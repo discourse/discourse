@@ -1324,7 +1324,6 @@ class TopicsController < ApplicationController
   end
 
   def self.defer_topic_view(topic_id, ip, user_id)
-    puts "DEFER TOPIC VIEW #{topic_id} #{ip} #{user_id}"
     Scheduler::Defer.later "Topic View" do
       TopicViewItem.add(topic_id, ip, user_id)
     end

@@ -167,12 +167,13 @@ class Middleware::RequestTracker
       status == 200 && !%w[0 false].include?(env_track_view) && request.get? && !request.xhr? &&
         headers["Content-Type"] =~ %r{text/html}
 
-    # Does the same thing as ActionDispatch::Request.remote_ip internally,
-    # the request at this point in time is a Rack::Request so we don't have
-    # access to it
+    # Since ActionDispatch::RemoteIp middleware is run before this middleware,
+    # we have access to the normalised remote IP based on ActionDispatch::RemoteIp::GetIp
     #
-    # TODO (martin) Fix this, it's not always right.
-    request_remote_ip = "#{env["action_dispatch.remote_ip"] || request.ip}"
+    # NOTE: Locally with MessageBus requests, the remote IP ends up as ::1 because
+    # of the X-Forwarded-For header set...somewhere, whereas all other requests
+    # end up as 127.0.0.1.
+    request_remote_ip = env["action_dispatch.remote_ip"].to_s
 
     track_view = !!(explicit_track_view || implicit_track_view)
 
