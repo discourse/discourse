@@ -20,8 +20,8 @@ export default class FKControlWrapper extends Component {
         return "input-" + (this.args.type || "text");
       case "FKControlComposer":
         return "composer";
-      case "FKControlText":
-        return "text";
+      case "FKControlTextarea":
+        return "textarea";
       case "FKControlQuestion":
         return "question";
       case "FKControlCode":

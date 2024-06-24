@@ -12,7 +12,7 @@ import FKControlMenu from "discourse/form-kit/components/control/menu";
 import FKControlQuestion from "discourse/form-kit/components/control/question";
 import FKControlRadioGroup from "discourse/form-kit/components/control/radio-group";
 import FKControlSelect from "discourse/form-kit/components/control/select";
-import FKControlText from "discourse/form-kit/components/control/text";
+import FKControlTextarea from "discourse/form-kit/components/control/textarea";
 import FKControlToggle from "discourse/form-kit/components/control/toggle";
 import FKControlWrapper from "discourse/form-kit/components/control-wrapper";
 import FKRow from "discourse/form-kit/components/row";
@@ -91,9 +91,9 @@ export default class FormField extends Component {
             field=this.field
             format=@format
           )
-          Text=(component
+          Textarea=(component
             FKControlWrapper
-            component=FKControlText
+            component=FKControlTextarea
             value=this.value
             field=this.field
             format=@format

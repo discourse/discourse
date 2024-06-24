@@ -1,4 +1,4 @@
-.form-kit__control-text {
+.form-kit__control-textarea {
   @include default-input;
 
   // reset textarea styles
@@ -13,6 +13,6 @@
   border-radius: var(--d-input-border-radius);
 }
 
-.form-kit__readonly-text {
+.form-kit__readonly-textarea {
   color: var(--primary-high);
 }
