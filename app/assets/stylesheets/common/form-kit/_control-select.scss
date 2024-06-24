@@ -1,6 +1,6 @@
 .form-kit__control-select {
   @include default-input;
-  padding: 0 1.5em 0 0.65em;
+  padding: 0 1.5em 0 0.5em;
   appearance: none;
   background-image: svg-uri(
     "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$primary-medium}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m2 5 6 6 6-6'/></svg>"
@@ -9,5 +9,5 @@
   background-position: right 0.5rem center;
   background-size: 16px 12px;
   cursor: pointer;
-  height: calc(2em + 4px);
+  height: 2em;
 }
