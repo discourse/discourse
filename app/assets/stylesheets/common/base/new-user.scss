@@ -13,7 +13,6 @@
       position: relative;
       border-bottom: var(--user-navigation__border-width) solid transparent;
       padding: calc(0.75em + var(--user-navigation__border-width)) 0.5em 0.75em;
-      transition: color 0.25s;
 
       @include breakpoint(extra-large) {
         font-size: var(--font-0);

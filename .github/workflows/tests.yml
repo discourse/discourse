@@ -237,8 +237,8 @@ jobs:
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
-        run: DISCOURSE_DEV_DB=discourse_test QUNIT_PARALLEL=3 bin/rake themes:qunit_all_official
-        timeout-minutes: 15
+        run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
+        timeout-minutes: 10
 
       - uses: actions/upload-artifact@v4
         if: always() && matrix.build_type == 'frontend' && matrix.target == 'plugins'

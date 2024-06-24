@@ -14,7 +14,7 @@ RSpec.describe HomepageHelper do
       expect(HomepageHelper.resolve).to eq("custom")
     end
 
-    context "when first item in top menu is no valid for anons" do
+    context "when first item in top menu is not valid for anons" do
       it "distinguishes between auth homepage and anon homepage" do
         SiteSetting.top_menu = "new|top|latest|unread"
 

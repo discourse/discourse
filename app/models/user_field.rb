@@ -6,6 +6,7 @@ class UserField < ActiveRecord::Base
   include HasSanitizableFields
 
   deprecate_column :required, drop_from: "3.3"
+  self.ignored_columns += %i[field_type]
 
   validates_presence_of :description
   validates_presence_of :name, unless: -> { field_type == "confirm" }
@@ -19,7 +20,8 @@ class UserField < ActiveRecord::Base
   scope :public_fields, -> { where(show_on_profile: true).or(where(show_on_user_card: true)) }
 
   enum :requirement, { optional: 0, for_all_users: 1, on_signup: 2 }.freeze
-  enum :field_type, { text: 0, confirm: 1, dropdown: 2, multiselect: 3 }.freeze
+  enum :field_type_enum, { text: 0, confirm: 1, dropdown: 2, multiselect: 3 }.freeze
+  alias_attribute :field_type, :field_type_enum
 
   def self.max_length
     2048
@@ -60,5 +62,5 @@ end
 #  external_type     :string
 #  searchable        :boolean          default(FALSE), not null
 #  requirement       :integer          default("optional"), not null
-#  field_type        :integer          not null
+#  field_type_enum   :integer          not null
 #

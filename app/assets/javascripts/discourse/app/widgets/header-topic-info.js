@@ -51,7 +51,8 @@ createWidget("topic-header-participant", {
     this.appEvents.trigger(
       `topic-header:trigger-${this.attrs.type}-card`,
       this.attrs.username,
-      e.target
+      e.target,
+      e
     );
     e.preventDefault();
   },
