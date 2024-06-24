@@ -27,37 +27,45 @@
     padding-block: 0.75rem;
     height: 100%;
     position: relative;
+    color: var(--primary-medium);
+    background: var(
+      --d-nav-bg-color
+    ) !important; // todo: remove need for !important
 
-    &.--active {
-      .d-icon,
-      .d-button-label {
-        color: var(--quaternary);
+    .d-icon {
+      margin-right: 0;
+      font-size: var(--font-up-2);
+      margin-bottom: 0.15em;
+      color: inherit;
+
+      &.d-icon-discourse-threads {
+        font-size: var(--font-up-2); // visual correction
       }
     }
+
     &:hover,
     &:focus {
-      .discourse-no-touch &,
-      .discourse-touch & {
-        .d-icon,
-        .d-button-label {
-          color: var(--quaternary);
+      .discourse-no-touch & {
+        background: var(
+          --d-nav-bg-color--hover
+        ) !important; // todo: remove need for !important
+        color: var(--d-nav-color--hover);
+        .d-icon {
+          color: var(--d-nav-color--hover);
         }
       }
     }
 
-    .d-icon {
-      margin-right: 0;
-      font-size: var(--font-up-4);
-      color: var(--primary-medium);
-
-      &.d-icon-discourse-threads {
-        font-size: var(--font-up-3); //visual correction
-      }
+    &.--active,
+    &.--active:hover {
+      @include nav-active();
+      background: var(
+        --d-nav-bg-color--active
+      ) !important; // todo: remove need for !important
     }
 
     .d-button-label {
       font-size: var(--font-down-1-rem);
-      color: var(--primary-medium);
     }
 
     .c-unread-indicator {

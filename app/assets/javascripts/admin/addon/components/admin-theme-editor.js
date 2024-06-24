@@ -52,7 +52,7 @@ export default class AdminThemeEditor extends Component {
     if (fieldName && fieldName === "color_definitions") {
       const example =
         ":root {\n" +
-        "  --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};\n" +
+        "  --mytheme-tertiary-or-highlight: #{dark-light-choose($tertiary, $highlight)};\n" +
         "}";
 
       return I18n.t("admin.customize.theme.color_definitions.placeholder", {

@@ -39,7 +39,7 @@
   .d-icon {
     pointer-events: none;
     margin-bottom: 0.2em;
-    color: var(--quaternary);
+    color: var(--d-nav-color--active);
   }
   &.disabled {
     // hiding with opacity so we can transition visibility

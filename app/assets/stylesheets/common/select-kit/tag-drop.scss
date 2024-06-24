@@ -16,10 +16,14 @@
         }
       }
 
+      .caret-icon {
+        color: var(--primary-high);
+      }
+
       &.has-selection {
         .tag-drop-header {
-          color: var(--quaternary);
-          border-color: var(--quaternary);
+          color: var(--d-nav-border-color--active);
+          border-color: var(--d-nav-border-color--active);
         }
       }
     }

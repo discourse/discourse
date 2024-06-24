@@ -17,7 +17,6 @@
           --primary: #<%= ColorScheme.hex_for_name("primary", scheme_id) %>;
           --secondary: #<%= ColorScheme.hex_for_name("secondary", scheme_id) %>;
           --tertiary: #<%= ColorScheme.hex_for_name("tertiary", scheme_id) %>;
-          --quaternary: #<%= ColorScheme.hex_for_name("quaternary", scheme_id) %>;
           --highlight: #<%= ColorScheme.hex_for_name("highlight", scheme_id) %>;
           --success: #<%= ColorScheme.hex_for_name("success", scheme_id) %>;
         }
@@ -30,7 +29,6 @@
             --primary: #<%= ColorScheme.hex_for_name("primary", scheme_id) %>;
             --secondary: #<%= ColorScheme.hex_for_name("secondary", scheme_id) %>;
             --tertiary: #<%= ColorScheme.hex_for_name("tertiary", scheme_id) %>;
-            --quaternary: #<%= ColorScheme.hex_for_name("quaternary", scheme_id) %>;
             --highlight: #<%= ColorScheme.hex_for_name("highlight", scheme_id) %>;
             --success: #<%= ColorScheme.hex_for_name("success", scheme_id) %>;
           }
@@ -42,7 +40,6 @@
             --primary: #<%= ColorScheme.hex_for_name("primary", dark_scheme_id) %>;
             --secondary: #<%= ColorScheme.hex_for_name("secondary", dark_scheme_id) %>;
             --tertiary: #<%= ColorScheme.hex_for_name("tertiary", dark_scheme_id) %>;
-            --quaternary: #<%= ColorScheme.hex_for_name("quaternary", dark_scheme_id) %>;
             --highlight: #<%= ColorScheme.hex_for_name("highlight", dark_scheme_id) %>;
             --success: #<%= ColorScheme.hex_for_name("success", dark_scheme_id) %>;
           }
@@ -63,29 +60,22 @@
           r: max(1vw, 11px);
           cy: 50%;
           filter: saturate(2) opacity(0.85);
-        }
-
-        .dots:first-child {
-          fill: var(--quaternary);
+          fill: var(--tertiary);
         }
 
         .dots:nth-child(2) {
-          fill: var(--quaternary);
           animation-delay: 0.15s;
         }
 
         .dots:nth-child(3) {
-          fill: var(--highlight);
           animation-delay: 0.3s;
         }
 
         .dots:nth-child(4) {
-          fill: var(--tertiary);
           animation-delay: 0.45s;
         }
 
         .dots:nth-child(5) {
-          fill: var(--tertiary);
           animation-delay: 0.6s;
         }
 
@@ -177,6 +167,7 @@
     }
 
     #d-splash .preloader-text-wrapper {
+      font-family: sans-serif;
       position: absolute;
       opacity: 0;
       animation: fade-in 0.5s ease-in-out;

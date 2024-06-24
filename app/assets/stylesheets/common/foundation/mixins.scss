@@ -263,3 +263,20 @@ $hpad: 0.65em;
   text-decoration: none;
   text-wrap: nowrap;
 }
+
+@mixin nav-active() {
+  color: var(--d-nav-color--active);
+  background: var(--d-nav-bg-color--active);
+  .d-icon {
+    color: var(--d-nav-color--active);
+  }
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: var(--d-nav-underline-height);
+    background: var(--d-nav-color--active);
+  }
+}
