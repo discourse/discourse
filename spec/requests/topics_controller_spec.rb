@@ -2697,8 +2697,8 @@ RSpec.describe TopicsController do
       end
     end
 
-    it "records a view" do
-      expect do get "/t/#{topic.slug}/#{topic.id}.json" end.to change(TopicViewItem, :count).by(1)
+    it "does not record a topic view" do
+      expect { get "/t/#{topic.slug}/#{topic.id}.json" }.not_to change(TopicViewItem, :count)
     end
 
     it "records a view to invalid post_number" do
@@ -3018,7 +3018,6 @@ RSpec.describe TopicsController do
 
           expect(response.status).to eq(200)
           topic.reload
-          expect(topic.views).to eq(1)
         end
 
         it "returns 403 for an invalid key" do
