@@ -1197,7 +1197,10 @@ en:
       activity_stream: "Activity"
       read: "Read"
       read_help: "Recently read topics"
-      preferences: "Preferences"
+      preferences:
+        title: "Preferences"
+        profile:
+          enforced_required_fields: "You are required to provide additional information before continuing to use this site."
       feature_topic_on_profile:
         open_search: "Select a New Topic"
         title: "Select a Topic"
@@ -6669,9 +6672,13 @@ en:
           title: "Field Requirement"
           optional:
             title: "Optional"
+          for_all_users:
+            title: "For all users"
+            description: "When new users sign up, they must fill out this field. When existing users return to the site and this is a new required field for them, they will also be prompted to fill it out. To re-prompt all users, delete this custom field and re-create it."
           on_signup:
             title: "On signup"
             description: "When new users sign up, they must fill out this field. Existing users are unaffected."
+          confirmation: "This will prompt existing users to fill in this field and will not allow them to do anything else on your site until the field is filled. Proceed?"
         editable:
           title: "Editable after signup"
           enabled: "editable"

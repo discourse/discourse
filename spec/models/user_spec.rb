@@ -3552,4 +3552,45 @@ RSpec.describe User do
       expect(user.new_personal_messages_notifications_count).to eq(1)
     end
   end
+
+  describe "#populated_required_fields?" do
+    let!(:required_field) { Fabricate(:user_field, name: "hairstyle") }
+    let!(:optional_field) { Fabricate(:user_field, name: "haircolor", requirement: "optional") }
+
+    context "when all required fields are populated" do
+      before { user.set_user_field(required_field.id, "bald") }
+
+      it { expect(user.populated_required_custom_fields?).to eq(true) }
+    end
+
+    context "when some required fields are missing values" do
+      it { expect(user.populated_required_custom_fields?).to eq(false) }
+    end
+  end
+
+  describe "#needs_required_fields_check?" do
+    let!(:version) { UserRequiredFieldsVersion.create! }
+
+    context "when version number is up to date" do
+      before { user.update(required_fields_version: version.id) }
+
+      it { expect(user.needs_required_fields_check?).to eq(false) }
+    end
+
+    context "when version number is out of date" do
+      before { user.update(required_fields_version: version.id - 1) }
+
+      it { expect(user.needs_required_fields_check?).to eq(true) }
+    end
+  end
+
+  describe "#bump_required_fields_version" do
+    let!(:version) { UserRequiredFieldsVersion.create! }
+
+    it do
+      expect { user.bump_required_fields_version }.to change { user.required_fields_version }.to(
+        version.id,
+      )
+    end
+  end
 end

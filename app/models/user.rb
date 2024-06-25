@@ -1843,6 +1843,21 @@ class User < ActiveRecord::Base
     end
   end
 
+  def populated_required_custom_fields?
+    UserField
+      .required
+      .pluck(:id)
+      .all? { |field_id| custom_fields["#{User::USER_FIELD_PREFIX}#{field_id}"].present? }
+  end
+
+  def needs_required_fields_check?
+    (required_fields_version || 0) < UserRequiredFieldsVersion.current
+  end
+
+  def bump_required_fields_version
+    update(required_fields_version: UserRequiredFieldsVersion.current)
+  end
+
   protected
 
   def badge_grant
@@ -2225,6 +2240,7 @@ end
 #  flair_group_id            :integer
 #  last_seen_reviewable_id   :integer
 #  password_algorithm        :string(64)
+#  required_fields_version   :integer
 #
 # Indexes
 #
