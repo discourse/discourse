@@ -13,7 +13,10 @@ export default class PreferencesProfile extends RestrictedUserRoute {
   willTransition(transition) {
     super.willTransition(...arguments);
 
-    if (this.currentUser.needs_required_fields_check) {
+    if (
+      this.currentUser?.needs_required_fields_check &&
+      !transition?.to.name.startsWith("admin")
+    ) {
       transition.abort();
       return false;
     }
