@@ -16,7 +16,7 @@
 
   .d-editor-textarea-wrapper {
     @include default-input;
-    padding: 0;
+    padding: 0 !important;
   }
 
   .d-editor-input {
