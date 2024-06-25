@@ -16,10 +16,7 @@ export default class WebhookEvents extends Component {
   @tracked pingEnabled = true;
   @tracked events = [];
   @tracked incomingEventIds = [];
-  @tracked loading = false;
-  @tracked showProgress = false;
-  @tracked processedTopicCount = 0;
-  @tracked count = 0;
+  @tracked failedEventCount = 0;
   @tracked eventIds = [];
   @tracked redeliverEnabled = true;
 
@@ -44,21 +41,21 @@ export default class WebhookEvents extends Component {
     } finally {
       this.loading = false;
     }
-    this.eventIds = this.filteredEventIds();
-    this.count = this.eventIds.length;
-    if (this.count === 0) {
+    this.eventIds = this.filterFailedEventIds();
+    this.failedEventCount = this.eventIds.length;
+    if (this.failedEventCount === 0) {
       this.redeliverEnabled = false;
     }
   }
 
-  filteredEventIds() {
+  filterFailedEventIds() {
     return this.events.content
       .filter(this.failedEvents)
       .map((event) => event.id);
   }
 
   failedEvents(event) {
-    return event.status < 200 || (event.status > 299 && event.status !== 0);
+    return (event.status < 200 || event.status > 299) && event.status !== 0;
   }
 
   get statuses() {
@@ -104,10 +101,13 @@ export default class WebhookEvents extends Component {
       const event = this.events.find((e) => {
         return e.id === data.web_hook_event.id;
       });
-      event.response_body = data.web_hook_event.response_body;
-      event.response_headers = data.web_hook_event.response_headers;
-      event.status = data.web_hook_event.status;
-      event.set("redelivering", false);
+
+      event.setProperties({
+        response_body: data.web_hook_event.response_body,
+        response_headers: data.web_hook_event.response_headers,
+        status: data.web_hook_event.status,
+        redelivering: false,
+      });
       return;
     }
 
@@ -153,9 +153,9 @@ export default class WebhookEvents extends Component {
 
   @action
   async redeliverFailed() {
-    this.eventIds = this.filteredEventIds();
-    this.count = this.eventIds.length;
-    if (this.count === 0) {
+    this.eventIds = this.filterFailedEventIds();
+    this.failedEventCount = this.eventIds.length;
+    if (this.failedEventCount === 0) {
       this.dialog.alert("No events to redeliver.");
       this.redeliverEnabled = false;
       return;
@@ -163,7 +163,7 @@ export default class WebhookEvents extends Component {
 
     return this.dialog.yesNoConfirm({
       message: I18n.t("admin.web_hooks.events.redeliver_failed_confirm", {
-        count: this.count,
+        count: this.failedEventCount,
       }),
       didConfirm: async () => {
         try {
