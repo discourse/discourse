@@ -186,7 +186,7 @@ GEM
     image_size (3.4.0)
     in_threads (1.6.0)
     io-console (0.7.2)
-    irb (1.13.1)
+    irb (1.13.2)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     iso8601 (0.13.0)
