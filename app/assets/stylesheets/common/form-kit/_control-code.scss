@@ -11,6 +11,7 @@
   &[data-disabled="false"] {
     > .ace_editor {
       @include default-input;
+      height: 100% !important;
 
       &.ace_focus {
         border-color: var(--tertiary);
