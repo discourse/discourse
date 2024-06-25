@@ -207,8 +207,8 @@ export default class Form extends Component {
     await this.validate(this.fields);
 
     if (!this.hasErrors) {
-      await this.args.onSubmit?.(this.effectiveData);
       this.isDirtyForm = false;
+      await this.args.onSubmit?.(this.effectiveData);
     }
   }
 
@@ -295,13 +295,13 @@ export default class Form extends Component {
 
       {{yield
         (hash
-          Row=(component Row)
-          Section=(component FKSection)
+          Row=Row
+          Section=FKSection
           ConditionalContent=(component FKControlConditionalContent)
-          Container=(component FKContainer)
+          Container=FKContainer
           Actions=(component FKSection class="form-kit__actions")
           Button=(component DButton class="form-kit__button")
-          Alert=(component FKAlert)
+          Alert=FKAlert
           Submit=(component
             DButton
             action=this.onSubmit

@@ -14,7 +14,39 @@ module PageObjects
       end
 
       def value
-        component["data-value"]
+        case control_type
+        when /input-/
+          component.find("input").value
+        when "icon"
+          picker = PageObjects::Components::SelectKit.new(component)
+          picker.value
+        when "checkbox"
+          component.find("input[type='checkbox']").checked?
+        when "menu"
+          component.find(".fk-d-menu__trigger")["data-value"]
+        when "select"
+          component.find("select").value
+        end
+      end
+
+      def unchecked?
+        if control_type != "checkbox"
+          raise "'unchecked?' is only supported for control type: #{control_type}"
+        end
+
+        expect(self.value).to eq(false)
+      end
+
+      def checked?
+        if control_type != "checkbox"
+          raise "'checked?' is only supported for control type: #{control_type}"
+        end
+
+        expect(self.value).to eq(true)
+      end
+
+      def has_value?(expected_value)
+        expect(self.value).to eq(expected_value)
       end
 
       def control_type
@@ -31,10 +63,12 @@ module PageObjects
 
       def fill_in(value)
         case control_type
-        when "input"
+        when "input-text"
           component.find("input").fill_in(with: value)
-        when "code", "textarea", "composer"
-          component.find("textarea").fill_in(with: value)
+        when "textarea", "composer"
+          component.find("textarea").fill_in(with: value, visible: :all)
+        when "code"
+          component.find(".ace_text-input", visible: :all).fill_in(with: value)
         else
           raise "Unsupported control type: #{control_type}"
         end
@@ -100,6 +134,18 @@ module PageObjects
 
       def initialize(component)
         @component = component
+      end
+
+      def submit
+        within component do
+          find("button[type='submit']").click
+        end
+      end
+
+      def has_an_alert?(message)
+        within component do
+          find(".form-kit__alert-message", text: message)
+        end
       end
 
       def field(name)

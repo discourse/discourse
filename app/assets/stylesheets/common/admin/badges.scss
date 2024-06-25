@@ -95,6 +95,10 @@
         text-transform: capitalize;
       }
     }
+
+    .readonly-field {
+      color: var(--primary-high);
+    }
   }
 
   .current-badge-actions {

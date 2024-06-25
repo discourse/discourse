@@ -61,7 +61,7 @@ export const MENU = {
     offset: 10,
     triggers: ["click"],
     untriggers: ["click"],
-    placement: "bottom",
+    placement: "bottom-start",
     fallbackPlacements: FLOAT_UI_PLACEMENTS,
     autoUpdate: true,
     trapTab: true,

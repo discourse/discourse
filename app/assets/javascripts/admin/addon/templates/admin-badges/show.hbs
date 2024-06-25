@@ -31,9 +31,9 @@
     {{/if}}
 
     {{#if this.readOnly}}
-      <form.Container @title={{i18n "admin.badges.name"}}>
-        <span class="form-kit__readonly-text">
-          <span>{{model.name}}</span>
+      <form.Container data-name="name" @title={{i18n "admin.badges.name"}}>
+        <span class="readonly-field">
+          {{model.name}}
         </span>
         <LinkTo
           @route="adminSiteText.edit"
@@ -72,7 +72,7 @@
       </form.Field>
 
       <form.ConditionalContent
-        @activeName={{if data.icon "choose-icon" "upload-image"}}
+        @activeName={{if data.image "upload-image" "choose-icon"}}
         as |cc|
       >
         <cc.Conditions as |Condition|>
@@ -111,8 +111,11 @@
       </form.ConditionalContent>
 
       {{#if this.readOnly}}
-        <form.Container @title={{i18n "admin.badges.description"}}>
-          <span class="form-kit__readonly-text">
+        <form.Container
+          data-name="description"
+          @title={{i18n "admin.badges.description"}}
+        >
+          <span class="readonly-field">
             {{model.description}}
           </span>
           <LinkTo
@@ -137,7 +140,10 @@
       {{/if}}
 
       {{#if this.readOnly}}
-        <form.Container @title={{i18n "admin.badges.long_description"}}>
+        <form.Container
+          data-name="long_description"
+          @title={{i18n "admin.badges.long_description"}}
+        >
           <span class="form-kit__readonly-text">
             {{model.long_description}}
           </span>
@@ -297,7 +303,7 @@
     />
 
     <form.Actions>
-      <form.Submit @isLoading={{this.saving}} />
+      <form.Submit />
 
       {{#unless this.readOnly}}
         <form.Button @action={{this.handleDelete}} class="btn-danger">
