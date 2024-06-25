@@ -183,7 +183,6 @@ ko:
       s3_backup_requires_s3_settings: "'%{setting_name}' 설정을 제공하지 않으면 S3를 백업 위치로 사용할 수 없습니다."
       s3_bucket_reused: "'s3_upload_bucket' 및 's3_backup_bucket'에 동일한 버킷을 사용할 수 없습니다. 다른 버킷을 선택하거나 각 버킷에 다른 경로를 사용하세요."
       share_quote_facebook_requirements: "Facebook 인용 공유를 활성화하려면 Facebook 앱 ID를 설정해야 합니다."
-      second_factor_cannot_enforce_with_socials: "소셜 로그인이 활성화된 상태에서는 2FA를 적용할 수 없습니다. 먼저 다음을 통해 로그인을 비활성화해야 합니다. %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "로컬 로그인이 비활성화된 경우 2FA를 적용할 수 없습니다."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "DiscourseConnect가 활성화된 경우 2FA를 적용할 수 없습니다."
       local_login_cannot_be_disabled_if_second_factor_enforced: "2FA가 적용된 경우 로컬 로그인을 비활성화할 수 없습니다. 로컬 로그인을 비활성화하기 전에 적용된 2FA를 비활성화하세요."
@@ -468,6 +467,8 @@ ko:
         raw: "본문"
       user_profile:
         bio_raw: "내 정보"
+      user:
+        password: "비밀번호"
     errors:
       models:
         topic:
@@ -1446,7 +1447,6 @@ ko:
     s3_endpoint: "엔드포인트를 수정하여 DigitalOcean Spaces 또는 Minio와 같은 S3 호환 서비스로 백업할 수 있습니다. 경고: AWS S3를 사용하는 경우 비워두세요."
     s3_configure_tombstone_policy: "삭제 표시 업로드에 대한 자동 삭제 정책을 활성화합니다. 중요: 비활성화하면 업로드가 삭제된 후 공간이 확보되지 않습니다."
     s3_disable_cleanup: "허용되는 최대 개수보다 많은 백업이 있는 경우 S3에서 이전 백업이 제거되지 않도록 합니다."
-    enable_s3_inventory: "Amazon S3 인벤토리를 사용하여 리포트를 생성하고 업로드를 검증합니다. 중요: 유효한 S3 크리덴셜(액세스 키 ID 및 암호 액세스 키 모두)이 필요합니다."
     backup_time_of_day: "백업이 실행되어야 할 시간(UTC)"
     backup_with_uploads: "예약된 백업에 업로드를 포함합니다. 비활성화하면 데이터베이스만 백업합니다."
     backup_location: "백업이 저장된 위치입니다. 중요: S3에는 파일 설정에 입력 한 유효한 S3 크리덴셜이 필요합니다."
@@ -2016,7 +2016,6 @@ ko:
     email_too_long: "제공한 이메일이 너무 깁니다. 메일함 이름은 254자 이하여야 하며 도메인 이름은 253자 이하여야 합니다."
     wrong_invite_code: "입력한 초대 코드가 잘못되었습니다."
     reserved_username: "이 아이디는 허용되지 않습니다."
-    missing_user_field: "입력 누락된 사용자 필드가 있습니다."
     auth_complete: "인증이 완료되었습니다."
     click_to_continue: "계속하려면 여기를 클릭하세요."
     already_logged_in: "이 초대는 기존 계정이 없는 신규 사용자를 위한 것입니다."
@@ -3309,6 +3308,7 @@ ko:
     %{page_name} 페이지의 콘텐츠를 변경하려면 이 주제의 첫 게시물을 편집하세요.
   guidelines_topic:
     title: "FAQ/가이드라인"
+    guidelines_title: "가이드라인"
   tos_topic:
     title: "이용약관"
   privacy_topic:

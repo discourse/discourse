@@ -24,7 +24,7 @@
     "ember-auto-import": "^2.7.3",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
-    "ember-resolver": "^11.0.1",
+    "ember-resolver": "^12.0.1",
     "handlebars": "^4.7.8",
     "truth-helpers": "1.0.0"
   },
@@ -36,7 +36,7 @@
     "@types/qunit": "^2.19.10",
     "@types/rsvp": "^4.0.9",
     "broccoli-asset-rev": "^3.0.0",
-    "ember-cli": "~5.8.1",
+    "ember-cli": "~5.9.0",
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",
@@ -45,7 +45,7 @@
     "ember-source": "~5.5.0",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
-    "webpack": "^5.91.0"
+    "webpack": "^5.92.1"
   },
   "engines": {
     "node": ">= 18",

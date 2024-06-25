@@ -13,7 +13,7 @@ class ContentSecurityPolicy
           directives[:base_uri] = [:self]
           directives[:object_src] = [:none]
           directives[:script_src] = script_src
-          directives[:worker_src] = worker_src
+          directives[:worker_src] = []
           directives[
             :report_uri
           ] = report_uri if SiteSetting.content_security_policy_collect_reports
@@ -60,47 +60,10 @@ class ContentSecurityPolicy
     end
 
     def script_src
-      sources = []
-
-      if SiteSetting.content_security_policy_strict_dynamic
-        sources << "'strict-dynamic'"
-      else
-        sources.push(
-          "#{base_url}/logs/",
-          "#{base_url}/sidekiq/",
-          "#{base_url}/mini-profiler-resources/",
-          *script_assets,
-        )
-
-        # Support Ember CLI Live reload
-        if Rails.env.development?
-          sources << "#{base_url}/ember-cli-live-reload.js"
-          sources << "#{base_url}/_lr/"
-        end
-
-        # we need analytics.js still as gtag/js is a script wrapper for it
-        if SiteSetting.ga_universal_tracking_code.present?
-          sources << "https://www.google-analytics.com/analytics.js"
-        end
-        if SiteSetting.ga_universal_tracking_code.present? && SiteSetting.ga_version == "v4_gtag"
-          sources << "https://www.googletagmanager.com/gtag/js"
-        end
-        if SiteSetting.gtm_container_id.present?
-          sources << "https://www.googletagmanager.com/gtm.js"
-        end
-      end
-
+      sources = ["'strict-dynamic'"]
       sources << :report_sample if SiteSetting.content_security_policy_collect_reports
 
       sources
-    end
-
-    def worker_src
-      return [] if SiteSetting.content_security_policy_strict_dynamic
-      [
-        "'self'", # For service worker
-        *script_assets(worker: true),
-      ]
     end
 
     def report_uri

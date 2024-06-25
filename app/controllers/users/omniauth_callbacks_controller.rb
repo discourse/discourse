@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 class Users::OmniauthCallbacksController < ApplicationController
-  skip_before_action :redirect_to_login_if_required
+  skip_before_action :redirect_to_login_if_required, :redirect_to_profile_if_required
 
   layout "no_ember"
 
@@ -86,6 +86,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     cookies["_bypass_cache"] = true
     cookies[:authentication_data] = { value: client_hash.to_json, path: Discourse.base_path("/") }
+    secure_session["oauth"] = true
     redirect_to @origin
   end
 
@@ -143,7 +144,8 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def user_found(user)
-    if user.has_any_second_factor_methods_enabled?
+    if user.has_any_second_factor_methods_enabled? &&
+         SiteSetting.enforce_second_factor_on_external_auth
       @auth_result.omniauth_disallow_totp = true
       @auth_result.email = user.email
       return

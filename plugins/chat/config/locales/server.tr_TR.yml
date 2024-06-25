@@ -231,18 +231,8 @@ tr_TR:
         other: "Yeni sohbet mesajlarınız var"
       from: "%{site_name}"
       subject:
-        private_message: "[%{email_prefix}] Yeni mesaj"
-        direct_message_from_1: "[%{email_prefix}] %{username} adlı kullanıcıdan yeni mesaj"
-        direct_message_from_2: "[%{email_prefix}] %{username1} ve %{username2} adlı kullanıcılardan yeni mesaj"
-        direct_message_from_more:
-          one: "[%{email_prefix}] %{username} ve %{count} kullanıcıdan daha yeni mesaj"
-          other: "[%{email_prefix}] %{username} ve %{count} kullanıcıdan daha yeni mesaj"
-        chat_channel_1: "[%{email_prefix}] %{channel} başlıklı mesajda yeni mesaj"
-        chat_channel_2: "[%{email_prefix}] %{channel1} ve %{channel2} adlı kanallarda yeni mesaj"
-        chat_channel_more:
-          one: "[%{email_prefix}] %{channel} ve %{count} kanalda daha yeni mesaj"
-          other: "[%{email_prefix}] %{channel} ve %{count} kanaldan daha yeni mesaj"
-        chat_channel_and_direct_message: "[%{email_prefix}] %{channel} adlı kanalda ve %{username} adlı kullanıcıdan yeni mesaj"
+        chat_dm_2: "[%{site_name}] %{name_1} ve %{name_2} kişiden daha yeni mesajlar"
+        chat_channel_2: "[%{site_name}] %{channel_1} ve %{channel_2} başlıklı mesajda yeni mesajlar"
       unsubscribe: "Bu sohbet özeti siz yokken %{site_link} tarafından gönderildi. %{email_preferences_link} değiştirin veya abonelikten çıkmak için %{unsubscribe_link} bağlantısını kullanın."
       unsubscribe_no_link: "Bu sohbet özeti, siz yokken %{site_link} tarafından gönderildi. %{email_preferences_link} değiştirin."
       view_messages:

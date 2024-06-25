@@ -166,6 +166,8 @@ task "javascript:update_constants" => :environment do
     export const TOPIC_VISIBILITY_REASONS = #{Topic.visibility_reasons.to_json};
 
     export const SYSTEM_FLAG_IDS = #{PostActionType.types.to_json}
+
+    export const SITE_SETTING_REQUIRES_CONFIRMATION_TYPES = #{SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.to_json}
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")
@@ -248,9 +250,15 @@ task "javascript:update" => "clean_up" do
 
           ace_root = "#{library_src}/ace-builds/src-min-noconflict/"
 
-          addtl_files = %w[ext-searchbox mode-html mode-scss mode-sql mode-yaml worker-html].concat(
-            themes,
-          )
+          addtl_files = %w[
+            ext-searchbox
+            mode-html
+            mode-javascript
+            mode-scss
+            mode-sql
+            mode-yaml
+            worker-html
+          ].concat(themes)
 
           dest_path = dest.split("/")[0..-2].join("/")
           addtl_files.each { |file| FileUtils.cp_r("#{ace_root}#{file}.js", dest_path) }

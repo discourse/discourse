@@ -13,7 +13,11 @@ TopicStatusUpdater =
         if updated
           highest_post_number = topic.highest_post_number
           create_moderator_post_for(status, opts)
-          update_read_state_for(status, highest_post_number)
+          update_read_state_for(
+            status,
+            highest_post_number,
+            silent_tracking: opts[:silent_tracking],
+          )
         end
       end
 
@@ -90,8 +94,8 @@ TopicStatusUpdater =
       topic.reload
     end
 
-    def update_read_state_for(status, old_highest_read)
-      if status.autoclosed? && status.enabled?
+    def update_read_state_for(status, old_highest_read, silent_tracking: false)
+      if (status.autoclosed? && status.enabled?) || (status.closed? && silent_tracking)
         # let's pretend all the people that read up to the autoclose message
         # actually read the topic
         PostTiming.pretend_read(topic.id, old_highest_read, topic.highest_post_number)

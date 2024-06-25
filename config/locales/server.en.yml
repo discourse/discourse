@@ -323,6 +323,7 @@ en:
         other: is the wrong length (should be %{count} characters)
       other_than: "must be other than %{count}"
       auth_overrides_username: "Username needs to be updated on authentication provider side, since `auth_overrides_username` setting is enabled."
+      required: "must exist"
     template:
       body: ! "There were problems with the following fields:"
       header:
@@ -333,6 +334,8 @@ en:
     site_settings:
       invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
+      site_setting_is_hidden: "You are not allowed to change hidden settings"
+      site_setting_is_unconfigurable: "You are not allowed to change unconfigurable settings"
       invalid_choice:
         one: "'%{name}' is an invalid choice."
         other: "'%{name}' are invalid choices."
@@ -346,7 +349,6 @@ en:
       secure_uploads_requirements: "S3 uploads and S3 ACLs must be enabled before enabling secure uploads."
       s3_use_acls_requirements: "You must have S3 ACLs enabled when secure uploads are enabled."
       share_quote_facebook_requirements: "You must set a Facebook app id to enable quote sharing for Facebook."
-      second_factor_cannot_enforce_with_socials: "You cannot enforce 2FA with social logins enabled. You must first disable login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "You cannot enforce 2FA if local logins are disabled."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "You cannot enforce 2FA if DiscourseConnect is enabled."
       local_login_cannot_be_disabled_if_second_factor_enforced: "You cannot disable local login if 2FA is enforced. Disable enforced 2FA before disabling local logins."
@@ -1760,7 +1762,8 @@ en:
     email_custom_headers: "A pipe-delimited list of custom email headers"
     email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
-    enforce_second_factor: "Require users to enable two-factor authentication before they can access the Discourse UI. Select 'all' to enforce it to all users. Select 'staff' to enforce it to staff users only. This setting does not affect API or 'DiscourseConnect provider' authentication."
+    enforce_second_factor: "Require users to enable two-factor authentication before they can access the Discourse UI. This setting does not affect API or 'DiscourseConnect provider' authentication. If enforce_second_factor_on_external_auth is enabled, users will not be able to log in with external authentication providers after they set up two-factor authentication."
+    enforce_second_factor_on_external_auth: "Require users to use two-factor authentication at all times. When enabled this will prevent users logging in with external authentication methods like social logins if they have two-factor authentication enabled. When disabled users will only need to confirm their two-factor authentication when logging in with a username and password. Also see the `enforce_second_factor` setting."
     force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
 
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
@@ -1841,8 +1844,7 @@ en:
     content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_collect_reports: "Enable CSP violation report collection at /csp_reports"
     content_security_policy_frame_ancestors: "Restrict who can embed this site in iframes via CSP. Control allowed hosts on <a href='%{base_path}/admin/customize/embedding'>Embedding</a>"
-    content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP). Host sources will be ignored when content_security_policy_strict_dynamic is enabled."
-    content_security_policy_strict_dynamic: "Use a strict-dynamic content security policy to reduce the need for manual configuration. Check <a href='https://meta.discourse.org/t/298172' target='_blank'>the announcement</a> for more information. The ability to disable this setting will be removed soon."
+    content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP). Other host sources are ignored as strict-dynamic is enabled."
     invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
     include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
     display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
@@ -1973,7 +1975,6 @@ en:
     s3_endpoint: "The endpoint can be modified to backup to an S3 compatible service like DigitalOcean Spaces or Minio. WARNING: Leave blank if using AWS S3."
     s3_configure_tombstone_policy: "Enable automatic deletion policy for tombstone uploads. IMPORTANT: If disabled, no space will be reclaimed after uploads are deleted."
     s3_disable_cleanup: "Prevent removal of old backups from S3 when there are more backups than the maximum allowed."
-    enable_s3_inventory: "Generate reports and verify uploads using Amazon S3 inventory. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
     s3_use_acls: "AWS recommends not using ACLs on S3 buckets; if you are following this advice, uncheck this option. This must be enabled if you are using secure uploads."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
@@ -2560,9 +2561,10 @@ en:
     enable_offline_indicator: "Display a message to users when it is detected that they have no network connection"
     default_sidebar_link_to_filtered_list: "Make navigation menu links link to filtered list by default."
     default_sidebar_show_count_of_new_items: "Make navigation menu links show count of new items instead of badges by default."
-    default_sidebar_switch_panel_position: "Position of sidebar switch panel buttons"
+    default_sidebar_switch_panel_position: "Position of button on sidebar to switch to chat"
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
+    retain_web_hook_events_aggregate_days: "Number of days to retain web hook event aggregate records."
     retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
     revoke_api_keys_unused_days: "Number of days since an API key was last used before it is automatically revoked (0 for never)"
     revoke_api_keys_maxlife_days: "Number of days before an API key is automatically revoked (0 for never)"
@@ -2688,6 +2690,7 @@ en:
       invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
       invalid_alternative_reply_by_email_addresses: "All values must contain '%{reply_key}' and be different from the notification email."
       invalid_domain_hostname: "Must not include * or ? characters."
+      invalid_csp_script_src: "Value must be either 'unsafe-eval' or 'wasm-unsafe-eval', or in the form '<hash algorithm>-<base64 value>' where supported hash algorithms are sha256, sha384 or sha512. Ensure that your input is wrapped in single quotation marks."
       pop3_polling_host_is_empty: "You must set a 'pop3 polling host' before enabling POP3 polling."
       pop3_polling_username_is_empty: "You must set a 'pop3 polling username' before enabling POP3 polling."
       pop3_polling_password_is_empty: "You must set a 'pop3 polling password' before enabling POP3 polling."
@@ -2929,7 +2932,7 @@ en:
     email_too_long: "The email you provided is too long. Mailbox names must be no more than 254 characters, and domain names must be no more than 253 characters."
     wrong_invite_code: "The invite code you entered was incorrect."
     reserved_username: "That username is not allowed."
-    missing_user_field: "You have not completed all the user fields"
+    missing_user_field: "You have not completed all the required user fields"
     auth_complete: "Authentication is complete."
     click_to_continue: "Click here to continue."
     already_logged_in: "Sorry! This invitation is intended for new users, who do not already have an existing account."
@@ -4625,6 +4628,7 @@ en:
 
   guidelines_topic:
     title: "FAQ/Guidelines"
+    guidelines_title: "Guidelines"
     body: |
       <a name="civilized"></a>
 
@@ -4716,7 +4720,7 @@ en:
 
       ## [Powered by You](#power)
 
-      This site is operated by your [friendly local staff](%{base_path}/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in %{feedback_category} and let’s discuss! If there’s a critical or urgent issue that can’t be handled by a meta topic or flag, contact us via the [staff page](%{base_path}/about).
+      This site is operated by your [friendly moderator team](%{base_path}/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in %{feedback_category} and let’s discuss! If there’s a critical or urgent issue that can’t be handled by a meta topic or flag, [contact the moderators](%{base_path}/about).
 
   tos_topic:
     title: "Terms of Service"

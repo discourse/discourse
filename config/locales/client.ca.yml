@@ -870,7 +870,8 @@ ca:
         to: "a"
       activity_stream: "Activitat"
       read: "Llegit"
-      preferences: "Preferències"
+      preferences:
+        title: "Preferències"
       feature_topic_on_profile:
         save: "Desa"
         clear:
@@ -1017,6 +1018,7 @@ ca:
         set_password: "Estableix la contrasenya"
         choose_new: "Trieu una contrasenya nova"
         choose: "Trieu una contrasenya"
+        title: "Restabliment de contrasenya"
       second_factor_backup:
         regenerate: "Regenera"
         disable: "Desactiva"
@@ -1264,7 +1266,6 @@ ca:
           error: "El fitxer hauria de tenir format CSV."
       password:
         title: "Contrasenya"
-        too_short: "La contrasenya és massa curta."
         common: "La contrasenya és massa freqüent."
         same_as_username: "La contrasenya és igual que el nom d'usuari."
         same_as_email: "La contrasenya és igual que el correu electrònic."
@@ -1639,7 +1640,6 @@ ca:
       enter_fullscreen: "entra en la redacció a pantalla completa"
       exit_fullscreen: "surt de la redacció a pantalla completa"
       modal_ok: "D'acord"
-      modal_cancel: "Cancel·la"
       cant_send_pm: "No podeu enviar cap missatge a %{username}."
       yourself_confirm:
         title: "Heu oblidat afegir destinataris?"
@@ -2762,7 +2762,6 @@ ca:
     tagging:
       other_tags: "Altres etiquetes"
       selector_tags: "etiquetes"
-      selector_all_tags: "totes les etiquetes"
       selector_no_tags: "sense etiquetes"
       selector_remove_filter: "elimina filtre"
       tags: "Etiquetes"
@@ -2904,6 +2903,8 @@ ca:
               content: "Temes"
             faq:
               content: "PMF"
+            guidelines:
+              content: "Directrius"
             groups:
               content: "Grups"
             users:
@@ -3178,6 +3179,8 @@ ca:
           timestamp: "Creat"
           completion: "Temps de finalització"
           actions: "Accions"
+          filter_status:
+            failed: "Fallits"
       home:
         title: "Pàgina principal"
       account:
@@ -3224,6 +3227,9 @@ ca:
           search_logs: "Cerca els registres (logs)"
           security: "Seguretat"
           spam: "Brossa"
+      config_areas:
+        about:
+          optional: "(opcional)"
       plugins:
         title: "Connectors"
         installed: "Connectors instal·lats"
@@ -3508,7 +3514,6 @@ ca:
             description: "Enllaços, alguns botons, alertes i color de ressaltament."
           quaternary:
             name: "quaternari"
-            description: "Enllaços de navegació"
           header_background:
             name: "color de fons de la capçalera"
             description: "Color de fons de la capçalera del lloc web."

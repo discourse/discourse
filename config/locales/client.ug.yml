@@ -1004,7 +1004,6 @@ ug:
     categories:
       categories_label: "سەھىپە"
       subcategories_label: "تارماق سەھىپە"
-      all_subcategories: "ھەممە تارماق سەھىپە"
       no_subcategories: "تارماق سەھىپە يوق"
       remove_filter: "سۈزگۈچنى چىقىرىۋەت"
       plus_more_count:
@@ -1123,7 +1122,8 @@ ug:
       activity_stream: "پائالىيەت"
       read: "ئوقۇلدى"
       read_help: "يېقىندا ئوقۇغان تېما"
-      preferences: "مايىللىق"
+      preferences:
+        title: "مايىللىق"
       feature_topic_on_profile:
         open_search: "يېڭى بىر تېما تاللىنىدۇ"
         title: "بىر تېما تاللىنىدۇ"
@@ -1344,6 +1344,7 @@ ug:
         set_password: "ئىم تەڭشەك"
         choose_new: "يېڭى ئىم تاللىنىدۇ"
         choose: "ئىم تاللىنىدۇ"
+        title: "ئىم ئەسلىگە قايتۇر"
       second_factor_backup:
         title: "ئىككى ئامىللىق زاپاسلاش كودى"
         regenerate: "قايتا ھاسىللا"
@@ -1736,7 +1737,6 @@ ug:
         fine_print: "كىملىكىڭىزنى جەزملىشىڭىزنى سورايمىز چۈنكى بۇ يوشۇرۇن سەزگۈر مەشغۇلات. دەلىللەنگەندىن كېيىن، سىز بىر نەچچە سائەت مەشغۇلات قىلمىغاندىن كېيىن ئاندىن قايتا دەلىللەشنى تەلەپ قىلىدۇ."
       password:
         title: "ئىم"
-        too_short: "ئىم بەك قىسقا."
         common: "بۇ ئىم بەك كۆپ ئۇچرايدۇ."
         same_as_username: "ئىم ئىشلەتكۈچى ئاتىڭىز بىلەن ئوخشاش."
         same_as_email: "ئىم ئېلخېتىڭىز بىلەن ئوخشاش."
@@ -2300,7 +2300,6 @@ ug:
       show_toolbar: "تەھرىرلىگۈچ قورال بالداقنى كۆرسەت"
       hide_toolbar: "تەھرىرلىگۈچ قورال بالداقنى يوشۇر"
       modal_ok: "جەزملە"
-      modal_cancel: "ۋاز كەچ"
       cant_send_pm: "كەچۈرۈڭ، %{username} غا ئۇچۇر يوللىيالمايسىز."
       yourself_confirm:
         title: "تاپشۇرۇۋالغۇچىنى قوشۇشنى ئۇنۇتتىڭىزمۇ؟"
@@ -3786,7 +3785,7 @@ ug:
           title: "كۈندىلىك"
         all_time: "ھەممە ۋاقىت"
         this_year: "يىل"
-        this_quarter: "چارەك"
+        this_quarter: "پەسىل"
         this_month: "ئاي"
         this_week: "ھەپتە"
         today: "بۈگۈن"
@@ -3963,7 +3962,6 @@ ug:
       all_tags: "ھەممە بەلگە"
       other_tags: "باشقا بەلگە"
       selector_tags: "بەلگە"
-      selector_all_tags: "ھەممە بەلگە"
       selector_no_tags: "بەلگە يوق"
       selector_remove_filter: "سۈزگۈچنى چىقىرىۋەت"
       tags: "بەلگە"
@@ -4145,6 +4143,7 @@ ug:
         title: "سەھىپە يولباشچى تەھرىر"
         filter_placeholder: "سەھىپە سۈزگۈچ"
         no_categories: "بېرىلگەن ئاتالغۇغا ماس كېلىدىغان سەھىپە يوق."
+        show_more: "تېخىمۇ كۆپ كۆرسەت"
       tags_form_modal:
         title: "بەلگە يولباشچى تەھرىر"
         filter_placeholder: "بەلگە سۈزگۈچ"
@@ -4246,6 +4245,9 @@ ug:
               title: "بارلىق تېما"
             faq:
               content: "كۆپ سورالغان سوئال"
+              title: "بۇ تور بېكەتنى ئىشلىتىش قوللانمىسى"
+            guidelines:
+              content: "كۆرسەتمە"
               title: "بۇ تور بېكەتنى ئىشلىتىش قوللانمىسى"
             groups:
               content: "گۇرۇپپا"
@@ -4794,6 +4796,8 @@ ug:
           timestamp: "قۇرغان ۋاقتى"
           completion: "تاماملاش ۋاقتى"
           actions: "مەشغۇلات"
+          filter_status:
+            failed: "مەغلۇب بولدى"
       home:
         title: "باش بەت"
       account:
@@ -4854,6 +4858,16 @@ ug:
           security: "بىخەتەرلىك"
           spam: "ئەخلەت خەت"
           staff_action_logs: "باشقۇرغۇچى مەشغۇلات خاتىرىسى"
+      config_areas:
+        about:
+          header: "تور بېكىتىڭىز ھەققىدە"
+          community_name: "جامائەت ئىسمى"
+          your_organization: "تەشكىلاتىڭىز"
+          company_name: "شىركەت ئىسمى"
+          governing_law: "باشقۇرۇش قانۇنى"
+          city_for_disputes: "تالاش-تارتىشتىكى شەھەر"
+          optional: "(تاللاشچان)"
+          update: "يېڭىلا"
       plugins:
         title: "قىستۇرما"
         installed: "ئورنىتىلغان قىستۇرما"
@@ -5248,7 +5262,6 @@ ug:
             description: "ئۇلانما، بەزى توپچە، ئۇقتۇرۇش ۋە تەكىتلەش رەڭگى."
           quaternary:
             name: "تۆتىنچى"
-            description: "يولباشچى ئۇلانما."
           header_background:
             name: "بەت قاش تەگلىكى"
             description: "تور بېكەت بەت قاشنىڭ تەگلىك رەڭگى."

@@ -19,6 +19,7 @@ globalThis.console = {
 import { transform as babelTransform } from "@babel/standalone";
 import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
 import { Preprocessor } from "content-tag";
+import DecoratorTransforms from "decorator-transforms";
 import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
 import { precompile } from "ember-source/dist/ember-template-compiler";
 import EmberThisFallback from "ember-this-fallback";
@@ -29,6 +30,7 @@ import getRandomValues from "polyfill-crypto.getrandomvalues";
 import { minify as terserMinify } from "terser";
 import RawHandlebars from "discourse-common/addon/lib/raw-handlebars";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
+import BabelPluginSafariClassFieldsBugfix from "../discourse/lib/babel-plugin-safari-class-fields-bugfix";
 globalThis.crypto = { getRandomValues };
 
 const thisFallbackPlugin = EmberThisFallback._buildPlugin({
@@ -138,7 +140,10 @@ globalThis.transpile = function (source, options = {}) {
   if (moduleId && !skipModule) {
     plugins.push(["transform-modules-amd", { noInterop: true }]);
   }
+  commonPlugins.find((p) => p[0] === "decorator-transforms")[0] =
+    DecoratorTransforms;
   plugins.push(...commonPlugins);
+  plugins.unshift(BabelPluginSafariClassFieldsBugfix);
 
   try {
     return babelTransform(source, {

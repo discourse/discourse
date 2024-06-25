@@ -5,36 +5,40 @@
   class="poll-ui-builder"
 >
   <:body>
-    <div class="input-group poll-type">
-      <a
-        href
-        {{on "click" (fn this.updatePollType "regular")}}
-        class="poll-type-value poll-type-value-regular
-          {{if this.isRegular 'active'}}"
-      >
-        {{i18n "poll.ui_builder.poll_type.regular"}}
-      </a>
-
-      <a
-        href
-        {{on "click" (fn this.updatePollType "multiple")}}
-        class="poll-type-value poll-type-value-multiple
-          {{if this.isMultiple 'active'}}"
-      >
-        {{i18n "poll.ui_builder.poll_type.multiple"}}
-      </a>
-
-      {{#if this.showNumber}}
+    <ul class="nav nav-pills poll-type">
+      <li>
         <a
           href
-          {{on "click" (fn this.updatePollType "number")}}
-          class="poll-type-value poll-type-value-number
-            {{if this.isNumber 'active'}}"
+          {{on "click" (fn this.updatePollType "regular")}}
+          class="poll-type-value poll-type-value-regular
+            {{if this.isRegular 'active'}}"
         >
-          {{i18n "poll.ui_builder.poll_type.number"}}
+          {{i18n "poll.ui_builder.poll_type.regular"}}
         </a>
+      </li>
+      <li>
+        <a
+          href
+          {{on "click" (fn this.updatePollType "multiple")}}
+          class="poll-type-value poll-type-value-multiple
+            {{if this.isMultiple 'active'}}"
+        >
+          {{i18n "poll.ui_builder.poll_type.multiple"}}
+        </a>
+      </li>
+      {{#if this.showNumber}}
+        <li>
+          <a
+            href
+            {{on "click" (fn this.updatePollType "number")}}
+            class="poll-type-value poll-type-value-number
+              {{if this.isNumber 'active'}}"
+          >
+            {{i18n "poll.ui_builder.poll_type.number"}}
+          </a>
+        </li>
       {{/if}}
-    </div>
+    </ul>
 
     {{#if this.showAdvanced}}
       <div class="input-group poll-title">

@@ -326,6 +326,8 @@ fa_IR:
         raw: "متن"
       user_profile:
         bio_raw: "درباره من"
+      user:
+        password: "رمزعبور"
     errors:
       models:
         topic:
@@ -1350,7 +1352,6 @@ fa_IR:
     password_too_long: "رمزهای عبور به 200 نویسه محدود شده‌اند."
     email_too_long: "ایمیل شما بسیار طولانی است. ایمیل باکس ها نباید بیش از 254 نویسه و نام دامنه نباید بیش از 253 نویسه باشد."
     reserved_username: "این نام کاربری مجاز نیست."
-    missing_user_field: "شما تمام فیلد‌های کاربری را تکمیل نکرده اید"
     second_factor_title: "ورود دو مرحله ای"
     second_factor_backup_description: "لطفا یکی از کدهای پشتیبان را وارد کنید:"
     second_factor_toggle:
@@ -2008,6 +2009,7 @@ fa_IR:
     نوشته اول این موضوع را برای عوض کردن محتویات صفحه %{page_name} ویرایش کن.
   guidelines_topic:
     title: "پرسش و پاسخ / دستورالعمل"
+    guidelines_title: "راهنماها"
   tos_topic:
     title: "شرایط استفاده از خدمات"
   privacy_topic:

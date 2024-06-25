@@ -229,18 +229,8 @@ es:
         other: "Tienes nuevos mensajes de chat"
       from: "%{site_name}"
       subject:
-        private_message: "[%{email_prefix}] Nuevo mensaje"
-        direct_message_from_1: "[%{email_prefix}] Nuevo mensaje de %{username}"
-        direct_message_from_2: "[%{email_prefix}] Nuevo mensaje de %{username1} y %{username2}"
-        direct_message_from_more:
-          one: "[%{email_prefix}] Nuevo mensaje de %{username} y %{count}"
-          other: "[%{email_prefix}] Nuevo mensaje de %{username} y otros %{count}"
-        chat_channel_1: "[%{email_prefix}] Nuevo mensaje en %{channel}"
-        chat_channel_2: "[%{email_prefix}] Nuevo mensaje en %{channel1} y %{channel2}"
-        chat_channel_more:
-          one: "[%{email_prefix}] Nuevo mensaje en %{channel} y %{count}"
-          other: "[%{email_prefix}] Nuevo mensaje en %{channel} y otros %{count}"
-        chat_channel_and_direct_message: "[%{email_prefix}] Nuevo mensaje en %{channel} y de %{username}"
+        chat_dm_2: "[%{site_name}] Nuevos mensajes de %{name_1} y %{name_2}"
+        chat_channel_2: "[%{site_name}] Nuevos mensajes en %{channel_1} y %{channel_2}"
       unsubscribe: "Este resumen del chat se envía desde %{site_link} cuando estás fuera. Cambia tu %{email_preferences_link}, o %{unsubscribe_link} para darte de baja."
       unsubscribe_no_link: "Este resumen del chat se envía desde %{site_link} cuando estás fuera. Cambia tu %{email_preferences_link}."
       view_messages:

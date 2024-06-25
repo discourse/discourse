@@ -16,15 +16,14 @@
           {{#if this.secondFactorRequired}}
             {{#if this.model.security_key_required}}
               <SecurityKeyForm
-                @allowedCredentialIds={{this.model.allowed_credential_ids}}
-                @challenge={{this.model.security_key_challenge}}
-                @showSecurityKey={{this.model.security_key_required}}
-                @showSecondFactor={{false}}
-                @secondFactorMethod={{this.secondFactorMethod}}
+                @setShowSecurityKey={{fn
+                  (mut this.model.security_key_required)
+                }}
+                @setSecondFactorMethod={{fn (mut this.secondFactorMethod)}}
                 @backupEnabled={{this.model.backup_codes_enabled}}
                 @totpEnabled={{this.model.totp_enabled}}
                 @otherMethodAllowed={{this.secondFactorRequired}}
-                @action={{action "authenticateSecurityKey"}}
+                @action={{this.authenticateSecurityKey}}
               />
             {{else}}
               <SecondFactorForm

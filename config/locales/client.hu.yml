@@ -987,7 +987,6 @@ hu:
     categories:
       categories_label: "kategóriák"
       subcategories_label: "alkategóriák"
-      all_subcategories: "minden alkategória"
       no_subcategories: "nincsenek alkategóriák"
       remove_filter: "szűrő eltávolítása"
       plus_more_count:
@@ -1104,7 +1103,8 @@ hu:
       activity_stream: "Tevékenység"
       read: "Olvasott"
       read_help: "Nemrég olvasott témák"
-      preferences: "Beállítások"
+      preferences:
+        title: "Beállítások"
       feature_topic_on_profile:
         open_search: "Új téma kiválasztása"
         title: "Téma kiválasztása"
@@ -1381,6 +1381,7 @@ hu:
         set_password: "Jelszó megadása"
         choose_new: "Válasszon új jelszót"
         choose: "Válasszon jelszót"
+        title: "Jelszó-visszaállítás"
       second_factor_backup:
         title: "Kétfaktoros biztonsági kódok"
         regenerate: "Újragenerálás"
@@ -1777,7 +1778,6 @@ hu:
         fine_print: "Arra kérjük, hogy erősítse meg személyazonosságát, mivel ez egy potenciálisan érzékeny művelet. A hitelesítést követően csak néhány óra inaktivitás után kérhetjük az újbóli hitelesítést."
       password:
         title: "Jelszó"
-        too_short: "A jelszava túl rövid."
         common: "A jelszava túl gyakori."
         same_as_username: "A jelszava megegyezik a felhasználónevével."
         same_as_email: "A jelszava megegyezik az e-mail-címével."
@@ -2342,7 +2342,6 @@ hu:
       show_toolbar: "szerkesztő eszköztár megjelenítése"
       hide_toolbar: "szerkesztő eszköztár elrejtése"
       modal_ok: "Rendben"
-      modal_cancel: "Mégse"
       cant_send_pm: "Nem tud üzenetet küldeni %{username} számára"
       yourself_confirm:
         title: "Elfelejtett címzettet hozzáadni?"
@@ -4065,7 +4064,6 @@ hu:
       all_tags: "Minden címke"
       other_tags: "Egyéb címkék"
       selector_tags: "címkék"
-      selector_all_tags: "összes címke"
       selector_no_tags: "címke nélküli"
       selector_remove_filter: "szűrő eltávolítása"
       tags: "Címkék"
@@ -4262,6 +4260,7 @@ hu:
           text: "és automatikusan megmutatjuk az oldal legnépszerűbb kategóriáit."
         filter_placeholder: "Kategóriák szűrése"
         no_categories: "Az adott kifejezésnek nincs megfelelő kategória."
+        show_more: "Mutass többet"
       tags_form_modal:
         title: "Címkék szerkesztése navigáció"
         filter_placeholder: "Címkék szűrése"
@@ -4351,6 +4350,9 @@ hu:
               title: "Minden téma"
             faq:
               content: "GYIK"
+              title: "Útmutató az oldal használatához"
+            guidelines:
+              content: "Irányelvek"
               title: "Útmutató az oldal használatához"
             groups:
               content: "Csoportok"
@@ -4912,6 +4914,8 @@ hu:
           timestamp: "Létrehozott"
           completion: "Elvégzési idő"
           actions: "Műveletek"
+          filter_status:
+            failed: "Sikertelen"
       home:
         title: "Kezdőlap"
       account:
@@ -4970,6 +4974,11 @@ hu:
           security: "Biztonság"
           spam: "Szemét"
           staff_action_logs: "Stábművelet naplók"
+      config_areas:
+        about:
+          header: "Az Ön webhelyéről"
+          optional: "(nem kötelező)"
+          update: "Frissítés"
       plugins:
         title: "Bővítmények"
         installed: "Telepített bővítmények"
@@ -5360,7 +5369,6 @@ hu:
             description: "Hivatkozások, néhány gomb, értesítések és kiemelő színek."
           quaternary:
             name: "negyedrendű"
-            description: "Navigációs linkek"
           header_background:
             name: "Fejléc háttere"
             description: "Az oldal fejlécének háttérszíne."

@@ -944,7 +944,8 @@ nb_NO:
       activity_stream: "Aktivitet"
       read: "Lest"
       read_help: "Nylig leste emner"
-      preferences: "Innstillinger"
+      preferences:
+        title: "Innstillinger"
       feature_topic_on_profile:
         open_search: "Velg et nytt emne"
         title: "Velg et emne"
@@ -1117,6 +1118,7 @@ nb_NO:
         set_password: "Sett passord"
         choose_new: "Velg et nytt passord"
         choose: "Velg et passord"
+        title: "Nullstill Passord"
       second_factor_backup:
         title: "To-faktor backup koder"
         regenerate: "Regenerer"
@@ -1431,7 +1433,6 @@ nb_NO:
           error: "Beklager, fila må være i CSV-format."
       password:
         title: "Passord"
-        too_short: "Passordet ditt er for kort"
         common: "Det passordet er for vanlig."
         same_as_username: "Ditt passord er det samme som ditt brukernavn."
         same_as_email: "Ditt passord er det samme som din e-post."
@@ -1843,7 +1844,6 @@ nb_NO:
       show_toolbar: "vis verktøylinje for komponist"
       hide_toolbar: "skjul verktøylinje for komponist"
       modal_ok: "OK"
-      modal_cancel: "Avbryt"
       cant_send_pm: "Beklager, du kan ikke sende privat melding til %{username}."
       yourself_confirm:
         title: "Glemte du å legge til mottagere?"
@@ -3177,7 +3177,6 @@ nb_NO:
     tagging:
       other_tags: "Andre stikkord"
       selector_tags: "stikkord"
-      selector_all_tags: "alle stikkord"
       selector_no_tags: "ingen stikkord"
       selector_remove_filter: "fjern filter"
       tags: "Stikkord"
@@ -3368,6 +3367,8 @@ nb_NO:
               content: "Emner"
             faq:
               content: "O-S-S"
+            guidelines:
+              content: "Retningslinjer"
             groups:
               content: "Grupper"
             users:
@@ -3633,6 +3634,8 @@ nb_NO:
           timestamp: "Opprettet"
           completion: "Gjennomføringstid"
           actions: "Handlinger"
+          filter_status:
+            failed: "Feilet"
       home:
         title: "Hjem"
       account:
@@ -3679,6 +3682,10 @@ nb_NO:
           search_logs: "Søkelogger"
           security: "Sikkerhet"
           spam: "Spam"
+      config_areas:
+        about:
+          optional: "(valgfritt)"
+          update: "Oppdater"
       plugins:
         title: "Utvidelser"
         installed: "Installerte utvidelser"
@@ -3941,7 +3948,6 @@ nb_NO:
             description: "Lenker, noen knapper, varsler og effektfarge"
           quaternary:
             name: "kvartær"
-            description: "Navigasjonslenker."
           header_background:
             name: "hodebakgrunn"
             description: "Bakgrunnsfarge i nettstedets hode"

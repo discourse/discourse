@@ -1090,7 +1090,8 @@ es:
       activity_stream: "Actividad"
       read: "Leer"
       read_help: "Temas leídos recientemente"
-      preferences: "Preferencias"
+      preferences:
+        title: "Preferencias"
       feature_topic_on_profile:
         open_search: "Selecciona un nuevo tema"
         title: "Selecciona un tema"
@@ -1364,6 +1365,7 @@ es:
         set_password: "Establecer contraseña"
         choose_new: "Escoge una nueva contraseña"
         choose: "Escoge una contraseña"
+        title: "Restablecer contraseña"
       second_factor_backup:
         title: "Códigos de respaldo de la verificación en dos factores"
         regenerate: "Generar nuevos"
@@ -1753,7 +1755,6 @@ es:
         fine_print: "Te pedimos que confirmes tu identidad porque se trata de una acción potencialmente sensible. Una vez autentificado, solo se te pedirá que vuelvas a autentificarte tras unas horas de inactividad."
       password:
         title: "Contraseña"
-        too_short: "Tu contraseña es demasiada corta."
         common: "Esta contraseña es demasiado común."
         same_as_username: "Tu contraseña es la misma que tu nombre de usuario."
         same_as_email: "Tu contraseña es la misma que tu correo electrónico."
@@ -2314,7 +2315,6 @@ es:
       show_toolbar: "mostrar la barra de herramientas del editor"
       hide_toolbar: "ocultar la barra de herramientas del editor"
       modal_ok: "Aceptar"
-      modal_cancel: "Cancelar"
       cant_send_pm: "Lo sentimos, no puedes enviar un mensaje a %{username}."
       yourself_confirm:
         title: "¿Olvidaste añadir destinatarios?"
@@ -3994,7 +3994,6 @@ es:
       all_tags: "Todas las etiquetas"
       other_tags: "Otras etiquetas"
       selector_tags: "etiquetas"
-      selector_all_tags: "todas las etiquetas"
       selector_no_tags: "sin etiquetas"
       selector_remove_filter: "quitar filtro"
       tags: "Etiquetas"
@@ -4191,6 +4190,7 @@ es:
           text: "y mostraremos automáticamente las categorías más populares de este sitio"
         filter_placeholder: "Filtrar categorías"
         no_categories: "No hay categorías que coincidan con el término proporcionado."
+        show_more: "Mostrar más"
       tags_form_modal:
         title: "Editar etiquetas navegación"
         filter_placeholder: "Filtrar etiquetas"
@@ -4280,6 +4280,9 @@ es:
               title: "Todos los temas"
             faq:
               content: "Preguntas frecuentes"
+              title: "Normas de uso de este sitio"
+            guidelines:
+              content: "Directrices"
               title: "Normas de uso de este sitio"
             groups:
               content: "Grupos"
@@ -4408,6 +4411,7 @@ es:
           copy: "Copiar..."
           paste: "Pegar..."
           save: "Guardar como..."
+    powered_by_discourse: "Impulsado por Discourse"
   admin_js:
     type_to_filter: "escribe para filtrar…"
     admin:
@@ -4823,6 +4827,8 @@ es:
           timestamp: "Creado"
           completion: "Tiempo de realización"
           actions: "Acciones"
+          filter_status:
+            failed: "Falló"
       home:
         title: "Inicio"
       account:
@@ -4869,6 +4875,16 @@ es:
           search_logs: "Registros de búsqueda"
           security: "Seguridad"
           spam: "Spam"
+      config_areas:
+        about:
+          header: "Acerca de tu sitio"
+          community_name: "Nombre de la comunidad"
+          your_organization: "Tu organización"
+          company_name: "Nombre de la empresa"
+          governing_law: "Ley que rige"
+          city_for_disputes: "Ciudad para disputas"
+          optional: "(opcional)"
+          update: "Actualizar"
       plugins:
         title: "Plugins"
         installed: "Plugins instalados"
@@ -5240,7 +5256,6 @@ es:
             description: "Enlaces, algunos botones, notificaciones y color de énfasis."
           quaternary:
             name: "cuaternario"
-            description: "Enlaces de navegación."
           header_background:
             name: "fondo del encabezado"
             description: "Color de fondo del encabezado del sitio."

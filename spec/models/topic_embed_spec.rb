@@ -23,7 +23,7 @@ RSpec.describe TopicEmbed do
       expect(TopicEmbed.count).to eq(0)
     end
 
-    it "Allows figure and figcaption HTML tags" do
+    it "Allows figure, figcaption, details HTML tags" do
       html = <<~HTML
         <html>
         <head>
@@ -35,7 +35,10 @@ RSpec.describe TopicEmbed do
             <figure>
               <img src="/a.png">
               <figcaption>Some caption</figcaption>
-            <figure>
+            </figure>
+            <details>
+              some details
+            </details>
           </div>
         </body>
         </html>
@@ -51,9 +54,56 @@ RSpec.describe TopicEmbed do
             <figure>
               <img src="https://blog.discourse.com/a.png">
               <figcaption>Some caption</figcaption>
-            <figure>
-          </figure></figure></div>
+            </figure>
+            <details>
+              some details
+            </details>
+          </div>
         </div></div>
+      HTML
+      expect(parsed.body.strip).to eq(expected.strip)
+    end
+
+    # ideally, articles get a heavier weightage than td elements
+    # so to force that, we do not allow td elements to be scored
+    it "does not score td tags" do
+      html = <<~HTML
+        <html>
+        <head>
+           <title>Some title</title>
+        </head>
+        <body>
+          <article>
+            article content
+            <table>
+              <tr>
+                <td>
+                  <p>cats</p>
+                  <p>cats</p>
+                </td>
+              </tr>
+            </table>
+          </article>
+        </body>
+        </html>
+      HTML
+
+      parsed = TopicEmbed.parse_html(html, "https://blog.discourse.com/somepost.html")
+
+      expected = <<-HTML
+        <div><div>
+  
+    article content
+    
+      
+        
+          cats
+          cats
+        
+      
+    
+  
+</div></div>
       HTML
       expect(parsed.body.strip).to eq(expected.strip)
     end

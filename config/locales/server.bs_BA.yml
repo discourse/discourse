@@ -203,6 +203,8 @@ bs_BA:
         raw: "Tijelo"
       user_profile:
         bio_raw: "O Meni"
+      user:
+        password: "Lozinka"
     errors:
       models:
         topic:
@@ -803,7 +805,6 @@ bs_BA:
     omniauth_confirm_button: "Nastavi"
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
-    missing_user_field: "You have not completed all the user fields"
     click_to_continue: "Klikni ovdje da nastavite dalje"
     second_factor_backup_description: "Molim ukucajte jedan od vaši rezevni kodova"
     second_factor_toggle:
@@ -949,6 +950,7 @@ bs_BA:
     Edit the first post in this topic to change the contents of the %{page_name} page.
   guidelines_topic:
     title: "FAQ/Guidelines"
+    guidelines_title: "Smjernice"
   tos_topic:
     title: "Terms of Service"
   privacy_topic:

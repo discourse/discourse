@@ -279,7 +279,7 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def filter_tags(tags)
-    tags - hidden_tags
+    tags.is_a?(Array) && tags.any? ? tags - hidden_tags : tags
   end
 
   def filter_category_id(category_id)

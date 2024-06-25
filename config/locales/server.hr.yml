@@ -433,6 +433,8 @@ hr:
         raw: "Tijelo"
       user_profile:
         bio_raw: "O meni"
+      user:
+        password: "Lozinka"
     errors:
       models:
         topic:
@@ -2257,6 +2259,8 @@ hr:
     boolean_yes: "Da"
     boolean_no: "Ne"
     rate_limit_error: "Objave mogu biti preuzimane jednom na dan, molimo pokušajte sutra."
+  guidelines_topic:
+    guidelines_title: "Vodić za uporabu"
   tos_topic:
     title: "Uvjeti korištenja"
   privacy_topic:

@@ -1028,7 +1028,8 @@ ja:
       activity_stream: "アクティビティ"
       read: "既読"
       read_help: "最近読んだトピック"
-      preferences: "設定"
+      preferences:
+        title: "設定"
       feature_topic_on_profile:
         open_search: "新規トピックを選択"
         title: "トピックを選択"
@@ -1286,6 +1287,7 @@ ja:
         set_password: "パスワードを設定"
         choose_new: "新しいパスワードを選択する"
         choose: "パスワードを選択する"
+        title: "パスワードをリセット"
       second_factor_backup:
         title: "二要素認証のバックアップコード"
         regenerate: "再生成"
@@ -1670,7 +1672,6 @@ ja:
         fine_print: "これは機密性のある操作である可能性があるため、本人確認を求めています。認証が完了すると、数時間操作がなかった場合にのみもう一度認証が求められます。"
       password:
         title: "パスワード"
-        too_short: "パスワードが短すぎます。"
         common: "このパスワードは非常に一般的です。"
         same_as_username: "パスワードとユーザー名が同じです。"
         same_as_email: "パスワードとメールアドレスが同じです。"
@@ -2211,7 +2212,6 @@ ja:
       show_toolbar: "コンポーザーツールバーを表示"
       hide_toolbar: "コンポーザーツールバーを非表示"
       modal_ok: "OK"
-      modal_cancel: "キャンセル"
       cant_send_pm: "%{username} にメッセージを送ることはできません。"
       yourself_confirm:
         title: "受信者を追加し忘れましたか？"
@@ -3790,7 +3790,6 @@ ja:
       all_tags: "すべてのタグ"
       other_tags: "他のタグ"
       selector_tags: "タグ"
-      selector_all_tags: "すべてのタグ"
       selector_no_tags: "タグなし"
       selector_remove_filter: "フィルタを削除"
       tags: "タグ"
@@ -3976,6 +3975,7 @@ ja:
           text: "このサイトで最も人気のあるカテゴリを自動的に表示します"
         filter_placeholder: "カテゴリをフィルタする"
         no_categories: "指定された用語に一致するカテゴリはありません。"
+        show_more: "もっと表示"
       tags_form_modal:
         title: "タグナビゲーションを編集する"
         filter_placeholder: "タグをフィルタする"
@@ -4073,6 +4073,9 @@ ja:
               title: "すべてのトピック"
             faq:
               content: "FAQ"
+              title: "このサイトの利用に関するガイドライン"
+            guidelines:
+              content: "ガイドライン"
               title: "このサイトの利用に関するガイドライン"
             groups:
               content: "グループ"
@@ -4605,6 +4608,8 @@ ja:
           timestamp: "作成"
           completion: "完了時間"
           actions: "操作"
+          filter_status:
+            failed: "失敗しました"
       home:
         title: "ホーム"
       account:
@@ -4651,6 +4656,16 @@ ja:
           search_logs: "検索ログ"
           security: "セキュリティ"
           spam: "迷惑"
+      config_areas:
+        about:
+          header: "サイトについて"
+          community_name: "コミュニティー名"
+          your_organization: "あなたの組織"
+          company_name: "会社名"
+          governing_law: "準拠法"
+          city_for_disputes: "紛争都市"
+          optional: "(オプション)"
+          update: "更新"
       plugins:
         title: "プラグイン"
         installed: "インストール済みプラグイン"
@@ -5022,7 +5037,6 @@ ja:
             description: "リンク、一部のボタン、通知、およびアクセントカラー。"
           quaternary:
             name: "クォータナリー"
-            description: "ナビゲーションリンク。"
           header_background:
             name: "ヘッダー背景"
             description: "サイトのヘッダー背景色。"

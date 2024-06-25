@@ -468,7 +468,8 @@ be:
         to: "да"
       activity_stream: "Актыўнасць"
       read: "прачытаныя"
-      preferences: "Налады"
+      preferences:
+        title: "Налады"
       feature_topic_on_profile:
         save: "Захаваць"
         clear:
@@ -536,6 +537,7 @@ be:
         set_password: "ўсталяваць пароль"
         choose_new: "Абярыце новы пароль"
         choose: "% Менш, чым {лік} хвілін таму........................................................."
+        title: "Скід пароля"
       second_factor_backup:
         regenerate: "Перагенераваць"
         disable: "Адключыць"
@@ -670,7 +672,6 @@ be:
         account_age_days: "Ўзрост акаўнта ў днях"
       password:
         title: "Пароль"
-        too_short: "Пароль занадта кароткі."
         common: "Гэты пароль занадта просты."
         same_as_username: "Гэты пароль занадта просты...."
         same_as_email: "Пароль ідэнтычны Вашаму email"
@@ -869,7 +870,6 @@ be:
       list_item: "элемент спісу"
       help: "Markdown Editing Help"
       modal_ok: "Добра"
-      modal_cancel: "Адмяніць"
       admin_options_title: "Неабавязковыя налады персаналу для гэтай тэмы"
       composer_actions:
         reply: Адказаць
@@ -1431,6 +1431,8 @@ be:
               content: "тэмы"
             faq:
               content: "Пытанні і адказы"
+            guidelines:
+              content: "інструкцыі"
             groups:
               content: "Групы"
             users:
@@ -1583,6 +1585,8 @@ be:
           body: "цела"
           timestamp: "Створана"
           actions: "загалоўкі....................."
+          filter_status:
+            failed: "памылка"
       home:
         title: "дома"
       account:
@@ -1743,8 +1747,6 @@ be:
             name: "другасны"
           tertiary:
             name: "троесны"
-          quaternary:
-            description: "Навігацыйныя спасылкі."
           header_background:
             name: "фон загалоўка"
           header_primary:

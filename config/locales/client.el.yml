@@ -937,7 +937,8 @@ el:
       activity_stream: "Δραστηριότητα"
       read: "Διαβασμένο"
       read_help: "Πρόσφατα αναγνωσμένα θέματα"
-      preferences: "Προτιμήσεις"
+      preferences:
+        title: "Προτιμήσεις"
       feature_topic_on_profile:
         open_search: "Επιλέξτε ένα νέο θέμα"
         title: "Επιλέξτε ένα θέμα"
@@ -1110,6 +1111,7 @@ el:
         set_password: "Ορισμός Συνθηματικού"
         choose_new: "Επιλέξτε νέο κωδικό πρόσβασης"
         choose: "Επιλέξτε έναν κωδικό πρόσβασης"
+        title: "Επαναφορά Κωδικού"
       second_factor_backup:
         regenerate: "Αναδημιουγία"
         disable: "Απενεργοποίηση"
@@ -1396,7 +1398,6 @@ el:
           error: "Λυπούμαστε, το αρχείο πρέπει να έχει την μορφή CSV."
       password:
         title: "Κωδικός Πρόσβασης"
-        too_short: "Ο κωδικός πρόσβασης είναι μικρός."
         common: "Ο κωδικός πρόσβασης είναι πολύ κοινός."
         same_as_username: "Ο κωδικός πρόσβασης που έδωσες είναι ο ίδιος με το όνομα χρήστη."
         same_as_email: "Ο κωδικός πρόσβασής σου είναι ίδιος με τη διεύθυνση email σου."
@@ -1817,7 +1818,6 @@ el:
       exit_fullscreen: "έξοδος από επεξεργαστή κειμένου πλήρους οθόνης"
       exit_fullscreen_prompt: "Πατήστε <kbd>ESC</kbd> για έξοδο από την πλήρη οθόνη"
       modal_ok: "OK"
-      modal_cancel: "Ακύρωση"
       cant_send_pm: "Λυπούμαστε, δεν μπορείτε να στείλετε μήνυμα στο χρήστη %{username}."
       yourself_confirm:
         title: "Ξεχάσατε να προσθέσετε αποδέκτες;"
@@ -3118,7 +3118,6 @@ el:
       all_tags: "Όλες οι ετικέτες"
       other_tags: "Άλλες ετικέτες"
       selector_tags: "ετικέτες"
-      selector_all_tags: "όλες οι ετικέτες"
       selector_no_tags: "καμία ετικέτα"
       selector_remove_filter: "αφαίρεση φίλτρου"
       tags: "Ετικέτες"
@@ -3315,6 +3314,8 @@ el:
               title: "Όλα τα θέματα"
             faq:
               content: "Συχνές ερωτήσεις"
+            guidelines:
+              content: "Οδηγίες"
             groups:
               content: "Ομάδες"
             users:
@@ -3616,6 +3617,8 @@ el:
           timestamp: "Δημιουργήθηκε"
           completion: "Χρόνος Ολοκλήρωσης"
           actions: "Ενέργειες"
+          filter_status:
+            failed: "Απέτυχε"
       home:
         title: "Αρχική Σελίδα"
       account:
@@ -3662,6 +3665,10 @@ el:
           search_logs: "Αναζήτηση καταγραφών"
           security: "Ασφάλεια"
           spam: "Ανεπιθύμητα"
+      config_areas:
+        about:
+          optional: "(προεραιτικό)"
+          update: "Ενημέρωση"
       plugins:
         title: "Plugins"
         installed: "Εγκατεστημένα Plugins"
@@ -3960,7 +3967,6 @@ el:
             description: "Σύνδεσμοι, μερικά κουμπιά, ειδοποιήσεις και χρώματα έμφασης."
           quaternary:
             name: "τέταρτο"
-            description: "Σύνδεσμοι πλοήγησης"
           header_background:
             name: "φόντο κεφαλίδας"
             description: "Χρώμα στο φόντο της κεφαλίδας του ιστότοπου."

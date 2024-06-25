@@ -726,7 +726,8 @@ th:
         to: "ถึง"
       activity_stream: "กิจกรรม"
       read: "อ่าน"
-      preferences: "การตั้งค่า"
+      preferences:
+        title: "การตั้งค่า"
       feature_topic_on_profile:
         open_search: "เลือกกระทู้ใหม่"
         title: "เลือกกระทู้"
@@ -853,6 +854,7 @@ th:
         set_password: "ตั้งรหัสผ่าน"
         choose_new: "เลือกรหัสผ่านใหม่"
         choose: "เลือกรหัสผ่าน"
+        title: "รีเซ็ตรหัสผ่าน"
       second_factor_backup:
         disable: "ปิดใช้งาน"
       second_factor:
@@ -1064,7 +1066,6 @@ th:
           error: "มีข้อผิดพลาดในการสร้างลิงก์คำเชิญ"
       password:
         title: "รหัสผ่าน"
-        too_short: "รหัสผ่านสั้นเกินไป"
         common: "รหัสผ่านง่ายเกินไป"
         same_as_username: "รหัสผ่านเหมือนกับชื่อผู้ใช้ของคุณ"
         same_as_email: "รหัสผ่านเหมือนกับอีเมลของคุณ"
@@ -1400,7 +1401,6 @@ th:
       enter_fullscreen: "ขยายหน้าเขียนกระทู้เต็มจอ"
       exit_fullscreen: "ออกจากหน้าเขียนกระทู้เต็มจอ"
       modal_ok: "ตกลง"
-      modal_cancel: "ยกเลิก"
       cant_send_pm: "ขออภัย คุณไม่สามารถส่งข้อความหา %{username} ได้"
       yourself_confirm:
         title: "คุณลืมเพิ่มผู้รับหรือไม่"
@@ -2343,7 +2343,6 @@ th:
     tagging:
       other_tags: "แท็กอื่น"
       selector_tags: "ป้าย"
-      selector_all_tags: "แท็กทั้งหมด"
       selector_no_tags: "ไม่มีแท็ก"
       selector_remove_filter: "เอาตัวกรองออก"
       tags: "แท็ก"
@@ -2460,6 +2459,8 @@ th:
               content: "หัวข้อ"
             faq:
               content: "คำถามที่พบบ่อย"
+            guidelines:
+              content: "คู่มือ"
             groups:
               content: "กลุ่ม"
             users:
@@ -2634,6 +2635,8 @@ th:
           request: "ร้องขอ"
           timestamp: "สร้าง"
           actions: "การกระทำ"
+          filter_status:
+            failed: "ล้มเหลว"
       home:
         title: "หน้าแรก"
       account:
@@ -2666,6 +2669,10 @@ th:
         sidebar_link:
           security: "ความปลอดภัย"
           spam: "ขยะ"
+      config_areas:
+        about:
+          optional: "(ทางเลือก)"
+          update: "อัปเดต"
       plugins:
         title: "ปลั้กอิน"
         installed: "ปลั้กอินที่ติดตั้งแล้ว"

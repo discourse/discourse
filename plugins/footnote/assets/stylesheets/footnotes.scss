@@ -49,6 +49,12 @@
   max-width: 400px;
   overflow-wrap: break-word;
 
+  .mobile-view & {
+    // tooltips are positioned 5px from the left
+    // - 10px accounts for this and gives 5px space on the right
+    max-width: calc(100dvw - 10px);
+  }
+
   .footnote-tooltip-content {
     overflow: hidden;
 
@@ -58,7 +64,7 @@
 
     img {
       object-fit: cover;
-      max-width: 385px;
+      max-width: 100%;
     }
 
     p {

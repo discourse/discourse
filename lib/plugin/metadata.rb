@@ -18,7 +18,6 @@ class Plugin::Metadata
         discourse-auto-deactivate
         discourse-bbcode
         discourse-bbcode-color
-        discourse-bcc
         discourse-cakeday
         discourse-calendar
         discourse-categories-suppressed
@@ -48,7 +47,7 @@ class Plugin::Metadata
         discourse-logster-transporter
         discourse-lti
         discourse-math
-        discourse-moderator-attention
+        discourse-microsoft-auth
         discourse-narrative-bot
         discourse-newsletter-integration
         discourse-no-bump
@@ -56,8 +55,6 @@ class Plugin::Metadata
         discourse-openid-connect
         discourse-patreon
         discourse-perspective-api
-        discourse-linkedin-auth
-        discourse-microsoft-auth
         discourse-policy
         discourse-post-voting
         discourse-presence
@@ -70,9 +67,7 @@ class Plugin::Metadata
         discourse-salesforce
         discourse-saml
         discourse-saved-searches
-        discourse-shared-edits
         discourse-signatures
-        discourse-sitemap
         discourse-solved
         discourse-staff-alias
         discourse-steam-login
@@ -91,13 +86,13 @@ class Plugin::Metadata
         discourse-zendesk-plugin
         discourse-zoom
         automation
-        docker_manager
         chat
-        poll
-        styleguide
         checklist
+        docker_manager
         footnote
+        poll
         spoiler-alert
+        styleguide
       ],
     )
 

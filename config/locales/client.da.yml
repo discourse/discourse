@@ -1013,7 +1013,8 @@ da:
       activity_stream: "Aktivitet"
       read: "Læs"
       read_help: "Nyligt læste emner"
-      preferences: "Indstillinger"
+      preferences:
+        title: "Indstillinger"
       feature_topic_on_profile:
         open_search: "Vælg et nyt emne"
         title: "Vælg et emne"
@@ -1197,6 +1198,7 @@ da:
         set_password: "Skriv password"
         choose_new: "Vælg et nyt kodeord"
         choose: "Vælg et kodeord"
+        title: "Nulstil kodeord"
       second_factor_backup:
         title: "To-faktor backup koder"
         regenerate: "Regenerér"
@@ -1537,7 +1539,6 @@ da:
           error: "Desværre, filen skal være CSV format."
       password:
         title: "Adgangskode"
-        too_short: "Din adgangskode er for kort."
         common: "Denne adgangskode er for almindelig."
         same_as_username: "Dit password er det samme som dit brugernavn."
         same_as_email: "Dit password er det samme som din email adresse."
@@ -2023,7 +2024,6 @@ da:
       exit_fullscreen: "gå ud af 'fullscreen composer'"
       exit_fullscreen_prompt: "Tryk på <kbd>ESC</kbd> for at afslutte fuld skærm"
       modal_ok: "OK"
-      modal_cancel: "Annuller"
       cant_send_pm: "Beklager, du kan ikke sende en besked til %{username}."
       yourself_confirm:
         title: "Glemte du at tilføje modtagere?"
@@ -3455,7 +3455,6 @@ da:
       all_tags: "Alle mærker"
       other_tags: "Andre Mærker"
       selector_tags: "mærker"
-      selector_all_tags: "alle mærker"
       selector_no_tags: "ingen mærker"
       selector_remove_filter: "fjern filter"
       tags: "Mærker"
@@ -3632,6 +3631,8 @@ da:
       more: "Flere"
       all_categories: "Alle kategorier"
       all_tags: "Alle mærker"
+      categories_form_modal:
+        show_more: "Vis mere"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "Alle"
@@ -3689,6 +3690,8 @@ da:
               title: "Alle emner"
             faq:
               content: "OSS"
+            guidelines:
+              content: "Retningslinier"
             groups:
               content: "Grupper"
             users:
@@ -4024,6 +4027,8 @@ da:
           timestamp: "Oprettet"
           completion: "Tid for fuldførelse"
           actions: "Handlinger"
+          filter_status:
+            failed: "Fejlet"
       home:
         title: "Hjem"
       account:
@@ -4070,6 +4075,10 @@ da:
           search_logs: "Søgnings logs"
           security: "Sikkerhed"
           spam: "Spam"
+      config_areas:
+        about:
+          optional: "(valgfri)"
+          update: "Opdater"
       plugins:
         title: "Udvidelser"
         installed: "Installerede Udvidelser"
@@ -4408,7 +4417,6 @@ da:
             description: "Links, nogle knapper, notifikationer og accent farver."
           quaternary:
             name: "fjerde"
-            description: "Navigations links."
           header_background:
             name: "titel baggrund"
             description: "Baggrunds farve på sitets titel."

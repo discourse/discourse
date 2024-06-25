@@ -1035,7 +1035,6 @@ hr:
     categories:
       categories_label: "kategorije"
       subcategories_label: "podkategorije"
-      all_subcategories: "sve potkategorije"
       no_subcategories: "nema podkategorija"
       remove_filter: "uklonite filter"
       plus_more_count:
@@ -1160,7 +1159,8 @@ hr:
       activity_stream: "Aktivnosti"
       read: "Pročitajte"
       read_help: "Nedavno pročitane teme"
-      preferences: "Postavke"
+      preferences:
+        title: "Postavke"
       feature_topic_on_profile:
         open_search: "Odaberite novu temu"
         title: "Odaberite temu"
@@ -1426,6 +1426,7 @@ hr:
         set_password: "Postavi zaporku"
         choose_new: "Izaberite novu lozinku"
         choose: "Izaberite lozinku"
+        title: "Poništavanje lozinke"
       second_factor_backup:
         title: "Dva faktorski rezervni kodovi"
         regenerate: "Regeneriraj"
@@ -1826,7 +1827,6 @@ hr:
         fine_print: "Molimo vas da potvrdite svoj identitet jer je ovo potencijalno osjetljiva radnja. Jednom kad ste autenticirani, od vas će se tražiti ponovna autentikacija tek nakon nekoliko sati neaktivnosti."
       password:
         title: "Zaporka"
-        too_short: "Vaša je zaporka prekratka"
         common: "Ta je zaporka pre česta."
         same_as_username: "Vaša lozinka je ista kao korisničko ime."
         same_as_email: "Vaša lozinka jednaka je vašoj e-pošti."
@@ -2409,7 +2409,6 @@ hr:
       show_toolbar: "prikaži alatnu traku skladatelja"
       hide_toolbar: "sakrij alatnu traku skladatelja"
       modal_ok: "U redu"
-      modal_cancel: "Odustani"
       cant_send_pm: "Žao nam je, ne možete poslati poruku %{username}."
       yourself_confirm:
         title: "Jeste li zaboravili dodati primatelje?"
@@ -4114,7 +4113,6 @@ hr:
       all_tags: "Sve oznake"
       other_tags: "Ostale oznake"
       selector_tags: "oznake"
-      selector_all_tags: "sve oznake"
       selector_no_tags: "bez oznaka"
       selector_remove_filter: "uklonite filter"
       tags: "Oznake"
@@ -4310,6 +4308,7 @@ hr:
           text: "i automatski ćemo prikazati najpopularnije kategorije ove stranice"
         filter_placeholder: "Filtrirajte kategorije"
         no_categories: "Nema kategorija koje odgovaraju danom pojmu."
+        show_more: "Prikaži više"
       edit_navigation_modal_form:
         deselect_button_text: "Odznači sve"
         reset_to_defaults: "Vrati na zadane postavke"
@@ -4370,6 +4369,9 @@ hr:
               title: "Sve teme"
             faq:
               content: "ČPP"
+              title: "Smjernice za korištenje ove stranice"
+            guidelines:
+              content: "Vodić za uporabu"
               title: "Smjernice za korištenje ove stranice"
             groups:
               content: "Grupe"
@@ -4768,6 +4770,8 @@ hr:
           timestamp: "Stvoreno"
           completion: "Vrijeme završetka"
           actions: "Akcije"
+          filter_status:
+            failed: "Neuspješno"
       home:
         title: "Naslovnica"
       account:
@@ -4816,6 +4820,10 @@ hr:
           search_logs: "Pretraživanje dnevnika"
           security: "Sigurnost"
           spam: "Nepoželjno"
+      config_areas:
+        about:
+          optional: "(opcionalno)"
+          update: "Ažuriraj"
       plugins:
         title: "Dodaci"
         installed: "Instalirani dodaci"
@@ -5157,7 +5165,6 @@ hr:
             description: "Poveznice, neki gumbi, obavijesti i boja naglaska."
           quaternary:
             name: "kvartarna"
-            description: "Poveznice za navigaciju"
           header_background:
             name: "pozadina zaglavlja"
             description: "Pozadinska boja zaglavlja stranice."

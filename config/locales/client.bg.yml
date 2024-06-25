@@ -1038,7 +1038,8 @@ bg:
       activity_stream: "Активност"
       read: "Прочетени"
       read_help: "Наскоро прочетени теми"
-      preferences: "Настройки"
+      preferences:
+        title: "Настройки"
       feature_topic_on_profile:
         open_search: "Изберете нова тема"
         title: "Изберете тема"
@@ -1312,6 +1313,7 @@ bg:
         set_password: "Задайте парола"
         choose_new: "Избери нова парола"
         choose: "Избери парола"
+        title: "Възстановяване на парола"
       second_factor_backup:
         title: "Двуфакторни резервни кодове"
         regenerate: "Регенерирай"
@@ -1664,7 +1666,6 @@ bg:
           error: "За съжаление файлът трябва да е във формат CSV."
       password:
         title: "Парола"
-        too_short: "Вашата парола е твърде кратка."
         common: "Вашата парола е твърде разпространена."
         same_as_username: "Вашата парола е същата като вашето потребителско име."
         same_as_email: "Вашата парола е същата като вашия email."
@@ -2169,7 +2170,6 @@ bg:
       show_toolbar: "показване на лентата с инструменти на композитора"
       hide_toolbar: "скриване на лентата с инструменти на композитора"
       modal_ok: "Ок"
-      modal_cancel: "Отмени"
       cant_send_pm: "Съжеляваме, но неможете да изпращате съобщения до %{username}."
       yourself_confirm:
         title: "Забравихте ли да добавите получатели?"
@@ -3284,7 +3284,6 @@ bg:
     tagging:
       other_tags: "Други тагове"
       selector_tags: "тагове"
-      selector_all_tags: "всички тагове"
       selector_no_tags: "няма тагове"
       selector_remove_filter: "премахни филтъра"
       tags: "Тагове"
@@ -3359,6 +3358,8 @@ bg:
         other: "%{count} нови"
       more: "Повече"
       all_categories: "Всички категории"
+      categories_form_modal:
+        show_more: "Покажи повече"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "Всички"
@@ -3411,6 +3412,8 @@ bg:
               content: "Теми"
             faq:
               content: "FAQ"
+            guidelines:
+              content: "Насоки"
             groups:
               content: "Групи"
             users:
@@ -3568,6 +3571,8 @@ bg:
           body: "Тяло"
           timestamp: "Създадени"
           actions: "Действия"
+          filter_status:
+            failed: "Провалени"
       home:
         title: "Начало"
       account:
@@ -3608,6 +3613,10 @@ bg:
           search_logs: "Търсене в логовете"
           security: "Сигурност"
           spam: "Спам"
+      config_areas:
+        about:
+          optional: "(по избор)"
+          update: "Актуализация"
       plugins:
         title: "Приставки"
         installed: "Инсталирани приставки"
@@ -3775,7 +3784,6 @@ bg:
             description: "Връзки, някои бутони, известия и цветове за акцентиране."
           quaternary:
             name: "четвърти"
-            description: "Връзки за навигация."
           header_background:
             name: "Фон на хедъра"
             description: "Цвят на фона на хедъра на сайта."

@@ -2,8 +2,8 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { alias, or, readOnly } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL, { userPath } from "discourse/lib/url";
-import { modKeysPressed } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 import PasswordValidation from "discourse/mixins/password-validation";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
@@ -66,10 +66,11 @@ export default Controller.extend(PasswordValidation, {
 
   @action
   done(event) {
-    if (event && modKeysPressed(event).length > 0) {
-      return false;
+    if (wantsNewWindow(event)) {
+      return;
     }
-    event?.preventDefault();
+
+    event.preventDefault();
     this.set("redirected", true);
     DiscourseURL.redirectTo(this.redirectTo || "/");
   },
@@ -79,9 +80,10 @@ export default Controller.extend(PasswordValidation, {
     this.toggleProperty("maskPassword");
   },
 
-  actions: {
-    submit() {
-      ajax({
+  @action
+  async submit() {
+    try {
+      const result = await ajax({
         url: userPath(`password-reset/${this.get("model.token")}.json`),
         type: "PUT",
         data: {
@@ -91,81 +93,71 @@ export default Controller.extend(PasswordValidation, {
           second_factor_method: this.selectedSecondFactorMethod,
           timezone: moment.tz.guess(),
         },
-      })
-        .then((result) => {
-          if (result.success) {
-            this.set("successMessage", result.message);
-            this.set("redirectTo", result.redirect_to);
-            if (result.requires_approval) {
-              this.set("requiresApproval", true);
-            } else {
-              this.set("redirected", true);
-              DiscourseURL.redirectTo(result.redirect_to || "/");
-            }
-          } else {
-            if (
-              result.errors.security_keys ||
-              result.errors.user_second_factors
-            ) {
-              this.setProperties({
-                secondFactorRequired: this.secondFactorRequired,
-                securityKeyRequired: this.securityKeyRequired,
-                password: null,
-                errorMessage: result.message,
-              });
-            } else if (this.secondFactorRequired || this.securityKeyRequired) {
-              this.setProperties({
-                secondFactorRequired: false,
-                securityKeyRequired: false,
-                errorMessage: null,
-              });
-            } else if (
-              result.errors &&
-              result.errors.password &&
-              result.errors.password.length > 0
-            ) {
-              this.rejectedPasswords.pushObject(this.accountPassword);
-              this.rejectedPasswordsMessages.set(
-                this.accountPassword,
-                (result.friendly_messages || []).join("\n")
-              );
-            }
+      });
 
-            if (result.message) {
-              this.set("errorMessage", result.message);
-            }
-          }
-        })
-        .catch((e) => {
-          if (e.jqXHR && e.jqXHR.status === 429) {
-            this.set("errorMessage", I18n.t("user.second_factor.rate_limit"));
-          } else {
-            throw new Error(e);
-          }
-        });
-    },
+      if (result.success) {
+        this.set("successMessage", result.message);
+        this.set("redirectTo", result.redirect_to);
 
-    authenticateSecurityKey() {
-      this.set(
-        "selectedSecondFactorMethod",
-        SECOND_FACTOR_METHODS.SECURITY_KEY
-      );
-
-      getWebauthnCredential(
-        this.model.challenge,
-        this.model.allowed_credential_ids,
-        (credentialData) => {
-          this.set("securityKeyCredential", credentialData);
-          this.send("submit");
-        },
-        (errorMessage) => {
-          this.setProperties({
-            securityKeyRequired: true,
-            password: null,
-            errorMessage,
-          });
+        if (result.requires_approval) {
+          this.set("requiresApproval", true);
+        } else {
+          this.set("redirected", true);
+          DiscourseURL.redirectTo(result.redirect_to || "/");
         }
-      );
-    },
+      } else {
+        if (result.errors.security_keys || result.errors.user_second_factors) {
+          this.setProperties({
+            secondFactorRequired: this.secondFactorRequired,
+            securityKeyRequired: this.securityKeyRequired,
+            password: null,
+            errorMessage: result.message,
+          });
+        } else if (this.secondFactorRequired || this.securityKeyRequired) {
+          this.setProperties({
+            secondFactorRequired: false,
+            securityKeyRequired: false,
+            errorMessage: null,
+          });
+        } else if (result.errors?.password?.length > 0) {
+          this.rejectedPasswords.pushObject(this.accountPassword);
+          this.rejectedPasswordsMessages.set(
+            this.accountPassword,
+            (result.friendly_messages || []).join("\n")
+          );
+        }
+
+        if (result.message) {
+          this.set("errorMessage", result.message);
+        }
+      }
+    } catch (e) {
+      if (e.jqXHR?.status === 429) {
+        this.set("errorMessage", I18n.t("user.second_factor.rate_limit"));
+      } else {
+        throw new Error(e);
+      }
+    }
+  },
+
+  @action
+  authenticateSecurityKey() {
+    this.set("selectedSecondFactorMethod", SECOND_FACTOR_METHODS.SECURITY_KEY);
+
+    getWebauthnCredential(
+      this.model.challenge,
+      this.model.allowed_credential_ids,
+      (credentialData) => {
+        this.set("securityKeyCredential", credentialData);
+        this.send("submit");
+      },
+      (errorMessage) => {
+        this.setProperties({
+          securityKeyRequired: true,
+          password: null,
+          errorMessage,
+        });
+      }
+    );
   },
 });

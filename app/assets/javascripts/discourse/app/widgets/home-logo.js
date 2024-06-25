@@ -1,21 +1,12 @@
 // deprecated in favor of components/header/home-logo.gjs
 import { h } from "virtual-dom";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import Session from "discourse/models/session";
 import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
 import { iconNode } from "discourse-common/lib/icon-library";
-
-let hrefCallback;
-
-export function registerHomeLogoHrefCallback(callback) {
-  hrefCallback = callback;
-}
-
-export function clearHomeLogoHrefCallback() {
-  hrefCallback = null;
-}
 
 export default createWidget("home-logo", {
   services: ["session"],
@@ -34,11 +25,10 @@ export default createWidget("home-logo", {
   href() {
     const href = this.settings.href;
 
-    if (hrefCallback) {
-      return hrefCallback();
-    }
-
-    return typeof href === "function" ? href() : href;
+    return applyValueTransformer(
+      "home-logo-href",
+      typeof href === "function" ? href() : href
+    );
   },
 
   logoUrl(opts = {}) {

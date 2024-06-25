@@ -65,6 +65,43 @@ RSpec.describe HtmlToMarkdown do
     expect(html_to_markdown(html)).to eq(markdown.strip)
   end
 
+  it "removes tags that aren't allowed" do
+    html = <<~HTML
+      <custom>Text withing custom <span>tag</span></custom>
+      <div>Text within allowed tag</div>
+    HTML
+
+    expect(html_to_markdown(html)).to eq("Text within allowed tag")
+  end
+
+  it "allows additional tags that can be consumed by subclasses" do
+    class ExtendedHtmlToMarkdown < HtmlToMarkdown
+      def to_markdown
+        yield @doc
+        super
+      end
+    end
+
+    html = <<~HTML
+      <custom-image image-id="42">Image text</custom-image>
+      <div>Text within allowed tag</div>
+    HTML
+
+    md =
+      ExtendedHtmlToMarkdown
+        .new(html)
+        .to_markdown { |doc| expect(doc.css("custom-image")).to be_empty }
+    expect(md).to eq("Text within allowed tag")
+
+    md =
+      ExtendedHtmlToMarkdown
+        .new(html, { additional_allowed_tags: ["custom-image"] })
+        .to_markdown do |doc|
+          doc.css("custom-image").each { |img| img.replace("Image #{img["image-id"]}") }
+        end
+    expect(md).to eq("Image 42\nText within allowed tag")
+  end
+
   it "doesn't error on non-inline elements like (aside, section)" do
     html = <<~HTML
       <aside class="quote no-group">
@@ -222,6 +259,35 @@ RSpec.describe HtmlToMarkdown do
     expect(html_to_markdown("<code>Code</code>")).to eq("`Code`")
   end
 
+  describe "when HTML is used within Markdown" do
+    HtmlToMarkdown::ALLOWED.each do |tag|
+      it "keeps mandatory HTML entities in text of <#{tag}>" do
+        expect(html_to_markdown("<#{tag}>Less than: &lt;</#{tag}>")).to eq(
+          "<#{tag}>Less than: &lt;</#{tag}>",
+        )
+        expect(html_to_markdown("<#{tag}>Greater than: &gt;")).to eq(
+          "<#{tag}>Greater than: &gt;</#{tag}>",
+        )
+        expect(html_to_markdown("<#{tag}>Ampersand: &amp;")).to eq(
+          "<#{tag}>Ampersand: &amp;</#{tag}>",
+        )
+
+        expect(html_to_markdown("<#{tag}>Double Quote: &quot;</#{tag}>")).to eq(
+          "<#{tag}>Double Quote: \"</#{tag}>",
+        )
+        expect(html_to_markdown("<#{tag}>Single Quote: &apos;</#{tag}>")).to eq(
+          "<#{tag}>Single Quote: '</#{tag}>",
+        )
+        expect(html_to_markdown("<#{tag}>Copyright Symbol: &copy;</#{tag}>")).to eq(
+          "<#{tag}>Copyright Symbol: ©</#{tag}>",
+        )
+        expect(html_to_markdown("<#{tag}>Euro Symbol: &euro;</#{tag}>")).to eq(
+          "<#{tag}>Euro Symbol: €</#{tag}>",
+        )
+      end
+    end
+  end
+
   it "supports <ins>" do
     expect(html_to_markdown("This is an <ins>insertion</ins>")).to eq(
       "This is an <ins>insertion</ins>",
@@ -248,16 +314,37 @@ RSpec.describe HtmlToMarkdown do
 
   it "supports <small>" do
     expect(html_to_markdown("<small>Small</small>")).to eq("<small>Small</small>")
+    expect(html_to_markdown("<mark><small>Small</small></mark>")).to eq(
+      "<mark><small>Small</small></mark>",
+    )
+    expect(html_to_markdown("<strong><small>Small</small></strong>")).to eq(
+      "**<small>Small</small>**",
+    )
+    expect(html_to_markdown("<small><strong>&lt;small&gt;</strong></small>")).to eq(
+      "<small>**&lt;small&gt;**</small>",
+    )
+  end
+
+  it "supports <big>" do
+    expect(html_to_markdown("<big>Big</big>")).to eq("<big>Big</big>")
+    expect(html_to_markdown("<big>&lt;big&gt;</big>")).to eq("<big>&lt;big&gt;</big>")
   end
 
   it "supports <kbd>" do
     expect(html_to_markdown("<kbd>CTRL</kbd>+<kbd>C</kbd>")).to eq("<kbd>CTRL</kbd>+<kbd>C</kbd>")
+    expect(html_to_markdown("<kbd>&lt;</kbd>")).to eq("<kbd>&lt;</kbd>")
   end
 
   it "supports <abbr>" do
     expect(
       html_to_markdown(%Q{<abbr title="Civilized Discourse Construction Kit, Inc.">CDCK</abbr>}),
     ).to eq(%Q{<abbr title="Civilized Discourse Construction Kit, Inc.">CDCK</abbr>})
+
+    expect(
+      html_to_markdown(
+        %Q{<abbr title="&quot;abbr&quot;: The Abbreviation element">&lt;abbr&gt;</abbr>},
+      ),
+    ).to eq(%Q{<abbr title="&quot;abbr&quot;: The Abbreviation element">&lt;abbr&gt;</abbr>})
   end
 
   it "supports <s>" do
@@ -329,6 +416,18 @@ RSpec.describe HtmlToMarkdown do
         "<pre>    function f() {\n        console.log('Hello world!');\n    }</pre>",
       ),
     ).to eq("```\n    function f() {\n        console.log('Hello world!');\n    }\n```")
+
+    html = <<~HTML
+      <pre data-code-wrap="plaintext"><code class="lang-plaintext">Reported-and-tested-by: A &lt;a@example.com&gt;
+      Reviewed-by: B &lt;b@example.com&gt;</code></pre>
+    HTML
+    md = <<~MD
+      ```plaintext
+      Reported-and-tested-by: A <a@example.com>
+      Reviewed-by: B <b@example.com>
+      ```
+    MD
+    expect(html_to_markdown(html)).to eq(md.strip)
   end
 
   it "supports <pre> inside <blockquote>" do
@@ -374,6 +473,10 @@ RSpec.describe HtmlToMarkdown do
 
   it "swallows <u>" do
     expect(html_to_markdown("<u>Underline</u>")).to eq("Underline")
+  end
+
+  it "swallows <center>" do
+    expect(html_to_markdown("<center>Centered</center>")).to eq("Centered")
   end
 
   it "removes <script>" do
@@ -490,6 +593,14 @@ RSpec.describe HtmlToMarkdown do
             <td>line</td>
           </tr>
         </tbody>
+        <tfoot>
+          <tr>
+            <td>This</td>
+            <td>is</td>
+            <td>the</td>
+            <td>footer</td>
+          </tr>
+        </tfoot>
       </table>
     HTML
 
@@ -498,6 +609,7 @@ RSpec.describe HtmlToMarkdown do
       | - | - | - | - |
       | I am | the | **first** | row |
       | And this | is the | 2<sup>nd</sup> | line |
+      | This | is | the | footer |
     MD
 
     expect(html_to_markdown(html)).to eq(markdown.strip)
@@ -507,7 +619,7 @@ RSpec.describe HtmlToMarkdown do
     )
   end
 
-  it "doesn't swallow badly formatted <table>" do
+  it "keeps HTML for badly formatted <table>" do
     html = <<~HTML
       <table>
         <tr>
@@ -517,13 +629,153 @@ RSpec.describe HtmlToMarkdown do
           <th>4</th>
         </tr>
         <tr>
-          <td>One</td>
-          <td>Two</td>
-          <td>Three</td>
+          <td>&lt;One&gt;</td>
+          <td><strong>Two</strong></td>
+          <td>Three<script>alert("foo")</script></td>
         </tr>
       </table>
     HTML
 
-    expect(html_to_markdown(html)).to eq("1 2 3 4 \nOne Two Three")
+    markdown = <<~MD
+      <table>
+      <tr>
+      <th>
+
+      1
+
+      </th>
+      <th>
+
+      2
+
+      </th>
+      <th>
+
+      3
+
+      </th>
+      <th>
+
+      4
+
+      </th>
+      </tr>
+      <tr>
+      <td>
+
+      &lt;One&gt;
+
+      </td>
+      <td>
+
+      **Two**
+
+      </td>
+      <td>
+
+      Three
+
+      </td>
+      </tr>
+      </table>
+    MD
+
+    expect(html_to_markdown(html)).to eq(markdown.strip)
+  end
+
+  it "keeps HTML for <table> with colspan" do
+    html = <<~HTML
+      <table>
+        <tr>
+          <th>1</th>
+          <th>2</th>
+        </tr>
+        <tr>
+          <td colspan="2">One / Two</td>
+        </tr>
+      </table>
+    HTML
+
+    markdown = <<~MD
+      <table>
+      <tr>
+      <th>
+
+      1
+
+      </th>
+      <th>
+
+      2
+
+      </th>
+      </tr>
+      <tr>
+      <td colspan="2">
+
+      One / Two
+
+      </td>
+      </tr>
+      </table>
+    MD
+
+    expect(html_to_markdown(html)).to eq(markdown.strip)
+  end
+
+  it "keeps HTML for <table> with rowspan" do
+    html = <<~HTML
+      <table>
+        <tr>
+          <th>1</th>
+          <th>2</th>
+        </tr>
+        <tr>
+          <td>A</td>
+          <td rowspan="2">B</td>
+        </tr>
+        <tr>
+          <td>C</td>
+        </tr>
+      </table>
+    HTML
+
+    markdown = <<~MD
+      <table>
+      <tr>
+      <th>
+
+      1
+
+      </th>
+      <th>
+
+      2
+
+      </th>
+      </tr>
+      <tr>
+      <td>
+
+      A
+
+      </td>
+      <td rowspan="2">
+
+      B
+
+      </td>
+      </tr>
+      <tr>
+      <td>
+
+      C
+
+      </td>
+      </tr>
+      </table>
+    MD
+
+    expect(html_to_markdown(html)).to eq(markdown.strip)
   end
 end

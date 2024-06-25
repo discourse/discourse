@@ -229,18 +229,8 @@ fr:
         other: "Vous avez de nouveaux messages de discussions"
       from: "%{site_name}"
       subject:
-        private_message: "[%{email_prefix}] Nouveau message"
-        direct_message_from_1: "[%{email_prefix}] Nouveau message de %{username}"
-        direct_message_from_2: "[%{email_prefix}] Nouveaux messages de %{username1} et de %{username2}"
-        direct_message_from_more:
-          one: "[%{email_prefix}] Nouveaux messages de %{username} et de %{count} autre utilisateur"
-          other: "[%{email_prefix}] Nouveaux messages de %{username} et de %{count} autres utilisateurs"
-        chat_channel_1: "[%{email_prefix}] Nouveau message dans %{channel}"
-        chat_channel_2: "[%{email_prefix}] Nouveaux messages dans %{channel1} et %{channel2}"
-        chat_channel_more:
-          one: "[%{email_prefix}] Nouveaux messages dans %{channel} et %{count} autre canal"
-          other: "[%{email_prefix}] Nouveaux messages dans %{channel} et %{count} autres canaux"
-        chat_channel_and_direct_message: "[%{email_prefix}] Nouveau message dans %{channel} de la part de %{username}"
+        chat_dm_2: "[%{site_name}] Nouveaux messages de %{name_1} et de %{name_2}"
+        chat_channel_2: "[%{site_name}] Nouveaux messages dans %{channel_1} et %{channel_2}"
       unsubscribe: "Ce résumé de discussion est envoyé à partir de %{site_link} lorsque vous vous absentez. Changez vos %{email_preferences_link} ou %{unsubscribe_link} pour vous désabonner."
       unsubscribe_no_link: "Ce résumé de discussion est envoyé à partir de %{site_link} lorsque vous vous absentez. Changez vos %{email_preferences_link}."
       view_messages:

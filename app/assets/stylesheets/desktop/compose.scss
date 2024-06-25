@@ -24,9 +24,8 @@
       .title-and-category {
         flex-wrap: nowrap;
         gap: 0.5em;
-        .mini-tag-chooser {
+        .tags-input {
           max-width: 50%;
-          margin-bottom: 8px; // match title input margin
           flex: 1 1 auto;
         }
       }

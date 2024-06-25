@@ -232,30 +232,43 @@
   .themes-list-header {
     width: 100%;
     display: flex;
-
+    border: 1px solid var(--primary-low);
     .tab {
       border: none;
       padding: 1em;
       width: 50%;
       box-sizing: border-box;
       text-align: center;
+      background: var(--d-nav-bg-color);
       &.themes-tab {
-        border-top-right-radius: 0px;
-        border-bottom-left-radius: 0px;
-        border-bottom-right-radius: 0px;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
       }
       &.components-tab {
-        border-top-left-radius: 0px;
-        border-bottom-left-radius: 0px;
-        border-bottom-right-radius: 0px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      .discourse-no-touch & {
+        &:focus,
+        &:hover {
+          color: var(--d-nav-color--hover);
+          background: var(--d-nav-bg-color--hover);
+          &.active {
+            color: var(--d-nav-color--active);
+            background: var(--d-nav-bg-color--active);
+          }
+          .d-icon {
+            color: inherit;
+          }
+        }
       }
 
       &.active {
-        background-color: var(--quaternary);
-        color: var(--secondary);
-        .d-icon {
-          color: currentColor;
-        }
+        position: relative;
+        @include nav-active();
       }
     }
 
@@ -556,11 +569,6 @@
       margin: 0;
     }
 
-    .edit-main-nav .nav-pills > li a.active {
-      background-color: var(--quaternary);
-      color: var(--secondary);
-    }
-
     .edit-main-nav ul {
       padding-bottom: 0;
     }
@@ -585,11 +593,6 @@
         label {
           padding: 6px 12px;
           margin-bottom: 0;
-        }
-
-        a.active {
-          background: var(--primary-medium);
-          color: var(--secondary);
         }
 
         a.blank:not(.active) {

@@ -210,6 +210,17 @@ task "users:list_recent_staff" => :environment do
   puts "user_ids = [#{all_ids.uniq.join(",")}]"
 end
 
+desc "Check if a user exists for given email address"
+task "users:exists", [:email] => [:environment] do |_, args|
+  email = args[:email]
+  if User.find_by_email(email)
+    puts "User with email #{email} exists"
+    exit 0
+  end
+  puts "ERROR: User with email #{email} not found"
+  exit 1
+end
+
 def find_user(username)
   user = User.find_by_username(username)
 

@@ -58,10 +58,6 @@ ro:
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
       chat_pm_body: "%{link}\n\n%{message}"
-  user_notifications:
-    chat_summary:
-      subject:
-        private_message: "[%{email_prefix}] Mesaj nou"
   unsubscribe:
     chat_summary:
       never: Niciodată

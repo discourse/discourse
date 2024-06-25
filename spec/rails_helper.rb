@@ -245,7 +245,7 @@ RSpec.configure do |config|
     CachedCounting.disable
 
     begin
-      ActiveRecord::Migration.check_pending!
+      ActiveRecord::Migration.check_all_pending!
     rescue ActiveRecord::PendingMigrationError
       raise "There are pending migrations, run RAILS_ENV=test bin/rake db:migrate"
     end
@@ -519,33 +519,31 @@ RSpec.configure do |config|
       end
     end
 
-    # This is a monkey patch for the `Selenium::WebDriver::Platform.localhost` method in `selenium-webdriver`. For some
+    # This is a monkey patch for the `Capybara.using_session` method in `capybara`. For some
     # unknown reasons on Github Actions, we are seeing system tests failing intermittently with the error
-    # `Socket::ResolutionError: getaddrinfo: Temporary failure in name resolution` when `selenium-webdriver` tries to
-    # resolve `localhost` in a `Capybara#using_session` block.
+    # `Socket::ResolutionError: getaddrinfo: Temporary failure in name resolution` when the app tries to resolve
+    # `localhost` from within a `Capybara#using_session` block.
     #
     # Too much time has been spent trying to debug this issue and the root cause is still unknown so we are just dropping
-    # this workaround for now.
-    module Selenium
-      module WebDriver
-        module Platform
-          def self.localhost_with_retry
-            attempts = 0
-
-            begin
-              localhost_without_retry
-            rescue Socket::ResolutionError
-              attempts += 1
-              attempts <= 3 ? retry : raise
-            end
-          end
+    # this workaround for now where we will retry the block once before raising the error.
+    #
+    # Potentially related: https://bugs.ruby-lang.org/issues/20172
+    module Capybara
+      class << self
+        def using_session_with_localhost_resolution(name, &block)
+          attempts = 0
+          self._using_session(name, &block)
+        rescue Socket::ResolutionError
+          puts "Socket::ResolutionError error encountered... Current thread count: #{Thread.list.size}"
+          attempts += 1
+          attempts <= 1 ? retry : raise
         end
       end
     end
 
-    Selenium::WebDriver::Platform.singleton_class.class_eval do
-      alias_method :localhost_without_retry, :localhost
-      alias_method :localhost, :localhost_with_retry
+    Capybara.singleton_class.class_eval do
+      alias_method :_using_session, :using_session
+      alias_method :using_session, :using_session_with_localhost_resolution
     end
   end
 
@@ -720,7 +718,7 @@ RSpec.configure do |config|
   end
 
   config.after(:each, type: :multisite) do
-    ActiveRecord::Base.clear_all_connections!
+    ActiveRecord::Base.connection_handler.clear_all_connections!
     Rails.configuration.multisite = false # rubocop:disable Discourse/NoDirectMultisiteManipulation
     RailsMultisite::ConnectionManagement.clear_settings!
     ActiveRecord::Base.establish_connection

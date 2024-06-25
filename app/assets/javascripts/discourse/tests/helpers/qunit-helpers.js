@@ -33,6 +33,7 @@ import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
 import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
+import { rollbackAllModifications } from "discourse/lib/class-prepend";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
@@ -65,6 +66,7 @@ import {
   resetHighestReadCache,
   setTopicList,
 } from "discourse/lib/topic-list-tracker";
+import { resetTransformers } from "discourse/lib/transformer";
 import { clearRewrites } from "discourse/lib/url";
 import { resetUserMenuTabs } from "discourse/lib/user-menu/tab";
 import {
@@ -246,6 +248,8 @@ export function testCleanup(container, app) {
   clearPopupMenuOptions();
   clearAdditionalAdminSidebarSectionLinks();
   resetAdminPluginConfigNav();
+  resetTransformers();
+  rollbackAllModifications();
 }
 
 function cleanupCssGeneratorTags() {

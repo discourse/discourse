@@ -27,11 +27,12 @@
     padding-block: 0.75rem;
     height: 100%;
     position: relative;
+    color: var(--primary-medium);
 
     &.--active {
       .d-icon,
       .d-button-label {
-        color: var(--quaternary);
+        color: var(--d-nav-color--active);
       }
     }
     &:hover,
@@ -40,18 +41,18 @@
       .discourse-touch & {
         .d-icon,
         .d-button-label {
-          color: var(--quaternary);
+          color: var(--d-nav-color--active);
         }
       }
     }
 
     .d-icon {
       margin-right: 0;
-      font-size: var(--font-up-4);
-      color: var(--primary-medium);
+      font-size: var(--font-up-2);
+      color: inherit;
 
       &.d-icon-discourse-threads {
-        font-size: var(--font-up-3); //visual correction
+        font-size: var(--font-up-1); //visual correction
       }
     }
 

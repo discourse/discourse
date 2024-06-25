@@ -4,9 +4,15 @@
   <ConditionalLoadingSpinner @condition={{this.loading}}>
     <form class="form-vertical">
       {{#if this.showEnforcedNotice}}
-        <div class="alert alert-error">{{i18n
-            "user.second_factor.enforced_notice"
-          }}</div>
+        <div class="alert alert-error">
+          {{i18n "user.second_factor.enforced_notice"}}
+        </div>
+      {{/if}}
+
+      {{#if this.showEnforcedWithOAuthNotice}}
+        <div class="alert alert-error">
+          {{i18n "user.second_factor.enforced_with_oauth_notice"}}
+        </div>
       {{/if}}
 
       {{#if this.displayOAuthWarning}}

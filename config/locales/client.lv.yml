@@ -893,7 +893,8 @@ lv:
       activity_stream: "Aktivitāte"
       read: "Lasīts"
       read_help: "Nesen lasītas tēmas"
-      preferences: "Iestatījumi"
+      preferences:
+        title: "Iestatījumi"
       feature_topic_on_profile:
         open_search: "Izvēlieties jaunu tēmu"
         title: "Izvēlieties tēmu"
@@ -1067,6 +1068,7 @@ lv:
         set_password: "Uzstādīt paroli"
         choose_new: "Izvēlēties jaunu paroli"
         choose: "Izvēlēties paroli"
+        title: "Paroles atjaunošana"
       second_factor_backup:
         title: "Divu faktoru rezerves kodi"
         regenerate: "Atkārtoti radīt"
@@ -1342,7 +1344,6 @@ lv:
           error: "Atvainojiet, failam jābūt CSV formātā."
       password:
         title: "Parole"
-        too_short: "Jūsu parole ir pārāk īsa."
         common: "Šī parole ir pārāk vienkārša."
         same_as_username: "Jūsu parole ir tāda pati, kā jūsu lietotājvārds."
         same_as_email: "Jūsu parole ir tāda pati, kā jūsu e-pasts."
@@ -1699,7 +1700,6 @@ lv:
       list_item: "Saraksta punkts"
       help: "Palīdzība ar formatēšanu, izmantojot Markdown"
       modal_ok: "Labi"
-      modal_cancel: "Atcelt"
       cant_send_pm: "Atvainojiet, jūs nevarat sūtīt ziņu %{username}."
       yourself_confirm:
         title: "Vai jūs aizmirsāt pievienot saņēmējus?"
@@ -2663,7 +2663,6 @@ lv:
       download: "Lejuplādēt"
     tagging:
       selector_tags: "birkas"
-      selector_all_tags: "visi tagi"
       selector_no_tags: "bez tagiem"
       selector_remove_filter: "noņemt filtru"
       tags: "Tagi"
@@ -2781,6 +2780,8 @@ lv:
               content: "Tēmas"
             faq:
               content: "BUJ"
+            guidelines:
+              content: "Vadlīnijas"
             groups:
               content: "Grupas"
             users:
@@ -2968,6 +2969,8 @@ lv:
           timestamp: "Izveidots"
           completion: "Pabeigšanas laiks"
           actions: "Darbības"
+          filter_status:
+            failed: "Neizdevies"
       home:
         title: "Mājas"
       account:
@@ -3006,6 +3009,9 @@ lv:
           screened_urls: "Pārbaudītie URL"
           security: "Drošība"
           spam: "Spams"
+      config_areas:
+        about:
+          optional: "(pēc izvēles)"
       plugins:
         title: "Spraudņi"
         installed: "Uzinstalētie spraudņi"

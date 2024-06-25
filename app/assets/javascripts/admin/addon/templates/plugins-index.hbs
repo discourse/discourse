@@ -1,16 +1,7 @@
 <DBreadcrumbsContainer />
 
-<DBreadcrumbsItem as |linkClass|>
-  <LinkTo @route="admin" class={{linkClass}}>
-    {{i18n "admin_title"}}
-  </LinkTo>
-</DBreadcrumbsItem>
-
-<DBreadcrumbsItem as |linkClass|>
-  <LinkTo @route="adminPlugins" class={{linkClass}}>
-    {{i18n "admin.plugins.title"}}
-  </LinkTo>
-</DBreadcrumbsItem>
+<DBreadcrumbsItem @route="admin" @label={{i18n "admin_title"}} />
+<DBreadcrumbsItem @route="adminPlugins" @label={{i18n "admin.plugins.title"}} />
 
 <div class="admin-plugins-list-container">
   {{#if this.model.length}}

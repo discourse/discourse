@@ -1,34 +1,32 @@
 :hatching_chick: Congratulations, you are now the proud owner of your very own [Civilized Discourse Construction Kit](https://www.discourse.org)!
 
-![](https://www.discourse.org/images/welcome/welcome-to-discourse-hosting-690x314.jpg)
-
-This guide includes suggestions for things to do as you get started.
-
-> :bulb: If you need to get back here later, scroll to the top of any page and click the <kbd>Getting started</kbd> button.
-
 ## :sun_behind_small_cloud: Overview
 
-Discourse is a powerful and flexible platform with many options for customization that you'll want to explore over time, but to get started, we recommend you:
+Discourse is a powerful and flexible platform with many options for customization that you'll want to explore over time.
+
+To get started, we recommend you follow the sections below for each of the following:
 
 - [ ] Test your email configuration
 - [ ] Complete the setup wizard
 - [ ] Invite a few people to join you
-- [ ] Discuss ideas with your community 
+- [ ] Discuss ideas with your community
 - [ ] Update your welcome topic and guidelines
 - [ ] Adjust other customizations
 - [ ] Repeat!
 - [ ] Launch your community
 
-> :speaking_head: Please join meta.discourse.org, our official community, for documentation and support from other Discourse users. 
+> :bulb: If you need to get back here later, scroll to the top of any page and click the <kbd>Getting started</kbd> button.
 
 ## :email: Test your email configuration
 
 Email is required for new account signups and notifications. **Test your email to make sure it is configured correctly!**  Visit [the admin email settings](/admin/email), then enter an email address in the "email address to test" field and click <kbd>send test email</kbd>.
 
-- You got the test email? 
+- You got the test email?
   Great! **Read that email closely**, it has important email deliverability tips.
-- You didn't get the test email? 
+- You didn't get the test email?
   Email deliverability is important to ensure users get signup emails and other notifications. Please see [Recommended Email Providers for Discourse](https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md) for template configurations for different providers.
+
+> :speaking_head: Please join meta.discourse.org, our official community, for documentation and support from other Discourse users.
 
 ## :magic_wand: Complete the setup wizard
 
@@ -36,21 +34,23 @@ You've already been through the setup wizard, but if you skipped some steps, you
 
 ## :handshake: Invite a few people to join you
 
-It's helpful to collaborate with at least one or two other people early that can provide feedback on the decisions you're making about your community. 
-- **If your community allows people to freely sign up**, send them the link and ask them to join. 
+It's helpful to collaborate with at least one or two other people early that can provide feedback on the decisions you're making about your community.
+- **If your community allows people to freely sign up**, send them the link and ask them to join.
 - **If your community is invite only**, go to [your invites page](/my/invited) and look for the <kbd>+ Invite</kbd> button to create invite links you can share or directly email everyone you want to have in your community.
 
-> :bulb: Your community starts off in “bootstrap mode”, which gives early members [a higher level of trust ](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)than the typical new member so they can help you launch your community. Your can adjust how long your community remains in bootstrap mode [here](/admin/site_settings/category/all_results?filter=bootstrap).
+> :bulb: Your community starts off in “bootstrap mode”, which gives early members [a higher level of trust ](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)than the typical new member so they can help you launch your community. You can adjust how long your community remains in bootstrap mode [here](/admin/site_settings/category/all_results?filter=bootstrap).
 
 ## :thought_balloon: Discuss ideas with your community
 
-Now that you have a few collaborators, you can start trying things out together and discussing ideas for your community. 
+Now that you have a few collaborators, you can start trying things out together and discussing ideas for your community.
 
-- The [#Site Feedback](/c/-/2) is intended as a long term home for discussions like these about your site, how it works, and how you can improve it. It's designed to be open to participation by everyone who can access your community.
+To start a new discussion, click the <kbd>+ New Topic</kbd> button on the [latest topics](/latest) page or within any of the following categories.
 
-- The [#General](/c/-/4) category is a place to start discussions on topics of general interest to your community. You can create additional categories as you decide how you want to make space for different kinds of topics.
+- [#Site Feedback](/c/-/2) is for discussions about your site, how it works, and how you can improve it. It's designed to be open to participation by everyone who can access your community.
 
-- The [#Staff](/c/-/3) category is only visible to admins and moderators and can be used for topics you wish to discuss privately with other admins and moderators. 
+- [#General](/c/-/4) is for topics of general interest to your community. You can create additional categories as you decide how you want to make space for different kinds of topics.
+
+- [#Staff](/c/-/3) is only visible to admins and moderators and can be used for topics you wish to discuss privately with other admins and moderators.
 
   If you'd like to promote any members to become admins or moderators, visit their user page and click on the <kbd>:wrench: Admin</kbd> button, then click <kbd>Grant Admin</kbd> or <kbd>Grant Moderator</kbd>.
 
@@ -60,7 +60,7 @@ Now that you have a few collaborators, you can start trying things out together 
 
 Update the welcome topic in the [#General](/c/-/4) category and the community guidelines on your [FAQ](/faq) page as you see fit. Go through it yourself with your initial members and see if there's anything you want to add or change.
 
-To get you started, think about what you want new members to **know about your community** or **do when they first join**. 
+To get you started, think about what you want new members to **know about your community** or **do when they first join**.
 
 ## :art: Adjust other customizations
 
@@ -76,19 +76,19 @@ To customize the look and feel of your community beyond what you configured in t
 
 [details="Advanced options"]
 
-Discourse is very configurable and there is a great deal programmers and web designers can do to customize it, integrate it into other platforms, or address any use case. Users going down this route are highly encouraged to join meta.discourse.org, our support community, to learn from what others have and to give and get advice. 
+Discourse is very configurable and there is a great deal programmers and web designers can do to customize it, integrate it into other platforms, or address any use case. Users going down this route are highly encouraged to join meta.discourse.org, our support community, to learn from what others have and to give and get advice.
 
 - Add one or more social login options: [Google](https://meta.discourse.org/t/configuring-google-oauth2-login-for-discourse/15858), [Twitter](https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395), [Facebook](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394), [GitHub](https://meta.discourse.org/t/configuring-github-login-for-discourse/13745), [Discord](https://meta.discourse.org/t/configure-discord-login-for-discourse/127129?u=tobiaseigen), [Apple](https://www.discourse.org/plugins/apple-login), [Amazon, LinkedIn, and Microsoft](https://www.discourse.org/plugins/amazon-linkedin-microsoft-login)
 - [Embed Discourse in your WordPress website](https://github.com/discourse/wp-discourse), or [on your static HTML site](https://meta.discourse.org/t/embedding-discourse-comments-via-javascript/31963)
-- Set up [single-sign on](https://meta.discourse.org/t/official-single-sign-on-for-discourse/13045) with your main site 
+- Set up [single-sign on](https://meta.discourse.org/t/official-single-sign-on-for-discourse/13045) with your main site
 - [Build your own login method](https://meta.discourse.org/t/login-to-discourse-with-custom-oauth2-provider/14717)
-- [Create your own theme](https://meta.discourse.org/docs?topic=93648) 
+- [Create your own theme](https://meta.discourse.org/docs?topic=93648)
 - [Interact with Discourse from other applications using the API](https://meta.discourse.org/t/create-and-configure-an-api-key/230124?u=tobiaseigen)
 [/details]
 
 ## :arrows_clockwise: Repeat!
 
-While you're getting started, you may find it helpful to repeat the steps above a few times. Invite a few more people, discuss ideas with them, and make adjustments to your site based on their input and feedback. 
+While you're getting started, you may find it helpful to repeat the steps above a few times. Invite a few more people, discuss ideas with them, and make adjustments to your site based on their input and feedback.
 
 After one or two rounds, you should have a good sense of what kind of experience people have as they join your community and be ready to invite a wider audience.
 
@@ -106,7 +106,7 @@ You can continue to improve your community as you receive feedback from you memb
 
 Here are some additional resources from [the Discourse blog](http://blog.discourse.org) and https://meta.discourse.org that you may also want to explore.
 
-- [Building a Discourse Community](http://blog.discourse.org/2014/08/building-a-discourse-community/) 
+- [Building a Discourse Community](http://blog.discourse.org/2014/08/building-a-discourse-community/)
 - [Understanding Trust Levels](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
 - [What is "Site Feedback"?](https://meta.discourse.org/t/-/5249)
 - [How you can use invitations to add users](https://meta.discourse.org/tags/c/documentation/10/invites)

@@ -381,7 +381,7 @@ RSpec.describe ListController do
       it "should display moderator group private messages for a moderator" do
         moderator = Fabricate(:moderator)
         group = Group.find(Group::AUTO_GROUPS[:moderators])
-        topic = Fabricate(:private_message_topic, allowed_groups: [group])
+        Fabricate(:private_message_topic, allowed_groups: [group])
 
         sign_in(moderator)
 
@@ -1283,6 +1283,24 @@ RSpec.describe ListController do
       end
     end
 
+    it "should filter with tag_group option" do
+      topic_with_tag = Fabricate(:topic, tags: [tag])
+      topic2_with_tag = Fabricate(:topic, tags: [tag])
+      tag_group = Fabricate(:tag_group, tags: [tag])
+
+      sign_in(user)
+
+      get "/filter.json", params: { q: "tag_group:#{tag_group.name}" }
+
+      parsed = response.parsed_body
+      expect(response.status).to eq(200)
+      expect(parsed["topic_list"]["topics"].length).to eq(2)
+      expect(parsed["topic_list"]["topics"].map { |topic| topic["id"] }).to contain_exactly(
+        topic_with_tag.id,
+        topic2_with_tag.id,
+      )
+    end
+
     describe "when filtering with the `created-by:<username>` filter" do
       fab!(:topic2) { Fabricate(:topic, user: admin) }
 
@@ -1500,56 +1518,30 @@ RSpec.describe ListController do
       response.parsed_body["topic_list"]["topics"].map { |topics| topics["id"] }
     end
 
-    def make_topic_with_unread_replies(topic, user)
-      TopicUser.change(
-        user.id,
-        topic.id,
-        notification_level: TopicUser.notification_levels[:tracking],
-      )
-      TopicUser.update_last_read(user, topic.id, 1, 1, 1)
-      Fabricate(:post, topic: topic)
-      topic
-    end
-
-    def make_topic_read(topic, user)
-      TopicUser.update_last_read(user, topic.id, 1, 1, 1)
-      topic
-    end
-
     context "when the user is part of the `experimental_new_new_view_groups` site setting group" do
       fab!(:category)
       fab!(:tag)
 
-      fab!(:new_reply) { make_topic_with_unread_replies(Fabricate(:post).topic, user) }
+      fab!(:new_reply) { Fabricate(:new_reply_topic, current_user: user) }
       fab!(:new_topic) { Fabricate(:post).topic }
-      fab!(:old_topic) { make_topic_read(Fabricate(:post).topic, user) }
+      fab!(:old_topic) { Fabricate(:read_topic, current_user: user) }
 
       fab!(:new_reply_in_category) do
-        make_topic_with_unread_replies(
-          Fabricate(:post, topic: Fabricate(:topic, category: category)).topic,
-          user,
-        )
+        Fabricate(:new_reply_topic, category: category, current_user: user)
       end
       fab!(:new_topic_in_category) do
         Fabricate(:post, topic: Fabricate(:topic, category: category)).topic
       end
       fab!(:old_topic_in_category) do
-        make_topic_read(Fabricate(:post, topic: Fabricate(:topic, category: category)).topic, user)
+        Fabricate(:read_topic, category: category, current_user: user)
       end
 
-      fab!(:new_reply_with_tag) do
-        make_topic_with_unread_replies(
-          Fabricate(:post, topic: Fabricate(:topic, tags: [tag])).topic,
-          user,
-        )
-      end
+      fab!(:new_reply_with_tag) { Fabricate(:new_reply_topic, tags: [tag], current_user: user) }
       fab!(:new_topic_with_tag) { Fabricate(:post, topic: Fabricate(:topic, tags: [tag])).topic }
-      fab!(:old_topic_with_tag) do
-        make_topic_read(Fabricate(:post, topic: Fabricate(:topic, tags: [tag])).topic, user)
-      end
+      fab!(:old_topic_with_tag) { Fabricate(:read_topic, tags: [tag], current_user: user) }
 
       before do
-        make_topic_read(topic, user)
+        TopicUser.update_last_read(user, topic.id, 1, 1, 1)
 
         SiteSetting.experimental_new_new_view_groups = group.name
         group.add(user)

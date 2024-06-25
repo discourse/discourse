@@ -42,6 +42,7 @@
   }
 
   .login-left-side {
+    box-sizing: border-box;
     width: 100%;
     padding: 3rem;
     overflow: auto;
@@ -51,12 +52,12 @@
     display: grid;
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr;
-    overflow-wrap: anywhere;
   }
 
   .login-title {
     font-size: var(--font-up-6);
     margin: 0;
+    line-height: var(--line-height-medium);
   }
 
   .waving-hand {
@@ -120,6 +121,36 @@
       padding: 0px;
       overflow: hidden;
       display: inline;
+    }
+  }
+
+  .desktop-view & {
+    @media screen and (max-width: 767px) {
+      // important to maintain narrow desktop widths
+      // for auth modals in Discourse Hub on iPad
+      .d-modal__header {
+        right: 0;
+        top: 0;
+      }
+      .has-alt-auth {
+        flex-direction: column;
+        overflow: auto;
+        gap: 1em;
+        .login-welcome-header,
+        .d-modal__footer {
+          font-size: var(--font-down-1);
+        }
+        .login-left-side {
+          overflow: unset;
+          padding: 1em 2.75em 1em 1em;
+        }
+        .login-right-side {
+          padding: 1em;
+        }
+        #login-form {
+          margin: 1.5em 0;
+        }
+      }
     }
   }
 }
