@@ -1764,18 +1764,18 @@
   dependencies:
     "@floating-ui/utils" "^0.2.1"
 
-"@floating-ui/dom@^1.6.5":
-  version "1.6.5"
-  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.6.5.tgz#323f065c003f1d3ecf0ff16d2c2c4d38979f4cb9"
-  integrity sha512-Nsdud2X65Dz+1RHjAIP0t8z5e2ff/IRbei6BqFrl1urT8sDVzM1HMQ+R0XcU5ceRfyO3I6ayeqIfh+6Wb8LGTw==
+"@floating-ui/dom@^1.6.6":
+  version "1.6.6"
+  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.6.6.tgz#be54c1ab2d19112ad323e63dbeb08185fed0ffd3"
+  integrity sha512-qiTYajAnh3P+38kECeffMSQgbvXty2VB6rS+42iWR4FPIlZjLK84E9qtLnMTLIpPz2znD/TaFqaiavMUrS+Hcw==
   dependencies:
     "@floating-ui/core" "^1.0.0"
-    "@floating-ui/utils" "^0.2.0"
+    "@floating-ui/utils" "^0.2.3"
 
-"@floating-ui/utils@^0.2.0", "@floating-ui/utils@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.1.tgz#16308cea045f0fc777b6ff20a9f25474dd8293d2"
-  integrity sha512-9TANp6GPoMtYzQdt54kfAyMmz1+osLlXdg2ENroU7zzrtflTLrrC/lgrIfaSe+Wu0b89GKccT7vxXA0MoAIO+Q==
+"@floating-ui/utils@^0.2.1", "@floating-ui/utils@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.3.tgz#506fcc73f730affd093044cb2956c31ba6431545"
+  integrity sha512-XGndio0l5/Gvd6CLIABvsav9HHezgDFFhDfHk1bvLfr9ni8dojqLSvBbotJEjmIwNHL7vK4QzBJTdBRoB+c1ww==
 
 "@fortawesome/fontawesome-free@5.15.4":
   version "5.15.4"
