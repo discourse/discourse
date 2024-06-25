@@ -1252,7 +1252,10 @@ he:
       activity_stream: "פעילות"
       read: "נקרא"
       read_help: "נושאים שנקראו לאחרונה"
-      preferences: "העדפות"
+      preferences:
+        title: "העדפות"
+        profile:
+          enforced_required_fields: "יש לספק פרטים נוספים בטרם המשך השימוש באתר הזה."
       feature_topic_on_profile:
         open_search: "נא לבחור נושא חדש"
         title: "נא לבחור נושא"
@@ -5521,6 +5524,8 @@ he:
           site_contact_name: "שם איש הקשר באתר"
           your_organization: "הארגון שלך"
           company_name: "שם החברה"
+          company_name_help: |
+            שם החברה או הארגון שלך.
           governing_law: "החוק המחייב"
           city_for_disputes: "עיר המחלוקת"
           city_for_disputes_help: |
@@ -5930,7 +5935,7 @@ he:
             description: "קישורים, כפתורים, עדכונים וצבע מבטא."
           quaternary:
             name: "רבעוני"
-            description: "קישורי ניווט."
+            description: "לשימוש בערכות עיצוב כרשות"
           header_background:
             name: "רקע כותרת"
             description: "צבע הרקע של כותרת האתר."
@@ -6699,9 +6704,12 @@ he:
           title: "דרישת שדה"
           optional:
             title: "רשות"
+          for_all_users:
+            title: "לכל המשתמשים"
           on_signup:
             title: "בהרשמה"
             description: "כשמשתמשים חדשים נרשמים, הם חייבים למלא את השדה הזה. משתמשים קיימים לא יושפעו."
+          confirmation: "הבחירה הזאת תבקש ממשתמשים חדשים למלא את השדה הזה ולא תאפשר להם לתפעל את האתר עד למילויו. להמשיך?"
         editable:
           title: "ניתן לערוך לאחר הרשמה"
           enabled: "ניתן לערוך"
@@ -6734,6 +6742,7 @@ he:
         recommended: "אנו ממליצים לערוך את הטקסט הבא כדי שיתאים לצרכים שלך:"
         show_overriden: "להציג רק את אלו שנדרסו"
         show_outdated: "להציג רק מיושן/שגוי"
+        show_untranslated: "להציג רק לא מתורגמות"
         locale: "שפה:"
         more_than_50_results: "יש למעלה מ־50 תוצאות. נא למקד את החיפוש שלך."
         no_results: "לא נמצאו טקסטים תואמים באתר"

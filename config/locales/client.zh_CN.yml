@@ -1057,7 +1057,10 @@ zh_CN:
       activity_stream: "活动"
       read: "已读"
       read_help: "最近阅读的话题"
-      preferences: "偏好设置"
+      preferences:
+        title: "偏好设置"
+        profile:
+          enforced_required_fields: "在继续使用本网站之前，你需要提供更多信息。"
       feature_topic_on_profile:
         open_search: "选择一个新话题"
         title: "选择一个话题"
@@ -1357,6 +1360,7 @@ zh_CN:
           双重身份验证会要求您提供除密码之外的一次性令牌，从而为您的帐户增加额外的安全性。可以在 <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> 和 <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> 设备上生成令牌。
         oauth_enabled_warning: "请注意，一旦您为帐户启用双重身份验证，社交登录将被禁用。"
         use: "使用身份验证器应用"
+        enforced_with_oauth_notice: "你需要启用双重身份验证。只有在使用密码登录时，你才会被提示使用此验证方式，而使用外部身份验证或社交登录方式时则不需要。"
         enforced_notice: "在访问此站点之前，您需要启用双重身份验证。"
         disable: "禁用"
         disable_confirm: "确定要禁用双重身份验证吗？"
@@ -4840,6 +4844,8 @@ zh_CN:
           site_contact_name_help: |
             用于发送所有自动信息的有效管理人员用户名。如果留空，将使用默认的系统账户。
           site_contact_group: "站点联系群组"
+          site_contact_group_help: |
+            可用的组名，该组将被邀请接收所有自动发送的私人消息。
           your_organization: "您的组织"
           company_name: "公司名称"
           company_name_help: |
@@ -4847,7 +4853,11 @@ zh_CN:
           company_name_warning: |
             如果留空，则不会提供模板式服务条款或隐私声明。
           governing_law: "适用法律"
+          governing_law_help: |
+            请指定管理本站法律事务的辖区，包括服务条款和隐私声明。这通常指的是运营本站的公司注册地或开展业务的国家或州。
           city_for_disputes: "争议城市"
+          city_for_disputes_help: |
+            请指定将作为解决与使用本论坛相关的任何纠纷的管辖城市。此信息通常包括在法律文件中，例如论坛的服务条款。
           optional: "（可选）"
           update: "更新"
       plugins:
@@ -5238,7 +5248,7 @@ zh_CN:
             description: "链接、一些按钮、通知和主题色。"
           quaternary:
             name: "第四"
-            description: "导航链接。"
+            description: "可在主题中选择使用。"
           header_background:
             name: "页眉背景"
             description: "站点标头的背景色。"
@@ -5989,6 +5999,9 @@ zh_CN:
           title: "字段要求"
           optional:
             title: "可选"
+          for_all_users:
+            title: "对于所有用户"
+            description: "新用户注册时，必须填写此字段。当现有用户返回网站时，如果这是新的必填字段，也会提示他们填写。要重新提示所有用户，请删除此自定义字段并重新创建。"
           on_signup:
             title: "注册时"
             description: "新用户注册时必须填写此字段。现有用户不受影响。"
@@ -6024,6 +6037,7 @@ zh_CN:
         recommended: "我们建议自定义以下文本以符合您的需求："
         show_overriden: "只显示被替换"
         show_outdated: "仅显示过期/无效"
+        show_untranslated: "只显示未翻译的内容"
         locale: "语言："
         more_than_50_results: "结果超过 50 个。请优化您的搜索。"
         no_results: "找不到匹配的站点文本"
@@ -6110,6 +6124,22 @@ zh_CN:
           add_types_title: "允许扩展名 %{types}"
           add_types_toast: "添加了 %{types} 文件类型"
         mandatory_group: "群组是必须的"
+        requires_confirmation_messages:
+          default:
+            prompt: "更改此设置可能会对你的网站产生深远或意想不到的后果。你确定要继续吗？"
+            confirm: "是，我确定"
+          min_password_length:
+            prompt: "你即将修改密码策略。这将影响所有从现在起更改密码的用户。你确定要继续吗？"
+            confirm: "是的，更新密码策略"
+          min_admin_password_length:
+            prompt: "你即将修改密码策略。这将影响所有从现在起更改密码的管理员。你确定要继续吗？"
+            confirm: "是的，更新密码策略"
+          password_unique_charactes:
+            prompt: "你即将修改密码策略。这将影响所有从现在起更改密码的用户。你确定要继续吗？"
+            confirm: "是的，更新密码策略"
+          block_common_passwords:
+            prompt: "你即将修改密码策略。这将影响所有从现在起更改密码的用户。你确定要继续吗？"
+            confirm: "是的，更新密码策略"
       badges:
         title: 徽章
         new_badge: 新徽章

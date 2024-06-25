@@ -1090,7 +1090,8 @@ nl:
       activity_stream: "Activiteit"
       read: "Gelezen"
       read_help: "Recent gelezen topics"
-      preferences: "Voorkeuren"
+      preferences:
+        title: "Voorkeuren"
       feature_topic_on_profile:
         open_search: "Selecteer een nieuw topic"
         title: "Selecteer een topic"
@@ -5266,7 +5267,6 @@ nl:
             description: "Links, sommige knoppen, meldingen en accentkleur."
           quaternary:
             name: "quaternair"
-            description: "Navigatielinks."
           header_background:
             name: "koptekstachtergrond"
             description: "Achtergrondkleur van de koptekst van de website."

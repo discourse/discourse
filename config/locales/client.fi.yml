@@ -1092,7 +1092,8 @@ fi:
       activity_stream: "Toiminta"
       read: "Luetut"
       read_help: "Äskettäin luetut ketjut"
-      preferences: "Asetukset"
+      preferences:
+        title: "Asetukset"
       feature_topic_on_profile:
         open_search: "Valitse uusi ketju"
         title: "Valitse ketju"
@@ -5300,7 +5301,6 @@ fi:
             description: "Linkit, jotkin painikkeet, ilmoitukset ja tehosteväri."
           quaternary:
             name: "neljässijainen"
-            description: "Navigaatiolinkit."
           header_background:
             name: "yläpalkin tausta"
             description: "Sivuston yläpalkin taustaväri."

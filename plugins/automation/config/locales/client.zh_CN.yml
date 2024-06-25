@@ -173,7 +173,9 @@ zh_CN:
           fields:
             user_profile:
               label: 用户个人资料字段
+              description: 仅当用户填写了所有这些字段时才会触发
             custom_fields:
+              label: 用户自定义字段
               description: 仅当用户填写了所有这些字段时才会触发
             once_per_user:
               label: 每个用户一次
@@ -231,6 +233,7 @@ zh_CN:
               description: 仅按话题回复一次
             word_answer_list:
               label: 字词/答案对列表
+              description: "定义关键字/值组列表，其中 `key` 是搜索的术语，`value` 是回复的文本。key \"可以留空，以响应所有触发器，无论其内容如何。注意 `value` 接受 `{{key}}` 作为占位符，将在回复中被 `key` 的值替换。请注意，\"key \"将作为一个 regex 进行评估，如果你实际上指的是一个点，则应转义特殊字符，如\".\"，例如：\"\\.\"。"
             answering_user:
               label: 回答用户
               description: 默认为系统用户
@@ -243,12 +246,17 @@ zh_CN:
           fields:
             creator:
               label: 创建者
+              post_creator_context: 该帖子的创建者
+              updated_user_context: 已更新的用户
             topic:
               label: 话题 ID
             post:
               label: 帖子内容
         topic:
           fields:
+            creator:
+              label: 创建者
+              updated_user_context: 已更新的用户
             body:
               label: 话题正文
             title:

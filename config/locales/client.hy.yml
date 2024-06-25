@@ -789,7 +789,8 @@ hy:
         to: "ում"
       activity_stream: "Ակտիվություն"
       read: "Կարդացած"
-      preferences: "Նախընտրություններ"
+      preferences:
+        title: "Նախընտրություններ"
       feature_topic_on_profile:
         open_search: "Ընտրեք Նոր Թեմա"
         title: "Ընտրել Թեմա"
@@ -3487,7 +3488,6 @@ hy:
             description: "Հղումներ, որոշ կոճակներ, ծանուցումներ և շեշտային գույն:"
           quaternary:
             name: "չորրորդային"
-            description: "Նավիգացիոն հղումները:"
           header_background:
             name: "վերնամասի ֆոն"
             description: "Կայքի վերնամասի ֆոնի գույնը:"

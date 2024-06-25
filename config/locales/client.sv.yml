@@ -1094,7 +1094,8 @@ sv:
       activity_stream: "Aktivitet"
       read: "Läs"
       read_help: "Nyligen lästa ämnen"
-      preferences: "Inställningar"
+      preferences:
+        title: "Inställningar"
       feature_topic_on_profile:
         open_search: "Välj ett nytt ämne"
         title: "Välj ett ämne"
@@ -5276,7 +5277,6 @@ sv:
             description: "Länkar, några knappar, aviseringar och accentfärg."
           quaternary:
             name: "kvartär"
-            description: "Navigeringslänkar."
           header_background:
             name: "bakgrund för sidhuvud"
             description: "Bakgrundsfärg för sidans sidhuvud. "

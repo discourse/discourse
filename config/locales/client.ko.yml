@@ -950,7 +950,8 @@ ko:
       activity_stream: "활동"
       read: "읽음"
       read_help: "최근 읽은 주제"
-      preferences: "환경설정"
+      preferences:
+        title: "환경 설정"
       feature_topic_on_profile:
         open_search: "새 주제 선택"
         title: "주제 선택"
@@ -4256,7 +4257,6 @@ ko:
             description: "링크, 일부 버튼, 알림 및 강조 색상"
           quaternary:
             name: "4차"
-            description: "네비게이션 링크"
           header_background:
             name: "헤더 배경 색상"
             description: "사이트 헤더의 배경 색상입니다."

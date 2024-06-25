@@ -937,7 +937,8 @@ el:
       activity_stream: "Δραστηριότητα"
       read: "Διαβασμένο"
       read_help: "Πρόσφατα αναγνωσμένα θέματα"
-      preferences: "Προτιμήσεις"
+      preferences:
+        title: "Προτιμήσεις"
       feature_topic_on_profile:
         open_search: "Επιλέξτε ένα νέο θέμα"
         title: "Επιλέξτε ένα θέμα"
@@ -3966,7 +3967,6 @@ el:
             description: "Σύνδεσμοι, μερικά κουμπιά, ειδοποιήσεις και χρώματα έμφασης."
           quaternary:
             name: "τέταρτο"
-            description: "Σύνδεσμοι πλοήγησης"
           header_background:
             name: "φόντο κεφαλίδας"
             description: "Χρώμα στο φόντο της κεφαλίδας του ιστότοπου."

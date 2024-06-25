@@ -726,7 +726,8 @@ th:
         to: "ถึง"
       activity_stream: "กิจกรรม"
       read: "อ่าน"
-      preferences: "การตั้งค่า"
+      preferences:
+        title: "การตั้งค่า"
       feature_topic_on_profile:
         open_search: "เลือกกระทู้ใหม่"
         title: "เลือกกระทู้"
