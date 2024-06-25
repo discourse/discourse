@@ -217,10 +217,17 @@ acceptance("User Status", function (needs) {
     await visit("/");
     await openUserStatusModal();
 
-    await fillIn(".user-status-description", userStatus);
+    await fillIn(".user-status-description", "off to <img src=''> dentist");
     await pickEmoji(userStatusEmoji);
     await click("#tap_tile_one_hour");
     await click(".btn-primary"); // save
+
+    assert.ok(
+      query(".user-status-background img").title.startsWith(
+        "off to <img src=''> dentist",
+        "title is properly escaped"
+      )
+    );
 
     await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
