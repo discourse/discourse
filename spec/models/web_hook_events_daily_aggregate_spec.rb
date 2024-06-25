@@ -100,5 +100,15 @@ RSpec.describe WebHookEventsDailyAggregate do
         ],
       )
     end
+
+    it "should be able to be used by the AggregateWebHooksEvents job" do
+      expect { Jobs::AggregateWebHooksEvents.new.execute(date: 1.days.ago) }.to change {
+        WebHookEventsDailyAggregate.count
+      }.by(1)
+
+      expect { Jobs::AggregateWebHooksEvents.new.execute(date: 1.days.ago) }.not_to change {
+        WebHookEventsDailyAggregate.count
+      }
+    end
   end
 end
