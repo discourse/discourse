@@ -909,7 +909,7 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_to_profile_if_required
-    return if request.format.json? && is_api?
+    return if request.format.json?
     return if !current_user
     return if !current_user.needs_required_fields_check?
 
