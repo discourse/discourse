@@ -20,8 +20,8 @@ describe Chat::ChatablesSerializer do
       expect(serializer.users[0]["model"][:status]).to be_present
     end
 
-    context "with hidden profile" do
-      before { user_1.user_option.update!(hide_profile: true) }
+    context "with hidden presence" do
+      before { user_1.user_option.update!(hide_presence: true) }
 
       it "doesn’t include status" do
         serializer =

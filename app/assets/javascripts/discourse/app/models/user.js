@@ -122,6 +122,7 @@ let userOptionFields = [
   "homepage_id",
   "hide_profile_and_presence",
   "hide_profile",
+  "hide_presence",
   "text_size",
   "title_count_mode",
   "timezone",
@@ -188,6 +189,7 @@ export default class User extends RestModel.extend(Evented) {
   @userOption("likes_notifications_disabled") likes_notifications_disabled;
   @userOption("hide_profile_and_presence") hide_profile_and_presence;
   @userOption("hide_profile") hide_profile;
+  @userOption("hide_presence") hide_presence;
   @userOption("title_count_mode") title_count_mode;
   @userOption("enable_defer") enable_defer;
   @userOption("timezone") timezone;

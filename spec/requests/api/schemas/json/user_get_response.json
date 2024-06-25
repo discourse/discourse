@@ -765,6 +765,9 @@
             "hide_profile": {
               "type": "boolean"
             },
+            "hide_presence": {
+              "type": "boolean"
+            },
             "text_size": {
               "type": "string"
             },
@@ -834,6 +837,7 @@
             "homepage_id",
             "hide_profile_and_presence",
             "hide_profile",
+            "hide_presence",
             "text_size",
             "text_size_seq",
             "title_count_mode",

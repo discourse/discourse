@@ -29,6 +29,7 @@ class UserOptionSerializer < ApplicationSerializer
              :homepage_id,
              :hide_profile_and_presence,
              :hide_profile,
+             :hide_presence,
              :text_size,
              :text_size_seq,
              :title_count_mode,

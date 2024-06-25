@@ -527,6 +527,7 @@ class BulkImport::Base
     skip_new_user_tips
     hide_profile_and_presence
     hide_profile
+    hide_presence
     sidebar_link_to_filtered_list
     sidebar_show_count_of_new_items
     timezone
@@ -1135,6 +1136,7 @@ class BulkImport::Base
     skip_new_user_tips: SiteSetting.default_other_skip_new_user_tips,
     hide_profile_and_presence: SiteSetting.default_hide_profile_and_presence,
     hide_profile: SiteSetting.default_hide_profile,
+    hide_presence: SiteSetting.default_hide_presence,
     sidebar_link_to_filtered_list: SiteSetting.default_sidebar_link_to_filtered_list,
     sidebar_show_count_of_new_items: SiteSetting.default_sidebar_show_count_of_new_items,
   }

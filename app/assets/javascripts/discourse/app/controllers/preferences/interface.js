@@ -64,6 +64,7 @@ export default Controller.extend({
       "homepage_id",
       "hide_profile_and_presence",
       "hide_profile",
+      "hide_presence",
       "text_size",
       "title_count_mode",
       "skip_new_user_tips",

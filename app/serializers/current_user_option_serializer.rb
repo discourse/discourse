@@ -9,6 +9,7 @@ class CurrentUserOptionSerializer < ApplicationSerializer
              :likes_notifications_disabled,
              :hide_profile_and_presence,
              :hide_profile,
+             :hide_presence,
              :title_count_mode,
              :enable_defer,
              :timezone,

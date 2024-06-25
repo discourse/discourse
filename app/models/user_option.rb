@@ -95,6 +95,7 @@ class UserOption < ActiveRecord::Base
 
     self.hide_profile_and_presence = SiteSetting.default_hide_profile_and_presence
     self.hide_profile = SiteSetting.default_hide_profile
+    self.hide_presence = SiteSetting.default_hide_presence
 
     self.sidebar_link_to_filtered_list = SiteSetting.default_sidebar_link_to_filtered_list
     self.sidebar_show_count_of_new_items = SiteSetting.default_sidebar_show_count_of_new_items
@@ -257,6 +258,7 @@ end
 #  theme_ids                            :integer          default([]), not null, is an Array
 #  hide_profile_and_presence            :boolean          default(FALSE), not null
 #  hide_profile                         :boolean          default(FALSE), not null
+#  hide_presence                        :boolean          default(FALSE), not null
 #  text_size_key                        :integer          default(0), not null
 #  text_size_seq                        :integer          default(0), not null
 #  email_level                          :integer          default(1), not null

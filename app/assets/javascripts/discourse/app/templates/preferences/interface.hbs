@@ -207,6 +207,14 @@
       class="pref-hide-profile"
     />
   {{/if}}
+  {{#if this.siteSettings.allow_users_to_hide_presence}}
+    <PreferenceCheckbox
+      @labelKey="user.hide_presence"
+      @checked={{this.model.user_option.hide_presence}}
+      data-setting-name="user-hide-presence"
+      class="pref-hide-presence"
+    />
+  {{/if}}
   <PreferenceCheckbox
     @labelKey="user.dynamic_favicon"
     @checked={{this.model.user_option.dynamic_favicon}}
