@@ -11,10 +11,17 @@ import I18n from "discourse-i18n";
 export default class WebhookEvents extends Component {
   @service messageBus;
   @service store;
+  @service dialog;
 
   @tracked pingEnabled = true;
   @tracked events = [];
   @tracked incomingEventIds = [];
+  @tracked loading = false;
+  @tracked showProgress = false;
+  @tracked processedTopicCount = 0;
+  @tracked count = 0;
+  @tracked eventIds = [];
+  @tracked redeliverEnabled = true;
 
   @readOnly("incomingEventIds.length") incomingCount;
   @gt("incomingCount", 0) hasIncoming;
@@ -37,6 +44,21 @@ export default class WebhookEvents extends Component {
     } finally {
       this.loading = false;
     }
+    this.eventIds = this.filteredEventIds();
+    this.count = this.eventIds.length;
+    if (this.count === 0) {
+      this.redeliverEnabled = false;
+    }
+  }
+
+  filteredEventIds() {
+    return this.events.content
+      .filter(this.failedEvents)
+      .map((event) => event.id);
+  }
+
+  failedEvents(event) {
+    return event.status < 200 || (event.status > 299 && event.status !== 0);
   }
 
   get statuses() {
@@ -78,6 +100,17 @@ export default class WebhookEvents extends Component {
       this.pingEnabled = true;
     }
 
+    if (data.type === "redelivered") {
+      const event = this.events.find((e) => {
+        return e.id === data.web_hook_event.id;
+      });
+      event.response_body = data.web_hook_event.response_body;
+      event.response_headers = data.web_hook_event.response_headers;
+      event.status = data.web_hook_event.status;
+      event.set("redelivering", false);
+      return;
+    }
+
     if (!this.incomingEventIds.includes(data.web_hook_event_id)) {
       this.incomingEventIds.pushObject(data.web_hook_event_id);
     }
@@ -116,5 +149,43 @@ export default class WebhookEvents extends Component {
       this.pingEnabled = true;
       popupAjaxError(error);
     }
+  }
+
+  @action
+  async redeliverFailed() {
+    this.eventIds = this.filteredEventIds();
+    this.count = this.eventIds.length;
+    if (this.count === 0) {
+      this.dialog.alert("No events to redeliver.");
+      this.redeliverEnabled = false;
+      return;
+    }
+
+    return this.dialog.yesNoConfirm({
+      message: I18n.t("admin.web_hooks.events.redeliver_failed_confirm", {
+        count: this.count,
+      }),
+      didConfirm: async () => {
+        try {
+          const response = await ajax(
+            `/admin/api/web_hooks/${this.args.webhookId}/events/failed_redeliver`,
+            { type: "POST", data: { event_ids: this.eventIds } }
+          );
+          if (response.event_ids?.length) {
+            response.event_ids.map((id) => {
+              let event = this.events.find((e) => {
+                return e.id === id;
+              });
+              event.set("redelivering", true);
+            });
+          } else {
+            this.dialog.alert("No events to redeliver.");
+          }
+        } catch (e) {
+          this.redeliverEnabled = false;
+          popupAjaxError(e);
+        }
+      },
+    });
   }
 }

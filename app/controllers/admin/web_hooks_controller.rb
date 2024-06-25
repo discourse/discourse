@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Admin::WebHooksController < Admin::AdminController
-  before_action :fetch_web_hook, only: %i[show update destroy list_events bulk_events ping]
+  before_action :fetch_web_hook,
+                only: %i[show update destroy list_events bulk_events ping redeliver_failed_events]
 
   def index
     limit = 50
@@ -130,6 +131,24 @@ class Admin::WebHooksController < Admin::AdminController
       emitter = WebHookEmitter.new(web_hook, web_hook_event)
       emitter.emit!(headers: MultiJson.load(web_hook_event.headers), body: web_hook_event.payload)
       render_serialized(web_hook_event, AdminWebHookEventSerializer, root: "web_hook_event")
+    else
+      render json: failed_json
+    end
+  end
+
+  def redeliver_failed_events
+    web_hook_events = @web_hook.web_hook_events.not_ping.where(id: params[:event_ids])
+
+    if web_hook_events
+      web_hook_events.each_with_index do |web_hook_event, index|
+        Jobs.enqueue_in(
+          (index * 2).seconds,
+          :redeliver_web_hook_event,
+          web_hook_id: @web_hook.id,
+          web_hook_event_id: web_hook_event.id,
+        )
+      end
+      render json: { event_ids: web_hook_events.map(&:id) }
     else
       render json: failed_json
     end

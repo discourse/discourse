@@ -3,6 +3,7 @@
 class WebHookEvent < ActiveRecord::Base
   scope :successful, -> { where("status >= 200 AND status <= 299") }
   scope :failed, -> { where("status < 200 OR status > 299") }
+  scope :not_ping, -> { where("status <> 0") }
   belongs_to :web_hook
 
   after_save :update_web_hook_delivery_status

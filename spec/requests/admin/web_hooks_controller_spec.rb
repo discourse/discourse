@@ -363,4 +363,25 @@ RSpec.describe Admin::WebHooksController do
       end
     end
   end
+
+  describe "#redeliver_failed_events" do
+    fab!(:web_hook_event) { Fabricate(:web_hook_event, web_hook: web_hook, status: 404) }
+
+    before { sign_in(admin) }
+
+    it "enqueues a job for the events" do
+      expect_enqueued_with(
+        job: :redeliver_web_hook_event,
+        args: {
+          web_hook_id: web_hook.id,
+          web_hook_event_id: web_hook_event.id,
+        },
+      ) do
+        post "/admin/api/web_hooks/#{web_hook.id}/events/failed_redeliver.json",
+             params: {
+               event_ids: web_hook_event.id,
+             }
+      end
+    end
+  end
 end
