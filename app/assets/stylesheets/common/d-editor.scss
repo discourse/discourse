@@ -163,10 +163,10 @@
 }
 
 .d-editor-preview .image-wrapper {
-  --resizer-height: 2.5em;
+  --resizer-height: 2.25em;
   position: relative;
   display: inline-block;
-  min-height: calc(var(--resizer-height) * 2);
+  padding-bottom: var(--resizer-height);
 
   .button-wrapper {
     box-sizing: border-box;
@@ -179,7 +179,7 @@
     gap: 0 0.5em;
     position: absolute;
     height: var(--resizer-height);
-    bottom: 0.4em;
+    bottom: 0;
     left: 0;
     opacity: 0.9;
     z-index: 1; // needs to be higher than image
