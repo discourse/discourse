@@ -116,7 +116,7 @@ class Middleware::RequestTracker
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
 
-        if data[:topic_id].present?
+        if data[:topic_id].present? && data[:current_user_id].present?
           TopicsController.defer_topic_view(
             topic_id: data[:topic_id],
             ip: data[:request_remote_ip],
@@ -217,7 +217,7 @@ class Middleware::RequestTracker
             end
           )
         topic_params = Rails.application.routes.recognize_path(path)
-        topic_params[:topic_id] || topic_params[:id]
+        (topic_params[:topic_id] || topic_params[:id])&.to_i
       end
 
     # Auth cookie can be used to find the ID for logged in users, but API calls must look up the
