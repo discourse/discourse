@@ -57,10 +57,6 @@ class TranslationOverride < ActiveRecord::Base
       I18n.overrides_disabled { I18n.t(transform_pluralized_key(key), locale: :en) }
 
     data = { value: sanitized_value, original_translation: original_translation }
-    if key.end_with?("_MF")
-      _, filename = JsLocaleHelper.find_message_format_locale([locale], fallback_to_english: false)
-      data[:compiled_js] = JsLocaleHelper.compile_message_format(filename, locale, sanitized_value)
-    end
 
     params.merge!(data) if translation_override.new_record?
     i18n_changed(locale, [key]) if translation_override.update(data)

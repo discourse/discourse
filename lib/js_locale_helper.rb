@@ -194,7 +194,8 @@ module JsLocaleHelper
 
     result = +"I18n._overrides = {};"
     existing_keys = Set.new
-    message_formats = []
+    message_formats =
+      all_overrides.each_with_object({}) { |(locale, _), hash| hash[locale.to_s.dasherize] = {} }
 
     all_overrides.each do |locale, overrides|
       translations = {}
@@ -204,7 +205,7 @@ module JsLocaleHelper
         existing_keys << key
 
         if key.end_with?("_MF")
-          message_formats << "#{key.inspect}: #{compiled_js}"
+          message_formats[locale.to_s.dasherize][key] = value
         else
           translations[key] = value
         end
@@ -213,7 +214,13 @@ module JsLocaleHelper
       result << "I18n._overrides['#{locale}'] = #{translations.to_json};" if translations.present?
     end
 
-    result << "I18n._mfOverrides = {#{message_formats.join(", ")}};"
+    message_formats.compact_blank!
+
+    require "messageformat"
+    compiled = MessageFormat.compile(message_formats.keys, message_formats)
+    compiled.sub!("export default", "const messages =")
+    result << compiled << ";\n"
+    result << "I18n._mfOverrides = messages;"
     result
   end
 

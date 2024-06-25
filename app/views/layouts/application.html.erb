@@ -49,7 +49,7 @@
       globalThis.I18n.mf_messages = messages;
     <% end -%>
     <%- if ExtraLocalesController.client_overrides_exist? %>
-      <%= preload_script_url ExtraLocalesController.url('overrides') %>
+      <%= preload_script_url ExtraLocalesController.url('overrides'), type: "module" %>
     <%- end %>
 
     <%- if staff? %>
