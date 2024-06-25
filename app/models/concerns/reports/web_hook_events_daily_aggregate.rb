@@ -22,6 +22,8 @@ module Reports::WebHookEventsDailyAggregate
           ["all", "failed events", "successful events", "mean duration"].map do |t|
             { id: t, name: t }
           end,
+        allow_any: false,
+        auto_insert_none_item: false,
       )
 
       report.average = true
