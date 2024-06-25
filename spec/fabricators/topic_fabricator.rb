@@ -35,3 +35,17 @@ Fabricator(:group_private_message_topic, from: :topic) do
   topic_allowed_users { |t| [Fabricate.build(:topic_allowed_user, user: t[:user])] }
   topic_allowed_groups { |t| [Fabricate.build(:topic_allowed_group, group: t[:recipient_group])] }
 end
+
+Fabricator(:new_reply_topic, from: :topic) do
+  before_validation { raise "new_reply_topic fabricator requires the `user` param" if !user }
+
+  after_create do |topic|
+    Fabricate.times(2, :post, topic: topic)
+    TopicUser.change(
+      user.id,
+      topic.id,
+      notification_level: TopicUser.notification_levels[:tracking],
+    )
+    TopicUser.update_last_read(user, topic.id, 1, 1, 1)
+  end
+end
