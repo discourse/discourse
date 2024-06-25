@@ -16,8 +16,6 @@ export default class WebhookEvents extends Component {
   @tracked pingEnabled = true;
   @tracked events = [];
   @tracked incomingEventIds = [];
-  // @tracked failedEventCount = 0;
-  // @tracked eventIds = [];
   @tracked redeliverEnabled = true;
 
   @readOnly("incomingEventIds.length") incomingCount;
