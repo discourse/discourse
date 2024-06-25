@@ -36,6 +36,8 @@ export default class FKControlWrapper extends Component {
         return "checkbox";
       case "FKControlMenu":
         return "menu";
+      default:
+        return "custom";
     }
   }
 
@@ -75,6 +77,7 @@ export default class FKControlWrapper extends Component {
 
   <template>
     <div
+      id={{concat "control-" @field.name}}
       class={{concatClass
         "form-kit__container"
         "form-kit__field"

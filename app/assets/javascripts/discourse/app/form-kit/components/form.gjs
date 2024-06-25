@@ -25,9 +25,10 @@ export default class Form extends Component {
   @service router;
 
   @tracked fieldsWithErrors;
-  @tracked formElement;
+  @tracked isLoading = false;
 
   fields = new Map();
+
   isDirtyForm = false;
 
   onValidation = modifierFn((element, [eventName, handler]) => {
@@ -64,7 +65,11 @@ export default class Form extends Component {
 
   @action
   checkIsDirty(transition) {
-    if (this.isDirtyForm && !transition.isAborted) {
+    if (
+      this.isDirtyForm &&
+      !transition.isAborted &&
+      !transition.queryParamsOnly
+    ) {
       transition.abort();
 
       this.dialog.yesNoConfirm({
@@ -202,8 +207,8 @@ export default class Form extends Component {
     await this.validate(this.fields);
 
     if (!this.hasErrors) {
-      this.isDirtyForm = false;
       await this.args.onSubmit?.(this.effectiveData);
+      this.isDirtyForm = false;
     }
   }
 
@@ -254,19 +259,27 @@ export default class Form extends Component {
   }
 
   async validate(fields) {
-    for (const [name, field] of fields) {
-      await field.validate?.(
-        name,
-        this.effectiveData[name],
-        this.effectiveData
+    this.isLoading = true;
+
+    try {
+      for (const [name, field] of fields) {
+        await field.validate?.(
+          name,
+          this.effectiveData[name],
+          this.effectiveData
+        );
+      }
+
+      await this.args.validate?.(this.effectiveData, {
+        addError: this.addError,
+      });
+
+      this.fieldsWithErrors = Array.from(this.fields.values()).filter(
+        (field) => field.hasErrors
       );
+    } finally {
+      this.isLoading = false;
     }
-
-    await this.args.validate?.(this.effectiveData, { addError: this.addError });
-
-    this.fieldsWithErrors = Array.from(this.fields.values()).filter(
-      (field) => field.hasErrors
-    );
   }
 
   <template>
@@ -296,6 +309,7 @@ export default class Form extends Component {
             class="btn-primary form-kit__button"
             label="submit"
             type="submit"
+            isLoading=this.isLoading
           )
           Field=(component
             FKField

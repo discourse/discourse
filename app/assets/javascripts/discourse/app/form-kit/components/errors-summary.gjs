@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
+import { gt } from "truth-helpers";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import { makeArray } from "discourse-common/lib/helpers";
@@ -13,7 +15,7 @@ export default class FKErrorsSummary extends Component {
   }
 
   <template>
-    {{#if this.fields.length}}
+    {{#if (gt this.fields.length 1)}}
       <div class="form-kit__errors-summary" aria-live="assertive" ...attributes>
         <h2 class="form-kit__errors-summary-title">
           {{icon "exclamation-triangle"}}
@@ -23,7 +25,10 @@ export default class FKErrorsSummary extends Component {
         <ul class="form-kit__errors-summary-list">
           {{#each this.fields as |field|}}
             <li>
-              {{field.title}}:
+              <a
+                rel="noopener noreferrer"
+                href={{concat "#control-" field.name}}
+              >{{field.title}}</a>:
               {{this.concatErrors field.visibleErrors}}
             </li>
           {{/each}}
