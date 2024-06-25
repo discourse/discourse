@@ -41,7 +41,7 @@ export default class TopicDismissButtons extends Component {
   dismissReadPosts() {
     this.modal.show(DismissReadModal, {
       model: {
-        title: this.selectedTopics.length
+        title: this.args.selectedTopics.length
           ? "topics.bulk.dismiss_read_with_selected"
           : "topics.bulk.dismiss_read",
         count: this.args.selectedTopics.length,
