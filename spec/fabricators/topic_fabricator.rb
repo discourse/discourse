@@ -37,15 +37,21 @@ Fabricator(:group_private_message_topic, from: :topic) do
 end
 
 Fabricator(:new_reply_topic, from: :topic) do
-  before_create { raise "new_reply_topic fabricator requires the `user` param" if !user }
+  transient :current_user
 
-  after_create do |topic|
+  before_create do |topic, transient|
+    if !transient[:current_user]
+      raise "new_reply_topic fabricator requires the `current_user` param"
+    end
+  end
+
+  after_create do |topic, transient|
     Fabricate.times(2, :post, topic: topic)
     TopicUser.change(
-      user.id,
+      transient[:current_user].id,
       topic.id,
       notification_level: TopicUser.notification_levels[:tracking],
     )
-    TopicUser.update_last_read(user, topic.id, 1, 1, 1)
+    TopicUser.update_last_read(transient[:current_user], topic.id, 1, 1, 1)
   end
 end

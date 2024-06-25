@@ -26,7 +26,7 @@ describe "glimmer topic list", type: :system do
     it "shows the list and the toggle buttons" do
       SiteSetting.experimental_new_new_view_groups = group.name
       Fabricate(:topic)
-      Fabricate(:new_reply_topic, user: user)
+      Fabricate(:new_reply_topic, current_user: user)
 
       visit("/new")
 
