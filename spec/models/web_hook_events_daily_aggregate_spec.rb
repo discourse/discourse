@@ -101,7 +101,7 @@ RSpec.describe WebHookEventsDailyAggregate do
       )
     end
 
-    it "should be able to be used by the AggregateWebHooksEvents job" do
+    it "should not create a new WebHookEventsDailyAggregate row if AggregateWebHooksEvents runs twice" do
       expect { Jobs::AggregateWebHooksEvents.new.execute(date: 1.days.ago) }.to change {
         WebHookEventsDailyAggregate.count
       }.by(1)
