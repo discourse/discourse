@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.24.7",
-    "ember-auto-import": "^2.7.3",
+    "ember-auto-import": "^2.7.4",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
     "ember-template-imports": "^4.1.1"
