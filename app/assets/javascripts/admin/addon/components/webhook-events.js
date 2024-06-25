@@ -16,8 +16,8 @@ export default class WebhookEvents extends Component {
   @tracked pingEnabled = true;
   @tracked events = [];
   @tracked incomingEventIds = [];
-  @tracked failedEventCount = 0;
-  @tracked eventIds = [];
+  // @tracked failedEventCount = 0;
+  // @tracked eventIds = [];
   @tracked redeliverEnabled = true;
 
   @readOnly("incomingEventIds.length") incomingCount;
@@ -41,21 +41,19 @@ export default class WebhookEvents extends Component {
     } finally {
       this.loading = false;
     }
-    this.eventIds = this.filterFailedEventIds();
-    this.failedEventCount = this.eventIds.length;
-    if (this.failedEventCount === 0) {
+
+    if (!this.failedEventIds.length) {
       this.redeliverEnabled = false;
     }
   }
 
-  filterFailedEventIds() {
+  get failedEventIds() {
     return this.events.content
-      .filter(this.failedEvents)
+      .filter(
+        (event) =>
+          (event.status < 200 || event.status > 299) && event.status !== 0
+      )
       .map((event) => event.id);
-  }
-
-  failedEvents(event) {
-    return (event.status < 200 || event.status > 299) && event.status !== 0;
   }
 
   get statuses() {
@@ -153,9 +151,7 @@ export default class WebhookEvents extends Component {
 
   @action
   async redeliverFailed() {
-    this.eventIds = this.filterFailedEventIds();
-    this.failedEventCount = this.eventIds.length;
-    if (this.failedEventCount === 0) {
+    if (!this.failedEventIds.length) {
       this.dialog.alert("No events to redeliver.");
       this.redeliverEnabled = false;
       return;
@@ -163,13 +159,13 @@ export default class WebhookEvents extends Component {
 
     return this.dialog.yesNoConfirm({
       message: I18n.t("admin.web_hooks.events.redeliver_failed_confirm", {
-        count: this.failedEventCount,
+        count: this.failedEventIds.length,
       }),
       didConfirm: async () => {
         try {
           const response = await ajax(
             `/admin/api/web_hooks/${this.args.webhookId}/events/failed_redeliver`,
-            { type: "POST", data: { event_ids: this.eventIds } }
+            { type: "POST", data: { event_ids: this.failedEventIds } }
           );
           if (response.event_ids?.length) {
             response.event_ids.map((id) => {
