@@ -49,6 +49,7 @@ lt:
       last_visit: "paskutinis apsilankymas"
       summarization:
         summarize: "Apibendrinti"
+      no_public_channels_cta: "Naršyti kanalus"
       reply: "Atsakyti"
       edit: "Redaguoti"
       rebake_message: "Perkurti HTML"

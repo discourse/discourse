@@ -110,7 +110,7 @@ export default class Toasts extends Service {
   }
 
   /**
-   * Close a toast. Any object containg a valid `id` property can be used as a toast parameter.
+   * Close a toast. Any object containing a valid `id` property can be used as a toast parameter.
    */
   @action
   close(toast) {

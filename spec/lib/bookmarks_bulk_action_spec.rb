@@ -44,7 +44,9 @@ RSpec.describe BookmarksBulkAction do
         expect do
           bba = BookmarksBulkAction.new(user, [bookmark_with_reminder.id], type: "clear_reminder")
           bba.perform!
-        end.to change { Bookmark.find_by_id(bookmark_with_reminder.id).reminder_set_at }.to(nil)
+        end.to change { Bookmark.find_by_id(bookmark_with_reminder.id).reminder_set_at }.to(
+          nil,
+        ).and change { Bookmark.find_by_id(bookmark_with_reminder.id).reminder_at }.to(nil)
       end
     end
   end

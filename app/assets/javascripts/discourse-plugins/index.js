@@ -96,13 +96,7 @@ module.exports = {
   name: require("./package").name,
 
   options: {
-    babel: {
-      plugins: [require.resolve("deprecation-silencer")],
-    },
-
-    "ember-cli-babel": {
-      throwUnlessParallelizable: true,
-    },
+    ...require("../discourse/lib/common-babel-config")(),
 
     "ember-this-fallback": {
       enableLogging: false,

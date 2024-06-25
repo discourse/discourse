@@ -53,6 +53,7 @@ class ApplicationRequest < ActiveRecord::Base
       query = self.where(req_type: i)
       s["#{key}_total"] = query.sum(:count)
       s["#{key}_30_days"] = query.where("date > ?", 30.days.ago).sum(:count)
+      s["#{key}_28_days"] = query.where("date > ?", 28.days.ago).sum(:count)
       s["#{key}_7_days"] = query.where("date > ?", 7.days.ago).sum(:count)
     end
 

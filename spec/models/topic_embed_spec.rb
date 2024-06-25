@@ -23,7 +23,7 @@ RSpec.describe TopicEmbed do
       expect(TopicEmbed.count).to eq(0)
     end
 
-    it "Allows figure and figcaption HTML tags" do
+    it "Allows figure, figcaption, details HTML tags" do
       html = <<~HTML
         <html>
         <head>
@@ -35,7 +35,10 @@ RSpec.describe TopicEmbed do
             <figure>
               <img src="/a.png">
               <figcaption>Some caption</figcaption>
-            <figure>
+            </figure>
+            <details>
+              some details
+            </details>
           </div>
         </body>
         </html>
@@ -51,9 +54,56 @@ RSpec.describe TopicEmbed do
             <figure>
               <img src="https://blog.discourse.com/a.png">
               <figcaption>Some caption</figcaption>
-            <figure>
-          </figure></figure></div>
+            </figure>
+            <details>
+              some details
+            </details>
+          </div>
         </div></div>
+      HTML
+      expect(parsed.body.strip).to eq(expected.strip)
+    end
+
+    # ideally, articles get a heavier weightage than td elements
+    # so to force that, we do not allow td elements to be scored
+    it "does not score td tags" do
+      html = <<~HTML
+        <html>
+        <head>
+           <title>Some title</title>
+        </head>
+        <body>
+          <article>
+            article content
+            <table>
+              <tr>
+                <td>
+                  <p>cats</p>
+                  <p>cats</p>
+                </td>
+              </tr>
+            </table>
+          </article>
+        </body>
+        </html>
+      HTML
+
+      parsed = TopicEmbed.parse_html(html, "https://blog.discourse.com/somepost.html")
+
+      expected = <<-HTML
+        <div><div>
+  
+    article content
+    
+      
+        
+          cats
+          cats
+        
+      
+    
+  
+</div></div>
       HTML
       expect(parsed.body.strip).to eq(expected.strip)
     end
@@ -306,6 +356,36 @@ RSpec.describe TopicEmbed do
       let!(:new_user) { Fabricate(:user) }
       let(:tags) { [tag1.name, tag2.name] }
       let(:imported_post) { TopicEmbed.import(new_user, url, title, contents, tags: tags) }
+
+      it "assigns the specified user as the author" do
+        expect(imported_post.user).to eq(new_user)
+      end
+
+      it "associates the specified tags with the topic" do
+        expect(imported_post.topic.tags).to contain_exactly(tag1, tag2)
+      end
+    end
+
+    context "when the embeddable host specifies the user and tags" do
+      fab!(:tag1) { Fabricate(:tag, name: "interesting") }
+      fab!(:tag2) { Fabricate(:tag, name: "article") }
+      fab!(:embeddable_host) { Fabricate(:embeddable_host, host: "tag-eviltrout.com") }
+
+      let!(:new_user) { Fabricate(:user) }
+      let(:tags) { [tag1.name, tag2.name] }
+      let(:embed_url_with_tags) { "http://tag-eviltrout.com/abcd" }
+
+      let(:imported_post) do
+        # passing user = system and tags = nil to ensure we're getting the user and tags from the embeddable host
+        # and not from the TopicEmbed.import method in the tests
+        TopicEmbed.import(Discourse.system_user, embed_url_with_tags, title, contents, tags: nil)
+      end
+
+      before do
+        embeddable_host.user = new_user
+        embeddable_host.tags = [tag1, tag2]
+        embeddable_host.save!
+      end
 
       it "assigns the specified user as the author" do
         expect(imported_post.user).to eq(new_user)

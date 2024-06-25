@@ -164,6 +164,25 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
     end
   end
 
+  describe "when the domain is x.com" do
+    before do
+      @link = "https://x.com/MKBHD/status/1625192182859632661"
+      @onebox_fixture = "xstatus_noclient"
+    end
+    include_context "with engines"
+
+    let(:tweet_content) { "I&#39;ve never played Minecraft" }
+    let(:full_name) { "Marques Brownlee" }
+    let(:screen_name) { "MKBHD" }
+    let(:avatar) { "" }
+    let(:timestamp) { "" }
+    let(:favorite_count) { "" }
+    let(:retweets_count) { "" }
+
+    it_behaves_like "an engine"
+    it_behaves_like "#to_html"
+  end
+
   context "with twitter client" do
     before do
       @twitter_client =

@@ -13,6 +13,7 @@ import {
 export default class ChatFooter extends Component {
   @service router;
   @service chat;
+  @service chatHistory;
   @service siteSettings;
   @service currentUser;
   @service chatChannelsManager;
@@ -27,6 +28,11 @@ export default class ChatFooter extends Component {
 
   get directMessagesEnabled() {
     return this.chat.userCanAccessDirectMessages;
+  }
+
+  get currentRouteName() {
+    const routeName = this.chatHistory.currentRoute?.name;
+    return routeName === "chat" ? "chat.channels" : routeName;
   }
 
   get shouldRenderFooter() {
@@ -46,9 +52,9 @@ export default class ChatFooter extends Component {
           aria-label={{i18n "chat.channel_list.aria_label"}}
           id="c-footer-channels"
           class={{concatClass
-            "btn-flat"
+            "btn-transparent"
             "c-footer__item"
-            (if (eq this.router.currentRouteName "chat.channels") "--active")
+            (if (eq this.currentRouteName "chat.channels") "--active")
           }}
         >
           <UnreadChannelsIndicator />
@@ -62,12 +68,9 @@ export default class ChatFooter extends Component {
             aria-label={{i18n "chat.direct_messages.aria_label"}}
             id="c-footer-direct-messages"
             class={{concatClass
-              "btn-flat"
+              "btn-transparent"
               "c-footer__item"
-              (if
-                (eq this.router.currentRouteName "chat.direct-messages")
-                "--active"
-              )
+              (if (eq this.currentRouteName "chat.direct-messages") "--active")
             }}
           >
             <UnreadDirectMessagesIndicator />
@@ -82,9 +85,9 @@ export default class ChatFooter extends Component {
             aria-label={{i18n "chat.my_threads.aria_label"}}
             id="c-footer-threads"
             class={{concatClass
-              "btn-flat"
+              "btn-transparent"
               "c-footer__item"
-              (if (eq this.router.currentRouteName "chat.threads") "--active")
+              (if (eq this.currentRouteName "chat.threads") "--active")
             }}
           >
             <UnreadThreadsIndicator />

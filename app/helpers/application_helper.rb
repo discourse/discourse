@@ -259,7 +259,7 @@ module ApplicationHelper
   end
 
   def rtl?
-    %w[ar ur fa_IR he].include? I18n.locale.to_s
+    Rtl::LOCALES.include? I18n.locale.to_s
   end
 
   def html_lang

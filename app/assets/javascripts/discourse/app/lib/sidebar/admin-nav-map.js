@@ -83,13 +83,6 @@ export const ADMIN_NAV_MAP = [
         icon: "user-shield",
       },
       {
-        name: "admin_users",
-        route: "adminUsers",
-        label: "admin.community.sidebar_link.users",
-        icon: "users",
-        moderator: true,
-      },
-      {
         name: "admin_user_fields",
         route: "adminUserFields",
         label: "admin.community.sidebar_link.user_fields",
@@ -109,6 +102,12 @@ export const ADMIN_NAV_MAP = [
         query: { filter: "" },
         label: "admin.community.sidebar_link.legal",
         icon: "gavel",
+      },
+      {
+        name: "admin_moderation_flags",
+        route: "adminConfig.flags",
+        label: "admin.community.sidebar_link.moderation_flags",
+        icon: "flag",
       },
     ],
   },

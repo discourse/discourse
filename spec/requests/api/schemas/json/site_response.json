@@ -353,6 +353,9 @@
             },
             "is_custom_flag": {
               "type": "boolean"
+            },
+            "enabled": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -362,7 +365,8 @@
             "description",
             "short_description",
             "is_flag",
-            "is_custom_flag"
+            "is_custom_flag",
+            "enabled"
           ]
         }
     },
@@ -393,6 +397,9 @@
             },
             "is_custom_flag": {
               "type": "boolean"
+            },
+            "enabled": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -402,7 +409,8 @@
             "description",
             "short_description",
             "is_flag",
-            "is_custom_flag"
+            "is_custom_flag",
+            "enabled"
           ]
         }
     },

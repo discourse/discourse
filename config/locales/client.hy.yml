@@ -265,10 +265,16 @@ hy:
         when_reminder_sent: "Ջնջել էջանշանը"
       search: "Որոնում"
       bookmark: "Էջանշել"
+      bulk:
+        select_all: "Ընտրել Բոլորը"
+        clear_all: "Ջնջել Բոլորը"
       reminders:
         today_with_time: "այսօր %{time}"
         tomorrow_with_time: "Վաղը %{time}"
         at_time: " %{date_time} -ում"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Ջնջել Էջանշանը"
     drafts:
       label: "Սևագրեր"
       resume: "Վերսկսել"
@@ -928,6 +934,7 @@ hy:
         set_password: "Առաջադրել Գաղտնաբառ"
         choose_new: "Ընտրել նոր գաղտնաբառ"
         choose: "Ընտրել գաղտնաբառ"
+        title: "Գաղտնաբառի Վերականգնում"
       second_factor_backup:
         regenerate: "Վերագեներացնել"
         disable: "Անջատել"
@@ -1173,7 +1180,6 @@ hy:
           error: "Ներողություն, ֆայլը պետք է լինի CSV ձևաչափով:"
       password:
         title: "Գաղտնաբառ"
-        too_short: "Ձեր գաղտնաբառը շատ կարճ է:"
         common: "Այդ գաղտնաբառը շատ է տարածված:"
         same_as_username: "Ձեր գաղտնաբառը համընկնում է Ձեր օգտանվան հետ:"
         same_as_email: "Ձեր գաղտնաբառը համընկնում է Ձեր էլ. հասցեի հետ:"
@@ -1441,6 +1447,8 @@ hy:
       components:
         bulk_select_topics_dropdown:
           title: "Զանգվածային Գործողությունները"
+        bulk_select_bookmarks_dropdown:
+          title: "Զանգվածային Գործողությունները"
     date_time_picker:
       from: Ում կողմից
       to: Ում
@@ -1538,7 +1546,6 @@ hy:
       enter_fullscreen: "մուտք գործել ամբողջական էկրանով կոմպոզեր"
       exit_fullscreen: "դուրս գալ ամբողջական էկրանով կոմպոզերից"
       modal_ok: "ՕԿ"
-      modal_cancel: "Չեղարկել"
       cant_send_pm: "Ներողություն, Դուք չեք կարող ուղարկել հաղորդագրություն %{username}-ին:"
       yourself_confirm:
         title: "Մոռացե՞լ եք ավելացնել ստացողներին:"
@@ -1799,20 +1806,18 @@ hy:
         bookmarks: "Էջանշված թեմաներ այլևս չկան:"
     topic_bulk_actions:
       close_topics:
-        name: "Փակել Թեմաները"
+        name: "Փակել"
         optional: (ընտրովի)
       archive_topics:
-        name: "Արխիվացնել Թեմաները"
-      unlist_topics:
-        name: "Թեմաները Ցանկից Հանել"
-      relist_topics:
-        name: "Վերացանկավորել Թեմաները"
+        name: "Արխիվ"
+      move_messages_to_inbox:
+        name: "Տեղափոխել Մուտքային արկղ"
       append_tags:
         name: "Ավելացնել Թեգեր"
       replace_tags:
         name: "Փոխարինել Թեգերը"
       delete_topics:
-        name: "Ջնջել Թեմաները"
+        name: "Ջնջել"
     topic:
       filter_to:
         one: "%{count} հրապարակում թեմայում"
@@ -2708,7 +2713,6 @@ hy:
     tagging:
       other_tags: "Այլ Թեգեր"
       selector_tags: "թեգեր"
-      selector_all_tags: "բոլոր թեգերը"
       selector_no_tags: "առանց թեգերի"
       selector_remove_filter: "հանել ֆիլտրը"
       tags: "Թեգեր"
@@ -2861,6 +2865,8 @@ hy:
               content: "Թեմա"
             faq:
               content: "ՀՏՀ"
+            guidelines:
+              content: "Ուղեցույց"
             groups:
               content: "Խմբեր"
             users:
@@ -2869,7 +2875,6 @@ hy:
               content: "Իմ Գրառումները"
             review:
               content: "Վերանայում"
-      filter: "Ֆիլտր"
     form_templates:
       upload_field:
         upload: "Վերբեռնել"
@@ -2993,6 +2998,9 @@ hy:
               label: Կատեգորիա
             include_subcategories:
               label: "Ներառել Ենթակատեգորիաներ"
+      flags:
+        description: "Նկարագրությունը"
+        enabled: "Միացվա՞ծ է:"
       groups:
         new:
           title: "Նոր Խումբ"
@@ -3136,6 +3144,8 @@ hy:
           timestamp: "Ստեղծված"
           completion: "Ավարտի Ժամանակը"
           actions: "Գործողություններ"
+          filter_status:
+            failed: "Ձախողված"
       home:
         title: "Գլխավոր էջ"
       account:
@@ -3182,6 +3192,9 @@ hy:
           search_logs: "Որոնել Գրառումներ"
           security: "Անվտանգություն"
           spam: "Սպամ"
+      config_areas:
+        about:
+          optional: "(ընտրովի)"
       plugins:
         title: "Հավելումներ"
         installed: "Տեղադրված Հավելումները"
@@ -4032,6 +4045,7 @@ hy:
         name: "Դաշտի Անվանումը"
         type: "Դաշտի Տիպը"
         description: "Դաշտի Նկարագրությունը"
+        preferences: "Նախընտրություններ"
         save: "Պահպանել"
         edit: "Խմբագրել"
         delete: "Ջնջել"
@@ -4041,6 +4055,9 @@ hy:
         required:
           enabled: "պարտադիր է"
           disabled: "պարտադիր չէ"
+        requirement:
+          optional:
+            title: "Ընտրովի"
         editable:
           enabled: "խմբագրելի է"
           disabled: "խմբագրելի չէ"

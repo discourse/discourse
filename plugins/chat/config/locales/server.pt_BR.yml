@@ -229,18 +229,8 @@ pt_BR:
         other: "Você tem novas mensagens de chat"
       from: "%{site_name}"
       subject:
-        private_message: "[%{email_prefix}] Nova mensagem"
-        direct_message_from_1: "[%{email_prefix}] Nova mensagem de %{username}"
-        direct_message_from_2: "[%{email_prefix}] Nova mensagem de %{username1} e %{username2}"
-        direct_message_from_more:
-          one: "[%{email_prefix}] Nova mensagem de %{username} e %{count} outro"
-          other: "[%{email_prefix}] Nova mensagem de %{username} e %{count} outros"
-        chat_channel_1: "[%{email_prefix}] Nova mensagem de %{channel}"
-        chat_channel_2: "[%{email_prefix}] Nova mensagem em %{channel1} e %{channel2}"
-        chat_channel_more:
-          one: "[%{email_prefix}] Nova mensagem em %{channel} e %{count} outro"
-          other: "[%{email_prefix}] Nova mensagem em %{channel} e %{count} outros"
-        chat_channel_and_direct_message: "[%{email_prefix}] Nova mensagem em %{channel} e de %{username}"
+        chat_dm_2: "[%{site_name}] Novas mensagens de %{name_1} e %{name_2}"
+        chat_channel_2: "[%{site_name}] Novas mensagens em %{channel_1} e %{channel_2}"
       unsubscribe: "Este resumo do chat será enviado de %{site_link} quando você estiver ausente. Altere seu %{email_preferences_link}, ou %{unsubscribe_link} para cancelar a inscrição."
       unsubscribe_no_link: "Este resumo do chat será enviado de %{site_link} quando você estiver ausente. Altere seu %{email_preferences_link}."
       view_messages:

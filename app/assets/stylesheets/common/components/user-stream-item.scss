@@ -140,6 +140,13 @@
     details.disabled {
       color: var(--primary-medium);
     }
+    .emoji.only-emoji {
+      // oversized emoji break excerpt layout
+      // so we match inline emoji size
+      width: 20px;
+      height: 20px;
+      margin: 0;
+    }
   }
 
   .group-member-info {

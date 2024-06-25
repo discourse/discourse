@@ -99,7 +99,6 @@ fi:
       channels_list_popup:
         browse: "Selaa kanavia"
         create: "Uusi kanava"
-      click_to_join: "Näytä saatavilla olevat kanavat napsauttamalla tätä."
       close: "Sulje"
       remove: "Poista"
       collapse: "Tiivistä chat-laatikko"
@@ -173,7 +172,7 @@ fi:
         header: "Chatin ylätunniste"
         composer: "Chatin tekstieditori"
         channels_list: "Chat-kanavien luettelo"
-      no_public_channels: "Et ole liittynyt kanaville."
+      no_public_channels_cta: "Selaa kanavia"
       kicked_from_channel: "Et voi enää käyttää tätä kanavaa."
       only_chat_push_notifications:
         title: "Lähetä vain chatin push-ilmoituksia"

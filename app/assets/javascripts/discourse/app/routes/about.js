@@ -4,8 +4,8 @@ import Category from "discourse/models/category";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
-export default DiscourseRoute.extend({
-  site: service(),
+export default class About extends DiscourseRoute {
+  @service site;
 
   async model() {
     const result = await ajax("/about.json");
@@ -29,9 +29,9 @@ export default DiscourseRoute.extend({
     });
 
     return result.about;
-  },
+  }
 
   titleToken() {
     return I18n.t("about.simple_title");
-  },
-});
+  }
+}

@@ -100,7 +100,6 @@ tr_TR:
       channels_list_popup:
         browse: "Kanallara göz atın"
         create: "Yeni kanal"
-      click_to_join: "Mevcut kanalları görüntülemek için buraya tıklayın."
       close: "Kapat"
       remove: "Kaldır"
       collapse: "Sohbet Çekmecesini Daralt"
@@ -228,8 +227,7 @@ tr_TR:
         header: "Sohbet başlığı"
         composer: "Sohbet oluşturucu"
         channels_list: "Sohbet kanalları listesi"
-      no_direct_message_channels: "Herhangi bir doğrudan mesaj kanalına katılmadınız."
-      no_public_channels: "Hiçbir kanala katılmadınız."
+      no_public_channels_cta: "Kanallara göz atın"
       kicked_from_channel: "Artık bu kanala erişemezsiniz."
       only_chat_push_notifications:
         title: "Yalnızca sohbet anlık bildirimleri gönder"

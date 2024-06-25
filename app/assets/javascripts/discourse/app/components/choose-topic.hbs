@@ -1,21 +1,19 @@
-<label for="choose-topic-title">
-  {{#if this.labelIcon}}
-    {{d-icon this.labelIcon}}
-  {{/if}}
-  <span>{{i18n this.labelText}}</span>
-</label>
+<div>
+  <label for="choose-topic-title">
+    <span>{{i18n (or @label "choose_topic.title.search")}}</span>
+  </label>
 
-<TextField
-  @value={{this.topicTitle}}
-  @placeholderKey="choose_topic.title.placeholder"
-  @id="choose-topic-title"
-  {{did-insert this.focusInput}}
-/>
+  <input
+    {{on "keydown" this.ignoreEnter}}
+    {{on "input" this.onTopicTitleChange}}
+    type="text"
+    placeholder={{i18n "choose_topic.title.placeholder"}}
+    id="choose-topic-title"
+  />
 
-{{#if this.loading}}
-  <p>{{i18n "loading"}}</p>
-{{else}}
-  {{#if this.noResults}}
+  {{#if this.loading}}
+    <p>{{i18n "loading"}}</p>
+  {{else if (not this.topics.length)}}
     <p>{{i18n "choose_topic.none_found"}}</p>
   {{else}}
     <div class="choose-topic-list" role="radiogroup">
@@ -23,11 +21,11 @@
         <div class="controls existing-topic">
           <label class="radio">
             <Input
-              id={{concat "choose-topic-" t.id}}
+              {{on "click" (fn this.chooseTopic t)}}
               @checked={{eq t.id this.selectedTopicId}}
               @type="radio"
               name="choose_topic_id"
-              {{on "click" (action "chooseTopic" t)}}
+              id={{concat "choose-topic-" t.id}}
             />
             <TopicStatus @topic={{t}} @disableActions={{true}} />
             <span class="topic-title">
@@ -46,4 +44,4 @@
       {{/each}}
     </div>
   {{/if}}
-{{/if}}
+</div>

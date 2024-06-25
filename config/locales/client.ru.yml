@@ -407,11 +407,22 @@ ru:
       search_placeholder: "Поиск закладок по имени, названию темы или по содержанию сообщения"
       search: "Поиск"
       bookmark: "Закладка"
+      bulk:
+        select_all: "Выбрать всё"
+        clear_all: "Сбросить всё"
+        selected_count:
+          one: "Выбрано %{count}"
+          few: "Выбрано %{count}"
+          many: "Выбрано %{count}"
+          other: "Выбрано %{count}"
       reminders:
         today_with_time: "сегодня в %{time}"
         tomorrow_with_time: "завтра в %{time}"
         at_time: "%{date_time}"
         existing_reminder: "Для этой закладки уже настроено напоминание, которое будет отправлено %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Удалить закладку"
     copy_codeblock:
       copied: "скопировано!"
       copy: "скопировать код в буфер обмена"
@@ -1509,6 +1520,7 @@ ru:
         set_password: "Установить пароль"
         choose_new: "Введите новый пароль"
         choose: "Введите пароль"
+        title: "Сброс пароля"
       second_factor_backup:
         title: "Резервные коды двухфакторной аутентификации"
         regenerate: "Сгенерировать заново"
@@ -1905,7 +1917,6 @@ ru:
         fine_print: "Мы просим вас подтвердить свою личность, поскольку это потенциально конфиденциальное действие. После аутентификации вам будет предложено пройти повторную аутентификацию только через несколько часов бездействия."
       password:
         title: "Пароль"
-        too_short: "Пароль слишком короткий."
         common: "Пароль слишком простой."
         same_as_username: "Пароль совпадает с именем пользователя."
         same_as_email: "Пароль совпадает с адресом электронной почты."
@@ -2347,6 +2358,8 @@ ru:
           title: "Управление категориями"
         bulk_select_topics_dropdown:
           title: "Массовые действия"
+        bulk_select_bookmarks_dropdown:
+          title: "Массовые действия"
     date_time_picker:
       from: От
       to: До
@@ -2512,7 +2525,6 @@ ru:
       show_toolbar: "показать панель инструментов редактора"
       hide_toolbar: "скрыть панель инструментов редактора"
       modal_ok: "OK"
-      modal_cancel: "Отмена"
       cant_send_pm: "Вы не можете отправлять сообщения пользователю %{username}."
       yourself_confirm:
         title: "Забыли указать получателей?"
@@ -3022,14 +3034,12 @@ ru:
         filter: "Тем больше нет."
     topic_bulk_actions:
       close_topics:
-        name: "Закрыть темы"
+        name: "Завершить"
         optional: (необязательно)
       archive_topics:
-        name: "Архивировать темы"
-      unlist_topics:
-        name: "Скрыть темы"
-      relist_topics:
-        name: "Показать темы"
+        name: "Архивировать"
+      move_messages_to_inbox:
+        name: "Переместить во входящие"
       remove_tags:
         name: "Удалить теги"
       append_tags:
@@ -3037,7 +3047,7 @@ ru:
       replace_tags:
         name: "Заменить теги"
       delete_topics:
-        name: "Удалить темы"
+        name: "Удалить"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"
@@ -4377,7 +4387,6 @@ ru:
       all_tags: "Все теги"
       other_tags: "Другие теги"
       selector_tags: "теги"
-      selector_all_tags: "Все теги"
       selector_no_tags: "Без тегов"
       selector_remove_filter: "отменить фильтр"
       tags: "Теги"
@@ -4596,6 +4605,7 @@ ru:
           text: "Мы автоматически покажем самые популярные категории сайта"
         filter_placeholder: "Фильтрация категорий"
         no_categories: "Нет категорий, соответствующих запросу."
+        show_more: "Развернуть"
       tags_form_modal:
         title: "Измените навигацию по тегам"
         filter_placeholder: "Фильтрация тегов"
@@ -4686,6 +4696,9 @@ ru:
             faq:
               content: "Правила"
               title: "Рекомендации по использованию сайта"
+            guidelines:
+              content: "Рекомендации"
+              title: "Рекомендации по использованию сайта"
             groups:
               content: "Группы"
               title: "Список доступных групп пользователей"
@@ -4714,7 +4727,7 @@ ru:
       panels:
         forum:
           label: Форум
-      filter: "Фильтр"
+      filter: "Фильтр..."
       no_results:
         title: "Нет результатов"
     welcome_topic_banner:
@@ -4939,6 +4952,9 @@ ru:
               label: Категория
             include_subcategories:
               label: "Включая подкатегории"
+      flags:
+        description: "Описание"
+        enabled: "Включён?"
       groups:
         new:
           title: "Новая группа"
@@ -5250,6 +5266,8 @@ ru:
           timestamp: "Создано"
           completion: "Время завершения"
           actions: "Действия"
+          filter_status:
+            failed: "Не удалась"
       home:
         title: "Главная"
       account:
@@ -5296,6 +5314,18 @@ ru:
           search_logs: "Журналы поиска"
           security: "Безопасность"
           spam: "Спам"
+      config_areas:
+        about:
+          header: "О вашем сайте"
+          community_name: "Название сообщества"
+          site_contact_group_help: |
+            Допустимое имя группы для приглашения ко всем автоматическим сообщениям.
+          your_organization: "Ваша организация"
+          company_name: "Название компании"
+          governing_law: "Регулирующее законодательство"
+          city_for_disputes: "Город для разрешения споров"
+          optional: "(необязательно)"
+          update: "Обновить"
       plugins:
         title: "Плагины"
         installed: "Установленные плагины"
@@ -6424,6 +6454,7 @@ ru:
         name: "Название поля"
         type: "Тип поля"
         description: "Описание поля"
+        preferences: "Настройки"
         save: "Сохранить"
         edit: "Изменить"
         delete: "Удалить"
@@ -6434,6 +6465,9 @@ ru:
           title: "Обязательное при регистрации"
           enabled: "Обязательное"
           disabled: "Необязательное"
+        requirement:
+          optional:
+            title: "Опционально"
         editable:
           title: "Редактируемое после регистрации"
           enabled: "Редактируемое"

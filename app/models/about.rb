@@ -59,7 +59,11 @@ class About
   end
 
   def admins
-    @admins ||= User.where(admin: true).human_users.order("last_seen_at DESC")
+    @admins ||=
+      DiscoursePluginRegistry.apply_modifier(
+        :about_admins,
+        User.where(admin: true).human_users.order("last_seen_at DESC"),
+      )
   end
 
   def stats

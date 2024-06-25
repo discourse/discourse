@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default class WebhookEvents extends Component {
   @service messageBus;
@@ -24,10 +25,40 @@ export default class WebhookEvents extends Component {
   }
 
   async loadEvents() {
-    this.events = await this.store.findAll(
-      "web-hook-event",
-      this.args.webhookId
-    );
+    this.loading = true;
+
+    try {
+      this.events = await this.store.findAll("web-hook-event", {
+        webhookId: this.args.webhookId,
+        status: this.args.status,
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  get statuses() {
+    return [
+      {
+        id: "successful",
+        name: I18n.t("admin.web_hooks.events.filter_status.successful"),
+      },
+      {
+        id: "failed",
+        name: I18n.t("admin.web_hooks.events.filter_status.failed"),
+      },
+    ];
+  }
+
+  @bind
+  reloadEvents() {
+    if (this.loading) {
+      return;
+    }
+
+    this.loadEvents();
   }
 
   @bind

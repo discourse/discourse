@@ -949,7 +949,7 @@ def analyze_missing_s3
       puts
     end
 
-  missing_uploads = Upload.where(verification_status: Upload.verification_statuses[:invalid_etag])
+  missing_uploads = Upload.with_invalid_etag_verification_status
   puts "Total missing uploads: #{missing_uploads.count}, newest is #{missing_uploads.maximum(:created_at)}"
   puts "Total problem posts: #{lookup.keys.count} with #{lookup.values.sum { |a| a.length }} missing uploads"
   puts "Other missing uploads count: #{other.count}"
@@ -991,16 +991,15 @@ def analyze_missing_s3
 end
 
 def delete_missing_s3
-  missing =
-    Upload.where(verification_status: Upload.verification_statuses[:invalid_etag]).order(
-      :created_at,
-    )
+  missing = Upload.with_invalid_etag_verification_status.order(:created_at)
   count = missing.count
+
   if count > 0
     puts "The following uploads will be deleted from the database"
     missing.each { |upload| puts "#{upload.id} - #{upload.url} - #{upload.created_at}" }
     puts "Please confirm you wish to delete #{count} upload records by typing YES"
     confirm = STDIN.gets.strip
+
     if confirm == "YES"
       missing.destroy_all
       puts "#{count} records were deleted"
@@ -1008,6 +1007,29 @@ def delete_missing_s3
       STDERR.puts "Aborting"
       exit 1
     end
+  end
+end
+
+task "uploads:mark_invalid_s3_uploads_as_missing" => :environment do
+  puts "Marking invalid S3 uploads as missing for '#{RailsMultisite::ConnectionManagement.current_db}'..."
+  invalid_s3_uploads = Upload.with_invalid_etag_verification_status.order(:created_at)
+  count = invalid_s3_uploads.count
+
+  if count > 0
+    puts "The following uploads will be marked as missing on S3"
+    invalid_s3_uploads.each { |upload| puts "#{upload.id} - #{upload.url} - #{upload.created_at}" }
+    puts "Please confirm you wish to mark #{count} upload records as missing by typing YES"
+    confirm = STDIN.gets.strip
+
+    if confirm == "YES"
+      changed_count = Upload.mark_invalid_s3_uploads_as_missing
+      puts "#{changed_count} records were marked as missing"
+    else
+      STDERR.puts "Aborting"
+      exit 1
+    end
+  else
+    puts "No uploads found with invalid S3 etag verification status"
   end
 end
 
@@ -1031,7 +1053,7 @@ def fix_missing_s3
   Jobs.run_immediately!
 
   puts "Attempting to download missing uploads and recreate"
-  ids = Upload.where(verification_status: Upload.verification_statuses[:invalid_etag]).pluck(:id)
+  ids = Upload.with_invalid_etag_verification_status.pluck(:id)
   ids.each do |id|
     upload = Upload.find_by(id: id)
     next if !upload

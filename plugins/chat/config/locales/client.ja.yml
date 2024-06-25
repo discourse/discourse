@@ -98,7 +98,6 @@ ja:
       channels_list_popup:
         browse: "チャンネルを閲覧する"
         create: "新しいチャンネル"
-      click_to_join: "利用可能なチャンネルを表示するにはここをクリックします。"
       close: "閉じる"
       remove: "削除"
       collapse: "チャットドロワーを折りたたむ"
@@ -219,7 +218,7 @@ ja:
         header: "チャットヘッダー"
         composer: "チャット作成ツール"
         channels_list: "チャットのチャンネルリスト"
-      no_public_channels: "どのチャンネルにも参加していません。"
+      no_public_channels_cta: "チャンネルを閲覧する"
       kicked_from_channel: "このチャンネルにアクセスできなくなりました。"
       only_chat_push_notifications:
         title: "チャットのプッシュ通知のみ送信する"

@@ -299,11 +299,17 @@ da:
       search_placeholder: "Søg i bogmærker efter navn, emnetitel eller indlægs indhold"
       search: "Søg"
       bookmark: "Bogmærk"
+      bulk:
+        select_all: "Vælg Alle"
+        clear_all: "Ryd Alle"
       reminders:
         today_with_time: "i dag kl. %{time}"
         tomorrow_with_time: "i morgen kl. %{time}"
         at_time: "kl. %{date_time}"
         existing_reminder: "Du har en påmindelse sat for dette bogmærke, som vil blive sendt %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Slet Bogmærke"
     copy_codeblock:
       copied: "kopieret!"
       copy: "kopier kode til udklipsholder"
@@ -1191,6 +1197,7 @@ da:
         set_password: "Skriv password"
         choose_new: "Vælg et nyt kodeord"
         choose: "Vælg et kodeord"
+        title: "Nulstil kodeord"
       second_factor_backup:
         title: "To-faktor backup koder"
         regenerate: "Regenerér"
@@ -1531,7 +1538,6 @@ da:
           error: "Desværre, filen skal være CSV format."
       password:
         title: "Adgangskode"
-        too_short: "Din adgangskode er for kort."
         common: "Denne adgangskode er for almindelig."
         same_as_username: "Dit password er det samme som dit brugernavn."
         same_as_email: "Dit password er det samme som din email adresse."
@@ -1890,6 +1896,8 @@ da:
           title: "Administrer kategorier"
         bulk_select_topics_dropdown:
           title: "Handlinger på flere indlæg"
+        bulk_select_bookmarks_dropdown:
+          title: "Handlinger på flere indlæg"
     date_time_picker:
       from: Fra
       to: Til
@@ -2015,7 +2023,6 @@ da:
       exit_fullscreen: "gå ud af 'fullscreen composer'"
       exit_fullscreen_prompt: "Tryk på <kbd>ESC</kbd> for at afslutte fuld skærm"
       modal_ok: "OK"
-      modal_cancel: "Annuller"
       cant_send_pm: "Beklager, du kan ikke sende en besked til %{username}."
       yourself_confirm:
         title: "Glemte du at tilføje modtagere?"
@@ -2358,20 +2365,18 @@ da:
         filter: "Der er ikke flere emner."
     topic_bulk_actions:
       close_topics:
-        name: "Luk indlæg"
+        name: "Luk"
         optional: (valgfri)
       archive_topics:
-        name: "Arkiver Emner"
-      unlist_topics:
-        name: "Fjern emner fra liste"
-      relist_topics:
-        name: "Genindlæs emner"
+        name: "Arkiv"
+      move_messages_to_inbox:
+        name: "Flyt til indbakke"
       append_tags:
         name: "Tilføj Mærker"
       replace_tags:
         name: "Erstat Mærker"
       delete_topics:
-        name: "Slet emner"
+        name: "Slet"
     topic:
       filter_to:
         one: "%{count} indlæg i emnet"
@@ -3449,7 +3454,6 @@ da:
       all_tags: "Alle mærker"
       other_tags: "Andre Mærker"
       selector_tags: "mærker"
-      selector_all_tags: "alle mærker"
       selector_no_tags: "ingen mærker"
       selector_remove_filter: "fjern filter"
       tags: "Mærker"
@@ -3626,6 +3630,8 @@ da:
       more: "Flere"
       all_categories: "Alle kategorier"
       all_tags: "Alle mærker"
+      categories_form_modal:
+        show_more: "Vis mere"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "Alle"
@@ -3683,6 +3689,8 @@ da:
               title: "Alle emner"
             faq:
               content: "OSS"
+            guidelines:
+              content: "Retningslinier"
             groups:
               content: "Grupper"
             users:
@@ -3696,7 +3704,7 @@ da:
       panels:
         forum:
           label: Forum
-      filter: "Filter"
+      filter: "Filter..."
     until: "Indtil:"
     form_templates:
       upload_field:
@@ -3823,6 +3831,9 @@ da:
               label: Kategori
             include_subcategories:
               label: "Inkludér Underkategorier"
+      flags:
+        description: "Beskrivelse"
+        enabled: "Aktiveret?"
       groups:
         new:
           title: "Ny Gruppe"
@@ -4015,6 +4026,8 @@ da:
           timestamp: "Oprettet"
           completion: "Tid for fuldførelse"
           actions: "Handlinger"
+          filter_status:
+            failed: "Fejlet"
       home:
         title: "Hjem"
       account:
@@ -4061,6 +4074,10 @@ da:
           search_logs: "Søgnings logs"
           security: "Sikkerhed"
           spam: "Spam"
+      config_areas:
+        about:
+          optional: "(valgfri)"
+          update: "Opdater"
       plugins:
         title: "Udvidelser"
         installed: "Installerede Udvidelser"
@@ -5058,6 +5075,7 @@ da:
         name: "Feltnavn"
         type: "Felttype"
         description: "Feltbeskrivelse"
+        preferences: "Indstillinger"
         save: "Gem"
         edit: "Ret"
         delete: "Slet"
@@ -5068,6 +5086,9 @@ da:
           title: "Krævet ved registrering"
           enabled: "krævet"
           disabled: "ikke krævet"
+        requirement:
+          optional:
+            title: "Valgfri"
         editable:
           title: "Kan rettes efter registrering"
           enabled: "redigerbar"

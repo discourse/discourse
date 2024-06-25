@@ -346,11 +346,20 @@ sv:
       search_placeholder: "Sök i bokmärken efter namn, ämnestitel eller postinnehåll"
       search: "Sök"
       bookmark: "Bokmärk"
+      bulk:
+        select_all: "Välj alla"
+        clear_all: "Rensa alla"
+        selected_count:
+          one: "%{count} har valts"
+          other: "%{count} har valts"
       reminders:
         today_with_time: "idag kl. %{time}"
         tomorrow_with_time: "imorgon kl. %{time}"
         at_time: "den %{date_time}"
         existing_reminder: "Du har en påminnelse inställd för detta bokmärke som kommer att skickas %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Radera bokmärke"
     copy_codeblock:
       copied: "kopierad!"
       copy: "kopiera kod till urklipp"
@@ -1358,6 +1367,7 @@ sv:
         set_password: "Ange lösenord"
         choose_new: "Välj ett nytt lösenord"
         choose: "Välj ett lösenord"
+        title: "Beställ nytt lösenord"
       second_factor_backup:
         title: "Tvåfaktorsreservkoder"
         regenerate: "Generera ny"
@@ -1753,7 +1763,6 @@ sv:
         fine_print: "Vi ber dig bekräfta din identitet eftersom detta är en potentiellt känslig åtgärd. När du har autentiserats kommer du bara att bli ombedd att autentisera igen efter några timmars inaktivitet."
       password:
         title: "Lösenord"
-        too_short: "Ditt lösenord är för kort."
         common: "Det lösenordet är för vanligt."
         same_as_username: "Ditt lösenord är detsamma som ditt användarnamn."
         same_as_email: "Ditt lösenord är detsamma som din e-postadress."
@@ -2163,6 +2172,8 @@ sv:
           title: "Hantera kategorier"
         bulk_select_topics_dropdown:
           title: "Massändringar"
+        bulk_select_bookmarks_dropdown:
+          title: "Massändringar"
     date_time_picker:
       from: Från
       to: Till
@@ -2312,7 +2323,6 @@ sv:
       show_toolbar: "visa redigerarens verktygsfält"
       hide_toolbar: "dölj redigerarens verktygsfält"
       modal_ok: "OK"
-      modal_cancel: "Avbryt"
       cant_send_pm: "Tyvärr, du kan inte skicka ett meddelande till %{username}."
       yourself_confirm:
         title: "Glömde du lägga till mottagare?"
@@ -2763,14 +2773,12 @@ sv:
         filter: "Det finns inga fler ämnen."
     topic_bulk_actions:
       close_topics:
-        name: "Stäng ämnen"
+        name: "Stäng"
         optional: (valfri)
       archive_topics:
-        name: "Arkivera ämnen"
-      unlist_topics:
-        name: "Avlista ämnen"
-      relist_topics:
-        name: "Lista om ämnen"
+        name: "Arkiv"
+      move_messages_to_inbox:
+        name: "Flytta till inkorgen"
       remove_tags:
         name: "Ta bort taggar"
       append_tags:
@@ -2778,7 +2786,7 @@ sv:
       replace_tags:
         name: "Ersätt taggar"
       delete_topics:
-        name: "Ta bort ämnen"
+        name: "Radera"
       update_category:
         name: "Uppdatera kategori"
         description: "Välj den nya kategorin för de valda ämnena"
@@ -4002,7 +4010,6 @@ sv:
       all_tags: "Alla taggar"
       other_tags: "Övriga taggar"
       selector_tags: "taggar"
-      selector_all_tags: "alla taggar"
       selector_no_tags: "inga taggar"
       selector_remove_filter: "ta bort filter"
       tags: "Taggar"
@@ -4199,6 +4206,7 @@ sv:
           text: "så visar vi automatiskt de mest populära kategorierna på denna webbplats"
         filter_placeholder: "Filterkategorier"
         no_categories: "Det finns inga kategorier som matchar den angivna termen."
+        show_more: "Visa mer"
       tags_form_modal:
         title: "Redigera taggnavigering"
         filter_placeholder: "Filtrera taggar"
@@ -4289,6 +4297,9 @@ sv:
             faq:
               content: "Vanliga frågor och svar"
               title: "Riktlinjer för att använda denna webbplats"
+            guidelines:
+              content: "Riktlinjer"
+              title: "Riktlinjer för att använda denna webbplats"
             groups:
               content: "Grupper"
               title: "Lista över tillgängliga användargrupper"
@@ -4313,7 +4324,7 @@ sv:
       panels:
         forum:
           label: Forum
-      filter: "Filter"
+      filter: "Filter..."
     welcome_topic_banner:
       title: "Skapa ditt välkomstämne"
       description: "Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din \"snabbpresentation\" eller \"målbeskrivning\". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först."
@@ -4526,6 +4537,9 @@ sv:
               label: Kategori
             include_subcategories:
               label: "Inkludera underkategorier"
+      flags:
+        description: "Beskrivning"
+        enabled: "Aktiverad?"
       groups:
         new:
           title: "Ny grupp"
@@ -4832,6 +4846,8 @@ sv:
           timestamp: "Skapad"
           completion: "Sluttid"
           actions: "Åtgärder"
+          filter_status:
+            failed: "Misslyckad"
       home:
         title: "Hem"
       account:
@@ -4879,6 +4895,16 @@ sv:
           search_logs: "Söklogg"
           security: "Säkerhet"
           spam: "Skräppost"
+      config_areas:
+        about:
+          header: "Om din webbplats"
+          community_name: "Forumets namn"
+          your_organization: "Din organisation"
+          company_name: "Företagsnamn"
+          governing_law: "Gällande lag"
+          city_for_disputes: "Domstol vid tvister"
+          optional: "(valfri)"
+          update: "Uppdatera"
       plugins:
         title: "Tillägg"
         installed: "Installerade tillägg"
@@ -5981,6 +6007,7 @@ sv:
         name: "Fältnamn"
         type: "Fälttyp"
         description: "Fältbeskrivning"
+        preferences: "Inställningar"
         save: "Spara"
         edit: "Redigera"
         delete: "Ta bort"
@@ -5991,6 +6018,9 @@ sv:
           title: "Krävs vid registrering"
           enabled: "krävs"
           disabled: "krävs ej"
+        requirement:
+          optional:
+            title: "Valfritt"
         editable:
           title: "Redigerbar efter registrering"
           enabled: "redigerbar"

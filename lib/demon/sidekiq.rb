@@ -21,18 +21,32 @@ class Demon::Sidekiq < ::Demon::Base
     false
   end
 
+  def log_in_trap(message, level: :info)
+    SignalTrapLogger.instance.log(@logger, message, level: level)
+  end
+
   def after_fork
     Demon::Sidekiq.after_fork&.call
+    SignalTrapLogger.instance.after_fork
 
-    puts "Loading Sidekiq in process id #{Process.pid}"
+    log("Loading Sidekiq in process id #{Process.pid}")
     require "sidekiq/cli"
     cli = Sidekiq::CLI.instance
 
     # Unicorn uses USR1 to indicate that log files have been rotated
     Signal.trap("USR1") do
-      puts "Sidekiq PID #{Process.pid} reopening logs..."
-      Unicorn::Util.reopen_logs
-      puts "Sidekiq PID #{Process.pid} done reopening logs..."
+      begin
+        log_in_trap("Sidekiq reopening logs...")
+        Unicorn::Util.reopen_logs
+        log_in_trap("Sidekiq done reopening logs...")
+      rescue => error
+        log_in_trap(
+          "Error encountered while reopening logs: [#{error.class}] #{error.message}\n#{error.backtrace.join("\n")}",
+          level: :error,
+        )
+
+        exit 1
+      end
     end
 
     options = ["-c", GlobalSetting.sidekiq_workers.to_s]
@@ -53,9 +67,12 @@ class Demon::Sidekiq < ::Demon::Base
     cli.parse(options)
     load Rails.root + "config/initializers/100-sidekiq.rb"
     cli.run
-  rescue => e
-    STDERR.puts e.message
-    STDERR.puts e.backtrace.join("\n")
+  rescue => error
+    log(
+      "Error encountered while starting Sidekiq: [#{error.class}] #{error.message}\n#{error.backtrace.join("\n")}",
+      level: :error,
+    )
+
     exit 1
   end
 end

@@ -2,12 +2,12 @@ import { underscore } from "@ember/string";
 import RestAdapter, { Result } from "discourse/adapters/rest";
 import { ajax } from "discourse/lib/ajax";
 
-export default RestAdapter.extend({
+export default class PostAdapter extends RestAdapter {
   find(store, type, findArgs) {
-    return this._super(store, type, findArgs).then(function (result) {
+    return super.find(store, type, findArgs).then(function (result) {
       return { post: result };
     });
-  },
+  }
 
   createRecord(store, type, args) {
     const typeField = underscore(type);
@@ -17,5 +17,5 @@ export default RestAdapter.extend({
         return new Result(json[typeField], json);
       }
     );
-  },
-});
+  }
+}

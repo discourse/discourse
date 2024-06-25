@@ -24,30 +24,31 @@ import discourseLater from "discourse-common/lib/later";
 
 const SCROLL_DELAY = 500;
 
-const TopicRoute = DiscourseRoute.extend({
-  composer: service(),
-  screenTrack: service(),
-  modal: service(),
-  router: service(),
+export default class TopicRoute extends DiscourseRoute {
+  @service composer;
+  @service screenTrack;
+  @service modal;
+  @service router;
 
-  scheduledReplace: null,
-  lastScrollPos: null,
-  isTransitioning: false,
+  scheduledReplace = null;
+
+  lastScrollPos = null;
+  isTransitioning = false;
+
+  queryParams = {
+    filter: { replace: true },
+    username_filters: { replace: true },
+  };
 
   buildRouteInfoMetadata() {
     return {
       scrollOnTransition: false,
     };
-  },
+  }
 
   redirect() {
     return this.redirectIfLoginRequired();
-  },
-
-  queryParams: {
-    filter: { replace: true },
-    username_filters: { replace: true },
-  },
+  }
 
   titleToken() {
     const model = this.modelFor("topic");
@@ -79,7 +80,7 @@ const TopicRoute = DiscourseRoute.extend({
       }
       return result;
     }
-  },
+  }
 
   @action
   showInvite() {
@@ -99,7 +100,7 @@ const TopicRoute = DiscourseRoute.extend({
         inviteModel: this.modelFor("topic"),
       },
     });
-  },
+  }
 
   @action
   showFlags(model) {
@@ -110,7 +111,7 @@ const TopicRoute = DiscourseRoute.extend({
         setHidden: () => model.set("hidden", true),
       },
     });
-  },
+  }
 
   @action
   showFlagTopic() {
@@ -122,7 +123,7 @@ const TopicRoute = DiscourseRoute.extend({
         setHidden: () => model.set("hidden", true),
       },
     });
-  },
+  }
 
   @action
   showPagePublish() {
@@ -130,7 +131,7 @@ const TopicRoute = DiscourseRoute.extend({
     this.modal.show(PublishPageModal, {
       model,
     });
-  },
+  }
 
   @action
   showTopicTimerModal() {
@@ -142,26 +143,26 @@ const TopicRoute = DiscourseRoute.extend({
         updateTopicTimerProperty: this.updateTopicTimerProperty,
       },
     });
-  },
+  }
 
   @action
   updateTopicTimerProperty(property, value) {
     this.modelFor("topic").set(`topic_timer.${property}`, value);
-  },
+  }
 
   @action
   showTopicSlowModeUpdate() {
     this.modal.show(EditSlowModeModal, {
       model: { topic: this.modelFor("topic") },
     });
-  },
+  }
 
   @action
   showChangeTimestamp() {
     this.modal.show(ChangeTimestampModal, {
       model: { topic: this.modelFor("topic") },
     });
-  },
+  }
 
   @action
   showFeatureTopic() {
@@ -181,7 +182,7 @@ const TopicRoute = DiscourseRoute.extend({
         removeBanner: () => topicController.send("removeBanner"),
       },
     });
-  },
+  }
 
   @action
   showHistory(model, revision) {
@@ -193,7 +194,7 @@ const TopicRoute = DiscourseRoute.extend({
         editPost: (post) => this.controllerFor("topic").send("editPost", post),
       },
     });
-  },
+  }
 
   @action
   showGrantBadgeModal() {
@@ -203,12 +204,12 @@ const TopicRoute = DiscourseRoute.extend({
         selectedPost: topicController.selectedPosts[0],
       },
     });
-  },
+  }
 
   @action
   showRawEmail(model) {
     this.modal.show(RawEmailModal, { model });
-  },
+  }
 
   @action
   moveToTopic() {
@@ -223,7 +224,7 @@ const TopicRoute = DiscourseRoute.extend({
         toggleMultiSelect: topicController.toggleMultiSelect,
       },
     });
-  },
+  }
 
   @action
   changeOwner() {
@@ -239,7 +240,7 @@ const TopicRoute = DiscourseRoute.extend({
         topic: this.modelFor("topic"),
       },
     });
-  },
+  }
 
   // Use replaceState to update the URL once it changes
   @action
@@ -288,7 +289,7 @@ const TopicRoute = DiscourseRoute.extend({
         ),
       });
     }
-  },
+  }
 
   @action
   didTransition() {
@@ -296,14 +297,14 @@ const TopicRoute = DiscourseRoute.extend({
     const topicId = controller.get("model.id");
     setTopicId(topicId);
     return true;
-  },
+  }
 
   @action
   willTransition() {
-    this._super(...arguments);
+    super.willTransition(...arguments);
     cancel(this.scheduledReplace);
     return true;
-  },
+  }
 
   // replaceState can be very slow on Android Chrome. This function debounces replaceState
   // within a topic until scrolling stops
@@ -336,7 +337,7 @@ const TopicRoute = DiscourseRoute.extend({
         SCROLL_DELAY
       ),
     });
-  },
+  }
 
   setupParams(topic, params) {
     const postStream = topic.get("postStream");
@@ -351,7 +352,7 @@ const TopicRoute = DiscourseRoute.extend({
     }
 
     return topic;
-  },
+  }
 
   model(params, transition) {
     if (params.slug.match(ID_CONSTRAINT)) {
@@ -373,10 +374,10 @@ const TopicRoute = DiscourseRoute.extend({
       topic = this.store.createRecord("topic", props);
       return this.setupParams(topic, queryParams);
     }
-  },
+  }
 
   deactivate() {
-    this._super(...arguments);
+    super.deactivate(...arguments);
 
     this.searchService.searchContext = null;
 
@@ -392,7 +393,7 @@ const TopicRoute = DiscourseRoute.extend({
     this.appEvents.trigger("header:hide-topic");
 
     this.controllerFor("topic").set("model", null);
-  },
+  }
 
   setupController(controller, model) {
     controller.setProperties({
@@ -416,7 +417,5 @@ const TopicRoute = DiscourseRoute.extend({
     schedule("afterRender", () =>
       this.appEvents.trigger("header:update-topic", model)
     );
-  },
-});
-
-export default TopicRoute;
+  }
+}

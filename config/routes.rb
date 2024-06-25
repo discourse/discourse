@@ -98,14 +98,6 @@ Discourse::Application.routes.draw do
     get "wizard/steps/:id" => "wizard#index"
     put "wizard/steps/:id" => "steps#update"
 
-    namespace :admin_revamp,
-              path: "admin-revamp",
-              module: "admin",
-              constraints: StaffConstraint.new do
-      get "" => "admin#index"
-      get "config/:area" => "admin#index"
-    end
-
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
 
@@ -391,6 +383,16 @@ Discourse::Application.routes.draw do
           get "types" => "badges#badge_types"
           post "badge_groupings" => "badges#save_badge_groupings"
           post "preview" => "badges#preview"
+        end
+      end
+      namespace :config, constraints: StaffConstraint.new do
+        resources :flags, only: %i[index] do
+          put "toggle"
+          put "reorder/:direction" => "flags#reorder"
+        end
+
+        resources :about, constraints: AdminConstraint.new, only: %i[index] do
+          collection { put "/" => "about#update" }
         end
       end
     end # admin namespace
@@ -1172,6 +1174,7 @@ Discourse::Application.routes.draw do
     post "categories/reorder" => "categories#reorder"
     get "categories/find" => "categories#find"
     post "categories/search" => "categories#search"
+    get "categories/hierarchical_search" => "categories#hierarchical_search"
     get "categories/:parent_category_id" => "categories#index"
 
     scope path: "category/:category_id" do
@@ -1595,7 +1598,9 @@ Discourse::Application.routes.draw do
          constraints: HomePageConstraint.new("finish_installation"),
          as: "installation_redirect"
 
-    root to: "custom#index", constraints: HomePageConstraint.new("custom"), as: "custom_index"
+    root to: "custom_homepage#index",
+         constraints: HomePageConstraint.new("custom"),
+         as: "custom_index"
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"

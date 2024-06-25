@@ -5,10 +5,10 @@ import Group from "discourse/models/group";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
-export default DiscourseRoute.extend({
-  dialog: service(),
-  composer: service(),
-  router: service(),
+export default class NewMessage extends DiscourseRoute {
+  @service dialog;
+  @service composer;
+  @service router;
 
   beforeModel(transition) {
     const params = transition.to.queryParams;
@@ -75,7 +75,7 @@ export default DiscourseRoute.extend({
           return this.openComposer(transition);
         });
     }
-  },
+  }
 
   openComposer(transition, recipients) {
     next(() => {
@@ -85,5 +85,5 @@ export default DiscourseRoute.extend({
         body: transition.to.queryParams.body,
       });
     });
-  },
-});
+  }
+}

@@ -26,3 +26,12 @@ Fabricator(:private_message_topic, from: :topic) do
     ]
   end
 end
+
+Fabricator(:group_private_message_topic, from: :topic) do
+  transient :recipient_group
+  category_id { nil }
+  title { sequence(:title) { |i| "This is a private message #{i} to a group" } }
+  archetype "private_message"
+  topic_allowed_users { |t| [Fabricate.build(:topic_allowed_user, user: t[:user])] }
+  topic_allowed_groups { |t| [Fabricate.build(:topic_allowed_group, group: t[:recipient_group])] }
+end

@@ -65,8 +65,7 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   }
 }
 
-.header-dropdown-toggle.chat-header-icon .icon,
-.c-footer .c-footer__item {
+.header-dropdown-toggle.chat-header-icon .icon {
   .chat-channel-unread-indicator {
     @include chat-unread-indicator;
     border: 2px solid var(--header_background);

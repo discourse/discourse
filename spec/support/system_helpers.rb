@@ -112,13 +112,6 @@ module SystemHelpers
     end
   end
 
-  # When using parallelism, Capybara's `using_session` method can cause
-  # intermittent failures as two sessions can be created with the same name
-  # in different tests and be run at the same time.
-  def using_session(name, &block)
-    Capybara.using_session(name.to_s + self.method_name, &block)
-  end
-
   def select_text_range(selector, start = 0, offset = 5)
     js = <<-JS
       const node = document.querySelector(arguments[0]).childNodes[0];

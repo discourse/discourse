@@ -343,11 +343,20 @@ es:
       search_placeholder: "Buscar marcadores por nombre, título del tema o contenido de la publicación"
       search: "Buscar"
       bookmark: "Marcador"
+      bulk:
+        select_all: "Seleccionar todo"
+        clear_all: "Limpiar todo"
+        selected_count:
+          one: "%{count} seleccionado"
+          other: "%{count} seleccionado"
       reminders:
         today_with_time: "hoy a las %{time}"
         tomorrow_with_time: "mañana a las %{time}"
         at_time: "a las %{date_time}"
         existing_reminder: "Tienes un recordatorio para este marcador que se enviará %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Eliminar marcador"
     copy_codeblock:
       copied: "¡copiado!"
       copy: "copiar código al portapapeles"
@@ -1355,6 +1364,7 @@ es:
         set_password: "Establecer contraseña"
         choose_new: "Escoge una nueva contraseña"
         choose: "Escoge una contraseña"
+        title: "Restablecer contraseña"
       second_factor_backup:
         title: "Códigos de respaldo de la verificación en dos factores"
         regenerate: "Generar nuevos"
@@ -1744,7 +1754,6 @@ es:
         fine_print: "Te pedimos que confirmes tu identidad porque se trata de una acción potencialmente sensible. Una vez autentificado, solo se te pedirá que vuelvas a autentificarte tras unas horas de inactividad."
       password:
         title: "Contraseña"
-        too_short: "Tu contraseña es demasiada corta."
         common: "Esta contraseña es demasiado común."
         same_as_username: "Tu contraseña es la misma que tu nombre de usuario."
         same_as_email: "Tu contraseña es la misma que tu correo electrónico."
@@ -2154,6 +2163,8 @@ es:
           title: "Gestionar categorías"
         bulk_select_topics_dropdown:
           title: "Acciones en bloque"
+        bulk_select_bookmarks_dropdown:
+          title: "Acciones en bloque"
     date_time_picker:
       from: Desde
       to: Hasta
@@ -2303,7 +2314,6 @@ es:
       show_toolbar: "mostrar la barra de herramientas del editor"
       hide_toolbar: "ocultar la barra de herramientas del editor"
       modal_ok: "Aceptar"
-      modal_cancel: "Cancelar"
       cant_send_pm: "Lo sentimos, no puedes enviar un mensaje a %{username}."
       yourself_confirm:
         title: "¿Olvidaste añadir destinatarios?"
@@ -2751,14 +2761,12 @@ es:
         filter: "No hay más temas."
     topic_bulk_actions:
       close_topics:
-        name: "Cerrar temas"
+        name: "Cerrar"
         optional: (opcional)
       archive_topics:
-        name: "Archivar temas"
-      unlist_topics:
-        name: "Hacer invisibles"
-      relist_topics:
-        name: "Hacer visibles de nuevo"
+        name: "Archivo"
+      move_messages_to_inbox:
+        name: "Mover a la bandeja de entrada"
       remove_tags:
         name: "Quitar etiquetas"
       append_tags:
@@ -2766,7 +2774,7 @@ es:
       replace_tags:
         name: "Remplazar etiquetas"
       delete_topics:
-        name: "Eliminar temas"
+        name: "Eliminar"
       update_category:
         name: "Actualizar Categoría"
     topic:
@@ -3985,7 +3993,6 @@ es:
       all_tags: "Todas las etiquetas"
       other_tags: "Otras etiquetas"
       selector_tags: "etiquetas"
-      selector_all_tags: "todas las etiquetas"
       selector_no_tags: "sin etiquetas"
       selector_remove_filter: "quitar filtro"
       tags: "Etiquetas"
@@ -4182,6 +4189,7 @@ es:
           text: "y mostraremos automáticamente las categorías más populares de este sitio"
         filter_placeholder: "Filtrar categorías"
         no_categories: "No hay categorías que coincidan con el término proporcionado."
+        show_more: "Mostrar más"
       tags_form_modal:
         title: "Editar etiquetas navegación"
         filter_placeholder: "Filtrar etiquetas"
@@ -4272,6 +4280,9 @@ es:
             faq:
               content: "Preguntas frecuentes"
               title: "Normas de uso de este sitio"
+            guidelines:
+              content: "Directrices"
+              title: "Normas de uso de este sitio"
             groups:
               content: "Grupos"
               title: "Lista de grupos de usuarios disponibles"
@@ -4296,7 +4307,7 @@ es:
       panels:
         forum:
           label: Foro
-      filter: "Filtro"
+      filter: "Filtrar..."
       no_results:
         title: "No hay resultados"
     welcome_topic_banner:
@@ -4399,6 +4410,7 @@ es:
           copy: "Copiar..."
           paste: "Pegar..."
           save: "Guardar como..."
+    powered_by_discourse: "Impulsado por Discourse"
   admin_js:
     type_to_filter: "escribe para filtrar…"
     admin:
@@ -4511,6 +4523,9 @@ es:
               label: Categoría
             include_subcategories:
               label: "Incluir subcategoría"
+      flags:
+        description: "Descripción"
+        enabled: "¿Activado?"
       groups:
         new:
           title: "Crear grupo"
@@ -4811,6 +4826,8 @@ es:
           timestamp: "Creado"
           completion: "Tiempo de realización"
           actions: "Acciones"
+          filter_status:
+            failed: "Falló"
       home:
         title: "Inicio"
       account:
@@ -4857,6 +4874,16 @@ es:
           search_logs: "Registros de búsqueda"
           security: "Seguridad"
           spam: "Spam"
+      config_areas:
+        about:
+          header: "Acerca de tu sitio"
+          community_name: "Nombre de la comunidad"
+          your_organization: "Tu organización"
+          company_name: "Nombre de la empresa"
+          governing_law: "Ley que rige"
+          city_for_disputes: "Ciudad para disputas"
+          optional: "(opcional)"
+          update: "Actualizar"
       plugins:
         title: "Plugins"
         installed: "Plugins instalados"
@@ -5957,6 +5984,7 @@ es:
         name: "Nombre del campo"
         type: "Tipo de campo"
         description: "Descripción del campo"
+        preferences: "Preferencias"
         save: "Guardar"
         edit: "Editar"
         delete: "Eliminar"
@@ -5967,6 +5995,9 @@ es:
           title: "Obligatorio rellenarlo al registrarse"
           enabled: "obligatorio"
           disabled: "no requerido"
+        requirement:
+          optional:
+            title: "Opcional"
         editable:
           title: "Editable después del registro"
           enabled: "editable"

@@ -34,12 +34,13 @@ module PluginGem
 
   def self.platform_variants(spec_file)
     platform_less = "#{spec_file}.gemspec"
-
     platform_full = "#{spec_file}-#{RUBY_PLATFORM}.gemspec"
-
     platform_version_less =
       "#{spec_file}-#{Gem::Platform.local.cpu}-#{Gem::Platform.local.os}.gemspec"
 
-    [platform_less, platform_full, platform_version_less]
+    variants = [platform_less, platform_full, platform_version_less]
+    variants << "#{spec_file}-#{RUBY_PLATFORM}-gnu.gemspec" if RUBY_PLATFORM.end_with?("-linux")
+
+    variants.uniq
   end
 end

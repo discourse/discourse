@@ -203,6 +203,8 @@ bs_BA:
         raw: "Tijelo"
       user_profile:
         bio_raw: "O Meni"
+      user:
+        password: "Lozinka"
     errors:
       models:
         topic:
@@ -596,10 +598,10 @@ bs_BA:
         user: User
         qtt_like: Likes Received
   dashboard:
-    rails_env_warning: "Your server is running in %{env} mode."
-    host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
-    sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
-    memory_warning: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
+    problem:
+      rails_env: "Your server is running in %{env} mode."
+      host_names: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
+      ram: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
   site_settings:
     disabled: "deaktiviran"
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
@@ -888,7 +890,6 @@ bs_BA:
     previous_discussion: "Prošli Postovi"
     posted_by: "Kreirano od %{username} na dan %{post_date}"
     digest:
-      why: "Ukratko šta se dešavalo na %{site_link} od vaše zadnje posjete %{last_seen_at}."
       liked_received: "Likes Received"
       new_users: "Users"
       join_the_discussion: "Pročitaj Više"
@@ -950,6 +951,7 @@ bs_BA:
     Edit the first post in this topic to change the contents of the %{page_name} page.
   guidelines_topic:
     title: "FAQ/Guidelines"
+    guidelines_title: "Smjernice"
   tos_topic:
     title: "Terms of Service"
   privacy_topic:

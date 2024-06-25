@@ -170,11 +170,15 @@ after_initialize do
 
   self.add_model_callback(Bookmark, :after_commit, on: :create) do
     if self.user.enqueue_narrative_bot_job?
-      if self.bookmarkable_type == "Post"
+      if self.bookmarkable_type == "Post" || self.bookmarkable_type == "Topic"
+        is_topic = self.bookmarkable_type == "Topic"
+        first_post_id =
+          Post.where(topic_id: self.bookmarkable_id, post_number: 1).pick(:id) if is_topic
+
         Jobs.enqueue(
           :bot_input,
           user_id: self.user_id,
-          post_id: self.bookmarkable_id,
+          post_id: is_topic ? first_post_id : self.bookmarkable_id,
           input: "bookmark",
         )
       end

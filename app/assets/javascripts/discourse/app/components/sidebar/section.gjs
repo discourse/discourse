@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
@@ -41,6 +42,10 @@ export default class SidebarSection extends Component {
 
   @bind
   setExpandedState() {
+    if (!isEmpty(this.sidebarState.filter)) {
+      return;
+    }
+
     if (this.isCollapsed) {
       this.sidebarState.collapseSection(this.args.sectionName);
     } else {
@@ -49,6 +54,10 @@ export default class SidebarSection extends Component {
   }
 
   get displaySectionContent() {
+    if (!isEmpty(this.sidebarState.filter)) {
+      return true;
+    }
+
     return !this.sidebarState.collapsedSections.has(
       this.collapsedSidebarSectionKey
     );

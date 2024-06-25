@@ -12,6 +12,7 @@ export default DropdownSelectBoxComponent.extend({
     autoFilterable: false,
     filterable: false,
     none: "select_kit.components.categories_admin_dropdown.title",
+    focusAfterOnChange: false,
   },
 
   content: computed(function () {

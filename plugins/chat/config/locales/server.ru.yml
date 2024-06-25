@@ -257,22 +257,8 @@ ru:
         other: "У вас в чате есть новые сообщения"
       from: "%{site_name}"
       subject:
-        private_message: "[%{email_prefix}] Новое сообщение"
-        direct_message_from_1: "[%{email_prefix}] Новое сообщение от %{username}"
-        direct_message_from_2: "[%{email_prefix}] Новое сообщение от пользователей %{username1} и %{username2}"
-        direct_message_from_more:
-          one: "[%{email_prefix}] Новое сообщение от пользователя %{username} и еще %{count}"
-          few: "[%{email_prefix}] Новое сообщение от пользователя %{username} и еще %{count}"
-          many: "[%{email_prefix}] Новое сообщение от пользователя %{username} и еще %{count}"
-          other: "[%{email_prefix}] Новое сообщение от пользователя %{username} и еще %{count}"
-        chat_channel_1: "[%{email_prefix}] Новое сообщение в канале «%{channel}»"
-        chat_channel_2: "[%{email_prefix}] Новое сообщение в каналах «%{channel1}» и «%{channel2}»"
-        chat_channel_more:
-          one: "[%{email_prefix}] Новое сообщение в канале «%{channel}» и еще %{count}"
-          few: "[%{email_prefix}] Новое сообщение в канале «%{channel}» и еще %{count}"
-          many: "[%{email_prefix}] Новое сообщение в канале «%{channel}» и еще %{count}"
-          other: "[%{email_prefix}] Новое сообщение в канале «%{channel}» и еще %{count}"
-        chat_channel_and_direct_message: "[%{email_prefix}] Новое сообщение в канале «%{channel}» и от пользователя %{username}"
+        chat_dm_2: "[%{site_name}] Новые сообщения от %{name_1} и %{name_2}"
+        chat_channel_2: "[%{site_name}] Новые сообщения в %{channel_1} и %{channel_2}"
       unsubscribe: "Эта сводка чата рассылается с сайта %{site_link} в период вашего отсутствия на форуме. Для отмены подписки измените %{email_preferences_link} или %{unsubscribe_link}."
       unsubscribe_no_link: "Эта сводка чата рассылается с сайта %{site_link} в период вашего отсутствия на форуме. Настройка рассылки: %{email_preferences_link}."
       view_messages:

@@ -35,17 +35,21 @@ class DiscourseCLI < Thor
   option :regex, type: :boolean
   def remap(from, to)
     load_rails
-    require 'db_helper'
 
     if options[:regex]
       puts "Rewriting all occurrences of #{from} to #{to} using regexp_replace"
     else
       puts "Rewriting all occurrences of #{from} to #{to}"
     end
-    puts "WILL RUN ON ALL #{RailsMultisite::ConnectionManagement.all_dbs.length} DBS" if options[:global]
+
+    if options[:global]
+      puts "WILL RUN ON ALL #{RailsMultisite::ConnectionManagement.all_dbs.length} DBS"
+    else
+      puts "WILL RUN ON '#{RailsMultisite::ConnectionManagement.current_db}' DB"
+    end
+
     puts "THIS TASK WILL REWRITE DATA, ARE YOU SURE (type YES)"
-    text = STDIN.gets
-    if text.strip.upcase != "YES"
+    if STDIN.gets.strip.upcase != "YES"
       puts "aborting."
       exit 1
     end
@@ -56,199 +60,196 @@ class DiscourseCLI < Thor
         do_remap(from, to, options[:regex])
       end
     else
+      puts "", "Remapping tables on #{RailsMultisite::ConnectionManagement.current_db}...", ""
       do_remap(from, to, options[:regex])
     end
   end
 
   desc "backup", "Backup a discourse forum"
+  option :s3_uploads, type: :boolean, default: false, desc: "Include s3 uploads in the backup"
   def backup(filename = nil)
     load_rails
-    require "backup_restore"
-    require "backup_restore/backuper"
 
     store = BackupRestore::BackupStore.create
 
     if filename
-      destination_directory = File.dirname(filename).sub(/^\.$/, '')
+      destination_directory = File.dirname(filename).sub(/^\.$/, "")
 
       if destination_directory.present? && store.remote?
         puts "Only local backup storage supports paths."
         exit(1)
       end
 
-      filename_without_extension = File.basename(filename).sub(/\.(sql\.)?(tar\.gz|t?gz)$/i, '')
+      filename_without_extension = File.basename(filename).sub(/\.(sql\.)?(tar\.gz|t?gz)$/i, "")
     end
 
-    puts "Starting backup..."
-    backuper = BackupRestore::Backuper.new(Discourse.system_user.id, filename: filename_without_extension)
-    backup_filename = backuper.run
-    exit(1) unless backuper.success
+    old_include_s3_uploads_in_backups = SiteSetting.include_s3_uploads_in_backups
+    SiteSetting.include_s3_uploads_in_backups = true if options[:s3_uploads]
 
-    puts "Backup done."
+    begin
+      puts "Starting backup..."
+      backuper =
+        BackupRestore::Backuper.new(Discourse.system_user.id, filename: filename_without_extension)
+      backup_filename = backuper.run
+      exit(1) unless backuper.success
 
-    if store.remote?
-      location = BackupLocationSiteSetting.values.find { |v| v[:value] == SiteSetting.backup_location }
-      location = I18n.t("admin_js.#{location[:name]}") if location
-      puts "Output file is stored on #{location} as #{backup_filename}", ""
-    else
-      backup = store.file(backup_filename, include_download_source: true)
+      puts "Backup done."
 
-      if destination_directory.present?
-        puts "Moving backup file..."
-        backup_path = File.join(destination_directory, backup_filename)
-        FileUtils.mv(backup.source, backup_path)
+      if store.remote?
+        location =
+          BackupLocationSiteSetting.values.find { |v| v[:value] == SiteSetting.backup_location }
+        location = I18n.t("admin_js.#{location[:name]}") if location
+        puts "Output file is stored on #{location} as #{backup_filename}", ""
       else
-        backup_path = backup.source
-      end
+        backup = store.file(backup_filename, include_download_source: true)
 
-      puts "Output file is in: #{backup_path}", ""
+        if destination_directory.present?
+          puts "Moving backup file..."
+          backup_path = File.join(destination_directory, backup_filename)
+          FileUtils.mv(backup.source, backup_path)
+        else
+          backup_path = backup.source
+        end
+
+        puts "Output file is in: #{backup_path}", ""
+      end
+    ensure
+      SiteSetting.include_s3_uploads_in_backups = old_include_s3_uploads_in_backups
     end
   end
 
   desc "export", "Backup a Discourse forum"
-  def export
-    backup
+  option :s3_uploads, type: :boolean, default: false
+  def export(filename = nil)
+    backup(filename)
   end
 
   desc "restore", "Restore a Discourse backup"
   option :disable_emails, type: :boolean, default: true
-  option :location, type: :string, enum: ["local", "s3"], desc: "Override the backup location"
+  option :location, type: :string, enum: %w[local s3], desc: "Override the backup location"
   def restore(filename = nil)
-
-    if File.exist?('/usr/local/bin/discourse')
-      discourse = 'discourse'
-    else
-      discourse = './script/discourse'
-    end
-
     load_rails
-    require "backup_restore"
-    require "backup_restore/restorer"
-    require "backup_restore/backup_store"
+
+    discourse = File.exist?("/usr/local/bin/discourse") ? "discourse" : "./script/discourse"
 
     if !filename
       puts "You must provide a filename to restore. Did you mean one of the following?\n\n"
 
       store = BackupRestore::BackupStore.create(location: options[:location])
-      store.files.each do |file|
-        puts "#{discourse} restore #{file.filename}"
-      end
+      store.files.each { |file| puts "#{discourse} restore #{file.filename}" }
 
       return
     end
 
     begin
       puts "Starting restore: #{filename}"
-      restorer = BackupRestore::Restorer.new(
-        user_id: Discourse.system_user.id,
-        filename: filename,
-        disable_emails: options[:disable_emails],
-        location: options[:location],
-        factory: BackupRestore::Factory.new(user_id: Discourse.system_user.id)
-      )
+      restorer =
+        BackupRestore::Restorer.new(
+          user_id: Discourse.system_user.id,
+          filename: filename,
+          disable_emails: options[:disable_emails],
+          location: options[:location],
+          factory: BackupRestore::Factory.new(user_id: Discourse.system_user.id),
+        )
       restorer.run
-      puts 'Restore done.'
+      puts "Restore done."
     rescue BackupRestore::FilenameMissingError
-      puts '', 'The filename argument was missing.', ''
+      puts "", "The filename argument was missing.", ""
       usage
     rescue BackupRestore::RestoreDisabledError
-      puts '', 'Restores are not allowed.', 'An admin needs to set allow_restore to true in the site settings before restores can be run.'
-      puts "Enable now with", '', "#{discourse} enable_restore", ''
-      puts 'Restore cancelled.', ''
+      puts "",
+           "Restores are not allowed.",
+           "An admin needs to set allow_restore to true in the site settings before restores can be run."
+      puts "Enable now with", "", "#{discourse} enable_restore", ""
+      puts "Restore cancelled.", ""
     end
 
     exit(1) unless restorer.try(:success)
   end
 
   desc "import", "Restore a Discourse backup"
-  def import(filename)
+  def import(filename = nil)
     restore(filename)
   end
 
   desc "rollback", "Rollback to the previous working state"
   def rollback
+    puts "Rolling back if needed.."
     load_rails
-    require "backup_restore"
-
-    puts 'Rolling back if needed..'
     BackupRestore.rollback!
-    puts 'Done.'
+    puts "Done."
   end
 
   desc "enable_restore", "Allow restore operations"
   def enable_restore
+    puts "Enabling restore..."
     load_rails
-    require "site_setting"
-
     SiteSetting.allow_restore = true
-    puts 'Restore are now permitted. Disable them with `disable_restore`'
+    puts "Restore are now permitted. Disable them with `disable_restore`"
   end
 
   desc "disable_restore", "Forbid restore operations"
   def disable_restore
+    puts "Disabling restore..."
     load_rails
-    require "site_setting"
-
     SiteSetting.allow_restore = false
-    puts 'Restore are now forbidden. Enable them with `enable_restore`'
+    puts "Restore are now forbidden. Enable them with `enable_restore`"
   end
 
   desc "enable_readonly", "Enable the readonly mode"
   def enable_readonly
+    puts "Enabling readonly mode..."
     load_rails
-
     Discourse.enable_readonly_mode
-    puts 'The site is now in readonly mode.'
+    puts "The site is now in readonly mode."
   end
 
   desc "disable_readonly", "Disable the readonly mode"
   def disable_readonly
+    puts "Disabling readonly mode..."
     load_rails
-
     Discourse.disable_readonly_mode
-    puts 'The site is now fully operable.'
+    puts "The site is now fully operable."
   end
 
   desc "request_refresh", "Ask all clients to refresh the browser"
   def request_refresh
     load_rails
-
     Discourse.request_refresh!
-    puts 'Requests sent. Clients will refresh on next navigation.'
+    puts "Requests sent. Clients will refresh on next navigation."
   end
 
-  desc "export_categories", "Export categories, all its topics, and all users who posted in those topics"
+  desc "export_categories",
+       "Export categories, all its topics, and all users who posted in those topics"
   def export_categories(*category_ids)
     puts "Starting export of categories...", ""
     load_rails
-    load_import_export
     ImportExport.export_categories(category_ids)
     puts "", "Done", ""
   end
 
-  desc "export_category", "Export a category, all its topics, and all users who posted in those topics"
+  desc "export_category",
+       "Export a category, all its topics, and all users who posted in those topics"
   def export_category(category_id)
     raise "Category id argument is missing!" unless category_id
-
     export_categories([category_id])
   end
 
-  desc "import_category", "Import a category, its topics and the users from the output of the export_category command"
+  desc "import_category",
+       "Import a category, its topics and the users from the output of the export_category command"
   def import_category(filename)
     raise "File name argument missing!" unless filename
-
     puts "Starting import from #{filename}..."
     load_rails
-    load_import_export
     ImportExport.import(filename)
     puts "", "Done", ""
   end
 
-  desc "export_topics", "Export topics and all users who posted in that topic. Accepts multiple topic id's"
+  desc "export_topics",
+       "Export topics and all users who posted in that topic. Accepts multiple topic id's"
   def export_topics(*topic_ids)
     puts "Starting export of topics...", ""
     load_rails
-    load_import_export
     ImportExport.export_topics(topic_ids)
     puts "", "Done", ""
   end
@@ -256,10 +257,8 @@ class DiscourseCLI < Thor
   desc "import_topics", "Import topics and their users from the output of the export_topic command"
   def import_topics(filename)
     raise "File name argument missing!" unless filename
-
     puts "Starting import from #{filename}..."
     load_rails
-    load_import_export
     ImportExport.import(filename)
     puts "", "Done", ""
   end
@@ -270,21 +269,20 @@ class DiscourseCLI < Thor
     require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
   end
 
-  def load_import_export
-    require File.expand_path(File.dirname(__FILE__) + "/../lib/import_export")
-  end
-
   def do_remap(from, to, regex = false)
     begin
-      regex ? DbHelper.regexp_replace(from, to, verbose: true) : DbHelper.remap(from, to, verbose: true)
-      puts 'Done', ''
+      if regex
+        DbHelper.regexp_replace(from, to, verbose: true)
+      else
+        DbHelper.remap(from, to, verbose: true)
+      end
+      puts "Done", ""
     rescue => ex
       puts "Error: #{ex}"
       puts "The remap has only been partially applied due to the error above. Please re-run the script again."
       exit(1)
     end
   end
-
 end
 
 DiscourseCLI.start(ARGV)

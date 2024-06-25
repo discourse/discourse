@@ -42,7 +42,7 @@ export default class TopicBulkActions extends Component {
     {
       label: "topics.bulk.change_category",
       icon: "pencil-alt",
-      class: "btn-default",
+      class: "btn-default bulk-actions__change-category",
       visible: ({ topics }) => !topics.some((t) => t.isPrivateMessage),
       action({ setComponent }) {
         setComponent(ChangeCategory);
@@ -60,7 +60,7 @@ export default class TopicBulkActions extends Component {
     {
       label: "topics.bulk.archive_topics",
       icon: "folder",
-      class: "btn-default",
+      class: "btn-default bulk-actions__archive-topics",
       visible: ({ topics }) => !topics.some((t) => t.isPrivateMessage),
       action({ forEachPerformed }) {
         forEachPerformed({ type: "archive" }, (t) => t.set("archived", true));
@@ -69,7 +69,7 @@ export default class TopicBulkActions extends Component {
     {
       label: "topics.bulk.archive_topics",
       icon: "folder",
-      class: "btn-default",
+      class: "btn-default bulk-actions__archive-topics",
       visible: ({ topics }) => topics.some((t) => t.isPrivateMessage),
       action: ({ performAndRefresh }) => {
         const userPrivateMessages = getOwner(this).lookup(
@@ -87,7 +87,7 @@ export default class TopicBulkActions extends Component {
     {
       label: "topics.bulk.move_messages_to_inbox",
       icon: "folder",
-      class: "btn-default",
+      class: "btn-default bulk-actions__move-messages-to-inbox",
       visible: ({ topics }) => topics.some((t) => t.isPrivateMessage),
       action: ({ performAndRefresh }) => {
         const userPrivateMessages = getOwner(this).lookup(
@@ -105,7 +105,7 @@ export default class TopicBulkActions extends Component {
     {
       label: "topics.bulk.notification_level",
       icon: "d-regular",
-      class: "btn-default",
+      class: "btn-default bulk-actions__notification-level",
       action({ setComponent }) {
         setComponent(NotificationLevel);
       },
@@ -113,7 +113,7 @@ export default class TopicBulkActions extends Component {
     {
       label: "topics.bulk.defer",
       icon: "circle",
-      class: "btn-default",
+      class: "btn-default bulk-actions__defer",
       visible: ({ currentUser }) => currentUser.user_option.enable_defer,
       action({ performAndRefresh }) {
         performAndRefresh({ type: "destroy_post_timing" });
@@ -122,7 +122,7 @@ export default class TopicBulkActions extends Component {
     {
       label: "topics.bulk.unlist_topics",
       icon: "far-eye-slash",
-      class: "btn-default",
+      class: "btn-default bulk-actions__unlist",
       visible: ({ topics }) =>
         topics.some((t) => t.visible) &&
         !topics.some((t) => t.isPrivateMessage),
@@ -133,7 +133,7 @@ export default class TopicBulkActions extends Component {
     {
       label: "topics.bulk.relist_topics",
       icon: "far-eye",
-      class: "btn-default",
+      class: "btn-default bulk-actions__relist",
       visible: ({ topics }) =>
         topics.some((t) => !t.visible) &&
         !topics.some((t) => t.isPrivateMessage),
@@ -144,7 +144,7 @@ export default class TopicBulkActions extends Component {
     {
       label: "topics.bulk.reset_bump_dates",
       icon: "anchor",
-      class: "btn-default",
+      class: "btn-default bulk-actions__reset-bump-dates",
       visible: ({ currentUser }) => currentUser.canManageTopic,
       action({ performAndRefresh }) {
         performAndRefresh({ type: "reset_bump_dates" });
@@ -153,7 +153,7 @@ export default class TopicBulkActions extends Component {
     {
       label: "topics.bulk.change_tags",
       icon: "tag",
-      class: "btn-default",
+      class: "btn-default bulk-actions__change-tags",
       visible: ({ currentUser, siteSettings }) =>
         siteSettings.tagging_enabled && currentUser.canManageTopic,
       action({ setComponent }) {
@@ -163,7 +163,7 @@ export default class TopicBulkActions extends Component {
     {
       label: "topics.bulk.append_tags",
       icon: "tag",
-      class: "btn-default",
+      class: "btn-default bulk-actions__append-tags",
       visible: ({ currentUser, siteSettings }) =>
         siteSettings.tagging_enabled && currentUser.canManageTopic,
       action({ setComponent }) {
@@ -173,7 +173,7 @@ export default class TopicBulkActions extends Component {
     {
       label: "topics.bulk.remove_tags",
       icon: "tag",
-      class: "btn-default",
+      class: "btn-default bulk-actions__remove-tags",
       visible: ({ currentUser, siteSettings }) =>
         siteSettings.tagging_enabled && currentUser.canManageTopic,
       action: ({ performAndRefresh, topics }) => {
@@ -188,7 +188,7 @@ export default class TopicBulkActions extends Component {
     {
       label: "topics.bulk.delete",
       icon: "trash-alt",
-      class: "btn-danger delete-topics",
+      class: "btn-danger delete-topics bulk-actions__delete",
       visible: ({ currentUser }) => currentUser.staff,
       action({ performAndRefresh }) {
         performAndRefresh({ type: "delete" });

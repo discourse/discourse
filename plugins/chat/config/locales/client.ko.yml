@@ -104,7 +104,7 @@ ko:
         header: "채팅 헤더"
         composer: "채팅 작성기"
         channels_list: "채팅 채널 목록"
-      no_public_channels: "가입한 채널이 없습니다."
+      no_public_channels_cta: "채널 찾아보기"
       kicked_from_channel: "더 이상 이 채널에 접근할 수 없습니다."
       only_chat_push_notifications:
         title: "채팅 푸시 알림만 보내기"

@@ -97,6 +97,9 @@ export default class ChatChannelsManager extends Service {
   }
 
   remove(model) {
+    if (!model) {
+      return;
+    }
     this.chatSubscriptionsManager.stopChannelSubscription(model);
     delete this._cached[model.id];
   }

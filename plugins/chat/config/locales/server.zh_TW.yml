@@ -63,11 +63,6 @@ zh_TW:
       description:
         other: "您有新的聊天訊息"
       from: "%{site_name}"
-      subject:
-        direct_message_from_1: "[%{email_prefix}] 來自 %{username} 的新訊息"
-        direct_message_from_2: "[%{email_prefix}] 來自 %{username1} 和 %{username2} 的新訊息"
-        chat_channel_1: "[%{email_prefix}] %{channel} 中的新訊息"
-        chat_channel_2: "[%{email_prefix}] %{channel1} 和 %{channel2} 中的新訊息"
       view_messages:
         other: "查看 %{count} 則訊息"
   unsubscribe:

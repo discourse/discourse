@@ -10,7 +10,7 @@ class Flag < ActiveRecord::Base
   after_save :reset_flag_settings!
   after_destroy :reset_flag_settings!
 
-  default_scope { order(:position) }
+  default_scope { order(:position).where(score_type: false) }
 
   def used?
     PostAction.exists?(post_action_type_id: self.id) ||
@@ -62,4 +62,5 @@ end
 #  enabled          :boolean          default(TRUE), not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  score_type       :boolean          default(FALSE), not null
 #

@@ -65,6 +65,7 @@ export default DropdownSelectBoxComponent.extend({
             })
               .then(() => {
                 this.router.refresh();
+                this.bulkSelectHelper.clear();
                 this.toasts.success({
                   duration: 3000,
                   data: { message: i18n("bookmarks.bulk.reminders_cleared") },
@@ -88,6 +89,7 @@ export default DropdownSelectBoxComponent.extend({
             })
               .then(() => {
                 this.router.refresh();
+                this.bulkSelectHelper.clear();
                 this.toasts.success({
                   duration: 3000,
                   data: { message: i18n("bookmarks.bulk.delete_completed") },

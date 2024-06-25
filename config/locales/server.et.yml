@@ -252,6 +252,8 @@ et:
         raw: "Sisu"
       user_profile:
         bio_raw: "Minust"
+      user:
+        password: "Parool"
     errors:
       models:
         topic:
@@ -732,7 +734,8 @@ et:
         user: Kasutaja
         qtt_like: Meeldimisi saadud
   dashboard:
-    host_names_warning: "Sinu config/database.yml fail kasutab vaikimisi hostinime localhost. Kirjuta sinna oma saidi hostinimi."
+    problem:
+      host_names: "Sinu config/database.yml fail kasutab vaikimisi hostinime localhost. Kirjuta sinna oma saidi hostinimi."
   site_settings:
     disabled: "välja lülitatud"
     max_post_length: "Maksimaalne lubatud postituse pikkus tähemärkides"
@@ -879,6 +882,8 @@ et:
     boolean_yes: "Jah"
     boolean_no: "Ei"
     rate_limit_error: "Postitusi saab alla laadida üks kord ööpäevas. Palun proovi homme uuesti."
+  guidelines_topic:
+    guidelines_title: "Juhised"
   tos_topic:
     title: "Teenuse tingimused"
   privacy_topic:

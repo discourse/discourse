@@ -45,14 +45,13 @@ function routeAction(actionName, router, ...params) {
   };
 }
 
-export default Helper.extend({
-  router: computed({
-    get() {
-      return getOwner(this).lookup("router:main");
-    },
-  }),
+export default class RouteAction extends Helper {
+  @computed
+  get router() {
+    return getOwner(this).lookup("router:main");
+  }
 
   compute([actionName, ...params]) {
     return routeAction(actionName, get(this, "router"), ...params);
-  },
-});
+  }
+}

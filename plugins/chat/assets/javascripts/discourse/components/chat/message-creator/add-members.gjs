@@ -27,6 +27,10 @@ export default class AddMembers extends Component {
     return userCount + (this.args.channel?.membershipsCount ?? 0);
   }
 
+  get maxMembers() {
+    return this.siteSettings.chat_max_direct_message_users;
+  }
+
   @action
   async saveGroupMembers() {
     try {
@@ -60,10 +64,7 @@ export default class AddMembers extends Component {
   <template>
     <div class="chat-message-creator__add-members-container">
       <div class="chat-message-creator__add-members">
-        <MembersCount
-          @count={{this.membersCount}}
-          @max={{this.siteSettings.chat_max_direct_message_users}}
-        />
+        <MembersCount @count={{this.membersCount}} @max={{this.maxMembers}} />
 
         <MembersSelector
           @channel={{@channel}}
@@ -72,10 +73,7 @@ export default class AddMembers extends Component {
           @close={{@close}}
           @cancel={{@cancel}}
           @membersCount={{this.membersCount}}
-          @maxReached={{gte
-            this.membersCount
-            this.siteSettings.chat_max_direct_message_users
-          }}
+          @maxReached={{gte this.membersCount this.maxMembers}}
         />
 
         {{#if @members.length}}

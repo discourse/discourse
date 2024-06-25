@@ -29,6 +29,10 @@ export default class Contents extends Component {
 
   <template>
     <div class="contents">
+      <PluginOutlet
+        @name="header-contents__before"
+        @outletArgs={{hash topic=this.header.topic}}
+      />
       {{#if this.site.desktopView}}
         {{#if @sidebarEnabled}}
           <SidebarToggle
@@ -72,6 +76,10 @@ export default class Contents extends Component {
           @outletArgs={{hash topic=this.header.topic}}
         />
       </div>
+      <PluginOutlet
+        @name="header-contents__after"
+        @outletArgs={{hash topic=this.header.topic}}
+      />
     </div>
   </template>
 }

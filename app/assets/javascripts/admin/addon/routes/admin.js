@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
-import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
@@ -31,7 +30,7 @@ export default class AdminRoute extends DiscourseRoute {
 
     if (this.adminSidebarStateManager.currentUserUsingAdminSidebar) {
       if (!transition?.to.name.startsWith("admin")) {
-        this.sidebarState.setPanel(MAIN_PANEL);
+        this.adminSidebarStateManager.stopForcingAdminSidebar();
       }
     }
   }

@@ -141,7 +141,28 @@ he:
         not_valid_boolean_value: "חייב להיות ערך בוליאני"
         humanize_not_valid_enum_value: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות אחד מהבאים %{choices}."
         not_valid_enum_value: "חייב להיות אחד מהבאים: %{choices}"
+        humanize_not_valid_categories_value: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב מערך של מזהי תחומים חוקיים."
         not_valid_categories_value: "חייב להיות מערך של מזהי קטגוריות תקניים"
+        humanize_categories_value_not_valid_min:
+          one: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות לפחות תחום אחד."
+          two: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות לפחות תחומיים."
+          many: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות לפחות %{count} תחומים."
+          other: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות לפחות %{count} תחומים."
+        categories_value_not_valid_min:
+          one: "חייב להיות לפחות תחום אחד"
+          two: "חייבים להיות לפחות שני תחומים"
+          many: "חייבים להיות לפחות %{count} תחומים"
+          other: "חייבים להיות לפחות %{count} תחומים"
+        humanize_categories_value_not_valid_max:
+          one: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות תחום אחד לכל היותר."
+          two: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות שני תחומים לכל היותר."
+          many: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות %{count} תחומים לכל היותר."
+          other: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות %{count} תחומים לכל היותר."
+        categories_value_not_valid_max:
+          one: "חייב להיות תחום אחד לכל היותר"
+          two: "חייבים להיות שני תחומים לכל היותר"
+          many: "חייבים להיות %{count} תחומים לכל היותר"
+          other: "חייבים להיות %{count} תחומים לכל היותר"
         humanize_not_valid_topic_value: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות מזהה נושא תקין."
         not_valid_topic_value: "חייב להיות מזהה נושא תקין"
         humanize_not_valid_post_value: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות מזהה פוסט תקין."
@@ -504,6 +525,7 @@ he:
   read_full_topic: "קריאת הנושא במלואו"
   private_message_abbrev: "הודעה"
   rss_description:
+    hot: "נושאים מובילים"
     latest: "נושאים אחרונים"
     top: "נושאים מובילים"
     top_all: "הנושאים המובילים בכל הזמנים"
@@ -587,7 +609,6 @@ he:
     request_membership_pm:
       title: "בקשת חברות עבור ‎@%{group_name}‎"
     request_accepted_pm:
-      title: "התקבלת אל ‎@%{group_name}‎"
       body: |
         בקשתך להיכנס אל ‎@%{group_name}‎ אושרה והתקבלת לחברות.
   education:
@@ -625,13 +646,13 @@ he:
 
       יותר קל לעקוב אחרי דיונים ולמצוא אנשים מעניינים בדיונים כשלכל אחד ואחת יש תמונת פרופיל ייחודית!
     sequential_replies: |
-      ### מוטב להשיב למספר פוסטים ביחד
+      ### מוטב להשיב למספר הודעות ביחד
 
-      במקום להגיב כמה פעמים לנושא ברצף, עדיף לכלול בתגובה אחת ציטוטים מפוסטים קודמים או @איזכורי שמות.
+      במקום להגיב כמה פעמים לנושא ברצף, עדיף לכלול בתגובה אחת ציטוטים מתגובות קודמות או @איזכורי שמות.
 
-      ניתן לערוך תגובות קודמות שלך כדי להוסיף ציטוט על ידי סימון טקסט ובחירה בכפתור שנגלה <b>ציטוט תגובה</b>.
+      ניתן לערוך תגובות קודמות שלך כדי להוסיף ציטוט על ידי סימון מלל ובחירה בכפתור שנגלה <b>ציטוט תגובה</b>.
 
-      יותר קל לכולם לקרוא נושאים שיש בהם פחות תגובות עמוקות מאשר הרבה תגובות קטנות.
+      יותר קל לכולם לקרוא נושאים שיש בהם תגובות עומק מעטות מאשר הרבה תגובות קטנות.
     dominating_topic: פרסמת המון בנושא הזה! אולי כדאי לתת גם לאחרים הזדמנות להגיב ולהחליף ביניהם דברים.
     dont_feed_the_trolls: הפוסט הזה כבר סומן להסבת תשומת הלב של המפקחים. עדיין להגיב אליו? תגובות לתוכן שלילי מעודדות התנהגות שלילית קיצונית אף יותר.
     too_many_replies: |
@@ -658,6 +679,8 @@ he:
         raw: "גוף"
       user_profile:
         bio_raw: "עלי"
+      user:
+        password: "ססמה"
     errors:
       models:
         topic:
@@ -682,6 +705,7 @@ he:
               same_as_username: "זהה לשם המשתמש שלך. נא להשתמש בסיסמה בטוחה יותר."
               same_as_email: "זהה לכתובת הדוא״ל שלך. נא להשתמש בסיסמה בטוחה יותר."
               same_as_current: "זהה לסיסמה הנוכחית שלך."
+              same_as_previous: "זהה לסיסמה הקודמת שלך."
               same_as_name: "זהה לשם שלך."
               unique_characters: "מכיל יותר מידי תווים שחוזרים על עצמם. נא להשתמש בסיסמה בטוחה יותר."
             username:
@@ -766,6 +790,8 @@ he:
 
       > לקבלת עזרה או הגשת הצעה, אפשר לשאול אותנו דרך %{feedback_category} או [ליצור קשר עם המנהלים](%{base_path}/about).
   admin_quick_start_title: "מדריך למנהלים: איך מתחילים"
+  topic_view_stats:
+    invalid_date: "התאריך בתבנית שגויה, נא להשתמש ב־YYYY-MM-DD"
   category:
     topic_prefix: "על הקטגוריה %{category}"
     replace_paragraph: "(מוטב להחליף את הפסקה הראשונה הזאת בתיאור קצר של הקטגוריה החדשה שלך. הנחיה זו תופיע באזור בחירת הקטגוריה, לכן עדיף להסתפק במלל שלא יעלה על 200 תווים.)"
@@ -1205,6 +1231,7 @@ he:
   flags:
     errors:
       already_handled: "הדגל כבר טופל"
+      wrong_move: "לא ניתן להזיז את הדגל"
   reports:
     default:
       labels:
@@ -1304,7 +1331,9 @@ he:
         page_view_anon_browser: "דפדפן אלמוני"
         page_view_logged_in_browser: "דפדפן עם כניסה למערכת"
         page_view_crawler: "סורק ידוע"
+        page_view_other: "צפיות נוספות"
       yaxis: "יום"
+      description: "צפיות בדף עבור משתמשים מחוברים, משתמשים אנונימיים, סורקים ידועים ואחרים. דוח ניסיוני זה מבטיח שבקשות מחוברות/אנונימיות מגיעות מדפדפנים אמיתיים לפני ספירתן."
     dau_by_mau:
       title: "יחס פעילות יומי/חודשי"
       xaxis: "יום"
@@ -1465,9 +1494,15 @@ he:
       yaxis: "צפיות אלמוניות מניידים"
       description: "מספר צפיות העמודים החדשות ממשתמשים במכשירים ניידים שלא נכנסו לחשבונם."
     page_view_anon_browser_reqs:
+      title: "צפיות דפדפן אנונימיות"
       xaxis: "יום"
+      yaxis: "צפיות דפדפן אנונימיות"
+      description: "מספר צפיות בדף על ידי מבקרים אנונימיים המשתמשים בדפדפנים אמיתיים."
     page_view_logged_in_browser_reqs:
+      title: "צפיות בדפים של משתמשיםות מחובריםות"
       xaxis: "יום"
+      yaxis: "צפיות בדפים של משתמשיםות מחובריםות"
+      description: "מספר צפיות בדף על ידי מבקריםות מחובריםות המשתמשים בדפדפנים אמיתיים."
     http_background_reqs:
       title: "רקע"
       xaxis: "יום"
@@ -1566,40 +1601,41 @@ he:
         qtt_like: לייקים שהתקבלו
       description: "10 המשתמשים המובילים שקיבלו לייקים ממגוון רחב של אנשים."
   dashboard:
-    twitter_login_warning: 'נראה שהכניסה לטוויטר לא עובדת כרגע. יש לבדוק שפרטי הכניסה תקינים ב<a href="%{base_path}/admin/site_settings/category/login?filter=twitter">הגדרות האתר</a>.'
-    group_email_credentials_warning: 'הייתה תקלה בפרטי הגישה לדוא״ל לקבוצה <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. לא תישלחנה הודעות מתיבת הדואר הנכנס של הקבוצה עד לטיפול בבעיה הזאת. %{error}'
-    rails_env_warning: "השרת שלך רץ במצב %{env}."
-    host_names_warning: "הקובץ config/database.yml אצלך משתמש בכתובת ברירת המחדל - localhost. נא לעדכן אותה להשתמש בכתובת השרת שלך."
-    sidekiq_warning: 'Sidekiq לא רץ. משימות רבות, כמו שליחת דוא״ל, מבוצעות אסינכרונית באמצעות Sidekiq. אנא לוודא שלפחות תהליך אחד של Sidekiq רץ. <a href="https://github.com/mperham/sidekiq" target="_blank">כאן יש מידע נוסף על Sidekiq</a>.'
-    queue_size_warning: "מספר העבודות בתור הוא %{queue_size}, שהוא גבוה. זה עלול להצביע על בעיה עם תהליך(י) Sidekiq, או שייתכן שאתם צריכים יותר Sidekiq workers."
-    memory_warning: "בשרת שלך יש פחות מגיגה זיכרון בסך הכול. מומלץ לפחות גיגה של זיכרון."
-    maxmind_db_configuration_warning: 'השרת הוגדר להשתמש במסד הנתונים של MaxMind לאיתור IP הפוך אך לא הוגדר מזהה חשבון ב־MaxMind מה שעלול לגרום לכשל בהורדת מסד הנתונים של MaxMind. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">המדריך הזה יסביר קצת מעבר</a>.'
-    google_oauth2_config_warning: 'השרת מוגדר לאפשר הרשמה דרך OAuth2 עם Google‏ (enable_google_oauth2_logins), אך לא הוגדרו ערכים למזהה לקוח ולסוד לקוח. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">מדריך זה יסביר לך כיצד</a>.'
-    facebook_config_warning: 'השרת מוגדר לאפשר הרשמה דרך פייסבוק (enable_facebook_logins), אך לא הוגדרו ערכים למזהה יישום ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">מדריך זה יסביר לך כיצד</a>.'
-    twitter_config_warning: 'השרת מוגדר לאפשר הרשמה דרך טוויטר (enable_twitter_logins), אך לא הוגדרו ערכים למפתח ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">מדריך זה יסביר לך כיצד</a>.'
-    github_config_warning: 'השרת מוגדר לאפשר הרשמה דרך GitHub‏ (enable_github_logins), אך לא הוגדרו ערכים למפתח ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">מדריך זה יסביר לך כיצד</a>.'
-    s3_config_warning: 'השרת מוגדר להעלות קבצים ל־S3, אך לפחות אחת מההגדרות הבאות חסרה: s3_access_key_id,‏ s3_secret_access_key,‏ s3_use_iam_profile, או s3_upload_bucket. עליך לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">ניתן לעיין בעמוד „איך להגדיר העלאת תמונות ל־S3?” כדי ללמוד עוד</a>.'
-    s3_backup_config_warning: 'השרת מוגדר להעלות גיבויים ל־S3, אך לפחות אחת מההגדרות הבאות חסרה: s3_access_key_id,‏ s3_secret_access_key,‏ s3_use_iam_profile, או s3_backup_bucket. עליך לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">ניתן לעיין בעמוד „איך להגדיר העלאת תמונות ל־S3?” כדי ללמוד עוד</a>.'
-    s3_cdn_warning: 'השרת מוגדר להעלות קבצים ל־S3, אך לא מוגדר CDN של S3. זה יכול להוביל לעלויות S3 גבוהות ולביצועים ירודים של האתר. <a href="https://meta.discourse.org/t/-/148916" target="_blank">ניתן לעיין בעמוד „שימוש באחסון אובייקטים להעלאות” למידע נוסף</a>.'
-    image_magick_warning: 'השרת שלך מוגדר ליצור תמונות מוקטנות של תמונות גדולות אך אין התקנה של ImageMagick. יש להתקין את ImageMagick בעזרת מנהל החבילות החביב עליך או <a href="https://www.imagemagick.org/script/download.php" target="_blank">להוריד את הגרסה העדכנית ביותר</a>.'
-    failing_emails_warning: 'ישנן %{num_failed_jobs} משימות דוא״ל שנכשלו. נא לבדוק את ה־app.yml שלך ולוודא שהגדרות כתובת שרת הדוא״ל נכונות. <a href="%{base_path}/sidekiq/retries" target="_blank">ניתן לעיין במשימות שנכשלו ב־Sidekiq</a>.'
-    subfolder_ends_in_slash: "הגדרת תיקיית המשנה שלך שגויה, הנתיב DISCOURSE_RELATIVE_URL_ROOT צריך להסתיים בלוכסן."
-    outdated_translations_warning: "חלק ממעקפי התרגומים שלך לא בתוקף. נא לבדוק את <a href='%{base_path}/admin/customize/site_texts?outdated=true'>התאמות הטקסט</a> שלך."
-    email_polling_errored_recently:
-      one: "ניסיונות שליפת הודעות דוא״ל יצרו תקלה ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
-      two: "ניסיונות שליפת הודעות דוא״ל יצרו %{count} תקלות ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
-      many: "ניסיונות שליפת הודעות דוא״ל יצרו %{count} תקלות ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
-      other: "ניסיונות שליפת הודעות דוא״ל יצרו %{count} תקלות ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
-    missing_mailgun_api_key: "השרת מוגדר לשלוח דוא״ל דרך Mailgun אך לא סיפקת מפתח API שישמש לאימות ההודעות דרך ההתליה."
-    bad_favicon_url: "טעינת סמל האתר נכשלה. נא לבדוק את הגדרות סמל האתר שלך תחת <a href='%{base_path}/admin/site_settings'>הגדרות האתר</a>."
-    poll_pop3_timeout: "החיבור לשרת ה־POP3 התנתק. אין אפשרות לשלוף דוא״ל נכנס. נא לבדוק את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה־POP3</a> ואת ספק השירות שלך."
-    poll_pop3_auth_error: "החיבור לשרת POP3 נכשל עקב שגיאת הזדהות. נא לבדוק את <a href='%{base_path}/admin/site_settings/category/email'>הגדרות ה־POP3</a> שלך."
-    force_https_warning: "האתר שלך משתמש ב־SSL. אך `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` לא מופעל עדיין בהגדרות האתר שלך."
-    out_of_date_themes: "יש עדכונים זמינים לערכות העיצוב הבאות:"
-    unreachable_themes: "לא הצלחתי לבדוק אם יש עדכונים לערכות העיצוב הבאות:"
-    watched_word_regexp_error: "הביטוי הרגולרי למילים במעקב %{action} שגוי. נא לבדוק את <a href='%{base_path}/admin/customize/watched_words'>הגדרות המילים במעקב</a> או kהשבית את הגדרת האתר ‚ביטוי רגולרי למילים במעקב’."
-    v3_analytics_deprecated: "ה־Discourse שלך משתמש כרגע ב־Google Analytics 3, שהתמיכה בו תיפסק אחרי יולי 2023. כדאי <a href='https://meta.discourse.org/t/260498'>לשדרג ל־Google Analytics 4</a> כעת כדי להמשיך לקבל תובנות מועילות בנוגע לביצועי האתר שלך."
-    category_style_deprecated: "ה־Discourse שלך משתמש כרגע בסגנון קטגוריות שהשימוש בו הופסק והוא יוסר לפני מהדורת הבטא האחרונה של Discourse 3.2. נא לפנות אל <a href='https://meta.discourse.org/t/282441'>מעבר להגדרת אתר סגנון קטגוריה אחיד</a> להנחיות על שמירת סגנון הקטגוריות שבחרת."
+    problem:
+      twitter_login: 'נראה שהכניסה לטוויטר לא עובדת כרגע. יש לבדוק שפרטי הכניסה תקינים ב<a href="%{base_path}/admin/site_settings/category/login?filter=twitter">הגדרות האתר</a>.'
+      group_email_credentials: 'הייתה תקלה בפרטי הגישה לדוא״ל לקבוצה <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. לא תישלחנה הודעות מתיבת הדואר הנכנס של הקבוצה עד לטיפול בבעיה הזאת. %{error}'
+      rails_env: "השרת שלך רץ במצב %{env}."
+      host_names: "הקובץ config/database.yml אצלך משתמש בכתובת ברירת המחדל - localhost. נא לעדכן אותה להשתמש בכתובת השרת שלך."
+      sidekiq: 'Sidekiq לא רץ. משימות רבות, כמו שליחת דוא״ל, מבוצעות אסינכרונית באמצעות Sidekiq. נא לוודא שלפחות תהליך אחד של Sidekiq רץ. <a href="https://github.com/mperham/sidekiq" target="_blank">כאן יש מידע נוסף על Sidekiq</a>.'
+      queue_size: "מספר העבודות בתור הוא %{queue_size}, שהוא גבוה. זה עלול להצביע על בעיה עם תהליך(י) Sidekiq, או שייתכן שאתם צריכים יותר Sidekiq workers."
+      ram: "בשרת שלך יש פחות מגיגה זיכרון בסך הכול. מומלץ לפחות גיגה של זיכרון."
+      google_oauth2_config: 'השרת מוגדר לאפשר הרשמה דרך OAuth2 עם Google‏ (enable_google_oauth2_logins), אך לא הוגדרו ערכים למזהה לקוח ולסוד לקוח. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">מדריך זה יסביר לך כיצד</a>.'
+      facebook_config: 'השרת מוגדר לאפשר הרשמה דרך פייסבוק (enable_facebook_logins), אך לא הוגדרו ערכים למזהה יישום ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">מדריך זה יסביר לך כיצד</a>.'
+      twitter_config: 'השרת מוגדר לאפשר הרשמה דרך טוויטר (enable_twitter_logins), אך לא הוגדרו ערכים למפתח ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">מדריך זה יסביר לך כיצד</a>.'
+      github_config: 'השרת מוגדר לאפשר הרשמה דרך GitHub‏ (enable_github_logins), אך לא הוגדרו ערכים למפתח ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">מדריך זה יסביר לך כיצד</a>.'
+      s3_upload_config: 'השרת מוגדר להעלות קבצים ל־S3, אך לפחות אחת מההגדרות הבאות חסרה: s3_access_key_id,‏ s3_secret_access_key,‏ s3_use_iam_profile, או s3_upload_bucket. עליך לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">ניתן לעיין בעמוד „איך להגדיר העלאת תמונות ל־S3?” כדי ללמוד עוד</a>.'
+      s3_backup_config: 'השרת מוגדר להעלות גיבויים ל־S3, אך לפחות אחת מההגדרות הבאות חסרה: s3_access_key_id,‏ s3_secret_access_key,‏ s3_use_iam_profile, או s3_backup_bucket. עליך לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">ניתן לעיין בעמוד „איך להגדיר העלאת תמונות ל־S3?” כדי ללמוד עוד</a>.'
+      s3_cdn: 'השרת מוגדר להעלות קבצים ל־S3, אך לא מוגדר CDN של S3. זה יכול להוביל לעלויות S3 גבוהות ולביצועים ירודים של האתר. <a href="https://meta.discourse.org/t/-/148916" target="_blank">ניתן לעיין בעמוד „שימוש באחסון אובייקטים להעלאות” למידע נוסף</a>.'
+      image_magick: 'השרת שלך מוגדר ליצור תמונות מוקטנות של תמונות גדולות אך אין התקנה של ImageMagick. יש להתקין את ImageMagick בעזרת מנהל החבילות החביב עליך או <a href="https://www.imagemagick.org/script/download.php" target="_blank">להוריד את הגרסה העדכנית ביותר</a>.'
+      failing_emails: 'ישנן %{num_failed_jobs} משימות דוא״ל שנכשלו. נא לבדוק את ה־app.yml שלך ולוודא שהגדרות כתובת שרת הדוא״ל נכונות. <a href="%{base_path}/sidekiq/retries" target="_blank">ניתן לעיין במשימות שנכשלו ב־Sidekiq</a>.'
+      subfolder_ends_in_slash: "הגדרת תיקיית המשנה שלך שגויה, הנתיב DISCOURSE_RELATIVE_URL_ROOT צריך להסתיים בלוכסן."
+      translation_overrides: "חלק ממעקפי התרגומים שלך לא בתוקף. נא לבדוק את <a href='%{base_path}/admin/customize/site_texts?outdated=true'>התאמות הטקסט</a> שלך."
+      email_polling_errored_recently:
+        one: "ניסיונות שליפת הודעות דוא״ל יצרו תקלה ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
+        two: "ניסיונות שליפת הודעות דוא״ל יצרו %{count} תקלות ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
+        many: "ניסיונות שליפת הודעות דוא״ל יצרו %{count} תקלות ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
+        other: "ניסיונות שליפת הודעות דוא״ל יצרו %{count} תקלות ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
+      missing_mailgun_api_key: "השרת מוגדר לשלוח דוא״ל דרך Mailgun אך לא סיפקת מפתח API שישמש לאימות ההודעות דרך ההתליה."
+      bad_favicon_url: "טעינת סמל האתר נכשלה. נא לבדוק את הגדרות סמל האתר שלך תחת <a href='%{base_path}/admin/site_settings'>הגדרות האתר</a>."
+      poll_pop3_timeout: "החיבור לשרת ה־POP3 התנתק. אין אפשרות לשלוף דוא״ל נכנס. נא לבדוק את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה־POP3</a> ואת ספק השירות שלך."
+      poll_pop3_auth_error: "החיבור לשרת ה־POP3 נכשל עקב שגיאת הזדהות. נא לבדוק את <a href='%{base_path}/admin/site_settings/category/email'>הגדרות ה־POP3</a> שלך."
+      force_https: "האתר שלך משתמש ב־SSL. אבל `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` עדיין לא הופעל בהגדרות האתר שלך."
+      out_of_date_themes: "יש עדכונים זמינים לערכות העיצוב הבאות:"
+      unreachable_themes: "לא הצלחתי לבדוק אם יש עדכונים לערכות העיצוב הבאות:"
+      watched_words: "הביטוי הרגולרי למילים במעקב %{action} שגוי. נא לבדוק את <a href='%{base_path}/admin/customize/watched_words'>הגדרות המילים במעקב</a> או kהשבית את הגדרת האתר ‚ביטוי רגולרי למילים במעקב’."
+      google_analytics_version: "ה־Discourse שלך משתמש כרגע ב־Google Analytics 3, שהתמיכה בו תיפסק אחרי יולי 2023. כדאי <a href='https://meta.discourse.org/t/260498'>לשדרג ל־Google Analytics 4</a> כעת כדי להמשיך לקבל תובנות מועילות בנוגע לביצועי האתר שלך."
+      category_style_deprecated: "ה־Discourse שלך משתמש כרגע בסגנון קטגוריות שהשימוש בו הופסק והוא יוסר לפני מהדורת הבטא האחרונה של Discourse 3.2. נא לפנות אל <a href='https://meta.discourse.org/t/282441'>מעבר להגדרת אתר סגנון קטגוריה אחיד</a> להנחיות על שמירת סגנון הקטגוריות שבחרת."
+      maxmind_db_configuration: 'השרת הוגדר להשתמש במסד הנתונים של MaxMind לאיתור IP הפוך אך לא הוגדר מזהה חשבון ב־MaxMind מה שעלול לגרום לכשל בהורדת מסד הנתונים של MaxMind. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">המדריך הזה יסביר קצת מעבר</a>.'
     back_from_logster_text: "חזרה לאתר"
   site_settings:
     allow_bulk_invite: "לאפשר הזמנות במרוכז על ידי העלאת קובץ CSV"
@@ -1621,6 +1657,7 @@ he:
     min_topic_title_length: "מספר התווים המזערי הנדרש לכותרת נושא"
     max_topic_title_length: "מספר התווים המקסימלי המותר לכותרת נושא"
     min_personal_message_title_length: "אורך הכותרת המזערי המותר להודעה בתווים"
+    max_emojis_in_title: "כמות סמלי האמוג׳י המרבית שמותר לציין בכותרת נושא. אם הערך מוגדר לאפס, אסור להשתמש באמוג׳י בכותרות נושאים."
     min_search_term_length: "מספר התווים המינמלי התקין כאורך מונח לחיפוש"
     search_tokenize_chinese: "לכפות על החיפוש לפרק טקסט בסינית אפילו באתרים שאינם סיניים"
     search_tokenize_japanese: "לכפות על החיפוש לפרק טקסט ביפנית אפילו באתרים שאינם יפניים"
@@ -1629,6 +1666,7 @@ he:
     log_search_queries: "רישום שאילתות חיפוש שמתבצעות על ידי משתמשים"
     search_query_log_max_size: "מספר מקסימלי של שאילתות חיפוש לשימור"
     search_query_log_max_retention_days: "הזמן המרבי לשמירת שאילתות חיפוש, בימים."
+    search_ignore_accents: "אם הגדרה זו מופעלת, מתעלמים מסימני Accent בשאילתות חיפוש, מה שמאפשר למשתמשים למצוא תוצאות גם אם הם לא מזינים את האיותים הנכונים (למשל בצרפתית)."
     search_default_sort_order: "סדר מיון כברירת מחדל לחיפוש עמוד מלא"
     category_search_priority_low_weight: "משקל שהוחל על הדירוג בעדיפות חיפוש נמוכה בקטגוריות."
     category_search_priority_high_weight: "משקל שהוחל על הדירוג בעדיפות חיפוש גבוהה בקטגוריות."
@@ -1674,9 +1712,11 @@ he:
     show_pinned_excerpt_desktop: "הצגת קטע בנושאים נעוצים בתצוגת מחשב-שולחני."
     post_onebox_maxlength: "אורך מרבי של פוסט ב־Discourse בתיבת תחימה בתווים."
     blocked_onebox_domains: "רשימה של שמות תחום שלא יתחמו בתיבה, למשל: wikipedia.org\n(אין תמיכה בתווי הכללה כגון * או ?)"
+    block_onebox_on_redirect: "מנע oneboxing עבור כתובות אתרים שמובילות לדף הפניה מחדש. תצורה זו עוצרת את היצירה של כרטיס ויזואלי (Onebox) עבור כל כתובת אתר שמפנה ליעד אחר, ומבטיחה שכתובות URL ישירות, שאינן מפנות מחדש, מקבלות עדיפות ל-Oneboxing."
     allowed_inline_onebox_domains: "רשימת שמות מתחם שיופיעו בתיבות תחימה בתצורה המזערית שלהם אם הקישור מופיע ללא כותרת"
     enable_inline_onebox_on_all_domains: "להתעלם מהגדרת האתר allowed_inline_onebox_domains (רשימת שמות תחום מאושרים לתיבת תחימה משולבת) ולאפשר תיבות תחימה לכל שמות המתחם."
     force_custom_user_agent_hosts: "מארחים שמולם משתמשים בסוכן משתמש onebox בהתאמה אישית לכל הבקשות. (חיוני במיוחד למארחים שמגבילים גישה בהתאם לסוכן משתמש)."
+    max_oneboxes_per_post: "הגדר את המספר המרבי של onebox שניתן לכלול בפוסט בודד. Onebox מספקים תצוגה מקדימה של תוכן מקושר בתוך הפוסט."
     facebook_app_access_token: "אסימון שנוצר ממזהה חשבון הפייסבוק שלך יחד עם סוד. משמש ליצירת תיבות תחימה של אינסטגרם."
     logo: "תמונת הלוגו בפינה הימנית העליונה באתר שלך. מוטב להשתמש בתמונה מלבנית בגובה של 120 ויחס תצוגה שעולה על 3:1. במקרה של העדר בחירה, יופיע הטקסט של כותרת האתר."
     logo_small: "תמונת הלוגו הקטנה בפינה הימנית של האתר שלך, מופיעה בעת גלילה כלפי מטה. יש להשתמש בתמונה ריבועית בגודל של 120 × 120. במקרה של העדר בחירה, תופיע אות הבית."
@@ -1698,7 +1738,6 @@ he:
     detailed_404: "מספק פרטים נוספים למשתמשים בנוגע לסיבה שבגינה אין להם גישה לנושא מסוים. לתשומת לבך: מדובר בתצורה לא מאובטחת כיוון שמשתמשים ידעו אם כתובת מקשרת לנושא תקף."
     enforce_second_factor: "לדרוש מהמשתמשים להפעיל אימות דו־שלבי לפני שתתאפשר להם גישה למנשק המשתמש של Discourse. יש לבחור ב‚הכול’ כדי לאכוף על כל המשתמשים. לבחור ב‚סגל’ כדי לאכוף על משתמשי סגל בלבד. ההגדרה הזאת לא חלה על ה־API או על האימות ‚ספק DiscourseConnect’."
     force_https: "אילוץ האתר שלך להשתמש ב־HTTPS בלבד. אזהרה: אין להפעיל זאת עד שווידאת ש־HTTPS מוגדר ועובד לחלוטין בכל מקום! בדקת שה־CDN, הכניסה דרך רשתות חברתיות ולוגואים / תלויות חיצוניות גם כן תומכים ב־HTTPS?"
-    same_site_cookies: "להשתמש בעוגיות של אותו האתר, הן מבטלות משטחי הונאת בקשות בין אתרים (Cross Site Request Forgery - CSRF) בדפדפנים נתמכים (גמיש או נוקשה). אזהרה: נוקשה יעבוד רק על אתרים שמאלצים כניסה ומשתמשים בשיטת אימות חיצונית."
     summary_score_threshold: "הניקוד המינימלי הנדרש כדי שפוסט ייכלל ב\"סיכום נושא זה\""
     summary_posts_required: "כמות פוסטים מזערית בנושא בטרם מופעל ‚תקציר לנושא זה’. שינויים בהגדרה זו יחולו רטרואקטיבית תוך שבוע."
     summary_likes_required: "כמות לייקים מזערית בנושא בטרם מופעל ‚תקציר לנושא זה’. שינויים בהגדרה זו יחולו רטרואקטיבית תוך שבוע."
@@ -1766,15 +1805,17 @@ he:
     blocked_crawler_user_agents: "מילה ייחודית שאינה תלוית רישיות במחרוזת סוכן המשתמש (user agent) שמגדירה לאילו סורקי רשת אין הרשאת גישה לאתר. לא חל במקרה שהגדרת רשימת היתר."
     slow_down_crawler_user_agents: 'סוכני משתמשים של סורקי רשת שכמות הגישה שלהם תוגבל בהתאם להגדרה „האטת קצב סורקי רשת”. כל ערך חייב להיות באורך של 3 תווים לפחות.'
     slow_down_crawler_rate: "אם הוגדר slow_down_crawler_user_agents (האטת סורקי אינטרנט) קצב זה יחול על כל סורקי האינטרנט (כמות ההמתנה בשניות בין בקשות)"
+    content_security_policy: "אפשר מדיניות תוכן-אבטחה (CSP). CSP הוא שכבת אבטחה נוספת שעוזרת למנוע סוגים מסוימים של התקפות, כולל Cross Site Scripting (XSS) והזרקת נתונים."
     content_security_policy_report_only: "הפעלת Content-Security-Policy-Report-Only (מדיניות אבטחת תוכן בדיווח בלבד - CSP)"
     content_security_policy_collect_reports: "הפעלת איסוף דוחות הפרה של CSP (מדיניות אבטחת תוכן) תחת ‎/csp_reports"
     content_security_policy_frame_ancestors: "להגביל מי יכול להטמיע את האתר הזה עם מסגרות iframes דרך CSP. ניתן לשלוח במארחים המורשים דרך <a href='%{base_path}/admin/customize/embedding'>הטמעה</a>"
+    content_security_policy_script_src: "מקורות סקריפט נוספים ברשימת ההיתרים. השרת המקומי וה-CDN כלולים כברירת מחדל. ראה <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>הקטנת התקפות XSS עם מדיניות אבטחת תוכן.</a> (CSP). מקורות שרת מקומי יתעלמו כאשר content_security_policy_strict_dynamic מופעל."
     invalidate_inactive_admin_email_after_days: "חשבונות מנהלים שלא ביקרו באתר מעל כמות כזו של ימים יאלצו לאמת מחדש את כתובת הדוא״ל שלהם כדי לשוב ולהיכנס. להגדיר כ־0 כדי להשבית."
     include_secure_categories_in_tag_counts: "כאשר האפשרות פעילה, מניין הנושאים לתגית יכלול נושאים בקטגוריות שמוגבלות לקריאה לכל המשתמשים. כשהאפשרות מוגבלת, משתמשים רגילים חשופים רק למניין הנושאים לתגית כאשר כל הנושאים הם בקטגוריות ציבוריות."
     display_personal_messages_tag_counts: "כאשר האפשרות פעילה, מניין ההודעות האישיות שמתויגות בתגית מסוימת יוצגו."
     top_menu: "בחירה בפריטים שיופיעו בניווט בעמוד הבית ובאיזה סדר."
     post_menu: "בחירה בפריטים שיופיעו בניווט בתפריט הפוסט ובאיזה סדר."
-    post_menu_hidden_items: "פריטי התפריט להסתרה כברירת מחדל בתפריט הפוסט, אלא אם כן נלחץ לחצן ההרחבה."
+    post_menu_hidden_items: "פריטי התפריט להסתרה כברירת מחדל בתפריט ההודעה, שנגלים רק עם לחיצה על לחצן ההרחבה."
     share_links: "החליטו אילו פריטים יופיעו בתיבת השיתוף, ובאיזה סדר."
     allow_username_in_share_links: "לאפשר לכלול שמות משתמש בקישורי שיתוף. שימושי להענקת עיטורים לפי מבקרים מסוימים."
     site_contact_username: "שם משתמש תקין של חבר סגל ממנו יישלחו כל ההודעות האוטומטיות. במקרה של העדר בחירה, ייעשה שימוש בחשבון בררת המחדל של המערכת."
@@ -1796,6 +1837,7 @@ he:
     enable_rich_text_paste: "הפעלת המרה אוטומטית מ־HTML ל־Markdown בעת הדבקת טקסט לתוך המחבר. (ניסיוני)"
     send_old_credential_reminder_days: "להזכיר על פרטי גישה ישנים לאחר ימים"
     email_token_valid_hours: "סיסמאות שכחת סיסמה / הפעלת חשבון תקפים במשך (n) שעות."
+    enable_badges: "הפעלת מערכת האותות, שהיא סוג של gamification כדי לחזק פעולות חיוביות של משתמשים. ראו <a href='https://meta.discourse.org/t/what-are-badges/32540' _target='blank'>מה הם אותות?</a> על אתר \"מטא\" של דיסקורס למידע נוסף."
     max_favorite_badges: "מספר העיטורים המרבי שמשתמש יכול לבחור"
     whispers_allowed_groups: "לאפשר תקשורת פרטית בתוך נושאים לחברים מקבוצות מסוימות."
     hidden_post_visible_groups: "לאפשר לחברי קבוצות אלה להציג פוסטים מוסתרים. משתמשי סגל תמיד יכולים לצפות בהודעות נסתרות."
@@ -1808,6 +1850,7 @@ he:
     log_out_strict: "בהתנתקות, נתקו את כל ההפעלות של המשתמש/ת בכל המכשירים"
     version_checks: "לדגום את Discourse Hub כדי למצוא עדכוני גרסאות ולהציג הודעות של גרסאות חדשות בלוח הניהול <a href='%{base_path}/admin' target='_blank'>‎/admin</a>"
     new_version_emails: "לשלוח הודעת דוא״ל לכתובת contact_email כשגרסה חדשה של Discourse זמינה."
+    include_in_discourse_discover: "זו הסכמתי ל־CDCK בע״מ („Discourse”) לקדם את הקהילה הזאת ב<a href='https://www.discourse.org/discover'>עמוד החשיפה</a> ובחומרי השיווק של Discourse. הסכמה זו, תוביל לשיתוף המידע הדרוש לפרסום עם Discourse. נא לשים לב שקידום הקהילות נתון לשיקול הדעת של Discourse."
     invite_expiry_days: "מה התוקף מפתחות הזמנת משתמשים, בימים"
     invite_only: "כל המשתמשים החדשים חייבים לקבל הזמנה ממשתמשים מהימנים או חברי סגל. הרשמה ציבורית סגורה."
     login_required: "לדרוש אימות כדי לקרוא תוכן באתר הזה, לאסור על גישה אלמונית."
@@ -1816,6 +1859,8 @@ he:
     unicode_usernames: "לאפשר לשמות משתמשים וקבוצות להכיל תווים ומספרים ביוניקוד."
     allowed_unicode_username_characters: "ביטויים רגולריים שנועדו לאפשר תווי יוניקוד מסוימים בשמות משתמשים. אותיות ASCII ומספרים תמיד יורשו ואין צורך לכלול אותם ברשימת ההיתר."
     reserved_usernames: "שמות משתמשים שלא מותרת הרשמה אליהם. סימון ה wildcard - * ניתן לשימוש כדי להתאים כל תו, 0 פעמים או יותר."
+    min_password_length: "מגדיר את מספר התווים המינימלי הנדרש עבור סיסמאות משתמש באתר. ערך נמוך מדי עלול לסכן את האבטחה בכך שיקל על גורמים לא מורשים לנחש סיסמאות, בעוד שערך גבוה מדי עלול להקשות על המשתמשים לזכור את הסיסמאות שלהם."
+    min_admin_password_length: "ציין את האורך המינימלי של הסיסמה עבור משתמשי מנהל מערכת. זה מבטיח שכל סיסמאות המנהל עומדות בדרישת אורך מסוימת לאבטחה משופרת. הגדרה זו חיונית כדי להגן על חשבון הניהול מפני גישה בלתי מורשית אפשרית."
     password_unique_characters: "מספר מינימלי של תווים ייחודיים שחייבים להיות בסיסמאות."
     block_common_passwords: "אל תאפשרו סיסמאות מתוך 10,000 הסיסמאות הנפוצות ביותר."
     auth_skip_create_confirm: בעת הרשמה דרך אימות חיצוני, יש לדלג על החלונית ליצירת חשבון. עדיף להשתמש לצד auth_overrides_email (דריסת דוא״ל מאימות חיצוני), auth_overrides_username (דריסת שם משתמש מאימות חיצוני) ו־auth_overrides_name (דריסת שם מאימות חיצוני).
@@ -1843,6 +1888,7 @@ he:
     allow_new_registrations: "לאפשר הרשמות של משתמשים חדשים. יש לבטל סימון זה כדי למנוע יצירת חשבונות חדשים."
     enable_signup_cta: "להציג מודעה למשתמשים אלמוניים חוזרים שמציעה להם להירשם כדי לקבל חשבון."
     enable_google_oauth2_logins: "להפעיל אימות עם Oauth2 מול Google. זו שיטת האימות שכרגע נתמכת מול Google. דורשת מפתח וסוד. יש לעיין ב<a href='https://meta.discourse.org/t/15858' target='_blank'>הגדרת כניסה עם Google ל־Discourse</a>."
+    google_oauth2_client_id: "מזהה הלקוח הייחודי שסופק על ידי אפליקציית Google שלך, המשמש לתהליך האימות."
     google_oauth2_client_secret: "קוד סודי של לקוח (client secret) של אפליקציית Google."
     google_oauth2_prompt: "רשימת רשות של ערכי מחרוזות מופרדים ברווחים שמציינת האם שרת האימות מבקש מהמשתמש אימות מחודש והסכמה. יש לעיין ב־<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> לצפייה בערכים האפשריים."
     google_oauth2_hd: "שם מתחם שמתארח ב־Google Apps שאליו תוגבל הכניסה. יש לעיין ב־<a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> לפרטים נוספים."
@@ -1860,6 +1906,7 @@ he:
     github_client_secret: "סוד לקוח לאימות מול Github, ניתן להירשם ב־<a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "לאפשר למשתמשים לעבור אימות דרך Discord?"
     discord_client_id: 'מזהה לקוח Discord (אין לך כזה? יש לבקר ב<a href="https://discordapp.com/developers/applications/me">פורטל המפתחים של Discord</a>)'
+    discord_secret: "מפתח סודי של לקוח Discord המשמש לאימות והפעלת תכונות הקשורות ל-Discord באתר, כגון כניסות לדיסקורד. מפתח סודי זה מתאים לאפליקציית Discord שנוצרה עבור האתר, והוא הכרחי לתקשורת מאובטחת עם Discord API."
     discord_trusted_guilds: 'לאפשר רק למשתמש מגילדות ה־Discord האלה להיכנס באמצעות Discord. עליך להשתמש במזהה המספרי של הגילדה. למידע נוסף, יש לעיין בהנחיות ש<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">כאן</a>. שדה ריק משמעו כל גילדה שהיא.'
     enable_linkedin_oidc_logins: "הפעלת אימות דרך LinkedIn, דורש את הגדרת linkedin_client_id ו־linkedin_client_secret."
     linkedin_oidc_client_id: "מזהה לקוח לאימות מול LinkedIn, ניתן להירשם ב־<a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
@@ -1869,11 +1916,11 @@ he:
     maximum_backups: "המספר המרבי של גיבויים לשמירה. גיבויים ישנים יותר יימחקו אוטומטית"
     remove_older_backups: "להסיר גיבויים שהתיישנו מעבר למספר הימים שצוין. יש להשאיר ריק להשבתה."
     automatic_backups_enabled: "הרץ גיבויים אוטומטים כמו שמוגדר בתדירות הגיבויים"
+    backup_frequency: "מציין את המרווח, בימים, שבו נוצרים גיבויים אוטומטיים של האתר. אם מוגדר ל-7, למשל, יווצר גיבוי חדש מדי שבוע. ההפעלה של הגדרה זו מותנית ב'מופעלים_גיבויים אוטומטיים'."
     s3_backup_bucket: "הדלי המרוחק שבו לשמור גיבויים. אזהרה: שימו לב שהוא דלי פרטי."
     s3_endpoint: "ניתן לערוך את נקודת הגישה לגיבוי כדי שתפנה לשירות תואם S3 כגון DigitalOcean Spaces או Minio. אזהרה: יש להשאיר ריק בעת שימוש ב־S3 מבית AWS."
     s3_configure_tombstone_policy: "הפעלת מדיניות מחיקה אוטומטית להעלאות מצבה. חשוב: אם אפשרות זו מושבתת, לא יפונה מקום לאחר מחיקת העלאות."
     s3_disable_cleanup: "למנוע הסרה של גיבויים ישנים מ־S3 כשיש יותר גיבויים מהמותר."
-    enable_s3_inventory: "יצירת דוחות ואימות העלאות באמצעות מאגר של Amazon S3. חשוב: נדרשים פרטי גישה תקפים ל־S3 (מזהה מפתח הגישה ומפתח הגישה הסודי)."
     s3_use_acls: "ההמלצה של AWS היא לא להשתמש בבקרת גישה (ACLs) על דליים (Buckets) של S3, אם בחרת להישמע לעצה הזאת, יש לבטל את האפשרות הזאת. אפשר להפעיל מחדש בעת שימוש בהעלאות מאובטחות."
     backup_time_of_day: "הגדרת זמן לגיבוי לפי UTC."
     backup_with_uploads: "כללו העלאות בגיבויים התקופתיים. ביטול של אפשרות זו תגבה רק את בסיס הנתונים."
@@ -1925,12 +1972,14 @@ he:
     s3_cdn_url: "כתובת CDN לכל המשאבים ב־S3 (למשל: https://cdn.somewhere.com). א-ז-ה-ר-ה: לאחר שינוי של הגדרה זו יש לאפות מחדש את כל הפוסטים הישנים."
     s3_use_cdn_url_for_all_uploads: "להשתמש בכתובת CDN לכל הקבצים שהועלו ל־S3 במקום רק לתמונות."
     avatar_sizes: "רשימה של גדלי דמויות שנוצרת אוטומטית."
+    external_system_avatars_enabled: "מאפשר שימוש בשירות חיצוני ליצירת אווטרים של מערכת. כאשר הגדרה זו מופעלת, אווטרים של משתמשים, במקום להיות מופקים בתוך מערכת השיח, נוצרים ומסופקים על ידי שירות חיצוני המוגדר על ידי ההגדרה `external_system_avatars_url`."
     external_system_avatars_url: "כתובת של שירות דמויות חיצוני. החלפות מותרות הן {username} {first_letter} {color} {size}"
     external_emoji_url: "כתובת שירות תמונות האמוג׳י החיצוני. ריק משבית את ההגדרה."
     use_site_small_logo_as_system_avatar: "להשתמש בלוגו הקטן של האתר במקום התמונה הייצוגית של המשתמש מהמערכת. דורש שהלוגו יהיה קיים."
     restrict_letter_avatar_colors: "רשימה של ערכי צבעים בייצוג של 6 תווים הקסדצימליים לשימוש כרקע לאות מייצגת."
     enable_listing_suspended_users_on_search: "לאפשר למשתמשים רגילים למצוא משתמשים מושעים."
     selectable_avatars_mode: "לאפשר למשתמשים לבחור תמונה ייצוגית מרשימת selectable_avatars (תמונות ייצוגיות לבחירה) ולהגביל את העלאות התמונות הייצוגיות לדרגת האמון הנבחרת."
+    selectable_avatars: "ציין אוסף אווטארים שמהם המשתמשים יכולים לבחור את תמונת הפרופיל שלהם. הבחירה תופיע במהלך יצירת פרופיל המשתמש או בעת עדכון הדמות של הפרופיל."
     allow_all_attachments_for_group_messages: "אפשרו צירוף קבצים להודעות לקבוצות."
     png_to_jpg_quality: "האיכות של קובץ JPG שמומר (1 הנמוכה ביותר, 99 הטובה ביותר, 100 לניטרול)."
     recompress_original_jpg_quality: "איכות קובצי התמונות שנשלחים (1 היא האיכות הנמוכה ביותר, 99 הטובה ביותר, 100 משבית)."
@@ -1977,13 +2026,17 @@ he:
     allow_flagging_staff: "אם אפשרות זו פעילה, משתמשים יכולים לסמן בדגל פוסטים שפורסמו על ידי חשבונות סגל."
     min_trust_to_edit_wiki_post: "דרגת האמון המזערית הנדרשת לעריכת פוסט המסומן כוויקי."
     min_trust_to_edit_post: "דרגת האמון המזערית הנדרשת לעריכת פוסטים."
+    edit_post_allowed_groups: "קבוצות שמורשות לערוך פוסטים. מנהלים ומפקחים תמיד יכולים לערוך פוסטים."
     min_trust_to_allow_self_wiki: "דרגת האמון המזערית הנדרשת להפיכת פוסט עצמי של משתמש לוויקי."
     min_trust_to_send_messages: "יצא מכלל שימוש, יש להשתמש בהגדרה ‚קבוצות בהן מופעלות הודעות אישיות’. דרגת האמון המזערית שנדרשת ליצירת הודעות אישיות."
     min_trust_to_send_email_messages: "דרגת האמון המזערית שנדרשת לשליחת הודעות פרטיות בדוא״ל."
+    send_email_messages_allowed_groups: "קבוצות שמורשות לשלוח הודעות אישיות בדוא״ל. מנהלים ומפקחים תמיד יכולים לשלוח הודעות אישיות בדוא״ל."
     min_trust_to_flag_posts: "דרגת האמון המזערית הנדרשת לסימון פוסטים בדגל"
+    flag_post_allowed_groups: "קבוצות שמורשות לסמן פוסטים. מנהלים ומפקחים תמיד יכולים לסמן פוסטים."
     min_trust_to_post_links: "דרגת האמון המזערית להוספת קישורים לפוסטים"
     post_links_allowed_groups: "קבוצות שמורשות לכלול קישורים בפוסטים. מנהלים ומפקחים תמיד מורשים לפרסם קישורים."
     min_trust_to_post_embedded_media: "דרגת האמון המזערית הנדרשת להטמעת מדיה בפוסט"
+    embedded_media_post_allowed_groups: "המשתמשים בקבוצות אלו רשאים להטמיע פריטי מדיה בפוסט. מנהלים ומפקחים תמיד יכולים להטמיע פריטי מדיה."
     min_trust_level_to_allow_profile_background: "דרגת האמון המזערית שנדרשת להעלאת רקע לפרופיל"
     min_trust_level_to_allow_user_card_background: "דרגת האמון המזערית שנדרשת להעלאת רקע לכרטיס המשתמש"
     min_trust_level_to_allow_invite: "דרגת האמון המזערית הנדרשת להזמנת משתמשים"
@@ -2314,6 +2367,7 @@ he:
     revoke_user_api_keys_maxlife_days: "מספר הימים בטרם שלילה אוטומטית של מפתח API של משתמש (0 - לעולם לא)."
     tagging_enabled: "להפעיל תגיות על נושאים? אפשר לעיין <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>במדריך למנהלים על תגיות ב־Meta</a> למידע נוסף."
     min_trust_to_create_tag: "דרגת האמון המזערית שנדרשת כדי ליצור תגית."
+    create_tag_allowed_groups: "קבוצות שמורשות ליצור תגיות. מנהלים ומפקחים תמיד יכולים ליצור תגיות."
     max_tags_per_topic: "כמות התגיות המרבית שניתן להקצות לנושא."
     enable_max_tags_per_email_subject: "להשתמש ב־max_tags_per_email_subject (כמות תגיות מרבית לנושא הודעת דוא״ל) בעת יצירת נושא להודעת דוא״ל"
     max_tags_per_email_subject: "מס׳ התגיות המרבי שיכול להיות בנושא של הודעת דוא״ל"
@@ -2322,6 +2376,7 @@ he:
     max_tags_in_filter_list: "מספר התגיות המרבי להצגה בתפריט המסננים הנגלל. התגיות השימושיות ביותר תופענה."
     tags_sort_alphabetically: "הצגת תגיות בסדר אלפביתי. בררת המחדל היא להציג אותן לפי פופולאריות."
     tags_listed_by_group: "הצגת תגיות לפי קבוצת תגיות ב<a href='%{base_path}/tags' target='_blank'>עמוד התגיות</a>."
+    pm_tags_allowed_for_groups: "לאפשר לחברים מהקבוצות שנכללו לתייג כל הודעה פרטית שהיא"
     min_trust_level_to_tag_topics: "דרגת האמון המזערית שדרושה כדי לתייג נושאים"
     suppress_overlapping_tags_in_list: "אם תגיות תואמות מילים בכותרות נושאים באופן מדויק, לא להציג את התגית"
     remove_muted_tags_from_latest: "לא להציג נושאים שמתויגים רק בתגיות מושתקות ברשימת הנושאים האחרונים."
@@ -2358,7 +2413,6 @@ he:
     use_name_for_username_suggestions: "להשתמש בשם המלא של המשתמש בעת הצעת שמות משתמשים."
     suggest_weekends_in_date_pickers: "לכלול סופי שבוע (שישי ושבת) בהצעות לבוחר התאריכים (כדאי להשבית זאת אם יוצא לך להשתמש ב־Discourse רק בימי חול, ראשון עד חמישי)."
     splash_screen: "מציג מסך טעינה בזמן שהמשאבים נטענים"
-    navigation_menu: "בחירה באיזה תפריט ניווט להשתמש."
     default_navigation_menu_categories: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של תפריט הניווט כברירת מחדל."
     default_navigation_menu_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של תפריט הניווט כברירת מחדל."
     experimental_new_new_view_groups: 'ניסיוני: לאפשר רשימת נושאים חדשה המשלבת נושאים שלא נקראו וחדשים ולקשר אליה את „הכול” בסרגל הצד.'
@@ -2367,7 +2421,7 @@ he:
     enable_experimental_lightbox: "ניסיוני: להחליף את התיבה הקלילה לתמונות כברירת מחדל לעיצוב המשופר."
     enable_experimental_bookmark_redesign_groups: "ניסיוני: הצגת תפריט גישה מהירה לסימניות על פוסטים וחלונית בורחת חדשה"
     experimental_form_templates: "ניסיוני: יש להפעיל את יכולת תבניות הטפסים. <b>לאחר ההפעלה,</b> אפשר לנהל את התבניות דרך <a href='%{base_path}/admin/customize/form-templates'>התאמה / תבניות</a>."
-    admin_sidebar_enabled_groups: "ניסיוני: הפעלת ניווט בסרגל הצד למנשק המשתמש של הניהול לקבוצות שצוינו, מחליף את כפתורי הניווט באפשרויות הניהול ברמה העליונה."
+    admin_sidebar_enabled_groups: "הפעלת ניווט בסרגל הצד למנשק המשתמש של הניהול לקבוצות שצוינו, מחליף את כפתורי הניווט באפשרויות הניהול ברמה העליונה."
     lazy_load_categories_groups: "ניסיוני: לטעון בעצלות את פרטי הקטגוריה רק למשתמשים בקבוצות האלה. הגדרה זו משפרת את הביצועים באתרים עם הרבה קטגוריות."
     page_loading_indicator: "הגדרת מחוון הטעינה שמופיע במהלך ניווט בין עמודים ב־Discourse. ‚שבשבת’ הוא מחוון עמוד מלא. ‚מד התקדמות’ מציג סרגל צר בראש המסך."
     show_user_menu_avatars: "הצגת תמונות ייצוגיות של משתמשים בתפריט המשתמש"
@@ -2459,6 +2513,9 @@ he:
       purge_unactivated_users_grace_period_days:
       - ""
       - "לא פעיל"
+      - ""
+      navigation_menu:
+      - "סרגל צד"
       - ""
     placeholder:
       discourse_connect_provider_secrets:
@@ -2929,13 +2986,13 @@ he:
       text_body_template: |
         שלום,
 
-        זו הודעה אוטומטית מאת %{site_name} כדי ליידע אותך שהפוסט שלך הוסתר.
+        זו הודעה אוטומטית מאת %{site_name} כדי ליידע אותך שהפרסום שלך הוסתר.
 
         <%{base_url}%{url}>
 
         %{flag_reason}
 
-        הפוסט הזה הוסתר עקב סימוני דגל רבים מצד הקהילה, לכן מומלץ לשקול כיצד להתאים את הפוסט כך שיענה על המשוב המבוקש. **ניתן לערוך את הפוסט שלך לאחר %{edit_delay} דקות וההסתרה תבוטל אוטומטית.**
+        הפרסום הזה הוסתר עקב סימוני דגל רבים מצד הקהילה, לכן מומלץ לשקול כיצד להתאים את הנוסח והתוכן כך שיענו על המשוב המבוקש. **ניתן לערוך את הפרסום שלך תוך %{edit_delay} דקות וההסתרה תבוטל אוטומטית.**
 
         להנחיות נוספות, נא לפנות אל [הנחיות הקהילה](%{base_url}/guidelines) שלנו.
     reviewable_queued_post_revise_and_reject:
@@ -2988,13 +3045,13 @@ he:
       text_body_template: |
         שלום,
 
-        זו הודעה אוטומטית מאת %{site_name} כדי ליידע אותך שהפוסט שלך הוסתר שוב.
+        זו הודעה אוטומטית מאת %{site_name} כדי ליידע אותך שהפרסום שלך הוסתר שוב.
 
         <%{base_url}%{url}>
 
         %{flag_reason}
 
-        הקהילה סימנה את הפוסט הזה בדגל והוא מוסתר כעת. **כיוון שהפוסט הזה הוסתר למעלה מפעם אחת, הפוסט שלך יוסתר מעתה ועד לסריקה מצד חבר סגל.**
+        הקהילה סימנה את הפרסום הזה בדגל והוא מוסתר כעת. **כיוון שהפרסום הזה הוסתר למעלה מפעם אחת, הפרסום שלך יוסתר מעתה ועד לסריקה מצד חבר סגל.**
 
         להנחיות נוספות, נא לפנות אל [הנחיות הקהילה](%{base_url}/guidelines).
     queued_by_staff:
@@ -3065,7 +3122,7 @@ he:
         לפרטים נוספים על סיבת ההסרה, נא לעיין ב[הנחיות הקהילה](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
-        לעצות זריזות איך כדאי להתחיל להשתמש במערכת, ניתן [לקרוא את הפוסט הזה בבלוג](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+        לעצות זריזות איך כדאי להתחיל להשתמש במערכת, ניתן [לקרוא את הפרסום הזה בבלוג](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
         השתתפותך כאן, מאפשרת לנו להכיר אותך, כך שמגבלות המשתמשים החדשים יוסרו. עם הזמן [דרגות האמון](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) בך תתקדמנה ותתווספנה לך יכולות כדי לסייע לנו לנהל את הקהילה שלנו ביחד.
     welcome_user:
@@ -3434,11 +3491,11 @@ he:
       title: "הסף של משתמשים בהתעלמות נחצה"
       subject_template: "משתמש שמתעלמים ממנו משתמשים רבים אחרים"
       text_body_template: |
-        https://goo.gl/maps/Zevma6hoBcj225vH8,
+        שלום,
 
-        זו הודעה אוטומטית מטעם %{site_name}  כדי ליידע אותך ש־‎@%{username} נכנס לרשימת ההתעלמות של %{ignores_threshold} משתמשים. ייתכן שמדובר במחדל שהולך ומתפתח בקרב קהילתנו.
+        זו הודעה אוטומטית מטעם %{site_name} כדי ליידע אותך ש־‎@%{username} נכנס לרשימת ההתעלמות של %{ignores_threshold} משתמשים. ייתכן שמדובר במחדל שהולך ומתפתח בקרב קהילתנו.
 
-        מוטב אולי [לסקור את הפוסטים העדכניים ביותר](%{base_url}/u/%{username}/summary) שיצר המשתמש, ואולי גם משתמשים אחרים ש[דוח המשתמשים שבהתעלמות](%{base_url}/admin/reports/top_ignored_users).
+        מוטב אולי [לסקור את הפרסומים העדכניים ביותר](%{base_url}/u/%{username}/summary) שיצר המשתמש, ואולי גם משתמשים אחרים ש[דוח המשתמשים שבהתעלמות](%{base_url}/admin/reports/top_ignored_users).
 
         להנחיות נוספות, נא לפנות אל [הנחיות הקהילה](%{base_url}/guidelines) שלנו.
     too_many_spam_flags:
@@ -3447,7 +3504,7 @@ he:
       text_body_template: |
         שלום,
 
-        זו הודעה אוטומטית מהאתר %{site_name} כדי ליידע אותך שהפוסטים שלך הוסתרו באופן זמני כיוון שסומנו בדגל על ידי הקהילה.
+        זו הודעה אוטומטית מהאתר %{site_name} כדי ליידע אותך שהפרסומים שלך הוסתרו באופן זמני כיוון שסומנו בדגל על ידי הקהילה.
 
         ליתר בטחון, החשבון החדש שלך הושתק ולא תהיה לך אפשרות להגיב או ליצור נושאים עד שחבר סגל יוכל לסקור את החשבון שלך. אנו מתנצלים על חוסר הנעימות.
 
@@ -3469,9 +3526,9 @@ he:
       text_body_template: |
         שלום,
 
-        זו הודעה אוטומטית מאת %{site_name} כדי ליידע אותך שהחשבון שלך הושהה באופן זמני מטעמי משנה זהירות.
+        זו הודעה אוטומטית מאת %{site_name} כדי ליידע אותך שהחשבון שלך הושעה באופן זמני מטעמי משנה זהירות.
 
-        עדיין מותר לך לעיין באתר, אך לא לענות או ליצור נושאים עד ש[חבר סגל](%{base_url}/about) יסקור את הפוסטים האחרונים שלך. אנו מתנצלים על אי הנוחות.
+        עדיין מותר לך לעיין באתר, אך לא לענות או ליצור נושאים עד אשר [חבר סגל](%{base_url}/about) יסקור את הפרסומים האחרונים שלך. אנו מתנצלים על אי הנוחות.
 
         להנחיות נוספות, נא לפנות ל[הנחיות הקהילה](%{base_url}/guidelines).
     user_automatically_silenced:
@@ -3837,7 +3894,7 @@ he:
 
         אם צצות לך שאלות, ניתן [ליצור קשר עם הסגל הידידותי שלנו](%{base_url}/about).
     digest:
-      why: "סיכום קצר של %{site_link} מאז ביקורך האחרון ב-%{last_seen_at}"
+      why: "תקציר של %{site_link} מאז %{since}"
       since_last_visit: "מאז ביקורכם האחרון"
       new_topics: "נושאים חדשים"
       unread_notifications: "התראות שלא נקראו"
@@ -3853,7 +3910,7 @@ he:
       your_email_settings: "הגדרות הדוא״ל שלך"
       click_here: "ללחוץ כאן"
       from: "%{site_name}"
-      preheader: "סיכום קצר מאז ביקורכם האחרון ב-%{last_seen_at}"
+      preheader: "תקציר מאז %{since}"
     forgot_password:
       title: "שכח/ה סיסמה"
       subject_template: "[%{email_prefix}] איפוס סיסמה"
@@ -4091,8 +4148,8 @@ he:
     user_email_seen_recently: "המשתמש נראה לאחרונה"
     user_email_notification_already_read: "ההתראה שעבורה נשלחה הודעה זו כבר נקראה"
     user_email_notification_topic_nil: "post.topic הוא nil"
-    user_email_post_user_deleted: "המשתמש של פוסט זה נמחק."
-    user_email_post_deleted: "הפוסט נמחק על ידי הכותב שלו"
+    user_email_post_user_deleted: "המשתמש שפרסם נמחק."
+    user_email_post_deleted: "הפרסום נמחק על ידי הכותב.ת שלו"
     user_email_user_suspended: "המשתמש הושעה"
     user_email_already_read: "המשתמש כבר קרא פוסט זה"
     user_email_access_denied: "למשתמש אין הרשאה לצפות בפוסט הזה"
@@ -4101,10 +4158,10 @@ he:
     sender_message_to_blank: "message.to ריק"
     sender_text_part_body_blank: "text_part.body ריק"
     sender_body_blank: "גוף ריק"
-    sender_post_deleted: "פוסט נמחק"
+    sender_post_deleted: "הפרסום נמחק"
     sender_message_to_invalid: "כתובת דוא״ל הנמען שגויה"
     sender_topic_deleted: "נושא נמחק"
-    group_smtp_post_deleted: "פוסט נמחק"
+    group_smtp_post_deleted: "הפרסום נמחק"
     group_smtp_topic_deleted: "נושא נמחק"
     group_smtp_disabled_for_group: "smtp הושבת עבור הקבוצה"
   color_schemes:
@@ -4145,6 +4202,7 @@ he:
     עריכת הפוסט הראשון בנושא משנה את התכנים של העמוד %{page_name}.
   guidelines_topic:
     title: "שאלות נפוצות / הנחיות"
+    guidelines_title: "הנחיות"
   tos_topic:
     title: "תנאי השימוש"
     body: |
@@ -4541,7 +4599,7 @@ he:
       name: ציטוט ראשון
       description: ציטטו פוסט
       long_description: |
-        עיטור זה מוענק על הפעם הראשונה שציטטת פוסט בתגובה שלך. ציטוט חלקים רלוונטיים של פוסטים קודמים בתגובה שלך מסייעת בקישורים הפנימיים של הדיון. הדרך הקלה ביותר לצטט היא להדגיש קטע כלשהו מתוך פוסט ואז ללחוץ על כפתור התגובה. מומלץ לצטט בנדיבות!
+        עיטור זה מוענק על הפעם הראשונה שציטטת הודעה בתגובה שלך. ציטוט חלקים רלוונטיים של הודעות קודמות בתגובה שלך מסייע בקישורים הפנימיים של הדיון. הדרך הקלה ביותר לצטט היא להדגיש קטע כלשהו מתוך הודעה ואז ללחוץ על כפתור התגובה. מומלץ לצטט בנדיבות!
     read_guidelines:
       name: לקריאת ההנחיות
       description: מוטב לעיין ב<a href="%{base_uri}/guidelines">כללי הקהילה</a>
@@ -4949,6 +5007,9 @@ he:
       agree_and_hide:
         title: "הסתרת פוסט"
         description: "הסכמה עם הסימון והסתרת הפוסט הזה + שליחת הודעה אוטומטית למשתמש שמפצירה בו לערוך אותו."
+      agree_and_edit:
+        title: "להסכים ולערוך את הפוסט"
+        description: "להסכים עם הסימון ולפתוח חלון עריכת הודעה כדי לערוך את הפוסט."
       delete_single:
         title: "מחיקה"
       delete:

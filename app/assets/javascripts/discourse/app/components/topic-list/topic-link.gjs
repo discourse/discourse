@@ -9,6 +9,7 @@ export default class TopicLink extends Component {
   }
 
   <template>
+    {{~! no whitespace ~}}
     <a
       href={{this.url}}
       data-topic-id={{@topic.id}}
@@ -17,5 +18,6 @@ export default class TopicLink extends Component {
       class="title"
       ...attributes
     >{{htmlSafe @topic.fancyTitle}}</a>
+    {{~! no whitespace ~}}
   </template>
 }

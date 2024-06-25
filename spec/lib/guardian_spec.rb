@@ -154,6 +154,15 @@ RSpec.describe Guardian do
       expect(Guardian.new(admin).post_can_act?(post, :notify_user)).to be_truthy
     end
 
+    it "returns false if flag is disabled" do
+      expect(Guardian.new(admin).post_can_act?(post, :spam)).to be true
+      Flag.where(name: "spam").update!(enabled: false)
+      expect(Guardian.new(admin).post_can_act?(post, :spam)).to be false
+      Flag.where(name: "spam").update!(enabled: true)
+    ensure
+      Flag.reset_flag_settings!
+    end
+
     it "works as expected for silenced users" do
       UserSilencer.silence(user, admin)
 

@@ -73,7 +73,7 @@ class StepsInspector
   # @!visibility private
   class Contract < Step
     def error
-      step_result.errors.inspect
+      "#{step_result.errors.inspect}\n\nProvided parameters: #{step_result.parameters.pretty_inspect}"
     end
   end
 

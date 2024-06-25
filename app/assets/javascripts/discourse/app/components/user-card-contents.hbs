@@ -35,8 +35,8 @@
               }}</span>
           {{else}}
             <a
+              {{on "click" this.handleShowUser}}
               href={{this.user.path}}
-              {{on "click" (fn this.handleShowUser this.user)}}
               class="card-huge-avatar"
             >{{bound-avatar this.user "huge"}}</a>
           {{/if}}
@@ -70,8 +70,8 @@
               </span>
             {{else}}
               <a
+                {{on "click" this.handleShowUser}}
                 href={{this.user.path}}
-                {{on "click" (fn this.handleShowUser this.user)}}
                 class="user-profile-link"
               >
                 <span
@@ -91,10 +91,7 @@
           <PluginOutlet
             @name="user-card-after-username"
             @connectorTagName="div"
-            @outletArgs={{hash
-              user=this.user
-              showUser=(fn this.handleShowUser this.user)
-            }}
+            @outletArgs={{hash user=this.user showUser=this.handleShowUser}}
           />
           {{#if this.nameFirst}}
             <h2 class="username">{{this.user.username}}</h2>

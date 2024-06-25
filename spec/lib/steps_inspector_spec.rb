@@ -219,6 +219,10 @@ RSpec.describe StepsInspector do
       it "returns an error related to the contract" do
         expect(error).to match(/ActiveModel::Error attribute=parameter, type=blank, options={}/)
       end
+
+      it "returns the provided paramaters" do
+        expect(error).to match(/{"parameter"=>nil}/)
+      end
     end
 
     context "when the policy step is failing" do

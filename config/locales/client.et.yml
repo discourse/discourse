@@ -280,10 +280,16 @@ et:
       search_placeholder: "Otsi järjehoidjaid nime, pealkirja või postituse sisu järgi"
       search: "Otsi"
       bookmark: "Järjehoidja"
+      bulk:
+        select_all: "Vali kõik"
+        clear_all: "Puhasta kõik"
       reminders:
         today_with_time: "täna kell %{time}"
         tomorrow_with_time: "homme kell %{time}"
         at_time: "kell %{date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Kustuta järjehoidja"
     copy_codeblock:
       copied: "kopeeritud!"
       view_code: "Vaata koodi"
@@ -921,6 +927,7 @@ et:
         set_password: "Määra parool"
         choose_new: "Vali uus parool"
         choose: "Vali parool"
+        title: "Parooli uuendamine"
       second_factor_backup:
         title: "Kahefaktorilise autentimise varukoodid"
         regenerate: "Genereeri uus"
@@ -1125,7 +1132,6 @@ et:
           error: "Vabandust, fail peab olema CSV vormingus."
       password:
         title: "Parool"
-        too_short: "Parool on liiga lühike."
         common: "See parool on liiga tavaline."
         same_as_username: "Parool ühtib sinu kasutajanimega."
         same_as_email: "Parool ühtib sinu meiliaadressiga."
@@ -1352,6 +1358,8 @@ et:
       components:
         bulk_select_topics_dropdown:
           title: "Masstoimingud"
+        bulk_select_bookmarks_dropdown:
+          title: "Masstoimingud"
     date_time_picker:
       from: Kellelt
       to: Kellele
@@ -1429,7 +1437,6 @@ et:
       toggle_direction: "Muuda suunda"
       help: "Markdown-i redaktori spikker"
       modal_ok: "OK"
-      modal_cancel: "Tühista"
       cant_send_pm: "Kahjuks ei saa sa kasutajale %{username} sõnumit saata."
       yourself_confirm:
         title: "Kas unustasid saajad lisada?"
@@ -1641,18 +1648,18 @@ et:
         bookmarks: "Rohkem järjehoidjaga teemasid pole."
     topic_bulk_actions:
       close_topics:
-        name: "Sulge Teemad"
+        name: "Sulge"
         optional: (valikuline)
       archive_topics:
-        name: "Arhiveeri Teemad"
-      unlist_topics:
-        name: "Eemalda teemad loetelust"
+        name: "Arhiiv"
+      move_messages_to_inbox:
+        name: "Liiguta Postkasti"
       append_tags:
         name: "Lisa sildid"
       replace_tags:
         name: "Asenda sildid"
       delete_topics:
-        name: "Kustuta teemad"
+        name: "Kustuta"
     topic:
       filter_to:
         one: "%{count} postitus teemas"
@@ -2465,7 +2472,6 @@ et:
     tagging:
       other_tags: "Muud sildid"
       selector_tags: "sildid"
-      selector_all_tags: "kõik sildid"
       selector_no_tags: "sildid puuduvad"
       selector_remove_filter: "eemalda filter"
       tags: "Sildid"
@@ -2588,6 +2594,8 @@ et:
               content: "Teemasid"
             faq:
               content: "KKK"
+            guidelines:
+              content: "Juhised"
             groups:
               content: "Grupid"
             users:
@@ -2599,7 +2607,7 @@ et:
       panels:
         forum:
           label: Foorum
-      filter: "Filter"
+      filter: "Filter..."
     form_templates:
       upload_field:
         upload: "Laadi üles"
@@ -2687,6 +2695,9 @@ et:
               label: Grupp
             category:
               label: Foorum
+      flags:
+        description: "Kirjeldus"
+        enabled: "Sisse lülitatud?"
       groups:
         new:
           title: "Uus grupp"
@@ -2804,6 +2815,8 @@ et:
           timestamp: "Loaded"
           completion: "Soorituse aeg"
           actions: "Tegevused"
+          filter_status:
+            failed: "Ebaõnnestunud"
       home:
         title: "Avaleht"
       account:
@@ -2848,6 +2861,9 @@ et:
           search_logs: "Otsingu logid"
           security: "Turve"
           spam: "Spämm"
+      config_areas:
+        about:
+          optional: "(valikuline)"
       plugins:
         title: "Plugin"
         installed: "Paigaldatud pluginad"
@@ -3479,6 +3495,7 @@ et:
         name: "Välja nimi"
         type: "Välja tüüp"
         description: "Välja kirjeldus"
+        preferences: "Eelistused"
         save: "Salvesta"
         edit: "Muuda"
         delete: "Kustuta"
@@ -3489,6 +3506,9 @@ et:
           title: "Nõutud registreerumisel"
           enabled: "nõutud"
           disabled: "ei ole nõutud"
+        requirement:
+          optional:
+            title: "Valikuline"
         editable:
           title: "Muudetav pärast registreerumist"
           enabled: "muudetav"

@@ -7,6 +7,7 @@ import { htmlSafe } from "@ember/template";
 import { and, gt, not, or } from "truth-helpers";
 import categoryLink from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import renderTags from "discourse/lib/render-tags";
 import DiscourseURL from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
@@ -68,6 +69,10 @@ export default class Info extends Component {
 
   @action
   jumpToTopPost(e) {
+    if (wantsNewWindow(e)) {
+      return;
+    }
+
     e.preventDefault();
     if (this.args.topic) {
       DiscourseURL.routeTo(this.args.topic.firstPostUrl, {

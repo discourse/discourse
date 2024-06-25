@@ -3,6 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import { translateModKey } from "discourse/lib/utilities";
 import i18n from "discourse-common/helpers/i18n";
 
 export default class Filter extends Component {
@@ -23,7 +24,7 @@ export default class Filter extends Component {
 
   @action
   setFilter(event) {
-    this.sidebarState.filter = event.target.value.toLowerCase();
+    this.sidebarState.filter = event.target.value;
   }
 
   @action
@@ -45,25 +46,40 @@ export default class Filter extends Component {
     document.querySelector(".sidebar-filter__input").focus();
   }
 
+  get showShortcutCombo() {
+    return !this.displayClearFilter;
+  }
+
+  get sidebarShortcutCombo() {
+    return `${translateModKey("Meta")}+/`;
+  }
+
   <template>
     {{#if this.shouldDisplay}}
       <div class="sidebar-filter">
-        <input
-          {{on "input" this.setFilter}}
-          {{on "keydown" this.handleEscape}}
-          value={{this.sidebarState.filter}}
-          placeholder={{i18n "sidebar.filter"}}
-          type="text"
-          class="sidebar-filter__input"
-        />
-
-        {{#if this.displayClearFilter}}
-          <DButton
-            @action={{this.clearFilter}}
-            @icon="times"
-            class="sidebar-filter__clear"
+        <div class="sidebar-filter__input-container">
+          <input
+            {{on "input" this.setFilter}}
+            {{on "keydown" this.handleEscape}}
+            value={{this.sidebarState.filter}}
+            placeholder={{i18n "sidebar.filter"}}
+            type="text"
+            class="sidebar-filter__input"
           />
-        {{/if}}
+          {{#if this.showShortcutCombo}}
+            <span
+              class="sidebar-filter__shortcut-hint"
+            >{{this.sidebarShortcutCombo}}</span>
+          {{/if}}
+
+          {{#if this.displayClearFilter}}
+            <DButton
+              @action={{this.clearFilter}}
+              @icon="times"
+              class="sidebar-filter__clear"
+            />
+          {{/if}}
+        </div>
       </div>
     {{/if}}
   </template>

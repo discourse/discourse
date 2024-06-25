@@ -294,11 +294,17 @@ el:
       search_placeholder: "Αναζήτηση σελιδοδεικτών με βάση το όνομα, τον τίτλο θέματος ή το περιεχόμενο δημοσίευσης"
       search: "Αναζήτηση"
       bookmark: "Σελιδοδείκτης"
+      bulk:
+        select_all: "Επιλογή Όλων"
+        clear_all: "Καθαρισμός Όλων"
       reminders:
         today_with_time: "σήμερα στις %{time}"
         tomorrow_with_time: "αύριο στις %{time}"
         at_time: "στις %{date_time}"
         existing_reminder: "Έχετε ορίσει μια υπενθύμιση για αυτόν τον σελιδοδείκτη που θα σταλεί στις %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Διαγραφή σελιδοδείκτη"
     copy_codeblock:
       copied: "αντιγράφηκε!"
       copy: "αντιγραφή κώδικα στο πρόχειρο"
@@ -1104,6 +1110,7 @@ el:
         set_password: "Ορισμός Συνθηματικού"
         choose_new: "Επιλέξτε νέο κωδικό πρόσβασης"
         choose: "Επιλέξτε έναν κωδικό πρόσβασης"
+        title: "Επαναφορά Κωδικού"
       second_factor_backup:
         regenerate: "Αναδημιουγία"
         disable: "Απενεργοποίηση"
@@ -1390,7 +1397,6 @@ el:
           error: "Λυπούμαστε, το αρχείο πρέπει να έχει την μορφή CSV."
       password:
         title: "Κωδικός Πρόσβασης"
-        too_short: "Ο κωδικός πρόσβασης είναι μικρός."
         common: "Ο κωδικός πρόσβασης είναι πολύ κοινός."
         same_as_username: "Ο κωδικός πρόσβασης που έδωσες είναι ο ίδιος με το όνομα χρήστη."
         same_as_email: "Ο κωδικός πρόσβασής σου είναι ίδιος με τη διεύθυνση email σου."
@@ -1708,6 +1714,8 @@ el:
           title: "Διαχείριση κατηγοριών"
         bulk_select_topics_dropdown:
           title: "Μαζικές Ενέργειες"
+        bulk_select_bookmarks_dropdown:
+          title: "Μαζικές Ενέργειες"
     date_time_picker:
       from: Από
       to: Προς
@@ -1809,7 +1817,6 @@ el:
       exit_fullscreen: "έξοδος από επεξεργαστή κειμένου πλήρους οθόνης"
       exit_fullscreen_prompt: "Πατήστε <kbd>ESC</kbd> για έξοδο από την πλήρη οθόνη"
       modal_ok: "OK"
-      modal_cancel: "Ακύρωση"
       cant_send_pm: "Λυπούμαστε, δεν μπορείτε να στείλετε μήνυμα στο χρήστη %{username}."
       yourself_confirm:
         title: "Ξεχάσατε να προσθέσετε αποδέκτες;"
@@ -2119,20 +2126,18 @@ el:
         bookmarks: "Δεν υπάρχουν άλλα νήματα με σελιδοδείκτη."
     topic_bulk_actions:
       close_topics:
-        name: "Κλείσιμο Νημάτων"
+        name: "Κλείσιμο"
         optional: (προεραιτικό)
       archive_topics:
-        name: "Αρχειοθέτηση Νημάτων"
-      unlist_topics:
-        name: "Απόκρυψη Νημάτων"
-      relist_topics:
-        name: "Εμφάνιση Νημάτων"
+        name: "Αρχείο"
+      move_messages_to_inbox:
+        name: "Μετακίνηση στα Εισερχόμενα"
       append_tags:
         name: "Προσάρτηση Ετικετών "
       replace_tags:
         name: "Αντικατάσταση Ετικετών "
       delete_topics:
-        name: "Διαγραφή Νημάτων"
+        name: "Σβήσιμο"
     topic:
       filter_to:
         one: "%{count} δημοσίευση σε νήματα"
@@ -3112,7 +3117,6 @@ el:
       all_tags: "Όλες οι ετικέτες"
       other_tags: "Άλλες ετικέτες"
       selector_tags: "ετικέτες"
-      selector_all_tags: "όλες οι ετικέτες"
       selector_no_tags: "καμία ετικέτα"
       selector_remove_filter: "αφαίρεση φίλτρου"
       tags: "Ετικέτες"
@@ -3309,6 +3313,8 @@ el:
               title: "Όλα τα θέματα"
             faq:
               content: "Συχνές ερωτήσεις"
+            guidelines:
+              content: "Οδηγίες"
             groups:
               content: "Ομάδες"
             users:
@@ -3318,7 +3324,7 @@ el:
               content: "Οι αναρτήσεις μου"
             review:
               content: "Ανασκόπηση"
-      filter: "Φίλτρο"
+      filter: "Φίλτρο..."
     welcome_topic_banner:
       title: "Δημιουργήστε το θέμα καλωσορίσματος"
       button_title: "Έναρξη Επεξεργασίας"
@@ -3446,6 +3452,9 @@ el:
               label: Κατηγορία
             include_subcategories:
               label: "Συμπερίληψη υποκατηγοριών"
+      flags:
+        description: "Περιγραφή"
+        enabled: "Ενεργοποιημένο;"
       groups:
         new:
           title: "Νέα Ομάδα"
@@ -3607,6 +3616,8 @@ el:
           timestamp: "Δημιουργήθηκε"
           completion: "Χρόνος Ολοκλήρωσης"
           actions: "Ενέργειες"
+          filter_status:
+            failed: "Απέτυχε"
       home:
         title: "Αρχική Σελίδα"
       account:
@@ -3653,6 +3664,10 @@ el:
           search_logs: "Αναζήτηση καταγραφών"
           security: "Ασφάλεια"
           spam: "Ανεπιθύμητα"
+      config_areas:
+        about:
+          optional: "(προεραιτικό)"
+          update: "Ενημέρωση"
       plugins:
         title: "Plugins"
         installed: "Εγκατεστημένα Plugins"
@@ -4523,6 +4538,7 @@ el:
         name: "Όνομα πεδίου"
         type: "Τύπος πεδίου"
         description: "Περιγραφή πεδίου"
+        preferences: "Προτιμήσεις"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
         delete: "Διαγραφή"
@@ -4532,6 +4548,9 @@ el:
         required:
           enabled: "απαραίτητο"
           disabled: "δεν είναι απαραίτητο"
+        requirement:
+          optional:
+            title: "Προεραιτικό"
         editable:
           enabled: "επεξεργάσιμο"
           disabled: "μη επεξεργάσιμο"

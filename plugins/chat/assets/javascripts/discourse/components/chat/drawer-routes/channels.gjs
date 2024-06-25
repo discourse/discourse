@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import i18n from "discourse-common/helpers/i18n";
-import ChannelsList from "discourse/plugins/chat/discourse/components/channels-list";
+import ChannelsListPublic from "discourse/plugins/chat/discourse/components/channels-list-public";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
+import ChatFooter from "discourse/plugins/chat/discourse/components/chat-footer";
 
 export default class ChatDrawerRoutesChannels extends Component {
   @service chat;
@@ -11,17 +12,19 @@ export default class ChatDrawerRoutesChannels extends Component {
   <template>
     <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
       <navbar.Title @title={{i18n "chat.heading"}} />
-      <navbar.Actions as |action|>
-        <action.ToggleDrawerButton />
-        <action.FullPageButton />
-        <action.CloseDrawerButton />
+      <navbar.Actions as |a|>
+        <a.ToggleDrawerButton />
+        <a.FullPageButton />
+        <a.CloseDrawerButton />
       </navbar.Actions>
     </Navbar>
 
     {{#if this.chatStateManager.isDrawerExpanded}}
       <div class="chat-drawer-content">
-        <ChannelsList />
+        <ChannelsListPublic />
       </div>
+
+      <ChatFooter />
     {{/if}}
   </template>
 }

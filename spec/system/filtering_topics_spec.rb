@@ -44,8 +44,16 @@ describe "Filtering topics", type: :system do
   end
 
   describe "when filtering by status" do
-    fab!(:topic)
-    fab!(:closed_topic) { Fabricate(:topic, closed: true) }
+    fab!(:topic) do
+      topic = Fabricate(:topic, bumped_at: 1.day.ago)
+      Fabricate(:post, topic: topic)
+      topic
+    end
+    fab!(:closed_topic) do
+      topic = Fabricate(:topic, closed: true)
+      Fabricate(:post, topic: topic)
+      topic
+    end
 
     it "should display the right topics when the status filter is used in the query string" do
       sign_in(user)
@@ -55,6 +63,14 @@ describe "Filtering topics", type: :system do
       expect(topic_list).to have_topic(topic)
       expect(topic_list).to have_topic(closed_topic)
 
+      topic_list.visit_topic(closed_topic)
+      expect(page).to have_current_path(closed_topic.url)
+
+      send_keys("gj")
+
+      expect(page).to have_current_path(topic.url)
+
+      visit("/filter")
       topic_query_filter.fill_in("status:open")
 
       expect(topic_list).to have_topic(topic)

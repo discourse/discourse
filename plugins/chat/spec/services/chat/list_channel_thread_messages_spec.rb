@@ -4,9 +4,7 @@ RSpec.describe Chat::ListChannelThreadMessages do
   subject(:result) { described_class.call(params) }
 
   fab!(:user)
-  fab!(:thread) do
-    Fabricate(:chat_thread, channel: Fabricate(:chat_channel, threading_enabled: true))
-  end
+  fab!(:thread) { Fabricate(:chat_thread, channel: Fabricate(:chat_channel)) }
 
   let(:guardian) { Guardian.new(user) }
   let(:thread_id) { thread.id }
@@ -37,34 +35,9 @@ RSpec.describe Chat::ListChannelThreadMessages do
     end
   end
 
-  context "when ensure_thread_enabled?" do
-    context "when channel threading is disabled" do
-      before { thread.channel.update!(threading_enabled: false) }
-
-      it { is_expected.to fail_a_policy(:ensure_thread_enabled) }
-
-      context "when the thread is forced" do
-        before { thread.update!(force: true) }
-
-        it { is_expected.to be_a_success }
-      end
-    end
-
-    context "when channel and site setting are enabling threading" do
-      before { thread.channel.update!(threading_enabled: true) }
-
-      it { is_expected.to be_a_success }
-    end
-  end
-
   context "when can_view_thread" do
     context "when channel is private" do
-      fab!(:thread) do
-        Fabricate(
-          :chat_thread,
-          channel: Fabricate(:private_category_channel, threading_enabled: true),
-        )
-      end
+      fab!(:thread) { Fabricate(:chat_thread, channel: Fabricate(:private_category_channel)) }
 
       it { is_expected.to fail_a_policy(:can_view_thread) }
 

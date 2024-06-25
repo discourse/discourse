@@ -125,6 +125,8 @@ lv:
         raw: "Saturs"
       user_profile:
         bio_raw: "Par Mani"
+      user:
+        password: "Parole"
     errors:
       <<: *errors
   general_category_name: "Vispārīgi"
@@ -472,6 +474,7 @@ lv:
     rate_limit_error: "Ierakstus var lejuplādēt reizi dienā, lūdzu mēģiniet atkal rītdien."
   guidelines_topic:
     title: "BUJ/Vadlīnijas"
+    guidelines_title: "Vadlīnijas"
   tos_topic:
     title: "Pakalpojuma noteikumi"
   privacy_topic:

@@ -137,6 +137,8 @@ sr:
         category_id: "Kategorija"
       user_profile:
         bio_raw: "O meni"
+      user:
+        password: "Šifra"
     errors:
       models:
         user:
@@ -422,6 +424,8 @@ sr:
     boolean_yes: "Da"
     boolean_no: "Ne"
     rate_limit_error: "Poruke mogu biti preuzimate jednom na dan, molimo pokušajte sutra."
+  guidelines_topic:
+    guidelines_title: "Smernice"
   tos_topic:
     title: "Uslovi Korišćenja"
   privacy_topic:

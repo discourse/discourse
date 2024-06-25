@@ -71,7 +71,6 @@ hu:
       channels_list_popup:
         browse: "Csatornák böngészése"
         create: "Új csatorna"
-      click_to_join: "Kattintson ide az elérhető csatornák megtekintéséhez."
       close: "Lezárás"
       remove: "Eltávolítás"
       collapse: "Csevegőfiók összecsukása"
@@ -118,7 +117,6 @@ hu:
         header: "Csevegés fejléce"
         composer: "Csevegés szerkesztője"
         channels_list: "Csevegőcsatornák"
-      no_public_channels: "Nem csatlakozott egyetlen csatornához sem."
       kicked_from_channel: "Ezt a csatornát már nem tudja elérni."
       only_chat_push_notifications:
         title: "Csak csevegési leküldéses értesítések küldése"

@@ -19,7 +19,7 @@
   ],
   "dependencies": {
     "@embroider/addon-shim": "^1.8.9",
-    "ember-auto-import": "^2.7.2"
+    "ember-auto-import": "^2.7.3"
   },
   "engines": {
     "node": ">= 18",

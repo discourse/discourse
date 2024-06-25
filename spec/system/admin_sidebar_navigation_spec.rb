@@ -34,8 +34,8 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
   it "collapses sections by default" do
     visit("/admin")
     links = page.all(".sidebar-section-link-content-text")
-    expect(links.count).to eq(2)
-    expect(links.map(&:text)).to eq(["Dashboard", "All Site Settings"])
+    expect(links.count).to eq(3)
+    expect(links.map(&:text)).to eq(["Dashboard", "Users", "All Site Settings"])
   end
 
   it "respects the user homepage preference for the Back to Forum link" do
@@ -105,6 +105,29 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     links = page.all(".sidebar-section-link-content-text")
     expect(links.count).to eq(3)
     expect(links.map(&:text)).to eq(["Appearance", "Preview Summary", "Server Setup"])
+
+    filter.filter("   preview   ")
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.count).to eq(1)
+    expect(links.map(&:text)).to eq(["Preview Summary"])
+    expect(page).to have_no_css(".sidebar-no-results")
+  end
+
+  it "temporarily expands section when filter" do
+    visit("/admin")
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.count).to eq(3)
+    expect(links.map(&:text)).to eq(["Dashboard", "Users", "All Site Settings"])
+
+    filter.filter("ie")
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.count).to eq(2)
+    expect(links.map(&:text)).to eq(["User Fields", "Preview Summary"])
+
+    filter.filter("")
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.count).to eq(3)
+    expect(links.map(&:text)).to eq(["Dashboard", "Users", "All Site Settings"])
   end
 
   it "allows further filtering of site settings or users if links do not show results" do
@@ -144,8 +167,8 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     sidebar.toggle_all_sections
 
     links = page.all(".sidebar-section-link-content-text")
-    expect(links.count).to eq(2)
-    expect(links.map(&:text)).to eq(["Dashboard", "All Site Settings"])
+    expect(links.count).to eq(3)
+    expect(links.map(&:text)).to eq(["Dashboard", "Users", "All Site Settings"])
 
     sidebar.toggle_all_sections
     links = page.all(".sidebar-section-link-content-text")
@@ -201,9 +224,9 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(links.map(&:text)).to eq(
       [
         "Dashboard",
+        "Users",
         "What's New",
         "All",
-        "Users",
         "Watched Words",
         "Screened Emails",
         "Screened IPs",

@@ -99,7 +99,6 @@ fr:
       channels_list_popup:
         browse: "Parcourir les canaux"
         create: "Nouveau canal"
-      click_to_join: "Cliquez ici pour voir les canaux disponibles."
       close: "Fermer"
       remove: "Supprimer"
       collapse: "Réduire le tiroir de discussion"
@@ -226,7 +225,7 @@ fr:
         header: "En-tête de discussion"
         composer: "Compositeur de discussion"
         channels_list: "Liste des canaux de discussion"
-      no_public_channels: "Vous n'avez rejoint aucun canal."
+      no_public_channels_cta: "Parcourir les canaux"
       kicked_from_channel: "Vous ne pouvez plus accéder à ce canal."
       only_chat_push_notifications:
         title: "Envoyer uniquement des notifications push de discussion"

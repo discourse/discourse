@@ -324,11 +324,17 @@ bg:
       search_placeholder: "Търсете отметки по име, заглавие на тема или съдържание на публикация"
       search: "Търсене"
       bookmark: "Отметка"
+      bulk:
+        select_all: "Избери Всички "
+        clear_all: "Изчисти Всички"
       reminders:
         today_with_time: "днес в %{time}"
         tomorrow_with_time: "утре в %{time}"
         at_time: "на %{date_time}"
         existing_reminder: "Имате зададено напомняне за тази отметка, което ще бъде изпратено %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Изтрийте отметката"
     copy_codeblock:
       copied: "копирано!"
       copy: "копирайте кода в клипборда"
@@ -1306,6 +1312,7 @@ bg:
         set_password: "Задайте парола"
         choose_new: "Избери нова парола"
         choose: "Избери парола"
+        title: "Възстановяване на парола"
       second_factor_backup:
         title: "Двуфакторни резервни кодове"
         regenerate: "Регенерирай"
@@ -1658,7 +1665,6 @@ bg:
           error: "За съжаление файлът трябва да е във формат CSV."
       password:
         title: "Парола"
-        too_short: "Вашата парола е твърде кратка."
         common: "Вашата парола е твърде разпространена."
         same_as_username: "Вашата парола е същата като вашето потребителско име."
         same_as_email: "Вашата парола е същата като вашия email."
@@ -2039,6 +2045,8 @@ bg:
           title: "Управление на категории"
         bulk_select_topics_dropdown:
           title: "Групови действия "
+        bulk_select_bookmarks_dropdown:
+          title: "Групови действия "
     date_time_picker:
       from: От
       to: До
@@ -2161,7 +2169,6 @@ bg:
       show_toolbar: "показване на лентата с инструменти на композитора"
       hide_toolbar: "скриване на лентата с инструменти на композитора"
       modal_ok: "Ок"
-      modal_cancel: "Отмени"
       cant_send_pm: "Съжеляваме, но неможете да изпращате съобщения до %{username}."
       yourself_confirm:
         title: "Забравихте ли да добавите получатели?"
@@ -2440,18 +2447,18 @@ bg:
         filter: "Няма повече теми."
     topic_bulk_actions:
       close_topics:
-        name: "Затвори темите"
+        name: "Затвори"
         optional: (по избор)
       archive_topics:
-        name: "Архивирай темите"
-      unlist_topics:
-        name: "Непоказани теми"
+        name: "Архив"
+      move_messages_to_inbox:
+        name: "Премести във входящи"
       append_tags:
         name: "Добави етикетите"
       replace_tags:
         name: "Замени етикетите"
       delete_topics:
-        name: "Изтрий темите"
+        name: "Изтрий"
     topic:
       create: "Нова тема"
       create_disabled_category: "Нямате право да създавате теми в тази категория"
@@ -3276,7 +3283,6 @@ bg:
     tagging:
       other_tags: "Други тагове"
       selector_tags: "тагове"
-      selector_all_tags: "всички тагове"
       selector_no_tags: "няма тагове"
       selector_remove_filter: "премахни филтъра"
       tags: "Тагове"
@@ -3351,6 +3357,8 @@ bg:
         other: "%{count} нови"
       more: "Повече"
       all_categories: "Всички категории"
+      categories_form_modal:
+        show_more: "Покажи повече"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "Всички"
@@ -3403,6 +3411,8 @@ bg:
               content: "Теми"
             faq:
               content: "FAQ"
+            guidelines:
+              content: "Насоки"
             groups:
               content: "Групи"
             users:
@@ -3411,7 +3421,6 @@ bg:
               content: "Моите публикации"
             review:
               content: "Преглед"
-      filter: "Филтър"
     form_template_chooser:
       select_template: "Изберете шаблони за формуляри"
     form_templates:
@@ -3494,6 +3503,9 @@ bg:
               label: Група
             category:
               label: Категория
+      flags:
+        description: "Описание"
+        enabled: "Да е включен?"
       groups:
         new:
           create: "Създай"
@@ -3558,6 +3570,8 @@ bg:
           body: "Тяло"
           timestamp: "Създадени"
           actions: "Действия"
+          filter_status:
+            failed: "Провалени"
       home:
         title: "Начало"
       account:
@@ -3598,6 +3612,10 @@ bg:
           search_logs: "Търсене в логовете"
           security: "Сигурност"
           spam: "Спам"
+      config_areas:
+        about:
+          optional: "(по избор)"
+          update: "Актуализация"
       plugins:
         title: "Приставки"
         installed: "Инсталирани приставки"
@@ -4210,6 +4228,7 @@ bg:
         name: "Име на полето"
         type: "Вид на полето"
         description: "Описание на полето"
+        preferences: "Настройки"
         save: "Запази"
         edit: "Редактирай"
         delete: "Изтрий"
@@ -4220,6 +4239,9 @@ bg:
           title: "Да се изисква при регистрация"
           enabled: "задължително"
           disabled: "по желание"
+        requirement:
+          optional:
+            title: "По избор"
         editable:
           title: "Да се редактира след регистрация"
           enabled: "може да се редактира"

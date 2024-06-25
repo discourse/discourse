@@ -99,7 +99,6 @@ pt_BR:
       channels_list_popup:
         browse: "Navegar por canais"
         create: "Novo canal"
-      click_to_join: "Clique aqui para visualizar os canais disponíveis."
       close: "Fechar"
       remove: "Remover"
       collapse: "Recolher gaveta de chat"
@@ -227,8 +226,7 @@ pt_BR:
         header: "Cabeçalho do chat"
         composer: "Compositor de chat"
         channels_list: "Lista de canais de chat"
-      no_direct_message_channels: "Você não entrou em nenhum canal de mensagem direta."
-      no_public_channels: "Você não entrou em nenhum canal."
+      no_public_channels_cta: "Navegar por canais"
       kicked_from_channel: "Você não pode mais acessar este canal."
       only_chat_push_notifications:
         title: "Enviar apenas notificações por push"

@@ -113,6 +113,8 @@ th:
       topic:
         title: "ชื่อเรื่อง"
         category_id: "หมวดหมู่"
+      user:
+        password: "รหัสผ่าน"
     errors:
       <<: *errors
   general_category_name: "ทั่วไป"
@@ -471,6 +473,8 @@ th:
     boolean_yes: "ใช่"
     boolean_no: "ไม่ใช่"
     rate_limit_error: "สามารถดาวน์โหลดโพสต์ได้วันละหนึ่งครั้งเท่านั้น กรุณาลองใหม่พรุ่งนี้"
+  guidelines_topic:
+    guidelines_title: "คู่มือ"
   tos_topic:
     title: "เงื่อนไขการบริการ"
   privacy_topic:

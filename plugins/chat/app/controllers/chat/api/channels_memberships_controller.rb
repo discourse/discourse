@@ -36,6 +36,9 @@ class Chat::Api::ChannelsMembershipsController < Chat::Api::ChannelsController
       on_failed_policy(:can_add_users_to_channel) do
         render_json_error(I18n.t("chat.errors.users_cant_be_added_to_channel"))
       end
+      on_failed_policy(:satisfies_dms_max_users_limit) do |policy|
+        render_json_dump({ error: policy.reason }, status: 400)
+      end
       on_failed_contract do |contract|
         render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
       end

@@ -1180,7 +1180,10 @@ blockquote > *:last-child {
   }
 
   &.deleted {
-    background-color: var(--danger-low-mid);
+    .topic-avatar,
+    .small-action-desc {
+      background-color: var(--danger-low-mid);
+    }
   }
 
   .topic-avatar,
@@ -1196,6 +1199,7 @@ blockquote > *:last-child {
     padding-top: 1em;
     width: var(--topic-avatar-width);
     justify-content: center;
+    height: auto;
     .d-icon {
       font-size: var(--font-up-3);
       width: var(--topic-avatar-width);

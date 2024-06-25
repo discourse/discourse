@@ -31,32 +31,32 @@ RSpec.describe Flag, type: :model do
 
   it "updates post action types when created, modified or destroyed" do
     expect(PostActionType.flag_types.keys).to eq(
-      %i[notify_user notify_moderators off_topic inappropriate spam illegal],
+      %i[notify_user off_topic inappropriate spam illegal notify_moderators],
     )
     expect(ReviewableScore.types.keys).to eq(
-      %i[notify_user notify_moderators off_topic inappropriate spam illegal needs_approval],
+      %i[notify_user off_topic inappropriate spam illegal notify_moderators needs_approval],
     )
 
     flag = Fabricate(:flag, name: "custom")
     expect(PostActionType.flag_types.keys).to eq(
-      %i[notify_user notify_moderators off_topic inappropriate spam illegal custom],
+      %i[notify_user off_topic inappropriate spam illegal notify_moderators custom],
     )
     expect(ReviewableScore.types.keys).to eq(
-      %i[notify_user notify_moderators off_topic inappropriate spam illegal custom needs_approval],
+      %i[notify_user off_topic inappropriate spam illegal notify_moderators custom needs_approval],
     )
 
     flag.update!(name: "edited_custom")
     expect(PostActionType.flag_types.keys).to eq(
-      %i[notify_user notify_moderators off_topic inappropriate spam illegal edited_custom],
+      %i[notify_user off_topic inappropriate spam illegal notify_moderators edited_custom],
     )
     expect(ReviewableScore.types.keys).to eq(
       %i[
         notify_user
-        notify_moderators
         off_topic
         inappropriate
         spam
         illegal
+        notify_moderators
         edited_custom
         needs_approval
       ],
@@ -64,10 +64,10 @@ RSpec.describe Flag, type: :model do
 
     flag.destroy!
     expect(PostActionType.flag_types.keys).to eq(
-      %i[notify_user notify_moderators off_topic inappropriate spam illegal],
+      %i[notify_user off_topic inappropriate spam illegal notify_moderators],
     )
     expect(ReviewableScore.types.keys).to eq(
-      %i[notify_user notify_moderators off_topic inappropriate spam illegal needs_approval],
+      %i[notify_user off_topic inappropriate spam illegal notify_moderators needs_approval],
     )
   end
 end

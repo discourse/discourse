@@ -343,11 +343,20 @@ it:
       search_placeholder: "Cerca nei segnalibri per nome, titolo dell'argomento o contenuto del messaggio"
       search: "Cerca"
       bookmark: "Aggiungi ai segnalibri"
+      bulk:
+        select_all: "Seleziona Tutto"
+        clear_all: "Deseleziona Tutto"
+        selected_count:
+          one: "%{count} selezionati"
+          other: "%{count} selezionati"
       reminders:
         today_with_time: "oggi alle %{time}"
         tomorrow_with_time: "domani alle %{time}"
         at_time: "il %{date_time}"
         existing_reminder: "Hai un promemoria impostato per questo segnalibro, che verrà inviato il %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Cancella Segnalibro"
     copy_codeblock:
       copied: "copiato!"
       copy: "copia il codice negli appunti"
@@ -1355,6 +1364,7 @@ it:
         set_password: "Imposta Password"
         choose_new: "Scegli una nuova password"
         choose: "Scegli una password"
+        title: "Reimposta Password"
       second_factor_backup:
         title: "Codice di backup per l'autenticazione a due fattori"
         regenerate: "Rigenera"
@@ -1743,7 +1753,6 @@ it:
         fine_print: "Ti chiediamo di confermare la tua identità perché si tratta di un'azione potenzialmente sensibile. Una volta effettuata l'autenticazione, ti verrà chiesto di riautenticarti solo dopo alcune ore di inattività."
       password:
         title: "Password"
-        too_short: "La password è troppo breve."
         common: "Questa password è troppo comune."
         same_as_username: "La tua password è uguale al tuo nome utente."
         same_as_email: "La password coincide con l'email."
@@ -2153,6 +2162,8 @@ it:
           title: "Gestisci le categorie"
         bulk_select_topics_dropdown:
           title: "Azioni Multiple"
+        bulk_select_bookmarks_dropdown:
+          title: "Azioni Multiple"
     date_time_picker:
       from: Da
       to: A
@@ -2302,7 +2313,6 @@ it:
       show_toolbar: "mostra la barra degli strumenti del Composer"
       hide_toolbar: "nascondi la barra degli strumenti del Composer"
       modal_ok: "OK"
-      modal_cancel: "Annulla"
       cant_send_pm: "Spiacenti, non puoi inviare un messaggio a %{username}."
       yourself_confirm:
         title: "Hai dimenticato di aggiungere i destinatari?"
@@ -2750,14 +2760,12 @@ it:
         filter: "Non ci sono altri argomenti."
     topic_bulk_actions:
       close_topics:
-        name: "Chiudi argomenti"
+        name: "Chiudi"
         optional: (opzionale)
       archive_topics:
-        name: "Archivia argomenti"
-      unlist_topics:
-        name: "Rendi argomenti invisibili"
-      relist_topics:
-        name: "Ripubblica Argomenti"
+        name: "Archiviati"
+      move_messages_to_inbox:
+        name: "Sposta in posta in arrivo"
       remove_tags:
         name: "Rimuovi etichette"
       append_tags:
@@ -2765,7 +2773,7 @@ it:
       replace_tags:
         name: "Sostituisci Etichette"
       delete_topics:
-        name: "Elimina argomenti"
+        name: "Elimina"
     topic:
       filter_to:
         one: "%{count} messaggio in questo argomento"
@@ -3977,7 +3985,6 @@ it:
       all_tags: "Tutte le etichette"
       other_tags: "Altre Etichette"
       selector_tags: "etichette"
-      selector_all_tags: "tutte le etichette"
       selector_no_tags: "nessuna etichetta"
       selector_remove_filter: "rimuovi filtro"
       tags: "Etichette"
@@ -4174,6 +4181,7 @@ it:
           text: "e mostreremo automaticamente le categorie più popolari di questo sito"
         filter_placeholder: "Filtra le categorie"
         no_categories: "Non ci sono categorie corrispondenti al termine specificato."
+        show_more: "Mostra altro"
       tags_form_modal:
         title: "Modifica la navigazione delle etichette"
         filter_placeholder: "Filtra etichette"
@@ -4264,6 +4272,9 @@ it:
             faq:
               content: "FAQ"
               title: "Linee guida per l'utilizzo di questo sito"
+            guidelines:
+              content: "Linee Guida"
+              title: "Linee guida per l'utilizzo di questo sito"
             groups:
               content: "Gruppi"
               title: "Elenco dei gruppi di utenti disponibili"
@@ -4288,7 +4299,7 @@ it:
       panels:
         forum:
           label: Forum
-      filter: "Filtro"
+      filter: "Filtro..."
       no_results:
         title: "Nessun risultato"
     welcome_topic_banner:
@@ -4503,6 +4514,9 @@ it:
               label: Categoria
             include_subcategories:
               label: "Includi Sottocategorie"
+      flags:
+        description: "Descrizione"
+        enabled: "Abilitato?"
       groups:
         new:
           title: "Nuovo Gruppo"
@@ -4804,6 +4818,8 @@ it:
           timestamp: "Creazione"
           completion: "Tempo Completamento"
           actions: "Azioni"
+          filter_status:
+            failed: "Non riuscito"
       home:
         title: "Home"
       account:
@@ -4850,6 +4866,16 @@ it:
           search_logs: "Log di ricerca"
           security: "Sicurezza"
           spam: "Spam"
+      config_areas:
+        about:
+          header: "Informazioni sul tuo sito"
+          community_name: "Nome community"
+          your_organization: "La tua organizzazione"
+          company_name: "Nome società"
+          governing_law: "Diritto applicabile"
+          city_for_disputes: "Sede per eventuali controversie"
+          optional: "(opzionale)"
+          update: "Aggiorna"
       plugins:
         title: "Plugin"
         installed: "Plugin Installati"
@@ -5950,6 +5976,7 @@ it:
         name: "Nome Campo"
         type: "Tipo Campo"
         description: "Descrizione Campo"
+        preferences: "Preferenze"
         save: "Salva"
         edit: "Modifica"
         delete: "Cancella"
@@ -5960,6 +5987,9 @@ it:
           title: "Obbligatorio durante l'iscrizione"
           enabled: "obbligatorio"
           disabled: "non obbligatorio"
+        requirement:
+          optional:
+            title: "Facoltativo"
         editable:
           title: "Modificabile dopo l'iscrizione"
           enabled: "modificabile"

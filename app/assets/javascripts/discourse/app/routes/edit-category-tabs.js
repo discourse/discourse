@@ -1,12 +1,12 @@
 import DiscourseRoute from "discourse/routes/discourse";
 
-export default DiscourseRoute.extend({
+export default class EditCategoryTabs extends DiscourseRoute {
   model() {
     return this.modelFor("editCategory");
-  },
+  }
 
   setupController(controller, model, transition) {
-    this._super(...arguments);
+    super.setupController(...arguments);
 
     const parentParams = this.paramsFor("editCategory");
 
@@ -15,5 +15,5 @@ export default DiscourseRoute.extend({
       selectedTab: transition.to.params.tab,
       showTooltip: false,
     });
-  },
-});
+  }
+}

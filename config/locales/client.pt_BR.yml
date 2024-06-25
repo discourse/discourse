@@ -342,11 +342,20 @@ pt_BR:
       search_placeholder: "Pesquisar os favoritos por nome, título do tópico ou conteúdo da postagem"
       search: "Pesquisar"
       bookmark: "Marcador"
+      bulk:
+        select_all: "Selecionar tudo"
+        clear_all: "Limpar tudo"
+        selected_count:
+          one: "Selecionou %{count}"
+          other: "Selecionou %{count}"
       reminders:
         today_with_time: "hoje à(s) %{time}"
         tomorrow_with_time: "amanhã à(s) %{time}"
         at_time: "em %{date_time}"
         existing_reminder: "Você tem um lembrete definido para este favorito que será enviado em %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Excluir favorito"
     copy_codeblock:
       copied: "copiado!"
       copy: "copiar código para a área de transferência"
@@ -1355,6 +1364,7 @@ pt_BR:
         set_password: "Definir senha"
         choose_new: "Escolha uma nova senha"
         choose: "Escolha uma senha"
+        title: "Redefinição de senha"
       second_factor_backup:
         title: "Códigos de backup de dois fatores"
         regenerate: "Gerar novamente"
@@ -1746,7 +1756,6 @@ pt_BR:
         fine_print: "Solicitamos que você confirme sua identidade porque provavelmente esta é uma ação confidencial. Após a autenticação, será solicitado que você autentique novamente após algumas horas de inatividade."
       password:
         title: "Senha"
-        too_short: "A sua senha é muito curta."
         common: "A senha é muito comum."
         same_as_username: "A sua senha é igual ao seu nome do(a) usuário(a)."
         same_as_email: "A sua senha é igual ao seu e-mail."
@@ -2156,6 +2165,8 @@ pt_BR:
           title: "Gerenciar categorias"
         bulk_select_topics_dropdown:
           title: "Ações em massa"
+        bulk_select_bookmarks_dropdown:
+          title: "Ações em massa"
     date_time_picker:
       from: De
       to: Para
@@ -2305,7 +2316,6 @@ pt_BR:
       show_toolbar: "exibir barra de ferramentas do compositor"
       hide_toolbar: "ocultar barra de ferramentas do compositor"
       modal_ok: "Ok"
-      modal_cancel: "Cancelar"
       cant_send_pm: "Desculpe, você não pode enviar uma mensagem para %{username}."
       yourself_confirm:
         title: "Você se esqueceu de adicionar destinatários?"
@@ -2756,20 +2766,18 @@ pt_BR:
         filter: "Não existem mais tópicos."
     topic_bulk_actions:
       close_topics:
-        name: "Fechar tópicos"
+        name: "Fechar"
         optional: (opcional)
       archive_topics:
-        name: "Arquivar tópicos"
-      unlist_topics:
-        name: "Remover tópicos da lista"
-      relist_topics:
-        name: "Reinserir tópicos na lista"
+        name: "Arquivo"
+      move_messages_to_inbox:
+        name: "Mover para caixa de entrada"
       append_tags:
         name: "Adicionar etiquetas"
       replace_tags:
         name: "Substituir etiquetas"
       delete_topics:
-        name: "Excluir tópicos"
+        name: "Excluir"
       update_category:
         name: "Atualizar Categoria"
         description: "Escolha a nova categoria para os tópicos selecionados"
@@ -3990,7 +3998,6 @@ pt_BR:
       all_tags: "Todas as etiquetas"
       other_tags: "Outras etiquetas"
       selector_tags: "etiquetas"
-      selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
       selector_remove_filter: "remover filtro"
       tags: "Etiquetas"
@@ -4187,6 +4194,7 @@ pt_BR:
           text: "e mostraremos automaticamente as categorias mais populares deste site"
         filter_placeholder: "Filtrar categorias"
         no_categories: "Não há categorias correspondentes ao termo fornecido."
+        show_more: "Exibir mais"
       tags_form_modal:
         title: "Editar navegação por etiquetas"
         filter_placeholder: "Filtrar etiquetas"
@@ -4277,6 +4285,9 @@ pt_BR:
             faq:
               content: "FAQ"
               title: "Diretrizes para usar este site"
+            guidelines:
+              content: "Diretrizes"
+              title: "Diretrizes para usar este site"
             groups:
               content: "Grupos"
               title: "Lista de grupos de usuários disponíveis"
@@ -4301,7 +4312,7 @@ pt_BR:
       panels:
         forum:
           label: Fórum
-      filter: "Filtro"
+      filter: "Filtro..."
       no_results:
         title: "Nenhum resultado"
     welcome_topic_banner:
@@ -4404,6 +4415,7 @@ pt_BR:
           copy: "Copiar..."
           paste: "Colar..."
           save: "Salvar como..."
+    powered_by_discourse: "Com tecnologia Discourse"
   admin_js:
     type_to_filter: "Digite para filtrar..."
     admin:
@@ -4516,6 +4528,9 @@ pt_BR:
               label: Categoria
             include_subcategories:
               label: "Incluir subcategorias"
+      flags:
+        description: "Descrição"
+        enabled: "Ativado(a)?"
       groups:
         new:
           title: "Novo grupo"
@@ -4818,6 +4833,8 @@ pt_BR:
           timestamp: "Criado(a)"
           completion: "Tempo de conclusão"
           actions: "Ações"
+          filter_status:
+            failed: "Falha"
       home:
         title: "Início"
       account:
@@ -4864,6 +4881,16 @@ pt_BR:
           search_logs: "Registros de pesquisa"
           security: "Segurança"
           spam: "Spam"
+      config_areas:
+        about:
+          header: "Sobre seu site"
+          community_name: "Nome da comunidade"
+          your_organization: "Sua organização"
+          company_name: "Nome da empresa"
+          governing_law: "Lei aplicável"
+          city_for_disputes: "Cidade para disputas"
+          optional: "(opcional)"
+          update: "Atualizar"
       plugins:
         title: "Plugins"
         installed: "Plugins nstalados"
@@ -5963,6 +5990,7 @@ pt_BR:
         name: "Nome do campo"
         type: "Tipo do campo"
         description: "Descrição do campo"
+        preferences: "Preferências"
         save: "Salvar"
         edit: "Editar"
         delete: "Excluir"
@@ -5973,6 +6001,9 @@ pt_BR:
           title: "Necessário para cadastro"
           enabled: "necessário(a)"
           disabled: "não necessário(a)"
+        requirement:
+          optional:
+            title: "Opcional"
         editable:
           title: "Editável após criar conta"
           enabled: "editável"

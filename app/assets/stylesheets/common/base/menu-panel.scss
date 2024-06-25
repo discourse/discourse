@@ -230,17 +230,6 @@
 }
 
 .hamburger-panel {
-  // remove once glimmer search menu in place
-  a.widget-link {
-    width: 100%;
-    box-sizing: border-box;
-    @include ellipsis;
-  }
-  a.search-link {
-    width: 100%;
-    box-sizing: border-box;
-    @include ellipsis;
-  }
   .panel-body {
     overflow-y: auto;
   }

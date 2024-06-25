@@ -9,6 +9,7 @@ ug:
     chat_separate_sidebar_mode: "مۇنبەر ۋە سۆھبەتكە ئايرىم يان بالداق ھالىتىنى كۆرسىتىدۇ."
     chat_enabled: "سۆھبەتنى قوزغىتىدۇ."
     enable_public_channels: "سەھىپە ئاساسىدىكى ئاممىۋى قانال قوزغىتىلدى."
+    chat_allowed_groups: "بۇ گۇرۇپپىدىكى ئىشلەتكۈچىلەر سۆھبەتلىشەلەيدۇ. دىققەت باشقۇرغۇچى ۋە رىياسەتچىلەر ھەمىشە سۆھبەتنى زىيارەت قىلالايدۇ."
     chat_channel_retention_days: "ئادەتتىكى قانالدىكى سۆھبەت ئۇچۇرى بۇ كۈنلەردە ساقلىنىدۇ. «0» گە تەڭشەلسە ئۇچۇرلار مەڭگۈلۈك ساقلىنىدۇ."
     chat_dm_retention_days: "شەخسىي سۆھبەت قانىلىدىكى سۆھبەت ئۇچۇرى بۇ كۈنلەردە ساقلىنىدۇ. «0» گە تەڭشەلسە ئۇچۇرلار مەڭگۈلۈك ساقلىنىدۇ."
     chat_auto_silence_duration: "ئىشلەتكۈچى سۆھبەت ئۇچۇرى قۇرۇش چېكىدىن ھالقىغاندا ئۈنسىزلەيدىغان مىنۇت سانى. «0» گە تەڭشەلسە ئۆزلۈكىدىكى ئۈنسىزلەشنى چەكلەيدۇ."
@@ -23,6 +24,7 @@ ug:
     chat_archive_destination_topic_status: "قانالنى ئارخىپلاشتۇرۇش تاماملانغاندىن كېيىن نىشان سۆھبەتنىڭ ھالىتى. بۇ پەقەت نىشان سۆھبەت نۆۋەتتىكى تېما بولماي يېڭى تېما بولغاندا قوللىنىلىدۇ."
     default_emoji_reactions: "سۆھبەت ئۇچۇرىنىڭ كۆڭۈلدىكى چىراي ئىپادە ئىنكاسى. تېز ئىنكاس ئۈچۈن ئەڭ كۆپ بولغاندا 5 چىراي ئىپادە قوشقىلى بولىدۇ."
     direct_message_enabled_groups: "بۇ گۇرۇپپىدىكى ئەزالارنىڭ ئىشلەتكۈچىدىن ئىشلەتكۈچىگە سۆھبەت قۇرۇشىغا يول قويۇلىدۇ. دىققەت: باشقۇرغۇچىلار ھەمىشە شەخسىي سۆھبەت قۇرالايدۇ، ئىشلەتكۈچى پەقەت شەخسىي سۆھبەت قۇرالايدىغان ئىشلەتكۈچى قۇرغان شەخسىي سۆھبەتكە جاۋاب قايتۇرالايدۇ."
+    chat_message_flag_allowed_groups: "بۇ گۇرۇپپىلاردىكى ئىشلەتكۈچىلەر سۆھبەت ئۇچۇرىنى پاش قىلالايدۇ. دىققەت، باشقۇرغۇچى ۋە رىياسەتچىلەر ھەمىشە پاراڭلىشىش ئۇچۇرلىرىنى پاش قىلالايدۇ."
     max_mentions_per_chat_message: "ئىشلەتكۈچى سۆھبەت ئۇچۇرىدا @name نى ئىشلىتىپ ئۇقتۇرۇش قىلالايدىغان ئەڭ كۆپ كىشى سانى."
     chat_max_direct_message_users: "يېڭى بىۋاسىتە ئۇچۇر قۇرغاندا ئىشلەتكۈچى قوشالايدىغان ئىشلەتكۈچىنىڭ سانى مۇشۇ ساندىن ئېشىپ كەتمەيدۇ. 0 قىلىپ تەڭشەلسە ئۆزىگىلا ئۇچۇر يوللاشقا يول قويىدۇ. باشقۇرغۇچى بۇ تەڭشەكنىڭ تەسىرىگە ئۇچرىمايدۇ."
     chat_allow_archiving_channels: "باشقۇرغۇچى قانالنى تاقىغاندا ئۇچۇرلار بىر تېمىغا ئارخىپلىنىدۇ."
@@ -231,18 +233,20 @@ ug:
         other: "يېڭى سۆھبەت ئۇچۇرىڭىز بار"
       from: "%{site_name}"
       subject:
-        private_message: "%{email_prefix} يېڭى ئۇچۇر"
-        direct_message_from_1: "[%{email_prefix}] %{username} دىن كەلگەن يېڭى ئۇچۇر"
-        direct_message_from_2: "[%{email_prefix}] %{username1} ۋە %{username2} دىن كەلگەن يېڭى ئۇچۇر"
-        direct_message_from_more:
-          one: "[%{email_prefix}] %{username} ۋە باشقا %{count} ئىشلەتكۈچىدىن كەلگەن يېڭى ئۇچۇر"
-          other: "[%{email_prefix}] %{username} ۋە باشقا %{count} ئىشلەتكۈچىدىن كەلگەن يېڭى ئۇچۇر"
-        chat_channel_1: "[%{email_prefix}] %{channel} دىكى يېڭى ئۇچۇر"
-        chat_channel_2: "[%{email_prefix}] %{channel1} ۋە %{channel2} دىكى يېڭى ئۇچۇر"
-        chat_channel_more:
-          one: "[%{email_prefix}] %{channel} ۋە باشقا %{count} قانالدىكى يېڭى ئۇچۇر"
-          other: "[%{email_prefix}] %{channel} ۋە باشقا %{count} قانالدىكى يېڭى ئۇچۇر"
-        chat_channel_and_direct_message: "[%{email_prefix}] %{channel} ۋە %{username} دىن كەلگەن يېڭى ئۇچۇر"
+        private_email:
+          one: "%{site_name} يېڭى ئۇچۇر"
+          other: "%{site_name} يېڭى ئۇچۇر"
+        chat_dm_1:
+          one: "[%{site_name}] %{name} دىن كەلگەن يېڭى ئۇچۇر"
+          other: "[%{site_name}] %{name} دىن كەلگەن يېڭى ئۇچۇر"
+        chat_dm_2: "[%{site_name}] %{name_1} ۋە %{name_2} دىن كەلگەن يېڭى ئۇچۇر"
+        chat_dm_3_or_more: "[%{site_name}] %{name} ۋە باشقا %{count} ئىشلەتكۈچىدىن كەلگەن يېڭى ئۇچۇر"
+        chat_channel_1:
+          one: "[%{site_name}] %{channel} دىكى يېڭى ئۇچۇر"
+          other: "[%{site_name}] %{channel} دىكى يېڭى ئۇچۇر"
+        chat_channel_2: "[%{site_name}] %{channel_1} ۋە %{channel_2} دىكى يېڭى ئۇچۇر"
+        chat_channel_3_or_more: "[%{site_name}] %{channel} ۋە باشقا %{count} دىكى يېڭى ئۇچۇر"
+        chat_channel_and_dm: "[%{site_name}] %{channel} ۋە %{name} دىن كەلگەن يېڭى ئۇچۇر"
       unsubscribe: "سىز ئايرىلغاندا %{site_link} دىن بۇ سۆھبەتنىڭ خۇلاسىسى ئەۋەتىلدى. %{email_preferences_link} نى ئۆزگەرتىڭ ياكى %{unsubscribe_link} مۇشتەرىلىكتىن چېكىنىڭ."
       unsubscribe_no_link: "سىز ئايرىلغاندا %{site_link} دىن بۇ سۆھبەتنىڭ خۇلاسىسى ئەۋەتىلدى. %{email_preferences_link} نى ئۆزگەرتىڭ."
       view_messages:

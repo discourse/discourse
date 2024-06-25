@@ -27,13 +27,18 @@ export default class SidebarApiSection extends Component {
       return this.section.links;
     }
 
-    if (this.section.text.toLowerCase().match(this.sidebarState.filter)) {
+    if (
+      this.section.text.toLowerCase().match(this.sidebarState.sanitizedFilter)
+    ) {
       return this.section.links;
     }
 
     return this.section.links.filter((link) => {
       return (
-        link.text.toString().toLowerCase().match(this.sidebarState.filter) ||
+        link.text
+          .toString()
+          .toLowerCase()
+          .match(this.sidebarState.sanitizedFilter) ||
         link.keywords.navigation.some((keyword) =>
           keyword.match(this.sidebarState.filter)
         )

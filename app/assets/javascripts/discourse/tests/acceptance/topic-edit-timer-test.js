@@ -14,7 +14,6 @@ import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
 acceptance("Topic - Edit timer", function (needs) {
-  let clock = null;
   needs.user();
   needs.pretender((server, helper) => {
     server.post("/t/280/timer", () =>
@@ -35,14 +34,14 @@ acceptance("Topic - Edit timer", function (needs) {
     server.get("/t/54077.json", () => helper.response(topicResponse));
   });
 
-  needs.hooks.beforeEach(() => {
-    const timezone = loggedInUser().user_option.timezone;
+  needs.hooks.beforeEach(function () {
+    this.timezone = loggedInUser().user_option.timezone;
     const tuesday = "2100-06-15T08:00:00";
-    clock = fakeTime(tuesday, timezone, true);
+    this.clock = fakeTime(tuesday, this.timezone, true);
   });
 
-  needs.hooks.afterEach(() => {
-    clock.restore();
+  needs.hooks.afterEach(function () {
+    this.clock.restore();
   });
 
   test("autoclose - specific time", async function (assert) {
@@ -69,14 +68,14 @@ acceptance("Topic - Edit timer", function (needs) {
 
     assert
       .dom(".edit-topic-timer-modal .topic-timer-info")
-      .matchesText(/will automatically close in/g);
+      .matchesText(/will automatically close in/);
 
     await click("#tap_tile_custom");
     await fillIn(".tap-tile-date-input .date-picker", "2100-11-24");
 
     assert
       .dom(".edit-topic-timer-modal .topic-timer-info")
-      .matchesText(/will automatically close in/g);
+      .matchesText(/will automatically close in/);
 
     const timerType = selectKit(".select-kit.timer-type");
     await timerType.expand();
@@ -85,11 +84,34 @@ acceptance("Topic - Edit timer", function (needs) {
     const interval = selectKit(".select-kit.relative-time-intervals");
     await interval.expand();
     await interval.selectRowByValue("hours");
+    assert.strictEqual(interval.header().label(), "hours");
     await fillIn(".relative-time-duration", "2");
 
     assert
       .dom(".edit-topic-timer-modal .warning")
-      .matchesText(/last post in the topic is already/g);
+      .matchesText(
+        /last post in the topic is already/,
+        "shows the warning if the topic will be closed immediately"
+      );
+
+    const topic = topicFixtures["/t/54077.json"];
+    const lastPostIndex = topic.post_stream.posts.length - 1;
+    const time = topic.post_stream.posts[lastPostIndex].updated_at;
+    this.clock.restore();
+    this.clock = fakeTime(time, this.timezone, true);
+    await fillIn(".relative-time-duration", "6");
+
+    assert
+      .dom(".topic-timer-heading")
+      .hasText("This topic will close 6 hours after the last reply.");
+
+    await interval.expand();
+    await interval.selectRowByValue("days");
+
+    assert.strictEqual(interval.header().label(), "days");
+    assert
+      .dom(".topic-timer-heading")
+      .hasText("This topic will close 6 days after the last reply.");
   });
 
   test("close temporarily", async function (assert) {

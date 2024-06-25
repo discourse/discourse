@@ -1077,7 +1077,6 @@ en:
     categories:
       categories_label: "categories"
       subcategories_label: "subcategories"
-      all_subcategories: "all subcategories"
       no_subcategories: "no subcategories"
       remove_filter: "remove filter"
       plus_more_count:
@@ -1498,6 +1497,8 @@ en:
         set_password: "Set Password"
         choose_new: "Choose a new password"
         choose: "Choose a password"
+        verify_identity: "To continue, please verify your identity."
+        title: "Password Reset"
 
       second_factor_backup:
         title: "Two-Factor Backup Codes"
@@ -1539,6 +1540,7 @@ en:
           Two-factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> and <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> devices.
         oauth_enabled_warning: "Please note that social logins will be disabled once two-factor authentication has been enabled on your account."
         use: "Use Authenticator app"
+        enforced_with_oauth_notice: "You are required to enable two-factor authentication. You will only be prompted to use this when logging in with a password, not with external authentication or social login methods."
         enforced_notice: "You are required to enable two-factor authentication before accessing this site."
         disable: "Disable"
         disable_confirm: "Are you sure you want to disable two-factor authentication?"
@@ -1934,7 +1936,9 @@ en:
         fine_print: "We are asking you to confirm your identity because this is a potentially sensitive action. Once authenticated, you will only be asked to re-authenticate again after a few hours of inactivity."
       password:
         title: "Password"
-        too_short: "Your password is too short."
+        too_short:
+          one: "Your password is too short (minimum is %{count} character)."
+          other: "Your password is too short (minimum is %{count} characters)."
         common: "That password is too common."
         same_as_username: "Your password is the same as your username."
         same_as_email: "Your password is the same as your email."
@@ -2292,6 +2296,7 @@ en:
       error: "Unknown error"
       cookies_error: "Your browser seems to have cookies disabled. You might not be able to log in without enabling them first."
       rate_limit: "Please wait before trying to log in again."
+      password_expired: "Password expired. Please <a href='%{reset_url}'>reset your password</a>."
       blank_username: "Please enter your email or username."
       blank_username_or_password: "Please enter your email or username, and password."
       reset_password: "Reset Password"
@@ -2595,7 +2600,6 @@ en:
       show_toolbar: "show composer toolbar"
       hide_toolbar: "hide composer toolbar"
       modal_ok: "OK"
-      modal_cancel: "Cancel"
       cant_send_pm: "Sorry, you can't send a message to %{username}."
       create_message_error: "Sorry, there was an error creating that message. Please try again."
       yourself_confirm:
@@ -3019,6 +3023,7 @@ en:
         close_topics: "Close Topics"
         archive_topics: "Archive Topics"
         move_messages_to_inbox: "Move to Inbox"
+        archive_messages: "Move to Archive"
         notification_level: "Notifications…"
         change_notification_level: "Change Notification Level"
         choose_new_category: "Choose the new category for the topics:"
@@ -3079,15 +3084,19 @@ en:
 
     topic_bulk_actions:
       close_topics:
-        name: "Close Topics"
+        name: "Close"
         note: "Note"
         optional: (optional)
       archive_topics:
-        name: "Archive Topics"
+        name: "Archive"
+      archive_messages:
+        name: "Move to Archive"
+      move_messages_to_inbox:
+        name: "Move to Inbox"
       unlist_topics:
-        name: "Unlist Topics"
+        name: "Unlist"
       relist_topics:
-        name: "Relist Topics"
+        name: "Relist"
       remove_tags:
         name: "Remove Tags"
       append_tags:
@@ -3095,7 +3104,7 @@ en:
       replace_tags:
         name: "Replace Tags"
       delete_topics:
-        name: "Delete Topics"
+        name: "Delete"
       update_category:
         name: "Update Category"
         description: "Choose the new category for the selected topics"
@@ -4445,7 +4454,6 @@ en:
       all_tags: "All tags"
       other_tags: "Other Tags"
       selector_tags: "tags"
-      selector_all_tags: "all tags"
       selector_no_tags: "no tags"
       selector_remove_filter: "remove filter"
       tags: "Tags"
@@ -4659,6 +4667,7 @@ en:
           text: "and we'll automatically show this site's most popular categories"
         filter_placeholder: "Filter categories"
         no_categories: "There are no categories matching the given term."
+        show_more: "Show more"
       tags_form_modal:
         title: "Edit tags navigation"
         filter_placeholder: "Filter tags"
@@ -4765,6 +4774,9 @@ en:
             faq:
               content: "FAQ"
               title: "Guidelines for using this site"
+            guidelines:
+              content: "Guidelines"
+              title: "Guidelines for using this site"
             groups:
               content: "Groups"
               title: "List of available user groups"
@@ -4789,7 +4801,7 @@ en:
       panels:
         forum:
           label: Forum
-      filter: "Filter"
+      filter: "Filter..."
       clear_filter: "Clear filter"
       no_results:
         title: "No results"
@@ -5024,6 +5036,14 @@ en:
               label: Category
             include_subcategories:
               label: "Include Subcategories"
+      flags:
+        title: "Moderation Flags"
+        description: "Description"
+        enabled: "Enabled?"
+        more_options:
+          title: "More options"
+          move_up: "Move up"
+          move_down: "Move down"
 
       groups:
         new:
@@ -5340,6 +5360,10 @@ en:
           timestamp: "Created"
           completion: "Completion Time"
           actions: "Actions"
+          filter_status:
+            all: "All Events"
+            successful: "Delivered"
+            failed: "Failed"
       home:
         title: "Home"
       account:
@@ -5363,6 +5387,7 @@ en:
           user_fields: "User Fields"
           watched_words: "Watched Words"
           legal: "Legal"
+          moderation_flags: "Moderation Flags"
 
       appearance:
         title: "Appearance"
@@ -5406,6 +5431,46 @@ en:
           spam: "Spam"
           staff_action_logs: "Staff Action Logs"
 
+      config_areas:
+        about:
+          header: "About your site"
+          general_settings: "General settings"
+          community_name: "Community name"
+          community_summary: "Community summary"
+          community_description: "Community description"
+          banner_image: "Banner image"
+          banner_image_help: |
+            This will be used on your About page. Recommended size: 800x300px. Accepted types: JPG, PNG, and SVG up to 10MB.
+          contact_information: "Contact information"
+          community_owner: "Community owner"
+          community_owner_help: |
+            Name of key contact responsible for this site. Used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
+          contact_email: "Contact email"
+          contact_email_help: |
+            Email address of key contact responsible for this site. Used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
+          contact_url: "Contact URL"
+          contact_url_help: |
+            Contact URL for this site. When present, replaces contact email address on /about and visible to anonymous users on public sites.
+          site_contact_name: "Site contact name"
+          site_contact_name_help: |
+            A valid staff username to send all automated messages from. If left blank, the default System account will be used.
+          site_contact_group: "Site contact group"
+          site_contact_group_help: |
+            A valid name of a group that gets invited to all automatically sent private messages.
+          your_organization: "Your organization"
+          company_name: "Company name"
+          company_name_help: |
+            Name of your company or organization.
+          company_name_warning: |
+            If left blank, no boilerplate Terms of Service or Privacy Notice will be provided.
+          governing_law: "Governing law"
+          governing_law_help: |
+            Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Notice. This is typically the country or state where the company operating the site is registered or conducts business.
+          city_for_disputes: "City for disputes"
+          city_for_disputes_help: |
+            Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service.
+          optional: "(optional)"
+          update: "Update"
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"
@@ -5810,7 +5875,7 @@ en:
             description: "Links, some buttons, notifications, and accent color."
           quaternary:
             name: "quaternary"
-            description: "Navigation links."
+            description: "For optional use in themes."
           header_background:
             name: "header background"
             description: "Background color of the site's header."
@@ -6081,6 +6146,8 @@ en:
             create_watched_word_group: "create watched word group"
             update_watched_word_group: "update watched word group"
             delete_watched_word_group: "delete watched word group"
+            toggle_flag: "toggle flag"
+            move_flag: "move flag"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -6640,6 +6707,7 @@ en:
         recommended: "We recommend customizing the following text to suit your needs:"
         show_overriden: "Only show overridden"
         show_outdated: "Only show outdated/invalid"
+        show_untranslated: "Only show untranslated"
         locale: "Language:"
         more_than_50_results: "There are more than 50 results. Please refine your search."
         no_results: "No matching site texts found"
@@ -6729,6 +6797,22 @@ en:
           add_types_title: "Allow extensions %{types}"
           add_types_toast: "%{types} file types added"
         mandatory_group: "Group is mandatory"
+        requires_confirmation_messages:
+          default:
+            prompt: "Changing this setting may have far-reaching or unintended consequences for your site. Are you sure you want to proceed?"
+            confirm: "Yes, I'm sure"
+          min_password_length:
+            prompt: "You’re about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
+            confirm: "Yes, update password policy"
+          min_admin_password_length:
+            prompt: "You’re about to change your password policy. This will affect all admins changing their passwords from now on. Are you sure you want to proceed?"
+            confirm: "Yes, update password policy"
+          password_unique_charactes:
+            prompt: "You’re about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
+            confirm: "Yes, update password policy"
+          block_common_passwords:
+            prompt: "You’re about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
+            confirm: "Yes, update password policy"
 
       badges:
         title: Badges

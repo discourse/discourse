@@ -255,7 +255,7 @@ end
 # Note that this should only be used in CI where it is safe to mutate the database without rolling back since running
 # the themes QUnit tests requires the themes to be installed in the database.
 desc "Runs qunit tests for all official themes"
-task "themes:qunit_all_official" => ["themes:clone_all_official", :environment] do |task, args|
+task "themes:qunit_all_official" => :environment do |task, args|
   theme_ids_with_qunit_tests = []
 
   ThemeMetadata::OFFICIAL_THEMES.each do |theme_name|

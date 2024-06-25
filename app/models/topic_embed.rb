@@ -61,7 +61,7 @@ class TopicEmbed < ActiveRecord::Base
     if embed.blank?
       Topic.transaction do
         if eh = EmbeddableHost.record_for_url(url)
-          tags = eh.tags.presence || tags
+          tags = eh.tags.presence&.map(&:name) || tags
           user = eh.user.presence || user
         end
 
@@ -163,9 +163,31 @@ class TopicEmbed < ActiveRecord::Base
     require "ruby-readability"
 
     opts = {
-      tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote figure figcaption],
+      tags: %w[
+        div
+        p
+        code
+        pre
+        h1
+        h2
+        h3
+        b
+        em
+        i
+        strong
+        a
+        img
+        ul
+        li
+        ol
+        blockquote
+        figure
+        figcaption
+        details
+      ],
       attributes: %w[href src class],
       remove_empty_nodes: false,
+      elements_to_score: %w[p],
     }
 
     opts[

@@ -1,7 +1,16 @@
 # frozen_string_literal: true
 
 class PostActionTypeSerializer < ApplicationSerializer
-  attributes(:id, :name_key, :name, :description, :short_description, :is_flag, :is_custom_flag)
+  attributes(
+    :id,
+    :name_key,
+    :name,
+    :description,
+    :short_description,
+    :is_flag,
+    :is_custom_flag,
+    :enabled,
+  )
 
   include ConfigurableUrls
 
@@ -27,6 +36,10 @@ class PostActionTypeSerializer < ApplicationSerializer
 
   def name_key
     PostActionType.types[object.id].to_s
+  end
+
+  def enabled
+    !!PostActionType.enabled_flag_types[object.id]
   end
 
   protected

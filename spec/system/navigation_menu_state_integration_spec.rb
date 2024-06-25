@@ -39,7 +39,7 @@ describe "Navigation menu states", type: :system, js: true do
         expect(find(sidebar_navigation.header_toggle_css)).to have_css(".d-icon-discourse-sidebar")
       end
 
-      it "shows the hamburger menu and allows toggling it, which shows the MAIN_PANEL onls" do
+      it "shows the hamburger menu and allows toggling it, which shows the MAIN_PANEL only" do
         visit "/admin"
         expect(header_dropdown).to be_visible
         header_dropdown.open

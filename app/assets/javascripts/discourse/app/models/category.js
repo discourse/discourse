@@ -1,7 +1,6 @@
 import { warn } from "@ember/debug";
 import { computed, get } from "@ember/object";
 import { service } from "@ember/service";
-import { on } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import PermissionType from "discourse/models/permission-type";
@@ -15,6 +14,7 @@ import { MultiCache } from "discourse-common/utils/multi-cache";
 
 const STAFF_GROUP_NAME = "staff";
 const CATEGORY_ASYNC_SEARCH_CACHE = {};
+const CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE = {};
 
 export default class Category extends RestModel {
   // Sort subcategories directly under parents
@@ -386,6 +386,32 @@ export default class Category extends RestModel {
     return data.sortBy("read_restricted");
   }
 
+  static async asyncHierarchicalSearch(term, opts) {
+    opts ||= {};
+
+    const data = {
+      term,
+      parent_category_id: opts.parentCategoryId,
+      limit: opts.limit,
+      only: opts.only,
+      except: opts.except,
+      page: opts.page,
+      offset: opts.offset,
+      include_uncategorized: opts.includeUncategorized,
+    };
+
+    const result = (CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE[
+      JSON.stringify(data)
+    ] ||= await ajax("/categories/hierarchical_search", {
+      method: "GET",
+      data,
+    }));
+
+    return result["categories"].map((category) =>
+      Site.current().updateCategory(category)
+    );
+  }
+
   static async asyncSearch(term, opts) {
     opts ||= {};
 
@@ -426,21 +452,23 @@ export default class Category extends RestModel {
 
   permissions = null;
 
-  @on("init")
+  init() {
+    super.init(...arguments);
+    this.setupGroupsAndPermissions();
+  }
+
   setupGroupsAndPermissions() {
-    const availableGroups = this.available_groups;
-    if (!availableGroups) {
+    if (!this.available_groups) {
       return;
     }
-    this.set("availableGroups", availableGroups);
 
-    const groupPermissions = this.group_permissions;
+    this.set("availableGroups", this.available_groups);
 
-    if (groupPermissions) {
+    if (this.group_permissions) {
       this.set(
         "permissions",
-        groupPermissions.map((elem) => {
-          availableGroups.removeObject(elem.group_name);
+        this.group_permissions.map((elem) => {
+          this.available_groups.removeObject(elem.group_name);
           return elem;
         })
       );

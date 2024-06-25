@@ -287,6 +287,22 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
         )
       end
 
+      it "triggers the response when bookmarking the topic" do
+        Jobs.run_later!
+        topic = Fabricate(:topic)
+        post = Fabricate(:post, topic: topic)
+        bookmark = Fabricate(:bookmark, bookmarkable: topic)
+
+        expect_job_enqueued(
+          job: :bot_input,
+          args: {
+            user_id: bookmark.user_id,
+            post_id: post.id,
+            input: "bookmark",
+          },
+        )
+      end
+
       context "when the bookmark is created" do
         let(:profile_page_url) { "#{Discourse.base_url_no_prefix}/prefix/u/#{user.username}" }
         let(:new_post) { Post.last }
