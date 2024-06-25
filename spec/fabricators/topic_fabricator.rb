@@ -37,7 +37,7 @@ Fabricator(:group_private_message_topic, from: :topic) do
 end
 
 Fabricator(:new_reply_topic, from: :topic) do
-  before_validation { raise "new_reply_topic fabricator requires the `user` param" if !user }
+  before_create { raise "new_reply_topic fabricator requires the `user` param" if !user }
 
   after_create do |topic|
     Fabricate.times(2, :post, topic: topic)
