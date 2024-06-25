@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
 
 export default class DBreadcrumbsItem extends Component {
@@ -23,6 +24,7 @@ export default class DBreadcrumbsItem extends Component {
     }
   }
 
+  @cached
   get templateForContainer() {
     // Those are evaluated in a different context than the `@linkClass`
     const { label } = this.args;

@@ -236,6 +236,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(data["email_valid"]).to eq(true)
         expect(data["can_edit_username"]).to eq(true)
         expect(data["destination_url"]).to eq(destination_url)
+        expect(read_secure_session["oauth"]).to eq("true")
       end
 
       it "should return the right response for staged users" do

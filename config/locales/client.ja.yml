@@ -1028,7 +1028,8 @@ ja:
       activity_stream: "アクティビティ"
       read: "既読"
       read_help: "最近読んだトピック"
-      preferences: "設定"
+      preferences:
+        title: "設定"
       feature_topic_on_profile:
         open_search: "新規トピックを選択"
         title: "トピックを選択"
@@ -5036,7 +5037,6 @@ ja:
             description: "リンク、一部のボタン、通知、およびアクセントカラー。"
           quaternary:
             name: "クォータナリー"
-            description: "ナビゲーションリンク。"
           header_background:
             name: "ヘッダー背景"
             description: "サイトのヘッダー背景色。"

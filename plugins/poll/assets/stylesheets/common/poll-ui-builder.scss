@@ -50,19 +50,9 @@
   }
 
   .poll-type {
-    display: block;
-
-    .poll-type-value {
-      border: none;
-      color: var(--primary);
-      display: inline-block;
-      padding: 6px 12px 3px;
-
-      &.active {
-        background-color: var(--quaternary);
-        color: var(--secondary);
-      }
-    }
+    padding: 0;
+    margin-top: 0;
+    border: none;
   }
 
   .poll-options {

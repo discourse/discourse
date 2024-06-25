@@ -201,7 +201,6 @@ id:
       secure_uploads_requirements: "Unggahan S3 dan ACL S3 harus diaktifkan sebelum mengaktifkan unggahan aman."
       s3_use_acls_requirements: "Anda harus mengaktifkan ACL S3 saat unggahan aman diaktifkan."
       share_quote_facebook_requirements: "Anda harus mengatur id app Facebook untuk mengaktifkan berbagi kutipan untuk Facebook."
-      second_factor_cannot_enforce_with_socials: "Anda tidak dapat menerapkan 2FA dengan login sosial diaktifkan. Anda harus terlebih dahulu menonaktifkan login melalui: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Anda tidak dapat menerapkan 2FA jika login lokal dinonaktifkan."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Anda tidak dapat menerapkan 2FA jika DiscourseConnect diaktifkan."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Anda tidak dapat menonaktifkan login lokal jika 2FA diterapkan. Nonaktifkan 2FA yang diberlakukan sebelum menonaktifkan login lokal."
@@ -1263,7 +1262,6 @@ id:
     enable_offline_indicator: "Menampilkan pesan kepada pengguna saat terdeteksi bahwa mereka tidak memiliki koneksi jaringan"
     default_sidebar_link_to_filtered_list: "Jadikan link menu navigasi terhubung ke daftar yang difilter secara bawaan."
     default_sidebar_show_count_of_new_items: "Jadikan tautan menu navigasi menampilkan jumlah item baru alih-alih lencana secara bawaan."
-    default_sidebar_switch_panel_position: "Posisi tombol panel sakelar bilah samping"
     min_trust_level_for_user_api_key: |
       Trust level diperlukan untuk membuat kunci API pengguna.<br>
       <b>PERINGATAN</b>: Mengubah trust level akan mencegah pengguna dengan tingkat kepercayaan yang lebih rendah untuk masuk melalui Discourse Hub

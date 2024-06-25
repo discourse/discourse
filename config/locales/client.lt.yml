@@ -1043,7 +1043,8 @@ lt:
       activity_stream: "Aktyvumas"
       read: "Perskaityti"
       read_help: "Neseniai skaitytos temos"
-      preferences: "Nustatymai"
+      preferences:
+        title: "Nustatymai"
       feature_topic_on_profile:
         open_search: "Pasirinkti naują temą"
         title: "Pasirinkite temą"
@@ -4222,7 +4223,6 @@ lt:
             description: "Nuorodos, keli mygtukai, pranešimai ir akcento spalva"
           quaternary:
             name: "ketvirtinė"
-            description: "Navigacijos nuorodos."
           header_background:
             name: "Višutinės juostos fonas"
             description: "Višutinės juostos fono spalva"

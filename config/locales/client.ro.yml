@@ -1077,7 +1077,8 @@ ro:
         to: "către"
       activity_stream: "Activitate"
       read: "Citite"
-      preferences: "Preferințe"
+      preferences:
+        title: "Preferințe"
       feature_topic_on_profile:
         open_search: "Selectează un subiect nou"
         title: "Selectați un subiect"
@@ -3182,7 +3183,8 @@ ro:
             faq:
               content: "Întrebări frecvente"
             guidelines:
-              content: "Indicații"
+              content: "Reguli generale"
+              title: "Reguli generale pentru utilizarea acestui site"
             groups:
               content: "Grupuri"
             users:
@@ -3749,7 +3751,6 @@ ro:
             description: "Legături, câteva butoane, notificări, și culoare de accent."
           quaternary:
             name: "cuaternar"
-            description: "Legături de navigare."
           header_background:
             name: "fundalul header-ului"
             description: "Culoarea de fundal a header-ului din site."

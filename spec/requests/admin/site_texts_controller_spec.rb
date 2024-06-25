@@ -187,6 +187,34 @@ RSpec.describe Admin::SiteTextsController do
         expect(value).to eq("education.new-topic override")
       end
 
+      it "returns only untranslated (english) strings" do
+        available_locales = I18n.config.available_locales
+        I18n.config.available_locales = %i[en test]
+
+        I18n.backend.store_translations(:en, { shrubbery: "Shrubbery" })
+        I18n.backend.store_translations(:en, { shrubbery2: "Shrubbery2" })
+
+        params = { q: "shrubbery", locale: "test", untranslated: "true" }
+
+        get "/admin/customize/site_texts.json", params: params
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["site_texts"].size).to eq(2)
+
+        I18n.backend.store_translations(:test, { shrubbery: "Arbusto" })
+
+        get "/admin/customize/site_texts.json", params: params
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["site_texts"].size).to eq(1)
+
+        TranslationOverride.upsert!(:test, "shrubbery2", "Arbusto2")
+
+        get "/admin/customize/site_texts.json", params: params
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["site_texts"].size).to eq(0)
+
+        I18n.config.available_locales = available_locales
+      end
+
       context "with plural keys" do
         before do
           I18n.backend.store_translations(

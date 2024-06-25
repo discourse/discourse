@@ -129,16 +129,6 @@ RSpec.describe ContentSecurityPolicy do
     expect(parse(policy)["script-src"]).to include("'unsafe-eval'")
   end
 
-  it "strips unsupported values from setting" do
-    SiteSetting.content_security_policy_script_src =
-      "'unsafe-eval'|blob:|https://example.com/script.js"
-
-    script_src = parse(policy)["script-src"]
-    expect(script_src).to include("'unsafe-eval'")
-    expect(script_src).not_to include("blob:")
-    expect(script_src).not_to include("https://example.com/script.js")
-  end
-
   def parse(csp_string)
     csp_string
       .split(";")

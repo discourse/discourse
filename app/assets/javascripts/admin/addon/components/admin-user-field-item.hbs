@@ -34,17 +34,36 @@
       <label class="optional">
         <RadioButton
           @value="optional"
-          @name="optional"
+          @name="requirement"
           @selection={{this.buffered.requirement}}
+          @onChange={{action "changeRequirementType"}}
         />
         <span>{{i18n "admin.user_fields.requirement.optional.title"}}</span>
+      </label>
+
+      <label class="for_all_users">
+        <RadioButton
+          @value="for_all_users"
+          @name="requirement"
+          @selection={{this.buffered.requirement}}
+          @onChange={{action "changeRequirementType"}}
+        />
+        <div class="label-text">
+          <span>{{i18n
+              "admin.user_fields.requirement.for_all_users.title"
+            }}</span>
+          <div class="description">{{i18n
+              "admin.user_fields.requirement.for_all_users.description"
+            }}</div>
+        </div>
       </label>
 
       <label class="on_signup">
         <RadioButton
           @value="on_signup"
-          @name="on_signup"
+          @name="requirement"
           @selection={{this.buffered.requirement}}
+          @onChange={{action "changeRequirementType"}}
         />
         <div class="label-text">
           <span>{{i18n "admin.user_fields.requirement.on_signup.title"}}</span>
@@ -57,7 +76,11 @@
 
     <AdminFormRow @label="admin.user_fields.preferences">
       <label>
-        <Input @type="checkbox" @checked={{this.buffered.editable}} />
+        <Input
+          @type="checkbox"
+          @checked={{this.buffered.editable}}
+          disabled={{this.editableDisabled}}
+        />
         <span>{{i18n "admin.user_fields.editable.title"}}</span>
       </label>
 

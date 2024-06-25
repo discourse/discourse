@@ -62,9 +62,9 @@
     line-height: var(--line-height-large);
     padding-left: 0.5em;
     padding-right: 0.5em;
+    position: relative;
     &.active {
-      background: var(--quaternary);
-      color: var(--secondary);
+      @include nav-active();
     }
   }
 
