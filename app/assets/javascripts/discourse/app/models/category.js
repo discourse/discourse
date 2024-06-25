@@ -491,6 +491,11 @@ export default class Category extends RestModel {
     return this.site.categories.filterBy("parent_category_id", this.id);
   }
 
+  @computed("subcategories")
+  get unloadedSubcategoryCount() {
+    return this.subcategory_count - this.subcategories.length;
+  }
+
   @computed("subcategory_list")
   get serializedSubcategories() {
     return this.subcategory_list?.map((c) => Category.create(c));
