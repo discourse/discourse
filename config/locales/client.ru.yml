@@ -1214,7 +1214,8 @@ ru:
       activity_stream: "Активность"
       read: "Прочитанные"
       read_help: "Недавно прочитанные темы"
-      preferences: "Настройки"
+      preferences:
+        title: "Настройки"
       feature_topic_on_profile:
         open_search: "Выберите тему"
         title: "Выбор темы"
@@ -5703,7 +5704,6 @@ ru:
             description: "Ссылки, некоторые кнопки, уведомления и акцентный цвет."
           quaternary:
             name: "Четвертичный"
-            description: "Навигационные ссылки."
           header_background:
             name: "Фон заголовка"
             description: "Фоновый цвет заголовка сайта."

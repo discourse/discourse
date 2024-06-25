@@ -1090,7 +1090,8 @@ it:
       activity_stream: "Attività"
       read: "Letti"
       read_help: "Argomenti letti di recente"
-      preferences: "Preferenze"
+      preferences:
+        title: "Preferenze"
       feature_topic_on_profile:
         open_search: "Seleziona un nuovo argomento"
         title: "Seleziona un argomento"
@@ -5247,7 +5248,6 @@ it:
             description: "Colore dei collegamenti, alcuni pulsanti, notifiche e colore in primo piano."
           quaternary:
             name: "quaternario"
-            description: "Collegamenti di navigazione."
           header_background:
             name: "sfondo intestazione"
             description: "Colore di sfondo dell'intestazione del sito."

@@ -9,6 +9,7 @@ zh_CN:
     chat_separate_sidebar_mode: "为论坛和聊天显示单独的边栏模式。"
     chat_enabled: "启用聊天。"
     enable_public_channels: "基于类别启用公开频道。"
+    chat_allowed_groups: "这些组中的用户可以聊天。请注意，管理员和版主可以随时访问聊天。"
     chat_channel_retention_days: "常规频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
     chat_dm_retention_days: "个人聊天频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
     chat_auto_silence_duration: "用户超过聊天消息创建速率限制时将被禁言的分钟数。设置为 0 将禁用自动禁言。"
@@ -23,6 +24,7 @@ zh_CN:
     chat_archive_destination_topic_status: "频道归档完成后目标话题应处于的状态。这仅适用于目标话题是新话题而不是现有话题的情况。"
     default_emoji_reactions: "聊天消息的默认表情符号回应。最多可添加 5 个表情符号进行快速回应。"
     direct_message_enabled_groups: "允许这些群组中的用户创建用户间的个人聊天。请注意：管理人员始终可以创建个人聊天，用户将能够回复有权创建个人聊天的用户发起的个人聊天。"
+    chat_message_flag_allowed_groups: "这些组中的用户可以举报聊天消息。请注意，管理员和版主可以随时举报聊天消息。"
     max_mentions_per_chat_message: "用户可以在聊天消息中使用的 @name 通知的最大数量。"
     chat_max_direct_message_users: "在创建新的直接消息时，用户无法添加超过此数量的其他用户。设置为 0 只允许给自己发送消息。管理人员不受此设置的影响。"
     chat_allow_archiving_channels: "允许管理人员在关闭频道时将消息归档到某个话题。"
@@ -226,6 +228,8 @@ zh_CN:
         chat_channel_1:
           other: "[%{site_name}] %{channel} 中的新消息"
         chat_channel_2: "[%{site_name}] %{channel_1}和%{channel_2}中的新消息"
+        chat_channel_3_or_more: "[%{site_name}] %{channel} 和其他 %{count} 个频道的新信息"
+        chat_channel_and_dm: "[%{site_name}] %{channel} 和来自 %{name} 的新消息"
       unsubscribe: "此聊天总结在您离开时从%{site_link}发送。更改您的%{email_preferences_link}，或者%{unsubscribe_link}以退订。"
       unsubscribe_no_link: "此聊天总结在您离开时从%{site_link}发送。更改您的%{email_preferences_link}。"
       view_messages:

@@ -895,7 +895,8 @@ bs_BA:
         to: "ka"
       activity_stream: "Aktivnost"
       read: "Čitaj"
-      preferences: "Postavke"
+      preferences:
+        title: "Postavke"
       feature_topic_on_profile:
         open_search: "Odaberi Novu temu"
         title: "Odaberi temu"
@@ -3659,7 +3660,6 @@ bs_BA:
             description: "Links, some buttons, notifications, and accent color."
           quaternary:
             name: "quaternary"
-            description: "Navigation links."
           header_background:
             name: "header background"
             description: "Background color of the site's header."

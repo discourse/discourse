@@ -893,7 +893,8 @@ lv:
       activity_stream: "Aktivitāte"
       read: "Lasīts"
       read_help: "Nesen lasītas tēmas"
-      preferences: "Iestatījumi"
+      preferences:
+        title: "Iestatījumi"
       feature_topic_on_profile:
         open_search: "Izvēlieties jaunu tēmu"
         title: "Izvēlieties tēmu"

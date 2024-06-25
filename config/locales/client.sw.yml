@@ -610,7 +610,8 @@ sw:
         to: "kwenda"
       activity_stream: "Shughuli"
       read: "Soma"
-      preferences: "Mapendekezo"
+      preferences:
+        title: "Mapendekezo"
       feature_topic_on_profile:
         save: "hifadhi"
         clear:
@@ -2727,7 +2728,6 @@ sw:
             description: "Viungo, baadhi ya vitufe, taarifa, na rangi za lafudhi."
           quaternary:
             name: "kila baada ya miezi minne"
-            description: "Viungo vya kuabiri."
           header_background:
             name: "mandharinyuma ya kichwa"
             description: "Rangi ya mandharinyuma ya kichwa cha tovuti."

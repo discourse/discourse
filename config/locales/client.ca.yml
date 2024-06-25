@@ -870,7 +870,8 @@ ca:
         to: "a"
       activity_stream: "Activitat"
       read: "Llegit"
-      preferences: "Preferències"
+      preferences:
+        title: "Preferències"
       feature_topic_on_profile:
         save: "Desa"
         clear:
@@ -3513,7 +3514,6 @@ ca:
             description: "Enllaços, alguns botons, alertes i color de ressaltament."
           quaternary:
             name: "quaternari"
-            description: "Enllaços de navegació"
           header_background:
             name: "color de fons de la capçalera"
             description: "Color de fons de la capçalera del lloc web."

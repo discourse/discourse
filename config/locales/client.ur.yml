@@ -980,7 +980,8 @@ ur:
       activity_stream: "سرگرمی"
       read: "پڑھ لیا گیا"
       read_help: "حال ہی میں پڑھے گئے موضوعات"
-      preferences: "ترجیحات"
+      preferences:
+        title: "ترجیحات"
       feature_topic_on_profile:
         open_search: "ایک نیا موضوع منتخب کریں"
         title: "ایک موضوع منتخب کریں"
@@ -4306,7 +4307,6 @@ ur:
             description: "لنکس، چند بٹن، اطلاعات، اور اَیکسنٹ رنگ۔"
           quaternary:
             name: "چوتھے درجہ کے"
-            description: "نیویگیشن لنکس۔"
           header_background:
             name: "ہیڈر کا پسِ منظر"
             description: "سائٹ کے ہیڈر کے پسِ منظر کا رنگ۔"

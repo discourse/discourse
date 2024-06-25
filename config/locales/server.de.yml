@@ -298,6 +298,7 @@ de:
         other: hat die falsche Länge (sollte %{count} Zeichen lang sein)
       other_than: "darf nicht %{count} sein"
       auth_overrides_username: "Benutzername muss auf der Authentifizierungsanbieterseite aktualisiert werden, da die Einstellung `auth_overrides_username` aktiviert ist."
+      required: "muss existieren"
     template:
       body: ! "Es gab Probleme mit diesen Feldern:"
       header:
@@ -323,7 +324,6 @@ de:
       secure_uploads_requirements: "S3-Uploads und S3-ACLs müssen aktiviert sein, bevor du sichere Uploads aktivieren kannst."
       s3_use_acls_requirements: "Du musst S3-ACLs aktiviert haben, wenn sichere Uploads aktiviert sind."
       share_quote_facebook_requirements: "Du musst eine Facebook-App-ID festlegen, um das Teilen von Zitaten für Facebook zu aktivieren."
-      second_factor_cannot_enforce_with_socials: "Du kannst 2FA nicht erzwingen, wenn die Anmeldung über soziale Netzwerke aktiviert ist. Du musst zuerst die Anmeldung über %{auth_provider_names} deaktivieren"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Du kannst 2FA nicht erzwingen, wenn lokale Anmeldungen deaktiviert sind."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Du kannst 2FA nicht erzwingen, wenn DiscourseConnect aktiviert ist."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Du kannst die lokale Anmeldung nicht deaktivieren, wenn 2FA erzwungen wird. Deaktiviere die erzwungene 2FA vor dem Deaktivieren lokaler Anmeldungen."
@@ -1660,7 +1660,8 @@ de:
     email_custom_headers: "Eine durch senkrechte Striche („|“) getrennte Liste von eigenen E-Mail-Headern"
     email_subject: "Anpassbares Betreff-Format für Standard-E-Mails. Siehe <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Liefert mehr Details für Benutzer darüber, warum sie keinen Zugriff auf ein spezielles Thema haben. Hinweis: Dies ist weniger sicher, weil Benutzer so herausfinden, ob eine URL zu einem existierenden Thema führt."
-    enforce_second_factor: "Verlangt von den Benutzern, dass sie die Zwei-Faktor-Authentifizierung aktivieren, bevor sie auf die Discourse-Benutzeroberfläche zugreifen können. Wähle „alle“, um dies für alle Benutzer zu erzwingen. Wähle „Team“, um dies nur für Team-Mitglieder zu erzwingen. Diese Einstellung wirkt sich nicht auf die API- oder DiscourseConnect-Anbieter-Authentifizierung aus."
+    enforce_second_factor: "Verlangt von den Benutzern, dass sie die Zwei-Faktor-Authentifizierung aktivieren, bevor sie auf die Discourse-Benutzeroberfläche zugreifen können. Diese Einstellung wirkt sich nicht auf die API- oder \"DiscourseConnect-Anbieter\"-Authentifizierung aus. Wenn enforce_second_factor_on_external_auth aktiviert ist, können sich Benutzer nicht mit externen Authentifizierungsanbietern anmelden, nachdem sie die Zwei-Faktor-Authentifizierung eingerichtet haben."
+    enforce_second_factor_on_external_auth: "Verlangt von den Benutzern, dass sie immer die Zwei-Faktor-Authentifizierung verwenden. Wenn diese Option aktiviert ist, wird verhindert, dass sich Nutzer mit externen Authentifizierungsmethoden wie sozialen Netzwerken anmelden, wenn sie die Zwei-Faktor-Authentifizierung aktiviert haben. Wenn sie deaktiviert ist, müssen die Benutzer die Zwei-Faktor-Authentifizierung nur bestätigen, wenn sie sich mit einem Benutzernamen und einem Passwort anmelden. Siehe auch die Einstellung `enforce_second_factor`."
     force_https: "Erzwinge HTTPS für deine Website. ACHTUNG: Aktiviere dies NICHT, bevor HTTPS nicht vollständig eingerichtet ist und auf jeden Fall überall funktioniert! Hast du dein CDN, alle Anmeldungen über soziale Netzwerke, alle externe Logos/Abhängigkeiten geprüft, um sicherzustellen, dass sie auch HTTPS-kompatibel sind?"
     summary_score_threshold: "Mindestscore, den ein Beitrag benötigt, um in der „Dieses Thema zusammenfassen“-Ansicht zu erscheinen."
     summary_posts_required: "Mindestanzahl an Beiträgen in einem Thema, bevor „Dieses Thema zusammenfassen“ aktiviert wird. Änderungen dieser Einstellung werden rückwirkend innerhalb einer Woche angewendet."
@@ -2304,7 +2305,7 @@ de:
     enable_offline_indicator: "Benutzern eine Nachricht anzeigen, wenn festgestellt wird, dass sie keine Netzwerkverbindung haben"
     default_sidebar_link_to_filtered_list: "Links im Navigationsmenü standardmäßig mit der gefilterten Liste verknüpfen."
     default_sidebar_show_count_of_new_items: "Links im Navigationsmenü zeigen standardmäßig die Anzahl der neuen Elemente anstelle von Abzeichen an."
-    default_sidebar_switch_panel_position: "Position der Panel-Umschaltschaltflächen in der Seitenleiste"
+    default_sidebar_switch_panel_position: "Position der Schaltfläche in der Seitenleiste, um zum Chat zu wechseln"
     retain_web_hook_events_period_days: "Anzahl an Tagen, die Webhook-Ereigniseinträge aufbewahrt werden."
     retry_web_hook_events: "Fehlgeschlagene Webhook-Ereignisse automatisch 4 Mal erneut versuchen. Die Wartezeiten zwischen den Versuchen betragen eine, 5, 25 und 125 Minuten."
     revoke_api_keys_unused_days: "Anzahl der Tage seit der letzten Verwendung eines API-Schlüssels, bevor er automatisch widerrufen wird (0 für nie)"
@@ -2414,6 +2415,7 @@ de:
       invalid_reply_by_email_address: "Wert muss „%{reply_key}“ enthalten und sich von der Benachrichtigungs-E-Mail unterscheiden."
       invalid_alternative_reply_by_email_addresses: "Alle Werte müssen „%{reply_key}“ enthalten und sich von der Benachrichtigungs-E-Mail unterscheiden."
       invalid_domain_hostname: "Darf kein * oder ? enthalten."
+      invalid_csp_script_src: "Der Wert muss entweder 'unsafe-eval' oder 'wasm-unsafe-eval' oder in der Form '<hash algorithm>-<base64 value>' sein, wobei die unterstützten Hash-Algorithmen sha256, sha384 oder sha512 sind. Achte darauf, dass deine Eingabe in einfache Anführungszeichen eingeschlossen ist."
       pop3_polling_host_is_empty: "Du musst „pop3 polling host“ definieren, um POP3-Abfragen zu aktivieren."
       pop3_polling_username_is_empty: "Du musst „pop3 polling username“ definieren, um POP3-Abfragen zu aktivieren."
       pop3_polling_password_is_empty: "Du musst „pop3 polling password“ definieren, um POP3-Abfragen zu aktivieren."
@@ -2640,7 +2642,6 @@ de:
     email_too_long: "Die von dir eingegebene E-Mail-Adresse ist zu lang. Der Teil vor dem @ darf maximal 254 Zeichen lang sein und Domain-Namen maximal 253 Zeichen."
     wrong_invite_code: "Der von dir eingegebene Einladungscode war falsch."
     reserved_username: "Der Benutzername ist nicht erlaubt."
-    missing_user_field: "Du hast nicht alle Benutzerangaben ausgefüllt"
     auth_complete: "Authentifizierung ist abgeschlossen."
     click_to_continue: "Klicke hier, um fortzufahren."
     already_logged_in: "Entschuldigung! Diese Einladung richtet sich an neue Benutzer, die noch kein bestehendes Konto haben."
@@ -4257,7 +4258,7 @@ de:
 
       ## [Betrieben von Euch](#power)
 
-      Diese Seite wird von eurem [freundlichen Team](%{base_path}/about) und *euch*, der Community, betrieben. Wenn du weitere Fragen dazu hast, wie die Dinge hier funktionieren sollen, eröffne ein neues Thema in %{feedback_category} und lass es uns diskutieren! Wenn es ein kritisches oder dringendes Problem gibt, das nicht mit einem Meta-Thema oder einer Meldung behandelt werden kann, kontaktiere uns über die [Team-Seite](%{base_path}/about).
+      Diese Seite wird von eurem [freundlichen Moderations-Team](%{base_path}/about) und *euch*, der Community, betrieben. Wenn du weitere Fragen dazu hast, wie die Dinge hier funktionieren sollen, eröffne ein neues Thema in %{feedback_category} und lass es uns diskutieren! Wenn es ein kritisches oder dringendes Problem gibt, das nicht mit einem Meta-Thema oder einer Meldung behandelt werden kann, [kontaktiere das Team](%{base_path}/about).
   tos_topic:
     title: "Nutzungsbedingungen"
     body: |

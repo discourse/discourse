@@ -1106,7 +1106,8 @@ fr:
       activity_stream: "Activité"
       read: "Lus"
       read_help: "Sujets lus récemment"
-      preferences: "Préférences"
+      preferences:
+        title: "Préférences"
       feature_topic_on_profile:
         open_search: "Sélectionner un nouveau sujet"
         title: "Sélectionner un sujet"
@@ -5308,7 +5309,6 @@ fr:
             description: "Liens, boutons, notifications et couleurs d'accentuation."
           quaternary:
             name: "quaternaire"
-            description: "Liens de navigation."
           header_background:
             name: "arrière-plan de l'en-tête"
             description: "Couleur d'arrière-plan de l'en-tête du site."

@@ -1338,7 +1338,8 @@ ar:
       activity_stream: "النشاط"
       read: "المقروءة"
       read_help: "الموضوعات المقروءة مؤخرًا"
-      preferences: "التفضيلات"
+      preferences:
+        title: "التفضيلات"
       feature_topic_on_profile:
         open_search: "تحديد موضوع جديد"
         title: "تحديد موضوع"
@@ -6160,7 +6161,6 @@ ar:
             description: "الروابط، وبعض الأزرار، والإشعارات، ولون التمييز."
           quaternary:
             name: "الرابع"
-            description: "روابط التنقل."
           header_background:
             name: "خلفية الرأس"
             description: "لون خلفية رأس الموقع."

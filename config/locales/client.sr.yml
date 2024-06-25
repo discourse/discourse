@@ -678,7 +678,8 @@ sr:
         monday: "Ponedeljak"
       activity_stream: "Aktivnost"
       read: "Pročitano"
-      preferences: "Postavke"
+      preferences:
+        title: "Postavke"
       feature_topic_on_profile:
         save: "Sačuvaj"
         clear:
@@ -2136,7 +2137,6 @@ sr:
             description: "Linkovi, neki dugmići, obaveštenja i boja naglaska."
           quaternary:
             name: "kvartarna"
-            description: "Linkovi za navigaciju"
           header_background:
             name: "Pozadina headera"
             description: "Pozadinska boja headera stranice."

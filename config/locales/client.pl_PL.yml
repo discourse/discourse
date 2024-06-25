@@ -1240,7 +1240,8 @@ pl_PL:
       activity_stream: "Aktywność"
       read: "Przeczytane"
       read_help: "Ostatnio przeczytane tematy"
-      preferences: "Ustawienia"
+      preferences:
+        title: "Ustawienia"
       feature_topic_on_profile:
         open_search: "Wybierz nowy temat"
         title: "Wybierz temat"
@@ -5868,7 +5869,6 @@ pl_PL:
             description: "Linki, niektóre przyciski, powiadomienia oraz kolor używany w różnych akcentach."
           quaternary:
             name: "czwartorzędny"
-            description: "Nawigacja"
           header_background:
             name: "tło nagłówka"
             description: "Kolor tła nagłówka witryny."
