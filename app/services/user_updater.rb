@@ -42,6 +42,7 @@ class UserUpdater
     enable_allowed_pm_users
     homepage_id
     hide_profile_and_presence
+    hide_profile
     text_size
     title_count_mode
     timezone

@@ -131,7 +131,7 @@ module UserGuardian
     return true if !SiteSetting.allow_users_to_hide_profile?
 
     # If a user has hidden their profile, restrict it to them and staff
-    return is_me?(user) || is_staff? if user.user_option.try(:hide_profile_and_presence?)
+    return is_me?(user) || is_staff? if user.user_option.try(:hide_profile?)
 
     true
   end

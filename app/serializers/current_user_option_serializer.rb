@@ -8,6 +8,7 @@ class CurrentUserOptionSerializer < ApplicationSerializer
              :automatically_unpin_topics,
              :likes_notifications_disabled,
              :hide_profile_and_presence,
+             :hide_profile,
              :title_count_mode,
              :enable_defer,
              :timezone,

@@ -172,6 +172,7 @@ def insert_user_options
                   like_notification_frequency,
                   skip_new_user_tips,
                   hide_profile_and_presence,
+                  hide_profile,
                   sidebar_link_to_filtered_list,
                   sidebar_show_count_of_new_items
                 )
@@ -195,6 +196,7 @@ def insert_user_options
                   , #{SiteSetting.default_other_like_notification_frequency}
                   , #{SiteSetting.default_other_skip_new_user_tips}
                   , #{SiteSetting.default_hide_profile_and_presence}
+                  , #{SiteSetting.default_hide_profile}
                   , #{SiteSetting.default_sidebar_link_to_filtered_list}
                   , #{SiteSetting.default_sidebar_show_count_of_new_items}
                FROM users u
