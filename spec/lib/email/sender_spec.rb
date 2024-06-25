@@ -681,6 +681,9 @@ RSpec.describe Email::Sender do
 
           Email::Sender.new(summary, "digest").send
 
+          expect(summary.content_type).to eq(
+            "multipart/mixed; boundary=\"#{summary.body.boundary}\"",
+          )
           expect(summary.attachments.map(&:filename)).to include(
             *[@secure_image, @secure_image_2, @secure_image_3].map(&:original_filename),
           )
