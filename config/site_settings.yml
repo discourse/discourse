@@ -2025,6 +2025,7 @@ security:
   content_security_policy_script_src:
     type: simple_list
     default: ""
+    validator: "CspScriptSrcValidator"
   invalidate_inactive_admin_email_after_days:
     default: 365
     min: 0
@@ -3227,3 +3228,7 @@ dashboard:
   hot_topics_recent_days:
     hidden: true
     default: 7
+  admin_allow_filter_untranslated_text:
+    hidden: true
+    default: false
+    client: true

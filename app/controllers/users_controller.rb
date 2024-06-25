@@ -86,6 +86,7 @@ class UsersController < ApplicationController
   #  once that happens you can't log in with social
   skip_before_action :verify_authenticity_token, only: [:create]
   skip_before_action :redirect_to_login_if_required,
+                     :redirect_to_profile_if_required,
                      only: %i[
                        check_username
                        check_email
@@ -102,6 +103,7 @@ class UsersController < ApplicationController
                        admin_login
                        confirm_admin
                      ]
+  skip_before_action :redirect_to_profile_if_required, only: %i[show staff_info update]
 
   after_action :add_noindex_header, only: %i[show my_redirect]
 

@@ -8,7 +8,9 @@ module Chat
 
     WEBHOOK_MESSAGES_PER_MINUTE_LIMIT = 10
 
-    skip_before_action :verify_authenticity_token, :redirect_to_login_if_required
+    skip_before_action :verify_authenticity_token,
+                       :redirect_to_login_if_required,
+                       :redirect_to_profile_if_required
 
     before_action :validate_payload
 

@@ -1044,7 +1044,8 @@ sl:
       activity_stream: "Aktivnost"
       read: "Prebrano"
       read_help: "Nedavno prebrane teme"
-      preferences: "Nastavitve"
+      preferences:
+        title: "Nastavitve"
       feature_topic_on_profile:
         open_search: "Izberite novo temo"
         title: "Izberite temo"

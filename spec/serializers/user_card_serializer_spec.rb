@@ -65,6 +65,10 @@ RSpec.describe UserCardSerializer do
       it "serializes pending_posts_count" do
         expect(json[:pending_posts_count]).to eq 0
       end
+
+      it "can_send_private_message_to_user is true" do
+        expect(json[:can_send_private_message_to_user]).to eq true
+      end
     end
   end
 

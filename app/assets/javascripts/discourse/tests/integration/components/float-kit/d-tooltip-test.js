@@ -1,7 +1,6 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import {
   click,
-  find,
   render,
   triggerEvent,
   triggerKeyEvent,
@@ -218,30 +217,24 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     );
     await hover();
 
-    assert.ok(
-      find(".fk-d-tooltip__content")
-        .getAttribute("style")
-        .includes("max-width: 20px;")
-    );
+    assert
+      .dom(".fk-d-tooltip__content")
+      .hasAttribute("style", /max-width: 20px;/);
   });
 
   test("applies position", async function (assert) {
     await render(hbs`<DTooltip @inline={{true}} @label="label" />`);
     await hover();
 
-    assert.ok(
-      find(".fk-d-tooltip__content").getAttribute("style").includes("left: ")
-    );
-    assert.ok(
-      find(".fk-d-tooltip__content").getAttribute("style").includes("top: ")
-    );
+    assert.dom(".fk-d-tooltip__content").hasAttribute("style", /left: /);
+    assert.dom(".fk-d-tooltip__content").hasAttribute("style", /top: /);
   });
 
   test("a tooltip can be closed by identifier", async function (assert) {
     await render(
       hbs`<DTooltip @inline={{true}} @label="label" @identifier="test">test</DTooltip>`
     );
-    await open();
+    await hover();
 
     await getOwner(this).lookup("service:tooltip").close("test");
 

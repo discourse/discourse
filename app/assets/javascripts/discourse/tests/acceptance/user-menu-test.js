@@ -529,7 +529,7 @@ acceptance("User menu", function (needs) {
     );
     assert.strictEqual(
       preferencesLink.textContent.trim(),
-      I18n.t("user.preferences"),
+      I18n.t("user.preferences.title"),
       "preferences link has the right label"
     );
     assert.ok(

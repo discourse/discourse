@@ -978,7 +978,8 @@ id:
       activity_stream: "Activity"
       read: "baca"
       read_help: "Topik yang baru saja dibaca"
-      preferences: "Preferensi"
+      preferences:
+        title: "Preferensi"
       feature_topic_on_profile:
         open_search: "Pilih Topik Baru"
         title: "Pilih Topik"

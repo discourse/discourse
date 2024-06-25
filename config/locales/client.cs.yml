@@ -37,8 +37,11 @@ cs:
       long_with_year: "D. M. YYYY, H:mm"
       long_with_year_no_time: "D. M. YYYY"
       full_with_year_no_time: "D. MMMM YYYY"
+      long_date_with_year: "MMM D, RRRR LT"
       long_date_without_year: "D. MMMM, H:mm"
+      long_date_with_year_without_time: "MMM D, YYYY"
       long_date_without_year_with_linebreak: "D. MMMM <br/>H:mm"
+      long_date_with_year_with_linebreak: "MMM D, RRRR <br/>LT"
       wrap_ago: "před %{date}"
       wrap_on: "%{date}"
       tiny:
@@ -121,6 +124,7 @@ cs:
           few: "%{count} dny"
           many: "%{count} dní"
           other: "%{count} dní"
+        date_year: "MMM D, RRRR"
       medium_with_ago:
         x_minutes:
           one: "před %{count} minutou"
@@ -229,6 +233,8 @@ cs:
     broken_plugin_alert: "Způsobeno pluginem '%{name}'"
     critical_deprecation:
       notice: "<b>[Upozornění správce]</b> Jeden z vašich motivů nebo pluginů potřebuje aktualizaci, aby byl kompatibilní s nadcházejícími změnami jádra Discourse."
+      id: "(id:<em>%{id}</em>)"
+      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
       theme_source: "Identifikovaný motiv: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Identifikovaný plugin: '%{name}'"
     s3:
@@ -388,6 +394,9 @@ cs:
       search: "Vyhledat"
       bookmark: "Založit"
       bulk:
+        delete_completed: "Záložky byly úspěšně odstraněny."
+        reminders_cleared: "Připomínky záložek byly úspěšně vymazány."
+        toggle: "přepnout hromadný výběr záložek"
         select_all: "Vybrat vše"
         clear_all: "Zrušit vše"
         selected_count:
@@ -401,6 +410,8 @@ cs:
         at_time: "v %{date_time}"
         existing_reminder: "Máte nastavenou připomínku pro tuto záložku, která bude odeslána %{at_date_time}"
     bookmark_bulk_actions:
+      clear_reminders:
+        name: "Vymazat připomínky"
       delete_bookmarks:
         name: "Smazat záložku"
     copy_codeblock:
@@ -1148,7 +1159,8 @@ cs:
       activity_stream: "Aktivita"
       read: "Přečteno"
       read_help: "Nedávno přečtená témata"
-      preferences: "Nastavení"
+      preferences:
+        title: "Nastavení"
       feature_topic_on_profile:
         open_search: "Vyberte nové téma"
         title: "Vyberte téma"
@@ -5498,7 +5510,6 @@ cs:
             description: "Odkazy, některá tlačítka, notifikace, a barvy zdůraznění"
           quaternary:
             name: "kvarciální"
-            description: "Navigační odkazy."
           header_background:
             name: "pozadí hlavičky"
             description: "Barva pozadí záhlaví stránky."

@@ -1122,7 +1122,8 @@ ug:
       activity_stream: "پائالىيەت"
       read: "ئوقۇلدى"
       read_help: "يېقىندا ئوقۇغان تېما"
-      preferences: "مايىللىق"
+      preferences:
+        title: "مايىللىق"
       feature_topic_on_profile:
         open_search: "يېڭى بىر تېما تاللىنىدۇ"
         title: "بىر تېما تاللىنىدۇ"
@@ -3784,7 +3785,7 @@ ug:
           title: "كۈندىلىك"
         all_time: "ھەممە ۋاقىت"
         this_year: "يىل"
-        this_quarter: "چارەك"
+        this_quarter: "پەسىل"
         this_month: "ئاي"
         this_week: "ھەپتە"
         today: "بۈگۈن"
@@ -5261,7 +5262,6 @@ ug:
             description: "ئۇلانما، بەزى توپچە، ئۇقتۇرۇش ۋە تەكىتلەش رەڭگى."
           quaternary:
             name: "تۆتىنچى"
-            description: "يولباشچى ئۇلانما."
           header_background:
             name: "بەت قاش تەگلىكى"
             description: "تور بېكەت بەت قاشنىڭ تەگلىك رەڭگى."

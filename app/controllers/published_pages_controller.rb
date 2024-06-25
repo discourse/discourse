@@ -4,7 +4,7 @@ class PublishedPagesController < ApplicationController
   skip_before_action :preload_json
   skip_before_action :check_xhr, :verify_authenticity_token, only: [:show]
   before_action :ensure_publish_enabled
-  before_action :redirect_to_login_if_required, except: [:show]
+  before_action :redirect_to_login_if_required, :redirect_to_profile_if_required, except: [:show]
 
   def show
     params.require(:slug)

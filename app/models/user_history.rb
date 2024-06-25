@@ -144,6 +144,8 @@ class UserHistory < ActiveRecord::Base
         create_watched_word_group: 105,
         update_watched_word_group: 106,
         delete_watched_word_group: 107,
+        redirected_to_required_fields: 108,
+        filled_in_required_fields: 109,
       )
   end
 

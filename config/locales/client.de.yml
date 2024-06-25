@@ -1122,7 +1122,8 @@ de:
       activity_stream: "Aktivität"
       read: "Gelesen"
       read_help: "Kürzlich gelesene Themen"
-      preferences: "Einstellungen"
+      preferences:
+        title: "Einstellungen"
       feature_topic_on_profile:
         open_search: "Wähle ein neues Thema"
         title: "Wähle ein Thema"
@@ -1440,6 +1441,7 @@ de:
           Zwei-Faktor-Authentifizierung erhöht die Sicherheit deines Kontos, indem zusätzlich zum Passwort ein einmalig gültiger Code erforderlich ist. Codes können auf <a href="https://www.google.de/search?q=authenticator+app+f%C3%BCr+android" target='_blank'>Android</a>- und <a href="https://www.google.de/search?q=authenticator+app+f%C3%BCr+iOS">iOS</a>-Geräten generiert werden.
         oauth_enabled_warning: "Bitte beachte, dass soziale Anmeldemethoden deaktiviert werden, sobald die Zwei-Faktor-Authentifizierung für dein Konto aktiviert wurde."
         use: "Benutze die Authentifizierungs-App"
+        enforced_with_oauth_notice: "Du musst die Zwei-Faktor-Authentifizierung aktivieren. Du wirst nur aufgefordert, diese zu verwenden, wenn du dich mit einem Passwort anmeldest, nicht aber bei externer Authentifizierung oder sozialen Anmeldemethoden."
         enforced_notice: "Du musst die Zwei-Faktor-Authentifizierung aktivieren, um auf die Website zugreifen zu können."
         disable: "Deaktivieren"
         disable_confirm: "Bist du sicher, dass du die Zwei-Faktor-Authentifizierung deaktivieren willst?"
@@ -5486,7 +5488,7 @@ de:
             description: "Links, einige Schaltflächen, Benachrichtigungen und Akzentfarben."
           quaternary:
             name: "vierte"
-            description: "Navigations-Links"
+            description: "Zur optionalen Verwendung in Themes."
           header_background:
             name: "Kopfzeile (Hintergrund)"
             description: "Hintergrundfarbe des Kopfbereichs der Website."
@@ -6278,6 +6280,7 @@ de:
         recommended: "Wir empfehlen, dass du den folgenden Text an deine Bedürfnisse anpasst:"
         show_overriden: "Nur geänderte Texte anzeigen"
         show_outdated: "Nur veraltete/ungültige Elemente anzeigen"
+        show_untranslated: "Nur unübersetzte anzeigen"
         locale: "Sprache:"
         more_than_50_results: "Es gibt mehr als 50 Ergebnisse. Bitte grenze deine Suche weiter ein."
         no_results: "Keine passenden Website-Texte gefunden"
@@ -6366,6 +6369,22 @@ de:
           add_types_title: "Erweiterungen zulassen %{types}"
           add_types_toast: "%{types} Dateitypen hinzugefügt"
         mandatory_group: "Gruppe ist obligatorisch"
+        requires_confirmation_messages:
+          default:
+            prompt: "Das Ändern dieser Einstellung kann weitreichende oder unbeabsichtigte Folgen für deine Website haben. Bist du sicher, dass du fortfahren willst?"
+            confirm: "Ja, ich bin sicher"
+          min_password_length:
+            prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Nutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
+            confirm: "Ja, Passwortrichtlinie aktualisieren"
+          min_admin_password_length:
+            prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Administratoren betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
+            confirm: "Ja, Passwortrichtlinie aktualisieren"
+          password_unique_charactes:
+            prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Nutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
+            confirm: "Ja, Passwortrichtlinie aktualisieren"
+          block_common_passwords:
+            prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Nutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
+            confirm: "Ja, Passwortrichtlinie aktualisieren"
       badges:
         title: Abzeichen
         new_badge: Neues Abzeichen

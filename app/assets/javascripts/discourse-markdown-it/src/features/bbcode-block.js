@@ -34,15 +34,9 @@ function trailingSpaceOnly(src, start, max) {
   return true;
 }
 
-// Easiest case is the closing tag which never has any attributes
-const BBCODE_CLOSING_TAG_REGEXP = /^\[\/([-\w]+)\]/i;
-
-// Old case where we supported attributes without quotation marks
-const BBCODE_QUOTE_TAG_REGEXP = /^\[quote=([-\w,: ]+)\]/i;
-
 // Most common quotation marks.
 // More can be found at https://en.wikipedia.org/wiki/Quotation_mark
-const QUOTATION_MARKS = [`""`, `''`, `“”`, `‘’`, `„“`, `‚’`, `«»`, `‹›`];
+const QUOTATION_MARKS = [`""`, `''`, `“”`, `””`, `‘’`, `„“`, `‚’`, `«»`, `‹›`];
 
 const QUOTATION_MARKS_NO_MATCH = QUOTATION_MARKS.map(
   ([a, b]) => `${a}[^${b}]+${b}`
@@ -51,6 +45,15 @@ const QUOTATION_MARKS_NO_MATCH = QUOTATION_MARKS.map(
 const QUOTATION_MARKS_WITH_MATCH = QUOTATION_MARKS.map(
   ([a, b]) => `${a}([^${b}]+)${b}`
 ).join("|");
+
+// Easiest case is the closing tag which never has any attributes
+const BBCODE_CLOSING_TAG_REGEXP = /^\[\/([-\w]+)\]/i;
+
+// Old case where we supported attributes without quotation marks
+const BBCODE_QUOTE_OR_DETAILS_TAG_REGEXP = new RegExp(
+  `^\\[(quote|details)=(\\s*[^${QUOTATION_MARKS.join("")}].+?)\\]`,
+  "i"
+);
 
 // This is used to match a **valid** opening tag
 // NOTE: it does not match the closing bracket "]" because it makes the regexp too slow
@@ -86,18 +89,18 @@ export function parseBBCodeTag(src, start, max, multiline) {
     };
   }
 
-  // CASE 2 - [quote=...] tag (without quotes)
-  m = BBCODE_QUOTE_TAG_REGEXP.exec(text);
+  // CASE 2 - [quote=...] or [details=...] tag (without quotes)
+  m = BBCODE_QUOTE_OR_DETAILS_TAG_REGEXP.exec(text);
 
-  if (m && m[0] && m[1]) {
+  if (m && m[0] && m[1] && m[2]) {
     if (multiline && !trailingSpaceOnly(src, start + m[0].length, max)) {
       return null;
     }
 
     return {
-      tag: "quote",
+      tag: m[1],
       length: m[0].length,
-      attrs: { _default: m[1] },
+      attrs: { _default: m[2] },
     };
   }
 
