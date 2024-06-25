@@ -57,12 +57,36 @@ describe UsersController do
   describe "#show_card" do
     fab!(:user) { Fabricate(:user) }
     fab!(:another_user) { Fabricate(:user) }
+
+    before do
+      SiteSetting.chat_enabled = true
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
+    end
+
+    context "when the card belongs to the current user" do
+      before { sign_in(user) }
+
+      it "returns that the user can message themselves" do
+        user.user_option.update!(hide_profile_and_presence: false)
+        user.user_option.update!(chat_enabled: true)
+        get "/u/#{user.username}/card.json"
+        expect(response).to be_successful
+        expect(response.parsed_body["user"]["can_chat_user"]).to eq(true)
+      end
+
+      it "returns that the user can message themselves when the profile is hidden" do
+        user.user_option.update!(hide_profile_and_presence: true)
+        user.user_option.update!(chat_enabled: true)
+        get "/u/#{user.username}/card.json"
+        expect(response).to be_successful
+        expect(response.parsed_body["user"]["can_chat_user"]).to eq(true)
+      end
+    end
+
     context "when hidden users" do
       before do
         sign_in(another_user)
-        SiteSetting.chat_enabled = true
-        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
-        SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
         user.user_option.update!(hide_profile_and_presence: true)
       end
 
