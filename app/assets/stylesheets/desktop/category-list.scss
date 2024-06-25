@@ -47,21 +47,43 @@
       display: block;
       text-align: right;
       padding-right: 0;
-      margin-top: 5px;
+      &:first-child {
+        margin-top: 0.75em;
+      }
     }
   }
 
   .subcategories {
-    margin-top: 0.25em;
-    clear: both;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.15em 0.75em;
+    margin-top: 0.5em;
     .subcategory {
       display: inline-flex;
       align-items: baseline;
-      margin-right: 0.3em;
+      gap: 0.25em;
+      @include ellipsis;
+      .badge-category {
+        min-width: 0;
+      }
+    }
+    .category__badges {
+      display: flex;
+      gap: 0.25em;
+      .badge-notification {
+        top: 0;
+        padding: 0;
+      }
     }
     .badge-notification.unread-posts {
       display: block;
       padding: 0;
+    }
+    &__more-subcategories {
+      font-size: var(--font-down-1);
+      a {
+        color: var(--primary-high);
+      }
     }
   }
 

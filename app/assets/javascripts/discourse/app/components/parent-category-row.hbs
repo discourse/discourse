@@ -57,10 +57,14 @@
             />
           {{/each}}
           {{#if (gt this.category.unloadedSubcategoryCount 0)}}
-            {{i18n
-              "category_row.subcategory_count"
-              count=this.category.unloadedSubcategoryCount
-            }}
+            <div class="subcategories__more-subcategories">
+              <LinkTo @route="discovery.subcategories" @model={{this.slugPath}}>
+                {{i18n
+                  "category_row.subcategory_count"
+                  count=this.category.unloadedSubcategoryCount
+                }}
+              </LinkTo>
+            </div>
           {{/if}}
         </div>
       {{/if}}

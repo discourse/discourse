@@ -36,4 +36,9 @@ export default Component.extend({
   newTopicsCount() {
     return this.category.newTopicsCount;
   },
+
+  @discourseComputed("category.path")
+  slugPath(categoryPath) {
+    return categoryPath.substring("/c/".length);
+  },
 });
