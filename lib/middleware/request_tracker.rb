@@ -81,11 +81,11 @@ class Middleware::RequestTracker
           ApplicationRequest.increment!(:page_view_logged_in_browser)
           ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
 
-          if data[:topic_id].present?
+          if data[:topic_id].present? && data[:current_user_id].present?
             TopicsController.defer_topic_view(
-              data[:topic_id],
-              data[:request_remote_ip],
-              data[:current_user_id],
+              topic_id: data[:topic_id],
+              ip: data[:request_remote_ip],
+              user_id: data[:current_user_id],
             )
           end
         end
@@ -98,11 +98,11 @@ class Middleware::RequestTracker
           ApplicationRequest.increment!(:page_view_anon_browser)
           ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
 
-          if data[:topic_id].present? && data[:current_user_id].present?
+          if data[:topic_id].present?
             TopicsController.defer_topic_view(
-              data[:topic_id],
-              data[:request_remote_ip],
-              data[:current_user_id],
+              topic_id: data[:topic_id],
+              ip: data[:request_remote_ip],
+              user_id: nil,
             )
           end
         end
@@ -116,16 +116,24 @@ class Middleware::RequestTracker
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
 
-        if data[:topic_id].present? && data[:current_user_id].present?
+        if data[:topic_id].present?
           TopicsController.defer_topic_view(
-            data[:topic_id],
-            data[:request_remote_ip],
-            data[:current_user_id],
+            topic_id: data[:topic_id],
+            ip: data[:request_remote_ip],
+            user_id: data[:current_user_id],
           )
         end
       elsif !SiteSetting.login_required
         ApplicationRequest.increment!(:page_view_anon_browser)
         ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
+
+        if data[:topic_id].present?
+          TopicsController.defer_topic_view(
+            topic_id: data[:topic_id],
+            ip: data[:request_remote_ip],
+            user_id: nil,
+          )
+        end
       end
     end
 
@@ -267,12 +275,16 @@ class Middleware::RequestTracker
   end
 
   def log_request_info(env, result, info, request = nil)
-    # we got to skip this on error ... its just logging
+    # We've got to skip this on error ... its just logging
     data =
       begin
         self.class.get_data(env, result, info, request)
       rescue StandardError => e
         Discourse.warn_exception(e, message: "RequestTracker.get_data failed")
+
+        # This is super hard to find if in testing, we should still raise in this case.
+        raise e if Rails.env.test?
+
         nil
       end
 
