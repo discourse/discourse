@@ -91,7 +91,6 @@ module PrettyText
       discourse-common/addon/lib/deprecated
       discourse-common/addon/lib/escape
       discourse-common/addon/lib/avatar-utils
-      discourse-common/addon/utils/watched-words
       discourse/app/lib/to-markdown
       discourse/app/static/markdown-it/features
     ].each do |f|
@@ -404,7 +403,7 @@ module PrettyText
     doc.css("aside.quote a, aside.onebox a, .elided a").remove
 
     # remove hotlinked images
-    doc.css("a.onebox > img").each { |img| img.parent.remove }
+    doc.css("a.lightbox > img, a.onebox > img").each { |img| img.parent.remove }
 
     # extract all links
     doc

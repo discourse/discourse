@@ -3,22 +3,15 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import UserAction from "discourse/models/user-action";
-import { on } from "discourse-common/utils/decorators";
 
 export default class UserPostsStream extends EmberObject {
   loaded = false;
+  itemsLoaded = 0;
+  canLoadMore = true;
+  content = [];
 
   @url("user.username_lower", "filter", "itemsLoaded", "/posts/%@/%@?offset=%@")
   url;
-
-  @on("init")
-  _initialize() {
-    this.setProperties({
-      itemsLoaded: 0,
-      canLoadMore: true,
-      content: [],
-    });
-  }
 
   filterBy(opts) {
     if (this.loaded && this.filter === opts.filter) {

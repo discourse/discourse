@@ -1215,6 +1215,7 @@ sl:
         set_password: "Nastavi geslo"
         choose_new: "Izberite novo geslo"
         choose: "Izberite geslo"
+        title: "Zamenjava gesla"
       second_factor_backup:
         title: "Rezervne potrditvene kode za preverjanje v dveh korakih"
         regenerate: "Ponovno ustvari"
@@ -1530,7 +1531,6 @@ sl:
         instructions: "Za dokončanje tega dejanja potrdite svojo identiteto."
       password:
         title: "Geslo"
-        too_short: "Vaše geslo je prekratko."
         common: "To geslo je preveč običajno."
         same_as_username: "Vaše geslo je enako kot uporabniško ime."
         same_as_email: "Vaše geslo je enako kot vaš e-naslov."
@@ -2024,7 +2024,6 @@ sl:
       show_toolbar: "prikaži orodno vrstico urejevalnika"
       hide_toolbar: "skrij orodno vrstico urejevalnika"
       modal_ok: "V redu"
-      modal_cancel: "Prekliči"
       cant_send_pm: "Ne moremo poslati sporočila %{username}."
       yourself_confirm:
         title: "Ali ste pozabili dodati prejemnike?"
@@ -2322,14 +2321,12 @@ sl:
         bookmarks: "Ni več tem z zaznamki."
     topic_bulk_actions:
       close_topics:
-        name: "Zapri teme"
+        name: "Zapri"
         optional: (neobvezno)
       archive_topics:
-        name: "Arhiviraj teme"
-      unlist_topics:
-        name: "Izloči temo iz seznamov"
-      relist_topics:
-        name: "Postavi temo nazaj na seznam"
+        name: "Arhiviraj"
+      move_messages_to_inbox:
+        name: "Prestavi v Prejeto"
       remove_tags:
         name: "Odstrani oznake"
       append_tags:
@@ -2337,7 +2334,7 @@ sl:
       replace_tags:
         name: "Zamenjaj oznake"
       delete_topics:
-        name: "Izbriši teme"
+        name: "Izbriši"
     topic:
       filter_to:
         one: "%{count} prispevek v temi"
@@ -3394,7 +3391,6 @@ sl:
     tagging:
       other_tags: "Druge oznake"
       selector_tags: "oznake"
-      selector_all_tags: "vse oznake"
       selector_no_tags: "brez oznak"
       selector_remove_filter: "odstrani filter"
       tags: "Oznake"
@@ -3549,6 +3545,8 @@ sl:
         other: "%{count} novih"
       more: "Več"
       all_categories: "Vse kategorije"
+      categories_form_modal:
+        show_more: "Več"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "Vse"
@@ -3595,6 +3593,8 @@ sl:
               content: "Tem"
             faq:
               content: "Pravila skupnosti"
+            guidelines:
+              content: "Navodila"
             groups:
               content: "Skupine"
             users:
@@ -3871,6 +3871,8 @@ sl:
           request: "Zahteva"
           timestamp: "Ustvarjeno"
           actions: "Akcije"
+          filter_status:
+            failed: "Spodletelo"
       home:
         title: "Domov"
       account:
@@ -3912,6 +3914,9 @@ sl:
           search_logs: "Dnevnik iskanj"
           security: "Varnost"
           spam: "Neželeno"
+      config_areas:
+        about:
+          optional: "(neobvezno)"
       plugins:
         title: "Vtičniki"
         installed: "Nameščeni vtičniki"

@@ -938,6 +938,7 @@ class UsersController < ApplicationController
                    success: false,
                    message: @error,
                    errors: @user&.errors&.to_hash,
+                   friendly_messages: @user&.errors&.full_messages,
                    is_developer: UsernameCheckerService.is_developer?(@user&.email),
                    admin: @user&.admin?,
                  }

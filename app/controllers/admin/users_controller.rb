@@ -8,6 +8,7 @@ class Admin::UsersController < Admin::StaffController
                   suspend
                   unsuspend
                   log_out
+                  grant_admin
                   revoke_admin
                   revoke_moderation
                   grant_moderation

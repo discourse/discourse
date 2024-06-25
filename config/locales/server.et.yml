@@ -252,6 +252,8 @@ et:
         raw: "Sisu"
       user_profile:
         bio_raw: "Minust"
+      user:
+        password: "Parool"
     errors:
       models:
         topic:
@@ -880,6 +882,8 @@ et:
     boolean_yes: "Jah"
     boolean_no: "Ei"
     rate_limit_error: "Postitusi saab alla laadida üks kord ööpäevas. Palun proovi homme uuesti."
+  guidelines_topic:
+    guidelines_title: "Juhised"
   tos_topic:
     title: "Teenuse tingimused"
   privacy_topic:

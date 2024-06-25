@@ -33,10 +33,14 @@ class Reviewable < ActiveRecord::Base
   has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
 
   enum :status, { pending: 0, approved: 1, rejected: 2, ignored: 3, deleted: 4 }
-  enum :priority, { low: 0, medium: 5, high: 10 }, scopes: false, suffix: true
+
+  attribute :sensitivity, :integer
   enum :sensitivity, { disabled: 0, low: 9, medium: 6, high: 3 }, scopes: false, suffix: true
 
-  validates :reject_reason, length: { maximum: 500 }
+  attribute :priority, :integer
+  enum :priority, { low: 0, medium: 5, high: 10 }, scopes: false, suffix: true
+
+  validates :reject_reason, length: { maximum: 2000 }
 
   after_create { log_history(:created, created_by) }
 

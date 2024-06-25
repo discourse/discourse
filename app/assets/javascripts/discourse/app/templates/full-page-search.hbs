@@ -109,13 +109,20 @@
               @action={{action "toggleBulkSelect"}}
               class="btn-default bulk-select"
             />
-            {{#if this.selected}}
-              <DButton
-                @selected={{this.selected}}
-                @action={{action "showBulkActions"}}
-                @icon="wrench"
-                class="btn-default bulk-select-btn"
-              />
+            {{#if this.bulkSelectHelper.selected}}
+              {{#if this.useNewBulkActions}}
+                <TopicList::TopicBulkSelectDropdown
+                  @bulkSelectHelper={{this.bulkSelectHelper}}
+                  @afterBulkActionComplete={{this.afterBulkActionComplete}}
+                />
+              {{else}}
+                <DButton
+                  @selected={{this.bulkSelectHelper.selected}}
+                  @action={{action "showBulkActions"}}
+                  @icon="wrench"
+                  class="btn-default bulk-select-btn"
+                />
+              {{/if}}
             {{/if}}
           {{/if}}
 
@@ -125,7 +132,7 @@
                 @icon="check-square"
                 @action={{action "selectAll"}}
                 @label="search.select_all"
-                class="btn-default"
+                class="btn-default bulk-select-all"
               />
             {{/if}}
 
@@ -134,7 +141,7 @@
                 @icon="far-square"
                 @action={{action "clearAll"}}
                 @label="search.clear_all"
-                class="btn-default"
+                class="btn-default bulk-select-clear"
               />
             {{/if}}
           {{/if}}
@@ -172,7 +179,7 @@
             <SearchResultEntries
               @posts={{this.searchResultPosts}}
               @bulkSelectEnabled={{this.bulkSelectEnabled}}
-              @selected={{this.selected}}
+              @selected={{this.bulkSelectHelper.selected}}
               @highlightQuery={{this.highlightQuery}}
               @searchLogId={{this.model.grouped_search_result.search_log_id}}
             />

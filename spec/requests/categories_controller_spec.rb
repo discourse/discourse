@@ -39,16 +39,16 @@ RSpec.describe CategoriesController do
 
     it "redirects /category paths to /c paths" do
       get "/category/uncategorized"
-      expect(response.status).to eq(302)
-      expect(response.body).to include("c/uncategorized")
+      expect(response).to have_http_status(:found)
+      expect(response).to redirect_to("/c/uncategorized")
     end
 
     it "respects permalinks before redirecting /category paths to /c paths" do
       _perm = Permalink.create!(url: "category/something", category_id: category.id)
 
       get "/category/something"
-      expect(response.status).to eq(301)
-      expect(response.body).to include(category.slug)
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response).to redirect_to(%r{/c/#{category.slug}})
     end
 
     it "returns the right response for a normal user" do
@@ -1432,6 +1432,42 @@ RSpec.describe CategoriesController do
       expect(category["permission"]).to eq(CategoryGroup.permission_types[:full])
       expect(category["has_children"]).to eq(true)
       expect(category["subcategory_count"]).to eq(1)
+    end
+
+    it "doesn't expose secret categories" do
+      category.update!(read_restricted: true)
+
+      post "/categories/search.json", params: { term: "" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["categories"].map { |c| c["id"] }).not_to include(category.id)
+    end
+  end
+
+  describe "#hierachical_search" do
+    before { sign_in(user) }
+
+    it "produces categories with an empty term" do
+      get "/categories/hierarchical_search.json", params: { term: "" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["categories"].length).not_to eq(0)
+    end
+
+    it "doesn't produce categories with a very specific term" do
+      get "/categories/hierarchical_search.json", params: { term: "acategorythatdoesnotexist" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["categories"].length).to eq(0)
+    end
+
+    it "doesn't expose secret categories" do
+      category.update!(read_restricted: true)
+
+      get "/categories/hierarchical_search.json", params: { term: "" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["categories"].map { |c| c["id"] }).not_to include(category.id)
     end
   end
 end

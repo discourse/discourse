@@ -89,18 +89,6 @@ fa_IR:
         one: "شما یک پیام گفتگو جدیدی دارید"
         other: "شما پیام‌های گفتگو جدیدی دارید"
       from: "%{site_name}"
-      subject:
-        direct_message_from_1: "[%{email_prefix}] پیام جدید از %{username}"
-        direct_message_from_2: "[%{email_prefix}] پیام جدید از %{username1} و %{username2}"
-        direct_message_from_more:
-          one: "[%{email_prefix}] پیام جدید از %{username} و %{count} نفر دیگر"
-          other: "[%{email_prefix}] پیام جدید از %{username} و %{count} نفر دیگر"
-        chat_channel_1: "[%{email_prefix}] پیام جدید در %{channel}"
-        chat_channel_2: "[%{email_prefix}] پیام جدید در %{channel1} و %{channel2}"
-        chat_channel_more:
-          one: "[%{email_prefix}] پیام جدید در %{channel} و %{count} نفر دیگر"
-          other: "[%{email_prefix}] پیام جدید در %{channel} و %{count} نفر دیگر"
-        chat_channel_and_direct_message: "[%{email_prefix}] پیام جدید در %{channel} و از %{username}"
       view_messages:
         one: "مشاهده پیام"
         other: "مشاهده %{count} پیام"

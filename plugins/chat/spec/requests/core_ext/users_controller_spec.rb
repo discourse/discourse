@@ -53,4 +53,34 @@ describe UsersController do
       expect(notifications.size).to eq(0)
     end
   end
+
+  describe "#show_card" do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:another_user) { Fabricate(:user) }
+    context "when hidden users" do
+      before do
+        sign_in(another_user)
+        SiteSetting.chat_enabled = true
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
+        user.user_option.update!(hide_profile_and_presence: true)
+      end
+
+      it "returns the correct partial response when the user has chat enabled" do
+        user.user_option.update!(chat_enabled: true)
+        get "/u/#{user.username}/card.json"
+        expect(response).to be_successful
+        expect(response.parsed_body["user"]["profile_hidden"]).to eq(true)
+        expect(response.parsed_body["user"]["can_chat_user"]).to eq(true)
+      end
+
+      it "returns the correct partial response when the user has chat disabled" do
+        user.user_option.update!(chat_enabled: false)
+        get "/u/#{user.username}/card.json"
+        expect(response).to be_successful
+        expect(response.parsed_body["user"]["profile_hidden"]).to eq(true)
+        expect(response.parsed_body["user"]["can_chat_user"]).to eq(false)
+      end
+    end
+  end
 end

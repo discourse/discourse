@@ -1225,6 +1225,7 @@ lt:
         set_password: "Nustatyti Slaptažodį"
         choose_new: "Pasirinkite naują slaptažodį"
         choose: "Pasirinkite slaptažodį"
+        title: "Slaptažodžio atkūrimas"
       second_factor_backup:
         title: "Dviejų veiksnių atsarginiai kodai"
         regenerate: "Pergeneruoti"
@@ -1539,7 +1540,6 @@ lt:
           error: "Atsiprašome, failas privalo buti CSV formato."
       password:
         title: "Slaptažodis"
-        too_short: "Jūsų slaptažodis per trumpas."
         common: "Jūsų slaptažodis yra per daug bendrinis."
         same_as_username: "Tavo slaptažodis yra toks pat, kaip ir vartotojo vardas"
         same_as_email: "Tavo slaptažodis yra toks pat, kaip ir el. adresas."
@@ -1968,7 +1968,6 @@ lt:
       toggle_direction: "Perjungti kryptį"
       help: "Markdown redagavimo pagalba"
       modal_ok: "OK"
-      modal_cancel: "Atšaukti"
       cant_send_pm: "Atsiprašome, bet negalite siųsti žinučių %{username}."
       yourself_confirm:
         title: "Ar pamiršote pridėti gavėjų?"
@@ -2307,18 +2306,18 @@ lt:
         bookmarks: "Daugiau pažymėtų temų nėra"
     topic_bulk_actions:
       close_topics:
-        name: "Uždaryti temas"
+        name: "Uždaryti"
         optional: (pasoronktinai)
       archive_topics:
-        name: "Archyvuoti temas"
-      unlist_topics:
-        name: "Atžymėti temas"
+        name: "Archyvuoti"
+      move_messages_to_inbox:
+        name: "Perkelti į Pranešimų dėžutę"
       append_tags:
         name: "Pridėti žymas"
       replace_tags:
         name: "Pakeisti žymas"
       delete_topics:
-        name: "Ištrinti temas"
+        name: "Pašalinti"
     topic:
       filter_to:
         one: "temoje %{count} įrašas"
@@ -3378,7 +3377,6 @@ lt:
     tagging:
       other_tags: "Kitos žymos"
       selector_tags: "žymos"
-      selector_all_tags: "visos žymos"
       selector_no_tags: "nėra žymų"
       selector_remove_filter: "išjungti filtrus"
       tags: "Žymos"
@@ -3528,6 +3526,8 @@ lt:
         other: "%{count} nauja"
       more: "Daugiau"
       all_categories: "Visos kategorijos"
+      categories_form_modal:
+        show_more: "Rodyti daugiau"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "Visos"
@@ -3574,6 +3574,8 @@ lt:
               title: "Visos temos"
             faq:
               content: "DUK"
+            guidelines:
+              content: "Instrukcijos"
             groups:
               content: "Grupės"
             users:
@@ -3873,6 +3875,8 @@ lt:
           timestamp: "Sukurta"
           completion: "Sukurimo laikas"
           actions: "Veiksmai"
+          filter_status:
+            failed: "Nepavyko"
       home:
         title: "Pradinis"
       account:
@@ -3918,6 +3922,12 @@ lt:
           search_logs: "Paieškos žurnalas"
           security: "Apsauga"
           spam: "Šlamštas"
+      config_areas:
+        about:
+          site_contact_group_help: |
+            Galiojantis grupės pavadinimas, kuris yra pakviestas į visas automatiškai siunčiamas privačias žinutes.
+          optional: "(pasoronktinai)"
+          update: "Atnaujinti"
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"

@@ -215,16 +215,8 @@ ja:
         other: "新しいチャットメッセージがあります"
       from: "%{site_name}"
       subject:
-        private_message: "[%{email_prefix}] 新しいメッセージ"
-        direct_message_from_1: "[%{email_prefix}] %{username} からの新しいメッセージがあります"
-        direct_message_from_2: "[%{email_prefix}] %{username1} と他 %{username2} 人からの新しいメッセージ"
-        direct_message_from_more:
-          other: "[%{email_prefix}] %{username} と他 %{count} 人からの新しいメッセージ"
-        chat_channel_1: "[%{email_prefix}] %{channel} の新しいメッセージ"
-        chat_channel_2: "[%{email_prefix}] %{channel1} と %{channel2} の新しいメッセージ"
-        chat_channel_more:
-          other: "[%{email_prefix}] %{channel} と他 %{count} チャンネルの新しいメッセージ"
-        chat_channel_and_direct_message: "[%{email_prefix}] %{channel} に %{username} からの新しいメッセージがあります"
+        chat_dm_2: "[%{site_name}] %{name_1} と他 %{name_2} 件のチャットの新しいメッセージ"
+        chat_channel_2: "[%{site_name}] %{channel_1} と他 %{channel_2} 件の新しいメッセージ"
       unsubscribe: "このチャットの要約は、あなたが退席中のときに %{site_link} から送信されます。%{email_preferences_link} を変更するか、%{unsubscribe_link} から購読を停止します。"
       unsubscribe_no_link: "このチャットの要約は、あなたが退席中のときに %{site_link} から送信されます。%{email_preferences_link} を変更します。"
       view_messages:

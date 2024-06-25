@@ -1036,7 +1036,6 @@ cs:
     categories:
       categories_label: "kategorie"
       subcategories_label: "podkategorie"
-      all_subcategories: "všechny podkategorie"
       no_subcategories: "žádné podkategorie"
       remove_filter: "zrušit filtr"
       plus_more_count:
@@ -1433,6 +1432,7 @@ cs:
         set_password: "Nastavit heslo"
         choose_new: "Zvolte si nové heslo"
         choose: "Vyber si heslo"
+        title: "Obnovení hesla"
       second_factor_backup:
         title: "Dvoufaktorové záložní kódy"
         regenerate: "Vytvořit znovu"
@@ -1826,7 +1826,6 @@ cs:
         fine_print: "Žádáme vás o potvrzení vaší totožnosti, protože se jedná o potenciálně citlivou akci. Po ověření budete požádáni o opětovné ověření až po několika hodinách nečinnosti."
       password:
         title: "Heslo"
-        too_short: "Vaše heslo je příliš krátké."
         common: "Toto heslo je používané moc často."
         same_as_username: "Vaše heslo je stejné jako Vaše uživatelské jméno."
         same_as_email: "Vaše heslo je stejné jako váš e-mail."
@@ -2483,7 +2482,6 @@ cs:
       show_toolbar: "zobrazit panel nástrojů editoru"
       hide_toolbar: "skrýt panel nástrojů editoru"
       modal_ok: "OK"
-      modal_cancel: "Zrušit"
       cant_send_pm: "Bohužel, nemůžete poslat zprávu uživateli %{username}."
       yourself_confirm:
         title: "Zapomněl/a jste přidat přijemce?"
@@ -2983,15 +2981,13 @@ cs:
         filter: "Nejsou zde žádná další témata."
     topic_bulk_actions:
       close_topics:
-        name: "Zavřít téma"
+        name: "Zavřít"
         note: "Poznámka"
         optional: (volitelné)
       archive_topics:
-        name: "Archivovat témata"
-      unlist_topics:
-        name: "Odebrat témata ze seznamu"
-      relist_topics:
-        name: "Znovunačíst seznam témat"
+        name: "Archív"
+      move_messages_to_inbox:
+        name: "Přesunout do Přijaté"
       remove_tags:
         name: "Odebrat štítky"
       append_tags:
@@ -2999,7 +2995,7 @@ cs:
       replace_tags:
         name: "Zaměnit štítky"
       delete_topics:
-        name: "Smazat témata"
+        name: "Smazat"
       update_category:
         name: "Aktualizovat kategorii"
         description: "Zvolte novou kategorii pro vybraná témata"
@@ -4340,7 +4336,6 @@ cs:
       all_tags: "Všechny štítky"
       other_tags: "Ostatní štítky "
       selector_tags: "štítky"
-      selector_all_tags: "všechny štítky"
       selector_no_tags: "bez štítků"
       selector_remove_filter: "zrušit filtr"
       tags: "Štítky"
@@ -4530,6 +4525,7 @@ cs:
           text: "a automaticky zobrazíme nejoblíbenější kategorie tohoto webu"
         filter_placeholder: "Filtrovat kategorie"
         no_categories: "Zadanému výrazu neodpovídají žádné kategorie."
+        show_more: "Zobrazit více"
       tags_form_modal:
         title: "Úprava štítků v postranním panelu"
         filter_placeholder: "Filtrovat štítky"
@@ -4622,6 +4618,9 @@ cs:
               title: "Všechna témata"
             faq:
               content: "FAQ"
+              title: "Pokyny pro používání tohoto webu"
+            guidelines:
+              content: "Pokyny"
               title: "Pokyny pro používání tohoto webu"
             groups:
               content: "Skupiny"
@@ -5162,6 +5161,8 @@ cs:
           timestamp: "Vytvořený"
           completion: "čas dokončení"
           actions: "Akce"
+          filter_status:
+            failed: "Neúspěšný"
       home:
         title: "Domů"
       account:
@@ -5212,6 +5213,10 @@ cs:
           security: "Zabezpečení"
           spam: "Spam"
           staff_action_logs: "Protokoly akcí redaktorů"
+      config_areas:
+        about:
+          optional: "(volitelné)"
+          update: "Aktualizovat"
       plugins:
         title: "Pluginy"
         installed: "Nainstalované pluginy"

@@ -1,4 +1,6 @@
 import { tracked } from "@glimmer/tracking";
+import { next } from "@ember/runloop";
+import { TrackedSet } from "@ember-compat/tracked-built-ins";
 
 /**
  * Define a tracked property on an object without needing to use the @tracked decorator.
@@ -119,4 +121,58 @@ export function dedupeTracked(target, key, desc) {
       }
     },
   };
+}
+
+export class DeferredTrackedSet {
+  #set;
+
+  constructor(value) {
+    this.#set = new TrackedSet(value);
+  }
+
+  has(value) {
+    return this.#set.has(value);
+  }
+
+  entries() {
+    return this.#set.entries();
+  }
+
+  keys() {
+    return this.#set.keys();
+  }
+
+  values() {
+    return this.#set.values();
+  }
+
+  forEach(fn) {
+    return this.#set.forEach(fn);
+  }
+
+  get size() {
+    return this.#set.size;
+  }
+
+  [Symbol.iterator]() {
+    return this.#set[Symbol.iterator]();
+  }
+
+  get [Symbol.toStringTag]() {
+    return this.#set[Symbol.toStringTag];
+  }
+
+  add(value) {
+    next(() => this.#set.add(value));
+    return this;
+  }
+
+  delete(value) {
+    next(() => this.#set.delete(value));
+    return this;
+  }
+
+  clear() {
+    next(() => this.#set.clear());
+  }
 }

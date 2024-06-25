@@ -15,6 +15,7 @@ export default class ChatRoute extends DiscourseRoute {
   @service chat;
   @service router;
   @service chatStateManager;
+  @service chatDrawerRouter;
   @service currentUser;
 
   titleToken() {
@@ -26,27 +27,10 @@ export default class ChatRoute extends DiscourseRoute {
       return this.router.transitionTo(`discovery.${defaultHomepage()}`);
     }
 
-    const INTERCEPTABLE_ROUTES = [
-      "chat.channel",
-      "chat.direct-messages",
-      "chat.channels",
-      "chat.threads",
-      "chat.channel.thread",
-      "chat.channel.thread.index",
-      "chat.channel.thread.near-message",
-      "chat.channel.near-message-with-thread",
-      "chat.channel.threads",
-      "chat.channel.index",
-      "chat.channel.near-message",
-      "chat.channel-legacy",
-      "chat",
-      "chat.index",
-    ];
-
     if (
       transition.from && // don't intercept when directly loading chat
       this.chatStateManager.isDrawerPreferred &&
-      INTERCEPTABLE_ROUTES.includes(transition.targetName)
+      this.chatDrawerRouter.routeNames.includes(transition.targetName)
     ) {
       transition.abort();
 

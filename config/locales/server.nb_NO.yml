@@ -331,6 +331,8 @@ nb_NO:
         raw: "Body"
       user_profile:
         bio_raw: "Om meg"
+      user:
+        password: "Passord"
     errors:
       models:
         topic:
@@ -1191,6 +1193,7 @@ nb_NO:
     rate_limit_error: "Innlegg kan lastes ned en gang om dagen, prøv igjen i morgen."
   guidelines_topic:
     title: "O-S-S/retningslinjer"
+    guidelines_title: "Retningslinjer"
   tos_topic:
     title: "Bruksvilkår"
   privacy_topic:

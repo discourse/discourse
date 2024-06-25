@@ -274,6 +274,8 @@ sw:
         raw: "Mwili"
       user_profile:
         bio_raw: "Kuhusu Mimi"
+      user:
+        password: "Nywila"
     errors:
       models:
         topic:
@@ -1782,6 +1784,7 @@ sw:
     Hariri chapisho la kwanza la mada hii kubadilisha maandishi ya ukurasa %{page_name}.
   guidelines_topic:
     title: "Maswali ya Mara kwa Mara/Muongozo"
+    guidelines_title: "Miongozo"
   tos_topic:
     title: "Masharti ya Huduma"
   privacy_topic:

@@ -467,6 +467,8 @@ gl:
         raw: "Mensaxe"
       user_profile:
         bio_raw: "Acerca de min"
+      user:
+        password: "Contrasinal"
     errors:
       models:
         topic:
@@ -1413,7 +1415,6 @@ gl:
     s3_endpoint: "O punto final pódese modificar para facer unha copia de seguranza nun servizo compatíbel con S3 como DigitalOcean Spaces ou Minio. AVISO: Déixeo en branco se usa AWS S3."
     s3_configure_tombstone_policy: "Activar a política de eliminación automática para cargas tombstone. IMPORTANTE: se está desactivado, non se reclamará ningún espazo despois de eliminar as cargas."
     s3_disable_cleanup: "Evitar a retirada de antigas copias de seguranza de S3 cando o número delas supere o máximo permitido."
-    enable_s3_inventory: "Xerar informes e verificar as cargas utilizando o inventario de Amazon S3. IMPORTANTE: require credenciais S3 válidas (tanto a chave de acceso como a chave de acceso secreta)."
     backup_time_of_day: "Hora do día UTC á se debería executar a copia de seguranza."
     backup_with_uploads: "Incluír os ficheiros subidos nas copias de seguranza programadas. De se desactiva esta opción, unicamente se executará a copia de seguranza da base de datos."
     backup_location: "Localización onde están almacenadas as copias de seguranza. IMPORTANTE: S3 require credenciais S3 válidas inseridas na configuración de ficheiros."
@@ -3206,6 +3207,7 @@ gl:
     Editar a primeira publicación deste tema para cambiar o contido da páxina %{page_name}.
   guidelines_topic:
     title: "Preguntas frecuentes/directrices"
+    guidelines_title: "Directrices"
   tos_topic:
     title: "Termos do servizo"
   privacy_topic:

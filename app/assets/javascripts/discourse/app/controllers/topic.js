@@ -19,11 +19,12 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import DiscourseURL, { userPath } from "discourse/lib/url";
-import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
+import { escapeExpression } from "discourse/lib/utilities";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Category from "discourse/models/category";
@@ -339,10 +340,11 @@ export default Controller.extend(bufferedProperty("model"), {
 
   @action
   jumpTop(event) {
-    if (event && modKeysPressed(event).length > 0) {
-      return false;
+    if (wantsNewWindow(event)) {
+      return;
     }
-    event?.preventDefault();
+
+    event.preventDefault();
     DiscourseURL.routeTo(this.get("model.firstPostUrl"), {
       skipIfOnScreen: false,
       keepFilter: true,

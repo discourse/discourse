@@ -319,6 +319,7 @@ fi:
         unbookmark: "Klikkaa poistaaksesi kaikki tämän ketjun kirjanmerkit"
         unbookmark_with_reminder: "Klikkaa poistaaksesi kaikki tämän ketjun kirjanmerkit ja muistutukset"
     bookmarks:
+      deleted_bookmark_success: "Kirjanmerkki poistettu!"
       created: "Olet kirjanmerkinnyt tämän viestin. %{name}"
       created_generic: "Olet kirjanmerkinnyt tämän. %{name}"
       create: "Luo kirjanmerkki"
@@ -1365,6 +1366,7 @@ fi:
         set_password: "Aseta salasana"
         choose_new: "Valitse uusi salasana"
         choose: "Valitse salasana"
+        title: "Salasanan palautus"
       second_factor_backup:
         title: "Kaksivaiheisen tunnistuksen varakoodit"
         regenerate: "Tee uusi"
@@ -1760,7 +1762,6 @@ fi:
         fine_print: "Pyydämme sinua todentamaan henkilöllisyytesi, koska tämä voi olla arkaluonteinen toimenpide. Kun olet tunnistautunut, todennusta pyydetään uudelleen vain muutaman tunnin käyttämättömyyden kuluttua."
       password:
         title: "Salasana"
-        too_short: "Salasanasi on liian lyhyt."
         common: "Annettu salasana on liian yleinen."
         same_as_username: "Salasanasi on sama kuin käyttäjätunnuksesi."
         same_as_email: "Salasanasi on sama kuin sähköpostisosoitteesi."
@@ -2327,7 +2328,6 @@ fi:
       show_toolbar: "näytä kirjoitustilan työkalurivi"
       hide_toolbar: "piilota kirjoitustilan työkalurivi"
       modal_ok: "OK"
-      modal_cancel: "Peruuta"
       cant_send_pm: "Et voi valitettavasti lähettää viestiä käyttäjälle %{username}."
       yourself_confirm:
         title: "Unohditko lisätä vastaanottajia?"
@@ -2777,14 +2777,12 @@ fi:
         filter: "Ketjuja ei ole enempää."
     topic_bulk_actions:
       close_topics:
-        name: "Sulje ketjut"
+        name: "Sulje"
         optional: (valinnainen)
       archive_topics:
-        name: "Arkistoi ketjut"
-      unlist_topics:
-        name: "Poista ketjuja listauksista"
-      relist_topics:
-        name: "Palauta ketjuja listauksiin"
+        name: "Arkistoi"
+      move_messages_to_inbox:
+        name: "Siirrä saapuneisiin"
       remove_tags:
         name: "Poista tunnisteita"
       append_tags:
@@ -2792,7 +2790,7 @@ fi:
       replace_tags:
         name: "Korvaa tunnisteet"
       delete_topics:
-        name: "Poista ketjut"
+        name: "Poista"
     topic:
       filter_to:
         one: "%{count} viesti ketjussa"
@@ -4006,7 +4004,6 @@ fi:
       all_tags: "Kaikki tunnisteet"
       other_tags: "Muut tunnisteet"
       selector_tags: "tunnisteet"
-      selector_all_tags: "kaikki tunnisteet"
       selector_no_tags: "ei tunnisteita"
       selector_remove_filter: "poista suodatin"
       tags: "Tunnisteet"
@@ -4203,6 +4200,7 @@ fi:
           text: "ja näytämme automaattisesti tämän sivuston suosituimmat alueet"
         filter_placeholder: "Suodata alueita"
         no_categories: "Annettua termiä vastaavia alueita ei ole."
+        show_more: "Näytä lisää"
       tags_form_modal:
         title: "Muokkaa tunnisteiden navigointia"
         filter_placeholder: "Suodata tunnisteita"
@@ -4298,6 +4296,9 @@ fi:
               title: "Kaikki ketjut"
             faq:
               content: "UKK"
+              title: "Ohjeet tämän sivuston käyttöön"
+            guidelines:
+              content: "Ohjeet"
               title: "Ohjeet tämän sivuston käyttöön"
             groups:
               content: "Ryhmät"
@@ -4853,6 +4854,8 @@ fi:
           timestamp: "Luotu"
           completion: "Suorituksen kesto"
           actions: "Toiminnot"
+          filter_status:
+            failed: "Epäonnistui"
       home:
         title: "Aloitus"
       account:
@@ -4913,6 +4916,16 @@ fi:
           security: "Tietoturva"
           spam: "Roskaposti"
           staff_action_logs: "Henkilöstön toimintalokit"
+      config_areas:
+        about:
+          header: "Tietoa sivustostasi"
+          community_name: "Yhteisön nimi"
+          your_organization: "Organisaatiosi"
+          company_name: "Yrityksen nimi"
+          governing_law: "Sovellettava lainsäädäntö"
+          city_for_disputes: "Kaupunki, jonka oikeudessa riidat ratkotaan"
+          optional: "(valinnainen)"
+          update: "Päivitä"
       plugins:
         title: "Lisäosat"
         installed: "Asennetut lisäosat"

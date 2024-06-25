@@ -217,16 +217,15 @@ zh_CN:
         other: "您有新的聊天消息"
       from: "%{site_name}"
       subject:
-        private_message: "[%{email_prefix}] 新消息"
-        direct_message_from_1: "[%{email_prefix}] 来自 %{username} 的新消息"
-        direct_message_from_2: "[%{email_prefix}] 来自 %{username1} 和 %{username2} 的新消息"
-        direct_message_from_more:
-          other: "[%{email_prefix}] 来自 %{username} 和其他 %{count} 位用户的新消息"
-        chat_channel_1: "[%{email_prefix}] %{channel} 中的新消息"
-        chat_channel_2: "[%{email_prefix}] %{channel1} 和 %{channel2} 中的新消息"
-        chat_channel_more:
-          other: "[%{email_prefix}] %{channel} 和其他 %{count} 个频道的新消息"
-        chat_channel_and_direct_message: "[%{email_prefix}] %{channel} 中和来自 %{username} 的新消息"
+        private_email:
+          other: "[%{site_name}] 新消息"
+        chat_dm_1:
+          other: "[%{site_name}] 来自 %{name} 的新消息"
+        chat_dm_2: "[%{site_name}] 来自%{name_1}和%{name_2}的新消息"
+        chat_dm_3_or_more: "[%{site_name}] 来自 %{name} 和 %{count} 个其他人的新信息"
+        chat_channel_1:
+          other: "[%{site_name}] %{channel} 中的新消息"
+        chat_channel_2: "[%{site_name}] %{channel_1}和%{channel_2}中的新消息"
       unsubscribe: "此聊天总结在您离开时从%{site_link}发送。更改您的%{email_preferences_link}，或者%{unsubscribe_link}以退订。"
       unsubscribe_no_link: "此聊天总结在您离开时从%{site_link}发送。更改您的%{email_preferences_link}。"
       view_messages:

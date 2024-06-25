@@ -241,6 +241,10 @@ pl_PL:
         header: "Nagłówek czatu"
         composer: "Edytor czatu"
         channels_list: "Lista kanałów czatu"
+      no_direct_message_channels: "Nie dołączyłeś jeszcze do żadnych bezpośrednich wiadomości!"
+      no_direct_message_channels_cta: "Rozpocząć rozmowę"
+      no_public_channels: "Jeszcze nie dołączyłeś(aś) do żadnych kanałów!"
+      no_public_channels_cta: "Przeglądaj kanały"
       kicked_from_channel: "Nie masz już dostępu do tego kanału."
       only_chat_push_notifications:
         title: "Wysyłaj tylko powiadomienia push czatu"

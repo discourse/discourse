@@ -1,11 +1,19 @@
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
+import { service } from "@ember/service";
 import BulkSelectTopicsDropdown from "discourse/components/bulk-select-topics-dropdown";
 import rawRenderGlimmer from "discourse/lib/raw-render-glimmer";
 import i18n from "discourse-common/helpers/i18n";
 
 export default class extends EmberObject {
+  @service router;
+
   get selectedCount() {
     return this.bulkSelectHelper.selected.length;
+  }
+
+  @action
+  afterBulkAction() {
+    return this.router.refresh();
   }
 
   get html() {
@@ -18,11 +26,13 @@ export default class extends EmberObject {
         </span>
         <BulkSelectTopicsDropdown
           @bulkSelectHelper={{@data.bulkSelectHelper}}
+          @afterBulkActionComplete={{@data.afterBulkAction}}
         />
       </template>,
       {
         bulkSelectHelper: this.bulkSelectHelper,
         selectedCount: this.selectedCount,
+        afterBulkAction: this.afterBulkAction,
       }
     );
   }

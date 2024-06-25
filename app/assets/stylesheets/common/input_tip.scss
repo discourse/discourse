@@ -13,6 +13,7 @@
 .popup-tip {
   @include form-item-sizing;
   position: absolute;
+  left: 0;
   z-index: z("composer", "dropdown") + 1;
   cursor: pointer;
   @media (prefers-reduced-motion: no-preference) {

@@ -979,7 +979,6 @@ te:
     categories:
       categories_label: "వర్గాలు"
       subcategories_label: "ఉప వర్గాలు"
-      all_subcategories: "అన్ని ఉపవర్గాలు"
       no_subcategories: "ఉపవర్గాలు లేవు"
       remove_filter: "ఫిల్టర్‌ని తీసివేయండి"
       plus_more_count:
@@ -1370,6 +1369,7 @@ te:
         set_password: "సంకేతపదం అమర్చు"
         choose_new: "కొత్త పాస్‌వర్డ్‌ని ఎంచుకోండి"
         choose: "పాస్వర్డ్ ను ఎన్నుకోండి"
+        title: "పాస్వర్డ్ రీసెట్"
       second_factor_backup:
         title: "రెండు-కారకాల బ్యాకప్ కోడ్‌లు"
         regenerate: "పునరుత్పత్తించు"
@@ -1764,7 +1764,6 @@ te:
         fine_print: "ఇది సంభావ్య సున్నితమైన చర్య అయినందున మీ గుర్తింపును నిర్ధారించమని మేము మిమ్మల్ని అడుగుతున్నాము. ఒకసారి ప్రామాణీకరించబడిన తర్వాత, మీరు కొన్ని గంటలపాటు నిష్క్రియంగా ఉన్న తర్వాత మాత్రమే మళ్లీ ప్రామాణీకరించమని అడగబడతారు."
       password:
         title: "సంకేతపదం"
-        too_short: "మీ సంకేతపదం మరీ చిన్నది."
         common: "ఆ సంకేతపదం మరీ సాధారణం."
         same_as_username: "మీ సంకేతపదం మీ వినియోగదారుపేరు ని పోలి ఉంది."
         same_as_email: "మీ సంకేతపదం మీ ఈమెయిల్ ను పోలి ఉంది."
@@ -2355,7 +2354,6 @@ te:
       show_toolbar: "కంపోజర్ టూల్బార్ చూపించండి"
       hide_toolbar: "కంపోజర్ టూల్‌బార్‌ను దాచండి"
       modal_ok: "సరే"
-      modal_cancel: "రద్దు చేయండి"
       cant_send_pm: "క్షమించండి, మీరు %{username}కి సందేశం పంపలేరు."
       yourself_confirm:
         title: "మీరు స్వీకర్తలను జోడించడం మర్చిపోయారా?"
@@ -2808,14 +2806,12 @@ te:
         filter: "ఇక విషయాలు లేవు."
     topic_bulk_actions:
       close_topics:
-        name: "విషయాలు మూయు"
+        name: "మూసివేయండి"
         optional: (ఐచ్ఛికం)
       archive_topics:
-        name: "విషయాలు కట్టకట్టు"
-      unlist_topics:
-        name: "విషయాలను జాబితా నుండి తీసివేయండి"
-      relist_topics:
-        name: "విషయాలను మళ్లీ జాబితా చేయండి"
+        name: "ఆర్కైవ్ చెయ్యండి"
+      move_messages_to_inbox:
+        name: "ఇన్‌బాక్స్‌కి తరలించండి"
       remove_tags:
         name: "ట్యాగ్‌లను తీసివేయండి"
       append_tags:
@@ -2823,7 +2819,7 @@ te:
       replace_tags:
         name: "ట్యాగ్‌లను భర్తీ చేయండి"
       delete_topics:
-        name: "విషయాలను తొలగించండి"
+        name: "తొలగించండి"
       update_category:
         name: "వర్గాన్ని నవీకరించండి"
         description: "ఎంచుకున్న విషయాలకి కొత్త వర్గాన్ని ఎంచుకోండి"
@@ -4067,7 +4063,6 @@ te:
       all_tags: "అన్ని ట్యాగ్‌లు"
       other_tags: "ఇతర ట్యాగ్‌లు"
       selector_tags: "ట్యాగులు"
-      selector_all_tags: "అన్ని ట్యాగ్‌లు"
       selector_no_tags: "ట్యాగ్‌లు లేవు"
       selector_remove_filter: "ఫిల్టర్‌ని తీసివేయండి"
       tags: "ట్యాగులు"
@@ -4264,6 +4259,7 @@ te:
           text: "మరియు మేము ఈ సైట్ యొక్క అత్యంత జనాదరణ పొందిన వర్గాలను స్వయంచాలకంగా చూపుతాము"
         filter_placeholder: "వర్గాలను ఫిల్టర్ చేయండి"
         no_categories: "ఇచ్చిన పదానికి సరిపోలే వర్గాలు ఏవీ లేవు."
+        show_more: "మరిన్ని చూపించండి"
       tags_form_modal:
         title: "ట్యాగ్‌ల నావిగేషన్‌ను సవరించండి"
         filter_placeholder: "ఫిల్టర్ ట్యాగ్‌లు"
@@ -4353,6 +4349,9 @@ te:
               title: "అన్ని విషయాలు"
             faq:
               content: "ఎఫ్ ఎ క్యూ"
+              title: "ఈ సైట్‌ని ఉపయోగించడం కోసం మార్గదర్శకాలు"
+            guidelines:
+              content: "మార్గదర్శకాలు"
               title: "ఈ సైట్‌ని ఉపయోగించడం కోసం మార్గదర్శకాలు"
             groups:
               content: "సమూహాలు"
@@ -4904,6 +4903,8 @@ te:
           timestamp: "సృష్టించిన"
           completion: "పూర్తి సమయం"
           actions: "చర్యలు"
+          filter_status:
+            failed: "విఫలం"
       home:
         title: "మొదటి పేజీ"
       account:
@@ -4951,6 +4952,18 @@ te:
           search_logs: "లాగ్‌లను శోధించండి"
           security: "సెక్యూరిటీ"
           spam: "స్పామ్"
+      config_areas:
+        about:
+          header: "మీ సైట్ గురించి"
+          community_name: "సంఘం పేరు"
+          site_contact_group_help: |
+            స్వయంచాలకంగా పంపబడిన అన్ని ప్రైవేట్ సందేశాలకు ఆహ్వానించబడిన సమూహం యొక్క చెల్లుబాటు అయ్యే పేరు.
+          your_organization: "మీ సంస్థ"
+          company_name: "కంపెనీ పేరు"
+          governing_law: "పాలక చట్టం"
+          city_for_disputes: "వివాదాలకు నగరం"
+          optional: "(ఐచ్ఛికం)"
+          update: "నవీకరించండి"
       plugins:
         title: "చొప్పింతలు"
         installed: "ప్రతిష్టించిన చొప్పింతలు"

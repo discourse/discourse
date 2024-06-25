@@ -4,17 +4,21 @@ require "aws-sdk-s3"
 require "csv"
 
 class S3Inventory
-  attr_reader :type, :inventory_date
+  attr_reader :type, :inventory_date, :s3_helper
 
   CSV_KEY_INDEX = 1
   CSV_ETAG_INDEX = 2
   INVENTORY_PREFIX = "inventory"
-  INVENTORY_VERSION = "1"
   INVENTORY_LAG = 2.days
   WAIT_AFTER_RESTORE_DAYS = 2
 
-  def initialize(s3_helper, type, preloaded_inventory_file: nil, preloaded_inventory_date: nil)
-    @s3_helper = s3_helper
+  def initialize(
+    type,
+    s3_inventory_bucket:,
+    preloaded_inventory_file: nil,
+    preloaded_inventory_date: nil
+  )
+    @s3_helper = S3Helper.new(s3_inventory_bucket)
 
     if preloaded_inventory_file && preloaded_inventory_date
       # Data preloaded, so we don't need to fetch it again
@@ -189,43 +193,6 @@ class S3Inventory
     )
   end
 
-  def update_bucket_policy
-    @s3_helper.s3_client.put_bucket_policy(
-      bucket: bucket_name,
-      policy: {
-        Version: "2012-10-17",
-        Statement: [
-          {
-            Sid: "InventoryAndAnalyticsPolicy",
-            Effect: "Allow",
-            Principal: {
-              Service: "s3.amazonaws.com",
-            },
-            Action: ["s3:PutObject"],
-            Resource: ["#{inventory_path_arn}/*"],
-            Condition: {
-              ArnLike: {
-                "aws:SourceArn": bucket_arn,
-              },
-              StringEquals: {
-                "s3:x-amz-acl": "bucket-owner-full-control",
-              },
-            },
-          },
-        ],
-      }.to_json,
-    )
-  end
-
-  def update_bucket_inventory_configuration
-    @s3_helper.s3_client.put_bucket_inventory_configuration(
-      bucket: bucket_name,
-      id: inventory_id,
-      inventory_configuration: inventory_configuration,
-      use_accelerate_endpoint: false,
-    )
-  end
-
   def prepare_for_all_sites
     db_names = RailsMultisite::ConnectionManagement.all_dbs
     db_files = {}
@@ -246,6 +213,10 @@ class S3Inventory
     db_files
   ensure
     cleanup!
+  end
+
+  def s3_client
+    @s3_helper.s3_client
   end
 
   private
@@ -318,31 +289,6 @@ class S3Inventory
       end
   end
 
-  def inventory_configuration
-    filter_prefix = type
-    filter_prefix = bucket_folder_path if bucket_folder_path.present?
-
-    {
-      destination: {
-        s3_bucket_destination: {
-          bucket: bucket_arn,
-          prefix: inventory_path,
-          format: "CSV",
-        },
-      },
-      filter: {
-        prefix: filter_prefix,
-      },
-      is_enabled: SiteSetting.enable_s3_inventory,
-      id: inventory_id,
-      included_object_versions: "Current",
-      optional_fields: ["ETag"],
-      schedule: {
-        frequency: "Daily",
-      },
-    }
-  end
-
   def bucket_name
     @s3_helper.s3_bucket_name
   end
@@ -353,36 +299,13 @@ class S3Inventory
 
   def unsorted_files
     objects = []
-
-    hive_path = File.join(inventory_path, bucket_name, inventory_id, "hive")
+    hive_path = File.join(bucket_folder_path, "hive")
     @s3_helper.list(hive_path).each { |obj| objects << obj if obj.key.match?(/symlink\.txt\z/i) }
 
     objects
   rescue Aws::Errors::ServiceError => e
     log("Failed to list inventory from S3", e)
     []
-  end
-
-  def inventory_id
-    @inventory_id ||=
-      begin
-        id = Rails.configuration.multisite ? "original" : type # TODO: rename multisite path to "uploads"
-        bucket_folder_path.present? ? "#{bucket_folder_path}-#{id}" : id
-      end
-  end
-
-  def inventory_path_arn
-    File.join(bucket_arn, inventory_path)
-  end
-
-  def inventory_path
-    path = File.join(INVENTORY_PREFIX, INVENTORY_VERSION)
-    path = File.join(bucket_folder_path, path) if bucket_folder_path.present?
-    path
-  end
-
-  def bucket_arn
-    "arn:aws:s3:::#{bucket_name}"
   end
 
   def log(message, ex = nil)

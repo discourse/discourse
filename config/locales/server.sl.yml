@@ -263,6 +263,8 @@ sl:
         title: "Naziv"
         featured_link: "Izpostavljena povezava"
         category_id: "Kategorija"
+      user:
+        password: "Geslo"
     errors:
       models:
         user:
@@ -1682,6 +1684,7 @@ sl:
     Uredite prvi prispevek v tej temi da spremenite vsebino %{page_name} strani.
   guidelines_topic:
     title: "Pravila skupnosti"
+    guidelines_title: "Navodila"
   tos_topic:
     title: "Pogoji uporabe"
   privacy_topic:

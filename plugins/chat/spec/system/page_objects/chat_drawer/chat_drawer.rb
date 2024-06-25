@@ -63,6 +63,10 @@ module PageObjects
         has_no_css?(".chat-channel-row.--threads .c-unread-indicator")
       end
 
+      def click_channels
+        find("#c-footer-channels").click
+      end
+
       def click_direct_messages
         find("#c-footer-direct-messages").click
       end
@@ -86,6 +90,26 @@ module PageObjects
 
       def has_open_channel?(channel)
         has_css?("#{VISIBLE_DRAWER} .chat-channel[data-id='#{channel.id}']")
+      end
+
+      def has_channel_settings?
+        has_css?("#{VISIBLE_DRAWER} .c-channel-settings")
+      end
+
+      def has_channel_members?
+        has_css?("#{VISIBLE_DRAWER} .c-channel-members")
+      end
+
+      def has_open_channels?
+        has_css?("#{VISIBLE_DRAWER} .public-channels")
+      end
+
+      def has_open_direct_messages?
+        has_css?("#{VISIBLE_DRAWER} .direct-message-channels")
+      end
+
+      def has_open_user_threads?
+        has_css?("#{VISIBLE_DRAWER} .c-user-threads")
       end
 
       def has_open_thread_list?

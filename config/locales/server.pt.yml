@@ -405,6 +405,8 @@ pt:
         raw: "Corpo"
       user_profile:
         bio_raw: "Sobre Mim"
+      user:
+        password: "Palavra-passe"
     errors:
       models:
         topic:
@@ -1272,6 +1274,9 @@ pt:
       - ""
       - "inativo"
       - ""
+      navigation_menu:
+      - "barra Lateral"
+      - ""
   search:
     within_post: "#%{post_number} por %{username}"
     types:
@@ -1834,6 +1839,7 @@ pt:
     Edite a primeira mensagem neste tópico para alterar os conteúdos da página %{page_name}.
   guidelines_topic:
     title: "FAQ/Orientações"
+    guidelines_title: "Orientações"
   tos_topic:
     title: "Termos de Serviço"
   privacy_topic:

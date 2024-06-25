@@ -54,7 +54,7 @@ class ThemeSetting < ActiveRecord::Base
         :json_value,
         I18n.t(
           "theme_settings.errors.json_value.too_large",
-          max_size_megabytes: MAXIMUM_JSON_VALUE_SIZE_BYTES / 1024 / 1024,
+          max_size: MAXIMUM_JSON_VALUE_SIZE_BYTES / 1024 / 1024,
         ),
       )
     end

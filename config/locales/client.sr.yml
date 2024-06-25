@@ -893,7 +893,6 @@ sr:
           hide_advanced: "Сакриј напредне опције"
       password:
         title: "Šifra"
-        too_short: "Vaša šifra je prekratka."
         common: "Ta šifra je pre česta."
         same_as_username: "Tvoja šifra je ista kao i tvoje korisničko ime."
         same_as_email: "Tvoja šifra je ista kao i tvoj email."
@@ -1127,7 +1126,6 @@ sr:
       list_item: "Predmet popisa"
       help: "Markdown pomoć pri izmenama"
       modal_ok: "U redu"
-      modal_cancel: "Odustani"
       yourself_confirm:
         title: "Da li ste zaboravili da dodate primaoce?"
         body: "Trenutno se ova poruka šalje samo Vama!"
@@ -1226,11 +1224,11 @@ sr:
         bookmarks: "Nema više markiranih tema."
     topic_bulk_actions:
       close_topics:
-        name: "Zatvori Teme"
+        name: "Zatvori"
       archive_topics:
-        name: "Arhiviraj teme"
+        name: "Arhiviraj"
       delete_topics:
-        name: "Obriši Teme"
+        name: "Obriši"
     topic:
       create: "Nova Tema"
       create_long: "Otvori novu Temu"
@@ -1845,6 +1843,8 @@ sr:
               content: "Teme"
             faq:
               content: "FAQ (često postavljana pitanja)"
+            guidelines:
+              content: "Smernice"
             groups:
               content: "Grupe"
             users:
@@ -1971,6 +1971,8 @@ sr:
         events:
           timestamp: "Napravljeno"
           actions: "Akcije"
+          filter_status:
+            failed: "Neuspešno"
       home:
         title: "Home"
       account:

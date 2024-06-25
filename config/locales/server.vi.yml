@@ -421,6 +421,8 @@ vi:
         raw: "Thân"
       user_profile:
         bio_raw: "GIới thiệu bản thân"
+      user:
+        password: "Mật khẩu"
     errors:
       models:
         topic:
@@ -1346,6 +1348,9 @@ vi:
       - ""
       - "không hoạt động"
       - ""
+      navigation_menu:
+      - "thanh bên"
+      - ""
   search:
     within_post: "#%{post_number} bởi %{username}"
     types:
@@ -1931,6 +1936,7 @@ vi:
     Sửa bài viết đầu tiên trong chủ đề này để thay đổi nội dung của trang %{page_name}.
   guidelines_topic:
     title: "FAQ/Hướng dẫn"
+    guidelines_title: "Hướng dẫn"
   tos_topic:
     title: "Điều khoản Dịch vụ"
   privacy_topic:

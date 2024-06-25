@@ -13,7 +13,6 @@ import { addCategorySortCriteria } from "discourse/components/edit-category-sett
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
-import { registerHomeLogoHrefCallback } from "discourse/components/header/home-logo";
 import { headerIconsDAG } from "discourse/components/header/icons";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 import MountWidget, {
@@ -56,6 +55,7 @@ import {
   PLUGIN_NAV_MODE_TOP,
   registerAdminPluginConfigNav,
 } from "discourse/lib/admin-plugin-config-nav";
+import classPrepend from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -93,9 +93,14 @@ import {
 import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import { includeAttributes } from "discourse/lib/transform-post";
+import {
+  _addTransformerName,
+  _registerTransformer,
+} from "discourse/lib/transformer";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
 import { addCardClickListenerSelector } from "discourse/mixins/card-contents-base";
+import { addCustomUserFieldValidationCallback } from "discourse/mixins/user-fields-validation";
 import Composer, {
   registerCustomizationCallback,
 } from "discourse/models/composer";
@@ -109,7 +114,6 @@ import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { attachAdditionalPanel } from "discourse/widgets/header";
-import { registerHomeLogoHrefCallback as registerHomeLogoHrefCallbackOnWidget } from "discourse/widgets/home-logo";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import {
@@ -152,7 +156,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.32.0";
+export const PLUGIN_API_VERSION = "1.34.0";
 
 const DEPRECATED_HEADER_WIDGETS = [
   "header",
@@ -170,7 +174,7 @@ const DEPRECATED_HEADER_WIDGETS = [
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
-  if (!changes.pluginId) {
+  if (typeof changes !== "function" && !changes.pluginId) {
     // eslint-disable-next-line no-console
     console.warn(
       consolePrefix(),
@@ -289,7 +293,9 @@ class PluginApi {
     if (canModify(klass, "member", resolverName, changes)) {
       delete changes.pluginId;
 
-      if (klass.class.reopen) {
+      if (typeof changes === "function") {
+        classPrepend(klass.class, changes);
+      } else if (klass.class.reopen) {
         klass.class.reopen(changes);
       } else {
         Object.defineProperties(
@@ -325,6 +331,69 @@ class PluginApi {
     }
 
     return klass;
+  }
+
+  /**
+   * Add a new valid transformer name.
+   *
+   * Use this API to add a new transformer name that can be used in the `registerValueTransformer` API.
+   *
+   * Notice that this API must be used in a pre-initializer, executed before `freeze-valid-transformers`, otherwise it will throw an error:
+   *
+   * Example:
+   *
+   * // pre-initializers/my-transformers.js
+   *
+   * export default {
+   *   before: "freeze-valid-transformers",
+   *
+   *   initialize() {
+   *     withPluginApi("1.33.0", (api) => {
+   *       api.addValueTransformerName("my-unique-transformer-name");
+   *     }),
+   *   },
+   * };
+   *
+   * @param name the name of the new transformer
+   *
+   */
+  addValueTransformerName(name) {
+    _addTransformerName(name);
+  }
+
+  /**
+   * Register a transformer to override values defined in Discourse.
+   *
+   * Example: return a static value
+   * ```
+   * api.registerValueTransformer("example-transformer", () => "value");
+   * ```
+   *
+   * Example: transform the current value
+   * ```
+   * api.registerValueTransformer("example-transformer", ({value}) => value * 10);
+   * ```
+   *
+   * Example: transform the current value based on a context property
+   * ```
+   * api.registerValueTransformer("example-transformer", ({value, context}) => {
+   *   if (context.property) {
+   *     return value * 10;
+   *   }
+   *
+   *   return value;
+   * });
+   * ```
+   *
+   * @param {string} transformerName the name of the transformer
+   * @param {function({value, context})} valueCallback callback to be used to transform the value. To avoid potential
+   * errors or unexpected behavior the callback must be a pure function, i.e. return the transform value instead of
+   * mutating the input value, return the same output for the same input and not have any side effects.
+   * @param {*} valueCallback.value the value to be transformed
+   * @param {*} [valueCallback.context] the optional context in which the value is being transformed
+   */
+  registerValueTransformer(transformerName, valueCallback) {
+    _registerTransformer(transformerName, valueCallback);
   }
 
   /**
@@ -1289,6 +1358,33 @@ class PluginApi {
   }
 
   /**
+   * Adds a callback when validating the value of a custom user field in the signup form.
+   *
+   * If the validation is intended to fail, the callback should return an Ember Object with the
+   * following properties: `failed`, `reason`, and `element`.
+   *
+   * In the case of a failed validation, the `reason` will be displayed to the user
+   * and the form will not be submitted.
+   *
+   *
+   * Example:
+   *
+   * addCustomUserFieldValidationCallback((userField) => {
+   *   if (userField.field.name === "my custom user field" && userField.value === "foo") {
+   *     return EmberObject.create({
+   *       failed: true,
+   *       reason: I18n.t("value_can_not_be_foo"),
+   *       element: userField.field.element,
+   *     });
+   *   }
+   * });
+   **/
+
+  addCustomUserFieldValidationCallback(callback) {
+    addCustomUserFieldValidationCallback(callback);
+  }
+
+  /**
    *
    * Adds a callback to be executed on the "transformed" post that is passed to the post
    * widget.
@@ -1987,8 +2083,7 @@ class PluginApi {
    *
    */
   registerHomeLogoHrefCallback(callback) {
-    registerHomeLogoHrefCallback(callback);
-    registerHomeLogoHrefCallbackOnWidget(callback); // for compatibility with the legacy header
+    _registerTransformer("home-logo-href", ({ value }) => callback(value));
   }
 
   /**

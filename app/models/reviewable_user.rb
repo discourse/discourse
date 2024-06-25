@@ -46,6 +46,9 @@ class ReviewableUser < Reviewable
       begin
         self.reject_reason = args[:reject_reason]
 
+        # Without this, we end up sending the email even if this reject_reason is too long.
+        self.validate!
+
         if args[:send_email] && SiteSetting.must_approve_users?
           # Execute job instead of enqueue because user has to exists to send email
           Jobs::CriticalUserEmail.new.execute(

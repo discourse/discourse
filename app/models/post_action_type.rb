@@ -45,7 +45,7 @@ class PostActionType < ActiveRecord::Base
     end
 
     def all_flags
-      @all_flags ||= Flag.all
+      @all_flags ||= Flag.unscoped.order(:position).all
     end
 
     def auto_action_flag_types

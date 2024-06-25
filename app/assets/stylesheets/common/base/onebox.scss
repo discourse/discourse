@@ -693,6 +693,7 @@ aside.onebox.twitterstatus .onebox-body {
     color: var(--primary-medium);
     display: flex;
     margin-left: 0.75em;
+    white-space: nowrap;
 
     svg {
       fill: currentColor;

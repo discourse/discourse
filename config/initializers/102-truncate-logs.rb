@@ -22,10 +22,6 @@ if Rails.env.production? || ENV["ENABLE_LOGS_TRUNCATION"] == "1"
   end
 
   Rails.application.config.to_prepare do
-    set_or_extend_truncate_logs_formatter(Rails.logger)
-
-    if Rails.logger.respond_to? :chained
-      Rails.logger.chained.each { |logger| set_or_extend_truncate_logs_formatter(logger) }
-    end
+    Rails.logger.broadcasts.each { |logger| set_or_extend_truncate_logs_formatter(logger) }
   end
 end

@@ -187,6 +187,8 @@ sq:
         raw: "Trupi"
       user_profile:
         bio_raw: "Rreth Meje"
+      user:
+        password: "Fjalëkalimi"
     errors:
       models:
         topic:
@@ -1196,6 +1198,7 @@ sq:
     Modifiko postimin e parë të kësaj teme puer të ndryshuar përmbajtjen e faqes %{page_name}.
   guidelines_topic:
     title: "Pyetje dhe Përgjigje/Udhëzime"
+    guidelines_title: "Udhëzimet"
   tos_topic:
     title: "Termat e Shërbimit "
   privacy_topic:

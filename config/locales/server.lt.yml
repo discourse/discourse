@@ -411,6 +411,8 @@ lt:
         raw: "Tekstas"
       user_profile:
         bio_raw: "Apie mane"
+      user:
+        password: "Slaptažodis"
     errors:
       models:
         topic:
@@ -1286,7 +1288,6 @@ lt:
     discord_client_id: '„Discord“ kliento ID (reikia vieno? Apsilankykite <a href="https://discordapp.com/developers/applications/me">„Discord“ kūrėjų portale</a>)'
     enable_backups: "Leiskite administratoriams kurti forumo atsargines kopijas"
     s3_disable_cleanup: "Neleiskite pašalinti senų atsarginių kopijų iš S3, kai atsarginių kopijų yra daugiau nei leidžiama."
-    enable_s3_inventory: "Kurkite ataskaitas ir patikrinkite įkėlimus naudodami „Amazon S3“ inventorių. SVARBU: reikalingi galiojantys S3 kredencialai (ir prieigos rakto ID, ir slaptasis prieigos raktas)."
     backup_time_of_day: "Dienos laikas UTC, kai atsarginė kopija turėtų įvykti."
     backup_gzip_compression_level_for_uploads: "Gzip suspaudimo lygis naudojamas suspaudžiant įkėlimus."
     enable_safe_mode: "Leisti vartotojams įjungti saugųjį režimą, kad būtų derinami papildiniai."
@@ -2312,6 +2313,7 @@ lt:
     Redaguoti pirmutinį įrašą kad pakeisti turinį %{page_name} puslapio.
   guidelines_topic:
     title: "DUK/Gairės"
+    guidelines_title: "Instrukcijos"
   tos_topic:
     title: "Paslaugų teikimo sąlygos"
   privacy_topic:

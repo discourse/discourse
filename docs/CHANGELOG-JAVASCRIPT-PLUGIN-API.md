@@ -7,6 +7,15 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.34.0] - 2024-06-06
+
+- Added `registerValueTransformer` which allows registering a transformer callback to override values defined in Discourse modules
+- Added `addValueTransformerName` which allows plugins/TCs to register a new transformer to override values defined in their modules
+
+## [1.33.0] - 2024-06-06
+
+- Added `addCustomUserFieldValidationCallback` which allows to set a callback to change the validation and user facing message when attempting to save the signup form.
+
 ## [1.32.0] - 2024-05-16
 
 - Added `registerHomeLogoHrefCallback` which allows to set a callback to change the home logo URL.

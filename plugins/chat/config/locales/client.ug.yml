@@ -177,6 +177,9 @@ ug:
         header: "سۆھبەت ماۋزۇسى"
         composer: "سۆھبەت يازغۇچ"
         channels_list: "سۆھبەت قانال تىزىمى"
+      no_direct_message_channels: "سىز تېخى ھېچقانداق بىۋاسىتە ئۇچۇرغا قاتناشمىغان!"
+      no_direct_message_channels_cta: "يېڭى سۆھبەت باشلا"
+      no_public_channels: "سىز تېخى ھېچقانداق قانالغا قاتناشمىدىڭىز!"
       no_public_channels_cta: "قانالغا كۆز يۈگۈرت"
       kicked_from_channel: "ئەمدى بۇ قانالنى زىيارەت قىلالمايسىز."
       only_chat_push_notifications:

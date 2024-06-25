@@ -203,6 +203,8 @@ bs_BA:
         raw: "Tijelo"
       user_profile:
         bio_raw: "O Meni"
+      user:
+        password: "Lozinka"
     errors:
       models:
         topic:
@@ -949,6 +951,7 @@ bs_BA:
     Edit the first post in this topic to change the contents of the %{page_name} page.
   guidelines_topic:
     title: "FAQ/Guidelines"
+    guidelines_title: "Smjernice"
   tos_topic:
     title: "Terms of Service"
   privacy_topic:

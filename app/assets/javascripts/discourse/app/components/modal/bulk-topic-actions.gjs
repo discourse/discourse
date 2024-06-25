@@ -87,7 +87,9 @@ export default class BulkTopicActions extends Component {
     const options = {};
 
     if (this.isSilent) {
-      operation = { type: "silent_close" };
+      const newType =
+        operation.type === "close" ? "silent_close" : operation.type;
+      operation.type = newType;
     }
 
     if (this.isCloseAction && this.closeNote) {

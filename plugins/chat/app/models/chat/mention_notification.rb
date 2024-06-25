@@ -4,7 +4,7 @@ module Chat
   class MentionNotification < ActiveRecord::Base
     self.table_name = "chat_mention_notifications"
 
-    belongs_to :chat_mention
+    belongs_to :chat_mention, class_name: "Chat::Mention"
     belongs_to :notification, dependent: :destroy
   end
 end

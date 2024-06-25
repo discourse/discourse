@@ -115,6 +115,11 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
   end
 end
 
+Fabricator(:chat_mention_notification, class_name: "Chat::MentionNotification") do
+  chat_mention { Fabricate(:user_chat_mention) }
+  notification { Fabricate(:notification) }
+end
+
 Fabricator(:user_chat_mention, class_name: "Chat::UserMention") do
   transient read: false
   transient high_priority: true

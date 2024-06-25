@@ -72,7 +72,6 @@ after_initialize do
     Bookmark.prepend Chat::BookmarkExtension
     User.prepend Chat::UserExtension
     Group.prepend Chat::GroupExtension
-    Jobs::UserEmail.prepend Chat::UserEmailExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
     Jobs::ExportCsvFile.prepend Chat::MessagesExporter
     WebHook.prepend Chat::OutgoingWebHookExtension
@@ -132,17 +131,15 @@ after_initialize do
     end
   end
 
-  add_to_serializer(
-    :admin_plugin,
-    :incoming_chat_webhooks,
-    include_condition: -> { self.name == "chat" },
-  ) { Chat::IncomingWebhook.includes(:chat_channel).all }
+  add_to_serializer(:user_card, :can_chat_user) do
+    return false if !SiteSetting.chat_enabled
+    return false if scope.user.blank? || scope.user.id == object.id
+    return false if !scope.user.user_option.chat_enabled || !object.user_option.chat_enabled
 
-  add_to_serializer(:admin_plugin, :chat_channels, include_condition: -> { self.name == "chat" }) do
-    Chat::Channel.public_channels
+    scope.can_direct_message? && Guardian.new(object).can_chat?
   end
 
-  add_to_serializer(:user_card, :can_chat_user) do
+  add_to_serializer(:hidden_profile, :can_chat_user) do
     return false if !SiteSetting.chat_enabled
     return false if scope.user.blank? || scope.user.id == object.id
     return false if !scope.user.user_option.chat_enabled || !object.user_option.chat_enabled
@@ -436,7 +433,7 @@ after_initialize do
   Discourse::Application.routes.append do
     mount ::Chat::Engine, at: "/chat"
 
-    get "/admin/plugins/chat" => "chat/admin/incoming_webhooks#index",
+    get "/admin/plugins/chat/hooks" => "chat/admin/incoming_webhooks#index",
         :constraints => StaffConstraint.new
     post "/admin/plugins/chat/hooks" => "chat/admin/incoming_webhooks#create",
          :constraints => StaffConstraint.new

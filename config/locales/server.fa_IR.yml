@@ -326,6 +326,8 @@ fa_IR:
         raw: "متن"
       user_profile:
         bio_raw: "درباره من"
+      user:
+        password: "رمزعبور"
     errors:
       models:
         topic:
@@ -1227,6 +1229,9 @@ fa_IR:
       - ""
       - "غیر‌فعال"
       - ""
+      navigation_menu:
+      - "نوار کناری"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2005,6 +2010,7 @@ fa_IR:
     نوشته اول این موضوع را برای عوض کردن محتویات صفحه %{page_name} ویرایش کن.
   guidelines_topic:
     title: "پرسش و پاسخ / دستورالعمل"
+    guidelines_title: "راهنماها"
   tos_topic:
     title: "شرایط استفاده از خدمات"
   privacy_topic:

@@ -375,6 +375,8 @@ ca:
         raw: "Cos"
       user_profile:
         bio_raw: "Quant a mi"
+      user:
+        password: "Contrasenya"
     errors:
       models:
         topic:
@@ -1251,7 +1253,6 @@ ca:
     s3_backup_bucket: "Bucket remot que contindrà les còpies de seguretat. ATENCIÓ: Assegureu-vos que és un bucket privat."
     s3_endpoint: "El punt final es pot modificar per a fer còpies de seguretat en un servei compatible amb S3 com ara DigitalOcean Spaces o Minio. AVÍS: Deixeu-ho en blanc si feu servir AWS S3."
     s3_configure_tombstone_policy: "Activa la política de supressió automàtica per a càrregues 'tombstone'. IMPORTANT: si és desactivat, no es reclamarà cap espai després de suprimir les càrregues."
-    enable_s3_inventory: "Genera reports i verifica les càrregues de fitxers mitjançant l'inventari d'Amazon S3. IMPORTANT: Requereix credencials S3 vàlides (tant identificador de clau d'accés com clau d'accés secreta)."
     backup_time_of_day: "Hora del dia (UTC) en què s'hauria de fer la còpia de seguretat."
     backup_with_uploads: "Inclou els fitxers carregats en les còpies de seguretat planificades. Si s'inhabilita, només es farà còpia de seguretat de la base de dades."
     backup_location: "Ubicació on s'emmagatzemen les còpies de seguretat. IMPORTANT: S3 requereix credencials S3 vàlides introduïdes en la configuració de fitxers."
@@ -2511,6 +2512,7 @@ ca:
     Edita la primera publicació en aquest tema per a canviar els continguts de la pàgina %{page_name}.
   guidelines_topic:
     title: "Guies/PMF"
+    guidelines_title: "Directrius"
   tos_topic:
     title: "Condicions del servei"
   privacy_topic:

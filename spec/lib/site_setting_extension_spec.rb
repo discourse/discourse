@@ -422,9 +422,7 @@ RSpec.describe SiteSettingExtension do
       end
     end
 
-    let :test_enum_class do
-      TestEnumClass
-    end
+    let(:test_enum_class) { TestEnumClass }
 
     before do
       settings.setting(:test_enum, "en", enum: test_enum_class)
@@ -568,6 +566,16 @@ RSpec.describe SiteSettingExtension do
       expect(settings.title).to eq("Discourse v2")
       expect(UserHistory.last.previous_value).to eq("Discourse v1")
       expect(UserHistory.last.new_value).to eq("Discourse v2")
+    end
+
+    context "when a detailed message is provided" do
+      let(:message) { "We really need to do this, see https://meta.discourse.org/t/123" }
+
+      it "adds the detailed message to the user history record" do
+        expect {
+          settings.set_and_log("title", "Discourse v2", Discourse.system_user, message)
+        }.to change { UserHistory.last.try(:details) }.to(message)
+      end
     end
   end
 
@@ -879,6 +887,24 @@ RSpec.describe SiteSettingExtension do
     ensure
       SiteSetting.find_by(name: "embedded_media_post_allowed_groups").destroy
       SiteSetting.provider = test_provider
+    end
+  end
+
+  describe "requires_confirmation settings" do
+    it "returns 'simple' for settings that require confirmation with 'simple' type" do
+      expect(
+        SiteSetting.all_settings.find { |s| s[:setting] == :min_password_length }[
+          :requires_confirmation
+        ],
+      ).to eq("simple")
+    end
+
+    it "returns nil for settings that do not require confirmation" do
+      expect(
+        SiteSetting.all_settings.find { |s| s[:setting] == :display_local_time_in_user_card }[
+          :requires_confirmation
+        ],
+      ).to eq(nil)
     end
   end
 

@@ -258,23 +258,6 @@ pl_PL:
         many: "Masz nowe wiadomości na czacie"
         other: "Masz nowe wiadomości na czacie"
       from: "%{site_name}"
-      subject:
-        private_message: "[%{email_prefix}] Nowa wiadomość"
-        direct_message_from_1: "[%{email_prefix}] Nowa wiadomość od %{username}"
-        direct_message_from_2: "[%{email_prefix}] Nowa wiadomość od %{username1} i %{username2}"
-        direct_message_from_more:
-          one: "[%{email_prefix}] Nowa wiadomość od %{username} i %{count} innego"
-          few: "[%{email_prefix}] Nowa wiadomość od %{username} i %{count} innych"
-          many: "[%{email_prefix}] Nowa wiadomość od %{username} i %{count} innych"
-          other: "[%{email_prefix}] Nowa wiadomość od %{username} i %{count} innych"
-        chat_channel_1: "[%{email_prefix}] Nowa wiadomość w %{channel}"
-        chat_channel_2: "[%{email_prefix}] Nowa wiadomość w %{channel1} i %{channel2}"
-        chat_channel_more:
-          one: "[%{email_prefix}] Nowa wiadomość w %{channel} i %{count} innym"
-          few: "[%{email_prefix}] Nowa wiadomość w %{channel} i %{count} innych"
-          many: "[%{email_prefix}] Nowa wiadomość w %{channel} i %{count} innych"
-          other: "[%{email_prefix}] Nowa wiadomość w %{channel} i %{count} innych"
-        chat_channel_and_direct_message: "[%{email_prefix}] Nowa wiadomość w %{channel} i od %{username}"
       unsubscribe: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}, lub %{unsubscribe_link}, aby zrezygnować z subskrypcji."
       unsubscribe_no_link: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}."
       view_messages:

@@ -361,6 +361,8 @@ el:
         raw: "Κύριο μέρος"
       user_profile:
         bio_raw: "Σχετικά με εμένα"
+      user:
+        password: "Κωδικός Πρόσβασης"
     errors:
       models:
         topic:
@@ -2133,6 +2135,7 @@ el:
     Επεξεργαστείτε την πρώτη ανάρτηση σε αυτό το νήμα για να αλλάξετε τα περιεχόμενα της σελίδας %{page_name}.
   guidelines_topic:
     title: "Συχνές Ερωτήσεις/Οδηγίες"
+    guidelines_title: "Οδηγίες"
   tos_topic:
     title: "Όροι Χρήσης"
   privacy_topic:

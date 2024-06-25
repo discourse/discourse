@@ -247,6 +247,9 @@ sk:
         header: "Hlavička chatu"
         composer: "Skladateľ chatu"
         channels_list: "Zoznam chatovacích kanálov"
+      no_direct_message_channels: "Zatiaľ ste sa nepripojili k žiadnym priamym správam!"
+      no_direct_message_channels_cta: "Začať konverzáciu"
+      no_public_channels: "Zatiaľ ste sa nepripojili k žiadnemu kanálu!"
       no_public_channels_cta: "Prehľadávanie kanálov"
       kicked_from_channel: "K tomuto kanálu už nemáte prístup."
       only_chat_push_notifications:

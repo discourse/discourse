@@ -229,18 +229,8 @@ fi:
         other: "Sinulla on uusia chat-viestejä"
       from: "%{site_name}"
       subject:
-        private_message: "[%{email_prefix}] Uusi viesti"
-        direct_message_from_1: "[%{email_prefix}] Uusi viesti käyttäjältä %{username}"
-        direct_message_from_2: "[%{email_prefix}] Uusi viesti käyttäjältä %{username1} ja %{username2}"
-        direct_message_from_more:
-          one: "[%{email_prefix}] Uusi viesti käyttäjältä %{username} ja %{count} muulta"
-          other: "[%{email_prefix}] Uusi viesti käyttäjältä %{username} ja %{count} muulta"
-        chat_channel_1: "[%{email_prefix}] Uusi viesti kanavalta %{channel}"
-        chat_channel_2: "[%{email_prefix}] Uusi viesti kanavalla %{channel1} ja %{channel2}"
-        chat_channel_more:
-          one: "[%{email_prefix}] Uusi viesti kanavalla %{channel} ja %{count} muulla"
-          other: "[%{email_prefix}] Uusi viesti kanavalla %{channel} ja %{count} muulla"
-        chat_channel_and_direct_message: "[%{email_prefix}] Uusi viesti kanavalla %{channel} ja käyttäjältä %{username}"
+        chat_dm_2: "[%{site_name}] Uusia viestejä käyttäjältä %{name_1} ja %{name_2}"
+        chat_channel_2: "[%{site_name}] Uusia viestejä kanavalta %{channel_1} ja %{channel_2}"
       unsubscribe: "Tämä chat-yhteenveto lähetetään sivustolta %{site_link}, kun olet poissa. Määritä %{email_preferences_link} tai %{unsubscribe_link} peruuttaaksesi tilauksen."
       unsubscribe_no_link: "Tämä chat-yhteenveto lähetetään sivustolta %{site_link}, kun olet poissa. Määritä %{email_preferences_link}."
       view_messages:

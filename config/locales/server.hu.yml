@@ -406,6 +406,8 @@ hu:
         raw: "Törzs"
       user_profile:
         bio_raw: "Bemutatkozás"
+      user:
+        password: "Jelszó"
     errors:
       models:
         topic:
@@ -1064,6 +1066,9 @@ hu:
       purge_unactivated_users_grace_period_days:
       - ""
       - "inaktív"
+      - ""
+      navigation_menu:
+      - "oldalsáv"
       - ""
   search:
     within_post: "#%{post_number}, szerző: %{username}"
@@ -1897,6 +1902,7 @@ hu:
     rate_limit_error: "A bejegyzések naponta csak egyszer töltetők le. Kérünk, próbáld újra holnap."
   guidelines_topic:
     title: "GYIK/Irányelvek"
+    guidelines_title: "Irányelvek"
   tos_topic:
     title: "Szolgáltatási feltételek"
   privacy_topic:
