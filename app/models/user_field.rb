@@ -44,6 +44,7 @@ class UserField < ActiveRecord::Base
     return if !for_all_users?
 
     UserRequiredFieldsVersion.create
+    Discourse.request_refresh!
   end
 
   def sanitize_description
