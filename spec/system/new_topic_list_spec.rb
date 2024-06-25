@@ -6,65 +6,23 @@ describe "New topic list", type: :system do
   fab!(:category)
   fab!(:tag)
 
-  fab!(:new_reply) do
-    Fabricate(:post).topic.tap do |topic|
-      TopicUser.change(
-        user.id,
-        topic.id,
-        notification_level: TopicUser.notification_levels[:tracking],
-      )
-      TopicUser.update_last_read(user, topic.id, 1, 1, 1)
-      Fabricate(:post, topic: topic)
-    end
-  end
-
+  fab!(:new_reply) { Fabricate(:new_reply_topic, current_user: user) }
   fab!(:new_topic) { Fabricate(:post).topic }
-
-  fab!(:old_topic) do
-    Fabricate(:post).topic.tap { |topic| TopicUser.update_last_read(user, topic.id, 1, 1, 1) }
-  end
+  fab!(:old_topic) { Fabricate(:read_topic, current_user: user) }
 
   fab!(:new_reply_in_category) do
-    Fabricate(:post, topic: Fabricate(:topic, category: category)).topic.tap do |topic|
-      TopicUser.change(
-        user.id,
-        topic.id,
-        notification_level: TopicUser.notification_levels[:tracking],
-      )
-      TopicUser.update_last_read(user, topic.id, 1, 1, 1)
-      Fabricate(:post, topic: topic)
-    end
+    Fabricate(:new_reply_topic, category: category, current_user: user)
   end
 
   fab!(:new_topic_in_category) do
     Fabricate(:post, topic: Fabricate(:topic, category: category)).topic
   end
 
-  fab!(:old_topic_in_category) do
-    Fabricate(:post, topic: Fabricate(:topic, category: category)).topic.tap do |topic|
-      TopicUser.update_last_read(user, topic.id, 1, 1, 1)
-    end
-  end
-
-  fab!(:new_reply_with_tag) do
-    Fabricate(:post, topic: Fabricate(:topic, tags: [tag])).topic.tap do |topic|
-      TopicUser.change(
-        user.id,
-        topic.id,
-        notification_level: TopicUser.notification_levels[:tracking],
-      )
-      TopicUser.update_last_read(user, topic.id, 1, 1, 1)
-      Fabricate(:post, topic: topic)
-    end
-  end
+  fab!(:old_topic_in_category) { Fabricate(:read_topic, category: category, current_user: user) }
+  fab!(:new_reply_with_tag) { Fabricate(:new_reply_topic, tags: [tag], current_user: user) }
 
   fab!(:new_topic_with_tag) { Fabricate(:post, topic: Fabricate(:topic, tags: [tag])).topic }
-
-  fab!(:old_topic_with_tag) do
-    Fabricate(:post, topic: Fabricate(:topic, tags: [tag])).topic.tap do |topic|
-      TopicUser.update_last_read(user, topic.id, 1, 1, 1)
-    end
-  end
+  fab!(:old_topic_with_tag) { Fabricate(:read_topic, tags: [tag], current_user: user) }
 
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:tabs_toggle) { PageObjects::Components::NewTopicListToggle.new }

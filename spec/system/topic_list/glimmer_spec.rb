@@ -60,17 +60,7 @@ describe "glimmer topic list", type: :system do
     it "shows the list" do
       topic1 = Fabricate(:post).topic
       topic2 = Fabricate(:post).topic
-
-      new_reply =
-        Fabricate(:post).topic.tap do |topic|
-          TopicUser.change(
-            user.id,
-            topic.id,
-            notification_level: TopicUser.notification_levels[:tracking],
-          )
-          TopicUser.update_last_read(user, topic.id, 1, 1, 1)
-          Fabricate.times(3, :post, topic: topic)
-        end
+      new_reply = Fabricate(:new_reply_topic, current_user: user, count: 3)
 
       visit(topic1.relative_url)
 
