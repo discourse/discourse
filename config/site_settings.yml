@@ -3225,3 +3225,7 @@ dashboard:
   hot_topics_recent_days:
     hidden: true
     default: 7
+  admin_allow_filter_untranslated_text:
+    hidden: true
+    default: false
+    client: true

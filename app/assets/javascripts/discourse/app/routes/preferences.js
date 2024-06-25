@@ -13,7 +13,7 @@ export default class Preferences extends RestrictedUserRoute {
     let controller = this.controllerFor(this.router.currentRouteName);
     let subpageTitle = controller?.subpageTitle;
     return subpageTitle
-      ? `${subpageTitle} - ${I18n.t("user.preferences")}`
-      : I18n.t("user.preferences");
+      ? `${subpageTitle} - ${I18n.t("user.preferences.title")}`
+      : I18n.t("user.preferences.title");
   }
 }

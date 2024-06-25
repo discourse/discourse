@@ -2,7 +2,10 @@
 
 class MetadataController < ApplicationController
   layout false
-  skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required
+  skip_before_action :preload_json,
+                     :check_xhr,
+                     :redirect_to_login_if_required,
+                     :redirect_to_profile_if_required
 
   def manifest
     expires_in 1.minutes

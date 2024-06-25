@@ -20,6 +20,23 @@ describe "glimmer topic list", type: :system do
     end
   end
 
+  describe "/new" do
+    let(:topic_list) { PageObjects::Components::TopicList.new }
+
+    it "shows the list and the toggle buttons" do
+      SiteSetting.experimental_new_new_view_groups = group.name
+      Fabricate(:topic)
+      Fabricate(:new_reply_topic, current_user: user)
+
+      visit("/new")
+
+      expect(topic_list).to have_topics(count: 2)
+      expect(page).to have_css(".topics-replies-toggle.--all")
+      expect(page).to have_css(".topics-replies-toggle.--topics")
+      expect(page).to have_css(".topics-replies-toggle.--replies")
+    end
+  end
+
   describe "categories-with-featured-topics page" do
     let(:category_list) { PageObjects::Components::CategoryList.new }
 
@@ -43,17 +60,7 @@ describe "glimmer topic list", type: :system do
     it "shows the list" do
       topic1 = Fabricate(:post).topic
       topic2 = Fabricate(:post).topic
-
-      new_reply =
-        Fabricate(:post).topic.tap do |topic|
-          TopicUser.change(
-            user.id,
-            topic.id,
-            notification_level: TopicUser.notification_levels[:tracking],
-          )
-          TopicUser.update_last_read(user, topic.id, 1, 1, 1)
-          Fabricate.times(3, :post, topic: topic)
-        end
+      new_reply = Fabricate(:new_reply_topic, current_user: user, count: 3)
 
       visit(topic1.relative_url)
 
