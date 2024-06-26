@@ -226,6 +226,7 @@ export default class PostTextSelection extends Component {
       offset,
       trapTab: false,
       closeOnScroll: false,
+      modalForMobile: false,
       data: {
         canEditPost: this.canEditPost,
         canCopyQuote: this.canCopyQuote,

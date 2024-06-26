@@ -196,9 +196,6 @@ en:
         one: "and %{count} other"
         other: "and %{count} others"
 
-    summaries:
-      no_targets: "There were no messages during the selected period."
-
     transcript:
       default_thread_title: "Thread"
       split_thread_range: "messages %{start} to %{end} of %{total}"
