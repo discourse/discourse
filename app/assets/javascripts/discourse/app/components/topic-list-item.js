@@ -337,7 +337,7 @@ export default Component.extend({
 
       this.element.classList.add("highlighted");
       this.element.setAttribute(
-        "data-islastviewedtopic",
+        "data-is-last-viewed-topic",
         opts.isLastViewedTopic
       );
       this.element.addEventListener("animationend", () => {

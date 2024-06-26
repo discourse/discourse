@@ -61,9 +61,7 @@ Fabricator(:read_topic, from: :topic) do
   transient :current_user
 
   before_create do |topic, transient|
-    if !transient[:current_user]
-      raise "new_reply_topic fabricator requires the `current_user` param"
-    end
+    raise "read_topic fabricator requires the `current_user` param" if !transient[:current_user]
   end
 
   after_create do |topic, transient|
