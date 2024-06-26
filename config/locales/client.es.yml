@@ -1090,7 +1090,8 @@ es:
       activity_stream: "Actividad"
       read: "Leer"
       read_help: "Temas leídos recientemente"
-      preferences: "Preferencias"
+      preferences:
+        title: "Preferencias"
       feature_topic_on_profile:
         open_search: "Selecciona un nuevo tema"
         title: "Selecciona un tema"
@@ -5255,7 +5256,6 @@ es:
             description: "Enlaces, algunos botones, notificaciones y color de énfasis."
           quaternary:
             name: "cuaternario"
-            description: "Enlaces de navegación."
           header_background:
             name: "fondo del encabezado"
             description: "Color de fondo del encabezado del sitio."

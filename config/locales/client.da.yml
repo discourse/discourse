@@ -1013,7 +1013,8 @@ da:
       activity_stream: "Aktivitet"
       read: "Læs"
       read_help: "Nyligt læste emner"
-      preferences: "Indstillinger"
+      preferences:
+        title: "Indstillinger"
       feature_topic_on_profile:
         open_search: "Vælg et nyt emne"
         title: "Vælg et emne"
@@ -4416,7 +4417,6 @@ da:
             description: "Links, nogle knapper, notifikationer og accent farver."
           quaternary:
             name: "fjerde"
-            description: "Navigations links."
           header_background:
             name: "titel baggrund"
             description: "Baggrunds farve på sitets titel."

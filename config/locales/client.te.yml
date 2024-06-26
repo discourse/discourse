@@ -1095,7 +1095,8 @@ te:
       activity_stream: "కలాపం"
       read: "చదివిన"
       read_help: "ఇటీవల చదివిన విషయాలు"
-      preferences: "ప్రాధాన్యతలు"
+      preferences:
+        title: "ప్రాధాన్యతలు"
       feature_topic_on_profile:
         open_search: "కొత్త విషయాన్ని ఎంచుకోండి"
         title: "ఒక విషయాన్ని ఎంచుకోండి"
@@ -5337,7 +5338,6 @@ te:
             description: "లింక్‌లు, కొన్ని బటన్‌లు, నోటిఫికేషన్‌లు మరియు యాస రంగు."
           quaternary:
             name: "చతుర్థీ"
-            description: "నావిగేషన్ లింక్‌లు."
           header_background:
             name: "హెడరు వెనుతలం"
             description: "సైటు హెడరు వెనుతలం రంగు."

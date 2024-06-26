@@ -41,6 +41,7 @@ class ApplicationController < ActionController::Base
   before_action :authorize_mini_profiler
   before_action :redirect_to_login_if_required
   before_action :block_if_requires_login
+  before_action :redirect_to_profile_if_required
   before_action :preload_json
   before_action :check_xhr
   after_action :add_readonly_header
@@ -905,6 +906,34 @@ class ApplicationController < ActionController::Base
   def disqualified_from_2fa_enforcement
     request.format.json? || is_api? || current_user.anonymous? ||
       (!SiteSetting.enforce_second_factor_on_external_auth && secure_session["oauth"] == "true")
+  end
+
+  def redirect_to_profile_if_required
+    return if request.format.json?
+    return if !current_user
+    return if !current_user.needs_required_fields_check?
+
+    if current_user.populated_required_custom_fields?
+      current_user.bump_required_fields_version
+      return
+    end
+
+    redirect_path = path("/u/#{current_user.encoded_username}/preferences/profile")
+    second_factor_path = path("/u/#{current_user.encoded_username}/preferences/second-factor")
+    allowed_paths = [redirect_path, second_factor_path, path("/admin")]
+    if allowed_paths.none? { |p| request.fullpath.start_with?(p) }
+      rate_limiter = RateLimiter.new(current_user, "redirect_to_required_fields_log", 1, 24.hours)
+
+      if rate_limiter.performed!(raise_error: false)
+        UserHistory.create!(
+          action: UserHistory.actions[:redirected_to_required_fields],
+          acting_user_id: current_user.id,
+        )
+      end
+
+      redirect_to path(redirect_path)
+      nil
+    end
   end
 
   def build_not_found_page(opts = {})

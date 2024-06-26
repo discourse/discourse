@@ -961,7 +961,8 @@ vi:
       activity_stream: "Hoạt động"
       read: "Đã đọc"
       read_help: "Các chủ đề đã đọc gần đây"
-      preferences: "Tùy chỉnh"
+      preferences:
+        title: "Tùy chỉnh"
       feature_topic_on_profile:
         open_search: "Chọn chủ đề mới"
         title: "Chọn chủ đề"
@@ -4363,7 +4364,6 @@ vi:
             description: "Liên kết, một và nút, thông báo, và màu nhấn."
           quaternary:
             name: "chia bốn"
-            description: "Liên kết điều hướng."
           header_background:
             name: "nền header"
             description: "Màu nền header của trang."

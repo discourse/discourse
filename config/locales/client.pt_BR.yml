@@ -1090,7 +1090,8 @@ pt_BR:
       activity_stream: "Atividade"
       read: "Lidos"
       read_help: "Tópicos lidos recentemente"
-      preferences: "Preferências"
+      preferences:
+        title: "Preferências"
       feature_topic_on_profile:
         open_search: "Selecione um novo tópico"
         title: "Selecione um tópico"
@@ -5261,7 +5262,6 @@ pt_BR:
             description: "Links, alguns botões, notificações e cor realçada."
           quaternary:
             name: "quaternário(a)"
-            description: "Links de navegação."
           header_background:
             name: "fundo do cabeçalho"
             description: "Cor de fundo do cabeçalho do site."

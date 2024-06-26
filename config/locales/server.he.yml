@@ -283,6 +283,7 @@ he:
         other: באורך שגוי (אמור להיות באורך של %{count} תווים)
       other_than: "צריך להיות שונה מ־%{count}"
       auth_overrides_username: "יש לעדכן את שם המשתמש בצד ספק האימות, מאחר שההגדרה `auth_overrides_username` (דריסת שם משתמש מצד האימות) פעילה."
+      required: "חייב להיות קיים"
     template:
       body: ! "ישנן תקלות עם השדות הבאים:"
       header:
@@ -295,6 +296,8 @@ he:
     site_settings:
       invalid_site_setting: "לא קיימת הגדרה שנקראת ‚%{name}’"
       invalid_category_id: "ציינת קטגוריה שאינה קיימת"
+      site_setting_is_hidden: "אסור לך לשנות הגדרות נסתרות"
+      site_setting_is_unconfigurable: "אסור לך לשנות הגדרות שחסומות להגדרה"
       invalid_choice:
         one: "‚%{name}’ היא בחירה שגויה."
         two: "‚%{name}’ הן בחירות שגויות."
@@ -310,7 +313,6 @@ he:
       secure_uploads_requirements: "יש להפעיל העלאה ל־S3 ובקרות גישה (ACLs) של S3 בטרם הפעלת העלאות מאובטחות."
       s3_use_acls_requirements: "עליך להפעיל את בקרת הגישה (ACLs) של S3 כדי שההעלאות המאובטחות תפעלנה."
       share_quote_facebook_requirements: "עליך להגדיר מזהה יישומון פייסבוק כדי להפעיל שיתוף ציטוטים עבור פייסבוק"
-      second_factor_cannot_enforce_with_socials: "לא ניתן לאכוף אימות דו־שלבי כאשר מופעלת כניסה דרך רשתות חברתיות. תחילה עליך להשבית כניסה דרך: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "אי אפשר לאכוף אימות דו־שלבי אם כניסה מקומית מושבתת."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "אי אפשר לאכוף אימות דו־שלבי אם מופעל DiscourseConnect."
       local_login_cannot_be_disabled_if_second_factor_enforced: "אי אפשר להשבית כניסה מקומית אם נאכף אימות דו־שלבי. יש להשבית את אכיפת האימות הדו־שלבי בטרם השבתת כניסה מקומית."
@@ -1736,7 +1738,6 @@ he:
     email_custom_headers: "רשימה מופרדת בקווים אנכיים (הסימון |) של כותרות דוא״ל מותאמות אישית"
     email_subject: "תבנית נושא בהתאמה אישית להודעות דוא״ל תקניות. יש לעיין ב־<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "מספק פרטים נוספים למשתמשים בנוגע לסיבה שבגינה אין להם גישה לנושא מסוים. לתשומת לבך: מדובר בתצורה לא מאובטחת כיוון שמשתמשים ידעו אם כתובת מקשרת לנושא תקף."
-    enforce_second_factor: "לדרוש מהמשתמשים להפעיל אימות דו־שלבי לפני שתתאפשר להם גישה למנשק המשתמש של Discourse. יש לבחור ב‚הכול’ כדי לאכוף על כל המשתמשים. לבחור ב‚סגל’ כדי לאכוף על משתמשי סגל בלבד. ההגדרה הזאת לא חלה על ה־API או על האימות ‚ספק DiscourseConnect’."
     force_https: "אילוץ האתר שלך להשתמש ב־HTTPS בלבד. אזהרה: אין להפעיל זאת עד שווידאת ש־HTTPS מוגדר ועובד לחלוטין בכל מקום! בדקת שה־CDN, הכניסה דרך רשתות חברתיות ולוגואים / תלויות חיצוניות גם כן תומכים ב־HTTPS?"
     summary_score_threshold: "הניקוד המינימלי הנדרש כדי שפוסט ייכלל ב\"סיכום נושא זה\""
     summary_posts_required: "כמות פוסטים מזערית בנושא בטרם מופעל ‚תקציר לנושא זה’. שינויים בהגדרה זו יחולו רטרואקטיבית תוך שבוע."
@@ -1809,7 +1810,6 @@ he:
     content_security_policy_report_only: "הפעלת Content-Security-Policy-Report-Only (מדיניות אבטחת תוכן בדיווח בלבד - CSP)"
     content_security_policy_collect_reports: "הפעלת איסוף דוחות הפרה של CSP (מדיניות אבטחת תוכן) תחת ‎/csp_reports"
     content_security_policy_frame_ancestors: "להגביל מי יכול להטמיע את האתר הזה עם מסגרות iframes דרך CSP. ניתן לשלוח במארחים המורשים דרך <a href='%{base_path}/admin/customize/embedding'>הטמעה</a>"
-    content_security_policy_script_src: "מקורות סקריפט נוספים ברשימת ההיתרים. השרת המקומי וה-CDN כלולים כברירת מחדל. ראה <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>הקטנת התקפות XSS עם מדיניות אבטחת תוכן.</a> (CSP). מקורות שרת מקומי יתעלמו כאשר content_security_policy_strict_dynamic מופעל."
     invalidate_inactive_admin_email_after_days: "חשבונות מנהלים שלא ביקרו באתר מעל כמות כזו של ימים יאלצו לאמת מחדש את כתובת הדוא״ל שלהם כדי לשוב ולהיכנס. להגדיר כ־0 כדי להשבית."
     include_secure_categories_in_tag_counts: "כאשר האפשרות פעילה, מניין הנושאים לתגית יכלול נושאים בקטגוריות שמוגבלות לקריאה לכל המשתמשים. כשהאפשרות מוגבלת, משתמשים רגילים חשופים רק למניין הנושאים לתגית כאשר כל הנושאים הם בקטגוריות ציבוריות."
     display_personal_messages_tag_counts: "כאשר האפשרות פעילה, מניין ההודעות האישיות שמתויגות בתגית מסוימת יוצגו."
@@ -2352,7 +2352,7 @@ he:
     enable_offline_indicator: "להציג הודעה למשתמשים כאשר זוהה שהחיבור שלהם לאינטרנט נקטע."
     default_sidebar_link_to_filtered_list: "להפוך את קישור קישורי תפריט הניווט לרשימה מסוננת כברירת מחדל."
     default_sidebar_show_count_of_new_items: "להפוך את קישורי תפריט הניווט כך שיציגו מספר פריטים חדשים במקום עיטורים כברירת מחדל."
-    default_sidebar_switch_panel_position: "מיקום כפתורי החלפת לוח בסרגל הצד"
+    default_sidebar_switch_panel_position: "מקום הכפתור בסרגל הצד כדי לעבור לצ׳אט"
     retain_web_hook_events_period_days: "מספר הימים לשמירת רשומות אירועי התלייה."
     retry_web_hook_events: "לנסות מחדש אירועי התליה שנכשלו במשך 4 פעמים. פרקי הזמן שבין הניסיונות החוזרים הם 1, 5, 25 ו־125 דקות."
     revoke_api_keys_unused_days: "מספר הימים אחרי השימוש האחרון במפתח API לפני שלילתו אוטומטית (0 כדי לא לשלול לעולם)"
@@ -2472,6 +2472,11 @@ he:
         regex_invalid: "הביטוי הרגולרי שגוי: %{error}"
         leading_trailing_slash: "אסור שהביטוי הרגולרי יתחיל או יסתיים בלוכסן."
       unicode_usernames_avatars: "התמונות הייצוגיות הפנימיות של המערכת אינן תומכות בשמות משתמשים עם יוניקוד."
+      list_value_count:
+        one: "הרשימה חייבת להכיל ערך אחד בדיוק."
+        two: "הרשימה חייבת להכיל בדיוק שני ערכים."
+        many: "הרשימה חייבת להכיל בדיוק %{count} ערכים."
+        other: "הרשימה חייבת להכיל בדיוק %{count} ערכים."
       markdown_linkify_tlds: "לא ניתן לכלול ערך של ‚*’."
       google_oauth2_hd_groups: "עליך להגדיר את כל הגדרות ‚google oauth2 hd’ בטרם הפעלת ההגדרה הזאת."
       linkedin_oidc_credentials: "יש להגדיר פרטי גישה ל־LinkedIn מסוג OIDC‏ (‚linkedin_oidc_client_id’ ואת ‚linkedin_oidc_client_secret’) בטרם הפעלת ההגדרה הזאת."
@@ -2705,7 +2710,7 @@ he:
     email_too_long: "כתובת הדוא״ל שסיפקת ארוכה מדי. שמות תיבות דוא״ל לא יכולים לעלות על 254 תווים ושם התחום חייב להיות קצר מ־253 תווים."
     wrong_invite_code: "קוד ההזמנה שהקלדת שגוי."
     reserved_username: "שם משתמש זה אינו מורשה."
-    missing_user_field: "לא מילאת את כל שדות המשתמש/ת"
+    missing_user_field: "לא מילאת את כל שדות המשתמש/ת הנחוצים"
     auth_complete: "אימות הושלם."
     click_to_continue: "יש ללחוץ כאן כדי להמשיך."
     already_logged_in: "מחילה! ההזמנה הזו מיועדת למשתמשים חדשים, שעוד אין להם חשבון."
@@ -2759,6 +2764,11 @@ he:
     new_user_typed_too_fast: "משתמש חדש הקליד מהר מידי"
     content_matches_auto_silence_regex: "ביטוי רגולרי לחסימת תוכן אוטומטית"
     username:
+      short:
+        one: "חייב להיות תו אחד לפחות"
+        two: "חייבים להיות לפחות שני תווים"
+        many: "חייבים להיות לפחות %{count} תווים"
+        other: "חייבים להיות לפחות %{count} תווים"
       too_long: "ארוך מדי"
       characters: "חייב לכלול מספרים, אותיות, מינוסים, נקודות וקווים תחתיים בלבד"
       unique: "חייב להיות ייחודי"

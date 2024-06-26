@@ -58,6 +58,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :associated_account_ids,
              :top_category_ids,
              :groups,
+             :needs_required_fields_check?,
              :second_factor_enabled,
              :ignored_users,
              :featured_topic,

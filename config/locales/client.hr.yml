@@ -1159,7 +1159,8 @@ hr:
       activity_stream: "Aktivnosti"
       read: "Pročitajte"
       read_help: "Nedavno pročitane teme"
-      preferences: "Postavke"
+      preferences:
+        title: "Postavke"
       feature_topic_on_profile:
         open_search: "Odaberite novu temu"
         title: "Odaberite temu"
@@ -5164,7 +5165,6 @@ hr:
             description: "Poveznice, neki gumbi, obavijesti i boja naglaska."
           quaternary:
             name: "kvartarna"
-            description: "Poveznice za navigaciju"
           header_background:
             name: "pozadina zaglavlja"
             description: "Pozadinska boja zaglavlja stranice."

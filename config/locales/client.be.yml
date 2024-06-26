@@ -468,7 +468,8 @@ be:
         to: "да"
       activity_stream: "Актыўнасць"
       read: "прачытаныя"
-      preferences: "Налады"
+      preferences:
+        title: "Налады"
       feature_topic_on_profile:
         save: "Захаваць"
         clear:
@@ -1746,8 +1747,6 @@ be:
             name: "другасны"
           tertiary:
             name: "троесны"
-          quaternary:
-            description: "Навігацыйныя спасылкі."
           header_background:
             name: "фон загалоўка"
           header_primary:
