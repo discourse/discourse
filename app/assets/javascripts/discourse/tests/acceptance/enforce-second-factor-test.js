@@ -80,3 +80,53 @@ acceptance("Enforce Second Factor for unconfirmed session", function (needs) {
     );
   });
 });
+
+acceptance("Enforce second factor for OAuth logins", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.post("/u/second_factors.json", () => {
+      return helper.response({
+        success: "OK",
+        unconfirmed_session: "true",
+      });
+    });
+  });
+
+  test("as a user using local login (username + password) when enforce_second_factor_on_external_auth is false", async function (assert) {
+    updateCurrentUser({
+      moderator: false,
+      admin: false,
+      login_method: "local",
+    });
+    this.siteSettings.enforce_second_factor = "all";
+    this.siteSettings.enforce_second_factor_on_external_auth = false;
+
+    await visit("/u/eviltrout/preferences/second-factor");
+    await click(".home-logo-wrapper-outlet a");
+
+    assert.strictEqual(
+      currentRouteName(),
+      "preferences.second-factor",
+      "it does not let the user leave the second factor preferences"
+    );
+  });
+
+  test("as a user using oauth login when enforce_second_factor_on_external_auth is false", async function (assert) {
+    updateCurrentUser({
+      moderator: false,
+      admin: false,
+      login_method: "oauth",
+    });
+    this.siteSettings.enforce_second_factor = "all";
+    this.siteSettings.enforce_second_factor_on_external_auth = false;
+
+    await visit("/u/eviltrout/preferences/second-factor");
+    await click(".home-logo-wrapper-outlet a");
+
+    assert.strictEqual(
+      currentRouteName(),
+      "discovery.latest",
+      "it does let the user leave the second factor preferences"
+    );
+  });
+});

@@ -38,14 +38,24 @@ export default class PreferencesSecondFactor extends RestrictedUserRoute {
   willTransition(transition) {
     super.willTransition(...arguments);
 
-    if (
-      transition.targetName === "preferences.second-factor" ||
+    // NOTE: Matches the should_enforce_2fa? and disqualified_from_2fa_enforcement
+    // methods in ApplicationController.
+    const enforcing2fa =
+      (this.siteSettings.enforce_second_factor === "staff" &&
+        this.currentUser.staff) ||
+      this.siteSettings.enforce_second_factor === "all";
+
+    const disqualifiedFrom2faEnforcement =
       !this.currentUser ||
       this.currentUser.is_anonymous ||
       this.currentUser.second_factor_enabled ||
-      (this.siteSettings.enforce_second_factor === "staff" &&
-        !this.currentUser.staff) ||
-      this.siteSettings.enforce_second_factor === "no"
+      (!this.siteSettings.enforce_second_factor_on_external_auth &&
+        this.currentUser.login_method === "oauth");
+
+    if (
+      transition.targetName === "preferences.second-factor" ||
+      disqualifiedFrom2faEnforcement ||
+      !enforcing2fa
     ) {
       return true;
     }
