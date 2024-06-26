@@ -39,12 +39,5 @@ export default {
         }
       }
     }
-
-    for (let [locale, values] of Object.entries(I18n._mfOverrides || {})) {
-      for (let [key, value] of Object.entries(values)) {
-        key = key.replace(/^[a-z_]*js\./, "");
-        I18n.mf_messages.addMessages(value, locale, [key]);
-      }
-    }
   },
 };

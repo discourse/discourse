@@ -138,12 +138,27 @@ module JsLocaleHelper
     require "messageformat"
 
     message_formats =
-      I18n.fallbacks[locale].each_with_object({}) do |l, hash|
-        translations = translations_for(l, no_fallback: true)
-        hash[l.to_s.dasherize] = remove_message_formats!(translations, l)
-      end
+      I18n.fallbacks[locale]
+        .each_with_object({}) do |l, hash|
+          translations = translations_for(l, no_fallback: true)
+          hash[l.to_s.dasherize] = remove_message_formats!(translations, l).merge(
+            TranslationOverride
+              .mf_locales(l)
+              .pluck(:translation_key, :value)
+              .to_h
+              .transform_keys { _1.sub(/^[a-z_]*js\./, "") },
+          )
+        end
+        .compact_blank
+    compiled = MessageFormat.compile(message_formats.keys, message_formats)
 
-    MessageFormat.compile(I18n.fallbacks[locale].map(&:to_s).map(&:dasherize), message_formats)
+    <<~JS
+      import Messages from '@messageformat/runtime/messages';
+      #{compiled.sub("export default", "const msgData =")};
+      const messages = new Messages(msgData, "#{locale.to_s.dasherize}");
+      messages.defaultLocale = "en";
+      globalThis.I18n._mf_messages = messages;
+    JS
   end
 
   def self.output_locale(locale)
@@ -177,51 +192,25 @@ module JsLocaleHelper
   end
 
   def self.output_client_overrides(main_locale)
-    all_overrides = {}
-    has_overrides = false
-
-    I18n.fallbacks[main_locale].each do |locale|
-      overrides =
-        all_overrides[locale] = TranslationOverride
-          .where(locale: locale)
-          .where("translation_key LIKE 'js.%' OR translation_key LIKE 'admin_js.%'")
-          .pluck(:translation_key, :value, :compiled_js)
-
-      has_overrides ||= overrides.present?
-    end
-
-    return "" if !has_overrides
-
-    result = +"I18n._overrides = {};"
-    existing_keys = Set.new
-    message_formats =
-      all_overrides.each_with_object({}) { |(locale, _), hash| hash[locale.to_s.dasherize] = {} }
-
-    all_overrides.each do |locale, overrides|
-      translations = {}
-
-      overrides.each do |key, value, compiled_js|
-        next if existing_keys.include?(key)
-        existing_keys << key
-
-        if key.end_with?("_MF")
-          message_formats[locale.to_s.dasherize][key] = value
-        else
-          translations[key] = value
+    locales = I18n.fallbacks[main_locale]
+    all_overrides =
+      locales
+        .each_with_object({}) do |locale, overrides|
+          overrides[locale] = TranslationOverride
+            .client_locales(locale)
+            .pluck(:translation_key, :value)
+            .to_h
         end
-      end
+        .compact_blank
 
-      result << "I18n._overrides['#{locale}'] = #{translations.to_json};" if translations.present?
+    return "" if all_overrides.blank?
+
+    if all_overrides.size == 2
+      all_overrides[locales.last].except!(*all_overrides[locales.first].keys)
+      all_overrides.compact_blank!
     end
 
-    message_formats.compact_blank!
-
-    require "messageformat"
-    compiled = MessageFormat.compile(message_formats.keys, message_formats)
-    compiled.sub!("export default", "const messages =")
-    result << compiled << ";\n"
-    result << "I18n._mfOverrides = messages;"
-    result
+    "I18n._overrides = #{all_overrides.to_json};"
   end
 
   def self.output_extra_locales(bundle, locale)
