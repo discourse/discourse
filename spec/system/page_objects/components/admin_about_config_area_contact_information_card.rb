@@ -17,13 +17,13 @@ module PageObjects
 
       def site_contact_user_selector
         PageObjects::Components::SelectKit.new(
-          ".contact-information-section .site-contact-username-input .user-chooser",
+          ".admin-config-area-about__contact-information-section .site-contact-username-input .user-chooser",
         )
       end
 
       def site_contact_group_selector
         PageObjects::Components::SelectKit.new(
-          ".contact-information-section .site-contact-group-input .group-chooser",
+          ".admin-config-area-about__contact-information-section .site-contact-group-input .group-chooser",
         )
       end
 
@@ -38,7 +38,7 @@ module PageObjects
       end
 
       def card
-        find(".admin-config-area-card.contact-information-section")
+        find(".admin-config-area-about__contact-information-section")
       end
     end
   end

@@ -30,7 +30,7 @@ module PageObjects
       end
 
       def card
-        find(".admin-config-area-card.general-settings-section")
+        find(".admin-config-area-about__general-settings-section")
       end
     end
   end

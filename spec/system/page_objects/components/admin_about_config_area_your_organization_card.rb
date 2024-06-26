@@ -26,7 +26,7 @@ module PageObjects
       end
 
       def card
-        find(".admin-config-area-card.your-organization-section")
+        find(".admin-config-area-about__your-organization-section")
       end
     end
   end

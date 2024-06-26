@@ -60,7 +60,7 @@ export default class AdminConfigAreasAbout extends Component {
         <AdminConfigAreaCard
           @heading="admin.config_areas.about.general_settings"
           @primaryActionLabel="admin.config_areas.about.update"
-          class="general-settings-section"
+          class="admin-config-area-about__general-settings-section"
         >
           <AdminConfigAreasAboutGeneralSettings
             @generalSettings={{this.generalSettings}}
@@ -70,7 +70,7 @@ export default class AdminConfigAreasAbout extends Component {
         <AdminConfigAreaCard
           @heading="admin.config_areas.about.contact_information"
           @primaryActionLabel="admin.config_areas.about.update"
-          class="contact-information-section"
+          class="admin-config-area-about__contact-information-section"
         >
           <AdminConfigAreasAboutContactInformation
             @contactInformation={{this.contactInformation}}
@@ -80,7 +80,7 @@ export default class AdminConfigAreasAbout extends Component {
         <AdminConfigAreaCard
           @heading="admin.config_areas.about.your_organization"
           @primaryActionLabel="admin.config_areas.about.update"
-          class="your-organization-section"
+          class="admin-config-area-about__your-organization-section"
         >
           <AdminConfigAreasAboutYourOrganization
             @yourOrganization={{this.yourOrganization}}
