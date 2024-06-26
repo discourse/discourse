@@ -83,9 +83,9 @@ class Middleware::RequestTracker
 
           if data[:topic_id].present? && data[:current_user_id].present?
             TopicsController.defer_topic_view(
-              topic_id: data[:topic_id],
-              ip: data[:request_remote_ip],
-              user_id: data[:current_user_id],
+              data[:topic_id],
+              data[:request_remote_ip],
+              data[:current_user_id],
             )
           end
         end
@@ -99,11 +99,7 @@ class Middleware::RequestTracker
           ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
 
           if data[:topic_id].present?
-            TopicsController.defer_topic_view(
-              topic_id: data[:topic_id],
-              ip: data[:request_remote_ip],
-              user_id: nil,
-            )
+            TopicsController.defer_topic_view(data[:topic_id], data[:request_remote_ip])
           end
         end
       end
@@ -118,9 +114,9 @@ class Middleware::RequestTracker
 
         if data[:topic_id].present? && data[:current_user_id].present?
           TopicsController.defer_topic_view(
-            topic_id: data[:topic_id],
-            ip: data[:request_remote_ip],
-            user_id: data[:current_user_id],
+            data[:topic_id],
+            data[:request_remote_ip],
+            data[:current_user_id],
           )
         end
       elsif !SiteSetting.login_required
@@ -128,11 +124,7 @@ class Middleware::RequestTracker
         ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
 
         if data[:topic_id].present?
-          TopicsController.defer_topic_view(
-            topic_id: data[:topic_id],
-            ip: data[:request_remote_ip],
-            user_id: nil,
-          )
+          TopicsController.defer_topic_view(data[:topic_id], data[:request_remote_ip])
         end
       end
     end
@@ -226,6 +218,7 @@ class Middleware::RequestTracker
             err,
             message: "RequestTracker.get_data failed with a topic routing error",
           )
+          nil
         end
       end
 
@@ -234,17 +227,19 @@ class Middleware::RequestTracker
     #
     # We only care about this for topic views, other pageviews it's enough to know if the user is
     # logged in or not, and we have separate pageview tracking for API views.
-    if is_topic_view
-      begin
-        current_user_id = (auth_cookie&.[](:user_id) || CurrentUser.lookup_from_env(env)&.id)
-      rescue Discourse::InvalidAccess => err
-        # This error is raised when the API key is invalid, no need to stop the show.
-        Discourse.warn_exception(
-          err,
-          message: "RequestTracker.get_data failed with an invalid API key error",
-        )
+    current_user_id =
+      if is_topic_view
+        begin
+          (auth_cookie&.[](:user_id) || CurrentUser.lookup_from_env(env)&.id)
+        rescue Discourse::InvalidAccess => err
+          # This error is raised when the API key is invalid, no need to stop the show.
+          Discourse.warn_exception(
+            err,
+            message: "RequestTracker.get_data failed with an invalid API key error",
+          )
+          nil
+        end
       end
-    end
 
     h = {
       status: status,
