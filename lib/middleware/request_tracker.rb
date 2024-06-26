@@ -283,7 +283,7 @@ class Middleware::RequestTracker
     topic_id = nil
 
     if is_topic_view
-      path = request.path
+      path = request.path.sub(Discourse.base_path, "")
       topic_id = topic_id_from_path(path, request.request_method)
     end
 
