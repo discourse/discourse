@@ -42,7 +42,7 @@ RSpec.describe AdminDashboardData do
   end
 
   describe "#problem_message_check" do
-    let(:key) { "new_key" }
+    let(:key) { AdminDashboardData.problem_messages.first }
 
     after { described_class.clear_problem_message(key) }
 
