@@ -7,50 +7,38 @@ import AdminConfigAreasAboutYourOrganization from "admin/components/admin-config
 
 export default class AdminConfigAreasAbout extends Component {
   get generalSettings() {
-    const hash = {};
-
-    hash.title = this.#lookupSettingFromData("title");
-    hash.siteDescription = this.#lookupSettingFromData("site_description");
-    hash.extendedSiteDescription = this.#lookupSettingFromData(
-      "extended_site_description"
-    );
-    hash.aboutBannerImage = this.#lookupSettingFromData("about_banner_image");
-
-    return hash;
+    return {
+      title: this.#lookupSettingFromData("title"),
+      siteDescription: this.#lookupSettingFromData("site_description"),
+      extendedSiteDescription: this.#lookupSettingFromData(
+        "extended_site_description"
+      ),
+      aboutBannerImage: this.#lookupSettingFromData("about_banner_image"),
+    };
   }
 
   get contactInformation() {
-    const hash = {};
-
-    hash.communityOwner = this.#lookupSettingFromData("community_owner");
-    hash.contactEmail = this.#lookupSettingFromData("contact_email");
-    hash.contactURL = this.#lookupSettingFromData("contact_url");
-    hash.contactUsername = this.#lookupSettingFromData("site_contact_username");
-    hash.contactGroupName = this.#lookupSettingFromData(
-      "site_contact_group_name"
-    );
-
-    return hash;
+    return {
+      communityOwner: this.#lookupSettingFromData("community_owner"),
+      contactEmail: this.#lookupSettingFromData("contact_email"),
+      contactURL: this.#lookupSettingFromData("contact_url"),
+      contactUsername: this.#lookupSettingFromData("site_contact_username"),
+      contactGroupName: this.#lookupSettingFromData("site_contact_group_name"),
+    };
   }
 
   get yourOrganization() {
-    const hash = {};
-
-    hash.companyName = this.#lookupSettingFromData("company_name");
-    hash.governingLaw = this.#lookupSettingFromData("governing_law");
-    hash.cityForDisputes = this.#lookupSettingFromData("city_for_disputes");
-
-    return hash;
+    return {
+      companyName: this.#lookupSettingFromData("company_name"),
+      governingLaw: this.#lookupSettingFromData("governing_law"),
+      cityForDisputes: this.#lookupSettingFromData("city_for_disputes"),
+    };
   }
 
   saveCallback() {}
 
   #lookupSettingFromData(name) {
-    for (const setting of this.args.data) {
-      if (setting.setting === name) {
-        return setting;
-      }
-    }
+    return this.args.data.findBy("setting", name);
   }
 
   <template>
