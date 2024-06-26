@@ -193,7 +193,14 @@ class Middleware::RequestTracker
 
     # Only a small handful of routes will count for topic views, we need to check
     # the path/referrer to determine this.
-    is_topic_view, topic_id = extract_topic_params(env, request, has_deferred_track_header:)
+    is_topic_view, topic_id =
+      (
+        if has_deferred_track_header
+          extract_topic_params_deferred_track(env, request)
+        else
+          extract_topic_params_explicit_track(env, request)
+        end
+      )
 
     # Auth cookie can be used to find the ID for logged in users, but API calls must look up the
     # current user based on env variables.
@@ -259,39 +266,50 @@ class Middleware::RequestTracker
     h
   end
 
-  def self.extract_topic_params(env, request, has_deferred_track_header: false)
-    is_topic_view =
-      if has_deferred_track_header
-        request.referrer&.start_with?("#{Discourse.base_url}/t/")
-      else
-        request.path.start_with?("#{Discourse.base_path}/t/")
-      end
+  def self.extract_topic_params_deferred_track(env, request)
+    is_topic_view = request.referer&.start_with?("#{Discourse.base_url}/t/")
+    topic_id = nil
 
-    topic_id =
-      if is_topic_view
-        path =
-          (
-            if has_deferred_track_header
-              request.referrer.gsub(Discourse.base_url, "")
-            else
-              request.path
-            end
-          )
-        begin
-          topic_params =
-            Rails.application.routes.recognize_path(path, method: env["REQUEST_METHOD"])
-          (topic_params[:topic_id] || topic_params[:id])&.to_i
-        rescue ActionController::RoutingError => err
-          # We don't want to stop the whole request because of a routing error
-          Discourse.warn_exception(
-            err,
-            message: "RequestTracker.get_data failed with a topic routing error",
-          )
-          nil
-        end
-      end
+    if is_topic_view
+      path = request.referer.gsub(Discourse.base_url, "")
+      topic_id = topic_id_from_path(path, "GET")
+    end
 
     [is_topic_view, topic_id]
+  end
+
+  def self.extract_topic_params_explicit_track(env, request)
+    is_topic_view = request.path.start_with?("#{Discourse.base_path}/t/")
+    topic_id = nil
+
+    if is_topic_view
+      path = request.path
+      topic_id = topic_id_from_path(path, request.request_method)
+    end
+
+    [is_topic_view, topic_id]
+  end
+
+  # Method is important to pass in, because when we are doing a deferred
+  # view we are relying on the message bus poll request, which is a GET,
+  # but at all other times we want to use the real request method. If we
+  # don't use the correct method, Rails will fail to recognize the route.
+  def self.topic_id_from_path(path, method)
+    begin
+      topic_params = Rails.application.routes.recognize_path(path, method: method)
+      (topic_params[:topic_id] || topic_params[:id])&.to_i
+    rescue ActionController::RoutingError => err
+      # We don't want to stop the whole request because of a routing error
+      Discourse.warn_exception(
+        err,
+        message: "RequestTracker.get_data failed with a topic routing error",
+      )
+
+      # This is super hard to find if in testing, we should still raise in this case.
+      raise err if Rails.env.test?
+
+      nil
+    end
   end
 
   def log_request_info(env, result, info, request = nil)
