@@ -88,4 +88,16 @@ module("Integration | Component | site-setting", function (hooks) {
       "jpg, jpeg, png, gif, heic, heif, webp, avif, svg"
     );
   });
+
+  test("prevents decimal in integer setting input", async function (assert) {
+    this.set("setting", {
+      setting: "suggested_topics_unread_max_days_old",
+      value: "90",
+      type: "integer",
+    });
+
+    await render(hbs`<SiteSetting @setting={{this.setting}} />`);
+    await fillIn(query(".input-setting-integer"), "90.5");
+    assert.strictEqual(query(".input-setting-integer").value, "90");
+  });
 });
