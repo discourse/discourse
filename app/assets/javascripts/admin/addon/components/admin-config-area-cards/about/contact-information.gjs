@@ -165,7 +165,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
     <DButton
       @label="admin.config_areas.about.update"
       @action={{this.save}}
-      class="btn-primary save-card"
+      class="btn-primary admin-config-area-card__btn-save"
     />
   </template>
 }

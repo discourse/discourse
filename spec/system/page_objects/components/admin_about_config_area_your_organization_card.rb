@@ -16,7 +16,7 @@ module PageObjects
       end
 
       def save_button
-        card.find(".btn-primary.save-card")
+        card.find(".btn-primary.admin-config-area-card__btn-save")
       end
 
       def has_saved_successfully?
