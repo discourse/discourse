@@ -8,13 +8,14 @@ import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import i18n from "discourse-common/helpers/i18n";
+import I18n from "discourse-i18n";
 import GroupChooser from "select-kit/components/group-chooser";
 import UserChooser from "select-kit/components/user-chooser";
 
 export default class AdminConfigAreasAboutContactInformation extends Component {
   @service site;
+  @service toasts;
 
-  @tracked showSavedAlert = false;
   @tracked
   contactUsername = this.args.contactInformation.contactUsername.value || null;
   @tracked
@@ -55,7 +56,6 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
 
   @action
   async save() {
-    this.showSavedAlert = false;
     try {
       await ajax("/admin/config/about.json", {
         type: "PUT",
@@ -69,7 +69,12 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
           },
         },
       });
-      this.showSavedAlert = true;
+      this.toasts.success({
+        duration: 3000,
+        data: {
+          message: I18n.t("admin.config_areas.about.saved"),
+        },
+      });
     } catch (err) {
       popupAjaxError(err);
     }
@@ -162,10 +167,5 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
       @action={{this.save}}
       class="btn-primary save-card"
     />
-    {{#if this.showSavedAlert}}
-      <span class="successful-save-alert">{{i18n
-          "admin.config_areas.about.saved"
-        }}</span>
-    {{/if}}
   </template>
 }

@@ -20,7 +20,9 @@ module PageObjects
       end
 
       def has_saved_successfully?
-        card.has_css?(".successful-save-alert")
+        PageObjects::Components::Toasts.new.has_success?(
+          I18n.t("admin_js.admin.config_areas.about.saved"),
+        )
       end
 
       def card

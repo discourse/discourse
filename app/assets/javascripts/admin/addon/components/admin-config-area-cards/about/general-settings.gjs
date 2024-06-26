@@ -1,16 +1,17 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DEditor from "discourse/components/d-editor";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import i18n from "discourse-common/helpers/i18n";
+import I18n from "discourse-i18n";
 
 export default class AdminConfigAreasAboutGeneralSettings extends Component {
-  @tracked showSavedAlert = false;
+  @service toasts;
 
   name = this.args.generalSettings.title.value;
   summary = this.args.generalSettings.siteDescription.value;
@@ -19,7 +20,6 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
 
   @action
   async save() {
-    this.showSavedAlert = false;
     try {
       await ajax("/admin/config/about.json", {
         type: "PUT",
@@ -32,7 +32,12 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
           },
         },
       });
-      this.showSavedAlert = true;
+      this.toasts.success({
+        duration: 3000,
+        data: {
+          message: I18n.t("admin.config_areas.about.saved"),
+        },
+      });
     } catch (err) {
       popupAjaxError(err);
     }
@@ -90,10 +95,5 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
       @action={{this.save}}
       class="btn-primary save-card"
     />
-    {{#if this.showSavedAlert}}
-      <span class="successful-save-alert">{{i18n
-          "admin.config_areas.about.saved"
-        }}</span>
-    {{/if}}
   </template>
 }
