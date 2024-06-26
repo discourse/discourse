@@ -15,10 +15,6 @@ export default class Contents extends Component {
   @service header;
   @service sidebarState;
 
-  get topicPresent() {
-    return !!this.header.topic;
-  }
-
   get sidebarIcon() {
     if (this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu) {
       return "discourse-sidebar";
@@ -31,7 +27,7 @@ export default class Contents extends Component {
     <div class="contents">
       <PluginOutlet
         @name="header-contents__before"
-        @outletArgs={{hash topic=this.header.topic}}
+        @outletArgs={{hash topic=this.header.showTopic}}
       />
       {{#if this.site.desktopView}}
         {{#if @sidebarEnabled}}
@@ -45,11 +41,11 @@ export default class Contents extends Component {
 
       <div class="home-logo-wrapper-outlet">
         <PluginOutlet @name="home-logo-wrapper">
-          <HomeLogo @minimized={{this.topicPresent}} />
+          <HomeLogo @minimized={{this.header.showTopic}} />
         </PluginOutlet>
       </div>
 
-      {{#if this.header.topic}}
+      {{#if this.header.showTopic}}
         <TopicInfo @topic={{this.header.topic}} />
       {{else if
         (and
