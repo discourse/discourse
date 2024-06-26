@@ -216,8 +216,17 @@ class Middleware::RequestTracker
               request.path
             end
           )
-        topic_params = Rails.application.routes.recognize_path(path)
-        (topic_params[:topic_id] || topic_params[:id])&.to_i
+        begin
+          topic_params =
+            Rails.application.routes.recognize_path(path, method: env["REQUEST_METHOD"])
+          (topic_params[:topic_id] || topic_params[:id])&.to_i
+        rescue ActionController::RoutingError => err
+          # We don't want to stop the whole request because of a routing error
+          Discourse.warn_exception(
+            err,
+            message: "RequestTracker.get_data failed with a topic routing error",
+          )
+        end
       end
 
     # Auth cookie can be used to find the ID for logged in users, but API calls must look up the
@@ -226,7 +235,15 @@ class Middleware::RequestTracker
     # We only care about this for topic views, other pageviews it's enough to know if the user is
     # logged in or not, and we have separate pageview tracking for API views.
     if is_topic_view
-      current_user_id = (auth_cookie&.[](:user_id) || CurrentUser.lookup_from_env(env)&.id)
+      begin
+        current_user_id = (auth_cookie&.[](:user_id) || CurrentUser.lookup_from_env(env)&.id)
+      rescue Discourse::InvalidAccess => err
+        # This error is raised when the API key is invalid, no need to stop the show.
+        Discourse.warn_exception(
+          err,
+          message: "RequestTracker.get_data failed with an invalid API key error",
+        )
+      end
     end
 
     h = {
@@ -279,11 +296,11 @@ class Middleware::RequestTracker
     data =
       begin
         self.class.get_data(env, result, info, request)
-      rescue StandardError => e
-        Discourse.warn_exception(e, message: "RequestTracker.get_data failed")
+      rescue StandardError => err
+        Discourse.warn_exception(err, message: "RequestTracker.get_data failed")
 
         # This is super hard to find if in testing, we should still raise in this case.
-        raise e if Rails.env.test?
+        raise err if Rails.env.test?
 
         nil
       end
