@@ -1,10 +1,12 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DEditor from "discourse/components/d-editor";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
+import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import i18n from "discourse-common/helpers/i18n";
@@ -43,25 +45,19 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
     }
   }
 
-  @action
-  onNameChange(event) {
-    this.name = event.target.value;
-  }
-
-  @action
-  onSummaryChange(event) {
-    this.summary = event.target.value;
-  }
-
   <template>
     <div class="control-group community-name-input">
       <label>{{i18n "admin.config_areas.about.community_name"}}</label>
-      <input {{on "input" this.onNameChange}} type="text" value={{this.name}} />
+      <input
+        {{on "input" (withEventValue (fn (mut this.name)))}}
+        type="text"
+        value={{this.name}}
+      />
     </div>
     <div class="control-group community-summary-input">
       <label>{{i18n "admin.config_areas.about.community_summary"}}</label>
       <input
-        {{on "input" this.onSummaryChange}}
+        {{on "input" (withEventValue (fn (mut this.summary)))}}
         type="text"
         value={{this.summary}}
       />

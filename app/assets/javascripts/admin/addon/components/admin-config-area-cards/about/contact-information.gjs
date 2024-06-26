@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import i18n from "discourse-common/helpers/i18n";
@@ -27,21 +28,6 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
   contactEmail = this.args.contactInformation.contactEmail.value;
   contactURL = this.args.contactInformation.contactURL.value;
   contactGroupName = this.args.contactInformation.contactGroupName.value;
-
-  @action
-  onCommunityOwnerChange(event) {
-    this.communityOwner = event.target.value;
-  }
-
-  @action
-  onContactEmailChange(event) {
-    this.contactEmail = event.target.value;
-  }
-
-  @action
-  onContactURLChange(event) {
-    this.contactURL = event.target.value;
-  }
 
   @action
   onContactUsernameChange(usernames) {
@@ -92,7 +78,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         {{i18n "admin.config_areas.about.community_owner_help"}}
       </p>
       <input
-        {{on "input" this.onCommunityOwnerChange}}
+        {{on "input" (withEventValue (fn (mut this.communityOwner)))}}
         type="text"
         value={{this.communityOwner}}
       />
@@ -108,7 +94,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         {{i18n "admin.config_areas.about.contact_email_help"}}
       </p>
       <input
-        {{on "input" this.onContactEmailChange}}
+        {{on "input" (withEventValue (fn (mut this.contactEmail)))}}
         type="text"
         value={{this.contactEmail}}
       />
@@ -124,7 +110,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         {{i18n "admin.config_areas.about.contact_url_help"}}
       </p>
       <input
-        {{on "input" this.onContactURLChange}}
+        {{on "input" (withEventValue (fn (mut this.contactURL)))}}
         type="text"
         value={{this.contactURL}}
       />
