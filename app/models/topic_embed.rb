@@ -122,7 +122,7 @@ class TopicEmbed < ActiveRecord::Base
         end
 
         existing_tag_names = post.topic.tags.pluck(:name).sort
-        incoming_tag_names = Array(tags).map(&:name).sort
+        incoming_tag_names = Array(tags).map { |tag| tag.respond_to?(:name) ? tag.name : tag }.sort
 
         tags_changed = existing_tag_names != incoming_tag_names
 
