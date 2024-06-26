@@ -22,9 +22,4 @@ export default class AdminConfigAboutRoute extends Route {
       },
     });
   }
-
-  setupController(controller, model) {
-    super.setupController(...arguments);
-    controller.set("model", model);
-  }
 }
