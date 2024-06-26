@@ -258,6 +258,8 @@ RSpec.describe Middleware::RequestTracker do
         )
       end
 
+      use_redis_snapshotting
+
       def log_topic_view(authenticated: false, deferred: false)
         headers = { "HTTP_REFERER" => topic.url, "action_dispatch.remote_ip" => "127.0.0.1" }
 
@@ -268,7 +270,7 @@ RSpec.describe Middleware::RequestTracker do
           path = "/message-bus/abcde/poll"
         else
           headers["HTTP_DISCOURSE_TRACK_VIEW"] = "1"
-          path = topic.url
+          path = URI.parse(topic.url).path
         end
 
         data =

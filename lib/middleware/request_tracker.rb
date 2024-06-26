@@ -72,7 +72,7 @@ class Middleware::RequestTracker
       if data[:is_crawler]
         ApplicationRequest.increment!(:page_view_crawler)
         WebCrawlerRequest.increment!(data[:user_agent])
-      elsif data[:has_auth_cookie].present?
+      elsif data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in)
         ApplicationRequest.increment!(:page_view_logged_in_mobile) if data[:is_mobile]
 
@@ -108,7 +108,7 @@ class Middleware::RequestTracker
     # Message-bus requests may include this 'deferred track' header which we use to detect
     # 'real browser' views.
     if data[:deferred_track] && !data[:is_crawler]
-      if data[:has_auth_cookie].present?
+      if data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
 
@@ -191,36 +191,9 @@ class Middleware::RequestTracker
     # see `scripts/pageview.js` and `instance-initializers/page-tracking.js`
     has_deferred_track_header = %w[1 true].include?(env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW"])
 
-    is_topic_view =
-      if has_deferred_track_header
-        request.referrer&.start_with?("#{Discourse.base_url}/t/")
-      else
-        request.path.start_with?("#{Discourse.base_path}/t/")
-      end
-
-    topic_id =
-      if is_topic_view
-        path =
-          (
-            if has_deferred_track_header
-              request.referrer.gsub(Discourse.base_url, "")
-            else
-              request.path
-            end
-          )
-        begin
-          topic_params =
-            Rails.application.routes.recognize_path(path, method: env["REQUEST_METHOD"])
-          (topic_params[:topic_id] || topic_params[:id])&.to_i
-        rescue ActionController::RoutingError => err
-          # We don't want to stop the whole request because of a routing error
-          Discourse.warn_exception(
-            err,
-            message: "RequestTracker.get_data failed with a topic routing error",
-          )
-          nil
-        end
-      end
+    # Only a small handful of routes will count for topic views, we need to check
+    # the path/referrer to determine this.
+    is_topic_view, topic_id = extract_topic_params(env, request, has_deferred_track_header:)
 
     # Auth cookie can be used to find the ID for logged in users, but API calls must look up the
     # current user based on env variables.
@@ -284,6 +257,41 @@ class Middleware::RequestTracker
     end
 
     h
+  end
+
+  def self.extract_topic_params(env, request, has_deferred_track_header: false)
+    is_topic_view =
+      if has_deferred_track_header
+        request.referrer&.start_with?("#{Discourse.base_url}/t/")
+      else
+        request.path.start_with?("#{Discourse.base_path}/t/")
+      end
+
+    topic_id =
+      if is_topic_view
+        path =
+          (
+            if has_deferred_track_header
+              request.referrer.gsub(Discourse.base_url, "")
+            else
+              request.path
+            end
+          )
+        begin
+          topic_params =
+            Rails.application.routes.recognize_path(path, method: env["REQUEST_METHOD"])
+          (topic_params[:topic_id] || topic_params[:id])&.to_i
+        rescue ActionController::RoutingError => err
+          # We don't want to stop the whole request because of a routing error
+          Discourse.warn_exception(
+            err,
+            message: "RequestTracker.get_data failed with a topic routing error",
+          )
+          nil
+        end
+      end
+
+    [is_topic_view, topic_id]
   end
 
   def log_request_info(env, result, info, request = nil)
