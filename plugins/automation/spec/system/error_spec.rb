@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "DiscourseAutomation | error", type: :system, js: true do
+describe "DiscourseAutomation | error", type: :system do
   fab!(:admin)
 
   before do
