@@ -413,8 +413,8 @@ basic:
     default: false
   extended_site_description:
     default: ""
-    client: true
     max: 10_000
+    hidden: true
   extended_site_description_cooked:
     default: ""
     hidden: true
@@ -422,9 +422,11 @@ basic:
   about_banner_image:
     default: ""
     type: upload
+    hidden: true
   community_owner:
     default: ""
     max: 300
+    hidden: true
 login:
   invite_only:
     refresh: true
