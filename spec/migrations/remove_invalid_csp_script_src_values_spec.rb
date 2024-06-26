@@ -28,7 +28,7 @@ RSpec.describe RemoveInvalidCspScriptSrcSiteSettingValues do
       )
     end
 
-    it "does not update value" do
+    it "does not update rows with the default empty string value" do
       site_setting.update!(value: "")
       silence_stdout { migrate }
       expect(site_setting.reload.value).to eq ""
