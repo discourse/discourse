@@ -561,6 +561,20 @@ RSpec.describe Email::Sender do
       )
     end
 
+    context "with a plugin" do
+      before { DiscoursePluginRegistry.clear_modifiers! }
+      after { DiscoursePluginRegistry.clear_modifiers! }
+
+      it "allows plugins to control whether attachments are included" do
+        SiteSetting.email_total_attachment_size_limit_kb = 10_000
+
+        Plugin::Instance.new.register_modifier(:should_add_email_attachments) { false }
+
+        Email::Sender.new(message, :valid_type).send
+        expect(message.attachments.size).to eq(0)
+      end
+    end
+
     it "adds only non-image uploads as attachments to the email" do
       SiteSetting.email_total_attachment_size_limit_kb = 10_000
       Email::Sender.new(message, :valid_type).send
