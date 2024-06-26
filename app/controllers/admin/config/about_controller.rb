@@ -40,7 +40,12 @@ class Admin::Config::AboutController < Admin::AdminController
         UpdateSiteSetting,
         setting_name: name,
         new_value: value,
-        allow_changing_hidden: name == :extended_site_description_cooked,
+        allow_changing_hidden: %i[
+          extended_site_description
+          extended_site_description_cooked
+          about_banner_image
+          community_owner
+        ].include?(name),
       )
     end
     render json: success_json
