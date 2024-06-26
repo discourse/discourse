@@ -299,7 +299,7 @@ RSpec.describe TopicEmbed do
       end
     end
 
-    context "when creating with string tags" do
+    context "when importing a topic embed with string tags" do
       fab!(:tag1) { Fabricate(:tag, name: "interesting") }
       fab!(:tag2) { Fabricate(:tag, name: "article") }
       let(:tags) { [tag1.name, tag2.name] }
@@ -310,7 +310,7 @@ RSpec.describe TopicEmbed do
       end
     end
 
-    context "when updating an existing topic with string tags" do
+    context "when updating an existing topic embed with string tags" do
       fab!(:tag1) { Fabricate(:tag, name: "interesting") }
       fab!(:tag2) { Fabricate(:tag, name: "article") }
       let(:tags) { [tag1, tag2] }
