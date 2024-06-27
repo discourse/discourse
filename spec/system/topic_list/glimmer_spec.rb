@@ -4,14 +4,15 @@ describe "glimmer topic list", type: :system do
   fab!(:user)
   fab!(:group) { Fabricate(:group, users: [user]) }
 
+  let(:topic_list) { PageObjects::Components::TopicList.new }
+  let(:topic_page) { PageObjects::Pages::Topic.new }
+
   before do
     SiteSetting.experimental_glimmer_topic_list_groups = group.name
     sign_in(user)
   end
 
   describe "/latest" do
-    let(:topic_list) { PageObjects::Components::TopicList.new }
-
     it "shows the list" do
       Fabricate.times(5, :topic)
       visit("/latest")
@@ -21,8 +22,6 @@ describe "glimmer topic list", type: :system do
   end
 
   describe "/new" do
-    let(:topic_list) { PageObjects::Components::TopicList.new }
-
     it "shows the list and the toggle buttons" do
       SiteSetting.experimental_new_new_view_groups = group.name
       Fabricate(:topic)
@@ -55,8 +54,6 @@ describe "glimmer topic list", type: :system do
   end
 
   describe "suggested topics" do
-    let(:topic_page) { PageObjects::Pages::Topic.new }
-
     it "shows the list" do
       topic1 = Fabricate(:post).topic
       topic2 = Fabricate(:post).topic
@@ -71,6 +68,35 @@ describe "glimmer topic list", type: :system do
       expect(
         find("[data-topic-id='#{new_reply.id}'] a.badge-notification.unread-posts").text,
       ).to eq("3")
+    end
+  end
+
+  describe "topic highlighting" do
+    # TODO: Those require `Capybara.disable_animation = false`
+
+    skip "highlights newly received topics" do
+      Fabricate(:read_topic, current_user: user)
+
+      visit("/latest")
+
+      new_topic = Fabricate(:post).topic
+      TopicTrackingState.publish_new(new_topic)
+
+      topic_list.had_new_topics_alert?
+      topic_list.click_new_topics_alert
+
+      topic_list.has_highlighted_topic?(new_topic)
+    end
+
+    skip "highlights the previous topic after navigation" do
+      topic = Fabricate(:read_topic, current_user: user)
+
+      visit("/latest")
+      topic_list.visit_topic(topic)
+      expect(topic_page).to have_topic_title(topic.title)
+      page.go_back
+
+      topic_list.has_highlighted_topic?(topic)
     end
   end
 end

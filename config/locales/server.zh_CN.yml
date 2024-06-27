@@ -273,6 +273,7 @@ zh_CN:
         other: 长度错误（应为 %{count} 个字符）
       other_than: "必须不为 %{count}"
       auth_overrides_username: "由于启用了 `auth_overrides_username` 设置，因此需要在身份验证服务提供商处更新用户名。"
+      required: "必须存在"
     template:
       body: ! "以下字段存在问题："
       header:
@@ -296,7 +297,6 @@ zh_CN:
       secure_uploads_requirements: "在启用安全上传之前，必须先启用 S3 上传和 S3 ACL。"
       s3_use_acls_requirements: "启用安全上传时，您必须启用 S3 ACL。"
       share_quote_facebook_requirements: "您必须设置 Facebook 应用 ID 才能为 Facebook 启用引用共享。"
-      second_factor_cannot_enforce_with_socials: "您无法在启用社交登录的情况下强制执行双重身份验证。您必须首先通过以下方式禁用登录：%{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "如果禁用本地登录，则无法强制执行双重身份验证。"
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "如果启用了 DiscourseConnect，则无法强制执行双重身份验证。"
       local_login_cannot_be_disabled_if_second_factor_enforced: "如果强制执行双重身份验证，则无法禁用本地登录。先禁用强制双重身份验证，然后再禁用本地登录。"
@@ -1586,7 +1586,8 @@ zh_CN:
     email_custom_headers: "以 | 分隔的自定义电子邮件标头列表。"
     email_subject: "标准电子邮件的可自定义主题格式。请参阅 <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "向用户提供有关他们无法访问特定话题的更多详细信息。注意：这不太安全，因为用户会知道 URL 是否链接到有效话题。"
-    enforce_second_factor: "要求用户在访问 Discourse UI 前启用双重身份验证。选择“所有”，对所有用户强制执行。选择“管理人员”，仅对管理人员用户强制执行。此设置不影响 API 或“DiscourseConnect 提供商”身份验证。"
+    enforce_second_factor: "要求用户在访问 Discourse 界面之前启用双重身份验证。此设置不会影响 API 或“DiscourseConnect提供商” 身份验证。如果启用了enforce_second_factor_on_external_auth 设置，用户在设置了双重身份验证后将无法使用外部身份验证提供商登录。"
+    enforce_second_factor_on_external_auth: "要求用户始终使用双因素身份验证。启用后，如果用户启用了双因素身份验证，就无法使用外部身份验证方法（如社交登录）登录。禁用后，用户只需在使用用户名和密码登录时确认双因素身份验证。另请参阅 \"enforce_second_factor \"设置。"
     force_https: "强制您的站点仅使用 HTTPS。警告：在您验证 HTTPS 已完全设置并在任何地方都可以正常工作之前，请勿启用此功能！您是否检查过您的 CDN、所有社交登录以及任何外部徽标/依赖项，以确保它们都与 HTTPS 兼容？"
     summary_score_threshold: "将帖子包含在“总结此话题”中所需的最低分数"
     summary_posts_required: "启用“总结此话题”之前话题中的最少帖子数。对此设置的更改将在一周内追溯应用。"
@@ -1659,7 +1660,7 @@ zh_CN:
     content_security_policy_report_only: "启用仅限内容安全策略报告 (CSP)"
     content_security_policy_collect_reports: "在 /csp_reports 启用 CSP 违规报告收集"
     content_security_policy_frame_ancestors: "限制谁可以通过 CSP 将此站点嵌入 iframe 中。在<a href='%{base_path}/admin/customize/embedding'>嵌入</a>上控制允许的主机。"
-    content_security_policy_script_src: "其他列入白名单的脚本源。默认情况下包含当前主机和 CDN。请参阅 <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>使用内容安全策略缓解 XSS 攻击。</a> (CSP)。启用 content_security_policy_strict_dynamic 时，主机源将被忽略。"
+    content_security_policy_script_src: "额外的允许的脚本源。默认情况下包括当前主机和 CDN。请参阅 \"<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>使用内容安全策略减轻 XSS 攻击\"。</a> (CSP)。启用严格动态后，其他主机源将被忽略。"
     invalidate_inactive_admin_email_after_days: "在此天数内未访问站点的管理员帐户将需要在登录前重新验证其电子邮件地址。设置为 0 将禁用。"
     include_secure_categories_in_tag_counts: "启用后，一个标签的话题数量将包括所有用户的阅读限制类别中的话题。禁用时，常规用户只会看到所有话题都为公开类别的标签的话题数量。"
     display_personal_messages_tag_counts: "启用后，将显示使用给定标签标记的个人消息的数量。"
@@ -2181,13 +2182,16 @@ zh_CN:
     code_formatting_style: "编辑器中的代码按钮将默认为此代码格式样式"
     max_allowed_message_recipients: "消息中允许的最大收件人数。"
     disable_watched_word_checking_in_user_fields: "禁用用户字段中的关注词检查"
+    watched_words_regular_expressions: "允许使用正则表达式来筛选词汇。如果启用，它会根据单词的大小写将敏感词汇分组。然后，它将所有选定的词汇编译成一个单一的正则表达式，并为常见监控词汇添加词边界。因此，这种基于正则表达式的筛选方法通过支持更复杂的词汇模式，增加了内容审核的控制层。该设置还允许轻松地用所选择的替换文本替换原始文本。"
     enable_diffhtml_preview: "使用 diffHTML 同步预览而不是完全重新呈现的实验性功能"
     enable_fast_edit: "在帖子选择菜单中添加一个按钮以内联编辑小部分内容。"
     enable_quote_copy: "在帖子选择菜单中添加一个按钮，以将选择内容作为 Markdown 引用复制到剪贴板。"
+    old_post_notice_days: "发布通知被视为旧通知的天数。这可以直观地将其与网站上较新的通知区分开来。"
     new_user_notice_tl: "查看新用户帖子通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回访用户帖子通知所需的最低信任级别。"
     returning_users_days: "在用户被视为回访之前应经过的天数。"
     review_media_unless_trust_level: "如果包含嵌入式媒体，管理人员将审核信任级别较低的用户的帖子。"
+    skip_review_media_groups: "如果帖子包含嵌入式媒体，则不属于上述任何组别的用户的帖子将被发送给工作人员审查。管理员和版主创建的帖子始终是允许的。"
     blur_tl0_flagged_posts_media: "模糊被举报的帖子图片以隐藏潜在的 NSFW 内容。"
     enable_page_publishing: "允许管理人员使用自己的样式将话题发布到新 URL。"
     show_published_pages_login_required: "即使需要登录，匿名用户也可以查看已发布的页面。"
@@ -2210,6 +2214,7 @@ zh_CN:
     default_other_enable_defer: "默认启用延迟话题功能。"
     default_other_dynamic_favicon: "在浏览器图标上默认显示新的/更新的话题计数。"
     default_other_skip_new_user_tips: "跳过新用户入门提示和徽章。"
+    default_other_like_notification_frequency: "设置用户默认接收点赞通知的频率。未自定义通知设置的用户将遵循此默认行为。"
     default_topics_automatic_unpin: "当用户到达底部时默认自动取消置顶话题。"
     default_categories_watching: "默认关注的类别列表。"
     default_categories_tracking: "默认跟踪的类别列表。"
@@ -2221,10 +2226,12 @@ zh_CN:
     default_tags_tracking: "默认跟踪的标签列表。"
     default_tags_muted: "默认被设为免打扰的标签列表。"
     default_tags_watching_first_post: "默认将关注每个新话题中的第一个帖子的标签列表。"
+    default_text_size: "指定网站上所有文本元素的默认字体大小。每个用户可根据自己的偏好调整字体大小。"
+    default_title_count_mode: "为网站上显示的页面标题数量选择默认模式。除非单独覆盖，否则这将适用于所有页面。"
     enable_offline_indicator: "检测到用户没有网络连接时，向他们显示一条消息"
     default_sidebar_link_to_filtered_list: "默认情况下，将导航菜单链接设为链接到筛选后的列表。"
     default_sidebar_show_count_of_new_items: "默认情况下，将导航菜单链接设为显示新条目的数量而非徽章的数量。"
-    default_sidebar_switch_panel_position: "边栏开关面板按钮的位置"
+    default_sidebar_switch_panel_position: "侧边栏上用于切换到聊天的按钮的位置"
     retain_web_hook_events_period_days: "保留网络钩子事件记录的天数。"
     retry_web_hook_events: "自动重试失败的网络钩子事件 4 次。重试之间的时间间隔为 1、5、25 和 125 分钟。"
     revoke_api_keys_unused_days: "API 密钥最后一次使用后被自动撤销前的天数（0 表示永不撤销）"
@@ -2233,10 +2240,15 @@ zh_CN:
     min_trust_level_for_user_api_key: |
       生成用户 API 密钥所需的信任级别。<br>
       <b>警告</b>：更改信任级别将阻止信任级别较低的用户通过 Discourse Hub 登录
+    user_api_key_allowed_groups: |
+      生成用户 API 密钥需要组成员资格。<br>
+      <b>警告</b>：更改信任级别将阻止信任级别较低的用户通过 Discourse Hub 登录。<br>
+       管理员和版主可以随时创建用户 API 密钥。
     allowed_user_api_auth_redirects: "用户 API 密钥身份验证重定向的允许 URL。通配符 * 可用于匹配它的任何部分（例如 www.example.com/*）。"
     allowed_user_api_push_urls: "服务器推送到用户 API 的允许 URL"
     revoke_user_api_keys_unused_days: "用户 API 密钥最后一次使用后被自动撤销前的天数（0 表示永不撤销）"
     revoke_user_api_keys_maxlife_days: "用户 API 密钥被自动撤销前的天数（0 表示永不撤销）"
+    tagging_enabled: "启用主题标签？有关更多信息，请参阅 <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Meta</a> 标签管理员指南。"
     min_trust_to_create_tag: "创建标签所需的最低信任级别。"
     max_tags_per_topic: "可应用于话题的最大标签数。"
     enable_max_tags_per_email_subject: "生成电子邮件主题时使用 max_tags_per_email_subject"
@@ -2314,6 +2326,7 @@ zh_CN:
       invalid_reply_by_email_address: "值必须包含 '%{reply_key}' 并且与通知电子邮件不同。"
       invalid_alternative_reply_by_email_addresses: "所有值必须包含 '%{reply_key}' 并且与通知电子邮件不同。"
       invalid_domain_hostname: "不得包括 * 或 ? 字符。"
+      invalid_csp_script_src: "值必须是 \"unsafe-eval \"或 \"wasm-unsafe-eval\"，或者是 \"<hash algorithm>-<base64 value>\"，其中支持的哈希算法是 sha256、sha384 或 sha512。确保输入内容用单引号括起来。"
       pop3_polling_host_is_empty: "在启用 POP3 轮询前，您必须先设置 'pop3 polling host'。"
       pop3_polling_username_is_empty: "在启用 POP3 轮询前，您必须先设置 'pop3 polling username'。"
       pop3_polling_password_is_empty: "在启用 POP3 轮询前，您必须先设置 'pop3 polling password'。"
@@ -2346,6 +2359,7 @@ zh_CN:
         other: "该列表必须恰好包含 %{count} 个值。"
       markdown_linkify_tlds: "您不能包含 '*' 的值。"
       google_oauth2_hd_groups: "在启用此设置之前，您必须配置所有 'google oauth2 hd' 设置。"
+      linkedin_oidc_credentials: "启用此设置前，必须先配置 LinkedIn OIDC 凭据('linkedin_oidc_client_id' 和 'linkedin_oidc_client_secret')。"
       search_tokenize_chinese_enabled: "在启用此设置之前，您必须禁用 'search_tokenize_chinese'。"
       search_tokenize_japanese_enabled: "在启用此设置之前，您必须禁用 'search_tokenize_japanese'。"
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "如果强制执行双重身份验证，则无法启用 DiscourseConnect。"
@@ -2519,7 +2533,6 @@ zh_CN:
     email_too_long: "您提供的电子邮件过长。邮箱名称不得超过 254 个字符，域名不得超过 253 个字符。"
     wrong_invite_code: "您输入的邀请码不正确。"
     reserved_username: "不允许使用该用户名。"
-    missing_user_field: "您尚未完成所有用户字段"
     auth_complete: "身份验证完成。"
     click_to_continue: "点击此处继续。"
     already_logged_in: "抱歉！此邀请面向目前没有帐户的新用户。"
@@ -3028,6 +3041,18 @@ zh_CN:
     bulk_invite_succeeded:
       title: "批量邀请成功"
       subject_template: "批量用户邀请处理成功"
+      text_body_template: |
+        你的批量用户邀请文件已处理， %{sent} 邀请已邮寄， %{skipped} 已跳过，并有 %{warnings} 条警告。
+
+        跳过的电子邮件邀请：
+
+        ```text
+        %{skipped_emails}
+        ```
+
+        ```text
+        %{logs}
+        ```
     bulk_invite_failed:
       title: "批量邀请失败"
       subject_template: "批量用户邀请已被处理，但存在错误"

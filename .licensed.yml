@@ -31,10 +31,6 @@ ignored:
     - timeout # Ruby (default gem)
     - uri # Ruby (default gem)
     - mutex_m # BSD-2-Clause
-    - irb # Ruby (default gem)
-    - rdoc # Ruby (default gem)
-    - reline # Ruby (default gem)
-    - stringio # Ruby (default gem)
 
 reviewed:
   bundler:

@@ -1252,7 +1252,8 @@ sk:
       activity_stream: "Aktivita"
       read: "Prečítané"
       read_help: "Nedávno prečítané témy"
-      preferences: "Nastavenia"
+      preferences:
+        title: "Nastavenia"
       feature_topic_on_profile:
         open_search: "Vyberte novú tému"
         title: "Vyber tému"
@@ -1592,6 +1593,7 @@ sk:
           Dvojfaktorové overenie zvyšuje bezpečnosť vášho účtu tým, že okrem hesla vyžaduje aj jednorazový token. Tokeny je možné generovať na zariadeniach <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> a <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> .
         oauth_enabled_warning: "Upozorňujeme, že prihlásenia do sociálnych sietí budú po povolení dvojfaktorovej autentifikácie vo vašom účte zakázané."
         use: "Použite aplikáciu Authenticator"
+        enforced_with_oauth_notice: "Je potrebné povoliť dvojfaktorové overovanie. Výzva na jeho použitie sa zobrazí len pri prihlasovaní pomocou hesla, nie pri externom overovaní alebo pri prihlasovaní pomocou sociálnych sietí."
         enforced_notice: "Pred prístupom na túto stránku musíte povoliť dvojfaktorovú autentifikáciu."
         disable: "Zakázať"
         disable_confirm: "Ste si istí, že chcete zakázať dvojfaktorovú autentifikáciu?"
@@ -5988,7 +5990,6 @@ sk:
             description: "Odkazy, nejaké tlačidlá, upozornenia a zvýrazňovacie farby."
           quaternary:
             name: "štvrťročne"
-            description: "Navigačné odkazy."
           header_background:
             name: "pozadie hlavičky"
             description: "Farba pozadia hlavičky stránky."
@@ -6890,6 +6891,22 @@ sk:
           add_types_title: "Povoliť rozšírenia %{types}"
           add_types_toast: "%{types} pridané typy súborov"
         mandatory_group: "Skupina je povinná"
+        requires_confirmation_messages:
+          default:
+            prompt: "Zmena tohto nastavenia môže mať pre vašu stránku ďalekosiahle alebo nezamýšľané dôsledky. Ste si istí, že chcete pokračovať?"
+            confirm: "Áno, som si istý/á."
+          min_password_length:
+            prompt: "Chystáte sa zmeniť zásady používania hesiel. Odteraz sa to bude týkať všetkých používateľov, ktorí si menia svoje heslá. Ste si istí, že chcete pokračovať?"
+            confirm: "Áno, aktualizujte zásady používania hesiel"
+          min_admin_password_length:
+            prompt: "Chystáte sa zmeniť zásady používania hesiel. Odteraz sa to bude týkať všetkých administrátorov, ktorí si menia svoje heslá. Ste si istí, že chcete pokračovať?"
+            confirm: "Áno, aktualizujte zásady používania hesiel"
+          password_unique_charactes:
+            prompt: "Chystáte sa zmeniť zásady používania hesiel. Odteraz sa to bude týkať všetkých používateľov, ktorí si menia svoje heslá. Ste si istí, že chcete pokračovať?"
+            confirm: "Áno, aktualizujte zásady používania hesiel"
+          block_common_passwords:
+            prompt: "Chystáte sa zmeniť zásady používania hesiel. Odteraz sa to bude týkať všetkých používateľov, ktorí si menia svoje heslá. Ste si istí, že chcete pokračovať?"
+            confirm: "Áno, aktualizujte zásady používania hesiel"
       badges:
         title: Odznaky
         new_badge: Nový odznak

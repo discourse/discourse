@@ -627,7 +627,7 @@ RSpec.describe "topics" do
                                    type: :integer,
                                  },
                                  primary_group_id: {
-                                   type: %i[string null],
+                                   type: %i[integer null],
                                  },
                                },
                              },
@@ -827,7 +827,7 @@ RSpec.describe "topics" do
                                    type: :integer,
                                  },
                                  primary_group_id: {
-                                   type: %i[string null],
+                                   type: %i[integer null],
                                  },
                                },
                              },
@@ -966,7 +966,7 @@ RSpec.describe "topics" do
                    type: :boolean,
                  },
                  category_id: {
-                   type: %i[string null],
+                   type: %i[integer null],
                  },
                }
 

@@ -259,6 +259,7 @@ zh_TW:
   read_full_topic: "閱讀整個話題"
   private_message_abbrev: "消息"
   rss_description:
+    hot: "熱門話題"
     latest: "最新討論話題"
     top: "熱門討論話題"
     top_all: "最熱門話題"
@@ -1628,7 +1629,6 @@ zh_TW:
     password_too_long: "密碼不能超過 200 個字符。"
     email_too_long: "你輸入的郵件太長了。郵箱名不得超過 254 字元，域名必須不超過 253 字元。"
     reserved_username: "該使用者名不可被使用。"
-    missing_user_field: "你還沒有填寫完所有使用者字段"
     auth_complete: "已完成認證。"
     click_to_continue: "點擊此處繼續。"
     second_factor_title: "兩步驟驗證"

@@ -944,7 +944,8 @@ nb_NO:
       activity_stream: "Aktivitet"
       read: "Lest"
       read_help: "Nylig leste emner"
-      preferences: "Innstillinger"
+      preferences:
+        title: "Innstillinger"
       feature_topic_on_profile:
         open_search: "Velg et nytt emne"
         title: "Velg et emne"
@@ -3947,7 +3948,6 @@ nb_NO:
             description: "Lenker, noen knapper, varsler og effektfarge"
           quaternary:
             name: "kvartær"
-            description: "Navigasjonslenker."
           header_background:
             name: "hodebakgrunn"
             description: "Bakgrunnsfarge i nettstedets hode"

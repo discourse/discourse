@@ -349,6 +349,30 @@ RSpec.describe TopicEmbed do
       end
     end
 
+    context "when importing a topic embed with string tags" do
+      fab!(:tag1) { Fabricate(:tag, name: "interesting") }
+      fab!(:tag2) { Fabricate(:tag, name: "article") }
+      let(:tags) { [tag1.name, tag2.name] }
+
+      it "associates the specified tags with the existing topic" do
+        imported_page = TopicEmbed.import(user, url, title, contents, tags: tags)
+        expect(imported_page.topic.tags).to match_array([tag1, tag2])
+      end
+    end
+
+    context "when updating an existing topic embed with string tags" do
+      fab!(:tag1) { Fabricate(:tag, name: "interesting") }
+      fab!(:tag2) { Fabricate(:tag, name: "article") }
+      let(:tags) { [tag1, tag2] }
+
+      before { TopicEmbed.import(user, url, title, contents, tags: [tag1.name]) }
+
+      it "associates the specified tags with the existing topic" do
+        imported_page = TopicEmbed.import(user, url, title, contents, tags: tags)
+        expect(imported_page.topic.tags).to match_array([tag1, tag2])
+      end
+    end
+
     context "with specified user and tags" do
       fab!(:tag1) { Fabricate(:tag, name: "interesting") }
       fab!(:tag2) { Fabricate(:tag, name: "article") }

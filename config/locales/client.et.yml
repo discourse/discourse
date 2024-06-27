@@ -785,7 +785,8 @@ et:
         to: "kellele"
       activity_stream: "Tegevused"
       read: "Loetud"
-      preferences: "Eelistused"
+      preferences:
+        title: "Eelistused"
       feature_topic_on_profile:
         save: "Salvesta"
         clear:
@@ -3058,7 +3059,6 @@ et:
             description: "Viited, mõned nupud, teavitused ja rõhuvärv."
           quaternary:
             name: "neljanda astme"
-            description: "Navigatsiooniviited"
           header_background:
             name: "päise taust"
             description: "Saidi päise taustavärv."

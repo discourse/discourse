@@ -1103,7 +1103,8 @@ hu:
       activity_stream: "Tevékenység"
       read: "Olvasott"
       read_help: "Nemrég olvasott témák"
-      preferences: "Beállítások"
+      preferences:
+        title: "Beállítások"
       feature_topic_on_profile:
         open_search: "Új téma kiválasztása"
         title: "Téma kiválasztása"
@@ -5368,7 +5369,6 @@ hu:
             description: "Hivatkozások, néhány gomb, értesítések és kiemelő színek."
           quaternary:
             name: "negyedrendű"
-            description: "Navigációs linkek"
           header_background:
             name: "Fejléc háttere"
             description: "Az oldal fejlécének háttérszíne."

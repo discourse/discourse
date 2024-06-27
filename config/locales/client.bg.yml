@@ -1038,7 +1038,8 @@ bg:
       activity_stream: "Активност"
       read: "Прочетени"
       read_help: "Наскоро прочетени теми"
-      preferences: "Настройки"
+      preferences:
+        title: "Настройки"
       feature_topic_on_profile:
         open_search: "Изберете нова тема"
         title: "Изберете тема"
@@ -3783,7 +3784,6 @@ bg:
             description: "Връзки, някои бутони, известия и цветове за акцентиране."
           quaternary:
             name: "четвърти"
-            description: "Връзки за навигация."
           header_background:
             name: "Фон на хедъра"
             description: "Цвят на фона на хедъра на сайта."

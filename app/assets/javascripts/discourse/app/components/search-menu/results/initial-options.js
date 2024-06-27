@@ -135,6 +135,7 @@ export default class InitialOptions extends Component {
   }
 
   userContextType() {
+    this.contextTypeKeyword = "@";
     this.slug = `@${this.search.searchContext.user.username}`;
     this.suffix = I18n.t("search.in_posts_by", {
       username: this.search.searchContext.user.username,

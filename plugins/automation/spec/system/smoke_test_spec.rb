@@ -6,34 +6,6 @@ describe "DiscourseAutomation | smoke test", type: :system, js: true do
   fab!(:badge) { Fabricate(:badge, name: "badge") }
 
   before do
-    I18n.backend.store_translations(
-      :en,
-      {
-        discourse_automation: {
-          scriptables: {
-            test: {
-              title: "Test",
-              description: "Test",
-            },
-            something_about_us: {
-              title: "Something about us.",
-              description: "We rock!",
-            },
-            nothing_about_us: {
-              title: "Nothing about us.",
-              description: "We don't rock!",
-            },
-          },
-          triggerables: {
-            title: "Triggerable",
-            description: "Triggerable",
-            user_first_logged_in: {
-              description: "User first logged in.",
-            },
-          },
-        },
-      },
-    )
     SiteSetting.discourse_automation_enabled = true
     sign_in(admin)
   end

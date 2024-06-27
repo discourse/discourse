@@ -6,8 +6,7 @@ Rails.application.config.to_prepare do
     require "lograge"
 
     if Rails.configuration.multisite
-      Rails.logger.formatter =
-        ActiveSupport::Logger::SimpleFormatter.new.extend(ActiveSupport::TaggedLogging::Formatter)
+      Rails.logger.formatter = ActiveSupport::Logger::SimpleFormatter.new
     end
 
     Rails.application.configure do
@@ -112,8 +111,8 @@ Rails.application.config.to_prepare do
 
         # Remove ActiveSupport::Logger from the chain and replace with Lograge's
         # logger
-        Rails.logger.stop_broadcasting_to(Rails.logger.broadcasts.first)
-        Rails.logger.broadcast_to(config.lograge.logger)
+        Rails.logger.chained.pop
+        Rails.logger.chain(config.lograge.logger)
       end
     end
   end
