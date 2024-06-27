@@ -102,7 +102,7 @@ class BadgeGranter
         user_id: user.id,
         badge_id: badge.id,
       )
-      notification = send_notification(user.id, user.username, user.locale, badge)
+      notification = send_notification(user.id, user.username, user.effective_locale, badge)
 
       DB.exec(<<~SQL, notification_id: notification.id, user_id: user.id, badge_id: badge.id)
         UPDATE user_badges
