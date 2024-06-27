@@ -152,11 +152,11 @@ export default class Form extends Component {
   }
 
   get errors() {
-    const visibleErrors = {};
+    const errors = {};
     for (const [name, field] of this.fields) {
-      visibleErrors[name] = field.visibleErrors;
+      errors[name] = field.errors;
     }
-    return visibleErrors;
+    return errors;
   }
 
   @action

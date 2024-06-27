@@ -29,7 +29,7 @@ export default class FKErrorsSummary extends Component {
                 rel="noopener noreferrer"
                 href={{concat "#control-" field.name}}
               >{{field.title}}</a>:
-              {{this.concatErrors field.visibleErrors}}
+              {{this.concatErrors field.errors}}
             </li>
           {{/each}}
         </ul>

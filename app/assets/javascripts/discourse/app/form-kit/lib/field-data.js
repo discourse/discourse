@@ -3,7 +3,6 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import ValidationParser from "discourse/form-kit/lib/validation-parser";
 import Validator from "discourse/form-kit/lib/validator";
 import uniqueId from "discourse/helpers/unique-id";
-import { bind } from "discourse-common/utils/decorators";
 
 /**
  * Represents field data for a form.
@@ -23,6 +22,10 @@ export default class FieldData {
    */
   errorId = uniqueId();
 
+  /**
+   * Type of the field.
+   * @type {string}
+   */
   type;
 
   /**
@@ -32,11 +35,12 @@ export default class FieldData {
    * @param {Function} options.set - The callback function for setting the field value.
    * @param {Function} options.onSet - The callback function for setting the custom field value.
    * @param {string} options.validation - The validation rules for the field.
-   * @param {boolean} options.disabled - Indicates if the field is disabled.
-   * @param {Function} options.validate - The custom validation function.
-   * @param {Function} options.type - The custom validation function.
-   * @param {Function} options.title - The custom validation function.
-   * @param {Function} options.showTitle - The custom validation function.
+   * @param {boolean} [options.disabled=false] - Indicates if the field is disabled.
+   * @param {Function} [options.validate] - The custom validation function.
+   * @param {Function} [options.title] - The custom field title.
+   * @param {Function} [options.showTitle=true] - Indicates if the field title should be shown.
+   * @param {Function} [options.triggerRevalidationFor] - The function to trigger revalidation.
+   * @param {Function} [options.addError] - The function to add an error message.
    */
   constructor(
     name,
@@ -44,10 +48,10 @@ export default class FieldData {
       set,
       onSet,
       validation,
-      disabled,
+      disabled = false,
       validate,
       title,
-      showTitle,
+      showTitle = true,
       triggerRevalidationFor,
       addError,
     }
@@ -55,8 +59,8 @@ export default class FieldData {
     this.name = name;
     this.title = title;
     this.addError = addError;
-    this.showTitle = showTitle ?? true;
-    this.disabled = disabled ?? false;
+    this.showTitle = showTitle;
+    this.disabled = disabled;
     this.customValidate = validate;
     this.validation = validation;
     this.rules = this.validation ? ValidationParser.parse(validation) : null;
@@ -119,18 +123,26 @@ export default class FieldData {
     });
   }
 
+  /**
+   * Adds an error message to the field.
+   * @param {string} message - The error message.
+   */
   pushError(message) {
     this.errors.push(message);
   }
 
-  get visibleErrors() {
-    return this.errors;
-  }
-
+  /**
+   * Checks if the field has any errors.
+   * @type {boolean}
+   * @readonly
+   */
   get hasErrors() {
     return this.errors.length > 0;
   }
 
+  /**
+   * Resets the errors for the field.
+   */
   reset() {
     this.errors = new TrackedArray();
   }
