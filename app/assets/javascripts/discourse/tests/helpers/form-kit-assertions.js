@@ -39,7 +39,7 @@ class FieldHelper {
             .ariaChecked === "true"
         );
       }
-      case "text": {
+      case "textarea": {
         return this.element.querySelector(".form-kit__control-textarea").value;
       }
       case "code": {
@@ -121,8 +121,17 @@ export function setupFormKitAssertions() {
         const field = form.field(name);
 
         return {
+          doesNotExist: (message) => {
+            field.doesNotExist(message);
+          },
+          exists: (message) => {
+            field.exists(message);
+          },
           isDisabled: (message) => {
             this.ok(field.disabled, message);
+          },
+          isEnabled: (message) => {
+            this.notOk(field.disabled, message);
           },
           hasError: (message) => {
             field.hasError(message);
