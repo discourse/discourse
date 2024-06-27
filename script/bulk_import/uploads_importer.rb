@@ -424,12 +424,13 @@ module BulkImport
               fake_upload.url = upload["url"]
               path = add_multisite_prefix(store.get_path_for_upload(fake_upload))
 
-              file_exists =
-                if store.external?
-                  store.object_from_path(path).exists?
-                else
-                  File.exist?(File.join(store.public_dir, path))
-                end
+              if store.external?
+                obj = store.object_from_path(path)
+                file_exists = obj.exists?
+                obj.acl.put(acl: "public-read") if file_exists
+              else
+                file_exists = File.exist?(File.join(store.public_dir, path))
+              end
 
               if file_exists
                 status_queue << { id: row["id"], upload_id: upload["id"], status: :ok }
