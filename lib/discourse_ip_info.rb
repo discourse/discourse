@@ -80,7 +80,6 @@ class DiscourseIpInfo
     rescue => e
       Discourse.warn_exception(e, message: "MaxMind database download failed.")
     end
-
   ensure
     FileUtils.rm_r(dir, force: true) if dir
     gz_file&.close!
@@ -180,4 +179,3 @@ class DiscourseIpInfo
     instance.get(ip, locale: locale, resolve_hostname: resolve_hostname)
   end
 end
-
