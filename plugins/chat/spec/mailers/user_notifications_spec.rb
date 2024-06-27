@@ -464,5 +464,45 @@ describe UserNotifications do
         )
       end
     end
+
+    describe "when another user is mentioned in the channel and user receives a 1:1" do
+      before do
+        create_message(direct_message, "Hello, how are you?")
+        create_message(followed_channel, "Hey @#{another.username}", Chat::UserMention)
+      end
+
+      it "does not show the channel mention in the subject" do
+        chat_summary_with_subject(:chat_dm_1, name: direct_message.title(user), count: 1)
+      end
+
+      it "does not show the channel mention in the body" do
+        html = chat_summary_email.html_part.body.to_s
+
+        expect(html).to include(direct_message.title(user))
+        expect(html).not_to include(followed_channel.title(user))
+      end
+    end
+
+    describe "when mentioning @all in the channel and user receives a 1:1" do
+      before do
+        create_message(direct_message, "Hello, how are you?")
+        create_message(followed_channel, "Hey @all", Chat::AllMention)
+      end
+
+      it "shows both the channel mention and 1:1 in the subject" do
+        chat_summary_with_subject(
+          :chat_channel_and_dm,
+          channel: followed_channel.name,
+          name: direct_message.title(user),
+        )
+      end
+
+      it "shows both the channel mention and 1:1 in the body" do
+        html = chat_summary_email.html_part.body.to_s
+
+        expect(html).to include(direct_message.title(user))
+        expect(html).to include(followed_channel.title(user))
+      end
+    end
   end
 end
