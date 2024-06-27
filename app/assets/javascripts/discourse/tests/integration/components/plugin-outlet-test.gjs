@@ -1,9 +1,7 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import templateOnly from "@ember/component/template-only";
 import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
-import Service from "@ember/service";
 import { click, render, settled } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
