@@ -1124,6 +1124,20 @@ RSpec.describe ListController do
         )
       end
     end
+
+    context "when redirect raises an unsafe redirect error" do
+      before do
+        ListController
+          .any_instance
+          .stubs(:redirect_to)
+          .raises(ActionController::Redirecting::UnsafeRedirectError)
+      end
+
+      it "renders a 404" do
+        get "/c/hello/world/bye/#{subsubcategory.id}"
+        expect(response).to have_http_status :not_found
+      end
+    end
   end
 
   describe "shared drafts" do
