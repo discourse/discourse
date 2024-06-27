@@ -55,27 +55,31 @@ class DiscourseIpInfo
         end
       end
 
-    gz_file =
-      FileHelper.download(
-        url,
-        max_file_size: 100.megabytes,
-        tmp_file_name: "#{name}.gz",
-        validate_uri: false,
-        follow_redirect: true,
-        extra_headers:,
-      )
+    begin
+      gz_file =
+        FileHelper.download(
+          url,
+          max_file_size: 100.megabytes,
+          tmp_file_name: "#{name}.gz",
+          validate_uri: false,
+          follow_redirect: true,
+          extra_headers:,
+        )
 
-    filename = File.basename(gz_file.path)
+      filename = File.basename(gz_file.path)
 
-    dir = "#{Dir.tmpdir}/#{SecureRandom.hex}"
+      dir = "#{Dir.tmpdir}/#{SecureRandom.hex}"
 
-    Discourse::Utils.execute_command("mkdir", "-p", dir)
+      Discourse::Utils.execute_command("mkdir", "-p", dir)
 
-    Discourse::Utils.execute_command("cp", gz_file.path, "#{dir}/#{filename}")
+      Discourse::Utils.execute_command("cp", gz_file.path, "#{dir}/#{filename}")
 
-    Discourse::Utils.execute_command("tar", "-xzvf", "#{dir}/#{filename}", chdir: dir)
+      Discourse::Utils.execute_command("tar", "-xzvf", "#{dir}/#{filename}", chdir: dir)
 
-    Dir["#{dir}/**/*.mmdb"].each { |f| FileUtils.mv(f, mmdb_path(name)) }
+      Dir["#{dir}/**/*.mmdb"].each { |f| FileUtils.mv(f, mmdb_path(name)) }
+    rescue => e
+      Discourse.warn_exception(e, message: "MaxMind database download failed.")
+    end
   ensure
     FileUtils.rm_r(dir, force: true) if dir
     gz_file&.close!
