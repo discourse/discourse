@@ -26,13 +26,17 @@ module("Integration | Component | FormKit | Field", function (hooks) {
         <form.Field @name="foo" @title="Foo" @validation="required" as |field|>
           <field.Input />
         </form.Field>
+        <form.Field @name="bar" @title="Bar" @validation="required" as |field|>
+          <field.Input />
+        </form.Field>
       </Form>
     </template>);
 
-    await formKit("form").submit();
+    await formKit().submit();
 
-    assert.form("form").hasErrors({ foo: ["Required"] });
-    assert.form("form").field("foo").hasError("Required");
+    assert.form().hasErrors({ foo: ["Required"], bar: ["Required"] });
+    assert.form().field("foo").hasError("Required");
+    assert.form().field("bar").hasError("Required");
   });
 
   test("@validate", async function (assert) {
@@ -53,19 +57,20 @@ module("Integration | Component | FormKit | Field", function (hooks) {
 
     await render(<template>
       <Form @data={{hash foo="bar"}} as |form|>
-        <form.Field @name="foo" @title="Foo" @validate={{validate}} />
+        <form.Field @name="foo" @title="Foo" @validate={{validate}} as |field|>
+          <field.Input />
+        </form.Field>
+
         <form.Submit />
       </Form>
     </template>);
 
-    await click("button");
+    await formKit().submit();
 
     assert
-      .form("form")
-      .hasErrors(
-        { foo: ["error"] },
-        "the callback has the addError helper as param"
-      );
+      .form()
+      .field("foo")
+      .hasError("error", "the callback has the addError helper as param");
   });
 
   test("@showTitle", async function (assert) {
@@ -86,11 +91,11 @@ module("Integration | Component | FormKit | Field", function (hooks) {
   test("@onSet", async function (assert) {
     const done = assert.async();
     const onSet = async (value, { set }) => {
-      assert.form("form").field("foo").hasValue("bar");
+      assert.form().field("foo").hasValue("bar");
 
       await set("foo", "baz");
 
-      assert.form("form").field("foo").hasValue("baz");
+      assert.form().field("foo").hasValue("baz");
 
       done();
     };

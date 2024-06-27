@@ -112,6 +112,10 @@ class Form {
     await triggerEvent(this.element, "submit");
   }
 
+  async reset() {
+    await triggerEvent(this.element, "reset");
+  }
+
   field(name) {
     const field = new Field(
       this.element.querySelector(`[data-name="${name}"]`)
@@ -130,6 +134,9 @@ export default function form(selector = "form") {
   return {
     async submit() {
       await helper.submit();
+    },
+    async reset() {
+      await helper.reset();
     },
     field(name) {
       return helper.field(name);

@@ -224,6 +224,10 @@ export default class FKForm extends Component {
       field.reset();
     });
 
+    this.fieldsWithErrors = null;
+
+    await this.args.onReset?.(this.effectiveData);
+
     await new Promise((resolve) => next(resolve));
   }
 
