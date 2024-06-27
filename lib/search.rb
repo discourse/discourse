@@ -1191,9 +1191,9 @@ class Search
 
           posts.where("topics.category_id in (?)", category_ids)
         elsif is_topic_search
-          posts.where("topics.id = ?", @search_context.id).order(
-            "posts.post_number #{@order == :latest ? "DESC" : ""}",
-          )
+          posts = posts.where("topics.id = ?", @search_context.id)
+          posts = posts.order("posts.post_number ASC") unless @order
+          posts
         elsif @search_context.is_a?(Tag)
           posts =
             posts.joins("LEFT JOIN topic_tags ON topic_tags.topic_id = topics.id").joins(
