@@ -107,7 +107,7 @@
     "messageformat": "0.1.5",
     "pretender": "^3.4.7",
     "qunit": "^2.21.0",
-    "qunit-dom": "^3.1.2",
+    "qunit-dom": "^3.2.0",
     "sass": "^1.77.6",
     "select-kit": "1.0.0",
     "sinon": "^18.0.0",
