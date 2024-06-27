@@ -19,6 +19,7 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
 
   @action
   async save() {
+    this.args.setGlobalSavingStatus(true);
     try {
       await ajax("/admin/config/about.json", {
         type: "PUT",
@@ -38,6 +39,8 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
       });
     } catch (err) {
       popupAjaxError(err);
+    } finally {
+      this.args.setGlobalSavingStatus(false);
     }
   }
 
@@ -96,6 +99,7 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
     <DButton
       @label="admin.config_areas.about.update"
       @action={{this.save}}
+      @disabled={{@globalSavingStatus}}
       class="btn-primary admin-config-area-card__btn-save"
     />
   </template>

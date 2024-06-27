@@ -43,6 +43,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
   @action
   async save() {
     try {
+      this.args.setGlobalSavingStatus(true);
       await ajax("/admin/config/about.json", {
         type: "PUT",
         data: {
@@ -63,6 +64,8 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
       });
     } catch (err) {
       popupAjaxError(err);
+    } finally {
+      this.args.setGlobalSavingStatus(false);
     }
   }
 
@@ -151,6 +154,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
     <DButton
       @label="admin.config_areas.about.update"
       @action={{this.save}}
+      @disabled={{@globalSavingStatus}}
       class="btn-primary admin-config-area-card__btn-save"
     />
   </template>

@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import i18n from "discourse-common/helpers/i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import AdminConfigAreasAboutContactInformation from "admin/components/admin-config-area-cards/about/contact-information";
@@ -6,6 +8,8 @@ import AdminConfigAreasAboutGeneralSettings from "admin/components/admin-config-
 import AdminConfigAreasAboutYourOrganization from "admin/components/admin-config-area-cards/about/your-organization";
 
 export default class AdminConfigAreasAbout extends Component {
+  @tracked saving = false;
+
   get generalSettings() {
     return {
       title: this.#lookupSettingFromData("title"),
@@ -35,7 +39,10 @@ export default class AdminConfigAreasAbout extends Component {
     };
   }
 
-  saveCallback() {}
+  @action
+  setSavingStatus(status) {
+    this.saving = status;
+  }
 
   #lookupSettingFromData(name) {
     return this.args.data.findBy("setting", name);
@@ -52,7 +59,8 @@ export default class AdminConfigAreasAbout extends Component {
         >
           <AdminConfigAreasAboutGeneralSettings
             @generalSettings={{this.generalSettings}}
-            @saveCallback={{this.saveCallback}}
+            @setGlobalSavingStatus={{this.setSavingStatus}}
+            @globalSavingStatus={{this.saving}}
           />
         </AdminConfigAreaCard>
         <AdminConfigAreaCard
@@ -62,7 +70,8 @@ export default class AdminConfigAreasAbout extends Component {
         >
           <AdminConfigAreasAboutContactInformation
             @contactInformation={{this.contactInformation}}
-            @saveCallback={{this.saveCallback}}
+            @setGlobalSavingStatus={{this.setSavingStatus}}
+            @globalSavingStatus={{this.saving}}
           />
         </AdminConfigAreaCard>
         <AdminConfigAreaCard
@@ -72,7 +81,8 @@ export default class AdminConfigAreasAbout extends Component {
         >
           <AdminConfigAreasAboutYourOrganization
             @yourOrganization={{this.yourOrganization}}
-            @saveCallback={{this.saveCallback}}
+            @setGlobalSavingStatus={{this.setSavingStatus}}
+            @globalSavingStatus={{this.saving}}
           />
         </AdminConfigAreaCard>
       </div>
