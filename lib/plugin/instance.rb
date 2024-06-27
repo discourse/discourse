@@ -1178,6 +1178,20 @@ class Plugin::Instance
   end
 
   ##
+  # Register an object that inherits from [Summarization::Base], which provides a way
+  # to summarize content. Staff can select which strategy to use
+  # through the `summarization_strategy` setting.
+  def register_summarization_strategy(strategy)
+    Discourse.deprecate(
+      "register_summarization_straegy is deprecated. Summarization code is now moved to Discourse AI",
+    )
+    if !strategy.class.ancestors.include?(Summarization::Base)
+      raise ArgumentError.new("Not a valid summarization strategy")
+    end
+    DiscoursePluginRegistry.register_summarization_strategy(strategy, self)
+  end
+
+  ##
   # Register a block that will be called when PostActionCreator is going to notify a
   # user of a post action. If any of these handlers returns false the default PostCreator
   # call will be skipped.
