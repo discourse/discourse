@@ -115,6 +115,8 @@ class DiscoursePluginRegistry
 
   define_filtered_register :list_suggested_for_providers
 
+  define_filtered_register :summarization_strategies
+
   define_filtered_register :post_action_notify_user_handlers
 
   define_filtered_register :post_strippers
