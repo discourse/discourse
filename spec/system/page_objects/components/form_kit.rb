@@ -137,9 +137,17 @@ module PageObjects
       end
 
       def submit
-        within component do
-          find("button[type='submit']").click
-        end
+        page.execute_script(
+          "var form = arguments[0]; form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));",
+          find(component),
+        )
+      end
+
+      def reset
+        page.execute_script(
+          "var form = arguments[0]; form.dispatchEvent(new Event('reset', { bubbles: true, cancelable: true }));",
+          find(component),
+        )
       end
 
       def has_an_alert?(message)
