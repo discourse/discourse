@@ -826,6 +826,45 @@ RSpec.describe SiteSettingExtension do
         expect(setting[:default]).to eq(system_upload.url)
       end
     end
+
+    context "with the filter_allowed_hidden argument" do
+      it "includes the specified hidden settings only if include_hidden is true" do
+        result =
+          SiteSetting
+            .all_settings(include_hidden: true, filter_allowed_hidden: [:about_banner_image])
+            .map { |ss| ss[:setting] }
+
+        expect(result).to include(:about_banner_image)
+        expect(result).not_to include(:community_owner)
+
+        result =
+          SiteSetting
+            .all_settings(include_hidden: false, filter_allowed_hidden: [:about_banner_image])
+            .map { |ss| ss[:setting] }
+
+        expect(result).not_to include(:about_banner_image)
+        expect(result).not_to include(:community_owner)
+
+        result =
+          SiteSetting
+            .all_settings(include_hidden: true, filter_allowed_hidden: [:community_owner])
+            .map { |ss| ss[:setting] }
+
+        expect(result).not_to include(:about_banner_image)
+        expect(result).to include(:community_owner)
+
+        result =
+          SiteSetting
+            .all_settings(
+              include_hidden: true,
+              filter_allowed_hidden: %i[about_banner_image community_owner],
+            )
+            .map { |ss| ss[:setting] }
+
+        expect(result).to include(:about_banner_image)
+        expect(result).to include(:community_owner)
+      end
+    end
   end
 
   describe ".client_settings_json_uncached" do
