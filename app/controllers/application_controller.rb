@@ -607,6 +607,11 @@ class ApplicationController < ActionController::Base
     RateLimiter.new(nil, "second-factor-min-#{user.username}", 6, 1.minute).performed! if user
   end
 
+  def login_method
+    return if current_user.anonymous?
+    secure_session["oauth"] == "true" ? Auth::LOGIN_METHOD_OAUTH : Auth::LOGIN_METHOD_LOCAL
+  end
+
   private
 
   def preload_anonymous_data
@@ -628,7 +633,7 @@ class ApplicationController < ActionController::Base
           current_user,
           scope: guardian,
           root: false,
-          navigation_menu_param: params[:navigation_menu],
+          login_method: login_method,
         ),
       ),
     )
@@ -905,7 +910,10 @@ class ApplicationController < ActionController::Base
 
   def disqualified_from_2fa_enforcement
     request.format.json? || is_api? || current_user.anonymous? ||
-      (!SiteSetting.enforce_second_factor_on_external_auth && secure_session["oauth"] == "true")
+      (
+        !SiteSetting.enforce_second_factor_on_external_auth &&
+          login_method == Auth::LOGIN_METHOD_OAUTH
+      )
   end
 
   def redirect_to_profile_if_required
