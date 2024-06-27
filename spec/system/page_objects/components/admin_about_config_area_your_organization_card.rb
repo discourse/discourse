@@ -21,7 +21,7 @@ module PageObjects
 
       def has_saved_successfully?
         PageObjects::Components::Toasts.new.has_success?(
-          I18n.t("admin_js.admin.config_areas.about.saved"),
+          I18n.t("admin_js.admin.config_areas.about.toasts.your_organization_saved"),
         )
       end
 

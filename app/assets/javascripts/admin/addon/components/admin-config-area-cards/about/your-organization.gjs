@@ -34,7 +34,9 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
       this.toasts.success({
         duration: 30000,
         data: {
-          message: I18n.t("admin.config_areas.about.saved"),
+          message: I18n.t(
+            "admin.config_areas.about.toasts.your_organization_saved"
+          ),
         },
       });
     } catch (err) {

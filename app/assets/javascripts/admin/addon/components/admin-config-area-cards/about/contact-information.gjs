@@ -59,7 +59,9 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
       this.toasts.success({
         duration: 3000,
         data: {
-          message: I18n.t("admin.config_areas.about.saved"),
+          message: I18n.t(
+            "admin.config_areas.about.toasts.contact_information_saved"
+          ),
         },
       });
     } catch (err) {
