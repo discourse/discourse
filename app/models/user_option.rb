@@ -273,8 +273,7 @@ end
 #  allow_private_messages               :boolean          default(TRUE), not null
 #  homepage_id                          :integer
 #  theme_ids                            :integer          default([]), not null, is an Array
-#  hide_profile                         :boolean          default(FALSE), not null
-#  hide_presence                        :boolean          default(FALSE), not null
+#  hide_profile_and_presence            :boolean          default(FALSE), not null
 #  text_size_key                        :integer          default(0), not null
 #  text_size_seq                        :integer          default(0), not null
 #  email_level                          :integer          default(1), not null
@@ -305,6 +304,8 @@ end
 #  chat_separate_sidebar_mode           :integer          default(0), not null
 #  topics_unread_when_closed            :boolean          default(TRUE), not null
 #  show_thread_title_prompts            :boolean          default(TRUE), not null
+#  hide_profile                         :boolean          default(FALSE), not null
+#  hide_presence                        :boolean          default(FALSE), not null
 #
 # Indexes
 #
