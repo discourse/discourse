@@ -49,12 +49,20 @@ class Field {
   }
 
   async accept() {
+    if (this.controlType !== "question") {
+      throw new Error(`Unsupported control type: ${this.controlType}`);
+    }
+
     await click(
       this.element.querySelector(".form-kit__control-radio[value='true']")
     );
   }
 
   async refuse() {
+    if (this.controlType !== "question") {
+      throw new Error(`Unsupported control type: ${this.controlType}`);
+    }
+
     await click(
       this.element.querySelector(".form-kit__control-radio[value='false']")
     );

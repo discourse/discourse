@@ -81,6 +81,14 @@ class FieldHelper {
       .dom(this.element.querySelector(".form-kit__errors"))
       .doesNotExist(message);
   }
+
+  doesNotExist(message) {
+    this.context.dom(this.element).doesNotExist(message);
+  }
+
+  exists(message) {
+    this.context.dom(this.element).exists(message);
+  }
 }
 
 class FormHelper {
