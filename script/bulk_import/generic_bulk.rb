@@ -833,8 +833,14 @@ class BulkImport::Generic < BulkImport::Base
       mentions.each do |mention|
         name = resolve_mentioned_name(mention)
 
-        puts "#{mention["type"]} not found -- #{mention["placeholder"]}" unless name
-        raw.gsub!(mention["placeholder"], " @#{name} ")
+        if name
+          raw.gsub!(mention["placeholder"], " @#{name} ")
+        else
+          unless ENV["NO_MENTION_WARNINGS"]
+            puts "#{mention["type"]} not found -- #{mention["placeholder"]}"
+          end
+          raw.gsub!(mention["placeholder"], " `@#{mention["type"]}_not_found` ")
+        end
       end
     end
 
