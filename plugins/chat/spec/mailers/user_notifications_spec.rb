@@ -489,7 +489,7 @@ describe UserNotifications do
         create_message(followed_channel, "Hey @all", Chat::AllMention)
       end
 
-      it "shows the channel mention in the subject" do
+      it "shows both the channel mention and 1:1 in the subject" do
         chat_summary_with_subject(
           :chat_channel_and_dm,
           channel: followed_channel.name,
@@ -497,7 +497,7 @@ describe UserNotifications do
         )
       end
 
-      it "shows the channel mention in the body" do
+      it "shows both the channel mention and 1:1 in the body" do
         html = chat_summary_email.html_part.body.to_s
 
         expect(html).to include(direct_message.title(user))
