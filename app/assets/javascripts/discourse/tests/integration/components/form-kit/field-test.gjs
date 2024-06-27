@@ -1,5 +1,5 @@
 import { hash } from "@ember/helper";
-import { click, fillIn, render } from "@ember/test-helpers";
+import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
