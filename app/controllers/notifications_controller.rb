@@ -9,10 +9,8 @@ class NotificationsController < ApplicationController
 
   def index
     user =
-      if params[:username] && !params[:recent]
-        user_record = User.find_by(username: params[:username].to_s)
-        raise Discourse::NotFound if !user_record
-        user_record
+      if params[:username].present? && params[:recent].blank?
+        User.find_by_username(params[:username].to_s) || (raise Discourse::NotFound)
       else
         current_user
       end
@@ -29,36 +27,30 @@ class NotificationsController < ApplicationController
     if params[:recent].present?
       limit = fetch_limit_from_params(default: 15, max: INDEX_LIMIT)
 
-      include_reviewables = false
-
       notifications =
         Notification.prioritized_list(current_user, count: limit, types: notification_types)
-      # notification_types is blank for the "all notifications" user menu tab
-      include_reviewables = notification_types.blank? && guardian.can_see_review_queue?
-
-      if notifications.present? && !(params.has_key?(:silent) || @readonly_mode)
-        if current_user.bump_last_seen_notification!
-          current_user.reload
-          current_user.publish_notifications_state
-        end
-      end
-
-      if !params.has_key?(:silent) && params[:bump_last_seen_reviewable] && !@readonly_mode &&
-           include_reviewables
-        current_user_id = current_user.id
-        Scheduler::Defer.later "bump last seen reviewable for user" do
-          # we lookup current_user again in the background thread to avoid
-          # concurrency issues where the user object returned by the
-          # current_user controller method is changed by the time the deferred
-          # block is executed
-          User.find_by(id: current_user_id)&.bump_last_seen_reviewable!
-        end
-      end
 
       notifications =
         Notification.filter_inaccessible_topic_notifications(current_user.guardian, notifications)
+
       notifications =
         Notification.populate_acting_user(notifications) if SiteSetting.show_user_menu_avatars
+
+      include_reviewables = notification_types.blank? && guardian.can_see_review_queue?
+      bump_notification = notifications.present?
+      bump_reviewable = include_reviewables && params[:bump_last_seen_reviewable]
+
+      if !params.has_key?(:silent) && !@readonly_mode
+        if bump_notification || bump_reviewable
+          current_user_id = current_user.id
+          Scheduler::Defer.later "bump last seen notification/reviewable for user" do
+            if user = User.find_by(id: current_user_id)
+              user.bump_last_seen_notification! if bump_notification
+              user.bump_last_seen_reviewable! if bump_reviewable
+            end
+          end
+        end
+      end
 
       json = {
         notifications: serialize_data(notifications, NotificationSerializer),
@@ -77,19 +69,20 @@ class NotificationsController < ApplicationController
       limit = fetch_limit_from_params(default: INDEX_LIMIT, max: INDEX_LIMIT)
       offset = params[:offset].to_i
 
-      notifications =
-        Notification.where(user_id: user.id).visible.includes(:topic).order(created_at: :desc)
-
-      notifications = notifications.where(read: true) if params[:filter] == "read"
-
-      notifications = notifications.where(read: false) if params[:filter] == "unread"
+      notifications = user.notifications.visible.includes(:topic).order(created_at: :desc)
+      notifications = notifications.read if params[:filter] == "read"
+      notifications = notifications.unread if params[:filter] == "unread"
 
       total_rows = notifications.dup.count
+
       notifications = notifications.offset(offset).limit(limit)
+
       notifications =
         Notification.filter_inaccessible_topic_notifications(current_user.guardian, notifications)
+
       notifications =
         Notification.populate_acting_user(notifications) if SiteSetting.show_user_menu_avatars
+
       render_json_dump(
         notifications: serialize_data(notifications, NotificationSerializer),
         total_rows_notifications: total_rows,
@@ -106,27 +99,20 @@ class NotificationsController < ApplicationController
   end
 
   def mark_read
-    if params[:id]
-      Notification.read(current_user, [params[:id].to_i])
+    if id = params[:id]
+      Notification.read!(current_user, id:)
     else
       if types = params[:dismiss_types]&.split(",").presence
-        invalid = []
         types.map! do |type|
-          type_id = Notification.types[type.to_sym]
-          invalid << type if !type_id
-          type_id
-        end
-        if invalid.size > 0
-          raise Discourse::InvalidParameters.new("invalid notification types: #{invalid.inspect}")
+          Notification.types[type.to_sym] ||
+            (raise Discourse::InvalidParameters.new("invalid notification type: #{type}"))
         end
       end
 
-      Notification.read_types(current_user, types)
-      current_user.bump_last_seen_notification!
+      Notification.read!(current_user, types:)
     end
 
-    current_user.reload
-    current_user.publish_notifications_state
+    current_user.bump_last_seen_notification!
 
     render json: success_json
   end

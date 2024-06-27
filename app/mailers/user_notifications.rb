@@ -309,7 +309,11 @@ class UserNotifications < ActionMailer::Base
       end
 
       if @counts.size < 3
-        value = user.unread_notifications_of_type(Notification.types[:liked], since: @since)
+        value =
+          user.unread_notifications_count(
+            notification_type: Notification.types[:liked],
+            since: @since,
+          )
         if value > 0
           @counts << {
             id: "likes_received",

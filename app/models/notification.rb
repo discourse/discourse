@@ -14,49 +14,26 @@ class Notification < ActiveRecord::Base
   validates_presence_of :data
   validates_presence_of :notification_type
 
-  scope :unread, lambda { where(read: false) }
-  scope :recent,
-        lambda { |n = nil|
-          n ||= 10
-          order("notifications.created_at desc").limit(n)
-        }
+  scope :read, -> { where(read: true) }
+  scope :unread, -> { where(read: false) }
   scope :visible,
-        lambda {
+        -> do
           joins("LEFT JOIN topics ON notifications.topic_id = topics.id").where(
-            "topics.id IS NULL OR topics.deleted_at IS NULL",
+            "notifications.topic_id IS NULL OR (topics.id IS NOT NULL AND topics.deleted_at IS NULL)",
           )
-        }
-  scope :unread_type, ->(user, type, limit = 30) { unread_types(user, [type], limit) }
-  scope :unread_types,
-        ->(user, types, limit = 30) do
-          where(user_id: user.id, read: false, notification_type: types)
-            .visible
-            .includes(:topic)
-            .limit(limit)
         end
   scope :prioritized,
         ->(deprioritized_types = []) do
-          scope = order("notifications.high_priority AND NOT notifications.read DESC")
+          low_pri =
+            "AND notifications.notification_type NOT IN (#{deprioritized_types.join(",")})" if deprioritized_types.present?
 
-          if deprioritized_types.present?
-            scope =
-              scope.order(
-                DB.sql_fragment(
-                  "NOT notifications.read AND notifications.notification_type NOT IN (?) DESC",
-                  deprioritized_types,
-                ),
-              )
-          else
-            scope = scope.order("NOT notifications.read DESC")
-          end
-
-          scope.order("notifications.created_at DESC")
+          order <<~SQL
+            NOT notifications.read AND notifications.high_priority DESC,
+            NOT notifications.read #{low_pri || ""} DESC,
+            notifications.created_at DESC
+          SQL
         end
-
-  scope :for_user_menu,
-        ->(user_id, limit: 30) do
-          where(user_id: user_id).visible.prioritized.includes(:topic).limit(limit)
-        end
+  scope :for_user_menu, ->(limit) { visible.prioritized.includes(:topic).limit(limit) }
 
   attr_accessor :skip_send_email
 
@@ -68,8 +45,7 @@ class Notification < ActiveRecord::Base
   before_create do
     # if we have manually set the notification to high_priority on create then
     # make sure that is respected
-    self.high_priority =
-      self.high_priority || Notification.high_priority_types.include?(self.notification_type)
+    self.high_priority ||= Notification.high_priority_types.include?(self.notification_type)
   end
 
   def self.consolidate_or_create!(notification_params)
@@ -172,71 +148,31 @@ class Notification < ActiveRecord::Base
   end
 
   def self.normal_priority_types
-    @normal_priority_types ||= types.reject { |_k, v| high_priority_types.include?(v) }.values
+    @normal_priority_types ||= types.values - high_priority_types
   end
 
-  def self.mark_posts_read(user, topic_id, post_numbers)
-    Notification.where(
-      user_id: user.id,
-      topic_id: topic_id,
-      post_number: post_numbers,
-      read: false,
-    ).update_all(read: true)
-  end
+  def self.read!(user, id: nil, ids: nil, types: nil, topic_id: nil, post_numbers: nil)
+    query = user.notifications.unread
+    query = query.where(id: id) if id.present?
+    query = query.where(id: ids) if ids.present?
+    query = query.where(notification_type: types) if types.present?
 
-  def self.read(user, notification_ids)
-    Notification.where(id: notification_ids, user_id: user.id, read: false).update_all(read: true)
-  end
+    if topic_id.present? && post_numbers.present?
+      query = query.where(topic_id: topic_id, post_number: post_numbers)
+    end
 
-  def self.read_types(user, types = nil)
-    query = Notification.where(user_id: user.id, read: false)
-    query = query.where(notification_type: types) if types
     query.update_all(read: true)
   end
 
-  def self.interesting_after(min_date)
-    result =
-      where("created_at > ?", min_date)
-        .includes(:topic)
-        .visible
-        .unread
-        .limit(20)
-        .order(
-          "CASE WHEN notification_type = #{Notification.types[:replied]} THEN 1
-                           WHEN notification_type = #{Notification.types[:mentioned]} THEN 2
-                           ELSE 3
-                      END, created_at DESC",
-        )
-        .to_a
-
-    # Remove any duplicates by type and topic
-    if result.present?
-      seen = {}
-      to_remove = Set.new
-
-      result.each do |r|
-        seen[r.notification_type] ||= Set.new
-        if seen[r.notification_type].include?(r.topic_id)
-          to_remove << r.id
-        else
-          seen[r.notification_type] << r.topic_id
-        end
-      end
-      result.reject! { |r| to_remove.include?(r.id) }
-    end
-
-    result
-  end
-
-  # Clean up any notifications the user can no longer see. For example, if a topic was previously
-  # public then turns private.
+  # Clean up any notifications the user can no longer see.
+  # For example, if a topic was previously public then turns private.
   def self.remove_for(user_id, topic_id)
     Notification.where(user_id: user_id, topic_id: topic_id).delete_all
   end
 
   def self.filter_inaccessible_topic_notifications(guardian, notifications)
-    topic_ids = notifications.map { |n| n.topic_id }.compact.uniq
-    accessible_topic_ids = guardian.can_see_topic_ids(topic_ids: topic_ids)
+    topic_ids = notifications.map(&:topic_id).compact.uniq
+    accessible_topic_ids = guardian.can_see_topic_ids(topic_ids:)
     notifications.select { |n| n.topic_id.blank? || accessible_topic_ids.include?(n.topic_id) }
   end
 
@@ -266,114 +202,43 @@ class Notification < ActiveRecord::Base
   # `Notification.prioritized_list` to deprioritize like typed notifications. Also See
   # `db/migrate/20240306063428_add_indexes_to_notifications.rb`.
   def self.like_types
-    [
+    @@like_types ||= [
       Notification.types[:liked],
       Notification.types[:liked_consolidated],
       Notification.types[:reaction],
     ]
   end
 
-  def self.prioritized_list(user, count: 30, types: [])
-    return [] if !user&.user_option
+  def self.never = UserOption.like_notification_frequency_type[:never]
 
-    notifications =
-      user
-        .notifications
-        .includes(:topic)
-        .visible
-        .prioritized(types.present? ? [] : like_types)
-        .limit(count)
+  def self.prioritized_list(user, count: 30, types: [])
+    return Notification.none unless user&.user_option
+
+    notifications = user.notifications.includes(:topic).visible.limit(count)
 
     if types.present?
-      notifications = notifications.where(notification_type: types)
-    elsif user.user_option.like_notification_frequency ==
-          UserOption.like_notification_frequency_type[:never]
-      like_types.each do |notification_type|
-        notifications = notifications.where("notification_type <> ?", notification_type)
-      end
-    end
-    notifications.to_a
-  end
-
-  def self.recent_report(user, count = nil, types = [])
-    return unless user && user.user_option
-
-    count ||= 10
-    notifications = user.notifications.visible.recent(count).includes(:topic)
-
-    notifications = notifications.where(notification_type: types) if types.present?
-    if user.user_option.like_notification_frequency ==
-         UserOption.like_notification_frequency_type[:never]
-      [
-        Notification.types[:liked],
-        Notification.types[:liked_consolidated],
-      ].each do |notification_type|
-        notifications = notifications.where("notification_type <> ?", notification_type)
-      end
-    end
-
-    notifications = notifications.to_a
-
-    if notifications.present?
-      builder = DB.build(<<~SQL)
-         SELECT n.id FROM notifications n
-         /*where*/
-        ORDER BY n.id ASC
-        /*limit*/
-      SQL
-
-      builder.where(<<~SQL, user_id: user.id)
-        n.high_priority = TRUE AND
-        n.user_id = :user_id AND
-        NOT read
-      SQL
-      builder.where("notification_type IN (:types)", types: types) if types.present?
-      builder.limit(count.to_i)
-
-      ids = builder.query_single
-
-      if ids.length > 0
-        notifications +=
-          user
-            .notifications
-            .order("notifications.created_at DESC")
-            .where(id: ids)
-            .joins(:topic)
-            .limit(count)
-      end
-
-      notifications
-        .uniq(&:id)
-        .sort do |x, y|
-          if x.unread_high_priority? && !y.unread_high_priority?
-            -1
-          elsif y.unread_high_priority? && !x.unread_high_priority?
-            1
-          else
-            y.created_at <=> x.created_at
-          end
-        end
-        .take(count)
+      notifications = notifications.prioritized.where(notification_type: types)
     else
-      []
+      notifications = notifications.prioritized(like_types)
+      if user.user_option.like_notification_frequency == never
+        notifications = notifications.where.not(notification_type: like_types)
+      end
     end
+
+    notifications
   end
+
+  USERNAME_FIELDS ||= %i[username display_username mentioned_by_username invited_by_username]
 
   def self.populate_acting_user(notifications)
     usernames =
-      notifications.map do |notification|
-        notification.acting_username =
-          (
-            notification.data_hash[:username] || notification.data_hash[:display_username] ||
-              notification.data_hash[:mentioned_by_username] ||
-              notification.data_hash[:invited_by_username]
-          )&.downcase
+      notifications.filter_map do |n|
+        n.acting_username = n.data_hash.values_at(*USERNAME_FIELDS).compact.first&.downcase
       end
 
     users = User.where(username_lower: usernames.uniq).index_by(&:username_lower)
-    notifications.each do |notification|
-      notification.acting_user = users[notification.acting_username]
-    end
+
+    notifications.each { |n| n.acting_user = users[n.acting_username] }
 
     notifications
   end

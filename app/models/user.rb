@@ -620,12 +620,9 @@ class User < ActiveRecord::Base
   end
 
   def reload
-    @unread_notifications = nil
-    @all_unread_notifications_count = nil
-    @unread_total_notifications = nil
+    @unread_notifications_count = {}
     @unread_pms = nil
     @unread_bookmarks = nil
-    @unread_high_prios = nil
     @ignored_user_ids = nil
     @muted_user_ids = nil
     @belonging_to_group_ids = nil
@@ -640,81 +637,6 @@ class User < ActiveRecord::Base
     @muted_user_ids ||= muted_users.pluck(:id)
   end
 
-  def unread_notifications_of_type(notification_type, since: nil)
-    # perf critical, much more efficient than AR
-    sql = <<~SQL
-        SELECT COUNT(*)
-          FROM notifications n
-     LEFT JOIN topics t ON t.id = n.topic_id
-         WHERE t.deleted_at IS NULL
-           AND n.notification_type = :notification_type
-           AND n.user_id = :user_id
-           AND NOT read
-           #{since ? "AND n.created_at > :since" : ""}
-    SQL
-
-    # to avoid coalesce we do to_i
-    DB.query_single(sql, user_id: id, notification_type: notification_type, since: since)[0].to_i
-  end
-
-  def unread_notifications_of_priority(high_priority:)
-    # perf critical, much more efficient than AR
-    sql = <<~SQL
-        SELECT COUNT(*)
-          FROM notifications n
-     LEFT JOIN topics t ON t.id = n.topic_id
-         WHERE t.deleted_at IS NULL
-           AND n.high_priority = :high_priority
-           AND n.user_id = :user_id
-           AND NOT read
-    SQL
-
-    # to avoid coalesce we do to_i
-    DB.query_single(sql, user_id: id, high_priority: high_priority)[0].to_i
-  end
-
-  MAX_UNREAD_BACKLOG = 400
-  def grouped_unread_notifications
-    results = DB.query(<<~SQL, user_id: self.id, limit: MAX_UNREAD_BACKLOG)
-      SELECT X.notification_type AS type, COUNT(*) FROM (
-        SELECT n.notification_type
-        FROM notifications n
-        LEFT JOIN topics t ON t.id = n.topic_id
-        WHERE t.deleted_at IS NULL
-          AND n.user_id = :user_id
-          AND NOT n.read
-        LIMIT :limit
-      ) AS X
-      GROUP BY X.notification_type
-    SQL
-    results.map! { |row| [row.type, row.count] }
-    results.to_h
-  end
-
-  def unread_high_priority_notifications
-    @unread_high_prios ||= unread_notifications_of_priority(high_priority: true)
-  end
-
-  def new_personal_messages_notifications_count
-    args = {
-      user_id: self.id,
-      seen_notification_id: self.seen_notification_id,
-      private_message: Notification.types[:private_message],
-    }
-
-    DB.query_single(<<~SQL, args).first
-      SELECT COUNT(*)
-      FROM notifications
-      WHERE user_id = :user_id
-      AND id > :seen_notification_id
-      AND NOT read
-      AND notification_type = :private_message
-    SQL
-  end
-
-  # PERF: This safeguard is in place to avoid situations where
-  # a user with enormous amounts of unread data can issue extremely
-  # expensive queries
   MAX_UNREAD_NOTIFICATIONS = 99
 
   def self.max_unread_notifications
@@ -725,64 +647,76 @@ class User < ActiveRecord::Base
     @max_unread_notifications = val
   end
 
-  def unread_notifications
-    @unread_notifications ||=
-      begin
-        # perf critical, much more efficient than AR
-        sql = <<~SQL
-        SELECT COUNT(*) FROM (
-          SELECT 1 FROM
-          notifications n
-          LEFT JOIN topics t ON t.id = n.topic_id
-           WHERE t.deleted_at IS NULL AND
-            n.high_priority = FALSE AND
-            n.user_id = :user_id AND
-            n.id > :seen_notification_id AND
-            NOT read
-          LIMIT :limit
-        ) AS X
-      SQL
-
-        DB.query_single(
-          sql,
-          user_id: id,
-          seen_notification_id: seen_notification_id,
-          limit: User.max_unread_notifications,
-        )[
-          0
-        ].to_i
-      end
+  def grouped_unread_notifications
+    DB.query_array(<<~SQL, user_id: id, limit: MAX_UNREAD_NOTIFICATIONS).to_h
+      SELECT X.notification_type, COUNT(*)
+      FROM (
+        SELECT n.notification_type
+        FROM notifications n
+        LEFT JOIN topics t ON t.id = n.topic_id
+        WHERE (n.topic_id IS NULL OR (t.id IS NOT NULL AND t.deleted_at IS NULL))
+        AND n.user_id = :user_id
+        AND NOT n.read
+        LIMIT :limit
+      ) AS X
+      GROUP BY X.notification_type
+    SQL
   end
 
-  def all_unread_notifications_count
-    @all_unread_notifications_count ||=
-      begin
-        sql = <<~SQL
-        SELECT COUNT(*) FROM (
-          SELECT 1 FROM
-          notifications n
-          LEFT JOIN topics t ON t.id = n.topic_id
-           WHERE t.deleted_at IS NULL AND
-            n.user_id = :user_id AND
-            n.id > :seen_notification_id AND
-            NOT read
-          LIMIT :limit
+  def unread_notifications_count(
+    user_id: id,
+    notification_type: nil,
+    high_priority: nil,
+    since: nil,
+    seen_notification_id: nil,
+    limit: nil
+  )
+    limit = [limit, User.max_unread_notifications].compact.min
+    args = { user_id:, notification_type:, high_priority:, since:, seen_notification_id:, limit: }
+    key = args.values.compact.join("-")
+
+    @unread_notifications_count ||= {}
+    @unread_notifications_count[key] ||= begin
+      DB.query_single(<<~SQL, args)[0].to_i
+        SELECT COUNT(*)
+        FROM (
+          SELECT 1
+          FROM notifications n
+          LEFT JOIN topics t ON n.topic_id = t.id
+          WHERE (n.topic_id IS NULL OR (t.id IS NOT NULL AND t.deleted_at IS NULL))
+            AND NOT n.read
+            AND n.user_id = :user_id
+            #{notification_type.blank? ? "" : "AND n.notification_type = :notification_type"}
+            #{high_priority.nil? ? "" : "AND n.high_priority = :high_priority"}
+            #{since.nil? ? "" : "AND n.created_at > :since"}
+            #{seen_notification_id.nil? ? "" : "AND n.id > :seen_notification_id"}
+            LIMIT :limit
         ) AS X
       SQL
-
-        DB.query_single(
-          sql,
-          user_id: id,
-          seen_notification_id: seen_notification_id,
-          limit: User.max_unread_notifications,
-        )[
-          0
-        ].to_i
-      end
+    end
   end
 
   def total_unread_notifications
-    @unread_total_notifications ||= notifications.where("read = false").count
+    unread_notifications_count
+  end
+
+  def unread_high_priority_notifications
+    unread_notifications_count(high_priority: true)
+  end
+
+  def unread_notifications
+    unread_notifications_count(seen_notification_id:, high_priority: false)
+  end
+
+  def all_unread_notifications_count
+    unread_notifications_count(seen_notification_id:)
+  end
+
+  def new_personal_messages_notifications_count
+    unread_notifications_count(
+      seen_notification_id:,
+      notification_type: Notification.types[:private_message],
+    )
   end
 
   def reviewable_count
@@ -794,6 +728,7 @@ class User < ActiveRecord::Base
     query = query.where("notifications.id > ?", seen_notification_id) if seen_notification_id
     if max_notification_id = query.maximum(:id)
       update!(seen_notification_id: max_notification_id)
+      publish_notifications_state
       true
     else
       false
@@ -802,13 +737,13 @@ class User < ActiveRecord::Base
 
   def bump_last_seen_reviewable!
     query = Reviewable.unseen_list_for(self, preload: false)
-
     query = query.where("reviewables.id > ?", last_seen_reviewable_id) if last_seen_reviewable_id
-    max_reviewable_id = query.maximum(:id)
-
-    if max_reviewable_id
+    if max_reviewable_id = query.maximum(:id)
       update!(last_seen_reviewable_id: max_reviewable_id)
       publish_reviewable_counts
+      true
+    else
+      false
     end
   end
 
@@ -829,48 +764,49 @@ class User < ActiveRecord::Base
     return if !self.allow_live_notifications?
 
     # publish last notification json with the message so we can apply an update
-    notification = notifications.visible.order("notifications.created_at desc").first
-    json = NotificationSerializer.new(notification).as_json if notification
+    notification = notifications.visible.order(created_at: :desc).first
+    last_notification = NotificationSerializer.new(notification).as_json if notification
 
-    sql = (<<~SQL)
-       SELECT * FROM (
-         SELECT n.id, n.read FROM notifications n
-         LEFT JOIN topics t ON n.topic_id = t.id
-         WHERE
-          t.deleted_at IS NULL AND
-          n.high_priority AND
-          n.user_id = :user_id AND
-          NOT read
+    recent = DB.query_array(<<~SQL, user_id: id)
+      SELECT * 
+      FROM (
+        SELECT n.id, n.read 
+        FROM notifications n
+        LEFT JOIN topics t ON n.topic_id = t.id
+        WHERE (n.topic_id IS NULL OR (t.id IS NOT NULL AND t.deleted_at IS NULL))
+        AND n.user_id = :user_id
+        AND n.high_priority
+        AND NOT read
         ORDER BY n.id DESC
         LIMIT 20
       ) AS x
+
       UNION ALL
-      SELECT * FROM (
-       SELECT n.id, n.read FROM notifications n
-       LEFT JOIN topics t ON n.topic_id = t.id
-       WHERE
-        t.deleted_at IS NULL AND
-        (n.high_priority = FALSE OR read) AND
-        n.user_id = :user_id
-       ORDER BY n.id DESC
-       LIMIT 20
+
+      SELECT * 
+      FROM (
+        SELECT n.id, n.read 
+        FROM notifications n
+        LEFT JOIN topics t ON n.topic_id = t.id
+        WHERE (n.topic_id IS NULL OR (t.id IS NOT NULL AND t.deleted_at IS NULL))
+        AND n.user_id = :user_id
+        AND (NOT n.high_priority OR read)
+        ORDER BY n.id DESC
+        LIMIT 20
       ) AS y
     SQL
 
-    recent = DB.query(sql, user_id: id).map! { |r| [r.id, r.read] }
-
     payload = {
-      unread_notifications: unread_notifications,
-      unread_high_priority_notifications: unread_high_priority_notifications,
+      unread_notifications:,
+      unread_high_priority_notifications:,
       read_first_notification: read_first_notification?,
-      last_notification: json,
-      recent: recent,
-      seen_notification_id: seen_notification_id,
+      last_notification:,
+      recent:,
+      seen_notification_id:,
+      all_unread_notifications_count:,
+      grouped_unread_notifications:,
+      new_personal_messages_notifications_count:,
     }
-
-    payload[:all_unread_notifications_count] = all_unread_notifications_count
-    payload[:grouped_unread_notifications] = grouped_unread_notifications
-    payload[:new_personal_messages_notifications_count] = new_personal_messages_notifications_count
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
   end

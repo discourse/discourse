@@ -329,15 +329,14 @@ RSpec.describe Notification do
         notification_type: Notification.types[:bookmark_reminder],
       )
 
-      other =
-        Notification.create!(
-          read: false,
-          user_id: user.id,
-          topic_id: t.id,
-          post_number: 1,
-          data: "{}",
-          notification_type: Notification.types[:mentioned],
-        )
+      Notification.create!(
+        read: false,
+        user_id: user.id,
+        topic_id: t.id,
+        post_number: 1,
+        data: "{}",
+        notification_type: Notification.types[:mentioned],
+      )
 
       user.bump_last_seen_notification!
       user.reload
@@ -348,7 +347,7 @@ RSpec.describe Notification do
     end
   end
 
-  describe "mark_posts_read" do
+  describe "read posts" do
     it "marks multiple posts as read if needed" do
       (1..3).map do |i|
         Notification.create!(
@@ -360,6 +359,7 @@ RSpec.describe Notification do
           notification_type: 1,
         )
       end
+
       Notification.create!(
         read: true,
         user_id: user.id,
@@ -369,8 +369,8 @@ RSpec.describe Notification do
         notification_type: 1,
       )
 
-      expect { Notification.mark_posts_read(user, 2, [1, 2, 3, 4]) }.to change {
-        Notification.where(read: true).count
+      expect { Notification.read!(user, topic_id: 2, post_numbers: [1, 2, 3, 4]) }.to change {
+        Notification.read.count
       }.by(3)
     end
   end
@@ -621,134 +621,60 @@ RSpec.describe Notification do
     end
   end
 
-  describe "#recent_report" do
-    let(:post) { Fabricate(:post) }
+  describe "#consolidate_membership_requests" do
+    fab!(:group) { Fabricate(:group, name: "XXsssssddd") }
+    fab!(:user)
+    fab!(:post)
 
-    def fab(type, read)
-      @i ||= 0
-      @i += 1
-      Notification.create!(
-        read: read,
+    def create_membership_request_notification
+      Notification.consolidate_or_create!(
+        notification_type: Notification.types[:private_message],
         user_id: user.id,
-        topic_id: post.topic_id,
-        post_number: post.post_number,
-        data: "[]",
-        notification_type: type,
-        created_at: @i.days.from_now,
+        data: {
+          topic_title: I18n.t("groups.request_membership_pm.title", group_name: group.name),
+          original_post_id: post.id,
+        }.to_json,
+        updated_at: Time.zone.now,
+        created_at: Time.zone.now,
       )
     end
 
-    def unread_pm
-      fab(Notification.types[:private_message], false)
+    before do
+      PostCustomField.create!(post_id: post.id, name: "requested_group_id", value: group.id)
+      2.times { create_membership_request_notification }
     end
 
-    def unread_bookmark_reminder
-      fab(Notification.types[:bookmark_reminder], false)
+    it "should consolidate membership requests to a new notification" do
+      original_notification = create_membership_request_notification
+      starting_count = SiteSetting.notification_consolidation_threshold
+
+      consolidated_notification = create_membership_request_notification
+      expect { original_notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
+
+      expect(consolidated_notification.notification_type).to eq(
+        Notification.types[:membership_request_consolidated],
+      )
+
+      data = consolidated_notification.data_hash
+      expect(data[:group_name]).to eq(group.name)
+      expect(data[:count]).to eq(starting_count + 1)
+
+      updated_consolidated_notification = create_membership_request_notification
+
+      expect(updated_consolidated_notification.data_hash[:count]).to eq(starting_count + 2)
     end
 
-    def pm
-      fab(Notification.types[:private_message], true)
-    end
+    it 'consolidates membership requests with "processed" false if user is in DND' do
+      user.do_not_disturb_timings.create(starts_at: Time.now, ends_at: 3.days.from_now)
 
-    def regular
-      fab(Notification.types[:liked], true)
-    end
+      create_membership_request_notification
+      create_membership_request_notification
 
-    def liked_consolidated
-      fab(Notification.types[:liked_consolidated], true)
-    end
-
-    it "correctly finds visible notifications" do
-      pm
-      expect(Notification.visible.count).to eq(1)
-      post.topic.trash!
-      expect(Notification.visible.count).to eq(0)
-    end
-
-    it "orders stuff by creation descending, bumping unread high priority (pms, bookmark reminders) to top" do
-      # note we expect the final order to read bottom-up for this list of variables,
-      # with unread pm + bookmark reminder at the top of that list
-      a = unread_pm
-      regular
-      b = unread_bookmark_reminder
-      c = pm
-      d = regular
-
-      notifications = Notification.recent_report(user, 4)
-      expect(notifications.map { |n| n.id }).to eq([b.id, a.id, d.id, c.id])
-    end
-
-    describe "for a user that does not want to be notify on liked" do
-      before do
-        user.user_option.update!(
-          like_notification_frequency: UserOption.like_notification_frequency_type[:never],
-        )
-      end
-
-      it "should not return any form of liked notifications" do
-        notification = pm
-        regular
-        liked_consolidated
-
-        expect(Notification.recent_report(user)).to contain_exactly(notification)
-      end
-    end
-
-    describe "#consolidate_membership_requests" do
-      fab!(:group) { Fabricate(:group, name: "XXsssssddd") }
-      fab!(:user)
-      fab!(:post)
-
-      def create_membership_request_notification
-        Notification.consolidate_or_create!(
-          notification_type: Notification.types[:private_message],
-          user_id: user.id,
-          data: {
-            topic_title: I18n.t("groups.request_membership_pm.title", group_name: group.name),
-            original_post_id: post.id,
-          }.to_json,
-          updated_at: Time.zone.now,
-          created_at: Time.zone.now,
-        )
-      end
-
-      before do
-        PostCustomField.create!(post_id: post.id, name: "requested_group_id", value: group.id)
-        2.times { create_membership_request_notification }
-      end
-
-      it "should consolidate membership requests to a new notification" do
-        original_notification = create_membership_request_notification
-        starting_count = SiteSetting.notification_consolidation_threshold
-
-        consolidated_notification = create_membership_request_notification
-        expect { original_notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
-
-        expect(consolidated_notification.notification_type).to eq(
-          Notification.types[:membership_request_consolidated],
-        )
-
-        data = consolidated_notification.data_hash
-        expect(data[:group_name]).to eq(group.name)
-        expect(data[:count]).to eq(starting_count + 1)
-
-        updated_consolidated_notification = create_membership_request_notification
-
-        expect(updated_consolidated_notification.data_hash[:count]).to eq(starting_count + 2)
-      end
-
-      it 'consolidates membership requests with "processed" false if user is in DND' do
-        user.do_not_disturb_timings.create(starts_at: Time.now, ends_at: 3.days.from_now)
-
-        create_membership_request_notification
-        create_membership_request_notification
-
-        notification = Notification.last
-        expect(notification.notification_type).to eq(
-          Notification.types[:membership_request_consolidated],
-        )
-        expect(notification.shelved_notification).to be_present
-      end
+      notification = Notification.last
+      expect(notification.notification_type).to eq(
+        Notification.types[:membership_request_consolidated],
+      )
+      expect(notification.shelved_notification).to be_present
     end
   end
 

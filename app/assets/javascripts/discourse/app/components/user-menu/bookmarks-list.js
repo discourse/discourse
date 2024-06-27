@@ -51,10 +51,12 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
   }
 
   async fetchItems() {
-    const data = await ajax(
-      `/u/${this.currentUser.username}/user-menu-bookmarks`
-    );
     const content = [];
+
+    const { currentUser, siteSettings, site } = this;
+    const { username } = currentUser;
+
+    const data = await ajax(`/u/${username}/user-menu-bookmarks`);
 
     const notifications = data.notifications.map((n) => Notification.create(n));
     await Notification.applyTransformations(notifications);
@@ -62,24 +64,24 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
       content.push(
         new UserMenuNotificationItem({
           notification,
-          currentUser: this.currentUser,
-          siteSettings: this.siteSettings,
-          site: this.site,
+          currentUser,
+          siteSettings,
+          site,
         })
       );
     });
 
     const bookmarks = data.bookmarks.map((b) => Bookmark.create(b));
     await Bookmark.applyTransformations(bookmarks);
-    content.push(
-      ...bookmarks.map((bookmark) => {
-        return new UserMenuBookmarkItem({
+    bookmarks.forEach((bookmark) => {
+      content.push(
+        new UserMenuBookmarkItem({
           bookmark,
-          siteSettings: this.siteSettings,
-          site: this.site,
-        });
-      })
-    );
+          siteSettings,
+          site,
+        })
+      );
+    });
 
     return content;
   }

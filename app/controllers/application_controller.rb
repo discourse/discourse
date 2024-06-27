@@ -391,8 +391,7 @@ class ApplicationController < ActionController::Base
       end
 
       if notifications.present?
-        notification_ids = notifications.split(",").map(&:to_i)
-        Notification.read(current_user, notification_ids)
+        Notification.read!(current_user, ids: notifications.split(",").map(&:to_i))
         current_user.reload
         current_user.publish_notifications_state
         cookie_args = {}

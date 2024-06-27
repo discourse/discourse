@@ -40,11 +40,10 @@ class UserBookmarkList
   def categories
     @categories ||=
       @bookmarks
-        .map do |bm|
+        .flat_map do |bm|
           category = bm.bookmarkable.try(:category) || bm.bookmarkable.try(:topic)&.category
           [category&.parent_category, category]
         end
-        .flatten
         .compact
         .uniq
   end
