@@ -2,22 +2,22 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { get } from "@ember/object";
-import FKControlCheckbox from "discourse/form-kit/components/control/checkbox";
-import FKControlCode from "discourse/form-kit/components/control/code";
-import FKControlComposer from "discourse/form-kit/components/control/composer";
-import FKControlIcon from "discourse/form-kit/components/control/icon";
-import FKControlImage from "discourse/form-kit/components/control/image";
-import FKControlInput from "discourse/form-kit/components/control/input";
-import FKControlMenu from "discourse/form-kit/components/control/menu";
-import FKControlQuestion from "discourse/form-kit/components/control/question";
-import FKControlRadioGroup from "discourse/form-kit/components/control/radio-group";
-import FKControlSelect from "discourse/form-kit/components/control/select";
-import FKControlTextarea from "discourse/form-kit/components/control/textarea";
-import FKControlToggle from "discourse/form-kit/components/control/toggle";
-import FKControlWrapper from "discourse/form-kit/components/control-wrapper";
-import FKRow from "discourse/form-kit/components/row";
+import FKControlCheckbox from "discourse/form-kit/components/fk/control/checkbox";
+import FKControlCode from "discourse/form-kit/components/fk/control/code";
+import FKControlComposer from "discourse/form-kit/components/fk/control/composer";
+import FKControlIcon from "discourse/form-kit/components/fk/control/icon";
+import FKControlImage from "discourse/form-kit/components/fk/control/image";
+import FKControlInput from "discourse/form-kit/components/fk/control/input";
+import FKControlMenu from "discourse/form-kit/components/fk/control/menu";
+import FKControlQuestion from "discourse/form-kit/components/fk/control/question";
+import FKControlRadioGroup from "discourse/form-kit/components/fk/control/radio-group";
+import FKControlSelect from "discourse/form-kit/components/fk/control/select";
+import FKControlTextarea from "discourse/form-kit/components/fk/control/textarea";
+import FKControlToggle from "discourse/form-kit/components/fk/control/toggle";
+import FKControlWrapper from "discourse/form-kit/components/fk/control-wrapper";
+import FKRow from "discourse/form-kit/components/fk/row";
 
-export default class FormField extends Component {
+export default class FKField extends Component {
   @tracked field;
 
   constructor() {

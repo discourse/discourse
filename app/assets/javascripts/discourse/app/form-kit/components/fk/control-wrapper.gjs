@@ -3,9 +3,9 @@ import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import FKLabel from "discourse/form-kit/components/label";
-import FKMeta from "discourse/form-kit/components/meta";
-import FormText from "discourse/form-kit/components/text";
+import FKLabel from "discourse/form-kit/components/fk/label";
+import FKMeta from "discourse/form-kit/components/fk/meta";
+import FormText from "discourse/form-kit/components/fk/text";
 import concatClass from "discourse/helpers/concat-class";
 import i18n from "discourse-common/helpers/i18n";
 

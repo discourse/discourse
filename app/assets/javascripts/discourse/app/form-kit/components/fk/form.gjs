@@ -8,19 +8,19 @@ import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { modifier as modifierFn } from "ember-modifier";
 import DButton from "discourse/components/d-button";
-import FKAlert from "discourse/form-kit/components/alert";
-import FKContainer from "discourse/form-kit/components/container";
-import FKControlConditionalContent from "discourse/form-kit/components/control/conditional-content";
-import FKControlInputGroup from "discourse/form-kit/components/control/input-group";
-import FKErrorsSummary from "discourse/form-kit/components/errors-summary";
-import FKField from "discourse/form-kit/components/field";
-import Row from "discourse/form-kit/components/row";
-import FKSection from "discourse/form-kit/components/section";
+import FKAlert from "discourse/form-kit/components/fk/alert";
+import FKContainer from "discourse/form-kit/components/fk/container";
+import FKControlConditionalContent from "discourse/form-kit/components/fk/control/conditional-content";
+import FKControlInputGroup from "discourse/form-kit/components/fk/control/input-group";
+import FKErrorsSummary from "discourse/form-kit/components/fk/errors-summary";
+import FKField from "discourse/form-kit/components/fk/field";
+import Row from "discourse/form-kit/components/fk/row";
+import FKSection from "discourse/form-kit/components/fk/section";
 import { VALIDATION_TYPES } from "discourse/form-kit/lib/constants";
 import FieldData from "discourse/form-kit/lib/field-data";
 import I18n from "I18n";
 
-export default class Form extends Component {
+export default class FKForm extends Component {
   @service dialog;
   @service router;
 

@@ -1,4 +1,4 @@
-import FormText from "discourse/form-kit/components/text";
+import FormText from "discourse/form-kit/components/fk/text";
 import concatClass from "discourse/helpers/concat-class";
 
 const FKContainer = <template>

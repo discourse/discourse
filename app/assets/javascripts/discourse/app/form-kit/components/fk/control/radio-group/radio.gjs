@@ -1,6 +1,6 @@
 import { on } from "@ember/modifier";
 import { eq } from "truth-helpers";
-import FKLabel from "discourse/form-kit/components/label";
+import FKLabel from "discourse/form-kit/components/fk/label";
 import uniqueId from "discourse/helpers/unique-id";
 import withEventValue from "discourse/helpers/with-event-value";
 

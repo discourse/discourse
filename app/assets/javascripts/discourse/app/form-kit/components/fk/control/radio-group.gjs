@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import FKErrors from "discourse/form-kit/components/errors";
-import FKText from "discourse/form-kit/components/text";
+import FKErrors from "discourse/form-kit/components/fk/errors";
+import FKText from "discourse/form-kit/components/fk/text";
 import FKControlRadioGroupRadio from "./radio-group/radio";
 
 // eslint-disable-next-line ember/no-empty-glimmer-component-classes

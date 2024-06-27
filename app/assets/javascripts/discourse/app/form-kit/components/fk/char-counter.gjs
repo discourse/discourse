@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { gt } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 
-export default class CharCounter extends Component {
+export default class FKCharCounter extends Component {
   get currentLength() {
     return this.args.value?.length || 0;
   }

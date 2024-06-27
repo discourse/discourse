@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
-import FKCharCounter from "discourse/form-kit/components/char-counter";
-import FKErrors from "discourse/form-kit/components/errors";
-import FKText from "discourse/form-kit/components/text";
+import FKCharCounter from "discourse/form-kit/components/fk/char-counter";
+import FKErrors from "discourse/form-kit/components/fk/errors";
+import FKText from "discourse/form-kit/components/fk/text";
 
 export default class FKMeta extends Component {
   get shouldRenderErrors() {
