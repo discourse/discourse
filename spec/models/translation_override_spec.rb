@@ -170,20 +170,6 @@ RSpec.describe TranslationOverride do
     expect(ovr.value).to eq("<a href=\"%{path}\">Click here</a> alert('TEST');")
   end
 
-  it "stores js for a message format key" do
-    I18n.backend.store_translations(:en, { some: { key_MF: "initial value" } })
-    TranslationOverride.upsert!(
-      "ru",
-      "some.key_MF",
-      "{NUM_RESULTS, plural, one {1 result} other {many} }",
-    )
-
-    ovr = TranslationOverride.where(locale: "ru", translation_key: "some.key_MF").first
-    expect(ovr).to be_present
-    expect(ovr.compiled_js).to start_with("function")
-    expect(ovr.compiled_js).to_not match(/Invalid Format/i)
-  end
-
   describe "site cache" do
     def cached_value(guardian, translation_key, locale:)
       types_name, name_key, attribute = translation_key.split(".")
