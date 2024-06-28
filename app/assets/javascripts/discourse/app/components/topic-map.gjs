@@ -42,17 +42,6 @@ export default class TopicMap extends Component {
       </section>
     {{/unless}}
 
-    <PluginOutlet
-      @name="topic-map-expanded-after"
-      @connectorTagName="span"
-      @outletArgs={{hash
-        topic=@model
-        postStream=@postStream
-        cancelFilter=@cancelFilter
-        showTopReplies=@showTopReplies
-      }}
-    />
-
     {{#if @showPMMap}}
       <section class="information private-message-map">
         <PrivateMessageMap
