@@ -245,6 +245,15 @@ describe UserNotifications do
         end
       end
     end
+
+    describe "channel does not allow channel wide mentions" do
+      before { followed_channel.update!(allow_channel_wide_mentions: false) }
+
+      it "does not send a chat summary email" do
+        create_message(followed_channel, "hello @all", Chat::AllMention)
+        no_chat_summary_email
+      end
+    end
   end
 
   describe "in two followed channels" do
