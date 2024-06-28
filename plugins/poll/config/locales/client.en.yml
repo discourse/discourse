@@ -22,7 +22,6 @@ en:
           title: "Results will be shown once <strong>closed</strong>."
         staff:
           title: "Results are only shown to <strong>staff</strong> members."
-
       multiple:
         help:
           at_least_min_options:
@@ -80,7 +79,7 @@ en:
         breakdown: "Breakdown"
         percentage: "Percentage"
         count: "Count"
-      
+
       options:
         label: "Options"
 
