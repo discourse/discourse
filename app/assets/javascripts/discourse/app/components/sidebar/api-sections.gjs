@@ -23,6 +23,9 @@ export default class SidebarApiSections extends Component {
       const SidebarSection = prepareSidebarSectionClass(Section);
 
       const sectionInstance = new SidebarSection({
+        filterable:
+          !this.sidebarState.combinedMode &&
+          this.sidebarState.currentPanel.filterable,
         sidebarState: this.sidebarState,
       });
 
@@ -49,14 +52,16 @@ export default class SidebarApiSections extends Component {
 // sections using the plugin API, like for example the filtering capabilities
 function prepareSidebarSectionClass(Section) {
   return class extends Section {
-    constructor({ sidebarState }) {
+    constructor({ filterable, sidebarState }) {
       super();
+
+      this.filterable = filterable;
       this.sidebarState = sidebarState;
     }
 
     @cached
     get filteredLinks() {
-      if (!this.sidebarState.filter) {
+      if (!this.filterable || !this.sidebarState.filter) {
         return this.links;
       }
 
@@ -78,7 +83,7 @@ function prepareSidebarSectionClass(Section) {
     }
 
     get filtered() {
-      return this.filteredLinks?.length > 0;
+      return !this.filterable || this.filteredLinks?.length > 0;
     }
   };
 }
