@@ -920,6 +920,8 @@ pt:
     web_crawlers:
       labels:
         page_views: "Exibições de Página"
+    web_hook_events_daily_aggregate:
+      xaxis: "Dia"
     suspicious_logins:
       labels:
         user: Utilizador

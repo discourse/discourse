@@ -1169,6 +1169,8 @@ gl:
         user_agent: "Axente de usuario"
         page_views: "Visualizacións de páxinas"
       description: "Listaxe dos axentes de usuario dos rastrexadores web, ordenados por visualizacións de páxina."
+    web_hook_events_daily_aggregate:
+      xaxis: "Día"
     suspicious_logins:
       title: "Inicios de sesión sospeitosos"
       labels:

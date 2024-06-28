@@ -1788,8 +1788,8 @@ ur:
       enter: "اَینٹر"
     category_row:
       subcategory_count:
-        one: "+ %{count} ذیلی زمرہ"
-        other: "+ %{count} ذیلی زمرہ جات"
+        one: "+%{count} ذیلی زمرہ"
+        other: "+%{count} ذیلی زمرہ جات"
       topic_count:
         one: "اس زمرے میں %{count} موضوع"
         other: "اس زمرے میں %{count} موضوعات"

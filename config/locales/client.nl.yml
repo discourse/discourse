@@ -2137,8 +2137,8 @@ nl:
       loading: Laden…
     category_row:
       subcategory_count:
-        one: "+ %{count} subcategorie"
-        other: "+ %{count} subcategorieën"
+        one: "+%{count} subcategorie"
+        other: "+%{count} subcategorieën"
       topic_count:
         one: "%{count} topic in deze categorie"
         other: "%{count} topics in deze categorie"

@@ -951,6 +951,8 @@ te:
       labels:
         user_agent: "యూజర్ ఏజెంట్"
         page_views: "పేజీ వీక్షణలు"
+    web_hook_events_daily_aggregate:
+      xaxis: "రోజు"
     suspicious_logins:
       title: "అనుమానాస్పద లాగిన్‌లు"
       labels:

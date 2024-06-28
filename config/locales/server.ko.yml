@@ -83,9 +83,17 @@ ko:
       invalid_yaml: "제공된 YAML이 유효하지 않습니다."
       data_type_inclusion: "`%{name}` 유형 설정은 지원되지 않습니다. 지원되는 유형은`integer`,`bool`,`list`,`enum` 및`upload`입니다."
       name_too_long: "이름이 너무 긴 설정이 있습니다. 최대 길이는 255입니다"
-      default_not_match_type: "`%{name}` 디폴트값 유형 설정이 설정 유형과 일치하지 않습니다."
+      default_value_missing: "`%{name}` 설정에는 기본값이 없습니다."
+      default_not_match_type: "`%{name}` 기본 값 유형 설정이 설정 유형과 일치하지 않습니다."
       enum_value_not_valid: "선택한 값은 열거형 선택 중 하나가 아닙니다."
       number_value_not_valid_min_max: "%{min}이상 %{max}이하이어야 합니다."
+      number_value_not_valid_min: "%{min}보다 크거나 같아야 합니다."
+      number_value_not_valid_max: "%{max}보다 작거나 같아야 합니다."
+      string_value_not_valid_min_max: "%{min}자에서 %{max}자 사이여야 합니다."
+      string_value_not_valid_min:
+        other: "최소 %{count}자 이상이어야 합니다."
+      string_value_not_valid_max:
+        other: "%{count}자 이하이어야 합니다."
       objects:
         required: "공백이 없어야 합니다."
         not_valid_integer_value: "정수여야 함"
@@ -329,6 +337,7 @@ ko:
   read_full_topic: "전체 주제 읽기"
   private_message_abbrev: "메시지"
   rss_description:
+    hot: "인기 주제"
     latest: "최신 주제"
     top: "주요 주제"
     top_all: "전체 기간의 주요 주제"
@@ -694,7 +703,7 @@ ko:
       unknown: "알 수 없는 운영체제"
   change_email:
     error: "이메일 주소 변경 중 오류가 발생했습니다. 이미 사용 중인 이메일일 수 있습니다."
-    doesnt_exist: "이 이메일 주소는 내 계정과 연결되어 있지 않습니다."
+    doesnt_exist: "해당 이메일 주소는 계정과 연결되어 있지 않습니다."
     error_staged: "이메일 주소 변경 중에 오류가 발생했습니다. 스테이징된 사용자가 사용 중인 이메일일 수 있습니다."
     already_done: "이 확인 링크는 더 이상 유효하지 않습니다. 이메일이 이미 변경되지는 않았나요?"
     confirm: "확인"
@@ -1180,6 +1189,8 @@ ko:
         user_agent: "사용자 에이전트"
         page_views: "페이지뷰"
       description: "페이지뷰로 정렬된 웹 크롤러 사용자 에이전트 목록입니다."
+    web_hook_events_daily_aggregate:
+      xaxis: "일"
     suspicious_logins:
       title: "의심스러운 로그인"
       labels:

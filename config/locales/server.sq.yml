@@ -586,6 +586,8 @@ sq:
     mobile_visits:
       xaxis: "Ditë"
       yaxis: "Numri i vizitave"
+    web_hook_events_daily_aggregate:
+      xaxis: "Dit"
     suspicious_logins:
       labels:
         user: User

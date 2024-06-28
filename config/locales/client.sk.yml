@@ -1254,6 +1254,8 @@ sk:
       read_help: "Nedávno prečítané témy"
       preferences:
         title: "Nastavenia"
+        profile:
+          enforced_required_fields: "Pred ďalším používaním tejto stránky musíte poskytnúť ďalšie informácie."
       feature_topic_on_profile:
         open_search: "Vyberte novú tému"
         title: "Vyber tému"
@@ -2405,10 +2407,10 @@ sk:
       loading: Načítava sa…
     category_row:
       subcategory_count:
-        one: "+ %{count} podkategória"
-        few: "+ %{count} podkategórií"
-        many: "+ %{count} podkategórií"
-        other: "+ %{count} podkategórie"
+        one: "+%{count} podkategória"
+        few: "+%{count} podkategórií"
+        many: "+%{count} podkategórie"
+        other: "+%{count} podkategórie"
       topic_count:
         one: "%{count} téma v tejto kategórii"
         few: "%{count} tém v tejto kategórii"
@@ -5146,6 +5148,8 @@ sk:
               label: Kategória
             include_subcategories:
               label: "Zahrnúť podkategórie"
+            type_of_web_hook_event:
+              label: "Typ podujatia"
       flags:
         title: "Príznaky moderovania"
         description: "Popis"
@@ -5990,6 +5994,7 @@ sk:
             description: "Odkazy, nejaké tlačidlá, upozornenia a zvýrazňovacie farby."
           quaternary:
             name: "štvrťročne"
+            description: "Na voliteľné použitie v témach."
           header_background:
             name: "pozadie hlavičky"
             description: "Farba pozadia hlavičky stránky."
@@ -6764,9 +6769,13 @@ sk:
           title: "Požiadavka na pole"
           optional:
             title: "Nepovinné"
+          for_all_users:
+            title: "Pre všetkých používateľov"
+            description: "Pri registrácii nových používateľov je potrebné vyplniť toto pole. Keď sa existujúci používatelia vrátia na stránku a toto pole je pre nich nové povinné, budú tiež vyzvaní, aby ho vyplnili. Ak chcete opätovne vyzvať všetkých používateľov, odstráňte toto vlastné pole a vytvorte ho znova."
           on_signup:
             title: "Pri registrácii"
             description: "Pri registrácii nových používateľov je potrebné vyplniť toto pole. Existujúcich používateľov sa to netýka."
+          confirmation: "To vyzve existujúcich používateľov, aby toto pole vyplnili, a nedovolí im robiť na stránke nič iné, kým pole nevyplnia. Pokračovať?"
         editable:
           title: "Upravovateľné po registrácii"
           enabled: "upravovateľné "
@@ -6799,6 +6808,7 @@ sk:
         recommended: "Odporúčame prispôsobenie nasledujúceho textu podľa vašich potrieb:"
         show_overriden: "Ukázať iba zmenené"
         show_outdated: "Zobraziť len neaktuálne/neplatné"
+        show_untranslated: "Zobraziť len nepreložené"
         locale: "Jazyk:"
         more_than_50_results: "K dispozícii je viac ako 50 výsledkov. Upresnite prosím vyhľadávanie."
         no_results: "Nenašli sa žiadne zodpovedajúce texty"

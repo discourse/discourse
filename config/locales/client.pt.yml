@@ -1854,8 +1854,8 @@ pt:
       loading: A carregar...
     category_row:
       subcategory_count:
-        one: "+ %{count} subcategoria"
-        other: "+ %{count} subcategorias"
+        one: "+%{count} subcategoria"
+        other: "+%{count} subcategorias"
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"

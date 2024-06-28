@@ -348,7 +348,6 @@ uk:
         other: має неправильну довжину (має бути %{count} символів)
       other_than: "має бути відмінним від %{count}"
       auth_overrides_username: "Ім’я користувача потрібно оновити на стороні постачальника автентифікації, оскільки увімкнено параметр `auth_overrides_username`."
-      required: "має існувати"
     template:
       body: ! "Проблеми у цих полях:"
       header:
@@ -1620,6 +1619,8 @@ uk:
         user_agent: "User Agent"
         page_views: "Переглядів"
       description: "Список агентів користувача, відсортований за переглядами сторінок."
+    web_hook_events_daily_aggregate:
+      xaxis: "День"
     suspicious_logins:
       title: "Підозрілі входи"
       labels:
