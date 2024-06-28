@@ -10,8 +10,7 @@ export default class SidebarApiSection extends Component {
   constructor() {
     super(...arguments);
 
-    this.section = this.args.section;
-    setOwner(this.section, getOwner(this));
+    setOwner(this.args.section, getOwner(this));
   }
 
   get shouldDisplay() {
@@ -24,16 +23,18 @@ export default class SidebarApiSection extends Component {
 
   get filteredLinks() {
     if (!this.sidebarState.filter) {
-      return this.section.links;
+      return this.args.section.links;
     }
 
     if (
-      this.section.text.toLowerCase().match(this.sidebarState.sanitizedFilter)
+      this.args.section.text
+        .toLowerCase()
+        .match(this.sidebarState.sanitizedFilter)
     ) {
-      return this.section.links;
+      return this.args.section.links;
     }
 
-    return this.section.links.filter((link) => {
+    return this.args.section.links.filter((link) => {
       return (
         link.text
           .toString()
@@ -49,16 +50,16 @@ export default class SidebarApiSection extends Component {
   <template>
     {{#if this.shouldDisplay}}
       <Section
-        @sectionName={{this.section.name}}
-        @headerLinkText={{this.section.text}}
-        @headerLinkTitle={{this.section.title}}
-        @headerActionsIcon={{this.section.actionsIcon}}
-        @headerActions={{this.section.actions}}
-        @willDestroy={{this.section.willDestroy}}
+        @sectionName={{@section.name}}
+        @headerLinkText={{@section.text}}
+        @headerLinkTitle={{@section.title}}
+        @headerActionsIcon={{@section.actionsIcon}}
+        @headerActions={{@section.actions}}
+        @willDestroy={{@section.willDestroy}}
         @collapsable={{@collapsable}}
-        @displaySection={{this.section.displaySection}}
-        @hideSectionHeader={{this.section.hideSectionHeader}}
-        @collapsedByDefault={{this.section.collapsedByDefault}}
+        @displaySection={{@section.displaySection}}
+        @hideSectionHeader={{@section.hideSectionHeader}}
+        @collapsedByDefault={{@section.collapsedByDefault}}
       >
         {{#each this.filteredLinks key="name" as |link|}}
           <SectionLink
