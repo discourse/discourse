@@ -12,6 +12,7 @@ import TopicMapExpanded from "discourse/components/topic-map/topic-map-expanded"
 import TopicMapSummary from "discourse/components/topic-map/topic-map-summary";
 import concatClass from "discourse/helpers/concat-class";
 import I18n from "discourse-i18n";
+import or from "truth-helpers/helpers/or";
 
 const MIN_POST_READ_TIME = 4;
 
@@ -97,39 +98,41 @@ export default class TopicMap extends Component {
       </section>
     {{/unless}}
 
-    <section class="information toggle-summary">
-      {{#if @model.has_summary}}
-        <p>{{htmlSafe this.topRepliesSummaryInfo}}</p>
-      {{/if}}
-      <PluginOutlet
-        @name="topic-map-expanded-after"
-        @defaultGlimmer={{true}}
-        @outletArgs={{hash topic=@model postStream=@postStream}}
-      >
-        <div class="summarization-buttons">
-          {{#if @model.has_summary}}
-            <DButton
-              @action={{if @postStream.summary @cancelFilter @showTopReplies}}
-              @translatedTitle={{this.topRepliesTitle}}
-              @translatedLabel={{this.topRepliesLabel}}
-              @icon={{this.topRepliesIcon}}
-              class="top-replies"
+    {{#if (or @model.has_summary @model.summarizable)}}
+      <section class="information toggle-summary">
+        {{#if @model.has_summary}}
+          <p>{{htmlSafe this.topRepliesSummaryInfo}}</p>
+        {{/if}}
+        <PluginOutlet
+          @name="topic-map-expanded-after"
+          @defaultGlimmer={{true}}
+          @outletArgs={{hash topic=@model postStream=@postStream}}
+        >
+          <div class="summarization-buttons">
+            {{#if @model.has_summary}}
+              <DButton
+                @action={{if @postStream.summary @cancelFilter @showTopReplies}}
+                @translatedTitle={{this.topRepliesTitle}}
+                @translatedLabel={{this.topRepliesLabel}}
+                @icon={{this.topRepliesIcon}}
+                class="top-replies"
+              />
+            {{/if}}
+          </div>
+
+          {{#if @model.summarizable}}
+            <SummaryBox
+              @topic={{@model}}
+              @postStream={{@postStream}}
+              @cancelFilter={{@cancelFilter}}
+              @showTopReplies={{@showTopReplies}}
+              @collapseSummary={{@collapseSummary}}
+              @showSummary={{@showSummary}}
             />
           {{/if}}
-        </div>
-
-        {{#if @model.summarizable}}
-          <SummaryBox
-            @topic={{@model}}
-            @postStream={{@postStream}}
-            @cancelFilter={{@cancelFilter}}
-            @showTopReplies={{@showTopReplies}}
-            @collapseSummary={{@collapseSummary}}
-            @showSummary={{@showSummary}}
-          />
-        {{/if}}
-      </PluginOutlet>
-    </section>
+        </PluginOutlet>
+      </section>
+    {{/if}}
 
     {{#if @showPMMap}}
       <section class="information private-message-map">
