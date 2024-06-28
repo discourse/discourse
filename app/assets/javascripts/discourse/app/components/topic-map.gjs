@@ -101,7 +101,6 @@ export default class TopicMap extends Component {
       {{#if @model.has_summary}}
         <p>{{htmlSafe this.topRepliesSummaryInfo}}</p>
       {{/if}}
-
       <PluginOutlet
         @name="topic-map-expanded-after"
         @defaultGlimmer={{true}}
