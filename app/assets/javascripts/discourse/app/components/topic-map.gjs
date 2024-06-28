@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import SummaryBox from "discourse/components/summary-box";
 import PrivateMessageMap from "discourse/components/topic-map/private-message-map";
 import TopicMapExpanded from "discourse/components/topic-map/topic-map-expanded";
@@ -53,6 +55,18 @@ export default class TopicMap extends Component {
         />
       </section>
     {{/if}}
+
+    <PluginOutlet
+      @name="topic-map-expanded-after"
+      @connectorTagName="span"
+      @outletArgs={{hash
+        topic=@model
+        postStream=@postStream
+        cancelFilter=@cancelFilter
+        showTopReplies=@showTopReplies
+      }}
+    />
+
     {{#if @showPMMap}}
       <section class="information private-message-map">
         <PrivateMessageMap
