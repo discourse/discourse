@@ -1858,13 +1858,13 @@ zh_CN:
       enabled: "此站点处于管理人员专用模式。请继续浏览，但回复、赞和其他操作仅限于管理人员。"
     logs_error_rate_notice:
       reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/小时} other {# 个错误/小时}}</a>达到了站点设置中 {limit, plural, one {# 个错误/小时} other {# 个错误/小时}}的限制。
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {# 个错误/小时}}</a>达到了站点设置中 {limit, plural, other {# 个错误/小时}}的限制。
       reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/分钟} other {# 个错误/分钟}}</a>达到了站点设置中 {limit, plural, one {# 个错误/分钟} other {# 个错误/分钟}}的限制。
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {# 个错误/分钟}}</a>达到了站点设置中 {limit, plural, other {# 个错误/分钟}}的限制。
       exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/小时} other {# 个错误/小时}}</a>超过了站点设置中 {limit, plural, one {# 个错误/小时} other {# 个错误/小时}}的限制。
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {# 个错误/小时}}</a>超过了站点设置中 {limit, plural, other {# 个错误/小时}}的限制。
       exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/分钟} other {# 个错误/分钟}}</a>超过了站点设置中 {limit, plural, one {# 个错误/分钟} other {# 个错误/分钟}}的限制。
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {# 个错误/分钟}}</a>超过了站点设置中 {limit, plural, other {# 个错误/分钟}}的限制。
     learn_more: "了解详情…"
     mute: 免打扰
     unmute: 取消免打扰
@@ -1902,7 +1902,7 @@ zh_CN:
         generate: "使用 AI 总结"
         regenerate: "重新生成摘要"
       description_time_MF: |
-        有 {replyCount, plural, one {<b>#</b> 个回复} other {<b>#</b> 个回复}}，预计阅读时间为 <b>{readingTime, plural,one {# 分钟}other {# 分钟}}</b>。
+        有 {replyCount, plural, other {<b>#</b> 个回复}}，预计阅读时间为 <b>{readingTime, plural,other {# 分钟}}</b>。
       enable: "显示热门回复"
       disable: "显示所有帖子"
       short_label: "热门回复"
@@ -2097,7 +2097,7 @@ zh_CN:
       loading: 正在加载…
     category_row:
       subcategory_count:
-        other: "+ %{count} 个子类别"
+        other: "+%{count} 个子类别"
       topic_count:
         other: "此类别下有 %{count} 个话题"
     select_kit:
@@ -6005,6 +6005,7 @@ zh_CN:
           on_signup:
             title: "注册时"
             description: "新用户注册时必须填写此字段。现有用户不受影响。"
+          confirmation: "这将提示现有用户填写该字段，并且在填写该字段之前不允许他们在网站上做任何其他操作。继续？"
         editable:
           title: "注册后可以编辑"
           enabled: "可编辑"

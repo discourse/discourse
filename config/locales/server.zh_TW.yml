@@ -1001,6 +1001,8 @@ zh_TW:
         user_agent: "使用者代理"
         page_views: "頁面瀏覽次數"
       description: "網路爬蟲使用者代理清單，按頁面瀏覽量排序"
+    web_hook_events_daily_aggregate:
+      xaxis: "天"
     suspicious_logins:
       title: "可疑登入"
       labels:

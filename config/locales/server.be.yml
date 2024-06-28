@@ -836,6 +836,8 @@ be:
         user_agent: "агент карыстальніка"
         page_views: "прагледжваемыя"
       description: "Спіс вэб-колавыя агентаў карыстальнікаў, адсартаваны па колькасці праглядаў старонак."
+    web_hook_events_daily_aggregate:
+      xaxis: "дзень"
     suspicious_logins:
       title: "падазроныя лагін"
       labels:

@@ -283,7 +283,6 @@ he:
         other: באורך שגוי (אמור להיות באורך של %{count} תווים)
       other_than: "צריך להיות שונה מ־%{count}"
       auth_overrides_username: "יש לעדכן את שם המשתמש בצד ספק האימות, מאחר שההגדרה `auth_overrides_username` (דריסת שם משתמש מצד האימות) פעילה."
-      required: "חייב להיות קיים"
     template:
       body: ! "ישנן תקלות עם השדות הבאים:"
       header:
@@ -1550,6 +1549,11 @@ he:
         user_agent: "סוכן משתמש"
         page_views: "צפיות בעמודים"
       description: "רשימת סוכני משתמשים של סורקי אינטרנט, בסידור לפי צפיות בעמודים."
+    web_hook_events_daily_aggregate:
+      title: "אירועי התלייה"
+      xaxis: "יום"
+      yaxis: "מספר אירועים"
+      description: "מספר ההתליות שהוזנקו או את משך הזמן הממוצע שלהן."
     suspicious_logins:
       title: "ניסיונות כניסה חשודים"
       labels:

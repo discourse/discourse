@@ -1280,6 +1280,8 @@ ja:
         user_agent: "ユーザーエージェント"
         page_views: "ページビュー"
       description: "ウェブクローラーユーザーエージェントのリスト (ページビュー順)。"
+    web_hook_events_daily_aggregate:
+      xaxis: "日"
     suspicious_logins:
       title: "不審なログイン"
       labels:

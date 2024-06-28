@@ -1328,6 +1328,8 @@ nl:
         user_agent: "Useragent"
         page_views: "Paginaweergaven"
       description: "Lijst van webcrawler-useragents, gesorteerd op paginaweergaven."
+    web_hook_events_daily_aggregate:
+      xaxis: "Day"
     suspicious_logins:
       title: "Verdachte aanmeldingen"
       labels:

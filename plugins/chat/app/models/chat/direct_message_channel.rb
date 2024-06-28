@@ -2,7 +2,7 @@
 
 module Chat
   class DirectMessageChannel < Channel
-    alias_method :direct_message, :chatable
+    alias_attribute :direct_message, :chatable
 
     def direct_message_channel?
       true

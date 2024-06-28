@@ -379,6 +379,8 @@ lv:
     web_crawlers:
       labels:
         page_views: "Lapu skatījumi"
+    web_hook_events_daily_aggregate:
+      xaxis: "Diena"
     suspicious_logins:
       labels:
         user: Lietotājs

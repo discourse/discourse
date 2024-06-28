@@ -33,6 +33,7 @@ module Chat
           AND chat_messages.created_at > now() - interval '1 week'
           AND (uccm.last_read_message_id IS NULL OR uccm.last_read_message_id < chat_messages.id)
           AND (uccm.last_unread_mention_when_emailed_id IS NULL OR uccm.last_unread_mention_when_emailed_id < chat_messages.id)
+          AND (chat_mentions.target_id = #{user.id} OR chat_mentions.type = 'Chat::AllMention')
           AND NOT notifications.read
           GROUP BY uccm.id
         )

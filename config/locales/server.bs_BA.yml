@@ -574,6 +574,8 @@ bs_BA:
     web_crawlers:
       labels:
         page_views: "Pagevieovi"
+    web_hook_events_daily_aggregate:
+      xaxis: "Day"
     suspicious_logins:
       labels:
         user: User

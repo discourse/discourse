@@ -2124,8 +2124,8 @@ ug:
       loading: يۈكلەۋاتىدۇ…
     category_row:
       subcategory_count:
-        one: "+ %{count} تارماق سەھىپە"
-        other: "+ %{count} تارماق سەھىپە"
+        one: "+%{count} تارماق سەھىپە"
+        other: "+%{count} تارماق سەھىپە"
       topic_count:
         one: "بۇ سەھىپىدە %{count} تېما بار"
         other: "بۇ سەھىپىدە %{count} تېما بار"
@@ -2702,6 +2702,7 @@ ug:
         close_topics: "تېمىنى تاقا"
         archive_topics: "تېما ئارخىپلاشتۇر"
         move_messages_to_inbox: "قوبۇللاش ساندۇقىغا يۆتكە"
+        archive_messages: "ئارخىپقا يۆتكە"
         notification_level: "ئۇقتۇرۇش…"
         change_notification_level: "ئۇقتۇرۇش دەرىجىسىنى ئۆزگەرت"
         choose_new_category: "تېمىغا يېڭى سەھىپە تاللىنىدۇ:"
@@ -2761,8 +2762,14 @@ ug:
         optional: (تاللاشچان)
       archive_topics:
         name: "ئارخىپ"
+      archive_messages:
+        name: "ئارخىپقا يۆتكە"
       move_messages_to_inbox:
         name: "قوبۇللاش ساندۇقىغا يۆتكە"
+      unlist_topics:
+        name: "تىزىمدىن چىقىرىۋەت"
+      relist_topics:
+        name: "تىزىمغا قايتا قوش"
       remove_tags:
         name: "بەلگىنى چىقىرىۋەت"
       append_tags:

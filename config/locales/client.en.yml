@@ -2406,8 +2406,8 @@ en:
 
     category_row:
       subcategory_count:
-        one: "+ %{count} subcategory"
-        other: "+ %{count} subcategories"
+        one: "+%{count} subcategory"
+        other: "+%{count} subcategories"
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
@@ -5038,6 +5038,8 @@ en:
               label: Category
             include_subcategories:
               label: "Include Subcategories"
+            type_of_web_hook_event:
+              label: "Type of event"
       flags:
         title: "Moderation Flags"
         description: "Description"

@@ -679,7 +679,7 @@ export default {
     );
     if (!selected) {
       selected = articles.find(
-        (element) => element.dataset.islastviewedtopic === "true"
+        (element) => element.dataset.isLastViewedTopic === "true"
       );
     }
 

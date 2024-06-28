@@ -1124,6 +1124,8 @@ de:
       read_help: "Kürzlich gelesene Themen"
       preferences:
         title: "Einstellungen"
+        profile:
+          enforced_required_fields: "Du musst zusätzliche Informationen angeben, bevor du diese Seite weiter nutzen kannst."
       feature_topic_on_profile:
         open_search: "Wähle ein neues Thema"
         title: "Wähle ein Thema"
@@ -2193,8 +2195,8 @@ de:
       loading: Wird geladen …
     category_row:
       subcategory_count:
-        one: "+ %{count} Unterkategorie"
-        other: "+ %{count} Unterkategorien"
+        one: "+%{count} Unterkategorie"
+        other: "+%{count} Unterkategorien"
       topic_count:
         one: "%{count} Thema in dieser Kategorie"
         other: "%{count} Themen in dieser Kategorie"
@@ -4668,6 +4670,8 @@ de:
               label: Kategorie
             include_subcategories:
               label: "Unterkategorien einschließen"
+            type_of_web_hook_event:
+              label: "Art des Ereignisses"
       flags:
         title: "Moderationsmeldungen"
         description: "Beschreibung"
@@ -6245,9 +6249,13 @@ de:
           title: "Felderfordernis"
           optional:
             title: "Optional"
+          for_all_users:
+            title: "Für alle Benutzer"
+            description: "Wenn sich neue Benutzer anmelden, müssen sie dieses Feld ausfüllen. Wenn bestehende Benutzer zur Website zurückkehren und dieses Feld für sie ein neues Pflichtfeld ist, werden sie ebenfalls aufgefordert, es auszufüllen. Um alle Benutzer erneut aufzufordern, löschst du dieses benutzerdefinierte Feld und erstellst es neu."
           on_signup:
             title: "Bei der Anmeldung"
             description: "Wenn sich neue Benutzer anmelden, müssen sie dieses Feld ausfüllen. Bestehende Benutzer sind nicht betroffen."
+          confirmation: "Dadurch werden bestehende Benutzer aufgefordert, dieses Feld auszufüllen, und sie können erst dann etwas anderes auf deiner Website tun, wenn das Feld ausgefüllt ist. Fortfahren?"
         editable:
           title: "Nach der Registrierung editierbar"
           enabled: "editierbar"

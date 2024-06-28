@@ -30,6 +30,10 @@ module PageObjects
         page.has_no_css?(topic_list_item_class(topic))
       end
 
+      def has_highlighted_topic?(topic)
+        page.has_css?("#{topic_list_item_class(topic)}.highlighted")
+      end
+
       def has_topic_checkbox?(topic)
         page.has_css?("#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}")
       end
@@ -77,6 +81,14 @@ module PageObjects
 
       def topic_list_item_class(topic)
         "#{TOPIC_LIST_ITEM_SELECTOR}[data-topic-id='#{topic.id}']"
+      end
+
+      def had_new_topics_alert?
+        page.has_css?(".show-more.has-topics")
+      end
+
+      def click_new_topics_alert
+        find(".show-more.has-topics").click
       end
 
       private

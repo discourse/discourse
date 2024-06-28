@@ -167,13 +167,11 @@ zh_CN:
                       { isAdmin, select,
                         true {
                           { notificationLimit, plural,
-                              one {提及 @{group1} 超出了 # 个用户的<a href="{siteSettingUrl}" target="_blank">通知限制</a>。}
                               other {提及 @{group1} 超出了 # 个用户的<a href="{siteSettingUrl}" target="_blank">通知限制</a>。}
                           }
                         }
                         false {
                           { notificationLimit, plural,
-                              one {提及 @{group1} 超出了 # 个用户的通知限制。}
                               other {提及 @{group1} 超出了 # 个用户的通知限制。}
                           }
                         }
@@ -184,13 +182,11 @@ zh_CN:
                       { isAdmin, select,
                         true {
                           { notificationLimit, plural,
-                              one {提及 @{group1} 和 @{group2} 超出了 # 个用户的<a href="{siteSettingUrl}" target="_blank">通知限制</a>。}
                             other {提及 @{group1} 和 @{group2} 超出了 # 个用户的<a href="{siteSettingUrl}" target="_blank">通知限制</a>。}
                           }
                         }
                         false {
                           { notificationLimit, plural,
-                              one {提及 @{group1} 和 @{group2} 超出了 # 个用户的通知限制。}
                             other {提及 @{group1} 和 @{group2} 超出了 # 个用户的通知限制。}
                           }
                         }
@@ -201,13 +197,11 @@ zh_CN:
                       { isAdmin, select,
                         true {
                           { notificationLimit, plural,
-                              one {提及这 {groupCount} 个群组超出了 # 个用户的<a href="{siteSettingUrl}" target="_blank">通知限制</a>。}
                             other {提及这 {groupCount} 个群组超出了 # 个用户的<a href="{siteSettingUrl}" target="_blank">通知限制</a>。}
                           }
                         }
                         false {
                           { notificationLimit, plural,
-                              one {提及这 {groupCount} 个群组超出了 # 个用户的通知限制。}
                             other {提及这 {groupCount} 个群组超出了 # 个用户的通知限制。}
                           }
                         }

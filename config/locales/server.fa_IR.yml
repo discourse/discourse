@@ -860,6 +860,8 @@ fa_IR:
     web_crawlers:
       labels:
         page_views: "بازدید"
+    web_hook_events_daily_aggregate:
+      xaxis: "روز"
     suspicious_logins:
       labels:
         user: کاربر

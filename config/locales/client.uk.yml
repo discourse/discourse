@@ -2389,10 +2389,10 @@ uk:
       loading: Завантаження…
     category_row:
       subcategory_count:
-        one: "+ %{count} підрозділ"
-        few: "+ %{count} підрозділи"
-        many: "+ %{count} підрозділів"
-        other: "+ %{count} підрозділів"
+        one: "+%{count} підрозділ"
+        few: "+%{count} підрозділи"
+        many: "+%{count} підрозділів"
+        other: "+%{count} підрозділів"
       topic_count:
         one: "в цьому розділі %{count} тема"
         few: "в цьому розділі %{count} теми"
