@@ -10,7 +10,7 @@ export default class SidebarApiSection extends Component {
   constructor() {
     super(...arguments);
 
-    this.section = new this.args.sectionConfig();
+    this.section = this.args.section;
     setOwner(this.section, getOwner(this));
   }
 
