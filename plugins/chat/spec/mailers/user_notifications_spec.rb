@@ -560,6 +560,14 @@ describe UserNotifications do
           expect(html).not_to include(group.name)
         end
       end
+
+      describe "when user is removed from group" do
+        before { group.remove(user) }
+
+        it "does not show the group mention in the email subject" do
+          chat_summary_with_subject(:chat_dm_1, name: direct_message.title(user), count: 1)
+        end
+      end
     end
   end
 end
