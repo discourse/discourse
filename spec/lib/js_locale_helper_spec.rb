@@ -141,4 +141,28 @@ RSpec.describe JsLocaleHelper do
       end
     end
   end
+
+  describe ".output_MF" do
+    subject(:output) { described_class.output_MF(locale) }
+
+    context "when locale is 'en'" do
+      let(:locale) { "en" }
+
+      it "outputs message format messages for 'en'" do
+        expect(output).to match(/en:.*_MF/m)
+      end
+    end
+
+    context "when locale is not 'en'" do
+      let(:locale) { "fr" }
+
+      it "outputs message format messages for this locale" do
+        expect(output).to match(/fr:.*_MF/m)
+      end
+
+      it "outputs a fallback locale too" do
+        expect(output).to match(/en:.*_MF/m)
+      end
+    end
+  end
 end
