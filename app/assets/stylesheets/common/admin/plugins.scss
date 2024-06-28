@@ -131,15 +131,12 @@
     }
 
     .admin-plugin-config-page__top-nav {
-      --active-border-width: var(--space-1);
-
-      width: auto !important;
+      width: auto;
       margin: 0;
 
       a {
         font-size: var(--font-down-0);
-        padding: var(--space-2) var(--space-3)
-          calc(0.5rem + var(--active-border-width));
+        padding: var(--space-2) var(--space-3) var(--space-3);
 
         &:hover {
           color: var(--tertiary);
