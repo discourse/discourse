@@ -28,7 +28,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_post_anonymously,
              :can_ignore_users,
              :can_delete_all_posts_and_topics,
-             :can_summarize,
              :custom_fields,
              :muted_category_ids,
              :indirectly_muted_category_ids,

@@ -11,7 +11,6 @@ import TopicMapExpanded from "discourse/components/topic-map/topic-map-expanded"
 import TopicMapSummary from "discourse/components/topic-map/topic-map-summary";
 import concatClass from "discourse/helpers/concat-class";
 import I18n from "discourse-i18n";
-import or from "truth-helpers/helpers/or";
 
 const MIN_POST_READ_TIME = 4;
 
