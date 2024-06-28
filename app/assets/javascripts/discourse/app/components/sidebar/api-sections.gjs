@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import ApiSection from "./api-section";
 import FilterNoResults from "./filter-no-results";
@@ -18,7 +19,12 @@ export default class SidebarApiSections extends Component {
       sectionConfigs = this.sidebarState.currentPanel.sections;
     }
 
-    return sectionConfigs.map((Section) => new Section());
+    return sectionConfigs.map((Section) => {
+      const sectionInstance = new Section();
+      setOwner(sectionInstance, getOwner(this));
+
+      return sectionInstance;
+    });
   }
 
   <template>

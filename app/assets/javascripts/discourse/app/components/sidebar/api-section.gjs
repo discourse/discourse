@@ -1,17 +1,10 @@
 import Component from "@glimmer/component";
-import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import Section from "./section";
 import SectionLink from "./section-link";
 
 export default class SidebarApiSection extends Component {
   @service sidebarState;
-
-  constructor() {
-    super(...arguments);
-
-    setOwner(this.args.section, getOwner(this));
-  }
 
   get shouldDisplay() {
     return (
