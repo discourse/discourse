@@ -1144,6 +1144,8 @@ lt:
     web_crawlers:
       labels:
         page_views: "Puslapio peržiūros"
+    web_hook_events_daily_aggregate:
+      xaxis: "Diena"
     suspicious_logins:
       title: "Įtartini prisijungimai"
       labels:

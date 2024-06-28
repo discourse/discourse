@@ -1335,6 +1335,8 @@ es:
         user_agent: "Agente de usuario"
         page_views: "Vistas de página"
       description: "Lista de los agentes de usuario de crawlers ordenado por vistas de página."
+    web_hook_events_daily_aggregate:
+      xaxis: "Día"
     suspicious_logins:
       title: "Inicios de sesión sospechosos"
       labels:

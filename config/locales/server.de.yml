@@ -298,7 +298,6 @@ de:
         other: hat die falsche Länge (sollte %{count} Zeichen lang sein)
       other_than: "darf nicht %{count} sein"
       auth_overrides_username: "Benutzername muss auf der Authentifizierungsanbieterseite aktualisiert werden, da die Einstellung `auth_overrides_username` aktiviert ist."
-      required: "muss existieren"
     template:
       body: ! "Es gab Probleme mit diesen Feldern:"
       header:
@@ -1474,6 +1473,11 @@ de:
         user_agent: "Browserkennung"
         page_views: "Seitenaufrufe"
       description: "Liste von Webcrawler-Browserkennungen, sortiert nach Seitenaufrufen."
+    web_hook_events_daily_aggregate:
+      title: "Web Hook Ereignisse"
+      xaxis: "Tag"
+      yaxis: "Anzahl der Ereignisse"
+      description: "Anzahl der ausgelösten Web-Hook-Ereignisse oder deren durchschnittliche Dauer."
     suspicious_logins:
       title: "Verdächtige Anmeldungen"
       labels:
@@ -2307,6 +2311,7 @@ de:
     default_sidebar_show_count_of_new_items: "Links im Navigationsmenü zeigen standardmäßig die Anzahl der neuen Elemente anstelle von Abzeichen an."
     default_sidebar_switch_panel_position: "Position der Schaltfläche in der Seitenleiste, um zum Chat zu wechseln"
     retain_web_hook_events_period_days: "Anzahl an Tagen, die Webhook-Ereigniseinträge aufbewahrt werden."
+    retain_web_hook_events_aggregate_days: "Anzahl der Tage, die aggregierte Webhook-Ereigniseinträge aufbewahrt werden."
     retry_web_hook_events: "Fehlgeschlagene Webhook-Ereignisse automatisch 4 Mal erneut versuchen. Die Wartezeiten zwischen den Versuchen betragen eine, 5, 25 und 125 Minuten."
     revoke_api_keys_unused_days: "Anzahl der Tage seit der letzten Verwendung eines API-Schlüssels, bevor er automatisch widerrufen wird (0 für nie)"
     revoke_api_keys_maxlife_days: "Anzahl der Tage, bevor ein API-Schlüssel automatisch widerrufen wird (0 für nie)"
@@ -2642,6 +2647,7 @@ de:
     email_too_long: "Die von dir eingegebene E-Mail-Adresse ist zu lang. Der Teil vor dem @ darf maximal 254 Zeichen lang sein und Domain-Namen maximal 253 Zeichen."
     wrong_invite_code: "Der von dir eingegebene Einladungscode war falsch."
     reserved_username: "Der Benutzername ist nicht erlaubt."
+    missing_user_field: "Du hast nicht alle erforderlichen Benutzerfelder ausgefüllt"
     auth_complete: "Authentifizierung ist abgeschlossen."
     click_to_continue: "Klicke hier, um fortzufahren."
     already_logged_in: "Entschuldigung! Diese Einladung richtet sich an neue Benutzer, die noch kein bestehendes Konto haben."

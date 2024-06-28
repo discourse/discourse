@@ -678,6 +678,8 @@ bg:
     mobile_visits:
       xaxis: "Ден"
       yaxis: "Брой на посещенията"
+    web_hook_events_daily_aggregate:
+      xaxis: "Ден"
     suspicious_logins:
       labels:
         user: Потребител

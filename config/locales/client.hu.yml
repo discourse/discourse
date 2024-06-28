@@ -2161,8 +2161,8 @@ hu:
       loading: Betöltés…
     category_row:
       subcategory_count:
-        one: "+ %{count} alkategória"
-        other: "+ %{count} alkategória"
+        one: "+%{count} alkategória"
+        other: "+%{count} alkategória"
       topic_count:
         one: "%{count} téma van ebben a kategóriában"
         other: "%{count} téma van ebben a kategóriában"

@@ -1549,6 +1549,7 @@ pl_PL:
         set_password: "Ustaw hasło"
         choose_new: "Wyberz nowe hasło"
         choose: "Wybierz hasło"
+        verify_identity: "Aby kontynuować, zweryfikuj swoją tożsamość."
         title: "Reset hasła"
       second_factor_backup:
         title: "Kody zapasowe weryfikacji dwuskładnikowej"
@@ -1593,6 +1594,7 @@ pl_PL:
           Uwierzytelnianie dwuskładnikowe zapewnia dodatkowe bezpieczeństwo konta, wymagając jednorazowego tokena oprócz hasła. Tokeny można generować na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>urządzeniach z systemem Android</a> i <a href="https://www.google.com/search?q=authenticator+apps+for+ios">systemem iOS</a>.
         oauth_enabled_warning: "Pamiętaj, że logowanie kontem społecznościowym zostanie wyłączone po włączeniu uwierzytelniania dwuskładnikowego na Twoim koncie."
         use: "Użyj aplikacji Authenticator"
+        enforced_with_oauth_notice: "Musisz włączyć uwierzytelnianie dwuskładnikowe. Zostaniesz poproszony o użycie tej opcji tylko podczas logowania przy użyciu hasła, a nie przy użyciu zewnętrznego uwierzytelniania lub metod logowania społecznościowego."
         enforced_notice: "Aby uzyskać dostęp do tej witryny, musisz włączyć uwierzytelnianie dwuskładnikowe."
         disable: "Wyłącz"
         disable_confirm: "Czy na pewno chcesz wyłączyć uwierzytelnianie dwuskładnikowe?"
@@ -1954,10 +1956,20 @@ pl_PL:
         fine_print: "Prosimy o potwierdzenie Twojej tożsamości, ponieważ jest to potencjalnie wrażliwe działanie. Po uwierzytelnieniu zostaniesz poproszony o ponowne uwierzytelnienie po kilku godzinach bezczynności."
       password:
         title: "Hasło"
+        too_short:
+          one: "Twoje hasło jest za krótkie (minimum %{count} znak)."
+          few: "Twoje hasło jest za krótkie (minimum %{count} znaki)."
+          many: "Twoje hasło jest za krótkie (minimum %{count} znaków)."
+          other: "Twoje hasło jest za krótkie (minimum %{count} znaków)."
         common: "To hasło jest zbyt popularne."
         same_as_username: "Twoje hasło jest takie samo jak nazwa użytkownika."
         same_as_email: "Twoje hasło jest takie samo jak twój e-mail."
         ok: "Twoje hasło wygląda na poprawne."
+        instructions:
+          one: "Co najmniej %{count} znak."
+          few: "Co najmniej %{count} znaki."
+          many: "Co najmniej %{count} znaków."
+          other: "Co najmniej %{count} znaków."
         required: "Wprowadź hasło"
         confirm: "Potwierdź"
         incorrect_password: "Wpisane hasło jest nieprawidłowe."
@@ -2264,6 +2276,7 @@ pl_PL:
       error: "Nieznany błąd"
       cookies_error: "Wygląda na to, że masz wyłączoną obsługę plików cookie. Możesz nie być w stanie zalogować się bez uprzedniego włączenia ich."
       rate_limit: "Poczekaj, zanim ponowisz próbę logowania."
+      password_expired: "Hasło wygasło. <a href='%{reset_url}'>Zresetuj swoje hasło</a>."
       blank_username: "Podaj swój adres e-mail lub nazwę użytkownika."
       blank_username_or_password: "Podaj swój email lub nazwę użytkownika i hasło"
       reset_password: "Resetuj hasło"
@@ -2362,10 +2375,10 @@ pl_PL:
       loading: Ładowanie…
     category_row:
       subcategory_count:
-        one: "+ %{count} podkategoria"
-        few: "+ %{count} podkategorie"
-        many: "+ %{count} podkategorii"
-        other: "+ %{count} podkategorii"
+        one: "+%{count} podkategoria"
+        few: "+%{count} podkategorie"
+        many: "+%{count} podkategorii"
+        other: "+%{count} podkategorii"
       topic_count:
         one: "%{count} temat w tej kategorii"
         few: "%{count} tematy w tej kategorii"
@@ -3036,6 +3049,7 @@ pl_PL:
         close_topics: "Zamknij tematy"
         archive_topics: "Zarchiwizuj tematy"
         move_messages_to_inbox: "Przenieś do skrzynki odbiorczej"
+        archive_messages: "Przenieś do archiwum"
         notification_level: "Powiadomienia…"
         change_notification_level: "Zmień poziom powiadomień"
         choose_new_category: "Wybierz nową kategorię dla tematów:"
@@ -3109,8 +3123,14 @@ pl_PL:
         optional: (opcjonalne)
       archive_topics:
         name: "Archiwum"
+      archive_messages:
+        name: "Przenieś do archiwum"
       move_messages_to_inbox:
         name: "Przenieś do skrzynki odbiorczej"
+      unlist_topics:
+        name: "Usuń z listy"
+      relist_topics:
+        name: "Dodaj do listy"
       remove_tags:
         name: "Usuń tagi"
       append_tags:
@@ -5083,6 +5103,10 @@ pl_PL:
         title: "Flagi moderacji"
         description: "Opis"
         enabled: "Włączona?"
+        more_options:
+          title: "Więcej opcji"
+          move_up: "Przenieś wyżej"
+          move_down: "Przenieś niżej"
       groups:
         new:
           title: "Nowa grupa"
@@ -5406,6 +5430,8 @@ pl_PL:
           completion: "Czas wykonania"
           actions: "Akcje"
           filter_status:
+            all: "Wszystkie zdarzenia"
+            successful: "Dostarczony"
             failed: "Niepowodzenie"
       home:
         title: "Strona główna"
@@ -5469,7 +5495,15 @@ pl_PL:
       config_areas:
         about:
           header: "O Twojej witrynie"
+          general_settings: "Ustawienia główne"
           community_name: "Nazwa społeczności"
+          community_summary: "Podsumowanie społeczności"
+          community_description: "Opis społeczności"
+          banner_image: "Obraz banera"
+          contact_information: "Informacje kontaktowe"
+          community_owner: "Właściciel społeczności"
+          contact_email: "E-mail kontaktowy"
+          contact_url: "URL kontaktowy"
           your_organization: "Twoja organizacja"
           company_name: "Nazwa firmy"
           governing_law: "Obowiązujące prawo"
@@ -6668,6 +6702,7 @@ pl_PL:
         recommended: "Zalecamy zmianę poniższego tekstu, aby lepiej odpowiadał Twoim potrzebom:"
         show_overriden: "Pokaż tylko nadpisane"
         show_outdated: "Pokaż tylko nieaktualne/nieprawidłowe"
+        show_untranslated: "Pokazuj tylko nieprzetłumaczone"
         locale: "Język:"
         more_than_50_results: "Istnieje ponad 50 wyników. Zawęź wyszukiwanie."
         no_results: "Nie znaleziono pasujących tekstów witryny"
@@ -6755,6 +6790,9 @@ pl_PL:
           add_types_title: "Zezwalaj na rozszerzenia %{types}"
           add_types_toast: "%{types} dodane typy plików"
         mandatory_group: "Grupa jest obowiązkowa"
+        requires_confirmation_messages:
+          default:
+            confirm: "Tak, jestem pewny/a"
       badges:
         title: Odznaki
         new_badge: Nowa odznaka

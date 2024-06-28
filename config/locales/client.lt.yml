@@ -1837,10 +1837,10 @@ lt:
       enter: "Įeiti"
     category_row:
       subcategory_count:
-        one: "+ %{count} subkategorija"
-        few: "+ %{count} subkategorijos"
-        many: "+ %{count} subkategorijos"
-        other: "+ %{count} subkategorijos"
+        one: "+%{count} subkategorija"
+        few: "+%{count} subkategorijos"
+        many: "+%{count} subkategorijos"
+        other: "+%{count} subkategorijos"
       topic_count:
         one: "%{count} tema šioje kategorijoje"
         few: "%{count} temos šioje kategorijoje"

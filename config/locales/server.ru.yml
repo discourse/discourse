@@ -1435,6 +1435,8 @@ ru:
         user_agent: "User Agent"
         page_views: "Просмотры"
       description: "Список поисковых роботов, отсортированный по просмотрам страниц."
+    web_hook_events_daily_aggregate:
+      xaxis: "Дата"
     suspicious_logins:
       title: "Подозрительные входы"
       labels:

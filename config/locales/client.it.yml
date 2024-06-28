@@ -2134,8 +2134,8 @@ it:
       loading: Caricamento…
     category_row:
       subcategory_count:
-        one: "+ %{count} sottocategoria"
-        other: "+ %{count} sottocategorie"
+        one: "+%{count} sottocategoria"
+        other: "+%{count} sottocategorie"
       topic_count:
         one: "%{count} argomento in questa categoria"
         other: "%{count} argomenti in questa categoria"

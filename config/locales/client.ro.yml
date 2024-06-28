@@ -448,12 +448,12 @@ ro:
       none_found: "Niciun subiect găsit."
       title:
         search: "Caută un subiect"
-        placeholder: "introdu aici titlul subiectului, URL-ul sau ID-ul"
+        placeholder: "scrie aici titlul subiectului, URL-ul sau ID-ul"
     choose_message:
       none_found: "Niciun mesaj găsit."
       title:
         search: "Căutați un mesaj"
-        placeholder: "introdu aici titlul mesajului, URL-ul sau ID-ul"
+        placeholder: "scrie aici titlul mesajului, URL-ul sau ID-ul"
     review:
       show_more: "Arată mai mult"
       show_less: "Arată mai puțin"
@@ -891,7 +891,7 @@ ro:
       group_name: "Nume grup"
       user_count: "Utilizatori"
       bio: "Despre grup"
-      selector_placeholder: "introdu username"
+      selector_placeholder: "Nume Utilizator"
       owner: "Proprietar"
       index:
         title: "Grupuri"
@@ -1252,7 +1252,7 @@ ro:
         in_progress: "(se trimite email)"
         error: "(eroare)"
         action: "Trimite email pentru resetare parolă"
-        set_password: "Introdu parolă"
+        set_password: "Parola"
         choose_new: "Alege o parolă nouă"
         choose: "Alege o parolă"
         title: "Resetare parolă"
@@ -1340,7 +1340,7 @@ ro:
         admin_note: "Notă: Un utilizator de administrator care modifică adresa email a altui utilizator non-administrator indică faptul că utilizatorul a pierdut accesul la contul de email original, astfel încât un email de resetare a parolei va fi trimis la noua adresă. Adresa email a utilizatorului nu se va schimba până când acesta nu finalizează procesul de resetare a parolei."
         ok: "Îți vom trimite un email pentru confirmare."
         required: "Te rugăm să introduci o adresă de e-mail"
-        invalid: "Introduceți o adresă de email validă."
+        invalid: "Adaugă o adresă de email validă."
         authenticated: "Emailul a fost autentificat de către %{provider}."
         frequency:
           one: "Vom trimite un email doar dacă nu te-am văzut în ultimul minut."
@@ -1779,12 +1779,12 @@ ro:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
-      enter: "Introdu"
+      enter: "Enter"
     category_row:
       subcategory_count:
-        one: "+ %{count} subcategorie"
-        few: "+ %{count} subcategorii"
-        other: "+ %{count} de subcategorii"
+        one: "+%{count} subcategorie"
+        few: "+%{count} subcategorii"
+        other: "+%{count} de subcategorii"
     select_kit:
       delete_item: "Șterge %{name}"
       no_content: Nu s-au găsit potriviri
@@ -3216,7 +3216,7 @@ ro:
         create: "Construiește tabel"
         help:
           title: "Folosind Editorul de foi de calcul"
-          enter_key: "Introdu"
+          enter_key: "Enter"
           tab_key: "Filă"
           new_row: "la sfârșitul unui rând pentru a introduce un rând nou."
           new_col: "la sfârșitul unei coloane pentru a introduce o coloană nouă."

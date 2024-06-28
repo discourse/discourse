@@ -1329,6 +1329,8 @@ fr:
         user_agent: "Agent utilisateur"
         page_views: "Pages vues"
       description: "Liste des agents utilisateurs des robots d'indexation, par ordre de pages vues."
+    web_hook_events_daily_aggregate:
+      xaxis: "Jour"
     suspicious_logins:
       title: "Connexions suspectes"
       labels:

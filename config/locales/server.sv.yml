@@ -1343,6 +1343,8 @@ sv:
         user_agent: "Användaragenter"
         page_views: "Sidvisningar"
       description: "Lista över användaragenter för sökrobotar, sorterad efter sidvisningar."
+    web_hook_events_daily_aggregate:
+      xaxis: "Dag"
     suspicious_logins:
       title: "Misstänkta inloggningar"
       labels:
