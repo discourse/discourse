@@ -65,7 +65,7 @@ export default class BaseCustomSidebarPanel {
    */
   // eslint-disable-next-line no-unused-vars
   filterNoResultsDescription(filter) {
-    this.#notImplemented();
+    return null;
   }
 
   #notImplemented() {

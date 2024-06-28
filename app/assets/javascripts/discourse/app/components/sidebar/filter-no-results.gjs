@@ -5,12 +5,11 @@ import i18n from "discourse-common/helpers/i18n";
 export default class FilterNoResults extends Component {
   @service sidebarState;
 
-  /**
-   * Component is rendered when panel is filterable
-   * Visibility is additionally controlled by CSS rule `.sidebar-section-wrapper + .sidebar-no-results`
-   */
   get shouldDisplay() {
-    return this.sidebarState.currentPanel.filterable;
+    return (
+      this.sidebarState.currentPanel.filterable &&
+      !!(this.args.sections?.length === 0)
+    );
   }
 
   get noResultsDescription() {
@@ -25,9 +24,11 @@ export default class FilterNoResults extends Component {
         <h4 class="sidebar-no-results__title">{{i18n
             "sidebar.no_results.title"
           }}</h4>
-        <p
-          class="sidebar-no-results__description"
-        >{{this.noResultsDescription}}</p>
+        {{#if this.noResultsDescription}}
+          <p class="sidebar-no-results__description">
+            {{this.noResultsDescription}}
+          </p>
+        {{/if}}
       </div>
     {{/if}}
   </template>

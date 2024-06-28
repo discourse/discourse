@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import ApiSection from "./api-section";
-import FilterNoResults from "./filter-no-results";
 import PanelHeader from "./panel-header";
 
 export default class SidebarApiSections extends Component {
@@ -20,20 +20,65 @@ export default class SidebarApiSections extends Component {
     }
 
     return sectionConfigs.map((Section) => {
-      const sectionInstance = new Section();
+      const SidebarSection = prepareSidebarSectionClass(Section);
+
+      const sectionInstance = new SidebarSection({
+        sidebarState: this.sidebarState,
+      });
+
       setOwner(sectionInstance, getOwner(this));
 
       return sectionInstance;
     });
   }
 
-  <template>
-    <PanelHeader @sections={{this.sections}} />
+  get filteredSections() {
+    return this.sections.filter((section) => section.filtered);
+  }
 
-    {{#each this.sections as |section|}}
+  <template>
+    <PanelHeader @sections={{this.filteredSections}} />
+
+    {{#each this.filteredSections as |section|}}
       <ApiSection @section={{section}} @collapsable={{@collapsable}} />
     {{/each}}
-
-    <FilterNoResults />
   </template>
+}
+
+// extends the class provided for the section to add functionality we don't want to be overridable when defining custom
+// sections using the plugin API, like for example the filtering capabilities
+function prepareSidebarSectionClass(Section) {
+  return class extends Section {
+    constructor({ sidebarState }) {
+      super();
+      this.sidebarState = sidebarState;
+    }
+
+    @cached
+    get filteredLinks() {
+      if (!this.sidebarState.filter) {
+        return this.links;
+      }
+
+      if (this.text.toLowerCase().match(this.sidebarState.sanitizedFilter)) {
+        return this.links;
+      }
+
+      return this.links.filter((link) => {
+        return (
+          link.text
+            .toString()
+            .toLowerCase()
+            .match(this.sidebarState.sanitizedFilter) ||
+          link.keywords.navigation.some((keyword) =>
+            keyword.match(this.sidebarState.filter)
+          )
+        );
+      });
+    }
+
+    get filtered() {
+      return this.filteredLinks?.length > 0;
+    }
+  };
 }
