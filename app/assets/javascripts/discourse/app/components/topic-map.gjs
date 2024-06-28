@@ -106,17 +106,15 @@ export default class TopicMap extends Component {
         @defaultGlimmer={{true}}
         @outletArgs={{hash topic=@model postStream=@postStream}}
       >
-        <div class="summarization-buttons">
-          {{#if @model.has_summary}}
-            <DButton
-              @action={{if @postStream.summary @cancelFilter @showTopReplies}}
-              @translatedTitle={{this.topRepliesTitle}}
-              @translatedLabel={{this.topRepliesLabel}}
-              @icon={{this.topRepliesIcon}}
-              class="top-replies"
-            />
-          {{/if}}
-        </div>
+        {{#if @model.has_summary}}
+          <DButton
+            @action={{if @postStream.summary @cancelFilter @showTopReplies}}
+            @translatedTitle={{this.topRepliesTitle}}
+            @translatedLabel={{this.topRepliesLabel}}
+            @icon={{this.topRepliesIcon}}
+            class="top-replies"
+          />
+        {{/if}}
       </PluginOutlet>
     </section>
 
