@@ -95,14 +95,14 @@ describe "Topic Map - Private Message", type: :system do
     expect(topic_page).to have_private_message_map
 
     # participants' links and avatars
-    private_message_map
-      .participants_details
-      .zip([user, other_user, last_post_user]) do |details, usr|
-        expect(details).to have_link(usr.username, href: "/u/#{usr.username}")
-        expect(details.find(".trigger-user-card")).to have_selector(
-          "img[src=\"#{avatar_url(usr, 24)}\"]",
-        )
-      end
+    expected_users = [user, other_user, last_post_user].sort_by { |u| u.username }
+    sorted_details =
+      private_message_map.participants_details.sort_by { |d| d["data-participant-username"] }
+
+    sorted_details.zip(expected_users) do |dets, usr|
+      expect(dets).to have_link(usr.username, href: "/u/#{usr.username}")
+      expect(dets.find(".trigger-user-card")).to have_selector("img[src='#{avatar_url(usr, 24)}']")
+    end
 
     # toggle ability to edit participants
     private_message_map.toggle_edit_participants_button
