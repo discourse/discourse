@@ -3,104 +3,88 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { isBlank } from "@ember/utils";
+import { eq } from "truth-helpers";
 import I18n from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
+function roundedDuration(duration) {
+  const rounded = parseFloat(duration.toFixed(2));
+
+  // showing 2.00 instead of just 2 in the input is weird
+  return rounded % 1 === 0 ? parseInt(rounded, 10) : rounded;
+}
+
 export default class RelativeTimePicker extends Component {
-  @tracked _selectedInterval;
-
-  _roundedDuration(duration) {
-    const rounded = parseFloat(duration.toFixed(2));
-
-    // showing 2.00 instead of just 2 in the input is weird
-    return rounded % 1 === 0 ? parseInt(rounded, 10) : rounded;
-  }
-
-  get duration() {
+  @tracked selectedInterval = (() => {
     if (this.args.durationMinutes !== undefined) {
-      return this._durationFromMinutes;
-    } else {
-      return this._durationFromHours;
+      if (this.args.durationMinutes >= 525600) {
+        return "years";
+      } else if (this.args.durationMinutes >= 43800) {
+        return "months";
+      } else if (this.args.durationMinutes >= 1440) {
+        return "days";
+      } else if (this.args.durationMinutes >= 60) {
+        return "hours";
+      } else {
+        return "mins";
+      }
     }
-  }
 
-  get selectedInterval() {
-    if (this._selectedInterval) {
-      return this._selectedInterval;
-    } else if (this.args.durationMinutes !== undefined) {
-      return this._intervalFromMinutes;
-    } else {
-      return this._intervalFromHours;
+    if (this.args.durationHours !== undefined) {
+      if (this.args.durationHours >= 8760) {
+        return "years";
+      } else if (this.args.durationHours >= 730) {
+        return "months";
+      } else if (this.args.durationHours >= 24) {
+        return "days";
+      } else if (
+        this.args.durationHours >= 1 ||
+        this.args.durationHours === null
+      ) {
+        return "hours";
+      } else {
+        return "mins";
+      }
     }
-  }
 
-  get _durationFromHours() {
-    if (this.args.durationHours === null) {
-      return this.args.durationHours;
-    } else if (this.args.durationHours >= 8760) {
-      return this._roundedDuration(this.args.durationHours / 365 / 24);
-    } else if (this.args.durationHours >= 730) {
-      return this._roundedDuration(this.args.durationHours / 30 / 24);
-    } else if (this.args.durationHours >= 24) {
-      return this._roundedDuration(this.args.durationHours / 24);
-    } else if (this.args.durationHours >= 1) {
-      return this.args.durationHours;
-    } else {
-      return this._roundedDuration(this.args.durationHours * 60);
+    return "mins";
+  })();
+
+  @tracked duration = (() => {
+    const { durationMinutes, durationHours } = this.args;
+
+    if (isBlank(durationMinutes) && isBlank(durationHours)) {
+      return;
     }
-  }
 
-  get _intervalFromHours() {
-    if (this.args.durationHours === null) {
-      return "hours";
-    } else if (this.args.durationHours >= 8760) {
-      return "years";
-    } else if (this.args.durationHours >= 730) {
-      return "months";
-    } else if (this.args.durationHours >= 24) {
-      return "days";
-    } else if (this.args.durationHours < 1) {
-      return "mins";
-    } else {
-      return "hours";
+    if (durationMinutes) {
+      if (durationMinutes >= 525600) {
+        return roundedDuration(durationMinutes / 365 / 60 / 24);
+      } else if (durationMinutes >= 43800) {
+        return roundedDuration(durationMinutes / 30 / 60 / 24);
+      } else if (durationMinutes >= 1440) {
+        return roundedDuration(durationMinutes / 60 / 24);
+      } else if (durationMinutes >= 60) {
+        return roundedDuration(durationMinutes / 60);
+      } else {
+        return durationMinutes;
+      }
     }
-  }
 
-  get _durationFromMinutes() {
-    if (this.args.durationMinutes >= 525600) {
-      return this._roundedDuration(this.args.durationMinutes / 365 / 60 / 24);
-    } else if (this.args.durationMinutes >= 43800) {
-      return this._roundedDuration(this.args.durationMinutes / 30 / 60 / 24);
-    } else if (this.args.durationMinutes >= 1440) {
-      return this._roundedDuration(this.args.durationMinutes / 60 / 24);
-    } else if (this.args.durationMinutes >= 60) {
-      return this._roundedDuration(this.args.durationMinutes / 60);
+    if (durationHours >= 8760) {
+      return roundedDuration(durationHours / 365 / 24);
+    } else if (durationHours >= 730) {
+      return roundedDuration(durationHours / 30 / 24);
+    } else if (durationHours >= 24) {
+      return roundedDuration(durationHours / 24);
+    } else if (durationHours >= 1) {
+      return durationHours;
     } else {
-      return this.args.durationMinutes;
+      return roundedDuration(this.args.durationHours * 60);
     }
-  }
+  })();
 
-  get _intervalFromMinutes() {
-    if (this.args.durationMinutes >= 525600) {
-      return "years";
-    } else if (this.args.durationMinutes >= 43800) {
-      return "months";
-    } else if (this.args.durationMinutes >= 1440) {
-      return "days";
-    } else if (this.args.durationMinutes >= 60) {
-      return "hours";
-    } else {
-      return "mins";
-    }
-  }
-
-  get durationMin() {
-    return this.selectedInterval === "mins" ? 1 : 0.1;
-  }
-
-  get durationStep() {
-    return this.selectedInterval === "mins" ? 1 : 0.05;
-  }
+  inputValue = this.duration;
 
   get intervals() {
     const count = this.duration ? parseFloat(this.duration) : 0;
@@ -129,14 +113,12 @@ export default class RelativeTimePicker extends Component {
     ].filter((interval) => !this.args.hiddenIntervals?.includes(interval.id));
   }
 
-  calculateMinutes(duration, interval) {
-    if (isBlank(duration) || isNaN(duration)) {
+  calculateMinutes(duration) {
+    if (isNaN(duration)) {
       return null;
     }
 
-    duration = parseFloat(duration);
-
-    switch (interval) {
+    switch (this.selectedInterval) {
       case "mins":
         // we round up here in case the user manually inputted a step < 1
         return Math.ceil(duration);
@@ -153,28 +135,25 @@ export default class RelativeTimePicker extends Component {
 
   @action
   onChangeInterval(interval) {
-    this._selectedInterval = interval;
-    const minutes = this.calculateMinutes(this.duration, interval);
-    this.args.onChange?.(minutes);
+    this.selectedInterval = interval;
+    this.args.onChange?.(this.calculateMinutes(this.inputValue));
   }
 
   @action
   onChangeDuration(event) {
-    const minutes = this.calculateMinutes(
-      event.target.value,
-      this.selectedInterval
-    );
-    this.args.onChange?.(minutes);
+    this.inputValue = parseFloat(event.target.value);
+    this.duration = this.calculateMinutes(this.inputValue);
+    this.args.onChange?.(this.duration);
   }
 
   <template>
     <div class="relative-time-picker">
       <input
-        {{on "change" this.onChangeDuration}}
+        {{on "input" this.onChangeDuration}}
         type="number"
-        min={{this.durationMin}}
-        step={{this.durationStep}}
-        value={{this.duration}}
+        min={{if (eq this.selectedInterval "mins") 1 0.1}}
+        step={{if (eq this.selectedInterval "mins") 1 0.05}}
+        value={{this.inputValue}}
         id={{@id}}
         class="relative-time-duration"
       />
