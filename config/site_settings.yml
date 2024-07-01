@@ -411,6 +411,22 @@ basic:
   show_user_menu_avatars:
     client: true
     default: false
+  extended_site_description:
+    default: ""
+    max: 10_000
+    hidden: true
+  extended_site_description_cooked:
+    default: ""
+    hidden: true
+    max: 15_000
+  about_banner_image:
+    default: ""
+    type: upload
+    hidden: true
+  community_owner:
+    default: ""
+    max: 300
+    hidden: true
 login:
   invite_only:
     refresh: true
