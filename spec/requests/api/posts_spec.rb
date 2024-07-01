@@ -221,7 +221,10 @@ RSpec.describe "posts" do
         expected_response_schema = load_spec_schema("topic_create_response")
         schema expected_response_schema
 
-        let(:params) { Fabricate(:post) }
+        let(:params) do
+          post = Fabricate(:post)
+          post.serializable_hash(only: %i[topic_id raw created_at]).as_json
+        end
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }

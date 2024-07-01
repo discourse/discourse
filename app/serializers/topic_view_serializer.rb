@@ -64,7 +64,6 @@ class TopicViewSerializer < ApplicationSerializer
     :is_warning,
     :chunk_size,
     :bookmarked,
-    :bookmarks,
     :message_archived,
     :topic_timer,
     :unicode_title,
@@ -85,6 +84,7 @@ class TopicViewSerializer < ApplicationSerializer
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
   has_many :pending_posts, serializer: TopicPendingPostSerializer, root: false, embed: :objects
   has_many :categories, serializer: CategoryBadgeSerializer, embed: :objects
+  has_many :bookmarks, serializer: TopicViewBookmarkSerializer, root: false, embed: :objects
 
   has_one :published_page, embed: :objects
 
@@ -199,10 +199,6 @@ class TopicViewSerializer < ApplicationSerializer
 
   def bookmarked
     object.has_bookmarks?
-  end
-
-  def bookmarks
-    object.bookmarks
   end
 
   def topic_timer
