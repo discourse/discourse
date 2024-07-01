@@ -57,6 +57,7 @@ export default class NewCategory extends DiscourseRoute {
       search_priority: SEARCH_PRIORITIES.normal,
       required_tag_groups: [],
       form_template_ids: [],
+      minimum_required_tags: 0,
     });
   }
 

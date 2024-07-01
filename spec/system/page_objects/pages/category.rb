@@ -20,6 +20,23 @@ module PageObjects
         self
       end
 
+      def visit_categories
+        page.visit("/categories")
+        self
+      end
+
+      def visit_new_category
+        page.visit("/new-category")
+        self
+      end
+
+      def focus_input(selector)
+        execute_script(<<~JS, text)
+          document.querySelector("#{selector}").focus();
+        JS
+        self
+      end
+
       def back_to_category
         find(".edit-category-title-bar span", text: "Back to category").click
         self
