@@ -45,7 +45,19 @@ module Migrations::Uploader
       end
 
       def thread_count
-        @thread_count ||= (Etc.nprocessors * settings[:thread_count_factor] * 2).to_i
+        @thread_count ||= (Etc.nprocessors * settings[:thread_count_factor] * remote_factor).to_i
+      end
+
+      def remote_factor
+        @remote_factor ||= discourse_store.external? ? 2 : 1
+      end
+
+      def file_exists?(path)
+        if discourse_store.external?
+          discourse_store.object_from_path(path).exists?
+        else
+          File.exist?(File.join(discourse_store.public_dir, path))
+        end
       end
 
       def self.run!(databases, settings)
