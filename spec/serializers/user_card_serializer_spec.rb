@@ -66,8 +66,20 @@ RSpec.describe UserCardSerializer do
         expect(json[:pending_posts_count]).to eq 0
       end
 
-      it "can_send_private_message_to_user is true" do
-        expect(json[:can_send_private_message_to_user]).to eq true
+      context "when the user is in a group with PMs enabled" do
+        before { SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
+
+        it "can_send_private_message_to_user is true" do
+          expect(json[:can_send_private_message_to_user]).to eq true
+        end
+      end
+
+      context "when the user is not in a group with PMs enabled" do
+        before { SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:moderators] }
+
+        it "can_send_private_message_to_user is false" do
+          expect(json[:can_send_private_message_to_user]).to eq false
+        end
       end
     end
   end
