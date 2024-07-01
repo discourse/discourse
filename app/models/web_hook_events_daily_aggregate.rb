@@ -25,7 +25,7 @@ class WebHookEventsDailyAggregate < ActiveRecord::Base
         self.web_hook_id,
       )
 
-    self.mean_duration = events.sum(:duration) / events.count
+    self.mean_duration = events.sum(:duration) / events.count if events.count > 0
 
     self.successful_event_count = events.where("status >= 200 AND status <= 299").count
     self.failed_event_count = events.where("status < 200 OR status > 299").count
