@@ -989,7 +989,7 @@ third line`
       const initialValue = "* first item in list\n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      await triggerKeyEvent(textarea, "keyup", "Enter");
+      await triggerKeyEvent(textarea, "keydown", "Enter");
       assert.strictEqual(this.value, initialValue + "* ");
     }
   );
@@ -1000,7 +1000,7 @@ third line`
       const initialValue = "- first item in list\n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      await triggerKeyEvent(textarea, "keyup", "Enter");
+      await triggerKeyEvent(textarea, "keydown", "Enter");
       assert.strictEqual(this.value, initialValue + "- ");
     }
   );
@@ -1011,7 +1011,7 @@ third line`
       const initialValue = "1. first item in list\n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      await triggerKeyEvent(textarea, "keyup", "Enter");
+      await triggerKeyEvent(textarea, "keydown", "Enter");
       assert.strictEqual(this.value, initialValue + "2. ");
     }
   );
@@ -1022,7 +1022,7 @@ third line`
       const initialValue = "* first item in list\n\n* second item in list";
       this.set("value", initialValue);
       setCaretPosition(textarea, 21);
-      await triggerKeyEvent(textarea, "keyup", "Enter");
+      await triggerKeyEvent(textarea, "keydown", "Enter");
       assert.strictEqual(
         this.value,
         "* first item in list\n* \n* second item in list"
@@ -1036,7 +1036,7 @@ third line`
       const initialValue = "1. first item in list\n\n2. second item in list";
       this.set("value", initialValue);
       setCaretPosition(textarea, 22);
-      await triggerKeyEvent(textarea, "keyup", "Enter");
+      await triggerKeyEvent(textarea, "keydown", "Enter");
       assert.strictEqual(
         this.value,
         "1. first item in list\n2. \n3. second item in list"
@@ -1050,7 +1050,7 @@ third line`
       const initialValue = "* first item in list with empty line\n* \n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      await triggerKeyEvent(textarea, "keyup", "Enter");
+      await triggerKeyEvent(textarea, "keydown", "Enter");
       assert.strictEqual(this.value, "* first item in list with empty line\n");
     }
   );
