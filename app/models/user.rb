@@ -602,8 +602,17 @@ class User < ActiveRecord::Base
   end
 
   def invited_by
+    invite_redemption_delay = 5.seconds
     used_invite =
-      Invite.with_deleted.joins(:invited_users).where("invited_users.user_id = ?", self.id).first
+      Invite
+        .with_deleted
+        .joins(:invited_users)
+        .where(
+          "invited_users.user_id = ? AND invited_users.redeemed_at <= ?",
+          self.id,
+          self.created_at + invite_redemption_delay,
+        )
+        .first
     used_invite.try(:invited_by)
   end
 
