@@ -22,6 +22,18 @@ RSpec.describe JsLocaleHelper do
       define("discourse/loader-shims", () => {})
     JS
     ctx.load("#{Rails.root}/app/assets/javascripts/locales/i18n.js")
+
+    # MessageFormat
+    ctx.eval(<<~JS)
+      exports = {};
+      module = { exports };
+      define('make-plural/cardinals', () => {});
+    JS
+    ctx.load("#{node_modules}/@messageformat/runtime/lib/messages.js")
+    ctx.load("#{node_modules}/@messageformat/runtime/lib/runtime.js")
+    ctx.load("#{node_modules}/make-plural/cardinals.js")
+    ctx.load("#{node_modules}/@messageformat/runtime/lib/cardinals.js")
+    ctx.eval("__exportStar(module.exports, this)")
     ctx
   end
 
@@ -143,25 +155,82 @@ RSpec.describe JsLocaleHelper do
   end
 
   describe ".output_MF" do
-    subject(:output) { described_class.output_MF(locale) }
+    let(:output) { described_class.output_MF(locale).gsub(/^import.*$/, "") }
+    let(:generated_locales) { v8_ctx.eval("Object.keys(msgData)") }
+    let(:translated_message) do
+      v8_ctx.eval("I18n._mf_messages.get('posts_likes_MF', {count: 3, ratio: 'med'})")
+    end
+    let!(:overriden_translation) do
+      Fabricate(
+        :translation_override,
+        translation_key: "admin_js.admin.user.penalty_history_MF",
+        value: "OVERRIDEN",
+      )
+    end
+
+    before { v8_ctx.eval(output) }
 
     context "when locale is 'en'" do
       let(:locale) { "en" }
 
-      it "outputs message format messages for 'en'" do
-        expect(output).to match(/en:.*_MF/m)
+      it "generates messages for the 'en' locale only" do
+        expect(generated_locales).to eq %w[en]
+      end
+
+      it "translates messages properly" do
+        expect(
+          translated_message,
+        ).to eq "This topic has 3 replies with a very high like to post ratio\n"
+      end
+
+      context "when the translation is overriden" do
+        let(:translated_message) do
+          v8_ctx.eval(
+            "I18n._mf_messages.get('admin.user.penalty_history_MF', { SUSPENDED: 3, SILENCED: 2 })",
+          )
+        end
+
+        it "returns the overriden translation" do
+          expect(translated_message).to eq "OVERRIDEN"
+        end
       end
     end
 
     context "when locale is not 'en'" do
       let(:locale) { "fr" }
 
-      it "outputs message format messages for this locale" do
-        expect(output).to match(/fr:.*_MF/m)
+      it "generates messages for the current locale and uses 'en' as fallback" do
+        expect(generated_locales).to match(%w[fr en])
       end
 
-      it "outputs a fallback locale too" do
-        expect(output).to match(/en:.*_MF/m)
+      it "translates messages properly" do
+        expect(
+          translated_message,
+        ).to eq "Ce sujet comprend 3 réponses avec un taux très élevé de « J'aime » par message\n"
+      end
+
+      context "when a translation is missing" do
+        before { v8_ctx.eval("delete msgData.fr.posts_likes_MF") }
+
+        it "returns the fallback translation" do
+          expect(
+            translated_message,
+          ).to eq "This topic has 3 replies with a very high like to post ratio\n"
+        end
+
+        context "when the fallback translation is overriden" do
+          let(:translated_message) do
+            v8_ctx.eval(
+              "I18n._mf_messages.get('admin.user.penalty_history_MF', { SUSPENDED: 3, SILENCED: 2 })",
+            )
+          end
+
+          before { v8_ctx.eval("delete msgData.fr['admin.user.penalty_history_MF']") }
+
+          it "returns the overriden fallback translation" do
+            expect(translated_message).to eq "OVERRIDEN"
+          end
+        end
       end
     end
   end
