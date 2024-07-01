@@ -27,23 +27,11 @@ RSpec.describe Jobs::RedeliverWebHookEvents do
         "bb" => 2,
       },
     ).to_return(status: 400, body: "", headers: {})
-    expect { job.execute(web_hook: web_hook, web_hook_event: web_hook_event) }.to change {
-      RedeliveringWebhookEvent.count
-    }.by(-1)
-  end
-
-  it "publishes a message to update the redelivery status" do
-    stub_request(:post, web_hook.payload_url).with(
-      body: "abc",
-      headers: {
-        "aa" => 1,
-        "bb" => 2,
-      },
-    ).to_return(status: 400, body: "", headers: {})
 
     messages =
       MessageBus.track_publish { job.execute(web_hook: web_hook, web_hook_event: web_hook_event) }
 
+    expect(RedeliveringWebhookEvent.count).to eq(0)
     expect(messages.count).to eq(1)
     expect(messages.first.data).to include(type: "redelivered")
   end
