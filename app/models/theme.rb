@@ -847,6 +847,8 @@ class Theme < ActiveRecord::Base
         if upload = field.upload
           url = upload_cdn_path(upload.url)
           contents << "$#{field.name}: unquote(\"#{url}\");"
+        else
+          contents << "$#{field.name}: unquote(\"\");"
         end
       else
         contents << to_scss_variable(field.name, field.value)
