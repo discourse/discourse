@@ -1,4 +1,5 @@
-import { fillIn, render } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { render, settled, typeIn } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -17,7 +18,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
     assert.strictEqual(selectKit().header().value(), "mins");
     assert.dom(".relative-time-duration").hasValue("");
 
-    await fillIn(".relative-time-duration", "50");
+    await typeIn(".relative-time-duration", "50");
     assert.dom(".relative-time-duration").hasValue("50");
     assert.strictEqual(updatedValue, 50);
 
@@ -26,7 +27,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
     assert.dom(".relative-time-duration").hasValue("50");
     assert.strictEqual(updatedValue, 50 * 60);
 
-    await fillIn(".relative-time-duration", "30");
+    await typeIn(".relative-time-duration", "30");
     assert.strictEqual(selectKit().header().value(), "hours");
     assert.dom(".relative-time-duration").hasValue("30");
     assert.strictEqual(updatedValue, 30 * 60);
@@ -35,6 +36,25 @@ module("Integration | Component | relative-time-picker", function (hooks) {
     await selectKit().selectRowByValue("mins");
     assert.dom(".relative-time-duration").hasValue("30");
     assert.strictEqual(updatedValue, 30);
+  });
+
+  test("updates the input when args change", async function (assert) {
+    const testState = new (class {
+      @tracked value;
+    })();
+    testState.value = 10;
+
+    await render(<template>
+      <RelativeTimePicker @durationMinutes={{testState.value}} />
+    </template>);
+
+    assert.strictEqual(selectKit().header().value(), "mins");
+    assert.dom(".relative-time-duration").hasValue("10");
+
+    testState.value = 20;
+    await settled();
+
+    assert.dom(".relative-time-duration").hasValue("20");
   });
 
   test("prefills and preselects minutes", async function (assert) {

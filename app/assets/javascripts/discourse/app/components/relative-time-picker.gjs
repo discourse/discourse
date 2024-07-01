@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { isBlank } from "@ember/utils";
 import { eq } from "truth-helpers";
 import I18n from "discourse-i18n";
@@ -15,7 +16,45 @@ function roundedDuration(duration) {
 }
 
 export default class RelativeTimePicker extends Component {
-  @tracked selectedInterval = (() => {
+  @tracked inputValue = this.initialInputValue;
+  @tracked interval = this.initialInterval;
+  @tracked duration = this.calculateMinutes();
+
+  get initialInputValue() {
+    const { durationMinutes, durationHours } = this.args;
+
+    if (isBlank(durationMinutes) && isBlank(durationHours)) {
+      return;
+    }
+
+    if (durationMinutes) {
+      if (durationMinutes >= 525600) {
+        return roundedDuration(durationMinutes / 365 / 60 / 24);
+      } else if (durationMinutes >= 43800) {
+        return roundedDuration(durationMinutes / 30 / 60 / 24);
+      } else if (durationMinutes >= 1440) {
+        return roundedDuration(durationMinutes / 60 / 24);
+      } else if (durationMinutes >= 60) {
+        return roundedDuration(durationMinutes / 60);
+      } else {
+        return durationMinutes;
+      }
+    }
+
+    if (durationHours >= 8760) {
+      return roundedDuration(durationHours / 365 / 24);
+    } else if (durationHours >= 730) {
+      return roundedDuration(durationHours / 30 / 24);
+    } else if (durationHours >= 24) {
+      return roundedDuration(durationHours / 24);
+    } else if (durationHours >= 1) {
+      return durationHours;
+    } else {
+      return roundedDuration(this.args.durationHours * 60);
+    }
+  }
+
+  get initialInterval() {
     if (this.args.durationMinutes !== undefined) {
       if (this.args.durationMinutes >= 525600) {
         return "years";
@@ -48,43 +87,7 @@ export default class RelativeTimePicker extends Component {
     }
 
     return "mins";
-  })();
-
-  @tracked duration = (() => {
-    const { durationMinutes, durationHours } = this.args;
-
-    if (isBlank(durationMinutes) && isBlank(durationHours)) {
-      return;
-    }
-
-    if (durationMinutes) {
-      if (durationMinutes >= 525600) {
-        return roundedDuration(durationMinutes / 365 / 60 / 24);
-      } else if (durationMinutes >= 43800) {
-        return roundedDuration(durationMinutes / 30 / 60 / 24);
-      } else if (durationMinutes >= 1440) {
-        return roundedDuration(durationMinutes / 60 / 24);
-      } else if (durationMinutes >= 60) {
-        return roundedDuration(durationMinutes / 60);
-      } else {
-        return durationMinutes;
-      }
-    }
-
-    if (durationHours >= 8760) {
-      return roundedDuration(durationHours / 365 / 24);
-    } else if (durationHours >= 730) {
-      return roundedDuration(durationHours / 30 / 24);
-    } else if (durationHours >= 24) {
-      return roundedDuration(durationHours / 24);
-    } else if (durationHours >= 1) {
-      return durationHours;
-    } else {
-      return roundedDuration(this.args.durationHours * 60);
-    }
-  })();
-
-  inputValue = this.duration;
+  }
 
   get intervals() {
     const count = this.duration ? parseFloat(this.duration) : 0;
@@ -113,53 +116,61 @@ export default class RelativeTimePicker extends Component {
     ].filter((interval) => !this.args.hiddenIntervals?.includes(interval.id));
   }
 
-  calculateMinutes(duration) {
-    if (isNaN(duration)) {
+  calculateMinutes() {
+    if (isNaN(this.inputValue)) {
       return null;
     }
 
-    switch (this.selectedInterval) {
+    switch (this.interval) {
       case "mins":
         // we round up here in case the user manually inputted a step < 1
-        return Math.ceil(duration);
+        return Math.ceil(this.inputValue);
       case "hours":
-        return duration * 60;
+        return this.inputValue * 60;
       case "days":
-        return duration * 60 * 24;
+        return this.inputValue * 60 * 24;
       case "months":
-        return duration * 60 * 24 * 30; // less accurate because of varying days in months
+        return this.inputValue * 60 * 24 * 30; // less accurate because of varying days in months
       case "years":
-        return duration * 60 * 24 * 365; // least accurate because of varying days in months/years
+        return this.inputValue * 60 * 24 * 365; // least accurate because of varying days in months/years
     }
   }
 
   @action
+  initValues() {
+    this.interval = this.initialInterval;
+    this.inputValue = this.initialInputValue;
+    this.duration = this.calculateMinutes();
+  }
+
+  @action
   onChangeInterval(interval) {
-    this.selectedInterval = interval;
-    this.args.onChange?.(this.calculateMinutes(this.inputValue));
+    this.interval = interval;
+    this.args.onChange?.(this.calculateMinutes());
   }
 
   @action
   onChangeDuration(event) {
     this.inputValue = parseFloat(event.target.value);
-    this.duration = this.calculateMinutes(this.inputValue);
+    this.duration = this.calculateMinutes();
     this.args.onChange?.(this.duration);
   }
 
   <template>
     <div class="relative-time-picker">
       <input
-        {{on "input" this.onChangeDuration}}
+        {{didUpdate this.initValues @durationMinutes @durationHours}}
+        {{on "change" this.onChangeDuration}}
         type="number"
-        min={{if (eq this.selectedInterval "mins") 1 0.1}}
-        step={{if (eq this.selectedInterval "mins") 1 0.05}}
+        min={{if (eq this.interval "mins") 1 0.1}}
+        step={{if (eq this.interval "mins") 1 0.05}}
         value={{this.inputValue}}
         id={{@id}}
         class="relative-time-duration"
       />
       <ComboBox
         @content={{this.intervals}}
-        @value={{this.selectedInterval}}
+        @value={{this.interval}}
         @onChange={{this.onChangeInterval}}
         class="relative-time-intervals"
       />
