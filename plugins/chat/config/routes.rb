@@ -51,9 +51,6 @@ Chat::Engine.routes.draw do
           "channel_threads_current_user_notifications_settings#update"
     post "/channels/:channel_id/threads/:thread_id/mark-thread-title-prompt-seen/me" =>
            "channel_threads_current_user_title_prompt_seen#update"
-
-    # TODO (martin) Remove this when we refactor the DM channel creation to happen
-    # via message creation in a different API controller.
     post "/direct-message-channels" => "direct_messages#create"
 
     put "/channels/:channel_id/messages/:message_id/restore" => "channel_messages#restore"
