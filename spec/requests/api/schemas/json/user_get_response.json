@@ -47,7 +47,13 @@
         "can_ignore_user": {
           "type": "boolean"
         },
+        "can_ignore_users": {
+          "type": "boolean"
+        },
         "can_mute_user": {
+          "type": "boolean"
+        },
+        "can_mute_users": {
           "type": "boolean"
         },
         "can_send_private_messages": {
