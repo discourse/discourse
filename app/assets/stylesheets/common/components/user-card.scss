@@ -88,6 +88,7 @@
       .name-username-wrapper {
         margin-right: 0;
         flex: 0 1 auto;
+        @include ellipsis;
       }
       span {
         display: block;
