@@ -1980,6 +1980,7 @@ en:
     s3_configure_tombstone_policy: "Enable automatic deletion policy for tombstone uploads. IMPORTANT: If disabled, no space will be reclaimed after uploads are deleted."
     s3_disable_cleanup: "Prevent removal of old backups from S3 when there are more backups than the maximum allowed."
     s3_use_acls: "AWS recommends not using ACLs on S3 buckets; if you are following this advice, uncheck this option. This must be enabled if you are using secure uploads."
+    enable_direct_s3_uploads: "Allows for direct multipart uploads to Amazon S3, see https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 for more details."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
     backup_location: "Location where backups are stored. IMPORTANT: S3 requires valid S3 credentials entered in Files settings."
