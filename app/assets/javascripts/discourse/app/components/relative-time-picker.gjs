@@ -162,8 +162,8 @@ export default class RelativeTimePicker extends Component {
         {{didUpdate this.initValues @durationMinutes @durationHours}}
         {{on "change" this.onChangeDuration}}
         type="number"
-        min={{if (eq this.interval "mins") 1 0.1}}
-        step={{if (eq this.interval "mins") 1 0.05}}
+        min={{if (eq this.interval "mins") 1 0.5}}
+        step={{if (eq this.interval "mins") 1 0.5}}
         value={{this.inputValue}}
         id={{@id}}
         class="relative-time-duration"
