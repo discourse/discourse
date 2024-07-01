@@ -19,7 +19,7 @@ class PostOwnerChanger
 
       if post.is_first_post?
         @topic.user = @new_owner
-        @topic.recover! if post.user.nil?
+        @topic.recover! if post.user.nil? || post.user_id == Discourse::SYSTEM_USER_ID
       end
 
       post.topic = @topic

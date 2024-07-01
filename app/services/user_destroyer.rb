@@ -70,7 +70,7 @@ class UserDestroyer
           end
         end
 
-        Post.unscoped.where(user_id: result.id).update_all(user_id: nil)
+        Post.unscoped.where(user_id: result.id).update_all(user_id: Discourse::SYSTEM_USER_ID)
 
         # If this user created categories, fix those up:
         Category
@@ -150,13 +150,13 @@ class UserDestroyer
   def delete_posts(user, category_topic_ids, opts)
     user.posts.find_each do |post|
       if post.is_first_post? && category_topic_ids.include?(post.topic_id)
-        post.update!(user: Discourse.system_user)
+        post.update!(user_id: Discourse::SYSTEM_USER_ID)
       else
         PostDestroyer.new(@actor.staff? ? @actor : Discourse.system_user, post).destroy
       end
 
       if post.topic && post.is_first_post?
-        Topic.unscoped.where(id: post.topic_id).update_all(user_id: nil)
+        Topic.unscoped.where(id: post.topic_id).update_all(user_id: Discourse::SYSTEM_USER_ID)
       end
     end
   end

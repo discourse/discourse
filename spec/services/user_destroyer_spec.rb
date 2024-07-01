@@ -173,7 +173,7 @@ RSpec.describe UserDestroyer do
           it "deletes the posts" do
             destroy
             expect(post.reload.deleted_at).not_to eq(nil)
-            expect(post.user_id).to eq(nil)
+            expect(post.user_id).to eq(Discourse::SYSTEM_USER_ID)
           end
 
           it "does not delete topics started by others in which the user has replies" do
@@ -187,7 +187,7 @@ RSpec.describe UserDestroyer do
             Fabricate(:post, user: user, topic: spammer_topic)
             destroy
             expect(spammer_topic.reload.deleted_at).not_to eq(nil)
-            expect(spammer_topic.user_id).to eq(nil)
+            expect(spammer_topic.user_id).to eq(Discourse::SYSTEM_USER_ID)
           end
 
           context "when delete_as_spammer is true" do
@@ -235,7 +235,7 @@ RSpec.describe UserDestroyer do
           it "deletes the posts" do
             destroy
             expect(post.reload.deleted_at).not_to eq(nil)
-            expect(post.user_id).to eq(nil)
+            expect(post.user_id).to eq(Discourse::SYSTEM_USER_ID)
           end
         end
       end
@@ -267,10 +267,10 @@ RSpec.describe UserDestroyer do
         UserDestroyer.new(admin).destroy(user, delete_posts: true)
 
         expect(first_post.reload.deleted_at).to eq(nil)
-        expect(first_post.user_id).to eq(Discourse.system_user.id)
+        expect(first_post.user_id).to eq(Discourse::SYSTEM_USER_ID)
 
         expect(second_post.reload.deleted_at).not_to eq(nil)
-        expect(second_post.user_id).to eq(nil)
+        expect(second_post.user_id).to eq(Discourse::SYSTEM_USER_ID)
       end
     end
 
@@ -292,7 +292,7 @@ RSpec.describe UserDestroyer do
 
       it "should mark the user's deleted posts as belonging to a nuked user" do
         expect { UserDestroyer.new(admin).destroy(user) }.to change { User.count }.by(-1)
-        expect(deleted_post.reload.user_id).to eq(nil)
+        expect(deleted_post.reload.user_id).to eq(Discourse::SYSTEM_USER_ID)
       end
     end
 
