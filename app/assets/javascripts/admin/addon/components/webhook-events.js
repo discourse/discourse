@@ -42,6 +42,8 @@ export default class WebhookEvents extends Component {
 
     if (!this.failedEventIds.length) {
       this.redeliverEnabled = false;
+    } else {
+      this.redeliverEnabled = true;
     }
   }
 
@@ -94,9 +96,7 @@ export default class WebhookEvents extends Component {
     }
 
     if (data.type === "redelivered") {
-      const event = this.events.find((e) => {
-        return e.id === data.web_hook_event.id;
-      });
+      const event = this.events.findBy("id", data.web_hook_event.id);
 
       event.setProperties({
         response_body: data.web_hook_event.response_body,
@@ -150,7 +150,9 @@ export default class WebhookEvents extends Component {
   @action
   async redeliverFailed() {
     if (!this.failedEventIds.length) {
-      this.dialog.alert("No events to redeliver.");
+      this.dialog.alert(
+        I18n.t("admin.web_hooks.events.no_events_to_redeliver")
+      );
       this.redeliverEnabled = false;
       return;
     }
@@ -167,17 +169,18 @@ export default class WebhookEvents extends Component {
           );
           if (response.event_ids?.length) {
             response.event_ids.map((id) => {
-              let event = this.events.find((e) => {
-                return e.id === id;
-              });
+              const event = this.events.findBy("id", id);
               event.set("redelivering", true);
             });
           } else {
-            this.dialog.alert("No events to redeliver.");
+            this.dialog.alert(
+              I18n.t("admin.web_hooks.events.no_events_to_redeliver")
+            );
           }
-        } catch (e) {
+        } catch (error) {
+          popupAjaxError(error);
+        } finally {
           this.redeliverEnabled = false;
-          popupAjaxError(e);
         }
       },
     });

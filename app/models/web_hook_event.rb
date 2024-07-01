@@ -6,6 +6,8 @@ class WebHookEvent < ActiveRecord::Base
   scope :not_ping, -> { where("status <> 0") }
   belongs_to :web_hook
 
+  has_one :redelivering_webhook_event, class_name: "RedeliveringWebhookEvent"
+
   after_save :update_web_hook_delivery_status
 
   default_scope { order("created_at DESC") }

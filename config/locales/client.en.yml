@@ -5349,6 +5349,7 @@ en:
           response: "Response"
           redeliver_confirm: "Are you sure you want to redeliver the same payload?"
           redeliver_failed_confirm: "Are you sure you want to redeliver %{count} webhook events?"
+          no_events_to_redeliver: "No events to redeliver."
           headers: "Headers"
           payload: "Payload"
           body: "Body"

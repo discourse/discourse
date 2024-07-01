@@ -88,7 +88,7 @@ class Admin::WebHooksController < Admin::AdminController
   def list_events
     limit = 50
     offset = params[:offset].to_i
-    events = @web_hook.web_hook_events
+    events = @web_hook.web_hook_events.includes(:redelivering_webhook_event)
     status = params[:status]
     if status == "successful"
       events = events.successful
@@ -141,12 +141,9 @@ class Admin::WebHooksController < Admin::AdminController
 
     if web_hook_events
       web_hook_events.each_with_index do |web_hook_event, index|
-        Jobs.enqueue_in(
-          (index * 2).seconds,
-          :redeliver_web_hook_event,
-          web_hook_id: @web_hook.id,
-          web_hook_event_id: web_hook_event.id,
-        )
+        if !RedeliveringWebhookEvent.find_by(web_hook_event: web_hook_event)
+          RedeliveringWebhookEvent.create!(web_hook_event: web_hook_event)
+        end
       end
       render json: { event_ids: web_hook_events.map(&:id) }
     else
