@@ -219,15 +219,6 @@ module SiteSettings::Validations
     if new_val != "no" && SiteSetting.enable_discourse_connect?
       return validate_error :second_factor_cannot_be_enforced_with_discourse_connect_enabled
     end
-    if new_val == "all" && Discourse.enabled_auth_providers.count > 0
-      auth_provider_names = Discourse.enabled_auth_providers.map(&:name).join(", ")
-      return(
-        validate_error(
-          :second_factor_cannot_enforce_with_socials,
-          auth_provider_names: auth_provider_names,
-        )
-      )
-    end
     return if SiteSetting.enable_local_logins
     return if new_val == "no"
     validate_error :second_factor_cannot_be_enforced_with_disabled_local_login

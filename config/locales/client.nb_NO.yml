@@ -944,7 +944,8 @@ nb_NO:
       activity_stream: "Aktivitet"
       read: "Lest"
       read_help: "Nylig leste emner"
-      preferences: "Innstillinger"
+      preferences:
+        title: "Innstillinger"
       feature_topic_on_profile:
         open_search: "Velg et nytt emne"
         title: "Velg et emne"
@@ -1717,8 +1718,8 @@ nb_NO:
       enter: "Angi"
     category_row:
       subcategory_count:
-        one: "+ %{count} underkategori"
-        other: "+ %{count} underkategorier"
+        one: "+%{count} underkategori"
+        other: "+%{count} underkategorier"
       topic_count:
         one: "%{count} emne i denne kategori"
         other: "%{count} emner i denne kategorien"
@@ -1843,7 +1844,6 @@ nb_NO:
       show_toolbar: "vis verktøylinje for komponist"
       hide_toolbar: "skjul verktøylinje for komponist"
       modal_ok: "OK"
-      modal_cancel: "Avbryt"
       cant_send_pm: "Beklager, du kan ikke sende privat melding til %{username}."
       yourself_confirm:
         title: "Glemte du å legge til mottagere?"
@@ -3367,6 +3367,8 @@ nb_NO:
               content: "Emner"
             faq:
               content: "O-S-S"
+            guidelines:
+              content: "Retningslinjer"
             groups:
               content: "Grupper"
             users:
@@ -3946,7 +3948,6 @@ nb_NO:
             description: "Lenker, noen knapper, varsler og effektfarge"
           quaternary:
             name: "kvartær"
-            description: "Navigasjonslenker."
           header_background:
             name: "hodebakgrunn"
             description: "Bakgrunnsfarge i nettstedets hode"

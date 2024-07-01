@@ -1038,7 +1038,8 @@ pt:
       activity_stream: "Atividade"
       read: "Lidos"
       read_help: "Tópicos lidos recentemente"
-      preferences: "Preferências"
+      preferences:
+        title: "Preferências"
       feature_topic_on_profile:
         open_search: "Selecione um Novo Tópico"
         title: "Selecione um Tópico"
@@ -1853,8 +1854,8 @@ pt:
       loading: A carregar...
     category_row:
       subcategory_count:
-        one: "+ %{count} subcategoria"
-        other: "+ %{count} subcategorias"
+        one: "+%{count} subcategoria"
+        other: "+%{count} subcategorias"
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"
@@ -1998,7 +1999,6 @@ pt:
       show_toolbar: "mostrar barra de compositor"
       hide_toolbar: "esconder barra de compositor"
       modal_ok: "CONFIRMAR"
-      modal_cancel: "Cancelar"
       cant_send_pm: "Desculpe, não pode enviar uma mensagem para %{username}."
       yourself_confirm:
         title: "Esqueceu-se de adicionar os destinatários?"
@@ -3482,6 +3482,8 @@ pt:
         other: "%{count} novos"
       more: "Mais"
       all_categories: "Todas as categorias"
+      categories_form_modal:
+        show_more: "Mostrar mais"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "Tudo"
@@ -3525,6 +3527,8 @@ pt:
               content: "Tópicos"
             faq:
               content: "FAQ"
+            guidelines:
+              content: "Orientações"
             groups:
               content: "Grupos"
             users:
@@ -4147,7 +4151,6 @@ pt:
             description: "Hiperligações, alguns botões, notificações, e cores acentuadas."
           quaternary:
             name: "quaternária"
-            description: "Hiperligações de navegação."
           header_background:
             name: "fundo do cabeçalho"
             description: "Cor de fundo do cabeçalho do sítio."

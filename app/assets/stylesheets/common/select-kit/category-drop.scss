@@ -19,10 +19,13 @@
         }
       }
 
+      .caret-icon {
+        color: var(--primary-high);
+      }
+
       &.has-selection {
         .category-drop-header {
-          color: var(--quaternary);
-          border-color: var(--quaternary);
+          border-color: var(--d-nav-border-color--active);
         }
       }
 

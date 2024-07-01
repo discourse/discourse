@@ -158,7 +158,6 @@
     text-decoration: none;
     cursor: pointer;
     border: 1px solid transparent;
-    transition: all linear 0.15s;
     outline: none;
     img.avatar {
       width: 2.1333em;
@@ -313,6 +312,9 @@
     }
     .topic-header-extra {
       grid-area: extra;
+      .archetype-private_message & {
+        grid-area: categories;
+      }
     }
   }
   .topic-link {
@@ -359,6 +361,12 @@
       .discourse-tag {
         display: inline; // tags need to stay inline in order for them to truncate
         vertical-align: unset;
+      }
+    }
+    .topic-featured-link {
+      align-self: baseline;
+      .d-icon {
+        font-size: var(--font-down-2);
       }
     }
   }

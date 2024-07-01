@@ -1076,7 +1076,6 @@ en:
     categories:
       categories_label: "categories"
       subcategories_label: "subcategories"
-      all_subcategories: "all subcategories"
       no_subcategories: "no subcategories"
       remove_filter: "remove filter"
       plus_more_count:
@@ -1198,7 +1197,10 @@ en:
       activity_stream: "Activity"
       read: "Read"
       read_help: "Recently read topics"
-      preferences: "Preferences"
+      preferences:
+        title: "Preferences"
+        profile:
+          enforced_required_fields: "You are required to provide additional information before continuing to use this site."
       feature_topic_on_profile:
         open_search: "Select a New Topic"
         title: "Select a Topic"
@@ -1540,6 +1542,7 @@ en:
           Two-factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> and <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> devices.
         oauth_enabled_warning: "Please note that social logins will be disabled once two-factor authentication has been enabled on your account."
         use: "Use Authenticator app"
+        enforced_with_oauth_notice: "You are required to enable two-factor authentication. You will only be prompted to use this when logging in with a password, not with external authentication or social login methods."
         enforced_notice: "You are required to enable two-factor authentication before accessing this site."
         disable: "Disable"
         disable_confirm: "Are you sure you want to disable two-factor authentication?"
@@ -2403,8 +2406,8 @@ en:
 
     category_row:
       subcategory_count:
-        one: "+ %{count} subcategory"
-        other: "+ %{count} subcategories"
+        one: "+%{count} subcategory"
+        other: "+%{count} subcategories"
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
@@ -2599,7 +2602,6 @@ en:
       show_toolbar: "show composer toolbar"
       hide_toolbar: "hide composer toolbar"
       modal_ok: "OK"
-      modal_cancel: "Cancel"
       cant_send_pm: "Sorry, you can't send a message to %{username}."
       create_message_error: "Sorry, there was an error creating that message. Please try again."
       yourself_confirm:
@@ -4667,6 +4669,7 @@ en:
           text: "and we'll automatically show this site's most popular categories"
         filter_placeholder: "Filter categories"
         no_categories: "There are no categories matching the given term."
+        show_more: "Show more"
       tags_form_modal:
         title: "Edit tags navigation"
         filter_placeholder: "Filter tags"
@@ -4772,6 +4775,9 @@ en:
               title: "All topics"
             faq:
               content: "FAQ"
+              title: "Guidelines for using this site"
+            guidelines:
+              content: "Guidelines"
               title: "Guidelines for using this site"
             groups:
               content: "Groups"
@@ -5032,6 +5038,8 @@ en:
               label: Category
             include_subcategories:
               label: "Include Subcategories"
+            type_of_web_hook_event:
+              label: "Type of event"
       flags:
         title: "Moderation Flags"
         description: "Description"
@@ -5470,6 +5478,11 @@ en:
             Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service.
           optional: "(optional)"
           update: "Update"
+          toasts:
+            general_settings_saved: "General settings saved"
+            contact_information_saved: "Contact information saved"
+            your_organization_saved: "Your organization saved"
+          saved: "saved!"
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"
@@ -5874,7 +5887,7 @@ en:
             description: "Links, some buttons, notifications, and accent color."
           quaternary:
             name: "quaternary"
-            description: "Navigation links."
+            description: "For optional use in themes."
           header_background:
             name: "header background"
             description: "Background color of the site's header."
@@ -6669,9 +6682,13 @@ en:
           title: "Field Requirement"
           optional:
             title: "Optional"
+          for_all_users:
+            title: "For all users"
+            description: "When new users sign up, they must fill out this field. When existing users return to the site and this is a new required field for them, they will also be prompted to fill it out. To re-prompt all users, delete this custom field and re-create it."
           on_signup:
             title: "On signup"
             description: "When new users sign up, they must fill out this field. Existing users are unaffected."
+          confirmation: "This will prompt existing users to fill in this field and will not allow them to do anything else on your site until the field is filled. Proceed?"
         editable:
           title: "Editable after signup"
           enabled: "editable"
@@ -6706,6 +6723,7 @@ en:
         recommended: "We recommend customizing the following text to suit your needs:"
         show_overriden: "Only show overridden"
         show_outdated: "Only show outdated/invalid"
+        show_untranslated: "Only show untranslated"
         locale: "Language:"
         more_than_50_results: "There are more than 50 results. Please refine your search."
         no_results: "No matching site texts found"
@@ -6795,6 +6813,22 @@ en:
           add_types_title: "Allow extensions %{types}"
           add_types_toast: "%{types} file types added"
         mandatory_group: "Group is mandatory"
+        requires_confirmation_messages:
+          default:
+            prompt: "Changing this setting may have far-reaching or unintended consequences for your site. Are you sure you want to proceed?"
+            confirm: "Yes, I'm sure"
+          min_password_length:
+            prompt: "You’re about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
+            confirm: "Yes, update password policy"
+          min_admin_password_length:
+            prompt: "You’re about to change your password policy. This will affect all admins changing their passwords from now on. Are you sure you want to proceed?"
+            confirm: "Yes, update password policy"
+          password_unique_charactes:
+            prompt: "You’re about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
+            confirm: "Yes, update password policy"
+          block_common_passwords:
+            prompt: "You’re about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
+            confirm: "Yes, update password policy"
 
       badges:
         title: Badges

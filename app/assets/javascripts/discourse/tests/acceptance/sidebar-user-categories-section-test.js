@@ -91,8 +91,8 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       return helper.response(cloneJSON(categoryFixture["/c/1/show.json"]));
     });
 
-    server.post("/categories/search", () => {
-      return helper.response({ categories: [], ancestors: [] });
+    server.get("/categories/hierarchical_search", () => {
+      return helper.response({ categories: [] });
     });
   });
 

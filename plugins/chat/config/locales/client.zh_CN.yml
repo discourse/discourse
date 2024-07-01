@@ -62,6 +62,9 @@ zh_CN:
         instructions:
           other: "您正在移动 <strong>%{count}</strong> 条消息。选择目标频道。将在 <strong>%{channelTitle}</strong> 频道中创建占位符消息，以表明这些消息已被移动。请注意，新频道中不会保留回复链，旧频道中的消息将不再显示为回复任何移动的消息。"
         confirm_move: "移动消息"
+      delete_messages:
+        confirm:
+          other: "你确定要删除 %{count} 条消息吗？"
       channel_settings:
         title: "频道设置"
         edit: "编辑"
@@ -164,13 +167,11 @@ zh_CN:
                       { isAdmin, select,
                         true {
                           { notificationLimit, plural,
-                              one {提及 @{group1} 超出了 # 个用户的<a href="{siteSettingUrl}" target="_blank">通知限制</a>。}
                               other {提及 @{group1} 超出了 # 个用户的<a href="{siteSettingUrl}" target="_blank">通知限制</a>。}
                           }
                         }
                         false {
                           { notificationLimit, plural,
-                              one {提及 @{group1} 超出了 # 个用户的通知限制。}
                               other {提及 @{group1} 超出了 # 个用户的通知限制。}
                           }
                         }
@@ -181,13 +182,11 @@ zh_CN:
                       { isAdmin, select,
                         true {
                           { notificationLimit, plural,
-                              one {提及 @{group1} 和 @{group2} 超出了 # 个用户的<a href="{siteSettingUrl}" target="_blank">通知限制</a>。}
                             other {提及 @{group1} 和 @{group2} 超出了 # 个用户的<a href="{siteSettingUrl}" target="_blank">通知限制</a>。}
                           }
                         }
                         false {
                           { notificationLimit, plural,
-                              one {提及 @{group1} 和 @{group2} 超出了 # 个用户的通知限制。}
                             other {提及 @{group1} 和 @{group2} 超出了 # 个用户的通知限制。}
                           }
                         }
@@ -198,13 +197,11 @@ zh_CN:
                       { isAdmin, select,
                         true {
                           { notificationLimit, plural,
-                              one {提及这 {groupCount} 个群组超出了 # 个用户的<a href="{siteSettingUrl}" target="_blank">通知限制</a>。}
                             other {提及这 {groupCount} 个群组超出了 # 个用户的<a href="{siteSettingUrl}" target="_blank">通知限制</a>。}
                           }
                         }
                         false {
                           { notificationLimit, plural,
-                              one {提及这 {groupCount} 个群组超出了 # 个用户的通知限制。}
                             other {提及这 {groupCount} 个群组超出了 # 个用户的通知限制。}
                           }
                         }
@@ -506,6 +503,7 @@ zh_CN:
         cancel: "取消"
         quote_selection: "话题中的引用"
         copy: "复制"
+        delete: "删除 (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "移至频道"
         error: "移动聊天消息时出错"
         title: "将聊天移动到话题"

@@ -23,7 +23,7 @@ RSpec.describe TopicEmbed do
       expect(TopicEmbed.count).to eq(0)
     end
 
-    it "Allows figure and figcaption HTML tags" do
+    it "Allows figure, figcaption, details HTML tags" do
       html = <<~HTML
         <html>
         <head>
@@ -35,7 +35,10 @@ RSpec.describe TopicEmbed do
             <figure>
               <img src="/a.png">
               <figcaption>Some caption</figcaption>
-            <figure>
+            </figure>
+            <details>
+              some details
+            </details>
           </div>
         </body>
         </html>
@@ -51,9 +54,56 @@ RSpec.describe TopicEmbed do
             <figure>
               <img src="https://blog.discourse.com/a.png">
               <figcaption>Some caption</figcaption>
-            <figure>
-          </figure></figure></div>
+            </figure>
+            <details>
+              some details
+            </details>
+          </div>
         </div></div>
+      HTML
+      expect(parsed.body.strip).to eq(expected.strip)
+    end
+
+    # ideally, articles get a heavier weightage than td elements
+    # so to force that, we do not allow td elements to be scored
+    it "does not score td tags" do
+      html = <<~HTML
+        <html>
+        <head>
+           <title>Some title</title>
+        </head>
+        <body>
+          <article>
+            article content
+            <table>
+              <tr>
+                <td>
+                  <p>cats</p>
+                  <p>cats</p>
+                </td>
+              </tr>
+            </table>
+          </article>
+        </body>
+        </html>
+      HTML
+
+      parsed = TopicEmbed.parse_html(html, "https://blog.discourse.com/somepost.html")
+
+      expected = <<-HTML
+        <div><div>
+  
+    article content
+    
+      
+        
+          cats
+          cats
+        
+      
+    
+  
+</div></div>
       HTML
       expect(parsed.body.strip).to eq(expected.strip)
     end
@@ -296,6 +346,30 @@ RSpec.describe TopicEmbed do
 
         # It uses regular rendering
         expect(post.cook_method).to eq(Post.cook_methods[:regular])
+      end
+    end
+
+    context "when importing a topic embed with string tags" do
+      fab!(:tag1) { Fabricate(:tag, name: "interesting") }
+      fab!(:tag2) { Fabricate(:tag, name: "article") }
+      let(:tags) { [tag1.name, tag2.name] }
+
+      it "associates the specified tags with the existing topic" do
+        imported_page = TopicEmbed.import(user, url, title, contents, tags: tags)
+        expect(imported_page.topic.tags).to match_array([tag1, tag2])
+      end
+    end
+
+    context "when updating an existing topic embed with string tags" do
+      fab!(:tag1) { Fabricate(:tag, name: "interesting") }
+      fab!(:tag2) { Fabricate(:tag, name: "article") }
+      let(:tags) { [tag1, tag2] }
+
+      before { TopicEmbed.import(user, url, title, contents, tags: [tag1.name]) }
+
+      it "associates the specified tags with the existing topic" do
+        imported_page = TopicEmbed.import(user, url, title, contents, tags: tags)
+        expect(imported_page.topic.tags).to match_array([tag1, tag2])
       end
     end
 

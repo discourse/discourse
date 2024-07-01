@@ -84,9 +84,14 @@ export const TOPIC_VISIBILITY_REASONS = {
 export const SYSTEM_FLAG_IDS = {
   like: 2,
   notify_user: 6,
-  notify_moderators: 7,
   off_topic: 3,
   inappropriate: 4,
   spam: 8,
   illegal: 10,
+  notify_moderators: 7,
+};
+
+export const SITE_SETTING_REQUIRES_CONFIRMATION_TYPES = {
+  simple: "simple",
+  user_option: "user_option",
 };

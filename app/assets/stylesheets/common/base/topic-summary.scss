@@ -158,6 +158,10 @@
   .outdated-summary {
     color: var(--primary-medium);
   }
+
+  .old-summary-box-temporary {
+    margin-top: 10px;
+  }
 }
 
 @keyframes ai-summary__indicator-wave {

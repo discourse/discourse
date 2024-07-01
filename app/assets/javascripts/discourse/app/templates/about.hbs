@@ -15,6 +15,10 @@
           <li class="nav-item-faq"><LinkTo @route="faq">{{i18n
                 "faq"
               }}</LinkTo></li>
+        {{else if this.renameFaqToGuidelines}}
+          <li class="nav-item-guidelines"><LinkTo @route="guidelines">{{i18n
+                "guidelines"
+              }}</LinkTo></li>
         {{else}}
           <li class="nav-item-faq"><LinkTo @route="faq">{{i18n
                 "faq"

@@ -1118,7 +1118,6 @@ sk:
     categories:
       categories_label: "kategórie"
       subcategories_label: "podkategórie"
-      all_subcategories: "všetky podkategórie"
       no_subcategories: "žiadne podkategórie"
       remove_filter: "zruš filter"
       plus_more_count:
@@ -1253,7 +1252,10 @@ sk:
       activity_stream: "Aktivita"
       read: "Prečítané"
       read_help: "Nedávno prečítané témy"
-      preferences: "Nastavenia"
+      preferences:
+        title: "Nastavenia"
+        profile:
+          enforced_required_fields: "Pred ďalším používaním tejto stránky musíte poskytnúť ďalšie informácie."
       feature_topic_on_profile:
         open_search: "Vyberte novú tému"
         title: "Vyber tému"
@@ -1593,6 +1595,7 @@ sk:
           Dvojfaktorové overenie zvyšuje bezpečnosť vášho účtu tým, že okrem hesla vyžaduje aj jednorazový token. Tokeny je možné generovať na zariadeniach <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> a <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> .
         oauth_enabled_warning: "Upozorňujeme, že prihlásenia do sociálnych sietí budú po povolení dvojfaktorovej autentifikácie vo vašom účte zakázané."
         use: "Použite aplikáciu Authenticator"
+        enforced_with_oauth_notice: "Je potrebné povoliť dvojfaktorové overovanie. Výzva na jeho použitie sa zobrazí len pri prihlasovaní pomocou hesla, nie pri externom overovaní alebo pri prihlasovaní pomocou sociálnych sietí."
         enforced_notice: "Pred prístupom na túto stránku musíte povoliť dvojfaktorovú autentifikáciu."
         disable: "Zakázať"
         disable_confirm: "Ste si istí, že chcete zakázať dvojfaktorovú autentifikáciu?"
@@ -2404,10 +2407,10 @@ sk:
       loading: Načítava sa…
     category_row:
       subcategory_count:
-        one: "+ %{count} podkategória"
-        few: "+ %{count} podkategórií"
-        many: "+ %{count} podkategórií"
-        other: "+ %{count} podkategórie"
+        one: "+%{count} podkategória"
+        few: "+%{count} podkategórií"
+        many: "+%{count} podkategórie"
+        other: "+%{count} podkategórie"
       topic_count:
         one: "%{count} téma v tejto kategórii"
         few: "%{count} tém v tejto kategórii"
@@ -2616,7 +2619,6 @@ sk:
       show_toolbar: "zobraziť panel nástrojov kompozície"
       hide_toolbar: "skryť panel s nástrojmi kompozície"
       modal_ok: "OK"
-      modal_cancel: "Zrušiť"
       cant_send_pm: "Ľutujeme, nemôžete poslať správu používateľovi %{username}."
       create_message_error: "Ľutujeme, pri vytváraní tejto správy sa vyskytla chyba. Prosím skúste znova."
       yourself_confirm:
@@ -4769,6 +4771,7 @@ sk:
           text: "a automaticky zobrazíme najobľúbenejšie kategórie tejto lokality"
         filter_placeholder: "Filtrovanie kategórií"
         no_categories: "Neexistujú žiadne kategórie, ktoré by zodpovedali danému výrazu."
+        show_more: "Zobraziť viac"
       tags_form_modal:
         title: "Upraviť navigáciu značiek"
         filter_placeholder: "Značky filtra"
@@ -4881,6 +4884,9 @@ sk:
               title: "Všetky témy"
             faq:
               content: "Časté otázky"
+              title: "Pokyny na používanie tejto stránky"
+            guidelines:
+              content: "Pokyny"
               title: "Pokyny na používanie tejto stránky"
             groups:
               content: "Skupiny"
@@ -5142,6 +5148,8 @@ sk:
               label: Kategória
             include_subcategories:
               label: "Zahrnúť podkategórie"
+            type_of_web_hook_event:
+              label: "Typ podujatia"
       flags:
         title: "Príznaky moderovania"
         description: "Popis"
@@ -5986,7 +5994,7 @@ sk:
             description: "Odkazy, nejaké tlačidlá, upozornenia a zvýrazňovacie farby."
           quaternary:
             name: "štvrťročne"
-            description: "Navigačné odkazy."
+            description: "Na voliteľné použitie v témach."
           header_background:
             name: "pozadie hlavičky"
             description: "Farba pozadia hlavičky stránky."
@@ -6761,9 +6769,13 @@ sk:
           title: "Požiadavka na pole"
           optional:
             title: "Nepovinné"
+          for_all_users:
+            title: "Pre všetkých používateľov"
+            description: "Pri registrácii nových používateľov je potrebné vyplniť toto pole. Keď sa existujúci používatelia vrátia na stránku a toto pole je pre nich nové povinné, budú tiež vyzvaní, aby ho vyplnili. Ak chcete opätovne vyzvať všetkých používateľov, odstráňte toto vlastné pole a vytvorte ho znova."
           on_signup:
             title: "Pri registrácii"
             description: "Pri registrácii nových používateľov je potrebné vyplniť toto pole. Existujúcich používateľov sa to netýka."
+          confirmation: "To vyzve existujúcich používateľov, aby toto pole vyplnili, a nedovolí im robiť na stránke nič iné, kým pole nevyplnia. Pokračovať?"
         editable:
           title: "Upravovateľné po registrácii"
           enabled: "upravovateľné "
@@ -6796,6 +6808,7 @@ sk:
         recommended: "Odporúčame prispôsobenie nasledujúceho textu podľa vašich potrieb:"
         show_overriden: "Ukázať iba zmenené"
         show_outdated: "Zobraziť len neaktuálne/neplatné"
+        show_untranslated: "Zobraziť len nepreložené"
         locale: "Jazyk:"
         more_than_50_results: "K dispozícii je viac ako 50 výsledkov. Upresnite prosím vyhľadávanie."
         no_results: "Nenašli sa žiadne zodpovedajúce texty"
@@ -6888,6 +6901,22 @@ sk:
           add_types_title: "Povoliť rozšírenia %{types}"
           add_types_toast: "%{types} pridané typy súborov"
         mandatory_group: "Skupina je povinná"
+        requires_confirmation_messages:
+          default:
+            prompt: "Zmena tohto nastavenia môže mať pre vašu stránku ďalekosiahle alebo nezamýšľané dôsledky. Ste si istí, že chcete pokračovať?"
+            confirm: "Áno, som si istý/á."
+          min_password_length:
+            prompt: "Chystáte sa zmeniť zásady používania hesiel. Odteraz sa to bude týkať všetkých používateľov, ktorí si menia svoje heslá. Ste si istí, že chcete pokračovať?"
+            confirm: "Áno, aktualizujte zásady používania hesiel"
+          min_admin_password_length:
+            prompt: "Chystáte sa zmeniť zásady používania hesiel. Odteraz sa to bude týkať všetkých administrátorov, ktorí si menia svoje heslá. Ste si istí, že chcete pokračovať?"
+            confirm: "Áno, aktualizujte zásady používania hesiel"
+          password_unique_charactes:
+            prompt: "Chystáte sa zmeniť zásady používania hesiel. Odteraz sa to bude týkať všetkých používateľov, ktorí si menia svoje heslá. Ste si istí, že chcete pokračovať?"
+            confirm: "Áno, aktualizujte zásady používania hesiel"
+          block_common_passwords:
+            prompt: "Chystáte sa zmeniť zásady používania hesiel. Odteraz sa to bude týkať všetkých používateľov, ktorí si menia svoje heslá. Ste si istí, že chcete pokračovať?"
+            confirm: "Áno, aktualizujte zásady používania hesiel"
       badges:
         title: Odznaky
         new_badge: Nový odznak

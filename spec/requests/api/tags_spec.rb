@@ -444,7 +444,7 @@ RSpec.describe "tags" do
                                    type: :integer,
                                  },
                                  primary_group_id: {
-                                   type: %i[string null],
+                                   type: %i[integer null],
                                  },
                                },
                              },

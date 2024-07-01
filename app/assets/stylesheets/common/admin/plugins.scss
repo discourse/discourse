@@ -58,6 +58,7 @@
 
     &__name-with-badges {
       display: flex;
+      padding: 8px 0 4px;
     }
 
     &__name {
@@ -70,11 +71,7 @@
       font-size: var(--font-down-2);
       background-color: var(--primary-low);
       color: var(--primary-medium);
-      padding: 0.2em 0.8em;
-
-      .d-icon {
-        font-size: 0.8em;
-      }
+      padding: 4px 8px;
 
       & + .admin-plugins-list__badge {
         margin-left: 0.5em;
@@ -84,6 +81,15 @@
     &__version {
       .commit-hash {
         font-size: var(--font-down-1);
+      }
+    }
+
+    &__about {
+      padding: 8px 0;
+
+      .d-icon {
+        font-size: var(--font-down-3);
+        margin-bottom: 0.1em;
       }
     }
   }
@@ -125,30 +131,21 @@
     }
 
     .admin-plugin-config-page__top-nav {
-      --active-border-width: var(--space-1);
-
-      width: auto !important;
+      width: auto;
       margin: 0;
 
       a {
         font-size: var(--font-down-0);
-        padding: var(--space-2) var(--space-3)
-          calc(0.5rem + var(--active-border-width));
+        padding: var(--space-2) var(--space-3) var(--space-3);
 
         &:hover {
-          color: var(--quaternary);
+          color: var(--tertiary);
           background-color: transparent;
-          border-color: transparent;
         }
 
         &.active {
-          color: var(--quaternary);
+          color: var(--tertiary);
           background-color: transparent;
-          border-bottom-left-radius: 0;
-          border-bottom-right-radius: 0;
-          border-width: 0;
-          border-bottom: var(--active-border-width) solid var(--quaternary);
-          padding-bottom: var(--space-2);
         }
       }
 

@@ -9,16 +9,16 @@ export default class ChatMessageReaction {
     return new ChatMessageReaction(args);
   }
 
-  @tracked count = 0;
-  @tracked reacted = false;
-  @tracked users = [];
+  @tracked count;
+  @tracked reacted;
+  @tracked users;
   @tracked emoji;
 
   constructor(args = {}) {
     this.count = args.count;
     this.emoji = args.emoji;
-    this.users = this.#initUsersModels(args.users);
     this.reacted = args.reacted;
+    this.users = this.#initUsersModels(args.users);
   }
 
   #initUsersModels(users = []) {

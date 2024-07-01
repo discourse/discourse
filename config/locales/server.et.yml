@@ -709,6 +709,8 @@ et:
     web_crawlers:
       labels:
         page_views: "Lehekülje vaatamisi"
+    web_hook_events_daily_aggregate:
+      xaxis: "Päev"
     suspicious_logins:
       labels:
         user: Kasutaja
@@ -882,6 +884,8 @@ et:
     boolean_yes: "Jah"
     boolean_no: "Ei"
     rate_limit_error: "Postitusi saab alla laadida üks kord ööpäevas. Palun proovi homme uuesti."
+  guidelines_topic:
+    guidelines_title: "Juhised"
   tos_topic:
     title: "Teenuse tingimused"
   privacy_topic:

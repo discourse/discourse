@@ -260,6 +260,27 @@ uk:
         many: "У вас є нові повідомлення в чаті"
         other: "У вас є нові повідомлення в чаті"
       from: "%{site_name}"
+      subject:
+        private_email:
+          one: "[%{site_name}] Нове повідомлення"
+          few: "[%{site_name}] Нові повідомлення"
+          many: "[%{site_name}] Нові повідомлення"
+          other: "[%{site_name}] Нові повідомлення"
+        chat_dm_1:
+          one: "[%{site_name}] Нове повідомлення від %{name}"
+          few: "[%{site_name}] Нове повідомлення від %{name}"
+          many: "[%{site_name}] Нове повідомлення від %{name}"
+          other: "[%{site_name}] Нове повідомлення від %{name}"
+        chat_dm_2: "[%{site_name}] Нові повідомлення від %{name_1} та %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] Нові повідомлення від %{name} та %{count} інших"
+        chat_channel_1:
+          one: "[%{site_name}] Нове повідомлення в %{channel}"
+          few: "[%{site_name}] Нове повідомлення в %{channel}"
+          many: "[%{site_name}] Нове повідомлення в %{channel}"
+          other: "[%{site_name}] Нове повідомлення в %{channel}"
+        chat_channel_2: "[%{site_name}] Нові повідомлення в %{channel_1} та %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] Нові повідомлення в %{channel} та %{count} інших"
+        chat_channel_and_dm: "[%{site_name}] Нові повідомлення в %{channel} та від %{name}"
       unsubscribe: "Цей підсумок чату надсилається з %{site_link} , коли вас немає. Змініть %{email_preferences_link} або %{unsubscribe_link} , щоб скасувати підписку."
       unsubscribe_no_link: "Цей звіт про чат надсилається від %{site_link} , коли вас немає. Змінити налаштування %{email_preferences_link}."
       view_messages:

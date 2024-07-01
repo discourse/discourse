@@ -1013,7 +1013,8 @@ da:
       activity_stream: "Aktivitet"
       read: "Læs"
       read_help: "Nyligt læste emner"
-      preferences: "Indstillinger"
+      preferences:
+        title: "Indstillinger"
       feature_topic_on_profile:
         open_search: "Vælg et nyt emne"
         title: "Vælg et emne"
@@ -1870,8 +1871,8 @@ da:
       loading: Indlæser…
     category_row:
       subcategory_count:
-        one: "+ %{count} underkategori"
-        other: "+ %{count} underkategorier"
+        one: "+%{count} underkategori"
+        other: "+%{count} underkategorier"
       topic_count:
         one: "%{count} emne i denne kategori"
         other: "%{count} emner i denne kategori"
@@ -2023,7 +2024,6 @@ da:
       exit_fullscreen: "gå ud af 'fullscreen composer'"
       exit_fullscreen_prompt: "Tryk på <kbd>ESC</kbd> for at afslutte fuld skærm"
       modal_ok: "OK"
-      modal_cancel: "Annuller"
       cant_send_pm: "Beklager, du kan ikke sende en besked til %{username}."
       yourself_confirm:
         title: "Glemte du at tilføje modtagere?"
@@ -3631,6 +3631,8 @@ da:
       more: "Flere"
       all_categories: "Alle kategorier"
       all_tags: "Alle mærker"
+      categories_form_modal:
+        show_more: "Vis mere"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "Alle"
@@ -3688,6 +3690,8 @@ da:
               title: "Alle emner"
             faq:
               content: "OSS"
+            guidelines:
+              content: "Retningslinier"
             groups:
               content: "Grupper"
             users:
@@ -4413,7 +4417,6 @@ da:
             description: "Links, nogle knapper, notifikationer og accent farver."
           quaternary:
             name: "fjerde"
-            description: "Navigations links."
           header_background:
             name: "titel baggrund"
             description: "Baggrunds farve på sitets titel."

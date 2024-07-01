@@ -1004,7 +1004,6 @@ ug:
     categories:
       categories_label: "سەھىپە"
       subcategories_label: "تارماق سەھىپە"
-      all_subcategories: "ھەممە تارماق سەھىپە"
       no_subcategories: "تارماق سەھىپە يوق"
       remove_filter: "سۈزگۈچنى چىقىرىۋەت"
       plus_more_count:
@@ -1123,7 +1122,8 @@ ug:
       activity_stream: "پائالىيەت"
       read: "ئوقۇلدى"
       read_help: "يېقىندا ئوقۇغان تېما"
-      preferences: "مايىللىق"
+      preferences:
+        title: "مايىللىق"
       feature_topic_on_profile:
         open_search: "يېڭى بىر تېما تاللىنىدۇ"
         title: "بىر تېما تاللىنىدۇ"
@@ -2124,8 +2124,8 @@ ug:
       loading: يۈكلەۋاتىدۇ…
     category_row:
       subcategory_count:
-        one: "+ %{count} تارماق سەھىپە"
-        other: "+ %{count} تارماق سەھىپە"
+        one: "+%{count} تارماق سەھىپە"
+        other: "+%{count} تارماق سەھىپە"
       topic_count:
         one: "بۇ سەھىپىدە %{count} تېما بار"
         other: "بۇ سەھىپىدە %{count} تېما بار"
@@ -2300,7 +2300,6 @@ ug:
       show_toolbar: "تەھرىرلىگۈچ قورال بالداقنى كۆرسەت"
       hide_toolbar: "تەھرىرلىگۈچ قورال بالداقنى يوشۇر"
       modal_ok: "جەزملە"
-      modal_cancel: "ۋاز كەچ"
       cant_send_pm: "كەچۈرۈڭ، %{username} غا ئۇچۇر يوللىيالمايسىز."
       yourself_confirm:
         title: "تاپشۇرۇۋالغۇچىنى قوشۇشنى ئۇنۇتتىڭىزمۇ؟"
@@ -2703,6 +2702,7 @@ ug:
         close_topics: "تېمىنى تاقا"
         archive_topics: "تېما ئارخىپلاشتۇر"
         move_messages_to_inbox: "قوبۇللاش ساندۇقىغا يۆتكە"
+        archive_messages: "ئارخىپقا يۆتكە"
         notification_level: "ئۇقتۇرۇش…"
         change_notification_level: "ئۇقتۇرۇش دەرىجىسىنى ئۆزگەرت"
         choose_new_category: "تېمىغا يېڭى سەھىپە تاللىنىدۇ:"
@@ -2762,8 +2762,14 @@ ug:
         optional: (تاللاشچان)
       archive_topics:
         name: "ئارخىپ"
+      archive_messages:
+        name: "ئارخىپقا يۆتكە"
       move_messages_to_inbox:
         name: "قوبۇللاش ساندۇقىغا يۆتكە"
+      unlist_topics:
+        name: "تىزىمدىن چىقىرىۋەت"
+      relist_topics:
+        name: "تىزىمغا قايتا قوش"
       remove_tags:
         name: "بەلگىنى چىقىرىۋەت"
       append_tags:
@@ -3786,7 +3792,7 @@ ug:
           title: "كۈندىلىك"
         all_time: "ھەممە ۋاقىت"
         this_year: "يىل"
-        this_quarter: "چارەك"
+        this_quarter: "پەسىل"
         this_month: "ئاي"
         this_week: "ھەپتە"
         today: "بۈگۈن"
@@ -4144,6 +4150,7 @@ ug:
         title: "سەھىپە يولباشچى تەھرىر"
         filter_placeholder: "سەھىپە سۈزگۈچ"
         no_categories: "بېرىلگەن ئاتالغۇغا ماس كېلىدىغان سەھىپە يوق."
+        show_more: "تېخىمۇ كۆپ كۆرسەت"
       tags_form_modal:
         title: "بەلگە يولباشچى تەھرىر"
         filter_placeholder: "بەلگە سۈزگۈچ"
@@ -4245,6 +4252,9 @@ ug:
               title: "بارلىق تېما"
             faq:
               content: "كۆپ سورالغان سوئال"
+              title: "بۇ تور بېكەتنى ئىشلىتىش قوللانمىسى"
+            guidelines:
+              content: "كۆرسەتمە"
               title: "بۇ تور بېكەتنى ئىشلىتىش قوللانمىسى"
             groups:
               content: "گۇرۇپپا"
@@ -5259,7 +5269,6 @@ ug:
             description: "ئۇلانما، بەزى توپچە، ئۇقتۇرۇش ۋە تەكىتلەش رەڭگى."
           quaternary:
             name: "تۆتىنچى"
-            description: "يولباشچى ئۇلانما."
           header_background:
             name: "بەت قاش تەگلىكى"
             description: "تور بېكەت بەت قاشنىڭ تەگلىك رەڭگى."

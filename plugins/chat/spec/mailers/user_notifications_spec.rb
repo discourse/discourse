@@ -226,6 +226,34 @@ describe UserNotifications do
         no_chat_summary_email
       end
     end
+
+    describe "group is mentioned" do
+      before do
+        group.update!(mentionable_level: Group::ALIAS_LEVELS[:everyone])
+        create_message(followed_channel, "hello @#{group.name}", Chat::GroupMention)
+      end
+
+      it "sends a chat summary email" do
+        chat_summary_with_subject(:chat_channel_1, channel: followed_channel.name, count: 1)
+      end
+
+      describe "when the group is not mentionable" do
+        before { group.update!(mentionable_level: Group::ALIAS_LEVELS[:nobody]) }
+
+        it "does not send a chat summary email" do
+          no_chat_summary_email
+        end
+      end
+    end
+
+    describe "channel does not allow channel wide mentions" do
+      before { followed_channel.update!(allow_channel_wide_mentions: false) }
+
+      it "does not send a chat summary email" do
+        create_message(followed_channel, "hello @all", Chat::AllMention)
+        no_chat_summary_email
+      end
+    end
   end
 
   describe "in two followed channels" do
@@ -462,6 +490,92 @@ describe UserNotifications do
           channel: followed_channel.name,
           name: direct_message.title(user),
         )
+      end
+    end
+
+    describe "when another user is mentioned in the channel and user receives a 1:1" do
+      before do
+        create_message(direct_message, "Hello, how are you?")
+        create_message(followed_channel, "Hey @#{another.username}", Chat::UserMention)
+      end
+
+      it "does not show the channel mention in the subject" do
+        chat_summary_with_subject(:chat_dm_1, name: direct_message.title(user), count: 1)
+      end
+
+      it "does not show the channel mention in the body" do
+        html = chat_summary_email.html_part.body.to_s
+
+        expect(html).to include(direct_message.title(user))
+        expect(html).not_to include(followed_channel.title(user))
+      end
+    end
+
+    describe "when mentioning @all in the channel and user receives a 1:1" do
+      before do
+        create_message(direct_message, "Hello, how are you?")
+        create_message(followed_channel, "Hey @all", Chat::AllMention)
+      end
+
+      it "shows both the channel mention and 1:1 in the subject" do
+        chat_summary_with_subject(
+          :chat_channel_and_dm,
+          channel: followed_channel.name,
+          name: direct_message.title(user),
+        )
+      end
+
+      it "shows both the channel mention and 1:1 in the body" do
+        html = chat_summary_email.html_part.body.to_s
+
+        expect(html).to include(direct_message.title(user))
+        expect(html).to include(followed_channel.title(user))
+      end
+    end
+
+    describe "when mentioning a group in the channel and user receives a 1:1" do
+      before do
+        group.update!(mentionable_level: Group::ALIAS_LEVELS[:everyone])
+        create_message(direct_message, "Hello, how are you?")
+        create_message(followed_channel, "Hey @#{group.name}", Chat::GroupMention)
+      end
+
+      it "shows the group mention in the email subject" do
+        chat_summary_with_subject(
+          :chat_channel_and_dm,
+          channel: followed_channel.name,
+          name: direct_message.title(user),
+        )
+      end
+
+      it "shows the group mention in the email body" do
+        html = chat_summary_email.html_part.body.to_s
+
+        expect(html).to include(direct_message.title(user))
+        expect(html).to include(group.name)
+      end
+
+      describe "when the group is not mentionable" do
+        before { group.update!(mentionable_level: Group::ALIAS_LEVELS[:nobody]) }
+
+        it "does not show the group mention in the email subject" do
+          chat_summary_with_subject(:chat_dm_1, name: direct_message.title(user), count: 1)
+        end
+
+        it "does not show the group mention in the email body" do
+          html = chat_summary_email.html_part.body.to_s
+
+          expect(html).to include(direct_message.title(user))
+          expect(html).not_to include(group.name)
+        end
+      end
+
+      describe "when user is removed from group" do
+        before { group.remove(user) }
+
+        it "does not show the group mention in the email subject" do
+          chat_summary_with_subject(:chat_dm_1, name: direct_message.title(user), count: 1)
+        end
       end
     end
   end

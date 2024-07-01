@@ -6,19 +6,10 @@ import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import getURL from "discourse-common/lib/get-url";
 import HomeLogoContents from "./home-logo-contents";
-
-let hrefCallback;
-
-export function registerHomeLogoHrefCallback(callback) {
-  hrefCallback = callback;
-}
-
-export function clearHomeLogoHrefCallback() {
-  hrefCallback = null;
-}
 
 export default class HomeLogo extends Component {
   @service session;
@@ -28,11 +19,7 @@ export default class HomeLogo extends Component {
   darkModeAvailable = this.session.darkModeAvailable;
 
   get href() {
-    if (hrefCallback) {
-      return hrefCallback();
-    }
-
-    return getURL("/");
+    return applyValueTransformer("home-logo-href", getURL("/"));
   }
 
   get showMobileLogo() {

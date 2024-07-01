@@ -785,7 +785,8 @@ et:
         to: "kellele"
       activity_stream: "Tegevused"
       read: "Loetud"
-      preferences: "Eelistused"
+      preferences:
+        title: "Eelistused"
       feature_topic_on_profile:
         save: "Salvesta"
         clear:
@@ -1437,7 +1438,6 @@ et:
       toggle_direction: "Muuda suunda"
       help: "Markdown-i redaktori spikker"
       modal_ok: "OK"
-      modal_cancel: "Tühista"
       cant_send_pm: "Kahjuks ei saa sa kasutajale %{username} sõnumit saata."
       yourself_confirm:
         title: "Kas unustasid saajad lisada?"
@@ -2595,6 +2595,8 @@ et:
               content: "Teemasid"
             faq:
               content: "KKK"
+            guidelines:
+              content: "Juhised"
             groups:
               content: "Grupid"
             users:
@@ -3057,7 +3059,6 @@ et:
             description: "Viited, mõned nupud, teavitused ja rõhuvärv."
           quaternary:
             name: "neljanda astme"
-            description: "Navigatsiooniviited"
           header_background:
             name: "päise taust"
             description: "Saidi päise taustavärv."

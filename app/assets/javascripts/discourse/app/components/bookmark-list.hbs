@@ -80,7 +80,7 @@
                 </label>
               </td>
             {{/if}}
-            <th scope="row" class="main-link topic-list-data">
+            <td class="main-link topic-list-data">
               <span class="link-top-line">
                 <div class="bookmark-metadata">
                   {{#if bookmark.reminder_at}}
@@ -157,7 +157,7 @@
                 class="post-excerpt"
                 {{on "click" this.screenExcerptForExternalLink}}
               >{{html-safe bookmark.excerpt}}</p>
-            </th>
+            </td>
             {{#if this.site.desktopView}}
               <td class="author-avatar topic-list-data">
                 {{#if bookmark.user.avatar_template}}

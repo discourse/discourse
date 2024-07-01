@@ -403,7 +403,7 @@ module PrettyText
     doc.css("aside.quote a, aside.onebox a, .elided a").remove
 
     # remove hotlinked images
-    doc.css("a.onebox > img").each { |img| img.parent.remove }
+    doc.css("a.lightbox > img, a.onebox > img").each { |img| img.parent.remove }
 
     # extract all links
     doc

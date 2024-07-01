@@ -95,6 +95,10 @@ module SiteSettingExtension
     @shadowed_settings ||= []
   end
 
+  def requires_confirmation_settings
+    @requires_confirmation_settings ||= {}
+  end
+
   def hidden_settings_provider
     @hidden_settings_provider ||= SiteSettings::HiddenProvider.new
   end
@@ -185,7 +189,9 @@ module SiteSettingExtension
     include_locale_setting: true,
     only_overridden: false,
     filter_categories: nil,
-    filter_plugin: nil
+    filter_plugin: nil,
+    filter_names: nil,
+    filter_allowed_hidden: nil
   )
     locale_setting_hash = {
       setting: "default_locale",
@@ -206,7 +212,15 @@ module SiteSettingExtension
       .reject do |setting_name, _|
         plugins[name] && !Discourse.plugins_by_name[plugins[name]].configurable?
       end
-      .reject { |setting_name, _| !include_hidden && hidden_settings.include?(setting_name) }
+      .select do |setting_name, _|
+        is_hidden = hidden_settings.include?(setting_name)
+
+        next true if !is_hidden
+        next false if !include_hidden
+        next true if filter_allowed_hidden.nil?
+
+        filter_allowed_hidden.include?(setting_name)
+      end
       .select do |setting_name, _|
         if filter_categories && filter_categories.any?
           filter_categories.include?(categories[setting_name])
@@ -243,6 +257,7 @@ module SiteSettingExtension
           secret: secret_settings.include?(s),
           placeholder: placeholder(s),
           mandatory_values: mandatory_values[s],
+          requires_confirmation: requires_confirmation_settings[s],
         }.merge!(type_hash)
 
         opts[:plugin] = plugins[s] if plugins[s]
@@ -252,6 +267,13 @@ module SiteSettingExtension
       .select do |setting|
         if only_overridden
           setting[:value] != setting[:default]
+        else
+          true
+        end
+      end
+      .select do |setting|
+        if filter_names
+          filter_names.include?(setting[:setting].to_s)
         else
           true
         end
@@ -442,12 +464,17 @@ module SiteSettingExtension
     end
   end
 
-  def set_and_log(name, value, user = Discourse.system_user)
+  def set_and_log(name, value, user = Discourse.system_user, detailed_message = nil)
     if has_setting?(name)
       prev_value = public_send(name)
       set(name, value)
       value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
-      StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value)
+      StaffActionLogger.new(user).log_site_setting_change(
+        name,
+        prev_value,
+        value,
+        { details: detailed_message }.compact_blank,
+      )
     else
       raise Discourse::InvalidParameters.new(
               I18n.t("errors.site_settings.invalid_site_setting", name: name),
@@ -640,6 +667,14 @@ module SiteSettingExtension
       defaults.load_setting(name, default, opts.delete(:locale_default))
 
       mandatory_values[name] = opts[:mandatory_values] if opts[:mandatory_values]
+
+      requires_confirmation_settings[name] = (
+        if SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.values.include?(
+             opts[:requires_confirmation],
+           )
+          opts[:requires_confirmation]
+        end
+      )
 
       categories[name] = opts[:category] || :uncategorized
 

@@ -6,13 +6,13 @@ export default class UserChatChannelMembership {
     return new UserChatChannelMembership(args);
   }
 
-  @tracked following = false;
-  @tracked muted = false;
-  @tracked desktopNotificationLevel = null;
-  @tracked mobileNotificationLevel = null;
-  @tracked lastReadMessageId = null;
-  @tracked lastViewedAt = null;
-  @tracked user = null;
+  @tracked following;
+  @tracked muted;
+  @tracked desktopNotificationLevel;
+  @tracked mobileNotificationLevel;
+  @tracked lastReadMessageId;
+  @tracked lastViewedAt;
+  @tracked user;
 
   constructor(args = {}) {
     this.following = args.following;

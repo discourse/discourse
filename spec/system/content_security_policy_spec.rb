@@ -3,7 +3,6 @@
 describe "Content security policy", type: :system do
   it "can boot the application in strict_dynamic mode" do
     expect(SiteSetting.content_security_policy).to eq(true)
-    SiteSetting.content_security_policy_strict_dynamic = true
 
     visit "/"
     expect(page).to have_css("#site-logo")
@@ -11,7 +10,6 @@ describe "Content security policy", type: :system do
 
   it "works for 'public exceptions' like RoutingError" do
     expect(SiteSetting.content_security_policy).to eq(true)
-    SiteSetting.content_security_policy_strict_dynamic = true
     SiteSetting.bootstrap_error_pages = true
 
     get "/nonexistent"
@@ -25,7 +23,6 @@ describe "Content security policy", type: :system do
   it "can boot logster in strict_dynamic mode" do
     expect(SiteSetting.content_security_policy).to eq(true)
     sign_in Fabricate(:admin)
-    SiteSetting.content_security_policy_strict_dynamic = true
 
     visit "/logs"
     expect(page).to have_css("#log-table")

@@ -122,7 +122,7 @@ class TopicEmbed < ActiveRecord::Base
         end
 
         existing_tag_names = post.topic.tags.pluck(:name).sort
-        incoming_tag_names = Array(tags).map(&:name).sort
+        incoming_tag_names = Array(tags).map { |tag| tag.respond_to?(:name) ? tag.name : tag }.sort
 
         tags_changed = existing_tag_names != incoming_tag_names
 
@@ -163,9 +163,31 @@ class TopicEmbed < ActiveRecord::Base
     require "ruby-readability"
 
     opts = {
-      tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote figure figcaption],
+      tags: %w[
+        div
+        p
+        code
+        pre
+        h1
+        h2
+        h3
+        b
+        em
+        i
+        strong
+        a
+        img
+        ul
+        li
+        ol
+        blockquote
+        figure
+        figcaption
+        details
+      ],
       attributes: %w[href src class],
       remove_empty_nodes: false,
+      elements_to_score: %w[p],
     }
 
     opts[

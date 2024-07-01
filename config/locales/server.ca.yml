@@ -1052,6 +1052,8 @@ ca:
         user_agent: "Agent d'usuari"
         page_views: "Pàgines vistes"
       description: "Llista d'agents d'usuari de rastrejadors web, ordenats per pàgines vistes."
+    web_hook_events_daily_aggregate:
+      xaxis: "Dia"
     suspicious_logins:
       title: "Inicis de sessió sospitosos"
       labels:
@@ -1734,7 +1736,6 @@ ca:
     password_too_long: "Les contrasenyes estan limitades a 200 caràcters."
     email_too_long: "El correu que heu facilitat és massa llarg. Els noms d'adreces de correu no poden tenir més de 254 caràcters i els noms de dominis no n'han de tenir més de 253."
     reserved_username: "Aquest nom d'usuari no és permès. "
-    missing_user_field: "No heu completat tots els camps d'usuari"
     auth_complete: "S'ha completat l'autenticació."
     click_to_continue: "Feu clic aquí per a continuar."
     second_factor_description: "Introduïu el codi d'autenticació necessari de la vostra aplicació:"
@@ -2512,6 +2513,7 @@ ca:
     Edita la primera publicació en aquest tema per a canviar els continguts de la pàgina %{page_name}.
   guidelines_topic:
     title: "Guies/PMF"
+    guidelines_title: "Directrius"
   tos_topic:
     title: "Condicions del servei"
   privacy_topic:

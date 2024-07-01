@@ -1044,7 +1044,8 @@ sl:
       activity_stream: "Aktivnost"
       read: "Prebrano"
       read_help: "Nedavno prebrane teme"
-      preferences: "Nastavitve"
+      preferences:
+        title: "Nastavitve"
       feature_topic_on_profile:
         open_search: "Izberite novo temo"
         title: "Izberite temo"
@@ -2024,7 +2025,6 @@ sl:
       show_toolbar: "prikaži orodno vrstico urejevalnika"
       hide_toolbar: "skrij orodno vrstico urejevalnika"
       modal_ok: "V redu"
-      modal_cancel: "Prekliči"
       cant_send_pm: "Ne moremo poslati sporočila %{username}."
       yourself_confirm:
         title: "Ali ste pozabili dodati prejemnike?"
@@ -3546,6 +3546,8 @@ sl:
         other: "%{count} novih"
       more: "Več"
       all_categories: "Vse kategorije"
+      categories_form_modal:
+        show_more: "Več"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "Vse"
@@ -3592,6 +3594,8 @@ sl:
               content: "Tem"
             faq:
               content: "Pravila skupnosti"
+            guidelines:
+              content: "Navodila"
             groups:
               content: "Skupine"
             users:

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Drawer", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user) { Fabricate(:user) }
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
@@ -222,6 +222,63 @@ RSpec.describe "Drawer", type: :system do
         drawer_page.open_thread_list
         thread_list_page.open_thread(thread_1)
         thread_page.send_message
+      end
+    end
+  end
+
+  describe "with chat footer" do
+    it "opens channels list by default" do
+      visit("/")
+      chat_page.open_from_header
+
+      expect(drawer_page).to have_open_channels
+    end
+
+    it "shows footer nav when 2 or more tabs are accessible" do
+      visit("/")
+      chat_page.open_from_header
+
+      expect(page).to have_css(".chat-drawer .c-footer")
+      expect(page).to have_css(".chat-drawer .c-footer__item", count: 2)
+    end
+
+    it "hides footer nav when only channels are accessible" do
+      SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff]
+
+      visit("/")
+      chat_page.open_from_header
+
+      expect(page).to have_no_css(".chat-drawer .c-footer")
+    end
+
+    context "when clicking footer nav items" do
+      fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
+
+      before do
+        SiteSetting.chat_threads_enabled = true
+        channel.add(current_user)
+      end
+
+      it "shows active state" do
+        visit("/")
+        chat_page.open_from_header
+
+        drawer_page.click_direct_messages
+        expect(page).to have_css("#c-footer-direct-messages.--active")
+      end
+
+      it "redirects to correct route" do
+        visit("/")
+        chat_page.open_from_header
+
+        drawer_page.click_direct_messages
+        expect(drawer_page).to have_open_direct_messages
+
+        drawer_page.click_channels
+        expect(drawer_page).to have_open_channels
+
+        drawer_page.click_user_threads
+        expect(drawer_page).to have_open_user_threads
       end
     end
   end

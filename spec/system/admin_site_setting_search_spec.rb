@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Admin Site Setting Search", type: :system do
-  let(:settings_page) { PageObjects::Pages::AdminSettings.new }
+  let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
   fab!(:admin)
 
   before do

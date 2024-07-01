@@ -1,23 +1,16 @@
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { cook } from "discourse/lib/text";
 
-const opts = {
-  siteSettings: {
-    enable_emoji: true,
-    emoji_set: "twitter",
-    highlighted_languages: "json|ruby|javascript",
-    default_code_lang: "auto",
-  },
-  censoredWords: "shucks|whiz|whizzer",
-  getURL: (url) => url,
-};
+module("lib:details-cooked-test", (hooks) => {
+  setupTest(hooks);
 
-module("lib:details-cooked-test", function () {
-  test("details", async function (assert) {
+  test("details", async (assert) => {
     const testCooked = async (input, expected, text) => {
-      const cooked = (await cook(input, opts)).toString();
+      const cooked = (await cook(input)).toString();
       assert.strictEqual(cooked, expected, text);
     };
+
     await testCooked(
       `<details><summary>Info</summary>coucou</details>`,
       `<details><summary>Info</summary>coucou</details>`,
@@ -25,12 +18,15 @@ module("lib:details-cooked-test", function () {
     );
 
     await testCooked(
-      "[details=testing]\ntest\n[/details]",
-      `<details>
-<summary>
-testing</summary>
-<p>test</p>
-</details>`
+      `[details=test'ing all the things]\ntest\n[/details]`,
+      `<details>\n<summary>\ntest'ing all the things</summary>\n<p>test</p>\n</details>`,
+      "details with spaces and a single quote"
+    );
+
+    await testCooked(
+      `[details=”test'ing all the things”]\ntest\n[/details]`,
+      `<details>\n<summary>\ntest'ing all the things</summary>\n<p>test</p>\n</details>`,
+      "details surrounded by finnish double quotes"
     );
   });
 });

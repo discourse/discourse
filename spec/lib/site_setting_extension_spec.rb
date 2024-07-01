@@ -569,6 +569,16 @@ RSpec.describe SiteSettingExtension do
       expect(UserHistory.last.previous_value).to eq("Discourse v1")
       expect(UserHistory.last.new_value).to eq("Discourse v2")
     end
+
+    context "when a detailed message is provided" do
+      let(:message) { "We really need to do this, see https://meta.discourse.org/t/123" }
+
+      it "adds the detailed message to the user history record" do
+        expect {
+          settings.set_and_log("title", "Discourse v2", Discourse.system_user, message)
+        }.to change { UserHistory.last.try(:details) }.to(message)
+      end
+    end
   end
 
   describe "filter domain name" do
@@ -816,6 +826,45 @@ RSpec.describe SiteSettingExtension do
         expect(setting[:default]).to eq(system_upload.url)
       end
     end
+
+    context "with the filter_allowed_hidden argument" do
+      it "includes the specified hidden settings only if include_hidden is true" do
+        result =
+          SiteSetting
+            .all_settings(include_hidden: true, filter_allowed_hidden: [:about_banner_image])
+            .map { |ss| ss[:setting] }
+
+        expect(result).to include(:about_banner_image)
+        expect(result).not_to include(:community_owner)
+
+        result =
+          SiteSetting
+            .all_settings(include_hidden: false, filter_allowed_hidden: [:about_banner_image])
+            .map { |ss| ss[:setting] }
+
+        expect(result).not_to include(:about_banner_image)
+        expect(result).not_to include(:community_owner)
+
+        result =
+          SiteSetting
+            .all_settings(include_hidden: true, filter_allowed_hidden: [:community_owner])
+            .map { |ss| ss[:setting] }
+
+        expect(result).not_to include(:about_banner_image)
+        expect(result).to include(:community_owner)
+
+        result =
+          SiteSetting
+            .all_settings(
+              include_hidden: true,
+              filter_allowed_hidden: %i[about_banner_image community_owner],
+            )
+            .map { |ss| ss[:setting] }
+
+        expect(result).to include(:about_banner_image)
+        expect(result).to include(:community_owner)
+      end
+    end
   end
 
   describe ".client_settings_json_uncached" do
@@ -879,6 +928,24 @@ RSpec.describe SiteSettingExtension do
     ensure
       SiteSetting.find_by(name: "embedded_media_post_allowed_groups").destroy
       SiteSetting.provider = test_provider
+    end
+  end
+
+  describe "requires_confirmation settings" do
+    it "returns 'simple' for settings that require confirmation with 'simple' type" do
+      expect(
+        SiteSetting.all_settings.find { |s| s[:setting] == :min_password_length }[
+          :requires_confirmation
+        ],
+      ).to eq("simple")
+    end
+
+    it "returns nil for settings that do not require confirmation" do
+      expect(
+        SiteSetting.all_settings.find { |s| s[:setting] == :display_local_time_in_user_card }[
+          :requires_confirmation
+        ],
+      ).to eq(nil)
     end
   end
 

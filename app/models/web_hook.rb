@@ -8,6 +8,7 @@ class WebHook < ActiveRecord::Base
 
   has_many :web_hook_events, dependent: :destroy
   has_many :redelivering_webhook_events
+  has_many :web_hook_events_daily_aggregates, dependent: :destroy
 
   default_scope { order("id ASC") }
 

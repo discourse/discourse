@@ -5,13 +5,13 @@ import { service } from "@ember/service";
 export default class ChatTrackingState {
   @service chatTrackingStateManager;
 
-  @tracked _unreadCount = 0;
-  @tracked _mentionCount = 0;
+  @tracked _unreadCount;
+  @tracked _mentionCount;
 
   constructor(owner, params = {}) {
     setOwner(this, owner);
-    this._unreadCount = params.unreadCount || 0;
-    this._mentionCount = params.mentionCount || 0;
+    this._unreadCount = params.unreadCount ?? 0;
+    this._mentionCount = params.mentionCount ?? 0;
   }
 
   reset() {

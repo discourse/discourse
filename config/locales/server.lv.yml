@@ -379,6 +379,8 @@ lv:
     web_crawlers:
       labels:
         page_views: "Lapu skatījumi"
+    web_hook_events_daily_aggregate:
+      xaxis: "Diena"
     suspicious_logins:
       labels:
         user: Lietotājs
@@ -474,6 +476,7 @@ lv:
     rate_limit_error: "Ierakstus var lejuplādēt reizi dienā, lūdzu mēģiniet atkal rītdien."
   guidelines_topic:
     title: "BUJ/Vadlīnijas"
+    guidelines_title: "Vadlīnijas"
   tos_topic:
     title: "Pakalpojuma noteikumi"
   privacy_topic:

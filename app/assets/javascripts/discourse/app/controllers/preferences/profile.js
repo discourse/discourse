@@ -42,6 +42,13 @@ export default Controller.extend({
       return;
     }
 
+    if (this.showEnforcedRequiredFieldsNotice) {
+      return this._missingRequiredFields(
+        this.site.user_fields,
+        this.model.user_fields
+      );
+    }
+
     // Staff can edit fields that are not `editable`
     if (!this.currentUser.staff) {
       siteUserFields = siteUserFields.filterBy("editable", true);
@@ -51,6 +58,11 @@ export default Controller.extend({
       const value = this.model.user_fields?.[field.id.toString()];
       return EmberObject.create({ field, value });
     });
+  },
+
+  @discourseComputed("currentUser.needs_required_fields_check")
+  showEnforcedRequiredFieldsNotice(needsRequiredFieldsCheck) {
+    return needsRequiredFieldsCheck;
   },
 
   @discourseComputed("model.user_option.default_calendar")
@@ -79,6 +91,16 @@ export default Controller.extend({
       },
     });
     document.querySelector(".feature-topic-on-profile-btn")?.focus();
+  },
+
+  _missingRequiredFields(siteFields, userFields) {
+    return siteFields
+      .filter(
+        (siteField) =>
+          siteField.requirement === "for_all_users" &&
+          isEmpty(userFields[siteField.id])
+      )
+      .map((field) => EmberObject.create({ field, value: "" }));
   },
 
   actions: {
@@ -132,6 +154,7 @@ export default Controller.extend({
             .then(() => {
               model.set("bio_cooked");
               this.set("saved", true);
+              this.currentUser.set("needs_required_fields_check", false);
             })
             .catch(popupAjaxError);
         })

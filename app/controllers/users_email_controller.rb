@@ -6,6 +6,7 @@ class UsersEmailController < ApplicationController
   skip_before_action :check_xhr, only: %i[show_confirm_old_email show_confirm_new_email]
 
   skip_before_action :redirect_to_login_if_required,
+                     :redirect_to_profile_if_required,
                      only: %i[
                        show_confirm_old_email
                        show_confirm_new_email

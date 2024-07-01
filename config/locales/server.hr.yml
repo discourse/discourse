@@ -1071,6 +1071,8 @@ hr:
         user_agent: "Korisnički agent"
         page_views: "Pregledi stranica"
       description: "Popis korisničkih agenata alata za indeksiranje, poredanih po prikazima stranica."
+    web_hook_events_daily_aggregate:
+      xaxis: "Dan"
     suspicious_logins:
       title: "Sumnjive prijave"
       labels:
@@ -2259,6 +2261,8 @@ hr:
     boolean_yes: "Da"
     boolean_no: "Ne"
     rate_limit_error: "Objave mogu biti preuzimane jednom na dan, molimo pokušajte sutra."
+  guidelines_topic:
+    guidelines_title: "Vodić za uporabu"
   tos_topic:
     title: "Uvjeti korištenja"
   privacy_topic:

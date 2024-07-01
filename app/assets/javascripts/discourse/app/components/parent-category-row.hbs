@@ -40,6 +40,12 @@
                 @listType={{this.listType}}
               />
             {{/each}}
+            {{#if (gt this.category.unloadedSubcategoryCount 0)}}
+              {{i18n
+                "category_row.subcategory_count"
+                count=this.category.unloadedSubcategoryCount
+              }}
+            {{/if}}
           </tbody>
         </table>
       {{else if this.category.subcategories}}
@@ -50,6 +56,16 @@
               @listType={{this.listType}}
             />
           {{/each}}
+          {{#if (gt this.category.unloadedSubcategoryCount 0)}}
+            <div class="subcategories__more-subcategories">
+              <LinkTo @route="discovery.subcategories" @model={{this.slugPath}}>
+                {{i18n
+                  "category_row.subcategory_count"
+                  count=this.category.unloadedSubcategoryCount
+                }}
+              </LinkTo>
+            </div>
+          {{/if}}
         </div>
       {{/if}}
     </td>

@@ -1004,7 +1004,6 @@ de:
     categories:
       categories_label: "Kategorien"
       subcategories_label: "Unterkategorien"
-      all_subcategories: "alle Unterkategorien"
       no_subcategories: "keine Unterkategorien"
       remove_filter: "Filter entfernen"
       plus_more_count:
@@ -1123,7 +1122,10 @@ de:
       activity_stream: "Aktivität"
       read: "Gelesen"
       read_help: "Kürzlich gelesene Themen"
-      preferences: "Einstellungen"
+      preferences:
+        title: "Einstellungen"
+        profile:
+          enforced_required_fields: "Du musst zusätzliche Informationen angeben, bevor du diese Seite weiter nutzen kannst."
       feature_topic_on_profile:
         open_search: "Wähle ein neues Thema"
         title: "Wähle ein Thema"
@@ -1441,6 +1443,7 @@ de:
           Zwei-Faktor-Authentifizierung erhöht die Sicherheit deines Kontos, indem zusätzlich zum Passwort ein einmalig gültiger Code erforderlich ist. Codes können auf <a href="https://www.google.de/search?q=authenticator+app+f%C3%BCr+android" target='_blank'>Android</a>- und <a href="https://www.google.de/search?q=authenticator+app+f%C3%BCr+iOS">iOS</a>-Geräten generiert werden.
         oauth_enabled_warning: "Bitte beachte, dass soziale Anmeldemethoden deaktiviert werden, sobald die Zwei-Faktor-Authentifizierung für dein Konto aktiviert wurde."
         use: "Benutze die Authentifizierungs-App"
+        enforced_with_oauth_notice: "Du musst die Zwei-Faktor-Authentifizierung aktivieren. Du wirst nur aufgefordert, diese zu verwenden, wenn du dich mit einem Passwort anmeldest, nicht aber bei externer Authentifizierung oder sozialen Anmeldemethoden."
         enforced_notice: "Du musst die Zwei-Faktor-Authentifizierung aktivieren, um auf die Website zugreifen zu können."
         disable: "Deaktivieren"
         disable_confirm: "Bist du sicher, dass du die Zwei-Faktor-Authentifizierung deaktivieren willst?"
@@ -2192,8 +2195,8 @@ de:
       loading: Wird geladen …
     category_row:
       subcategory_count:
-        one: "+ %{count} Unterkategorie"
-        other: "+ %{count} Unterkategorien"
+        one: "+%{count} Unterkategorie"
+        other: "+%{count} Unterkategorien"
       topic_count:
         one: "%{count} Thema in dieser Kategorie"
         other: "%{count} Themen in dieser Kategorie"
@@ -2376,7 +2379,6 @@ de:
       show_toolbar: "Editor-Werkzeugleiste anzeigen"
       hide_toolbar: "Editor-Werkzeugleiste ausblenden"
       modal_ok: "OK"
-      modal_cancel: "Abbrechen"
       cant_send_pm: "Entschuldige, aber du kannst keine Nachricht an %{username} senden."
       create_message_error: "Entschuldige, es gab einen Fehler beim Erstellen der Nachricht. Bitte versuche es noch einmal."
       yourself_confirm:
@@ -4313,6 +4315,7 @@ de:
           text: "und wir zeigen automatisch die beliebtesten Kategorien dieser Website an"
         filter_placeholder: "Kategorien filtern"
         no_categories: "Es gibt keine Kategorien, die dem angegebenen Begriff entsprechen."
+        show_more: "Mehr anzeigen"
       tags_form_modal:
         title: "Schlagwörter-Navigation bearbeiten"
         filter_placeholder: "Schlagwörter filtern"
@@ -4417,6 +4420,9 @@ de:
               title: "Alle Themen"
             faq:
               content: "FAQ"
+              title: "Richtlinien für die Nutzung dieser Website"
+            guidelines:
+              content: "Richtlinien"
               title: "Richtlinien für die Nutzung dieser Website"
             groups:
               content: "Gruppen"
@@ -4664,6 +4670,8 @@ de:
               label: Kategorie
             include_subcategories:
               label: "Unterkategorien einschließen"
+            type_of_web_hook_event:
+              label: "Art des Ereignisses"
       flags:
         title: "Moderationsmeldungen"
         description: "Beschreibung"
@@ -5484,7 +5492,7 @@ de:
             description: "Links, einige Schaltflächen, Benachrichtigungen und Akzentfarben."
           quaternary:
             name: "vierte"
-            description: "Navigations-Links"
+            description: "Zur optionalen Verwendung in Themes."
           header_background:
             name: "Kopfzeile (Hintergrund)"
             description: "Hintergrundfarbe des Kopfbereichs der Website."
@@ -6241,9 +6249,13 @@ de:
           title: "Felderfordernis"
           optional:
             title: "Optional"
+          for_all_users:
+            title: "Für alle Benutzer"
+            description: "Wenn sich neue Benutzer anmelden, müssen sie dieses Feld ausfüllen. Wenn bestehende Benutzer zur Website zurückkehren und dieses Feld für sie ein neues Pflichtfeld ist, werden sie ebenfalls aufgefordert, es auszufüllen. Um alle Benutzer erneut aufzufordern, löschst du dieses benutzerdefinierte Feld und erstellst es neu."
           on_signup:
             title: "Bei der Anmeldung"
             description: "Wenn sich neue Benutzer anmelden, müssen sie dieses Feld ausfüllen. Bestehende Benutzer sind nicht betroffen."
+          confirmation: "Dadurch werden bestehende Benutzer aufgefordert, dieses Feld auszufüllen, und sie können erst dann etwas anderes auf deiner Website tun, wenn das Feld ausgefüllt ist. Fortfahren?"
         editable:
           title: "Nach der Registrierung editierbar"
           enabled: "editierbar"
@@ -6276,6 +6288,7 @@ de:
         recommended: "Wir empfehlen, dass du den folgenden Text an deine Bedürfnisse anpasst:"
         show_overriden: "Nur geänderte Texte anzeigen"
         show_outdated: "Nur veraltete/ungültige Elemente anzeigen"
+        show_untranslated: "Nur unübersetzte anzeigen"
         locale: "Sprache:"
         more_than_50_results: "Es gibt mehr als 50 Ergebnisse. Bitte grenze deine Suche weiter ein."
         no_results: "Keine passenden Website-Texte gefunden"
@@ -6364,6 +6377,22 @@ de:
           add_types_title: "Erweiterungen zulassen %{types}"
           add_types_toast: "%{types} Dateitypen hinzugefügt"
         mandatory_group: "Gruppe ist obligatorisch"
+        requires_confirmation_messages:
+          default:
+            prompt: "Das Ändern dieser Einstellung kann weitreichende oder unbeabsichtigte Folgen für deine Website haben. Bist du sicher, dass du fortfahren willst?"
+            confirm: "Ja, ich bin sicher"
+          min_password_length:
+            prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Nutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
+            confirm: "Ja, Passwortrichtlinie aktualisieren"
+          min_admin_password_length:
+            prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Administratoren betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
+            confirm: "Ja, Passwortrichtlinie aktualisieren"
+          password_unique_charactes:
+            prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Nutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
+            confirm: "Ja, Passwortrichtlinie aktualisieren"
+          block_common_passwords:
+            prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Nutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
+            confirm: "Ja, Passwortrichtlinie aktualisieren"
       badges:
         title: Abzeichen
         new_badge: Neues Abzeichen

@@ -55,7 +55,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
       expect(modal).to have_no_reset_to_defaults_button
 
       expect(modal).to have_categories(
-        [category2, category2_subcategory, category, category_subcategory2, category_subcategory],
+        [category, category_subcategory, category_subcategory2, category2, category2_subcategory],
       )
 
       modal
@@ -100,18 +100,6 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
 
   describe "when on mobile" do
     include_examples "a user can edit the sidebar categories navigation", true
-  end
-
-  it "displays the categories in the modal based on the fixed position of the category when `fixed_category_positions` site setting is enabled" do
-    SiteSetting.fixed_category_positions = true
-
-    visit "/latest"
-
-    modal = sidebar.click_edit_categories_button
-
-    expect(modal).to have_categories(
-      [category2, category2_subcategory, category, category_subcategory2, category_subcategory],
-    )
   end
 
   it "allows a user to deselect all categories in the modal" do
@@ -165,13 +153,13 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     modal.filter("subcategory")
 
     expect(modal).to have_categories(
-      [category2, category2_subcategory, category, category_subcategory2, category_subcategory],
+      [category, category_subcategory, category_subcategory2, category2, category2_subcategory],
     )
 
     modal.filter("2")
 
     expect(modal).to have_categories(
-      [category2, category2_subcategory, category, category_subcategory2],
+      [category, category_subcategory2, category2, category2_subcategory],
     )
 
     modal.filter("someinvalidterm")
@@ -190,16 +178,11 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     modal = sidebar.click_edit_categories_button
     modal.filter_by_selected
 
-    expect(modal).to have_categories([category2, category, category_subcategory])
-    expect(modal).to have_checkbox(category, disabled: true)
-    expect(modal).to have_checkbox(category_subcategory)
-    expect(modal).to have_checkbox(category2)
+    expect(modal).to have_categories([category, category_subcategory, category2])
 
     modal.filter("category subcategory")
 
     expect(modal).to have_categories([category, category_subcategory])
-    expect(modal).to have_checkbox(category, disabled: true)
-    expect(modal).to have_checkbox(category_subcategory)
 
     modal.filter("").filter_by_unselected
 
@@ -207,22 +190,11 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
       [category, category_subcategory2, category2, category2_subcategory],
     )
 
-    expect(modal).to have_checkbox(category)
-    expect(modal).to have_checkbox(category_subcategory2)
-    expect(modal).to have_checkbox(category2, disabled: true)
-    expect(modal).to have_checkbox(category2_subcategory)
-
     modal.filter_by_all
 
     expect(modal).to have_categories(
-      [category, category_subcategory2, category_subcategory, category2, category2_subcategory],
+      [category, category_subcategory, category_subcategory2, category2, category2_subcategory],
     )
-
-    expect(modal).to have_checkbox(category)
-    expect(modal).to have_checkbox(category_subcategory)
-    expect(modal).to have_checkbox(category_subcategory2)
-    expect(modal).to have_checkbox(category2)
-    expect(modal).to have_checkbox(category2_subcategory)
   end
 
   context "when there are more categories than the page limit" do
@@ -264,6 +236,8 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
 
   describe "when max_category_nesting has been set to 3" do
     before_all { SiteSetting.max_category_nesting = 3 }
+
+    before { SiteSetting.max_category_nesting = 3 }
 
     fab!(:category_subcategory_subcategory) do
       Fabricate(
@@ -335,9 +309,9 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
           category2_subcategory,
           category2_subcategory_subcategory,
           category,
-          category_subcategory2,
           category_subcategory,
           category_subcategory_subcategory2,
+          category_subcategory2,
         ],
       )
     end

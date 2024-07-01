@@ -1,3 +1,5 @@
+import { applyDataAttributes, parseBBCodeTag } from "./bbcode-block";
+
 export class TextPostProcessRuler {
   constructor() {
     this.rules = [];
@@ -59,7 +61,8 @@ export class TextPostProcessRuler {
         this.rules[i].rule.onMatch(
           buffer,
           match.slice(index, this.matcherIndex[i + 1]),
-          state
+          state,
+          { parseBBCodeTag, applyDataAttributes }
         );
         break;
       }

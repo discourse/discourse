@@ -1,38 +1,24 @@
-<div class="summary-box__container">
-  {{#if @topic.has_summary}}
-    <p>{{html-safe this.topRepliesSummaryInfo}}</p>
-  {{/if}}
-  <div class="summarization-buttons">
-    {{#if @topic.summarizable}}
-      {{#if this.summary.showSummaryBox}}
-        <DButton
-          @action={{@collapseSummary}}
-          @title="summary.buttons.hide"
-          @label="summary.buttons.hide"
-          @icon="chevron-up"
-          class="btn-primary topic-strategy-summarization"
-        />
-      {{else}}
-        <DButton
-          @action={{@showSummary}}
-          @translatedLabel={{this.generateSummaryTitle}}
-          @translatedTitle={{this.generateSummaryTitle}}
-          @icon={{this.generateSummaryIcon}}
-          @disabled={{this.summary.loading}}
-          class="btn-primary topic-strategy-summarization"
-        />
-      {{/if}}
-    {{/if}}
-    {{#if @topic.has_summary}}
+<div class="summary-box__container old-summary-box-temporary">
+  {{#if @topic.summarizable}}
+    {{#if this.summary.showSummaryBox}}
       <DButton
-        @action={{if @postStream.summary @cancelFilter @showTopReplies}}
-        @translatedTitle={{this.topRepliesTitle}}
-        @translatedLabel={{this.topRepliesLabel}}
-        @icon={{this.topRepliesIcon}}
-        class="top-replies"
+        @action={{@collapseSummary}}
+        @title="summary.buttons.hide"
+        @label="summary.buttons.hide"
+        @icon="chevron-up"
+        class="btn-primary topic-strategy-summarization"
+      />
+    {{else}}
+      <DButton
+        @action={{@showSummary}}
+        @translatedLabel={{this.generateSummaryTitle}}
+        @translatedTitle={{this.generateSummaryTitle}}
+        @icon={{this.generateSummaryIcon}}
+        @disabled={{this.summary.loading}}
+        class="btn-primary topic-strategy-summarization"
       />
     {{/if}}
-  </div>
+  {{/if}}
 
   {{#if this.summary.showSummaryBox}}
     <article class="summary-box">

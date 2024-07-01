@@ -1,12 +1,12 @@
-import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import Service from "@ember/service";
+import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 export default class Tooltip extends Service {
-  @tracked registeredTooltips = [];
+  registeredTooltips = new TrackedSet();
 
   /**
    * Render a tooltip
@@ -23,7 +23,7 @@ export default class Tooltip extends Service {
    * @param {String} [options.identifier] - Add a data-identifier attribute to the trigger and the content
    * @param {Boolean} [options.inline] - Improves positioning for trigger that spans over multiple lines
    *
-   * @returns {Promise<DTooltipInstance>}
+   * @returns {Promise<DTooltipInstance | undefined>}
    */
   @action
   async show() {
@@ -36,7 +36,7 @@ export default class Tooltip extends Service {
         return;
       }
     } else {
-      instance = this.registeredTooltips.find(
+      instance = [...this.registeredTooltips].find(
         (registeredTooltips) => registeredTooltips.trigger === arguments[0]
       );
       if (!instance) {
@@ -58,32 +58,29 @@ export default class Tooltip extends Service {
     }
 
     if (instance.expanded) {
-      return await this.close(instance);
+      await this.close(instance);
+      return;
     }
 
-    await new Promise((resolve) => {
-      if (!this.registeredTooltips.includes(instance)) {
-        this.registeredTooltips = this.registeredTooltips.concat(instance);
-      }
+    if (!this.registeredTooltips.has(instance)) {
+      this.registeredTooltips.add(instance);
+    }
 
-      instance.expanded = true;
+    instance.expanded = true;
 
-      schedule("afterRender", () => {
-        resolve();
-      });
-    });
+    await new Promise((resolve) => schedule("afterRender", resolve));
 
     return instance;
   }
 
   /**
-   * Closes the active tooltip
-   * @param {DTooltipInstance} [tooltip] - the tooltip to close, if not provider will close any active tooltip
+   * Closes the given tooltip
+   * @param {DTooltipInstance | String} [tooltip | identifier] - the tooltip to close, can accept an instance or an identifier
    */
   @action
   async close(tooltip) {
     if (typeof tooltip === "string") {
-      tooltip = this.registeredTooltips.find(
+      tooltip = [...this.registeredTooltips].find(
         (registeredTooltip) => registeredTooltip.options.identifier === tooltip
       );
     }
@@ -94,15 +91,11 @@ export default class Tooltip extends Service {
 
     tooltip.expanded = false;
 
-    await new Promise((resolve) => {
-      this.registeredTooltips = this.registeredTooltips.filter(
-        (registeredTooltips) => tooltip.id !== registeredTooltips.id
-      );
+    if (this.registeredTooltips.has(tooltip)) {
+      this.registeredTooltips.delete(tooltip);
+    }
 
-      schedule("afterRender", () => {
-        resolve();
-      });
-    });
+    await new Promise((resolve) => schedule("afterRender", resolve));
   }
 
   /**

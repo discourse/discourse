@@ -8,11 +8,18 @@ module DiscourseAutomation
       scriptables =
         DiscourseAutomation::Scriptable.all.map do |s|
           id = s.to_s.gsub(/^__scriptable_/, "")
+          description_key = "discourse_automation.scriptables.#{id}.description"
+          doc_key = "discourse_automation.scriptables.#{id}.doc"
+
           {
             id: id,
-            name: I18n.t("discourse_automation.scriptables.#{id}.title"),
-            description: I18n.t("discourse_automation.scriptables.#{id}.description", default: ""),
-            doc: I18n.t("discourse_automation.scriptables.#{id}.doc", default: ""),
+            name:
+              I18n.t(
+                "discourse_automation.scriptables.#{id}.title",
+                default: "Missing translation for discourse_automation.scriptables.#{id}.title",
+              ),
+            description: I18n.exists?(description_key, :en) ? I18n.t(description_key) : nil,
+            doc: I18n.exists?(doc_key, :en) ? I18n.t(doc_key) : nil,
           }
         end
 
