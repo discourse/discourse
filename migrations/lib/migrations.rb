@@ -8,6 +8,9 @@ require "active_support/core_ext"
 require "zeitwerk"
 
 module Migrations
+  class NoSettingsFound < StandardError
+  end
+
   def self.root_path
     @root_path ||= File.expand_path("..", __dir__)
   end
