@@ -22,17 +22,21 @@ RSpec.describe JsLocaleHelper do
       define("discourse/loader-shims", () => {})
     JS
     ctx.load("#{Rails.root}/app/assets/javascripts/locales/i18n.js")
-
-    # MessageFormat
+    ctx
+  end
+  let(:v8_ctx_mf) do
+    ctx = MiniRacer::Context.new
+    ctx.load("#{Rails.root}/node_modules/loader.js/dist/loader/loader.js")
     ctx.eval(<<~JS)
+      I18n = {};
       exports = {};
       module = { exports };
       define('make-plural/cardinals', () => {});
     JS
-    ctx.load("#{node_modules}/@messageformat/runtime/lib/messages.js")
-    ctx.load("#{node_modules}/@messageformat/runtime/lib/runtime.js")
-    ctx.load("#{node_modules}/make-plural/cardinals.js")
-    ctx.load("#{node_modules}/@messageformat/runtime/lib/cardinals.js")
+    ctx.load("#{Rails.root}/node_modules/@messageformat/runtime/lib/messages.js")
+    ctx.load("#{Rails.root}/node_modules/@messageformat/runtime/lib/runtime.js")
+    ctx.load("#{Rails.root}/node_modules/make-plural/cardinals.js")
+    ctx.load("#{Rails.root}/node_modules/@messageformat/runtime/lib/cardinals.js")
     ctx.eval("__exportStar(module.exports, this)")
     ctx
   end
@@ -156,9 +160,9 @@ RSpec.describe JsLocaleHelper do
 
   describe ".output_MF" do
     let(:output) { described_class.output_MF(locale).gsub(/^import.*$/, "") }
-    let(:generated_locales) { v8_ctx.eval("Object.keys(msgData)") }
+    let(:generated_locales) { v8_ctx_mf.eval("Object.keys(msgData)") }
     let(:translated_message) do
-      v8_ctx.eval("I18n._mf_messages.get('posts_likes_MF', {count: 3, ratio: 'med'})")
+      v8_ctx_mf.eval("I18n._mf_messages.get('posts_likes_MF', {count: 3, ratio: 'med'})")
     end
     let!(:overriden_translation) do
       Fabricate(
@@ -168,7 +172,7 @@ RSpec.describe JsLocaleHelper do
       )
     end
 
-    before { v8_ctx.eval(output) }
+    before { v8_ctx_mf.eval(output) }
 
     context "when locale is 'en'" do
       let(:locale) { "en" }
@@ -185,7 +189,7 @@ RSpec.describe JsLocaleHelper do
 
       context "when the translation is overriden" do
         let(:translated_message) do
-          v8_ctx.eval(
+          v8_ctx_mf.eval(
             "I18n._mf_messages.get('admin.user.penalty_history_MF', { SUSPENDED: 3, SILENCED: 2 })",
           )
         end
@@ -210,7 +214,7 @@ RSpec.describe JsLocaleHelper do
       end
 
       context "when a translation is missing" do
-        before { v8_ctx.eval("delete msgData.fr.posts_likes_MF") }
+        before { v8_ctx_mf.eval("delete msgData.fr.posts_likes_MF") }
 
         it "returns the fallback translation" do
           expect(
@@ -220,12 +224,12 @@ RSpec.describe JsLocaleHelper do
 
         context "when the fallback translation is overriden" do
           let(:translated_message) do
-            v8_ctx.eval(
+            v8_ctx_mf.eval(
               "I18n._mf_messages.get('admin.user.penalty_history_MF', { SUSPENDED: 3, SILENCED: 2 })",
             )
           end
 
-          before { v8_ctx.eval("delete msgData.fr['admin.user.penalty_history_MF']") }
+          before { v8_ctx_mf.eval("delete msgData.fr['admin.user.penalty_history_MF']") }
 
           it "returns the overriden fallback translation" do
             expect(translated_message).to eq "OVERRIDEN"
