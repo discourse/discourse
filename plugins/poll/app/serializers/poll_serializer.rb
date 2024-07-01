@@ -15,7 +15,8 @@ class PollSerializer < ApplicationSerializer
              :preloaded_voters,
              :chart_type,
              :groups,
-             :title
+             :title,
+             :irv_outcome
 
   def public
     true
@@ -73,5 +74,13 @@ class PollSerializer < ApplicationSerializer
 
   def include_preloaded_voters?
     object.can_see_voters?(scope.user)
+  end
+
+  def include_irv_outcome?
+    object.irv?
+  end
+
+  def irv_outcome
+    DiscoursePoll::Irv.irv_outcome(object.id)
   end
 end

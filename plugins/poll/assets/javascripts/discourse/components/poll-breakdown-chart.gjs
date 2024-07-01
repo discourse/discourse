@@ -173,4 +173,9 @@ export default class PollBreakdownChart extends Component {
     this._chart.setActiveElements(activeElements);
     this._chart.update();
   }
+
+  <template>
+    <label class="poll-breakdown-chart-label">{{@group}}</label>
+    <canvas class="poll-breakdown-chart-chart"></canvas>
+  </template>
 }
