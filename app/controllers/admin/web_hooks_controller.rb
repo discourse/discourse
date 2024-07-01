@@ -137,11 +137,16 @@ class Admin::WebHooksController < Admin::AdminController
   end
 
   def redeliver_failed_events
-    web_hook_events = @web_hook.web_hook_events.not_ping.where(id: params[:event_ids])
+    web_hook_events =
+      @web_hook
+        .web_hook_events
+        .includes(:redelivering_webhook_event)
+        .not_ping
+        .where(id: params[:event_ids])
 
     if web_hook_events
-      web_hook_events.each_with_index do |web_hook_event, index|
-        if !RedeliveringWebhookEvent.find_by(web_hook_event: web_hook_event)
+      web_hook_events.each do |web_hook_event|
+        if !web_hook_event.redelivering_webhook_event
           RedeliveringWebhookEvent.create!(web_hook_event: web_hook_event)
         end
       end

@@ -40,11 +40,7 @@ export default class WebhookEvents extends Component {
       this.loading = false;
     }
 
-    if (!this.failedEventIds.length) {
-      this.redeliverEnabled = false;
-    } else {
-      this.redeliverEnabled = true;
-    }
+    this.redeliverEnabled = this.failedEventIds.length;
   }
 
   get failedEventIds() {

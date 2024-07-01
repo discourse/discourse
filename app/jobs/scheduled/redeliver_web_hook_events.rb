@@ -13,27 +13,25 @@ module Jobs
     LIMIT = 20
 
     def execute(args)
-      @redelivery_events = RedeliveringWebhookEvent.includes(web_hook_event: :web_hook).limit(LIMIT)
-      if @redelivery_events
-        @redelivery_events.each do |redelivery_event|
-          begin
-            web_hook_event = redelivery_event.web_hook_event
-            web_hook = web_hook_event.web_hook
+      redelivery_events = RedeliveringWebhookEvent.includes(web_hook_event: :web_hook).limit(LIMIT)
+      redelivery_events.each do |redelivery_event|
+        begin
+          web_hook_event = redelivery_event.web_hook_event
+          web_hook = web_hook_event.web_hook
 
-            emitter = WebHookEmitter.new(web_hook, web_hook_event)
-            emitter.emit!(
-              headers: MultiJson.load(web_hook_event.headers),
-              body: web_hook_event.payload,
-            )
+          emitter = WebHookEmitter.new(web_hook, web_hook_event)
+          emitter.emit!(
+            headers: MultiJson.load(web_hook_event.headers),
+            body: web_hook_event.payload,
+          )
 
-            publish_webhook_event(web_hook_event, web_hook)
-            RedeliveringWebhookEvent.delete(redelivery_event)
-          rescue => e
-            Rails.logger.warn("Error redelivering web_hook_event #{web_hook_event.id}", e.inspect)
-          end
-
-          sleep 2
+          publish_webhook_event(web_hook_event, web_hook)
+          RedeliveringWebhookEvent.delete(redelivery_event)
+        rescue => e
+          Rails.logger.warn("Error redelivering web_hook_event #{web_hook_event.id}", e.inspect)
         end
+
+        sleep 2
       end
     end
 
