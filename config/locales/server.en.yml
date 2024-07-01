@@ -1983,7 +1983,7 @@ en:
     enable_direct_s3_uploads: "Allows for direct multipart uploads to Amazon S3, see https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 for more details."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
-    backup_location: "Location where backups are stored. IMPORTANT: S3 requires valid S3 credentials entered in Files settings."
+    backup_location: "Location where backups are stored. IMPORTANT: S3 requires valid S3 credentials entered in Files settings. When changing this to S3 from Local, you must run the `s3:ensure_cors_rules` rake task."
     backup_gzip_compression_level_for_uploads: "Gzip compression level used for compressing uploads."
     include_thumbnails_in_backups: "Include generated thumbnails in backups. Disabling this will make backups smaller, but requires a rebake of all posts after a restore."
 
