@@ -1544,12 +1544,14 @@ class UsersController < ApplicationController
           .select(:id, :name, :last_used, :created_at, :method)
           .where(enabled: true)
           .order(:created_at)
+          .as_json(only: %i[id name method last_used])
 
       security_keys =
         current_user
           .security_keys
           .where(factor_type: UserSecurityKey.factor_types[:second_factor])
           .order(:created_at)
+          .as_json(only: %i[id user_id credential_id public_key factor_type enabled name last_used])
 
       render json: success_json.merge(totps: totp_second_factors, security_keys: security_keys)
     else
