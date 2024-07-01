@@ -3,7 +3,7 @@
 require "excon"
 
 module Jobs
-  class RedeliverWebHookEventsCleanup < ::Jobs::Scheduled
+  class CleanupRedeliveringWebHookEvents < ::Jobs::Scheduled
     every 1.hour
 
     sidekiq_options queue: "low"
