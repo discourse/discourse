@@ -37,6 +37,7 @@ ko:
       long_date_without_year: "MMM D, LT"
       long_date_with_year_without_time: "YYYY MMM D"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, YYYY <br/>LT"
       wrap_ago: "%{date} 전"
       wrap_on: "%{date}"
       tiny:
@@ -114,6 +115,8 @@ ko:
       facebook: "페이스북에 공유"
       email: "이메일로 공유"
       url: "URL 복사 및 공유"
+    word_connector:
+      last_item: ","
     action_codes:
       public_topic: "이 글을 %{when}에 공개"
       open_topic: "%{when}에 주제로 변환됨"
@@ -149,7 +152,7 @@ ko:
       forwarded: "위의 이메일을 전달했습니다."
     topic_admin_menu: "주제 관리"
     skip_to_main_content: "메인 콘텐츠로 건너뛰기"
-    emails_are_disabled: "관리자에 의해 모든 이메일의 발신이 비활성화되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
+    emails_are_disabled: "운영자에 의해 모든 이메일의 발신이 비활성화되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
     emails_are_disabled_non_staff: "직원이 아닌 사용자의 발신 이메일이 비활성화되었습니다."
     software_update_prompt:
       dismiss: "무시"
@@ -158,7 +161,7 @@ ko:
       default_description: "기본"
       broken_theme_alert: "테마/구성 요소에 오류가 있어 사이트가 작동하지 않을 수 있습니다."
       error_caused_by: "'%{name}' 테마에서 오류가 발생하였습니다. <a target='blank' href='%{path}'>여기</a>를 클릭해 업데이트, 재설정 혹은 테마 사용을 중지하세요."
-      only_admins: "(이 메시지는 사이트 관리자에게만 표시됩니다)"
+      only_admins: "(이 메시지는 사이트 운영자에게만 표시됩니다)"
     s3:
       regions:
         ap_northeast_1: "아시아 태평양(도쿄)"
@@ -373,7 +376,7 @@ ko:
           title: "신뢰 레벨이 더 높은 사용자가 만든 검토 가능 항목은 더 높은 점수를 받습니다."
         type_bonus:
           name: "유형 보너스"
-          title: "특정 검토 가능 유형에는 운영진이 보너스를 할당하여 우선순위를 높일 수 있습니다."
+          title: "특정한 검토 유형에는 관리자가 보너스를 할당하여 우선 순위를 높일 수 있습니다."
       revise_and_reject_post:
         reason: "이유"
         optional: "선택 사항"
@@ -1026,9 +1029,9 @@ ko:
       change: "변경"
       featured_topic: "추천 주제"
       moderator: "%{user} 님은 운영자입니다"
-      admin: "%{user} 님은 관리자입니다"
+      admin: "%{user} 님은 운영자입니다"
       moderator_tooltip: "이 사용자는 운영자입니다"
-      admin_tooltip: "이 사용자는 관리자입니다"
+      admin_tooltip: "이 사용자는 운영자입니다"
       silenced_tooltip: "이 사용자는 차단되었습니다"
       suspended_notice: "이 사용자는 %{date}까지 정지되었습니다."
       suspended_permanently: "이 사용자는 정지되었습니다."
@@ -1600,13 +1603,13 @@ ko:
       logout_disabled: "사이트가 읽기 전용 모드인 동안에는 로그아웃이 비활성화됩니다."
     logs_error_rate_notice:
       reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/시간} other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/시간} other {#개의 오류/시간}}에 도달했습니다.
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/시간}}에 도달했습니다.
       reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/분} other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/분} other {#개의 오류/분}}에 도달했습니다.
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/분}}에 도달했습니다.
       exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/시간} other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/시간} other {#개의 오류/시간}}을 초과했습니다.
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/시간}}을 초과했습니다.
       exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/분} other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/분} other {#개의 오류/분}}을 초과했습니다.
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/분}}을 초과했습니다.
     mute: 뮤트
     unmute: 뮤트 해제
     last_post: 게시됨
@@ -1788,7 +1791,7 @@ ko:
       enter: "시작"
     category_row:
       subcategory_count:
-        other: "+ %{count}개의 하위 카테고리"
+        other: "+%{count}개의 하위 카테고리"
       topic_count:
         other: "이 카테고리에는 %{count}개의 주제가 있습니다"
     select_kit:
@@ -3019,7 +3022,7 @@ ko:
       delete_spammer: "스팸 사용자 삭제"
       flag_for_review: "검토 대기열"
       delete_confirm_MF: |
-        이 사용자의 {POSTS, plural, one {<b>#</b>개의 게시물} other {<b>#</b>개의 게시물}} 및 {TOPICS, plural, one {<b>#</b>개의 주제} other {<b>#</b>개의 주제}}를 삭제하고, 사용자의 계정을 제거하고, 해당 IP 주소 <b>{ip_address}</b>의 가입을 차단하고, 해당 이메일 주소(<b>{email}</b>)를 영구 차단 목록에 추가하려 합니다. 이 사용자가 정말 스팸 사용자인가요?
+        이 사용자의 {POSTS, plural, other {<b>#</b>개의 게시물}} 및 {TOPICS, plural, other {<b>#</b>개의 주제}}를 삭제하고, 사용자의 계정을 제거하고, 해당 IP 주소 <b>{ip_address}</b>의 가입을 차단하고, 해당 이메일 주소(<b>{email}</b>)를 영구 차단 목록에 추가하려 합니다. 이 사용자가 정말 스팸 사용자인가요?
       yes_delete_spammer: "예, 스팸 사용자를 삭제합니다"
       ip_address_missing: "(해당 사항 없음)"
       hidden_email_address: "(숨김)"
@@ -4698,7 +4701,7 @@ ko:
           title: "페널티 히스토리 지우기"
           description: "페널티가 있는 사용자는 신뢰 레벨 3을 받을 수 없음"
         delete_all_posts_confirm_MF: |
-          {POSTS, plural, one {#개의 댓글} other {#개의 댓글}} 및 {TOPICS, plural, one {#개의 주제} other {#개의 주제}}를 삭제하려고 합니다. 계속할까요?
+          {POSTS, plural, other {#개의 댓글}} 및 {TOPICS, plural, other {#개의 주제}}를 삭제하려고 합니다. 계속할까요?
         silence: "차단"
         unsilence: "차단 해제"
         silenced: "차단되었나요?"

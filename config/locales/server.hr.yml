@@ -1071,6 +1071,8 @@ hr:
         user_agent: "Korisnički agent"
         page_views: "Pregledi stranica"
       description: "Popis korisničkih agenata alata za indeksiranje, poredanih po prikazima stranica."
+    web_hook_events_daily_aggregate:
+      xaxis: "Dan"
     suspicious_logins:
       title: "Sumnjive prijave"
       labels:

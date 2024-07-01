@@ -2193,8 +2193,8 @@ tr_TR:
       loading: Yükleniyor…
     category_row:
       subcategory_count:
-        one: "+ %{count} alt kategori"
-        other: "+ %{count} alt kategori"
+        one: "+%{count} alt kategori"
+        other: "+%{count} alt kategori"
       topic_count:
         one: "bu kategorideki %{count} konu"
         other: "bu kategorideki %{count} konu"

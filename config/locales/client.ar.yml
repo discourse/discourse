@@ -2501,12 +2501,12 @@ ar:
       loading: جارٍ التحميل…
     category_row:
       subcategory_count:
-        zero: "+ %{count} فئة فرعية"
-        one: "+ %{count} تصنيفات فرعية"
-        two: "+ %{count} تصنيف فرعي واحد و تصنيفات فرعية"
-        few: "+ %{count} فئات فرعية"
-        many: "+ %{count} فئة فرعية"
-        other: "+ %{count} فئة فرعية"
+        zero: "+%{count} فئة فرعية"
+        one: "+%{count} تصنيفات فرعية"
+        two: "+%{count} تصنيف فرعي واحد و تصنيفات فرعية"
+        few: "+%{count} فئات فرعية"
+        many: "+%{count} فئة فرعية"
+        other: "+%{count} فئة فرعية"
       topic_count:
         zero: "%{count} موضوع في هذه الفئة"
         one: "موضوع واحد (%{count}) في هذه الفئة"

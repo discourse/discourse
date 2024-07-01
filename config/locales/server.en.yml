@@ -323,7 +323,6 @@ en:
         other: is the wrong length (should be %{count} characters)
       other_than: "must be other than %{count}"
       auth_overrides_username: "Username needs to be updated on authentication provider side, since `auth_overrides_username` setting is enabled."
-      required: "must exist"
     template:
       body: ! "There were problems with the following fields:"
       header:
@@ -1571,6 +1570,11 @@ en:
         user_agent: "User Agent"
         page_views: "Pageviews"
       description: "List of web crawler user agents, sorted by pageviews."
+    web_hook_events_daily_aggregate:
+      title: "Web Hook Events"
+      xaxis: "Day"
+      yaxis: "Number of events"
+      description: "Number of web hook events triggered or their mean duration."
     suspicious_logins:
       title: "Suspicious Logins"
       labels:

@@ -117,7 +117,7 @@ RSpec.describe "posts" do
                          type: %i[string null],
                        },
                        flair_group_id: {
-                         type: %i[string null],
+                         type: %i[integer null],
                        },
                        version: {
                          type: :integer,
@@ -191,7 +191,7 @@ RSpec.describe "posts" do
                          type: :boolean,
                        },
                        reviewable_id: {
-                         type: %i[string null],
+                         type: %i[integer null],
                        },
                        reviewable_score_count: {
                          type: :integer,
@@ -254,6 +254,29 @@ RSpec.describe "posts" do
         schema expected_response_schema
 
         let(:id) { Fabricate(:post).id }
+        run_test!
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+
+      response "200", "single reviewable post" do
+        expected_response_schema = load_spec_schema("post_show_response")
+        schema expected_response_schema
+
+        let(:id) do
+          topic = Fabricate(:topic)
+          post = Fabricate(:post, topic: topic)
+          Fabricate(:reviewable_flagged_post, topic: topic, target: post)
+
+          post.id
+        end
+
+        let(:moderator) { Fabricate(:moderator) }
+        before { sign_in(moderator) }
+
         run_test!
 
         it_behaves_like "a JSON endpoint", 200 do
@@ -570,7 +593,7 @@ RSpec.describe "posts" do
                    type: :object,
                  },
                  reviewable_id: {
-                   type: %i[string null],
+                   type: %i[integer null],
                  },
                  reviewable_score_count: {
                    type: :integer,

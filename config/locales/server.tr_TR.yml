@@ -1369,6 +1369,8 @@ tr_TR:
         user_agent: "Kullanıcı Aracısı"
         page_views: "Sayfa Görüntülemeleri"
       description: "Sayfa görüntülemelerine göre sıralanmış web veri gezgini kullanıcı aracılarının listesi."
+    web_hook_events_daily_aggregate:
+      xaxis: "Gün"
     suspicious_logins:
       title: "Şüpheli Girişler"
       labels:

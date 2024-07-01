@@ -2320,10 +2320,10 @@ ru:
       loading: Загрузка…
     category_row:
       subcategory_count:
-        one: "+ %{count} подкатегория"
-        few: "+ %{count} подкатегории"
-        many: "+ %{count} подкатегорий"
-        other: "+ %{count} подкатегории"
+        one: "+%{count} подкатегория"
+        few: "+%{count} подкатегории"
+        many: "+%{count} подкатегорий"
+        other: "+%{count} подкатегории"
       topic_count:
         one: "%{count} тема в этой категории"
         few: "%{count} темы в этой категории"

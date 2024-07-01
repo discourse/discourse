@@ -652,7 +652,7 @@ class SessionController < ApplicationController
 
   def current
     if current_user.present?
-      render_serialized(current_user, CurrentUserSerializer)
+      render_serialized(current_user, CurrentUserSerializer, { login_method: login_method })
     else
       render body: nil, status: 404
     end

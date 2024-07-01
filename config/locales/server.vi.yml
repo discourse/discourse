@@ -943,6 +943,8 @@ vi:
     web_crawlers:
       labels:
         page_views: "Số lượt xem"
+    web_hook_events_daily_aggregate:
+      xaxis: "Ngày"
     suspicious_logins:
       title: "Đăng nhập đáng ngờ"
       labels:

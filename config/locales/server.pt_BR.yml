@@ -1329,6 +1329,8 @@ pt_BR:
         user_agent: "Agente de usuário(a)"
         page_views: "Visualizações de página"
       description: "Lista de agentes de usuários(a) de rastreadores da web, classificados por visualizações de página."
+    web_hook_events_daily_aggregate:
+      xaxis: "Dia"
     suspicious_logins:
       title: "Entradas com conta suspeitas"
       labels:

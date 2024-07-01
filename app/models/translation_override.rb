@@ -45,7 +45,6 @@ class TranslationOverride < ActiveRecord::Base
 
   validate :check_interpolation_keys
 
-  attribute :status, :integer
   enum status: { up_to_date: 0, outdated: 1, invalid_interpolation_keys: 2, deprecated: 3 }
 
   def self.upsert!(locale, key, value)

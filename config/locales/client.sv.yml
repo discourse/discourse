@@ -2144,8 +2144,8 @@ sv:
       loading: Laddar…
     category_row:
       subcategory_count:
-        one: "+ %{count} underkategori"
-        other: "+ %{count} underkategorier"
+        one: "+%{count} underkategori"
+        other: "+%{count} underkategorier"
       topic_count:
         one: "%{count} ämne i den här kategorin"
         other: "%{count} ämnen i den här kategorin"

@@ -1275,6 +1275,7 @@ pl_PL:
     consolidated_page_views_browser_detection:
       xaxis:
         page_view_anon_browser: "Anonimowa przeglądarka"
+        page_view_logged_in_browser: "Zalogowana przeglądarka"
         page_view_other: "Inne wyświetlenia strony"
       yaxis: "Dzień"
     dau_by_mau:
@@ -1486,6 +1487,8 @@ pl_PL:
         user_agent: "Przeglądarka użytkownika"
         page_views: "Wyświetlenia strony"
       description: "Lista agentów użytkownika przeszukiwacza sieci, posortowana według odsłon."
+    web_hook_events_daily_aggregate:
+      xaxis: "Dzień"
     suspicious_logins:
       title: "Podejrzane logowanie"
       labels:

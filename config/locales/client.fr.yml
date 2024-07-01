@@ -2160,8 +2160,8 @@ fr:
       loading: Chargement…
     category_row:
       subcategory_count:
-        one: "+ %{count} sous-catégorie"
-        other: "+ %{count} sous-catégories"
+        one: "+%{count} sous-catégorie"
+        other: "+%{count} sous-catégories"
       topic_count:
         one: "%{count} sujet dans cette catégorie"
         other: "%{count} sujets dans cette catégorie"

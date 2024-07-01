@@ -1697,8 +1697,8 @@ gl:
       enter: "Intro"
     category_row:
       subcategory_count:
-        one: "+ %{count} subcategoría"
-        other: "+ %{count} subcategorías"
+        one: "+%{count} subcategoría"
+        other: "+%{count} subcategorías"
       topic_count:
         one: "%{count} tema nesta categoría"
         other: "%{count} temas nesta categoría"

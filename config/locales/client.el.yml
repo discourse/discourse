@@ -1695,8 +1695,8 @@ el:
       enter: "Enter"
     category_row:
       subcategory_count:
-        one: "+ %{count} υποκατηγορία"
-        other: "+ %{count} υποκατηγορίες"
+        one: "+%{count} υποκατηγορία"
+        other: "+%{count} υποκατηγορίες"
       topic_count:
         one: "%{count} θέμα σε αυτήν την κατηγορία"
         other: "%{count} θέματα σε αυτήν την κατηγορία"

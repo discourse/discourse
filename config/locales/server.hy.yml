@@ -975,6 +975,8 @@ hy:
         user_agent: "Օգտատիրոջ Գործակալ"
         page_views: "Էջադիտումներ"
       description: "Ըստ էջադիտումների տեսակավորված ցանցային տվյալների հավաքագրիչի (crawler) օգտատիրոջ գործակալներ"
+    web_hook_events_daily_aggregate:
+      xaxis: "Օր"
     suspicious_logins:
       title: "Կասկածելի Մուտքեր"
       labels:

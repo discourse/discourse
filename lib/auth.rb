@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Auth
+  LOGIN_METHOD_OAUTH = "oauth"
+  LOGIN_METHOD_LOCAL = "local"
 end
 
 require "auth/auth_provider"

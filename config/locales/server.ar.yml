@@ -1540,6 +1540,8 @@ ar:
         user_agent: "وكيل المستخدم"
         page_views: "مرات عرض الصفحة"
       description: "قائمة وكلاء مستخدمي زاحفات الويب، مرتَّبة حسب مرات عرض الصفحة."
+    web_hook_events_daily_aggregate:
+      xaxis: "اليوم"
     suspicious_logins:
       title: "عمليات تسجيل الدخول المشبوهة"
       labels:

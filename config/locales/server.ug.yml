@@ -298,7 +298,6 @@ ug:
         other: ئۇزۇنلۇق خاتالىقى (%{count} ھەرپ بولۇشى كېرەك)
       other_than: "%{count} بولماسلىقى كېرەك"
       auth_overrides_username: "«auth_overrides_username» تەڭشىكى قوزغىتىلغانلىقتىن، ئىشلەتكۈچى ئىسمىنى كىملىك دەلىللەش مۇلازىمىتى تەمىنلىگۈچى تەرەپتىن يېڭىلاش كېرەك."
-      required: "مەۋجۇتلۇقى زۆرۈر"
     template:
       body: ! "تۆۋەندىكى بۆلەكتە مەسىلە كۆرۈلگەن:"
       header:
@@ -1472,6 +1471,8 @@ ug:
         user_agent: "ئىشلەتكۈچى ۋاكالەتچىسى"
         page_views: "بەت كۆرۈلۈشى"
       description: "بەت كۆرۈلۈشى بويىچە تىزىلغان تور بەت ئۆمىلىگۈچ ئىشلەتكۈچى ۋاكالەتچىسىنىڭ تىزىمى"
+    web_hook_events_daily_aggregate:
+      xaxis: "كۈن"
     suspicious_logins:
       title: "گۇمانلىق تىزىمغا كىرىش"
       labels:

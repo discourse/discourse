@@ -422,7 +422,9 @@ RSpec.describe SiteSettingExtension do
       end
     end
 
-    let(:test_enum_class) { TestEnumClass }
+    let :test_enum_class do
+      TestEnumClass
+    end
 
     before do
       settings.setting(:test_enum, "en", enum: test_enum_class)

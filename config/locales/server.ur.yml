@@ -1223,6 +1223,8 @@ ur:
         user_agent: "صارف ایجنٹ"
         page_views: "صفحہ ملاحظات"
       description: "وَیب کرالر صارف ایجنٹس کی فہرست، صفحہ ملاحظات کے حساب سے ترتیب کردہ۔"
+    web_hook_events_daily_aggregate:
+      xaxis: "دن"
     suspicious_logins:
       title: "مشکوک لاگ اِن"
       labels:

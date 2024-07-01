@@ -1175,6 +1175,8 @@ da:
       labels:
         user_agent: "Bruger Agent"
         page_views: "Sidevisninger"
+    web_hook_events_daily_aggregate:
+      xaxis: "Dag"
     suspicious_logins:
       title: "Mistænkelige Logins"
       labels:
