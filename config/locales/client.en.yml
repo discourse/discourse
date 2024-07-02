@@ -5048,7 +5048,6 @@ en:
           title: "More options"
           move_up: "Move up"
           move_down: "Move down"
-
       groups:
         new:
           title: "New Group"
@@ -5480,6 +5479,36 @@ en:
             contact_information_saved: "Contact information saved"
             your_organization_saved: "Your organization saved"
           saved: "saved!"
+        flags:
+          header: "Moderation Flags"
+          subheader: "The flagging system in Discourse helps you and your moderator team manage content and user behavior, keeping your community respectful and healthy. The defaults are suitable for most communities and you don’t have to change them. However, if your site has particular requirements you can disable flags you don’t need and add your own custom flags."
+          description: "Description"
+          enabled: "Enabled?"
+          add: "Add Flag"
+          edit: "Edit"
+          back: "Back to flags"
+          delete: "Delete"
+          delete_confirm: 'Are you sure you want to delete "%{name}"?'
+          form:
+            add_header: "Add flag"
+            edit_header: "Edit flag"
+            save: "Save"
+            name: "Name"
+            description: "Description"
+            applies_to: "Display this flag on"
+            topic: "topics"
+            post: "posts"
+            chat_message: "chat messages"
+            enabled: "Enable this custom flag after saving"
+            alert: "Once a custom flag has been used, it can only be disabled but not edited or deleted."
+            edit_flag: "Edit flag"
+            non_editable: "You cannot edit this flag because it is a system flag or has already been used in the review system, however you can still disable it."
+            delete_flag: "Delete flag"
+            non_deletable: "You cannot delete this flag because it is a system flag or has already been used in the review system, however you can still disable it."
+          more_options:
+            title: "More options"
+            move_up: "Move up"
+            move_down: "Move down"
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"
@@ -6157,6 +6186,9 @@ en:
             delete_watched_word_group: "delete watched word group"
             toggle_flag: "toggle flag"
             move_flag: "move flag"
+            create_flag: "create flag"
+            update_flag: "update flag"
+            delete_flag: "delete flag"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe(ReorderFlag) do
+RSpec.describe(Flags::ReorderFlag) do
   subject(:result) do
     described_class.call(flag_id: flag.id, guardian: current_user.guardian, direction: direction)
   end

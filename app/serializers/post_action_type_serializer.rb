@@ -10,6 +10,8 @@ class PostActionTypeSerializer < ApplicationSerializer
     :is_flag,
     :is_custom_flag,
     :enabled,
+    :applies_to,
+    :is_used,
   )
 
   include ConfigurableUrls
@@ -27,7 +29,14 @@ class PostActionTypeSerializer < ApplicationSerializer
   end
 
   def description
-    i18n("description", vars: { tos_url:, base_path: Discourse.base_path })
+    i18n(
+      "description",
+      vars: {
+        tos_url:,
+        base_path: Discourse.base_path,
+      },
+      default: object.class.descriptions[object.id],
+    )
   end
 
   def short_description
@@ -40,6 +49,15 @@ class PostActionTypeSerializer < ApplicationSerializer
 
   def enabled
     !!PostActionType.enabled_flag_types[object.id]
+  end
+
+  def applies_to
+    Array.wrap(PostActionType.applies_to[object.id])
+  end
+
+  def is_used
+    PostAction.exists?(post_action_type_id: object.id) ||
+      ReviewableScore.exists?(reviewable_score_type: object.id)
   end
 
   protected
