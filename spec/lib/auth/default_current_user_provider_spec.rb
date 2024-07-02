@@ -21,11 +21,11 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
   end
 
   def get_cookie_info(cookie_jar, name)
-    headers = {}
+    response = ActionDispatch::Response.new
     cookie_jar.always_write_cookie = true
-    cookie_jar.write(headers)
+    cookie_jar.write(response)
 
-    header = headers["Set-Cookie"]
+    header = response.headers["Set-Cookie"]
     return if header.nil?
 
     info = {}

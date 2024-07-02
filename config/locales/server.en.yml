@@ -323,6 +323,7 @@ en:
         other: is the wrong length (should be %{count} characters)
       other_than: "must be other than %{count}"
       auth_overrides_username: "Username needs to be updated on authentication provider side, since `auth_overrides_username` setting is enabled."
+      required: "must exist"
     template:
       body: ! "There were problems with the following fields:"
       header:

@@ -26,7 +26,7 @@ Discourse::Application.configure do
 
   # production has "show exceptions" on so we better have it
   # in test as well
-  config.action_dispatch.show_exceptions = true
+  config.action_dispatch.show_exceptions = :all
 
   # Disable request forgery protection in test environment
   config.action_controller.allow_forgery_protection = false
@@ -65,6 +65,7 @@ Discourse::Application.configure do
 
   # Catch missing translations during test runs.
   config.i18n.raise_on_missing_translations = true
+  config.i18n.load_path += Dir[Rails.root.join("spec", "support", "locales", "**", "*.yml")]
 
   config.after_initialize do
     ActiveRecord::LogSubscriber.backtrace_cleaner.add_silencer do |line|

@@ -22,7 +22,7 @@ Discourse::Application.configure do
   # Generate digests for assets URLs
   config.assets.digest = true
 
-  config.log_level = :info
+  config.log_level = :debug
 
   if (smtp_settings = GlobalSetting.smtp_settings).present?
     config.action_mailer.smtp_settings = smtp_settings
