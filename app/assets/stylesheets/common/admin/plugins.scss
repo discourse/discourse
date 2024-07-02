@@ -131,30 +131,21 @@
     }
 
     .admin-plugin-config-page__top-nav {
-      --active-border-width: var(--space-1);
-
-      width: auto !important;
+      width: auto;
       margin: 0;
 
       a {
         font-size: var(--font-down-0);
-        padding: var(--space-2) var(--space-3)
-          calc(0.5rem + var(--active-border-width));
+        padding: var(--space-2) var(--space-3) var(--space-3);
 
         &:hover {
           color: var(--tertiary);
           background-color: transparent;
-          border-color: transparent;
         }
 
         &.active {
           color: var(--tertiary);
           background-color: transparent;
-          border-bottom-left-radius: 0;
-          border-bottom-right-radius: 0;
-          border-width: 0;
-          border-bottom: var(--active-border-width) solid var(--tertiary);
-          padding-bottom: var(--space-2);
         }
       }
 

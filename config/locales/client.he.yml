@@ -1478,14 +1478,12 @@ he:
                    =0 {}
                   one {נותרה <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'>הודעה אחת</a> שלא נקראה}
                    two {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> שלא נקראו}
-                   many {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> שלא נקראו}
                 other {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> שלא נקראו}
               }
               { NEW, plural,
                    =0 {}
                   one { ועוד <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>אחת</a> חדשה, או שניתן לעיין בהודעות אחרות תחת {groupLink}}
                    two { ועוד <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>#</a> חדשות, או שניתן לעיין בהודעות אחרות תחת {groupLink}}
-                   many { ועוד <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>#</a> חדשות, או שניתן לעיין בהודעות אחרות תחת {groupLink}}
                 other { ועוד <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>#</a> חדשות, או שניתן לעיין בהודעות אחרות תחת {groupLink}}
               }
             }
@@ -1494,14 +1492,12 @@ he:
                    =0 {}
                   one {נותרה <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'>הודעה אחת</a> שלא נקראה, או שניתן לעיין בהודעות אחרות תחת {groupLink}}
                    two {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> שלא נקראו, או שניתן לעיין בהודעות חדשות תחת {groupLink}}
-                   many {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> שלא נקראו, או שניתן לעיין בהודעות חדשות תחת {groupLink}}
                 other {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> שלא נקראו, או שניתן לעיין בהודעות חדשות תחת {groupLink}}
               }
               { NEW, plural,
                    =0 {}
                   one {נותרה <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'>הודעה אחת</a> חדשה, או שניתן לעיין בהודעות אחרות תחת {groupLink}}
                    two {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> חדשות, או שניתן לעיין בהודעות חדשות תחת {groupLink}}
-                   many {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> חדשות, או שניתן לעיין בהודעות חדשות תחת {groupLink}}
                 other {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> חדשות, או שניתן לעיין בהודעות חדשות תחת {groupLink}}
               }
             }
@@ -1514,14 +1510,12 @@ he:
                    =0 {}
                   one {נותרה <a href='{basePath}/u/{username}/messages/unread'>הודעה אחת</a> שלא נקראה}
                    two {נותרו <a href='{basePath}/u/{username}/messages/unread'># הודעות</a> שלא נקראו}
-                   many {נותרו <a href='{basePath}/u/{username}/messages/unread'># הודעות</a> שלא נקראו}
                 other {נותרו <a href='{basePath}/u/{username}/messages/unread'># הודעות</a> שלא נקראו}
               }
               { NEW, plural,
                    =0 {}
                   one { ועוד <a href='{basePath}/u/{username}/messages/new'>אחת חדשה</a>, או שאפשר לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
                    two { ועוד <a href='{basePath}/u/{username}/messages/new'># חדשות</a> , או שאפשר לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
-                   many { ועוד <a href='{basePath}/u/{username}/messages/new'># חדשות</a> , או שאפשר לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
                 other { ועוד <a href='{basePath}/u/{username}/messages/new'># חדשות</a> , או שאפשר לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
               }
             }
@@ -1530,14 +1524,12 @@ he:
                    =0 {}
                   one {נותרה <a href='{basePath}/u/{username}/messages/unread'>הודעה אחת</a> שלא נקראה, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
                    two {נותרו <a href='{basePath}/u/{username}/messages/unread'># הודעות</a> שלא נקראו, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
-                   many {נותרו <a href='{basePath}/u/{username}/messages/unread'># הודעות</a> שלא נקראו, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
                 other {נותרו <a href='{basePath}/u/{username}/messages/unread'># הודעות</a> שלא נקראו, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
               }
               { NEW, plural,
                    =0 {}
                   one {נותרה <a href='{basePath}/u/{username}/messages/new'>הודעה אחת</a> חדשה, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
                    two {נותרו <a href='{basePath}/u/{username}/messages/new'># הודעות</a> חדשות, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
-                   many {נותרו <a href='{basePath}/u/{username}/messages/new'># הודעות</a> חדשות, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
                 other {נותרו <a href='{basePath}/u/{username}/messages/new'># הודעות</a> חדשות, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
               }
             }
@@ -2392,10 +2384,10 @@ he:
       loading: בטעינה…
     category_row:
       subcategory_count:
-        one: "+ תת־קטגוריה %{count}"
-        two: "+ %{count} תת־קטגוריות"
-        many: "+ %{count} תת־קטגוריות"
-        other: "+ %{count} תת־קטגוריות"
+        one: "+תת־קטגוריה %{count}"
+        two: "+%{count} תת־קטגוריות"
+        many: "+%{count} תת־קטגוריות"
+        other: "+%{count} תת־קטגוריות"
       topic_count:
         one: "נושא %{count} בקטגוריה הזו"
         two: "%{count} נושאים בקטגוריה הזו"
@@ -3233,14 +3225,12 @@ he:
                  =0 {}
                 one {נותר <a href="{basePath}/unread">נושא אחד</a> שלא נקרא}
                  two {נותרו <a href="{basePath}/unread"># נושאים</a> שלא נקראו}
-                 many {נותרו <a href="{basePath}/unread"># נושאים</a> שלא נקראו}
               other {נותרו <a href="{basePath}/unread"># נושאים</a> שלא נקראו}
             }
             { NEW, plural,
                  =0 {}
                 one { ועוד <a href="{basePath}/new">אחד חדש</a>,}
                  two { ועוד <a href="{basePath}/new"># חדשים</a>,}
-                 many { ועוד <a href="{basePath}/new"># חדשים</a>,}
               other { ועוד <a href="{basePath}/new"># חדשים</a>,}
             }
           }
@@ -3249,14 +3239,12 @@ he:
                  =0 {}
                 one {נותר <a href="{basePath}/unread">נושא אחד</a> שלא נקרא,}
                  two {נותרו <a href="{basePath}/unread"># נושאים</a> שלא נקראו,}
-                 many {נותרו <a href="{basePath}/unread"># נושאים</a> שלא נקראו,}
               other {נותרו <a href="{basePath}/unread"># נושאים</a> שלא נקראו,}
             }
             { NEW, plural,
                  =0 {}
                 one {נותר <a href="{basePath}/new">נושא אחד</a> חדש,}
                  two {נותרו <a href="{basePath}/new"># נושאים</a> חדשים,}
-                 many {נותרו <a href="{basePath}/new"># נושאים</a> חדשים,}
               other {נותרו <a href="{basePath}/new"># נושאים</a> חדשים,}
             }
           }
@@ -4204,7 +4192,7 @@ he:
       label: "בהמתנה"
       label_with_count: "ממתינות (%{count})"
     posts_likes_MF: |
-      לנושא זה יש {count, plural, one {תגובה אחת} two {שתי תגובות} many {# תגובות} other {# תגובות}} {ratio, select,
+      לנושא זה יש {count, plural, one {תגובה אחת} two {שתי תגובות} other {# תגובות}} {ratio, select,
         low {עם יחס גבוה של לייקים לפוסט}
         med {עם יחס גבוה מאוד של לייקים לפוסט}
         high {עם יחס גבוה במיוחד של לייקים לפוסט}
@@ -5106,6 +5094,8 @@ he:
               label: קטגוריה
             include_subcategories:
               label: "לכלול תת־קטגוריות"
+            type_of_web_hook_event:
+              label: "סוג אירוע"
       flags:
         title: "סימוני פיקוח"
         description: "תיאור"
@@ -6469,12 +6459,12 @@ he:
         penalty_post_none: "לא לעשות דבר"
         penalty_count: "ספירת עונשין"
         penalty_history_MF: >-
-          ב־6 החודשים שחלפו משתמש זה <b>הושעה { SUSPENDED, plural, one {פעם אחת} two {פעמיים} many {# פעמים} other {# פעמים} }</b> ו<b>הושתק { SILENCED, plural, one {פעם אחת} two {פעמיים} many {# פעמים} other {# פעמים} }</b>.
+          ב־6 החודשים שחלפו משתמש זה <b>הושעה { SUSPENDED, plural, one {פעם אחת} two {פעמיים} other {# פעמים} }</b> ו<b>הושתק { SILENCED, plural, one {פעם אחת} two {פעמיים} other {# פעמים} }</b>.
         clear_penalty_history:
           title: "מחיקת היסטוריית עונשין"
           description: "משתמשים עם עונשין לא יכולים להגיע לדרגת אמון 3"
         delete_all_posts_confirm_MF: |
-          פעולה זו תמחק {POSTS, plural, one {פוסט אחד} two {שני פוסטים} many {# פוסטים} other {# פוסטים}} ו{TOPICS, plural, one {נושא אחד} two {שני נושאים} many {־# נושאים} other {־# נושאים}}. להמשיך?
+          פעולה זו תמחק {POSTS, plural, one {פוסט אחד} two {שני פוסטים} other {# פוסטים}} ו{TOPICS, plural, one {נושא אחד} two {שני נושאים} other {־# נושאים}}. להמשיך?
         silence: "השתקה"
         unsilence: "ביטול השתקה"
         silenced: "בהשתקה?"
@@ -6706,6 +6696,7 @@ he:
             title: "רשות"
           for_all_users:
             title: "לכל המשתמשים"
+            description: "כשמשתמשים חדשים נרשמים, עליהם למלא את השדה הזה. כשמשתמשים קיימים חוזרים לאתר וזה שדה נחוץ להם, הם יתבקשו למלא אותו. כדי לבקש מחדש מכל המשתמשים, יש למחוק את השדה המותאם הזה וליצור אותו מחדש."
           on_signup:
             title: "בהרשמה"
             description: "כשמשתמשים חדשים נרשמים, הם חייבים למלא את השדה הזה. משתמשים קיימים לא יושפעו."

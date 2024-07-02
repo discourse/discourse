@@ -140,7 +140,7 @@ class TopicsController < ApplicationController
                   custom_message_params: {
                     group: group.name,
                   },
-                  group: group,
+                  group: serialize_data(group, BasicGroupSerializer, root: false),
                 )
         end
 

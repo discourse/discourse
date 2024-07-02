@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import { eq, gt } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ActionList from "discourse/components/topic-list/action-list";
@@ -40,6 +41,25 @@ export default class TopicListItem extends Component {
   @service router;
   @service site;
   @service siteSettings;
+
+  highlightIfNeeded = modifier((element) => {
+    if (this.args.topic.id === this.historyStore.get("lastTopicIdViewed")) {
+      element.dataset.isLastViewedTopic = true;
+
+      this.highlightRow(element).then(() =>
+        this.historyStore.delete("lastTopicIdViewed")
+      );
+
+      if (this.shouldFocusLastVisited) {
+        element.querySelector(".main-link .title")?.focus();
+      }
+    } else if (this.args.topic.get("highlight")) {
+      // highlight new topics that have been loaded from the server or the one we just created
+      this.highlightRow(element).then(() =>
+        this.args.topic.set("highlight", false)
+      );
+    }
+  });
 
   constructor() {
     super(...arguments);
@@ -125,30 +145,19 @@ export default class TopicListItem extends Component {
     DiscourseURL.routeTo(href || topic.url);
   }
 
-  highlight(element, isLastViewedTopic) {
-    element.classList.add("highlighted");
-    element.setAttribute("data-islastviewedtopic", isLastViewedTopic);
-    element.addEventListener(
-      "animationend",
-      () => element.classList.remove("highlighted"),
-      { once: true }
-    );
+  highlightRow(element) {
+    return new Promise((resolve) => {
+      element.addEventListener(
+        "animationend",
+        () => {
+          element.classList.remove("highlighted");
+          resolve();
+        },
+        { once: true }
+      );
 
-    if (isLastViewedTopic && this.shouldFocusLastVisited) {
-      element.querySelector(".main-link .title")?.focus();
-    }
-  }
-
-  @action
-  highlightIfNeeded(element) {
-    if (this.args.topic.id === this.historyStore.get("lastTopicIdViewed")) {
-      this.historyStore.delete("lastTopicIdViewed");
-      this.highlight(element, true);
-    } else if (this.args.topic.highlight) {
-      // highlight new topics that have been loaded from the server or the one we just created
-      this.args.topic.set("highlight", false);
-      this.highlight(element, false);
-    }
+      element.classList.add("highlighted");
+    });
   }
 
   @action
@@ -254,7 +263,7 @@ export default class TopicListItem extends Component {
     <tr
       {{! template-lint-disable no-invalid-interactive }}
       {{didInsert this.applyTitleDecorators}}
-      {{didInsert this.highlightIfNeeded}}
+      {{this.highlightIfNeeded}}
       {{on "keydown" this.keyDown}}
       {{on "click" this.click}}
       data-topic-id={{@topic.id}}

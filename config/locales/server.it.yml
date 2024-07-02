@@ -1329,6 +1329,8 @@ it:
         user_agent: "User Agent"
         page_views: "Pagine viste"
       description: "Elenco di user agents usati da web crawler, ordinati per pagine viste."
+    web_hook_events_daily_aggregate:
+      xaxis: "Giorno"
     suspicious_logins:
       title: "Accessi Sospetti"
       labels:

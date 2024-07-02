@@ -1143,6 +1143,8 @@ id:
     web_crawlers:
       labels:
         page_views: "Tampilan halaman"
+    web_hook_events_daily_aggregate:
+      xaxis: "Hari"
     suspicious_logins:
       labels:
         user: Pengguna

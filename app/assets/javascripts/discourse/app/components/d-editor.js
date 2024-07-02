@@ -326,7 +326,12 @@ export default Component.extend(TextareaTextManipulation, {
     this._itsatrap.bind(`${PLATFORM_KEY_MODIFIER}+shift+.`, () =>
       this.send("insertCurrentTime")
     );
-    this._itsatrap.bind("enter", () => this.maybeContinueList(), "keyup");
+    this._itsatrap.bind("enter", () => {
+      // Check the textarea value after a brief delay to ensure the input event has updated the value
+      setTimeout(() => {
+        this.maybeContinueList();
+      }, 0);
+    });
 
     // disable clicking on links in the preview
     this.element

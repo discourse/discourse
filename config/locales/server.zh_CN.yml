@@ -273,7 +273,6 @@ zh_CN:
         other: 长度错误（应为 %{count} 个字符）
       other_than: "必须不为 %{count}"
       auth_overrides_username: "由于启用了 `auth_overrides_username` 设置，因此需要在身份验证服务提供商处更新用户名。"
-      required: "必须存在"
     template:
       body: ! "以下字段存在问题："
       header:
@@ -1401,6 +1400,8 @@ zh_CN:
         user_agent: "用户代理"
         page_views: "页面浏览量"
       description: "网络抓取工具用户代理列表，按页面浏览量排序。"
+    web_hook_events_daily_aggregate:
+      xaxis: "天"
     suspicious_logins:
       title: "可疑登录"
       labels:
@@ -2233,6 +2234,7 @@ zh_CN:
     default_sidebar_show_count_of_new_items: "默认情况下，将导航菜单链接设为显示新条目的数量而非徽章的数量。"
     default_sidebar_switch_panel_position: "侧边栏上用于切换到聊天的按钮的位置"
     retain_web_hook_events_period_days: "保留网络钩子事件记录的天数。"
+    retain_web_hook_events_aggregate_days: "保留 Webhook 事件合计记录的天数。"
     retry_web_hook_events: "自动重试失败的网络钩子事件 4 次。重试之间的时间间隔为 1、5、25 和 125 分钟。"
     revoke_api_keys_unused_days: "API 密钥最后一次使用后被自动撤销前的天数（0 表示永不撤销）"
     revoke_api_keys_maxlife_days: "API 密钥被自动撤销前的天数（0 表示永不撤销）"
@@ -2250,6 +2252,7 @@ zh_CN:
     revoke_user_api_keys_maxlife_days: "用户 API 密钥被自动撤销前的天数（0 表示永不撤销）"
     tagging_enabled: "启用主题标签？有关更多信息，请参阅 <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Meta</a> 标签管理员指南。"
     min_trust_to_create_tag: "创建标签所需的最低信任级别。"
+    create_tag_allowed_groups: "允许创建标记的组。管理员和版主始终可以创建标签。"
     max_tags_per_topic: "可应用于话题的最大标签数。"
     enable_max_tags_per_email_subject: "生成电子邮件主题时使用 max_tags_per_email_subject"
     max_tags_per_email_subject: "电子邮件主题中可以包含的最大标签数"
@@ -2258,6 +2261,8 @@ zh_CN:
     max_tags_in_filter_list: "要在筛选器下拉列表中显示的最大标签数。将显示最常用的标签。"
     tags_sort_alphabetically: "按照字母顺序显示标签。默认按流行度显示。"
     tags_listed_by_group: "在<a href='%{base_path}/tags' target='_blank'>标签页面</a>上按标签组列出标签。"
+    tag_style: "定义网站上标签的视觉外观。通过此设置，你可以自定义标签在网站所有区域的视觉表现方式，从而增强布局的一致性和用户的可访问性。"
+    pm_tags_allowed_for_groups: "允许所包含群组的成员为任何个人消息添加标签"
     min_trust_level_to_tag_topics: "为话题添加标签所需的最低信任级别"
     suppress_overlapping_tags_in_list: "如果标签与话题标题中的字词完全匹配，则不显示标签"
     remove_muted_tags_from_latest: "不在最新话题列表中显示仅使用已被设为免打扰的标签标记的话题。"

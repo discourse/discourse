@@ -5,6 +5,12 @@ class Admin::SiteSettingsController < Admin::AdminController
     render_json_error e.message, status: 422
   end
 
+  ADMIN_CONFIG_AREA_ALLOWLISTED_HIDDEN_SETTINGS = %i[
+    extended_site_description
+    about_banner_image
+    community_owner
+  ]
+
   def index
     params.permit(:categories, :plugin)
     params.permit(:filter_names, [])
@@ -16,6 +22,8 @@ class Admin::SiteSettingsController < Admin::AdminController
           filter_plugin: params[:plugin],
           filter_names: params[:filter_names],
           include_locale_setting: params[:filter_names].blank?,
+          include_hidden: true,
+          filter_allowed_hidden: ADMIN_CONFIG_AREA_ALLOWLISTED_HIDDEN_SETTINGS,
         ),
     )
   end

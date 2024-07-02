@@ -1329,6 +1329,8 @@ fi:
         user_agent: "Käyttäjäagentti"
         page_views: "Sivukatselut"
       description: "Luettelo eri hakurobottikäyttäjäagenteista järjestettynä sivukatseluiden mukaan."
+    web_hook_events_daily_aggregate:
+      xaxis: "Päivä"
     suspicious_logins:
       title: "Epäilyttävät kirjautumiset"
       labels:

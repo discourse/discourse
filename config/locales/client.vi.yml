@@ -1787,7 +1787,7 @@ vi:
       loading: Đang tải…
     category_row:
       subcategory_count:
-        other: "+ %{count} danh mục phụ"
+        other: "+%{count} danh mục phụ"
       topic_count:
         other: "%{count} chủ đề trong danh mục này"
     select_kit:
@@ -3126,7 +3126,7 @@ vi:
       label: "Đang treo"
       label_with_count: "Đang xử lý (%{count})"
     posts_likes_MF: |
-      Chủ đề này có {count, plural, one {# trả lời} other {# trả lời}} {ratio, select,
+      Chủ đề này có {count, plural, other {# trả lời}} {ratio, select,
         low {với tỷ lệ like trên post cao}
         med {với tỷ lệ like trên post rất cao}
         high {với tỷ lệ like trên post cực cao}

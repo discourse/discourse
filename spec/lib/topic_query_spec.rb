@@ -1410,7 +1410,7 @@ RSpec.describe TopicQuery do
     end
 
     def read(user, topic, post_number)
-      TopicUser.update_last_read(user, topic, post_number, post_number, 10_000)
+      TopicUser.update_last_read(user, topic.id, post_number, post_number, 10_000)
     end
 
     before do

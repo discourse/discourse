@@ -190,7 +190,8 @@ module SiteSettingExtension
     only_overridden: false,
     filter_categories: nil,
     filter_plugin: nil,
-    filter_names: nil
+    filter_names: nil,
+    filter_allowed_hidden: nil
   )
     locale_setting_hash = {
       setting: "default_locale",
@@ -211,7 +212,15 @@ module SiteSettingExtension
       .reject do |setting_name, _|
         plugins[name] && !Discourse.plugins_by_name[plugins[name]].configurable?
       end
-      .reject { |setting_name, _| !include_hidden && hidden_settings.include?(setting_name) }
+      .select do |setting_name, _|
+        is_hidden = hidden_settings.include?(setting_name)
+
+        next true if !is_hidden
+        next false if !include_hidden
+        next true if filter_allowed_hidden.nil?
+
+        filter_allowed_hidden.include?(setting_name)
+      end
       .select do |setting_name, _|
         if filter_categories && filter_categories.any?
           filter_categories.include?(categories[setting_name])
@@ -274,7 +283,7 @@ module SiteSettingExtension
   end
 
   def description(setting)
-    I18n.t("site_settings.#{setting}", base_path: Discourse.base_path, default: "")
+    I18n.t("site_settings.#{setting}", base_path: Discourse.base_path)
   end
 
   def keywords(setting)

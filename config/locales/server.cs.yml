@@ -1060,6 +1060,8 @@ cs:
     web_crawlers:
       labels:
         page_views: "Zobrazení stránky "
+    web_hook_events_daily_aggregate:
+      xaxis: "Den"
     suspicious_logins:
       labels:
         user: Uživatel

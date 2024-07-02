@@ -22,7 +22,7 @@ describe "User preferences | Profile", type: :system do
     it "redirects to the profile page to fill up required fields" do
       visit("/")
 
-      expect(page).to have_current_path("/u/bruce0/preferences/profile")
+      expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
 
       expect(page).to have_selector(
         ".alert-error",
@@ -35,7 +35,7 @@ describe "User preferences | Profile", type: :system do
 
       find("#site-logo").click
 
-      expect(page).to have_current_path("/u/bruce0/preferences/profile")
+      expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
     end
 
     it "allows user to fill up required fields" do

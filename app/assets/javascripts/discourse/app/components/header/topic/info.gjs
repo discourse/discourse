@@ -157,8 +157,8 @@ export default class Info extends Component {
 
             <div class="topic-header-extra">
               {{htmlSafe this.tags}}
-              <div class="topic-header-participants">
-                {{#if this.showPM}}
+              {{#if this.showPM}}
+                <div class="topic-header-participants">
                   {{#each this.participants as |participant|}}
                     <Participant
                       @user={{participant}}
@@ -178,8 +178,8 @@ export default class Info extends Component {
                       +{{this.remainingParticipantCount}}
                     </a>
                   {{/if}}
-                {{/if}}
-              </div>
+                </div>
+              {{/if}}
               {{#if this.siteSettings.topic_featured_link_enabled}}
                 <FeaturedLink />
               {{/if}}

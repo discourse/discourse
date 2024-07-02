@@ -84,7 +84,10 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def default_dark_color_scheme
-    ColorScheme.find_by_id(SiteSetting.default_dark_mode_color_scheme_id).as_json
+    ColorSchemeSerializer.new(
+      ColorScheme.find_by_id(SiteSetting.default_dark_mode_color_scheme_id),
+      root: false,
+    ).as_json
   end
 
   def groups

@@ -363,6 +363,12 @@
         vertical-align: unset;
       }
     }
+    .topic-featured-link {
+      align-self: baseline;
+      .d-icon {
+        font-size: var(--font-down-2);
+      }
+    }
   }
 }
 

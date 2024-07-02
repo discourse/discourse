@@ -162,13 +162,11 @@ ja:
                       { isAdmin, select,
                         true {
                           { notificationLimit, plural,
-                              one {@{group1} のメンションは、# ユーザーの<a href="{siteSettingUrl}" target="_blank">通知上限</a>を超えています。}
                               other {@{group1} のメンションは、# ユーザーの<a href="{siteSettingUrl}" target="_blank">通知上限</a>を超えています。}
                           }
                         }
                         false {
                           { notificationLimit, plural,
-                              one {@{group1} のメンションは、# ユーザーの通知上限を超えています。}
                               other {@{group1} のメンションは、# ユーザーの通知上限を超えています。}
                           }
                         }
@@ -179,13 +177,11 @@ ja:
                       { isAdmin, select,
                         true {
                           { notificationLimit, plural,
-                              one {@{group1} と @{group2} のメンションは、# ユーザーの<a href="{siteSettingUrl}" target="_blank">通知上限</a>を超えています。}
                             other {@{group1} と @{group2} のメンションは、# ユーザーの<a href="{siteSettingUrl}" target="_blank">通知上限</a>を超えています。}
                           }
                         }
                         false {
                           { notificationLimit, plural,
-                              one {@{group1} と @{group2} のメンションは、# ユーザーの通知上限を超えています。}
                             other {@{group1} と @{group2} のメンションは、# ユーザーの通知上限を超えています。}
                           }
                         }
@@ -196,13 +192,11 @@ ja:
                       { isAdmin, select,
                         true {
                           { notificationLimit, plural,
-                              one {これら {groupCount} 個のグループのメンションは、# ユーザーの<a href="{siteSettingUrl}" target="_blank">通知上限</a>を超えています。}
                             other {これら {groupCount} 個のグループのメンションは、# ユーザーの<a href="{siteSettingUrl}" target="_blank">通知上限</a>を超えています。}
                           }
                         }
                         false {
                           { notificationLimit, plural,
-                              one {これら {groupCount} 個のグループのメンションは、# ユーザーの通知上限を超えています。}
                             other {これら {groupCount} 個のグループのメンションは、# ユーザーの通知上限を超えています。}
                           }
                         }

@@ -370,6 +370,7 @@ class SessionController < ApplicationController
     return render(json: @second_factor_failure_payload) if !second_factor_auth_result.ok
 
     if user.active && user.email_confirmed?
+      secure_session["oauth"] = false if !SiteSetting.persistent_sessions
       login(user, second_factor_auth_result)
     else
       not_activated(user)
@@ -652,7 +653,7 @@ class SessionController < ApplicationController
 
   def current
     if current_user.present?
-      render_serialized(current_user, CurrentUserSerializer)
+      render_serialized(current_user, CurrentUserSerializer, { login_method: login_method })
     else
       render body: nil, status: 404
     end

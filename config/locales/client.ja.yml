@@ -2043,7 +2043,7 @@ ja:
       loading: 読み込み中…
     category_row:
       subcategory_count:
-        other: "+ %{count} 個のサブカテゴリ"
+        other: "+%{count} 個のサブカテゴリ"
       topic_count:
         other: "このカテゴリの %{count} 件のトピック"
     select_kit:
@@ -5555,7 +5555,7 @@ ja:
         penalty_post_none: "何もしない"
         penalty_count: "ペナルティ数"
         penalty_history_MF: >-
-          過去 6 か月において、このユーザーは<b>{ SUSPENDED, plural, one {# 回} other {# 回} }凍結</b>され、<b>{ SILENCED, plural, one {# 回} other {# 回} }投稿禁止</b>にされました。
+          過去 6 か月において、このユーザーは<b>{ SUSPENDED, plural, other {# 回} }凍結</b>され、<b>{ SILENCED, plural, other {# 回} }投稿禁止</b>にされました。
         clear_penalty_history:
           title: "ペナルティ履歴をクリア"
           description: "ペナルティのあるユーザーは TL3 に昇格されません"

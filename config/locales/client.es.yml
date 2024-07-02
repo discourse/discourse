@@ -2135,8 +2135,8 @@ es:
       loading: Cargando…
     category_row:
       subcategory_count:
-        one: "+ %{count} subcategoría"
-        other: "+ %{count} subcategorías"
+        one: "+%{count} subcategoría"
+        other: "+%{count} subcategorías"
       topic_count:
         one: "%{count} tema en esta categoría"
         other: "%{count} temas en esta categoría"

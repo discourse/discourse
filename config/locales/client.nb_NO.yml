@@ -1718,8 +1718,8 @@ nb_NO:
       enter: "Angi"
     category_row:
       subcategory_count:
-        one: "+ %{count} underkategori"
-        other: "+ %{count} underkategorier"
+        one: "+%{count} underkategori"
+        other: "+%{count} underkategorier"
       topic_count:
         one: "%{count} emne i denne kategori"
         other: "%{count} emner i denne kategorien"

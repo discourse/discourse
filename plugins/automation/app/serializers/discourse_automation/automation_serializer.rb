@@ -47,8 +47,12 @@ module DiscourseAutomation
       {
         id: object.script,
         version: scriptable.version,
-        name: I18n.t("#{key}.#{object.script}.title"),
-        description: I18n.t("#{key}.#{object.script}.description"),
+        name:
+          I18n.t(
+            "#{key}.#{object.script}.title",
+            default: "Missing translation for #{key}.#{object.script}.title",
+          ),
+        description: I18n.t("#{key}.#{object.script}.description", default: ""),
         doc: I18n.exists?(doc_key, :en) ? I18n.t(doc_key) : nil,
         with_trigger_doc:
           I18n.exists?(script_with_trigger_key, :en) ? I18n.t(script_with_trigger_key) : nil,
@@ -66,8 +70,12 @@ module DiscourseAutomation
 
       {
         id: object.trigger,
-        name: I18n.t("#{key}.#{object.trigger}.title"),
-        description: I18n.t("#{key}.#{object.trigger}.description"),
+        name:
+          I18n.t(
+            "#{key}.#{object.trigger}.title",
+            default: "Missing translation for #{key}.#{object.trigger}.title",
+          ),
+        description: I18n.t("#{key}.#{object.trigger}.description", default: ""),
         doc: I18n.exists?(doc_key, :en) ? I18n.t(doc_key) : nil,
         not_found: triggerable&.not_found,
         templates: process_templates(triggerable&.fields || []),

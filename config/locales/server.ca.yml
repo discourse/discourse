@@ -1052,6 +1052,8 @@ ca:
         user_agent: "Agent d'usuari"
         page_views: "Pàgines vistes"
       description: "Llista d'agents d'usuari de rastrejadors web, ordenats per pàgines vistes."
+    web_hook_events_daily_aggregate:
+      xaxis: "Dia"
     suspicious_logins:
       title: "Inicis de sessió sospitosos"
       labels:

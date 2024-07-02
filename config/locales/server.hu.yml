@@ -931,6 +931,8 @@ hu:
       labels:
         user_agent: "Felhasználói ügynök"
         page_views: "Oldalmegtekintések"
+    web_hook_events_daily_aggregate:
+      xaxis: "Nap"
     suspicious_logins:
       labels:
         user: Felhasználó

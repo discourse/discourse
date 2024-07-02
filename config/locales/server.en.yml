@@ -323,7 +323,6 @@ en:
         other: is the wrong length (should be %{count} characters)
       other_than: "must be other than %{count}"
       auth_overrides_username: "Username needs to be updated on authentication provider side, since `auth_overrides_username` setting is enabled."
-      required: "must exist"
     template:
       body: ! "There were problems with the following fields:"
       header:
@@ -1571,6 +1570,11 @@ en:
         user_agent: "User Agent"
         page_views: "Pageviews"
       description: "List of web crawler user agents, sorted by pageviews."
+    web_hook_events_daily_aggregate:
+      title: "Web Hook Events"
+      xaxis: "Day"
+      yaxis: "Number of events"
+      description: "Number of web hook events triggered or their mean duration."
     suspicious_logins:
       title: "Suspicious Logins"
       labels:
@@ -1976,9 +1980,10 @@ en:
     s3_configure_tombstone_policy: "Enable automatic deletion policy for tombstone uploads. IMPORTANT: If disabled, no space will be reclaimed after uploads are deleted."
     s3_disable_cleanup: "Prevent removal of old backups from S3 when there are more backups than the maximum allowed."
     s3_use_acls: "AWS recommends not using ACLs on S3 buckets; if you are following this advice, uncheck this option. This must be enabled if you are using secure uploads."
+    enable_direct_s3_uploads: "Allows for direct multipart uploads to Amazon S3, see https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 for more details."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
-    backup_location: "Location where backups are stored. IMPORTANT: S3 requires valid S3 credentials entered in Files settings."
+    backup_location: "Location where backups are stored. IMPORTANT: S3 requires valid S3 credentials entered in Files settings. When changing this to S3 from Local, you must run the `s3:ensure_cors_rules` rake task."
     backup_gzip_compression_level_for_uploads: "Gzip compression level used for compressing uploads."
     include_thumbnails_in_backups: "Include generated thumbnails in backups. Disabling this will make backups smaller, but requires a rebake of all posts after a restore."
 

@@ -1620,6 +1620,11 @@ sk:
         user_agent: "Používateľský agent"
         page_views: "Zobrazenia stránky"
       description: "Zoznam používateľských agentov webového prehľadávača zoradených podľa zobrazení stránok."
+    web_hook_events_daily_aggregate:
+      title: "Udalosti Web Hook"
+      xaxis: "Deň"
+      yaxis: "Počet udalostí"
+      description: "Počet spustených udalostí web hook alebo ich priemerné trvanie."
     suspicious_logins:
       title: "Podozrivé prihlásenia"
       labels:
@@ -1882,6 +1887,7 @@ sk:
     content_security_policy_report_only: "Povoliť Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_collect_reports: "Povolenie zberu správ o porušeniach CSP na adrese /csp_reports"
     content_security_policy_frame_ancestors: "Obmedziť, kto môže túto stránku vložiť do iframe prostredníctvom CSP. Kontrola povolených hostiteľov pri <a href='%{base_path}/admin/customize/embedding'>vkladaní</a>"
+    content_security_policy_script_src: "Ďalšie zdroje skriptov uvedené v zozname povolených zdrojov. Aktuálny hostiteľ a CDN sú predvolene zahrnuté. Pozrite si časť <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Zmiernenie útokov XSS pomocou zásad zabezpečenia obsahu.</a> (CSP). Ostatné zdroje hostiteľa sú ignorované, pretože je povolená funkcia strict-dynamic."
     invalidate_inactive_admin_email_after_days: "Účty administrátorov, ktorí nenavštívili stránku počas tohto počtu dní, budú musieť pred prihlásením znovu overiť svoju e-mailovú adresu. Nastavte na 0, aby ste to zakázali."
     include_secure_categories_in_tag_counts: "Ak je táto možnosť povolená, počet tém pre značku bude zahŕňať témy, ktoré sú v kategóriách s obmedzeným čítaním pre všetkých používateľov. Ak je vypnuté, bežným používateľom sa zobrazí len počet tém pre značku, v ktorej sú všetky témy vo verejných kategóriách."
     display_personal_messages_tag_counts: "Ak je táto možnosť povolená, zobrazí sa počet osobných správ označených danou značkou."
@@ -2454,6 +2460,7 @@ sk:
     default_sidebar_show_count_of_new_items: "Nastaviť, aby odkazy navigačnej ponuky v predvolenom nastavení zobrazovali počet nových položiek namiesto odznakov."
     default_sidebar_switch_panel_position: "Poloha tlačidla na bočnom paneli na prepnutie do chatu"
     retain_web_hook_events_period_days: "Počet dní, počas ktorých sa majú uchovávať záznamy o udalostiach webového háčika."
+    retain_web_hook_events_aggregate_days: "Počet dní uchovávania súhrnných záznamov udalostí webového háku."
     retry_web_hook_events: "Automaticky opakovať neúspešné udalosti web hook 4-krát. Časové intervaly medzi opakovaniami sú 1, 5, 25 a 125 minút."
     revoke_api_keys_unused_days: "Počet dní od posledného použitia kľúča API pred jeho automatickým zrušením (0 pre nikdy)"
     revoke_api_keys_maxlife_days: "Počet dní pred automatickým zrušením kľúča API (0 pre nikdy)"
@@ -2566,6 +2573,7 @@ sk:
       invalid_reply_by_email_address: "Hodnota musí obsahovať '%{reply_key}' a byť odlišná od notifikačného emailu."
       invalid_alternative_reply_by_email_addresses: "Všetky hodnoty musia obsahovať '%{reply_key}' a musia sa líšiť od notifikačného e-mailu."
       invalid_domain_hostname: "Nesmie obsahovať znaky * alebo ?."
+      invalid_csp_script_src: "Hodnota musí byť buď 'unsafe-eval' alebo 'wasm-unsafe-eval', alebo v tvare '<hash algorithm>-<base64 value>', kde podporované hash algoritmy sú sha256, sha384 alebo sha512. Uistite sa, že váš vstup je zabalený do jednoduchých úvodzoviek."
       pop3_polling_host_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 adresu'."
       pop3_polling_username_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 používateľské meno'."
       pop3_polling_password_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 heslo'."
@@ -2832,6 +2840,7 @@ sk:
     email_too_long: "Emailová adresa je príliš dlhá. Meno priečinka musí byť kratšie ako 254 znakov a meno domény musí byť kratšie ako 253 znakov."
     wrong_invite_code: "Zadaný kód pozvánky bol nesprávny."
     reserved_username: "Toto užívateľské meno nie je povolené."
+    missing_user_field: "Nevyplnili ste všetky požadované polia používateľa"
     auth_complete: "Overovanie je dokončené."
     click_to_continue: "Kliknutím sem pokračujte."
     already_logged_in: "Prepáčte! Táto pozvánka je určená pre nových používateľov, ktorí ešte nemajú vytvorené konto."
@@ -4386,6 +4395,98 @@ sk:
   guidelines_topic:
     title: "FAQ/Pravidlá"
     guidelines_title: "Pokyny"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Toto je civilizované miesto pre verejnú diskusiu](#civilizované)
+
+      Prosím, správajte sa k tomuto diskusnému fóru s rovnakým rešpektom ako k verejnému parku. Aj my sme spoločným zdrojom komunity &mdash; , ktorý je miestom na zdieľanie zručností, vedomostí a záujmov prostredníctvom prebiehajúcej diskusie.
+
+      Toto nie sú tvrdé a pevné pravidlá. Sú to usmernenia, ktoré majú napomôcť ľudskému úsudku našej komunity a zachovať toto láskavé, priateľské miesto pre civilizovanú verejnú diskusiu.
+
+      <a name="improve"></a>
+
+      ## [Zlepšovanie diskusie](#improve)
+
+      Pomôžte nám urobiť z tejto stránky skvelé miesto na diskusiu tým, že do nej vždy pridáte niečo pozitívne, hoci aj malé. Ak si nie ste istí, či váš príspevok prispieva k diskusii, premyslite si, čo chcete povedať, a skúste to neskôr.
+
+      Jedným zo spôsobov, ako zlepšiť diskusiu, je objaviť tie, ktoré už prebiehajú. Pred tým, ako odpoviete alebo začnete vlastnú tému, venujte čas prezeraniu tunajších tém a budete mať väčšiu šancu stretnúť sa s ostatnými, ktorí majú rovnaké záujmy.
+
+      Témy, o ktorých sa tu diskutuje, sú pre nás dôležité a chceme, aby ste sa aj vy správali tak, ako keby boli dôležité pre vás. Buďte úctiví k témam a k ľuďom, ktorí o nich diskutujú, aj keď s niektorými vyjadreniami nesúhlasíte.
+
+      <a name="agreeable"></a>
+
+      ## [Buďte ústretoví, aj keď nesúhlasíte](#agreeable)
+
+      Možno budete chcieť reagovať nesúhlasom. To je v poriadku. Nezabudnite však _kritizovať myšlienky, nie ľudí_. Vyvarujte sa, prosím, týchto vecí:
+
+      * Nadávkam
+      * Útokom ad hominem
+      * Reagovaniu na tón príspevku namiesto jeho skutočného obsahu
+      * Protirečeniu na kolene
+
+      Namiesto toho poskytnite premyslené postrehy, ktoré zlepšia konverzáciu.
+
+      <a name="participate"></a>
+
+      ## [Vaša účasť sa počíta](#participate)
+
+      Rozhovory, ktoré tu vedieme, udávajú tón každému novému príchodu. Pomôžte nám ovplyvniť budúcnosť tejto komunity tým, že sa budete zapájať do diskusií, ktoré robia toto fórum zaujímavým miestom &mdash; , a vyhnete sa tým, ktoré ho nezaujímajú.
+
+      Diskurz poskytuje nástroje, ktoré komunite umožňujú spoločne identifikovať najlepšie (a najhoršie) príspevky: záložky, lajky, vlajky, odpovede, úpravy, sledovanie, stlmenie atď. Využívajte tieto nástroje na zlepšenie vlastnej skúsenosti a tiež skúsenosti všetkých ostatných.
+
+      Zanechajme našu komunitu lepšiu, ako sme ju našli.
+
+      <a name="flag-problems"></a>
+
+      ## [Ak vidíte problém, označte ho](#flag-problems)
+
+      Moderátori majú osobitné právomoci; sú zodpovední za toto fórum. Ale aj vy. S vašou pomocou môžu byť moderátori sprostredkovateľmi komunity, nielen upratovačmi alebo policajtmi.
+
+      Keď vidíte zlé správanie, neodpovedajte. Odpovedanie podporuje zlé správanie tým, že ho potvrdzuje, spotrebúva vašu energiu a mrhá časom všetkých. Jednoducho ho označte. Ak sa nazbiera dostatok príznakov, budú prijaté opatrenia, buď automaticky, alebo zásahom moderátora.
+
+      V záujme zachovania našej komunity si moderátori vyhradzujú právo kedykoľvek odstrániť akýkoľvek obsah a akýkoľvek používateľský účet z akéhokoľvek dôvodu. Moderátori neprezerajú nové príspevky; moderátori a prevádzkovatelia stránky nenesú žiadnu zodpovednosť za akýkoľvek obsah zverejnený komunitou.
+
+      <a name="be-civil"></a>
+
+      ## [Vždy buďte zdvorilí](#be-civil)
+
+      Nič tak nesabotuje zdravú konverzáciu ako hrubosť:
+
+      * Buďte zdvorilí. Nezverejňujte nič, čo by rozumný človek považoval za urážlivé, hanlivé alebo nenávistné prejavy.
+      * Zachovajte čistotu. Nezverejňujte nič obscénne alebo sexuálne explicitné.
+      * Rešpektujte sa navzájom. Nikoho neobťažujte ani neurážajte, nevydávajte sa za ľudí ani nezverejňujte ich súkromné informácie.
+      * Rešpektujte naše fórum. Neposielajte spam ani inak neničte fórum.
+
+      Toto nie sú konkrétne pojmy s presnými definíciami &mdash; vyhnite sa dokonca aj _zjavu_ niektorej z týchto vecí. Ak si nie ste istí, spýtajte sa sami seba, ako by ste sa cítili, keby sa váš príspevok objavil na titulnej strane veľkého spravodajského webu.
+
+      Toto je verejné fórum a vyhľadávače tieto diskusie indexujú. Jazyk, odkazy a obrázky nechajte bezpečné pre rodinu a priateľov.
+
+      <a name="keep-tidy"></a>
+
+      ## [Udržujte poriadok](#keep-tidy)
+
+      Vynaložte úsilie, aby ste veci umiestnili na správne miesto, aby sme mohli stráviť viac času diskusiou a menej upratovaním. Takže:
+
+      * Nezakladajte tému v nesprávnej kategórii; prečítajte si definície kategórií.
+      * Nevkladajte krížom-krážom tú istú vec do viacerých tém.
+      * Nezverejňujte odpovede bez obsahu.
+      * Neodvracajte tému tým, že ju zmeníte uprostred prúdu.
+      * Nepodpisujte svoje príspevky &mdash; ku každému príspevku sú pripojené informácie z vášho profilu.
+
+      Namiesto toho, aby ste písali "+1" alebo "Súhlasím", použite radšej tlačidlo Páči sa mi to. Namiesto toho, aby ste existujúcu tému posunuli radikálne iným smerom, použite radšej odpoveď ako prepojenú tému.
+
+      <a name="stealing"></a>
+
+      ## [Post Only Your Own Stuff](#krádež)
+
+      Nesmiete zverejňovať nič digitálne, čo patrí niekomu inému, bez povolenia. Nesmiete zverejňovať popisy, odkazy alebo metódy na krádež cudzieho duševného vlastníctva (softvér, video, zvuk, obrázky) alebo na porušenie akéhokoľvek iného zákona.
+
+      <a name="power"></a>
+
+      ## [Powered by You](#power)
+
+      Túto stránku prevádzkuje váš [priateľský moderátorský tím](%{base_path}/about) a *vy*, komunita. Ak máte ďalšie otázky o tom, ako by tu mali veci fungovať, otvorte novú tému na %{feedback_category} a poďme diskutovať! Ak sa vyskytne kritický alebo naliehavý problém, ktorý sa nedá vyriešiť pomocou meta témy alebo príznaku, [kontaktujte moderátorov](%{base_path}/o).
   tos_topic:
     title: "Podmienky používania"
     body: |

@@ -2148,8 +2148,8 @@ fi:
       loading: Ladataan…
     category_row:
       subcategory_count:
-        one: "+ %{count} ala-alue"
-        other: "+ %{count} ala-aluetta"
+        one: "+%{count} ala-alue"
+        other: "+%{count} ala-aluetta"
       topic_count:
         one: "%{count} ketju tällä alueella"
         other: "%{count} ketjua tällä alueella"

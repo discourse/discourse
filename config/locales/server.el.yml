@@ -853,6 +853,8 @@ el:
     web_crawlers:
       labels:
         page_views: "Προβολές σελίδας"
+    web_hook_events_daily_aggregate:
+      xaxis: "Ημέρα"
     suspicious_logins:
       labels:
         user: Χρήστης
