@@ -9,7 +9,7 @@ import I18n from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
 function roundedMinutes(duration) {
-  const rounded = parseFloat(duration.toFixed(2));
+  const rounded = parseFloat(duration.toFixed(1));
 
   // showing 2.00 instead of just 2 in the input is weird
   return rounded % 1 === 0 ? parseInt(rounded, 10) : rounded;
