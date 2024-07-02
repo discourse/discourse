@@ -207,16 +207,16 @@ module("Integration | Component | relative-time-picker", function (hooks) {
 
   test("prefills and preselects months based on converted minutes", async function (assert) {
     await render(<template>
-      <RelativeTimePicker @durationMinutes="129600" />
+      <RelativeTimePicker @durationMinutes="151200" />
     </template>);
 
     assert.strictEqual(selectKit().header().value(), "months");
-    assert.dom(".relative-time-duration").hasValue("3");
+    assert.dom(".relative-time-duration").hasValue("3.5");
   });
 
   test("prefills and preselects years based on converted minutes", async function (assert) {
     await render(<template>
-      <RelativeTimePicker @durationMinutes="525600" />
+      <RelativeTimePicker @durationMinutes="525700" />
     </template>);
 
     assert.strictEqual(selectKit().header().value(), "years");
