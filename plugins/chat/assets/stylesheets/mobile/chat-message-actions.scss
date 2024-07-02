@@ -1,6 +1,6 @@
 .chat-message-actions {
   .selected-message-container {
-    padding: 0.5em 0 1em 0;
+    padding: 0.75rem 1rem;
   }
 
   .selected-message {
@@ -101,10 +101,8 @@
     margin: 0;
 
     .chat-message-action-item {
-      border-bottom: 1px solid var(--primary-low);
       width: 100%;
       list-style: none;
-      padding: 0.25em 0;
       display: flex;
 
       &:active {
@@ -117,10 +115,12 @@
 
       .chat-message-action {
         justify-content: flex-start;
+        gap: 0.25em;
         background: none;
         width: 100%;
         border: 0;
         color: var(--primary);
+        padding: 0.75rem 1em;
 
         &:focus,
         .d-icon {
