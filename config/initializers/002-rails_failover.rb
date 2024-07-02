@@ -19,18 +19,11 @@ if defined?(RailsFailover::Redis)
     SiteSetting.refresh!
   end
 
-  RailsFailover::Redis.logger = Rails.logger.chained.first if Rails.logger.respond_to? :chained
+  RailsFailover::Redis.logger = Rails.logger.broadcasts.first
 end
 
 if defined?(RailsFailover::ActiveRecord)
   return unless Rails.configuration.active_record_rails_failover
-
-  if Rails.configuration.multisite
-    if ActiveRecord::Base.current_role == ActiveRecord.reading_role
-      RailsMultisite::ConnectionManagement.default_connection_handler =
-        ActiveRecord::Base.connection_handlers[ActiveRecord.reading_role]
-    end
-  end
 
   RailsFailover::ActiveRecord.on_failover do |role|
     if role == ActiveRecord.writing_role # Multisite master
@@ -52,6 +45,8 @@ if defined?(RailsFailover::ActiveRecord)
   end
 
   RailsFailover::ActiveRecord.on_fallback do |role|
+    Rails.logger.warn("Falling back to #{role} role")
+
     if role == ActiveRecord.writing_role # Multisite master
       RailsMultisite::ConnectionManagement.each_connection do
         Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
@@ -60,11 +55,6 @@ if defined?(RailsFailover::ActiveRecord)
       ActiveRecord::Base.connected_to(role: role) do
         Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
       end
-    end
-
-    if Rails.configuration.multisite
-      RailsMultisite::ConnectionManagement.default_connection_handler =
-        ActiveRecord::Base.connection_handlers[ActiveRecord.writing_role]
     end
   end
 

@@ -10,7 +10,6 @@ RSpec.describe "Middleware order" do
         ActionDispatch::RemoteIp
         Middleware::RequestTracker
         MessageBus::Rack::Middleware
-        ActionDispatch::HostAuthorization
         Rack::Sendfile
         ActionDispatch::Static
         ActionDispatch::Executor
