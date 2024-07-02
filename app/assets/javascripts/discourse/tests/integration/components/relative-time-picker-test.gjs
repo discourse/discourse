@@ -101,7 +101,7 @@ module("Integration | Component | relative-time-picker", function (hooks) {
     assert.strictEqual(
       selectKit().header().value(),
       "mins",
-      "dropdown has still 'minutes' selected"
+      "dropdown has 'minutes' selected"
     );
 
     // type <60 minutes
