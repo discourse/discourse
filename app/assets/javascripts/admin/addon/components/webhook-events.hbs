@@ -14,6 +14,13 @@
     />
 
     <DButton
+      @icon="sync"
+      @label="admin.web_hooks.events.redeliver_failed"
+      @action={{this.redeliverFailed}}
+      @disabled={{not this.redeliverEnabled}}
+    />
+
+    <DButton
       @icon="paper-plane"
       @label="admin.web_hooks.events.ping"
       @action={{this.ping}}

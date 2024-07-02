@@ -10,9 +10,14 @@ class AdminWebHookEventSerializer < ApplicationSerializer
              :response_headers,
              :response_body,
              :duration,
-             :created_at
+             :created_at,
+             :redelivering
 
   def request_url
     object.web_hook.payload_url
+  end
+
+  def redelivering
+    object.redelivering_webhook_event.present?
   end
 end
