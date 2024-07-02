@@ -1257,7 +1257,6 @@ ca:
     s3_configure_tombstone_policy: "Activa la política de supressió automàtica per a càrregues 'tombstone'. IMPORTANT: si és desactivat, no es reclamarà cap espai després de suprimir les càrregues."
     backup_time_of_day: "Hora del dia (UTC) en què s'hauria de fer la còpia de seguretat."
     backup_with_uploads: "Inclou els fitxers carregats en les còpies de seguretat planificades. Si s'inhabilita, només es farà còpia de seguretat de la base de dades."
-    backup_location: "Ubicació on s'emmagatzemen les còpies de seguretat. IMPORTANT: S3 requereix credencials S3 vàlides introduïdes en la configuració de fitxers."
     backup_gzip_compression_level_for_uploads: "Nivell de compressió gzip per a comprimir els fitxers carregats."
     include_thumbnails_in_backups: "Inclou les miniatures generades en les còpies de seguretat. Desactivar-ho farà les còpies de seguretat menys voluminoses, però requereix regenerar totes les publicacions després d'una restauració."
     active_user_rate_limit_secs: "Amb quina freqüència actualitzem el camp 'last_seen_at', en segons."

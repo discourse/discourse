@@ -4440,6 +4440,8 @@ zh_CN:
               label: 类别
             include_subcategories:
               label: "包括子类别"
+            type_of_web_hook_event:
+              label: "活动类型"
       flags:
         title: "审核标记"
         description: "描述"
@@ -4860,6 +4862,11 @@ zh_CN:
             请指定将作为解决与使用本论坛相关的任何纠纷的管辖城市。此信息通常包括在法律文件中，例如论坛的服务条款。
           optional: "（可选）"
           update: "更新"
+          toasts:
+            general_settings_saved: "常规设置已保存"
+            contact_information_saved: "联系人信息已保存"
+            your_organization_saved: "你的组织已保存"
+          saved: "已保存!"
       plugins:
         title: "插件"
         installed: "安装的插件"

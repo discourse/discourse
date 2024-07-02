@@ -1660,7 +1660,6 @@ fr:
     s3_use_acls: "AWS recommande de ne pas utiliser d'ACL sur les compartiments S3 ; si vous suivez ce conseil, décochez cette option. Cela doit être activé si vous utilisez des téléchargements sécurisés."
     backup_time_of_day: "Heure (UTC) de planification de la sauvegarde."
     backup_with_uploads: "Inclure les fichiers envoyés dans les sauvegardes. Si cette option est désactivée, seule la base de données sera sauvegardée."
-    backup_location: "Emplacement de stockage des sauvegardes. IMPORTANT : S3 nécessite la saisie d'identifiants valides dans la section « Fichiers » des paramètres du site."
     backup_gzip_compression_level_for_uploads: "Niveau de compression gzip utilisé pour compresser les envois."
     include_thumbnails_in_backups: "Inclure les vignettes générées dans les sauvegardes. Si vous désactivez cette option, les sauvegardes seront plus petites mais leur restauration nécessitera de régénérer tous les messages."
     active_user_rate_limit_secs: "À quelle fréquence mettre à jour le champ « last_seen_at », en secondes."

@@ -5585,6 +5585,11 @@ sk:
             Uveďte mesto, ktoré sa použije ako súdna právomoc na riešenie akýchkoľvek sporov súvisiacich s používaním tohto fóra. Táto informácia sa zvyčajne uvádza v právnych dokumentoch, ako sú napríklad podmienky používania fóra.
           optional: "(nepovinné)"
           update: "Aktualizovať"
+          toasts:
+            general_settings_saved: "Všeobecné nastavenia uložené"
+            contact_information_saved: "Kontaktné informácie uložené"
+            your_organization_saved: "Vaša organizácia uložená"
+          saved: "uložené!"
       plugins:
         title: "Pluginy"
         installed: "Nainštalované pluginy"

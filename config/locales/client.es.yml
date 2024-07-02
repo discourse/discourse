@@ -4885,6 +4885,7 @@ es:
           city_for_disputes: "Ciudad para disputas"
           optional: "(opcional)"
           update: "Actualizar"
+          saved: "guardado!"
       plugins:
         title: "Plugins"
         installed: "Plugins instalados"

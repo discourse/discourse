@@ -3699,6 +3699,7 @@ gl:
         about:
           optional: "(opcional)"
           update: "Actualizar"
+          saved: "gardado!"
       plugins:
         title: "Complementos"
         installed: "Complementos instalados"

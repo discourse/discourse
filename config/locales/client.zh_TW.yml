@@ -3293,6 +3293,7 @@ zh_TW:
         about:
           optional: "(選擇性)"
           update: "更新"
+          saved: "儲存完畢!"
       plugins:
         title: "外掛"
         installed: "已安裝外掛"

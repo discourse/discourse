@@ -2009,6 +2009,9 @@ sr:
           screened_urls: "Provereni URL-ovi"
           security: "Sigurnost"
           spam: "Nepoželjno"
+      config_areas:
+        about:
+          saved: "sačuvano!"
       plugins:
         title: "Dodatci"
         name: "Ime foruma"

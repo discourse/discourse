@@ -5512,6 +5512,7 @@ pl_PL:
             Określ miasto, które będzie używane jako jurysdykcja do rozstrzygania wszelkich sporów związanych z korzystaniem z tego forum. Informacje te są zazwyczaj zawarte w dokumentach prawnych, takich jak warunki korzystania z forum.
           optional: "(opcjonalne)"
           update: "Aktualizuj"
+          saved: "zapisano!"
       plugins:
         title: "Wtyczki"
         installed: "Zainstalowane wtyczki"

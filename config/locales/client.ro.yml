@@ -3527,6 +3527,7 @@ ro:
       config_areas:
         about:
           optional: "(opțional)"
+          saved: "salvat!"
       plugins:
         title: "Plugin-uri"
         installed: "Plugin-uri instalate"
