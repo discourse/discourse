@@ -150,11 +150,15 @@ export default class RelativeTimePicker extends Component {
   @action
   onChangeInterval(interval) {
     this.interval = interval;
-    this.duration = this.minutesFromInputValueAndInterval(
+
+    const newDuration = this.minutesFromInputValueAndInterval(
       this.inputValue,
       this.interval
     );
-    this.args.onChange?.(this.duration);
+    if (newDuration !== this.duration) {
+      this.duration = newDuration;
+      this.args.onChange?.(this.duration);
+    }
   }
 
   <template>
