@@ -196,6 +196,11 @@ class Reviewable < ActiveRecord::Base
     update(score: self.score + rs.score, latest_score: rs.created_at, force_review: force_review)
     topic.update(reviewable_score: topic.reviewable_score + rs.score) if topic
 
+    # Flags are cached for performance reasons.
+    # However, when the reviewable item is created, we need to clear the cache to mark flag as used.
+    # Used flags cannot be deleted or update by admins, only disabled.
+    Flag.reset_flag_settings! if PostActionType.notify_flag_type_ids.include?(reviewable_score_type)
+
     DiscourseEvent.trigger(:reviewable_score_updated, self)
 
     rs

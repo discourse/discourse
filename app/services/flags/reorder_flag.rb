@@ -2,7 +2,7 @@
 
 VALID_DIRECTIONS = %w[up down]
 
-class ReorderFlag
+class Flags::ReorderFlag
   include Service::Base
 
   contract

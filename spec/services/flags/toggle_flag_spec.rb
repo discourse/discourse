@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe(ToggleFlag) do
+RSpec.describe(Flags::ToggleFlag) do
   subject(:result) { described_class.call(flag_id: flag.id, guardian: current_user.guardian) }
 
   let(:flag) { Flag.system.last }

@@ -13,12 +13,29 @@ module PageObjects
 
       def move_down(key)
         open_flag_menu(key)
-        find(".dropdown-menu__item .move-down").click
+        find(".admin-flag-item__move-down").click
       end
 
       def move_up(key)
         open_flag_menu(key)
-        find(".dropdown-menu__item .move-up").click
+        find(".admin-flag-item__move-up").click
+      end
+
+      def click_add_flag
+        find(".admin-flags__header-add-flag").click
+      end
+
+      def click_edit_flag(key)
+        find(".#{key} .admin-flag-item__edit").click
+      end
+
+      def click_delete_flag(key)
+        find(".#{key} .flag-menu-trigger").click
+        find(".admin-flag-item__delete").click
+      end
+
+      def confirm_delete
+        find(".dialog-footer .btn-primary").click
       end
     end
   end

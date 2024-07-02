@@ -48,6 +48,7 @@ class SiteSerializer < ApplicationSerializer
     :privacy_policy_url,
     :system_user_avatar_template,
     :lazy_load_categories,
+    :valid_flag_applies_to_types,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -348,6 +349,14 @@ class SiteSerializer < ApplicationSerializer
 
   def include_lazy_load_categories?
     scope.can_lazy_load_categories?
+  end
+
+  def valid_flag_applies_to_types
+    Flag.valid_applies_to_types
+  end
+
+  def include_valid_flag_applies_to_types?
+    scope.is_admin?
   end
 
   private

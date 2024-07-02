@@ -1253,6 +1253,8 @@ en:
     errors:
       already_handled: "Flag was already handled"
       wrong_move: "Flag cannot be moved"
+      system: "System flag cannot be updated or deleted."
+      used: "Flag cannot be updated or deleted because has already been used."
   reports:
     default:
       labels:

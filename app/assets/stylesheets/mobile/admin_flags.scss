@@ -1,3 +1,17 @@
 .admin-contents table.grid tr.admin-flag-item {
   grid-template-columns: auto min-content;
+
+  .d-toggle-switch {
+    margin-right: 0;
+  }
+}
+
+.admin-config-area__primary-content {
+  .admin-flag-form {
+    &__name,
+    &__applies-to.select-kit.multi-select,
+    &__description {
+      width: 100%;
+    }
+  }
 }

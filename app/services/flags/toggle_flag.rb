@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ToggleFlag
+class Flags::ToggleFlag
   include Service::Base
 
   contract

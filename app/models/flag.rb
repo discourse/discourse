@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class Flag < ActiveRecord::Base
+  DEFAULT_VALID_APPLIES_TO = %w[Post Topic]
   MAX_SYSTEM_FLAG_ID = 1000
+  MAX_NAME_LENGTH = 200
+  MAX_DESCRIPTION_LENGTH = 1000
   scope :enabled, -> { where(enabled: true) }
   scope :system, -> { where("id < 1000") }
 
@@ -15,6 +18,10 @@ class Flag < ActiveRecord::Base
   def used?
     PostAction.exists?(post_action_type_id: self.id) ||
       ReviewableScore.exists?(reviewable_score_type: self.id)
+  end
+
+  def self.valid_applies_to_types
+    Set.new(DEFAULT_VALID_APPLIES_TO | DiscoursePluginRegistry.flag_applies_to_types)
   end
 
   def self.reset_flag_settings!

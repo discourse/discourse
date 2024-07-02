@@ -10,11 +10,67 @@
   &__options {
     display: flex;
     align-items: center;
+    justify-content: space-between;
   }
   .d-toggle-switch--label {
     margin-bottom: 0;
   }
+  .d-toggle-switch {
+    margin-right: 2em;
+  }
+  .btn-secondary {
+    padding: 0.25em 0.325em;
+    margin-right: 0.75em;
+  }
   .flag-menu-trigger {
     padding: 0.25em 0.325em;
+  }
+
+  &__delete.btn,
+  &__delete.btn:hover {
+    border-top: 1px solid var(--primary-low);
+    color: var(--danger);
+    svg {
+      color: var(--danger);
+    }
+  }
+}
+
+.admin-flag-form {
+  &__enabled,
+  &__applies-to {
+    margin-bottom: 1em;
+  }
+  &__save {
+    margin-top: 1em;
+  }
+  &__info {
+    color: var(--primary-high);
+    svg {
+      color: var(--tertiary);
+    }
+  }
+  &__description {
+    width: 60%;
+  }
+  &__applies-to.select-kit.multi-select {
+    width: 60%;
+  }
+}
+
+.admin-flags__header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  .btn-primary {
+    align-self: center;
+  }
+
+  h3 {
+    margin-top: 1em;
+    font-size: var(--font-0);
+    font-weight: normal;
+    flex-basis: 100%;
   }
 }

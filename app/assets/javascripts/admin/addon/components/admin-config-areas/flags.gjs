@@ -6,9 +6,10 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
+import AdminConfigHeader from "admin/components/admin-config-header";
 import AdminFlagItem from "admin/components/admin-flag-item";
 
-export default class AdminFlags extends Component {
+export default class AdminConfigAreasFlags extends Component {
   @service site;
   @tracked flags = this.site.flagTypes;
 
@@ -46,19 +47,39 @@ export default class AdminFlags extends Component {
     });
   }
 
+  @action
+  deleteFlagCallback(flag) {
+    return ajax(`/admin/config/flags/${flag.id}`, {
+      type: "DELETE",
+    })
+      .then(() => {
+        this.flags.removeObject(flag);
+      })
+      .catch((error) => popupAjaxError(error));
+  }
+
   <template>
     <div class="container admin-flags">
-      <h1>{{i18n "admin.flags.title"}}</h1>
-      <table class="flags grid">
+      <AdminConfigHeader
+        @name="flags"
+        @heading="admin.config_areas.flags.header"
+        @subheading="admin.config_areas.flags.subheader"
+        @primaryActionRoute="adminConfig.flags.new"
+        @primaryActionCssClass="admin-flags__header-add-flag"
+        @primaryActionIcon="plus"
+        @primaryActionLabel="admin.config_areas.flags.add"
+      />
+      <table class="admin-flags__items grid">
         <thead>
-          <th>{{i18n "admin.flags.description"}}</th>
-          <th>{{i18n "admin.flags.enabled"}}</th>
+          <th>{{i18n "admin.config_areas.flags.description"}}</th>
+          <th>{{i18n "admin.config_areas.flags.enabled"}}</th>
         </thead>
         <tbody>
           {{#each this.flags as |flag|}}
             <AdminFlagItem
               @flag={{flag}}
               @moveFlagCallback={{this.moveFlagCallback}}
+              @deleteFlagCallback={{this.deleteFlagCallback}}
               @isFirstFlag={{this.isFirstFlag flag}}
               @isLastFlag={{this.isLastFlag flag}}
             />

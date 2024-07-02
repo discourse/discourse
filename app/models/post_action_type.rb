@@ -117,6 +117,14 @@ class PostActionType < ActiveRecord::Base
       all_flags.pluck(:id, :name).to_h
     end
 
+    def descriptions
+      all_flags.pluck(:id, :description).to_h
+    end
+
+    def applies_to
+      all_flags.pluck(:id, :applies_to).to_h
+    end
+
     def is_flag?(sym)
       flag_types.valid?(sym)
     end

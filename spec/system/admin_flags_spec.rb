@@ -7,6 +7,7 @@ describe "Admin Flags Page", type: :system do
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:admin_flags_page) { PageObjects::Pages::AdminFlags.new }
+  let(:admin_flag_form_page) { PageObjects::Pages::AdminFlagForm.new }
 
   before { sign_in(admin) }
 
@@ -55,6 +56,55 @@ describe "Admin Flags Page", type: :system do
     )
   end
 
+  it "allows admin to create, edit and delete flags" do
+    topic_page.visit_topic(post.topic)
+    topic_page.open_flag_topic_modal
+    expect(all(".flag-action-type-details strong").map(&:text)).to eq(
+      ["It's Inappropriate", "It's Spam", "It's Illegal", "Something Else"],
+    )
+
+    visit "/admin/config/flags"
+
+    admin_flags_page.click_add_flag
+
+    expect(admin_flag_form_page).to have_disabled_save_button
+
+    admin_flag_form_page.fill_in_name("Vulgar")
+    admin_flag_form_page.fill_in_description("New flag description")
+    admin_flag_form_page.fill_in_applies_to("Topic")
+    admin_flag_form_page.fill_in_applies_to("Post")
+    admin_flag_form_page.click_save
+
+    topic_page.visit_topic(post.topic)
+    topic_page.open_flag_topic_modal
+    expect(all(".flag-action-type-details strong").map(&:text)).to eq(
+      ["It's Inappropriate", "It's Spam", "It's Illegal", "Something Else", "Vulgar"],
+    )
+
+    visit "/admin/config/flags"
+
+    admin_flags_page.click_edit_flag("vulgar")
+
+    admin_flag_form_page.fill_in_name("Tasteless")
+    admin_flag_form_page.click_save
+
+    topic_page.visit_topic(post.topic)
+    topic_page.open_flag_topic_modal
+    expect(all(".flag-action-type-details strong").map(&:text)).to eq(
+      ["It's Inappropriate", "It's Spam", "It's Illegal", "Something Else", "Tasteless"],
+    )
+
+    visit "/admin/config/flags"
+    admin_flags_page.click_delete_flag("tasteless")
+    admin_flags_page.confirm_delete
+
+    topic_page.visit_topic(post.topic)
+    topic_page.open_flag_topic_modal
+    expect(all(".flag-action-type-details strong").map(&:text)).to eq(
+      ["It's Inappropriate", "It's Spam", "It's Illegal", "Something Else"],
+    )
+  end
+
   it "does not allow to move notify user flag" do
     visit "/admin/config/flags"
     expect(page).not_to have_css(".notify_user .flag-menu-trigger")
@@ -64,6 +114,17 @@ describe "Admin Flags Page", type: :system do
     visit "/admin/config/flags"
     admin_flags_page.open_flag_menu("notify_moderators")
     expect(page).not_to have_css(".dropdown-menu__item .move-down")
+  end
+
+  it "does not allow to system flag to be edited" do
+    visit "/admin/config/flags"
+    expect(page).to have_css(".off_topic .admin-flag-item__edit[disabled]")
+  end
+
+  it "does not allow to system flag to be deleted" do
+    visit "/admin/config/flags"
+    admin_flags_page.open_flag_menu("notify_moderators")
+    expect(page).to have_css(".admin-flag-item__delete[disabled]")
   end
 
   it "does not allow top flag to move up" do

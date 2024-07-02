@@ -37,7 +37,7 @@ export default class ChatMessageFlag {
         "description",
         I18n.t(`chat.flags.${flag.name_key}`, {
           basePath: getURL(""),
-          defaultValue: "",
+          defaultValue: flag.description,
         })
       );
       return flag;
@@ -48,8 +48,9 @@ export default class ChatMessageFlag {
     let flagsAvailable = flagModal.site.flagTypes;
 
     flagsAvailable = flagsAvailable.filter((flag) => {
-      return flagModal.args.model.flagModel.availableFlags.includes(
-        flag.name_key
+      return (
+        flagModal.args.model.flagModel.availableFlags.includes(flag.name_key) &&
+        flag.applies_to.includes("Chat::Message")
       );
     });
 

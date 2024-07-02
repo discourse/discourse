@@ -49,6 +49,7 @@ after_initialize do
 
   register_user_custom_field_type(Chat::LAST_CHAT_CHANNEL_ID, :integer)
   DiscoursePluginRegistry.serialized_current_user_fields << Chat::LAST_CHAT_CHANNEL_ID
+  DiscoursePluginRegistry.register_flag_applies_to_type("Chat::Message", self)
 
   UserUpdater::OPTION_ATTR.push(:chat_enabled)
   UserUpdater::OPTION_ATTR.push(:only_chat_push_notifications)
