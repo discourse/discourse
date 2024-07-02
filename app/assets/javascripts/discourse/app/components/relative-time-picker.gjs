@@ -16,78 +16,44 @@ function roundDuration(duration) {
   return rounded % 1 === 0 ? parseInt(rounded, 10) : rounded;
 }
 
-export default class RelativeTimePicker extends Component {
-  @tracked inputValue = this.initialInputValue;
-  @tracked interval = this.initialInterval;
-  @tracked duration = this.calculateMinutes();
-
-  get initialInputValue() {
-    const { durationMinutes, durationHours } = this.args;
-
-    if (isBlank(durationMinutes) && isBlank(durationHours)) {
-      return;
-    }
-
-    if (durationMinutes) {
-      if (durationMinutes >= 525600) {
-        return roundDuration(durationMinutes / 365 / 60 / 24);
-      } else if (durationMinutes >= 43800) {
-        return roundDuration(durationMinutes / 30 / 60 / 24);
-      } else if (durationMinutes >= 1440) {
-        return roundDuration(durationMinutes / 60 / 24);
-      } else if (durationMinutes >= 60) {
-        return roundDuration(durationMinutes / 60);
-      } else {
-        return durationMinutes;
-      }
-    }
-
-    if (durationHours >= 8760) {
-      return roundDuration(durationHours / 365 / 24);
-    } else if (durationHours >= 730) {
-      return roundDuration(durationHours / 30 / 24);
-    } else if (durationHours >= 24) {
-      return roundDuration(durationHours / 24);
-    } else if (durationHours >= 1) {
-      return durationHours;
-    } else {
-      return roundDuration(this.args.durationHours * 60);
-    }
+function inputValueFromMinutes(minutes) {
+  if (!minutes) {
+    return null;
+  } else if (minutes >= 525600) {
+    return roundDuration(minutes / 365 / 60 / 24);
+  } else if (minutes >= 43800) {
+    return roundDuration(minutes / 30 / 60 / 24);
+  } else if (minutes >= 1440) {
+    return roundDuration(minutes / 60 / 24);
+  } else if (minutes >= 60) {
+    return roundDuration(minutes / 60);
+  } else {
+    return minutes;
   }
+}
 
-  get initialInterval() {
-    if (this.args.durationMinutes !== undefined) {
-      if (this.args.durationMinutes >= 525600) {
-        return "years";
-      } else if (this.args.durationMinutes >= 43800) {
-        return "months";
-      } else if (this.args.durationMinutes >= 1440) {
-        return "days";
-      } else if (this.args.durationMinutes >= 60) {
-        return "hours";
-      } else {
-        return "mins";
-      }
-    }
-
-    if (this.args.durationHours !== undefined) {
-      if (this.args.durationHours >= 8760) {
-        return "years";
-      } else if (this.args.durationHours >= 730) {
-        return "months";
-      } else if (this.args.durationHours >= 24) {
-        return "days";
-      } else if (
-        this.args.durationHours >= 1 ||
-        this.args.durationHours === null
-      ) {
-        return "hours";
-      } else {
-        return "mins";
-      }
-    }
-
+function intervalFromMinutes(minutes) {
+  if (minutes >= 525600) {
+    return "years";
+  } else if (minutes >= 43800) {
+    return "months";
+  } else if (minutes >= 1440) {
+    return "days";
+  } else if (minutes >= 60) {
+    return "hours";
+  } else {
     return "mins";
+  }
+}
+
+export default class RelativeTimePicker extends Component {
+  @tracked inputValue;
+  @tracked duration;
+  @tracked interval;
+
+  constructor() {
+    super(...arguments);
+    this.initValues();
   }
 
   get intervals() {
@@ -117,31 +83,49 @@ export default class RelativeTimePicker extends Component {
     ].filter((interval) => !this.args.hiddenIntervals?.includes(interval.id));
   }
 
-  calculateMinutes() {
-    if (isNaN(this.inputValue)) {
+  minutesFromInputValueAndInterval(duration, interval) {
+    if (isNaN(duration)) {
       return null;
     }
 
-    switch (this.interval) {
+    switch (interval) {
       case "mins":
         // we round up here in case the user manually inputted a step < 1
-        return Math.ceil(this.inputValue);
+        return Math.ceil(duration);
       case "hours":
-        return this.inputValue * 60;
+        return duration * 60;
       case "days":
-        return this.inputValue * 60 * 24;
+        return duration * 60 * 24;
       case "months":
-        return this.inputValue * 60 * 24 * 30; // less accurate because of varying days in months
+        return duration * 60 * 24 * 30; // less accurate because of varying days in months
       case "years":
-        return this.inputValue * 60 * 24 * 365; // least accurate because of varying days in months/years
+        return duration * 60 * 24 * 365; // least accurate because of varying days in months/years
     }
   }
 
   @action
   initValues() {
-    this.inputValue = this.initialInputValue;
-    this.interval = this.initialInterval;
-    this.duration = this.calculateMinutes();
+    let minutes = this.args.durationMinutes;
+    if (this.args.durationHours) {
+      minutes ??= this.args.durationHours * 60;
+    }
+
+    this.inputValue = inputValueFromMinutes(minutes);
+
+    if (this.args.durationMinutes !== undefined) {
+      this.interval = intervalFromMinutes(this.args.durationMinutes);
+    } else if (this.args.durationHours === null) {
+      this.interval = "hours";
+    } else if (this.args.durationHours !== undefined) {
+      this.interval = intervalFromMinutes(this.args.durationHours * 60);
+    } else {
+      this.interval = "mins";
+    }
+
+    this.duration = this.minutesFromInputValueAndInterval(
+      this.inputValue,
+      this.interval
+    );
   }
 
   @action
@@ -150,8 +134,14 @@ export default class RelativeTimePicker extends Component {
       this.inputValue = null;
       this.duration = null;
     } else {
-      this.inputValue = parseFloat(event.target.value);
-      this.duration = this.calculateMinutes();
+      const minutes = this.minutesFromInputValueAndInterval(
+        parseFloat(event.target.value),
+        this.interval
+      );
+
+      this.duration = minutes;
+      this.interval = intervalFromMinutes(this.duration);
+      this.inputValue = inputValueFromMinutes(minutes);
     }
 
     this.args.onChange?.(this.duration);
@@ -160,7 +150,11 @@ export default class RelativeTimePicker extends Component {
   @action
   onChangeInterval(interval) {
     this.interval = interval;
-    this.args.onChange?.(this.calculateMinutes());
+    this.duration = this.minutesFromInputValueAndInterval(
+      this.inputValue,
+      this.interval
+    );
+    this.args.onChange?.(this.duration);
   }
 
   <template>

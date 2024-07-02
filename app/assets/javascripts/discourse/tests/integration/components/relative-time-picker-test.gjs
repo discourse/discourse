@@ -15,44 +15,139 @@ module("Integration | Component | relative-time-picker", function (hooks) {
       <RelativeTimePicker @onChange={{update}} />
     </template>);
 
+    // empty and "minutes" by default
+    assert.dom(".relative-time-duration").hasValue("");
     assert.strictEqual(
       selectKit().header().value(),
       "mins",
       "dropdown has 'minutes' preselected"
     );
-    assert.dom(".relative-time-duration").hasValue("");
 
+    // type <60 minutes
     await typeIn(".relative-time-duration", "50");
     assert.dom(".relative-time-duration").hasValue("50");
     assert.strictEqual(updatedValue, 50, "onChange called with 50");
 
+    // select "hours"
     await selectKit().expand();
     await selectKit().selectRowByValue("hours");
     assert.dom(".relative-time-duration").hasValue("50");
     assert.strictEqual(updatedValue, 50 * 60, "onChange called with 50 * 60");
 
+    // clear the duration
     await fillIn(".relative-time-duration", "");
     assert.dom(".relative-time-duration").hasValue("");
     assert.strictEqual(updatedValue, null, "onChange called with null");
-
-    await typeIn(".relative-time-duration", "30");
     assert.strictEqual(
       selectKit().header().value(),
       "hours",
       "dropdown has 'hours' selected"
     );
-    assert.dom(".relative-time-duration").hasValue("30");
-    assert.strictEqual(updatedValue, 30 * 60, "onChange called with 30 * 60");
 
+    // type a new value
+    await typeIn(".relative-time-duration", "22");
+    assert.strictEqual(
+      selectKit().header().value(),
+      "hours",
+      "dropdown has still 'hours' selected"
+    );
+    assert.dom(".relative-time-duration").hasValue("22");
+    assert.strictEqual(updatedValue, 22 * 60, "onChange called with 22 * 60");
+
+    // select "minutes"
     await selectKit().expand();
     await selectKit().selectRowByValue("mins");
-    assert.dom(".relative-time-duration").hasValue("30");
-    assert.strictEqual(updatedValue, 30, "onChange called with 30");
+    assert.dom(".relative-time-duration").hasValue("22");
+    assert.strictEqual(updatedValue, 22, "onChange called with 22");
 
+    // type >60 minutes
     await fillIn(".relative-time-duration", "");
     await typeIn(".relative-time-duration", "800");
     assert.dom(".relative-time-duration").hasValue("13.5");
     assert.strictEqual(updatedValue, 800, "onChange called with 800");
+    assert.strictEqual(
+      selectKit().header().value(),
+      "hours",
+      "automatically changes the dropdown to 'hours'"
+    );
+  });
+
+  test("onChange callback works w/ a start value", async function (assert) {
+    const testState = new (class {
+      @tracked minutes = 120;
+    })();
+
+    const update = (value) => (testState.minutes = value);
+    await render(<template>
+      <RelativeTimePicker
+        @onChange={{update}}
+        @durationMinutes={{testState.minutes}}
+      />
+    </template>);
+
+    // uses the value and selects the right interval
+    assert.dom(".relative-time-duration").hasValue("2");
+    assert.strictEqual(
+      selectKit().header().value(),
+      "hours",
+      "dropdown has 'hours' preselected"
+    );
+
+    // clear the duration
+    await fillIn(".relative-time-duration", "");
+    assert.dom(".relative-time-duration").hasValue("");
+    assert.strictEqual(testState.minutes, null, "onChange called with null");
+    // semi-acceptable behavior: because `initValues()` is called, it changes the interval:
+    assert.strictEqual(
+      selectKit().header().value(),
+      "mins",
+      "dropdown has still 'minutes' selected"
+    );
+
+    // type <60 minutes
+    await typeIn(".relative-time-duration", "18");
+    assert.dom(".relative-time-duration").hasValue("18");
+    assert.strictEqual(testState.minutes, 18, "onChange called with 18");
+
+    // select "days"
+    await selectKit().expand();
+    await selectKit().selectRowByValue("days");
+    assert.dom(".relative-time-duration").hasValue("18");
+    assert.strictEqual(
+      testState.minutes,
+      18 * 60 * 24,
+      "onChange called with 18 * 60 * 24"
+    );
+
+    // type a new value
+    await fillIn(".relative-time-duration", "2");
+    assert.strictEqual(
+      selectKit().header().value(),
+      "days",
+      "dropdown has still 'days' selected"
+    );
+    assert.dom(".relative-time-duration").hasValue("2");
+    assert.strictEqual(
+      testState.minutes,
+      2 * 60 * 24,
+      "onChange called with 2 * 60 * 24"
+    );
+
+    // select "minutes"
+    await selectKit().expand();
+    await selectKit().selectRowByValue("mins");
+    assert.dom(".relative-time-duration").hasValue("2");
+    assert.strictEqual(testState.minutes, 2, "onChange called with 2");
+
+    // type >60 minutes
+    await fillIn(".relative-time-duration", "90");
+    assert.dom(".relative-time-duration").hasValue("1.5");
+    assert.strictEqual(testState.minutes, 90, "onChange called with 90");
+    assert.strictEqual(
+      selectKit().header().value(),
+      "hours",
+      "automatically changes the dropdown to 'hours'"
+    );
   });
 
   test("updates the input when args change", async function (assert) {
