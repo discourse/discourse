@@ -12,8 +12,8 @@ function roundDuration(duration) {
   let rounded = parseFloat(duration.toFixed(1));
   rounded = Math.round(rounded * 2) / 2;
 
-  // showing 2.00 instead of just 2 in the input is weird
-  return rounded % 1 === 0 ? parseInt(rounded, 10) : rounded;
+  // don't show decimal point for fraction-less numbers
+  return rounded % 1 === 0 ? rounded.toFixed(0) : rounded;
 }
 
 function inputValueFromMinutes(minutes) {
