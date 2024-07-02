@@ -1324,6 +1324,15 @@ class TopicsController < ApplicationController
 
   def self.defer_topic_view(topic_id, ip, user_id = nil)
     Scheduler::Defer.later "Topic View" do
+      topic = Topic.find_by(id: topic_id)
+      return if topic.blank?
+
+      # We need to make sure that we aren't allowing recording
+      # random topic views against topics the user cannot see.
+      user = User.find_by(id: user_id) if user_id.present?
+      return if user_id.present? && user.blank?
+      return if !Guardian.new(user).can_see_topic?(topic)
+
       TopicViewItem.add(topic_id, ip, user_id)
     end
   end
