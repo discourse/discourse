@@ -155,7 +155,15 @@ class Middleware::RequestTracker
     request ||= Rack::Request.new(env)
     helper = Middleware::AnonymousCache::Helper.new(env, request)
 
-    # Value of the discourse-track-view request header
+    # Since ActionDispatch::RemoteIp middleware is run before this middleware,
+    # we have access to the normalised remote IP based on ActionDispatch::RemoteIp::GetIp
+    #
+    # NOTE: Locally with MessageBus requests, the remote IP ends up as ::1 because
+    # of the X-Forwarded-For header set...somewhere, whereas all other requests
+    # end up as 127.0.0.1.
+    request_remote_ip = env["action_dispatch.remote_ip"].to_s
+
+    # Value of the discourse-track-view request header, set in `lib/ajax.js`
     env_track_view = env["HTTP_DISCOURSE_TRACK_VIEW"]
 
     # Was the discourse-track-view request header set to true? Likely
@@ -167,15 +175,21 @@ class Middleware::RequestTracker
       status == 200 && !%w[0 false].include?(env_track_view) && request.get? && !request.xhr? &&
         headers["Content-Type"] =~ %r{text/html}
 
-    # Since ActionDispatch::RemoteIp middleware is run before this middleware,
-    # we have access to the normalised remote IP based on ActionDispatch::RemoteIp::GetIp
-    #
-    # NOTE: Locally with MessageBus requests, the remote IP ends up as ::1 because
-    # of the X-Forwarded-For header set...somewhere, whereas all other requests
-    # end up as 127.0.0.1.
-    request_remote_ip = env["action_dispatch.remote_ip"].to_s
+    # This header is sent on a follow-up request after a real browser loads up a page
+    # see `scripts/pageview.js` and `instance-initializers/page-tracking.js`
+    deferred_track_view = %w[1 true].include?(env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW"])
 
+    # This is treated separately from deferred tracking in #log_request, this is
+    # why deferred_track_view is not counted here.
     track_view = !!(explicit_track_view || implicit_track_view)
+
+    # These are set in the same place as the respective track view headers in the client.
+    topic_id =
+      if deferred_track_view
+        env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_TOPIC_ID"]
+      elsif explicit_track_view || implicit_track_view
+        env["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"]
+      end
 
     auth_cookie = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request)
     auth_cookie ||= Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env)
@@ -187,28 +201,13 @@ class Middleware::RequestTracker
     is_message_bus = request.path.start_with?("#{Discourse.base_path}/message-bus/")
     is_topic_timings = request.path.start_with?("#{Discourse.base_path}/topics/timings")
 
-    # This header is sent on a follow-up request after a real browser loads up a page
-    # see `scripts/pageview.js` and `instance-initializers/page-tracking.js`
-    has_deferred_track_header = %w[1 true].include?(env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW"])
-
-    # Only a small handful of routes will count for topic views, we need to check
-    # the path/referrer to determine this.
-    is_topic_view, topic_id =
-      (
-        if has_deferred_track_header
-          extract_topic_params_deferred_track(env, request)
-        else
-          extract_topic_params_explicit_track(env, request)
-        end
-      )
-
     # Auth cookie can be used to find the ID for logged in users, but API calls must look up the
     # current user based on env variables.
     #
     # We only care about this for topic views, other pageviews it's enough to know if the user is
     # logged in or not, and we have separate pageview tracking for API views.
     current_user_id =
-      if is_topic_view
+      if topic_id.present?
         begin
           (auth_cookie&.[](:user_id) || CurrentUser.lookup_from_env(env)&.id)
         rescue Discourse::InvalidAccess => err
@@ -235,7 +234,7 @@ class Middleware::RequestTracker
       timing: timing,
       queue_seconds: env["REQUEST_QUEUE_SECONDS"],
       explicit_track_view: explicit_track_view,
-      deferred_track: has_deferred_track_header,
+      deferred_track: deferred_track_view,
       request_remote_ip: request_remote_ip,
     }
 
@@ -264,52 +263,6 @@ class Middleware::RequestTracker
     end
 
     h
-  end
-
-  def self.extract_topic_params_deferred_track(env, request)
-    is_topic_view = request.referer&.start_with?("#{Discourse.base_url}/t/")
-    topic_id = nil
-
-    if is_topic_view
-      path = request.referer.gsub(Discourse.base_url, "")
-      topic_id = topic_id_from_path(path, "GET")
-    end
-
-    [is_topic_view, topic_id]
-  end
-
-  def self.extract_topic_params_explicit_track(env, request)
-    is_topic_view = request.path.start_with?("#{Discourse.base_path}/t/")
-    topic_id = nil
-
-    if is_topic_view
-      path = request.path.sub(Discourse.base_path, "")
-      topic_id = topic_id_from_path(path, request.request_method)
-    end
-
-    [is_topic_view, topic_id]
-  end
-
-  # Method is important to pass in, because when we are doing a deferred
-  # view we are relying on the message bus poll request, which is a GET,
-  # but at all other times we want to use the real request method. If we
-  # don't use the correct method, Rails will fail to recognize the route.
-  def self.topic_id_from_path(path, method)
-    begin
-      topic_params = Rails.application.routes.recognize_path(path, method: method)
-      (topic_params[:topic_id] || topic_params[:id])&.to_i
-    rescue ActionController::RoutingError => err
-      # We don't want to stop the whole request because of a routing error
-      Discourse.warn_exception(
-        err,
-        message: "RequestTracker.get_data failed with a topic routing error",
-      )
-
-      # This is super hard to find if in testing, we should still raise in this case.
-      raise err if Rails.env.test?
-
-      nil
-    end
   end
 
   def log_request_info(env, result, info, request = nil)

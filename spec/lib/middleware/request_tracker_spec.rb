@@ -261,15 +261,17 @@ RSpec.describe Middleware::RequestTracker do
       use_redis_snapshotting
 
       def log_topic_view(authenticated: false, deferred: false)
-        headers = { "HTTP_REFERER" => topic.url, "action_dispatch.remote_ip" => "127.0.0.1" }
+        headers = { "action_dispatch.remote_ip" => "127.0.0.1" }
 
         headers["HTTP_COOKIE"] = "_t=#{auth_cookie};" if authenticated
 
         if deferred
           headers["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW"] = "1"
+          headers["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_TOPIC_ID"] = topic.id
           path = "/message-bus/abcde/poll"
         else
           headers["HTTP_DISCOURSE_TRACK_VIEW"] = "1"
+          headers["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"] = topic.id
           path = URI.parse(topic.url).path
         end
 
