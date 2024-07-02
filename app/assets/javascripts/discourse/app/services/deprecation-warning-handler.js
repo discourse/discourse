@@ -11,10 +11,12 @@ import I18n from "discourse-i18n";
 // To avoid 'crying wolf', we should only add values here when we're sure they're
 // not being triggered by core or official themes/plugins.
 export const CRITICAL_DEPRECATIONS = [
-  /^discourse.modal-controllers$/,
-  /^discourse.bootbox$/,
-  /^discourse.add-header-panel$/,
-  /^discourse.header-widget-overrides$/,
+  "discourse.modal-controllers",
+  "discourse.bootbox",
+  "discourse.add-header-panel",
+  "discourse.header-widget-overrides",
+  "discourse.plugin-outlet-tag-name",
+  "discourse.plugin-outlet-parent-view",
   /^(?!discourse\.)/, // All unsilenced ember deprecations
 ];
 
@@ -76,7 +78,15 @@ export default class DeprecationWarningHandler extends Service {
       return;
     }
 
-    if (CRITICAL_DEPRECATIONS.some((pattern) => pattern.test(opts.id))) {
+    if (
+      CRITICAL_DEPRECATIONS.some((pattern) => {
+        if (typeof pattern === "string") {
+          return pattern === opts.id;
+        } else {
+          return pattern.test(opts.id);
+        }
+      })
+    ) {
       this.notifyAdmin(opts, source);
     }
   }
