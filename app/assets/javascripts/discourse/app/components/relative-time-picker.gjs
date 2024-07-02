@@ -19,13 +19,13 @@ function roundDuration(duration) {
 function inputValueFromMinutes(minutes) {
   if (!minutes) {
     return null;
-  } else if (minutes >= 525600) {
+  } else if (minutes > 525600) {
     return roundDuration(minutes / 365 / 60 / 24);
-  } else if (minutes >= 43800) {
+  } else if (minutes > 43800) {
     return roundDuration(minutes / 30 / 60 / 24);
-  } else if (minutes >= 1440) {
+  } else if (minutes > 1440) {
     return roundDuration(minutes / 60 / 24);
-  } else if (minutes >= 60) {
+  } else if (minutes > 60) {
     return roundDuration(minutes / 60);
   } else {
     return minutes;
@@ -33,13 +33,13 @@ function inputValueFromMinutes(minutes) {
 }
 
 function intervalFromMinutes(minutes) {
-  if (minutes >= 525600) {
+  if (minutes > 525600) {
     return "years";
-  } else if (minutes >= 43800) {
+  } else if (minutes > 43800) {
     return "months";
-  } else if (minutes >= 1440) {
+  } else if (minutes > 1440) {
     return "days";
-  } else if (minutes >= 60) {
+  } else if (minutes > 60) {
     return "hours";
   } else {
     return "mins";
