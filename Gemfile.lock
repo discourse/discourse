@@ -205,8 +205,6 @@ GEM
       railties (>= 4)
       request_store (~> 1.0)
     logstash-event (1.2.02)
-    logstash-logger (0.26.1)
-      logstash-event (~> 1.2)
     logster (2.19.1)
     loofah (2.22.0)
       crass (~> 1.0.2)
@@ -613,7 +611,6 @@ DEPENDENCIES
   listen
   lograge
   logstash-event
-  logstash-logger
   logster
   loofah
   lru_redux

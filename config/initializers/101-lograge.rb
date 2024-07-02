@@ -101,18 +101,28 @@ Rails.application.config.to_prepare do
           end
         end
 
-      if ENV["LOGSTASH_URI"]
+      if ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
         config.lograge.formatter = Lograge::Formatters::Logstash.new
 
         require "discourse_logstash_logger"
 
         config.lograge.logger =
-          DiscourseLogstashLogger.logger(uri: ENV["LOGSTASH_URI"], type: :rails)
+          DiscourseLogstashLogger.logger(
+            logdev: Rails.root.join("log", "#{Rails.env}.log"),
+            type: :rails,
+            customize_event:
+              lambda do |event|
+                event["database"] = RailsMultisite::ConnectionManagement.current_db
+              end,
+          )
 
-        # Remove ActiveSupport::Logger from the chain and replace with Lograge's
-        # logger
-        Rails.logger.chained.pop
-        Rails.logger.chain(config.lograge.logger)
+        # Remove ActiveSupport::Logger from the chain to avoid duplicated logging
+        # Reach into instance variable but this will be irrelevant once we upgrade to Rails 7.1 which is happening soon.
+        Logster.logger.instance_variable_get(:@chained).delete(Logster.logger.chained.first)
+
+        Logster.logger.subscribe do |severity, progname, message, opts, &block|
+          config.lograge.logger.add_with_opts(severity, message, progname, opts, &block)
+        end
       end
     end
   end
