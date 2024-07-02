@@ -1,4 +1,4 @@
-/* 
+/*
 * shared styles
 */
 .d-modal.login-modal,
@@ -82,7 +82,17 @@
   }
 
   #login-form {
-    margin: 3em 0 2em 0;
+    margin: 3em 0 1.2em 0;
+    display: flex;
+    flex-direction: column;
+
+    .input-group {
+      &.create-account-email,
+      &.create-account__username,
+      &.create-account__fullname.required {
+        order: -1;
+      }
+    }
   }
 
   .tip {
@@ -164,9 +174,18 @@
     }
     &__footer-buttons {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
+      width: 100%;
       align-items: center;
-      gap: 0.5rem;
+      .already-have-account {
+        color: var(--primary-medium);
+        margin-bottom: 0.5em;
+      }
+
+      button,
+      hr {
+        width: 100%;
+      }
     }
   }
 

@@ -13,7 +13,7 @@ describe "Create account", type: :system do
 
     find("#new-account-password").fill_in with: "secret-password"
 
-    click_button "Create your account"
+    find(".d-modal.create-account").click_button "Sign Up"
     expect(page).to have_no_css(".d-modal.create-account")
 
     user = User.last
