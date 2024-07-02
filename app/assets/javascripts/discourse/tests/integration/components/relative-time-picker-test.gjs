@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { render, settled, typeIn } from "@ember/test-helpers";
+import { fillIn, render, settled, typeIn } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -15,27 +15,44 @@ module("Integration | Component | relative-time-picker", function (hooks) {
       <RelativeTimePicker @onChange={{update}} />
     </template>);
 
-    assert.strictEqual(selectKit().header().value(), "mins");
+    assert.strictEqual(
+      selectKit().header().value(),
+      "mins",
+      "dropdown has 'minutes' preselected"
+    );
     assert.dom(".relative-time-duration").hasValue("");
 
     await typeIn(".relative-time-duration", "50");
     assert.dom(".relative-time-duration").hasValue("50");
-    assert.strictEqual(updatedValue, 50);
+    assert.strictEqual(updatedValue, 50, "onChange called with 50");
 
     await selectKit().expand();
     await selectKit().selectRowByValue("hours");
     assert.dom(".relative-time-duration").hasValue("50");
-    assert.strictEqual(updatedValue, 50 * 60);
+    assert.strictEqual(updatedValue, 50 * 60, "onChange called with 50 * 60");
+
+    await fillIn(".relative-time-duration", "");
+    assert.dom(".relative-time-duration").hasValue("");
+    assert.strictEqual(updatedValue, null, "onChange called with null");
 
     await typeIn(".relative-time-duration", "30");
-    assert.strictEqual(selectKit().header().value(), "hours");
+    assert.strictEqual(
+      selectKit().header().value(),
+      "hours",
+      "dropdown has 'hours' selected"
+    );
     assert.dom(".relative-time-duration").hasValue("30");
-    assert.strictEqual(updatedValue, 30 * 60);
+    assert.strictEqual(updatedValue, 30 * 60, "onChange called with 30 * 60");
 
     await selectKit().expand();
     await selectKit().selectRowByValue("mins");
     assert.dom(".relative-time-duration").hasValue("30");
-    assert.strictEqual(updatedValue, 30);
+    assert.strictEqual(updatedValue, 30, "onChange called with 30");
+
+    await fillIn(".relative-time-duration", "");
+    await typeIn(".relative-time-duration", "800");
+    assert.dom(".relative-time-duration").hasValue("13.5");
+    assert.strictEqual(updatedValue, 800, "onChange called with 800");
   });
 
   test("updates the input when args change", async function (assert) {
