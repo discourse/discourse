@@ -1297,7 +1297,6 @@ class TopicsController < ApplicationController
     topic_id = @topic_view.topic.id
     ip = request.remote_ip
     user_id = (current_user.id if current_user)
-    track_visit = should_track_visit_to_topic?
 
     if !request.format.json?
       hash = {
@@ -1314,12 +1313,12 @@ class TopicsController < ApplicationController
       TopicsController.defer_add_incoming_link(hash)
     end
 
-    TopicsController.defer_track_visit(topic_id, user_id, track_visit)
+    TopicsController.defer_track_visit(topic_id, user_id) if should_track_visit_to_topic?
   end
 
-  def self.defer_track_visit(topic_id, user_id, track_visit)
+  def self.defer_track_visit(topic_id, user_id)
     Scheduler::Defer.later "Track Visit" do
-      TopicUser.track_visit!(topic_id, user_id) if track_visit
+      TopicUser.track_visit!(topic_id, user_id)
     end
   end
 
