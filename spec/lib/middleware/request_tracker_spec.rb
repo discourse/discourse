@@ -243,6 +243,204 @@ RSpec.describe Middleware::RequestTracker do
       expect(ApplicationRequest.page_view_anon.first.count).to eq(1)
     end
 
+    describe "topic views" do
+      fab!(:topic)
+      fab!(:post) { Fabricate(:post, topic: topic) }
+      fab!(:user) { Fabricate(:user, active: true) }
+
+      let!(:auth_cookie) do
+        token = UserAuthToken.generate!(user_id: user.id)
+        create_auth_cookie(
+          token: token.unhashed_auth_token,
+          user_id: user.id,
+          trust_level: user.trust_level,
+          issued_at: 5.minutes.ago,
+        )
+      end
+
+      use_redis_snapshotting
+
+      def log_topic_view(authenticated: false, deferred: false)
+        headers = { "action_dispatch.remote_ip" => "127.0.0.1" }
+
+        headers["HTTP_COOKIE"] = "_t=#{auth_cookie};" if authenticated
+
+        if deferred
+          headers["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW"] = "1"
+          headers["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_TOPIC_ID"] = topic.id
+          path = "/message-bus/abcde/poll"
+        else
+          headers["HTTP_DISCOURSE_TRACK_VIEW"] = "1"
+          headers["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"] = topic.id
+          path = URI.parse(topic.url).path
+        end
+
+        data =
+          Middleware::RequestTracker.get_data(
+            env(path: path, **headers),
+            ["200", { "Content-Type" => "text/html" }],
+            0.1,
+          )
+        Middleware::RequestTracker.log_request(data)
+        data
+      end
+
+      it "logs deferred topic views correctly for logged in users" do
+        data = log_topic_view(authenticated: true, deferred: true)
+
+        expect(data[:topic_id]).to eq(topic.id)
+        expect(data[:request_remote_ip]).to eq("127.0.0.1")
+        expect(data[:current_user_id]).to eq(user.id)
+        CachedCounting.flush
+
+        expect(TopicViewItem.exists?(topic_id: topic.id, user_id: user.id, ip_address: nil)).to eq(
+          true,
+        )
+        expect(
+          TopicViewStat.exists?(
+            topic_id: topic.id,
+            anonymous_views: 0,
+            logged_in_views: 1,
+            viewed_at: Time.zone.now.to_date,
+          ),
+        ).to eq(true)
+      end
+
+      it "does not log deferred topic views for topics the user cannot access" do
+        topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+        log_topic_view(authenticated: true, deferred: true)
+        CachedCounting.flush
+        expect(TopicViewItem.exists?(topic_id: topic.id, user_id: user.id, ip_address: nil)).to eq(
+          false,
+        )
+        expect(
+          TopicViewStat.exists?(
+            topic_id: topic.id,
+            anonymous_views: 0,
+            logged_in_views: 1,
+            viewed_at: Time.zone.now.to_date,
+          ),
+        ).to eq(false)
+      end
+
+      it "logs deferred topic views correctly for anonymous" do
+        data = log_topic_view(authenticated: false, deferred: true)
+
+        expect(data[:topic_id]).to eq(topic.id)
+        expect(data[:request_remote_ip]).to eq("127.0.0.1")
+        expect(data[:current_user_id]).to eq(nil)
+        CachedCounting.flush
+
+        expect(
+          TopicViewItem.exists?(topic_id: topic.id, user_id: nil, ip_address: "127.0.0.1"),
+        ).to eq(true)
+        expect(
+          TopicViewStat.exists?(
+            topic_id: topic.id,
+            anonymous_views: 1,
+            logged_in_views: 0,
+            viewed_at: Time.zone.now.to_date,
+          ),
+        ).to eq(true)
+      end
+
+      it "does not log deferred topic views for topics the anonymous user cannot access" do
+        topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+        log_topic_view(authenticated: false, deferred: true)
+        CachedCounting.flush
+
+        expect(
+          TopicViewItem.exists?(topic_id: topic.id, user_id: nil, ip_address: "127.0.0.1"),
+        ).to eq(false)
+        expect(
+          TopicViewStat.exists?(
+            topic_id: topic.id,
+            anonymous_views: 1,
+            logged_in_views: 0,
+            viewed_at: Time.zone.now.to_date,
+          ),
+        ).to eq(false)
+      end
+
+      it "logs explicit topic views correctly for logged in users" do
+        data = log_topic_view(authenticated: true, deferred: false)
+
+        expect(data[:topic_id]).to eq(topic.id)
+        expect(data[:request_remote_ip]).to eq("127.0.0.1")
+        expect(data[:current_user_id]).to eq(user.id)
+        CachedCounting.flush
+
+        expect(TopicViewItem.exists?(topic_id: topic.id, user_id: user.id, ip_address: nil)).to eq(
+          true,
+        )
+        expect(
+          TopicViewStat.exists?(
+            topic_id: topic.id,
+            anonymous_views: 0,
+            logged_in_views: 1,
+            viewed_at: Time.zone.now.to_date,
+          ),
+        ).to eq(true)
+      end
+
+      it "does not log explicit topic views for topics the user cannot access" do
+        topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+        log_topic_view(authenticated: true, deferred: false)
+        CachedCounting.flush
+
+        expect(TopicViewItem.exists?(topic_id: topic.id, user_id: user.id, ip_address: nil)).to eq(
+          false,
+        )
+        expect(
+          TopicViewStat.exists?(
+            topic_id: topic.id,
+            anonymous_views: 0,
+            logged_in_views: 1,
+            viewed_at: Time.zone.now.to_date,
+          ),
+        ).to eq(false)
+      end
+
+      it "logs explicit topic views correctly for anonymous" do
+        data = log_topic_view(authenticated: false, deferred: false)
+
+        expect(data[:topic_id]).to eq(topic.id)
+        expect(data[:request_remote_ip]).to eq("127.0.0.1")
+        expect(data[:current_user_id]).to eq(nil)
+        CachedCounting.flush
+
+        expect(
+          TopicViewItem.exists?(topic_id: topic.id, user_id: nil, ip_address: "127.0.0.1"),
+        ).to eq(true)
+        expect(
+          TopicViewStat.exists?(
+            topic_id: topic.id,
+            anonymous_views: 1,
+            logged_in_views: 0,
+            viewed_at: Time.zone.now.to_date,
+          ),
+        ).to eq(true)
+      end
+
+      it "does not log explicit topic views for topics the anonymous user cannot access" do
+        topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+        log_topic_view(authenticated: false, deferred: false)
+        CachedCounting.flush
+
+        expect(
+          TopicViewItem.exists?(topic_id: topic.id, user_id: nil, ip_address: "127.0.0.1"),
+        ).to eq(false)
+        expect(
+          TopicViewStat.exists?(
+            topic_id: topic.id,
+            anonymous_views: 1,
+            logged_in_views: 0,
+            viewed_at: Time.zone.now.to_date,
+          ),
+        ).to eq(false)
+      end
+    end
+
     context "when ignoring anonymous page views" do
       let(:anon_data) do
         Middleware::RequestTracker.get_data(
