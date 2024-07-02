@@ -97,21 +97,6 @@ export default {
         },
       });
 
-      const canSummarize =
-        this.siteSettings.summarization_strategy &&
-        this.currentUser &&
-        this.currentUser.can_summarize;
-
-      if (canSummarize) {
-        api.registerChatComposerButton({
-          translatedLabel: "chat.summarization.title",
-          id: "channel-summary",
-          icon: "discourse-sparkles",
-          position: "dropdown",
-          action: "showChannelSummaryModal",
-        });
-      }
-
       // we want to decorate the chat quote dates regardless
       // of whether the current user has chat enabled
       api.decorateCookedElement((elem) => {
