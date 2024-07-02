@@ -18,7 +18,7 @@ class SpamRule::FlagSockpuppets
 
   def reply_is_from_sockpuppet?
     return false if @post.try(:post_number) == 1
-    return false if first_post.user.nil?
+    return false if first_post.user.nil? || first_post.user_id == Discourse::SYSTEM_USER_ID
 
     !first_post.user.staff? && !@post.user.staff? && !first_post.user.staged? &&
       !@post.user.staged? && @post.user != first_post.user &&

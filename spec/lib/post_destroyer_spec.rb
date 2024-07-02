@@ -176,9 +176,14 @@ RSpec.describe PostDestroyer do
       post = Fabricate(:post)
       UserDestroyer.new(Discourse.system_user).destroy(post.user, delete_posts: true)
 
-      expect { PostDestroyer.new(admin, post.reload).recover }.to change { post.reload.user_id }.to(
-        Discourse.system_user.id,
-      ).and change { post.topic.user_id }.to(Discourse.system_user.id)
+      post.reload
+      PostDestroyer.new(admin, post).recover
+
+      post.reload
+      expect(post.deleted_at).to eq(nil)
+      expect(post.user_id).to eq(Discourse::SYSTEM_USER_ID)
+      expect(post.topic.deleted_at).to eq(nil)
+      expect(post.topic.user_id).to eq(Discourse::SYSTEM_USER_ID)
     end
 
     it "bypassed validation when updating users" do
