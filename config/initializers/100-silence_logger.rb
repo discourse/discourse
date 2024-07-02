@@ -20,16 +20,16 @@ class SilenceLogger < Rails::Rack::Logger
     if env[HTTP_X_SILENCE_LOGGER] || @opts[:silenced].include?(path_info) ||
          path_info.start_with?("/logs") || path_info.start_with?("/user_avatar") ||
          path_info.start_with?("/letter_avatar")
-      if ::Logster::Logger === Rails.logger
+      if defined?(::Logster::Logger) && Logster.logger
         override = true
-        Rails.logger.override_level = Logger::WARN
+        Logster.logger.override_level = Logger::WARN
       end
       @app.call(env)
     else
-      super(env)
+      super
     end
   ensure
-    Rails.logger.override_level = nil if override
+    Logster.logger.override_level = nil if override
   end
 end
 

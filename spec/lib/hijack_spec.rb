@@ -14,7 +14,7 @@ RSpec.describe Hijack do
       self.request = ActionController::TestRequest.new(env, nil, nil)
 
       # we need this for the 418
-      self.response = ActionDispatch::Response.new
+      set_response!(ActionDispatch::Response.new)
     end
 
     def hijack_test(&blk)
@@ -22,12 +22,10 @@ RSpec.describe Hijack do
     end
   end
 
-  let :tester do
-    Hijack::Tester.new
-  end
+  let(:tester) { Hijack::Tester.new }
 
   describe "Request Tracker integration" do
-    let :logger do
+    let(:logger) do
       lambda do |env, data|
         @calls += 1
         @status = data[:status]
@@ -181,7 +179,7 @@ RSpec.describe Hijack do
     end
 
     result =
-      "HTTP/1.1 302 Found\r\nLocation: http://awesome.com\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 84\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\n<html><body>You are being <a href=\"http://awesome.com\">redirected</a>.</body></html>"
+      "HTTP/1.1 302 Found\r\nLocation: http://awesome.com\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 0\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\n"
     expect(tester.io.string).to eq(result)
   end
 

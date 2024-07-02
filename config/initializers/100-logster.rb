@@ -2,7 +2,7 @@
 
 if GlobalSetting.skip_redis?
   Rails.application.reloader.to_prepare do
-    Rails.logger = Rails.logger.chained.first if Rails.logger.respond_to? :chained
+    Rails.logger.stop_broadcasting_to(Logster.logger) if defined?(Logster::Logger) && Logster.logger
   end
   return
 end
@@ -10,12 +10,12 @@ end
 if Rails.env.development? && !Sidekiq.server? && ENV["RAILS_LOGS_STDOUT"] == "1"
   Rails.application.config.after_initialize do
     console = ActiveSupport::Logger.new(STDOUT)
-    original_logger = Rails.logger.chained.first
+    original_logger = Rails.logger.broadcasts.first
     console.formatter = original_logger.formatter
     console.level = original_logger.level
 
     unless ActiveSupport::Logger.logger_outputs_to?(original_logger, STDOUT)
-      original_logger.extend(ActiveSupport::Logger.broadcast(console))
+      Rails.logger.broadcast_to(console)
     end
   end
 end
@@ -118,10 +118,7 @@ RailsMultisite::ConnectionManagement.each_connection do
 end
 
 if Rails.configuration.multisite
-  if Rails.logger.respond_to? :chained
-    chained = Rails.logger.chained
-    chained && chained.first.formatter = RailsMultisite::Formatter.new
-  end
+  Rails.logger.broadcasts.first.formatter = RailsMultisite::Formatter.new
 end
 
 Logster.config.project_directories = [

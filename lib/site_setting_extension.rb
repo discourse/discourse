@@ -283,7 +283,7 @@ module SiteSettingExtension
   end
 
   def description(setting)
-    I18n.t("site_settings.#{setting}", base_path: Discourse.base_path)
+    I18n.t("site_settings.#{setting}", base_path: Discourse.base_path, default: "")
   end
 
   def keywords(setting)
