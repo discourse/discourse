@@ -1,0 +1,20 @@
+.form-kit__control-menu {
+  @include default-input;
+}
+
+.fk-d-menu {
+  .dropdown-menu {
+    min-width: 200px;
+  }
+  .dropdown-menu__item {
+    &:hover {
+      background: var(--d-hover);
+    }
+
+    &:last-child {
+      .btn {
+        color: var(--tertiary);
+      }
+    }
+  }
+}

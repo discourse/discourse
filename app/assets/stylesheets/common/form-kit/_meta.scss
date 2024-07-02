@@ -1,0 +1,16 @@
+.form-kit__meta {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: start;
+  gap: 0.25em;
+  font-size: var(--font-down-2-rem);
+  color: var(--primary-high);
+  width: 100%;
+  min-height: 20px;
+  line-height: var(--line-height-medium);
+
+  &-description {
+    margin: 0;
+  }
+}

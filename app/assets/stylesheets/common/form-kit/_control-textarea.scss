@@ -1,0 +1,15 @@
+.form-kit__control-textarea {
+  @include default-input;
+
+  // reset textarea styles
+  width: 100% !important;
+  margin: 0 !important;
+  min-width: auto !important;
+  padding: 0.5em !important;
+
+  // prevents firefox/chrome to add spacing under textarea
+  display: block;
+
+  height: 150px !important;
+  border-radius: var(--d-input-border-radius);
+}

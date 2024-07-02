@@ -5,7 +5,6 @@ import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
 import I18n from "discourse-i18n";
 import BadgePreviewModal from "../../components/modal/badge-preview";
-import EditBadgeGroupingsModal from "../../components/modal/edit-badge-groupings";
 
 export default class AdminBadgesShowRoute extends Route {
   @service dialog;
@@ -27,24 +26,10 @@ export default class AdminBadgesShowRoute extends Route {
     );
   }
 
-  setupController(controller, model) {
+  setupController(controller) {
     super.setupController(...arguments);
-    if (model.image_url) {
-      controller.showImageUploader();
-    } else if (model.icon) {
-      controller.showIconSelector();
-    }
-  }
 
-  @action
-  editGroupings() {
-    const model = this.controllerFor("admin-badges").get("badgeGroupings");
-    this.modal.show(EditBadgeGroupingsModal, {
-      model: {
-        badgeGroupings: model,
-        updateGroupings: this.updateGroupings,
-      },
-    });
+    controller.setup();
   }
 
   @action

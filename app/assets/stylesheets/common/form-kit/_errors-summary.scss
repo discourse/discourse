@@ -1,0 +1,15 @@
+.form-kit__errors-summary {
+  padding: 1em;
+  border: 1px solid var(--danger);
+  background-color: var(--danger-low);
+  width: 100%;
+  border-radius: var(--d-border-radius);
+
+  .d-icon-exclamation-triangle {
+    color: var(--danger);
+  }
+
+  ul {
+    margin-block: 0;
+  }
+}

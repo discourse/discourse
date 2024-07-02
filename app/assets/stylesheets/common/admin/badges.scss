@@ -1,6 +1,7 @@
 // Styles for admin/badges
 .admin-badges {
   // flex page layout
+
   .badges {
     display: flex;
     flex-wrap: wrap;
@@ -10,6 +11,9 @@
       flex: 1 0 100%;
       .create-new-badge {
         margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
       }
     }
     .content-list {
@@ -60,66 +64,47 @@
       background-color: unset;
     }
   }
+
+  .current-badge-header {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    font-size: var(--font-up-2-rem);
+
+    img {
+      border-radius: var(--d-border-radius-large);
+      max-width: 36px;
+    }
+
+    .d-icon {
+      font-size: 36px;
+    }
+
+    .badge-display-name {
+      font-size: var(--font-up-1);
+      font-weight: bold;
+      word-break: break-word;
+    }
+  }
+
   .current-badge {
     margin: 20px;
-    p.help {
-      margin: 0;
-      margin-top: 5px;
-      color: var(--primary-medium);
-      font-size: var(--font-down-1);
-    }
-    .badge-grouping-control {
-      display: flex;
-      align-items: center;
-      .badge-selector {
-        margin-right: 5px;
+
+    .form-kit__field-question {
+      .form-kit__control-radio-label {
+        text-transform: capitalize;
       }
     }
 
-    .icon-picker {
-      width: 350px;
+    .readonly-field {
+      color: var(--primary-high);
     }
   }
-  .current-badge {
-    .ace-wrapper {
-      position: relative;
-      height: 270px;
-      .ace_editor {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-      }
-      &[data-disabled="true"] {
-        cursor: not-allowed;
-        opacity: 0.5;
-        .ace_editor {
-          pointer-events: none;
-          .ace_cursor {
-            visibility: hidden;
-          }
-        }
-      }
-    }
-    textarea {
-      height: 200px;
-    }
-  }
+
   .current-badge-actions {
     margin: 10px;
     padding: 10px;
     border-top: 1px solid var(--primary-low);
-  }
-  .buttons {
-    display: flex;
-    align-items: center;
-    button {
-      margin-right: 0.5em;
-    }
-    .saving {
-      order: 3;
-    }
   }
 }
 
@@ -188,10 +173,15 @@
 
 // badge preview modal
 .badge-query-preview {
+  .badge-query-plan {
+    overflow-x: auto;
+  }
+
   .badge-errors,
   .badge-query-plan {
     padding: 5px;
     background-color: var(--primary-low);
+    white-space: pre-wrap;
   }
   .count-warning {
     background-color: var(--danger-low);
