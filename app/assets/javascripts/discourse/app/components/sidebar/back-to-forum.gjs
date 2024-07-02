@@ -1,28 +1,17 @@
-import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
-import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
 import { defaultHomepage } from "discourse/lib/utilities";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 
-export default class BackToForum extends Component {
-  @service sidebarState;
+const BackToForum = <template>
+  <LinkTo
+    @route="discovery.{{(defaultHomepage)}}"
+    class="sidebar-sections__back-to-forum"
+  >
+    {{icon "arrow-left"}}
 
-  get shouldDisplay() {
-    return this.sidebarState.isCurrentPanel(ADMIN_PANEL);
-  }
+    <span>{{i18n "sidebar.back_to_forum"}}</span>
+  </LinkTo>
+</template>;
 
-  <template>
-    {{#if this.shouldDisplay}}
-      <LinkTo
-        @route="discovery.{{(defaultHomepage)}}"
-        class="sidebar-sections__back-to-forum"
-      >
-        {{icon "arrow-left"}}
-
-        <span>{{i18n "admin.back_to_forum"}}</span>
-      </LinkTo>
-    {{/if}}
-  </template>
-}
+export default BackToForum;

@@ -7,6 +7,7 @@ import {
   currentPanelKey,
   customPanels as panels,
 } from "discourse/lib/sidebar/custom-sections";
+import { getCollapsedSidebarSectionKey } from "discourse/lib/sidebar/helpers";
 import {
   COMBINED_MODE,
   MAIN_PANEL,
@@ -81,13 +82,15 @@ export default class SidebarState extends Service {
   }
 
   collapseSection(sectionKey) {
-    const collapsedSidebarSectionKey = `sidebar-section-${sectionKey}-collapsed`;
+    const collapsedSidebarSectionKey =
+      getCollapsedSidebarSectionKey(sectionKey);
     this.keyValueStore.setItem(collapsedSidebarSectionKey, true);
     this.collapsedSections.add(collapsedSidebarSectionKey);
   }
 
   expandSection(sectionKey) {
-    const collapsedSidebarSectionKey = `sidebar-section-${sectionKey}-collapsed`;
+    const collapsedSidebarSectionKey =
+      getCollapsedSidebarSectionKey(sectionKey);
     this.keyValueStore.setItem(collapsedSidebarSectionKey, false);
     this.collapsedSections.delete(collapsedSidebarSectionKey);
   }

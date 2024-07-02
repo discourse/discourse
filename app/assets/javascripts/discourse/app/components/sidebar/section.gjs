@@ -5,6 +5,10 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import {
+  getCollapsedSidebarSectionKey,
+  getSidebarSectionContentID,
+} from "discourse/lib/sidebar/helpers";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
@@ -16,8 +20,10 @@ export default class SidebarSection extends Component {
   @service keyValueStore;
   @service sidebarState;
 
-  sidebarSectionContentID = `sidebar-section-content-${this.args.sectionName}`;
-  collapsedSidebarSectionKey = `sidebar-section-${this.args.sectionName}-collapsed`;
+  sidebarSectionContentID = getSidebarSectionContentID(this.args.sectionName);
+  collapsedSidebarSectionKey = getCollapsedSidebarSectionKey(
+    this.args.sectionName
+  );
 
   willDestroy() {
     super.willDestroy(...arguments);
