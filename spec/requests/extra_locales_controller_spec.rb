@@ -177,6 +177,15 @@ RSpec.describe ExtraLocalesController do
         end
       end
     end
+
+    context "when requesting MessageFormat translations" do
+      before { JsLocaleHelper.stubs(:output_MF).with("en").returns("MF_TRANSLATIONS") }
+
+      it "returns the translations properly" do
+        get "/extra-locales/mf"
+        expect(response.body).to eq("MF_TRANSLATIONS")
+      end
+    end
   end
 
   describe ".bundle_js_hash" do
