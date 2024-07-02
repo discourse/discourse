@@ -1,4 +1,42 @@
-{{#each (array this.model) as |model|}}
+<div class="badge-form current-badge content-body">
+  <Form as |form data|>
+    {{#if data.foo}}
+      <span>Foo:</span>
+      {{#each data.foo as |f index|}}
+        <span>index ({{index}}): bar -> {{f.bar}}, baz -> {{f.baz}}</span>
+      {{/each}}
+    {{/if}}
+
+    <form.Button @icon="plus" @action={{fn form.push "foo"}} />
+
+    <form.Collection @name="foo" as |collection index|>
+      <form.Button
+        class="btn-danger"
+        @icon="trash-alt"
+        @action={{fn collection.remove index}}
+      />
+      <form.Section @title={{concat "Foo #" index}}>
+        <collection.Field
+          @name="bar"
+          @title="Bar"
+          @validation="required"
+          as |field|
+        >
+          <field.Input />
+        </collection.Field>
+        <collection.Field @name="baz" @title="Baz" as |field|>
+          <field.Checkbox>Accept baz</field.Checkbox>
+        </collection.Field>
+
+        <hr />
+      </form.Section>
+    </form.Collection>
+
+    <form.Submit />
+  </Form>
+</div>
+
+{{!-- {{#each (array this.model) as |model|}}
   <Form
     @data={{model}}
     @onSubmit={{this.handleSubmit}}
@@ -6,6 +44,7 @@
     class="badge-form current-badge content-body"
     as |form data|
   >
+
     <h1 class="current-badge-header">
       {{iconOrImage data}}
       <span class="badge-display-name">{{data.name}}</span>
@@ -328,4 +367,4 @@
       </div>
     {{/if}}
   </Form>
-{{/each}}
+{{/each}} --}}

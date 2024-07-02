@@ -6,8 +6,8 @@ import i18n from "discourse-common/helpers/i18n";
 import { makeArray } from "discourse-common/lib/helpers";
 
 export default class FKErrorsSummary extends Component {
-  get fields() {
-    return makeArray(this.args.fields);
+  get errors() {
+    return makeArray(this.args.errors);
   }
 
   concatErrors(errors) {
@@ -15,7 +15,7 @@ export default class FKErrorsSummary extends Component {
   }
 
   <template>
-    {{#if (gt this.fields.length 1)}}
+    {{#if (gt this.errors.length 1)}}
       <div class="form-kit__errors-summary" aria-live="assertive" ...attributes>
         <h2 class="form-kit__errors-summary-title">
           {{icon "exclamation-triangle"}}
@@ -23,13 +23,13 @@ export default class FKErrorsSummary extends Component {
         </h2>
 
         <ul class="form-kit__errors-summary-list">
-          {{#each this.fields as |field|}}
+          {{#each this.errors as |error|}}
             <li>
               <a
                 rel="noopener noreferrer"
-                href={{concat "#control-" field.name}}
-              >{{field.title}}</a>:
-              {{this.concatErrors field.errors}}
+                href={{concat "#control-" error.name}}
+              >{{error.name}}</a>:
+              {{error.message}}
             </li>
           {{/each}}
         </ul>

@@ -7,27 +7,26 @@ export default class FKErrors extends Component {
     return this.args.withTitle ?? false;
   }
 
-  get fields() {
-    return makeArray(this.args.fields);
+  get errors() {
+    return makeArray(this.args.errors);
   }
 
-  concatErrors(errors) {
-    return errors.join(", ");
-  }
+  // concatErrors(errors) {
+  //   return errors.join(", ");
+  // }
 
   <template>
+    {{log "errors.gjs" this.errors}}
     <p class="form-kit__errors" id={{@id}} aria-live="assertive" ...attributes>
-      {{#each this.fields as |field|}}
-        {{#if field.hasErrors}}
-          <span>
-            {{icon "exclamation-triangle"}}
-            {{#if this.withTitle}}
-              [{{field.title}}]
-            {{/if}}
-            {{this.concatErrors field.errors}}
-          </span>
-          <br />
-        {{/if}}
+      {{#each this.errors as |error|}}
+        <span>
+          {{icon "exclamation-triangle"}}
+          {{#if this.withTitle}}
+            [{{error.name}}]
+          {{/if}}
+          {{error.message}}
+        </span>
+        <br />
       {{/each}}
     </p>
   </template>

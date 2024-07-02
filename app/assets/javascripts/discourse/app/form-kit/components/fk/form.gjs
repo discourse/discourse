@@ -6,9 +6,11 @@ import { action, set } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { ImmerChangeset } from "ember-immer-changeset";
 import { modifier as modifierFn } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import FKAlert from "discourse/form-kit/components/fk/alert";
+import FKCollection from "discourse/form-kit/components/fk/collection";
 import FKContainer from "discourse/form-kit/components/fk/container";
 import FKControlConditionalContent from "discourse/form-kit/components/fk/control/conditional-content";
 import FKControlInputGroup from "discourse/form-kit/components/fk/control/input-group";
@@ -24,7 +26,6 @@ export default class FKForm extends Component {
   @service dialog;
   @service router;
 
-  @tracked fieldsWithErrors;
   @tracked isLoading = false;
 
   fields = new Map();
@@ -85,52 +86,11 @@ export default class FKForm extends Component {
 
   @cached
   get effectiveData() {
-    const obj = this.args.data ?? {};
+    return new ImmerChangeset(this.args.data ?? {});
 
-    if (this.mutable) {
-      return obj;
-    }
-
-    const { transientData } = this;
-
-    return new Proxy(obj, {
-      get(target, prop) {
-        return prop in transientData
-          ? transientData[prop]
-          : Reflect.get(target, prop);
-      },
-
-      set(target, property, value) {
-        return Reflect.set(transientData, property, value);
-      },
-
-      has(target, prop) {
-        return prop in transientData ? true : Reflect.has(target, prop);
-      },
-
-      getOwnPropertyDescriptor(target, prop) {
-        return Reflect.getOwnPropertyDescriptor(
-          prop in transientData ? transientData : target,
-          prop
-        );
-      },
-
-      ownKeys(target) {
-        return (
-          [...Reflect.ownKeys(target), ...Reflect.ownKeys(transientData)]
-            // return only unique values
-            .filter((value, index, array) => array.indexOf(value) === index)
-        );
-      },
-
-      deleteProperty(target, prop) {
-        if (prop in transientData) {
-          delete transientData[prop];
-        }
-
-        return true;
-      },
-    });
+    // if (this.mutable) {
+    //   return obj;
+    // }
   }
 
   get validateOn() {
@@ -161,17 +121,60 @@ export default class FKForm extends Component {
 
   @action
   addError(name, message) {
-    const field = this.fields.get(name);
-    field?.pushError(message);
+    this.effectiveData.addError({ name, key: name, message });
+    // const field = this.fields.get(name);
+    // field?.pushError(message);
   }
 
   @action
-  async set(key, value) {
+  async push(name, value) {
+    const current = this.effectiveData.get(name) ?? [];
+    this.effectiveData.set(name, current.concat(value ?? {}));
+  }
+
+  @action
+  async remove(name, index) {
+    const current = this.effectiveData.get(name) ?? [];
+
+    const keys = [];
+    for (const [n] of this.fields) {
+      if (n.startsWith(`${name}.${index}`)) {
+        keys.push(n.split(".").pop());
+      }
+    }
+
+    this.effectiveData.set(
+      name,
+      current.filter((_, i) => i !== index)
+    );
+
+    const newMap = new Map();
+    let newIndex = 0;
+    for (const [n, field] of this.fields) {
+      // keys.forEach((key) => {
+      //   if (n.endsWith(`.${key}`)) {
+      //     newMap.set(`${name}.${newIndex}.${key}`, field);
+      //   }
+      // });
+
+      newIndex++;
+    }
+
+    this.fields = newMap;
+
+    this.effectiveData.removeErrors();
+
+    console.log(this.effectiveData, this.fields);
+  }
+
+  @action
+  async set(name, value, { index }) {
     this.isDirtyForm = true;
-    set(this.effectiveData, key, value);
+
+    this.effectiveData.set(name, value);
 
     if (this.fieldValidationEvent === VALIDATION_TYPES.change) {
-      await this.handleFieldValidation(key);
+      await this.handleFieldValidation(name);
     }
 
     await new Promise((resolve) => next(resolve));
@@ -184,9 +187,11 @@ export default class FKForm extends Component {
     }
 
     if (this.fields.has(name)) {
-      throw new Error(
-        `@name="${name}", is already in use. Names of \`<form.Field />\` must be unique!`
-      );
+      // throw new Error(
+      //   `@name="${name}", is already in use. Names of \`<form.Field />\` must be unique!`
+      // );
+
+      return this.fields.get(name);
     }
 
     const fieldModel = new FieldData(name, field);
@@ -220,11 +225,7 @@ export default class FKForm extends Component {
       delete this.transientData[key];
     }
 
-    this.fields.forEach((field) => {
-      field.reset();
-    });
-
-    this.fieldsWithErrors = null;
+    this.effectiveData.removeErrors();
 
     await this.args.onReset?.(this.effectiveData);
 
@@ -263,27 +264,39 @@ export default class FKForm extends Component {
   }
 
   async validate(fields) {
-    this.isLoading = true;
+    // this.isLoading = true;
 
-    try {
+    this.effectiveData.removeErrors();
+
+    await this.effectiveData.validate(async (draftData) => {
       for (const [name, field] of fields) {
-        await field.validate?.(
-          name,
-          this.effectiveData[name],
-          this.effectiveData
-        );
+        await field.validate?.(name, this.effectiveData.get(name), draftData);
+
+        await this.args.validate?.(draftData, {
+          addError: this.addError,
+        });
       }
+    });
 
-      await this.args.validate?.(this.effectiveData, {
-        addError: this.addError,
-      });
+    // try {
+    //   for (const [name, field] of fields) {
+    //     await field.validate?.(
+    //       name,
+    //       this.effectiveData[name],
+    //       this.effectiveData
+    //     );
+    //   }
 
-      this.fieldsWithErrors = Array.from(this.fields.values()).filter(
-        (field) => field.hasErrors
-      );
-    } finally {
-      this.isLoading = false;
-    }
+    //   await this.args.validate?.(this.effectiveData, {
+    //     addError: this.addError,
+    //   });
+
+    //   this.fieldsWithErrors = Array.from(this.fields.values()).filter(
+    //     (field) => field.hasErrors
+    //   );
+    // } finally {
+    //   this.isLoading = false;
+    // }
   }
 
   <template>
@@ -295,7 +308,7 @@ export default class FKForm extends Component {
       {{on "reset" this.onReset}}
       {{this.onValidation this.fieldValidationEvent this.handleFieldValidation}}
     >
-      <FKErrorsSummary @fields={{this.fieldsWithErrors}} />
+      <FKErrorsSummary @errors={{this.effectiveData.errors}} />
 
       {{yield
         (hash
@@ -317,9 +330,22 @@ export default class FKForm extends Component {
           )
           Field=(component
             FKField
+            errors=this.effectiveData.errors
             addError=this.addError
-            data=this.effectiveData
+            data=this.effectiveData.draftData
             set=this.set
+            registerField=this.registerField
+            unregisterField=this.unregisterField
+            triggerRevalidationFor=this.triggerRevalidationFor
+          )
+          Collection=(component
+            FKCollection
+            errors=this.effectiveData.errors
+            addError=this.addError
+            data=this.effectiveData.draftData
+            effectiveData=this.effectiveData
+            set=this.set
+            remove=this.remove
             registerField=this.registerField
             unregisterField=this.unregisterField
             triggerRevalidationFor=this.triggerRevalidationFor
@@ -332,8 +358,9 @@ export default class FKForm extends Component {
             unregisterField=this.unregisterField
           )
           set=this.set
+          push=this.push
         )
-        this.effectiveData
+        this.effectiveData.draftData
       }}
     </form>
   </template>

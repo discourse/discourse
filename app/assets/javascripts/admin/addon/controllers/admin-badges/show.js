@@ -19,6 +19,10 @@ export default class AdminBadgesShowController extends Controller {
   @tracked userBadges;
   @tracked userBadgesAll;
 
+  initialData = {
+    foo: [{ bar: 1 }, { bar: 2 }],
+  };
+
   @action
   currentBadgeGrouping(data) {
     return this.badgeGroupings.find((bg) => bg.id === data.badge_grouping_id)

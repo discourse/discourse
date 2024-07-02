@@ -1,5 +1,3 @@
-import { tracked } from "@glimmer/tracking";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import ValidationParser from "discourse/form-kit/lib/validation-parser";
 import Validator from "discourse/form-kit/lib/validator";
 import uniqueId from "discourse/helpers/unique-id";
@@ -8,8 +6,6 @@ import uniqueId from "discourse/helpers/unique-id";
  * Represents field data for a form.
  */
 export default class FieldData {
-  @tracked errors = new TrackedArray();
-
   /**
    * Unique identifier for the field.
    * @type {string}
@@ -53,11 +49,13 @@ export default class FieldData {
       title,
       showTitle = true,
       triggerRevalidationFor,
+      collectionIndex,
       addError,
     }
   ) {
     this.name = name;
     this.title = title;
+    this.collectionIndex = collectionIndex;
     this.addError = addError;
     this.showTitle = showTitle;
     this.disabled = disabled;
@@ -66,9 +64,9 @@ export default class FieldData {
     this.rules = this.validation ? ValidationParser.parse(validation) : null;
     this.set = (value) => {
       if (onSet) {
-        onSet(value, { set });
+        onSet(value, { set, index: collectionIndex });
       } else {
-        set(this.name, value);
+        set(this.name, value, { index: collectionIndex });
       }
 
       if (this.hasErrors) {
@@ -103,13 +101,9 @@ export default class FieldData {
    * @returns {Promise<Object>} The validation errors.
    */
   async validate(name, value, data) {
-    this.reset();
-
     if (this.disabled) {
       return;
     }
-
-    const validator = new Validator(value, this.rules);
 
     await this.customValidate?.(name, value, {
       data,
@@ -117,18 +111,11 @@ export default class FieldData {
       addError: this.addError,
     });
 
+    const validator = new Validator(value, this.rules);
     const validationErrors = await validator.validate(this.type);
     validationErrors.forEach((message) => {
-      this.pushError(message);
+      this.addError(name, message);
     });
-  }
-
-  /**
-   * Adds an error message to the field.
-   * @param {string} message - The error message.
-   */
-  pushError(message) {
-    this.errors.push(message);
   }
 
   /**
@@ -137,13 +124,6 @@ export default class FieldData {
    * @readonly
    */
   get hasErrors() {
-    return this.errors.length > 0;
-  }
-
-  /**
-   * Resets the errors for the field.
-   */
-  reset() {
-    this.errors = new TrackedArray();
+    return true;
   }
 }

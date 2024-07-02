@@ -75,6 +75,16 @@ export default class FKControlWrapper extends Component {
     return new TrackedObject(props);
   }
 
+  get errors() {
+    return (this.args.errors ?? []).filter(
+      (error) => error.name === this.args.field.name
+    );
+  }
+
+  get hasErrors() {
+    return this.errors.length > 0;
+  }
+
   <template>
     <div
       id={{concat "control-" @field.name}}
@@ -82,7 +92,7 @@ export default class FKControlWrapper extends Component {
         "form-kit__container"
         "form-kit__field"
         (concat "form-kit__field-" this.controlType)
-        (if @field.hasErrors "has-errors")
+        (if this.hasErrors "has-errors")
       }}
       data-disabled={{@field.disabled}}
       data-name={{@field.name}}
@@ -119,8 +129,8 @@ export default class FKControlWrapper extends Component {
           @props={{this.props}}
           id={{@field.id}}
           name={{@field.name}}
-          aria-invalid={{if @field.hasErrors "true"}}
-          aria-describedby={{if @field.hasErrors @field.errorId}}
+          aria-invalid={{if this.hasErrors "true"}}
+          aria-describedby={{if this.hasErrors @field.errorId}}
           ...attributes
           as |components|
         >
@@ -131,6 +141,7 @@ export default class FKControlWrapper extends Component {
           @description={{@description}}
           @value={{@value}}
           @field={{@field}}
+          @errors={{this.errors}}
         />
       </div>
     </div>

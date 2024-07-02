@@ -5,7 +5,7 @@ import FKText from "discourse/form-kit/components/fk/text";
 
 export default class FKMeta extends Component {
   get shouldRenderErrors() {
-    return this.args.field.hasErrors && (this.args.showErrors ?? true);
+    return this.args.errors.length && (this.args.showErrors ?? true);
   }
 
   get shouldRenderCharCounter() {
@@ -29,7 +29,7 @@ export default class FKMeta extends Component {
     {{#if this.shouldRenderMeta}}
       <div class="form-kit__meta">
         {{#if this.shouldRenderErrors}}
-          <FKErrors @id={{@field.errorId}} @fields={{@field}} />
+          <FKErrors @id={{@field.errorId}} @errors={{@errors}} />
         {{else if @description}}
           <FKText class="form-kit__meta-description">{{@description}}</FKText>
         {{/if}}
