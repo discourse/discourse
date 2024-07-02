@@ -79,8 +79,8 @@ export default class AdminFlagsForm extends Component {
       type: "POST",
       data: this.#formData,
     })
-      .then((flag) => {
-        this.site.flagTypes.push(flag);
+      .then((response) => {
+        this.site.flagTypes.push(response.flag);
         this.router.transitionTo("adminConfig.flags");
       })
       .catch((error) => {
@@ -94,11 +94,11 @@ export default class AdminFlagsForm extends Component {
       type: "PUT",
       data: this.#formData,
     })
-      .then((flag) => {
-        this.args.flag.name = flag.name;
-        this.args.flag.description = flag.description;
-        this.args.flag.applies_to = flag.applies_to;
-        this.args.flag.enabled = flag.enabled;
+      .then((response) => {
+        this.args.flag.name = response.flag.name;
+        this.args.flag.description = response.flag.description;
+        this.args.flag.applies_to = response.flag.applies_to;
+        this.args.flag.enabled = response.flag.enabled;
         this.router.transitionTo("adminConfig.flags");
       })
       .catch((error) => {
