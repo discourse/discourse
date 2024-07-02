@@ -146,7 +146,9 @@ export default class RelativeTimePicker extends Component {
 
   @action
   onChangeDuration(event) {
-    this.inputValue = parseFloat(event.target.value);
+    this.inputValue = isBlank(event.target.value)
+      ? null
+      : parseFloat(event.target.value);
     this.duration = this.calculateMinutes();
     this.args.onChange?.(this.duration);
   }
