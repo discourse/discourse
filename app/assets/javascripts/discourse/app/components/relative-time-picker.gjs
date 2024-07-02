@@ -162,7 +162,7 @@ export default class RelativeTimePicker extends Component {
   }
 
   <template>
-    <div class="relative-time-picker">
+    <div class="relative-time-picker" ...attributes>
       <input
         {{didUpdate this.initValues @durationMinutes @durationHours}}
         {{on "change" this.onChangeDuration}}
