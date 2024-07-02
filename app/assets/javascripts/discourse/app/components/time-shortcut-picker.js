@@ -207,16 +207,14 @@ export default Component.extend({
 
   @action
   relativeTimeChanged(relativeTimeMins) {
-    let dateTime = now(this.userTimezone).add(relativeTimeMins, "minutes");
+    const dateTime = now(this.userTimezone).add(relativeTimeMins, "minutes");
 
     this.setProperties({
       selectedDurationMins: relativeTimeMins,
       selectedDatetime: dateTime,
     });
 
-    if (this.onTimeSelected) {
-      this.onTimeSelected(TIME_SHORTCUT_TYPES.RELATIVE, dateTime);
-    }
+    this.onTimeSelected?.(TIME_SHORTCUT_TYPES.RELATIVE, dateTime);
   },
 
   @action
