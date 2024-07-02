@@ -944,8 +944,7 @@ RSpec.describe Stylesheet::Manager do
       expect(content).to match(%r{# sourceMappingURL=[^/]+\.css\.map\?__ws=test\.localhost})
     end
 
-    # Disabled to verify that this is actually the expected behavior
-    xit "generates precompiled CSS with a missing upload" do
+    it "generates precompiled CSS with a missing upload" do
       image = file_from_fixtures("logo.png")
       upload = UploadCreator.new(image, "logo.png").create_for(-1)
 
