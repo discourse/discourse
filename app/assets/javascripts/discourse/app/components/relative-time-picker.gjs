@@ -8,7 +8,7 @@ import { eq } from "truth-helpers";
 import I18n from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
-function roundedDuration(duration) {
+function roundedMinutes(duration) {
   const rounded = parseFloat(duration.toFixed(2));
 
   // showing 2.00 instead of just 2 in the input is weird
@@ -29,28 +29,28 @@ export default class RelativeTimePicker extends Component {
 
     if (durationMinutes) {
       if (durationMinutes >= 525600) {
-        return roundedDuration(durationMinutes / 365 / 60 / 24);
+        return roundedMinutes(durationMinutes / 365 / 60 / 24);
       } else if (durationMinutes >= 43800) {
-        return roundedDuration(durationMinutes / 30 / 60 / 24);
+        return roundedMinutes(durationMinutes / 30 / 60 / 24);
       } else if (durationMinutes >= 1440) {
-        return roundedDuration(durationMinutes / 60 / 24);
+        return roundedMinutes(durationMinutes / 60 / 24);
       } else if (durationMinutes >= 60) {
-        return roundedDuration(durationMinutes / 60);
+        return roundedMinutes(durationMinutes / 60);
       } else {
         return durationMinutes;
       }
     }
 
     if (durationHours >= 8760) {
-      return roundedDuration(durationHours / 365 / 24);
+      return roundedMinutes(durationHours / 365 / 24);
     } else if (durationHours >= 730) {
-      return roundedDuration(durationHours / 30 / 24);
+      return roundedMinutes(durationHours / 30 / 24);
     } else if (durationHours >= 24) {
-      return roundedDuration(durationHours / 24);
+      return roundedMinutes(durationHours / 24);
     } else if (durationHours >= 1) {
       return durationHours;
     } else {
-      return roundedDuration(this.args.durationHours * 60);
+      return roundedMinutes(this.args.durationHours * 60);
     }
   }
 
