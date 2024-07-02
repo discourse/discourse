@@ -5229,6 +5229,7 @@ cs:
         about:
           optional: "(volitelné)"
           update: "Aktualizovat"
+          saved: "uloženo!"
       plugins:
         title: "Pluginy"
         installed: "Nainstalované pluginy"

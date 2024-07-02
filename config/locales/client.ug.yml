@@ -4875,6 +4875,7 @@ ug:
           city_for_disputes: "تالاش-تارتىشتىكى شەھەر"
           optional: "(تاللاشچان)"
           update: "يېڭىلا"
+          saved: "ساقلاندى!"
       plugins:
         title: "قىستۇرما"
         installed: "ئورنىتىلغان قىستۇرما"

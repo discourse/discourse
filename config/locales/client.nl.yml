@@ -4896,6 +4896,7 @@ nl:
           city_for_disputes: "Plaats voor geschillen"
           optional: "(optioneel)"
           update: "Bijwerken"
+          saved: "opgeslagen!"
       plugins:
         title: "Plug-ins"
         installed: "Geïnstalleerde plug-ins"

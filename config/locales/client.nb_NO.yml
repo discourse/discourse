@@ -3686,6 +3686,7 @@ nb_NO:
         about:
           optional: "(valgfritt)"
           update: "Oppdater"
+          saved: "lagret!"
       plugins:
         title: "Utvidelser"
         installed: "Installerte utvidelser"

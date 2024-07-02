@@ -3381,6 +3381,7 @@ bs_BA:
       config_areas:
         about:
           optional: "(opciono)"
+          saved: "sačuvano!"
       plugins:
         title: "Pluginovi"
         installed: "Instalirani pluginovi"

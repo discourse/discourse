@@ -1199,7 +1199,6 @@ zh_TW:
     s3_configure_tombstone_policy: "啟用上傳的自動刪除功能。重要提醒：如果禁用此功能，在檔案刪除後，不會回收空間。"
     backup_time_of_day: "備份的 UTC 時間"
     backup_with_uploads: "在備份日程中包括上傳。關閉此項僅備份資料庫。"
-    backup_location: "讀取備份資料的位置。注意：Amazon S3 需要在“文件”設定中輸入有效的 S3 驗證資料。"
     backup_gzip_compression_level_for_uploads: "Gzip壓縮等級用於壓縮上傳圖片。"
     include_thumbnails_in_backups: "在備份中包含生成的縮圖。禁用此選項會使備份檔案大小變得更小，但需要在還原後重新啟動所有貼文。"
     active_user_rate_limit_secs: "更新“最後一次見到”資料的頻率，單位為秒"

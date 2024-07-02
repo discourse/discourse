@@ -1611,7 +1611,6 @@ ja:
     s3_use_acls: "AWS は S3 バケットでの ACL の使用を推奨していません。このアドバイスに従っている場合は、このオプションをオフにしてください。安全なアップロードを使用している場合は、これを有効にする必要があります。"
     backup_time_of_day: "バックアップが発生する必要のある時刻 (UTC)。"
     backup_with_uploads: "スケジュールされたバックアップにアップロードを含める。これを無効にすると、データベースのみがバックアップされます。"
-    backup_location: "バックアップが保存される場所。重要: S3 には、ファイルの設定に入力されている有効な S3 資格情報が必要です。"
     backup_gzip_compression_level_for_uploads: "アップロードの圧縮に使用される Gzip 圧縮レベル。"
     include_thumbnails_in_backups: "生成されたサムネイルをバックアップに含める。これを無効にするとバックアップが小さくなりますが、復元後にすべての投稿を rebake する必要があります。"
     active_user_rate_limit_secs: "'last_seen_at' フィールドを更新する頻度 (秒)"

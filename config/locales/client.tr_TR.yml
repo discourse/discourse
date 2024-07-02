@@ -5060,6 +5060,7 @@ tr_TR:
             Bu forumun kullanımıyla ilgili herhangi bir anlaşmazlığın çözümünde yargı yetkisi olarak kullanılacak şehri belirtin. Bu bilgi genellikle forumun Hizmet Şartları gibi yasal belgelerde yer alır.
           optional: "(isteğe bağlı)"
           update: "Güncelle"
+          saved: "kaydedildi!"
       plugins:
         title: "Eklentiler"
         installed: "Yüklü Eklentiler"

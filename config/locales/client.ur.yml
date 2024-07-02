@@ -3983,6 +3983,7 @@ ur:
         about:
           optional: "(اختیاری)"
           update: "اپ ڈیٹ"
+          saved: "محفوظ کر لیا گیا!"
       plugins:
         title: "پلَگ اِنز"
         installed: "انسٹال کیے ہوے پلَگ اِنز"

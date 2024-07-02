@@ -4824,6 +4824,7 @@ hr:
         about:
           optional: "(opcionalno)"
           update: "Ažuriraj"
+          saved: "spremljeno!"
       plugins:
         title: "Dodaci"
         installed: "Instalirani dodaci"

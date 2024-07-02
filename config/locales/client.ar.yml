@@ -5778,6 +5778,7 @@ ar:
           city_for_disputes: "مدينة النزاعات"
           optional: "(اختياري)"
           update: "تحديث"
+          saved: "تم الحفظ!"
       plugins:
         title: "الإضافات"
         installed: "الإضافات المثبَّتة"

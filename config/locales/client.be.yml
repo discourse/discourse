@@ -1623,6 +1623,9 @@ be:
           screened_urls: "Screened URLs"
           security: "Бяспека"
           spam: "Спам"
+      config_areas:
+        about:
+          saved: "захавана!"
       plugins:
         title: "Плагіны"
         name: "Назва"

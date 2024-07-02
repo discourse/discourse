@@ -4962,6 +4962,7 @@ te:
           city_for_disputes: "వివాదాలకు నగరం"
           optional: "(ఐచ్ఛికం)"
           update: "నవీకరించండి"
+          saved: "సేవ్ చేయబడింది!"
       plugins:
         title: "చొప్పింతలు"
         installed: "ప్రతిష్టించిన చొప్పింతలు"

@@ -4906,6 +4906,7 @@ sv:
           city_for_disputes: "Domstol vid tvister"
           optional: "(valfri)"
           update: "Uppdatera"
+          saved: "sparat!"
       plugins:
         title: "Tillägg"
         installed: "Installerade tillägg"
