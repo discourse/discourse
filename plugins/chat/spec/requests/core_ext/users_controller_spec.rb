@@ -87,7 +87,7 @@ describe UsersController do
     context "when hidden users" do
       before do
         sign_in(another_user)
-        user.user_option.update!(hide_profile_and_presence: true)
+        user.user_option.update!(hide_profile: true)
       end
 
       it "returns the correct partial response when the user has chat enabled" do
