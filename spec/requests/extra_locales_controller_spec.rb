@@ -120,7 +120,6 @@ RSpec.describe ExtraLocalesController do
           ctx.eval("I18n = {};")
           ctx.eval(response.body)
 
-          expect(ctx.eval("typeof I18n._mfOverrides['js.client_MF']")).to eq("function")
           expect(ctx.eval("I18n._overrides['#{I18n.locale}']['js.some_key']")).to eq(
             "client-side translation",
           )
@@ -175,13 +174,16 @@ RSpec.describe ExtraLocalesController do
           expect(overrides["fr"]).to eq(
             { "js.some_key" => "some key (fr)", "js.only_fr" => "only French" },
           )
-
-          expect(ctx.eval("Object.keys(I18n._mfOverrides)")).to contain_exactly(
-            "js.some_client_MF",
-            "js.only_en_MF",
-            "js.only_fr_MF",
-          )
         end
+      end
+    end
+
+    context "when requesting MessageFormat translations" do
+      before { JsLocaleHelper.stubs(:output_MF).with("en").returns("MF_TRANSLATIONS") }
+
+      it "returns the translations properly" do
+        get "/extra-locales/mf"
+        expect(response.body).to eq("MF_TRANSLATIONS")
       end
     end
   end

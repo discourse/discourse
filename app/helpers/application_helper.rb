@@ -66,7 +66,9 @@ module ApplicationHelper
   end
 
   def csp_nonce_placeholder
-    ContentSecurityPolicy.nonce_placeholder(response.headers)
+    response.headers[
+      ::Middleware::CspScriptNonceInjector::PLACEHOLDER_HEADER
+    ] ||= ContentSecurityPolicy.nonce_placeholder(request.headers)
   end
 
   def shared_session_key
@@ -146,14 +148,15 @@ module ApplicationHelper
       .html_safe
   end
 
-  def preload_script_url(url, entrypoint: nil)
+  def preload_script_url(url, entrypoint: nil, type: nil)
     entrypoint_attribute = entrypoint ? "data-discourse-entrypoint=\"#{entrypoint}\"" : ""
     nonce_attribute = "nonce=\"#{csp_nonce_placeholder}\""
+    type = " type=\"#{type}\"" if type
 
     add_resource_preload_list(url, "script")
 
     <<~HTML.html_safe
-      <script defer src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
+      <script defer src="#{url}" #{entrypoint_attribute} #{nonce_attribute}#{type}></script>
     HTML
   end
 
