@@ -2236,6 +2236,11 @@ en:
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
       associate: "Already have an account? <a href='%{associate_link}'>Log In</a> to link your %{provider} account."
       activation_title: "Activate your account"
+      progress_bar:
+        signup: "Sign Up"
+        verify: "Verify"
+        approve: "Approve"
+        login: "Log In"
 
     forgot_password:
       title: "Password Reset"
