@@ -40,9 +40,9 @@
             {{i18n "relative_time_picker.relative"}}
           </label>
           <RelativeTimePicker
-            @id="bookmark-relative-time-picker"
             @durationMinutes={{this.selectedDurationMins}}
-            @onChange={{action "relativeTimeChanged"}}
+            @onChange={{this.relativeTimeChanged}}
+            id="bookmark-relative-time-picker"
           />
         </div>
       {{/if}}
