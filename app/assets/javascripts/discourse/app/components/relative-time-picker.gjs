@@ -131,17 +131,15 @@ export default class RelativeTimePicker extends Component {
   @action
   onChangeDuration(event) {
     if (isBlank(event.target.value)) {
-      this.inputValue = null;
       this.duration = null;
+      this.inputValue = null;
     } else {
-      const minutes = this.minutesFromInputValueAndInterval(
+      this.duration = this.minutesFromInputValueAndInterval(
         parseFloat(event.target.value),
         this.interval
       );
-
-      this.duration = minutes;
       this.interval = intervalFromMinutes(this.duration);
-      this.inputValue = inputValueFromMinutes(minutes);
+      this.inputValue = inputValueFromMinutes(this.duration);
     }
 
     this.args.onChange?.(this.duration);
