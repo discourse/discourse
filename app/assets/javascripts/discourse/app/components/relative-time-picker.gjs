@@ -139,10 +139,27 @@ export default class RelativeTimePicker extends Component {
       this.duration = null;
       this.inputValue = null;
     } else {
-      this.duration = this.minutesFromInputValueAndInterval(
+      let newDuration = this.minutesFromInputValueAndInterval(
         parseFloat(event.target.value),
         this.interval
       );
+
+      // if on the edge of an interval - go to the next value
+      // (e.g. 24 hours -> 1.5 days, instead of 24 hours -> 1 day)
+      if (
+        newDuration > this.duration &&
+        (this.duration === YEAR ||
+          this.duration === MONTH ||
+          this.duration === DAY ||
+          this.duration === HOUR)
+      ) {
+        newDuration = this.minutesFromInputValueAndInterval(
+          parseFloat(event.target.value) * 1.5,
+          this.interval
+        );
+      }
+
+      this.duration = newDuration;
       this.interval = intervalFromMinutes(this.duration);
       this.inputValue = inputValueFromMinutes(this.duration);
     }
