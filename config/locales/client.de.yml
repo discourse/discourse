@@ -5097,6 +5097,11 @@ de:
             Gib die Stadt an, die für die Beilegung von Streitigkeiten im Zusammenhang mit der Nutzung dieses Forums zuständig sein soll. Diese Information ist normalerweise in rechtlichen Dokumenten wie den Nutzungsbedingungen des Forums enthalten.
           optional: "(optional)"
           update: "Aktualisieren"
+          toasts:
+            general_settings_saved: "Allgemeine Einstellungen gespeichert"
+            contact_information_saved: "Kontaktinformationen gespeichert"
+            your_organization_saved: "Deine Organisation gespeichert"
+          saved: "gespeichert!"
       plugins:
         title: "Plug-ins"
         installed: "Installierte Plug-ins"

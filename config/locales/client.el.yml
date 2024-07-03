@@ -3669,6 +3669,7 @@ el:
         about:
           optional: "(προεραιτικό)"
           update: "Ενημέρωση"
+          saved: "αποθηκεύτηκε!"
       plugins:
         title: "Plugins"
         installed: "Εγκατεστημένα Plugins"

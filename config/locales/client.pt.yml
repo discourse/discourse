@@ -3882,6 +3882,7 @@ pt:
         about:
           optional: "(opcional)"
           update: "Atualização"
+          saved: "guardado!"
       plugins:
         title: "Plugins"
         installed: "Plugins Instalados"

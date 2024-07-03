@@ -3932,6 +3932,7 @@ ko:
             모든 자동 메시지에 초대 할 유효한 그룹 이름입니다.
           optional: "(선택 사항)"
           update: "업데이트"
+          saved: "저장되었습니다!"
       plugins:
         title: "플러그인"
         installed: "설치된 플러그인"

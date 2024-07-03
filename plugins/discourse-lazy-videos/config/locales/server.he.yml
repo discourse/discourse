@@ -6,6 +6,7 @@
 
 he:
   site_settings:
+    lazy_videos_enabled: "הפעלת תוסף הסרטונים העצלים"
     lazy_youtube_enabled: "הפעלת טעינה עצלה להטמעות של YouTube"
     lazy_vimeo_enabled: "הפעלת טעינה עצלה להטמעות של Vimeo"
     lazy_tiktok_enabled: "הפעלת טעינה עצלה להטמעות של TikTok (ניסיוני)"

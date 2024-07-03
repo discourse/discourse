@@ -1418,7 +1418,6 @@ gl:
     s3_disable_cleanup: "Evitar a retirada de antigas copias de seguranza de S3 cando o número delas supere o máximo permitido."
     backup_time_of_day: "Hora do día UTC á se debería executar a copia de seguranza."
     backup_with_uploads: "Incluír os ficheiros subidos nas copias de seguranza programadas. De se desactiva esta opción, unicamente se executará a copia de seguranza da base de datos."
-    backup_location: "Localización onde están almacenadas as copias de seguranza. IMPORTANTE: S3 require credenciais S3 válidas inseridas na configuración de ficheiros."
     backup_gzip_compression_level_for_uploads: "Nivel de compresión Gzip utilizado para comprimir ficheiros subidos."
     include_thumbnails_in_backups: "Incluír miniaturas xeradas nas copias de seguranza. Desactivar isto fará que as copias sexan máis pequenas, mais require reconstruír todas as publicacións logo dunha restauración."
     active_user_rate_limit_secs: "Frecuencia en segundos con que actualizaremos o campo «last_seen_at»"

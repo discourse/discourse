@@ -4979,6 +4979,7 @@ hu:
           header: "Az Ön webhelyéről"
           optional: "(nem kötelező)"
           update: "Frissítés"
+          saved: "mentve!"
       plugins:
         title: "Bővítmények"
         installed: "Telepített bővítmények"

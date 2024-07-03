@@ -980,6 +980,8 @@ id:
       read_help: "Topik yang baru saja dibaca"
       preferences:
         title: "Preferensi"
+        profile:
+          enforced_required_fields: "Anda diharuskan memberikan informasi tambahan sebelum melanjutkan menggunakan situs ini."
       feature_topic_on_profile:
         open_search: "Pilih Topik Baru"
         title: "Pilih Topik"
@@ -1551,6 +1553,8 @@ id:
       alt: "Alt"
       enter: "Enter"
     category_row:
+      subcategory_count:
+        other: "+%{count} subkategori"
       topic_count:
         other: "%{count} topik dalam kategori ini"
     select_kit:
@@ -2162,7 +2166,8 @@ id:
             faq:
               content: "FAQ"
             guidelines:
-              content: "Petunjuk"
+              content: "Panduan"
+              title: "Panduan untuk menggunakan situs ini"
             groups:
               content: "Grup"
             users:
@@ -2345,6 +2350,7 @@ id:
         about:
           community_name: "Nama komunitas"
           optional: "(opsional)"
+          saved: "tersimpan!"
       plugins:
         name: "Nama"
         enabled: "Diaktifkan?"
@@ -2427,6 +2433,8 @@ id:
           revert: "Dibalik"
           primary:
             name: "utama"
+          quaternary:
+            description: "Untuk penggunaan opsional dalam tema."
           selected:
             name: "dipilih"
         email_style:
@@ -2625,12 +2633,17 @@ id:
           title: "Persyaratan Kolom"
           optional:
             title: "Opsional"
+          for_all_users:
+            title: "Untuk semua pengguna"
+            description: "Saat pengguna baru mendaftar, mereka harus mengisi kolom ini. Ketika pengguna lama kembali ke situs dan ini adalah kolom baru yang wajib diisi, mereka juga akan diminta untuk mengisinya. Untuk meminta ulang semua pengguna, hapus bidang khusus ini dan buat ulang."
           on_signup:
             title: "Saat mendaftar"
             description: "Saat pengguna baru mendaftar, mereka harus mengisi kolom ini. Pengguna yang sudah ada tidak terpengaruh."
+          confirmation: "Ini akan meminta pengguna yang ada untuk mengisi kolom ini dan tidak akan mengizinkan mereka melakukan hal lain di situs Anda hingga kolom tersebut terisi. Lanjutkan?"
       site_text:
         edit: "ubah"
         show_outdated: "Hanya tampilkan yang usang/tidak valid"
+        show_untranslated: "Hanya tampilkan yang belum diterjemahkan"
         no_results: "Tidak ditemukan teks situs yang cocok"
         interpolation_keys: "Kunci interpolasi yang tersedia:"
         outdated:

@@ -1460,7 +1460,6 @@ ko:
     s3_disable_cleanup: "허용되는 최대 개수보다 많은 백업이 있는 경우 S3에서 이전 백업이 제거되지 않도록 합니다."
     backup_time_of_day: "백업이 실행되어야 할 시간(UTC)"
     backup_with_uploads: "예약된 백업에 업로드를 포함합니다. 비활성화하면 데이터베이스만 백업합니다."
-    backup_location: "백업이 저장된 위치입니다. 중요: S3에는 파일 설정에 입력 한 유효한 S3 크리덴셜이 필요합니다."
     backup_gzip_compression_level_for_uploads: "업로드 압축에 사용되는 Gzip 압축 수준입니다."
     include_thumbnails_in_backups: "백업에 생성된 섬네일을 포함합니다. 비활성화하면 백업이 더 작아지지만 복원 후 모든 게시물을 다시 작성해야 합니다."
     active_user_rate_limit_secs: "'last_seen_at' 필드 업데이트 주기(초)"

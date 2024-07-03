@@ -4877,6 +4877,7 @@ it:
           city_for_disputes: "Sede per eventuali controversie"
           optional: "(opzionale)"
           update: "Aggiorna"
+          saved: "salvato!"
       plugins:
         title: "Plugin"
         installed: "Plugin Installati"

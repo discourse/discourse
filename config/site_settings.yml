@@ -291,7 +291,6 @@ basic:
   enable_direct_s3_uploads:
     client: true
     default: false
-    hidden: true
   enable_upload_debug_mode:
     default: false
     hidden: true
@@ -411,6 +410,22 @@ basic:
   show_user_menu_avatars:
     client: true
     default: false
+  extended_site_description:
+    default: ""
+    max: 10_000
+    hidden: true
+  extended_site_description_cooked:
+    default: ""
+    hidden: true
+    max: 15_000
+  about_banner_image:
+    default: ""
+    type: upload
+    hidden: true
+  community_owner:
+    default: ""
+    max: 300
+    hidden: true
 login:
   invite_only:
     refresh: true
@@ -2660,10 +2675,12 @@ uncategorized:
 
   summarization_strategy:
     client: true
+    hidden: true
     default: ""
     enum: "SummarizationStrategy"
     validator: "SummarizationValidator"
   custom_summarization_allowed_groups:
+    hidden: true
     type: group_list
     list_type: compact
     default: "3|13" # 3: @staff, 13: @trust_level_3

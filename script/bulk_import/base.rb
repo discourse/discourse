@@ -1000,7 +1000,7 @@ class BulkImport::Base
 
   def process_user(user)
     if user[:email].present?
-      user[:email].downcase!
+      user[:email] = user[:email].downcase
 
       if (existing_user_id = @emails[user[:email]])
         @users[user[:imported_id].to_i] = existing_user_id
