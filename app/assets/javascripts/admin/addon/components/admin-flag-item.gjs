@@ -56,12 +56,13 @@ export default class AdminFlagItem extends Component {
     })
       .then(() => {
         this.args.flag.enabled = this.enabled;
-        this.isSaving = false;
       })
       .catch((error) => {
         this.enabled = !this.enabled;
-        this.isSaving = false;
         return popupAjaxError(error);
+      })
+      .finally(() => {
+        this.isSaving = false;
       });
   }
 
