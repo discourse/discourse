@@ -204,6 +204,18 @@
     display: flex;
     justify-content: space-between;
   }
+
+  // .signup-progress-bar {
+  //   padding-top: 4rem;
+  //   padding-inline: 2rem;
+  //   margin-bottom: 0.6rem;
+  // }
+
+  .signup-progress-bar {
+    padding-top: 0;
+    padding-inline: 0.6rem;
+    margin-bottom: 1.2rem;
+  }
 }
 
 // Login Form Styles

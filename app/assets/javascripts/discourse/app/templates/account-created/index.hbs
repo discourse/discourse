@@ -1,5 +1,6 @@
 {{body-class "account-activation-page"}}
 <div class="container invites-show">
+  <SignupProgressBar @step="verify" />
   <div class="login-welcome-header">
     <h1 class="login-title">{{this.welcomeTitle}}</h1>
     <img src={{this.wavingHandURL}} alt="" class="waving-hand" />

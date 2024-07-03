@@ -1,0 +1,59 @@
+$progress-bar-line-width: 2px;
+$progress-bar-circle-size: 1.2rem;
+$progress-bar-icon-size: 0.8rem;
+
+.signup-progress-bar {
+  width: 100%;
+  display: flex;
+  color: var(--primary-medium);
+  margin-bottom: 1.2rem;
+  padding-inline: 0.6rem;
+  box-sizing: border-box;
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    width: $progress-bar-circle-size;
+    gap: 0.5rem;
+  }
+  .line {
+    transform: translateY(
+      calc(calc($progress-bar-circle-size + $progress-bar-line-width) / 2)
+    );
+    height: $progress-bar-line-width;
+    width: 100%;
+    background-color: var(--primary-medium);
+  }
+  .circle {
+    z-index: z("modal", "content");
+    font-size: $progress-bar-icon-size;
+    color: var(--secondary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: $progress-bar-circle-size;
+    width: $progress-bar-circle-size;
+    border-radius: 50%;
+    border: $progress-bar-line-width solid var(--primary-medium);
+  }
+
+  .completed {
+    color: var(--primary);
+    .circle {
+      background-color: var(--success);
+      border: $progress-bar-line-width solid var(--success);
+    }
+    &.line {
+      background-color: var(--success);
+    }
+  }
+
+  .active {
+    .circle {
+      border: $progress-bar-line-width solid var(--success);
+    }
+  }
+}
