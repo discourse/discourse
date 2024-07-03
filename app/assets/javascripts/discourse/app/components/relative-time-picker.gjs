@@ -8,6 +8,11 @@ import { eq } from "truth-helpers";
 import I18n from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
+const YEAR = 365 * 24 * 60;
+const MONTH = 30 * 24 * 60;
+const DAY = 24 * 60;
+const HOUR = 60;
+
 function roundDuration(duration) {
   let rounded = parseFloat(duration.toFixed(1));
   rounded = Math.round(rounded * 2) / 2;
@@ -19,27 +24,27 @@ function roundDuration(duration) {
 function inputValueFromMinutes(minutes) {
   if (!minutes) {
     return null;
-  } else if (minutes > 525600) {
-    return roundDuration(minutes / 365 / 60 / 24);
-  } else if (minutes > 43800) {
-    return roundDuration(minutes / 30 / 60 / 24);
-  } else if (minutes > 1440) {
-    return roundDuration(minutes / 60 / 24);
-  } else if (minutes > 60) {
-    return roundDuration(minutes / 60);
+  } else if (minutes > YEAR) {
+    return roundDuration(minutes / YEAR);
+  } else if (minutes > MONTH) {
+    return roundDuration(minutes / MONTH);
+  } else if (minutes > DAY) {
+    return roundDuration(minutes / DAY);
+  } else if (minutes > HOUR) {
+    return roundDuration(minutes / HOUR);
   } else {
     return minutes;
   }
 }
 
 function intervalFromMinutes(minutes) {
-  if (minutes > 525600) {
+  if (minutes > YEAR) {
     return "years";
-  } else if (minutes > 43800) {
+  } else if (minutes > MONTH) {
     return "months";
-  } else if (minutes > 1440) {
+  } else if (minutes > DAY) {
     return "days";
-  } else if (minutes > 60) {
+  } else if (minutes > HOUR) {
     return "hours";
   } else {
     return "mins";
@@ -93,13 +98,13 @@ export default class RelativeTimePicker extends Component {
         // we round up here in case the user manually inputted a step < 1
         return Math.ceil(duration);
       case "hours":
-        return duration * 60;
+        return duration * HOUR;
       case "days":
-        return duration * 60 * 24;
+        return duration * DAY;
       case "months":
-        return duration * 60 * 24 * 30; // less accurate because of varying days in months
+        return duration * MONTH; // less accurate because of varying days in months
       case "years":
-        return duration * 60 * 24 * 365; // least accurate because of varying days in months/years
+        return duration * YEAR; // least accurate because of varying days in months/years
     }
   }
 
