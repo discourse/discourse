@@ -2,7 +2,7 @@ import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Rendering polls with bar charts - desktop", function (needs) {
+acceptance("Poll show percentage button", function (needs) {
   // needs.user();
   needs.settings({ poll_enabled: true });
 
