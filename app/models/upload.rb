@@ -27,6 +27,7 @@ class Upload < ActiveRecord::Base
   has_many :upload_references, dependent: :destroy
   has_many :posts, through: :upload_references, source: :target, source_type: "Post"
   has_many :topic_thumbnails
+  has_many :badges, foreign_key: :image_upload_id, dependent: :nullify
 
   attr_accessor :for_group_message
   attr_accessor :for_theme
