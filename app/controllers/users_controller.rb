@@ -901,6 +901,10 @@ class UsersController < ApplicationController
           secure_session["password-#{token}"] = nil
           secure_session["second-factor-#{token}"] = nil
 
+          if SiteSetting.delete_associated_accounts_on_password_reset
+            @user.user_associated_accounts.destroy_all
+          end
+
           UserHistory.create!(
             target_user: @user,
             acting_user: @user,

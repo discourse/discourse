@@ -304,6 +304,31 @@ RSpec.describe UsersController do
         expect(user1.user_option.reload.timezone).to eq("America/Chicago")
       end
 
+      it "deletes user associated accounts" do
+        SiteSetting.delete_associated_accounts_on_password_reset = true
+        UserAssociatedAccount.create(
+          user_id: user.id,
+          provider_uid: "example0",
+          provider_name: "facebook",
+        )
+        UserAssociatedAccount.create(
+          user_id: user1.id,
+          provider_uid: "example1",
+          provider_name: "facebook",
+        )
+
+        get "/u/password-reset/#{email_token.token}"
+
+        expect do
+          put "/u/password-reset/#{email_token.token}",
+              params: {
+                password: "hg9ow8yhg98oadminlonger",
+              }
+        end.to change { UserAssociatedAccount.count }.by(-1)
+
+        expect(UserAssociatedAccount.count).to eq(1)
+      end
+
       it "logs the password change" do
         get "/u/password-reset/#{email_token.token}"
 

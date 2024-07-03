@@ -2369,6 +2369,8 @@ en:
     allow_users_to_hide_profile: "Allow users to hide their profile and presence"
     hide_user_activity_tab: "Hide the activity tab on user profiles except for Admin and self."
 
+    delete_associated_accounts_on_password_reset: "Delete user associated account when user changes the password."
+
     allow_featured_topic_on_user_profiles: "Allow users to feature a link to a topic on their user card and profile."
 
     show_inactive_accounts: "Allow logged in users to browse profiles of inactive accounts."
