@@ -55,9 +55,9 @@ export function defaultRenderTag(tag, params) {
     (params.description ? ' title="' + escape(hoverDescription) + '" ' : "") +
     " class='" +
     classes.join(" ") +
-    "'>" +
+    "'><span>" +
     (params.displayName ? escape(params.displayName) : visibleName) +
-    "</" +
+    "</span></" +
     tagName +
     ">";
 
