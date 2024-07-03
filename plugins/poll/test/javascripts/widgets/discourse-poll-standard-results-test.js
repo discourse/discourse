@@ -13,7 +13,7 @@ module(
     const template = hbs`
       <MountWidget
         @widget="discourse-poll-standard-results"
-        @args={{hash poll=this.poll isMultiple=this.isMultiple}}
+        @args={{hash poll=this.poll isMultiple=this.isMultiple showPercentage=this.showPercentage}}
       />
     `;
 
@@ -46,11 +46,11 @@ module(
       await render(template);
 
       assert.strictEqual(
-        queryAll(".option .percentage")[0].innerText.split(" ")[0],
+        queryAll(".option .absolute")[0].innerText.split(" ")[0],
         "5"
       );
       assert.strictEqual(
-        queryAll(".option .percentage")[1].innerText.split(" ")[0],
+        queryAll(".option .absolute")[1].innerText.split(" ")[0],
         "4"
       );
     });
@@ -128,7 +128,7 @@ module(
 
       await render(template);
 
-      let percentages = queryAll(".option .percentage");
+      let percentages = queryAll(".option .absolute");
       assert.strictEqual(percentages[0].innerText.split(" ")[0], "5");
       assert.strictEqual(percentages[1].innerText.split(" ")[0], "4");
       assert.strictEqual(percentages[2].innerText.split(" ")[0], "2");
@@ -138,7 +138,7 @@ module(
         queryAll(".option")[3].querySelectorAll("span")[1].innerText,
         "a"
       );
-      assert.strictEqual(percentages[4].innerText, "8%");
+      assert.strictEqual(percentages[4].innerText.split(" ")[0], "1");
       assert.strictEqual(
         queryAll(".option")[4].querySelectorAll("span")[1].innerText,
         "b"
