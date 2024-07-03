@@ -8,10 +8,10 @@ import { eq } from "truth-helpers";
 import I18n from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
-const YEAR = 365 * 24 * 60;
-const MONTH = 30 * 24 * 60;
-const DAY = 24 * 60;
 const HOUR = 60;
+const DAY = 24 * HOUR;
+const MONTH = 30 * DAY;
+const YEAR = 365 * DAY;
 
 function roundDuration(duration) {
   let rounded = parseFloat(duration.toFixed(1));
@@ -112,7 +112,7 @@ export default class RelativeTimePicker extends Component {
   initValues() {
     let minutes = this.args.durationMinutes;
     if (this.args.durationHours) {
-      minutes ??= this.args.durationHours * 60;
+      minutes ??= this.args.durationHours * HOUR;
     }
 
     this.inputValue = inputValueFromMinutes(minutes);
@@ -122,7 +122,7 @@ export default class RelativeTimePicker extends Component {
     } else if (this.args.durationHours === null) {
       this.interval = "hours";
     } else if (this.args.durationHours !== undefined) {
-      this.interval = intervalFromMinutes(this.args.durationHours * 60);
+      this.interval = intervalFromMinutes(this.args.durationHours * HOUR);
     } else {
       this.interval = "mins";
     }
