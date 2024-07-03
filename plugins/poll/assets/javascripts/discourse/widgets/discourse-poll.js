@@ -47,6 +47,20 @@ const buttonOptionsMap = {
     icon: "lock",
     action: "toggleStatus",
   },
+  showAbsolute: {
+    className: "btn-default toggle-percentage",
+    label: "poll.show-absolute.label",
+    title: "poll.show-absolute.title",
+    icon: "info",
+    action: "togglePercentage",
+  },
+  showPercentage: {
+    className: "btn-default toggle-percentage",
+    label: "poll.show-percentage.label",
+    title: "poll.show-percentage.title",
+    icon: "info",
+    action: "togglePercentage",
+  },
 };
 
 function optionHtml(option, siteSettings = {}) {
@@ -202,7 +216,14 @@ createWidget("discourse-poll-standard-results", {
           h(
             "div.option",
             h("p", [
-              h("span.percentage", `${per}%`),
+              attrs.showPercentage
+                ? h("span.percentage", `${per}%`)
+                : h(
+                    "span.absolute",
+                    `${option.votes} ${I18n.t("poll.voters", {
+                      count: option.votes,
+                    })}`
+                  ),
               optionHtml(option, this.siteSettings),
             ])
           )
@@ -731,7 +752,7 @@ createWidget("discourse-poll-buttons-dropdown", {
     const isAdmin = this.currentUser && this.currentUser.admin;
     const dataExplorerEnabled = this.siteSettings.data_explorer_enabled;
     const exportQueryID = this.siteSettings.poll_export_data_explorer_query_id;
-    const { poll, post } = attrs;
+    const { poll, post, showPercentage } = attrs;
     const closed = attrs.isClosed;
     const isStaff = this.currentUser && this.currentUser.staff;
     const topicArchived = post.get("topic.archived");
@@ -766,6 +787,18 @@ createWidget("discourse-poll-buttons-dropdown", {
       }
     }
 
+    if (
+      poll.chart_type === "bar" &&
+      poll.type !== "number" &&
+      attrs.showResults
+    ) {
+      const option = showPercentage
+        ? { ...buttonOptionsMap.showAbsolute }
+        : { ...buttonOptionsMap.showPercentage };
+      option.id = option.action;
+      contents.push(option);
+    }
+
     return contents;
   },
 });
@@ -775,7 +808,7 @@ createWidget("discourse-poll-buttons", {
 
   html(attrs) {
     const contents = [];
-    const { poll, post } = attrs;
+    const { poll, post, showPercentage } = attrs;
     const topicArchived = post.get("topic.archived");
     const closed = attrs.isClosed;
     const staffOnly = poll.results === "staff_only";
@@ -860,6 +893,11 @@ createWidget("discourse-poll-buttons", {
           ? buttonOptionsMap.openPoll
           : buttonOptionsMap.closePoll;
       }
+      if (singleOptionId === "togglePercentage") {
+        singleOption = showPercentage
+          ? buttonOptionsMap.showAbsolute
+          : buttonOptionsMap.showPercentage;
+      }
       contents.push(this.attach("button", singleOption));
     }
     return [contents];
@@ -890,7 +928,7 @@ export default createWidget("discourse-poll", {
     const showResults =
       poll.results !== "on_close" && this.hasVoted() && !staffOnly;
 
-    return { loading: false, showResults };
+    return { loading: false, showResults, showPercentage: true };
   },
 
   html(attrs, state) {
@@ -909,6 +947,7 @@ export default createWidget("discourse-poll", {
       isMultiple: this.isMultiple(),
       max: this.max(),
       min: this.min(),
+      showPercentage: this.showPercentage(),
       showResults,
     };
 
@@ -1019,6 +1058,14 @@ export default createWidget("discourse-poll", {
           });
       },
     });
+  },
+
+  togglePercentage() {
+    this.state.showPercentage = !this.state.showPercentage;
+  },
+
+  showPercentage() {
+    return this.state.showPercentage;
   },
 
   toggleResults() {
