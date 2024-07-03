@@ -20,6 +20,7 @@ describe "Admin Flags Page", type: :system do
 
     visit "/admin/config/flags"
     admin_flags_page.toggle("spam")
+    expect(page).not_to have_css(".admin-flag-item.spam.saving")
 
     topic_page.visit_topic(post.topic)
     topic_page.open_flag_topic_modal
@@ -39,6 +40,7 @@ describe "Admin Flags Page", type: :system do
 
     visit "/admin/config/flags"
     admin_flags_page.move_down("spam")
+    expect(page).not_to have_css(".admin-flag-item.spam.saving")
 
     topic_page.visit_topic(post.topic)
     topic_page.open_flag_topic_modal
@@ -48,6 +50,7 @@ describe "Admin Flags Page", type: :system do
 
     visit "/admin/config/flags"
     admin_flags_page.move_up("spam")
+    expect(page).not_to have_css(".admin-flag-item.spam.saving")
 
     topic_page.visit_topic(post.topic)
     topic_page.open_flag_topic_modal
