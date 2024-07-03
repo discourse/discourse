@@ -9,6 +9,7 @@ import { not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { SYSTEM_FLAG_IDS } from "discourse/lib/constants";
@@ -20,6 +21,7 @@ export default class AdminFlagItem extends Component {
   @service router;
 
   @tracked enabled = this.args.flag.enabled;
+  @tracked isSaving = false;
 
   get canMove() {
     return this.args.flag.id !== SYSTEM_FLAG_IDS.notify_user;
@@ -47,6 +49,7 @@ export default class AdminFlagItem extends Component {
   @action
   toggleFlagEnabled(flag) {
     this.enabled = !this.enabled;
+    this.isSaving = true;
 
     return ajax(`/admin/config/flags/${flag.id}/toggle`, {
       type: "PUT",
@@ -57,6 +60,9 @@ export default class AdminFlagItem extends Component {
       .catch((error) => {
         this.enabled = !this.enabled;
         return popupAjaxError(error);
+      })
+      .finally(() => {
+        this.isSaving = false;
       });
   }
 
@@ -67,14 +73,20 @@ export default class AdminFlagItem extends Component {
 
   @action
   moveUp() {
-    this.args.moveFlagCallback(this.args.flag, "up");
+    this.isSaving = true;
     this.dMenu.close();
+    this.args.moveFlagCallback(this.args.flag, "up").finally(() => {
+      this.isSaving = false;
+    });
   }
 
   @action
   moveDown() {
-    this.args.moveFlagCallback(this.args.flag, "down");
+    this.isSaving = true;
     this.dMenu.close();
+    this.args.moveFlagCallback(this.args.flag, "down").finally(() => {
+      this.isSaving = false;
+    });
   }
   @action
   edit() {
@@ -83,19 +95,31 @@ export default class AdminFlagItem extends Component {
 
   @action
   delete() {
+    this.isSaving = true;
     this.dialog.yesNoConfirm({
       message: i18n("admin.config_areas.flags.delete_confirm", {
         name: this.args.flag.name,
       }),
       didConfirm: () => {
-        this.args.deleteFlagCallback(this.args.flag);
+        this.args.deleteFlagCallback(this.args.flag).finally(() => {
+          this.isSaving = false;
+        });
+      },
+      didCancel: () => {
+        this.isSaving = false;
       },
     });
     this.dMenu.close();
   }
 
   <template>
-    <tr class="admin-flag-item {{@flag.name_key}}">
+    <tr
+      class={{concatClass
+        "admin-flag-item"
+        @flag.name_key
+        (if this.isSaving "saving")
+      }}
+    >
       <td>
         <p class="admin-flag-item__name">{{@flag.name}}</p>
         <p class="admin-flag-item__description">{{htmlSafe
