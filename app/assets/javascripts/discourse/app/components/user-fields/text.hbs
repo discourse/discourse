@@ -9,6 +9,7 @@
     for={{concat "user-" this.elementId}}
   >
     {{this.field.name}}
+    {{~#unless this.field.required}} {{i18n "user_fields.optional"}}{{/unless~}}
   </label>
   <InputTip
     @validation={{this.validation}}
