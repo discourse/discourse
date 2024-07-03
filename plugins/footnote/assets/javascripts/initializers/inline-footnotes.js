@@ -113,7 +113,7 @@ export default {
     }
 
     document.body.append(buildTooltip());
-    window.addEventListener("click", footnoteEventHandler);
+    window.addEventListener("click", footnoteEventHandler, true);
 
     withPluginApi("0.8.9", (api) => {
       api.decorateCookedElement((elem) => applyInlineFootnotes(elem), {
