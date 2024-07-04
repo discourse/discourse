@@ -17,6 +17,7 @@ class Flags::UpdateFlag
   class Contract
     attribute :name, :string
     attribute :description, :string
+    attribute :require_message, :boolean
     attribute :enabled, :boolean
     attribute :applies_to
     validates :name, presence: true
@@ -44,8 +45,14 @@ class Flags::UpdateFlag
     guardian.can_edit_flag?(flag)
   end
 
-  def update(flag:, name:, description:, applies_to:, enabled:)
-    flag.update!(name: name, description: description, applies_to: applies_to, enabled: enabled)
+  def update(flag:, name:, description:, applies_to:, require_message:, enabled:)
+    flag.update!(
+      name: name,
+      description: description,
+      applies_to: applies_to,
+      require_message: require_message,
+      enabled: enabled,
+    )
   end
 
   def log(guardian:, flag:)
@@ -55,6 +62,7 @@ class Flags::UpdateFlag
         name: flag.name,
         description: flag.description,
         applies_to: flag.applies_to,
+        require_message: flag.require_message,
         enabled: flag.enabled,
       },
     )
