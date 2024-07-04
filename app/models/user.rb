@@ -1211,7 +1211,7 @@ class User < ActiveRecord::Base
   def flags_given_count
     PostAction.where(
       user_id: id,
-      post_action_type_id: PostActionType.flag_types_without_custom.values,
+      post_action_type_id: PostActionType.flag_types_without_additional_message.values,
     ).count
   end
 
@@ -1222,7 +1222,10 @@ class User < ActiveRecord::Base
   def flags_received_count
     posts
       .includes(:post_actions)
-      .where("post_actions.post_action_type_id" => PostActionType.flag_types_without_custom.values)
+      .where(
+        "post_actions.post_action_type_id" =>
+          PostActionType.flag_types_without_additional_message.values,
+      )
       .count
   end
 

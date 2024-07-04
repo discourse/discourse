@@ -115,7 +115,9 @@ class PostActionCreator
 
     # create meta topic / post if needed
     if @message.present? &&
-         %i[notify_moderators notify_user spam illegal].include?(@post_action_name)
+         (PostActionType.additional_message_types.keys | %i[spam illegal]).include?(
+           @post_action_name,
+         )
       creator = create_message_creator
       # We need to check if the creator exists because it's possible `create_message_creator` returns nil
       # in the event that a `post_action_notify_user_handler` evaluated to false, haulting the post creation.
@@ -325,6 +327,7 @@ class PostActionCreator
         "post_action_types.#{@post_action_name}.email_title",
         title: @post.topic.title,
         locale: SiteSetting.default_locale,
+        default: I18n.t("post_action_types.illegal.email_title"),
       )
 
     body =
@@ -333,6 +336,7 @@ class PostActionCreator
         message: @message,
         link: "#{Discourse.base_url}#{@post.url}",
         locale: SiteSetting.default_locale,
+        default: I18n.t("post_action_types.illegal.email_body"),
       )
 
     create_args = {
@@ -342,31 +346,25 @@ class PostActionCreator
       raw: body,
     }
 
-    if %i[notify_moderators spam illegal].include?(@post_action_name)
+    if @post_action_name == :notify_user
+      create_args[:subtype] = TopicSubtype.notify_user
+
+      create_args[:target_usernames] = @post.user.username
+
+      # Evaluate DiscoursePluginRegistry.post_action_notify_user_handlers.
+      # If any return false, return early from this method
+      handler_values =
+        DiscoursePluginRegistry.post_action_notify_user_handlers.map do |handler|
+          handler.call(@created_by, @post, @message)
+        end
+      return if handler_values.any? { |value| value == false }
+    else
       create_args[:subtype] = TopicSubtype.notify_moderators
       create_args[:target_group_names] = [Group[:moderators].name]
 
       if SiteSetting.enable_category_group_moderation? &&
            @post.topic&.category&.reviewable_by_group_id?
         create_args[:target_group_names] << @post.topic.category.reviewable_by_group.name
-      end
-    else
-      create_args[:subtype] = TopicSubtype.notify_user
-
-      if @post_action_name == :notify_user
-        create_args[:target_usernames] = @post.user.username
-
-        # Evaluate DiscoursePluginRegistry.post_action_notify_user_handlers.
-        # If any return false, return early from this method
-        handler_values =
-          DiscoursePluginRegistry.post_action_notify_user_handlers.map do |handler|
-            handler.call(@created_by, @post, @message)
-          end
-        return if handler_values.any? { |value| value == false }
-      elsif @post_action_name != :notify_moderators
-        # this is a hack to allow a PM with no recipients, we should think through
-        # a cleaner technique, a PM with myself is valid for flagging
-        "x"
       end
     end
 

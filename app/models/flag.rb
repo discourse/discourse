@@ -63,7 +63,7 @@ end
 #  description      :text
 #  notify_type      :boolean          default(FALSE), not null
 #  auto_action_type :boolean          default(FALSE), not null
-#  custom_type      :boolean          default(FALSE), not null
+#  require_message  :boolean          default(FALSE), not null
 #  applies_to       :string           not null, is an Array
 #  position         :integer          not null
 #  enabled          :boolean          default(TRUE), not null
