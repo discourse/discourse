@@ -13,10 +13,6 @@ module PageObjects
           find(header_toggle_css).click
         end
 
-        def header_toggle_css
-          ".header-sidebar-toggle"
-        end
-
         def visible?
           page.has_css?("#d-sidebar")
         end
@@ -47,6 +43,14 @@ module PageObjects
 
         def custom_section_modal_title
           find("#discourse-modal-title")
+        end
+
+        def has_panel_header?
+          page.has_css?(".sidebar-panel-header")
+        end
+
+        def has_no_panel_header?
+          page.has_no_css?(".sidebar-panel-header")
         end
 
         def toggle_all_sections
