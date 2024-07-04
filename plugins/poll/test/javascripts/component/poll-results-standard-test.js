@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { exists, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 const TWO_OPTIONS = [
   { id: "1ddc47be0d2315b9711ee8526ca9d83f", html: "This", votes: 5, rank: 0 },
@@ -41,6 +41,7 @@ module("Poll | Component | poll-results-standard", function (hooks) {
       options: TWO_OPTIONS,
       pollName: "Two Choice Poll",
       pollType: "single",
+      isPublic: true,
       postId: 123,
       vote: ["1ddc47be0d2315b9711ee8526ca9d83f"],
       voters: PRELOADEDVOTERS,
@@ -52,6 +53,7 @@ module("Poll | Component | poll-results-standard", function (hooks) {
       @options={{this.options}}
       @pollName={{this.pollName}}
       @pollType={{this.pollType}}
+      @isPublic={{this.isPublic}}
       @postId={{this.postId}}
       @vote={{this.vote}}
       @voters={{this.voters}}
@@ -61,6 +63,35 @@ module("Poll | Component | poll-results-standard", function (hooks) {
 
     assert.strictEqual(queryAll(".option .percentage")[0].innerText, "56%");
     assert.strictEqual(queryAll(".option .percentage")[1].innerText, "44%");
+    assert.ok(exists("ul.poll-voters-list"));
+  });
+
+  test("Omits voters for private polls", async function (assert) {
+    this.setProperties({
+      options: TWO_OPTIONS,
+      pollName: "Two Choice Poll",
+      pollType: "single",
+      isPublic: false,
+      postId: 123,
+      vote: ["1ddc47be0d2315b9711ee8526ca9d83f"],
+      voters: PRELOADEDVOTERS,
+      votersCount: 9,
+      fetchVoters: () => {},
+    });
+
+    await render(hbs`<PollResultsStandard
+      @options={{this.options}}
+      @pollName={{this.pollName}}
+      @pollType={{this.pollType}}
+      @isPublic={{this.isPublic}}
+      @postId={{this.postId}}
+      @vote={{this.vote}}
+      @voters={{this.voters}}
+      @votersCount={{this.votersCount}}
+      @fetchVoters={{this.fetchVoters}}
+    />`);
+
+    assert.ok(!exists("ul.poll-voters-list"));
   });
 
   test("options in ascending order", async function (assert) {
