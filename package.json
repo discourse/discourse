@@ -20,7 +20,6 @@
     "chrome-launcher": "^1.1.2",
     "chrome-remote-interface": "^0.33.0",
     "concurrently": "^8.2.2",
-    "diffhtml": "1.0.0-beta.30",
     "ember-template-lint": "^5.13.0",
     "esbuild": "^0.23.0",
     "eslint": "^8.57.0",
