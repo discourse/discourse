@@ -4556,6 +4556,7 @@ RSpec.describe UsersController do
         expect(parsed["username"]).to eq(user.username)
         expect(parsed["profile_hidden"]).to be_blank
         expect(parsed["trust_level"]).to be_present
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
       it "returns a hidden profile" do
@@ -4568,11 +4569,13 @@ RSpec.describe UsersController do
         expect(parsed["username"]).to eq(user.username)
         expect(parsed["profile_hidden"]).to eq(true)
         expect(parsed["trust_level"]).to be_blank
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
       it "should 403 for anonymous user when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}.json"
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
         expect(response).to have_http_status(:forbidden)
         get "/u/#{user.username}/messages.json"
         expect(response).to have_http_status(:forbidden)
@@ -4583,6 +4586,7 @@ RSpec.describe UsersController do
         get "/u/#{user.username}", headers: { "User-Agent" => "Googlebot" }
         expect(response).to have_http_status(:forbidden)
         expect(response.body).to have_tag("body.crawler")
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
       describe "user profile views" do
@@ -4615,12 +4619,14 @@ RSpec.describe UsersController do
       it "returns not found when the username doesn't exist" do
         get "/u/madeuppity.json"
         expect(response).not_to be_successful
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
       it "returns not found when the user is inactive" do
         inactive = Fabricate(:user, active: false)
         get "/u/#{inactive.username}.json"
         expect(response).not_to be_successful
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
       it "returns success when show_inactive_accounts is true and user is logged in" do
@@ -4634,6 +4640,7 @@ RSpec.describe UsersController do
         Guardian.any_instance.expects(:can_see?).with(user1).returns(false)
         get "/u/#{user1.username}.json"
         expect(response).to be_forbidden
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
       describe "user profile views" do

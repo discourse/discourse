@@ -105,7 +105,7 @@ class UsersController < ApplicationController
                      ]
   skip_before_action :redirect_to_profile_if_required, only: %i[show staff_info update]
 
-  after_action :add_noindex_header, only: %i[show my_redirect]
+  before_action :add_noindex_header, only: %i[show my_redirect]
 
   allow_in_staff_writes_only_mode :admin_login
   allow_in_staff_writes_only_mode :email_login
