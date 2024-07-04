@@ -51,7 +51,9 @@ class UserSerializer < UserCardSerializer
                      :custom_avatar_template,
                      :has_title_badges,
                      :muted_usernames,
+                     :can_mute_users,
                      :ignored_usernames,
+                     :can_ignore_users,
                      :allowed_pm_usernames,
                      :mailing_list_posts_per_day,
                      :can_change_bio,
@@ -254,8 +256,16 @@ class UserSerializer < UserCardSerializer
     MutedUser.where(user_id: object.id).joins(:muted_user).pluck(:username)
   end
 
+  def can_mute_users
+    scope.can_mute_users?
+  end
+
   def ignored_usernames
     IgnoredUser.where(user_id: object.id).joins(:ignored_user).pluck(:username)
+  end
+
+  def can_ignore_users
+    scope.can_ignore_users?
   end
 
   def allowed_pm_usernames

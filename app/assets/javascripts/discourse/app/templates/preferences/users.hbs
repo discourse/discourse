@@ -1,5 +1,6 @@
 <label class="control-label">{{i18n "user.users"}}</label>
-{{#if this.ignoredEnabled}}
+
+{{#if this.model.can_ignore_users}}
   <div class="control-group user-ignore" data-setting-name="user-ignored-users">
     <div class="controls tracking-controls user-notifications">
       <label>{{d-icon "far-eye-slash" class="icon"}}
@@ -13,22 +14,24 @@
   </div>
 {{/if}}
 
-<div class="control-group user-mute" data-setting-name="user-muted-users">
-  <div class="controls tracking-controls">
-    <label>
-      {{d-icon "d-muted" class="icon"}}
-      <span>{{i18n "user.muted_users"}}</span>
-    </label>
-    <UserChooser
-      @value={{this.mutedUsernames}}
-      @onChange={{action "onChangeMutedUsernames"}}
-      @options={{hash excludeCurrentUser=true}}
-    />
+{{#if this.model.can_mute_users}}
+  <div class="control-group user-mute" data-setting-name="user-muted-users">
+    <div class="controls tracking-controls">
+      <label>
+        {{d-icon "d-muted" class="icon"}}
+        <span>{{i18n "user.muted_users"}}</span>
+      </label>
+      <UserChooser
+        @value={{this.mutedUsernames}}
+        @onChange={{action "onChangeMutedUsernames"}}
+        @options={{hash excludeCurrentUser=true}}
+      />
+    </div>
+    <div class="instructions">{{i18n "user.muted_users_instructions"}}</div>
   </div>
-  <div class="instructions">{{i18n "user.muted_users_instructions"}}</div>
-</div>
+{{/if}}
 
-{{#if this.currentUser.can_send_private_messages}}
+{{#if this.model.can_send_private_messages}}
   <div class="control-group private-messages">
     <label class="control-label">{{i18n "user.private_messages"}}</label>
     <div
