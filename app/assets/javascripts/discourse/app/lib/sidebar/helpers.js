@@ -16,7 +16,7 @@ export function hasDefaultSidebarTags(siteSettings) {
   return siteSettings.default_navigation_menu_tags.length > 0;
 }
 
-export function getSidebarSectionContentID(name) {
+export function getSidebarSectionContentId(name) {
   return `sidebar-section-content-${name}`;
 }
 

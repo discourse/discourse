@@ -7,7 +7,7 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import {
   getCollapsedSidebarSectionKey,
-  getSidebarSectionContentID,
+  getSidebarSectionContentId,
 } from "discourse/lib/sidebar/helpers";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
@@ -20,7 +20,7 @@ export default class SidebarSection extends Component {
   @service keyValueStore;
   @service sidebarState;
 
-  sidebarSectionContentID = getSidebarSectionContentID(this.args.sectionName);
+  sidebarSectionContentId = getSidebarSectionContentId(this.args.sectionName);
   collapsedSidebarSectionKey = getCollapsedSidebarSectionKey(
     this.args.sectionName
   );
@@ -122,7 +122,7 @@ export default class SidebarSection extends Component {
           <div class="sidebar-section-header-wrapper sidebar-row">
             <SectionHeader
               @collapsable={{@collapsable}}
-              @sidebarSectionContentID={{this.sidebarSectionContentID}}
+              @sidebarSectionContentId={{this.sidebarSectionContentId}}
               @toggleSectionDisplay={{this.toggleSectionDisplay}}
               @isExpanded={{this.displaySectionContent}}
             >
@@ -180,7 +180,7 @@ export default class SidebarSection extends Component {
 
         {{#if this.displaySectionContent}}
           <ul
-            id={{this.sidebarSectionContentID}}
+            id={{this.sidebarSectionContentId}}
             class="sidebar-section-content"
           >
             {{yield}}
