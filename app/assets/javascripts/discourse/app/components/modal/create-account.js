@@ -388,13 +388,15 @@ export default class CreateAccount extends Component.extend(
 
           // Trigger the browser's password manager using the hidden static login form:
           const hiddenLoginForm = document.querySelector("#hidden-login-form");
-          hiddenLoginForm.querySelector("input[name=username]").value =
-            attrs.accountUsername;
-          hiddenLoginForm.querySelector("input[name=password]").value =
-            attrs.accountPassword;
-          hiddenLoginForm.querySelector("input[name=redirect]").value =
-            userPath("account-created");
-          hiddenLoginForm.submit();
+          if (hiddenLoginForm) {
+            hiddenLoginForm.querySelector("input[name=username]").value =
+              attrs.accountUsername;
+            hiddenLoginForm.querySelector("input[name=password]").value =
+              attrs.accountPassword;
+            hiddenLoginForm.querySelector("input[name=redirect]").value =
+              userPath("account-created");
+            hiddenLoginForm.submit();
+          }
           return new Promise(() => {}); // This will never resolve, the page will reload instead
         } else {
           this.set("flash", result.message || I18n.t("create_account.failed"));
