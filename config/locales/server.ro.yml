@@ -845,6 +845,8 @@ ro:
     web_crawlers:
       labels:
         page_views: "Vizualizări"
+    web_hook_events_daily_aggregate:
+      xaxis: "Zi"
     suspicious_logins:
       labels:
         user: Utilizator
@@ -910,7 +912,6 @@ ro:
     post_onebox_maxlength: "Lungimea maximă a unei postări afișate în Onebox (în caractere)"
     notification_email: "Adresă expeditor: adresa de email folosită când se trimit toate emailurile esențiale ale sistemului. Domeniul specificat aici trebuie să aibă setate corect SPF, DKIM și reverse PTR pentru ca emailul să poată fi livrat."
     email_custom_headers: "O listă delimitată cu simbolul | (pipe) a header-elor personalizate de email"
-    enforce_second_factor: "Cere utilizatorilor să-și activeze autentificarea în doi factori înainte de a putea accesa interfața de utilizare Discourse. Selectează „toți” pentru a o impune tuturor utilizatorilor. Selectează „echipă” pentru a o impune numai utilizatorilor din echipă. Această setare nu afectează autentificarea API sau a „furnizorului DiscourseConnect”."
     force_https: "Forțează site-ul să folosească exclusiv HTTPS. ATENȚIE: NU activa această opțiune până nu ai verificat dacă HTTPS este configurat în întregime și funcționează absolut peste tot. Ai verificat, de asemenea, dacă și CND-ul, toate autentificările cu cont pe rețele de socializaer și toate logo-urile și dependențele externe sunt compatibile cu HTTPS?"
     summary_score_threshold: "Scorul minim necesar pentru ca o postare să fie inclusă în 'Rezumă acest subiect'"
     summary_percent_filter: "Când un utilizator face click pe 'Rezumatul acestui subiect', arată primele % de postări"
@@ -1325,7 +1326,6 @@ ro:
     password_too_long: "Parole sunt limitate la 200 caractere."
     email_too_long: "Adresa de email pe care ai introdus-o este prea lungă. Numele de căsuțe poștale nu trebuie să depășească 254 de caractere, și numele de domenii nu trebuie să depășească 253 de caractere."
     reserved_username: "Acest nume utilizator nu este permis."
-    missing_user_field: "Nu ai completat toate câmpurile utilizatorului"
     second_factor_title: "Autentificare în doi pași (2FA)"
     second_factor_description: "Introdu codul de autentificare din aplicația 2FA"
     invalid_second_factor_code: "Cod de autentificare invalid. Fiecare cod poate fi utilizat o singură dată."
@@ -1813,7 +1813,7 @@ ro:
     Editează prima postare în acest subiect pentru a schimba conținutul paginii %{page_name}.
   guidelines_topic:
     title: "FAQ/Ghid"
-    guidelines_title: "Indicații"
+    guidelines_title: "Reguli generale"
   tos_topic:
     title: "Condiții generale de utilizare"
   privacy_topic:

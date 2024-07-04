@@ -1214,7 +1214,8 @@ ru:
       activity_stream: "Активность"
       read: "Прочитанные"
       read_help: "Недавно прочитанные темы"
-      preferences: "Настройки"
+      preferences:
+        title: "Настройки"
       feature_topic_on_profile:
         open_search: "Выберите тему"
         title: "Выбор темы"
@@ -2319,10 +2320,10 @@ ru:
       loading: Загрузка…
     category_row:
       subcategory_count:
-        one: "+ %{count} подкатегория"
-        few: "+ %{count} подкатегории"
-        many: "+ %{count} подкатегорий"
-        other: "+ %{count} подкатегории"
+        one: "+%{count} подкатегория"
+        few: "+%{count} подкатегории"
+        many: "+%{count} подкатегорий"
+        other: "+%{count} подкатегории"
       topic_count:
         one: "%{count} тема в этой категории"
         few: "%{count} темы в этой категории"
@@ -5326,6 +5327,7 @@ ru:
           city_for_disputes: "Город для разрешения споров"
           optional: "(необязательно)"
           update: "Обновить"
+          saved: "сохранено!"
       plugins:
         title: "Плагины"
         installed: "Установленные плагины"
@@ -5703,7 +5705,6 @@ ru:
             description: "Ссылки, некоторые кнопки, уведомления и акцентный цвет."
           quaternary:
             name: "Четвертичный"
-            description: "Навигационные ссылки."
           header_background:
             name: "Фон заголовка"
             description: "Фоновый цвет заголовка сайта."

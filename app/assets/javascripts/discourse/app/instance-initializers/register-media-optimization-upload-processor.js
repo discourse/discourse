@@ -16,8 +16,6 @@ export default {
       //
       // Until Safari makes some progress with OffscreenCanvas or other
       // alternatives we cannot support this workflow.
-      //
-      // TODO (martin): Revisit around 2022-06-01 to see the state of iOS Safari.
       if (
         capabilities.isIOS &&
         !siteSettings.composer_ios_media_optimisation_image_enabled

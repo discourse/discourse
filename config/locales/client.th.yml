@@ -726,7 +726,8 @@ th:
         to: "ถึง"
       activity_stream: "กิจกรรม"
       read: "อ่าน"
-      preferences: "การตั้งค่า"
+      preferences:
+        title: "การตั้งค่า"
       feature_topic_on_profile:
         open_search: "เลือกกระทู้ใหม่"
         title: "เลือกกระทู้"
@@ -2672,6 +2673,7 @@ th:
         about:
           optional: "(ทางเลือก)"
           update: "อัปเดต"
+          saved: "บันทึกแล้ว!"
       plugins:
         title: "ปลั้กอิน"
         installed: "ปลั้กอินที่ติดตั้งแล้ว"

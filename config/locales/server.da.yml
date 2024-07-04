@@ -183,7 +183,6 @@ da:
       s3_backup_requires_s3_settings: "Du kan ikke bruge S3 som backupplacering, medmindre du har angivet '%{setting_name}'."
       s3_bucket_reused: "Du kan ikke bruge den samme spand til 's3_upload_bucket' og 's3_backup_bucket'. Vælg en anden spand, eller brug en anden sti til hver spand."
       share_quote_facebook_requirements: "Du skal indstille et Facebook-app-id for at aktivere citatdeling for Facebook."
-      second_factor_cannot_enforce_with_socials: "Du kan ikke gennemtvinge 2FA med sociale logins aktiveret. Du skal først deaktivere login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Du kan ikke gennemtvinge 2FA, hvis lokale logins er deaktiveret."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Du kan ikke gennemtvinge 2FA, hvis DiscourseConnect er aktiveret."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Du kan ikke deaktivere lokalt login, hvis 2FA gennemtvinges. Deaktiver gennemtvunget 2FA, før du deaktiverer lokale logins."
@@ -1176,6 +1175,8 @@ da:
       labels:
         user_agent: "Bruger Agent"
         page_views: "Sidevisninger"
+    web_hook_events_daily_aggregate:
+      xaxis: "Dag"
     suspicious_logins:
       title: "Mistænkelige Logins"
       labels:
@@ -1707,7 +1708,6 @@ da:
     password_too_long: "Kodeord er begrænset til 200 tegn."
     email_too_long: "Den mailadresse, du har opgivet, er for lang. Navnet i mailadressen må ikke overstige 254 tegn, og domænenavnet må ikke overstige 253 tegn."
     reserved_username: "Dette brugernavn er ikke tilladt."
-    missing_user_field: "Du har ikke udfyldt alle felterne"
     auth_complete: "Godkendelsen er gennemført."
     click_to_continue: "Klik her for at fortsætte."
     second_factor_title: "To-faktor Godkendelse"

@@ -123,6 +123,18 @@ class DiscoursePoll::Poll
       end
     end
 
+    if serialized_poll[:type] == MULTIPLE
+      serialized_poll[:options].each do |option|
+        option.merge!(
+          chosen:
+            PollVote
+              .joins(:poll_option)
+              .where(poll_options: { digest: option[:id] }, user_id: user.id, poll_id: poll_id)
+              .exists?,
+        )
+      end
+    end
+
     [serialized_poll, options]
   end
 

@@ -1338,7 +1338,8 @@ ar:
       activity_stream: "النشاط"
       read: "المقروءة"
       read_help: "الموضوعات المقروءة مؤخرًا"
-      preferences: "التفضيلات"
+      preferences:
+        title: "التفضيلات"
       feature_topic_on_profile:
         open_search: "تحديد موضوع جديد"
         title: "تحديد موضوع"
@@ -2500,12 +2501,12 @@ ar:
       loading: جارٍ التحميل…
     category_row:
       subcategory_count:
-        zero: "+ %{count} فئة فرعية"
-        one: "+ %{count} تصنيفات فرعية"
-        two: "+ %{count} تصنيف فرعي واحد و تصنيفات فرعية"
-        few: "+ %{count} فئات فرعية"
-        many: "+ %{count} فئة فرعية"
-        other: "+ %{count} فئة فرعية"
+        zero: "+%{count} فئة فرعية"
+        one: "+%{count} تصنيفات فرعية"
+        two: "+%{count} تصنيف فرعي واحد و تصنيفات فرعية"
+        few: "+%{count} فئات فرعية"
+        many: "+%{count} فئة فرعية"
+        other: "+%{count} فئة فرعية"
       topic_count:
         zero: "%{count} موضوع في هذه الفئة"
         one: "موضوع واحد (%{count}) في هذه الفئة"
@@ -5777,6 +5778,7 @@ ar:
           city_for_disputes: "مدينة النزاعات"
           optional: "(اختياري)"
           update: "تحديث"
+          saved: "تم الحفظ!"
       plugins:
         title: "الإضافات"
         installed: "الإضافات المثبَّتة"
@@ -6160,7 +6162,6 @@ ar:
             description: "الروابط، وبعض الأزرار، والإشعارات، ولون التمييز."
           quaternary:
             name: "الرابع"
-            description: "روابط التنقل."
           header_background:
             name: "خلفية الرأس"
             description: "لون خلفية رأس الموقع."

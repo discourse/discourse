@@ -526,7 +526,8 @@ sq:
         to: "për"
       activity_stream: "Aktiviteti"
       read: "Lexuar"
-      preferences: "Preferencat"
+      preferences:
+        title: "Preferencat"
       feature_topic_on_profile:
         save: "Ruaj"
         clear:
@@ -2140,6 +2141,9 @@ sq:
           screened_urls: "Kontroll URL-sh"
           security: "Siguria"
           spam: "Spam"
+      config_areas:
+        about:
+          saved: "u ruajt!"
       plugins:
         title: "Pluginet"
         installed: "Pluginet e instaluar"
@@ -2300,7 +2304,6 @@ sq:
             description: "Linket, ca butona, njoftimet dhe ngjyrat për theks."
           quaternary:
             name: "katërsore"
-            description: "Lidhjet e menusë."
           header_background:
             name: "sfondi i ballinës"
             description: "Ngjyra në sfond të ballinës."

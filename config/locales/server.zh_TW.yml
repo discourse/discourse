@@ -259,6 +259,7 @@ zh_TW:
   read_full_topic: "閱讀整個話題"
   private_message_abbrev: "消息"
   rss_description:
+    hot: "熱門話題"
     latest: "最新討論話題"
     top: "熱門討論話題"
     top_all: "最熱門話題"
@@ -1000,6 +1001,8 @@ zh_TW:
         user_agent: "使用者代理"
         page_views: "頁面瀏覽次數"
       description: "網路爬蟲使用者代理清單，按頁面瀏覽量排序"
+    web_hook_events_daily_aggregate:
+      xaxis: "天"
     suspicious_logins:
       title: "可疑登入"
       labels:
@@ -1196,7 +1199,6 @@ zh_TW:
     s3_configure_tombstone_policy: "啟用上傳的自動刪除功能。重要提醒：如果禁用此功能，在檔案刪除後，不會回收空間。"
     backup_time_of_day: "備份的 UTC 時間"
     backup_with_uploads: "在備份日程中包括上傳。關閉此項僅備份資料庫。"
-    backup_location: "讀取備份資料的位置。注意：Amazon S3 需要在“文件”設定中輸入有效的 S3 驗證資料。"
     backup_gzip_compression_level_for_uploads: "Gzip壓縮等級用於壓縮上傳圖片。"
     include_thumbnails_in_backups: "在備份中包含生成的縮圖。禁用此選項會使備份檔案大小變得更小，但需要在還原後重新啟動所有貼文。"
     active_user_rate_limit_secs: "更新“最後一次見到”資料的頻率，單位為秒"
@@ -1628,7 +1630,6 @@ zh_TW:
     password_too_long: "密碼不能超過 200 個字符。"
     email_too_long: "你輸入的郵件太長了。郵箱名不得超過 254 字元，域名必須不超過 253 字元。"
     reserved_username: "該使用者名不可被使用。"
-    missing_user_field: "你還沒有填寫完所有使用者字段"
     auth_complete: "已完成認證。"
     click_to_continue: "點擊此處繼續。"
     second_factor_title: "兩步驟驗證"

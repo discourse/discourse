@@ -961,7 +961,8 @@ vi:
       activity_stream: "Hoạt động"
       read: "Đã đọc"
       read_help: "Các chủ đề đã đọc gần đây"
-      preferences: "Tùy chỉnh"
+      preferences:
+        title: "Tùy chỉnh"
       feature_topic_on_profile:
         open_search: "Chọn chủ đề mới"
         title: "Chọn chủ đề"
@@ -1786,7 +1787,7 @@ vi:
       loading: Đang tải…
     category_row:
       subcategory_count:
-        other: "+ %{count} danh mục phụ"
+        other: "+%{count} danh mục phụ"
       topic_count:
         other: "%{count} chủ đề trong danh mục này"
     select_kit:
@@ -3125,7 +3126,7 @@ vi:
       label: "Đang treo"
       label_with_count: "Đang xử lý (%{count})"
     posts_likes_MF: |
-      Chủ đề này có {count, plural, one {# trả lời} other {# trả lời}} {ratio, select,
+      Chủ đề này có {count, plural, other {# trả lời}} {ratio, select,
         low {với tỷ lệ like trên post cao}
         med {với tỷ lệ like trên post rất cao}
         high {với tỷ lệ like trên post cực cao}
@@ -4032,6 +4033,7 @@ vi:
         about:
           optional: "(tùy chọn)"
           update: "Cập nhật"
+          saved: "đã lưu"
       plugins:
         title: "Plugin"
         installed: "Đã cài Plugin"
@@ -4363,7 +4365,6 @@ vi:
             description: "Liên kết, một và nút, thông báo, và màu nhấn."
           quaternary:
             name: "chia bốn"
-            description: "Liên kết điều hướng."
           header_background:
             name: "nền header"
             description: "Màu nền header của trang."

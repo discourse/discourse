@@ -136,7 +136,7 @@ export default class TopicListHeaderColumn extends Component {
       {{/if}}
 
       {{#unless @bulkSelectEnabled}}
-        {{#if this.showTopicsAndRepliesToggle}}
+        {{#if @showTopicsAndRepliesToggle}}
           <NewListHeaderControls
             @current={{@newListSubset}}
             @newRepliesCount={{@newRepliesCount}}

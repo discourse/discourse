@@ -140,7 +140,7 @@ class TopicsController < ApplicationController
                   custom_message_params: {
                     group: group.name,
                   },
-                  group: group,
+                  group: serialize_data(group, BasicGroupSerializer, root: false),
                 )
         end
 
@@ -1189,37 +1189,6 @@ class TopicsController < ApplicationController
     head :ok
   end
 
-  def summary
-    topic = Topic.find(params[:topic_id])
-    guardian.ensure_can_see!(topic)
-    strategy = Summarization::Base.selected_strategy
-
-    if strategy.nil? || !Summarization::Base.can_see_summary?(topic, current_user)
-      raise Discourse::NotFound
-    end
-
-    RateLimiter.new(current_user, "summary", 6, 5.minutes).performed! if current_user
-
-    opts = params.permit(:skip_age_check)
-
-    if params[:stream] && current_user
-      Jobs.enqueue(
-        :stream_topic_summary,
-        topic_id: topic.id,
-        user_id: current_user.id,
-        opts: opts.as_json,
-      )
-
-      render json: success_json
-    else
-      hijack do
-        summary = TopicSummarization.new(strategy).summarize(topic, current_user, opts)
-
-        render_serialized(summary, TopicSummarySerializer)
-      end
-    end
-  end
-
   private
 
   def topic_params
@@ -1297,7 +1266,6 @@ class TopicsController < ApplicationController
     topic_id = @topic_view.topic.id
     ip = request.remote_ip
     user_id = (current_user.id if current_user)
-    track_visit = should_track_visit_to_topic?
 
     if !request.format.json?
       hash = {
@@ -1314,13 +1282,32 @@ class TopicsController < ApplicationController
       TopicsController.defer_add_incoming_link(hash)
     end
 
-    TopicsController.defer_track_visit(topic_id, ip, user_id, track_visit)
+    TopicsController.defer_track_visit_v2(topic_id, user_id) if should_track_visit_to_topic?
   end
 
+  # TODO (martin) Remove this once discourse-docs is updated.
   def self.defer_track_visit(topic_id, ip, user_id, track_visit)
+    self.defer_track_visit_v2(topic_id, user_id) if track_visit
+    self.defer_topic_view(topic_id, ip, user_id)
+  end
+  def self.defer_track_visit_v2(topic_id, user_id)
     Scheduler::Defer.later "Track Visit" do
+      TopicUser.track_visit!(topic_id, user_id)
+    end
+  end
+
+  def self.defer_topic_view(topic_id, ip, user_id = nil)
+    Scheduler::Defer.later "Topic View" do
+      topic = Topic.find_by(id: topic_id)
+      return if topic.blank?
+
+      # We need to make sure that we aren't allowing recording
+      # random topic views against topics the user cannot see.
+      user = User.find_by(id: user_id) if user_id.present?
+      return if user_id.present? && user.blank?
+      return if !Guardian.new(user).can_see_topic?(topic)
+
       TopicViewItem.add(topic_id, ip, user_id)
-      TopicUser.track_visit!(topic_id, user_id) if track_visit
     end
   end
 

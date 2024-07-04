@@ -943,6 +943,8 @@ vi:
     web_crawlers:
       labels:
         page_views: "Số lượt xem"
+    web_hook_events_daily_aggregate:
+      xaxis: "Ngày"
     suspicious_logins:
       title: "Đăng nhập đáng ngờ"
       labels:
@@ -1439,7 +1441,6 @@ vi:
     email_too_long: "Email bạn cung cấp quá dài. Địa chỉ email phải không quá 254 ký tự, và tên miền phải không quá 253 ký tự."
     wrong_invite_code: "Mã mời bạn đã nhập không chính xác."
     reserved_username: "Tên đăng nhập không được cho phép."
-    missing_user_field: "Bạn không hoàn tất tất cả các trường người dùng"
     auth_complete: "Xác thực đã hoàn tất."
     click_to_continue: "Nhấn vào đây để tiếp tục."
     already_logged_in: "Lấy làm tiếc! Lời mời này dành cho người dùng mới, những người chưa có tài khoản."

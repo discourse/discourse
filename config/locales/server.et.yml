@@ -709,6 +709,8 @@ et:
     web_crawlers:
       labels:
         page_views: "Lehekülje vaatamisi"
+    web_hook_events_daily_aggregate:
+      xaxis: "Päev"
     suspicious_logins:
       labels:
         user: Kasutaja

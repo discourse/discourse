@@ -13,6 +13,16 @@ module Chat
       return if user.user_option.send_chat_email_never?
       return if user.user_option.email_level == UserOption.email_level_types[:never]
 
+      group_ids = user.groups.where.not(mentionable_level: Group::ALIAS_LEVELS[:nobody]).pluck(:id)
+      group_sql =
+        (
+          if group_ids.any?
+            "WHEN 'Chat::GroupMention' THEN chat_mentions.target_id IN (#{group_ids.join(",")})"
+          else
+            ""
+          end
+        )
+
       unread_mentions = DB.query_array <<~SQL
         WITH unread_mentions AS (
           SELECT uccm.id membership_id, uccm.chat_channel_id, MIN(chat_messages.id) first_chat_message_id, MAX(chat_messages.id) last_chat_message_id
@@ -33,6 +43,12 @@ module Chat
           AND chat_messages.created_at > now() - interval '1 week'
           AND (uccm.last_read_message_id IS NULL OR uccm.last_read_message_id < chat_messages.id)
           AND (uccm.last_unread_mention_when_emailed_id IS NULL OR uccm.last_unread_mention_when_emailed_id < chat_messages.id)
+          AND (
+            CASE chat_mentions.type
+            WHEN 'Chat::UserMention' THEN chat_mentions.target_id = #{user.id}
+            WHEN 'Chat::AllMention' THEN chat_channels.allow_channel_wide_mentions = true
+            #{group_sql} END
+          )
           AND NOT notifications.read
           GROUP BY uccm.id
         )

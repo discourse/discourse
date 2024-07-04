@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# TODO(@keegan): Remove after removing SiteSetting.summarization_strategy
+# Keeping because its still needed for SiteSetting to function.
+# Remove after settings are migrated to AI
+
 # Base class that defines the interface that every summarization
 # strategy must implement.
 # Above each method, you'll find an explanation of what

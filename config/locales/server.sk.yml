@@ -377,7 +377,6 @@ sk:
       secure_uploads_requirements: "Pred povolením zabezpečeného odosielania je potrebné povoliť odosielanie na S3 a S3 ACL."
       s3_use_acls_requirements: "Ak je povolené zabezpečené odosielanie, musíte mať povolené ACL S3."
       share_quote_facebook_requirements: "Ak chcete povoliť zdieľanie citácií pre Facebook, musíte nastaviť id aplikácie Facebook."
-      second_factor_cannot_enforce_with_socials: "Pri povolených prihláseniach do sociálnych sietí nie je možné vynútiť 2FA. Musíte najprv zakázať prihlasovanie prostredníctvom: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Ak sú miestne prihlásenia zakázané, nie je možné vynútiť 2FA."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Ak je zapnutá funkcia DiscourseConnect, nie je možné vynútiť 2FA."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Ak je vynútené 2FA, nemôžete vypnúť miestne prihlásenie. Pred vypnutím miestneho prihlásenia vypnite vynútené 2FA."
@@ -1621,6 +1620,11 @@ sk:
         user_agent: "Používateľský agent"
         page_views: "Zobrazenia stránky"
       description: "Zoznam používateľských agentov webového prehľadávača zoradených podľa zobrazení stránok."
+    web_hook_events_daily_aggregate:
+      title: "Udalosti Web Hook"
+      xaxis: "Deň"
+      yaxis: "Počet udalostí"
+      description: "Počet spustených udalostí web hook alebo ich priemerné trvanie."
     suspicious_logins:
       title: "Podozrivé prihlásenia"
       labels:
@@ -1809,7 +1813,8 @@ sk:
     email_custom_headers: "Zoznam voliteľných emailových hlavičiek oddelených |"
     email_subject: "Prispôsobiteľný formát predmetu pre štandardné e-maily. Pozrite si <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Poskytuje používateľom podrobnejšie informácie o tom, prečo nemajú prístup k určitej téme. Poznámka: Je to menej bezpečné, pretože používatelia budú vedieť, či adresa URL odkazuje na platnú tému."
-    enforce_second_factor: "Vyžadujte od používateľov, aby pred prístupom do používateľského rozhrania Discourse povolili dvojfaktorové overovanie. Výberom možnosti \"all\" (všetci) ju vynútite pre všetkých používateľov. Vyberte možnosť \"staff\", ak ju chcete uplatniť len na používateľov z radov personálu. Toto nastavenie nemá vplyv na overovanie API alebo poskytovateľa DiscourseConnect."
+    enforce_second_factor: "Vyžadujte od používateľov, aby pred prístupom do používateľského rozhrania Discourse povolili dvojfaktorové overovanie. Toto nastavenie nemá vplyv na overovanie API alebo poskytovateľa DiscourseConnect. Ak je zapnutá možnosť enforce_second_factor_on_external_auth, používatelia sa nebudú môcť prihlásiť pomocou externých poskytovateľov overovania po nastavení dvojfaktorového overovania."
+    enforce_second_factor_on_external_auth: "Vyžadujte od používateľov, aby vždy používali dvojfaktorové overovanie. Ak je táto funkcia zapnutá, zabráni používateľom prihlásiť sa pomocou externých metód overovania, ako sú napríklad prihlásenia cez sociálne siete, ak majú povolené dvojfaktorové overovanie. Keď je táto funkcia vypnutá, používatelia budú musieť potvrdiť svoje dvojfaktorové overenie len pri prihlasovaní pomocou používateľského mena a hesla. Pozrite si tiež nastavenie `enforce_second_factor` (vynútiť druhý faktor)."
     force_https: "Vynútiť, aby váš web používal iba HTTPS. UPOZORNENIE: NEZAPÍNAJTE to, kým neoveríte, že HTTPS je úplne nastavené a funguje úplne všade! Skontrolovali ste svoje CDN, všetky sociálne prihlásenia a akékoľvek externé logá / závislosti, aby ste sa uistili, že sú tiež kompatibilné s HTTPS?"
     summary_score_threshold: "Minimálne požadované skóre príspevku na to aby bol zahrnutý do 'Sumarizuj túto tému'"
     summary_posts_required: "Minimálny počet príspevkov v téme pred povolením funkcie 'Zhrnúť túto tému'. Zmeny v tomto nastavení budú uplatnené spätne do jedného týždňa."
@@ -1882,7 +1887,7 @@ sk:
     content_security_policy_report_only: "Povoliť Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_collect_reports: "Povolenie zberu správ o porušeniach CSP na adrese /csp_reports"
     content_security_policy_frame_ancestors: "Obmedziť, kto môže túto stránku vložiť do iframe prostredníctvom CSP. Kontrola povolených hostiteľov pri <a href='%{base_path}/admin/customize/embedding'>vkladaní</a>"
-    content_security_policy_script_src: "Ďalšie zdroje skriptov uvedené v zozname povolených zdrojov. Aktuálny hostiteľ a CDN sú predvolene zahrnuté. Pozrite si časť <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Zmiernenie útokov XSS pomocou zásad zabezpečenia obsahu.</a> (CSP). Zdroje hostiteľa budú ignorované, keď je zapnutá funkcia content_security_policy_strict_dynamic."
+    content_security_policy_script_src: "Ďalšie zdroje skriptov uvedené v zozname povolených zdrojov. Aktuálny hostiteľ a CDN sú predvolene zahrnuté. Pozrite si časť <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Zmiernenie útokov XSS pomocou zásad zabezpečenia obsahu.</a> (CSP). Ostatné zdroje hostiteľa sú ignorované, pretože je povolená funkcia strict-dynamic."
     invalidate_inactive_admin_email_after_days: "Účty administrátorov, ktorí nenavštívili stránku počas tohto počtu dní, budú musieť pred prihlásením znovu overiť svoju e-mailovú adresu. Nastavte na 0, aby ste to zakázali."
     include_secure_categories_in_tag_counts: "Ak je táto možnosť povolená, počet tém pre značku bude zahŕňať témy, ktoré sú v kategóriách s obmedzeným čítaním pre všetkých používateľov. Ak je vypnuté, bežným používateľom sa zobrazí len počet tém pre značku, v ktorej sú všetky témy vo verejných kategóriách."
     display_personal_messages_tag_counts: "Ak je táto možnosť povolená, zobrazí sa počet osobných správ označených danou značkou."
@@ -1995,9 +2000,10 @@ sk:
     s3_configure_tombstone_policy: "Povolenie politiky automatického odstraňovania pre nahrávanie náhrobných kameňov. DÔLEŽITÉ: Ak je táto funkcia vypnutá, po vymazaní nahraných súborov nebude obnovené žiadne miesto."
     s3_disable_cleanup: "Zabrániť odstráneniu starých záloh zo služby S3, ak je ich viac, ako je povolené maximum."
     s3_use_acls: "AWS odporúča nepoužívať ACL na vedrách S3; ak sa riadite touto radou, zrušte začiarknutie tejto možnosti. Táto možnosť musí byť povolená, ak používate zabezpečené nahrávanie."
+    enable_direct_s3_uploads: "Umožňuje priame nahrávanie viacerých častí do Amazon S3, viac informácií nájdete na stránke https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469."
     backup_time_of_day: "Čas v UTC, kedy sa má spustiť záloha."
     backup_with_uploads: "Do pravidelných záloh ulož i nahrané súbory. Pri vypnutej voľbe sa uloží iba záloha databázy."
-    backup_location: "Miesto, kde sú uložené zálohy. DÔLEŽITÉ: S3 vyžaduje platné poverenia S3 zadané v nastaveniach súborov."
+    backup_location: "Miesto, kde sú uložené zálohy. DÔLEŽITÉ: S3 vyžaduje platné poverenia S3 zadané v nastaveniach súborov. Keď to zmeníte na S3 z Local, musíte spustiť úlohu rake `s3:ensure_cors_rules`."
     backup_gzip_compression_level_for_uploads: "Úroveň kompresie Gzip používaná na komprimovanie odosielania."
     include_thumbnails_in_backups: "Zahrnúť vygenerované miniatúry do záloh. Ak túto funkciu zakážete, zálohy budú menšie, ale po obnovení sa budú musieť všetky príspevky znovu obnoviť."
     active_user_rate_limit_secs: "Ako často máme aktualizovať pole 'naposledy videný o', v sekundách"
@@ -2453,8 +2459,9 @@ sk:
     enable_offline_indicator: "Zobrazenie správy používateľom, keď sa zistí, že nemajú sieťové pripojenie"
     default_sidebar_link_to_filtered_list: "Zabezpečte, aby odkazy navigačného menu odkazovali na filtrovaný zoznam v predvolenom nastavení."
     default_sidebar_show_count_of_new_items: "Nastaviť, aby odkazy navigačnej ponuky v predvolenom nastavení zobrazovali počet nových položiek namiesto odznakov."
-    default_sidebar_switch_panel_position: "Poloha tlačidiel na paneli prepínačov bočného panela"
+    default_sidebar_switch_panel_position: "Poloha tlačidla na bočnom paneli na prepnutie do chatu"
     retain_web_hook_events_period_days: "Počet dní, počas ktorých sa majú uchovávať záznamy o udalostiach webového háčika."
+    retain_web_hook_events_aggregate_days: "Počet dní uchovávania súhrnných záznamov udalostí webového háku."
     retry_web_hook_events: "Automaticky opakovať neúspešné udalosti web hook 4-krát. Časové intervaly medzi opakovaniami sú 1, 5, 25 a 125 minút."
     revoke_api_keys_unused_days: "Počet dní od posledného použitia kľúča API pred jeho automatickým zrušením (0 pre nikdy)"
     revoke_api_keys_maxlife_days: "Počet dní pred automatickým zrušením kľúča API (0 pre nikdy)"
@@ -2567,6 +2574,7 @@ sk:
       invalid_reply_by_email_address: "Hodnota musí obsahovať '%{reply_key}' a byť odlišná od notifikačného emailu."
       invalid_alternative_reply_by_email_addresses: "Všetky hodnoty musia obsahovať '%{reply_key}' a musia sa líšiť od notifikačného e-mailu."
       invalid_domain_hostname: "Nesmie obsahovať znaky * alebo ?."
+      invalid_csp_script_src: "Hodnota musí byť buď 'unsafe-eval' alebo 'wasm-unsafe-eval', alebo v tvare '<hash algorithm>-<base64 value>', kde podporované hash algoritmy sú sha256, sha384 alebo sha512. Uistite sa, že váš vstup je zabalený do jednoduchých úvodzoviek."
       pop3_polling_host_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 adresu'."
       pop3_polling_username_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 používateľské meno'."
       pop3_polling_password_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 heslo'."
@@ -2833,7 +2841,7 @@ sk:
     email_too_long: "Emailová adresa je príliš dlhá. Meno priečinka musí byť kratšie ako 254 znakov a meno domény musí byť kratšie ako 253 znakov."
     wrong_invite_code: "Zadaný kód pozvánky bol nesprávny."
     reserved_username: "Toto užívateľské meno nie je povolené."
-    missing_user_field: "Nevyplnili ste všetky užívateľké polia."
+    missing_user_field: "Nevyplnili ste všetky požadované polia používateľa"
     auth_complete: "Overovanie je dokončené."
     click_to_continue: "Kliknutím sem pokračujte."
     already_logged_in: "Prepáčte! Táto pozvánka je určená pre nových používateľov, ktorí ešte nemajú vytvorené konto."
@@ -4479,7 +4487,7 @@ sk:
 
       ## [Powered by You](#power)
 
-      Túto stránku prevádzkuje váš [priateľský miestny personál](%{base_path}/about) a *vy*, komunita. Ak máte ďalšie otázky o tom, ako by tu mali veci fungovať, otvorte novú tému na %{feedback_category} a poďme diskutovať! Ak sa vyskytne kritický alebo naliehavý problém, ktorý sa nedá vyriešiť prostredníctvom meta témy alebo príznaku, kontaktujte nás prostredníctvom stránky [staff](%{base_path}/about).
+      Túto stránku prevádzkuje váš [priateľský moderátorský tím](%{base_path}/about) a *vy*, komunita. Ak máte ďalšie otázky o tom, ako by tu mali veci fungovať, otvorte novú tému na %{feedback_category} a poďme diskutovať! Ak sa vyskytne kritický alebo naliehavý problém, ktorý sa nedá vyriešiť pomocou meta témy alebo príznaku, [kontaktujte moderátorov](%{base_path}/o).
   tos_topic:
     title: "Podmienky používania"
     body: |

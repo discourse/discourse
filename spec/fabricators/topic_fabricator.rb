@@ -35,3 +35,37 @@ Fabricator(:group_private_message_topic, from: :topic) do
   topic_allowed_users { |t| [Fabricate.build(:topic_allowed_user, user: t[:user])] }
   topic_allowed_groups { |t| [Fabricate.build(:topic_allowed_group, group: t[:recipient_group])] }
 end
+
+Fabricator(:new_reply_topic, from: :topic) do
+  transient count: 1
+  transient :current_user
+
+  before_create do |topic, transient|
+    if !transient[:current_user]
+      raise "new_reply_topic fabricator requires the `current_user` param"
+    end
+  end
+
+  after_create do |topic, transient|
+    Fabricate.times(transient[:count] + 1, :post, topic: topic)
+    TopicUser.change(
+      transient[:current_user].id,
+      topic.id,
+      notification_level: TopicUser.notification_levels[:tracking],
+    )
+    TopicUser.update_last_read(transient[:current_user], topic.id, 1, 1, 1)
+  end
+end
+
+Fabricator(:read_topic, from: :topic) do
+  transient :current_user
+
+  before_create do |topic, transient|
+    raise "read_topic fabricator requires the `current_user` param" if !transient[:current_user]
+  end
+
+  after_create do |topic, transient|
+    Fabricate(:post, topic: topic)
+    TopicUser.update_last_read(transient[:current_user], topic.id, 1, 1, 1)
+  end
+end

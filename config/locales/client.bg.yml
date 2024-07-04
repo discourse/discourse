@@ -1038,7 +1038,8 @@ bg:
       activity_stream: "Активност"
       read: "Прочетени"
       read_help: "Наскоро прочетени теми"
-      preferences: "Настройки"
+      preferences:
+        title: "Настройки"
       feature_topic_on_profile:
         open_search: "Изберете нова тема"
         title: "Изберете тема"
@@ -2020,8 +2021,8 @@ bg:
       enter: "Въведете"
     category_row:
       subcategory_count:
-        one: "+ %{count} подкатегория"
-        other: "+ %{count} подкатегории"
+        one: "+%{count} подкатегория"
+        other: "+%{count} подкатегории"
       topic_count:
         one: "%{count} тема в тази категория"
         other: "%{count} теми в тази категория"
@@ -3616,6 +3617,7 @@ bg:
         about:
           optional: "(по избор)"
           update: "Актуализация"
+          saved: "запазено!"
       plugins:
         title: "Приставки"
         installed: "Инсталирани приставки"
@@ -3783,7 +3785,6 @@ bg:
             description: "Връзки, някои бутони, известия и цветове за акцентиране."
           quaternary:
             name: "четвърти"
-            description: "Връзки за навигация."
           header_background:
             name: "Фон на хедъра"
             description: "Цвят на фона на хедъра на сайта."

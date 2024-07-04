@@ -632,13 +632,14 @@ export function getCaretPosition(element, options) {
  * Generate markdown table from an array of objects
  * Inspired by https://github.com/Ygilany/array-to-table
  *
- * @param  {Array} array       Array of objects
- * @param  {Array} columns     Column headings
- * @param  {String} colPrefix  Table column prefix
+ * @param  {Array<Record<string, string | undefined>>}          array       Array of objects
+ * @param  {String[]}                                           columns     Column headings
+ * @param  {String}                                             colPrefix   Table column prefix
+ * @param  {("left" | "center" | "right" | null)[] | undefined} alignments  Table alignments
  *
  * @return {String} Markdown table
  */
-export function arrayToTable(array, cols, colPrefix = "col") {
+export function arrayToTable(array, cols, colPrefix = "col", alignments) {
   let table = "";
 
   // Generate table headers
@@ -646,11 +647,15 @@ export function arrayToTable(array, cols, colPrefix = "col") {
   table += cols.join(" | ");
   table += "|\r\n|";
 
+  const alignMap = {
+    left: ":--",
+    center: ":-:",
+    right: "--:",
+  };
+
   // Generate table header separator
   table += cols
-    .map(function () {
-      return "---";
-    })
+    .map((_, index) => alignMap[String(alignments?.[index])] || "---")
     .join(" | ");
   table += "|\r\n";
 

@@ -937,7 +937,8 @@ el:
       activity_stream: "Δραστηριότητα"
       read: "Διαβασμένο"
       read_help: "Πρόσφατα αναγνωσμένα θέματα"
-      preferences: "Προτιμήσεις"
+      preferences:
+        title: "Προτιμήσεις"
       feature_topic_on_profile:
         open_search: "Επιλέξτε ένα νέο θέμα"
         title: "Επιλέξτε ένα θέμα"
@@ -1694,8 +1695,8 @@ el:
       enter: "Enter"
     category_row:
       subcategory_count:
-        one: "+ %{count} υποκατηγορία"
-        other: "+ %{count} υποκατηγορίες"
+        one: "+%{count} υποκατηγορία"
+        other: "+%{count} υποκατηγορίες"
       topic_count:
         one: "%{count} θέμα σε αυτήν την κατηγορία"
         other: "%{count} θέματα σε αυτήν την κατηγορία"
@@ -3668,6 +3669,7 @@ el:
         about:
           optional: "(προεραιτικό)"
           update: "Ενημέρωση"
+          saved: "αποθηκεύτηκε!"
       plugins:
         title: "Plugins"
         installed: "Εγκατεστημένα Plugins"
@@ -3966,7 +3968,6 @@ el:
             description: "Σύνδεσμοι, μερικά κουμπιά, ειδοποιήσεις και χρώματα έμφασης."
           quaternary:
             name: "τέταρτο"
-            description: "Σύνδεσμοι πλοήγησης"
           header_background:
             name: "φόντο κεφαλίδας"
             description: "Χρώμα στο φόντο της κεφαλίδας του ιστότοπου."

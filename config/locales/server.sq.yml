@@ -586,6 +586,8 @@ sq:
     mobile_visits:
       xaxis: "Ditë"
       yaxis: "Numri i vizitave"
+    web_hook_events_daily_aggregate:
+      xaxis: "Dit"
     suspicious_logins:
       labels:
         user: User
@@ -867,7 +869,6 @@ sq:
     password_too_long: "Passwords are limited to 200 characters."
     email_too_long: "The email you provided is too long. Mailbox names must be no more than 254 characters, and domain names must be no more than 253 characters."
     reserved_username: "Ky emër nuk lejohet."
-    missing_user_field: "You have not completed all the user fields"
   admin:
     email:
       sent_test: "u dërgua!"

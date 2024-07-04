@@ -924,7 +924,8 @@ gl:
       activity_stream: "Actividade"
       read: "Ler"
       read_help: "Temas lidos recentes"
-      preferences: "Preferencias"
+      preferences:
+        title: "Preferencias"
       feature_topic_on_profile:
         open_search: "Seleccionar un novo tema"
         title: "Seleccionar un tema"
@@ -1696,8 +1697,8 @@ gl:
       enter: "Intro"
     category_row:
       subcategory_count:
-        one: "+ %{count} subcategoría"
-        other: "+ %{count} subcategorías"
+        one: "+%{count} subcategoría"
+        other: "+%{count} subcategorías"
       topic_count:
         one: "%{count} tema nesta categoría"
         other: "%{count} temas nesta categoría"
@@ -3698,6 +3699,7 @@ gl:
         about:
           optional: "(opcional)"
           update: "Actualizar"
+          saved: "gardado!"
       plugins:
         title: "Complementos"
         installed: "Complementos instalados"
@@ -4018,7 +4020,6 @@ gl:
             description: "Ligazóns, algúns botóns, notificacións e cor de realce."
           quaternary:
             name: "cuaternario"
-            description: "Ligazóns de navegación."
           header_background:
             name: "fondo da cabeceira"
             description: "Cor do fondo na cabeceira do sitio."

@@ -64,7 +64,6 @@ updates:
       - dependency-name: "@json-editor/json-editor"
       - dependency-name: "chart.js"
       - dependency-name: "chartjs-plugin-datalabels"
-      - dependency-name: "diffhtml"
       - dependency-name: "magnific-popup"
       - dependency-name: "pikaday"
       - dependency-name: "moment"

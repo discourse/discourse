@@ -1009,7 +1009,8 @@ fa_IR:
       activity_stream: "فعالیت"
       read: "خواندن"
       read_help: "موضوعات خوانده شده در زمان اخیر"
-      preferences: "تنظیمات"
+      preferences:
+        title: "تنظیمات"
       feature_topic_on_profile:
         open_search: "انتخاب یک موضوع نو"
         title: "انتخاب یک موضوع"
@@ -3815,6 +3816,7 @@ fa_IR:
           company_name: "نام شرکت"
           optional: "(اختیاری)"
           update: "به روز رسانی"
+          saved: "ذخیره شد!"
       plugins:
         title: "افزونه‌ها"
         installed: "افزونه های نصب شده"
@@ -4079,7 +4081,6 @@ fa_IR:
             description: "لینک‌ها، برخی از دکمه‌ها، اطلاعیه‌ها، و مد رنگ."
           quaternary:
             name: "چهارمی"
-            description: "پیوند‌های ناوبری."
           header_background:
             name: "پس زمینه سربرگ"
             description: "رنگ پس زمینه سربرگ سایت"

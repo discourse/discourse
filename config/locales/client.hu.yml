@@ -1103,7 +1103,8 @@ hu:
       activity_stream: "Tevékenység"
       read: "Olvasott"
       read_help: "Nemrég olvasott témák"
-      preferences: "Beállítások"
+      preferences:
+        title: "Beállítások"
       feature_topic_on_profile:
         open_search: "Új téma kiválasztása"
         title: "Téma kiválasztása"
@@ -2160,8 +2161,8 @@ hu:
       loading: Betöltés…
     category_row:
       subcategory_count:
-        one: "+ %{count} alkategória"
-        other: "+ %{count} alkategória"
+        one: "+%{count} alkategória"
+        other: "+%{count} alkategória"
       topic_count:
         one: "%{count} téma van ebben a kategóriában"
         other: "%{count} téma van ebben a kategóriában"
@@ -4978,6 +4979,7 @@ hu:
           header: "Az Ön webhelyéről"
           optional: "(nem kötelező)"
           update: "Frissítés"
+          saved: "mentve!"
       plugins:
         title: "Bővítmények"
         installed: "Telepített bővítmények"
@@ -5368,7 +5370,6 @@ hu:
             description: "Hivatkozások, néhány gomb, értesítések és kiemelő színek."
           quaternary:
             name: "negyedrendű"
-            description: "Navigációs linkek"
           header_background:
             name: "Fejléc háttere"
             description: "Az oldal fejlécének háttérszíne."

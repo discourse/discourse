@@ -144,13 +144,6 @@ en:
       join: "Join"
       last_visit: "last visit"
 
-      summarization:
-        title: "Summarize messages"
-        description: "Select an option below to summarize the conversation sent during the desired timeframe."
-        summarize: "Summarize"
-        since:
-          one: "Last hour"
-          other: "Last %{count} hours"
       mention_warning:
         invitations_sent:
           one: "Invitation sent"

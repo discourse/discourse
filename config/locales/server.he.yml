@@ -295,6 +295,8 @@ he:
     site_settings:
       invalid_site_setting: "לא קיימת הגדרה שנקראת ‚%{name}’"
       invalid_category_id: "ציינת קטגוריה שאינה קיימת"
+      site_setting_is_hidden: "אסור לך לשנות הגדרות נסתרות"
+      site_setting_is_unconfigurable: "אסור לך לשנות הגדרות שחסומות להגדרה"
       invalid_choice:
         one: "‚%{name}’ היא בחירה שגויה."
         two: "‚%{name}’ הן בחירות שגויות."
@@ -310,7 +312,6 @@ he:
       secure_uploads_requirements: "יש להפעיל העלאה ל־S3 ובקרות גישה (ACLs) של S3 בטרם הפעלת העלאות מאובטחות."
       s3_use_acls_requirements: "עליך להפעיל את בקרת הגישה (ACLs) של S3 כדי שההעלאות המאובטחות תפעלנה."
       share_quote_facebook_requirements: "עליך להגדיר מזהה יישומון פייסבוק כדי להפעיל שיתוף ציטוטים עבור פייסבוק"
-      second_factor_cannot_enforce_with_socials: "לא ניתן לאכוף אימות דו־שלבי כאשר מופעלת כניסה דרך רשתות חברתיות. תחילה עליך להשבית כניסה דרך: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "אי אפשר לאכוף אימות דו־שלבי אם כניסה מקומית מושבתת."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "אי אפשר לאכוף אימות דו־שלבי אם מופעל DiscourseConnect."
       local_login_cannot_be_disabled_if_second_factor_enforced: "אי אפשר להשבית כניסה מקומית אם נאכף אימות דו־שלבי. יש להשבית את אכיפת האימות הדו־שלבי בטרם השבתת כניסה מקומית."
@@ -1548,6 +1549,11 @@ he:
         user_agent: "סוכן משתמש"
         page_views: "צפיות בעמודים"
       description: "רשימת סוכני משתמשים של סורקי אינטרנט, בסידור לפי צפיות בעמודים."
+    web_hook_events_daily_aggregate:
+      title: "אירועי התלייה"
+      xaxis: "יום"
+      yaxis: "מספר אירועים"
+      description: "מספר ההתליות שהוזנקו או את משך הזמן הממוצע שלהן."
     suspicious_logins:
       title: "ניסיונות כניסה חשודים"
       labels:
@@ -1736,7 +1742,6 @@ he:
     email_custom_headers: "רשימה מופרדת בקווים אנכיים (הסימון |) של כותרות דוא״ל מותאמות אישית"
     email_subject: "תבנית נושא בהתאמה אישית להודעות דוא״ל תקניות. יש לעיין ב־<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "מספק פרטים נוספים למשתמשים בנוגע לסיבה שבגינה אין להם גישה לנושא מסוים. לתשומת לבך: מדובר בתצורה לא מאובטחת כיוון שמשתמשים ידעו אם כתובת מקשרת לנושא תקף."
-    enforce_second_factor: "לדרוש מהמשתמשים להפעיל אימות דו־שלבי לפני שתתאפשר להם גישה למנשק המשתמש של Discourse. יש לבחור ב‚הכול’ כדי לאכוף על כל המשתמשים. לבחור ב‚סגל’ כדי לאכוף על משתמשי סגל בלבד. ההגדרה הזאת לא חלה על ה־API או על האימות ‚ספק DiscourseConnect’."
     force_https: "אילוץ האתר שלך להשתמש ב־HTTPS בלבד. אזהרה: אין להפעיל זאת עד שווידאת ש־HTTPS מוגדר ועובד לחלוטין בכל מקום! בדקת שה־CDN, הכניסה דרך רשתות חברתיות ולוגואים / תלויות חיצוניות גם כן תומכים ב־HTTPS?"
     summary_score_threshold: "הניקוד המינימלי הנדרש כדי שפוסט ייכלל ב\"סיכום נושא זה\""
     summary_posts_required: "כמות פוסטים מזערית בנושא בטרם מופעל ‚תקציר לנושא זה’. שינויים בהגדרה זו יחולו רטרואקטיבית תוך שבוע."
@@ -1809,7 +1814,6 @@ he:
     content_security_policy_report_only: "הפעלת Content-Security-Policy-Report-Only (מדיניות אבטחת תוכן בדיווח בלבד - CSP)"
     content_security_policy_collect_reports: "הפעלת איסוף דוחות הפרה של CSP (מדיניות אבטחת תוכן) תחת ‎/csp_reports"
     content_security_policy_frame_ancestors: "להגביל מי יכול להטמיע את האתר הזה עם מסגרות iframes דרך CSP. ניתן לשלוח במארחים המורשים דרך <a href='%{base_path}/admin/customize/embedding'>הטמעה</a>"
-    content_security_policy_script_src: "מקורות סקריפט נוספים ברשימת ההיתרים. השרת המקומי וה-CDN כלולים כברירת מחדל. ראה <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>הקטנת התקפות XSS עם מדיניות אבטחת תוכן.</a> (CSP). מקורות שרת מקומי יתעלמו כאשר content_security_policy_strict_dynamic מופעל."
     invalidate_inactive_admin_email_after_days: "חשבונות מנהלים שלא ביקרו באתר מעל כמות כזו של ימים יאלצו לאמת מחדש את כתובת הדוא״ל שלהם כדי לשוב ולהיכנס. להגדיר כ־0 כדי להשבית."
     include_secure_categories_in_tag_counts: "כאשר האפשרות פעילה, מניין הנושאים לתגית יכלול נושאים בקטגוריות שמוגבלות לקריאה לכל המשתמשים. כשהאפשרות מוגבלת, משתמשים רגילים חשופים רק למניין הנושאים לתגית כאשר כל הנושאים הם בקטגוריות ציבוריות."
     display_personal_messages_tag_counts: "כאשר האפשרות פעילה, מניין ההודעות האישיות שמתויגות בתגית מסוימת יוצגו."
@@ -1820,7 +1824,7 @@ he:
     allow_username_in_share_links: "לאפשר לכלול שמות משתמש בקישורי שיתוף. שימושי להענקת עיטורים לפי מבקרים מסוימים."
     site_contact_username: "שם משתמש תקין של חבר סגל ממנו יישלחו כל ההודעות האוטומטיות. במקרה של העדר בחירה, ייעשה שימוש בחשבון בררת המחדל של המערכת."
     site_contact_group_name: "שם קבוצה תקני להזמנה לכל ההודעות האוטומטיות."
-    send_welcome_message: "שלחו לכל המשתמשים החדשים הודעת \"ברוכים הבאים\" עם הדרכה ראשונית כיצד להתחיל."
+    send_welcome_message: "לשלוח לכל המשתמשים החדשים הודעת „ברוך בואך” עם הדרכה ראשונית כיצד להתחיל."
     send_tl1_welcome_message: "שליחת הודעת קבלת פנים למשתמשים חדשים בדרגת אמון 1."
     send_tl2_promotion_message: "לשלוח למשתמשים חדשים בדרגת אמון 2 הודעה על קידום."
     suppress_reply_directly_below: "אל תציגו את סך התגובות המצטבר בפוסט כאשר ישנה תגובה ישירה אחת לפוסט זה."
@@ -1922,9 +1926,10 @@ he:
     s3_configure_tombstone_policy: "הפעלת מדיניות מחיקה אוטומטית להעלאות מצבה. חשוב: אם אפשרות זו מושבתת, לא יפונה מקום לאחר מחיקת העלאות."
     s3_disable_cleanup: "למנוע הסרה של גיבויים ישנים מ־S3 כשיש יותר גיבויים מהמותר."
     s3_use_acls: "ההמלצה של AWS היא לא להשתמש בבקרת גישה (ACLs) על דליים (Buckets) של S3, אם בחרת להישמע לעצה הזאת, יש לבטל את האפשרות הזאת. אפשר להפעיל מחדש בעת שימוש בהעלאות מאובטחות."
+    enable_direct_s3_uploads: "מאפשר העלאות ישירות רבות חלקים ל־S3 מבית Amazon, לפרטים: https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469."
     backup_time_of_day: "הגדרת זמן לגיבוי לפי UTC."
     backup_with_uploads: "כללו העלאות בגיבויים התקופתיים. ביטול של אפשרות זו תגבה רק את בסיס הנתונים."
-    backup_location: "מיקום אחסון הגיבויים. חשוב: ל־S3 נדרשים פרטי גישה תקפים שיש להוסיף בהגדרות הקבצים."
+    backup_location: "מקום אחסון הגיבויים. חשוב: S3 דורש מילוי פרטי גישה תקפים ל־S3 בהגדרות הקבצים. בעת שינוי ההגדרה הזאת מ־S3 למקומי, יש להריץ את משימת ה־rake‏ `s3:ensure_cors_rules`."
     backup_gzip_compression_level_for_uploads: "רמת דחיסת Gzip המשמשת לדחיסת העלאות."
     include_thumbnails_in_backups: "לכלול בגיבוי תמונות ממוזערות שנוצרו. השבתת הגדרה זו יקטין את הגיבויים אך ידרוש להכין מחדש את כל הפוסטים לאחר שחזור."
     active_user_rate_limit_secs: "כל כמה זמן אנחנו מעדכנים את השדה 'last_seen_at', בשניות"
@@ -2023,8 +2028,10 @@ he:
     edit_all_topic_groups: "לאפשר למשתמשים בקבוצה זו לערוך את כותרות הנושאים, התגיות והקטגוריות של משתמשים אחרים"
     edit_all_post_groups: "לאפשר למשתמשים בקבוצה זו לערוך פוסטים של משתמשים אחרים"
     min_trust_to_create_topic: "דרגת האמון המזערית הנדרשת ליצירת נושא חדש."
+    create_topic_allowed_groups: "קבוצות שמורשות ליצור נושאים חדשים. מנהלים ומפקחים תמיד יכולים ליצור נושאים."
     allow_flagging_staff: "אם אפשרות זו פעילה, משתמשים יכולים לסמן בדגל פוסטים שפורסמו על ידי חשבונות סגל."
     min_trust_to_edit_wiki_post: "דרגת האמון המזערית הנדרשת לעריכת פוסט המסומן כוויקי."
+    edit_wiki_post_allowed_groups: "קבוצות שמורשות לערוך פוסטים שמסומנים כוויקי. מנהלים ומפקחים תמיד יכולים לערוך פוסטים שמסומנים כוויקי."
     min_trust_to_edit_post: "דרגת האמון המזערית הנדרשת לעריכת פוסטים."
     edit_post_allowed_groups: "קבוצות שמורשות לערוך פוסטים. מנהלים ומפקחים תמיד יכולים לערוך פוסטים."
     min_trust_to_allow_self_wiki: "דרגת האמון המזערית הנדרשת להפיכת פוסט עצמי של משתמש לוויקי."
@@ -2352,8 +2359,9 @@ he:
     enable_offline_indicator: "להציג הודעה למשתמשים כאשר זוהה שהחיבור שלהם לאינטרנט נקטע."
     default_sidebar_link_to_filtered_list: "להפוך את קישור קישורי תפריט הניווט לרשימה מסוננת כברירת מחדל."
     default_sidebar_show_count_of_new_items: "להפוך את קישורי תפריט הניווט כך שיציגו מספר פריטים חדשים במקום עיטורים כברירת מחדל."
-    default_sidebar_switch_panel_position: "מיקום כפתורי החלפת לוח בסרגל הצד"
+    default_sidebar_switch_panel_position: "מקום הכפתור בסרגל הצד כדי לעבור לצ׳אט"
     retain_web_hook_events_period_days: "מספר הימים לשמירת רשומות אירועי התלייה."
+    retain_web_hook_events_aggregate_days: "מספר הימים לשמירת רשומות צבירת אירועי התלייה."
     retry_web_hook_events: "לנסות מחדש אירועי התליה שנכשלו במשך 4 פעמים. פרקי הזמן שבין הניסיונות החוזרים הם 1, 5, 25 ו־125 דקות."
     revoke_api_keys_unused_days: "מספר הימים אחרי השימוש האחרון במפתח API לפני שלילתו אוטומטית (0 כדי לא לשלול לעולם)"
     revoke_api_keys_maxlife_days: "מספר הימים בטרם שלילה אוטומטית של מפתח API (0 - לעולם לא)."
@@ -2472,6 +2480,11 @@ he:
         regex_invalid: "הביטוי הרגולרי שגוי: %{error}"
         leading_trailing_slash: "אסור שהביטוי הרגולרי יתחיל או יסתיים בלוכסן."
       unicode_usernames_avatars: "התמונות הייצוגיות הפנימיות של המערכת אינן תומכות בשמות משתמשים עם יוניקוד."
+      list_value_count:
+        one: "הרשימה חייבת להכיל ערך אחד בדיוק."
+        two: "הרשימה חייבת להכיל בדיוק שני ערכים."
+        many: "הרשימה חייבת להכיל בדיוק %{count} ערכים."
+        other: "הרשימה חייבת להכיל בדיוק %{count} ערכים."
       markdown_linkify_tlds: "לא ניתן לכלול ערך של ‚*’."
       google_oauth2_hd_groups: "עליך להגדיר את כל הגדרות ‚google oauth2 hd’ בטרם הפעלת ההגדרה הזאת."
       linkedin_oidc_credentials: "יש להגדיר פרטי גישה ל־LinkedIn מסוג OIDC‏ (‚linkedin_oidc_client_id’ ואת ‚linkedin_oidc_client_secret’) בטרם הפעלת ההגדרה הזאת."
@@ -2550,7 +2563,7 @@ he:
   frequent_poster: "מפרסמים מתמידים"
   poster_description_joiner: ", "
   redirected_to_top_reasons:
-    new_user: "ברוכים הבאים לקהילה! אלה הנושאים הפופולריים האחרונים אצלנו."
+    new_user: "ברוך בואך לקהילה! אלה הנושאים הנפוצים העדכניים אצלנו."
     not_seen_in_a_month: "ברוך שובכם! לא ראינו אתכם כבר כמה זמן, אה? הנה כמה נושאים פופולאריים שהתווספו מאז שהייתם כאן."
   merge_posts:
     edit_reason:
@@ -2705,7 +2718,7 @@ he:
     email_too_long: "כתובת הדוא״ל שסיפקת ארוכה מדי. שמות תיבות דוא״ל לא יכולים לעלות על 254 תווים ושם התחום חייב להיות קצר מ־253 תווים."
     wrong_invite_code: "קוד ההזמנה שהקלדת שגוי."
     reserved_username: "שם משתמש זה אינו מורשה."
-    missing_user_field: "לא מילאת את כל שדות המשתמש/ת"
+    missing_user_field: "לא מילאת את כל שדות המשתמש/ת הנחוצים"
     auth_complete: "אימות הושלם."
     click_to_continue: "יש ללחוץ כאן כדי להמשיך."
     already_logged_in: "מחילה! ההזמנה הזו מיועדת למשתמשים חדשים, שעוד אין להם חשבון."
@@ -2759,6 +2772,11 @@ he:
     new_user_typed_too_fast: "משתמש חדש הקליד מהר מידי"
     content_matches_auto_silence_regex: "ביטוי רגולרי לחסימת תוכן אוטומטית"
     username:
+      short:
+        one: "חייב להיות תו אחד לפחות"
+        two: "חייבים להיות לפחות שני תווים"
+        many: "חייבים להיות לפחות %{count} תווים"
+        other: "חייבים להיות לפחות %{count} תווים"
       too_long: "ארוך מדי"
       characters: "חייב לכלול מספרים, אותיות, מינוסים, נקודות וקווים תחתיים בלבד"
       unique: "חייב להיות ייחודי"
@@ -3126,16 +3144,16 @@ he:
 
         השתתפותך כאן, מאפשרת לנו להכיר אותך, כך שמגבלות המשתמשים החדשים יוסרו. עם הזמן [דרגות האמון](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) בך תתקדמנה ותתווספנה לך יכולות כדי לסייע לנו לנהל את הקהילה שלנו ביחד.
     welcome_user:
-      title: "ברוכים הבאים למשתמש/ת"
-      subject_template: "ברוכים הבאים ל %{site_name}!"
+      title: "ברוך בואך למשתמשים"
+      subject_template: "ברוך בואך אל %{site_name}!"
       text_body_template: |
-        תודה שהצטרפתם ל-%{site_name}, וברוכים הבאים!
+        תודה שהצטרפת אל %{site_name}, וברוך בואך!
 
         %{new_user_tips}
 
-        אנחנו מאמינים ב-[התנהגות קהילתית מתורבתת](%{base_url}/guidlines) בכל עת.
+        אנו דוגלים ב[התנהגות קהילתית מתורבתת](%{base_url}/guidlines) בכל עת.
 
-        תהנו מהשהייה!
+        שיהיה בכיף!
     welcome_tl1_user:
       title: "ברוך בואך משתמש בדרגת אמון 1"
       subject_template: "תודה על הזמן בו שהית אתנו"
@@ -3153,7 +3171,7 @@ he:
         כוח רב טומן בחובו אחריות רבה. אם תחום הפיקוח זר לך, ניתן לפנות אל [המדריך למפקחים](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "הזמנת ברוכים הבאים"
-      subject_template: "ברוכים הבאים ל %{site_name}!"
+      subject_template: "ברוך בואך אל %{site_name}!"
       text_body_template: |
         תודה שאישרת את הזמנתך אל %{site_name} -- ברוך בואך!
 
@@ -4501,7 +4519,7 @@ he:
       long_description: |
         עיטור זה מוענק עם הגיעך לדרגת אמון 4. יש לך חלק גדול בהובלת הקהילה הזו כפי שנבחרת על ידי הסגל ומעשיך ומילותיך הם דוגמה חיובית לשאר הקהילה. יש לך הרשאות לערוך את כל הפוסטים ולבצע פעילויות פיקוח נפוצות כגון נעיצה, סגירה, הסרה מהרשימה, העברה לארכיון, פיצול ומיזוג.
     welcome:
-      name: ברוכים הבאים
+      name: ברוך בואך
       description: קיבלו לייק
       long_description: |
         עיטור זה מוענק עם קבלת הלייק הראשון שלך על פוסט. מזל טוב, פרסמת משהו שחבריך לקהילה חשבו שהוא מעניין, מגניב, או שימושי!

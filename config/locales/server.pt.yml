@@ -185,7 +185,6 @@ pt:
       s3_backup_requires_s3_settings: "Não pode utilizar S3 como local para cópia de segurança a não ser que providencie '%{setting_name}'."
       s3_bucket_reused: "Não pode utilizar o mesmo balde para 's3_upload_bucket' e 's3_backup_bucket'. Escolha um balde diferente ou use uma localização diferente para cada balde."
       share_quote_facebook_requirements: "Você tem de definir um ID de Aplicação do Facebook para ativar a partilha de citações para o Facebook."
-      second_factor_cannot_enforce_with_socials: "Você não pode aplicar o 2FA com logins sociais ativados. Você tem primeiro de desativar o login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Não pode forçar 2FA se logins locais estiver desativado."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Você não pode impor 2FA se o DiscourseConnect estiver habilitado."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Você não pode desabilitar o login local se 2FA for obrigatório. Desative o 2FA obrigatório antes de desativar os logins locais."
@@ -921,6 +920,8 @@ pt:
     web_crawlers:
       labels:
         page_views: "Exibições de Página"
+    web_hook_events_daily_aggregate:
+      xaxis: "Dia"
     suspicious_logins:
       labels:
         user: Utilizador
@@ -1359,7 +1360,6 @@ pt:
     password_too_long: "As palavras-passe estão limitadas a 200 caracteres."
     email_too_long: "O email fornecido é demasiado longo. Nomes de caixas de email não devem ter mais que 254 caracteres, e nomes de domínio não devem ter mais que 253 caracteres."
     reserved_username: "Esse nome de utilizador não é permitido."
-    missing_user_field: "Não completou todos os campos de utilizador."
     second_factor_title: "Autenticação em Dois Passos"
     second_factor_backup_description: "Por favor introduza um dos seus códigos de reserva:"
     second_factor_toggle:

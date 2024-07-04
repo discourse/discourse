@@ -574,6 +574,8 @@ bs_BA:
     web_crawlers:
       labels:
         page_views: "Pagevieovi"
+    web_hook_events_daily_aggregate:
+      xaxis: "Day"
     suspicious_logins:
       labels:
         user: User
@@ -805,7 +807,6 @@ bs_BA:
     omniauth_confirm_button: "Nastavi"
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
-    missing_user_field: "You have not completed all the user fields"
     click_to_continue: "Klikni ovdje da nastavite dalje"
     second_factor_backup_description: "Molim ukucajte jedan od vaši rezevni kodova"
     second_factor_toggle:

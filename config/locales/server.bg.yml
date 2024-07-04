@@ -678,6 +678,8 @@ bg:
     mobile_visits:
       xaxis: "Ден"
       yaxis: "Брой на посещенията"
+    web_hook_events_daily_aggregate:
+      xaxis: "Ден"
     suspicious_logins:
       labels:
         user: Потребител
@@ -994,7 +996,6 @@ bg:
     new_registrations_disabled: "В момента новите регистации са забранени."
     password_too_long: "Паролата е ограничена до 200 символа."
     reserved_username: "Това потребителско име не е разрешено."
-    missing_user_field: "Вие не сте попълнили всички потребителски полета."
     auth_complete: "Удостоверяването е завършено."
     click_to_continue: "Кликнете тук, за да продължите."
     second_factor_title: "Двуфакторна автентификация"

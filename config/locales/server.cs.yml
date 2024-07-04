@@ -224,7 +224,6 @@ cs:
       secure_uploads_requirements: "Nahrávání S3 a seznamy ACL S3 musí být před povolením zabezpečeného nahrávání povoleny."
       s3_use_acls_requirements: "Pokud je povoleno zabezpečené nahrávání, musíte mít povoleny seznamy ACL S3."
       share_quote_facebook_requirements: "Chcete-li povolit sdílení citací pro Facebook, musíte nastavit Facebook app id."
-      second_factor_cannot_enforce_with_socials: "Se zapnutým přihlašováním přes sociální sítě nelze vynucovat 2FA. Nejprve musíte zakázat přihlašování prostřednictvím: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Nemůžete vynutit 2FA, pokud je zakázáno lokální přihlašování."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Nemůžete vynutit 2FA, pokud je povoleno DiscourseConnect."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Přihlášení nelze vypnout, pokud je vynuceno 2FA. Před vypnutím lokálního přihlašování deaktivujte 2FA."
@@ -1061,6 +1060,8 @@ cs:
     web_crawlers:
       labels:
         page_views: "Zobrazení stránky "
+    web_hook_events_daily_aggregate:
+      xaxis: "Den"
     suspicious_logins:
       labels:
         user: Uživatel
@@ -1266,7 +1267,6 @@ cs:
     email_too_long: "Vámi zadaný e-mail je příliš dlouhý. Názvy poštovních schránek nesmí mít více než 254 znaků a názvy domén nesmí mít více než 253 znaků."
     wrong_invite_code: "Zadaný kód pozvánky byl nesprávný."
     reserved_username: "Toto uživatelské jméno není povoleno."
-    missing_user_field: "Nevyplnili jste všechna uživatelská pole"
     auth_complete: "Ověřování je dokončeno."
     click_to_continue: "Pro pokračování klikněte zde."
     already_logged_in: "Promiňte! Tato pozvánka je určena pro nové uživatele, kteří ještě nemají existující účet."

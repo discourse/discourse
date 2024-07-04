@@ -1043,7 +1043,8 @@ lt:
       activity_stream: "Aktyvumas"
       read: "Perskaityti"
       read_help: "Neseniai skaitytos temos"
-      preferences: "Nustatymai"
+      preferences:
+        title: "Nustatymai"
       feature_topic_on_profile:
         open_search: "Pasirinkti naują temą"
         title: "Pasirinkite temą"
@@ -1836,10 +1837,10 @@ lt:
       enter: "Įeiti"
     category_row:
       subcategory_count:
-        one: "+ %{count} subkategorija"
-        few: "+ %{count} subkategorijos"
-        many: "+ %{count} subkategorijos"
-        other: "+ %{count} subkategorijos"
+        one: "+%{count} subkategorija"
+        few: "+%{count} subkategorijos"
+        many: "+%{count} subkategorijos"
+        other: "+%{count} subkategorijos"
       topic_count:
         one: "%{count} tema šioje kategorijoje"
         few: "%{count} temos šioje kategorijoje"
@@ -3928,6 +3929,7 @@ lt:
             Galiojantis grupės pavadinimas, kuris yra pakviestas į visas automatiškai siunčiamas privačias žinutes.
           optional: "(pasoronktinai)"
           update: "Atnaujinti"
+          saved: "išsaugota!"
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"
@@ -4222,7 +4224,6 @@ lt:
             description: "Nuorodos, keli mygtukai, pranešimai ir akcento spalva"
           quaternary:
             name: "ketvirtinė"
-            description: "Navigacijos nuorodos."
           header_background:
             name: "Višutinės juostos fonas"
             description: "Višutinės juostos fono spalva"

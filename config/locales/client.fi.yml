@@ -1092,7 +1092,8 @@ fi:
       activity_stream: "Toiminta"
       read: "Luetut"
       read_help: "Äskettäin luetut ketjut"
-      preferences: "Asetukset"
+      preferences:
+        title: "Asetukset"
       feature_topic_on_profile:
         open_search: "Valitse uusi ketju"
         title: "Valitse ketju"
@@ -2147,8 +2148,8 @@ fi:
       loading: Ladataan…
     category_row:
       subcategory_count:
-        one: "+ %{count} ala-alue"
-        other: "+ %{count} ala-aluetta"
+        one: "+%{count} ala-alue"
+        other: "+%{count} ala-aluetta"
       topic_count:
         one: "%{count} ketju tällä alueella"
         other: "%{count} ketjua tällä alueella"
@@ -4926,6 +4927,7 @@ fi:
           city_for_disputes: "Kaupunki, jonka oikeudessa riidat ratkotaan"
           optional: "(valinnainen)"
           update: "Päivitä"
+          saved: "tallennettu!"
       plugins:
         title: "Lisäosat"
         installed: "Asennetut lisäosat"
@@ -5300,7 +5302,6 @@ fi:
             description: "Linkit, jotkin painikkeet, ilmoitukset ja tehosteväri."
           quaternary:
             name: "neljässijainen"
-            description: "Navigaatiolinkit."
           header_background:
             name: "yläpalkin tausta"
             description: "Sivuston yläpalkin taustaväri."

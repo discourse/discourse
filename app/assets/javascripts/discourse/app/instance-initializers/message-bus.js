@@ -8,6 +8,7 @@ import getURL from "discourse-common/lib/get-url";
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 
 let _sendDeferredPageview = false;
+let _deferredViewTopicId = null;
 
 export function sendDeferredPageview() {
   _sendDeferredPageview = true;
@@ -30,7 +31,14 @@ function mbAjax(messageBus, opts) {
 
   if (_sendDeferredPageview) {
     opts.headers["Discourse-Deferred-Track-View"] = "true";
+
+    if (_deferredViewTopicId) {
+      opts.headers["Discourse-Deferred-Track-View-Topic-Id"] =
+        _deferredViewTopicId;
+    }
+
     _sendDeferredPageview = false;
+    _deferredViewTopicId = null;
   }
 
   const oldComplete = opts.complete;
@@ -53,7 +61,8 @@ export default {
 
     const messageBus = owner.lookup("service:message-bus"),
       user = owner.lookup("service:current-user"),
-      siteSettings = owner.lookup("service:site-settings");
+      siteSettings = owner.lookup("service:site-settings"),
+      router = owner.lookup("service:router");
 
     messageBus.alwaysLongPoll = !isProduction();
     messageBus.shouldLongPollCallback = () =>
@@ -86,6 +95,13 @@ export default {
     // pass in a position
     const interval = setInterval(() => {
       if (document.readyState === "complete") {
+        if (
+          router.currentRouteName === "topic.fromParams" ||
+          router.currentRouteName === "topic.fromParamsNear"
+        ) {
+          _deferredViewTopicId = router.currentRoute.parent.params.id;
+        }
+
         clearInterval(interval);
         messageBus.start();
       }

@@ -1095,7 +1095,8 @@ te:
       activity_stream: "కలాపం"
       read: "చదివిన"
       read_help: "ఇటీవల చదివిన విషయాలు"
-      preferences: "ప్రాధాన్యతలు"
+      preferences:
+        title: "ప్రాధాన్యతలు"
       feature_topic_on_profile:
         open_search: "కొత్త విషయాన్ని ఎంచుకోండి"
         title: "ఒక విషయాన్ని ఎంచుకోండి"
@@ -2173,9 +2174,6 @@ te:
     conditional_loading_section:
       loading: లోడ్ అవుతోంది…
     category_row:
-      subcategory_count:
-        one: "+ %{count} ఉపవర్గం"
-        other: "+ %{count} ఉపవర్గాలు"
       topic_count:
         one: "ఈ వర్గంలో %{count} విషయం"
         other: "ఈ వర్గంలోని %{count} విషయాలు"
@@ -4964,6 +4962,7 @@ te:
           city_for_disputes: "వివాదాలకు నగరం"
           optional: "(ఐచ్ఛికం)"
           update: "నవీకరించండి"
+          saved: "సేవ్ చేయబడింది!"
       plugins:
         title: "చొప్పింతలు"
         installed: "ప్రతిష్టించిన చొప్పింతలు"
@@ -5337,7 +5336,6 @@ te:
             description: "లింక్‌లు, కొన్ని బటన్‌లు, నోటిఫికేషన్‌లు మరియు యాస రంగు."
           quaternary:
             name: "చతుర్థీ"
-            description: "నావిగేషన్ లింక్‌లు."
           header_background:
             name: "హెడరు వెనుతలం"
             description: "సైటు హెడరు వెనుతలం రంగు."

@@ -20,6 +20,13 @@ import PollResultsPie from "../components/poll-results-pie";
 import PollResultsTabs from "../components/poll-results-tabs";
 
 const FETCH_VOTERS_COUNT = 25;
+const STAFF_ONLY = "staff_only";
+const MULTIPLE = "multiple";
+const NUMBER = "number";
+const REGULAR = "regular";
+const IRV = "irv";
+const ON_VOTE = "on_vote";
+const ON_CLOSE = "on_close";
 
 export default class PollComponent extends Component {
   @service currentUser;
@@ -36,12 +43,12 @@ export default class PollComponent extends Component {
   @tracked poll = this.args.attrs.poll;
   @tracked voters = this.poll.voters || 0;
   @tracked preloadedVoters = this.args.preloadedVoters || [];
-  @tracked staffOnly = this.poll.results === "staff_only";
-  @tracked isIrv = this.poll.type === "irv";
+  @tracked isIrv = this.poll.type === IRV;
   @tracked irvOutcome = this.poll.irv_outcome || [];
-  @tracked isMultiple = this.poll.type === "multiple";
-  @tracked isNumber = this.poll.type === "number";
   @tracked isMultiVoteType = this.isIrv || this.isMultiple;
+  @tracked staffOnly = this.poll.results === STAFF_ONLY;
+  @tracked isMultiple = this.poll.type === MULTIPLE;
+  @tracked isNumber = this.poll.type === NUMBER;
   @tracked showingResults = false;
   @tracked hasSavedVote = this.args.attrs.hasSavedVote;
   @tracked status = this.poll.status;
@@ -336,9 +343,9 @@ export default class PollComponent extends Component {
     return (
       !this.showResults &&
       !this.hideResultsDisabled &&
-      !(this.poll.results === "on_vote" && !this.hasSavedVote && !this.isMe) &&
-      !(this.poll.results === "on_close" && !this.closed) &&
-      !(this.poll.results === "staff_only" && !this.isStaff) &&
+      !(this.poll.results === ON_VOTE && !this.hasSavedVote && !this.isMe) &&
+      !(this.poll.results === ON_CLOSE && !this.closed) &&
+      !(this.poll.results === STAFF_ONLY && !this.isStaff) &&
       this.voters > 0
     );
   }
@@ -431,7 +438,7 @@ export default class PollComponent extends Component {
             }
           });
           // remove users who changed their vote
-          if (this.poll.type === "regular") {
+          if (this.poll.type === REGULAR) {
             Object.keys(this.preloadedVoters).forEach((otherOptionId) => {
               if (optionId !== otherOptionId) {
                 this.preloadedVoters[otherOptionId] = this.preloadedVoters[
@@ -473,7 +480,7 @@ export default class PollComponent extends Component {
       },
     })
       .then(({ poll }) => {
-        if (this.poll.type === "irv") {
+        if (this.poll.type === IRV) {
           poll.options.forEach((option) => {
             option.rank = 0;
           });
@@ -538,7 +545,7 @@ export default class PollComponent extends Component {
   @action
   exportResults() {
     const queryID =
-      this.poll.type === "irv"
+      this.poll.type === IRV
         ? this.siteSettings.poll_export_irv_data_explorer_query_id
         : this.siteSettings.poll_export_data_explorer_query_id;
 

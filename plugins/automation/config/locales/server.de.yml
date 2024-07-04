@@ -46,7 +46,7 @@ de:
       user_promoted:
         title: Benutzer befördert
         description: Wenn ein Benutzer von einer Vertrauensstufe zur nächsten befördert wird
-        transition_placeholder: "von %{from_level_name} bis %{to_level_name}"
+        transition_placeholder: "von %{from_level_name} zu %{to_level_name}"
       stalled_wiki:
         title: Festgefahrenes Wiki
         description: Wenn ein Wiki für einen längeren als den definierten Zeitraum nicht bearbeitet wurde, wird die Automatisierung ausgelöst

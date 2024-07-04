@@ -1106,7 +1106,8 @@ fr:
       activity_stream: "Activité"
       read: "Lus"
       read_help: "Sujets lus récemment"
-      preferences: "Préférences"
+      preferences:
+        title: "Préférences"
       feature_topic_on_profile:
         open_search: "Sélectionner un nouveau sujet"
         title: "Sélectionner un sujet"
@@ -2159,8 +2160,8 @@ fr:
       loading: Chargement…
     category_row:
       subcategory_count:
-        one: "+ %{count} sous-catégorie"
-        other: "+ %{count} sous-catégories"
+        one: "+%{count} sous-catégorie"
+        other: "+%{count} sous-catégories"
       topic_count:
         one: "%{count} sujet dans cette catégorie"
         other: "%{count} sujets dans cette catégorie"
@@ -4937,6 +4938,7 @@ fr:
           city_for_disputes: "Ville pour les litiges"
           optional: "(facultatif)"
           update: "Mettre à jour"
+          saved: "enregistré avec succès !"
       plugins:
         title: "Extensions"
         installed: "Extensions installées"
@@ -5308,7 +5310,6 @@ fr:
             description: "Liens, boutons, notifications et couleurs d'accentuation."
           quaternary:
             name: "quaternaire"
-            description: "Liens de navigation."
           header_background:
             name: "arrière-plan de l'en-tête"
             description: "Couleur d'arrière-plan de l'en-tête du site."

@@ -256,6 +256,45 @@ RSpec.describe ApplicationController do
     end
   end
 
+  describe "#redirect_to_profile_if_required" do
+    fab!(:user)
+
+    before { sign_in(user) }
+
+    context "when the user is missing required custom fields" do
+      before do
+        Fabricate(:user_field, requirement: "for_all_users")
+        UserRequiredFieldsVersion.create!
+      end
+
+      it "redirects the user to the profile preferences" do
+        get "/hot"
+        expect(response).to redirect_to("/u/#{user.username}/preferences/profile")
+      end
+
+      it "only logs user history once per day" do
+        expect do
+          RateLimiter.enable
+          get "/hot"
+          get "/hot"
+        end.to change { UserHistory.count }.by(1)
+      end
+    end
+
+    context "when the user has filled up all required custom fields" do
+      before do
+        Fabricate(:user_field, requirement: "for_all_users")
+        UserRequiredFieldsVersion.create!
+        user.bump_required_fields_version
+      end
+
+      it "redirects the user to the profile preferences" do
+        get "/hot"
+        expect(response).not_to redirect_to("/u/#{user.username}/preferences/profile")
+      end
+    end
+  end
+
   describe "invalid request params" do
     before do
       @old_logger = Rails.logger

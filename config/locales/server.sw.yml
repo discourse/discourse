@@ -737,6 +737,8 @@ sw:
       labels:
         user_agent: "Mwakilishi wa Mtumiaji"
         page_views: "Ukurasa Umeonwa Mara"
+    web_hook_events_daily_aggregate:
+      xaxis: "Siku"
     suspicious_logins:
       labels:
         user: Mtumiaji
@@ -996,7 +998,6 @@ sw:
     password_too_long: "Nywila haziruhusiwi kuwa na herufi zaidi ya 200."
     email_too_long: "Barua pepe uliandika ni ndefu sana. Majina ya boxi la ujumbe hayatakiwi kuwa zaidi ya herufi 254, na majina ya kikoa hayaruhusiwi kuwa zaidi ya herufi 253."
     reserved_username: "Hilo jina la mtumiaji haliruhusiwi."
-    missing_user_field: "Haujajaza sehemu zote za mtumiaji"
     auth_complete: "Uthibitisho umekamilika."
     click_to_continue: "Bofya hapa kuendelea."
     second_factor_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye programu-tumizi:"

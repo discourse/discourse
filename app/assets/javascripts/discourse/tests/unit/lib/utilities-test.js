@@ -412,6 +412,24 @@ module("Unit | Utilities | table-builder", function (hooks) {
     );
   });
 
+  test("arrayToTable with alignment specification", function (assert) {
+    const tableData = [
+      { col0: "left", col1: "center", col2: "right", col3: "unspecificated" },
+      { col0: "111", col1: "222", col2: "333", col3: "444" },
+    ];
+    const alignment = ["left", "center", "right", null];
+    assert.strictEqual(
+      arrayToTable(
+        tableData,
+        ["Col 1", "Col 2", "Col 3", "Col 4"],
+        "col",
+        alignment
+      ),
+      "|Col 1 | Col 2 | Col 3 | Col 4|\r\n|:-- | :-: | --: | ---|\r\n|left | center | right | unspecificated|\r\n|111 | 222 | 333 | 444|\r\n",
+      "it creates a valid table"
+    );
+  });
+
   test("findTableRegex", function (assert) {
     const oneTable = `|Make|Model|Year|\r\n|--- | --- | ---|\r\n|Toyota|Supra|1998|`;
 

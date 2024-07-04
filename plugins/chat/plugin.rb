@@ -49,6 +49,7 @@ after_initialize do
 
   register_user_custom_field_type(Chat::LAST_CHAT_CHANNEL_ID, :integer)
   DiscoursePluginRegistry.serialized_current_user_fields << Chat::LAST_CHAT_CHANNEL_ID
+  DiscoursePluginRegistry.register_flag_applies_to_type("Chat::Message", self)
 
   UserUpdater::OPTION_ATTR.push(:chat_enabled)
   UserUpdater::OPTION_ATTR.push(:only_chat_push_notifications)
@@ -133,7 +134,7 @@ after_initialize do
 
   add_to_serializer(:user_card, :can_chat_user) do
     return false if !SiteSetting.chat_enabled
-    return false if scope.user.blank? || scope.user.id == object.id
+    return false if scope.user.blank?
     return false if !scope.user.user_option.chat_enabled || !object.user_option.chat_enabled
 
     scope.can_direct_message? && Guardian.new(object).can_chat?
@@ -141,7 +142,7 @@ after_initialize do
 
   add_to_serializer(:hidden_profile, :can_chat_user) do
     return false if !SiteSetting.chat_enabled
-    return false if scope.user.blank? || scope.user.id == object.id
+    return false if scope.user.blank?
     return false if !scope.user.user_option.chat_enabled || !object.user_option.chat_enabled
 
     scope.can_direct_message? && Guardian.new(object).can_chat?

@@ -860,6 +860,8 @@ fa_IR:
     web_crawlers:
       labels:
         page_views: "بازدید"
+    web_hook_events_daily_aggregate:
+      xaxis: "روز"
     suspicious_logins:
       labels:
         user: کاربر
@@ -1352,7 +1354,6 @@ fa_IR:
     password_too_long: "رمزهای عبور به 200 نویسه محدود شده‌اند."
     email_too_long: "ایمیل شما بسیار طولانی است. ایمیل باکس ها نباید بیش از 254 نویسه و نام دامنه نباید بیش از 253 نویسه باشد."
     reserved_username: "این نام کاربری مجاز نیست."
-    missing_user_field: "شما تمام فیلد‌های کاربری را تکمیل نکرده اید"
     second_factor_title: "ورود دو مرحله ای"
     second_factor_backup_description: "لطفا یکی از کدهای پشتیبان را وارد کنید:"
     second_factor_toggle:

@@ -28,7 +28,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_post_anonymously,
              :can_ignore_users,
              :can_delete_all_posts_and_topics,
-             :can_summarize,
              :custom_fields,
              :muted_category_ids,
              :indirectly_muted_category_ids,
@@ -58,6 +57,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :associated_account_ids,
              :top_category_ids,
              :groups,
+             :needs_required_fields_check?,
              :second_factor_enabled,
              :ignored_users,
              :featured_topic,
@@ -75,7 +75,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :use_experimental_topic_bulk_actions?,
              :use_admin_sidebar,
              :can_view_raw_email,
-             :use_glimmer_topic_list?
+             :use_glimmer_topic_list?,
+             :login_method
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -89,6 +90,10 @@ class CurrentUserSerializer < BasicUserSerializer
   def initialize(object, options = {})
     super
     options[:include_status] = true
+  end
+
+  def login_method
+    @options[:login_method]
   end
 
   def groups
@@ -147,10 +152,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_delete_all_posts_and_topics
     object.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
-  end
-
-  def can_summarize
-    object.in_any_groups?(SiteSetting.custom_summarization_allowed_groups_map)
   end
 
   def can_upload_avatar

@@ -1182,6 +1182,9 @@ class Plugin::Instance
   # to summarize content. Staff can select which strategy to use
   # through the `summarization_strategy` setting.
   def register_summarization_strategy(strategy)
+    Discourse.deprecate(
+      "register_summarization_straegy is deprecated. Summarization code is now moved to Discourse AI",
+    )
     if !strategy.class.ancestors.include?(Summarization::Base)
       raise ArgumentError.new("Not a valid summarization strategy")
     end

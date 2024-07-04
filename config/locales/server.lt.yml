@@ -1144,6 +1144,8 @@ lt:
     web_crawlers:
       labels:
         page_views: "Puslapio peržiūros"
+    web_hook_events_daily_aggregate:
+      xaxis: "Diena"
     suspicious_logins:
       title: "Įtartini prisijungimai"
       labels:
@@ -1522,7 +1524,6 @@ lt:
     email_too_long: "Jūsų pateiktas el. pašto adresas per ilgas. Pašto dėžutės pavadinimai turi būti ne ilgesni kaip 254 simboliai, o domenų vardai – ne ilgesni kaip 253 simboliai."
     wrong_invite_code: "Įvestas pakvieto kodas buvo neteisingas."
     reserved_username: "Šis vartotojo vardas neleidžiamas."
-    missing_user_field: "Neužpildėte visų vartotojo laukų"
     auth_complete: "Autentifikavimas baigtas."
     click_to_continue: "Jei norite tęsti, paspauskite čia."
     already_logged_in: "Atsiprašau! Šis kvietimas skirtas naujiems vartotojams, kurie dar neturi esamos paskyros."

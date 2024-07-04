@@ -12,6 +12,7 @@ he:
       update: עדכון
       select_script: בחירת סקריפט
       select_trigger: בחירת גורם מפעיל
+      confirm_automation_reset: הפעולה הזאת תאפס את אפשרויות הסקריפט וההזנקה, מצב חדש יישמר, להמשיך?
       confirm_automation_trigger: פעולה זו תקפיץ את האוטומציה, להמשיך?
       no_automation_yet: לא יצרת אף אוטומציה עדיין.
       edit_automation:

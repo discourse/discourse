@@ -980,7 +980,8 @@ ur:
       activity_stream: "سرگرمی"
       read: "پڑھ لیا گیا"
       read_help: "حال ہی میں پڑھے گئے موضوعات"
-      preferences: "ترجیحات"
+      preferences:
+        title: "ترجیحات"
       feature_topic_on_profile:
         open_search: "ایک نیا موضوع منتخب کریں"
         title: "ایک موضوع منتخب کریں"
@@ -1787,8 +1788,8 @@ ur:
       enter: "اَینٹر"
     category_row:
       subcategory_count:
-        one: "+ %{count} ذیلی زمرہ"
-        other: "+ %{count} ذیلی زمرہ جات"
+        one: "+%{count} ذیلی زمرہ"
+        other: "+%{count} ذیلی زمرہ جات"
       topic_count:
         one: "اس زمرے میں %{count} موضوع"
         other: "اس زمرے میں %{count} موضوعات"
@@ -3982,6 +3983,7 @@ ur:
         about:
           optional: "(اختیاری)"
           update: "اپ ڈیٹ"
+          saved: "محفوظ کر لیا گیا!"
       plugins:
         title: "پلَگ اِنز"
         installed: "انسٹال کیے ہوے پلَگ اِنز"
@@ -4306,7 +4308,6 @@ ur:
             description: "لنکس، چند بٹن، اطلاعات، اور اَیکسنٹ رنگ۔"
           quaternary:
             name: "چوتھے درجہ کے"
-            description: "نیویگیشن لنکس۔"
           header_background:
             name: "ہیڈر کا پسِ منظر"
             description: "سائٹ کے ہیڈر کے پسِ منظر کا رنگ۔"

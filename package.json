@@ -20,9 +20,8 @@
     "chrome-launcher": "^1.1.2",
     "chrome-remote-interface": "^0.33.0",
     "concurrently": "^8.2.2",
-    "diffhtml": "1.0.0-beta.30",
     "ember-template-lint": "^5.13.0",
-    "esbuild": "^0.21.5",
+    "esbuild": "^0.23.0",
     "eslint": "^8.57.0",
     "jsdoc": "^4.0.0",
     "lefthook": "^1.6.18",
@@ -36,9 +35,9 @@
     "pikaday": "1.8.2",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.8.8",
-    "puppeteer-core": "^22.12.0",
+    "puppeteer-core": "^22.12.1",
     "squoosh": "discourse/squoosh#dc9649d",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.3"
   },
   "scripts": {
     "dev": "concurrently \"bin/ember-cli server --environment=development\" \"RAILS_ENV=development bin/rails server\"",

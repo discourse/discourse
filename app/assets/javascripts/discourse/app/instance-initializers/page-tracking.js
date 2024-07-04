@@ -1,4 +1,8 @@
-import { resetAjax, trackNextAjaxAsPageview } from "discourse/lib/ajax";
+import {
+  resetAjax,
+  trackNextAjaxAsPageview,
+  trackNextAjaxAsTopicView,
+} from "discourse/lib/ajax";
 import {
   googleTagManagerPageChanged,
   resetPageTracking,
@@ -86,6 +90,13 @@ export default {
     }
 
     trackNextAjaxAsPageview();
+
+    if (
+      transition.to.name === "topic.fromParamsNear" ||
+      transition.to.name === "topic.fromParams"
+    ) {
+      trackNextAjaxAsTopicView(transition.to.parent.params.id);
+    }
   },
 
   teardown() {

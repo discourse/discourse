@@ -43,11 +43,7 @@ describe "Uploading files in the composer", type: :system do
       SiteSetting.authorized_extensions += "|mp4"
     end
 
-    # TODO (martin): Video streaming is not yet available in Chrome for Testing,
-    # we need to come back to this in a few months and try again.
-    #
-    # c.f. https://groups.google.com/g/chromedriver-users/c/1SMbByMfO2U
-    xit "generates a topic preview thumbnail from the video" do
+    it "generates a topic preview thumbnail from the video" do
       visit "/new-topic"
       expect(composer).to be_opened
       topic.fill_in_composer_title("Video upload test")
@@ -61,8 +57,7 @@ describe "Uploading files in the composer", type: :system do
       composer.submit
 
       expect(find("#topic-title")).to have_content("Video upload test")
-      # I think topic list previews need to be enabled for this?
-      #expect(topic.image_upload_id).to eq(Upload.last.id)
+      expect(Topic.last.image_upload_id).to eq(Upload.last.id)
     end
 
     it "generates a thumbnail from the video" do

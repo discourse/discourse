@@ -386,9 +386,10 @@ Discourse::Application.routes.draw do
         end
       end
       namespace :config, constraints: StaffConstraint.new do
-        resources :flags, only: %i[index] do
+        resources :flags, only: %i[index new create update destroy] do
           put "toggle"
           put "reorder/:direction" => "flags#reorder"
+          member { get "/" => "flags#edit" }
         end
 
         resources :about, constraints: AdminConstraint.new, only: %i[index] do
@@ -1358,11 +1359,6 @@ Discourse::Application.routes.draw do
           topic_id: /\d+/,
         }
     get "t/:topic_id/summary" => "topics#show", :constraints => { topic_id: /\d+/ }
-    get "t/:topic_id/strategy-summary" => "topics#summary",
-        :constraints => {
-          topic_id: /\d+/,
-        },
-        :format => :json
     put "t/:slug/:topic_id" => "topics#update", :constraints => { topic_id: /\d+/ }
     put "t/:slug/:topic_id/status" => "topics#status", :constraints => { topic_id: /\d+/ }
     put "t/:topic_id/status" => "topics#status", :constraints => { topic_id: /\d+/ }

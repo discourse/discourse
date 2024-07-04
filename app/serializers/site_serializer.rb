@@ -48,6 +48,7 @@ class SiteSerializer < ApplicationSerializer
     :privacy_policy_url,
     :system_user_avatar_template,
     :lazy_load_categories,
+    :valid_flag_applies_to_types,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -84,7 +85,10 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def default_dark_color_scheme
-    ColorScheme.find_by_id(SiteSetting.default_dark_mode_color_scheme_id).as_json
+    ColorSchemeSerializer.new(
+      ColorScheme.find_by_id(SiteSetting.default_dark_mode_color_scheme_id),
+      root: false,
+    ).as_json
   end
 
   def groups
@@ -345,6 +349,14 @@ class SiteSerializer < ApplicationSerializer
 
   def include_lazy_load_categories?
     scope.can_lazy_load_categories?
+  end
+
+  def valid_flag_applies_to_types
+    Flag.valid_applies_to_types
+  end
+
+  def include_valid_flag_applies_to_types?
+    scope.is_admin?
   end
 
   private
