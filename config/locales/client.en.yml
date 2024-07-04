@@ -1142,6 +1142,7 @@ en:
       none: "(select an option)"
       required: 'Please enter a value for "%{name}"'
       same_as_password: "Your password should not be repeated in other fields."
+      optional: (optional)
 
     user:
       said: "%{username}:"
@@ -2233,10 +2234,11 @@ en:
       header_title: "Welcome!"
       subheader_title: "Let's create your account"
       disclaimer: "By registering, you agree to the <a href='%{privacy_link}' target='blank'>privacy policy</a> and <a href='%{tos_link}' target='blank'>terms of service</a>."
-      title: "Create your account"
+      title: "Sign Up"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
       associate: "Already have an account? <a href='%{associate_link}'>Log In</a> to link your %{provider} account."
       activation_title: "Activate your account"
+      already_have_account: "Already have an account?"
 
     forgot_password:
       title: "Password Reset"
