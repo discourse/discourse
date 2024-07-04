@@ -14,7 +14,7 @@ import I18n from "discourse-i18n";
 
 let requests = 0;
 
-module("Integration | Component | Widget | discourse-poll", function (hooks) {
+module("Poll | Component | poll", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
@@ -47,14 +47,14 @@ module("Integration | Component | Widget | discourse-poll", function (hooks) {
   });
 
   test("can vote", async function (assert) {
-    this.set(
-      "args",
-      EmberObject.create({
+    this.setProperties({
+      attributes: EmberObject.create({
         post: EmberObject.create({
           id: 42,
           topic: {
             archived: false,
           },
+          user_id: 29,
         }),
         poll: EmberObject.create({
           name: "poll",
@@ -70,16 +70,23 @@ module("Integration | Component | Widget | discourse-poll", function (hooks) {
         }),
         vote: [],
         groupableUserFields: [],
-      })
-    );
+      }),
+      preloadedVoters: [],
+      options: [
+        { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
+        { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+      ],
+    });
 
     await render(
-      hbs`<MountWidget @widget="discourse-poll" @args={{this.args}} />`
+      hbs`<Poll @attrs={{this.attributes}} @preloadedVoters={{this.preloadedVoters}} @options={{this.options}} />`
     );
 
     requests = 0;
 
-    await click("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']");
+    await click(
+      "li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29'] button"
+    );
     assert.strictEqual(requests, 1);
     assert.strictEqual(count(".chosen"), 1);
     assert.deepEqual(
@@ -95,14 +102,14 @@ module("Integration | Component | Widget | discourse-poll", function (hooks) {
   });
 
   test("cannot vote if not member of the right group", async function (assert) {
-    this.set(
-      "args",
-      EmberObject.create({
+    this.setProperties({
+      attributes: EmberObject.create({
         post: EmberObject.create({
           id: 42,
           topic: {
             archived: false,
           },
+          user_id: 29,
         }),
         poll: EmberObject.create({
           name: "poll",
@@ -119,16 +126,23 @@ module("Integration | Component | Widget | discourse-poll", function (hooks) {
         }),
         vote: [],
         groupableUserFields: [],
-      })
-    );
+      }),
+      preloadedVoters: [],
+      options: [
+        { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
+        { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+      ],
+    });
 
     await render(
-      hbs`<MountWidget @widget="discourse-poll" @args={{this.args}} />`
+      hbs`<Poll @attrs={{this.attributes}} @preloadedVoters={{this.preloadedVoters}} @options={{this.options}} />`
     );
 
     requests = 0;
 
-    await click("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']");
+    await click(
+      "li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29'] button"
+    );
     assert.strictEqual(
       query(".poll-container .alert").innerText,
       I18n.t("poll.results.groups.title", { groups: "foo" })
@@ -138,14 +152,14 @@ module("Integration | Component | Widget | discourse-poll", function (hooks) {
   });
 
   test("voting on a multiple poll with no min attribute", async function (assert) {
-    this.set(
-      "args",
-      EmberObject.create({
+    this.setProperties({
+      attributes: EmberObject.create({
         post: EmberObject.create({
           id: 42,
           topic: {
             archived: false,
           },
+          user_id: 29,
         }),
         poll: EmberObject.create({
           name: "poll",
@@ -162,15 +176,23 @@ module("Integration | Component | Widget | discourse-poll", function (hooks) {
         }),
         vote: [],
         groupableUserFields: [],
-      })
-    );
-
+      }),
+      preloadedVoters: [],
+      options: [
+        { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
+        { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+      ],
+    });
     await render(
-      hbs`<MountWidget @widget="discourse-poll" @args={{this.args}} />`
+      hbs`<Poll @attrs={{this.attributes}} @preloadedVoters={{this.preloadedVoters}} @options={{this.options}} />`
     );
-    assert.ok(exists(".poll-buttons .cast-votes[disabled=true]"));
 
-    await click("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']");
+    assert.ok(exists(".poll-buttons .cast-votes:disabled"));
+
+    await click(
+      "li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29'] button"
+    );
+
     await click(".poll-buttons .cast-votes");
     assert.ok(exists(".chosen"));
   });
