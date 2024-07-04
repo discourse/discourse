@@ -2047,7 +2047,7 @@ class User < ActiveRecord::Base
         end
     end
 
-    TagUser.insert_all!(values) if values.present?
+    TagUser.insert_all(values) if values.present?
   end
 
   def self.purge_unactivated
