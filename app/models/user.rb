@@ -602,8 +602,20 @@ class User < ActiveRecord::Base
   end
 
   def invited_by
+    # this is unfortunate, but when an invite is redeemed,
+    # any user created by the invite is created *after*
+    # the invite's redeemed_at
+    invite_redemption_delay = 5.seconds
     used_invite =
-      Invite.with_deleted.joins(:invited_users).where("invited_users.user_id = ?", self.id).first
+      Invite
+        .with_deleted
+        .joins(:invited_users)
+        .where(
+          "invited_users.user_id = ? AND invited_users.redeemed_at <= ?",
+          self.id,
+          self.created_at + invite_redemption_delay,
+        )
+        .first
     used_invite.try(:invited_by)
   end
 
