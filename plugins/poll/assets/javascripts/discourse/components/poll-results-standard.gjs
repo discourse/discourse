@@ -82,16 +82,18 @@ export default class PollResultsStandardComponent extends Component {
                 style={{htmlSafe (concat "width:" option.percentage "%")}}
               />
             </div>
-            <PollVoters
-              @postId={{@postId}}
-              @pollType={{@pollType}}
-              @optionId={{option.id}}
-              @pollName={{@pollName}}
-              @totalVotes={{option.votes}}
-              @voters={{option.voters}}
-              @fetchVoters={{@fetchVoters}}
-              @loading={{option.loading}}
-            />
+            {{#if @isPublic}}
+              <PollVoters
+                @postId={{@postId}}
+                @pollType={{@pollType}}
+                @optionId={{option.id}}
+                @pollName={{@pollName}}
+                @totalVotes={{option.votes}}
+                @voters={{option.voters}}
+                @fetchVoters={{@fetchVoters}}
+                @loading={{option.loading}}
+              />
+            {{/if}}
           </div>
         </li>
       {{/each}}
