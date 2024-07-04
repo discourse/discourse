@@ -388,7 +388,7 @@ module("Unit | Utilities | table-builder", function (hooks) {
 
     assert.strictEqual(
       arrayToTable(tableData, ["Col 1", "Col 2"], "A"),
-      `|Col 1 | Col 2|\r\n|--- | ---|\r\n|hey | you|\r\n|over | there|\r\n`,
+      `|Col 1 | Col 2|\n|--- | ---|\n|hey | you|\n|over | there|\n`,
       "it works"
     );
   });
@@ -407,7 +407,7 @@ module("Unit | Utilities | table-builder", function (hooks) {
 
     assert.strictEqual(
       arrayToTable(tableData, ["Col 1", "Col 2"]),
-      `|Col 1 | Col 2|\r\n|--- | ---|\r\n|Jane Doe | Teri|\r\n|Finch | Sami|\r\n`,
+      `|Col 1 | Col 2|\n|--- | ---|\n|Jane Doe | Teri|\n|Finch | Sami|\n`,
       "it creates a valid table"
     );
   });
@@ -425,13 +425,13 @@ module("Unit | Utilities | table-builder", function (hooks) {
         "col",
         alignment
       ),
-      "|Col 1 | Col 2 | Col 3 | Col 4|\r\n|:-- | :-: | --: | ---|\r\n|left | center | right | unspecificated|\r\n|111 | 222 | 333 | 444|\r\n",
+      "|Col 1 | Col 2 | Col 3 | Col 4|\n|:-- | :-: | --: | ---|\n|left | center | right | unspecificated|\n|111 | 222 | 333 | 444|\n",
       "it creates a valid table"
     );
   });
 
   test("findTableRegex", function (assert) {
-    const oneTable = `|Make|Model|Year|\r\n|--- | --- | ---|\r\n|Toyota|Supra|1998|`;
+    const oneTable = `|Make|Model|Year|\n|--- | --- | ---|\n|Toyota|Supra|1998|`;
 
     assert.strictEqual(
       oneTable.match(findTableRegex()).length,

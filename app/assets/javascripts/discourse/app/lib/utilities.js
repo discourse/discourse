@@ -645,7 +645,7 @@ export function arrayToTable(array, cols, colPrefix = "col", alignments) {
   // Generate table headers
   table += "|";
   table += cols.join(" | ");
-  table += "|\r\n|";
+  table += "|\n|";
 
   const alignMap = {
     left: ":--",
@@ -657,7 +657,7 @@ export function arrayToTable(array, cols, colPrefix = "col", alignments) {
   table += cols
     .map((_, index) => alignMap[String(alignments?.[index])] || "---")
     .join(" | ");
-  table += "|\r\n";
+  table += "|\n";
 
   // Generate table body
   array.forEach(function (item) {
@@ -671,7 +671,7 @@ export function arrayToTable(array, cols, colPrefix = "col", alignments) {
             " "
           );
         })
-        .join(" | ") + "|\r\n";
+        .join(" | ") + "|\n";
   });
 
   return table;

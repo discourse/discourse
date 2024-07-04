@@ -1,3 +1,3 @@
-export const mdTable = `|Make | Model | Year|\r\n|--- | --- | ---|\r\n|Toyota | Supra | 1998|\r\n|Nissan | Skyline | 1999|\r\n|Honda | S2000 | 2001|\r\n`;
-export const mdTableSpecialChars = `|Make | Model | Price|\r\n|--- | --- | ---|\r\n|Toyota | Supra | $50,000|\r\n| | Celica | $20,000|\r\n|Nissan | GTR | $80,000|\r\n`;
-export const mdTableNonUniqueHeadings = `|col1 | col2 | col1|\r\n|--- | --- | ---|\r\n|Col A | Col B | Col C|\r\n`;
+export const mdTable = `|Make | Model | Year|\n|--- | --- | ---|\n|Toyota | Supra | 1998|\n|Nissan | Skyline | 1999|\n|Honda | S2000 | 2001|\n`;
+export const mdTableSpecialChars = `|Make | Model | Price|\n|--- | --- | ---|\n|Toyota | Supra | $50,000|\n| | Celica | $20,000|\n|Nissan | GTR | $80,000|\n`;
+export const mdTableNonUniqueHeadings = `|col1 | col2 | col1|\n|--- | --- | ---|\n|Col A | Col B | Col C|\n`;
