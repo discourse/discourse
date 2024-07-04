@@ -79,7 +79,7 @@ class UserSerializer < UserCardSerializer
       object.user_notification_schedule,
       scope: scope,
       root: false,
-    ) || UserNotificationSchedule::DEFAULT
+    ).as_json || UserNotificationSchedule::DEFAULT
   end
 
   def mailing_list_posts_per_day
