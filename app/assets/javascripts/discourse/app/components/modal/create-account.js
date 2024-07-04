@@ -5,7 +5,6 @@ import { alias, notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
-import $ from "jquery";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
@@ -388,17 +387,16 @@ export default class CreateAccount extends Component.extend(
           this._challengeExpiry = 1;
 
           // Trigger the browser's password manager using the hidden static login form:
-          const $hidden_login_form = $("#hidden-login-form");
-          $hidden_login_form
-            .find("input[name=username]")
-            .val(attrs.accountUsername);
-          $hidden_login_form
-            .find("input[name=password]")
-            .val(attrs.accountPassword);
-          $hidden_login_form
-            .find("input[name=redirect]")
-            .val(userPath("account-created"));
-          $hidden_login_form.submit();
+          const hiddenLoginForm = document.querySelector("#hidden-login-form");
+          if (hiddenLoginForm) {
+            hiddenLoginForm.querySelector("input[name=username]").value =
+              attrs.accountUsername;
+            hiddenLoginForm.querySelector("input[name=password]").value =
+              attrs.accountPassword;
+            hiddenLoginForm.querySelector("input[name=redirect]").value =
+              userPath("account-created");
+            hiddenLoginForm.submit();
+          }
           return new Promise(() => {}); // This will never resolve, the page will reload instead
         } else {
           this.set("flash", result.message || I18n.t("create_account.failed"));
