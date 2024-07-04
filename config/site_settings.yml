@@ -793,6 +793,8 @@ users:
   hide_user_activity_tab:
     default: false
     client: true
+  delete_associated_accounts_on_password_reset:
+    default: false
 
 groups:
   enable_group_directory:
