@@ -2,12 +2,10 @@
 
 require "json"
 require "socket"
-require_relative "git_utils"
 
 class DiscourseLogstashLogger < Logger
   PROCESS_PID = Process.pid
   HOST = Socket.gethostname
-  GIT_VERSION = GitUtils.git_version
 
   attr_accessor :customize_event, :type
 
@@ -67,7 +65,6 @@ class DiscourseLogstashLogger < Logger
       "pid" => PROCESS_PID,
       "type" => @type.to_s,
       "host" => HOST,
-      "git_version" => GitUtils.git_version,
     }
 
     # Only log backtrace and env for Logger::WARN and above.
