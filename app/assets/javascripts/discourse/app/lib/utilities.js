@@ -666,10 +666,9 @@ export function arrayToTable(array, cols, colPrefix = "col", alignments) {
     table +=
       cols
         .map(function (_key, index) {
-          return String(item[`${colPrefix}${index}`] || "").replace(
-            /\r?\n|\r/g,
-            " "
-          );
+          return String(item[`${colPrefix}${index}`] || "")
+            .replace(/\r?\n|\r/g, " ")
+            .replaceAll("|", "\\|");
         })
         .join(" | ") + "|\n";
   });
