@@ -17,5 +17,5 @@ class UserNotificationScheduleSerializer < ApplicationSerializer
              :day_5_start_time,
              :day_5_end_time,
              :day_6_start_time,
-             :day_6_end_time"
+             :day_6_end_time
 end
