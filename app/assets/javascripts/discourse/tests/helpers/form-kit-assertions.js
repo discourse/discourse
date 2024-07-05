@@ -70,7 +70,7 @@ class FieldHelper {
     return this.element.dataset.disabled === "";
   }
 
-  hasCounter(current, max, message) {
+  hasCharCounter(current, max, message) {
     this.context
       .dom(this.element.querySelector(".form-kit__char-counter"))
       .includesText(`${current}/${max}`, message);
@@ -150,8 +150,8 @@ export function setupFormKitAssertions() {
           hasError: (message) => {
             field.hasError(message);
           },
-          hasCounter: (current, max, message) => {
-            field.hasCounter(current, max, message);
+          hasCharCounter: (current, max, message) => {
+            field.hasCharCounter(current, max, message);
           },
           hasNoError: (message) => {
             field.hasNoError(message);

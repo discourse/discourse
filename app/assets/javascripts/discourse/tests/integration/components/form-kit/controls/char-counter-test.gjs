@@ -26,11 +26,11 @@ module(
         </Form>
       </template>);
 
-      assert.form().field("foo").hasCounter(0, 5);
+      assert.form().field("foo").hasCharCounter(0, 5);
 
       await formKit().field("foo").fillIn("foo");
 
-      assert.form().field("foo").hasCounter(3, 5);
+      assert.form().field("foo").hasCharCounter(3, 5);
     });
   }
 );
