@@ -28,6 +28,6 @@ class GitUtils
         default_value
       end
 
-    (value.present? ? value : nil) || default_value
+    (!value.empty? ? value : nil) || default_value
   end
 end
