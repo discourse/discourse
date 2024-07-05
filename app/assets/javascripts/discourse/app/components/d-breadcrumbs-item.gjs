@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
 
 export default class DBreadcrumbsItem extends Component {
@@ -17,25 +16,30 @@ export default class DBreadcrumbsItem extends Component {
   }
 
   get url() {
-    if (this.args.model) {
-      return this.router.urlFor(this.args.route, this.args.model);
-    } else {
-      return this.router.urlFor(this.args.route);
+    try {
+      if (this.args.model) {
+        return this.router.urlFor(this.args.route, this.args.model);
+      } else {
+        return this.router.urlFor(this.args.route);
+      }
+    } catch {
+      // if the route can't be resolved, ignore
     }
   }
 
-  @cached
   get templateForContainer() {
     // Those are evaluated in a different context than the `@linkClass`
     const { label } = this.args;
     const url = this.url;
 
     return <template>
-      <li ...attributes>
-        <a href={{url}} class={{@linkClass}}>
-          {{label}}
-        </a>
-      </li>
+      {{#if url}}
+        <li ...attributes>
+          <a href={{url}} class={{@linkClass}}>
+            {{label}}
+          </a>
+        </li>
+      {{/if}}
     </template>;
   }
 }
