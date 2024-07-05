@@ -21,7 +21,6 @@ RSpec.describe DiscourseLogstashLogger do
           "pid" => described_class::PROCESS_PID,
           "type" => "test",
           "host" => described_class::HOST,
-          "git_version" => described_class::GIT_VERSION,
           "method" => "GET",
           "path" => "/",
           "format" => "html",
