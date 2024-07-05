@@ -48,7 +48,7 @@ RSpec.describe SearchLog, type: :model do
         log = SearchLog.find(log_id)
         expect(log.term).to eq("jabba")
         expect(log.search_type).to eq(SearchLog.search_types[:header])
-        expect(log.ip_address).to eq(nil)
+        expect(log.ip_address).to eq("192.168.0.33")
         expect(log.user_agent).to eq("Mozilla")
 
         action, updated_log_id =
@@ -93,7 +93,7 @@ RSpec.describe SearchLog, type: :model do
         log = SearchLog.find(log_id)
         expect(log.term).to eq("hello")
         expect(log.search_type).to eq(SearchLog.search_types[:full_page])
-        expect(log.ip_address).to eq("192.168.0.1")
+        expect(log.ip_address).to eq(nil)
         expect(log.user_agent).to eq("Mozilla")
         expect(log.user_id).to eq(user.id)
 
