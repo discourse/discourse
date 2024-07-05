@@ -1,27 +1,57 @@
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
+import { action, getProperties } from "@ember/object";
 import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
+import BadgePreviewModal from "../../components/modal/badge-preview";
+
+const FORM_FIELDS = [
+  "allow_title",
+  "multiple_grant",
+  "listable",
+  "auto_revoke",
+  "enabled",
+  "show_posts",
+  "target_posts",
+  "name",
+  "description",
+  "long_description",
+  "icon",
+  "image_upload_id",
+  "query",
+  "badge_grouping_id",
+  "trigger",
+  "badge_type_id",
+];
 
 export default class AdminBadgesShowController extends Controller {
   @service router;
   @service toasts;
   @service dialog;
+  @service modal;
 
   @controller adminBadges;
 
   @tracked model;
   @tracked saving = false;
+  @tracked previewLoading = false;
   @tracked selectedGraphicType = null;
   @tracked userBadges;
   @tracked userBadgesAll;
 
-  initialData = {
-    foo: [{ bar: 1 }, { bar: 2 }],
-  };
+  @cached
+  get formData() {
+    const data = getProperties(this.model, ...FORM_FIELDS);
+
+    if (data.icon === "") {
+      data.icon = undefined;
+    }
+
+    return data;
+  }
 
   @action
   currentBadgeGrouping(data) {
@@ -99,14 +129,44 @@ export default class AdminBadgesShowController extends Controller {
   @action
   showPreview(badge, explain, event) {
     event?.preventDefault();
-    this.send("preview", badge, explain);
+    this.preview(badge, explain);
   }
 
   @action
   validateForm(data, { addError }) {
     if (!data.icon && !data.image_url) {
-      addError("icon", I18n.t("admin.badges.icon_or_image"));
-      addError("image_url", I18n.t("admin.badges.icon_or_image"));
+      addError("icon", {
+        title: "Icon",
+        message: I18n.t("admin.badges.icon_or_image"),
+      });
+      addError("image_url", {
+        title: "Image",
+        message: I18n.t("admin.badges.icon_or_image"),
+      });
+    }
+  }
+
+  @action
+  async preview(badge, explain) {
+    try {
+      this.previewLoading = true;
+      const model = await ajax("/admin/badges/preview.json", {
+        type: "POST",
+        data: {
+          sql: badge.query,
+          target_posts: !!badge.target_posts,
+          trigger: badge.trigger,
+          explain,
+        },
+      });
+
+      this.modal.show(BadgePreviewModal, { model: { badge: model } });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+      this.dialog.alert("Network error");
+    } finally {
+      this.previewLoading = false;
     }
   }
 
@@ -116,24 +176,7 @@ export default class AdminBadgesShowController extends Controller {
       return;
     }
 
-    let fields = [
-      "allow_title",
-      "multiple_grant",
-      "listable",
-      "auto_revoke",
-      "enabled",
-      "show_posts",
-      "target_posts",
-      "name",
-      "description",
-      "long_description",
-      "icon",
-      "image_upload_id",
-      "query",
-      "badge_grouping_id",
-      "trigger",
-      "badge_type_id",
-    ];
+    let fields = FORM_FIELDS;
 
     if (formData.system) {
       const protectedFields = this.protectedSystemFields || [];

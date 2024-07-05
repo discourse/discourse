@@ -9,9 +9,10 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
 
   test("default", async function (assert) {
     let data = { foo: null };
+    const mutateData = (x) => (data = x);
 
     await render(<template>
-      <Form @mutable={{true}} @data={{data}} as |form|>
+      <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
         <form.Field @name="foo" @title="Foo" as |field|>
           <field.Code />
         </form.Field>
@@ -22,6 +23,7 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
     assert.form().field("foo").hasValue("");
 
     await formKit().field("foo").fillIn("bar");
+    await formKit().submit();
 
     assert.deepEqual(data, { foo: "bar" });
     assert.form().field("foo").hasValue("bar");

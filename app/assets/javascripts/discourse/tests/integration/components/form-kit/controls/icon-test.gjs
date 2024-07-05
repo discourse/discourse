@@ -16,9 +16,10 @@ module("Integration | Component | FormKit | Controls | Icon", function (hooks) {
 
   test("default", async function (assert) {
     let data = { foo: null };
+    const mutateData = (x) => (data = x);
 
     await render(<template>
-      <Form @mutable={{true}} @data={{data}} as |form|>
+      <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
         <form.Field @name="foo" @title="Foo" as |field|>
           <field.Icon />
         </form.Field>

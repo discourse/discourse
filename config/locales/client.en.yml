@@ -2090,6 +2090,7 @@ en:
       close: "close"
       dismiss_error: "Dismiss error"
     form_kit:
+      reset: Reset
       optional: optional
       errors_summary_title: "This form contains errors:"
       dirty_form: "You didn't submit your changes! Are you sure you want to leave?"

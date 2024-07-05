@@ -40,7 +40,6 @@ module("Integration | Component | FormKit | Field", function (hooks) {
   });
 
   test("@validate", async function (assert) {
-    const done = assert.async();
     const validate = async (name, value, { addError, data }) => {
       assert.deepEqual(name, "foo", "the callback has the name as param");
       assert.deepEqual(value, "bar", "the callback has the name as param");
@@ -50,9 +49,7 @@ module("Integration | Component | FormKit | Field", function (hooks) {
         "the callback has the data as param"
       );
 
-      addError("foo", "error");
-
-      done();
+      addError("foo", { title: "Some error", message: "error" });
     };
 
     await render(<template>
@@ -89,15 +86,12 @@ module("Integration | Component | FormKit | Field", function (hooks) {
   });
 
   test("@onSet", async function (assert) {
-    const done = assert.async();
     const onSet = async (value, { set }) => {
       assert.form().field("foo").hasValue("bar");
 
       await set("foo", "baz");
 
       assert.form().field("foo").hasValue("baz");
-
-      done();
     };
 
     await render(<template>
@@ -105,7 +99,6 @@ module("Integration | Component | FormKit | Field", function (hooks) {
         <form.Field @name="foo" @title="Foo" @onSet={{onSet}} as |field|>
           <field.Input />
         </form.Field>
-
       </Form>
     </template>);
 

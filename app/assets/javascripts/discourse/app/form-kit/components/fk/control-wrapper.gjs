@@ -75,19 +75,21 @@ export default class FKControlWrapper extends Component {
     return new TrackedObject(props);
   }
 
-  get errors() {
-    return (this.args.errors ?? []).filter(
-      (error) => error.name === this.args.field.name
-    );
+  get error() {
+    return (this.args.errors ?? {})[this.args.field.name];
   }
 
   get hasErrors() {
-    return this.errors.length > 0;
+    return this.errors?.length > 0;
+  }
+
+  normalizeName(name) {
+    return name.replace(/\./g, "-");
   }
 
   <template>
     <div
-      id={{concat "control-" @field.name}}
+      id={{concat "control-" (this.normalizeName @field.name)}}
       class={{concatClass
         "form-kit__container"
         "form-kit__field"
@@ -141,7 +143,7 @@ export default class FKControlWrapper extends Component {
           @description={{@description}}
           @value={{@value}}
           @field={{@field}}
-          @errors={{this.errors}}
+          @error={{this.error}}
         />
       </div>
     </div>

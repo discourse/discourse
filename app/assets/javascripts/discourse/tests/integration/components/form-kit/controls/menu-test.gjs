@@ -9,9 +9,10 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
 
   test("default", async function (assert) {
     let data = { foo: "item-2" };
+    const mutateData = (x) => (data = x);
 
     await render(<template>
-      <Form @mutable={{true}} @data={{data}} as |form|>
+      <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
         <form.Field @name="foo" @title="Foo" as |field|>
           <field.Menu as |menu|>
             <menu.Item @value="item-1">Item 1</menu.Item>
@@ -26,6 +27,7 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
     assert.form().field("foo").hasValue("item-2");
 
     await formKit().field("foo").select("item-3");
+    await formKit().submit();
 
     assert.deepEqual(data, { foo: "item-3" });
     assert.form().field("foo").hasValue("item-3");

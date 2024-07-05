@@ -1,14 +1,11 @@
 import { action, get } from "@ember/object";
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
-import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
 import I18n from "discourse-i18n";
-import BadgePreviewModal from "../../components/modal/badge-preview";
 
 export default class AdminBadgesShowRoute extends Route {
   @service dialog;
-  @service modal;
 
   serialize(m) {
     return { badge_id: get(m, "id") || "new" };
@@ -35,28 +32,5 @@ export default class AdminBadgesShowRoute extends Route {
   @action
   updateGroupings(groupings) {
     this.controllerFor("admin-badges").set("badgeGroupings", groupings);
-  }
-
-  @action
-  async preview(badge, explain) {
-    try {
-      badge.set("preview_loading", true);
-      const model = await ajax("/admin/badges/preview.json", {
-        type: "POST",
-        data: {
-          sql: badge.get("query"),
-          target_posts: !!badge.get("target_posts"),
-          trigger: badge.get("trigger"),
-          explain,
-        },
-      });
-      badge.set("preview_loading", false);
-      this.modal.show(BadgePreviewModal, { model: { badge: model } });
-    } catch (e) {
-      badge.set("preview_loading", false);
-      // eslint-disable-next-line no-console
-      console.error(e);
-      this.dialog.alert("Network error");
-    }
   }
 }

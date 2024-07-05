@@ -2,11 +2,9 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action, set } from "@ember/object";
+import { action, get } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import { ImmerChangeset } from "ember-immer-changeset";
 import { modifier as modifierFn } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import FKAlert from "discourse/form-kit/components/fk/alert";
@@ -20,6 +18,7 @@ import Row from "discourse/form-kit/components/fk/row";
 import FKSection from "discourse/form-kit/components/fk/section";
 import { VALIDATION_TYPES } from "discourse/form-kit/lib/constants";
 import FieldData from "discourse/form-kit/lib/field-data";
+import FormData from "discourse/form-kit/lib/form-data";
 import I18n from "I18n";
 
 export default class FKForm extends Component {
@@ -30,8 +29,6 @@ export default class FKForm extends Component {
 
   fields = new Map();
 
-  isDirtyForm = false;
-
   onValidation = modifierFn((element, [eventName, handler]) => {
     if (eventName) {
       element.addEventListener(eventName, handler);
@@ -39,8 +36,6 @@ export default class FKForm extends Component {
       return () => element.removeEventListener(eventName, handler);
     }
   });
-
-  transientData = new TrackedObject({});
 
   constructor() {
     super(...arguments);
@@ -60,14 +55,10 @@ export default class FKForm extends Component {
     this.router.off("routeWillChange", this.checkIsDirty);
   }
 
-  get mutable() {
-    return this.args.mutable ?? false;
-  }
-
   @action
   checkIsDirty(transition) {
     if (
-      this.isDirtyForm &&
+      this.formData.isDirty &&
       !transition.isAborted &&
       !transition.queryParamsOnly
     ) {
@@ -76,7 +67,6 @@ export default class FKForm extends Component {
       this.dialog.yesNoConfirm({
         message: I18n.t("form_kit.dirty_form"),
         didConfirm: () => {
-          this.isDirtyForm = false;
           this.onReset();
           transition.retry();
         },
@@ -84,13 +74,13 @@ export default class FKForm extends Component {
     }
   }
 
-  @cached
-  get effectiveData() {
-    return new ImmerChangeset(this.args.data ?? {});
+  // @cached
+  // get effectiveData() {
+  //   return new EffectiveData(this.args.data ?? {});
 
-    // if (this.mutable) {
-    //   return obj;
-    // }
+  @cached
+  get formData() {
+    return new FormData(this.args.data ?? {});
   }
 
   get validateOn() {
@@ -107,10 +97,6 @@ export default class FKForm extends Component {
     return validateOn;
   }
 
-  get hasErrors() {
-    return Array.from(this.fields.values()).some((field) => field.hasErrors);
-  }
-
   get errors() {
     const errors = {};
     for (const [name, field] of this.fields) {
@@ -120,58 +106,38 @@ export default class FKForm extends Component {
   }
 
   @action
-  addError(name, message) {
-    this.effectiveData.addError({ name, key: name, message });
-    // const field = this.fields.get(name);
-    // field?.pushError(message);
+  addError(name, { title, message }) {
+    this.formData.addError(name, {
+      title,
+      message,
+    });
   }
 
   @action
-  async push(name, value) {
-    const current = this.effectiveData.get(name) ?? [];
-    this.effectiveData.set(name, current.concat(value ?? {}));
+  async addItemToCollection(name, value = {}) {
+    const current = get(this.formData.draftData, name) ?? [];
+    this.formData.set(name, current.concat(value));
   }
 
   @action
   async remove(name, index) {
-    const current = this.effectiveData.get(name) ?? [];
+    const current = get(this.formData.draftData, name) ?? [];
 
-    const keys = [];
-    for (const [n] of this.fields) {
-      if (n.startsWith(`${name}.${index}`)) {
-        keys.push(n.split(".").pop());
-      }
-    }
-
-    this.effectiveData.set(
+    this.formData.set(
       name,
       current.filter((_, i) => i !== index)
     );
 
-    const newMap = new Map();
-    let newIndex = 0;
-    for (const [n, field] of this.fields) {
-      // keys.forEach((key) => {
-      //   if (n.endsWith(`.${key}`)) {
-      //     newMap.set(`${name}.${newIndex}.${key}`, field);
-      //   }
-      // });
-
-      newIndex++;
-    }
-
-    this.fields = newMap;
-
-    this.effectiveData.removeErrors();
-
-    console.log(this.effectiveData, this.fields);
+    Object.keys(this.formData.errors).forEach((key) => {
+      if (key.startsWith(`${name}.${index}.`)) {
+        this.formData.removeError(key);
+      }
+    });
   }
 
   @action
-  async set(name, value, { index }) {
-    this.isDirtyForm = true;
-
-    this.effectiveData.set(name, value);
+  async set(name, value) {
+    this.formData.set(name, value);
 
     if (this.fieldValidationEvent === VALIDATION_TYPES.change) {
       await this.handleFieldValidation(name);
@@ -187,11 +153,9 @@ export default class FKForm extends Component {
     }
 
     if (this.fields.has(name)) {
-      // throw new Error(
-      //   `@name="${name}", is already in use. Names of \`<form.Field />\` must be unique!`
-      // );
-
-      return this.fields.get(name);
+      throw new Error(
+        `@name="${name}", is already in use. Names of \`<form.Field />\` must be unique!`
+      );
     }
 
     const fieldModel = new FieldData(name, field);
@@ -211,9 +175,10 @@ export default class FKForm extends Component {
 
     await this.validate(this.fields);
 
-    if (!this.hasErrors) {
-      this.isDirtyForm = false;
-      await this.args.onSubmit?.(this.effectiveData);
+    if (this.formData.isValid) {
+      this.formData.save();
+
+      await this.args.onSubmit?.(this.formData.draftData);
     }
   }
 
@@ -221,15 +186,9 @@ export default class FKForm extends Component {
   async onReset(event) {
     event?.preventDefault();
 
-    for (const key of Object.keys(this.transientData)) {
-      delete this.transientData[key];
-    }
-
-    this.effectiveData.removeErrors();
-
-    await this.args.onReset?.(this.effectiveData);
-
-    await new Promise((resolve) => next(resolve));
+    this.formData.removeErrors();
+    await this.formData.rollback();
+    await this.args.onReset?.(this.formData.draftData);
   }
 
   @action
@@ -240,7 +199,7 @@ export default class FKForm extends Component {
       return;
     }
 
-    await this.validate(new Map([[name, field]]));
+    await this.validate(this.fields);
   }
 
   @action
@@ -264,39 +223,25 @@ export default class FKForm extends Component {
   }
 
   async validate(fields) {
-    // this.isLoading = true;
+    this.isLoading = true;
 
-    this.effectiveData.removeErrors();
+    this.formData.removeErrors();
 
-    await this.effectiveData.validate(async (draftData) => {
+    try {
       for (const [name, field] of fields) {
-        await field.validate?.(name, this.effectiveData.get(name), draftData);
-
-        await this.args.validate?.(draftData, {
-          addError: this.addError,
-        });
+        await field.validate?.(
+          name,
+          get(this.formData.draftData, name),
+          this.formData.draftData
+        );
       }
-    });
 
-    // try {
-    //   for (const [name, field] of fields) {
-    //     await field.validate?.(
-    //       name,
-    //       this.effectiveData[name],
-    //       this.effectiveData
-    //     );
-    //   }
-
-    //   await this.args.validate?.(this.effectiveData, {
-    //     addError: this.addError,
-    //   });
-
-    //   this.fieldsWithErrors = Array.from(this.fields.values()).filter(
-    //     (field) => field.hasErrors
-    //   );
-    // } finally {
-    //   this.isLoading = false;
-    // }
+      await this.args.validate?.(this.formData.draftData, {
+        addError: this.addError,
+      });
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   <template>
@@ -308,7 +253,7 @@ export default class FKForm extends Component {
       {{on "reset" this.onReset}}
       {{this.onValidation this.fieldValidationEvent this.handleFieldValidation}}
     >
-      <FKErrorsSummary @errors={{this.effectiveData.errors}} />
+      <FKErrorsSummary @errors={{this.formData.errors}} />
 
       {{yield
         (hash
@@ -328,11 +273,18 @@ export default class FKForm extends Component {
             type="submit"
             isLoading=this.isLoading
           )
+          Reset=(component
+            DButton
+            action=this.onReset
+            forwardEvent=true
+            class="form-kit__button"
+            label="form_kit.reset"
+          )
           Field=(component
             FKField
-            errors=this.effectiveData.errors
+            errors=this.formData.errors
             addError=this.addError
-            data=this.effectiveData.draftData
+            data=this.formData.draftData
             set=this.set
             registerField=this.registerField
             unregisterField=this.unregisterField
@@ -340,10 +292,9 @@ export default class FKForm extends Component {
           )
           Collection=(component
             FKCollection
-            errors=this.effectiveData.errors
+            errors=this.formData.errors
             addError=this.addError
-            data=this.effectiveData.draftData
-            effectiveData=this.effectiveData
+            data=this.formData.draftData
             set=this.set
             remove=this.remove
             registerField=this.registerField
@@ -352,15 +303,15 @@ export default class FKForm extends Component {
           )
           InputGroup=(component
             FKControlInputGroup
-            data=this.effectiveData
+            data=this.formData.draftData
             set=this.set
             registerField=this.registerField
             unregisterField=this.unregisterField
           )
           set=this.set
-          push=this.push
+          addItemToCollection=this.addItemToCollection
         )
-        this.effectiveData.draftData
+        this.formData.draftData
       }}
     </form>
   </template>

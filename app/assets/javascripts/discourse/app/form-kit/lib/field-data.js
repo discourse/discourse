@@ -114,7 +114,12 @@ export default class FieldData {
     const validator = new Validator(value, this.rules);
     const validationErrors = await validator.validate(this.type);
     validationErrors.forEach((message) => {
-      this.addError(name, message);
+      let title = this.title;
+      if (this.collectionIndex !== undefined) {
+        title += ` #${this.collectionIndex + 1}`;
+      }
+
+      this.addError(name, { title, message });
     });
   }
 

@@ -42,8 +42,8 @@ export default class FKField extends Component {
       {
         triggerRevalidationFor: this.args.triggerRevalidationFor,
         title: this.args.title,
-        collectionIndex: this.args.collectionIndex,
         showTitle: this.args.showTitle,
+        collectionIndex: this.args.collectionIndex,
         set: this.args.set,
         addError: this.args.addError,
         validate: this.args.validate,
@@ -55,7 +55,7 @@ export default class FKField extends Component {
   }
 
   willDestroy() {
-    this.args.unregisterField(this.args.name);
+    this.args.unregisterField(this.field.name);
 
     super.willDestroy();
   }
@@ -82,7 +82,6 @@ export default class FKField extends Component {
   }
 
   <template>
-    {{this.field.name}}
     <this.wrapper @size={{@size}}>
       {{yield
         (hash

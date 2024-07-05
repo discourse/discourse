@@ -1,21 +1,23 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import { gt } from "truth-helpers";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
-import { makeArray } from "discourse-common/lib/helpers";
 
 export default class FKErrorsSummary extends Component {
-  get errors() {
-    return makeArray(this.args.errors);
-  }
-
   concatErrors(errors) {
     return errors.join(", ");
   }
 
+  get hasErrors() {
+    return Object.keys(this.args.errors).length > 0;
+  }
+
+  normalizeName(name) {
+    return name.replace(/\./g, "-");
+  }
+
   <template>
-    {{#if (gt this.errors.length 1)}}
+    {{#if this.hasErrors}}
       <div class="form-kit__errors-summary" aria-live="assertive" ...attributes>
         <h2 class="form-kit__errors-summary-title">
           {{icon "exclamation-triangle"}}
@@ -23,15 +25,15 @@ export default class FKErrorsSummary extends Component {
         </h2>
 
         <ul class="form-kit__errors-summary-list">
-          {{#each this.errors as |error|}}
+          {{#each-in @errors as |name error|}}
             <li>
               <a
                 rel="noopener noreferrer"
-                href={{concat "#control-" error.name}}
-              >{{error.name}}</a>:
-              {{error.message}}
+                href={{concat "#control-" (this.normalizeName name)}}
+              >{{error.title}}</a>:
+              {{this.concatErrors error.messages}}
             </li>
-          {{/each}}
+          {{/each-in}}
         </ul>
       </div>
     {{/if}}

@@ -11,9 +11,10 @@ module(
 
     test("default", async function (assert) {
       let data = { foo: "" };
+      const mutateData = (x) => (data = x);
 
       await render(<template>
-        <Form @mutable={{true}} @data={{data}} as |form|>
+        <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
           <form.Field @name="foo" @title="Foo" as |field|>
             <field.Input />
           </form.Field>
@@ -25,14 +26,18 @@ module(
       await formKit().field("foo").fillIn("bar");
 
       assert.form().field("foo").hasValue("bar");
+
+      await formKit().submit();
+
       assert.deepEqual(data.foo, "bar");
     });
 
     test("@type", async function (assert) {
       let data = { foo: "" };
+      const mutateData = (x) => (data = x);
 
       await render(<template>
-        <Form @mutable={{true}} @data={{data}} as |form|>
+        <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
           <form.Field @name="foo" @title="Foo" as |field|>
             <field.Input @type="number" />
           </form.Field>
@@ -44,6 +49,9 @@ module(
       await formKit().field("foo").fillIn(1);
 
       assert.form().field("foo").hasValue("1");
+
+      await formKit().submit();
+
       assert.deepEqual(data.foo, 1);
     });
   }

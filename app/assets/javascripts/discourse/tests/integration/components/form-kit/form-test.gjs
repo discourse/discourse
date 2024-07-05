@@ -1,5 +1,5 @@
-import { fn, hash } from "@ember/helper";
-import { click, render, settled } from "@ember/test-helpers";
+import { array, fn, hash } from "@ember/helper";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -9,11 +9,8 @@ module("Integration | Component | FormKit | Form", function (hooks) {
   setupRenderingTest(hooks);
 
   test("@onSubmit", async function (assert) {
-    const done = assert.async();
-
     const onSubmit = (data) => {
       assert.deepEqual(data.foo, 1);
-      done();
     };
 
     await render(<template>
@@ -23,14 +20,35 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await formKit().submit();
   });
 
+  test("addItemToCollection", async function (assert) {
+    await render(<template>
+      <Form @data={{hash foo=(array (hash bar=1) (hash bar=2))}} as |form|>
+        <form.Button
+          @action={{fn form.addItemToCollection "foo" (hash bar=3)}}
+        >Add</form.Button>
+
+        <form.Collection @name="foo" as |collection|>
+          <collection.Field @name="bar" @title="Bar" as |field|>
+            <field.Input />
+          </collection.Field>
+        </form.Collection>
+      </Form>
+    </template>);
+
+    await click("button");
+
+    assert.form().field("foo.0.bar").hasValue("1");
+    assert.form().field("foo.1.bar").hasValue("2");
+    assert.form().field("foo.2.bar").hasValue("3");
+  });
+
   test("@validate", async function (assert) {
-    const done = assert.async();
     const validate = async (data, { addError }) => {
       assert.deepEqual(data.foo, 1);
       assert.deepEqual(data.bar, 2);
-      addError("foo", "error");
-      addError("bar", "error");
-      done();
+      addError("foo", { title: "Foo", message: "incorrect type" });
+      addError("foo", { title: "Foo", message: "required" });
+      addError("bar", { title: "Bar", message: "error" });
     };
 
     await render(<template>
@@ -41,32 +59,29 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     </template>);
 
     await formKit().submit();
-    await settled();
 
     assert.form("form").hasErrors({
-      foo: "error",
+      foo: "incorrect type, required",
       bar: "error",
     });
   });
 
   test("@onRegisterApi", async function (assert) {
     let formApi;
+    let model = { foo: 1 };
 
-    const doneRegister = assert.async();
     const registerApi = (api) => {
       formApi = api;
-      doneRegister();
     };
 
-    const doneSubmit = assert.async();
-    const submit = (data) => {
-      assert.deepEqual(data.foo, 1);
-      doneSubmit();
+    const submit = (x) => {
+      model = x;
+      assert.deepEqual(model.foo, 1);
     };
 
     await render(<template>
       <Form
-        @data={{hash foo=1}}
+        @data={{model}}
         @onSubmit={{submit}}
         @onRegisterApi={{registerApi}}
         as |form data|
@@ -76,12 +91,15 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     </template>);
 
     await formApi.set("bar", 2);
+    await formApi.submit();
+
     assert.dom(".bar").hasText("2");
 
+    await formApi.set("bar", 1);
     await formApi.reset();
-    assert.dom(".bar").hasNoText("2");
-
     await formApi.submit();
+
+    assert.dom(".bar").hasText("2");
   });
 
   test("@data", async function (assert) {
@@ -94,27 +112,13 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     assert.dom(".foo").hasText("1");
   });
 
-  test("@mutable", async function (assert) {
-    const data = { foo: 1 };
-
-    await render(<template>
-      <Form @mutable={{true}} @data={{data}} as |form|>
-        <form.Field @name="foo" @title="Foo" as |field|>
-          <field.Input />
-        </form.Field>
-        <form.Button class="set-foo" @action={{fn form.set "foo" 2}} />
-      </Form>
-    </template>);
-
-    await click(".set-foo");
-
-    assert.deepEqual(data.foo, 2);
-  });
-
   test("@onReset", async function (assert) {
     const done = assert.async();
-    const onReset = (data) => {
-      assert.deepEqual(data.bar, 1, "it resets the data to its initial state");
+    const onReset = async () => {
+      assert
+        .form()
+        .field("bar")
+        .hasValue("1", "it resets the data to its initial state");
       done();
     };
 
@@ -131,7 +135,7 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     </template>);
 
     await click(".set-bar");
-    await formKit().submit();
+    await formKit().field("foo").fillIn("");
 
     assert.form().field("bar").hasValue("2");
     assert.form().field("foo").hasError("Required");
