@@ -35,8 +35,9 @@ class FieldHelper {
       }
       case "toggle": {
         return (
-          this.element.querySelector(".form-kit__control-toggle")
-            .ariaChecked === "true"
+          this.element
+            .querySelector(".form-kit__control-toggle")
+            .getAttribute("aria-checked") === "true"
         );
       }
       case "textarea": {
