@@ -356,7 +356,7 @@ RSpec.describe CurrentUserSerializer do
   describe "#featured_topic" do
     fab!(:featured_topic) { Fabricate(:topic) }
 
-    before { user.user_profile.update(featured_topic_id: featured_topic.id) }
+    before { user.user_profile.update!(featured_topic_id: featured_topic.id) }
 
     it "includes the featured topic" do
       payload = serializer.as_json
