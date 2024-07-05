@@ -40,7 +40,7 @@ export default class PollResultsStandardComponent extends Component {
       const chosen = (this.args.vote || []).includes(option.id);
       option.percentage = per;
       option.chosen = chosen;
-      let voters = this.args.voters[option.id] || [];
+      let voters = this.args.isPublic ? this.args.voters[option.id] || [] : [];
       option.voters = [...voters];
     });
 
@@ -86,17 +86,19 @@ export default class PollResultsStandardComponent extends Component {
                 />
               </div>
             {{/unless}}
-            <PollVoters
-              @postId={{@postId}}
-              @pollType={{@pollType}}
-              @optionId={{option.id}}
-              @pollName={{@pollName}}
-              @isIrv={{@isIrv}}
-              @totalVotes={{option.votes}}
-              @voters={{option.voters}}
-              @fetchVoters={{@fetchVoters}}
-              @loading={{option.loading}}
-            />
+            {{#if @isPublic}}
+              <PollVoters
+                @postId={{@postId}}
+                @pollType={{@pollType}}
+                @optionId={{option.id}}
+                @pollName={{@pollName}}
+                @isIrv={{@isIrv}}
+                @totalVotes={{option.votes}}
+                @voters={{option.voters}}
+                @fetchVoters={{@fetchVoters}}
+                @loading={{option.loading}}
+              />
+            {{/if}}
           </div>
         </li>
       {{/each}}

@@ -147,7 +147,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_ignore_users
-    !is_anonymous && object.in_any_groups?(SiteSetting.ignore_allowed_groups_map)
+    scope.can_ignore_users?
   end
 
   def can_delete_all_posts_and_topics
@@ -294,7 +294,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def featured_topic
-    object.user_profile.featured_topic
+    BasicTopicSerializer.new(object.user_profile.featured_topic, scope: scope, root: false).as_json
   end
 
   def has_topic_draft

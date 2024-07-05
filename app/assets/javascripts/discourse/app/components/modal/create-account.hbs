@@ -53,17 +53,16 @@
             />
             <label class="alt-placeholder" for="new-account-email">
               {{i18n "user.email.title"}}
-              {{~#if this.userFields~}}
-                <span class="required">*</span>
-              {{/if}}
             </label>
             <InputTip
               @validation={{this.emailValidation}}
               id="account-email-validation"
             />
-            <span class="more-info" id="account-email-validation-more-info">
-              {{i18n "user.email.instructions"}}
-            </span>
+            {{#unless this.emailValidation.reason}}
+              <span class="more-info" id="account-email-validation-more-info">
+                {{i18n "user.email.instructions"}}
+              </span>
+            {{/unless}}
           </div>
 
           <div class="input-group create-account__username">
@@ -80,47 +79,18 @@
             />
             <label class="alt-placeholder" for="new-account-username">
               {{i18n "user.username.title"}}
-              {{~#if this.userFields~}}
-                <span class="required">*</span>
-              {{/if}}
             </label>
 
             <InputTip
               @validation={{this.usernameValidation}}
               id="username-validation"
             />
-            <span class="more-info" id="username-validation-more-info">
-              {{i18n "user.username.instructions"}}
-            </span>
-          </div>
+            {{#unless this.usernameValidation.reason}}
 
-          <div class="input-group create-account__fullname">
-            {{#if this.fullnameRequired}}
-              <TextField
-                @disabled={{this.nameDisabled}}
-                @value={{this.model.accountName}}
-                @id="new-account-name"
-                aria-describedby="fullname-validation fullname-validation-more-info"
-                aria-invalid={{this.nameValidation.failed}}
-                class={{value-entered this.model.accountName}}
-              />
-              <label class="alt-placeholder" for="new-account-name">
-                {{i18n "user.name.title"}}
-                {{#if this.siteSettings.full_name_required}}
-                  {{~#if this.userFields~}}
-                    <span class="required">*</span>
-                  {{/if}}
-                {{/if}}
-              </label>
-
-              <InputTip
-                @validation={{this.nameValidation}}
-                id="fullname-validation"
-              />
-              <span class="more-info" id="fullname-validation-more-info">
-                {{this.nameInstructions}}
+              <span class="more-info" id="username-validation-more-info">
+                {{i18n "user.username.instructions"}}
               </span>
-            {{/if}}
+            {{/unless}}
           </div>
 
           <PluginOutlet
@@ -148,9 +118,6 @@
               />
               <label class="alt-placeholder" for="new-account-password">
                 {{i18n "user.password.title"}}
-                {{~#if this.userFields~}}
-                  <span class="required">*</span>
-                {{/if}}
               </label>
 
               <div class="create-account__password-info">
@@ -159,9 +126,11 @@
                     @validation={{this.passwordValidation}}
                     id="password-validation"
                   />
-                  <span class="more-info" id="password-validation-more-info">
-                    {{this.passwordInstructions}}
-                  </span>
+                  {{#unless this.passwordValidation.reason}}
+                    <span class="more-info" id="password-validation-more-info">
+                      {{this.passwordInstructions}}
+                    </span>
+                  {{/unless}}
                   <div
                     class={{concat-class
                       "caps-lock-warning"
@@ -221,6 +190,38 @@
             }}
           />
 
+          <div
+            class={{concat-class
+              "input-group"
+              "create-account__fullname"
+              (if this.siteSettings.full_name_required "required")
+            }}
+          >
+            {{#if this.fullnameRequired}}
+              <TextField
+                @disabled={{this.nameDisabled}}
+                @value={{this.model.accountName}}
+                @id="new-account-name"
+                aria-describedby="fullname-validation fullname-validation-more-info"
+                aria-invalid={{this.nameValidation.failed}}
+                class={{value-entered this.model.accountName}}
+              />
+              <label class="alt-placeholder" for="new-account-name">
+                {{i18n "user.name.title"}}
+              </label>
+
+              <InputTip
+                @validation={{this.nameValidation}}
+                id="fullname-validation"
+              />
+              {{#unless this.nameValidation.reason}}
+                <span class="more-info" id="fullname-validation-more-info">
+                  {{this.nameInstructions}}
+                </span>
+              {{/unless}}
+            {{/if}}
+          </div>
+
           {{#if this.userFields}}
             <div class="user-fields">
               {{#each this.userFields as |f|}}
@@ -249,9 +250,11 @@
 
         {{#if this.site.desktopView}}
           <div class="d-modal__footer">
-            <div class="disclaimer">
-              {{html-safe this.disclaimerHtml}}
-            </div>
+            {{#if this.disclaimerHtml}}
+              <div class="disclaimer">
+                {{html-safe this.disclaimerHtml}}
+              </div>
+            {{/if}}
             <div class="d-modal__footer-buttons">
               <DButton
                 @action={{this.createAccount}}
@@ -262,6 +265,10 @@
               />
 
               {{#unless this.hasAuthOptions}}
+                <hr />
+                <div class="already-have-account">
+                  {{i18n "create_account.already_have_account"}}
+                </div>
                 <DButton
                   @action={{route-action "showLogin"}}
                   @disabled={{this.formSubmitted}}
