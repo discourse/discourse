@@ -306,6 +306,7 @@ class Search
           term: @clean_term,
           search_type: @opts[:search_type],
           ip_address: @opts[:ip_address],
+          user_agent: @opts[:user_agent],
           user_id: @opts[:user_id],
         )
       @results.search_log_id = search_log_id unless status == :error
