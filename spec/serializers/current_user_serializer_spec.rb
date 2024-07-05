@@ -362,9 +362,15 @@ RSpec.describe CurrentUserSerializer do
       payload = serializer.as_json
 
       expect(payload[:featured_topic]).to_not be_nil
-      expect(payload[:featured_topic].size).to eq(5)
       expect(payload[:featured_topic][:id]).to eq(featured_topic.id)
       expect(payload[:featured_topic][:title]).to eq(featured_topic.title)
+      expect(payload[:featured_topic].keys).to contain_exactly(
+        :id,
+        :title,
+        :fancy_title,
+        :slug,
+        :posts_count,
+      )
     end
   end
 end

@@ -138,9 +138,15 @@ RSpec.describe UserCardSerializer do
       json = serializer.as_json
 
       expect(json[:featured_topic]).to_not be_nil
-      expect(json[:featured_topic].size).to eq(5)
       expect(json[:featured_topic][:id]).to eq(featured_topic.id)
       expect(json[:featured_topic][:title]).to eq(featured_topic.title)
+      expect(json[:featured_topic].keys).to contain_exactly(
+        :id,
+        :title,
+        :fancy_title,
+        :slug,
+        :posts_count,
+      )
     end
   end
 end
