@@ -35,7 +35,7 @@
     }
   }
 
-  .form-kit__field.has-errors & {
+  .form-kit__field.has-error & {
     summary {
       border-color: var(--danger);
     }

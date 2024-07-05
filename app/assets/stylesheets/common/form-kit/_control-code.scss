@@ -21,7 +21,7 @@
     }
   }
 
-  .form-kit__field.has-errors & {
+  .form-kit__field.has-error & {
     border-color: var(--danger);
   }
 

@@ -69,9 +69,7 @@ export default class FieldData {
         set(this.name, value, { index: collectionIndex });
       }
 
-      if (this.hasErrors) {
-        triggerRevalidationFor(name);
-      }
+      triggerRevalidationFor(name);
     };
   }
 
@@ -130,14 +128,5 @@ export default class FieldData {
 
       this.addError(name, { title, message });
     });
-  }
-
-  /**
-   * Checks if the field has any errors.
-   * @type {boolean}
-   * @readonly
-   */
-  get hasErrors() {
-    return true;
   }
 }
