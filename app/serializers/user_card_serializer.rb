@@ -147,7 +147,7 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   def can_send_private_message_to_user
-    scope.can_send_private_message?(object) || scope.current_user == object
+    scope.can_send_private_message?(object)
   end
 
   def include_suspend_reason?

@@ -211,6 +211,7 @@ input {
     background-color: var(--d-input-bg-color);
     border: var(--d-input-border);
     border-radius: var(--d-input-border-radius);
+    color-scheme: var(--scheme-type);
     &:focus {
       @include default-focus;
     }

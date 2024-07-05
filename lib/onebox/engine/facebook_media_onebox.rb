@@ -6,7 +6,7 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(%r{^https?://.*\.facebook\.com/(\w+)/(videos|\?).*})
+      matches_regexp(%r{^https?://(?:www\.)?facebook\.com/(\w+)/(videos|\?).*})
       always_https
       requires_iframe_origins "https://www.facebook.com"
 

@@ -101,6 +101,7 @@
     display: inline-flex;
     align-items: center;
     &:before {
+      flex-shrink: 0;
       background: var(--primary-low-mid);
       margin-right: 5px;
       position: relative;

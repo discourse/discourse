@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# TODO(@keegan): Remove after removing SiteSetting.summarization_strategy
+
 class SummarizationValidator
   def initialize(opts = {})
     @opts = opts

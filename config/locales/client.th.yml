@@ -2673,6 +2673,7 @@ th:
         about:
           optional: "(ทางเลือก)"
           update: "อัปเดต"
+          saved: "บันทึกแล้ว!"
       plugins:
         title: "ปลั้กอิน"
         installed: "ปลั้กอินที่ติดตั้งแล้ว"

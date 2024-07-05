@@ -579,17 +579,6 @@ export default class ChatApi extends Service {
   }
 
   /**
-   * Summarize a channel.
-   *
-   * @param {number} channelId - The ID of the channel to summarize.
-   * @param {object} options
-   * @param {number} options.since - Number of hours ago the summary should start (1, 3, 6, 12, 24, 72, 168).
-   */
-  summarize(channelId, options = {}) {
-    return this.#getRequest(`/channels/${channelId}/summarize`, options);
-  }
-
-  /**
    * Add members to a channel.
    *
    * @param {number} channelId - The ID of the channel.

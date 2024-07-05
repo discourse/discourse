@@ -4927,6 +4927,7 @@ fi:
           city_for_disputes: "Kaupunki, jonka oikeudessa riidat ratkotaan"
           optional: "(valinnainen)"
           update: "Päivitä"
+          saved: "tallennettu!"
       plugins:
         title: "Lisäosat"
         installed: "Asennetut lisäosat"

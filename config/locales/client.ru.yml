@@ -5327,6 +5327,7 @@ ru:
           city_for_disputes: "Город для разрешения споров"
           optional: "(необязательно)"
           update: "Обновить"
+          saved: "сохранено!"
       plugins:
         title: "Плагины"
         installed: "Установленные плагины"

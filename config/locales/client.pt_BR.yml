@@ -4889,6 +4889,7 @@ pt_BR:
           city_for_disputes: "Cidade para disputas"
           optional: "(opcional)"
           update: "Atualizar"
+          saved: "salvou!"
       plugins:
         title: "Plugins"
         installed: "Plugins nstalados"

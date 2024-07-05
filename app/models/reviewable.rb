@@ -33,8 +33,12 @@ class Reviewable < ActiveRecord::Base
   has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
 
   enum :status, { pending: 0, approved: 1, rejected: 2, ignored: 3, deleted: 4 }
-  enum :priority, { low: 0, medium: 5, high: 10 }, scopes: false, suffix: true
+
+  attribute :sensitivity, :integer
   enum :sensitivity, { disabled: 0, low: 9, medium: 6, high: 3 }, scopes: false, suffix: true
+
+  attribute :priority, :integer
+  enum :priority, { low: 0, medium: 5, high: 10 }, scopes: false, suffix: true
 
   validates :reject_reason, length: { maximum: 2000 }
 
@@ -195,6 +199,11 @@ class Reviewable < ActiveRecord::Base
 
     update(score: self.score + rs.score, latest_score: rs.created_at, force_review: force_review)
     topic.update(reviewable_score: topic.reviewable_score + rs.score) if topic
+
+    # Flags are cached for performance reasons.
+    # However, when the reviewable item is created, we need to clear the cache to mark flag as used.
+    # Used flags cannot be deleted or update by admins, only disabled.
+    Flag.reset_flag_settings! if PostActionType.notify_flag_type_ids.include?(reviewable_score_type)
 
     DiscourseEvent.trigger(:reviewable_score_updated, self)
 

@@ -4666,6 +4666,7 @@ ja:
           city_for_disputes: "紛争都市"
           optional: "(オプション)"
           update: "更新"
+          saved: "保存済み!"
       plugins:
         title: "プラグイン"
         installed: "インストール済みプラグイン"

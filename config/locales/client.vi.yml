@@ -4033,6 +4033,7 @@ vi:
         about:
           optional: "(tùy chọn)"
           update: "Cập nhật"
+          saved: "đã lưu"
       plugins:
         title: "Plugin"
         installed: "Đã cài Plugin"

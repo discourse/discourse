@@ -3816,6 +3816,7 @@ fa_IR:
           company_name: "نام شرکت"
           optional: "(اختیاری)"
           update: "به روز رسانی"
+          saved: "ذخیره شد!"
       plugins:
         title: "افزونه‌ها"
         installed: "افزونه های نصب شده"

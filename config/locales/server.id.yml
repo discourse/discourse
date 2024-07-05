@@ -1264,6 +1264,7 @@ id:
     enable_offline_indicator: "Menampilkan pesan kepada pengguna saat terdeteksi bahwa mereka tidak memiliki koneksi jaringan"
     default_sidebar_link_to_filtered_list: "Jadikan link menu navigasi terhubung ke daftar yang difilter secara bawaan."
     default_sidebar_show_count_of_new_items: "Jadikan tautan menu navigasi menampilkan jumlah item baru alih-alih lencana secara bawaan."
+    retain_web_hook_events_aggregate_days: "Jumlah hari untuk menyimpan catatan agregat peristiwa kait web."
     min_trust_level_for_user_api_key: |
       Trust level diperlukan untuk membuat kunci API pengguna.<br>
       <b>PERINGATAN</b>: Mengubah trust level akan mencegah pengguna dengan tingkat kepercayaan yang lebih rendah untuk masuk melalui Discourse Hub
@@ -1320,6 +1321,7 @@ id:
   login:
     not_available: "Tidak tersedia. Coba %{suggestion}?"
     omniauth_confirm_button: "Lanjutkan"
+    missing_user_field: "Anda belum mengisi semua kolom yang diperlukan pengguna"
     too_many_authenticators: "Maaf, Anda tidak dapat memiliki lebih dari 50 autentikator. Harap hapus yang sudah ada dan coba lagi."
     too_many_security_keys: "Maaf, Anda tidak boleh memiliki lebih dari 50 kunci keamanan. Silakan hapus yang sudah ada dan coba lagi."
   admin:
@@ -1420,7 +1422,99 @@ id:
     boolean_yes: "Ya"
     boolean_no: "Tidak"
   guidelines_topic:
-    guidelines_title: "Petunjuk"
+    guidelines_title: "Panduan"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Ini adalah Tempat yang Beradab untuk Diskusi Publik] (#civilized)
+
+      Mohon perlakukan forum diskusi ini dengan rasa hormat yang sama seperti Anda memperlakukan taman umum. Kami juga merupakan sumber daya komunitas bersama &mdash; tempat untuk berbagi keterampilan, pengetahuan, dan minat melalui percakapan yang berkelanjutan.
+
+      Ini bukan aturan yang keras dan cepat. Ini adalah panduan untuk membantu penilaian manusiawi dari komunitas kami dan menjaga agar tetap menjadi tempat yang ramah dan baik untuk wacana publik yang beradab.
+
+      <a name="improve"></a>
+
+      ## [Perbaiki Diskusi] (#improve)
+
+      Bantu kami menjadikan tempat ini sebagai tempat yang baik untuk berdiskusi dengan selalu menambahkan sesuatu yang positif ke dalam diskusi, betapapun kecilnya. Jika Anda tidak yakin bahwa postingan Anda menambah percakapan, pikirkan kembali apa yang ingin Anda katakan dan coba lagi nanti.
+
+      Salah satu cara untuk meningkatkan diskusi adalah dengan menemukan diskusi yang sudah terjadi. Luangkan waktu untuk menelusuri topik-topik di sini sebelum membalas atau memulai topik Anda sendiri, dan Anda akan memiliki peluang lebih baik untuk bertemu dengan orang lain yang memiliki minat yang sama dengan Anda.
+
+      Topik-topik yang didiskusikan di sini penting bagi kami, dan kami ingin Anda bertindak seolah-olah topik-topik tersebut juga penting bagi Anda. Hormatilah topik dan orang-orang yang mendiskusikannya, meskipun Anda tidak setuju dengan beberapa hal yang dikatakan.
+
+      <a name="agreeable"></a>
+
+      ## [Bersikaplah Setuju, Bahkan Ketika Anda Tidak Setuju](#agreeable)
+
+      Anda mungkin ingin merespons dengan tidak setuju. Itu tidak masalah. Tapi ingatlah untuk mengkritik ide, bukan orangnya. Mohon hindari:
+
+      * Sebutan nama
+      * Serangan ad hominem
+      * Menanggapi nada postingan alih-alih konten sebenarnya
+      * Pertentangan spontan
+
+      Sebagai gantinya, berikan wawasan bijaksana yang dapat meningkatkan percakapan.
+
+      <a name="participate"></a>
+
+      ## [Partisipasi Anda Berharga] (#participate)
+
+      Percakapan yang kita lakukan di sini menentukan nada untuk setiap pendatang baru. Bantu kami memengaruhi masa depan komunitas ini dengan memilih untuk terlibat dalam diskusi yang membuat forum ini menjadi tempat yang menarik untuk &mdash; dan menghindari diskusi yang tidak menarik.
+
+      Discourse menyediakan alat yang memungkinkan komunitas untuk secara kolektif mengidentifikasi kontribusi terbaik (dan terburuk): penanda, suka, bendera, balasan, suntingan, menonton, membisukan, dan sebagainya. Gunakan alat bantu ini untuk meningkatkan pengalaman Anda sendiri, dan juga pengalaman orang lain.
+
+      Mari tinggalkan komunitas kita lebih baik daripada saat kita menemukannya.
+
+      <a name="flag-problems"></a>
+
+      ## [Jika Anda Melihat Masalah, Tandai Masalah](#flag-problems)
+
+      Moderator memiliki otoritas khusus; mereka bertanggung jawab atas forum ini. Begitu juga dengan Anda. Dengan bantuan Anda, moderator dapat menjadi fasilitator komunitas, bukan hanya petugas kebersihan atau polisi.
+
+      Ketika Anda melihat perilaku buruk, jangan membalas. Membalas mendorong perilaku buruk dengan mengakuinya, menghabiskan energi Anda, dan membuang waktu semua orang. Tandai saja. Jika bendera yang terkumpul cukup banyak, tindakan akan diambil, baik secara otomatis atau dengan intervensi moderator.
+
+      Untuk menjaga komunitas kami, moderator berhak untuk menghapus konten dan akun pengguna dengan alasan apa pun dan kapan pun. Moderator tidak melakukan pratinjau terhadap postingan baru; moderator dan operator situs tidak bertanggung jawab atas konten apa pun yang diposting oleh komunitas.
+
+      <a name="be-civil"></a>
+
+      ## [Selalu Bersikap Sopan] (#be-civil)
+
+      Tidak ada yang menyabotase percakapan yang sehat selain kekasaran:
+
+      * Bersikaplah sopan. Jangan memposting apa pun yang dianggap menyinggung, menghina, atau ujaran kebencian oleh orang yang berakal sehat.
+      * Jaga kebersihan. Jangan memposting sesuatu yang tidak senonoh atau eksplisit secara seksual.
+      * Saling menghormati satu sama lain. Jangan melecehkan atau menyedihkan siapa pun, menyamar sebagai orang lain, atau mengekspos informasi pribadi mereka.
+      * Hormati forum kami. Jangan mengirim spam atau merusak forum.
+
+      Ini bukan istilah konkret dengan definisi yang tepat &mdash; hindari bahkan _penampilan_ dari semua hal ini. Jika Anda tidak yakin, tanyakan pada diri Anda sendiri bagaimana perasaan Anda jika postingan Anda ditampilkan di halaman depan situs berita utama.
+
+      Ini adalah forum publik, dan mesin pencari mengindeks diskusi-diskusi ini. Jaga agar bahasa, tautan, dan gambar tetap aman untuk keluarga dan teman.
+
+      <a name="keep-tidy"></a>
+
+      ## [Tetap Rapi] (#keep-tidy)
+
+      Berusahalah untuk meletakkan segala sesuatu di tempat yang tepat, sehingga kita dapat menghabiskan lebih banyak waktu untuk berdiskusi dan lebih sedikit waktu untuk bersih-bersih. Jadi:
+
+      * Jangan memulai sebuah topik di kategori yang salah; harap baca definisi kategori.
+      * Jangan memposting hal yang sama di beberapa topik.
+      * Jangan memposting balasan yang tidak ada isinya.
+      * Jangan mengalihkan topik dengan mengubahnya di tengah jalan.
+      * Jangan menandatangani postingan Anda &mdash; setiap postingan memiliki informasi profil Anda yang dilampirkan di dalamnya.
+
+      Daripada memposting "+1" atau "Setuju", gunakan tombol Suka. Daripada membawa topik yang sudah ada ke arah yang sangat berbeda, gunakan Balas sebagai Topik Terkait.
+
+      <a name="stealing"></a>
+
+      ## [Posting Hanya Materi Milik Anda Sendiri] (#stealing)
+
+      Anda tidak diperkenankan untuk memposting materi digital milik orang lain tanpa izin. Anda tidak diperkenankan memposting deskripsi, tautan, atau metode untuk mencuri kekayaan intelektual seseorang (perangkat lunak, video, audio, gambar), atau melanggar hukum lainnya.
+
+      <a name="power"></a>
+
+      ## [Didukung oleh Anda](#power)
+
+      Situs ini dioperasikan oleh [tim moderator yang ramah](%{base_path}/about) dan *Anda*, komunitas. Jika Anda memiliki pertanyaan lebih lanjut tentang bagaimana segala sesuatunya bekerja di sini, buka topik baru di %{feedback_category} dan mari berdiskusi! Jika ada masalah penting atau mendesak yang tidak dapat ditangani oleh meta topik atau bendera, [hubungi moderator](%{base_path}/about).
   tos_topic:
     title: "Ketentuan Layanan"
     body: |

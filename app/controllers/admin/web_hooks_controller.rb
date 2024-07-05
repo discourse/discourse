@@ -17,12 +17,18 @@ class Admin::WebHooksController < Admin::AdminController
 
     data = serialize_data(web_hooks, AdminWebHookSerializer, root: "web_hooks")
 
+    serialized_grouped_event_types =
+      WebHookEventType.active_grouped.transform_values do |array|
+        serialize_data(array, WebHookEventTypeSerializer)
+      end
+
     json = {
       web_hooks: data.delete("web_hooks"),
       extras:
         data.merge(
-          grouped_event_types: WebHookEventType.active_grouped,
-          default_event_types: WebHook.default_event_types,
+          grouped_event_types: serialized_grouped_event_types,
+          default_event_types:
+            serialize_data(WebHook.default_event_types, WebHookEventTypeSerializer),
           content_types: WebHook.content_types.map { |name, id| { id: id, name: name } },
           delivery_statuses:
             WebHook.last_delivery_statuses.map { |name, id| { id: id, name: name.to_s } },

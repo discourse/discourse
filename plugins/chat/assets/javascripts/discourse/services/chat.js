@@ -129,7 +129,7 @@ export default class Chat extends Service {
               if (!channel) {
                 return;
               }
-              // TODO (martin) We need to do something here for thread tracking
+              // NOTE: We need to do something here for thread tracking
               // state as well on presence change, otherwise we will be back in
               // the same place as the channels were.
               //

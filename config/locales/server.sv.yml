@@ -1675,7 +1675,6 @@ sv:
     s3_use_acls: "AWS rekommenderar att inte använda ACL:er på S3-behållare. Om du följer detta råd ska det här alternativet avmarkeras. Det måste vara aktiverat om du använder säkra uppladdningar."
     backup_time_of_day: "UTC-tid på dygnet då säkerhetskopieringen sker."
     backup_with_uploads: "Inkludera uppladdning i schemalagda säkerhetskopieringar. Inaktivering av det här kommer endast att säkerhetskopiera databasen."
-    backup_location: "Plats där säkerhetskopior lagras. VIKTIGT: S3 kräver giltiga S3-referenser som anges i Fil-inställningarna."
     backup_gzip_compression_level_for_uploads: "Nivå av Gzip-komprimering som används för att komprimera överföringar."
     include_thumbnails_in_backups: "Inkludera genererade miniatyrbilder i säkerhetskopior. Inaktivering av detta kommer att göra säkerhetskopior mindre, men kräver en ny omläggning av alla inlägg efter en återställning."
     active_user_rate_limit_secs: "Hur frekvent vi uppdaterar 'last_seen_at'-fältet, i sekunder"

@@ -3617,6 +3617,7 @@ bg:
         about:
           optional: "(по избор)"
           update: "Актуализация"
+          saved: "запазено!"
       plugins:
         title: "Приставки"
         installed: "Инсталирани приставки"

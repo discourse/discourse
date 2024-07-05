@@ -3196,6 +3196,7 @@ hy:
       config_areas:
         about:
           optional: "(ընտրովի)"
+          saved: "պահված է!"
       plugins:
         title: "Հավելումներ"
         installed: "Տեղադրված Հավելումները"

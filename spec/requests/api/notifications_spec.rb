@@ -108,6 +108,11 @@ RSpec.describe "notifications" do
       response "200", "notifications marked read" do
         schema type: :object, properties: { success: { type: :string } }
 
+        let(:notification) do
+          notification = Fabricate(:notification)
+          NotificationSerializer.new(notification).as_json
+        end
+
         run_test!
       end
     end

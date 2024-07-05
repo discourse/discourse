@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# TODO (martin) Remove this endpoint when we move to do the channel creation
-# when a message is first sent to avoid double-request round trips for DMs.
 class Chat::Api::DirectMessagesController < Chat::ApiController
   def create
     with_service(Chat::CreateDirectMessageChannel) do

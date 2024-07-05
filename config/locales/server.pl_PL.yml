@@ -1836,7 +1836,6 @@ pl_PL:
     s3_use_acls: "AWS zaleca, aby nie używać list ACL w zasobnikach S3; jeśli postępujesz zgodnie z tą radą, odznacz tę opcję. Ta opcja musi być włączona, jeśli korzystasz z bezpiecznego przesyłania."
     backup_time_of_day: "Godzina (UTC) wykonania kopii zapasowej."
     backup_with_uploads: "Uwzględniaj przesyły w zaplanowanych backupach. Wyłączenie tej opcji spowoduje backup jedynie bazy danych."
-    backup_location: "Miejsce przechowywania kopii zapasowych. WAŻNE: S3 wymaga prawidłowych poświadczeń S3 wprowadzonych w ustawieniach plików."
     backup_gzip_compression_level_for_uploads: "Poziom kompresji gzip używany przy kompresowaniu wgranych plików."
     include_thumbnails_in_backups: "Uwzględnij wygenerowane miniatury w kopiach zapasowych. Wyłączenie tego spowoduje, że kopie zapasowe będą mniejsze, ale wymaga ponownego wygenerowania wszystkich wpisów po przywróceniu."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"

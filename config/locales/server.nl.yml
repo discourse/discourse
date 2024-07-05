@@ -1659,7 +1659,6 @@ nl:
     s3_use_acls: "AWS raadt aan om geen ACL's te gebruiken op S3-buckets. Als je dit advies opvolgt, schakel deze optie dan uit. Dit moet zijn ingeschakeld als je beveiligde uploads gebruikt."
     backup_time_of_day: "Tijdstip (UTC) waarop de back-up moet plaatsvinden."
     backup_with_uploads: "Uploads opnemen in geplande back-ups. Wanneer uitgeschakeld, wordt alleen een back-up van de database gemaakt."
-    backup_location: "Locatie waar back-ups worden bewaard. BELANGRIJK: S3 vereist geldige ingevoerde S3-referenties in de instellingen voor Bestanden."
     backup_gzip_compression_level_for_uploads: "Gzip-compressieniveau voor het comprimeren van uploads."
     include_thumbnails_in_backups: "Gegenereerde miniaturen opnemen in back-ups. Uitschakelen hiervan maakt back-ups kleiner, maar vereist opnieuw opbouwen van alle berichten na een terugzetactie."
     active_user_rate_limit_secs: "Hoe vaak we het 'last_seen_at'-veld bijwerken, in seconden."

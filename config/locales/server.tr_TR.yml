@@ -1718,7 +1718,6 @@ tr_TR:
     s3_use_acls: "AWS, S3 klasörlerinde (bucket) ACL kullanılmamasını önerir; bu tavsiyeye uyacaksanız bu seçeneğin işaretini kaldırın. Güvenli yüklemeler kullanıyorsanız bu etkinleştirilmelidir."
     backup_time_of_day: "Yedeklemenin gerçekleşmesi gereken günün saati UTC."
     backup_with_uploads: "Yüklemeleri zamanlanan yedeklemelere dahil et. Bu devre dışı bırakıldığında yalnızca veritabanı yedeklenir."
-    backup_location: "Yedeklerin depolandığı konum. ÖNEMLİ: S3, Dosyalar ayarlarına geçerli S3 giriş bilgilerinin girilmesini gerektirir."
     backup_gzip_compression_level_for_uploads: "Yüklemeleri sıkıştırmak için kullanılan Gzip sıkıştırma seviyesi."
     include_thumbnails_in_backups: "Oluşturulan küçük resimleri yedeklemelere dahil edin. Bunu devre dışı bırakmak yedeklemeleri küçültür, ancak geri yüklemeden sonra tüm gönderilerin yeniden yüklenmesini gerektirir."
     active_user_rate_limit_secs: "\"last_seen_at\" alanını saniye cinsinden güncelleme sıklığımız"

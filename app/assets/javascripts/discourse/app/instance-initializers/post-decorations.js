@@ -156,7 +156,16 @@ export default {
       function generateFullScreenTableModal(event) {
         const table = event.currentTarget.parentElement.nextElementSibling;
         const tempTable = table.cloneNode(true);
-        modal.show(FullscreenTableModal, { model: { tableHtml: tempTable } });
+        const cookedWrapper = document.createElement("div");
+        cookedWrapper.classList.add("cooked");
+        if (siteSettings.display_footnotes_inline) {
+          cookedWrapper.classList.add("inline-footnotes");
+        }
+        cookedWrapper.dataset.refPostId = this.id;
+        cookedWrapper.appendChild(tempTable);
+        modal.show(FullscreenTableModal, {
+          model: { tableHtml: cookedWrapper },
+        });
       }
 
       function generateSpreadsheetModal() {
@@ -228,7 +237,7 @@ export default {
           buttonWrapper.append(expandTableBtn);
           expandTableBtn.addEventListener(
             "click",
-            generateFullScreenTableModal,
+            generateFullScreenTableModal.bind(attrs),
             false
           );
           table.parentNode.insertBefore(buttonWrapper, table);

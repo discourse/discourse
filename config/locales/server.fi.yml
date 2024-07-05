@@ -1660,7 +1660,6 @@ fi:
     s3_use_acls: "AWS suosittelee, ettei ACL-luetteloita käytetä S3-säilöissä; jos noudatat tätä neuvoa, poista tämä valinta. Tämä täytyy olla käytössä, jos käytät suojattuja latauksia."
     backup_time_of_day: "UTC-kellonaika, jolloin varmuuskopio tehdään."
     backup_with_uploads: "Sisällytä lataukset ajastettuihin varmuuskopioihin. Jos tämä ei ole käytössä, vain tietokanta varmuuskopioidaan."
-    backup_location: "SIjainti, jonne varmuuskopiot säilötään. TÄRKEÄÄ: S3 vaatii toimiakseen, että käyvät S3-tunnistetiedot on syötetty Tiedostot-asetuksiin."
     backup_gzip_compression_level_for_uploads: "Gzip-pakkausaste, jota käytetään palvelimeen ladattujen tiedostojen pakkaamiseen."
     include_thumbnails_in_backups: "Sisällytä luodut esikatselukuvat varmuuskopioihin. Käytöstä poistaminen pienentää varmuuskopioita, mutta varmuuskopiopalautuksen yhteydessä kaikki viestit on rakennettava uudelleen."
     active_user_rate_limit_secs: "Kuinka usein 'last_seen_at' kenttä päivitetään, sekunneissa"
