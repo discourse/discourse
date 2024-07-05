@@ -13,6 +13,7 @@ import {
   MAIN_PANEL,
   SEPARATED_MODE,
 } from "discourse/lib/sidebar/panels";
+import escapeRegExp from "discourse-common/utils/escape-regexp";
 
 @disableImplicitInjections
 export default class SidebarState extends Service {
@@ -138,7 +139,7 @@ export default class SidebarState extends Service {
   }
 
   get sanitizedFilter() {
-    return this.filter.toLowerCase().trim();
+    return escapeRegExp(this.filter.toLowerCase().trim());
   }
 
   clearFilter() {

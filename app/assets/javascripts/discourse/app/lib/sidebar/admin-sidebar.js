@@ -355,10 +355,12 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const params = {
       filter,
       settings_filter_url: getURL(
-        `/admin/site_settings/category/all_results?filter=${filter}`
+        `/admin/site_settings/category/all_results?filter=${encodeURIComponent(
+          filter
+        )}`
       ),
       user_list_filter_url: getURL(
-        `/admin/users/list/active?username=${filter}`
+        `/admin/users/list/active?username=${encodeURIComponent(filter)}`
       ),
     };
 
