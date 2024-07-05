@@ -11,10 +11,9 @@ export default class AdminBackupsIndexRoute extends Route {
     this.messageBus.unsubscribe("/admin/backups", this.onMessage);
   }
 
-  model() {
-    return Backup.find().then((backups) =>
-      backups.map((backup) => Backup.create(backup))
-    );
+  async model() {
+    const backups = await Backup.find();
+    return backups.map((backup) => Backup.create(backup));
   }
 
   @bind

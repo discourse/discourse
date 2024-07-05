@@ -6,12 +6,12 @@ export default class AdminSiteTextEditRoute extends Route {
     locale: { replace: true },
   };
 
-  model(params) {
-    return ajax(
+  async model(params) {
+    const result = await ajax(
       `/admin/customize/site_texts/${params.id}?locale=${params.locale}`
-    ).then((result) => {
-      return this.store.createRecord("site-text", result.site_text);
-    });
+    );
+
+    return this.store.createRecord("site-text", result.site_text);
   }
 
   setupController(controller, siteText) {
