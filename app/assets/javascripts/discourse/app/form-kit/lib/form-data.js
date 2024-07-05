@@ -113,6 +113,8 @@ export default class Changeset {
       ]);
     }
 
+    this.resetPatches();
+
     await new Promise((resolve) => next(resolve));
   }
 

@@ -59,7 +59,7 @@ export default class FKForm extends Component {
   }
 
   @action
-  checkIsDirty(transition) {
+  async checkIsDirty(transition) {
     if (
       this.formData.isDirty &&
       !transition.isAborted &&
@@ -69,8 +69,8 @@ export default class FKForm extends Component {
 
       this.dialog.yesNoConfirm({
         message: I18n.t("form_kit.dirty_form"),
-        didConfirm: () => {
-          this.onReset();
+        didConfirm: async () => {
+          await this.onReset();
           transition.retry();
         },
       });
