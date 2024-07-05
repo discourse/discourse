@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 # See http://unicorn.bogomips.org/Unicorn/Configurator.html
+
+if (ENV["LOGSTASH_UNICORN_URI"] || "").length > 0
+  require_relative "../lib/discourse_logstash_logger"
+  require_relative "../lib/unicorn_logstash_patch"
+  logger DiscourseLogstashLogger.logger(uri: ENV["LOGSTASH_UNICORN_URI"], type: :unicorn)
+end
+
 discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 
 # tune down if not enough ram
@@ -18,31 +25,18 @@ FileUtils.mkdir_p("#{discourse_path}/tmp/pids") if !File.exist?("#{discourse_pat
 # feel free to point this anywhere accessible on the filesystem
 pid(ENV["UNICORN_PID_PATH"] || "#{discourse_path}/tmp/pids/unicorn.pid")
 
-if ENV["RAILS_ENV"] == "production"
+if ENV["RAILS_ENV"] != "production"
+  logger Logger.new(STDOUT)
+  # we want a longer timeout in dev cause first request can be really slow
+  timeout(ENV["UNICORN_TIMEOUT"] && ENV["UNICORN_TIMEOUT"].to_i || 60)
+else
   # By default, the Unicorn logger will write to stderr.
   # Additionally, some applications/frameworks log to stderr or stdout,
   # so prevent them from going to /dev/null when daemonized here:
   stderr_path "#{discourse_path}/log/unicorn.stderr.log"
   stdout_path "#{discourse_path}/log/unicorn.stdout.log"
-
   # nuke workers after 30 seconds instead of 60 seconds (the default)
   timeout 30
-else
-  # we want a longer timeout in dev cause first request can be really slow
-  timeout(ENV["UNICORN_TIMEOUT"] && ENV["UNICORN_TIMEOUT"].to_i || 60)
-end
-
-enable_logstash_logger = ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
-
-if enable_logstash_logger
-  require_relative "../lib/discourse_logstash_logger"
-  require_relative "../lib/unicorn_logstash_patch"
-  logger DiscourseLogstashLogger.logger(
-           logdev: "#{discourse_path}/log/unicorn.stderr.log",
-           type: :unicorn,
-         )
-else
-  logger Logger.new(STDOUT)
 end
 
 # important for Ruby 2.0
