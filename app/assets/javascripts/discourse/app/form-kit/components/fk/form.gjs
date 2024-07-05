@@ -110,7 +110,6 @@ export default class FKForm extends Component {
 
   @action
   addError(name, { title, message }) {
-    console.log("addError", name, title, message);
     this.formData.addError(name, {
       title,
       message,
