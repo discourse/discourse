@@ -102,29 +102,18 @@ Rails.application.config.to_prepare do
           end
         end
 
-      if ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
+      if ENV["LOGSTASH_URI"]
         config.lograge.formatter = Lograge::Formatters::Logstash.new
 
         require "discourse_logstash_logger"
 
         config.lograge.logger =
-          DiscourseLogstashLogger.logger(
-            logdev: Rails.root.join("log", "#{Rails.env}.log"),
-            type: :rails,
-            customize_event:
-              lambda do |event|
-                event["database"] = RailsMultisite::ConnectionManagement.current_db
-              end,
-          )
+          DiscourseLogstashLogger.logger(uri: ENV["LOGSTASH_URI"], type: :rails)
 
-        # Stop broadcasting to Rails' default logger
-        Rails.logger.stop_broadcasting_to(
-          Rails.logger.broadcasts.find { |logger| logger.is_a?(ActiveSupport::Logger) },
-        )
-
-        Logster.logger.subscribe do |severity, message, progname, opts, &block|
-          config.lograge.logger.add_with_opts(severity, message, progname, opts, &block)
-        end
+        # Remove ActiveSupport::Logger from the chain and replace with Lograge's
+        # logger
+        Rails.logger.stop_broadcasting_to(Rails.logger.broadcasts.first)
+        Rails.logger.broadcast_to(config.lograge.logger)
       end
     end
   end

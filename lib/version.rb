@@ -3,6 +3,7 @@
 module Discourse
   VERSION_REGEXP ||= /\A\d+\.\d+\.\d+(\.beta\d+)?\z/
   VERSION_COMPATIBILITY_FILENAME ||= ".discourse-compatibility"
+
   # work around reloader
   unless defined?(::Discourse::VERSION)
     module VERSION #:nodoc:
@@ -15,8 +16,8 @@ module Discourse
       MAJOR = PARTS[0].to_i
       MINOR = PARTS[1].to_i
       TINY = PARTS[2].to_i
-      PRE = PARTS[3]&.split("-", 2)&.[](0)
-      DEV = PARTS[3]&.split("-", 2)&.[](1)
+      PRE = PARTS[3]&.split("-", 2)&.first
+      DEV = PARTS[3]&.split("-", 2)&.second
     end
   end
 
