@@ -742,10 +742,6 @@ class TopicView
       end
   end
 
-  def summarizable?
-    Summarization::Base.can_see_summary?(@topic, @user)
-  end
-
   def categories
     @categories ||= [category&.parent_category, category, suggested_topics&.categories].flatten
       .uniq

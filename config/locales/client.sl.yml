@@ -3918,6 +3918,7 @@ sl:
       config_areas:
         about:
           optional: "(neobvezno)"
+          saved: "shranjeno!"
       plugins:
         title: "Vtičniki"
         installed: "Nameščeni vtičniki"

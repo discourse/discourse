@@ -157,7 +157,9 @@
     position: absolute;
     right: 0;
     bottom: 0;
+    z-index: 1;
   }
+
   .badge-contents {
     display: flex;
     align-items: flex-start;
@@ -166,22 +168,41 @@
 
     .badge-link {
       color: var(--primary);
+      display: inline-block;
+      line-height: var(--line-height-medium);
+
+      &:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+      }
+    }
+
+    .badge-summary:has(a) {
+      // for summary links to be reachable
+      // they must be positioned above .badge-link:after
+      position: relative;
+      z-index: 1;
     }
 
     .badge-icon {
+      --badge-icon-size: 3.5em;
       display: flex;
       flex-shrink: 0;
       align-items: center;
       justify-content: center;
 
       svg {
-        font-size: 3.5em;
+        font-size: var(--badge-icon-size);
       }
 
       img {
         width: 100%;
-        max-width: 64px;
-        max-height: 64px;
+        max-width: var(--badge-icon-size);
+        max-height: var(--badge-icon-size);
       }
 
       &.badge-type-gold .fa {
@@ -210,7 +231,7 @@
     }
   }
 
-  &.large {
+  &.--badge-large {
     width: 100%;
     align-self: flex-start;
 
@@ -325,12 +346,15 @@
 }
 
 .check-display {
-  display: inline-block;
-  padding: 0 0.25em;
-  border-radius: 10px;
-  text-align: center;
-  .fa {
-    font-size: 0.9em;
+  display: flex;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 100%;
+  align-items: center;
+  justify-content: center;
+
+  .d-icon {
+    font-size: var(--font-down-2);
     color: var(--secondary);
   }
 }

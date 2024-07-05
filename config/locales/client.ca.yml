@@ -3230,6 +3230,7 @@ ca:
       config_areas:
         about:
           optional: "(opcional)"
+          saved: "desat!"
       plugins:
         title: "Connectors"
         installed: "Connectors instal·lats"

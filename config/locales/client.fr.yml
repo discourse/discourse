@@ -4938,6 +4938,7 @@ fr:
           city_for_disputes: "Ville pour les litiges"
           optional: "(facultatif)"
           update: "Mettre à jour"
+          saved: "enregistré avec succès !"
       plugins:
         title: "Extensions"
         installed: "Extensions installées"

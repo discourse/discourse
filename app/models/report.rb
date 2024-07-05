@@ -296,13 +296,14 @@ class Report
   def self.req_report(report, filter = nil)
     data =
       if filter == :page_view_total
+        # For this report we intentionally do not want to count mobile pageviews
+        # or "browser" pageviews. See `ConsolidatedPageViewsBrowserDetection` for
+        # browser pageviews.
         ApplicationRequest.where(
           req_type: [
-            ApplicationRequest
-              .req_types
-              .reject { |k, v| k =~ /mobile/ }
-              .map { |k, v| v if k =~ /page_view/ }
-              .compact,
+            ApplicationRequest.req_types[:page_view_crawler],
+            ApplicationRequest.req_types[:page_view_anon],
+            ApplicationRequest.req_types[:page_view_logged_in],
           ].flatten,
         )
       else

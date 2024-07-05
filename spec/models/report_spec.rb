@@ -312,6 +312,49 @@ RSpec.describe Report do
     end
   end
 
+  describe "page_view_total_reqs" do
+    before do
+      freeze_time(Time.now.at_midnight)
+      Theme.clear_default!
+    end
+
+    let(:report) { Report.find("page_view_total_reqs") }
+
+    context "with no data" do
+      it "works" do
+        expect(report.data).to be_empty
+      end
+    end
+
+    context "with data" do
+      before do
+        CachedCounting.reset
+        CachedCounting.enable
+        ApplicationRequest.enable
+      end
+
+      after do
+        CachedCounting.reset
+        ApplicationRequest.disable
+        CachedCounting.disable
+      end
+
+      it "works and does not count browser or mobile pageviews" do
+        3.times { ApplicationRequest.increment!(:page_view_crawler) }
+        8.times { ApplicationRequest.increment!(:page_view_logged_in) }
+        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+        2.times { ApplicationRequest.increment!(:page_view_logged_in_mobile) }
+        2.times { ApplicationRequest.increment!(:page_view_anon) }
+        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+        4.times { ApplicationRequest.increment!(:page_view_anon_mobile) }
+
+        CachedCounting.flush
+
+        expect(report.data.sum { |r| r[:y] }).to eq(13)
+      end
+    end
+  end
+
   describe "user to user private messages with replies" do
     let(:report) { Report.find("user_to_user_private_messages_with_replies") }
     let(:user) { Fabricate(:user) }
@@ -1281,6 +1324,72 @@ RSpec.describe Report do
     end
 
     include_examples "no data"
+  end
+
+  describe "consolidated_page_views_browser_detection" do
+    before do
+      freeze_time(Time.now.at_midnight)
+      Theme.clear_default!
+    end
+
+    let(:reports) { Report.find("consolidated_page_views_browser_detection") }
+
+    context "with no data" do
+      it "works" do
+        reports.data.each { |report| expect(report[:data]).to be_empty }
+      end
+    end
+
+    context "with data" do
+      before do
+        CachedCounting.reset
+        CachedCounting.enable
+        ApplicationRequest.enable
+      end
+
+      after do
+        CachedCounting.reset
+        ApplicationRequest.disable
+        CachedCounting.disable
+      end
+
+      it "works" do
+        3.times { ApplicationRequest.increment!(:page_view_crawler) }
+        8.times { ApplicationRequest.increment!(:page_view_logged_in) }
+        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+        2.times { ApplicationRequest.increment!(:page_view_anon) }
+        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+
+        CachedCounting.flush
+
+        page_view_crawler_report = reports.data.find { |r| r[:req] == "page_view_crawler" }
+        page_view_logged_in_browser_report =
+          reports.data.find { |r| r[:req] == "page_view_logged_in_browser" }
+        page_view_anon_browser_report =
+          reports.data.find { |r| r[:req] == "page_view_anon_browser" }
+        page_view_other_report = reports.data.find { |r| r[:req] == "page_view_other" }
+
+        expect(page_view_crawler_report[:data][0][:y]).to eql(3)
+        expect(page_view_logged_in_browser_report[:data][0][:y]).to eql(6)
+        expect(page_view_anon_browser_report[:data][0][:y]).to eql(1)
+        expect(page_view_other_report[:data][0][:y]).to eql(3)
+      end
+
+      it "gives the same total as page_view_total_reqs" do
+        3.times { ApplicationRequest.increment!(:page_view_crawler) }
+        8.times { ApplicationRequest.increment!(:page_view_logged_in) }
+        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+        2.times { ApplicationRequest.increment!(:page_view_anon) }
+        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+
+        CachedCounting.flush
+
+        total_consolidated = reports.data.sum { |r| r[:data][0][:y] }
+        total_page_views = Report.find("page_view_total_reqs").data[0][:y]
+
+        expect(total_consolidated).to eq(total_page_views)
+      end
+    end
   end
 
   describe "consolidated_page_views" do

@@ -323,6 +323,7 @@ en:
         other: is the wrong length (should be %{count} characters)
       other_than: "must be other than %{count}"
       auth_overrides_username: "Username needs to be updated on authentication provider side, since `auth_overrides_username` setting is enabled."
+      required: "must exist"
     template:
       body: ! "There were problems with the following fields:"
       header:
@@ -1253,6 +1254,8 @@ en:
     errors:
       already_handled: "Flag was already handled"
       wrong_move: "Flag cannot be moved"
+      system: "System flag cannot be updated or deleted."
+      used: "Flag cannot be updated or deleted because has already been used."
   reports:
     default:
       labels:
@@ -2366,6 +2369,8 @@ en:
     hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
     allow_users_to_hide_profile: "Allow users to hide their profile and presence"
     hide_user_activity_tab: "Hide the activity tab on user profiles except for Admin and self."
+
+    delete_associated_accounts_on_password_reset: "Delete user associated account when user changes the password."
 
     allow_featured_topic_on_user_profiles: "Allow users to feature a link to a topic on their user card and profile."
 

@@ -143,3 +143,8 @@
     border-radius: 9px;
   }
 }
+
+// Overrides core onebox height: auto; that can cause a conflict
+.lazy-video-wrapper .lazy-video-container.youtube-onebox {
+  height: 0;
+}

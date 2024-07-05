@@ -4079,6 +4079,7 @@ da:
         about:
           optional: "(valgfri)"
           update: "Opdater"
+          saved: "gemt!"
       plugins:
         title: "Udvidelser"
         installed: "Installerede Udvidelser"

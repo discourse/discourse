@@ -339,6 +339,21 @@ RSpec.describe UserSerializer do
         end
       end
     end
+
+    describe "with a custom notification schedule" do
+      let(:schedule) do
+        UserNotificationSchedule.create({ user: user }.merge(UserNotificationSchedule::DEFAULT))
+      end
+      let(:scope) { Guardian.new(user) }
+
+      it "includes the serialized schedule" do
+        expect(json[:user_notification_schedule][:enabled]).to eq(schedule[:enabled])
+        expect(json[:user_notification_schedule][:day_0_start_time]).to eq(
+          schedule[:day_0_start_time],
+        )
+        expect(json[:user_notification_schedule][:day_6_end_time]).to eq(schedule[:day_6_end_time])
+      end
+    end
   end
 
   context "with custom_fields" do

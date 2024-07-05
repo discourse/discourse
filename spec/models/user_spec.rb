@@ -678,7 +678,7 @@ RSpec.describe User do
           quoted_post = create_post(user: user, topic: topic, post_number: 1, raw: "quoted post")
           post = create_post(raw: <<~RAW)
             Lorem ipsum
-  
+
             [quote="#{user.username}, post:1, topic:#{quoted_post.topic.id}"]
             quoted post
             [/quote]
@@ -3235,10 +3235,25 @@ RSpec.describe User do
   describe "#invited_by" do
     it "returns even if invites was trashed" do
       invite = Fabricate(:invite, invited_by: Fabricate(:user))
-      Fabricate(:invited_user, invite: invite, user: user)
+      Fabricate(:invited_user, invite: invite, user: user, redeemed_at: Time.now)
       invite.trash!
 
       expect(user.invited_by).to eq(invite.invited_by)
+    end
+
+    it "does not return invites that are not redeemed yet" do
+      invite = Fabricate(:invite, invited_by: Fabricate(:user))
+      Fabricate(:invited_user, invite: invite, user: user, redeemed_at: nil)
+      invite.trash!
+
+      expect(user.invited_by).to eq(nil)
+    end
+
+    it "excludes invites redeemed after user creation" do
+      invite = Fabricate(:invite, invited_by: Fabricate(:user))
+      Fabricate(:invited_user, invite: invite, user: user, redeemed_at: user.created_at + 6.second)
+
+      expect(user.invited_by).to eq(nil)
     end
   end
 

@@ -123,6 +123,8 @@ class DiscoursePluginRegistry
 
   define_filtered_register :problem_checks
 
+  define_filtered_register :flag_applies_to_types
+
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
   end

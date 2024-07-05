@@ -14,6 +14,7 @@ import { setCaretPosition } from "discourse/lib/utilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
 import {
+  chromeTest,
   exists,
   paste,
   query,
@@ -77,8 +78,13 @@ module("Integration | Component | d-editor", function (hooks) {
     return textarea;
   }
 
-  function testCase(title, testFunc) {
-    test(title, async function (assert) {
+  function testCase(title, testFunc, opts = {}) {
+    let testFn = test;
+    if (opts.chrome) {
+      testFn = chromeTest;
+    }
+
+    testFn(title, async function (assert) {
       this.set("value", "hello world.");
 
       await render(hbs`<DEditor @value={{this.value}} />`);
@@ -989,9 +995,10 @@ third line`
       const initialValue = "* first item in list\n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      await triggerKeyEvent(textarea, "keyup", "Enter");
+      await triggerKeyEvent(textarea, "keydown", "Enter");
       assert.strictEqual(this.value, initialValue + "* ");
-    }
+    },
+    { chrome: true }
   );
 
   testCase(
@@ -1000,9 +1007,10 @@ third line`
       const initialValue = "- first item in list\n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      await triggerKeyEvent(textarea, "keyup", "Enter");
+      await triggerKeyEvent(textarea, "keydown", "Enter");
       assert.strictEqual(this.value, initialValue + "- ");
-    }
+    },
+    { chrome: true }
   );
 
   testCase(
@@ -1011,9 +1019,10 @@ third line`
       const initialValue = "1. first item in list\n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      await triggerKeyEvent(textarea, "keyup", "Enter");
+      await triggerKeyEvent(textarea, "keydown", "Enter");
       assert.strictEqual(this.value, initialValue + "2. ");
-    }
+    },
+    { chrome: true }
   );
 
   testCase(
@@ -1022,12 +1031,13 @@ third line`
       const initialValue = "* first item in list\n\n* second item in list";
       this.set("value", initialValue);
       setCaretPosition(textarea, 21);
-      await triggerKeyEvent(textarea, "keyup", "Enter");
+      await triggerKeyEvent(textarea, "keydown", "Enter");
       assert.strictEqual(
         this.value,
         "* first item in list\n* \n* second item in list"
       );
-    }
+    },
+    { chrome: true }
   );
 
   testCase(
@@ -1036,12 +1046,13 @@ third line`
       const initialValue = "1. first item in list\n\n2. second item in list";
       this.set("value", initialValue);
       setCaretPosition(textarea, 22);
-      await triggerKeyEvent(textarea, "keyup", "Enter");
+      await triggerKeyEvent(textarea, "keydown", "Enter");
       assert.strictEqual(
         this.value,
         "1. first item in list\n2. \n3. second item in list"
       );
-    }
+    },
+    { chrome: true }
   );
 
   testCase(
@@ -1050,9 +1061,10 @@ third line`
       const initialValue = "* first item in list with empty line\n* \n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      await triggerKeyEvent(textarea, "keyup", "Enter");
+      await triggerKeyEvent(textarea, "keydown", "Enter");
       assert.strictEqual(this.value, "* first item in list with empty line\n");
-    }
+    },
+    { chrome: true }
   );
 
   (() => {

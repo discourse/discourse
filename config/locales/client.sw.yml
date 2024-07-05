@@ -2522,6 +2522,7 @@ sw:
       config_areas:
         about:
           optional: "(sio muhimu)"
+          saved: "imehifadhiwa!"
       plugins:
         title: "Programu-jalizi"
         installed: "Progamu-jalizi zilizowekwa"

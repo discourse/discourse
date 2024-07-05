@@ -56,8 +56,6 @@ Chat::Engine.routes.draw do
     put "/channels/:channel_id/messages/:message_id/restore" => "channel_messages#restore"
     delete "/channels/:channel_id/messages/:message_id" => "channel_messages#destroy"
     delete "/channels/:channel_id/messages" => "channel_messages#bulk_destroy"
-
-    get "/channels/:channel_id/summarize" => "summaries#get_summary"
   end
 
   namespace :admin, defaults: { format: :json, constraints: StaffConstraint.new } do

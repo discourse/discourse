@@ -388,7 +388,7 @@ module("Unit | Utilities | table-builder", function (hooks) {
 
     assert.strictEqual(
       arrayToTable(tableData, ["Col 1", "Col 2"], "A"),
-      `|Col 1 | Col 2|\r\n|--- | ---|\r\n|hey | you|\r\n|over | there|\r\n`,
+      `|Col 1 | Col 2|\n|--- | ---|\n|hey | you|\n|over | there|\n`,
       "it works"
     );
   });
@@ -407,13 +407,48 @@ module("Unit | Utilities | table-builder", function (hooks) {
 
     assert.strictEqual(
       arrayToTable(tableData, ["Col 1", "Col 2"]),
-      `|Col 1 | Col 2|\r\n|--- | ---|\r\n|Jane Doe | Teri|\r\n|Finch | Sami|\r\n`,
+      `|Col 1 | Col 2|\n|--- | ---|\n|Jane Doe | Teri|\n|Finch | Sami|\n`,
+      "it creates a valid table"
+    );
+  });
+
+  test("arrayToTable with alignment specification", function (assert) {
+    const tableData = [
+      { col0: "left", col1: "center", col2: "right", col3: "unspecificated" },
+      { col0: "111", col1: "222", col2: "333", col3: "444" },
+    ];
+    const alignment = ["left", "center", "right", null];
+    assert.strictEqual(
+      arrayToTable(
+        tableData,
+        ["Col 1", "Col 2", "Col 3", "Col 4"],
+        "col",
+        alignment
+      ),
+      "|Col 1 | Col 2 | Col 3 | Col 4|\n|:-- | :-: | --: | ---|\n|left | center | right | unspecificated|\n|111 | 222 | 333 | 444|\n",
+      "it creates a valid table"
+    );
+  });
+
+  test("arrayToTable should escape `|`", function (assert) {
+    const tableData = [
+      {
+        col0: "`a|b`",
+        col1: "![image|200x50](/images/discourse-logo-sketch.png)",
+        col2: "",
+        col3: "|",
+      },
+      { col0: "1|1", col1: "2|2", col2: "3|3", col3: "4|4" },
+    ];
+    assert.strictEqual(
+      arrayToTable(tableData, ["Col 1", "Col 2", "Col 3", "Col 4"]),
+      "|Col 1 | Col 2 | Col 3 | Col 4|\n|--- | --- | --- | ---|\n|`a\\|b` | ![image\\|200x50](/images/discourse-logo-sketch.png) |  | \\||\n|1\\|1 | 2\\|2 | 3\\|3 | 4\\|4|\n",
       "it creates a valid table"
     );
   });
 
   test("findTableRegex", function (assert) {
-    const oneTable = `|Make|Model|Year|\r\n|--- | --- | ---|\r\n|Toyota|Supra|1998|`;
+    const oneTable = `|Make|Model|Year|\n|--- | --- | ---|\n|Toyota|Supra|1998|`;
 
     assert.strictEqual(
       oneTable.match(findTableRegex()).length,

@@ -3,6 +3,7 @@ import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { eq, gt } from "truth-helpers";
@@ -46,18 +47,16 @@ export default class TopicListItem extends Component {
     if (this.args.topic.id === this.historyStore.get("lastTopicIdViewed")) {
       element.dataset.isLastViewedTopic = true;
 
-      this.highlightRow(element).then(() =>
-        this.historyStore.delete("lastTopicIdViewed")
-      );
+      this.highlightRow(element);
+      next(() => this.historyStore.delete("lastTopicIdViewed"));
 
       if (this.shouldFocusLastVisited) {
         element.querySelector(".main-link .title")?.focus();
       }
     } else if (this.args.topic.get("highlight")) {
       // highlight new topics that have been loaded from the server or the one we just created
-      this.highlightRow(element).then(() =>
-        this.args.topic.set("highlight", false)
-      );
+      this.highlightRow(element);
+      next(() => this.args.topic.set("highlight", false));
     }
   });
 
@@ -146,18 +145,13 @@ export default class TopicListItem extends Component {
   }
 
   highlightRow(element) {
-    return new Promise((resolve) => {
-      element.addEventListener(
-        "animationend",
-        () => {
-          element.classList.remove("highlighted");
-          resolve();
-        },
-        { once: true }
-      );
+    element.addEventListener(
+      "animationend",
+      () => element.classList.remove("highlighted"),
+      { once: true }
+    );
 
-      element.classList.add("highlighted");
-    });
+    element.classList.add("highlighted");
   }
 
   @action

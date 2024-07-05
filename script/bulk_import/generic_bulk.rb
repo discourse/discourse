@@ -784,7 +784,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def post_raw(row, group_names)
-    raw = row["raw"]
+    raw = row["raw"].dup
     placeholders = row["placeholders"]&.then { |json| JSON.parse(json) }
 
     if (polls = placeholders&.fetch("polls", nil))
@@ -2351,7 +2351,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def calculate_external_url(row)
-    external_url = row["external_url"]
+    external_url = row["external_url"].dup
     placeholders = row["external_url_placeholders"]&.then { |json| JSON.parse(json) }
     return external_url unless placeholders
 

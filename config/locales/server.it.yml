@@ -1660,7 +1660,6 @@ it:
     s3_use_acls: "AWS consiglia di non utilizzare gli ACL sui bucket S3; se stai seguendo questo consiglio, deseleziona questa opzione. L'opzione deve essere abilitata se si utilizzano caricamenti protetti."
     backup_time_of_day: "Ora del giorno in UTC in cui eseguire il backup."
     backup_with_uploads: "Includi i caricamenti nei backup programmati. Se l'opzione è disabilitata verrà eseguito il backup del solo database."
-    backup_location: "Posizione in cui sono archiviati i backup. IMPORTANTE: S3 richiede credenziali S3 valide immesse nelle impostazioni File."
     backup_gzip_compression_level_for_uploads: "Livello di compressione Gzip utilizzato per comprimere i caricamenti."
     include_thumbnails_in_backups: "Includi le miniature generate automaticamente nei backup. Disabilitare questa opzione renderà i backup più piccoli, ma richiederà un rebake di tutti i post dopo un ripristino."
     active_user_rate_limit_secs: "Ogni quanti secondi viene aggiornato il campo 'last_seen_at'"

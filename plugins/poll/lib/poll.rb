@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class DiscoursePoll::Poll
+  MULTIPLE = "multiple"
+  REGULAR = "regular"
+
   def self.vote(user, post_id, poll_name, options)
     poll_id = nil
 
@@ -9,6 +12,7 @@ class DiscoursePoll::Poll
         poll_id = poll.id
         # remove options that aren't available in the poll
         available_options = poll.poll_options.map { |o| o.digest }.to_set
+
         options.select! { |o| available_options.include?(o) }
 
         if options.empty?
@@ -35,17 +39,21 @@ class DiscoursePoll::Poll
         PollVote.where(poll: poll, user: user).where.not(poll_option_id: new_option_ids).delete_all
 
         # create missing votes
-        (new_option_ids - old_option_ids).each do |option_id|
+        creation_set = new_option_ids - old_option_ids
+
+        creation_set.each do |option_id|
           PollVote.create!(poll: poll, user: user, poll_option_id: option_id)
         end
       end
 
     # Ensure consistency here as we do not have a unique index to limit the
     # number of votes per the poll's configuration.
-    is_multiple = serialized_poll[:type] == "multiple"
+    is_multiple = serialized_poll[:type] == MULTIPLE
     offset = is_multiple ? (serialized_poll[:max] || serialized_poll[:options].length) : 1
 
-    DB.query(<<~SQL, poll_id: poll_id, user_id: user.id, offset: offset)
+    params = { poll_id: poll_id, offset: offset, user_id: user.id }
+
+    DB.query(<<~SQL, params)
     DELETE FROM poll_votes
     USING (
       SELECT
@@ -60,6 +68,18 @@ class DiscoursePoll::Poll
     WHERE poll_votes.poll_id = to_delete_poll_votes.poll_id
     AND poll_votes.user_id = to_delete_poll_votes.user_id
     SQL
+
+    if serialized_poll[:type] == MULTIPLE
+      serialized_poll[:options].each do |option|
+        option.merge!(
+          chosen:
+            PollVote
+              .joins(:poll_option)
+              .where(poll_options: { digest: option[:id] }, user_id: user.id, poll_id: poll_id)
+              .exists?,
+        )
+      end
+    end
 
     [serialized_poll, options]
   end
@@ -159,7 +179,9 @@ class DiscoursePoll::Poll
 
       result = { option_digest => user_hashes }
     else
-      votes = DB.query <<~SQL
+      params = { poll_id: poll.id, offset: offset, offset_plus_limit: offset + limit }
+
+      votes = DB.query(<<~SQL, params)
         SELECT digest, user_id
           FROM (
             SELECT digest
@@ -167,10 +189,10 @@ class DiscoursePoll::Poll
                   , ROW_NUMBER() OVER (PARTITION BY poll_option_id ORDER BY pv.created_at) AS row
               FROM poll_votes pv
               JOIN poll_options po ON pv.poll_option_id = po.id
-              WHERE pv.poll_id = #{poll.id}
-                AND po.poll_id = #{poll.id}
+              WHERE pv.poll_id = :poll_id
+                AND po.poll_id = :poll_id
           ) v
-          WHERE row BETWEEN #{offset} AND #{offset + limit}
+          WHERE row BETWEEN :offset AND :offset_plus_limit
       SQL
 
       user_ids = votes.map(&:user_id).uniq
@@ -292,7 +314,7 @@ class DiscoursePoll::Poll
         post_id: post_id,
         name: poll["name"].presence || "poll",
         close_at: close_at,
-        type: poll["type"].presence || "regular",
+        type: poll["type"].presence || REGULAR,
         status: poll["status"].presence || "open",
         visibility: poll["public"] == "true" ? "everyone" : "secret",
         title: poll["title"],

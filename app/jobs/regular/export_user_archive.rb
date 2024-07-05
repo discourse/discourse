@@ -533,7 +533,10 @@ module Jobs
     def get_user_archive_fields(user_archive)
       user_archive_array = []
       topic_data = user_archive.topic
-      user_archive = user_archive.as_json
+      user_archive =
+        user_archive.as_json(
+          only: %i[topic_id post_number raw cooked like_count reply_count created_at id],
+        )
       topic_data =
         Topic
           .with_deleted

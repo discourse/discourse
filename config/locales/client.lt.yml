@@ -3929,6 +3929,7 @@ lt:
             Galiojantis grupės pavadinimas, kuris yra pakviestas į visas automatiškai siunčiamas privačias žinutes.
           optional: "(pasoronktinai)"
           update: "Atnaujinti"
+          saved: "išsaugota!"
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"
