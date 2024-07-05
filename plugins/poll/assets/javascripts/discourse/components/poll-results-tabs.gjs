@@ -54,6 +54,7 @@ export default class TabsComponent extends Component {
             @options={{@options}}
             @pollName={{@pollName}}
             @pollType={{@pollType}}
+            @isPublic={{@isPublic}}
             @isIrv={{@isIrv}}
             @postId={{@postId}}
             @vote={{@vote}}
