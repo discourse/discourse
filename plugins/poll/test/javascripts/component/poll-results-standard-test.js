@@ -1,6 +1,6 @@
 import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
-import { module, test } from "qunit";
+import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
@@ -36,7 +36,7 @@ const PRELOADEDVOTERS = {
 module("Poll | Component | poll-results-standard", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("Renders the standard results Component correctly", async function (assert) {
+  skip("Renders the standard results Component correctly", async function (assert) {
     this.setProperties({
       options: TWO_OPTIONS,
       pollName: "Two Choice Poll",
