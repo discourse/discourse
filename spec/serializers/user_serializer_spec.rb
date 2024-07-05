@@ -495,4 +495,26 @@ RSpec.describe UserSerializer do
       expect(serializer.as_json[:display_sidebar_tags]).to eq(nil)
     end
   end
+
+  context "with groups" do
+    fab!(:group) do
+      Fabricate(
+        :group,
+        visibility_level: Group.visibility_levels[:public],
+        members_visibility_level: Group.visibility_levels[:owners],
+      )
+    end
+    let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }
+
+    before do
+      group.add(user)
+      group.save!
+    end
+
+    it "should show group even when members list is not visible" do
+      json = serializer.as_json
+      expect(json[:groups].length).to eq(1)
+      expect(json[:groups].first[:id]).to eq(group.id)
+    end
+  end
 end
