@@ -11,9 +11,10 @@ module(
 
     test("default", async function (assert) {
       let data = { foo: null };
+      const mutateData = (x) => (data = x);
 
       await render(<template>
-        <Form @mutable={{true}} @data={{data}} as |form|>
+        <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
           <form.Field @name="foo" @title="Foo" as |field|>
             <field.Question />
           </form.Field>
@@ -25,8 +26,11 @@ module(
 
       await formKit().field("foo").accept();
 
-      assert.deepEqual(data, { foo: true });
       assert.form().field("foo").hasValue(true);
+
+      await formKit().submit();
+
+      assert.deepEqual(data, { foo: true });
     });
   }
 );

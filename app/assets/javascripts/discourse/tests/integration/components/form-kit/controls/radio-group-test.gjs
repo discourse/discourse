@@ -11,9 +11,10 @@ module(
 
     test("default", async function (assert) {
       let data = { foo: "one" };
+      const mutateData = (x) => (data = x);
 
       await render(<template>
-        <Form @mutable={{true}} @data={{data}} as |form|>
+        <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
           <form.Field @name="foo" @title="Foo" as |field|>
             <field.RadioGroup as |RadioGroup|>
               <RadioGroup.Radio @value="one">One</RadioGroup.Radio>
@@ -29,6 +30,9 @@ module(
       await formKit().field("foo").select("two");
 
       assert.form().field("foo").hasValue("two");
+
+      await formKit().submit();
+
       assert.deepEqual(data.foo, "two");
     });
   }

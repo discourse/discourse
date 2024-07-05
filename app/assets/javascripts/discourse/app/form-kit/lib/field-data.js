@@ -94,6 +94,15 @@ export default class FieldData {
   }
 
   /**
+   * Gets the minimum length of the field value.
+   * @type {number|null}
+   * @readonly
+   */
+  get minLength() {
+    return this.rules?.length?.min ?? null;
+  }
+
+  /**
    * Validates the field value.
    * @param {string} name - The name of the field.
    * @param {any} value - The value of the field.

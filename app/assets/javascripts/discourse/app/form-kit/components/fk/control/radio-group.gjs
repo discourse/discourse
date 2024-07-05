@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import FKErrors from "discourse/form-kit/components/fk/errors";
 import FKText from "discourse/form-kit/components/fk/text";
 import FKControlRadioGroupRadio from "./radio-group/radio";
 
@@ -26,7 +25,5 @@ export default class FKControlRadioGroup extends Component {
         )
       }}
     </fieldset>
-
-    <FKErrors @errors={{@errors}} />
   </template>
 }

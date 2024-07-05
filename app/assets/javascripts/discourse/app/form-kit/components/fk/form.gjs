@@ -6,6 +6,7 @@ import { action, get } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
+import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import FKAlert from "discourse/form-kit/components/fk/alert";
 import FKCollection from "discourse/form-kit/components/fk/collection";
@@ -26,6 +27,8 @@ export default class FKForm extends Component {
   @service router;
 
   @tracked isLoading = false;
+
+  @tracked isSubmitting = false;
 
   fields = new Map();
 
@@ -107,6 +110,7 @@ export default class FKForm extends Component {
 
   @action
   addError(name, { title, message }) {
+    console.log("addError", name, title, message);
     this.formData.addError(name, {
       title,
       message,
@@ -173,12 +177,22 @@ export default class FKForm extends Component {
   async onSubmit(event) {
     event?.preventDefault();
 
-    await this.validate(this.fields);
+    if (this.isSubmitting) {
+      return;
+    }
 
-    if (this.formData.isValid) {
-      this.formData.save();
+    try {
+      this.isSubmitting = true;
 
-      await this.args.onSubmit?.(this.formData.draftData);
+      await this.validate(this.fields);
+
+      if (this.formData.isValid) {
+        this.formData.save();
+
+        await this.args.onSubmit?.(this.formData.draftData);
+      }
+    } finally {
+      this.isSubmitting = false;
     }
   }
 
@@ -271,7 +285,7 @@ export default class FKForm extends Component {
             class="btn-primary form-kit__button"
             label="submit"
             type="submit"
-            isLoading=this.isLoading
+            isLoading=(or this.isLoading this.isSubmitting)
           )
           Reset=(component
             DButton

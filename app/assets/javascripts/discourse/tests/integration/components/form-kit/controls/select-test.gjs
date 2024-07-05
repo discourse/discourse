@@ -11,9 +11,10 @@ module(
 
     test("default", async function (assert) {
       let data = { foo: "option-2" };
+      const mutateData = (x) => (data = x);
 
       await render(<template>
-        <Form @mutable={{true}} @data={{data}} as |form|>
+        <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
           <form.Field @name="foo" @title="Foo" as |field|>
             <field.Select as |select|>
               <select.Option @value="option-1">Option 1</select.Option>
@@ -29,8 +30,11 @@ module(
 
       await formKit().field("foo").select("option-3");
 
-      assert.deepEqual(data, { foo: "option-3" });
       assert.form().field("foo").hasValue("option-3");
+
+      await formKit().submit();
+
+      assert.deepEqual(data, { foo: "option-3" });
     });
   }
 );

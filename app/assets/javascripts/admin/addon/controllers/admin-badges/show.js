@@ -36,7 +36,6 @@ export default class AdminBadgesShowController extends Controller {
   @controller adminBadges;
 
   @tracked model;
-  @tracked saving = false;
   @tracked previewLoading = false;
   @tracked selectedGraphicType = null;
   @tracked userBadges;
@@ -80,8 +79,6 @@ export default class AdminBadgesShowController extends Controller {
   }
 
   setup() {
-    this.saving = false;
-
     // this is needed because the model doesnt have default values
     // Using `set` here isn't ideal, but we don't know that tracking is set up on the model yet.
     if (this.model) {
@@ -172,18 +169,12 @@ export default class AdminBadgesShowController extends Controller {
 
   @action
   async handleSubmit(formData) {
-    if (this.saving) {
-      return;
-    }
-
     let fields = FORM_FIELDS;
 
     if (formData.system) {
       const protectedFields = this.protectedSystemFields || [];
       fields = fields.filter((f) => !protectedFields.includes(f));
     }
-
-    this.saving = true;
 
     const data = {};
     fields.forEach(function (field) {
@@ -206,8 +197,6 @@ export default class AdminBadgesShowController extends Controller {
       }
     } catch (error) {
       return popupAjaxError(error);
-    } finally {
-      this.saving = false;
     }
   }
 

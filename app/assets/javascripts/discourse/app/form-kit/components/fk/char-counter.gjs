@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { gt } from "truth-helpers";
+import { gt, lt } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 
 export default class FKCharCounter extends Component {
@@ -12,6 +12,7 @@ export default class FKCharCounter extends Component {
       class={{concatClass
         "form-kit__char-counter"
         (if (gt this.currentLength @maxLength) "--exceeded")
+        (if (lt this.currentLength @minLength) "--insufficient")
       }}
       ...attributes
     >

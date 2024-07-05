@@ -79,10 +79,6 @@ export default class FKControlWrapper extends Component {
     return (this.args.errors ?? {})[this.args.field.name];
   }
 
-  get hasErrors() {
-    return this.errors?.length > 0;
-  }
-
   normalizeName(name) {
     return name.replace(/\./g, "-");
   }
@@ -94,7 +90,7 @@ export default class FKControlWrapper extends Component {
         "form-kit__container"
         "form-kit__field"
         (concat "form-kit__field-" this.controlType)
-        (if this.hasErrors "has-errors")
+        (if this.error "has-errors")
       }}
       data-disabled={{@field.disabled}}
       data-name={{@field.name}}
@@ -131,8 +127,8 @@ export default class FKControlWrapper extends Component {
           @props={{this.props}}
           id={{@field.id}}
           name={{@field.name}}
-          aria-invalid={{if this.hasErrors "true"}}
-          aria-describedby={{if this.hasErrors @field.errorId}}
+          aria-invalid={{if this.error "true"}}
+          aria-describedby={{if this.error @field.errorId}}
           ...attributes
           as |components|
         >
