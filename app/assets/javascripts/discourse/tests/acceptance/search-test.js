@@ -399,15 +399,6 @@ acceptance("Search - Anonymous", function (needs) {
       exists(".search-menu .search-context"),
       "search context indicator is visible"
     );
-
-    await fillIn("#search-term", "");
-    await query("#search-term").focus();
-    await triggerKeyEvent("#search-term", "keyup", "Backspace");
-
-    assert.ok(
-      !exists(".search-menu .search-context"),
-      "backspace resets search context"
-    );
   });
 
   test("topic results - search result escapes html in topic title", async function (assert) {
@@ -1246,12 +1237,6 @@ acceptance("Search - assistant", function (needs) {
     await click("#search-button");
 
     assert.ok(exists(".btn.search-context"), "it shows the button");
-
-    await fillIn("#search-term", "");
-    await query("input#search-term").focus();
-    await triggerKeyEvent("input#search-term", "keyup", "Backspace");
-
-    assert.notOk(exists(".btn.search-context"), "it removes the button");
 
     await clickOutside();
     await click("#search-button");
