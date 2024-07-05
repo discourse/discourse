@@ -4806,6 +4806,9 @@ en:
       panels:
         forum:
           label: Forum
+      back_to_forum: "Back to Forum"
+      collapse_all_sections: "Collapse all sections"
+      expand_all_sections: "Expand all sections"
       filter: "Filter..."
       clear_filter: "Clear filter"
       no_results:
@@ -4926,10 +4929,7 @@ en:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
-      back_to_forum: "Back to Forum"
       filter_reports: Filter reports
-      expand_all_sections: "Expand all sections"
-      collapse_all_sections: "Collapse all sections"
 
       tags:
         remove_muted_tags_from_latest:
