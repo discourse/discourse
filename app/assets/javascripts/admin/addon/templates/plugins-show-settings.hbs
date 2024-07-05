@@ -1,6 +1,5 @@
 <DBreadcrumbsItem
-  @route="adminPlugins.show.settings"
-  @model={{@model.plugin}}
+  @path="/admin/plugins/{{@model.plugin.name}}/settings"
   @label={{i18n "admin.plugins.change_settings_short"}}
 />
 
