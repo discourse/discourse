@@ -6,7 +6,6 @@ import { isEmpty } from "@ember/utils";
 import FeatureTopicOnProfileModal from "discourse/components/modal/feature-topic-on-profile";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { cook } from "discourse/lib/text";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
@@ -142,23 +141,18 @@ export default Controller.extend({
 
     save() {
       this.set("saved", false);
-      const model = this.model;
 
       // Update the user fields
       this.send("_updateUserFields");
 
-      return model
+      return this.model
         .save(this.saveAttrNames)
-        .then(() => {
-          cook(model.get("bio_raw"))
-            .then(() => {
-              model.set("bio_cooked");
-              this.set("saved", true);
-              this.currentUser.set("needs_required_fields_check", false);
-            })
-            .catch(popupAjaxError);
-        })
-        .catch(popupAjaxError);
+        .then(({ user }) => this.model.set("bio_cooked", user.bio_cooked))
+        .catch(popupAjaxError)
+        .finally(() => {
+          this.currentUser.set("needs_required_fields_check", false);
+          this.set("saved", true);
+        });
     },
   },
 });
