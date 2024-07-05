@@ -109,8 +109,16 @@ export default class PollInfoComponent extends Component {
     );
   }
 
+  get resultsOnVoteTitle() {
+    return htmlSafe(I18n.t("poll.results.vote.title"));
+  }
+
   get resultsOnClose() {
     return this.args.results === ON_CLOSE && !this.args.closed;
+  }
+
+  get resultsOnCloseTitle() {
+    return htmlSafe(I18n.t("poll.results.close.title"));
   }
 
   get resultsStaffOnly() {
@@ -118,6 +126,10 @@ export default class PollInfoComponent extends Component {
       this.args.results === STAFF_ONLY &&
       !(this.currentUser && this.currentUser.staff)
     );
+  }
+
+  get resultsStaffOnlyTitle() {
+    return htmlSafe(I18n.t("poll.results.staff.title"));
   }
 
   get publicTitle() {
@@ -179,21 +191,21 @@ export default class PollInfoComponent extends Component {
             {{/if}}
           {{/if}}
           {{#if this.resultsOnVote}}
-            <li>
+            <li class="results-on-vote">
               {{icon "check"}}
-              <span>{{I18n "poll.results.vote.title"}}</span>
+              <span>{{this.resultsOnVoteTitle}}</span>
             </li>
           {{/if}}
           {{#if this.resultsOnClose}}
-            <li>
+            <li class="results-on-close">
               {{icon "lock"}}
-              <span>{{I18n "poll.results.closed.title"}}</span>
+              <span>{{this.resultsOnCloseTitle}}</span>
             </li>
           {{/if}}
           {{#if this.resultsStaffOnly}}
-            <li>
+            <li class="results-staff-only">
               {{icon "shield-alt"}}
-              <span>{{I18n "poll.results.staff.title"}}</span>
+              <span>{{this.resultsStaffOnlyTitle}}</span>
             </li>
           {{/if}}
           {{#if this.publicTitle}}
