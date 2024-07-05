@@ -6,7 +6,7 @@ export default class AdminPluginsRoute extends Route {
   @service router;
 
   async model() {
-    const plugins = this.store.findAll("plugin");
+    const plugins = await this.store.findAll("plugin");
     return plugins.map((plugin) => AdminPlugin.create(plugin));
   }
 }
