@@ -430,6 +430,23 @@ module("Unit | Utilities | table-builder", function (hooks) {
     );
   });
 
+  test("arrayToTable should escape `|`", function (assert) {
+    const tableData = [
+      {
+        col0: "`a|b`",
+        col1: "![image|200x50](/images/discourse-logo-sketch.png)",
+        col2: "",
+        col3: "|",
+      },
+      { col0: "1|1", col1: "2|2", col2: "3|3", col3: "4|4" },
+    ];
+    assert.strictEqual(
+      arrayToTable(tableData, ["Col 1", "Col 2", "Col 3", "Col 4"]),
+      "|Col 1 | Col 2 | Col 3 | Col 4|\n|--- | --- | --- | ---|\n|`a\\|b` | ![image\\|200x50](/images/discourse-logo-sketch.png) |  | \\||\n|1\\|1 | 2\\|2 | 3\\|3 | 4\\|4|\n",
+      "it creates a valid table"
+    );
+  });
+
   test("findTableRegex", function (assert) {
     const oneTable = `|Make|Model|Year|\n|--- | --- | ---|\n|Toyota|Supra|1998|`;
 
