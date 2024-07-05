@@ -144,16 +144,14 @@ class Admin::WebHooksController < Admin::AdminController
         .not_ping
         .where(id: params[:event_ids])
 
-    if web_hook_events
-      web_hook_events.each do |web_hook_event|
-        if !web_hook_event.redelivering_webhook_event
-          RedeliveringWebhookEvent.create!(web_hook_event: web_hook_event)
-        end
+    raise Discourse::InvalidParameters if web_hook_events.count.zero?
+
+    web_hook_events.each do |web_hook_event|
+      if !web_hook_event.redelivering_webhook_event
+        RedeliveringWebhookEvent.create!(web_hook_event: web_hook_event)
       end
-      render json: { event_ids: web_hook_events.map(&:id) }
-    else
-      render json: failed_json
     end
+    render json: { event_ids: web_hook_events.map(&:id) }
   end
 
   def ping

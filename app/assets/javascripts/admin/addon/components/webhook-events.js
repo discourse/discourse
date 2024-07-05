@@ -92,7 +92,7 @@ export default class WebhookEvents extends Component {
     }
 
     if (data.type === "redelivered") {
-      const event = this.events.findBy("id", data.web_hook_event.id);
+      const event = this.events.find((e) => e.id === data.web_hook_event.id);
 
       event.setProperties({
         response_body: data.web_hook_event.response_body,
@@ -100,6 +100,12 @@ export default class WebhookEvents extends Component {
         status: data.web_hook_event.status,
         redelivering: false,
       });
+      return;
+    }
+
+    if (data.type === "redelivery_failed") {
+      const event = this.events.find((e) => e.id === data.web_hook_event_id);
+      event.set("redelivering", false);
       return;
     }
 
@@ -165,7 +171,7 @@ export default class WebhookEvents extends Component {
           );
           if (response.event_ids?.length) {
             response.event_ids.map((id) => {
-              const event = this.events.findBy("id", id);
+              const event = this.events.find((e) => e.id === id);
               event.set("redelivering", true);
             });
           } else {

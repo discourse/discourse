@@ -10,6 +10,7 @@ module Jobs
     sidekiq_options retry: false
 
     REDELIVERED = "redelivered"
+    REDELIVERY_FAILED = "redelivery_failed"
     LIMIT = 20
 
     def execute(args)
@@ -25,10 +26,15 @@ module Jobs
             body: web_hook_event.payload,
           )
 
-          publish_webhook_event(web_hook_event, web_hook)
+          publish_webhook_event(web_hook_event, web_hook, REDELIVERED)
           RedeliveringWebhookEvent.delete(redelivery_event)
         rescue => e
-          Rails.logger.warn("Error redelivering web_hook_event #{web_hook_event.id}", e.inspect)
+          Discourse.warn_exception(
+            e,
+            message: "Error redelivering web_hook_event #{web_hook_event.id}",
+          )
+          publish_webhook_event(web_hook_event, web_hook, REDELIVERY_FAILED)
+          RedeliveringWebhookEvent.delete(redelivery_event)
         end
 
         sleep 2
@@ -37,11 +43,11 @@ module Jobs
 
     private
 
-    def publish_webhook_event(web_hook_event, web_hook)
+    def publish_webhook_event(web_hook_event, web_hook, type)
       MessageBus.publish(
         "/web_hook_events/#{web_hook.id}",
         {
-          type: REDELIVERED,
+          type: type,
           web_hook_event: AdminWebHookEventSerializer.new(web_hook_event, root: false).as_json,
         },
       )

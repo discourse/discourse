@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "excon"
-
 module Jobs
   class CleanupRedeliveringWebHookEvents < ::Jobs::Scheduled
     every 1.hour
