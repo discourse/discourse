@@ -19,7 +19,7 @@ class DiscourseConnect < DiscourseConnectBase
     sso = new(secure_session: secure_session)
     sso.nonce = SecureRandom.hex
     sso.register_nonce(return_path)
-    sso.return_sso_url = Discourse.base_url + "/session/sso_login"
+    sso.return_sso_url = Discourse.base_url_no_prefix + "/session/sso_login"
     sso
   end
 

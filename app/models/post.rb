@@ -693,7 +693,7 @@ class Post < ActiveRecord::Base
   end
 
   def full_url(opts = {})
-    "#{Discourse.base_url}#{url(opts)}"
+    "#{Discourse.base_url_no_prefix}#{url(opts)}"
   end
 
   def relative_url(opts = {})

@@ -20,7 +20,7 @@ class PublishedPage < ActiveRecord::Base
   end
 
   def url
-    "#{Discourse.base_url}#{path}"
+    "#{Discourse.base_url_no_prefix}#{path}"
   end
 
   def self.publish!(publisher, topic, slug, options = {})
