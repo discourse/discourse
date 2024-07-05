@@ -2865,6 +2865,7 @@ et:
       config_areas:
         about:
           optional: "(valikuline)"
+          saved: "salvestatud!"
       plugins:
         title: "Plugin"
         installed: "Paigaldatud pluginad"

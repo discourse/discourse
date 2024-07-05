@@ -2287,10 +2287,10 @@ cs:
       loading: Načítání…
     category_row:
       subcategory_count:
-        one: "+ %{count} podkategorie"
-        few: "+ %{count} podkategorie"
-        many: "+ %{count} podkategorií"
-        other: "+ %{count} podkategorií"
+        one: "+%{count} podkategorie"
+        few: "+%{count} podkategorie"
+        many: "+%{count} podkategorií"
+        other: "+%{count} podkategorií"
       topic_count:
         one: "%{count} téma v této kategorii"
         few: "%{count} témata v této kategorii"
@@ -5229,6 +5229,7 @@ cs:
         about:
           optional: "(volitelné)"
           update: "Aktualizovat"
+          saved: "uloženo!"
       plugins:
         title: "Pluginy"
         installed: "Nainstalované pluginy"

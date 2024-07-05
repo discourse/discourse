@@ -876,6 +876,8 @@ nb_NO:
       labels:
         user_agent: "Brukeragent"
         page_views: "Sidevisninger"
+    web_hook_events_daily_aggregate:
+      xaxis: "Dag"
     suspicious_logins:
       labels:
         user: Bruker

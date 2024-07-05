@@ -3012,6 +3012,7 @@ lv:
       config_areas:
         about:
           optional: "(pēc izvēles)"
+          saved: "saglabāts!"
       plugins:
         title: "Spraudņi"
         installed: "Uzinstalētie spraudņi"

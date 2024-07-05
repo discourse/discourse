@@ -44,10 +44,28 @@ export default class BaseCustomSidebarPanel {
   }
 
   /**
+   * @returns {boolean} Controls whether the panel will display a header
+   */
+  get displayHeader() {
+    return false;
+  }
+
+  /**
    * @returns {boolean} Controls whether the filter is shown
    */
   get filterable() {
     return false;
+  }
+
+  /**
+   * @param {string} filter filter applied
+   *
+   * @returns {string | SafeString} Description displayed when the applied filter has no results.
+   * Use `htmlSafe` from `from "@ember/template` to use HTML strings.
+   */
+  // eslint-disable-next-line no-unused-vars
+  filterNoResultsDescription(filter) {
+    return null;
   }
 
   #notImplemented() {

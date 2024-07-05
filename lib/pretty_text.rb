@@ -91,6 +91,7 @@ module PrettyText
       discourse-common/addon/lib/deprecated
       discourse-common/addon/lib/escape
       discourse-common/addon/lib/avatar-utils
+      discourse-common/addon/lib/case-converter
       discourse/app/lib/to-markdown
       discourse/app/static/markdown-it/features
     ].each do |f|

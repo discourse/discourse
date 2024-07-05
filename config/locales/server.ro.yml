@@ -845,6 +845,8 @@ ro:
     web_crawlers:
       labels:
         page_views: "Vizualizări"
+    web_hook_events_daily_aggregate:
+      xaxis: "Zi"
     suspicious_logins:
       labels:
         user: Utilizator

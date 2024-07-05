@@ -110,5 +110,11 @@ RSpec.describe WebHookEventsDailyAggregate do
         WebHookEventsDailyAggregate.count
       }
     end
+
+    it "should not fail if there are no events" do
+      expect { Jobs::AggregateWebHooksEvents.new.execute(date: 99.days.ago) }.not_to raise_error
+
+      expect(WebHookEventsDailyAggregate.count).to eq(1)
+    end
   end
 end

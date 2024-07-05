@@ -2161,8 +2161,8 @@ hu:
       loading: Betöltés…
     category_row:
       subcategory_count:
-        one: "+ %{count} alkategória"
-        other: "+ %{count} alkategória"
+        one: "+%{count} alkategória"
+        other: "+%{count} alkategória"
       topic_count:
         one: "%{count} téma van ebben a kategóriában"
         other: "%{count} téma van ebben a kategóriában"
@@ -4979,6 +4979,7 @@ hu:
           header: "Az Ön webhelyéről"
           optional: "(nem kötelező)"
           update: "Frissítés"
+          saved: "mentve!"
       plugins:
         title: "Bővítmények"
         installed: "Telepített bővítmények"

@@ -2276,7 +2276,7 @@ RSpec.describe GroupsController do
         title: I18n.t("groups.request_membership_pm.title", group_name: group.name),
         raw: "*British accent* Please, sir, may I have some group?",
         archetype: Archetype.private_message,
-        target_usernames: "#{user.username}",
+        target_usernames: user.username,
         skip_validations: true,
       ).create!
 
@@ -2312,15 +2312,10 @@ RSpec.describe GroupsController do
       # send the initial request PM
       PostCreator.new(
         other_user,
-        title:
-          (
-            I18n.t "groups.request_membership_pm.title",
-                   group_name: group.name,
-                   locale: other_user.locale
-          ),
+        title: I18n.t("groups.request_membership_pm.title", group_name: group.name, locale: "fr"),
         raw: "*French accent* Please let me in!",
         archetype: Archetype.private_message,
-        target_usernames: "#{user.username}",
+        target_usernames: user.username,
         skip_validations: true,
       ).create!
 
@@ -2345,6 +2340,34 @@ RSpec.describe GroupsController do
       expect(post.raw).to eq(
         I18n.t("groups.request_accepted_pm.body", group_name: group.name, locale: "fr").strip,
       )
+    end
+
+    it "works even though the user has no locale" do
+      other_user.update!(locale: "")
+
+      GroupRequest.create!(group: group, user: other_user)
+
+      # send the initial request PM
+      PostCreator.new(
+        other_user,
+        title: I18n.t("groups.request_membership_pm.title", group_name: group.name),
+        raw: "*Alien accent* Can I join?!",
+        archetype: Archetype.private_message,
+        target_usernames: user.username,
+        skip_validations: true,
+      ).create!
+
+      topic = Topic.last
+
+      expect {
+        put "/groups/#{group.id}/handle_membership_request.json",
+            params: {
+              user_id: other_user.id,
+              accept: true,
+            }
+      }.to_not change { Topic.count }
+
+      expect(topic.posts.count).to eq(2)
     end
   end
 

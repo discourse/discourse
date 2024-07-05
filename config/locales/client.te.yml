@@ -2174,9 +2174,6 @@ te:
     conditional_loading_section:
       loading: లోడ్ అవుతోంది…
     category_row:
-      subcategory_count:
-        one: "+ %{count} ఉపవర్గం"
-        other: "+ %{count} ఉపవర్గాలు"
       topic_count:
         one: "ఈ వర్గంలో %{count} విషయం"
         other: "ఈ వర్గంలోని %{count} విషయాలు"
@@ -4965,6 +4962,7 @@ te:
           city_for_disputes: "వివాదాలకు నగరం"
           optional: "(ఐచ్ఛికం)"
           update: "నవీకరించండి"
+          saved: "సేవ్ చేయబడింది!"
       plugins:
         title: "చొప్పింతలు"
         installed: "ప్రతిష్టించిన చొప్పింతలు"

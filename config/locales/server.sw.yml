@@ -737,6 +737,8 @@ sw:
       labels:
         user_agent: "Mwakilishi wa Mtumiaji"
         page_views: "Ukurasa Umeonwa Mara"
+    web_hook_events_daily_aggregate:
+      xaxis: "Siku"
     suspicious_logins:
       labels:
         user: Mtumiaji

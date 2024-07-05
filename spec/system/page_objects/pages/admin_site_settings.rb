@@ -85,10 +85,5 @@ module PageObjects
         assert_selector(".admin-detail .row.setting", minimum: count)
       end
     end
-
-    # TODO (martin) Remove this after discourse-topic-voting no longer
-    # relies on this, it was renamed to AdminSiteSettings.
-    class AdminSettings < PageObjects::Pages::AdminSiteSettings
-    end
   end
 end

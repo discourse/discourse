@@ -77,6 +77,24 @@ module("Unit | Utility | sanitizer", function (hooks) {
       "it allows iframe to OpenStreetMap"
     );
 
+    cooked(
+      `BEFORE\n\n<iframe src=http://example.com>\n\nINSIDE\n\n</iframe>\n\nAFTER`,
+      `<p>BEFORE</p>\n\n<p>AFTER</p>`,
+      "it strips unauthorized iframes - unallowed src"
+    );
+
+    cooked(
+      `BEFORE\n\n<iframe src=''>\n\nINSIDE\n\n</iframe>\n\nAFTER`,
+      `<p>BEFORE</p>\n\n<p>AFTER</p>`,
+      "it strips unauthorized iframes - empty src"
+    );
+
+    cooked(
+      `BEFORE\n\n<iframe src='http://example.com'>\n\nAFTER`,
+      `<p>BEFORE</p>`,
+      "it strips unauthorized partial iframes"
+    );
+
     assert.strictEqual(engine.sanitize("<textarea>hullo</textarea>"), "hullo");
     assert.strictEqual(
       engine.sanitize("<button>press me!</button>"),

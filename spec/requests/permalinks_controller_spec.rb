@@ -44,5 +44,14 @@ RSpec.describe PermalinksController do
       get "/not/a/valid/url"
       expect(response.status).to eq(404)
     end
+
+    context "when permalink's target_url is an external URL" do
+      before { permalink.update!(external_url: "https://github.com/discourse/discourse") }
+
+      it "redirects to it properly" do
+        get "/#{permalink.url}"
+        expect(response).to redirect_to(permalink.external_url)
+      end
+    end
   end
 end

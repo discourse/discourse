@@ -484,10 +484,12 @@ class GroupsController < ApplicationController
     request_topic =
       Topic.find_by(
         title:
-          (
-            I18n.t "groups.request_membership_pm.title", group_name: group.name, locale: user.locale
+          I18n.t(
+            "groups.request_membership_pm.title",
+            group_name: group.name,
+            locale: user.effective_locale,
           ),
-        archetype: "private_message",
+        archetype: Archetype.private_message,
         user_id: user.id,
       )
 
@@ -506,7 +508,11 @@ class GroupsController < ApplicationController
         post_type: Post.types[:regular],
         topic_id: request_topic.id,
         raw:
-          (I18n.t "groups.request_accepted_pm.body", group_name: group.name, locale: user.locale),
+          I18n.t(
+            "groups.request_accepted_pm.body",
+            group_name: group.name,
+            locale: user.effective_locale,
+          ),
         reply_to_post_number: 1,
         target_usernames: user.username,
         skip_validations: true,

@@ -2141,6 +2141,9 @@ sq:
           screened_urls: "Kontroll URL-sh"
           security: "Siguria"
           spam: "Spam"
+      config_areas:
+        about:
+          saved: "u ruajt!"
       plugins:
         title: "Pluginet"
         installed: "Pluginet e instaluar"

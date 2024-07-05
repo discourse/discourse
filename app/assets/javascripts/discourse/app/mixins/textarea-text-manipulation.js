@@ -515,6 +515,15 @@ export default Mixin.create({
 
   @bind
   maybeContinueList() {
+    // TODO (martin) Very inconsistent on Firefox at the moment, we end up with
+    // things like this. Something about newlines maybe?
+    //
+    // 1. a
+    // 2. test? 2. 2. 2. 2. 2.
+    if (this.capabilities.isFirefox) {
+      return false;
+    }
+
     const offset = caretPosition(this._textarea);
     const text = this._textarea.value;
     const lines = text.substring(0, offset).split("\n");

@@ -2176,6 +2176,18 @@ RSpec.describe Search do
       expect(Search.execute("Topic max_views:150").posts.map(&:id)).to eq([post.id])
     end
 
+    it "can order by likes" do
+      raw = "Foo bar lorem ipsum"
+      topic = Fabricate(:topic)
+      post1 = Fabricate(:post, topic:, raw:, like_count: 1)
+      post2 = Fabricate(:post, topic:, raw:, like_count: 2)
+      post3 = Fabricate(:post, topic:, raw:, like_count: 3)
+
+      expect(Search.execute("topic:#{topic.id} bar order:likes").posts.map(&:id)).to eq(
+        [post3, post2, post1].map(&:id),
+      )
+    end
+
     it "can search for terms with dots" do
       post = Fabricate(:post, raw: "Will.2000 Will.Bob.Bill...")
       expect(Search.execute("bill").posts.map(&:id)).to eq([post.id])

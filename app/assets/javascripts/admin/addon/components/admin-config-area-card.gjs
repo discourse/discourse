@@ -6,7 +6,7 @@ export default class AdminConfigAreaCard extends Component {
   @tracked collapsed = false;
 
   <template>
-    <section class="admin-config-area-card">
+    <section class="admin-config-area-card" ...attributes>
       <h3 class="admin-config-area-card__title">{{i18n @heading}}</h3>
       <div class="admin-config-area-card__content">
         {{yield}}

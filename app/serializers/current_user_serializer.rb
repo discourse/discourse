@@ -28,7 +28,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_post_anonymously,
              :can_ignore_users,
              :can_delete_all_posts_and_topics,
-             :can_summarize,
              :custom_fields,
              :muted_category_ids,
              :indirectly_muted_category_ids,
@@ -148,15 +147,11 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_ignore_users
-    !is_anonymous && object.in_any_groups?(SiteSetting.ignore_allowed_groups_map)
+    scope.can_ignore_users?
   end
 
   def can_delete_all_posts_and_topics
     object.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
-  end
-
-  def can_summarize
-    object.in_any_groups?(SiteSetting.custom_summarization_allowed_groups_map)
   end
 
   def can_upload_avatar
@@ -299,7 +294,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def featured_topic
-    object.user_profile.featured_topic
+    BasicTopicSerializer.new(object.user_profile.featured_topic, scope: scope, root: false).as_json
   end
 
   def has_topic_draft

@@ -853,14 +853,14 @@ module("Integration | Component | Widget | post", function (hooks) {
     assert.dom(".topic-map-expanded .topic-link").exists({ count: 6 });
   });
 
-  test("topic map - no summary", async function (assert) {
+  test("topic map - no top reply summary", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 123 });
     this.set("args", { topic, showTopicMap: true });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.dom(".toggle-summary").doesNotExist();
+    assert.dom(".toggle-summary .top-replies").doesNotExist();
   });
 
   test("topic map - has top replies summary", async function (assert) {
