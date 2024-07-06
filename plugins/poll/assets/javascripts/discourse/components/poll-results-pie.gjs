@@ -13,6 +13,10 @@ export default class PollResultsPieComponent extends Component {
 
     afterUpdate(chart, args, options) {
       const ul = document.getElementById(options.containerID);
+      if (!ul) {
+        return;
+      }
+
       ul.innerHTML = "";
 
       const items = chart.options.plugins.legend.labels.generateLabels(chart);
