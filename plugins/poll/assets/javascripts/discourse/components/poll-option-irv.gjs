@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import routeAction from "discourse/helpers/route-action";
 import i18n from "discourse-common/helpers/i18n";
@@ -34,7 +35,7 @@ export default class PollOptionsComponent extends Component {
           onclick={{routeAction "showLogin"}}
         >{{i18n "poll.options.irv.login"}}</DButton>
       {{/if}}
-      <span class="option-text">{{@option.html}}</span>
+      <span class="option-text">{{htmlSafe @option.html}}</span>
     </div>
   </template>
 }
