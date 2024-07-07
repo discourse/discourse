@@ -40,7 +40,7 @@ after_initialize do
   require_relative "app/serializers/poll_serializer"
   require_relative "jobs/regular/close_poll"
   require_relative "lib/poll"
-  require_relative "lib/irv"
+  require_relative "lib/ranked_choice"
   require_relative "lib/polls_updater"
   require_relative "lib/polls_validator"
   require_relative "lib/post_validator"
@@ -221,7 +221,7 @@ after_initialize do
   ) do
     preloaded_polls
       .map do |poll|
-        if poll.irv?
+        if poll.ranked_choice?
           user_poll_votes =
             poll
               .poll_votes

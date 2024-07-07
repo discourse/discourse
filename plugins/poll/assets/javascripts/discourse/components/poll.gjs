@@ -24,7 +24,7 @@ const STAFF_ONLY = "staff_only";
 const MULTIPLE = "multiple";
 const NUMBER = "number";
 const REGULAR = "regular";
-const IRV = "irv";
+const RANKED_CHOICE = "ranked_choice";
 const ON_VOTE = "on_vote";
 const ON_CLOSE = "on_close";
 
@@ -43,9 +43,9 @@ export default class PollComponent extends Component {
   @tracked poll = this.args.attrs.poll;
   @tracked voters = this.poll.voters || 0;
   @tracked preloadedVoters = this.args.preloadedVoters || [];
-  @tracked isIrv = this.poll.type === IRV;
-  @tracked irvOutcome = this.poll.irv_outcome || [];
-  @tracked isMultiVoteType = this.isIrv || this.isMultiple;
+  @tracked isRankedChoice = this.poll.type === RANKED_CHOICE;
+  @tracked rankedChoiceOutcome = this.poll.ranked_choice_outcome || [];
+  @tracked isMultiVoteType = this.isRankedChoice || this.isMultiple;
   @tracked staffOnly = this.poll.results === STAFF_ONLY;
   @tracked isMultiple = this.poll.type === MULTIPLE;
   @tracked isNumber = this.poll.type === NUMBER;
@@ -94,7 +94,7 @@ export default class PollComponent extends Component {
       .then(({ poll }) => {
         this.options = [...poll.options];
         this.hasSavedVote = true;
-        this.irvOutcome = poll.irv_outcome || [];
+        this.rankedChoiceOutcome = poll.ranked_choice_outcome || [];
         this.poll.setProperties(poll);
         this.appEvents.trigger(
           "poll:voted",
@@ -119,7 +119,7 @@ export default class PollComponent extends Component {
       })
       .catch((error) => {
         if (error) {
-          if (!this.isMultiple && !this.isIrv) {
+          if (!this.isMultiple && !this.isRankedChoice) {
             this._toggleOption(option);
           }
           popupAjaxError(error);
@@ -158,7 +158,7 @@ export default class PollComponent extends Component {
       } else {
         vote.push(option.id);
       }
-    } else if (this.isIrv) {
+    } else if (this.isRankedChoice) {
       options.forEach((candidate, i) => {
         const chosenIdx = vote.findIndex(
           (object) => object.digest === candidate.id
@@ -189,19 +189,22 @@ export default class PollComponent extends Component {
     this.post = this.args.attrs.post;
     this.options = this.poll.options;
     this.groupableUserFields = this.args.attrs.groupableUserFields;
-    this.irvDropdownContent = [];
+    this.rankedChoiceDropdownContent = [];
 
-    if (this.isIrv) {
-      this.irvDropdownContent.push({
+    if (this.isRankedChoice) {
+      this.rankedChoiceDropdownContent.push({
         id: 0,
-        name: I18n.t("poll.options.irv.abstain"),
+        name: I18n.t("poll.options.ranked_choice.abstain"),
       });
     }
 
     this.options.forEach((option, i) => {
       option.rank = 0;
-      if (this.isIrv) {
-        this.irvDropdownContent.push({ id: i + 1, name: (i + 1).toString() });
+      if (this.isRankedChoice) {
+        this.rankedChoiceDropdownContent.push({
+          id: i + 1,
+          name: (i + 1).toString(),
+        });
         this.args.attrs.vote.forEach((vote) => {
           if (vote.digest === option.id) {
             option.rank = vote.rank;
@@ -264,20 +267,20 @@ export default class PollComponent extends Component {
 
     if (
       !this.isMultiple &&
-      !this.isIrv &&
+      !this.isRankedChoice &&
       this.vote.length === 1 &&
       this.vote[0] === option.id
     ) {
       return this.removeVote();
     }
 
-    if (!this.isMultiple && !this.isIrv) {
+    if (!this.isMultiple && !this.isRankedChoice) {
       this.vote.length = 0;
     }
 
     this._toggleOption(option, rank);
 
-    if (!this.isMultiple && !this.isIrv) {
+    if (!this.isMultiple && !this.isRankedChoice) {
       this.castVotes(option);
     }
   }
@@ -299,7 +302,7 @@ export default class PollComponent extends Component {
       return selectedOptionCount >= this.min && selectedOptionCount <= this.max;
     }
 
-    if (this.isIrv) {
+    if (this.isRankedChoice) {
       return (
         this.options.length === this.vote.length &&
         this.areRanksValid(this.vote)
@@ -318,7 +321,7 @@ export default class PollComponent extends Component {
   }
 
   get showCastVotesButton() {
-    return (this.isMultiple || this.isIrv) && !this.showResults;
+    return (this.isMultiple || this.isRankedChoice) && !this.showResults;
   }
 
   get castVotesButtonClass() {
@@ -392,7 +395,7 @@ export default class PollComponent extends Component {
   updatedVoters() {
     this.preloadedVoters = this.args.preloadedVoters;
     this.options = [...this.args.options];
-    if (this.isIrv) {
+    if (this.isRankedChoice) {
       this.options.forEach((candidate) => {
         let specificVote = this.vote.find(
           (vote) => vote.digest === candidate.id
@@ -427,7 +430,7 @@ export default class PollComponent extends Component {
           ? this.preloadedVoters[optionId]
           : this.preloadedVoters;
         const newVoters = optionId ? result.voters[optionId] : result.voters;
-        if (this.isIrv) {
+        if (this.isRankedChoice) {
           this.preloadedVoters[optionId] = [...new Set([...newVoters])];
         } else {
           const votersSet = new Set(voters.map((voter) => voter.username));
@@ -480,14 +483,14 @@ export default class PollComponent extends Component {
       },
     })
       .then(({ poll }) => {
-        if (this.poll.type === IRV) {
+        if (this.poll.type === RANKED_CHOICE) {
           poll.options.forEach((option) => {
             option.rank = 0;
           });
         }
         this.options = [...poll.options];
         this.poll.setProperties(poll);
-        this.irvOutcome = poll.irv_outcome || [];
+        this.rankedChoiceOutcome = poll.ranked_choice_outcome || [];
         this.vote = [];
         this.voters = poll.voters;
         this.hasSavedVote = false;
@@ -545,8 +548,8 @@ export default class PollComponent extends Component {
   @action
   exportResults() {
     const queryID =
-      this.poll.type === IRV
-        ? this.siteSettings.poll_export_irv_data_explorer_query_id
+      this.poll.type === RANKED_CHOICE
+        ? this.siteSettings.poll_export_ranked_choice_data_explorer_query_id
         : this.siteSettings.poll_export_data_explorer_query_id;
 
     // This uses the Data Explorer plugin export as CSV route
@@ -606,14 +609,14 @@ export default class PollComponent extends Component {
                 @options={{this.options}}
                 @pollName={{this.poll.name}}
                 @pollType={{this.poll.type}}
-                @isIrv={{this.isIrv}}
+                @isRankedChoice={{this.isRankedChoice}}
                 @isPublic={{this.poll.public}}
                 @postId={{this.post.id}}
                 @vote={{this.vote}}
                 @voters={{this.preloadedVoters}}
                 @votersCount={{this.poll.voters}}
                 @fetchVoters={{this.fetchVoters}}
-                @irvOutcome={{this.irvOutcome}}
+                @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
               />
             {{/if}}
           {{/if}}
@@ -621,8 +624,8 @@ export default class PollComponent extends Component {
       {{else}}
         <PollOptions
           @isCheckbox={{this.isCheckbox}}
-          @isIrv={{this.isIrv}}
-          @irvDropdownContent={{this.irvDropdownContent}}
+          @isRankedChoice={{this.isRankedChoice}}
+          @rankedChoiceDropdownContent={{this.rankedChoiceDropdownContent}}
           @options={{this.options}}
           @votes={{this.vote}}
           @sendOptionSelect={{this.toggleOption}}
@@ -694,7 +697,7 @@ export default class PollComponent extends Component {
         @voters={{this.voters}}
         @isStaff={{this.isStaff}}
         @isMe={{this.isMe}}
-        @isIrv={{this.isIrv}}
+        @isRankedChoice={{this.isRankedChoice}}
         @topicArchived={{this.topicArchived}}
         @groupableUserFields={{this.groupableUserFields}}
         @isAutomaticallyClosed={{this.isAutomaticallyClosed}}

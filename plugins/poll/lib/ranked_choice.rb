@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-class DiscoursePoll::Irv
+class DiscoursePoll::RankedChoice
   MAX_ROUNDS = 50
 
-  def self.irv_outcome(poll_id)
+  def self.outcome(poll_id)
     options = PollOption.where(poll_id: poll_id).map { |hash| { id: hash.digest, html: hash.html } }
 
     ballot = []
@@ -24,10 +24,10 @@ class DiscoursePoll::Irv
       ballot << ballot_paper
     end
 
-    DiscoursePoll::Irv.run_irv(ballot, options) if ballot.length > 0
+    DiscoursePoll::RankedChoice.run(ballot, options) if ballot.length > 0
   end
 
-  def self.run_irv(starting_votes, options)
+  def self.run(starting_votes, options)
     current_votes = starting_votes
     round_activity = []
     potential_winners = []

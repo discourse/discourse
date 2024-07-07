@@ -24,12 +24,15 @@ export default class PollOptionsDropdownComponent extends Component {
   @action
   selectRank(option, rank) {
     this.args.sendRank(option, rank);
-    this.rank = rank === 0 ? I18n.t("poll.options.irv.abstain") : rank;
+    this.rank =
+      rank === 0 ? I18n.t("poll.options.ranked_choice.abstain") : rank;
     this.dMenu.close();
   }
 
   get rankLabel() {
-    return this.rank === 0 ? I18n.t("poll.options.irv.abstain") : this.rank;
+    return this.rank === 0
+      ? I18n.t("poll.options.ranked_choice.abstain")
+      : this.rank;
   }
 
   <template>
@@ -42,7 +45,7 @@ export default class PollOptionsDropdownComponent extends Component {
       </:trigger>
       <:content>
         <DropdownMenu as |dropdown|>
-          {{#each @irvDropdownContent as |content|}}
+          {{#each @rankedChoiceDropdownContent as |content|}}
             <dropdown.item>
               <DButton
                 @translatedLabel={{content.name}}

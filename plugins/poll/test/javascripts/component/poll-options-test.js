@@ -31,16 +31,16 @@ module("Poll | Component | poll-options", function (hooks) {
   test("single, not selected", async function (assert) {
     this.setProperties({
       isCheckbox: false,
-      isIrv: false,
-      irvDropdownContent: [],
+      isRankedChoice: false,
+      rankedChoiceDropdownContent: [],
       options: OPTIONS,
       votes: [],
     });
 
     await render(hbs`<PollOptions
       @isCheckbox={{this.isCheckbox}}
-      @isIrv={{this.isIrv}}
-      @irv_dropdown_content={{this.irv_dropdown_content}}
+      @isRankedChoice={{this.isRankedChoice}}
+      @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
       @options={{this.options}}
       @votes={{this.votes}}
       @sendRadioClick={{this.toggleOption}}
@@ -52,16 +52,16 @@ module("Poll | Component | poll-options", function (hooks) {
   test("single, selected", async function (assert) {
     this.setProperties({
       isCheckbox: false,
-      isIrv: false,
-      irvDropdownContent: [],
+      isRankedChoice: false,
+      rankedChoiceDropdownContent: [],
       options: OPTIONS,
       votes: ["6c986ebcde3d5822a6e91a695c388094"],
     });
 
     await render(hbs`<PollOptions
         @isCheckbox={{this.isCheckbox}}
-        @isIrv={{this.isIrv}}
-        @irv_dropdown_content={{this.irv_dropdown_content}}
+        @isRankedChoice={{this.isRankedChoice}}
+        @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
         @options={{this.options}}
         @votes={{this.votes}}
         @sendRadioClick={{this.toggleOption}}
@@ -73,16 +73,16 @@ module("Poll | Component | poll-options", function (hooks) {
   test("multi, not selected", async function (assert) {
     this.setProperties({
       isCheckbox: true,
-      isIrv: false,
-      irvDropdownContent: [],
+      isRankedChoice: false,
+      rankedChoiceDropdownContent: [],
       options: OPTIONS,
       votes: [],
     });
 
     await render(hbs`<PollOptions
         @isCheckbox={{this.isCheckbox}}
-        @isIrv={{this.isIrv}}
-        @irv_dropdown_content={{this.irv_dropdown_content}}
+        @isRankedChoice={{this.isRankedChoice}}
+        @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
         @options={{this.options}}
         @votes={{this.votes}}
         @sendRadioClick={{this.toggleOption}}
@@ -94,16 +94,16 @@ module("Poll | Component | poll-options", function (hooks) {
   test("multi, selected", async function (assert) {
     this.setProperties({
       isCheckbox: true,
-      isIrv: false,
-      irvDropdownContent: [],
+      isRankedChoice: false,
+      rankedChoiceDropdownContent: [],
       options: OPTIONS,
       votes: ["6c986ebcde3d5822a6e91a695c388094"],
     });
 
     await render(hbs`<PollOptions
       @isCheckbox={{this.isCheckbox}}
-      @isIrv={{this.isIrv}}
-      @irv_dropdown_content={{this.irv_dropdown_content}}
+      @isRankedChoice={{this.isRankedChoice}}
+      @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
       @options={{this.options}}
       @votes={{this.votes}}
       @sendRadioClick={{this.toggleOption}}

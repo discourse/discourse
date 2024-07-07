@@ -82,14 +82,14 @@ en:
         breakdown: "Breakdown"
         percentage: "Percentage"
         count: "Count"
-      
-      irv:
+
+      ranked_choice:
         title:
           rounds: "Rounds"
           outcome: "Result"
         none: "None"
         majority: "Majority"
-        eliminated: "Elminated"
+        eliminated: "Eliminated"
         round: "Round"
         winner:
           one: "Winner was %{winner} after one round."
@@ -100,7 +100,7 @@ en:
 
       options:
         label: "Options"
-        irv:
+        ranked_choice:
           abstain: "Abstain"
           login: "Login to vote!"
 
@@ -123,7 +123,7 @@ en:
           label: Type
           regular: Single Choice
           multiple: Multiple Choice
-          irv: Instant Runoff Voting
+          ranked_choice: Ranked Choice
           number: Number Rating
         poll_result:
           label: Show Results...

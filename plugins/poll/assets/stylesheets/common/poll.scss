@@ -31,13 +31,13 @@ div.poll-outer {
       }
     }
 
-    .irv-poll-options {
+    .ranked-choice-poll-options {
       display: flex;
       flex-direction: column;
       gap: 0.5em;
       padding: 0.5em;
 
-      .irv-poll-option {
+      .ranked-choice-poll-option {
         display: inline-flex;
         flex-wrap: wrap;
         align-items: center;
@@ -50,7 +50,7 @@ div.poll-outer {
       display: none;
     }
 
-    .discourse-poll-irv-results {
+    .discourse-poll-ranked-choice-results {
       .tabs {
         &.nav-items {
           display: flex;
@@ -71,7 +71,7 @@ div.poll-outer {
         display: inline-block;
         min-width: 20px;
       }
-      .poll-results-irv-subtitle-rounds {
+      .poll-results-ranked-choice-subtitle-rounds {
         margin: 0.25em 0 0.67rem;
       }
     }

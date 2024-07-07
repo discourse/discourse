@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DiscoursePoll::Poll
-  IRV = "irv"
+  RANKED_CHOICE = "ranked_choice"
   MULTIPLE = "multiple"
   REGULAR = "regular"
 
@@ -14,7 +14,7 @@ class DiscoursePoll::Poll
         # remove options that aren't available in the poll
         available_options = poll.poll_options.map { |o| o.digest }.to_set
 
-        if poll.irv?
+        if poll.ranked_choice?
           options = options.values.map { |hash| hash }
           options.select! { |o| available_options.include?(o[:digest]) }
         else
@@ -29,7 +29,7 @@ class DiscoursePoll::Poll
           poll
             .poll_options
             .each_with_object([]) do |option, obj|
-              if poll.irv?
+              if poll.ranked_choice?
                 obj << option.id if options.any? { |o| o[:digest] == option.digest }
               else
                 obj << option.id if options.include?(option.digest)
@@ -45,8 +45,8 @@ class DiscoursePoll::Poll
               obj << option.id if option.poll_votes.where(user_id: user.id).exists?
             end
 
-        if poll.irv?
-          # for IRV, we need to remove all votes and re-create them as there is no way to update them due to lack of primary key.
+        if poll.ranked_choice?
+          # for ranked choice, we need to remove all votes and re-create them as there is no way to update them due to lack of primary key.
           PollVote.where(poll: poll, user: user).delete_all
           creation_set = new_option_ids
         else
@@ -60,7 +60,7 @@ class DiscoursePoll::Poll
 
         # create missing votes
         creation_set.each do |option_id|
-          if poll.irv?
+          if poll.ranked_choice?
             option_digest = poll.poll_options.find(option_id).digest
 
             PollVote.create!(
@@ -75,8 +75,8 @@ class DiscoursePoll::Poll
         end
       end
 
-    if serialized_poll[:type] == IRV
-      serialized_poll[:irv_outcome] = DiscoursePoll::Irv.irv_outcome(poll_id)
+    if serialized_poll[:type] == RANKED_CHOICE
+      serialized_poll[:ranked_choice_outcome] = DiscoursePoll::RankedChoice.outcome(poll_id)
     else
       # Ensure consistency here as we do not have a unique index to limit the
       # number of votes per the poll's configuration.
@@ -103,7 +103,7 @@ class DiscoursePoll::Poll
     end
 
     serialized_poll[:options].each do |option|
-      if serialized_poll[:type] == IRV
+      if serialized_poll[:type] == RANKED_CHOICE
         option.merge!(
           rank:
             PollVote
@@ -147,8 +147,8 @@ class DiscoursePoll::Poll
         PollVote.where(poll: poll, user: user).delete_all
       end
 
-    if serialized_poll[:type] == IRV
-      serialized_poll[:irv_outcome] = DiscoursePoll::Irv.irv_outcome(poll_id)
+    if serialized_poll[:type] == RANKED_CHOICE
+      serialized_poll[:ranked_choice_outcome] = DiscoursePoll::RankedChoice.outcome(poll_id)
     end
 
     serialized_poll
@@ -230,7 +230,7 @@ class DiscoursePoll::Poll
 
       raise Discourse::InvalidParameters.new(:option_id) unless poll_option
 
-      if poll.irv?
+      if poll.ranked_choice?
         params = {
           poll_id: poll.id,
           option_digest: option_digest,
@@ -265,12 +265,12 @@ class DiscoursePoll::Poll
             .map { |u| [u.id, UserNameSerializer.new(u).serializable_hash] }
             .to_h
 
-        irv_users = []
+        ranked_choice_users = []
         votes.each do |v|
-          irv_users ||= []
-          irv_users << { rank: v.rank, user: user_hashes[v.user_id] }
+          ranked_choice_users ||= []
+          ranked_choice_users << { rank: v.rank, user: user_hashes[v.user_id] }
         end
-        user_hashes = irv_users
+        user_hashes = ranked_choice_users
       else
         user_ids =
           PollVote
@@ -287,7 +287,7 @@ class DiscoursePoll::Poll
       result = { option_digest => user_hashes }
     else
       params = { poll_id: poll.id, offset: offset, offset_plus_limit: offset + limit }
-      if poll.irv?
+      if poll.ranked_choice?
         votes = DB.query(<<~SQL, params)
         SELECT digest, rank, user_id
           FROM (
@@ -331,7 +331,7 @@ class DiscoursePoll::Poll
 
       result = {}
       votes.each do |v|
-        if poll.irv?
+        if poll.ranked_choice?
           result[v.digest] ||= []
           result[v.digest] << { rank: v.rank, user: user_hashes[v.user_id] }
         else
@@ -519,11 +519,11 @@ class DiscoursePoll::Poll
       elsif poll.max && (num_of_options > poll.max)
         raise DiscoursePoll::Error.new(I18n.t("poll.max_vote_per_user", count: poll.max))
       end
-    elsif poll.irv?
+    elsif poll.ranked_choice?
       if poll.poll_options.length != num_of_options
         raise DiscoursePoll::Error.new(
                 I18n.t(
-                  "poll.irv.vote_options_mismatch",
+                  "poll.ranked_choice.vote_options_mismatch",
                   count: poll.options.length,
                   provided: num_of_options,
                 ),

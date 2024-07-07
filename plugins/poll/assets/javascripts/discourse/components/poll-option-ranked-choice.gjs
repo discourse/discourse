@@ -5,7 +5,7 @@ import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import routeAction from "discourse/helpers/route-action";
 import i18n from "discourse-common/helpers/i18n";
-import PollOptionIrvDropdown from "./poll-option-irv-dropdown";
+import PollOptionRankedChoiceDropdown from "./poll-option-ranked-choice-dropdown";
 
 export default class PollOptionsComponent extends Component {
   @service currentUser;
@@ -18,20 +18,20 @@ export default class PollOptionsComponent extends Component {
   <template>
     <div
       tabindex="0"
-      class="irv-poll-option"
+      class="ranked-choice-poll-option"
       data-poll-option-id={{@option.id}}
       data-poll-option-rank={{@option.rank}}
     >
       {{#if this.currentUser}}
-        <PollOptionIrvDropdown
+        <PollOptionRankedChoiceDropdown
           @rank={{@option.rank}}
           @option={{@option}}
-          @irvDropdownContent={{@irvDropdownContent}}
+          @rankedChoiceDropdownContent={{@rankedChoiceDropdownContent}}
           @sendRank={{this.sendRank}}
         />
       {{else}}
         <DButton class="btn-default" onclick={{routeAction "showLogin"}}>{{i18n
-            "poll.options.irv.login"
+            "poll.options.ranked_choice.login"
           }}</DButton>
       {{/if}}
       <span class="option-text">{{htmlSafe @option.html}}</span>

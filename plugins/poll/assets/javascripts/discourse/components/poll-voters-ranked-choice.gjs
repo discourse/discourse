@@ -15,7 +15,7 @@ export default class PollVotersComponent extends Component {
     }, {});
   };
 
-  get irvVoters() {
+  get rankedChoiceVoters() {
     const voters = [...this.args.voters];
 
     // Group voters by rank so they can be displayed together by rank
@@ -31,7 +31,7 @@ export default class PollVotersComponent extends Component {
   }
 
   <template>
-    {{#each this.irvVoters as |rank|}}
+    {{#each this.rankedChoiceVoters as |rank|}}
       <ul>
         {{#if (eq rank.rank "Abstain")}}
           <span class="rank">{{icon "ban"}}</span>

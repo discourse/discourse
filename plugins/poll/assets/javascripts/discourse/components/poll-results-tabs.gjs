@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import I18n from "discourse-i18n";
-import PollResultsIrv from "./poll-results-irv";
+import PollResultsRankedChoice from "./poll-results-ranked-choice";
 import PollResultsStandard from "./poll-results-standard";
 
 export default class TabsComponent extends Component {
@@ -16,16 +16,21 @@ export default class TabsComponent extends Component {
   constructor() {
     super(...arguments);
     this.activeTab =
-      this.args.isIrv && this.args.isPublic ? this.tabs[1] : this.tabs[0];
+      this.args.isRankedChoice && this.args.isPublic
+        ? this.tabs[1]
+        : this.tabs[0];
   }
   get tabs() {
     let tabs = [];
 
-    if (!this.args.isIrv || (this.args.isIrv && this.args.isPublic)) {
+    if (
+      !this.args.isRankedChoice ||
+      (this.args.isRankedChoice && this.args.isPublic)
+    ) {
       tabs.push(this.tabOne);
     }
 
-    if (this.args.isIrv) {
+    if (this.args.isRankedChoice) {
       tabs.push(this.tabTwo);
     }
     return tabs;
@@ -54,7 +59,7 @@ export default class TabsComponent extends Component {
             @pollName={{@pollName}}
             @pollType={{@pollType}}
             @isPublic={{@isPublic}}
-            @isIrv={{@isIrv}}
+            @isRankedChoice={{@isRankedChoice}}
             @postId={{@postId}}
             @vote={{@vote}}
             @voters={{@voters}}
@@ -64,7 +69,9 @@ export default class TabsComponent extends Component {
         {{/if}}
 
         {{#if (eq this.activeTab this.tabTwo)}}
-          <PollResultsIrv @irvOutcome={{@irvOutcome}} />
+          <PollResultsRankedChoice
+            @rankedChoiceOutcome={{@rankedChoiceOutcome}}
+          />
         {{/if}}
       </div>
     </div>
