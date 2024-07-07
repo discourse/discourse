@@ -10,6 +10,21 @@ const OPTIONS = [
   { id: "6c986ebcde3d5822a6e91a695c388094", html: "Other", votes: 0, rank: 0 },
 ];
 
+const IMAGE_OPTIONS = [
+  {
+    id: "1ddc47be0d2315b9711ee8526ca9d83f",
+    html: "<img src='upload://tpbXHFLPCTLWjyGvtyekmXQN49A.jpeg'></img>",
+    votes: 0,
+    rank: 0,
+  },
+  {
+    id: "70e743697dac09483d7b824eaadb91e1",
+    html: "<img src='upload://eurierXHFETLWjHsdfLKKJDFLKJ.jpeg'></img>",
+    votes: 0,
+    rank: 0,
+  },
+];
+
 module("Poll | Component | poll-options", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -79,5 +94,22 @@ module("Poll | Component | poll-options", function (hooks) {
     />`);
 
     assert.strictEqual(count("li .d-icon-far-check-square:nth-of-type(1)"), 1);
+  });
+
+  test("single with images", async function (assert) {
+    this.setProperties({
+      isCheckbox: false,
+      options: IMAGE_OPTIONS,
+      votes: [],
+    });
+
+    await render(hbs`<PollOptions
+      @isCheckbox={{this.isCheckbox}}
+      @options={{this.options}}
+      @votes={{this.votes}}
+      @sendRadioClick={{this.toggleOption}}
+    />`);
+
+    assert.strictEqual(count("li img"), 2);
   });
 });

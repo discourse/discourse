@@ -74,7 +74,7 @@ export default class PollResultsStandardComponent extends Component {
                   "number.percent"
                   count=option.percentage
                 }}</span>
-              <span class="option-text">{{option.html}}</span>
+              <span class="option-text">{{htmlSafe option.html}}</span>
             </p>
             <div class="bar-back">
               <div
