@@ -7,11 +7,13 @@ import {
   currentPanelKey,
   customPanels as panels,
 } from "discourse/lib/sidebar/custom-sections";
+import { getCollapsedSidebarSectionKey } from "discourse/lib/sidebar/helpers";
 import {
   COMBINED_MODE,
   MAIN_PANEL,
   SEPARATED_MODE,
 } from "discourse/lib/sidebar/panels";
+import escapeRegExp from "discourse-common/utils/escape-regexp";
 
 @disableImplicitInjections
 export default class SidebarState extends Service {
@@ -81,13 +83,15 @@ export default class SidebarState extends Service {
   }
 
   collapseSection(sectionKey) {
-    const collapsedSidebarSectionKey = `sidebar-section-${sectionKey}-collapsed`;
+    const collapsedSidebarSectionKey =
+      getCollapsedSidebarSectionKey(sectionKey);
     this.keyValueStore.setItem(collapsedSidebarSectionKey, true);
     this.collapsedSections.add(collapsedSidebarSectionKey);
   }
 
   expandSection(sectionKey) {
-    const collapsedSidebarSectionKey = `sidebar-section-${sectionKey}-collapsed`;
+    const collapsedSidebarSectionKey =
+      getCollapsedSidebarSectionKey(sectionKey);
     this.keyValueStore.setItem(collapsedSidebarSectionKey, false);
     this.collapsedSections.delete(collapsedSidebarSectionKey);
   }
@@ -135,7 +139,7 @@ export default class SidebarState extends Service {
   }
 
   get sanitizedFilter() {
-    return this.filter.toLowerCase().trim();
+    return escapeRegExp(this.filter.toLowerCase().trim());
   }
 
   clearFilter() {

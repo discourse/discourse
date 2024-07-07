@@ -212,6 +212,7 @@ gem "cppjieba_rb", require: false
 
 gem "lograge", require: false
 gem "logstash-event", require: false
+gem "logstash-logger", require: false
 gem "logster"
 
 # A fork of sassc with dart-sass support

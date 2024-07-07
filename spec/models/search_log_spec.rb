@@ -7,13 +7,30 @@ RSpec.describe SearchLog, type: :model do
     context "with invalid arguments" do
       it "no search type returns error" do
         status, _ =
-          SearchLog.log(term: "bounty hunter", search_type: :missing, ip_address: "127.0.0.1")
+          SearchLog.log(
+            term: "bounty hunter",
+            search_type: :missing,
+            ip_address: "127.0.0.1",
+            user_agent: "Mozilla",
+          )
         expect(status).to eq(:error)
       end
 
       it "no IP returns error" do
-        status, _ = SearchLog.log(term: "bounty hunter", search_type: :header, ip_address: nil)
+        status, _ =
+          SearchLog.log(
+            term: "bounty hunter",
+            search_type: :header,
+            ip_address: nil,
+            user_agent: "Mozilla",
+          )
         expect(status).to eq(:error)
+      end
+
+      it "does not error when no user_agent" do
+        status, _ =
+          SearchLog.log(term: "bounty hunter", search_type: :header, ip_address: "127.0.0.1")
+        expect(status).to eq(:created)
       end
     end
 
@@ -21,12 +38,18 @@ RSpec.describe SearchLog, type: :model do
       it "logs and updates the search" do
         freeze_time
         action, log_id =
-          SearchLog.log(term: "jabba", search_type: :header, ip_address: "192.168.0.33")
+          SearchLog.log(
+            term: "jabba",
+            search_type: :header,
+            ip_address: "192.168.0.33",
+            user_agent: "Mozilla",
+          )
         expect(action).to eq(:created)
         log = SearchLog.find(log_id)
         expect(log.term).to eq("jabba")
         expect(log.search_type).to eq(SearchLog.search_types[:header])
         expect(log.ip_address).to eq("192.168.0.33")
+        expect(log.user_agent).to eq("Mozilla")
 
         action, updated_log_id =
           SearchLog.log(term: "jabba the hut", search_type: :header, ip_address: "192.168.0.33")
@@ -63,6 +86,7 @@ RSpec.describe SearchLog, type: :model do
             term: "hello",
             search_type: :full_page,
             ip_address: "192.168.0.1",
+            user_agent: "Mozilla",
             user_id: user.id,
           )
         expect(action).to eq(:created)
@@ -70,6 +94,7 @@ RSpec.describe SearchLog, type: :model do
         expect(log.term).to eq("hello")
         expect(log.search_type).to eq(SearchLog.search_types[:full_page])
         expect(log.ip_address).to eq(nil)
+        expect(log.user_agent).to eq("Mozilla")
         expect(log.user_id).to eq(user.id)
 
         action, updated_log_id =

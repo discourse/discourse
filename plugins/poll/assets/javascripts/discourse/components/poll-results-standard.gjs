@@ -76,7 +76,7 @@ export default class PollResultsStandardComponent extends Component {
                     count=option.percentage
                   }}</span>
               {{/unless}}
-              <span class="option-text">{{option.html}}</span>
+              <span class="option-text">{{htmlSafe option.html}}</span>
             </p>
             {{#unless @isIrv}}
               <div class="bar-back">
