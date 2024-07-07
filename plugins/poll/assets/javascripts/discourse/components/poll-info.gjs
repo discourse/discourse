@@ -118,7 +118,7 @@ export default class PollInfoComponent extends Component {
   }
 
   get resultsOnCloseTitle() {
-    return htmlSafe(I18n.t("poll.results.close.title"));
+    return htmlSafe(I18n.t("poll.results.closed.title"));
   }
 
   get resultsStaffOnly() {
