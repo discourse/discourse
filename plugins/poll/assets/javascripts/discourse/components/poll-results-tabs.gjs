@@ -42,7 +42,7 @@ export default class TabsComponent extends Component {
       <ul class="tabs nav nav-items">
         {{#each this.tabs as |tab|}}
           <li class="tab nav-item {{if (eq tab this.activeTab) 'active'}}">
-            <DButton {{on "click" (fn this.selectTab tab)}}>
+            <DButton @action={{(fn this.selectTab tab)}}>
               {{tab}}
             </DButton>
           </li>
