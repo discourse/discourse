@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class DiscoursePoll::Irv
+  MAX_ROUNDS = 50
+
   def self.irv_outcome(poll_id)
     options = PollOption.where(poll_id: poll_id).map { |hash| { id: hash.digest, html: hash.html } }
 
@@ -26,10 +28,11 @@ class DiscoursePoll::Irv
   end
 
   def self.run_irv(starting_votes, options)
-    current_votes = starting_votes.dup
+    current_votes = starting_votes
     round_activity = []
+    potential_winners = []
     round = 0
-    while true
+    while round < MAX_ROUNDS
       round += 1
 
       # Count the first place votes for each candidate
@@ -61,10 +64,7 @@ class DiscoursePoll::Irv
       losers = identify_losers(tally)
 
       # Remove the candidate with the least votes
-      current_votes.each do |vote|
-        # losers.each { |loser| vote.delete(loser) }
-        vote.reject! { |candidate| losers.include?(candidate) }
-      end
+      current_votes.each { |vote| vote.reject! { |candidate| losers.include?(candidate) } }
 
       losers = losers.map { |loser| enrich(loser, options) }
 
@@ -84,6 +84,17 @@ class DiscoursePoll::Irv
         )
       end
     end
+
+    potential_winners =
+      potential_winners.keys.map { |potential_winner| enrich(potential_winner, options) }
+
+    {
+      tied: true,
+      tied_candidates: potential_winners,
+      winner: nil,
+      winning_candidate: nil,
+      round_activity: round_activity,
+    }
   end
 
   private
