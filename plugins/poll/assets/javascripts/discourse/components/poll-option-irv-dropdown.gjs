@@ -46,7 +46,7 @@ export default class PollOptionsDropdownComponent extends Component {
             <dropdown.item>
               <DButton
                 @translatedLabel={{content.name}}
-                class="btn btn-transparent poll-option-dropdown"
+                class="btn-transparent poll-option-dropdown"
                 @action={{fn this.selectRank @option.id content.id}}
               />
             </dropdown.item>
