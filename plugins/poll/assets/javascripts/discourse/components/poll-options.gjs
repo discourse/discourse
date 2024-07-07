@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import concatClass from "discourse/helpers/concat-class";
 import routeAction from "discourse/helpers/route-action";
 import icon from "discourse-common/helpers/d-icon";
 import PollOptionIrv from "./poll-option-irv";
@@ -15,10 +16,6 @@ export default class PollOptionsComponent extends Component {
     return this.args.votes.includes(option.id);
   };
 
-  get classes() {
-    return this.args.isIrv ? "irv-poll-options" : "";
-  }
-
   @action
   sendClick(option) {
     this.args.sendOptionSelect(option);
@@ -29,7 +26,7 @@ export default class PollOptionsComponent extends Component {
     this.args.sendOptionSelect(option, rank);
   }
   <template>
-    <ul class={{this.classes}}>
+    <ul class={{concatClass (if @isIrv "irv-poll-options")}}>
       {{#each @options as |option|}}
         {{#if @isIrv}}
           <PollOptionIrv
