@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
@@ -42,10 +41,7 @@ export default class TabsComponent extends Component {
       <ul class="tabs nav nav-items">
         {{#each this.tabs as |tab|}}
           <li class="tab nav-item {{if (eq tab this.activeTab) 'active'}}">
-            <DButton
-              class="nav-btn"
-              @action={{(fn this.selectTab tab)}}
-            >
+            <DButton class="nav-btn" @action={{fn this.selectTab tab}}>
               {{tab}}
             </DButton>
           </li>

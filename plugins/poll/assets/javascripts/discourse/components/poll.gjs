@@ -160,7 +160,9 @@ export default class PollComponent extends Component {
       }
     } else if (this.isIrv) {
       options.forEach((candidate, i) => {
-        const chosenIdx = vote.findIndex((object) => object.digest === candidate.id);
+        const chosenIdx = vote.findIndex(
+          (object) => object.digest === candidate.id
+        );
 
         if (chosenIdx === -1) {
           vote.push({

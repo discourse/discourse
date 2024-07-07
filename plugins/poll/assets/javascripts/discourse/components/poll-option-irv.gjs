@@ -30,10 +30,9 @@ export default class PollOptionsComponent extends Component {
           @sendRank={{this.sendRank}}
         />
       {{else}}
-        <DButton
-          class="btn-default"
-          onclick={{routeAction "showLogin"}}
-        >{{i18n "poll.options.irv.login"}}</DButton>
+        <DButton class="btn-default" onclick={{routeAction "showLogin"}}>{{i18n
+            "poll.options.irv.login"
+          }}</DButton>
       {{/if}}
       <span class="option-text">{{htmlSafe @option.html}}</span>
     </div>

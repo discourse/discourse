@@ -9,7 +9,10 @@
       <li>
         <DButton
           @action={{fn this.updatePollType "regular"}}
-          class={{concatClass "poll-type-value poll-type-value-regular" (if this.isRegular "active")}}
+          class={{concatClass
+            "poll-type-value poll-type-value-regular"
+            (if this.isRegular "active")
+          }}
         >
           {{i18n "poll.ui_builder.poll_type.regular"}}
         </DButton>
@@ -17,7 +20,10 @@
       <li>
         <DButton
           @action={{fn this.updatePollType "multiple"}}
-          class={{concatClass "poll-type-value poll-type-value-multiple" (if this.isMultiple "active")}}
+          class={{concatClass
+            "poll-type-value poll-type-value-multiple"
+            (if this.isMultiple "active")
+          }}
         >
           {{i18n "poll.ui_builder.poll_type.multiple"}}
         </DButton>
@@ -26,7 +32,10 @@
         <li>
           <DButton
             @action={{fn this.updatePollType "number"}}
-            class={{concatClass "poll-type-value poll-type-value-number" (if this.isNumber "active")}}
+            class={{concatClass
+              "poll-type-value poll-type-value-number"
+              (if this.isNumber "active")
+            }}
           >
             {{i18n "poll.ui_builder.poll_type.number"}}
           </DButton>
@@ -36,7 +45,10 @@
         <li>
           <DButton
             @action={{fn this.updatePollType "irv"}}
-            class={{concatClass "poll-type-value poll-type-value-irv" (if this.isIrv "active")}}
+            class={{concatClass
+              "poll-type-value poll-type-value-irv"
+              (if this.isIrv "active")
+            }}
           >
             {{i18n "poll.ui_builder.poll_type.irv"}}
           </DButton>
