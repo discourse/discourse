@@ -31,7 +31,7 @@ export default class PollOptionsComponent extends Component {
         />
       {{else}}
         <DButton
-          class="btn btn-default"
+          class="btn-default"
           onclick={{routeAction "showLogin"}}
         >{{i18n "poll.options.irv.login"}}</DButton>
       {{/if}}
