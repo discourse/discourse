@@ -11,11 +11,11 @@ import PollResultsStandard from "./poll-results-standard";
 
 export default class TabsComponent extends Component {
   @tracked activeTab;
+  tabOne = I18n.t("poll.results.tabs.votes");
+  tabTwo = I18n.t("poll.results.tabs.outcome");
 
   constructor() {
     super(...arguments);
-    this.tabOne = I18n.t("poll.results.tabs.votes");
-    this.tabTwo = I18n.t("poll.results.tabs.outcome");
     this.activeTab =
       this.args.isIrv && this.args.isPublic ? this.tabs[1] : this.tabs[0];
   }
