@@ -39,12 +39,6 @@ div.poll-outer {
 
       .irv-poll-option {
         display: inline-flex;
-        details {
-          padding: 0;
-        }
-        summary {
-          min-width: 100px;
-        }
         flex-wrap: wrap;
         align-items: center;
         gap: 0.5em;
