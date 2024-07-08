@@ -83,6 +83,13 @@ export default class FieldData {
   }
 
   /**
+   * Sets the type of the field.
+   */
+  setType(type) {
+    this.type = type;
+  }
+
+  /**
    * Gets the maximum length of the field value.
    * @type {number|null}
    * @readonly
