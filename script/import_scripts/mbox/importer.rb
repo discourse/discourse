@@ -145,7 +145,7 @@ module ImportScripts::Mbox
     end
 
     def map_first_post(row)
-      subject = row["subject"]
+      subject = row["subject"].dup
       tags = remove_tags!(subject)
 
       mapped = map_post(row)
