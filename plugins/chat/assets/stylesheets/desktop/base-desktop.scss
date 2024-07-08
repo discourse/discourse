@@ -1,5 +1,9 @@
 .fk-d-menu[data-identifier="card"] {
   z-index: z("usercard");
+  max-width: calc(100vw - 2em);
+  .fk-d-menu__inner-content {
+    min-width: 0;
+  }
 }
 
 .full-page-chat {
