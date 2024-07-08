@@ -1285,15 +1285,14 @@ class TopicsController < ApplicationController
     TopicsController.defer_track_visit_v2(topic_id, user_id) if should_track_visit_to_topic?
   end
 
-  # TODO (martin) Remove this once discourse-docs is updated.
-  def self.defer_track_visit(topic_id, ip, user_id, track_visit)
-    self.defer_track_visit_v2(topic_id, user_id) if track_visit
-    self.defer_topic_view(topic_id, ip, user_id)
-  end
-  def self.defer_track_visit_v2(topic_id, user_id)
+  def self.defer_track_visit(topic_id, user_id)
     Scheduler::Defer.later "Track Visit" do
       TopicUser.track_visit!(topic_id, user_id)
     end
+  end
+  # TODO (martin) Remove this once discourse-docs is updated.
+  def self.defer_track_visit_v2(topic_id, user_id)
+    defer_track_visit(topic_id, user_id)
   end
 
   def self.defer_topic_view(topic_id, ip, user_id = nil)
