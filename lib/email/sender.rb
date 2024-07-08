@@ -171,7 +171,9 @@ module Email
 
           if topic
             if SiteSetting.private_email?
-              @message.header["List-Archive"] = "#{Discourse.base_url}#{topic.slugless_url}"
+              @message.header[
+                "List-Archive"
+              ] = "#{Discourse.base_url_no_prefix}#{topic.slugless_url}"
             else
               @message.header["List-Archive"] = topic.url
             end
