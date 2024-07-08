@@ -70,6 +70,11 @@
   .login-right-side {
     background: var(--tertiary-or-tertiary-low);
     padding: 3.5rem 3rem;
+    max-width: 16em;
+  }
+
+  .btn-social-title {
+    @include ellipsis;
   }
 
   #login-buttons {
@@ -156,6 +161,7 @@
         }
         .login-right-side {
           padding: 1em;
+          max-width: unset;
         }
         #login-form {
           margin: 1.5em 0;
