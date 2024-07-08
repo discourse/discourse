@@ -24,23 +24,23 @@ export default class FKControlInput extends Component {
   constructor(owner, args) {
     super(...arguments);
 
-    if (["checkbox", "radio"].includes(args.props.type)) {
+    if (["checkbox", "radio"].includes(args.type)) {
       throw new Error(
-        `input component does not support @type="${args.props.type}" as there is a dedicated component for this.`
+        `input component does not support @type="${args.type}" as there is a dedicated component for this.`
       );
     }
 
-    if (args.props.type && !SUPPORTED_TYPES.includes(args.props.type)) {
+    if (args.type && !SUPPORTED_TYPES.includes(args.type)) {
       throw new Error(
         `input component does not support @type="${
-          args.props.type
+          args.type
         }", must be one of ${SUPPORTED_TYPES.join(", ")}!`
       );
     }
   }
 
   get type() {
-    return this.args.props.type ?? "text";
+    return this.args.type ?? "text";
   }
 
   @action

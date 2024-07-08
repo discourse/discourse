@@ -11,13 +11,11 @@ export default class FKControlTextarea extends Component {
   }
 
   get style() {
-    if (!this.args.props.height) {
+    if (!this.args.height) {
       return;
     }
 
-    return `height: ${htmlSafe(
-      escapeExpression(this.args.props.height) + "px"
-    )}`;
+    return `height: ${htmlSafe(escapeExpression(this.args.height) + "px")}`;
   }
 
   <template>

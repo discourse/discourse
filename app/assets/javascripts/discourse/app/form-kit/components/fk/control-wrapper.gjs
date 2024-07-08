@@ -46,35 +46,6 @@ export default class FKControlWrapper extends Component {
     this.args.field.type = this.controlType;
   }
 
-  get props() {
-    const props = {};
-
-    switch (this.args.component.name) {
-      case "FKControlInput":
-        props.type = this.args.type;
-        break;
-      case "FKControlQuestion":
-        props.yesLabel = this.args.yesLabel;
-        props.noLabel = this.args.noLabel;
-        break;
-      case "FKControlCode":
-        props.lang = this.args.lang;
-        props.height = this.args.height;
-        break;
-      case "FKControlText":
-        props.height = this.args.height;
-        break;
-      case "FKControlComposer":
-        props.height = this.args.height;
-        break;
-      case "FKControlMenu":
-        props.selection = this.args.selection;
-        break;
-    }
-
-    return new TrackedObject(props);
-  }
-
   get error() {
     return (this.args.errors ?? {})[this.args.field.name];
   }
@@ -124,7 +95,12 @@ export default class FKControlWrapper extends Component {
         <@component
           @field={{@field}}
           @value={{@value}}
-          @props={{this.props}}
+          @type={{@type}}
+          @yesLabel={{@yesLabel}}
+          @noLabel={{@noLabel}}
+          @lang={{@lang}}
+          @height={{@height}}
+          @selection={{@selection}}
           id={{@field.id}}
           name={{@field.name}}
           aria-invalid={{if this.error "true"}}
