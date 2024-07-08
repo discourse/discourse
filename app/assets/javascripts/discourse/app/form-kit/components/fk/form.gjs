@@ -21,6 +21,14 @@ import FKFieldData from "discourse/form-kit/lib/fk-field-data";
 import FKFormData from "discourse/form-kit/lib/fk-form-data";
 import I18n from "I18n";
 
+const onValidation = modifierFn((element, [eventName, handler]) => {
+  if (eventName) {
+    element.addEventListener(eventName, handler);
+
+    return () => element.removeEventListener(eventName, handler);
+  }
+});
+
 export default class FKForm extends Component {
   @service dialog;
   @service router;
@@ -30,14 +38,6 @@ export default class FKForm extends Component {
   @tracked isSubmitting = false;
 
   fields = new Map();
-
-  onValidation = modifierFn((element, [eventName, handler]) => {
-    if (eventName) {
-      element.addEventListener(eventName, handler);
-
-      return () => element.removeEventListener(eventName, handler);
-    }
-  });
 
   constructor() {
     super(...arguments);
@@ -263,7 +263,7 @@ export default class FKForm extends Component {
       ...attributes
       {{on "submit" this.onSubmit}}
       {{on "reset" this.onReset}}
-      {{this.onValidation this.fieldValidationEvent this.handleFieldValidation}}
+      {{onValidation this.fieldValidationEvent this.handleFieldValidation}}
     >
       <FKErrorsSummary @errors={{this.formData.errors}} />
 
