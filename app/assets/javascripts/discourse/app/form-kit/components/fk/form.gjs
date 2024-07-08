@@ -226,7 +226,7 @@ export default class FKForm extends Component {
       const field = this.fields.get(name);
 
       if (field) {
-        await this.validate(this.fields);
+        await this.validate([field]);
       }
     }
   }
