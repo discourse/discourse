@@ -107,26 +107,35 @@ export default class PollButtonsDropdownComponent extends Component {
 
   <template>
     <div class="poll-buttons-dropdown">
-      <DMenu class="widget-dropdown-header">
-        <:trigger>
-          {{icon "cog"}}
-        </:trigger>
-        <:content>
-          <DropdownMenu as |dropdown|>
-            {{#each this.getDropdownContent as |content|}}
-              <dropdown.item>
-                <DButton
-                  class="widget-button {{content.className}}"
-                  @icon={{content.icon}}
-                  @label={{content.label}}
-                  @action={{fn this.dropDownClick content.action}}
-                />
-              </dropdown.item>
-              <dropdown.divider />
-            {{/each}}
-          </DropdownMenu>
-        </:content>
-      </DMenu>
+      {{#if this.showDropdown}}
+        <DMenu class="widget-dropdown-header">
+          <:trigger>
+            {{icon "cog"}}
+          </:trigger>
+          <:content>
+            <DropdownMenu as |dropdown|>
+              {{#each this.getDropdownContent as |content|}}
+                <dropdown.item>
+                  <DButton
+                    class="widget-button {{content.className}}"
+                    @icon={{content.icon}}
+                    @label={{content.label}}
+                    @action={{fn this.dropDownClick content.action}}
+                  />
+                </dropdown.item>
+                <dropdown.divider />
+              {{/each}}
+            </DropdownMenu>
+          </:content>
+        </DMenu>
+      {{else if this.showDropdownAsButton}}
+        <DButton
+          class="widget-button {{this.getDropdownContent.firstObject.className}}"
+          @icon={{this.getDropdownContent.firstObject.icon}}
+          @label={{this.getDropdownContent.firstObject.label}}
+          @action={{fn this.dropDownClick this.getDropdownContent.firstObject.action}}
+        />
+      {{/if}}
     </div>
   </template>
 }
