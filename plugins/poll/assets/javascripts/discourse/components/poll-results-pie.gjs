@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { schedule } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import loadScript from "discourse/lib/load-script";
@@ -12,36 +13,38 @@ export default class PollResultsPieComponent extends Component {
     id: "htmlLegend",
 
     afterUpdate(chart, args, options) {
-      const ul = document.getElementById(options.containerID);
-      ul.innerHTML = "";
+      schedule("afterRender", () => {
+        const ul = document.getElementById(options.containerID);
+        ul.innerHTML = "";
 
-      const items = chart.options.plugins.legend.labels.generateLabels(chart);
-      items.forEach((item) => {
-        const li = document.createElement("li");
-        li.classList.add("legend");
-        li.onclick = () => {
-          chart.toggleDataVisibility(item.index);
-          chart.update();
-        };
+        const items = chart.options.plugins.legend.labels.generateLabels(chart);
+        items.forEach((item) => {
+          const li = document.createElement("li");
+          li.classList.add("legend");
+          li.onclick = () => {
+            chart.toggleDataVisibility(item.index);
+            chart.update();
+          };
 
-        const boxSpan = document.createElement("span");
-        boxSpan.classList.add("swatch");
-        boxSpan.style.background = item.fillStyle;
+          const boxSpan = document.createElement("span");
+          boxSpan.classList.add("swatch");
+          boxSpan.style.background = item.fillStyle;
 
-        const textContainer = document.createElement("span");
-        textContainer.style.color = item.fontColor;
-        textContainer.innerHTML = item.text;
+          const textContainer = document.createElement("span");
+          textContainer.style.color = item.fontColor;
+          textContainer.innerHTML = item.text;
 
-        if (!chart.getDataVisibility(item.index)) {
-          li.style.opacity = 0.2;
-        } else {
-          li.style.opacity = 1.0;
-        }
+          if (!chart.getDataVisibility(item.index)) {
+            li.style.opacity = 0.2;
+          } else {
+            li.style.opacity = 1.0;
+          }
 
-        li.appendChild(boxSpan);
-        li.appendChild(textContainer);
+          li.appendChild(boxSpan);
+          li.appendChild(textContainer);
 
-        ul.appendChild(li);
+          ul.appendChild(li);
+        });
       });
     },
   };
