@@ -6,7 +6,6 @@ import { action, get } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
-import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import FKAlert from "discourse/form-kit/components/fk/alert";
 import FKCollection from "discourse/form-kit/components/fk/collection";
