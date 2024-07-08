@@ -51,6 +51,7 @@ class Report
   include Reports::TopUsersByLikesReceivedFromInferiorTrustLevel
   include Reports::Topics
   include Reports::TopicsWithNoResponse
+  include Reports::TopicViewStats
   include Reports::TrendingSearch
   include Reports::TrustLevelGrowth
   include Reports::UserFlaggingRatio
