@@ -7,7 +7,7 @@ import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import routeAction from "discourse/helpers/route-action";
 import icon from "discourse-common/helpers/d-icon";
-import PollOptionIrv from "./poll-option-irv";
+import PollOptionRankedChoice from "./poll-option-ranked-choice";
 
 export default class PollOptionsComponent extends Component {
   @service currentUser;
@@ -26,12 +26,12 @@ export default class PollOptionsComponent extends Component {
     this.args.sendOptionSelect(option, rank);
   }
   <template>
-    <ul class={{concatClass (if @isIrv "irv-poll-options")}}>
+    <ul class={{concatClass (if @isRankedChoice "ranked-choice-poll-options")}}>
       {{#each @options as |option|}}
-        {{#if @isIrv}}
-          <PollOptionIrv
+        {{#if @isRankedChoice}}
+          <PollOptionRankedChoice
             @option={{option}}
-            @irvDropdownContent={{@irvDropdownContent}}
+            @rankedChoiceDropdownContent={{@rankedChoiceDropdownContent}}
             @sendRank={{this.sendRank}}
           />
         {{else}}

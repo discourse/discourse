@@ -17,7 +17,7 @@ class PollSerializer < ApplicationSerializer
              :chart_type,
              :groups,
              :title,
-             :irv_outcome
+             :ranked_choice_outcome
 
   def public
     true
@@ -77,11 +77,11 @@ class PollSerializer < ApplicationSerializer
     object.can_see_voters?(scope.user)
   end
 
-  def include_irv_outcome?
-    object.irv?
+  def include_ranked_choice_outcome?
+    object.ranked_choice?
   end
 
-  def irv_outcome
-    DiscoursePoll::Irv.irv_outcome(object.id)
+  def ranked_choice_outcome
+    DiscoursePoll::RankedChoice.outcome(object.id)
   end
 end

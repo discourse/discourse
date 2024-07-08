@@ -41,16 +41,16 @@
           </DButton>
         </li>
       {{/if}}
-      {{#if this.showIrv}}
+      {{#if this.showRankedChoice}}
         <li>
           <DButton
-            @action={{fn this.updatePollType "irv"}}
+            @action={{fn this.updatePollType "ranked_choice"}}
             class={{concatClass
-              "poll-type-value poll-type-value-irv"
-              (if this.isIrv "active")
+              "poll-type-value poll-type-value-ranked-choice"
+              (if this.isRankedChoice "active")
             }}
           >
-            {{i18n "poll.ui_builder.poll_type.irv"}}
+            {{i18n "poll.ui_builder.poll_type.ranked_choice"}}
           </DButton>
         </li>
       {{/if}}
@@ -119,7 +119,7 @@
       </div>
     {{/unless}}
 
-    {{#unless this.irvOrRegular}}
+    {{#unless this.rankedChoiceOrRegular}}
       <div class="options">
         <div class="input-group poll-number">
           <label class="input-group-label">{{i18n
@@ -213,7 +213,7 @@
         />
       </div>
 
-      {{#unless this.irvOrNumber}}
+      {{#unless this.rankedChoiceOrNumber}}
         <div class="input-group poll-select column">
           <label class="input-group-label">{{i18n
               "poll.ui_builder.poll_chart_type.label"

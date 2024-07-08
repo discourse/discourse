@@ -5,7 +5,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { count, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 
-const IRV_OUTCOME = {
+const RANKED_CHOICE_OUTCOME = {
   tied: false,
   tied_candidates: null,
   winner: true,
@@ -31,27 +31,29 @@ const IRV_OUTCOME = {
   ],
 };
 
-module("Poll | Component | poll-results-irv", function (hooks) {
+module("Poll | Component | poll-results-ranked-choice", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("Renders the IRV results Component correctly", async function (assert) {
+  test("Renders the ranked choice results component correctly", async function (assert) {
     this.setProperties({
-      irvOutcome: IRV_OUTCOME,
+      rankedChoiceOutcome: RANKED_CHOICE_OUTCOME,
     });
 
-    await render(hbs`<PollResultsIrv @irvOutcome={{this.irvOutcome}} />`);
-
-    assert.strictEqual(
-      count("table.poll-results-irv tr"),
-      3,
-      "there are two rounds of IRV"
+    await render(
+      hbs`<PollResultsRankedChoice @rankedChoiceOutcome={{this.rankedChoiceOutcome}} />`
     );
 
     assert.strictEqual(
-      query("span.poll-results-irv-info").textContent.trim(),
-      I18n.t("poll.irv.winner", {
-        count: this.irvOutcome.round_activity.length,
-        winner: this.irvOutcome.winning_candidate.html,
+      count("table.poll-results-ranked-choice tr"),
+      3,
+      "there are two rounds of ranked choice"
+    );
+
+    assert.strictEqual(
+      query("span.poll-results-ranked-choice-info").textContent.trim(),
+      I18n.t("poll.ranked_choice.winner", {
+        count: this.rankedChoiceOutcome.round_activity.length,
+        winner: this.rankedChoiceOutcome.winning_candidate.html,
       }),
       "displays the winner information"
     );

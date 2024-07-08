@@ -21,8 +21,8 @@ RSpec.describe DiscoursePoll::Poll do
       [/poll]
     RAW
 
-  fab!(:post_with_irv_poll) { Fabricate(:post, raw: <<~RAW) }
-    [poll type=irv public=true]
+  fab!(:post_with_ranked_choice_poll) { Fabricate(:post, raw: <<~RAW) }
+    [poll type=ranked_choice public=true]
     * Red
     * Blue
     * Yellow
@@ -168,13 +168,13 @@ RSpec.describe DiscoursePoll::Poll do
       )
     end
 
-    it "allows user to vote on options correctly for a irv poll and to vote again" do
-      poll = post_with_irv_poll.polls.first
+    it "allows user to vote on options correctly for a ranked choice poll and to vote again" do
+      poll = post_with_ranked_choice_poll.polls.first
       poll_options = poll.poll_options
 
       DiscoursePoll::Poll.vote(
         user,
-        post_with_irv_poll.id,
+        post_with_ranked_choice_poll.id,
         "poll",
         {
           "0": {
@@ -194,7 +194,7 @@ RSpec.describe DiscoursePoll::Poll do
 
       DiscoursePoll::Poll.vote(
         user_2,
-        post_with_irv_poll.id,
+        post_with_ranked_choice_poll.id,
         "poll",
         {
           "0": {
@@ -214,7 +214,7 @@ RSpec.describe DiscoursePoll::Poll do
 
       DiscoursePoll::Poll.vote(
         user,
-        post_with_irv_poll.id,
+        post_with_ranked_choice_poll.id,
         "poll",
         {
           "0": {

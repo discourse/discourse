@@ -65,9 +65,9 @@ class DiscoursePoll::PollsController < ::ApplicationController
 
     if poll.nil?
       render json: { error: I18n.t("poll.errors.poll_not_found") }, status: :not_found
-    elsif poll.irv?
+    elsif poll.ranked_choice?
       render json: {
-               error: I18n.t("poll.irv.no_group_results_support"),
+               error: I18n.t("poll.ranked_choice.no_group_results_support"),
              },
              status: :unprocessable_entity
     else

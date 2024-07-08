@@ -19,7 +19,7 @@ const TWO_OPTIONS = [
   },
 ];
 
-const IRV_OUTCOME = {
+const RANKED_CHOICE_OUTCOME = {
   tied: false,
   tied_candidates: null,
   winner: true,
@@ -59,13 +59,13 @@ const PRELOADEDVOTERS = {
 module("Poll | Component | poll-results-tabs", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("Renders one tab for non-Irv poll", async function (assert) {
+  test("Renders one tab for non-ranked-choice poll", async function (assert) {
     this.setProperties({
       options: TWO_OPTIONS,
       pollName: "Two Choice Poll",
       pollType: "single",
       isPublic: true,
-      isIrv: false,
+      isRankedChoice: false,
       postId: 123,
       vote: ["1ddc47be0d2315b9711ee8526ca9d83f"],
       voters: PRELOADEDVOTERS,
@@ -78,7 +78,7 @@ module("Poll | Component | poll-results-tabs", function (hooks) {
       @pollName={{this.pollName}}
       @pollType={{this.pollType}}
       @isPublic={{this.isPublic}}
-      @isIrv={{this.isIrv}}
+      @isRankedChoice={{this.isRankedChoice}}
       @postId={{this.postId}}
       @vote={{this.vote}}
       @voters={{this.voters}}
@@ -89,14 +89,14 @@ module("Poll | Component | poll-results-tabs", function (hooks) {
     assert.strictEqual(count("li.tab"), 1);
   });
 
-  test("Renders two tabs for public Irv poll", async function (assert) {
+  test("Renders two tabs for public ranked choice poll", async function (assert) {
     this.setProperties({
       options: TWO_OPTIONS,
       pollName: "Two Choice Poll",
-      pollType: "irv",
+      pollType: "ranked_choice",
       isPublic: true,
-      isIrv: true,
-      irvOutcome: IRV_OUTCOME,
+      isRankedChoice: true,
+      rankedChoiceOutcome: RANKED_CHOICE_OUTCOME,
       postId: 123,
       vote: ["1ddc47be0d2315b9711ee8526ca9d83f"],
       voters: PRELOADEDVOTERS,
@@ -109,8 +109,8 @@ module("Poll | Component | poll-results-tabs", function (hooks) {
       @pollName={{this.pollName}}
       @pollType={{this.pollType}}
       @isPublic={{this.isPublic}}
-      @isIrv={{this.isIrv}}
-      @irvOutcome={{this.irvOutcome}}
+      @isRankedChoice={{this.isRankedChoice}}
+      @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
       @postId={{this.postId}}
       @vote={{this.vote}}
       @voters={{this.voters}}
@@ -121,14 +121,14 @@ module("Poll | Component | poll-results-tabs", function (hooks) {
     assert.strictEqual(count("li.tab"), 2);
   });
 
-  test("Renders one tab for private Irv poll", async function (assert) {
+  test("Renders one tab for private ranked choice poll", async function (assert) {
     this.setProperties({
       options: TWO_OPTIONS,
       pollName: "Two Choice Poll",
-      pollType: "irv",
+      pollType: "ranked_choice",
       isPublic: false,
-      isIrv: true,
-      irvOutcome: IRV_OUTCOME,
+      isRankedChoice: true,
+      rankedChoiceOutcome: RANKED_CHOICE_OUTCOME,
       postId: 123,
       vote: ["1ddc47be0d2315b9711ee8526ca9d83f"],
       voters: PRELOADEDVOTERS,
@@ -141,8 +141,8 @@ module("Poll | Component | poll-results-tabs", function (hooks) {
       @pollName={{this.pollName}}
       @pollType={{this.pollType}}
       @isPublic={{this.isPublic}}
-      @isIrv={{this.isIrv}}
-      @irvOutcome={{this.irvOutcome}}
+      @isRankedChoice={{this.isRankedChoice}}
+      @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
       @postId={{this.postId}}
       @vote={{this.vote}}
       @voters={{this.voters}}

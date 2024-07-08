@@ -56,8 +56,8 @@ export default class PollButtonsDropdownComponent extends Component {
     const isAdmin = this.currentUser && this.currentUser.admin;
 
     const dataExplorerEnabled = this.siteSettings.data_explorer_enabled;
-    const exportQueryID = this.args.isIrv
-      ? this.siteSettings.poll_export_irv_data_explorer_query_id
+    const exportQueryID = this.args.isRankedChoice
+      ? this.siteSettings.poll_export_ranked_choice_data_explorer_query_id
       : this.siteSettings.poll_export_data_explorer_query_id;
 
     const {
