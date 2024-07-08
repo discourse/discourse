@@ -7,30 +7,30 @@ RSpec.describe SearchLog, type: :model do
     context "with invalid arguments" do
       it "no search type returns error" do
         status, _ =
-          SearchLog.log(
-            term: "bounty hunter",
-            search_type: :missing,
-            ip_address: "127.0.0.1",
-            user_agent: "Mozilla",
-          )
+          SearchLog.log(term: "bounty hunter", search_type: :missing, ip_address: "127.0.0.1")
+
         expect(status).to eq(:error)
       end
 
       it "no IP returns error" do
+        status, _ = SearchLog.log(term: "bounty hunter", search_type: :header, ip_address: nil)
+
+        expect(status).to eq(:error)
+      end
+
+      it "truncates the `user_agent` attribute if it exceeds #{described_class::MAXIMUM_USER_AGENT_LENGTH} characters" do
+        user_agent = "a" * (described_class::MAXIMUM_USER_AGENT_LENGTH + 1)
+
         status, _ =
           SearchLog.log(
             term: "bounty hunter",
             search_type: :header,
-            ip_address: nil,
-            user_agent: "Mozilla",
+            user_agent:,
+            ip_address: "127.0.0.1",
           )
-        expect(status).to eq(:error)
-      end
 
-      it "does not error when no user_agent" do
-        status, _ =
-          SearchLog.log(term: "bounty hunter", search_type: :header, ip_address: "127.0.0.1")
         expect(status).to eq(:created)
+        expect(SearchLog.last.user_agent).to eq("a" * described_class::MAXIMUM_USER_AGENT_LENGTH)
       end
     end
 
