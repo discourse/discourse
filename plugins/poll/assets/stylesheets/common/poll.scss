@@ -50,7 +50,7 @@ div.poll-outer {
       display: none;
     }
 
-    .discourse-poll-ranked-choice-results {
+    .discourse-poll-ranked_choice-results {
       .tabs {
         &.nav-items {
           display: flex;
@@ -71,7 +71,7 @@ div.poll-outer {
         display: inline-block;
         min-width: 20px;
       }
-      .poll-results-ranked-choice-subtitle-rounds {
+      .poll-results-ranked_choice-subtitle-rounds {
         margin: 0.25em 0 0.67rem;
       }
     }
