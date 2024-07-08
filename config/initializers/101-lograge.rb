@@ -13,6 +13,11 @@ Rails.application.config.to_prepare do
     Rails.application.configure do
       config.lograge.enabled = true
 
+      # Monkey patch Rails::Rack::Logger#logger to silence its logs.
+      # The `lograge` gem is supposed to do this but it broke after we upgraded to Rails 7.1.
+      # This patch is a temporary workaround until we find a proper fix.
+      Rails::Rack::Logger.prepend(Module.new { def logger = (@logger ||= Logger.new(IO::NULL)) })
+
       Lograge.ignore(
         lambda do |event|
           # this is our hijack magic status,
