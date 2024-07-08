@@ -138,13 +138,12 @@ class CurrentUserSerializer < BasicUserSerializer
     object.staff? && object.in_any_groups?(SiteSetting.admin_sidebar_enabled_groups_map)
   end
 
-  def include_user_admin_sidebar?
-    object.admin?
+  def include_use_admin_sidebar?
+    object.staff?
   end
 
   def show_experimental_flags_admin_page
-    object.admin? &&
-      object.in_any_groups?(SiteSetting.experimental_flags_admin_page_enabled_groups_map)
+    object.in_any_groups?(SiteSetting.experimental_flags_admin_page_enabled_groups_map)
   end
 
   def include_show_experimental_flags_admin_page?
