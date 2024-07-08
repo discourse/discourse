@@ -1,5 +1,5 @@
 import { visit } from "@ember/test-helpers";
-import { skip } from "qunit";
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Rendering polls with pie charts", function (needs) {
@@ -9,7 +9,7 @@ acceptance("Rendering polls with pie charts", function (needs) {
     poll_groupable_user_fields: "something",
   });
 
-  skip("Displays the pie chart", async function (assert) {
+  test("Displays the pie chart", async function (assert) {
     await visit("/t/-/topic_with_pie_chart_poll");
 
     assert

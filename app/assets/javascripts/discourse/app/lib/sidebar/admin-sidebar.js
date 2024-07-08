@@ -318,6 +318,15 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       });
     }
 
+    if (currentUser.show_experimental_flags_admin_page) {
+      navMap.findBy("name", "community").links.push({
+        name: "admin_moderation_flags",
+        route: "adminConfig.flags",
+        label: "admin.community.sidebar_link.moderation_flags",
+        icon: "flag",
+      });
+    }
+
     navMap.forEach((section) =>
       section.links.forEach((link) => {
         if (link.keywords) {

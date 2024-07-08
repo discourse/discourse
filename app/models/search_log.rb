@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class SearchLog < ActiveRecord::Base
+  MAXIMUM_USER_AGENT_LENGTH = 2000
+
   validates_presence_of :term
+  validates :user_agent, length: { maximum: MAXIMUM_USER_AGENT_LENGTH }
 
   belongs_to :user
 
@@ -41,7 +44,9 @@ class SearchLog < ActiveRecord::Base
     ip_address = nil if user_id
     key = redis_key(user_id: user_id, ip_address: ip_address)
 
-    user_agent = nil if user_agent && user_agent.length > 2000
+    if user_agent && user_agent.length > MAXIMUM_USER_AGENT_LENGTH
+      user_agent = user_agent.truncate(MAXIMUM_USER_AGENT_LENGTH, omission: "")
+    end
 
     result = nil
 

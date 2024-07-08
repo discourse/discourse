@@ -55,7 +55,7 @@ export default class AdminPlugin {
       name = this.translatedCategoryName;
     } else {
       name = this.name
-        .split("-")
+        .split(/[-_]/)
         .map((word) => {
           return capitalize(word);
         })

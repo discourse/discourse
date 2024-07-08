@@ -418,7 +418,7 @@ class UploadCreator
 
   MAX_CONVERT_FORMAT_SECONDS = 20
   def execute_convert(from, to, opts = {})
-    command = ["convert", from, "-auto-orient", "-background", "white", "-interlace", "none"]
+    command = ["magick", from, "-auto-orient", "-background", "white", "-interlace", "none"]
     command << "-flatten" unless opts[:flatten] == false
     command << "-debug" << "all" if opts[:debug]
     command << "-quality" << opts[:quality].to_s if opts[:quality]
@@ -526,7 +526,7 @@ class UploadCreator
     path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
 
     Discourse::Utils.execute_command(
-      "convert",
+      "magick",
       path,
       "-auto-orient",
       path,
