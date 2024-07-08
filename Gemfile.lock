@@ -134,7 +134,7 @@ GEM
     drb (2.2.1)
     email_reply_trimmer (0.1.13)
     erubi (1.13.0)
-    excon (0.110.0)
+    excon (0.111.0)
     execjs (2.9.1)
     exifr (1.4.0)
     fabrication (2.31.0)
