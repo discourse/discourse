@@ -1,7 +1,7 @@
 <ul>
 <% anonymous_top_menu_items.each_with_index do |item, index| %>
   <li>
-    <a href='<%= Discourse.base_url_no_prefix %>/<%= item %>'>
+    <a href='<%= Discourse.base_url %>/<%= item %>'>
       <%= I18n.t("js.filters.#{item}.title") %>
     </a>
   </li>

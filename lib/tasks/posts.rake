@@ -610,7 +610,7 @@ def recover_uploads_from_index(path)
         if raw.scan(upload).length == 0
           upload = upload.sub(SiteSetting.Upload.s3_base_url, Discourse.base_url)
         end
-        upload = upload.sub(Discourse.base_url_no_prefix + "/", "/") if raw.scan(upload).length == 0
+        upload = upload.sub(Discourse.base_url + "/", "/") if raw.scan(upload).length == 0
         if raw.scan(upload).length == 0
           # last resort, try for sha
           sha = upload.split("/")[-1]

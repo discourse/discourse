@@ -54,7 +54,7 @@
       <% if @topic_view.crawler_posts&.first && !@topic_view.crawler_posts.first.is_first_post? %>
         <span itemprop='author' itemscope itemtype="http://schema.org/Person">
           <meta itemprop='name' content='<%= @topic_view.topic.user.username %>'>
-          <link itemprop='url' href='<%= Discourse.base_url_no_prefix %>/u/<%= @topic_view.topic.user.username %>'>
+          <link itemprop='url' href='<%= Discourse.base_url %>/u/<%= @topic_view.topic.user.username %>'>
         </span>
         <meta itemprop='text' content='<%= @topic_view.topic.excerpt %>'>
       <% end %>
@@ -64,7 +64,7 @@
           <div id='post_<%= post.post_number %>' <%= post.is_first_post? ? "" : "itemprop='comment' itemscope itemtype='http://schema.org/Comment'".html_safe %> class='topic-body crawler-post'>
             <div class='crawler-post-meta'>
               <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
-                <a itemprop="url" href='<%= Discourse.base_url_no_prefix %>/u/<%= u.username %>'><span itemprop='name'><%= u.username %></span></a>
+                <a itemprop="url" href='<%= Discourse.base_url %>/u/<%= u.username %>'><span itemprop='name'><%= u.username %></span></a>
                 <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
                 <%
                   post_custom_fields = @topic_view.post_custom_fields[post.id] || {}
