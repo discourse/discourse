@@ -5,6 +5,8 @@ import DEditor from "discourse/components/d-editor";
 import { escapeExpression } from "discourse/lib/utilities";
 
 export default class FKControlComposer extends Component {
+  static controlType = "composer";
+
   @action
   handleInput(event) {
     this.args.field.set(event.target.value);

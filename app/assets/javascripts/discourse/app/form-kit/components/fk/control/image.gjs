@@ -4,6 +4,8 @@ import { action } from "@ember/object";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 
 export default class FKControlImage extends Component {
+  static controlType = "image";
+
   @action
   setImage(upload) {
     this.args.field.set(upload);

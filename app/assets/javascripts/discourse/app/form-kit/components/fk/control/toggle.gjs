@@ -4,6 +4,8 @@ import { action } from "@ember/object";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 
 export default class FKControlToggle extends Component {
+  static controlType = "toggle";
+
   @action
   handleInput() {
     this.args.field.set(!this.args.value);

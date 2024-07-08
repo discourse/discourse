@@ -5,6 +5,8 @@ import AceEditor from "discourse/components/ace-editor";
 import { escapeExpression } from "discourse/lib/utilities";
 
 export default class FKControlCode extends Component {
+  static controlType = "code";
+
   initialValue = this.args.value || "";
 
   @action

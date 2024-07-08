@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import FKMeta from "discourse/form-kit/components/fk/meta";
 import FormText from "discourse/form-kit/components/fk/text";
@@ -11,34 +10,11 @@ import i18n from "discourse-common/helpers/i18n";
 
 export default class FKControlWrapper extends Component {
   get controlType() {
-    switch (this.args.component.name) {
-      case "FKControlRadioGroup":
-        return "radio-group";
-      case "FKControlToggle":
-        return "toggle";
-      case "FKControlInput":
-        return "input-" + (this.args.type || "text");
-      case "FKControlComposer":
-        return "composer";
-      case "FKControlTextarea":
-        return "textarea";
-      case "FKControlQuestion":
-        return "question";
-      case "FKControlCode":
-        return "code";
-      case "FKControlSelect":
-        return "select";
-      case "FKControlIcon":
-        return "icon";
-      case "FKControlImage":
-        return "image";
-      case "FKControlCheckbox":
-        return "checkbox";
-      case "FKControlMenu":
-        return "menu";
-      default:
-        return "custom";
+    if (this.args.component.controlType === "input") {
+      return this.args.component.controlType + "-" + (this.args.type || "text");
     }
+
+    return this.args.component.controlType;
   }
 
   @action

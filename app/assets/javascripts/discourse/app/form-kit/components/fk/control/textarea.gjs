@@ -5,6 +5,8 @@ import { htmlSafe } from "@ember/template";
 import { escapeExpression } from "discourse/lib/utilities";
 
 export default class FKControlTextarea extends Component {
+  static controlType = "textarea";
+
   @action
   handleInput(event) {
     this.args.field.set(event.target.value);

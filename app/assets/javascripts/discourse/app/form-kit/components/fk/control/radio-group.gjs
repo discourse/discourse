@@ -5,6 +5,8 @@ import FKControlRadioGroupRadio from "./radio-group/radio";
 
 // eslint-disable-next-line ember/no-empty-glimmer-component-classes
 export default class FKControlRadioGroup extends Component {
+  static controlType = "radio-group";
+
   <template>
     <fieldset class="form-kit__radio-group" ...attributes>
       {{#if @title}}

@@ -7,6 +7,8 @@ import uniqueId from "discourse/helpers/unique-id";
 import i18n from "discourse-common/helpers/i18n";
 
 export default class FKControlQuestion extends Component {
+  static controlType = "question";
+
   @action
   handleInput(event) {
     this.args.field.set(event.target.value === "true");

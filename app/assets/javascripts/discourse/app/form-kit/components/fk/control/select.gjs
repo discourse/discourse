@@ -6,6 +6,8 @@ import { NO_VALUE_OPTION } from "discourse/form-kit/lib/constants";
 import FKControlSelectOption from "./select/option";
 
 export default class FKControlSelect extends Component {
+  static controlType = "select";
+
   @action
   handleInput(event) {
     // if an option has no value, event.target.value will be the content of the option

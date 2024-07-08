@@ -21,6 +21,8 @@ const SUPPORTED_TYPES = [
 ];
 
 export default class FKControlInput extends Component {
+  static controlType = "input";
+
   constructor(owner, args) {
     super(...arguments);
 

@@ -4,6 +4,8 @@ import { action } from "@ember/object";
 import IconPicker from "select-kit/components/icon-picker";
 
 export default class FKControlIcon extends Component {
+  static controlType = "icon";
+
   @action
   handleInput(value) {
     this.args.field.set(value);
