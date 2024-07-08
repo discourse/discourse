@@ -26,7 +26,7 @@ export default class FKForm extends Component {
   @service dialog;
   @service router;
 
-  @tracked isLoading = false;
+  @tracked isValidating = false;
 
   @tracked isSubmitting = false;
 
@@ -76,10 +76,6 @@ export default class FKForm extends Component {
       });
     }
   }
-
-  // @cached
-  // get effectiveData() {
-  //   return new EffectiveData(this.args.data ?? {});
 
   @cached
   get formData() {
@@ -236,7 +232,11 @@ export default class FKForm extends Component {
   }
 
   async validate(fields) {
-    this.isLoading = true;
+    if (this.isValidating) {
+      return;
+    }
+
+    this.isValidating = true;
 
     this.formData.removeErrors();
 
@@ -253,7 +253,7 @@ export default class FKForm extends Component {
         addError: this.addError,
       });
     } finally {
-      this.isLoading = false;
+      this.isValidating = false;
     }
   }
 
@@ -284,7 +284,7 @@ export default class FKForm extends Component {
             class="btn-primary form-kit__button"
             label="submit"
             type="submit"
-            isLoading=(or this.isLoading this.isSubmitting)
+            isLoading=this.isSubmitting
           )
           Reset=(component
             DButton
