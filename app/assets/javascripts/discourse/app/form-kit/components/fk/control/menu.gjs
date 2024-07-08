@@ -10,6 +10,8 @@ import FKControlMenuItem from "discourse/form-kit/components/fk/control/menu/ite
 import icon from "discourse-common/helpers/d-icon";
 
 export default class FKControlMenu extends Component {
+  static controlType = "menu";
+
   @tracked menuApi;
 
   @action
