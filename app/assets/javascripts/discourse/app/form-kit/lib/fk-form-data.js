@@ -8,7 +8,7 @@ import { applyPatches, enablePatches, produce } from "immer";
 
 enablePatches();
 
-export default class Changeset {
+export default class FKFormData {
   /**
    * The original data.
    * @type {any}

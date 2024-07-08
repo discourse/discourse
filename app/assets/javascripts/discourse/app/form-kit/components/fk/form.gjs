@@ -17,8 +17,8 @@ import FKField from "discourse/form-kit/components/fk/field";
 import Row from "discourse/form-kit/components/fk/row";
 import FKSection from "discourse/form-kit/components/fk/section";
 import { VALIDATION_TYPES } from "discourse/form-kit/lib/constants";
-import FieldData from "discourse/form-kit/lib/field-data";
-import FormData from "discourse/form-kit/lib/form-data";
+import FKFieldData from "discourse/form-kit/lib/fk-field-data";
+import FKFormData from "discourse/form-kit/lib/fk-form-data";
 import I18n from "I18n";
 
 export default class FKForm extends Component {
@@ -78,7 +78,7 @@ export default class FKForm extends Component {
 
   @cached
   get formData() {
-    return new FormData(this.args.data ?? {});
+    return new FKFormData(this.args.data ?? {});
   }
 
   get validateOn() {
@@ -156,7 +156,7 @@ export default class FKForm extends Component {
       );
     }
 
-    const fieldModel = new FieldData(name, field);
+    const fieldModel = new FKFieldData(name, field);
     this.fields.set(name, fieldModel);
 
     return fieldModel;

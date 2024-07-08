@@ -5,7 +5,7 @@ import uniqueId from "discourse/helpers/unique-id";
 /**
  * Represents field data for a form.
  */
-export default class FieldData {
+export default class FKFieldData {
   /**
    * Unique identifier for the field.
    * @type {string}
