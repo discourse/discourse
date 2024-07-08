@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
@@ -11,7 +12,9 @@ import I18n from "discourse-i18n";
 const _pluginNotices = new TrackedArray();
 
 export function addGlobalNotice(text, id, options = {}) {
-  _pluginNotices.push(Notice.create({ text, id, options }));
+  next(() => {
+    _pluginNotices.push(Notice.create({ text, id, options }));
+  });
 }
 
 const GLOBAL_NOTICE_DISMISSED_PROMPT_KEY = "dismissed-global-notice-v2";
