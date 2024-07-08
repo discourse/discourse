@@ -7,9 +7,7 @@ export default class PollVotersComponent extends Component {
   groupVotersByRank = (voters) => {
     return voters.reduce((groups, voter) => {
       const rank = voter.rank;
-      if (!groups[rank]) {
-        groups[rank] = [];
-      }
+      groups[rank] ??= [];
       groups[rank].push(voter);
       return groups;
     }, {});
