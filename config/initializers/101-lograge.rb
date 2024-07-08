@@ -1,10 +1,47 @@
 # frozen_string_literal: true
 
-Rails.application.config.to_prepare do
-  if (Rails.env.production? && SiteSetting.logging_provider == "lograge") ||
-       (ENV["ENABLE_LOGRAGE"] == "1")
-    require "lograge"
+if (Rails.env.production? && SiteSetting.logging_provider == "lograge") ||
+     (ENV["ENABLE_LOGRAGE"] == "1")
+  require "lograge"
 
+  Rails.application.config.after_initialize do
+    def unsubscribe(component_name, subscriber)
+      subscriber
+        .public_methods(false)
+        .reject { |method| method.to_s == "call" }
+        .each do |event|
+          ActiveSupport::Notifications
+            .notifier
+            .all_listeners_for("#{event}.#{component_name}")
+            .each do |listener|
+              if listener
+                   .instance_variable_get("@delegate")
+                   .class
+                   .to_s
+                   .start_with?("#{component_name.to_s.classify}::LogSubscriber")
+                ActiveSupport::Notifications.unsubscribe listener
+              end
+            end
+        end
+    end
+
+    # This is doing what the `lograge` gem is doing but has stopped working after we upgraded to Rails 7.1 and the `lograge`
+    # gem does not seem to be maintained anymore so we're shipping our own fix. In the near term, we are considering
+    # dropping the lograge gem and just port the relevant code to our codebase.
+    #
+    # Basically, this code silences log events coming from `ActionView::Logsubscriber` and `ActionController::LogSubscriber`
+    # since those are just noise.
+    ActiveSupport::LogSubscriber.log_subscribers.each do |subscriber|
+      case subscriber
+      when ActionView::LogSubscriber
+        unsubscribe(:action_view, subscriber)
+      when ActionController::LogSubscriber
+        unsubscribe(:action_controller, subscriber)
+      end
+    end
+  end
+
+  Rails.application.config.to_prepare do
     if Rails.configuration.multisite
       Rails.logger.formatter =
         ActiveSupport::Logger::SimpleFormatter.new.extend(ActiveSupport::TaggedLogging::Formatter)
