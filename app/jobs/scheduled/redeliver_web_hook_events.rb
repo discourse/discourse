@@ -14,8 +14,16 @@ module Jobs
     LIMIT = 20
 
     def execute(args)
-      redelivery_events = RedeliveringWebhookEvent.includes(web_hook_event: :web_hook).limit(LIMIT)
-      redelivery_events.each do |redelivery_event|
+      redelivery_events =
+        RedeliveringWebhookEvent
+          .where(processing: false)
+          .includes(web_hook_event: :web_hook)
+          .limit(LIMIT)
+      event_ids = redelivery_events.pluck(:id)
+      redelivery_events.update_all(processing: true)
+      updated_redelivery_events = RedeliveringWebhookEvent.where(id: event_ids)
+
+      updated_redelivery_events.each do |redelivery_event|
         begin
           web_hook_event = redelivery_event.web_hook_event
           web_hook = web_hook_event.web_hook

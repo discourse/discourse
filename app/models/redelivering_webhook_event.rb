@@ -10,6 +10,7 @@ end
 #
 #  id                :bigint           not null, primary key
 #  web_hook_event_id :bigint           not null
+#  processing        :boolean          default(FALSE), not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #
