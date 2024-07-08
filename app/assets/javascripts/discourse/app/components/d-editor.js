@@ -47,6 +47,7 @@ function getButtonLabel(labelKey, defaultLabel) {
 const FOUR_SPACES_INDENT = "4-spaces-indent";
 
 let _createCallbacks = [];
+let handleSmartListAutocomplete = false;
 
 class Toolbar {
   constructor(opts) {
@@ -326,12 +327,18 @@ export default Component.extend(TextareaTextManipulation, {
     this._itsatrap.bind(`${PLATFORM_KEY_MODIFIER}+shift+.`, () =>
       this.send("insertCurrentTime")
     );
-    this._itsatrap.bind("enter", () => {
-      // Check the textarea value after a brief delay to ensure the input event has updated the value
-      setTimeout(() => {
-        this.maybeContinueList();
-      }, 0);
-    });
+
+    // These must be bound manually because itsatrap does not support
+    // beforeinput or input events.
+    //
+    // beforeinput is better used to detect line breaks because it is
+    // fired before the actual value of the textarea is changed,
+    // and sometimes in the input event no `insertLineBreak` event type
+    // is fired.
+    //
+    // c.f. https://developer.mozilla.org/en-US/docs/Web/API/Element/beforeinput_event
+    this._textarea.addEventListener("beforeinput", this.onBeforeInputSmartList);
+    this._textarea.addEventListener("input", this.onInputSmartList);
 
     // disable clicking on links in the preview
     this.element
@@ -349,6 +356,26 @@ export default Component.extend(TextareaTextManipulation, {
         "indentSelection"
       );
     }
+  },
+
+  @bind
+  onBeforeInputSmartList(event) {
+    // This inputType is much more consistently fired in `beforeinput`
+    // rather than `input`.
+    const isNewLine = event.inputType === "insertLineBreak";
+    if (isNewLine) {
+      handleSmartListAutocomplete = true;
+    } else {
+      handleSmartListAutocomplete = false;
+    }
+  },
+
+  @bind
+  onInputSmartList() {
+    if (handleSmartListAutocomplete) {
+      this.maybeContinueList();
+    }
+    handleSmartListAutocomplete = false;
   },
 
   @bind
@@ -392,6 +419,12 @@ export default Component.extend(TextareaTextManipulation, {
         "indentSelection"
       );
     }
+
+    this._textarea.removeEventListener(
+      "beforeinput",
+      this.onBeforeInputSmartList
+    );
+    this._textarea.removeEventListener("input", this.onInputSmartList);
 
     this._itsatrap?.destroy();
     this._itsatrap = null;
