@@ -111,7 +111,7 @@ class ReviewableSerializer < ApplicationSerializer
 
   def target_url
     if object.target.is_a?(Post) && object.target.present?
-      return Discourse.base_url_no_prefix + object.target.url
+      return Discourse.base_url + object.target.url
     end
     topic_url
   end
