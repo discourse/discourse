@@ -76,7 +76,7 @@ function prepareSidebarSectionClass(Section) {
             .toLowerCase()
             .match(this.sidebarState.sanitizedFilter) ||
           link.keywords.navigation.some((keyword) =>
-            keyword.match(this.sidebarState.filter)
+            keyword.match(this.sidebarState.sanitizedFilter)
           )
         );
       });

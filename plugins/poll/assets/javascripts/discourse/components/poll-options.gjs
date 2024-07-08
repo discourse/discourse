@@ -3,6 +3,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import routeAction from "discourse/helpers/route-action";
 import icon from "discourse-common/helpers/d-icon";
 
@@ -37,7 +38,7 @@ export default class PollOptionsComponent extends Component {
                   {{icon "far-circle"}}
                 {{/if}}
               {{/if}}
-              <span class="option-text">{{option.html}}</span>
+              <span class="option-text">{{htmlSafe option.html}}</span>
             </button>
           {{else}}
             <button onclick={{routeAction "showLogin"}}>
@@ -54,7 +55,7 @@ export default class PollOptionsComponent extends Component {
                   {{icon "far-circle"}}
                 {{/if}}
               {{/if}}
-              <span class="option-text">{{option.html}}</span>
+              <span class="option-text">{{htmlSafe option.html}}</span>
             </button>
           {{/if}}
         </li>
