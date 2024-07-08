@@ -32,5 +32,29 @@ module(
 
       assert.deepEqual(data, { foo: true });
     });
+
+    test("@yesLabel", async function (assert) {
+      await render(<template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Question @yesLabel="Correct" />
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert.dom(".form-kit__control-radio-label.--yes").hasText("Correct");
+    });
+
+    test("@noLabel", async function (assert) {
+      await render(<template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Question @noLabel="Wrong" />
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert.dom(".form-kit__control-radio-label.--no").hasText("Wrong");
+    });
   }
 );
