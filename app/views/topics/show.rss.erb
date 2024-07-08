@@ -17,7 +17,7 @@
         <title><%= @topic_view.title %></title>
         <dc:creator><![CDATA[<%= rss_creator(post.user) -%>]]></dc:creator>
         <description><![CDATA[
-          <% post_url = Discourse.base_url_no_prefix + post.url %>
+          <% post_url = Discourse.base_url + post.url %>
           <% if post.hidden %>
             <%= t('flagging.user_must_edit').html_safe %>
           <% else %>

@@ -2238,6 +2238,17 @@ RSpec.describe Post do
     end
   end
 
+  describe "full_url" do
+    it "returns the correct post url with subfolder install" do
+      set_subfolder "/forum"
+      post = Fabricate(:post)
+
+      expect(post.full_url).to eq(
+        "#{Discourse.base_url_no_prefix}/forum/t/#{post.topic.slug}/#{post.topic.id}/#{post.post_number}",
+      )
+    end
+  end
+
   describe "public_posts_count_per_day" do
     before do
       freeze_time_safe

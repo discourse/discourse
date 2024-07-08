@@ -42,7 +42,7 @@
 
 <div itemscope itemtype="http://schema.org/EmailMessage" style="display:none">
   <div itemprop="action" itemscope itemtype="http://schema.org/ViewAction">
-    <link itemprop="url" href="<%= Discourse.base_url_no_prefix %><%= post.url(without_slug: SiteSetting.private_email?) %>" />
+    <link itemprop="url" href="<%= Discourse.base_url %><%= post.url(without_slug: SiteSetting.private_email?) %>" />
     <meta itemprop="name" content="<%= t 'read_full_topic' %>"/>
   </div>
 </div>

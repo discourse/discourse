@@ -331,7 +331,7 @@ class PostActionCreator
       I18n.t(
         "post_action_types.#{@post_action_name}.email_body",
         message: @message,
-        link: "#{Discourse.base_url_no_prefix}#{@post.url}",
+        link: "#{Discourse.base_url}#{@post.url}",
         locale: SiteSetting.default_locale,
       )
 

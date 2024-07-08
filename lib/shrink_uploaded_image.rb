@@ -198,8 +198,8 @@ class ShrinkUploadedImage
       Discourse.store.cdn_url(upload_after.url),
     )
     post.raw.gsub!(
-      "#{Discourse.base_url_no_prefix}#{upload_before.short_path}",
-      "#{Discourse.base_url_no_prefix}#{upload_after.short_path}",
+      "#{Discourse.base_url}#{upload_before.short_path}",
+      "#{Discourse.base_url}#{upload_after.short_path}",
     )
 
     if SiteSetting.enable_s3_uploads
