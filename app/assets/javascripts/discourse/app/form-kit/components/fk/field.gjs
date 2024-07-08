@@ -27,10 +27,14 @@ export default class FKField extends Component {
       throw new Error("@title is required on `<form.Field />`.");
     }
 
-    if (typeof this.args.name !== "string" || this.args.name.includes(".")) {
+    if (typeof this.args.name !== "string") {
       throw new Error(
-        "@name is required and must be a string on `<form.Field />`. "
+        "@name is required and must be a string on `<form.Field />`."
       );
+    }
+
+    if (this.args.name.includes(".") || this.args.name.includes("-")) {
+      throw new Error("@name can't include `.` or `-`.");
     }
 
     this.field = this.args.registerField(

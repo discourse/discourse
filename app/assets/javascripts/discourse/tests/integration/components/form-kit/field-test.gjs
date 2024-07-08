@@ -1,5 +1,10 @@
 import { hash } from "@ember/helper";
-import { fillIn, render } from "@ember/test-helpers";
+import {
+  fillIn,
+  render,
+  resetOnerror,
+  setupOnerror,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -18,6 +23,41 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     </template>);
 
     assert.dom(".form-kit__row .form-kit__col.--col-8").hasText("Test");
+  });
+
+  test("invalid @name", async function (assert) {
+    setupOnerror((error) => {
+      assert.deepEqual(error.message, "@name can't include `.` or `-`.");
+    });
+
+    await render(<template>
+      <Form as |form|>
+        <form.Field @name="foo.bar" @title="Foo" @size={{8}}>
+          Test
+        </form.Field>
+      </Form>
+    </template>);
+
+    resetOnerror();
+  });
+
+  test("non existing title", async function (assert) {
+    setupOnerror((error) => {
+      assert.deepEqual(
+        error.message,
+        "@title is required on `<form.Field />`."
+      );
+    });
+
+    await render(<template>
+      <Form as |form|>
+        <form.Field @name="foo" @size={{8}}>
+          Test
+        </form.Field>
+      </Form>
+    </template>);
+
+    resetOnerror();
   });
 
   test("@validation", async function (assert) {
