@@ -3,17 +3,31 @@ import { registerDestructor } from "@ember/destroyable";
 import Service, { service } from "@ember/service";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import deprecated from "discourse-common/lib/deprecated";
 
 @disableImplicitInjections
 export default class Header extends Service {
   @service siteSettings;
 
-  @tracked topic = null;
+  @tracked topicId = null;
+  @tracked topicInfoVisible = false;
   @tracked hamburgerVisible = false;
   @tracked userVisible = false;
   @tracked anyWidgetHeaderOverrides = false;
 
   #hiders = new TrackedMap();
+
+  get topic() {
+    deprecated(
+      "`.topic` is deprecated in service:header. Use `.currentTopicId` or `.topicInfoVisible` instead.",
+      {
+        id: "discourse.header-service-topic",
+        since: "3.3.0.beta4-dev",
+      }
+    );
+
+    return this.topicInfoVisible ? this.topicId : null;
+  }
 
   get useGlimmerHeader() {
     if (this.siteSettings.glimmer_header_mode === "disabled") {
