@@ -259,6 +259,7 @@ en:
       copy_link: "Copy link"
       copy_text: "Copy text"
       rebake_message: "Rebuild HTML"
+      message_too_long: "Message is too long, messages must be a maximum of %{count} characters."
       retry_staged_message:
         title: "Network error"
         action: "Send again?"
