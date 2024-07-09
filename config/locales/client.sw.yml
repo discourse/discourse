@@ -588,6 +588,7 @@ sw:
       powered_by: "inatumia <a href='https://maxmind.com'>MaxMindDB</a>"
     user_fields:
       none: "(Chagua chaguo moja)"
+      optional: (sio muhimu)
     user:
       said: "%{jinalamtumiaji}:"
       profile: "Maelezo Mafupi "
@@ -1060,6 +1061,7 @@ sw:
     search_hint: "jina la mtumiaji, barua pepe au Anwani ya Mtandao"
     create_account:
       header_title: "Karibu!"
+      title: "Jiunge"
       failed: "Tatizo limetokea, labda barua pepe imesajiliwa tayari, jaribu kiungo cha kusahau nywila."
     forgot_password:
       title: "Weka upa nywila"
@@ -2523,6 +2525,17 @@ sw:
         about:
           optional: "(sio muhimu)"
           saved: "imehifadhiwa!"
+        flags:
+          description: "Elezo"
+          enabled: "Imeruhusiwa?"
+          edit: "Hariri"
+          delete: "Futa"
+          form:
+            save: "Hifadhi"
+            name: "Jina"
+            description: "Elezo"
+            topic: "mada"
+            post: "machapisho"
       plugins:
         title: "Programu-jalizi"
         installed: "Progamu-jalizi zilizowekwa"

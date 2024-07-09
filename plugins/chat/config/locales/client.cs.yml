@@ -121,8 +121,6 @@ cs:
       heading: "Chat"
       join: "Přidat se ke skupině"
       last_visit: "poslední návštěva"
-      summarization:
-        title: "Shrnout zprávy"
       aria_roles:
         channels_list: "Seznam kanálů chatu"
       no_public_channels_cta: "Procházet kanály"

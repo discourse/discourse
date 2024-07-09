@@ -878,6 +878,12 @@ el:
       labels:
         user: Χρήστης
         qtt_like: Μου αρέσει που λήφθησαν
+    topic_view_stats:
+      labels:
+        topic: Νήμα
+        logged_in_views: Συνδεδεμένοι
+        anon_views: Ανώνυμοι
+        total_views: Σύνολο
   dashboard:
     problem:
       rails_env: "Ο διακομιστής σας τρέχει στη %{env} λειτουργία."

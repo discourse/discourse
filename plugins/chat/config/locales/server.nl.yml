@@ -190,8 +190,6 @@ nl:
       and_x_others:
         one: "en %{count} ander"
         other: "en %{count} anderen"
-    summaries:
-      no_targets: "Er waren geen berichten tijdens de geselecteerde periode."
     transcript:
       default_thread_title: "Thread"
       split_thread_range: "bericht %{start} t/m %{end} van %{total}"

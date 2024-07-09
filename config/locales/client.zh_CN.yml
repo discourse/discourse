@@ -20,6 +20,7 @@ zh_CN:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -1002,6 +1003,7 @@ zh_CN:
       none: "（选择一个选项）"
       required: '请为“%{name}”输入一个值。'
       same_as_password: "您的密码不应重复出现在其他字段中。"
+      optional: '（可选）'
     user:
       said: "%{username}："
       profile: "个人资料"
@@ -1935,10 +1937,11 @@ zh_CN:
       header_title: "欢迎！"
       subheader_title: "让我们创建您的帐户"
       disclaimer: "注册，即表示您同意<a href='%{privacy_link}' target='blank'>隐私政策</a>和<a href='%{tos_link}' target='blank'>服务条款</a>。"
-      title: "创建您的帐户"
+      title: "注册"
       failed: "出了点问题，可能此电子邮件已被注册，试试点击忘记密码链接"
       associate: "已经有帐户？<a href='%{associate_link}'>登录</a>以关联您的 %{provider} 帐户。"
       activation_title: "激活您的帐户"
+      already_have_account: "已经有帐户？"
     forgot_password:
       title: "密码重置"
       action: "我忘记密码了"
@@ -4223,6 +4226,9 @@ zh_CN:
       panels:
         forum:
           label: 论坛
+      back_to_forum: "返回论坛"
+      collapse_all_sections: "折叠所有部分"
+      expand_all_sections: "展开所有部分"
       filter: "筛选..."
       clear_filter: "清除过滤器"
       no_results:
@@ -4330,10 +4336,7 @@ zh_CN:
     admin:
       title: "Discourse 管理员"
       moderator: "版主"
-      back_to_forum: "返回论坛"
       filter_reports: 筛选报告
-      expand_all_sections: "展开所有部分"
-      collapse_all_sections: "折叠所有部分"
       tags:
         remove_muted_tags_from_latest:
           always: "始终"
@@ -4741,6 +4744,7 @@ zh_CN:
         events:
           none: "没有相关事件。"
           redeliver: "重新传送"
+          redeliver_failed: "重送失败"
           incoming:
             other: "有 %{count} 个新事件。"
           completed_in:
@@ -4748,6 +4752,8 @@ zh_CN:
           request: "请求"
           response: "回应"
           redeliver_confirm: "确定要重新传送相同的有效负载吗？"
+          redeliver_failed_confirm: "你确定要重新发送 %{count} 个 webhook 活动吗？"
+          no_events_to_redeliver: "没有要重送的事件。"
           headers: "标题"
           payload: "有效负载"
           body: "正文"
@@ -4867,6 +4873,24 @@ zh_CN:
             contact_information_saved: "联系人信息已保存"
             your_organization_saved: "你的组织已保存"
           saved: "已保存!"
+        flags:
+          header: "审核标记"
+          description: "描述"
+          enabled: "已启用？"
+          edit: "编辑"
+          delete: "删除"
+          delete_confirm: '确定要删除“%{name}”吗？'
+          form:
+            save: "保存"
+            name: "名称"
+            description: "描述"
+            topic: "话题"
+            post: "帖子"
+            chat_message: "聊天消息"
+          more_options:
+            title: "更多选项"
+            move_up: "上移"
+            move_down: "下移"
       plugins:
         title: "插件"
         installed: "安装的插件"

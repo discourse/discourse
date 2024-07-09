@@ -192,8 +192,6 @@ tr_TR:
       and_x_others:
         one: "ve %{count} üye daha"
         other: "ve %{count} üye daha"
-    summaries:
-      no_targets: "Seçilen dönemde mesaj yok."
     transcript:
       default_thread_title: "İleti Dizisi"
       split_thread_range: "%{total} mesajdan %{start} - %{end}"

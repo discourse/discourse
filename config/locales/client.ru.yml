@@ -23,6 +23,7 @@ ru:
             kb: КБ
             mb: МБ
             tb: ТБ
+      percent: "%{count}%"
       short:
         thousands: "%{number} тыс."
         millions: "%{number} млн"
@@ -1162,6 +1163,7 @@ ru:
       none: "(выберите вариант)"
       required: 'Введите значение для «%{name}»'
       same_as_password: "Указанный пароль не должен фигурировать в других полях."
+      optional: (необязательно)
     user:
       said: "%{username}:"
       profile: "Профиль"
@@ -2163,10 +2165,11 @@ ru:
       header_title: "Добро пожаловать!"
       subheader_title: "Давайте создадим аккаунт"
       disclaimer: "Регистрируясь, вы соглашаетесь с <a href='%{privacy_link}' target='blank'>политикой конфиденциальности</a> и <a href='%{tos_link}' target='blank'> условиями предоставления услуг</a>."
-      title: "Создать аккаунт"
+      title: "Зарегистрироваться"
       failed: "Произошла ошибка. Возможно, эта эл. почта уже используется. Попробуйте восстановить пароль."
       associate: "Уже есть аккаунт? <a href='%{associate_link}'>Войдите в систему</a> для привязки аккаунта %{provider}."
       activation_title: "Активируйте свой аккаунт"
+      already_have_account: "Уже есть аккаунт?"
     forgot_password:
       title: "Сброс пароля"
       action: "Пароль утерян"
@@ -4728,6 +4731,7 @@ ru:
       panels:
         forum:
           label: Форум
+      back_to_forum: "Вернуться на форум"
       filter: "Фильтр..."
       no_results:
         title: "Нет результатов"
@@ -4844,7 +4848,6 @@ ru:
     admin:
       title: "Администратор Discourse"
       moderator: "Модератор"
-      back_to_forum: "Вернуться на форум"
       filter_reports: Фильтр отчётов
       tags:
         remove_muted_tags_from_latest:
@@ -5328,6 +5331,19 @@ ru:
           optional: "(необязательно)"
           update: "Обновить"
           saved: "сохранено!"
+        flags:
+          description: "Описание"
+          enabled: "Включён?"
+          edit: "Отредактировать"
+          delete: "Удалить"
+          delete_confirm: 'Действительно удалить тему «%{name}»?'
+          form:
+            save: "Сохранить"
+            name: "Название"
+            description: "Описание"
+            topic: "новые темы"
+            post: "Сообщения"
+            chat_message: "сообщения чата"
       plugins:
         title: "Плагины"
         installed: "Установленные плагины"

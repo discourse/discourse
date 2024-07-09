@@ -1240,6 +1240,12 @@ ko:
       labels:
         user: 사용자
         qtt_like: 받은 좋아요 수
+    topic_view_stats:
+      labels:
+        topic: 글
+        logged_in_views: 로그인됨
+        anon_views: 익명
+        total_views: 합계
   dashboard:
     problem:
       rails_env: "당신의 서버는 %{env} 모드에서 실행되고 있습니다."

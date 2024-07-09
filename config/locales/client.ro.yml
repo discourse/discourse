@@ -1038,6 +1038,7 @@ ro:
     user_fields:
       none: "(alege o opțiune)"
       required: 'Te rog introdu o valoare pentru "%{name}"'
+      optional: (opțional)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1664,7 +1665,7 @@ ro:
       header_title: "Bun venit!"
       subheader_title: "Să-ți creăm contul"
       disclaimer: "Prin înregistrare, ești de acord cu politica de confidențialitate <a href='%{privacy_link}' target='blank'></a> și <a href='%{tos_link}' target='blank'>termenii de utilizare</a>."
-      title: "Creează-ți contul"
+      title: "Înregistrare"
       failed: "Ceva s-a întâmplat, poate că acest email este deja înregistrat, încearcă să-ți resetezi parola la link-ul respectiv."
       associate: "Ai deja un cont? <a href='%{associate_link}'>Loghează-te</a> pentru a conecta contul tău %{provider}."
     forgot_password:
@@ -3197,6 +3198,9 @@ ro:
       panels:
         forum:
           label: Forum
+      back_to_forum: "Înapoi la forum"
+      collapse_all_sections: "Restrânge toate secțiunile"
+      expand_all_sections: "Extinde toate secțiunile"
       filter: "Filtru..."
       clear_filter: "Elimină filtrul"
       no_results:
@@ -3271,10 +3275,7 @@ ro:
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
-      back_to_forum: "Înapoi la forum"
       filter_reports: Filtrează rapoarte
-      expand_all_sections: "Extinde toate secțiunile"
-      collapse_all_sections: "Restrânge toate secțiunile"
       tags:
         remove_muted_tags_from_latest:
           always: "întotdeauna"
@@ -3528,6 +3529,17 @@ ro:
         about:
           optional: "(opțional)"
           saved: "salvat!"
+        flags:
+          description: "Descriere"
+          enabled: "Activat?"
+          edit: "Modifică"
+          delete: "Șterge"
+          form:
+            save: "Salvare"
+            name: "Nume"
+            description: "Descriere"
+            topic: "discuții"
+            post: "Postări"
       plugins:
         title: "Plugin-uri"
         installed: "Plugin-uri instalate"

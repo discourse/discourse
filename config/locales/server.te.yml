@@ -996,6 +996,12 @@ te:
       labels:
         user: సభ్యుడు
         qtt_like: అందుకున్న ఇష్టాలు
+    topic_view_stats:
+      labels:
+        topic: విషయం
+        logged_in_views: లాగిన్ అయిన
+        anon_views: అనామక
+        total_views: మొత్తం
   dashboard:
     problem:
       host_names: "మీ config/database.yml దస్త్రం అప్రమేయ లోకల్ హోస్ట్ వాడుతున్నది. దాన్ని మీ సైటు పేరుకు మార్చగలరు. "

@@ -190,8 +190,6 @@ es:
       and_x_others:
         one: "y %{count} otros"
         other: "y %{count} otros"
-    summaries:
-      no_targets: "No hubo mensajes durante el periodo seleccionado."
     transcript:
       default_thread_title: "Hilo"
       split_thread_range: "mensajes %{start} a %{end} de %{total}"

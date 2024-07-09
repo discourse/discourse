@@ -1020,6 +1020,12 @@ hy:
       labels:
         user: Օգտատեր
         qtt_like: Ստացած Հավանումները
+    topic_view_stats:
+      labels:
+        topic: Թեմա
+        logged_in_views: Մուտքագրված
+        anon_views: Անանուն
+        total_views: Ամբողջը
   dashboard:
     problem:
       rails_env: "Ձեր սերվերը աշխատում է %{env} ռեժիմով:"

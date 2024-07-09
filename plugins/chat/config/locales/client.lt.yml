@@ -47,8 +47,6 @@ lt:
       heading: "Pokalbis"
       join: "Prisijungti"
       last_visit: "paskutinis apsilankymas"
-      summarization:
-        summarize: "Apibendrinti"
       no_public_channels_cta: "Naršyti kanalus"
       reply: "Atsakyti"
       edit: "Redaguoti"

@@ -699,6 +699,11 @@ sl:
       labels:
         user: Uporabnik
         qtt_like: Všečkov prejetih
+    topic_view_stats:
+      labels:
+        topic: Tema
+        anon_views: Anonimni
+        total_views: Skupaj
   dashboard:
     problem:
       out_of_date_themes: "Posodobitve so na voljo za naslednje prilagoditve:"

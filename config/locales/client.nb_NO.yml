@@ -21,6 +21,7 @@ nb_NO:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -903,6 +904,7 @@ nb_NO:
     user_fields:
       none: "(velg et alternativ)"
       required: 'Skriv inn en verdi for "%{name}'
+      optional: (valgfritt)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1597,7 +1599,7 @@ nb_NO:
       header_title: "Velkommen!"
       subheader_title: "La oss opprette kontoen din"
       disclaimer: "Ved å registrere deg, godtar du <a href='%{privacy_link}' target='blank'>retningslinjer for personvern</a> og <a href='%{tos_link}' target='blank'>vilkår for bruk</a>."
-      title: "Opprett konto"
+      title: "Registrer deg"
       failed: "Noe gikk galt, kanskje denne e-postadressen allerede er registrert. Prøv lenke for glemt passord"
     forgot_password:
       title: "Nullstill Passord"
@@ -3687,6 +3689,18 @@ nb_NO:
           optional: "(valgfritt)"
           update: "Oppdater"
           saved: "lagret!"
+        flags:
+          description: "Beskrivelse"
+          enabled: "Aktivert?"
+          edit: "Endre"
+          delete: "Slett"
+          delete_confirm: 'Er du sikker på at du vil slette "%{name}?'
+          form:
+            save: "Lagre"
+            name: "Navn"
+            description: "Beskrivelse"
+            topic: "emner"
+            post: "innlegg"
       plugins:
         title: "Utvidelser"
         installed: "Installerte utvidelser"

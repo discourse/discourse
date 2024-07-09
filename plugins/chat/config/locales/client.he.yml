@@ -151,15 +151,6 @@ he:
       heading: "צ׳אט"
       join: "הצטרפות"
       last_visit: "ביקור אחרון"
-      summarization:
-        title: "סיכום הודעות"
-        description: "נא לבחור אפשרות להלן כדי לסכם את הדיון שנשלח בפרק הזמן המבוקש."
-        summarize: "סיכום"
-        since:
-          one: "שעה אחרונה"
-          two: "השעתיים האחרונות"
-          many: "%{count} השעות האחרונות"
-          other: "%{count} השעות האחרונות"
       mention_warning:
         invitations_sent:
           one: "נשלחה הזמנה"
@@ -258,6 +249,9 @@ he:
       ignore_channel_wide_mention:
         title: "התעלמות מאזכורים לכל הערוץ"
         description: "לא לשלוח התראות על אזכורים לכל הערוץ (‎@here ו־‎@all)"
+      show_thread_title_prompts:
+        title: "הצג הנחיות לכותרת השרשור"
+        description: "הצג הנחיות להגדרת כותרת לשרשורים חדשים"
       open: "פתיחת צ׳אט"
       open_full_page: "פתיחת צ׳אט במסך מלא"
       close_full_page: "סגירת צ׳אט במסך מלא"
@@ -278,6 +272,7 @@ he:
       copy_link: "העתקת קישור"
       copy_text: "העתקת טקסט"
       rebake_message: "בנייה מחודשת של HTML"
+      message_too_long: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים."
       retry_staged_message:
         title: "שגיאת רשת"
         action: "לשלוח שוב?"
@@ -670,6 +665,7 @@ he:
         input_placeholder: "לספר לאחרים על מה הדיון הזה…"
         discourse_ai:
           title: "יצירת כותרות שרשורים אוטומטית"
+          description: "עיינו ב־ %{url} כדי ללמוד עוד על זה ועל שיפורים אחרים לחוויית הדיסקורס שלך."
       threads:
         open: "פתיחת שרשור"
         list: "שרשורים"

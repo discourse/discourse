@@ -139,13 +139,6 @@ fr:
       heading: "Discussion"
       join: "Rejoindre"
       last_visit: "dernière visite"
-      summarization:
-        title: "Résumer les messages"
-        description: "Sélectionnez une option ci-dessous pour résumer la conversation envoyée pendant la période souhaitée."
-        summarize: "Résumer"
-        since:
-          one: "Dernière heure"
-          other: "%{count} dernières heures"
       mention_warning:
         invitations_sent:
           one: "Invitation envoyée"
@@ -253,6 +246,7 @@ fr:
       copy_link: "Copier le lien"
       copy_text: "Copier le texte"
       rebake_message: "Reconstruire le HTML"
+      message_too_long: "Le message est trop long, les messages doivent comporter au maximum %{count} caractères."
       retry_staged_message:
         title: "Erreur de réseau"
         action: "Envoyer à nouveau ?"

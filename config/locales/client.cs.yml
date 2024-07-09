@@ -23,6 +23,7 @@ cs:
             kb: kB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -1106,6 +1107,7 @@ cs:
       none: "(zvolit možnost)"
       required: 'Zadejte hodnotu pro "%{name}"'
       same_as_password: "Vaše heslo by se v jiných polích nemělo opakovat."
+      optional: (volitelné)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -2130,10 +2132,11 @@ cs:
       header_title: "Vítejte!"
       subheader_title: "Pojďme vytvořit váš účet"
       disclaimer: "Registrací souhlasíte s <a href='%{privacy_link}' target='blank'>zásadami ochrany osobních údajů</a> a <a href='%{tos_link}' target='blank'>podmínkami služby</a>."
-      title: "Vytvořte si účet"
+      title: "Registrovat se"
       failed: "Něco se nepovedlo, možná je tato e-mailová adresa již použita. Zkuste použít formulář pro obnovení hesla."
       associate: "Máte již účet? <a href='%{associate_link}'>Přihlaste se</a> a propojte svůj účet %{provider}."
       activation_title: "Aktivujte svůj účet"
+      already_have_account: "Máte již účet?"
     forgot_password:
       title: "Obnovení hesla"
       action: "Zapomněl/a jsem své heslo"
@@ -4662,6 +4665,9 @@ cs:
       panels:
         forum:
           label: Fórum
+      back_to_forum: "Zpět na fórum"
+      collapse_all_sections: "Sbalit všechny sekce"
+      expand_all_sections: "Rozbalit všechny sekce"
       filter: "Filtr..."
       clear_filter: "Vymazat filtr"
       no_results:
@@ -4781,10 +4787,7 @@ cs:
     admin:
       title: "Administrátor"
       moderator: "Moderátor"
-      back_to_forum: "Zpět na fórum"
       filter_reports: Filtrovat přehledy
-      expand_all_sections: "Rozbalit všechny sekce"
-      collapse_all_sections: "Sbalit všechny sekce"
       tags:
         remove_muted_tags_from_latest:
           always: "vždy"
@@ -5230,6 +5233,19 @@ cs:
           optional: "(volitelné)"
           update: "Aktualizovat"
           saved: "uloženo!"
+        flags:
+          description: "Popis"
+          enabled: "Zapnuto?"
+          edit: "Upravit"
+          delete: "Smazat"
+          delete_confirm: 'Opravdu chcete odstranit "%{name}"?'
+          form:
+            save: "Uložit"
+            name: "Jméno"
+            description: "Popis"
+            topic: "témata"
+            post: "příspěvky"
+            chat_message: "zprávy v chatu"
       plugins:
         title: "Pluginy"
         installed: "Nainstalované pluginy"

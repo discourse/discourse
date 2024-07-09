@@ -21,6 +21,7 @@ te:
             kb: కేబీ
             mb: యంబీ
             tb: టీబీ
+      percent: "%{count}%"
       short:
         thousands: "%{number} వేల"
         millions: "%{number}0 ల"
@@ -1042,6 +1043,7 @@ te:
       none: "(ఒక ఎంపికను ఎంచుకోండి)"
       required: 'దయచేసి "%{name}" కోసం విలువను నమోదు చేయండి'
       same_as_password: "మీ పాస్‌వర్డ్ ఇతర ఫీల్డ్‌లలో పునరావృతం కాకూడదు."
+      optional: (ఐచ్ఛికం)
     user:
       said: "%{username}:"
       profile: "ప్రొఫైల్"
@@ -2018,10 +2020,11 @@ te:
       header_title: "స్వాగతం!"
       subheader_title: "మీ ఖాతాను సృష్టిద్దాం"
       disclaimer: "నమోదు చేయడం ద్వారా, మీరు <a href='%{privacy_link}' target='blank'>గోప్యతా విధానం</a> మరియు <a href='%{tos_link}' target='blank'>సేవా నిబంధనలను</a> అంగీకరిస్తున్నారు."
-      title: "మీ ఖాతాను సృష్టించండి"
+      title: "సైన్ అప్"
       failed: "ఏదో తేడా జరిగింది. బహుశా ఈమెయిల్ ఇప్పటికే ఈసైటులో రిజిస్టరు అయి ఉందేమో, సంకేతపదం మర్చిపోయా లంకె ప్రయత్నించు."
       associate: "ఖాతా కలిగి ఉన్నారా? మీ %{provider} ఖాతాను లింక్ చేయడానికి <a href='%{associate_link}'>లాగిన్</a> చేయండి."
       activation_title: "మీ ఖాతాను సక్రియం చేయండి"
+      already_have_account: "ఖాతా కలిగి ఉన్నారా?"
     forgot_password:
       title: "పాస్వర్డ్ రీసెట్"
       action: "నేను నా సంకేతపదాన్ని మర్చిపోయాను"
@@ -4375,6 +4378,7 @@ te:
       panels:
         forum:
           label: ఫోరం
+      back_to_forum: "తిరిగి ఫోరమ్కి"
       clear_filter: "ఫిల్టర్‌ని క్లియర్ చేయండి"
       no_results:
         title: "ఫలితాలు లేవు"
@@ -4483,7 +4487,6 @@ te:
     admin:
       title: "డిస్కోర్స్ అడ్మిన్"
       moderator: "నిర్వాహకుడు"
-      back_to_forum: "తిరిగి ఫోరమ్కి"
       filter_reports: నివేదికలను ఫిల్టర్ చేయండి
       tags:
         remove_muted_tags_from_latest:
@@ -4963,6 +4966,18 @@ te:
           optional: "(ఐచ్ఛికం)"
           update: "నవీకరించండి"
           saved: "సేవ్ చేయబడింది!"
+        flags:
+          description: "వివరణ"
+          enabled: "ప్రారంభించబడిందా?"
+          edit: "సవరించండి"
+          delete: "తొలగించండి"
+          delete_confirm: 'మీరు "%{name}"ని ఖచ్చితంగా తొలగించాలనుకుంటున్నారా?'
+          form:
+            save: "సేవ్ చేయండి"
+            name: "పేరు"
+            description: "వివరణ"
+            topic: "విషయాలు"
+            post: "టపాలు"
       plugins:
         title: "చొప్పింతలు"
         installed: "ప్రతిష్టించిన చొప్పింతలు"

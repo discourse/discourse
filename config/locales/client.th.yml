@@ -696,6 +696,7 @@ th:
       copied: "คัดลอกแล้ว"
     user_fields:
       none: "(เลือกตัวเลือก)"
+      optional: (ทางเลือก)
     user:
       said: "%{username}:"
       profile: "โปรไฟล์"
@@ -1205,6 +1206,7 @@ th:
     search_hint: "ชื่อผู้ใช้ อีเมล หรือที่อยู่ไอพี"
     create_account:
       disclaimer: "เมื่อลงทะเบียน คุณได้ยอมรับ <a href='%{privacy_link}' target='blank'>นโยบายความเป็นส่วนตัว</a> และ <a href='%{tos_link}' target='blank'> เงื่อนไขการบริการ</a>"
+      title: "สมัคร"
       failed: "มีบางอย่างผิดพลาด อีเมลนี้อาจถูกลงทะเบียนไว้แล้ว กดลิงก์หากลืมรหัสผ่าน"
     forgot_password:
       title: "รีเซ็ตรหัสผ่าน"
@@ -2674,6 +2676,18 @@ th:
           optional: "(ทางเลือก)"
           update: "อัปเดต"
           saved: "บันทึกแล้ว!"
+        flags:
+          description: "รายละเอียด"
+          enabled: "เปิดใช้"
+          edit: "แก้ไข"
+          delete: "ลบ"
+          delete_confirm: 'คุณแน่ใจหรือว่าต้องการลบ "%{name}"'
+          form:
+            save: "บันทึก"
+            name: "ชื่อ"
+            description: "รายละเอียด"
+            topic: "หัวข้อ"
+            post: "โพสต์"
       plugins:
         title: "ปลั้กอิน"
         installed: "ปลั้กอินที่ติดตั้งแล้ว"

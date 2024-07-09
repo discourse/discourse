@@ -21,6 +21,7 @@ ug:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number} مىڭ"
         millions: "%{number} مىليون"
@@ -1067,6 +1068,7 @@ ug:
       none: "(تاللانما تاللىنىدۇ)"
       required: '«%{name}» نىڭ قىممىتىنى كىرگۈزۈڭ'
       same_as_password: "سىز كىرگۈزگەن ئىم باشقا بۆلەكتە تەكرارلانماسلىقى كېرەك."
+      optional: (تاللاشچان)
     user:
       said: "%{username}:"
       profile: "تەرجىمىھال"
@@ -1986,8 +1988,9 @@ ug:
     create_account:
       header_title: "خۇش كەپسىز!"
       subheader_title: "ھېساباتىڭىزنى قۇرايلى"
-      title: "ھېساباتىڭىزنى قۇرايلى"
+      title: "تىزىملىتىڭ"
       activation_title: "ھېساباتىڭىزنى ئاكتىپلاڭ"
+      already_have_account: "ھېساباتىڭىز بارمۇ؟"
     forgot_password:
       title: "ئىم ئەسلىگە قايتۇر"
       action: "ئىم ئۇنتۇپتىمەن"
@@ -4280,6 +4283,9 @@ ug:
       panels:
         forum:
           label: مۇنبەر
+      back_to_forum: "مۇنبەرگە قايت"
+      collapse_all_sections: "بارلىق بۆلەكلەرنى يىغ"
+      expand_all_sections: "بارلىق بۆلەكلەرنى ياي"
       filter: "سۈزگۈچ..."
       clear_filter: "سۈزگۈچنى تازىلا"
       no_results:
@@ -4389,10 +4395,7 @@ ug:
     admin:
       title: "Discourse باشقۇرغۇچى"
       moderator: "رىياسەتچى"
-      back_to_forum: "مۇنبەرگە قايت"
       filter_reports: سۈزگۈچ دوكلاتى
-      expand_all_sections: "بارلىق بۆلەكلەرنى ياي"
-      collapse_all_sections: "بارلىق بۆلەكلەرنى يىغ"
       tags:
         remove_muted_tags_from_latest:
           always: "ھەمىشە"
@@ -4876,6 +4879,19 @@ ug:
           optional: "(تاللاشچان)"
           update: "يېڭىلا"
           saved: "ساقلاندى!"
+        flags:
+          description: "چۈشەندۈرۈش"
+          enabled: "قوزغىتىلدى؟"
+          edit: "تەھرىر"
+          delete: "ئۆچۈر"
+          delete_confirm: '«%{name}» نى راستتىنلا ئۆچۈرەمسىز؟'
+          form:
+            save: "ساقلا"
+            name: "ئىسمى"
+            description: "چۈشەندۈرۈش"
+            topic: "تېما"
+            post: "يازما"
+            chat_message: "سۆھبەت ئۇچۇرى"
       plugins:
         title: "قىستۇرما"
         installed: "ئورنىتىلغان قىستۇرما"

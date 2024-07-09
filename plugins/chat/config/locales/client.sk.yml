@@ -151,15 +151,6 @@ sk:
       heading: "Chat"
       join: "Pridať sa"
       last_visit: "posledná návševa"
-      summarization:
-        title: "Zhrnutie správ"
-        description: "Ak chcete zhrnúť konverzáciu odoslanú počas požadovaného časového obdobia, vyberte nižšie uvedenú možnosť."
-        summarize: "Zhrnúť"
-        since:
-          one: "Posledná hodina"
-          few: "Posledných %{count} hodín"
-          many: "Posledných %{count} hodín"
-          other: "Posledných %{count} hodín"
       mention_warning:
         invitations_sent:
           one: "Pozvánka bola odoslaná"
@@ -281,6 +272,7 @@ sk:
       copy_link: "Kopírovať odkaz"
       copy_text: "Kopírovať text"
       rebake_message: "Pregenerovať HTML"
+      message_too_long: "Správa je príliš dlhá, správy môžu mať maximálne %{count} znaky."
       retry_staged_message:
         title: "Chyba siete"
         action: "Odoslať znova?"

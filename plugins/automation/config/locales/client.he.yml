@@ -44,6 +44,7 @@ he:
           confirm_remove_pm: "להסיר את ההודעה הפרטית הזאת?"
           placeholder_title: כותרת ההודעה הפרטית
           add_pm: הוספת הודעה פרטית
+          no_pm_created: עדיין לא יצרת שום PM. הודעות PM יישלחו ברגע שהאוטומציה שלך תופעל.
           title:
             label: כותרת
           raw:
@@ -79,6 +80,8 @@ he:
               label: מוגבל לקטגוריות
             tags:
               label: מוגבל לתגיות
+            stalled_after:
+              label: נעצר לאחר
         recurring:
           every: כל
           frequencies:
@@ -112,6 +115,7 @@ he:
               description: הגדרת השהייה בין עריכת הוויקי האחרונה והזנקת האוטומציה
             retriggered_after:
               label: השהיית הזנקה חוזרת
+              description: מגדיר עיכוב בין הטריגר הראשון לבין הטריגר הבא, אם הוויקי עדיין לא נערך לאחר הטריגר הראשון
         user_added_to_group:
           fields:
             joined_group:
@@ -181,6 +185,7 @@ he:
               description: יוזנק רק פעם אחת לכל משתמש
             new_users_only:
               label: משתמשים חדשים בלבד
+              description: יופעל רק עבור משתמשים חדשים שיצטרפו לאחר הפעלת האוטומציה הזו
         category_created_edited:
           fields:
             restricted_category:
@@ -253,6 +258,7 @@ he:
         topic:
           fields:
             creator:
+              label: יוצר
               updated_user_context: המשתמש המעודכן
             body:
               label: גוף הנושא
@@ -337,9 +343,18 @@ he:
           fields:
             gift_exchangers_group:
               label: שם קבוצת המשתתפים
+            giftee_assignment_messages:
+              label: הודעות שנשלחו לנותן/נותנת המתנה
         send_pms:
           add_a_pm_btn:
             label: הוספת הודעה פרטית
+          fields:
+            receiver:
+              label: מקבל.ת ההודעה הפרטית
+            sendable_pms:
+              label: הודעות פרטיות
+            sender:
+              label: שולח הודעה פרטית
         close_topic:
           fields:
             topic:
