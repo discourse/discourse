@@ -17,7 +17,10 @@ import I18n from "discourse-i18n";
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
   modal: service(),
+  toasts: service(),
+
   user: controller(),
+
   canDownloadPosts: alias("user.viewingSelf"),
 
   init() {
@@ -177,8 +180,6 @@ export default Controller.extend(CanCheckEmails, {
 
   actions: {
     save() {
-      this.set("saved", false);
-
       this.model.setProperties({
         name: this.newNameInput,
         title: this.newTitleInput,
@@ -189,7 +190,12 @@ export default Controller.extend(CanCheckEmails, {
 
       return this.model
         .save(this.saveAttrNames)
-        .then(() => this.set("saved", true))
+        .then(() =>
+          this.toasts.success({
+            duration: 3000,
+            data: { message: I18n.t("saved") },
+          })
+        )
         .catch(popupAjaxError);
     },
 

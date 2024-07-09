@@ -1,5 +1,6 @@
 import Controller from "@ember/controller";
 import { equal } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
@@ -11,6 +12,8 @@ const EMAIL_LEVELS = {
 };
 
 export default Controller.extend({
+  toasts: service(),
+
   subpageTitle: I18n.t("user.preferences_nav.emails"),
   emailMessagesLevelAway: equal(
     "model.user_option.email_messages_level",
@@ -92,11 +95,13 @@ export default Controller.extend({
 
   actions: {
     save() {
-      this.set("saved", false);
       return this.model
         .save(this.saveAttrNames)
         .then(() => {
-          this.set("saved", true);
+          this.toasts.success({
+            duration: 3000,
+            data: { message: I18n.t("saved") },
+          });
         })
         .catch(popupAjaxError);
     },

@@ -1,11 +1,15 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { and } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { makeArray } from "discourse-common/lib/helpers";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Controller.extend({
+  toasts: service(),
+
   allowPmUsersEnabled: and(
     "model.user_option.enable_allowed_pm_users",
     "model.user_option.allow_private_messages"
@@ -63,11 +67,14 @@ export default Controller.extend({
 
   @action
   save() {
-    this.set("saved", false);
-
     return this.model
       .save(this.saveAttrNames)
-      .then(() => this.set("saved", true))
+      .then(() =>
+        this.toasts.success({
+          duration: 3000,
+          data: { message: I18n.t("saved") },
+        })
+      )
       .catch(popupAjaxError);
   },
 });

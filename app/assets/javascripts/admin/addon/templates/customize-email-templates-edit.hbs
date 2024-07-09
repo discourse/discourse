@@ -25,7 +25,6 @@
   <SaveControls
     @model={{this.emailTemplate}}
     @action={{action "saveChanges"}}
-    @saved={{this.saved}}
     @saveDisabled={{this.saveDisabled}}
   >
     {{#if this.emailTemplate.can_revert}}

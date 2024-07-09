@@ -315,11 +315,7 @@
 </span>
 
 {{#if this.canSaveUser}}
-  <SaveControls
-    @model={{this.model}}
-    @action={{action "save"}}
-    @saved={{this.saved}}
-  />
+  <SaveControls @model={{this.model}} @action={{action "save"}} />
 {{/if}}
 
 {{#if this.model.canDeleteAccount}}

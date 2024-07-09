@@ -1,8 +1,12 @@
 import Controller from "@ember/controller";
+import { service } from "@ember/service";
+import I18n from "i18n";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
+  toats: service(),
+
   init() {
     this._super(...arguments);
 
@@ -26,11 +30,13 @@ export default Controller.extend({
 
   actions: {
     save() {
-      this.set("saved", false);
       return this.model
         .save(this.saveAttrNames)
         .then(() => {
-          this.set("saved", true);
+          this.toasts.success({
+            duration: 3000,
+            data: { message: I18n.t("saved") },
+          });
         })
         .catch(popupAjaxError);
     },

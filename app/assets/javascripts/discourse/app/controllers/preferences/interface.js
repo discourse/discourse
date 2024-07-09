@@ -30,6 +30,7 @@ const TEXT_SIZES = ["smallest", "smaller", "normal", "larger", "largest"];
 const TITLE_COUNT_MODES = ["notifications", "contextual"];
 
 export default Controller.extend({
+  toasts: service(),
   session: service(),
 
   currentThemeId: -1,
@@ -281,7 +282,6 @@ export default Controller.extend({
 
   actions: {
     save() {
-      this.set("saved", false);
       const makeThemeDefault = this.makeThemeDefault;
       if (makeThemeDefault) {
         this.set("model.user_option.theme_ids", [this.themeId]);
@@ -324,7 +324,10 @@ export default Controller.extend({
       return this.model
         .save(this.saveAttrNames)
         .then(() => {
-          this.set("saved", true);
+          this.toasts.success({
+            duration: 3000,
+            data: { message: I18n.t("saved") },
+          });
 
           if (makeThemeDefault) {
             setLocalTheme([]);

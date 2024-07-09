@@ -8,11 +8,7 @@
 />
 
 {{#if this.canSave}}
-  <SaveControls
-    @model={{this.model}}
-    @action={{action "save"}}
-    @saved={{this.saved}}
-  />
+  <SaveControls @model={{this.model}} @action={{action "save"}} />
 {{else}}
   {{i18n "user.no_category_access"}}
 {{/if}}

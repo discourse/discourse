@@ -20,6 +20,7 @@ export default Controller.extend(CanCheckEmails, {
   modal: service(),
   dialog: service(),
   router: service(),
+  toasts: service(),
   passwordProgress: null,
   subpageTitle: I18n.t("user.preferences_nav.security"),
   showAllAuthTokens: false,
@@ -140,10 +141,13 @@ export default Controller.extend(CanCheckEmails, {
 
   actions: {
     save() {
-      this.set("saved", false);
-
       return this.model
-        .then(() => this.set("saved", true))
+        .then(() =>
+          this.toasts.success({
+            duration: 3000,
+            data: { message: I18n.t("saved") },
+          })
+        )
         .catch(popupAjaxError);
     },
 

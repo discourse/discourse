@@ -1,10 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
 
 export default class extends Controller {
+  @service toasts;
+
   @tracked saved = false;
 
   subpageTitle = I18n.t("user.preferences_nav.navigation_menu");
@@ -33,7 +36,10 @@ export default class extends Controller {
     this.model
       .save(this.saveAttrNames)
       .then(() => {
-        this.saved = true;
+        this.toasts.success({
+          duration: 3000,
+          data: { message: I18n.t("saved") },
+        });
       })
       .catch((error) => {
         this.model.set(

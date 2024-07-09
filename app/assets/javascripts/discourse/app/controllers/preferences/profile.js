@@ -12,7 +12,10 @@ import I18n from "discourse-i18n";
 export default Controller.extend({
   dialog: service(),
   modal: service(),
+  toasts: service(),
+
   subpageTitle: I18n.t("user.preferences_nav.profile"),
+
   init() {
     this._super(...arguments);
     this.saveAttrNames = [
@@ -140,18 +143,21 @@ export default Controller.extend({
     },
 
     save() {
-      this.set("saved", false);
-
       // Update the user fields
       this.send("_updateUserFields");
 
       return this.model
         .save(this.saveAttrNames)
-        .then(({ user }) => this.model.set("bio_cooked", user.bio_cooked))
+        .then(({ user }) => {
+          this.model.set("bio_cooked", user.bio_cooked);
+          this.toasts.success({
+            duration: 3000,
+            data: { message: I18n.t("saved") },
+          });
+        })
         .catch(popupAjaxError)
         .finally(() => {
           this.currentUser.set("needs_required_fields_check", false);
-          this.set("saved", true);
         });
     },
   },

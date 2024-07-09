@@ -1,8 +1,11 @@
 import Controller from "@ember/controller";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
 
 export default Controller.extend({
+  toasts: service(),
+
   subpageTitle: I18n.t("user.preferences_nav.notifications"),
 
   init() {
@@ -32,11 +35,13 @@ export default Controller.extend({
 
   actions: {
     save() {
-      this.set("saved", false);
       return this.model
         .save(this.saveAttrNames)
         .then(() => {
-          this.set("saved", true);
+          this.toasts.success({
+            duration: 3000,
+            data: { message: I18n.t("saved") },
+          });
         })
         .catch(popupAjaxError);
     },

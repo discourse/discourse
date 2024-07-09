@@ -7,6 +7,7 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import I18n from "discourse-i18n";
 
 export default class extends Controller {
+  @service toasts;
   @service currentUser;
   @service siteSettings;
   @tracked saved = false;
@@ -184,12 +185,13 @@ export default class extends Controller {
 
   @action
   save() {
-    this.saved = false;
-
     return this.model
       .save(this.saveAttrNames)
       .then(() => {
-        this.saved = true;
+        this.toasts.success({
+          duration: 3000,
+          data: { message: I18n.t("saved") },
+        });
       })
       .catch(popupAjaxError);
   }
