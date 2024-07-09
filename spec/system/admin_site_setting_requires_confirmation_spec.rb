@@ -26,6 +26,7 @@ describe "Admin Site Setting Requires Confirmation", type: :system do
     )
     dialog.click_yes
     expect(dialog).to be_closed
+    expect(settings_page).to have_overridden_setting("min_password_length")
     expect(SiteSetting.min_password_length).to eq(12)
   end
 
