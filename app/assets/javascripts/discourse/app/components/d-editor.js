@@ -47,13 +47,13 @@ function getButtonLabel(labelKey, defaultLabel) {
 const FOUR_SPACES_INDENT = "4-spaces-indent";
 
 let _createCallbacks = [];
-let handleSmartListAutocomplete = false;
 
 class Toolbar {
   constructor(opts) {
     const { siteSettings, capabilities } = opts;
     this.shortcuts = {};
     this.context = null;
+    this.handleSmartListAutocomplete = false;
 
     this.groups = [
       { group: "fontStyles", buttons: [] },
@@ -369,18 +369,18 @@ export default Component.extend(TextareaTextManipulation, {
     // rather than `input`.
     const isNewLine = event.inputType === "insertLineBreak";
     if (isNewLine) {
-      handleSmartListAutocomplete = true;
+      this.handleSmartListAutocomplete = true;
     } else {
-      handleSmartListAutocomplete = false;
+      this.handleSmartListAutocomplete = false;
     }
   },
 
   @bind
   onInputSmartList() {
-    if (handleSmartListAutocomplete) {
+    if (this.handleSmartListAutocomplete) {
       this.maybeContinueList();
     }
-    handleSmartListAutocomplete = false;
+    this.handleSmartListAutocomplete = false;
   },
 
   @bind
