@@ -130,10 +130,14 @@ export default class PollButtonsDropdownComponent extends Component {
         </DMenu>
       {{else if this.showDropdownAsButton}}
         <DButton
-          class="widget-button {{this.getDropdownContent.firstObject.className}}"
+          class="widget-button
+            {{this.getDropdownContent.firstObject.className}}"
           @icon={{this.getDropdownContent.firstObject.icon}}
           @label={{this.getDropdownContent.firstObject.label}}
-          @action={{fn this.dropDownClick this.getDropdownContent.firstObject.action}}
+          @action={{fn
+            this.dropDownClick
+            this.getDropdownContent.firstObject.action
+          }}
         />
       {{/if}}
     </div>
