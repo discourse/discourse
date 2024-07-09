@@ -31,7 +31,7 @@
     "jspreadsheet-ce": "^4.13.4",
     "morphlex": "^0.0.16",
     "pretty-text": "1.0.0",
-    "decorator-transforms": "^2.0.0",
+    "decorator-transforms": "^2.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",
