@@ -33,6 +33,10 @@ module Onebox
       def title
         Sanitize.fragment(Onebox::Helpers.uri_unencode(link).sub(%r{^https?\://gitlab\.com/}, ""))
       end
+
+      def auth_headers
+        {}
+      end
     end
   end
 end
