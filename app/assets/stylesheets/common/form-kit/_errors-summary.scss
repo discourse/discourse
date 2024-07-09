@@ -4,6 +4,7 @@
   background-color: var(--danger-low);
   width: 100%;
   border-radius: var(--d-border-radius);
+  box-sizing: border-box;
 
   .d-icon-exclamation-triangle {
     color: var(--danger);
