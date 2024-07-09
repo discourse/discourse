@@ -4,11 +4,8 @@ module Onebox
   module Mixins
     module GithubAuthHeader
       def github_auth_header
-        if SiteSetting.github_onebox_access_token.present?
-          { "Authorization" => "Bearer #{SiteSetting.github_onebox_access_token}" }
-        else
-          {}
-        end
+        return {} if SiteSetting.github_onebox_access_token.blank?
+        { "Authorization" => "Bearer #{SiteSetting.github_onebox_access_token}" }
       end
     end
   end
