@@ -2346,13 +2346,6 @@ developer:
   bypass_wizard_check:
     default: false
     hidden: true
-  logging_provider:
-    hidden: true
-    default: "default"
-    type: "list"
-    choices:
-      - "default"
-      - "lograge"
   bootstrap_error_pages:
     hidden: true
     default: false
