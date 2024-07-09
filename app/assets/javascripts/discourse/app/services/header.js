@@ -9,8 +9,21 @@ import deprecated from "discourse-common/lib/deprecated";
 export default class Header extends Service {
   @service siteSettings;
 
+  /**
+   * The ID of the topic currently viewed on the page. The information is updated as soon as the page is loaded.
+   *
+   * @type {Integer|null}
+   */
   @tracked topicId = null;
+
+  /**
+   * Indicates whether the topic information is visible on the header. The information is updated when the user scrolls
+   * the page.
+   *
+   * @type {boolean}
+   */
   @tracked topicInfoVisible = false;
+
   @tracked hamburgerVisible = false;
   @tracked userVisible = false;
   @tracked anyWidgetHeaderOverrides = false;
