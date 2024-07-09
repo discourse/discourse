@@ -66,14 +66,11 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.valid_type?(type)
-    return false if Reviewable.types.exclude?(type)
-    type.constantize <= Reviewable
-  rescue NameError
-    false
+    type.to_s.safe_constantize.in?(types)
   end
 
   def self.types
-    %w[ReviewableFlaggedPost ReviewableQueuedPost ReviewableUser ReviewablePost]
+    [ReviewableFlaggedPost, ReviewableQueuedPost, ReviewableUser, ReviewablePost]
   end
 
   def self.custom_filters

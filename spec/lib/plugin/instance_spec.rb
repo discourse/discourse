@@ -599,25 +599,60 @@ TEXT
     end
   end
 
-  describe "#register_reviewable_types" do
-    it "Overrides the existing Reviewable types adding new ones" do
-      current_types = Reviewable.types
-      new_type_class = Class
+  describe "#register_reviewable_type" do
+    subject(:register_reviewable_type) { plugin_instance.register_reviewable_type(new_type) }
 
-      Plugin::Instance.new.register_reviewable_type new_type_class
+    context "when the provided class inherits from `Reviewable`" do
+      let(:new_type) { Class.new(Reviewable) }
 
-      expect(Reviewable.types).to match_array(current_types << new_type_class.name)
+      it "adds the provided class to the existing types" do
+        expect { register_reviewable_type }.to change { Reviewable.types.size }.by(1)
+        expect(Reviewable.types).to include(new_type)
+      end
+
+      context "when the plugin is disabled" do
+        before do
+          register_reviewable_type
+          plugin_instance.stubs(:enabled?).returns(false)
+        end
+
+        it "does not return the new type" do
+          expect(Reviewable.types).not_to be_blank
+          expect(Reviewable.types).not_to include(new_type)
+        end
+      end
+    end
+
+    context "when the provided class does not inherit from `Reviewable`" do
+      let(:new_type) { Class }
+
+      it "does not add the provided class to the existing types" do
+        expect { register_reviewable_type }.not_to change { Reviewable.types }
+        expect(Reviewable.types).not_to be_blank
+      end
     end
   end
 
   describe "#extend_list_method" do
-    it "Overrides the existing list appending new elements" do
-      current_list = Reviewable.types
-      new_element = Class.name
+    subject(:extend_list) do
+      plugin_instance.extend_list_method(UserHistory, :staff_actions, %i[new_action another_action])
+    end
 
-      Plugin::Instance.new.extend_list_method Reviewable, :types, [new_element]
+    it "adds the provided values to the provided method on the provided class" do
+      expect { extend_list }.to change { UserHistory.staff_actions.size }.by(2)
+      expect(UserHistory.staff_actions).to include(:new_action, :another_action)
+    end
 
-      expect(Reviewable.types).to match_array(current_list << new_element)
+    context "when the plugin is disabled" do
+      before do
+        extend_list
+        plugin_instance.stubs(:enabled?).returns(false)
+      end
+
+      it "does not return the provided values" do
+        expect(UserHistory.staff_actions).not_to be_blank
+        expect(UserHistory.staff_actions).not_to include(:new_action, :another_action)
+      end
     end
   end
 
