@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action, get } from "@ember/object";
+import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
@@ -113,13 +113,13 @@ export default class FKForm extends Component {
 
   @action
   async addItemToCollection(name, value = {}) {
-    const current = get(this.formData.draftData, name) ?? [];
+    const current = this.formData.get(name) ?? [];
     this.formData.set(name, current.concat(value));
   }
 
   @action
   async remove(name, index) {
-    const current = get(this.formData.draftData, name) ?? [];
+    const current = this.formData.get(name) ?? [];
 
     this.formData.set(
       name,
@@ -243,7 +243,7 @@ export default class FKForm extends Component {
       for (const [name, field] of fields) {
         await field.validate?.(
           name,
-          get(this.formData.draftData, name),
+          this.formData.get(name),
           this.formData.draftData
         );
       }
@@ -296,7 +296,7 @@ export default class FKForm extends Component {
             FKField
             errors=this.formData.errors
             addError=this.addError
-            data=this.formData.draftData
+            data=this.formData
             set=this.set
             registerField=this.registerField
             unregisterField=this.unregisterField
@@ -306,7 +306,7 @@ export default class FKForm extends Component {
             FKCollection
             errors=this.formData.errors
             addError=this.addError
-            data=this.formData.draftData
+            data=this.formData
             set=this.set
             remove=this.remove
             registerField=this.registerField
@@ -317,7 +317,7 @@ export default class FKForm extends Component {
             FKControlInputGroup
             errors=this.formData.errors
             addError=this.addError
-            data=this.formData.draftData
+            data=this.formData
             set=this.set
             remove=this.remove
             registerField=this.registerField

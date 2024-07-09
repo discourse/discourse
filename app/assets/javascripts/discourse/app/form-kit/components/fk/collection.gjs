@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import { action, get } from "@ember/object";
+import { action } from "@ember/object";
 import FKField from "discourse/form-kit/components/fk/field";
 
 export default class FKCollection extends Component {
@@ -9,8 +9,12 @@ export default class FKCollection extends Component {
     this.args.remove(this.args.name, index);
   }
 
+  get collectionValue() {
+    return this.args.data.get(this.args.name);
+  }
+
   <template>
-    {{#each (get @data @name) key="index" as |data index|}}
+    {{#each this.collectionValue key="index" as |data index|}}
       {{yield
         (hash
           Field=(component
@@ -19,7 +23,7 @@ export default class FKCollection extends Component {
             collectionName=@name
             collectionIndex=index
             addError=@addError
-            data=data
+            data=@data
             set=@set
             registerField=@registerField
             unregisterField=@unregisterField

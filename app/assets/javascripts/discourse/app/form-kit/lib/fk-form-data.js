@@ -2,7 +2,7 @@
  * A Changeset class that manages data and tracks changes.
  */
 import { tracked } from "@glimmer/tracking";
-import { get, set } from "@ember/object";
+import { set } from "@ember/object";
 import { next } from "@ember/runloop";
 import { applyPatches, enablePatches, produce } from "immer";
 
@@ -119,14 +119,6 @@ export default class FKFormData {
   }
 
   /**
-   * Rolls back a specific property to its original value.
-   * @param {string} property - The property to rollback.
-   */
-  rollbackProperty(property) {
-    this.set(property, get(this.data, property));
-  }
-
-  /**
    * Adds an error to a specific property.
    * @param {string} name - The property name.
    * @param {Object} error - The error to add.
@@ -170,7 +162,12 @@ export default class FKFormData {
    * @return {any} The value of the property.
    */
   get(name) {
-    return get(this.draftData, name);
+    const parts = name.split(".");
+    let target = this.draftData[parts.shift()];
+    while (parts.length) {
+      target = target[parts.shift()];
+    }
+    return target;
   }
 
   /**

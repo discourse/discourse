@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { get } from "@ember/object";
 import FKControlCheckbox from "discourse/form-kit/components/fk/control/checkbox";
 import FKControlCode from "discourse/form-kit/components/fk/control/code";
 import FKControlComposer from "discourse/form-kit/components/fk/control/composer";
@@ -19,6 +18,7 @@ import FKRow from "discourse/form-kit/components/fk/row";
 
 export default class FKField extends Component {
   @tracked field;
+  @tracked name;
 
   constructor() {
     super(...arguments);
@@ -37,35 +37,35 @@ export default class FKField extends Component {
       throw new Error("@name can't include `.` or `-`.");
     }
 
-    this.field = this.args.registerField(
+    this.name =
       (this.args.collectionName ? `${this.args.collectionName}.` : "") +
-        (this.args.collectionIndex !== undefined
-          ? `${this.args.collectionIndex}.`
-          : "") +
-        this.args.name,
-      {
-        triggerRevalidationFor: this.args.triggerRevalidationFor,
-        title: this.args.title,
-        showTitle: this.args.showTitle,
-        collectionIndex: this.args.collectionIndex,
-        set: this.args.set,
-        addError: this.args.addError,
-        validate: this.args.validate,
-        disabled: this.args.disabled,
-        validation: this.args.validation,
-        onSet: this.args.onSet,
-      }
-    );
+      (this.args.collectionIndex !== undefined
+        ? `${this.args.collectionIndex}.`
+        : "") +
+      this.args.name;
+
+    this.field = this.args.registerField(this.name, {
+      triggerRevalidationFor: this.args.triggerRevalidationFor,
+      title: this.args.title,
+      showTitle: this.args.showTitle,
+      collectionIndex: this.args.collectionIndex,
+      set: this.args.set,
+      addError: this.args.addError,
+      validate: this.args.validate,
+      disabled: this.args.disabled,
+      validation: this.args.validation,
+      onSet: this.args.onSet,
+    });
   }
 
   willDestroy() {
-    this.args.unregisterField(this.field.name);
+    this.args.unregisterField(this.name);
 
     super.willDestroy();
   }
 
   get value() {
-    return get(this.args.data, this.args.name);
+    return this.args.data.get(this.name);
   }
 
   get wrapper() {
