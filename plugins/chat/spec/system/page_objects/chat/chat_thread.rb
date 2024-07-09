@@ -94,7 +94,7 @@ module PageObjects
       end
 
       def click_composer
-        if has_no_css?(".dialog-overlay") # we can't click composer if a dialog is open, in case of error for exampel
+        if has_no_css?(".dialog-overlay", wait: 0) # we can't click composer if a dialog is open, in case of error for exampel
           find(".chat-thread .chat-composer__input").click # ensures autocomplete is closed and not masking anything
         end
       end
