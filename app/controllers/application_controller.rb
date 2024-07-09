@@ -168,7 +168,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from ActiveRecord::RecordInvalid do |e|
-    if request.format && request.format.json?
+    if request.format
       render_json_error e, type: :record_invalid, status: 422
     else
       raise e
