@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-if (Rails.env.production? && SiteSetting.logging_provider == "lograge") ||
-     (ENV["ENABLE_LOGRAGE"] == "1")
+if ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
   require "lograge"
 
   Rails.application.config.after_initialize do
@@ -144,29 +143,25 @@ if (Rails.env.production? && SiteSetting.logging_provider == "lograge") ||
           end
         end
 
-      if ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
-        config.lograge.formatter = Lograge::Formatters::Logstash.new
+      config.lograge.formatter = Lograge::Formatters::Logstash.new
 
-        require "discourse_logstash_logger"
+      require "discourse_logstash_logger"
 
-        config.lograge.logger =
-          DiscourseLogstashLogger.logger(
-            logdev: Rails.root.join("log", "#{Rails.env}.log"),
-            type: :rails,
-            customize_event:
-              lambda do |event|
-                event["database"] = RailsMultisite::ConnectionManagement.current_db
-              end,
-          )
-
-        # Stop broadcasting to Rails' default logger
-        Rails.logger.stop_broadcasting_to(
-          Rails.logger.broadcasts.find { |logger| logger.is_a?(ActiveSupport::Logger) },
+      config.lograge.logger =
+        DiscourseLogstashLogger.logger(
+          logdev: Rails.root.join("log", "#{Rails.env}.log"),
+          type: :rails,
+          customize_event:
+            lambda { |event| event["database"] = RailsMultisite::ConnectionManagement.current_db },
         )
 
-        Logster.logger.subscribe do |severity, message, progname, opts, &block|
-          config.lograge.logger.add_with_opts(severity, message, progname, opts, &block)
-        end
+      # Stop broadcasting to Rails' default logger
+      Rails.logger.stop_broadcasting_to(
+        Rails.logger.broadcasts.find { |logger| logger.is_a?(ActiveSupport::Logger) },
+      )
+
+      Logster.logger.subscribe do |severity, message, progname, opts, &block|
+        config.lograge.logger.add_with_opts(severity, message, progname, opts, &block)
       end
     end
   end
