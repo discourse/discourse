@@ -145,7 +145,7 @@ export default class TopicListHeaderColumn extends Component {
             class={{if @screenreaderOnly "sr-only"}}
             tabindex={{if @sortable "0"}}
             role={{if @sortable "button"}}
-            aria-pressed="{{this.isSorting}}"
+            aria-pressed={{this.isSorting}}
           >
             {{this.localizedName}}
           </span>
