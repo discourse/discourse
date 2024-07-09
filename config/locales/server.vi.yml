@@ -974,6 +974,12 @@ vi:
       labels:
         user: Người dùng
         qtt_like: Likes Đã Nhận
+    topic_view_stats:
+      labels:
+        topic: Chủ đề
+        logged_in_views: Đã đăng nhập
+        anon_views: Ẩn danh
+        total_views: Tổng số
   dashboard:
     problem:
       rails_env: "Máy chủ của bạn đang chạy trong chế độ %{env}."

@@ -93,11 +93,6 @@ zh_TW:
       heading: "聊天"
       join: "加入"
       last_visit: "上次到訪"
-      summarization:
-        title: "摘要訊息"
-        summarize: "總結"
-        since:
-          other: "前 %{count} 小時"
       no_public_channels_cta: "瀏覽頻道"
       remove_upload: "移除檔案"
       react: "用表情符號反應"
@@ -105,6 +100,7 @@ zh_TW:
       edit: "編輯"
       copy_link: "複製連結"
       rebake_message: "重建 HTML"
+      message_too_long: "訊息過長，不得超過 %{count} 個字元。"
       retry_staged_message:
         title: "網路錯誤"
         action: "再次發送？"

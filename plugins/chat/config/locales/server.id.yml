@@ -168,8 +168,6 @@ id:
         other: "%{count} anggota"
       and_x_others:
         other: "dan %{count} lainnya"
-    summaries:
-      no_targets: "Tidak ada pesan selama periode yang dipilih."
     transcript:
       default_thread_title: "Utas"
       split_thread_range: "pesan %{start} hingga %{end} dari %{total}"

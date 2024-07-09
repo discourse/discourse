@@ -735,6 +735,12 @@ et:
       labels:
         user: Kasutaja
         qtt_like: Meeldimisi saadud
+    topic_view_stats:
+      labels:
+        topic: Teema
+        logged_in_views: Sisse logitud
+        anon_views: Anonüümne
+        total_views: Kokku
   dashboard:
     problem:
       host_names: "Sinu config/database.yml fail kasutab vaikimisi hostinime localhost. Kirjuta sinna oma saidi hostinimi."

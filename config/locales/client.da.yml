@@ -21,6 +21,7 @@ da:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -967,6 +968,7 @@ da:
       none: "(vælg en indstilling)"
       required: 'Indtast venligst en værdi for "%{name}"'
       same_as_password: "Din adgangskode bør ikke gentages i andre felter."
+      optional: (valgfri)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1728,9 +1730,10 @@ da:
       header_title: "Velkommen!"
       subheader_title: "Lad os oprette din konto"
       disclaimer: "Ved at registrere dig accepterer du <a href='%{privacy_link}' target='blank'>Privatlivsbetingelser</a> og <a href='%{tos_link}' target='blank'>servicevilkårene</a> ."
-      title: "Opret din konto"
+      title: "Tilmeld dig"
       failed: "Noget gik galt. Måske er e-mail-adressen allerede registreret – prøv “Jeg har glemt min adgangskode”-linket"
       associate: "Har du allerede en konto? <a href='%{associate_link}'>Log ind</a> for at linke din %{provider} konto."
+      already_have_account: "Har du allerede en konto?"
     forgot_password:
       title: "Nulstil kodeord"
       action: "Jeg har glemt min adgangskode"
@@ -4080,6 +4083,18 @@ da:
           optional: "(valgfri)"
           update: "Opdater"
           saved: "gemt!"
+        flags:
+          description: "Beskrivelse"
+          enabled: "Aktiveret?"
+          edit: "Rediger"
+          delete: "Slet"
+          delete_confirm: 'Er du sikker på, at du vil slette "%{name}"?'
+          form:
+            save: "Gem"
+            name: "Navn"
+            description: "Beskrivelse"
+            topic: "emner"
+            post: "indlæg"
       plugins:
         title: "Udvidelser"
         installed: "Installerede Udvidelser"

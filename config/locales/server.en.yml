@@ -1630,6 +1630,14 @@ en:
         user: User
         qtt_like: Likes Received
       description: "Top 10 users who have had likes from a wide range of people."
+    topic_view_stats:
+      title: "Topic View Stats"
+      labels:
+        topic: Topic
+        logged_in_views: Logged In
+        anon_views: Anonymous
+        total_views: Total
+      description: "The top 100 most viewed topics in a date range, combining logged in and anonymous views. Can be filtered by category."
 
   dashboard:
     problem:

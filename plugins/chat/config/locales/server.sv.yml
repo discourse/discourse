@@ -190,8 +190,6 @@ sv:
       and_x_others:
         one: "och %{count} annan"
         other: "och %{count} andra"
-    summaries:
-      no_targets: "Det fanns inga meddelanden under den valda perioden."
     transcript:
       default_thread_title: "Tråd"
       split_thread_range: "meddelanden %{start} till %{end} av %{total}"

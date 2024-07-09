@@ -1383,6 +1383,12 @@ it:
         user: Utente
         qtt_like: Mi piace ricevuti
       description: "I migliori 10 utenti che hanno ricevuto Mi piace da una vasta gamma di persone."
+    topic_view_stats:
+      labels:
+        topic: Argomento
+        logged_in_views: Connessioni
+        anon_views: Anonimo
+        total_views: Totali
   dashboard:
     problem:
       rails_env: "Il tuo server è in modalità %{env}."

@@ -20,6 +20,7 @@
     "@faker-js/faker": "^8.4.1",
     "@glimmer/syntax": "^0.92.0",
     "@highlightjs/cdn-assets": "^11.10.0",
+    "ace-builds": "^1.35.2",
     "discourse-hbr": "1.0.0",
     "discourse-widget-hbs": "1.0.0",
     "ember-route-template": "^1.0.3",

@@ -74,8 +74,6 @@ bg:
       heading: "Чат"
       join: "Влизане"
       last_visit: "последно посещение"
-      summarization:
-        summarize: "Обобщаване"
       reply: "Отговорете"
       edit: "Редактирай"
       rebake_message: "Прегенерирай HTML "

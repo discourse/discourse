@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import CustomSection from "./custom-section";
 
-export default class SidebarCustomSection extends Component {
+export default class SidebarCustomSections extends Component {
   @service currentUser;
   @service router;
   @service messageBus;

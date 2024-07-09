@@ -1382,6 +1382,12 @@ nl:
         user: Gebruiker
         qtt_like: Ontvangen likes
       description: "Top 10 gebruikers die likes hebben ontvangen van een breed scala aan mensen."
+    topic_view_stats:
+      labels:
+        topic: Topic
+        logged_in_views: Aangemeld
+        anon_views: Anoniem
+        total_views: Totaal
   dashboard:
     problem:
       rails_env: "Je server werkt in de modus voor %{env}."

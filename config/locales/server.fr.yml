@@ -1383,6 +1383,12 @@ fr:
         user: Utilisateur
         qtt_like: '« J''aime » reçus'
       description: "Liste des 10 utilisateurs ayant reçu le plus de J'aime de la part d'une grande diversité de personnes différentes."
+    topic_view_stats:
+      labels:
+        topic: Sujet
+        logged_in_views: Connectés
+        anon_views: Anonymes
+        total_views: Total
   dashboard:
     problem:
       rails_env: "Votre serveur fonctionne dans l'environnement de %{env}."

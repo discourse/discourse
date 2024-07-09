@@ -194,8 +194,6 @@ de:
       and_x_others:
         one: "und %{count} andere Person"
         other: "und %{count} andere"
-    summaries:
-      no_targets: "Im ausgewählten Zeitraum gab es keine Nachrichten."
     transcript:
       default_thread_title: "Thread"
       split_thread_range: "Nachrichten %{start} bis %{end} von %{total}"

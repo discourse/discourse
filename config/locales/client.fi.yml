@@ -21,6 +21,7 @@ fi:
             kb: Kt
             mb: Mt
             tb: Tt
+      percent: "%{count}%"
       short:
         thousands: "%{number} k"
         millions: "%{number} M"
@@ -1040,6 +1041,7 @@ fi:
       none: "(valitse vaihtoehto)"
       required: '"%{name}" on pakollinen'
       same_as_password: "Salasanaasi ei tulisi toistaa muissa kentissä."
+      optional: (valinnainen)
     user:
       said: "%{username}:"
       profile: "Profiili"
@@ -1987,10 +1989,11 @@ fi:
       header_title: "Tervetuloa!"
       subheader_title: "Luodaan sinulle käyttäjätili"
       disclaimer: "Kun rekisteröidyt, hyväksyt <a href='%{privacy_link}' target='blank'>tietosuojaselosteen</a> ja <a href='%{tos_link}' target='blank'>käyttöehdot</a>."
-      title: "Luo tili"
+      title: "Rekisteröidy"
       failed: "Jokin meni vikaan. Tämä sähköpostiosoite on ehkä jo rekisteröity, kokeile salasanan unohduslinkkiä"
       associate: "Onko sinulla jo tili? <a href='%{associate_link}'>Kirjaudu sisään</a> yhdistääksesi %{provider}-tilisi."
       activation_title: "Aktivoi tilisi"
+      already_have_account: "Onko sinulla jo tili?"
     forgot_password:
       title: "Salasanan palautus"
       action: "Unohdin salasanani"
@@ -4325,6 +4328,9 @@ fi:
       panels:
         forum:
           label: Keskustelualuea
+      back_to_forum: "Takaisin foorumille"
+      collapse_all_sections: "Pienennä kaikki osiot"
+      expand_all_sections: "Laajenna kaikki osiot"
       filter: "Suodata..."
       clear_filter: "Tyhjennä suodatin"
       no_results:
@@ -4435,10 +4441,7 @@ fi:
     admin:
       title: "Discoursen ylläpitäjä"
       moderator: "Valvoja"
-      back_to_forum: "Takaisin foorumille"
       filter_reports: Suodata raportteja
-      expand_all_sections: "Laajenna kaikki osiot"
-      collapse_all_sections: "Pienennä kaikki osiot"
       tags:
         remove_muted_tags_from_latest:
           always: "aina"
@@ -4928,6 +4931,19 @@ fi:
           optional: "(valinnainen)"
           update: "Päivitä"
           saved: "tallennettu!"
+        flags:
+          description: "Kuvaus"
+          enabled: "Otettu käyttöön?"
+          edit: "Muokkaa"
+          delete: "Poista"
+          delete_confirm: 'Haluatko varmasti poistaa teeman "%{name}"?'
+          form:
+            save: "Tallenna"
+            name: "Nimi"
+            description: "Kuvaus"
+            topic: "aiheet"
+            post: "viestit"
+            chat_message: "chat-viestit"
       plugins:
         title: "Lisäosat"
         installed: "Asennetut lisäosat"

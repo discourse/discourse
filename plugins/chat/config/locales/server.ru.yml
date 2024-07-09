@@ -216,8 +216,6 @@ ru:
         few: "и ещё %{count}"
         many: "и ещё %{count}"
         other: "и ещё %{count}"
-    summaries:
-      no_targets: "За выбранный период сообщений не было."
     transcript:
       default_thread_title: "Цепочка сообщений"
       split_thread_range: "сообщения от %{start} до %{end} из %{total}"

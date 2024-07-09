@@ -1,26 +1,55 @@
 # frozen_string_literal: true
 
 RSpec.describe "Message errors", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
-  let(:chat_page) { PageObjects::Pages::Chat.new }
-  let(:channel_page) { PageObjects::Pages::ChatChannel.new }
-  let(:max_length) { SiteSetting.chat_maximum_message_length }
-
-  before { chat_system_bootstrap }
-
   context "when message is too long" do
-    fab!(:channel) { Fabricate(:chat_channel) }
+    let(:chat_page) { PageObjects::Pages::Chat.new }
+    let(:dialog_page) { PageObjects::Components::Dialog.new }
+    let(:max_length) { SiteSetting.chat_maximum_message_length }
+    let(:message) { "atoolongmessage" + "a" * max_length }
 
-    before { channel.add(current_user) }
+    fab!(:current_user) { Fabricate(:admin) }
 
-    it "only shows the error, not the message" do
+    before do
+      chat_system_bootstrap
       sign_in(current_user)
-      chat_page.visit_channel(channel)
+    end
 
-      channel_page.send_message("atoolongmessage" + "a" * max_length)
+    context "when in channel" do
+      fab!(:channel) { Fabricate(:chat_channel) }
 
-      expect(page).to have_content(I18n.t("chat.errors.message_too_long", count: max_length))
-      expect(page).to have_no_content("atoolongmessage")
+      let(:channel_page) { PageObjects::Pages::ChatChannel.new }
+
+      before { channel.add(current_user) }
+
+      it "shows a dialog with the error and keeps the message in the input" do
+        chat_page.visit_channel(channel)
+
+        channel_page.send_message(message)
+
+        expect(dialog_page).to have_content(
+          I18n.t("chat.errors.message_too_long", count: max_length),
+        )
+        expect(channel_page.composer).to have_value(message)
+      end
+    end
+
+    context "when in thread" do
+      fab!(:thread) { Fabricate(:chat_thread) }
+
+      let(:thread_page) { PageObjects::Pages::ChatThread.new }
+
+      before { thread.add(current_user) }
+
+      it "shows a dialog with the error and keeps the message in the input" do
+        chat_page.visit_thread(thread)
+
+        thread_page.send_message(message)
+
+        expect(dialog_page).to have_content(
+          I18n.t("chat.errors.message_too_long", count: max_length),
+        )
+        expect(thread_page.composer).to have_value(message)
+      end
     end
   end
 end

@@ -22,6 +22,7 @@ hr:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -1106,6 +1107,7 @@ hr:
       none: "(odaberi opciju)"
       required: 'Unesi vrijednost za "%{name}"'
       same_as_password: "Vaša lozinka ne smije se ponavljati u drugim poljima."
+      optional: (opcionalno)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -2058,10 +2060,11 @@ hr:
       header_title: "Dobrodošli!"
       subheader_title: "Kreirajmo vaš račun"
       disclaimer: "Registracijom pristajete na <a href='%{privacy_link}' target='blank'>politiku privatnosti</a> i <a href='%{tos_link}' target='blank'>uvjete korištenja</a>."
-      title: "Kreiraj svoj račun"
+      title: "Učlani se"
       failed: "Nešto je pošlo krivo, možda je ovaj e-mail već registriran, pokušajte s poveznicom za zaboravljenu zaporku."
       associate: "Već imate račun? <a href='%{associate_link}'>Prijavite se</a> da biste povezali svoj %{provider} račun."
       activation_title: "Aktivirajte svoj račun"
+      already_have_account: "Već imate račun?"
     forgot_password:
       title: "Poništavanje lozinke"
       action: "Zaboravio/la sam zaporku"
@@ -4825,6 +4828,18 @@ hr:
           optional: "(opcionalno)"
           update: "Ažuriraj"
           saved: "spremljeno!"
+        flags:
+          description: "Opis"
+          enabled: "Omogućeno?"
+          edit: "Uredi"
+          delete: "Pobriši"
+          delete_confirm: 'Jeste li sigurni da želite izbrisati "%{name}"?'
+          form:
+            save: "Spremi"
+            name: "Ime"
+            description: "Opis"
+            topic: "tema"
+            post: "objave"
       plugins:
         title: "Dodaci"
         installed: "Instalirani dodaci"

@@ -6,6 +6,7 @@ import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-pa
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
+import { escapeExpression } from "discourse/lib/utilities";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
@@ -362,7 +363,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
 
   filterNoResultsDescription(filter) {
     const params = {
-      filter,
+      filter: escapeExpression(filter),
       settings_filter_url: getURL(
         `/admin/site_settings/category/all_results?filter=${encodeURIComponent(
           filter

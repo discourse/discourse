@@ -190,8 +190,6 @@ fi:
       and_x_others:
         one: "ja %{count} muu"
         other: "ja %{count} muuta"
-    summaries:
-      no_targets: "Valitun ajanjakson aikana ei ollut viestejä."
     transcript:
       default_thread_title: "Ketju"
       split_thread_range: "viestit %{start}–%{end}/%{total}"

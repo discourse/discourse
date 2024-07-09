@@ -889,6 +889,7 @@ el:
     user_fields:
       none: "(διαλέξτε μία επιλογή)"
       required: 'Παρακαλώ εισαγάγετε μια τιμή για το "%{name}»'
+      optional: (προεραιτικό)
     user:
       said: "%{username}:"
       profile: "Προφίλ"
@@ -1560,9 +1561,10 @@ el:
       header_title: "Καλωσόρισες!"
       subheader_title: "Ας δημιουργήσουμε τον λογαριασμό σας"
       disclaimer: "Κάνοντας εγγραφή συμφωνείς με την <a href='%{privacy_link}'>πολιτική ιδιωτικότητας</a> και με τους <a href='%{tos_link}'>όρους χρήσης</a>."
-      title: "Δημιουργήστε τον λογαριασμό σας"
+      title: "Εγγραφή"
       failed: "Κάτι πήγε στραβά. Ίσως αυτή η διεύθυνση email να είναι ήδη δηλωμένη. Δοκίμασε την λειτουργία «ξέχασα τον κωδικό μου»."
       associate: "Έχετε ήδη λογαριασμό; <a href='%{associate_link}'>Συνδεθείτε</a> για να συνδέσετε τον λογαριασμό σας %{provider}."
+      already_have_account: "Έχετε ήδη λογαριασμό;"
     forgot_password:
       title: "Επαναφορά Κωδικού"
       action: "Ξέχασα τον κωδικό πρόσβασής μου"
@@ -3670,6 +3672,18 @@ el:
           optional: "(προεραιτικό)"
           update: "Ενημέρωση"
           saved: "αποθηκεύτηκε!"
+        flags:
+          description: "Περιγραφή"
+          enabled: "Ενεργοποιημένο;"
+          edit: "Επεξεργασία"
+          delete: "Σβήσιμο"
+          delete_confirm: 'Είστε βέβαιοι πως θέλετε να διαγράψετε το «%{name}»;'
+          form:
+            save: "Αποθήκευση"
+            name: "Όνομα"
+            description: "Περιγραφή"
+            topic: "θέματα"
+            post: "αναρτήσεις"
       plugins:
         title: "Plugins"
         installed: "Εγκατεστημένα Plugins"

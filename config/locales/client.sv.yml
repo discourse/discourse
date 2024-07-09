@@ -21,6 +21,7 @@ sv:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -1041,6 +1042,7 @@ sv:
       none: "(välj ett alternativ)"
       required: 'Ange ett värde för "%{name}"'
       same_as_password: "Upprepa inte ditt lösenord i andra fält."
+      optional: (valfri)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1987,10 +1989,11 @@ sv:
       header_title: "Välkommen!"
       subheader_title: "Låt oss skapa ditt konto"
       disclaimer: "Genom att registrera dig godkänner du <a href='%{privacy_link}' target='blank'>integritetspolicyn</a> och <a href='%{tos_link}' target='blank'>användarvillkoren</a>."
-      title: "Skapa ditt konto"
+      title: "Registrera dig"
       failed: "Något gick fel, kanske är denna e-postadress redan registrerad, prova länken Glömt lösenord"
       associate: "Har du redan ett konto? <a href='%{associate_link}'>Logga in</a> för att länka ditt %{provider}-konto."
       activation_title: "Aktivera ditt konto"
+      already_have_account: "Har du redan ett konto?"
     forgot_password:
       title: "Beställ nytt lösenord"
       action: "Jag har glömt mitt lösenord"
@@ -4325,6 +4328,7 @@ sv:
       panels:
         forum:
           label: Forum
+      back_to_forum: "Tillbaka till forumet"
       filter: "Filter..."
     welcome_topic_banner:
       title: "Skapa ditt välkomstämne"
@@ -4431,7 +4435,6 @@ sv:
     admin:
       title: "Discourse-administratör"
       moderator: "Moderator"
-      back_to_forum: "Tillbaka till forumet"
       filter_reports: Filtrera rapporter
       tags:
         remove_muted_tags_from_latest:
@@ -4907,6 +4910,19 @@ sv:
           optional: "(valfri)"
           update: "Uppdatera"
           saved: "sparat!"
+        flags:
+          description: "Beskrivning"
+          enabled: "Aktiverad?"
+          edit: "Redigera"
+          delete: "Ta bort"
+          delete_confirm: 'Är du säker på att du vill radera "%{name}"?'
+          form:
+            save: "Spara"
+            name: "Namn"
+            description: "Beskrivning"
+            topic: "ämnen"
+            post: "inlägg"
+            chat_message: "chattmeddelanden"
       plugins:
         title: "Tillägg"
         installed: "Installerade tillägg"

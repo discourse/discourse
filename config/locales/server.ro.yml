@@ -870,6 +870,12 @@ ro:
       labels:
         user: Utilizator
         qtt_like: Aprecieri primite
+    topic_view_stats:
+      labels:
+        topic: Discuție
+        logged_in_views: Autentificați
+        anon_views: Anonimi
+        total_views: Total
   dashboard:
     problem:
       twitter_login: 'Conectarea la Twitter pare să nu funcționeze în acest moment. Verifică datele de conectare în <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">setările site-ului</a>.'

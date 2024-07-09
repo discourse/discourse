@@ -190,8 +190,6 @@ pt_BR:
       and_x_others:
         one: "e %{count} outro"
         other: "e %{count} outros"
-    summaries:
-      no_targets: "Não houve mensagens durante o período selecionado."
     transcript:
       default_thread_title: "Linha de discussão"
       split_thread_range: "mensagens de %{start} a %{end}, de %{total}"

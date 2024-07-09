@@ -445,7 +445,8 @@ export default class TopicListItem extends Component {
                 class="raw-link raw-topic-link"
               />
               {{~#if @topic.featured_link~}}
-                {{topicFeaturedLink @topic}}
+                &nbsp;
+                {{~topicFeaturedLink @topic}}
               {{~/if~}}
               <PluginOutlet @name="topic-list-after-title" />
               {{~#if @topic.unseen~}}

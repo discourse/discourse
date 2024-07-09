@@ -242,8 +242,6 @@ ar:
         few: "و%{count} آخرين"
         many: "و%{count} آخرين"
         other: "و%{count} آخرين"
-    summaries:
-      no_targets: "لم تكن هناك رسائل خلال الفترة المحدَّدة."
     transcript:
       default_thread_title: "سلسلة الدردشة"
       split_thread_range: "الرسائل %{start} إلى %{end} من إجمالي %{total}"

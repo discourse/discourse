@@ -1030,6 +1030,7 @@ sr:
     search_hint: "korisničko ime, e-mail ili IP adresa"
     create_account:
       header_title: "Добро дошли!"
+      title: "Registrujte se"
       failed: "Nešto nije u redu, možda je ovaj e-mail već registrovan, pokušajte s linkom za zaboravljenu šifru."
     forgot_password:
       action: "Zaboravio/la sam šifru"
@@ -2012,6 +2013,17 @@ sr:
       config_areas:
         about:
           saved: "sačuvano!"
+        flags:
+          description: "Opis"
+          enabled: "Omgućeno"
+          edit: "Izmeni"
+          delete: "Obriši"
+          form:
+            save: "Sačuvaj"
+            name: "Ime foruma"
+            description: "Opis"
+            topic: "teme"
+            post: "poruke"
       plugins:
         title: "Dodatci"
         name: "Ime foruma"
