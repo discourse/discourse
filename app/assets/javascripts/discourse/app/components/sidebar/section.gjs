@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import concatClass from "discourse/helpers/concat-class";
 import {
   getCollapsedSidebarSectionKey,
   getSidebarSectionContentId,
@@ -60,7 +61,7 @@ export default class SidebarSection extends Component {
   }
 
   get displaySectionContent() {
-    if (!isEmpty(this.sidebarState.filter)) {
+    if (this.args.hideSectionHeader || !isEmpty(this.sidebarState.filter)) {
       return true;
     }
 
@@ -115,7 +116,15 @@ export default class SidebarSection extends Component {
       <div
         {{didInsert this.setExpandedState}}
         data-section-name={{@sectionName}}
-        class="sidebar-section-wrapper sidebar-section"
+        class={{concatClass
+          "sidebar-section"
+          "sidebar-section-wrapper"
+          (if
+            this.displaySectionContent
+            "sidebar-section--expanded"
+            "sidebar-section--collapsed"
+          )
+        }}
         ...attributes
       >
         {{#unless @hideSectionHeader}}
