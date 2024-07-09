@@ -62,7 +62,11 @@ export default class BackupCodes extends Component {
   }
 
   <template>
-    <div class="backup-codes" {{on "click" this._selectAllBackupCodes}}>
+    <div
+      class="backup-codes"
+      role="button"
+      {{on "click" this._selectAllBackupCodes}}
+    >
       <div class="wrapper">
         <textarea
           id="backupCodes"
@@ -81,19 +85,18 @@ export default class BackupCodes extends Component {
             class="btn-default backup-codes-copy-btn"
           />
 
-          <a
+          <DButton
             download="{{this.siteTitleSlug}}-backup-codes.txt"
-            class="btn btn-default no-text btn-icon backup-codes-download-btn"
+            class="backup-codes-download-btn"
             aria-label={{i18n
               "user.second_factor_backup.download_backup_codes"
             }}
             title={{i18n "user.second_factor_backup.download_backup_codes"}}
             rel="noopener noreferrer"
             target="_blank"
-            href="data:application/octet-stream;charset=utf-8;base64,{{this.base64BackupCode}}"
-          >
-            {{icon "download"}}
-          </a>
+            @href="data:application/octet-stream;charset=utf-8;base64,{{this.base64BackupCode}}"
+            @icon="download"
+          />
         </div>
       </div>
     </div>
