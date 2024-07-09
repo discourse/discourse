@@ -2517,6 +2517,9 @@ backups:
     hidden: true
     default: ""
     regex: '^[a-z0-9\-\/_]+$' # can't use '.' when using HTTPS
+  s3_inventory_bucket_region:
+    hidden: true
+    default: ""
   s3_disable_cleanup:
     default: false
   backup_time_of_day:
