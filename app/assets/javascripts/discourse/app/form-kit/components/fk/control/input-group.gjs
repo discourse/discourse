@@ -11,10 +11,14 @@ const FKControlInputGroup = <template>
         Button=(component DButton)
         Field=(component
           FKField
+          errors=@errors
+          addError=@addError
           data=@data
           set=@set
+          remove=@remove
           registerField=@registerField
           unregisterField=@unregisterField
+          triggerRevalidationFor=@triggerRevalidationFor
           showMeta=false
         )
       )

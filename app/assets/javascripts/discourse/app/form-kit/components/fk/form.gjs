@@ -315,10 +315,14 @@ export default class FKForm extends Component {
           )
           InputGroup=(component
             FKControlInputGroup
+            errors=this.formData.errors
+            addError=this.addError
             data=this.formData.draftData
             set=this.set
+            remove=this.remove
             registerField=this.registerField
             unregisterField=this.unregisterField
+            triggerRevalidationFor=this.triggerRevalidationFor
           )
           set=this.set
           addItemToCollection=this.addItemToCollection
