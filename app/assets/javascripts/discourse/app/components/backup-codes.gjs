@@ -62,11 +62,7 @@ export default class BackupCodes extends Component {
   }
 
   <template>
-    <div
-      class="backup-codes"
-      role="button"
-      {{on "click" this._selectAllBackupCodes}}
-    >
+    <div class="backup-codes">
       <div class="wrapper">
         <textarea
           id="backupCodes"
@@ -74,6 +70,7 @@ export default class BackupCodes extends Component {
           rows="10"
           readonly
           {{didInsert this.registerBackupCodesArea}}
+          {{on "click" this._selectAllBackupCodes}}
         >{{this.formattedBackupCodes}}</textarea>
 
         <div class="controls">
