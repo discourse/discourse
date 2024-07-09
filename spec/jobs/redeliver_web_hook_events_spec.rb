@@ -63,7 +63,7 @@ RSpec.describe Jobs::RedeliverWebHookEvents do
         },
       ).to_return(status: 400, body: "", headers: {})
 
-      job.execute(web_hook: web_hook, web_hook_event: web_hook_event2)
+      job.execute({})
 
       expect(RedeliveringWebhookEvent.count).to eq(1)
       expect(
