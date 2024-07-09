@@ -2,7 +2,6 @@
  * A Changeset class that manages data and tracks changes.
  */
 import { tracked } from "@glimmer/tracking";
-import { set } from "@ember/object";
 import { next } from "@ember/runloop";
 import { applyPatches, enablePatches, produce } from "immer";
 
@@ -184,8 +183,12 @@ export default class FKFormData {
   set(name, value) {
     this.draftData = produce(
       this.draftData,
-      (d) => {
-        set(d, name, value);
+      (target) => {
+        const parts = name.split(".");
+        while (parts.length > 1) {
+          target = target[parts.shift()];
+        }
+        target[parts[0]] = value;
       },
       (patches, inversePatches) => {
         this.patches.push(...patches);
