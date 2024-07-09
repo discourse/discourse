@@ -1,5 +1,5 @@
-import SidebarCustomSection from "../common/custom-sections";
+import SidebarCustomSections from "../common/custom-sections";
 
-export default class SidebarAnonymousCustomSections extends SidebarCustomSection {
+export default class SidebarAnonymousCustomSections extends SidebarCustomSections {
   anonymous = true;
 }
