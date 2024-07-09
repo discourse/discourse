@@ -44,8 +44,14 @@ export default class FKFormData {
    * @param {any} data - The initial data.
    */
   constructor(data) {
-    this.data = produce(data, () => {});
-    this.draftData = produce(data, () => {});
+    try {
+      this.data = produce(data, () => {});
+      this.draftData = produce(data, () => {});
+    } catch (e) {
+      if (e.message.includes("[Immer]")) {
+        throw new Error("[FormKit]: the @data property expects a POJO.");
+      }
+    }
   }
 
   /**
