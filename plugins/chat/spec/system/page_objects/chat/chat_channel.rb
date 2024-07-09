@@ -35,8 +35,9 @@ module PageObjects
       end
 
       def click_composer
-        return if has_css?(".dialog-overlay") # we can't click composer if a dialog is open, in case of error for exampel
-        find(".chat-channel .chat-composer__input").click # ensures autocomplete is closed and not masking anything
+        if has_no_css?(".dialog-overlay") # we can't click composer if a dialog is open, in case of error for exampel
+          find(".chat-channel .chat-composer__input").click # ensures autocomplete is closed and not masking anything
+        end
       end
 
       def click_send_message
