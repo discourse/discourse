@@ -40,24 +40,26 @@ export default class IgnoredUserList extends Component {
   }
 
   <template>
-    <div class="ignored-list">
-      {{#each @items as |item|}}
-        <IgnoredUserListItem
-          @item={{item}}
-          @onRemoveIgnoredUser={{this.removeIgnoredUser}}
-        />
-      {{else}}
-        {{i18n "user.user_notifications.ignore_no_users"}}
-      {{/each}}
-    </div>
-    <div class="instructions">{{i18n "user.ignored_users_instructions"}}</div>
     <div>
-      <DButton
-        @action={{this.newIgnoredUser}}
-        @icon="plus"
-        @label="user.user_notifications.add_ignored_user"
-        class="btn-default"
-      />
+      <div class="ignored-list">
+        {{#each @items as |item|}}
+          <IgnoredUserListItem
+            @item={{item}}
+            @onRemoveIgnoredUser={{this.removeIgnoredUser}}
+          />
+        {{else}}
+          {{i18n "user.user_notifications.ignore_no_users"}}
+        {{/each}}
+      </div>
+      <div class="instructions">{{i18n "user.ignored_users_instructions"}}</div>
+      <div>
+        <DButton
+          @action={{this.newIgnoredUser}}
+          @icon="plus"
+          @label="user.user_notifications.add_ignored_user"
+          class="btn-default"
+        />
+      </div>
     </div>
   </template>
 }
