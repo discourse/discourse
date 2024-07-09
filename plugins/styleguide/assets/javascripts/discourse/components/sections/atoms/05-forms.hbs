@@ -127,6 +127,38 @@
   </Form>
 </StyleguideExample>
 
+<StyleguideExample @title="InputGroup">
+  <Form as |form data|>
+    <form.InputGroup as |inputGroup|>
+      <inputGroup.Field @title="Username" @name="username" as |field|>
+        <field.Input />
+      </inputGroup.Field>
+      <inputGroup.Text>
+        Email:
+      </inputGroup.Text>
+      <inputGroup.Field @title="Email" @name="email" as |field|>
+        <field.Input />
+      </inputGroup.Field>
+    </form.InputGroup>
+  </Form>
+</StyleguideExample>
+
+<StyleguideExample @title="Collection">
+  <Form as |form data|>
+    <form.Button @action={{fn form.addItemToCollection "foo"}} @icon="plus" />
+    <form.Collection @name="foo" as |collection index|>
+      <collection.Field @title="Bar" @name="bar" as |field|>
+        <field.Input />
+      </collection.Field>
+      <collection.Field @title="Baz" @name="baz" as |field|>
+        <field.Input />
+      </collection.Field>
+
+      <form.Button @action={{fn collection.remove index}} @icon="minus" />
+    </form.Collection>
+  </Form>
+</StyleguideExample>
+
 <h2>Validation</h2>
 
 <StyleguideExample @title="Input">
