@@ -681,6 +681,14 @@ module Oneboxer
 
     uri = URI(url)
 
+    # For private GitHub repos, we get a 404 when trying to use
+    # FinalDestination to request the final URL because no auth headers
+    # are sent. In this case we can ignore redirects and go straight to
+    # using Onebox.preview
+    if SiteSetting.github_onebox_access_token.present? && uri.hostname == "github.com"
+      fd_options[:ignore_redirects] << "https://github.com"
+    end
+
     strategy = Oneboxer.ordered_strategies(uri.hostname).shift if strategy.blank?
 
     if strategy && Oneboxer.strategies[strategy][:force_get_host]
