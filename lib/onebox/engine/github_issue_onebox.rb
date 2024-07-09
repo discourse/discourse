@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "../mixins/github_body"
+require_relative "../mixins/github_auth_header"
 
 module Onebox
   module Engine
@@ -10,6 +11,7 @@ module Onebox
       include LayoutSupport
       include JSON
       include Onebox::Mixins::GithubBody
+      include Onebox::Mixins::GithubAuthHeader
 
       matches_regexp(
         %r{^https?://(?:www\.)?(?:(?:\w)+\.)?github\.com/(?<org>.+)/(?<repo>.+)/issues/([[:digit:]]+)},
@@ -35,31 +37,32 @@ module Onebox
       end
 
       def data
-        created_at = Time.parse(raw["created_at"])
-        closed_at = Time.parse(raw["closed_at"]) if raw["closed_at"]
-        body, excerpt = compute_body(raw["body"])
+        result = raw(github_auth_header).clone
+        created_at = Time.parse(result["created_at"])
+        closed_at = Time.parse(result["closed_at"]) if result["closed_at"]
+        body, excerpt = compute_body(result["body"])
         ulink = URI(link)
 
         labels =
-          raw["labels"].map do |l|
+          result["labels"].map do |l|
             { name: Emoji.codes_to_img(Onebox::Helpers.sanitize(l["name"])) }
           end
 
         {
           link: @url,
-          title: raw["title"],
+          title: result["title"],
           body: body,
           excerpt: excerpt,
           labels: labels,
-          user: raw["user"],
+          user: result["user"],
           created_at: created_at.strftime("%I:%M%p - %d %b %y %Z"),
           created_at_date: created_at.strftime("%F"),
           created_at_time: created_at.strftime("%T"),
           closed_at: closed_at&.strftime("%I:%M%p - %d %b %y %Z"),
           closed_at_date: closed_at&.strftime("%F"),
           closed_at_time: closed_at&.strftime("%T"),
-          closed_by: raw["closed_by"],
-          avatar: "https://avatars1.githubusercontent.com/u/#{raw["user"]["id"]}?v=2&s=96",
+          closed_by: result["closed_by"],
+          avatar: "https://avatars1.githubusercontent.com/u/#{result["user"]["id"]}?v=2&s=96",
           domain: "#{ulink.host}/#{ulink.path.split("/")[1]}/#{ulink.path.split("/")[2]}",
           i18n: i18n,
         }

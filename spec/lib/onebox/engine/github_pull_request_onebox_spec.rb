@@ -90,4 +90,17 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
       expect(html).to include("You&#39;ve signed the CLA")
     end
   end
+
+  context "when github_onebox_access_token is configured" do
+    before { SiteSetting.github_onebox_access_token = "1234" }
+
+    it "sends it as part of the request" do
+      html
+      expect(WebMock).to have_requested(:get, @uri).with(
+        headers: {
+          "Authorization" => "Bearer #{SiteSetting.github_onebox_access_token}",
+        },
+      )
+    end
+  end
 end
