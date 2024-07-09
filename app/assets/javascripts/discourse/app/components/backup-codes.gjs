@@ -6,7 +6,6 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import copyText from "discourse/lib/copy-text";
 import { slugify, toAsciiPrintable } from "discourse/lib/utilities";
-import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 
 // https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
