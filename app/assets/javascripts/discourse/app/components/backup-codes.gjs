@@ -79,7 +79,7 @@ export default class BackupCodes extends Component {
             @icon="copy"
             @ariaLabel="user.second_factor_backup.copy_to_clipboard"
             @title="user.second_factor_backup.copy_to_clipboard"
-            class="btn-default backup-codes-copy-btn"
+            class="backup-codes-copy-btn"
           />
 
           <DButton
