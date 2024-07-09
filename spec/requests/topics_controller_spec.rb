@@ -5382,6 +5382,12 @@ RSpec.describe TopicsController do
         )
       end
 
+      it "works even when the author has been deleted" do
+        topic.update!(user_id: nil)
+
+        get "#{topic.relative_url}/2"
+      end
+
       context "with canonical_url" do
         fab!(:topic_embed) { Fabricate(:topic_embed, embed_url: "https://markvanlan.com") }
         let!(:user_agent) do
