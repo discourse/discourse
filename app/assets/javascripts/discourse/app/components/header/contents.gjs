@@ -27,7 +27,11 @@ export default class Contents extends Component {
     <div class="contents">
       <PluginOutlet
         @name="header-contents__before"
-        @outletArgs={{hash topic=this.header.topic}}
+        @outletArgs={{hash
+          topic=this.header.topic
+          topicInfo=this.header.topicInfo
+          topicInfoVisible=this.header.topicInfoVisible
+        }}
       />
       {{#if this.site.desktopView}}
         {{#if @sidebarEnabled}}
@@ -46,7 +50,7 @@ export default class Contents extends Component {
       </div>
 
       {{#if this.header.topicInfoVisible}}
-        <TopicInfo @topic={{this.header.topicId}} />
+        <TopicInfo @topic={{this.header.topicInfo}} />
       {{else if
         (and
           this.siteSettings.bootstrap_mode_enabled
@@ -62,19 +66,31 @@ export default class Contents extends Component {
       <div class="before-header-panel-outlet">
         <PluginOutlet
           @name="before-header-panel"
-          @outletArgs={{hash topic=this.header.topic}}
+          @outletArgs={{hash
+            topic=this.header.topic
+            topicInfo=this.header.topicInfo
+            topicInfoVisible=this.header.topicInfoVisible
+          }}
         />
       </div>
       <div class="panel" role="navigation">{{yield}}</div>
       <div class="after-header-panel-outlet">
         <PluginOutlet
           @name="after-header-panel"
-          @outletArgs={{hash topic=this.header.topic}}
+          @outletArgs={{hash
+            topic=this.header.topic
+            topicInfo=this.header.topicInfo
+            topicInfoVisible=this.header.topicInfoVisible
+          }}
         />
       </div>
       <PluginOutlet
         @name="header-contents__after"
-        @outletArgs={{hash topic=this.header.topic}}
+        @outletArgs={{hash
+          topic=this.header.topic
+          topicInfo=this.header.topicInfo
+          topicInfoVisible=this.header.topicInfoVisible
+        }}
       />
     </div>
   </template>

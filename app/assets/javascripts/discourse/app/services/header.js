@@ -10,15 +10,18 @@ export default class Header extends Service {
   @service siteSettings;
 
   /**
-   * The ID of the topic currently viewed on the page. The information is updated as soon as the page is loaded.
+   * The topic currently viewed on the page.
+   *
+   * The information is updated as soon as the page is loaded.
    *
    * @type {Integer|null}
    */
-  @tracked topicId = null;
+  @tracked topicInfo = null;
 
   /**
-   * Indicates whether the topic information is visible on the header. The information is updated when the user scrolls
-   * the page.
+   * Indicates whether the topic information is visible on the header.
+   *
+   * The information is updated when the user scrolls the page.
    *
    * @type {boolean}
    */
@@ -32,14 +35,14 @@ export default class Header extends Service {
 
   get topic() {
     deprecated(
-      "`.topic` is deprecated in service:header. Use `.currentTopicId` or `.topicInfoVisible` instead.",
+      "`.topic` is deprecated in service:header. Use `.topicInfo` or `.topicInfoVisible` instead.",
       {
         id: "discourse.header-service-topic",
         since: "3.3.0.beta4-dev",
       }
     );
 
-    return this.topicInfoVisible ? this.topicId : null;
+    return this.topicInfoVisible ? this.topicInfo : null;
   }
 
   get useGlimmerHeader() {

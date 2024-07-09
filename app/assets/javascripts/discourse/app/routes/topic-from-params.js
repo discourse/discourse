@@ -46,7 +46,7 @@ export default class TopicFromParams extends DiscourseRoute {
       this.pmTopicTrackingState.startTracking();
     }
 
-    this.header.topicId = topic;
+    this.header.topicInfo = topic;
   }
 
   deactivate() {
