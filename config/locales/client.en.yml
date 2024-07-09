@@ -5348,6 +5348,7 @@ en:
         events:
           none: "There are no related events."
           redeliver: "Redeliver"
+          redeliver_failed: "Redeliver Failed"
           incoming:
             one: "There is a new event."
             other: "There are %{count} new events."
@@ -5357,6 +5358,8 @@ en:
           request: "Request"
           response: "Response"
           redeliver_confirm: "Are you sure you want to redeliver the same payload?"
+          redeliver_failed_confirm: "Are you sure you want to redeliver %{count} webhook events?"
+          no_events_to_redeliver: "No events to redeliver."
           headers: "Headers"
           payload: "Payload"
           body: "Body"
