@@ -363,4 +363,20 @@ RSpec.describe Admin::WebHooksController do
       end
     end
   end
+
+  describe "#redeliver_failed_events" do
+    fab!(:web_hook_event) { Fabricate(:web_hook_event, web_hook: web_hook, status: 404) }
+
+    before { sign_in(admin) }
+
+    it "stores failed events" do
+      post "/admin/api/web_hooks/#{web_hook.id}/events/failed_redeliver.json",
+           params: {
+             event_ids: web_hook_event.id,
+           }
+      expect(RedeliveringWebhookEvent.find_by(web_hook_event_id: web_hook_event.id)).not_to be_nil
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["event_ids"]).to eq([web_hook_event.id])
+    end
+  end
 end

@@ -158,7 +158,9 @@ class User < ActiveRecord::Base
             unless: :should_skip_user_fields_validation?
 
   validates_associated :primary_email,
-                       message: ->(_, user_email) { user_email[:value]&.errors&.[](:email)&.first }
+                       message: ->(_, user_email) do
+                         user_email[:value]&.errors&.[](:email)&.first.to_s
+                       end
 
   after_initialize :add_trust_level
 
@@ -2047,7 +2049,7 @@ class User < ActiveRecord::Base
         end
     end
 
-    TagUser.insert_all!(values) if values.present?
+    TagUser.insert_all(values) if values.present?
   end
 
   def self.purge_unactivated

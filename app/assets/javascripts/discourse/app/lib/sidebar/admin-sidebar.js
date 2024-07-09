@@ -1,4 +1,5 @@
 import { cached } from "@glimmer/tracking";
+import { htmlSafe } from "@ember/template";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
@@ -6,6 +7,7 @@ import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
 
 let additionalAdminSidebarSectionLinks = {};
@@ -81,6 +83,7 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
 
     return this.adminSidebarNavLink.route;
   }
+
   get keywords() {
     return (
       this.adminSidebarStateManager.keywords[this.adminSidebarNavLink.name] || {
@@ -257,6 +260,7 @@ function installedPluginsLinkKeywords() {
 export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   key = ADMIN_PANEL;
   hidden = true;
+  displayHeader = true;
 
   @cached
   get sections() {
@@ -314,6 +318,15 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       });
     }
 
+    if (currentUser.show_experimental_flags_admin_page) {
+      navMap.findBy("name", "community").links.push({
+        name: "admin_moderation_flags",
+        route: "adminConfig.flags",
+        label: "admin.community.sidebar_link.moderation_flags",
+        icon: "flag",
+      });
+    }
+
     navMap.forEach((section) =>
       section.links.forEach((link) => {
         if (link.keywords) {
@@ -345,5 +358,21 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
 
   get filterable() {
     return true;
+  }
+
+  filterNoResultsDescription(filter) {
+    const params = {
+      filter,
+      settings_filter_url: getURL(
+        `/admin/site_settings/category/all_results?filter=${encodeURIComponent(
+          filter
+        )}`
+      ),
+      user_list_filter_url: getURL(
+        `/admin/users/list/active?username=${encodeURIComponent(filter)}`
+      ),
+    };
+
+    return htmlSafe(I18n.t("sidebar.no_results.description", params));
   }
 }

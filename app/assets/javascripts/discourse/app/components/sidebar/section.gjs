@@ -5,6 +5,10 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import {
+  getCollapsedSidebarSectionKey,
+  getSidebarSectionContentId,
+} from "discourse/lib/sidebar/helpers";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
@@ -16,8 +20,10 @@ export default class SidebarSection extends Component {
   @service keyValueStore;
   @service sidebarState;
 
-  sidebarSectionContentID = `sidebar-section-content-${this.args.sectionName}`;
-  collapsedSidebarSectionKey = `sidebar-section-${this.args.sectionName}-collapsed`;
+  sidebarSectionContentId = getSidebarSectionContentId(this.args.sectionName);
+  collapsedSidebarSectionKey = getCollapsedSidebarSectionKey(
+    this.args.sectionName
+  );
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -116,7 +122,7 @@ export default class SidebarSection extends Component {
           <div class="sidebar-section-header-wrapper sidebar-row">
             <SectionHeader
               @collapsable={{@collapsable}}
-              @sidebarSectionContentID={{this.sidebarSectionContentID}}
+              @sidebarSectionContentId={{this.sidebarSectionContentId}}
               @toggleSectionDisplay={{this.toggleSectionDisplay}}
               @isExpanded={{this.displaySectionContent}}
             >
@@ -174,7 +180,7 @@ export default class SidebarSection extends Component {
 
         {{#if this.displaySectionContent}}
           <ul
-            id={{this.sidebarSectionContentID}}
+            id={{this.sidebarSectionContentId}}
             class="sidebar-section-content"
           >
             {{yield}}

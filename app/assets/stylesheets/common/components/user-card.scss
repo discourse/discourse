@@ -38,6 +38,7 @@
 // shared styles for user and group cards
 .user-card,
 .group-card {
+  min-width: 0;
   width: var(--card-width);
   color: var(--primary);
   background: var(--secondary) center center;

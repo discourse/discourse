@@ -17,6 +17,7 @@ en:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -1141,6 +1142,7 @@ en:
       none: "(select an option)"
       required: 'Please enter a value for "%{name}"'
       same_as_password: "Your password should not be repeated in other fields."
+      optional: (optional)
 
     user:
       said: "%{username}:"
@@ -2232,10 +2234,11 @@ en:
       header_title: "Welcome!"
       subheader_title: "Let's create your account"
       disclaimer: "By registering, you agree to the <a href='%{privacy_link}' target='blank'>privacy policy</a> and <a href='%{tos_link}' target='blank'>terms of service</a>."
-      title: "Create your account"
+      title: "Sign Up"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
       associate: "Already have an account? <a href='%{associate_link}'>Log In</a> to link your %{provider} account."
       activation_title: "Activate your account"
+      already_have_account: "Already have an account?"
 
     forgot_password:
       title: "Password Reset"
@@ -4803,6 +4806,9 @@ en:
       panels:
         forum:
           label: Forum
+      back_to_forum: "Back to Forum"
+      collapse_all_sections: "Collapse all sections"
+      expand_all_sections: "Expand all sections"
       filter: "Filter..."
       clear_filter: "Clear filter"
       no_results:
@@ -4923,10 +4929,7 @@ en:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
-      back_to_forum: "Back to Forum"
       filter_reports: Filter reports
-      expand_all_sections: "Expand all sections"
-      collapse_all_sections: "Collapse all sections"
 
       tags:
         remove_muted_tags_from_latest:
@@ -5345,6 +5348,7 @@ en:
         events:
           none: "There are no related events."
           redeliver: "Redeliver"
+          redeliver_failed: "Redeliver Failed"
           incoming:
             one: "There is a new event."
             other: "There are %{count} new events."
@@ -5354,6 +5358,8 @@ en:
           request: "Request"
           response: "Response"
           redeliver_confirm: "Are you sure you want to redeliver the same payload?"
+          redeliver_failed_confirm: "Are you sure you want to redeliver %{count} webhook events?"
+          no_events_to_redeliver: "No events to redeliver."
           headers: "Headers"
           payload: "Payload"
           body: "Body"

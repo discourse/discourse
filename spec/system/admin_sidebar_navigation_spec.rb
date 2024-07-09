@@ -31,6 +31,11 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(sidebar).to have_no_section("admin-root")
   end
 
+  it "displays the panel header" do
+    visit("/admin")
+    expect(sidebar).to have_panel_header
+  end
+
   it "collapses sections by default" do
     visit("/admin")
     links = page.all(".sidebar-section-link-content-text")
@@ -111,6 +116,56 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(links.count).to eq(1)
     expect(links.map(&:text)).to eq(["Preview Summary"])
     expect(page).to have_no_css(".sidebar-no-results")
+  end
+
+  it "escapes the filtered expression for regex expressions" do
+    visit("/admin")
+
+    filter.filter(".*") # this shouldn't return any results if the expression was escaped
+    expect(page).to have_no_css(".sidebar-section-link-content-text")
+    expect(page).to have_css(".sidebar-no-results")
+  end
+
+  it "displays the no results description message correctly when the filter has no results" do
+    visit("/admin")
+
+    filter.filter("ieeee")
+    expect(page).to have_no_css(".sidebar-section-link-content-text")
+    expect(page).to have_css(".sidebar-no-results")
+
+    no_results_description = page.find(".sidebar-no-results__description")
+    expect(no_results_description.text).to eq(
+      "We couldn’t find anything matching ‘ieeee’.\n\nDid you want to search site settings or the admin user list?",
+    )
+    expect(no_results_description).to have_link(
+      "search site settings",
+      href: "/admin/site_settings/category/all_results?filter=ieeee",
+    )
+    expect(no_results_description).to have_link(
+      "admin user list?",
+      href: "/admin/users/list/active?username=ieeee",
+    )
+  end
+
+  it "encodes the url param in the links when the filter has no results" do
+    visit("/admin")
+
+    filter.filter("?")
+    expect(page).to have_no_css(".sidebar-section-link-content-text")
+    expect(page).to have_css(".sidebar-no-results")
+
+    no_results_description = page.find(".sidebar-no-results__description")
+    expect(no_results_description.text).to eq(
+      "We couldn’t find anything matching ‘?’.\n\nDid you want to search site settings or the admin user list?",
+    )
+    expect(no_results_description).to have_link(
+      "search site settings",
+      href: "/admin/site_settings/category/all_results?filter=%3F",
+    )
+    expect(no_results_description).to have_link(
+      "admin user list?",
+      href: "/admin/users/list/active?username=%3F",
+    )
   end
 
   it "temporarily expands section when filter" do

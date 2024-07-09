@@ -15,3 +15,11 @@ export function hasDefaultSidebarCategories(siteSettings) {
 export function hasDefaultSidebarTags(siteSettings) {
   return siteSettings.default_navigation_menu_tags.length > 0;
 }
+
+export function getSidebarSectionContentId(name) {
+  return `sidebar-section-content-${name}`;
+}
+
+export function getCollapsedSidebarSectionKey(name) {
+  return `sidebar-section-${name}-collapsed`;
+}

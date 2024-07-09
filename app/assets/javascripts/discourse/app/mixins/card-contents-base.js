@@ -203,6 +203,7 @@ export default Mixin.create({
             bottom: 10,
             left: 10,
           },
+          maxWidth: "unset",
         });
       } else {
         this._menuInstance = await this.menu.show(target, {

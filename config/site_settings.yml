@@ -2348,13 +2348,6 @@ developer:
   bypass_wizard_check:
     default: false
     hidden: true
-  logging_provider:
-    hidden: true
-    default: "default"
-    type: "list"
-    choices:
-      - "default"
-      - "lograge"
   bootstrap_error_pages:
     hidden: true
     default: false
@@ -2424,6 +2417,12 @@ developer:
     client: true
     hidden: true
   experimental_topic_bulk_actions_enabled_groups:
+    default: ""
+    type: group_list
+    list_type: compact
+    allow_any: false
+    refresh: true
+  experimental_flags_admin_page_enabled_groups:
     default: ""
     type: group_list
     list_type: compact
