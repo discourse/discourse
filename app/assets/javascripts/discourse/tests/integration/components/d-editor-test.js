@@ -1,5 +1,12 @@
 import { next } from "@ember/runloop";
-import { click, fillIn, focus, render, settled } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  focus,
+  render,
+  settled,
+  triggerEvent,
+} from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -982,15 +989,14 @@ third line`
   //
   // c.f. https://github.com/emberjs/ember-test-helpers/blob/master/API.md#typein and
   // https://github.com/emberjs/ember-test-helpers/issues/1336
-  function triggerEnter(textarea) {
-    let event = new Event("beforeinput");
-    event.inputType = "insertLineBreak";
-    textarea.dispatchEvent(event);
-
-    event = new Event("input");
-    event.inputType = "insertText";
-    event.data = "\n";
-    textarea.dispatchEvent(event);
+  async function triggerEnter(textarea) {
+    await triggerEvent(textarea, "beforeinput", {
+      inputType: "insertLineBreak",
+    });
+    await triggerEvent(textarea, "input", {
+      inputType: "insertText",
+      data: "\n",
+    });
   }
 
   testCase(
@@ -999,7 +1005,7 @@ third line`
       const initialValue = "* first item in list\n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      triggerEnter(textarea);
+      await triggerEnter(textarea);
 
       assert.strictEqual(this.value, initialValue + "* ");
     }
@@ -1011,7 +1017,7 @@ third line`
       const initialValue = "- first item in list\n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      triggerEnter(textarea);
+      await triggerEnter(textarea);
       assert.strictEqual(this.value, initialValue + "- ");
     }
   );
@@ -1022,7 +1028,7 @@ third line`
       const initialValue = "1. first item in list\n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      triggerEnter(textarea);
+      await triggerEnter(textarea);
       assert.strictEqual(this.value, initialValue + "2. ");
     }
   );
@@ -1033,7 +1039,7 @@ third line`
       const initialValue = "* first item in list\n\n* second item in list";
       this.set("value", initialValue);
       setCaretPosition(textarea, 21);
-      triggerEnter(textarea);
+      await triggerEnter(textarea);
       assert.strictEqual(
         this.value,
         "* first item in list\n* \n* second item in list"
@@ -1047,7 +1053,7 @@ third line`
       const initialValue = "1. first item in list\n\n2. second item in list";
       this.set("value", initialValue);
       setCaretPosition(textarea, 22);
-      triggerEnter(textarea);
+      await triggerEnter(textarea);
       assert.strictEqual(
         this.value,
         "1. first item in list\n2. \n3. second item in list"
@@ -1061,7 +1067,7 @@ third line`
       const initialValue = "* first item in list with empty line\n* \n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      triggerEnter(textarea);
+      await triggerEnter(textarea);
       assert.strictEqual(this.value, "* first item in list with empty line\n");
     }
   );
