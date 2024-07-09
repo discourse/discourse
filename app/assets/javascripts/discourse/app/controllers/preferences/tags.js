@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
 import { service } from "@ember/service";
-import I18n from "i18n";
+import I18n from "discourse-i18n";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
 
