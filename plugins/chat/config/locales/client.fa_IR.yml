@@ -109,6 +109,7 @@ fa_IR:
       edit: "ویرایش"
       copy_link: "کپی پیوند"
       rebake_message: "ساخت مجدد HTML"
+      message_too_long: "پیام خیلی طولانی است، پیام‌ها باید حداکثر %{count} کاراکتر داشته باشند."
       retry_staged_message:
         title: "خطای شبکه"
         action: "دوباره بفرستم؟"

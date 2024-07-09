@@ -1383,6 +1383,12 @@ fi:
         user: Käyttäjä
         qtt_like: Saatuja tykkäyksiä
       description: "10 käyttäjää, jotka ovat saaneet eniten tykkäyksiä monilta erilaisilta ihmisiltä."
+    topic_view_stats:
+      labels:
+        topic: Ketju
+        logged_in_views: Kirjautuneita
+        anon_views: Anonyymi
+        total_views: Yhteensä
   dashboard:
     problem:
       rails_env: "Palvelintasi ajetaan tilassa %{env}."

@@ -151,15 +151,6 @@ uk:
       heading: "Чат"
       join: "Приєднатися"
       last_visit: "останнє відвідування"
-      summarization:
-        title: "Підсумкове повідомлення"
-        description: "Виберіть опцію нижче, щоб підсумувати розмову, надіслану протягом визначеного періоду."
-        summarize: "Підсумок"
-        since:
-          one: "Остання година"
-          few: "Останні %{count} години"
-          many: "Останні %{count} годин"
-          other: "Останні %{count} годин"
       mention_warning:
         invitations_sent:
           one: "Запрошення надіслано"
@@ -293,6 +284,7 @@ uk:
       copy_link: "Скопіювати посилання"
       copy_text: "Копіювати текст"
       rebake_message: "Перебудувати HTML"
+      message_too_long: "Повідомлення занадто довге, повідомлення має бути не більше %{count} символів."
       retry_staged_message:
         title: "Помилка мережі"
         action: "Надіслати ще раз?"

@@ -140,13 +140,6 @@ nl:
       heading: "Chat"
       join: "Deelnemen"
       last_visit: "laatste bezoek"
-      summarization:
-        title: "Berichten samenvatten"
-        description: "Selecteer hieronder een optie om het gesprek samen te vatten dat tijdens de gewenste periode is gevoerd."
-        summarize: "Samenvatten"
-        since:
-          one: "Afgelopen uur"
-          other: "Afgelopen %{count} uur"
       mention_warning:
         invitations_sent:
           one: "Uitnodiging gestuurd"
@@ -254,6 +247,7 @@ nl:
       copy_link: "Link kopiëren"
       copy_text: "Tekst kopiëren"
       rebake_message: "HTML opnieuw opbouwen"
+      message_too_long: "Bericht is te lang, berichten mogen maximaal %{count} tekens lang zijn."
       retry_staged_message:
         title: "Netwerkfout"
         action: "Opnieuw sturen?"

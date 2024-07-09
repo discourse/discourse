@@ -1223,6 +1223,12 @@ da:
         user: Bruger
         qtt_like: Likes modtaget
       description: "Top 10 over brugere, der har fået 'Synes godt om' fra en lang række personer."
+    topic_view_stats:
+      labels:
+        topic: Emne
+        logged_in_views: Logget ind
+        anon_views: Anonym
+        total_views: Total
   dashboard:
     problem:
       rails_env: "Din server kører i %{env}-tilstand."

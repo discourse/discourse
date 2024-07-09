@@ -21,6 +21,7 @@ it:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -1038,6 +1039,7 @@ it:
       none: "(scegli un'opzione)"
       required: 'Inserisci un valore per "%{name}"'
       same_as_password: "La tua password non deve essere ripetuta in altri campi."
+      optional: (opzionale)
     user:
       said: "%{username}:"
       profile: "Profilo"
@@ -1977,10 +1979,11 @@ it:
       header_title: "Benvenuti!"
       subheader_title: "Creiamo il tuo account"
       disclaimer: "Registrandoti accetti <a href='%{privacy_link}' target='blank'>Informativa sulla privacy</a> e <a href='%{tos_link}' target='blank'>termini del servizio</a>."
-      title: "Crea il tuo account"
+      title: "Iscriviti"
       failed: "Qualcosa non ha funzionato. Forse questa email è già registrata, prova a usare il link di recupero password"
       associate: "Hai già un account? <a href='%{associate_link}'>Accedi</a> per collegare il tuo account %{provider}."
       activation_title: "Attiva il tuo account"
+      already_have_account: "Hai già un account?"
     forgot_password:
       title: "Reimposta Password"
       action: "Ho dimenticato la password"
@@ -4300,6 +4303,7 @@ it:
       panels:
         forum:
           label: Forum
+      back_to_forum: "Torna al forum"
       filter: "Filtro..."
       no_results:
         title: "Nessun risultato"
@@ -4408,7 +4412,6 @@ it:
     admin:
       title: "Amministratore Discourse"
       moderator: "Moderatore"
-      back_to_forum: "Torna al forum"
       filter_reports: Filtra rapporti
       tags:
         remove_muted_tags_from_latest:
@@ -4878,6 +4881,19 @@ it:
           optional: "(opzionale)"
           update: "Aggiorna"
           saved: "salvato!"
+        flags:
+          description: "Descrizione"
+          enabled: "Abilitato?"
+          edit: "Modifica"
+          delete: "Cancella"
+          delete_confirm: 'Sei sicuro di voler eliminare "%{name}"?'
+          form:
+            save: "Salva"
+            name: "Nome"
+            description: "Descrizione"
+            topic: "argomenti"
+            post: "messaggi"
+            chat_message: "messaggi di chat"
       plugins:
         title: "Plugin"
         installed: "Plugin Installati"

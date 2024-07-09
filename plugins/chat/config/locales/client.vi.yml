@@ -35,8 +35,6 @@ vi:
       flag: "Gắn cờ"
       join: "Tham gia"
       last_visit: "lần thăm cuối"
-      summarization:
-        summarize: "Tóm tắt"
       mention_warning:
         groups:
           header:

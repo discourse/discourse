@@ -1193,6 +1193,12 @@ lt:
       labels:
         user: Narys
         qtt_like: Gauta patikimų
+    topic_view_stats:
+      labels:
+        topic: Tema
+        logged_in_views: Prisijungęs
+        anon_views: Anonimas
+        total_views: Viso
   dashboard:
     problem:
       rails_env: "Jūsų serveris veikia %{env} režimu."

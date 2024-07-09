@@ -84,12 +84,6 @@ ko:
       heading: "채팅"
       join: "가입"
       last_visit: "마지막 방문"
-      summarization:
-        title: "메시지 요약"
-        description: "선택된 시간 동안 전송된 대화 내역을 요약하기 위한 옵션을 선택하십시오."
-        summarize: "요약하기"
-        since:
-          other: "약 %{count}시간"
       mention_warning:
         groups:
           unreachable_1: "@%{group}에서 멘션을 허용하지 않습니다."

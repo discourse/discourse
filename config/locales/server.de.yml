@@ -298,6 +298,7 @@ de:
         other: hat die falsche Länge (sollte %{count} Zeichen lang sein)
       other_than: "darf nicht %{count} sein"
       auth_overrides_username: "Benutzername muss auf der Authentifizierungsanbieterseite aktualisiert werden, da die Einstellung `auth_overrides_username` aktiviert ist."
+      required: "muss existieren"
     template:
       body: ! "Es gab Probleme mit diesen Feldern:"
       header:
@@ -1157,6 +1158,8 @@ de:
     errors:
       already_handled: "Die Meldung wurde bereits bearbeitet"
       wrong_move: "Meldung kann nicht verschoben werden"
+      system: "Ein vom System erstellter Meldungsgrund kann nicht aktualisiert oder gelöscht werden."
+      used: "Dieser Meldungsgrund kann nicht aktualisiert oder gelöscht werden, weil er bereits verwendet wurde."
   reports:
     default:
       labels:
@@ -1530,6 +1533,14 @@ de:
         user: Benutzer
         qtt_like: Erhaltene „Gefällt mir“
       description: "Top-10-Benutzer, die von einer Vielzahl von Personen „Gefällt mir“ erhalten haben."
+    topic_view_stats:
+      title: "Themenansicht Statistiken"
+      labels:
+        topic: Thema
+        logged_in_views: Angemeldet
+        anon_views: Anonym
+        total_views: Gesamt
+      description: "Die 100 meistgesehenen Themen in einem Zeitraum, nach Aufrufen durch eingeloggte und anonyme Benutzer. Kann nach Kategorie gefiltert werden."
   dashboard:
     problem:
       twitter_login: 'Der Twitter-Login scheint im Moment nicht zu funktionieren. Überprüfe die Anmeldedaten in <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">den Website-Einstellungen</a>.'
@@ -2168,6 +2179,7 @@ de:
     hide_user_profiles_from_public: "Deaktiviert Benutzerkarten, Benutzerprofile und das Benutzerverzeichnis für anonyme Benutzer."
     allow_users_to_hide_profile: "Benutzern erlauben, ihr Profil und ihre Präsenz auszublenden"
     hide_user_activity_tab: "Blende die Registerkarte \"Aktivität\" in Benutzerprofilen, außer für Administratoren und den Benutzer selbst, aus."
+    delete_associated_accounts_on_password_reset: "Entferne verknüpfte Konten, wenn der Benutzer sein Passwort ändert."
     allow_featured_topic_on_user_profiles: "Erlaube Benutzern, ihrer Benutzerkarte und ihrem Profil einen Link zu einem Thema hinzuzufügen."
     show_inactive_accounts: "Erlaube angemeldeten Benutzern, die Profile inaktiver Benutzer anzuschauen."
     hide_suspension_reasons: "Zeige Sperrgründe nicht öffentlich auf Benutzerprofilen an."
@@ -2687,7 +2699,7 @@ de:
         updating_site_settings: "Website-Einstellungen aktualisieren …"
         updating_user_stats: "Benutzerstatistik aktualisieren …"
         merging_user_attributes: "Zusammenführen von Benutzerattributen …"
-        merging_user_associated_accounts: "Zusammenführen von zugehörigen Konten…"
+        merging_user_associated_accounts: "Zusammenführen von verknüpften Konten…"
         updating_user_ids: "Benutzer-IDs aktualisieren …"
         deleting_source_user: "Quellbenutzer löschen …"
   user:

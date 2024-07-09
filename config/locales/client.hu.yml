@@ -21,6 +21,7 @@ hu:
             kb: kB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}e"
         millions: "%{number}m"
@@ -1050,6 +1051,7 @@ hu:
       none: "(válasszon egy lehetőséget)"
       required: 'Adja meg a(z) „%{name}” értékét'
       same_as_password: "A jelszavát nem szabad megismételnie más mezőkben."
+      optional: (nem kötelező)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -2008,6 +2010,7 @@ hu:
       failed: "Valami hiba történt, talán ez az e-mail-cím már regisztrálva van. Próbálta már a jelszó-emlékeztetőt?"
       associate: "Már van fiókja? <a href='%{associate_link}'>Jelentkezzen be</a> hogy hozzákapcsolja a(z) %{provider}-fiókját."
       activation_title: "Fiók aktiválása"
+      already_have_account: "Már van fiókja?"
     forgot_password:
       title: "Jelszó-visszaállítás"
       action: "Elfelejtettem a jelszavamat"
@@ -4378,6 +4381,9 @@ hu:
       panels:
         forum:
           label: Fórum
+      back_to_forum: "Vissza a fórumra"
+      collapse_all_sections: "Minden szakasz összezárása"
+      expand_all_sections: "Minden szakasz kibontása"
       filter: "Szűrő..."
       clear_filter: "Szűrő kiürítése"
       no_results:
@@ -4488,10 +4494,7 @@ hu:
     admin:
       title: "Discourse Adminisztrátor"
       moderator: "Moderátor"
-      back_to_forum: "Vissza a fórumra"
       filter_reports: Jelentések szűrése
-      expand_all_sections: "Minden szakasz kibontása"
-      collapse_all_sections: "Minden szakasz összezárása"
       tags:
         remove_muted_tags_from_latest:
           always: "mindig"
@@ -4980,6 +4983,18 @@ hu:
           optional: "(nem kötelező)"
           update: "Frissítés"
           saved: "mentve!"
+        flags:
+          description: "Leírás"
+          enabled: "Engedélyezed?"
+          edit: "Szerkesztés"
+          delete: "Törlés"
+          delete_confirm: 'Biztosan törli a "%{name}" elemet?'
+          form:
+            save: "Mentés"
+            name: "Név"
+            description: "Leírás"
+            topic: "témák"
+            post: "bejegyzések"
       plugins:
         title: "Bővítmények"
         installed: "Telepített bővítmények"

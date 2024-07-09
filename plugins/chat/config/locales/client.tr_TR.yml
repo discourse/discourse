@@ -141,13 +141,6 @@ tr_TR:
       heading: "Sohbet"
       join: "Katıl"
       last_visit: "son ziyaret"
-      summarization:
-        title: "Mesajları özetle"
-        description: "İstediğiniz zaman diliminde gönderilen görüşmeyi özetlemek için aşağıdaki seçeneklerden birini belirleyin."
-        summarize: "Özetle"
-        since:
-          one: "Son bir saat"
-          other: "Son %{count} saat"
       mention_warning:
         invitations_sent:
           one: "Davet gönderildi"
@@ -255,6 +248,7 @@ tr_TR:
       copy_link: "Bağlantıyı kopyala"
       copy_text: "Metni kopyala"
       rebake_message: "HTML'yi yeniden oluştur"
+      message_too_long: "Mesaj çok uzun, mesajlar en fazla %{count} karakter olmalı."
       retry_staged_message:
         title: "Ağ hatası"
         action: "Tekrar gönderilsin mi?"

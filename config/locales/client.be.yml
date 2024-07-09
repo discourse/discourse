@@ -769,6 +769,7 @@ be:
     search_hint: "імя карыстальніка, email або IP-адрас"
     create_account:
       header_title: "жаданы!"
+      title: "рэгістрацыя"
       failed: "Нешта пайшло не так; хутчэй за ўсё, гэтую электронную пошту ўжо зарэгістравана, паспрабуйце спасылкі Забыўся пароль"
     forgot_password:
       title: "Скід пароля"
@@ -1626,6 +1627,16 @@ be:
       config_areas:
         about:
           saved: "захавана!"
+        flags:
+          description: "Апісанне"
+          edit: "рэдагаваць"
+          delete: "Выдаліць"
+          form:
+            save: "захаваць"
+            name: "імя"
+            description: "Апісанне"
+            topic: "тэмы"
+            post: "паведамленняў"
       plugins:
         title: "Плагіны"
         name: "Назва"

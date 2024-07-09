@@ -1179,6 +1179,12 @@ id:
         user: Pengguna
         qtt_like: Likes Diterima
       description: "10 pengguna teratas yang memiliki suka dari banyak orang."
+    topic_view_stats:
+      labels:
+        topic: Topik
+        logged_in_views: Masuk
+        anon_views: Anonim
+        total_views: Total
   dashboard:
     problem:
       twitter_login: 'Login Twitter tampaknya tidak berfungsi saat ini. Periksa kredensial di <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">Pengaturan Situs</a>.'

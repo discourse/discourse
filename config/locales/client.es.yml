@@ -21,6 +21,7 @@ es:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -1038,6 +1039,7 @@ es:
       none: "(selecciona una opción)"
       required: 'Introduce un valor para «%{name}»'
       same_as_password: "Tu contraseña no debe repetirse en otros campos."
+      optional: (opcional)
     user:
       said: "%{username}:"
       profile: "Perfil"
@@ -1978,10 +1980,11 @@ es:
       header_title: "¡Hola!"
       subheader_title: "Vamos a crear tu cuenta"
       disclaimer: "Al registrarte aceptas la <a href='%{privacy_link}' target='blank'>Política de privacidad</a> y los <a href='%{tos_link}' target='blank'>Términos de servicio</a>."
-      title: "Crea tu cuenta"
+      title: "Registrarse"
       failed: "Algo salió mal. Quizás este correo electrónico ya se encuentra registrado. Prueba con el enlace «olvidé la contraseña»"
       associate: "¿Ya tienes una cuenta? <a href='%{associate_link}'>Inicia sesión</a> para enlazarla con tu cuenta de %{provider}."
       activation_title: "Activa tu cuenta"
+      already_have_account: "¿Ya tienes una cuenta?"
     forgot_password:
       title: "Restablecer contraseña"
       action: "Olvidé mi contraseña"
@@ -4308,6 +4311,7 @@ es:
       panels:
         forum:
           label: Foro
+      back_to_forum: "Volver al Foro"
       filter: "Filtrar..."
       no_results:
         title: "No hay resultados"
@@ -4417,7 +4421,6 @@ es:
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
-      back_to_forum: "Volver al Foro"
       filter_reports: Filtrar informes
       tags:
         remove_muted_tags_from_latest:
@@ -4886,6 +4889,19 @@ es:
           optional: "(opcional)"
           update: "Actualizar"
           saved: "guardado!"
+        flags:
+          description: "Descripción"
+          enabled: "¿Activado?"
+          edit: "Editar"
+          delete: "Eliminar"
+          delete_confirm: '¿Seguro que quieres eliminar «%{name}»?'
+          form:
+            save: "Guardar"
+            name: "Nombre"
+            description: "Descripción"
+            topic: "temas"
+            post: "publicaciones"
+            chat_message: "mensajes de chat"
       plugins:
         title: "Plugins"
         installed: "Plugins instalados"

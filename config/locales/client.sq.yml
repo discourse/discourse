@@ -932,6 +932,7 @@ sq:
     search_hint: "emri i anëtarit, email ose adresë IP"
     create_account:
       header_title: "Mirë se vini!"
+      title: "Regjistrohu"
       failed: "Diçka nuk funksionoi siç duhet, mbase kjo adresë emaili është e regjistruar në faqe. Provoni butonin e fjalëkalimit të humbur. "
     forgot_password:
       title: "Rivendos fjalëkalimin"
@@ -2144,6 +2145,17 @@ sq:
       config_areas:
         about:
           saved: "u ruajt!"
+        flags:
+          description: "Përshkrimi"
+          enabled: "Aktivizuar?"
+          edit: "Redakto"
+          delete: "Fshij"
+          form:
+            save: "Ruaj"
+            name: "Emri"
+            description: "Përshkrimi"
+            topic: "topics"
+            post: "postime"
       plugins:
         title: "Pluginet"
         installed: "Pluginet e instaluar"

@@ -761,6 +761,7 @@ hy:
       copied: "կրկօրինակված"
     user_fields:
       none: "(ընտրել)"
+      optional: (ընտրովի)
     user:
       said: "%{username} ՝"
       profile: "Պրոֆիլ"
@@ -1326,6 +1327,7 @@ hy:
     create_account:
       header_title: "Բարի գալուստ!"
       disclaimer: "Գրանցվելով դուք ընդունում եք <a href='%{privacy_link}' target='blank'> գաղտնիության քաղաքականությունը </a> և <a href='%{tos_link}' target='blank'> պայմանները </a>:"
+      title: "Գրանցվել"
       failed: "Ինչ-որ սխալ է տեղի ունեցել, հնարավոր է՝ այս էլ. հասցեն արդեն գրանցված է, փորձեք կատարել գաղտնաբառի վերականգնում:"
     forgot_password:
       title: "Գաղտնաբառի Վերականգնում"
@@ -3197,6 +3199,18 @@ hy:
         about:
           optional: "(ընտրովի)"
           saved: "պահված է!"
+        flags:
+          description: "Նկարագրությունը"
+          enabled: "Միացվա՞ծ է:"
+          edit: "Խմբագրել"
+          delete: "Ջնջել"
+          delete_confirm: 'Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել <<%{name}>> :'
+          form:
+            save: "Պահպանել"
+            name: "Անուն"
+            description: "Նկարագրությունը"
+            topic: "թեմաներ"
+            post: "գրառումներ"
       plugins:
         title: "Հավելումներ"
         installed: "Տեղադրված Հավելումները"

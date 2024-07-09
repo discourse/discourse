@@ -106,8 +106,6 @@ hu:
       heading: "Csevegés"
       join: "Belépés"
       last_visit: "utolsó látogatás"
-      summarization:
-        summarize: "Összefoglalás"
       mention_warning:
         invitations_sent:
           one: "Meghívó elküldve"
@@ -137,6 +135,7 @@ hu:
       edit: "Szerkesztés"
       copy_link: "Hivatkozás másolása"
       rebake_message: "HTML újjáépítése"
+      message_too_long: "Az üzenet túl hosszú, az üzenetek legfeljebb %{count} karakterekből állhatnak."
       retry_staged_message:
         title: "Hálózati hiba"
         action: "Újraküldi?"
