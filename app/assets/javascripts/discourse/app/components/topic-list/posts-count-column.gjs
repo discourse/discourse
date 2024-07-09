@@ -21,10 +21,10 @@ export default class PostsCountColumn extends Component {
   }
 
   get title() {
-    return I18n.messageFormat("posts_likes_MF", {
+    return `${I18n.messageFormat("posts_likes_MF", {
       count: this.args.topic.replyCount,
       ratio: this.ratioText,
-    }).trim();
+    }).trim()} ${I18n.t("topic_entrance.title")}`;
   }
 
   get ratioText() {

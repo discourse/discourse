@@ -1,4 +1,4 @@
-<th data-sort-order='{{order}}' class='{{view.className}} topic-list-data' scope="col" {{#if ariaLabel}}aria-label='{{ariaLabel}}'{{/if}} {{#if sortable}}tabindex="0" role="button" aria-pressed='{{view.ariaPressed}}' {{#if view.ariaSort}}aria-sort='{{view.ariaSort}}'{{/if}} {{/if}}>
+<th data-sort-order='{{order}}' class='{{view.className}} topic-list-data' scope="col" {{#if view.ariaSort}}aria-sort='{{view.ariaSort}}'{{/if}}>
   {{~#if canBulkSelect}}
     {{~#if showBulkToggle}}
       {{~#if experimentalTopicBulkActionsEnabled }}
@@ -25,7 +25,7 @@
     {{~#if view.showTopicsAndRepliesToggle}}
       {{raw "list/new-list-header-controls" current=newListSubset newRepliesCount=newRepliesCount newTopicsCount=newTopicsCount}}
     {{else}}
-      <span>{{view.localizedName}}</span>
+      <span {{#if view.screenreaderOnly}}class="sr-only"{{/if}} {{#if sortable}}tabindex="0" role="button" aria-pressed='{{view.ariaPressed}}'{{/if}}>{{view.localizedName}}</span>
     {{/if ~}}
   {{/unless ~}}
   {{~#if view.isSorting}}
