@@ -18,6 +18,21 @@ RSpec.describe S3Inventory do
     expect(output).to eq("Failed to list inventory from S3\n")
   end
 
+  it "should forward custom s3 options to the S3Helper when initializing" do
+    inventory =
+      S3Inventory.new(
+        :upload,
+        s3_inventory_bucket: "some-inventory-bucket",
+        s3_options: {
+          region: "us-west-1",
+        },
+      )
+
+    inventory.s3_helper.stub_client_responses!
+
+    expect(inventory.s3_helper.s3_client.config.region).to eq("us-west-1")
+  end
+
   describe "verifying uploads" do
     before do
       freeze_time

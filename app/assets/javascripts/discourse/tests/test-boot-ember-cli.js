@@ -1,4 +1,3 @@
-import Ember from "ember";
 import loadEmberExam from "ember-exam/test-support/load";
 import { start } from "ember-qunit";
 import * as QUnit from "qunit";
@@ -7,8 +6,7 @@ import setupTests from "discourse/tests/setup-tests";
 import config from "../config/environment";
 
 document.addEventListener("discourse-init", () => {
-  // eslint-disable-next-line no-undef
-  if (!EmberENV.TESTS_FILE_LOADED) {
+  if (!window.EmberENV.TESTS_FILE_LOADED) {
     throw new Error(
       'The tests file was not loaded. Make sure your tests index.html includes "assets/tests.js".'
     );
@@ -27,7 +25,7 @@ document.addEventListener("discourse-init", () => {
   const testingCore = !testingTheme && (!target || target === "core");
   const disableAutoStart = params.get("qunit_disable_auto_start") === "1";
 
-  Ember.ENV.LOG_STACKTRACE_ON_DEPRECATION = false;
+  window.EmberENV.LOG_STACKTRACE_ON_DEPRECATION = false;
 
   document.body.insertAdjacentHTML(
     "afterbegin",

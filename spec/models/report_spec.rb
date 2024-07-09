@@ -2,9 +2,9 @@
 
 RSpec.describe Report do
   let(:user) { Fabricate(:user) }
-  let(:c0) { Fabricate(:category, user: user) }
-  let(:c1) { Fabricate(:category, parent_category: c0, user: user) } # id: 2
-  let(:c2) { Fabricate(:category, user: user) }
+  let(:category_1) { Fabricate(:category, user: user) }
+  let(:category_2) { Fabricate(:category, parent_category: category_1, user: user) } # id: 2
+  let(:category_3) { Fabricate(:category, user: user) }
 
   shared_examples "no data" do
     context "with no data" do
@@ -894,7 +894,8 @@ RSpec.describe Report do
         user = Fabricate(:user, refresh_auto_groups: true)
         topic = Fabricate(:topic, user: user)
         post0 = Fabricate(:post, topic: topic, user: user)
-        post1 = Fabricate(:post, topic: Fabricate(:topic, category: c1, user: user), user: user)
+        post1 =
+          Fabricate(:post, topic: Fabricate(:topic, category: category_2, user: user), user: user)
         post2 = Fabricate(:post, topic: topic, user: user)
         post3 = Fabricate(:post, topic: topic, user: user)
         PostActionCreator.off_topic(user, post0)
@@ -904,13 +905,13 @@ RSpec.describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find("flags", filters: { category: c1.id }) }
+        let(:report) { Report.find("flags", filters: { category: category_2.id }) }
 
         include_examples "category filtering"
 
         context "with subcategories" do
           let(:report) do
-            Report.find("flags", filters: { category: c0.id, include_subcategories: true })
+            Report.find("flags", filters: { category: category_1.id, include_subcategories: true })
           end
 
           include_examples "category filtering on subcategories"
@@ -930,19 +931,19 @@ RSpec.describe Report do
       before(:each) do
         user = Fabricate(:user)
         Fabricate(:topic, user: user)
-        Fabricate(:topic, category: c1, user: user)
+        Fabricate(:topic, category: category_2, user: user)
         Fabricate(:topic, user: user)
         Fabricate(:topic, created_at: 45.days.ago, user: user)
       end
 
       context "with category filtering" do
-        let(:report) { Report.find("topics", filters: { category: c1.id }) }
+        let(:report) { Report.find("topics", filters: { category: category_2.id }) }
 
         include_examples "category filtering"
 
         context "with subcategories" do
           let(:report) do
-            Report.find("topics", filters: { category: c0.id, include_subcategories: true })
+            Report.find("topics", filters: { category: category_1.id, include_subcategories: true })
           end
 
           include_examples "category filtering on subcategories"
@@ -1017,7 +1018,7 @@ RSpec.describe Report do
       before(:each) do
         user = Fabricate(:user)
         topic = Fabricate(:topic, user: user)
-        topic_with_category_id = Fabricate(:topic, category: c1, user: user)
+        topic_with_category_id = Fabricate(:topic, category: category_2, user: user)
         Fabricate(:post, topic: topic, user: user)
         Fabricate(:post, topic: topic_with_category_id, user: user)
         Fabricate(:post, topic: topic, user: user)
@@ -1025,13 +1026,13 @@ RSpec.describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find("posts", filters: { category: c1.id }) }
+        let(:report) { Report.find("posts", filters: { category: category_2.id }) }
 
         include_examples "category filtering"
 
         context "with subcategories" do
           let(:report) do
-            Report.find("posts", filters: { category: c0.id, include_subcategories: true })
+            Report.find("posts", filters: { category: category_1.id, include_subcategories: true })
           end
 
           include_examples "category filtering on subcategories"
@@ -1052,14 +1053,16 @@ RSpec.describe Report do
 
       before(:each) do
         user = Fabricate(:user)
-        Fabricate(:topic, category: c1, user: user)
+        Fabricate(:topic, category: category_2, user: user)
         Fabricate(:post, topic: Fabricate(:topic, user: user), user: user)
         Fabricate(:topic, user: user)
         Fabricate(:topic, created_at: 45.days.ago, user: user)
       end
 
       context "with category filtering" do
-        let(:report) { Report.find("topics_with_no_response", filters: { category: c1.id }) }
+        let(:report) do
+          Report.find("topics_with_no_response", filters: { category: category_2.id })
+        end
 
         include_examples "category filtering"
 
@@ -1068,7 +1071,7 @@ RSpec.describe Report do
             Report.find(
               "topics_with_no_response",
               filters: {
-                category: c0.id,
+                category: category_1.id,
                 include_subcategories: true,
               },
             )
@@ -1089,11 +1092,11 @@ RSpec.describe Report do
       include_examples "with data x/y"
 
       before(:each) do
-        topic = Fabricate(:topic, category: c1)
+        topic = Fabricate(:topic, category: category_2)
         post = Fabricate(:post, topic: topic)
         PostActionCreator.like(Fabricate(:user), post)
 
-        topic = Fabricate(:topic, category: c2)
+        topic = Fabricate(:topic, category: category_3)
         post = Fabricate(:post, topic: topic)
         PostActionCreator.like(Fabricate(:user), post)
         PostActionCreator.like(Fabricate(:user), post)
@@ -1105,13 +1108,13 @@ RSpec.describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find("likes", filters: { category: c1.id }) }
+        let(:report) { Report.find("likes", filters: { category: category_2.id }) }
 
         include_examples "category filtering"
 
         context "with subcategories" do
           let(:report) do
-            Report.find("likes", filters: { category: c0.id, include_subcategories: true })
+            Report.find("likes", filters: { category: category_1.id, include_subcategories: true })
           end
 
           include_examples "category filtering on subcategories"
@@ -1729,6 +1732,92 @@ RSpec.describe Report do
         expect(report.data.length).to eq(2)
         expect(report.data[0][:username]).to eq("jake")
         expect(report.data[1][:username]).to eq("jonah")
+      end
+    end
+  end
+
+  describe "topic_view_stats" do
+    let(:report) { Report.find("topic_view_stats") }
+
+    fab!(:topic_1) { Fabricate(:topic) }
+    fab!(:topic_2) { Fabricate(:topic) }
+
+    include_examples "no data"
+
+    context "with data" do
+      before do
+        freeze_time_safe
+
+        Fabricate(
+          :topic_view_stat,
+          topic: topic_1,
+          anonymous_views: 4,
+          logged_in_views: 2,
+          viewed_at: Time.zone.now - 5.days,
+        )
+        Fabricate(
+          :topic_view_stat,
+          topic: topic_1,
+          anonymous_views: 5,
+          logged_in_views: 18,
+          viewed_at: Time.zone.now - 3.days,
+        )
+        Fabricate(
+          :topic_view_stat,
+          topic: topic_2,
+          anonymous_views: 14,
+          logged_in_views: 21,
+          viewed_at: Time.zone.now - 5.days,
+        )
+        Fabricate(
+          :topic_view_stat,
+          topic: topic_2,
+          anonymous_views: 9,
+          logged_in_views: 13,
+          viewed_at: Time.zone.now - 1.days,
+        )
+        Fabricate(
+          :topic_view_stat,
+          topic: Fabricate(:topic),
+          anonymous_views: 1,
+          logged_in_views: 34,
+          viewed_at: Time.zone.now - 40.days,
+        )
+      end
+
+      it "works" do
+        expect(report.data.length).to eq(2)
+        expect(report.data[0]).to include(
+          topic_id: topic_2.id,
+          topic_title: topic_2.title,
+          total_anonymous_views: 23,
+          total_logged_in_views: 34,
+          total_views: 57,
+        )
+        expect(report.data[1]).to include(
+          topic_id: topic_1.id,
+          topic_title: topic_1.title,
+          total_anonymous_views: 9,
+          total_logged_in_views: 20,
+          total_views: 29,
+        )
+      end
+
+      context "with category filtering" do
+        let(:report) { Report.find("topic_view_stats", filters: { category: category_1.id }) }
+
+        before { topic_1.update!(category: category_1) }
+
+        it "filters topics to that category" do
+          expect(report.data.length).to eq(1)
+          expect(report.data[0]).to include(
+            topic_id: topic_1.id,
+            topic_title: topic_1.title,
+            total_anonymous_views: 9,
+            total_logged_in_views: 20,
+            total_views: 29,
+          )
+        end
       end
     end
   end
