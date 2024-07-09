@@ -4,6 +4,8 @@
 #  A class that handles interaction between a plugin and the Discourse App.
 #
 class DiscoursePluginRegistry
+  @@register_names = Set.new
+
   # Plugins often need to be able to register additional handlers, data, or
   # classes that will be used by core classes. This should be used if you
   # need to control which type the registry is, and if it doesn't need to
@@ -15,7 +17,7 @@ class DiscoursePluginRegistry
   #   - Defines instance method as a shortcut to the singleton method
   #   - Automatically deletes the register on registry.reset!
   def self.define_register(register_name, type)
-    @@register_names ||= Set.new
+    return if respond_to?(register_name)
     @@register_names << register_name
 
     define_singleton_method(register_name) do
@@ -36,13 +38,13 @@ class DiscoursePluginRegistry
   #   - Defines instance method as a shortcut to the singleton method
   #   - Automatically deletes the register on registry.reset!
   def self.define_filtered_register(register_name)
+    return if respond_to?(register_name)
     define_register(register_name, Array)
 
     singleton_class.alias_method :"_raw_#{register_name}", :"#{register_name}"
 
     define_singleton_method(register_name) do
-      unfiltered = public_send(:"_raw_#{register_name}")
-      unfiltered.filter { |v| v[:plugin].enabled? }.map { |v| v[:value] }.uniq
+      public_send(:"_raw_#{register_name}").filter_map { |h| h[:value] if h[:plugin].enabled? }.uniq
     end
 
     define_singleton_method("register_#{register_name.to_s.singularize}") do |value, plugin|
