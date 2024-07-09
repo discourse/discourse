@@ -337,8 +337,13 @@ export default Component.extend(TextareaTextManipulation, {
     // is fired.
     //
     // c.f. https://developer.mozilla.org/en-US/docs/Web/API/Element/beforeinput_event
-    this._textarea.addEventListener("beforeinput", this.onBeforeInputSmartList);
-    this._textarea.addEventListener("input", this.onInputSmartList);
+    if (this._textarea) {
+      this._textarea.addEventListener(
+        "beforeinput",
+        this.onBeforeInputSmartList
+      );
+      this._textarea.addEventListener("input", this.onInputSmartList);
+    }
 
     // disable clicking on links in the preview
     this.element
@@ -420,11 +425,13 @@ export default Component.extend(TextareaTextManipulation, {
       );
     }
 
-    this._textarea.removeEventListener(
-      "beforeinput",
-      this.onBeforeInputSmartList
-    );
-    this._textarea.removeEventListener("input", this.onInputSmartList);
+    if (this._textarea) {
+      this._textarea.removeEventListener(
+        "beforeinput",
+        this.onBeforeInputSmartList
+      );
+      this._textarea.removeEventListener("input", this.onInputSmartList);
+    }
 
     this._itsatrap?.destroy();
     this._itsatrap = null;
