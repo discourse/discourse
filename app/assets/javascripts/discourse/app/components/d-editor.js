@@ -367,12 +367,7 @@ export default Component.extend(TextareaTextManipulation, {
   onBeforeInputSmartList(event) {
     // This inputType is much more consistently fired in `beforeinput`
     // rather than `input`.
-    const isNewLine = event.inputType === "insertLineBreak";
-    if (isNewLine) {
-      this.handleSmartListAutocomplete = true;
-    } else {
-      this.handleSmartListAutocomplete = false;
-    }
+    this.handleSmartListAutocomplete = event.inputType === "insertLineBreak";
   },
 
   @bind
