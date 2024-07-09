@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
+import { tracked } from "@glimmer/tracking";
+import { array, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
@@ -29,7 +29,7 @@ const onValidation = modifierFn((element, [eventName, handler]) => {
   }
 });
 
-export default class FKForm extends Component {
+class FKForm extends Component {
   @service dialog;
   @service router;
 
@@ -38,6 +38,8 @@ export default class FKForm extends Component {
   @tracked isSubmitting = false;
 
   fields = new Map();
+
+  formData = new FKFormData(this.args.data ?? {});
 
   constructor() {
     super(...arguments);
@@ -74,11 +76,6 @@ export default class FKForm extends Component {
         },
       });
     }
-  }
-
-  @cached
-  get formData() {
-    return new FKFormData(this.args.data ?? {});
   }
 
   get validateOn() {
@@ -332,3 +329,22 @@ export default class FKForm extends Component {
     </form>
   </template>
 }
+
+const Form = <template>
+  {{#each (array @data) as |data|}}
+    <FKForm
+      @data={{data}}
+      @onSubmit={{@onSubmit}}
+      @validate={{@validate}}
+      @validateOn={{@validateOn}}
+      @onRegisterApi={{@onRegisterApi}}
+      @onReset={{@onReset}}
+      ...attributes
+      as |components draftData|
+    >
+      {{yield components draftData}}
+    </FKForm>
+  {{/each}}
+</template>;
+
+export default Form;
