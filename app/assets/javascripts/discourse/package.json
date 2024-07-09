@@ -20,7 +20,7 @@
     "@faker-js/faker": "^8.4.1",
     "@glimmer/syntax": "^0.92.0",
     "@highlightjs/cdn-assets": "^11.10.0",
-    "decorator-transforms": "^2.0.0",
+    "ace-builds": "^1.35.2",
     "discourse-hbr": "1.0.0",
     "discourse-widget-hbs": "1.0.0",
     "ember-route-template": "^1.0.3",
@@ -30,7 +30,8 @@
     "immer": "^10.1.1",
     "jspreadsheet-ce": "^4.13.4",
     "morphlex": "^0.0.16",
-    "pretty-text": "1.0.0"
+    "pretty-text": "1.0.0",
+    "decorator-transforms": "^2.0.0",
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",
