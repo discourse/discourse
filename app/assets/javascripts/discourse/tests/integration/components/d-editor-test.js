@@ -5,7 +5,7 @@ import {
   focus,
   render,
   settled,
-  triggerKeyEvent,
+  triggerEvent,
 } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
@@ -14,7 +14,6 @@ import { setCaretPosition } from "discourse/lib/utilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
 import {
-  chromeTest,
   exists,
   paste,
   query,
@@ -78,13 +77,8 @@ module("Integration | Component | d-editor", function (hooks) {
     return textarea;
   }
 
-  function testCase(title, testFunc, opts = {}) {
-    let testFn = test;
-    if (opts.chrome) {
-      testFn = chromeTest;
-    }
-
-    testFn(title, async function (assert) {
+  function testCase(title, testFunc) {
+    test(title, async function (assert) {
       this.set("value", "hello world.");
 
       await render(hbs`<DEditor @value={{this.value}} />`);
@@ -989,16 +983,32 @@ third line`
     }
   );
 
+  // Smart list functionality relies on beforeinput, which QUnit does not send with
+  // `typeIn` synthetic events. We need to send it ourselves manually along with `input`.
+  // Not ideal, but gets the job done.
+  //
+  // c.f. https://github.com/emberjs/ember-test-helpers/blob/master/API.md#typein and
+  // https://github.com/emberjs/ember-test-helpers/issues/1336
+  async function triggerEnter(textarea) {
+    await triggerEvent(textarea, "beforeinput", {
+      inputType: "insertLineBreak",
+    });
+    await triggerEvent(textarea, "input", {
+      inputType: "insertText",
+      data: "\n",
+    });
+  }
+
   testCase(
     "smart lists - pressing enter on a line with a list item starting with * creates a list item on the next line",
     async function (assert, textarea) {
       const initialValue = "* first item in list\n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      await triggerKeyEvent(textarea, "keydown", "Enter");
+      await triggerEnter(textarea);
+
       assert.strictEqual(this.value, initialValue + "* ");
-    },
-    { chrome: true }
+    }
   );
 
   testCase(
@@ -1007,10 +1017,9 @@ third line`
       const initialValue = "- first item in list\n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      await triggerKeyEvent(textarea, "keydown", "Enter");
+      await triggerEnter(textarea);
       assert.strictEqual(this.value, initialValue + "- ");
-    },
-    { chrome: true }
+    }
   );
 
   testCase(
@@ -1019,10 +1028,9 @@ third line`
       const initialValue = "1. first item in list\n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      await triggerKeyEvent(textarea, "keydown", "Enter");
+      await triggerEnter(textarea);
       assert.strictEqual(this.value, initialValue + "2. ");
-    },
-    { chrome: true }
+    }
   );
 
   testCase(
@@ -1031,13 +1039,12 @@ third line`
       const initialValue = "* first item in list\n\n* second item in list";
       this.set("value", initialValue);
       setCaretPosition(textarea, 21);
-      await triggerKeyEvent(textarea, "keydown", "Enter");
+      await triggerEnter(textarea);
       assert.strictEqual(
         this.value,
         "* first item in list\n* \n* second item in list"
       );
-    },
-    { chrome: true }
+    }
   );
 
   testCase(
@@ -1046,13 +1053,12 @@ third line`
       const initialValue = "1. first item in list\n\n2. second item in list";
       this.set("value", initialValue);
       setCaretPosition(textarea, 22);
-      await triggerKeyEvent(textarea, "keydown", "Enter");
+      await triggerEnter(textarea);
       assert.strictEqual(
         this.value,
         "1. first item in list\n2. \n3. second item in list"
       );
-    },
-    { chrome: true }
+    }
   );
 
   testCase(
@@ -1061,10 +1067,9 @@ third line`
       const initialValue = "* first item in list with empty line\n* \n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      await triggerKeyEvent(textarea, "keydown", "Enter");
+      await triggerEnter(textarea);
       assert.strictEqual(this.value, "* first item in list with empty line\n");
-    },
-    { chrome: true }
+    }
   );
 
   (() => {
