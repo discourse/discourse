@@ -284,10 +284,7 @@ export default class TopicListItem extends Component {
         @outletArgs={{hash topic=@topic}}
       />
       {{#if this.site.desktopView}}
-        <PluginOutlet
-          @name="topic-list-before-columns"
-          @outletArgs={{hash topic=@topic}}
-        />
+        {{! TODO: column DAG "topic-list-before-columns" }}
 
         {{#if @bulkSelectEnabled}}
           <td class="bulk-select topic-list-data">
@@ -426,16 +423,10 @@ export default class TopicListItem extends Component {
 
         <ActivityColumn @topic={{@topic}} class="num topic-list-data" />
 
-        <PluginOutlet
-          @name="topic-list-after-columns"
-          @outletArgs={{hash topic=@topic}}
-        />
+        {{! TODO: column DAG "topic-list-after-columns" }}
       {{else}}
         <td class="topic-list-data">
-          <PluginOutlet
-            @name="topic-list-before-columns"
-            @outletArgs={{hash topic=@topic}}
-          />
+          {{! TODO: column DAG "topic-list-before-columns" }}
 
           <div class="pull-left">
             {{#if @bulkSelectEnabled}}
