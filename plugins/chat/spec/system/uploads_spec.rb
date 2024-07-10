@@ -99,7 +99,9 @@ describe "Uploading files in chat messages", type: :system do
       expect(channel_page.messages).to have_message(
         text: "upload testing\n#{I18n.t("js.chat.uploaded_files", count: 2)}",
         persisted: true,
+        wait: 5,
       )
+
       expect(Chat::Message.last.uploads.count).to eq(2)
     end
 
