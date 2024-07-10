@@ -2123,10 +2123,10 @@
   dependencies:
     lodash "^4.17.21"
 
-"@json-editor/json-editor@2.10.0":
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/@json-editor/json-editor/-/json-editor-2.10.0.tgz#95002ed971e8b39d8d8834df885f002275a1e5ce"
-  integrity sha512-RGkzTccb4UDtmcQ1PYDWDJ3SXoGIRmesTUTJCyZ9kyVGjHs/HgqIXlpQPmg9fHFi9D45/8RTdGqlvkZMGw2zlA==
+"@json-editor/json-editor@2.15.1":
+  version "2.15.1"
+  resolved "https://registry.yarnpkg.com/@json-editor/json-editor/-/json-editor-2.15.1.tgz#93451868f9174055c680d388fcdf5a18f4a1df54"
+  integrity sha512-Z4KFXpL7I9wrKD94c1PcIwFfCvUzYhwM0jH2ihP2OSH8wut0FnqzCfKCL0gdNHG3A2UVsyVJBoU9Iwsc0xB6zQ==
   dependencies:
     core-js "^3.27.2"
 
