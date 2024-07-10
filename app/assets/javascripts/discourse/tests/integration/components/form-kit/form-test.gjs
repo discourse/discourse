@@ -1,5 +1,5 @@
 import { array, fn, hash } from "@ember/helper";
-import { click, render } from "@ember/test-helpers";
+import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -60,9 +60,46 @@ module("Integration | Component | FormKit | Form", function (hooks) {
 
     await formKit().submit();
 
-    assert.form("form").hasErrors({
+    assert.form().hasErrors({
       foo: "incorrect type, required",
       bar: "error",
+    });
+  });
+
+  test("@validateOn", async function (assert) {
+    const data = { foo: "test" };
+
+    await render(<template>
+      <Form @data={{data}} as |form|>
+        <form.Field @name="foo" @title="Foo" @validation="required" as |field|>
+          <field.Input />
+        </form.Field>
+        <form.Field @name="bar" @title="Bar" @validation="required" as |field|>
+          <field.Input />
+        </form.Field>
+        <form.Submit />
+      </Form>
+    </template>);
+
+    await formKit().field("foo").fillIn("");
+
+    assert.form().field("foo").hasNoError();
+
+    await formKit().submit();
+
+    assert.form().field("foo").hasError("Required");
+    assert.form().field("bar").hasError("Required");
+    assert.form().hasErrors({
+      foo: "Required",
+      bar: "Required",
+    });
+
+    await formKit().field("foo").fillIn("t");
+
+    assert.form().field("foo").hasNoError();
+    assert.form().field("bar").hasError("Required");
+    assert.form().hasErrors({
+      bar: "Required",
     });
   });
 

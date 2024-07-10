@@ -108,13 +108,20 @@ class FormHelper {
     }
   }
 
-  hasErrors(fields) {
-    Object.keys(fields).forEach((name) => {
-      const message = fields[name];
-      this.context
-        .dom(this.element.querySelector(".form-kit__errors-summary-list"))
-        .includesText(`${capitalize(name)}: ${message}`);
+  hasErrors(fields, assertionMessage) {
+    const messages = Object.keys(fields).map((name) => {
+      return `${capitalize(name)}: ${fields[name]}`;
     });
+
+    this.context
+      .dom(this.element.querySelector(".form-kit__errors-summary-list"))
+      .hasText(messages.join(" "), assertionMessage);
+  }
+
+  hasNoErrors(message) {
+    this.context
+      .dom(this.element.querySelector(".form-kit__errors-summary-list"))
+      .doesNotExist(message);
   }
 
   field(name) {
@@ -129,8 +136,11 @@ export function setupFormKitAssertions() {
   QUnit.assert.form = function (selector = "form") {
     const form = new FormHelper(selector, this);
     return {
-      hasErrors: (fields) => {
-        form.hasErrors(fields);
+      hasErrors: (fields, message) => {
+        form.hasErrors(fields, message);
+      },
+      hasNoErrors: (fields, message) => {
+        form.hasNoErrors(fields, message);
       },
       field: (name) => {
         const field = form.field(name);

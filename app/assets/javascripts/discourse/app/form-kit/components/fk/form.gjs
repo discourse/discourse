@@ -4,7 +4,6 @@ import { array, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { modifier as modifierFn } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import FKAlert from "discourse/form-kit/components/fk/alert";
 import FKCollection from "discourse/form-kit/components/fk/collection";
@@ -19,14 +18,6 @@ import { VALIDATION_TYPES } from "discourse/form-kit/lib/constants";
 import FKFieldData from "discourse/form-kit/lib/fk-field-data";
 import FKFormData from "discourse/form-kit/lib/fk-form-data";
 import I18n from "I18n";
-
-const onValidation = modifierFn((element, [eventName, handler]) => {
-  if (eventName) {
-    element.addEventListener(eventName, handler);
-
-    return () => element.removeEventListener(eventName, handler);
-  }
-});
 
 class FKForm extends Component {
   @service dialog;
@@ -91,14 +82,6 @@ class FKForm extends Component {
     return validateOn;
   }
 
-  get errors() {
-    const errors = {};
-    for (const [name, field] of this.fields) {
-      errors[name] = field.errors;
-    }
-    return errors;
-  }
-
   @action
   addError(name, { title, message }) {
     this.formData.addError(name, {
@@ -134,7 +117,7 @@ class FKForm extends Component {
     this.formData.set(name, value);
 
     if (this.fieldValidationEvent === VALIDATION_TYPES.change) {
-      await this.handleFieldValidation(name);
+      await this.triggerRevalidationFor(name);
     }
   }
 
@@ -172,7 +155,7 @@ class FKForm extends Component {
     try {
       this.isSubmitting = true;
 
-      await this.validate(this.fields);
+      await this.validate(this.fields.values());
 
       if (this.formData.isValid) {
         this.formData.save();
@@ -201,26 +184,8 @@ class FKForm extends Component {
       return;
     }
 
-    await this.validate(this.fields);
-  }
-
-  @action
-  async handleFieldValidation(event) {
-    let name;
-
-    if (typeof event === "string") {
-      name = event;
-    } else {
-      const { target } = event;
-      name = target.name;
-    }
-
-    if (name) {
-      const field = this.fields.get(name);
-
-      if (field) {
-        await this.validate([field]);
-      }
+    if (this.formData.errors[name]) {
+      await this.validate([field]);
     }
   }
 
@@ -231,13 +196,13 @@ class FKForm extends Component {
 
     this.isValidating = true;
 
-    this.formData.removeErrors();
-
     try {
-      for (const [name, field] of fields) {
+      for (const field of fields) {
+        this.formData.removeError(field.name);
+
         await field.validate?.(
-          name,
-          this.formData.get(name),
+          field.name,
+          this.formData.get(field.name),
           this.formData.draftData
         );
       }
@@ -257,7 +222,6 @@ class FKForm extends Component {
       ...attributes
       {{on "submit" this.onSubmit}}
       {{on "reset" this.onReset}}
-      {{onValidation this.fieldValidationEvent this.handleFieldValidation}}
     >
       <FKErrorsSummary @errors={{this.formData.errors}} />
 
