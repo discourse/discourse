@@ -6,7 +6,6 @@ const GroupsInfo = <template>
       {{or @group.full_name @group.displayName}}
     </span>
   </span>
-</template>
+</template>;
 
 export default GroupsInfo;
-}
