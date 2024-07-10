@@ -4146,11 +4146,11 @@ en:
           one {# reply,}
         other {# replies,}
       } { ratio, select,
-          low {high like to post ratio,}
-          med {very high like to post ratio,}
-         high {extremely high like to post ratio,}
+          low {high like to post ratio, }
+          med {very high like to post ratio, }
+         high {extremely high like to post ratio, }
         other {}
-      }
+      }jump to the first or last post...
 
     posters: "Posters"
     latest_poster_link: "%{username}'s profile, latest poster"
@@ -4639,7 +4639,6 @@ en:
     no_group_messages_title: "No group messages found"
 
     topic_entrance:
-      title: "jump to the first or last post..."
       sr_jump_top_button: "Jump to the first post"
       sr_jump_bottom_button: "Jump to the last post"
     fullscreen_table:

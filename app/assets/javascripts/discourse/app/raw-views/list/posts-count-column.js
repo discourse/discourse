@@ -19,10 +19,10 @@ export default EmberObject.extend({
 
   @discourseComputed("topic.replyCount", "ratioText")
   title(count, ratio) {
-    return `${I18n.messageFormat("posts_likes_MF", {
+    return I18n.messageFormat("posts_likes_MF", {
       count,
       ratio,
-    }).trim()} ${I18n.t("topic_entrance.title")}`;
+    }).trim();
   },
 
   @discourseComputed("ratio")
