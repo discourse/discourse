@@ -174,6 +174,8 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await click(".set-bar");
     await formKit().field("foo").fillIn("");
 
+    await formKit().submit();
+
     assert.form().field("bar").hasValue("2");
     assert.form().field("foo").hasError("Required");
 
