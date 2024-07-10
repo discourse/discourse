@@ -7,7 +7,6 @@ import { htmlSafe } from "@ember/template";
 import DiscourseURL from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
-import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
@@ -60,15 +59,6 @@ export default class TopicEntrance extends Component {
     return entranceDate(this.bumpedDate, this.showTime);
   }
 
-  @bind
-  ariaLabel(position) {
-    return position === "top"
-      ? I18n.t("topic_entrance.sr_jump_top_button", { date: this.topDate })
-      : I18n.t("topic_entrance.sr_jump_bottom_button", {
-          date: this.bottomDate,
-        });
-  }
-
   @action
   jumpTo(destination) {
     this.historyStore.set("lastTopicIdViewed", this.args.topic.id);
@@ -90,7 +80,10 @@ export default class TopicEntrance extends Component {
         <div id="topic-entrance" class="--glimmer">
           <button
             {{on "click" (fn this.jumpTo @topic.url)}}
-            aria-label={{this.ariaLabel "top"}}
+            aria-label={{i18n
+              "topic_entrance.sr_jump_top_button"
+              date=this.topDate
+            }}
             title={{i18n "topic_entrance.jump_top_button_title"}}
             class="btn btn-default full jump-top"
           >
@@ -100,7 +93,10 @@ export default class TopicEntrance extends Component {
 
           <button
             {{on "click" (fn this.jumpTo @topic.lastPostUrl)}}
-            aria-label={{this.ariaLabel "bottom"}}
+            aria-label={{i18n
+              "topic_entrance.sr_jump_bottom_button"
+              date=this.bottomDate
+            }}
             title={{i18n "topic_entrance.jump_bottom_button_title"}}
             class="btn btn-default full jump-bottom"
           >
