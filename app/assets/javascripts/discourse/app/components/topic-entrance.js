@@ -98,6 +98,15 @@ export default Component.extend(CleansUp, {
     }
   },
 
+  @bind
+  ariaLabel(position) {
+    return position === "top"
+      ? I18n.t("topic_entrance.sr_jump_top_button", { date: this.topDate })
+      : I18n.t("topic_entrance.sr_jump_bottom_button", {
+          date: this.bottomDate,
+        });
+  },
+
   _jumpTopButton() {
     return this.element.querySelector(".jump-top");
   },

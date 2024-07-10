@@ -1,6 +1,7 @@
 <DButton
   @action={{action "enterTop"}}
-  @ariaLabel="topic_entrance.sr_jump_top_button"
+  @translatedAriaLabel={{this.ariaLabel "top"}}
+  title={{i18n "topic_entrance.jump_top_button_title"}}
   class="btn-default full jump-top"
 >
   {{d-icon "step-backward"}}
@@ -9,7 +10,8 @@
 
 <DButton
   @action={{action "enterBottom"}}
-  @ariaLabel="topic_entrance.sr_jump_bottom_button"
+  @translatedAriaLabel={{this.ariaLabel "bottom"}}
+  title={{i18n "topic_entrance.jump_bottom_button_title"}}
   class="btn-default full jump-bottom"
 >
   {{html-safe this.bottomDate}}
