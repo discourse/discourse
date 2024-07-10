@@ -47,6 +47,7 @@ const ApplicationRoute = DiscourseRoute.extend({
   router: service(),
   site: service(),
   siteSettings: service(),
+  restrictedRouting: service(),
 
   get isOnlyOneExternalLoginMethod() {
     return (
@@ -66,6 +67,19 @@ const ApplicationRoute = DiscourseRoute.extend({
       this.loadingSlider.transitionEnded();
     });
     return false;
+  },
+
+  @action
+  willTransition(transition) {
+    if (
+      this.restrictedRouting.isRestricted &&
+      !this.restrictedRouting.isAllowedRoute(transition.to.name)
+    ) {
+      transition.abort();
+      return false;
+    }
+
+    return true;
   },
 
   @action
