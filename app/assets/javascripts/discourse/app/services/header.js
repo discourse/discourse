@@ -4,6 +4,8 @@ import Service, { service } from "@ember/service";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
+const VALID_HEADER_BUTTONS_TO_HIDE = ["search", "login", "signup"];
+
 @disableImplicitInjections
 export default class Header extends Service {
   @service siteSettings;
@@ -35,7 +37,26 @@ export default class Header extends Service {
   }
 
   registerHider(ref, buttons) {
-    this.#hiders.set(ref, buttons);
+    const validButtons = buttons
+      .map((button) => {
+        if (!VALID_HEADER_BUTTONS_TO_HIDE.includes(button)) {
+          // eslint-disable-next-line no-console
+          console.error(
+            `Invalid button to hide: ${button}, valid buttons are: ${VALID_HEADER_BUTTONS_TO_HIDE.join(
+              ","
+            )}`
+          );
+        } else {
+          return button;
+        }
+      })
+      .filter(Boolean);
+
+    if (!validButtons.length) {
+      return;
+    }
+
+    this.#hiders.set(ref, validButtons);
 
     registerDestructor(ref, () => {
       this.#hiders.delete(ref);
