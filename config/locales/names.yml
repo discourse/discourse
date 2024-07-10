@@ -557,6 +557,9 @@ zh:
 zh_TW:
   name: Chinese
   nativeName: 繁體中文
+zh_CN:
+  name: Chinese Simplified
+  nativeName: 中文简体
 zu:
   name: Zulu
   nativeName: isiZulu
