@@ -1,7 +1,7 @@
 <h2>Controls</h2>
 
 <StyleguideExample @title="Input">
-  <Form as |form data|>
+  <Form as |form|>
     <form.Field @title="Username" @name="username" as |field|>
       <field.Input @placeholder="Username" />
     </form.Field>
@@ -12,7 +12,7 @@
 </StyleguideExample>
 
 <StyleguideExample @title="Question">
-  <Form as |form data|>
+  <Form as |form|>
     <form.Field @title="Enabled" @name="enabled" as |field|>
       <field.Question />
     </form.Field>
@@ -20,7 +20,7 @@
 </StyleguideExample>
 
 <StyleguideExample @title="Toggle">
-  <Form as |form data|>
+  <Form as |form|>
     <form.Field @title="Enabled" @name="enabled" as |field|>
       <field.Toggle />
     </form.Field>
@@ -28,7 +28,7 @@
 </StyleguideExample>
 
 <StyleguideExample @title="Composer">
-  <Form as |form data|>
+  <Form as |form|>
     <form.Field @title="Query" @name="query" as |field|>
       <field.Composer />
     </form.Field>
@@ -36,7 +36,7 @@
 </StyleguideExample>
 
 <StyleguideExample @title="Code">
-  <Form as |form data|>
+  <Form as |form|>
     <form.Field @title="Query" @name="query" as |field|>
       <field.Code />
     </form.Field>
@@ -44,7 +44,7 @@
 </StyleguideExample>
 
 <StyleguideExample @title="Textarea">
-  <Form as |form data|>
+  <Form as |form|>
     <form.Field @title="Query" @name="query" as |field|>
       <field.Textarea />
     </form.Field>
@@ -52,7 +52,7 @@
 </StyleguideExample>
 
 <StyleguideExample @title="Select">
-  <Form as |form data|>
+  <Form as |form|>
     <form.Field @title="Enabled" @name="enabled" as |field|>
       <field.Select as |select|>
         <select.Option @value="true">Yes</select.Option>
@@ -63,7 +63,7 @@
 </StyleguideExample>
 
 <StyleguideExample @title="Checkbox">
-  <Form as |form data|>
+  <Form as |form|>
     <form.Field @title="Contract" @name="contract" as |field|>
       <field.Checkbox>Accept the contract</field.Checkbox>
     </form.Field>
@@ -71,7 +71,7 @@
 </StyleguideExample>
 
 <StyleguideExample @title="Image">
-  <Form as |form data|>
+  <Form as |form|>
     <form.Field @title="Image" @name="image" as |field|>
       <field.Image />
     </form.Field>
@@ -79,7 +79,7 @@
 </StyleguideExample>
 
 <StyleguideExample @title="Icon">
-  <Form as |form data|>
+  <Form as |form|>
     <form.Field @title="Icon" @name="icon" as |field|>
       <field.Icon />
     </form.Field>
@@ -99,7 +99,7 @@
 </StyleguideExample>
 
 <StyleguideExample @title="RadioGroup">
-  <Form as |form data|>
+  <Form as |form|>
     <form.Field @title="Enabled" @name="enabled" as |field|>
       <field.RadioGroup as |radioGroup|>
         <radioGroup.Radio @value="true">Yes</radioGroup.Radio>
@@ -112,7 +112,7 @@
 <h2>Layout</h2>
 
 <StyleguideExample @title="Section">
-  <Form as |form data|>
+  <Form as |form|>
     <form.Section @title="Section title">
       Content
     </form.Section>
@@ -120,7 +120,7 @@
 </StyleguideExample>
 
 <StyleguideExample @title="Alert">
-  <Form as |form data|>
+  <Form as |form|>
     <form.Alert @icon="pencil-alt">
       You can edit this form.
     </form.Alert>
@@ -128,7 +128,7 @@
 </StyleguideExample>
 
 <StyleguideExample @title="InputGroup">
-  <Form as |form data|>
+  <Form as |form|>
     <form.InputGroup as |inputGroup|>
       <inputGroup.Field @title="Username" @name="username" as |field|>
         <field.Input />
@@ -144,7 +144,7 @@
 </StyleguideExample>
 
 <StyleguideExample @title="Collection">
-  <Form as |form data|>
+  <Form as |form|>
     <form.Button @action={{fn form.addItemToCollection "foo"}} @icon="plus" />
     <form.Collection @name="foo" as |collection index|>
       <collection.Field @title="Bar" @name="bar" as |field|>
@@ -160,7 +160,7 @@
 </StyleguideExample>
 
 <StyleguideExample @title="Row/Col">
-  <Form as |form data|>
+  <Form as |form|>
     <form.Row as |row|>
       <row.Col @size={{4}}>
         <form.Field
@@ -187,7 +187,7 @@
 <h2>Validation</h2>
 
 <StyleguideExample @title="Input">
-  <Form @validateOn="change" as |form data|>
+  <Form @validateOn="change" as |form|>
     <form.Field
       @title="Username"
       @name="username"
