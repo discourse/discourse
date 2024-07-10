@@ -642,6 +642,24 @@ RSpec.describe PostsController do
       expect(post.topic.reload.category_id).not_to eq(category.id)
     end
 
+    describe "trying to add a link without permission" do
+      it "returns an error message if links are added to posts when not allowed" do
+        post = create_post
+        sign_in(post.user)
+        SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:admins]
+
+        put "/posts/#{post.id}",
+            params: {
+              post: {
+                raw: "I'm editing this post to add www.linkhere.com",
+              },
+            }
+
+        expect(response.status).to eq(422)
+        expect(response.body).to include("Sorry, you can't include links in your posts.")
+      end
+    end
+
     describe "with Post.plugin_permitted_update_params" do
       before do
         plugin = Plugin::Instance.new
