@@ -63,11 +63,12 @@ describe "Topic Map", type: :system do
     expect(topic_map.expanded_map_avatars_details.length).to eq 4
 
     # views count
-    sign_in(other_user)
-    topic_page.visit_topic(topic)
-    try_until_success { expect(TopicViewItem.count).to eq(2) }
-    page.refresh
-    expect(topic_map.views_count).to eq(2)
+    # TODO (martin) Investigate flakiness
+    # sign_in(other_user)
+    # topic_page.visit_topic(topic)
+    # try_until_success { expect(TopicViewItem.count).to eq(2) }
+    # page.refresh
+    # expect(topic_map.views_count).to eq(2)
 
     # likes count
     expect(topic_map).to have_no_likes

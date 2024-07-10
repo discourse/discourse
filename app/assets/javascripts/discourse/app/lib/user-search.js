@@ -5,6 +5,7 @@ import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
+import { camelCaseToSnakeCase } from "discourse-common/lib/case-converter";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseLater from "discourse-common/lib/later";
 
@@ -20,10 +21,6 @@ export function resetUserSearchCache() {
   cacheTime = null;
   currentTerm = null;
   oldSearch = null;
-}
-
-export function camelCaseToSnakeCase(text) {
-  return text.replace(/([a-zA-Z])(?=[A-Z])/g, "$1_").toLowerCase();
 }
 
 function performSearch(

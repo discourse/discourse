@@ -793,6 +793,8 @@ users:
   hide_user_activity_tab:
     default: false
     client: true
+  delete_associated_accounts_on_password_reset:
+    default: false
 
 groups:
   enable_group_directory:
@@ -2073,9 +2075,12 @@ security:
       - "same-origin"
       - "same-origin-allow-popups"
     hidden: true
-  cross_origin_opener_unsafe_none_referrers:
+  cross_origin_opener_unsafe_none_groups:
+    type: group_list
+    list_type: compact
     default: ""
-    type: host_list
+    allow_any: false
+    refresh: true
     hidden: true
 
 onebox:
@@ -2120,6 +2125,9 @@ onebox:
   cache_onebox_user_agent:
     default: ""
     hidden: true
+  github_onebox_access_token:
+    default: ""
+    secret: true
 spam:
   add_rel_nofollow_to_user_content: true
   hide_post_sensitivity:
@@ -2344,13 +2352,6 @@ developer:
   bypass_wizard_check:
     default: false
     hidden: true
-  logging_provider:
-    hidden: true
-    default: "default"
-    type: "list"
-    choices:
-      - "default"
-      - "lograge"
   bootstrap_error_pages:
     hidden: true
     default: false
@@ -2420,6 +2421,12 @@ developer:
     client: true
     hidden: true
   experimental_topic_bulk_actions_enabled_groups:
+    default: ""
+    type: group_list
+    list_type: compact
+    allow_any: false
+    refresh: true
+  experimental_flags_admin_page_enabled_groups:
     default: ""
     type: group_list
     list_type: compact
@@ -2516,6 +2523,9 @@ backups:
     hidden: true
     default: ""
     regex: '^[a-z0-9\-\/_]+$' # can't use '.' when using HTTPS
+  s3_inventory_bucket_region:
+    hidden: true
+    default: ""
   s3_disable_cleanup:
     default: false
   backup_time_of_day:

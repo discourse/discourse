@@ -16,6 +16,8 @@ RSpec.describe Upload do
   let(:attachment_path) { __FILE__ }
   let(:attachment) { File.new(attachment_path) }
 
+  it { is_expected.to have_many(:badges).dependent(:nullify) }
+
   describe ".with_no_non_post_relations" do
     it "does not find non-post related uploads" do
       post_upload = Fabricate(:upload)

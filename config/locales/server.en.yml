@@ -245,6 +245,7 @@ en:
       maximum_staged_user_per_email_reached: "Reached maximum number of staged users created per email."
       no_subject: "(no subject)"
       no_body: "(no body)"
+      attachments: "(attachments)"
       missing_attachment: "(Attachment %{filename} is missing)"
       continuing_old_discussion:
         one: "Continuing the discussion from [%{title}](%{url}), because it was created more than %{count} day ago."
@@ -323,6 +324,7 @@ en:
         other: is the wrong length (should be %{count} characters)
       other_than: "must be other than %{count}"
       auth_overrides_username: "Username needs to be updated on authentication provider side, since `auth_overrides_username` setting is enabled."
+      required: "must exist"
     template:
       body: ! "There were problems with the following fields:"
       header:
@@ -1629,6 +1631,14 @@ en:
         user: User
         qtt_like: Likes Received
       description: "Top 10 users who have had likes from a wide range of people."
+    topic_view_stats:
+      title: "Topic View Stats"
+      labels:
+        topic: Topic
+        logged_in_views: Logged In
+        anon_views: Anonymous
+        total_views: Total
+      description: "The top 100 most viewed topics in a date range, combining logged in and anonymous views. Can be filtered by category."
 
   dashboard:
     problem:
@@ -1748,6 +1758,7 @@ en:
     force_custom_user_agent_hosts: "Hosts for which to use the custom onebox user agent on all requests. (Especially useful for hosts that limit access by user agent)."
     max_oneboxes_per_post: "Set the maximum number of oneboxes that can be included in a single post. Oneboxes provide a preview of linked content within the post."
     facebook_app_access_token: "A token generated from your Facebook app ID and secret. Used to generate Instagram oneboxes."
+    github_onebox_access_token: "A GitHub access token which is used to generate GitHub oneboxes for private repos, commits, pull requests, issues, and file contents. Without this, only public GitHub URLs will be oneboxed."
 
     logo: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the site title text will be shown."
     logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square 120 × 120 image. If left blank, a home glyph will be shown."
@@ -2369,6 +2380,8 @@ en:
     allow_users_to_hide_profile: "Allow users to hide their profile and presence"
     hide_user_activity_tab: "Hide the activity tab on user profiles except for Admin and self."
 
+    delete_associated_accounts_on_password_reset: "Delete user associated account when user changes the password."
+
     allow_featured_topic_on_user_profiles: "Allow users to feature a link to a topic on their user card and profile."
 
     show_inactive_accounts: "Allow logged in users to browse profiles of inactive accounts."
@@ -2672,6 +2685,7 @@ en:
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
     view_raw_email_allowed_groups: "Groups which can view the raw email content of a post if it was created by an incoming email. This includes email headers and other technical information."
+    experimental_flags_admin_page_enabled_groups: "EXPERIMENTAL: Remove the Moderation Flags link from the admin sidebar."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."

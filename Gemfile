@@ -6,13 +6,13 @@ source "https://rubygems.org"
 
 gem "bootsnap", require: false, platform: :mri
 
-gem "actionmailer", "< 7.1"
-gem "actionpack", "< 7.1"
-gem "actionview", "< 7.1"
-gem "activemodel", "< 7.1"
-gem "activerecord", "< 7.1"
-gem "activesupport", "< 7.1"
-gem "railties", "< 7.1"
+gem "actionmailer", "~> 7.1.0"
+gem "actionpack", "~> 7.1.0"
+gem "actionview", "~> 7.1.0"
+gem "activemodel", "~> 7.1.0"
+gem "activerecord", "~> 7.1.0"
+gem "activesupport", "~> 7.1.0"
+gem "railties", "~> 7.1.0"
 gem "sprockets-rails"
 
 gem "json"
@@ -89,6 +89,7 @@ gem "mini_sql"
 gem "pry-rails", require: false
 gem "pry-byebug", require: false
 gem "rtlcss", require: false
+gem "messageformat-wrapper", require: false
 gem "rake"
 
 gem "thor", require: false
@@ -212,7 +213,6 @@ gem "cppjieba_rb", require: false
 
 gem "lograge", require: false
 gem "logstash-event", require: false
-gem "logstash-logger", require: false
 gem "logster"
 
 # A fork of sassc with dart-sass support

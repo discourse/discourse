@@ -372,6 +372,24 @@ export function slugify(string) {
     .replace(/-+$/, ""); // Remove trailing dashes
 }
 
+export function unicodeSlugify(string) {
+  try {
+    return string
+      .trim()
+      .toLowerCase()
+      .normalize("NFD") // normalize the string to remove diacritics
+      .replace(/\s|_+/g, "-") // replace spaces and underscores with dashes
+      .replace(/[^\p{Letter}\d\-]+/gu, "") // Remove non-letter characters except for dashes
+      .replace(/--+/g, "-") // replace multiple dashes with a single dash
+      .replace(/^-+/, "") // Remove leading dashes
+      .replace(/-+$/, ""); // Remove trailing dashes
+  } catch (e) {
+    // in case the regex construct \p{Letter} is not supported by the browser
+    // fall back to the basic slugify function
+    return slugify(string);
+  }
+}
+
 export function toNumber(input) {
   return typeof input === "number" ? input : parseFloat(input);
 }
@@ -632,27 +650,32 @@ export function getCaretPosition(element, options) {
  * Generate markdown table from an array of objects
  * Inspired by https://github.com/Ygilany/array-to-table
  *
- * @param  {Array} array       Array of objects
- * @param  {Array} columns     Column headings
- * @param  {String} colPrefix  Table column prefix
+ * @param  {Array<Record<string, string | undefined>>}          array       Array of objects
+ * @param  {String[]}                                           columns     Column headings
+ * @param  {String}                                             colPrefix   Table column prefix
+ * @param  {("left" | "center" | "right" | null)[] | undefined} alignments  Table alignments
  *
  * @return {String} Markdown table
  */
-export function arrayToTable(array, cols, colPrefix = "col") {
+export function arrayToTable(array, cols, colPrefix = "col", alignments) {
   let table = "";
 
   // Generate table headers
   table += "|";
   table += cols.join(" | ");
-  table += "|\r\n|";
+  table += "|\n|";
+
+  const alignMap = {
+    left: ":--",
+    center: ":-:",
+    right: "--:",
+  };
 
   // Generate table header separator
   table += cols
-    .map(function () {
-      return "---";
-    })
+    .map((_, index) => alignMap[String(alignments?.[index])] || "---")
     .join(" | ");
-  table += "|\r\n";
+  table += "|\n";
 
   // Generate table body
   array.forEach(function (item) {
@@ -661,12 +684,11 @@ export function arrayToTable(array, cols, colPrefix = "col") {
     table +=
       cols
         .map(function (_key, index) {
-          return String(item[`${colPrefix}${index}`] || "").replace(
-            /\r?\n|\r/g,
-            " "
-          );
+          return String(item[`${colPrefix}${index}`] || "")
+            .replace(/\r?\n|\r/g, " ")
+            .replaceAll("|", "\\|");
         })
-        .join(" | ") + "|\r\n";
+        .join(" | ") + "|\n";
   });
 
   return table;

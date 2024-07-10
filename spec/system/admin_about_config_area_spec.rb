@@ -38,7 +38,7 @@ describe "Admin About Config Area Page", type: :system do
       expect(config_area.general_settings_section.community_description_editor.value).to eq(
         "this is an extended description for my forums",
       )
-      expect(config_area.general_settings_section.banner_image_uploader).to have_uploaded_picture
+      expect(config_area.general_settings_section.banner_image_uploader).to have_uploaded_image
 
       expect(config_area.contact_information_section.community_owner_input.value).to eq("kitty")
       expect(config_area.contact_information_section.contact_email_input.value).to eq(
@@ -79,6 +79,7 @@ describe "Admin About Config Area Page", type: :system do
         with: "here's an extended description for the **community**",
       )
       config_area.general_settings_section.banner_image_uploader.select_image(image_file.path)
+      expect(config_area.general_settings_section.banner_image_uploader).to have_uploaded_image
 
       config_area.general_settings_section.save_button.click
       expect(config_area.general_settings_section).to have_saved_successfully

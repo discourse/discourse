@@ -340,11 +340,11 @@ export default Controller.extend(bufferedProperty("model"), {
 
   @action
   jumpTop(event) {
-    if (wantsNewWindow(event)) {
+    if (event && wantsNewWindow(event)) {
       return;
     }
 
-    event.preventDefault();
+    event?.preventDefault();
     DiscourseURL.routeTo(this.get("model.firstPostUrl"), {
       skipIfOnScreen: false,
       keepFilter: true,

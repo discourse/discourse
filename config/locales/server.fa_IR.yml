@@ -886,6 +886,12 @@ fa_IR:
       labels:
         user: کاربر
         qtt_like: پسند‌های دریافتی
+    topic_view_stats:
+      labels:
+        topic: موضوع
+        logged_in_views: وارد شده در
+        anon_views: ناشناس
+        total_views: مجموع
   dashboard:
     problem:
       rails_env: "سرور شما در حالت %{env} در حال اجراست"

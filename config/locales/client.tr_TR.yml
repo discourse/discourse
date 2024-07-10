@@ -21,6 +21,7 @@ tr_TR:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number} bin"
         millions: "%{number} Milyon"
@@ -1067,6 +1068,7 @@ tr_TR:
       none: "(bir seçenek belirleyin)"
       required: 'Lütfen "%{name}" için bir değer girin'
       same_as_password: "Şifreniz diğer alanlarda tekrarlanmamalıdır."
+      optional: (isteğe bağlı)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -2031,10 +2033,11 @@ tr_TR:
       header_title: "Hoş geldiniz!"
       subheader_title: "Hesabınızı oluşturalım"
       disclaimer: "Kaydolarak, <a href='%{privacy_link}' target='blank'>gizlilik politikası</a> ve <a href='%{tos_link}' target='blank'>hizmet şartlarını</a>kabul etmiş olursunuz."
-      title: "Hesabınızı oluşturun"
+      title: "Kaydol"
       failed: "Bir şeyler ters gitti, belki de bu e-posta zaten kayıtlıdır, şifremi unuttum bağlantısını deneyin"
       associate: "Zaten bir hesabınız var mı? %{provider} hesabınızı bağlamak için <a href='%{associate_link}'>giriş yapın</a>."
       activation_title: "Hesabınızı etkinleştirin"
+      already_have_account: "Zaten hesabınız var mı?"
     forgot_password:
       title: "Şifre Sıfırlama"
       action: "Şifremi unuttum"
@@ -4446,6 +4449,9 @@ tr_TR:
       panels:
         forum:
           label: Forum
+      back_to_forum: "Foruma Geri Dön"
+      collapse_all_sections: "Tüm bölümleri daralt"
+      expand_all_sections: "Tüm bölümleri genişlet"
       filter: "Filtrele..."
       clear_filter: "Filtreyi temizle"
       no_results:
@@ -4557,10 +4563,7 @@ tr_TR:
     admin:
       title: "Discourse Yöneticisi"
       moderator: "Moderatör"
-      back_to_forum: "Foruma Geri Dön"
       filter_reports: Raporları filtrele
-      expand_all_sections: "Tüm bölümleri genişlet"
-      collapse_all_sections: "Tüm bölümleri daralt"
       tags:
         remove_muted_tags_from_latest:
           always: "her zaman"
@@ -5061,6 +5064,22 @@ tr_TR:
           optional: "(isteğe bağlı)"
           update: "Güncelle"
           saved: "kaydedildi!"
+        flags:
+          header: "Moderasyon Bayrakları"
+          description: "Açıklama"
+          enabled: "Etkin mi?"
+          edit: "Düzenle"
+          delete: "Sil"
+          delete_confirm: '"%{name}" adlı temayı silmek istediğinizden emin misiniz?'
+          form:
+            save: "Kaydet"
+            name: "Ad"
+            description: "Açıklama"
+            topic: "konular"
+            post: "gönderiler"
+            chat_message: "sohbet mesajları"
+          more_options:
+            title: "Daha fazla seçenek"
       plugins:
         title: "Eklentiler"
         installed: "Yüklü Eklentiler"

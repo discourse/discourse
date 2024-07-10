@@ -23,6 +23,7 @@ pl_PL:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -1187,6 +1188,7 @@ pl_PL:
       none: "(wybierz opcję)"
       required: 'Wprowadź wartość dla "%{name}”'
       same_as_password: "Twoje hasło nie powinno się powtarzać w innych polach."
+      optional: (opcjonalne)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -2214,10 +2216,11 @@ pl_PL:
       header_title: "Witamy!"
       subheader_title: "Utwórzmy Twoje konto"
       disclaimer: "Rejestrując się, wyrażasz zgodę na <a href='%{privacy_link}' target='blank'>politykę prywatności</a> i <a href='%{tos_link}' target='blank'>warunki świadczenia usług</a> ."
-      title: "Utwórz swoje konto"
+      title: "Rejestracja"
       failed: "Coś poszło nie tak, możliwe, że wybrany adres email jest już zarejestrowany, spróbuj użyć odnośnika przypomnienia hasła"
       associate: "Masz już konto? <a href='%{associate_link}'>Zaloguj się</a> , aby połączyć swoje konto %{provider}."
       activation_title: "Aktywuj swoje konto"
+      already_have_account: "Masz już konto?"
     forgot_password:
       title: "Reset hasła"
       action: "Zapomniałem(-łam) hasła"
@@ -4868,6 +4871,9 @@ pl_PL:
       panels:
         forum:
           label: Forum
+      back_to_forum: "Powrót do forum"
+      collapse_all_sections: "Zwiń wszystkie sekcje"
+      expand_all_sections: "Rozwiń wszystkie sekcje"
       filter: "Filtr..."
       clear_filter: "Wyczyść filtr"
       no_results:
@@ -4986,10 +4992,7 @@ pl_PL:
     admin:
       title: "Administrator Discourse"
       moderator: "Moderator"
-      back_to_forum: "Powrót do forum"
       filter_reports: Filtruj zgłoszenia
-      expand_all_sections: "Rozwiń wszystkie sekcje"
-      collapse_all_sections: "Zwiń wszystkie sekcje"
       tags:
         remove_muted_tags_from_latest:
           always: "zawsze"
@@ -5513,6 +5516,24 @@ pl_PL:
           optional: "(opcjonalne)"
           update: "Aktualizuj"
           saved: "zapisano!"
+        flags:
+          header: "Flagi moderacji"
+          description: "Opis"
+          enabled: "Włączona?"
+          edit: "Edytuj"
+          delete: "Usuń"
+          delete_confirm: 'Czy na pewno chcesz usunąć "%{name}"?'
+          form:
+            save: "Zapisz"
+            name: "Nazwa"
+            description: "Opis"
+            topic: "tematy"
+            post: "wpisy"
+            chat_message: "wiadomości czatu"
+          more_options:
+            title: "Więcej opcji"
+            move_up: "Przenieś wyżej"
+            move_down: "Przenieś niżej"
       plugins:
         title: "Wtyczki"
         installed: "Zainstalowane wtyczki"

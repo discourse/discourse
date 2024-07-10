@@ -13,8 +13,8 @@ module(
     test("it renders a DBreadcrumbsContainer with multiple DBreadcrumbsItems", async function (assert) {
       await render(<template>
         <DBreadcrumbsContainer />
-        <DBreadcrumbsItem @route="admin" @label={{i18n "admin_title"}} />
-        <DBreadcrumbsItem @route="about" @label={{i18n "about.simple_title"}} />
+        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @path="/about" @label={{i18n "about.simple_title"}} />
       </template>);
 
       assert
@@ -28,7 +28,7 @@ module(
           @additionalLinkClasses="some-class"
           @additionalItemClasses="other-class"
         />
-        <DBreadcrumbsItem @route="admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
       </template>);
 
       assert.dom(".d-breadcrumbs .d-breadcrumbs__item.other-class").exists();
@@ -43,7 +43,7 @@ module(
       await render(<template>
         <DBreadcrumbsContainer />
         <DBreadcrumbsContainer />
-        <DBreadcrumbsItem @route="admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
       </template>);
 
       assert.dom(".d-breadcrumbs").exists({ count: 2 });

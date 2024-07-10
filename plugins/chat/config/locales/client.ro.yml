@@ -56,10 +56,6 @@ ro:
       flag: "Marchează cu marcaj de avertizare"
       join: "Alătură-te"
       last_visit: "ultima vizită"
-      summarization:
-        title: "Rezumați mesajele"
-        description: "Selectați o opțiune de mai jos pentru a rezuma conversația trimisă în intervalul de timp dorit."
-        summarize: "Rezumat"
       mention_warning:
         groups:
           unreachable_1: "@%{group} nu permite mențiuni."

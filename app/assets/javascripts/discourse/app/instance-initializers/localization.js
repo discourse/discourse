@@ -39,10 +39,5 @@ export default {
         }
       }
     }
-
-    for (let [key, value] of Object.entries(I18n._mfOverrides || {})) {
-      key = key.replace(/^[a-z_]*js\./, "");
-      I18n._compiledMFs[key] = value;
-    }
   },
 };

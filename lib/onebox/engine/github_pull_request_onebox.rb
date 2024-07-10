@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "../mixins/github_body"
+require_relative "../mixins/github_auth_header"
 
 module Onebox
   module Engine
@@ -9,6 +10,7 @@ module Onebox
       include LayoutSupport
       include JSON
       include Onebox::Mixins::GithubBody
+      include Onebox::Mixins::GithubAuthHeader
 
       GITHUB_COMMENT_REGEX = /(<!--.*?-->\r\n)/
 
@@ -27,7 +29,7 @@ module Onebox
       end
 
       def data
-        result = raw.clone
+        result = raw(github_auth_header).clone
         result["link"] = link
 
         created_at = Time.parse(result["created_at"])

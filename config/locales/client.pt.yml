@@ -21,6 +21,7 @@ pt:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -991,6 +992,7 @@ pt:
     user_fields:
       none: "(selecione uma opção)"
       required: 'Por favor, insira um valor para "%{name}”'
+      optional: (opcional)
     user:
       said: "%{username}:"
       profile: "Perfil"
@@ -1720,7 +1722,7 @@ pt:
       header_title: "Bem-vindo!"
       subheader_title: "Vamos criar a sua conta"
       disclaimer: "Ao registar-se, concorda com a <a href='%{privacy_link}' target='blank'>política de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos do serviço</a>."
-      title: "Crie sua conta"
+      title: "Inscrever-se"
       failed: "Ocorreu algo de errado, este e-mail já pode estar registado. Tente utilizar a hiperligação \"Esqueci-me da Palavra-passe\"."
     forgot_password:
       title: "Repor Palavra-Passe"
@@ -3883,6 +3885,18 @@ pt:
           optional: "(opcional)"
           update: "Atualização"
           saved: "guardado!"
+        flags:
+          description: "Descrição"
+          enabled: "Ativado?"
+          edit: "Editar"
+          delete: "Eliminar"
+          delete_confirm: 'Tem certeza de que deseja excluir "%{name}"?'
+          form:
+            save: "Guardar"
+            name: "Nome"
+            description: "Descrição"
+            topic: "tópicos"
+            post: "mensagens"
       plugins:
         title: "Plugins"
         installed: "Plugins Instalados"

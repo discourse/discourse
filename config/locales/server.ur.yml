@@ -1277,6 +1277,12 @@ ur:
         user: صارف
         qtt_like: لائیکس موصول ہوے
       description: "سرفہرست 10 صارفین جنہیں لوگوں کی ایک وسیع رینج سے پسندیدگی ملی ہے۔"
+    topic_view_stats:
+      labels:
+        topic: ٹاپک
+        logged_in_views: لاگڈ اِن
+        anon_views: گمنام
+        total_views: کُل
   dashboard:
     problem:
       rails_env: "آپ کا سرور %{env} مَوڈ میں چل رہا ہے۔"

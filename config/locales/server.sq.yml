@@ -611,6 +611,12 @@ sq:
       labels:
         user: User
         qtt_like: Pëlqime të marra
+    topic_view_stats:
+      labels:
+        topic: Topic
+        logged_in_views: Logged In
+        anon_views: Anonim
+        total_views: Total
   dashboard:
     problem:
       rails_env: "Your server is running in %{env} mode."

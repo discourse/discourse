@@ -1183,7 +1183,7 @@ class Plugin::Instance
   # through the `summarization_strategy` setting.
   def register_summarization_strategy(strategy)
     Discourse.deprecate(
-      "register_summarization_straegy is deprecated. Summarization code is now moved to Discourse AI",
+      "register_summarization_strategy is deprecated. Summarization code is now moved to Discourse AI",
     )
     if !strategy.class.ancestors.include?(Summarization::Base)
       raise ArgumentError.new("Not a valid summarization strategy")
@@ -1275,13 +1275,6 @@ class Plugin::Instance
       locale_chain = opts[:fallbackLocale] ? [locale, opts[:fallbackLocale]] : [locale]
       lib_locale_path = File.join(root_path, "lib/javascripts/locale")
 
-      path = File.join(lib_locale_path, "message_format")
-      opts[:message_format] = find_locale_file(locale_chain, path)
-      opts[:message_format] = JsLocaleHelper.find_message_format_locale(
-        locale_chain,
-        fallback_to_english: false,
-      ) unless opts[:message_format]
-
       path = File.join(lib_locale_path, "moment_js")
       opts[:moment_js] = find_locale_file(locale_chain, path)
       opts[:moment_js] = JsLocaleHelper.find_moment_locale(locale_chain) unless opts[:moment_js]
@@ -1357,8 +1350,7 @@ class Plugin::Instance
   def valid_locale?(custom_locale)
     File.exist?(custom_locale[:client_locale_file]) &&
       File.exist?(custom_locale[:server_locale_file]) &&
-      File.exist?(custom_locale[:js_locale_file]) && custom_locale[:message_format] &&
-      custom_locale[:moment_js]
+      File.exist?(custom_locale[:js_locale_file]) && custom_locale[:moment_js]
   end
 
   def find_locale_file(locale_chain, path)

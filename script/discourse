@@ -8,7 +8,7 @@ class DiscourseCLI < Thor
     true
   end
 
-  desc "remap [--global,--regex] FROM TO", "Remap a string sequence across all tables"
+  desc "remap [--global,--regex,--force] FROM TO", "Remap a string sequence across all tables"
   long_desc <<-TEXT
     Replace a string sequence FROM with TO across all tables.
 
@@ -33,6 +33,7 @@ class DiscourseCLI < Thor
   TEXT
   option :global, type: :boolean
   option :regex, type: :boolean
+  option :force, type: :boolean
   def remap(from, to)
     load_rails
 
@@ -48,10 +49,12 @@ class DiscourseCLI < Thor
       puts "WILL RUN ON '#{RailsMultisite::ConnectionManagement.current_db}' DB"
     end
 
-    puts "THIS TASK WILL REWRITE DATA, ARE YOU SURE (type YES)"
-    if STDIN.gets.strip.upcase != "YES"
-      puts "aborting."
-      exit 1
+    unless options[:force]
+      puts "THIS TASK WILL REWRITE DATA, ARE YOU SURE (type YES)"
+      if STDIN.gets.strip.upcase != "YES"
+        puts "aborting."
+        exit 1
+      end
     end
 
     if options[:global]

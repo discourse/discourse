@@ -220,8 +220,6 @@ uk:
         few: "та %{count} інші"
         many: "та %{count} інших"
         other: "та %{count} інших"
-    summaries:
-      no_targets: "За вибраний період повідомлень не було."
     transcript:
       default_thread_title: "Нитка"
       split_thread_range: "повідомлення %{start} до %{end} із %{total}"

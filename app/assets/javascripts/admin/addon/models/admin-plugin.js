@@ -1,5 +1,6 @@
 import { cached, tracked } from "@glimmer/tracking";
 import { capitalize } from "@ember/string";
+import { snakeCaseToCamelCase } from "discourse-common/lib/case-converter";
 import I18n from "discourse-i18n";
 
 export default class AdminPlugin {
@@ -10,24 +11,9 @@ export default class AdminPlugin {
   @tracked enabled;
 
   constructor(args = {}) {
-    this.about = args.about;
-    this.adminRoute = args.admin_route;
-    this.commitHash = args.commit_hash;
-    this.commitUrl = args.commit_url;
-    this.enabled = args.enabled;
-    this.enabledSetting = args.enabled_setting;
-    this.hasSettings = args.has_settings;
-    this.hasOnlyEnabledSetting = args.has_only_enabled_setting;
-    this.id = args.id;
-    this.isOfficial = args.is_official;
-    this.isDiscourseOwned = args.is_discourse_owned;
-    this.label = args.label;
-    this.name = args.name;
-    this.url = args.url;
-    this.version = args.version;
-    this.metaUrl = args.meta_url;
-    this.authors = args.authors;
-    this.extras = args.extras;
+    Object.keys(args).forEach((key) => {
+      this[snakeCaseToCamelCase(key)] = args[key];
+    });
   }
 
   get useNewShowRoute() {
@@ -69,7 +55,7 @@ export default class AdminPlugin {
       name = this.translatedCategoryName;
     } else {
       name = this.name
-        .split("-")
+        .split(/[-_]/)
         .map((word) => {
           return capitalize(word);
         })

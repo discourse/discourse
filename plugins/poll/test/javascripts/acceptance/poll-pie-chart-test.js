@@ -20,7 +20,9 @@ acceptance("Rendering polls with pie charts", function (needs) {
       .dom(".poll .poll-info_counts-count:last-child .info-number")
       .hasText("5", "it should display the right number of votes");
 
-    assert.dom(".poll").hasClass("pie", "pie class is present on poll div");
+    assert
+      .dom(".poll-outer")
+      .hasClass("pie", "pie class is present on poll div");
 
     assert
       .dom(".poll .poll-results-chart")

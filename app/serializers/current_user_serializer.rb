@@ -76,7 +76,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :use_admin_sidebar,
              :can_view_raw_email,
              :use_glimmer_topic_list?,
-             :login_method
+             :login_method,
+             :show_experimental_flags_admin_page
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -137,7 +138,15 @@ class CurrentUserSerializer < BasicUserSerializer
     object.staff? && object.in_any_groups?(SiteSetting.admin_sidebar_enabled_groups_map)
   end
 
-  def include_user_admin_sidebar?
+  def include_use_admin_sidebar?
+    object.staff?
+  end
+
+  def show_experimental_flags_admin_page
+    object.in_any_groups?(SiteSetting.experimental_flags_admin_page_enabled_groups_map)
+  end
+
+  def include_show_experimental_flags_admin_page?
     object.admin?
   end
 
@@ -147,7 +156,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_ignore_users
-    !is_anonymous && object.in_any_groups?(SiteSetting.ignore_allowed_groups_map)
+    scope.can_ignore_users?
   end
 
   def can_delete_all_posts_and_topics
@@ -294,7 +303,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def featured_topic
-    object.user_profile.featured_topic
+    BasicTopicSerializer.new(object.user_profile.featured_topic, scope: scope, root: false).as_json
   end
 
   def has_topic_draft

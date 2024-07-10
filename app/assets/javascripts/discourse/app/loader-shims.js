@@ -64,3 +64,12 @@ loaderShim("truth-helpers/helpers/not", () =>
 loaderShim("truth-helpers/helpers/or", () =>
   importSync("truth-helpers/helpers/or")
 );
+loaderShim("@messageformat/runtime/messages", () =>
+  importSync("@messageformat/runtime/messages")
+);
+loaderShim("@messageformat/runtime", () =>
+  importSync("@messageformat/runtime")
+);
+loaderShim("@messageformat/runtime/lib/cardinals", () =>
+  importSync("@messageformat/runtime/lib/cardinals")
+);

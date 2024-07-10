@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class SearchLog < ActiveRecord::Base
+  MAXIMUM_USER_AGENT_LENGTH = 2000
+
   validates_presence_of :term
+  validates :user_agent, length: { maximum: MAXIMUM_USER_AGENT_LENGTH }
 
   belongs_to :user
 
@@ -32,7 +35,7 @@ class SearchLog < ActiveRecord::Base
     Discourse.redis.keys("__SEARCH__LOG_*").each { |k| Discourse.redis.del(k) }
   end
 
-  def self.log(term:, search_type:, ip_address:, user_id: nil)
+  def self.log(term:, search_type:, ip_address:, user_agent: nil, user_id: nil)
     return [:error] if term.blank?
 
     search_type = search_types[search_type]
@@ -40,6 +43,10 @@ class SearchLog < ActiveRecord::Base
 
     ip_address = nil if user_id
     key = redis_key(user_id: user_id, ip_address: ip_address)
+
+    if user_agent && user_agent.length > MAXIMUM_USER_AGENT_LENGTH
+      user_agent = user_agent.truncate(MAXIMUM_USER_AGENT_LENGTH, omission: "")
+    end
 
     result = nil
 
@@ -55,7 +62,13 @@ class SearchLog < ActiveRecord::Base
 
     if !result
       log =
-        self.create!(term: term, search_type: search_type, ip_address: ip_address, user_id: user_id)
+        self.create!(
+          term: term,
+          search_type: search_type,
+          ip_address: ip_address,
+          user_agent: user_agent,
+          user_id: user_id,
+        )
 
       result = [:created, log.id]
     end
@@ -165,6 +178,7 @@ end
 #  search_type        :integer          not null
 #  created_at         :datetime         not null
 #  search_result_type :integer
+#  user_agent         :string(2000)
 #
 # Indexes
 #

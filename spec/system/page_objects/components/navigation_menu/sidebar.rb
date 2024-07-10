@@ -49,6 +49,14 @@ module PageObjects
           find("#discourse-modal-title")
         end
 
+        def has_panel_header?
+          page.has_css?(".sidebar-panel-header")
+        end
+
+        def has_no_panel_header?
+          page.has_no_css?(".sidebar-panel-header")
+        end
+
         def toggle_all_sections
           find(".sidebar-toggle-all-sections").click
         end

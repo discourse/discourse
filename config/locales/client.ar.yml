@@ -25,6 +25,7 @@ ar:
             kb: ك.ب
             mb: م.ب
             tb: ت.ب
+      percent: "%{count}%"
       short:
         thousands: "%{number} ألف"
         millions: "%{number} مليون"
@@ -1285,6 +1286,7 @@ ar:
       none: "(تحديد خيار)"
       required: 'يُرجى إدخال قيمة لـ "%{name}"'
       same_as_password: "ينبغي عدم تكرار كلمة مرورك في الحقول الأخرى."
+      optional: (اختياري)
     user:
       said: "%{username}:"
       profile: "الملف الشخصي"
@@ -2344,10 +2346,11 @@ ar:
       header_title: "مرحبًا!"
       subheader_title: "لننشئ حسابك"
       disclaimer: "يشير التسجيل إلى موافقتك على <a href='%{privacy_link}' target='blank'>سياسة الخصوصية</a> و<a href='%{tos_link}' target='blank'>شروط الخدمة</a>."
-      title: "إنشاء حسابك"
+      title: "الاشتراك"
       failed: "حدث خطأ ما. قد يكون هذا البريد الإلكتروني مسجلًا بالفعل. جرِّب رابط نسيان كلمة المرور"
       associate: "لديك حساب بالفعل؟ <a href='%{associate_link}'>سجِّل الدخول</a> لربط حسابك من %{provider}."
       activation_title: "تفعيل حسابك"
+      already_have_account: "هل لديك حساب بالفعل؟"
     forgot_password:
       title: "إعادة تعيين كلمة المرور"
       action: "نسيت كلمة مروري"
@@ -5157,6 +5160,7 @@ ar:
       panels:
         forum:
           label: المنتدى
+      back_to_forum: "العودة إلى المنتدى"
       filter: "المرشح..."
       no_results:
         title: "لا نتائج"
@@ -5281,7 +5285,6 @@ ar:
     admin:
       title: "مسؤول Discourse"
       moderator: "مشرف"
-      back_to_forum: "العودة إلى المنتدى"
       filter_reports: تصفية التقارير
       tags:
         remove_muted_tags_from_latest:
@@ -5779,6 +5782,19 @@ ar:
           optional: "(اختياري)"
           update: "تحديث"
           saved: "تم الحفظ!"
+        flags:
+          description: "الوصف"
+          enabled: "مفعَّلة؟"
+          edit: "تعديل"
+          delete: "حذف"
+          delete_confirm: 'هل تريد بالتأكيد حذف السمة "%{name}"؟'
+          form:
+            save: "حفظ"
+            name: "الاسم"
+            description: "الوصف"
+            topic: "الموضوعات"
+            post: "المنشورات"
+            chat_message: "رسائل الدردشة"
       plugins:
         title: "الإضافات"
         installed: "الإضافات المثبَّتة"

@@ -21,6 +21,7 @@ ur:
             kb: کے بی
             mb: ایم بی
             tb: ٹی بی
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -938,6 +939,7 @@ ur:
     user_fields:
       none: "(ایک آپشن منتخب کریں)"
       required: 'برائے مہربانی "%{name}” کے لیے ایک قدر درج کریں'
+      optional: (اختیاری)
     user:
       said: "%{username}:"
       profile: "پروفائل"
@@ -1663,7 +1665,7 @@ ur:
       header_title: "خوش آمدید!"
       subheader_title: "آئیے اپنا اکاؤنٹ بنائیں"
       disclaimer: "رجسٹر کرنے پر آپ <a href='%{privacy_link}' target='blank'>پرائیوِیسی پالیسی</a> اور <a href='%{tos_link}' target='blank'>سروس کی شرائط</a> سے اتفاق کرتے ہیں۔"
-      title: "اپنا اکاؤنٹ بنائیں"
+      title: "سائن اپ"
       failed: "کچھ غلط ہو گیا، شاید یہ ای میل پہلے ہی سے رجسٹرڈ ہے، پاسورڈ بھول جانے والا لنک اِستعمال کر کے دیکھیں"
       associate: "پہلے سے ہی اکاؤنٹ ہے؟ <a href='%{associate_link}'>اپنے %{provider} اکاؤنٹ کو لنک کرنے کے لیے</a> لاگ ان کریں۔"
     forgot_password:
@@ -3984,6 +3986,18 @@ ur:
           optional: "(اختیاری)"
           update: "اپ ڈیٹ"
           saved: "محفوظ کر لیا گیا!"
+        flags:
+          description: "تفصیل"
+          enabled: "فعال؟"
+          edit: "ترمیم کریں"
+          delete: "مٹائیں"
+          delete_confirm: 'کیا آپ واقعی "%{name}" مٹانا چاہتے ہیں؟'
+          form:
+            save: "محفوظ کریں"
+            name: "نام"
+            description: "تفصیل"
+            topic: "ٹاپک"
+            post: "پوسٹ`"
       plugins:
         title: "پلَگ اِنز"
         installed: "انسٹال کیے ہوے پلَگ اِنز"

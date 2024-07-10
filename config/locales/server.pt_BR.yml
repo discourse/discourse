@@ -1383,6 +1383,12 @@ pt_BR:
         user: Usuário(a)
         qtt_like: Curtidas recebidas
       description: "Melhores dez usuários(as) que receberam curtidas de uma ampla variedade de pessoas."
+    topic_view_stats:
+      labels:
+        topic: Tópico
+        logged_in_views: Entrou
+        anon_views: Anônimo(a)
+        total_views: Total
   dashboard:
     problem:
       rails_env: "Seu servidor está rodando no modo %{env}."

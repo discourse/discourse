@@ -964,6 +964,7 @@ fa_IR:
     user_fields:
       none: "(یک گزینه انتخاب کنید)"
       same_as_password: "رمز عبور شما نباید در قسمت‌های دیگر تکرار شود."
+      optional: (اختیاری)
     user:
       said: "%{username}:"
       profile: "نمایه"
@@ -1707,6 +1708,7 @@ fa_IR:
       disclaimer: "با ثبت نام شما با <a href='%{privacy_link}' target='blank'>حریم خصوصی</a> و <a href='%{tos_link}' target='blank'>شرایط و ضوابط استفاده از سرویس </a> موافقت کرده اید."
       title: "ثبت نام"
       failed: "اشتباهی روی داده، شاید این نام کاربری پیش‌تر استفاده شده؛ پیوند فراموشی گذرواژه می‌تواند کمک کند."
+      already_have_account: "از قبل حساب کاربری دارید؟"
     forgot_password:
       title: "باز‌یابی رمز‌عبور"
       action: "رمز عبورم را فراموش کرده‌ام"
@@ -3488,6 +3490,7 @@ fa_IR:
       panels:
         forum:
           label: انجمن
+      back_to_forum: "بازگشت به انجمن"
       filter: "فیلتر..."
     until: "تا وقتی که:"
     form_templates:
@@ -3514,7 +3517,6 @@ fa_IR:
     admin:
       title: "مدیر ارشد دیسکورس"
       moderator: "مدیر"
-      back_to_forum: "بازگشت به انجمن"
       filter_reports: صافی گزارشات
       tags:
         remove_muted_tags_from_latest:
@@ -3817,6 +3819,18 @@ fa_IR:
           optional: "(اختیاری)"
           update: "به روز رسانی"
           saved: "ذخیره شد!"
+        flags:
+          description: "توضیح"
+          enabled: "فعال شده؟"
+          edit: "ویرایش"
+          delete: "حذف"
+          delete_confirm: 'آیا از حذف "%{name}" مطمئن هستید؟ '
+          form:
+            save: "ذخیره"
+            name: "نام"
+            description: "توضیح"
+            topic: "موضوعات"
+            post: "فرسته‌ها"
       plugins:
         title: "افزونه‌ها"
         installed: "افزونه های نصب شده"

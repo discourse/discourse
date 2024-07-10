@@ -21,6 +21,7 @@ pt_BR:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -1037,6 +1038,7 @@ pt_BR:
       none: "(selecione uma opção)"
       required: 'Digite um valor para "%{name}"'
       same_as_password: "Sua senha não deve ser repetida em outros campos."
+      optional: (opcional)
     user:
       said: "%{username}:"
       profile: "Perfil"
@@ -1980,10 +1982,11 @@ pt_BR:
       header_title: "Boas-vindas!"
       subheader_title: "Vamos criar a sua conta"
       disclaimer: "Ao se cadastrar, você concorda com a <a href='%{privacy_link}' target='blank'>política de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos de serviço</a>."
-      title: "Criar sua conta"
+      title: "Cadastrar-se"
       failed: "Algo deu errado, talvez este e-mail já esteja cadastrado, tente usar o link de senha esquecida."
       associate: "Já tem uma conta? <a href='%{associate_link}'>Entre</a> para vincular sua conta do %{provider}."
       activation_title: "Ativar sua conta"
+      already_have_account: "Já tem uma conta?"
     forgot_password:
       title: "Redefinição de senha"
       action: "Esqueci minha senha"
@@ -4310,6 +4313,7 @@ pt_BR:
       panels:
         forum:
           label: Fórum
+      back_to_forum: "Voltar para o Fórum"
       filter: "Filtro..."
       no_results:
         title: "Nenhum resultado"
@@ -4419,7 +4423,6 @@ pt_BR:
     admin:
       title: "Administrador(a) do Discourse"
       moderator: "Moderador(a)"
-      back_to_forum: "Voltar para o Fórum"
       filter_reports: Filtrar relatórios
       tags:
         remove_muted_tags_from_latest:
@@ -4890,6 +4893,19 @@ pt_BR:
           optional: "(opcional)"
           update: "Atualizar"
           saved: "salvou!"
+        flags:
+          description: "Descrição"
+          enabled: "Ativado(a)?"
+          edit: "Editar"
+          delete: "Excluir"
+          delete_confirm: 'Você tem certeza de que deseja excluir "%{name}"?'
+          form:
+            save: "Salvar"
+            name: "Nome"
+            description: "Descrição"
+            topic: "tópicos"
+            post: "postagens"
+            chat_message: "mensagens de chat"
       plugins:
         title: "Plugins"
         installed: "Plugins nstalados"

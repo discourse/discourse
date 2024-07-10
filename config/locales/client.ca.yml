@@ -841,6 +841,7 @@ ca:
       copied: "copiat"
     user_fields:
       none: "(trieu una opció)"
+      optional: (opcional)
     user:
       said: "%{username}:"
       profile: "Perfil"
@@ -1419,6 +1420,7 @@ ca:
     create_account:
       header_title: "Benvingut!"
       disclaimer: "Registrant-vos, accepteu la <a href='%{privacy_link}' target='blank'>política de privacitat</a> i les <a href='%{tos_link}' target='blank'>condicions del servei</a>."
+      title: "Registre"
       failed: "Alguna cosa ha anat malament. Potser aquest correu electrònic ja ha estat registrat; proveu-ho amb l'enllaç de contrasenya oblidada"
     forgot_password:
       title: "Restabliment de contrasenya"
@@ -3231,6 +3233,18 @@ ca:
         about:
           optional: "(opcional)"
           saved: "desat!"
+        flags:
+          description: "Descripció"
+          enabled: "Activat?"
+          edit: "Edita"
+          delete: "Suprimeix"
+          delete_confirm: 'Esteu segur que voleu suprimir "%{name}"?'
+          form:
+            save: "Desa"
+            name: "Nom"
+            description: "Descripció"
+            topic: "temes"
+            post: "publicacions"
       plugins:
         title: "Connectors"
         installed: "Connectors instal·lats"

@@ -1,6 +1,6 @@
-import { click, fillIn, render } from "@ember/test-helpers";
+import { click, fillIn, render, typeIn } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { module, test } from "qunit";
+import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { query } from "discourse/tests/helpers/qunit-helpers";
@@ -87,5 +87,18 @@ module("Integration | Component | site-setting", function (hooks) {
       query(".formatted-selection").innerText,
       "jpg, jpeg, png, gif, heic, heif, webp, avif, svg"
     );
+  });
+
+  // Skipping for now because ember-test-helpers doesn't check for defaultPrevented when firing that event chain
+  skip("prevents decimal in integer setting input", async function (assert) {
+    this.set("setting", {
+      setting: "suggested_topics_unread_max_days_old",
+      value: "",
+      type: "integer",
+    });
+
+    await render(hbs`<SiteSetting @setting={{this.setting}} />`);
+    await typeIn(".input-setting-integer", "90,5", { delay: 1000 });
+    assert.dom(".input-setting-integer").hasValue("905");
   });
 });

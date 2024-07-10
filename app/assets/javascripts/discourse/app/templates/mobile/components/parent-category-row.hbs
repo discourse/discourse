@@ -25,7 +25,7 @@
         {{/if}}
         {{#unless this.isMuted}}
           {{#if this.showTopics}}
-            {{#each this.category.topics as |t|}}
+            {{#each this.category.featuredTopics as |t|}}
               <MobileCategoryTopic @topic={{t}} />
             {{/each}}
           {{/if}}

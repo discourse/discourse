@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
+import getURL from "discourse-common/lib/get-url";
 
 export default class DBreadcrumbsItem extends Component {
   @service breadcrumbs;
@@ -16,23 +16,14 @@ export default class DBreadcrumbsItem extends Component {
     this.breadcrumbs.items.delete(this);
   }
 
-  get url() {
-    if (this.args.model) {
-      return this.router.urlFor(this.args.route, this.args.model);
-    } else {
-      return this.router.urlFor(this.args.route);
-    }
-  }
-
-  @cached
+  // @cached
   get templateForContainer() {
     // Those are evaluated in a different context than the `@linkClass`
-    const { label } = this.args;
-    const url = this.url;
+    const { label, path } = this.args;
 
     return <template>
       <li ...attributes>
-        <a href={{url}} class={{@linkClass}}>
+        <a href={{getURL path}} class={{@linkClass}}>
           {{label}}
         </a>
       </li>

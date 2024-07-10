@@ -864,6 +864,7 @@ bs_BA:
     user_fields:
       none: "(odaberi opciju)"
       required: 'Unesite vrijednost za "%{name}”'
+      optional: (opciono)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1469,6 +1470,7 @@ bs_BA:
     create_account:
       header_title: "Dobrodošao!"
       disclaimer: "Registracijom pristajete na <a href='%{privacy_link}' target='blank'>politiku privatnosti</a> i <a href='%{tos_link}' target='blank'>uvjete pružanja usluge</a> ."
+      title: "Učlani se"
       failed: "Nešto je krenulo pogrešno, možda je ovaj email već iskorišten za registraciju, pokušajte sa Zaboravio šifru linkom"
     forgot_password:
       title: "Resetovanje lozinke"
@@ -3382,6 +3384,18 @@ bs_BA:
         about:
           optional: "(opciono)"
           saved: "sačuvano!"
+        flags:
+          description: "Opis"
+          enabled: "Omogućen?"
+          edit: "Edit"
+          delete: "Delete"
+          delete_confirm: 'Jeste li sigurni da želite izbrisati "%{name}"?'
+          form:
+            save: "Save"
+            name: "Ime"
+            description: "Opis"
+            topic: "topics"
+            post: "objave"
       plugins:
         title: "Pluginovi"
         installed: "Instalirani pluginovi"

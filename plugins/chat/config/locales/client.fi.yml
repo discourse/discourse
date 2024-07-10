@@ -139,13 +139,6 @@ fi:
       heading: "Chat"
       join: "Liity"
       last_visit: "edellinen vierailu"
-      summarization:
-        title: "Tee yhteenveto viesteistä"
-        description: "Valitse vaihtoehto alla yhteenvedon tekemiseksi haluttuna ajanjaksona lähetetystä keskustelusta."
-        summarize: "Tee yhteenveto"
-        since:
-          one: "Viimeinen tunti"
-          other: "Viimeiset %{count} tuntia"
       mention_warning:
         invitations_sent:
           one: "Kutsu lähetetty"
@@ -200,6 +193,7 @@ fi:
       copy_link: "Kopioi linkki"
       copy_text: "Kopioi teksti"
       rebake_message: "Kokoa HTML uudelleen"
+      message_too_long: "Viesti on liian pitkä. Enintään %{count} merkkiä sallitaan."
       retry_staged_message:
         title: "Verkkovirhe"
         action: "Lähetetäänkö uudelleen?"

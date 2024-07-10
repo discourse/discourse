@@ -298,6 +298,7 @@ ug:
         other: ئۇزۇنلۇق خاتالىقى (%{count} ھەرپ بولۇشى كېرەك)
       other_than: "%{count} بولماسلىقى كېرەك"
       auth_overrides_username: "«auth_overrides_username» تەڭشىكى قوزغىتىلغانلىقتىن، ئىشلەتكۈچى ئىسمىنى كىملىك دەلىللەش مۇلازىمىتى تەمىنلىگۈچى تەرەپتىن يېڭىلاش كېرەك."
+      required: "مەۋجۇتلۇقى زۆرۈر"
     template:
       body: ! "تۆۋەندىكى بۆلەكتە مەسىلە كۆرۈلگەن:"
       header:
@@ -1472,7 +1473,10 @@ ug:
         page_views: "بەت كۆرۈلۈشى"
       description: "بەت كۆرۈلۈشى بويىچە تىزىلغان تور بەت ئۆمىلىگۈچ ئىشلەتكۈچى ۋاكالەتچىسىنىڭ تىزىمى"
     web_hook_events_daily_aggregate:
+      title: "تور ئىلمەك پائالىيىتى"
       xaxis: "كۈن"
+      yaxis: "پائالىيەت قېتىم سانى"
+      description: "قوزغالغان تور ئىلمەك پائالىيىتىنىڭ سانى ياكى داۋاملىشىش ۋاقتى."
     suspicious_logins:
       title: "گۇمانلىق تىزىمغا كىرىش"
       labels:
@@ -1525,6 +1529,12 @@ ug:
         user: ئىشلەتكۈچى
         qtt_like: تاپشۇرۇۋالغان ياقتۇرۇش
       description: "كەڭ دائىرىدىكى كىشىلەرنىڭ ياقتۇرۇشىغا ئېرىشكەن ئالدىنقى 10 ئىشلەتكۈچى."
+    topic_view_stats:
+      labels:
+        topic: تېما
+        logged_in_views: تىزىمغا كىردى
+        anon_views: نامسىز
+        total_views: جەمئىي
   dashboard:
     problem:
       twitter_login: 'Twitter ئارقىلىق تىزىمغا كىرىش ھازىر ئىشلىمەيدىغاندەك قىلىدۇ. <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">بېكەت تەڭشىكى</a> دىن سالاھىيەت كىملىكىنى تەكشۈرۈڭ.'

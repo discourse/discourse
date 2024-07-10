@@ -902,6 +902,12 @@ nb_NO:
       labels:
         user: Bruker
         qtt_like: Likes mottatt
+    topic_view_stats:
+      labels:
+        topic: Emne
+        logged_in_views: Innlogget
+        anon_views: Anonym
+        total_views: Total
   dashboard:
     problem:
       host_names: "Din config/database.yml-fil bruker forvalgt lokalvert-vertsnavn. Oppdater det til å bruke din sides vertsnavn."

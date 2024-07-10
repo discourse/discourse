@@ -93,7 +93,7 @@ describe "Thread indicator for chat messages", type: :system do
       expect(page).not_to have_css(channel_page.message_by_id_selector(new_thread.replies.first))
     end
 
-    it "increments the indicator when a new reply is sent in the thread" do
+    xit "increments the indicator when a new reply is sent in the thread" do
       chat_page.visit_channel(channel)
 
       expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_reply_count(

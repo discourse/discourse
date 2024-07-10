@@ -1216,6 +1216,12 @@ gl:
       labels:
         user: Usuario
         qtt_like: Gústames recibidos
+    topic_view_stats:
+      labels:
+        topic: Tema
+        logged_in_views: Coa sesión iniciada
+        anon_views: Anónimo
+        total_views: Total
   dashboard:
     problem:
       rails_env: "O seu servidor está a executarse en modo %{env}."
