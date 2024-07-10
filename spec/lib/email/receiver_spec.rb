@@ -71,13 +71,12 @@ RSpec.describe Email::Receiver do
     user = Fabricate(:user, email: "staged@bar.com", active: false, staged: true)
     post = Fabricate(:post)
 
-    post_reply_key =
-      Fabricate(
-        :post_reply_key,
-        user: user,
-        post: post,
-        reply_key: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      )
+    Fabricate(
+      :post_reply_key,
+      user: user,
+      post: post,
+      reply_key: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    )
 
     expect { process(:staged_sender) }.not_to raise_error
   end
@@ -91,7 +90,7 @@ RSpec.describe Email::Receiver do
 
     topic = Fabricate(:topic)
     post = Fabricate(:post, topic: topic)
-    user = Fabricate(:user, email: "discourse@bar.com")
+    Fabricate(:user, email: "discourse@bar.com")
 
     mail = email(:old_destination).gsub(":post_id", post.id.to_s)
     expect { Email::Receiver.new(mail).process! }.to raise_error(
@@ -666,18 +665,14 @@ RSpec.describe Email::Receiver do
       post = topic.posts.last
       upload = post.uploads.first
 
-      expect(post.raw).to include(
-        "![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})",
-      )
+      expect(post.raw).to include UploadMarkdown.new(upload).to_markdown
 
       expect { process(:inline_image) }.to change { topic.posts.count }
 
       post = topic.posts.last
       upload = post.uploads.first
 
-      expect(post.raw).to include(
-        "![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})",
-      )
+      expect(post.raw).to include UploadMarkdown.new(upload).to_markdown
     end
 
     it "supports attached images in HTML part" do
@@ -706,7 +701,11 @@ RSpec.describe Email::Receiver do
       expect(post.raw).to eq(<<~MD.chomp)
       [image:#{"0" * 5000}
 
-      ![#{upload.original_filename}|#{upload.width}x#{upload.height}](#{upload.short_url})
+      [details="#{I18n.t("emails.incoming.attachments")}"]
+
+      #{UploadMarkdown.new(upload).to_markdown}
+
+      [/details]
       MD
     end
 
@@ -725,7 +724,7 @@ RSpec.describe Email::Receiver do
       <details class='elided'>
       <summary title='Show trimmed content'>&#183;&#183;&#183;</summary>
 
-      <img src="upload://qUm0DGR49PAZshIi7HxMd3cAlzn.png" width="300" height="200">
+      <img src="#{upload.short_url}" width="300" height="200">
 
       </details>
       MD
@@ -740,7 +739,11 @@ RSpec.describe Email::Receiver do
       expect(post.raw).to eq(<<~MD.chomp)
       Please find some text file attached.
 
-      [#{upload.original_filename}|attachment](#{upload.short_url}) (20 Bytes)
+      [details="#{I18n.t("emails.incoming.attachments")}"]
+      
+      #{UploadMarkdown.new(upload).to_markdown}
+
+      [/details]
       MD
 
       expect { process(:apple_mail_attachment) }.to change { topic.posts.count }
@@ -758,33 +761,21 @@ RSpec.describe Email::Receiver do
 
     it "tries not to repeat duplicate attachments" do
       SiteSetting.authorized_extensions = "jpg"
+      SiteSetting.always_show_trimmed_content = true
 
-      expect { process(:logo_1) }.to change { UploadReference.count }.by(1)
-      expect(topic.posts.last.raw).to match %r{upload://}
+      expect { process(:logo_1) }.to change { Upload.count }.by(1)
+      logo = Upload.last
+      expect(topic.posts.last.raw).to include logo.short_url
 
-      expect { process(:logo_2) }.not_to change { UploadReference.count }
-      expect(topic.posts.last.raw).not_to match %r{upload://}
-    end
-
-    it "tries not to repeat duplicate secure attachments" do
-      setup_s3
-      stub_s3_store
-      SiteSetting.secure_uploads = true
-      SiteSetting.authorized_extensions = "jpg"
-
-      expect { process(:logo_1) }.to change { UploadReference.count }.by(1)
-      expect(topic.posts.last.raw).to match %r{upload://}
-
-      expect { process(:logo_2) }.not_to change { UploadReference.count }
-      expect(topic.posts.last.raw).not_to match %r{upload://}
+      expect { process(:logo_2) }.not_to change { Upload.count }
+      expect(topic.posts.last.raw).to include logo.short_url
     end
 
     it "works with removed attachments" do
       SiteSetting.authorized_extensions = "jpg"
 
       expect { process(:removed_attachments) }.to change { topic.posts.count }
-      post = topic.posts.last
-      expect(post.uploads).to be_empty
+      expect(topic.posts.last.uploads).to be_empty
     end
 
     it "supports eml attachments" do
@@ -796,7 +787,11 @@ RSpec.describe Email::Receiver do
       expect(post.raw).to eq(<<~MD.chomp)
       Please find the eml file attached.
 
-      [#{upload.original_filename}|attachment](#{upload.short_url}) (193 Bytes)
+      [details="#{I18n.t("emails.incoming.attachments")}"]
+
+      #{UploadMarkdown.new(upload).to_markdown}
+
+      [/details]
       MD
     end
 
@@ -837,9 +832,7 @@ RSpec.describe Email::Receiver do
       post = topic.posts.last
       upload = post.uploads.last
 
-      expect(post.raw).to include(
-        "[#{upload.original_filename}|attachment](#{upload.short_url}) (64 KB)",
-      )
+      expect(post.raw).to include UploadMarkdown.new(upload).to_markdown
     end
 
     it "supports liking via email" do
@@ -1020,20 +1013,16 @@ RSpec.describe Email::Receiver do
 
       it "extracts address and uses it for comparison" do
         expect { process(:reply_to_whitespaces) }.to change(Topic, :count).by(1)
-        user = User.last
         incoming = IncomingEmail.find_by(message_id: "TXULO4v6YU0TzeL2buFAJNU2MK21c7t4@example.com")
-        topic = incoming.topic
         expect(incoming.from_address).to eq("johndoe@example.com")
-        expect(user.email).to eq("johndoe@example.com")
+        expect(User.last.email).to eq("johndoe@example.com")
       end
 
       it "handles emails where there is a Reply-To address, using that instead of the from address, if X-Original-From is present" do
         expect { process(:reply_to_different_to_from) }.to change(Topic, :count).by(1)
-        user = User.last
         incoming = IncomingEmail.find_by(message_id: "3848c3m98r439c348mc349@test.mailinglist.com")
-        topic = incoming.topic
         expect(incoming.from_address).to eq("arthurmorgan@reddeadtest.com")
-        expect(user.email).to eq("arthurmorgan@reddeadtest.com")
+        expect(User.last.email).to eq("arthurmorgan@reddeadtest.com")
       end
 
       it "allows for quotes around the display name of the Reply-To address" do
@@ -1041,20 +1030,16 @@ RSpec.describe Email::Receiver do
           Topic,
           :count,
         ).by(1)
-        user = User.last
         incoming = IncomingEmail.find_by(message_id: "3848c3m98r439c348mc349@test.mailinglist.com")
-        topic = incoming.topic
         expect(incoming.from_address).to eq("johnmarston@reddeadtest.com")
-        expect(user.email).to eq("johnmarston@reddeadtest.com")
+        expect(User.last.email).to eq("johnmarston@reddeadtest.com")
       end
 
       it "does not use the reply-to address if an X-Original-From header is not present" do
         expect { process(:reply_to_different_to_from_no_x_original) }.to change(Topic, :count).by(1)
-        user = User.last
         incoming = IncomingEmail.find_by(message_id: "3848c3m98r439c348mc349@test.mailinglist.com")
-        topic = incoming.topic
         expect(incoming.from_address).to eq("westernsupport@test.mailinglist.com")
-        expect(user.email).to eq("westernsupport@test.mailinglist.com")
+        expect(User.last.email).to eq("westernsupport@test.mailinglist.com")
       end
 
       it "does not use the reply-to address if the X-Original-From header is different from the reply-to address" do
@@ -1062,11 +1047,9 @@ RSpec.describe Email::Receiver do
           Topic,
           :count,
         ).by(1)
-        user = User.last
         incoming = IncomingEmail.find_by(message_id: "3848c3m98r439c348mc349@test.mailinglist.com")
-        topic = incoming.topic
         expect(incoming.from_address).to eq("westernsupport@test.mailinglist.com")
-        expect(user.email).to eq("westernsupport@test.mailinglist.com")
+        expect(User.last.email).to eq("westernsupport@test.mailinglist.com")
       end
     end
 
@@ -1138,9 +1121,7 @@ RSpec.describe Email::Receiver do
       post = Topic.last.first_post
       upload = post.uploads.first
 
-      expect(post.raw).to include(
-        "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{upload.filesize} Bytes)",
-      )
+      expect(post.raw).to include UploadMarkdown.new(upload).to_markdown
     end
 
     it "reenables user's PM email notifications when user emails new topic to group" do
@@ -1401,7 +1382,7 @@ RSpec.describe Email::Receiver do
       end
 
       it "processes the reply from the user as a brand new topic if they have replied from a different address (e.g. auto forward) and allow_unknown_sender_topic_replies is disabled" do
-        email_log, group_post = reply_as_group_user
+        email_log, _group_post = reply_as_group_user
 
         reply_email = email(:email_to_group_email_username_2_as_unknown_sender)
         reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
@@ -1415,7 +1396,7 @@ RSpec.describe Email::Receiver do
 
       it "processes the reply from the user as a reply if they have replied from a different address (e.g. auto forward) and allow_unknown_sender_topic_replies is enabled" do
         group.update!(allow_unknown_sender_topic_replies: true)
-        email_log, group_post = reply_as_group_user
+        email_log, _group_post = reply_as_group_user
 
         reply_email = email(:email_to_group_email_username_2_as_unknown_sender)
         reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
@@ -2216,7 +2197,7 @@ RSpec.describe Email::Receiver do
       SiteSetting.strip_incoming_email_lines = true
 
       receiver = Email::Receiver.new(email)
-      text, elided, format = receiver.select_body
+      text, _elided, _format = receiver.select_body
       expect(text).to eq(stripped_text)
     end
 
