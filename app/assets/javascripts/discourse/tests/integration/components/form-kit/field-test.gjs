@@ -6,12 +6,21 @@ import {
   setupOnerror,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 
 module("Integration | Component | FormKit | Field", function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.consoleWarnStub = sinon.stub(console, "error");
+  });
+
+  hooks.afterEach(function () {
+    this.consoleWarnStub.restore();
+  });
 
   test("@size", async function (assert) {
     await render(<template>
