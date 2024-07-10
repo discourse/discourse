@@ -4642,8 +4642,10 @@ en:
     no_group_messages_title: "No group messages found"
 
     topic_entrance:
-      sr_jump_top_button: "Jump to the first post"
-      sr_jump_bottom_button: "Jump to the last post"
+      sr_jump_top_button: "Jump to the first post - %{date}"
+      sr_jump_bottom_button: "Jump to the last post - %{date}"
+      jump_top_button_title: "Jump to the first post"
+      jump_bottom_button_title: "Jump to the last post"
     fullscreen_table:
       expand_btn: "Expand Table"
       view_table: "View Table"
