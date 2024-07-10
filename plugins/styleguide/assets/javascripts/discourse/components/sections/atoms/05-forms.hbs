@@ -159,7 +159,7 @@
   </Form>
 </StyleguideExample>
 
-<StyleguideExample @title="Row">
+<StyleguideExample @title="Row/Col">
   <Form as |form data|>
     <form.Row as |row|>
       <row.Col @size={{4}}>
@@ -187,7 +187,7 @@
 <h2>Validation</h2>
 
 <StyleguideExample @title="Input">
-  <Form as |form data|>
+  <Form @validateOn="change" as |form data|>
     <form.Field
       @title="Username"
       @name="username"
