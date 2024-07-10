@@ -22,7 +22,7 @@ export default EmberObject.extend({
     return I18n.messageFormat("posts_likes_MF", {
       count,
       ratio,
-    }).trim();
+    });
   },
 
   @discourseComputed("ratio")
