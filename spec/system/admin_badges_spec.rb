@@ -74,7 +74,7 @@ describe "Admin Badges Page", type: :system do
       expect(form.field("auto_revoke")).to be_unchecked
       expect(form.field("target_posts")).to be_unchecked
 
-      expect(form.field("trigger")).to have_value(Badge::Trigger::TrustLevelChange.to_s)
+      expect(form.field("trigger")).to have_value(Badge::Trigger::PostRevision.to_s)
     end
   end
 end
