@@ -4153,7 +4153,7 @@ en:
           med {very high like to post ratio, }
          high {extremely high like to post ratio, }
         other {}
-      }jump to the first or last post...
+      }jump to the first or last post…
 
     posters: "Posters"
     latest_poster_link: "%{username}'s profile, latest poster"
