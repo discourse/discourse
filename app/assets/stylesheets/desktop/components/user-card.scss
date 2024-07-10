@@ -24,6 +24,33 @@
   h3 {
     font-size: var(--font-0);
   }
+
+  @include breakpoint("mobile-extra-large") {
+    // important for keeping the usercard uncropped
+    // at 200% - 400% zoom levels
+    --avatar-width: 4em;
+    --avatar-margin: 0;
+    .names h1 {
+      font-size: var(--font-up-2);
+    }
+    .first-row {
+      gap: 0.5em 0;
+      flex-wrap: wrap;
+      .usercard-controls {
+        max-width: unset;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 0.5em;
+      }
+      li {
+        flex: 1 1 0;
+        &:empty {
+          display: none;
+        }
+      }
+    }
+  }
 }
 
 // styles for user cards only
