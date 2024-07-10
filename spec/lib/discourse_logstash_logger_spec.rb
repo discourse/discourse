@@ -173,5 +173,21 @@ RSpec.describe DiscourseLogstashLogger do
 
       expect(parsed).not_to have_key("request.headers.some_random_header")
     end
+
+    it "does not log the event if message matches a pattern configured by `Logster.store.ignore`" do
+      original_logster_store_ignore = Logster.store.ignore
+      Logster.store.ignore = [/^Some::StandardError/]
+
+      logger.add(
+        Logger::ERROR,
+        "Some::StandardError (this is a normal message)\ntest",
+        "web-exception",
+      )
+
+      output.rewind
+      expect(output.read.chomp).to be_empty
+    ensure
+      Logster.store.ignore = original_logster_store_ignore
+    end
   end
 end
