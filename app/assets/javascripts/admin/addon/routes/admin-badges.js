@@ -20,7 +20,7 @@ export default class AdminBadgesRoute extends DiscourseRoute {
 
   @action
   editGroupings() {
-    const model = this.controllerFor("admin-badges").get("badgeGroupings");
+    const model = this.controllerFor("admin-badges").badgeGroupings;
     this.modal.show(EditBadgeGroupingsModal, {
       model: {
         badgeGroupings: model,
