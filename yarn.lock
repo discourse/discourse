@@ -5543,10 +5543,10 @@ ember-cli-version-checker@^5.1.1, ember-cli-version-checker@^5.1.2:
     semver "^7.3.4"
     silent-error "^1.1.1"
 
-ember-cli@~5.9.0:
-  version "5.9.0"
-  resolved "https://registry.yarnpkg.com/ember-cli/-/ember-cli-5.9.0.tgz#ee5683b4f73158bde2e5be4be19a068578098af6"
-  integrity sha512-3+4F9STw4yRttzMCCrbpAwwQLtUqIwVug/Ve6rvUFvcpK//n8Q6N7iaPBHhYOFGwwok8Nr0jfkINxLWTl6WrlA==
+ember-cli@~5.10.0:
+  version "5.10.0"
+  resolved "https://registry.yarnpkg.com/ember-cli/-/ember-cli-5.10.0.tgz#095c659fb8cb337331acb90516babe6a61ee27b0"
+  integrity sha512-Y9nihTELz3dxphn/Fvw9/Gdwe5Q13Zlsh3wa4qXyy84CHRo9FcDNb8ka8UstaUxHoCcsASS6iUq8cos2krLRdA==
   dependencies:
     "@pnpm/find-workspace-dir" "^6.0.2"
     broccoli "^3.5.2"
