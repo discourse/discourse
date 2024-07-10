@@ -26,6 +26,7 @@
       &nbsp;{{~topic-featured-link topic~}}
       {{~/if~}}
       {{~raw-plugin-outlet name="topic-list-after-title"}}
+      {{~raw "plugin-outlet" name="topic-list-after-title" outletArgs=(raw-hash topic=topic)}}
       {{~#if topic.unseen~}}
         <span class="topic-post-badges">&nbsp;<span class="badge-notification new-topic"></span></span>
       {{~/if~}}

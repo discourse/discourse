@@ -25,6 +25,7 @@
       &nbsp;{{~topic-featured-link topic}}
     {{~/if}}
     {{~raw-plugin-outlet name="topic-list-after-title"}}
+    {{~raw "plugin-outlet" name="topic-list-after-title" outletArgs=(raw-hash topic=topic)}}
     {{~raw "list/unread-indicator" includeUnreadIndicator=includeUnreadIndicator
                                    topicId=topic.id
                                    unreadClass=unreadClass~}}
