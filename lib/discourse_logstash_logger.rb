@@ -74,6 +74,17 @@ class DiscourseLogstashLogger < Logger
         event["backtrace"] = backtrace
       end
 
+      # `web-exception` is a log message triggered by logster.
+      # The exception class and message are extracted from the message based on the format logged by logster in
+      # https://github.com/discourse/logster/blob/25375250fb8a5c312e9c55a75f6048637aad2c69/lib/logster/middleware/debug_exceptions.rb#L22.
+      #
+      # In theory we could get logster to include the exception class and message in opts but logster currently does not
+      # need those options so we are parsing it from the message for now and not making a change in logster.
+      if progname == "web-exception" && message =~ /^(\w+) \((.+)\)\n/
+        event["exception.class"] = $1
+        event["exception.message"] = $2
+      end
+
       if (env = opts&.dig(:env)).present?
         ALLOWED_HEADERS_FROM_ENV.each do |header|
           event["request.headers.#{header.downcase}"] = opts[:env][header]
