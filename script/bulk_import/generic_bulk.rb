@@ -2283,6 +2283,15 @@ class BulkImport::Generic < BulkImport::Base
         image_upload_id:
           row["image_upload_id"] ? upload_id_from_original_id(row["image_upload_id"]) : nil,
         query: row["query"],
+        multiple_grant: to_boolean(row["multiple_grant"]),
+        allow_title: to_boolean(row["allow_title"]),
+        icon: row["icon"],
+        listable: to_boolean(row["listable"]),
+        target_posts: to_boolean(row["target_posts"]),
+        enabled: to_boolean(row["enabled"]),
+        auto_revoke: to_boolean(row["auto_revoke"]),
+        trigger: row["trigger"],
+        show_posts: to_boolean(row["show_posts"]),
       }
     end
 

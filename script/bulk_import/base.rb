@@ -713,6 +713,14 @@ class BulkImport::Base
     updated_at
     multiple_grant
     query
+    allow_title
+    icon
+    listable
+    target_posts
+    enabled
+    auto_revoke
+    trigger
+    show_posts
   ]
 
   USER_BADGE_COLUMNS ||= %i[badge_id user_id granted_at granted_by_id seq post_id created_at]
