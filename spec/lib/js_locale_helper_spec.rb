@@ -172,7 +172,7 @@ RSpec.describe JsLocaleHelper do
       it "translates messages properly" do
         expect(
           translated_message,
-        ).to eq "This topic has 3 replies with a very high like to post ratio\n"
+        ).to eq "3 replies, very high like to post ratio, jump to the first or last post...\n"
       end
 
       context "when the translation is overriden" do
