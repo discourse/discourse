@@ -83,9 +83,6 @@ export default class TopicListHeaderColumn extends Component {
       {{(if @sortable (modifier on "keydown" this.onKeyDown))}}
       data-sort-order={{@order}}
       scope="col"
-      tabindex={{if @sortable "0"}}
-      role={{if @sortable "button"}}
-      aria-pressed={{this.isSorting}}
       aria-sort={{this.ariaSort}}
       class={{concatClass
         "topic-list-data"
@@ -144,7 +141,14 @@ export default class TopicListHeaderColumn extends Component {
             @changeNewListSubset={{@changeNewListSubset}}
           />
         {{else}}
-          <span>{{this.localizedName}}</span>
+          <span
+            class={{if @screenreaderOnly "sr-only"}}
+            tabindex={{if @sortable "0"}}
+            role={{if @sortable "button"}}
+            aria-pressed={{this.isSorting}}
+          >
+            {{this.localizedName}}
+          </span>
         {{/if}}
       {{/unless}}
 

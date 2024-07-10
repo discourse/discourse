@@ -66,6 +66,7 @@ export default class TopicEntrance extends Component {
 
   <template>
     <DMenu
+      @title={{@title}}
       @ariaLabel={{@title}}
       @placement="center"
       @autofocus={{true}}

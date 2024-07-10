@@ -4141,36 +4141,33 @@ en:
     pending_posts:
       label: "Pending"
       label_with_count: "Pending (%{count})"
+    sr_topic_list_caption: Topic list, column headers with buttons are sortable.
 
     # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
     posts_likes_MF: |
-      This topic has { count, plural,
-          one {# reply}
-        other {# replies}
-      } { ratio, select,
-          low {with a high like to post ratio}
-          med {with a very high like to post ratio}
-         high {with an extremely high like to post ratio}
+      { count, plural,
+          one {# reply,}
+        other {# replies,}
+      }{ ratio, select,
+          low { high like to post ratio,}
+          med { very high like to post ratio,}
+         high { extremely high like to post ratio,}
         other {}
-      }
+      } jump to the first or last post…
 
+    posters: "Posters"
     latest_poster_link: "%{username}'s profile, latest poster"
     original_post: "Original Post"
     views: "Views"
-    sr_views: "Sort by views"
     views_lowercase:
       one: "view"
       other: "views"
     replies: "Replies"
-    sr_replies: "Sort by replies"
     views_long:
       one: "this topic has been viewed %{count} time"
       other: "this topic has been viewed %{count} times"
     activity: "Activity"
-    sr_activity: "Sort by activity"
     likes: "Likes"
-    sr_likes: "Sort by likes"
-    sr_op_likes: "Sort by original post likes"
     likes_lowercase:
       one: "like"
       other: "likes"
