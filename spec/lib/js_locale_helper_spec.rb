@@ -172,7 +172,7 @@ RSpec.describe JsLocaleHelper do
       it "translates messages properly" do
         expect(
           translated_message,
-        ).to eq "3 replies, very high like to post ratio, jump to the first or last post...\n"
+        ).to eq "3 replies, very high like to post ratio, jump to the first or last post…\n"
       end
 
       context "when the translation is overriden" do
@@ -207,7 +207,7 @@ RSpec.describe JsLocaleHelper do
         it "returns the fallback translation" do
           expect(
             translated_message,
-          ).to eq "3 replies, very high like to post ratio, jump to the first or last post...\n"
+          ).to eq "3 replies, very high like to post ratio, jump to the first or last post…\n"
         end
 
         context "when the fallback translation is overriden" do
