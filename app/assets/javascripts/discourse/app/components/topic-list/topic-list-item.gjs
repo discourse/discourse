@@ -284,7 +284,10 @@ export default class TopicListItem extends Component {
         @outletArgs={{hash topic=@topic}}
       />
       {{#if this.site.desktopView}}
-        <PluginOutlet @name="topic-list-before-columns" />
+        <PluginOutlet
+          @name="topic-list-before-columns"
+          @outletArgs={{hash topic=@topic}}
+        />
 
         {{#if @bulkSelectEnabled}}
           <td class="bulk-select topic-list-data">
@@ -301,11 +304,17 @@ export default class TopicListItem extends Component {
         {{/if}}
 
         <td class="main-link clearfix topic-list-data" colspan="1">
-          <PluginOutlet @name="topic-list-before-link" />
+          <PluginOutlet
+            @name="topic-list-before-link"
+            @outletArgs={{hash topic=@topic}}
+          />
 
           <span class="link-top-line">
             {{~! no whitespace ~}}
-            <PluginOutlet @name="topic-list-before-status" />
+            <PluginOutlet
+              @name="topic-list-before-status"
+              @outletArgs={{hash topic=@topic}}
+            />
             {{~! no whitespace ~}}
             <TopicStatus @topic={{@topic}} />
             {{~! no whitespace ~}}
@@ -319,7 +328,10 @@ export default class TopicListItem extends Component {
               &nbsp;
               {{~topicFeaturedLink @topic}}
             {{~/if~}}
-            <PluginOutlet @name="topic-list-after-title" />
+            <PluginOutlet
+              @name="topic-list-after-title"
+              @outletArgs={{hash topic=@topic}}
+            />
             {{~! no whitespace ~}}
             <UnreadIndicator
               @includeUnreadIndicator={{this.includeUnreadIndicator}}
@@ -339,7 +351,10 @@ export default class TopicListItem extends Component {
           <div class="link-bottom-line">
             {{#unless @hideCategory}}
               {{#unless @topic.isPinnedUncategorized}}
-                <PluginOutlet @name="topic-list-before-category" />
+                <PluginOutlet
+                  @name="topic-list-before-category"
+                  @outletArgs={{hash topic=@topic}}
+                />
                 {{categoryLink @topic.category}}
               {{/unless}}
             {{/unless}}
@@ -362,10 +377,16 @@ export default class TopicListItem extends Component {
             <TopicExcerpt @topic={{@topic}} />
           {{/if}}
 
-          <PluginOutlet @name="topic-list-main-link-bottom" />
+          <PluginOutlet
+            @name="topic-list-main-link-bottom"
+            @outletArgs={{hash topic=@topic}}
+          />
         </td>
 
-        <PluginOutlet @name="topic-list-after-main-link" />
+        <PluginOutlet
+          @name="topic-list-after-main-link"
+          @outletArgs={{hash topic=@topic}}
+        />
 
         {{#if @showPosters}}
           <PostersColumn @posters={{@topic.featuredUsers}} />
@@ -396,16 +417,25 @@ export default class TopicListItem extends Component {
         {{/if}}
 
         <td class={{concatClass "num views topic-list-data" @topic.viewsHeat}}>
-          <PluginOutlet @name="topic-list-before-view-count" />
+          <PluginOutlet
+            @name="topic-list-before-view-count"
+            @outletArgs={{hash topic=@topic}}
+          />
           {{number @topic.views numberKey="views_long"}}
         </td>
 
         <ActivityColumn @topic={{@topic}} class="num topic-list-data" />
 
-        <PluginOutlet @name="topic-list-after-columns" />
+        <PluginOutlet
+          @name="topic-list-after-columns"
+          @outletArgs={{hash topic=@topic}}
+        />
       {{else}}
         <td class="topic-list-data">
-          <PluginOutlet @name="topic-list-before-columns" />
+          <PluginOutlet
+            @name="topic-list-before-columns"
+            @outletArgs={{hash topic=@topic}}
+          />
 
           <div class="pull-left">
             {{#if @bulkSelectEnabled}}
@@ -430,11 +460,17 @@ export default class TopicListItem extends Component {
 
           <div class="topic-item-metadata right">
             {{~! no whitespace ~}}
-            <PluginOutlet @name="topic-list-before-link" />
+            <PluginOutlet
+              @name="topic-list-before-link"
+              @outletArgs={{hash topic=@topic}}
+            />
 
             <div class="main-link">
               {{~! no whitespace ~}}
-              <PluginOutlet @name="topic-list-before-status" />
+              <PluginOutlet
+                @name="topic-list-before-status"
+                @outletArgs={{hash topic=@topic}}
+              />
               {{~! no whitespace ~}}
               <TopicStatus @topic={{@topic}} />
               {{~! no whitespace ~}}
@@ -448,7 +484,10 @@ export default class TopicListItem extends Component {
                 &nbsp;
                 {{~topicFeaturedLink @topic}}
               {{~/if~}}
-              <PluginOutlet @name="topic-list-after-title" />
+              <PluginOutlet
+                @name="topic-list-after-title"
+                @outletArgs={{hash topic=@topic}}
+              />
               {{~#if @topic.unseen~}}
                 <span class="topic-post-badges">&nbsp;<span
                     class="badge-notification new-topic"
@@ -457,10 +496,16 @@ export default class TopicListItem extends Component {
               {{~#if this.expandPinned~}}
                 <TopicExcerpt @topic={{@topic}} />
               {{~/if~}}
-              <PluginOutlet @name="topic-list-main-link-bottom" />
+              <PluginOutlet
+                @name="topic-list-main-link-bottom"
+                @outletArgs={{hash topic=@topic}}
+              />
             </div>
             {{~! no whitespace ~}}
-            <PluginOutlet @name="topic-list-after-main-link" />
+            <PluginOutlet
+              @name="topic-list-after-main-link"
+              @outletArgs={{hash topic=@topic}}
+            />
 
             <div class="pull-right">
               <PostCountOrBadges
@@ -472,7 +517,10 @@ export default class TopicListItem extends Component {
             <div class="topic-item-stats clearfix">
               <span class="topic-item-stats__category-tags">
                 {{#unless @hideCategory}}
-                  <PluginOutlet @name="topic-list-before-category" />
+                  <PluginOutlet
+                    @name="topic-list-before-category"
+                    @outletArgs={{hash topic=@topic}}
+                  />
                   {{categoryLink @topic.category}}
                 {{/unless}}
 
