@@ -51,12 +51,34 @@ RSpec.describe DiscourseLogstashLogger do
 
     it "logs a JSON string with the `exception_class` and `exception_message` fields when `progname` is `web-exception`" do
       logger = described_class.logger(logdev: output, type: "test")
-      logger.add(Logger::ERROR, "StandardError (some error message)\ntest", "web-exception")
+
+      logger.add(
+        Logger::ERROR,
+        "Some::StandardError (this is a normal message)\ntest",
+        "web-exception",
+      )
+
       output.rewind
       parsed = JSON.parse(output.read.chomp)
 
-      expect(parsed["exception.class"]).to eq("StandardError")
-      expect(parsed["exception.message"]).to eq("some error message")
+      expect(parsed["exception.class"]).to eq("Some::StandardError")
+      expect(parsed["exception.message"]).to eq("this is a normal message")
+    end
+
+    it "logs a JSON string with the `exception_class` and `exception_message` fields when `progname` is `web-exception` and the exception message contains newlines" do
+      logger = described_class.logger(logdev: output, type: "test")
+
+      logger.add(
+        Logger::ERROR,
+        "Some::StandardError (\n\nsome error message\n\nsomething else\n\n)\ntest",
+        "web-exception",
+      )
+
+      output.rewind
+      parsed = JSON.parse(output.read.chomp)
+
+      expect(parsed["exception.class"]).to eq("Some::StandardError")
+      expect(parsed["exception.message"]).to eq("some error message\n\nsomething else")
     end
 
     it "logs a JSON string with the right fields when `customize_event` attribute is set" do

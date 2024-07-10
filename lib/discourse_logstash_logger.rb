@@ -83,9 +83,9 @@ class DiscourseLogstashLogger < Logger
       #
       # In theory we could get logster to include the exception class and message in opts but logster currently does not
       # need those options so we are parsing it from the message for now and not making a change in logster.
-      if progname == "web-exception" && message =~ /^(\w+) \((.+)\)\n/
+      if progname == "web-exception" && message =~ /\A([^\(\)]+)\s{1}\(([\s\S]+)\)/
         event["exception.class"] = $1
-        event["exception.message"] = $2
+        event["exception.message"] = $2.strip
       end
 
       if (env = opts&.dig(:env)).present?
