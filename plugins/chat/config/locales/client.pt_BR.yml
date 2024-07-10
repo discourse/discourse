@@ -140,13 +140,6 @@ pt_BR:
       heading: "Chat"
       join: "Participar"
       last_visit: "último acesso"
-      summarization:
-        title: "Resumir mensagens"
-        description: "Selecione uma opção abaixo para resumir a conversa enviada durante o período desejado."
-        summarize: "Resumir"
-        since:
-          one: "Última hora"
-          other: "Últimas %{count} horas"
       mention_warning:
         invitations_sent:
           one: "Convite enviado"
@@ -254,6 +247,7 @@ pt_BR:
       copy_link: "Copiar link"
       copy_text: "Copiar texto"
       rebake_message: "Reconstruir HTML"
+      message_too_long: "A mensagem é muito longa; as mensagens devem ter no máximo %{count} caracteres."
       retry_staged_message:
         title: "Erro de rede"
         action: "Enviar novamente?"

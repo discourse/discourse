@@ -20,6 +20,7 @@ id:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -930,6 +931,7 @@ id:
       copied: "disalin"
     user_fields:
       none: "(memilih sebuah pilihan)"
+      optional: (opsional)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1482,6 +1484,8 @@ id:
     created_lowercase: "dibuat"
     trust_level: "Tingkat Kepercayaan"
     search_hint: "username, email, atau alamat IP"
+    create_account:
+      title: "Mendaftar"
     forgot_password:
       title: "Atur Ulang Kata Sandi"
       action: "Saya lupa password"
@@ -2175,6 +2179,7 @@ id:
             review:
               content: "Ulasan"
         global_section: "Bagian global, dapat dilihat oleh semua orang"
+      back_to_forum: "Kembali ke Forum"
       filter: "Filter..."
     until: "Sampai:"
     form_template_chooser:
@@ -2225,7 +2230,6 @@ id:
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
-      back_to_forum: "Kembali ke Forum"
       filter_reports: Filter laporan
       tags:
         remove_muted_tags_from_latest:
@@ -2351,6 +2355,18 @@ id:
           community_name: "Nama komunitas"
           optional: "(opsional)"
           saved: "tersimpan!"
+        flags:
+          header: "Bendera Moderasi"
+          description: "Deskripsi"
+          enabled: "Diaktifkan?"
+          edit: "Ubah"
+          delete: "Hapus"
+          form:
+            save: "Simpan"
+            name: "Nama"
+            description: "Deskripsi"
+            topic: "topik"
+            post: "post"
       plugins:
         name: "Nama"
         enabled: "Diaktifkan?"

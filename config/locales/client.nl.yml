@@ -21,6 +21,7 @@ nl:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -1037,6 +1038,7 @@ nl:
       none: "(selecteer een optie)"
       required: 'Voer een waarde in voor ''%{name}'''
       same_as_password: "Je wachtwoord mag niet worden herhaald in andere velden."
+      optional: (optioneel)
     user:
       said: "%{username}:"
       profile: "Profiel"
@@ -1980,10 +1982,11 @@ nl:
       header_title: "Welkom!"
       subheader_title: "Laten we je account maken"
       disclaimer: "Door je te registreren, ga je akkoord met het <a href='%{privacy_link}' target='blank'>privacybeleid</a> en de <a href='%{tos_link}' target='blank'>gebruiksvoorwaarden</a>."
-      title: "Maak je account"
+      title: "Registreren"
       failed: "Er is iets misgegaan, mogelijk is het e-mailadres al geregistreerd. Probeer de link 'Wachtwoord vergeten'."
       associate: "Heb je al een account? <a href='%{associate_link}'>Meld je aan</a> om je %{provider}-account te koppelen."
       activation_title: "Activeer je account"
+      already_have_account: "Heb je al een account?"
     forgot_password:
       title: "Wachtwoord herstellen"
       action: "Ik ben mijn wachtwoord vergeten"
@@ -4315,6 +4318,7 @@ nl:
       panels:
         forum:
           label: Forum
+      back_to_forum: "Terug naar Forum"
       filter: "Filter..."
       no_results:
         title: "Geen resultaten"
@@ -4424,7 +4428,6 @@ nl:
     admin:
       title: "Discourse-beheerder"
       moderator: "Moderator"
-      back_to_forum: "Terug naar Forum"
       filter_reports: Rapporten filteren
       tags:
         remove_muted_tags_from_latest:
@@ -4897,6 +4900,19 @@ nl:
           optional: "(optioneel)"
           update: "Bijwerken"
           saved: "opgeslagen!"
+        flags:
+          description: "Beschrijving"
+          enabled: "Ingeschakeld?"
+          edit: "Bewerken"
+          delete: "Verwijderen"
+          delete_confirm: 'Weet je zeker dat je ''%{name}'' wilt verwijderen?'
+          form:
+            save: "Opslaan"
+            name: "Naam"
+            description: "Beschrijving"
+            topic: "topics"
+            post: "berichten"
+            chat_message: "chatberichten"
       plugins:
         title: "Plug-ins"
         installed: "Geïnstalleerde plug-ins"

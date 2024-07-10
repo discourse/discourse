@@ -23,6 +23,7 @@ sl:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -1001,6 +1002,7 @@ sl:
     user_fields:
       none: "(izberi možnost)"
       required: 'Vnesite vrednost za "%{name}«'
+      optional: (neobvezno)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1737,9 +1739,10 @@ sl:
       header_title: "Dobrodošli!"
       subheader_title: "Ustvarimo vaš račun"
       disclaimer: "Z registracijo sprejemate <a href='%{privacy_link}' target='blank'>Pravilnik o zasebnosti</a> in <a href='%{tos_link}' target='blank'>Pogoje uporabe</a>."
-      title: "Ustvari svoj račun"
+      title: "Registracija"
       failed: "Nekaj je šlo narobe, morda je ta e-naslov že registriran, poskusite povezavo za pozabljeno geslo."
       activation_title: "Aktivirajte svoj račun"
+      already_have_account: "Že imate račun?"
     forgot_password:
       title: "Zamenjava gesla"
       action: "Pozabil sem geslo"
@@ -3919,6 +3922,18 @@ sl:
         about:
           optional: "(neobvezno)"
           saved: "shranjeno!"
+        flags:
+          description: "Opis"
+          enabled: "Vključeno?"
+          edit: "Uredi"
+          delete: "Izbriši"
+          form:
+            save: "Shrani"
+            name: "Ime"
+            description: "Opis"
+            topic: "tem"
+            post: "prispevkov"
+            chat_message: "sporočila klepeta"
       plugins:
         title: "Vtičniki"
         installed: "Nameščeni vtičniki"

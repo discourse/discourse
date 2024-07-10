@@ -218,8 +218,6 @@ pl_PL:
         few: "i %{count} inne"
         many: "i %{count} innych"
         other: "i %{count} innych"
-    summaries:
-      no_targets: "W wybranym okresie nie było żadnych wiadomości."
     transcript:
       default_thread_title: "Wątek"
       split_thread_range: "wiadomości od %{start} do %{end} z %{total}"

@@ -21,6 +21,7 @@ RSpec.describe DiscourseLogstashLogger do
           "pid" => described_class::PROCESS_PID,
           "type" => "test",
           "host" => described_class::HOST,
+          "git_version" => described_class::GIT_VERSION,
           "method" => "GET",
           "path" => "/",
           "format" => "html",
@@ -46,6 +47,38 @@ RSpec.describe DiscourseLogstashLogger do
       output.rewind
       parsed = JSON.parse(output.read.chomp)
       expect(parsed["message"]).to eq("error message")
+    end
+
+    it "logs a JSON string with the `exception_class` and `exception_message` fields when `progname` is `web-exception`" do
+      logger = described_class.logger(logdev: output, type: "test")
+
+      logger.add(
+        Logger::ERROR,
+        "Some::StandardError (this is a normal message)\ntest",
+        "web-exception",
+      )
+
+      output.rewind
+      parsed = JSON.parse(output.read.chomp)
+
+      expect(parsed["exception.class"]).to eq("Some::StandardError")
+      expect(parsed["exception.message"]).to eq("this is a normal message")
+    end
+
+    it "logs a JSON string with the `exception_class` and `exception_message` fields when `progname` is `web-exception` and the exception message contains newlines" do
+      logger = described_class.logger(logdev: output, type: "test")
+
+      logger.add(
+        Logger::ERROR,
+        "Some::StandardError (\n\nsome error message\n\nsomething else\n\n)\ntest",
+        "web-exception",
+      )
+
+      output.rewind
+      parsed = JSON.parse(output.read.chomp)
+
+      expect(parsed["exception.class"]).to eq("Some::StandardError")
+      expect(parsed["exception.message"]).to eq("some error message\n\nsomething else")
     end
 
     it "logs a JSON string with the right fields when `customize_event` attribute is set" do
@@ -139,6 +172,22 @@ RSpec.describe DiscourseLogstashLogger do
       parsed = JSON.parse(output.read.chomp)
 
       expect(parsed).not_to have_key("request.headers.some_random_header")
+    end
+
+    it "does not log the event if message matches a pattern configured by `Logster.store.ignore`" do
+      original_logster_store_ignore = Logster.store.ignore
+      Logster.store.ignore = [/^Some::StandardError/]
+
+      logger.add(
+        Logger::ERROR,
+        "Some::StandardError (this is a normal message)\ntest",
+        "web-exception",
+      )
+
+      output.rewind
+      expect(output.read.chomp).to be_empty
+    ensure
+      Logster.store.ignore = original_logster_store_ignore
     end
   end
 end

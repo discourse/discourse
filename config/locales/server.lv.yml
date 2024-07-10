@@ -404,6 +404,11 @@ lv:
       labels:
         user: Lietotājs
         qtt_like: Saņemtās atzinības
+    topic_view_stats:
+      labels:
+        topic: Tēmas
+        anon_views: Anonīmi
+        total_views: Kopā
   site_settings:
     disabled: "atslēgt"
     send_welcome_message: "Nosūtiet visiem jaunajiem lietotājiem apsveikuma ziņojumu ar īso darba sākšanas rokasgrāmatu."

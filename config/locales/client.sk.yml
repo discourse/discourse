@@ -23,6 +23,7 @@ sk:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}tis"
         millions: "%{number}mil"
@@ -1197,6 +1198,7 @@ sk:
       none: "(vyberte možnosť)"
       required: 'Zadajte hodnotu pre „%{name}“'
       same_as_password: "Vaše heslo by sa nemalo opakovať v iných poliach."
+      optional: (nepovinné)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -2245,10 +2247,11 @@ sk:
       header_title: "Vitajte!"
       subheader_title: "Vytvorme si účet"
       disclaimer: "Registráciou súhlasíte s <a href='%{privacy_link}' target='blank'>zásadami ochrany osobných údajov</a> a <a href='%{tos_link}' target='blank'>zmluvnými podmienkami</a>."
-      title: "Vytvorte si účet"
+      title: "Registrovať sa"
       failed: "Niečo sa pokazilo, možno je tento e-mail už registrovaný, vyskúšajte odkaz pre zabudnuté heslo"
       associate: "Máte už účet? <a href='%{associate_link}'>Prihláste sa</a> a prepojte svoj účet %{provider} ."
       activation_title: "Aktivujte si účet"
+      already_have_account: "Už máte účet?"
     forgot_password:
       title: "Obnovenie hesla"
       action: "Zabudol som svoje heslo"
@@ -4916,6 +4919,9 @@ sk:
       panels:
         forum:
           label: fórum
+      back_to_forum: "Späť na fórum"
+      collapse_all_sections: "Zbaliť všetky sekcie"
+      expand_all_sections: "Rozbaľte všetky sekcie"
       filter: "Filter..."
       clear_filter: "Vymazať filter"
       no_results:
@@ -5035,10 +5041,7 @@ sk:
     admin:
       title: "Administrátor Discourse"
       moderator: "Moderátor"
-      back_to_forum: "Späť na fórum"
       filter_reports: Filtrovať prehľady
-      expand_all_sections: "Rozbaľte všetky sekcie"
-      collapse_all_sections: "Zbaliť všetky sekcie"
       tags:
         remove_muted_tags_from_latest:
           always: "vždy"
@@ -5590,6 +5593,36 @@ sk:
             contact_information_saved: "Kontaktné informácie uložené"
             your_organization_saved: "Vaša organizácia uložená"
           saved: "uložené!"
+        flags:
+          header: "Príznaky moderovania"
+          subheader: "Systém označovania v službe Discourse pomáha vám a vášmu moderátorskému tímu spravovať obsah a správanie používateľov, aby vaša komunita bola rešpektovaná a zdravá. Predvolené nastavenia sú vhodné pre väčšinu komunít a nemusíte ich meniť. Ak má však vaša stránka špecifické požiadavky, môžete vypnúť príznaky, ktoré nepotrebujete, a pridať vlastné príznaky."
+          description: "Popis"
+          enabled: "Povolené?"
+          add: "Pridať príznak"
+          edit: "Upraviť"
+          back: "Späť k príznakom"
+          delete: "Odstrániť"
+          delete_confirm: 'Naozaj chcete odstrániť „%{name}“?'
+          form:
+            add_header: "Pridať príznak"
+            edit_header: "Upraviť príznak"
+            save: "Uložiť"
+            name: "Meno"
+            description: "Popis"
+            applies_to: "Zobrazte tento príznak zapnutý"
+            topic: "témy"
+            post: "príspevky"
+            chat_message: "chat správy"
+            enabled: "Po uložení povoľte tento vlastný príznak"
+            alert: "Po použití vlastného príznaku ho možno iba deaktivovať, ale nie upravovať ani vymazávať."
+            edit_flag: "Upraviť príznak"
+            non_editable: "Tento príznak nemôžete upraviť, pretože je to systémový príznak alebo už bol použitý v systéme hodnotenia, môžete ho však vypnúť."
+            delete_flag: "Odstrániť príznak"
+            non_deletable: "Tento príznak nemôžete odstrániť, pretože je to systémový príznak alebo už bol použitý v systéme hodnotenia, môžete ho však vypnúť."
+          more_options:
+            title: "Ďalšie možnosti"
+            move_up: "Posunúť sa nahor"
+            move_down: "Posunúť sa nadol"
       plugins:
         title: "Pluginy"
         installed: "Nainštalované pluginy"
@@ -6266,6 +6299,9 @@ sk:
             delete_watched_word_group: "odstrániť sledovanú skupinu slov"
             toggle_flag: "prepnúť príznak"
             move_flag: "vlajka presunu"
+            create_flag: "vytvoriť príznak"
+            update_flag: "aktualizovať príznak"
+            delete_flag: "odstrániť príznak"
         screened_emails:
           title: "Kontrolované emaily"
           description: "Keď niekto skúsi vytvoriť nový účet, nasledujúce emailove adresy budú preverené a registrácia bude zablokovaná, alebo bude vykonaná nejaka iná akcia. "

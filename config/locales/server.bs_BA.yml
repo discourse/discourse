@@ -599,6 +599,11 @@ bs_BA:
       labels:
         user: User
         qtt_like: Likes Received
+    topic_view_stats:
+      labels:
+        topic: Topic
+        anon_views: Anoniman
+        total_views: Suma
   dashboard:
     problem:
       rails_env: "Your server is running in %{env} mode."

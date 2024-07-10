@@ -1049,6 +1049,12 @@ zh_TW:
       labels:
         user: 使用者
         qtt_like: 收到的讚
+    topic_view_stats:
+      labels:
+        topic: 話題
+        logged_in_views: 已登入
+        anon_views: 匿名
+        total_views: 總數
   dashboard:
     problem:
       rails_env: "伺服器現在運行 %{env} 模式。"

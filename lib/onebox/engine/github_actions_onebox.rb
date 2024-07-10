@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "../mixins/github_body"
+require_relative "../mixins/github_auth_header"
 
 module Onebox
   module Engine
@@ -8,6 +9,7 @@ module Onebox
       include Engine
       include LayoutSupport
       include JSON
+      include Onebox::Mixins::GithubAuthHeader
 
       matches_regexp(
         %r{^https?://(?:www\.)?(?:(?:\w)+\.)?github\.com/(?<org>.+)/(?<repo>.+)/(actions/runs/[[:digit:]]+|pull/[[:digit:]]*/checks\?check_run_id=[[:digit:]]+)},
@@ -63,20 +65,22 @@ module Onebox
       end
 
       def data
+        result = raw(github_auth_header).clone
+
         status = "unknown"
-        if raw["status"] == "completed"
-          if raw["conclusion"] == "success"
+        if result["status"] == "completed"
+          if result["conclusion"] == "success"
             status = "success"
-          elsif raw["conclusion"] == "failure"
+          elsif result["conclusion"] == "failure"
             status = "failure"
           end
-        elsif raw["status"] == "in_progress"
+        elsif result["status"] == "in_progress"
           status = "pending"
         end
 
         title =
           if type == :actions_run
-            raw["head_commit"]["message"].lines.first
+            result["head_commit"]["message"].lines.first
           elsif type == :pr_run
             pr_url =
               "https://api.github.com/repos/#{match[:org]}/#{match[:repo]}/pulls/#{match[:pr_id]}"
@@ -86,8 +90,8 @@ module Onebox
         {
           :link => @url,
           :title => title,
-          :name => raw["name"],
-          :run_number => raw["run_number"],
+          :name => result["name"],
+          :run_number => result["run_number"],
           status => true,
         }
       end

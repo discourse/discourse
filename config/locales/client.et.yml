@@ -21,6 +21,7 @@ et:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -759,6 +760,7 @@ et:
       copied: "kopeeritud"
     user_fields:
       none: "(vali võimalus)"
+      optional: (valikuline)
     user:
       said: "%{username}:"
       profile: "Profiil"
@@ -1271,6 +1273,7 @@ et:
     search_hint: "kasutajanimi, meil või IP-aadress"
     create_account:
       header_title: "Tere tulemast!"
+      title: "Liitu"
       failed: "Miski läks valesti - võimalik, et see meiliaadress on juba registreeritud. Proovi viidet unustatud parooli lehele"
       activation_title: "Aktiveeri oma konto"
     forgot_password:
@@ -2866,6 +2869,17 @@ et:
         about:
           optional: "(valikuline)"
           saved: "salvestatud!"
+        flags:
+          description: "Kirjeldus"
+          enabled: "Sisse lülitatud?"
+          edit: "Muuda"
+          delete: "Kustuta"
+          form:
+            save: "Salvesta"
+            name: "Nimi"
+            description: "Kirjeldus"
+            topic: "teemasid"
+            post: "postitused"
       plugins:
         title: "Plugin"
         installed: "Paigaldatud pluginad"

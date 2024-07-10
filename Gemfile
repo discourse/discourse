@@ -89,6 +89,7 @@ gem "mini_sql"
 gem "pry-rails", require: false
 gem "pry-byebug", require: false
 gem "rtlcss", require: false
+gem "messageformat-wrapper", require: false
 gem "rake"
 
 gem "thor", require: false

@@ -145,13 +145,6 @@ ug:
       heading: "سۆھبەت"
       join: "قوشۇل"
       last_visit: "ئاخىرقى زىيارەت"
-      summarization:
-        title: "ئۇچۇرنى خۇلاسىلە"
-        description: "تۆۋەندىكى تاللانما تاللانسا لازىملىق ۋاقىت دائىرىسىدە يوللانغان سۆھبەتنى خۇلاسىلەيدۇ."
-        summarize: "خۇلاسە"
-        since:
-          one: "ئاخىرقى %{count} سائەت"
-          other: "ئاخىرقى %{count} سائەت"
       mention_warning:
         invitations_sent:
           one: "تەكلىپ يوللاندى"
@@ -211,6 +204,7 @@ ug:
       copy_link: "ئۇلانما كۆچۈر"
       copy_text: "تېكىستنى كۆچۈر"
       rebake_message: "HTML نى قايتا قۇر"
+      message_too_long: "ئۇچۇر بەك ئۇزۇن، ئەڭ كۆپ بولغاندا %{count} ھەرپ بولۇشى كېرەك."
       retry_staged_message:
         title: "تور خاتالىقى"
         action: "قايتا يوللامدۇ؟"

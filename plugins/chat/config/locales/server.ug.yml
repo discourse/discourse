@@ -194,8 +194,6 @@ ug:
       and_x_others:
         one: "ۋە باشقا %{count}"
         other: "ۋە باشقا %{count}"
-    summaries:
-      no_targets: "تاللىغان مەزگىلدىكى ئۇچۇر يوق."
     transcript:
       default_thread_title: "سۆھبەت ماۋزۇسى"
       split_thread_range: "%{total} ئۇچۇر %{start}-%{end}"

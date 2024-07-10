@@ -46,6 +46,11 @@ RSpec.describe ExtraLocalesController do
         expect(response.headers["Cache-Control"]).not_to include("max-age", "public", "immutable")
       end
 
+      it "doesn’t generate the bundle twice" do
+        described_class.expects(:bundle_js).returns("JS").once
+        get "/extra-locales/admin", params: { v: "a" * 32 }
+      end
+
       context "with plugin" do
         before do
           JsLocaleHelper.clear_cache!
@@ -120,7 +125,6 @@ RSpec.describe ExtraLocalesController do
           ctx.eval("I18n = {};")
           ctx.eval(response.body)
 
-          expect(ctx.eval("typeof I18n._mfOverrides['js.client_MF']")).to eq("function")
           expect(ctx.eval("I18n._overrides['#{I18n.locale}']['js.some_key']")).to eq(
             "client-side translation",
           )
@@ -175,13 +179,16 @@ RSpec.describe ExtraLocalesController do
           expect(overrides["fr"]).to eq(
             { "js.some_key" => "some key (fr)", "js.only_fr" => "only French" },
           )
-
-          expect(ctx.eval("Object.keys(I18n._mfOverrides)")).to contain_exactly(
-            "js.some_client_MF",
-            "js.only_en_MF",
-            "js.only_fr_MF",
-          )
         end
+      end
+    end
+
+    context "when requesting MessageFormat translations" do
+      before { JsLocaleHelper.stubs(:output_MF).with("en").returns("MF_TRANSLATIONS") }
+
+      it "returns the translations properly" do
+        get "/extra-locales/mf"
+        expect(response.body).to eq("MF_TRANSLATIONS")
       end
     end
   end
@@ -231,6 +238,16 @@ RSpec.describe ExtraLocalesController do
 
       TranslationOverride.upsert!(I18n.locale, "js.some_key", "client-side translation")
       expect(ExtraLocalesController.client_overrides_exist?).to eq(true)
+    end
+  end
+
+  describe ".bundle_js_with_hash" do
+    before { described_class.stubs(:bundle_js).with("admin").returns("JS") }
+
+    it "returns both JS and its hash for a given bundle" do
+      expect(described_class.bundle_js_with_hash("admin")).to eq(
+        ["JS", Digest::MD5.hexdigest("JS")],
+      )
     end
   end
 end

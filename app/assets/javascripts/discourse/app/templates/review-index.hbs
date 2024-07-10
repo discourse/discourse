@@ -71,7 +71,7 @@
         <CategoryChooser
           @value={{this.filterCategoryId}}
           @onChange={{fn (mut this.filterCategoryId)}}
-          @options={{hash none="review.filters.all_categories"}}
+          @options={{hash none="review.filters.all_categories" clearable=true}}
         />
       </div>
 

@@ -1423,6 +1423,12 @@ tr_TR:
         user: Kullanıcı
         qtt_like: Alınan Beğeniler
       description: "Çok çeşitli kişilerden beğeni alan En Popüler 10 kullanıcı."
+    topic_view_stats:
+      labels:
+        topic: Konu
+        logged_in_views: Giriş Yapıldı
+        anon_views: Anonim
+        total_views: Toplam
   dashboard:
     problem:
       twitter_login: 'Twitter girişi şu anda çalışmıyor gibi görünüyor. <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">Site Ayarları</a>içindeki kimlik bilgilerini kontrol edin.'

@@ -20,6 +20,7 @@ vi:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}triệu"
@@ -918,6 +919,7 @@ vi:
     user_fields:
       none: "(chọn một tùy chọn)"
       required: 'Vui lòng nhập giá trị cho "%{name}"'
+      optional: (tùy chọn)
     user:
       said: "%{username}:"
       profile: "Tiểu sử"
@@ -1644,7 +1646,7 @@ vi:
       header_title: "Chào mừng!"
       subheader_title: "Hãy tạo tài khoản của bạn"
       disclaimer: "Bằng cách đăng ký, bạn đồng ý với <a href='%{privacy_link}' target='blank'>chính sách bảo mật</a> và <a href='%{tos_link}' target='blank'>điều khoản dịch vụ</a>."
-      title: "Tạo tài khoản của bạn"
+      title: "Đăng ký"
       failed: "Có gì đó không đúng, có thể email này đã được đăng ký, thử liên kết quên mật khẩu"
       associate: "Đã có tài khoản? <a href='%{associate_link}'>Đăng nhập</a> để liên kết tài khoản %{provider} của bạn."
       activation_title: "Kích hoạt tài khoản của bạn"
@@ -4034,6 +4036,18 @@ vi:
           optional: "(tùy chọn)"
           update: "Cập nhật"
           saved: "đã lưu"
+        flags:
+          description: "Mô tả"
+          enabled: "Kích hoạt"
+          edit: "Sửa"
+          delete: "Xóa"
+          delete_confirm: 'Bạn có chắc chắn muốn xóa "%{name}" không?'
+          form:
+            save: "Lưu lại"
+            name: "Tên"
+            description: "Mô tả"
+            topic: "các chủ đề"
+            post: "bài viết"
       plugins:
         title: "Plugin"
         installed: "Đã cài Plugin"

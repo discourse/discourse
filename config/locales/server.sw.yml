@@ -762,6 +762,12 @@ sw:
       labels:
         user: Mtumiaji
         qtt_like: Umepokea Likes
+    topic_view_stats:
+      labels:
+        topic: Mada
+        logged_in_views: Ameingia
+        anon_views: Asiyejulikana
+        total_views: Jumla
   dashboard:
     problem:
       rails_env: "Seva inafanyakazi ndani ya %{env} halitumizi."

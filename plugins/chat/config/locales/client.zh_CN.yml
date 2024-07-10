@@ -142,12 +142,6 @@ zh_CN:
       heading: "聊天"
       join: "加入"
       last_visit: "上次访问"
-      summarization:
-        title: "总结消息"
-        description: "选择以下选项，以总结在所需时间范围内发送的对话。"
-        summarize: "总结"
-        since:
-          other: "过去 %{count} 小时"
       mention_warning:
         invitations_sent:
           other: "已发送邀请"
@@ -251,6 +245,7 @@ zh_CN:
       copy_link: "复制链接"
       copy_text: "复制文本"
       rebake_message: "重建 HTML"
+      message_too_long: "消息过长，最多只能包含 %{count} 个字符。"
       retry_staged_message:
         title: "网络错误"
         action: "重新发送？"

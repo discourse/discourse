@@ -250,6 +250,7 @@ pl_PL:
         other: jest nieprawidłowej długości (powinna mieć %{count} znaków)
       other_than: "musi być różna od %{count}"
       auth_overrides_username: "Nazwa użytkownika musi być aktualizowana po stronie dostawcy uwierzytelniania, ponieważ opcja `auth_overrides_username` jest włączona."
+      required: "musi istnieć"
     template:
       body: ! "Wystąpiły problemy z następującymi polami:"
       header:
@@ -1541,6 +1542,12 @@ pl_PL:
         user: Użytkownik
         qtt_like: Polubienia otrzymane
       description: "Top 10 użytkowników, którzy otrzymali polubienia od szerokiego grona osób."
+    topic_view_stats:
+      labels:
+        topic: Temat
+        logged_in_views: Zalogowany
+        anon_views: Anonimowy
+        total_views: Łącznie
   dashboard:
     problem:
       twitter_login: 'Wygląda na to, że logowanie przez Twittera obecnie nie działa. Sprawdź dane uwierzytelniające w <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">ustawieniach witryny</a>.'

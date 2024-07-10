@@ -104,14 +104,6 @@ hr:
       heading: "Čet"
       join: "Pridružite se"
       last_visit: "posljednji posjet"
-      summarization:
-        title: "Sažmi poruke"
-        description: "Odaberite opciju u nastavku da biste saželi razgovor poslan tijekom željenog vremenskog okvira."
-        summarize: "Rezimirati"
-        since:
-          one: "Posljednji sat"
-          few: "Posljednja %{count} sata"
-          other: "Posljednjih %{count} sati"
       mention_warning:
         invitations_sent:
           one: "Poziv poslan"

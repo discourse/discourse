@@ -21,6 +21,7 @@ de:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number} T."
         millions: "%{number} M."
@@ -1067,6 +1068,7 @@ de:
       none: "(wähle eine Option aus)"
       required: 'Bitte gib einen Wert für „%{name}“ ein'
       same_as_password: "Dein Passwort sollte nicht in anderen Feldern wiederholt werden."
+      optional: (optional)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -2033,10 +2035,11 @@ de:
       header_title: "Willkommen!"
       subheader_title: "Lass uns dein Konto erstellen"
       disclaimer: "Mit der Registrierung stimmst du der <a href='%{privacy_link}' target='blank'>Datenschutzerklärung</a> und den <a href='%{tos_link}' target='blank'>Nutzungsbedingungen</a> zu."
-      title: "Erstelle dein Konto"
+      title: "Registrieren"
       failed: "Etwas ist schiefgelaufen. Vielleicht ist diese E-Mail-Adresse bereits registriert. Versuche es mit dem „Passwort vergessen“-Link."
       associate: "Hast du bereits ein Konto? <a href='%{associate_link}'>Logge dich ein</a>, um dein %{provider}-Konto zu verknüpfen."
       activation_title: "Aktiviere dein Konto"
+      already_have_account: "Du hast bereits ein Konto?"
     forgot_password:
       title: "Passwort zurücksetzen"
       action: "Ich habe mein Passwort vergessen"
@@ -4448,6 +4451,9 @@ de:
       panels:
         forum:
           label: Forum
+      back_to_forum: "Zurück zum Forum"
+      collapse_all_sections: "Alle Abschnitte einklappen"
+      expand_all_sections: "Alle Abschnitte erweitern"
       filter: "Filter..."
       clear_filter: "Filter löschen"
       no_results:
@@ -4559,10 +4565,7 @@ de:
     admin:
       title: "Discourse-Administrator"
       moderator: "Moderator"
-      back_to_forum: "Zurück zum Forum"
       filter_reports: Berichte filtern
-      expand_all_sections: "Alle Abschnitte erweitern"
-      collapse_all_sections: "Alle Abschnitte einklappen"
       tags:
         remove_muted_tags_from_latest:
           always: "immer"
@@ -4974,6 +4977,7 @@ de:
         events:
           none: "Es gibt keine verwandten Ereignisse."
           redeliver: "Erneut übertragen"
+          redeliver_failed: "Erneute Zustellung fehlgeschlagen"
           incoming:
             one: "Es gibt ein neues Ereignis."
             other: "Es gibt %{count} neue Ereignisse."
@@ -4983,6 +4987,8 @@ de:
           request: "Anfrage"
           response: "Antwort"
           redeliver_confirm: "Bist du sicher, dass du denselben Payload noch einmal übertragen möchtest?"
+          redeliver_failed_confirm: "Bist du dir sicher, dass du die %{count} Webhook-Ereignisse erneut zustellen willst?"
+          no_events_to_redeliver: "Keine erneut zu übermittelnden Ereignisse."
           headers: "Headers"
           payload: "Payload"
           body: "Body"
@@ -5102,6 +5108,36 @@ de:
             contact_information_saved: "Kontaktinformationen gespeichert"
             your_organization_saved: "Deine Organisation gespeichert"
           saved: "gespeichert!"
+        flags:
+          header: "Meldungsgründe"
+          subheader: "Das Meldesystem in Discourse hilft dir und deinem Moderatorenteam, Inhalte und Nutzerverhalten zu handhaben, damit deine Community respektvoll und gesund bleibt. Die Standardeinstellungen sind für die meisten Gemeinschaften geeignet und müssen nicht geändert werden. Wenn deine Seite jedoch besondere Anforderungen hat, kannst du Meldungsgründe, die du nicht brauchst, deaktivieren und deine eigenen Meldungsgründe hinzufügen."
+          description: "Beschreibung"
+          enabled: "Aktiviert?"
+          add: "Meldungsgrund hinzufügen"
+          edit: "Bearbeiten"
+          back: "Zurück zu Meldungsgründe"
+          delete: "Löschen"
+          delete_confirm: 'Möchtest du wirklich „%{name}“ löschen?'
+          form:
+            add_header: "Meldungsgrund hinzufügen"
+            edit_header: "Meldungsgrund bearbeiten"
+            save: "Speichern"
+            name: "Name"
+            description: "Beschreibung"
+            applies_to: "Zeige diesen Meldungsgrund bei"
+            topic: "Themen"
+            post: "Beiträgen"
+            chat_message: "Chat-Nachrichten"
+            enabled: "Aktiviere diesen benutzerdefinierten Meldungsgrund nach dem Speichern"
+            alert: "Sobald ein benutzerdefinierter Meldungsgrund verwendet wurde, kann er nur deaktiviert, aber nicht bearbeitet oder gelöscht werden."
+            edit_flag: "Meldungsgrund bearbeiten"
+            non_editable: "Du kannst diesen Meldungsgrund nicht bearbeiten, da er vom System erstellt oder bereits im Überprüfungssystem verwendet wurde, aber du kannst ihn trotzdem deaktivieren."
+            delete_flag: "Meldungsgrund löschen"
+            non_deletable: "Du kannst diesen Meldungsgrund nicht löschen, weil er vom System erstellt oder bereits im Überprüfungssystem verwendet wurde. Du kannst ihn aber immer noch deaktivieren."
+          more_options:
+            title: "Mehr Optionen"
+            move_up: "Nach oben"
+            move_down: "Nach unten"
       plugins:
         title: "Plug-ins"
         installed: "Installierte Plug-ins"
@@ -5764,6 +5800,9 @@ de:
             delete_watched_word_group: "Beobachtete Wortgruppe löschen"
             toggle_flag: "Meldung umschalten"
             move_flag: "Meldung verschieben"
+            create_flag: "Meldungsgrund erstellen"
+            update_flag: "Meldungsgrund aktualisieren"
+            delete_flag: "Meldungsgrund löschen"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."

@@ -1594,6 +1594,12 @@ ar:
         user: المستخدم
         qtt_like: تسجيلات الإعجاب المتلقاة
       description: "أبرز 10 مستخدمين حصلوا على إعجابات من مجموعة واسعة من الأشخاص."
+    topic_view_stats:
+      labels:
+        topic: الموضوع
+        logged_in_views: مسجِّل الدخول
+        anon_views: مجهول
+        total_views: الإجمالي
   dashboard:
     problem:
       rails_env: "الخادم يعمل في وضع %{env}."

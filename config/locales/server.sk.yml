@@ -348,6 +348,7 @@ sk:
         other: nesprávna dĺžka (musí byť %{count} znakov)
       other_than: "musí byť iný než %{count}"
       auth_overrides_username: "Používateľské meno je potrebné aktualizovať na strane poskytovateľa overovania, pretože je povolené nastavenie `auth_overrides_username`."
+      required: "musí existovať"
     template:
       body: ! "Nastal problém s nasledujúcimi položkami:"
       header:
@@ -1304,6 +1305,8 @@ sk:
     errors:
       already_handled: "Označenie už bolo spracované"
       wrong_move: "Vlajku nie je možné presunúť"
+      system: "Systémový príznak nie je možné aktualizovať ani odstrániť."
+      used: "Príznak nemožno aktualizovať ani vymazať, pretože už bol použitý."
   reports:
     default:
       labels:
@@ -1677,6 +1680,12 @@ sk:
         user: Používateľ
         qtt_like: Obdržaných 'páči sa mi'
       description: "Top 10 používateľov, ktorí získali lajky od širokej škály ľudí."
+    topic_view_stats:
+      labels:
+        topic: Témy
+        logged_in_views: Prihlásený
+        anon_views: Anonymný
+        total_views: Celkovo
   dashboard:
     problem:
       twitter_login: 'Zdá sa, že prihlásenie na Twitter momentálne nefunguje. Skontrolujte prihlasovacie údaje v <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">nastaveniach stránky</a>.'
@@ -2317,6 +2326,7 @@ sk:
     hide_user_profiles_from_public: "Vypnúť používateľské karty, profily a adresár pre anonymných používateľov."
     allow_users_to_hide_profile: "Umožniť používateľom skryť svoj profil a prítomnosť"
     hide_user_activity_tab: "Skryť kartu aktivity v používateľských profiloch okrem profilov administrátora a seba."
+    delete_associated_accounts_on_password_reset: "Odstránenie účtu spojeného s používateľom, keď používateľ zmení heslo."
     allow_featured_topic_on_user_profiles: "Umožniť používateľom uviesť odkaz na tému na karte používateľa a v profile."
     show_inactive_accounts: "Umožniť prihláseným používateľom prezerať profily neaktívnych účtov."
     hide_suspension_reasons: "Nezobrazujte dôvody pozastavenia verejne v profiloch používateľov."

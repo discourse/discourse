@@ -1334,6 +1334,12 @@ ja:
         user: ユーザー
         qtt_like: '「いいね！」された数'
       description: "広範な人から「いいね！」を受け取った上位 10 人のユーザーです。"
+    topic_view_stats:
+      labels:
+        topic: トピック
+        logged_in_views: ログイン
+        anon_views: 匿名ユーザー
+        total_views: 総合
   dashboard:
     problem:
       rails_env: "サーバーは %{env} モードで実行中です。"

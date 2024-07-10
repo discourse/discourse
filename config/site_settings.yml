@@ -2075,9 +2075,12 @@ security:
       - "same-origin"
       - "same-origin-allow-popups"
     hidden: true
-  cross_origin_opener_unsafe_none_referrers:
+  cross_origin_opener_unsafe_none_groups:
+    type: group_list
+    list_type: compact
     default: ""
-    type: host_list
+    allow_any: false
+    refresh: true
     hidden: true
 
 onebox:
@@ -2122,6 +2125,9 @@ onebox:
   cache_onebox_user_agent:
     default: ""
     hidden: true
+  github_onebox_access_token:
+    default: ""
+    secret: true
 spam:
   add_rel_nofollow_to_user_content: true
   hide_post_sensitivity:

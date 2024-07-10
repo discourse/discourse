@@ -273,6 +273,7 @@ zh_CN:
         other: 长度错误（应为 %{count} 个字符）
       other_than: "必须不为 %{count}"
       auth_overrides_username: "由于启用了 `auth_overrides_username` 设置，因此需要在身份验证服务提供商处更新用户名。"
+      required: "必须存在"
     template:
       body: ! "以下字段存在问题："
       header:
@@ -1457,6 +1458,12 @@ zh_CN:
         user: 用户
         qtt_like: 获赞
       description: "从各种用户收到赞最多的前 10 名用户。"
+    topic_view_stats:
+      labels:
+        topic: 话题
+        logged_in_views: 登录用户
+        anon_views: 匿名
+        total_views: 总计
   dashboard:
     problem:
       twitter_login: 'Twitter 登录目前似乎无法使用。请在 <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">网站设置</a>中检查凭据。'
