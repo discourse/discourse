@@ -1,5 +1,13 @@
 @use "sass:math";
 
+.fk-d-menu[data-identifier="card"] {
+  max-width: calc(100vw - 2em);
+  width: auto;
+  .fk-d-menu__inner-content {
+    min-width: 0;
+  }
+}
+
 .user-card {
   --card-width: 39em;
   --avatar-width: 8em;
