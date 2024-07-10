@@ -37,7 +37,7 @@ export default class JsonSchemaEditorModal extends Component {
 
   @action
   async buildJsonEditor(element) {
-    const promise = await import("@json-editor/json-editor");
+    const promise = import("@json-editor/json-editor");
     if (isTesting()) {
       waitForPromise(promise);
     }
