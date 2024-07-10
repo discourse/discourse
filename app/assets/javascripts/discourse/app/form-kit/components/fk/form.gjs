@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { array, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
 import DButton from "discourse/components/d-button";
@@ -137,8 +136,6 @@ class FKForm extends Component {
     if (this.fieldValidationEvent === VALIDATION_TYPES.change) {
       await this.handleFieldValidation(name);
     }
-
-    await new Promise((resolve) => next(resolve));
   }
 
   @action
