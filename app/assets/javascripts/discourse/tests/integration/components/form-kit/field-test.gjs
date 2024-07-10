@@ -3,6 +3,7 @@ import {
   fillIn,
   render,
   resetOnerror,
+  settled,
   setupOnerror,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -135,12 +136,16 @@ module("Integration | Component | FormKit | Field", function (hooks) {
   });
 
   test("@onSet", async function (assert) {
+    const onSetWasCalled = assert.async();
+
     const onSet = async (value, { set }) => {
       assert.form().field("foo").hasValue("bar");
 
       await set("foo", "baz");
+      await settled();
 
       assert.form().field("foo").hasValue("baz");
+      onSetWasCalled();
     };
 
     await render(<template>
