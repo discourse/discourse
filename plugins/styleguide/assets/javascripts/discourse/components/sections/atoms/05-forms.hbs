@@ -159,6 +159,31 @@
   </Form>
 </StyleguideExample>
 
+<StyleguideExample @title="Row">
+  <Form as |form data|>
+    <form.Row as |row|>
+      <row.Col @size={{4}}>
+        <form.Field
+          @title="Username"
+          @name="username"
+          @validation="required"
+          as |field|
+        >
+          <field.Input />
+        </form.Field>
+      </row.Col>
+      <row.Col @size={{4}}>
+        <form.Field @title="Email" @name="email" as |field|>
+          <field.Input />
+        </form.Field>
+      </row.Col>
+      <row.Col @size={{2}}>
+        <form.Submit />
+      </row.Col>
+    </form.Row>
+  </Form>
+</StyleguideExample>
+
 <h2>Validation</h2>
 
 <StyleguideExample @title="Input">
