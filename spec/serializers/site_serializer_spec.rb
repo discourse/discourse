@@ -113,7 +113,7 @@ RSpec.describe SiteSerializer do
     scheme = ColorScheme.last
     SiteSetting.default_dark_mode_color_scheme_id = scheme.id
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    default_dark_scheme = expect(serialized[:default_dark_color_scheme]["name"]).to eq(scheme.name)
+    default_dark_scheme = expect(serialized[:default_dark_color_scheme][:name]).to eq(scheme.name)
 
     SiteSetting.default_dark_mode_color_scheme_id = -1
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
@@ -220,7 +220,7 @@ RSpec.describe SiteSerializer do
 
     it "includes only public sidebar sections serialised object when user is anonymous" do
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_sidebar_sections].map(&:title)).to eq(
+      expect(serialized[:anonymous_sidebar_sections].map { |section| section[:title] }).to eq(
         ["Community", "Public section"],
       )
     end
@@ -237,7 +237,7 @@ RSpec.describe SiteSerializer do
 
           expect(serialized[:anonymous_sidebar_sections].count).to eq(2)
 
-          expect(serialized[:anonymous_sidebar_sections].last.links.map { |link| link.id }).to eq(
+          expect(serialized[:anonymous_sidebar_sections].last[:links].map { |link| link.id }).to eq(
             [public_section_link.linkable.id],
           )
         end.count
@@ -253,7 +253,7 @@ RSpec.describe SiteSerializer do
 
           expect(serialized[:anonymous_sidebar_sections].count).to eq(2)
 
-          expect(serialized[:anonymous_sidebar_sections].last.links.map { |link| link.id }).to eq(
+          expect(serialized[:anonymous_sidebar_sections].last[:links].map { |link| link.id }).to eq(
             [
               public_section_link.linkable.id,
               public_section_link_2.linkable.id,

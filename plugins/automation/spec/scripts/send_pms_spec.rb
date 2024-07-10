@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
 describe "SendPms" do
   fab!(:automation) do
     Fabricate(:automation, script: DiscourseAutomation::Scripts::SEND_PMS, trigger: "stalled_wiki")
@@ -42,7 +40,7 @@ describe "SendPms" do
 
     it "creates expected PM" do
       expect {
-        Jobs::StalledWikiTracker.new.execute(nil)
+        Jobs::DiscourseAutomation::StalledWikiTracker.new.execute(nil)
 
         post = Post.last
         expect(post.topic.title).to eq("A message from #{Discourse.system_user.username}")

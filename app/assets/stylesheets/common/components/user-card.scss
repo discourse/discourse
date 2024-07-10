@@ -38,6 +38,7 @@
 // shared styles for user and group cards
 .user-card,
 .group-card {
+  min-width: 0;
   width: var(--card-width);
   color: var(--primary);
   background: var(--secondary) center center;
@@ -88,6 +89,7 @@
       .name-username-wrapper {
         margin-right: 0;
         flex: 0 1 auto;
+        @include ellipsis;
       }
       span {
         display: block;

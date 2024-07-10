@@ -65,7 +65,7 @@ describe "Bookmarking posts and topics", type: :system do
     bookmark_menu.click_menu_option("custom")
     expect(bookmark_modal).to be_open
 
-    # TODO (martin) Not sure why, but I need to click this twice for the panel to open :/
+    # NOTE: (martin) Not sure why, but I need to click this twice for the panel to open :/
     bookmark_modal.open_options_panel
     bookmark_modal.open_options_panel
 
@@ -81,17 +81,6 @@ describe "Bookmarking posts and topics", type: :system do
     expect(bookmark_modal).to have_auto_delete_preference(
       Bookmark.auto_delete_preferences[:clear_reminder],
     )
-  end
-
-  it "opens the bookmark modal with the Custom... option only after the bookmark saves on slow connections" do
-    topic_page.visit_topic(topic)
-
-    cdp.with_slow_upload do
-      open_bookmark_menu(post)
-      bookmark_menu.click_menu_option("custom")
-    end
-
-    expect(bookmark_modal).to be_open
   end
 
   describe "topic level bookmarks" do

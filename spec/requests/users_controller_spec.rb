@@ -304,6 +304,31 @@ RSpec.describe UsersController do
         expect(user1.user_option.reload.timezone).to eq("America/Chicago")
       end
 
+      it "deletes user associated accounts" do
+        SiteSetting.delete_associated_accounts_on_password_reset = true
+        UserAssociatedAccount.create(
+          user_id: user.id,
+          provider_uid: "example0",
+          provider_name: "facebook",
+        )
+        UserAssociatedAccount.create(
+          user_id: user1.id,
+          provider_uid: "example1",
+          provider_name: "facebook",
+        )
+
+        get "/u/password-reset/#{email_token.token}"
+
+        expect do
+          put "/u/password-reset/#{email_token.token}",
+              params: {
+                password: "hg9ow8yhg98oadminlonger",
+              }
+        end.to change { UserAssociatedAccount.count }.by(-1)
+
+        expect(UserAssociatedAccount.count).to eq(1)
+      end
+
       it "logs the password change" do
         get "/u/password-reset/#{email_token.token}"
 
@@ -1432,7 +1457,7 @@ RSpec.describe UsersController do
     context "with custom fields" do
       fab!(:user_field)
       fab!(:another_field) { Fabricate(:user_field) }
-      fab!(:optional_field) { Fabricate(:user_field, required: false) }
+      fab!(:optional_field) { Fabricate(:user_field, requirement: "optional") }
 
       context "without a value for the fields" do
         let(:create_params) do
@@ -1492,7 +1517,7 @@ RSpec.describe UsersController do
           it "value can't be nil or empty if the field is required" do
             put update_user_url, params: { user_fields: { field_id => valid_options } }
 
-            user_field.update!(required: true)
+            user_field.for_all_users!
 
             expect do
               put update_user_url, params: { user_fields: { field_id => nil } }
@@ -1506,7 +1531,7 @@ RSpec.describe UsersController do
           it "value can nil or empty if the field is not required" do
             put update_user_url, params: { user_fields: { field_id => valid_options } }
 
-            user_field.update!(required: false)
+            user_field.optional!
 
             expect do
               put update_user_url, params: { user_fields: { field_id => nil } }
@@ -1547,7 +1572,7 @@ RSpec.describe UsersController do
           it "value can't be nil if the field is required" do
             put update_user_url, params: { user_fields: { field_id => valid_options.first } }
 
-            user_field.update!(required: true)
+            user_field.for_all_users!
 
             expect do
               put update_user_url, params: { user_fields: { field_id => nil } }
@@ -1557,7 +1582,7 @@ RSpec.describe UsersController do
           it "value can be set to nil if the field is not required" do
             put update_user_url, params: { user_fields: { field_id => valid_options.last } }
 
-            user_field.update!(required: false)
+            user_field.optional!
 
             expect do
               put update_user_url, params: { user_fields: { field_id => nil } }
@@ -1614,7 +1639,7 @@ RSpec.describe UsersController do
     end
 
     context "with only optional custom fields" do
-      fab!(:user_field) { Fabricate(:user_field, required: false) }
+      fab!(:user_field) { Fabricate(:user_field, requirement: "optional") }
 
       context "without values for the fields" do
         let(:create_params) do
@@ -2378,8 +2403,8 @@ RSpec.describe UsersController do
 
         context "with user fields" do
           context "with an editable field" do
-            fab!(:user_field)
-            fab!(:optional_field) { Fabricate(:user_field, required: false) }
+            fab!(:user_field) { Fabricate(:user_field, requirement: "for_all_users") }
+            fab!(:optional_field) { Fabricate(:user_field, requirement: "optional") }
 
             it "should update the user field" do
               put "/u/#{user.username}.json",
@@ -3172,7 +3197,10 @@ RSpec.describe UsersController do
       fab!(:badge) { Fabricate(:badge, name: "Demogorgon", allow_title: true) }
       let(:user_badge) { BadgeGranter.grant(badge, user1) }
 
-      before { TranslationOverride.upsert!("en", "badges.demogorgon.name", "Boss") }
+      before do
+        I18n.backend.store_translations(:en, { badges: { demogorgon: { name: "D'Artagnan" } } })
+        TranslationOverride.upsert!("en", "badges.demogorgon.name", "Boss")
+      end
 
       after { TranslationOverride.revert!("en", ["badges.demogorgon.name"]) }
 
@@ -4528,6 +4556,7 @@ RSpec.describe UsersController do
         expect(parsed["username"]).to eq(user.username)
         expect(parsed["profile_hidden"]).to be_blank
         expect(parsed["trust_level"]).to be_present
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
       it "returns a hidden profile" do
@@ -4540,11 +4569,13 @@ RSpec.describe UsersController do
         expect(parsed["username"]).to eq(user.username)
         expect(parsed["profile_hidden"]).to eq(true)
         expect(parsed["trust_level"]).to be_blank
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
       it "should 403 for anonymous user when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}.json"
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
         expect(response).to have_http_status(:forbidden)
         get "/u/#{user.username}/messages.json"
         expect(response).to have_http_status(:forbidden)
@@ -4555,6 +4586,7 @@ RSpec.describe UsersController do
         get "/u/#{user.username}", headers: { "User-Agent" => "Googlebot" }
         expect(response).to have_http_status(:forbidden)
         expect(response.body).to have_tag("body.crawler")
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
       describe "user profile views" do
@@ -4587,12 +4619,14 @@ RSpec.describe UsersController do
       it "returns not found when the username doesn't exist" do
         get "/u/madeuppity.json"
         expect(response).not_to be_successful
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
       it "returns not found when the user is inactive" do
         inactive = Fabricate(:user, active: false)
         get "/u/#{inactive.username}.json"
         expect(response).not_to be_successful
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
       it "returns success when show_inactive_accounts is true and user is logged in" do
@@ -4606,6 +4640,7 @@ RSpec.describe UsersController do
         Guardian.any_instance.expects(:can_see?).with(user1).returns(false)
         get "/u/#{user1.username}.json"
         expect(response).to be_forbidden
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
       describe "user profile views" do
@@ -4789,17 +4824,30 @@ RSpec.describe UsersController do
         expect(response.parsed_body["user"]["inactive"]).to eq(true)
       end
 
-      it "returns partial response when hidden users" do
-        user.user_option.update!(hide_profile_and_presence: true)
-        get "/u/#{user.username}/card.json"
-        expect(response).to be_successful
-        expect(response.parsed_body["user"]["profile_hidden"]).to eq(true)
-      end
-
       it "raises an error on invalid access" do
         Guardian.any_instance.expects(:can_see?).with(user).returns(false)
         get "/u/#{user.username}/card.json"
         expect(response).to be_forbidden
+      end
+
+      context "when hidden users" do
+        before { user.user_option.update!(hide_profile_and_presence: true) }
+
+        it "returns the correct partial response when the user has messages enabled" do
+          user.user_option.update!(allow_private_messages: true)
+          get "/u/#{user.username}/card.json"
+          expect(response).to be_successful
+          expect(response.parsed_body["user"]["profile_hidden"]).to eq(true)
+          expect(response.parsed_body["user"]["can_send_private_message_to_user"]).to eq(true)
+        end
+
+        it "returns the correct partial response when the user has messages disabled" do
+          user.user_option.update!(allow_private_messages: false)
+          get "/u/#{user.username}/card.json"
+          expect(response).to be_successful
+          expect(response.parsed_body["user"]["profile_hidden"]).to eq(true)
+          expect(response.parsed_body["user"]["can_send_private_message_to_user"]).to eq(false)
+        end
       end
     end
   end

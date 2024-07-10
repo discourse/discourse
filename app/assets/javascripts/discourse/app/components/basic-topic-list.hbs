@@ -1,18 +1,34 @@
 <ConditionalLoadingSpinner @condition={{this.loading}}>
   {{#if this.topics}}
-    <TopicList
-      @showPosters={{this.showPosters}}
-      @hideCategory={{this.hideCategory}}
-      @topics={{this.topics}}
-      @expandExcerpts={{this.expandExcerpts}}
-      @bulkSelectHelper={{this.bulkSelectHelper}}
-      @canBulkSelect={{this.canBulkSelect}}
-      @tagsForUser={{this.tagsForUser}}
-      @changeSort={{this.changeSort}}
-      @order={{this.order}}
-      @ascending={{this.ascending}}
-      @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
-    />
+    {{#if this.currentUser.use_glimmer_topic_list}}
+      <TopicList::List
+        @showPosters={{this.showPosters}}
+        @hideCategory={{this.hideCategory}}
+        @topics={{this.topics}}
+        @expandExcerpts={{this.expandExcerpts}}
+        @bulkSelectHelper={{this.bulkSelectHelper}}
+        @canBulkSelect={{this.canBulkSelect}}
+        @tagsForUser={{this.tagsForUser}}
+        @changeSort={{this.changeSort}}
+        @order={{this.order}}
+        @ascending={{this.ascending}}
+        @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
+      />
+    {{else}}
+      <TopicList
+        @showPosters={{this.showPosters}}
+        @hideCategory={{this.hideCategory}}
+        @topics={{this.topics}}
+        @expandExcerpts={{this.expandExcerpts}}
+        @bulkSelectHelper={{this.bulkSelectHelper}}
+        @canBulkSelect={{this.canBulkSelect}}
+        @tagsForUser={{this.tagsForUser}}
+        @changeSort={{this.changeSort}}
+        @order={{this.order}}
+        @ascending={{this.ascending}}
+        @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
+      />
+    {{/if}}
   {{else}}
     {{#unless this.loadingMore}}
       <div class="alert alert-info">

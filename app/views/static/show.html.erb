@@ -6,6 +6,8 @@
       <% if @faq_overridden %>
         <li class='nav-item-guidelines'><a class='<%= @page == 'faq' ? 'active' : '' %>' href='<%= guidelines_path %>'><%= t 'js.guidelines' %></a></li>
         <li class='nav-item-faq'><a href='<%= faq_path %>'><%= t 'js.faq' %></a></li>
+      <% elsif @experimental_rename_faq_to_guidelines %>
+        <li class='nav-item-guidelines'><a class='<%= @page == 'faq' ? 'active' : '' %>' href='<%=guidelines_path%>'><%= t 'js.guidelines' %></a></li>
       <% else %>
         <li class='nav-item-faq'><a class='<%= @page == 'faq' ? 'active' : '' %>' href='<%=faq_path%>'><%= t 'js.faq' %></a></li>
       <% end %>

@@ -1,4 +1,6 @@
 import { tracked } from "@glimmer/tracking";
+import { next } from "@ember/runloop";
+import { TrackedSet } from "@ember-compat/tracked-built-ins";
 
 /**
  * Define a tracked property on an object without needing to use the @tracked decorator.
@@ -73,4 +75,104 @@ export function resettableTracked(prototype, key, descriptor) {
       state.currentValue = value;
     },
   };
+}
+
+/**
+ * @decorator
+ *
+ * Same as `@tracked`, but skips notifying about updates if the value is unchanged. This introduces some
+ * performance overhead, so should only be used where excessive downstream re-evaluations are a problem.
+ *
+ * @example
+ *
+ * ```js
+ * class UserRenameForm {
+ *   ⁣@dedupeTracked fullName;
+ * }
+ *
+ * const form = new UserRenameForm();
+ * form.fullName = "Alice"; // Downstream consumers will be notified
+ * form.fullName = "Alice"; // Downstream consumers will not be re-notified
+ * form.fullName = "Bob"; // Downstream consumers will be notified
+ * ```
+ *
+ */
+export function dedupeTracked(target, key, desc) {
+  let { initializer } = desc;
+  let { get, set } = tracked(target, key, desc);
+
+  let values = new WeakMap();
+
+  return {
+    get() {
+      if (!values.has(this)) {
+        let value = initializer?.call(this);
+        values.set(this, value);
+        set.call(this, value);
+      }
+
+      return get.call(this);
+    },
+
+    set(value) {
+      if (!values.has(this) || values.get(this) !== value) {
+        values.set(this, value);
+        set.call(this, value);
+      }
+    },
+  };
+}
+
+export class DeferredTrackedSet {
+  #set;
+
+  constructor(value) {
+    this.#set = new TrackedSet(value);
+  }
+
+  has(value) {
+    return this.#set.has(value);
+  }
+
+  entries() {
+    return this.#set.entries();
+  }
+
+  keys() {
+    return this.#set.keys();
+  }
+
+  values() {
+    return this.#set.values();
+  }
+
+  forEach(fn) {
+    return this.#set.forEach(fn);
+  }
+
+  get size() {
+    return this.#set.size;
+  }
+
+  [Symbol.iterator]() {
+    return this.#set[Symbol.iterator]();
+  }
+
+  get [Symbol.toStringTag]() {
+    return this.#set[Symbol.toStringTag];
+  }
+
+  add(value) {
+    next(() => this.#set.add(value));
+    return this;
+  }
+
+  delete(value) {
+    next(() => this.#set.delete(value));
+    return this;
+  }
+
+  clear() {
+    next(() => this.#set.clear());
+  }
 }

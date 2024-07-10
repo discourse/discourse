@@ -86,6 +86,7 @@ class BulkImport::Generic < BulkImport::Base
 
     import_topic_tags
     import_topic_allowed_users
+    import_topic_allowed_groups
 
     import_likes
     import_votes
@@ -164,7 +165,7 @@ class BulkImport::Generic < BulkImport::Base
       when "append"
         raise "Cannot append to #{name} setting" if setting[:type] != "list"
         items = (SiteSetting.get(name) || "").split("|")
-        items << row["value"] unless items.include?(row["value"])
+        items << row["value"] if items.exclude?(row["value"])
         SiteSetting.set_and_log(name, items.join("|"))
       end
     end
@@ -414,17 +415,11 @@ class BulkImport::Generic < BulkImport::Base
       end
 
       if row["anonymized"] == 1
-        while true
-          anon_suffix = (SecureRandom.random_number * 100_000_000).to_i
-          break if !@anonymized_user_suffixes.include?(anon_suffix)
-        end
-
-        row["username"] = "anon_#{anon_suffix}"
+        row["username"] = "anon_#{anon_username_suffix}"
         row["email"] = "#{row["username"]}#{UserAnonymizer::EMAIL_SUFFIX}"
         row["name"] = nil
         row["registration_ip_address"] = nil
-
-        @anonymized_user_suffixes << anon_suffix
+        row["date_of_birth"] = nil
       end
 
       {
@@ -441,6 +436,7 @@ class BulkImport::Generic < BulkImport::Base
         suspended_at: suspended_at,
         suspended_till: suspended_till,
         registration_ip_address: row["registration_ip_address"],
+        date_of_birth: to_date(row["date_of_birth"]),
       }
     end
 
@@ -453,7 +449,7 @@ class BulkImport::Generic < BulkImport::Base
     existing_user_ids = UserEmail.pluck(:user_id).to_set
 
     users = query(<<~SQL)
-      SELECT id, email, created_at
+      SELECT id, email, created_at, anonymized
       FROM users
       ORDER BY id
     SQL
@@ -461,6 +457,11 @@ class BulkImport::Generic < BulkImport::Base
     create_user_emails(users) do |row|
       user_id = user_id_from_imported_id(row["id"])
       next if user_id && existing_user_ids.include?(user_id)
+
+      if row["anonymized"] == 1
+        username = username_from_id(user_id)
+        row["email"] = "#{username}#{UserAnonymizer::EMAIL_SUFFIX}"
+      end
 
       { user_id: user_id, email: row["email"], created_at: to_datetime(row["created_at"]) }
     end
@@ -472,9 +473,8 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing user profiles..."
 
     users = query(<<~SQL)
-      SELECT id, bio
+      SELECT id, bio, location, website, anonymized
       FROM users
-      WHERE bio IS NOT NULL
       ORDER BY id
     SQL
 
@@ -484,7 +484,13 @@ class BulkImport::Generic < BulkImport::Base
       user_id = user_id_from_imported_id(row["id"])
       next if user_id && existing_user_ids.include?(user_id)
 
-      { user_id: user_id, bio_raw: row["bio"] }
+      if row["anonymized"] == 1
+        row["bio"] = nil
+        row["location"] = nil
+        row["website"] = nil
+      end
+
+      { user_id: user_id, bio_raw: row["bio"], location: row["location"], website: row["website"] }
     end
 
     users.close
@@ -623,10 +629,13 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     existing_user_ids = UserAssociatedAccount.pluck(:user_id).to_set
+    existing_provider_uids = UserAssociatedAccount.pluck(:provider_uid, :provider_name).to_set
 
     create_user_associated_accounts(accounts) do |row|
       user_id = user_id_from_imported_id(row["user_id"])
+
       next if user_id && existing_user_ids.include?(user_id)
+      next if existing_provider_uids.include?([row["provider_uid"], row["provider_name"]])
 
       {
         user_id: user_id,
@@ -650,11 +659,10 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_topics(topics) do |row|
-      unless row["category_id"] && (category_id = category_id_from_imported_id(row["category_id"]))
-        next
-      end
+      category_id = category_id_from_imported_id(row["category_id"]) if row["category_id"].present?
 
       next if topic_id_from_imported_id(row["id"]).present?
+      next if row["private_message"].blank? && category_id.nil?
 
       {
         archetype: row["private_message"] ? Archetype.private_message : Archetype.default,
@@ -666,6 +674,9 @@ class BulkImport::Generic < BulkImport::Base
         closed: to_boolean(row["closed"]),
         views: row["views"],
         subtype: row["subtype"],
+        pinned_at: to_datetime(row["pinned_at"]),
+        pinned_until: to_datetime(row["pinned_until"]),
+        pinned_globally: to_boolean(row["pinned_globally"]),
       }
     end
 
@@ -673,35 +684,69 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_topic_allowed_users
-    # FIXME: This is not working correctly because it imports only the first user from the list!
-    # Groups are ignored completely. And there is no check for existing records.
-
     puts "", "Importing topic_allowed_users..."
 
     topics = query(<<~SQL)
-      SELECT *
-      FROM topics
-      WHERE private_message IS NOT NULL
-      ORDER BY id
+      SELECT
+        t.id,
+        user_ids.value AS user_id
+      FROM topics t, JSON_EACH(t.private_message, '$.user_ids') AS user_ids
+      WHERE t.private_message IS NOT NULL
+      ORDER BY t.id
     SQL
 
     added = 0
+    existing_topic_allowed_users = TopicAllowedUser.pluck(:topic_id, :user_id).to_set
 
     create_topic_allowed_users(topics) do |row|
-      next unless (topic_id = topic_id_from_imported_id(row["id"]))
-      imported_user_id = JSON.parse(row["private_message"])["user_ids"].first
-      user_id = user_id_from_imported_id(imported_user_id)
+      topic_id = topic_id_from_imported_id(row["id"])
+      user_id = user_id_from_imported_id(row["user_id"])
+
+      next unless topic_id && user_id
+      next unless existing_topic_allowed_users.add?([topic_id, user_id])
+
       added += 1
-      {
-        # FIXME: missing imported_id
-        topic_id: topic_id,
-        user_id: user_id,
-      }
+
+      { topic_id: topic_id, user_id: user_id }
     end
 
     topics.close
 
     puts "  Added #{added} topic_allowed_users records."
+  end
+
+  def import_topic_allowed_groups
+    puts "", "Importing topic_allowed_groups..."
+
+    topics = query(<<~SQL)
+      SELECT
+        t.id,
+        group_ids.value AS group_id
+      FROM topics t, JSON_EACH(t.private_message, '$.group_ids') AS group_ids
+      WHERE t.private_message IS NOT NULL
+      ORDER BY t.id
+    SQL
+
+    added = 0
+    existing_topic_allowed_groups = TopicAllowedGroup.pluck(:topic_id, :group_id).to_set
+
+    create_topic_allowed_groups(topics) do |row|
+      topic_id = topic_id_from_imported_id(row["id"])
+      group_id = group_id_from_imported_id(row["group_id"])
+
+      next unless topic_id && group_id
+      next unless existing_topic_allowed_groups.add?([topic_id, group_id])
+
+      added += 1
+
+      { topic_id: topic_id, group_id: group_id }
+    end
+
+    # TODO: Add support for special group names
+
+    topics.close
+
+    puts "  Added #{added} topic_allowed_groups records."
   end
 
   def import_posts
@@ -739,7 +784,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def post_raw(row, group_names)
-    raw = row["raw"]
+    raw = row["raw"].dup
     placeholders = row["placeholders"]&.then { |json| JSON.parse(json) }
 
     if (polls = placeholders&.fetch("polls", nil))
@@ -2247,7 +2292,7 @@ class BulkImport::Generic < BulkImport::Base
 
     rows.each do |row|
       normalization = row["normalization"]
-      normalizations << normalization unless normalizations.include?(normalization)
+      normalizations << normalization if normalizations.exclude?(normalization)
     end
 
     SiteSetting.permalink_normalizations = normalizations.join("|")
@@ -2306,7 +2351,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def calculate_external_url(row)
-    external_url = row["external_url"]
+    external_url = row["external_url"].dup
     placeholders = row["external_url_placeholders"]&.then { |json| JSON.parse(json) }
     return external_url unless placeholders
 
@@ -2367,6 +2412,16 @@ class BulkImport::Generic < BulkImport::Base
 
   def to_boolean(value)
     value == 1
+  end
+
+  def anon_username_suffix
+    while true
+      suffix = (SecureRandom.random_number * 100_000_000).to_i
+      break if @anonymized_user_suffixes.exclude?(suffix)
+    end
+
+    @anonymized_user_suffixes << suffix
+    suffix
   end
 end
 

@@ -70,6 +70,20 @@ module("Unit | Lib | DAG", function (hooks) {
     assert.deepEqual(keys, ["key1", "key2", "key4", "key3"]);
   });
 
+  test("should resolve only existing keys", function (assert) {
+    dag = new DAG();
+    dag.add("key1", "value1");
+    dag.add("key2", "value2", { before: "key1" });
+    dag.add("key3", "value3");
+
+    dag.delete("key1");
+
+    const resolved = dag.resolve();
+    const keys = resolved.map((pair) => pair.key);
+
+    assert.deepEqual(keys, ["key2", "key3"]);
+  });
+
   test("throws on bad positioning", function (assert) {
     dag = new DAG();
 

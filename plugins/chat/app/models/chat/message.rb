@@ -266,7 +266,7 @@ module Chat
     end
 
     def in_thread?
-      self.thread_id.present?
+      self.thread_id.present? && (self.chat_channel.threading_enabled || self.thread&.force)
     end
 
     def thread_reply?

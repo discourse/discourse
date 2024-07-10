@@ -2,7 +2,7 @@
 
 class FinalDestination::HTTP < Net::HTTP
   def connect
-    raise ArgumentError.new("address cannot be nil or empty") unless @address.present?
+    raise ArgumentError.new("address cannot be nil or empty") if @address.blank?
 
     original_open_timeout = @open_timeout
     return super if @ipaddr

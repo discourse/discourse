@@ -231,7 +231,7 @@ class TagsController < ::ApplicationController
             if tag_group_name
               tag_group =
                 TagGroup.find_by(name: tag_group_name) || TagGroup.create!(name: tag_group_name)
-              tag.tag_groups << tag_group unless tag.tag_groups.include?(tag_group)
+              tag.tag_groups << tag_group if tag.tag_groups.exclude?(tag_group)
             end
           end
         end

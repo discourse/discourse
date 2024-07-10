@@ -13,6 +13,10 @@ module Chat
     enum :desktop_notification_level, NOTIFICATION_LEVELS, prefix: :desktop_notifications
     enum :mobile_notification_level, NOTIFICATION_LEVELS, prefix: :mobile_notifications
     enum :join_mode, { manual: 0, automatic: 1 }
+
+    def mark_read!(new_last_read_id = nil)
+      update!(last_read_message_id: new_last_read_id || chat_channel.last_message_id)
+    end
   end
 end
 

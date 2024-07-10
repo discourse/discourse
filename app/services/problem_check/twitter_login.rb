@@ -2,8 +2,6 @@
 
 class ProblemCheck::TwitterLogin < ProblemCheck
   self.priority = "high"
-
-  # TODO: Implement.
   self.perform_every = 24.hours
 
   def call
@@ -17,9 +15,5 @@ class ProblemCheck::TwitterLogin < ProblemCheck
 
   def authenticator
     @authenticator ||= Auth::TwitterAuthenticator.new
-  end
-
-  def translation_key
-    "dashboard.twitter_login_warning"
   end
 end

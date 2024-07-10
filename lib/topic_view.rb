@@ -742,10 +742,6 @@ class TopicView
       end
   end
 
-  def summarizable?
-    Summarization::Base.can_see_summary?(@topic, @user)
-  end
-
   def categories
     @categories ||= [category&.parent_category, category, suggested_topics&.categories].flatten
       .uniq
@@ -758,8 +754,8 @@ class TopicView
     @read_posts_set ||=
       begin
         result = Set.new
-        return result unless @user.present?
-        return result unless topic_user.present?
+        return result if @user.blank?
+        return result if topic_user.blank?
 
         post_numbers =
           PostTiming

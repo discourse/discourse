@@ -86,6 +86,7 @@ class UsersController < ApplicationController
   #  once that happens you can't log in with social
   skip_before_action :verify_authenticity_token, only: [:create]
   skip_before_action :redirect_to_login_if_required,
+                     :redirect_to_profile_if_required,
                      only: %i[
                        check_username
                        check_email
@@ -102,8 +103,9 @@ class UsersController < ApplicationController
                        admin_login
                        confirm_admin
                      ]
+  skip_before_action :redirect_to_profile_if_required, only: %i[show staff_info update]
 
-  after_action :add_noindex_header, only: %i[show my_redirect]
+  before_action :add_noindex_header, only: %i[show my_redirect]
 
   allow_in_staff_writes_only_mode :admin_login
   allow_in_staff_writes_only_mode :email_login
@@ -893,15 +895,22 @@ class UsersController < ApplicationController
         @user.password = params[:password]
         @user.password_required!
         @user.user_auth_tokens.destroy_all
+
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
           secure_session["password-#{token}"] = nil
           secure_session["second-factor-#{token}"] = nil
+
+          if SiteSetting.delete_associated_accounts_on_password_reset
+            @user.user_associated_accounts.destroy_all
+          end
+
           UserHistory.create!(
             target_user: @user,
             acting_user: @user,
             action: UserHistory.actions[:change_password],
           )
+
           logon_after_password_reset
         end
       end
@@ -935,6 +944,7 @@ class UsersController < ApplicationController
                    success: false,
                    message: @error,
                    errors: @user&.errors&.to_hash,
+                   friendly_messages: @user&.errors&.full_messages,
                    is_developer: UsernameCheckerService.is_developer?(@user&.email),
                    admin: @user&.admin?,
                  }
@@ -1143,7 +1153,7 @@ class UsersController < ApplicationController
         1.hour,
       ).performed!
       @user = User.find_by_username_or_email(params[:username])
-      raise Discourse::InvalidAccess.new unless @user.present?
+      raise Discourse::InvalidAccess.new if @user.blank?
       raise Discourse::InvalidAccess.new unless @user.confirm_password?(params[:password])
     elsif user_key = session[SessionController::ACTIVATE_USER_KEY]
       RateLimiter.new(nil, "activate-edit-email-hr-user-key-#{user_key}", 5, 1.hour).performed!
@@ -1342,9 +1352,7 @@ class UsersController < ApplicationController
       return render json: failed_json, status: 422
     end
 
-    unless SiteSetting.selectable_avatars.include?(upload)
-      return render json: failed_json, status: 422
-    end
+    return render json: failed_json, status: 422 if SiteSetting.selectable_avatars.exclude?(upload)
 
     user.uploaded_avatar_id = upload.id
 
@@ -1540,12 +1548,14 @@ class UsersController < ApplicationController
           .select(:id, :name, :last_used, :created_at, :method)
           .where(enabled: true)
           .order(:created_at)
+          .as_json(only: %i[id name method last_used])
 
       security_keys =
         current_user
           .security_keys
           .where(factor_type: UserSecurityKey.factor_types[:second_factor])
           .order(:created_at)
+          .as_json(only: %i[id user_id credential_id public_key factor_type enabled name last_used])
 
       render json: success_json.merge(totps: totp_second_factors, security_keys: security_keys)
     else
@@ -2096,7 +2106,7 @@ class UsersController < ApplicationController
     ]
 
     editable_custom_fields = User.editable_user_custom_fields(by_staff: current_user.try(:staff?))
-    permitted << { custom_fields: editable_custom_fields } unless editable_custom_fields.blank?
+    permitted << { custom_fields: editable_custom_fields } if editable_custom_fields.present?
     permitted.concat UserUpdater::OPTION_ATTR
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys
@@ -2132,31 +2142,12 @@ class UsersController < ApplicationController
       result.merge!(params.permit(:active, :staged, :approved))
     end
 
-    deprecate_modify_user_params_method
-    result = modify_user_params(result)
     DiscoursePluginRegistry.apply_modifier(
       :users_controller_update_user_params,
       result,
       current_user,
       params,
     )
-  end
-
-  # Plugins can use this to modify user parameters
-  def modify_user_params(attrs)
-    attrs
-  end
-
-  def deprecate_modify_user_params_method
-    # only issue a deprecation warning if the method is overriden somewhere
-    if method(:modify_user_params).source_location[0] !=
-         "#{Rails.root}/app/controllers/users_controller.rb"
-      Discourse.deprecate(
-        "`UsersController#modify_user_params` method is deprecated. Please use the `users_controller_update_user_params` modifier instead.",
-        since: "3.1.0.beta4",
-        drop_from: "3.2.0",
-      )
-    end
   end
 
   def fail_with(key)

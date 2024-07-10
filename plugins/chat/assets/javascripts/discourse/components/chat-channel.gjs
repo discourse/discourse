@@ -10,7 +10,6 @@ import { service } from "@ember/service";
 import { and, not } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { resetIdle } from "discourse/lib/desktop-notifications";
 import DiscourseURL from "discourse/lib/url";
 import {
   onPresenceChange,
@@ -19,6 +18,7 @@ import {
 import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
 import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
 import ChatChannelSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-subscription-manager";
@@ -63,9 +63,11 @@ export default class ChatChannel extends Component {
   @service("chat-channel-composer") composer;
   @service("chat-channel-pane") pane;
   @service currentUser;
+  @service dialog;
   @service messageBus;
   @service router;
   @service site;
+  @service siteSettings;
 
   @tracked sending = false;
   @tracked showChatQuoteSuccess = false;
@@ -477,7 +479,6 @@ export default class ChatChannel extends Component {
 
   @action
   onScrollEnd(state) {
-    resetIdle();
     this.needsArrow =
       (this.messagesLoader.fetchedOnce &&
         this.messagesLoader.canLoadMoreFuture) ||
@@ -498,6 +499,17 @@ export default class ChatChannel extends Component {
 
   @action
   async onSendMessage(message) {
+    if (
+      message.message.length > this.siteSettings.chat_maximum_message_length
+    ) {
+      this.dialog.alert(
+        I18n.t("chat.message_too_long", {
+          count: this.siteSettings.chat_maximum_message_length,
+        })
+      );
+      return;
+    }
+
     await message.cook();
     if (message.editing) {
       await this.#sendEditMessage(message);
@@ -535,8 +547,6 @@ export default class ChatChannel extends Component {
 
   async #sendNewMessage(message) {
     this.pane.sending = true;
-
-    resetIdle();
 
     stackingContextFix(this.scroller, async () => {
       await this.args.channel.stageMessage(message);
@@ -738,6 +748,7 @@ export default class ChatChannel extends Component {
             @channel.canModerate
           }}
           @pane={{this.pane}}
+          @messagesManager={{this.messagesManager}}
         />
       {{else}}
         {{#if (and (not @channel.isFollowing) @channel.isCategoryChannel)}}

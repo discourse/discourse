@@ -36,6 +36,11 @@ module DiscourseAutomation
         end
 
         start_date = Time.parse(start_date)
+        if start_date > Time.zone.now
+          automation.pending_automations.create!(execute_at: start_date)
+          return
+        end
+
         byday = start_date.strftime("%A").upcase[0, 2]
         interval = interval.to_i
         interval_end = interval + 1

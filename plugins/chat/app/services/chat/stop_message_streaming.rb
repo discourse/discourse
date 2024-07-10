@@ -15,7 +15,8 @@ module Chat
     #   @return [Service::Base::Context]
     contract
     model :message
-    policy :can_join_channel
+    step :enforce_membership
+    model :membership
     policy :can_stop_streaming
     step :stop_message_streaming
     step :publish_message_streaming_state
@@ -33,12 +34,16 @@ module Chat
       ::Chat::Message.find_by(id: contract.message_id)
     end
 
-    def can_join_channel(guardian:, message:)
-      guardian.can_join_chat_channel?(message.chat_channel)
+    def enforce_membership(guardian:, message:)
+      message.chat_channel.add(guardian.user) if guardian.user.bot?
+    end
+
+    def fetch_membership(guardian:, message:)
+      message.chat_channel.membership_for(guardian.user)
     end
 
     def can_stop_streaming(guardian:, message:)
-      guardian.is_admin? || message.user.id == guardian.user.id ||
+      guardian.user.bot? || guardian.is_admin? || message.user.id == guardian.user.id ||
         message.in_reply_to && message.in_reply_to.user_id == guardian.user.id
     end
 

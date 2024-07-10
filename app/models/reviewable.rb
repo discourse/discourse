@@ -33,10 +33,14 @@ class Reviewable < ActiveRecord::Base
   has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
 
   enum :status, { pending: 0, approved: 1, rejected: 2, ignored: 3, deleted: 4 }
-  enum :priority, { low: 0, medium: 5, high: 10 }, scopes: false, suffix: true
+
+  attribute :sensitivity, :integer
   enum :sensitivity, { disabled: 0, low: 9, medium: 6, high: 3 }, scopes: false, suffix: true
 
-  validates :reject_reason, length: { maximum: 500 }
+  attribute :priority, :integer
+  enum :priority, { low: 0, medium: 5, high: 10 }, scopes: false, suffix: true
+
+  validates :reject_reason, length: { maximum: 2000 }
 
   after_create { log_history(:created, created_by) }
 
@@ -62,7 +66,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.valid_type?(type)
-    return false unless Reviewable.types.include?(type)
+    return false if Reviewable.types.exclude?(type)
     type.constantize <= Reviewable
   rescue NameError
     false
@@ -195,6 +199,11 @@ class Reviewable < ActiveRecord::Base
 
     update(score: self.score + rs.score, latest_score: rs.created_at, force_review: force_review)
     topic.update(reviewable_score: topic.reviewable_score + rs.score) if topic
+
+    # Flags are cached for performance reasons.
+    # However, when the reviewable item is created, we need to clear the cache to mark flag as used.
+    # Used flags cannot be deleted or update by admins, only disabled.
+    Flag.reset_flag_settings! if PostActionType.notify_flag_type_ids.include?(reviewable_score_type)
 
     DiscourseEvent.trigger(:reviewable_score_updated, self)
 
@@ -383,7 +392,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.viewable_by(user, order: nil, preload: true)
-    return none unless user.present?
+    return none if user.blank?
 
     result = self.order(order || "reviewables.score desc, reviewables.created_at desc")
 
@@ -732,7 +741,7 @@ class Reviewable < ActiveRecord::Base
   private
 
   def update_flag_stats(status:, user_ids:)
-    return unless %i[agreed disagreed ignored].include?(status)
+    return if %i[agreed disagreed ignored].exclude?(status)
 
     # Don't count self-flags
     user_ids -= [post&.user_id]

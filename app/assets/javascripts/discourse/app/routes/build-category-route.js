@@ -84,7 +84,7 @@ class AbstractCategoryRoute extends DiscourseRoute {
 
   async _createSubcategoryList(category) {
     if (category.isParent && category.show_subcategory_list) {
-      return CategoryList.listForParent(this.store, category);
+      return CategoryList.list(this.store, category);
     }
   }
 

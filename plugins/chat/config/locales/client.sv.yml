@@ -100,7 +100,6 @@ sv:
       channels_list_popup:
         browse: "Bläddra bland kanaler"
         create: "Ny kanal"
-      click_to_join: "Klicka här för att se tillgängliga kanaler."
       close: "Stäng"
       remove: "Ta bort"
       collapse: "Komprimera chattruta"
@@ -142,13 +141,6 @@ sv:
       heading: "Chatt"
       join: "Gå med"
       last_visit: "senaste besök"
-      summarization:
-        title: "Sammanfatta meddelanden"
-        description: "Välj ett alternativ nedan för att sammanfatta samtalet som skickades under den önskade tidsramen."
-        summarize: "Sammanfatta"
-        since:
-          one: "Senaste timmen"
-          other: "Senaste %{count} timmarna"
       mention_warning:
         invitations_sent:
           one: "Inbjudan skickad"
@@ -228,8 +220,6 @@ sv:
         header: "Chatthuvud"
         composer: "Chattkompositör"
         channels_list: "Lista över chattkanaler"
-      no_direct_message_channels: "Du har inte gått med i några direktmeddelandekanaler."
-      no_public_channels: "Du har inte gått med i några kanaler."
       kicked_from_channel: "Du har inte längre tillgång till den här kanalen."
       only_chat_push_notifications:
         title: "Skicka bara push-meddelanden för chatt"
@@ -257,6 +247,7 @@ sv:
       copy_link: "Kopiera länk"
       copy_text: "Kopiera text"
       rebake_message: "Generera HTML"
+      message_too_long: "Meddelandet är för långt. Meddelanden får högst innehålla %{count} tecken."
       retry_staged_message:
         title: "Nätverksfel"
         action: "Skicka igen?"

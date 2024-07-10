@@ -101,7 +101,6 @@ ru:
       channels_list_popup:
         browse: "Просмотр каналов"
         create: "Новый канал"
-      click_to_join: "Нажмите здесь для просмотра доступных каналов."
       close: "Закрыть"
       remove: "Удалить"
       collapse: "Свернуть чат"
@@ -144,15 +143,6 @@ ru:
       heading: "Чат"
       join: "Подписаться"
       last_visit: "последнее посещение"
-      summarization:
-        title: "Делать сводку сообщений"
-        description: "Выберите ниже вариант сводки беседы для отправки в указанный период."
-        summarize: "Сводка"
-        since:
-          one: "Последний %{count} час"
-          few: "Последние %{count} часа"
-          many: "Последние %{count} часов"
-          other: "Последние %{count} часа"
       mention_warning:
         invitations_sent:
           one: "Приглашение отправлено"
@@ -252,7 +242,7 @@ ru:
         header: "Заголовок чата"
         composer: "Редактор чата"
         channels_list: "Список каналов чата"
-      no_public_channels: "Вы не присоединились ни к одному каналу."
+      no_public_channels_cta: "Просмотр каналов"
       kicked_from_channel: "У вас больше нет доступа к этому каналу."
       only_chat_push_notifications:
         title: "Отправлять только push-уведомления в чате"
@@ -280,6 +270,7 @@ ru:
       copy_link: "Копировать ссылку"
       copy_text: "Копировать текст"
       rebake_message: "Перестроить HTML"
+      message_too_long: "Сообщение слишком длинное, оно должно содержать не более %{count} символа."
       retry_staged_message:
         title: "Ошибка сети"
         action: "Отправить ещё раз?"

@@ -1,220 +1,149 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::EnqueueDigestEmails do
-  describe "#target_users" do
-    context "with disabled digests" do
-      before { SiteSetting.default_email_digest_frequency = 0 }
-      let!(:user_no_digests) do
-        Fabricate(:active_user, last_emailed_at: 8.days.ago, last_seen_at: 10.days.ago)
-      end
-
-      it "doesn't return users with email disabled" do
-        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user_no_digests.id)).to eq(
-          false,
-        )
-      end
-    end
-
-    context "with unapproved users" do
-      before { SiteSetting.must_approve_users = true }
-
-      let!(:unapproved_user) do
-        Fabricate(
-          :active_user,
-          approved: false,
-          last_emailed_at: 8.days.ago,
-          last_seen_at: 10.days.ago,
-        )
-      end
-
-      it "should enqueue the right digest emails" do
-        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(
-          false,
-        )
-
-        # As a moderator
-        unapproved_user.update_column(:moderator, true)
-        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(
-          true,
-        )
-
-        # As an admin
-        unapproved_user.update(admin: true, moderator: false)
-        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(
-          true,
-        )
-
-        # As an approved user
-        unapproved_user.update(admin: false, moderator: false, approved: true)
-        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(
-          true,
-        )
-      end
-    end
-
-    context "with staged users" do
-      let!(:staged_user) do
-        Fabricate(:active_user, staged: true, last_emailed_at: 1.year.ago, last_seen_at: 1.year.ago)
-      end
-
-      it "doesn't return staged users" do
-        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(staged_user.id)).to eq(false)
-      end
-    end
-
-    context "when recently emailed" do
-      let!(:user_emailed_recently) { Fabricate(:active_user, last_emailed_at: 6.days.ago) }
-
-      it "doesn't return users who have been emailed recently" do
-        expect(
-          Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user_emailed_recently.id),
-        ).to eq(false)
-      end
-    end
-
-    context "with inactive user" do
-      let!(:inactive_user) { Fabricate(:user, active: false) }
-
-      it "doesn't return users who have been emailed recently" do
-        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(inactive_user.id)).to eq(
-          false,
-        )
-      end
-    end
-
-    context "with suspended user" do
-      let!(:suspended_user) do
-        Fabricate(:user, suspended_till: 1.week.from_now, suspended_at: 1.day.ago)
-      end
-
-      it "doesn't return users who are suspended" do
-        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(suspended_user.id)).to eq(
-          false,
-        )
-      end
-    end
-
-    context "when visited the site this week" do
-      let(:user_visited_this_week) { Fabricate(:active_user, last_seen_at: 6.days.ago) }
-
-      it "doesn't return users who have been emailed recently" do
-        user = user_visited_this_week
-        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user.id)).to eq(false)
-      end
-    end
-
-    context "when visited the site a year ago" do
-      let!(:user_visited_a_year_ago) { Fabricate(:active_user, last_seen_at: 370.days.ago) }
-
-      it "doesn't return the user who have not visited the site for more than 365 days" do
-        expect(
-          Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user_visited_a_year_ago.id),
-        ).to eq(false)
-      end
-    end
-
-    context "with regular users" do
-      let!(:user) do
-        Fabricate(
-          :active_user,
-          last_seen_at: (SiteSetting.suppress_digest_email_after_days - 1).days.ago,
-        )
-      end
-
-      it "returns the user" do
-        expect(Jobs::EnqueueDigestEmails.new.target_user_ids).to eq([user.id])
-      end
-    end
-
-    context "with too many bounces" do
-      let!(:bounce_user) { Fabricate(:active_user, last_seen_at: 6.month.ago) }
-
-      it "doesn't return users with too many bounces" do
-        bounce_user.user_stat.update(bounce_score: SiteSetting.bounce_score_threshold + 1)
-        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(bounce_user.id)).to eq(false)
-      end
-    end
-
-    context "with no primary email" do
-      let!(:user) { Fabricate(:active_user, last_seen_at: 2.months.ago) }
-
-      it "doesn't return users with no primary emails" do
-        UserEmail.where(user: user).delete_all
-        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user.id)).to eq(false)
-      end
-    end
-  end
+  let(:job) { described_class.new }
 
   describe "#execute" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user)
 
-    it "limits jobs enqueued per max_digests_enqueued_per_30_mins_per_site" do
-      user1 = Fabricate(:user, last_seen_at: 2.months.ago, last_emailed_at: 2.months.ago)
-      user2 = Fabricate(:user, last_seen_at: 2.months.ago, last_emailed_at: 2.months.ago)
+    context "when all emails are disabled" do
+      before { SiteSetting.disable_emails = "yes" }
 
-      user1.user_stat.update(digest_attempted_at: 2.week.ago)
-      user2.user_stat.update(digest_attempted_at: 3.weeks.ago)
-
-      global_setting :max_digests_enqueued_per_30_mins_per_site, 1
-
-      expect_enqueued_with(job: :user_email, args: { type: :digest, user_id: user2.id }) do
-        expect { Jobs::EnqueueDigestEmails.new.execute(nil) }.to change(
-          Jobs::UserEmail.jobs,
-          :size,
-        ).by(1)
-      end
-
-      # The job didn't actually run, so fake the user_stat update
-      user2.user_stat.update(digest_attempted_at: Time.zone.now)
-
-      expect_enqueued_with(job: :user_email, args: { type: :digest, user_id: user1.id }) do
-        expect { Jobs::EnqueueDigestEmails.new.execute(nil) }.to change(
-          Jobs::UserEmail.jobs,
-          :size,
-        ).by(1)
-      end
-
-      user1.user_stat.update(digest_attempted_at: Time.zone.now)
-
-      expect_not_enqueued_with(job: :user_email) { Jobs::EnqueueDigestEmails.new.execute(nil) }
-    end
-
-    context "when digest emails are enabled" do
-      before { Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).returns([user.id]) }
-
-      it "enqueues the digest email job" do
-        SiteSetting.disable_digest_emails = false
-
-        expect_enqueued_with(job: :user_email, args: { type: :digest, user_id: user.id }) do
-          Jobs::EnqueueDigestEmails.new.execute({})
-        end
-      end
-    end
-
-    context "with private email" do
-      before do
+      it "does not enqueue the digest email job" do
         Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).never
-        SiteSetting.private_email = true
-      end
 
-      it "doesn't return users with email disabled" do
         expect_not_enqueued_with(job: :user_email, args: { type: :digest, user_id: user.id }) do
-          Jobs::EnqueueDigestEmails.new.execute({})
+          job.execute({})
         end
       end
     end
 
     context "when digest emails are disabled" do
-      before do
-        Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).never
-        SiteSetting.disable_digest_emails = true
-      end
+      before { SiteSetting.disable_digest_emails = true }
 
       it "does not enqueue the digest email job" do
+        Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).never
+
         expect_not_enqueued_with(job: :user_email, args: { type: :digest, user_id: user.id }) do
-          Jobs::EnqueueDigestEmails.new.execute({})
+          job.execute({})
         end
       end
+    end
+
+    context "when emails are private" do
+      before { SiteSetting.private_email = true }
+
+      it "does not enqueue the digest email job" do
+        Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).never
+
+        expect_not_enqueued_with(job: :user_email, args: { type: :digest, user_id: user.id }) do
+          job.execute({})
+        end
+      end
+    end
+  end
+
+  describe "#target_user_ids" do
+    fab!(:user) { Fabricate(:active_user, last_seen_at: 10.days.ago) }
+    fab!(:bot) { Fabricate(:bot, last_seen_at: 10.days.ago) }
+    fab!(:anon) { Fabricate(:anonymous, last_seen_at: 10.days.ago) }
+
+    it "never returns bots" do
+      expect(job.target_user_ids).not_to include(bot.id)
+    end
+
+    it "never returns anonymous users" do
+      expect(job.target_user_ids).not_to include(anon.id)
+    end
+
+    it "never returns inactive users" do
+      user.update!(active: false)
+      expect(job.target_user_ids).not_to include(user.id)
+    end
+
+    it "never returns staged users" do
+      user.update!(staged: true)
+      expect(job.target_user_ids).not_to include(user.id)
+    end
+
+    it "never returns suspended users" do
+      user.update!(suspended_till: 1.day.from_now)
+      expect(job.target_user_ids).not_to include(user.id)
+    end
+
+    it "never returns users who have not opted in to digest emails" do
+      user.user_option.update!(email_digests: false)
+      expect(job.target_user_ids).not_to include(user.id)
+    end
+
+    it "never returns users who have set a digest frequency to 'never" do
+      user.user_option.update!(digest_after_minutes: 0)
+      expect(job.target_user_ids).not_to include(user.id)
+    end
+
+    it "never returns users who have not set a digest frequency and it's disabled globally" do
+      SiteSetting.default_email_digest_frequency = 0
+      user.user_option.update!(digest_after_minutes: nil)
+      expect(job.target_user_ids).not_to include(user.id)
+    end
+
+    it "never returns users who have a bounce score above the threshold" do
+      user.user_stat.update!(bounce_score: SiteSetting.bounce_score_threshold + 1)
+      expect(job.target_user_ids).not_to include(user.id)
+    end
+
+    it "never returns users who doesn't have a primary email" do
+      user.user_emails.update_all(primary: false)
+      expect(job.target_user_ids).not_to include(user.id)
+    end
+
+    it "never returns users who have received a digest email too recently" do
+      user.user_stat.update!(digest_attempted_at: 1.minute.ago)
+      expect(job.target_user_ids).not_to include(user.id)
+    end
+
+    it "never returns users who have been seen too recently" do
+      user.update!(last_seen_at: 1.minute.ago)
+      expect(job.target_user_ids).not_to include(user.id)
+    end
+
+    it "never returns users who have been seen too long ago" do
+      user.update!(last_seen_at: (SiteSetting.suppress_digest_email_after_days + 1).days.ago)
+      expect(job.target_user_ids).not_to include(user.id)
+    end
+
+    context "when the site requires user approval" do
+      before { SiteSetting.must_approve_users = true }
+
+      it "never returns users who have not been approved" do
+        user.update!(approved: false)
+        expect(job.target_user_ids).not_to include(user.id)
+      end
+
+      it "returns users who have been approved" do
+        user.update!(approved: true)
+        expect(job.target_user_ids).to include(user.id)
+      end
+
+      it "always returns moderators" do
+        user.update!(approved: false, moderator: true)
+        expect(job.target_user_ids).to include(user.id)
+      end
+
+      it "always returns admins" do
+        user.update!(approved: false, admin: true)
+        expect(job.target_user_ids).to include(user.id)
+      end
+    end
+
+    it "limits the number of users returned" do
+      global_setting :max_digests_enqueued_per_30_mins_per_site, 1
+      2.times { Fabricate(:active_user, last_seen_at: 10.days.ago) }
+      expect(job.target_user_ids.size).to eq(1)
+    end
+
+    it "returns the user ids of users who want to receive digest emails" do
+      expect(job.target_user_ids).to eq([user.id])
     end
   end
 end

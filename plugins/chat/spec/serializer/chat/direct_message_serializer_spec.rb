@@ -3,9 +3,9 @@
 describe Chat::DirectMessageSerializer do
   describe "#user" do
     it "returns you when there are two of us" do
-      me = Fabricate.build(:user)
-      you = Fabricate.build(:user)
-      direct_message = Fabricate.build(:direct_message, users: [me, you])
+      me = Fabricate(:user)
+      you = Fabricate(:user)
+      direct_message = Fabricate(:direct_message, users: [me, you])
 
       serializer = described_class.new(direct_message, scope: Guardian.new(me), root: false)
       json = serializer.as_json
@@ -14,10 +14,10 @@ describe Chat::DirectMessageSerializer do
     end
 
     it "returns you both if there are three of us" do
-      me = Fabricate.build(:user)
-      you = Fabricate.build(:user)
-      other_you = Fabricate.build(:user)
-      direct_message = Fabricate.build(:direct_message, users: [me, you, other_you])
+      me = Fabricate(:user)
+      you = Fabricate(:user)
+      other_you = Fabricate(:user)
+      direct_message = Fabricate(:direct_message, users: [me, you, other_you])
 
       serializer = described_class.new(direct_message, scope: Guardian.new(me), root: false)
       json = serializer.as_json
@@ -28,8 +28,8 @@ describe Chat::DirectMessageSerializer do
     end
 
     it "returns me if there is only me" do
-      me = Fabricate.build(:user)
-      direct_message = Fabricate.build(:direct_message, users: [me])
+      me = Fabricate(:user)
+      direct_message = Fabricate(:direct_message, users: [me])
 
       serializer = described_class.new(direct_message, scope: Guardian.new(me), root: false)
       json = serializer.as_json

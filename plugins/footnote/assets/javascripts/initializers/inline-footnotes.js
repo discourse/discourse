@@ -65,7 +65,13 @@ function footnoteEventHandler(event) {
 
   // append footnote to tooltip body
   const footnoteContent = tooltip.querySelector(".footnote-tooltip-content");
-  const cooked = expandableFootnote.closest(".cooked");
+  let cooked = expandableFootnote.closest(".cooked");
+  if (cooked.dataset.refPostId != null) {
+    // For full screen tables, redirect
+    cooked = document.querySelector(
+      `article[data-post-id="${cooked.dataset.refPostId}"] .cooked`
+    );
+  }
   const newContent = cooked.querySelector(footnoteId);
   footnoteContent.innerHTML = newContent.innerHTML;
 
@@ -107,7 +113,7 @@ export default {
     }
 
     document.body.append(buildTooltip());
-    window.addEventListener("click", footnoteEventHandler);
+    window.addEventListener("click", footnoteEventHandler, true);
 
     withPluginApi("0.8.9", (api) => {
       api.decorateCookedElement((elem) => applyInlineFootnotes(elem), {

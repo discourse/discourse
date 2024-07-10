@@ -42,7 +42,7 @@ module Chat
     def dismiss_retention_reminder
       params.require(:chatable_type)
       guardian.ensure_can_chat!
-      unless Chat::Channel.chatable_types.include?(params[:chatable_type])
+      if Chat::Channel.chatable_types.exclude?(params[:chatable_type])
         raise Discourse::InvalidParameters
       end
 

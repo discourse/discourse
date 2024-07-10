@@ -19,13 +19,14 @@ export default class AdminSiteTextIndexController extends Controller {
   @tracked q;
   @tracked overridden;
   @tracked outdated;
+  @tracked untranslated;
 
   @tracked model;
 
   @tracked searching = false;
   @tracked preferred = false;
 
-  queryParams = ["q", "overridden", "outdated", "locale"];
+  queryParams = ["q", "overridden", "outdated", "locale", "untranslated"];
 
   get resolvedOverridden() {
     return [true, "true"].includes(this.overridden) ?? false;
@@ -35,8 +36,19 @@ export default class AdminSiteTextIndexController extends Controller {
     return [true, "true"].includes(this.outdated) ?? false;
   }
 
+  get resolvedUntranslated() {
+    return [true, "true"].includes(this.untranslated) ?? false;
+  }
+
   get resolvedLocale() {
     return this.locale ?? this.siteSettings.default_locale;
+  }
+
+  get showUntranslated() {
+    return (
+      this.siteSettings.admin_allow_filter_untranslated_text &&
+      this.resolvedLocale !== "en"
+    );
   }
 
   async _performSearch() {
@@ -46,6 +58,7 @@ export default class AdminSiteTextIndexController extends Controller {
         overridden: this.resolvedOverridden,
         outdated: this.resolvedOutdated,
         locale: this.resolvedLocale,
+        untranslated: this.resolvedUntranslated,
       });
     } finally {
       this.searching = false;
@@ -90,6 +103,17 @@ export default class AdminSiteTextIndexController extends Controller {
       this.outdated = null;
     } else {
       this.outdated = true;
+    }
+    this.searching = true;
+    discourseDebounce(this, this._performSearch, 400);
+  }
+
+  @action
+  toggleUntranslated() {
+    if (this.resolvedUntranslated) {
+      this.untranslated = null;
+    } else {
+      this.untranslated = true;
     }
     this.searching = true;
     discourseDebounce(this, this._performSearch, 400);

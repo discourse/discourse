@@ -254,7 +254,11 @@ export default function transformPost(
           postId: post.id,
           action,
           canUndo: a.can_undo,
-          description: I18n.t(`post.actions.by_you.${action}`),
+          description: I18n.t(`post.actions.by_you.${action}`, {
+            defaultValue: I18n.t(`post.actions.by_you.custom`, {
+              custom: a.actionType.name,
+            }),
+          }),
         };
       });
   }

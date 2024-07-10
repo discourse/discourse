@@ -1,7 +1,6 @@
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
-import { cleanNullQueryParams } from "discourse/lib/utilities";
 import UserAction from "discourse/models/user-action";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 import getURL from "discourse-common/lib/get-url";
@@ -15,15 +14,15 @@ export const ARCHIVE_FILTER = "archive";
 
 // A helper to build a user topic list route
 export default (inboxType, path, filter) => {
-  return UserTopicListRoute.extend({
-    userActionType: UserAction.TYPES.messages_received,
+  return class BuildPrivateMessagesRoute extends UserTopicListRoute {
+    userActionType = UserAction.TYPES.messages_received;
 
     titleToken() {
       return [
         I18n.t(`user.messages.${filter}`),
         I18n.t("user.private_messages"),
       ];
-    },
+    }
 
     model(params = {}) {
       const topicListFilter =
@@ -38,8 +37,6 @@ export default (inboxType, path, filter) => {
         return lastTopicList;
       }
 
-      params = cleanNullQueryParams(params);
-
       return this.store
         .findFiltered("topicList", {
           filter: topicListFilter,
@@ -53,10 +50,10 @@ export default (inboxType, path, filter) => {
           model.set("emptyState", this.emptyState());
           return model;
         });
-    },
+    }
 
     setupController() {
-      this._super.apply(this, arguments);
+      super.setupController(...arguments);
 
       const userPrivateMessagesController = this.controllerFor(
         "user-private-messages"
@@ -103,7 +100,7 @@ export default (inboxType, path, filter) => {
         type: "private_messages",
       };
       this.searchService.searchContext = pmSearchContext;
-    },
+    }
 
     emptyState() {
       const title = I18n.t("user.no_messages_title");
@@ -116,7 +113,7 @@ export default (inboxType, path, filter) => {
           )
         : "";
       return { title, body };
-    },
+    }
 
     deactivate() {
       this.controllerFor("user-topics-list").unsubscribe();
@@ -124,11 +121,11 @@ export default (inboxType, path, filter) => {
       this.searchService.searchContext = this.controllerFor("user").get(
         "model.searchContext"
       );
-    },
+    }
 
     dismissReadOptions() {
       return {};
-    },
+    }
 
     @action
     dismissReadTopics(dismissTopics) {
@@ -139,6 +136,6 @@ export default (inboxType, path, filter) => {
         private_message_inbox: inboxType,
         ...this.dismissReadOptions(),
       });
-    },
-  });
+    }
+  };
 };

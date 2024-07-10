@@ -150,6 +150,25 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
     end
 
+    it "should redirect users when enforce_second_factor is 'all' and authenticated via oauth" do
+      SiteSetting.enforce_second_factor = "all"
+      write_secure_session("oauth", true)
+      sign_in(user)
+
+      get "/"
+      expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
+    end
+
+    it "should not redirect users when enforce_second_factor is 'all', authenticated via oauth but enforce_second_factor_on_external_auth is false" do
+      SiteSetting.enforce_second_factor = "all"
+      SiteSetting.enforce_second_factor_on_external_auth = false
+      write_secure_session("oauth", true)
+      sign_in(user)
+
+      get "/"
+      expect(response.status).to eq(200)
+    end
+
     it "should not redirect anonymous users when enforce_second_factor is 'all'" do
       SiteSetting.enforce_second_factor = "all"
       SiteSetting.allow_anonymous_posting = true
@@ -237,6 +256,45 @@ RSpec.describe ApplicationController do
     end
   end
 
+  describe "#redirect_to_profile_if_required" do
+    fab!(:user)
+
+    before { sign_in(user) }
+
+    context "when the user is missing required custom fields" do
+      before do
+        Fabricate(:user_field, requirement: "for_all_users")
+        UserRequiredFieldsVersion.create!
+      end
+
+      it "redirects the user to the profile preferences" do
+        get "/hot"
+        expect(response).to redirect_to("/u/#{user.username}/preferences/profile")
+      end
+
+      it "only logs user history once per day" do
+        expect do
+          RateLimiter.enable
+          get "/hot"
+          get "/hot"
+        end.to change { UserHistory.count }.by(1)
+      end
+    end
+
+    context "when the user has filled up all required custom fields" do
+      before do
+        Fabricate(:user_field, requirement: "for_all_users")
+        UserRequiredFieldsVersion.create!
+        user.bump_required_fields_version
+      end
+
+      it "redirects the user to the profile preferences" do
+        get "/hot"
+        expect(response).not_to redirect_to("/u/#{user.username}/preferences/profile")
+      end
+    end
+  end
+
   describe "invalid request params" do
     before do
       @old_logger = Rails.logger
@@ -268,7 +326,7 @@ RSpec.describe ApplicationController do
 
       expect(log).not_to include("exception app middleware")
 
-      expect(response.parsed_body).to eq("status" => 400, "error" => "Bad Request")
+      expect(response.status).to eq(400)
     end
   end
 
@@ -545,6 +603,45 @@ RSpec.describe ApplicationController do
 
         expect(response.status).to eq(200)
         expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("unsafe-none")
+      end
+    end
+
+    describe "when `cross_origin_opener_unsafe_none_groups` site setting has been set" do
+      fab!(:group)
+      fab!(:current_user) { Fabricate(:user) }
+
+      before do
+        SiteSetting.cross_origin_opener_policy_header = "same-origin"
+        SiteSetting.cross_origin_opener_unsafe_none_groups = group.id
+      end
+
+      context "for logged in user" do
+        before { sign_in(current_user) }
+
+        it "sets `Cross-Origin-Opener-Policy` to `unsafe-none` for a listed group" do
+          group.add(current_user)
+
+          get "/latest"
+
+          expect(response.status).to eq(200)
+          expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("unsafe-none")
+        end
+
+        it "sets `Cross-Origin-Opener-Policy` to configured value when group is missing" do
+          get "/latest"
+
+          expect(response.status).to eq(200)
+          expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("same-origin")
+        end
+      end
+
+      context "for anon" do
+        it "sets `Cross-Origin-Opener-Policy` to configured value" do
+          get "/latest"
+
+          expect(response.status).to eq(200)
+          expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("same-origin")
+        end
       end
     end
   end
@@ -1103,13 +1200,17 @@ RSpec.describe ApplicationController do
   end
 
   describe "crawlers in slow_down_crawler_user_agents site setting" do
-    before { RateLimiter.enable }
+    before do
+      Fabricate(:admin) # to prevent redirect to the wizard
+      RateLimiter.enable
+
+      SiteSetting.slow_down_crawler_rate = 128
+      SiteSetting.slow_down_crawler_user_agents = "badcrawler|problematiccrawler"
+    end
 
     use_redis_snapshotting
 
     it "are rate limited" do
-      SiteSetting.slow_down_crawler_rate = 128
-      SiteSetting.slow_down_crawler_user_agents = "badcrawler|problematiccrawler"
       now = Time.zone.now
       freeze_time now
 
@@ -1140,6 +1241,21 @@ RSpec.describe ApplicationController do
 
       get "/", headers: { "HTTP_USER_AGENT" => "iam problematiccrawler" }
       expect(response.status).to eq(200)
+    end
+
+    context "with anonymous caching" do
+      before do
+        global_setting :anon_cache_store_threshold, 1
+        Middleware::AnonymousCache.enable_anon_cache
+      end
+
+      it "don't bypass crawler rate limits" do
+        get "/", headers: { "HTTP_USER_AGENT" => "iam badcrawler" }
+        expect(response.status).to eq(200)
+
+        get "/", headers: { "HTTP_USER_AGENT" => "iam badcrawler" }
+        expect(response.status).to eq(429)
+      end
     end
   end
 
@@ -1330,6 +1446,28 @@ RSpec.describe ApplicationController do
       it "has correctly loaded visiblePlugins" do
         get "/latest"
         expect(JSON.parse(preloaded_json["visiblePlugins"])).to eq([])
+      end
+    end
+
+    describe "readonly serialization" do
+      it "serializes regular readonly mode correctly" do
+        Discourse.enable_readonly_mode(Discourse::USER_READONLY_MODE_KEY)
+
+        get "/latest"
+        expect(JSON.parse(preloaded_json["isReadOnly"])).to eq(true)
+        expect(JSON.parse(preloaded_json["isStaffWritesOnly"])).to eq(false)
+      ensure
+        Discourse.disable_readonly_mode(Discourse::USER_READONLY_MODE_KEY)
+      end
+
+      it "serializes staff readonly mode correctly" do
+        Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
+
+        get "/latest"
+        expect(JSON.parse(preloaded_json["isReadOnly"])).to eq(true)
+        expect(JSON.parse(preloaded_json["isStaffWritesOnly"])).to eq(true)
+      ensure
+        Discourse.disable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
       end
     end
   end

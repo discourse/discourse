@@ -71,7 +71,6 @@ hu:
       channels_list_popup:
         browse: "Csatornák böngészése"
         create: "Új csatorna"
-      click_to_join: "Kattintson ide az elérhető csatornák megtekintéséhez."
       close: "Lezárás"
       remove: "Eltávolítás"
       collapse: "Csevegőfiók összecsukása"
@@ -107,8 +106,6 @@ hu:
       heading: "Csevegés"
       join: "Belépés"
       last_visit: "utolsó látogatás"
-      summarization:
-        summarize: "Összefoglalás"
       mention_warning:
         invitations_sent:
           one: "Meghívó elküldve"
@@ -118,7 +115,6 @@ hu:
         header: "Csevegés fejléce"
         composer: "Csevegés szerkesztője"
         channels_list: "Csevegőcsatornák"
-      no_public_channels: "Nem csatlakozott egyetlen csatornához sem."
       kicked_from_channel: "Ezt a csatornát már nem tudja elérni."
       only_chat_push_notifications:
         title: "Csak csevegési leküldéses értesítések küldése"
@@ -139,6 +135,7 @@ hu:
       edit: "Szerkesztés"
       copy_link: "Hivatkozás másolása"
       rebake_message: "HTML újjáépítése"
+      message_too_long: "Az üzenet túl hosszú, az üzenetek legfeljebb %{count} karakterekből állhatnak."
       retry_staged_message:
         title: "Hálózati hiba"
         action: "Újraküldi?"

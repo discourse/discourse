@@ -8,10 +8,16 @@ import i18n from "discourse-common/helpers/i18n";
 
 export default class SidebarToggle extends Component {
   @service site;
+  @service sidebarState;
 
   @action
   toggleWithBlur(e) {
-    this.args.toggleHamburger();
+    if (this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu) {
+      this.args.toggleNavigationMenu("sidebar");
+    } else {
+      this.args.toggleNavigationMenu();
+    }
+
     // remove the focus of the header dropdown button after clicking
     e.target.tagName.toLowerCase() === "button"
       ? e.target.blur()
@@ -30,7 +36,7 @@ export default class SidebarToggle extends Component {
         aria-controls="d-sidebar"
         {{on "click" this.toggleWithBlur}}
       >
-        {{icon "bars"}}
+        {{icon @icon}}
       </button>
     </span>
   </template>

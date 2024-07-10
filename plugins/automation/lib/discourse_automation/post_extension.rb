@@ -10,9 +10,9 @@ module DiscourseAutomation
       return if !SiteSetting.discourse_automation_enabled
       return if self.post_type == Post.types[:small_action]
       return if !topic
-      return if topic.custom_fields[DiscourseAutomation::CUSTOM_FIELD].blank?
+      return if topic.custom_fields[DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD].blank?
 
-      topic.custom_fields[DiscourseAutomation::CUSTOM_FIELD].each do |automation_id|
+      topic.custom_fields[DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD].each do |automation_id|
         automation = DiscourseAutomation::Automation.find_by(id: automation_id)
         next if automation&.script != DiscourseAutomation::Scripts::TOPIC_REQUIRED_WORDS
 

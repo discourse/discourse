@@ -460,7 +460,9 @@ RSpec.describe FinalDestination do
     before { described_class.clear_https_cache!("wikipedia.com") }
 
     context "when there is a redirect" do
-      before do
+      after { WebMock.reset! }
+
+      it "correctly streams" do
         stub_request(:get, "http://wikipedia.com/").to_return(
           status: 302,
           body: "",
@@ -468,6 +470,7 @@ RSpec.describe FinalDestination do
             "location" => "https://wikipedia.com/",
           },
         )
+
         # webmock does not do chunks
         stub_request(:get, "https://wikipedia.com/").to_return(
           status: 200,
@@ -475,11 +478,7 @@ RSpec.describe FinalDestination do
           headers: {
           },
         )
-      end
 
-      after { WebMock.reset! }
-
-      it "correctly streams" do
         chunk = nil
         result =
           fd.get do |resp, c|
@@ -489,6 +488,26 @@ RSpec.describe FinalDestination do
 
         expect(result).to eq("https://wikipedia.com/")
         expect(chunk).to eq("<html><head>")
+      end
+
+      it "does not forward 'Authorization' header to subsequent hosts" do
+        fd =
+          FinalDestination.new(
+            "http://wikipedia.com",
+            headers: {
+              "Authorization" => "Basic #{Base64.strict_encode64("account_id:license_key")}",
+            },
+          )
+
+        stub_request(:get, "http://wikipedia.com").with(
+          basic_auth: %w[account_id license_key],
+        ).to_return(status: 302, body: "", headers: { "Location" => "http://some.host.com/" })
+
+        stub_request(:get, "http://some.host.com/")
+          .with { |req| expect(req.headers.key?("Authorization")).to eq(false) }
+          .to_return(status: 200, body: "")
+
+        fd.get {}
       end
     end
 

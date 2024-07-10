@@ -291,7 +291,6 @@ basic:
   enable_direct_s3_uploads:
     client: true
     default: false
-    hidden: true
   enable_upload_debug_mode:
     default: false
     hidden: true
@@ -411,6 +410,22 @@ basic:
   show_user_menu_avatars:
     client: true
     default: false
+  extended_site_description:
+    default: ""
+    max: 10_000
+    hidden: true
+  extended_site_description_cooked:
+    default: ""
+    hidden: true
+    max: 15_000
+  about_banner_image:
+    default: ""
+    type: upload
+    hidden: true
+  community_owner:
+    default: ""
+    max: 300
+    hidden: true
 login:
   invite_only:
     refresh: true
@@ -512,7 +527,7 @@ login:
     regex: "^[a-z0-9]+$"
   linkedin_oidc_client_secret:
     default: ""
-    regex: "^[a-zA-Z0-9]+$"
+    regex: "^[a-zA-Z0-9_=\\.]+$"
     secret: true
   auth_skip_create_confirm:
     default: false
@@ -630,16 +645,21 @@ users:
     default: 10
     min: 8
     max: 500
+    requires_confirmation: "simple"
   min_admin_password_length:
     client: true
     default: 15
     min: 8
     max: 500
+    requires_confirmation: "simple"
   password_unique_characters:
     default: 6
     min: 1
     max: 10
-  block_common_passwords: true
+    requires_confirmation: "simple"
+  block_common_passwords:
+    default: true
+    requires_confirmation: "simple"
   username_change_period: 3
   email_editable:
     client: true
@@ -773,6 +793,8 @@ users:
   hide_user_activity_tab:
     default: false
     client: true
+  delete_associated_accounts_on_password_reset:
+    default: false
 
 groups:
   enable_group_directory:
@@ -1581,11 +1603,6 @@ files:
     default: true
   s3_use_acls:
     default: true
-  enable_s3_inventory:
-    default: false
-  s3_configure_inventory_policy:
-    default: true
-    hidden: true
   s3_presigned_get_url_expires_after_seconds:
     default: 300
     hidden: true
@@ -1918,6 +1935,9 @@ trust:
 
 security:
   detailed_404: false
+  enforce_second_factor_on_external_auth:
+    client: true
+    default: true
   enforce_second_factor:
     client: true
     type: enum
@@ -1930,6 +1950,7 @@ security:
     default: false
   same_site_cookies:
     default: Lax
+    hidden: true
     type: enum
     choices:
       - Lax
@@ -1958,7 +1979,7 @@ security:
     list_type: compact
   crawler_user_agents:
     hidden: true
-    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool|gptbot|claudebot|anthropic-ai|brightbot"
+    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool|gptbot|claudebot|anthropic-ai|brightbot|googleother"
     type: list
     list_type: compact
   browser_update_user_agents:
@@ -1992,7 +2013,7 @@ security:
     allow_any: false
     choices: "['*'] + Onebox::Engine.all_iframe_origins"
   allowed_iframes:
-    default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/|https://www.instagram.com"
+    default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/|https://www.instagram.com|https://open.spotify.com"
     type: list
     list_type: simple
     client: true
@@ -2021,8 +2042,7 @@ security:
   content_security_policy_script_src:
     type: simple_list
     default: ""
-  content_security_policy_strict_dynamic:
-    default: true
+    validator: "CspScriptSrcValidator"
   invalidate_inactive_admin_email_after_days:
     default: 365
     min: 0
@@ -2054,6 +2074,13 @@ security:
       - "unsafe-none"
       - "same-origin"
       - "same-origin-allow-popups"
+    hidden: true
+  cross_origin_opener_unsafe_none_groups:
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
     hidden: true
 
 onebox:
@@ -2098,6 +2125,9 @@ onebox:
   cache_onebox_user_agent:
     default: ""
     hidden: true
+  github_onebox_access_token:
+    default: ""
+    secret: true
 spam:
   add_rel_nofollow_to_user_content: true
   hide_post_sensitivity:
@@ -2322,13 +2352,6 @@ developer:
   bypass_wizard_check:
     default: false
     hidden: true
-  logging_provider:
-    hidden: true
-    default: "default"
-    type: "list"
-    choices:
-      - "default"
-      - "lograge"
   bootstrap_error_pages:
     hidden: true
     default: false
@@ -2346,6 +2369,13 @@ developer:
     client: true
     default: false
   experimental_new_new_view_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+  experimental_glimmer_topic_list_groups:
     client: true
     type: group_list
     list_type: compact
@@ -2391,6 +2421,12 @@ developer:
     client: true
     hidden: true
   experimental_topic_bulk_actions_enabled_groups:
+    default: ""
+    type: group_list
+    list_type: compact
+    allow_any: false
+    refresh: true
+  experimental_flags_admin_page_enabled_groups:
     default: ""
     type: group_list
     list_type: compact
@@ -2452,6 +2488,10 @@ legal:
     default: ""
   log_anonymizer_details:
     default: true
+  experimental_rename_faq_to_guidelines:
+    default: false
+    hidden: true
+    client: true
 
 backups:
   enable_backups:
@@ -2479,6 +2519,13 @@ backups:
   s3_backup_bucket:
     default: ""
     regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
+  s3_inventory_bucket:
+    hidden: true
+    default: ""
+    regex: '^[a-z0-9\-\/_]+$' # can't use '.' when using HTTPS
+  s3_inventory_bucket_region:
+    hidden: true
+    default: ""
   s3_disable_cleanup:
     default: false
   backup_time_of_day:
@@ -2638,10 +2685,12 @@ uncategorized:
 
   summarization_strategy:
     client: true
+    hidden: true
     default: ""
     enum: "SummarizationStrategy"
     validator: "SummarizationValidator"
   custom_summarization_allowed_groups:
+    hidden: true
     type: group_list
     list_type: compact
     default: "3|13" # 3: @staff, 13: @trust_level_3
@@ -2854,7 +2903,7 @@ uncategorized:
   share_anonymized_statistics: true
 
   enable_powered_by_discourse:
-    default: false
+    default: true
     client: true
 
   auto_handle_queued_age:
@@ -3024,6 +3073,9 @@ user_preferences:
 api:
   retain_web_hook_events_period_days:
     default: 30
+    max: 36500
+  retain_web_hook_events_aggregate_days:
+    default: 720
     max: 36500
   retry_web_hook_events:
     default: false
@@ -3203,3 +3255,7 @@ dashboard:
   hot_topics_recent_days:
     hidden: true
     default: 7
+  admin_allow_filter_untranslated_text:
+    hidden: true
+    default: false
+    client: true

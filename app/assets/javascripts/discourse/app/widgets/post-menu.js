@@ -827,8 +827,8 @@ export default createWidget("post-menu", {
     this.menu.show(event.target, {
       identifier: "admin-post-menu",
       component: AdminPostMenu,
-      extraClassName: "popup-menu",
       modalForMobile: true,
+      autofocus: true,
       data: {
         scheduleRerender: this.scheduleRerender.bind(this),
         transformedPost: this.attrs,

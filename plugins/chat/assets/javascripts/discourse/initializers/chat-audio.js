@@ -8,14 +8,11 @@ export default {
   name: "chat-audio",
 
   initialize(container) {
-    const chatService = container.lookup("service:chat");
+    const chat = container.lookup("service:chat");
 
-    if (!chatService.userCanChat) {
+    if (!chat.userCanChat) {
       return;
     }
-
-    const chatAudioManager = container.lookup("service:chat-audio-manager");
-    chatAudioManager.setup();
 
     withPluginApi("0.12.1", (api) => {
       api.registerDesktopNotificationHandler((data, siteSettings, user) => {
@@ -28,6 +25,9 @@ export default {
         }
 
         if (CHAT_NOTIFICATION_TYPES.includes(data.notification_type)) {
+          const chatAudioManager = container.lookup(
+            "service:chat-audio-manager"
+          );
           chatAudioManager.play(user.chat_sound);
         }
       });

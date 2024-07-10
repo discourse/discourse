@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
 describe "UserAddedToGroup" do
   fab!(:user)
   fab!(:tracked_group) { Fabricate(:group) }

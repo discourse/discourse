@@ -20,6 +20,7 @@ ja:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count} 件%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -310,11 +311,19 @@ ja:
       search_placeholder: "名前、トピックタイトル、または投稿コンテンツでブックマークを検索する"
       search: "検索"
       bookmark: "ブックマーク"
+      bulk:
+        select_all: "すべて選択"
+        clear_all: "すべてクリア"
+        selected_count:
+          other: "%{count} 個選択済み"
       reminders:
         today_with_time: "今日 %{time}"
         tomorrow_with_time: "明日 %{time}"
         at_time: "%{date_time}"
         existing_reminder: "このブックマークに %{at_date_time} に送信されるリマインダーが設定されています"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "ブックマークを削除"
     copy_codeblock:
       copied: "コピーしました！"
       copy: "コードをクリップボードにコピー"
@@ -634,6 +643,7 @@ ja:
       topic_count_long: "作成したトピック数"
       post_count: "返信"
       post_count_long: "投稿の返信数"
+      no_results_with_search: "結果はありませんでした。"
       days_visited: "アクセス"
       days_visited_long: "アクセス日数"
       posts_read: "既読"
@@ -967,6 +977,7 @@ ja:
       none: "(オプションを選択)"
       required: '"%{name}" の値を入力してください'
       same_as_password: "他のフィールドでパスワードを繰り返し入力してはいけません。"
+      optional: (オプション)
     user:
       said: "%{username}:"
       profile: "プロファイル"
@@ -1019,7 +1030,8 @@ ja:
       activity_stream: "アクティビティ"
       read: "既読"
       read_help: "最近読んだトピック"
-      preferences: "設定"
+      preferences:
+        title: "設定"
       feature_topic_on_profile:
         open_search: "新規トピックを選択"
         title: "トピックを選択"
@@ -1277,6 +1289,7 @@ ja:
         set_password: "パスワードを設定"
         choose_new: "新しいパスワードを選択する"
         choose: "パスワードを選択する"
+        title: "パスワードをリセット"
       second_factor_backup:
         title: "二要素認証のバックアップコード"
         regenerate: "再生成"
@@ -1661,7 +1674,6 @@ ja:
         fine_print: "これは機密性のある操作である可能性があるため、本人確認を求めています。認証が完了すると、数時間操作がなかった場合にのみもう一度認証が求められます。"
       password:
         title: "パスワード"
-        too_short: "パスワードが短すぎます。"
         common: "このパスワードは非常に一般的です。"
         same_as_username: "パスワードとユーザー名が同じです。"
         same_as_email: "パスワードとメールアドレスが同じです。"
@@ -1876,10 +1888,11 @@ ja:
       header_title: "ようこそ！"
       subheader_title: "アカウントを作成しましょう"
       disclaimer: "登録すると、<a href='%{privacy_link}' target='blank'>プライバシーポリシー</a>と<a href='%{tos_link}' target='blank'>利用規約</a>に同意することになります。"
-      title: "アカウントの作成"
+      title: "アカウントを登録"
       failed: "エラーが発生しました。このメールアドレスは使用中かもしれません。「パスワードを忘れました」リンクを試してみてください"
       associate: "アカウントをお持ちですか？<a href='%{associate_link}'>ログイン</a>して %{provider} アカウントにリンクします。"
       activation_title: "アカウントの有効化"
+      already_have_account: "すでにアカウントをお持ちですか？"
     forgot_password:
       title: "パスワードをリセット"
       action: "パスワードを忘れました"
@@ -2033,7 +2046,7 @@ ja:
       loading: 読み込み中…
     category_row:
       subcategory_count:
-        other: "+ %{count} 個のサブカテゴリ"
+        other: "+%{count} 個のサブカテゴリ"
       topic_count:
         other: "このカテゴリの %{count} 件のトピック"
     select_kit:
@@ -2056,6 +2069,8 @@ ja:
         categories_admin_dropdown:
           title: "カテゴリの管理"
         bulk_select_topics_dropdown:
+          title: "一括操作"
+        bulk_select_bookmarks_dropdown:
           title: "一括操作"
     date_time_picker:
       from: 開始
@@ -2200,7 +2215,6 @@ ja:
       show_toolbar: "コンポーザーツールバーを表示"
       hide_toolbar: "コンポーザーツールバーを非表示"
       modal_ok: "OK"
-      modal_cancel: "キャンセル"
       cant_send_pm: "%{username} にメッセージを送ることはできません。"
       yourself_confirm:
         title: "受信者を追加し忘れましたか？"
@@ -2617,20 +2631,18 @@ ja:
         filter: "トピックは以上です。"
     topic_bulk_actions:
       close_topics:
-        name: "トピックをクローズ"
+        name: "クローズ"
         optional: (オプション)
       archive_topics:
-        name: "トピックをアーカイブ"
-      unlist_topics:
-        name: "トピックを非表示"
-      relist_topics:
-        name: "トピックを表示"
+        name: "アーカイブ"
+      move_messages_to_inbox:
+        name: "受信トレイに移動"
       append_tags:
         name: "タグを追加"
       replace_tags:
         name: "タグを置換"
       delete_topics:
-        name: "トピックを削除"
+        name: "削除"
     topic:
       filter_to:
         other: "トピックの %{count} 件の投稿"
@@ -3781,7 +3793,6 @@ ja:
       all_tags: "すべてのタグ"
       other_tags: "他のタグ"
       selector_tags: "タグ"
-      selector_all_tags: "すべてのタグ"
       selector_no_tags: "タグなし"
       selector_remove_filter: "フィルタを削除"
       tags: "タグ"
@@ -3967,6 +3978,7 @@ ja:
           text: "このサイトで最も人気のあるカテゴリを自動的に表示します"
         filter_placeholder: "カテゴリをフィルタする"
         no_categories: "指定された用語に一致するカテゴリはありません。"
+        show_more: "もっと表示"
       tags_form_modal:
         title: "タグナビゲーションを編集する"
         filter_placeholder: "タグをフィルタする"
@@ -4065,6 +4077,9 @@ ja:
             faq:
               content: "FAQ"
               title: "このサイトの利用に関するガイドライン"
+            guidelines:
+              content: "ガイドライン"
+              title: "このサイトの利用に関するガイドライン"
             groups:
               content: "グループ"
               title: "使用可能なユーザーグループのリスト"
@@ -4087,7 +4102,8 @@ ja:
       panels:
         forum:
           label: フォーラム
-      filter: "フィルタ"
+      back_to_forum: "フォーラムに戻る"
+      filter: "フィルタ..."
       no_results:
         title: "結果がありません"
     welcome_topic_banner:
@@ -4191,7 +4207,6 @@ ja:
     admin:
       title: "Discourse の管理者"
       moderator: "モデレーター"
-      back_to_forum: "フォーラムに戻る"
       filter_reports: レポートをフィルタ
       tags:
         remove_muted_tags_from_latest:
@@ -4297,6 +4312,9 @@ ja:
               label: カテゴリ
             include_subcategories:
               label: "サブカテゴリを含める"
+      flags:
+        description: "説明"
+        enabled: "有効化？"
       groups:
         new:
           title: "新しいグループ"
@@ -4593,6 +4611,8 @@ ja:
           timestamp: "作成"
           completion: "完了時間"
           actions: "操作"
+          filter_status:
+            failed: "失敗しました"
       home:
         title: "ホーム"
       account:
@@ -4639,6 +4659,30 @@ ja:
           search_logs: "検索ログ"
           security: "セキュリティ"
           spam: "迷惑"
+      config_areas:
+        about:
+          header: "サイトについて"
+          community_name: "コミュニティー名"
+          your_organization: "あなたの組織"
+          company_name: "会社名"
+          governing_law: "準拠法"
+          city_for_disputes: "紛争都市"
+          optional: "(オプション)"
+          update: "更新"
+          saved: "保存済み!"
+        flags:
+          description: "説明"
+          enabled: "有効化？"
+          edit: "編集"
+          delete: "削除"
+          delete_confirm: '"%{name}" を削除してもよろしいですか？'
+          form:
+            save: "保存"
+            name: "名前"
+            description: "説明"
+            topic: "トピック"
+            post: "投稿"
+            chat_message: "チャットメッセージ"
       plugins:
         title: "プラグイン"
         installed: "インストール済みプラグイン"
@@ -5010,7 +5054,6 @@ ja:
             description: "リンク、一部のボタン、通知、およびアクセントカラー。"
           quaternary:
             name: "クォータナリー"
-            description: "ナビゲーションリンク。"
           header_background:
             name: "ヘッダー背景"
             description: "サイトのヘッダー背景色。"
@@ -5354,6 +5397,7 @@ ja:
           upload_successful: "アップロードが成功し、言葉が追加されました。"
           case_sensitivity_label: "大文字と小文字を区別"
           case_sensitivity_description: "大文字と小文字が一致する語のみ"
+          html_label: "HTML"
         test:
           button_label: "テスト"
           modal_title: "%{action}: ウォッチ語をテスト"
@@ -5528,7 +5572,7 @@ ja:
         penalty_post_none: "何もしない"
         penalty_count: "ペナルティ数"
         penalty_history_MF: >-
-          過去 6 か月において、このユーザーは<b>{ SUSPENDED, plural, one {# 回} other {# 回} }凍結</b>され、<b>{ SILENCED, plural, one {# 回} other {# 回} }投稿禁止</b>にされました。
+          過去 6 か月において、このユーザーは<b>{ SUSPENDED, plural, other {# 回} }凍結</b>され、<b>{ SILENCED, plural, other {# 回} }投稿禁止</b>にされました。
         clear_penalty_history:
           title: "ペナルティ履歴をクリア"
           description: "ペナルティのあるユーザーは TL3 に昇格されません"
@@ -5732,6 +5776,7 @@ ja:
         name: "フィールド名"
         type: "フィールドタイプ"
         description: "フィールド説明"
+        preferences: "設定"
         save: "保存"
         edit: "編集"
         delete: "削除"
@@ -5742,6 +5787,9 @@ ja:
           title: "登録時に必須"
           enabled: "必須"
           disabled: "オプション"
+        requirement:
+          optional:
+            title: "オプション"
         editable:
           title: "登録後に編集可能"
           enabled: "編集可能"

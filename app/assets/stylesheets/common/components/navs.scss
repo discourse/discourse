@@ -23,44 +23,43 @@
   display: flex;
   flex-direction: row;
   align-items: stretch;
+  gap: 0.5em;
 
   > li {
     display: flex;
-    margin-right: 0.5em;
 
     > a,
     button {
-      border: none;
+      position: relative;
       border-radius: var(--d-nav-pill-border-radius);
-      padding: 6px 12px;
+      padding: 0.65em 0.75em;
       color: var(--primary);
-      font-size: var(--font-up-1);
       line-height: var(--line-height-small);
       box-sizing: border-box;
       min-height: 30px;
       display: flex;
       align-items: center;
-      transition: background-color 0.2s, color 0.2s;
+      background-color: var(--d-nav-bg-color);
+      transition: var(--d-button-transition);
 
       .d-icon {
         margin-right: 5px;
-        opacity: 0.65;
+        color: var(--primary-high);
+        transition: color 0.2s;
       }
 
       &:hover {
-        color: var(--quaternary);
-        background-color: var(--quaternary-low);
+        color: var(--d-nav-color--hover);
+        background: var(--d-nav-bg-color--hover);
+        .d-icon {
+          color: var(--d-nav-color--hover);
+        }
       }
     }
 
     a.active,
     button.active {
-      color: var(--secondary);
-      background-color: var(--quaternary);
-
-      .d-icon {
-        opacity: 1;
-      }
+      @include nav-active();
     }
   }
 }
@@ -94,8 +93,6 @@
     @include ellipsis;
 
     &.active {
-      color: var(--secondary);
-      background-color: var(--quaternary);
       position: relative;
 
       --arrow-thickness: 8px;

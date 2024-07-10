@@ -46,14 +46,14 @@ ko:
       invalid: |-
         미안, 수학적으로 그 조합의 주사위는 돌릴 수 없어. :confounded:
       out_of_range: |-
-        수학적으로 공평하면서도 [가장 큰 수](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)를 가진 주사위의 면 수가 120이라는 거 아니?
+        수학적으로 균등한 주사위의 [최대 면 수] (https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) 가 120이라는 사실을 알고 계셨나요?
       results: |-
         > :game_die: %{results}
     quote:
       trigger: "명언"
       "1":
         quote: "\"모든 역경속에는 기회가 있다\""
-        author: "앨버트 아인슈타인"
+        author: "알베르트 아인슈타인"
       "2":
         quote: "자유가 실수를 저지를 수 있는 자유를 내포하지 않는다면 가질 만한 가치가 없다."
         author: "마하트마 간디"
@@ -76,7 +76,7 @@ ko:
         quote: "\"당신이 두려워하는 일을 매일하라\""
         author: "엘리너 루즈벨트"
       "9":
-        quote: "\"실수는 만약 받아들일 용기가 있다면 언제든 용서될 수 있다.\""
+        quote: "실수를 인정할 용기가 있다면 실수는 언제나 용서받을 수 있다."
         author: "이소룡"
       "10":
         quote: "\"당신은 당신이 상상하고 믿는 모든 것들을 이룰 수 있다.\""
@@ -85,10 +85,10 @@ ko:
         quote: "가정에 평화, 세계에 평화."
         author: "무스타파 케말 아타튀르크"
       "12":
-        quote: "교육은 빈곤을 탈출하는 방법이 아니라 빈곤과 싸우는 방법입니다."
+        quote: "교육은 빈곤에서 벗어나는 방법이 아니라 빈곤과 싸우는 방법이다."
         author: "줄리어스 니에레레"
       "13":
-        quote: "천 마일의 여행도 한 걸음부터 시작해야 합니다."
+        quote: "천 리 길도 한 걸음부터"
         author: "노자"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
@@ -152,7 +152,7 @@ ko:
 
           그럼, 난 잠시 자리를 비워줄게.
     new_user_narrative:
-      reset_trigger: "지도 시간"
+      reset_trigger: "튜토리얼"
       title: "새로운 사용자 튜토리얼 수료증"
       cert_title: "새로운 사용자 튜토리얼을 성공적으로 마친 것에 대한 보상으로"
       hello:
@@ -171,9 +171,9 @@ ko:
         reply: |-
           좋았어! 이건 대부분의 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> 링크에 대해서 작동해. 딱 링크로만 된 한줄이어야만 한다는 걸 명심해. 앞이나 뒤에 다른게 있어서는 안돼.
         not_found: |-
-          미안해. 답글에서 링크를 찾지 못했어! :cry:
+          미안. 답글에서 링크를 찾지 못했어! :cry:
 
-          아래 링크 한줄을 복사해서 다음 답글에 넣어볼래?
+          아래 링크 한 줄을 복사해서 다음 답글에 넣어볼래?
 
           <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
@@ -203,7 +203,7 @@ ko:
 
           마음에 들면 글 아래의 좋아요 :heart: 버튼을 눌러 알려주세요.
         reply: |-
-          내 글을 좋아해 주셔서 감사합니다!
+          내 게시물을 좋아해줘서 고마워!
         not_found: |-
           내 글(%{url})에 좋아요 :heart: 안 눌러 줄거에요? :crying_cat_face:
       formatting:
@@ -340,6 +340,16 @@ ko:
         reply: |-
           휴, 그것은 가까운 사람이었다! : wink : 게시물을 삭제 취소 할 수있는 시간은 %{deletion_after}입니다.
       category_hashtag:
+        instructions: |-
+          게시물에서 카테고리와 태그를 참조할 수 있다는 거 알고 있었어? 예를 들어, %{category} 카테고리를 본 적 있어?
+
+          문장 아무 곳에나 `#`을 입력하고 아무 카테고리나 태그를 선택해 봐.
+        not_found: |-
+          음, 문장에 카테고리가 안 보이네. 다음 문장을 복사해 줄 수 있어?
+
+          ```text
+          나는 카테고리 링크를 만들 수 있어. 이렇게 #
+          ```
         reply: |-
           우수한! 태그가 활성화 된 경우 두 카테고리 _and_ 태그 모두에서 작동합니다.
       change_topic_notification_level:
@@ -367,4 +377,4 @@ ko:
         message: |-
           당신은 이것을 _advanced user_ 실제로 : bow : %{certificate}처럼 비난했습니다. 안녕! 나와 다시 대화하고 싶다면 언제든지 메시지를 보내주세요.
       certificate:
-        alt: "고급 사용자 추적 인증"
+        alt: "고급 사용자 과정 수료증"

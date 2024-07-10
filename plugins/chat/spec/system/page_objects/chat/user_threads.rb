@@ -11,6 +11,10 @@ module PageObjects
       def open_thread(thread)
         find(".c-user-thread[data-id='#{thread.id}'] .chat__thread-title__name").click
       end
+
+      def excerpt_text
+        find(".c-user-thread__excerpt-text").text
+      end
     end
   end
 end

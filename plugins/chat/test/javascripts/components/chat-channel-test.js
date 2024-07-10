@@ -158,9 +158,7 @@ module(
     });
 
     test("it shows status tooltip", async function (assert) {
-      await render(
-        hbs`<ChatChannel @channel={{this.channel}} /><DInlineTooltip />`
-      );
+      await render(hbs`<ChatChannel @channel={{this.channel}} /><DTooltips />`);
       await triggerEvent(statusSelector(mentionedUser.username), "mousemove");
 
       assert.equal(

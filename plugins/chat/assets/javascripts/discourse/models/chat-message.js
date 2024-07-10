@@ -1,5 +1,5 @@
 import { cached, tracked } from "@glimmer/tracking";
-import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { generateCookFunction, parseMentions } from "discourse/lib/text";
 import Bookmark from "discourse/models/bookmark";
 import User from "discourse/models/user";
@@ -25,7 +25,7 @@ export default class ChatMessage {
   @tracked selected;
   @tracked channel;
   @tracked staged;
-  @tracked processed = true;
+  @tracked processed;
   @tracked draftSaved;
   @tracked draft;
   @tracked createdAt;
@@ -35,14 +35,14 @@ export default class ChatMessage {
   @tracked reviewableId;
   @tracked user;
   @tracked inReplyTo;
-  @tracked expanded = true;
+  @tracked expanded;
   @tracked bookmark;
   @tracked userFlagStatus;
   @tracked hidden;
   @tracked version = 0;
   @tracked edited;
   @tracked editing;
-  @tracked chatWebhookEvent = new TrackedObject();
+  @tracked chatWebhookEvent;
   @tracked mentionWarning;
   @tracked availableFlags;
   @tracked newest;
@@ -51,7 +51,7 @@ export default class ChatMessage {
   @tracked message;
   @tracked manager;
   @tracked deletedById;
-  @tracked streaming = false;
+  @tracked streaming;
 
   @tracked _deletedAt;
   @tracked _cooked;
@@ -62,33 +62,33 @@ export default class ChatMessage {
     this.channel = channel;
     this.streaming = args.streaming;
     this.manager = args.manager;
-    this.newest = args.newest || false;
-    this.draftSaved = args.draftSaved || args.draft_saved || false;
-    this.firstOfResults = args.firstOfResults || args.first_of_results || false;
-    this.staged = args.staged || false;
-    this.processed = args.processed || true;
-    this.edited = args.edited || false;
-    this.editing = args.editing || false;
-    this.availableFlags = args.availableFlags || args.available_flags;
-    this.hidden = args.hidden || false;
-    this.chatWebhookEvent = args.chatWebhookEvent || args.chat_webhook_event;
+    this.newest = args.newest ?? false;
+    this.draftSaved = args.draftSaved ?? args.draft_saved ?? false;
+    this.firstOfResults = args.firstOfResults ?? args.first_of_results ?? false;
+    this.staged = args.staged ?? false;
+    this.processed = args.processed ?? true;
+    this.edited = args.edited ?? false;
+    this.editing = args.editing ?? false;
+    this.availableFlags = args.availableFlags ?? args.available_flags;
+    this.hidden = args.hidden ?? false;
+    this.chatWebhookEvent = args.chatWebhookEvent ?? args.chat_webhook_event;
     this.createdAt = args.created_at
       ? new Date(args.created_at)
       : new Date(args.createdAt);
     this.deletedById = args.deletedById || args.deleted_by_id;
     this._deletedAt = args.deletedAt || args.deleted_at;
     this.expanded =
-      this.hidden || this._deletedAt ? false : args.expanded || true;
+      this.hidden || this._deletedAt ? false : args.expanded ?? true;
     this.excerpt = args.excerpt;
-    this.reviewableId = args.reviewableId || args.reviewable_id;
-    this.userFlagStatus = args.userFlagStatus || args.user_flag_status;
+    this.reviewableId = args.reviewableId ?? args.reviewable_id;
+    this.userFlagStatus = args.userFlagStatus ?? args.user_flag_status;
     this.draft = args.draft;
-    this.message = args.message || "";
-    this._cooked = args.cooked || "";
+    this.message = args.message ?? "";
+    this._cooked = args.cooked ?? "";
     this.inReplyTo =
-      args.inReplyTo ||
-      (args.in_reply_to || args.replyToMsg
-        ? ChatMessage.create(channel, args.in_reply_to || args.replyToMsg)
+      args.inReplyTo ??
+      (args.in_reply_to ?? args.replyToMsg
+        ? ChatMessage.create(channel, args.in_reply_to ?? args.replyToMsg)
         : null);
     this.reactions = this.#initChatMessageReactionModel(args.reactions);
     this.uploads = new TrackedArray(args.uploads || []);

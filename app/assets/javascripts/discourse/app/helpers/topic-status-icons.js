@@ -1,6 +1,6 @@
 import ArrayProxy from "@ember/array/proxy";
 
-export default ArrayProxy.extend({
+class TopicStatusIconArrayProxy extends ArrayProxy {
   render(topic, renderIcon) {
     const renderIconIf = (conditionProp, name, key) => {
       if (!topic.get(conditionProp)) {
@@ -17,8 +17,10 @@ export default ArrayProxy.extend({
     }
 
     this.forEach((args) => renderIconIf(...args));
-  },
-}).create({
+  }
+}
+
+export default TopicStatusIconArrayProxy.create({
   content: [
     ["is_warning", "envelope", "warning"],
     ["pinned", "thumbtack", "pinned"],

@@ -159,7 +159,7 @@ module DiscourseTagging
             parent_tag = tags.select { |t| t.id == parent_tag_ids.first }.first
             original_child_tag = tags.select { |t| t.id == tag_id }.first
 
-            next unless parent_tag.present? && original_child_tag.present?
+            next if parent_tag.blank? || original_child_tag.blank?
             parent_child_names_map[parent_tag.name] = original_child_tag.name
           end
 

@@ -108,7 +108,7 @@ class NotificationEmailer
         return
       end
 
-      return unless EMAILABLE_POST_TYPES.include?(post_type)
+      return if EMAILABLE_POST_TYPES.exclude?(post_type)
 
       Jobs.enqueue_in(delay, :user_email, self.class.notification_params(notification, type))
     end

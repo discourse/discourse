@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 81
+  BASE_COMPILER_VERSION = 84
 
   class SettingsMigrationError < StandardError
   end
@@ -714,17 +714,21 @@ class Theme < ActiveRecord::Base
 
   def build_theme_uploads_hash
     hash = {}
-    upload_fields.each do |field|
-      hash[field.name] = Discourse.store.cdn_url(field.upload.url) if field.upload&.url
-    end
+    upload_fields
+      .includes(:javascript_cache, :upload)
+      .each do |field|
+        hash[field.name] = Discourse.store.cdn_url(field.upload.url) if field.upload&.url
+      end
     hash
   end
 
   def build_local_theme_uploads_hash
     hash = {}
-    upload_fields.each do |field|
-      hash[field.name] = field.javascript_cache.local_url if field.javascript_cache
-    end
+    upload_fields
+      .includes(:javascript_cache, :upload)
+      .each do |field|
+        hash[field.name] = field.javascript_cache.local_url if field.javascript_cache
+      end
     hash
   end
 
@@ -843,6 +847,8 @@ class Theme < ActiveRecord::Base
         if upload = field.upload
           url = upload_cdn_path(upload.url)
           contents << "$#{field.name}: unquote(\"#{url}\");"
+        else
+          contents << "$#{field.name}: unquote(\"\");"
         end
       else
         contents << to_scss_variable(field.name, field.value)
@@ -857,10 +863,11 @@ class Theme < ActiveRecord::Base
     contents
   end
 
-  def migrate_settings(start_transaction: true)
+  def migrate_settings(start_transaction: true, fields: nil, allow_out_of_sequence_migration: false)
     block = -> do
       runner = ThemeSettingsMigrationsRunner.new(self)
-      results = runner.run
+      results =
+        runner.run(fields:, raise_error_on_out_of_sequence: !allow_out_of_sequence_migration)
 
       next if results.blank?
 
@@ -893,8 +900,12 @@ class Theme < ActiveRecord::Base
             name: res[:name],
             theme_field_id: res[:theme_field_id],
           )
+
         record.calculate_diff(res[:settings_before], res[:settings_after])
-        record.save!
+
+        # If out of sequence migration is allowed we don't want to raise an error if the record is invalid due to version
+        # conflicts
+        allow_out_of_sequence_migration ? record.save : record.save!
       end
 
       self.reload

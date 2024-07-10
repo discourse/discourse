@@ -94,6 +94,9 @@ module ChatSDK
       with_service(Chat::StopMessageStreaming, message_id: message_id, guardian: guardian) do
         on_success { result.message }
         on_model_not_found(:message) { raise "Couldn't find message with id: `#{message_id}`" }
+        on_model_not_found(:membership) do
+          raise "Couldn't find membership for user with id: `#{guardian.user.id}`"
+        end
         on_failed_policy(:can_join_channel) do
           raise "User with id: `#{guardian.user.id}` can't join this channel"
         end
@@ -132,8 +135,8 @@ module ChatSDK
           strip_whitespaces: strip_whitespaces,
         ) do
           on_model_not_found(:channel) { raise "Couldn't find channel with id: `#{channel_id}`" }
-          on_model_not_found(:channel_membership) do
-            raise "User with id: `#{guardian.user.id}` has no membership to this channel"
+          on_model_not_found(:membership) do
+            raise "Couldn't find membership for user with id: `#{guardian.user.id}`"
           end
           on_failed_policy(:ensure_valid_thread_for_channel) do
             raise "Couldn't find thread with id: `#{thread_id}`"

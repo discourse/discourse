@@ -37,7 +37,7 @@ class TopicsBulkAction
   end
 
   def perform!
-    unless TopicsBulkAction.operations.include?(@operation[:type])
+    if TopicsBulkAction.operations.exclude?(@operation[:type])
       raise Discourse::InvalidParameters.new(:operation)
     end
     # careful these are private methods, we need send
@@ -174,7 +174,12 @@ class TopicsBulkAction
   def silent_close
     topics.each do |t|
       if guardian.can_moderate?(t)
-        t.update_status("autoclosed", true, @user, { message: @operation[:message] })
+        t.update_status(
+          "closed",
+          true,
+          @user,
+          { message: @operation[:message], silent_tracking: true },
+        )
         @changed_ids << t.id
       end
     end

@@ -20,6 +20,7 @@ zh_TW:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number} 千"
         millions: "%{number} 百萬"
@@ -283,11 +284,17 @@ zh_TW:
       search_placeholder: "依名稱、主題標題或貼文內容搜尋書籤"
       search: "搜尋"
       bookmark: "書籤"
+      bulk:
+        select_all: "選擇全部"
+        clear_all: "清除全部"
       reminders:
         today_with_time: "今天 %{time}"
         tomorrow_with_time: "明天 %{time}"
         at_time: "在 %{date_time}"
         existing_reminder: "您為此書籤設置了一個提醒，該提醒將在 %{at_date_time} 被發送"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "刪除書籤"
     copy_codeblock:
       copied: "已複製!"
       copy: "將程式碼複製到剪貼簿"
@@ -561,6 +568,7 @@ zh_TW:
       topic_count_long: "話題已開啟"
       post_count: "回覆"
       post_count_long: "回覆貼文"
+      no_results_with_search: "未找到任何結果。"
       days_visited: "造訪"
       days_visited_long: "到訪天數"
       posts_read: "已讀"
@@ -835,6 +843,7 @@ zh_TW:
     user_fields:
       none: "（選擇一個選項）"
       required: '請輸入「%{name}」的值'
+      optional: (選擇性)
     user:
       said: "%{username}："
       profile: "個人檔案"
@@ -879,7 +888,8 @@ zh_TW:
       activity_stream: "活動"
       read: "已讀"
       read_help: "最近看過的主題"
-      preferences: "偏好設定"
+      preferences:
+        title: "偏好設定"
       feature_topic_on_profile:
         open_search: "選擇一個新主題"
         title: "選擇一個主題"
@@ -1042,6 +1052,7 @@ zh_TW:
         set_password: "設定密碼"
         choose_new: "選擇一個新密碼"
         choose: "選擇一個密碼"
+        title: "寄出密碼"
       second_factor_backup:
         regenerate: "重新產生"
         disable: "禁用"
@@ -1292,7 +1303,6 @@ zh_TW:
           error: "上傳的檔案必須是 csv 格式。"
       password:
         title: "密碼"
-        too_short: "你的密碼太短。"
         common: "此密碼太簡單。"
         same_as_username: "密碼與使用者名稱相同"
         same_as_email: "你的密碼與電郵相同。"
@@ -1440,6 +1450,7 @@ zh_TW:
     create_account:
       header_title: "歡迎!"
       disclaimer: "註冊即表示您同意 <a href='%{privacy_link}' target='blank'>隱私政策</a> 和 <a href='%{tos_link}' target='blank'>服務條款</a>。"
+      title: "註冊"
       failed: "發生了某些錯誤，可能此電子郵件地址已經註冊過，請試試看忘記密碼連結"
     forgot_password:
       title: "寄出密碼"
@@ -1498,16 +1509,27 @@ zh_TW:
       not_approved: "您的帳號尚未通過審核。一旦您的帳號通過審核，就會傳送電子郵件通知您。"
       google_oauth2:
         name: "Google"
+        title: "使用 Google 登入"
+        sr_title: "使用 Google 登入"
       twitter:
         name: "Twitter"
+        title: "使用 Twitter 登入"
+        sr_title: "使用 Twitter 登入"
       instagram:
         name: "Instagram"
+        title: "使用 Instagram 登入"
+        sr_title: "使用 Instagram 登入"
       facebook:
         name: "Facebook"
+        title: "使用 Facebook 登入"
+        sr_title: "使用 Facebook 登入"
       github:
         name: "GitHub"
+        title: "使用 GitHub 登入"
+        sr_title: "使用 GitHub 登入"
       discord:
         name: "Discord"
+        title: "使用 Discord 登入"
       second_factor_toggle:
         totp: "請改用身份驗證應用程式"
         backup_code: "請改用備用碼"
@@ -1547,14 +1569,20 @@ zh_TW:
         other: "%{count}個話題在此分類"
     select_kit:
       delete_item: "刪除 %{name} 個"
+      default_header_text: 選取…
       no_content: 找不到符合的項目
+      filter_placeholder: 搜尋…
       create: "建立：'%{content}'"
       max_content_reached:
         other: "您只能選擇%{count}個項目"
       min_content_not_reached:
         other: "至少要選擇%{count}個項目"
       components:
+        categories_admin_dropdown:
+          title: "管理分類"
         bulk_select_topics_dropdown:
+          title: "批次操作"
+        bulk_select_bookmarks_dropdown:
           title: "批次操作"
     date_time_picker:
       from: 自
@@ -1591,6 +1619,7 @@ zh_TW:
       add_warning: "這是正式警告。"
       toggle_whisper: "切換密談"
       toggle_unlisted: "切換 不公開"
+      insert_table: "插入表格"
       posting_not_on_topic: "你想要回覆哪個話題?"
       saved_local_draft_tip: "本地儲存完畢"
       drafts_offline: "離線草稿"
@@ -1660,7 +1689,6 @@ zh_TW:
       enter_fullscreen: "進入全螢幕編輯"
       exit_fullscreen: "離開全螢幕編輯"
       modal_ok: "確定"
-      modal_cancel: "取消"
       cant_send_pm: "抱歉，你不能發訊息給 %{username} 。"
       yourself_confirm:
         title: "忘記填收信人了嗎？"
@@ -1855,6 +1883,7 @@ zh_TW:
         mentions: "提及"
         likes: "新的讚"
         bookmarks: "書籤"
+        other_notifications: "其他通知"
         profile: "基本資料"
       reviewable:
         deleted_user: "(已被刪除的使用者)"
@@ -1905,20 +1934,24 @@ zh_TW:
         bookmarks: "書籤裡沒有更多的話題了。"
     topic_bulk_actions:
       close_topics:
-        name: "關閉話題"
+        name: "關閉"
         optional: (選擇性)
       archive_topics:
-        name: "已封存的話題"
-      unlist_topics:
-        name: "未在列表中的話題"
-      relist_topics:
-        name: "討論話題"
+        name: "封存"
+      move_messages_to_inbox:
+        name: "移動到收件匣"
+      remove_tags:
+        name: "移除標記"
       append_tags:
         name: "向後追加標記"
       replace_tags:
         name: "取代標記"
       delete_topics:
-        name: "刪除話題"
+        name: "刪除"
+      update_category:
+        name: "更新分類"
+      defer:
+        name: "標註為未讀"
     topic:
       filter_to:
         other: "本話題中的 %{count} 帖"
@@ -1994,6 +2027,8 @@ zh_TW:
         title: "定時發表"
       temp_open:
         title: "暫時開啟"
+      auto_reopen:
+        title: "自動開啟話題"
       temp_close:
         title: "暫時關閉"
       auto_close:
@@ -2263,6 +2298,7 @@ zh_TW:
       has_likes_title_only_you: "你已按讚"
       has_likes_title_you:
         other: "你和其他 %{count} 人讚了該貼"
+      view_all_posts: "檢視所有貼文"
       errors:
         create: "抱歉，建立你的貼文時發生錯誤，請再試一次。"
         edit: "抱歉，編輯你的貼文時發生錯誤，請再試一次。"
@@ -2620,6 +2656,8 @@ zh_TW:
       unseen:
         title: "未讀"
         lower_title: "未讀"
+      hot:
+        title: "熱門"
       new:
         lower_title_with_count:
           other: "%{count} 近期"
@@ -2767,7 +2805,6 @@ zh_TW:
       all_tags: "所有標記"
       other_tags: "其他標記"
       selector_tags: "標記"
-      selector_all_tags: "所有標籤"
       selector_no_tags: "無標記"
       selector_remove_filter: "取消過濾"
       tags: "標記"
@@ -2943,6 +2980,8 @@ zh_TW:
               title: "所有話題"
             faq:
               content: "常見問答"
+            guidelines:
+              content: "守則"
             groups:
               content: "群組"
             users:
@@ -2955,7 +2994,6 @@ zh_TW:
               content: "審核"
               pending_count:
                 other: "剩餘 %{count}"
-      filter: "過濾"
       no_results:
         title: "沒有結果"
     welcome_topic_banner:
@@ -2971,13 +3009,18 @@ zh_TW:
           default: "請輸入一個有效的值。"
     table_builder:
       edit:
+        btn_edit: "編輯表格"
         modal:
+          title: "編輯表格"
           cancel: "取消"
           create: "保存"
           reason: "你為什麼做編輯?"
       spreadsheet:
         show: "顯示"
         about: "關於"
+        context_menu:
+          copy: "複製..."
+          paste: "貼上..."
   admin_js:
     admin:
       title: "論壇管理員"
@@ -3073,6 +3116,9 @@ zh_TW:
               label: 群組
             category:
               label: 分類
+      flags:
+        description: "簡述"
+        enabled: "啟用?"
       groups:
         new:
           title: "新群組"
@@ -3198,6 +3244,8 @@ zh_TW:
           timestamp: "建立時間"
           completion: "完成時間"
           actions: "操作"
+          filter_status:
+            failed: "失敗"
       home:
         title: "主頁"
       account:
@@ -3244,6 +3292,24 @@ zh_TW:
           search_logs: "搜尋紀錄"
           security: "安全性"
           spam: "垃圾內容"
+      config_areas:
+        about:
+          optional: "(選擇性)"
+          update: "更新"
+          saved: "儲存完畢!"
+        flags:
+          description: "簡述"
+          enabled: "啟用?"
+          edit: "編輯"
+          delete: "刪除"
+          delete_confirm: '你確定要刪除%{name}嗎？'
+          form:
+            save: "保存"
+            name: "名字"
+            description: "簡述"
+            topic: "話題"
+            post: "貼文"
+            chat_message: "聊天訊息"
       plugins:
         title: "外掛"
         installed: "已安裝外掛"
@@ -3528,7 +3594,6 @@ zh_TW:
             description: "連結、一些按鈕、通知和強調顏色"
           quaternary:
             name: "四級"
-            description: "導覽連結"
           header_background:
             name: "標頭背景"
             description: "網站標頭的背景顏色"
@@ -3791,6 +3856,7 @@ zh_TW:
           success: "成功"
           exists: "已存在"
           upload_successful: "上傳成功，文字已被添加。"
+          html_label: "HTML"
         test:
           button_label: "測試"
           no_matches: "找不到符合的項目"
@@ -4054,6 +4120,7 @@ zh_TW:
         name: "欄位名稱"
         type: "欄位類別"
         description: "欄位敘述"
+        preferences: "偏好設定"
         save: "儲存"
         edit: "編輯"
         delete: "刪除"
@@ -4064,6 +4131,9 @@ zh_TW:
           title: "在註冊時必填"
           enabled: "必填"
           disabled: "非必填"
+        requirement:
+          optional:
+            title: "選擇性"
         editable:
           title: "註冊後可以修改"
           enabled: "可編輯"
@@ -4281,6 +4351,7 @@ zh_TW:
       next: "下一步"
       step-text: "步驟"
       step: "%{current} / %{total}"
+      upload: "上傳檔案"
       upload_error: "抱歉，上傳檔案時發生錯誤，請再試一次。"
       staff_count:
         other: "您的社群包含您在內共有%{count}位管理員。"

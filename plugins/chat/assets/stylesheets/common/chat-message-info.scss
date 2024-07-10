@@ -67,6 +67,7 @@
 }
 
 .chat-message-info__original-message {
+  @include ellipsis;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -97,6 +98,9 @@
       width: 0.35em;
       margin-right: 0.4em;
       padding: 1px 1px 2px 1px;
+    }
+    &:has(.--users-count) {
+      display: none;
     }
   }
 

@@ -232,7 +232,7 @@ createWidget(
 );
 
 createWidget("header-icons", {
-  services: ["search"],
+  services: ["search", "header"],
   tagName: "ul.icons.d-header-icons",
 
   init() {
@@ -250,17 +250,19 @@ createWidget("header-icons", {
 
     resolvedIcons.forEach((icon) => {
       if (icon.key === "search") {
-        icons.push(
-          this.attach("header-dropdown", {
-            title: "search.title",
-            icon: "search",
-            iconId: SEARCH_BUTTON_ID,
-            action: "toggleSearchMenu",
-            active: this.search.visible,
-            href: getURL("/search"),
-            classNames: ["search-dropdown"],
-          })
-        );
+        if (!this.header.headerButtonsHidden.includes("search")) {
+          icons.push(
+            this.attach("header-dropdown", {
+              title: "search.title",
+              icon: "search",
+              iconId: SEARCH_BUTTON_ID,
+              action: "toggleSearchMenu",
+              active: this.search.visible,
+              href: getURL("/search"),
+              classNames: ["search-dropdown"],
+            })
+          );
+        }
       } else if (icon.key === "user-menu" && attrs.user) {
         icons.push(
           this.attach("user-dropdown", {
@@ -294,6 +296,7 @@ createWidget("header-icons", {
 });
 
 createWidget("header-buttons", {
+  services: ["header"],
   tagName: "span.auth-buttons",
 
   html(attrs) {
@@ -303,7 +306,11 @@ createWidget("header-buttons", {
 
     const buttons = [];
 
-    if (attrs.canSignUp && !attrs.topic) {
+    if (
+      attrs.canSignUp &&
+      !attrs.topic &&
+      !this.header.headerButtonsHidden.includes("signup")
+    ) {
       buttons.push(
         this.attach("button", {
           label: "sign_up",
@@ -313,14 +320,17 @@ createWidget("header-buttons", {
       );
     }
 
-    buttons.push(
-      this.attach("button", {
-        label: "log_in",
-        className: "btn-primary btn-small login-button",
-        action: "showLogin",
-        icon: "user",
-      })
-    );
+    if (!this.header.headerButtonsHidden.includes("login")) {
+      buttons.push(
+        this.attach("button", {
+          label: "log_in",
+          className: "btn-primary btn-small login-button",
+          action: "showLogin",
+          icon: "user",
+        })
+      );
+    }
+
     return buttons;
   },
 });
@@ -357,7 +367,6 @@ createWidget("hamburger-dropdown-wrapper", {
   click(event) {
     if (
       event.target.closest(".sidebar-section-header-button") ||
-      event.target.closest(".sidebar-section-link-button") ||
       event.target.closest(".sidebar-section-link")
     ) {
       this.sendWidgetAction("toggleHamburger");
@@ -645,11 +654,15 @@ export default createWidget("header", {
 
   toggleHamburger() {
     if (this.attrs.sidebarEnabled && !this.site.narrowDesktopView) {
-      this.sendWidgetAction("toggleSidebar");
+      if (!this.attrs.showSidebar) {
+        this.sendWidgetAction("toggleSidebar");
+        this.closeAll();
+      } else {
+        this.state.hamburgerVisible = !this.state.hamburgerVisible;
+      }
     } else {
       this.state.hamburgerVisible = !this.state.hamburgerVisible;
       this.toggleBodyScrolling(this.state.hamburgerVisible);
-
       schedule("afterRender", () => {
         // Remove focus from hamburger toggle button
         document.querySelector("#toggle-hamburger-menu")?.blur();

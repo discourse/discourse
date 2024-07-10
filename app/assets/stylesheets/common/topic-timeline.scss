@@ -171,6 +171,10 @@
     touch-action: none;
     min-width: 6em;
 
+    .topic-admin-menu-button .btn {
+      height: 100%;
+    }
+
     .timeline-controls {
       margin-bottom: 1em;
     }

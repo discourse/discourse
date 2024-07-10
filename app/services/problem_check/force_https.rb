@@ -9,10 +9,4 @@ class ProblemCheck::ForceHttps < ProblemCheck
 
     problem
   end
-
-  private
-
-  def translation_key
-    "dashboard.force_https_warning"
-  end
 end

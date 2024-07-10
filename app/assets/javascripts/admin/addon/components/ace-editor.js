@@ -3,9 +3,7 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { classNames } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
-import $ from "jquery";
-import loadScript from "discourse/lib/load-script";
-import getURL from "discourse-common/lib/get-url";
+import loadAce from "discourse/lib/load-ace-editor";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
@@ -81,14 +79,12 @@ export default class AceEditor extends Component {
       this._editor.destroy();
       this._editor = null;
     }
-    if (this.appEvents) {
-      // xxx: don't run during qunit tests
-      this.appEvents.off("ace:resize", this, "resize");
-    }
 
-    $(window).off("ace:resize");
+    this.appEvents.off("ace:resize", this.resize);
+    window.removeEventListener("resize", this.resize);
   }
 
+  @action
   resize() {
     if (this._editor) {
       this._editor.resize();
@@ -97,85 +93,81 @@ export default class AceEditor extends Component {
 
   didInsertElement() {
     super.didInsertElement(...arguments);
+    this.setup();
+  }
 
-    loadScript("/javascripts/ace/ace.js").then(() => {
-      loadScript(`/javascripts/ace/theme-${this.aceTheme}.js`).then(() => {
-        this.set("isLoading", false);
+  async setup() {
+    const ace = await loadAce();
 
-        next(() => {
-          window.ace.require(["ace/ace"], (loadedAce) => {
-            loadedAce.config.set("loadWorkerFromBlob", false);
-            loadedAce.config.set("workerPath", getURL("/javascripts/ace")); // Do not use CDN for workers
+    this.set("isLoading", false);
 
-            if (this.htmlPlaceholder) {
-              this._overridePlaceholder(loadedAce);
-            }
+    next(() => {
+      if (this.htmlPlaceholder) {
+        this._overridePlaceholder(ace);
+      }
 
-            if (!this.element || this.isDestroying || this.isDestroyed) {
-              return;
-            }
-            const aceElement = this.element.querySelector(".ace");
-            const editor = loadedAce.edit(aceElement);
-            editor.setShowPrintMargin(false);
-            editor.setOptions({
-              fontSize: "14px",
-              placeholder: this.placeholder,
-            });
-            editor.getSession().setMode("ace/mode/" + this.mode);
-            editor.on("change", () => {
-              this._skipContentChangeEvent = true;
-              this.set("content", editor.getSession().getValue());
-            });
-            if (this.save) {
-              editor.commands.addCommand({
-                name: "save",
-                exec: () => {
-                  this.save();
-                },
-                bindKey: { mac: "cmd-s", win: "ctrl-s" },
-              });
-            }
+      ace.config.set("useWorker", false);
 
-            editor.on("blur", () => {
-              this.warnSCSSDeprecations();
-            });
-
-            editor.$blockScrolling = Infinity;
-            editor.renderer.setScrollMargin(10, 10);
-
-            this.element.setAttribute("data-editor", editor);
-            this._editor = editor;
-            this.changeDisabledState();
-            this.warnSCSSDeprecations();
-
-            $(window)
-              .off("ace:resize")
-              .on("ace:resize", () => this.appEvents.trigger("ace:resize"));
-
-            if (this.appEvents) {
-              // xxx: don't run during qunit tests
-              this.appEvents.on("ace:resize", this, "resize");
-            }
-
-            if (this.autofocus) {
-              this.send("focus");
-            }
-
-            this.setAceTheme();
-
-            this._darkModeListener = window.matchMedia(
-              "(prefers-color-scheme: dark)"
-            );
-            this._darkModeListener.addListener(this.setAceTheme);
-          });
-        });
+      if (!this.element || this.isDestroying || this.isDestroyed) {
+        return;
+      }
+      const aceElement = this.element.querySelector(".ace");
+      const editor = ace.edit(aceElement);
+      editor.setShowPrintMargin(false);
+      editor.setOptions({
+        fontSize: "14px",
+        placeholder: this.placeholder,
       });
+      editor.getSession().setMode("ace/mode/" + this.mode);
+      editor.on("change", () => {
+        this._skipContentChangeEvent = true;
+        this.set("content", editor.getSession().getValue());
+      });
+      if (this.save) {
+        editor.commands.addCommand({
+          name: "save",
+          exec: () => {
+            this.save();
+          },
+          bindKey: { mac: "cmd-s", win: "ctrl-s" },
+        });
+      }
+
+      editor.on("blur", () => {
+        this.warnSCSSDeprecations();
+      });
+
+      editor.$blockScrolling = Infinity;
+      editor.renderer.setScrollMargin(10, 10);
+
+      this.element.setAttribute("data-editor", editor);
+      this._editor = editor;
+      this.changeDisabledState();
+      this.warnSCSSDeprecations();
+
+      window.addEventListener("resize", this.resize);
+
+      this.appEvents.on("ace:resize", this.resize);
+
+      if (this.autofocus) {
+        this.send("focus");
+      }
+
+      this.setAceTheme();
+
+      this._darkModeListener = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      );
+      this._darkModeListener.addListener(this.setAceTheme);
     });
   }
 
   willDestroyElement() {
     super.willDestroyElement(...arguments);
     this._darkModeListener?.removeListener(this.setAceTheme);
+    window.addEventListener("resize", () => {
+      this.appEvents.trigger("ace:resize");
+    });
   }
 
   get aceTheme() {
@@ -231,11 +223,11 @@ export default class AceEditor extends Component {
     }
   }
 
-  _overridePlaceholder(loadedAce) {
+  _overridePlaceholder(ace) {
     const originalPlaceholderSetter =
-      loadedAce.config.$defaultOptions.editor.placeholder.set;
+      ace.config.$defaultOptions.editor.placeholder.set;
 
-    loadedAce.config.$defaultOptions.editor.placeholder.set = function () {
+    ace.config.$defaultOptions.editor.placeholder.set = function () {
       if (!this.$updatePlaceholder) {
         const originalRendererOn = this.renderer.on;
         this.renderer.on = function () {};

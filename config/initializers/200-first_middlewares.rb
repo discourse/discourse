@@ -13,7 +13,8 @@ Rails.configuration.middleware.unshift(MessageBus::Rack::Middleware)
 # page view (we serve all assets out of thin in development)
 if Rails.env != "development" || ENV["TRACK_REQUESTS"]
   require "middleware/request_tracker"
-  Rails.configuration.middleware.unshift Middleware::RequestTracker
+  Rails.configuration.middleware.unshift(Middleware::RequestTracker)
+  Rails.configuration.middleware.move_before(Middleware::RequestTracker, ActionDispatch::RemoteIp)
 
   MethodProfiler.ensure_discourse_instrumentation! if GlobalSetting.enable_performance_http_headers
 end

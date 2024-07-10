@@ -34,7 +34,6 @@ html:not(.keyboard-visible.mobile-view) {
     width: 100%;
     max-width: 100%;
     max-height: calc(var(--composer-vh, var(--1dvh)) * 85);
-    will-change: auto;
   }
 
   &__header {
@@ -71,12 +70,6 @@ html:not(.keyboard-visible.mobile-view) {
 .modal-middle-container {
   max-width: 100%;
   margin-bottom: 30px; // For iOS Safari issues
-}
-
-// Hardcode to be the same as before for now. I would recommend not using bootbox, or finding a way so the html structure can be the same
-.bootbox.modal {
-  top: 10%;
-  width: 100%;
 }
 
 .modal {

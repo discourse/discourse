@@ -42,6 +42,18 @@ export default class Bookmark extends RestModel {
     });
   }
 
+  static bulkOperation(bookmarks, operation) {
+    const data = {
+      bookmark_ids: bookmarks.mapBy("id"),
+      operation,
+    };
+
+    return ajax("/bookmarks/bulk", {
+      type: "PUT",
+      data,
+    });
+  }
+
   static async applyTransformations(bookmarks) {
     await applyModelTransformations("bookmark", bookmarks);
   }

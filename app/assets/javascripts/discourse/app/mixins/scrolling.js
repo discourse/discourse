@@ -17,12 +17,6 @@ const ScrollingDOMMethods = {
     document.removeEventListener("touchmove", onScrollMethod);
     window.removeEventListener("scroll", onScrollMethod);
   },
-
-  screenNotFull() {
-    return (
-      window.height > document.querySelector(".ember-application").offsetHeight
-    );
-  },
 };
 
 const Scrolling = Mixin.create({
@@ -58,8 +52,6 @@ const Scrolling = Mixin.create({
     this._scrollingMixinOnScrollMethod = onScrollMethod;
     ScrollingDOMMethods.bindOnScroll(onScrollMethod);
   },
-
-  screenNotFull: () => ScrollingDOMMethods.screenNotFull(),
 
   unbindScrolling() {
     ScrollingDOMMethods.unbindOnScroll(this._scrollingMixinOnScrollMethod);

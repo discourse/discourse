@@ -15,16 +15,16 @@ export default class AutomationNew extends Controller {
   }
 
   @action
-  saveAutomation(automation) {
+  saveAutomation() {
     this.set("error", null);
 
-    automation
+    this.model.automation
       .save(this.form.getProperties("name", "script"))
       .then(() => {
         this._resetForm();
         this.router.transitionTo(
           "adminPlugins.discourse-automation.edit",
-          automation.id
+          this.model.automation.id
         );
       })
       .catch((e) => {

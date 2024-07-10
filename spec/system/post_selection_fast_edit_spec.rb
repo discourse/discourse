@@ -9,6 +9,13 @@ describe "Post selection | Fast edit", type: :system do
   fab!(:spanish_post) { Fabricate(:post, topic: topic, raw: "Hola Juan, ¿cómo estás?") }
   fab!(:chinese_post) { Fabricate(:post, topic: topic, raw: "这是一个测试") }
   fab!(:post_with_emoji) { Fabricate(:post, topic: topic, raw: "Good morning :wave:!") }
+  fab!(:post_with_quote) do
+    Fabricate(
+      :post,
+      topic: topic,
+      raw: "[quote]\n#{post_2.raw}\n[/quote]\n\nBelle journée, n'est-ce pas ?",
+    )
+  end
   fab!(:current_user) { Fabricate(:admin) }
 
   before { sign_in(current_user) }
@@ -37,6 +44,17 @@ describe "Post selection | Fast edit", type: :system do
         expect(el).not_to eq("Hello world")
         expect(el).to have_content("Howdy")
       end
+    end
+  end
+
+  context "when text selected is inside a quote" do
+    it "opens the composer directly" do
+      topic_page.visit_topic(topic)
+
+      select_text_range("#{topic_page.post_by_number_selector(6)} .cooked p", 5, 10)
+      topic_page.click_fast_edit_button
+
+      expect(topic_page).to have_expanded_composer
     end
   end
 

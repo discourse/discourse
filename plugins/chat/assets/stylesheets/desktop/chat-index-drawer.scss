@@ -1,4 +1,4 @@
-.chat-drawer-container .channels-list {
+.chat-drawer-container .channels-list-container {
   .chat-channel-divider {
     padding: 1.5rem 0.5rem 0.5rem 1rem;
     font-size: var(--font-0);
@@ -41,4 +41,21 @@
   .toggle-channel-membership-button.-leave {
     margin-left: 0.5em;
   }
+}
+
+.chat-drawer-container .c-channel-settings,
+.chat-drawer-container .c-channel-info__nav,
+.chat-drawer-container .c-channel-members,
+.chat-drawer-container .chat-message-creator-container {
+  padding: 1rem;
+  width: auto;
+}
+
+.chat-drawer-container .c-channel-info__nav,
+.chat-drawer-container .c-channel-info__nav .nav-pills {
+  padding-bottom: 0;
+}
+
+.chat-drawer-container .c-footer .chat-channel-unread-indicator.-urgent {
+  width: min-content;
 }

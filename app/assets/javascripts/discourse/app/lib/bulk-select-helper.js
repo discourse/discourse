@@ -14,6 +14,7 @@ export default class BulkSelectHelper {
 
   @tracked bulkSelectEnabled = false;
   @tracked autoAddTopicsToBulkSelect = false;
+  @tracked autoAddBookmarksToBulkSelect = false;
 
   selected = new TrackedArray();
 

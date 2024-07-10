@@ -63,6 +63,10 @@ de:
           one: "Du verschiebst <strong>%{count}</strong> Nachricht. Wähle einen Zielkanal aus. Im Kanal <strong>%{channelTitle}</strong> wird eine Platzhalter-Nachricht erstellt, um anzuzeigen, dass diese Nachricht verschoben wurde. Beachte, dass Antwortketten im neuen Kanal nicht erhalten bleiben und dass Nachrichten im alten Kanal nicht mehr als Antwort auf verschobene Nachrichten angezeigt werden."
           other: "Du verschiebst <strong>%{count}</strong> Nachrichten. Wähle einen Zielkanal aus. Im Kanal <strong>%{channelTitle}</strong> wird eine Platzhalter-Nachricht erstellt, um anzuzeigen, dass diese Nachrichten verschoben wurden. Beachte, dass die Antwortketten im neuen Kanal nicht erhalten bleiben und dass die Nachrichten im alten Kanal nicht mehr als Antwort auf die verschobenen Nachrichten angezeigt werden."
         confirm_move: "Nachrichten verschieben"
+      delete_messages:
+        confirm:
+          one: "Bist du sicher, dass du diese Nachricht löschen willst?"
+          other: "Bist du sicher, dass du diese %{count} Nachrichten löschen willst?"
       channel_settings:
         title: "Kanaleinstellungen"
         edit: "Bearbeiten"
@@ -100,7 +104,6 @@ de:
       channels_list_popup:
         browse: "Kanäle durchsuchen"
         create: "Neuer Kanal"
-      click_to_join: "Klicke hier, um die verfügbaren Kanäle zu sehen."
       close: "Schließen"
       remove: "Entfernen"
       collapse: "Chat-Bereich ausblenden"
@@ -118,7 +121,7 @@ de:
         direct_message_cta: "Persönlichen Chat beginnen"
         direct_message: "Du kannst auch einen persönlichen Chat mit einem oder mehreren Benutzern beginnen."
         title: "Keine Kanäle gefunden"
-        my_threads: "Du hast noch keine Themen. Themen, an denen du teilnimmst, werden hier angezeigt."
+        my_threads: "Du hast noch keine Threads. Threads, an denen du teilnimmst, werden hier angezeigt."
       email_frequency:
         description: "Wir schicken dir nur dann eine E-Mail, wenn wir dich in den letzten 15 Minuten nicht gesehen haben."
         never: "Niemals"
@@ -142,13 +145,6 @@ de:
       heading: "Chat"
       join: "Beitreten"
       last_visit: "letzter Besuch"
-      summarization:
-        title: "Nachrichten zusammenfassen"
-        description: "Wähle unten eine Option aus, um die im gewünschten Zeitraum gesendete Konversation zusammenzufassen."
-        summarize: "Zusammenfassen"
-        since:
-          one: "Letzte Stunde"
-          other: "Letzte %{count} Stunden"
       mention_warning:
         invitations_sent:
           one: "Einladung gesendet"
@@ -228,8 +224,10 @@ de:
         header: "Chat-Kopfzeile"
         composer: "Chat-Composer"
         channels_list: "Liste der Chat-Kanäle"
-      no_direct_message_channels: "Du bist keinem Direktnachrichtenkanal beigetreten."
-      no_public_channels: "Du bist keinem Kanal beigetreten."
+      no_direct_message_channels: "Du bist noch keiner Direktnachricht beigetreten!"
+      no_direct_message_channels_cta: "Eine Unterhaltung starten"
+      no_public_channels: "Du bist noch keinem Kanal beigetreten!"
+      no_public_channels_cta: "Kanäle durchsuchen"
       kicked_from_channel: "Du kannst nicht mehr auf diesen Kanal zugreifen."
       only_chat_push_notifications:
         title: "Nur Chat-Push-Benachrichtigungen senden"
@@ -260,6 +258,7 @@ de:
       copy_link: "Link kopieren"
       copy_text: "Text kopieren"
       rebake_message: "HTML neu erstellen"
+      message_too_long: "Nachricht ist zu lang. Nachrichten dürfen maximal %{count} Zeichen lang sein."
       retry_staged_message:
         title: "Netzwerkfehler"
         action: "Erneut senden?"
@@ -528,6 +527,7 @@ de:
         cancel: "Abbrechen"
         quote_selection: "In Thema zitieren"
         copy: "Kopieren"
+        delete: "Lösche (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "In Kanal verschieben"
         error: "Beim Verschieben der Chat-Nachrichten ist ein Fehler aufgetreten"
         title: "Chat in Thema verschieben"

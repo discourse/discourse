@@ -330,7 +330,7 @@ RSpec.describe CurrentUserSerializer do
 
           expect(serialized[:sidebar_sections].count).to eq(2)
 
-          expect(serialized[:sidebar_sections].last.links.map { |link| link.id }).to eq(
+          expect(serialized[:sidebar_sections].last[:links].map { |link| link.id }).to eq(
             [custom_sidebar_section_link_1.linkable.id],
           )
         end.count
@@ -344,12 +344,33 @@ RSpec.describe CurrentUserSerializer do
 
           expect(serialized[:sidebar_sections].count).to eq(2)
 
-          expect(serialized[:sidebar_sections].last.links.map { |link| link.id }).to eq(
+          expect(serialized[:sidebar_sections].last[:links].map { |link| link.id }).to eq(
             [custom_sidebar_section_link_1.linkable.id, custom_sidebar_section_link_2.linkable.id],
           )
         end.count
 
       expect(initial_count).to eq(final_count)
+    end
+  end
+
+  describe "#featured_topic" do
+    fab!(:featured_topic) { Fabricate(:topic) }
+
+    before { user.user_profile.update!(featured_topic_id: featured_topic.id) }
+
+    it "includes the featured topic" do
+      payload = serializer.as_json
+
+      expect(payload[:featured_topic]).to_not be_nil
+      expect(payload[:featured_topic][:id]).to eq(featured_topic.id)
+      expect(payload[:featured_topic][:title]).to eq(featured_topic.title)
+      expect(payload[:featured_topic].keys).to contain_exactly(
+        :id,
+        :title,
+        :fancy_title,
+        :slug,
+        :posts_count,
+      )
     end
   end
 end

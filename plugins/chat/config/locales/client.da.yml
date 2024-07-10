@@ -69,7 +69,6 @@ da:
       channels_list_popup:
         browse: "Gennemse kanaler"
         create: "Ny kanal"
-      click_to_join: "Klik her for at se tilgængelige kanaler."
       close: "Luk"
       remove: "Fjern"
       delete: "Slet"

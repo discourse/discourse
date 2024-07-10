@@ -13,27 +13,33 @@
         grid-template-columns: 0.25fr repeat(4, 1fr);
       }
     }
+
     @include breakpoint(mobile-extra-large) {
       .admin-plugins-list__row {
         grid-template-columns: 0.25fr repeat(3, 1fr);
       }
+
       .admin-plugins-list {
         &__name-details {
           grid-column-start: 2;
           grid-column-end: -1;
         }
+
         &__settings {
           grid-row: 2;
           grid-column-start: 4;
           text-align: right;
+
           button {
             display: flex;
           }
         }
+
         &__version {
           grid-row: 2;
           grid-column-start: 3;
         }
+
         &__enabled {
           grid-row: 2;
           grid-column-start: 2;
@@ -52,6 +58,7 @@
 
     &__name-with-badges {
       display: flex;
+      padding: 8px 0 4px;
     }
 
     &__name {
@@ -64,11 +71,7 @@
       font-size: var(--font-down-2);
       background-color: var(--primary-low);
       color: var(--primary-medium);
-      padding: 0.2em 0.8em;
-
-      .d-icon {
-        font-size: 0.8em;
-      }
+      padding: 4px 8px;
 
       & + .admin-plugins-list__badge {
         margin-left: 0.5em;
@@ -80,14 +83,19 @@
         font-size: var(--font-down-1);
       }
     }
+
+    &__about {
+      padding: 8px 0;
+
+      .d-icon {
+        font-size: var(--font-down-3);
+        margin-bottom: 0.1em;
+      }
+    }
   }
 }
 
 .admin-plugin-config-page {
-  .admin-controls {
-    margin-bottom: 1em;
-  }
-
   &__main-area {
     .admin-detail {
       padding-top: 15px;
@@ -101,14 +109,59 @@
       }
     }
   }
+
+  &__metadata {
+    margin-bottom: var(--space-6);
+  }
+
+  .admin-nav-submenu {
+    background: transparent;
+    border-bottom: 1px solid var(--primary-low);
+
+    .horizontal-overflow-nav {
+      background: transparent;
+
+      &:before {
+        display: none;
+      }
+
+      &:after {
+        display: none;
+      }
+    }
+
+    .admin-plugin-config-page__top-nav {
+      width: auto;
+      margin: 0;
+
+      a {
+        font-size: var(--font-down-0);
+        padding: var(--space-2) var(--space-3) var(--space-3);
+
+        &:hover {
+          color: var(--tertiary);
+          background-color: transparent;
+        }
+
+        &.active {
+          color: var(--tertiary);
+          background-color: transparent;
+        }
+      }
+
+      .has-sidebar-page & {
+        @include breakpoint(large) {
+          span {
+            display: none;
+          }
+        }
+      }
+    }
+  }
 }
 
 .admin-plugins .admin-container {
   margin-top: 0;
-}
-
-.admin-plugins-list-container {
-  margin-top: 1em;
 }
 
 .admin-plugin-filtered-site-settings {
@@ -122,5 +175,14 @@
     .admin-site-settings-filter-controls {
       margin-bottom: 1em;
     }
+
+    .setting-label {
+      margin-left: 18px;
+    }
+  }
+
+  &__empty-list {
+    padding: 1em;
+    border: 1px solid var(--primary-low);
   }
 }

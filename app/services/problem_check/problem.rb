@@ -3,12 +3,14 @@
 class ProblemCheck::Problem
   PRIORITIES = %w[low high].freeze
 
-  attr_reader :message, :priority, :identifier
+  attr_reader :message, :priority, :identifier, :target, :details
 
-  def initialize(message, priority: "low", identifier: nil)
+  def initialize(message, priority: "low", identifier: nil, target: nil, details: {})
     @message = message
     @priority = PRIORITIES.include?(priority) ? priority : "low"
     @identifier = identifier
+    @target = target
+    @details = details
   end
 
   def to_s

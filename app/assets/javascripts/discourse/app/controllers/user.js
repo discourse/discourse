@@ -7,12 +7,12 @@ import { isEmpty } from "@ember/utils";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
-import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 export default Controller.extend(CanCheckEmails, {
+  currentUser: service(),
   router: service(),
   dialog: service(),
   userNotifications: controller("user-notifications"),
@@ -20,8 +20,7 @@ export default Controller.extend(CanCheckEmails, {
 
   @discourseComputed("model.username")
   viewingSelf(username) {
-    let currentUser = this.currentUser;
-    return currentUser && username === currentUser.get("username");
+    return this.currentUser && username === this.currentUser?.get("username");
   },
 
   @discourseComputed("viewingSelf", "model.profile_hidden")
@@ -144,7 +143,7 @@ export default Controller.extend(CanCheckEmails, {
 
   @discourseComputed()
   canInviteToForum() {
-    return User.currentProp("can_invite_to_forum");
+    return this.currentUser?.get("can_invite_to_forum");
   },
 
   canDeleteUser: and("model.can_be_deleted", "model.can_delete_all_posts"),

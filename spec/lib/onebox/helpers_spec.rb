@@ -16,6 +16,7 @@ RSpec.describe Onebox::Helpers do
     around do |example|
       previous_options = Onebox.options.to_h
       Onebox.options = { max_download_kb: 1 }
+
       stub_request(:get, "http://example.com/large-file").to_return(
         status: 200,
         body: onebox_response("slides"),
@@ -30,6 +31,15 @@ RSpec.describe Onebox::Helpers do
       expect { described_class.fetch_response("http://example.com/large-file") }.to raise_error(
         Onebox::Helpers::DownloadTooLarge,
       )
+    end
+
+    it "returns the body of the response when size of response body exceeds the limit and `raise_error_when_response_too_large` has been set to `false`" do
+      expect(
+        described_class.fetch_response(
+          "http://example.com/large-file",
+          raise_error_when_response_too_large: false,
+        ),
+      ).to eq(onebox_response("slides"))
     end
 
     it "raises an exception when private url requested" do
@@ -47,6 +57,22 @@ RSpec.describe Onebox::Helpers do
       stub_request(:get, uri).to_return(status: 200, body: "<!DOCTYPE html><p>success</p>")
 
       expect(described_class.fetch_html_doc(uri).to_s).to match("success")
+    end
+
+    it "does not raise an error when response body exceeds Onebox's `max_download_kb` limit" do
+      previous_options = Onebox.options.to_h
+      Onebox.options = previous_options.merge(max_download_kb: 1)
+
+      stub_request(:get, "http://example.com/large-file").to_return(
+        status: 200,
+        body: onebox_response("slides"),
+      )
+
+      expect(described_class.fetch_html_doc("http://example.com/large-file").to_s).to include(
+        "ECMAScript 2015 by David Leonard",
+      )
+    ensure
+      Onebox.options = previous_options
     end
 
     context "with canonical link" do

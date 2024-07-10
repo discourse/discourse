@@ -216,6 +216,18 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Trashes (soft deletes) multiple chat messages.
+   * @param {number} channelId - ID of the channel.
+   * @param {Array.<number>} messageIds - IDs of the messages to delete.
+   * @returns {Promise}
+   */
+  trashMessages(channelId, messageIds) {
+    return this.#deleteRequest(`/channels/${channelId}/messages`, {
+      message_ids: messageIds,
+    });
+  }
+
+  /**
    * Creates a channel archive.
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - Params of the archive.
@@ -564,17 +576,6 @@ export default class ChatApi extends Service {
       user_ids: userIds,
       message_id: options.messageId,
     });
-  }
-
-  /**
-   * Summarize a channel.
-   *
-   * @param {number} channelId - The ID of the channel to summarize.
-   * @param {object} options
-   * @param {number} options.since - Number of hours ago the summary should start (1, 3, 6, 12, 24, 72, 168).
-   */
-  summarize(channelId, options = {}) {
-    return this.#getRequest(`/channels/${channelId}/summarize`, options);
   }
 
   /**

@@ -6,18 +6,21 @@ import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
-import icon from "discourse-common/helpers/d-icon";
 import getURL from "discourse-common/lib/get-url";
-import Logo from "./logo";
+import HomeLogoContents from "./home-logo-contents";
 
 export default class HomeLogo extends Component {
   @service session;
   @service site;
   @service siteSettings;
 
-  href = getURL("/");
   darkModeAvailable = this.session.darkModeAvailable;
+
+  get href() {
+    return applyValueTransformer("home-logo-href", getURL("/"));
+  }
 
   get showMobileLogo() {
     return this.site.mobileView && this.logoResolver("mobile_logo").length > 0;
@@ -45,6 +48,10 @@ export default class HomeLogo extends Component {
 
   get mobileLogoUrlDark() {
     return this.logoResolver("mobile_logo", { dark: this.darkModeAvailable });
+  }
+
+  get title() {
+    return this.siteSettings.title;
   }
 
   logoResolver(name, opts = {}) {
@@ -81,36 +88,32 @@ export default class HomeLogo extends Component {
     <PluginOutlet @name="home-logo" @outletArgs={{hash minimized=@minimized}}>
       <div class={{concatClass (if @minimized "title--minimized") "title"}}>
         <a href={{this.href}} {{on "click" this.click}}>
-          {{#if @minimized}}
-            {{#if this.logoSmallUrl}}
-              <Logo
-                @key="logo-small"
-                @url={{this.logoSmallUrl}}
-                @title={{this.siteSettings.title}}
-                @darkUrl={{this.logoSmallUrlDark}}
-              />
-            {{else}}
-              {{icon "home"}}
-            {{/if}}
-          {{else if this.showMobileLogo}}
-            <Logo
-              @key="logo-mobile"
-              @url={{this.mobileLogoUrl}}
-              @title={{this.siteSettings.title}}
-              @darkUrl={{this.mobileLogoUrlDark}}
+          <PluginOutlet
+            @name="home-logo-contents"
+            @outletArgs={{hash
+              logoSmallUrl=this.logoSmallUrl
+              logoSmallUrlDark=this.logoSmallUrlDark
+              logoUrl=this.logoUrl
+              logoUrlDark=this.logoUrlDark
+              minimized=@minimized
+              mobileLogoUrl=this.mobileLogoUrl
+              mobileLogoUrlDark=this.mobileLogoUrlDark
+              showMobileLogo=this.showMobileLogo
+              title=this.title
+            }}
+          >
+            <HomeLogoContents
+              @logoSmallUrl={{this.logoSmallUrl}}
+              @logoSmallUrlDark={{this.logoSmallUrlDark}}
+              @logoUrl={{this.logoUrl}}
+              @logoUrlDark={{this.logoUrlDark}}
+              @minimized={{@minimized}}
+              @mobileLogoUrl={{this.mobileLogoUrl}}
+              @mobileLogoUrlDark={{this.mobileLogoUrlDark}}
+              @showMobileLogo={{this.showMobileLogo}}
+              @title={{this.title}}
             />
-          {{else if this.logoUrl}}
-            <Logo
-              @key="logo-big"
-              @url={{this.logoUrl}}
-              @title={{this.siteSettings.title}}
-              @darkUrl={{this.logoUrlDark}}
-            />
-          {{else}}
-            <h1 id="site-text-logo" class="text-logo">
-              {{this.siteSettings.title}}
-            </h1>
-          {{/if}}
+          </PluginOutlet>
         </a>
       </div>
     </PluginOutlet>

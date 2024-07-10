@@ -33,10 +33,14 @@
           margin-right: 0.5rem;
         }
 
-        .chat-user-display-name span:not(.-first) {
-          color: var(--primary-high);
-          font-size: var(--font-down-1);
-          margin-left: 0.5rem;
+        .chat-user-display-name {
+          @include ellipsis;
+
+          span:not(.-first) {
+            color: var(--primary-high);
+            font-size: var(--font-down-1);
+            margin-left: 0.5rem;
+          }
         }
 
         .user-status-message {

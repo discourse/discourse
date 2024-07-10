@@ -16,7 +16,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::ZAPIER_WEBHOOK
     end
 
     Jobs.enqueue(
-      :discourse_automation_call_zapier_webhook,
+      Jobs::DiscourseAutomation::CallZapierWebhook,
       webhook_url: webhook_url,
       context: context,
     )

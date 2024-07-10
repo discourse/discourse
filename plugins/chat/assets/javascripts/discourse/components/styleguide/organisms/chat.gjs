@@ -3,7 +3,6 @@ import ChatComposerMessageDetails from "../chat-composer-message-details";
 import ChatHeaderIcon from "../chat-header-icon";
 import ChatMessage from "../chat-message";
 import ChatModalArchiveChannel from "../chat-modal-archive-channel";
-import ChatModalChannelSummary from "../chat-modal-channel-summary";
 import ChatModalCreateChannel from "../chat-modal-create-channel";
 import ChatModalDeleteChannel from "../chat-modal-delete-channel";
 import ChatModalEditChannelDescription from "../chat-modal-edit-channel-description";
@@ -32,7 +31,6 @@ const ChatOrganism = <template>
   <ChatModalCreateChannel />
   <ChatModalToggleChannelStatus />
   <ChatModalNewMessage />
-  <ChatModalChannelSummary />
 </template>;
 
 export default ChatOrganism;

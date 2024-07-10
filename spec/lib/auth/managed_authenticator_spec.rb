@@ -293,6 +293,14 @@ RSpec.describe Auth::ManagedAuthenticator do
         }.not_to change { Jobs::DownloadAvatarFromUrl.jobs.count }
       end
 
+      it "does not schedule if image is empty" do
+        association.info["image"] = ""
+        association.save!
+        expect {
+          authenticator.after_create_account(user, create_auth_result(extra_data: create_hash))
+        }.not_to change { Jobs::DownloadAvatarFromUrl.jobs.count }
+      end
+
       it "schedules with image" do
         association.info["image"] = "https://some.domain/image.jpg"
         association.save!

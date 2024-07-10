@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 task "assets:precompile:prereqs" do
-  unless %w[profile production].include? Rails.env
+  if %w[profile production].exclude? Rails.env
     raise "rake assets:precompile should only be run in RAILS_ENV=production, you are risking unminified assets"
   end
 end
@@ -214,7 +214,7 @@ end
 def max_compress?(path, locales)
   return false if Rails.configuration.assets.skip_minification.include? path
   return false if EmberCli.is_ember_cli_asset?(path)
-  return true unless path.include? "locales/"
+  return true if path.exclude? "locales/"
 
   path_locale = path.delete_prefix("locales/").delete_suffix(".js")
   return true if locales.include? path_locale

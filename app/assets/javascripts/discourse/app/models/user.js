@@ -177,6 +177,7 @@ export default class User extends RestModel.extend(Evented) {
   @service userTips;
 
   @tracked do_not_disturb_until;
+  @tracked status;
 
   @userOption("mailing_list_mode") mailing_list_mode;
   @userOption("external_links_in_new_tab") external_links_in_new_tab;
@@ -323,19 +324,21 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   pmPath(topic) {
-    const userId = this.id;
     const username = this.username_lower;
-
-    const details = topic && topic.get("details");
-    const allowedUsers = details && details.get("allowed_users");
-    const groups = details && details.get("allowed_groups");
+    const details = topic.details;
+    const allowedUsers = details?.allowed_users;
+    const groups = details?.allowed_groups;
 
     // directly targeted so go to inbox
-    if (!groups || (allowedUsers && allowedUsers.findBy("id", userId))) {
+    if (!groups || allowedUsers?.findBy("id", this.id)) {
       return userPath(`${username}/messages`);
-    } else {
-      if (groups && groups[0]) {
-        return userPath(`${username}/messages/group/${groups[0].name}`);
+    } else if (groups) {
+      const firstAllowedGroup = groups.find((allowedGroup) =>
+        this.groups.some((userGroup) => userGroup.id === allowedGroup.id)
+      );
+
+      if (firstAllowedGroup) {
+        return userPath(`${username}/messages/group/${firstAllowedGroup.name}`);
       }
     }
   }
@@ -983,9 +986,8 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   updateNotificationLevel({ level, expiringAt = null, actingUser = null }) {
-    if (!actingUser) {
-      actingUser = User.current();
-    }
+    actingUser ||= User.current();
+
     return ajax(`${userPath(this.username)}/notification_level.json`, {
       type: "PUT",
       data: {

@@ -12,10 +12,6 @@ class ProblemCheck::TwitterConfig < ProblemCheck
 
   private
 
-  def translation_key
-    "dashboard.twitter_config_warning"
-  end
-
   def twitter_credentials_present?
     SiteSetting.twitter_consumer_key.present? && SiteSetting.twitter_consumer_secret.present?
   end

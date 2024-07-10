@@ -113,6 +113,8 @@ th:
       topic:
         title: "ชื่อเรื่อง"
         category_id: "หมวดหมู่"
+      user:
+        password: "รหัสผ่าน"
     errors:
       <<: *errors
   general_category_name: "ทั่วไป"
@@ -290,6 +292,11 @@ th:
       labels:
         user: ผู้ใช้
         qtt_like: ได้รับการชอบ
+    topic_view_stats:
+      labels:
+        topic: หัวข้อ
+        anon_views: ไม่ระบุชื่อ
+        total_views: ทั้งหมด
   site_settings:
     disabled: "ปิดใช้งานแล้ว"
     dark_mode_none: "ไม่มี"
@@ -471,6 +478,8 @@ th:
     boolean_yes: "ใช่"
     boolean_no: "ไม่ใช่"
     rate_limit_error: "สามารถดาวน์โหลดโพสต์ได้วันละหนึ่งครั้งเท่านั้น กรุณาลองใหม่พรุ่งนี้"
+  guidelines_topic:
+    guidelines_title: "คู่มือ"
   tos_topic:
     title: "เงื่อนไขการบริการ"
   privacy_topic:

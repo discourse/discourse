@@ -331,7 +331,7 @@ class PostSerializer < BasicPostSerializer
         summary[:count] = summary[:acted] ? 1 : 0
       end
 
-      summary.delete(:count) if summary[:count] == 0
+      summary.delete(:count) if summary[:count].to_i.zero?
 
       # Only include it if the user can do it or it has a count
       result << summary if summary[:can_act] || summary[:count]

@@ -7,8 +7,8 @@ RSpec.describe GroupMessage do
 
   let(:moderators_group) { Group[:moderators].name }
 
-  let!(:admin) { Fabricate.build(:admin, id: 999) }
-  let!(:user) { Fabricate.build(:user, id: 111) }
+  fab!(:admin)
+  fab!(:user)
 
   before { Discourse.stubs(:system_user).returns(admin) }
 
@@ -57,11 +57,10 @@ RSpec.describe GroupMessage do
   end
 
   describe "message_params" do
-    let(:user) { Fabricate.build(:user, id: 123_123) }
     shared_examples "common message params for group messages" do
       it "returns the correct params" do
         expect(message_params[:username]).to eq(user.username)
-        expect(message_params[:user_url]).to be_present
+        expect(message_params[:user_url]).to eq("/u/#{user.username}")
       end
     end
 
@@ -86,8 +85,6 @@ RSpec.describe GroupMessage do
     subject(:group_message) do
       GroupMessage.new(moderators_group, :user_automatically_silenced, user: user)
     end
-
-    let(:user) { Fabricate.build(:user, id: 123_123) }
 
     before do
       PostCreator.stubs(:create).returns(stub_everything)

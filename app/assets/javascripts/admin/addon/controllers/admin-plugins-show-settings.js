@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 
-export default class AdminSiteSettingsController extends Controller {
+export default class AdminPluginsShowSettingsController extends Controller {
   filter = "";
 
   @action

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
 describe "Infinite loop protection" do
   fab!(:automation_1) do
     Fabricate(:automation, script: "auto_responder", trigger: "post_created_edited", enabled: true)

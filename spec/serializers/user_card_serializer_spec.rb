@@ -65,6 +65,22 @@ RSpec.describe UserCardSerializer do
       it "serializes pending_posts_count" do
         expect(json[:pending_posts_count]).to eq 0
       end
+
+      context "when the user is in a group with PMs enabled" do
+        before { SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
+
+        it "can_send_private_message_to_user is true" do
+          expect(json[:can_send_private_message_to_user]).to eq true
+        end
+      end
+
+      context "when the user is not in a group with PMs enabled" do
+        before { SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:moderators] }
+
+        it "can_send_private_message_to_user is false" do
+          expect(json[:can_send_private_message_to_user]).to eq false
+        end
+      end
     end
   end
 
@@ -108,6 +124,29 @@ RSpec.describe UserCardSerializer do
       json = serializer.as_json
 
       expect(json.keys).not_to include :status
+    end
+  end
+
+  describe "#featured_topic" do
+    fab!(:user)
+    fab!(:featured_topic) { Fabricate(:topic) }
+
+    before { user.user_profile.update(featured_topic_id: featured_topic.id) }
+
+    it "includes the featured topic" do
+      serializer = described_class.new(user, scope: Guardian.new(user), root: false)
+      json = serializer.as_json
+
+      expect(json[:featured_topic]).to_not be_nil
+      expect(json[:featured_topic][:id]).to eq(featured_topic.id)
+      expect(json[:featured_topic][:title]).to eq(featured_topic.title)
+      expect(json[:featured_topic].keys).to contain_exactly(
+        :id,
+        :title,
+        :fancy_title,
+        :slug,
+        :posts_count,
+      )
     end
   end
 end

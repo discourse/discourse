@@ -37,17 +37,6 @@ class Wizard
         value = Upload.get_from_url(value) || ""
       end
 
-      if id == :navigation_menu
-        value =
-          (
-            if value.to_s == "true"
-              NavigationMenuSiteSetting::SIDEBAR
-            else
-              NavigationMenuSiteSetting::HEADER_DROPDOWN
-            end
-          )
-      end
-
       SiteSetting.set_and_log(id, value, @current_user) if SiteSetting.get(id) != value
     end
 

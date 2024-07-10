@@ -11,9 +11,7 @@ module DiscourseNarrativeBot
       immutable_for(24.hours)
 
       %i[date user_id].each do |key|
-        unless params[key]&.present?
-          raise Discourse::InvalidParameters.new("#{key} must be present")
-        end
+        raise Discourse::InvalidParameters.new("#{key} must be present") if params[key].blank?
       end
 
       if params[:user_id].to_i != current_user.id

@@ -97,6 +97,14 @@ export default Controller.extend({
       return false;
     }
 
+    // Always show sidebar for admin if user can see the admin sidbar
+    if (
+      this.sidebarState.isForcingAdminSidebar &&
+      this.sidebarState.currentUserUsingAdminSidebar
+    ) {
+      return true;
+    }
+
     return this.siteSettings.navigation_menu === "sidebar";
   },
 

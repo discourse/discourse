@@ -23,6 +23,7 @@ lt:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -355,11 +356,17 @@ lt:
       search_placeholder: "Ieškokite žymių pagal pavadinimą, temos pavadinimą ar įrašo turinį"
       search: "Paieška"
       bookmark: "Žymės"
+      bulk:
+        select_all: "Pasirinkti viską"
+        clear_all: "Ištrinti viską"
       reminders:
         today_with_time: "šiandien %{time}"
         tomorrow_with_time: "rytoj %{time}"
         at_time: "ties %{date_time}"
         existing_reminder: "Turite priminimų rinkinį šiai žymai, kuri bus išsiųsta %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Ištrinti žymę"
     copy_codeblock:
       copied: "nukopijuota!"
       copy: "nukopijuoti kodą į iškarpinę"
@@ -663,6 +670,7 @@ lt:
       topic_count_long: "Sukurtos Temos"
       post_count: "Atsakymai"
       post_count_long: "Paskelbti Įrašai"
+      no_results_with_search: "Nerasta jokių rezultatų."
       days_visited: "Apsilankymai"
       days_visited_long: "Apsilankymo dienos"
       posts_read: "Perskaityti"
@@ -993,6 +1001,7 @@ lt:
       none: "(pasirink nustatymą)"
       required: 'Prašome įvesti reikšmę "%{name}”'
       same_as_password: "Jūsų slaptažodis neturėtų kartotis kituose laukuose."
+      optional: (pasoronktinai)
     user:
       said: "%{username}:"
       profile: "Profilis"
@@ -1036,7 +1045,8 @@ lt:
       activity_stream: "Aktyvumas"
       read: "Perskaityti"
       read_help: "Neseniai skaitytos temos"
-      preferences: "Nustatymai"
+      preferences:
+        title: "Nustatymai"
       feature_topic_on_profile:
         open_search: "Pasirinkti naują temą"
         title: "Pasirinkite temą"
@@ -1218,6 +1228,7 @@ lt:
         set_password: "Nustatyti Slaptažodį"
         choose_new: "Pasirinkite naują slaptažodį"
         choose: "Pasirinkite slaptažodį"
+        title: "Slaptažodžio atkūrimas"
       second_factor_backup:
         title: "Dviejų veiksnių atsarginiai kodai"
         regenerate: "Pergeneruoti"
@@ -1532,7 +1543,6 @@ lt:
           error: "Atsiprašome, failas privalo buti CSV formato."
       password:
         title: "Slaptažodis"
-        too_short: "Jūsų slaptažodis per trumpas."
         common: "Jūsų slaptažodis yra per daug bendrinis."
         same_as_username: "Tavo slaptažodis yra toks pat, kaip ir vartotojo vardas"
         same_as_email: "Tavo slaptažodis yra toks pat, kaip ir el. adresas."
@@ -1698,7 +1708,7 @@ lt:
       header_title: "Sveiki!"
       subheader_title: "Sukurti naują paskyrą"
       disclaimer: "Registruodamiesi sutinkate su <a href='%{privacy_link}' target='blank'>privatumo politika</a> ir <a href='%{tos_link}' target='blank'>paslaugų teikimo sąlygomis</a>."
-      title: "Sukurti naują paskyrą"
+      title: "Registruotis"
       failed: "Įvyko kažkas blogai, gali būti, kad šis el. paštas jau yra užregistruotas, pameginkite pasinaudoti slaptažodžio priminimo nuoroda"
     forgot_password:
       title: "Slaptažodžio atkūrimas"
@@ -1829,10 +1839,10 @@ lt:
       enter: "Įeiti"
     category_row:
       subcategory_count:
-        one: "+ %{count} subkategorija"
-        few: "+ %{count} subkategorijos"
-        many: "+ %{count} subkategorijos"
-        other: "+ %{count} subkategorijos"
+        one: "+%{count} subkategorija"
+        few: "+%{count} subkategorijos"
+        many: "+%{count} subkategorijos"
+        other: "+%{count} subkategorijos"
       topic_count:
         one: "%{count} tema šioje kategorijoje"
         few: "%{count} temos šioje kategorijoje"
@@ -1858,6 +1868,8 @@ lt:
         categories_admin_dropdown:
           title: "Tvarkyti kategorijas"
         bulk_select_topics_dropdown:
+          title: "Veiksmai"
+        bulk_select_bookmarks_dropdown:
           title: "Veiksmai"
     date_time_picker:
       from: Nuo
@@ -1959,7 +1971,6 @@ lt:
       toggle_direction: "Perjungti kryptį"
       help: "Markdown redagavimo pagalba"
       modal_ok: "OK"
-      modal_cancel: "Atšaukti"
       cant_send_pm: "Atsiprašome, bet negalite siųsti žinučių %{username}."
       yourself_confirm:
         title: "Ar pamiršote pridėti gavėjų?"
@@ -2298,18 +2309,18 @@ lt:
         bookmarks: "Daugiau pažymėtų temų nėra"
     topic_bulk_actions:
       close_topics:
-        name: "Uždaryti temas"
+        name: "Uždaryti"
         optional: (pasoronktinai)
       archive_topics:
-        name: "Archyvuoti temas"
-      unlist_topics:
-        name: "Atžymėti temas"
+        name: "Archyvuoti"
+      move_messages_to_inbox:
+        name: "Perkelti į Pranešimų dėžutę"
       append_tags:
         name: "Pridėti žymas"
       replace_tags:
         name: "Pakeisti žymas"
       delete_topics:
-        name: "Ištrinti temas"
+        name: "Pašalinti"
     topic:
       filter_to:
         one: "temoje %{count} įrašas"
@@ -3369,7 +3380,6 @@ lt:
     tagging:
       other_tags: "Kitos žymos"
       selector_tags: "žymos"
-      selector_all_tags: "visos žymos"
       selector_no_tags: "nėra žymų"
       selector_remove_filter: "išjungti filtrus"
       tags: "Žymos"
@@ -3519,6 +3529,8 @@ lt:
         other: "%{count} nauja"
       more: "Daugiau"
       all_categories: "Visos kategorijos"
+      categories_form_modal:
+        show_more: "Rodyti daugiau"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "Visos"
@@ -3565,6 +3577,8 @@ lt:
               title: "Visos temos"
             faq:
               content: "DUK"
+            guidelines:
+              content: "Instrukcijos"
             groups:
               content: "Grupės"
             users:
@@ -3573,7 +3587,7 @@ lt:
               content: "Mano Įrašai"
             review:
               content: "Peržiūra"
-      filter: "Filtruoti"
+      filter: "Filtruoti..."
     until: "Iki:"
     form_templates:
       upload_field:
@@ -3695,6 +3709,9 @@ lt:
               label: Kategorija
             include_subcategories:
               label: "Įtraukti subkategorijas"
+      flags:
+        description: "Aprašymas"
+        enabled: "Galimas?"
       groups:
         new:
           title: "Nauja Grupė"
@@ -3861,6 +3878,8 @@ lt:
           timestamp: "Sukurta"
           completion: "Sukurimo laikas"
           actions: "Veiksmai"
+          filter_status:
+            failed: "Nepavyko"
       home:
         title: "Pradinis"
       account:
@@ -3906,6 +3925,25 @@ lt:
           search_logs: "Paieškos žurnalas"
           security: "Apsauga"
           spam: "Šlamštas"
+      config_areas:
+        about:
+          site_contact_group_help: |
+            Galiojantis grupės pavadinimas, kuris yra pakviestas į visas automatiškai siunčiamas privačias žinutes.
+          optional: "(pasoronktinai)"
+          update: "Atnaujinti"
+          saved: "išsaugota!"
+        flags:
+          description: "Aprašymas"
+          enabled: "Galimas?"
+          edit: "Redaguoti"
+          delete: "Pašalinti"
+          delete_confirm: 'Ar tikrai norite ištrinti „%{name}“?'
+          form:
+            save: "Išsaugoti"
+            name: "Vardas"
+            description: "Aprašymas"
+            topic: "temos"
+            post: "žinutės"
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"
@@ -4200,7 +4238,6 @@ lt:
             description: "Nuorodos, keli mygtukai, pranešimai ir akcento spalva"
           quaternary:
             name: "ketvirtinė"
-            description: "Navigacijos nuorodos."
           header_background:
             name: "Višutinės juostos fonas"
             description: "Višutinės juostos fono spalva"
@@ -4490,6 +4527,7 @@ lt:
           exists: "Jau egzistuoja"
           upload: "Pridėti iš failo"
           upload_successful: "Įkėlimas sėkmingas. Žodžiai buvo pridėti."
+          html_label: "HTML"
         test:
           button_label: "Bandymas"
           modal_title: "%{action}: išbandykite žiūrėtus žodžius"
@@ -4774,6 +4812,7 @@ lt:
         name: "Lauko Pavadinimas"
         type: "Lauko Tema"
         description: "Lauko Tekstas"
+        preferences: "Nustatymai"
         save: "Išsaugoti"
         edit: "Redaguoti"
         delete: "Ištrinti"
@@ -4784,6 +4823,9 @@ lt:
           title: "Privaloma per prisijungimą"
           enabled: "privalomi"
           disabled: "neprivaloma"
+        requirement:
+          optional:
+            title: "Pasirinktinai"
         editable:
           title: "Gali keisti po registracijos"
           enabled: "redaguojama"

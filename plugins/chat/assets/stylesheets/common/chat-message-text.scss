@@ -1,23 +1,4 @@
 .chat-message-container.-streaming {
-  .chat-message-text {
-    @keyframes cursor-blink {
-      0% {
-        opacity: 0;
-      }
-    }
-
-    p::after {
-      margin-left: 1px;
-      margin-bottom: -4px;
-      content: "";
-      width: 6px;
-      height: 17px;
-      background: var(--primary);
-      display: inline-block;
-      animation: cursor-blink 0.5s steps(2) infinite;
-    }
-  }
-
   .stop-streaming-btn {
     margin-top: 0.5rem;
     margin-bottom: 0.25rem;

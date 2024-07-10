@@ -3,12 +3,11 @@
 module Discourse
   VERSION_REGEXP ||= /\A\d+\.\d+\.\d+(\.beta\d+)?\z/
   VERSION_COMPATIBILITY_FILENAME ||= ".discourse-compatibility"
-
   # work around reloader
   unless defined?(::Discourse::VERSION)
     module VERSION #:nodoc:
       # Use the `version_bump:*` rake tasks to update this value
-      STRING = "3.3.0.beta2-dev"
+      STRING = "3.3.0.beta4-dev"
 
       PARTS = STRING.split(".")
       private_constant :PARTS
@@ -16,8 +15,8 @@ module Discourse
       MAJOR = PARTS[0].to_i
       MINOR = PARTS[1].to_i
       TINY = PARTS[2].to_i
-      PRE = PARTS[3]&.split("-", 2)&.first
-      DEV = PARTS[3]&.split("-", 2)&.second
+      PRE = PARTS[3]&.split("-", 2)&.[](0)
+      DEV = PARTS[3]&.split("-", 2)&.[](1)
     end
   end
 
@@ -37,7 +36,7 @@ module Discourse
   #  2.4.4.beta6: some-other-branch-ref
   #  2.4.2.beta1: v1-tag
   def self.find_compatible_resource(version_list, target_version = ::Discourse::VERSION::STRING)
-    return unless version_list.present?
+    return if version_list.blank?
 
     begin
       version_list = YAML.safe_load(version_list)

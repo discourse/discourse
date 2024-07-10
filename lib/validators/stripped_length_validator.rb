@@ -2,7 +2,7 @@
 
 class StrippedLengthValidator < ActiveModel::EachValidator
   def self.validate(record, attribute, value, range)
-    if value.nil?
+    if value.blank?
       record.errors.add attribute, I18n.t("errors.messages.blank")
     elsif value.length > range.end
       record.errors.add attribute,

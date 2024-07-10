@@ -8,7 +8,7 @@ module PageObjects
       end
 
       def open?
-        has_css?(".bookmark-menu__body")
+        has_css?(".bookmark-menu-content")
       end
     end
   end

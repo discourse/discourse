@@ -21,6 +21,7 @@ sv:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -346,11 +347,20 @@ sv:
       search_placeholder: "Sök i bokmärken efter namn, ämnestitel eller postinnehåll"
       search: "Sök"
       bookmark: "Bokmärk"
+      bulk:
+        select_all: "Välj alla"
+        clear_all: "Rensa alla"
+        selected_count:
+          one: "%{count} har valts"
+          other: "%{count} har valts"
       reminders:
         today_with_time: "idag kl. %{time}"
         tomorrow_with_time: "imorgon kl. %{time}"
         at_time: "den %{date_time}"
         existing_reminder: "Du har en påminnelse inställd för detta bokmärke som kommer att skickas %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Radera bokmärke"
     copy_codeblock:
       copied: "kopierad!"
       copy: "kopiera kod till urklipp"
@@ -689,6 +699,7 @@ sv:
       topic_count_long: "Ämnen skapade"
       post_count: "Svar"
       post_count_long: "Svar publicerade"
+      no_results_with_search: "Inga resultat hittades."
       days_visited: "Besök"
       days_visited_long: "Dagar besökta"
       posts_read: "Lästa"
@@ -1031,6 +1042,7 @@ sv:
       none: "(välj ett alternativ)"
       required: 'Ange ett värde för "%{name}"'
       same_as_password: "Upprepa inte ditt lösenord i andra fält."
+      optional: (valfri)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1084,7 +1096,8 @@ sv:
       activity_stream: "Aktivitet"
       read: "Läs"
       read_help: "Nyligen lästa ämnen"
-      preferences: "Inställningar"
+      preferences:
+        title: "Inställningar"
       feature_topic_on_profile:
         open_search: "Välj ett nytt ämne"
         title: "Välj ett ämne"
@@ -1357,6 +1370,7 @@ sv:
         set_password: "Ange lösenord"
         choose_new: "Välj ett nytt lösenord"
         choose: "Välj ett lösenord"
+        title: "Beställ nytt lösenord"
       second_factor_backup:
         title: "Tvåfaktorsreservkoder"
         regenerate: "Generera ny"
@@ -1752,7 +1766,6 @@ sv:
         fine_print: "Vi ber dig bekräfta din identitet eftersom detta är en potentiellt känslig åtgärd. När du har autentiserats kommer du bara att bli ombedd att autentisera igen efter några timmars inaktivitet."
       password:
         title: "Lösenord"
-        too_short: "Ditt lösenord är för kort."
         common: "Det lösenordet är för vanligt."
         same_as_username: "Ditt lösenord är detsamma som ditt användarnamn."
         same_as_email: "Ditt lösenord är detsamma som din e-postadress."
@@ -1976,10 +1989,11 @@ sv:
       header_title: "Välkommen!"
       subheader_title: "Låt oss skapa ditt konto"
       disclaimer: "Genom att registrera dig godkänner du <a href='%{privacy_link}' target='blank'>integritetspolicyn</a> och <a href='%{tos_link}' target='blank'>användarvillkoren</a>."
-      title: "Skapa ditt konto"
+      title: "Registrera dig"
       failed: "Något gick fel, kanske är denna e-postadress redan registrerad, prova länken Glömt lösenord"
       associate: "Har du redan ett konto? <a href='%{associate_link}'>Logga in</a> för att länka ditt %{provider}-konto."
       activation_title: "Aktivera ditt konto"
+      already_have_account: "Har du redan ett konto?"
     forgot_password:
       title: "Beställ nytt lösenord"
       action: "Jag har glömt mitt lösenord"
@@ -2133,8 +2147,8 @@ sv:
       loading: Laddar…
     category_row:
       subcategory_count:
-        one: "+ %{count} underkategori"
-        other: "+ %{count} underkategorier"
+        one: "+%{count} underkategori"
+        other: "+%{count} underkategorier"
       topic_count:
         one: "%{count} ämne i den här kategorin"
         other: "%{count} ämnen i den här kategorin"
@@ -2161,6 +2175,8 @@ sv:
         categories_admin_dropdown:
           title: "Hantera kategorier"
         bulk_select_topics_dropdown:
+          title: "Massändringar"
+        bulk_select_bookmarks_dropdown:
           title: "Massändringar"
     date_time_picker:
       from: Från
@@ -2311,7 +2327,6 @@ sv:
       show_toolbar: "visa redigerarens verktygsfält"
       hide_toolbar: "dölj redigerarens verktygsfält"
       modal_ok: "OK"
-      modal_cancel: "Avbryt"
       cant_send_pm: "Tyvärr, du kan inte skicka ett meddelande till %{username}."
       yourself_confirm:
         title: "Glömde du lägga till mottagare?"
@@ -2762,14 +2777,12 @@ sv:
         filter: "Det finns inga fler ämnen."
     topic_bulk_actions:
       close_topics:
-        name: "Stäng ämnen"
+        name: "Stäng"
         optional: (valfri)
       archive_topics:
-        name: "Arkivera ämnen"
-      unlist_topics:
-        name: "Avlista ämnen"
-      relist_topics:
-        name: "Lista om ämnen"
+        name: "Arkiv"
+      move_messages_to_inbox:
+        name: "Flytta till inkorgen"
       remove_tags:
         name: "Ta bort taggar"
       append_tags:
@@ -2777,7 +2790,7 @@ sv:
       replace_tags:
         name: "Ersätt taggar"
       delete_topics:
-        name: "Ta bort ämnen"
+        name: "Radera"
       update_category:
         name: "Uppdatera kategori"
         description: "Välj den nya kategorin för de valda ämnena"
@@ -4001,7 +4014,6 @@ sv:
       all_tags: "Alla taggar"
       other_tags: "Övriga taggar"
       selector_tags: "taggar"
-      selector_all_tags: "alla taggar"
       selector_no_tags: "inga taggar"
       selector_remove_filter: "ta bort filter"
       tags: "Taggar"
@@ -4198,6 +4210,7 @@ sv:
           text: "så visar vi automatiskt de mest populära kategorierna på denna webbplats"
         filter_placeholder: "Filterkategorier"
         no_categories: "Det finns inga kategorier som matchar den angivna termen."
+        show_more: "Visa mer"
       tags_form_modal:
         title: "Redigera taggnavigering"
         filter_placeholder: "Filtrera taggar"
@@ -4288,6 +4301,9 @@ sv:
             faq:
               content: "Vanliga frågor och svar"
               title: "Riktlinjer för att använda denna webbplats"
+            guidelines:
+              content: "Riktlinjer"
+              title: "Riktlinjer för att använda denna webbplats"
             groups:
               content: "Grupper"
               title: "Lista över tillgängliga användargrupper"
@@ -4312,7 +4328,8 @@ sv:
       panels:
         forum:
           label: Forum
-      filter: "Filter"
+      back_to_forum: "Tillbaka till forumet"
+      filter: "Filter..."
     welcome_topic_banner:
       title: "Skapa ditt välkomstämne"
       description: "Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din \"snabbpresentation\" eller \"målbeskrivning\". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först."
@@ -4418,7 +4435,6 @@ sv:
     admin:
       title: "Discourse-administratör"
       moderator: "Moderator"
-      back_to_forum: "Tillbaka till forumet"
       filter_reports: Filtrera rapporter
       tags:
         remove_muted_tags_from_latest:
@@ -4525,6 +4541,9 @@ sv:
               label: Kategori
             include_subcategories:
               label: "Inkludera underkategorier"
+      flags:
+        description: "Beskrivning"
+        enabled: "Aktiverad?"
       groups:
         new:
           title: "Ny grupp"
@@ -4831,6 +4850,8 @@ sv:
           timestamp: "Skapad"
           completion: "Sluttid"
           actions: "Åtgärder"
+          filter_status:
+            failed: "Misslyckad"
       home:
         title: "Hem"
       account:
@@ -4878,6 +4899,30 @@ sv:
           search_logs: "Söklogg"
           security: "Säkerhet"
           spam: "Skräppost"
+      config_areas:
+        about:
+          header: "Om din webbplats"
+          community_name: "Forumets namn"
+          your_organization: "Din organisation"
+          company_name: "Företagsnamn"
+          governing_law: "Gällande lag"
+          city_for_disputes: "Domstol vid tvister"
+          optional: "(valfri)"
+          update: "Uppdatera"
+          saved: "sparat!"
+        flags:
+          description: "Beskrivning"
+          enabled: "Aktiverad?"
+          edit: "Redigera"
+          delete: "Ta bort"
+          delete_confirm: 'Är du säker på att du vill radera "%{name}"?'
+          form:
+            save: "Spara"
+            name: "Namn"
+            description: "Beskrivning"
+            topic: "ämnen"
+            post: "inlägg"
+            chat_message: "chattmeddelanden"
       plugins:
         title: "Tillägg"
         installed: "Installerade tillägg"
@@ -5249,7 +5294,6 @@ sv:
             description: "Länkar, några knappar, aviseringar och accentfärg."
           quaternary:
             name: "kvartär"
-            description: "Navigeringslänkar."
           header_background:
             name: "bakgrund för sidhuvud"
             description: "Bakgrundsfärg för sidans sidhuvud. "
@@ -5595,6 +5639,7 @@ sv:
           upload_successful: "Uppladdning lyckades. Ord har lagts till."
           case_sensitivity_label: "Är skiftlägeskänsligt"
           case_sensitivity_description: "Endast ord med bokstäver i samma skiftläge"
+          html_label: "HTML"
         test:
           button_label: "Testa"
           modal_title: "%{action}: Testa bevakade ord"
@@ -5979,6 +6024,7 @@ sv:
         name: "Fältnamn"
         type: "Fälttyp"
         description: "Fältbeskrivning"
+        preferences: "Inställningar"
         save: "Spara"
         edit: "Redigera"
         delete: "Ta bort"
@@ -5989,6 +6035,9 @@ sv:
           title: "Krävs vid registrering"
           enabled: "krävs"
           disabled: "krävs ej"
+        requirement:
+          optional:
+            title: "Valfritt"
         editable:
           title: "Redigerbar efter registrering"
           enabled: "redigerbar"

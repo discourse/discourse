@@ -360,7 +360,7 @@ RSpec.describe ComposerMessagesFinder do
     end
 
     it "shows a message when the replier has already flagged the post" do
-      Fabricate(:flag, post: self_flagged_post, user: user)
+      Fabricate(:flag_post_action, post: self_flagged_post, user: user)
       finder =
         ComposerMessagesFinder.new(
           user,
@@ -372,13 +372,13 @@ RSpec.describe ComposerMessagesFinder do
     end
 
     it "shows a message when replying to flagged topic (first post)" do
-      Fabricate(:flag, post: original_post, user: user)
+      Fabricate(:flag_post_action, post: original_post, user: user)
       finder = ComposerMessagesFinder.new(user, composer_action: "reply", topic_id: topic.id)
       expect(finder.check_dont_feed_the_trolls).to be_present
     end
 
     it "does not show a message when not enough others have flagged the post" do
-      Fabricate(:flag, post: under_flagged_post, user: other_user)
+      Fabricate(:flag_post_action, post: under_flagged_post, user: other_user)
       finder =
         ComposerMessagesFinder.new(
           user,
@@ -392,7 +392,12 @@ RSpec.describe ComposerMessagesFinder do
     it "does not show a message when the flag has already been resolved" do
       SiteSetting.dont_feed_the_trolls_threshold = 1
 
-      Fabricate(:flag, post: resolved_flag_post, user: other_user, disagreed_at: 1.hour.ago)
+      Fabricate(
+        :flag_post_action,
+        post: resolved_flag_post,
+        user: other_user,
+        disagreed_at: 1.hour.ago,
+      )
       finder =
         ComposerMessagesFinder.new(
           user,
@@ -404,8 +409,8 @@ RSpec.describe ComposerMessagesFinder do
     end
 
     it "shows a message when enough others have already flagged the post" do
-      Fabricate(:flag, post: over_flagged_post, user: other_user)
-      Fabricate(:flag, post: over_flagged_post, user: third_user)
+      Fabricate(:flag_post_action, post: over_flagged_post, user: other_user)
+      Fabricate(:flag_post_action, post: over_flagged_post, user: third_user)
       finder =
         ComposerMessagesFinder.new(
           user,

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
 describe "GiftExchange" do
   fab!(:automation) do
     Fabricate(
@@ -56,7 +54,7 @@ describe "GiftExchange" do
     it "creates expected PM" do
       freeze_time 6.hours.from_now do
         expect {
-          Jobs::DiscourseAutomationTracker.new.execute
+          Jobs::DiscourseAutomation::Tracker.new.execute
 
           raws = Post.order(created_at: :desc).limit(3).pluck(:raw)
           expect(raws.any? { |r| r.start_with?("@#{user_1.username}") }).to be_truthy

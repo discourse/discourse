@@ -7,6 +7,7 @@ import { htmlSafe } from "@ember/template";
 import { and, gt, not, or } from "truth-helpers";
 import categoryLink from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import renderTags from "discourse/lib/render-tags";
 import DiscourseURL from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
@@ -68,6 +69,10 @@ export default class Info extends Component {
 
   @action
   jumpToTopPost(e) {
+    if (wantsNewWindow(e)) {
+      return;
+    }
+
     e.preventDefault();
     if (this.args.topic) {
       DiscourseURL.routeTo(this.args.topic.firstPostUrl, {
@@ -80,6 +85,10 @@ export default class Info extends Component {
     <div
       class={{concatClass (if this.twoRows "two-rows") "extra-info-wrapper"}}
     >
+      <PluginOutlet
+        @name="header-topic-info__before"
+        @outletArgs={{hash topic=@topic}}
+      />
       <div class={{concatClass (if this.twoRows "two-rows") "extra-info"}}>
         <div class="title-wrapper">
           <h1 class="header-title">
@@ -148,8 +157,8 @@ export default class Info extends Component {
 
             <div class="topic-header-extra">
               {{htmlSafe this.tags}}
-              <div class="topic-header-participants">
-                {{#if this.showPM}}
+              {{#if this.showPM}}
+                <div class="topic-header-participants">
                   {{#each this.participants as |participant|}}
                     <Participant
                       @user={{participant}}
@@ -169,8 +178,8 @@ export default class Info extends Component {
                       +{{this.remainingParticipantCount}}
                     </a>
                   {{/if}}
-                {{/if}}
-              </div>
+                </div>
+              {{/if}}
               {{#if this.siteSettings.topic_featured_link_enabled}}
                 <FeaturedLink />
               {{/if}}
@@ -178,6 +187,10 @@ export default class Info extends Component {
           {{/if}}
         </div>
       </div>
+      <PluginOutlet
+        @name="header-topic-info__after"
+        @outletArgs={{hash topic=@topic}}
+      />
     </div>
   </template>
 }

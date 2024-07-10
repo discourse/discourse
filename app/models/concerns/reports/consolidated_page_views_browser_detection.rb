@@ -44,7 +44,7 @@ module Reports::ConsolidatedPageViewsBrowserDetection
             I18n.t(
               "reports.consolidated_page_views_browser_detection.xaxis.page_view_logged_in_browser",
             ),
-          color: report.colors[0],
+          color: report.colors[:turquoise],
           data: data.map { |row| { x: row.date, y: row.page_view_logged_in_browser } },
         },
         {
@@ -53,20 +53,20 @@ module Reports::ConsolidatedPageViewsBrowserDetection
             I18n.t(
               "reports.consolidated_page_views_browser_detection.xaxis.page_view_anon_browser",
             ),
-          color: report.colors[1],
+          color: report.colors[:lime],
           data: data.map { |row| { x: row.date, y: row.page_view_anon_browser } },
         },
         {
           req: "page_view_crawler",
           label:
             I18n.t("reports.consolidated_page_views_browser_detection.xaxis.page_view_crawler"),
-          color: report.colors[3],
+          color: report.colors[:purple],
           data: data.map { |row| { x: row.date, y: row.page_view_crawler } },
         },
         {
           req: "page_view_other",
           label: I18n.t("reports.consolidated_page_views_browser_detection.xaxis.page_view_other"),
-          color: report.colors[2],
+          color: report.colors[:magenta],
           data: data.map { |row| { x: row.date, y: row.page_view_other } },
         },
       ]

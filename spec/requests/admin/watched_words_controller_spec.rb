@@ -96,6 +96,9 @@ RSpec.describe Admin::WatchedWordsController do
         expect(response.status).to eq(200)
         expect(WatchedWordGroup.exists?(id: watched_word_group.id)).to be_falsey
         expect(WatchedWord.exists?(id: watched_word.id)).to be_falsey
+        expect(
+          UserHistory.where(action: UserHistory.actions[:delete_watched_word_group]).count,
+        ).to eq(1)
       end
     end
   end
@@ -126,6 +129,9 @@ RSpec.describe Admin::WatchedWordsController do
         expect(response.status).to eq(200)
         expect(WatchedWord.take.word).to eq("Deals")
         expect(WatchedWord.last.word).to eq("Offer")
+        expect(
+          UserHistory.where(action: UserHistory.actions[:create_watched_word_group]).count,
+        ).to eq(1)
       end
 
       it "creates a word with the given case sensitivity" do

@@ -1,11 +1,14 @@
 import { cached } from "@glimmer/tracking";
+import { htmlSafe } from "@ember/template";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
+import { escapeExpression } from "discourse/lib/utilities";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
 
 let additionalAdminSidebarSectionLinks = {};
@@ -81,6 +84,7 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
 
     return this.adminSidebarNavLink.route;
   }
+
   get keywords() {
     return (
       this.adminSidebarStateManager.keywords[this.adminSidebarNavLink.name] || {
@@ -159,6 +163,13 @@ export function useAdminNavConfig(navMap) {
           moderator: true,
         },
         {
+          name: "admin_users",
+          route: "adminUsers",
+          label: "admin.community.sidebar_link.users",
+          icon: "users",
+          moderator: true,
+        },
+        {
           name: "admin_all_site_settings",
           route: "adminSiteSettings",
           label: "admin.advanced.sidebar_link.all_site_settings",
@@ -173,7 +184,9 @@ export function useAdminNavConfig(navMap) {
   for (const [sectionName, additionalLinks] of Object.entries(
     additionalAdminSidebarSectionLinks
   )) {
-    const section = navMap.findBy("name", sectionName);
+    const section = navMap.find(
+      (navSection) => navSection.name === sectionName
+    );
     if (section && additionalLinks.length) {
       section.links.push(...additionalLinks);
     }
@@ -210,7 +223,10 @@ export function addAdminSidebarSectionLink(sectionName, link) {
   }
 
   // label must be valid, don't want broken [XYZ translation missing]
-  if (link.label && typeof I18n.lookup(link.label) !== "string") {
+  if (
+    link.label &&
+    I18n.t(link.label) === I18n.missingTranslation(link.label, null, {})
+  ) {
     // eslint-disable-next-line no-console
     console.debug(
       "[AdminSidebar]",
@@ -247,6 +263,7 @@ function installedPluginsLinkKeywords() {
 export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   key = ADMIN_PANEL;
   hidden = true;
+  displayHeader = true;
 
   @cached
   get sections() {
@@ -271,7 +288,9 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const navMap = savedConfig || ADMIN_NAV_MAP;
 
     if (!session.get("safe_mode")) {
-      const pluginLinks = navMap.findBy("name", "plugins").links;
+      const pluginLinks = navMap.find(
+        (section) => section.name === "plugins"
+      ).links;
       pluginAdminRouteLinks().forEach((pluginLink) => {
         if (!pluginLinks.mapBy("name").includes(pluginLink.name)) {
           pluginLinks.push(pluginLink);
@@ -296,12 +315,25 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     });
 
     if (siteSettings.experimental_form_templates) {
-      navMap.findBy("name", "appearance").links.push({
-        name: "admin_customize_form_templates",
-        route: "adminCustomizeFormTemplates",
-        label: "admin.form_templates.nav_title",
-        icon: "list",
-      });
+      navMap
+        .find((section) => section.name === "appearance")
+        .links.push({
+          name: "admin_customize_form_templates",
+          route: "adminCustomizeFormTemplates",
+          label: "admin.form_templates.nav_title",
+          icon: "list",
+        });
+    }
+
+    if (currentUser.show_experimental_flags_admin_page) {
+      navMap
+        .find((section) => section.name === "community")
+        .links.push({
+          name: "admin_moderation_flags",
+          route: "adminConfig.flags",
+          label: "admin.community.sidebar_link.moderation_flags",
+          icon: "flag",
+        });
     }
 
     navMap.forEach((section) =>
@@ -335,5 +367,21 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
 
   get filterable() {
     return true;
+  }
+
+  filterNoResultsDescription(filter) {
+    const params = {
+      filter: escapeExpression(filter),
+      settings_filter_url: getURL(
+        `/admin/site_settings/category/all_results?filter=${encodeURIComponent(
+          filter
+        )}`
+      ),
+      user_list_filter_url: getURL(
+        `/admin/users/list/active?username=${encodeURIComponent(filter)}`
+      ),
+    };
+
+    return htmlSafe(I18n.t("sidebar.no_results.description", params));
   }
 }

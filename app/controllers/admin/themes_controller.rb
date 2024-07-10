@@ -83,7 +83,7 @@ class Admin::ThemesController < Admin::AdminController
 
       if @theme.save
         log_theme_change(nil, @theme)
-        render json: @theme, status: :created
+        render json: serialize_data(@theme, ThemeSerializer), status: :created
       else
         render json: @theme.errors, status: :unprocessable_entity
       end
@@ -113,7 +113,7 @@ class Admin::ThemesController < Admin::AdminController
 
           @theme =
             RemoteTheme.import_theme(remote, theme_user, private_key: private_key, branch: branch)
-          render json: @theme, status: :created
+          render json: serialize_data(@theme, ThemeSerializer), status: :created
         rescue RemoteTheme::ImportError => e
           if params[:force]
             theme_name = params[:remote].gsub(/.git\z/, "").split("/").last
@@ -128,7 +128,7 @@ class Admin::ThemesController < Admin::AdminController
             @theme.remote_theme = remote_theme
             @theme.save!
 
-            render json: @theme, status: :created
+            render json: serialize_data(@theme, ThemeSerializer), status: :created
           else
             render_json_error e.message
           end
@@ -156,7 +156,7 @@ class Admin::ThemesController < Admin::AdminController
           )
 
         log_theme_change(nil, @theme)
-        render json: @theme, status: :created
+        render json: serialize_data(@theme, ThemeSerializer), status: :created
       rescue RemoteTheme::ImportError => e
         render_json_error e.message
       end
@@ -200,7 +200,7 @@ class Admin::ThemesController < Admin::AdminController
       if @theme.save
         update_default_theme
         log_theme_change(nil, @theme)
-        format.json { render json: @theme, status: :created }
+        format.json { render json: serialize_data(@theme, ThemeSerializer), status: :created }
       else
         format.json { render json: @theme.errors, status: :unprocessable_entity }
       end
@@ -250,7 +250,7 @@ class Admin::ThemesController < Admin::AdminController
         log_theme_component_disabled if disables_component
         log_theme_component_enabled if enables_component
 
-        format.json { render json: @theme, status: :ok }
+        format.json { render json: serialize_data(@theme, ThemeSerializer), status: :ok }
       else
         format.json do
           error = @theme.errors.full_messages.join(", ").presence
@@ -279,7 +279,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def bulk_destroy
     themes = Theme.where(id: params[:theme_ids])
-    raise Discourse::InvalidParameters.new(:id) unless themes.present?
+    raise Discourse::InvalidParameters.new(:id) if themes.blank?
 
     ActiveRecord::Base.transaction do
       themes.each { |theme| StaffActionLogger.new(current_user).log_theme_destroy(theme) }
@@ -313,7 +313,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def get_translations
     params.require(:locale)
-    unless I18n.available_locales.include?(params[:locale].to_sym)
+    if I18n.available_locales.exclude?(params[:locale].to_sym)
       raise Discourse::InvalidParameters.new(:locale)
     end
 
@@ -445,7 +445,7 @@ class Admin::ThemesController < Admin::AdminController
 
     locale = theme_params[:locale].presence
     if locale
-      unless I18n.available_locales.include?(locale.to_sym)
+      if I18n.available_locales.exclude?(locale.to_sym)
         raise Discourse::InvalidParameters.new(:locale)
       end
       I18n.locale = locale

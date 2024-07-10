@@ -20,6 +20,7 @@ module Chat
     #   @param [Hash] params_to_create
     #   @option params_to_create [Array<String>] target_usernames
     #   @option params_to_create [Array<String>] target_groups
+    #   @option params_to_create [Boolean] upsert
     #   @return [Service::Base::Context]
 
     contract
@@ -42,6 +43,7 @@ module Chat
       attribute :name, :string
       attribute :target_usernames, :array
       attribute :target_groups, :array
+      attribute :upsert, :boolean, default: false
 
       validate :target_presence
 
@@ -78,11 +80,13 @@ module Chat
 
     def fetch_or_create_direct_message(target_users:, contract:)
       ids = target_users.map(&:id)
+      is_group = ids.size > 2 || contract.name.present?
 
-      if ids.size > 2 || contract.name.present?
-        ::Chat::DirectMessage.create(user_ids: ids, group: true)
+      if contract.upsert || !is_group
+        ::Chat::DirectMessage.for_user_ids(ids, group: is_group) ||
+          ::Chat::DirectMessage.create(user_ids: ids, group: is_group)
       else
-        ::Chat::DirectMessage.for_user_ids(ids) || ::Chat::DirectMessage.create(user_ids: ids)
+        ::Chat::DirectMessage.create(user_ids: ids, group: is_group)
       end
     end
 

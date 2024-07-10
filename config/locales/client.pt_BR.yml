@@ -21,6 +21,7 @@ pt_BR:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -342,11 +343,20 @@ pt_BR:
       search_placeholder: "Pesquisar os favoritos por nome, título do tópico ou conteúdo da postagem"
       search: "Pesquisar"
       bookmark: "Marcador"
+      bulk:
+        select_all: "Selecionar tudo"
+        clear_all: "Limpar tudo"
+        selected_count:
+          one: "Selecionou %{count}"
+          other: "Selecionou %{count}"
       reminders:
         today_with_time: "hoje à(s) %{time}"
         tomorrow_with_time: "amanhã à(s) %{time}"
         at_time: "em %{date_time}"
         existing_reminder: "Você tem um lembrete definido para este favorito que será enviado em %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Excluir favorito"
     copy_codeblock:
       copied: "copiado!"
       copy: "copiar código para a área de transferência"
@@ -685,6 +695,7 @@ pt_BR:
       topic_count_long: "Tópicos criados"
       post_count: "Respostas"
       post_count_long: "Respostas postadas"
+      no_results_with_search: "Nenhum resultado foi encontrado."
       days_visited: "Acessos"
       days_visited_long: "Dias acessados"
       posts_read: "Lidos"
@@ -1027,6 +1038,7 @@ pt_BR:
       none: "(selecione uma opção)"
       required: 'Digite um valor para "%{name}"'
       same_as_password: "Sua senha não deve ser repetida em outros campos."
+      optional: (opcional)
     user:
       said: "%{username}:"
       profile: "Perfil"
@@ -1080,7 +1092,8 @@ pt_BR:
       activity_stream: "Atividade"
       read: "Lidos"
       read_help: "Tópicos lidos recentemente"
-      preferences: "Preferências"
+      preferences:
+        title: "Preferências"
       feature_topic_on_profile:
         open_search: "Selecione um novo tópico"
         title: "Selecione um tópico"
@@ -1354,6 +1367,7 @@ pt_BR:
         set_password: "Definir senha"
         choose_new: "Escolha uma nova senha"
         choose: "Escolha uma senha"
+        title: "Redefinição de senha"
       second_factor_backup:
         title: "Códigos de backup de dois fatores"
         regenerate: "Gerar novamente"
@@ -1745,7 +1759,6 @@ pt_BR:
         fine_print: "Solicitamos que você confirme sua identidade porque provavelmente esta é uma ação confidencial. Após a autenticação, será solicitado que você autentique novamente após algumas horas de inatividade."
       password:
         title: "Senha"
-        too_short: "A sua senha é muito curta."
         common: "A senha é muito comum."
         same_as_username: "A sua senha é igual ao seu nome do(a) usuário(a)."
         same_as_email: "A sua senha é igual ao seu e-mail."
@@ -1969,10 +1982,11 @@ pt_BR:
       header_title: "Boas-vindas!"
       subheader_title: "Vamos criar a sua conta"
       disclaimer: "Ao se cadastrar, você concorda com a <a href='%{privacy_link}' target='blank'>política de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos de serviço</a>."
-      title: "Criar sua conta"
+      title: "Cadastrar-se"
       failed: "Algo deu errado, talvez este e-mail já esteja cadastrado, tente usar o link de senha esquecida."
       associate: "Já tem uma conta? <a href='%{associate_link}'>Entre</a> para vincular sua conta do %{provider}."
       activation_title: "Ativar sua conta"
+      already_have_account: "Já tem uma conta?"
     forgot_password:
       title: "Redefinição de senha"
       action: "Esqueci minha senha"
@@ -2125,9 +2139,6 @@ pt_BR:
     conditional_loading_section:
       loading: Carregando…
     category_row:
-      subcategory_count:
-        one: "+%{count} subcategoria"
-        other: "+%{count} subcategorias"
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"
@@ -2154,6 +2165,8 @@ pt_BR:
         categories_admin_dropdown:
           title: "Gerenciar categorias"
         bulk_select_topics_dropdown:
+          title: "Ações em massa"
+        bulk_select_bookmarks_dropdown:
           title: "Ações em massa"
     date_time_picker:
       from: De
@@ -2304,7 +2317,6 @@ pt_BR:
       show_toolbar: "exibir barra de ferramentas do compositor"
       hide_toolbar: "ocultar barra de ferramentas do compositor"
       modal_ok: "Ok"
-      modal_cancel: "Cancelar"
       cant_send_pm: "Desculpe, você não pode enviar uma mensagem para %{username}."
       yourself_confirm:
         title: "Você se esqueceu de adicionar destinatários?"
@@ -2755,20 +2767,18 @@ pt_BR:
         filter: "Não existem mais tópicos."
     topic_bulk_actions:
       close_topics:
-        name: "Fechar tópicos"
+        name: "Fechar"
         optional: (opcional)
       archive_topics:
-        name: "Arquivar tópicos"
-      unlist_topics:
-        name: "Remover tópicos da lista"
-      relist_topics:
-        name: "Reinserir tópicos na lista"
+        name: "Arquivo"
+      move_messages_to_inbox:
+        name: "Mover para caixa de entrada"
       append_tags:
         name: "Adicionar etiquetas"
       replace_tags:
         name: "Substituir etiquetas"
       delete_topics:
-        name: "Excluir tópicos"
+        name: "Excluir"
       update_category:
         name: "Atualizar Categoria"
         description: "Escolha a nova categoria para os tópicos selecionados"
@@ -3989,7 +3999,6 @@ pt_BR:
       all_tags: "Todas as etiquetas"
       other_tags: "Outras etiquetas"
       selector_tags: "etiquetas"
-      selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
       selector_remove_filter: "remover filtro"
       tags: "Etiquetas"
@@ -4186,6 +4195,7 @@ pt_BR:
           text: "e mostraremos automaticamente as categorias mais populares deste site"
         filter_placeholder: "Filtrar categorias"
         no_categories: "Não há categorias correspondentes ao termo fornecido."
+        show_more: "Exibir mais"
       tags_form_modal:
         title: "Editar navegação por etiquetas"
         filter_placeholder: "Filtrar etiquetas"
@@ -4276,6 +4286,9 @@ pt_BR:
             faq:
               content: "FAQ"
               title: "Diretrizes para usar este site"
+            guidelines:
+              content: "Diretrizes"
+              title: "Diretrizes para usar este site"
             groups:
               content: "Grupos"
               title: "Lista de grupos de usuários disponíveis"
@@ -4300,7 +4313,8 @@ pt_BR:
       panels:
         forum:
           label: Fórum
-      filter: "Filtro"
+      back_to_forum: "Voltar para o Fórum"
+      filter: "Filtro..."
       no_results:
         title: "Nenhum resultado"
     welcome_topic_banner:
@@ -4403,12 +4417,12 @@ pt_BR:
           copy: "Copiar..."
           paste: "Colar..."
           save: "Salvar como..."
+    powered_by_discourse: "Com tecnologia Discourse"
   admin_js:
     type_to_filter: "Digite para filtrar..."
     admin:
       title: "Administrador(a) do Discourse"
       moderator: "Moderador(a)"
-      back_to_forum: "Voltar para o Fórum"
       filter_reports: Filtrar relatórios
       tags:
         remove_muted_tags_from_latest:
@@ -4515,6 +4529,9 @@ pt_BR:
               label: Categoria
             include_subcategories:
               label: "Incluir subcategorias"
+      flags:
+        description: "Descrição"
+        enabled: "Ativado(a)?"
       groups:
         new:
           title: "Novo grupo"
@@ -4817,6 +4834,8 @@ pt_BR:
           timestamp: "Criado(a)"
           completion: "Tempo de conclusão"
           actions: "Ações"
+          filter_status:
+            failed: "Falha"
       home:
         title: "Início"
       account:
@@ -4863,6 +4882,30 @@ pt_BR:
           search_logs: "Registros de pesquisa"
           security: "Segurança"
           spam: "Spam"
+      config_areas:
+        about:
+          header: "Sobre seu site"
+          community_name: "Nome da comunidade"
+          your_organization: "Sua organização"
+          company_name: "Nome da empresa"
+          governing_law: "Lei aplicável"
+          city_for_disputes: "Cidade para disputas"
+          optional: "(opcional)"
+          update: "Atualizar"
+          saved: "salvou!"
+        flags:
+          description: "Descrição"
+          enabled: "Ativado(a)?"
+          edit: "Editar"
+          delete: "Excluir"
+          delete_confirm: 'Você tem certeza de que deseja excluir "%{name}"?'
+          form:
+            save: "Salvar"
+            name: "Nome"
+            description: "Descrição"
+            topic: "tópicos"
+            post: "postagens"
+            chat_message: "mensagens de chat"
       plugins:
         title: "Plugins"
         installed: "Plugins nstalados"
@@ -5233,7 +5276,6 @@ pt_BR:
             description: "Links, alguns botões, notificações e cor realçada."
           quaternary:
             name: "quaternário(a)"
-            description: "Links de navegação."
           header_background:
             name: "fundo do cabeçalho"
             description: "Cor de fundo do cabeçalho do site."
@@ -5578,6 +5620,7 @@ pt_BR:
           upload_successful: "Envio bem-sucedido. As palavras foram adicionadas."
           case_sensitivity_label: "É sensível a maiúsculas"
           case_sensitivity_description: "Apenas palavras com maiúsculas e minúsculas de caracteres correspondentes"
+          html_label: "HTML"
         test:
           button_label: "Testar"
           modal_title: "%{action}: testar palavras acompanhadas"
@@ -5961,6 +6004,7 @@ pt_BR:
         name: "Nome do campo"
         type: "Tipo do campo"
         description: "Descrição do campo"
+        preferences: "Preferências"
         save: "Salvar"
         edit: "Editar"
         delete: "Excluir"
@@ -5971,6 +6015,9 @@ pt_BR:
           title: "Necessário para cadastro"
           enabled: "necessário(a)"
           disabled: "não necessário(a)"
+        requirement:
+          optional:
+            title: "Opcional"
         editable:
           title: "Editável após criar conta"
           enabled: "editável"

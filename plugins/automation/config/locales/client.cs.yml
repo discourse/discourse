@@ -80,12 +80,12 @@ cs:
             restricted_category:
               label: Kategorie
             restricted_tags:
-              label: Tagy
+              label: Štítky
       scriptables:
         auto_tag_topic:
           fields:
             tags:
-              label: Tagy
+              label: Štítky
         post:
           fields:
             topic:

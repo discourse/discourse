@@ -23,6 +23,7 @@ ru:
             kb: КБ
             mb: МБ
             tb: ТБ
+      percent: "%{count}%"
       short:
         thousands: "%{number} тыс."
         millions: "%{number} млн"
@@ -407,11 +408,22 @@ ru:
       search_placeholder: "Поиск закладок по имени, названию темы или по содержанию сообщения"
       search: "Поиск"
       bookmark: "Закладка"
+      bulk:
+        select_all: "Выбрать всё"
+        clear_all: "Сбросить всё"
+        selected_count:
+          one: "Выбрано %{count}"
+          few: "Выбрано %{count}"
+          many: "Выбрано %{count}"
+          other: "Выбрано %{count}"
       reminders:
         today_with_time: "сегодня в %{time}"
         tomorrow_with_time: "завтра в %{time}"
         at_time: "%{date_time}"
         existing_reminder: "Для этой закладки уже настроено напоминание, которое будет отправлено %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Удалить закладку"
     copy_codeblock:
       copied: "скопировано!"
       copy: "скопировать код в буфер обмена"
@@ -788,6 +800,7 @@ ru:
       topic_count_long: "Создано тем"
       post_count: "Ответов"
       post_count_long: "Ответов написано"
+      no_results_with_search: "Ничего не найдено."
       days_visited: "Посещений"
       days_visited_long: "Дней посещения"
       posts_read: "Прочитано"
@@ -1150,6 +1163,7 @@ ru:
       none: "(выберите вариант)"
       required: 'Введите значение для «%{name}»'
       same_as_password: "Указанный пароль не должен фигурировать в других полях."
+      optional: (необязательно)
     user:
       said: "%{username}:"
       profile: "Профиль"
@@ -1202,7 +1216,8 @@ ru:
       activity_stream: "Активность"
       read: "Прочитанные"
       read_help: "Недавно прочитанные темы"
-      preferences: "Настройки"
+      preferences:
+        title: "Настройки"
       feature_topic_on_profile:
         open_search: "Выберите тему"
         title: "Выбор темы"
@@ -1508,6 +1523,7 @@ ru:
         set_password: "Установить пароль"
         choose_new: "Введите новый пароль"
         choose: "Введите пароль"
+        title: "Сброс пароля"
       second_factor_backup:
         title: "Резервные коды двухфакторной аутентификации"
         regenerate: "Сгенерировать заново"
@@ -1904,7 +1920,6 @@ ru:
         fine_print: "Мы просим вас подтвердить свою личность, поскольку это потенциально конфиденциальное действие. После аутентификации вам будет предложено пройти повторную аутентификацию только через несколько часов бездействия."
       password:
         title: "Пароль"
-        too_short: "Пароль слишком короткий."
         common: "Пароль слишком простой."
         same_as_username: "Пароль совпадает с именем пользователя."
         same_as_email: "Пароль совпадает с адресом электронной почты."
@@ -2150,10 +2165,11 @@ ru:
       header_title: "Добро пожаловать!"
       subheader_title: "Давайте создадим аккаунт"
       disclaimer: "Регистрируясь, вы соглашаетесь с <a href='%{privacy_link}' target='blank'>политикой конфиденциальности</a> и <a href='%{tos_link}' target='blank'> условиями предоставления услуг</a>."
-      title: "Создать аккаунт"
+      title: "Зарегистрироваться"
       failed: "Произошла ошибка. Возможно, эта эл. почта уже используется. Попробуйте восстановить пароль."
       associate: "Уже есть аккаунт? <a href='%{associate_link}'>Войдите в систему</a> для привязки аккаунта %{provider}."
       activation_title: "Активируйте свой аккаунт"
+      already_have_account: "Уже есть аккаунт?"
     forgot_password:
       title: "Сброс пароля"
       action: "Пароль утерян"
@@ -2307,10 +2323,10 @@ ru:
       loading: Загрузка…
     category_row:
       subcategory_count:
-        one: "+ %{count} подкатегория"
-        few: "+ %{count} подкатегории"
-        many: "+ %{count} подкатегорий"
-        other: "+ %{count} подкатегории"
+        one: "+%{count} подкатегория"
+        few: "+%{count} подкатегории"
+        many: "+%{count} подкатегорий"
+        other: "+%{count} подкатегории"
       topic_count:
         one: "%{count} тема в этой категории"
         few: "%{count} темы в этой категории"
@@ -2345,6 +2361,8 @@ ru:
         categories_admin_dropdown:
           title: "Управление категориями"
         bulk_select_topics_dropdown:
+          title: "Массовые действия"
+        bulk_select_bookmarks_dropdown:
           title: "Массовые действия"
     date_time_picker:
       from: От
@@ -2511,7 +2529,6 @@ ru:
       show_toolbar: "показать панель инструментов редактора"
       hide_toolbar: "скрыть панель инструментов редактора"
       modal_ok: "OK"
-      modal_cancel: "Отмена"
       cant_send_pm: "Вы не можете отправлять сообщения пользователю %{username}."
       yourself_confirm:
         title: "Забыли указать получателей?"
@@ -3021,14 +3038,12 @@ ru:
         filter: "Тем больше нет."
     topic_bulk_actions:
       close_topics:
-        name: "Закрыть темы"
+        name: "Завершить"
         optional: (необязательно)
       archive_topics:
-        name: "Архивировать темы"
-      unlist_topics:
-        name: "Скрыть темы"
-      relist_topics:
-        name: "Показать темы"
+        name: "Архивировать"
+      move_messages_to_inbox:
+        name: "Переместить во входящие"
       remove_tags:
         name: "Удалить теги"
       append_tags:
@@ -3036,7 +3051,7 @@ ru:
       replace_tags:
         name: "Заменить теги"
       delete_topics:
-        name: "Удалить темы"
+        name: "Удалить"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"
@@ -4376,7 +4391,6 @@ ru:
       all_tags: "Все теги"
       other_tags: "Другие теги"
       selector_tags: "теги"
-      selector_all_tags: "Все теги"
       selector_no_tags: "Без тегов"
       selector_remove_filter: "отменить фильтр"
       tags: "Теги"
@@ -4595,6 +4609,7 @@ ru:
           text: "Мы автоматически покажем самые популярные категории сайта"
         filter_placeholder: "Фильтрация категорий"
         no_categories: "Нет категорий, соответствующих запросу."
+        show_more: "Развернуть"
       tags_form_modal:
         title: "Измените навигацию по тегам"
         filter_placeholder: "Фильтрация тегов"
@@ -4685,6 +4700,9 @@ ru:
             faq:
               content: "Правила"
               title: "Рекомендации по использованию сайта"
+            guidelines:
+              content: "Рекомендации"
+              title: "Рекомендации по использованию сайта"
             groups:
               content: "Группы"
               title: "Список доступных групп пользователей"
@@ -4713,7 +4731,8 @@ ru:
       panels:
         forum:
           label: Форум
-      filter: "Фильтр"
+      back_to_forum: "Вернуться на форум"
+      filter: "Фильтр..."
       no_results:
         title: "Нет результатов"
     welcome_topic_banner:
@@ -4829,7 +4848,6 @@ ru:
     admin:
       title: "Администратор Discourse"
       moderator: "Модератор"
-      back_to_forum: "Вернуться на форум"
       filter_reports: Фильтр отчётов
       tags:
         remove_muted_tags_from_latest:
@@ -4938,6 +4956,9 @@ ru:
               label: Категория
             include_subcategories:
               label: "Включая подкатегории"
+      flags:
+        description: "Описание"
+        enabled: "Включён?"
       groups:
         new:
           title: "Новая группа"
@@ -5249,6 +5270,8 @@ ru:
           timestamp: "Создано"
           completion: "Время завершения"
           actions: "Действия"
+          filter_status:
+            failed: "Не удалась"
       home:
         title: "Главная"
       account:
@@ -5295,6 +5318,32 @@ ru:
           search_logs: "Журналы поиска"
           security: "Безопасность"
           spam: "Спам"
+      config_areas:
+        about:
+          header: "О вашем сайте"
+          community_name: "Название сообщества"
+          site_contact_group_help: |
+            Допустимое имя группы для приглашения ко всем автоматическим сообщениям.
+          your_organization: "Ваша организация"
+          company_name: "Название компании"
+          governing_law: "Регулирующее законодательство"
+          city_for_disputes: "Город для разрешения споров"
+          optional: "(необязательно)"
+          update: "Обновить"
+          saved: "сохранено!"
+        flags:
+          description: "Описание"
+          enabled: "Включён?"
+          edit: "Отредактировать"
+          delete: "Удалить"
+          delete_confirm: 'Действительно удалить тему «%{name}»?'
+          form:
+            save: "Сохранить"
+            name: "Название"
+            description: "Описание"
+            topic: "новые темы"
+            post: "Сообщения"
+            chat_message: "сообщения чата"
       plugins:
         title: "Плагины"
         installed: "Установленные плагины"
@@ -5672,7 +5721,6 @@ ru:
             description: "Ссылки, некоторые кнопки, уведомления и акцентный цвет."
           quaternary:
             name: "Четвертичный"
-            description: "Навигационные ссылки."
           header_background:
             name: "Фон заголовка"
             description: "Фоновый цвет заголовка сайта."
@@ -6019,6 +6067,7 @@ ru:
           upload_successful: "Загрузка выполнена. Слова добавлены."
           case_sensitivity_label: "С учётом регистра"
           case_sensitivity_description: "Только слова с соответствующим регистром символов"
+          html_label: "HTML"
         test:
           button_label: "Тестирование слов"
           modal_title: "%{action}: тестирование контролируемых слов"
@@ -6422,6 +6471,7 @@ ru:
         name: "Название поля"
         type: "Тип поля"
         description: "Описание поля"
+        preferences: "Настройки"
         save: "Сохранить"
         edit: "Изменить"
         delete: "Удалить"
@@ -6432,6 +6482,9 @@ ru:
           title: "Обязательное при регистрации"
           enabled: "Обязательное"
           disabled: "Необязательное"
+        requirement:
+          optional:
+            title: "Опционально"
         editable:
           title: "Редактируемое после регистрации"
           enabled: "Редактируемое"

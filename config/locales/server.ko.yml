@@ -75,17 +75,25 @@ ko:
       not_allowed_theme: "`%{repo}` 가 허용 테마의 목록에 없습니다(`allowed_theme_repos` 글로벌 설정을 확인하세요)."
     errors:
       component_no_user_selectable: "테마 구성 요소는 사용자가 선택할 수 없습니다"
-      component_no_default: "테마 구성 요소는 디폴트 테마가 될 수 없습니다"
-      component_no_color_scheme: "테마 구성 요소는 색상 팔레트를 가질 수 없습니다"
+      component_no_default: "테마 구성 요소는 기본 테마가 될 수 없습니다."
+      component_no_color_scheme: "테마 구성 요소에는 색상 팔레트를 포함할 수 없습니다."
       no_multilevels_components: "자식 테마가 있는 테마는 자식 테마 자체가 될 수 없습니다"
       optimized_link: 최적화된 이미지 링크는 일시적이므로 테마 소스 코드에 포함하지 않아야 합니다.
     settings_errors:
       invalid_yaml: "제공된 YAML이 유효하지 않습니다."
       data_type_inclusion: "`%{name}` 유형 설정은 지원되지 않습니다. 지원되는 유형은`integer`,`bool`,`list`,`enum` 및`upload`입니다."
       name_too_long: "이름이 너무 긴 설정이 있습니다. 최대 길이는 255입니다"
-      default_not_match_type: "`%{name}` 디폴트값 유형 설정이 설정 유형과 일치하지 않습니다."
+      default_value_missing: "`%{name}` 설정에는 기본값이 없습니다."
+      default_not_match_type: "`%{name}` 기본 값 유형 설정이 설정 유형과 일치하지 않습니다."
       enum_value_not_valid: "선택한 값은 열거형 선택 중 하나가 아닙니다."
       number_value_not_valid_min_max: "%{min}이상 %{max}이하이어야 합니다."
+      number_value_not_valid_min: "%{min}보다 크거나 같아야 합니다."
+      number_value_not_valid_max: "%{max}보다 작거나 같아야 합니다."
+      string_value_not_valid_min_max: "%{min}자에서 %{max}자 사이여야 합니다."
+      string_value_not_valid_min:
+        other: "최소 %{count}자 이상이어야 합니다."
+      string_value_not_valid_max:
+        other: "%{count}자 이하이어야 합니다."
       objects:
         required: "공백이 없어야 합니다."
         not_valid_integer_value: "정수여야 함"
@@ -183,7 +191,6 @@ ko:
       s3_backup_requires_s3_settings: "'%{setting_name}' 설정을 제공하지 않으면 S3를 백업 위치로 사용할 수 없습니다."
       s3_bucket_reused: "'s3_upload_bucket' 및 's3_backup_bucket'에 동일한 버킷을 사용할 수 없습니다. 다른 버킷을 선택하거나 각 버킷에 다른 경로를 사용하세요."
       share_quote_facebook_requirements: "Facebook 인용 공유를 활성화하려면 Facebook 앱 ID를 설정해야 합니다."
-      second_factor_cannot_enforce_with_socials: "소셜 로그인이 활성화된 상태에서는 2FA를 적용할 수 없습니다. 먼저 다음을 통해 로그인을 비활성화해야 합니다. %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "로컬 로그인이 비활성화된 경우 2FA를 적용할 수 없습니다."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "DiscourseConnect가 활성화된 경우 2FA를 적용할 수 없습니다."
       local_login_cannot_be_disabled_if_second_factor_enforced: "2FA가 적용된 경우 로컬 로그인을 비활성화할 수 없습니다. 로컬 로그인을 비활성화하기 전에 적용된 2FA를 비활성화하세요."
@@ -330,6 +337,7 @@ ko:
   read_full_topic: "전체 주제 읽기"
   private_message_abbrev: "메시지"
   rss_description:
+    hot: "인기 주제"
     latest: "최신 주제"
     top: "주요 주제"
     top_all: "전체 기간의 주요 주제"
@@ -399,7 +407,6 @@ ko:
     request_membership_pm:
       title: "@%{group_name}에 멤버십 요청"
     request_accepted_pm:
-      title: "@%{group_name}의 가입이 수락되었습니다"
       body: |
         @%{group_name} 가입 요청이 수락되었으며 이제 회원이 되었습니다.
   education:
@@ -469,6 +476,8 @@ ko:
         raw: "본문"
       user_profile:
         bio_raw: "내 정보"
+      user:
+        password: "비밀번호"
     errors:
       models:
         topic:
@@ -694,7 +703,7 @@ ko:
       unknown: "알 수 없는 운영체제"
   change_email:
     error: "이메일 주소 변경 중 오류가 발생했습니다. 이미 사용 중인 이메일일 수 있습니다."
-    doesnt_exist: "이 이메일 주소는 내 계정과 연결되어 있지 않습니다."
+    doesnt_exist: "해당 이메일 주소는 계정과 연결되어 있지 않습니다."
     error_staged: "이메일 주소 변경 중에 오류가 발생했습니다. 스테이징된 사용자가 사용 중인 이메일일 수 있습니다."
     already_done: "이 확인 링크는 더 이상 유효하지 않습니다. 이메일이 이미 변경되지는 않았나요?"
     confirm: "확인"
@@ -934,7 +943,6 @@ ko:
       title: "사용자 방문 횟수"
       xaxis: "일"
       yaxis: "방문 횟수"
-      description: "모든 사용자 방문 횟수"
     signups:
       title: "가입"
       xaxis: "일"
@@ -1175,13 +1183,14 @@ ko:
       title: "사용자 방문 횟수(모바일)"
       xaxis: "일"
       yaxis: "방문 횟수"
-      description: "모바일 디바이스로 방문한 고유 사용자 수입니다."
     web_crawlers:
       title: "웹 크롤러 사용자 에이전트"
       labels:
         user_agent: "사용자 에이전트"
         page_views: "페이지뷰"
       description: "페이지뷰로 정렬된 웹 크롤러 사용자 에이전트 목록입니다."
+    web_hook_events_daily_aggregate:
+      xaxis: "일"
     suspicious_logins:
       title: "의심스러운 로그인"
       labels:
@@ -1231,31 +1240,22 @@ ko:
       labels:
         user: 사용자
         qtt_like: 받은 좋아요 수
+    topic_view_stats:
+      labels:
+        topic: 글
+        logged_in_views: 로그인됨
+        anon_views: 익명
+        total_views: 합계
   dashboard:
-    rails_env_warning: "서버가 %{env} 모드에서 실행 중입니다."
-    host_names_warning: "config/database.yml 파일은 디폴트 로컬호스트 호스트 이름을 사용하고 있습니다. 내 사이트의 호스트 이름으로 업데이트하세요."
-    sidekiq_warning: 'Sidekiq이 현재 실행되고 있지 않습니다. Sidekiq은 이메일 전송 같은 많은 작업을 비동기식으로 처리합니다. 최소 하나의 sidekiq 프로세서를 실행하세요. <a href="https://github.com/mperham/sidekiq">여기에서 Sidekiq을 자세히 알아보세요</a>.'
-    queue_size_warning: "대기열 작업이 %{queue_size}개 있습니다. 작업 수가 너무 많아 Sidekiq 프로세스에 문제가 있을 수 있습니다. Sidekiq Worker를 더 추가해야 할 수 있습니다."
-    memory_warning: "서버가 총 1GB 미만 메모리로 실행되고 있습니다. 최소 1GB 이상의 메모리를 사용하세요."
-    google_oauth2_config_warning: '서버가 Google OAuth2(enable_google_oauth2_logins)로 가입 및 로그인을 허용하도록 환경설정되었지만, 클라이언트 ID 및 클라이언트 암호 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하세요. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">자세한 내용은 이 가이드를 참조하세요</a>.'
-    facebook_config_warning: '서버가 Facebook(enable_facebook_logins)으로 가입 및 로그인을 허용하도록 환경설정되었지만, 앱 ID 및 앱 암호 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하세요. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">자세한 내용은 이 가이드를 참조하세요</a>.'
-    twitter_config_warning: '서버가 Twitter(enable_twitter_logins)로 가입 및 로그인을 허용하도록 환경설정되었지만, 키 및 암호 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하세요. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">자세한 내용은 이 가이드를 참조하세요</a>.'
-    github_config_warning: '서버가 GitHub(enable_github_logins)로 가입 및 로그인을 허용하도록 환경설정되었지만, 클라이언트 ID 및 암호 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하세요. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">자세한 내용은 이 가이드를 참조하세요</a>.'
-    s3_config_warning: '서버가 S3에 파일을 업로드하도록 환경설정되었지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile 또는 s3_upload_bucket 설정 중 하나 이상이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>에서 설정을 업데이트하세요. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">자세한 내용은 ''S3에 이미지 업로드 구성 방법''을 참조하세요</a>.'
-    s3_backup_config_warning: '서버가 S3에 백업을 업로드하도록 환경설정되었지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile 또는 s3_backup_bucket 설정 중 하나 이상이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>에서 설정을 업데이트하세요. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">자세한 내용은 ''S3에 이미지 업로드 구성 방법''을 참조하세요</a>.'
-    s3_cdn_warning: '서버가 S3에 파일을 업로드하도록 환경설정되었지만 S3 CDN이 환경설정되어 있지 않습니다. 이로 인해 S3 비용이 많이 들고 사이트 퍼포먼스가 저하될 수 있습니다. <a href="https://meta.discourse.org/t/-/148916" target="_blank">자세한 내용은 ''업로드용 오브젝트 스토리지 사용''을 참조하세요</a>.'
-    image_magick_warning: '서버가 큰 이미지의 섬네일을 만들도록 환경설정되었지만 ImageMagick이 설치되지 않았습니다. 즐겨 찾는 패키지 관리자를 사용하여 ImageMagick을 설치하거나 <a href="https://www.imagemagick.org/script/download.php" target="_blank">최신 출시 버전을 다운로드하세요</a>.'
-    failing_emails_warning: '실패한 %{num_failed_jobs} 이메일 작업이 있습니다. app.yml을 확인하고 메일 서버 설정이 올바른지 확인하세요. <a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq의 실패한 작업을 참조하세요</a>.'
-    subfolder_ends_in_slash: "서브폴더 설정이 올바르지 않습니다. DISCOURSE_RELATIVE_URL_ROOT 다음에 슬래시가 있습니다."
-    email_polling_errored_recently:
-      other: "이메일 폴링에서 지난 24시간 %{count}개의 오류가 발생했습니다. 자세한 내용은 <a href='%{base_path}/logs' target='_blank'>로그</a>를 확인하세요."
-    missing_mailgun_api_key: "서버가 Mailgun을 통해 이메일을 전송하도록 환경설정되었지만 Webhook 메시지 검증에 사용되는 API 키를 제공하지 않았습니다."
-    bad_favicon_url: "즐겨찾기 아이콘을 로드하지 못했습니다. <a href='%{base_path}/admin/site_settings'>사이트 설정</a>에서 즐겨찾기 아이콘 설정을 확인하세요."
-    poll_pop3_timeout: "POP3 서버 연결이 시간 초과되었습니다. 수신 이메일을 가져올 수 없습니다. <a href='%{base_path}/admin/site_settings/category/email'>POP3 설정</a>과 서비스 제공자를 확인하세요."
-    poll_pop3_auth_error: "인증 오류로 POP3 서버에 연결하지 못했습니다. <a href='%{base_path}/admin/site_settings/category/email'>POP3 설정</a>을 확인하세요."
-    force_https_warning: "웹사이트에서 SSL을 사용하고 있지만, 사이트 설정에서 `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` 가 아직 활성화되어 있지 않습니다."
-    out_of_date_themes: "다음 테마에 대한 업데이트가 있습니다."
-    unreachable_themes: "다음 테마에 대한 업데이트를 확인할 수 없습니다."
+    problem:
+      rails_env: "당신의 서버는 %{env} 모드에서 실행되고 있습니다."
+      host_names: "당신의 config/database.yml 파일은 기본 호스트네임을 사용하고 있습니다. 사이트의 호스트네임으로 업데이트 하세요."
+      queue_size: "큐 작업의 수가 %{queue_size} 개 입니다. 작업의 수가 너무 많습니다. Sidekiq에 문제가 있을 수 있습니다. Sidekiq Worker를 더 추가하세요."
+      ram: "당신의 서버는 1GB 이하 메모리로 실행되고 있습니다. 적어도 1GB 이상의 메모리를 사용하세요."
+      subfolder_ends_in_slash: "서브폴더 설정이 정확하지 않습니다. DISCOURSE_RELATIVE_URL_ROOT 다음에 슬래시가 있습니다."
+      missing_mailgun_api_key: "서버가 Mailgun을 통해 이메일을 보내도록 구성되었지만 웹 후크 메시지를 확인하는 데 사용되는 API 키를 제공하지 않았습니다."
+      out_of_date_themes: "다음 테마에 대한 업데이트가 제공됩니다."
+      unreachable_themes: "다음 테마에 대한 업데이트를 확인할 수 없습니다."
   site_settings:
     allow_bulk_invite: "CSV 파일 업로드를 통한 일괄 초대 허용"
     disabled: "비활성화됨"
@@ -1464,10 +1464,8 @@ ko:
     s3_endpoint: "엔드포인트를 수정하여 DigitalOcean Spaces 또는 Minio와 같은 S3 호환 서비스로 백업할 수 있습니다. 경고: AWS S3를 사용하는 경우 비워두세요."
     s3_configure_tombstone_policy: "삭제 표시 업로드에 대한 자동 삭제 정책을 활성화합니다. 중요: 비활성화하면 업로드가 삭제된 후 공간이 확보되지 않습니다."
     s3_disable_cleanup: "허용되는 최대 개수보다 많은 백업이 있는 경우 S3에서 이전 백업이 제거되지 않도록 합니다."
-    enable_s3_inventory: "Amazon S3 인벤토리를 사용하여 리포트를 생성하고 업로드를 검증합니다. 중요: 유효한 S3 크리덴셜(액세스 키 ID 및 암호 액세스 키 모두)이 필요합니다."
     backup_time_of_day: "백업이 실행되어야 할 시간(UTC)"
     backup_with_uploads: "예약된 백업에 업로드를 포함합니다. 비활성화하면 데이터베이스만 백업합니다."
-    backup_location: "백업이 저장된 위치입니다. 중요: S3에는 파일 설정에 입력 한 유효한 S3 크리덴셜이 필요합니다."
     backup_gzip_compression_level_for_uploads: "업로드 압축에 사용되는 Gzip 압축 수준입니다."
     include_thumbnails_in_backups: "백업에 생성된 섬네일을 포함합니다. 비활성화하면 백업이 더 작아지지만 복원 후 모든 게시물을 다시 작성해야 합니다."
     active_user_rate_limit_secs: "'last_seen_at' 필드 업데이트 주기(초)"
@@ -1904,6 +1902,9 @@ ko:
       - ""
       - "비활성화"
       - ""
+      navigation_menu:
+      - "사이드바"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2031,7 +2032,6 @@ ko:
     email_too_long: "제공한 이메일이 너무 깁니다. 메일함 이름은 254자 이하여야 하며 도메인 이름은 253자 이하여야 합니다."
     wrong_invite_code: "입력한 초대 코드가 잘못되었습니다."
     reserved_username: "이 아이디는 허용되지 않습니다."
-    missing_user_field: "입력 누락된 사용자 필드가 있습니다."
     auth_complete: "인증이 완료되었습니다."
     click_to_continue: "계속하려면 여기를 클릭하세요."
     already_logged_in: "이 초대는 기존 계정이 없는 신규 사용자를 위한 것입니다."
@@ -3043,7 +3043,6 @@ ko:
 
         궁금한 점이 있으면 [운영진에게 문의하세요](%{base_url}/about).
     digest:
-      why: "%{last_seen_at}부터 지금까지 %{site_link}의 간략한 요약"
       since_last_visit: "마지막 방문 이후"
       new_topics: "새 주제"
       unread_notifications: "읽지 않은 알림"
@@ -3059,7 +3058,6 @@ ko:
       your_email_settings: "이메일 설정"
       click_here: "여기를 클릭"
       from: "%{site_name}"
-      preheader: "%{last_seen_at}부터 지금까지 간략한 요약"
     forgot_password:
       title: "비밀번호가 기억나지 않나요?"
       subject_template: "[%{email_prefix}] 비밀번호 리셋"
@@ -3326,6 +3324,7 @@ ko:
     %{page_name} 페이지의 콘텐츠를 변경하려면 이 주제의 첫 게시물을 편집하세요.
   guidelines_topic:
     title: "FAQ/가이드라인"
+    guidelines_title: "가이드라인"
   tos_topic:
     title: "이용약관"
   privacy_topic:
@@ -3657,8 +3656,6 @@ ko:
             extra_description: "로그인 한 사용자 만이 커뮤니티에 액세스 할 수 있습니다"
           chat_enabled:
             placeholder: "채팅 활성화"
-          enable_sidebar:
-            placeholder: "사이드바 활성화"
       styling:
         fields:
           color_scheme:

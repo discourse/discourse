@@ -17,6 +17,7 @@ RSpec.describe Admin::UserFieldsController do
                    name: "hello",
                    description: "hello desc",
                    field_type: "text",
+                   requirement: "on_signup",
                  },
                }
 
@@ -33,6 +34,7 @@ RSpec.describe Admin::UserFieldsController do
                    description: "hello desc",
                    field_type: "dropdown",
                    options: %w[a b c],
+                   requirement: "on_signup",
                  },
                }
 
@@ -162,13 +164,16 @@ RSpec.describe Admin::UserFieldsController do
                 name: "fraggle",
                 field_type: "confirm",
                 description: "muppet",
+                requirement: "optional",
               },
             }
 
         expect(response.status).to eq(200)
-        user_field.reload
-        expect(user_field.name).to eq("fraggle")
-        expect(user_field.field_type).to eq("confirm")
+        expect(user_field.reload).to have_attributes(
+          name: "fraggle",
+          field_type: "confirm",
+          required?: false,
+        )
       end
 
       it "updates the user field options" do

@@ -21,6 +21,7 @@ hu:
             kb: kB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}e"
         millions: "%{number}m"
@@ -354,11 +355,20 @@ hu:
       search_placeholder: "Könyvjelzők keresése név, téma címe vagy tartalom alapján"
       search: "Keresés"
       bookmark: "Könyvjelző"
+      bulk:
+        select_all: "Összes kiválasztása"
+        clear_all: "Összes törlése"
+        selected_count:
+          one: "%{count} kiválasztva"
+          other: "%{count} kiválasztva"
       reminders:
         today_with_time: "ma %{time}-kor"
         tomorrow_with_time: "holnap %{time}-kor"
         at_time: "%{date_time}-kor"
         existing_reminder: "Beállított egy emlékeztetőt erre a könyvjelzőre, amely %{at_date_time}-kor lesz kiküldve."
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Könyvjelző törlése"
     copy_codeblock:
       copied: "másolva!"
       copy: "kód másolása a vágólapra"
@@ -698,6 +708,7 @@ hu:
       topic_count_long: "Létrehozott téma"
       post_count: "Válasz"
       post_count_long: "Közzétett válasz"
+      no_results_with_search: "Nincs találat."
       days_visited: "Látogatás"
       days_visited_long: "Látogatott nap"
       posts_read: "Olvasott"
@@ -977,7 +988,6 @@ hu:
     categories:
       categories_label: "kategóriák"
       subcategories_label: "alkategóriák"
-      all_subcategories: "minden alkategória"
       no_subcategories: "nincsenek alkategóriák"
       remove_filter: "szűrő eltávolítása"
       plus_more_count:
@@ -1041,6 +1051,7 @@ hu:
       none: "(válasszon egy lehetőséget)"
       required: 'Adja meg a(z) „%{name}” értékét'
       same_as_password: "A jelszavát nem szabad megismételnie más mezőkben."
+      optional: (nem kötelező)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1094,7 +1105,8 @@ hu:
       activity_stream: "Tevékenység"
       read: "Olvasott"
       read_help: "Nemrég olvasott témák"
-      preferences: "Beállítások"
+      preferences:
+        title: "Beállítások"
       feature_topic_on_profile:
         open_search: "Új téma kiválasztása"
         title: "Téma kiválasztása"
@@ -1371,6 +1383,7 @@ hu:
         set_password: "Jelszó megadása"
         choose_new: "Válasszon új jelszót"
         choose: "Válasszon jelszót"
+        title: "Jelszó-visszaállítás"
       second_factor_backup:
         title: "Kétfaktoros biztonsági kódok"
         regenerate: "Újragenerálás"
@@ -1767,7 +1780,6 @@ hu:
         fine_print: "Arra kérjük, hogy erősítse meg személyazonosságát, mivel ez egy potenciálisan érzékeny művelet. A hitelesítést követően csak néhány óra inaktivitás után kérhetjük az újbóli hitelesítést."
       password:
         title: "Jelszó"
-        too_short: "A jelszava túl rövid."
         common: "A jelszava túl gyakori."
         same_as_username: "A jelszava megegyezik a felhasználónevével."
         same_as_email: "A jelszava megegyezik az e-mail-címével."
@@ -1998,6 +2010,7 @@ hu:
       failed: "Valami hiba történt, talán ez az e-mail-cím már regisztrálva van. Próbálta már a jelszó-emlékeztetőt?"
       associate: "Már van fiókja? <a href='%{associate_link}'>Jelentkezzen be</a> hogy hozzákapcsolja a(z) %{provider}-fiókját."
       activation_title: "Fiók aktiválása"
+      already_have_account: "Már van fiókja?"
     forgot_password:
       title: "Jelszó-visszaállítás"
       action: "Elfelejtettem a jelszavamat"
@@ -2151,8 +2164,8 @@ hu:
       loading: Betöltés…
     category_row:
       subcategory_count:
-        one: "+ %{count} alkategória"
-        other: "+ %{count} alkategória"
+        one: "+%{count} alkategória"
+        other: "+%{count} alkategória"
       topic_count:
         one: "%{count} téma van ebben a kategóriában"
         other: "%{count} téma van ebben a kategóriában"
@@ -2179,6 +2192,8 @@ hu:
         categories_admin_dropdown:
           title: "Kategóriák kezelése"
         bulk_select_topics_dropdown:
+          title: "Csoportos műveletek"
+        bulk_select_bookmarks_dropdown:
           title: "Csoportos műveletek"
     date_time_picker:
       from: Feladó
@@ -2330,7 +2345,6 @@ hu:
       show_toolbar: "szerkesztő eszköztár megjelenítése"
       hide_toolbar: "szerkesztő eszköztár elrejtése"
       modal_ok: "Rendben"
-      modal_cancel: "Mégse"
       cant_send_pm: "Nem tud üzenetet küldeni %{username} számára"
       yourself_confirm:
         title: "Elfelejtett címzettet hozzáadni?"
@@ -2786,15 +2800,13 @@ hu:
         filter: "Nincs több téma."
     topic_bulk_actions:
       close_topics:
-        name: "Témák lezárása"
+        name: "Lezárás"
         note: "Megjegyzés"
         optional: (nem kötelező)
       archive_topics:
-        name: "Témák archiválása"
-      unlist_topics:
-        name: "Témák listázásnak megszüntetése"
-      relist_topics:
-        name: "Újralistázott témák"
+        name: "Archiválás"
+      move_messages_to_inbox:
+        name: "Áthelyezés a bejövő üzenetek közé"
       remove_tags:
         name: "Címkék eltávolítása"
       append_tags:
@@ -2802,7 +2814,7 @@ hu:
       replace_tags:
         name: "Címkék cseréje"
       delete_topics:
-        name: "Témák törlése"
+        name: "Törlés"
       update_category:
         name: "Kategória frissítése"
         description: "Válaszd ki az új kategóriát a kiválasztott témákhoz"
@@ -4055,7 +4067,6 @@ hu:
       all_tags: "Minden címke"
       other_tags: "Egyéb címkék"
       selector_tags: "címkék"
-      selector_all_tags: "összes címke"
       selector_no_tags: "címke nélküli"
       selector_remove_filter: "szűrő eltávolítása"
       tags: "Címkék"
@@ -4252,6 +4263,7 @@ hu:
           text: "és automatikusan megmutatjuk az oldal legnépszerűbb kategóriáit."
         filter_placeholder: "Kategóriák szűrése"
         no_categories: "Az adott kifejezésnek nincs megfelelő kategória."
+        show_more: "Mutass többet"
       tags_form_modal:
         title: "Címkék szerkesztése navigáció"
         filter_placeholder: "Címkék szűrése"
@@ -4342,6 +4354,9 @@ hu:
             faq:
               content: "GYIK"
               title: "Útmutató az oldal használatához"
+            guidelines:
+              content: "Irányelvek"
+              title: "Útmutató az oldal használatához"
             groups:
               content: "Csoportok"
               title: "Az elérhető felhasználói csoportok listája"
@@ -4366,7 +4381,10 @@ hu:
       panels:
         forum:
           label: Fórum
-      filter: "Szűrő"
+      back_to_forum: "Vissza a fórumra"
+      collapse_all_sections: "Minden szakasz összezárása"
+      expand_all_sections: "Minden szakasz kibontása"
+      filter: "Szűrő..."
       clear_filter: "Szűrő kiürítése"
       no_results:
         title: "Nincs eredmény"
@@ -4476,10 +4494,7 @@ hu:
     admin:
       title: "Discourse Adminisztrátor"
       moderator: "Moderátor"
-      back_to_forum: "Vissza a fórumra"
       filter_reports: Jelentések szűrése
-      expand_all_sections: "Minden szakasz kibontása"
-      collapse_all_sections: "Minden szakasz összezárása"
       tags:
         remove_muted_tags_from_latest:
           always: "mindig"
@@ -4587,6 +4602,9 @@ hu:
               label: Kategória
             include_subcategories:
               label: "Alkategóriák belefoglalása"
+      flags:
+        description: "Leírás"
+        enabled: "Engedélyezed?"
       groups:
         new:
           title: "Új csoport"
@@ -4899,6 +4917,8 @@ hu:
           timestamp: "Létrehozott"
           completion: "Elvégzési idő"
           actions: "Műveletek"
+          filter_status:
+            failed: "Sikertelen"
       home:
         title: "Kezdőlap"
       account:
@@ -4957,6 +4977,24 @@ hu:
           security: "Biztonság"
           spam: "Szemét"
           staff_action_logs: "Stábművelet naplók"
+      config_areas:
+        about:
+          header: "Az Ön webhelyéről"
+          optional: "(nem kötelező)"
+          update: "Frissítés"
+          saved: "mentve!"
+        flags:
+          description: "Leírás"
+          enabled: "Engedélyezed?"
+          edit: "Szerkesztés"
+          delete: "Törlés"
+          delete_confirm: 'Biztosan törli a "%{name}" elemet?'
+          form:
+            save: "Mentés"
+            name: "Név"
+            description: "Leírás"
+            topic: "témák"
+            post: "bejegyzések"
       plugins:
         title: "Bővítmények"
         installed: "Telepített bővítmények"
@@ -5347,7 +5385,6 @@ hu:
             description: "Hivatkozások, néhány gomb, értesítések és kiemelő színek."
           quaternary:
             name: "negyedrendű"
-            description: "Navigációs linkek"
           header_background:
             name: "Fejléc háttere"
             description: "Az oldal fejlécének háttérszíne."
@@ -5693,6 +5730,7 @@ hu:
           upload_successful: "A feltöltés sikeres, egy Word-öt hozzáadtunk."
           case_sensitivity_label: "Nagy- és kisbetű érzékeny"
           case_sensitivity_description: "Csak a megfelelő kis- és nagybetűkkel rendelkező szavak"
+          html_label: "HTML"
         test:
           button_label: "Teszt"
           modal_title: "%{action}: Figyelt szavak tesztelése"
@@ -6083,6 +6121,7 @@ hu:
         name: "Mező neve"
         type: "Mező típusa"
         description: "Mező leírása"
+        preferences: "Beállítások"
         save: "Mentés"
         edit: "Szerkesztés"
         delete: "Törlés"
@@ -6093,6 +6132,9 @@ hu:
           title: "Bejelentkezéskor kötelező"
           enabled: "kötelező"
           disabled: "nem kötelező"
+        requirement:
+          optional:
+            title: "Nem kötelező"
         editable:
           title: "Bejelentkezés után szerkeszthető"
           enabled: "szerkeszthető"

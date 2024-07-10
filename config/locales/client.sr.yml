@@ -310,11 +310,16 @@ sr:
       search_placeholder: "Pretraži obeleživače po nazivu, naslovu teme ili sadržaju poruka"
       search: "Pretraži"
       bookmark: "Markiraj"
+      bulk:
+        select_all: "Izaberi sve"
       reminders:
         today_with_time: "danas u %{time}"
         tomorrow_with_time: "sutra u %{time}"
         at_time: "u %{date_time}"
         existing_reminder: "Imate podsetnik postavljen za ovaj obeleživač koji će biti poslan %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Ukloni obeleživač"
     copy_codeblock:
       copied: "kopirano!"
     drafts:
@@ -503,6 +508,7 @@ sr:
       topic_count_long: "Tema kreirano"
       post_count: "Odgovori"
       post_count_long: "Odgovora poslato"
+      no_results_with_search: "Rezultati nisu pronađeni"
       days_visited: "Poseta"
       days_visited_long: "Dana posećivano"
       posts_read: "Pročitano"
@@ -672,7 +678,8 @@ sr:
         monday: "Ponedeljak"
       activity_stream: "Aktivnost"
       read: "Pročitano"
-      preferences: "Postavke"
+      preferences:
+        title: "Postavke"
       feature_topic_on_profile:
         save: "Sačuvaj"
         clear:
@@ -887,7 +894,6 @@ sr:
           hide_advanced: "Сакриј напредне опције"
       password:
         title: "Šifra"
-        too_short: "Vaša šifra je prekratka."
         common: "Ta šifra je pre česta."
         same_as_username: "Tvoja šifra je ista kao i tvoje korisničko ime."
         same_as_email: "Tvoja šifra je ista kao i tvoj email."
@@ -1024,6 +1030,7 @@ sr:
     search_hint: "korisničko ime, e-mail ili IP adresa"
     create_account:
       header_title: "Добро дошли!"
+      title: "Registrujte se"
       failed: "Nešto nije u redu, možda je ovaj e-mail već registrovan, pokušajte s linkom za zaboravljenu šifru."
     forgot_password:
       action: "Zaboravio/la sam šifru"
@@ -1074,6 +1081,8 @@ sr:
       components:
         bulk_select_topics_dropdown:
           title: "Grupne aktivnosti"
+        bulk_select_bookmarks_dropdown:
+          title: "Grupne aktivnosti"
     emoji_picker:
       flags: Zastave
     composer:
@@ -1119,7 +1128,6 @@ sr:
       list_item: "Predmet popisa"
       help: "Markdown pomoć pri izmenama"
       modal_ok: "U redu"
-      modal_cancel: "Odustani"
       yourself_confirm:
         title: "Da li ste zaboravili da dodate primaoce?"
         body: "Trenutno se ova poruka šalje samo Vama!"
@@ -1218,11 +1226,11 @@ sr:
         bookmarks: "Nema više markiranih tema."
     topic_bulk_actions:
       close_topics:
-        name: "Zatvori Teme"
+        name: "Zatvori"
       archive_topics:
-        name: "Arhiviraj teme"
+        name: "Arhiviraj"
       delete_topics:
-        name: "Obriši Teme"
+        name: "Obriši"
     topic:
       create: "Nova Tema"
       create_long: "Otvori novu Temu"
@@ -1837,13 +1845,14 @@ sr:
               content: "Teme"
             faq:
               content: "FAQ (često postavljana pitanja)"
+            guidelines:
+              content: "Smernice"
             groups:
               content: "Grupe"
             users:
               content: "Korisnici"
             my_posts:
               content: "Moje poruke"
-      filter: "Filter"
     form_templates:
       upload_field:
         upload: "Upload"
@@ -1913,6 +1922,9 @@ sr:
               label: Grupa
             category:
               label: Kategorija
+      flags:
+        description: "Opis"
+        enabled: "Omgućeno"
       groups:
         manage:
           interaction:
@@ -1961,6 +1973,8 @@ sr:
         events:
           timestamp: "Napravljeno"
           actions: "Akcije"
+          filter_status:
+            failed: "Neuspešno"
       home:
         title: "Home"
       account:
@@ -1996,6 +2010,20 @@ sr:
           screened_urls: "Provereni URL-ovi"
           security: "Sigurnost"
           spam: "Nepoželjno"
+      config_areas:
+        about:
+          saved: "sačuvano!"
+        flags:
+          description: "Opis"
+          enabled: "Omgućeno"
+          edit: "Izmeni"
+          delete: "Obriši"
+          form:
+            save: "Sačuvaj"
+            name: "Ime foruma"
+            description: "Opis"
+            topic: "teme"
+            post: "poruke"
       plugins:
         title: "Dodatci"
         name: "Ime foruma"
@@ -2124,7 +2152,6 @@ sr:
             description: "Linkovi, neki dugmići, obaveštenja i boja naglaska."
           quaternary:
             name: "kvartarna"
-            description: "Linkovi za navigaciju"
           header_background:
             name: "Pozadina headera"
             description: "Pozadinska boja headera stranice."
@@ -2451,6 +2478,7 @@ sr:
         name: "Ime Polja"
         type: "Tip Polja"
         description: "Opis Polja"
+        preferences: "Postavke"
         save: "Sačuvaj"
         edit: "Izmeni"
         delete: "Obriši"

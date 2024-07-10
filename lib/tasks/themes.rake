@@ -225,10 +225,37 @@ task "themes:clone_all_official" do |task, args|
     end
 end
 
+desc "pull compatible theme versions for all themes"
+task "themes:pull_compatible_all" do |t|
+  Dir
+    .glob(File.expand_path("#{Rails.root}/tmp/themes/*"))
+    .select { |f| File.directory? f }
+    .each do |theme_path|
+      next unless File.directory?(theme_path + "/.git")
+
+      theme_name = File.basename(theme_path)
+      checkout_version = Discourse.find_compatible_git_resource(theme_path)
+
+      # Checkout value of the version compat
+      if checkout_version
+        puts "checking out compatible #{theme_name} version: #{checkout_version}"
+
+        update_status =
+          system(
+            "git -C '#{theme_path}' cat-file -e #{checkout_version} || git -C '#{theme_path}' fetch --depth 1 $(git -C '#{theme_path}' rev-parse --symbolic-full-name @{upstream} | awk -F '/' '{print $3}') #{checkout_version}; git -C '#{theme_path}' reset --hard #{checkout_version}",
+          )
+
+        abort("Unable to checkout a compatible theme version") unless update_status
+      else
+        puts "#{theme_name} is already at latest compatible version"
+      end
+    end
+end
+
 # Note that this should only be used in CI where it is safe to mutate the database without rolling back since running
 # the themes QUnit tests requires the themes to be installed in the database.
 desc "Runs qunit tests for all official themes"
-task "themes:qunit_all_official" => ["themes:clone_all_official", :environment] do |task, args|
+task "themes:qunit_all_official" => :environment do |task, args|
   theme_ids_with_qunit_tests = []
 
   ThemeMetadata::OFFICIAL_THEMES.each do |theme_name|

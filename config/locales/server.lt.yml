@@ -351,7 +351,6 @@ lt:
     request_membership_pm:
       title: "Narystės prašymas @%{group_name}"
     request_accepted_pm:
-      title: "Jūs buvote priimtas į @%{group_name}"
       body: |
         Jūsų prašymas įstoti į @%{group_name} buvo priimtas ir dabar esate narys.
   education:
@@ -412,6 +411,8 @@ lt:
         raw: "Tekstas"
       user_profile:
         bio_raw: "Apie mane"
+      user:
+        password: "Slaptažodis"
     errors:
       models:
         topic:
@@ -913,7 +914,6 @@ lt:
       title: "Nario aplankymai"
       xaxis: "Diena"
       yaxis: "Apsilankymai"
-      description: "Visų vartotojų apsilankymų skaičius."
     signups:
       title: "Registracijos"
       xaxis: "Diena"
@@ -1141,10 +1141,11 @@ lt:
       title: "Vartotojo apsilankymai (mobili)"
       xaxis: "Diena"
       yaxis: "Apsilankymai"
-      description: "Unikalių naudotojų, kurie apsilankė naudodami mobilųjį įrenginį, skaičius."
     web_crawlers:
       labels:
         page_views: "Puslapio peržiūros"
+    web_hook_events_daily_aggregate:
+      xaxis: "Diena"
     suspicious_logins:
       title: "Įtartini prisijungimai"
       labels:
@@ -1192,9 +1193,16 @@ lt:
       labels:
         user: Narys
         qtt_like: Gauta patikimų
+    topic_view_stats:
+      labels:
+        topic: Tema
+        logged_in_views: Prisijungęs
+        anon_views: Anonimas
+        total_views: Viso
   dashboard:
-    rails_env_warning: "Jūsų serveris veikia %{env} režimu."
-    out_of_date_themes: "Galimi naujiniai šioms temoms:"
+    problem:
+      rails_env: "Jūsų serveris veikia %{env} režimu."
+      out_of_date_themes: "Galimi naujiniai šioms temoms:"
   site_settings:
     disabled: "uždrausta"
     display_local_time_in_user_card: "Rodyti vietinį laiką pagal vartotojo laiko juostą, kai atidaroma vartotojo kortelė."
@@ -1288,7 +1296,6 @@ lt:
     discord_client_id: '„Discord“ kliento ID (reikia vieno? Apsilankykite <a href="https://discordapp.com/developers/applications/me">„Discord“ kūrėjų portale</a>)'
     enable_backups: "Leiskite administratoriams kurti forumo atsargines kopijas"
     s3_disable_cleanup: "Neleiskite pašalinti senų atsarginių kopijų iš S3, kai atsarginių kopijų yra daugiau nei leidžiama."
-    enable_s3_inventory: "Kurkite ataskaitas ir patikrinkite įkėlimus naudodami „Amazon S3“ inventorių. SVARBU: reikalingi galiojantys S3 kredencialai (ir prieigos rakto ID, ir slaptasis prieigos raktas)."
     backup_time_of_day: "Dienos laikas UTC, kai atsarginė kopija turėtų įvykti."
     backup_gzip_compression_level_for_uploads: "Gzip suspaudimo lygis naudojamas suspaudžiant įkėlimus."
     enable_safe_mode: "Leisti vartotojams įjungti saugųjį režimą, kad būtų derinami papildiniai."
@@ -1523,7 +1530,6 @@ lt:
     email_too_long: "Jūsų pateiktas el. pašto adresas per ilgas. Pašto dėžutės pavadinimai turi būti ne ilgesni kaip 254 simboliai, o domenų vardai – ne ilgesni kaip 253 simboliai."
     wrong_invite_code: "Įvestas pakvieto kodas buvo neteisingas."
     reserved_username: "Šis vartotojo vardas neleidžiamas."
-    missing_user_field: "Neužpildėte visų vartotojo laukų"
     auth_complete: "Autentifikavimas baigtas."
     click_to_continue: "Jei norite tęsti, paspauskite čia."
     already_logged_in: "Atsiprašau! Šis kvietimas skirtas naujiems vartotojams, kurie dar neturi esamos paskyros."
@@ -2050,7 +2056,6 @@ lt:
       title: "Dviejų veiksnių autentifikavimas išjungtas"
       subject_template: "[%{email_prefix}] Dviejų veiksnių autentifikavimas išjungtas"
     digest:
-      why: "Trumpa %{site_link} santrauka nuo paskutinio apsilankymo %{last_seen_at}"
       since_last_visit: "Nuo paskutinio jūsų apsilankymo"
       new_topics: "Naujos temos"
       unread_notifications: "Neskaityti pranešimai"
@@ -2064,7 +2069,6 @@ lt:
       your_email_settings: "Jūsų el. pašto nustatymai"
       click_here: "spustelti čia"
       from: "%{site_name}"
-      preheader: "Trumpa santrauka nuo paskutinio jūsų apsilankymo %{last_seen_at}"
     forgot_password:
       title: "Pamiršote slaptažodį"
       subject_template: "[%{email_prefix}]Atkurti slaptažodį"
@@ -2316,6 +2320,7 @@ lt:
     Redaguoti pirmutinį įrašą kad pakeisti turinį %{page_name} puslapio.
   guidelines_topic:
     title: "DUK/Gairės"
+    guidelines_title: "Instrukcijos"
   tos_topic:
     title: "Paslaugų teikimo sąlygos"
   privacy_topic:

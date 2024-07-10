@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
 describe "AppendLastEditedBy" do
   fab!(:post) { Fabricate(:post, raw: "this is a post with no edit") }
   fab!(:moderator)

@@ -383,7 +383,7 @@ class ImportScripts::Drupal < ImportScripts::Base
           end
 
           upload_html = html_for_upload(upload, filename)
-          new_raw = "#{new_raw}\n\n#{upload_html}" unless new_raw.include?(upload_html)
+          new_raw = "#{new_raw}\n\n#{upload_html}" if new_raw.exclude?(upload_html)
 
           if new_raw != post.raw
             PostRevisor.new(post).revise!(

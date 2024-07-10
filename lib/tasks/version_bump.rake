@@ -103,13 +103,25 @@ end
 def make_pr(base:, branch:, title:)
   params = { expand: 1, title: title, body: <<~MD }
       > :warning: This PR should not be merged via the GitHub web interface
-      > 
+      >
       > It should only be merged (via fast-forward) using the associated `bin/rake version_bump:*` task.
     MD
 
   if !test_mode?
+    open_command =
+      case RbConfig::CONFIG["host_os"]
+      when /darwin|mac os/
+        "open"
+      when /linux|solaris|bsd/
+        "xdg-open"
+      when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+        "start"
+      else
+        raise "Unsupported OS"
+      end
+
     system(
-      "open",
+      open_command,
       "https://github.com/discourse/discourse/compare/#{base}...#{branch}?#{params.to_query}",
       exception: true,
     )
@@ -326,7 +338,7 @@ desc <<~DESC
 DESC
 task "version_bump:major_stable_merge", [:version_bump_ref] do |t, args|
   merge_ref = args[:version_bump_ref]
-  raise "Must pass version_bump_ref" unless merge_ref.present?
+  raise "Must pass version_bump_ref" if merge_ref.blank?
 
   git "fetch", "origin", merge_ref
   raise "Unknown version_bump_ref: #{merge_ref.inspect}" unless ref_exists?(merge_ref)
@@ -383,7 +395,7 @@ desc <<~DESC
 DESC
 task "version_bump:stage_security_fixes", [:base] do |t, args|
   base = args[:base]
-  raise "Unknown base: #{base.inspect}" unless %w[stable main].include?(base)
+  raise "Unknown base: #{base.inspect}" if %w[stable main].exclude?(base)
 
   fix_refs = ENV["SECURITY_FIX_REFS"]&.split(",")&.map(&:strip)
   raise "No branches specified in SECURITY_FIX_REFS env" if fix_refs.nil? || fix_refs.empty?

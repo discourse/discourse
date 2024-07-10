@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 require_relative "../mixins/git_blob_onebox"
+require_relative "../mixins/github_auth_header"
 
 module Onebox
   module Engine
     class GithubBlobOnebox
+      include Onebox::Mixins::GithubAuthHeader
+
       def self.git_regexp
         %r{^https?://(www\.)?github\.com.*/blob/}
       end
@@ -34,6 +37,10 @@ module Onebox
 
       def title
         Sanitize.fragment(Onebox::Helpers.uri_unencode(link).sub(%r{^https?\://github\.com/}, ""))
+      end
+
+      def auth_headers
+        github_auth_header
       end
     end
   end

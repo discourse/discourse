@@ -6,43 +6,54 @@ RSpec.describe PrettyText do
   let(:post) { Fabricate(:post) }
 
   it "supports details tag" do
-    cooked_html = <<~HTML.gsub("\n", "")
+    cooked_html = PrettyText.cook <<~MARKDOWN
+      [details="foo"]
+      bar
+      [/details]
+    MARKDOWN
+
+    expect(cooked_html).to match_html <<~HTML
       <details>
-      <summary>
-      foo</summary>
-      <p>bar</p>
+        <summary>foo</summary>
+        <p>bar</p>
       </details>
     HTML
-
-    expect(cooked_html).to match_html(cooked_html)
-    expect(PrettyText.cook("[details=foo]\nbar\n[/details]").gsub("\n", "")).to match_html(
-      cooked_html,
-    )
   end
 
   it "deletes elided content" do
-    cooked_html = PrettyText.cook("Hello World\n\n<details class='elided'>42</details>")
-    mail_html = "<p>Hello World</p>\n<a href=\"http://test.localhost\">(click for more details)</a>"
+    cooked_html = PrettyText.cook <<~MARKDOWN
+      Hello World
+      
+      <details class='elided'>42</details>
+    MARKDOWN
 
-    expect(PrettyText.format_for_email(cooked_html)).to match_html(mail_html)
+    email_html = PrettyText.format_for_email(cooked_html)
+
+    expect(email_html).to match_html <<~HTML
+      <p>Hello World</p>
+      <a href="#{Discourse.base_url}">#{I18n.t("details.excerpt_details")}</a>
+    HTML
   end
 
   it "can replace spoilers in emails" do
-    md = PrettyText.cook(<<~MD)
+    cooked_html = PrettyText.cook <<~MARKDOWN
       hello
 
       [details="Summary"]
       world
       [/details]
-    MD
-    md = PrettyText.format_for_email(md, post)
-    html = "<p>hello</p>\n\nSummary <a href=\"#{post.full_url}\">(click for more details)</a>"
+    MARKDOWN
 
-    expect(md).to eq(html)
+    email_html = PrettyText.format_for_email(cooked_html, post)
+
+    expect(email_html).to match_html <<~HTML
+      <p>hello</p>
+      Summary <a href="#{post.full_url}">#{I18n.t("details.excerpt_details")}</a>
+    HTML
   end
 
   it "properly handles multiple spoiler blocks in a post" do
-    md = PrettyText.cook(<<~MD)
+    cooked_html = PrettyText.cook <<~MARKDOWN
       [details="First"]
       body secret stuff very long
       [/details]
@@ -55,24 +66,31 @@ RSpec.describe PrettyText do
       [details="Third"]
       body secret stuff very long
       [/details]
-    MD
+    MARKDOWN
 
-    md = PrettyText.format_for_email(md, post)
-    expect(md).not_to include("secret stuff")
-    expect(md.scan(/First/).size).to eq(1)
-    expect(md.scan(/Third/).size).to eq(1)
-    expect(md.scan(I18n.t("details.excerpt_details")).size).to eq(3)
+    email_html = PrettyText.format_for_email(cooked_html, post)
+
+    expect(email_html).to match_html <<~HTML
+      First <a href="#{post.full_url}">#{I18n.t("details.excerpt_details")}</a>
+      Second <a href="#{post.full_url}">#{I18n.t("details.excerpt_details")}</a>
+      <p>Hey there.</p>
+      Third <a href="#{post.full_url}">#{I18n.t("details.excerpt_details")}</a>
+    HTML
   end
 
   it "escapes summary text" do
-    md = PrettyText.cook(<<~MD)
+    cooked_html = PrettyText.cook <<~MARKDOWN
       <script>alert('hello')</script>
+
       [details="<script>alert('hello')</script>"]
       <script>alert('hello')</script>
       [/details]
-    MD
-    md = PrettyText.format_for_email(md, post)
+    MARKDOWN
 
-    expect(md).not_to include("<script>")
+    email_html = PrettyText.format_for_email(cooked_html, post)
+
+    expect(email_html).to match_html <<~HTML
+      &lt;script&gt;alert('hello')&lt;/script&gt; <a href="#{post.full_url}">#{I18n.t("details.excerpt_details")}</a>
+    HTML
   end
 end

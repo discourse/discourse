@@ -27,17 +27,30 @@ export default class CategoryDropMoreCollection extends Component {
     return this.args.selectKit.totalCount - currentCount;
   }
 
+  get slugPath() {
+    return this.args.selectKit.options.parentCategory.path.substring(
+      "/c/".length
+    );
+  }
+
   <template>
     {{#if this.moreCount}}
       <div class="category-drop-footer">
-        <span>{{i18n
-            "categories.plus_more_count"
-            (hash count=this.moreCount)
-          }}</span>
-        <LinkTo @route="discovery.categories">
-          {{i18n "categories.view_all"}}
-          {{icon "external-link-alt"}}
-        </LinkTo>
+        <span>
+          {{i18n "categories.plus_more_count" (hash count=this.moreCount)}}
+        </span>
+
+        {{#if @selectKit.options.parentCategory}}
+          <LinkTo @route="discovery.subcategories" @model={{this.slugPath}}>
+            {{i18n "categories.view_all"}}
+            {{icon "external-link-alt"}}
+          </LinkTo>
+        {{else}}
+          <LinkTo @route="discovery.categories">
+            {{i18n "categories.view_all"}}
+            {{icon "external-link-alt"}}
+          </LinkTo>
+        {{/if}}
       </div>
     {{/if}}
   </template>

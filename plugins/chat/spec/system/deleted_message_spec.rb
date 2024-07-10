@@ -80,6 +80,18 @@ RSpec.describe "Deleted message", type: :system do
     fab!(:message_5) { Fabricate(:chat_message, chat_channel: channel_1) }
     fab!(:message_6) { Fabricate(:chat_message, chat_channel: channel_1) }
 
+    it "allows user to bulk delete" do
+      chat_page.visit_channel(channel_1)
+
+      channel_page.messages.select(message_2)
+      channel_page.messages.select(message_4)
+      channel_page.messages.select(message_6)
+      channel_page.selection_management.delete
+      click_button(I18n.t("js.delete"))
+
+      expect(channel_page.messages).to have_deleted_messages(message_2, message_4, message_6)
+    end
+
     it "groups them" do
       chat_page.visit_channel(channel_1)
 

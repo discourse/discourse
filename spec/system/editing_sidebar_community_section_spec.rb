@@ -78,7 +78,9 @@ RSpec.describe "Editing Sidebar Community Section", type: :system do
 
     visit("/latest")
 
-    modal = sidebar_header_dropdown.open.click_customize_community_section_button
+    sidebar_header_dropdown.open
+    expect(sidebar_header_dropdown).to have_dropdown_visible
+    modal = sidebar_header_dropdown.click_customize_community_section_button
 
     expect(modal).to be_visible
   end

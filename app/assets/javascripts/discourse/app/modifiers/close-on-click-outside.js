@@ -8,9 +8,13 @@ export default class CloseOnClickOutside extends Modifier {
     registerDestructor(this, (instance) => instance.cleanup());
   }
 
-  modify(element, [closeFn, { targetSelector, secondaryTargetSelector }]) {
+  modify(
+    element,
+    [closeFn, { targetSelector, secondaryTargetSelector, target }]
+  ) {
     this.closeFn = closeFn;
     this.element = element;
+    this.target = target;
     this.targetSelector = targetSelector;
     this.secondaryTargetSelector = secondaryTargetSelector;
 
@@ -25,8 +29,10 @@ export default class CloseOnClickOutside extends Modifier {
       return;
     }
 
+    const target = this.target ?? document.querySelector(this.targetSelector);
+
     if (
-      document.querySelector(this.targetSelector)?.contains(event.target) ||
+      target?.contains(event.target) ||
       (this.secondaryTargetSelector &&
         document
           .querySelector(this.secondaryTargetSelector)

@@ -11,12 +11,10 @@ export default class AdminWatchedWord extends Component {
   @service dialog;
 
   @equal("actionKey", "replace") isReplace;
-
   @equal("actionKey", "tag") isTag;
-
   @equal("actionKey", "link") isLink;
-
   @alias("word.case_sensitive") isCaseSensitive;
+  @alias("word.html") isHtml;
 
   @discourseComputed("word.replacement")
   tags(replacement) {

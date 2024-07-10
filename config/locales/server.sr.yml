@@ -137,6 +137,8 @@ sr:
         category_id: "Kategorija"
       user_profile:
         bio_raw: "O meni"
+      user:
+        password: "Šifra"
     errors:
       models:
         user:
@@ -341,6 +343,11 @@ sr:
       labels:
         user: Korisnik
         qtt_like: Primljeno Lajkova
+    topic_view_stats:
+      labels:
+        topic: Tema
+        anon_views: Anonimno
+        total_views: Ukupno
   site_settings:
     min_topic_title_length: "Minimalna dozvoljena dužina naslova teme u znakovima"
     max_topic_title_length: "Maksimalna dozvoljena dužina naslova teme u znakovima"
@@ -422,6 +429,8 @@ sr:
     boolean_yes: "Da"
     boolean_no: "Ne"
     rate_limit_error: "Poruke mogu biti preuzimate jednom na dan, molimo pokušajte sutra."
+  guidelines_topic:
+    guidelines_title: "Smernice"
   tos_topic:
     title: "Uslovi Korišćenja"
   privacy_topic:

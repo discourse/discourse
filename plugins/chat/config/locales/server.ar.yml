@@ -9,7 +9,6 @@ ar:
     chat_separate_sidebar_mode: "إظهار أوضاع الشريط الجانبي المنفصلة للمنتدى والدردشة."
     chat_enabled: "تفعيل الدردشة."
     enable_public_channels: "تفعيل القنوات العامة حسب الفئات."
-    chat_allowed_groups: "يمكن للمستخدمين في هذه المجموعات الدردشة. لاحظ أن أعضاء فريق العمل يمكنهم دائمًا الوصول إلى الدردشة."
     chat_channel_retention_days: "سيتم الاحتفاظ برسائل الدردشة في القنوات العادية لهذا العدد من الأيام. اتعيين القيمة على '0' للاحتفاظ بالرسائل إلى الأبد."
     chat_dm_retention_days: "سيتم الاحتفاظ برسائل الدردشة في قنوات الدردشة الشخصية لهذا العدد من الأيام. اتعيين القيمة على '0' للاحتفاظ بالرسائل إلى الأبد."
     chat_auto_silence_duration: "عدد الدقائق التي سيتم فيها كتم المستخدمين عندما يتجاوزون حد معدل إنشاء رسائل الدردشة. اتعيين القيمة على '0' لإيقاف الكتم التلقائي."
@@ -24,7 +23,6 @@ ar:
     chat_archive_destination_topic_status: "الحالة التي يجب أن يكون عليها الموضوع المستهدف بعد اكتمال أرشيف القناة. ينطبق ذلك فقط عندما يكون الموضوع المستهدف موضوعًا جديدًا وليس موضوعًا موجودًا."
     default_emoji_reactions: "تفاعلات الرموز التعبيرية الافتراضية لرسائل الدردشة. أضِف ما يصل إلى 5 رموز تعبيرية للتفاعل السريع."
     direct_message_enabled_groups: "السماح للمستخدمين في تلك المجموعات بإنشاء دردشات شخصية بين مستخدم وآخر. ملاحظة: يمكن للموظفين دائمًا إنشاء دردشات شخصية، وسيتمكن المستخدمون من الرد على الدردشات الشخصية التي بدأها مستخدمون لديهم إذن بإنشائها."
-    chat_message_flag_allowed_groups: "السماح للمستخدمين في تلك المجموعات بالإبلاغ عن رسائل الدردشة."
     max_mentions_per_chat_message: "الحد الأقصى لعدد إشعارات @الاسم التي يمكن لمستخدم استخدامها في رسالة دردشة."
     chat_max_direct_message_users: "لا يمكن للمستخدمين إضافة أكثر من هذا العدد من المستخدمين الآخرين عند إنشاء رسالة مباشرة جديدة. اتعيين القيمة على 0 للسماح بإرسال الرسائل إلى نفسك فقط. الموظفون معفيون من هذا الإعداد."
     chat_allow_archiving_channels: "السماح لفريق العمل بأرشفة الرسائل في أحد الموضوعات عند إغلاق القناة."
@@ -244,8 +242,6 @@ ar:
         few: "و%{count} آخرين"
         many: "و%{count} آخرين"
         other: "و%{count} آخرين"
-    summaries:
-      no_targets: "لم تكن هناك رسائل خلال الفترة المحدَّدة."
     transcript:
       default_thread_title: "سلسلة الدردشة"
       split_thread_range: "الرسائل %{start} إلى %{end} من إجمالي %{total}"
@@ -286,27 +282,6 @@ ar:
         many: "لديك رسائل دردشة جديدة"
         other: "لديك رسائل دردشة جديدة"
       from: "%{site_name}"
-      subject:
-        private_message: "[%{email_prefix}] رسالة جديدة"
-        direct_message_from_1: "[%{email_prefix}] رسالة جديدة من %{username}"
-        direct_message_from_2: "[%{email_prefix}] رسالة جديدة من %{username1} و%{username2}"
-        direct_message_from_more:
-          zero: "[%{email_prefix}] رسالة جديدة من %{username} و%{count} مستخدم آخر"
-          one: "[%{email_prefix}] رسالة جديدة من %{username} ومستخدم (%{count}) آخر"
-          two: "[%{email_prefix}] رسالة جديدة من %{username} ومستخدمَين (%{count}) آخرين"
-          few: "[%{email_prefix}] رسالة جديدة من %{username} و%{count} مستخدمين آخرين"
-          many: "[%{email_prefix}] رسالة جديدة من %{username} و%{count} مستخدمًا آخر"
-          other: "[%{email_prefix}] رسالة جديدة من %{username} و%{count} مستخدم آخر"
-        chat_channel_1: "[%{email_prefix}] رسالة جديدة في %{channel}"
-        chat_channel_2: "[%{email_prefix}] رسالة جديدة في %{channel1} و%{channel2}"
-        chat_channel_more:
-          zero: "[%{email_prefix}] رسالة جديدة في %{channel} و%{count} قناة أخرى"
-          one: "[%{email_prefix}] رسالة جديدة في %{channel} وقناة (%{count}) أخرى"
-          two: "[%{email_prefix}] رسالة جديدة في %{channel} وقناتين (%{count}) آخرتين"
-          few: "[%{email_prefix}] رسالة جديدة في %{channel} و%{count} قنوات أخرى"
-          many: "[%{email_prefix}] رسالة جديدة في %{channel} و%{count} قناةً أخرى"
-          other: "[%{email_prefix}] رسالة جديدة في %{channel} و%{count} قناة أخرى"
-        chat_channel_and_direct_message: "[%{email_prefix}] رسالة جديدة في %{channel} ومن %{username}"
       unsubscribe: "يتم إرسال ملخص الدردشة هذا من %{site_link} عندما تكون غائبًا. غيِّر %{email_preferences_link} أو %{unsubscribe_link} لإلغاء الاشتراك."
       unsubscribe_no_link: "يتم إرسال ملخص الدردشة هذا من %{site_link} عندما تكون غائبًا. غيِّر %{email_preferences_link} لديك."
       view_messages:

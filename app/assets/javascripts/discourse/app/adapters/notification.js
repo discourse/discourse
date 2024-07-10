@@ -1,3 +1,5 @@
 import RestAdapter from "discourse/adapters/rest";
 
-export default RestAdapter.extend({ cache: true });
+export default class NotificationAdapter extends RestAdapter {
+  cache = true;
+}

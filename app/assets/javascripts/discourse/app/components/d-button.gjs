@@ -178,15 +178,13 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
     >
       {{#if @isLoading}}
         {{~icon "spinner" class="loading-icon"~}}
-      {{else}}
-        {{#if @icon}}
-          {{#if @ariaHidden}}
-            <span aria-hidden="true">
-              {{~icon @icon~}}
-            </span>
-          {{else}}
+      {{else if @icon}}
+        {{#if @ariaHidden}}
+          <span aria-hidden="true">
             {{~icon @icon~}}
-          {{/if}}
+          </span>
+        {{else}}
+          {{~icon @icon~}}
         {{/if}}
       {{/if}}
 
@@ -197,7 +195,7 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
             &hellip;
           {{~/if~}}
         </span>
-      {{~else~}}
+      {{~else if (or @icon @isLoading)~}}
         &#8203;
         {{! Zero-width space character, so icon-only button height = regular button height }}
       {{~/if~}}

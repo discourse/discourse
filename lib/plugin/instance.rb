@@ -197,6 +197,9 @@ class Plugin::Instance
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def replace_flags(settings: ::FlagSettings.new, score_type_names: [])
+    Discourse.deprecate(
+      "replace flags should not be used as flags were moved to the database. Instead, a flag record should be added to the database. Alternatively, soon, the admin will be able to do this in the admin panel.",
+    )
     next_flag_id = ReviewableScore.types.values.max + 1
 
     yield(settings, next_flag_id) if block_given?
@@ -715,7 +718,7 @@ class Plugin::Instance
   end
 
   def register_emoji(name, url, group = Emoji::DEFAULT_GROUP)
-    name = name.gsub(/[^a-z0-9]+/i, "_").gsub(/_{2,}/, "_").downcase
+    name = Emoji.sanitize_emoji_name(name)
     Plugin::CustomEmoji.register(name, url, group)
     Emoji.clear_cache
   end
@@ -750,7 +753,7 @@ class Plugin::Instance
       assets.concat(auto_assets)
     end
 
-    register_assets! unless assets.blank?
+    register_assets! if assets.present?
     register_locales!
     register_service_workers!
 
@@ -789,25 +792,6 @@ class Plugin::Instance
 
       Auth::AuthProvider.auth_attributes.each do |sym|
         provider.public_send("#{sym}=", opts.delete(sym)) if opts.has_key?(sym)
-      end
-
-      begin
-        provider.authenticator.enabled?
-      rescue NotImplementedError
-        provider
-          .authenticator
-          .define_singleton_method(:enabled?) do
-            Discourse.deprecate(
-              "#{provider.authenticator.class.name} should define an `enabled?` function. Patching for now.",
-              drop_from: "2.9.0",
-            )
-            return SiteSetting.get(provider.enabled_setting) if provider.enabled_setting
-            Discourse.deprecate(
-              "#{provider.authenticator.class.name} has not defined an enabled_setting. Defaulting to true.",
-              drop_from: "2.9.0",
-            )
-            true
-          end
       end
 
       DiscoursePluginRegistry.register_auth_provider(provider)
@@ -1198,6 +1182,9 @@ class Plugin::Instance
   # to summarize content. Staff can select which strategy to use
   # through the `summarization_strategy` setting.
   def register_summarization_strategy(strategy)
+    Discourse.deprecate(
+      "register_summarization_strategy is deprecated. Summarization code is now moved to Discourse AI",
+    )
     if !strategy.class.ancestors.include?(Summarization::Base)
       raise ArgumentError.new("Not a valid summarization strategy")
     end
@@ -1288,13 +1275,6 @@ class Plugin::Instance
       locale_chain = opts[:fallbackLocale] ? [locale, opts[:fallbackLocale]] : [locale]
       lib_locale_path = File.join(root_path, "lib/javascripts/locale")
 
-      path = File.join(lib_locale_path, "message_format")
-      opts[:message_format] = find_locale_file(locale_chain, path)
-      opts[:message_format] = JsLocaleHelper.find_message_format_locale(
-        locale_chain,
-        fallback_to_english: false,
-      ) unless opts[:message_format]
-
       path = File.join(lib_locale_path, "moment_js")
       opts[:moment_js] = find_locale_file(locale_chain, path)
       opts[:moment_js] = JsLocaleHelper.find_moment_locale(locale_chain) unless opts[:moment_js]
@@ -1370,8 +1350,7 @@ class Plugin::Instance
   def valid_locale?(custom_locale)
     File.exist?(custom_locale[:client_locale_file]) &&
       File.exist?(custom_locale[:server_locale_file]) &&
-      File.exist?(custom_locale[:js_locale_file]) && custom_locale[:message_format] &&
-      custom_locale[:moment_js]
+      File.exist?(custom_locale[:js_locale_file]) && custom_locale[:moment_js]
   end
 
   def find_locale_file(locale_chain, path)

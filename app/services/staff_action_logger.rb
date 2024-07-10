@@ -318,7 +318,7 @@ class StaffActionLogger
   end
 
   def log_site_text_change(subject, new_text = nil, old_text = nil, opts = {})
-    raise Discourse::InvalidParameters.new(:subject) unless subject.present?
+    raise Discourse::InvalidParameters.new(:subject) if subject.blank?
     UserHistory.create!(
       params(opts).merge(
         action: UserHistory.actions[:change_site_text],
@@ -549,7 +549,7 @@ class StaffActionLogger
 
     changed_attributes = category.previous_changes.slice(*category_params.keys)
 
-    if !old_permissions.empty? && (old_permissions != category_params[:permissions])
+    if !old_permissions.empty? && (old_permissions != category_params[:permissions].to_h)
       changed_attributes.merge!(
         permissions: [old_permissions.to_json, category_params[:permissions].to_json],
       )
@@ -856,9 +856,7 @@ class StaffActionLogger
 
     if opts[:changes]
       old_values, new_values = get_changes(opts[:changes])
-      history_params[:previous_value] = old_values&.join(", ") unless opts[:changes].keys.include?(
-        "id",
-      )
+      history_params[:previous_value] = old_values&.join(", ") if opts[:changes].keys.exclude?("id")
       history_params[:new_value] = new_values&.join(", ")
     end
 
@@ -934,8 +932,11 @@ class StaffActionLogger
   def log_watched_words_creation(watched_word)
     raise Discourse::InvalidParameters.new(:watched_word) unless watched_word
 
+    action_key = :watched_word_create
+    action_key = :create_watched_word_group if watched_word.is_a?(WatchedWordGroup)
+
     UserHistory.create!(
-      action: UserHistory.actions[:watched_word_create],
+      action: UserHistory.actions[action_key],
       acting_user_id: @admin.id,
       details: watched_word.action_log_details,
       context: WatchedWord.actions[watched_word.action],
@@ -945,8 +946,11 @@ class StaffActionLogger
   def log_watched_words_deletion(watched_word)
     raise Discourse::InvalidParameters.new(:watched_word) unless watched_word
 
+    action_key = :watched_word_destroy
+    action_key = :delete_watched_word_group if watched_word.is_a?(WatchedWordGroup)
+
     UserHistory.create!(
-      action: UserHistory.actions[:watched_word_destroy],
+      action: UserHistory.actions[action_key],
       acting_user_id: @admin.id,
       details: watched_word.action_log_details,
       context: WatchedWord.actions[watched_word.action],

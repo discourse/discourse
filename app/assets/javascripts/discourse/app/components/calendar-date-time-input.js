@@ -40,7 +40,8 @@ export default class CalendarDateTimeInput extends Component {
     if (moment(this.args.date, this._dateFormat).isValid()) {
       this._date = this.args.date;
       this._picker.setDate(
-        moment.utc(this._date).format(this._dateFormat),
+        // using the format YYYY-MM-DD returns the previous day for some timezones
+        moment.utc(this._date).format("YYYY/MM/DD"),
         true
       );
     } else {

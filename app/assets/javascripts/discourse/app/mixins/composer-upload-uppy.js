@@ -319,13 +319,13 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     });
 
     this._uppyInstance.on("upload-success", (file, response) => {
-      run(() => {
+      run(async () => {
         if (!this._uppyInstance) {
           return;
         }
         this._removeInProgressUpload(file.id);
         let upload = response.body;
-        const markdown = this.uploadMarkdownResolvers.reduce(
+        const markdown = await this.uploadMarkdownResolvers.reduce(
           (md, resolver) => resolver(upload) || md,
           getUploadMarkdown(upload)
         );

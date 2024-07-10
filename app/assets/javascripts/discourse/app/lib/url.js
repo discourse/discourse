@@ -77,10 +77,10 @@ let _jumpScheduled = false;
 let _transitioning = false;
 let lockOn = null;
 
-const DiscourseURL = EmberObject.extend({
+class DiscourseURL extends EmberObject {
   isJumpScheduled() {
     return _transitioning || _jumpScheduled;
-  },
+  }
 
   // Jumps to a particular post in the stream
   jumpToPost(postNumber, opts) {
@@ -156,7 +156,7 @@ const DiscourseURL = EmberObject.extend({
         return;
       }
     });
-  },
+  }
 
   replaceState(path) {
     if (path.startsWith("#")) {
@@ -175,12 +175,12 @@ const DiscourseURL = EmberObject.extend({
         this.router._routerMicrolib.replaceURL(path);
       });
     }
-  },
+  }
 
   pushState(path) {
     path = withoutPrefix(path);
     this.router._routerMicrolib.updateURL(path);
-  },
+  }
 
   routeToTag(a) {
     // skip when we are provided nowhere to route to
@@ -194,7 +194,7 @@ const DiscourseURL = EmberObject.extend({
     }
 
     return this.routeTo(a.href);
-  },
+  }
 
   /**
     Our custom routeTo method is used to intelligently overwrite default routing
@@ -261,15 +261,15 @@ const DiscourseURL = EmberObject.extend({
     }
 
     return this.handleURL(path, opts);
-  },
+  }
 
   routeToUrl(url, opts = {}) {
     this.routeTo(getURL(url), opts);
-  },
+  }
 
   rewrite(regexp, replacement, opts) {
     rewrites.push({ regexp, replacement, opts: opts || {} });
-  },
+  }
 
   redirectAbsolute(url) {
     // Redirects will kill a test runner
@@ -278,11 +278,11 @@ const DiscourseURL = EmberObject.extend({
     }
     window.location = url;
     return true;
-  },
+  }
 
   redirectTo(url) {
     return this.redirectAbsolute(getURL(url));
-  },
+  }
 
   // Determines whether a URL is internal or not
   isInternal(url) {
@@ -312,7 +312,7 @@ const DiscourseURL = EmberObject.extend({
     }
 
     return true;
-  },
+  }
 
   /**
     If the URL is in the topic form, /t/something/:topic_id/:post_number
@@ -373,7 +373,7 @@ const DiscourseURL = EmberObject.extend({
     }
 
     return false;
-  },
+  }
 
   /**
     @private
@@ -390,33 +390,33 @@ const DiscourseURL = EmberObject.extend({
       (path === "/" || path === "/" + homepage) &&
       (oldPath === "/" || oldPath === "/" + homepage)
     );
-  },
+  }
 
   // This has been extracted so it can be tested.
   get origin() {
     const prefix = getURL("/");
     return window.location.origin + (prefix === "/" ? "" : prefix);
-  },
+  }
 
   get isComposerOpen() {
     return this.container.lookup("service:composer")?.visible;
-  },
+  }
 
   get router() {
     return this.container.lookup("router:main");
-  },
+  }
 
   get routerService() {
     return this.container.lookup("service:router");
-  },
+  }
 
   get appEvents() {
     return this.container.lookup("service:app-events");
-  },
+  }
 
   controllerFor(name) {
     return this.container.lookup("controller:" + name);
-  },
+  }
 
   /**
     Be wary of looking up the router. In this case, we have links in our
@@ -445,7 +445,7 @@ const DiscourseURL = EmberObject.extend({
 
     const promise = transition.promise || transition;
     return promise.then(() => this.jumpToElement(elementId));
-  },
+  }
 
   jumpToElement(elementId) {
     if (_jumpScheduled || isEmpty(elementId)) {
@@ -468,8 +468,8 @@ const DiscourseURL = EmberObject.extend({
       });
       lockOn.lock();
     });
-  },
-});
+  }
+}
 
 let _urlInstance = DiscourseURL.create();
 

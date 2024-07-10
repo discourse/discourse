@@ -20,6 +20,13 @@ RSpec.describe Jobs::BulkInvite do
       ]
     end
 
+    def parse_skipped_and_failed_emails(input)
+      skipped_invites_emails = input[/Skipped Invites for Emails?:\s+``` text\n(.+?)\n```/m, 1]
+      failed_invites_emails = input[/Failed Invites for Emails?:\s+``` text\n(.+?)\n```/m, 1]
+
+      { skipped_invites: skipped_invites_emails, failed_invites: failed_invites_emails }
+    end
+
     it "raises an error when the invites array is missing" do
       expect { Jobs::BulkInvite.new.execute(current_user_id: user.id) }.to raise_error(
         Discourse::InvalidParameters,
@@ -125,6 +132,18 @@ RSpec.describe Jobs::BulkInvite do
       expect(staged_user.user_fields[user_field_color.id.to_s]).to eq(nil)
       new_staged_user = User.where(staged: true).find_by_email("test2@discourse.org")
       expect(new_staged_user.user_fields[user_field.id.to_s]).to eq("value 3")
+    end
+
+    it "includes any skipped and failed emails in the private message" do
+      described_class.new.execute(
+        current_user_id: admin.id,
+        invites: [{ email: "bad_email" }, { email: user.email }, { email: "test@discourse.org" }],
+      )
+
+      post = Post.last
+      result = parse_skipped_and_failed_emails(post.raw)
+      expect(result[:skipped_invites]).to eq(user.email)
+      expect(result[:failed_invites]).to eq("bad_email")
     end
 
     context "when there are more than 200 invites" do

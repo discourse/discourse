@@ -21,6 +21,7 @@ nl:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -342,11 +343,20 @@ nl:
       search_placeholder: "Zoek bladwijzers op naam, topictitel of berichtinhoud"
       search: "Zoeken"
       bookmark: "Bladwijzer"
+      bulk:
+        select_all: "Alles selecteren"
+        clear_all: "Alles wissen"
+        selected_count:
+          one: "%{count} geselecteerd"
+          other: "%{count} geselecteerd"
       reminders:
         today_with_time: "vandaag om %{time}"
         tomorrow_with_time: "morgen om %{time}"
         at_time: "om %{date_time}"
         existing_reminder: "Je hebt een herinnering voor deze bladwijzer ingesteld die %{at_date_time} wordt verzonden"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Bladwijzer verwijderen"
     copy_codeblock:
       copied: "gekopieerd!"
       copy: "code kopiëren naar klembord"
@@ -685,6 +695,7 @@ nl:
       topic_count_long: "Topics gemaakt"
       post_count: "Antwoorden"
       post_count_long: "Antwoorden geplaatst"
+      no_results_with_search: "Geen resultaten gevonden."
       days_visited: "Bezoeken"
       days_visited_long: "Dagen bezocht"
       posts_read: "Gelezen"
@@ -1027,6 +1038,7 @@ nl:
       none: "(selecteer een optie)"
       required: 'Voer een waarde in voor ''%{name}'''
       same_as_password: "Je wachtwoord mag niet worden herhaald in andere velden."
+      optional: (optioneel)
     user:
       said: "%{username}:"
       profile: "Profiel"
@@ -1080,7 +1092,8 @@ nl:
       activity_stream: "Activiteit"
       read: "Gelezen"
       read_help: "Recent gelezen topics"
-      preferences: "Voorkeuren"
+      preferences:
+        title: "Voorkeuren"
       feature_topic_on_profile:
         open_search: "Selecteer een nieuw topic"
         title: "Selecteer een topic"
@@ -1354,6 +1367,7 @@ nl:
         set_password: "Wachtwoord instellen"
         choose_new: "Kies een nieuw wachtwoord"
         choose: "Kies een wachtwoord"
+        title: "Wachtwoord herstellen"
       second_factor_backup:
         title: "Back-upcodes voor tweeledige verificatie"
         regenerate: "Opnieuw genereren"
@@ -1745,7 +1759,6 @@ nl:
         fine_print: "We vragen je om je identiteit te bevestigen omdat dit een potentieel gevoelige actie is. Nadat je je hebt geverifieerd, wordt je pas na een paar uur inactiviteit opnieuw gevraagd om je te verifiëren."
       password:
         title: "Wachtwoord"
-        too_short: "Je wachtwoord is te kort."
         common: "Dat wachtwoord wordt te vaak gebruikt."
         same_as_username: "Je wachtwoord is hetzelfde als je gebruikersnaam."
         same_as_email: "Je wachtwoord is hetzelfde als je e-mailadres."
@@ -1969,10 +1982,11 @@ nl:
       header_title: "Welkom!"
       subheader_title: "Laten we je account maken"
       disclaimer: "Door je te registreren, ga je akkoord met het <a href='%{privacy_link}' target='blank'>privacybeleid</a> en de <a href='%{tos_link}' target='blank'>gebruiksvoorwaarden</a>."
-      title: "Maak je account"
+      title: "Registreren"
       failed: "Er is iets misgegaan, mogelijk is het e-mailadres al geregistreerd. Probeer de link 'Wachtwoord vergeten'."
       associate: "Heb je al een account? <a href='%{associate_link}'>Meld je aan</a> om je %{provider}-account te koppelen."
       activation_title: "Activeer je account"
+      already_have_account: "Heb je al een account?"
     forgot_password:
       title: "Wachtwoord herstellen"
       action: "Ik ben mijn wachtwoord vergeten"
@@ -2126,8 +2140,8 @@ nl:
       loading: Laden…
     category_row:
       subcategory_count:
-        one: "+ %{count} subcategorie"
-        other: "+ %{count} subcategorieën"
+        one: "+%{count} subcategorie"
+        other: "+%{count} subcategorieën"
       topic_count:
         one: "%{count} topic in deze categorie"
         other: "%{count} topics in deze categorie"
@@ -2154,6 +2168,8 @@ nl:
         categories_admin_dropdown:
           title: "Categorieën beheren"
         bulk_select_topics_dropdown:
+          title: "Bulkacties"
+        bulk_select_bookmarks_dropdown:
           title: "Bulkacties"
     date_time_picker:
       from: Van
@@ -2304,7 +2320,6 @@ nl:
       show_toolbar: "editorwerkbalk weergeven"
       hide_toolbar: "editorwerkbalk verbergen"
       modal_ok: "OK"
-      modal_cancel: "Annuleren"
       cant_send_pm: "Sorry, je kunt geen bericht naar %{username} sturen."
       yourself_confirm:
         title: "Ben je vergeten ontvangers toe te voegen?"
@@ -2755,14 +2770,12 @@ nl:
         filter: "Er zijn geen verdere topics."
     topic_bulk_actions:
       close_topics:
-        name: "Topics sluiten"
+        name: "Sluiten"
         optional: (optioneel)
       archive_topics:
-        name: "Topics archiveren"
-      unlist_topics:
-        name: "Topics onzichtbaar maken"
-      relist_topics:
-        name: "Topics opnieuw weergeven"
+        name: "Archief"
+      move_messages_to_inbox:
+        name: "Verplaatsen naar inbox"
       remove_tags:
         name: "Tags verwijderen"
       append_tags:
@@ -2770,7 +2783,7 @@ nl:
       replace_tags:
         name: "Tags vervangen"
       delete_topics:
-        name: "Topics verwijderen"
+        name: "Verwijderen"
       update_category:
         name: "Categorie bijwerken"
         description: "Kies de nieuwe categorie voor de geselecteerde onderwerpen"
@@ -3991,7 +4004,6 @@ nl:
       all_tags: "Alle tags"
       other_tags: "Andere tags"
       selector_tags: "tags"
-      selector_all_tags: "alle tags"
       selector_no_tags: "geen tags"
       selector_remove_filter: "filter verwijderen"
       tags: "Tags"
@@ -4188,6 +4200,7 @@ nl:
           text: "en we geven automatisch de populairste categorieën van deze site weer"
         filter_placeholder: "Filter categorieën"
         no_categories: "Er zijn geen categorieën die overeenkomen met de opgegeven term."
+        show_more: "Meer weergeven"
       tags_form_modal:
         title: "Tagsnavigatie bewerken"
         filter_placeholder: "Filter tags"
@@ -4278,6 +4291,9 @@ nl:
             faq:
               content: "FAQ"
               title: "Richtlijnen voor het gebruik van deze site"
+            guidelines:
+              content: "Richtlijnen"
+              title: "Richtlijnen voor het gebruik van deze site"
             groups:
               content: "Groepen"
               title: "Lijst van beschikbare gebruikersgroepen"
@@ -4302,7 +4318,8 @@ nl:
       panels:
         forum:
           label: Forum
-      filter: "Filter"
+      back_to_forum: "Terug naar Forum"
+      filter: "Filter..."
       no_results:
         title: "Geen resultaten"
     welcome_topic_banner:
@@ -4405,12 +4422,12 @@ nl:
           copy: "Kopiëren..."
           paste: "Plakken..."
           save: "Opslaan als..."
+    powered_by_discourse: "Gemaakt met Discourse"
   admin_js:
     type_to_filter: "typ om te filteren…"
     admin:
       title: "Discourse-beheerder"
       moderator: "Moderator"
-      back_to_forum: "Terug naar Forum"
       filter_reports: Rapporten filteren
       tags:
         remove_muted_tags_from_latest:
@@ -4517,6 +4534,9 @@ nl:
               label: Categorie
             include_subcategories:
               label: "Subcategorieën bijvoegen"
+      flags:
+        description: "Beschrijving"
+        enabled: "Ingeschakeld?"
       groups:
         new:
           title: "Nieuwe groep"
@@ -4819,6 +4839,8 @@ nl:
           timestamp: "Gemaakt"
           completion: "Voltooiingstijd"
           actions: "Acties"
+          filter_status:
+            failed: "Mislukt"
       home:
         title: "Start"
       account:
@@ -4865,6 +4887,32 @@ nl:
           search_logs: "Zoeken in logs"
           security: "Beveiliging"
           spam: "Spam"
+      config_areas:
+        about:
+          header: "Over je site"
+          community_name: "Communitynaam"
+          site_contact_group_help: |
+            Een geldige groepsnaam voor uitnodiging in alle automatische berichten.
+          your_organization: "Je organisatie"
+          company_name: "Bedrijfsnaam"
+          governing_law: "Toepasselijk recht"
+          city_for_disputes: "Plaats voor geschillen"
+          optional: "(optioneel)"
+          update: "Bijwerken"
+          saved: "opgeslagen!"
+        flags:
+          description: "Beschrijving"
+          enabled: "Ingeschakeld?"
+          edit: "Bewerken"
+          delete: "Verwijderen"
+          delete_confirm: 'Weet je zeker dat je ''%{name}'' wilt verwijderen?'
+          form:
+            save: "Opslaan"
+            name: "Naam"
+            description: "Beschrijving"
+            topic: "topics"
+            post: "berichten"
+            chat_message: "chatberichten"
       plugins:
         title: "Plug-ins"
         installed: "Geïnstalleerde plug-ins"
@@ -5236,7 +5284,6 @@ nl:
             description: "Links, sommige knoppen, meldingen en accentkleur."
           quaternary:
             name: "quaternair"
-            description: "Navigatielinks."
           header_background:
             name: "koptekstachtergrond"
             description: "Achtergrondkleur van de koptekst van de website."
@@ -5581,6 +5628,7 @@ nl:
           upload_successful: "Uploaden geslaagd. Woorden zijn toegevoegd."
           case_sensitivity_label: "Is hoofdlettergevoelig"
           case_sensitivity_description: "Alleen woorden met overeenkomend hoofdlettergebruik"
+          html_label: "HTML"
         test:
           button_label: "Testen"
           modal_title: "%{action}: Geobserveerde woorden testen"
@@ -5964,6 +6012,7 @@ nl:
         name: "Veldnaam"
         type: "Veldtype"
         description: "Veldbeschrijving"
+        preferences: "Voorkeuren"
         save: "Opslaan"
         edit: "Bewerken"
         delete: "Verwijderen"
@@ -5974,6 +6023,9 @@ nl:
           title: "Vereist bij registratie"
           enabled: "vereist"
           disabled: "niet vereist"
+        requirement:
+          optional:
+            title: "Optioneel"
         editable:
           title: "Bewerkbaar na registratie"
           enabled: "bewerkbaar"

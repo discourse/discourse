@@ -8,6 +8,7 @@ class Admin::UsersController < Admin::StaffController
                   suspend
                   unsuspend
                   log_out
+                  grant_admin
                   revoke_admin
                   revoke_moderation
                   grant_moderation
@@ -45,7 +46,11 @@ class Admin::UsersController < Admin::StaffController
     @user = User.find_by(id: params[:id])
     raise Discourse::NotFound unless @user
 
-    similar_users = User.real.where.not(id: @user.id).where(ip_address: @user.ip_address)
+    similar_users =
+      User
+        .real
+        .where.not(id: @user.id)
+        .where(ip_address: @user.ip_address, admin: false, moderator: false)
 
     render_serialized(
       @user,
@@ -143,44 +148,20 @@ class Admin::UsersController < Admin::StaffController
 
     user_history = nil
 
+    all_users.each { |user| raise Discourse::InvalidAccess.new if !guardian.can_suspend?(user) }
+
     all_users.each do |user|
-      user.suspended_till = params[:suspend_until]
-      user.suspended_at = DateTime.now
-
-      message = params[:message]
-
-      User.transaction do
-        user.save!
-
-        user_history =
-          StaffActionLogger.new(current_user).log_user_suspend(
-            user,
-            params[:reason],
-            message: message,
-            post_id: params[:post_id],
-          )
-      end
-      user.logged_out
-
-      if message.present?
-        Jobs.enqueue(
-          :critical_user_email,
-          type: "account_suspended",
-          user_id: user.id,
-          user_history_id: user_history.id,
+      suspender =
+        UserSuspender.new(
+          user,
+          suspended_till: params[:suspend_until],
+          reason: params[:reason],
+          by_user: current_user,
+          message: params[:message],
+          post_id: params[:post_id],
         )
-      end
-
-      DiscourseEvent.trigger(
-        :user_suspended,
-        user: user,
-        reason: params[:reason],
-        message: message,
-        user_history: user_history,
-        post_id: params[:post_id],
-        suspended_till: params[:suspend_until],
-        suspended_at: DateTime.now,
-      )
+      suspender.suspend
+      user_history = suspender.user_history
     end
 
     perform_post_action
@@ -188,7 +169,7 @@ class Admin::UsersController < Admin::StaffController
     render_json_dump(
       suspension: {
         suspend_reason: params[:reason],
-        full_suspend_reason: user_history.try(:details),
+        full_suspend_reason: user_history&.details,
         suspended_till: @user.suspended_till,
         suspended_at: @user.suspended_at,
         suspended_by: BasicUserSerializer.new(current_user, root: false).as_json,
@@ -368,7 +349,6 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def silence
-    guardian.ensure_can_silence_user! @user
     reason = params[:reason]
 
     if reason && (!reason.is_a?(String) || reason.size > 300)
@@ -402,6 +382,10 @@ class Admin::UsersController < Admin::StaffController
     end
 
     user_history = nil
+
+    all_users.each do |user|
+      raise Discourse::InvalidAccess.new if !guardian.can_silence_user?(user)
+    end
 
     all_users.each do |user|
       silencer =
@@ -619,7 +603,7 @@ class Admin::UsersController < Admin::StaffController
   private
 
   def perform_post_action
-    return unless params[:post_id].present? && params[:post_action].present?
+    return if params[:post_id].blank? || params[:post_action].blank?
 
     if post = Post.where(id: params[:post_id]).first
       case params[:post_action]

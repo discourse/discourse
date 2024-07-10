@@ -187,6 +187,8 @@ sq:
         raw: "Trupi"
       user_profile:
         bio_raw: "Rreth Meje"
+      user:
+        password: "Fjalëkalimi"
     errors:
       models:
         topic:
@@ -584,6 +586,8 @@ sq:
     mobile_visits:
       xaxis: "Ditë"
       yaxis: "Numri i vizitave"
+    web_hook_events_daily_aggregate:
+      xaxis: "Dit"
     suspicious_logins:
       labels:
         user: User
@@ -607,12 +611,18 @@ sq:
       labels:
         user: User
         qtt_like: Pëlqime të marra
+    topic_view_stats:
+      labels:
+        topic: Topic
+        logged_in_views: Logged In
+        anon_views: Anonim
+        total_views: Total
   dashboard:
-    rails_env_warning: "Your server is running in %{env} mode."
-    host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
-    sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
-    queue_size_warning: "The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers."
-    memory_warning: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
+    problem:
+      rails_env: "Your server is running in %{env} mode."
+      host_names: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
+      queue_size: "The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers."
+      ram: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
   site_settings:
     censored_words: "Fjalët do të zhvendosen automatikisht me &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
@@ -865,7 +875,6 @@ sq:
     password_too_long: "Passwords are limited to 200 characters."
     email_too_long: "The email you provided is too long. Mailbox names must be no more than 254 characters, and domain names must be no more than 253 characters."
     reserved_username: "Ky emër nuk lejohet."
-    missing_user_field: "You have not completed all the user fields"
   admin:
     email:
       sent_test: "u dërgua!"
@@ -1114,14 +1123,12 @@ sq:
 
         %{message}
     digest:
-      why: "Një përmbledhje e shkurtër e temave tek %{site_link} që prej vizitës tuaj të fundit më %{last_seen_at}"
       new_topics: "Diskutimet e Reja"
       liked_received: "Pëlqime të marra"
       new_users: "Përdorues të rinj"
       join_the_discussion: "Më shumë"
       subject_template: "[%{email_prefix}] Përmbledhja"
       click_here: "klikoni këtu"
-      preheader: "Një përmbledhe e shkurtër e faqes që nga vizita juaj e fundit më %{last_seen_at}"
     forgot_password:
       title: "Harruat Fjalëkalimin"
     set_password:
@@ -1198,6 +1205,7 @@ sq:
     Modifiko postimin e parë të kësaj teme puer të ndryshuar përmbajtjen e faqes %{page_name}.
   guidelines_topic:
     title: "Pyetje dhe Përgjigje/Udhëzime"
+    guidelines_title: "Udhëzimet"
   tos_topic:
     title: "Termat e Shërbimit "
   privacy_topic:

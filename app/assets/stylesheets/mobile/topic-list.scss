@@ -455,7 +455,7 @@ td .main-link {
   width: 78%;
   display: inline-block;
   a.title {
-    padding: 5px 10px 5px 0;
+    padding: 0.33em 0.67em 0.33em 0;
     word-wrap: break-word;
   }
 }
@@ -566,11 +566,14 @@ td .main-link {
     background: none;
     border: none;
     padding: 0.75em;
-    box-shadow: 0 3px 0 var(--primary-low);
+    position: relative;
 
     &.active {
-      color: var(--quaternary);
-      box-shadow: 0 3px 0 var(--quaternary);
+      @include nav-active;
+      &:after {
+        height: 0.15em;
+        bottom: -0.15em;
+      }
     }
   }
 }

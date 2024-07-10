@@ -238,32 +238,27 @@ export default class History extends Component {
   }
 
   get previousCategory() {
-    if (this.postRevision?.category_id_changes) {
+    if (this.postRevision?.category_id_changes?.previous) {
       let category = Category.findById(
         this.postRevision.category_id_changes.previous
       );
-      return categoryBadgeHTML(category, { allowUncategorized: true });
+      return categoryBadgeHTML(category, {
+        allowUncategorized: true,
+        extraClasses: "diff-del",
+      });
     }
   }
 
   get currentCategory() {
-    if (this.postRevision?.category_id_changes) {
+    if (this.postRevision?.category_id_changes?.current) {
       let category = Category.findById(
         this.postRevision.category_id_changes.current
       );
-      return categoryBadgeHTML(category, { allowUncategorized: true });
+      return categoryBadgeHTML(category, {
+        allowUncategorized: true,
+        extraClasses: "diff-ins",
+      });
     }
-  }
-
-  get wikiDisabled() {
-    return !this.postRevision.wiki_changes?.current;
-  }
-
-  get postTypeDisabled() {
-    return (
-      this.postRevision?.post_type_changes?.current !==
-      this.site.post_types.moderator_action
-    );
   }
 
   @action

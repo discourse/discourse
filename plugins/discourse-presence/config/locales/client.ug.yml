@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  js:
+    presence:
+      replying:
+        one: "جاۋاب بېرىۋاتىدۇ"
+        other: "جاۋاب بېرىۋاتىدۇ"
+      editing:
+        one: "تەھرىرلەۋاتىدۇ"
+        other: "تەھرىرلەۋاتىدۇ"
+      replying_to_topic:
+        one: "جاۋاب بېرىۋاتىدۇ"
+        other: "جاۋاب بېرىۋاتىدۇ"

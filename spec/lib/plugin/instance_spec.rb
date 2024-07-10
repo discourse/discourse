@@ -17,6 +17,8 @@ RSpec.describe Plugin::Instance do
 some_ruby
 TEXT
 
+  around { |example| allow_missing_translations(&example) }
+
   after { DiscoursePluginRegistry.reset! }
 
   # NOTE: sample_plugin_site_settings.yml is always loaded in tests in site_setting.rb
@@ -324,49 +326,6 @@ TEXT
     end
   end
 
-  it "patches the enabled? function for auth_providers if not defined" do
-    SimpleAuthenticator =
-      Class.new(Auth::Authenticator) do
-        def name
-          "my_authenticator"
-        end
-      end
-
-    plugin = Plugin::Instance.new
-
-    # lets piggy back on another boolean setting, so we don't dirty our SiteSetting object
-    SiteSetting.enable_badges = false
-
-    # No enabled_site_setting
-    authenticator = SimpleAuthenticator.new
-    plugin.auth_provider(authenticator: authenticator)
-    plugin.notify_after_initialize
-    expect(authenticator.enabled?).to eq(true)
-
-    # With enabled site setting
-    plugin = Plugin::Instance.new
-    authenticator = SimpleAuthenticator.new
-    plugin.auth_provider(enabled_setting: "enable_badges", authenticator: authenticator)
-    plugin.notify_after_initialize
-    expect(authenticator.enabled?).to eq(false)
-
-    # Defines own method
-    plugin = Plugin::Instance.new
-
-    SiteSetting.enable_badges = true
-    authenticator =
-      Class
-        .new(SimpleAuthenticator) do
-          def enabled?
-            false
-          end
-        end
-        .new
-    plugin.auth_provider(enabled_setting: "enable_badges", authenticator: authenticator)
-    plugin.notify_after_initialize
-    expect(authenticator.enabled?).to eq(false)
-  end
-
   describe "#activate!" do
     before do
       # lets piggy back on another boolean setting, so we don't dirty our SiteSetting object
@@ -564,9 +523,6 @@ TEXT
       expect(DiscoursePluginRegistry.locales).to have_key(:foo_BAR)
 
       expect(locale[:fallbackLocale]).to be_nil
-      expect(locale[:message_format]).to eq(
-        ["foo_BAR", "#{plugin_path}/lib/javascripts/locale/message_format/foo_BAR.js"],
-      )
       expect(locale[:moment_js]).to eq(
         ["foo_BAR", "#{plugin_path}/lib/javascripts/locale/moment_js/foo_BAR.js"],
       )
@@ -577,9 +533,6 @@ TEXT
 
       expect(Rails.configuration.assets.precompile).to include("locales/foo_BAR.js")
 
-      expect(
-        JsLocaleHelper.find_message_format_locale(["foo_BAR"], fallback_to_english: true),
-      ).to eq(locale[:message_format])
       expect(JsLocaleHelper.find_moment_locale(["foo_BAR"])).to eq(locale[:moment_js])
       expect(JsLocaleHelper.find_moment_locale(["foo_BAR"], timezone_names: true)).to eq(
         locale[:moment_js_timezones],
@@ -593,9 +546,6 @@ TEXT
       expect(DiscoursePluginRegistry.locales).to have_key(:tup)
 
       expect(locale[:fallbackLocale]).to eq("pt_BR")
-      expect(locale[:message_format]).to eq(
-        ["pt_BR", "#{Rails.root}/lib/javascripts/locale/pt_BR.js"],
-      )
       expect(locale[:moment_js]).to eq(
         ["pt-br", "#{Rails.root}/vendor/assets/javascripts/moment-locale/pt-br.js"],
       )
@@ -606,9 +556,6 @@ TEXT
 
       expect(Rails.configuration.assets.precompile).to include("locales/tup.js")
 
-      expect(JsLocaleHelper.find_message_format_locale(["tup"], fallback_to_english: true)).to eq(
-        locale[:message_format],
-      )
       expect(JsLocaleHelper.find_moment_locale(["tup"])).to eq(locale[:moment_js])
     end
 
@@ -619,9 +566,6 @@ TEXT
       expect(DiscoursePluginRegistry.locales).to have_key(:tlh)
 
       expect(locale[:fallbackLocale]).to be_nil
-      expect(locale[:message_format]).to eq(
-        ["tlh", "#{plugin_path}/lib/javascripts/locale/message_format/tlh.js"],
-      )
       expect(locale[:moment_js]).to eq(
         ["tlh", "#{Rails.root}/vendor/assets/javascripts/moment-locale/tlh.js"],
       )
@@ -629,9 +573,6 @@ TEXT
 
       expect(Rails.configuration.assets.precompile).to include("locales/tlh.js")
 
-      expect(JsLocaleHelper.find_message_format_locale(["tlh"], fallback_to_english: true)).to eq(
-        locale[:message_format],
-      )
       expect(JsLocaleHelper.find_moment_locale(["tlh"])).to eq(locale[:moment_js])
     end
 
@@ -643,7 +584,6 @@ TEXT
     %w[
       config/locales/client.foo_BAR.yml
       config/locales/server.foo_BAR.yml
-      lib/javascripts/locale/message_format/foo_BAR.js
       lib/javascripts/locale/moment_js/foo_BAR.js
       assets/locales/foo_BAR.js.erb
     ].each do |path|
@@ -718,7 +658,7 @@ TEXT
   describe "#replace_flags" do
     after do
       PostActionType.replace_flag_settings(nil)
-      ReviewableScore.reload_types
+      Flag.reset_flag_settings!
     end
 
     let(:original_flags) { PostActionType.flag_settings }

@@ -4,7 +4,7 @@ class ThemeSettingsMigration < ActiveRecord::Base
   belongs_to :theme
   belongs_to :theme_field
 
-  validates :theme_id, presence: true
+  validates :theme_id, presence: true, uniqueness: { scope: :version }
   validates :theme_field_id, presence: true
 
   validates :version, presence: true

@@ -136,4 +136,10 @@ describe "Viewing sidebar as logged in user", type: :system do
       expect(sidebar).to have_all_tags_section_link
     end
   end
+
+  it "shouldn't display the panel header for the main sidebar" do
+    visit("/latest")
+    expect(sidebar).to be_visible
+    expect(sidebar).to have_no_panel_header
+  end
 end

@@ -24,10 +24,9 @@ module Chat
     policy :no_silenced_user
     contract
     model :channel
-    step :enforce_system_membership
-    policy :allowed_to_join_channel
+    step :enforce_membership
+    model :membership
     policy :allowed_to_create_message_in_channel, class_name: Chat::Channel::MessageCreationPolicy
-    model :channel_membership
     model :reply, optional: true
     policy :ensure_reply_consistency
     model :thread, optional: true
@@ -81,8 +80,8 @@ module Chat
       Chat::Channel.find_by_id_or_slug(contract.chat_channel_id)
     end
 
-    def enforce_system_membership(guardian:, channel:, contract:)
-      if guardian.user&.is_system_user? || contract.enforce_membership
+    def enforce_membership(guardian:, channel:, contract:)
+      if guardian.user.bot? || contract.enforce_membership
         channel.add(guardian.user)
 
         if channel.direct_message_channel?
@@ -91,12 +90,8 @@ module Chat
       end
     end
 
-    def allowed_to_join_channel(guardian:, channel:)
-      guardian.can_join_chat_channel?(channel)
-    end
-
-    def fetch_channel_membership(guardian:, channel:)
-      Chat::ChannelMembershipManager.new(channel).find_for_user(guardian.user)
+    def fetch_membership(guardian:, channel:)
+      channel.membership_for(guardian.user)
     end
 
     def fetch_reply(contract:)
@@ -187,15 +182,13 @@ module Chat
       channel.update!(last_message: message_instance)
     end
 
-    def update_membership_last_read(channel_membership:, message_instance:)
+    def update_membership_last_read(membership:, message_instance:)
       return if message_instance.in_thread?
-      channel_membership.update!(last_read_message: message_instance)
+      membership.update!(last_read_message: message_instance)
     end
 
-    def process_direct_message_channel(channel_membership:)
-      Chat::Action::PublishAndFollowDirectMessageChannel.call(
-        channel_membership: channel_membership,
-      )
+    def process_direct_message_channel(membership:)
+      Chat::Action::PublishAndFollowDirectMessageChannel.call(channel_membership: membership)
     end
 
     def publish_new_thread(reply:, contract:, channel:, thread:)
@@ -238,10 +231,10 @@ module Chat
       message_instance.excerpt = message_instance.build_excerpt
     end
 
-    def publish_user_tracking_state(message_instance:, channel:, channel_membership:, guardian:)
+    def publish_user_tracking_state(message_instance:, channel:, membership:, guardian:)
       message_to_publish = message_instance
       message_to_publish =
-        channel_membership.last_read_message || message_instance if message_instance.in_thread?
+        membership.last_read_message || message_instance if message_instance.in_thread?
       Chat::Publisher.publish_user_tracking_state!(guardian.user, channel, message_to_publish)
     end
   end

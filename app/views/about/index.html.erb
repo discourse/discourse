@@ -14,8 +14,8 @@
   <div class='admins-list' itemscope itemtype='http://schema.org/ItemList'>
     <% @about.admins.each do |user| %>
       <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
-        <meta itemprop='url' content='<%= user_path(user.username_lower) %>'>
-        <a href='<%= user_path(user.username_lower) %>' itemprop='item'>
+        <meta itemprop='url' content='<%= user_path(user.encoded_username(lower: true)) %>'>
+        <a href='<%= user_path(user.encoded_username(lower: true)) %>' itemprop='item'>
           <span itemprop='image'>
             <img width="45" height="45" class="avatar" src="<%= user.small_avatar_url %>">
           </span>
@@ -35,8 +35,8 @@
     <div class='moderators-list' itemscope itemtype='http://schema.org/ItemList'>
       <% @about.moderators.each do |user| %>
         <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
-          <meta itemprop='url' content='<%= user_path(user.username_lower) %>'>
-          <a href='<%= user_path(user.username_lower) %>' itemprop='item'>
+          <meta itemprop='url' content='<%= user_path(user.encoded_username(lower: true)) %>'>
+          <a href='<%= user_path(user.encoded_username(lower: true)) %>' itemprop='item'>
             <span itemprop='image'>
               <img width="45" height="45" class="avatar" src="<%= user.small_avatar_url %>">
             </span>

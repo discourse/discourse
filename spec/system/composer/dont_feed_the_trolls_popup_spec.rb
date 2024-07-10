@@ -6,7 +6,7 @@ describe "Composer don't feed the trolls popup", type: :system do
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:post) { Fabricate(:post, user: user, topic: topic) }
   fab!(:reply) { Fabricate(:post, user: troll, topic: topic) }
-  fab!(:flag) { Fabricate(:flag, post: reply, user: user) }
+  fab!(:flag) { Fabricate(:flag_post_action, post: reply, user: user) }
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
   before { sign_in user }

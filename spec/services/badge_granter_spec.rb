@@ -330,6 +330,10 @@ RSpec.describe BadgeGranter do
       let(:customized_badge_name) { "Merit Badge" }
 
       before do
+        I18n.backend.store_translations(
+          :en,
+          { badges: { Badge.i18n_name(badge.name) => { name: "Badge 0" } } },
+        )
         TranslationOverride.upsert!(I18n.locale, Badge.i18n_key(badge.name), customized_badge_name)
       end
 
@@ -381,6 +385,10 @@ RSpec.describe BadgeGranter do
 
     it "removes custom badge titles" do
       custom_badge_title = "this is a badge title"
+      I18n.backend.store_translations(
+        :en,
+        { badges: { Badge.i18n_name(badge.name) => { name: "Badge 0" } } },
+      )
       TranslationOverride.create!(
         translation_key: badge.translation_key,
         value: custom_badge_title,

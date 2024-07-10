@@ -23,16 +23,20 @@ RSpec.describe "translate accelerator" do
       I18n::MissingTranslationData,
     )
 
-    orig = I18n.t("i_am_an_unknown_key99")
+    allow_missing_translations do
+      orig = I18n.t("i_am_an_unknown_key99")
 
-    expect(I18n.t("i_am_an_unknown_key99").object_id).to eq(orig.object_id)
-    expect(I18n.t("i_am_an_unknown_key99")).to eq("Translation missing: en.i_am_an_unknown_key99")
+      expect(I18n.t("i_am_an_unknown_key99").object_id).to eq(orig.object_id)
+      expect(I18n.t("i_am_an_unknown_key99")).to eq("Translation missing: en.i_am_an_unknown_key99")
+    end
   end
 
   it "has the same 'translation missing' message as upstream" do
-    expect(I18n.t("this_key_does_not_exist")).to eq(
-      I18n.translate_no_cache("this_key_does_not_exist"),
-    )
+    allow_missing_translations do
+      expect(I18n.t("this_key_does_not_exist")).to eq(
+        I18n.translate_no_cache("this_key_does_not_exist"),
+      )
+    end
   end
 
   it "returns the correct language" do

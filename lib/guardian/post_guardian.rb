@@ -56,6 +56,8 @@ module PostGuardian
         # post made by staff, but we don't allow staff flags
         return false if is_flag && (!SiteSetting.allow_flagging_staff?) && post&.user&.staff?
 
+        return false if is_flag && PostActionType.disabled_flag_types.keys.include?(action_key)
+
         if action_key == :notify_user &&
              !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
           # The modifier below is used to add additional permissions for notifying users.

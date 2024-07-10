@@ -47,7 +47,13 @@
         "can_ignore_user": {
           "type": "boolean"
         },
+        "can_ignore_users": {
+          "type": "boolean"
+        },
         "can_mute_user": {
+          "type": "boolean"
+        },
+        "can_mute_users": {
           "type": "boolean"
         },
         "can_send_private_messages": {
@@ -119,7 +125,7 @@
         },
         "primary_group_id": {
           "type": [
-            "string",
+            "integer",
             "null"
           ]
         },
@@ -131,7 +137,7 @@
         },
         "flair_group_id": {
           "type": [
-            "string",
+            "integer",
             "null"
           ]
         },
@@ -182,7 +188,7 @@
         },
         "uploaded_avatar_id": {
           "type": [
-            "string",
+            "integer",
             "null"
           ]
         },

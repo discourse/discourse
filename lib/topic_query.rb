@@ -721,7 +721,7 @@ class TopicQuery
   end
 
   def get_category_id(category_id_or_slug)
-    return nil unless category_id_or_slug.present?
+    return nil if category_id_or_slug.blank?
     category_id = category_id_or_slug.to_i
 
     if category_id == 0

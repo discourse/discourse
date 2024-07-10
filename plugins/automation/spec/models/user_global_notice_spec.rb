@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
 describe DiscourseAutomation::UserGlobalNotice do
   fab!(:user_1) { Fabricate(:user) }
 

@@ -22,7 +22,8 @@ export default class Participant extends Component {
     this.appEvents.trigger(
       `topic-header:trigger-${this.args.type}-card`,
       this.args.username,
-      e.target
+      e.target,
+      e
     );
     e.preventDefault();
   }

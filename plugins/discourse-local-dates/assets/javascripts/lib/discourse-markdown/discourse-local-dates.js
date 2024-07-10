@@ -1,206 +1,113 @@
-import { parseBBCodeTag } from "pretty-text/engines/discourse-markdown/bbcode-block";
-
 moment.tz.link(["Asia/Kolkata|IST", "Asia/Seoul|KST", "Asia/Tokyo|JST"]);
 const timezoneNames = moment.tz.names();
 
-function addSingleLocalDate(buffer, state, config) {
+function addLocalDate(attributes, state, buffer, applyDataAttributes) {
+  if (attributes.timezone) {
+    if (!timezoneNames.includes(attributes.timezone)) {
+      delete attributes.timezone;
+    }
+  }
+
+  if (attributes.displayedTimezone) {
+    if (!timezoneNames.includes(attributes.displayedTimezone)) {
+      delete attributes.displayedTimezone;
+    }
+  }
+
+  if (attributes.timezones) {
+    attributes.timezones = attributes.timezones
+      .split("|")
+      .filter((tz) => timezoneNames.includes(tz))
+      .join("|");
+  }
+
+  const dateTime = moment.tz(
+    [attributes._default || attributes.date, attributes.time]
+      .filter(Boolean)
+      .join("T"),
+    attributes.timezone || "Etc/UTC"
+  );
+
+  const emailFormat =
+    state.md.options.discourse.datesEmailFormat || moment.defaultFormat;
+
+  attributes.emailPreview = `${dateTime.utc().format(emailFormat)} UTC`;
+
   let token = new state.Token("span_open", "span", 1);
-  token.attrs = [["data-date", state.md.utils.escapeHtml(config.date)]];
-
-  if (!config.date.match(/\d{4}-\d{2}-\d{2}/)) {
-    closeBuffer(buffer, state, moment.invalid().format());
-    return;
-  }
-
-  if (config.time && !config.time.match(/\d{2}:\d{2}(?::\d{2})?/)) {
-    closeBuffer(buffer, state, moment.invalid().format());
-    return;
-  }
-
-  let dateTime = config.date;
-  if (config.time) {
-    token.attrs.push(["data-time", state.md.utils.escapeHtml(config.time)]);
-    dateTime = `${dateTime} ${config.time}`;
-  }
-
-  if (!moment(dateTime).isValid()) {
-    closeBuffer(buffer, state, moment.invalid().format());
-    return;
-  }
-
-  token.attrs.push(["class", "discourse-local-date"]);
-
-  if (config.format) {
-    token.attrs.push(["data-format", state.md.utils.escapeHtml(config.format)]);
-  }
-
-  if (config.countdown) {
-    token.attrs.push([
-      "data-countdown",
-      state.md.utils.escapeHtml(config.countdown),
-    ]);
-  }
-
-  if (config.calendar) {
-    token.attrs.push([
-      "data-calendar",
-      state.md.utils.escapeHtml(config.calendar),
-    ]);
-  }
-  if (config.range) {
-    token.attrs.push(["data-range", config.range]);
-  }
-
-  if (
-    config.displayedTimezone &&
-    timezoneNames.includes(config.displayedTimezone)
-  ) {
-    token.attrs.push([
-      "data-displayed-timezone",
-      state.md.utils.escapeHtml(config.displayedTimezone),
-    ]);
-  }
-
-  if (config.timezones) {
-    const timezones = config.timezones.split("|").filter((timezone) => {
-      return timezoneNames.includes(timezone);
-    });
-
-    token.attrs.push([
-      "data-timezones",
-      state.md.utils.escapeHtml(timezones.join("|")),
-    ]);
-  }
-
-  if (config.timezone && timezoneNames.includes(config.timezone)) {
-    token.attrs.push([
-      "data-timezone",
-      state.md.utils.escapeHtml(config.timezone),
-    ]);
-    dateTime = moment.tz(dateTime, config.timezone);
-  } else {
-    dateTime = moment.utc(dateTime);
-  }
-
-  if (config.recurring) {
-    token.attrs.push([
-      "data-recurring",
-      state.md.utils.escapeHtml(config.recurring),
-    ]);
-  }
-
+  token.attrs = [["class", "discourse-local-date"]];
+  applyDataAttributes(token, attributes, "date");
   buffer.push(token);
 
-  const formattedDateTime = dateTime
-    .tz("Etc/UTC")
-    .format(
-      state.md.options.discourse.datesEmailFormat || moment.defaultFormat
-    );
-  token.attrs.push(["data-email-preview", `${formattedDateTime} UTC`]);
-
-  closeBuffer(buffer, state, dateTime.utc().format(config.format));
-}
-
-function defaultDateConfig() {
-  return {
-    date: null,
-    time: null,
-    timezone: null,
-    format: null,
-    timezones: null,
-    displayedTimezone: null,
-    countdown: null,
-    range: false,
-  };
-}
-
-function parseTagAttributes(tag) {
-  const matchString = tag.replace(/[‘’„“«»”]/g, '"');
-
-  return parseBBCodeTag(
-    "[date date" + matchString + "]",
-    0,
-    matchString.length + 12
-  );
-}
-
-function addLocalDate(buffer, matches, state) {
-  let config = defaultDateConfig();
-
-  const parsed = parseTagAttributes(matches[1]);
-
-  config.date = parsed.attrs.date;
-  config.format = parsed.attrs.format;
-  config.calendar = parsed.attrs.calendar;
-  config.time = parsed.attrs.time;
-  config.timezone = (parsed.attrs.timezone || "").trim();
-  config.recurring = parsed.attrs.recurring;
-  config.timezones = parsed.attrs.timezones;
-  config.displayedTimezone = parsed.attrs.displayedTimezone;
-  config.countdown = parsed.attrs.countdown;
-  addSingleLocalDate(buffer, state, config);
-}
-
-function addLocalRange(buffer, matches, state) {
-  let config = defaultDateConfig();
-  let date, time;
-  const parsed = parseTagAttributes(matches[1]);
-
-  config.format = parsed.attrs.format;
-  config.calendar = parsed.attrs.calendar;
-  config.timezone = (parsed.attrs.timezone || "").trim();
-  config.recurring = parsed.attrs.recurring;
-  config.timezones = parsed.attrs.timezones;
-  config.displayedTimezone = parsed.attrs.displayedTimezone;
-  config.countdown = parsed.attrs.countdown;
-
-  if (parsed.attrs.from) {
-    [date, time] = parsed.attrs.from.split("T");
-    config.date = date;
-    config.time = time;
-    config.range = "from";
-    addSingleLocalDate(buffer, state, config);
-  }
-  if (config.range) {
-    const token = new state.Token("text", "", 0);
-    token.content = "→";
-    buffer.push(token);
-  }
-  if (parsed.attrs.to) {
-    [date, time] = parsed.attrs.to.split("T");
-    config.date = date;
-    config.time = time;
-    config.range = "to";
-    addSingleLocalDate(buffer, state, config);
-  }
-}
-
-function closeBuffer(buffer, state, text) {
-  let token;
-
   token = new state.Token("text", "", 0);
-  token.content = text;
+  token.content = dateTime.utc().format(attributes.format);
   buffer.push(token);
 
   token = new state.Token("span_close", "span", -1);
-
   buffer.push(token);
+}
+
+function date(buffer, matches, state, { parseBBCodeTag, applyDataAttributes }) {
+  const parsed = parseBBCodeTag(matches[0], 0, matches[0].length);
+
+  if (parsed?.tag === "date") {
+    addLocalDate(parsed.attrs, state, buffer, applyDataAttributes);
+  } else {
+    let token = new state.Token("text", "", 0);
+    token.content = matches[0];
+    buffer.push(token);
+  }
+}
+
+function range(
+  buffer,
+  matches,
+  state,
+  { parseBBCodeTag, applyDataAttributes }
+) {
+  let token;
+  const parsed = parseBBCodeTag(matches[0], 0, matches[0].length);
+
+  if (parsed?.tag === "date-range") {
+    if (parsed.attrs.from) {
+      const { from, ...attributes } = { ...parsed.attrs, range: "from" };
+      delete attributes.to;
+      [attributes.date, attributes.time] = from.split("T");
+      addLocalDate(attributes, state, buffer, applyDataAttributes);
+    }
+
+    if (parsed.attrs.from && parsed.attrs.to) {
+      token = new state.Token("text", "", 0);
+      token.content = "→";
+      buffer.push(token);
+    }
+
+    if (parsed.attrs.to) {
+      const { to, ...attributes } = { ...parsed.attrs, range: "to" };
+      delete attributes.from;
+      [attributes.date, attributes.time] = to.split("T");
+      addLocalDate(attributes, state, buffer, applyDataAttributes);
+    }
+  } else {
+    token = new state.Token("text", "", 0);
+    token.content = matches[0];
+    buffer.push(token);
+  }
 }
 
 export function setup(helper) {
   helper.allowList([
     "span.discourse-local-date",
     "span[aria-label]",
-    "span[data-date]",
-    "span[data-time]",
-    "span[data-format]",
-    "span[data-countdown]",
     "span[data-calendar]",
+    "span[data-countdown]",
+    "span[data-date]",
     "span[data-displayed-timezone]",
+    "span[data-email-preview]",
+    "span[data-format]",
+    "span[data-recurring]",
+    "span[data-time]",
     "span[data-timezone]",
     "span[data-timezones]",
-    "span[data-recurring]",
-    "span[data-email-preview]",
   ]);
 
   helper.registerOptions((opts, siteSettings) => {
@@ -211,20 +118,14 @@ export function setup(helper) {
   });
 
   helper.registerPlugin((md) => {
-    const rule = {
-      matcher: /\[date(=.+?)\]/,
-      onMatch: addLocalDate,
-    };
+    md.core.textPostProcess.ruler.push("date", {
+      matcher: /\[date=.+?\]/,
+      onMatch: date,
+    });
 
-    md.core.textPostProcess.ruler.push("discourse-local-dates", rule);
-  });
-
-  helper.registerPlugin((md) => {
-    const rule = {
-      matcher: /\[date-range(.+?)\]/,
-      onMatch: addLocalRange,
-    };
-
-    md.core.textPostProcess.ruler.push("discourse-local-dates", rule);
+    md.core.textPostProcess.ruler.push("date-range", {
+      matcher: /\[date-range .+?\]/,
+      onMatch: range,
+    });
   });
 }

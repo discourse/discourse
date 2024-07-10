@@ -16,7 +16,7 @@ import I18n from "discourse-i18n";
 import selectKit from "../helpers/select-kit-helper";
 
 acceptance("Personal Message", function (needs) {
-  needs.user();
+  needs.user({ id: 1 });
 
   test("suggested messages", async function (assert) {
     await visit("/t/pm-for-testing/12");

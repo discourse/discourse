@@ -1,334 +1,282 @@
 # frozen_string_literal: true
 
 describe Chat::Mailer do
-  fab!(:chatters_group) { Fabricate(:group) }
-  fab!(:sender) { Fabricate(:user, group_ids: [chatters_group.id], refresh_auto_groups: true) }
-  fab!(:user_1) do
-    Fabricate(
-      :user,
-      group_ids: [chatters_group.id],
-      last_seen_at: 15.minutes.ago,
-      refresh_auto_groups: true,
-    )
+  fab!(:user) { Fabricate(:user, last_seen_at: 1.hour.ago) }
+  fab!(:other) { Fabricate(:user) }
+
+  fab!(:group) do
+    Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone], users: [user, other])
   end
-  fab!(:chat_channel) { Fabricate(:category_channel) }
-  fab!(:chat_message) { Fabricate(:chat_message, user: sender, chat_channel: chat_channel) }
-  fab!(:user_1_chat_channel_membership) do
-    Fabricate(
-      :user_chat_channel_membership,
-      user: user_1,
-      chat_channel: chat_channel,
-      last_read_message_id: nil,
-    )
-  end
-  fab!(:private_chat_channel) do
-    result =
-      Chat::CreateDirectMessageChannel.call(
-        guardian: sender.guardian,
-        target_usernames: [sender.username, user_1.username],
-      )
-    service_failed!(result) if result.failure?
-    result.channel
-  end
+
+  fab!(:followed_channel) { Fabricate(:category_channel) }
+  fab!(:non_followed_channel) { Fabricate(:category_channel) }
+  fab!(:muted_channel) { Fabricate(:category_channel) }
+  fab!(:unseen_channel) { Fabricate(:category_channel) }
+  fab!(:direct_message) { Fabricate(:direct_message_channel, users: [user, other]) }
+
+  fab!(:job) { :user_email }
+  fab!(:args) { { type: :chat_summary, user_id: user.id, force_respect_seen_recently: true } }
 
   before do
     SiteSetting.chat_enabled = true
-    SiteSetting.chat_allowed_groups = chatters_group.id
-
-    Fabricate(:user_chat_channel_membership, user: sender, chat_channel: chat_channel)
+    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
   end
 
-  def assert_summary_skipped
-    expect(
-      job_enqueued?(job: :user_email, args: { type: "chat_summary", user_id: user_1.id }),
-    ).to eq(false)
-  end
-
-  def assert_only_queued_once
-    expect_job_enqueued(job: :user_email, args: { type: "chat_summary", user_id: user_1.id })
+  def expect_enqueued
+    expect_enqueued_with(job:, args:) { described_class.send_unread_mentions_summary }
     expect(Jobs::UserEmail.jobs.size).to eq(1)
   end
 
-  describe "for chat mentions" do
-    fab!(:notification) do
-      Fabricate(:notification, notification_type: Notification.types[:chat_mention], user: user_1)
-    end
-    fab!(:mention) do
-      Fabricate(:user_chat_mention, chat_message: chat_message, notifications: [notification])
-    end
+  def expect_not_enqueued
+    expect_not_enqueued_with(job:, args:) { described_class.send_unread_mentions_summary }
+  end
 
-    it "skips users without chat access" do
-      chatters_group.remove(user_1)
+  # This helper is much faster than `Fabricate(:chat_message_with_service, ...)`
+  def create_message(chat_channel, message, mention_klass = nil)
+    chat_message = Fabricate(:chat_message, user: other, chat_channel:, message:)
 
-      described_class.send_unread_mentions_summary
+    if mention_klass
+      notification_type = Notification.types[:chat_mention]
 
-      assert_summary_skipped
-    end
-
-    it "skips users with summaries disabled" do
-      user_1.user_option.update(chat_email_frequency: UserOption.chat_email_frequencies[:never])
-
-      described_class.send_unread_mentions_summary
-
-      assert_summary_skipped
-    end
-
-    it "skips a job if the user haven't read the channel since the last summary" do
-      user_1_chat_channel_membership.update!(last_unread_mention_when_emailed_id: chat_message.id)
-
-      described_class.send_unread_mentions_summary
-
-      assert_summary_skipped
-    end
-
-    it "skips without chat enabled" do
-      user_1.user_option.update(
-        chat_enabled: false,
-        chat_email_frequency: UserOption.chat_email_frequencies[:when_away],
-      )
-
-      described_class.send_unread_mentions_summary
-
-      assert_summary_skipped
-    end
-
-    it "queues a job for users that was mentioned and never read the channel before" do
-      described_class.send_unread_mentions_summary
-
-      assert_only_queued_once
-    end
-
-    it "skips the job when the user was mentioned but already read the message" do
-      user_1_chat_channel_membership.update!(last_read_message_id: chat_message.id)
-
-      described_class.send_unread_mentions_summary
-
-      assert_summary_skipped
-    end
-
-    it "skips the job when the user is not following a public channel anymore" do
-      user_1_chat_channel_membership.update!(
-        last_read_message_id: chat_message.id - 1,
-        following: false,
-      )
-
-      described_class.send_unread_mentions_summary
-
-      assert_summary_skipped
-    end
-
-    it "doesn’t skip the job when the user is not following a direct channel" do
-      private_chat_channel
-        .user_chat_channel_memberships
-        .where(user_id: user_1.id)
-        .update!(last_read_message_id: chat_message.id - 1, following: false)
-
-      described_class.send_unread_mentions_summary
-
-      assert_only_queued_once
-    end
-
-    it "skips users with unread messages from a different channel" do
-      user_1_chat_channel_membership.update!(last_read_message_id: chat_message.id)
-      second_channel = Fabricate(:category_channel)
       Fabricate(
-        :user_chat_channel_membership,
-        user: user_1,
-        chat_channel: second_channel,
-        last_read_message_id: chat_message.id - 1,
+        :chat_mention_notification,
+        notification: Fabricate(:notification, user:, notification_type:),
+        chat_mention: mention_klass.find_by(chat_message:),
       )
-
-      described_class.send_unread_mentions_summary
-
-      assert_summary_skipped
     end
 
-    it "only queues the job once for users who are member of multiple groups with chat access" do
-      chatters_group_2 = Fabricate(:group, users: [user_1])
-      SiteSetting.chat_allowed_groups = [chatters_group, chatters_group_2].map(&:id).join("|")
+    chat_message
+  end
 
-      described_class.send_unread_mentions_summary
+  describe "in a followed channel" do
+    before { followed_channel.add(user) }
 
-      assert_only_queued_once
-    end
+    describe "user is @direct mentioned" do
+      let!(:chat_message) do
+        create_message(followed_channel, "hello @#{user.username}", Chat::UserMention)
+      end
 
-    it "skips users when the mention was deleted" do
-      chat_message.trash!
+      it "queues a chat summary email" do
+        expect_enqueued
+      end
 
-      described_class.send_unread_mentions_summary
+      it "does not queue a chat summary when chat is globally disabled" do
+        SiteSetting.chat_enabled = false
+        expect_not_enqueued
+      end
 
-      assert_summary_skipped
-    end
+      it "does not queue a chat summary email when user has chat disabled" do
+        user.user_option.update!(chat_enabled: false)
+        expect_not_enqueued
+      end
 
-    it "queues the job if the user has unread mentions and already read all the messages in the previous summary" do
-      user_1_chat_channel_membership.update!(
-        last_read_message_id: chat_message.id,
-        last_unread_mention_when_emailed_id: chat_message.id,
-      )
-      unread_message = Fabricate(:chat_message, chat_channel: chat_channel, user: sender)
-      notification_2 =
-        Fabricate(:notification, notification_type: Notification.types[:chat_mention], user: user_1)
-      Fabricate(
-        :user_chat_mention,
-        user: user_1,
-        chat_message: unread_message,
-        notifications: [notification_2],
-      )
+      it "does not queue a chat summary email when user has chat email frequency = never" do
+        user.user_option.update!(chat_email_frequency: UserOption.chat_email_frequencies[:never])
+        expect_not_enqueued
+      end
 
-      described_class.send_unread_mentions_summary
+      it "does not queue a chat summary email when user has email level = never" do
+        user.user_option.update!(email_level: UserOption.email_level_types[:never])
+        expect_not_enqueued
+      end
 
-      expect_job_enqueued(job: :user_email, args: { type: "chat_summary", user_id: user_1.id })
-      expect(Jobs::UserEmail.jobs.size).to eq(1)
-    end
+      it "does not queue a chat summary email when chat message has been deleted" do
+        chat_message.trash!
+        expect_not_enqueued
+      end
 
-    it "skips users who were seen recently" do
-      user_1.update!(last_seen_at: 2.minutes.ago)
+      it "does not queue a chat summary email when chat message is older than 1 week" do
+        chat_message.update!(created_at: 2.weeks.ago)
+        expect_not_enqueued
+      end
 
-      described_class.send_unread_mentions_summary
+      it "does not queue a chat summary email when chat channel has been deleted" do
+        followed_channel.trash!
+        expect_not_enqueued
+      end
 
-      assert_summary_skipped
-    end
+      it "does not queue a chat summary email when user is not part of chat allowed groups" do
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:admins]
+        expect_not_enqueued
+      end
 
-    it "doesn't mix mentions from other users" do
-      mention.destroy!
-      user_2 = Fabricate(:user, groups: [chatters_group], last_seen_at: 20.minutes.ago)
-      Fabricate(
-        :user_chat_channel_membership,
-        user: user_2,
-        chat_channel: chat_channel,
-        last_read_message_id: nil,
-      )
-      new_message = Fabricate(:chat_message, chat_channel: chat_channel, user: sender)
-      notification_2 =
-        Fabricate(:notification, notification_type: Notification.types[:chat_mention], user: user_2)
-      Fabricate(
-        :user_chat_mention,
-        user: user_2,
-        chat_message: new_message,
-        notifications: [notification_2],
-      )
+      it "does not queue a chat summary email when user has read the mention notification" do
+        Notification.find_by(
+          user: user,
+          notification_type: Notification.types[:chat_mention],
+        ).update!(read: true)
 
-      described_class.send_unread_mentions_summary
+        expect_not_enqueued
+      end
 
-      expect(
-        job_enqueued?(job: :user_email, args: { type: "chat_summary", user_id: user_1.id }),
-      ).to eq(false)
-      expect_job_enqueued(job: :user_email, args: { type: "chat_summary", user_id: user_2.id })
-      expect(Jobs::UserEmail.jobs.size).to eq(1)
-    end
+      it "does not queue a chat summary email when user has been seen in the past 15 minutes" do
+        user.update!(last_seen_at: 5.minutes.ago)
+        expect_not_enqueued
+      end
 
-    it "skips users when the message is older than 1 week" do
-      chat_message.update!(created_at: 1.5.weeks.ago)
+      it "does not queue a chat summary email when user has read the message" do
+        followed_channel.membership_for(user).update!(last_read_message_id: chat_message.id)
+        expect_not_enqueued
+      end
 
-      described_class.send_unread_mentions_summary
-
-      assert_summary_skipped
-    end
-
-    it "queues a job when the chat_allowed_groups is set to everyone" do
-      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
-
-      described_class.send_unread_mentions_summary
-
-      assert_only_queued_once
-    end
-
-    context "with chat_mailer_send_summary_to_user modifier" do
-      let(:modifier_block) { Proc.new { |_| false } }
-      it "skips when modifier evaluates to false" do
-        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
-
-        plugin_instance = Plugin::Instance.new
-        plugin_instance.register_modifier(:chat_mailer_send_summary_to_user, &modifier_block)
-
-        described_class.send_unread_mentions_summary
-
-        assert_summary_skipped
-      ensure
-        DiscoursePluginRegistry.unregister_modifier(
-          plugin_instance,
-          :chat_mailer_send_summary_to_user,
-          &modifier_block
+      it "does not queue a chat summary email when user has received an email for this message" do
+        followed_channel.membership_for(user).update!(
+          last_unread_mention_when_emailed_id: chat_message.id,
         )
+
+        expect_not_enqueued
+      end
+
+      it "does not queue a chat summary email when user is not active" do
+        user.update!(active: false)
+        expect_not_enqueued
+      end
+
+      it "does not queue a chat summary email when user is staged" do
+        user.update!(staged: true)
+        expect_not_enqueued
+      end
+
+      it "does not queue a chat summary email when user is suspended" do
+        user.update!(suspended_till: 1.day.from_now)
+        expect_not_enqueued
+      end
+
+      it "does not queue a chat summary email when sender has been deleted" do
+        other.destroy!
+        expect_not_enqueued
+      end
+
+      it "queues a chat summary email even when user has private messages disabled" do
+        user.user_option.update!(allow_private_messages: false)
+        expect_enqueued
+      end
+
+      describe "when another plugin blocks the email" do
+        let!(:plugin) { Plugin::Instance.new }
+        let!(:modifier) { :chat_mailer_send_summary_to_user }
+        let!(:block) { Proc.new { false } }
+
+        before { DiscoursePluginRegistry.register_modifier(plugin, modifier, &block) }
+        after { DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block) }
+
+        it "does not queue a chat summary email" do
+          expect_not_enqueued
+        end
       end
     end
 
-    describe "update the user membership after we send the email" do
-      before { Jobs.run_immediately! }
+    describe "user is @group mentioned" do
+      before { create_message(followed_channel, "hello @#{group.name}", Chat::GroupMention) }
 
-      it "doesn't send the same summary the summary again if the user haven't read any channel messages since the last one" do
-        user_1_chat_channel_membership.update!(last_read_message_id: chat_message.id - 1)
-        described_class.send_unread_mentions_summary
-
-        expect(user_1_chat_channel_membership.reload.last_unread_mention_when_emailed_id).to eq(
-          chat_message.id,
-        )
-
-        another_channel_message = Fabricate(:chat_message, chat_channel: chat_channel, user: sender)
-        Fabricate(:user_chat_mention, user: user_1, chat_message: another_channel_message)
-
-        expect { described_class.send_unread_mentions_summary }.not_to change(
-          Jobs::UserEmail.jobs,
-          :size,
-        )
+      it "queues a chat summary email" do
+        expect_enqueued
       end
+    end
 
-      it "only updates the last_message_read_when_emailed_id on the channel with unread mentions" do
-        another_channel = Fabricate(:category_channel)
-        another_channel_message =
-          Fabricate(:chat_message, chat_channel: another_channel, user: sender)
-        Fabricate(:user_chat_mention, user: user_1, chat_message: another_channel_message)
-        another_channel_membership =
-          Fabricate(
-            :user_chat_channel_membership,
-            user: user_1,
-            chat_channel: another_channel,
-            last_read_message_id: another_channel_message.id,
-          )
-        user_1_chat_channel_membership.update!(last_read_message_id: chat_message.id - 1)
+    describe "user is @all mentioned" do
+      before { create_message(followed_channel, "hello @all", Chat::AllMention) }
 
-        described_class.send_unread_mentions_summary
-
-        expect(user_1_chat_channel_membership.reload.last_unread_mention_when_emailed_id).to eq(
-          chat_message.id,
-        )
-        expect(another_channel_membership.reload.last_unread_mention_when_emailed_id).to be_nil
+      it "queues a chat summary email" do
+        expect_enqueued
       end
     end
   end
 
-  describe "for direct messages" do
-    before { Fabricate(:chat_message, user: sender, chat_channel: private_chat_channel) }
+  describe "in a non-followed channel" do
+    before { non_followed_channel.add(user).update!(following: false) }
 
-    it "queue a job when the user has unread private mentions" do
-      described_class.send_unread_mentions_summary
+    describe "user is @direct mentioned" do
+      before { create_message(non_followed_channel, "hello @#{user.username}", Chat::UserMention) }
 
-      assert_only_queued_once
+      it "does not queue a chat summary email" do
+        expect_not_enqueued
+      end
     end
 
-    it "only queues the job once when the user has mentions and private messages" do
-      Fabricate(:user_chat_mention, user: user_1, chat_message: chat_message)
+    describe "user is @group mentioned" do
+      before { create_message(non_followed_channel, "hello @#{group.name}", Chat::GroupMention) }
 
-      described_class.send_unread_mentions_summary
-
-      assert_only_queued_once
+      it "does not queue a chat summary email" do
+        expect_not_enqueued
+      end
     end
 
-    it "doesn't mix or update mentions from other users when joining tables" do
-      user_2 = Fabricate(:user, groups: [chatters_group], last_seen_at: 20.minutes.ago)
-      user_2_membership =
-        Fabricate(
-          :user_chat_channel_membership,
-          user: user_2,
-          chat_channel: chat_channel,
-          last_read_message_id: chat_message.id,
-        )
-      Fabricate(:user_chat_mention, user: user_2, chat_message: chat_message)
+    describe "user is @all mentioned" do
+      before { create_message(non_followed_channel, "hello @all", Chat::AllMention) }
 
-      described_class.send_unread_mentions_summary
+      it "does not queue a chat summary email" do
+        expect_not_enqueued
+      end
+    end
+  end
 
-      assert_only_queued_once
-      expect(user_2_membership.reload.last_unread_mention_when_emailed_id).to be_nil
+  describe "in a muted channel" do
+    before { muted_channel.add(user).update!(muted: true) }
+
+    describe "user is @direct mentioned" do
+      before { create_message(muted_channel, "hello @#{user.username}", Chat::UserMention) }
+
+      it "does not queue a chat summary email" do
+        expect_not_enqueued
+      end
+    end
+
+    describe "user is @group mentioned" do
+      before { create_message(muted_channel, "hello @#{group.name}", Chat::GroupMention) }
+
+      it "does not queue a chat summary email" do
+        expect_not_enqueued
+      end
+    end
+
+    describe "user is @all mentioned" do
+      before { create_message(muted_channel, "hello @all", Chat::AllMention) }
+
+      it "does not queue a chat summary email" do
+        expect_not_enqueued
+      end
+    end
+  end
+
+  describe "in an unseen channel" do
+    describe "user is @direct mentioned" do
+      before { create_message(unseen_channel, "hello @#{user.username}") }
+
+      it "does not queue a chat summary email" do
+        expect_not_enqueued
+      end
+    end
+
+    describe "user is @group mentioned" do
+      before { create_message(unseen_channel, "hello @#{group.name}") }
+
+      it "doest not queue a chat summary email" do
+        expect_not_enqueued
+      end
+    end
+  end
+
+  describe "in a direct message" do
+    before { create_message(direct_message, "Howdy 👋") }
+
+    it "queues a chat summary email" do
+      expect_enqueued
+    end
+
+    it "queues a chat summary email when user isn't following the direct message anymore" do
+      direct_message.membership_for(user).update!(following: false)
+      expect_enqueued
+    end
+
+    it "does not queue a chat summary email when user has muted the direct message" do
+      direct_message.membership_for(user).update!(muted: true)
+      expect_not_enqueued
+    end
+
+    it "does not queue a chat summary email when user has private messages disabled" do
+      user.user_option.update!(allow_private_messages: false)
+      expect_not_enqueued
     end
   end
 end

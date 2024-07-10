@@ -19,8 +19,7 @@ end
 #
 # Indexes
 #
-#  idx_topic_custom_fields_auto_responder_triggered_ids_partial    (topic_id,value) UNIQUE WHERE ((name)::text = 'auto_responder_triggered_ids'::text)
-#  idx_topic_custom_fields_discourse_automation_unique_id_partial  (topic_id,value) UNIQUE WHERE ((name)::text = 'discourse_automation_ids'::text)
-#  index_topic_custom_fields_on_topic_id_and_name                  (topic_id,name)
-#  topic_custom_fields_value_key_idx                               (value,name) WHERE ((value IS NOT NULL) AND (char_length(value) < 400))
+#  idx_topic_custom_fields_auto_responder_triggered_ids_partial  (topic_id,value) UNIQUE WHERE ((name)::text = 'auto_responder_triggered_ids'::text)
+#  index_topic_custom_fields_on_topic_id_and_name                (topic_id,name)
+#  topic_custom_fields_value_key_idx                             (value,name) WHERE ((value IS NOT NULL) AND (char_length(value) < 400))
 #

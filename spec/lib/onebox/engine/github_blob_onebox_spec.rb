@@ -5,10 +5,12 @@ RSpec.describe Onebox::Engine::GithubBlobOnebox do
     @link =
       "https://github.com/discourse/onebox/blob/master/lib/onebox/engine/github_blob_onebox.rb"
     @uri = URI.parse(@link)
-    stub_request(
-      :get,
-      "https://raw.githubusercontent.com/discourse/onebox/master/lib/onebox/engine/github_blob_onebox.rb",
-    ).to_return(status: 200, body: onebox_response(described_class.onebox_name))
+    @raw_uri =
+      "https://raw.githubusercontent.com/discourse/onebox/master/lib/onebox/engine/github_blob_onebox.rb"
+    stub_request(:get, @raw_uri).to_return(
+      status: 200,
+      body: onebox_response(described_class.onebox_name),
+    )
   end
 
   include_context "with engines"
@@ -37,6 +39,19 @@ RSpec.describe Onebox::Engine::GithubBlobOnebox do
 
       expect(html).not_to include("/Pages")
       expect(html).to include("This file is binary.")
+    end
+
+    context "when github_onebox_access_token is configured" do
+      before { SiteSetting.github_onebox_access_token = "1234" }
+
+      it "sends it as part of the request" do
+        html
+        expect(WebMock).to have_requested(:get, @raw_uri).with(
+          headers: {
+            "Authorization" => "Bearer #{SiteSetting.github_onebox_access_token}",
+          },
+        )
+      end
     end
   end
 end

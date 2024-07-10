@@ -46,7 +46,7 @@ $search-pad-horizontal: 0.5em;
       margin: 2px;
       margin-right: 0;
       white-space: nowrap;
-      background-color: var(--primary-300);
+      background-color: var(--primary-200);
       &:hover {
         background-color: var(--primary-medium);
       }
@@ -124,6 +124,9 @@ $search-pad-horizontal: 0.5em;
     }
 
     .search-result-category {
+      .badge-category__wrapper {
+        font-size: var(--font-0);
+      }
       .widget-link {
         margin-bottom: 0;
       }
@@ -167,25 +170,31 @@ $search-pad-horizontal: 0.5em;
     .search-result-group .group-result {
       display: flex;
       gap: 0.5em;
+      align-items: center;
 
-      &.--with-flair {
-        align-items: center;
+      &:not(.--with-flair) {
+        svg {
+          padding: 0.43em; // matching avatar-flair width
+          background: var(--primary-200);
+          border-radius: 50%;
+        }
       }
 
-      .avatar-flair__wrapper,
-      .d-icon-users {
-        margin-top: 0.1em; // vertical alignment
+      .d-icon {
+        font-size: var(--font-down-1);
       }
 
       .avatar-flair {
-        width: 1.58em;
+        width: 1.62em;
         height: 1.6em;
         display: flex;
         justify-content: center;
         align-items: center;
+        background: var(--primary-200);
+        color: var(--primary-medium);
 
         .d-icon {
-          font-size: var(--font-down-1);
+          font-size: var(--font-down-2);
           color: currentColor;
         }
       }
@@ -242,12 +251,14 @@ $search-pad-horizontal: 0.5em;
       margin-right: 0.33em;
     }
 
+    .badge-category__wrapper + .search-item-tag {
+      display: flex;
+      align-items: baseline;
+      margin-left: 0.33em;
+    }
+
     .search-item-tag {
       color: var(--primary-high);
-
-      .d-icon {
-        margin-right: 0 !important;
-      }
     }
 
     .extra-hint {
@@ -256,6 +267,9 @@ $search-pad-horizontal: 0.5em;
     }
 
     .search-item-slug {
+      overflow-wrap: anywhere;
+      white-space: wrap;
+      min-width: 0;
       .keyword {
         margin-right: 0.33em;
       }
@@ -293,9 +307,8 @@ $search-pad-horizontal: 0.5em;
           vertical-align: middle;
         }
         .d-icon-tag {
-          font-size: var(--font-down-2);
+          font-size: 0.7em;
         }
-
         .d-icon-search {
           font-size: var(--font-down-1);
         }
@@ -322,6 +335,9 @@ $search-pad-horizontal: 0.5em;
   .search-menu-recent {
     @include separator;
 
+    .search-menu-assistant-item .search-link {
+      flex-wrap: nowrap;
+    }
     .heading {
       display: flex;
       justify-content: space-between;

@@ -4,7 +4,6 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import Post from "discourse/models/post";
-import User from "discourse/models/user";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 function buildStream(id, stream) {
@@ -894,14 +893,16 @@ module("Unit | Model | post-stream", function (hooks) {
   test("triggerNewPostInStream for ignored posts", async function (assert) {
     const postStream = buildStream.call(this, 280, [1]);
     const store = getOwner(this).lookup("service:store");
-    User.resetCurrent(
-      store.createRecord("user", {
-        username: "eviltrout",
-        name: "eviltrout",
-        id: 321,
-        ignored_users: ["ignored-user"],
-      })
-    );
+    const user = store.createRecord("user", {
+      username: "eviltrout",
+      name: "eviltrout",
+      id: 321,
+      ignored_users: ["ignored-user"],
+    });
+    getOwner(this).unregister("service:current-user");
+    getOwner(this).register("service:current-user", user, {
+      instantiate: false,
+    });
 
     postStream.appendPost(
       store.createRecord("post", { id: 1, post_number: 1 })

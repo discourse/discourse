@@ -1,0 +1,37 @@
+.admin-config-area {
+  .btn-back {
+    margin-bottom: 1em;
+  }
+}
+.admin-config-area-card {
+  padding: 20px;
+  border: 1px solid var(--primary-low);
+  border-radius: 2px;
+  background-color: var(--secondary);
+  margin-bottom: 1em;
+
+  &__label-optional {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    margin-left: 5px;
+  }
+
+  &__additional-help {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__warning-banner {
+    color: var(--primary-high);
+    background-color: var(--danger-low);
+    font-size: var(--font-down-1);
+    padding: 10px 10px;
+  }
+  &__control-group-horizontal {
+    display: flex;
+    margin-bottom: 18px;
+    label {
+      margin-right: 1em;
+    }
+  }
+}

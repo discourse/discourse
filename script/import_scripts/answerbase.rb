@@ -318,7 +318,7 @@ class ImportScripts::Answerbase < ImportScripts::Base
   end
 
   def add_normalization(normalizations, normalization)
-    normalizations << normalization unless normalizations.include?(normalization)
+    normalizations << normalization if normalizations.exclude?(normalization)
   end
 
   def permalink_exists?(url)

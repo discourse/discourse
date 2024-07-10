@@ -11,10 +11,6 @@ class ProblemCheck::RailsEnv < ProblemCheck
 
   private
 
-  def translation_key
-    "dashboard.rails_env_warning"
-  end
-
   def translation_data
     { env: Rails.env }
   end

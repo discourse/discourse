@@ -234,7 +234,6 @@ sv:
       secure_uploads_requirements: "S3-uppladdningar och S3 ACL:er måste ha aktiverats innan säkra uppladdningar aktiveras."
       s3_use_acls_requirements: "Du måste ha S3 ACL:er aktiverade när säkra uppladdningar är aktiverade."
       share_quote_facebook_requirements: "Du måste ange ett Facebook-app-id för att möjliggöra delning av citat på Facebook."
-      second_factor_cannot_enforce_with_socials: "Du kan inte tvinga 2FA med sociala inloggningar aktiverade. Du måste först inaktivera inloggning via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Du kan inte genomdriva 2FA om lokala inloggningar är inaktiverade."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Du kan inte genomdriva 2FA om DiscourseConnect har aktiverats."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Du kan inte inaktivera lokal inloggning om 2FA har genomdrivits. Inaktivera genomdriven 2FA innan du inaktiverar lokala inloggningar."
@@ -495,7 +494,6 @@ sv:
     request_membership_pm:
       title: "Begäran om medlemskap i @%{group_name}"
     request_accepted_pm:
-      title: "Du har blivit antagen i @%{group_name}"
       body: |
         Din begäran om tillträde i @%{group_name} har godkänts och du är nu medlem.
   education:
@@ -564,6 +562,8 @@ sv:
         raw: "Inlägg"
       user_profile:
         bio_raw: "Om mig"
+      user:
+        password: "Lösenord"
     errors:
       models:
         topic:
@@ -654,20 +654,6 @@ sv:
   staff_category_description: "Privat kategori för personaldiskussioner. Ämnen är bara synliga för administratörer och moderatorer."
   discourse_welcome_topic:
     title: "Välkommen till %{site_title}! :wave:"
-    body: |
-      Vi är så glada över att du kom till oss.
-
-      %{site_info_quote}
-
-      Här är några saker du kan göra för att komma igång:
-
-      :speaking_head: **Presentera dig** genom att lägga till en bild och information om dig själv och dina intressen i [din profil](%{base_path}/my/preferences/account). Vad skulle du vilja få frågor om?
-
-      :open_book: **Lär känna forumet** genom att [bläddra i diskussioner](%{base_path}/top) som redan pågår här. När du tycker att ett inlägg är intressant, informativt eller underhållande, använd :heart: för att visa din uppskattning eller ditt stöd!
-
-      :handshake: **Bidra** genom att kommentera, dela med dig av ditt perspektiv, ställa frågor eller ge feedback i diskussionen. Innan du svarar eller startar nya ämnen bör du läsa igenom [forumets riktlinjer](%{base_path}/faq).
-
-      > Om du behöver hjälp eller har ett förslag, fråga gärna i %{feedback_category} eller [kontakta administratörerna](%{base_path}/about).
   admin_quick_start_title: "Administratörsguide: Komma igång"
   category:
     topic_prefix: "Om kategorin %{category}"
@@ -1109,7 +1095,6 @@ sv:
       title: "Användarbesök"
       xaxis: "Dag"
       yaxis: "Antal besök"
-      description: "Totalt antal användarbesök."
     signups:
       title: "Registreringar"
       xaxis: "Dag"
@@ -1352,13 +1337,14 @@ sv:
       title: "Användarbesök (mobil)"
       xaxis: "Dag"
       yaxis: "Antal besök"
-      description: "Antal unika användare som kom via en mobil enhet."
     web_crawlers:
       title: "Användaragenter för sökrobotar"
       labels:
         user_agent: "Användaragenter"
         page_views: "Sidvisningar"
       description: "Lista över användaragenter för sökrobotar, sorterad efter sidvisningar."
+    web_hook_events_daily_aggregate:
+      xaxis: "Dag"
     suspicious_logins:
       title: "Misstänkta inloggningar"
       labels:
@@ -1411,36 +1397,23 @@ sv:
         user: Användare
         qtt_like: Mottagna gillningar
       description: "Topp 10-användare som har fått gillningar från ett brett spektrum av personer."
+    topic_view_stats:
+      labels:
+        topic: Ämne
+        logged_in_views: Inloggad
+        anon_views: Anonym
+        total_views: Totalt
   dashboard:
-    group_email_credentials_warning: 'Det uppstod ett problem med e-postautentiseringsuppgifterna för gruppen <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Inga e-postmeddelanden skickas från gruppinkorgen förrän problemet är åtgärdat. %{error}'
-    rails_env_warning: "Din server kör i %{env}-läge."
-    host_names_warning: "Din config/database.yml-fil använder lokalvärdens standard-värdnamn. Uppdatera den till att använda din webbplats värdnamn."
-    sidekiq_warning: 'Sidekiq körs inte. Många uppgifter, som att skicka e-post, utförs asynkront av sidekiq. Se till att minst en sidekiq-process körs. <a href="https://github.com/mperham/sidekiq">Läs mer om Sidekiq här</a>.'
-    queue_size_warning: "Antal köade jobb är %{queue_size}, vilket är ganska högt. Det kan indikera ett problem med Sidekiq-processen/-processerna, eller så kanske du behöver lägga till fler Sidekiq-arbetare."
-    memory_warning: "Din server körs med mindre än 1 GB minne. Det rekommenderas minst 1 GB minne."
-    google_oauth2_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med Google OAuth2 (enable_google_oauth2_logins), men klient-id och klienthemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-    facebook_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med Facebook (enable_facebook_logins), men app-id och appens hemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-    twitter_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med Twitter (enable_twitter_logins), men nyckel och hemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-    github_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med GitHub (enable_github_logins), men klient-id och hemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-    s3_config_warning: 'Servern är konfigurerad till att ladda upp filer till S3, men minst en av följande inställningar har inte ställts in: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, eller s3_upload_bucket. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera dem. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
-    s3_backup_config_warning: 'Servern är konfigurerad till att ladda upp reservfiler till S3, men minst en av följande inställningar har inte ställts in: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, eller s3_backup_bucket. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera dem. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
-    s3_cdn_warning: 'Servern är konfigurerad att ladda upp filer till S3, men det finns ingen konfigurerad S3 CDN. Detta kan leda till dyra S3-kostnader och långsammare prestanda. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Läs mer i "Använda objektlagring för uppladdningar"</a>.'
-    image_magick_warning: 'Servern är konfigurerad att skapa ikoner av stora bilder, men ImageMagick är inte installerad. Installera ImageMagick med din föredragna pakethanterare eller <a href="https://www.imagemagick.org/script/download.php" target="_blank">hämta den senaste utgåvan</a>.'
-    failing_emails_warning: 'Det finns %{num_failed_jobs} e-postutskick som har misslyckats. Kontrollera din app.yml för att säkerställa att serverinställningarna för e-post är korrekta. <a href="%{base_path}/sidekiq/retries" target="_blank">Se alla misslyckade utskick i Sidekiq</a>.'
-    subfolder_ends_in_slash: "Inställningarna för dina undermappar är inte korrekt; DISCOURSE_RELATIV_URL_ROOT slutar med ett snedstreck."
-    outdated_translations_warning: "Vissa av dina översättningsåsidosättningar är inaktuella. Kontrollera dina <a href='%{base_path}/admin/customize/site_texts?outdated=true'>textanpassningar</a>."
-    email_polling_errored_recently:
-      one: "E-postpolling har genererat ett fel de senaste 24 timmarna. Se <a href='%{base_path}/logs' target='_blank'>loggarna</a> för mer detaljer."
-      other: "E-postpolling har genererat %{count} fel de senaste 24 timmarna. Se <a href='%{base_path}/logs' target='_blank'>loggarna</a> för mer detaljer."
-    missing_mailgun_api_key: "Servern är konfigurerad att skicka e-post via Mailgun, men du har inte tillhandahållit en API-nyckel som ska användas för att verifiera webhook-meddelandena."
-    bad_favicon_url: "Favoritikonen kan inte laddas. Kontrollera dina inställningar för favoritikonen i <a href='%{base_path}/admin/site_settings'>webbplatsinställningarna</a>."
-    poll_pop3_timeout: "Anslutningen till POP3-servern har nått tidsgränsen. Inkommande e-postmeddelanden kunde inte mottas. Kontrollera dina <a href='%{base_path}/admin/site_settings/category/email'>POP3-inställningar</a> och tjänsteleverantör."
-    poll_pop3_auth_error: "Anslutning till POP3-servern misslyckas med ett autentiseringsfel. Kontrollera dina <a href='%{base_path}/admin/site_settings/category/email'>POP3-inställningar</a>."
-    force_https_warning: "Din webbplats använder SSL, men `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` har inte aktiverats i inställningarna för din webbplats."
-    out_of_date_themes: "Uppdateringar finns tillgängliga för följande teman:"
-    unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
-    v3_analytics_deprecated: "Din Discourse använder för närvarande Google Analytics 3, som inte längre kommer att stödjas efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Uppgradera till Google Analytics 4</a> nu för att fortsätta att få värdefulla insikter i, och analyser av, din webbplats prestanda."
-    category_style_deprecated: "Din Discourse använder för närvarande en utfasad kategoristil som tas bort innan den sista betaversionen av Discourse 3.2 kommer ut. Se <a href='https://meta.discourse.org/t/282441'>Flytta till en enskild webbplatsinställning för kategoristil</a> för instruktioner om hur du behåller din valda kategoristil."
+    problem:
+      rails_env: "Din server kör i %{env}-läge."
+      host_names: "Din config/database.yml-fil använder lokalvärdens standard-värdnamn. Uppdatera den till att använda din webbplats värdnamn."
+      queue_size: "Antal köade jobb är %{queue_size}, vilket är ganska högt. Det kan indikera ett problem med Sidekiq-processen/-processerna, eller så kanske du behöver lägga till fler Sidekiq-arbetare."
+      ram: "Din server körs med mindre än 1 GB minne. Det rekommenderas minst 1 GB minne."
+      subfolder_ends_in_slash: "Inställningarna för dina undermappar är inte korrekt; DISCOURSE_RELATIV_URL_ROOT slutar med ett snedstreck."
+      missing_mailgun_api_key: "Servern är konfigurerad att skicka e-post via Mailgun, men du har inte tillhandahållit en API-nyckel som ska användas för att verifiera webhook-meddelandena."
+      out_of_date_themes: "Uppdateringar finns tillgängliga för följande teman:"
+      unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
+      google_analytics_version: "Din Discourse använder för närvarande Google Analytics 3, som inte längre kommer att stödjas efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Uppgradera till Google Analytics 4</a> nu för att fortsätta att få värdefulla insikter i, och analyser av, din webbplats prestanda."
     back_from_logster_text: "Tillbaka till webbplatsen"
   site_settings:
     allow_bulk_invite: "Tillåt massinbjudningar genom att ladda upp en CSV-fil"
@@ -1536,9 +1509,7 @@ sv:
     email_custom_headers: "En lista över anpassade e-postrubriker, avgränsad med vertikalstreck"
     email_subject: "Anpassningsbart ämnesformat för vanliga e-postmeddelanden. Se <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Ger mer information till användarna om varför de inte kan komma åt ett visst ämne. Notera: Det här är mindre säkert eftersom användare vet om att en URL länkar till ett giltigt ämne."
-    enforce_second_factor: "Kräv att användare aktiverar tvåfaktorsautentisering innan de kan komma åt Discourse UI. Välj \"alla\" för att tillämpa det för alla användare. Välj \"personal\" för att tillämpa det endast för personalanvändare. Den här inställningen påverkar inte autentiseringen av API eller 'DiscourseConnect provider'."
     force_https: "Tvinga din webbplats att endast använda HTTPS. VARNING: bocka INTE i det här innan du kan verifiera att HTTPS verkligen fungerar överallt! Har du kontrollerat din CDN, alla sociala inloggningar och alla externa logotyper/beroenden för att säkerställa att de alla också är HTTPS-kompatibla?"
-    same_site_cookies: "Använd samma webbplatskakor, detta eliminerar alla vektorer för Cross Site Request Forgery på webbläsare som stöds (Löst eller Strikt). Varning: Strikt fungerar bara på webbplatser som tvingar inloggning och använder en extern autentiseringsmetod."
     summary_score_threshold: "Minsta poäng för att ett inlägg ska inkluderas i 'Sammanfatta det här ämnet'"
     summary_posts_required: "Minsta antal inlägg i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs. Ändringar i denna inställning kommer att genomföras retroaktivt inom en vecka."
     summary_likes_required: "Minsta antal gillningar i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs. Ändringar i denna inställning kommer att genomföras retroaktivt inom en vecka."
@@ -1707,11 +1678,9 @@ sv:
     s3_endpoint: "Ändpunkten kan ändras för att säkerhetskopiera till en S3-kompatibel tjänst som DigitalOcean Spaces eller Minio. VARNING: Lämna tomt om du använder AWS S3."
     s3_configure_tombstone_policy: "Aktivera automatisk raderingspolicy för Tombstone uppladdningar. VIKTIGT: Om det är inaktiverat kommer inget utrymme att återtas efter att överföringar har tagits bort."
     s3_disable_cleanup: "Förhindra borttagning av äldre säkerhetskopior från S3 när det finns fler säkerhetskopior än högsta tillåtna."
-    enable_s3_inventory: "Generera rapporter och verifiera uppladdningar med Amazon S3 inventering. VIKTIGT: kräver giltiga S3-referenser (både åtkomstnyckel-ID och hemlig åtkomstnyckel)."
     s3_use_acls: "AWS rekommenderar att inte använda ACL:er på S3-behållare. Om du följer detta råd ska det här alternativet avmarkeras. Det måste vara aktiverat om du använder säkra uppladdningar."
     backup_time_of_day: "UTC-tid på dygnet då säkerhetskopieringen sker."
     backup_with_uploads: "Inkludera uppladdning i schemalagda säkerhetskopieringar. Inaktivering av det här kommer endast att säkerhetskopiera databasen."
-    backup_location: "Plats där säkerhetskopior lagras. VIKTIGT: S3 kräver giltiga S3-referenser som anges i Fil-inställningarna."
     backup_gzip_compression_level_for_uploads: "Nivå av Gzip-komprimering som används för att komprimera överföringar."
     include_thumbnails_in_backups: "Inkludera genererade miniatyrbilder i säkerhetskopior. Inaktivering av detta kommer att göra säkerhetskopior mindre, men kräver en ny omläggning av alla inlägg efter en återställning."
     active_user_rate_limit_secs: "Hur frekvent vi uppdaterar 'last_seen_at'-fältet, i sekunder"
@@ -2120,7 +2089,6 @@ sv:
     enable_offline_indicator: "Visa ett meddelande för användare när det upptäcks att de inte har någon nätverksanslutning"
     default_sidebar_link_to_filtered_list: "Låt länkar i navigeringsmenyn länka till filtrerad lista som standard."
     default_sidebar_show_count_of_new_items: "Låt länkar i navigeringsmenyn visa antalet nya objekt istället för utmärkelser som standard."
-    default_sidebar_switch_panel_position: "Placering av panelknappar för sidofältsomkoppling"
     retain_web_hook_events_period_days: "Antal dagar för att behålla register över webhook-händelsedata."
     retry_web_hook_events: "Försök automatiskt igen för misslyckade händelser för webhooken 4 gånger. Tidsspannet mellan försöken är 1, 5, 25 och 125 minuter."
     revoke_api_keys_unused_days: "Antal dagar sedan en API-nyckel senast användes innan den automatiskt återkallas (0 för aldrig)"
@@ -2173,7 +2141,6 @@ sv:
     use_name_for_username_suggestions: "Använd en användares fullständiga namn när det föreslås användarnamn."
     suggest_weekends_in_date_pickers: "Inkludera helger (lördag och söndag) i förslagen till datumval (inaktivera detta om du endast använder Discourse på vardagar, måndag till fredag)."
     splash_screen: "Visar en tillfällig laddningsskärm medan webbplatsens tillgångar laddas"
-    navigation_menu: "Bestäm vilken navigeringsmeny som ska användas."
     default_navigation_menu_categories: "Valda kategorier visas som standard under navigeringsmenyns sektion Kategorier."
     default_navigation_menu_tags: "Valda taggar visas som standard under navigeringsmenyns sektion Taggar."
     experimental_new_new_view_groups: 'EXPERIMENTELLT: Aktivera en ny ämneslista som kombinerar olästa och nya ämnen och gör att länken "Allt" i sidofältet länkar till den.'
@@ -2181,7 +2148,6 @@ sv:
     experimental_topics_filter: "EXPERIMENTELLT: Aktiverar den experimentella ämnesfiltervägen vid /filter"
     enable_experimental_lightbox: "EXPERIMENTELLT: Byt ut standardbild-lightboxen mot den nya designen."
     experimental_form_templates: "EXPERIMENTELLT: Aktivera funktionen för formulärmallar. <b>Efter att den har aktiverats</b> hanterar du mallarna på <a href='%{base_path}/admin/customize/form-templates'>Anpassa / Mallar</a>."
-    admin_sidebar_enabled_groups: "EXPERIMENTELLT: Aktivera sidofältsnavigering för administratörsgränssnittet för de angivna grupperna, som ersätter administratörsnavigeringsknapparna på översta nivån."
     lazy_load_categories_groups: "EXPERIMENTELLT: Information om kategorier av uppskjuten inläsning endast för användare av dessa grupper. Detta förbättrar prestandan på webbplatser med många kategorier."
     page_loading_indicator: "Konfigurera laddningsindikatorn som visas under sidnavigeringar i Discourse. 'Spinnare' är en indikator som tar upp hela sidan. 'Skjutreglage' visar ett smalt fält högst upp på skärmen."
     show_user_menu_avatars: "Visa användaravatarer i användarmenyn"
@@ -2271,6 +2237,9 @@ sv:
       purge_unactivated_users_grace_period_days:
       - ""
       - "inaktiv"
+      - ""
+      navigation_menu:
+      - "sidofält"
       - ""
     placeholder:
       discourse_connect_provider_secrets:
@@ -2420,7 +2389,6 @@ sv:
     email_too_long: "E-postadressen du tillhandahöll är för lång. E-postadresser kan på sin höjd vara 254 tecken och domännamn 253 tecken."
     wrong_invite_code: "Inbjudningskoden som du har angett var felaktig."
     reserved_username: "Användarnamnet är inte tillåtet."
-    missing_user_field: "Du har inte fyllt i alla användarfält"
     auth_complete: "Autentisering är färdig."
     click_to_continue: "Klicka här för att fortsätta."
     already_logged_in: "Tyvärr är denna inbjudan avsedd för nya användare, som inte redan har ett befintligt konto."
@@ -2879,23 +2847,9 @@ sv:
     bulk_invite_succeeded:
       title: "Massinbjudan lyckades"
       subject_template: "Massinbjudan av användare behandlades utan fel"
-      text_body_template: |
-        Din fil för massinbjudan av användare behandlades, %{sent} inbjudningar skickades, %{skipped} hoppades över, med %{warnings} varning(ar).
-
-        `` text
-        %{logs}
-        ```
     bulk_invite_failed:
       title: "Massinbjudan misslyckades"
       subject_template: "Massinbjudan av användare genererade fel"
-      text_body_template: |
-        Din fil för massinbjudan av användare behandlades, %{sent} inbjudningar skickades, %{skipped} hoppades över, med %{warnings} varning(ar) och %{failed} fel.
-
-        Här är loggen:
-
-        `` text
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "Tillagd i gruppen som ägare"
       subject_template: "Du har lagts till som ägare av gruppen %{group_name}"
@@ -3453,7 +3407,6 @@ sv:
       subject_template: "[%{email_prefix}] Tvåfaktorsautentisering inaktiverad"
       text_body_template: "Tvåfaktorsautentisering har stängts av för ditt konto hos %{site_name}. Du kan nu enbart logga in genom ditt lösenord; en ytterligare autentiseringskod behövs inte längre.\n\nOm du inte valde att stänga av tvåfaktorsautentisering kan någon ha äventyrat ditt konto. \n\nOm du har några frågor, [kontakta din trevliga personal](%{base_url}/about).\n"
     digest:
-      why: "En kortfattad sammanfattning av %{site_link} sedan ditt senaste besök den %{last_seen_at}"
       since_last_visit: "Sedan ditt senaste besök"
       new_topics: "Nya ämnen"
       unread_notifications: "Olästa aviseringar"
@@ -3469,7 +3422,6 @@ sv:
       your_email_settings: "dina e-postinställningar"
       click_here: "klicka här"
       from: "%{site_name}"
-      preheader: "En kort sammanfattning sedan ditt senaste besök %{last_seen_at}"
     forgot_password:
       title: "Glömt lösenord"
       subject_template: "[%{email_prefix}] Återställning av lösenord"
@@ -3716,6 +3668,7 @@ sv:
     Redigera det första inlägget i det här ämnet för att ändra innehållet på sidan %{page_name}.
   guidelines_topic:
     title: "Vanliga frågor/riktlinjer"
+    guidelines_title: "Riktlinjer"
   tos_topic:
     title: "Villkor"
     body: |
@@ -4321,9 +4274,6 @@ sv:
           chat_enabled:
             placeholder: "Aktivera chatt"
             extra_description: "Engagera dina medlemmar i realtid"
-          enable_sidebar:
-            placeholder: "Aktivera sidofältet"
-            extra_description: "Få enkelt tillgång till dina favoritutrymmen"
       ready:
         title: "Din webbplats är klar!"
         description: "Det var allt! Du har gjort det grundläggande för att konfigurera ditt forum. Nu kan du hoppa in och ta en titt, skriva ett välkomstämne och skicka inbjudningar!<br><br>Ha kul!"

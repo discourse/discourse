@@ -85,13 +85,13 @@ class EmbedController < ApplicationController
       raise Discourse::InvalidAccess.new("invalid embed host")
     end
 
-    topic_id = nil
     if embed_url.present?
       topic_id = TopicEmbed.topic_id_for_embed(embed_url)
     else
       topic_id = params[:topic_id].to_i
     end
 
+    response.headers["X-Robots-Tag"] = "noindex, indexifembedded"
     if topic_id
       @topic_view =
         TopicView.new(
@@ -144,7 +144,7 @@ class EmbedController < ApplicationController
 
       topic_embeds.each do |te|
         url = te.embed_url
-        url = "#{url}#discourse-comments" unless params[:embed_url].include?(url)
+        url = "#{url}#discourse-comments" if params[:embed_url].exclude?(url)
         if te.topic.present?
           by_url[url] = I18n.t("embed.replies", count: te.topic.posts_count - 1)
         else

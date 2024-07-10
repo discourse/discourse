@@ -26,7 +26,7 @@ module HasErrors
   end
 
   def add_error(msg)
-    errors.add(:base, msg) unless errors[:base].include?(msg)
+    errors.add(:base, msg) if errors[:base].exclude?(msg)
   end
 
   def add_errors_from(obj)

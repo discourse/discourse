@@ -90,7 +90,7 @@ module PrettyText
       discourse-common/addon/lib/deprecated
       discourse-common/addon/lib/escape
       discourse-common/addon/lib/avatar-utils
-      discourse-common/addon/utils/watched-words
+      discourse-common/addon/lib/case-converter
       discourse/app/lib/to-markdown
       discourse/app/static/markdown-it/features
     ].each do |f|
@@ -403,7 +403,7 @@ module PrettyText
     doc.css("aside.quote a, aside.onebox a, .elided a").remove
 
     # remove hotlinked images
-    doc.css("a.onebox > img").each { |img| img.parent.remove }
+    doc.css("a.lightbox > img, a.onebox > img").each { |img| img.parent.remove }
 
     # extract all links
     doc
@@ -505,17 +505,23 @@ module PrettyText
   end
 
   def self.make_all_links_absolute(doc)
-    site_uri = nil
     doc
-      .css("a")
-      .each do |link|
-        href = link["href"].to_s
+      .css("a[href]")
+      .each do |a|
         begin
-          uri = URI(href)
-          site_uri ||= URI(Discourse.base_url)
-          unless uri.host.present? || href.start_with?("mailto")
-            link["href"] = "#{site_uri}#{link["href"]}"
-          end
+          href = a["href"].to_s
+          next if href.blank?
+          next if href.start_with?("mailto:")
+          next if href.start_with?(Discourse.base_url)
+          next if URI(href).host.present?
+
+          a["href"] = (
+            if href.start_with?(Discourse.base_path)
+              "#{Discourse.base_url_no_prefix}#{href}"
+            else
+              "#{Discourse.base_url}#{href}"
+            end
+          )
         rescue URI::Error
           # leave it
         end

@@ -12,6 +12,7 @@ import i18n from "discourse-common/helpers/i18n";
 
 export default class ChatModalThreadSettings extends Component {
   @service chatApi;
+  @service currentUser;
 
   @tracked editedTitle = this.thread.title || "";
   @tracked saving = false;
@@ -74,17 +75,19 @@ export default class ChatModalThreadSettings extends Component {
           <span>{{this.threadTitleLength}}</span>/50
         </div>
 
-        <div class="discourse-ai-cta">
-          <p class="discourse-ai-cta__title">{{icon "info-circle"}}
-            {{i18n "chat.thread_title_modal.discourse_ai.title"}}</p>
-          <p class="discourse-ai-cta__description">{{htmlSafe
-              (i18n
-                "chat.thread_title_modal.discourse_ai.description"
-                url="<a href='https://www.discourse.org/ai' rel='noopener noreferrer' target='_blank'>Discourse AI</a>"
-              )
-            }}
-          </p>
-        </div>
+        {{#if this.currentUser.admin}}
+          <div class="discourse-ai-cta">
+            <p class="discourse-ai-cta__title">{{icon "info-circle"}}
+              {{i18n "chat.thread_title_modal.discourse_ai.title"}}</p>
+            <p class="discourse-ai-cta__description">{{htmlSafe
+                (i18n
+                  "chat.thread_title_modal.discourse_ai.description"
+                  url="<a href='https://www.discourse.org/ai' rel='noopener noreferrer' target='_blank'>Discourse AI</a>"
+                )
+              }}
+            </p>
+          </div>
+        {{/if}}
       </:body>
       <:footer>
         <DButton

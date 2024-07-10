@@ -21,6 +21,7 @@ te:
             kb: కేబీ
             mb: యంబీ
             tb: టీబీ
+      percent: "%{count}%"
       short:
         thousands: "%{number} వేల"
         millions: "%{number}0 ల"
@@ -348,11 +349,20 @@ te:
       search_placeholder: "పేరు, విషయం శీర్షిక లేదా పోస్ట్ కంటెంట్ ద్వారా బుక్‌మార్క్‌లను శోధించండి"
       search: "శోధించండి"
       bookmark: "బుక్‌మార్క్"
+      bulk:
+        select_all: "అన్ని ఎంచుకోండి"
+        clear_all: "అన్నీ క్లియర్ చేయండి"
+        selected_count:
+          one: "%{count} ఎంచుకోబడింది"
+          other: "%{count} ఎంచుకోబడింది"
       reminders:
         today_with_time: "ఈరోజు %{time} కి"
         tomorrow_with_time: "రేపు %{time} కి"
         at_time: "%{date_time} వద్ద"
         existing_reminder: "మీరు ఈ బుక్‌మార్క్ కోసం రిమైండర్ సెట్ చేసారు, అది %{at_date_time} పంపబడుతుంది"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "బుక్‌మార్క్‌ను తొలగించండి"
     copy_codeblock:
       copied: "కాపీ చేయబడింది!"
       copy: "కోడ్‌ను క్లిప్‌బోర్డ్‌కి కాపీ చేయండి"
@@ -690,6 +700,7 @@ te:
       topic_count_long: "విషయాలు సృష్టించబడ్డాయి"
       post_count: "ప్రత్యుత్తరాలు"
       post_count_long: "ప్రత్యుత్తరాలు పోస్ట్ చేయబడ్డాయి"
+      no_results_with_search: "ఫలితాలు ఏవీ కనుగొనబడలేదు."
       days_visited: "సందర్శనాలు"
       days_visited_long: "దర్శించిన రోజులు"
       posts_read: "చదివిన"
@@ -969,7 +980,6 @@ te:
     categories:
       categories_label: "వర్గాలు"
       subcategories_label: "ఉప వర్గాలు"
-      all_subcategories: "అన్ని ఉపవర్గాలు"
       no_subcategories: "ఉపవర్గాలు లేవు"
       remove_filter: "ఫిల్టర్‌ని తీసివేయండి"
       plus_more_count:
@@ -1033,6 +1043,7 @@ te:
       none: "(ఒక ఎంపికను ఎంచుకోండి)"
       required: 'దయచేసి "%{name}" కోసం విలువను నమోదు చేయండి'
       same_as_password: "మీ పాస్‌వర్డ్ ఇతర ఫీల్డ్‌లలో పునరావృతం కాకూడదు."
+      optional: (ఐచ్ఛికం)
     user:
       said: "%{username}:"
       profile: "ప్రొఫైల్"
@@ -1086,7 +1097,8 @@ te:
       activity_stream: "కలాపం"
       read: "చదివిన"
       read_help: "ఇటీవల చదివిన విషయాలు"
-      preferences: "ప్రాధాన్యతలు"
+      preferences:
+        title: "ప్రాధాన్యతలు"
       feature_topic_on_profile:
         open_search: "కొత్త విషయాన్ని ఎంచుకోండి"
         title: "ఒక విషయాన్ని ఎంచుకోండి"
@@ -1360,6 +1372,7 @@ te:
         set_password: "సంకేతపదం అమర్చు"
         choose_new: "కొత్త పాస్‌వర్డ్‌ని ఎంచుకోండి"
         choose: "పాస్వర్డ్ ను ఎన్నుకోండి"
+        title: "పాస్వర్డ్ రీసెట్"
       second_factor_backup:
         title: "రెండు-కారకాల బ్యాకప్ కోడ్‌లు"
         regenerate: "పునరుత్పత్తించు"
@@ -1754,7 +1767,6 @@ te:
         fine_print: "ఇది సంభావ్య సున్నితమైన చర్య అయినందున మీ గుర్తింపును నిర్ధారించమని మేము మిమ్మల్ని అడుగుతున్నాము. ఒకసారి ప్రామాణీకరించబడిన తర్వాత, మీరు కొన్ని గంటలపాటు నిష్క్రియంగా ఉన్న తర్వాత మాత్రమే మళ్లీ ప్రామాణీకరించమని అడగబడతారు."
       password:
         title: "సంకేతపదం"
-        too_short: "మీ సంకేతపదం మరీ చిన్నది."
         common: "ఆ సంకేతపదం మరీ సాధారణం."
         same_as_username: "మీ సంకేతపదం మీ వినియోగదారుపేరు ని పోలి ఉంది."
         same_as_email: "మీ సంకేతపదం మీ ఈమెయిల్ ను పోలి ఉంది."
@@ -2008,10 +2020,11 @@ te:
       header_title: "స్వాగతం!"
       subheader_title: "మీ ఖాతాను సృష్టిద్దాం"
       disclaimer: "నమోదు చేయడం ద్వారా, మీరు <a href='%{privacy_link}' target='blank'>గోప్యతా విధానం</a> మరియు <a href='%{tos_link}' target='blank'>సేవా నిబంధనలను</a> అంగీకరిస్తున్నారు."
-      title: "మీ ఖాతాను సృష్టించండి"
+      title: "సైన్ అప్"
       failed: "ఏదో తేడా జరిగింది. బహుశా ఈమెయిల్ ఇప్పటికే ఈసైటులో రిజిస్టరు అయి ఉందేమో, సంకేతపదం మర్చిపోయా లంకె ప్రయత్నించు."
       associate: "ఖాతా కలిగి ఉన్నారా? మీ %{provider} ఖాతాను లింక్ చేయడానికి <a href='%{associate_link}'>లాగిన్</a> చేయండి."
       activation_title: "మీ ఖాతాను సక్రియం చేయండి"
+      already_have_account: "ఖాతా కలిగి ఉన్నారా?"
     forgot_password:
       title: "పాస్వర్డ్ రీసెట్"
       action: "నేను నా సంకేతపదాన్ని మర్చిపోయాను"
@@ -2164,9 +2177,6 @@ te:
     conditional_loading_section:
       loading: లోడ్ అవుతోంది…
     category_row:
-      subcategory_count:
-        one: "+ %{count} ఉపవర్గం"
-        other: "+ %{count} ఉపవర్గాలు"
       topic_count:
         one: "ఈ వర్గంలో %{count} విషయం"
         other: "ఈ వర్గంలోని %{count} విషయాలు"
@@ -2193,6 +2203,8 @@ te:
         categories_admin_dropdown:
           title: "వర్గాలను నిర్వహించండి"
         bulk_select_topics_dropdown:
+          title: "బహుళ చర్యలు"
+        bulk_select_bookmarks_dropdown:
           title: "బహుళ చర్యలు"
     date_time_picker:
       from: నుండి
@@ -2343,7 +2355,6 @@ te:
       show_toolbar: "కంపోజర్ టూల్బార్ చూపించండి"
       hide_toolbar: "కంపోజర్ టూల్‌బార్‌ను దాచండి"
       modal_ok: "సరే"
-      modal_cancel: "రద్దు చేయండి"
       cant_send_pm: "క్షమించండి, మీరు %{username}కి సందేశం పంపలేరు."
       yourself_confirm:
         title: "మీరు స్వీకర్తలను జోడించడం మర్చిపోయారా?"
@@ -2796,14 +2807,12 @@ te:
         filter: "ఇక విషయాలు లేవు."
     topic_bulk_actions:
       close_topics:
-        name: "విషయాలు మూయు"
+        name: "మూసివేయండి"
         optional: (ఐచ్ఛికం)
       archive_topics:
-        name: "విషయాలు కట్టకట్టు"
-      unlist_topics:
-        name: "విషయాలను జాబితా నుండి తీసివేయండి"
-      relist_topics:
-        name: "విషయాలను మళ్లీ జాబితా చేయండి"
+        name: "ఆర్కైవ్ చెయ్యండి"
+      move_messages_to_inbox:
+        name: "ఇన్‌బాక్స్‌కి తరలించండి"
       remove_tags:
         name: "ట్యాగ్‌లను తీసివేయండి"
       append_tags:
@@ -2811,7 +2820,7 @@ te:
       replace_tags:
         name: "ట్యాగ్‌లను భర్తీ చేయండి"
       delete_topics:
-        name: "విషయాలను తొలగించండి"
+        name: "తొలగించండి"
       update_category:
         name: "వర్గాన్ని నవీకరించండి"
         description: "ఎంచుకున్న విషయాలకి కొత్త వర్గాన్ని ఎంచుకోండి"
@@ -4055,7 +4064,6 @@ te:
       all_tags: "అన్ని ట్యాగ్‌లు"
       other_tags: "ఇతర ట్యాగ్‌లు"
       selector_tags: "ట్యాగులు"
-      selector_all_tags: "అన్ని ట్యాగ్‌లు"
       selector_no_tags: "ట్యాగ్‌లు లేవు"
       selector_remove_filter: "ఫిల్టర్‌ని తీసివేయండి"
       tags: "ట్యాగులు"
@@ -4252,6 +4260,7 @@ te:
           text: "మరియు మేము ఈ సైట్ యొక్క అత్యంత జనాదరణ పొందిన వర్గాలను స్వయంచాలకంగా చూపుతాము"
         filter_placeholder: "వర్గాలను ఫిల్టర్ చేయండి"
         no_categories: "ఇచ్చిన పదానికి సరిపోలే వర్గాలు ఏవీ లేవు."
+        show_more: "మరిన్ని చూపించండి"
       tags_form_modal:
         title: "ట్యాగ్‌ల నావిగేషన్‌ను సవరించండి"
         filter_placeholder: "ఫిల్టర్ ట్యాగ్‌లు"
@@ -4342,6 +4351,9 @@ te:
             faq:
               content: "ఎఫ్ ఎ క్యూ"
               title: "ఈ సైట్‌ని ఉపయోగించడం కోసం మార్గదర్శకాలు"
+            guidelines:
+              content: "మార్గదర్శకాలు"
+              title: "ఈ సైట్‌ని ఉపయోగించడం కోసం మార్గదర్శకాలు"
             groups:
               content: "సమూహాలు"
               title: "అందుబాటులో ఉన్న సభ్యుడి సమూహాల జాబితా"
@@ -4366,7 +4378,7 @@ te:
       panels:
         forum:
           label: ఫోరం
-      filter: "ఫిల్టర్ చేయండి"
+      back_to_forum: "తిరిగి ఫోరమ్కి"
       clear_filter: "ఫిల్టర్‌ని క్లియర్ చేయండి"
       no_results:
         title: "ఫలితాలు లేవు"
@@ -4475,7 +4487,6 @@ te:
     admin:
       title: "డిస్కోర్స్ అడ్మిన్"
       moderator: "నిర్వాహకుడు"
-      back_to_forum: "తిరిగి ఫోరమ్కి"
       filter_reports: నివేదికలను ఫిల్టర్ చేయండి
       tags:
         remove_muted_tags_from_latest:
@@ -4582,6 +4593,9 @@ te:
               label: వర్గం
             include_subcategories:
               label: "ఉపవర్గాలను చేర్చండి"
+      flags:
+        description: "వివరణ"
+        enabled: "ప్రారంభించబడిందా?"
       groups:
         new:
           title: "కొత్త సమూహం"
@@ -4890,6 +4904,8 @@ te:
           timestamp: "సృష్టించిన"
           completion: "పూర్తి సమయం"
           actions: "చర్యలు"
+          filter_status:
+            failed: "విఫలం"
       home:
         title: "మొదటి పేజీ"
       account:
@@ -4937,6 +4953,31 @@ te:
           search_logs: "లాగ్‌లను శోధించండి"
           security: "సెక్యూరిటీ"
           spam: "స్పామ్"
+      config_areas:
+        about:
+          header: "మీ సైట్ గురించి"
+          community_name: "సంఘం పేరు"
+          site_contact_group_help: |
+            స్వయంచాలకంగా పంపబడిన అన్ని ప్రైవేట్ సందేశాలకు ఆహ్వానించబడిన సమూహం యొక్క చెల్లుబాటు అయ్యే పేరు.
+          your_organization: "మీ సంస్థ"
+          company_name: "కంపెనీ పేరు"
+          governing_law: "పాలక చట్టం"
+          city_for_disputes: "వివాదాలకు నగరం"
+          optional: "(ఐచ్ఛికం)"
+          update: "నవీకరించండి"
+          saved: "సేవ్ చేయబడింది!"
+        flags:
+          description: "వివరణ"
+          enabled: "ప్రారంభించబడిందా?"
+          edit: "సవరించండి"
+          delete: "తొలగించండి"
+          delete_confirm: 'మీరు "%{name}"ని ఖచ్చితంగా తొలగించాలనుకుంటున్నారా?'
+          form:
+            save: "సేవ్ చేయండి"
+            name: "పేరు"
+            description: "వివరణ"
+            topic: "విషయాలు"
+            post: "టపాలు"
       plugins:
         title: "చొప్పింతలు"
         installed: "ప్రతిష్టించిన చొప్పింతలు"
@@ -5310,7 +5351,6 @@ te:
             description: "లింక్‌లు, కొన్ని బటన్‌లు, నోటిఫికేషన్‌లు మరియు యాస రంగు."
           quaternary:
             name: "చతుర్థీ"
-            description: "నావిగేషన్ లింక్‌లు."
           header_background:
             name: "హెడరు వెనుతలం"
             description: "సైటు హెడరు వెనుతలం రంగు."
@@ -5656,6 +5696,7 @@ te:
           upload_successful: "అప్‌లోడ్ విజయవంతమైంది. పదాలు జోడించబడ్డాయి."
           case_sensitivity_label: "కేస్ సెన్సిటివ్"
           case_sensitivity_description: "సరిపోలే క్యారెక్టర్ కేసింగ్ ఉన్న పదాలు మాత్రమే"
+          html_label: "HTML"
         test:
           button_label: "పరీక్షించండి"
           modal_title: "%{action}: అనుసరిస్తున్న పదాలను పరీక్షించండి"
@@ -6046,6 +6087,7 @@ te:
         name: "క్షేత్రం పేరు"
         type: "క్షేత్రం టైపు"
         description: "క్షేత్రం వివరణ"
+        preferences: "ప్రాధాన్యతలు"
         save: "సేవ్ చేయండి"
         edit: "సవరించండి"
         delete: "తొలగించండి"
@@ -6056,6 +6098,9 @@ te:
           title: "సైన్అప్ వద్ద అవసరం"
           enabled: "అవసరం"
           disabled: "అవసరంలేదు"
+        requirement:
+          optional:
+            title: "ఐచ్ఛికం"
         editable:
           title: "సైన్అప్ తర్వాత సవరించదగినది"
           enabled: "సవరించదగిన"

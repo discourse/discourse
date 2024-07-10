@@ -4,6 +4,7 @@
   id={{this.id}}
   tabindex={{this.tabIndex}}
   title={{@tab.title}}
+  aria-label={{@tab.title}}
   aria-selected={{if this.isActive "true" "false"}}
   aria-controls={{this.ariaControls}}
   data-tab-number={{@tab.position}}

@@ -68,7 +68,7 @@ module Jobs
       if count > 3
         Discourse.redis.del(POLL_MAILBOX_TIMEOUT_ERROR_KEY)
         mark_as_errored!
-        add_admin_dashboard_problem_message("dashboard.poll_pop3_timeout")
+        track_problem(:poll_pop3_timeout)
         Discourse.handle_job_exception(
           e,
           error_context(
@@ -79,7 +79,7 @@ module Jobs
       end
     rescue Net::POPAuthenticationError => e
       mark_as_errored!
-      add_admin_dashboard_problem_message("dashboard.poll_pop3_auth_error")
+      track_problem(:poll_pop3_auth_error)
       Discourse.handle_job_exception(e, error_context(@args, "Signing in to poll incoming emails."))
     end
 
@@ -104,11 +104,8 @@ module Jobs
       Discourse.redis.zadd(POLL_MAILBOX_ERRORS_KEY, now, now.to_s)
     end
 
-    def add_admin_dashboard_problem_message(i18n_key)
-      AdminDashboardData.add_problem_message(
-        i18n_key,
-        SiteSetting.pop3_polling_period_mins.minutes + 5.minutes,
-      )
+    def track_problem(identifier)
+      ProblemCheckTracker[identifier].problem!
     end
   end
 end

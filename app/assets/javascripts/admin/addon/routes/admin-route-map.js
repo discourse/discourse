@@ -210,6 +210,20 @@ export default function () {
     );
 
     this.route(
+      "adminConfig",
+      { path: "/config", resetNamespace: true },
+      function () {
+        this.route("flags", function () {
+          this.route("index", { path: "/" });
+          this.route("new");
+          this.route("edit", { path: "/:flag_id" });
+        });
+
+        this.route("about");
+      }
+    );
+
+    this.route(
       "adminPlugins",
       { path: "/plugins", resetNamespace: true },
       function () {
@@ -223,16 +237,6 @@ export default function () {
     this.route("admin.whatsNew", {
       path: "/whats-new",
       resetNamespace: true,
-    });
-  });
-
-  // EXPERIMENTAL: These admin routes are hidden behind an `admin_sidebar_enabled_groups`
-  // site setting and are subject to constant change.
-  this.route("admin-revamp", { resetNamespace: true }, function () {
-    this.route("lobby", { path: "/" }, function () {});
-
-    this.route("config", function () {
-      this.route("area", { path: "/:area" });
     });
   });
 }

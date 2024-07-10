@@ -1,5 +1,8 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import DBreadcrumbsContainer from "discourse/components/d-breadcrumbs-container";
+import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
+import i18n from "discourse-common/helpers/i18n";
 import AdminPluginConfigArea from "./admin-plugin-config-area";
 import AdminPluginConfigMetadata from "./admin-plugin-config-metadata";
 import AdminPluginConfigTopNav from "./admin-plugin-config-top-nav";
@@ -22,11 +25,23 @@ export default class AdminPluginConfigPage extends Component {
 
   <template>
     <div class="admin-plugin-config-page">
+      <DBreadcrumbsContainer />
+
+      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem
+        @path="/admin/plugins"
+        @label={{i18n "admin.plugins.title"}}
+      />
+      <DBreadcrumbsItem
+        @path="/admin/plugins/{{@plugin.name}}"
+        @label={{@plugin.nameTitleized}}
+      />
+
+      <AdminPluginConfigMetadata @plugin={{@plugin}} />
+
       {{#if this.adminPluginNavManager.isTopMode}}
         <AdminPluginConfigTopNav />
       {{/if}}
-
-      <AdminPluginConfigMetadata @plugin={{@plugin}} />
 
       <div class="admin-plugin-config-page__content">
         <div class={{this.mainAreaClasses}}>

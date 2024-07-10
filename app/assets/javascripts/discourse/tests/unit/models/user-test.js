@@ -194,4 +194,42 @@ module("Unit | Model | user", function (hooks) {
       "_clearStatusTimerId wasn't set"
     );
   });
+
+  test("pmPath", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const user = store.createRecord("user", {
+      id: 1,
+      username: "eviltrout",
+      groups: [],
+    });
+    const topic = store.createRecord("topic", { id: 1, details: {} });
+
+    assert.strictEqual(
+      user.pmPath(topic),
+      `/u/${user.username_lower}/messages`,
+      "user is in no groups and not directly allowed on the topic"
+    );
+
+    const group1 = store.createRecord("group", { id: 1, name: "group1" });
+    const group2 = store.createRecord("group", { id: 2, name: "group2" });
+    topic.details = {
+      allowed_users: [user],
+      allowed_groups: [group1, group2],
+    };
+    user.groups = [group2];
+
+    assert.strictEqual(
+      user.pmPath(topic),
+      `/u/${user.username_lower}/messages`,
+      "user is in one group (not the first one) and allowed on the topic"
+    );
+
+    topic.details.allowed_users = [];
+
+    assert.strictEqual(
+      user.pmPath(topic),
+      `/u/${user.username_lower}/messages/group/${group2.name}`,
+      "user is in one group (not the first one) and not allowed on the topic"
+    );
+  });
 });

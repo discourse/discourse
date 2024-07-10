@@ -25,39 +25,61 @@ class DiscourseIpInfo
   end
 
   def self.mmdb_download(name)
+    extra_headers = {}
+
     url =
       if GlobalSetting.maxmind_mirror_url.present?
         File.join(GlobalSetting.maxmind_mirror_url, "#{name}.tar.gz").to_s
       else
-        if GlobalSetting.maxmind_license_key.blank?
-          STDERR.puts "MaxMind IP database updates require a license"
-          STDERR.puts "Please set DISCOURSE_MAXMIND_LICENSE_KEY to one you generated at https://www.maxmind.com"
+        license_key = GlobalSetting.maxmind_license_key
+
+        if license_key.blank?
+          STDERR.puts "MaxMind IP database download requires an account ID and a license key"
+          STDERR.puts "Please set DISCOURSE_MAXMIND_ACCOUNT_ID and DISCOURSE_MAXMIND_LICENSE_KEY. See https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941 for more details."
           return
         end
 
-        "https://download.maxmind.com/app/geoip_download?license_key=#{GlobalSetting.maxmind_license_key}&edition_id=#{name}&suffix=tar.gz"
+        account_id = GlobalSetting.maxmind_account_id
+
+        if account_id.present?
+          extra_headers[
+            "Authorization"
+          ] = "Basic #{Base64.strict_encode64("#{account_id}:#{license_key}")}"
+
+          "https://download.maxmind.com/geoip/databases/#{name}/download?suffix=tar.gz"
+        else
+          # This URL is not documented by MaxMind, but it works but we don't know when it will stop working. Therefore,
+          # we are deprecating this in 3.3 and will remove it in 3.4. An admin dashboard warning has been added to inform
+          # site admins about this deprecation. See `ProblemCheck::MaxmindDbConfiguration` for more information.
+          "https://download.maxmind.com/app/geoip_download?license_key=#{license_key}&edition_id=#{name}&suffix=tar.gz"
+        end
       end
 
-    gz_file =
-      FileHelper.download(
-        url,
-        max_file_size: 100.megabytes,
-        tmp_file_name: "#{name}.gz",
-        validate_uri: false,
-        follow_redirect: true,
-      )
+    begin
+      gz_file =
+        FileHelper.download(
+          url,
+          max_file_size: 100.megabytes,
+          tmp_file_name: "#{name}.gz",
+          validate_uri: false,
+          follow_redirect: true,
+          extra_headers:,
+        )
 
-    filename = File.basename(gz_file.path)
+      filename = File.basename(gz_file.path)
 
-    dir = "#{Dir.tmpdir}/#{SecureRandom.hex}"
+      dir = "#{Dir.tmpdir}/#{SecureRandom.hex}"
 
-    Discourse::Utils.execute_command("mkdir", "-p", dir)
+      Discourse::Utils.execute_command("mkdir", "-p", dir)
 
-    Discourse::Utils.execute_command("cp", gz_file.path, "#{dir}/#{filename}")
+      Discourse::Utils.execute_command("cp", gz_file.path, "#{dir}/#{filename}")
 
-    Discourse::Utils.execute_command("tar", "-xzvf", "#{dir}/#{filename}", chdir: dir)
+      Discourse::Utils.execute_command("tar", "-xzvf", "#{dir}/#{filename}", chdir: dir)
 
-    Dir["#{dir}/**/*.mmdb"].each { |f| FileUtils.mv(f, mmdb_path(name)) }
+      Dir["#{dir}/**/*.mmdb"].each { |f| FileUtils.mv(f, mmdb_path(name)) }
+    rescue => e
+      Discourse.warn_exception(e, message: "MaxMind database download failed.")
+    end
   ensure
     FileUtils.rm_r(dir, force: true) if dir
     gz_file&.close!

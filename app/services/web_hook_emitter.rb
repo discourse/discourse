@@ -19,6 +19,9 @@ class WebHookEmitter
       },
     }
 
+    headers =
+      DiscoursePluginRegistry.apply_modifier(:web_hook_event_headers, headers, body, @webhook_event)
+
     connection_opts[:ssl] = { verify: false } if !@webhook.verify_certificate
 
     conn = Faraday.new(nil, connection_opts) { |f| f.adapter FinalDestination::FaradayAdapter }

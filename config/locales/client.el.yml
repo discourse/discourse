@@ -294,11 +294,17 @@ el:
       search_placeholder: "Αναζήτηση σελιδοδεικτών με βάση το όνομα, τον τίτλο θέματος ή το περιεχόμενο δημοσίευσης"
       search: "Αναζήτηση"
       bookmark: "Σελιδοδείκτης"
+      bulk:
+        select_all: "Επιλογή Όλων"
+        clear_all: "Καθαρισμός Όλων"
       reminders:
         today_with_time: "σήμερα στις %{time}"
         tomorrow_with_time: "αύριο στις %{time}"
         at_time: "στις %{date_time}"
         existing_reminder: "Έχετε ορίσει μια υπενθύμιση για αυτόν τον σελιδοδείκτη που θα σταλεί στις %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Διαγραφή σελιδοδείκτη"
     copy_codeblock:
       copied: "αντιγράφηκε!"
       copy: "αντιγραφή κώδικα στο πρόχειρο"
@@ -584,6 +590,7 @@ el:
       topic_count_long: "Δημιουργημένα Νήματα"
       post_count: "Απαντήσεις"
       post_count_long: "Αναρτημένες Απαντήσεις"
+      no_results_with_search: "Δεν βρέθηκαν αποτελέσματα."
       days_visited: "Επισκέψεις"
       days_visited_long: "Ημέρες Επίσκεψης"
       posts_read: "Διαβασμένο"
@@ -882,6 +889,7 @@ el:
     user_fields:
       none: "(διαλέξτε μία επιλογή)"
       required: 'Παρακαλώ εισαγάγετε μια τιμή για το "%{name}»'
+      optional: (προεραιτικό)
     user:
       said: "%{username}:"
       profile: "Προφίλ"
@@ -930,7 +938,8 @@ el:
       activity_stream: "Δραστηριότητα"
       read: "Διαβασμένο"
       read_help: "Πρόσφατα αναγνωσμένα θέματα"
-      preferences: "Προτιμήσεις"
+      preferences:
+        title: "Προτιμήσεις"
       feature_topic_on_profile:
         open_search: "Επιλέξτε ένα νέο θέμα"
         title: "Επιλέξτε ένα θέμα"
@@ -1103,6 +1112,7 @@ el:
         set_password: "Ορισμός Συνθηματικού"
         choose_new: "Επιλέξτε νέο κωδικό πρόσβασης"
         choose: "Επιλέξτε έναν κωδικό πρόσβασης"
+        title: "Επαναφορά Κωδικού"
       second_factor_backup:
         regenerate: "Αναδημιουγία"
         disable: "Απενεργοποίηση"
@@ -1389,7 +1399,6 @@ el:
           error: "Λυπούμαστε, το αρχείο πρέπει να έχει την μορφή CSV."
       password:
         title: "Κωδικός Πρόσβασης"
-        too_short: "Ο κωδικός πρόσβασης είναι μικρός."
         common: "Ο κωδικός πρόσβασης είναι πολύ κοινός."
         same_as_username: "Ο κωδικός πρόσβασης που έδωσες είναι ο ίδιος με το όνομα χρήστη."
         same_as_email: "Ο κωδικός πρόσβασής σου είναι ίδιος με τη διεύθυνση email σου."
@@ -1552,9 +1561,10 @@ el:
       header_title: "Καλωσόρισες!"
       subheader_title: "Ας δημιουργήσουμε τον λογαριασμό σας"
       disclaimer: "Κάνοντας εγγραφή συμφωνείς με την <a href='%{privacy_link}'>πολιτική ιδιωτικότητας</a> και με τους <a href='%{tos_link}'>όρους χρήσης</a>."
-      title: "Δημιουργήστε τον λογαριασμό σας"
+      title: "Εγγραφή"
       failed: "Κάτι πήγε στραβά. Ίσως αυτή η διεύθυνση email να είναι ήδη δηλωμένη. Δοκίμασε την λειτουργία «ξέχασα τον κωδικό μου»."
       associate: "Έχετε ήδη λογαριασμό; <a href='%{associate_link}'>Συνδεθείτε</a> για να συνδέσετε τον λογαριασμό σας %{provider}."
+      already_have_account: "Έχετε ήδη λογαριασμό;"
     forgot_password:
       title: "Επαναφορά Κωδικού"
       action: "Ξέχασα τον κωδικό πρόσβασής μου"
@@ -1687,8 +1697,8 @@ el:
       enter: "Enter"
     category_row:
       subcategory_count:
-        one: "+ %{count} υποκατηγορία"
-        other: "+ %{count} υποκατηγορίες"
+        one: "+%{count} υποκατηγορία"
+        other: "+%{count} υποκατηγορίες"
       topic_count:
         one: "%{count} θέμα σε αυτήν την κατηγορία"
         other: "%{count} θέματα σε αυτήν την κατηγορία"
@@ -1706,6 +1716,8 @@ el:
         categories_admin_dropdown:
           title: "Διαχείριση κατηγοριών"
         bulk_select_topics_dropdown:
+          title: "Μαζικές Ενέργειες"
+        bulk_select_bookmarks_dropdown:
           title: "Μαζικές Ενέργειες"
     date_time_picker:
       from: Από
@@ -1808,7 +1820,6 @@ el:
       exit_fullscreen: "έξοδος από επεξεργαστή κειμένου πλήρους οθόνης"
       exit_fullscreen_prompt: "Πατήστε <kbd>ESC</kbd> για έξοδο από την πλήρη οθόνη"
       modal_ok: "OK"
-      modal_cancel: "Ακύρωση"
       cant_send_pm: "Λυπούμαστε, δεν μπορείτε να στείλετε μήνυμα στο χρήστη %{username}."
       yourself_confirm:
         title: "Ξεχάσατε να προσθέσετε αποδέκτες;"
@@ -2118,20 +2129,18 @@ el:
         bookmarks: "Δεν υπάρχουν άλλα νήματα με σελιδοδείκτη."
     topic_bulk_actions:
       close_topics:
-        name: "Κλείσιμο Νημάτων"
+        name: "Κλείσιμο"
         optional: (προεραιτικό)
       archive_topics:
-        name: "Αρχειοθέτηση Νημάτων"
-      unlist_topics:
-        name: "Απόκρυψη Νημάτων"
-      relist_topics:
-        name: "Εμφάνιση Νημάτων"
+        name: "Αρχείο"
+      move_messages_to_inbox:
+        name: "Μετακίνηση στα Εισερχόμενα"
       append_tags:
         name: "Προσάρτηση Ετικετών "
       replace_tags:
         name: "Αντικατάσταση Ετικετών "
       delete_topics:
-        name: "Διαγραφή Νημάτων"
+        name: "Σβήσιμο"
     topic:
       filter_to:
         one: "%{count} δημοσίευση σε νήματα"
@@ -3111,7 +3120,6 @@ el:
       all_tags: "Όλες οι ετικέτες"
       other_tags: "Άλλες ετικέτες"
       selector_tags: "ετικέτες"
-      selector_all_tags: "όλες οι ετικέτες"
       selector_no_tags: "καμία ετικέτα"
       selector_remove_filter: "αφαίρεση φίλτρου"
       tags: "Ετικέτες"
@@ -3308,6 +3316,8 @@ el:
               title: "Όλα τα θέματα"
             faq:
               content: "Συχνές ερωτήσεις"
+            guidelines:
+              content: "Οδηγίες"
             groups:
               content: "Ομάδες"
             users:
@@ -3317,7 +3327,7 @@ el:
               content: "Οι αναρτήσεις μου"
             review:
               content: "Ανασκόπηση"
-      filter: "Φίλτρο"
+      filter: "Φίλτρο..."
     welcome_topic_banner:
       title: "Δημιουργήστε το θέμα καλωσορίσματος"
       button_title: "Έναρξη Επεξεργασίας"
@@ -3445,6 +3455,9 @@ el:
               label: Κατηγορία
             include_subcategories:
               label: "Συμπερίληψη υποκατηγοριών"
+      flags:
+        description: "Περιγραφή"
+        enabled: "Ενεργοποιημένο;"
       groups:
         new:
           title: "Νέα Ομάδα"
@@ -3606,6 +3619,8 @@ el:
           timestamp: "Δημιουργήθηκε"
           completion: "Χρόνος Ολοκλήρωσης"
           actions: "Ενέργειες"
+          filter_status:
+            failed: "Απέτυχε"
       home:
         title: "Αρχική Σελίδα"
       account:
@@ -3652,6 +3667,23 @@ el:
           search_logs: "Αναζήτηση καταγραφών"
           security: "Ασφάλεια"
           spam: "Ανεπιθύμητα"
+      config_areas:
+        about:
+          optional: "(προεραιτικό)"
+          update: "Ενημέρωση"
+          saved: "αποθηκεύτηκε!"
+        flags:
+          description: "Περιγραφή"
+          enabled: "Ενεργοποιημένο;"
+          edit: "Επεξεργασία"
+          delete: "Σβήσιμο"
+          delete_confirm: 'Είστε βέβαιοι πως θέλετε να διαγράψετε το «%{name}»;'
+          form:
+            save: "Αποθήκευση"
+            name: "Όνομα"
+            description: "Περιγραφή"
+            topic: "θέματα"
+            post: "αναρτήσεις"
       plugins:
         title: "Plugins"
         installed: "Εγκατεστημένα Plugins"
@@ -3950,7 +3982,6 @@ el:
             description: "Σύνδεσμοι, μερικά κουμπιά, ειδοποιήσεις και χρώματα έμφασης."
           quaternary:
             name: "τέταρτο"
-            description: "Σύνδεσμοι πλοήγησης"
           header_background:
             name: "φόντο κεφαλίδας"
             description: "Χρώμα στο φόντο της κεφαλίδας του ιστότοπου."
@@ -4242,6 +4273,7 @@ el:
           exists: "Υπάρχει ήδη"
           upload: "Προσθήκη από αρχείο"
           upload_successful: "Επιτυχημένη μεταφόρτωση. Οι λέξεις προστέθηκαν."
+          html_label: "HTML"
         test:
           button_label: "Δοκιμή"
           description: "Εισαγάγετε κείμενο παρακάτω για να ελέγξετε για αντιστοιχίες με τις παρακολουθούμενες λέξεις"
@@ -4521,6 +4553,7 @@ el:
         name: "Όνομα πεδίου"
         type: "Τύπος πεδίου"
         description: "Περιγραφή πεδίου"
+        preferences: "Προτιμήσεις"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
         delete: "Διαγραφή"
@@ -4530,6 +4563,9 @@ el:
         required:
           enabled: "απαραίτητο"
           disabled: "δεν είναι απαραίτητο"
+        requirement:
+          optional:
+            title: "Προεραιτικό"
         editable:
           enabled: "επεξεργάσιμο"
           disabled: "μη επεξεργάσιμο"

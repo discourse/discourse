@@ -11,7 +11,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
     sign_in(current_user)
   end
 
-  describe "index" do
+  describe "#index" do
     describe "success" do
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
       fab!(:message_2) { Fabricate(:chat_message) }
@@ -47,7 +47,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       end
     end
 
-    context "when channnel doesn’t exist" do
+    context "when channel doesn’t exist" do
       it "returns a 404" do
         get "/chat/api/channels/-999/messages"
 
@@ -89,6 +89,52 @@ RSpec.describe Chat::Api::ChannelMessagesController do
                  force_thread: true,
                }
         }.to change { Chat::Thread.where(force: false).count }.by(1)
+      end
+    end
+  end
+
+  describe "#update" do
+    context "when message is updated" do
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel, user: current_user) }
+      it "works" do
+        put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
+            params: {
+              message: "abcdefg",
+            }
+
+        expect(response.status).to eq(200)
+        expect(message_1.reload.message).to eq("abcdefg")
+      end
+
+      context "when params are invalid" do
+        it "returns a 400" do
+          put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}"
+
+          expect(response.status).to eq(400)
+        end
+      end
+
+      context "when user is not part of the channel" do
+        before { channel.membership_for(current_user).destroy! }
+
+        it "returns a 404" do
+          put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}"
+
+          expect(response.status).to eq(400)
+        end
+      end
+
+      context "when user is not the author" do
+        fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
+
+        it "returns a 422" do
+          put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
+              params: {
+                message: "abcdefg",
+              }
+
+          expect(response.status).to eq(422)
+        end
       end
     end
   end

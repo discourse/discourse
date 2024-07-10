@@ -77,6 +77,7 @@ class User < ActiveRecord::Base
           dependent: :destroy
   has_one :invited_user, dependent: :destroy
   has_one :user_notification_schedule, dependent: :destroy
+  has_many :passwords, class_name: "UserPassword", dependent: :destroy
 
   # delete all is faster but bypasses callbacks
   has_many :bookmarks, dependent: :delete_all
@@ -141,6 +142,7 @@ class User < ActiveRecord::Base
   belongs_to :uploaded_avatar, class_name: "Upload"
 
   has_many :sidebar_section_links, dependent: :delete_all
+  has_many :embeddable_hosts
 
   delegate :last_sent_email_address, to: :email_logs
 
@@ -156,7 +158,9 @@ class User < ActiveRecord::Base
             unless: :should_skip_user_fields_validation?
 
   validates_associated :primary_email,
-                       message: ->(_, user_email) { user_email[:value]&.errors&.[](:email)&.first }
+                       message: ->(_, user_email) do
+                         user_email[:value]&.errors&.[](:email)&.first.to_s
+                       end
 
   after_initialize :add_trust_level
 
@@ -171,6 +175,7 @@ class User < ActiveRecord::Base
   after_create :set_default_categories_preferences
   after_create :set_default_tags_preferences
   after_create :set_default_sidebar_section_links
+  after_create :refresh_user_directory, if: Proc.new { SiteSetting.bootstrap_mode_enabled }
   after_update :set_default_sidebar_section_links, if: Proc.new { self.saved_change_to_staged? }
 
   after_update :trigger_user_updated_event,
@@ -365,6 +370,13 @@ class User < ActiveRecord::Base
 
   def should_skip_user_fields_validation?
     custom_fields_clean? || SiteSetting.disable_watched_word_checking_in_user_fields
+  end
+
+  def all_sidebar_sections
+    sidebar_sections
+      .or(SidebarSection.public_sections)
+      .includes(:sidebar_urls)
+      .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
   end
 
   def secured_sidebar_category_ids(user_guardian = nil)
@@ -592,8 +604,20 @@ class User < ActiveRecord::Base
   end
 
   def invited_by
+    # this is unfortunate, but when an invite is redeemed,
+    # any user created by the invite is created *after*
+    # the invite's redeemed_at
+    invite_redemption_delay = 5.seconds
     used_invite =
-      Invite.with_deleted.joins(:invited_users).where("invited_users.user_id = ?", self.id).first
+      Invite
+        .with_deleted
+        .joins(:invited_users)
+        .where(
+          "invited_users.user_id = ? AND invited_users.redeemed_at <= ?",
+          self.id,
+          self.created_at + invite_redemption_delay,
+        )
+        .first
     used_invite.try(:invited_by)
   end
 
@@ -779,18 +803,6 @@ class User < ActiveRecord::Base
     Reviewable.list_for(self, include_claimed_by_others: false).count
   end
 
-  def saw_notification_id(notification_id)
-    Discourse.deprecate(<<~TEXT, since: "2.9", drop_from: "3.0")
-      User#saw_notification_id is deprecated. Please use User#bump_last_seen_notification! instead.
-    TEXT
-    if seen_notification_id.to_i < notification_id.to_i
-      update_columns(seen_notification_id: notification_id.to_i)
-      true
-    else
-      false
-    end
-  end
-
   def bump_last_seen_notification!
     query = self.notifications.visible
     query = query.where("notifications.id > ?", seen_notification_id) if seen_notification_id
@@ -901,7 +913,7 @@ class User < ActiveRecord::Base
 
   def password=(password)
     # special case for passwordless accounts
-    @raw_password = password unless password.blank?
+    @raw_password = password if password.present?
   end
 
   def password
@@ -927,6 +939,15 @@ class User < ActiveRecord::Base
 
   def password_validator
     PasswordValidator.new(attributes: :password).validate_each(self, :password, @raw_password)
+  end
+
+  def password_expired?(password)
+    passwords
+      .where("password_expired_at IS NOT NULL AND password_expired_at < ?", Time.zone.now)
+      .any? do |user_password|
+        user_password.password_hash ==
+          hash_password(password, user_password.password_salt, user_password.password_algorithm)
+      end
   end
 
   def confirm_password?(password)
@@ -1488,7 +1509,7 @@ class User < ActiveRecord::Base
     end
 
     # mark all the user's quoted posts as "needing a rebake"
-    Post.rebake_all_quoted_posts(self.id) if self.will_save_change_to_uploaded_avatar_id?
+    Post.rebake_all_quoted_posts(self.id) if saved_change_to_uploaded_avatar_id?
   end
 
   def first_post_created_at
@@ -1782,6 +1803,10 @@ class User < ActiveRecord::Base
     username_lower == User.normalize_username(another_username)
   end
 
+  def relative_url
+    "#{Discourse.base_path}/u/#{encoded_username}"
+  end
+
   def full_url
     "#{Discourse.base_url}/u/#{encoded_username}"
   end
@@ -1828,6 +1853,21 @@ class User < ActiveRecord::Base
     else
       user_option.watched_precedence_over_muted
     end
+  end
+
+  def populated_required_custom_fields?
+    UserField
+      .required
+      .pluck(:id)
+      .all? { |field_id| custom_fields["#{User::USER_FIELD_PREFIX}#{field_id}"].present? }
+  end
+
+  def needs_required_fields_check?
+    (required_fields_version || 0) < UserRequiredFieldsVersion.current
+  end
+
+  def bump_required_fields_version
+    update(required_fields_version: UserRequiredFieldsVersion.current)
   end
 
   protected
@@ -2009,7 +2049,7 @@ class User < ActiveRecord::Base
         end
     end
 
-    TagUser.insert_all!(values) if values.present?
+    TagUser.insert_all(values) if values.present?
   end
 
   def self.purge_unactivated
@@ -2162,6 +2202,10 @@ class User < ActiveRecord::Base
   def validate_status!(status)
     UserStatus.new(status).validate!
   end
+
+  def refresh_user_directory
+    DirectoryItem.refresh!
+  end
 end
 
 # == Schema Information
@@ -2208,6 +2252,7 @@ end
 #  flair_group_id            :integer
 #  last_seen_reviewable_id   :integer
 #  password_algorithm        :string(64)
+#  required_fields_version   :integer
 #
 # Indexes
 #

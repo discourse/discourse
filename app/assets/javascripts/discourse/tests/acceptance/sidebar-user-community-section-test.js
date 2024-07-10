@@ -295,7 +295,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.strictEqual(
       query(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary .sidebar-section-link-content-text"
       ).textContent.trim(),
       I18n.t("sidebar.more"),
       "displays the right count as users link is currently active"
@@ -404,7 +404,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.strictEqual(
       query(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary .sidebar-section-link-content-text"
       ).textContent.trim(),
       I18n.t("sidebar.more"),
       "displays the right count as groups link is currently active"

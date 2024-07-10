@@ -20,6 +20,7 @@ ko:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}천"
         millions: "%{number}백만"
@@ -37,6 +38,7 @@ ko:
       long_date_without_year: "MMM D, LT"
       long_date_with_year_without_time: "YYYY MMM D"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, YYYY <br/>LT"
       wrap_ago: "%{date} 전"
       wrap_on: "%{date}"
       tiny:
@@ -114,6 +116,8 @@ ko:
       facebook: "페이스북에 공유"
       email: "이메일로 공유"
       url: "URL 복사 및 공유"
+    word_connector:
+      last_item: ","
     action_codes:
       public_topic: "이 글을 %{when}에 공개"
       open_topic: "%{when}에 주제로 변환됨"
@@ -149,7 +153,7 @@ ko:
       forwarded: "위의 이메일을 전달했습니다."
     topic_admin_menu: "주제 관리"
     skip_to_main_content: "메인 콘텐츠로 건너뛰기"
-    emails_are_disabled: "관리자에 의해 모든 이메일의 발신이 비활성화되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
+    emails_are_disabled: "운영자에 의해 모든 이메일의 발신이 비활성화되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
     emails_are_disabled_non_staff: "직원이 아닌 사용자의 발신 이메일이 비활성화되었습니다."
     software_update_prompt:
       dismiss: "무시"
@@ -158,7 +162,7 @@ ko:
       default_description: "기본"
       broken_theme_alert: "테마/구성 요소에 오류가 있어 사이트가 작동하지 않을 수 있습니다."
       error_caused_by: "'%{name}' 테마에서 오류가 발생하였습니다. <a target='blank' href='%{path}'>여기</a>를 클릭해 업데이트, 재설정 혹은 테마 사용을 중지하세요."
-      only_admins: "(이 메시지는 사이트 관리자에게만 표시됩니다)"
+      only_admins: "(이 메시지는 사이트 운영자에게만 표시됩니다)"
     s3:
       regions:
         ap_northeast_1: "아시아 태평양(도쿄)"
@@ -284,11 +288,17 @@ ko:
       search_placeholder: "이름, 주제 또는 게시물 콘텐츠로 북마크 검색"
       search: "검색"
       bookmark: "북마크"
+      bulk:
+        select_all: "모두 선택"
+        clear_all: "모두 지우기"
       reminders:
         today_with_time: "오늘 %{time}"
         tomorrow_with_time: "내일 %{time}"
         at_time: "%{date_time}"
         existing_reminder: "이 북마크는 %{at_date_time}에 미리 알림이 설정되어 있습니다"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "북마크 삭제"
     copy_codeblock:
       copied: "복사되었습니다!"
       copy: "클립보드에 코드 복사"
@@ -318,6 +328,7 @@ ko:
       other: "%{count}개의 새 주제 보기"
     preview: "미리보기"
     cancel: "취소"
+    deleting: "삭제 중…"
     save: "변경사항 저장"
     saved: "저장되었습니다!"
     upload: "업로드"
@@ -366,7 +377,7 @@ ko:
           title: "신뢰 레벨이 더 높은 사용자가 만든 검토 가능 항목은 더 높은 점수를 받습니다."
         type_bonus:
           name: "유형 보너스"
-          title: "특정 검토 가능 유형에는 운영진이 보너스를 할당하여 우선순위를 높일 수 있습니다."
+          title: "특정한 검토 유형에는 관리자가 보너스를 할당하여 우선 순위를 높일 수 있습니다."
       revise_and_reject_post:
         reason: "이유"
         optional: "선택 사항"
@@ -571,6 +582,7 @@ ko:
       topic_count_long: "생성한 주제"
       post_count: "댓글"
       post_count_long: "게시된 댓글"
+      no_results_with_search: "결과가 없습니다."
       days_visited: "방문"
       days_visited_long: "방문 일수"
       posts_read: "읽음"
@@ -900,6 +912,7 @@ ko:
       none: "(옵션 선택)"
       required: '''%{name}''에 대한 값을 입력하세요'
       same_as_password: "비밀번호를 다른 필드에 반복해서 입력해서는 안 됩니다."
+      optional: (선택 사항)
     user:
       said: "%{username}:"
       profile: "프로필"
@@ -942,7 +955,8 @@ ko:
       activity_stream: "활동"
       read: "읽음"
       read_help: "최근 읽은 주제"
-      preferences: "환경설정"
+      preferences:
+        title: "환경 설정"
       feature_topic_on_profile:
         open_search: "새 주제 선택"
         title: "주제 선택"
@@ -1017,9 +1031,9 @@ ko:
       change: "변경"
       featured_topic: "추천 주제"
       moderator: "%{user} 님은 운영자입니다"
-      admin: "%{user} 님은 관리자입니다"
+      admin: "%{user} 님은 운영자입니다"
       moderator_tooltip: "이 사용자는 운영자입니다"
-      admin_tooltip: "이 사용자는 관리자입니다"
+      admin_tooltip: "이 사용자는 운영자입니다"
       silenced_tooltip: "이 사용자는 차단되었습니다"
       suspended_notice: "이 사용자는 %{date}까지 정지되었습니다."
       suspended_permanently: "이 사용자는 정지되었습니다."
@@ -1135,6 +1149,7 @@ ko:
         set_password: "비밀번호 설정"
         choose_new: "새 비밀번호를 입력하세요"
         choose: "비밀번호를 입력하세요"
+        title: "비밀번호 재설정"
       second_factor_backup:
         title: "2단계 백업 코드"
         regenerate: "재생성"
@@ -1476,7 +1491,6 @@ ko:
           error: "파일은 CSV 포맷이어야 합니다."
       password:
         title: "비밀번호"
-        too_short: "비밀번호가 너무 짧습니다."
         common: "비밀번호가 너무 평범합니다."
         same_as_username: "비밀번호가 사용자명과 동일합니다."
         same_as_email: "비밀번호가 이메일과 동일합니다."
@@ -1591,13 +1605,13 @@ ko:
       logout_disabled: "사이트가 읽기 전용 모드인 동안에는 로그아웃이 비활성화됩니다."
     logs_error_rate_notice:
       reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/시간} other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/시간} other {#개의 오류/시간}}에 도달했습니다.
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/시간}}에 도달했습니다.
       reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/분} other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/분} other {#개의 오류/분}}에 도달했습니다.
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/분}}에 도달했습니다.
       exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/시간} other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/시간} other {#개의 오류/시간}}을 초과했습니다.
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/시간}}을 초과했습니다.
       exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/분} other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/분} other {#개의 오류/분}}을 초과했습니다.
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/분}}을 초과했습니다.
     mute: 뮤트
     unmute: 뮤트 해제
     last_post: 게시됨
@@ -1642,7 +1656,7 @@ ko:
       header_title: "환영합니다!"
       subheader_title: "계정을 만드세요"
       disclaimer: "등록하면 <a href='%{privacy_link}' target='blank'>개인정보 취급방침</a> 및 <a href='%{tos_link}' target='blank'>이용약관</a>에 동의하게 됩니다."
-      title: "계정 만들기"
+      title: "회원가입"
       failed: "문제가 발생했습니다. 이 이메일이 이미 등록되어 있을 수 있습니다. 비밀번호 찾기 링크를 시도해 보세요."
       associate: "이미 계정이 있나요? <a href='%{associate_link}'>로그인</a>하여 %{provider} 계정을 연결하세요."
     forgot_password:
@@ -1779,7 +1793,7 @@ ko:
       enter: "시작"
     category_row:
       subcategory_count:
-        other: "+ %{count}개의 하위 카테고리"
+        other: "+%{count}개의 하위 카테고리"
       topic_count:
         other: "이 카테고리에는 %{count}개의 주제가 있습니다"
     select_kit:
@@ -1798,6 +1812,8 @@ ko:
         categories_admin_dropdown:
           title: "카테고리 관리"
         bulk_select_topics_dropdown:
+          title: "일괄 적용"
+        bulk_select_bookmarks_dropdown:
           title: "일괄 적용"
     date_time_picker:
       from: 시작
@@ -1915,7 +1931,6 @@ ko:
       show_toolbar: "작성기 툴바 표시"
       hide_toolbar: "작성기 툴바 숨기기"
       modal_ok: "확인"
-      modal_cancel: "취소"
       cant_send_pm: "%{username} 님에게 메시지를 보낼 수 없습니다."
       yourself_confirm:
         title: "받는 사람 추가를 잊으셨나요?"
@@ -2274,14 +2289,12 @@ ko:
         bookmarks: "더 이상 북마크한 주제가 없습니다."
     topic_bulk_actions:
       close_topics:
-        name: "글 닫기"
+        name: "닫기"
         optional: (선택 사항)
       archive_topics:
-        name: "글 보관"
-      unlist_topics:
-        name: "목록에서 글 숨기기"
-      relist_topics:
-        name: "목록에서 글 다시 보이기"
+        name: "보관"
+      move_messages_to_inbox:
+        name: "받은 편지함으로 이동"
       remove_tags:
         name: "태그 제거"
       append_tags:
@@ -2289,7 +2302,7 @@ ko:
       replace_tags:
         name: "태그 바꾸기"
       delete_topics:
-        name: "글 삭제"
+        name: "삭제하기"
     topic:
       filter_to:
         other: "이 주제의 게시물 %{count}개"
@@ -3011,7 +3024,7 @@ ko:
       delete_spammer: "스팸 사용자 삭제"
       flag_for_review: "검토 대기열"
       delete_confirm_MF: |
-        이 사용자의 {POSTS, plural, one {<b>#</b>개의 게시물} other {<b>#</b>개의 게시물}} 및 {TOPICS, plural, one {<b>#</b>개의 주제} other {<b>#</b>개의 주제}}를 삭제하고, 사용자의 계정을 제거하고, 해당 IP 주소 <b>{ip_address}</b>의 가입을 차단하고, 해당 이메일 주소(<b>{email}</b>)를 영구 차단 목록에 추가하려 합니다. 이 사용자가 정말 스팸 사용자인가요?
+        이 사용자의 {POSTS, plural, other {<b>#</b>개의 게시물}} 및 {TOPICS, plural, other {<b>#</b>개의 주제}}를 삭제하고, 사용자의 계정을 제거하고, 해당 IP 주소 <b>{ip_address}</b>의 가입을 차단하고, 해당 이메일 주소(<b>{email}</b>)를 영구 차단 목록에 추가하려 합니다. 이 사용자가 정말 스팸 사용자인가요?
       yes_delete_spammer: "예, 스팸 사용자를 삭제합니다"
       ip_address_missing: "(해당 사항 없음)"
       hidden_email_address: "(숨김)"
@@ -3313,7 +3326,6 @@ ko:
       all_tags: "모든 태그"
       other_tags: "기타 태그"
       selector_tags: "태그"
-      selector_all_tags: "모든 태그"
       selector_no_tags: "태그 없음"
       selector_remove_filter: "필터 제거"
       tags: "태그"
@@ -3525,6 +3537,8 @@ ko:
               title: "모든 글"
             faq:
               content: "자주하는 질문"
+            guidelines:
+              content: "가이드라인"
             groups:
               content: "그룹"
             users:
@@ -3535,7 +3549,7 @@ ko:
                 other: "초안 %{count}"
             review:
               content: "검토"
-      filter: "필터"
+      filter: "필터..."
       no_results:
         title: "결과 없음"
     welcome_topic_banner:
@@ -3665,6 +3679,9 @@ ko:
               label: 카테고리
             include_subcategories:
               label: "서브카테고리 포함"
+      flags:
+        description: "내용"
+        enabled: "활성화?"
       groups:
         new:
           title: "새 그룹"
@@ -3862,6 +3879,8 @@ ko:
           timestamp: "생성일"
           completion: "완료 시간"
           actions: "작업"
+          filter_status:
+            failed: "실패"
       home:
         title: "홈"
       account:
@@ -3908,6 +3927,26 @@ ko:
           search_logs: "검색 로그"
           security: "보안"
           spam: "스팸"
+      config_areas:
+        about:
+          community_name: "커뮤니티 이름"
+          site_contact_group_help: |
+            모든 자동 메시지에 초대 할 유효한 그룹 이름입니다.
+          optional: "(선택 사항)"
+          update: "업데이트"
+          saved: "저장되었습니다!"
+        flags:
+          description: "내용"
+          enabled: "활성화?"
+          edit: "편집"
+          delete: "삭제하기"
+          delete_confirm: '&quot;%{name}&quot;를 삭제 하시겠습니까?'
+          form:
+            save: "저장"
+            name: "그룹명"
+            description: "내용"
+            topic: "글"
+            post: "포스트"
       plugins:
         title: "플러그인"
         installed: "설치된 플러그인"
@@ -4236,7 +4275,6 @@ ko:
             description: "링크, 일부 버튼, 알림 및 강조 색상"
           quaternary:
             name: "4차"
-            description: "네비게이션 링크"
           header_background:
             name: "헤더 배경 색상"
             description: "사이트 헤더의 배경 색상입니다."
@@ -4556,6 +4594,7 @@ ko:
           upload_successful: "업로드되었습니다. 단어가 추가되었습니다."
           case_sensitivity_label: "대소문자를 구분합니다"
           case_sensitivity_description: "대/소문자가 일치하는 단어만"
+          html_label: "HTML"
         test:
           button_label: "테스트"
           modal_title: "%{action}: 검열 단어 테스트"
@@ -4677,7 +4716,7 @@ ko:
           title: "페널티 히스토리 지우기"
           description: "페널티가 있는 사용자는 신뢰 레벨 3을 받을 수 없음"
         delete_all_posts_confirm_MF: |
-          {POSTS, plural, one {#개의 댓글} other {#개의 댓글}} 및 {TOPICS, plural, one {#개의 주제} other {#개의 주제}}를 삭제하려고 합니다. 계속할까요?
+          {POSTS, plural, other {#개의 댓글}} 및 {TOPICS, plural, other {#개의 주제}}를 삭제하려고 합니다. 계속할까요?
         silence: "차단"
         unsilence: "차단 해제"
         silenced: "차단되었나요?"
@@ -4869,6 +4908,7 @@ ko:
         name: "필드 이름"
         type: "필드 유형"
         description: "필드 설명"
+        preferences: "환경 설정"
         save: "저장"
         edit: "편집"
         delete: "삭제"
@@ -4879,6 +4919,9 @@ ko:
           title: "회원가입시 필수항목"
           enabled: "필수"
           disabled: "필수 아님"
+        requirement:
+          optional:
+            title: "선택 사항"
         editable:
           title: "가입 후 편집 가능"
           enabled: "편집 가능"

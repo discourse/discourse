@@ -6,11 +6,11 @@ import DiscourseRoute from "discourse/routes/discourse";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default DiscourseRoute.extend({
-  router: service(),
-  searchService: service("search"),
-  appEvents: service("app-events"),
-  messageBus: service("message-bus"),
+export default class UserRoute extends DiscourseRoute {
+  @service router;
+  @service("search") searchService;
+  @service appEvents;
+  @service messageBus;
 
   beforeModel() {
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
@@ -19,7 +19,7 @@ export default DiscourseRoute.extend({
         desc: I18n.t("user.login_to_view_profile"),
       });
     }
-  },
+  }
 
   model(params) {
     // If we're viewing the currently logged in user, return that object instead
@@ -33,7 +33,7 @@ export default DiscourseRoute.extend({
     return User.create({
       username: encodeURIComponent(params.username),
     });
-  },
+  }
 
   afterModel() {
     const user = this.modelFor("user");
@@ -43,7 +43,7 @@ export default DiscourseRoute.extend({
       .then(() => user.findStaffInfo())
       .then(() => user.statusManager.trackStatus())
       .catch(() => this.router.replaceWith("/404"));
-  },
+  }
 
   serialize(model) {
     if (!model) {
@@ -51,15 +51,15 @@ export default DiscourseRoute.extend({
     }
 
     return { username: (model.username || "").toLowerCase() };
-  },
+  }
 
   setupController(controller, user) {
     controller.set("model", user);
     this.searchService.searchContext = user.searchContext;
-  },
+  }
 
   activate() {
-    this._super(...arguments);
+    super.activate(...arguments);
 
     const user = this.modelFor("user");
     this.messageBus.subscribe(`/u/${user.username_lower}`, this.onUserMessage);
@@ -67,10 +67,10 @@ export default DiscourseRoute.extend({
       `/u/${user.username_lower}/counters`,
       this.onUserCountersMessage
     );
-  },
+  }
 
   deactivate() {
-    this._super(...arguments);
+    super.deactivate(...arguments);
 
     const user = this.modelFor("user");
     this.messageBus.unsubscribe(
@@ -85,13 +85,13 @@ export default DiscourseRoute.extend({
 
     // Remove the search context
     this.searchService.searchContext = null;
-  },
+  }
 
   @bind
   onUserMessage(data) {
     const user = this.modelFor("user");
     return user.loadUserAction(data);
-  },
+  }
 
   @bind
   onUserCountersMessage(data) {
@@ -104,20 +104,20 @@ export default DiscourseRoute.extend({
         value
       )
     );
-  },
+  }
 
   titleToken() {
     const username = this.modelFor("user").username;
     return username ? username : null;
-  },
+  }
 
   @action
   undoRevokeApiKey(key) {
     key.undoRevoke();
-  },
+  }
 
   @action
   revokeApiKey(key) {
     key.revoke();
-  },
-});
+  }
+}

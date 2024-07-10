@@ -99,7 +99,6 @@ it:
       channels_list_popup:
         browse: "Sfoglia i canali"
         create: "Nuovo canale"
-      click_to_join: "Fai clic qui per visualizzare i canali disponibili."
       close: "Chiudi"
       remove: "Rimuovi"
       collapse: "Comprimi il cassetto della chat"
@@ -140,13 +139,6 @@ it:
       heading: "Chat"
       join: "Partecipa"
       last_visit: "ultima visita"
-      summarization:
-        title: "Riassumi i messaggi"
-        description: "Seleziona un'opzione qui sotto per riepilogare la conversazione inviata nel periodo di tempo desiderato."
-        summarize: "Riassumi"
-        since:
-          one: "Ultima ora"
-          other: "Ultime %{count} ore"
       mention_warning:
         invitations_sent:
           one: "Invito inviato"
@@ -226,7 +218,7 @@ it:
         header: "Intestazione della chat"
         composer: "Compositore di chat"
         channels_list: "Elenco dei canali di chat"
-      no_public_channels: "Non hai partecipato a nessun canale."
+      no_public_channels_cta: "Sfoglia i canali"
       kicked_from_channel: "Non puoi più accedere a questo canale."
       only_chat_push_notifications:
         title: "Invia solo le notifiche push della chat"
@@ -254,6 +246,7 @@ it:
       copy_link: "Copia link"
       copy_text: "Copia testo"
       rebake_message: "Ricompila HTML"
+      message_too_long: "Il messaggio è troppo lungo. I messaggi devono contenere al massimo %{count} caratteri."
       retry_staged_message:
         title: "Errore di rete"
         action: "Inviare di nuovo?"

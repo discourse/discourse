@@ -295,10 +295,16 @@ bs_BA:
       search_placeholder: "Pretražite zabilješke po imenu, naslovu teme ili sadržaju objave"
       search: "Pretraži"
       bookmark: "Sačuvaj"
+      bulk:
+        select_all: "Označi sve"
+        clear_all: "Očisti sve"
       reminders:
         today_with_time: "danas u %{time}"
         tomorrow_with_time: "sutra u %{time}"
         at_time: "na %{date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Izbriši zabilješku"
     copy_codeblock:
       copied: "kopirano!"
     drafts:
@@ -572,6 +578,7 @@ bs_BA:
       topic_count_long: "Kreirano temi"
       post_count: "Replike"
       post_count_long: "Odgovoreno"
+      no_results_with_search: "Bez rezultata pretrage."
       days_visited: "Posjete"
       days_visited_long: "Dani posjete"
       posts_read: "Čitaj"
@@ -857,6 +864,7 @@ bs_BA:
     user_fields:
       none: "(odaberi opciju)"
       required: 'Unesite vrijednost za "%{name}”'
+      optional: (opciono)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -888,7 +896,8 @@ bs_BA:
         to: "ka"
       activity_stream: "Aktivnost"
       read: "Čitaj"
-      preferences: "Postavke"
+      preferences:
+        title: "Postavke"
       feature_topic_on_profile:
         open_search: "Odaberi Novu temu"
         title: "Odaberi temu"
@@ -1045,6 +1054,7 @@ bs_BA:
         set_password: "Namjesti šifru"
         choose_new: "Izaberite novu šifru"
         choose: "Izaberite šifru"
+        title: "Resetovanje lozinke"
       second_factor_backup:
         regenerate: "Regenerate"
         disable: "Onemogući"
@@ -1305,7 +1315,6 @@ bs_BA:
           error: "Oprostite, vaš fajl bi trebao biti u CSV formatu."
       password:
         title: "Lozinka"
-        too_short: "Vaša lozinka je prekratka."
         common: "Vaša lozinka je preobična i česta."
         same_as_username: "Vaš pasword je isti kao vaše korisničko ime."
         same_as_email: "Vaš pasword je isti kao vaš email."
@@ -1461,6 +1470,7 @@ bs_BA:
     create_account:
       header_title: "Dobrodošao!"
       disclaimer: "Registracijom pristajete na <a href='%{privacy_link}' target='blank'>politiku privatnosti</a> i <a href='%{tos_link}' target='blank'>uvjete pružanja usluge</a> ."
+      title: "Učlani se"
       failed: "Nešto je krenulo pogrešno, možda je ovaj email već iskorišten za registraciju, pokušajte sa Zaboravio šifru linkom"
     forgot_password:
       title: "Resetovanje lozinke"
@@ -1585,6 +1595,8 @@ bs_BA:
       components:
         bulk_select_topics_dropdown:
           title: "Masovno odrađene akcije"
+        bulk_select_bookmarks_dropdown:
+          title: "Masovno odrađene akcije"
     date_time_picker:
       from: Od
       to: Ka
@@ -1681,7 +1693,6 @@ bs_BA:
       enter_fullscreen: "unesite fullscreen composer"
       exit_fullscreen: "izlaz iz fullscreen kompozitora"
       modal_ok: "OK"
-      modal_cancel: "Odustani"
       cant_send_pm: "Neuspješno, ne možete slati poruke ka %{username}."
       yourself_confirm:
         title: "Da li ste zaboravili da dodate primaoca?"
@@ -1940,20 +1951,18 @@ bs_BA:
         bookmarks: "U zabilješkama više nema spremljenih tema."
     topic_bulk_actions:
       close_topics:
-        name: "Zatvori teme"
+        name: "Zatvori"
         optional: (opciono)
       archive_topics:
-        name: "Arhiviraj teme"
-      unlist_topics:
-        name: "Skini teme sa liste"
-      relist_topics:
-        name: "Listaj teme"
+        name: "Arhiva"
+      move_messages_to_inbox:
+        name: "Premjesti u Sanduče"
       append_tags:
         name: "Pripoji oznake"
       replace_tags:
         name: "Zamijeni oznake"
       delete_topics:
-        name: "Obriši teme"
+        name: "Delete"
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -2867,7 +2876,6 @@ bs_BA:
     tagging:
       other_tags: "Druge oznake"
       selector_tags: "oznake"
-      selector_all_tags: "sve oznake"
       selector_no_tags: "bez oznaka"
       selector_remove_filter: "show all posts in this topic again."
       tags: "Oznake"
@@ -3043,6 +3051,8 @@ bs_BA:
               content: "Topics"
             faq:
               content: "Česta pitanja"
+            guidelines:
+              content: "Smjernice"
             groups:
               content: "Grupe"
             users:
@@ -3051,7 +3061,7 @@ bs_BA:
               content: "Moje objave"
             review:
               content: "Pregled"
-      filter: "Filter"
+      filter: "Filter..."
     until: "Sve do:"
     form_templates:
       upload_field:
@@ -3176,6 +3186,9 @@ bs_BA:
               label: Kategorija
             include_subcategories:
               label: "Uključi potkategorije"
+      flags:
+        description: "Opis"
+        enabled: "Omogućen?"
       groups:
         new:
           title: "Nova Grupa"
@@ -3319,6 +3332,8 @@ bs_BA:
           timestamp: "Stvoreno"
           completion: "Vrijeme završetka"
           actions: "Akcije"
+          filter_status:
+            failed: "Neuspješno"
       home:
         title: "Naslovnica"
       account:
@@ -3365,6 +3380,22 @@ bs_BA:
           search_logs: "Logovi pretrage"
           security: "Security"
           spam: "Spam"
+      config_areas:
+        about:
+          optional: "(opciono)"
+          saved: "sačuvano!"
+        flags:
+          description: "Opis"
+          enabled: "Omogućen?"
+          edit: "Edit"
+          delete: "Delete"
+          delete_confirm: 'Jeste li sigurni da želite izbrisati "%{name}"?'
+          form:
+            save: "Save"
+            name: "Ime"
+            description: "Opis"
+            topic: "topics"
+            post: "objave"
       plugins:
         title: "Pluginovi"
         installed: "Instalirani pluginovi"
@@ -3644,7 +3675,6 @@ bs_BA:
             description: "Links, some buttons, notifications, and accent color."
           quaternary:
             name: "quaternary"
-            description: "Navigation links."
           header_background:
             name: "header background"
             description: "Background color of the site's header."
@@ -3918,6 +3948,7 @@ bs_BA:
           exists: "Već postoji"
           upload: "Dodaj iz datoteke"
           upload_successful: "Otpremanje je uspješno. Riječi su dodane."
+          html_label: "HTML"
         test:
           no_matches: "Nije pronađen traženi pojam"
       form_templates:
@@ -4166,6 +4197,7 @@ bs_BA:
         name: "Field Name"
         type: "Field Type"
         description: "Field Description"
+        preferences: "Postavke"
         save: "Save"
         edit: "Edit"
         delete: "Delete"
@@ -4176,6 +4208,9 @@ bs_BA:
           title: "Required at signup"
           enabled: "required"
           disabled: "not required"
+        requirement:
+          optional:
+            title: "Opciono"
         editable:
           title: "Editable after signup"
           enabled: "editable"

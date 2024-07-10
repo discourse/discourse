@@ -41,7 +41,8 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
 
         expect(described_class.new.call).to contain_exactly(
           have_attributes(
-            identifier: "group_#{group2.id}_email_credentials",
+            identifier: "group_email_credentials",
+            target: group2.id,
             priority: "high",
             message:
               "There was an issue with the email credentials for the group <a href=\"/g/#{group2.name}/manage/email\"></a>. No emails will be sent from the group inbox until this problem is addressed. There was an issue with the SMTP credentials provided, check the username and password and try again.",
@@ -58,7 +59,8 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
 
         expect(described_class.new.call).to contain_exactly(
           have_attributes(
-            identifier: "group_#{group3.id}_email_credentials",
+            identifier: "group_email_credentials",
+            target: group3.id,
             priority: "high",
             message:
               "There was an issue with the email credentials for the group <a href=\"/g/#{group3.name}/manage/email\"></a>. No emails will be sent from the group inbox until this problem is addressed. There was an issue with the IMAP credentials provided, check the username and password and try again.",

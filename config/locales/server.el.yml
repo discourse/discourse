@@ -168,7 +168,6 @@ el:
       enable_s3_uploads_is_required: "Δε μπορείτε να ενεργοποιήσετε την απογραφή στο S3, εκτός αν έχετε ενεργοποιήσει τις επιφορτώσεις S3."
       s3_backup_requires_s3_settings: "Δε μπορείτε να χρησιμοποιήσετε το S3 ως θέση αντιγράφου ασφαλείας, εκτός αν έχετε παράσχει το «%{setting_name}»."
       share_quote_facebook_requirements: "Πρέπει να ορίσετε ένα αναγνωριστικό εφαρμογής Facebook για να ενεργοποιήσετε την κοινοποίηση παραθέσεων για το Facebook."
-      second_factor_cannot_enforce_with_socials: "Δε μπορείτε να επιβάλετε 2FA με ενεργοποιημένες τις συνδέσεις κοινωνικής δικτύωσης. Πρέπει πρώτα να απενεργοποιήσετε τη σύνδεση μέσω: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Δε μπορείτε να επιβάλετε 2FA εάν οι τοπικές συνδέσεις είναι απενεργοποιημένες."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Δε μπορείτε να απενεργοποιήσετε την τοπική σύνδεση εάν επιβάλλεται 2FA. Απενεργοποιήστε το επιβεβλημένο 2FA πριν από την απενεργοποίηση των τοπικών συνδέσεων."
   invite:
@@ -361,6 +360,8 @@ el:
         raw: "Κύριο μέρος"
       user_profile:
         bio_raw: "Σχετικά με εμένα"
+      user:
+        password: "Κωδικός Πρόσβασης"
     errors:
       models:
         topic:
@@ -852,6 +853,8 @@ el:
     web_crawlers:
       labels:
         page_views: "Προβολές σελίδας"
+    web_hook_events_daily_aggregate:
+      xaxis: "Ημέρα"
     suspicious_logins:
       labels:
         user: Χρήστης
@@ -875,18 +878,19 @@ el:
       labels:
         user: Χρήστης
         qtt_like: Μου αρέσει που λήφθησαν
+    topic_view_stats:
+      labels:
+        topic: Νήμα
+        logged_in_views: Συνδεδεμένοι
+        anon_views: Ανώνυμοι
+        total_views: Σύνολο
   dashboard:
-    rails_env_warning: "Ο διακομιστής σας τρέχει στη %{env} λειτουργία."
-    host_names_warning: "Το αρχείο config/database.yml χρησιμοποιεί ως hostname το localhost . Ενημερώστε το, ώστε να χρησιμοποεί το όνομα του site σας."
-    sidekiq_warning: 'Το Sidekiq σταμάτησε. Κάποιες λειτουργίες, όπως η αποστολή email εκτελούνται ασύγχρονα από το sidekiq. Παρακαλούμε βεβαιωθείτε ότι τουλάχτιστον μία sidekiq λειτουργία εκτελείται. <a href="https://github.com/mperham/sidekiq" target="_blank">Περισσότερα για το Sidekiq εδώ</a>.'
-    queue_size_warning: "Ο αριθμός των εργασιών που βρίσκονται σε λίστα αναμονής είναι %{queue_size}, το οποίο είναι υψηλό. Αυτό θα μπορούσε να ενδείξει πρόβλημα με τις λειτουργία(ες) του Sidekiq ή θα πρέπει να προσθέσετε κι άλλους Sidekiq εργάτες. "
-    memory_warning: "Ο server σας έχει λιγότερο από 1 GB διαθέσιμης μνήμης. Προτείνεται η χρήση τουλάχιστον 1 GB μνήμης."
-    subfolder_ends_in_slash: "Οι ρυθμίσεις του υποφακέλου σας δεν είναι σωστές. Το DISCOURSE_RELATIVE_URL_ROOT τελειώνει με κάθετη. "
-    email_polling_errored_recently:
-      one: "To Email polling έχει παράγει ένα σφάλμα τις τελευταίες 24 ώρες . Δείτε <a href='%{base_path}/logs' target='_blank'>τα αρχεία καταγραφής</a> για περισσότερες λεπτομέρειες. "
-      other: "To Email polling έχει παράγει %{count} σφάλματα τις τελευταίες 24 ώρες . Δείτε <a href='%{base_path}/logs' target='_blank'>τα αρχεία καταγραφής</a> για περισσότερες λεπτομέρειες. "
-    poll_pop3_timeout: "Το χρονικό όριο σύνδεσης με τον διακομιστή POP3 έληξε. Τα εισερχόμενα email δεν μπορούν να ανακτηθούν. Παρακαλώ ελέγξτε τις <a href='%{base_path}/admin/site_settings/category/email'>POP3 ρυθμίσεις σας</a> και τον πάροχο υπηρεσιών."
-    poll_pop3_auth_error: "Υπήρξε σφάλμα ελεχγου ταυτότητας κατά την σύνδεση με τον διακομιστή POP3. Παρακαλώ όπως ελέξετε τις <a href='%{base_path}/admin/site_settings/category/email'> POP3 ρυθμίσεις σας.</a> "
+    problem:
+      rails_env: "Ο διακομιστής σας τρέχει στη %{env} λειτουργία."
+      host_names: "Το αρχείο config/database.yml χρησιμοποιεί ως hostname το localhost . Ενημερώστε το, ώστε να χρησιμοποεί το όνομα του site σας."
+      queue_size: "Ο αριθμός των εργασιών που βρίσκονται σε λίστα αναμονής είναι %{queue_size}, το οποίο είναι υψηλό. Αυτό θα μπορούσε να ενδείξει πρόβλημα με τις λειτουργία(ες) του Sidekiq ή θα πρέπει να προσθέσετε κι άλλους Sidekiq εργάτες. "
+      ram: "Ο server σας έχει λιγότερο από 1 GB διαθέσιμης μνήμης. Προτείνεται η χρήση τουλάχιστον 1 GB μνήμης."
+      subfolder_ends_in_slash: "Οι ρυθμίσεις του υποφακέλου σας δεν είναι σωστές. Το DISCOURSE_RELATIVE_URL_ROOT τελειώνει με κάθετη. "
   site_settings:
     disabled: "απενεργοποιημένα"
     censored_words: "Αυτόματη αντικατάσταση λέξεων θα γίνεται με &#9632;&#9632;&#9632;&#9632;"
@@ -1338,7 +1342,6 @@ el:
     password_too_long: "Οι κωδικοί πρόσβασης περιορίζονται σε 200 χαρακτήρες."
     email_too_long: "Η διεύθυνση email που δώσατε είναι πολύ μεγάλη. Οι ηλεκτρονικές διευθύνσεις δεν πρέπει να είναι περισσότερο από 254 χαρακτήρες, και η διεύθυνση Διαδικτύου δεν πρέπει να είναι περισσότερο απο 253 χαρακτήρες."
     reserved_username: "Αυτό το όνομα χρήστη δεν είναι επιτρεπτό."
-    missing_user_field: "Δεν έχετε συμπληρώσει όλα τα πεδία χρήστη"
     auth_complete: "Η ταυτοποιήση έχει ολοκληρωθεί."
     click_to_continue: "Κλικ εδώ για να συνεχίσετε."
     second_factor_backup_description: "Παρακαλώ εισαγάγετε έναν από τους εφεδρικούς κωδικούς σας:"
@@ -1981,7 +1984,6 @@ el:
 
         Αν έχετε απορίες, [επικοινωνήστε με τους συνεργάτες μας](%{base_url}/about).
     digest:
-      why: "Μια σύντομη σύνοψη του %{site_link} από την τελευταία σου επίσκεψη στις %{last_seen_at}"
       since_last_visit: "Από την τελευταία σου επίσκεψη"
       new_topics: "Νέα θέματα"
       unread_notifications: "Αδιάβαστες Ειδοποιήσεις"
@@ -1995,7 +1997,6 @@ el:
       unsubscribe: "Λάβατε αυτή την σύνοψη από την %{site_link} επειδή δεν σας είδαμε εδώ και μερικές μέρες. Αν δεν θέλετε να λαμβάνετε αυτή την σύνοψη, αλλάξτε τις %{email_preferences_link} ή %{unsubscribe_link} για διαγραφή από την λίστα."
       your_email_settings: "ρυθμίσεις email"
       click_here: "κάνε κλικ εδώ"
-      preheader: "Μία σύντομη σύνοψη από την τελευταία σου επίσκεψη στις %{last_seen_at}"
     forgot_password:
       title: "Ξέχασα τον κωδικό πρόσβασης"
       subject_template: "[%{email_prefix}] Επαναφορά κωδικού"
@@ -2140,6 +2141,7 @@ el:
     Επεξεργαστείτε την πρώτη ανάρτηση σε αυτό το νήμα για να αλλάξετε τα περιεχόμενα της σελίδας %{page_name}.
   guidelines_topic:
     title: "Συχνές Ερωτήσεις/Οδηγίες"
+    guidelines_title: "Οδηγίες"
   tos_topic:
     title: "Όροι Χρήσης"
   privacy_topic:
@@ -2359,8 +2361,6 @@ el:
         fields:
           login_required:
             placeholder: "Ιδιωτική"
-          enable_sidebar:
-            placeholder: "Ενεργοποίηση πλαϊνής γραμμής"
       styling:
         fields:
           styling_preview:

@@ -41,7 +41,7 @@ export default class UserTip extends Component {
         buttonText = `${iconHTML(this.args.buttonIcon)} ${buttonText}`;
       }
 
-      instance = new DTooltipInstance(getOwner(this), trigger || element, {
+      instance = new DTooltipInstance(getOwner(this), {
         identifier: "user-tip",
         interactive: true,
         closeOnScroll: false,
@@ -60,6 +60,8 @@ export default class UserTip extends Component {
           showSkipButton: this.args.showSkipButton,
         },
       });
+      instance.trigger = trigger || element;
+      instance.detachedTrigger = true;
 
       this.tooltip.show(instance);
 

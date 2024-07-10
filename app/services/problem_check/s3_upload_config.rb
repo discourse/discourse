@@ -18,8 +18,4 @@ class ProblemCheck::S3UploadConfig < ProblemCheck
 
     SiteSetting.s3_access_key_id.blank? || SiteSetting.s3_secret_access_key.blank?
   end
-
-  def translation_key
-    "dashboard.s3_config_warning"
-  end
 end

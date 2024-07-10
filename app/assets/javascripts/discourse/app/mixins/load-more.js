@@ -9,12 +9,6 @@ export default Mixin.create(Scrolling, {
     return this.eyeline?.update();
   },
 
-  loadMoreUnlessFull() {
-    if (this.screenNotFull()) {
-      this.send("loadMore");
-    }
-  },
-
   @on("didInsertElement")
   _bindEyeline() {
     const eyeline = Eyeline.create({

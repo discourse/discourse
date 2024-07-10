@@ -170,6 +170,8 @@ be:
       no_user_bookmarks: "У вас няма закладак паведамлення; закладкі дазваляюць хутка спасылацца на канкрэтныя пасады."
       search: "Пошук"
       bookmark: "закладка"
+      bulk:
+        select_all: "выбраць усе"
     drafts:
       label: "Чарнавікі"
       remove: "выдаліць"
@@ -294,6 +296,7 @@ be:
       topic_count: "тэмаў"
       topic_count_long: "тэмаў створана"
       post_count: "адказы"
+      no_results_with_search: "нічога не знойдзена."
       days_visited: "наведванне"
       days_visited_long: "дзён наведанае"
       posts_read: "прачытаныя"
@@ -465,7 +468,8 @@ be:
         to: "да"
       activity_stream: "Актыўнасць"
       read: "прачытаныя"
-      preferences: "Налады"
+      preferences:
+        title: "Налады"
       feature_topic_on_profile:
         save: "Захаваць"
         clear:
@@ -533,6 +537,7 @@ be:
         set_password: "ўсталяваць пароль"
         choose_new: "Абярыце новы пароль"
         choose: "% Менш, чым {лік} хвілін таму........................................................."
+        title: "Скід пароля"
       second_factor_backup:
         regenerate: "Перагенераваць"
         disable: "Адключыць"
@@ -667,7 +672,6 @@ be:
         account_age_days: "Ўзрост акаўнта ў днях"
       password:
         title: "Пароль"
-        too_short: "Пароль занадта кароткі."
         common: "Гэты пароль занадта просты."
         same_as_username: "Гэты пароль занадта просты...."
         same_as_email: "Пароль ідэнтычны Вашаму email"
@@ -765,6 +769,7 @@ be:
     search_hint: "імя карыстальніка, email або IP-адрас"
     create_account:
       header_title: "жаданы!"
+      title: "рэгістрацыя"
       failed: "Нешта пайшло не так; хутчэй за ўсё, гэтую электронную пошту ўжо зарэгістравана, паспрабуйце спасылкі Забыўся пароль"
     forgot_password:
       title: "Скід пароля"
@@ -818,6 +823,8 @@ be:
       components:
         bulk_select_topics_dropdown:
           title: "масавыя дзеянні"
+        bulk_select_bookmarks_dropdown:
+          title: "масавыя дзеянні"
     date_time_picker:
       from: ад
       to: да
@@ -864,7 +871,6 @@ be:
       list_item: "элемент спісу"
       help: "Markdown Editing Help"
       modal_ok: "Добра"
-      modal_cancel: "Адмяніць"
       admin_options_title: "Неабавязковыя налады персаналу для гэтай тэмы"
       composer_actions:
         reply: Адказаць
@@ -970,11 +976,13 @@ be:
         bookmarks: "Тэмы ў закладках адсутнічаюць."
     topic_bulk_actions:
       close_topics:
-        name: "Закрыць тэму"
+        name: "зачыніць"
       archive_topics:
-        name: "Заархіваваныя тэмы"
+        name: "архіў"
+      move_messages_to_inbox:
+        name: "Перамясціць у тэчцы Уваходныя"
       delete_topics:
-        name: "Выдаліць тэмы"
+        name: "выдаляць"
     topic:
       create: "пачаць новую тэму"
       create_long: "Стварыць новую тэму"
@@ -1424,6 +1432,8 @@ be:
               content: "тэмы"
             faq:
               content: "Пытанні і адказы"
+            guidelines:
+              content: "інструкцыі"
             groups:
               content: "Групы"
             users:
@@ -1433,7 +1443,7 @@ be:
               content_drafts: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
-      filter: "Filter"
+      filter: "Filter..."
     form_templates:
       upload_field:
         upload: "Запампаваць"
@@ -1513,6 +1523,8 @@ be:
               label: Група
             category:
               label: катэгорыя
+      flags:
+        description: "Апісанне"
       groups:
         new:
           title: "Новая група"
@@ -1574,6 +1586,8 @@ be:
           body: "цела"
           timestamp: "Створана"
           actions: "загалоўкі....................."
+          filter_status:
+            failed: "памылка"
       home:
         title: "дома"
       account:
@@ -1610,6 +1624,19 @@ be:
           screened_urls: "Screened URLs"
           security: "Бяспека"
           spam: "Спам"
+      config_areas:
+        about:
+          saved: "захавана!"
+        flags:
+          description: "Апісанне"
+          edit: "рэдагаваць"
+          delete: "Выдаліць"
+          form:
+            save: "захаваць"
+            name: "імя"
+            description: "Апісанне"
+            topic: "тэмы"
+            post: "паведамленняў"
       plugins:
         title: "Плагіны"
         name: "Назва"
@@ -1734,8 +1761,6 @@ be:
             name: "другасны"
           tertiary:
             name: "троесны"
-          quaternary:
-            description: "Навігацыйныя спасылкі."
           header_background:
             name: "фон загалоўка"
           header_primary:
@@ -2054,6 +2079,7 @@ be:
         untitled: "без загалоўка"
         type: "тып поля"
         description: "поле апісання"
+        preferences: "Налады"
         save: "захаваць"
         edit: "рэдагаваць"
         delete: "выдаліць"

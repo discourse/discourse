@@ -676,7 +676,7 @@ class PostMover
   end
 
   def add_allowed_users(usernames)
-    return unless usernames.present?
+    return if usernames.blank?
 
     names = usernames.split(",").flatten
     User

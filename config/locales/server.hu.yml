@@ -213,7 +213,6 @@ hu:
       s3_upload_bucket_is_required: "Nem lehet engedélyezni a feltöltést az S3-ba, amíg nincs megadva az „s3_upload_bucket”."
       enable_s3_uploads_is_required: "Az S3 leltár használatát csak akkor engedélyezheti, ha engedélyezte az S3 feltöltéseket."
       share_quote_facebook_requirements: "Be kell állítania egy Facebook-alkalmazás azonosítót, hogy engedélyezhesse a megosztást Facebookon."
-      second_factor_cannot_enforce_with_socials: "A közösségi bejelentkezések engedélyezése mellett nem lehet 2FA-t érvényesíteni. Először le kell tiltania ezt a bejelentkezést: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "A 2FA nem kényszeríthető, ha a helyi bejelentkezés le van tiltva."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "A 2FA nem kényszeríthető, ha a DiscourseConnect engedélyezett."
       local_login_cannot_be_disabled_if_second_factor_enforced: "A helyi bejelentkezés nem tiltható le, ha a 2FA kényszerítve van. A helyi bejelentkezések letiltása előtt tiltsa le a kényszerített 2FA-t."
@@ -358,8 +357,6 @@ hu:
       trust_level_2: "bizalmi_szint_2"
       trust_level_3: "bizalmi_szint_3"
       trust_level_4: "bizalmi_szint_4"
-    request_accepted_pm:
-      title: "Felvettek a @%{group_name} csoportba."
   education:
     until_posts:
       one: "%{count} bejegyzés"
@@ -408,6 +405,8 @@ hu:
         raw: "Törzs"
       user_profile:
         bio_raw: "Bemutatkozás"
+      user:
+        password: "Jelszó"
     errors:
       models:
         topic:
@@ -932,6 +931,8 @@ hu:
       labels:
         user_agent: "Felhasználói ügynök"
         page_views: "Oldalmegtekintések"
+    web_hook_events_daily_aggregate:
+      xaxis: "Nap"
     suspicious_logins:
       labels:
         user: Felhasználó
@@ -972,11 +973,18 @@ hu:
       labels:
         user: Felhasználó
         qtt_like: Kapott kedvelések
+    topic_view_stats:
+      labels:
+        topic: Téma
+        logged_in_views: Bejelentkezve
+        anon_views: Névtelen
+        total_views: Összes
   dashboard:
-    rails_env_warning: "A kiszolgáló jelenleg %{env} módban fut."
-    host_names_warning: "A config/database.yml fájl az alapértelmezett „localhost” domaint használja. Állítsa be az oldala saját domain nevét."
-    memory_warning: "A kiszolgáló kevesebb mint 1 GB memóriával rendelkezik. Legalább 1 GB memória ajánlott."
-    v3_analytics_deprecated: "A Discourse jelenleg a Google Analytics 3-at használja, amely 2023 júliusa után már nem kap támogatást. <a href='https://meta.discourse.org/t/260498'>Frissítsen most a Google Analytics 4-re</a> , hogy továbbra is értékes betekintést és elemzést kapjon webhelye teljesítményéről."
+    problem:
+      rails_env: "A kiszolgáló jelenleg %{env} módban fut."
+      host_names: "A config/database.yml fájl az alapértelmezett „localhost” domaint használja. Állítsa be az oldala saját domain nevét."
+      ram: "A kiszolgáló kevesebb mint 1 GB memóriával rendelkezik. Legalább 1 GB memória ajánlott."
+      google_analytics_version: "A Discourse jelenleg a Google Analytics 3-at használja, amely 2023 júliusa után már nem kap támogatást. <a href='https://meta.discourse.org/t/260498'>Frissítsen most a Google Analytics 4-re</a> , hogy továbbra is értékes betekintést és elemzést kapjon webhelye teljesítményéről."
   site_settings:
     disabled: "kikapcsolva"
     default_locale: "A Discourse alapértelmezett nyelve. A rendszer által generált kategóriák és témák szövegét lecserélheted a <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Személyre szabás / Szöveg</a>oldalon."
@@ -1066,6 +1074,9 @@ hu:
       - ""
       - "inaktív"
       - ""
+      navigation_menu:
+      - "oldalsáv"
+      - ""
   search:
     within_post: "#%{post_number}, szerző: %{username}"
     types:
@@ -1119,7 +1130,6 @@ hu:
     new_registrations_disabled: "Az új fiókok létrehozása jelenleg nem engedélyezett."
     password_too_long: "A jelszavak legfeljebb 200 karakter hosszúak lehetnek."
     reserved_username: "Ez a felhasználónév nem engedélyezett."
-    missing_user_field: "Nem töltötte ki az összes felhasználói mezőt"
     click_to_continue: "Kattintson ide a folytatáshoz."
     already_logged_in: "Sajnálom! Ez a meghívás új felhasználóknak szól, akik még nem rendelkeznek meglévő fiókkal."
     second_factor_title: "Kéttényezős hitelesítés"
@@ -1694,7 +1704,6 @@ hu:
 
         Ha kérdésed van, [vedd fel a kapcsolatot barátságos munkatársainkkal] (%{base_url}/about).
     digest:
-      why: "Egy kis összefoglaló a(z) %{site_link} oldalról, hogy mik történtek a legutóbbi látogatása (%{last_seen_at}) óta."
       since_last_visit: "Utolsó látogatása óta"
       new_topics: "Új téma"
       unread_notifications: "Olvasatlan értesítés"
@@ -1708,7 +1717,6 @@ hu:
       unsubscribe: "Ezt az összefoglalót %{site_link} tól küldjük, mert már egy ideje nem látunk. Az %{email_preferences_link} vagy a %{unsubscribe_link} oldalon tudod a beállításokat változtatni vagy leiratkozni."
       your_email_settings: "e-mail beállítások"
       click_here: "kattintson ide"
-      preheader: "Rövid összefoglaló a legutóbbi látogatásod óta, ami ekkor történt: %{last_seen_at}"
     forgot_password:
       title: "Elfelejtett jelszó"
       subject_template: "[%{email_prefix}] Jelszó visszaállítás"
@@ -1718,7 +1726,7 @@ hu:
         Ha nem te voltál, nyugodtan figyelmen kívül hagyhatod ezt az e-mailt.
 
         Kattints a következő linkre az új jelszó létrehozásához:
-        %{base_url}/u/ password-reset/%{email_token}
+        %{base_url}/u/password-reset/%{email_token}
     email_login:
       text_body_template: |
         Itt van a link a bejelentkezéshez a [%{site_name}](%{base_url}) címen.
@@ -1900,6 +1908,7 @@ hu:
     rate_limit_error: "A bejegyzések naponta csak egyszer töltetők le. Kérünk, próbáld újra holnap."
   guidelines_topic:
     title: "GYIK/Irányelvek"
+    guidelines_title: "Irányelvek"
   tos_topic:
     title: "Szolgáltatási feltételek"
   privacy_topic:
@@ -2161,8 +2170,6 @@ hu:
             placeholder: "Privát"
           chat_enabled:
             placeholder: "Csevegés engedélyezése"
-          enable_sidebar:
-            placeholder: "Oldalsáv engedélyezése"
       styling:
         fields:
           color_scheme:

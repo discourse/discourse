@@ -89,6 +89,18 @@ RSpec.describe "Glimmer Header", type: :system do
     expect(header.get_computed_style_value(".d-header", "--header-offset")).to eq("60px")
   end
 
+  it "body document is permanently docked regardless of scroll positioning" do
+    Fabricate.times(20, :topic)
+    sign_in(current_user)
+    visit "/"
+
+    expect(page).to have_selector("body.docked")
+    page.execute_script("window.scrollBy(0, 1000)")
+    expect(page).to have_selector("body.docked")
+    page.execute_script("window.scrollTo(0, 0)")
+    expect(page).to have_selector("body.docked")
+  end
+
   it "moves focus between tabs using arrow keys" do
     sign_in(current_user)
     visit "/"
@@ -178,6 +190,23 @@ RSpec.describe "Glimmer Header", type: :system do
     expect(page).not_to have_selector(
       ".header-dropdown-toggle.current-user .badge-notification.with-icon.new-pms",
     )
+  end
+
+  context "when resetting password" do
+    fab!(:current_user) { Fabricate(:user) }
+
+    it "does not show search, login, or signup buttons" do
+      email_token =
+        current_user.email_tokens.create!(
+          email: current_user.email,
+          scope: EmailToken.scopes[:password_reset],
+        )
+
+      visit "/u/password-reset/#{email_token.token}"
+      expect(page).not_to have_css("button.login-button")
+      expect(page).not_to have_css("button.sign-up-button")
+      expect(page).not_to have_css(".search-dropdown #search-button")
+    end
   end
 
   context "when logged in and login required" do

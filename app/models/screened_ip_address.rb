@@ -29,7 +29,7 @@ class ScreenedIpAddress < ActiveRecord::Base
   end
 
   def check_for_match
-    unless self.errors[:ip_address].present?
+    if self.errors[:ip_address].blank?
       matched = self.class.match_for_ip_address(self.ip_address)
       if matched && matched.action_type == self.action_type
         self.errors.add(:ip_address, :ip_address_already_screened)

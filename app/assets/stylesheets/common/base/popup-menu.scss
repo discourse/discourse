@@ -1,0 +1,69 @@
+// LEGACY STYLES
+// some plugins rely on these (discourse-topic-voting is one)
+
+.popup-menu {
+  background-color: var(--secondary);
+  width: 14em;
+  border: 1px solid var(--primary-low);
+  z-index: z("dropdown");
+  box-shadow: var(--shadow-card);
+
+  ul {
+    margin: 0;
+    list-style: none;
+
+    li {
+      border-bottom: 1px solid rgba(var(--primary-low-rgb), 0.5);
+
+      &:last-child {
+        border: none;
+      }
+    }
+  }
+
+  .btn {
+    justify-content: left;
+    text-align: left;
+    background: none;
+    width: 100%;
+    padding: 0.5em;
+    border-radius: 0;
+    margin: 0;
+
+    .d-icon {
+      color: var(--primary-medium);
+      align-self: flex-start;
+      margin-right: 0.75em;
+      margin-top: 0.1em; // vertical alignment
+    }
+
+    &:focus,
+    &:hover {
+      color: var(--primary);
+      background: var(--d-hover);
+
+      .d-icon {
+        color: var(--primary-medium);
+      }
+    }
+
+    &.popup-menu-btn-danger {
+      .d-icon {
+        color: var(--danger);
+      }
+
+      .d-button-label {
+        color: var(--primary);
+      }
+
+      &:focus,
+      &:hover {
+        .d-icon,
+        .d-button-label {
+          color: var(--danger);
+        }
+        background: var(--danger-low);
+      }
+    }
+  }
+}

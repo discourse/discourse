@@ -6,7 +6,7 @@ module PageObjects
       class ChannelIndex < PageObjects::Components::Base
         attr_reader :context
 
-        SELECTOR = ".channels-list"
+        SELECTOR = ".channels-list-container"
 
         def initialize(context = nil)
           @context = context

@@ -590,6 +590,8 @@ export default {
           icon: null,
           id: 3,
           is_custom_flag: false,
+          enabled: true,
+          applies_to: ["Post", "Chat::Message"]
         },
         {
           name_key: "inappropriate",
@@ -602,6 +604,8 @@ export default {
           icon: null,
           id: 4,
           is_custom_flag: false,
+          enabled: true,
+          applies_to: ["Post", "Topic", "Chat::Message"]
         },
         {
           name_key: "vote",
@@ -612,6 +616,7 @@ export default {
           icon: null,
           id: 5,
           is_custom_flag: false,
+          enabled: true
         },
         {
           name_key: "spam",
@@ -623,6 +628,8 @@ export default {
           icon: null,
           id: 8,
           is_custom_flag: false,
+          enabled: true,
+          applies_to: ["Post", "Topic", "Chat::Message"]
         },
         {
           name_key: "notify_user",
@@ -635,6 +642,8 @@ export default {
           icon: null,
           id: 6,
           is_custom_flag: true,
+          enabled: true,
+          applies_to: ["Post", "Topic", "Chat::Message"]
         },
         {
           name_key: "notify_moderators",
@@ -646,6 +655,8 @@ export default {
           icon: null,
           id: 7,
           is_custom_flag: true,
+          enabled: true,
+          applies_to: ["Post", "Topic", "Chat::Message"]
         },
       ],
       topic_flag_types: [
@@ -658,6 +669,8 @@ export default {
           icon: null,
           id: 4,
           is_custom_flag: false,
+          enabled: true,
+          applies_to: ["Post", "Topic", "Chat::Message"]
         },
         {
           name_key: "spam",
@@ -668,6 +681,8 @@ export default {
           icon: null,
           id: 8,
           is_custom_flag: false,
+          enabled: true,
+          applies_to: ["Post", "Topic", "Chat::Message"]
         },
         {
           name_key: "notify_moderators",
@@ -678,6 +693,8 @@ export default {
           icon: null,
           id: 7,
           is_custom_flag: true,
+          enabled: true,
+          applies_to: ["Post", "Topic", "Chat::Message"]
         },
       ],
       archetypes: [

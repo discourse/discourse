@@ -1,0 +1,14 @@
+{
+    "html": "<iframe style=\"border-radius: 12px\" width=\"100%\" height=\"152\" title=\"Spotify Embed: NerdOut@Spotify\" frameborder=\"0\" allowfullscreen allow=\"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture\" loading=\"lazy\" src=\"https://open.spotify.com/embed/show/5eXZwvvxt3K2dxha3BSaAe?utm_source=oembed\"></iframe>",
+    "iframe_url": "https://open.spotify.com/embed/show/5eXZwvvxt3K2dxha3BSaAe?utm_source=oembed",
+    "width": 456,
+    "height": 152,
+    "version": "1.0",
+    "provider_name": "Spotify",
+    "provider_url": "https://spotify.com",
+    "type": "rich",
+    "title": "NerdOut@Spotify",
+    "thumbnail_url": "https://i.scdn.co/image/ab67656300005f1f3ed9a52396207aad8858a28a",
+    "thumbnail_width": 300,
+    "thumbnail_height": 300
+  }

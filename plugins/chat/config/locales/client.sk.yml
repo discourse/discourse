@@ -65,6 +65,12 @@ sk:
           many: "Presúvate <strong>%{count}</strong> správ. Vyberte cieľový kanál. V kanáli <strong>%{channelTitle}</strong> sa vytvorí zástupná správa, ktorá označuje, že táto správa bola presunutá. Upozorňujeme, že reťazce odpovedí sa v novom kanáli nezachovajú a správy v starom kanáli sa už nebudú zobrazovať ako odpovede na žiadne presunuté správy."
           other: "Presúvate <strong>%{count}</strong> správ. Vyberte cieľový kanál. V kanáli <strong>%{channelTitle}</strong> sa vytvorí zástupná správa, ktorá označuje, že táto správa bola presunutá. Upozorňujeme, že reťazce odpovedí sa v novom kanáli nezachovajú a správy v starom kanáli sa už nebudú zobrazovať ako odpovede na žiadne presunuté správy."
         confirm_move: "Presunúť správy"
+      delete_messages:
+        confirm:
+          one: "Naozaj chcete odstrániť túto správu?"
+          few: "Naozaj chcete odstrániť týchto %{count} správ?"
+          many: "Naozaj chcete odstrániť týchto %{count} správ?"
+          other: "Naozaj chcete odstrániť tieto %{count} správy?"
       channel_settings:
         title: "Nastavenia kanála"
         edit: "Upraviť"
@@ -102,7 +108,6 @@ sk:
       channels_list_popup:
         browse: "Prehľadávanie kanálov"
         create: "Nový kanál"
-      click_to_join: "Kliknutím sem zobrazíte dostupné kanály."
       close: "Zavrieť"
       remove: "Odstrániť"
       collapse: "Zatvoriť zásuvku chatu"
@@ -146,15 +151,6 @@ sk:
       heading: "Chat"
       join: "Pridať sa"
       last_visit: "posledná návševa"
-      summarization:
-        title: "Zhrnutie správ"
-        description: "Ak chcete zhrnúť konverzáciu odoslanú počas požadovaného časového obdobia, vyberte nižšie uvedenú možnosť."
-        summarize: "Zhrnúť"
-        since:
-          one: "Posledná hodina"
-          few: "Posledných %{count} hodín"
-          many: "Posledných %{count} hodín"
-          other: "Posledných %{count} hodín"
       mention_warning:
         invitations_sent:
           one: "Pozvánka bola odoslaná"
@@ -174,6 +170,60 @@ sk:
             few: "@%{group} a %{count} iné skupiny nepovoľujú zmienky."
             many: "@%{group} a %{count} iných skupín nepovoľujú zmienky."
             other: "@%{group} a %{count} iných skupín nepovoľujú zmienky."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Označenie @{group1} prekračuje <a href="{siteSettingUrl}" target="_blank">limit upozornení</a> pre # používateľa.}
+                              other {Označenie @{group1} prekračuje <a href="{siteSettingUrl}" target="_blank">limit upozornení</a> pre # používateľov.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Označenie @{group1} prekračuje limit upozornení pre # používateľa.}
+                              other {Označenie @{group1} prekračuje limit upozornení pre # používateľov.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Označenie @{group1} a @{group2} prekračuje <a href="{siteSettingUrl}" target="_blank">limit upozornení</a> pre # používateľa.}
+                            other {Označenie @{group1} a @{group2} prekračuje <a href="{siteSettingUrl}" target="_blank">limit upozornení</a> pre # používateľov.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Označenie @{group1} a @{group2} prekračuje limit upozornení pre # používateľa.}
+                            other {Označenie @{group1} a @{group2} prekračuje limit upozornení pre # používateľov.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Označenie týchto {groupCount} skupín prekračuje <a href="{siteSettingUrl}" target="_blank">limit upozornení</a> pre # používateľa.}
+                            other {Označenie týchto {groupCount} skupín prekračuje <a href="{siteSettingUrl}" target="_blank">limit upozornení</a> pre # používateľov.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Označenie týchto {groupCount} skupín prekračuje limit upozornení pre # používateľa.}
+                            other {Označenie týchto {groupCount} skupín prekračuje limit upozornení pre # používateľov.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
         too_many_mentions:
           one: "Táto správa presahuje limit upozornení na zmienku %{count} ."
           few: "Táto správa prekračuje limit oznámenia %{count} zmienok."
@@ -188,8 +238,10 @@ sk:
         header: "Hlavička chatu"
         composer: "Skladateľ chatu"
         channels_list: "Zoznam chatovacích kanálov"
-      no_direct_message_channels: "Nepripojili ste sa k žiadnym kanálom priamych správ."
-      no_public_channels: "Nepripojili ste sa k žiadnym kanálom."
+      no_direct_message_channels: "Zatiaľ ste sa nepripojili k žiadnym priamym správam!"
+      no_direct_message_channels_cta: "Začať konverzáciu"
+      no_public_channels: "Zatiaľ ste sa nepripojili k žiadnemu kanálu!"
+      no_public_channels_cta: "Prehľadávanie kanálov"
       kicked_from_channel: "K tomuto kanálu už nemáte prístup."
       only_chat_push_notifications:
         title: "Odosielajte iba upozornenia na chat"
@@ -197,6 +249,9 @@ sk:
       ignore_channel_wide_mention:
         title: "Ignorovať zmienky v rámci celého kanála"
         description: "Neposielať upozornenia na zmienky v rámci celého kanála (@tu a @všetci)"
+      show_thread_title_prompts:
+        title: "Zobraziť výzvy na názov vlákna"
+        description: "Zobraziť výzvy na nastavenie názvu pre nové vlákna"
       open: "Otvoriť chat"
       open_full_page: "Otvoriť chat na celú obrazovku"
       close_full_page: "Zatvorenie chatu na celej obrazovke"
@@ -217,6 +272,7 @@ sk:
       copy_link: "Kopírovať odkaz"
       copy_text: "Kopírovať text"
       rebake_message: "Pregenerovať HTML"
+      message_too_long: "Správa je príliš dlhá, správy môžu mať maximálne %{count} znaky."
       retry_staged_message:
         title: "Chyba siete"
         action: "Odoslať znova?"
@@ -523,6 +579,7 @@ sk:
         cancel: "Zrušiť"
         quote_selection: "Citácia v téme"
         copy: "Kopírovať"
+        delete: "Odstrániť (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "Presun do kanála"
         error: "Došlo k chybe pri presúvaní správ chatu"
         title: "Presunúť chat na tému"
@@ -573,6 +630,7 @@ sk:
       flags:
         off_topic: "Táto správa nie je relevantná pre aktuálnu diskusiu definovanú názvom kanála a mala by byť pravdepodobne presunutá inam."
         inappropriate: "Táto správa obsahuje obsah, ktorý by rozumná osoba považovala za urážlivý, urážlivý alebo za porušenie <a href=\"%{basePath}/guidelines\">našich pokynov pre komunitu</a>."
+        illegal: "Tento príspevok si vyžaduje pozornosť zamestnancov, pretože podľa môjho názoru obsahuje obsah, ktorý je nezákonný."
         spam: "Táto správa je reklama alebo vandalizmus. Nie je to užitočné ani relevantné pre aktuálny kanál."
         notify_user: "Chcem sa s touto osobou porozprávať priamo a osobne o jej posolstve."
         notify_moderators: "Táto správa si vyžaduje pozornosť personálu z iného dôvodu, ktorý nie je uvedený vyššie."
@@ -617,6 +675,17 @@ sk:
           few: "+%{count}"
           many: "+%{count}"
           other: "+%{count}"
+      thread_title_toast:
+        title: "Nastavte názov vlákna"
+        message: "Pomôžte ostatným objaviť túto konverzáciu."
+        dismiss_action: "Už nezobrazovať"
+        primary_action: "Nastaviť názov"
+      thread_title_modal:
+        title: "Nastaviť názov vlákna"
+        input_placeholder: "Povedzte ostatným, o čom je táto konverzácia..."
+        discourse_ai:
+          title: "Automaticky generujte názvy vlákien"
+          description: "Pozrite si stránku %{url} , kde sa dozviete viac o tomto a ďalších vylepšeniach Discourse."
       threads:
         open: "Otvoriť vlákno"
         list: "Vlákna"

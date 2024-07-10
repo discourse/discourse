@@ -1,6 +1,10 @@
 import { tracked } from "@glimmer/tracking";
+import { registerDestructor } from "@ember/destroyable";
 import Service, { service } from "@ember/service";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+
+const VALID_HEADER_BUTTONS_TO_HIDE = ["search", "login", "signup"];
 
 @disableImplicitInjections
 export default class Header extends Service {
@@ -10,6 +14,8 @@ export default class Header extends Service {
   @tracked hamburgerVisible = false;
   @tracked userVisible = false;
   @tracked anyWidgetHeaderOverrides = false;
+
+  #hiders = new TrackedMap();
 
   get useGlimmerHeader() {
     if (this.siteSettings.glimmer_header_mode === "disabled") {
@@ -28,5 +34,42 @@ export default class Header extends Service {
         return true;
       }
     }
+  }
+
+  registerHider(ref, buttons) {
+    const validButtons = buttons
+      .map((button) => {
+        if (!VALID_HEADER_BUTTONS_TO_HIDE.includes(button)) {
+          // eslint-disable-next-line no-console
+          console.error(
+            `Invalid button to hide: ${button}, valid buttons are: ${VALID_HEADER_BUTTONS_TO_HIDE.join(
+              ","
+            )}`
+          );
+        } else {
+          return button;
+        }
+      })
+      .filter(Boolean);
+
+    if (!validButtons.length) {
+      return;
+    }
+
+    this.#hiders.set(ref, validButtons);
+
+    registerDestructor(ref, () => {
+      this.#hiders.delete(ref);
+    });
+  }
+
+  get headerButtonsHidden() {
+    const buttonsToHide = new Set();
+    this.#hiders.forEach((buttons) => {
+      buttons.forEach((button) => {
+        buttonsToHide.add(button);
+      });
+    });
+    return Array.from(buttonsToHide);
   }
 }

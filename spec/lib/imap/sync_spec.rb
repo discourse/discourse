@@ -142,7 +142,7 @@ RSpec.describe Imap::Sync do
     end
 
     context "when the message id matches the receiver post id regex" do
-      let(:message_id) { "topic/999/324@test.localhost" }
+      let(:message_id) { "discourse/post/324@test.localhost" }
       it "does not duplicate incoming email" do
         incoming_email = Fabricate(:incoming_email, message_id: message_id)
 

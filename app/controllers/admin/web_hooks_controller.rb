@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Admin::WebHooksController < Admin::AdminController
-  before_action :fetch_web_hook, only: %i[show update destroy list_events bulk_events ping]
+  before_action :fetch_web_hook,
+                only: %i[show update destroy list_events bulk_events ping redeliver_failed_events]
 
   def index
     limit = 50
@@ -17,12 +18,18 @@ class Admin::WebHooksController < Admin::AdminController
 
     data = serialize_data(web_hooks, AdminWebHookSerializer, root: "web_hooks")
 
+    serialized_grouped_event_types =
+      WebHookEventType.active_grouped.transform_values do |array|
+        serialize_data(array, WebHookEventTypeSerializer)
+      end
+
     json = {
       web_hooks: data.delete("web_hooks"),
       extras:
         data.merge(
-          grouped_event_types: WebHookEventType.active_grouped,
-          default_event_types: WebHook.default_event_types,
+          grouped_event_types: serialized_grouped_event_types,
+          default_event_types:
+            serialize_data(WebHook.default_event_types, WebHookEventTypeSerializer),
           content_types: WebHook.content_types.map { |name, id| { id: id, name: name } },
           delivery_statuses:
             WebHook.last_delivery_statuses.map { |name, id| { id: id, name: name.to_s } },
@@ -87,16 +94,27 @@ class Admin::WebHooksController < Admin::AdminController
   def list_events
     limit = 50
     offset = params[:offset].to_i
+    events = @web_hook.web_hook_events.includes(:redelivering_webhook_event)
+    status = params[:status]
+    if status == "successful"
+      events = events.successful
+    elsif status == "failed"
+      events = events.failed
+    end
+
+    total = events.count
+    events = events.limit(limit).offset(offset)
 
     json = {
-      web_hook_events:
-        serialize_data(
-          @web_hook.web_hook_events.limit(limit).offset(offset),
-          AdminWebHookEventSerializer,
-        ),
-      total_rows_web_hook_events: @web_hook.web_hook_events.count,
+      web_hook_events: serialize_data(events, AdminWebHookEventSerializer),
+      total_rows_web_hook_events: total,
       load_more_web_hook_events:
-        web_hook_events_admin_api_index_path(limit: limit, offset: offset + limit, format: :json),
+        web_hook_events_admin_api_index_path(
+          limit: limit,
+          offset: offset + limit,
+          status: status,
+          format: :json,
+        ),
       extras: {
         web_hook_id: @web_hook.id,
       },
@@ -122,6 +140,24 @@ class Admin::WebHooksController < Admin::AdminController
     else
       render json: failed_json
     end
+  end
+
+  def redeliver_failed_events
+    web_hook_events =
+      @web_hook
+        .web_hook_events
+        .includes(:redelivering_webhook_event)
+        .not_ping
+        .where(id: params[:event_ids])
+
+    raise Discourse::InvalidParameters if web_hook_events.count.zero?
+
+    web_hook_events.each do |web_hook_event|
+      if !web_hook_event.redelivering_webhook_event
+        RedeliveringWebhookEvent.create!(web_hook_event: web_hook_event)
+      end
+    end
+    render json: { event_ids: web_hook_events.map(&:id) }
   end
 
   def ping

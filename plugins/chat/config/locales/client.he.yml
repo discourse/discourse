@@ -65,6 +65,12 @@ he:
           many: "בחרת להעביר <strong>%{count}</strong> הודעות. נא לבחור את ערוץ היעד. הודעה ממלאת מקום תיווצר בערוץ <strong>%{channelTitle}</strong> כדי לציין שההודעות האלו הועברו. נא לשים לב ששרשורי תגובה לא יישמרו בערוץ החדש והודעות בערוץ הישן לא תופענה עוד כתגובה להודעות כלשהן שהועברו."
           other: "בחרת להעביר <strong>%{count}</strong> הודעות. נא לבחור את ערוץ היעד. הודעה ממלאת מקום תיווצר בערוץ <strong>%{channelTitle}</strong> כדי לציין שההודעות האלו הועברו. נא לשים לב ששרשורי תגובה לא יישמרו בערוץ החדש והודעות בערוץ הישן לא תופענה עוד כתגובה להודעות כלשהן שהועברו."
         confirm_move: "העברת הודעות"
+      delete_messages:
+        confirm:
+          one: "למחוק את ההודעה הזאת?"
+          two: "למחוק את שתי ההודעות האלה?"
+          many: "למחוק את %{count} ההודעות האלה?"
+          other: "למחוק את %{count} ההודעות האלה?"
       channel_settings:
         title: "הגדרות ערוץ"
         edit: "עריכה"
@@ -102,7 +108,6 @@ he:
       channels_list_popup:
         browse: "עיון בערוצים"
         create: "ערוץ חדש"
-      click_to_join: "לחיצה כאן תציג את הערוצים הזמינים."
       close: "סגירה"
       remove: "הסרה"
       collapse: "צמצום מגירת צ׳אט"
@@ -146,15 +151,6 @@ he:
       heading: "צ׳אט"
       join: "הצטרפות"
       last_visit: "ביקור אחרון"
-      summarization:
-        title: "סיכום הודעות"
-        description: "נא לבחור אפשרות להלן כדי לסכם את הדיון שנשלח בפרק הזמן המבוקש."
-        summarize: "סיכום"
-        since:
-          one: "שעה אחרונה"
-          two: "השעתיים האחרונות"
-          many: "%{count} השעות האחרונות"
-          other: "%{count} השעות האחרונות"
       mention_warning:
         invitations_sent:
           one: "נשלחה הזמנה"
@@ -242,8 +238,10 @@ he:
         header: "כותרת צ׳אט"
         composer: "כותב צ׳אט"
         channels_list: "רשימת ערוצי צ׳אט"
-      no_direct_message_channels: "לא הצטרפת לאף ערוץ הודעות ישירות."
-      no_public_channels: "לא הצטרפת לאף ערוץ."
+      no_direct_message_channels: "לא הצטרפת להודעות ישירות כלשהן, עדיין!"
+      no_direct_message_channels_cta: "לפתוח דיון"
+      no_public_channels: "לא הצטרפת לערוצים כלשהם, עדיין!"
+      no_public_channels_cta: "עיון בערוצים"
       kicked_from_channel: "אין לך יותר גישה לערוץ הזה."
       only_chat_push_notifications:
         title: "לשלוח התראות בדחיפה על הצ׳אט בלבד"
@@ -251,6 +249,9 @@ he:
       ignore_channel_wide_mention:
         title: "התעלמות מאזכורים לכל הערוץ"
         description: "לא לשלוח התראות על אזכורים לכל הערוץ (‎@here ו־‎@all)"
+      show_thread_title_prompts:
+        title: "הצג הנחיות לכותרת השרשור"
+        description: "הצג הנחיות להגדרת כותרת לשרשורים חדשים"
       open: "פתיחת צ׳אט"
       open_full_page: "פתיחת צ׳אט במסך מלא"
       close_full_page: "סגירת צ׳אט במסך מלא"
@@ -271,6 +272,7 @@ he:
       copy_link: "העתקת קישור"
       copy_text: "העתקת טקסט"
       rebake_message: "בנייה מחודשת של HTML"
+      message_too_long: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים."
       retry_staged_message:
         title: "שגיאת רשת"
         action: "לשלוח שוב?"
@@ -557,6 +559,7 @@ he:
         cancel: "ביטול"
         quote_selection: "ציטוט בנושא"
         copy: "העתקה"
+        delete: "מחיקה (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "העברה לערוץ"
         error: "אירעה שגיאה בהעברת הודעות הצ׳אט"
         title: "העברת צ׳אט לנושא"
@@ -662,6 +665,7 @@ he:
         input_placeholder: "לספר לאחרים על מה הדיון הזה…"
         discourse_ai:
           title: "יצירת כותרות שרשורים אוטומטית"
+          description: "עיינו ב־ %{url} כדי ללמוד עוד על זה ועל שיפורים אחרים לחוויית הדיסקורס שלך."
       threads:
         open: "פתיחת שרשור"
         list: "שרשורים"

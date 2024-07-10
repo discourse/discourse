@@ -35,7 +35,7 @@ class PostTiming < ActiveRecord::Base
 
     DB.exec(sql_query, params)
 
-    TopicUser.ensure_consistency!(topic_id)
+    TopicUser.update_last_read_post_number(topic_id:)
   end
 
   def self.record_new_timing(args)
@@ -207,7 +207,7 @@ SQL
       new_posts_read = timings.size - existing.size if is_regular
 
       timings.each_with_index do |(post_number, time), index|
-        unless existing.include?(index)
+        if existing.exclude?(index)
           PostTiming.record_new_timing(
             topic_id: topic_id,
             post_number: post_number,

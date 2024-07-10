@@ -1,0 +1,28 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  discourse_narrative_bot:
+    quote:
+      trigger: "نەقىل"
+    magic_8_ball:
+      answers:
+        "9": "ھەئە"
+    new_user_narrative:
+      reset_trigger: "دەرسلىك"
+      hello:
+        title: "سالام!"
+    advanced_user_narrative:
+      category_hashtag:
+        instructions: |-
+          يازمىڭىزدا سەھىپە ۋە بەلگىلەرنى نەقىل ئالالايدىغانلىقىڭىزنى بىلەمسىز؟ مەسىلەن، %{category} سەھىپەنى كۆردىڭىزمۇ؟
+
+          جۈملىنىڭ خالىغان يېرىگە «#» نى كىرگۈزۈپ، خالىغان سەھىپە ياكى بەلگىنى تاللىسىڭىز بولىدۇ.
+        not_found: |-
+          ھىم، مەن ئۇ يەردە ھېچقانداق سەھىپە كۆرمىدىم. كېيىنكى جاۋابىڭىزغا بۇنى كۆچۈرەلەمسىز؟
+
+          ```text
+          مەن # ئارقىلىق سەھىپە ئۇلانمىسى قۇرالايمەن.

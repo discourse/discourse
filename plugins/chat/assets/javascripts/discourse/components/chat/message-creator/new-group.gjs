@@ -26,7 +26,11 @@ export default class NewGroup extends Component {
       } else {
         return acc + 1;
       }
-    }, 1);
+    }, 0);
+  }
+
+  get maxMembers() {
+    return this.siteSettings.chat_max_direct_message_users;
   }
 
   @action
@@ -40,9 +44,9 @@ export default class NewGroup extends Component {
         .filter((member) => member.type === "group")
         .mapBy("model.name");
 
-      const channel = await this.chat.upsertDmChannel(
+      const channel = await this.chat.createDmChannel(
         { usernames, groups },
-        this.newGroupTitle
+        { name: this.newGroupTitle }
       );
 
       if (!channel) {
@@ -82,10 +86,7 @@ export default class NewGroup extends Component {
           @close={{@close}}
           @cancel={{@cancel}}
           @membersCount={{this.membersCount}}
-          @maxReached={{gte
-            this.membersCount
-            this.siteSettings.chat_max_direct_message_users
-          }}
+          @maxReached={{gte this.membersCount this.maxMembers}}
         />
 
         {{#if @members.length}}

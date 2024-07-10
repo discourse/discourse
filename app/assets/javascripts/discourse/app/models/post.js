@@ -1,5 +1,6 @@
 import EmberObject, { get } from "@ember/object";
 import { and, equal, not, or } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
@@ -102,6 +103,8 @@ export default class Post extends RestModel {
     return ajax(`/posts/${postId}/raw-email.json`);
   }
 
+  @service currentUser;
+
   customShare = null;
 
   @equal("trust_level", 0) new_user;
@@ -115,12 +118,7 @@ export default class Post extends RestModel {
 
   @discourseComputed("url", "customShare")
   shareUrl(url) {
-    if (this.customShare) {
-      return this.customShare;
-    }
-
-    const user = User.current();
-    return resolveShareUrl(url, user);
+    return this.customShare || resolveShareUrl(url, this.currentUser);
   }
 
   @discourseComputed("name", "username")
@@ -438,7 +436,7 @@ export default class Post extends RestModel {
   }
 
   updateLikeCount(count, userId, eventType) {
-    let ownAction = User.current()?.id === userId;
+    let ownAction = this.currentUser?.id === userId;
     let ownLike = ownAction && eventType === "liked";
     let current_actions_summary = this.get("actions_summary");
     let likeActionID = Site.current().post_action_types.find(

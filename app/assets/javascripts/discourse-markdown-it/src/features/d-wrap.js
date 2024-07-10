@@ -1,32 +1,6 @@
-import { parseBBCodeTag } from "./bbcode-block";
+import { applyDataAttributes } from "./bbcode-block";
 
 const WRAP_CLASS = "d-wrap";
-
-function parseAttributes(tagInfo) {
-  const attributes = tagInfo.attrs._default || "";
-
-  return (
-    parseBBCodeTag(`[wrap wrap=${attributes}]`, 0, attributes.length + 12)
-      .attrs || {}
-  );
-}
-
-function camelCaseToDash(str) {
-  return str.replace(/([a-zA-Z])(?=[A-Z])/g, "$1-").toLowerCase();
-}
-
-function applyDataAttributes(token, state, attributes) {
-  Object.keys(attributes).forEach((tag) => {
-    const value = state.md.utils.escapeHtml(attributes[tag]);
-    tag = camelCaseToDash(
-      state.md.utils.escapeHtml(tag.replace(/[^A-Za-z\-0-9]/g, ""))
-    );
-
-    if (value && tag && tag.length > 1) {
-      token.attrs.push([`data-${tag}`, value]);
-    }
-  });
-}
 
 const blockRule = {
   tag: "wrap",
@@ -34,8 +8,7 @@ const blockRule = {
   before(state, tagInfo) {
     let token = state.push("wrap_open", "div", 1);
     token.attrs = [["class", WRAP_CLASS]];
-
-    applyDataAttributes(token, state, parseAttributes(tagInfo));
+    applyDataAttributes(token, tagInfo.attrs, "wrap");
   },
 
   after(state) {
@@ -49,8 +22,7 @@ const inlineRule = {
   replace(state, tagInfo, content) {
     let token = state.push("wrap_open", "span", 1);
     token.attrs = [["class", WRAP_CLASS]];
-
-    applyDataAttributes(token, state, parseAttributes(tagInfo));
+    applyDataAttributes(token, tagInfo.attrs, "wrap");
 
     if (content) {
       token = state.push("text", "", 0);
@@ -58,6 +30,7 @@ const inlineRule = {
     }
 
     state.push("wrap_close", "span", -1);
+
     return true;
   },
 };

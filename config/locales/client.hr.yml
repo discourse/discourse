@@ -22,6 +22,7 @@ hr:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -381,11 +382,21 @@ hr:
       search_placeholder: "Pretraživanje oznaka po nazivu, naslovu teme ili sadržaju posta"
       search: "Pretraži"
       bookmark: "Zabilješka"
+      bulk:
+        select_all: "Odaberi sve"
+        clear_all: "Obriši sve"
+        selected_count:
+          one: "%{count} odabrano"
+          few: "%{count} odabrano"
+          other: "%{count} odabrano"
       reminders:
         today_with_time: "danas u %{time}"
         tomorrow_with_time: "sutra u %{time}"
         at_time: "na %{date_time}"
         existing_reminder: "Imate podsjetnik postavljen za ovu oznaku (bookmark) koji će biti poslan %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Izbriši oznaku"
     copy_codeblock:
       copied: "kopirano!"
       copy: "kopirati kod u međuspremnik"
@@ -743,6 +754,7 @@ hr:
       topic_count_long: "Napravljene teme"
       post_count: "Odgovori"
       post_count_long: "Poslan odgovor"
+      no_results_with_search: "Nema pronađenih rezultata"
       days_visited: "Posjete"
       days_visited_long: "Dana posjećeno"
       posts_read: "Pročitano"
@@ -1024,7 +1036,6 @@ hr:
     categories:
       categories_label: "kategorije"
       subcategories_label: "podkategorije"
-      all_subcategories: "sve potkategorije"
       no_subcategories: "nema podkategorija"
       remove_filter: "uklonite filter"
       plus_more_count:
@@ -1096,6 +1107,7 @@ hr:
       none: "(odaberi opciju)"
       required: 'Unesi vrijednost za "%{name}"'
       same_as_password: "Vaša lozinka ne smije se ponavljati u drugim poljima."
+      optional: (opcionalno)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1149,7 +1161,8 @@ hr:
       activity_stream: "Aktivnosti"
       read: "Pročitajte"
       read_help: "Nedavno pročitane teme"
-      preferences: "Postavke"
+      preferences:
+        title: "Postavke"
       feature_topic_on_profile:
         open_search: "Odaberite novu temu"
         title: "Odaberite temu"
@@ -1415,6 +1428,7 @@ hr:
         set_password: "Postavi zaporku"
         choose_new: "Izaberite novu lozinku"
         choose: "Izaberite lozinku"
+        title: "Poništavanje lozinke"
       second_factor_backup:
         title: "Dva faktorski rezervni kodovi"
         regenerate: "Regeneriraj"
@@ -1815,7 +1829,6 @@ hr:
         fine_print: "Molimo vas da potvrdite svoj identitet jer je ovo potencijalno osjetljiva radnja. Jednom kad ste autenticirani, od vas će se tražiti ponovna autentikacija tek nakon nekoliko sati neaktivnosti."
       password:
         title: "Zaporka"
-        too_short: "Vaša je zaporka prekratka"
         common: "Ta je zaporka pre česta."
         same_as_username: "Vaša lozinka je ista kao korisničko ime."
         same_as_email: "Vaša lozinka jednaka je vašoj e-pošti."
@@ -2047,10 +2060,11 @@ hr:
       header_title: "Dobrodošli!"
       subheader_title: "Kreirajmo vaš račun"
       disclaimer: "Registracijom pristajete na <a href='%{privacy_link}' target='blank'>politiku privatnosti</a> i <a href='%{tos_link}' target='blank'>uvjete korištenja</a>."
-      title: "Kreiraj svoj račun"
+      title: "Učlani se"
       failed: "Nešto je pošlo krivo, možda je ovaj e-mail već registriran, pokušajte s poveznicom za zaboravljenu zaporku."
       associate: "Već imate račun? <a href='%{associate_link}'>Prijavite se</a> da biste povezali svoj %{provider} račun."
       activation_title: "Aktivirajte svoj račun"
+      already_have_account: "Već imate račun?"
     forgot_password:
       title: "Poništavanje lozinke"
       action: "Zaboravio/la sam zaporku"
@@ -2204,9 +2218,9 @@ hr:
       loading: Učitavanje…
     category_row:
       subcategory_count:
-        one: "+ %{count} potkategorija"
-        few: "+ %{count} potkategorija"
-        other: "+ %{count} potkategorija"
+        one: "+%{count} potkategorija"
+        few: "+%{count} potkategorija"
+        other: "+%{count} potkategorija"
       topic_count:
         one: "%{count} tema u ovoj kategoriji"
         few: "%{count} tema u ovoj kategoriji"
@@ -2237,6 +2251,8 @@ hr:
         categories_admin_dropdown:
           title: "Upravljanje kategorijama"
         bulk_select_topics_dropdown:
+          title: "Grupne aktivnosti"
+        bulk_select_bookmarks_dropdown:
           title: "Grupne aktivnosti"
     date_time_picker:
       from: Od
@@ -2396,7 +2412,6 @@ hr:
       show_toolbar: "prikaži alatnu traku skladatelja"
       hide_toolbar: "sakrij alatnu traku skladatelja"
       modal_ok: "U redu"
-      modal_cancel: "Odustani"
       cant_send_pm: "Žao nam je, ne možete poslati poruku %{username}."
       yourself_confirm:
         title: "Jeste li zaboravili dodati primatelje?"
@@ -2878,14 +2893,12 @@ hr:
         filter: "Nema više tema."
     topic_bulk_actions:
       close_topics:
-        name: "Zatvori teme"
+        name: "Zatvori"
         optional: (opcionalno)
       archive_topics:
-        name: "Arhiviraj teme"
-      unlist_topics:
-        name: "Poništite popis tema"
-      relist_topics:
-        name: "Poništite popis tema"
+        name: "Arhiva"
+      move_messages_to_inbox:
+        name: "Premjesti u Inbox"
       remove_tags:
         name: "Ukloni oznake"
       append_tags:
@@ -2893,7 +2906,7 @@ hr:
       replace_tags:
         name: "Zamijeni oznake"
       delete_topics:
-        name: "Obriši teme"
+        name: "Pobriši"
       update_category:
         name: "Ažuriraj kategoriju"
         description: "Odaberi novu kategoriju za odabrane teme"
@@ -4103,7 +4116,6 @@ hr:
       all_tags: "Sve oznake"
       other_tags: "Ostale oznake"
       selector_tags: "oznake"
-      selector_all_tags: "sve oznake"
       selector_no_tags: "bez oznaka"
       selector_remove_filter: "uklonite filter"
       tags: "Oznake"
@@ -4299,6 +4311,7 @@ hr:
           text: "i automatski ćemo prikazati najpopularnije kategorije ove stranice"
         filter_placeholder: "Filtrirajte kategorije"
         no_categories: "Nema kategorija koje odgovaraju danom pojmu."
+        show_more: "Prikaži više"
       edit_navigation_modal_form:
         deselect_button_text: "Odznači sve"
         reset_to_defaults: "Vrati na zadane postavke"
@@ -4360,6 +4373,9 @@ hr:
             faq:
               content: "ČPP"
               title: "Smjernice za korištenje ove stranice"
+            guidelines:
+              content: "Vodić za uporabu"
+              title: "Smjernice za korištenje ove stranice"
             groups:
               content: "Grupe"
               title: "Popis dostupnih korisničkih grupa"
@@ -4381,7 +4397,6 @@ hr:
                 one: "%{count} na čekanju"
                 few: "%{count} na čekanju"
                 other: "%{count} na čekanju"
-      filter: "Filter"
     welcome_topic_banner:
       title: "Kreirajte svoju temu dobrodošlice"
       description: "Vaša tema dobrodošlice prva je stvar koju će novi članovi pročitati. Zamislite to kao svoj \"elevator pitch\" ili \"izjavu o misiji\". Recite svima za koga je ova zajednica, što mogu očekivati da će ovdje pronaći i što biste željeli da prvo učine."
@@ -4538,6 +4553,9 @@ hr:
               label: Kategorija
             include_subcategories:
               label: "Uključi podkategorije"
+      flags:
+        description: "Opis"
+        enabled: "Omogućeno?"
       groups:
         new:
           title: "Nova grupa"
@@ -4755,6 +4773,8 @@ hr:
           timestamp: "Stvoreno"
           completion: "Vrijeme završetka"
           actions: "Akcije"
+          filter_status:
+            failed: "Neuspješno"
       home:
         title: "Naslovnica"
       account:
@@ -4803,6 +4823,23 @@ hr:
           search_logs: "Pretraživanje dnevnika"
           security: "Sigurnost"
           spam: "Nepoželjno"
+      config_areas:
+        about:
+          optional: "(opcionalno)"
+          update: "Ažuriraj"
+          saved: "spremljeno!"
+        flags:
+          description: "Opis"
+          enabled: "Omogućeno?"
+          edit: "Uredi"
+          delete: "Pobriši"
+          delete_confirm: 'Jeste li sigurni da želite izbrisati "%{name}"?'
+          form:
+            save: "Spremi"
+            name: "Ime"
+            description: "Opis"
+            topic: "tema"
+            post: "objave"
       plugins:
         title: "Dodaci"
         installed: "Instalirani dodaci"
@@ -5144,7 +5181,6 @@ hr:
             description: "Poveznice, neki gumbi, obavijesti i boja naglaska."
           quaternary:
             name: "kvartarna"
-            description: "Poveznice za navigaciju"
           header_background:
             name: "pozadina zaglavlja"
             description: "Pozadinska boja zaglavlja stranice."
@@ -5475,6 +5511,7 @@ hr:
           upload_successful: "Prijenos uspješno. Riječi su dodane."
           case_sensitivity_label: "Je li osjetljiv na velika i mala slova"
           case_sensitivity_description: "Samo riječi s odgovarajućim malim slovima"
+          html_label: "HTML"
         test:
           button_label: "Test"
           modal_title: "%{action}: Testirajte gledane riječi"
@@ -5807,6 +5844,7 @@ hr:
         name: "Ime polja"
         type: "Tip polja"
         description: "Opis polja"
+        preferences: "Postavke"
         save: "Spremi"
         edit: "Izmijeni"
         delete: "Obriši"
@@ -5817,6 +5855,9 @@ hr:
           title: "Potrebno pri registraciji"
           enabled: "potrebno"
           disabled: "nije potrebno"
+        requirement:
+          optional:
+            title: "Neobvezno"
         editable:
           title: "Izmijenjivo nakon registracije"
           enabled: "izmijenjivo"

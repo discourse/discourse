@@ -33,13 +33,13 @@ class GroupHistory < ActiveRecord::Base
 
     if !params.blank?
       params = params.slice(*filters)
-      records = records.where(action: self.actions[params[:action].to_sym]) unless params[
+      records = records.where(action: self.actions[params[:action].to_sym]) if params[
         :action
-      ].blank?
-      records = records.where(subject: params[:subject]) unless params[:subject].blank?
+      ].present?
+      records = records.where(subject: params[:subject]) if params[:subject].present?
 
       %i[acting_user target_user].each do |filter|
-        unless params[filter].blank?
+        if params[filter].present?
           id = User.where(username_lower: params[filter]).pluck(:id)
           records = records.where("#{filter}_id" => id)
         end

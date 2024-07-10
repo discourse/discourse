@@ -264,10 +264,16 @@ th:
         when_reminder_sent: "ลบบุ๊กมาร์ก"
       search: "ค้นหา"
       bookmark: "บุ๊คมาร์ค"
+      bulk:
+        select_all: "เลือกทั้งหมด"
+        clear_all: "ล้างทั้งหมด"
       reminders:
         today_with_time: "วันนี้ตอน%{time}"
         tomorrow_with_time: "พรุ่งนี้ตอน%{time}"
         at_time: "เมื่อ%{date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "ลบบุ๊กมาร์ก"
     copy_codeblock:
       copied: "คัดลอกแล้ว!"
     drafts:
@@ -466,6 +472,7 @@ th:
       topic_count_long: "กระทู้ถูกสร้าง"
       post_count: "ตอบ"
       post_count_long: "คำตอบถูกโพสต์แล้ว"
+      no_results_with_search: "ไม่พบผลการค้นหา"
       days_visited: "เยี่ยมชม"
       days_visited_long: "วันที่เยี่ยมชม"
       posts_read: "อ่าน"
@@ -689,6 +696,7 @@ th:
       copied: "คัดลอกแล้ว"
     user_fields:
       none: "(เลือกตัวเลือก)"
+      optional: (ทางเลือก)
     user:
       said: "%{username}:"
       profile: "โปรไฟล์"
@@ -719,7 +727,8 @@ th:
         to: "ถึง"
       activity_stream: "กิจกรรม"
       read: "อ่าน"
-      preferences: "การตั้งค่า"
+      preferences:
+        title: "การตั้งค่า"
       feature_topic_on_profile:
         open_search: "เลือกกระทู้ใหม่"
         title: "เลือกกระทู้"
@@ -846,6 +855,7 @@ th:
         set_password: "ตั้งรหัสผ่าน"
         choose_new: "เลือกรหัสผ่านใหม่"
         choose: "เลือกรหัสผ่าน"
+        title: "รีเซ็ตรหัสผ่าน"
       second_factor_backup:
         disable: "ปิดใช้งาน"
       second_factor:
@@ -1057,7 +1067,6 @@ th:
           error: "มีข้อผิดพลาดในการสร้างลิงก์คำเชิญ"
       password:
         title: "รหัสผ่าน"
-        too_short: "รหัสผ่านสั้นเกินไป"
         common: "รหัสผ่านง่ายเกินไป"
         same_as_username: "รหัสผ่านเหมือนกับชื่อผู้ใช้ของคุณ"
         same_as_email: "รหัสผ่านเหมือนกับอีเมลของคุณ"
@@ -1197,6 +1206,7 @@ th:
     search_hint: "ชื่อผู้ใช้ อีเมล หรือที่อยู่ไอพี"
     create_account:
       disclaimer: "เมื่อลงทะเบียน คุณได้ยอมรับ <a href='%{privacy_link}' target='blank'>นโยบายความเป็นส่วนตัว</a> และ <a href='%{tos_link}' target='blank'> เงื่อนไขการบริการ</a>"
+      title: "สมัคร"
       failed: "มีบางอย่างผิดพลาด อีเมลนี้อาจถูกลงทะเบียนไว้แล้ว กดลิงก์หากลืมรหัสผ่าน"
     forgot_password:
       title: "รีเซ็ตรหัสผ่าน"
@@ -1296,6 +1306,8 @@ th:
       components:
         bulk_select_topics_dropdown:
           title: "การดำเนินการจำนวนมาก"
+        bulk_select_bookmarks_dropdown:
+          title: "การดำเนินการจำนวนมาก"
     date_time_picker:
       from: จาก
       to: ถึง
@@ -1391,7 +1403,6 @@ th:
       enter_fullscreen: "ขยายหน้าเขียนกระทู้เต็มจอ"
       exit_fullscreen: "ออกจากหน้าเขียนกระทู้เต็มจอ"
       modal_ok: "ตกลง"
-      modal_cancel: "ยกเลิก"
       cant_send_pm: "ขออภัย คุณไม่สามารถส่งข้อความหา %{username} ได้"
       yourself_confirm:
         title: "คุณลืมเพิ่มผู้รับหรือไม่"
@@ -1614,16 +1625,16 @@ th:
         bookmarks: "ไม่มีกระทู้ที่บุ๊กมาร์กอีกแล้ว"
     topic_bulk_actions:
       close_topics:
-        name: "ปิดกระทู้"
+        name: "ปิด"
         optional: (ทางเลือก)
       archive_topics:
-        name: "คลังกระทู้"
-      unlist_topics:
-        name: "กระทู้ที่ไม่ได้แสดง"
+        name: "คลัง"
+      move_messages_to_inbox:
+        name: "ย้ายไปกล่องขาเข้า"
       replace_tags:
         name: "แทนที่แท็ก"
       delete_topics:
-        name: "ลบกระทู้"
+        name: "ลบ"
     topic:
       filter_to:
         other: " %{count} โพสต์ในกระทู้"
@@ -2334,7 +2345,6 @@ th:
     tagging:
       other_tags: "แท็กอื่น"
       selector_tags: "ป้าย"
-      selector_all_tags: "แท็กทั้งหมด"
       selector_no_tags: "ไม่มีแท็ก"
       selector_remove_filter: "เอาตัวกรองออก"
       tags: "แท็ก"
@@ -2451,6 +2461,8 @@ th:
               content: "หัวข้อ"
             faq:
               content: "คำถามที่พบบ่อย"
+            guidelines:
+              content: "คู่มือ"
             groups:
               content: "กลุ่ม"
             users:
@@ -2547,6 +2559,9 @@ th:
               label: หมวดหมู่
             include_subcategories:
               label: "รวมหมวดหมู่ย่อย"
+      flags:
+        description: "รายละเอียด"
+        enabled: "เปิดใช้"
       groups:
         new:
           title: "กลุ่มใหม่"
@@ -2622,6 +2637,8 @@ th:
           request: "ร้องขอ"
           timestamp: "สร้าง"
           actions: "การกระทำ"
+          filter_status:
+            failed: "ล้มเหลว"
       home:
         title: "หน้าแรก"
       account:
@@ -2654,6 +2671,23 @@ th:
         sidebar_link:
           security: "ความปลอดภัย"
           spam: "ขยะ"
+      config_areas:
+        about:
+          optional: "(ทางเลือก)"
+          update: "อัปเดต"
+          saved: "บันทึกแล้ว!"
+        flags:
+          description: "รายละเอียด"
+          enabled: "เปิดใช้"
+          edit: "แก้ไข"
+          delete: "ลบ"
+          delete_confirm: 'คุณแน่ใจหรือว่าต้องการลบ "%{name}"'
+          form:
+            save: "บันทึก"
+            name: "ชื่อ"
+            description: "รายละเอียด"
+            topic: "หัวข้อ"
+            post: "โพสต์"
       plugins:
         title: "ปลั้กอิน"
         installed: "ปลั้กอินที่ติดตั้งแล้ว"
@@ -2928,6 +2962,7 @@ th:
           exists: "มีอยู่แล้ว"
           upload: "เพิ่มจากไฟล์"
           upload_successful: "อัปโหลดสำเร็จแล้ว เพิ่มคำเรียบร้อย"
+          html_label: "HTML"
         test:
           no_matches: "ไม่พบผลลัพธ์ที่ตรงกัน"
       form_templates:
@@ -3091,6 +3126,7 @@ th:
         name: "ชื่อช่อง"
         type: "ประเภทช่อง"
         description: "รายละเอียดช่อง"
+        preferences: "การตั้งค่า"
         save: "บันทึก"
         edit: "แก้ไข"
         delete: "ลบ"
@@ -3101,6 +3137,9 @@ th:
           title: "ต้องการเมื่อลงทะเบียน"
           enabled: "ต้องการ"
           disabled: "ไม่ต้องการ"
+        requirement:
+          optional:
+            title: "ทางเลือก"
         editable:
           enabled: "แก้ไขได้"
           disabled: "แก้ไขไม่ได้"

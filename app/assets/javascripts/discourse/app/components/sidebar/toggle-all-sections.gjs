@@ -1,44 +1,47 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
-import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
+import { getCollapsedSidebarSectionKey } from "discourse/lib/sidebar/helpers";
 
 export default class ToggleAllSections extends Component {
   @service sidebarState;
   @service keyValueStore;
-  @tracked collapsedSections = this.sidebarState.collapsedSections;
+
+  get collapsableSections() {
+    return this.args.sections.filter(
+      (section) => section.displaySection && !section.hideSectionHeader
+    );
+  }
 
   get allSectionsExpanded() {
-    return ADMIN_NAV_MAP.every((adminNav) => {
-      return !this.collapsedSections.includes(
-        `sidebar-section-${this.sidebarState.currentPanel.key}-${adminNav.name}-collapsed`
+    return this.collapsableSections.every((section) => {
+      return !this.sidebarState.collapsedSections.has(
+        getCollapsedSidebarSectionKey(section.name)
       );
     });
   }
 
   get title() {
     return this.allSectionsExpanded
-      ? "admin.collapse_all_sections"
-      : "admin.expand_all_sections";
+      ? "sidebar.collapse_all_sections"
+      : "sidebar.expand_all_sections";
   }
 
   get icon() {
-    return this.allSectionsExpanded
-      ? "discourse-chevron-collapse"
-      : "discourse-chevron-expand";
+    return this.allSectionsExpanded ? "angle-double-up" : "angle-double-down";
   }
 
   @action
   toggleAllSections() {
-    const collapseOrExpand = this.allSectionsExpanded
-      ? this.sidebarState.collapseSection.bind(this)
-      : this.sidebarState.expandSection.bind(this);
-    ADMIN_NAV_MAP.forEach((adminNav) => {
-      collapseOrExpand(
-        `${this.sidebarState.currentPanel.key}-${adminNav.name}`
-      );
+    const collapse = this.allSectionsExpanded;
+
+    this.collapsableSections.forEach((section) => {
+      if (collapse) {
+        this.sidebarState.collapseSection(section.name);
+      } else {
+        this.sidebarState.expandSection(section.name);
+      }
     });
   }
 

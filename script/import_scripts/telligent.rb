@@ -888,7 +888,7 @@ class ImportScripts::Telligent < ImportScripts::Base
   end
 
   def add_normalization(normalizations, normalization)
-    normalizations << normalization unless normalizations.include?(normalization)
+    normalizations << normalization if normalizations.exclude?(normalization)
   end
 
   def batches

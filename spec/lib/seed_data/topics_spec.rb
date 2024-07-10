@@ -93,6 +93,14 @@ RSpec.describe SeedData::Topics do
       expect(post.raw).not_to include("> ## My Awesome Community")
     end
 
+    it "doesn't create a welcome topic when the 'General' category is missing" do
+      SiteSetting.general_category_id = nil
+
+      create_topic("welcome_topic_id")
+
+      expect(SiteSetting.welcome_topic_id).to eq(-1)
+    end
+
     it "creates a welcome topic with site title and description" do
       SiteSetting.title = "My Awesome Community"
       SiteSetting.site_description = "The best community"
@@ -180,6 +188,28 @@ RSpec.describe SeedData::Topics do
       expect(topic.title).to eq("New topic title")
       expect(topic.first_post.raw).to eq("New text of first post.")
     end
+
+    it "updates 'Welcome Topic' even when `general_category_id` doesn't exist" do
+      create_topic("welcome_topic_id")
+      SiteSetting.general_category_id = nil
+
+      post = Post.last
+      post.revise(Discourse.system_user, raw: "New text of first post.")
+
+      update_topic
+      post.reload
+
+      expect(post.raw).to eq(
+        I18n.t(
+          "discourse_welcome_topic.body",
+          base_path: Discourse.base_path,
+          site_title: SiteSetting.title,
+          site_description: SiteSetting.site_description,
+          site_info_quote: "",
+          feedback_category: "#site-feedback",
+        ).rstrip,
+      )
+    end
   end
 
   describe "#delete" do
@@ -214,6 +244,21 @@ RSpec.describe SeedData::Topics do
       expected_options = [
         { id: "guidelines_topic_id", name: I18n.t("guidelines_topic.title"), selected: true },
         { id: "welcome_topic_id", name: "Changed Topic Title", selected: false },
+      ]
+
+      expect(seeder.reseed_options).to eq(expected_options)
+    end
+
+    it "returns 'Welcome Topic' even when `general_category_id` doesn't exist" do
+      create_topic("welcome_topic_id")
+      SiteSetting.general_category_id = nil
+
+      expected_options = [
+        {
+          id: "welcome_topic_id",
+          name: I18n.t("discourse_welcome_topic.title", site_title: SiteSetting.title),
+          selected: true,
+        },
       ]
 
       expect(seeder.reseed_options).to eq(expected_options)

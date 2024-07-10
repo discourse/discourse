@@ -4,6 +4,7 @@ import Service from "@ember/service";
 import { underscore } from "@ember/string";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import { cleanNullQueryParams } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
 import { getRegister } from "discourse-common/lib/get-owner";
@@ -91,6 +92,7 @@ export default class StoreService extends Service {
   // Mostly for legacy, things like TopicList without ResultSets
   findFiltered(type, findArgs) {
     const adapter = this.adapterFor(type);
+    findArgs = cleanNullQueryParams(findArgs);
     return adapter
       .find(this, type, findArgs)
       .then((result) => this._build(type, result))

@@ -111,15 +111,16 @@ RSpec.describe "Flag message", type: :system do
     user_1 = Fabricate(:user)
     user_2 = Fabricate(:user)
     user_3 = Fabricate(:user)
-    group = Fabricate(:public_group, users: [user_1, user_2])
+    user_4 = Fabricate(:user)
+    group = Fabricate(:public_group, users: [user_1, user_2, user_3])
 
     visit("/")
     chat_page.prefers_full_page
     chat_page.open_new_message
     chat_page.find("#new-group-chat").click
     chat_page.find(".chat-message-creator__new-group-header__input").fill_in(with: "hamsters")
-    chat_page.find(".chat-message-creator__members-input").fill_in(with: user_3.username)
-    chat_page.message_creator.click_row(user_3)
+    chat_page.find(".chat-message-creator__members-input").fill_in(with: user_4.username)
+    chat_page.message_creator.click_row(user_4)
     chat_page.find(".chat-message-creator__members-input").fill_in(with: group.name)
     chat_page.message_creator.click_row(group)
 

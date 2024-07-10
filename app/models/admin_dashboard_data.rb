@@ -3,7 +3,7 @@
 class AdminDashboardData
   include StatsCacheable
 
-  cattr_reader :problem_messages
+  cattr_reader :problem_messages, default: []
 
   # kept for backward compatibility
   GLOBAL_REPORTS ||= []
@@ -100,13 +100,8 @@ class AdminDashboardData
   # tests. It will also fire multiple times in development mode because
   # classes are not cached.
   def self.reset_problem_checks
-    @@problem_messages = %w[
-      dashboard.bad_favicon_url
-      dashboard.poll_pop3_timeout
-      dashboard.poll_pop3_auth_error
-    ]
+    @@problem_messages = []
   end
-  reset_problem_checks
 
   def self.fetch_stats
     new.as_json

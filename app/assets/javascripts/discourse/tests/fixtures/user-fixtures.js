@@ -1731,7 +1731,7 @@ export default {
         action_type: 7,
         created_at: "2014-01-12T22:31:35Z",
         excerpt:
-          "This is an interesting approach an an interesting feature. <a class='mention' href='/u/eviltrout'>@eviltrout</a> your thoughts. Essentially allows us to have notifications cross tabs.",
+          "This is an interesting approach and an interesting feature. <a class='mention' href='/u/eviltrout'>@eviltrout</a> your thoughts. Essentially allows us to have notifications cross tabs.",
         avatar_template:
           "//www.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:

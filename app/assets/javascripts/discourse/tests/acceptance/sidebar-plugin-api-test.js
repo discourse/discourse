@@ -921,7 +921,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
       api.addSidebarPanel((BaseCustomSidebarPanel) => {
         const AdminSidebarPanel = class extends BaseCustomSidebarPanel {
           get key() {
-            return "admin-panel";
+            return "admin";
           }
 
           get hidden() {
@@ -1004,9 +1004,9 @@ acceptance("Sidebar - Plugin API", function (needs) {
             }
           };
         },
-        "admin-panel"
+        "admin"
       );
-      api.setSidebarPanel("admin-panel");
+      api.setSidebarPanel("admin");
       api.setSeparatedSidebarMode();
     });
 
@@ -1019,12 +1019,14 @@ acceptance("Sidebar - Plugin API", function (needs) {
       "test admin section",
       "displays header with correct text"
     );
+    assert.dom(".admin-panel").exists();
     withPluginApi(PLUGIN_API_VERSION, (api) => {
       api.setSidebarPanel("main-panel");
       api.setCombinedSidebarMode();
     });
     await visit("/");
     assert.dom(".sidebar__panel-switch-button").doesNotExist();
+    assert.dom(".admin-panel").doesNotExist();
     assert
       .dom(".sidebar-section[data-section-name='test-admin-section']")
       .doesNotExist();

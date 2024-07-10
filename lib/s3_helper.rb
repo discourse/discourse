@@ -27,6 +27,7 @@ class S3Helper
 
   def initialize(s3_bucket_name, tombstone_prefix = "", options = {})
     @s3_client = options.delete(:client)
+    @s3_bucket = options.delete(:bucket)
     @s3_options = default_s3_options.merge(options)
 
     @s3_bucket_name, @s3_bucket_folder_path =
@@ -281,7 +282,12 @@ class S3Helper
   end
 
   def s3_client
-    @s3_client ||= Aws::S3::Client.new(@s3_options)
+    @s3_client ||= init_aws_s3_client
+  end
+
+  def stub_client_responses!
+    raise "This method is only allowed to be used in the testing environment" if !Rails.env.test?
+    @s3_client = init_aws_s3_client(stub_responses: true)
   end
 
   def s3_inventory_path(path = "inventory")
@@ -379,6 +385,12 @@ class S3Helper
   end
 
   private
+
+  def init_aws_s3_client(stub_responses: false)
+    options = @s3_options
+    options = options.merge(stub_responses: true) if stub_responses
+    Aws::S3::Client.new(options)
+  end
 
   def fetch_bucket_cors_rules
     begin

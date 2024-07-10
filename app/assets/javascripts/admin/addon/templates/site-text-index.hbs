@@ -51,6 +51,18 @@
       />
       {{i18n "admin.site_text.show_outdated"}}
     </label>
+
+    {{#if this.showUntranslated}}
+      <label class="checkbox-label">
+        <input
+          id="toggle-untranslated"
+          type="checkbox"
+          checked={{this.resolvedUntranslated}}
+          {{on "click" this.toggleUntranslated}}
+        />
+        {{i18n "admin.site_text.show_untranslated"}}
+      </label>
+    {{/if}}
   </p>
 </div>
 

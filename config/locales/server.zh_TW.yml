@@ -259,6 +259,7 @@ zh_TW:
   read_full_topic: "閱讀整個話題"
   private_message_abbrev: "消息"
   rss_description:
+    hot: "熱門話題"
     latest: "最新討論話題"
     top: "熱門討論話題"
     top_all: "最熱門話題"
@@ -365,6 +366,8 @@ zh_TW:
         raw: "內容"
       user_profile:
         bio_raw: "關於我"
+      user:
+        password: "密碼"
     errors:
       models:
         topic:
@@ -433,21 +436,6 @@ zh_TW:
   meta_category_description: "討論這個網站、整體的組織規劃、社群的運作方式、以及我們該如何改善這些事務。"
   staff_category_name: "管理員"
   staff_category_description: "讓工作人員進行討論的私人分類。此分類下的討論話題只有管理員與板主才看得到。"
-  discourse_welcome_topic:
-    body: |
-      我們很高興您能加入我們。
-
-      %{site_info_quote}
-
-      這些事情能夠幫助您入門：
-
-      :speaking_head: **自我介紹**：將您的照片、資訊、興趣加到[您的個人檔案](%{base_path}/my/preferences/account)。您希望被問到的一件事是什麼？
-
-      :open_book: **通過[瀏覽進行中的討論串](%{base_path}/top)來認識社群**。當您發現某篇貼文有趣、內容豐富或好笑時，請使用 :heart: 來表達您的欣賞或支持！
-
-      :handshake: 通過評論、分享您的觀點、提出問題或在討論串中提供回饋來做出**貢獻**。在回覆或開始新主題之前，請查看[社群準則](%{base_path}/faq)。
-
-      > 如果您需要幫助或有任何建議，歡迎在 %{feedback_category} 中詢問或[聯繫管理員](%{base_path}/about)。
   category:
     topic_prefix: "對於分類：%{category} 的定義"
     replace_paragraph: "（以新分類的簡短說明文字取代此段落。這段說明會出現在選擇分類的區塊，因此請將內容限於 200 字以內。）"
@@ -1007,13 +995,14 @@ zh_TW:
       title: "使用者訪問次數（行動裝置）"
       xaxis: "天"
       yaxis: "訪問次數"
-      description: "使用行動裝置訪問的唯一使用者數"
     web_crawlers:
       title: "網路爬蟲使用者代理"
       labels:
         user_agent: "使用者代理"
         page_views: "頁面瀏覽次數"
       description: "網路爬蟲使用者代理清單，按頁面瀏覽量排序"
+    web_hook_events_daily_aggregate:
+      xaxis: "天"
     suspicious_logins:
       title: "可疑登入"
       labels:
@@ -1060,27 +1049,23 @@ zh_TW:
       labels:
         user: 使用者
         qtt_like: 收到的讚
+    topic_view_stats:
+      labels:
+        topic: 話題
+        logged_in_views: 已登入
+        anon_views: 匿名
+        total_views: 總數
   dashboard:
-    rails_env_warning: "伺服器現在運行 %{env} 模式。"
-    host_names_warning: "伺服器上 config/database.yml 的主機名稱為 localhost 。請更改成你的網站主機名稱。"
-    sidekiq_warning: 'Sidekiq 未有執行。很多程序, 如發送電子郵件, 需要 sidekiq 非同步 (asynchronous) 執行的。請確保至少運行一個 sidekiq 程序。<a href="https://github.com/mperham/sidekiq">瞭解 Sidekiq</a>。'
-    queue_size_warning: "隊列中有較多任務，為 %{queue_size} 個。這可能是因為 Sidekiq 進程的問題導致，或者需要更多的 Sidekiq 進程。"
-    memory_warning: "伺服器記憶體少於 1GB，建議配置至少 1GB 記憶體"
-    s3_config_warning: '伺服器被設定為上傳文件到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, s3_upload_bucket。到<a href="%{base_path}/admin/site_settings">網站設定</a>更新此設定。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">請查閱「如何設置圖片上傳至 S3」</a>.'
-    s3_backup_config_warning: '伺服器被設置為上傳備份到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="%{base_path}/admin/site_settings">設定</a>更新此設定。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">參考如何設置圖片上傳至 S3</a>。'
-    image_magick_warning: '伺服器被設置為給尺寸較大的圖片縮圖，但是 ImageMagick 沒有被安裝。使用你喜愛的包裝管理器安裝 ImageMagick 或<a href="https://www.imagemagick.org/script/download.php" target="_blank">下載最新版</a>。'
-    failing_emails_warning: '有 %{num_failed_jobs} 個郵件任務失敗。請檢查 app.yml 檔案是否正確配置了郵件伺服器。<a href="%{base_path}/sidekiq/retries" target="_blank">查看 Sidekiq 中失敗的任務</a>。'
-    subfolder_ends_in_slash: "你的子目錄設置不正確；DISCOURSE_RELATIVE_URL_ROOT以斜杠結尾。"
-    email_polling_errored_recently:
-      other: "郵件輪詢在過去的 24 小時內出現了 %{count} 個錯誤。看一看<a href='%{base_path}/logs' target='_blank'>日誌</a>尋找詳情。"
-    missing_mailgun_api_key: "伺服器設置使用 Mailgun 寄送電子郵件，但你尚未設置用來驗證 webhook 訊息的 API 鑰匙。"
-    bad_favicon_url: "網站 favicon 無法載入。檢查</a>網站設置</a>中的 favicon_url。"
-    poll_pop3_timeout: "至 POP3 伺服器的連接超時。無法獲取進站郵件。請檢查<a href='%{base_path}/admin/site_settings/category/email'>POP3 設置</a>和服務商。"
-    poll_pop3_auth_error: "至 POP3 伺服器的連接驗證失敗。請檢查<a href='%{base_path}/admin/site_settings/category/email'>POP3 設置</a>。"
-    force_https_warning: "伺服器設置使用SSL，但<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>並未在伺服器設置中啟用。"
-    out_of_date_themes: "以下主題可更新："
-    unreachable_themes: "我們無法檢查以下主題是否可更新："
-    v3_analytics_deprecated: "您的 Discourse 目前正在使用 Google Analytics 3，將在 2023 年 7 月後失去支援。 <a href='https://meta.discourse.org/t/260498'>立即升級到 Google Analytics 4</a> 以繼續接收有關您網站性能的寶貴見解和分析。"
+    problem:
+      rails_env: "伺服器現在運行 %{env} 模式。"
+      host_names: "伺服器上 config/database.yml 的主機名稱為 localhost 。請更改成你的網站主機名稱。"
+      queue_size: "隊列中有較多任務，為 %{queue_size} 個。這可能是因為 Sidekiq 進程的問題導致，或者需要更多的 Sidekiq 進程。"
+      ram: "伺服器記憶體少於 1GB，建議配置至少 1GB 記憶體"
+      subfolder_ends_in_slash: "你的子目錄設置不正確；DISCOURSE_RELATIVE_URL_ROOT以斜杠結尾。"
+      missing_mailgun_api_key: "伺服器設置使用 Mailgun 寄送電子郵件，但你尚未設置用來驗證 webhook 訊息的 API 鑰匙。"
+      out_of_date_themes: "以下主題可更新："
+      unreachable_themes: "我們無法檢查以下主題是否可更新："
+      google_analytics_version: "您的 Discourse 目前正在使用 Google Analytics 3，將在 2023 年 7 月後失去支援。 <a href='https://meta.discourse.org/t/260498'>立即升級到 Google Analytics 4</a> 以繼續接收有關您網站性能的寶貴見解和分析。"
   site_settings:
     disabled: "停用"
     censored_words: "將被自動替換為 &#9632;&#9632;&#9632;&#9632;"
@@ -1218,10 +1203,8 @@ zh_TW:
     s3_backup_bucket: "遠端備份 bucket ，注意：請確定是私有的 bucket"
     s3_endpoint: "Discourse 備份空間有支援其他第三方服務，可修改備份空間存向 DigitalOcean Spaces、Minio或是Amazon S3。警告：如果使用Amazon S3，請留白。"
     s3_configure_tombstone_policy: "啟用上傳的自動刪除功能。重要提醒：如果禁用此功能，在檔案刪除後，不會回收空間。"
-    enable_s3_inventory: "使用Amazon S3 清單生成報告並驗證上傳。注意：需要設定Amazon S3 驗證資料（包括Access Key ID、Secret Access Key）。"
     backup_time_of_day: "備份的 UTC 時間"
     backup_with_uploads: "在備份日程中包括上傳。關閉此項僅備份資料庫。"
-    backup_location: "讀取備份資料的位置。注意：Amazon S3 需要在“文件”設定中輸入有效的 S3 驗證資料。"
     backup_gzip_compression_level_for_uploads: "Gzip壓縮等級用於壓縮上傳圖片。"
     include_thumbnails_in_backups: "在備份中包含生成的縮圖。禁用此選項會使備份檔案大小變得更小，但需要在還原後重新啟動所有貼文。"
     active_user_rate_limit_secs: "更新“最後一次見到”資料的頻率，單位為秒"
@@ -1551,6 +1534,9 @@ zh_TW:
       - ""
       - "不活躍"
       - ""
+      navigation_menu:
+      - "側選單"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.範例.com"
@@ -1650,7 +1636,6 @@ zh_TW:
     password_too_long: "密碼不能超過 200 個字符。"
     email_too_long: "你輸入的郵件太長了。郵箱名不得超過 254 字元，域名必須不超過 253 字元。"
     reserved_username: "該使用者名不可被使用。"
-    missing_user_field: "你還沒有填寫完所有使用者字段"
     auth_complete: "已完成認證。"
     click_to_continue: "點擊此處繼續。"
     second_factor_title: "兩步驟驗證"
@@ -2391,7 +2376,6 @@ zh_TW:
 
         如果您有任何疑問，[聯繫論壇管理員](%{base_url}/about)。
     digest:
-      why: "在你上一次於 %{last_seen_at} 訪問後，在 %{site_link} 上的摘要。"
       since_last_visit: "自你上次訪問至今"
       new_topics: "新主題"
       unread_notifications: "未讀通知"
@@ -2406,7 +2390,6 @@ zh_TW:
       your_email_settings: "你的電子郵件設定"
       click_here: "點擊此處"
       from: "%{site_name}"
-      preheader: "在你上次於%{last_seen_at}訪問後的新內容摘要"
     forgot_password:
       title: "忘記密碼"
       subject_template: "[%{email_prefix}] 重設密碼"
@@ -2590,6 +2573,7 @@ zh_TW:
     編輯本主題的第一帖以改變 %{page_name} 頁面的內容。
   guidelines_topic:
     title: "FAQ / 使用守則"
+    guidelines_title: "守則"
   tos_topic:
     title: "服務條款"
   privacy_topic:
@@ -2883,8 +2867,6 @@ zh_TW:
             placeholder: "僅限邀請"
           must_approve_users:
             extra_description: "使用者必須經過工作人員的批准"
-          enable_sidebar:
-            placeholder: "啟用側選單"
       styling:
         fields:
           styling_preview:

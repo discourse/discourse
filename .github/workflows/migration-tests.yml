@@ -164,6 +164,10 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Modify path for libpq
+        if: matrix.os == 'macos-latest'
+        run: echo "/opt/homebrew/opt/libpq/bin" >> $GITHUB_PATH
+
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:

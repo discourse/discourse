@@ -37,7 +37,7 @@ task "avatars:clean" => :environment do
   optimized_image_ids.each do |id|
     begin
       optimized_image = OptimizedImage.find_by(id: id)
-      next unless optimized_image.present?
+      next if optimized_image.blank?
       optimized_image.destroy!
     rescue => e
       puts "", "Failed to cleanup avatar (optimized_image id: #{id})", e, e.backtrace.join("\n")

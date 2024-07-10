@@ -12,10 +12,6 @@ class ProblemCheck::FacebookConfig < ProblemCheck
 
   private
 
-  def translation_key
-    "dashboard.facebook_config_warning"
-  end
-
   def facebook_credentials_present?
     SiteSetting.facebook_app_id.present? && SiteSetting.facebook_app_secret.present?
   end

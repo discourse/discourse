@@ -73,7 +73,6 @@ hr:
         process_started: "Započeo je proces brisanja kanala. Ovaj modal će se uskoro zatvoriti, više nigdje nećete vidjeti izbrisani kanal."
       channels_list_popup:
         browse: "Pretražujte kanale"
-      click_to_join: "Kliknite ovdje da biste vidjeli dostupne kanale."
       close: "Zatvori"
       remove: "Ukloni"
       collapse: "Sažmi ladicu za chat"
@@ -105,14 +104,6 @@ hr:
       heading: "Čet"
       join: "Pridružite se"
       last_visit: "posljednji posjet"
-      summarization:
-        title: "Sažmi poruke"
-        description: "Odaberite opciju u nastavku da biste saželi razgovor poslan tijekom željenog vremenskog okvira."
-        summarize: "Rezimirati"
-        since:
-          one: "Posljednji sat"
-          few: "Posljednja %{count} sata"
-          other: "Posljednjih %{count} sati"
       mention_warning:
         invitations_sent:
           one: "Poziv poslan"

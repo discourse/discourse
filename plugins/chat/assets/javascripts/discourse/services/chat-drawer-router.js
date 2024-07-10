@@ -4,10 +4,16 @@ import ChatDrawerRoutesChannel from "discourse/plugins/chat/discourse/components
 import ChatDrawerRoutesChannelThread from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-thread";
 import ChatDrawerRoutesChannelThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-threads";
 import ChatDrawerRoutesChannels from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channels";
+import ChatDrawerRoutesDirectMessages from "discourse/plugins/chat/discourse/components/chat/drawer-routes/direct-messages";
+import ChatDrawerRoutesMembers from "discourse/plugins/chat/discourse/components/chat/drawer-routes/members";
+import ChatDrawerRoutesSettings from "discourse/plugins/chat/discourse/components/chat/drawer-routes/settings";
 import ChatDrawerRoutesThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/threads";
 
 const ROUTES = {
+  "chat.index": { name: ChatDrawerRoutesChannels },
+  "chat.channels": { name: ChatDrawerRoutesChannels },
   "chat.channel": { name: ChatDrawerRoutesChannel },
+  "chat.channel.index": { name: ChatDrawerRoutesChannel },
   "chat.channel.thread": {
     name: ChatDrawerRoutesChannelThread,
     extractParams: (route) => {
@@ -44,6 +50,9 @@ const ROUTES = {
       };
     },
   },
+  "chat.direct-messages": {
+    name: ChatDrawerRoutesDirectMessages,
+  },
   "chat.threads": {
     name: ChatDrawerRoutesThreads,
   },
@@ -54,6 +63,31 @@ const ROUTES = {
       return {
         channelId: route.parent.params.channelId,
         messageId: route.params.messageId,
+      };
+    },
+  },
+  "chat.channel.near-message-with-thread": {
+    name: ChatDrawerRoutesChannel,
+    extractParams: (route) => {
+      return {
+        channelId: route.parent.params.channelId,
+        messageId: route.params.messageId,
+      };
+    },
+  },
+  "chat.channel.info.settings": {
+    name: ChatDrawerRoutesSettings,
+    extractParams: (route) => {
+      return {
+        channelId: route.parent.params.channelId,
+      };
+    },
+  },
+  "chat.channel.info.members": {
+    name: ChatDrawerRoutesMembers,
+    extractParams: (route) => {
+      return {
+        channelId: route.parent.params.channelId,
       };
     },
   },
@@ -75,6 +109,8 @@ export default class ChatDrawerRouter extends Service {
   @tracked component = null;
   @tracked drawerRoute = null;
   @tracked params = null;
+
+  routeNames = Object.keys(ROUTES);
 
   stateFor(route) {
     this.drawerRoute?.deactivate?.(this.chatHistory.currentRoute);

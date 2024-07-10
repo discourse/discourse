@@ -4,14 +4,13 @@
 # for the body and subject
 module Email
   class MessageBuilder
-    attr_reader :template_args
+    attr_reader :template_args, :reply_by_email_key
 
     ALLOW_REPLY_BY_EMAIL_HEADER = "X-Discourse-Allow-Reply-By-Email"
 
     def initialize(to, opts = nil)
       @to = to
       @opts = opts || {}
-
       @template_args = {
         site_name: SiteSetting.title,
         email_prefix: SiteSetting.email_prefix.presence || SiteSetting.title,
@@ -19,12 +18,25 @@ module Email
         user_preferences_url: "#{Discourse.base_url}/my/preferences",
         hostname: Discourse.current_hostname,
       }.merge!(@opts)
-
       if @template_args[:url].present?
         @template_args[:header_instructions] ||= I18n.t(
           "user_notifications.header_instructions",
           @template_args,
         )
+        @visit_link_to_respond_key =
+          DiscoursePluginRegistry.apply_modifier(
+            :message_builder_visit_link_to_respond,
+            "user_notifications.visit_link_to_respond",
+            @opts,
+            @to,
+          )
+        @reply_by_email_key =
+          DiscoursePluginRegistry.apply_modifier(
+            :message_builder_reply_by_email,
+            "user_notifications.reply_by_email",
+            @opts,
+            @to,
+          )
 
         if @opts[:include_respond_instructions] == false
           @template_args[:respond_instructions] = ""
@@ -40,9 +52,9 @@ module Email
             string =
               (
                 if allow_reply_by_email?
-                  +"user_notifications.reply_by_email"
+                  +@reply_by_email_key
                 else
-                  +"user_notifications.visit_link_to_respond"
+                  +@visit_link_to_respond_key
                 end
               )
             string << "_pm" if @opts[:private_reply]
@@ -126,7 +138,7 @@ module Email
       else
         subject = @opts[:subject]
       end
-      subject
+      DiscoursePluginRegistry.apply_modifier(:message_builder_subject, subject, @opts, @to)
     end
 
     def html_part
@@ -164,6 +176,7 @@ module Email
             html_body: html_override.html_safe,
           },
         )
+      html = DiscoursePluginRegistry.apply_modifier(:message_builder_html_part, html, @opts, @to)
 
       Mail::Part.new do
         content_type "text/html; charset=UTF-8"
@@ -184,8 +197,7 @@ module Email
         body << "\n"
         body << @template_args[:unsubscribe_instructions]
       end
-
-      body
+      DiscoursePluginRegistry.apply_modifier(:message_builder_body, body, @opts, @to)
     end
 
     def build_args
@@ -290,7 +302,7 @@ module Email
 
     def reply_by_email_address
       return @reply_by_email_address if @reply_by_email_address
-      return nil unless SiteSetting.reply_by_email_address.present?
+      return nil if SiteSetting.reply_by_email_address.blank?
 
       @reply_by_email_address = SiteSetting.reply_by_email_address.dup
 

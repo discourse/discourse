@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import I18n from "discourse-i18n";
+import { extractError } from "discourse/lib/ajax-error";
 
 export default class ConvertToPublicTopic extends Component {
   @service appEvents;
@@ -13,18 +13,18 @@ export default class ConvertToPublicTopic extends Component {
 
   @action
   async makePublic() {
+    const { topic } = this.args.model;
+
     try {
       this.saving = true;
-      await this.args.model.topic.convertTopic("public", {
-        categoryId: this.publicCategoryId,
-      });
-      this.args.model.topic.set("archetype", "regular");
-      this.args.model.topic.set("category_id", this.publicCategoryId);
-      this.appEvents.trigger("header:show-topic", this.args.model.topic);
-      this.saving = false;
+      await topic.convertTopic("public", { categoryId: this.publicCategoryId });
+      topic.set("archetype", "regular");
+      topic.set("category_id", this.publicCategoryId);
+      this.appEvents.trigger("header:show-topic", topic);
       this.args.closeModal();
     } catch (e) {
-      this.flash = I18n.t("generic_error");
+      this.flash = extractError(e);
+    } finally {
       this.saving = false;
     }
   }

@@ -142,7 +142,7 @@ select {
 }
 
 // Media Queries
-@media all and (max-width: 570px) {
+@include breakpoint(mobile-extra-large) {
   body {
     min-width: 0;
   }

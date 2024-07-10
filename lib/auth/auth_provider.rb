@@ -17,7 +17,6 @@ class Auth::AuthProvider
       frame_height
       pretty_name_setting
       title_setting
-      enabled_setting
       full_screen_login
       full_screen_login_setting
       custom_url
@@ -27,14 +26,6 @@ class Auth::AuthProvider
   end
 
   attr_accessor(*auth_attributes)
-
-  def enabled_setting=(val)
-    Discourse.deprecate(
-      "(#{authenticator.name}) enabled_setting is deprecated. Please define authenticator.enabled? instead",
-      drop_from: "2.9.0",
-    )
-    @enabled_setting = val
-  end
 
   def background_color=(val)
     Discourse.deprecate(

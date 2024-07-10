@@ -40,6 +40,7 @@ export default class GlimmerHeader extends Component {
   @service router;
   @service search;
   @service currentUser;
+  @service siteSettings;
   @service site;
   @service appEvents;
   @service header;
@@ -71,7 +72,7 @@ export default class GlimmerHeader extends Component {
         this.toggleUserMenu();
         break;
       case "hamburger":
-        this.toggleHamburger();
+        this.toggleNavigationMenu();
         break;
       case "page-search":
         if (!this.togglePageSearch()) {
@@ -148,15 +149,33 @@ export default class GlimmerHeader extends Component {
   }
 
   @action
-  toggleHamburger() {
-    if (this.args.sidebarEnabled && !this.site.narrowDesktopView) {
-      this.args.toggleSidebar();
-      this.args.animateMenu();
-    } else {
-      this.header.hamburgerVisible = !this.header.hamburgerVisible;
-      this.toggleBodyScrolling(this.header.hamburgerVisible);
-      this.args.animateMenu();
+  toggleNavigationMenu(override = null) {
+    if (override === "sidebar") {
+      return this.toggleSidebar();
     }
+
+    if (override === "hamburger") {
+      return this.toggleHamburger();
+    }
+
+    if (this.args.sidebarEnabled && !this.site.narrowDesktopView) {
+      this.toggleSidebar();
+    } else {
+      this.toggleHamburger();
+    }
+  }
+
+  @action
+  toggleHamburger() {
+    this.header.hamburgerVisible = !this.header.hamburgerVisible;
+    this.toggleBodyScrolling(this.header.hamburgerVisible);
+    this.args.animateMenu();
+  }
+
+  @action
+  toggleSidebar() {
+    this.args.toggleSidebar();
+    this.args.animateMenu();
   }
 
   @action
@@ -171,7 +190,7 @@ export default class GlimmerHeader extends Component {
       <div class="wrap">
         <Contents
           @sidebarEnabled={{@sidebarEnabled}}
-          @toggleHamburger={{this.toggleHamburger}}
+          @toggleNavigationMenu={{this.toggleNavigationMenu}}
           @showSidebar={{@showSidebar}}
         >
           <span class="header-buttons">
@@ -194,7 +213,7 @@ export default class GlimmerHeader extends Component {
             <Icons
               @sidebarEnabled={{@sidebarEnabled}}
               @toggleSearchMenu={{this.toggleSearchMenu}}
-              @toggleHamburger={{this.toggleHamburger}}
+              @toggleNavigationMenu={{this.toggleNavigationMenu}}
               @toggleUserMenu={{this.toggleUserMenu}}
               @searchButtonId={{SEARCH_BUTTON_ID}}
             />
@@ -204,7 +223,8 @@ export default class GlimmerHeader extends Component {
             <SearchMenuWrapper @closeSearchMenu={{this.toggleSearchMenu}} />
           {{else if this.header.hamburgerVisible}}
             <HamburgerDropdownWrapper
-              @toggleHamburger={{this.toggleHamburger}}
+              @toggleNavigationMenu={{this.toggleNavigationMenu}}
+              @sidebarEnabled={{@sidebarEnabled}}
             />
           {{else if this.header.userVisible}}
             <UserMenuWrapper @toggleUserMenu={{this.toggleUserMenu}} />

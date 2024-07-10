@@ -3,7 +3,7 @@
   <WatchedWords
     @id="watched-words"
     @value={{this.words}}
-    @onChange={{action (mut this.words)}}
+    @onChange={{fn (mut this.words)}}
     @options={{hash
       filterPlaceholder=this.placeholderKey
       disabled=this.formSubmitted
@@ -72,6 +72,20 @@
       disabled={{this.formSubmitted}}
     />
     {{i18n "admin.watched_words.form.case_sensitivity_description"}}
+  </label>
+</div>
+
+<div class="watched-word-input">
+  <label for="watched-html">{{i18n
+      "admin.watched_words.form.html_label"
+    }}</label>
+  <label class="html-checkbox checkbox-label">
+    <Input
+      @type="checkbox"
+      @checked={{this.isHtml}}
+      disabled={{this.formSubmitted}}
+    />
+    {{i18n "admin.watched_words.form.html_description"}}
   </label>
 </div>
 

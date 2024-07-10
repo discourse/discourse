@@ -204,6 +204,7 @@ RSpec.configure do |config|
   config.include FastImageHelpers
   config.include WithServiceHelper
   config.include ServiceMatchers
+  config.include I18nHelpers
 
   config.mock_framework = :mocha
   config.order = "random"
@@ -244,7 +245,7 @@ RSpec.configure do |config|
     CachedCounting.disable
 
     begin
-      ActiveRecord::Migration.check_pending!
+      ActiveRecord::Migration.check_all_pending!
     rescue ActiveRecord::PendingMigrationError
       raise "There are pending migrations, run RAILS_ENV=test bin/rake db:migrate"
     end
@@ -517,6 +518,33 @@ RSpec.configure do |config|
         sleep 0.01 while !mutex.synchronize { is_waiting }
       end
     end
+
+    # This is a monkey patch for the `Capybara.using_session` method in `capybara`. For some
+    # unknown reasons on Github Actions, we are seeing system tests failing intermittently with the error
+    # `Socket::ResolutionError: getaddrinfo: Temporary failure in name resolution` when the app tries to resolve
+    # `localhost` from within a `Capybara#using_session` block.
+    #
+    # Too much time has been spent trying to debug this issue and the root cause is still unknown so we are just dropping
+    # this workaround for now where we will retry the block once before raising the error.
+    #
+    # Potentially related: https://bugs.ruby-lang.org/issues/20172
+    module Capybara
+      class << self
+        def using_session_with_localhost_resolution(name, &block)
+          attempts = 0
+          self._using_session(name, &block)
+        rescue Socket::ResolutionError
+          puts "Socket::ResolutionError error encountered... Current thread count: #{Thread.list.size}"
+          attempts += 1
+          attempts <= 1 ? retry : raise
+        end
+      end
+    end
+
+    Capybara.singleton_class.class_eval do
+      alias_method :_using_session, :using_session
+      alias_method :using_session, :using_session_with_localhost_resolution
+    end
   end
 
   if ENV["DISCOURSE_RSPEC_PROFILE_EACH_EXAMPLE"]
@@ -690,7 +718,7 @@ RSpec.configure do |config|
   end
 
   config.after(:each, type: :multisite) do
-    ActiveRecord::Base.clear_all_connections!
+    ActiveRecord::Base.connection_handler.clear_all_connections!
     Rails.configuration.multisite = false # rubocop:disable Discourse/NoDirectMultisiteManipulation
     RailsMultisite::ConnectionManagement.clear_settings!
     ActiveRecord::Base.establish_connection

@@ -226,7 +226,6 @@ fi:
       secure_uploads_requirements: "S3-lataukset ja S3 ACL:t täytyy ottaa käyttöön ennen suojattujen latausten käyttöönottoa."
       s3_use_acls_requirements: "Sinulla täytyy olla S3 ACL:t käytössä, kun suojatut lataukset on käytössä."
       share_quote_facebook_requirements: "Facebook-sovellustunnus on määritettävä, jotta lainausten jakaminen Facebookiin on mahdollista."
-      second_factor_cannot_enforce_with_socials: "Et voi pakottaa 2FA-asetusta käyttöön, kun yhteisökirjautuminen on aktiivisena. Poista yhteisökirjautuminen käytöstä täällä: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Et voi pakottaa kaksivaiheista tunnistusta, jos paikallinen kirjautuminen on pois käytöstä."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Et voi pakottaa 2FA-asetusta käyttöön kun DiscourseConnect on aktiivisena."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Et voi poistaa paikallista kirjautumista käytöstä, jos kaksivaiheinen tunnistus on pakollinen. Kun poistat kaksivaiheisen tunnistuksen pakollisuuden, voit ottaa käyttöön paikallisen kirjautumisen."
@@ -487,7 +486,6 @@ fi:
     request_membership_pm:
       title: "Jäsenhakemus ryhmään @%{group_name}"
     request_accepted_pm:
-      title: "Sinut hyväksyttiin ryhmään @%{group_name}"
       body: |
         Pyyntösi ryhmään @%{group_name} liittymiseksi on hyväksytty, ja olet nyt jäsen.
   education:
@@ -556,6 +554,8 @@ fi:
         raw: "Leipäteksti"
       user_profile:
         bio_raw: "Tietoa minusta"
+      user:
+        password: "Salasana"
     errors:
       models:
         topic:
@@ -646,20 +646,6 @@ fi:
   staff_category_description: "Yksityinen alue henkilökunnan keskusteluille. Ketjut näkyvät ainoastaan ylläpitäjille ja valvojille."
   discourse_welcome_topic:
     title: "Tervetuloa sivustolle %{site_title}! :wave:"
-    body: |
-      Mukavaa, että liityit joukkoomme.
-
-      %{site_info_quote}
-
-      Tässä muutamia asioita, joita voit tehdä päästäksesi alkuun:
-
-      :speaking_head: **Esittele itsesi** lisäämällä kuvasi ja tietoa itsestäsi ja kiinnostuksen kohteistasi [profiiliisi](%{base_path}/my/preferences/account). Mikä on päällimmäinen asia, josta haluaisit ihmisten kysyvän sinulta?
-
-      :open_book: **Tutustu yhteisöön** [selaamalla keskusteluita](%{base_path}/top), joita on jo käynnissä. Kun viesti on mielestäsi kiinnostava, informatiivinen tai viihdyttävä, osoita arvostuksesi tai tukesi käyttämällä :heart:-painiketta!
-
-      :handshake: **Osallistu** kommentoimalla, jakamalla oman näkökantasi, kysymällä kysymyksiä tai tarjoamalla palautetta keskustelussa. Ennen kuin vastaat tai aloitat uusia ketjuja, tutustu [yhteisön sääntöihin](%{base_path}/faq).
-
-      > Jos tarvitset apua tai sinulla on ehdotus, voit esittää kysymyksesi alueella %{feedback_category} tai [ottaa yhteyttä ylläpitäjiin](%{base_path}/about).
   admin_quick_start_title: "Ylläpitäjän opas: aloittaminen"
   category:
     topic_prefix: "Tietoa alueesta %{category}"
@@ -1095,7 +1081,6 @@ fi:
       title: "Käyttäjien vierailut"
       xaxis: "Päivä"
       yaxis: "Vierailujen määrä"
-      description: "Vierailleiden käyttäjien määrä."
     signups:
       title: "Rekisteröitymiset"
       xaxis: "Päivä"
@@ -1338,13 +1323,14 @@ fi:
       title: "Käyttäjävierailut (mobiili)"
       xaxis: "Päivä"
       yaxis: "Vierailujen määrä"
-      description: "Uniikkien mobiilikävijöiden määrä."
     web_crawlers:
       title: "Hakurobottikäyttäjäagentit"
       labels:
         user_agent: "Käyttäjäagentti"
         page_views: "Sivukatselut"
       description: "Luettelo eri hakurobottikäyttäjäagenteista järjestettynä sivukatseluiden mukaan."
+    web_hook_events_daily_aggregate:
+      xaxis: "Päivä"
     suspicious_logins:
       title: "Epäilyttävät kirjautumiset"
       labels:
@@ -1397,36 +1383,23 @@ fi:
         user: Käyttäjä
         qtt_like: Saatuja tykkäyksiä
       description: "10 käyttäjää, jotka ovat saaneet eniten tykkäyksiä monilta erilaisilta ihmisiltä."
+    topic_view_stats:
+      labels:
+        topic: Ketju
+        logged_in_views: Kirjautuneita
+        anon_views: Anonyymi
+        total_views: Yhteensä
   dashboard:
-    group_email_credentials_warning: 'Ryhmän <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a> sähköpostitunnistetiedoissa havaittiin ongelma, eikä ryhmän postilaatikosta lähetetä viestejä ennen kuin se on korjattu. %{error}'
-    rails_env_warning: "Palvelintasi ajetaan tilassa %{env}."
-    host_names_warning: "Sivuston config/database.yml tiedosto käyttää oletusarvoista localhost-isäntänimeä. Päivitä se käyttämään sivuston isäntänimeä."
-    sidekiq_warning: 'Sidekiq ei ole käynnissä. Monet tehtävät, kuten sähköpostien lähettäminen, suoritetaan asynkronisesti sidekiqin avulla. Varmista, että vähintään yksi sidekiq-prosessi on käynnissä. <a href="https://github.com/mperham/sidekiq" target="_blank">Lue lisää Sidekiqista täällä</a>.'
-    queue_size_warning: "Jonossa olevien tehtävien määrä on %{queue_size}, joka on korkea. Tämä voi olla merkki ongelmista Sidekiq prosesseissa, tai sinun voi täytyä lisätä Sidekiqin workerien määrää."
-    memory_warning: "Palvelimella on alle 1 Gt muistia. Vähintään 1 Gt muistia on suositeltavaa."
-    google_oauth2_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen Google OAuth2:n kautta (enable_google_oauth2_logins), mutta client id- ja client secret -arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Lue lisää tästä oppaasta</a>.'
-    facebook_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen Facebookin kautta (enable_facebook_logins), mutta app id- ja app secret -arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Lue lisää tästä oppaasta</a>.'
-    twitter_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen Twitterin kautta (enable_twitter_logins), mutta key- ja secret-arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Lue lisää tästä oppaasta</a>.'
-    github_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen GitHubin kautta (enable_github_logins), mutta client id- ja app secret -arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Lue lisää tästä oppaasta</a>.'
-    s3_config_warning: 'Palvelin on konfiguroitu tallentamaan sivustolle ladatut tiedostot S3:een, mutta vähintään yksi tiedoista on asettamatta: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile tai s3_upload_bucket. Päivitä ne <a href="<a href="%{base_path}/admin/site_settings">/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa saat englanninkielisestä ketjusta <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
-    s3_backup_config_warning: 'Palvelin on konfiguroitu tallentamaan varmuuskopiot S3:een, mutta vähintään yksi tiedoista on asettamatta: s3_access_key_id, s3_secret_access_key tai s3_upload_bucket . Päivitä ne <a href="<a href="%{base_path}/admin/site_settings">/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa saat englanninkielisestä ketjusta <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">How to set up image uploads to S3?</a>.'
-    s3_cdn_warning: 'Palvelin on määritetty käyttämään S3-latausta, mutta S3:n CDN-asetuksia ei ole määritelty. Tämä voi johtaa kalliisiin S3-kustannuksiin ja hitaampaan sivuston suorituskykyyn. <a href="https://meta.discourse.org/t/-/148916" target="_blank"> Lue lisää aiheesta täältä</a>.'
-    image_magick_warning: 'Palvelin on konfiguroitu luomaan esikatselukuvia suurista kuvista, mutta ImageMagickia ei ole asennettu. Asenna ImageMagick paketinhallinnasta tai <a href="https://www.imagemagick.org/script/download.php" target="_blank">lataa uusin versio</a>.'
-    failing_emails_warning: '%{num_failed_jobs} sähköpostitehtävää on epäonnistunut. Tarkista app.yml ja varmista, että sähköpostipalvelimen asetukset ovat kunnossa. <a href="%{base_path}/sidekiq/retries" target="_blank">Katsele epäonnistuneita tehtäviä Sidekiqissa</a>.'
-    subfolder_ends_in_slash: "Alihakemiston asetuksesi ei kelpaa; DISCOURSE_RELATIVE_URL_ROOT päättyy vinoviivaan."
-    outdated_translations_warning: "Jotkin käännösohituksistasi ovat vanhentuneet. Tarkista <a href='%{base_path}/admin/customize/site_texts?outdated=true'>tekstimukautuksesi</a>."
-    email_polling_errored_recently:
-      one: "Sähköpostin pollaus on aiheuttanut virheen edellisten 24 tunnin aikana. Tarkastele <a href='%{base_path}/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
-      other: "Sähköpostin pollaus aiheutti %{count} virhettä edellisten 24 tunnin aikana. Tarkastele <a href='%{base_path}/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
-    missing_mailgun_api_key: "Palvelin on määritelty lähettämään sähköpostit Mailgunin avulla, muttet ole määrittänyt API-avainta, jolla varmistetaan webhook-viestien aitous."
-    bad_favicon_url: "Favicon ei lataudu. Tarkista favicon-asetus <a href='%{base_path}/admin/site_settings'>sivuston asetuksissa</a>."
-    poll_pop3_timeout: "Yhteys POP3-palvelimeen aikakatkaistaan. Saapuvia sähköposteja ei voitu hakea. Tarkista <a href='%{base_path}/admin/site_settings/category/email'>POP3-asetukset</a> ja palveluntarjoaja."
-    poll_pop3_auth_error: "Yhteys POP3-palvelimelle epäonnistuu todennusvirheen vuoksi. Tarkista <a href='%{base_path}/admin/site_settings/category/email'>POP3-asetukset</a>."
-    force_https_warning: "Sivusto käyttää SSL-salausta, mutta `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ei ole valittuna sivuston asetuksissa."
-    out_of_date_themes: "Päivityksiä on saatavilla näihin teemoihin:"
-    unreachable_themes: "Näille teemoille ei voitu tarkistaa päivityksiä:"
-    v3_analytics_deprecated: "Discoursesi käyttää tällä hetkellä Google Analytics 3:a, jota ei enää tueta heinäkuun 2023 jälkeen. <a href='https://meta.discourse.org/t/260498'>Päivitä Google Analytics 4:ään</a> nyt, jotta saat jatkossakin arvokkaita tietoja ja analytiikkaa verkkosivustosi suoriutumisesta."
-    category_style_deprecated: "Discourse käyttää tällä hetkellä vanhentunutta kategoriatyyliä, joka poistuu ennen Discourse 3.2:n lopullista beta-julkaisua. Löydät <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> -artikkelista tietoja siitä, miten voit säilyttää valitsemasi kategoriatyylin."
+    problem:
+      rails_env: "Palvelintasi ajetaan tilassa %{env}."
+      host_names: "Sivuston config/database.yml tiedosto käyttää oletusarvoista localhost-isäntänimeä. Päivitä se käyttämään sivuston isäntänimeä."
+      queue_size: "Jonossa olevien tehtävien määrä on %{queue_size}, joka on korkea. Tämä voi olla merkki ongelmista Sidekiq prosesseissa, tai sinun voi täytyä lisätä Sidekiqin workerien määrää."
+      ram: "Palvelimella on alle 1 Gt muistia. Vähintään 1 Gt muistia on suositeltavaa."
+      subfolder_ends_in_slash: "Alihakemiston asetuksesi ei kelpaa; DISCOURSE_RELATIVE_URL_ROOT päättyy vinoviivaan."
+      missing_mailgun_api_key: "Palvelin on määritelty lähettämään sähköpostit Mailgunin avulla, muttet ole määrittänyt API-avainta, jolla varmistetaan webhook-viestien aitous."
+      out_of_date_themes: "Päivityksiä on saatavilla näihin teemoihin:"
+      unreachable_themes: "Näille teemoille ei voitu tarkistaa päivityksiä:"
+      google_analytics_version: "Discoursesi käyttää tällä hetkellä Google Analytics 3:a, jota ei enää tueta heinäkuun 2023 jälkeen. <a href='https://meta.discourse.org/t/260498'>Päivitä Google Analytics 4:ään</a> nyt, jotta saat jatkossakin arvokkaita tietoja ja analytiikkaa verkkosivustosi suoriutumisesta."
   site_settings:
     allow_bulk_invite: "Salli joukkokutsut lataamalla CSV-tiedosto"
     disabled: "poistettu käytöstä"
@@ -1521,9 +1494,7 @@ fi:
     email_custom_headers: "Pystyviivalla eroteltu luettelo mukautetuista sähköpostin otsikkotiedoista"
     email_subject: "Mukautettava tavallisten sähköpostiviestien aiheen muoto. Katso englanninkielinen ohje: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Kertoo käyttäjälle tarkemmin, miksi hän ei pääse tiettyyn ketjuun. Huomioi: tämä vaarantaa tietoturvaa, koska käyttäjä saa tietää, että URL osoittaa olemassa olevaan ketjuun."
-    enforce_second_factor: "Vaadi käyttäjiä ottamaan käyttöön kaksivaiheinen tunnistus ennen kuin he voivat käyttää Discourse-käyttöliittymää. Valitse \"kaikki\", jos haluat pakottaa sen kaikille käyttäjille. Valitse \"henkilökunta\", jos haluat pakottaa sen koskemaan vain henkilökunnan käyttäjiä. Tämä asetus ei vaikuta API- tai DiscourseConnect-palveluntarjoajatodennukseen."
     force_https: "Pakota sivusto käyttämään vain HTTPS:ää. VAROITUS: älä ota tätä käyttöön ennen kuin HTTPS on täysin käytössä ja toimii täysin kaikkialla! Tarkastitko käyttämäsi CDN:n, kaikki sosiaaliset kirjautumiset ja kaikki ulkoiset logot ja muut riippuvuudet varmistaaksesi, että ne ovat myös HTTPS-yhteensopivia?"
-    same_site_cookies: "Käytä saman sivuston evästeitä, ne eliminoivat kaikki sivustojenvälisen pyynnön väärennyksen vektorit tuetuilla selaimilla (lax tai strict). Varoitus: strict toimii vain sivustoilla, jotka pakottavat kirjautumisen ja käyttävät ulkoista todennustapaa."
     summary_score_threshold: "Viestin minimipistemäärä, jotta se näytetään ketjun tiivistelmässä."
     summary_posts_required: "Vähimmäismäärä viestejä ketjussa ennen kuin Näytä ketjun tiivistelmä otetaan käyttöön. Muutokset tähän asetukseen otetaan käyttöön taannehtivasti viikon kuluessa."
     summary_likes_required: "Vähimmäismäärä tykkäyksiä ketjussa ennen kuin Näytä ketjun tiivistelmä otetaan käyttöön. Muutokset tähän asetukseen otetaan käyttöön taannehtivasti viikon kuluessa."
@@ -1692,11 +1663,9 @@ fi:
     s3_endpoint: "Päätepisteeksi voidaan vaihtaa muu S3-yhteensopiva palvelu kuten DigitalOcean Spaces tai Minio. VAROITUS: Jätä tyhjäksi, jos käytät AWS S3:a."
     s3_configure_tombstone_policy: "Ota käyttöön tombstone-hakemiston automaattinen tyhjennys. TÄRKEÄÄ: Jos ei käytössä, tilaa ei vapaudu, kun ladattuja tiedostoja poistetaan."
     s3_disable_cleanup: "Estä vanhojen varmuuskopioiden poistaminen S3:sta, kun varmuuskopioita on enemmän kuin suurin sallittu määrä."
-    enable_s3_inventory: "Luo raportit ja vahvista lataukset palvelimeen käyttämällä Amazon S3 -inventaariota. Tärkeää: edellyttää toimivat S3-tunnistetiedot (access key id ja secret access key)."
     s3_use_acls: "AWS suosittelee, ettei ACL-luetteloita käytetä S3-säilöissä; jos noudatat tätä neuvoa, poista tämä valinta. Tämä täytyy olla käytössä, jos käytät suojattuja latauksia."
     backup_time_of_day: "UTC-kellonaika, jolloin varmuuskopio tehdään."
     backup_with_uploads: "Sisällytä lataukset ajastettuihin varmuuskopioihin. Jos tämä ei ole käytössä, vain tietokanta varmuuskopioidaan."
-    backup_location: "SIjainti, jonne varmuuskopiot säilötään. TÄRKEÄÄ: S3 vaatii toimiakseen, että käyvät S3-tunnistetiedot on syötetty Tiedostot-asetuksiin."
     backup_gzip_compression_level_for_uploads: "Gzip-pakkausaste, jota käytetään palvelimeen ladattujen tiedostojen pakkaamiseen."
     include_thumbnails_in_backups: "Sisällytä luodut esikatselukuvat varmuuskopioihin. Käytöstä poistaminen pienentää varmuuskopioita, mutta varmuuskopiopalautuksen yhteydessä kaikki viestit on rakennettava uudelleen."
     active_user_rate_limit_secs: "Kuinka usein 'last_seen_at' kenttä päivitetään, sekunneissa"
@@ -2099,7 +2068,6 @@ fi:
     enable_offline_indicator: "Näytä käyttäjille viesti, kun havaitaan, ettei heillä ole verkkoyhteyttä."
     default_sidebar_link_to_filtered_list: "Kohdista navigointivalikon linkit oletusarvoisesti suodatettuihin listauksiin."
     default_sidebar_show_count_of_new_items: "Määritä navigointivalikon linkit näyttämään oletusarvoisten korostusmerkkien sijaan uusien kohteiden lukumäärä."
-    default_sidebar_switch_panel_position: "Sivupalkin kytkinpaneelin painikkeiden sijainti"
     retain_web_hook_events_period_days: "Kuinka monta päivää tietoa webhook-tapahtumista säilötään."
     retry_web_hook_events: "Yritä uudelleen epäonnistuneita webhook-tapahtumia neljästi. Aikavälit yritysten välillä ovat 1, 5, 25 ja 125 minuuttia."
     revoke_api_keys_unused_days: "Päivien määrä API-avaimen viimeisimmästä käytöstä ennen kuin se peruutetaan automaattisesti (0 on ei koskaan)"
@@ -2159,7 +2127,6 @@ fi:
     experimental_topics_filter: "KOKEELLINEN: ottaa käyttöön kokeellisen aiheiden suodatuspolun osoitteella /filter"
     enable_experimental_lightbox: "KOKEELLINEN: Korvaa kuvien oletusarvoinen lightbox-tehoste uudistetulla tyylillä."
     experimental_form_templates: "KOKEELLINEN: Ota lomakemalliominaisuus käyttöön. <b>Kun ominaisuus on otettu käyttöön,</b> voit hallinnoida malleja kohdassa <a href='%{base_path}/admin/customize/form-templates'>Mukauta / Mallit</a>."
-    admin_sidebar_enabled_groups: "KOKEELLINEN: Ota käyttöön sivupalkkinavigointi ylläpitäjän käyttöliittymässä määritetyille ryhmille, mikä korvaa ylätason ylläpitäjän navigointipainikkeet."
     page_loading_indicator: "Määritä latausilmaisin, joka näkyy Discoursessa sivujen navigointien aikana. \"Spinner\" on koko sivun ilmaisin. \"Slider\" näyttää kapean palkin ruudun yläosassa."
     show_user_menu_avatars: "Näytä käyttäjien avatarit käyttäjävalikossa"
     errors:
@@ -2242,6 +2209,9 @@ fi:
       purge_unactivated_users_grace_period_days:
       - ""
       - "ei aktiivinen"
+      - ""
+      navigation_menu:
+      - "sivupalkki"
       - ""
     placeholder:
       discourse_connect_provider_secrets:
@@ -2391,7 +2361,6 @@ fi:
     email_too_long: "Antamasi sähköpostiosoite on liian pitkä. Postilaatikon nimi ei saa olla yli 254 merkkiä pitkä, eikä verkkotunnuksen nimi yli 253 merkkiä pitkä."
     wrong_invite_code: "Antamasi kutsukoodi oli väärä."
     reserved_username: "Käyttäjätunnus ei ole sallittu."
-    missing_user_field: "Et ole täyttänyt kaikkia käyttäjäkenttiä"
     auth_complete: "Todennus suoritettu."
     click_to_continue: "Jatka klikkaamalla tästä."
     already_logged_in: "Tämä kutsu on tarkoitettu uusille käyttäjille, joilla ei vielä ole olemassa olevaa tiliä."
@@ -2873,21 +2842,9 @@ fi:
     bulk_invite_succeeded:
       title: "Massakutsun lähetys onnistui"
       subject_template: "Massakutsun käsittely onnistui"
-      text_body_template: |
-        Massakutsutiedostosi käsiteltiin, %{sent} kutsua lähetettiin, %{skipped} ohitettiin, %{warnings} varoitus(ta).
-
-        Tässä loki:
-
-        %{logs}
     bulk_invite_failed:
       title: "Massakutsun lähetys epäonnistui"
       subject_template: "Massakutsun käsittelyssä tapahtui virhe"
-      text_body_template: |
-        Massakutsutiedostosi käsiteltiin, %{sent} kutsua lähetettiin, %{skipped} ohitettiin, %{warnings} varoitus(ta) ja %{failed} virhe(ttä).
-
-        Tässä loki:
-
-        %{logs}
     user_added_to_group_as_owner:
       title: "Lisätty ryhmään omistajana"
       subject_template: "Sinut on lisätty ryhmän %{group_name} omistajaksi"
@@ -3553,7 +3510,6 @@ fi:
 
         Jos sinulla on kysyttävää, [ota yhteyttä avuliaaseen henkilökuntaamme](%{base_url}/about).
     digest:
-      why: "Lyhyt kooste siitä, mitä on tapahtunut sivustolla %{site_link} viimeisimmän vierailusi jälkeen %{last_seen_at}."
       since_last_visit: "Viime vierailusi jälkeen"
       new_topics: "Uutta ketjua"
       unread_notifications: "Lukematonta ilmoitusta"
@@ -3569,7 +3525,6 @@ fi:
       your_email_settings: "sähköpostiasetuksiasi"
       click_here: "klikkaa tätä"
       from: "%{site_name}"
-      preheader: "Lyhyt yhteenveto tapahtumista viime vierailusi (%{last_seen_at}) jälkeen"
     forgot_password:
       title: "Unohtunut salasana"
       subject_template: "[%{email_prefix}] Salasanan palauttaminen"
@@ -3856,6 +3811,7 @@ fi:
     Muokkaa ketjun aloitusviestiä muokataksesi sivun %{page_name} sisältöä.
   guidelines_topic:
     title: "UKK/Ohjeet"
+    guidelines_title: "Ohjeet"
   tos_topic:
     title: "Käyttöehdot"
     body: |
@@ -4461,9 +4417,6 @@ fi:
           chat_enabled:
             placeholder: "Ota chat käyttöön"
             extra_description: "Pidä yhteyttä jäseniisi reaaliajassa"
-          enable_sidebar:
-            placeholder: "Ota sivupalkki käyttöön"
-            extra_description: "Helppo pääsy suosikkitiloihisi"
       ready:
         title: "Sivustosi on valmis!"
         description: "Olet nyt tehnyt perusasioat yhteisösi määrittämiseksi. Nyt voit alkaa tutustumaan paikkoihin, kirjoittaa tervetuloketjun ja lähettää kutsuja!<br><br>Pidä hauskaa!"

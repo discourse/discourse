@@ -8,10 +8,4 @@ class ProblemCheck::SubfolderEndsInSlash < ProblemCheck
 
     problem
   end
-
-  private
-
-  def translation_key
-    "dashboard.subfolder_ends_in_slash"
-  end
 end

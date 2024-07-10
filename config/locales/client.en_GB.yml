@@ -119,6 +119,8 @@ en_GB:
     admin:
       dashboard:
         exception_error: Sorry, an error occurred whilst executing the query
+      flags:
+        description: "Description"
       api:
         description: Description
         scopes:
@@ -128,6 +130,11 @@ en_GB:
       appearance:
         sidebar_link:
           navigation: "Navigation"
+      config_areas:
+        flags:
+          description: "Description"
+          form:
+            description: "Description"
       backups:
         upload:
           error: "There has been an error whilst uploading '%{filename}': %{message}"

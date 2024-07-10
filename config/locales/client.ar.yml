@@ -25,6 +25,7 @@ ar:
             kb: ك.ب
             mb: م.ب
             tb: ت.ب
+      percent: "%{count}%"
       short:
         thousands: "%{number} ألف"
         millions: "%{number} مليون"
@@ -471,11 +472,24 @@ ar:
       search_placeholder: "البحث عن الإشارات المرجعية بالاسم أو عنوان الموضوع أو محتوى المنشور"
       search: "البحث"
       bookmark: "وضع إشارة مرجعية"
+      bulk:
+        select_all: "تحديد الكل"
+        clear_all: "مسح الكل"
+        selected_count:
+          zero: "المحدَّدة: %{count}"
+          one: "المحدَّدة: %{count}"
+          two: "المحدَّدة: %{count}"
+          few: "المحدَّدة: %{count}"
+          many: "المحدَّدة: %{count}"
+          other: "المحدَّدة: %{count}"
       reminders:
         today_with_time: "اليوم في الساعة %{time}"
         tomorrow_with_time: "غدًا في الساعة %{time}"
         at_time: "بتاريخ %{date_time}"
         existing_reminder: "لديك تذكير معيَّن لهذه الإشارة المرجعية، وسيتم إرساله إليك في %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "حذف الإشارة المرجعية"
     copy_codeblock:
       copied: "تم النسخ!"
       copy: "نسخ الرمز إلى الحافظة"
@@ -890,6 +904,7 @@ ar:
       topic_count_long: "الموضوعات المنشأة"
       post_count: "الردود"
       post_count_long: "الردود المنشورة"
+      no_results_with_search: "لم يتم العثور على أي نتيجة."
       days_visited: "الزيارات"
       days_visited_long: "أيام الزيارة"
       posts_read: "المقروءة"
@@ -1271,6 +1286,7 @@ ar:
       none: "(تحديد خيار)"
       required: 'يُرجى إدخال قيمة لـ "%{name}"'
       same_as_password: "ينبغي عدم تكرار كلمة مرورك في الحقول الأخرى."
+      optional: (اختياري)
     user:
       said: "%{username}:"
       profile: "الملف الشخصي"
@@ -1324,7 +1340,8 @@ ar:
       activity_stream: "النشاط"
       read: "المقروءة"
       read_help: "الموضوعات المقروءة مؤخرًا"
-      preferences: "التفضيلات"
+      preferences:
+        title: "التفضيلات"
       feature_topic_on_profile:
         open_search: "تحديد موضوع جديد"
         title: "تحديد موضوع"
@@ -1654,6 +1671,7 @@ ar:
         set_password: "تعيين كلمة المرور"
         choose_new: "اختيار كلمة مرور جديدة"
         choose: "اختيار كلمة مرور"
+        title: "إعادة تعيين كلمة المرور"
       second_factor_backup:
         title: "الرموز الاحياطية للمصادقة الثنائية"
         regenerate: "أعِد التوليد"
@@ -2061,7 +2079,6 @@ ar:
         fine_print: "نطلب منك تأكيد هويتك لأن هذا إجراء قد يكون حساسًا. بمجرد المصادقة، سيُطلَب منك إعادة المصادقة مرة أخرى فقط بعد بضع ساعات من عدم النشاط."
       password:
         title: "كلمة المرور"
-        too_short: "كلمة مرورك قصيرة جدًا."
         common: "كلمة المرور شائعة جدًا."
         same_as_username: "كلمة المرور تُطابق اسم المستخدم."
         same_as_email: "كلمة المرور تُطابق عنوان البريد الإلكتروني."
@@ -2329,10 +2346,11 @@ ar:
       header_title: "مرحبًا!"
       subheader_title: "لننشئ حسابك"
       disclaimer: "يشير التسجيل إلى موافقتك على <a href='%{privacy_link}' target='blank'>سياسة الخصوصية</a> و<a href='%{tos_link}' target='blank'>شروط الخدمة</a>."
-      title: "إنشاء حسابك"
+      title: "الاشتراك"
       failed: "حدث خطأ ما. قد يكون هذا البريد الإلكتروني مسجلًا بالفعل. جرِّب رابط نسيان كلمة المرور"
       associate: "لديك حساب بالفعل؟ <a href='%{associate_link}'>سجِّل الدخول</a> لربط حسابك من %{provider}."
       activation_title: "تفعيل حسابك"
+      already_have_account: "هل لديك حساب بالفعل؟"
     forgot_password:
       title: "إعادة تعيين كلمة المرور"
       action: "نسيت كلمة مروري"
@@ -2486,12 +2504,12 @@ ar:
       loading: جارٍ التحميل…
     category_row:
       subcategory_count:
-        zero: "+ %{count} فئة فرعية"
-        one: "+ %{count} تصنيفات فرعية"
-        two: "+ %{count} تصنيف فرعي واحد و تصنيفات فرعية"
-        few: "+ %{count} فئات فرعية"
-        many: "+ %{count} فئة فرعية"
-        other: "+ %{count} فئة فرعية"
+        zero: "+%{count} فئة فرعية"
+        one: "+%{count} تصنيفات فرعية"
+        two: "+%{count} تصنيف فرعي واحد و تصنيفات فرعية"
+        few: "+%{count} فئات فرعية"
+        many: "+%{count} فئة فرعية"
+        other: "+%{count} فئة فرعية"
       topic_count:
         zero: "%{count} موضوع في هذه الفئة"
         one: "موضوع واحد (%{count}) في هذه الفئة"
@@ -2534,6 +2552,8 @@ ar:
         categories_admin_dropdown:
           title: "إدارة الفئات"
         bulk_select_topics_dropdown:
+          title: "الإجراءات الجماعية"
+        bulk_select_bookmarks_dropdown:
           title: "الإجراءات الجماعية"
     date_time_picker:
       from: من
@@ -2716,7 +2736,6 @@ ar:
       show_toolbar: "عرض شريط أداة الإنشاء"
       hide_toolbar: "إخفاء شريط أداة الإنشاء"
       modal_ok: "حسنًا"
-      modal_cancel: "إلغاء"
       cant_send_pm: "عذرًا، لا يمكنك إرسال رسالة إلى %{username}."
       yourself_confirm:
         title: "هل نسيت إضافة المستلمين؟"
@@ -3291,14 +3310,12 @@ ar:
         filter: "لا توجد موضوعات أخرى."
     topic_bulk_actions:
       close_topics:
-        name: "إغلاق الموضوعات"
+        name: "إغلاق"
         optional: (اختياري)
       archive_topics:
-        name: "أرشفة الموضوعات"
-      unlist_topics:
-        name: "إلغاء إدراج الموضوعات"
-      relist_topics:
-        name: "إعادة إدراج الموضوعات"
+        name: "الأرشيف"
+      move_messages_to_inbox:
+        name: "النقل إلى صندوق الوارد"
       remove_tags:
         name: "أزِل الوسوم"
       append_tags:
@@ -3306,7 +3323,7 @@ ar:
       replace_tags:
         name: "استبدال الوسوم"
       delete_topics:
-        name: "حذف الموضوعات"
+        name: "حذف"
       update_category:
         name: "تحديث الفئة"
         description: "اختر الفئة الجديدة للموضوعات المحددة"
@@ -4777,7 +4794,6 @@ ar:
       all_tags: "كل الوسوم"
       other_tags: "وسوم أخرى"
       selector_tags: "الوسوم"
-      selector_all_tags: "كل الوسوم"
       selector_no_tags: "لا توجد وسوم"
       selector_remove_filter: "إزالة التصفية"
       tags: "الوسوم"
@@ -5018,6 +5034,7 @@ ar:
           text: "وسنعرض تلقائيًا الفئات الأكثر شيوعًا على هذا الموقع"
         filter_placeholder: "تصفية الفئات"
         no_categories: "لا توجد فئات مطابقة للمصطلح المحدَّد."
+        show_more: "عرض المزيد"
       tags_form_modal:
         title: "يمكنك تعديل التنقل بين الوسوم"
         filter_placeholder: "تصفية الوسوم"
@@ -5108,6 +5125,9 @@ ar:
             faq:
               content: "الأسئلة الشائعة"
               title: "إرشادات لاستخدام هذا الموقع"
+            guidelines:
+              content: "الإرشادات"
+              title: "إرشادات لاستخدام هذا الموقع"
             groups:
               content: "المجموعات"
               title: "قائمة بمجموعات المستخدمين المتاحة"
@@ -5140,7 +5160,8 @@ ar:
       panels:
         forum:
           label: المنتدى
-      filter: "عامل التصفية"
+      back_to_forum: "العودة إلى المنتدى"
+      filter: "المرشح..."
       no_results:
         title: "لا نتائج"
     welcome_topic_banner:
@@ -5264,7 +5285,6 @@ ar:
     admin:
       title: "مسؤول Discourse"
       moderator: "مشرف"
-      back_to_forum: "العودة إلى المنتدى"
       filter_reports: تصفية التقارير
       tags:
         remove_muted_tags_from_latest:
@@ -5375,6 +5395,9 @@ ar:
               label: الفئة
             include_subcategories:
               label: "تضمين الفئات الفرعية"
+      flags:
+        description: "الوصف"
+        enabled: "مفعَّلة؟"
       groups:
         new:
           title: "مجموعة جديدة"
@@ -5697,6 +5720,8 @@ ar:
           timestamp: "تاريخ الإنشاء"
           completion: "وقت الاكتمال"
           actions: "الإجراءات"
+          filter_status:
+            failed: "فشل"
       home:
         title: "الصفحة الرئيسية"
       account:
@@ -5744,6 +5769,32 @@ ar:
           search_logs: "سجلات البحث"
           security: "الأمان"
           spam: "غير مرغوب فيه"
+      config_areas:
+        about:
+          header: "نبذة عن موقعك"
+          community_name: "اسم المجتمع"
+          site_contact_group_help: |
+            اسم مجموعة صالح ليتم دعوتها إلى جميع الرسائل الآلية
+          your_organization: "مؤسستك"
+          company_name: "اسم الشركة"
+          governing_law: "القانون الحاكم"
+          city_for_disputes: "مدينة النزاعات"
+          optional: "(اختياري)"
+          update: "تحديث"
+          saved: "تم الحفظ!"
+        flags:
+          description: "الوصف"
+          enabled: "مفعَّلة؟"
+          edit: "تعديل"
+          delete: "حذف"
+          delete_confirm: 'هل تريد بالتأكيد حذف السمة "%{name}"؟'
+          form:
+            save: "حفظ"
+            name: "الاسم"
+            description: "الوصف"
+            topic: "الموضوعات"
+            post: "المنشورات"
+            chat_message: "رسائل الدردشة"
       plugins:
         title: "الإضافات"
         installed: "الإضافات المثبَّتة"
@@ -6127,7 +6178,6 @@ ar:
             description: "الروابط، وبعض الأزرار، والإشعارات، ولون التمييز."
           quaternary:
             name: "الرابع"
-            description: "روابط التنقل."
           header_background:
             name: "خلفية الرأس"
             description: "لون خلفية رأس الموقع."
@@ -6477,6 +6527,7 @@ ar:
           upload_successful: "تم التحميل بنجاح. وتمت إضافة الكلمات."
           case_sensitivity_label: "حساس لحالة الأحرف"
           case_sensitivity_description: "الكلمات ذات حالة الأحرف المطابقة فقط"
+          html_label: "HTML"
         test:
           button_label: "اختبار"
           modal_title: "%{action}: اختبار الكلمات المُراقَبة"
@@ -6880,6 +6931,7 @@ ar:
         name: "اسم الحقل"
         type: "نوع الحقل"
         description: "وصف الحقل"
+        preferences: "التفضيلات"
         save: "حفظ"
         edit: "تعديل"
         delete: "حذف"
@@ -6890,6 +6942,9 @@ ar:
           title: "مطلوب عند التسجيل"
           enabled: "مطلوب"
           disabled: "غير مطلوب"
+        requirement:
+          optional:
+            title: "اختياري"
         editable:
           title: "يمكن تعديله بعد التسجيل"
           enabled: "يمكن تعديله"
@@ -6960,6 +7015,7 @@ ar:
           empty: "لا توجد صور حتى الآن. يُرجى تحميل واحدة."
           upload:
             label: "تحميل"
+            title: "رفع الصور"
         selectable_avatars:
           title: "قائمة الصور الرمزية التي يمكن للمستخدمين الاختيار منها"
         categories:
@@ -7126,6 +7182,8 @@ ar:
         allowed_paths: "قائمة السماح بالمسارات"
         edit: "تعديل"
         category: "النشر في الفئة"
+        tags: "وسوم الموضوع"
+        post_author: "مؤلف المنشور - افتراضي إلى %{author}"
         add_host: "إضافة مضيف"
         settings: "إعدادات التضمين"
         crawling_settings: "إعدادات الزاحف"
@@ -7151,6 +7209,7 @@ ar:
         category_title: "الفئة"
         tag_name: "اسم الوسم"
         external_url: "عنوان URL خارجي أو نسبي"
+        user_id: "معرّف المستخدم"
         username: "اسم المستخدم"
         destination: "الوجهة"
         copy_to_clipboard: "نسخ الرابط الثابت إلى الحافظة"

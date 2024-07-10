@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
 describe "UserGroupMembershipThroughBadge" do
   fab!(:user)
   fab!(:other_users) { Fabricate.times(5, :user) }

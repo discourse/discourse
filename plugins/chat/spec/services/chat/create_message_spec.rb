@@ -47,6 +47,8 @@ RSpec.describe Chat::CreateMessage do
     end
     let(:message) { result[:message_instance].reload }
 
+    before { channel.add(guardian.user) }
+
     shared_examples "creating a new message" do
       it "saves the message" do
         expect { result }.to change { Chat::Message.count }.by(1)
@@ -226,13 +228,13 @@ RSpec.describe Chat::CreateMessage do
         end
 
         context "when channel model is found" do
-          context "when user can't join channel" do
-            let(:guardian) { Guardian.new }
+          context "when user is not part of the channel" do
+            before { channel.membership_for(user).destroy! }
 
-            it { is_expected.to fail_a_policy(:allowed_to_join_channel) }
+            it { is_expected.to fail_to_find_a_model(:membership) }
           end
 
-          context "when user is system" do
+          context "when user is a bot" do
             fab!(:user) { Discourse.system_user }
 
             it { is_expected.to be_a_success }
@@ -259,17 +261,13 @@ RSpec.describe Chat::CreateMessage do
             end
 
             context "when user can create a message in the channel" do
-              context "when user is not a member of the channel" do
-                it { is_expected.to fail_to_find_a_model(:channel_membership) }
-              end
-
               context "when user is a member of the channel" do
                 fab!(:existing_message) { Fabricate(:chat_message, chat_channel: channel) }
 
-                let(:membership) { Chat::UserChatChannelMembership.last }
+                let(:membership) { channel.membership_for(user) }
 
                 before do
-                  channel.add(user).update!(last_read_message: existing_message)
+                  membership.update!(last_read_message: existing_message)
                   DiscourseEvent.stubs(:trigger)
                 end
 

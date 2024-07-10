@@ -72,6 +72,13 @@ module("Unit | Utility | i18n", function (hooks) {
           with_multiple_interpolate_arguments: "Hi %{username}, %{username2}",
         },
       },
+      ja: {
+        js: {
+          topic_stat_sentence_week: {
+            other: "先週、新しいトピックが %{count} 件投稿されました。",
+          },
+        },
+      },
     };
 
     // fake pluralization rules
@@ -172,18 +179,6 @@ module("Unit | Utility | i18n", function (hooks) {
         },
       },
     };
-    I18n.pluralizationRules.pl_PL = function (n) {
-      if (n === 1) {
-        return "one";
-      }
-      if (n % 10 >= 2 && n % 10 <= 4) {
-        return "few";
-      }
-      if (n % 10 === 0) {
-        return "many";
-      }
-      return "other";
-    };
 
     assert.strictEqual(
       I18n.t("admin.dashboard.title"),
@@ -218,6 +213,20 @@ module("Unit | Utility | i18n", function (hooks) {
     assert.strictEqual(I18n.t("word_count", { count: 3 }), "3 words");
     assert.strictEqual(I18n.t("word_count", { count: 10 }), "10 words");
     assert.strictEqual(I18n.t("word_count", { count: 100 }), "100 words");
+
+    I18n.locale = "ja";
+    assert.strictEqual(
+      I18n.t("topic_stat_sentence_week", { count: 0 }),
+      "先週、新しいトピックが 0 件投稿されました。"
+    );
+    assert.strictEqual(
+      I18n.t("topic_stat_sentence_week", { count: 1 }),
+      "先週、新しいトピックが 1 件投稿されました。"
+    );
+    assert.strictEqual(
+      I18n.t("topic_stat_sentence_week", { count: 2 }),
+      "先週、新しいトピックが 2 件投稿されました。"
+    );
   });
 
   test("adds the count to the missing translation strings", function (assert) {
@@ -322,5 +331,29 @@ module("Unit | Utility | i18n", function (hooks) {
     } finally {
       I18n.testing = false;
     }
+  });
+
+  test("pluralizationNormalizedLocale", function (assert) {
+    I18n.locale = "pt";
+
+    assert.strictEqual(
+      I18n.pluralizationNormalizedLocale,
+      "pt_PT",
+      "returns 'pt_PT' for the 'pt' locale, this is a special case of the 'make-plural' lib."
+    );
+
+    Object.entries({
+      pt_BR: "pt",
+      en_GB: "en",
+      bs_BA: "bs",
+      "fr-BE": "fr",
+    }).forEach(([raw, normalized]) => {
+      I18n.locale = raw;
+      assert.strictEqual(
+        I18n.pluralizationNormalizedLocale,
+        normalized,
+        `returns '${normalized}' for '${raw}'`
+      );
+    });
   });
 });

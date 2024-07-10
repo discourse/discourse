@@ -18,6 +18,8 @@ export default class EmbeddableHost extends Component.extend(
   editToggled = false;
   categoryId = null;
   category = null;
+  tags = null;
+  user = null;
 
   @or("host.isNew", "editToggled") editing;
 
@@ -29,6 +31,8 @@ export default class EmbeddableHost extends Component.extend(
     const category = Category.findById(categoryId);
 
     this.set("category", category);
+    this.set("tags", host.tags || []);
+    this.set("user", host.user);
   }
 
   @discourseComputed("buffered.host", "host.isSaving")
@@ -40,7 +44,10 @@ export default class EmbeddableHost extends Component.extend(
   edit() {
     this.set("editToggled", true);
   }
-
+  @action
+  onUserChange(user) {
+    this.set("user", user);
+  }
   @action
   save() {
     if (this.cantSave) {
@@ -53,6 +60,9 @@ export default class EmbeddableHost extends Component.extend(
       "class_name"
     );
     props.category_id = this.category.id;
+    props.tags = this.tags;
+    props.user =
+      Array.isArray(this.user) && this.user.length > 0 ? this.user[0] : null;
 
     const host = this.host;
 

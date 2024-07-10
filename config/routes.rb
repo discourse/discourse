@@ -98,14 +98,6 @@ Discourse::Application.routes.draw do
     get "wizard/steps/:id" => "wizard#index"
     put "wizard/steps/:id" => "steps#update"
 
-    namespace :admin_revamp,
-              path: "admin-revamp",
-              module: "admin",
-              constraints: StaffConstraint.new do
-      get "" => "admin#index"
-      get "config/:area" => "admin#index"
-    end
-
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
 
@@ -259,6 +251,7 @@ Discourse::Application.routes.draw do
         get "themes/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id" => "themes#index"
         get "components/:id" => "themes#index"
+        get "components/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id/export" => "themes#export"
         get "themes/:id/schema/:setting_name" => "themes#schema"
         get "components/:id/schema/:setting_name" => "themes#schema"
@@ -351,6 +344,7 @@ Discourse::Application.routes.draw do
           get "web_hook_events/:id" => "web_hooks#list_events", :as => :web_hook_events
           get "web_hooks/:id/events/bulk" => "web_hooks#bulk_events"
           post "web_hooks/:web_hook_id/events/:event_id/redeliver" => "web_hooks#redeliver_event"
+          post "web_hooks/:id/events/failed_redeliver" => "web_hooks#redeliver_failed_events"
           post "web_hooks/:id/ping" => "web_hooks#ping"
         end
       end
@@ -390,6 +384,17 @@ Discourse::Application.routes.draw do
           get "types" => "badges#badge_types"
           post "badge_groupings" => "badges#save_badge_groupings"
           post "preview" => "badges#preview"
+        end
+      end
+      namespace :config, constraints: StaffConstraint.new do
+        resources :flags, only: %i[index new create update destroy] do
+          put "toggle"
+          put "reorder/:direction" => "flags#reorder"
+          member { get "/" => "flags#edit" }
+        end
+
+        resources :about, constraints: AdminConstraint.new, only: %i[index] do
+          collection { put "/" => "about#update" }
         end
       end
     end # admin namespace
@@ -1100,6 +1105,8 @@ Discourse::Application.routes.draw do
     delete "admin/groups/:id/members" => "groups#remove_member", :constraints => AdminConstraint.new
     put "admin/groups/:id/members" => "groups#add_members", :constraints => AdminConstraint.new
 
+    put "bookmarks/bulk"
+
     resources :posts, only: %i[show update create destroy] do
       delete "bookmark", to: "posts#destroy_bookmark"
       put "wiki"
@@ -1165,10 +1172,12 @@ Discourse::Application.routes.draw do
 
     get "/c", to: redirect(relative_url_root + "categories")
 
-    resources :categories, except: %i[show new edit]
+    resources :categories, only: %i[index create update destroy]
     post "categories/reorder" => "categories#reorder"
     get "categories/find" => "categories#find"
-    get "categories/search" => "categories#search"
+    post "categories/search" => "categories#search"
+    get "categories/hierarchical_search" => "categories#hierarchical_search"
+    get "categories/:parent_category_id" => "categories#index"
 
     scope path: "category/:category_id" do
       post "/move" => "categories#move"
@@ -1210,6 +1219,9 @@ Discourse::Application.routes.draw do
           :constraints => {
             format: "html",
           }
+
+      get "/subcategories" => "categories#index"
+
       get "/" => "list#category_default", :as => "category_default"
     end
 
@@ -1348,11 +1360,6 @@ Discourse::Application.routes.draw do
           topic_id: /\d+/,
         }
     get "t/:topic_id/summary" => "topics#show", :constraints => { topic_id: /\d+/ }
-    get "t/:topic_id/strategy-summary" => "topics#summary",
-        :constraints => {
-          topic_id: /\d+/,
-        },
-        :format => :json
     put "t/:slug/:topic_id" => "topics#update", :constraints => { topic_id: /\d+/ }
     put "t/:slug/:topic_id/status" => "topics#status", :constraints => { topic_id: /\d+/ }
     put "t/:topic_id/status" => "topics#status", :constraints => { topic_id: /\d+/ }
@@ -1576,6 +1583,9 @@ Discourse::Application.routes.draw do
            constraints: HomePageConstraint.new("#{filter}"),
            as: "list_#{filter}"
     end
+
+    get "/t/:topic_id/view-stats.json" => "topic_view_stats#index"
+
     # special case for categories
     root to: "categories#index",
          constraints: HomePageConstraint.new("categories"),
@@ -1585,7 +1595,9 @@ Discourse::Application.routes.draw do
          constraints: HomePageConstraint.new("finish_installation"),
          as: "installation_redirect"
 
-    root to: "custom#index", constraints: HomePageConstraint.new("custom"), as: "custom_index"
+    root to: "custom_homepage#index",
+         constraints: HomePageConstraint.new("custom"),
+         as: "custom_index"
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"

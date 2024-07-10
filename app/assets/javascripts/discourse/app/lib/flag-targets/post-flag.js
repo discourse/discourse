@@ -20,6 +20,10 @@ export default class PostFlag extends Flag {
   flagsAvailable(flagModal) {
     let flagsAvailable = flagModal.args.model.flagModel.flagsAvailable;
 
+    flagsAvailable = flagsAvailable.filter((flag) => {
+      return flag.applies_to.includes("Post");
+    });
+
     // "message user" option should be at the top
     const notifyUserIndex = flagsAvailable.indexOf(
       flagsAvailable.filterBy("name_key", "notify_user")[0]

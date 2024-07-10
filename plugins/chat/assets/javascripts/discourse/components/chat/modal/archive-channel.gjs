@@ -82,12 +82,25 @@ export default class ChatModalArchiveChannel extends Component {
     );
   }
 
+  get data() {
+    const data = { type: this.selection };
+    if (this.newTopic) {
+      data.title = this.topicTitle;
+      data.category_id = this.categoryId;
+      data.tags = this.tags;
+    }
+    if (this.existingTopic) {
+      data.topic_id = this.selectedTopicId;
+    }
+    return data;
+  }
+
   @action
   archiveChannel() {
     this.saving = true;
 
     return this.chatApi
-      .createChannelArchive(this.channel.id, this.#data())
+      .createChannelArchive(this.channel.id, this.data)
       .then(() => {
         this.flash = I18n.t("chat.channel_archive.process_started");
         this.flashType = "success";
@@ -101,17 +114,9 @@ export default class ChatModalArchiveChannel extends Component {
       .finally(() => (this.saving = false));
   }
 
-  #data() {
-    const data = { type: this.selection };
-    if (this.newTopic) {
-      data.title = this.topicTitle;
-      data.category_id = this.categoryId;
-      data.tags = this.tags;
-    }
-    if (this.existingTopic) {
-      data.topic_id = this.selectedTopicId;
-    }
-    return data;
+  @action
+  newTopicSelected(topic) {
+    this.selectedTopicId = topic.id;
   }
 
   <template>
@@ -132,7 +137,7 @@ export default class ChatModalArchiveChannel extends Component {
           @topicTitle={{this.topicTitle}}
           @categoryId={{this.categoryId}}
           @tags={{this.tags}}
-          @selectedTopicId={{this.selectedTopicId}}
+          @topicChangedCallback={{this.newTopicSelected}}
           @instructionLabels={{this.instructionLabels}}
           @allowNewMessage={{false}}
         />

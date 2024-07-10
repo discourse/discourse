@@ -106,6 +106,22 @@ describe "Single thread in side panel", type: :system do
       end
     end
 
+    context "when in drawer" do
+      it "opens the channel and highlights the message when clicking original message link" do
+        visit("/latest")
+        chat_page.open_from_header
+        chat_drawer_page.open_channel(channel)
+        channel_page.message_thread_indicator(thread.original_message).click
+        find(".chat-message-info__original-message").click
+
+        expect(chat_drawer_page).to have_open_channel(channel)
+        expect(channel_page.messages).to have_message(
+          id: thread.original_message.id,
+          highlighted: true,
+        )
+      end
+    end
+
     it "highlights the message in the channel when clicking original message link" do
       chat_page.visit_thread(thread)
 

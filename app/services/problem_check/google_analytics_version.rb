@@ -8,10 +8,4 @@ class ProblemCheck::GoogleAnalyticsVersion < ProblemCheck
 
     problem
   end
-
-  private
-
-  def translation_key
-    "dashboard.v3_analytics_deprecated"
-  end
 end

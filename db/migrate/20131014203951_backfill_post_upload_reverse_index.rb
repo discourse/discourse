@@ -19,7 +19,7 @@ class BackfillPostUploadReverseIndex < ActiveRecord::Migration[4.2]
 
   def add_to_reverse_index(url, post_id)
     # make sure we have a url to insert
-    return unless url.present?
+    return if url.blank?
     # local uploads are relative
     if index = url.index(local_base_url)
       url = url[index..-1]

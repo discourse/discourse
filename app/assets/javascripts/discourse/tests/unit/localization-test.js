@@ -10,9 +10,7 @@ module("initializer:localization", function (hooks) {
     this._locale = I18n.locale;
     this._translations = I18n.translations;
     this._extras = I18n.extras;
-    this._compiledMFs = I18n._compiledMFs;
     this._overrides = I18n._overrides;
-    this._mfOverrides = I18n._mfOverrides;
 
     I18n.locale = "fr";
 
@@ -35,10 +33,6 @@ module("initializer:localization", function (hooks) {
           },
         },
       },
-    };
-
-    I18n._compiledMFs = {
-      "user.messages.some_key_MF": () => "user.messages.some_key_MF (FR)",
     };
 
     I18n.extras = {
@@ -67,9 +61,7 @@ module("initializer:localization", function (hooks) {
     I18n.locale = this._locale;
     I18n.translations = this._translations;
     I18n.extras = this._extras;
-    I18n._compiledMFs = this._compiledMFs;
     I18n._overrides = this._overrides;
-    I18n._mfOverrides = this._mfOverrides;
   });
 
   test("translation overrides", function (assert) {
@@ -156,21 +148,6 @@ module("initializer:localization", function (hooks) {
       I18n.t("type_to_filter"),
       "type_to_filter (FR override)",
       "correctly changes the translation key by removing `admin_js`"
-    );
-  });
-
-  test("translation overrides for MessageFormat strings", function (assert) {
-    I18n._mfOverrides = {
-      "js.user.messages.some_key_MF": () =>
-        "user.messages.some_key_MF (FR override)",
-    };
-
-    LocalizationInitializer.initialize(this.owner);
-
-    assert.strictEqual(
-      I18n.messageFormat("user.messages.some_key_MF", {}),
-      "user.messages.some_key_MF (FR override)",
-      "overrides existing MessageFormat string"
     );
   });
 

@@ -147,7 +147,7 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   def can_send_private_message_to_user
-    scope.can_send_private_message?(object) && scope.current_user != object
+    scope.can_send_private_message?(object)
   end
 
   def include_suspend_reason?
@@ -214,7 +214,7 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   def featured_topic
-    object.user_profile.featured_topic
+    BasicTopicSerializer.new(object.user_profile.featured_topic, scope: scope, root: false).as_json
   end
 
   def include_timezone?

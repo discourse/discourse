@@ -70,9 +70,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::AUTO_RESPONDER
         end
         .join("\n\n")
 
-    value = (Array(post.topic.custom_fields[key]) << automation.id).compact.uniq
-    post.topic.custom_fields[key] = value
-    post.topic.save_custom_fields
+    automation.add_id_to_custom_field(post.topic, key)
 
     PostCreator.create!(
       answering_user,

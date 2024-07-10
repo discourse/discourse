@@ -10,12 +10,14 @@ import TopicBulkActions from "./modal/topic-bulk-actions";
 export default Component.extend(LoadMore, {
   modal: service(),
   router: service(),
+  siteSettings: service(),
 
   tagName: "table",
   classNames: ["topic-list"],
   classNameBindings: ["bulkSelectEnabled:sticky-header"],
   showTopicPostBadges: true,
   listTitle: "topic.title",
+  lastCheckedElementId: null,
 
   get canDoBulkActions() {
     return (

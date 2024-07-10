@@ -8,10 +8,4 @@ class ProblemCheck::HostNames < ProblemCheck
 
     problem
   end
-
-  private
-
-  def translation_key
-    "dashboard.host_names_warning"
-  end
 end

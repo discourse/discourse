@@ -6,6 +6,7 @@ export default createWidget("sidebar-toggle", {
 
   html() {
     const attrs = this.attrs;
+
     return [
       this.attach("button", {
         title: "sidebar.title",

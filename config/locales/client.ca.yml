@@ -291,11 +291,17 @@ ca:
       search_placeholder: "Cerqueu preferits per nom, títol del tema o contingut de la publicació"
       search: "Cerca"
       bookmark: "Preferit"
+      bulk:
+        select_all: "Selecciona-ho tot"
+        clear_all: "Neteja-ho tot"
       reminders:
         today_with_time: "avui a les %{time}"
         tomorrow_with_time: "demà a les %{time}"
         at_time: "%{date_time}"
         existing_reminder: "Teniu un recordatori definit per a aquest preferit que se us enviarà: %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Suprimeix el marcador"
     copy_codeblock:
       copied: "copiat!"
     drafts:
@@ -569,6 +575,7 @@ ca:
       topic_count_long: "Temes creats"
       post_count: "Respostes"
       post_count_long: "Respostes publicades"
+      no_results_with_search: "No s'han trobat resultats"
       days_visited: "Visites"
       days_visited_long: "Dies visitats"
       posts_read: "Llegit"
@@ -834,6 +841,7 @@ ca:
       copied: "copiat"
     user_fields:
       none: "(trieu una opció)"
+      optional: (opcional)
     user:
       said: "%{username}:"
       profile: "Perfil"
@@ -863,7 +871,8 @@ ca:
         to: "a"
       activity_stream: "Activitat"
       read: "Llegit"
-      preferences: "Preferències"
+      preferences:
+        title: "Preferències"
       feature_topic_on_profile:
         save: "Desa"
         clear:
@@ -1010,6 +1019,7 @@ ca:
         set_password: "Estableix la contrasenya"
         choose_new: "Trieu una contrasenya nova"
         choose: "Trieu una contrasenya"
+        title: "Restabliment de contrasenya"
       second_factor_backup:
         regenerate: "Regenera"
         disable: "Desactiva"
@@ -1257,7 +1267,6 @@ ca:
           error: "El fitxer hauria de tenir format CSV."
       password:
         title: "Contrasenya"
-        too_short: "La contrasenya és massa curta."
         common: "La contrasenya és massa freqüent."
         same_as_username: "La contrasenya és igual que el nom d'usuari."
         same_as_email: "La contrasenya és igual que el correu electrònic."
@@ -1411,6 +1420,7 @@ ca:
     create_account:
       header_title: "Benvingut!"
       disclaimer: "Registrant-vos, accepteu la <a href='%{privacy_link}' target='blank'>política de privacitat</a> i les <a href='%{tos_link}' target='blank'>condicions del servei</a>."
+      title: "Registre"
       failed: "Alguna cosa ha anat malament. Potser aquest correu electrònic ja ha estat registrat; proveu-ho amb l'enllaç de contrasenya oblidada"
     forgot_password:
       title: "Restabliment de contrasenya"
@@ -1533,6 +1543,8 @@ ca:
       components:
         bulk_select_topics_dropdown:
           title: "Accions massives"
+        bulk_select_bookmarks_dropdown:
+          title: "Accions massives"
     date_time_picker:
       from: De
       to: A
@@ -1630,7 +1642,6 @@ ca:
       enter_fullscreen: "entra en la redacció a pantalla completa"
       exit_fullscreen: "surt de la redacció a pantalla completa"
       modal_ok: "D'acord"
-      modal_cancel: "Cancel·la"
       cant_send_pm: "No podeu enviar cap missatge a %{username}."
       yourself_confirm:
         title: "Heu oblidat afegir destinataris?"
@@ -1886,20 +1897,18 @@ ca:
         bookmarks: "No hi ha més temes marcats com a preferits."
     topic_bulk_actions:
       close_topics:
-        name: "Tanca temes"
+        name: "Tanca"
         optional: (opcional)
       archive_topics:
-        name: "Arxiva temes"
-      unlist_topics:
-        name: "Fes temes invisibles"
-      relist_topics:
-        name: "Torna a llistar els temes"
+        name: "Arxiva"
+      move_messages_to_inbox:
+        name: "Mou a la safata d'entrada"
       append_tags:
         name: "Annexa etiquetes"
       replace_tags:
         name: "Reemplaça etiquetes"
       delete_topics:
-        name: "Suprimeix temes"
+        name: "Suprimeix"
     topic:
       filter_to:
         one: "%{count} publicació en el tema"
@@ -2755,7 +2764,6 @@ ca:
     tagging:
       other_tags: "Altres etiquetes"
       selector_tags: "etiquetes"
-      selector_all_tags: "totes les etiquetes"
       selector_no_tags: "sense etiquetes"
       selector_remove_filter: "elimina filtre"
       tags: "Etiquetes"
@@ -2897,6 +2905,8 @@ ca:
               content: "Temes"
             faq:
               content: "PMF"
+            guidelines:
+              content: "Directrius"
             groups:
               content: "Grups"
             users:
@@ -2905,7 +2915,7 @@ ca:
               content: "Les meves publicacions"
             review:
               content: "Revisa"
-      filter: "Filtre"
+      filter: "Filtre..."
     until: "Fins a:"
     form_templates:
       upload_field:
@@ -3027,6 +3037,9 @@ ca:
               label: Grup
             category:
               label: Categoria
+      flags:
+        description: "Descripció"
+        enabled: "Activat?"
       groups:
         new:
           title: "Grup nou"
@@ -3168,6 +3181,8 @@ ca:
           timestamp: "Creat"
           completion: "Temps de finalització"
           actions: "Accions"
+          filter_status:
+            failed: "Fallits"
       home:
         title: "Pàgina principal"
       account:
@@ -3214,6 +3229,22 @@ ca:
           search_logs: "Cerca els registres (logs)"
           security: "Seguretat"
           spam: "Brossa"
+      config_areas:
+        about:
+          optional: "(opcional)"
+          saved: "desat!"
+        flags:
+          description: "Descripció"
+          enabled: "Activat?"
+          edit: "Edita"
+          delete: "Suprimeix"
+          delete_confirm: 'Esteu segur que voleu suprimir "%{name}"?'
+          form:
+            save: "Desa"
+            name: "Nom"
+            description: "Descripció"
+            topic: "temes"
+            post: "publicacions"
       plugins:
         title: "Connectors"
         installed: "Connectors instal·lats"
@@ -3498,7 +3529,6 @@ ca:
             description: "Enllaços, alguns botons, alertes i color de ressaltament."
           quaternary:
             name: "quaternari"
-            description: "Enllaços de navegació"
           header_background:
             name: "color de fons de la capçalera"
             description: "Color de fons de la capçalera del lloc web."
@@ -3772,6 +3802,7 @@ ca:
           exists: "Ja existeix"
           upload: "Afegeix des de fitxer"
           upload_successful: "Càrrega feta amb èxit. S'han afegit paraules."
+          html_label: "HTML"
         test:
           button_label: "Test"
           description: "Introduïu un text per a comprovar coincidències amb paraules vigilades."
@@ -4030,6 +4061,7 @@ ca:
         name: "Nom del camp"
         type: "Tipus de camp"
         description: "Descripció del camp"
+        preferences: "Preferències"
         save: "Desa"
         edit: "Edita"
         delete: "Suprimeix"
@@ -4040,6 +4072,9 @@ ca:
           title: "Necessari en identificar-se"
           enabled: "necessari"
           disabled: "no necessari"
+        requirement:
+          optional:
+            title: "Opcional"
         editable:
           enabled: "editable"
           disabled: "no editable"

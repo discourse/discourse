@@ -48,11 +48,13 @@ class SiteSerializer < ApplicationSerializer
     :privacy_policy_url,
     :system_user_avatar_template,
     :lazy_load_categories,
+    :valid_flag_applies_to_types,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
   has_many :user_fields, embed: :objects, serializer: UserFieldSerializer
   has_many :auth_providers, embed: :objects, serializer: AuthProviderSerializer
+  has_many :anonymous_sidebar_sections, embed: :objects, serializer: SidebarSectionSerializer
 
   def user_themes
     cache_fragment("user_themes") do
@@ -83,7 +85,10 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def default_dark_color_scheme
-    ColorScheme.find_by_id(SiteSetting.default_dark_mode_color_scheme_id).as_json
+    ColorSchemeSerializer.new(
+      ColorScheme.find_by_id(SiteSetting.default_dark_mode_color_scheme_id),
+      root: false,
+    ).as_json
   end
 
   def groups
@@ -294,14 +299,6 @@ class SiteSerializer < ApplicationSerializer
       anonymous_default_navigation_menu_tags.present?
   end
 
-  def anonymous_sidebar_sections
-    SidebarSection
-      .public_sections
-      .includes(:sidebar_urls)
-      .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
-      .map { |section| SidebarSectionSerializer.new(section, root: false) }
-  end
-
   def include_anonymous_sidebar_sections?
     scope.anonymous?
   end
@@ -354,16 +351,17 @@ class SiteSerializer < ApplicationSerializer
     scope.can_lazy_load_categories?
   end
 
+  def valid_flag_applies_to_types
+    Flag.valid_applies_to_types
+  end
+
+  def include_valid_flag_applies_to_types?
+    scope.is_admin?
+  end
+
   private
 
   def ordered_flags(flags)
-    notify_moderators_type = PostActionType.flag_types[:notify_moderators]
-    types = flags
-
-    if notify_moderators_flag = types.index(notify_moderators_type)
-      types.insert(types.length, types.delete_at(notify_moderators_flag))
-    end
-
-    types.map { |id| PostActionType.new(id: id) }
+    flags.map { |id| PostActionType.new(id: id) }
   end
 end

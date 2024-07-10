@@ -8,13 +8,13 @@ export default class AdminSearchLogsIndexRoute extends DiscourseRoute {
     searchType: { refreshModel: true },
   };
 
-  model(params) {
+  async model(params) {
     this._params = params;
-    return ajax("/admin/logs/search_logs.json", {
+    const searchLogs = await ajax("/admin/logs/search_logs.json", {
       data: { period: params.period, search_type: params.searchType },
-    }).then((search_logs) => {
-      return search_logs.map((sl) => EmberObject.create(sl));
     });
+
+    return searchLogs.map((log) => EmberObject.create(log));
   }
 
   setupController(controller, model) {

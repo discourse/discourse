@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
 describe DiscourseAutomation::AdminAutomationsController do
   before { SiteSetting.discourse_automation_enabled = true }
 
@@ -70,7 +68,7 @@ describe DiscourseAutomation::AdminAutomationsController do
                }
 
           expect(response.status).to eq(200)
-          expect(Jobs::DiscourseAutomationTrigger.jobs.size).to eq(1)
+          expect(Jobs::DiscourseAutomation::Trigger.jobs.size).to eq(1)
         end
       end
     end

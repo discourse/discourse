@@ -492,7 +492,7 @@ export default class ChatMessage extends Component {
     return (
       this.args.message.streaming &&
       (this.currentUser.admin ||
-        this.args.message.user.id === this.currentUser.id)
+        this.args.message.inReplyTo?.user?.id === this.currentUser.id)
     );
   }
 

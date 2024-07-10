@@ -73,7 +73,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
   def update
     et = params[:email_template]
     key = params[:id]
-    raise Discourse::NotFound unless self.class.email_keys.include?(params[:id])
+    raise Discourse::NotFound if self.class.email_keys.exclude?(params[:id])
 
     subject_result = update_key("#{key}.subject_template", et[:subject])
     body_result = update_key("#{key}.text_body_template", et[:body])
@@ -110,7 +110,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
 
   def revert
     key = params[:id]
-    raise Discourse::NotFound unless self.class.email_keys.include?(params[:id])
+    raise Discourse::NotFound if self.class.email_keys.exclude?(params[:id])
 
     revert_and_log("#{key}.subject_template", "#{key}.text_body_template")
     render_serialized(

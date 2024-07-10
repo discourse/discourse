@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/application";
 import {
   click,
   find,
@@ -87,7 +88,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("-expanded class", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @label="label"  />`);
+    await render(hbs`<DMenu @inline={{true}} @label="label" />`);
 
     assert.dom(".fk-d-menu__trigger").doesNotHaveClass("-expanded");
 
@@ -97,7 +98,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("trigger id attribute", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @label="label"  />`);
+    await render(hbs`<DMenu @inline={{true}} @label="label" />`);
 
     assert.dom(".fk-d-menu__trigger").hasAttribute("id");
   });
@@ -115,7 +116,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("aria-expanded attribute", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @label="label"  />`);
+    await render(hbs`<DMenu @inline={{true}} @label="label" />`);
 
     assert.dom(".fk-d-menu__trigger").hasAttribute("aria-expanded", "false");
 
@@ -126,7 +127,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
   test("<:trigger>", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}}><:trigger>label</:trigger></DMenu />`
+      hbs`<DMenu @inline={{true}}><:trigger>label</:trigger></DMenu>`
     );
 
     assert.dom(".fk-d-menu__trigger").containsText("label");
@@ -134,7 +135,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
   test("<:content>", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}}><:content>content</:content></DMenu />`
+      hbs`<DMenu @inline={{true}}><:content>content</:content></DMenu>`
     );
 
     await open();
@@ -143,7 +144,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("content role attribute", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @label="label"  />`);
+    await render(hbs`<DMenu @inline={{true}} @label="label" />`);
 
     await open();
 
@@ -167,7 +168,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("content aria-labelledby attribute", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @label="label"  />`);
+    await render(hbs`<DMenu @inline={{true}} @label="label" />`);
 
     await open();
 
@@ -179,7 +180,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
   test("@closeOnEscape", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}} @label="label" @closeOnEscape={{true}}  />`
+      hbs`<DMenu @inline={{true}} @label="label" @closeOnEscape={{true}} />`
     );
     await open();
     await triggerKeyEvent(document.activeElement, "keydown", "Escape");
@@ -187,7 +188,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     assert.dom(".fk-d-menu").doesNotExist();
 
     await render(
-      hbs`<DMenu @inline={{true}} @label="label" @closeOnEscape={{false}}  />`
+      hbs`<DMenu @inline={{true}} @label="label" @closeOnEscape={{false}} />`
     );
     await open();
     await triggerKeyEvent(document.activeElement, "keydown", "Escape");
@@ -197,7 +198,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
   test("@closeOnClickOutside", async function (assert) {
     await render(
-      hbs`<span class="test">test</span><DMenu @inline={{true}} @label="label" @closeOnClickOutside={{true}}  />`
+      hbs`<span class="test">test</span><DMenu @inline={{true}} @label="label" @closeOnClickOutside={{true}} />`
     );
     await open();
     await triggerEvent(".test", "pointerdown");
@@ -205,7 +206,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     assert.dom(".fk-d-menu").doesNotExist();
 
     await render(
-      hbs`<span class="test">test</span><DMenu @inline={{true}} @label="label" @closeOnClickOutside={{false}}  />`
+      hbs`<span class="test">test</span><DMenu @inline={{true}} @label="label" @closeOnClickOutside={{false}} />`
     );
     await open();
     await triggerEvent(".test", "pointerdown");
@@ -215,7 +216,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
   test("@maxWidth", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}} @label="label" @maxWidth={{20}}  />`
+      hbs`<DMenu @inline={{true}} @label="label" @maxWidth={{20}} />`
     );
     await open();
 
@@ -225,7 +226,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("applies position", async function (assert) {
-    await render(hbs`<DMenu @inline={{true}} @label="label"  />`);
+    await render(hbs`<DMenu @inline={{true}} @label="label" />`);
     await open();
 
     assert.dom(".fk-d-menu").hasAttribute("style", /left: /);
@@ -254,5 +255,102 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await open();
 
     assert.dom(document.activeElement).hasClass("my-button");
+  });
+
+  test("a menu can be closed by identifier", async function (assert) {
+    await render(hbs`<DMenu @inline={{true}} @identifier="test">test</DMenu>`);
+    await open();
+
+    await getOwner(this).lookup("service:menu").close("test");
+
+    assert.dom(".fk-d-menu__content.test-content").doesNotExist();
+  });
+
+  test("get a menu by identifier", async function (assert) {
+    await render(hbs`<DMenu @inline={{true}} @identifier="test">test</DMenu>`);
+    await open();
+
+    const activeMenu = getOwner(this)
+      .lookup("service:menu")
+      .getByIdentifier("test");
+
+    await activeMenu.close();
+
+    assert.dom(".fk-d-menu__content.test-content").doesNotExist();
+  });
+
+  test("opening a menu with the same identifier", async function (assert) {
+    await render(
+      hbs`<DMenu @inline={{true}} @identifier="foo" @class="first">1</DMenu><DMenu @inline={{true}} @identifier="foo" @class="second">2</DMenu>`
+    );
+
+    await click(".first.fk-d-menu__trigger");
+
+    assert.dom(".foo-content.first").exists();
+    assert.dom(".foo-content.second").doesNotExist();
+
+    await click(".second.fk-d-menu__trigger");
+
+    assert.dom(".foo-content.first").doesNotExist();
+    assert.dom(".foo-content.second").exists();
+  });
+
+  test("@groupIdentifier", async function (assert) {
+    await render(
+      hbs`<DMenu @inline={{true}} @groupIdentifier="foo" @class="first">1</DMenu><DMenu @inline={{true}} @groupIdentifier="foo" @class="second">2</DMenu>`
+    );
+
+    await click(".first.fk-d-menu__trigger");
+
+    assert.dom(".fk-d-menu__content.first").exists();
+    assert.dom(".fk-d-menu__content.second").doesNotExist();
+
+    await click(".second.fk-d-menu__trigger");
+
+    assert.dom(".fk-d-menu__content.first").doesNotExist();
+    assert.dom(".fk-d-menu__content.second").exists();
+  });
+
+  test("empty @identifier/@groupIdentifier", async function (assert) {
+    await render(
+      hbs`<DMenu @inline={{true}} @class="first">1</DMenu><DMenu @inline={{true}} @class="second">2</DMenu>`
+    );
+
+    await click(".first.fk-d-menu__trigger");
+
+    assert.dom(".fk-d-menu__content.first").exists();
+    assert.dom(".fk-d-menu__content.second").doesNotExist();
+
+    await click(".second.fk-d-menu__trigger");
+
+    assert.dom(".fk-d-menu__content.first").exists("it doesn’t autoclose");
+    assert.dom(".fk-d-menu__content.second").exists();
+  });
+
+  test("@class", async function (assert) {
+    await render(hbs`<DMenu @inline={{true}} @class="first">1</DMenu>`);
+
+    await open();
+
+    assert.dom(".fk-d-menu__trigger.first").exists();
+    assert.dom(".fk-d-menu__content.first").exists();
+  });
+
+  test("@triggerClass", async function (assert) {
+    await render(hbs`<DMenu @inline={{true}} @triggerClass="first">1</DMenu>`);
+
+    await open();
+
+    assert.dom(".fk-d-menu__trigger.first").exists();
+    assert.dom(".fk-d-menu__content.first").doesNotExist();
+  });
+
+  test("@contentClass", async function (assert) {
+    await render(hbs`<DMenu @inline={{true}} @contentClass="first">1</DMenu>`);
+
+    await open();
+
+    assert.dom(".fk-d-menu__trigger.first").doesNotExist();
+    assert.dom(".fk-d-menu__content.first").exists();
   });
 });

@@ -284,11 +284,17 @@ lv:
       search_placeholder: "Meklējiet grāmatzīmes pēc nosaukuma, tēmas nosaukuma vai ziņas satura"
       search: "Meklēt"
       bookmark: "Grāmatzīmes"
+      bulk:
+        select_all: "Izvēlēties visu"
+        clear_all: "Noņemt visu"
       reminders:
         today_with_time: "šodien %{time}"
         tomorrow_with_time: "rīt %{time}"
         at_time: "%{date_time}"
         existing_reminder: "Šai grāmatzīmei ir iestatīts atgādinājums, kas tiks nosūtīts %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Dzēst grāmatzīmi"
     copy_codeblock:
       copied: "nokopēts!"
     drafts:
@@ -530,6 +536,7 @@ lv:
       topic_count_long: "Izveidotās tēmas"
       post_count: "Atbildes"
       post_count_long: "Ierakstītās atbildes"
+      no_results_with_search: "Nav rezultātu."
       days_visited: "Apmeklējumi"
       days_visited_long: "Apmeklējuma dienas"
       posts_read: "Lasīts"
@@ -844,6 +851,7 @@ lv:
     user_fields:
       none: "(izvēlieties opciju)"
       required: 'Lūdzu, ievadiet vērtību "%{name}"'
+      optional: (pēc izvēles)
     user:
       said: "%{username}:"
       profile: "Profils"
@@ -886,7 +894,8 @@ lv:
       activity_stream: "Aktivitāte"
       read: "Lasīts"
       read_help: "Nesen lasītas tēmas"
-      preferences: "Iestatījumi"
+      preferences:
+        title: "Iestatījumi"
       feature_topic_on_profile:
         open_search: "Izvēlieties jaunu tēmu"
         title: "Izvēlieties tēmu"
@@ -1060,6 +1069,7 @@ lv:
         set_password: "Uzstādīt paroli"
         choose_new: "Izvēlēties jaunu paroli"
         choose: "Izvēlēties paroli"
+        title: "Paroles atjaunošana"
       second_factor_backup:
         title: "Divu faktoru rezerves kodi"
         regenerate: "Atkārtoti radīt"
@@ -1335,7 +1345,6 @@ lv:
           error: "Atvainojiet, failam jābūt CSV formātā."
       password:
         title: "Parole"
-        too_short: "Jūsu parole ir pārāk īsa."
         common: "Šī parole ir pārāk vienkārša."
         same_as_username: "Jūsu parole ir tāda pati, kā jūsu lietotājvārds."
         same_as_email: "Jūsu parole ir tāda pati, kā jūsu e-pasts."
@@ -1493,7 +1502,7 @@ lv:
       header_title: "Sveicināti!"
       subheader_title: "Izveidosim jūsu kontu"
       disclaimer: "Reģistrējoties jūs piekrītat <a href='%{privacy_link}' target='blank'>privātuma politikas</a> un <a href='%{tos_link}' target='blank'>pakalpojumu sniegšanas noteikumiem</a>."
-      title: "izveido savu kontu"
+      title: "Reģistrēties"
       failed: "Notika neparedzēta kļūda; varbūt šis e-pasts ir jau reģistrēts, pamēģiniet izmantot \"aizmirsu paroli\""
       associate: "Jau ir konts? <a href='%{associate_link}'>Piesakieties</a> lai saistītu savu %{provider} kontu."
     forgot_password:
@@ -1619,6 +1628,8 @@ lv:
       components:
         bulk_select_topics_dropdown:
           title: "Darbības ar vairumu"
+        bulk_select_bookmarks_dropdown:
+          title: "Darbības ar vairumu"
     date_time_picker:
       from: "No"
       to: Kam
@@ -1690,7 +1701,6 @@ lv:
       list_item: "Saraksta punkts"
       help: "Palīdzība ar formatēšanu, izmantojot Markdown"
       modal_ok: "Labi"
-      modal_cancel: "Atcelt"
       cant_send_pm: "Atvainojiet, jūs nevarat sūtīt ziņu %{username}."
       yourself_confirm:
         title: "Vai jūs aizmirsāt pievienot saņēmējus?"
@@ -1894,20 +1904,18 @@ lv:
         bookmarks: "Vairāk grāmatzīmēs ievietoto tēmu nav. "
     topic_bulk_actions:
       close_topics:
-        name: "Slēgt tēmas"
+        name: "Aizvērt"
         optional: (pēc izvēles)
       archive_topics:
-        name: "Arhivēt tēmas"
-      unlist_topics:
-        name: "Izņemt no sarakstiem tēmas"
-      relist_topics:
-        name: "Atkal padarīt tēmas redzamas sarakstiem"
+        name: "Arhīvs"
+      move_messages_to_inbox:
+        name: "Pārvietot uz iesūtni"
       append_tags:
         name: "Pievienot tagus"
       replace_tags:
         name: "Aizvietot tagus"
       delete_topics:
-        name: "Dzēst tēmas"
+        name: "Dzēst"
     topic:
       filter_to:
         zero: "tēmā ziņu nav"
@@ -2656,7 +2664,6 @@ lv:
       download: "Lejuplādēt"
     tagging:
       selector_tags: "birkas"
-      selector_all_tags: "visi tagi"
       selector_no_tags: "bez tagiem"
       selector_remove_filter: "noņemt filtru"
       tags: "Tagi"
@@ -2774,6 +2781,8 @@ lv:
               content: "Tēmas"
             faq:
               content: "BUJ"
+            guidelines:
+              content: "Vadlīnijas"
             groups:
               content: "Grupas"
             users:
@@ -2782,7 +2791,7 @@ lv:
               content: "Mani ieraksti"
             review:
               content: "Pārskats"
-      filter: "Filtrs"
+      filter: "Filtri..."
     form_templates:
       upload_field:
         upload: "Augšupielādēt"
@@ -2864,6 +2873,9 @@ lv:
               label: Grupa
             category:
               label: Sadaļa
+      flags:
+        description: "Apraksts"
+        enabled: "Ieslēgts?"
       groups:
         new:
           title: "Jauna grupa"
@@ -2958,6 +2970,8 @@ lv:
           timestamp: "Izveidots"
           completion: "Pabeigšanas laiks"
           actions: "Darbības"
+          filter_status:
+            failed: "Neizdevies"
       home:
         title: "Mājas"
       account:
@@ -2996,6 +3010,21 @@ lv:
           screened_urls: "Pārbaudītie URL"
           security: "Drošība"
           spam: "Spams"
+      config_areas:
+        about:
+          optional: "(pēc izvēles)"
+          saved: "saglabāts!"
+        flags:
+          description: "Apraksts"
+          enabled: "Ieslēgts?"
+          edit: "Rediģēt"
+          delete: "Dzēst"
+          form:
+            save: "Saglabāt"
+            name: "Vārds"
+            description: "Apraksts"
+            topic: "tēmas"
+            post: "raksti"
       plugins:
         title: "Spraudņi"
         installed: "Uzinstalētie spraudņi"
@@ -3341,6 +3370,7 @@ lv:
           add: "Pievienot"
           success: "Veiksmīgi"
           upload_successful: "Augšupielāde ir veiksmīga. Vārdi ir pievienoti."
+          html_label: "HTML"
       form_templates:
         nav_title: "Veidnes"
         list_table:
@@ -3557,6 +3587,7 @@ lv:
         name: "Lauka nosaukums"
         type: "Lauka veids"
         description: "Lauka apraksts"
+        preferences: "Iestatījumi"
         save: "Saglabāt"
         edit: "Labot"
         delete: "Dzēst"
@@ -3567,6 +3598,9 @@ lv:
           title: "Nepieciešams pierakstoties"
           enabled: "obligāts"
           disabled: "nav obligāts"
+        requirement:
+          optional:
+            title: "Pēc izvēles"
         editable:
           title: "Labot pēc pierakstīšanās"
           enabled: "labojams"

@@ -1,8 +1,3 @@
-import {
-  createWatchedWordRegExp,
-  toWatchedWord,
-} from "discourse-common/utils/watched-words";
-
 const MAX_MATCHES = 100;
 
 function isLinkOpen(str) {
@@ -16,7 +11,7 @@ function isLinkClose(str) {
 function findAllMatches(text, matchers) {
   const matches = [];
 
-  for (const { word, pattern, replacement, link } of matchers) {
+  for (const { word, pattern, replacement, link, html } of matchers) {
     if (matches.length >= MAX_MATCHES) {
       break;
     }
@@ -28,6 +23,7 @@ function findAllMatches(text, matchers) {
           text: match[1],
           replacement,
           link,
+          html,
         });
 
         if (matches.length >= MAX_MATCHES) {
@@ -58,13 +54,15 @@ export function setup(helper) {
     if (md.options.discourse.watchedWordsReplace) {
       Object.entries(md.options.discourse.watchedWordsReplace).forEach(
         ([regexpString, options]) => {
-          const word = toWatchedWord({ [regexpString]: options });
-
           matchers.push({
             word: new RegExp(options.regexp, options.case_sensitive ? "" : "i"),
-            pattern: createWatchedWordRegExp(word),
+            pattern: new RegExp(
+              regexpString,
+              options.case_sensitive ? "gu" : "gui"
+            ),
             replacement: options.replacement,
             link: false,
+            html: options.html,
           });
         }
       );
@@ -73,11 +71,12 @@ export function setup(helper) {
     if (md.options.discourse.watchedWordsLink) {
       Object.entries(md.options.discourse.watchedWordsLink).forEach(
         ([regexpString, options]) => {
-          const word = toWatchedWord({ [regexpString]: options });
-
           matchers.push({
             word: new RegExp(options.regexp, options.case_sensitive ? "" : "i"),
-            pattern: createWatchedWordRegExp(word),
+            pattern: new RegExp(
+              regexpString,
+              options.case_sensitive ? "gu" : "gui"
+            ),
             replacement: options.replacement,
             link: true,
           });
@@ -239,7 +238,8 @@ export function setup(helper) {
                   nodes.push(token);
                 }
               } else {
-                token = new state.Token("text", "", 0);
+                let tokenType = matches[ln].html ? "html_inline" : "text";
+                token = new state.Token(tokenType, "", 0);
                 token.content = matches[ln].replacement;
                 token.level = level;
                 nodes.push(token);

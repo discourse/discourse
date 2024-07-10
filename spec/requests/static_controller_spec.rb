@@ -54,6 +54,14 @@ RSpec.describe StaticController do
         expect(response.media_type).to eq("image/png")
         expect(response.body.bytesize).to eq(upload.filesize)
       end
+
+      context "when favicon fails to load" do
+        before { FileHelper.stubs(:download).raises(SocketError) }
+
+        it "creates an admin notice" do
+          expect { get "/favicon/proxied" }.to change { AdminNotice.problem.count }.by(1)
+        end
+      end
     end
   end
 

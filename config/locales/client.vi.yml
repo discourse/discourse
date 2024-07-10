@@ -20,6 +20,7 @@ vi:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}triệu"
@@ -290,11 +291,19 @@ vi:
       search_placeholder: "Tìm kiếm dấu trang theo tên, tiêu đề chủ đề hoặc nội dung bài đăng"
       search: "Tìm kiếm"
       bookmark: "Đánh dấu chỉ mục"
+      bulk:
+        select_all: "Chọn hết"
+        clear_all: "Xoá hết"
+        selected_count:
+          other: "%{count} được chọn"
       reminders:
         today_with_time: "hôm nay lúc %{time}"
         tomorrow_with_time: "ngày mai lúc %{time}"
         at_time: "lúc %{date_time}"
         existing_reminder: "Bạn đã đặt lời nhắc cho dấu trang này sẽ được gửi vào lúc %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Xóa chỉ mục"
     copy_codeblock:
       copied: "đã sao chép!"
       copy: "sao chép mã vào khay nhớ tạm"
@@ -586,6 +595,7 @@ vi:
       topic_count_long: "Chủ đề đã được tạo"
       post_count: "Trả lời"
       post_count_long: "Trả lời đã đăng"
+      no_results_with_search: "Không tìm thấy kết quả."
       days_visited: "Ghé thăm"
       days_visited_long: "Ngày đã ghé thăm"
       posts_read: "Đã đọc"
@@ -909,6 +919,7 @@ vi:
     user_fields:
       none: "(chọn một tùy chọn)"
       required: 'Vui lòng nhập giá trị cho "%{name}"'
+      optional: (tùy chọn)
     user:
       said: "%{username}:"
       profile: "Tiểu sử"
@@ -952,7 +963,8 @@ vi:
       activity_stream: "Hoạt động"
       read: "Đã đọc"
       read_help: "Các chủ đề đã đọc gần đây"
-      preferences: "Tùy chỉnh"
+      preferences:
+        title: "Tùy chỉnh"
       feature_topic_on_profile:
         open_search: "Chọn chủ đề mới"
         title: "Chọn chủ đề"
@@ -1135,6 +1147,7 @@ vi:
         set_password: "Nhập Mật khẩu"
         choose_new: "Chọn một mật khẩu mới"
         choose: "Chọn một mật khẩu"
+        title: "Đặt lại mật khẩu"
       second_factor_backup:
         title: "Mã dự phòng đăng nhập hai yếu tố"
         regenerate: "Khởi tạo lại"
@@ -1464,7 +1477,6 @@ vi:
           error: "Xin lỗi, file phải ở định dạng CSV."
       password:
         title: "Mật khẩu"
-        too_short: "Mật khẩu của bạn quá ngắn."
         common: "Mật khẩu quá đơn giản, rất dễ bị đoán ra"
         same_as_username: "Mật khẩu của bạn trùng với tên đăng nhập."
         same_as_email: "Mật khẩu của bạn trùng với email của bạn."
@@ -1634,7 +1646,7 @@ vi:
       header_title: "Chào mừng!"
       subheader_title: "Hãy tạo tài khoản của bạn"
       disclaimer: "Bằng cách đăng ký, bạn đồng ý với <a href='%{privacy_link}' target='blank'>chính sách bảo mật</a> và <a href='%{tos_link}' target='blank'>điều khoản dịch vụ</a>."
-      title: "Tạo tài khoản của bạn"
+      title: "Đăng ký"
       failed: "Có gì đó không đúng, có thể email này đã được đăng ký, thử liên kết quên mật khẩu"
       associate: "Đã có tài khoản? <a href='%{associate_link}'>Đăng nhập</a> để liên kết tài khoản %{provider} của bạn."
       activation_title: "Kích hoạt tài khoản của bạn"
@@ -1777,7 +1789,7 @@ vi:
       loading: Đang tải…
     category_row:
       subcategory_count:
-        other: "+ %{count} danh mục phụ"
+        other: "+%{count} danh mục phụ"
       topic_count:
         other: "%{count} chủ đề trong danh mục này"
     select_kit:
@@ -1799,6 +1811,8 @@ vi:
         categories_admin_dropdown:
           title: "Quản lý Danh mục"
         bulk_select_topics_dropdown:
+          title: "Hành động theo lô"
+        bulk_select_bookmarks_dropdown:
           title: "Hành động theo lô"
     date_time_picker:
       from: Từ
@@ -1924,7 +1938,6 @@ vi:
       show_toolbar: "hiển thị thanh công cụ của trình soạn nội dung"
       hide_toolbar: "ẩn thanh công cụ của trình soạn nội dung"
       modal_ok: "OK"
-      modal_cancel: "Hủy"
       cant_send_pm: "Xin lỗi, bạn không thể gởi tin nhắn đến %{username}."
       yourself_confirm:
         title: "Bạn có quên chưa thêm người nhận?"
@@ -2308,14 +2321,12 @@ vi:
         bookmarks: "Không còn thêm chủ đề được đánh dấu nào nữa."
     topic_bulk_actions:
       close_topics:
-        name: "Đóng các chủ đề"
+        name: "Đóng"
         optional: (tùy chọn)
       archive_topics:
-        name: "Chủ đề Lưu trữ"
-      unlist_topics:
-        name: "Chủ đề không công khai"
-      relist_topics:
-        name: "Chủ đề liên quan"
+        name: "Lưu Trữ"
+      move_messages_to_inbox:
+        name: "Chuyển sang hộp thư"
       remove_tags:
         name: "Xóa thẻ"
       append_tags:
@@ -2323,7 +2334,7 @@ vi:
       replace_tags:
         name: "Thay thế thẻ"
       delete_topics:
-        name: "Xóa chủ đề"
+        name: "Xóa"
     topic:
       filter_to:
         other: "%{count} bài viết trong chủ đề"
@@ -3117,7 +3128,7 @@ vi:
       label: "Đang treo"
       label_with_count: "Đang xử lý (%{count})"
     posts_likes_MF: |
-      Chủ đề này có {count, plural, one {# trả lời} other {# trả lời}} {ratio, select,
+      Chủ đề này có {count, plural, other {# trả lời}} {ratio, select,
         low {với tỷ lệ like trên post cao}
         med {với tỷ lệ like trên post rất cao}
         high {với tỷ lệ like trên post cực cao}
@@ -3369,7 +3380,6 @@ vi:
       all_tags: "Tất cả các thẻ"
       other_tags: "Các thẻ khác"
       selector_tags: "thẻ"
-      selector_all_tags: "tất cả thẻ"
       selector_no_tags: "không có thẻ"
       selector_remove_filter: "bỏ đièu kiện lọc"
       tags: "Thẻ"
@@ -3593,6 +3603,8 @@ vi:
               title: "Tất cả các chủ đề"
             faq:
               content: "Câu hỏi thường gặp"
+            guidelines:
+              content: "Hướng dẫn"
             groups:
               content: "Nhóm"
             users:
@@ -3603,7 +3615,7 @@ vi:
                 other: "%{count} bản nháp"
             review:
               content: "Review"
-      filter: "Lọc"
+      filter: "Lọc..."
     until: "Cho đến khi:"
     form_templates:
       upload_field:
@@ -3729,6 +3741,9 @@ vi:
               label: Danh mục
             include_subcategories:
               label: "Bao gồm các danh mục phụ"
+      flags:
+        description: "Mô tả"
+        enabled: "Kích hoạt"
       groups:
         new:
           title: "Nhóm mới"
@@ -3968,6 +3983,8 @@ vi:
           timestamp: "Tạo bởi"
           completion: "Thời gian hoàn thành"
           actions: "Hành động"
+          filter_status:
+            failed: "Thất bại"
       home:
         title: "Trang chủ"
       account:
@@ -4014,6 +4031,23 @@ vi:
           search_logs: "Nhật ký tìm kiếm"
           security: "Bảo mật"
           spam: "Rác"
+      config_areas:
+        about:
+          optional: "(tùy chọn)"
+          update: "Cập nhật"
+          saved: "đã lưu"
+        flags:
+          description: "Mô tả"
+          enabled: "Kích hoạt"
+          edit: "Sửa"
+          delete: "Xóa"
+          delete_confirm: 'Bạn có chắc chắn muốn xóa "%{name}" không?'
+          form:
+            save: "Lưu lại"
+            name: "Tên"
+            description: "Mô tả"
+            topic: "các chủ đề"
+            post: "bài viết"
       plugins:
         title: "Plugin"
         installed: "Đã cài Plugin"
@@ -4345,7 +4379,6 @@ vi:
             description: "Liên kết, một và nút, thông báo, và màu nhấn."
           quaternary:
             name: "chia bốn"
-            description: "Liên kết điều hướng."
           header_background:
             name: "nền header"
             description: "Màu nền header của trang."
@@ -4644,6 +4677,7 @@ vi:
           exists: "Đã tồn tại"
           upload: "Thêm từ tệp"
           upload_successful: "Tải lên thành công. Các từ đã được thêm vào."
+          html_label: "HTML"
         test:
           no_matches: "Không tìm thấy"
       form_templates:
@@ -4940,6 +4974,7 @@ vi:
         name: "Tên Trường"
         type: "Loại Trường"
         description: "Trường mô tả"
+        preferences: "Tùy chỉnh"
         save: "Lưu"
         edit: "Sửa"
         delete: "Xoá"
@@ -4950,6 +4985,9 @@ vi:
           title: "Bắt buộc lúc đăng ký"
           enabled: "bắt buộc"
           disabled: "không bắt buộc"
+        requirement:
+          optional:
+            title: "Tùy chọn"
         editable:
           title: "Có thể chỉnh sửa sau khi đăng ký"
           enabled: "có thể chỉnh sửa"

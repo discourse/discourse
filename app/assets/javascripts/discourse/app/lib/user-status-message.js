@@ -22,6 +22,10 @@ export class UserStatusMessage {
   }
 
   destroy() {
+    if (this.tooltip.isDestroyed) {
+      return;
+    }
+
     this.tooltipInstance.destroy();
   }
 

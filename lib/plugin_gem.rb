@@ -10,7 +10,7 @@ module PluginGem
 
     spec_file = spec_path + "/#{name}-#{version}"
 
-    unless platform_variants(spec_file).find(&File.method(:exist?)).present?
+    if platform_variants(spec_file).find(&File.method(:exist?)).blank?
       command =
         "gem install #{name} -v #{version} -i #{gems_path} --no-document --ignore-dependencies --no-user-install"
       command += " --source #{opts[:source]}" if opts[:source]
@@ -34,12 +34,13 @@ module PluginGem
 
   def self.platform_variants(spec_file)
     platform_less = "#{spec_file}.gemspec"
-
     platform_full = "#{spec_file}-#{RUBY_PLATFORM}.gemspec"
-
     platform_version_less =
       "#{spec_file}-#{Gem::Platform.local.cpu}-#{Gem::Platform.local.os}.gemspec"
 
-    [platform_less, platform_full, platform_version_less]
+    variants = [platform_less, platform_full, platform_version_less]
+    variants << "#{spec_file}-#{RUBY_PLATFORM}-gnu.gemspec" if RUBY_PLATFORM.end_with?("-linux")
+
+    variants.uniq
   end
 end

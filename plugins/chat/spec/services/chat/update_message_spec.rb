@@ -43,9 +43,7 @@ RSpec.describe Chat::UpdateMessage do
       SiteSetting.chat_duplicate_message_sensitivity = 0
       Jobs.run_immediately!
 
-      [admin1, admin2, user1, user2, user3, user4].each do |user|
-        Fabricate(:user_chat_channel_membership, chat_channel: public_chat_channel, user: user)
-      end
+      [admin1, admin2, user1, user2, user3, user4].each { |user| public_chat_channel.add(user) }
     end
 
     def create_chat_message(user, message, channel, upload_ids: nil)
@@ -452,11 +450,7 @@ RSpec.describe Chat::UpdateMessage do
 
         it "doesn't notify the second time users that has already been notified when creating the message" do
           group_user = Fabricate(:user)
-          Fabricate(
-            :user_chat_channel_membership,
-            chat_channel: public_chat_channel,
-            user: group_user,
-          )
+          public_chat_channel.add(group_user)
           group =
             Fabricate(
               :public_group,
@@ -483,7 +477,7 @@ RSpec.describe Chat::UpdateMessage do
       describe "with @here mentions" do
         it "doesn't notify the second time users that has already been notified when creating the message" do
           user = Fabricate(:user)
-          Fabricate(:user_chat_channel_membership, chat_channel: public_chat_channel, user: user)
+          public_chat_channel.add(user)
           user.update!(last_seen_at: 4.minutes.ago)
 
           chat_message = create_chat_message(user1, "Mentioning @here", public_chat_channel)
@@ -504,7 +498,7 @@ RSpec.describe Chat::UpdateMessage do
       describe "with @all mentions" do
         it "doesn't notify the second time users that has already been notified when creating the message" do
           user = Fabricate(:user)
-          Fabricate(:user_chat_channel_membership, chat_channel: public_chat_channel, user: user)
+          public_chat_channel.add(user)
 
           chat_message = create_chat_message(user1, "Mentioning @all", public_chat_channel)
           notification_id = user.notifications.first.id
@@ -880,6 +874,8 @@ RSpec.describe Chat::UpdateMessage do
       SiteSetting.chat_editing_grace_period = 10
       SiteSetting.chat_editing_grace_period_max_diff_low_trust = 10
       SiteSetting.chat_editing_grace_period_max_diff_high_trust = 40
+
+      channel_1.add(current_user)
     end
 
     context "when all steps pass" do
@@ -920,6 +916,15 @@ RSpec.describe Chat::UpdateMessage do
         Jobs::Chat::ProcessMessage.any_instance.expects(:execute).once
         expect_not_enqueued_with(job: Jobs::Chat::ProcessMessage) { result }
       end
+
+      context "when user is a bot" do
+        fab!(:bot) { Discourse.system_user }
+        let(:guardian) { Guardian.new(bot) }
+
+        it "creates the membership" do
+          expect { result }.to change { channel_1.membership_for(bot) }.from(nil).to(be_present)
+        end
+      end
     end
 
     context "when params are not valid" do
@@ -934,10 +939,10 @@ RSpec.describe Chat::UpdateMessage do
       it { is_expected.to fail_a_policy(:can_modify_channel_message) }
     end
 
-    context "when user can't modify this message" do
+    context "when user is not member of the channel" do
       let(:message_id) { Fabricate(:chat_message).id }
 
-      it { is_expected.to fail_a_policy(:can_modify_message) }
+      it { is_expected.to fail_to_find_a_model(:membership) }
     end
 
     context "when edit grace period" do

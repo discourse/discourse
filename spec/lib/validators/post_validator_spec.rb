@@ -5,7 +5,7 @@ RSpec.describe PostValidator do
   let(:post) { build(:post, topic: topic) }
   let(:validator) { PostValidator.new({}) }
 
-  describe "#post_body_validator" do
+  describe "post_body_validator" do
     it "should not allow a post with an empty raw" do
       post.raw = ""
       validator.post_body_validator(post)
@@ -105,7 +105,7 @@ RSpec.describe PostValidator do
     end
   end
 
-  describe "too_many_posts" do
+  describe "max_posts_validator" do
     it "should be invalid when the user has posted too much" do
       post.user.expects(:posted_too_much_in_topic?).returns(true)
       validator.max_posts_validator(post)
@@ -123,115 +123,6 @@ RSpec.describe PostValidator do
       post.user.expects(:posted_too_much_in_topic?).returns(false)
       validator.max_posts_validator(post)
       expect(post.errors.count).to be(0)
-    end
-  end
-
-  describe "too_many_mentions" do
-    before do
-      SiteSetting.newuser_max_mentions_per_post = 2
-      SiteSetting.max_mentions_per_post = 3
-    end
-
-    it "should be invalid when new user exceeds max mentions limit" do
-      post.acting_user = build(:newuser)
-      post.expects(:raw_mentions).returns(%w[jake finn jake_old])
-      validator.max_mention_validator(post)
-      expect(post.errors.count).to be > 0
-    end
-
-    it "should be invalid when leader user exceeds max mentions limit" do
-      post.acting_user = build(:trust_level_4)
-      post.expects(:raw_mentions).returns(%w[jake finn jake_old jake_new])
-      validator.max_mention_validator(post)
-      expect(post.errors.count).to be > 0
-    end
-
-    it "should be valid when new user does not exceed max mentions limit" do
-      post.acting_user = build(:newuser)
-      post.expects(:raw_mentions).returns(%w[jake finn])
-      validator.max_mention_validator(post)
-      expect(post.errors.count).to be(0)
-    end
-
-    it "should be valid when new user exceeds max mentions limit in PM" do
-      post.acting_user = build(:newuser)
-      post.topic.expects(:private_message?).returns(true)
-      post.expects(:raw_mentions).returns(%w[jake finn jake_old])
-      validator.max_mention_validator(post)
-      expect(post.errors.count).to be(0)
-    end
-
-    it "should be valid when leader user does not exceed max mentions limit" do
-      post.acting_user = build(:trust_level_4)
-      post.expects(:raw_mentions).returns(%w[jake finn jake_old])
-      validator.max_mention_validator(post)
-      expect(post.errors.count).to be(0)
-    end
-
-    it "should be valid for moderator in all cases" do
-      post.acting_user = build(:moderator)
-      post.expects(:raw_mentions).never
-      validator.max_mention_validator(post)
-      expect(post.errors.count).to be(0)
-    end
-
-    it "should be valid for admin in all cases" do
-      post.acting_user = build(:admin)
-      post.expects(:raw_mentions).never
-      validator.max_mention_validator(post)
-      expect(post.errors.count).to be(0)
-    end
-  end
-
-  describe "too_many_embedded_media" do
-    fab!(:new_user) { Fabricate(:newuser, refresh_auto_groups: true) }
-
-    before do
-      SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      SiteSetting.newuser_max_embedded_media = 2
-    end
-
-    it "should be invalid when new user exceeds max mentions limit" do
-      post.acting_user = new_user
-      post.expects(:embedded_media_count).returns(3)
-      validator.max_embedded_media_validator(post)
-      expect(post.errors.count).to be > 0
-    end
-
-    it "should be valid when new user does not exceed max mentions limit" do
-      post.acting_user = new_user
-      post.expects(:embedded_media_count).returns(2)
-      validator.max_embedded_media_validator(post)
-      expect(post.errors.count).to be(0)
-    end
-
-    it "should be invalid when user trust level is not sufficient" do
-      SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
-      post.acting_user = Fabricate(:leader, groups: [])
-      post.expects(:embedded_media_count).returns(2)
-      validator.max_embedded_media_validator(post)
-      expect(post.errors.count).to be > 0
-    end
-
-    it "should be valid for moderator in all cases" do
-      post.acting_user = Fabricate(:moderator)
-      post.expects(:embedded_media_count).never
-      validator.max_embedded_media_validator(post)
-      expect(post.errors.count).to be(0)
-    end
-
-    it "should be valid for admin in all cases" do
-      post.acting_user = Fabricate(:admin)
-      post.expects(:embedded_media_count).never
-      validator.max_embedded_media_validator(post)
-      expect(post.errors.count).to be(0)
-    end
-  end
-
-  describe "invalid post" do
-    it "should be invalid" do
-      validator.validate(post)
-      expect(post.errors.count).to be > 0
     end
   end
 
@@ -319,6 +210,162 @@ RSpec.describe PostValidator do
     end
   end
 
+  describe "max_mention_validator" do
+    before do
+      SiteSetting.newuser_max_mentions_per_post = 2
+      SiteSetting.max_mentions_per_post = 3
+    end
+
+    it "should be invalid when new user exceeds max mentions limit" do
+      post.acting_user = build(:newuser)
+      post.expects(:raw_mentions).returns(%w[jake finn jake_old])
+      validator.max_mention_validator(post)
+      expect(post.errors.count).to be > 0
+    end
+
+    it "should be invalid when leader user exceeds max mentions limit" do
+      post.acting_user = build(:trust_level_4)
+      post.expects(:raw_mentions).returns(%w[jake finn jake_old jake_new])
+      validator.max_mention_validator(post)
+      expect(post.errors.count).to be > 0
+    end
+
+    it "should be valid when new user does not exceed max mentions limit" do
+      post.acting_user = build(:newuser)
+      post.expects(:raw_mentions).returns(%w[jake finn])
+      validator.max_mention_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+
+    it "should be valid when new user exceeds max mentions limit in PM" do
+      post.acting_user = build(:newuser)
+      post.topic.expects(:private_message?).returns(true)
+      post.expects(:raw_mentions).returns(%w[jake finn jake_old])
+      validator.max_mention_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+
+    it "should be valid when leader user does not exceed max mentions limit" do
+      post.acting_user = build(:trust_level_4)
+      post.expects(:raw_mentions).returns(%w[jake finn jake_old])
+      validator.max_mention_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+
+    it "should be valid for moderator in all cases" do
+      post.acting_user = build(:moderator)
+      post.expects(:raw_mentions).never
+      validator.max_mention_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+
+    it "should be valid for admin in all cases" do
+      post.acting_user = build(:admin)
+      post.expects(:raw_mentions).never
+      validator.max_mention_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+  end
+
+  describe "max_embedded_media_validator" do
+    fab!(:new_user) { Fabricate(:newuser, refresh_auto_groups: true) }
+
+    before do
+      SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.newuser_max_embedded_media = 2
+    end
+
+    it "should be invalid when new user exceeds max mentions limit" do
+      post.acting_user = new_user
+      post.expects(:embedded_media_count).returns(3)
+      validator.max_embedded_media_validator(post)
+      expect(post.errors.count).to be > 0
+    end
+
+    it "should be valid when new user does not exceed max mentions limit" do
+      post.acting_user = new_user
+      post.expects(:embedded_media_count).returns(2)
+      validator.max_embedded_media_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+
+    it "should be invalid when user trust level is not sufficient" do
+      SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+      post.acting_user = Fabricate(:leader, groups: [])
+      post.expects(:embedded_media_count).returns(2)
+      validator.max_embedded_media_validator(post)
+      expect(post.errors.count).to be > 0
+    end
+
+    it "should be valid for moderator in all cases" do
+      post.acting_user = Fabricate(:moderator)
+      post.expects(:embedded_media_count).never
+      validator.max_embedded_media_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+
+    it "should be valid for admin in all cases" do
+      post.acting_user = Fabricate(:admin)
+      post.expects(:embedded_media_count).never
+      validator.max_embedded_media_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+  end
+
+  describe "max_attachments_validator" do
+    fab!(:new_user) { Fabricate(:newuser) }
+
+    before { SiteSetting.newuser_max_attachments = 2 }
+
+    it "should be invalid when new user exceeds max attachments limit" do
+      post.acting_user = new_user
+      post.expects(:attachment_count).returns(3)
+      validator.max_attachments_validator(post)
+      expect(post.errors.count).to be > 0
+    end
+
+    it "should be valid when new user does not exceed max attachments limit" do
+      post.acting_user = new_user
+      post.expects(:attachment_count).returns(2)
+      validator.max_attachments_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+
+    it "should be valid for moderator in all cases" do
+      post.acting_user = Fabricate(:moderator)
+      post.expects(:attachment_count).never
+      validator.max_attachments_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+
+    it "should be valid for admin in all cases" do
+      post.acting_user = Fabricate(:admin)
+      post.expects(:attachment_count).never
+      validator.max_attachments_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+  end
+
+  describe "max_links_validator" do
+    fab!(:new_user) { Fabricate(:newuser) }
+
+    before { SiteSetting.newuser_max_links = 2 }
+
+    it "should be invalid when new user exceeds max links limit" do
+      post.acting_user = new_user
+      post.stubs(:link_count).returns(3)
+      validator.max_links_validator(post)
+      expect(post.errors.count).to be > 0
+    end
+
+    it "should be valid when new user does not exceed max links limit" do
+      post.acting_user = new_user
+      post.stubs(:link_count).returns(2)
+      validator.max_links_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+  end
+
   describe "force_edit_last_validator" do
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:other_user) { Fabricate(:user) }
@@ -381,14 +428,13 @@ RSpec.describe PostValidator do
 
   shared_examples "almost no validations" do
     it "skips most validations" do
-      validator.expects(:stripped_length).never
-      validator.expects(:raw_quality).never
+      validator.expects(:post_body_validator).never
       validator.expects(:max_posts_validator).never
+      validator.expects(:unique_post_validator).never
       validator.expects(:max_mention_validator).never
       validator.expects(:max_embedded_media_validator).never
       validator.expects(:max_attachments_validator).never
-      validator.expects(:newuser_links_validator).never
-      validator.expects(:unique_post_validator).never
+      validator.expects(:max_links_validator).never
       validator.expects(:force_edit_last_validator).never
       validator.validate(post)
     end

@@ -7,7 +7,6 @@
     <ConditionalLoadingSpinner @condition={{this.initialLoad}}>
       <Modal::History::Revision
         @model={{this.postRevision}}
-        @wikiDisabled={{this.wikiDisabled}}
         @previousCategory={{this.previousCategory}}
         @currentCategory={{this.currentCategory}}
         @displayInline={{this.displayInline}}
@@ -20,8 +19,6 @@
         @hiddenClasses={{this.hiddenClasses}}
         @mobileView={{this.site.mobileView}}
         @userChanges={{this.user_changes}}
-        @wikiDisabled={{this.wikiDisabled}}
-        @postTypeDisabled={{this.postTypeDisabled}}
         @previousCategory={{this.previousCategory}}
         @currentCategory={{this.currentCategory}}
         @previousTagChanges={{this.previousTagChanges}}

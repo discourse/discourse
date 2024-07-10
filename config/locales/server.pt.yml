@@ -185,7 +185,6 @@ pt:
       s3_backup_requires_s3_settings: "Não pode utilizar S3 como local para cópia de segurança a não ser que providencie '%{setting_name}'."
       s3_bucket_reused: "Não pode utilizar o mesmo balde para 's3_upload_bucket' e 's3_backup_bucket'. Escolha um balde diferente ou use uma localização diferente para cada balde."
       share_quote_facebook_requirements: "Você tem de definir um ID de Aplicação do Facebook para ativar a partilha de citações para o Facebook."
-      second_factor_cannot_enforce_with_socials: "Você não pode aplicar o 2FA com logins sociais ativados. Você tem primeiro de desativar o login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Não pode forçar 2FA se logins locais estiver desativado."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Você não pode impor 2FA se o DiscourseConnect estiver habilitado."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Você não pode desabilitar o login local se 2FA for obrigatório. Desative o 2FA obrigatório antes de desativar os logins locais."
@@ -405,6 +404,8 @@ pt:
         raw: "Corpo"
       user_profile:
         bio_raw: "Sobre Mim"
+      user:
+        password: "Palavra-passe"
     errors:
       models:
         topic:
@@ -919,6 +920,8 @@ pt:
     web_crawlers:
       labels:
         page_views: "Exibições de Página"
+    web_hook_events_daily_aggregate:
+      xaxis: "Dia"
     suspicious_logins:
       labels:
         user: Utilizador
@@ -942,18 +945,19 @@ pt:
       labels:
         user: Utilizador
         qtt_like: Gostos Recebidos
+    topic_view_stats:
+      labels:
+        topic: Tópico
+        logged_in_views: Com Sessão Iniciada
+        anon_views: Anónimo
+        total_views: Total
   dashboard:
-    rails_env_warning: "O seu servidor está a executar em modo %{env}."
-    host_names_warning: "O ficheiro config/database.yml está a utilizar o nome do servidor local por defeito. Modifique para usar o nome do servidor do seu sítio."
-    sidekiq_warning: 'Sidekiq não está em execução. Muitas tarefas, como envio de emails, são executadas de forma assíncrona pelo sidekiq. Por favor certifique-se de que pelo menos um processo sidekiq está em execução. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda sobre Sidekiq aqui</a>.'
-    queue_size_warning: "O número de trabalhos na fila é %{queue_size}, o que é alto. Isto pode indicar um problema com o(s) processo(s) Sidekiq, ou pode necessitar de adicionar mais trabalhadores Sidekiq."
-    memory_warning: "O seu servidor está a executar com menos de 1 GB de memória total. Pelo menos 1 GB é a quantidade de memória recomendada."
-    subfolder_ends_in_slash: "A configuração da sua sub-página está incorreta; o DISCOURSE_RELATIVE_URL_ROOT termina com um traço."
-    email_polling_errored_recently:
-      one: "A consulta automática de emails gerou um erro nas últimas 24 horas. Consulte em <a href='%{base_path}/logs' target='_blank'>os registos</a> para mais detalhes."
-      other: "A consulta automática de emails gerou %{count} erros nas últimas 24 horas. Consulte em <a href='%{base_path}/logs' target='_blank'>os registos</a> para mais detalhes."
-    poll_pop3_timeout: "A tentativa de ligação ao servidor POP3 está a ultrapassar o tempo máximo. O email da caixa de entrada não pôde ser obtido. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a> e fornecedor de serviço internet."
-    poll_pop3_auth_error: "A tentativa de ligação ao servidor POP3 está a falhar por motivos de erro de autenticação. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a>."
+    problem:
+      rails_env: "O seu servidor está a executar em modo %{env}."
+      host_names: "O ficheiro config/database.yml está a utilizar o nome do servidor local por defeito. Modifique para usar o nome do servidor do seu sítio."
+      queue_size: "O número de trabalhos na fila é %{queue_size}, o que é alto. Isto pode indicar um problema com o(s) processo(s) Sidekiq, ou pode necessitar de adicionar mais trabalhadores Sidekiq."
+      ram: "O seu servidor está a executar com menos de 1 GB de memória total. Pelo menos 1 GB é a quantidade de memória recomendada."
+      subfolder_ends_in_slash: "A configuração da sua sub-página está incorreta; o DISCOURSE_RELATIVE_URL_ROOT termina com um traço."
   site_settings:
     disabled: "desativado"
     censored_words: "Palavras que serão automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
@@ -1277,6 +1281,9 @@ pt:
       - ""
       - "inativo"
       - ""
+      navigation_menu:
+      - "barra Lateral"
+      - ""
   search:
     within_post: "#%{post_number} por %{username}"
     types:
@@ -1359,7 +1366,6 @@ pt:
     password_too_long: "As palavras-passe estão limitadas a 200 caracteres."
     email_too_long: "O email fornecido é demasiado longo. Nomes de caixas de email não devem ter mais que 254 caracteres, e nomes de domínio não devem ter mais que 253 caracteres."
     reserved_username: "Esse nome de utilizador não é permitido."
-    missing_user_field: "Não completou todos os campos de utilizador."
     second_factor_title: "Autenticação em Dois Passos"
     second_factor_backup_description: "Por favor introduza um dos seus códigos de reserva:"
     second_factor_toggle:
@@ -1755,7 +1761,6 @@ pt:
 
         %{message}
     digest:
-      why: "Um breve sumário de %{site_link} desde a sua última visita em %{last_seen_at}"
       since_last_visit: "Desde a sua última visita"
       new_topics: "Novos tópicos"
       unread_notifications: "Notificações Não Lidas"
@@ -1765,7 +1770,6 @@ pt:
       join_the_discussion: "Ler Mais"
       popular_posts: "Publicações Populares"
       click_here: "clique aqui"
-      preheader: "Um breve sumário desde a sua última visita em %{last_seen_at}"
     forgot_password:
       title: "Esqueci a palavra-passe"
     set_password:
@@ -1841,6 +1845,7 @@ pt:
     Edite a primeira mensagem neste tópico para alterar os conteúdos da página %{page_name}.
   guidelines_topic:
     title: "FAQ/Orientações"
+    guidelines_title: "Orientações"
   tos_topic:
     title: "Termos de Serviço"
   privacy_topic:

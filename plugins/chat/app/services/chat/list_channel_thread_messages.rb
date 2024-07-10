@@ -18,7 +18,6 @@ module Chat
     contract
 
     model :thread
-    policy :ensure_thread_enabled
     policy :can_view_thread
     step :fetch_optional_membership
     step :determine_target_message_id
@@ -35,6 +34,8 @@ module Chat
       attribute :direction, :string # (optional)
       attribute :page_size, :integer # (optional)
       attribute :fetch_from_last_read, :boolean # (optional)
+      attribute :fetch_from_last_message, :boolean # (optional)
+      attribute :fetch_from_first_message, :boolean # (optional)
       attribute :target_date, :string # (optional)
 
       validates :direction,
@@ -60,16 +61,16 @@ module Chat
       ::Chat::Thread.strict_loading.includes(channel: :chatable).find_by(id: contract.thread_id)
     end
 
-    def ensure_thread_enabled(thread:)
-      thread.channel.threading_enabled || thread.force
-    end
-
     def can_view_thread(guardian:, thread:)
-      guardian.can_preview_chat_channel?(thread.channel)
+      guardian.user == Discourse.system_user || guardian.can_preview_chat_channel?(thread.channel)
     end
 
-    def determine_target_message_id(contract:, membership:, guardian:)
-      if contract.fetch_from_last_read || !contract.target_message_id
+    def determine_target_message_id(contract:, membership:, guardian:, thread:)
+      if contract.fetch_from_last_message
+        context.target_message_id = thread.last_message_id
+      elsif contract.fetch_from_first_message
+        context.target_message_id = thread.original_message_id
+      elsif contract.fetch_from_last_read || !contract.target_message_id
         context.target_message_id = membership&.last_read_message_id
       elsif contract.target_message_id
         context.target_message_id = contract.target_message_id
@@ -98,6 +99,8 @@ module Chat
           page_size: contract.page_size || Chat::MessagesQuery::MAX_PAGE_SIZE,
           direction: contract.direction,
           target_date: contract.target_date,
+          include_target_message_id:
+            contract.fetch_from_first_message || contract.fetch_from_last_message,
         )
 
       context.can_load_more_past = messages_data[:can_load_more_past]

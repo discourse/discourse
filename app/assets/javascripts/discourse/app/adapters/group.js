@@ -1,7 +1,7 @@
 import RestAdapter from "discourse/adapters/rest";
 
-export default RestAdapter.extend({
+export default class GroupAdapter extends RestAdapter {
   appendQueryParams(path, findArgs) {
-    return this._super(path, findArgs, ".json");
-  },
-});
+    return super.appendQueryParams(path, findArgs, ".json");
+  }
+}
