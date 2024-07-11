@@ -8,8 +8,8 @@ export default class UserBadge extends Component {
 
   get badgeUrl() {
     // NOTE: I tried using a link-to helper here but the queryParams mean it fails
-    let username = this.args.user?.username_lower || "";
-    username = username !== "" ? "?username=" + username : "";
+    let username = this.args.user?.username_lower;
+    username = username ? `?username=${username}` : "";
     return this.args.badge.url + username;
   }
 
