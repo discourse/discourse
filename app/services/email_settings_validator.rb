@@ -91,6 +91,7 @@ class EmailSettingsValidator
       end
 
       if username || password
+        authentication = provider_specific_authentication_overrides(host) if authentication.nil?
         authentication = (authentication || GlobalSetting.smtp_authentication)&.to_sym
         if !%i[plain login cram_md5].include?(authentication)
           raise ArgumentError, "Invalid authentication method. Must be plain, login, or cram_md5."
@@ -129,7 +130,11 @@ class EmailSettingsValidator
       smtp.enable_tls(ssl_context) if enable_tls
 
       smtp.open_timeout = 5
-      smtp.read_timeout = 5
+
+      # Some SMTP servers have a higher delay to respond with errors
+      # as a tarpit measure that slows down clients who are sending "bad" commands.
+      # 10s is the minimum, we might need to increase this in the future.
+      smtp.read_timeout = 10
 
       smtp.start(domain, username, password, authentication)
       smtp.finish
@@ -176,10 +181,19 @@ class EmailSettingsValidator
     raise err
   end
 
+  # Ideally we (or net-smtp) would automatically detect the correct authentication
+  # method, but this is sufficient for our purposes because we know certain providers
+  # need certain authentication methods. This may need to change when we start to
+  # use XOAUTH2 for SMTP.
+  def self.provider_specific_authentication_overrides(host)
+    return :login if %w[smtp.office365.com smtp-mail.outlook.com].include?(host)
+    :plain
+  end
+
   def self.provider_specific_ssl_overrides(host, port, enable_tls, enable_starttls_auto)
-    # Gmail acts weirdly if you do not use the correct combinations of
+    # Certain mail servers act weirdly if you do not use the correct combinations of
     # TLS settings based on the port, we clean these up here for the user.
-    if host == "smtp.gmail.com"
+    if %w[smtp.gmail.com smtp.office365.com smtp-mail.outlook.com].include?(host)
       if port.to_i == 587
         enable_starttls_auto = true
         enable_tls = false
