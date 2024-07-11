@@ -1,17 +1,19 @@
 # frozen_string_literal: true
 
 RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
-  before do
-    @link = "https://github.com/discourse/discourse/pull/1253/"
-    @uri = "https://api.github.com/repos/discourse/discourse/pulls/1253"
+  let(:gh_link) { "https://github.com/discourse/discourse/pull/1253/" }
+  let(:api_uri) { "https://api.github.com/repos/discourse/discourse/pulls/1253" }
 
-    stub_request(:get, @uri).to_return(
+  before do
+    stub_request(:get, api_uri).to_return(
       status: 200,
       body: onebox_response(described_class.onebox_name),
     )
   end
 
-  include_context "with engines"
+  include_context "with engines" do
+    let(:link) { gh_link }
+  end
   it_behaves_like "an engine"
 
   describe "#to_html" do
@@ -54,16 +56,15 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
   end
 
   context "with commit links" do
-    before do
-      @link =
-        "https://github.com/discourse/discourse/pull/1253/commits/d7d3be1130c665cc7fab9f05dbf32335229137a6"
-      @uri =
-        "https://api.github.com/repos/discourse/discourse/commits/d7d3be1130c665cc7fab9f05dbf32335229137a6"
+    let(:gh_link) do
+      "https://github.com/discourse/discourse/pull/1253/commits/d7d3be1130c665cc7fab9f05dbf32335229137a6"
+    end
 
-      stub_request(:get, @uri).to_return(
-        status: 200,
-        body: onebox_response(described_class.onebox_name + "_commit"),
-      )
+    before do
+      stub_request(
+        :get,
+        "https://api.github.com/repos/discourse/discourse/commits/d7d3be1130c665cc7fab9f05dbf32335229137a6",
+      ).to_return(status: 200, body: onebox_response(described_class.onebox_name + "_commit"))
     end
 
     it "includes commit name" do
@@ -76,14 +77,13 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
   end
 
   context "with comment links" do
-    before do
-      @link = "https://github.com/discourse/discourse/pull/1253/#issuecomment-21597425"
-      @uri = "https://api.github.com/repos/discourse/discourse/issues/comments/21597425"
+    let(:gh_link) { "https://github.com/discourse/discourse/pull/1253/#issuecomment-21597425" }
 
-      stub_request(:get, @uri).to_return(
-        status: 200,
-        body: onebox_response(described_class.onebox_name + "_comment"),
-      )
+    before do
+      stub_request(
+        :get,
+        "https://api.github.com/repos/discourse/discourse/issues/comments/21597425",
+      ).to_return(status: 200, body: onebox_response(described_class.onebox_name + "_comment"))
     end
 
     it "includes comment" do
@@ -96,7 +96,7 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
 
     it "sends it as part of the request" do
       html
-      expect(WebMock).to have_requested(:get, @uri).with(
+      expect(WebMock).to have_requested(:get, api_uri).with(
         headers: {
           "Authorization" => "Bearer #{SiteSetting.github_onebox_access_token}",
         },
