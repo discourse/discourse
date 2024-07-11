@@ -114,7 +114,7 @@
     {{#if (and this.hasInactiveThemes (not this.activeFilter))}}
       {{#each this.inactiveThemes as |theme|}}
         <ThemesListItem
-          @classNames="inactive-theme"
+          class="inactive-theme"
           @theme={{theme}}
           @navigateToTheme={{fn this.navigateToTheme theme}}
           @selectInactiveMode={{this.selectInactiveMode}}
