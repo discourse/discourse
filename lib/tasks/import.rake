@@ -2,6 +2,9 @@
 
 # Use http://tatiyants.com/pev/#/plans/new if you want to optimize a query
 
+require "colored2"
+require_relative "../../app/services/badge_granter"
+
 task "import:ensure_consistency" => :environment do
   log "Starting..."
 
@@ -27,6 +30,7 @@ task "import:ensure_consistency" => :environment do
   update_topic_users
   update_topic_featured_users
   create_category_definitions
+  grant_badges
 
   # run_jobs
 
@@ -715,6 +719,32 @@ task "import:update_avatars_from_sso" => :environment do
   threads.each(&:join)
   status_queue.close
   status_thread.join
+end
+
+class NoNotificationBadeGranter < BadgeGranter
+  def self.suppress_notification?(badge, granted_at, skip_new_user_tips)
+    true
+  end
+end
+
+def grant_badges
+  return unless SiteSetting.enable_badges
+
+  Badge.enabled.find_each do |b|
+    begin
+      start_time = Time.now
+      print "  - Backfilling #{b.name}"
+      NoNotificationBadeGranter.backfill(b)
+      puts ": #{(Time.now - start_time).to_i} seconds"
+    rescue StandardError
+      print ": "
+      puts "failed".red
+    end
+  end
+
+  BadgeGranter.revoke_ungranted_titles!
+  UserBadge.ensure_consistency! # Badge granter sometimes uses raw SQL, so hooks do not run. Clean up data
+  UserStat.update_distinct_badge_count
 end
 
 def run_jobs
