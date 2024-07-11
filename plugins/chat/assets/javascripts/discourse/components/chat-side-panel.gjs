@@ -3,15 +3,18 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import KeyValueStore from "discourse/lib/key-value-store";
 import resizableNode from "../modifiers/chat/resizable-node";
 import ChatSidePanelResizer from "./chat-side-panel-resizer";
 
 const MIN_PANEL_WIDTH = 250;
+const STORE_NAMESPACE = "discourse_chat_side_panel_size_";
 
 export default class ChatSidePanel extends Component {
-  @service chatSidePanelSize;
   @service chatStateManager;
   @service site;
+
+  store = new KeyValueStore(STORE_NAMESPACE);
 
   @action
   setupSize(element) {
@@ -24,7 +27,7 @@ export default class ChatSidePanel extends Component {
     }
 
     const validWidth = Math.min(
-      this.chatSidePanelSize.width,
+      this.store.getObject("width"),
       this.mainContainerWidth - MIN_PANEL_WIDTH
     );
 
@@ -32,7 +35,7 @@ export default class ChatSidePanel extends Component {
       [{ width: element.style.width }, { width: validWidth + "px" }],
       { duration: 0, fill: "forwards" }
     );
-    this.chatSidePanelSize.width = validWidth;
+    this.storeWidth(validWidth);
   }
 
   @action
@@ -44,12 +47,19 @@ export default class ChatSidePanel extends Component {
         [{ width: element.style.width }, { width: size.width + "px" }],
         { duration: 0, fill: "forwards" }
       );
-      this.chatSidePanelSize.width = size.width;
+      this.storeWidth(size.width);
     }
   }
 
   get mainContainerWidth() {
     return document.getElementById("main-chat-outlet").clientWidth;
+  }
+
+  storeWidth(width) {
+    this.store.setObject({
+      key: "width",
+      value: width,
+    });
   }
 
   <template>
