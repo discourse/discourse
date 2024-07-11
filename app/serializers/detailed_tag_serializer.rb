@@ -14,7 +14,7 @@ class DetailedTagSerializer < TagSerializer
   end
 
   def category_restricted
-    !object.all_category_ids.empty?
+    object.all_category_ids.present?
   end
 
   def include_tag_group_names?

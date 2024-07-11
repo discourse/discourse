@@ -246,7 +246,7 @@ class Tag < ActiveRecord::Base
   def all_category_ids
     @all_category_ids ||=
       categories.pluck(:id) +
-        tag_groups.includes(:categories).map { |tg| tg.categories.map(&:id) }.flatten
+        tag_groups.includes(:categories).flat_map { |tg| tg.categories.map(&:id) }
   end
 
   def all_categories(guardian)
