@@ -10,11 +10,11 @@ class DetailedTagSerializer < TagSerializer
   end
 
   def categories
-    Category.secured(scope).where(id: category_ids)
+    object.all_categories(scope)
   end
 
   def category_restricted
-    !category_ids.empty?
+    object.all_category_ids.present?
   end
 
   def include_tag_group_names?
@@ -23,13 +23,5 @@ class DetailedTagSerializer < TagSerializer
 
   def tag_group_names
     object.tag_groups.map(&:name)
-  end
-
-  private
-
-  def category_ids
-    @_category_ids ||=
-      object.categories.pluck(:id) +
-        object.tag_groups.includes(:categories).map { |tg| tg.categories.map(&:id) }.flatten
   end
 end

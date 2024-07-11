@@ -243,6 +243,18 @@ class Tag < ActiveRecord::Base
     end
   end
 
+  def all_category_ids
+    @all_category_ids ||=
+      categories.pluck(:id) +
+        tag_groups.includes(:categories).flat_map { |tg| tg.categories.map(&:id) }
+  end
+
+  def all_categories(guardian)
+    categories = Category.secured(guardian).where(id: all_category_ids)
+    Category.preload_user_fields!(guardian, categories)
+    categories
+  end
+
   %i[tag_created tag_updated tag_destroyed].each do |event|
     define_method("trigger_#{event}_event") do
       DiscourseEvent.trigger(event, self)
