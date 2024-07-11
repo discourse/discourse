@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
 import KeyValueStore from "discourse/lib/key-value-store";
 
@@ -7,8 +8,10 @@ export default class ChatSidePanelSize extends Service {
 
   store = new KeyValueStore(this.STORE_NAMESPACE);
 
+  @tracked _width = this.store.getObject("width");
+
   get width() {
-    return this.store.getObject("width") || this.MIN_WIDTH;
+    return this._width ?? this.MIN_WIDTH;
   }
 
   set width(width) {
@@ -16,6 +19,7 @@ export default class ChatSidePanelSize extends Service {
       key: "width",
       value: this.#min(width, this.MIN_WIDTH),
     });
+    this._width = this.#min(width, this.MIN_WIDTH);
   }
 
   #min(number, min) {
