@@ -38,7 +38,7 @@ export default class ThemesListItem extends Component {
 
   get children() {
     let children = this.args.theme?.get("childThemes.[]");
-    if (this.args.theme?.component || !children) {
+    if (this.args.theme?.get("component") || !children) {
       return [];
     }
     children = this.childrenExpanded
@@ -56,7 +56,11 @@ export default class ThemesListItem extends Component {
 
   get moreCount() {
     const childrenCount = this.args.theme?.get("childThemes.length");
-    if (this.args.theme?.component || !childrenCount || this.childrenExpanded) {
+    if (
+      this.args.theme?.get("component") ||
+      !childrenCount ||
+      this.childrenExpanded
+    ) {
       return 0;
     }
     return childrenCount - MAX_COMPONENTS;
@@ -77,6 +81,7 @@ export default class ThemesListItem extends Component {
       }}
       role="button"
       {{on "click" this.handleClick}}
+      ...attributes
     >
       <div class="inner-wrapper">
         <span>
