@@ -84,6 +84,7 @@
           <ReviewableClaimedTopic
             @topicId={{this.topicId}}
             @claimedBy={{this.reviewable.claimed_by}}
+            @onClaim={{fn (mut this.reviewable.claimed_by)}}
           />
         </div>
       {{/if}}

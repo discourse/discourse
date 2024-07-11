@@ -29,6 +29,7 @@
             <ReviewableClaimedTopic
               @topicId={{rt.id}}
               @claimedBy={{rt.claimed_by}}
+              @onClaim={{fn (mut rt.claimed_by)}}
             />
             <LinkTo
               @route="review.index"
