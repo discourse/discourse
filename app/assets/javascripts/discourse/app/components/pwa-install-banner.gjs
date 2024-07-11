@@ -60,7 +60,6 @@ export default class PwaInstallBanner extends Component {
   }
 
   <template>
-    {{log this.bannerDismissed}}
     {{#if this.showPWAInstallBanner}}
       <div class="pwa-install-banner alert alert-info">
         <span>
