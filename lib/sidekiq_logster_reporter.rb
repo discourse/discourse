@@ -9,13 +9,21 @@ class SidekiqLogsterReporter
     fake_env = {}
     context.each { |key, value| Logster.add_to_env(fake_env, key, value) }
 
-    text = "Job exception: #{ex}\n"
+    text = "Job exception: #{ex}"
     Logster.add_to_env(fake_env, :backtrace, ex.backtrace) if ex.backtrace
-
     Logster.add_to_env(fake_env, :current_hostname, Discourse.current_hostname)
 
     Thread.current[Logster::Logger::LOGSTER_ENV] = fake_env
-    Logster.logger.error(text)
+
+    Logster.logger.add_with_opts(
+      ::Logger::Severity::ERROR,
+      text,
+      "sidekiq-exception",
+      backtrace: ex.backtrace,
+      exception_class: ex.class.to_s,
+      exception_message: ex.message.strip,
+      context:,
+    )
   rescue => e
     Logster.logger.fatal(
       "Failed to log exception #{ex} #{hash}\nReason: #{e.class} #{e}\n#{e.backtrace.join("\n")}",

@@ -91,12 +91,18 @@ class DiscourseLogstashLogger < Logger
           event["exception.class"] = $1
           event["exception.message"] = $2.strip
         end
+
+        ALLOWED_HEADERS_FROM_ENV.each do |header|
+          event["request.headers.#{header.downcase}"] = opts.dig(:env, header)
+        end
       end
 
-      if (env = opts&.dig(:env)).present?
-        ALLOWED_HEADERS_FROM_ENV.each do |header|
-          event["request.headers.#{header.downcase}"] = opts[:env][header]
-        end
+      if progname == "sidekiq-exception"
+        event["job.class"] = opts.dig(:context, :job)
+        event["job.opts"] = opts.dig(:context, :opts)
+        event["job.problem_db"] = opts.dig(:context, :problem_db)
+        event["exception.class"] = opts[:exception_class]
+        event["exception.message"] = opts[:exception_message]
       end
     end
 
