@@ -69,6 +69,7 @@ export default class ThemesListItem extends Component {
   }
 
   <template>
+    {{! template-lint-disable no-nested-interactive }}
     <div
       class={{concatClass
         "themes-list-container__item"
