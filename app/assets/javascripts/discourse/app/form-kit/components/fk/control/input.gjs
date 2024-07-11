@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import concatClass from "discourse/helpers/concat-class";
 
 const SUPPORTED_TYPES = [
   "color",
@@ -58,13 +59,25 @@ export default class FKControlInput extends Component {
   }
 
   <template>
+    {{#if @before}}
+      <span class="form-kit__before-input">{{@before}}</span>
+    {{/if}}
+
     <input
       type={{this.type}}
       value={{@value}}
-      class="form-kit__control-input"
+      class={{concatClass
+        "form-kit__control-input"
+        (if @before "--with-before")
+        (if @after "--with-after")
+      }}
       disabled={{@field.disabled}}
       ...attributes
       {{on "input" this.handleInput}}
     />
+
+    {{#if @after}}
+      <span class="form-kit__after-input">{{@after}}</span>
+    {{/if}}
   </template>
 }

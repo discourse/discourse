@@ -8,6 +8,12 @@
     <form.Field @title="Age" @name="age" as |field|>
       <field.Input placeholder="Age" @type="number" @format="small" />
     </form.Field>
+    <form.Field @title="Website" @name="website" as |field|>
+      <field.Input @before="https://" @after=".com" @format="large" />
+    </form.Field>
+    <form.Field @title="Test2" @name="test2" as |field|>
+      <field.Input @after=".com" />
+    </form.Field>
   </Form>
 </StyleguideExample>
 
@@ -162,7 +168,7 @@
 <StyleguideExample @title="Row/Col">
   <Form as |form|>
     <form.Row as |row|>
-      <row.Col @size={{4}}>
+      <row.Col @size={{6}}>
         <form.Field
           @title="Username"
           @name="username"

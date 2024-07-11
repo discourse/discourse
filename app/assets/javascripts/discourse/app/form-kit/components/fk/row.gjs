@@ -2,7 +2,7 @@ import { hash } from "@ember/helper";
 import FKCol from "discourse/form-kit/components/fk/col";
 
 const FKRow = <template>
-  <div class="form-kit__row" ...attributes>
+  <div class="form-kit__row --grid" ...attributes>
     {{yield (hash Col=FKCol)}}
   </div>
 </template>;

@@ -79,6 +79,8 @@ export default class FKControlWrapper extends Component {
           @yesLabel={{@yesLabel}}
           @noLabel={{@noLabel}}
           @lang={{@lang}}
+          @before={{@before}}
+          @after={{@after}}
           @height={{@height}}
           @selection={{@selection}}
           id={{@field.id}}
