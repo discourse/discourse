@@ -15,10 +15,6 @@ export default class Contents extends Component {
   @service header;
   @service sidebarState;
 
-  get topicPresent() {
-    return !!this.header.topic;
-  }
-
   get sidebarIcon() {
     if (this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu) {
       return "discourse-sidebar";
@@ -31,7 +27,11 @@ export default class Contents extends Component {
     <div class="contents">
       <PluginOutlet
         @name="header-contents__before"
-        @outletArgs={{hash topic=this.header.topic}}
+        @outletArgs={{hash
+          topic=this.header.topic
+          topicInfo=this.header.topicInfo
+          topicInfoVisible=this.header.topicInfoVisible
+        }}
       />
       {{#if this.site.desktopView}}
         {{#if @sidebarEnabled}}
@@ -45,12 +45,12 @@ export default class Contents extends Component {
 
       <div class="home-logo-wrapper-outlet">
         <PluginOutlet @name="home-logo-wrapper">
-          <HomeLogo @minimized={{this.topicPresent}} />
+          <HomeLogo @minimized={{this.header.topicInfoVisible}} />
         </PluginOutlet>
       </div>
 
-      {{#if this.header.topic}}
-        <TopicInfo @topic={{this.header.topic}} />
+      {{#if this.header.topicInfoVisible}}
+        <TopicInfo @topic={{this.header.topicInfo}} />
       {{else if
         (and
           this.siteSettings.bootstrap_mode_enabled
@@ -66,19 +66,31 @@ export default class Contents extends Component {
       <div class="before-header-panel-outlet">
         <PluginOutlet
           @name="before-header-panel"
-          @outletArgs={{hash topic=this.header.topic}}
+          @outletArgs={{hash
+            topic=this.header.topic
+            topicInfo=this.header.topicInfo
+            topicInfoVisible=this.header.topicInfoVisible
+          }}
         />
       </div>
       <div class="panel" role="navigation">{{yield}}</div>
       <div class="after-header-panel-outlet">
         <PluginOutlet
           @name="after-header-panel"
-          @outletArgs={{hash topic=this.header.topic}}
+          @outletArgs={{hash
+            topic=this.header.topic
+            topicInfo=this.header.topicInfo
+            topicInfoVisible=this.header.topicInfoVisible
+          }}
         />
       </div>
       <PluginOutlet
         @name="header-contents__after"
-        @outletArgs={{hash topic=this.header.topic}}
+        @outletArgs={{hash
+          topic=this.header.topic
+          topicInfo=this.header.topicInfo
+          topicInfoVisible=this.header.topicInfoVisible
+        }}
       />
     </div>
   </template>
