@@ -15,6 +15,11 @@ describe ChatSDK::Message do
       expect(message.message).to eq("something")
     end
 
+    it "sets created_by_sdk to true" do
+      message = described_class.create(**params)
+      expect(message).to have_attributes(created_by_sdk: true)
+    end
+
     context "when thread_id is present" do
       fab!(:thread_1) { Fabricate(:chat_thread, channel: channel_1) }
 
