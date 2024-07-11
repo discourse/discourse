@@ -4,10 +4,9 @@ import { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { and, gt } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
-import { classNameBindings, classNames } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import escape from "discourse-common/lib/escape";
@@ -15,13 +14,11 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 
 const MAX_COMPONENTS = 4;
 
-@classNames("themes-list-container__item")
-@classNameBindings("theme.selected:selected")
 export default class ThemesListItem extends Component {
   @tracked childrenExpanded = false;
 
   get displayHasMore() {
-    return this.args.theme?.childThemes?.length > MAX_COMPONENTS;
+    return this.args.theme?.get("childThemes.length") > MAX_COMPONENTS;
   }
 
   get displayComponents() {
@@ -32,14 +29,15 @@ export default class ThemesListItem extends Component {
     return this.children.length > 0;
   }
 
-  click(e) {
-    if (!e.target.classList.contains("others-count")) {
-      this.navigateToTheme();
+  @action
+  handleClick(event) {
+    if (!event.target.classList.contains("others-count")) {
+      this.args.navigateToTheme();
     }
   }
 
   get children() {
-    let children = this.args.theme?.childThemes;
+    let children = this.args.theme?.get("childThemes.[]");
     if (this.args.theme?.component || !children) {
       return [];
     }
@@ -57,7 +55,7 @@ export default class ThemesListItem extends Component {
   }
 
   get moreCount() {
-    const childrenCount = this.args.theme?.childThemes?.length;
+    const childrenCount = this.args.theme?.get("childThemes.length");
     if (this.args.theme?.component || !childrenCount || this.childrenExpanded) {
       return 0;
     }
@@ -67,11 +65,18 @@ export default class ThemesListItem extends Component {
   @action
   toggleChildrenExpanded(event) {
     event?.preventDefault();
-    this.toggleProperty("childrenExpanded");
+    this.childrenExpanded = !this.childrenExpanded;
   }
 
   <template>
-    <div class="themes-list-container__item">
+    <div
+      class={{concatClass
+        "themes-list-container__item"
+        (if @theme.selected "selected")
+      }}
+      role="button"
+      {{on "click" this.handleClick}}
+    >
       <div class="inner-wrapper">
         <span>
           <PluginOutlet
