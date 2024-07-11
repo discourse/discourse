@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
@@ -33,6 +34,7 @@ export default class RelatedMessages extends Component {
     this.moreTopicsPreferenceTracking.removeTopicList(LIST_ID);
   }
 
+  @cached
   get targetUser() {
     const topic = this.args.topic;
 
