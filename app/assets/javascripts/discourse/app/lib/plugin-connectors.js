@@ -4,7 +4,10 @@ import {
   setComponentTemplate,
 } from "@glimmer/manager";
 import templateOnly from "@ember/component/template-only";
-import deprecated from "discourse-common/lib/deprecated";
+import { isDeprecatedOutletArgument } from "discourse/helpers/deprecated-outlet-argument";
+import deprecated, {
+  withSilencedDeprecations,
+} from "discourse-common/lib/deprecated";
 import { buildRawConnectorCache } from "discourse-common/lib/raw-templates";
 
 let _connectorCache;
@@ -235,21 +238,42 @@ export function rawConnectorsFor(outletName) {
   return _rawConnectorCache[outletName] || [];
 }
 
-export function buildArgsWithDeprecations(args, deprecatedArgs) {
+export function buildArgsWithDeprecations(args, deprecatedArgs, opts = {}) {
   const output = {};
 
   Object.keys(args).forEach((key) => {
     Object.defineProperty(output, key, { value: args[key] });
   });
 
-  Object.keys(deprecatedArgs).forEach((key) => {
-    Object.defineProperty(output, key, {
+  Object.keys(deprecatedArgs).forEach((argumentName) => {
+    Object.defineProperty(output, argumentName, {
       get() {
-        deprecated(`${key} is deprecated`, {
-          id: "discourse.plugin-connector.deprecated-arg",
-        });
+        const deprecatedArg = deprecatedArgs[argumentName];
 
-        return deprecatedArgs[key];
+        if (!isDeprecatedOutletArgument(deprecatedArg)) {
+          throw new Error(
+            "deprecated argument is not defined properly, use `deprecatedOutletArg` from discourse/helpers/deprecated-outlet-argument"
+          );
+        }
+
+        let message = deprecatedArg.message;
+        if (!message) {
+          if (opts.name) {
+            message = `outlet arg \`${argumentName}\` is deprecated on the outlet \`${opts.name}\``;
+          } else {
+            message = `${argumentName} is deprecated`;
+          }
+        }
+
+        if (!deprecatedArg.silence) {
+          deprecated(message, deprecatedArg.options);
+          return deprecatedArg.value;
+        }
+
+        return withSilencedDeprecations(deprecatedArg.silence, () => {
+          deprecated(message, deprecatedArg.options);
+          return deprecatedArg.value;
+        });
       },
     });
   });
