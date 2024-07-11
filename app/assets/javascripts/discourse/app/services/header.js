@@ -14,7 +14,7 @@ export default class Header extends Service {
    *
    * The information is updated as soon as the page is loaded.
    *
-   * @type {Integer|null}
+   * @type {Topic|null}
    */
   @tracked topicInfo = null;
 
