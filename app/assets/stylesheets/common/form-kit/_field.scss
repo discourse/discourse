@@ -19,6 +19,21 @@
     }
   }
 
+  &-toggle {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: var(--form-kit-medium-input);
+
+    .form-kit__container-content {
+      align-items: flex-end;
+    }
+
+    .form-kit__container-title {
+      padding: 0;
+    }
+  }
+
   .form-kit__container-content {
     &.--small {
       width: var(--form-kit-small-input) !important;
