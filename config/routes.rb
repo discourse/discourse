@@ -1107,7 +1107,7 @@ Discourse::Application.routes.draw do
 
     put "bookmarks/bulk"
 
-    resources :posts, only: %i[show update create destroy] do
+    resources :posts, only: %i[show update create destroy], defaults: { format: "json" } do
       delete "bookmark", to: "posts#destroy_bookmark"
       put "wiki"
       put "post_type"
