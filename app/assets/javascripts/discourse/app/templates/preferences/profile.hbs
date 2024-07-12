@@ -170,31 +170,23 @@
     </div>
   {{/if}}
 
-  <span>
-    <PluginOutlet
-      @name="user-preferences-profile"
-      @connectorTagName="div"
-      @outletArgs={{hash model=this.model save=(action "save")}}
-    />
-  </span>
+  <PluginOutlet
+    @name="user-preferences-profile"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model save=(action "save")}}
+  />
 
-  <span>
-    <PluginOutlet
-      @name="user-custom-preferences"
-      @connectorTagName="div"
-      @outletArgs={{hash model=this.model}}
-    />
-  </span>
+  <PluginOutlet
+    @name="user-custom-preferences"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
 
-  <br />
-
-  <span>
-    <PluginOutlet
-      @name="user-custom-controls"
-      @connectorTagName="div"
-      @outletArgs={{hash model=this.model}}
-    />
-  </span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
 {{/unless}}
 
 <SaveControls

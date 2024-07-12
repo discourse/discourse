@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
-import { observes, on } from "@ember-decorators/object";
+import { observes } from "@ember-decorators/object";
 import loadAce from "discourse/lib/load-ace-editor";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
@@ -21,6 +21,14 @@ export default class AceEditor extends Component {
   htmlPlaceholder = false;
   _editor = null;
   _skipContentChangeEvent = null;
+
+  constructor() {
+    super(...arguments);
+    this.appEvents.on("ace:resize", this.resize);
+    window.addEventListener("resize", this.resize);
+    this._darkModeListener = window.matchMedia("(prefers-color-scheme: dark)");
+    this._darkModeListener.addListener(this.setAceTheme);
+  }
 
   @observes("editorId")
   editorIdChanged() {
@@ -74,17 +82,6 @@ export default class AceEditor extends Component {
       });
       editor.container.parentNode.setAttribute("data-disabled", disabled);
     }
-  }
-
-  @on("willDestroyElement")
-  _destroyEditor() {
-    if (this._editor) {
-      this._editor.destroy();
-      this._editor = null;
-    }
-
-    this.appEvents.off("ace:resize", this.resize);
-    window.removeEventListener("resize", this.resize);
   }
 
   @action
@@ -152,29 +149,25 @@ export default class AceEditor extends Component {
       this.changeDisabledState();
       this.warnSCSSDeprecations();
 
-      window.addEventListener("resize", this.resize);
-
-      this.appEvents.on("ace:resize", this.resize);
-
       if (this.autofocus) {
         this.send("focus");
       }
 
       this.setAceTheme();
-
-      this._darkModeListener = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      );
-      this._darkModeListener.addListener(this.setAceTheme);
     });
   }
 
   willDestroyElement() {
+    if (this._editor) {
+      this._editor.destroy();
+      this._editor = null;
+    }
+
     super.willDestroyElement(...arguments);
+
     this._darkModeListener?.removeListener(this.setAceTheme);
-    window.addEventListener("resize", () => {
-      this.appEvents.trigger("ace:resize");
-    });
+    window.removeEventListener("resize", this.resize);
+    this.appEvents.off("ace:resize", this.resize);
   }
 
   get aceTheme() {

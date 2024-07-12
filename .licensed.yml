@@ -20,21 +20,22 @@ ignored:
     - date # Ruby (default gem)
     - digest # Ruby (default gem)
     - io-wait # Ruby (default gem)
+    - irb # Ruby (default gem)
     - json # Ruby (default gem)
+    - logger # Ruby (default gem)
+    - mutex_m # BSD-2-Clause
     - net-http # Ruby (default gem)
     - net-protocol # Ruby (default gem)
     - openssl # Ruby (default gem)
     - racc # Ruby (default gem)
     - rchardet # LGPL
+    - rdoc # Ruby (default gem)
+    - reline # Ruby (default gem)
     - ruby2_keywords # Ruby (default gem)
+    - stringio # Ruby (default gem)
     - strscan # Ruby (default gem)
     - timeout # Ruby (default gem)
     - uri # Ruby (default gem)
-    - mutex_m # BSD-2-Clause
-    - irb # Ruby (default gem)
-    - rdoc # Ruby (default gem)
-    - reline # Ruby (default gem)
-    - stringio # Ruby (default gem)
 
 reviewed:
   bundler:
@@ -42,6 +43,7 @@ reviewed:
     - coderay # MIT
     - concurrent-ruby # MIT
     - css_parser # MIT
+    - drb # BSD-2-Clause
     - excon # MIT
     - faraday-em_http # MIT
     - faraday-em_synchrony # MIT
@@ -69,4 +71,3 @@ reviewed:
     - tilt # MIT
     - unf # BSD-2-Clause
     - unicorn # Ruby or GPLv2/GPLv3
-    - drb # BSD-2-Clause

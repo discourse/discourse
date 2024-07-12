@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
-import SidePanel from "discourse/plugins/chat/discourse/components/chat-side-panel";
+import ChatSidePanel from "discourse/plugins/chat/discourse/components/chat-side-panel";
 import FullPageChat from "discourse/plugins/chat/discourse/components/full-page-chat";
 
 export default class ChatRoutesChannel extends Component {
@@ -32,8 +32,8 @@ export default class ChatRoutesChannel extends Component {
       />
     </div>
 
-    <SidePanel>
+    <ChatSidePanel>
       {{outlet}}
-    </SidePanel>
+    </ChatSidePanel>
   </template>
 }

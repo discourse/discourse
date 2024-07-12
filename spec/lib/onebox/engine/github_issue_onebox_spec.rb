@@ -1,17 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe Onebox::Engine::GithubIssueOnebox do
-  before do
-    @link = "https://github.com/discourse/discourse/issues/1"
-    @issue_uri = "https://api.github.com/repos/discourse/discourse/issues/1"
+  let(:issue_uri) { "https://api.github.com/repos/discourse/discourse/issues/1" }
 
-    stub_request(:get, @issue_uri).to_return(
+  before do
+    stub_request(:get, issue_uri).to_return(
       status: 200,
       body: onebox_response("github_issue_onebox"),
     )
   end
 
-  include_context "with engines"
+  include_context "with engines" do
+    let(:link) { "https://github.com/discourse/discourse/issues/1" }
+  end
   it_behaves_like "an engine"
 
   describe "#to_html" do
@@ -27,7 +28,7 @@ RSpec.describe Onebox::Engine::GithubIssueOnebox do
 
       it "sends it as part of the request" do
         html
-        expect(WebMock).to have_requested(:get, @issue_uri).with(
+        expect(WebMock).to have_requested(:get, issue_uri).with(
           headers: {
             "Authorization" => "Bearer #{SiteSetting.github_onebox_access_token}",
           },

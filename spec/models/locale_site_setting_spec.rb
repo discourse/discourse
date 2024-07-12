@@ -108,4 +108,12 @@ RSpec.describe LocaleSiteSetting do
       expect(LocaleSiteSetting.fallback_locale("en_GB")).to eq(:en)
     end
   end
+
+  describe ".supported_locales" do
+    it "has a language name for each supported locale" do
+      LocaleSiteSetting.supported_locales.each do |locale|
+        expect(LocaleSiteSetting.language_names[locale]).to be_present
+      end
+    end
+  end
 end

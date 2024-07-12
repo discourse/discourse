@@ -2123,10 +2123,10 @@
   dependencies:
     lodash "^4.17.21"
 
-"@json-editor/json-editor@2.10.0":
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/@json-editor/json-editor/-/json-editor-2.10.0.tgz#95002ed971e8b39d8d8834df885f002275a1e5ce"
-  integrity sha512-RGkzTccb4UDtmcQ1PYDWDJ3SXoGIRmesTUTJCyZ9kyVGjHs/HgqIXlpQPmg9fHFi9D45/8RTdGqlvkZMGw2zlA==
+"@json-editor/json-editor@2.15.1":
+  version "2.15.1"
+  resolved "https://registry.yarnpkg.com/@json-editor/json-editor/-/json-editor-2.15.1.tgz#93451868f9174055c680d388fcdf5a18f4a1df54"
+  integrity sha512-Z4KFXpL7I9wrKD94c1PcIwFfCvUzYhwM0jH2ihP2OSH8wut0FnqzCfKCL0gdNHG3A2UVsyVJBoU9Iwsc0xB6zQ==
   dependencies:
     core-js "^3.27.2"
 
@@ -4329,10 +4329,10 @@ chrome-trace-event@^1.0.2:
   resolved "https://registry.yarnpkg.com/chrome-trace-event/-/chrome-trace-event-1.0.3.tgz#1015eced4741e15d06664a957dbbf50d041e26ac"
   integrity sha512-p3KULyQg4S7NIHixdwbGX+nFHkoBiA4YQmyWtjb8XngSKV124nJmRysgAeujbUVb15vh+RvFUfCPqU7rXk+hZg==
 
-chromium-bidi@0.5.24:
-  version "0.5.24"
-  resolved "https://registry.yarnpkg.com/chromium-bidi/-/chromium-bidi-0.5.24.tgz#0fe672fa30b1e6bcc63ae818442b21c41849c435"
-  integrity sha512-5xQNN2SVBdZv4TxeMLaI+PelrnZsHDhn8h2JtyriLr+0qHcZS8BMuo93qN6J1VmtmrgYP+rmcLHcbpnA8QJh+w==
+chromium-bidi@0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/chromium-bidi/-/chromium-bidi-0.6.0.tgz#cba9737dcdf4285d0cb1ab8298e03d08e1370b64"
+  integrity sha512-VnxVrpGojAjkiGFN2I+KtsDILFAjiGWVEDizOEnKzEDkT93eQT1cqTfUkqmOyLq33i1q4a1KDYbH+52CUe4Ufw==
   dependencies:
     mitt "3.0.1"
     urlpattern-polyfill "10.0.0"
@@ -5543,10 +5543,10 @@ ember-cli-version-checker@^5.1.1, ember-cli-version-checker@^5.1.2:
     semver "^7.3.4"
     silent-error "^1.1.1"
 
-ember-cli@~5.9.0:
-  version "5.9.0"
-  resolved "https://registry.yarnpkg.com/ember-cli/-/ember-cli-5.9.0.tgz#ee5683b4f73158bde2e5be4be19a068578098af6"
-  integrity sha512-3+4F9STw4yRttzMCCrbpAwwQLtUqIwVug/Ve6rvUFvcpK//n8Q6N7iaPBHhYOFGwwok8Nr0jfkINxLWTl6WrlA==
+ember-cli@~5.10.0:
+  version "5.10.0"
+  resolved "https://registry.yarnpkg.com/ember-cli/-/ember-cli-5.10.0.tgz#095c659fb8cb337331acb90516babe6a61ee27b0"
+  integrity sha512-Y9nihTELz3dxphn/Fvw9/Gdwe5Q13Zlsh3wa4qXyy84CHRo9FcDNb8ka8UstaUxHoCcsASS6iUq8cos2krLRdA==
   dependencies:
     "@pnpm/find-workspace-dir" "^6.0.2"
     broccoli "^3.5.2"
@@ -8710,59 +8710,59 @@ lcid@^3.0.0:
   dependencies:
     invert-kv "^3.0.0"
 
-lefthook-darwin-arm64@1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/lefthook-darwin-arm64/-/lefthook-darwin-arm64-1.7.1.tgz#d6cbbfe6988a995ea32e4c92d6f99d54c2bbd440"
-  integrity sha512-WNM92Ix2rKmDKXzjlkVGCdzSkzzj3Z9D7yKi22KeOZ1iCXG1EtXEWmXO5M2g28FNb4cZI0r2DACNH5hz8JsfgA==
+lefthook-darwin-arm64@1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/lefthook-darwin-arm64/-/lefthook-darwin-arm64-1.7.2.tgz#43a451b3ed640bb3dcf478d4255d5434577fe246"
+  integrity sha512-E3Ouk04/yeD8IBLGJkyzL0NMYIrjADQvaDbf4yNSq6HWGnUC0R2KpYxrZno2yahZnvQ0vYTDta7Egw6cqcYGlQ==
 
-lefthook-darwin-x64@1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/lefthook-darwin-x64/-/lefthook-darwin-x64-1.7.1.tgz#b2683a73da0a1ea86c6bc16be188743a955f12a7"
-  integrity sha512-SDPEciuP+eNzuKN8kx1x0dRzFElpO65on5q0raKgTbTvSOyVd3c7sMLGluz6OSM5qqEWEdEeA8QYKpdA56uXEw==
+lefthook-darwin-x64@1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/lefthook-darwin-x64/-/lefthook-darwin-x64-1.7.2.tgz#d4c737580b45fc791c8e1f1a87715a2425d02d3c"
+  integrity sha512-Am6ZNmjItQSqKbK8/spFIj5GDWNHJ47PM0vpT1PnBHrgWanjz0iLw6adwpMu8u7+CkZlHjp08lbvjBPGHIu3dg==
 
-lefthook-freebsd-arm64@1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/lefthook-freebsd-arm64/-/lefthook-freebsd-arm64-1.7.1.tgz#0cc51b81236bc0465fd8c1842a7cf63840d24d90"
-  integrity sha512-Ym2hhv6w7RWva3jfjtBOYck+GiaCx1JpnsOCf9tDYKFiV6ve/DoLrGQ+uI0UOqtiHN/bJzt5BrNXygfAubXaEg==
+lefthook-freebsd-arm64@1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/lefthook-freebsd-arm64/-/lefthook-freebsd-arm64-1.7.2.tgz#9d5285e798afd4f4ad56c37f97bc382e2b09c74b"
+  integrity sha512-o1LBgHhwnUOLs9iVbi1GhvXMQlzYSKnyFcc061iADxHMJk1xWMD6RUyyohmLbfEU0gTWxkRfkdAFvbvwNqQiww==
 
-lefthook-freebsd-x64@1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/lefthook-freebsd-x64/-/lefthook-freebsd-x64-1.7.1.tgz#47b2584a578dc9a28d185c94e3bd620b30a79c70"
-  integrity sha512-u9WYd+LDJr1A+VQV6lTe1a0yG0Ew9Wgeb9Ym9IKr9eLblrt6JNvW1x9u0e9OFteLwnqBCCT8omBY+NARcvqVvg==
+lefthook-freebsd-x64@1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/lefthook-freebsd-x64/-/lefthook-freebsd-x64-1.7.2.tgz#8ff750baf1e2262353e0ad12bc40ee81ed736a97"
+  integrity sha512-vxB3FeeFYDfk4vAahaZdGJ7gbViGOkOyL5JRBDWlFjUfZJLGwVauf6GhtysdO1dgxs9K3ECdEtXgW+uOB872rQ==
 
-lefthook-linux-arm64@1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/lefthook-linux-arm64/-/lefthook-linux-arm64-1.7.1.tgz#4ce35be13553a78c0800ddc5771fb29848e39dee"
-  integrity sha512-Sgc+vHNnAbiJ5b1yMJsFn/rQ6eVQ0KLzuL0x0KJqFZvmffFenVmqABrFHKNDzhj8//KUbHdgCgLzqQAkAbCNcg==
+lefthook-linux-arm64@1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/lefthook-linux-arm64/-/lefthook-linux-arm64-1.7.2.tgz#3022d9d1095643437098fab82748d965beff221e"
+  integrity sha512-4dbVj5Jjy12flAyOcVWvWQ6gJoQ6X7HJ3qfsrM8/GIfLQBlkw+YRcLuWHUI3H9qsQFpkpYZsLcmUXoVM77z5mw==
 
-lefthook-linux-x64@1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/lefthook-linux-x64/-/lefthook-linux-x64-1.7.1.tgz#b757ff298724083c1fa06cee5fa05480e1f96e24"
-  integrity sha512-UDIM6Cf0aHrfvIxeVz05M7g+omLdyTQpmB2BqkeANpd/5+1LqRMOBOdtW+y3X47NKYL++iFh2EtIhlIqVBj6Kw==
+lefthook-linux-x64@1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/lefthook-linux-x64/-/lefthook-linux-x64-1.7.2.tgz#7589e7ed9b968e16189a0c9e4a074fd92aea19e7"
+  integrity sha512-lT0IRp1pGtbua8IWVeIVCSAxKex9fOyAexHaEmBZytfqr/94lpjzWWEQdLFQAlpZthuyCkuaJp5kLgMj6/IySQ==
 
-lefthook-windows-arm64@1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/lefthook-windows-arm64/-/lefthook-windows-arm64-1.7.1.tgz#45c5f9b2b0ab2d7260602037b98e156eacb43d1f"
-  integrity sha512-cz3vhIdmORA25YF4ZnPjDQwi/KQd8cB89q7jHEQ9sv+bpSOTXiauMOM9jvXbnvGrmFaR1qbLRTYpKQs6oyGdsA==
+lefthook-windows-arm64@1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/lefthook-windows-arm64/-/lefthook-windows-arm64-1.7.2.tgz#afd7054130461ad69c53c6ff40bd069b48e49fde"
+  integrity sha512-DxWLmcNI3NICd4rFqTPgXf+G/97ztl+ONvYuNE/ELAxVp338xAUFvzZCQvDZDzeTLrT1C4hZZ4zDvEhnOOECXg==
 
-lefthook-windows-x64@1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/lefthook-windows-x64/-/lefthook-windows-x64-1.7.1.tgz#9575fe23af4f6d7ef0c958431f20dd6ca5fe7162"
-  integrity sha512-Fa9HEkJczbD1zu6wBKP2rR738uRei5sb76d/DzgqW09ZBTwQl+6Oiyg3kicVU1N1X8bhZ/g1h49tcHrVtjU5ww==
+lefthook-windows-x64@1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/lefthook-windows-x64/-/lefthook-windows-x64-1.7.2.tgz#3e516daf6c98d911e76ae8ed97364772e137145e"
+  integrity sha512-fL4F8/XXoYUJJ6GSYCwFL+bRufzbkeMSGYZKUDr6ZKOI4KafIEcgFNwlnQF03gY6vkUrYKksXQofOVlOfv3vPA==
 
-lefthook@^1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/lefthook/-/lefthook-1.7.1.tgz#c31f57dd42a28fed22376db519fb40c4c3064398"
-  integrity sha512-WNgjrPH4bYZyAYsiK7y7roQCQFIgqdCFxVCVe7ylAFD+QvW8tMceG19mR3GS2if1fGHC/cs+Z0r6PI52b/G1eA==
+lefthook@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/lefthook/-/lefthook-1.7.2.tgz#1c2c7c9d2a76f7efcd31346ee4c1f45a1a2a3a19"
+  integrity sha512-QCCq6KyVAVYBuxWf338TjMAjjGesyNRtfxJhjYV+kpUkd5ST2yr8ZUJrcEKe+0cUfziPOQ9Hz+1JZniXJx+JqA==
   optionalDependencies:
-    lefthook-darwin-arm64 "1.7.1"
-    lefthook-darwin-x64 "1.7.1"
-    lefthook-freebsd-arm64 "1.7.1"
-    lefthook-freebsd-x64 "1.7.1"
-    lefthook-linux-arm64 "1.7.1"
-    lefthook-linux-x64 "1.7.1"
-    lefthook-windows-arm64 "1.7.1"
-    lefthook-windows-x64 "1.7.1"
+    lefthook-darwin-arm64 "1.7.2"
+    lefthook-darwin-x64 "1.7.2"
+    lefthook-freebsd-arm64 "1.7.2"
+    lefthook-freebsd-x64 "1.7.2"
+    lefthook-linux-arm64 "1.7.2"
+    lefthook-linux-x64 "1.7.2"
+    lefthook-windows-arm64 "1.7.2"
+    lefthook-windows-x64 "1.7.2"
 
 levn@^0.4.1:
   version "0.4.1"
@@ -10460,16 +10460,16 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.3.0.tgz#f67fa67c94da8f4d0cfff981aee4118064199b8f"
   integrity sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==
 
-puppeteer-core@^22.12.1:
-  version "22.12.1"
-  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-22.12.1.tgz#4dacc2e9ab127ef534a4bb4793d33f9424a5b48d"
-  integrity sha512-XmqeDPVdC5/3nGJys1jbgeoZ02wP0WV1GBlPtr/ULRbGXJFuqgXMcKQ3eeNtFpBzGRbpeoCGWHge1ZWKWl0Exw==
+puppeteer-core@^22.13.0:
+  version "22.13.0"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-22.13.0.tgz#aba45e900cd5379fde88510b7f4915017cc6b5c3"
+  integrity sha512-ZkpRX8nm/S39BnpcCverMzIc6oGWBPOUeOeaWRLKHqiKVCZ1l28HxPTYLitJlDiB16xZATSKpjul+sl+ZEm0HQ==
   dependencies:
     "@puppeteer/browsers" "2.2.3"
-    chromium-bidi "0.5.24"
+    chromium-bidi "0.6.0"
     debug "^4.3.5"
     devtools-protocol "0.0.1299070"
-    ws "^8.17.1"
+    ws "^8.18.0"
 
 qs@6.11.0:
   version "6.11.0"
@@ -11022,10 +11022,10 @@ sane@^5.0.1:
     minimist "^1.1.1"
     walker "~1.0.5"
 
-sass@^1.77.7:
-  version "1.77.7"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.77.7.tgz#ef3520edc8f59da089f25891d8a6bebf93668ee0"
-  integrity sha512-9ywH75cO+rLjbrZ6en3Gp8qAMwPGBapFtlsMJoDTkcMU/bSe5a6cjKVUn5Jr4Gzg5GbP3HE8cm+02pLCgcoMow==
+sass@^1.77.8:
+  version "1.77.8"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.77.8.tgz#9f18b449ea401759ef7ec1752a16373e296b52bd"
+  integrity sha512-4UHg6prsrycW20fqLGPShtEvo/WyHRVRHwOP4DzkUrObWoWI05QBSfzU71TVB7PFaL104TwNaHpjlWXAZbQiNQ==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"
@@ -11801,10 +11801,10 @@ terser-webpack-plugin@^5.3.10:
     serialize-javascript "^6.0.1"
     terser "^5.26.0"
 
-terser@^5.26.0, terser@^5.3.0, terser@^5.31.1, terser@^5.7.0:
-  version "5.31.1"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.31.1.tgz#735de3c987dd671e95190e6b98cfe2f07f3cf0d4"
-  integrity sha512-37upzU1+viGvuFtBo9NPufCb9dwM0+l9hMxYyWfBA+fbwrPqNJAhbZ6W47bBFnZHKHTUBnMvi87434qq+qnxOg==
+terser@^5.26.0, terser@^5.3.0, terser@^5.31.2, terser@^5.7.0:
+  version "5.31.2"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.31.2.tgz#b5ca188107b706084dca82f988089fa6102eba11"
+  integrity sha512-LGyRZVFm/QElZHy/CPr/O4eNZOZIzsrQ92y4v9UJe/pFJjypje2yI3C2FmPtvUEnhadlSbmG2nXtdcjHOjCfxw==
   dependencies:
     "@jridgewell/source-map" "^0.3.3"
     acorn "^8.8.2"
@@ -12586,10 +12586,10 @@ webpack-stats-plugin@^1.1.3:
   resolved "https://registry.yarnpkg.com/webpack-stats-plugin/-/webpack-stats-plugin-1.1.3.tgz#ebcc36c8b468074ad737882e2043c1ce4b55d928"
   integrity sha512-yUKYyy+e0iF/w31QdfioRKY+h3jDBRpthexBOWGKda99iu2l/wxYsI/XqdlP5IU58/0KB9CsJZgWNAl+/MPkRw==
 
-webpack@^5.92.1:
-  version "5.92.1"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.92.1.tgz#eca5c1725b9e189cffbd86e8b6c3c7400efc5788"
-  integrity sha512-JECQ7IwJb+7fgUFBlrJzbyu3GEuNBcdqr1LD7IbSzwkSmIevTm8PF+wej3Oxuz/JFBUZ6O1o43zsPkwm1C4TmA==
+webpack@^5.93.0:
+  version "5.93.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.93.0.tgz#2e89ec7035579bdfba9760d26c63ac5c3462a5e5"
+  integrity sha512-Y0m5oEY1LRuwly578VqluorkXbvXKh7U3rLoQCEO04M97ScRr44afGVkI0FQFsXzysk5OgFAxjZAb9rsGQVihA==
   dependencies:
     "@types/eslint-scope" "^3.7.3"
     "@types/estree" "^1.0.5"
@@ -12808,10 +12808,10 @@ ws@^7.2.0, ws@^7.4.6:
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.9.tgz#54fa7db29f4c7cec68b1ddd3a89de099942bb591"
   integrity sha512-F+P9Jil7UiSKSkppIiD94dN07AwvFixvLIj1Og1Rl9GGMuNipJnV9JzjD6XuqmAeiswGvUmNLjr5cFuXwNS77Q==
 
-ws@^8.17.1:
-  version "8.17.1"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.17.1.tgz#9293da530bb548febc95371d90f9c878727d919b"
-  integrity sha512-6XQFvXTkbfUOZOKKILFG1PDK2NDQs4azKQl26T0YS5CxqWLgXajbPZ+h4gZekJyRqFU8pvnbAbbs/3TgRPy+GQ==
+ws@^8.18.0:
+  version "8.18.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.18.0.tgz#0d7505a6eafe2b0e712d232b42279f53bc289bbc"
+  integrity sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==
 
 ws@~8.11.0:
   version "8.11.0"

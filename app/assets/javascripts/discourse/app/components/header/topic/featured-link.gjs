@@ -7,7 +7,7 @@ export default class FeaturedLink extends Component {
   @service header;
 
   get meta() {
-    return extractLinkMeta(this.header.topic);
+    return extractLinkMeta(this.header.topicInfo);
   }
 
   <template>
