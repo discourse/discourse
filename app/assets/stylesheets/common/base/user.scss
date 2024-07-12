@@ -475,6 +475,20 @@
     color: var(--primary-medium);
   }
 
+  .user-info .user-detail {
+    width: 100%;
+    .name-line {
+      .username {
+        width: auto;
+        overflow-wrap: anywhere;
+        flex: 1 0 auto;
+      }
+      > a {
+        flex-wrap: nowrap;
+      }
+    }
+  }
+
   @media all and (max-width: 600px) {
     float: none;
     width: 100%;
