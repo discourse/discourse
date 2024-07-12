@@ -90,7 +90,10 @@ export default class SpreadsheetEditor extends Component {
 
   @action
   insertTable() {
-    const updatedHeaders = this.spreadsheet.getHeaders().split(","); // keys
+    const updatedHeaders = this.spreadsheet
+      .getHeaders()
+      .split(",")
+      .map((c) => c.trim()); // keys
     const updatedData = this.spreadsheet.getData(); // values
     const markdownTable = this.buildTableMarkdown(updatedHeaders, updatedData);
 
@@ -205,7 +208,7 @@ export default class SpreadsheetEditor extends Component {
         // headings
         headings = this.extractTableContent(row).map((heading) => {
           return {
-            title: heading,
+            title: heading || " ",
             width: Math.max(
               heading.length * rowWidthFactor,
               this.defaultColWidth
@@ -221,7 +224,9 @@ export default class SpreadsheetEditor extends Component {
       }
     });
 
-    headings.forEach((h, i) => (h.align = this.alignments?.[i] ?? "left"));
+    headings.forEach((h, i) => {
+      h.align = this.alignments?.[i] ?? "left";
+    });
 
     return this.buildSpreadsheet(rows, headings);
   }

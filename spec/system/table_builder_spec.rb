@@ -5,12 +5,19 @@ describe "Table Builder", type: :system do
   let(:composer) { PageObjects::Components::Composer.new }
   let(:insert_table_modal) { PageObjects::Modals::InsertTable.new }
   fab!(:topic) { Fabricate(:topic, user: user) }
+  fab!(:topic2) { Fabricate(:topic, user: user) }
   fab!(:post1) { create_post(user: user, topic: topic, raw: <<~RAW) }
         |Make   | Model   | Year|
         |--- | --- | ---|
         |Toyota | Supra   | 1998|
         |Nissan | Skyline | 1999|
         |Honda  | S2000  | 2001|
+        RAW
+  fab!(:post2) { create_post(user: user, topic: topic2, raw: <<~RAW) }
+        | |  | |
+        |--- | --- | ---|
+        |Some | content | here|
+        |1 | 2 | 3|
         RAW
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
@@ -105,6 +112,25 @@ describe "Table Builder", type: :system do
 
       try_until_success do
         expect(normalize_value(post1.reload.raw)).to eq(normalize_value(updated_post))
+      end
+    end
+
+    it "should respect the original empty header" do
+      topic_page.visit_topic(topic2)
+      topic_page.find(".btn-edit-table", visible: :all).click
+      expect(page).to have_selector(".insert-table-modal")
+      insert_table_modal.type_in_cell(0, 0, " updated")
+      insert_table_modal.click_insert_table
+
+      updated_post = <<~RAW
+      | |  | |
+      |--- | --- | ---|
+      |Some updated | content | here|
+      |1 | 2 | 3|
+      RAW
+
+      try_until_success do
+        expect(normalize_value(post2.reload.raw)).to eq(normalize_value(updated_post))
       end
     end
 
