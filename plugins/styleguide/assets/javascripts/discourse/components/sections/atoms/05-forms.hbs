@@ -11,8 +11,11 @@
     <form.Field @title="Website" @name="website" as |field|>
       <field.Input @before="https://" @after=".com" @format="large" />
     </form.Field>
-    <form.Field @title="Test2" @name="test2" as |field|>
+    <form.Field @title="After" @name="after" as |field|>
       <field.Input @after=".com" />
+    </form.Field>
+    <form.Field @title="Before" @name="before" as |field|>
+      <field.Input @before="https://" />
     </form.Field>
   </Form>
 </StyleguideExample>
@@ -150,18 +153,32 @@
 </StyleguideExample>
 
 <StyleguideExample @title="Collection">
-  <Form as |form|>
+  <Form
+    @data={{hash foo=(array (hash bar=1 baz=2) (hash bar=3 baz=4))}}
+    as |form|
+  >
     <form.Button @action={{fn form.addItemToCollection "foo"}} @icon="plus" />
-    <form.Collection @name="foo" as |collection index|>
-      <collection.Field @title="Bar" @name="bar" as |field|>
-        <field.Input />
-      </collection.Field>
-      <collection.Field @title="Baz" @name="baz" as |field|>
-        <field.Input />
-      </collection.Field>
 
-      <form.Button @action={{fn collection.remove index}} @icon="minus" />
+    <form.Collection @name="foo" as |collection index|>
+      <form.Row as |row|>
+        <row.Col @size={{6}}>
+          <collection.Field @title="Bar" @name="bar" as |field|>
+            <field.Input />
+          </collection.Field>
+        </row.Col>
+
+        <row.Col @size={{4}}>
+          <collection.Field @title="Baz" @name="baz" as |field|>
+            <field.Input />
+          </collection.Field>
+        </row.Col>
+
+        <row.Col @size={{2}}>
+          <form.Button @action={{fn collection.remove index}} @icon="minus" />
+        </row.Col>
+      </form.Row>
     </form.Collection>
+
   </Form>
 </StyleguideExample>
 
@@ -185,6 +202,34 @@
       </row.Col>
       <row.Col @size={{2}}>
         <form.Submit />
+      </row.Col>
+    </form.Row>
+  </Form>
+</StyleguideExample>
+
+<StyleguideExample @title="Multiline">
+  <Form as |form|>
+    <form.Row as |row|>
+      <row.Col @size={{6}}>
+        <form.Field
+          @title="Username"
+          @name="username"
+          @validation="required"
+          as |field|
+        >
+          <field.Input />
+        </form.Field>
+      </row.Col>
+      <row.Col @size={{6}}>
+        <form.Field @title="Email" @name="email" as |field|>
+          <field.Input />
+        </form.Field>
+      </row.Col>
+
+      <row.Col @size={{12}}>
+        <form.Field @title="Adress" @name="adress" as |field|>
+          <field.Input />
+        </form.Field>
       </row.Col>
     </form.Row>
   </Form>
