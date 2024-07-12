@@ -14,10 +14,10 @@
   }
 
   &.--with-before:not(.--with-after) {
-    border-radius: 0 var(--d-input-border-radius) var(--d-input-border-radius) 0;
+    border-radius: 0var (--d-input-border-radius) var(--d-input-border-radius) 0;
   }
   &.--with-after:not(.--with-before) {
-    border-radius: var(--d-input-border-radius) 0 0 var(--d-input-border-radius);
+    border-radius: 0var (--d-input-border-radius) var(--d-input-border-radius) 0;
   }
 }
 
