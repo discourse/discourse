@@ -11,9 +11,6 @@
     <form.Field @title="Website" @name="website" as |field|>
       <field.Input @before="https://" @after=".com" @format="large" />
     </form.Field>
-    <form.Field @title="Test2" @name="test2" as |field|>
-      <field.Input @after=".com" />
-    </form.Field>
   </Form>
 </StyleguideExample>
 
@@ -136,36 +133,56 @@
 <StyleguideExample @title="InputGroup">
   <Form as |form|>
     <form.InputGroup as |inputGroup|>
-      <inputGroup.Field @title="Username" @name="username" as |field|>
-        <field.Input />
-      </inputGroup.Field>
       <inputGroup.Text>
-        Email:
+        Who?
       </inputGroup.Text>
-      <inputGroup.Field @title="Email" @name="email" as |field|>
-        <field.Input />
+      <inputGroup.Field @title="Firstname" @name="firstname" as |field|>
+        <field.Input placeholder="Firstname" />
+      </inputGroup.Field>
+      <inputGroup.Field @title="Lastname" @name="lastname" as |field|>
+        <field.Input placeholder="Lastname" />
       </inputGroup.Field>
     </form.InputGroup>
   </Form>
 </StyleguideExample>
 
 <StyleguideExample @title="Collection">
-  <Form as |form|>
+  <Form
+    @data={{hash foo=(array (hash bar="1" baz="2") (hash bar="3" baz="4"))}}
+    as |form|
+  >
     <form.Button @action={{fn form.addItemToCollection "foo"}} @icon="plus" />
     <form.Collection @name="foo" as |collection index|>
-      <collection.Field @title="Bar" @name="bar" as |field|>
-        <field.Input />
-      </collection.Field>
-      <collection.Field @title="Baz" @name="baz" as |field|>
-        <field.Input />
-      </collection.Field>
-
-      <form.Button @action={{fn collection.remove index}} @icon="minus" />
+      <form.Row as |row|>
+        <row.Col @size={{6}}>
+          <collection.Field
+            @title="Bar"
+            @name="bar"
+            @showTitle={{false}}
+            as |field|
+          >
+            <field.Input placeholder="Bar" />
+          </collection.Field>
+        </row.Col>
+        <row.Col @size={{5}}>
+          <collection.Field
+            @title="Baz"
+            @name="baz"
+            @showTitle={{false}}
+            as |field|
+          >
+            <field.Input placeholder="Baz" />
+          </collection.Field>
+        </row.Col>
+        <row.Col @size={{1}}>
+          <form.Button @action={{fn collection.remove index}} @icon="minus" />
+        </row.Col>
+      </form.Row>
     </form.Collection>
   </Form>
 </StyleguideExample>
 
-<StyleguideExample @title="Row/Col">
+<StyleguideExample @title="Row/Col with titles">
   <Form as |form|>
     <form.Row as |row|>
       <row.Col @size={{6}}>
@@ -175,12 +192,42 @@
           @validation="required"
           as |field|
         >
-          <field.Input />
+          <field.Input placeholder="Username" />
         </form.Field>
       </row.Col>
       <row.Col @size={{4}}>
         <form.Field @title="Email" @name="email" as |field|>
-          <field.Input />
+          <field.Input placeholder="Email" @after=".com" />
+        </form.Field>
+      </row.Col>
+    </form.Row>
+
+    <form.Submit />
+  </Form>
+</StyleguideExample>
+
+<StyleguideExample @title="Row/Col with no titles">
+  <Form as |form|>
+    <form.Row as |row|>
+      <row.Col @size={{6}}>
+        <form.Field
+          @title="Username"
+          @name="username"
+          @validation="required"
+          @showTitle={{false}}
+          as |field|
+        >
+          <field.Input placeholder="Username" />
+        </form.Field>
+      </row.Col>
+      <row.Col @size={{4}}>
+        <form.Field
+          @title="Email"
+          @name="email"
+          @showTitle={{false}}
+          as |field|
+        >
+          <field.Input placeholder="Email" @after=".com" />
         </form.Field>
       </row.Col>
       <row.Col @size={{2}}>
@@ -202,5 +249,10 @@
     >
       <field.Input />
     </form.Field>
+
+    <form.Container>
+      <form.Submit />
+      <form.Reset />
+    </form.Container>
   </Form>
 </StyleguideExample>

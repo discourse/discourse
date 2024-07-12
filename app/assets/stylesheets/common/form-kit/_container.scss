@@ -7,23 +7,23 @@
   &-title {
     display: flex;
     align-items: center;
-    gap: 0.25em;
+    gap: 0.25rem;
     margin: 0;
     font-size: var(--font-down-1-rem);
     color: var(--primary-high);
     font-weight: bold;
-    padding-bottom: 0.25em;
+    padding-bottom: 0.25rem;
     width: max-content;
   }
 
   &-subtitle {
     display: flex;
     align-items: center;
-    gap: 0.25em;
+    gap: 0.25rem;
     margin: 0;
     font-size: var(--font-down-1-rem);
     color: var(--primary-high);
-    padding-bottom: 0.25em;
+    padding-bottom: 0.25rem;
     width: max-content;
   }
 
@@ -35,7 +35,7 @@
 
   &-content {
     display: flex;
-    gap: 0.25em;
+    gap: 0.25rem;
     flex-direction: row;
     align-items: flex-start;
     max-width: 100%;

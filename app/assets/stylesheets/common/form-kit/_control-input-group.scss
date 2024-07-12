@@ -4,21 +4,23 @@
   align-items: stretch;
   width: 100%;
 
-  .form-kit-text {
+  .form-kit__text {
     display: flex;
     align-items: center;
     text-align: center;
     white-space: nowrap;
     padding-inline: 0.5em;
-    line-height: 2em;
+    height: 2rem;
     background-color: var(--primary-low);
     color: var(--primary-high);
     border: 1px solid var(--primary-low-mid);
     border-radius: var(--d-input-border-radius);
-  }
+    margin: 0;
+    box-sizing: border-box;
 
-  .--col-12 {
-    width: auto;
+    @include breakpoint(mobile-large) {
+      height: 2.25rem !important;
+    }
   }
 
   .form-kit__control-input {

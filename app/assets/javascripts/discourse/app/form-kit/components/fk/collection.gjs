@@ -14,25 +14,27 @@ export default class FKCollection extends Component {
   }
 
   <template>
-    {{#each this.collectionValue key="index" as |data index|}}
-      {{yield
-        (hash
-          Field=(component
-            FKField
-            errors=@errors
-            collectionName=@name
-            collectionIndex=index
-            addError=@addError
-            data=@data
-            set=@set
-            registerField=@registerField
-            unregisterField=@unregisterField
-            triggerRevalidationFor=@triggerRevalidationFor
+    <div class="form-kit__collection">
+      {{#each this.collectionValue key="index" as |data index|}}
+        {{yield
+          (hash
+            Field=(component
+              FKField
+              errors=@errors
+              collectionName=@name
+              collectionIndex=index
+              addError=@addError
+              data=@data
+              set=@set
+              registerField=@registerField
+              unregisterField=@unregisterField
+              triggerRevalidationFor=@triggerRevalidationFor
+            )
+            remove=this.remove
           )
-          remove=this.remove
-        )
-        index
-      }}
-    {{/each}}
+          index
+        }}
+      {{/each}}
+    </div>
   </template>
 }

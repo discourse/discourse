@@ -20,6 +20,7 @@ const FKControlInputGroup = <template>
           unregisterField=@unregisterField
           triggerRevalidationFor=@triggerRevalidationFor
           showMeta=false
+          showTitle=false
         )
       )
     }}

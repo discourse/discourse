@@ -1,20 +1,15 @@
 .form-kit__row.--grid {
   display: grid;
-  grid-auto-flow: column;
-  column-gap: 0.5em;
-  row-gap: 0.25em;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(1, 1fr);
+  column-gap: 0.5rem;
+  row-gap: 0.25rem;
 
-  .form-kit__col,
-  .form-kit__container {
-    display: contents;
-  }
-
-  .form-kit__container-content {
-    width: auto !important;
+  @include breakpoint("large") {
+    row-gap: 1rem;
   }
 
   .form-kit__button {
-    grid-row: 2;
-    height: 2em;
+    height: 2rem;
   }
 }

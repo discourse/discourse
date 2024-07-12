@@ -1,8 +1,8 @@
 .form-kit__field {
   .form-kit__container-content {
-    align-items: center;
-    flex-direction: row;
-    width: var(--form-kit-medium-input) !important;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
   }
 
   &-textarea,

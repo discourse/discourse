@@ -21,25 +21,34 @@
   }
 }
 
+.form-kit__control-input-wrapper {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+}
+
 .form-kit__before-input,
 .form-kit__after-input {
   border: 1px solid var(--primary-medium);
   padding-inline: 0.5em;
-  height: 2em;
+  height: 2rem;
   box-sizing: border-box;
   background: var(--primary-low);
   display: flex;
   align-items: center;
+
+  @include breakpoint(mobile-large) {
+    height: 2.25rem !important;
+  }
 }
 
 .form-kit__before-input {
-  margin-right: -0.25em;
   border-right: 0;
   border-radius: var(--d-input-border-radius) 0 0 var(--d-input-border-radius);
 }
 
 .form-kit__after-input {
-  margin-left: -0.25em;
   border-left: 0;
   border-radius: 0 var(--d-input-border-radius) var(--d-input-border-radius) 0;
 }
