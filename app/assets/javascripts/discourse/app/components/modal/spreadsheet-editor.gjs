@@ -28,11 +28,13 @@ export default class SpreadsheetEditor extends Component {
   defaultColWidth = 150;
   isEditingTable = !!this.args.model.tableTokens;
   alignments = null;
+  notitle = null;
 
   constructor() {
     super(...arguments);
     this.loadJspreadsheet();
     KeyboardShortcuts.pause();
+    this.notitle = {};
   }
 
   willDestroy() {
@@ -90,7 +92,12 @@ export default class SpreadsheetEditor extends Component {
 
   @action
   insertTable() {
-    const updatedHeaders = this.spreadsheet.getHeaders().split(","); // keys
+    const updatedHeaders = this.spreadsheet
+      .getHeaders()
+      .split(",")
+      .map((content, index) => {
+        return this.notitle[String(index)] ? "" : content;
+      }); // keys
     const updatedData = this.spreadsheet.getData(); // values
     const markdownTable = this.buildTableMarkdown(updatedHeaders, updatedData);
 
@@ -221,7 +228,10 @@ export default class SpreadsheetEditor extends Component {
       }
     });
 
-    headings.forEach((h, i) => (h.align = this.alignments?.[i] ?? "left"));
+    headings.forEach((h, i) => {
+      h.align = this.alignments?.[i] ?? "left";
+      this.notitle[String(i)] = !h.title;
+    });
 
     return this.buildSpreadsheet(rows, headings);
   }
@@ -241,6 +251,9 @@ export default class SpreadsheetEditor extends Component {
       csvFileName: exportFileName,
       text: this.localeMapping(),
       ...opts,
+      onchangeheader: (_, i) => {
+        this.notitle[i] = false;
+      },
     });
   }
 
