@@ -2,16 +2,19 @@
 import "decorator-transforms/globals";
 import "./loader-shims";
 import "./global-compat";
+import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
 /* eslint-enable simple-import-sort/imports */
 
+// Register Discourse's standard implicit injections on common framework classes.
+registerDiscourseImplicitInjections();
+
 import Application from "@ember/application";
+import { VERSION } from "@ember/version";
 import require from "require";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
-import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { isTesting } from "discourse-common/config/environment";
 import { buildResolver } from "discourse-common/resolver";
-import { VERSION } from "@ember/version";
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
@@ -35,9 +38,6 @@ class Discourse extends Application {
     // Rewire event handling to eliminate event delegation for better compat
     // between Glimmer and Classic components.
     normalizeEmberEventHandling(this);
-
-    // Register Discourse's standard implicit injections on common framework classes.
-    registerDiscourseImplicitInjections();
 
     if (Error.stackTraceLimit) {
       // We need Errors to have full stack traces for `lib/source-identifier`
