@@ -1,18 +1,21 @@
 .form-kit__row {
-  display: flex;
-  flex-wrap: wrap;
-  margin-right: calc(-0.5 * var(--form-kit-gutter-x));
-  margin-left: calc(-0.5 * var(--form-kit-gutter-x));
-  row-gap: var(--form-kit-gutter-y);
+  display: grid;
+  grid-auto-flow: column;
+  column-gap: 0.5em;
+  row-gap: 0.25em;
+  max-width: 100%;
 
-  > * {
-    flex-shrink: 0;
-    max-width: 100%;
-    padding-right: calc(var(--form-kit-gutter-x) * 0.5);
-    padding-left: calc(var(--form-kit-gutter-x) * 0.5);
+  .form-kit__col,
+  .form-kit__container {
+    display: contents;
   }
 
-  > *:not(.col-*) {
-    width: 100%;
+  .form-kit__container-content {
+    width: auto !important;
+  }
+
+  .form-kit__button {
+    grid-row: 2;
+    height: 2em;
   }
 }
