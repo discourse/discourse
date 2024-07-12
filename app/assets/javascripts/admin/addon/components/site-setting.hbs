@@ -50,12 +50,24 @@
 
 {{#if this.dirty}}
   <div class="setting-controls">
-    <DButton class="ok" @action={{this.update}} @icon="check" />
-    <DButton class="cancel" @action={{this.cancel}} @icon="times" />
+    <DButton
+      @action={{this.update}}
+      @icon="check"
+      class="ok setting-controls__ok"
+    />
+    <DButton
+      @action={{this.cancel}}
+      @icon="times"
+      class="cancel setting-controls__cancel"
+    />
   </div>
 {{else if this.overridden}}
   {{#if this.setting.secret}}
-    <DButton @action={{this.toggleSecret}} @icon="far-eye-slash" />
+    <DButton
+      @action={{this.toggleSecret}}
+      @icon="far-eye-slash"
+      class="setting-toggle-secret"
+    />
   {{/if}}
 
   <DButton
