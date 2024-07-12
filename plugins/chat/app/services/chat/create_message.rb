@@ -38,13 +38,13 @@ module Chat
 
     transaction do
       step :create_excerpt
+      step :update_created_by_sdk
       step :save_message
       step :delete_drafts
       step :post_process_thread
       step :create_webhook_event
       step :update_channel_last_message
       step :update_membership_last_read
-      step :update_created_by_sdk
       step :process_direct_message_channel
     end
     step :publish_new_thread
