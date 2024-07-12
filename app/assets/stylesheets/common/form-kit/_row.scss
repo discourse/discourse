@@ -25,8 +25,8 @@
   flex-wrap: wrap;
   margin-right: calc(-0.5 * var(--form-kit-gutter-x));
   margin-left: calc(-0.5 * var(--form-kit-gutter-x));
-  row-gap: calc(var(--form-kit-gutter-y) + 1.25em);
-  padding-top: 1.25em;
+  row-gap: calc(var(--form-kit-gutter-y) + 1.75em);
+  padding-top: 1.75em;
 
   > * {
     flex-shrink: 0;
@@ -53,6 +53,6 @@
 
   .form-kit__container-title {
     position: absolute;
-    top: -1.25em;
+    top: -1.75em;
   }
 }
