@@ -108,8 +108,7 @@ RSpec.describe TextSentinel do
       expect(TextSentinel.new("去年十二月，北韓不顧國際社會警告")).to be_valid
     end
 
-    it "skips uppercase text for CJK locale" do
-      SiteSetting.default_locale = "zh_CN"
+    it "allows all caps if within CJK text" do
       expect(TextSentinel.new("去年SHIER月，北韓不顧國際社會警告")).to be_valid
     end
 

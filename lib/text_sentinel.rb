@@ -75,10 +75,13 @@ class TextSentinel
   end
 
   def seems_quiet?
-    return true if skipped_locale.include?(SiteSetting.default_locale)
     # We don't allow all upper case content
-    SiteSetting.allow_uppercase_posts || @text == @text.mb_chars.downcase.to_s ||
-      @text != @text.mb_chars.upcase.to_s
+    # It's not all upper case if
+    #  a) it has a single lower case letter, or,
+    #  b) it has a letter or ideograph character without an uppercase variant (CJK)
+    #  c) has no letters at all
+    SiteSetting.allow_uppercase_posts || @text.match?(/\p{Lowercase_Letter}/) ||
+      @text.match?(/\p{Other_Letter}/) || !@text.match?(/\p{Letter}/)
   end
 
   private
