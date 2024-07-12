@@ -28,13 +28,11 @@ export default class SpreadsheetEditor extends Component {
   defaultColWidth = 150;
   isEditingTable = !!this.args.model.tableTokens;
   alignments = null;
-  notitle = null;
 
   constructor() {
     super(...arguments);
     this.loadJspreadsheet();
     KeyboardShortcuts.pause();
-    this.notitle = {};
   }
 
   willDestroy() {
@@ -95,9 +93,7 @@ export default class SpreadsheetEditor extends Component {
     const updatedHeaders = this.spreadsheet
       .getHeaders()
       .split(",")
-      .map((content, index) => {
-        return this.notitle[String(index)] ? "" : content;
-      }); // keys
+      .map((c) => c.trim()); // keys
     const updatedData = this.spreadsheet.getData(); // values
     const markdownTable = this.buildTableMarkdown(updatedHeaders, updatedData);
 
@@ -212,7 +208,7 @@ export default class SpreadsheetEditor extends Component {
         // headings
         headings = this.extractTableContent(row).map((heading) => {
           return {
-            title: heading,
+            title: heading || " ",
             width: Math.max(
               heading.length * rowWidthFactor,
               this.defaultColWidth
@@ -230,7 +226,6 @@ export default class SpreadsheetEditor extends Component {
 
     headings.forEach((h, i) => {
       h.align = this.alignments?.[i] ?? "left";
-      this.notitle[String(i)] = !h.title;
     });
 
     return this.buildSpreadsheet(rows, headings);
