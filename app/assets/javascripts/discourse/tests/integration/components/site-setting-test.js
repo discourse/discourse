@@ -101,4 +101,20 @@ module("Integration | Component | site-setting", function (hooks) {
     await typeIn(".input-setting-integer", "90,5", { delay: 1000 });
     assert.dom(".input-setting-integer").hasValue("905");
   });
+
+  test("does not consider an integer setting overridden if the value is the same as the default", async function (assert) {
+    this.set("setting", {
+      setting: "suggested_topics_unread_max_days_old",
+      value: "99",
+      default: "99",
+      type: "integer",
+    });
+    await render(hbs`<SiteSetting @setting={{this.setting}} />`);
+    await fillIn(".input-setting-integer", "90");
+    assert.dom(".input-setting-integer").hasValue("90");
+    await fillIn(".input-setting-integer", "99");
+    assert
+      .dom("[data-setting='suggested_topics_unread_max_days_old']")
+      .hasNoClass("overridden");
+  });
 });
