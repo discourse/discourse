@@ -84,7 +84,7 @@ export default class GlimmerHeader extends Component {
       };
 
       // avoid triggering focusout on click
-      // otherwise we can double-trigger focusout
+      // otherwise we can double-trigger the menu toggle
       const handleMousedown = () => {
         isKeyboardEvent = false;
       };
