@@ -41,11 +41,11 @@
     }
 
     &.--medium {
-      width: var(--form-kit-medium-input) !important;
+      width: var(--form-kit-medium-input);
     }
 
     &.--large {
-      width: var(--form-kit-large-input) !important;
+      width: var(--form-kit-large-input);
     }
 
     &.--full {
