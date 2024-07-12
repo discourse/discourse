@@ -44,6 +44,7 @@ module Chat
       step :create_webhook_event
       step :update_channel_last_message
       step :update_membership_last_read
+      step :update_created_by_sdk
       step :process_direct_message_channel
     end
     step :publish_new_thread
@@ -65,6 +66,7 @@ module Chat
       attribute :process_inline, :boolean, default: Rails.env.test?
       attribute :force_thread, :boolean, default: false
       attribute :strip_whitespaces, :boolean, default: true
+      attribute :created_by_sdk, :boolean, default: false
 
       validates :chat_channel_id, presence: true
       validates :message, presence: true, if: -> { upload_ids.blank? }
@@ -185,6 +187,10 @@ module Chat
     def update_membership_last_read(membership:, message_instance:)
       return if message_instance.in_thread?
       membership.update!(last_read_message: message_instance)
+    end
+
+    def update_created_by_sdk(message_instance:, contract:)
+      message_instance.created_by_sdk = contract.created_by_sdk
     end
 
     def process_direct_message_channel(membership:)
