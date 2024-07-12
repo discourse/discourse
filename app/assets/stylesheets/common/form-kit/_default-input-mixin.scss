@@ -1,6 +1,6 @@
 @mixin default-input {
   width: auto !important;
-  height: 2rem;
+  height: 2em;
   background: var(--secondary);
   border: 1px solid var(--primary-low-mid);
   border-radius: var(--d-input-border-radius);
@@ -11,7 +11,7 @@
 
   @include breakpoint(mobile-large) {
     width: 100% !important;
-    height: 2.25rem;
+    height: 2.25em;
   }
 
   &:focus,

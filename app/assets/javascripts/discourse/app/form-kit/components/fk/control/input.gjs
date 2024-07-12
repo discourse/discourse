@@ -59,27 +59,25 @@ export default class FKControlInput extends Component {
   }
 
   <template>
-    <div class="form-kit__control-input-wrapper">
-      {{#if @before}}
-        <span class="form-kit__before-input">{{@before}}</span>
-      {{/if}}
+    {{#if @before}}
+      <span class="form-kit__before-input">{{@before}}</span>
+    {{/if}}
 
-      <input
-        type={{this.type}}
-        value={{@value}}
-        class={{concatClass
-          "form-kit__control-input"
-          (if @before "--with-before")
-          (if @after "--with-after")
-        }}
-        disabled={{@field.disabled}}
-        ...attributes
-        {{on "input" this.handleInput}}
-      />
+    <input
+      type={{this.type}}
+      value={{@value}}
+      class={{concatClass
+        "form-kit__control-input"
+        (if @before "--with-before")
+        (if @after "--with-after")
+      }}
+      disabled={{@field.disabled}}
+      ...attributes
+      {{on "input" this.handleInput}}
+    />
 
-      {{#if @after}}
-        <span class="form-kit__after-input">{{@after}}</span>
-      {{/if}}
-    </div>
+    {{#if @after}}
+      <span class="form-kit__after-input">{{@after}}</span>
+    {{/if}}
   </template>
 }
