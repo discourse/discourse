@@ -48,7 +48,7 @@ export default class ChatIndexRoute extends DiscourseRoute {
 
     // We are on desktop. Check for last visited channel and transition if so
     const id = this.currentUser.custom_fields.last_chat_channel_id;
-    if (id) {
+    if (id /** && this.siteSettings.chat_public_channels_enabled **/) {
       return this.chatChannelsManager.find(id).then((c) => {
         return this.router.replaceWith("chat.channel", ...c.routeModels);
       });

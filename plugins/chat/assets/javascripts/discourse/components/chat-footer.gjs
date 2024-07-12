@@ -45,21 +45,22 @@ export default class ChatFooter extends Component {
   <template>
     {{#if this.shouldRenderFooter}}
       <nav class="c-footer">
-        <DButton
-          @route="chat.channels"
-          @icon="comments"
-          @translatedLabel={{i18n "chat.channel_list.title"}}
-          aria-label={{i18n "chat.channel_list.aria_label"}}
-          id="c-footer-channels"
-          class={{concatClass
-            "btn-transparent"
-            "c-footer__item"
-            (if (eq this.currentRouteName "chat.channels") "--active")
-          }}
-        >
-          <UnreadChannelsIndicator />
-        </DButton>
-
+        {{#if this.siteSettings.chat_public_channels_enabled}}
+          <DButton
+            @route="chat.channels"
+            @icon="comments"
+            @translatedLabel={{i18n "chat.channel_list.title"}}
+            aria-label={{i18n "chat.channel_list.aria_label"}}
+            id="c-footer-channels"
+            class={{concatClass
+              "btn-transparent"
+              "c-footer__item"
+              (if (eq this.currentRouteName "chat.channels") "--active")
+            }}
+          >
+            <UnreadChannelsIndicator />
+          </DButton>
+        {{/if}}
         {{#if this.directMessagesEnabled}}
           <DButton
             @route="chat.direct-messages"
