@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { and, eq, not, or } from "truth-helpers";
@@ -19,6 +20,9 @@ import SearchMenuWrapper from "./header/search-menu-wrapper";
 import UserMenuWrapper from "./header/user-menu-wrapper";
 
 const SEARCH_BUTTON_ID = "search-button";
+const USER_BUTTON_ID = "toggle-current-user";
+const HAMBURGER_BUTTON_ID = "toggle-hamburger-menu";
+const PANEL_SELECTOR = ".panel-body";
 
 let headerButtons;
 resetHeaderButtons();
@@ -61,6 +65,70 @@ export default class GlimmerHeader extends Component {
       );
     };
   });
+
+  @action
+  setupFocusOutListener() {
+    next(() => {
+      const panelBody = document.querySelector(PANEL_SELECTOR);
+
+      if (!panelBody) {
+        return;
+      }
+
+      let isKeyboardEvent = false;
+
+      const handleKeydown = (event) => {
+        if (event.key) {
+          isKeyboardEvent = true;
+        }
+      };
+
+      // avoid triggering focusout on click
+      // otherwise we can double-trigger focusout
+      const handleMousedown = () => {
+        isKeyboardEvent = false;
+      };
+
+      const focusOutHandler = (event) => {
+        if (isKeyboardEvent) {
+          const relatedTarget = event.relatedTarget;
+
+          if (!panelBody.contains(relatedTarget)) {
+            this.closeCurrentMenu();
+          }
+        }
+      };
+
+      panelBody.addEventListener("keydown", handleKeydown);
+      panelBody.addEventListener("mousedown", handleMousedown);
+      panelBody.addEventListener("focusout", focusOutHandler);
+
+      this.cleanupFocusOutListener = () => {
+        panelBody.removeEventListener("keydown", handleKeydown);
+        panelBody.removeEventListener("mousedown", handleMousedown);
+        panelBody.removeEventListener("focusout", focusOutHandler);
+      };
+    });
+  }
+
+  @action
+  teardownFocusOutListener() {
+    if (this.cleanupFocusOutListener) {
+      this.cleanupFocusOutListener();
+      this.cleanupFocusOutListener = null;
+    }
+  }
+
+  @action
+  closeCurrentMenu() {
+    if (this.search.visible) {
+      this.toggleSearchMenu();
+    } else if (this.header.userVisible) {
+      this.toggleUserMenu();
+    } else if (this.header.hamburgerVisible) {
+      this.toggleHamburger();
+    }
+  }
 
   @action
   headerKeyboardTrigger(msg) {
@@ -106,6 +174,9 @@ export default class GlimmerHeader extends Component {
       this.search.highlightTerm = "";
       this.search.inTopicContext = false;
       document.getElementById(SEARCH_BUTTON_ID)?.focus();
+      this.teardownFocusOutListener();
+    } else {
+      this.setupFocusOutListener();
     }
   }
 
@@ -146,6 +217,12 @@ export default class GlimmerHeader extends Component {
     this.header.userVisible = !this.header.userVisible;
     this.toggleBodyScrolling(this.header.userVisible);
     this.args.animateMenu();
+    if (this.header.userVisible) {
+      this.setupFocusOutListener();
+    } else {
+      document.getElementById(USER_BUTTON_ID)?.focus();
+      this.teardownFocusOutListener();
+    }
   }
 
   @action
@@ -170,6 +247,12 @@ export default class GlimmerHeader extends Component {
     this.header.hamburgerVisible = !this.header.hamburgerVisible;
     this.toggleBodyScrolling(this.header.hamburgerVisible);
     this.args.animateMenu();
+    if (this.header.hamburgerVisible) {
+      this.setupFocusOutListener();
+    } else {
+      document.getElementById(HAMBURGER_BUTTON_ID)?.focus();
+      this.teardownFocusOutListener();
+    }
   }
 
   @action
