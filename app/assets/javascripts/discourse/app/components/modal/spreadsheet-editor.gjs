@@ -246,9 +246,6 @@ export default class SpreadsheetEditor extends Component {
       csvFileName: exportFileName,
       text: this.localeMapping(),
       ...opts,
-      onchangeheader: (_, i) => {
-        this.notitle[i] = false;
-      },
     });
   }
 
