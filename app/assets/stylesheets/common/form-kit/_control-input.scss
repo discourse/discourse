@@ -19,6 +19,12 @@
   &.--with-after:not(.--with-before) {
     border-radius: 0var (--d-input-border-radius) var(--d-input-border-radius) 0;
   }
+
+  &-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
 }
 
 .form-kit__before-input,
@@ -34,12 +40,10 @@
 
 .form-kit__before-input {
   margin-right: -0.25em;
-  border-right: 0;
   border-radius: var(--d-input-border-radius) 0 0 var(--d-input-border-radius);
 }
 
 .form-kit__after-input {
   margin-left: -0.25em;
-  border-left: 0;
   border-radius: 0 var(--d-input-border-radius) var(--d-input-border-radius) 0;
 }
