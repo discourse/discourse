@@ -1094,7 +1094,7 @@ Discourse::Application.routes.draw do
     delete "admin/groups/:id/members" => "groups#remove_member", :constraints => AdminConstraint.new
     put "admin/groups/:id/members" => "groups#add_members", :constraints => AdminConstraint.new
 
-    resources :posts, only: %i[show update create destroy] do
+    resources :posts, only: %i[show update create destroy], defaults: { format: "json" } do
       delete "bookmark", to: "posts#destroy_bookmark"
       put "wiki"
       put "post_type"
