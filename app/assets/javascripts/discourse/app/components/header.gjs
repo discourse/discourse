@@ -125,8 +125,10 @@ export default class GlimmerHeader extends Component {
       this.toggleSearchMenu();
     } else if (this.header.userVisible) {
       this.toggleUserMenu();
+      document.getElementById(USER_BUTTON_ID)?.focus();
     } else if (this.header.hamburgerVisible) {
       this.toggleHamburger();
+      document.getElementById(HAMBURGER_BUTTON_ID)?.focus();
     }
   }
 
@@ -220,7 +222,6 @@ export default class GlimmerHeader extends Component {
     if (this.header.userVisible) {
       this.setupFocusOutListener();
     } else {
-      document.getElementById(USER_BUTTON_ID)?.focus();
       this.teardownFocusOutListener();
     }
   }
@@ -250,7 +251,6 @@ export default class GlimmerHeader extends Component {
     if (this.header.hamburgerVisible) {
       this.setupFocusOutListener();
     } else {
-      document.getElementById(HAMBURGER_BUTTON_ID)?.focus();
       this.teardownFocusOutListener();
     }
   }
