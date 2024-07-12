@@ -86,7 +86,7 @@ RSpec.describe "Glimmer Header", type: :system do
 
     visit "/"
 
-    find(".toggle-hamburger-menu").click
+    find("#toggle-hamburger-menu").click
     expect(page).to have_selector(".panel-body")
     first_link = find(".panel-body a", match: :first)
     first_link_href = first_link[:href]
