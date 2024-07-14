@@ -7,8 +7,8 @@ class PostActionType < ActiveRecord::Base
   include AnonCacheInvalidator
 
   def expire_cache
-    ApplicationSerializer.expire_cache_fragment!(/\Apost_action_types_/)
-    ApplicationSerializer.expire_cache_fragment!(/\Apost_action_flag_types_/)
+    Discourse.redis.keys("post_action_types_*").each { |key| Discourse.redis.del(key) }
+    Discourse.redis.keys("post_action_flag_types_*").each { |key| Discourse.redis.del(key) }
   end
 
   DiscourseEvent.on(:reload_post_action_types) { self.reload_types }

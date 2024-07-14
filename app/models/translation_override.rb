@@ -95,6 +95,7 @@ class TranslationOverride < ActiveRecord::Base
   def self.clear_cached_keys!(locale, keys)
     should_clear_anon_cache = false
     keys.each { |key| should_clear_anon_cache |= expire_cache(locale, key) }
+    PostActionType.new.expire_cache
     Site.clear_anon_cache! if should_clear_anon_cache
   end
 

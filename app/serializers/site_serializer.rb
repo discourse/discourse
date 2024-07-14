@@ -111,17 +111,25 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def post_action_types
-    cache_fragment("post_action_types_#{I18n.locale}") do
-      types = ordered_flags(PostActionType.types.values)
-      ActiveModel::ArraySerializer.new(types).as_json
-    end
+    types = Discourse.redis.get("post_action_types_#{I18n.locale}")
+    return JSON.parse(types) if types.present?
+
+    types = ordered_flags(PostActionType.types.values)
+    json = ActiveModel::ArraySerializer.new(types).as_json
+
+    Discourse.redis.set("post_action_types_#{I18n.locale}", JSON.dump(json))
+    json
   end
 
   def topic_flag_types
-    cache_fragment("post_action_flag_types_#{I18n.locale}") do
-      types = ordered_flags(PostActionType.topic_flag_types.values)
-      ActiveModel::ArraySerializer.new(types, each_serializer: TopicFlagTypeSerializer).as_json
-    end
+    types = Discourse.redis.get("post_action_flag_types_#{I18n.locale}")
+    return JSON.parse(types) if types.present?
+
+    types = ordered_flags(PostActionType.topic_flag_types.values)
+    json = ActiveModel::ArraySerializer.new(types, each_serializer: TopicFlagTypeSerializer).as_json
+
+    Discourse.redis.set("post_action_flag_types_#{I18n.locale}", JSON.dump(json))
+    json
   end
 
   def default_archetype
