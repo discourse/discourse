@@ -104,6 +104,18 @@ describe "Admin Flags Page", type: :system do
     admin_flag_form_page.fill_in_name("Tasteless")
     admin_flag_form_page.click_save
 
+    expect(all(".admin-flag-item__name").map(&:text)).to eq(
+      [
+        "Send @%{username} a message",
+        "Off-Topic",
+        "Inappropriate",
+        "Spam",
+        "Illegal",
+        "Something Else",
+        "Tasteless",
+      ],
+    )
+
     topic_page.visit_topic(post.topic)
     topic_page.open_flag_topic_modal
     expect(all(".flag-action-type-details strong").map(&:text)).to eq(
