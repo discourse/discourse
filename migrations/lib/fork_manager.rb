@@ -5,7 +5,6 @@ module Migrations
     def initialize
       @before_fork_hooks = []
       @after_fork_hooks = []
-      @warmed_up = false
     end
 
     def before_fork(&block)
@@ -27,10 +26,7 @@ module Migrations
     def fork_process
       run_before_fork_hooks
 
-      if !@warmed_up
-        @warmed_up = true
-        Process.warmup
-      end
+      Process.warmup
 
       Process.fork do
         run_after_fork_hooks
