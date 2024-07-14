@@ -220,7 +220,12 @@ class UsersController < ApplicationController
         value = nil if value === "false"
         value = value[0...UserField.max_length] if value
 
-        if value.blank? && field.required?
+        if value.blank? &&
+             (
+               field.for_all_users? ||
+                 field.on_signup? &&
+                   user.custom_fields["#{User::USER_FIELD_PREFIX}#{field_id}"].present?
+             )
           return render_json_error(I18n.t("login.missing_user_field"))
         end
         attributes[:custom_fields]["#{User::USER_FIELD_PREFIX}#{field.id}"] = value

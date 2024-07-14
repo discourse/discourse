@@ -1528,6 +1528,20 @@ RSpec.describe UsersController do
             end.not_to change { user1.reload.user_fields[field_id] }
           end
 
+          it "value is required only on sign-up" do
+            user_field.on_signup!
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => "" } }
+            end.to change { user1.reload.user_fields[field_id] }.from(nil).to("")
+
+            put update_user_url, params: { user_fields: { field_id => valid_options } }
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => "" } }
+            end.not_to change { user1.reload.user_fields[field_id] }
+          end
+
           it "value can nil or empty if the field is not required" do
             put update_user_url, params: { user_fields: { field_id => valid_options } }
 
