@@ -20,7 +20,7 @@
     "concurrently": "^8.2.2",
     "ember-template-lint": "^5.13.0",
     "esbuild": "^0.23.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.7.0",
     "jsdoc": "^4.0.0",
     "lefthook": "^1.7.2",
     "lint-to-the-future": "^2.0.0",
