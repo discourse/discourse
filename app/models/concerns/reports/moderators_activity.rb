@@ -76,7 +76,7 @@ module Reports::ModeratorsActivity
           disagreed_by_id,
           deferred_by_id
           FROM post_actions
-          WHERE post_action_type_id IN (#{PostActionType.flag_types_without_custom.values.join(",")})
+          WHERE post_action_type_id IN (#{PostActionType.flag_types_without_additional_message.values.join(",")})
           AND created_at >= '#{report.start_date}'
           AND created_at <= '#{report.end_date}'
           ),

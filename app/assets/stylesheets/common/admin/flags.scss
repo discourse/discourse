@@ -56,6 +56,15 @@
   &__applies-to.select-kit.multi-select {
     width: 60%;
   }
+  &__require-message-description {
+    clear: both;
+    flex-basis: 100%;
+    font-size: var(--font-down-2);
+    margin-top: 0.25em;
+  }
+  label {
+    flex-wrap: wrap;
+  }
 }
 
 .admin-flags__header {
