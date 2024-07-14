@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::IntermediateDB::Migrator do
+RSpec.describe Migrations::Database::Migrator do
   def migrate(migrations_directory: nil, storage_path: nil, ignore_errors: false)
     migrations_path =
       if migrations_directory

@@ -38,7 +38,7 @@ module Migrations
 
     loader = Zeitwerk::Loader.new
 
-    loader.inflector.inflect({ "cli" => "CLI", "intermediate_db" => "IntermediateDB" })
+    loader.inflector.inflect({ "cli" => "CLI" })
 
     loader.push_dir(File.join(Migrations.root_path, "lib"), namespace: Migrations)
     loader.ignore(File.join(Migrations.root_path, "lib", "migrations.rb"))

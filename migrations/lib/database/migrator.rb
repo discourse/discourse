@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Migrations::IntermediateDB
+module Migrations::Database
   class Migrator
     def initialize(db_path, migrations_path = nil)
       @db_path = db_path

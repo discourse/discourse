@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::IntermediateDB::Connection do
+RSpec.describe Migrations::Database::Connection do
   describe ".open_database" do
     it "creates a database at the given path with default `journal_mode`" do
       Dir.mktmpdir do |storage_path|
@@ -50,7 +50,7 @@ RSpec.describe Migrations::IntermediateDB::Connection do
     end
 
     it "closes cached prepared statements" do
-      cache_class = Migrations::IntermediateDB::PreparedStatementCache
+      cache_class = Migrations::Database::PreparedStatementCache
       cache_double = instance_spy(cache_class)
       allow(cache_class).to receive(:new).and_return(cache_double)
 
@@ -120,12 +120,12 @@ RSpec.describe Migrations::IntermediateDB::Connection do
 
     def create_db(db_path)
       migrations_path = File.join(Migrations.root_path, "spec", "fixtures", "schema", "copy")
-      Migrations::IntermediateDB.migrate(db_path, migrations_path:)
+      Migrations::Database.migrate(db_path, migrations_path:)
       described_class.open_database(path: db_path)
     end
 
     it "commits an active transaction" do
-      Migrations::IntermediateDB.connect(@main_db_path) do |main_connection|
+      Migrations::Database.connect(@main_db_path) do |main_connection|
         main_connection.insert("INSERT INTO users (id, username) VALUES (?, ?)", [1, "sam"])
 
         expect(@main_db.query_single_splat("SELECT COUNT(*) FROM users")).to eq(0)
@@ -147,7 +147,7 @@ RSpec.describe Migrations::IntermediateDB::Connection do
       @db2.execute("INSERT INTO users (id, username) VALUES (?, ?)", 4, "user4")
       @db2.execute("INSERT INTO uploads (id, url) VALUES (?, ?)", 4, "url4")
 
-      Migrations::IntermediateDB.connect(@main_db_path) do |main_connection|
+      Migrations::Database.connect(@main_db_path) do |main_connection|
         main_connection.copy_from([@db1_path, @db2_path, @db3_path])
       end
 
@@ -170,7 +170,7 @@ RSpec.describe Migrations::IntermediateDB::Connection do
         @db1.execute("INSERT INTO users (id, username) VALUES (?, ?)", 1, "user1")
         @db2.execute("INSERT INTO users (id, username) VALUES (?, ?)", 1, "user1")
 
-        Migrations::IntermediateDB.connect(@main_db_path) do |main_connection|
+        Migrations::Database.connect(@main_db_path) do |main_connection|
           expect { main_connection.copy_from([@db1_path, @db2_path]) }.to raise_error(
             Extralite::Error,
             "UNIQUE constraint failed: users.id",
@@ -184,7 +184,7 @@ RSpec.describe Migrations::IntermediateDB::Connection do
 
         insert_actions = { "users" => "OR IGNORE" }
 
-        Migrations::IntermediateDB.connect(@main_db_path) do |main_connection|
+        Migrations::Database.connect(@main_db_path) do |main_connection|
           main_connection.copy_from([@db1_path, @db2_path], insert_actions:)
         end
 
@@ -198,7 +198,7 @@ RSpec.describe Migrations::IntermediateDB::Connection do
 
         insert_actions = { "config" => "OR REPLACE" }
 
-        Migrations::IntermediateDB.connect(@main_db_path) do |main_connection|
+        Migrations::Database.connect(@main_db_path) do |main_connection|
           main_connection.copy_from([@db1_path, @db2_path], insert_actions:)
         end
 

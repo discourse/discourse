@@ -3,7 +3,7 @@
 require "extralite"
 require "lru_redux"
 
-module Migrations::IntermediateDB
+module Migrations::Database
   class Connection
     DEFAULT_JOURNAL_MODE = "wal"
     TRANSACTION_BATCH_SIZE = 1000
