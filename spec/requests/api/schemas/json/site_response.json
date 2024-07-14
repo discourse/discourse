@@ -351,7 +351,7 @@
             "is_flag": {
               "type": "boolean"
             },
-            "require_message": {
+            "is_custom_flag": {
               "type": "boolean"
             },
             "enabled": {
@@ -371,7 +371,7 @@
             "description",
             "short_description",
             "is_flag",
-            "require_message",
+            "is_custom_flag",
             "enabled",
             "applies_to",
             "is_used"
@@ -403,7 +403,7 @@
             "is_flag": {
               "type": "boolean"
             },
-            "require_message": {
+            "is_custom_flag": {
               "type": "boolean"
             },
             "enabled": {
@@ -423,7 +423,7 @@
             "description",
             "short_description",
             "is_flag",
-            "require_message",
+            "is_custom_flag",
             "enabled",
             "applies_to",
             "is_used"

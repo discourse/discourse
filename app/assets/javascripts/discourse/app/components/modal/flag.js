@@ -73,7 +73,7 @@ export default class Flag extends Component {
   }
 
   get submitLabel() {
-    if (this.selected?.require_message) {
+    if (this.selected?.is_custom_flag) {
       return this.args.model.flagTarget.customSubmitLabel();
     }
 
@@ -97,7 +97,7 @@ export default class Flag extends Component {
       return false;
     }
 
-    if (!this.selected.require_message) {
+    if (!this.selected.is_custom_flag) {
       return true;
     }
 
@@ -119,7 +119,7 @@ export default class Flag extends Component {
   get canTakeAction() {
     return (
       !this.args.model.flagTarget.targetsTopic() &&
-      !this.selected?.require_message &&
+      !this.selected?.is_custom_flag &&
       this.currentUser.staff
     );
   }
@@ -184,7 +184,7 @@ export default class Flag extends Component {
 
   @action
   createFlag(opts = {}) {
-    if (this.selected.require_message) {
+    if (this.selected.is_custom_flag) {
       opts.message = this.message;
     }
     this.args.model.flagTarget.create(this, opts);

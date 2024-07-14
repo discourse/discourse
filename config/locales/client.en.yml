@@ -5512,8 +5512,6 @@ en:
             non_editable: "You cannot edit this flag because it is a system flag or has already been used in the review system, however you can still disable it."
             delete_flag: "Delete flag"
             non_deletable: "You cannot delete this flag because it is a system flag or has already been used in the review system, however you can still disable it."
-            require_message: "Prompt users to provide additional reasons"
-            require_message_description: "When this flag is selected, a text field will be displayed"
           more_options:
             title: "More options"
             move_up: "Move up"
