@@ -12,7 +12,8 @@ describe "Admin Flags Page", type: :system do
 
   before { sign_in(admin) }
 
-  it "allows admin to disable flags" do
+  it "allows admin to disable, change order, create, update and delete flags" do
+    # disable
     topic_page.visit_topic(post.topic)
     topic_page.open_flag_topic_modal
     expect(all(".flag-action-type-details strong").map(&:text)).to eq(
@@ -30,9 +31,8 @@ describe "Admin Flags Page", type: :system do
     )
 
     Flag.system.where(name: "spam").update!(enabled: true)
-  end
 
-  it "allows admin to change order of flags" do
+    # change order
     topic_page.visit_topic(post.topic)
     topic_page.open_flag_topic_modal
     expect(all(".flag-action-type-details strong").map(&:text)).to eq(
@@ -58,9 +58,8 @@ describe "Admin Flags Page", type: :system do
     expect(all(".flag-action-type-details strong").map(&:text)).to eq(
       ["It's Inappropriate", "It's Spam", "It's Illegal", "Something Else"],
     )
-  end
 
-  it "allows admin to create, edit and delete flags" do
+    # create
     topic_page.visit_topic(post.topic)
     topic_page.open_flag_topic_modal
     expect(all(".flag-action-type-details strong").map(&:text)).to eq(
@@ -97,6 +96,7 @@ describe "Admin Flags Page", type: :system do
       ["It's Inappropriate", "It's Spam", "It's Illegal", "Something Else", "Vulgar"],
     )
 
+    # update
     visit "/admin/config/flags"
 
     admin_flags_page.click_edit_flag("vulgar")
@@ -110,6 +110,7 @@ describe "Admin Flags Page", type: :system do
       ["It's Inappropriate", "It's Spam", "It's Illegal", "Something Else", "Tasteless"],
     )
 
+    # delete
     visit "/admin/config/flags"
     admin_flags_page.click_delete_flag("tasteless")
     admin_flags_page.confirm_delete
