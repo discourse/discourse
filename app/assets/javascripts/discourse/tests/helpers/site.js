@@ -278,7 +278,7 @@ PreloadStore.store("site", {
       is_flag: false,
       icon: null,
       id: 1,
-      require_message: false,
+      is_custom_flag: false,
     },
     {
       name_key: "like",
@@ -288,7 +288,7 @@ PreloadStore.store("site", {
       is_flag: false,
       icon: "heart",
       id: 2,
-      require_message: false,
+      is_custom_flag: false,
     },
     {
       name_key: "off_topic",
@@ -299,7 +299,7 @@ PreloadStore.store("site", {
       is_flag: true,
       icon: null,
       id: 3,
-      require_message: false,
+      is_custom_flag: false,
     },
     {
       name_key: "inappropriate",
@@ -310,7 +310,7 @@ PreloadStore.store("site", {
       is_flag: true,
       icon: null,
       id: 4,
-      require_message: false,
+      is_custom_flag: false,
     },
     {
       name_key: "vote",
@@ -320,7 +320,7 @@ PreloadStore.store("site", {
       is_flag: false,
       icon: null,
       id: 5,
-      require_message: false,
+      is_custom_flag: false,
     },
     {
       name_key: "spam",
@@ -331,7 +331,7 @@ PreloadStore.store("site", {
       is_flag: true,
       icon: null,
       id: 8,
-      require_message: false,
+      is_custom_flag: false,
     },
     {
       name_key: "notify_user",
@@ -342,7 +342,7 @@ PreloadStore.store("site", {
       is_flag: true,
       icon: null,
       id: 6,
-      require_message: true,
+      is_custom_flag: true,
     },
     {
       name_key: "notify_moderators",
@@ -353,7 +353,7 @@ PreloadStore.store("site", {
       is_flag: true,
       icon: null,
       id: 7,
-      require_message: true,
+      is_custom_flag: true,
     },
   ],
   archetypes: [{ id: "regular", name: "Regular Topic", options: [] }],

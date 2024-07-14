@@ -568,7 +568,7 @@ export default {
           is_flag: false,
           icon: null,
           id: 1,
-          require_message: false,
+          is_custom_flag: false,
         },
         {
           name_key: "like",
@@ -578,7 +578,7 @@ export default {
           is_flag: false,
           icon: "heart",
           id: 2,
-          require_message: false,
+          is_custom_flag: false,
         },
         {
           name_key: "off_topic",
@@ -589,7 +589,7 @@ export default {
           is_flag: true,
           icon: null,
           id: 3,
-          require_message: false,
+          is_custom_flag: false,
           enabled: true,
           applies_to: ["Post", "Chat::Message"]
         },
@@ -603,7 +603,7 @@ export default {
           is_flag: true,
           icon: null,
           id: 4,
-          require_message: false,
+          is_custom_flag: false,
           enabled: true,
           applies_to: ["Post", "Topic", "Chat::Message"]
         },
@@ -615,7 +615,7 @@ export default {
           is_flag: false,
           icon: null,
           id: 5,
-          require_message: false,
+          is_custom_flag: false,
           enabled: true
         },
         {
@@ -627,7 +627,7 @@ export default {
           is_flag: true,
           icon: null,
           id: 8,
-          require_message: false,
+          is_custom_flag: false,
           enabled: true,
           applies_to: ["Post", "Topic", "Chat::Message"]
         },
@@ -641,7 +641,7 @@ export default {
           is_flag: true,
           icon: null,
           id: 6,
-          require_message: true,
+          is_custom_flag: true,
           enabled: true,
           applies_to: ["Post", "Topic", "Chat::Message"]
         },
@@ -654,7 +654,7 @@ export default {
           is_flag: true,
           icon: null,
           id: 7,
-          require_message: true,
+          is_custom_flag: true,
           enabled: true,
           applies_to: ["Post", "Topic", "Chat::Message"]
         },
@@ -668,7 +668,7 @@ export default {
           is_flag: true,
           icon: null,
           id: 4,
-          require_message: false,
+          is_custom_flag: false,
           enabled: true,
           applies_to: ["Post", "Topic", "Chat::Message"]
         },
@@ -680,7 +680,7 @@ export default {
           is_flag: true,
           icon: null,
           id: 8,
-          require_message: false,
+          is_custom_flag: false,
           enabled: true,
           applies_to: ["Post", "Topic", "Chat::Message"]
         },
@@ -692,7 +692,7 @@ export default {
           is_flag: true,
           icon: null,
           id: 7,
-          require_message: true,
+          is_custom_flag: true,
           enabled: true,
           applies_to: ["Post", "Topic", "Chat::Message"]
         },

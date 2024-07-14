@@ -23,7 +23,6 @@ export default class AdminFlagsForm extends Component {
   @service site;
 
   @tracked enabled = true;
-  @tracked require_message = false;
   @tracked name;
   @tracked description;
   @tracked appliesTo;
@@ -34,7 +33,6 @@ export default class AdminFlagsForm extends Component {
       this.name = this.args.flag.name;
       this.description = this.args.flag.description;
       this.appliesTo = this.args.flag.applies_to;
-      this.require_message = this.args.flag.require_message;
       this.enabled = this.args.flag.enabled;
     }
   }
@@ -100,7 +98,6 @@ export default class AdminFlagsForm extends Component {
         this.args.flag.name = response.flag.name;
         this.args.flag.description = response.flag.description;
         this.args.flag.applies_to = response.flag.applies_to;
-        this.args.flag.require_message = response.flag.require_message;
         this.args.flag.enabled = response.flag.enabled;
         this.router.transitionTo("adminConfig.flags");
       })
@@ -115,7 +112,6 @@ export default class AdminFlagsForm extends Component {
       name: this.name,
       description: this.description,
       applies_to: this.appliesTo,
-      require_message: this.require_message,
       enabled: this.enabled,
     };
   }
@@ -166,20 +162,6 @@ export default class AdminFlagsForm extends Component {
               @options={{hash allowAny=false}}
               class="admin-flag-form__applies-to"
             />
-          </div>
-
-          <div class="control-group">
-            <label class="checkbox-label admin-flag-form__require-reason">
-              <Input @type="checkbox" @checked={{this.require_message}} />
-              <div>
-                {{i18n "admin.config_areas.flags.form.require_message"}}
-                <div class="admin-flag-form__require-message-description">
-                  {{i18n
-                    "admin.config_areas.flags.form.require_message_description"
-                  }}
-                </div>
-              </div>
-            </label>
           </div>
 
           <div class="control-group">

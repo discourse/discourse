@@ -15,7 +15,6 @@ class Flags::CreateFlag
   class Contract
     attribute :name, :string
     attribute :description, :string
-    attribute :require_message, :boolean
     attribute :enabled, :boolean
     attribute :applies_to
     validates :name, presence: true
@@ -27,12 +26,11 @@ class Flags::CreateFlag
 
   private
 
-  def instantiate_flag(name:, description:, applies_to:, require_message:, enabled:)
+  def instantiate_flag(name:, description:, applies_to:, enabled:)
     Flag.new(
       name: name,
       description: description,
       applies_to: applies_to,
-      require_message: require_message,
       enabled: enabled,
       notify_type: true,
     )
@@ -53,7 +51,6 @@ class Flags::CreateFlag
         name: flag.name,
         description: flag.description,
         applies_to: flag.applies_to,
-        require_message: flag.require_message,
         enabled: flag.enabled,
       },
     )

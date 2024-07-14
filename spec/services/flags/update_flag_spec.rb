@@ -10,7 +10,6 @@ RSpec.describe(Flags::UpdateFlag) do
       name: name,
       description: description,
       applies_to: applies_to,
-      require_message: require_message,
       enabled: enabled,
     )
   end
@@ -20,7 +19,6 @@ RSpec.describe(Flags::UpdateFlag) do
   let(:name) { "edited custom flag name" }
   let(:description) { "edited custom flag description" }
   let(:applies_to) { ["Topic"] }
-  let(:require_message) { true }
   let(:enabled) { false }
 
   context "when user is not allowed to perform the action" do
@@ -76,7 +74,6 @@ RSpec.describe(Flags::UpdateFlag) do
       expect(flag.reload.name).to eq("edited custom flag name")
       expect(flag.description).to eq("edited custom flag description")
       expect(flag.applies_to).to eq(["Topic"])
-      expect(flag.require_message).to be true
       expect(flag.enabled).to be false
     end
 
@@ -85,7 +82,7 @@ RSpec.describe(Flags::UpdateFlag) do
       expect(UserHistory.last).to have_attributes(
         custom_type: "update_flag",
         details:
-          "name: edited custom flag name\ndescription: edited custom flag description\napplies_to: [\"Topic\"]\nrequire_message: true\nenabled: false",
+          "name: edited custom flag name\ndescription: edited custom flag description\napplies_to: [\"Topic\"]\nenabled: false",
       )
     end
   end

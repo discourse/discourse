@@ -8,7 +8,7 @@ class PostActionTypeSerializer < ApplicationSerializer
     :description,
     :short_description,
     :is_flag,
-    :require_message,
+    :is_custom_flag,
     :enabled,
     :applies_to,
     :is_used,
@@ -16,8 +16,8 @@ class PostActionTypeSerializer < ApplicationSerializer
 
   include ConfigurableUrls
 
-  def require_message
-    !!PostActionType.additional_message_types[object.id]
+  def is_custom_flag
+    !!PostActionType.custom_types[object.id]
   end
 
   def is_flag
