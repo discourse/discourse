@@ -2,13 +2,13 @@
 
 module Migrations::Database
   class Migrator
-    def initialize(db_path, migrations_path = nil)
+    def initialize(db_path)
       @db_path = db_path
-      @migrations_path = migrations_path
       @db = nil
     end
 
-    def migrate
+    def migrate(migrations_path)
+      @migrations_path = migrations_path
       @db = Connection.open_database(path: @db_path)
 
       if new_database?
@@ -18,7 +18,7 @@ module Migrations::Database
         performed_migrations = find_performed_migrations
       end
 
-      path = @migrations_path || File.join(Migrations.root_path, "db", "schema")
+      path = @migrations_path
       migrate_from_path(path, performed_migrations)
 
       @db.close

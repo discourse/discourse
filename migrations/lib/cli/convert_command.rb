@@ -15,8 +15,11 @@ module Migrations::CLI::ConvertCommand
 
         Migrations.load_rails_environment
 
-        Migrations::IntermediateDB.reset!("/tmp/converter/intermediate.db")
-        Migrations::IntermediateDB.migrate("/tmp/converter/intermediate.db")
+        Migrations::Database.reset!("/tmp/converter/intermediate.db")
+        Migrations::Database.migrate(
+          "/tmp/converter/intermediate.db",
+          migrations_path: Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
+        )
       end
 
       private
