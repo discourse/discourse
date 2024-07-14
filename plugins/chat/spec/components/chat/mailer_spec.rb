@@ -147,6 +147,11 @@ describe Chat::Mailer do
         expect_not_enqueued
       end
 
+      it "does not queue a chat summary email when chat message was created by the SDK" do
+        chat_message.update!(created_by_sdk: true)
+        expect_not_enqueued
+      end
+
       it "queues a chat summary email even when user has private messages disabled" do
         user.user_option.update!(allow_private_messages: false)
         expect_enqueued
