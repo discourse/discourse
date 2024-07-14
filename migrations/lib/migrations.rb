@@ -7,6 +7,8 @@ require "active_support"
 require "active_support/core_ext"
 require "zeitwerk"
 
+require_relative "converters"
+
 module Migrations
   def self.root_path
     @root_path ||= File.expand_path("..", __dir__)

@@ -10,16 +10,18 @@ module Migrations::CLI::ConvertCommand
         converter_type = converter_type.downcase
         validate_converter_type!(converter_type)
 
-        settings_path = calculate_settings_path(converter_type)
-        validate_settings_path!(settings_path)
+        settings = load_settings(converter_type)
 
         Migrations.load_rails_environment
 
-        Migrations::Database.reset!("/tmp/converter/intermediate.db")
-        Migrations::Database.migrate(
-          "/tmp/converter/intermediate.db",
-          migrations_path: Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
-        )
+        converter = "migrations/converters/#{converter_type}/converter".camelize.constantize
+        converter.new(settings).run
+
+        # Migrations::Database.reset!("/tmp/converter/intermediate.db")
+        # Migrations::Database.migrate(
+        #   "/tmp/converter/intermediate.db",
+        #   migrations_path: Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
+        # )
       end
 
       private
@@ -37,6 +39,13 @@ module Migrations::CLI::ConvertCommand
         if !File.exist?(settings_path)
           raise Thor::Error, "Settings file not found: #{settings_path}"
         end
+      end
+
+      def load_settings(converter_type)
+        settings_path = calculate_settings_path(converter_type)
+        validate_settings_path!(settings_path)
+
+        YAML.safe_load(File.read(settings_path), symbolize_names: true)
       end
 
       def calculate_settings_path(converter_type)

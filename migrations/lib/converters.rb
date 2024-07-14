@@ -9,6 +9,8 @@ module Migrations
       all_paths = core_paths - [base_path] + private_paths
 
       all_paths.each_with_object({}) do |path, hash|
+        next unless File.directory?(path)
+
         name = File.basename(path).downcase
         existing_path = hash[name]
 
