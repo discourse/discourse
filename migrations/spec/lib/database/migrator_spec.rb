@@ -1,19 +1,23 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Database::Migrator do
-  def migrate(migrations_directory: nil, storage_path: nil, ignore_errors: false)
-    migrations_path =
-      if migrations_directory
+  def migrate(
+    migrations_directory: nil,
+    migrations_path: nil,
+    storage_path: nil,
+    db_filename: "intermediate.db",
+    ignore_errors: false
+  )
+    if migrations_directory
+      migrations_path =
         File.join(Migrations.root_path, "spec", "fixtures", "schema", migrations_directory)
-      else
-        nil
-      end
+    end
 
     temp_path = storage_path = Dir.mktmpdir if storage_path.nil?
-    db_path = File.join(storage_path, "intermediate.db")
+    db_path = File.join(storage_path, db_filename)
 
     begin
-      described_class.new(db_path, migrations_path).migrate
+      described_class.new(db_path).migrate(migrations_path)
     rescue StandardError
       raise unless ignore_errors
     end
@@ -24,9 +28,25 @@ RSpec.describe Migrations::Database::Migrator do
   end
 
   describe "#migrate" do
-    it "works with the default schema" do
-      migrate do |db_path, storage_path|
+    it "works with the IntermediateDB schema" do
+      migrate(
+        migrations_path: Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
+        db_filename: "intermediate.db",
+      ) do |db_path, storage_path|
         expect(Dir.children(storage_path)).to contain_exactly("intermediate.db")
+
+        db = Extralite::Database.new(db_path)
+        expect(db.tables).not_to be_empty
+        db.close
+      end
+    end
+
+    it "works with the UploadsDB schema" do
+      migrate(
+        migrations_path: Migrations::Database::UPLOADS_DB_SCHEMA_PATH,
+        db_filename: "uploads.db",
+      ) do |db_path, storage_path|
+        expect(Dir.children(storage_path)).to contain_exactly("uploads.db")
 
         db = Extralite::Database.new(db_path)
         expect(db.tables).not_to be_empty

@@ -23,8 +23,8 @@ RSpec.describe Migrations::Database do
 
         described_class.migrate(db_path, migrations_path:)
 
-        expect(Migrations::Database::Migrator).to have_received(:new).with(db_path, migrations_path)
-        expect(migrator_instance).to have_received(:migrate)
+        expect(Migrations::Database::Migrator).to have_received(:new).with(db_path)
+        expect(migrator_instance).to have_received(:migrate).with(migrations_path)
       end
     end
 

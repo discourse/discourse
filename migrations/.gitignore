@@ -1,4 +1,4 @@
-!/db/schema/*.sql
+!/db/**/*.sql
 !/spec/fixtures/**/*.sql
 
 tmp/*

@@ -2,8 +2,11 @@
 
 module Migrations
   module Database
-    def self.migrate(db_path, migrations_path: nil)
-      Migrator.new(db_path, migrations_path).migrate
+    INTERMEDIATE_DB_SCHEMA_PATH = File.join(Migrations.root_path, "db", "intermediate_db_schema")
+    UPLOADS_DB_SCHEMA_PATH = File.join(Migrations.root_path, "db", "uploads_db_schema")
+
+    def self.migrate(db_path, migrations_path:)
+      Migrator.new(db_path).migrate(migrations_path)
     end
 
     def self.reset!(db_path)
