@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::IntermediateDB do
+RSpec.describe Migrations::Database do
   context "with `Migrator`" do
     let(:db_path) { "path/to/db" }
     let(:migrations_path) { "path/to/migrations" }
-    let(:migrator_instance) { instance_double(Migrations::IntermediateDB::Migrator) }
+    let(:migrator_instance) { instance_double(Migrations::Database::Migrator) }
 
     before do
-      allow(Migrations::IntermediateDB::Migrator).to receive(:new).with(
+      allow(Migrations::Database::Migrator).to receive(:new).with(
         db_path,
         migrations_path,
       ).and_return(migrator_instance)
 
-      allow(Migrations::IntermediateDB::Migrator).to receive(:new).with(db_path).and_return(
+      allow(Migrations::Database::Migrator).to receive(:new).with(db_path).and_return(
         migrator_instance,
       )
     end
@@ -23,10 +23,7 @@ RSpec.describe Migrations::IntermediateDB do
 
         described_class.migrate(db_path, migrations_path:)
 
-        expect(Migrations::IntermediateDB::Migrator).to have_received(:new).with(
-          db_path,
-          migrations_path,
-        )
+        expect(Migrations::Database::Migrator).to have_received(:new).with(db_path, migrations_path)
         expect(migrator_instance).to have_received(:migrate)
       end
     end
@@ -37,7 +34,7 @@ RSpec.describe Migrations::IntermediateDB do
 
         described_class.reset!(db_path)
 
-        expect(Migrations::IntermediateDB::Migrator).to have_received(:new).with(db_path)
+        expect(Migrations::Database::Migrator).to have_received(:new).with(db_path)
         expect(migrator_instance).to have_received(:reset!)
       end
     end
@@ -50,7 +47,7 @@ RSpec.describe Migrations::IntermediateDB do
         db = nil
 
         described_class.connect(db_path) do |connection|
-          expect(connection).to be_a(Migrations::IntermediateDB::Connection)
+          expect(connection).to be_a(Migrations::Database::Connection)
           expect(connection.path).to eq(db_path)
 
           db = connection.db

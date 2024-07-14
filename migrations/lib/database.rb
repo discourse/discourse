@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations
-  module IntermediateDB
+  module Database
     def self.migrate(db_path, migrations_path: nil)
       Migrator.new(db_path, migrations_path).migrate
     end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Migrations::IntermediateDB
+module Migrations::Database
   class PreparedStatementCache < LruRedux::Cache
     class PreparedStatementHash < Hash
       def shift

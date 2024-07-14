@@ -2,7 +2,7 @@
 
 require "extralite"
 
-RSpec.describe Migrations::IntermediateDB::PreparedStatementCache do
+RSpec.describe Migrations::Database::PreparedStatementCache do
   let(:cache) { described_class.new(3) }
 
   def create_statement_double
