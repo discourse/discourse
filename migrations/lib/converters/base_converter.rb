@@ -33,8 +33,8 @@ module Migrations::Converters
     rescue SignalException
       STDERR.puts "\nAborted"
       exit(1)
-      # ensure
-      # output_db.close if output_db
+    ensure
+      Migrations::IntermediateDb.close
     end
 
     def steps
@@ -56,7 +56,14 @@ module Migrations::Converters
     private
 
     def create_database
-      # do nothing
+      db_path = @settings[:intermediate_db][:path]
+      Migrations::Database.migrate(
+        db_path,
+        migrations_path: Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
+      )
+
+      db = Migrations::Database::Connection.new(path: db_path)
+      Migrations::IntermediateDb.setup(db)
     end
 
     def create_step(step_class)

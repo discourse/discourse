@@ -3,21 +3,17 @@
 require "singleton"
 
 module Migrations
-  class IntermediateDb
-    def self.instance
-      @__instance__ ||= new
+  module IntermediateDb
+    def self.setup(db_connection)
+      @db = db_connection
     end
 
-    def initialize
-      @db = nil
-    end
-
-    def setup(db_connection)
-      @db = db_connection unless @db
-    end
-
-    def insert(sql, *parameters)
+    def self.insert(sql, *parameters)
       @db.insert(sql, *parameters)
+    end
+
+    def self.close
+      @db.close if @db
     end
   end
 end
