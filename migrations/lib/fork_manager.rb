@@ -2,28 +2,36 @@
 
 module Migrations
   class ForkManager
+    include Singleton
+
     def initialize
       @before_fork_hooks = []
       @after_fork_hooks = []
     end
 
     def before_fork(&block)
-      @before_fork_hooks << block if block
+      if block
+        @before_fork_hooks << block
+        block
+      end
     end
 
-    def run_before_fork_hooks
-      @before_fork_hooks.each(&:call)
+    def remove_before_fork_hook(block)
+      @before_fork_hooks.delete(block)
     end
 
     def after_fork(&block)
-      @after_fork_hooks << block if block
+      if block
+        @after_fork_hooks << block
+        block
+      end
     end
 
-    def run_after_fork_hooks
-      @after_fork_hooks.each(&:call)
+    def remove_after_fork_hook(block)
+      @after_fork_hooks.delete(block)
     end
 
-    def fork_process
+    def fork
       run_before_fork_hooks
 
       Process.warmup
@@ -32,6 +40,16 @@ module Migrations
         run_after_fork_hooks
         yield
       end
+    end
+
+    private
+
+    def run_before_fork_hooks
+      @before_fork_hooks.each(&:call)
+    end
+
+    def run_after_fork_hooks
+      @after_fork_hooks.each(&:call)
     end
   end
 end

@@ -20,7 +20,7 @@ module Migrations::Converters
         )
       )
         @title = value unless getter
-        @title || "Converting #{name&.demodulize&.underscore&.humanize(capitalize: false)}"
+        @title.presence || "Converting #{name&.demodulize&.underscore&.humanize(capitalize: false)}"
       end
     end
   end
