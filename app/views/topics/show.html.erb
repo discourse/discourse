@@ -108,11 +108,6 @@
               <span class='post-likes'><%= post.like_count > 0 ? t('post.has_likes', count: post.like_count) : '' %></span>
             </div>
 
-            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
-                <meta itemprop="interactionType" content="http://schema.org/CommentAction"/>
-                <meta itemprop="userInteractionCount" content="<%= post.reply_count %>" />
-              </div>
-
               <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].filter { |l| l[:reflection] }.length > 0 %>
                 <div class='crawler-linkback-list' itemscope itemtype='http://schema.org/ItemList'>
                   <% @topic_view.link_counts[post.id].each_with_index do |link, i| %>
