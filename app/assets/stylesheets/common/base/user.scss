@@ -478,10 +478,11 @@
   .user-info .user-detail {
     width: 100%;
     .name-line {
-      .username {
+      span {
         width: auto;
+      }
+      .username {
         overflow-wrap: anywhere;
-        flex: 1 0 auto;
       }
       > a {
         flex-wrap: nowrap;
