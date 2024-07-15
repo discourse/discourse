@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { next } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { or } from "truth-helpers";
 import DeferredRender from "discourse/components/deferred-render";
@@ -23,7 +23,7 @@ export default class SidebarHamburgerDropdown extends Component {
 
   @action
   focusFirstLink() {
-    next(() => {
+    schedule("afterRender", () => {
       const firstLink = document.querySelector(".sidebar-hamburger-dropdown a");
       if (firstLink) {
         firstLink.focus();
