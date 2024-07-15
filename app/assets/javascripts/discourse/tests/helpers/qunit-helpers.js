@@ -447,7 +447,7 @@ export function controllerFor(controller, model) {
   deprecated(
     'controllerFor is deprecated. Use the standard `getOwner(this).lookup("controller:NAME")` instead',
     {
-      id: "controller-for",
+      id: "discourse.controller-for",
       since: "3.0.0.beta14",
     }
   );

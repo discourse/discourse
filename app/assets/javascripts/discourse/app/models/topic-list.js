@@ -106,7 +106,7 @@ export default class TopicList extends RestModel {
     deprecated(
       `TopicList.find is deprecated. Use \`findFiltered("topicList")\` on the \`store\` service instead.`,
       {
-        id: "topic-list-find",
+        id: "discourse.topic-list-find",
         since: "3.1.0.beta5",
         dropFrom: "3.2.0.beta1",
       }
