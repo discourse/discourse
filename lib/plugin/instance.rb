@@ -239,6 +239,17 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_editable_group_custom_field(field, self)
   end
 
+  # Allows to define custom filter utilizing the user's input.
+  # Ensure proper input sanitization before using it in a query.
+  #
+  # Example usage:
+  #   register_custom_filter("word_count") do |scope, value|
+  #     scope.where(word_count: value)
+  #   end
+  def register_custom_filter(filter_name, &block)
+    TopicsFilter.add_filter(filter_name, &block)
+  end
+
   # Allows to define custom "status:" filter. Example usage:
   #   register_custom_filter_by_status("foobar") do |scope|
   #     scope.where("word_count = 42")

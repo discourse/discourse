@@ -82,10 +82,22 @@ class TopicsFilter
         filter_by_number_of_views(min: filter_values)
       when "views-max"
         filter_by_number_of_views(max: filter_values)
+      else
+        if custom_filter = TopicsFilter.custom_filters[filter]
+          @scope = custom_filter.call(@scope, filter_values)
+        end
       end
     end
 
     @scope
+  end
+
+  def self.add_filter(filter_name, &blk)
+    custom_filters[filter_name] = blk
+  end
+
+  def self.custom_filters
+    @custom_filters ||= {}
   end
 
   def self.add_filter_by_status(status, &blk)
