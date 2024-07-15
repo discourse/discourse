@@ -133,6 +133,6 @@ if Rails.env == "test" || $0 =~ /rake$/
   MessageBus.keepalive_interval = -1
 end
 
-unless Rails.env.test?
+if !Rails.env.test?
   MessageBus.subscribe("/reload_post_action_types") { PostActionType.reload_types }
 end
