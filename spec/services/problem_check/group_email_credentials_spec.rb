@@ -45,7 +45,14 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
             target: group2.id,
             priority: "high",
             message:
-              "There was an issue with the email credentials for the group <a href=\"/g/#{group2.name}/manage/email\"></a>. No emails will be sent from the group inbox until this problem is addressed. There was an issue with the SMTP credentials provided, check the username and password and try again.",
+              I18n.t(
+                "dashboard.problem.group_email_credentials",
+                base_path: Discourse.base_path,
+                group_name: group2.name,
+                group_full_name: group2.full_name,
+                error:
+                  I18n.t("email_settings.smtp_authentication_error", message: "bad credentials"),
+              ),
           ),
         )
       end
@@ -63,7 +70,14 @@ RSpec.describe ProblemCheck::GroupEmailCredentials do
             target: group3.id,
             priority: "high",
             message:
-              "There was an issue with the email credentials for the group <a href=\"/g/#{group3.name}/manage/email\"></a>. No emails will be sent from the group inbox until this problem is addressed. There was an issue with the IMAP credentials provided, check the username and password and try again.",
+              I18n.t(
+                "dashboard.problem.group_email_credentials",
+                base_path: Discourse.base_path,
+                group_name: group3.name,
+                group_full_name: group3.full_name,
+                error:
+                  I18n.t("email_settings.imap_authentication_error", message: "bad credentials"),
+              ),
           ),
         )
       end

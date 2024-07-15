@@ -1123,8 +1123,7 @@ en:
     pop3_authentication_error: "There was an issue with the POP3 credentials provided, check the username and password and try again."
     imap_authentication_error: "There was an issue with the IMAP credentials provided, check the username and password and try again."
     imap_no_response_error: "An error occurred when communicating with the IMAP server. %{message}"
-    smtp_authentication_error: "There was an issue with the SMTP credentials provided, check the username and password and try again."
-    authentication_error_gmail_app_password: 'Application-specific password required. Learn more at <a target="_blank" href="https://support.google.com/accounts/answer/185833">this Google Help article</a>'
+    smtp_authentication_error: "There was an issue with the SMTP credentials provided, check the username and password and try again. %{message}"
     smtp_server_busy_error: "The SMTP server is currently busy, try again later."
     smtp_unhandled_error: "There was an unhandled error when communicating with the SMTP server. %{message}"
     imap_unhandled_error: "There was an unhandled error when communicating with the IMAP server. %{message}"
