@@ -169,12 +169,11 @@ class ProblemCheck
   def problem(override_key: nil, override_data: {})
     [
       Problem.new(
-        message ||
-          I18n.t(
-            override_key || translation_key,
-            base_path: Discourse.base_path,
-            **override_data.merge(translation_data).symbolize_keys,
-          ),
+        I18n.t(
+          override_key || translation_key,
+          base_path: Discourse.base_path,
+          **override_data.merge(translation_data).symbolize_keys,
+        ),
         priority: self.config.priority,
         identifier:,
       ),
@@ -183,10 +182,6 @@ class ProblemCheck
 
   def no_problem
     []
-  end
-
-  def message
-    nil
   end
 
   def translation_key
