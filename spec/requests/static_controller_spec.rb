@@ -290,7 +290,7 @@ RSpec.describe StaticController do
       end
     end
 
-    context "with a full url to someone else" do
+    context "with a full url to an external host" do
       it "redirects to the root path" do
         post "/login.json", params: { redirect: "http://eviltrout.com/foo" }
         expect(response).to redirect_to("/")
@@ -317,6 +317,13 @@ RSpec.describe StaticController do
     context "when the redirect path is the login page" do
       it "redirects to the root url" do
         post "/login.json", params: { redirect: login_path }
+        expect(response).to redirect_to("/")
+      end
+    end
+
+    context "when the redirect path is invalid" do
+      it "redirects to the root URL" do
+        post "/login.json", params: { redirect: "test" }
         expect(response).to redirect_to("/")
       end
     end
