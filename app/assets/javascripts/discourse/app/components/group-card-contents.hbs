@@ -30,17 +30,19 @@
         </div>
         <div class="names">
           <span>
-            <h1 class={{this.group.name}}>
+            <div class="names__primary {{this.group.name}}">
               <a
                 {{on "click" this.handleShowGroup}}
                 href={{this.groupPath}}
                 class="group-page-link"
               >{{this.group.name}}</a>
-            </h1>
+            </div>
             {{#if this.group.full_name}}
-              <h2 class="full-name">{{this.group.full_name}}</h2>
+              <div class="names__secondary full-name">
+                {{this.group.full_name}}
+              </div>
             {{else}}
-              <h2 class="username">{{this.group.name}}</h2>
+              <div class="names__secondary username">{{this.group.name}}</div>
             {{/if}}
           </span>
         </div>
