@@ -55,14 +55,14 @@ RSpec.describe Onebox::Engine::GithubCommitOnebox do
     end
 
     context "when github_onebox_access_token is configured" do
-      before { SiteSetting.github_onebox_access_token = "1234" }
+      before { SiteSetting.github_onebox_access_tokens = "discourse|github_pat_1234" }
 
       it "sends it as part of the request" do
         html
         expect(WebMock).to have_requested(
           :get,
           "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919",
-        ).with(headers: { "Authorization" => "Bearer #{SiteSetting.github_onebox_access_token}" })
+        ).with(headers: { "Authorization" => "Bearer github_pat_1234" })
       end
     end
   end
@@ -122,14 +122,14 @@ RSpec.describe Onebox::Engine::GithubCommitOnebox do
     end
 
     context "when github_onebox_access_token is configured" do
-      before { SiteSetting.github_onebox_access_token = "1234" }
+      before { SiteSetting.github_onebox_access_tokens = "discourse|github_pat_1234" }
 
       it "sends it as part of the request" do
         html
         expect(WebMock).to have_requested(
           :get,
           "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919",
-        ).with(headers: { "Authorization" => "Bearer #{SiteSetting.github_onebox_access_token}" })
+        ).with(headers: { "Authorization" => "Bearer github_pat_1234" })
       end
     end
   end

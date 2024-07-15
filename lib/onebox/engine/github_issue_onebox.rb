@@ -37,7 +37,7 @@ module Onebox
       end
 
       def data
-        result = raw(github_auth_header).clone
+        result = raw(github_auth_header(match[:org])).clone
         created_at = Time.parse(result["created_at"])
         closed_at = Time.parse(result["closed_at"]) if result["closed_at"]
         body, excerpt = compute_body(result["body"])

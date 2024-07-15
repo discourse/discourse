@@ -18,18 +18,18 @@ module Onebox
       always_https
 
       def url
-        "https://api.github.com/repos/#{match[:owner]}/#{match[:repository]}/pulls/#{match[:number]}"
+        "https://api.github.com/repos/#{match[:org]}/#{match[:repository]}/pulls/#{match[:number]}"
       end
 
       private
 
       def match
         @match ||=
-          @url.match(%r{github\.com/(?<owner>[^/]+)/(?<repository>[^/]+)/pull/(?<number>[^/]+)})
+          @url.match(%r{github\.com/(?<org>[^/]+)/(?<repository>[^/]+)/pull/(?<number>[^/]+)})
       end
 
       def data
-        result = raw(github_auth_header).clone
+        result = raw(github_auth_header(match[:org])).clone
         result["link"] = link
 
         created_at = Time.parse(result["created_at"])
@@ -78,7 +78,7 @@ module Onebox
       def load_commit(link)
         if commit_match = link.match(%r{commits/(\h+)})
           load_json(
-            "https://api.github.com/repos/#{match[:owner]}/#{match[:repository]}/commits/#{commit_match[1]}",
+            "https://api.github.com/repos/#{match[:org]}/#{match[:repository]}/commits/#{commit_match[1]}",
           )
         end
       end
@@ -86,7 +86,7 @@ module Onebox
       def load_comment(link)
         if comment_match = link.match(/#issuecomment-(\d+)/)
           load_json(
-            "https://api.github.com/repos/#{match[:owner]}/#{match[:repository]}/issues/comments/#{comment_match[1]}",
+            "https://api.github.com/repos/#{match[:org]}/#{match[:repository]}/issues/comments/#{comment_match[1]}",
           )
         end
       end
@@ -94,7 +94,7 @@ module Onebox
       def load_review(link)
         if review_match = link.match(/#discussion_r(\d+)/)
           load_json(
-            "https://api.github.com/repos/#{match[:owner]}/#{match[:repository]}/pulls/comments/#{review_match[1]}",
+            "https://api.github.com/repos/#{match[:org]}/#{match[:repository]}/pulls/comments/#{review_match[1]}",
           )
         end
       end
