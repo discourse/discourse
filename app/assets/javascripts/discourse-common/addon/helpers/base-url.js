@@ -5,6 +5,8 @@ import { registerRawHelper } from "discourse-common/lib/helpers";
 registerRawHelper("base-url", baseUrl);
 
 export default function baseUrl() {
-  deprecated("Use `{{base-path}}` instead of `{{base-url}}`");
+  deprecated("Use `{{base-path}}` instead of `{{base-url}}`", {
+    id: "discourse.base-url",
+  });
   return getUrl("");
 }
