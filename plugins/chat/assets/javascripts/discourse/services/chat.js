@@ -391,7 +391,8 @@ export default class Chat extends Service {
 
   addToolbarButton() {
     deprecated(
-      "Use the new chat API `api.registerChatComposerButton` instead of `chat.addToolbarButton`"
+      "Use the new chat API `api.registerChatComposerButton` instead of `chat.addToolbarButton`",
+      { id: "discourse.chat.addToolbarButton" }
     );
   }
 
