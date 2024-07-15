@@ -8,7 +8,7 @@ module Migrations::IntermediateDb
     SQL
 
     def self.create!(created_at: Time.now, type:, message:, exception: nil, details: nil)
-      Migrations::IntermediateDb.instance.insert(
+      Migrations::IntermediateDb.insert(
         SQL,
         [
           Migrations::Database::Formatter.format_datetime(created_at),

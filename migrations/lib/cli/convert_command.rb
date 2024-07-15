@@ -17,11 +17,7 @@ module Migrations::CLI::ConvertCommand
         converter = "migrations/converters/#{converter_type}/converter".camelize.constantize
         converter.new(settings).run
 
-        # Migrations::Database.reset!("/tmp/converter/intermediate.db")
-        # Migrations::Database.migrate(
-        #   "/tmp/converter/intermediate.db",
-        #   migrations_path: Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
-        # )
+        Migrations::Database.reset!(settings[:intermediate_db][:path]) if options[:reset]
       end
 
       private

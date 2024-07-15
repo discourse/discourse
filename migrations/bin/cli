@@ -8,11 +8,15 @@ module Migrations
   configure_zeitwerk
 
   class CommandLineInterface < Thor
-    extend Migrations::CLI::ThorExt
+    # extend Migrations::CLI::ThorExt
 
     include Migrations::CLI::ConvertCommand
     include Migrations::CLI::ImportCommand
     include Migrations::CLI::UploadCommand
+
+    def self.exit_on_failure?
+      true
+    end
   end
 
   CommandLineInterface.start
