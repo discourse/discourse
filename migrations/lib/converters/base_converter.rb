@@ -26,6 +26,8 @@ module Migrations::Converters
 
         step.execute
 
+        ProgressStepExecutor.new(step).execute if step.is_a?(ProgressStep)
+
         after_step_execution(step)
       end
     rescue SignalException

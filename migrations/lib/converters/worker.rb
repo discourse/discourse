@@ -17,24 +17,25 @@ module Migrations::Converters
     private
 
     def start_fork
-      io_from_parent, parent_writer = IO.pipe
-      io_from_child, child_writer = IO.pipe
+      parent_reader, parent_writer = IO.pipe
+      child_reader, child_writer = IO.pipe
 
       @worker_pid =
-        Process.fork do
+        Migrations::ForkManager.instance.fork do
           begin
             Process.setproctitle("worker_process#{@index}")
 
             parent_writer.close
-            io_from_child.close
+            child_reader.close
 
             @item_handler.after_fork
 
-            Oj.load(io_from_parent) do |data|
+            Oj.load(parent_reader) do |data|
               stats = @item_handler.handle(data)
               child_writer.write(Oj.dump(stats), "\n")
             end
           rescue SignalException
+            warn "Worker process #{@index} terminated by signal: #{e.message}"
             exit(1)
           ensure
             @item_handler.close
@@ -42,24 +43,28 @@ module Migrations::Converters
         end
 
       child_writer.close
-      io_from_parent.close
+      parent_reader.close
 
       @writer = parent_writer
-      @reader = io_from_child
+      @reader = child_reader
     end
 
     def start_thread
       Thread.new do
         Thread.current.name = "worker_thread#{@index}"
 
-        while (data = @work_queue.pop)
-          @writer.write(Oj.dump(data))
-          @progress_queue.push(Oj.load(@reader.readline))
+        begin
+          while (data = @work_queue.pop)
+            @writer.write(Oj.dump(data))
+            @progress_queue.push(Oj.load(@reader.readline))
+          end
+        rescue => e
+          warn "Worker thread #{@index} encountered an error: #{e.message}"
+        ensure
+          @writer.close
+          Process.waitpid(@worker_pid) if @worker_pid
+          @reader.close
         end
-
-        @writer.close
-        Process.waitpid(@worker_pid)
-        @reader.close
       end
     end
   end
