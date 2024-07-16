@@ -11,6 +11,7 @@ import ChatDrawerRoutesDirectMessages from "discourse/plugins/chat/discourse/com
 import ChatDrawerRoutesThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/threads";
 
 const ROUTES = {
+  chat: { name: ChatDrawerRoutesChannels },
   "chat.index": { name: ChatDrawerRoutesChannels },
   // order matters, non index before index
   "chat.browse": {
@@ -82,7 +83,6 @@ const ROUTES = {
   "chat.threads": {
     name: ChatDrawerRoutesThreads,
   },
-  chat: { name: ChatDrawerRoutesChannels },
   "chat.channel.near-message": {
     name: ChatDrawerRoutesChannel,
     extractParams: (route) => {

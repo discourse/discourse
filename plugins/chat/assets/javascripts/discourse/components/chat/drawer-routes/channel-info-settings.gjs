@@ -34,31 +34,34 @@ export default class ChatDrawerRoutesSettings extends Component {
   }
 
   <template>
-    <div class="c-drawer-routes --channel-info-settings">
-      <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
-        <navbar.BackButton
-          @title={{this.backButton.title}}
-          @route={{this.backButton.route}}
-          @routeModels={{this.backButton.models}}
-        />
-        <navbar.ChannelTitle @channel={{this.chat.activeChannel}} />
-        <navbar.Actions as |a|>
-          <a.ToggleDrawerButton />
-          <a.FullPageButton />
-          <a.CloseDrawerButton />
-        </navbar.Actions>
-      </Navbar>
+    <div
+      class="c-drawer-routes --channel-info-settings"
+      {{didInsert this.fetchChannel}}
+    >
+      {{#if this.chat.activeChannel}}
+        <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
+          <navbar.BackButton
+            @title={{this.backButton.title}}
+            @route={{this.backButton.route}}
+            @routeModels={{this.backButton.models}}
+          />
+          <navbar.ChannelTitle @channel={{this.chat.activeChannel}} />
+          <navbar.Actions as |a|>
+            <a.ToggleDrawerButton />
+            <a.FullPageButton />
+            <a.CloseDrawerButton />
+          </navbar.Actions>
+        </Navbar>
 
-      {{#if this.chatStateManager.isDrawerExpanded}}
-        <div class="chat-drawer-content" {{didInsert this.fetchChannel}}>
-          {{#if this.chat.activeChannel}}
+        {{#if this.chatStateManager.isDrawerExpanded}}
+          <div class="chat-drawer-content">
             <ChannelInfoNav
               @channel={{this.chat.activeChannel}}
               @tab="settings"
             />
             <ChannelSettings @channel={{this.chat.activeChannel}} />
-          {{/if}}
-        </div>
+          </div>
+        {{/if}}
       {{/if}}
     </div>
   </template>

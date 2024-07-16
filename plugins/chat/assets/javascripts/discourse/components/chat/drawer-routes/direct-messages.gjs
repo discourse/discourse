@@ -5,7 +5,7 @@ import ChannelsListDirect from "discourse/plugins/chat/discourse/components/chan
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatFooter from "discourse/plugins/chat/discourse/components/chat-footer";
 
-export default class ChatDrawerRoutesChannels extends Component {
+export default class ChatDrawerRoutesDirectMessages extends Component {
   @service chat;
   @service chatStateManager;
 
