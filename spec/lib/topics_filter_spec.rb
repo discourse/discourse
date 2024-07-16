@@ -217,10 +217,11 @@ RSpec.describe TopicsFilter do
       fab!(:word_count_topic) { Fabricate(:topic, word_count: 42) }
       fab!(:word_count_topic_2) { Fabricate(:topic, word_count: 42) }
 
-      after { TopicsFilter.custom_filters.clear }
+      let(:word_count_block) { Proc.new { |scope, value| scope.where(word_count: value) } }
+      let(:id_block) { Proc.new { |scope, value| scope.where(id: value) } }
 
       it "supports a custom filter" do
-        TopicsFilter.add_filter("word_count") { |scope, value| scope.where(word_count: value) }
+        DiscoursePluginRegistry.register_custom_filter("word_count", &word_count_block)
 
         expect(
           TopicsFilter
@@ -228,12 +229,13 @@ RSpec.describe TopicsFilter do
             .filter_from_query_string("word_count:42")
             .pluck(:id),
         ).to contain_exactly(word_count_topic.id, word_count_topic_2.id)
+      ensure
+        DiscoursePluginRegistry.reset_register!(:custom_filters)
       end
 
       it "supports multiple custom filters" do
-        TopicsFilter.add_filter("word_count") { |scope, value| scope.where(word_count: value) }
-
-        TopicsFilter.add_filter("id") { |scope, value| scope.where(id: value) }
+        DiscoursePluginRegistry.register_custom_filter("word_count", &word_count_block)
+        DiscoursePluginRegistry.register_custom_filter("id", &id_block)
 
         expect(
           TopicsFilter
@@ -241,6 +243,8 @@ RSpec.describe TopicsFilter do
             .filter_from_query_string("word_count:42 id:#{word_count_topic.id}")
             .pluck(:id),
         ).to contain_exactly(word_count_topic.id)
+      ensure
+        DiscoursePluginRegistry.reset_register!(:custom_filters)
       end
     end
 

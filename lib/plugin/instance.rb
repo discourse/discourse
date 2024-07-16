@@ -247,7 +247,8 @@ class Plugin::Instance
   #     scope.where(word_count: value)
   #   end
   def register_custom_filter(filter_name, &block)
-    TopicsFilter.add_filter(filter_name, &block)
+    plugin = self
+    DiscoursePluginRegistry.register_custom_filter(filter_name, &block) if plugin.enabled?
   end
 
   # Allows to define custom "status:" filter. Example usage:
