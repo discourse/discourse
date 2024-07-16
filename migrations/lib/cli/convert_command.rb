@@ -12,8 +12,6 @@ module Migrations::CLI::ConvertCommand
 
         settings = load_settings(converter_type)
 
-        Migrations.load_rails_environment
-
         converter = "migrations/converters/#{converter_type}/converter".camelize.constantize
         converter.new(settings).run
 
