@@ -69,8 +69,8 @@ export default class FKControlInput extends Component {
         value={{@value}}
         class={{concatClass
           "form-kit__control-input"
-          (if @before "--with-before")
-          (if @after "--with-after")
+          (if @before "has-prefix")
+          (if @after "has-suffix")
         }}
         disabled={{@field.disabled}}
         ...attributes

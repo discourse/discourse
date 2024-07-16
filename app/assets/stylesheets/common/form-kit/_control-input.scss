@@ -9,14 +9,14 @@
     border-color: var(--danger);
   }
 
-  &.--with-before.--with-after {
+  &.has-prefix.has-suffix {
     border-radius: 0;
   }
 
-  &.--with-before:not(.--with-after) {
+  &.has-prefix:not(.has-suffix) {
     border-radius: 0var (--d-input-border-radius) var(--d-input-border-radius) 0;
   }
-  &.--with-after:not(.--with-before) {
+  &.has-suffix:not(.has-prefix) {
     border-radius: 0var (--d-input-border-radius) var(--d-input-border-radius) 0;
   }
 
@@ -37,6 +37,11 @@
   background: var(--primary-low);
   display: flex;
   align-items: center;
+
+  &.--toggle {
+    background: var(--secondary);
+    border-left: 0;
+  }
 }
 
 .form-kit__before-input {
