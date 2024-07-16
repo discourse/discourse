@@ -146,6 +146,8 @@ class UserHistory < ActiveRecord::Base
         delete_watched_word_group: 107,
         redirected_to_required_fields: 108,
         filled_in_required_fields: 109,
+        topic_slow_mode_set: 110,
+        topic_slow_mode_removed: 111,
       )
   end
 
@@ -254,6 +256,8 @@ class UserHistory < ActiveRecord::Base
       create_watched_word_group
       update_watched_word_group
       delete_watched_word_group
+      topic_slow_mode_set
+      topic_slow_mode_removed
     ]
   end
 
