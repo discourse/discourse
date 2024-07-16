@@ -584,6 +584,17 @@ aside.quote {
 
   .buttons {
     display: flex;
+    flex-wrap: wrap;
+    @media screen and (max-width: 420px) {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .btn,
+      .ai-post-helper {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
   }
 
   .extra {
