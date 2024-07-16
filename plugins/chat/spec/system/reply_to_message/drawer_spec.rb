@@ -29,19 +29,17 @@ RSpec.describe "Reply to message - channel - drawer", type: :system do
       visit("/")
       chat_page.open_from_header
       drawer_page.open_channel(channel_1)
+      channel_page.reply_to(original_message)
 
-      pause_test
-      # channel_page.reply_to(original_message)
+      expect(drawer_page).to have_open_thread
 
-      # expect(drawer_page).to have_open_thread
+      thread_page.send_message("reply to message")
 
-      # thread_page.send_message("reply to message")
+      expect(thread_page.messages).to have_message(text: "reply to message")
 
-      # expect(thread_page.messages).to have_message(text: "reply to message")
+      drawer_page.back
 
-      # drawer_page.back
-
-      # expect(channel_page).to have_thread_indicator(original_message)
+      expect(channel_page).to have_thread_indicator(original_message)
     end
   end
 
