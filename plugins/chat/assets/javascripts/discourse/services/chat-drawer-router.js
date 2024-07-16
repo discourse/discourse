@@ -12,11 +12,12 @@ import ChatDrawerRoutesThreads from "discourse/plugins/chat/discourse/components
 
 const ROUTES = {
   "chat.index": { name: ChatDrawerRoutesChannels },
-  "chat.browse.index": {
+  // order matters, non index before index
+  "chat.browse": {
     name: ChatDrawerRoutesBrowse,
     extractParams: () => ({ currentTab: "all" }),
   },
-  "chat.browse": {
+  "chat.browse.index": {
     name: ChatDrawerRoutesBrowse,
     extractParams: () => ({ currentTab: "all" }),
   },
