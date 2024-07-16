@@ -7,21 +7,13 @@
       .btn {
         font-size: var(--font-0);
         line-height: var(--line-height-large);
-        padding: 1em 0.65em;
+        padding: 0.75em 0.65em;
       }
     }
   }
   .more-topics__lists:not(.single-list) {
     .topic-list-header .default {
       visibility: hidden;
-    }
-  }
-}
-
-#main-outlet .regular {
-  .more-topics__container .nav {
-    li .btn {
-      padding: 0.75em 0.65em;
     }
   }
 }
