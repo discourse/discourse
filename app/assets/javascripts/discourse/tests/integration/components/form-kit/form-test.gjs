@@ -1,5 +1,5 @@
 import { array, fn, hash } from "@ember/helper";
-import { click, render, settled } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
