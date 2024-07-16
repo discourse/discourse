@@ -1099,6 +1099,12 @@ ca:
       labels:
         user: Usuari
         qtt_like: '''M''agrada'' rebuts'
+    topic_view_stats:
+      labels:
+        topic: Tema
+        logged_in_views: Sessió iniciada
+        anon_views: Anònim
+        total_views: Total
   dashboard:
     problem:
       rails_env: "El vostre servidor s'executa en mode %{env}."

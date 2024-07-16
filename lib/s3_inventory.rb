@@ -16,9 +16,10 @@ class S3Inventory
     type,
     s3_inventory_bucket:,
     preloaded_inventory_file: nil,
-    preloaded_inventory_date: nil
+    preloaded_inventory_date: nil,
+    s3_options: {}
   )
-    @s3_helper = S3Helper.new(s3_inventory_bucket)
+    @s3_helper = S3Helper.new(s3_inventory_bucket, "", s3_options)
 
     if preloaded_inventory_file && preloaded_inventory_date
       # Data preloaded, so we don't need to fetch it again

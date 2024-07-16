@@ -135,6 +135,18 @@ RSpec.describe GroupSmtpMailer do
     )
   end
 
+  it "uses the login SMTP authentication method for office365" do
+    group.update!(smtp_server: "smtp.office365.com")
+    mail = GroupSmtpMailer.send_mail(group, user.email, Fabricate(:post))
+    expect(mail.delivery_method.settings[:authentication]).to eq("login")
+  end
+
+  it "uses the login SMTP authentication method for outlook" do
+    group.update!(smtp_server: "smtp-mail.outlook.com")
+    mail = GroupSmtpMailer.send_mail(group, user.email, Fabricate(:post))
+    expect(mail.delivery_method.settings[:authentication]).to eq("login")
+  end
+
   context "when the site has a reply by email address configured" do
     before do
       SiteSetting.manual_polling_enabled = true

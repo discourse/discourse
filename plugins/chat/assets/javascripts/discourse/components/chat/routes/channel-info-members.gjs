@@ -125,76 +125,78 @@ export default class ChatRouteChannelInfoMembers extends Component {
   }
 
   <template>
-    {{#if this.site.mobileView}}
-      <LinkTo
-        class="c-back-button"
-        @route="chat.channel.info.settings"
-        @model={{@channel}}
-      >
-        {{icon "chevron-left"}}
-        {{i18n "chat.members_view.back_to_settings"}}
-      </LinkTo>
-    {{/if}}
-    {{#if this.showAddMembers}}
-      <MessageCreator
-        @mode={{this.addMembersMode}}
-        @channel={{@channel}}
-        @onClose={{this.hideAddMember}}
-        @onCancel={{this.hideAddMember}}
-      />
-    {{else}}
-      <div class="c-channel-members">
-        <DcFilterInput
-          {{autoFocus}}
-          @filterAction={{this.mutFilter}}
-          @icons={{hash right="search"}}
-          @containerClass="c-channel-members__filter"
-          placeholder={{this.filterPlaceholder}}
+    <div class="c-routes --channel-info-members">
+      {{#if this.site.mobileView}}
+        <LinkTo
+          class="c-back-button"
+          @route="chat.channel.info.settings"
+          @model={{@channel}}
+        >
+          {{icon "chevron-left"}}
+          {{i18n "chat.members_view.back_to_settings"}}
+        </LinkTo>
+      {{/if}}
+      {{#if this.showAddMembers}}
+        <MessageCreator
+          @mode={{this.addMembersMode}}
+          @channel={{@channel}}
+          @onClose={{this.hideAddMember}}
+          @onCancel={{this.hideAddMember}}
         />
+      {{else}}
+        <div class="c-channel-members">
+          <DcFilterInput
+            {{autoFocus}}
+            @filterAction={{this.mutFilter}}
+            @icons={{hash right="search"}}
+            @containerClass="c-channel-members__filter"
+            placeholder={{this.filterPlaceholder}}
+          />
 
-        <ul class="c-channel-members__list" {{this.fill}}>
-          {{#if @channel.chatable.group}}
-            <li
-              class="c-channel-members__list-item -add-member"
-              role="button"
-              {{on "click" this.addMember}}
-              {{this.onEnter this.addMember}}
-              tabindex="0"
-            >
-              {{icon "plus"}}
-              <span>{{this.addMemberLabel}}</span>
-            </li>
-          {{/if}}
-          {{#each this.members as |membership|}}
-            <li
-              class="c-channel-members__list-item -member"
-              {{on "click" (fn this.openMemberCard membership.user)}}
-              {{this.onEnter (fn this.openMemberCard membership.user)}}
-              tabindex="0"
-            >
-              <ChatUserInfo
-                @user={{membership.user}}
-                @avatarSize="tiny"
-                @interactive={{false}}
-                @showStatus={{true}}
-                @showStatusDescription={{true}}
-              />
-            </li>
-          {{else}}
-            {{#if this.noResults}}
+          <ul class="c-channel-members__list" {{this.fill}}>
+            {{#if @channel.chatable.group}}
               <li
-                class="c-channel-members__list-item -no-results alert alert-info"
+                class="c-channel-members__list-item -add-member"
+                role="button"
+                {{on "click" this.addMember}}
+                {{this.onEnter this.addMember}}
+                tabindex="0"
               >
-                {{this.noMembershipsFoundLabel}}
+                {{icon "plus"}}
+                <span>{{this.addMemberLabel}}</span>
               </li>
             {{/if}}
-          {{/each}}
-        </ul>
+            {{#each this.members as |membership|}}
+              <li
+                class="c-channel-members__list-item -member"
+                {{on "click" (fn this.openMemberCard membership.user)}}
+                {{this.onEnter (fn this.openMemberCard membership.user)}}
+                tabindex="0"
+              >
+                <ChatUserInfo
+                  @user={{membership.user}}
+                  @avatarSize="tiny"
+                  @interactive={{false}}
+                  @showStatus={{true}}
+                  @showStatusDescription={{true}}
+                />
+              </li>
+            {{else}}
+              {{#if this.noResults}}
+                <li
+                  class="c-channel-members__list-item -no-results alert alert-info"
+                >
+                  {{this.noMembershipsFoundLabel}}
+                </li>
+              {{/if}}
+            {{/each}}
+          </ul>
 
-        <div {{this.loadMore}}>
-          <br />
+          <div {{this.loadMore}}>
+            <br />
+          </div>
         </div>
-      </div>
-    {{/if}}
+      {{/if}}
+    </div>
   </template>
 }

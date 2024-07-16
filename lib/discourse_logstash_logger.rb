@@ -2,10 +2,12 @@
 
 require "json"
 require "socket"
+require_relative "git_utils"
 
 class DiscourseLogstashLogger < Logger
   PROCESS_PID = Process.pid
   HOST = Socket.gethostname
+  GIT_VERSION = GitUtils.git_version
 
   attr_accessor :customize_event, :type
 
@@ -65,6 +67,7 @@ class DiscourseLogstashLogger < Logger
       "pid" => PROCESS_PID,
       "type" => @type.to_s,
       "host" => HOST,
+      "git_version" => GitUtils.git_version,
     }
 
     # Only log backtrace and env for Logger::WARN and above.
@@ -74,10 +77,32 @@ class DiscourseLogstashLogger < Logger
         event["backtrace"] = backtrace
       end
 
-      if (env = opts&.dig(:env)).present?
-        ALLOWED_HEADERS_FROM_ENV.each do |header|
-          event["request.headers.#{header.downcase}"] = opts[:env][header]
+      # `web-exception` is a log message triggered by logster.
+      # The exception class and message are extracted from the message based on the format logged by logster in
+      # https://github.com/discourse/logster/blob/25375250fb8a5c312e9c55a75f6048637aad2c69/lib/logster/middleware/debug_exceptions.rb#L22.
+      #
+      # In theory we could get logster to include the exception class and message in opts but logster currently does not
+      # need those options so we are parsing it from the message for now and not making a change in logster.
+      if progname == "web-exception"
+        # `Logster.store.ignore` is set in the logster initializer and is an array of regex patterns.
+        return if Logster.store&.ignore&.any? { |pattern| pattern.match(message) }
+
+        if message =~ /\A([^\(\)]+)\s{1}\(([\s\S]+)\)/
+          event["exception.class"] = $1
+          event["exception.message"] = $2.strip
         end
+
+        ALLOWED_HEADERS_FROM_ENV.each do |header|
+          event["request.headers.#{header.downcase}"] = opts.dig(:env, header)
+        end
+      end
+
+      if progname == "sidekiq-exception"
+        event["job.class"] = opts.dig(:context, :job)
+        event["job.opts"] = opts.dig(:context, :opts)
+        event["job.problem_db"] = opts.dig(:context, :problem_db)
+        event["exception.class"] = opts[:exception_class]
+        event["exception.message"] = opts[:exception_message]
       end
     end
 

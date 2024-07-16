@@ -101,6 +101,7 @@ export default class TopicList extends Component {
         (if this.bulkSelectEnabled "sticky-header")
       }}
     >
+      <caption class="sr-only">{{i18n "sr_topic_list_caption"}}</caption>
       <thead class="topic-list-header">
         <TopicListHeader
           @canBulkSelect={{@canBulkSelect}}

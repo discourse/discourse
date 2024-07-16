@@ -1099,6 +1099,12 @@ hr:
       labels:
         user: Korisnik
         qtt_like: Like-ova primljeno
+    topic_view_stats:
+      labels:
+        topic: Tema
+        logged_in_views: Prijavljeni
+        anon_views: Anonimno
+        total_views: Ukupno
   dashboard:
     problem:
       rails_env: "Server vam radi na %{env} način."

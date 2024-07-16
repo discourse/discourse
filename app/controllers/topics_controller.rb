@@ -1186,6 +1186,13 @@ class TopicsController < ApplicationController
 
     topic.set_or_create_timer(slow_mode_type, time, by_user: timer&.user)
 
+    StaffActionLogger.new(current_user).log_topic_slow_mode(
+      topic,
+      enabled:,
+      seconds: params[:seconds],
+      until: time,
+    )
+
     head :ok
   end
 
@@ -1282,17 +1289,13 @@ class TopicsController < ApplicationController
       TopicsController.defer_add_incoming_link(hash)
     end
 
-    TopicsController.defer_track_visit_v2(topic_id, user_id) if should_track_visit_to_topic?
+    TopicsController.defer_track_visit(topic_id, user_id) if should_track_visit_to_topic?
   end
 
   def self.defer_track_visit(topic_id, user_id)
     Scheduler::Defer.later "Track Visit" do
       TopicUser.track_visit!(topic_id, user_id)
     end
-  end
-  # TODO (martin) Remove this once discourse-docs is updated.
-  def self.defer_track_visit_v2(topic_id, user_id)
-    defer_track_visit(topic_id, user_id)
   end
 
   def self.defer_topic_view(topic_id, ip, user_id = nil)

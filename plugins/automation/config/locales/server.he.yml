@@ -11,6 +11,8 @@ he:
     models:
       fields:
         required_field: את השדה `%{name}` חובה למלא ב־`%{target}:%{target_name}`.
+        invalid_field: רכיב השדה `%{component}` אינו ניתן לשימוש ב- `%{target}:%{target_name}.`
+        invalid_metadata: הנתונים עבור `%{field}` אינם חוקיים או שהרכיב `%{component}` אינו ידוע.
     triggerables:
       errors:
         custom_fields_or_user_profile_required: "יש לציין לפחות אחת מבין האפשרויות ‚custom_fields’ (שדות מותאמים אישית) או ‚user_profile’ (פרופיל משתמש)."
@@ -24,6 +26,8 @@ he:
         title: נושא מעוכב
       api_call:
         title: קריאת API
+        description: הגשת בקשת POST להזנקת אוטומציה
+        doc: את בקשת ה־POST יש להגיש כנגד ‎`/automations/:id/trigger.json`‎ עם מפתח API כללי.
       category_created_edited:
         title: הקטגוריה נוצרה/נערכה
         description: כאשר קטגוריה נוצרת או נערכת, האוטומציה תפעל
@@ -41,8 +45,12 @@ he:
         title: משתמש קיבל קידום
         description: כאשר משתמש מקודם מדרגת אמון אחת לאחרת
         transition_placeholder: "מ־%{from_level_name} עד %{to_level_name}"
+      stalled_wiki:
+        title: דף ויקי מעוכב
+        description: כאשר ויקי לא נערך במשך תקופה ארוכה מזו שהוגדרה, האוטומציה תופעל
       post_created_edited:
         title: פוסט נוצר/נערך
+        description: כאשר הודעה חוקית נערכת או נוצרת, האוטומציה תופעל
       pm_created:
         title: נוצרה הודעה פרטית
         description: כאשר הודעה פרטית תקפה האוטומציה תוקפץ
@@ -66,33 +74,50 @@ he:
         title: סימון פוסט בדגל על המילים
         description: מסמן פוסט בדגל אם מופיעות בו מילים מסוימות
         flag_message: "הפוסט מכיל מילים אסורות: %{words}"
+        doc: פוסט שמכיל את כל המילים שסופקו בבת אחת יסומן ויוסתר. נא לשים לב שהגדרת מספר מילים עם פסיקים ביניהן ישמש כחיבור (כל מילה חייבת להיות קיימת).
       zapier_webhook:
         title: התליה של Zapier
+        description: קורא ל„זאפ” (פעולה באתר zapier) עם התוכן כגוף הזאפ
       auto_responder:
         title: משיב אוטומטי
+        description: מפרסם תשובה להודעה כולל מילות מפתח שצוינו
       auto_tag_topic:
         title: תיוג נושא אוטומטית
         description: להוסיף תגיות לנושא אוטומטית
       pin_topic:
         title: נעץ נושא
+        description: מצמיד נושא מוגדר בתאריך נתון
       banner_topic:
         title: להציב ככרזה לנושא
         description: הפיכת נושא לכרזה
       gift_exchange:
         title: החלפת מתנות
+        description: מאפשר התאמה אנונימית למשתמשים בקבוצה לשלוח אחד לשני מתנה (משחק גמד-ענק).
         doc: החלפת מתנות דורשת קבוצה קיימת עם שלושה משתמשים לפחות. בתאריך שנבחר כל המשתמשים בקבוצה יצומדו עם משתמש/ת שיעניקו להם מתנה ומשתמש/ת שיקבל מהם מתנה.
+      send_pms:
+        title: שלח הודעות פרטיות
+        description: מאפשר לשלוח הודעות פרטיות (עם אפשרות שליחה דחויה).
+        doc: מאפשר לשלוח מספר הודעות פרטיות למשתמש. כל הודעה מקבלת שליחה דחויה.
       suspend_user_by_email:
         title: השהיית משתמש לפי דוא״ל
       user_global_notice:
+        title: הודעה גלובלית למשתמש
         description: מאפשר להציג הודעה גלובלית למשתמש
       user_group_membership_through_badge:
         title: חברות משתמשים בקבוצות לפי עיטורים
         description: שינוי חברות בקבוצת משתמשים לפי עיטור
+      suspend_user_by_email_with_api_call:
+        doc: בעת הפעלת 'השעיית_משתמש_במייל' עם קריאת API, נקודת הקצה מצפה ש'אימייל' חוקי יהיה קיים במאפיינים שנשלחו. 'סיבות' ו-'suspend_until (פורמט ISO 8601)' יכולים לשמש גם כדי לעקוף ערכי ברירת מחדל של שדות.
+      user_global_notice_with_stalled_topic:
+        doc: כאשר הוא מופעל בגלל נושא שנתקע, בעל הנושא יקבל את ההודעה הגלובלית.
       user_global_notice_with_first_accepted_solution:
         doc: כאשר מוקפץ עקב הפתרון הראשון שהתקבל, הפותר יקבל התראה כללית.
+      send_pms_with_api_call:
+        doc: בעת שימוש בסקריפט של `שלח הודעות פרטיות` עם טריגר `api call`, פרמטר `שמות משתמש` של הבקשה שלך ישמש למילוי רשימת הנמענים.
       topic_required_words:
         title: מילים שנחוצות לנושא
         description: מאפשר להגדיר רשימה של מילים נדרשות בנושא, יש להשתמש לפחות באחת בכל פוסט.
+        doc: מילים נדרשות לנושא דורשות נושא. כאשר הודעה נערכת/נוצרת, ההודעה תעבור בדיקה מול רשימת המילים, לפחות אחת חייבת להיות נוכחת.
         errors:
           must_include_word: "הפוסט חייב לכלול לפחות אחת מהמילים האלו: %{words}"
       close_topic:

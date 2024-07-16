@@ -37,10 +37,7 @@
         {{#if this.reviewable.created_by}}
           <div class="editable-created-by">
             {{avatar this.reviewable.created_by imageSize="tiny"}}
-            <ReviewableCreatedByName
-              @user={{this.reviewable.created_by}}
-              @tagName=""
-            />
+            <ReviewableCreatedByName @user={{this.reviewable.created_by}} />
           </div>
         {{/if}}
 
@@ -87,6 +84,7 @@
           <ReviewableClaimedTopic
             @topicId={{this.topicId}}
             @claimedBy={{this.reviewable.claimed_by}}
+            @onClaim={{fn (mut this.reviewable.claimed_by)}}
           />
         </div>
       {{/if}}

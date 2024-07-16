@@ -62,7 +62,7 @@ bo:
 br:
   name: Breton
   nativeName: brezhoneg
-bs:
+bs_BA:
   name: Bosnian
   nativeName: bosanski jezik
 ca:
@@ -128,7 +128,7 @@ et:
 eu:
   name: Basque
   nativeName: euskara
-fa:
+fa_IR:
   name: Persian
   nativeName: فارسی
 ff:
@@ -335,7 +335,7 @@ my:
 na:
   name: Nauru
   nativeName: Ekakairũ Naoero
-nb:
+nb_NO:
   name: Norwegian Bokmål
   nativeName: Norsk bokmål
 nd:
@@ -386,7 +386,7 @@ pa:
 pi:
   name: Pāli
   nativeName: पाऴि
-pl:
+pl_PL:
   name: Polish
   nativeName: polski
 ps:
@@ -497,7 +497,7 @@ tn:
 to:
   name: Tonga
   nativeName: faka Tonga
-tr:
+tr_TR:
   name: Turkish
   nativeName: Türkçe
 ts:
@@ -551,12 +551,12 @@ yo:
 za:
   name: Zhuang
   nativeName: Saɯ cueŋƅ
-zh:
-  name: Chinese
-  nativeName: 简体中文
 zh_TW:
   name: Chinese
   nativeName: 繁體中文
+zh_CN:
+  name: Chinese Simplified
+  nativeName: 简体中文
 zu:
   name: Zulu
   nativeName: isiZulu

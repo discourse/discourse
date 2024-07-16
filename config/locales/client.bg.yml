@@ -21,6 +21,7 @@ bg:
             kb: КБ
             mb: МБ
             tb: ТБ
+      percent: "%{count}%"
       short:
         thousands: "%{number}k "
         millions: "%{number}M "
@@ -144,6 +145,7 @@ bg:
       url: "Копирайте и споделете линка"
     word_connector:
       comma: ", "
+      last_item: "и"
     action_codes:
       public_topic: "Направи тази тема публична на %{when}"
       open_topic: "Преобразува това в тема %{when}"
@@ -339,6 +341,7 @@ bg:
       copied: "копирано!"
       copy: "копирайте кода в клипборда"
       fullscreen: "показване на кода на цял екран"
+      view_code: "Виж кода"
     drafts:
       label: "Чернови"
       label_with_count: "Чернови (%{count})"
@@ -371,11 +374,18 @@ bg:
       other: "Вижте %{count} нови теми"
     preview: "преглед"
     cancel: "прекрати"
+    deleting: "Изтриване…"
     save: "Запазете промените"
+    saving: "Запазване…"
     saved: "Запазено!"
     upload: "Качване"
+    uploading: "Качване…"
+    processing: "Обработва се…"
+    uploading_filename: "Качване: %{filename}…"
+    processing_filename: "Обработва се: %{filename}…"
     clipboard: "клипборд"
     uploaded: "Качено!"
+    pasting: "Копиране…"
     enable: "Позволи"
     disable: "Деактивиране"
     continue: "Напред"
@@ -423,7 +433,10 @@ bg:
           name: "тип бонус"
           title: "Определени типове, подлежащи на преглед, могат да получат бонус от персонала, за да бъдат с по-висок приоритет."
       revise_and_reject_post:
+        title: "Преразглеждане"
         reason: "Причина"
+        send_pm: "Изпратете ЛС"
+        feedback: "Обратна връзка"
         optional: "по избор"
       stale_help: "Този преглед е разрешен от <b>%{username}</b>."
       claim_help:
@@ -623,6 +636,7 @@ bg:
       never: "Никога"
       last_custom: "Последна персонализирана дата и час"
       custom: "Друга дата и час"
+      custom_short: "Ръчно задаване..."
       select_timeframe: "Избери времева рамка"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> публикува <a href='%{topicUrl}'>тази тема</a>"
@@ -988,6 +1002,7 @@ bg:
       none: "(изберете опция)"
       required: 'Моля, попълнете "%{name}"'
       same_as_password: "Вашата парола не трябва да се повтаря в други полета."
+      optional: (по избор)
     user:
       said: "%{username}:"
       profile: "Профил"
@@ -1101,6 +1116,7 @@ bg:
         description: "Пропуснете съвети и значки за въвеждане на нови потребители"
       reset_seen_user_tips: "Показване на потребителски съвети отново"
       theme_default_on_all_devices: "Направи тази тема стандарт на всичките ми устройства"
+      color_scheme_default_on_all_devices: "Задаване на цветова схема по подразбиране на всички мои устройства"
       color_scheme: "Цветова схема"
       color_schemes:
         default_description: "Темата по подразбиране"
@@ -1772,6 +1788,7 @@ bg:
       suggested_topics:
         title: "Продължете да четете!"
         content: "Ето някои теми, които смятаме, че бихте искали също да прочетете."
+    loading: "Зареждане…"
     errors:
       prev_page: "докато се зареждаше"
       reasons:
@@ -1795,6 +1812,7 @@ bg:
       close: "затвори"
       dismiss_error: "Отхвърли грешката"
     close: "Затвори"
+    assets_changed_confirm: "Този сайт току-що получи софтуерна актуализация. Обновете до най-новата версия сега?"
     logout: "Вие бяхте отписан."
     refresh: "Опресни"
     home: "Начало"
@@ -1877,14 +1895,16 @@ bg:
       header_title: "Добре дошли!"
       subheader_title: "Нека създадем вашия акаунт"
       disclaimer: "С регистрацията си се съгласявате с <a href='%{privacy_link}' target='blank'>политиката за повелителност</a> и <a href='%{tos_link}' target='blank'>условията за ползване</a>."
-      title: "Създайте своя акаунт"
+      title: "Регистрирай се"
       failed: "Нещо се случи, вероятно вече има регистрация с този имейл адрес, опитайте с линка за забравена парола."
       associate: "Вече имате акаунт? <a href='%{associate_link}'>Влезте</a> да свържете вашите %{provider} акаунти."
+      already_have_account: "Вече имате акаунт?"
     forgot_password:
       title: "Възстановяване на парола"
       action: "Забравих си паролата"
       invite: "Въведете вашето потребителско име или имейл и ние ще Ви изпратим имейл за смяна на паролата."
       invite_no_username: "Въведете имейл адреса си и ние ще ви изпратим имейл за възстановяване на паролата."
+      email-username: "Имейл или потребителско име"
       reset: "Смяна на паролата"
       complete_username: "Ако профилът съвпада с потребителското име <b>%{username}</b>, трябва да получите имейл с инструкции, как да си смените паролата. "
       complete_email: "Ако профилът съвпада с <b>%{email}</b>, трябва да получите имейл с инструкции, как да си смените паролата. "
@@ -3618,6 +3638,17 @@ bg:
           optional: "(по избор)"
           update: "Актуализация"
           saved: "запазено!"
+        flags:
+          description: "Описание"
+          enabled: "Да е включен?"
+          edit: "Редактирай"
+          delete: "Изтрий"
+          form:
+            save: "Запази "
+            name: "Име"
+            description: "Описание"
+            topic: "теми"
+            post: "публикации"
       plugins:
         title: "Приставки"
         installed: "Инсталирани приставки"

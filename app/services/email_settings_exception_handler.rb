@@ -75,7 +75,18 @@ class EmailSettingsExceptionHandler
     end
 
     def net_smtp_authentication_error
-      I18n.t("email_settings.smtp_authentication_error")
+      # Generally SMTP authentication errors are due to invalid credentials,
+      # and most common mail servers provide more detailed error messages,
+      # so it should be safe to return the error message as is.
+      #
+      # Example: Office 365 returns:
+      #
+      # 535 5.7.139 Authentication unsuccessful, user is locked by your organization's security defaults policy. Contact your administrator.
+      #
+      # Example: Gmail returns:
+      #
+      # Application-specific password required. Learn more at https://support.google.com/accounts/answer/185833
+      I18n.t("email_settings.smtp_authentication_error", message: @exception.message)
     end
 
     def net_smtp_server_busy
@@ -99,33 +110,7 @@ class EmailSettingsExceptionHandler
     end
   end
 
-  class GmailProvider < GenericProvider
-    def net_smtp_authentication_error
-      # Gmail requires use of application-specific passwords when 2FA is enabled and return
-      # a special error message calling this out.
-      if @exception.message.match(/Application-specific password required/)
-        I18n.t("email_settings.authentication_error_gmail_app_password")
-      else
-        super
-      end
-    end
-
-    def net_imap_no_response_error
-      # Gmail requires use of application-specific passwords when 2FA is enabled and return
-      # a special error message calling this out.
-      if @exception.message.match(/Application-specific password required/)
-        I18n.t("email_settings.authentication_error_gmail_app_password")
-      else
-        super
-      end
-    end
-  end
-
   def self.friendly_exception_message(exception, host)
-    if host.include?("gmail.com")
-      EmailSettingsExceptionHandler::GmailProvider.new(exception).message
-    else
-      EmailSettingsExceptionHandler::GenericProvider.new(exception).message
-    end
+    EmailSettingsExceptionHandler::GenericProvider.new(exception).message
   end
 end

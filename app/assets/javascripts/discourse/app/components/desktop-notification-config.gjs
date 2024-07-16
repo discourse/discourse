@@ -23,7 +23,9 @@ export default class DesktopNotificationsConfig extends Component {
           @disabled="true"
           class="btn-default"
         />
-        {{i18n "user.desktop_notifications.perm_denied_expl"}}
+        <span>
+          {{i18n "user.desktop_notifications.perm_denied_expl"}}
+        </span>
       {{else}}
         {{#if this.desktopNotifications.isSubscribed}}
           <DButton

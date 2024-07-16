@@ -181,8 +181,6 @@ zh_CN:
         other: "%{count} 个成员"
       and_x_others:
         other: "和其他 %{count} 人"
-    summaries:
-      no_targets: "在所选时间段内没有消息。"
     transcript:
       default_thread_title: "对话"
       split_thread_range: "%{start} 到 %{end} 的消息（共 %{total} 条）"

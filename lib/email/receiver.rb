@@ -462,6 +462,10 @@ module Email
         end
       end
 
+      # keep track of inlined images in html version
+      # so we can later check if they were elided
+      @cids = (html.presence || "").scan(/src\s*=\s*['"](cid:.+?)["']/).flatten
+
       markdown, elided_markdown =
         if html.present?
           # use the first html extracter that matches
@@ -772,7 +776,7 @@ module Email
           # return the email address and name
           [mail, name]
         end
-      rescue Mail::Field::ParseError, Mail::Field::IncompleteParseError => e
+      rescue Mail::Field::ParseError, Mail::Field::IncompleteParseError
         # something went wrong parsing the email header value, return nil
       end
     end
@@ -1366,7 +1370,21 @@ module Email
 
       upload_shas = Upload.where(id: upload_ids).pluck("DISTINCT COALESCE(original_sha1, sha1)")
 
+      is_duplicate = ->(upload_id, upload_sha, attachment) do
+        return true if upload_id && upload_ids.include?(upload_id)
+        return true if upload_sha && upload_shas.include?(upload_sha)
+
+        if attachment.respond_to?(:url) && attachment.url&.start_with?("cid:") &&
+             attachment.content_type&.start_with?("image/")
+          return true if @cids&.include?(attachment.url)
+        end
+
+        false
+      end
+
+      added_attachments = []
       rejected_attachments = []
+
       attachments.each do |attachment|
         tmp = Tempfile.new(["discourse-email-attachment", File.extname(attachment.filename)])
         begin
@@ -1392,11 +1410,11 @@ module Email
                 end
               elsif raw[/\[image:[^\]]*\]/i]
                 raw.sub!(/\[image:[^\]]*\]/i, UploadMarkdown.new(upload).to_markdown)
-              elsif !upload_ids.include?(upload.id) && !upload_shas.include?(upload_sha)
-                raw << "\n\n#{UploadMarkdown.new(upload).to_markdown}\n\n"
+              elsif !is_duplicate[upload.id, upload_sha, attachment]
+                added_attachments << upload
               end
-            elsif !upload_ids.include?(upload.id) && !upload_shas.include?(upload_sha)
-              raw << "\n\n#{UploadMarkdown.new(upload).to_markdown}\n\n"
+            elsif !is_duplicate[upload.id, upload_sha, attachment]
+              added_attachments << upload
             end
           else
             rejected_attachments << upload
@@ -1406,8 +1424,22 @@ module Email
           tmp&.close!
         end
       end
+
       if rejected_attachments.present? && !user.staged?
         notify_about_rejected_attachment(rejected_attachments)
+      end
+
+      if added_attachments.present?
+        markdown =
+          added_attachments.map { |upload| UploadMarkdown.new(upload).to_markdown }.join("\n")
+        if markdown.present?
+          raw << "\n\n"
+          raw << "[details=\"#{I18n.t("emails.incoming.attachments")}\"]"
+          raw << "\n\n"
+          raw << markdown
+          raw << "\n\n"
+          raw << "[/details]"
+        end
       end
 
       raw

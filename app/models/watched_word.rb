@@ -3,7 +3,10 @@
 class WatchedWord < ActiveRecord::Base
   MAX_WORDS_PER_ACTION = 2000
 
-  before_validation { self.word = WatchedWord.normalize_word(self.word) }
+  before_validation do
+    self.word = WatchedWord.normalize_word(self.word)
+    self.replacement = WatchedWord.normalize_word(self.replacement) if self.replacement.present?
+  end
 
   before_validation do
     if self.action == WatchedWord.actions[:link] && self.replacement !~ %r{\Ahttps?://}
@@ -13,6 +16,7 @@ class WatchedWord < ActiveRecord::Base
   end
 
   validates :word, presence: true, uniqueness: true, length: { maximum: 100 }
+  validates :replacement, length: { maximum: 100 }
   validates :action, presence: true
   validate :replacement_is_url, if: -> { action == WatchedWord.actions[:link] }
   validate :replacement_is_tag_list, if: -> { action == WatchedWord.actions[:tag] }

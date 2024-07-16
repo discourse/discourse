@@ -17,6 +17,7 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.header-widget-overrides",
   "discourse.plugin-outlet-tag-name",
   "discourse.plugin-outlet-parent-view",
+  "discourse.d-button-action-string",
   /^(?!discourse\.)/, // All unsilenced ember deprecations
 ];
 

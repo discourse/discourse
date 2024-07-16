@@ -27,14 +27,13 @@ export default class AdminPluginConfigPage extends Component {
     <div class="admin-plugin-config-page">
       <DBreadcrumbsContainer />
 
-      <DBreadcrumbsItem @route="admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
       <DBreadcrumbsItem
-        @route="adminPlugins"
+        @path="/admin/plugins"
         @label={{i18n "admin.plugins.title"}}
       />
       <DBreadcrumbsItem
-        @route="adminPlugins.show"
-        @model={{@plugin}}
+        @path="/admin/plugins/{{@plugin.name}}"
         @label={{@plugin.nameTitleized}}
       />
 

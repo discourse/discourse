@@ -50,10 +50,7 @@
       >
         {{#if this.editingTopic}}
           <div class="edit-topic-title">
-            <PrivateMessageGlyph
-              @shouldShow={{this.model.isPrivateMessage}}
-              @tagName=""
-            />
+            <PrivateMessageGlyph @shouldShow={{this.model.isPrivateMessage}} />
 
             <TextField
               @id="edit-title"
@@ -129,12 +126,10 @@
                   @href={{this.pmPath}}
                   @title="topic_statuses.personal_message.title"
                   @ariaLabel="user.messages.inbox"
-                  @tagName=""
                 />
               {{else}}
                 <PrivateMessageGlyph
                   @shouldShow={{this.model.isPrivateMessage}}
-                  @tagName=""
                 />
               {{/if}}
             {{/unless}}
@@ -404,15 +399,9 @@
                         </span>
                       </div>
                       <div class="post-contents-wrapper">
-                        <ReviewableCreatedBy
-                          @user={{this.currentUser}}
-                          @tagName=""
-                        />
+                        <ReviewableCreatedBy @user={{this.currentUser}} />
                         <div class="post-contents">
-                          <ReviewableCreatedByName
-                            @user={{this.currentUser}}
-                            @tagName=""
-                          />
+                          <ReviewableCreatedByName @user={{this.currentUser}} />
                           <div class="post-body"><CookText
                               @rawText={{pending.raw}}
                             /></div>

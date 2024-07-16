@@ -102,7 +102,7 @@ describe "Single thread in side panel", type: :system do
       it "doesn’t show back button " do
         chat_page.visit_thread(thread)
 
-        expect(page).to have_no_css(".c-routes-channel-thread .c-navbar__back-button")
+        expect(page).to have_no_css(".c-routes.--channel-thread .c-navbar__back-button")
       end
     end
 

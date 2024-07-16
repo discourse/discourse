@@ -945,6 +945,12 @@ pt:
       labels:
         user: Utilizador
         qtt_like: Gostos Recebidos
+    topic_view_stats:
+      labels:
+        topic: Tópico
+        logged_in_views: Com Sessão Iniciada
+        anon_views: Anónimo
+        total_views: Total
   dashboard:
     problem:
       rails_env: "O seu servidor está a executar em modo %{env}."

@@ -145,13 +145,6 @@ de:
       heading: "Chat"
       join: "Beitreten"
       last_visit: "letzter Besuch"
-      summarization:
-        title: "Nachrichten zusammenfassen"
-        description: "Wähle unten eine Option aus, um die im gewünschten Zeitraum gesendete Konversation zusammenzufassen."
-        summarize: "Zusammenfassen"
-        since:
-          one: "Letzte Stunde"
-          other: "Letzte %{count} Stunden"
       mention_warning:
         invitations_sent:
           one: "Einladung gesendet"
@@ -265,6 +258,7 @@ de:
       copy_link: "Link kopieren"
       copy_text: "Text kopieren"
       rebake_message: "HTML neu erstellen"
+      message_too_long: "Nachricht ist zu lang. Nachrichten dürfen maximal %{count} Zeichen lang sein."
       retry_staged_message:
         title: "Netzwerkfehler"
         action: "Erneut senden?"

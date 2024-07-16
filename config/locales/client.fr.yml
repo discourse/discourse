@@ -21,6 +21,7 @@ fr:
             kb: Ko
             mb: Mo
             tb: To
+      percent: "%{count}%"
       short:
         thousands: "%{number} k"
         millions: "%{number} M"
@@ -1054,6 +1055,7 @@ fr:
       none: "(choisir une option)"
       required: 'Veuillez saisir une valeur pour « %{name} »'
       same_as_password: "Votre mot de passe ne doit pas être répété dans d'autres champs."
+      optional: (facultatif)
     user:
       said: "%{username} :"
       profile: "Profil"
@@ -1999,10 +2001,11 @@ fr:
       header_title: "Bienvenue !"
       subheader_title: "Créons votre compte"
       disclaimer: "En vous inscrivant, vous acceptez la <a href='%{privacy_link}' target='blank'>politique de confidentialité</a> et les <a href='%{tos_link}' target='blank'>conditions générales d'utilisation</a>."
-      title: "Créer votre compte"
+      title: "S'inscrire"
       failed: "Un problème est survenu. Cette adresse e-mail est peut-être déjà enregistrée. Essayez le lien d'oubli du mot de passe."
       associate: "Vous avez déjà un compte ? <a href='%{associate_link}'>Connectez-vous</a> pour lier votre compte %{provider}."
       activation_title: "Activez votre compte"
+      already_have_account: "Vous avez déjà un compte ?"
     forgot_password:
       title: "Réinitialisation du mot de passe"
       action: "J'ai oublié mon mot de passe"
@@ -4352,6 +4355,8 @@ fr:
       panels:
         forum:
           label: Forum
+      back_to_forum: "Retour au forum"
+      collapse_all_sections: "Réduire toutes les sections"
       filter: "Filtrer ..."
       no_results:
         title: "Aucun résultat"
@@ -4461,9 +4466,7 @@ fr:
     admin:
       title: "Administrateur Discourse"
       moderator: "Modérateur"
-      back_to_forum: "Retour au forum"
       filter_reports: Filtrer les rapports
-      collapse_all_sections: "Réduire toutes les sections"
       tags:
         remove_muted_tags_from_latest:
           always: "toujours"
@@ -4939,6 +4942,19 @@ fr:
           optional: "(facultatif)"
           update: "Mettre à jour"
           saved: "enregistré avec succès !"
+        flags:
+          description: "Description"
+          enabled: "Activée ?"
+          edit: "Modifier"
+          delete: "Supprimer"
+          delete_confirm: 'Voulez-vous vraiment supprimer « %{name} » ?'
+          form:
+            save: "Enregistrer"
+            name: "Nom"
+            description: "Description"
+            topic: "sujets"
+            post: "messages"
+            chat_message: "messages de discussion"
       plugins:
         title: "Extensions"
         installed: "Extensions installées"

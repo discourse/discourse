@@ -23,7 +23,7 @@
       {{~raw "topic-status" topic=topic~}}
       {{~topic-link topic class="raw-link raw-topic-link"}}
       {{~#if topic.featured_link~}}
-      {{~topic-featured-link topic~}}
+      &nbsp;{{~topic-featured-link topic~}}
       {{~/if~}}
       {{~raw-plugin-outlet name="topic-list-after-title"}}
       {{~#if topic.unseen~}}

@@ -134,15 +134,16 @@ GEM
     drb (2.2.1)
     email_reply_trimmer (0.1.13)
     erubi (1.13.0)
-    excon (0.110.0)
+    excon (0.111.0)
     execjs (2.9.1)
     exifr (1.4.0)
     fabrication (2.31.0)
     faker (2.23.0)
       i18n (>= 1.8.11, < 2)
     fakeweb (1.3.0)
-    faraday (2.9.2)
+    faraday (2.10.0)
       faraday-net_http (>= 2.0, < 3.2)
+      logger
     faraday-net_http (3.1.0)
       net-http
     faraday-retry (2.2.1)
@@ -234,6 +235,8 @@ GEM
     memory_profiler (1.0.2)
     message_bus (4.3.8)
       rack (>= 1.1.3)
+    messageformat-wrapper (1.0.0)
+      mini_racer (>= 0.6.3)
     method_source (1.1.0)
     mini_mime (1.1.5)
     mini_racer (0.9.0)
@@ -316,7 +319,7 @@ GEM
     parallel (1.25.1)
     parallel_tests (4.7.1)
       parallel
-    parser (3.3.3.0)
+    parser (3.3.4.0)
       ast (~> 2.4.1)
       racc
     pg (1.5.4)
@@ -440,13 +443,13 @@ GEM
       rspec-core (>= 2.14)
     rtlcss (0.2.1)
       mini_racer (>= 0.6.3)
-    rubocop (1.64.1)
+    rubocop (1.65.0)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
-      regexp_parser (>= 1.8, < 3.0)
+      regexp_parser (>= 2.4, < 3.0)
       rexml (>= 3.2.5, < 4.0)
       rubocop-ast (>= 1.31.1, < 2.0)
       ruby-progressbar (~> 1.7)
@@ -565,7 +568,7 @@ GEM
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
     webrick (1.8.1)
-    websocket (1.2.10)
+    websocket (1.2.11)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yaml-lint (0.1.2)
@@ -646,6 +649,7 @@ DEPENDENCIES
   maxminddb
   memory_profiler
   message_bus
+  messageformat-wrapper
   mini_mime
   mini_racer
   mini_scheduler
@@ -728,4 +732,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.5.3
+   2.5.9

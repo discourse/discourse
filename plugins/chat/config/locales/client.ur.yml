@@ -35,8 +35,6 @@ ur:
       flag: "فلَیگ"
       join: "شمولیت اختیار کریں"
       last_visit: "آخری وزٹ"
-      summarization:
-        summarize: "خلاصہ"
       reply: "جواب"
       edit: "ترمیم کریں"
       rebake_message: "HTML دوبارہ بِلڈ کریں"

@@ -65,12 +65,6 @@ end
 
 def dependencies
   [
-    { source: "ace-builds/src-min-noconflict/ace.js", destination: "ace.js", public: true },
-    {
-      source: "@json-editor/json-editor/dist/jsoneditor.js",
-      package_name: "@json-editor/json-editor",
-      public: true,
-    },
     { source: "chart.js/dist/chart.min.js", public: true },
     { source: "chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js", public: true },
     { source: "magnific-popup/dist/jquery.magnific-popup.min.js", public: true },
@@ -237,31 +231,6 @@ task "javascript:update" => "clean_up" do
         dest = "#{path}/#{filename}"
 
         FileUtils.mkdir_p(path) unless File.exist?(path)
-
-        if src.include? "ace.js"
-          versions["ace/ace.js"] = versions.delete("ace.js")
-
-          themes = %w[theme-chrome theme-chaos]
-
-          themes.each do |file|
-            versions["ace/#{file}.js"] = "#{package_dir_name}/#{package_version}/#{file}.js"
-          end
-
-          ace_root = "#{library_src}/ace-builds/src-min-noconflict/"
-
-          addtl_files = %w[
-            ext-searchbox
-            mode-html
-            mode-javascript
-            mode-scss
-            mode-sql
-            mode-yaml
-            worker-html
-          ].concat(themes)
-
-          dest_path = dest.split("/")[0..-2].join("/")
-          addtl_files.each { |file| FileUtils.cp_r("#{ace_root}#{file}.js", dest_path) }
-        end
       end
     else
       dest = "#{vendor_js}/#{filename}"

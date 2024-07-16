@@ -12,33 +12,134 @@ RSpec.describe ListController do
   end
 
   describe "#index" do
-    it "does not return a 500 for invalid input" do
-      get "/latest?min_posts=bob"
-      expect(response.status).to eq(400)
+    context "when params are invalid" do
+      it "should return a 400 response when `page` param is a string that represent a negative integer" do
+        get "/latest?page=-1"
+        expect(response.status).to eq(400)
+      end
 
-      get "/latest?max_posts=bob"
-      expect(response.status).to eq(400)
+      it "should return a 400 response when `page` param is a string larger than maximum integer value" do
+        get "/latest?page=2147483648"
+        expect(response.status).to eq(400)
 
-      get "/latest?max_posts=1111111111111111111111111111111111111111"
-      expect(response.status).to eq(400)
+        get "/latest?page=1111111111111111111111111111111111111111"
+        expect(response.status).to eq(400)
+      end
 
-      get "/latest?page=-1"
-      expect(response.status).to eq(400)
+      it "should return a 400 response when `before` param is not a string represetning an integer" do
+        get "/latest?before[1]=haxx"
+        expect(response.status).to eq(400)
+      end
 
-      get "/latest?page=2147483648"
-      expect(response.status).to eq(400)
+      it "should return a 400 response when `bumped_before` param is not a string representing an integer" do
+        get "/latest?bumped_before[1]=haxx"
+        expect(response.status).to eq(400)
+      end
 
-      get "/latest?page=1111111111111111111111111111111111111111"
-      expect(response.status).to eq(400)
+      it "should return a 400 response when `topic_ids` param is not a string representing an integer" do
+        get "/latest?topic_ids[1]=haxx"
+        expect(response.status).to eq(400)
+      end
 
-      get "/latest?tags[1]=hello"
-      expect(response.status).to eq(400)
+      it "should return a 400 response when `category` param is not a string representing an integer" do
+        get "/latest?category[1]=haxx"
+        expect(response.status).to eq(400)
+      end
 
-      get "/latest?before[1]=haxx"
-      expect(response.status).to eq(400)
+      it "should return a 400 response when `order` param is not a string" do
+        get "/latest?order[1]=haxx"
+        expect(response.status).to eq(400)
+      end
 
-      get "/latest?bumped_before[1]=haxx"
-      expect(response.status).to eq(400)
+      it "should return a 400 response when `ascending` param is not a string that is either `true` or `false`" do
+        get "/latest?ascending=maybe"
+        expect(response.status).to eq(400)
+      end
+
+      it "should return a 400 response when `min_posts` param is a string that does not represent an integer" do
+        get "/latest?min_posts=bob"
+        expect(response.status).to eq(400)
+      end
+
+      it "should return a 400 response when `max_posts` param is a string that does not represent an integer" do
+        get "/latest?max_posts=bob"
+        expect(response.status).to eq(400)
+      end
+
+      it "should return a 400 response when `max_posts` param is a string larger than maximum integer value" do
+        get "/latest?max_posts=1111111111111111111111111111111111111111"
+        expect(response.status).to eq(400)
+      end
+
+      it "should return a 400 response when `status` param is not a string" do
+        get "/latest?status%5Bsomehash%5D=something"
+        expect(response.status).to eq(400)
+      end
+
+      it "should return a 400 response when `filter` param is not a string" do
+        get "/latest?filter%5Bsomehash%5D=something"
+        expect(response.status).to eq(400)
+      end
+
+      it "should return a 400 response when `state` param is not a string" do
+        get "/latest?state%5Bsomehash%5D=something"
+        expect(response.status).to eq(400)
+      end
+
+      it "should return a 400 response when `search` param is not a string" do
+        get "/latest?search%5Bsomehash%5D=something"
+        expect(response.status).to eq(400)
+      end
+
+      it "should return a 400 response when `q` param is not a string" do
+        get "/latest?q%5Bsomehash%5D=something"
+        expect(response.status).to eq(400)
+      end
+
+      it "should return a 400 response when `f` param is not a string" do
+        get "/latest?f%5Bsomehash%5D=something"
+        expect(response.status).to eq(400)
+      end
+
+      it "should return a 400 response when `subset` param is not a string" do
+        get "/latest?subset%5Bsomehash%5D=something"
+        expect(response.status).to eq(400)
+      end
+
+      it "should return a 400 response when `group_name` param is not a string" do
+        get "/latest?group_name%5Bsomehash%5D=something"
+        expect(response.status).to eq(400)
+      end
+
+      it "should return a 400 response when `tags` param is not an array or string" do
+        get "/latest?tags[1]=hello"
+        expect(response.status).to eq(400)
+      end
+
+      it "should return a 400 response when `filter` param is not a string" do
+        get "/latest?filter%5Bsomehash%5D=something"
+        expect(response.status).to eq(400)
+      end
+
+      it "should return a 400 response when `match_all_tags` param is not a string that is either `true` or `false`" do
+        get "/latest?match_all_tags=something"
+        expect(response.status).to eq(400)
+      end
+
+      it "should return a 400 response when `no_subcategories` param is not a string that is either `true` or `false`" do
+        get "/latest?no_subcategories=something"
+        expect(response.status).to eq(400)
+      end
+
+      it "should return a 400 response when `no_tags` param is not a string that is either `true` or `false`" do
+        get "/latest?no_tags=something"
+        expect(response.status).to eq(400)
+      end
+
+      it "should return a 400 response when `exclude_tag` param is not a string" do
+        get "/latest?exclude_tag%5Bsomehash%5D=something"
+        expect(response.status).to eq(400)
+      end
     end
 
     it "returns 200 for legit requests" do

@@ -141,13 +141,6 @@ sv:
       heading: "Chatt"
       join: "Gå med"
       last_visit: "senaste besök"
-      summarization:
-        title: "Sammanfatta meddelanden"
-        description: "Välj ett alternativ nedan för att sammanfatta samtalet som skickades under den önskade tidsramen."
-        summarize: "Sammanfatta"
-        since:
-          one: "Senaste timmen"
-          other: "Senaste %{count} timmarna"
       mention_warning:
         invitations_sent:
           one: "Inbjudan skickad"
@@ -254,6 +247,7 @@ sv:
       copy_link: "Kopiera länk"
       copy_text: "Kopiera text"
       rebake_message: "Generera HTML"
+      message_too_long: "Meddelandet är för långt. Meddelanden får högst innehålla %{count} tecken."
       retry_staged_message:
         title: "Nätverksfel"
         action: "Skicka igen?"

@@ -190,8 +190,6 @@ fr:
       and_x_others:
         one: "et %{count} autre utilisateur"
         other: "et %{count} autres utilisateurs"
-    summaries:
-      no_targets: "Il n'y a eu aucun message pendant la période sélectionnée."
     transcript:
       default_thread_title: "Fil"
       split_thread_range: "messages %{start} à %{end} sur %{total}"

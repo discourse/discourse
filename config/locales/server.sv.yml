@@ -1397,6 +1397,12 @@ sv:
         user: Användare
         qtt_like: Mottagna gillningar
       description: "Topp 10-användare som har fått gillningar från ett brett spektrum av personer."
+    topic_view_stats:
+      labels:
+        topic: Ämne
+        logged_in_views: Inloggad
+        anon_views: Anonym
+        total_views: Totalt
   dashboard:
     problem:
       rails_env: "Din server kör i %{env}-läge."

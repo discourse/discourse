@@ -20,6 +20,7 @@ ja:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count} 件%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -976,6 +977,7 @@ ja:
       none: "(オプションを選択)"
       required: '"%{name}" の値を入力してください'
       same_as_password: "他のフィールドでパスワードを繰り返し入力してはいけません。"
+      optional: (オプション)
     user:
       said: "%{username}:"
       profile: "プロファイル"
@@ -1886,10 +1888,11 @@ ja:
       header_title: "ようこそ！"
       subheader_title: "アカウントを作成しましょう"
       disclaimer: "登録すると、<a href='%{privacy_link}' target='blank'>プライバシーポリシー</a>と<a href='%{tos_link}' target='blank'>利用規約</a>に同意することになります。"
-      title: "アカウントの作成"
+      title: "アカウントを登録"
       failed: "エラーが発生しました。このメールアドレスは使用中かもしれません。「パスワードを忘れました」リンクを試してみてください"
       associate: "アカウントをお持ちですか？<a href='%{associate_link}'>ログイン</a>して %{provider} アカウントにリンクします。"
       activation_title: "アカウントの有効化"
+      already_have_account: "すでにアカウントをお持ちですか？"
     forgot_password:
       title: "パスワードをリセット"
       action: "パスワードを忘れました"
@@ -4099,6 +4102,7 @@ ja:
       panels:
         forum:
           label: フォーラム
+      back_to_forum: "フォーラムに戻る"
       filter: "フィルタ..."
       no_results:
         title: "結果がありません"
@@ -4203,7 +4207,6 @@ ja:
     admin:
       title: "Discourse の管理者"
       moderator: "モデレーター"
-      back_to_forum: "フォーラムに戻る"
       filter_reports: レポートをフィルタ
       tags:
         remove_muted_tags_from_latest:
@@ -4667,6 +4670,19 @@ ja:
           optional: "(オプション)"
           update: "更新"
           saved: "保存済み!"
+        flags:
+          description: "説明"
+          enabled: "有効化？"
+          edit: "編集"
+          delete: "削除"
+          delete_confirm: '"%{name}" を削除してもよろしいですか？'
+          form:
+            save: "保存"
+            name: "名前"
+            description: "説明"
+            topic: "トピック"
+            post: "投稿"
+            chat_message: "チャットメッセージ"
       plugins:
         title: "プラグイン"
         installed: "インストール済みプラグイン"

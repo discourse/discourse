@@ -48,6 +48,10 @@ module PageObjects
           input.value
         end
 
+        def has_value?(expected)
+          value == expected
+        end
+
         def reply_to_last_message_shortcut
           input.click
           input.send_keys(%i[shift arrow_up])

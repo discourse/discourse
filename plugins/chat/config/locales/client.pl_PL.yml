@@ -145,15 +145,6 @@ pl_PL:
       heading: "Czat"
       join: "Dołącz"
       last_visit: "ostatnia wizyta"
-      summarization:
-        title: "Podsumuj wiadomości"
-        description: "Wybierz opcję poniżej, aby podsumować rozmowę wysłaną w żądanym przedziale czasowym."
-        summarize: "Podsumuj"
-        since:
-          one: "Ostatnia godzina"
-          few: "Ostatnie %{count} godziny"
-          many: "Ostatnie %{count} godzin"
-          other: "Ostatnie %{count} godzin"
       mention_warning:
         invitations_sent:
           one: "Zaproszenie wysłane"
@@ -272,6 +263,7 @@ pl_PL:
       copy_link: "Skopiuj link"
       copy_text: "Skopiuj tekst"
       rebake_message: "Odśwież HTML"
+      message_too_long: "Wiadomość jest zbyt długa, wiadomości muszą mieć maksymalnie %{count} znaków."
       retry_staged_message:
         title: "Błąd sieci"
         action: "Wyślij ponownie?"

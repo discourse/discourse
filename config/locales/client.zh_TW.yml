@@ -20,6 +20,7 @@ zh_TW:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number} 千"
         millions: "%{number} 百萬"
@@ -842,6 +843,7 @@ zh_TW:
     user_fields:
       none: "（選擇一個選項）"
       required: '請輸入「%{name}」的值'
+      optional: (選擇性)
     user:
       said: "%{username}："
       profile: "個人檔案"
@@ -1448,6 +1450,7 @@ zh_TW:
     create_account:
       header_title: "歡迎!"
       disclaimer: "註冊即表示您同意 <a href='%{privacy_link}' target='blank'>隱私政策</a> 和 <a href='%{tos_link}' target='blank'>服務條款</a>。"
+      title: "註冊"
       failed: "發生了某些錯誤，可能此電子郵件地址已經註冊過，請試試看忘記密碼連結"
     forgot_password:
       title: "寄出密碼"
@@ -3294,6 +3297,19 @@ zh_TW:
           optional: "(選擇性)"
           update: "更新"
           saved: "儲存完畢!"
+        flags:
+          description: "簡述"
+          enabled: "啟用?"
+          edit: "編輯"
+          delete: "刪除"
+          delete_confirm: '你確定要刪除%{name}嗎？'
+          form:
+            save: "保存"
+            name: "名字"
+            description: "簡述"
+            topic: "話題"
+            post: "貼文"
+            chat_message: "聊天訊息"
       plugins:
         title: "外掛"
         installed: "已安裝外掛"

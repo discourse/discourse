@@ -1489,6 +1489,12 @@ ru:
         user: Пользователь
         qtt_like: Получено лайков
       description: "Топ-10 пользователей по количеству лайков, полученных от различных пользователей."
+    topic_view_stats:
+      labels:
+        topic: Перенаправление в тему
+        logged_in_views: Авторизованные пользователи
+        anon_views: Анонимные просмотры
+        total_views: Всего
   dashboard:
     problem:
       rails_env: "Сервер работает в режиме %{env}."

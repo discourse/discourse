@@ -148,17 +148,6 @@ ar:
       heading: "الدردشة"
       join: "الانضمام"
       last_visit: "آخر زيارة"
-      summarization:
-        title: "تلخيص الرسائل"
-        description: "حدِّد خيارًا أدناه لتلخيص المحادثة المُرسَلة خلال الإطار الزمني المطلوب."
-        summarize: "تلخيص"
-        since:
-          zero: "آخر ساعة"
-          one: "آخر ساعة"
-          two: "آخر ساعتين (%{count})"
-          few: "آخر %{count} ساعات"
-          many: "آخر %{count} ساعة"
-          other: "آخر %{count} ساعة"
       mention_warning:
         invitations_sent:
           zero: "تم إرسال الدعوات"
@@ -281,6 +270,7 @@ ar:
       copy_link: "نسخ الرابط"
       copy_text: "نسخ النص"
       rebake_message: "إعادة بناء HTML"
+      message_too_long: "الرسالة طويلة جدًا، يجب ألا يزيد عدد أحرف الرسائل عن %{count} حرفًا."
       retry_staged_message:
         title: "خطأ في الشبكة"
         action: "هل تريد الإرسال مجددًا؟"

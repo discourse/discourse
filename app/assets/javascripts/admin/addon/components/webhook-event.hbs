@@ -1,6 +1,10 @@
 <li>
   <div class="col first status">
-    <span class={{this.statusColorClasses}}>{{@event.status}}</span>
+    {{#if @event.redelivering}}
+      {{d-icon "sync"}}
+    {{else}}
+      <span class={{this.statusColorClasses}}>{{@event.status}}</span>
+    {{/if}}
   </div>
 
   <div class="col event-id">{{@event.id}}</div>

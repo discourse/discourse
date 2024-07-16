@@ -9,7 +9,7 @@ export default class AuthButtons extends Component {
     return (
       this.args.canSignUp &&
       !this.header.headerButtonsHidden.includes("signup") &&
-      !this.header.topic
+      !this.header.topicInfoVisible
     );
   }
 

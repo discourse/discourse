@@ -298,7 +298,13 @@ module FileStore
 
     def list_missing_uploads(skip_optimized: false)
       if s3_inventory_bucket = SiteSetting.s3_inventory_bucket
-        S3Inventory.new(:upload, s3_inventory_bucket:).backfill_etags_and_list_missing
+        s3_options = {}
+
+        if (s3_inventory_bucket_region = SiteSetting.s3_inventory_bucket_region).present?
+          s3_options[:region] = s3_inventory_bucket_region
+        end
+
+        S3Inventory.new(:upload, s3_inventory_bucket:, s3_options:).backfill_etags_and_list_missing
 
         unless skip_optimized
           S3Inventory.new(:optimized, s3_inventory_bucket:).backfill_etags_and_list_missing

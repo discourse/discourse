@@ -52,10 +52,12 @@
       </div>
 
       <% if @topic_view.crawler_posts&.first && !@topic_view.crawler_posts.first.is_first_post? %>
-        <span itemprop='author' itemscope itemtype="http://schema.org/Person">
-          <meta itemprop='name' content='<%= @topic_view.topic.user.username %>'>
-          <link itemprop='url' href='<%= Discourse.base_url %>/u/<%= @topic_view.topic.user.username %>'>
-        </span>
+        <% if @topic_view.topic.user.present? %>
+          <span itemprop='author' itemscope itemtype="http://schema.org/Person">
+            <meta itemprop='name' content='<%= @topic_view.topic.user.username %>'>
+            <link itemprop='url' href='<%= Discourse.base_url %>/u/<%= @topic_view.topic.user.username %>'>
+          </span>
+        <% end %>
         <meta itemprop='text' content='<%= @topic_view.topic.excerpt %>'>
       <% end %>
 
@@ -105,11 +107,6 @@
               <meta itemprop="userInteractionCount" content="<%= post.like_count %>" />
               <span class='post-likes'><%= post.like_count > 0 ? t('post.has_likes', count: post.like_count) : '' %></span>
             </div>
-
-            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
-                <meta itemprop="interactionType" content="http://schema.org/CommentAction"/>
-                <meta itemprop="userInteractionCount" content="<%= post.reply_count %>" />
-              </div>
 
               <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].filter { |l| l[:reflection] }.length > 0 %>
                 <div class='crawler-linkback-list' itemscope itemtype='http://schema.org/ItemList'>

@@ -372,6 +372,24 @@ export function slugify(string) {
     .replace(/-+$/, ""); // Remove trailing dashes
 }
 
+export function unicodeSlugify(string) {
+  try {
+    return string
+      .trim()
+      .toLowerCase()
+      .normalize("NFD") // normalize the string to remove diacritics
+      .replace(/\s|_+/g, "-") // replace spaces and underscores with dashes
+      .replace(/[^\p{Letter}\d\-]+/gu, "") // Remove non-letter characters except for dashes
+      .replace(/--+/g, "-") // replace multiple dashes with a single dash
+      .replace(/^-+/, "") // Remove leading dashes
+      .replace(/-+$/, ""); // Remove trailing dashes
+  } catch (e) {
+    // in case the regex construct \p{Letter} is not supported by the browser
+    // fall back to the basic slugify function
+    return slugify(string);
+  }
+}
+
 export function toNumber(input) {
   return typeof input === "number" ? input : parseFloat(input);
 }

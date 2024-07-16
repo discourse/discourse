@@ -50,6 +50,8 @@ const TopicListHeader = <template>
         @activeOrder={{@order}}
         @changeSort={{@changeSort}}
         @ascending={{@ascending}}
+        @name="posters"
+        @screenreaderOnly={{true}}
         aria-label={{i18n "category.sort_options.posters"}}
       />
     {{/if}}
@@ -62,7 +64,6 @@ const TopicListHeader = <template>
       @changeSort={{@changeSort}}
       @ascending={{@ascending}}
       @name="replies"
-      aria-label={{i18n "sr_replies"}}
     />
 
     {{#if @showLikes}}
@@ -74,7 +75,6 @@ const TopicListHeader = <template>
         @changeSort={{@changeSort}}
         @ascending={{@ascending}}
         @name="likes"
-        aria-label={{i18n "sr_likes"}}
       />
     {{/if}}
 
@@ -87,7 +87,6 @@ const TopicListHeader = <template>
         @changeSort={{@changeSort}}
         @ascending={{@ascending}}
         @name="likes"
-        aria-label={{i18n "sr_op_likes"}}
       />
     {{/if}}
 
@@ -99,7 +98,6 @@ const TopicListHeader = <template>
       @changeSort={{@changeSort}}
       @ascending={{@ascending}}
       @name="views"
-      aria-label={{i18n "sr_views"}}
     />
 
     <TopicListHeaderColumn
@@ -110,7 +108,6 @@ const TopicListHeader = <template>
       @changeSort={{@changeSort}}
       @ascending={{@ascending}}
       @name="activity"
-      aria-label={{i18n "sr_activity"}}
     />
 
     <PluginOutlet @name="topic-list-header-after" />

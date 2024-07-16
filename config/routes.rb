@@ -344,6 +344,7 @@ Discourse::Application.routes.draw do
           get "web_hook_events/:id" => "web_hooks#list_events", :as => :web_hook_events
           get "web_hooks/:id/events/bulk" => "web_hooks#bulk_events"
           post "web_hooks/:web_hook_id/events/:event_id/redeliver" => "web_hooks#redeliver_event"
+          post "web_hooks/:id/events/failed_redeliver" => "web_hooks#redeliver_failed_events"
           post "web_hooks/:id/ping" => "web_hooks#ping"
         end
       end
@@ -1106,7 +1107,7 @@ Discourse::Application.routes.draw do
 
     put "bookmarks/bulk"
 
-    resources :posts, only: %i[show update create destroy] do
+    resources :posts, only: %i[show update create destroy], defaults: { format: "json" } do
       delete "bookmark", to: "posts#destroy_bookmark"
       put "wiki"
       put "post_type"

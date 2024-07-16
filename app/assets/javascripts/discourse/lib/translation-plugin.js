@@ -3,7 +3,7 @@ const Yaml = require("js-yaml");
 const fs = require("fs");
 const concat = require("broccoli-concat");
 const mergeTrees = require("broccoli-merge-trees");
-const MessageFormat = require("messageformat");
+const MessageFormat = require("@messageformat/core");
 const deepmerge = require("deepmerge");
 const glob = require("glob");
 const { shouldLoadPlugins } = require("discourse-plugins");
@@ -34,7 +34,7 @@ class TranslationPlugin extends Plugin {
       } else if (key.endsWith("_MF")) {
         // omit locale.js
         let mfPath = subpath.slice(2).join(".");
-        formats[mfPath] = this.mf.precompile(this.mf.parse(value));
+        formats[mfPath] = this.mf.compile(value);
       }
     });
   }
@@ -74,11 +74,19 @@ class TranslationPlugin extends Plugin {
     formats = Object.entries(formats).map(([k, v]) => `"${k}": ${v}`);
 
     let contents = `
-      I18n.locale = 'en';
-      I18n.translations = ${JSON.stringify(parsed)};
-      I18n.extras = ${JSON.stringify(extras)};
-      MessageFormat = { locale: {} };
-      I18n._compiledMFs = { ${formats.join(",\n")} };
+      (function() {
+        I18n.locale = 'en';
+        I18n.translations = ${JSON.stringify(parsed)};
+        I18n.extras = ${JSON.stringify(extras)};
+
+        const Messages = require("@messageformat/runtime/messages").default;
+        const { number, plural, select } = require("@messageformat/runtime");
+        const { en } = require("@messageformat/runtime/lib/cardinals");
+        const msgData = { en: { ${formats.join(",\n")} } };
+        const messages = new Messages(msgData, "en");
+        messages.defaultLocale = "en";
+        I18n._mfMessages = messages;
+      })()
     `;
 
     fs.writeFileSync(
@@ -110,7 +118,6 @@ module.exports.createI18nTree = function (discourseRoot, vendorJs) {
     mergeTrees([
       vendorJs,
       discourseRoot + "/app/assets/javascripts/locales",
-      discourseRoot + "/lib/javascripts",
       en,
     ]),
     {
@@ -118,17 +125,10 @@ module.exports.createI18nTree = function (discourseRoot, vendorJs) {
         "i18n.js",
         "moment.js",
         "moment-timezone-with-data.js",
-        "messageformat-lookup.js",
-        "locale/en.js",
         "client.en.js",
       ],
-      headerFiles: [
-        "i18n.js",
-        "moment.js",
-        "moment-timezone-with-data.js",
-        "messageformat-lookup.js",
-      ],
-      footerFiles: ["client.en.js", "locale/en.js"],
+      headerFiles: ["i18n.js", "moment.js", "moment-timezone-with-data.js"],
+      footerFiles: ["client.en.js"],
       outputFile: `assets/test-i18n.js`,
     }
   );

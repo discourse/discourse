@@ -56,6 +56,7 @@ module Chat
         AND chat_messages.deleted_at IS NULL
         AND chat_messages.created_at > now() - interval '1 week'
         AND chat_messages.user_id <> users.id
+        AND chat_messages.created_by_sdk = false
         AND (
           (chat_channels.chatable_type = 'DirectMessage' AND user_options.allow_private_messages) OR
           (chat_channels.chatable_type = 'Category' AND uccm.following AND NOT notifications.read)

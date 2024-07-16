@@ -20,6 +20,7 @@ ko:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}천"
         millions: "%{number}백만"
@@ -911,6 +912,7 @@ ko:
       none: "(옵션 선택)"
       required: '''%{name}''에 대한 값을 입력하세요'
       same_as_password: "비밀번호를 다른 필드에 반복해서 입력해서는 안 됩니다."
+      optional: (선택 사항)
     user:
       said: "%{username}:"
       profile: "프로필"
@@ -1654,7 +1656,7 @@ ko:
       header_title: "환영합니다!"
       subheader_title: "계정을 만드세요"
       disclaimer: "등록하면 <a href='%{privacy_link}' target='blank'>개인정보 취급방침</a> 및 <a href='%{tos_link}' target='blank'>이용약관</a>에 동의하게 됩니다."
-      title: "계정 만들기"
+      title: "회원가입"
       failed: "문제가 발생했습니다. 이 이메일이 이미 등록되어 있을 수 있습니다. 비밀번호 찾기 링크를 시도해 보세요."
       associate: "이미 계정이 있나요? <a href='%{associate_link}'>로그인</a>하여 %{provider} 계정을 연결하세요."
     forgot_password:
@@ -3933,6 +3935,18 @@ ko:
           optional: "(선택 사항)"
           update: "업데이트"
           saved: "저장되었습니다!"
+        flags:
+          description: "내용"
+          enabled: "활성화?"
+          edit: "편집"
+          delete: "삭제하기"
+          delete_confirm: '&quot;%{name}&quot;를 삭제 하시겠습니까?'
+          form:
+            save: "저장"
+            name: "그룹명"
+            description: "내용"
+            topic: "글"
+            post: "포스트"
       plugins:
         title: "플러그인"
         installed: "설치된 플러그인"

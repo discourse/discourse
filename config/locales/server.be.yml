@@ -883,6 +883,12 @@ be:
       labels:
         user: Карыстальнік
         qtt_like: атрыманыя перавагі
+    topic_view_stats:
+      labels:
+        topic: тэма
+        logged_in_views: Ўвайшлі ў
+        anon_views: ананімны
+        total_views: агульны
   dashboard:
     problem:
       rails_env: "Сервер працуе ў рэжыме %{env}."

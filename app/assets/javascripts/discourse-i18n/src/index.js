@@ -4,6 +4,8 @@ if (window.I18n) {
   );
 }
 
+import * as Cardinals from "make-plural/cardinals";
+
 // The placeholder format. Accepts `{{placeholder}}` and `%{placeholder}`.
 const PLACEHOLDER = /(?:\{\{|%\{)(.*?)(?:\}\}?)/gm;
 const SEPARATOR = ".";
@@ -13,19 +15,14 @@ export class I18n {
   defaultLocale = "en";
 
   // Set current locale to null
-  local = null;
+  locale = null;
   fallbackLocale = null;
   translations = null;
   extras = null;
   noFallbacks = false;
   testing = false;
 
-  // Set default pluralization rule
-  pluralizationRules = {
-    en(n) {
-      return n === 0 ? ["zero", "none", "other"] : n === 1 ? "one" : "other";
-    },
-  };
+  pluralizationRules = Cardinals;
 
   translate = (scope, options) => this._translate(scope, options);
 
@@ -34,6 +31,13 @@ export class I18n {
 
   currentLocale() {
     return this.locale || this.defaultLocale;
+  }
+
+  get pluralizationNormalizedLocale() {
+    if (this.currentLocale() === "pt") {
+      return "pt_PT";
+    }
+    return this.currentLocale().replace(/[_-].*/, "");
   }
 
   enableVerboseLocalization() {
@@ -192,7 +196,9 @@ export class I18n {
     options = this.prepareOptions(options);
     let count = options.count.toString();
 
-    let pluralizer = this.pluralizer(options.locale || this.currentLocale());
+    let pluralizer = this.pluralizer(
+      options.locale || this.pluralizationNormalizedLocale
+    );
     let key = pluralizer(Math.abs(count));
     let keys = typeof key === "object" && key instanceof Array ? key : [key];
     let message = this.findAndTranslateValidNode(keys, translation);
@@ -370,6 +376,22 @@ export class I18n {
 
   isValidNode(obj, node) {
     return obj[node] !== null && obj[node] !== undefined;
+  }
+
+  messageFormat(key, options) {
+    const message = this._mfMessages.hasMessage(
+      key,
+      this._mfMessages.locale,
+      this._mfMessages.defaultLocale
+    );
+    if (!message) {
+      return "Missing Key: " + key;
+    }
+    try {
+      return this._mfMessages.get(key, options);
+    } catch (err) {
+      return err.message;
+    }
   }
 }
 

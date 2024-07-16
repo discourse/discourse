@@ -56,6 +56,10 @@ export default class GlimmerSiteHeader extends Component {
     return !this.sidebarEnabled || this.site.narrowDesktopView;
   }
 
+  get slideInMode() {
+    return this.site.mobileView || this.site.narrowDesktopView;
+  }
+
   get leftMenuClass() {
     if (isDocumentRTL()) {
       return "user-menu";
@@ -182,14 +186,11 @@ export default class GlimmerSiteHeader extends Component {
     const menuPanels = document.querySelectorAll(".menu-panel");
 
     if (menuPanels.length === 0) {
-      this._animate = this.site.mobileView || this.site.narrowDesktopView;
+      this._animate = this.slideInMode;
       return;
     }
 
-    let viewMode =
-      this.site.mobileView || this.site.narrowDesktopView
-        ? "slide-in"
-        : "drop-down";
+    let viewMode = this.slideInMode ? "slide-in" : "drop-down";
 
     menuPanels.forEach((panel) => {
       if (menuPanelContainsClass(panel)) {
@@ -208,7 +209,7 @@ export default class GlimmerSiteHeader extends Component {
         let finalPosition = PANEL_WIDTH;
         this._swipeMenuOrigin = "right";
         if (
-          (this.site.mobileView || this.site.narrowDesktopView) &&
+          this.slideInMode &&
           panel.parentElement.classList.contains(this.leftMenuClass)
         ) {
           this._swipeMenuOrigin = "left";
@@ -418,7 +419,7 @@ export default class GlimmerSiteHeader extends Component {
   <template>
     <div
       class={{concatClass
-        (if this.site.desktopView "drop-down-mode")
+        (unless this.slideInMode "drop-down-mode")
         "d-header-wrap"
       }}
       {{didInsert this.setupHeader}}

@@ -23,6 +23,7 @@ lt:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -1000,6 +1001,7 @@ lt:
       none: "(pasirink nustatymą)"
       required: 'Prašome įvesti reikšmę "%{name}”'
       same_as_password: "Jūsų slaptažodis neturėtų kartotis kituose laukuose."
+      optional: (pasoronktinai)
     user:
       said: "%{username}:"
       profile: "Profilis"
@@ -1706,7 +1708,7 @@ lt:
       header_title: "Sveiki!"
       subheader_title: "Sukurti naują paskyrą"
       disclaimer: "Registruodamiesi sutinkate su <a href='%{privacy_link}' target='blank'>privatumo politika</a> ir <a href='%{tos_link}' target='blank'>paslaugų teikimo sąlygomis</a>."
-      title: "Sukurti naują paskyrą"
+      title: "Registruotis"
       failed: "Įvyko kažkas blogai, gali būti, kad šis el. paštas jau yra užregistruotas, pameginkite pasinaudoti slaptažodžio priminimo nuoroda"
     forgot_password:
       title: "Slaptažodžio atkūrimas"
@@ -3930,6 +3932,18 @@ lt:
           optional: "(pasoronktinai)"
           update: "Atnaujinti"
           saved: "išsaugota!"
+        flags:
+          description: "Aprašymas"
+          enabled: "Galimas?"
+          edit: "Redaguoti"
+          delete: "Pašalinti"
+          delete_confirm: 'Ar tikrai norite ištrinti „%{name}“?'
+          form:
+            save: "Išsaugoti"
+            name: "Vardas"
+            description: "Aprašymas"
+            topic: "temos"
+            post: "žinutės"
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"

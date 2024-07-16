@@ -292,6 +292,11 @@ th:
       labels:
         user: ผู้ใช้
         qtt_like: ได้รับการชอบ
+    topic_view_stats:
+      labels:
+        topic: หัวข้อ
+        anon_views: ไม่ระบุชื่อ
+        total_views: ทั้งหมด
   site_settings:
     disabled: "ปิดใช้งานแล้ว"
     dark_mode_none: "ไม่มี"

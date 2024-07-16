@@ -20,6 +20,7 @@ import {
   setDefaultHomepage,
   slugify,
   toAsciiPrintable,
+  unicodeSlugify,
 } from "discourse/lib/utilities";
 import {
   mdTable,
@@ -199,6 +200,37 @@ module("Unit | Utilities", function (hooks) {
       slugify(unicodeString),
       "",
       "it removes unicode characters"
+    );
+  });
+
+  test("unicodeSlugify", function (assert) {
+    const asciiString = "--- 0__( Some--cool Discourse Site! )__0 --- ";
+    const accentedString = "Créme_Brûlée!";
+    const unicodeString = "談話";
+    const unicodeStringWithEmojis = "⌘😁 談話";
+
+    assert.strictEqual(
+      unicodeSlugify(asciiString),
+      "0-some-cool-discourse-site-0",
+      "it properly slugifies an ASCII string"
+    );
+
+    assert.strictEqual(
+      unicodeSlugify(accentedString),
+      "creme-brulee",
+      "it removes diacritics"
+    );
+
+    assert.strictEqual(
+      unicodeSlugify(unicodeString),
+      "談話",
+      "it keeps unicode letters"
+    );
+
+    assert.strictEqual(
+      unicodeSlugify(unicodeStringWithEmojis),
+      "談話",
+      "it removes emojis and symbols"
     );
   });
 

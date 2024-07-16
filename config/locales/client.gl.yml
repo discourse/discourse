@@ -21,6 +21,7 @@ gl:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -883,6 +884,7 @@ gl:
     user_fields:
       none: "(seleccione unha opción)"
       required: 'Escriba un valor para "%{name}"'
+      optional: (opcional)
     user:
       said: "%{username}:"
       profile: "Perfil"
@@ -1578,7 +1580,7 @@ gl:
       header_title: "Dámoslle a benvida!"
       subheader_title: "Déixenos crear a súa conta"
       disclaimer: "Ao rexistrarse, acepta a <a href='%{privacy_link}' target='blank'>norma de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos de servizo</a>."
-      title: "Crear unha conta nova"
+      title: "Crear conta"
       failed: "Algo foi mal, quizais este correo electrónico xa está rexistrado, ténteo coa ligazón de «Esqueceume o contrasinal»"
     forgot_password:
       title: "Contrasinal restabelecido"
@@ -3700,6 +3702,18 @@ gl:
           optional: "(opcional)"
           update: "Actualizar"
           saved: "gardado!"
+        flags:
+          description: "Descrición"
+          enabled: "Activado?"
+          edit: "Editar"
+          delete: "Eliminar"
+          delete_confirm: 'Confirma a eliminación de «%{name}»?'
+          form:
+            save: "Gardar"
+            name: "Nome"
+            description: "Descrición"
+            topic: "temas"
+            post: "publicacións"
       plugins:
         title: "Complementos"
         installed: "Complementos instalados"

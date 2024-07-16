@@ -137,12 +137,6 @@ ja:
       heading: "チャット"
       join: "参加"
       last_visit: "最後の訪問"
-      summarization:
-        title: "メッセージを要約する"
-        description: "以下から、希望する期間に送信される会話を要約するオプションを選択してください。"
-        summarize: "要約"
-        since:
-          other: "過去 %{count} 時間"
       mention_warning:
         invitations_sent:
           other: "招待状を送信しました"
@@ -240,6 +234,7 @@ ja:
       copy_link: "リンクをコピーする"
       copy_text: "テキストをコピー"
       rebake_message: "HTML を再構築"
+      message_too_long: "メッセージが長すぎます。メッセージは最大 %{count} 文字までです。"
       retry_staged_message:
         title: "ネットワークエラー"
         action: "もう一度送信しますか？"
