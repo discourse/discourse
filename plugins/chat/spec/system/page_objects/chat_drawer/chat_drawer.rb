@@ -5,8 +5,12 @@ module PageObjects
     class ChatDrawer < PageObjects::Pages::Base
       VISIBLE_DRAWER = ".chat-drawer.is-expanded"
 
-      def channel_index
-        @channel_index ||= ::PageObjects::Components::Chat::ChannelIndex.new(VISIBLE_DRAWER)
+      def channels_index
+        @channels_index ||= ::PageObjects::Components::Chat::ChannelsIndex.new(VISIBLE_DRAWER)
+      end
+
+      def browse
+        @browse ||= ::PageObjects::Pages::ChatBrowse.new(".c-drawer-routes.--browse")
       end
 
       def open_browse
@@ -34,17 +38,22 @@ module PageObjects
         open_channel(channel)
       end
 
+      def visit_browse
+        visit_index
+        open_browse
+      end
+
       def open_channel(channel)
-        channel_index.open_channel(channel)
+        channels_index.open_channel(channel)
         has_no_css?(".chat-skeleton")
       end
 
       def has_unread_channel?(channel)
-        channel_index.has_unread_channel?(channel)
+        channels_index.has_unread_channel?(channel)
       end
 
       def has_no_unread_channel?(channel)
-        channel_index.has_no_unread_channel?(channel)
+        channels_index.has_no_unread_channel?(channel)
       end
 
       def has_user_threads_section?

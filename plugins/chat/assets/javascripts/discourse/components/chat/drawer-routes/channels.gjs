@@ -10,21 +10,23 @@ export default class ChatDrawerRoutesChannels extends Component {
   @service chatStateManager;
 
   <template>
-    <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
-      <navbar.Title @title={{i18n "chat.heading"}} />
-      <navbar.Actions as |a|>
-        <a.ToggleDrawerButton />
-        <a.FullPageButton />
-        <a.CloseDrawerButton />
-      </navbar.Actions>
-    </Navbar>
+    <div class="c-drawer-routes --channels">
+      <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
+        <navbar.Title @title={{i18n "chat.heading"}} />
+        <navbar.Actions as |a|>
+          <a.ToggleDrawerButton />
+          <a.FullPageButton />
+          <a.CloseDrawerButton />
+        </navbar.Actions>
+      </Navbar>
 
-    {{#if this.chatStateManager.isDrawerExpanded}}
-      <div class="chat-drawer-content">
-        <ChannelsListPublic />
-      </div>
+      {{#if this.chatStateManager.isDrawerExpanded}}
+        <div class="chat-drawer-content">
+          <ChannelsListPublic />
+        </div>
 
-      <ChatFooter />
-    {{/if}}
+        <ChatFooter />
+      {{/if}}
+    </div>
   </template>
 }

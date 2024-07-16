@@ -8,7 +8,7 @@ export default class ChatRoutesChannels extends Component {
   @service site;
 
   <template>
-    <div class="c-routes-channels">
+    <div class="c-routes --channels">
       <Navbar as |navbar|>
         <navbar.Title @title={{i18n "chat.chat_channels"}} />
         <navbar.Actions as |action|>

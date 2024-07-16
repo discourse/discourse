@@ -1,5 +1,5 @@
 .chat-message-thread-indicator {
-  .c-routes-threads & {
+  .c-routes.--threads & {
     background: var(--secondary);
   }
   grid-template-areas:
