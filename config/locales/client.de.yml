@@ -2747,7 +2747,7 @@ de:
         category: "Das waren alle Themen in der Kategorie „%{category}“."
         tag: "Das waren alle Themen mit dem Schlagwort „%{tag}“."
         top: "Das waren alle angesagten Themen."
-        hot: "Es gibt keine heißen Themen mehr."
+        hot: "Das waren alle heißen Themen."
         bookmarks: "Das waren alle Themen, die du mit einem Lesezeichen versehen hast."
         filter: "Es gibt keine weiteren Themen."
     topic_bulk_actions:
