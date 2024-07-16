@@ -42,7 +42,8 @@
   he: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| n == 1 ? :one : :other } } } },
   hi: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| [0, 1].include?(n) ? :one : :other } } } },
   hr: { i18n: { plural: { keys: [:one, :few, :other], rule: lambda { |n| n % 10 == 1 && n % 100 != 11 ? :one : [2, 3, 4].include?(n % 10) && ![12, 13, 14].include?(n % 100) ? :few : :other } } } },
-  hu: { i18n: { plural: { keys: [:other], rule: lambda { |n| :other } } } },
+  # The next line has a fix for ruby-i18n. Hungarian has plural forms. See https://meta.discourse.org/t/issue-with-pluralized-count-translation-override/316019/8
+  hu: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| n == 1 ? :one : :other } } } },
   hy: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| n == 1 ? :one : :other } } } },
   id: { i18n: { plural: { keys: [:other], rule: lambda { |n| :other } } } },
   is: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| n == 1 ? :one : :other } } } },
