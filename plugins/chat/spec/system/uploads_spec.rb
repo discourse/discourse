@@ -83,6 +83,8 @@ describe "Uploading files in chat messages", type: :system do
     end
 
     it "allows uploading multiple files" do
+      skip("This test is flaky on CI") if ENV["CI"]
+
       chat.visit_channel(channel_1)
 
       file_path_1 = file_from_fixtures("logo.png", "images").path

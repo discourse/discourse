@@ -204,6 +204,21 @@ class StaffActionLogger
     )
   end
 
+  def log_topic_slow_mode(topic, opts = {})
+    raise Discourse::InvalidParameters.new(:topic) unless topic && topic.is_a?(Topic)
+
+    details = opts[:enabled] ? ["interval: #{opts[:seconds]}", "until: #{opts[:until]}"] : []
+
+    UserHistory.create!(
+      params(opts).merge(
+        action:
+          UserHistory.actions[opts[:enabled] ? :topic_slow_mode_set : :topic_slow_mode_removed],
+        topic_id: topic.id,
+        details: details.join("\n"),
+      ),
+    )
+  end
+
   def log_post_staff_note(post, opts = {})
     raise Discourse::InvalidParameters.new(:post) unless post && post.is_a?(Post)
 

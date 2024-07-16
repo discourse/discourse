@@ -34,7 +34,7 @@ module Onebox
         Sanitize.fragment(Onebox::Helpers.uri_unencode(link).sub(%r{^https?\://gitlab\.com/}, ""))
       end
 
-      def auth_headers
+      def auth_headers(_match)
         {}
       end
     end

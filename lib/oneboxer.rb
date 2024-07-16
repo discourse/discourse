@@ -685,7 +685,7 @@ module Oneboxer
     # FinalDestination to request the final URL because no auth headers
     # are sent. In this case we can ignore redirects and go straight to
     # using Onebox.preview
-    if SiteSetting.github_onebox_access_token.present? && uri.hostname == "github.com"
+    if SiteSetting.github_onebox_access_tokens.present? && uri.hostname == "github.com"
       fd_options[:ignore_redirects] << "https://github.com"
     end
 

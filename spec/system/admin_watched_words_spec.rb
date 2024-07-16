@@ -17,4 +17,11 @@ describe "Admin Watched Words", type: :system, js: true do
 
     expect(ww_page).to have_word
   end
+
+  it "shows error when character limit is exceeded" do
+    ww_page.visit
+    ww_page.add_word "a" * 101
+
+    expect(ww_page).to have_error("Word is too long (maximum is 100 characters)")
+  end
 end

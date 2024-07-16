@@ -11,8 +11,6 @@ class PostActionType < ActiveRecord::Base
     ApplicationSerializer.expire_cache_fragment!(/\Apost_action_flag_types_/)
   end
 
-  DiscourseEvent.on(:reload_post_action_types) { self.reload_types }
-
   class << self
     attr_reader :flag_settings
 

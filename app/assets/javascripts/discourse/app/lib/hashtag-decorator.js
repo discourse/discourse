@@ -100,6 +100,7 @@ export function decorateHashtags(element, site) {
         .generateIconHTML({
           icon: site.hashtag_icons[hashtagType],
           id: hashtagEl.dataset.id,
+          slug: hashtagEl.dataset.slug,
         })
         .trim();
       iconPlaceholderEl.replaceWith(domFromString(hashtagIconHTML)[0]);

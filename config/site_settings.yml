@@ -2125,9 +2125,11 @@ onebox:
   cache_onebox_user_agent:
     default: ""
     hidden: true
-  github_onebox_access_token:
+  github_onebox_access_tokens:
     default: ""
+    type: list
     secret: true
+    list_type: secret
 spam:
   add_rel_nofollow_to_user_content: true
   hide_post_sensitivity:

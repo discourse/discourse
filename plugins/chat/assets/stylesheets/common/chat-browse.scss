@@ -35,6 +35,16 @@
     justify-content: space-between;
     align-items: end;
 
+    .c-drawer-routes.--browse & {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+
+      .filter-input {
+        width: 100%;
+      }
+    }
+
     @include breakpoint(tablet) {
       flex-direction: column;
 

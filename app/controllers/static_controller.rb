@@ -133,7 +133,8 @@ class StaticController < ApplicationController
         forum_uri = URI(Discourse.base_url)
         uri = URI(redirect_location)
 
-        if uri.path.present? && (uri.host.blank? || uri.host == forum_uri.host) && uri.path !~ /\./
+        if uri.path.present? && (uri.host.blank? || uri.host == forum_uri.host) &&
+             uri.path =~ %r{\A\/{1}[^\.\s]*\z}
           destination = "#{uri.path}#{uri.query ? "?#{uri.query}" : ""}"
         end
       rescue URI::Error
@@ -141,7 +142,7 @@ class StaticController < ApplicationController
       end
     end
 
-    redirect_to destination
+    redirect_to(destination, allow_other_host: false)
   end
 
   FAVICON ||= -"favicon"

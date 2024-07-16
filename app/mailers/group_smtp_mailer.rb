@@ -15,7 +15,9 @@ class GroupSmtpMailer < ActionMailer::Base
       domain: from_group.email_username_domain,
       user_name: from_group.email_username,
       password: from_group.email_password,
-      authentication: GlobalSetting.smtp_authentication,
+      # NOTE: Might be better at some point to store this authentication method in the database
+      # against the group.
+      authentication: SmtpProviderOverrides.authentication_override(from_group.smtp_server),
       enable_starttls_auto: from_group.smtp_ssl,
       return_response: true,
       open_timeout: GlobalSetting.group_smtp_open_timeout,

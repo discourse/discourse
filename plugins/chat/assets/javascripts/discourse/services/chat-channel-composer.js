@@ -78,10 +78,16 @@ export default class ChatChannelComposer extends Service {
 
       message.channel.resetDraft(this.currentUser);
 
-      await this.router.transitionTo(
-        "chat.channel.thread",
-        ...message.thread.routeModels
-      );
+      try {
+        await this.router.transitionTo(
+          "chat.channel.thread",
+          ...message.thread.routeModels
+        );
+      } catch (e) {
+        if (e.name !== "TransitionAborted") {
+          throw e;
+        }
+      }
 
       this.threadComposer.focus({ ensureAtEnd: true, refreshHeight: true });
     } else {

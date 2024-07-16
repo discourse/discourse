@@ -26,6 +26,18 @@ RSpec.describe WatchedWord do
     expect(described_class.create(word: "Jest").case_sensitive?).to eq(false)
   end
 
+  it "limits the number of characters in a word" do
+    w = Fabricate.build(:watched_word, word: "a" * 101)
+    expect(w).to_not be_valid
+    expect(w.errors[:word]).to be_present
+  end
+
+  it "limits the number of characters in a replacement" do
+    w = Fabricate.build(:watched_word, replacement: "a" * 101)
+    expect(w).to_not be_valid
+    expect(w.errors[:replacement]).to be_present
+  end
+
   describe "action_key=" do
     let(:w) { WatchedWord.new(word: "troll") }
 

@@ -43,7 +43,7 @@ export default class RestrictedRouting extends Service {
     // methods in ApplicationController.
     const enforcing2fa =
       (this.siteSettings.enforce_second_factor === "staff" &&
-        this.currentUser.staff) ||
+        this.currentUser?.staff) ||
       this.siteSettings.enforce_second_factor === "all";
 
     const exemptedFrom2faEnforcement =

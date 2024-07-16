@@ -24,13 +24,13 @@ RSpec.describe Onebox::Engine::GithubIssueOnebox do
     end
 
     context "when github_onebox_access_token is configured" do
-      before { SiteSetting.github_onebox_access_token = "1234" }
+      before { SiteSetting.github_onebox_access_tokens = "discourse|github_pat_1234" }
 
       it "sends it as part of the request" do
         html
         expect(WebMock).to have_requested(:get, issue_uri).with(
           headers: {
-            "Authorization" => "Bearer #{SiteSetting.github_onebox_access_token}",
+            "Authorization" => "Bearer github_pat_1234",
           },
         )
       end

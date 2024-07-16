@@ -65,7 +65,7 @@ module Onebox
       end
 
       def data
-        result = raw(github_auth_header).clone
+        result = raw(github_auth_header(match[:org])).clone
 
         status = "unknown"
         if result["status"] == "completed"

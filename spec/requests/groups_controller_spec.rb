@@ -2799,7 +2799,7 @@ RSpec.describe GroupsController do
           post "/groups/#{group.id}/test_email_settings.json", params: params
           expect(response.status).to eq(422)
           expect(response.parsed_body["errors"]).to include(
-            I18n.t("email_settings.smtp_authentication_error"),
+            I18n.t("email_settings.smtp_authentication_error", message: "Invalid credentials"),
           )
         end
       end

@@ -21,7 +21,7 @@ html.has-full-page-chat {
       &.has-side-panel-expanded {
         grid-template-columns: 1fr;
 
-        .c-routes-channel {
+        .c-routes.--channel {
           display: none;
         }
       }

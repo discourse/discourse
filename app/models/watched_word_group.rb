@@ -2,25 +2,25 @@
 
 class WatchedWordGroup < ActiveRecord::Base
   validates :action, presence: true
+  validate :watched_words_validation
 
   has_many :watched_words, dependent: :destroy
+
+  def watched_words_validation
+    watched_words.each { |word| errors.merge!(word.errors) }
+    errors.add(:watched_words, :empty) if watched_words.empty?
+  end
 
   def create_or_update_members(words, params)
     WatchedWordGroup.transaction do
       self.action = WatchedWord.actions[params[:action_key].to_sym]
-      self.save! if self.changed?
 
       words.each do |word|
-        watched_word =
-          WatchedWord.create_or_update_word(
-            params.merge(word: word, watched_word_group_id: self.id),
-          )
-
-        if !watched_word.valid?
-          self.errors.merge!(watched_word.errors)
-          raise ActiveRecord::Rollback
-        end
+        watched_word = WatchedWord.create_or_update_word(params.merge(word: word))
+        self.watched_words << watched_word
       end
+
+      self.save!
     end
   end
 

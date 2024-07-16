@@ -3,8 +3,19 @@
 module PageObjects
   module Pages
     class ChatBrowse < PageObjects::Pages::Base
+      SELECTOR = ".c-routes.--browse"
+
+      def initialize(context = SELECTOR)
+        @context = context
+      end
+
       def component
-        find(".chat-browse-view")
+        find("#{@context} .chat-browse-view")
+      end
+
+      def change_status(status = "all")
+        component.find(".chat-browse-view__filter.-#{status}").click
+        has_finished_loading?
       end
 
       def has_finished_loading?
