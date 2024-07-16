@@ -84,15 +84,15 @@ class EmailSettingsValidator
   )
     begin
       port, enable_tls, enable_starttls_auto =
-        provider_specific_ssl_overrides(host, port, enable_tls, enable_starttls_auto)
+        SmtpProviderOverrides.ssl_override(host, port, enable_tls, enable_starttls_auto)
 
       if enable_tls && enable_starttls_auto
         raise ArgumentError, "TLS and STARTTLS are mutually exclusive"
       end
 
       if username || password
-        authentication = provider_specific_authentication_overrides(host) if authentication.nil?
-        authentication = (authentication || GlobalSetting.smtp_authentication)&.to_sym
+        authentication = SmtpProviderOverrides.authentication_override(host) if authentication.nil?
+        authentication = authentication.to_sym
         if !%i[plain login cram_md5].include?(authentication)
           raise ArgumentError, "Invalid authentication method. Must be plain, login, or cram_md5."
         end
@@ -179,30 +179,5 @@ class EmailSettingsValidator
       )
     end
     raise err
-  end
-
-  # Ideally we (or net-smtp) would automatically detect the correct authentication
-  # method, but this is sufficient for our purposes because we know certain providers
-  # need certain authentication methods. This may need to change when we start to
-  # use XOAUTH2 for SMTP.
-  def self.provider_specific_authentication_overrides(host)
-    return :login if %w[smtp.office365.com smtp-mail.outlook.com].include?(host)
-    :plain
-  end
-
-  def self.provider_specific_ssl_overrides(host, port, enable_tls, enable_starttls_auto)
-    # Certain mail servers act weirdly if you do not use the correct combinations of
-    # TLS settings based on the port, we clean these up here for the user.
-    if %w[smtp.gmail.com smtp.office365.com smtp-mail.outlook.com].include?(host)
-      if port.to_i == 587
-        enable_starttls_auto = true
-        enable_tls = false
-      elsif port.to_i == 465
-        enable_starttls_auto = false
-        enable_tls = true
-      end
-    end
-
-    [port, enable_tls, enable_starttls_auto]
   end
 end
