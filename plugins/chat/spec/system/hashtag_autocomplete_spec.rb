@@ -9,8 +9,8 @@ describe "Using #hashtag autocompletion to search for and lookup channels", type
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:message1) { Fabricate(:chat_message, chat_channel: channel1) }
+
   let(:chat_page) { PageObjects::Pages::Chat.new }
-  let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
   let(:chat_channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
 

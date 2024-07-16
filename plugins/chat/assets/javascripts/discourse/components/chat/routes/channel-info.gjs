@@ -30,7 +30,7 @@ export default class ChatRoutesChannelInfo extends Component {
   }
 
   <template>
-    <div class="c-routes-channel-info">
+    <div class="c-routes --channel-info">
       <Navbar as |navbar|>
         {{#if this.chatChannelInfoRouteOriginManager.isBrowse}}
           <navbar.BackButton

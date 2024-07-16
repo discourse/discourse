@@ -702,7 +702,6 @@ export default class ChatChannel extends Component {
       {{didUpdate this.loadMessages @targetMessageId}}
       data-id={{@channel.id}}
     >
-
       <ChatChannelStatus @channel={{@channel}} />
       <ChatNotices @channel={{@channel}} />
       <ChatMentionWarnings />

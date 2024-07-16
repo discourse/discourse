@@ -40,29 +40,31 @@ export default class ChatDrawerRoutesChannelThreads extends Component {
   }
 
   <template>
-    {{#if this.chat.activeChannel}}
-      <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
-        <navbar.BackButton
-          @title={{this.backLinkTitle}}
-          @route="chat.channel"
-          @routeModels={{this.chat.activeChannel.routeModels}}
-        />
-        <navbar.Title @title={{this.title}} @icon="discourse-threads" />
-        <navbar.Actions as |a|>
-          <a.ToggleDrawerButton />
-          <a.FullPageButton />
-          <a.CloseDrawerButton />
-        </navbar.Actions>
-      </Navbar>
-    {{/if}}
-
-    <div class="chat-drawer-content" {{didInsert this.fetchChannel}}>
+    <div class="c-drawer-routes --channel-threads">
       {{#if this.chat.activeChannel}}
-        <ChatThreadList
-          @channel={{this.chat.activeChannel}}
-          @includeHeader={{false}}
-        />
+        <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
+          <navbar.BackButton
+            @title={{this.backLinkTitle}}
+            @route="chat.channel"
+            @routeModels={{this.chat.activeChannel.routeModels}}
+          />
+          <navbar.Title @title={{this.title}} @icon="discourse-threads" />
+          <navbar.Actions as |a|>
+            <a.ToggleDrawerButton />
+            <a.FullPageButton />
+            <a.CloseDrawerButton />
+          </navbar.Actions>
+        </Navbar>
       {{/if}}
+
+      <div class="chat-drawer-content" {{didInsert this.fetchChannel}}>
+        {{#if this.chat.activeChannel}}
+          <ChatThreadList
+            @channel={{this.chat.activeChannel}}
+            @includeHeader={{false}}
+          />
+        {{/if}}
+      </div>
     </div>
   </template>
 }

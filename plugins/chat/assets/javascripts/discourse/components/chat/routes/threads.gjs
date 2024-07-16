@@ -8,7 +8,7 @@ export default class ChatRoutesThreads extends Component {
   @service site;
 
   <template>
-    <div class="c-routes-threads">
+    <div class="c-routes --threads">
       <Navbar as |navbar|>
         <navbar.Title @title={{i18n "chat.my_threads.title"}} />
 

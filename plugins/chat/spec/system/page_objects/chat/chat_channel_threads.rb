@@ -4,11 +4,11 @@ module PageObjects
   module Pages
     class ChatChannelThreads < PageObjects::Pages::Base
       def close
-        find(".c-routes-channel-threads .c-navbar__close-threads-button").click
+        find(".c-routes.--channel-threads .c-navbar__close-threads-button").click
       end
 
       def back
-        find(".c-routes-channel-threads .c-navbar__back-button").click
+        find(".c-routes.--channel-threads .c-navbar__back-button").click
       end
     end
   end
