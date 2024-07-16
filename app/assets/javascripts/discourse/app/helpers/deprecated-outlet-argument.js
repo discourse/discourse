@@ -1,4 +1,4 @@
-export default function deprecatedOutletArg(options) {
+export default function deprecatedOutletArgument(options) {
   return new DeprecatedOutletArgument(options);
 }
 

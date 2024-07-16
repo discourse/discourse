@@ -128,7 +128,7 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
     return buildArgsWithDeprecations(
       this.outletArgs,
       this.args.deprecatedArgs || {},
-      { name: this.args.name }
+      { outletName: this.args.name }
     );
   }
 

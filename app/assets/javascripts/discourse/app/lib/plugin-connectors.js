@@ -250,33 +250,49 @@ export function buildArgsWithDeprecations(args, deprecatedArgs, opts = {}) {
       get() {
         const deprecatedArg = deprecatedArgs[argumentName];
 
-        if (!isDeprecatedOutletArgument(deprecatedArg)) {
-          throw new Error(
-            "deprecated argument is not defined properly, use `deprecatedOutletArg` from discourse/helpers/deprecated-outlet-argument"
-          );
-        }
-
-        let message = deprecatedArg.message;
-        if (!message) {
-          if (opts.name) {
-            message = `outlet arg \`${argumentName}\` is deprecated on the outlet \`${opts.name}\``;
-          } else {
-            message = `${argumentName} is deprecated`;
-          }
-        }
-
-        if (!deprecatedArg.silence) {
-          deprecated(message, deprecatedArg.options);
-          return deprecatedArg.value;
-        }
-
-        return withSilencedDeprecations(deprecatedArg.silence, () => {
-          deprecated(message, deprecatedArg.options);
-          return deprecatedArg.value;
+        return deprecatedArgumentValue(deprecatedArg, {
+          ...opts,
+          argumentName,
         });
       },
     });
   });
 
   return output;
+}
+
+export function deprecatedArgumentValue(deprecatedArg, options) {
+  if (!isDeprecatedOutletArgument(deprecatedArg)) {
+    throw new Error(
+      "deprecated argument is not defined properly, use helper `deprecatedOutletArgument` from discourse/helpers/deprecated-outlet-argument"
+    );
+  }
+
+  let message = deprecatedArg.message;
+  if (!message) {
+    if (options.outletName) {
+      message = `outlet arg \`${options.argumentName}\` is deprecated on the outlet \`${options.outletName}\``;
+    } else {
+      message = `${options.argumentName} is deprecated`;
+    }
+  }
+
+  const connectorModule =
+    options.classModuleName || options.templateModule || options.connectorName;
+
+  if (connectorModule) {
+    message += ` [used on connector ${connectorModule}]`;
+  } else if (options.layoutName) {
+    message += ` [used on ${options.layoutName}]`;
+  }
+
+  if (!deprecatedArg.silence) {
+    deprecated(message, deprecatedArg.options);
+    return deprecatedArg.value;
+  }
+
+  return withSilencedDeprecations(deprecatedArg.silence, () => {
+    deprecated(message, deprecatedArg.options);
+    return deprecatedArg.value;
+  });
 }

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
-import deprecatedOutletArg from "discourse/helpers/deprecated-outlet-argument";
+import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import BootstrapModeNotice from "../bootstrap-mode-notice";
 import PluginOutlet from "../plugin-outlet";
 import HomeLogo from "./home-logo";
@@ -33,7 +33,7 @@ export default class Contents extends Component {
           topicInfoVisible=this.header.topicInfoVisible
         }}
         @deprecatedArgs={{hash
-          topic=(deprecatedOutletArg
+          topic=(deprecatedOutletArgument
             value=this.header.topic
             message="The argument 'topic' is deprecated on the outlet 'header-contents__before', use 'topicInfo' or 'topicInfoVisible' instead"
             id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
@@ -81,7 +81,7 @@ export default class Contents extends Component {
             topicInfoVisible=this.header.topicInfoVisible
           }}
           @deprecatedArgs={{hash
-            topic=(deprecatedOutletArg
+            topic=(deprecatedOutletArgument
               value=this.header.topic
               message="The argument 'topic' is deprecated on the outlet 'before-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
               id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
@@ -101,7 +101,7 @@ export default class Contents extends Component {
             topicInfoVisible=this.header.topicInfoVisible
           }}
           @deprecatedArgs={{hash
-            topic=(deprecatedOutletArg
+            topic=(deprecatedOutletArgument
               value=this.header.topic
               message="The argument 'topic' is deprecated on the outlet 'after-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
               id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
@@ -119,7 +119,7 @@ export default class Contents extends Component {
           topicInfoVisible=this.header.topicInfoVisible
         }}
         @deprecatedArgs={{hash
-          topic=(deprecatedOutletArg
+          topic=(deprecatedOutletArgument
             value=this.header.topic
             message="The argument 'topic' is deprecated on the outlet 'header-contents__after', use 'topicInfo' or 'topicInfoVisible' instead"
             id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
