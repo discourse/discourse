@@ -73,6 +73,28 @@ RSpec.describe "Glimmer Header", type: :system do
     expect(page).not_to have_selector(".user-menu.revamped")
   end
 
+  it "closes menu-panel when keyboard focus leaves it" do
+    sign_in(current_user)
+    visit "/"
+    find(".header-dropdown-toggle.current-user").click
+    find("##{header.active_element_id}").send_keys(%i[shift tab])
+    expect(page).not_to have_selector(".user-menu.revamped")
+  end
+
+  it "automatically focuses the first link in the hamburger panel" do
+    SiteSetting.navigation_menu = "header dropdown"
+
+    visit "/"
+
+    find("#toggle-hamburger-menu").click
+    expect(page).to have_selector(".panel-body")
+    first_link = find(".panel-body a", match: :first)
+    first_link_href = first_link[:href]
+    focused_element_href = evaluate_script("document.activeElement.href")
+
+    expect(focused_element_href).to eq(first_link_href)
+  end
+
   it "sets header's height css property" do
     sign_in(current_user)
     visit "/"
