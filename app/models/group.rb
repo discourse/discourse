@@ -3,7 +3,8 @@
 require "net/imap"
 
 class Group < ActiveRecord::Base
-  self.ignored_columns = %w[flair_url] # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
+  # TODO: Remove flair_url when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy, remove smtp_ssl once smtp_mode is merged
+  self.ignored_columns = %w[flair_url smtp_ssl]
 
   include HasCustomFields
   include AnonCacheInvalidator
@@ -143,6 +144,10 @@ class Group < ActiveRecord::Base
 
   def self.visibility_levels
     @visibility_levels = Enum.new(public: 0, logged_on_users: 1, members: 2, staff: 3, owners: 4)
+  end
+
+  def self.smtp_ssl_modes
+    @visibility_levels = Enum.new(none: 0, ssl_tls: 1, starttls: 2)
   end
 
   def self.auto_groups_between(lower, upper)
@@ -1316,6 +1321,7 @@ end
 #  imap_updated_at                    :datetime
 #  imap_updated_by_id                 :integer
 #  email_from_alias                   :string
+#  smtp_ssl_mode                      :integer          default(0), not null
 #
 # Indexes
 #

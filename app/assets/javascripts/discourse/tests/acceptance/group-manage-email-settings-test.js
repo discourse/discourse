@@ -1,5 +1,6 @@
 import { click, currentRouteName, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { GROUP_SMTP_SSL_MODES } from "discourse/lib/constants";
 import {
   acceptance,
   exists,
@@ -239,7 +240,7 @@ acceptance(
             message_count: 2,
             smtp_server: "smtp.gmail.com",
             smtp_port: 587,
-            smtp_ssl: true,
+            smtp_ssl_mode: GROUP_SMTP_SSL_MODES.starttls,
             smtp_enabled: true,
             smtp_updated_at: "2021-06-16T02:58:12.739Z",
             smtp_updated_by: {

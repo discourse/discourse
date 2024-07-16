@@ -1397,7 +1397,7 @@ RSpec.describe Group do
     it "enables smtp and records the change" do
       group.update(
         smtp_port: 587,
-        smtp_ssl: true,
+        smtp_ssl_mode: Group.smtp_ssl_modes[:starttls],
         smtp_server: "smtp.gmail.com",
         email_username: "test@gmail.com",
         email_password: "password",
@@ -1414,7 +1414,7 @@ RSpec.describe Group do
     it "records the change for singular setting changes" do
       group.update(
         smtp_port: 587,
-        smtp_ssl: true,
+        smtp_ssl_mode: Group.smtp_ssl_modes[:starttls],
         smtp_server: "smtp.gmail.com",
         email_username: "test@gmail.com",
         email_password: "password",
@@ -1448,7 +1448,7 @@ RSpec.describe Group do
     it "disables smtp and records the change" do
       group.update(
         smtp_port: 587,
-        smtp_ssl: true,
+        smtp_ssl_mode: Group.smtp_ssl_modes[:starttls],
         smtp_server: "smtp.gmail.com",
         email_username: "test@gmail.com",
         email_password: "password",
@@ -1460,7 +1460,7 @@ RSpec.describe Group do
 
       group.update(
         smtp_port: nil,
-        smtp_ssl: false,
+        smtp_ssl_mode: Group.smtp_ssl_modes[:none],
         smtp_server: nil,
         email_username: nil,
         email_password: nil,
