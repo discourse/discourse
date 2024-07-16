@@ -10,7 +10,6 @@ export default class ChatNavbarOpenDrawerButton extends Component {
 
   @action
   async openDrawer() {
-    console.log("open drawer");
     this.chatStateManager.prefersDrawer();
 
     DiscourseURL.routeTo(this.chatStateManager.lastKnownAppURL).then(() => {
