@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-module Migrations::Converters
-  class BaseStep
+module Migrations::Converters::Base
+  class BasicStep
+    IntermediateDB = Migrations::Database::IntermediateDB
+
     attr_accessor :settings, :output_db
 
     def initialize(args)

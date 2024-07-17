@@ -36,14 +36,18 @@ module Migrations
   end
 
   def self.configure_zeitwerk
-    Zeitwerk::Loader.default_logger = method(:puts) if ENV["DEBUG"]
-
     loader = Zeitwerk::Loader.new
+    loader.log! if ENV["DEBUG"]
 
-    loader.inflector.inflect({ "cli" => "CLI" })
+    loader.inflector.inflect(
+      { "cli" => "CLI", "intermediate_db" => "IntermediateDB", "uploads_db" => "UploadsDB" },
+    )
 
     loader.push_dir(File.join(Migrations.root_path, "lib"), namespace: Migrations)
-    loader.ignore(File.join(Migrations.root_path, "lib", "migrations.rb"))
+    loader.push_dir(File.join(Migrations.root_path, "lib", "common"), namespace: Migrations)
+
+    # all sub-directories of a converter should have the same namespace
+    loader.collapse(File.join(Migrations.root_path, "lib", "converters", "*", "**"))
 
     loader.setup
   end

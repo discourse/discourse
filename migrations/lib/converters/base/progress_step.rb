@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Migrations::Converters
-  class ProgressStep < BaseStep
+module Migrations::Converters::Base
+  class ProgressStep < BasicStep
     def max_progress
       nil
     end

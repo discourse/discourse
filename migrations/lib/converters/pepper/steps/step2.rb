@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Converters::Pepper
-  class Step2 < Migrations::Converters::ProgressStep
+  class Step2 < Migrations::Converters::Base::ProgressStep
     def items
       [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     end

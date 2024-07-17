@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Migrations::Converters
+module Migrations::Converters::Base
   class ItemHandler
     def initialize(step, db_path = nil)
       @step = step
@@ -18,7 +18,7 @@ module Migrations::Converters
       begin
         @step.process_item(item, @stats)
       rescue StandardError => e
-        Migrations::IntermediateDb::LogEntry.create!(
+        Migrations::Database::IntermediateDB::LogEntry.create!(
           type: "error",
           message: "Failed to process item",
           exception: e,

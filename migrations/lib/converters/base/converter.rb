@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Migrations::Converters
-  class BaseConverter
+module Migrations::Converters::Base
+  class Converter
     attr_accessor :settings
     attr_reader :root_path
 
@@ -11,8 +11,6 @@ module Migrations::Converters
     end
 
     def run
-      require_all
-
       if respond_to?(:setup)
         puts "Initializing..."
         setup
@@ -34,7 +32,7 @@ module Migrations::Converters
       STDERR.puts "\nAborted"
       exit(1)
     ensure
-      Migrations::IntermediateDb.close
+      Migrations::Database::IntermediateDB.close
     end
 
     def steps
@@ -62,8 +60,8 @@ module Migrations::Converters
         migrations_path: Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
       )
 
-      db = Migrations::Database::Connection.new(path: db_path)
-      Migrations::IntermediateDb.setup(db)
+      db = Migrations::Database.connect(db_path)
+      Migrations::Database::IntermediateDB.setup(db)
     end
 
     def create_step(step_class)
@@ -71,10 +69,6 @@ module Migrations::Converters
 
       args = default_args.merge(step_args(step_class))
       step_class.new(args)
-    end
-
-    def require_all
-      Dir[File.join(__dir__, "**", "*.rb")].each { |file| require file }
     end
   end
 end

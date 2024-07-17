@@ -4,7 +4,7 @@ require "etc"
 require "colored2"
 require "ruby-progressbar"
 
-module Migrations::Converters
+module Migrations::Converters::Base
   class ProgressStepExecutor
     WORKER_COUNT = Etc.nprocessors
     MIN_PARALLEL_ITEMS = WORKER_COUNT * 10

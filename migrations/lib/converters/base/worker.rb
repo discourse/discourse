@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Migrations::Converters
+module Migrations::Converters::Base
   class Worker
     def initialize(index, work_queue, item_handler, progress_queue)
       @index = index
