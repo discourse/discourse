@@ -24,10 +24,7 @@ export default class ChatController extends Controller {
   }
 
   get shouldUseChatFooter() {
-    return (
-      this.site.mobileView &&
-      FOOTER_NAV_ROUTES.includes(this.router.currentRouteName)
-    );
+    return FOOTER_NAV_ROUTES.includes(this.router.currentRouteName);
   }
 
   get mainOutletModifierClasses() {
