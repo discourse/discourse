@@ -33,14 +33,14 @@ export default class GroupSmtpEmailSettings extends Component {
     email_from_alias: this.args.group.email_from_alias,
     smtp_server: this.args.group.smtp_server,
     smtp_port: (this.args.group.smtp_port || "").toString(),
-    smtp_ssl_mode: this.args.group.smtp_ssl_mode,
+    smtp_ssl_mode: this.args.group.smtp_ssl_mode || GROUP_SMTP_SSL_MODES.none,
   });
 
   get sslModes() {
     return Object.keys(GROUP_SMTP_SSL_MODES).map((key) => {
       return {
         value: GROUP_SMTP_SSL_MODES[key],
-        label: I18n.t(`groups.manage.email.ssl_modes.${key}`),
+        name: I18n.t(`groups.manage.email.ssl_modes.${key}`),
       };
     });
   }
@@ -58,44 +58,45 @@ export default class GroupSmtpEmailSettings extends Component {
   }
 
   @action
-  resetSettingsValid() {
-    this.smtpSettingsValid = false;
+  changeSmtpSettingsValid(newValidValue) {
+    this.smtpSettingsValid = newValidValue;
+    this.args.onChangeSmtpSettingsValid(newValidValue);
   }
 
   @action
   onChangeSslMode(newMode) {
     this.form.smtp_ssl_mode = newMode;
-    this.resetSettingsValid();
+    this.changeSmtpSettingsValid(false);
   }
 
   @action
-  changeEmailUsername(event) {
-    this.form.email_username = event.target.value;
-    this.resetSettingsValid();
+  changeEmailUsername(newValue) {
+    this.form.email_username = newValue;
+    this.changeSmtpSettingsValid(false);
   }
 
   @action
-  changeEmailPassword(event) {
-    this.form.email_password = event.target.value;
-    this.resetSettingsValid();
+  changeEmailPassword(newValue) {
+    this.form.email_password = newValue;
+    this.changeSmtpSettingsValid(false);
   }
 
   @action
-  changeEmailFromAlias(event) {
-    this.form.email_from_alias = event.target.value;
-    this.resetSettingsValid();
+  changeEmailFromAlias(newValue) {
+    this.form.email_from_alias = newValue;
+    this.changeSmtpSettingsValid(false);
   }
 
   @action
-  changeSmtpServer(event) {
-    this.form.smtp_server = event.target.value;
-    this.resetSettingsValid();
+  changeSmtpServer(newValue) {
+    this.form.smtp_server = newValue;
+    this.changeSmtpSettingsValid(false);
   }
 
   @action
-  changeSmtpPort(event) {
-    this.form.smtp_port = event.target.value;
-    this.resetSettingsValid();
+  changeSmtpPort(newValue) {
+    this.form.smtp_port = newValue;
+    this.changeSmtpSettingsValid(false);
   }
 
   @action
@@ -115,14 +116,14 @@ export default class GroupSmtpEmailSettings extends Component {
     };
 
     this.testingSettings = true;
-    this.smtpSettingsValid = false;
+    this.changeSmtpSettingsValid(false);
 
     return ajax(`/groups/${this.args.group.id}/test_email_settings`, {
       type: "POST",
       data: Object.assign(settings, { protocol: "smtp" }),
     })
       .then(() => {
-        this.smtpSettingsValid = true;
+        this.changeSmtpSettingsValid(true);
         this.args.group.setProperties({
           smtp_server: this.form.smtp_server,
           smtp_port: this.form.smtp_port,
@@ -138,7 +139,7 @@ export default class GroupSmtpEmailSettings extends Component {
 
   <template>
     <div class="group-smtp-email-settings">
-      <form class="groups-form form-horizontal">
+      <form class="groups-form form-horizontal group-smtp-form">
         <div>
           <div class="control-group">
             <label for="username">{{i18n
@@ -147,6 +148,7 @@ export default class GroupSmtpEmailSettings extends Component {
             <input
               type="text"
               name="username"
+              class="group-smtp-form__smtp-username"
               value={{this.form.email_username}}
               tabindex="1"
               {{on "input" (withEventValue this.changeEmailUsername)}}
@@ -160,6 +162,7 @@ export default class GroupSmtpEmailSettings extends Component {
             <input
               type="text"
               name="smtp_server"
+              class="group-smtp-form__smtp-server"
               value={{this.form.smtp_server}}
               tabindex="4"
               {{on "input" (withEventValue this.changeSmtpServer)}}
@@ -168,13 +171,14 @@ export default class GroupSmtpEmailSettings extends Component {
 
           <div class="control-group">
             <label for="smtp_ssl_mode">
-              {{i18n "groups.manage.email.credentials.smtp_ssl"}}
+              {{i18n "groups.manage.email.credentials.smtp_ssl_mode"}}
             </label>
             <ComboBox
               @content={{this.sslModes}}
               @valueProperty="value"
               @value={{this.form.smtp_ssl_mode}}
               name="smtp_ssl_mode"
+              class="group-smtp-form__smtp-ssl-mode"
               tabindex="6"
               @onChange={{this.onChangeSslMode}}
             />
@@ -189,9 +193,10 @@ export default class GroupSmtpEmailSettings extends Component {
             <input
               type="password"
               name="password"
+              class="group-smtp-form__smtp-password"
               value={{this.form.email_password}}
               tabindex="2"
-              {{on "input" this.changeEmailPassword}}
+              {{on "input" (withEventValue this.changeEmailPassword)}}
             />
           </div>
 
@@ -202,9 +207,10 @@ export default class GroupSmtpEmailSettings extends Component {
             <input
               type="text"
               name="smtp_port"
+              class="group-smtp-form__smtp-port"
               value={{this.form.smtp_port}}
               tabindex="5"
-              {{on "input" this.changeSmtpPort}}
+              {{on "input" (withEventValue this.changeSmtpPort)}}
             />
           </div>
         </div>
@@ -217,9 +223,10 @@ export default class GroupSmtpEmailSettings extends Component {
             <input
               type="text"
               name="from_alias"
+              class="group-smtp-form__smtp-from-alias"
               id="from_alias"
               value={{this.form.email_from_alias}}
-              {{on "input" this.changeEmailFromAlias}}
+              {{on "input" (withEventValue this.changeEmailFromAlias)}}
               tabindex="3"
             />
             <p>{{i18n "groups.manage.email.settings.from_alias_hint"}}</p>
@@ -264,7 +271,7 @@ export default class GroupSmtpEmailSettings extends Component {
           @label="groups.manage.email.test_settings"
           @title="groups.manage.email.settings_required"
           tabindex="7"
-          class="btn-primary test-smtp-settings"
+          class="btn-primary group-smtp-form__test-smtp-settings"
         />
 
         <ConditionalLoadingSpinner
@@ -272,8 +279,8 @@ export default class GroupSmtpEmailSettings extends Component {
           @condition={{this.testingSettings}}
         />
 
-        {{#if this.smtpSettingsValid}}
-          <span class="smtp-settings-ok">
+        {{#if @smtpSettingsValid}}
+          <span class="group-smtp-form__smtp-settings-ok">
             {{dIcon "check-circle"}}
             {{i18n "groups.manage.email.smtp_settings_valid"}}
           </span>
@@ -281,7 +288,7 @@ export default class GroupSmtpEmailSettings extends Component {
       </div>
 
       {{#if @group.smtp_updated_at}}
-        <div class="group-email-last-updated-details for-smtp">
+        <div class=".group-smtp-form__last-updated-details">
           <small>
             {{i18n "groups.manage.email.last_updated"}}
             <strong>{{formatDate
