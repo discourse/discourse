@@ -6,6 +6,16 @@
   @additionalTags={{this.additionalTags}}
 />
 
+<PluginOutlet
+  @name="after-breadcrumbs"
+  @outletArgs={{hash
+    categories=this.categories
+    category=this.category
+    tag=this.tag
+    additionalTags=this.additionalTags
+  }}
+/>
+
 {{#unless this.additionalTags}}
   {{! nav bar doesn't work with tag intersections }}
   <NavigationBar
