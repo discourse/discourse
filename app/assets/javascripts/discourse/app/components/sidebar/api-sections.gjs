@@ -65,7 +65,7 @@ function prepareSidebarSectionClass(Section) {
         return this.links;
       }
 
-      if (this.text.toLowerCase().match(this.sidebarState.sanitizedFilter)) {
+      if (this.text?.toLowerCase()?.match(this.sidebarState.sanitizedFilter)) {
         return this.links;
       }
 
