@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Converters::Pepper
-  class Step3 < Migrations::Converters::ProgressStep
+  class Step3 < Migrations::Converters::Base::ProgressStep
     def max_progress
       10
     end

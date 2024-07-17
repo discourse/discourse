@@ -2,8 +2,8 @@
 
 require "singleton"
 
-module Migrations
-  module IntermediateDb
+module Migrations::Database
+  module IntermediateDB
     def self.setup(db_connection)
       @db = db_connection
     end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Migrations::IntermediateDb
+module Migrations::Database::IntermediateDB
   module LogEntry
     SQL = <<~SQL
       INSERT INTO log_entries (created_at, type, message, exception, details)
@@ -8,10 +8,10 @@ module Migrations::IntermediateDb
     SQL
 
     def self.create!(created_at: Time.now, type:, message:, exception: nil, details: nil)
-      Migrations::IntermediateDb.insert(
+      Migrations::Database::IntermediateDB.insert(
         SQL,
         [
-          Migrations::Database::Formatter.format_datetime(created_at),
+          Migrations::Database.format_datetime(created_at),
           type,
           message,
           exception&.full_message(highlight: false),

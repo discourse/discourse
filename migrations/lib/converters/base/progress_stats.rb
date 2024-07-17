@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Migrations::Converters
+module Migrations::Converters::Base
   class ProgressStats
     attr_accessor :progress, :warning_count, :error_count
 
