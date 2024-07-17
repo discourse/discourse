@@ -20,6 +20,10 @@ export default class ChatIndexRoute extends DiscourseRoute {
     return this.chat.userCanAccessDirectMessages;
   }
 
+  get isPublicChannelsEnabled() {
+    return this.siteSettings.enable_public_channels;
+  }
+
   activate() {
     this.chat.activeChannel = null;
   }
@@ -39,8 +43,18 @@ export default class ChatIndexRoute extends DiscourseRoute {
       this.hasDirectMessages
     ) {
       return this.router.replaceWith("chat.direct-messages");
-    } else {
+    } else if (
+      this.siteSettings.chat_preferred_index === "channels" &&
+      this.isPublicChannelsEnabled
+    ) {
+      const id = this.currentUser.custom_fields.last_chat_channel_id;
+      if (id) {
+        return this.chatChannelsManager.find(id).then((c) => {
+          return this.router.replaceWith("chat.channel", ...c.routeModels);
+        });
+      }
       return this.router.replaceWith("chat.channels");
     }
+    return this.router.replaceWith("chat.browse");
   }
 }

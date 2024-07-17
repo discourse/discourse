@@ -5,6 +5,8 @@ import { FOOTER_NAV_ROUTES } from "discourse/plugins/chat/discourse/lib/chat-con
 export default class ChatController extends Controller {
   @service chat;
   @service chatStateManager;
+  @service chatChannelsManager;
+  @service siteSettings;
   @service router;
 
   get shouldUseChatSidebar() {
@@ -23,8 +25,19 @@ export default class ChatController extends Controller {
     return this.siteSettings.navigation_menu === "sidebar";
   }
 
+  get enabledRouteCount() {
+    return [
+      this.siteSettings.chat_threads_enabled,
+      this.chat.userCanAccessDirectMessages,
+      this.siteSettings.enable_public_channels,
+    ].filter(Boolean).length;
+  }
+
   get shouldUseChatFooter() {
-    return FOOTER_NAV_ROUTES.includes(this.router.currentRouteName);
+    return (
+      FOOTER_NAV_ROUTES.includes(this.router.currentRouteName) &&
+      this.enabledRouteCount > 1
+    );
   }
 
   get mainOutletModifierClasses() {
