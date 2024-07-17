@@ -1,6 +1,6 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import renderTag from "discourse/lib/render-tag";
+import renderTag, { defaultRenderTag } from "discourse/lib/render-tag";
 
 module("Unit | Utility | render-tag", function (hooks) {
   setupTest(hooks);
@@ -32,6 +32,22 @@ module("Unit | Utility | render-tag", function (hooks) {
       }),
       '<a href="/tag/foo" data-tag-name="foo" data-tag-groups="group1,group2" class="discourse-tag simple">foo</a>',
       "adds the tag-groups to data"
+    );
+
+    assert.strictEqual(
+      defaultRenderTag(
+        "foo",
+        {},
+        {
+          extraClass: "classname1 classname2",
+          contentFn: (c) => `Tag - ${c}`,
+          attrs: {
+            "data-foo": "bar",
+          },
+        }
+      ),
+      '<a href="/tag/foo" data-tag-name="foo" class="discourse-tag simple classname1 classname2" data-foo="bar">Tag - foo</a>',
+      "works fine with extra parameters"
     );
   });
 });

@@ -10,20 +10,27 @@ export function replaceTagRenderer(fn) {
   _renderer = fn;
 }
 
-function buildTagHTML(tagName, attrs, text) {
+function buildTagHTML(tagName, attrs, innerHTML) {
   let val = `<${tagName}`;
   for (const [k, v] of Object.entries(attrs)) {
     val += v ? ` ${k}="${escape(v)}"` : "";
   }
-  val += `>${text}</${tagName}>`;
+  val += `>${innerHTML}</${tagName}>`;
   return val;
 }
 
-export function defaultRenderTag(tag, params) {
+/**
+ * @param {Object} extra Reserved for theme components and plugins so they don't have to rewrite the entire renderer
+ * @param {Record<string, string>?} extra.attrs Add or override tag attributes
+ * @param {((content: string)=>string)?} extra.contentFn Override the innerHTML of a tag
+ * @param {string?} extra.extraClass Adding additional classes to tags
+ */
+export function defaultRenderTag(tag, params, extra) {
   // This file is in lib but it's used as a helper
   let siteSettings = helperContext().siteSettings;
 
   params = params || {};
+  extra = extra || {};
 
   const visibleName = escapeExpression(tag);
   tag = visibleName.toLowerCase();
@@ -47,12 +54,17 @@ export function defaultRenderTag(tag, params) {
   if (params.extraClass) {
     classes.push(params.extraClass);
   }
+  if (extra.extraClass) {
+    classes.push(extra.extraClass);
+  }
   if (params.size) {
     classes.push(params.size);
   }
 
   // remove all html tags from hover text
   const hoverDescription = params.description?.replace(/<.+?>/g, "");
+
+  const content = params.displayName ? escape(params.displayName) : visibleName;
 
   let val = buildTagHTML(
     tagName,
@@ -62,8 +74,9 @@ export function defaultRenderTag(tag, params) {
       "data-tag-groups": params.tagGroup || params.tagGroups?.join(","),
       title: hoverDescription,
       class: classes.join(" "),
+      ...(extra.attrs ?? {}),
     },
-    params.displayName ? escape(params.displayName) : visibleName
+    extra.contentFn?.(content) ?? content
   );
 
   if (params.count) {
