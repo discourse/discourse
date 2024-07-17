@@ -15,7 +15,7 @@ module PageObjects
 
       def value
         case control_type
-        when /input-/
+        when /input-/, "password"
           component.find("input").value
         when "icon"
           picker = PageObjects::Components::SelectKit.new(component)
@@ -54,8 +54,11 @@ module PageObjects
       end
 
       def toggle
-        if control_type == "checkbox"
+        case control_type
+        when "checkbox"
           component.find("input[type='checkbox']").click
+        when "password"
+          component.find(".form-kit__control-password-toggle").click
         else
           raise "'toggle' is not supported for control type: #{control_type}"
         end
@@ -63,7 +66,7 @@ module PageObjects
 
       def fill_in(value)
         case control_type
-        when "input-text"
+        when "input-text", "password"
           component.find("input").fill_in(with: value)
         when "textarea", "composer"
           component.find("textarea").fill_in(with: value, visible: :all)

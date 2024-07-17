@@ -16,6 +16,9 @@
     <form.Field @title="Before" @name="before" as |field|>
       <field.Input @before="https://" />
     </form.Field>
+    <form.Field @title="Secret" @name="secret" as |field|>
+      <field.Password />
+    </form.Field>
   </Form>
 </StyleguideExample>
 
@@ -141,9 +144,6 @@
       <inputGroup.Field @title="Username" @name="username" as |field|>
         <field.Input />
       </inputGroup.Field>
-      <inputGroup.Text>
-        Email:
-      </inputGroup.Text>
       <inputGroup.Field @title="Email" @name="email" as |field|>
         <field.Input />
       </inputGroup.Field>

@@ -25,7 +25,6 @@
       border-color: var(--tertiary);
       outline: 2px solid var(--tertiary);
       outline-offset: -2px;
-      background-image: none !important; //why? this removed the dropdown arrow from the select element…
 
       .d-icon {
         color: inherit !important;

@@ -25,16 +25,25 @@
     z-index: 1;
     width: 100% !important;
     min-width: auto !important;
+
+    &:hover,
+    &:focus {
+      z-index: 2;
+    }
   }
 
   > :not(:last-child) {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    .form-kit__control-input {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
   }
 
   > :not(:first-child) {
     margin-left: -1px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+    .form-kit__control-input {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
   }
 }

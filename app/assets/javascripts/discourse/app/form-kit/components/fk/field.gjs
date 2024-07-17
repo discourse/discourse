@@ -8,6 +8,7 @@ import FKControlIcon from "discourse/form-kit/components/fk/control/icon";
 import FKControlImage from "discourse/form-kit/components/fk/control/image";
 import FKControlInput from "discourse/form-kit/components/fk/control/input";
 import FKControlMenu from "discourse/form-kit/components/fk/control/menu";
+import FKControlPassword from "discourse/form-kit/components/fk/control/password";
 import FKControlQuestion from "discourse/form-kit/components/fk/control/question";
 import FKControlRadioGroup from "discourse/form-kit/components/fk/control/radio-group";
 import FKControlSelect from "discourse/form-kit/components/fk/control/select";
@@ -125,6 +126,14 @@ export default class FKField extends Component {
             FKControlWrapper
             errors=@errors
             component=FKControlImage
+            value=this.value
+            field=this.field
+            format=@format
+          )
+          Password=(component
+            FKControlWrapper
+            errors=@errors
+            component=FKControlPassword
             value=this.value
             field=this.field
             format=@format

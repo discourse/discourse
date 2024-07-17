@@ -21,6 +21,7 @@ class Field {
     switch (this.controlType) {
       case "input-text":
       case "input-number":
+      case "password":
         element = this.element.querySelector("input");
         break;
       case "code":
@@ -37,6 +38,11 @@ class Field {
 
   async toggle() {
     switch (this.controlType) {
+      case "password":
+        await click(
+          this.element.querySelector(".form-kit__control-password-toggle")
+        );
+        break;
       case "checkbox":
         await click(this.element.querySelector("input"));
         break;

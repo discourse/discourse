@@ -19,6 +19,8 @@ class FieldHelper {
         return this.element.querySelector(".form-kit__control-radio:checked")
           ?.value;
       }
+      case "password":
+        return this.element.querySelector(".form-kit__control-password").value;
       case "input-number":
       case "input-text":
         return this.element.querySelector(".form-kit__control-input").value;
