@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
+import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import loadAce from "discourse/lib/load-ace-editor";
@@ -12,6 +13,8 @@ const COLOR_VARS_REGEX =
 
 @classNames("ace-wrapper")
 export default class AceEditor extends Component {
+  @service appEvents;
+
   isLoading = true;
   mode = "css";
   disabled = false;
@@ -117,8 +120,12 @@ export default class AceEditor extends Component {
       });
       editor.getSession().setMode("ace/mode/" + this.mode);
       editor.on("change", () => {
-        this._skipContentChangeEvent = true;
-        this.set("content", editor.getSession().getValue());
+        if (this.onChange) {
+          this.onChange(editor.getSession().getValue());
+        } else {
+          this._skipContentChangeEvent = true;
+          this.set("content", editor.getSession().getValue());
+        }
       });
       if (this.save) {
         editor.commands.addCommand({

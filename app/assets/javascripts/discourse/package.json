@@ -31,6 +31,7 @@
     "ember-source": "~5.5.0",
     "handlebars": "^4.7.8",
     "highlight.js": "^11.10.0",
+    "immer": "^10.1.1",
     "jspreadsheet-ce": "^4.13.4",
     "morphlex": "^0.0.16",
     "pretty-text": "1.0.0"

@@ -30,8 +30,8 @@ en:
         icons:
           title: "Icons"
           full_list: "See the full list of Font Awesome Icons"
-        input_fields:
-          title: "Input Fields"
+        forms:
+          title: "Forms"
         buttons:
           title: "Buttons"
         dropdowns:

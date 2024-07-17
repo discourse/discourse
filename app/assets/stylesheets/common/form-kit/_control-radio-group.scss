@@ -1,0 +1,14 @@
+.form-kit__radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+
+  &-title {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    margin: 0;
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-high);
+  }
+}

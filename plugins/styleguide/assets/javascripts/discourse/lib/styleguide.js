@@ -3,7 +3,7 @@ import fontScale from "../components/sections/atoms/01-font-scale";
 import buttons from "../components/sections/atoms/02-buttons";
 import colors from "../components/sections/atoms/03-colors";
 import icons from "../components/sections/atoms/04-icons";
-import inputFields from "../components/sections/atoms/05-input-fields";
+import forms from "../components/sections/atoms/05-forms";
 import spinners from "../components/sections/atoms/06-spinners";
 import dateTimeInputs from "../components/sections/atoms/date-time-inputs";
 import dropdowns from "../components/sections/atoms/dropdowns";
@@ -51,9 +51,9 @@ const SECTIONS = [
   { component: colors, category: "atoms", id: "colors", priority: 3 },
   { component: icons, category: "atoms", id: "icons", priority: 4 },
   {
-    component: inputFields,
+    component: forms,
     category: "atoms",
-    id: "input-fields",
+    id: "forms",
     priority: 5,
   },
   { component: spinners, category: "atoms", id: "spinners", priority: 6 },
