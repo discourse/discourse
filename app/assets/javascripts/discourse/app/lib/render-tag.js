@@ -10,11 +10,21 @@ export function replaceTagRenderer(fn) {
   _renderer = fn;
 }
 
+function buildTagHTML(tagName, attrs, text) {
+  let val = `<${tagName}`;
+  for (const [k, v] of Object.entries(attrs)) {
+    val += v ? ` ${k}="${escape(v)}"` : "";
+  }
+  val += `>${text}</${tagName}>`;
+  return val;
+}
+
 export function defaultRenderTag(tag, params) {
   // This file is in lib but it's used as a helper
   let siteSettings = helperContext().siteSettings;
 
   params = params || {};
+
   const visibleName = escapeExpression(tag);
   tag = visibleName.toLowerCase();
   const classes = ["discourse-tag"];
@@ -30,7 +40,6 @@ export function defaultRenderTag(tag, params) {
       path = `/tag/${tag}`;
     }
   }
-  const href = path ? ` href='${getURL(path)}' ` : "";
 
   if (siteSettings.tag_style || params.style) {
     classes.push(params.style || siteSettings.tag_style);
@@ -43,23 +52,19 @@ export function defaultRenderTag(tag, params) {
   }
 
   // remove all html tags from hover text
-  const hoverDescription =
-    params.description && params.description.replace(/<.+?>/g, "");
+  const hoverDescription = params.description?.replace(/<.+?>/g, "");
 
-  let val =
-    "<" +
-    tagName +
-    href +
-    " data-tag-name=" +
-    tag +
-    (params.description ? ' title="' + escape(hoverDescription) + '" ' : "") +
-    " class='" +
-    classes.join(" ") +
-    "'>" +
-    (params.displayName ? escape(params.displayName) : visibleName) +
-    "</" +
-    tagName +
-    ">";
+  let val = buildTagHTML(
+    tagName,
+    {
+      href: path && getURL(path),
+      "data-tag-name": tag,
+      "data-tag-groups": params.tagGroup || params.tagGroups?.join(","),
+      title: hoverDescription,
+      class: classes.join(" "),
+    },
+    params.displayName ? escape(params.displayName) : visibleName
+  );
 
   if (params.count) {
     val += " <span class='discourse-tag-count'>x" + params.count + "</span>";

@@ -6,6 +6,7 @@ module TopicTagsMixin
   def self.included(klass)
     klass.attributes :tags
     klass.attributes :tags_descriptions
+    klass.attributes :tags_groups
   end
 
   def include_tags?
@@ -21,6 +22,10 @@ module TopicTagsMixin
       .each
       .with_object({}) { |tag, acc| acc[tag.name] = tag.description&.truncate(DESCRIPTION_LIMIT) }
       .compact
+  end
+
+  def tags_groups
+    TagGroup.visible_of_tags(all_tags, scope).select { |_, v| v.size > 0 }
   end
 
   def topic

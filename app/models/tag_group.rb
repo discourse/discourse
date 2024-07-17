@@ -109,6 +109,18 @@ class TagGroup < ActiveRecord::Base
       )
     end
   end
+
+  def self.visible_of_tags(tags, guardian)
+    visible_groups = TagGroup.visible(guardian)
+
+    tags
+      .each
+      .with_object({}) do |tag, obj|
+        group = tag.tag_groups
+        group &= visible_groups unless visible_groups.equal? TagGroup
+        obj[tag.name] = group.map { |g| g.name }
+      end
+  end
 end
 
 # == Schema Information
