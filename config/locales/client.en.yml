@@ -5532,7 +5532,7 @@ en:
             delete_flag: "Delete flag"
             non_deletable: "You cannot delete this flag because it is a system flag or has already been used in the review system, however you can still disable it."
             require_message: "Prompt users to provide additional reasons"
-            require_message_description: "When this flag is selected, a text field will be displayed"
+            require_message_description: "When this flag is selected, a text field will be displayed for the user to provide additional detail about why they are flagging the content"
           more_options:
             title: "More options"
             move_up: "Move up"

@@ -13,6 +13,7 @@ class DuplicateFlagsCustomTypeToRequireMessage < ActiveRecord::Migration[7.0]
   end
 
   def down
+    Migration::ColumnDropper.drop_readonly("flags", "custom_type")
     remove_column :flags, :require_message
   end
 end
