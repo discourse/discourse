@@ -1335,10 +1335,13 @@ email:
   enable_imap:
     default: false
     client: true
+    hidden: true
   enable_imap_write:
     default: false
+    hidden: true
   enable_imap_idle:
     default: false
+    hidden: true
   enable_smtp:
     default: false
     client: true
