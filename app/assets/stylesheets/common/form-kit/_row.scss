@@ -1,25 +1,3 @@
-// .form-kit__row {
-//   display: grid;
-//   grid-auto-flow: column;
-//   column-gap: 0.5em;
-//   row-gap: 0.25em;
-//   max-width: 100%;
-
-//   .form-kit__col,
-//   .form-kit__container {
-//     display: contents;
-//   }
-
-//   .form-kit__container-content {
-//     width: auto !important;
-//   }
-
-//   .form-kit__button {
-//     grid-row: 2;
-//     height: 2em;
-//   }
-// }
-
 .form-kit__row {
   display: flex;
   flex-wrap: wrap;
