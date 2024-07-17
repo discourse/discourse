@@ -8,7 +8,8 @@
   }
 }
 
-.user-card {
+.user-card,
+.group-card {
   --card-width: 39em;
   --avatar-width: 8em;
   --avatar-margin: -3.3em; // extends the avatar above the card
@@ -114,15 +115,21 @@
   .btn {
     margin-bottom: 5px;
   }
-  h1 {
+  .names__primary {
     line-height: var(--line-height-medium);
+    font-size: var(--font-up-5);
+    font-weight: bold;
     .d-icon {
       color: var(--primary);
     }
   }
-  h3 {
-    display: inline;
-    margin-right: 0.5em;
+  .names__secondary {
+    font-size: var(--font-up-1);
+  }
+  .metadata {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.15em 0.5em;
     color: var(--primary);
     &.email,
     .desc,
@@ -130,21 +137,17 @@
       color: var(--primary-high);
     }
   }
-  h1,
-  h2,
-  h3 {
+
+  .names__secondary,
+  [class*="metadata__"] {
     margin: 0;
     @include ellipsis;
   }
-  h1,
-  h2 {
+  .names__primary,
+  .names__secondary {
     a {
       color: var(--primary);
     }
-  }
-  h2,
-  h3 {
-    font-weight: normal;
   }
   p {
     margin: 0 0 5px 0;
@@ -270,6 +273,28 @@
       @extend .user-badge;
     }
   }
+
+  .user-status {
+    display: flex;
+
+    img.emoji {
+      margin-bottom: 1px;
+      margin-right: 0.3em;
+    }
+
+    .relative-date {
+      flex: 1 0 auto;
+      text-align: left;
+      font-size: var(--font-down-3);
+      padding-top: 0.5em;
+      margin-left: 0.6em;
+      color: var(--primary-medium);
+    }
+
+    &__description {
+      @include ellipsis;
+    }
+  }
 }
 
 // styles for group cards only
@@ -313,23 +338,5 @@
         overflow: hidden;
       }
     }
-  }
-}
-
-h3.user-status {
-  display: flex;
-
-  img.emoji {
-    margin-bottom: 1px;
-    margin-right: 0.3em;
-  }
-
-  .relative-date {
-    flex: 1 0 auto;
-    text-align: left;
-    font-size: var(--font-down-3);
-    padding-top: 0.5em;
-    margin-left: 0.6em;
-    color: var(--primary-medium);
   }
 }

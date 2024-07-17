@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
+import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import BootstrapModeNotice from "../bootstrap-mode-notice";
 import PluginOutlet from "../plugin-outlet";
 import HomeLogo from "./home-logo";
@@ -28,9 +29,18 @@ export default class Contents extends Component {
       <PluginOutlet
         @name="header-contents__before"
         @outletArgs={{hash
-          topic=this.header.topic
           topicInfo=this.header.topicInfo
           topicInfoVisible=this.header.topicInfoVisible
+        }}
+        @deprecatedArgs={{hash
+          topic=(deprecatedOutletArgument
+            value=this.header.topic
+            message="The argument 'topic' is deprecated on the outlet 'header-contents__before', use 'topicInfo' or 'topicInfoVisible' instead"
+            id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
+            since="3.3.0.beta4-dev"
+            dropFrom="3.4.0"
+            silence="discourse.header-service-topic"
+          )
         }}
       />
       {{#if this.site.desktopView}}
@@ -67,9 +77,18 @@ export default class Contents extends Component {
         <PluginOutlet
           @name="before-header-panel"
           @outletArgs={{hash
-            topic=this.header.topic
             topicInfo=this.header.topicInfo
             topicInfoVisible=this.header.topicInfoVisible
+          }}
+          @deprecatedArgs={{hash
+            topic=(deprecatedOutletArgument
+              value=this.header.topic
+              message="The argument 'topic' is deprecated on the outlet 'before-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
+              id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
+              since="3.3.0.beta4-dev"
+              dropFrom="3.4.0"
+              silence="discourse.header-service-topic"
+            )
           }}
         />
       </div>
@@ -78,18 +97,36 @@ export default class Contents extends Component {
         <PluginOutlet
           @name="after-header-panel"
           @outletArgs={{hash
-            topic=this.header.topic
             topicInfo=this.header.topicInfo
             topicInfoVisible=this.header.topicInfoVisible
+          }}
+          @deprecatedArgs={{hash
+            topic=(deprecatedOutletArgument
+              value=this.header.topic
+              message="The argument 'topic' is deprecated on the outlet 'after-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
+              id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
+              since="3.3.0.beta4-dev"
+              dropFrom="3.4.0"
+              silence="discourse.header-service-topic"
+            )
           }}
         />
       </div>
       <PluginOutlet
         @name="header-contents__after"
         @outletArgs={{hash
-          topic=this.header.topic
           topicInfo=this.header.topicInfo
           topicInfoVisible=this.header.topicInfoVisible
+        }}
+        @deprecatedArgs={{hash
+          topic=(deprecatedOutletArgument
+            value=this.header.topic
+            message="The argument 'topic' is deprecated on the outlet 'header-contents__after', use 'topicInfo' or 'topicInfoVisible' instead"
+            id="discourse.plugin-connector.deprecated-arg.header-contents.topic"
+            since="3.3.0.beta4-dev"
+            dropFrom="3.4.0"
+            silence="discourse.header-service-topic"
+          )
         }}
       />
     </div>

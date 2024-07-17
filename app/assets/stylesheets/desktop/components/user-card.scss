@@ -13,16 +13,10 @@
       }
     }
   }
-  h1 {
+  .names__primary {
     .d-icon {
       font-size: var(--font-down-1);
     }
-  }
-  h2 {
-    font-size: var(--font-up-1);
-  }
-  h3 {
-    font-size: var(--font-0);
   }
 
   @include breakpoint("mobile-extra-large") {
@@ -30,7 +24,7 @@
     // at 200% - 400% zoom levels
     --avatar-width: 4em;
     --avatar-margin: 0;
-    .names h1 {
+    .names__primary {
       font-size: var(--font-up-2);
     }
     .first-row {

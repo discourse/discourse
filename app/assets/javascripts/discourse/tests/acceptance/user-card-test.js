@@ -57,9 +57,9 @@ acceptance(
       await click('a[data-user-card="eviltrout"]');
 
       assert
-        .dom(".user-card h1.username .name-username-wrapper")
+        .dom(".user-card .username .name-username-wrapper")
         .hasText("eviltrout");
-      assert.dom(".user-card h2.full-name").hasText("Robin Ward");
+      assert.dom(".user-card .full-name").hasText("Robin Ward");
     });
   }
 );
@@ -79,9 +79,9 @@ acceptance(
       await click('a[data-user-card="eviltrout"]');
 
       assert
-        .dom(".user-card h1.full-name .name-username-wrapper")
+        .dom(".user-card .full-name .name-username-wrapper")
         .hasText("Robin Ward");
-      assert.dom(".user-card h2.username").hasText("eviltrout");
+      assert.dom(".user-card .username").hasText("eviltrout");
     });
   }
 );
@@ -100,7 +100,7 @@ acceptance("User Card - User Status", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click('a[data-user-card="charlie"]');
 
-    assert.dom(".user-card h3.user-status").exists();
+    assert.dom(".user-card .user-status").exists();
   });
 
   test("doesn't show user status if disabled", async function (assert) {
@@ -109,7 +109,7 @@ acceptance("User Card - User Status", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click('a[data-user-card="charlie"]');
 
-    assert.dom(".user-card h3.user-status").doesNotExist();
+    assert.dom(".user-card .user-status").doesNotExist();
   });
 });
 
