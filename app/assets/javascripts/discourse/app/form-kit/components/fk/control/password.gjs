@@ -54,7 +54,7 @@ export default class FKControlInput extends Component {
     <div
       class={{concatClass
         "form-kit__control-password-wrapper"
-        (if this.isFocused "--focused")
+        (if this.isFocused "is-focused")
       }}
     >
       <input
