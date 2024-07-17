@@ -1,7 +1,6 @@
 .form-kit__control-input {
   @include default-input;
   z-index: 1;
-
   margin: 0 !important;
   width: 100% !important;
   min-width: auto !important;
@@ -39,6 +38,10 @@
   background: var(--primary-low);
   display: flex;
   align-items: center;
+
+  @include breakpoint(mobile-large) {
+    height: 2.25em;
+  }
 }
 
 .form-kit__before-input {
