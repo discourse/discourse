@@ -4,7 +4,7 @@ import { getOwner } from "@ember/application";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { modifier } from "ember-modifier";
+import { modifier as modifierFn } from "ember-modifier";
 import { and, eq, not, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DAG from "discourse/lib/dag";
@@ -19,6 +19,9 @@ import SearchMenuWrapper from "./header/search-menu-wrapper";
 import UserMenuWrapper from "./header/user-menu-wrapper";
 
 const SEARCH_BUTTON_ID = "search-button";
+const USER_BUTTON_ID = "toggle-current-user";
+const HAMBURGER_BUTTON_ID = "toggle-hamburger-menu";
+const PANEL_SELECTOR = ".panel-body";
 
 let headerButtons;
 resetHeaderButtons();
@@ -47,12 +50,13 @@ export default class GlimmerHeader extends Component {
 
   @tracked skipSearchContext = this.site.mobileView;
 
-  appEventsListeners = modifier(() => {
+  appEventsListeners = modifierFn(() => {
     this.appEvents.on(
       "header:keyboard-trigger",
       this,
       this.headerKeyboardTrigger
     );
+
     return () => {
       this.appEvents.off(
         "header:keyboard-trigger",
@@ -61,6 +65,60 @@ export default class GlimmerHeader extends Component {
       );
     };
   });
+
+  handleFocus = modifierFn((element) => {
+    const panelBody = element.querySelector(PANEL_SELECTOR);
+    if (!panelBody) {
+      return;
+    }
+
+    let isKeyboardEvent = false;
+
+    const handleKeydown = (event) => {
+      if (event.key) {
+        isKeyboardEvent = true;
+      }
+    };
+
+    // avoid triggering focusout on click
+    // otherwise we can double-trigger the menu toggle
+    const handleMousedown = () => {
+      isKeyboardEvent = false;
+    };
+
+    const focusOutHandler = (event) => {
+      if (!isKeyboardEvent) {
+        return;
+      }
+
+      if (!panelBody.contains(event.relatedTarget)) {
+        this.closeCurrentMenu();
+      }
+    };
+
+    panelBody.addEventListener("keydown", handleKeydown);
+    panelBody.addEventListener("mousedown", handleMousedown);
+    panelBody.addEventListener("focusout", focusOutHandler);
+
+    return () => {
+      panelBody.removeEventListener("keydown", handleKeydown);
+      panelBody.removeEventListener("mousedown", handleMousedown);
+      panelBody.removeEventListener("focusout", focusOutHandler);
+    };
+  });
+
+  @action
+  closeCurrentMenu() {
+    if (this.search.visible) {
+      this.toggleSearchMenu();
+    } else if (this.header.userVisible) {
+      this.toggleUserMenu();
+      document.getElementById(USER_BUTTON_ID)?.focus();
+    } else if (this.header.hamburgerVisible) {
+      this.toggleHamburger();
+      document.getElementById(HAMBURGER_BUTTON_ID)?.focus();
+    }
+  }
 
   @action
   headerKeyboardTrigger(msg) {
@@ -220,14 +278,21 @@ export default class GlimmerHeader extends Component {
           {{/if}}
 
           {{#if this.search.visible}}
-            <SearchMenuWrapper @closeSearchMenu={{this.toggleSearchMenu}} />
+            <SearchMenuWrapper
+              @closeSearchMenu={{this.toggleSearchMenu}}
+              {{this.handleFocus}}
+            />
           {{else if this.header.hamburgerVisible}}
             <HamburgerDropdownWrapper
               @toggleNavigationMenu={{this.toggleNavigationMenu}}
               @sidebarEnabled={{@sidebarEnabled}}
+              {{this.handleFocus}}
             />
           {{else if this.header.userVisible}}
-            <UserMenuWrapper @toggleUserMenu={{this.toggleUserMenu}} />
+            <UserMenuWrapper
+              @toggleUserMenu={{this.toggleUserMenu}}
+              {{this.handleFocus}}
+            />
           {{/if}}
 
           {{#if

@@ -1186,6 +1186,13 @@ class TopicsController < ApplicationController
 
     topic.set_or_create_timer(slow_mode_type, time, by_user: timer&.user)
 
+    StaffActionLogger.new(current_user).log_topic_slow_mode(
+      topic,
+      enabled:,
+      seconds: params[:seconds],
+      until: time,
+    )
+
     head :ok
   end
 

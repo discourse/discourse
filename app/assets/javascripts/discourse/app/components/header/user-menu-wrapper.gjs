@@ -51,6 +51,7 @@ export default class UserMenuWrapper extends Component {
           secondaryTargetSelector=".user-menu-panel"
         )
       }}
+      ...attributes
     >
       <UserMenu @closeUserMenu={{@toggleUserMenu}} />
     </div>

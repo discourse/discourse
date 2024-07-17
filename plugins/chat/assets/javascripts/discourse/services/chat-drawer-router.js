@@ -1,16 +1,43 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
+import ChatDrawerRoutesBrowse from "discourse/plugins/chat/discourse/components/chat/drawer-routes/browse";
 import ChatDrawerRoutesChannel from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel";
+import ChatDrawerRoutesChannelInfoMembers from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-info-members";
+import ChatDrawerRoutesChannelInfoSettings from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-info-settings";
 import ChatDrawerRoutesChannelThread from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-thread";
 import ChatDrawerRoutesChannelThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-threads";
 import ChatDrawerRoutesChannels from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channels";
 import ChatDrawerRoutesDirectMessages from "discourse/plugins/chat/discourse/components/chat/drawer-routes/direct-messages";
-import ChatDrawerRoutesMembers from "discourse/plugins/chat/discourse/components/chat/drawer-routes/members";
-import ChatDrawerRoutesSettings from "discourse/plugins/chat/discourse/components/chat/drawer-routes/settings";
 import ChatDrawerRoutesThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/threads";
 
 const ROUTES = {
+  chat: { name: ChatDrawerRoutesChannels },
   "chat.index": { name: ChatDrawerRoutesChannels },
+  // order matters, non index before index
+  "chat.browse": {
+    name: ChatDrawerRoutesBrowse,
+    extractParams: () => ({ currentTab: "all" }),
+  },
+  "chat.browse.index": {
+    name: ChatDrawerRoutesBrowse,
+    extractParams: () => ({ currentTab: "all" }),
+  },
+  "chat.browse.open": {
+    name: ChatDrawerRoutesBrowse,
+    extractParams: (r) => ({ currentTab: r.localName }),
+  },
+  "chat.browse.archived": {
+    name: ChatDrawerRoutesBrowse,
+    extractParams: (r) => ({ currentTab: r.localName }),
+  },
+  "chat.browse.closed": {
+    name: ChatDrawerRoutesBrowse,
+    extractParams: (r) => ({ currentTab: r.localName }),
+  },
+  "chat.browse.all": {
+    name: ChatDrawerRoutesBrowse,
+    extractParams: (r) => ({ currentTab: r.localName }),
+  },
   "chat.channels": { name: ChatDrawerRoutesChannels },
   "chat.channel": { name: ChatDrawerRoutesChannel },
   "chat.channel.index": { name: ChatDrawerRoutesChannel },
@@ -56,7 +83,6 @@ const ROUTES = {
   "chat.threads": {
     name: ChatDrawerRoutesThreads,
   },
-  chat: { name: ChatDrawerRoutesChannels },
   "chat.channel.near-message": {
     name: ChatDrawerRoutesChannel,
     extractParams: (route) => {
@@ -76,7 +102,7 @@ const ROUTES = {
     },
   },
   "chat.channel.info.settings": {
-    name: ChatDrawerRoutesSettings,
+    name: ChatDrawerRoutesChannelInfoSettings,
     extractParams: (route) => {
       return {
         channelId: route.parent.params.channelId,
@@ -84,7 +110,7 @@ const ROUTES = {
     },
   },
   "chat.channel.info.members": {
-    name: ChatDrawerRoutesMembers,
+    name: ChatDrawerRoutesChannelInfoMembers,
     extractParams: (route) => {
       return {
         channelId: route.parent.params.channelId,

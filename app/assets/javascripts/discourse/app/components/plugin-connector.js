@@ -1,7 +1,9 @@
 import Component from "@ember/component";
 import { computed, defineProperty } from "@ember/object";
-import { buildArgsWithDeprecations } from "discourse/lib/plugin-connectors";
-import deprecated from "discourse-common/lib/deprecated";
+import {
+  buildArgsWithDeprecations,
+  deprecatedArgumentValue,
+} from "discourse/lib/plugin-connectors";
 import { afterRender } from "discourse-common/utils/decorators";
 
 let _decorators = {};
@@ -30,19 +32,23 @@ export default Component.extend({
     });
 
     const deprecatedArgs = this.deprecatedArgs || {};
+    const connectorInfo = {
+      outletName: this.connector?.outletName,
+      connectorName: this.connector?.connectorName,
+      classModuleName: this.connector?.classModuleName,
+      templateModule: this.connector?.templateModule,
+      layoutName: this.layoutName,
+    };
+
     Object.keys(deprecatedArgs).forEach((key) => {
       defineProperty(
         this,
         key,
         computed("deprecatedArgs", () => {
-          deprecated(
-            `The ${key} property is deprecated, but is being used in ${this.layoutName}`,
-            {
-              id: "discourse.plugin-connector.deprecated-arg",
-            }
-          );
-
-          return (this.deprecatedArgs || {})[key];
+          return deprecatedArgumentValue(deprecatedArgs[key], {
+            ...connectorInfo,
+            argumentName: key,
+          });
         })
       );
     });
@@ -56,7 +62,11 @@ export default Component.extend({
       }
     }
 
-    const merged = buildArgsWithDeprecations(args, deprecatedArgs);
+    const merged = buildArgsWithDeprecations(
+      args,
+      deprecatedArgs,
+      connectorInfo
+    );
     connectorClass?.setupComponent?.call(this, merged, this);
   },
 

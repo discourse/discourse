@@ -17,7 +17,7 @@ module PageObjects
       end
 
       def header
-        @header ||= PageObjects::Components::Chat::ThreadHeader.new(".c-routes-channel-thread")
+        @header ||= PageObjects::Components::Chat::ThreadHeader.new(".c-routes.--channel-thread")
       end
 
       def notifications_button

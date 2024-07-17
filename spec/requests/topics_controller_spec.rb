@@ -5031,6 +5031,26 @@ RSpec.describe TopicsController do
         expect(execute_at).to eq(updated_timestamp)
       end
     end
+
+    describe "changes slow mode" do
+      before { sign_in(admin) }
+
+      it "should create a staff log entry" do
+        put "/t/#{topic.id}/slow_mode.json", params: { seconds: "3600" }
+
+        log = UserHistory.last
+        expect(log.acting_user_id).to eq(admin.id)
+        expect(log.topic_id).to eq(topic.id)
+        expect(log.action).to eq(UserHistory.actions[:topic_slow_mode_set])
+
+        put "/t/#{topic.id}/slow_mode.json", params: { seconds: "0" }
+
+        log = UserHistory.last
+        expect(log.acting_user_id).to eq(admin.id)
+        expect(log.topic_id).to eq(topic.id)
+        expect(log.action).to eq(UserHistory.actions[:topic_slow_mode_removed])
+      end
+    end
   end
 
   describe "#invite" do

@@ -3,10 +3,10 @@
 module PageObjects
   module Components
     module Chat
-      class ChannelIndex < PageObjects::Components::Base
+      class ChannelsIndex < PageObjects::Components::Base
         attr_reader :context
 
-        SELECTOR = ".channels-list-container"
+        SELECTOR = ".c-drawer-routes.--channels"
 
         def initialize(context = nil)
           @context = context
@@ -15,6 +15,10 @@ module PageObjects
         def component
           return find(SELECTOR) if !@context
           find(context).find(SELECTOR)
+        end
+
+        def open_browse
+          component.find(".open-browse-page-btn").click
         end
 
         def open_channel(channel)

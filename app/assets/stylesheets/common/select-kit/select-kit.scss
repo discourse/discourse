@@ -112,6 +112,7 @@
       color: inherit;
       display: flex;
       outline: none;
+      min-width: 0;
 
       &:focus .d-icon-times {
         color: var(--danger);
@@ -124,6 +125,7 @@
       .name {
         display: inline-flex;
         gap: 0.5em;
+        min-width: 0;
         > .d-icon {
           margin-left: 0.5em;
           margin-right: 0;

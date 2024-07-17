@@ -14,7 +14,7 @@ export default class ChatRoutesChannel extends Component {
   }
 
   <template>
-    <div class="c-routes-channel">
+    <div class="c-routes --channel">
       <Navbar as |navbar|>
         {{#if this.site.mobileView}}
           <navbar.BackButton @route={{this.getChannelsRoute}} />
