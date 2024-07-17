@@ -1581,6 +1581,13 @@ vi:
     modal:
       close: "đóng"
       dismiss_error: "Loại bỏ lỗi"
+    form_kit:
+      reset: Cài lại
+      optional: tùy chọn
+      errors:
+        required: "Bắt buộc"
+        too_short:
+          other: "Phải ít nhất %{count} ký tự"
     close: "Đóng lại"
     logout: "Bạn đã đăng xuất"
     refresh: "Tải lại"
@@ -3127,26 +3134,16 @@ vi:
     pending_posts:
       label: "Đang treo"
       label_with_count: "Đang xử lý (%{count})"
-    posts_likes_MF: |
-      Chủ đề này có {count, plural, other {# trả lời}} {ratio, select,
-        low {với tỷ lệ like trên post cao}
-        med {với tỷ lệ like trên post rất cao}
-        high {với tỷ lệ like trên post cực cao}
-        other {}}
+    posters: "Người gửi"
     original_post: "Bài viết gốc"
     views: "Lượt xem"
-    sr_views: "Sắp xếp theo lượt xem"
     views_lowercase:
       other: "lượt xem"
     replies: "Trả lời"
-    sr_replies: "Sắp xếp theo câu trả lời"
     views_long:
       other: "chủ đề này đã được xem %{number} lần"
     activity: "Hoạt động"
-    sr_activity: "Sắp xếp theo hoạt động"
     likes: "Lượt thích"
-    sr_likes: "Sắp xếp theo lượt thích"
-    sr_op_likes: "Sắp xếp theo lượt thích bài đăng ban đầu"
     likes_lowercase:
       other: "lượt thích"
     users: "Người dùng"
@@ -3538,8 +3535,8 @@ vi:
       no_read_topics_body: "Khi bạn bắt đầu đọc các cuộc thảo luận, bạn sẽ thấy một danh sách ở đây. Để bắt đầu đọc, hãy tìm các chủ đề mà bạn quan tâm trong <a href='%{topUrl}'>Top</a> hoặc <a href='%{categoriesUrl}'>Danh mục</a> hoặc tìm kiếm theo từ khóa %{searchIcon}"
     no_group_messages_title: "Không tìm thấy tin nhắn nhóm nào"
     topic_entrance:
-      sr_jump_top_button: "Chuyển đến bài viết đầu tiên"
-      sr_jump_bottom_button: "Chuyển đến bài viết cuối cùng"
+      jump_top_button_title: "Chuyển đến bài viết đầu tiên"
+      jump_bottom_button_title: "Chuyển đến bài viết cuối cùng"
     fullscreen_table:
       expand_btn: "Mở rộng bảng"
     second_factor_auth:
@@ -5088,6 +5085,7 @@ vi:
         file_types_list:
           add_image_types: "Hình ảnh"
       badges:
+        status: Trạng thái
         title: Huy hiệu
         new_badge: Thêm huy hiệu
         new: Mới
@@ -5095,8 +5093,6 @@ vi:
         badge: Huy hiệu
         display_name: Tên Hiển thị
         description: Mô tả
-        long_description: Mô Tả Dài
-        badge_type: Kiểu huy hiệu
         badge_grouping: Nhóm
         badge_groupings:
           modal_title: Nhóm huy hiệu
@@ -5125,9 +5121,8 @@ vi:
         image: Hình ảnh
         graphic: Đồ họa
         icon_help: "Nhập tên biểu tượng Font Awesome (sử dụng tiền tố 'far-' cho các biểu tượng thông thường và 'fab-' cho các biểu tượng thương hiệu)"
-        image_help: "Tải lên hình ảnh sẽ ghi đè trường biểu tượng nếu cả hai đều được đặt."
         select_an_icon: "Chọn một biểu tượng"
-        upload_an_image: "Tải lên hình ảnh"
+        upload_an_image: "Tải lên một hình ảnh"
         read_only_setting_help: "Tùy chỉnh văn bản"
         query: Truy vấn huy hiệu (SQL)
         target_posts: Truy vấn bài viết mục tiêu

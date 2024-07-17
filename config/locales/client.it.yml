@@ -1887,6 +1887,11 @@ it:
     modal:
       close: "chiudi"
       dismiss_error: "Ignora errore"
+    form_kit:
+      reset: Annulla
+      optional: facoltativo
+      errors:
+        required: "Obbligatorie"
     close: "Chiudi"
     logout: "Sei stato disconnesso."
     refresh: "Aggiorna"
@@ -3702,29 +3707,19 @@ it:
     pending_posts:
       label: "In attesa"
       label_with_count: "In attesa (%{count})"
-    posts_likes_MF: |
-      Questo argomento ha {count, plural, one {# risposta} other {# risposte}} {ratio, select,
-        low {con un'alta percentuale di 'mi piace' sulle risposte}
-        med {con una percentuale molto alta di 'mi piace' sulle risposte}
-        high {con una percentuale estremamente alta di 'mi piace' sulle risposte}
-        other {}}
+    posters: "Partecipanti"
     latest_poster_link: "Profilo di %{username}, ultimo a pubblicare"
     original_post: "Messaggio Originale"
     views: "Visualizzazioni"
-    sr_views: "Ordina per visualizzazioni"
     views_lowercase:
       one: "visita"
       other: "visite"
     replies: "Risposte"
-    sr_replies: "Ordina per risposte"
     views_long:
       one: "questo argomento è stato visto una volta"
       other: "questo argomento è stato visto %{number} volte"
     activity: "Attività"
-    sr_activity: "Ordina per attività"
     likes: "Mi piace"
-    sr_likes: "Ordina per n° di \"mi piace\""
-    sr_op_likes: "Ordina per n° di \"mi piace\" al post originale"
     likes_lowercase:
       one: "mi piace"
       other: "mi piace"
@@ -4160,8 +4155,8 @@ it:
       no_read_topics_body: "Una volta che avrai iniziato a leggere discussioni, ne vedrai un elenco qui. Per cominciare a leggere, cerca argomenti di tuo interesse alle pagine <a href='%{topUrl}'>Popolari</a> o <a href='%{categoriesUrl}'>Categorie</a>; oppure effettua una ricerca per parola chiave %{searchIcon}"
     no_group_messages_title: "Nessun messaggio di gruppo trovato"
     topic_entrance:
-      sr_jump_top_button: "Vai al primo messaggio"
-      sr_jump_bottom_button: "Vai all'ultimo messaggio"
+      jump_top_button_title: "Vai al primo messaggio"
+      jump_bottom_button_title: "Vai all'ultimo messaggio"
     fullscreen_table:
       expand_btn: "Espandi Tabella"
       view_table: "Visualizza tabella"
@@ -6123,6 +6118,7 @@ it:
           add_types_title: "Consenti estensioni %{types}"
           add_types_toast: "%{types} tipi di file aggiunti"
       badges:
+        status: Stato
         title: Distintivi
         new_badge: Nuovo Distintivo
         new: Nuovo
@@ -6130,8 +6126,6 @@ it:
         badge: Distintivo
         display_name: Nome Visualizzato
         description: Descrizione
-        long_description: Descrizione Lunga
-        badge_type: Tipo Distintivo
         badge_grouping: Gruppo
         badge_groupings:
           modal_title: Raggruppamento Distintivi
@@ -6161,7 +6155,6 @@ it:
         image: Immagine
         graphic: Grafico
         icon_help: "Inserisci il nome di un'icona Font Awesome (usa il prefisso 'far-' per le icone Regular e 'fab-' per le icone Brands)"
-        image_help: "Il caricamento di un'immagine sovrascrive il campo icona se entrambi sono impostati."
         select_an_icon: "Seleziona un'icona"
         upload_an_image: "Carica un'immagine"
         read_only_setting_help: "Personalizza testo"

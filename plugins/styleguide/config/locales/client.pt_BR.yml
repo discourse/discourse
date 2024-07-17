@@ -34,8 +34,6 @@ pt_BR:
         icons:
           title: "Ícones"
           full_list: "Exibir a lista completa de ícones incríveis de fonte"
-        input_fields:
-          title: "Campos de entrada"
         buttons:
           title: "Botões"
         dropdowns:

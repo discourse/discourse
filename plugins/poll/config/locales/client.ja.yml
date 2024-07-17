@@ -67,6 +67,8 @@ ja:
         breakdown: "内訳"
         percentage: "割合"
         count: "票数"
+      ranked_choice:
+        none: "なし"
       options:
         label: "オプション"
       error_while_toggling_status: "この投票のステータスを切り替える際にエラーが発生しました。"

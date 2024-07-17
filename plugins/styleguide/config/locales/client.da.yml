@@ -27,8 +27,6 @@ da:
         icons:
           title: "Ikoner"
           full_list: "Se den fulde liste over Font Awesome Ikoner"
-        input_fields:
-          title: "Indtastningsfelter"
         buttons:
           title: "Knapper"
         dropdowns:

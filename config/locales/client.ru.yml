@@ -2067,6 +2067,11 @@ ru:
     modal:
       close: "закрыть"
       dismiss_error: "Отклонить ошибку"
+    form_kit:
+      reset: Сбросить
+      optional: опционально
+      errors:
+        required: "Обязательное"
     close: "Закрыть"
     logout: "Необходимо заново войти в систему."
     refresh: "Обновить"
@@ -4074,33 +4079,23 @@ ru:
     pending_posts:
       label: "Ожидают одобрения"
       label_with_count: "Ожидают одобрения (%{count})"
-    posts_likes_MF: |
-      В этой теме {count, plural, one {# ответ} few {# ответа} many {# ответов} other {# ответа}} {ratio, select,
-        low {с высоким рейтингом лайков}
-        med {с очень высоким рейтингом лайков}
-        high {с чрезвычайно высоким рейтингом лайков}
-        other {}}
+    posters: "Количество участников"
     latest_poster_link: "Профиль пользователя %{username}, последний автор"
     original_post: "Исходное сообщение"
     views: "Просм."
-    sr_views: "Сортировать по просмотрам"
     views_lowercase:
       one: "просмотр"
       few: "просмотра"
       many: "просмотров"
       other: "просмотра"
     replies: "Ответов"
-    sr_replies: "Сортировать по ответам"
     views_long:
       one: "Тема просмотрена %{count} раз"
       few: "Тема просмотрена %{count} раза"
       many: "Тема просмотрена %{count} раз"
       other: "Тема просмотрена %{count} раза"
     activity: "Активность"
-    sr_activity: "Сортировать по активности"
     likes: "Лайки"
-    sr_likes: "Сортировать по лайкам"
-    sr_op_likes: "Сортировать по лайкам первого сообщения"
     likes_lowercase:
       one: "лайк"
       few: "лайка"
@@ -4580,8 +4575,8 @@ ru:
       no_read_topics_body: "Когда вы начнете читать обсуждения, список читаемых тем появится здесь. Чтобы начать читать, поищите интересующие вас темы в разделе <a href='%{topUrl}'>Обсуждаемые</a>, в других <a href='%{categoriesUrl}'>категориях</a> форума либо выполните поиск по ключевому слову %{searchIcon}."
     no_group_messages_title: "Групповые сообщения не найдены"
     topic_entrance:
-      sr_jump_top_button: "Перейти к первому сообщению"
-      sr_jump_bottom_button: "Перейти к последнему сообщению"
+      jump_top_button_title: "Перейти к первому сообщению"
+      jump_bottom_button_title: "Перейти к последнему сообщению"
     fullscreen_table:
       expand_btn: "Развернуть таблицу"
       view_table: "Просмотреть таблицу"
@@ -6603,6 +6598,7 @@ ru:
           add_types_title: "Разрешить расширения %{types}"
           add_types_toast: "Добавлены типы файлов %{types}"
       badges:
+        status: Статус
         title: Награды
         new_badge: Новая награда
         new: Новая
@@ -6610,8 +6606,6 @@ ru:
         badge: Награда
         display_name: Отображаемое название
         description: Описание
-        long_description: Подробное описание
-        badge_type: Тип награды
         badge_grouping: Группа
         badge_groupings:
           modal_title: Группы наград
@@ -6641,8 +6635,7 @@ ru:
         image: Изображение
         graphic: Иконка награды
         icon_help: "Введите имя иконки из коллекции Font Awesome (используйте префикс «far-» для обычных значков и «fab-» для значков брендов)"
-        image_help: "Вместо иконки будет использоваться загруженное изображение, если используются обе настройки."
-        select_an_icon: "Выбрать значок"
+        select_an_icon: "Выбрать иконку"
         upload_an_image: "Загрузить изображение"
         read_only_setting_help: "Настроить текст"
         query: Выборка награды (SQL)

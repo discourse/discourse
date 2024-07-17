@@ -1507,6 +1507,11 @@ el:
     modal:
       close: "κλείσιμο"
       dismiss_error: "Παράβλεψη σφάλματος"
+    form_kit:
+      reset: Επαναφορά
+      optional: προεραιτικό
+      errors:
+        required: "Απαιτείται"
     close: "Κλείσιμο"
     logout: "Αποσυνδέθηκες."
     refresh: "Ανανέωση"
@@ -2879,19 +2884,17 @@ el:
     pending_posts:
       label: "Εκκρεμή"
       label_with_count: "Εκρεμείς (%{count})"
+    posters: "Συμμετέχοντες"
     original_post: "Αρχική Ανάρτηση"
     views: "Προβολές"
-    sr_views: "Ταξινόμηση κατά προβολές"
     views_lowercase:
       one: "προβολή"
       other: "προβολές"
     replies: "Απαντήσεις"
-    sr_replies: "Ταξινόμηση κατά απαντήσεις"
     views_long:
       one: "αυτό το νήμα έχει προβληθεί %{count} φορά"
       other: "αυτό το νήμα έχει προβληθεί %{number} φορές"
     activity: "Δραστηριότητα"
-    sr_activity: "Ταξινόμηση ανά δραστηριότητα"
     likes: "«Μου αρέσει»"
     likes_lowercase:
       one: "μου αρέσει"
@@ -3248,8 +3251,8 @@ el:
         leader: "αρχηγός"
     no_group_messages_title: "Δε βρέθηκαν ομαδικά μηνύματα"
     topic_entrance:
-      sr_jump_top_button: "Μετάβαση στην πρώτη δημοσίευση"
-      sr_jump_bottom_button: "Μετάβαση στην τελευταία δημοσίευση"
+      jump_top_button_title: "Μετάβαση στην πρώτη δημοσίευση"
+      jump_bottom_button_title: "Μετάβαση στην τελευταία δημοσίευση"
     fullscreen_table:
       expand_btn: "Ανάπτυξη Πίνακα"
     sidebar:
@@ -4648,6 +4651,7 @@ el:
         file_types_list:
           add_image_types: "Εικόνες"
       badges:
+        status: Κατάσταση
         title: Παράσημα
         new_badge: Νέο Παράσημο
         new: Νέο
@@ -4655,8 +4659,6 @@ el:
         badge: Παράσημο
         display_name: Όνομα που θα φαίνεται
         description: Περιγραφή
-        long_description: Μακρά Περιγραφή
-        badge_type: Τύπος Παράσημου
         badge_grouping: Ομάδα
         badge_groupings:
           modal_title: Ομαδοποίηση Παράσημων
@@ -4684,6 +4686,8 @@ el:
         icon: Σύμβολο
         image: Εικόνα
         icon_help: "Εισαγάγετε ένα όνομα εικονιδίου FontAwesome (χρησιμοποιήστε το πρόθεμα «far-» για κανονικά εικονίδια και «fab-» για εικονίδια επωνυμίας)"
+        select_an_icon: "Επιλέξτε ένα εικονίδιο"
+        upload_an_image: "Επιφορτώστε μια εικόνα"
         query: Ερώτηση παράσημου (SQL)
         target_posts: Το ερώτημα αφορά αναρτήσεις
         auto_revoke: Τρέξε καθημερινά το ερώτημα για την ανάκληση

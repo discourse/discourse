@@ -920,8 +920,6 @@ sv:
     pop3_authentication_error: "Det uppstod ett problem med de angivna POP3-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
     imap_authentication_error: "Det uppstod ett problem med de angivna IMAP-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
     imap_no_response_error: "Det uppstod ett fel vid kommunikation med IMAP-servern. %{message}"
-    smtp_authentication_error: "Det uppstod ett problem med de angivna SMTP-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
-    authentication_error_gmail_app_password: 'Programspecifikt lösenord krävs. Läs mer i <a target="_blank" href="https://support.google.com/accounts/answer/185833">den här Google Hjälp-artikeln</a>'
     smtp_server_busy_error: "SMTP-servern är för närvarande upptagen. Försök igen senare."
     smtp_unhandled_error: "Det uppstod ett ohanterat fel vid kommunikation med SMTP-servern. %{message}"
     imap_unhandled_error: "Det uppstod ett ohanterat fel vid kommunikation med IMAP-servern. %{message}"
@@ -1411,8 +1409,6 @@ sv:
       ram: "Din server körs med mindre än 1 GB minne. Det rekommenderas minst 1 GB minne."
       subfolder_ends_in_slash: "Inställningarna för dina undermappar är inte korrekt; DISCOURSE_RELATIV_URL_ROOT slutar med ett snedstreck."
       missing_mailgun_api_key: "Servern är konfigurerad att skicka e-post via Mailgun, men du har inte tillhandahållit en API-nyckel som ska användas för att verifiera webhook-meddelandena."
-      out_of_date_themes: "Uppdateringar finns tillgängliga för följande teman:"
-      unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
       google_analytics_version: "Din Discourse använder för närvarande Google Analytics 3, som inte längre kommer att stödjas efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Uppgradera till Google Analytics 4</a> nu för att fortsätta att få värdefulla insikter i, och analyser av, din webbplats prestanda."
     back_from_logster_text: "Tillbaka till webbplatsen"
   site_settings:

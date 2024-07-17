@@ -49,6 +49,8 @@ ca:
         age: "Tancat <strong>%{age}</strong>"
       breakdown:
         count: "Recompte"
+      ranked_choice:
+        none: "Cap"
       options:
         label: "Opcions"
       error_while_toggling_status: "Ho sentim. S'ha produït un error en canviar l'estat d'aquesta enquesta."

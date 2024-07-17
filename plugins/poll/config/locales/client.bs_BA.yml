@@ -58,6 +58,8 @@ bs_BA:
         breakdown: "Razloženo"
         percentage: "Procentualno"
         count: "Broj"
+      ranked_choice:
+        none: "Ništa"
       options:
         label: "Opcije"
       error_while_toggling_status: "Izvinjavamo se, pojavio se problem u prebacivanju statutusa ove ankete"

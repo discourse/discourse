@@ -2126,6 +2126,12 @@ he:
     modal:
       close: "סגירה"
       dismiss_error: "התעלמות מהשגיאה"
+    form_kit:
+      reset: איפוס
+      optional: רשות
+      errors:
+        required: "נדרש"
+        invalid_url: "חייבת להיות כתובת תקפה"
     close: "סגור"
     assets_changed_confirm: "האתר זכה לעדכון תכנה. למשוך את הגרסה העדכנית כעת?"
     logout: "יצאת מהמערכת."
@@ -4200,33 +4206,36 @@ he:
     pending_posts:
       label: "בהמתנה"
       label_with_count: "ממתינות (%{count})"
+    sr_topic_list_caption: רשימת נושאים, כותרות עמודות עם הכפתורים ניתנות לסידור.
     posts_likes_MF: |
-      לנושא זה יש {count, plural, one {תגובה אחת} two {שתי תגובות} other {# תגובות}} {ratio, select,
-        low {עם יחס גבוה של לייקים לפוסט}
-        med {עם יחס גבוה מאוד של לייקים לפוסט}
-        high {עם יחס גבוה במיוחד של לייקים לפוסט}
-        other {}}
+      { count, plural,
+          one {תגובה,}
+          two {שתי תגובות,}
+          many {# תגובות,}
+        other {# תגובות,}
+      }{ ratio, select,
+          low { יחס גבוה בין פוסטים ללייקים,}
+          med { יחס גבוה מאוד בין פוסטים ללייקים,}
+         high { יחס גבוה במיוחד בין פוסטים ללייקים,}
+        other {}
+      } קפיצה לפוסט הראשון או האחרון…
+    posters: "מפרסמים"
     latest_poster_link: "הפרופיל של %{username}, פרסום אחרון"
     original_post: "פוסט מקורי"
     views: "צפיות"
-    sr_views: "מיון לפי תצוגות"
     views_lowercase:
       one: "צפיה"
       two: "צפיות"
       many: "צפיות"
       other: "צפיות"
     replies: "תגובות"
-    sr_replies: "מיון לפי תגובות"
     views_long:
       one: "נושא זה נצפה פעם %{count}"
       two: "נושא זה נצפה %{number} פעמים"
       many: "נושא זה נצפה %{number} פעמים"
       other: "נושא זה נצפה %{number} פעמים"
     activity: "פעילות"
-    sr_activity: "מיון לפי פעילות"
     likes: "לייקים"
-    sr_likes: "מיון לפי לייקים"
-    sr_op_likes: "מיון לפי לייקים בפוסט המקורי"
     likes_lowercase:
       one: "לייק"
       two: "לייקים"
@@ -4717,8 +4726,10 @@ he:
       no_read_topics_body: "עם תחילת קריאת הדיונים, תופיע כאן רשימה. כדי להתחיל לקרוא, כדאי לחפש נושאים שמעניינים אותך תחת <a href='%{topUrl}'>עליונים</a> או <a href='%{categoriesUrl}'>קטגוריות</a> או לחפש אחר מילת מפתח %{searchIcon}"
     no_group_messages_title: "לא נמצאו הודעות קבוצתיות"
     topic_entrance:
-      sr_jump_top_button: "קפיצה לפוסט הראשון"
-      sr_jump_bottom_button: "קפיצה לפוסט האחרון"
+      sr_jump_top_button: "דילוג לפוסט הראשון - %{date}"
+      sr_jump_bottom_button: "דילוג לפוסט האחרון - %{date}"
+      jump_top_button_title: "קפיצה לפוסט הראשון"
+      jump_bottom_button_title: "קפיצה לפוסט האחרון"
     fullscreen_table:
       expand_btn: "הרחבת טבלה"
       view_table: "הצגת טבלה"
@@ -5447,7 +5458,11 @@ he:
           request: "בקשה"
           response: "תשובה"
           redeliver_confirm: "לשלוח מחדש את אותו התוכן?"
-          redeliver_failed_confirm: "לשלוח %{count} אירועי התליה מחדש?"
+          redeliver_failed_confirm:
+            one: "לשלוח אירוע התליה מחדש?"
+            two: "לשלוח %{count} אירועי התליה מחדש?"
+            many: "לשלוח %{count} אירועי התליה מחדש?"
+            other: "לשלוח %{count} אירועי התליה מחדש?"
           no_events_to_redeliver: "אין אירועים לשליחה מחדש."
           headers: "כותרות"
           payload: "תוכן"
@@ -6928,6 +6943,7 @@ he:
             prompt: "פעולה זו תשנה את מדיניות הסיסמאות שלך. היא תשפיע על כל המשתמשים שישנו את הסיסמה שלהם מעתה ואילך. להמשיך?"
             confirm: "כן, לעדכן את מדיניות הסיסמאות"
       badges:
+        status: מצב
         title: עיטורים
         new_badge: עיטור חדש
         new: חדש
@@ -6935,8 +6951,6 @@ he:
         badge: עיטור
         display_name: שם תצוגה
         description: תיאור
-        long_description: תיאור ארוך
-        badge_type: סוג עיטור
         badge_grouping: קבוצה
         badge_groupings:
           modal_title: קבוצות עיטורים
@@ -6966,7 +6980,6 @@ he:
         image: תמונה
         graphic: גרפיקה
         icon_help: "נא למלא שם של סמל מתוך Font Awesome (קידומת ‚far-‎’ לסמלים רגילים ו־‚fab-‎’ לסמלים ממותגים)"
-        image_help: "העלאת תמונה דורסת את שדה הסמל אם שני אלו הוגדרו."
         select_an_icon: "נא לבחור סמל"
         upload_an_image: "העלאת תמונה"
         read_only_setting_help: "התאמת טקסט אישית"

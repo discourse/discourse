@@ -202,6 +202,7 @@ zh_CN:
       maximum_staged_user_per_email_reached: "已达到每个电子邮件可以创建的暂存用户的上限。"
       no_subject: "（无主题）"
       no_body: "（无正文）"
+      attachments: "(附件)"
       missing_attachment: "（附件 %{filename} 缺失）"
       continuing_old_discussion:
         other: "从[%{title}](%{url})继续讨论，因为它是在超过 %{count} 天前创建的。"
@@ -962,8 +963,6 @@ zh_CN:
     pop3_authentication_error: "提供的 POP3 凭据存在问题，请检查用户名和密码并重试。"
     imap_authentication_error: "提供的 IMAP 凭据存在问题，请检查用户名和密码并重试。"
     imap_no_response_error: "与 IMAP 服务器通信时出错。%{message}"
-    smtp_authentication_error: "提供的 SMTP 凭据存在问题，请检查用户名和密码并重试。"
-    authentication_error_gmail_app_password: '需要应用程序特定的密码。请在<a target="_blank" href="https://support.google.com/accounts/answer/185833">此 Google 帮助文章</a>中了解详情'
     smtp_server_busy_error: "SMTP 服务器当前正忙，请稍后再试。"
     smtp_unhandled_error: "与 SMTP 服务器通信时出现未处理的错误。%{message}"
     imap_unhandled_error: "与 IMAP 服务器通信时发生未处理错误。%{message}"
@@ -1085,6 +1084,8 @@ zh_CN:
     errors:
       already_handled: "举报已被处理"
       wrong_move: "举报无法移动"
+      system: "系统举报无法更新或删除。"
+      used: "举报无法更新或删除，因为已被使用。"
   reports:
     default:
       labels:
@@ -1459,11 +1460,13 @@ zh_CN:
         qtt_like: 获赞
       description: "从各种用户收到赞最多的前 10 名用户。"
     topic_view_stats:
+      title: "话题查看统计"
       labels:
         topic: 话题
         logged_in_views: 登录用户
         anon_views: 匿名
         total_views: 总计
+      description: "在某一日期范围内浏览次数最多的前 100 个主题，包括登录和匿名浏览。可按类别进行筛选。"
   dashboard:
     problem:
       twitter_login: 'Twitter 登录目前似乎无法使用。请在 <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">网站设置</a>中检查凭据。'
@@ -1491,8 +1494,8 @@ zh_CN:
       poll_pop3_timeout: "连接到 POP3 服务器超时。无法检索收到的电子邮件。请检查您的 <a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a> 和服务提供商。"
       poll_pop3_auth_error: "连接 POP3 服务器失败，出现身份验证错误。请检查你的<a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>。"
       force_https: "你的网站正在使用 SSL。但在网站设置中，强制 https `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>`尚未启用。"
-      out_of_date_themes: "以下主题有更新："
-      unreachable_themes: "我们无法检查以下主题的更新："
+      out_of_date_themes: "以下主题有可用更新：%{themes_list}"
+      unreachable_themes: "我们无法检查以下主题的更新：%{themes_list}"
       watched_words: "'%{action}' 关注词的正则表达式无效。请检查您的<a href='%{base_path}/admin/customize/watched_words'>关注词设置</a>，或禁用“关注词正则表达式”站点设置。"
       google_analytics_version: "您的 Discourse 目前使用的是 Google Analytics（分析）3，2023 年 7 月后该版本将不受支持。立即<a href='https://meta.discourse.org/t/260498'>升级到Google Analytics（分析）4</a> ，以继续接收有价值的见解和分析，了解您的网站性能。"
       category_style_deprecated: "你的 Discourse 目前使用的是过时的分类样式，该样式将在 Discourse 3.2 最终测试版发布前移除。请参阅 \"<a href='https://meta.discourse.org/t/282441'>转至单一类别风格网站设置</a>\"，了解如何保留所选类别风格。"
@@ -1579,6 +1582,7 @@ zh_CN:
     force_custom_user_agent_hosts: "对所有请求使用自定义 Onebox 用户代理的主机。（对于限制用户代理访问的主机特别有用）。"
     max_oneboxes_per_post: "设置单个帖子中可包含的最大 onebox 数量。onebox 可预览帖子中的链接内容。"
     facebook_app_access_token: "从您的 Facebook 应用 ID 和密钥生成的令牌。用于生成 Instagram Onebox。"
+    github_onebox_access_tokens: "GitHub 组织或用户与 GitHub 访问令牌之间的映射，用于为私有存储库、提交、拉取请求、问题和文件内容生成 GitHub onebox。如果没有此映射，则只有公共 GitHub URL 会被 onebox 化。"
     logo: "您的站点左上角的徽标图片。使用高度为 120 且宽高比大于 3:1 的宽矩形图片。如果留空，将显示站点标题文本。"
     logo_small: "您的站点左上角的小徽标图片，向下滚动后可见。使用 120×120 的方形图片。如果留空，将显示首页标志符号。"
     digest_logo: "在您站点的电子邮件总结顶部使用的备用徽标图片。使用宽矩形图片。不要使用 SVG 图片。如果留空，则使用 `logo` 设置中的图片。"
@@ -1787,6 +1791,7 @@ zh_CN:
     enable_direct_s3_uploads: "允许直接分段上传到 Amazon S3，有关更多详细信息，请参阅 https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 。"
     backup_time_of_day: "备份的 UTC 时间。"
     backup_with_uploads: "在计划备份中包括上传。禁用此项只会备份数据库。"
+    backup_location: "存储备份的位置。重要：S3 要求在文件设置中输入有效的 S3 凭据。从本地更改为 S3 时，必须运行 `s3:ensure_cors_rules` rake 任务。"
     backup_gzip_compression_level_for_uploads: "用于压缩上传的 Gzip 压缩级别。"
     include_thumbnails_in_backups: "在备份中包含生成的缩略图。禁用此项将使备份更小，但需要在恢复后重新发布所有帖子。"
     active_user_rate_limit_secs: "更新 'last_seen_at' 字段的频率，以为秒单位"
@@ -2100,6 +2105,7 @@ zh_CN:
     hide_user_profiles_from_public: "禁用匿名用户的用户卡片、用户个人资料和用户目录。"
     allow_users_to_hide_profile: "允许用户隐藏他们的个人资料和状态"
     hide_user_activity_tab: "隐藏用户个人资料中的活动选项卡，管理员和自己除外。"
+    delete_associated_accounts_on_password_reset: "当用户更改密码时，删除用户关联账户。"
     allow_featured_topic_on_user_profiles: "允许用户在他们的用户卡片和个人资料上添加指向某个话题的链接。"
     show_inactive_accounts: "允许登录用户浏览闲置帐户的个人资料。"
     hide_suspension_reasons: "不在用户个人资料中公开显示封禁原因。"
@@ -2274,6 +2280,7 @@ zh_CN:
     tag_style: "定义网站上标签的视觉外观。通过此设置，你可以自定义标签在网站所有区域的视觉表现方式，从而增强布局的一致性和用户的可访问性。"
     pm_tags_allowed_for_groups: "允许所包含群组的成员为任何个人消息添加标签"
     min_trust_level_to_tag_topics: "为话题添加标签所需的最低信任级别"
+    tag_topic_allowed_groups: "允许给话题添加标签的群组。管理员和版主始终可以给话题添加标签。"
     suppress_overlapping_tags_in_list: "如果标签与话题标题中的字词完全匹配，则不显示标签"
     remove_muted_tags_from_latest: "不在最新话题列表中显示仅使用已被设为免打扰的标签标记的话题。"
     force_lowercase_tags: "强制所有新标签完全小写。"
@@ -2328,6 +2335,7 @@ zh_CN:
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     show_user_menu_avatars: "在用户菜单中显示用户头像"
     view_raw_email_allowed_groups: "如果帖子是通过接收的电子邮件创建的，则可以查看帖子原始电子邮件内容的组。这包括电子邮件标题和其他技术信息。"
+    experimental_flags_admin_page_enabled_groups: "实验性：从“管理员”页面的侧边栏中将“审核标记”链接移除"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"

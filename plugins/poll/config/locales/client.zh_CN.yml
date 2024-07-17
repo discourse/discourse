@@ -67,6 +67,8 @@ zh_CN:
         breakdown: "细分"
         percentage: "百分比"
         count: "计数"
+      ranked_choice:
+        none: "无"
       options:
         label: "选项"
       error_while_toggling_status: "抱歉，切换此投票的状态时出错。"

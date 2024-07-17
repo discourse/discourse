@@ -1452,6 +1452,11 @@ lv:
     modal:
       close: "aizvērt"
       dismiss_error: "Noraidīt kļūdu"
+    form_kit:
+      reset: Atlikt
+      optional: pēc izvēles
+      errors:
+        required: "Nepieciešams"
     close: "Aizvērt"
     logout: "Jūs izgājāt."
     refresh: "Pārlādēt"
@@ -2464,6 +2469,7 @@ lv:
     pending_posts:
       label: "Gaidošie"
       label_with_count: "Gaidošie (%{count})"
+    posters: "Plakāti"
     original_post: "Oriģinālais ieraksts"
     views: "Skatījumi"
     views_lowercase:
@@ -3677,6 +3683,7 @@ lv:
         file_types_list:
           add_image_types: "Attēli"
       badges:
+        status: Statuss
         title: Žetoni
         new_badge: Jauns Žetons
         new: Jauns
@@ -3684,8 +3691,6 @@ lv:
         badge: Žetons
         display_name: Rādīt Nosaukumu
         description: Apraksts
-        long_description: Garais Apraksts
-        badge_type: Žetona Tips
         badge_grouping: Grupa
         badge_groupings:
           modal_title: Žetonu Grupa
@@ -3713,6 +3718,8 @@ lv:
         disabled: atslēgt
         icon: Ikona
         image: Bilde
+        select_an_icon: "Izvēlieties ikonu"
+        upload_an_image: "Augšupielādēt attēlu"
         query: Vaicājums Žetons (SQL)
         target_posts: Vaicājums ir vērsts uz ierakstiem
         auto_revoke: Palaist anulēšanas vaicājumu ikdienā

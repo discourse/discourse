@@ -82,6 +82,8 @@ uk:
         breakdown: "Розбивка"
         percentage: "Відсоток"
         count: "Кількість"
+      ranked_choice:
+        none: "Немає"
       options:
         label: "Параметри"
       error_while_toggling_status: "На жаль, виникла помилка зміни статусу цього опитування."

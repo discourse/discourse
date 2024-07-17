@@ -1063,8 +1063,6 @@ zh_TW:
       ram: "伺服器記憶體少於 1GB，建議配置至少 1GB 記憶體"
       subfolder_ends_in_slash: "你的子目錄設置不正確；DISCOURSE_RELATIVE_URL_ROOT以斜杠結尾。"
       missing_mailgun_api_key: "伺服器設置使用 Mailgun 寄送電子郵件，但你尚未設置用來驗證 webhook 訊息的 API 鑰匙。"
-      out_of_date_themes: "以下主題可更新："
-      unreachable_themes: "我們無法檢查以下主題是否可更新："
       google_analytics_version: "您的 Discourse 目前正在使用 Google Analytics 3，將在 2023 年 7 月後失去支援。 <a href='https://meta.discourse.org/t/260498'>立即升級到 Google Analytics 4</a> 以繼續接收有關您網站性能的寶貴見解和分析。"
   site_settings:
     disabled: "停用"

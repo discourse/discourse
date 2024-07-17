@@ -1230,8 +1230,6 @@ gl:
       ram: "O seu servidor está a funcionar con menos de 1 GB de memoria total. Recoméndase polo menos unha memoria de 1 GB."
       subfolder_ends_in_slash: "A configuración do subcartafol non é correcta; o campo DISCOURSE_RELATIVE_URL_ROOT remata cunha barra."
       missing_mailgun_api_key: "O servidor está configurado para enviar correos electrónicos a través de Mailgun, pero non proporcionou unha chave API que se utiliza para verificar as mensaxes de webhook."
-      out_of_date_themes: "Hai actualizacións dispoñibles para os seguintes temas:"
-      unreachable_themes: "Non puidemos comprobar se hai actualizacións para os seguintes temas:"
   site_settings:
     disabled: "desactivado"
     display_local_time_in_user_card: "Amosar a hora local con base no fuso horario do usuario cando se abre a súa tarxeta."

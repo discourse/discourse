@@ -30,8 +30,6 @@ ro:
         icons:
           title: "Pictograme"
           full_list: "Vezi lista completă a pictogramelor din Font Awesome"
-        input_fields:
-          title: "Rubrici de completat"
         buttons:
           title: "Butoane"
         dropdowns:

@@ -994,6 +994,9 @@ sr:
         fixed: "Učitaj stranicu"
     modal:
       close: "zatvori"
+    form_kit:
+      errors:
+        required: "Potrebno"
     close: "Zatvori"
     logout: "Odjavljeni ste."
     refresh: "Osveži"
@@ -2554,7 +2557,6 @@ sr:
         badge: Značka
         display_name: Ime Prikaza
         description: Opis
-        badge_type: Tip Značke
         badge_grouping: Grupa
         badge_groupings:
           modal_title: Grupiranja Znački

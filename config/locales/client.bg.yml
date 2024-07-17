@@ -1811,6 +1811,11 @@ bg:
     modal:
       close: "затвори"
       dismiss_error: "Отхвърли грешката"
+    form_kit:
+      reset: Нулиране
+      optional: по избор
+      errors:
+        required: "Задъжителни"
     close: "Затвори"
     assets_changed_confirm: "Този сайт току-що получи софтуерна актуализация. Обновете до най-новата версия сега?"
     logout: "Вие бяхте отписан."
@@ -3119,6 +3124,7 @@ bg:
     pending_posts:
       label: "Чакащи"
       label_with_count: "Чакащи (%{count})"
+    posters: "Автори"
     original_post: "Оригинална публикация"
     views: "Прегледи"
     views_lowercase:
@@ -4349,6 +4355,7 @@ bg:
         file_types_list:
           add_image_types: "Изображения"
       badges:
+        status: Статус
         title: Значки
         new_badge: Нова значка
         new: Нова
@@ -4356,8 +4363,6 @@ bg:
         badge: Значка
         display_name: Име
         description: Описание
-        long_description: Дълго описание
-        badge_type: Тип на значката
         badge_grouping: Група
         badge_groupings:
           modal_title: Групи значки
@@ -4385,6 +4390,8 @@ bg:
         disabled: деактивирани
         icon: Икона
         image: Изображение
+        select_an_icon: "Изберете икона"
+        upload_an_image: "Качете изображение"
         query: Badge Query (SQL)
         target_posts: Запитване за насочени публикации
         auto_revoke: Пусни заявката за отмяна ежедневно

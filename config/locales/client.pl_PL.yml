@@ -1223,6 +1223,7 @@ pl_PL:
         ignore_option: "Zignorowany"
         add_ignored_user: "Dodaj…"
         mute_option: "Wyciszenie"
+        mute_option_title: "Nie będziesz otrzymywać żadnych powiadomień, wiadomości osobistych ani bezpośrednich wiadomości na czacie od tego użytkownika."
         normal_option: "Normalny"
         normal_option_title: "Zostaniesz powiadomiony, jeśli ten użytkownik odpowie ci, zacytuje lub o tobie wspomni."
       notification_schedule:
@@ -1244,6 +1245,8 @@ pl_PL:
       read_help: "Ostatnio przeczytane tematy"
       preferences:
         title: "Ustawienia"
+        profile:
+          enforced_required_fields: "Przed dalszym korzystaniem z tej witryny musisz podać dodatkowe informacje."
       feature_topic_on_profile:
         open_search: "Wybierz nowy temat"
         title: "Wybierz temat"
@@ -2117,6 +2120,12 @@ pl_PL:
     modal:
       close: "zamknij"
       dismiss_error: "Odrzuć błąd"
+    form_kit:
+      reset: Przywróć
+      optional: opcjonalnie
+      errors:
+        required: "Wymagane"
+        invalid_url: "Musi być prawidłowym adresem URL"
     close: "Zamknij"
     assets_changed_confirm: "Ta strona właśnie otrzymała aktualizację oprogramowania. Pobrać najnowszą wersję teraz?"
     logout: "Nastąpiło wylogowanie."
@@ -4190,33 +4199,23 @@ pl_PL:
     pending_posts:
       label: "Oczekujące"
       label_with_count: "Oczekujące (%{count})"
-    posts_likes_MF: |
-      Ten temat ma {count, plural, one {# odpowiedź} few {# odpowiedzi} many {# odpowiedzi} other {# odpowiedzi}} {ratio, select,
-        low {z wysokim stosunkiem polubień na post}
-        med {z bardzo wysokim stosunkiem polubień na post}
-        high {z ekstremalnie wysokim stosunkiem polubień na post}
-        other {}}
+    posters: "Napisali"
     latest_poster_link: "Profil %{username}, najnowszy postujący"
     original_post: "Oryginalny wpis"
     views: "Odsłony"
-    sr_views: "Sortuj według wyświetleń"
     views_lowercase:
       one: "odsłona"
       few: "odsłony"
       many: "odsłon"
       other: "odsłon"
     replies: "Odpowiedzi"
-    sr_replies: "Sortuj według odpowiedzi"
     views_long:
       one: "ten temat był przeglądany %{count} raz"
       few: "ten temat był przeglądany %{number} razy"
       many: "ten temat był przeglądany %{number} razy"
       other: "ten temat był przeglądany %{number} razy"
     activity: "Aktywność"
-    sr_activity: "Sortuj według aktywności"
     likes: "Polubienia"
-    sr_likes: "Sortuj według polubień"
-    sr_op_likes: "Sortuj według polubień oryginalnego postu"
     likes_lowercase:
       one: "polubienie"
       few: "polubienia"
@@ -4707,8 +4706,8 @@ pl_PL:
       no_read_topics_body: "Gdy zaczniesz czytać dyskusje, zobaczysz tutaj listę. Aby rozpocząć czytanie, poszukaj tematów, które Cię interesują w <a href='%{topUrl}'>popularnych</a> lub <a href='%{categoriesUrl}'>kategoriach</a> lub wyszukaj według słowa kluczowego %{searchIcon}"
     no_group_messages_title: "Nie znaleziono wiadomości grupowych"
     topic_entrance:
-      sr_jump_top_button: "Przejdź do pierwszego posta"
-      sr_jump_bottom_button: "Przejdź do ostatniego posta"
+      jump_top_button_title: "Przejdź do pierwszego posta"
+      jump_bottom_button_title: "Przejdź do ostatniego posta"
     fullscreen_table:
       expand_btn: "Rozwiń tabelę"
       view_table: "Zobacz tabelę"
@@ -5515,21 +5514,31 @@ pl_PL:
             Określ miasto, które będzie używane jako jurysdykcja do rozstrzygania wszelkich sporów związanych z korzystaniem z tego forum. Informacje te są zazwyczaj zawarte w dokumentach prawnych, takich jak warunki korzystania z forum.
           optional: "(opcjonalne)"
           update: "Aktualizuj"
+          toasts:
+            general_settings_saved: "Ustawienia ogólne zostały zapisane"
+            contact_information_saved: "Dane kontaktowe zostały zapisane"
+            your_organization_saved: "Twoja organizacja została zapisana"
           saved: "zapisano!"
         flags:
           header: "Flagi moderacji"
           description: "Opis"
           enabled: "Włączona?"
+          add: "Dodaj flagę"
           edit: "Edytuj"
+          back: "Powrót do flag"
           delete: "Usuń"
           delete_confirm: 'Czy na pewno chcesz usunąć "%{name}"?'
           form:
+            add_header: "Dodaj flagę"
+            edit_header: "Edytuj flagę"
             save: "Zapisz"
             name: "Nazwa"
             description: "Opis"
             topic: "tematy"
             post: "wpisy"
             chat_message: "wiadomości czatu"
+            edit_flag: "Edytuj flagę"
+            delete_flag: "Usuń flagę"
           more_options:
             title: "Więcej opcji"
             move_up: "Przenieś wyżej"
@@ -6816,6 +6825,7 @@ pl_PL:
           default:
             confirm: "Tak, jestem pewny/a"
       badges:
+        status: Status
         title: Odznaki
         new_badge: Nowa odznaka
         new: Nowa
@@ -6823,8 +6833,6 @@ pl_PL:
         badge: Odznaka
         display_name: Wyświetlana nazwa
         description: Opis
-        long_description: Długi opis
-        badge_type: Typ odznaki
         badge_grouping: Grupa
         badge_groupings:
           modal_title: Grupy odznak
@@ -6854,9 +6862,8 @@ pl_PL:
         image: Grafika
         graphic: Grafika
         icon_help: "Wprowadź nazwę ikony Font Awesome (użyj prefiksu \"far-\" dla zwykłych ikon i \"fab-\" dla ikon marek)"
-        image_help: "Przesyłanie obrazu zastępuje pole ikony, jeśli oba są ustawione."
         select_an_icon: "Wybierz ikonę"
-        upload_an_image: "Prześlij obrazek"
+        upload_an_image: "Prześlij obraz"
         read_only_setting_help: "Dostosuj tekst"
         query: Zapytanie odznaki (SQL)
         target_posts: Wpisy powiązane z odznaką

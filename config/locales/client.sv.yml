@@ -1897,6 +1897,12 @@ sv:
     modal:
       close: "stäng"
       dismiss_error: "Avfärda fel"
+    form_kit:
+      reset: Återställ
+      optional: valfritt
+      errors:
+        required: "Krävs"
+        invalid_url: "Måste vara en giltig URL"
     close: "Stäng"
     logout: "Du loggades ut."
     refresh: "Uppdatera"
@@ -3723,29 +3729,19 @@ sv:
     pending_posts:
       label: "Väntande"
       label_with_count: "Väntande (%{count})"
-    posts_likes_MF: |
-      Detta ämne har {count, plural, one {# svar} other {# svar}} {ratio, select,
-        low {med ett högt förhållande mellan gillningar/inlägg}
-        med {med ett mycket högt förhållande mellan gillningar/inlägg}
-        high {med ett extremt högt förhållande mellan gillningar/inlägg}
-        other {}}
+    posters: "Inläggsförfattare"
     latest_poster_link: "%{username}:s profil, senaste avsändare"
     original_post: "Originalinlägg"
     views: "Visningar"
-    sr_views: "Sortera efter vyer"
     views_lowercase:
       one: "visning"
       other: "visningar"
     replies: "Svar"
-    sr_replies: "Sortera efter svar"
     views_long:
       one: "Detta ämnet har visats %{count} gång"
       other: "Detta ämne har visats %{number} gånger"
     activity: "Aktivitet"
-    sr_activity: "Sortera efter aktivitet"
     likes: "Gillningar"
-    sr_likes: "Sortera efter gillningar"
-    sr_op_likes: "Sortera efter originalinläggets gillningar"
     likes_lowercase:
       one: "gillar"
       other: "gillar"
@@ -4185,8 +4181,8 @@ sv:
       no_read_topics_body: "När du börjar läsa diskussioner ser du en lista här. Börja läsa genom att leta efter ämnen som du tycker är intressanta i <a href='%{topUrl}'>Topp</a> eller <a href='%{categoriesUrl}'>Kategorier</a> eller sök efter sökord %{searchIcon}"
     no_group_messages_title: "Inga gruppmeddelanden hittades"
     topic_entrance:
-      sr_jump_top_button: "Hoppa till första inlägget"
-      sr_jump_bottom_button: "Hoppa till sista inlägget"
+      jump_top_button_title: "Hoppa till första inlägget"
+      jump_bottom_button_title: "Hoppa till sista inlägget"
     fullscreen_table:
       expand_btn: "Expandera tabell"
       view_table: "Visa tabell"
@@ -6154,6 +6150,7 @@ sv:
           add_types_title: "Tillåt tillägg %{types}"
           add_types_toast: "%{types} filtyper har lagts till"
       badges:
+        status: Status
         title: Utmärkelser
         new_badge: Ny utmärkelse
         new: Ny
@@ -6161,8 +6158,6 @@ sv:
         badge: Utmärkelse
         display_name: Visa namn
         description: Beskrivning
-        long_description: Lång beskrivning
-        badge_type: Utmärkelsetyp
         badge_grouping: Grupp
         badge_groupings:
           modal_title: Utmärkelsegrupper
@@ -6192,9 +6187,8 @@ sv:
         image: Bild
         graphic: Grafik
         icon_help: "Ange ett FA-ikonnamn (använd prefix 'far-' för reguljära ikoner samt 'fab-' för varumärkesikoner)"
-        image_help: "Uppladdning av en bild åsidosätter ikonfältet om båda är inställda."
         select_an_icon: "Välj en ikon"
-        upload_an_image: "Ladda upp en bild"
+        upload_an_image: "Infoga bild"
         read_only_setting_help: "Anpassa text"
         query: Utmärkelsesökning (SQL)
         target_posts: Sök målets inlägg

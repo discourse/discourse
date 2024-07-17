@@ -221,6 +221,7 @@ de:
       maximum_staged_user_per_email_reached: "Maximale Anzahl vorbereiteter Benutzer erreicht, die per E-Mail erstellt wurden."
       no_subject: "(kein Betreff)"
       no_body: "(kein Inhalt)"
+      attachments: "(Anhänge)"
       missing_attachment: "(Anhang %{filename} fehlt)"
       continuing_old_discussion:
         one: "Fortsetzung der Diskussion von [%{title}](%{url}), da vor mehr als %{count} Tag erstellt."
@@ -309,7 +310,7 @@ de:
     site_settings:
       invalid_site_setting: "Es ist keine Einstellung mit dem Namen „%{name}“ vorhanden"
       invalid_category_id: "Du hast eine Kategorie angegeben, die nicht existiert"
-      site_setting_is_hidden: "Du darfst versteckten Einstellungen nicht ändern"
+      site_setting_is_hidden: "Du darfst versteckte Einstellungen nicht ändern"
       site_setting_is_unconfigurable: "Du darfst keine unkonfigurierbaren Einstellungen ändern"
       invalid_choice:
         one: "„%{name}“ ist eine ungültige Option."
@@ -1035,8 +1036,7 @@ de:
     pop3_authentication_error: "Es gab ein Problem mit den bereitgestellten POP3-Anmeldedaten, überprüfe bitte den Benutzernamen und das Passwort und versuche es erneut."
     imap_authentication_error: "Es gab ein Problem mit den bereitgestellten IMAP-Anmeldedaten, überprüfe bitte den Benutzernamen und das Passwort und versuche es erneut."
     imap_no_response_error: "Bei der Kommunikation mit dem IMAP-Server ist ein Fehler aufgetreten. %{message}"
-    smtp_authentication_error: "Es gab ein Problem mit den bereitgestellten SMTP-Anmeldedaten, überprüfe bitte den Benutzernamen und das Passwort und versuche es erneut."
-    authentication_error_gmail_app_password: 'Anwendungsspezifisches Passwort erforderlich. Erfahre mehr in <a target="_blank" href="https://support.google.com/accounts/answer/185833">diesem Google-Hilfeartikel</a>'
+    smtp_authentication_error: "Es gab ein Problem mit den bereitgestellten SMTP-Anmeldedaten, überprüfe bitte den Benutzernamen und das Passwort und versuche es erneut. %{message}"
     smtp_server_busy_error: "Der SMTP-Server ist derzeit ausgelastet, versuche es später erneut."
     smtp_unhandled_error: "Es gab einen unbehandelten Fehler bei der Kommunikation mit dem SMTP-Server. %{message}"
     imap_unhandled_error: "Es gab einen unbehandelten Fehler bei der Kommunikation mit dem IMAP-Server. %{message}"
@@ -1569,8 +1569,8 @@ de:
       poll_pop3_timeout: "Die Verbindung zum POP3-Server schlägt mit einer Zeitüberschreitung fehl. Eingehende E-Mails konnten nicht abgerufen werden. Überprüfe deine <a href='%{base_path}/admin/site_settings/category/email'>POP3-Einstellungen</a>."
       poll_pop3_auth_error: "Die Verbindung zum POP3-Server schlägt mit einem Authentifizierungsfehler fehl. Überprüfe deine <a href='%{base_path}/admin/site_settings/category/email'>POP3-Einstellungen</a>."
       force_https: "Deine Website verwendet SSL. Aber <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>`force_https`</a> ist in den Einstellungen deiner Website noch nicht aktiviert."
-      out_of_date_themes: "Updates sind für die folgenden Themes verfügbar:"
-      unreachable_themes: "Wir konnten die folgenden Themes nicht auf Updates prüfen:"
+      out_of_date_themes: "Updates sind für die folgenden Themes verfügbar: %{themes_list}"
+      unreachable_themes: "Wir konnten die folgenden Themes nicht auf Updates prüfen: %{themes_list}"
       watched_words: "Der reguläre Ausdruck für %{action} überwachte Wörter ist ungültig. Bitte überprüfe deine <a href='%{base_path}/admin/customize/watched_words'>Einstellungen für überwachte Wörter</a> oder deaktiviere die Website-Einstellung „watched words regular expressions“."
       google_analytics_version: "Dein Discourse verwendet derzeit Google Analytics 3, das ab Juli 2023 nicht mehr unterstützt wird. <a href='https://meta.discourse.org/t/260498'>Aktualisiere jetzt auf Google Analytics 4</a>, um weiterhin wertvolle Einblicke und Analysen zur Leistung deiner Website zu erhalten."
       category_style_deprecated: "Dein Discourse verwendet zurzeit einen veralteten Kategoriestil, der vor der endgültigen Beta-Version von Discourse 3.2 entfernt wird. Wie du deinen gewählten Kategoriestil beibehalten kannst, erfährst du unter <a href='https://meta.discourse.org/t/282441'>Umstellung auf einen einzigen Kategoriestil (Website-Einstellung)</a> ."
@@ -1657,6 +1657,7 @@ de:
     force_custom_user_agent_hosts: "Hosts, bei denen der spezifische Onebox-Useragent für alle Anfragen genutzt wird. (Besonders hilfreich bei Hosts, die Zugriffe per Useragent limitieren.)"
     max_oneboxes_per_post: "Lege die maximale Anzahl von Oneboxen fest, die in einem Beitrag enthalten sein können. Oneboxes bieten eine Vorschau der verlinkten Inhalte im Beitrag."
     facebook_app_access_token: "Ein Token, das aus deiner Facebook-App-ID und deinem Geheimnis generiert wird. Wird verwendet, um Instagram-Oneboxes zu generieren."
+    github_onebox_access_tokens: "Eine Zuordnung einer GitHub-Organisation oder eines GitHub-Benutzers zu einem GitHub-Zugriffs-Token, der verwendet wird, um GitHub-Oneboxen für private Repos, Commits, Pull Requests, Issues und Dateiinhalte zu erzeugen. Ohne dieses Token werden nur öffentliche GitHub-URLs in eine Onebox umgewandelt."
     logo: "Das Logo oben links auf deiner Website. Verwende ein breites rechteckiges Bild mit einer Höhe von 120 Pixeln und einem Seitenverhältnis von mindestens 3:1. Wenn leer, wird die Website-Überschrift angezeigt."
     logo_small: "Kleine Logo-Grafik oben links auf der Website, die beim Herunterscrollen angezeigt wird. Verwende ein quadratisches Bild (120 × 120). Falls leer, wird ein „Home“-Zeichen angezeigt."
     digest_logo: "Das alternative Logo oben in den E-Mail-Zusammenfassungen deiner Website. Verwende ein breites rechteckiges Bild. Verwende kein SVG-Bild. Wenn leer, wird das Bild aus der `logo`-Einstellung verwendet."
@@ -2409,6 +2410,7 @@ de:
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     view_raw_email_allowed_groups: "Gruppen, die den unformatierten E-Mail-Inhalt eines Beitrags einsehen können, wenn dieser durch eine eingehende E-Mail erstellt wurde. Dazu gehören E-Mail-Kopfzeilen und andere technische Informationen."
+    experimental_flags_admin_page_enabled_groups: "EXPERIMENTELL: Entferne den Link Meldungsgründe aus der Admin-Seitenleiste."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."

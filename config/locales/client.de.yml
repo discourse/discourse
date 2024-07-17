@@ -1942,6 +1942,24 @@ de:
     modal:
       close: "schließen"
       dismiss_error: "Fehler ignorieren"
+    form_kit:
+      reset: Zurücksetzen
+      optional: optional
+      errors_summary_title: "Dieses Formular enthält Fehler:"
+      dirty_form: "\"Du hast deine Änderungen nicht gespeichert! Bist du sicher, dass du die Seite verlassen möchtest?\""
+      errors:
+        required: "Erforderlich"
+        invalid_url: "Muss eine gültige URL sein"
+        not_accepted: "Muss akzeptiert werden"
+        not_a_number: "Muss eine Zahl sein"
+        too_high: "Darf höchstens %{count} sein"
+        too_low: "Muss mindestens %{count} sein."
+        too_long:
+          one: "Darf maximal %{count} Zeichen lang sein"
+          other: "Darf maximal %{count} Zeichen lang sein"
+        too_short:
+          one: "Muss mindestens %{count} Zeichen lang sein"
+          other: "Muss mindestens %{count} Zeichen lang sein"
     close: "Schließen"
     assets_changed_confirm: "Diese Website hat gerade ein Software-Update erhalten. Jetzt die neueste Version abrufen?"
     logout: "Du wurdest abgemeldet."
@@ -2842,7 +2860,7 @@ de:
         category: "Das waren alle Themen in der Kategorie „%{category}“."
         tag: "Das waren alle Themen mit dem Schlagwort „%{tag}“."
         top: "Das waren alle angesagten Themen."
-        hot: "Es gibt keine heißen Themen mehr."
+        hot: "Das waren alle heißen Themen."
         bookmarks: "Das waren alle Themen, die du mit einem Lesezeichen versehen hast."
         filter: "Es gibt keine weiteren Themen."
     topic_bulk_actions:
@@ -3824,29 +3842,30 @@ de:
     pending_posts:
       label: "Ausstehend"
       label_with_count: "Ausstehend (%{count})"
+    sr_topic_list_caption: Themenliste, Spaltenüberschriften mit Schaltflächen sind sortierbar.
     posts_likes_MF: |
-      Dieses Thema hat {count, plural, one {# Antwort} other {# Antworten}} {ratio, select,
-        low {mit einem hohen Verhältnis von „Gefällt mir“ zu Beiträgen}
-        med {mit einem sehr hohen Verhältnis von „Gefällt mir“ zu Beiträgen}
-        high {mit einem extrem hohen Verhältnis von „Gefällt mir“ zu Beiträgen}
-        other {}}
+      {count, plural,
+          one {# Antwort,}
+       other {# Antworten,}
+      }{ratio, select,
+              low { mit einem hohen Verhältnis von „Gefällt mir“ zu Beiträgen,}
+              med { mit einem sehr hohen Verhältnis von „Gefällt mir“ zu Beiträgen,}
+              high { mit einem extrem hohen Verhältnis von „Gefällt mir“ zu Beiträgen,}
+              other {}
+      } springe zum ersten oder letzten Beitrag...
+    posters: "Beitragende"
     latest_poster_link: "Profil von %{username}, neuester Beitragender"
     original_post: "Original-Beitrag"
     views: "Aufrufe"
-    sr_views: "Nach Aufrufen sortieren"
     views_lowercase:
       one: "Aufruf"
       other: "Aufrufe"
     replies: "Antworten"
-    sr_replies: "Nach Antworten sortieren"
     views_long:
       one: "dieses Thema wurde %{count}-mal betrachtet"
       other: "dieses Thema wurde %{count}-mal betrachtet"
     activity: "Aktivität"
-    sr_activity: "Nach Aktivität sortieren"
     likes: "„Gefällt mir“"
-    sr_likes: "Nach „Gefällt mir“ sortieren"
-    sr_op_likes: "Nach „Gefällt mir“ des Originalbeitrags sortieren"
     likes_lowercase:
       one: "„Gefällt mir“"
       other: "„Gefällt mir“"
@@ -4293,8 +4312,10 @@ de:
       no_read_topics_body: "Sobald du mit dem Lesen von Diskussionen beginnst, siehst du hier eine Liste. Zum Lesen suche in <a href='%{topUrl}'>Top</a> oder <a href='%{categoriesUrl}'>Kategorien</a> nach Themen, die dich interessieren, oder suche nach einem Schlüsselwort %{searchIcon}"
     no_group_messages_title: "Keine Gruppennachrichten gefunden"
     topic_entrance:
-      sr_jump_top_button: "Zum ersten Beitrag springen"
-      sr_jump_bottom_button: "Zum letzten Beitrag springen"
+      sr_jump_top_button: "Zum ersten Beitrag springen - %{date}"
+      sr_jump_bottom_button: "Zum letzten Beitrag springen - %{date}"
+      jump_top_button_title: "Zum ersten Beitrag springen"
+      jump_bottom_button_title: "Zum letzten Beitrag springen"
     fullscreen_table:
       expand_btn: "Tabelle erweitern"
       view_table: "Tabelle ansehen"
@@ -4987,7 +5008,9 @@ de:
           request: "Anfrage"
           response: "Antwort"
           redeliver_confirm: "Bist du sicher, dass du denselben Payload noch einmal übertragen möchtest?"
-          redeliver_failed_confirm: "Bist du dir sicher, dass du die %{count} Webhook-Ereignisse erneut zustellen willst?"
+          redeliver_failed_confirm:
+            one: "Bist du dir sicher, dass du %{count} Webhook-Ereignis erneut zustellen willst?"
+            other: "Bist du dir sicher, dass du %{count} Webhook-Ereignisse erneut zustellen willst?"
           no_events_to_redeliver: "Keine erneut zu übermittelnden Ereignisse."
           headers: "Headers"
           payload: "Payload"
@@ -5803,6 +5826,8 @@ de:
             create_flag: "Meldungsgrund erstellen"
             update_flag: "Meldungsgrund aktualisieren"
             delete_flag: "Meldungsgrund löschen"
+            topic_slow_mode_set: "langsamen Modus aktivieren"
+            topic_slow_mode_removed: "langsamen Modus deaktivieren"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."
@@ -6438,6 +6463,8 @@ de:
             prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Nutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
             confirm: "Ja, Passwortrichtlinie aktualisieren"
       badges:
+        disable_system: Dieses Abzeichen ist ein Systemabzeichen und kann nicht deaktiviert und/oder gelöscht werden.
+        status: Status
         title: Abzeichen
         new_badge: Neues Abzeichen
         new: Neu
@@ -6475,8 +6502,8 @@ de:
         icon: Symbol
         image: Bild
         graphic: Grafik
+        icon_or_image: Ein Abzeichen erfordert ein Symbol oder ein Bild
         icon_help: "Gib einen „Font Awesome“-Symbolnamen ein (benutze für reguläre Symbole das Präfix „far-“ und für Markensymbole „fab-“)"
-        image_help: "Das Hochladen eines Bildes überschreibt das Symbolfeld, wenn beide gesetzt sind."
         select_an_icon: "Wähle ein Symbol"
         upload_an_image: "Lade ein Bild hoch"
         read_only_setting_help: "Text anpassen"

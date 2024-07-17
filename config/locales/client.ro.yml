@@ -1614,6 +1614,12 @@ ro:
         fixed: "Încărcare pagină"
     modal:
       close: "Închide"
+    form_kit:
+      reset: Resetare
+      optional: opțional
+      errors:
+        required: "Necesare"
+        invalid_url: "Trebuie să fie un URL valid"
     close: "Închide"
     logout: "Aţi fost deconectat."
     refresh: "Reîmprospătează"
@@ -2814,6 +2820,7 @@ ro:
     pending_posts:
       label: "În așteptare"
       label_with_count: "În așteptare: (%{count})"
+    posters: "Autori"
     original_post: "Postare inițială"
     views: "Vizualizări"
     views_lowercase:
@@ -4326,6 +4333,7 @@ ro:
           add_types_title: "Permite extensiile %{types}"
           add_types_toast: "Tipurile de fișier %{types} au fost adăugate"
       badges:
+        status: Stare
         title: Insigne
         new_badge: Ecuson nou
         new: Nou
@@ -4333,8 +4341,6 @@ ro:
         badge: Insignă
         display_name: Afișează numele
         description: Descriere
-        long_description: Descriere lungă
-        badge_type: Tipul ecusonului
         badge_grouping: Grup
         badge_groupings:
           modal_title: Grupuri ecusoane
@@ -4362,6 +4368,8 @@ ro:
         disabled: dezactivat
         icon: Pictogramă
         image: Imagine
+        select_an_icon: "Alege o pictogramă"
+        upload_an_image: "Încarcă o imagine"
         query: Interogare ecusoane (SQL)
         target_posts: Interogarea mesajelor utilizatorilor-ţintă
         auto_revoke: Pornește verificarea de revocare în fiecare zi
