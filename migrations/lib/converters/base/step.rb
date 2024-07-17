@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Converters::Base
-  class BasicStep
+  class Step
     IntermediateDB = Migrations::Database::IntermediateDB
 
     attr_accessor :settings, :output_db
