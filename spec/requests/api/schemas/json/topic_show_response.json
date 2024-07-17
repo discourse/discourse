@@ -396,6 +396,13 @@
             "additionalProperties": false,
             "properties": {}
           },
+          "tags_groups": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array"
+            },
+            "properties": {}
+          },
           "like_count": {
             "type": "integer"
           },
@@ -481,6 +488,7 @@
           "liked",
           "tags",
           "tags_descriptions",
+          "tags_groups",
           "like_count",
           "views",
           "category_id",
@@ -496,6 +504,13 @@
     "tags_descriptions": {
       "type": "object",
       "additionalProperties": false,
+      "properties": {}
+    },
+    "tags_groups": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array"
+      },
       "properties": {}
     },
     "id": {
@@ -923,6 +938,7 @@
     "suggested_topics",
     "tags",
     "tags_descriptions",
+    "tags_groups",
     "id",
     "title",
     "fancy_title",

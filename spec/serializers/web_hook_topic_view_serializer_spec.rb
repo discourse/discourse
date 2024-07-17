@@ -44,6 +44,7 @@ RSpec.describe WebHookTopicViewSerializer do
       last_poster
       tags
       tags_descriptions
+      tags_groups
       thumbnails
     ]
 
