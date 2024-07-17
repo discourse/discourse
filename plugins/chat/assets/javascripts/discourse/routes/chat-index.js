@@ -32,12 +32,12 @@ export default class ChatIndexRoute extends DiscourseRoute {
     // on mobile redirect user to the first footer tab route
     if (this.site.mobileView) {
       if (
-        this.siteSettings.chat_preferred_mobile_index === "my_threads" &&
+        this.siteSettings.chat_preferred_index === "my_threads" &&
         this.hasThreads
       ) {
         return this.router.replaceWith("chat.threads");
       } else if (
-        this.siteSettings.chat_preferred_mobile_index === "direct_messages" &&
+        this.siteSettings.chat_preferred_index === "direct_messages" &&
         this.hasDirectMessages
       ) {
         return this.router.replaceWith("chat.direct-messages");
