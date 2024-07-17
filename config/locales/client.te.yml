@@ -1898,6 +1898,12 @@ te:
     modal:
       close: "మూసివేయండి"
       dismiss_error: "లోపాన్ని తీసివేయండి"
+    form_kit:
+      reset: రీసెట్ చేయండి
+      optional: ఐచ్ఛికం
+      errors:
+        required: "అవసరం"
+        invalid_url: "తప్పక చెల్లుబాటు అయ్యే URL అయి ఉండాలి"
     close: "మూసివేయండి"
     logout: "మీరు లాగవుట్ అయ్యారు."
     refresh: "రిఫ్రెష్ చేయండి"
@@ -3768,33 +3774,19 @@ te:
     pending_posts:
       label: "పెండింగు"
       label_with_count: "పెండింగ్‌లో ఉన్నాయి (%{count})"
-    posts_likes_MF: |
-      ఈ విషయానికి { count, plural,
-          one {# ప్రత్యుత్తరం ఉంది,}
-        other {# ప్రత్యుత్తరాలు ఉన్నాయి,}
-      } { ratio, select,
-          low {పోస్ట్‌ల కంటే ఎక్కువ లైక్‌లతో}
-          med {పోస్ట్‌ల కంటే చాలా ఎక్కువ లైక్‌లతో}
-         high {పోస్ట్‌ల కంటే చాలా చాలా ఎక్కువ లైక్‌లతో}
-        other {}
-      }
+    posters: "పోస్టర్లు"
     latest_poster_link: "%{username}యొక్క ప్రొఫైల్, తాజా పోస్టర్"
     original_post: "అసలు పోస్ట్"
     views: "వీక్షణలు"
-    sr_views: "వీక్షణాల ద్వారా క్రమబద్ధీకరించండి"
     views_lowercase:
       one: "వీక్షణ"
       other: "వీక్షణలు"
     replies: "ప్రత్యుత్తరాలు"
-    sr_replies: "ప్రత్యుత్తరాల ద్వారా క్రమబద్ధీకరించండి"
     views_long:
       one: "ఈ విషయం %{count} సారి వీక్షించబడింది"
       other: "ఈ విషయం %{count} సార్లు వీక్షించబడింది"
     activity: "కలాపం"
-    sr_activity: "కార్యాచరణ ఆధారంగా క్రమబద్ధీకరించండి"
     likes: "ఇష్టాలు"
-    sr_likes: "ఇష్టాల ద్వారా క్రమబద్ధీకరించండి"
-    sr_op_likes: "అసలు పోస్ట్ ఇష్టాల ద్వారా క్రమబద్ధీకరించండి"
     likes_lowercase:
       one: "ఇష్టం"
       other: "ఇష్టాలు"
@@ -4235,8 +4227,8 @@ te:
       no_read_topics_body: "మీరు చర్చలను చదవడం ప్రారంభించిన తర్వాత, మీకు ఇక్కడ జాబితా కనిపిస్తుంది. చదవడం ప్రారంభించడానికి, <a href='%{topUrl}'>అగ్ర</a> లేదా <a href='%{categoriesUrl}'>వర్గాల్లో</a> లేదా కీలకపదం కోసం శోధించండి %{searchIcon}."
     no_group_messages_title: "సమూహ సందేశాలు ఏవీ కనుగొనబడలేదు"
     topic_entrance:
-      sr_jump_top_button: "మొదటి పోస్ట్‌కి వెళ్లండి"
-      sr_jump_bottom_button: "చివరి పోస్ట్‌కి వెళ్లండి"
+      jump_top_button_title: "మొదటి పోస్ట్‌కి వెళ్లండి"
+      jump_bottom_button_title: "చివరి పోస్ట్‌కి వెళ్లండి"
     fullscreen_table:
       expand_btn: "పట్టికను విస్తరించండి"
       view_table: "పట్టికను వీక్షించండి"
@@ -6217,6 +6209,7 @@ te:
           add_types_title: "పొడిగింపులను అనుమతించండి %{types}"
           add_types_toast: "%{types} ఫైల్ రకాలు జోడించబడ్డాయి"
       badges:
+        status: స్థితి
         title: బ్యాడ్జీలు
         new_badge: కొత్త బ్యాడ్జీ
         new: కొత్త
@@ -6224,8 +6217,6 @@ te:
         badge: బ్యాడ్జ్
         display_name: ప్రదర్శన పేరు
         description: వివరణ
-        long_description: సుదీర్ఘ వివరణ
-        badge_type: బ్యాడ్జ్ రకం
         badge_grouping: సమూహం
         badge_groupings:
           modal_title: బ్యాడ్జ్ సమూహాలు
@@ -6255,7 +6246,6 @@ te:
         image: చిత్రం
         graphic: గ్రాఫిక్
         icon_help: "Font Awesome చిహ్నం పేరును నమోదు చేయండి (సాధారణ చిహ్నాల కోసం 'far-' మరియు బ్రాండ్ చిహ్నాల కోసం 'fab-' ఉపసర్గ ఉపయోగించండి)"
-        image_help: "రెండూ సెట్ చేయబడితే, చిత్రాన్ని అప్‌లోడ్ చేయడం ఐకాన్ ఫీల్డ్‌ను భర్తీ చేస్తుంది."
         select_an_icon: "చిహ్నాన్ని ఎంచుకోండి"
         upload_an_image: "చిత్రాన్ని అప్‌లోడ్ చేయండి"
         read_only_setting_help: "వచనాన్ని అనుకూలీకరించండి"

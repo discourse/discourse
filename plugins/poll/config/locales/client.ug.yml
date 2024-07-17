@@ -72,6 +72,8 @@ ug:
         breakdown: "تۈرلىنىشى"
         percentage: "پىرسەنت"
         count: "ساناق"
+      ranked_choice:
+        none: "يوق"
       options:
         label: "تاللانما"
       error_while_toggling_status: "كەچۈرۈڭ ، بۇ راي سىناشنىڭ ھالىتىنى ئالماشتۇرۇۋاتقاندا خاتالىق كۆرۈلدى."

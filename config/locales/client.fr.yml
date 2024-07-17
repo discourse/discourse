@@ -1908,6 +1908,11 @@ fr:
     modal:
       close: "fermer"
       dismiss_error: "Ignorer l'erreur"
+    form_kit:
+      reset: Réinitialiser
+      optional: facultatif
+      errors:
+        required: "Requis"
     close: "Fermer"
     assets_changed_confirm: "Une mise à jour est disponible pour ce site. Souhaitez-vous obtenir la dernière version ?"
     logout: "Vous avez été déconnecté(e)."
@@ -3755,28 +3760,28 @@ fr:
       label: "En attente"
       label_with_count: "En attente (%{count})"
     posts_likes_MF: |
-      Ce sujet comprend {count, plural, one {# réponse} other {# réponses}} {ratio, select,
-       low {avec un taux élevé de « J'aime » par message}
-       med {avec un taux très élevé de « J'aime » par message}
-       high {avec un taux extrêmement élevé de « J'aime » par message}
-       other {}}
+      { count, plural,
+          one {# réponse,}
+        other {# réponses,}
+      }{ ratio, select,
+          low { avec un taux élevé de « J'aime » par message,}
+          med { avec un taux très élevé de « J'aime » par message,}
+         high { avec un taux extrêmement élevé de « J'aime » par message,}
+        other {}
+      } aller au premier ou dernier message...
+    posters: "Auteurs"
     latest_poster_link: "Profil de %{username}, dernier auteur"
     original_post: "Message original"
     views: "Vues"
-    sr_views: "Trier par vues"
     views_lowercase:
       one: "vue"
       other: "vues"
     replies: "Réponses"
-    sr_replies: "Trier par réponses"
     views_long:
       one: "ce sujet a été vu %{count} fois"
       other: "ce sujet a été vu %{number} fois"
     activity: "Activité"
-    sr_activity: "Trier par activité"
     likes: "J'aime"
-    sr_likes: "Trier par J'aime"
-    sr_op_likes: "Trier par J'aime sur le premier message du sujet"
     likes_lowercase:
       one: "J'aime"
       other: "J'aime"
@@ -4212,8 +4217,8 @@ fr:
       no_read_topics_body: "Une fois que vous aurez commencé à lire les discussions, vous verrez une liste ici. Pour commencer à lire, recherchez les sujets qui vous intéressent dans <a href='%{topUrl}'>Top</a> ou <a href='%{categoriesUrl}'>Catégories</a> ou recherchez par mot-clé %{searchIcon}"
     no_group_messages_title: "Aucun message de groupe trouvé"
     topic_entrance:
-      sr_jump_top_button: "Accéder au premier message"
-      sr_jump_bottom_button: "Accéder au dernier message"
+      jump_top_button_title: "Accéder au premier message"
+      jump_bottom_button_title: "Accéder au dernier message"
     fullscreen_table:
       expand_btn: "Développer le tableau"
       view_table: "Voir le tableau"
@@ -6184,6 +6189,7 @@ fr:
           add_types_title: "Autoriser les extensions %{types}"
           add_types_toast: "%{types} types de fichiers ajoutés"
       badges:
+        status: Statut
         title: Badges
         new_badge: Nouveau badge
         new: Nouveau
@@ -6191,8 +6197,6 @@ fr:
         badge: Badge
         display_name: Nom affiché
         description: Description
-        long_description: Description longue
-        badge_type: Type de badge
         badge_grouping: Groupe
         badge_groupings:
           modal_title: Groupes de badges
@@ -6222,9 +6226,8 @@ fr:
         image: Image
         graphic: Graphique
         icon_help: "Saisissez un nom d'icône Font Awesome (utilisez le préfixe « far- » pour les icônes classiques et « fab- » pour les icônes de marques)"
-        image_help: "L'envoi d'une image remplace le champ d'icône si les deux sont définis."
-        select_an_icon: "Sélectionnez une icône"
-        upload_an_image: "Envoyer une image"
+        select_an_icon: "Sélectionner une icône"
+        upload_an_image: "Insérer une image"
         read_only_setting_help: "Personnaliser le texte"
         query: Requête du badge (SQL)
         target_posts: Requête sur les messages

@@ -34,8 +34,6 @@ sk:
         icons:
           title: "Ikony"
           full_list: "Zobraziť celý zoznam Font Awesome Icons"
-        input_fields:
-          title: "Vstupné polia"
         buttons:
           title: "Tlačidlá"
         dropdowns:

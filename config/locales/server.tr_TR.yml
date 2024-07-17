@@ -946,8 +946,6 @@ tr_TR:
     pop3_authentication_error: "Sağlanan POP3 kimlik bilgileriyle ilgili bir sorun oluştu, kullanıcı adı ve parolayı kontrol edip tekrar deneyin."
     imap_authentication_error: "Sağlanan IMAP kimlik bilgileriyle ilgili bir sorun oluştu, kullanıcı adı ve şifreyi kontrol edip tekrar deneyin."
     imap_no_response_error: "IMAP sunucusuyla iletişim kurulurken bir hata oluştu. %{message}"
-    smtp_authentication_error: "Sağlanan SMTP kimlik bilgileriyle ilgili bir sorun oluştu, kullanıcı adı ve şifreyi kontrol edip tekrar deneyin."
-    authentication_error_gmail_app_password: 'Uygulamaya özel şifre gerekli. Daha fazla bilgi için <a target="_blank" href="https://support.google.com/accounts/answer/185833">bu Google Yardım makalesini</a> okuyun'
     smtp_server_busy_error: "SMTP sunucusu şu anda meşgul, daha sonra yeniden deneyin."
     smtp_unhandled_error: "SMTP sunucusuyla iletişim kurulurken işlenmemiş bir hata oluştu. %{message}"
     imap_unhandled_error: "IMAP sunucusuyla iletişim kurulurken işlenmemiş bir hata oluştu. %{message}"
@@ -1438,8 +1436,6 @@ tr_TR:
       ram: "Sunucunuz 1 GB'den az toplam bellekle çalışıyor. En az 1 GB bellek önerilir."
       subfolder_ends_in_slash: "Alt klasör kurulumunuz yanlış; DISCOURSE_RELATIVE_URL_ROOT bir eğik çizgi ile bitiyor."
       missing_mailgun_api_key: "Sunucu Mailgun aracılığıyla e-posta gönderecek şekilde yapılandırılmış ancak web kancası mesajlarını doğrulamak için kullanılan bir API anahtarı sağlamadınız."
-      out_of_date_themes: "Aşağıdaki temalar için güncellemeler mevcut:"
-      unreachable_themes: "Aşağıdaki temalarda güncelleme olup olmadığını kontrol edemedik:"
       watched_words: "%{action} izlenen sözcükler için normal ifade geçersiz. Lütfen <a href='%{base_path}/admin/customize/watched_words'>İzlenen Kelime ayarlarınızı</a>kontrol edin veya \"izlenen kelimeler sıradan ifadeler\" site ayarını devre dışı bırakın."
       google_analytics_version: "Discourse'unuz şu anda Temmuz 2023'ten sonra artık desteklenmeyecek olan Google Analytics 3'ü kullanıyor. Web sitenizin performansı hakkında değerli bilgiler ve analizler almaya devam etmek için hemen <a href='https://meta.discourse.org/t/260498'>Google Analytics 4'e yükseltin</a>."
     back_from_logster_text: "Siteye geri dön"

@@ -2091,6 +2091,25 @@ en:
     modal:
       close: "close"
       dismiss_error: "Dismiss error"
+    form_kit:
+      reset: Reset
+      optional: optional
+      errors_summary_title: "This form contains errors:"
+      dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
+      errors:
+        required: "Required"
+        invalid_url: "Must be a valid URL"
+        not_accepted: "Must be accepted"
+        not_a_number: "Must be a number"
+        too_high: "Must be at most %{count}"
+        too_low: "Must be at least %{count}"
+        too_long:
+          one: "Must be at most %{count} character"
+          other: "Must be at most %{count} characters"
+        too_short:
+          one: "Must be at least %{count} character"
+          other: "Must be at least %{count} characters"
+
     close: "Close"
     assets_changed_confirm: "This site just received a software update. Get the latest version now?"
     logout: "You were logged out."
@@ -6869,6 +6888,8 @@ en:
             confirm: "Yes, update password policy"
 
       badges:
+        disable_system: This badge is a system badge and cannot be disabled and/or deleted.
+        status: Status
         title: Badges
         new_badge: New Badge
         new: New
@@ -6876,8 +6897,8 @@ en:
         badge: Badge
         display_name: Display Name
         description: Description
-        long_description: Long Description
-        badge_type: Badge Type
+        long_description: Long description
+        badge_type: Badge type
         badge_grouping: Group
         badge_groupings:
           modal_title: Badge Groupings
@@ -6906,10 +6927,10 @@ en:
         icon: Icon
         image: Image
         graphic: Graphic
+        icon_or_image: A badge requires an icon or an image
         icon_help: "Enter a Font Awesome icon name (use prefix 'far-' for regular icons and 'fab-' for brand icons)"
-        image_help: "Uploading an image overrides icon field if both are set."
-        select_an_icon: "Select an Icon"
-        upload_an_image: "Upload an Image"
+        select_an_icon: "Select an icon"
+        upload_an_image: "Upload an image"
         read_only_setting_help: "Customize text"
         query: Badge Query (SQL)
         target_posts: Query targets posts

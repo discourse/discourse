@@ -41,6 +41,8 @@ vi:
         votes: "%{count} phiếu bầu"
         percentage: "Phần trăm"
         count: "Đếm"
+      ranked_choice:
+        none: "Không có gì"
       options:
         label: "Tùy chọn"
       error_while_toggling_status: "Đã có lỗi xảy ra khi chuyển trạng thái của thăm dò."

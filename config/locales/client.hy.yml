@@ -1279,6 +1279,11 @@ hy:
     modal:
       close: "փակել"
       dismiss_error: "Չեղարկել սխալը"
+    form_kit:
+      reset: Զրոյացնել
+      optional: ընտրովի
+      errors:
+        required: "Պարտադիր"
     close: "Փակել"
     logout: "Դուք դուրս եք գրվել:"
     refresh: "Թարմացնել"
@@ -2491,6 +2496,7 @@ hy:
     pending_posts:
       label: "Սպասող"
       label_with_count: "Սպասող (%{count})"
+    posters: "Հրապարակողների"
     original_post: "Սկզբնական Գրառումը"
     views: "Դիտում"
     views_lowercase:
@@ -4155,6 +4161,7 @@ hy:
         file_types_list:
           add_image_types: "Նկարներ"
       badges:
+        status: Ստատուս
         title: Կրծքանշաններ
         new_badge: Նոր Կրծքանշան
         new: Նոր
@@ -4162,8 +4169,6 @@ hy:
         badge: Կրծքանշան
         display_name: Ցուցադրվող Անվանումը
         description: Նկարագրությունը
-        long_description: Ընդարձակ Նկարագրությունը
-        badge_type: Կրծքանշանի Տիպը
         badge_grouping: Խմբավորել
         badge_groupings:
           modal_title: Կրծքանշանների Խմբավորումները

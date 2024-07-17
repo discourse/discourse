@@ -27,8 +27,6 @@ sr:
         icons:
           title: "Ikonice"
           full_list: "Pogledaj sve Font Awesome ikonice"
-        input_fields:
-          title: "Поља за унос"
         buttons:
           title: "Дугмад"
         dropdowns:

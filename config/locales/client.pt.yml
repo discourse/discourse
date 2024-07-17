@@ -1671,6 +1671,11 @@ pt:
     modal:
       close: "fechar"
       dismiss_error: "Dispensar erro"
+    form_kit:
+      reset: Repor
+      optional: opcional
+      errors:
+        required: "Necessário"
     close: "Fechar"
     logout: "A sua sessão foi encerrada."
     refresh: "Atualizar"
@@ -3120,6 +3125,7 @@ pt:
     pending_posts:
       label: "Pendente"
       label_with_count: "Pendentes (%{count})"
+    posters: "Autores"
     original_post: "Publicação Original"
     views: "Vistas"
     views_lowercase:
@@ -4728,6 +4734,7 @@ pt:
         file_types_list:
           add_image_types: "Imagens"
       badges:
+        status: Estado
         title: Crachás
         new_badge: Novo Crachá
         new: Novo
@@ -4735,8 +4742,6 @@ pt:
         badge: Crachá
         display_name: Exibir Nome
         description: Descrição
-        long_description: Descrição longa
-        badge_type: Tipo de Crachá
         badge_grouping: Grupo
         badge_groupings:
           modal_title: Grupos de Crachás
@@ -4765,8 +4770,8 @@ pt:
         icon: Ícone
         image: Imagem
         graphic: Gráfico
-        select_an_icon: "Selecione um Ícone"
-        upload_an_image: "Enviar uma Imagem"
+        select_an_icon: "Selecione um ícone"
+        upload_an_image: "Enviar uma imagem"
         query: Query do Crachá (SQL)
         target_posts: '"Query" direcionada a publicações'
         auto_revoke: Executar diariamente a "query" de revogação

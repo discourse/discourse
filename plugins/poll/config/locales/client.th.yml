@@ -32,6 +32,8 @@ th:
         title: "ปิดโพล"
         label: "ปิด"
         confirm: "คุณแน่ใจหรือไม่ที่จะปิดโพลนี้"
+      ranked_choice:
+        none: "ไม่มี"
       options:
         label: "ตัวเลือก"
       error_while_toggling_status: "ขออภัย มีข้อผิดพลาดในการแสดงสถานะของโพล"

@@ -58,6 +58,8 @@ da:
         breakdown: "Fordeling"
         percentage: "Procentdel"
         count: "Antal"
+      ranked_choice:
+        none: "Ingen"
       options:
         label: "Indstillinger"
       error_while_toggling_status: "Beklager, der opstod en fejl under statusskifte for denne afstemning."

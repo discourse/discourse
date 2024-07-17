@@ -181,6 +181,7 @@ id:
         other: jumlah karakter salah (seharusnya %{count} karakter)
       other_than: "harus lain dari %{count}"
       auth_overrides_username: "Nama pengguna perlu diperbarui di sisi penyedia autentikasi, karena pengaturan `auth_overrides_username` diaktifkan."
+      required: "harus ada"
     template:
       body: ! "Ada masalah dengan objek-objek berikut:"
       header:
@@ -1212,8 +1213,6 @@ id:
       poll_pop3_timeout: "Waktu koneksi ke server POP3 habis. Email masuk tidak dapat diambil. Silakan periksa <a href='%{base_path}/admin/site_settings/category/email'>pengaturan POP3</a> dan penyedia layanan Anda."
       poll_pop3_auth_error: "Sambungan ke server POP3 gagal karena kesalahan autentikasi. Silakan periksa <a href='%{base_path}/admin/site_settings/category/email'>pengaturan POP3</a>."
       force_https: "Situs web Anda menggunakan SSL. Namun `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` belum diaktifkan di pengaturan situs Anda."
-      out_of_date_themes: "Pembaruan tersedia untuk tema-tema berikut ini:"
-      unreachable_themes: "Kami tidak dapat memeriksa pembaruan pada tema-tema berikut ini:"
       watched_words: "Ekspresi reguler untuk %{action} kata-kata yang diawasi tidak valid. Silakan periksa <a href='%{base_path}/admin/customize/watched_words'>pengaturan Word yang Diawasi</a>, atau nonaktifkan pengaturan situs 'ekspresi reguler kata yang diawasi'."
       google_analytics_version: "Wacana Anda saat ini menggunakan Google Analytics 3, yang tidak akan didukung lagi setelah Juli 2023.0 <a href='https://meta.discourse.org/t/260498'>ke Google Analytics 4</a> sekarang untuk terus menerima wawasan dan analitik berharga untuk kinerja situs web Anda."
       category_style_deprecated: "Discourse Anda saat ini menggunakan gaya kategori yang sudah tidak digunakan lagi yang akan dihapus sebelum rilis beta akhir Discourse 3.2. Silakan lihat <a href='https://meta.discourse.org/t/282441'>Pindah ke Pengaturan Situs Gaya Kategori Tunggal</a> untuk petunjuk tentang cara mempertahankan gaya kategori yang Anda pilih."
@@ -1233,6 +1232,7 @@ id:
     custom_summarization_allowed_groups: "Grup diizinkan untuk meringkas konten menggunakan `summarization_strategy`."
     num_users_to_silence_new_user: "Jika post pengguna baru melebihi pengaturan hide_post_sensitive, dan memiliki tanda spam dari banyak pengguna yang berbeda, sembunyikan semua posting mereka dan cegah post lagi di masa mendatang. 0 untuk menonaktifkan."
     gtm_container_id: "ID penampung Google Pengelola Tag. misalnya: GTM-ABCD12E. <br/>Catatan: Untuk menggunakan GTM saat Kebijakan Keamanan Konten (CSP) diaktifkan, lihat dokumentasi tentang meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Gunakan nonce dalam skrip Google Pengelola Tag</a>."
+    content_security_policy_script_src: "Sumber skrip tambahan yang diizinkan. Host dan CDN saat ini disertakan secara bawaan. Lihat <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mengurangi Serangan XSS dengan Kebijakan Keamanan Konten.</a> (CSP). Sumber host lain diabaikan karena strict-dynamic diaktifkan."
     include_secure_categories_in_tag_counts: "Saat diaktifkan, jumlah topik untuk sebuah tag akan menyertakan topik yang berada dalam kategori yang dibatasi untuk dibaca bagi semua pengguna. Saat dinonaktifkan, pengguna normal hanya ditampilkan sejumlah topik untuk tag yang semua topiknya berada dalam kategori publik."
     display_personal_messages_tag_counts: "Saat diaktifkan, jumlah pesan pribadi yang diberi tag dengan tag tertentu akan ditampilkan."
     top_menu: "Tentukan item mana yang muncul di navigasi beranda, dan dalam urutan apa."
@@ -1246,6 +1246,8 @@ id:
     discourse_connect_url: "URL endpoint DiscourseConnect (harus menyertakan http:// atau https://, dan tidak boleh menyertakan garis miring)"
     discourse_connect_allowed_redirect_domains: "Batasi ke domain ini untuk return_paths yang disediakan oleh DiscourseConnect (secara bawaan jalur pengembalian harus ada di situs saat ini). Gunakan * untuk mengizinkan domain apa pun untuk jalur pengembalian. Karakter pengganti subdomain (`*.foobar.com`) tidak diizinkan."
     s3_use_acls: "AWS merekomendasikan untuk tidak menggunakan ACL pada bucket S3; jika Anda mengikuti saran ini, hapus centang opsi ini. Ini harus diaktifkan jika Anda menggunakan unggahan aman."
+    enable_direct_s3_uploads: "Memungkinkan pengunggahan multipart secara langsung ke Amazon S3, lihat https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 untuk informasi lebih lanjut."
+    backup_location: "Lokasi penyimpanan cadangan. PENTING: S3 memerlukan kredensial S3 valid yang dimasukkan dalam pengaturan File. Saat mengubahnya ke S3 dari Lokal, Anda harus menjalankan tugas rake `s3:ensure_cors_rules`."
     s3_use_cdn_url_for_all_uploads: "Gunakan URL CDN untuk semua file yang diunggah ke s3, bukan hanya untuk gambar."
     composer_media_optimization_image_encode_quality: "Kualitas penyandian JPG digunakan dalam proses penyandian ulang."
     tl4_delete_posts_and_topics: "Izinkan pengguna TL4 untuk menghapus posting dan topik yang dibuat oleh pengguna lain. Pengguna TL4 juga akan dapat melihat topik dan postingan yang dihapus."
@@ -1259,6 +1261,7 @@ id:
     sparkpost_webhook_token: "Token digunakan untuk memverifikasi payload webhook. Itu harus diteruskan sebagai parameter kueri 't' dari webhook, misalnya: https://example.com/webhook/sparkpost?t=supersecret"
     email_in: "Izinkan pengguna membuat topik baru melalui surel. Setelah mengaktifkan setelan ini, Anda akan dapat melakukan konfigurasi alamat surel masuk untuk grup dan kategori."
     email_editable: "Perbolehkan pengguna untuk mengganti alamat email setelah registrasi."
+    delete_associated_accounts_on_password_reset: "Hapus akun terkait pengguna ketika pengguna mengubah kata sandi."
     dont_feed_the_trolls_threshold: "Jumlah penanda dari pengguna lain sebelum diperingatkan."
     disable_category_edit_notifications: "Nonaktifkan notifikasi untuk pengeditan kategori topik. Ini termasuk topik yang 'dipublikasikan' (misalnya draf bersama)."
     disable_tags_edit_notifications: "Nonaktifkan notifikasi untuk pengeditan tag topik. Ini termasuk topik yang 'dipublikasikan' (misalnya draf bersama)."
@@ -1292,6 +1295,7 @@ id:
     page_loading_indicator: "Konfigurasikan indikator pemuatan yang muncul selama navigasi halaman dalam Discourse. 'Spinner' adalah indikator halaman penuh. 'Slider' menampilkan bilah sempit di bagian atas layar."
     errors:
       invalid_email: "Alamat email tidak valid."
+      invalid_csp_script_src: "Nilai harus berupa 'unsafe-eval' atau 'wasm-unsafe-eval', atau dalam bentuk '<hash algorithm>-<base64 value>' dengan algoritma hash yang didukung adalah sha256, sha384, atau sha512. Pastikan masukan Anda diapit tanda kutip tunggal."
       email_polling_disabled: "Anda harus mengaktifkan polling POP3 manual atau mengaktifkan poller email khusus sebelum mengaktifkan balasan melalui email."
       min_username_length_range: "Anda tidak boleh menentukan minimum lebih dari maksimum."
       max_username_length_range: "Anda tidak bisa menentukan jumlah maksimum dibawah jumlah minimum."

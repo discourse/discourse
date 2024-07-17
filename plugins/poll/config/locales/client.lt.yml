@@ -55,6 +55,8 @@ lt:
         votes: "%{count} balsų"
         percentage: "Procentas"
         count: "Skaičiuoti"
+      ranked_choice:
+        none: "Nieko"
       options:
         label: "Nustatymai"
       error_while_toggling_status: "Atsiprašome, perjungiant šios apklausos būseną įvyko klaida."

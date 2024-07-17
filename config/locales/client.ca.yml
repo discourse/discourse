@@ -1364,6 +1364,11 @@ ca:
         fixed: "Carrega la pàgina"
     modal:
       close: "tanca"
+    form_kit:
+      reset: Restableix
+      optional: opcional
+      errors:
+        required: "Necessari"
     close: "Tanca"
     logout: "Heu tancat la sessió."
     refresh: "Actualitza"
@@ -2557,6 +2562,7 @@ ca:
     pending_posts:
       label: "Pendent"
       label_with_count: "Pendents (%{count})"
+    posters: "Persones que han publicat"
     original_post: "Publicació original"
     views: "Vistes"
     views_lowercase:
@@ -4160,6 +4166,7 @@ ca:
           add_image_types: "Imatges"
           add_audio_types: "Àudio"
       badges:
+        status: Estat
         title: Insígnies
         new_badge: Insígnia nova
         new: Nou
@@ -4167,8 +4174,6 @@ ca:
         badge: Insígnia
         display_name: Mostra el nom
         description: Descripció
-        long_description: Descripció llarga
-        badge_type: Tipus d'insígnia
         badge_grouping: Grup
         badge_groupings:
           modal_title: Agrupacions d'insígnies

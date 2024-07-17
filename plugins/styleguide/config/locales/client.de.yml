@@ -34,8 +34,8 @@ de:
         icons:
           title: "Symbole"
           full_list: "Siehe vollständige Liste der „Font Awesome“-Symbole"
-        input_fields:
-          title: "Eingabefelder"
+        forms:
+          title: "Formulare"
         buttons:
           title: "Buttons"
         dropdowns:

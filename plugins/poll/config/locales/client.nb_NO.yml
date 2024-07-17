@@ -56,6 +56,8 @@ nb_NO:
         breakdown: "Fordeling"
         percentage: "Prosent"
         count: "Antall"
+      ranked_choice:
+        none: "Ingen"
       options:
         label: "Alternativer"
       error_while_toggling_status: "Beklager, det oppstod en feil ved endring av status på denne avstemningen."

@@ -909,8 +909,6 @@ fi:
     pop3_authentication_error: "Annetuissa POP3-tunnistetiedoissa oli ongelma, tarkista käyttäjätunnus ja salasana ja yritä uudelleen."
     imap_authentication_error: "Annetuissa IMAP-tunnistetiedoissa oli ongelma, tarkista käyttäjätunnus ja salasana ja yritä uudelleen."
     imap_no_response_error: "Yhteydessä IMAP-palvelimeen tapahtui virhe. %{message}"
-    smtp_authentication_error: "Annetuissa SMTP-tunnistetiedoissa oli ongelma, tarkista käyttäjätunnus ja salasana ja yritä uudelleen."
-    authentication_error_gmail_app_password: 'Sovelluskohtainen salasana vaaditaan. Katso lisätietoja <a target="_blank" href="https://support.google.com/accounts/answer/185833">tästä Googlen ohjeartikkelista</a>'
     smtp_server_busy_error: "SMTP-palvelin on tällä hetkellä varattu, yritä myöhemmin uudelleen."
     smtp_unhandled_error: "Kommunikoinnissa SMTP-palvelimen kanssa tapahtui käsittelemätön virhe. %{message}"
     imap_unhandled_error: "Kommunikoinnissa IMAP-palvelimen kanssa tapahtui käsittelemätön virhe. %{message}"
@@ -1397,8 +1395,6 @@ fi:
       ram: "Palvelimella on alle 1 Gt muistia. Vähintään 1 Gt muistia on suositeltavaa."
       subfolder_ends_in_slash: "Alihakemiston asetuksesi ei kelpaa; DISCOURSE_RELATIVE_URL_ROOT päättyy vinoviivaan."
       missing_mailgun_api_key: "Palvelin on määritelty lähettämään sähköpostit Mailgunin avulla, muttet ole määrittänyt API-avainta, jolla varmistetaan webhook-viestien aitous."
-      out_of_date_themes: "Päivityksiä on saatavilla näihin teemoihin:"
-      unreachable_themes: "Näille teemoille ei voitu tarkistaa päivityksiä:"
       google_analytics_version: "Discoursesi käyttää tällä hetkellä Google Analytics 3:a, jota ei enää tueta heinäkuun 2023 jälkeen. <a href='https://meta.discourse.org/t/260498'>Päivitä Google Analytics 4:ään</a> nyt, jotta saat jatkossakin arvokkaita tietoja ja analytiikkaa verkkosivustosi suoriutumisesta."
   site_settings:
     allow_bulk_invite: "Salli joukkokutsut lataamalla CSV-tiedosto"

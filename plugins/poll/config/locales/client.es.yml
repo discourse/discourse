@@ -72,6 +72,8 @@ es:
         breakdown: "Desglose"
         percentage: "Porcentaje"
         count: "Cantidad"
+      ranked_choice:
+        none: "Ninguno"
       options:
         label: "Opciones"
       error_while_toggling_status: "Lo sentimos, se ha producido un error al cambiar el estado de esta encuesta."

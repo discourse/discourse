@@ -1230,6 +1230,11 @@ et:
         fixed: "Lae lehekülg"
     modal:
       close: "Sulge"
+    form_kit:
+      reset: Lähtesta
+      optional: valikuline
+      errors:
+        required: "Nõutud"
     close: "Sulge"
     logout: "Sind logiti välja."
     refresh: "Värskenda"
@@ -2292,6 +2297,7 @@ et:
     pending_posts:
       label: "Ootel"
       label_with_count: "Ootel (%{count})"
+    posters: "Postitajad"
     original_post: "Algne postitus"
     views: "Vaatamisi"
     views_lowercase:
@@ -3599,6 +3605,7 @@ et:
         file_types_list:
           add_image_types: "Pildid"
       badges:
+        status: Staatus
         title: Märgised
         new_badge: Uus märgis
         new: Uus
@@ -3606,8 +3613,6 @@ et:
         badge: Märgis
         display_name: Kuvatav nimi
         description: Kirjeldus
-        long_description: Pikk kirjeldus
-        badge_type: Märgise tüüp
         badge_grouping: Grupp
         badge_groupings:
           modal_title: Märgiste grupeeringud
@@ -3635,6 +3640,8 @@ et:
         disabled: välja lülitatud
         icon: Ikoon
         image: Pilt
+        select_an_icon: "Vali ikoon"
+        upload_an_image: "Lae pilt üles"
         query: Märgise päring (SQL)
         target_posts: Päri sihtmärkide postitusi
         auto_revoke: Jooksuta tühistamispäringut igapäevaselt

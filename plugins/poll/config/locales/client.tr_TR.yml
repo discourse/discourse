@@ -72,6 +72,8 @@ tr_TR:
         breakdown: "Dağılım"
         percentage: "Yüzde"
         count: "Sayı"
+      ranked_choice:
+        none: "Yok"
       options:
         label: "Seçenekler"
       error_while_toggling_status: "Üzgünüz, bu anketin durumunu değiştirirken bir hata oluştu."

@@ -13,6 +13,7 @@ de:
     poll_create_allowed_groups: "Die Gruppen, die Umfragen erstellen dürfen."
     poll_groupable_user_fields: "Eine Reihe von Benutzerfeldern, die verwendet werden können, um Umfrageergebnisse zu gruppieren und zu filtern."
     poll_export_data_explorer_query_id: "ID der Datenexplorer-Abfrage, die zum Exportieren von Umfrageergebnissen verwendet werden soll (0 zum Deaktivieren)."
+    poll_export_ranked_choice_data_explorer_query_id: "ID der Data Explorer-Abfrage, die zum Exportieren der Umfrageergebnisse der integrierten Stichwahl verwendet werden soll."
     poll_default_public: "Wenn du eine neue Umfrage erstellst, aktiviere standardmäßig die Option „anzeigen, wer abgestimmt hat“."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
@@ -51,8 +52,13 @@ de:
     min_vote_per_user:
       one: Für diese Umfrage ist mindestens %{count} Stimme erforderlich.
       other: Für diese Umfrage sind mindestens %{count} Stimmen erforderlich.
+    ranked_choice:
+      vote_options_mismatch: "\"Bei der integrierten Stichwahl muss die Anzahl der abgegebenen Optionen mit der Anzahl der vorhandenen Optionen übereinstimmen. Die Anzahl der Optionen ist %{count} und die Anzahl der abgegebenen Optionen war %{provided}.\""
+      no_group_results_support: "Ungültiger Umfragetyp, Rangfolgewahlen unterstützen keine gruppierten Ergebnisse."
     topic_must_be_open_to_toggle_status: "Damit du den Status ändern kannst, muss das Thema geöffnet sein."
     only_staff_or_op_can_toggle_status: "Nur ein Team-Mitglied und der Autor des Beitrags können den Status der Umfrage ändern."
+    errors:
+      poll_not_found: "Umfrage nicht gefunden, bitte bestätige die Parameter."
     insufficient_rights_to_create: "Du darfst keine Umfragen erstellen."
     email:
       link_to_poll: "Klicke hier, um die Umfrage zu sehen."

@@ -1913,6 +1913,11 @@ hu:
     modal:
       close: "bezárás"
       dismiss_error: "Hiba elvetése"
+    form_kit:
+      reset: Alaphelyzetbe állítás
+      optional: nem kötelező
+      errors:
+        required: "Kötelező"
     close: "Bezárás"
     assets_changed_confirm: "Ez az oldal most kapott egy szoftverfrissítést. Beszerzi most a legújabb verziót?"
     logout: "Kijelentkezett."
@@ -3766,33 +3771,19 @@ hu:
     pending_posts:
       label: "Függőben"
       label_with_count: "Függőben (%{count})"
-    posts_likes_MF: |
-      Ebben a témában { count, plural,
-          one {# válasz}
-        other {# válasz}
-      } { ratio, select,
-          low {magas kedvelések/bejegyzések arányával}
-          med {nagyon magas tetszésnyilvánítási arány}
-         high {, rendkívül magas kedvelések és feladások aránya}
-        other {}
-      }
+    posters: "Bejegyzők"
     latest_poster_link: "%{username} profilja, legújabb bejegyző"
     original_post: "Eredeti Bejegyzés"
     views: "Megtekintések"
-    sr_views: "Rendezés megnézések szerint"
     views_lowercase:
       one: "megtekintés"
       other: "megtekintés"
     replies: "Válaszok"
-    sr_replies: "Rendezés válaszok szerint"
     views_long:
       one: "ezt a témát %{count} alkalommal nézték meg"
       other: "ezt a témát %{count} alkalommal nézték meg"
     activity: "Aktivitás"
-    sr_activity: "Rendezés aktivitás szerint"
     likes: "Kedvelések"
-    sr_likes: "Rendezés kedvelések szerint"
-    sr_op_likes: "Rendezés az eredeti bejegyzés kedvelései szerint"
     likes_lowercase:
       one: "kedvelés"
       other: "kedvelés"
@@ -4238,8 +4229,8 @@ hu:
       no_read_topics_body: "Amint elkezd beszélgetéseket olvasni, itt egy listát fog látni. Az olvasás megkezdéséhez keresse meg az Önt érdeklő témákat a <a href='%{topUrl}'>Top</a> vagy a <a href='%{categoriesUrl}'>Kategóriák</a> között, vagy keressen kulcsszóval %{searchIcon}."
     no_group_messages_title: "Nem található csoportos üzenet"
     topic_entrance:
-      sr_jump_top_button: "Ugrás az első bejegyzésre"
-      sr_jump_bottom_button: "Ugrás az utolsó bejegyzéshez"
+      jump_top_button_title: "Ugrás az első bejegyzésre"
+      jump_bottom_button_title: "Ugrás az utolsó bejegyzéshez"
     fullscreen_table:
       expand_btn: "Táblázat kibontása"
       view_table: "Táblázat megtekintése"
@@ -6251,6 +6242,7 @@ hu:
           add_types_title: "%{types}kiterjesztések engedélyezése"
           add_types_toast: "%{types} fájltípusok hozzáadva"
       badges:
+        status: Állapot
         title: Jelvények
         new_badge: Új jelvény
         new: Új
@@ -6258,8 +6250,6 @@ hu:
         badge: Jelvény
         display_name: Megjelenített név
         description: Leírás
-        long_description: Hosszú leírás
-        badge_type: Jelvény típusa
         badge_grouping: Csoport
         badge_groupings:
           modal_title: Jelvénycsoportok
@@ -6289,7 +6279,6 @@ hu:
         image: Kép
         graphic: Grafika
         icon_help: "Add meg a Font Awesome ikon nevét (használja a 'far-' előtagot a normál ikonokhoz és a 'fab-' előtagot a márkaikonokhoz)."
-        image_help: "A kép feltöltése felülírja az ikonmezőt, ha mindkettő be van állítva."
         select_an_icon: "Válasszon ikont"
         upload_an_image: "Kép feltöltése"
         read_only_setting_help: "Szöveg testreszabása"

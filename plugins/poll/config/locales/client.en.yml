@@ -22,6 +22,9 @@ en:
           title: "Results will be shown once <strong>closed</strong>."
         staff:
           title: "Results are only shown to <strong>staff</strong> members."
+        tabs:
+          votes: "Votes"
+          outcome: "Outcome"
       multiple:
         help:
           at_least_min_options:
@@ -80,8 +83,26 @@ en:
         percentage: "Percentage"
         count: "Count"
 
+      ranked_choice:
+        title:
+          rounds: "Rounds"
+          outcome: "Result"
+        none: "None"
+        majority: "Majority"
+        eliminated: "Eliminated"
+        round: "Round"
+        winner:
+          one: "Winner was %{winner} after one round."
+          other: "Winner was %{winner} after %{count} rounds."
+        tied:
+          one: "Tied after one round between the following candidates:"
+          other: "Tied after %{count} rounds between the following candidates:"
+
       options:
         label: "Options"
+        ranked_choice:
+          abstain: "Abstain"
+          login: "Login to vote!"
 
       error_while_toggling_status: "Sorry, there was an error toggling the status of this poll."
       error_while_casting_votes: "Sorry, there was an error casting your votes."
@@ -102,6 +123,7 @@ en:
           label: Type
           regular: Single Choice
           multiple: Multiple Choice
+          ranked_choice: Ranked Choice
           number: Number Rating
         poll_result:
           label: Show Results...

@@ -1847,6 +1847,14 @@ zh_CN:
     modal:
       close: "关闭"
       dismiss_error: "忽略错误"
+    form_kit:
+      reset: 重置
+      optional: 可选
+      errors:
+        required: "必选"
+        invalid_url: "必须是有效的 URL"
+        too_short:
+          other: "必须至少为 %{count} 个字符"
     close: "关闭"
     assets_changed_confirm: "该网站刚刚收到软件更新。现在获取最新版本吗？"
     logout: "您已退出。"
@@ -3631,27 +3639,27 @@ zh_CN:
     pending_posts:
       label: "待处理"
       label_with_count: "待处理 (%{count})"
+    sr_topic_list_caption: 话题列表，带有按钮的列标题可以排序的。
     posts_likes_MF: |
-      此话题有 {count, plural, other {# 个回复}}{ratio, select,
-        low {，并且点赞发帖比例比较高}
-        med {，并且点赞发帖比例非常高}
-        high {，并且点赞发帖比例极高}
-        other {}}
+      { count, plural,
+          other {# 回复，}
+      }{ ratio, select,
+          low { 点赞率高，}
+          med { 点赞率非常高，}
+         high { 点赞率极高，}
+        other {}
+      } 跳转到第一篇或最后一篇帖子…
+    posters: "发帖人"
     latest_poster_link: "%{username} 的个人资料、最新海报"
     original_post: "原始帖子"
     views: "浏览量"
-    sr_views: "按浏览量排序"
     views_lowercase:
       other: "浏览量"
     replies: "回复"
-    sr_replies: "按回复数排序"
     views_long:
       other: "此话题已被浏览 %{number} 次"
     activity: "活动"
-    sr_activity: "按活动排序"
     likes: "赞"
-    sr_likes: "按赞数排序"
-    sr_op_likes: "按原帖赞数排序"
     likes_lowercase:
       other: "赞"
     users: "用户"
@@ -4076,8 +4084,10 @@ zh_CN:
       no_read_topics_body: "开始阅读讨论后，您会在此处看到一个列表。要开始阅读，请在<a href='%{topUrl}'>热门</a>或<a href='%{categoriesUrl}'>类别</a>中或者通过关键字搜索 %{searchIcon}，查找您感兴趣的话题"
     no_group_messages_title: "未找到群组消息"
     topic_entrance:
-      sr_jump_top_button: "跳到第一个帖子"
-      sr_jump_bottom_button: "跳到最后一个帖子"
+      sr_jump_top_button: "跳转到第一篇帖子 - %{date}"
+      sr_jump_bottom_button: "跳至最后一篇帖子 - %{date}"
+      jump_top_button_title: "跳到第一个帖子"
+      jump_bottom_button_title: "跳到最后一个帖子"
     fullscreen_table:
       expand_btn: "展开表"
       view_table: "查看表"
@@ -4752,7 +4762,8 @@ zh_CN:
           request: "请求"
           response: "回应"
           redeliver_confirm: "确定要重新传送相同的有效负载吗？"
-          redeliver_failed_confirm: "你确定要重新发送 %{count} 个 webhook 活动吗？"
+          redeliver_failed_confirm:
+            other: "你确定要重新发送 %{count} 个 webhook 活动吗？"
           no_events_to_redeliver: "没有要重送的事件。"
           headers: "标题"
           payload: "有效负载"
@@ -4875,18 +4886,30 @@ zh_CN:
           saved: "已保存!"
         flags:
           header: "审核标记"
+          subheader: "Discourse 中的举报系统可帮助你和你的版主团队管理内容和用户行为，保持社区的尊重与健康。默认值适用于大多数社区，你无需对其进行更改。但是，如果你的网站有特殊要求，你可以禁用不需要的举报，然后添加自己的自定义举报。"
           description: "描述"
           enabled: "已启用？"
+          add: "添加举报"
           edit: "编辑"
+          back: "返回举报"
           delete: "删除"
           delete_confirm: '确定要删除“%{name}”吗？'
           form:
+            add_header: "添加举报"
+            edit_header: "编辑举报"
             save: "保存"
             name: "名称"
             description: "描述"
+            applies_to: "将此举报显示于"
             topic: "话题"
             post: "帖子"
             chat_message: "聊天消息"
+            enabled: "保存后启用此自定义举报"
+            alert: "自定义举报一旦使用，就只能禁用，而不能编辑或删除。"
+            edit_flag: "编辑举报"
+            non_editable: "你无法编辑此举报，因为它是系统举报或已在审核系统中使用，但你仍然可以禁用它。"
+            delete_flag: "删除举报"
+            non_deletable: "你无法删除此举报，因为它是系统举报或已在审核系统中使用，但你仍然可以禁用它。"
           more_options:
             title: "更多选项"
             move_up: "上移"
@@ -5546,6 +5569,9 @@ zh_CN:
             delete_watched_word_group: "删除关注词组"
             toggle_flag: "切换标记"
             move_flag: "移动举报"
+            create_flag: "创建举报"
+            update_flag: "更新举报"
+            delete_flag: "删除举报"
         screened_emails:
           title: "已屏蔽的电子邮件"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"
@@ -6173,6 +6199,7 @@ zh_CN:
             prompt: "你即将修改密码策略。这将影响所有从现在起更改密码的用户。你确定要继续吗？"
             confirm: "是的，更新密码策略"
       badges:
+        status: 状态
         title: 徽章
         new_badge: 新徽章
         new: 新
@@ -6180,8 +6207,6 @@ zh_CN:
         badge: 徽章
         display_name: 显示名称
         description: 描述
-        long_description: 长描述
-        badge_type: 徽章类型
         badge_grouping: 组
         badge_groupings:
           modal_title: 徽章组
@@ -6211,7 +6236,6 @@ zh_CN:
         image: 图片
         graphic: 图形
         icon_help: "输入一个 Font Awsome 图标名称（使用前缀“far-”表示常规图标，使用前缀“fab-”表示品牌图标）"
-        image_help: "如果两者都设置，则上传图像会替换图标字段。"
         select_an_icon: "选择一个图标"
         upload_an_image: "上传图片"
         read_only_setting_help: "自定义文本"

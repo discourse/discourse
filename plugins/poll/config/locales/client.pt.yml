@@ -58,6 +58,8 @@ pt:
         breakdown: "Detalhe"
         percentage: "Percentagem"
         count: "Soma"
+      ranked_choice:
+        none: "Nenhuma"
       options:
         label: "Opções"
       error_while_toggling_status: "Lamentamos, mas ocorreu um erro ao alternar o estado desta sondagem."

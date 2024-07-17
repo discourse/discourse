@@ -7,35 +7,51 @@
   <:body>
     <ul class="nav nav-pills poll-type">
       <li>
-        <a
-          href
-          {{on "click" (fn this.updatePollType "regular")}}
-          class="poll-type-value poll-type-value-regular
-            {{if this.isRegular 'active'}}"
+        <DButton
+          @action={{fn this.updatePollType "regular"}}
+          class={{concatClass
+            "poll-type-value poll-type-value-regular"
+            (if this.isRegular "active")
+          }}
         >
           {{i18n "poll.ui_builder.poll_type.regular"}}
-        </a>
+        </DButton>
       </li>
       <li>
-        <a
-          href
-          {{on "click" (fn this.updatePollType "multiple")}}
-          class="poll-type-value poll-type-value-multiple
-            {{if this.isMultiple 'active'}}"
+        <DButton
+          @action={{fn this.updatePollType "multiple"}}
+          class={{concatClass
+            "poll-type-value poll-type-value-multiple"
+            (if this.isMultiple "active")
+          }}
         >
           {{i18n "poll.ui_builder.poll_type.multiple"}}
-        </a>
+        </DButton>
       </li>
       {{#if this.showNumber}}
         <li>
-          <a
-            href
-            {{on "click" (fn this.updatePollType "number")}}
-            class="poll-type-value poll-type-value-number
-              {{if this.isNumber 'active'}}"
+          <DButton
+            @action={{fn this.updatePollType "number"}}
+            class={{concatClass
+              "poll-type-value poll-type-value-number"
+              (if this.isNumber "active")
+            }}
           >
             {{i18n "poll.ui_builder.poll_type.number"}}
-          </a>
+          </DButton>
+        </li>
+      {{/if}}
+      {{#if this.showRankedChoice}}
+        <li>
+          <DButton
+            @action={{fn this.updatePollType "ranked_choice"}}
+            class={{concatClass
+              "poll-type-value poll-type-value-ranked-choice"
+              (if this.isRankedChoice "active")
+            }}
+          >
+            {{i18n "poll.ui_builder.poll_type.ranked_choice"}}
+          </DButton>
         </li>
       {{/if}}
     </ul>
@@ -103,7 +119,7 @@
       </div>
     {{/unless}}
 
-    {{#unless this.isRegular}}
+    {{#unless this.rankedChoiceOrRegular}}
       <div class="options">
         <div class="input-group poll-number">
           <label class="input-group-label">{{i18n
@@ -197,7 +213,7 @@
         />
       </div>
 
-      {{#unless this.isNumber}}
+      {{#unless this.rankedChoiceOrNumber}}
         <div class="input-group poll-select column">
           <label class="input-group-label">{{i18n
               "poll.ui_builder.poll_chart_type.label"

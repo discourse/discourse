@@ -1897,6 +1897,11 @@ fi:
     modal:
       close: "sulje"
       dismiss_error: "Hylkää virhe"
+    form_kit:
+      reset: Nollaa
+      optional: valinnainen
+      errors:
+        required: "Pakolliset"
     close: "Sulje"
     logout: "Sinut kirjattiin ulos."
     refresh: "Päivitä"
@@ -3721,29 +3726,19 @@ fi:
     pending_posts:
       label: "Odottaa"
       label_with_count: "Avoimet (%{count})"
-    posts_likes_MF: |
-      Tässä ketjussa on {count, plural, one {1 vastaus} other {# vastausta}}{ratio, select,
-      low {, joilla on suuri määrä tykkäyksiä suhteessa viestien määrään}
-      med {, joilla on erittäin suuri määrä tykkäyksiä suhteessa viestien määrään}
-      high {, joilla on äärimmäisen suuri määrä tykkäyksiä suhteessa viestien määrään}
-      other {}}
+    posters: "Kirjoittajat"
     latest_poster_link: "Käyttäjän %{username} profiili, viimeisin kirjoittaja"
     original_post: "Aloitusviesti"
     views: "Katseluita"
-    sr_views: "Lajittele katselukertojen mukaan"
     views_lowercase:
       one: "katselu"
       other: "katselua"
     replies: "Vastauksia"
-    sr_replies: "Lajittele vastausten mukaan"
     views_long:
       one: "ketjua on katseltu %{count} kerran"
       other: "ketjua on katseltu %{number} kertaa"
     activity: "Toiminta"
-    sr_activity: "Lajittele toiminnan mukaan"
     likes: "Tykkäykset"
-    sr_likes: "Lajittele tykkäysten mukaan"
-    sr_op_likes: "Lajittele alkuperäisen viestin tykkäysten mukaan"
     likes_lowercase:
       one: "tykkäys"
       other: "tykkäystä"
@@ -4179,8 +4174,8 @@ fi:
       no_read_topics_body: "Kun alat lukemaana keskusteluita, näet luettelon täällä. Aloita lukeminen etsimällä sinua kiinnostavia ketjuja <a href='%{topUrl}'>Suosituista</a> tai <a href='%{categoriesUrl}'>alueilta</a> tai hakemalla avainsanalla %{searchIcon}"
     no_group_messages_title: "Ryhmäviestejä ei löytynyt"
     topic_entrance:
-      sr_jump_top_button: "Siirry ensimmäiseen viestiin"
-      sr_jump_bottom_button: "Siirry viimeiseen viestiin"
+      jump_top_button_title: "Siirry ensimmäiseen viestiin"
+      jump_bottom_button_title: "Siirry viimeiseen viestiin"
     fullscreen_table:
       expand_btn: "Laajenna taulukko"
       view_table: "Näytä taulukko"
@@ -6176,6 +6171,7 @@ fi:
           add_types_title: "Salli päätteet %{types}"
           add_types_toast: "Tiedostotyypit %{types} lisätty"
       badges:
+        status: Tila
         title: Kunniamerkit
         new_badge: Uusi kunniamerkki
         new: Uusi
@@ -6183,8 +6179,6 @@ fi:
         badge: Kunniamerkki
         display_name: Näyttönimi
         description: Kuvaus
-        long_description: Pitkä kuvaus
-        badge_type: Kunniamerkin tyyppi
         badge_grouping: Ryhmä
         badge_groupings:
           modal_title: Kunniamerkkien ryhmittely
@@ -6214,7 +6208,6 @@ fi:
         image: Kuva
         graphic: Kuvake
         icon_help: "Anna Font Awesome -kuvakkeen nimi (käytä etuliitettä \"far-\" tavallisille kuvakkeille ja \"fab-\" brändikuvakkeille)"
-        image_help: "Kuvan lataaminen ohittaa kuvakekentän, jos molemmat on asetettu."
         select_an_icon: "Valitse kuvake"
         upload_an_image: "Lataa kuva"
         read_only_setting_help: "Mukauta tekstiä"

@@ -31,6 +31,51 @@ div.poll-outer {
       }
     }
 
+    .ranked-choice-poll-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+      padding: 0.5em;
+
+      .ranked-choice-poll-option {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5em;
+        padding: 0.5em;
+      }
+    }
+
+    .tabs {
+      display: none;
+    }
+
+    .discourse-poll-ranked_choice-results {
+      .tabs {
+        &.nav-items {
+          display: flex;
+          gap: 0.5em;
+          .nav-btn {
+            background-color: var(--secondary);
+            border: none;
+            color: var(--primary-medium);
+          }
+          .active {
+            .nav-btn {
+              color: var(--primary);
+            }
+          }
+        }
+      }
+      .rank {
+        display: inline-block;
+        min-width: 20px;
+      }
+      .poll-results-ranked_choice-subtitle-rounds {
+        margin: 0.25em 0 0.67rem;
+      }
+    }
+
     img {
       // Hacky way to stop images without width/height
       // from causing abrupt unintended scrolling
@@ -298,64 +343,6 @@ div.poll-outer {
         margin-top: 0.25em;
       }
     }
-
-    // .poll-buttons-dropdown {
-    //   align-self: stretch;
-    //   position: relative;
-
-    //   .label {
-    //     display: none;
-    //   }
-    //   .widget-dropdown {
-    //     &.closed {
-    //       :not(:first-child) {
-    //         display: none;
-    //       }
-    //     }
-    //     &.opened {
-    //       display: flex;
-    //       flex-direction: column;
-    //       position: relative;
-
-    //       overflow-y: visible;
-    //       .widget-dropdown-body {
-    //         display: block;
-    //         position: absolute;
-    //         z-index: 300;
-    //         overflow-y: visible;
-    //         transform: translate(-44px, 38px);
-    //         .widget-dropdown-item {
-    //           width: 100%;
-    //           padding: 0;
-    //           margin: 0;
-    //           float: left;
-    //           &:hover {
-    //             color: var(--tertiary);
-    //             background-color: var(--primary-low);
-    //           }
-    //           button {
-    //             width: 100%;
-    //             padding: 0.5em;
-    //             display: flex;
-    //             flex-direction: row;
-    //             background-color: var(--secondary);
-    //             &:hover {
-    //               background-color: var(--primary-low);
-    //             }
-    //             border: none;
-    //           }
-    //         }
-    //       }
-    //     }
-
-    //     &-header {
-    //       height: 100%;
-    //       .d-icon {
-    //         margin: 0;
-    //       }
-    //     }
-    //   }
-    // }
 
     .poll-buttons-dropdown,
     .export-results,

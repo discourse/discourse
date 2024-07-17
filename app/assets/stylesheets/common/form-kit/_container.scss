@@ -1,0 +1,43 @@
+.form-kit__container {
+  display: flex;
+  gap: 0.25rem;
+  flex-direction: column;
+  align-items: flex-start;
+
+  &-title {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    margin: 0;
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-high);
+    font-weight: bold;
+    padding-bottom: 0.25em;
+    width: max-content;
+  }
+
+  &-subtitle {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    margin: 0;
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-high);
+    padding-bottom: 0.25em;
+    width: max-content;
+  }
+
+  &-optional {
+    font-size: var(--font-down-2-rem);
+    color: var(--primary-medium);
+    font-weight: normal;
+  }
+
+  &-content {
+    display: flex;
+    gap: 0.25em;
+    flex-direction: row;
+    align-items: flex-start;
+    max-width: 100%;
+  }
+}

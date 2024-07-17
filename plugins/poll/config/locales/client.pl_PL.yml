@@ -82,6 +82,8 @@ pl_PL:
         breakdown: "Podział"
         percentage: "Procent"
         count: "Liczba"
+      ranked_choice:
+        none: "Brak"
       options:
         label: "Opcje"
       error_while_toggling_status: "Przepraszamy, wystąpił błąd podczas przełączania statusu w tej ankiecie."

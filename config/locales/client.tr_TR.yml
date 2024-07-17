@@ -1940,6 +1940,12 @@ tr_TR:
     modal:
       close: "kapat"
       dismiss_error: "Hatayı kapat"
+    form_kit:
+      reset: Sıfırla
+      optional: i̇steğe bağlı
+      errors:
+        required: "Gerekli"
+        invalid_url: "Geçerli bir URL olmalıdır"
     close: "Kapat"
     assets_changed_confirm: "Bu site yakın zamanda bir yazılım güncellemesi aldı. Şimdi en son sürümünü edinin?"
     logout: "Çıkış yaptınız."
@@ -3822,29 +3828,19 @@ tr_TR:
     pending_posts:
       label: "Beklemede"
       label_with_count: "Beklemede (%{count})"
-    posts_likes_MF: |
-      Bu konuda {count, plural, one {# yanıt} other {# yanıt}} var ve {ratio, select,
-        low {yüksek beğeni/gönderi oranına sahip}
-        med {çok yüksek beğeni/gönderi oranına sahip}
-        high {aşırı derecede yüksek beğeni/gönderi oranına sahip}
-        other {}}
+    posters: "Gönderi Sahipleri"
     latest_poster_link: "%{username} adlı kullanıcının profili, son gönderi sahibi"
     original_post: "Orijinal Gönderi"
     views: "Görüntüleme"
-    sr_views: "Görüntülemeye göre sırala"
     views_lowercase:
       one: "görüntüleme"
       other: "görüntüleme"
     replies: "Yanıtlar"
-    sr_replies: "Yanıtlara göre sırala"
     views_long:
       one: "bu konu %{count} kez görüntülendi"
       other: "bu konu %{count} kez görüntülendi"
     activity: "Aktivite"
-    sr_activity: "Aktiviteye göre sırala"
     likes: "Beğeniler"
-    sr_likes: "Beğenilere göre sırala"
-    sr_op_likes: "Orijinal gönderi beğenilerine göre sırala"
     likes_lowercase:
       one: "beğeni"
       other: "beğeni"
@@ -4291,8 +4287,8 @@ tr_TR:
       no_read_topics_body: "Tartışmaları okumaya başladığınızda, burada bir liste görürsünüz. Okumaya başlamak için <a href='%{topUrl}'>En İyi</a> veya <a href='%{categoriesUrl}'>Kategoriler</a>'de ilginizi çeken konuları arayın veya anahtar kelime %{searchIcon} ile arama yapın"
     no_group_messages_title: "Grup mesajı bulunamadı"
     topic_entrance:
-      sr_jump_top_button: "İlk gönderiye atla"
-      sr_jump_bottom_button: "Son gönderiye atla"
+      jump_top_button_title: "İlk gönderiye atla"
+      jump_bottom_button_title: "Son gönderiye atla"
     fullscreen_table:
       expand_btn: "Tabloyu Genişlet"
       view_table: "Tabloyu Görüntüle"
@@ -6322,6 +6318,7 @@ tr_TR:
           add_types_title: "Uzantılara izin ver %{types}"
           add_types_toast: "%{types} dosya türleri eklendi"
       badges:
+        status: Durum
         title: Rozetler
         new_badge: Yeni Rozet
         new: Yeni
@@ -6329,8 +6326,6 @@ tr_TR:
         badge: Rozet
         display_name: Ekran adı
         description: Açıklama
-        long_description: Uzun Açıklama
-        badge_type: Rozet Türü
         badge_grouping: Grup
         badge_groupings:
           modal_title: Rozet Gruplamaları
@@ -6360,9 +6355,8 @@ tr_TR:
         image: Görsel
         graphic: Grafik
         icon_help: "Font Awesome simge adı girin (normal simgeler için 'far-' önünü ve marka simgeleri için 'fab-' kullanın)"
-        image_help: "Her ikisi de belirlenmişse bir görüntünün yüklenmesi simge alanını geçersiz kılar."
-        select_an_icon: "Simge seç"
-        upload_an_image: "Görüntü yükle"
+        select_an_icon: "Simge seçin"
+        upload_an_image: "Görüntü yükleyin"
         read_only_setting_help: "Metni özelleştir"
         query: Rozet Sorgusu (SQL)
         target_posts: Sorgu hedefleri gönderileri

@@ -2242,6 +2242,11 @@ ar:
     modal:
       close: "إغلاق"
       dismiss_error: "تجاهل الخطأ"
+    form_kit:
+      reset: إعادة التعيين
+      optional: اختياري
+      errors:
+        required: "مطلوب"
     close: "إغلاق"
     logout: "تم تسجيل خروجك."
     refresh: "تحديث"
@@ -4443,16 +4448,10 @@ ar:
     pending_posts:
       label: "قيد الانتظار"
       label_with_count: "قيد الانتظار (%{count})"
-    posts_likes_MF: |
-      يتضمَّن هذا الموضوع {count, plural, zero {# رد} one {ردًا واحدًا (#)} two {ردَّين (#)} few {# ردود} many {# ردًا} other {# رد}} {ratio, select,
-        low {بمعدل إعجابات مرتفع على المنشورات}
-        med {بمعدل إعجابات مرتفع جدًا على المنشورات}
-        high {بمعدل إعجابات مرتفع للغاية على المنشورات}
-        other {}}
+    posters: "الناشرون"
     latest_poster_link: "الملف الشخصي لـ %{username}، الناشر الأخير"
     original_post: "المنشور الأصلي"
     views: "مرات العرض"
-    sr_views: "الترتيب حسب المشاهدات"
     views_lowercase:
       zero: "مرة عرض"
       one: "مرة عرض واحدة"
@@ -4461,7 +4460,6 @@ ar:
       many: "مرة عرض"
       other: "مرة عرض"
     replies: "الردود"
-    sr_replies: "الترتيب حسب الردود"
     views_long:
       zero: "لقد تم عرض هذا الموضوع %{number} مرة"
       one: "لقد تم عرض هذا الموضوع مرة واحدة (%{count})"
@@ -4470,10 +4468,7 @@ ar:
       many: "لقد تم عرض هذا الموضوع %{number} مرة"
       other: "لقد تم عرض هذا الموضوع %{number} مرة"
     activity: "النشاط"
-    sr_activity: "الترتيب حسب النشاط"
     likes: "تسجيلات الإعجاب"
-    sr_likes: "الترتيب حسب تسجيلات الإعجاب"
-    sr_op_likes: "الترتيب حسب تسجيلات الإعجاب على المنشور"
     likes_lowercase:
       zero: "مرة إعجاب"
       one: "مرة إعجاب واحدة"
@@ -5001,8 +4996,8 @@ ar:
       no_read_topics_body: "بعد البدء في قراءة المناقشات، سترى قائمة هنا. لبدء القراءة، ابحث عن الموضوعات التي تهمك في <a href='%{topUrl}'>الأعلى</a> أو <a href='%{categoriesUrl}'>الفئات</a>، أو عن طريق البحث بالكلمة الرئيسية %{searchIcon}"
     no_group_messages_title: "لم يتم العثور على أي رسائل من المجموعة"
     topic_entrance:
-      sr_jump_top_button: "الانتقال إلى المنشور الأول"
-      sr_jump_bottom_button: "الانتقال إلى المنشور الأخير"
+      jump_top_button_title: "الانتقال إلى المنشور الأول"
+      jump_bottom_button_title: "الانتقال إلى المنشور الأخير"
     fullscreen_table:
       expand_btn: "توسيع الجدول"
       view_table: "عرض الجدول"
@@ -7066,6 +7061,7 @@ ar:
           add_types_title: "السماح بالامتدادات %{types}"
           add_types_toast: "تمت إضافة أنواع الملفات %{types}"
       badges:
+        status: الحالة
         title: الشارات
         new_badge: شارة جديدة
         new: جديدة
@@ -7073,8 +7069,6 @@ ar:
         badge: الشارة
         display_name: اسم العرض
         description: الوصف
-        long_description: الوصف الطويل
-        badge_type: نوع الشارة
         badge_grouping: المجموعة
         badge_groupings:
           modal_title: تجميعات الشارات
@@ -7104,7 +7098,6 @@ ar:
         image: الصورة
         graphic: رمز الشارة
         icon_help: "إدخال اسم أيقونة Font Awesome (استخدم البادئة \"far-\" للأيقونات العادية والبادئة \"fab-‎\" لأيقونات العلامات التجارية)"
-        image_help: "يؤدي تحميل صورة إلى تجاوز حقل الرمز إذا تم تعيين كليهما."
         select_an_icon: "تحديد أيقونة"
         upload_an_image: "تحميل صورة"
         read_only_setting_help: "تخصيص النص"

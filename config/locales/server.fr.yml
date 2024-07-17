@@ -909,8 +909,6 @@ fr:
     pop3_authentication_error: "L'authentification auprès du serveur POP3 a échoué. Vérifiez le nom d'utilisateur et le mot de passe avant de réessayer."
     imap_authentication_error: "L'authentification auprès du serveur IMAP a échoué. Vérifiez le nom d'utilisateur et le mot de passe avant de réessayer."
     imap_no_response_error: "Une erreur est survenue lors de la communication avec le serveur IMAP. %{message}"
-    smtp_authentication_error: "L'authentification auprès du serveur SMTP a échoué. Vérifiez le nom d'utilisateur et le mot de passe avant de réessayer."
-    authentication_error_gmail_app_password: 'Un mot de passe propre à l''application est requis. Pour en savoir plus, consultez cet <a target="_blank" href="https://support.google.com/accounts/answer/185833">article du centre d''assistance de Google</a>'
     smtp_server_busy_error: "Le serveur SMTP indique qu'il subit une trop forte charge. Patientez un moment avant de réessayer."
     smtp_unhandled_error: "Une erreur non prise en charge est survenue lors de la communication avec le serveur SMTP. %{message}"
     imap_unhandled_error: "Une erreur non prise en charge est survenue lors de la communication avec le serveur IMAP. %{message}"
@@ -1397,8 +1395,6 @@ fr:
       ram: "Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé."
       subfolder_ends_in_slash: "Votre configuration de sous-répertoire est erronée ; DISCOURSE_RELATIVE_URL_ROOT se termine avec une barre oblique ."
       missing_mailgun_api_key: "Le serveur est configuré pour envoyer des e-mails via Mailgun, mais vous n'avez pas fourni la clé API nécessaire pour vérifier les messages Webhook."
-      out_of_date_themes: "Des mises à jour sont disponibles pour les thèmes suivants :"
-      unreachable_themes: "Nous n'avons pas pu vérifier les mises à jour pour les thèmes suivants :"
       google_analytics_version: "Votre Discourse utilise actuellement Google Analytics 3, qui ne sera plus pris en charge après le mois de juillet 2023. <a href='https://meta.discourse.org/t/260498'>Passez à Google Analytics 4</a> dès maintenant pour continuer à recevoir des informations et des analyses précieuses sur les performances de votre site Web."
   site_settings:
     allow_bulk_invite: "Autoriser l'envoi d'invitations multiples via l'importation d'un fichier CSV"

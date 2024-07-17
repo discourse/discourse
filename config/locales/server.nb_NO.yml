@@ -915,7 +915,6 @@ nb_NO:
       ram: "Serveren din kjører med mindre enn 1 GB med minne. Minst 1 GB RAM er anbefalt."
       subfolder_ends_in_slash: "Oppsettet av undermappe er feil; variablen DISCOURSE_RELATIVE_URL_ROOT slutter med en skråstrek."
       missing_mailgun_api_key: "Serveren er konfigurert til å sende e-post via Mailgun men du har ikke satt API-nøkkelen som brukes til å verifisere webhook meldinger."
-      out_of_date_themes: "Oppdateringer er tilgjengelig for følgende drakter:"
   site_settings:
     disabled: "deaktivert"
     censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"
