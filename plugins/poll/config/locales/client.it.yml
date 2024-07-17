@@ -72,6 +72,8 @@ it:
         breakdown: "Ripartizione"
         percentage: "Percentuale"
         count: "Conteggio"
+      ranked_choice:
+        none: "Nessun orario"
       options:
         label: "Opzioni"
       error_while_toggling_status: "Spiacenti, si è verificato un errore nel cambiamento di stato di questo sondaggio."

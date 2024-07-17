@@ -1159,6 +1159,10 @@ th:
     modal:
       close: "ปิด"
       dismiss_error: "ละทิ้งข้อผิดพลาด"
+    form_kit:
+      optional: ทางเลือก
+      errors:
+        required: "ต้องการ"
     close: "ปิด"
     logout: "คุณได้ออกจากระบบ"
     refresh: "รีเฟรช"
@@ -2158,6 +2162,7 @@ th:
     pending_posts:
       label: "อยู่ระหว่างการพิจารณา"
       label_with_count: "กำลังรอ (%{count})"
+    posters: "ผู้โพสต์"
     original_post: "โพสต์ต้นฉบับ"
     views: "ดู"
     views_lowercase:
@@ -3210,6 +3215,7 @@ th:
         file_types_list:
           add_image_types: "รูปภาพ"
       badges:
+        status: สถานะ
         title: เหรียญ
         new_badge: เหรียญใหม่
         new: ใหม่
@@ -3217,8 +3223,6 @@ th:
         badge: เหรียญ
         display_name: ชื่อที่ใช้แสดง
         description: รายละเอียด
-        long_description: รายละเอียดแบบยาว
-        badge_type: ประเภทเหรียญ
         badge_grouping: กลุ่ม
         badge_groupings:
           modal_title: การจัดกลุ่มเหรียญ
@@ -3234,6 +3238,8 @@ th:
         disabled: ปิดใช้งานแล้ว
         icon: ไอคอน
         image: ภาพ
+        select_an_icon: "เลือกไอคอน"
+        upload_an_image: "อัปโหลดรูปภาพ"
         trigger_type:
           none: "อัปเดตรายวัน"
           post_revision: "เมื่อผู้ใช้แก้ไขหรือสร้างโพสต์"

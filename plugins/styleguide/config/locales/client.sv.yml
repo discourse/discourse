@@ -34,8 +34,6 @@ sv:
         icons:
           title: "Ikoner"
           full_list: "Se hela listan över Font Awesome-ikoner"
-        input_fields:
-          title: "Inmatningsfält"
         buttons:
           title: "Knappar"
         dropdowns:

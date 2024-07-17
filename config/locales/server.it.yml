@@ -909,8 +909,6 @@ it:
     pop3_authentication_error: "Si è verificato un problema con le credenziali POP3 fornite. Controlla il nome utente e la password e riprova."
     imap_authentication_error: "Si è verificato un problema con le credenziali IMAP fornite. Controlla il nome utente e la password e riprova."
     imap_no_response_error: "Si è verificato un errore durante la comunicazione con il server IMAP. %{message}"
-    smtp_authentication_error: "Si è verificato un problema con le credenziali SMTP fornite. Controlla il nome utente e la password e riprova."
-    authentication_error_gmail_app_password: 'È richiesta una password specifica dell''applicazione. Ulteriori informazioni su <a target="_blank" href="https://support.google.com/accounts/answer/185833">questo articolo della Guida di Google</a>'
     smtp_server_busy_error: "Il server SMTP è attualmente occupato. Riprova più tardi."
     smtp_unhandled_error: "Si è verificato un errore non gestito durante la comunicazione con il server SMTP. %{message}"
     imap_unhandled_error: "Si è verificato un errore non gestito durante la comunicazione con il server IMAP. %{message}"
@@ -1397,8 +1395,6 @@ it:
       ram: "Il tuo server sta funzionando con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria."
       subfolder_ends_in_slash: "L'impostazione della sottocartella è errata; DISCOURSE_RELATIVE_URL_ROOT finisce con uno slash."
       missing_mailgun_api_key: "Il server è configurato per inviare email via Mailgun ma non hai fornito la chiave API necessaria a verificare i messaggi webhook."
-      out_of_date_themes: "Sono disponibili aggiornamenti per i seguenti temi:"
-      unreachable_themes: "Non è stato possibile verificare la presenza di aggiornamenti per i seguenti temi:"
       google_analytics_version: "Il tuo Discourse utilizza attualmente Google Analytics 3, che non sarà più supportato dopo luglio 2023. <a href='https://meta.discourse.org/t/260498'>Passa a Google Analytics 4</a> ora per continuare a ricevere preziose informazioni e analisi per le prestazioni del tuo sito web."
   site_settings:
     allow_bulk_invite: "Consenti inviti di massa caricando un file CSV"

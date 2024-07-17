@@ -72,6 +72,8 @@ pt_BR:
         breakdown: "Divisão"
         percentage: "Porcentagem"
         count: "Contagem"
+      ranked_choice:
+        none: "Nenhum"
       options:
         label: "Opções"
       error_while_toggling_status: "Desculpe, houve um erro ao mudar o status desta enquete."

@@ -1427,6 +1427,9 @@ id:
         fixed: "Mengakses Halaman"
     modal:
       close: "tutup"
+    form_kit:
+      reset: Reset
+      optional: opsional
     close: "Tutup"
     assets_changed_confirm: "Situs ini baru saja menerima pembaruan perangkat lunak. Dapatkan versi terbaru sekarang?"
     logout: "Anda telah keluar."
@@ -1486,6 +1489,7 @@ id:
     search_hint: "username, email, atau alamat IP"
     create_account:
       title: "Mendaftar"
+      already_have_account: "Sudah memiliki akun?"
     forgot_password:
       title: "Atur Ulang Kata Sandi"
       action: "Saya lupa password"
@@ -2180,6 +2184,8 @@ id:
               content: "Ulasan"
         global_section: "Bagian global, dapat dilihat oleh semua orang"
       back_to_forum: "Kembali ke Forum"
+      collapse_all_sections: "Tutup semua bagian"
+      expand_all_sections: "Buka semua bagian"
       filter: "Filter..."
     until: "Sampai:"
     form_template_chooser:
@@ -2354,6 +2360,10 @@ id:
         about:
           community_name: "Nama komunitas"
           optional: "(opsional)"
+          toasts:
+            general_settings_saved: "Pengaturan umum disimpan"
+            contact_information_saved: "Informasi kontak disimpan"
+            your_organization_saved: "Organisasi Anda disimpan"
           saved: "tersimpan!"
         flags:
           header: "Bendera Moderasi"
@@ -2695,6 +2705,7 @@ id:
         default_categories:
           modal_yes: "Ya"
       badges:
+        status: Status
         new_badge: Badge Baru
         new: Baru
         name: Nama
@@ -2706,6 +2717,7 @@ id:
         expand: Perluas &hellip;
         enabled: diaktifkan
         disabled: dinonaktifkan
+        select_an_icon: "Pilih ikon"
       emoji:
         name: "Nama"
         settings: "Pengaturan"

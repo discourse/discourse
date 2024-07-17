@@ -636,8 +636,6 @@ vi:
   email_settings:
     pop3_authentication_error: "Đã xảy ra sự cố với thông tin đăng nhập POP3 được cung cấp, hãy kiểm tra tên người dùng và mật khẩu rồi thử lại."
     imap_authentication_error: "Đã xảy ra sự cố với thông tin đăng nhập IMAP được cung cấp, hãy kiểm tra tên người dùng và mật khẩu rồi thử lại."
-    smtp_authentication_error: "Đã xảy ra sự cố với thông tin đăng nhập SMTP được cung cấp, hãy kiểm tra tên người dùng và mật khẩu rồi thử lại."
-    authentication_error_gmail_app_password: 'Yêu cầu mật khẩu dành riêng cho ứng dụng. Tìm hiểu thêm tại <a target="_blank" href="https://support.google.com/accounts/answer/185833">bài viết Trợ giúp Google này</a>'
   webauthn:
     validation:
       challenge_mismatch_error: "Thử thách được cung cấp không khớp với thử thách do máy chủ xác thực tạo ra."
@@ -987,8 +985,6 @@ vi:
       queue_size: "Có %{queue_size} công việc đang chờ xử lý trong hàng đợi. Điều này chứng tỏ có vấn đề đã xảy ra với tiến trình Sidekiq, hoặc bạn cần tăng số lượng Sidekiq workers ()."
       ram: "Máy chủ của bạn có bộ nhớ ít hơn 1 GB. Khuyến cáo sử dụng bộ nhớ tối thiểu 1 GB ."
       subfolder_ends_in_slash: "Thư mục con của bạn được thiết lập không đúng, DISCOURSE_RELATIVE_URL_ROOT phải được kết thúc bằng dấu gạch chéo."
-      out_of_date_themes: "Các bản cập nhật có sẵn cho các chủ đề sau:"
-      unreachable_themes: "Chúng tôi không thể kiểm tra cập nhật về các chủ đề sau:"
   site_settings:
     disabled: "khóa"
     censored_words: "Từ sẽ tự động thay thế bằng &#9632;&#9632;&#9632;&#9632;"

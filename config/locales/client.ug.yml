@@ -1126,6 +1126,8 @@ ug:
       read_help: "يېقىندا ئوقۇغان تېما"
       preferences:
         title: "مايىللىق"
+        profile:
+          enforced_required_fields: "بۇ تور بېكەتنى ئىشلىتىشتىنى داۋاملاشتۇرۇشتىن ئىلگىرى قوشۇمچە ئۇچۇرلارنى تەمىنلىشىڭىز كېرەك."
       feature_topic_on_profile:
         open_search: "يېڭى بىر تېما تاللىنىدۇ"
         title: "بىر تېما تاللىنىدۇ"
@@ -1325,6 +1327,35 @@ ug:
         warnings: "رەسمىي ئاگاھلاندۇرۇش"
         read_more_in_group: "تېخىمۇ كۆپ ئوقۇماقچىمۇ؟ %{groupLink} دىكى باشقا ئۇچۇرلارغا كۆز يۈگۈرتۈڭ."
         read_more: "تېخىمۇ كۆپ ئوقۇماقچىمۇ؟ <a href='%{basePath}/u/%{username}/messages'>شەخسىي ئۇچۇر</a>دىكى باشقا ئۇچۇرلارغا كۆز يۈگۈرتۈڭ."
+        read_more_group_pm_MF: "{ HAS_UNREAD_AND_NEW, select,\n  true {\n    { UNREAD, plural,\n         =0 {}\n        one {ئوقۇلمىغان <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># </a>ئۇچۇر بار} \n      other {ئوقۇلمىغان <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># </a>ئۇچۇر بار}\n    }\n    { NEW, plural,\n         =0 {}\n        one { ۋە <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># يېڭى</a> ئۇچۇر قالدى ياكى  {groupLink} دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}\n      other { ۋە <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># يېڭى</a> ئۇچۇر قالدى ياكى  {groupLink} دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}\n    }\n  }\n  false {\n    { UNREAD, plural,\n         =0 {}\n        one {ئوقۇلمىغان <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># </a> ئۇچۇر قالدى ياكى  {groupLink} دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}\n      other {ئوقۇلمىغان <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># </a> ئۇچۇر قالدى ياكى  {groupLink} دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}\n    }\n    { NEW, plural,\n         =0 {}\n        one {يېڭى <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># </a> ئۇچۇر قالدى ياكى  {groupLink} دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}\n      other {يېڭى <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># </a> ئۇچۇر قالدى ياكى  {groupLink} دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}\n    }\n  }\n  other {}\n}\n"
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {ئوقۇلمىغان <a href='{basePath}/u/{username}/messages/unread'># </a>}
+                other {ئوقۇلمىغان <a href='{basePath}/u/{username}/messages/unread'># </a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { ۋە يېڭى <a href='{basePath}/u/{username}/messages/new'># </a> ئۇچۇر قالدى ياكى باشقا <a href='{basePath}/u/{username}/messages'>شەخسىي ئۇچۇر</a>غا كۆز يۈگۈرتۈڭ}
+                other { ۋە يېڭى <a href='{basePath}/u/{username}/messages/new'># </a> ئۇچۇر قالدى ياكى باشقا <a href='{basePath}/u/{username}/messages'>شەخسىي ئۇچۇر</a>غا كۆز يۈگۈرتۈڭ}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {ئوقۇلمىغان <a href='{basePath}/u/{username}/messages/unread'># </a> ئۇچۇر قالدى ياكى باشقا <a href='{basePath}/u/{username}/messages'>شەخسىي ئۇچۇر</a>غا كۆز يۈگۈرتۈڭ}
+                other {ئوقۇلمىغان <a href='{basePath}/u/{username}/messages/unread'># </a> ئۇچۇر قالدى ياكى باشقا <a href='{basePath}/u/{username}/messages'>شەخشىي ئۇچۇر</a>غا كۆز يۈگۈرتۈڭ}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {يېڭى <a href='{basePath}/u/{username}/messages/new'># </a> ئۇچۇر قالدى ياكى باشقا <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+                other {يېڭى <a href='{basePath}/u/{username}/messages/new'># </a> ئۇچۇر قالدى ياكى باشقا <a href='{basePath}/u/{username}/messages'>شەخسىي ئۇچۇر</a>غا كۆز يۈگۈرتۈڭ}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "ھېسابات"
         security: "بىخەتەرلىك"
@@ -1346,6 +1377,7 @@ ug:
         set_password: "ئىم تەڭشەك"
         choose_new: "يېڭى ئىم تاللىنىدۇ"
         choose: "ئىم تاللىنىدۇ"
+        verify_identity: "داۋاملاشتۇرۇش ئۈچۈن كىملىكىڭىزنى دەلىللەڭ."
         title: "ئىم ئەسلىگە قايتۇر"
       second_factor_backup:
         title: "ئىككى ئامىللىق زاپاسلاش كودى"
@@ -1386,6 +1418,7 @@ ug:
           ئىككى ئامىللىق دەلىللەش ھېساباتىڭىزغا ئىمدىن باشقا بىر قېتىملىق پەرمان تاختىسى كىرگۈزۈشنى تەلەپ قىلىپ، ھېساباتىڭىزغا قوشۇمچە بىخەتەرلىك قوشىدۇ. پەرمان تاختىسىنى <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ۋە <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> ئۈسكۈنىسىدە ھاسىللىيالايسىز.
         oauth_enabled_warning: "دىققەت، ھېساباتىڭىزدا ئىككى ئامىللىق دەلىللەش قوزغىتىلغاندىن كېيىن ئىجتىمائىي تاراتقۇدا تىزىمغا كىرىش چەكلىنىدۇ."
         use: "دەلىللىگۈچ ئەپ ئىشلىتىڭ"
+        enforced_with_oauth_notice: "ئىككى ئامىللىق دەلىللەشنى قوزغىتىشىڭىزكېرەك. سىز پەقەت ئىم بىلەن تىزىمغا كىرگەندىلا تەلەپ قىلىنىدۇ. سىرتقى دەلىللەش ياكى ئىجتىمائىي تاراتقۇ ئارقىلىق تىزىمغا كىرىش ئۇسۇلىنى قوللانغاندا تەلەپ قىلىنمايدۇ."
         enforced_notice: "بۇ تور بېكەتكە كىرىشتىن ئىلگىرى ئىككى ئامىللىق دەلىللەشنى قوزغىتىشىڭىز تەلەپ قىلىنىدۇ."
         disable: "چەكلە"
         disable_confirm: "سىز ئىككى ئامىللىق دەلىللەشنى راستتىنلا چەكلەمسىز؟"
@@ -1724,6 +1757,10 @@ ug:
         bulk_invite:
           none: "بۇ بەتتە كۆرسىتىلىدىغان تەكلىپنامە يوق."
           text: "توپ تەكلىپ"
+          instructions: |
+            <p>ئەزا تەكلىپ قىلىپ جامائىتىڭىزنى زورايتىڭ. بىر <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV ھۆججىتى</a> تەييارلاپ، سىز تەكلىپ قىلماقچى بولغان ئىشلەتكۈچىنىڭ ئېلخەت ئادرېسىنى ھەر بىر قۇرغا ئاز دېگەندە بىرنى يېزىڭ. ئەگەر ئۇلارنى گۇرۇپپىغا قوشماقچى ياكى ئۇلار تۇنجى قېتىم تىزىمغا كىرگەندە بەلگىلەنگەن تېمىغا باشلىماقچى بولسىڭىز، پەش بىلەن ئايرىلغان ئۇچۇرنى تەمىنلىسىڭىز بولىدۇ، تۆۋەندە كۆرسىتىلگەندەك.</p>
+            <pre>john@smith.com,first_group_name;second_group_name,topic_id</pre>
+            <p>سىز يۈكلىگەن CSV ھۆججەتتىكى ھەر بىر ئېلخەتكە تەكلىپ يوللايدۇ، سەل تۇرۇپ ئۇلارنى باشقۇرالايسىز.</p>
           progress: "يۈكلەنگىنى %{progress}…"
           success: "ھۆججەت مۇۋەپپەقىيەتلىك يۈكلەندى. بۇ جەريان تاماملانغاندا سىزگە ئۇچۇر ئارقىلىق ئۇقتۇرۇلىدۇ."
           error: "كەچۈرۈڭ ، ھۆججەت CSV پىچىمىدا بولۇشى كېرەك."
@@ -1739,6 +1776,9 @@ ug:
         fine_print: "كىملىكىڭىزنى جەزملىشىڭىزنى سورايمىز چۈنكى بۇ يوشۇرۇن سەزگۈر مەشغۇلات. دەلىللەنگەندىن كېيىن، سىز بىر نەچچە سائەت مەشغۇلات قىلمىغاندىن كېيىن ئاندىن قايتا دەلىللەشنى تەلەپ قىلىدۇ."
       password:
         title: "ئىم"
+        too_short:
+          one: "ئىم بەك قىسقا (ئەڭ ئاز بولغاندا %{count} ھەرپ)."
+          other: "ئىم بەك قىسقا (ئەڭ ئاز بولغاندا %{count} ھەرپ)."
         common: "بۇ ئىم بەك كۆپ ئۇچرايدۇ."
         same_as_username: "ئىم ئىشلەتكۈچى ئاتىڭىز بىلەن ئوخشاش."
         same_as_email: "ئىم ئېلخېتىڭىز بىلەن ئوخشاش."
@@ -1875,6 +1915,15 @@ ug:
     modal:
       close: "تاقا"
       dismiss_error: "خاتالىققا پەرۋا قىلما"
+    form_kit:
+      reset: ئەسلىگە قايتۇر
+      optional: تاللاشچان
+      errors:
+        required: "زۆرۈر"
+        invalid_url: "چوقۇم ئۈنۈملۈك تور ئادرېسى بولۇشى كېرەك"
+        too_short:
+          one: "كەم دېگەندە %{count} ھەرپ بولۇشى كېرەك."
+          other: "كەم دېگەندە %{count} ھەرپ بولۇشى كېرەك"
     close: "تاقا"
     assets_changed_confirm: "بۇ تور بېكەت يۇمشاق دېتال يېڭىلاشنى تاپشۇرۇۋالدى. ھازىر ئەڭ يېڭى نەشرىگە ئېرىشسۇنمۇ؟"
     logout: "سىز تىزىمدىن چىققان."
@@ -3682,23 +3731,19 @@ ug:
     pending_posts:
       label: "كۈتۈۋاتىدۇ"
       label_with_count: "كۈتۈۋاتىدۇ(%{count})"
+    posters: "يوللىغۇچى"
     latest_poster_link: "%{username} نىڭ تەرجىمىھالى، ئاخىرقى چاپلانمىسى"
     original_post: "ئەسلى يازما"
     views: "كۆرۈلۈشى"
-    sr_views: "كۆرۈلۈشى بويىچە تەرتىپلە"
     views_lowercase:
       one: "كۆرۈلۈشى"
       other: "كۆرۈلۈشى"
     replies: "جاۋاب"
-    sr_replies: "جاۋاب بويىچە تەرتىپلە"
     views_long:
       one: "بۇ تېما %{count} قېتىم كۆرۈلگەن"
       other: "بۇ تېما %{count} قېتىم كۆرۈلگەن"
     activity: "پائالىيەت"
-    sr_activity: "پائالىيەت بويىچە تەرتىپلە"
     likes: "ياقتۇرۇش"
-    sr_likes: "ياقتۇرۇش بويىچە تەرتىپلە"
-    sr_op_likes: "ئەسلى يازمىنىڭ ياقتۇرۇش سانى بويىچە تەرتىپلە"
     likes_lowercase:
       one: "ياقتۇرۇش"
       other: "ياقتۇرۇش"
@@ -4132,8 +4177,8 @@ ug:
       no_read_topics_title: "تېخى ھېچقانداق تېمىنى ئوقۇمىدىڭىز"
     no_group_messages_title: "ھېچقانداق گۇرۇپپا ئۇچۇرى تېپىلمىدى"
     topic_entrance:
-      sr_jump_top_button: "بىرىنچى يازمىغا ئاتلا"
-      sr_jump_bottom_button: "ئاخىرقى يازمىغا ئاتلا"
+      jump_top_button_title: "بىرىنچى يازمىغا ئاتلا"
+      jump_bottom_button_title: "ئاخىرقى يازمىغا ئاتلا"
     fullscreen_table:
       expand_btn: "جەدۋەلنى ياي"
       view_table: "جەدۋەل كۆرسەت"
@@ -6150,6 +6195,7 @@ ug:
           add_types_toast: "%{types} ھۆججەت تىپى قوشۇلدى"
         mandatory_group: "گۇرۇپپا مەجبۇرى"
       badges:
+        status: ھالەت
         title: تارتۇق
         new_badge: يېڭى تارتۇق
         new: يېڭى
@@ -6157,8 +6203,6 @@ ug:
         badge: تارتۇق
         display_name: كۆرسىتىش ئىسمى
         description: چۈشەندۈرۈش
-        long_description: تەپسىلىي چۈشەندۈرۈش
-        badge_type: تارتۇق تىپى
         badge_grouping: گۇرۇپپا
         badge_groupings:
           modal_title: تارتۇق گۇرۇپپىسى
@@ -6188,7 +6232,6 @@ ug:
         image: سۈرەت
         graphic: گرافىك
         icon_help: "Font Awesome نىڭ سىنبەلگە ئىسمىنى كىرگۈزۈڭ (ئالدى قوشۇلغۇچى «far-» ئادەتتىكى سىنبەلگە ۋە ئالدى قوشۇلغۇچى «fab-» ماركا سىنبەلگە ئىشلىتىشنى كۆرسىتىدۇ)"
-        image_help: "ئەگەر ھەر ئىككىسى تەڭشەلسە، يۈكلىگەن سۈرەت سىنبەلگە بۆلىكىنى قاپلىۋېتىدۇ."
         select_an_icon: "سىنبەلگە تاللىنىدۇ"
         upload_an_image: "سۈرەت يۈكلىنىدۇ"
         read_only_setting_help: "ئىختىيارى تېكىست"

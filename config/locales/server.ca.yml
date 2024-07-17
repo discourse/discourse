@@ -1113,8 +1113,6 @@ ca:
       ram: "El vostre servidor s'està executant amb menys d'1 GB de memòria total. Es recomana com a mínim un 1 GB de memòria."
       subfolder_ends_in_slash: "La vostra configuració de subcarpeta no és correcta; DISCOURSE_RELATIVE_URL_ROOT acaba amb barra inclinada."
       missing_mailgun_api_key: "El servidor està configurat per a enviar correus electrònics mitjançant Mailgun, però no heu proporcionat cap clau d'API per a verificar els missatges del webhook."
-      out_of_date_themes: "Hi ha actualitzacions disponibles per a les aparences següents:"
-      unreachable_themes: "No hem pogut comprovar si hi ha actualitzacions de les aparences següents:"
   site_settings:
     disabled: "desactivat"
     censored_words: "Paraules que es reemplaçaran automàticament amb &#9632;&#9632;&#9632;&#9632;"

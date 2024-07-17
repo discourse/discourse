@@ -1059,8 +1059,6 @@ pl_PL:
     pop3_authentication_error: "Wystąpił problem z podanymi poświadczeniami POP3, sprawdź nazwę użytkownika i hasło i spróbuj ponownie."
     imap_authentication_error: "Wystąpił problem z podanymi poświadczeniami IMAP, sprawdź nazwę użytkownika i hasło i spróbuj ponownie."
     imap_no_response_error: "Wystąpił błąd podczas komunikacji z serwerem IMAP. %{message}"
-    smtp_authentication_error: "Wystąpił problem z podanymi poświadczeniami SMTP, sprawdź nazwę użytkownika i hasło i spróbuj ponownie."
-    authentication_error_gmail_app_password: 'Wymagane hasło aplikacji. Dowiedz się więcej czytając <a target="_blank" href="https://support.google.com/accounts/answer/185833">ten artykuł pomocy Google</a>'
     smtp_server_busy_error: "Serwer SMTP jest obecnie zajęty, spróbuj ponownie później."
     smtp_unhandled_error: "Wystąpił nieobsługiwany błąd podczas komunikacji z serwerem SMTP. %{message}"
     imap_unhandled_error: "Podczas komunikacji z serwerem IMAP wystąpił nieobsługiwany błąd. %{message}"
@@ -1557,8 +1555,6 @@ pl_PL:
       ram: "Twój serwer działa z mniej niż 1 GB pamięci całkowitej. Przynajmniej 1 GB pamięci jest zalecany."
       subfolder_ends_in_slash: "Twoje ustawienie podfolderu jest niepoprawne; DISCOURSE_RELATIVE_URL_ROOT kończy się slashem."
       missing_mailgun_api_key: "Serwer jest skonfigurowany do wysyłania wiadomości e-mail za pośrednictwem Mailgun, ale nie podałeś/łaś klucza API używanego do weryfikacji wiadomości z webhooka."
-      out_of_date_themes: "Aktualizacje są dostępne dla następujących motywów:"
-      unreachable_themes: "Nie byliśmy w stanie sprawdzić aktualizacji następujących tematów:"
       watched_words: "Wyrażenie regularne dla %{action} obserwowanych słów jest nieprawidłowe. Sprawdź ustawienia <a href='%{base_path}/admin/customize/watched_words'>obserwowanych słów</a>lub wyłącz ustawienie witryny 'watched words regular expressions'."
       google_analytics_version: "Twój Discourse używa obecnie Google Analytics 3, które nie będzie już wspierane po lipcu 2023 roku. <a href='https://meta.discourse.org/t/260498'>Uaktualnij do Google Analytics 4</a> teraz, aby nadal otrzymywać cenne informacje i analizy dotyczące wydajności twojej strony."
     back_from_logster_text: "Powrót do strony"

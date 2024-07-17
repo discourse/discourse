@@ -259,6 +259,7 @@ he:
       maximum_staged_user_per_email_reached: "הגעת למספר המרבי של משתמשים מבוימים לדוא״ל."
       no_subject: "(אין נושא)"
       no_body: "(אין גוף)"
+      attachments: "(קבצים מצורפים)"
       missing_attachment: "(הקובץ המצורף %{filename} חסר)"
       continuing_old_discussion:
         one: "בהמשך לדיון שהתנהל בכתובת [%{title}](%{url}) כיוון שהוא נוצר לפני למעלה מיום (%{count})."
@@ -1181,8 +1182,7 @@ he:
     pop3_authentication_error: "אירעה תקלה עם פרטי הגישה שסופקו עבור POP3, נא לבדוק את שם המשתמש והססמה ולנסות שוב."
     imap_authentication_error: "אירעה תקלה עם פרטי הגישה שסופקו עבור IMAP, נא לבדוק את שם המשתמש והססמה ולנסות שוב."
     imap_no_response_error: "אירעה שגיאה ביצירת קשר עם שרת ה־IMAP. ‏%{message}"
-    smtp_authentication_error: "אירעה תקלה עם פרטי הגישה שסופקו עבור SMTP, נא לבדוק את שם המשתמש והססמה ולנסות שוב."
-    authentication_error_gmail_app_password: 'נדרשת ססמה ייעודית ליישום. ניתן למצוא מידע נוסף ב<a target="_blank" href="https://support.google.com/accounts/answer/185833?hl=iw">כתבת העזרה הבאה מבית Google</a>'
+    smtp_authentication_error: "אירעה תקלה עם פרטי הגישה שסופקו עבור SMTP, נא לבדוק את שם המשתמש והססמה ולנסות שוב. %{message}"
     smtp_server_busy_error: "שרת ה־SMTP עסוק, נא לנסות שוב בהמשך."
     smtp_unhandled_error: "קרתה תקלה שלא טופלה בעת יצירת הקשר עם שרת ה־SMTP. ‏%{message}"
     imap_unhandled_error: "קרתה תקלה שלא טופלה בעת יצירת הקשר עם שרת ה־IMAP. ‏%{message}"
@@ -1717,8 +1717,8 @@ he:
       poll_pop3_timeout: "החיבור לשרת ה־POP3 התנתק. אין אפשרות לשלוף דוא״ל נכנס. נא לבדוק את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה־POP3</a> ואת ספק השירות שלך."
       poll_pop3_auth_error: "החיבור לשרת ה־POP3 נכשל עקב שגיאת הזדהות. נא לבדוק את <a href='%{base_path}/admin/site_settings/category/email'>הגדרות ה־POP3</a> שלך."
       force_https: "האתר שלך משתמש ב־SSL. אבל `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` עדיין לא הופעל בהגדרות האתר שלך."
-      out_of_date_themes: "יש עדכונים זמינים לערכות העיצוב הבאות:"
-      unreachable_themes: "לא הצלחתי לבדוק אם יש עדכונים לערכות העיצוב הבאות:"
+      out_of_date_themes: "יש עדכונים זמינים לערכות העיצוב הבאות:%{themes_list}"
+      unreachable_themes: "לא ניתן לבדוק אם יש עדכונים לערכות העיצוב הבאות:%{themes_list}"
       watched_words: "הביטוי הרגולרי למילים במעקב %{action} שגוי. נא לבדוק את <a href='%{base_path}/admin/customize/watched_words'>הגדרות המילים במעקב</a> או kהשבית את הגדרת האתר ‚ביטוי רגולרי למילים במעקב’."
       google_analytics_version: "ה־Discourse שלך משתמש כרגע ב־Google Analytics 3, שהתמיכה בו תיפסק אחרי יולי 2023. כדאי <a href='https://meta.discourse.org/t/260498'>לשדרג ל־Google Analytics 4</a> כעת כדי להמשיך לקבל תובנות מועילות בנוגע לביצועי האתר שלך."
       category_style_deprecated: "ה־Discourse שלך משתמש כרגע בסגנון קטגוריות שהשימוש בו הופסק והוא יוסר לפני מהדורת הבטא האחרונה של Discourse 3.2. נא לפנות אל <a href='https://meta.discourse.org/t/282441'>מעבר להגדרת אתר סגנון קטגוריה אחיד</a> להנחיות על שמירת סגנון הקטגוריות שבחרת."

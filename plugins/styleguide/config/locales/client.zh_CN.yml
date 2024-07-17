@@ -34,8 +34,6 @@ zh_CN:
         icons:
           title: "图标"
           full_list: "查看 Font Awesome 图标的完整列表"
-        input_fields:
-          title: "输入字段"
         buttons:
           title: "按钮"
         dropdowns:

@@ -1799,6 +1799,13 @@ ja:
     modal:
       close: "閉じる"
       dismiss_error: "エラーを閉じる"
+    form_kit:
+      reset: リセット
+      optional: オプション
+      errors:
+        required: "必須"
+        too_short:
+          other: "は少なくとも %{count} 文字である必要があります"
     close: "閉じる"
     logout: "ログアウトしました。"
     refresh: "更新"
@@ -3521,27 +3528,17 @@ ja:
     pending_posts:
       label: "保留中"
       label_with_count: "保留中 (%{count})"
-    posts_likes_MF: |
-      このトピックには{ratio, select,
-        low {「いいね！」率が高い}
-        med {「いいね！」率がとても高い}
-        high {「いいね！」率が非常に高い}
-        other {}}{count, plural, other {返信が # 件}}あります
+    posters: "投稿者"
     latest_poster_link: "%{username} のプロファイル、最新の投稿者"
     original_post: "元の投稿"
     views: "表示"
-    sr_views: "閲覧数で並べ替え"
     views_lowercase:
       other: "表示"
     replies: "返信"
-    sr_replies: "返信数で並べ替え"
     views_long:
       other: "このトピックは %{number} 回表示されました"
     activity: "アクティビティ"
-    sr_activity: "アクティビティで並べ替え"
     likes: "いいね！"
-    sr_likes: "「いいね！」数で並べ替え"
-    sr_op_likes: "元の投稿の「いいね！」数で並べ替え"
     likes_lowercase:
       other: "いいね！"
     users: "ユーザー"
@@ -3955,8 +3952,8 @@ ja:
       no_read_topics_body: "ディスカッションを読み始めると、ここにリストが表示されます。読み始めるには、<a href='%{topUrl}'>トップ</a>または<a href='%{categoriesUrl}'>カテゴリ</a>で興味のあるトピックを探すか、キーワードで検索 %{searchIcon} してください。"
     no_group_messages_title: "グループメッセージが見つかりません"
     topic_entrance:
-      sr_jump_top_button: "最初の投稿に移動"
-      sr_jump_bottom_button: "最後の投稿に移動"
+      jump_top_button_title: "最初の投稿に移動"
+      jump_bottom_button_title: "最後の投稿に移動"
     fullscreen_table:
       expand_btn: "表を展開"
       view_table: "テーブルを表示"
@@ -5907,6 +5904,7 @@ ja:
           add_types_title: "拡張子 %{types} を許可する"
           add_types_toast: "%{types} ファイルタイプが追加されました"
       badges:
+        status: ステータス
         title: バッジ
         new_badge: 新しいバッジ
         new: 新規
@@ -5914,8 +5912,6 @@ ja:
         badge: バッジ
         display_name: 表示名
         description: 説明
-        long_description: 詳しい説明
-        badge_type: バッジタイプ
         badge_grouping: グループ
         badge_groupings:
           modal_title: バッジのグループ
@@ -5945,7 +5941,6 @@ ja:
         image: 画像
         graphic: グラフィック
         icon_help: "Font Awesome アイコン名を入力します (通常のアイコンには接頭辞 'far-' を、ブランドアイコンには 'fab-' を使用します)"
-        image_help: "画像をアップロードすると、両方が設定されている場合、アイコンフィールドがオーバーライドされます。"
         select_an_icon: "アイコンを選択する"
         upload_an_image: "画像をアップロードする"
         read_only_setting_help: "テキストをカスタマイズする"

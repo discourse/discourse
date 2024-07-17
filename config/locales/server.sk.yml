@@ -259,6 +259,7 @@ sk:
       maximum_staged_user_per_email_reached: "Dosiahnutý maximálny počet nezaktívnených používateľov vytvorených emailom."
       no_subject: "(bez predmetu)"
       no_body: "(bez tela)"
+      attachments: "(prílohy)"
       missing_attachment: "(Chýba príloha %{filename})"
       continuing_old_discussion:
         one: "Pokračovanie diskusie z [%{title}](%{url}), pretože bola vytvorená pred viac ako %{count} dňami."
@@ -1182,8 +1183,6 @@ sk:
     pop3_authentication_error: "Vyskytol sa problém so zadanými povereniami POP3, skontrolujte používateľské meno a heslo a skúste to znova."
     imap_authentication_error: "Vyskytol sa problém so zadanými povereniami IMAP, skontrolujte používateľské meno a heslo a skúste to znova."
     imap_no_response_error: "Pri komunikácii so serverom IMAP došlo k chybe. %{message}"
-    smtp_authentication_error: "Vyskytol sa problém so zadanými povereniami SMTP, skontrolujte používateľské meno a heslo a skúste to znova."
-    authentication_error_gmail_app_password: 'Vyžaduje sa heslo špecifické pre aplikáciu. Viac informácií nájdete v <a target="_blank" href="https://support.google.com/accounts/answer/185833">tomto článku Pomocníka Google</a>'
     smtp_server_busy_error: "Server SMTP je momentálne zaneprázdnený, skúste to znova neskôr."
     smtp_unhandled_error: "Pri komunikácii so serverom SMTP sa vyskytla neošetrená chyba. %{message}"
     imap_unhandled_error: "Pri komunikácii so serverom IMAP sa vyskytla neošetrená chyba. %{message}"
@@ -1681,11 +1680,13 @@ sk:
         qtt_like: Obdržaných 'páči sa mi'
       description: "Top 10 používateľov, ktorí získali lajky od širokej škály ľudí."
     topic_view_stats:
+      title: "Štatistiky zobrazenia témy"
       labels:
         topic: Témy
         logged_in_views: Prihlásený
         anon_views: Anonymný
         total_views: Celkovo
+      description: "100 najnavštevovanejších tém v rozmedzí dátumu, kombinácia prihlásených a anonymných zobrazení. Možno filtrovať podľa kategórie."
   dashboard:
     problem:
       twitter_login: 'Zdá sa, že prihlásenie na Twitter momentálne nefunguje. Skontrolujte prihlasovacie údaje v <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">nastaveniach stránky</a>.'
@@ -1716,8 +1717,8 @@ sk:
       poll_pop3_timeout: "Pripojenie k serveru POP3 je časovo obmedzené. Prichádzajúcu poštu sa nepodarilo načítať. Skontrolujte <a href='%{base_path}/admin/site_settings/category/email'>nastavenia POP3</a> a poskytovateľa služieb."
       poll_pop3_auth_error: "Pripojenie k serveru POP3 zlyháva s chybou overovania. Skontrolujte <a href='%{base_path}/admin/site_settings/category/email'>nastavenia POP3</a>."
       force_https: "Vaša webová stránka používa protokol SSL. Ale v nastaveniach vašej stránky ešte nie je povolená funkcia <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>`force_https`</a>."
-      out_of_date_themes: "K dispozícii sú aktualizácie pre nasledujúce témy:"
-      unreachable_themes: "Nepodarilo sa nám skontrolovať aktualizácie nasledujúcich tém:"
+      out_of_date_themes: "K dispozícii sú aktualizácie pre tieto témy:%{themes_list}"
+      unreachable_themes: "Nepodarilo sa nám skontrolovať aktualizácie týchto tém:%{themes_list}"
       watched_words: "Regulárny výraz pre %{action} sledované slová je neplatný. Skontrolujte <a href='%{base_path}/admin/customize/watched_words'>nastavenia sledovaných slov</a> alebo vypnite nastavenie stránky \"sledované slová regulárne výrazy\"."
       google_analytics_version: "Tvoj Discourse momentálne používa Google Analytics 3, ktorý už nebude podporovaný po júli 2023. <a href='https://meta.discourse.org/t/260498'>Aktualizuj na Google Analytics 4</a> teraz, aby si naďalej získaval cenné prehľady a analytické údaje o výkonnosti tvojej webovej stránky."
       category_style_deprecated: "Váš Discourse v súčasnosti používa zastaraný štýl kategórie, ktorý bude odstránený pred konečným vydaním beta verzie Discusu 3.2. Pokyny, ako zachovať zvolený štýl kategórie, nájdete v časti <a href='https://meta.discourse.org/t/282441'>Presun na nastavenie lokality v štýle jednej kategórie</a> ."
@@ -1804,6 +1805,7 @@ sk:
     force_custom_user_agent_hosts: "Hostitelia, pre ktorých sa má používať vlastný používateľský agent onebox na všetky požiadavky. (Obzvlášť užitočné pre hostiteľov, ktorí obmedzujú prístup podľa používateľského agenta)."
     max_oneboxes_per_post: "Nastavenie maximálneho počtu oneboxov, ktoré môžu byť zahrnuté v jednom príspevku. Oneboxy poskytujú náhľad prepojeného obsahu v rámci príspevku."
     facebook_app_access_token: "Token vygenerovaný z vášho ID a tajomstva aplikácie Facebook. Používa sa na generovanie instagramových oneboxov."
+    github_onebox_access_tokens: "Mapovanie organizácie alebo používateľa GitHub na prístupový token GitHub, ktorý sa používa na generovanie oneboxov GitHub pre súkromné repozitáre, revízie, žiadosti o stiahnutie, problémy a obsah súborov. Bez toho budú oneboxované len verejné adresy URL GitHub."
     logo: "Obrázok loga v ľavom hornom rohu vašej stránky. Použite široký obdĺžnikový obrázok s výškou 120 a pomerom strán väčším ako 3:1. Ak zostane prázdny, zobrazí sa text názvu lokality."
     logo_small: "Malý obrázok loga v ľavom hornom rohu vašej stránky, ktorý vidíte pri posúvaní nadol. Použite štvorcový obrázok s rozmermi 120 × 120. Ak zostane prázdny, zobrazí sa domovský glyf."
     digest_logo: "Alternatívny obrázok loga, ktorý sa používa v hornej časti súhrnu e-mailu na vašej stránke. Použite široký obdĺžnikový obrázok. Nepoužívajte obrázok SVG. Ak zostane prázdny, použije sa obrázok z nastavenia `logo`."
@@ -2556,6 +2558,7 @@ sk:
     page_loading_indicator: "Nakonfigurujte indikátor načítania, ktorý sa zobrazí počas navigácie po stránkach v rámci Discourse. „Spinner“ je indikátor celej strany. „Posuvník“ zobrazuje úzky pruh v hornej časti obrazovky."
     show_user_menu_avatars: "Zobraziť používateľské avatary v používateľskej ponuke"
     view_raw_email_allowed_groups: "Skupiny, ktoré môžu zobraziť nespracovaný obsah e-mailu, ak bol príspevok vytvorený pomocou prichádzajúceho e-mailu. To zahŕňa hlavičky e-mailov a ďalšie technické informácie."
+    experimental_flags_admin_page_enabled_groups: "EXPERIMENTÁLNE: Odstráňte odkaz Moderovanie príznakov z bočného panela administrátora."
     errors:
       invalid_css_color: "Neplatná farba. Zadajte názov farby alebo hexadecimálnu hodnotu."
       invalid_email: "Nesprávna emailová adresa."

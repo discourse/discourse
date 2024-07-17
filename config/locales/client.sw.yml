@@ -1016,6 +1016,11 @@ sw:
         fixed: "Pakua Ukurasa"
     modal:
       close: "funga"
+    form_kit:
+      reset: Anza Upya
+      optional: sio muhimu
+      errors:
+        required: "Muhimu na Inahitajika"
     close: "Funga"
     logout: "Ulitolewa."
     refresh: "Rudisha Tena"
@@ -1987,6 +1992,7 @@ sw:
     pending_posts:
       label: "subiria"
       label_with_count: "(%{count}) zinasubiria"
+    posters: "Wachapishaji"
     original_post: "Chapisho la Kwanza"
     views: "Imeonwa"
     views_lowercase:
@@ -3296,8 +3302,6 @@ sw:
         badge: Beji
         display_name: Jina la Kutumia
         description: Maelezo
-        long_description: Maelezo Marefu
-        badge_type: Aina ya beji
         badge_grouping: Kikundi
         badge_groupings:
           modal_title: VIkundi vya beji

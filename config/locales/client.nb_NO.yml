@@ -1538,6 +1538,11 @@ nb_NO:
     modal:
       close: "lukk"
       dismiss_error: "Avvis feil"
+    form_kit:
+      reset: Tilbakestill
+      optional: valgfritt
+      errors:
+        required: "Påkrevd"
     close: "Lukk"
     logout: "Du ble logget ut"
     refresh: "Refresh"
@@ -2941,12 +2946,7 @@ nb_NO:
     pending_posts:
       label: "På vent"
       label_with_count: "Ventende (%{count})"
-    posts_likes_MF: |
-      Dette emnet har {count, plural, one {1 svar} other {# svar}} {ratio, select,
-      low {med mange likes i forhold til innlegg}
-      med {med veldig mange likes i forhold til innlegg}
-      high {med ekstremt mange likes i forhold til innlegg}
-      other {}}
+    posters: "Innleggsskrivere"
     original_post: "Originalt innlegg"
     views: "Visninger"
     views_lowercase:
@@ -4591,6 +4591,7 @@ nb_NO:
         file_types_list:
           add_image_types: "Bilder"
       badges:
+        status: Status
         title: Merker
         new_badge: Nytt merke
         new: Ny
@@ -4598,8 +4599,6 @@ nb_NO:
         badge: Merke
         display_name: Visningsnavn
         description: Beskrivelse
-        long_description: Helhetlig beskrivelse
-        badge_type: Merketype
         badge_grouping: Gruppe
         badge_groupings:
           modal_title: Merkegrupper
@@ -4627,6 +4626,8 @@ nb_NO:
         disabled: deaktivert
         icon: Ikon
         image: Bilde
+        select_an_icon: "Velg et ikon"
+        upload_an_image: "Last opp et bilde"
         query: Spørring for merke (SQL)
         target_posts: Spørring har innlegg som mål
         auto_revoke: Kjør tilbakedragningsspørring daglig

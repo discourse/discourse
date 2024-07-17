@@ -1657,6 +1657,11 @@ da:
     modal:
       close: "luk"
       dismiss_error: "Skjul fejl"
+    form_kit:
+      reset: Nulstil
+      optional: valgfri
+      errors:
+        required: "Obligatoriske"
     close: "Luk"
     logout: "Du er blevet logget ud."
     refresh: "Opdater"
@@ -3200,25 +3205,17 @@ da:
     pending_posts:
       label: "Afventende"
       label_with_count: "Ventende (%{count})"
-    posts_likes_MF: |
-      Dette emne har {count, plural, one {# svar} other {# svar}} {ratio, select,
-        low {med et højt forhold i mellem antal 'Synes godt om' og antal indlæg}
-        med {med et meget højt forhold i mellem antal 'Synes godt om' og antal indlæg}
-        high {med et ekstremt højt forhold i mellem antal 'Synes godt om' og antal indlæg}
-        other {}}
+    posters: "Forfattere"
     original_post: "Oprindeligt indlæg"
     views: "Visninger"
-    sr_views: "Sorter efter visninger"
     views_lowercase:
       one: "visning"
       other: "visninger"
     replies: "Svar"
-    sr_replies: "Sorter efter svar"
     views_long:
       one: "emnet er læst %{count} gang"
       other: "emnet er læst %{number} gange"
     activity: "Aktivitet"
-    sr_activity: "Sorter efter aktivitet"
     likes: "Likes"
     likes_lowercase:
       one: "like"
@@ -3619,8 +3616,8 @@ da:
       no_read_topics_title: "Du har ikke læst nogen emner endnu"
     no_group_messages_title: "Ingen gruppemeddelelser fundet"
     topic_entrance:
-      sr_jump_top_button: "Hop til det første indlæg"
-      sr_jump_bottom_button: "Hop til det sidste indlæg"
+      jump_top_button_title: "Hop til det første indlæg"
+      jump_bottom_button_title: "Hop til det sidste indlæg"
     fullscreen_table:
       expand_btn: "Udvid Tabel"
     sidebar:
@@ -5209,6 +5206,7 @@ da:
           add_image_types: "Billeder"
           add_audio_types: "Audio"
       badges:
+        status: Status
         title: Emblemer
         new_badge: Nyt Emblem
         new: Ny
@@ -5216,8 +5214,6 @@ da:
         badge: Emblem
         display_name: Vist navn
         description: Beskrivelse
-        long_description: Lang beskrivelse
-        badge_type: Emblem Type
         badge_grouping: Gruppe
         badge_groupings:
           modal_title: Badge grupperinger
@@ -5247,8 +5243,7 @@ da:
         image: Billede
         graphic: Grafik
         icon_help: "Indtast et font Awesome ikonnavn (brug præfikset 'far-' til almindelige ikoner og 'fab-' til mærkeikoner)"
-        image_help: "Overførsel af et billede tilsidesætter ikonfeltet, hvis begge er indstillet."
-        select_an_icon: "Vælg et Ikon"
+        select_an_icon: "Vælg et ikon"
         upload_an_image: "Overfør et billede"
         read_only_setting_help: "Tilpas tekst"
         query: Emblem Forespørgesel (SQL)

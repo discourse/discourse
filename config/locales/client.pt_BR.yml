@@ -1890,6 +1890,11 @@ pt_BR:
     modal:
       close: "fechar"
       dismiss_error: "Descartar erro"
+    form_kit:
+      reset: Redefinir
+      optional: opcional
+      errors:
+        required: "Necessário(a)"
     close: "Fechar"
     logout: "Você foi desconectado(a)."
     refresh: "Atualizar"
@@ -3708,29 +3713,19 @@ pt_BR:
     pending_posts:
       label: "Pendentes"
       label_with_count: "Pendentes (%{count})"
-    posts_likes_MF: |
-      Este tópico tem {count, plural, one {# resposta} other {# respostas}} {ratio, select,
-        low {com uma alta taxa de postagns para curtidas}
-        med {com uma alta muito alta de postagens para curtidas}
-        high {com uma taxa extremamente alta de taxa de postagens para curtidas}
-        other {}}
+    posters: "Autores"
     latest_poster_link: "perfil de %{username}, autor(a) da postagem mais recente"
     original_post: "Postagem original"
     views: "Visualizações"
-    sr_views: "Classificar por visualizações"
     views_lowercase:
       one: "visualização"
       other: "visualizações"
     replies: "Respostas"
-    sr_replies: "Classificar por respostas"
     views_long:
       one: "este tópico foi visto %{count} vez"
       other: "este tópico foi visto %{number} vezes"
     activity: "Atividade"
-    sr_activity: "Classificar por atividade"
     likes: "Curtidas"
-    sr_likes: "Classificar por curtidas"
-    sr_op_likes: "Classificar por curtidas da postagem original"
     likes_lowercase:
       one: "curtida"
       other: "curtidas"
@@ -4170,8 +4165,8 @@ pt_BR:
       no_read_topics_body: "Quando começar a ler as discussões, uma lista será exibida aqui. Para começar a ler, procure tópicos do seu interesse em <a href='%{topUrl}'>Melhores</a> ou <a href='%{categoriesUrl}'>Categorias</a>, ou pesquise por palavra-chave %{searchIcon}"
     no_group_messages_title: "Nenhuma mensagem de grupo encontrada"
     topic_entrance:
-      sr_jump_top_button: "Pular para a primeira postagem"
-      sr_jump_bottom_button: "Pular para a última postagem"
+      jump_top_button_title: "Pular para a primeira postagem"
+      jump_bottom_button_title: "Pular para a última postagem"
     fullscreen_table:
       expand_btn: "Expandir tabela"
       view_table: "Visualizar tabela"
@@ -6134,6 +6129,7 @@ pt_BR:
           add_types_title: "Permitir extensões %{types}"
           add_types_toast: "%{types} tipos de arquivo adicionados"
       badges:
+        status: Status
         title: Emblemas
         new_badge: Novo emblema
         new: Novo(a)
@@ -6141,8 +6137,6 @@ pt_BR:
         badge: Emblema
         display_name: Nome de exibição
         description: Descrição
-        long_description: Descrição longa
-        badge_type: Tipo de emblema
         badge_grouping: Grupo
         badge_groupings:
           modal_title: Agrupamentos de emblemas
@@ -6172,7 +6166,6 @@ pt_BR:
         image: Imagem
         graphic: Gráfico
         icon_help: "Digite um nome de ícone do tipo Font Awesome (use o prefixo \"far-\" para ícones comuns e \"fab-\" para ícones de marca)"
-        image_help: "Enviar uma imagem substitui o campo do ícone se ambos estiverem definidos."
         select_an_icon: "Selecione um ícone"
         upload_an_image: "Enviar uma imagem"
         read_only_setting_help: "Personalizar texto"

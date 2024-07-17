@@ -82,6 +82,8 @@ ru:
         breakdown: "Распределение"
         percentage: "Процент"
         count: "Количество"
+      ranked_choice:
+        none: "Нет"
       options:
         label: "Параметры"
       error_while_toggling_status: "Произошла ошибка при смене статуса опроса."

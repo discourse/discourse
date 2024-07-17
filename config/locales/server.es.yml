@@ -912,8 +912,6 @@ es:
     pop3_authentication_error: "Ha habido un problema con las credenciales POP3 proporcionadas, comprueba el nombre de usuario y la contraseña e inténtalo de nuevo."
     imap_authentication_error: "Ha habido un problema con las credenciales IMAP proporcionadas, comprueba el nombre de usuario y la contraseña e inténtalo de nuevo."
     imap_no_response_error: "Se ha producido un error al comunicarse con el servidor IMAP. %{message}"
-    smtp_authentication_error: "Ha habido un problema con las credenciales SMTP proporcionadas, comprueba el nombre de usuario y la contraseña e inténtalo de nuevo."
-    authentication_error_gmail_app_password: 'Se requiere una contraseña específica para la aplicación. Obtén más información en <a target="_blank" href="https://support.google.com/accounts/answer/185833">este artículo de la Ayuda de Google</a>'
     smtp_server_busy_error: "El servidor SMTP está ocupado actualmente, inténtalo de nuevo más tarde."
     smtp_unhandled_error: "Se ha producido un error no gestionado al comunicarse con el servidor SMTP. %{message}"
     imap_unhandled_error: "Se ha producido un error no gestionado al comunicarse con el servidor IMAP. %{message}"
@@ -1403,8 +1401,6 @@ es:
       ram: "Tu servidor está funcionando con menos de 1 GB de memoria total. Se recomienda una memoria de al menos 1 GB de capacidad."
       subfolder_ends_in_slash: "La configuación del subdirectorio no es correcta; el campo DISCOURSE_RELATIVE_URL_ROOT termina con una barra."
       missing_mailgun_api_key: "El servidor está configurado para enviar correos electrónicos a través de Mailgun pero no has proporcionado una clave API que se utiliza para verificar los mensajes de webhook."
-      out_of_date_themes: "Hay actualizaciones disponibles para los siguientes temas:"
-      unreachable_themes: "No pudimos verificar actualizaciones de los siguientes temas:"
       google_analytics_version: "Tu Discourse utiliza actualmente Google Analytics 3, que dejará de ser compatible después de julio de 2023. <a href='https://meta.discourse.org/t/260498'>Actualízate a Google Analytics 4</a> ahora para seguir recibiendo información y análisis valiosos sobre el rendimiento de tu sitio web."
     back_from_logster_text: "Volver al sitio"
   site_settings:

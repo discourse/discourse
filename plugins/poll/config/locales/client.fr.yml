@@ -72,6 +72,8 @@ fr:
         breakdown: "Détails"
         percentage: "Pourcentage"
         count: "Nombre"
+      ranked_choice:
+        none: "Jamais"
       options:
         label: "Options"
       error_while_toggling_status: "Nous sommes désolés, une erreur s'est produite lors du changement de statut de ce sondage."

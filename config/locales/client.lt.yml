@@ -1653,6 +1653,11 @@ lt:
     modal:
       close: "uždaryti"
       dismiss_error: "Atmesti klaidą"
+    form_kit:
+      reset: Atstatyti
+      optional: pasirinktinai
+      errors:
+        required: "Privalomi"
     close: "Uždaryti"
     logout: "Jūs buvote atjungtas nuo sistemos."
     refresh: "Atnaujinti"
@@ -3114,23 +3119,21 @@ lt:
     pending_posts:
       label: "Laukiama"
       label_with_count: "Neperskaityti (%{count})"
+    posters: "Komentatoriai"
     original_post: "Originalus įrašas"
     views: "Peržiūros"
-    sr_views: "Rūšiuoti pagal peržiūras"
     views_lowercase:
       one: "peržiūra"
       few: "peržiūros"
       many: "peržiūros"
       other: "peržiūros"
     replies: "Atsakymai"
-    sr_replies: "Rūšiuoti pagal atsakymus"
     views_long:
       one: "ši tema buvo peržiūrėta %{count} kartą"
       few: "ši tema buvo peržiūrėta %{number} kartus"
       many: "ši tema buvo peržiūrėta %{number}kartų"
       other: "ši tema buvo peržiūrėta %{number} kartus"
     activity: "Aktyvumas"
-    sr_activity: "Rūšiuoti pagal veiklą"
     likes: "Patikimai"
     likes_lowercase:
       one: "patikimas"
@@ -3510,8 +3513,8 @@ lt:
       no_read_topics_title: "Dar neskaitėte jokių temų"
     no_group_messages_title: "Grupės pranešimų nerasta"
     topic_entrance:
-      sr_jump_top_button: "Peršokti į pirmą įrašą"
-      sr_jump_bottom_button: "Peršokti į paskutinį įrašą"
+      jump_top_button_title: "Peršokti į pirmą įrašą"
+      jump_bottom_button_title: "Peršokti į paskutinį įrašą"
     fullscreen_table:
       expand_btn: "Išskleisti lentelę"
     second_factor_auth:
@@ -4923,6 +4926,7 @@ lt:
           add_image_types: "Paveiksliukai"
           add_audio_types: "Audio"
       badges:
+        status: Statusas
         title: Trofėjai
         new_badge: Naujas ženklelis
         new: Naujas
@@ -4930,8 +4934,6 @@ lt:
         badge: Ženklelis
         display_name: Rodymo pavadinimas
         description: Aprašymas
-        long_description: Ilgas aprašymas
-        badge_type: Ženklelio tipas
         badge_grouping: Grupė
         badge_groupings:
           modal_title: Ženklelių grupavimas

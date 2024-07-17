@@ -72,6 +72,8 @@ sv:
         breakdown: "Fördelning"
         percentage: "Procent"
         count: "Räkna"
+      ranked_choice:
+        none: "Ingen"
       options:
         label: "Alternativ"
       error_while_toggling_status: "Tyvärr uppstod det ett fel vid ändring av status för den här omröstningen."

@@ -1663,6 +1663,11 @@ sl:
     modal:
       close: "zapri"
       dismiss_error: "Opustite napako"
+    form_kit:
+      reset: Ponastavi
+      optional: neobvezno
+      errors:
+        required: "Zahtevano"
     close: "Zapri"
     logout: "Bili ste odjavljeni."
     refresh: "Osveži"
@@ -3139,6 +3144,7 @@ sl:
     pending_posts:
       label: "Za potrditev"
       label_with_count: "V teku (%{count})"
+    posters: "Avtorji"
     original_post: "Izvirni prispevek"
     views: "Ogledi"
     views_lowercase:
@@ -4591,6 +4597,7 @@ sl:
         file_types_list:
           add_image_types: "Slike"
       badges:
+        status: Stanje
         title: Značke
         new_badge: Nova značka
         new: Nova
@@ -4598,8 +4605,6 @@ sl:
         badge: Značka
         display_name: Ime za prikaz
         description: Opis
-        long_description: Dolg opis
-        badge_type: Tip značke
         badge_grouping: Skupina
         badge_groupings:
           modal_title: Skupine značk
@@ -4627,6 +4632,8 @@ sl:
         disabled: onemogočeno
         icon: Ikona
         image: Slika
+        select_an_icon: "Izberite ikono"
+        upload_an_image: "Naložite sliko"
         read_only_setting_help: "Prilagodite besedilo"
         query: poizvedba (SQL) značke
         show_posts: Prikaži prispevek za značko na strani z značkami

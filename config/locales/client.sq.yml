@@ -893,6 +893,10 @@ sq:
         fixed: "Ngarko faqen"
     modal:
       close: "mbylle"
+    form_kit:
+      reset: Rivendos
+      errors:
+        required: "E nevojshme"
     close: "Mbyll"
     logout: "Ju jeni shkëputur!"
     refresh: "Rifresko"
@@ -2781,8 +2785,6 @@ sq:
         badge: Stemë
         display_name: Emri Shfaqur
         description: Përshkrimi
-        long_description: Përshkrim i gjatë
-        badge_type: Lloj Steme
         badge_grouping: Grupi
         badge_groupings:
           modal_title: Grupime Steme
