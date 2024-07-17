@@ -116,7 +116,7 @@
     "select-kit": "1.0.0",
     "sinon": "^18.0.0",
     "source-map": "^0.7.4",
-    "terser": "^5.31.2",
+    "terser": "^5.31.3",
     "truth-helpers": "1.0.0",
     "util": "^0.12.5",
     "virtual-dom": "^2.1.1",
