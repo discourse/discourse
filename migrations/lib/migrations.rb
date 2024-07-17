@@ -46,8 +46,17 @@ module Migrations
     loader.push_dir(File.join(Migrations.root_path, "lib"), namespace: Migrations)
     loader.push_dir(File.join(Migrations.root_path, "lib", "common"), namespace: Migrations)
 
-    # all sub-directories of a converter should have the same namespace
-    loader.collapse(File.join(Migrations.root_path, "lib", "converters", "*", "**"))
+    # All sub-directories of a converter should have the same namespace.
+    # Unfortunately `loader.collapse` doesn't work recursively.
+    Converters.all.each do |name, converter_path|
+      module_name = name.camelize.to_sym
+      namespace = Migrations::Converters.const_set(module_name, Module.new)
+
+      Dir[File.join(converter_path, "**", "*")].each do |subdirectory|
+        next unless File.directory?(subdirectory)
+        loader.push_dir(subdirectory, namespace: namespace)
+      end
+    end
 
     loader.setup
   end
