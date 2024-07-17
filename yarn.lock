@@ -1408,10 +1408,10 @@
     "@babel/core" "^7.14.5"
     babel-loader "^9.0.0"
 
-"@embroider/compat@^3.5.6":
-  version "3.5.6"
-  resolved "https://registry.yarnpkg.com/@embroider/compat/-/compat-3.5.6.tgz#c017976cc75de9da5a54480443b5f8c64173f67a"
-  integrity sha512-yATWUTGrbHms/FLBe+tbvmmTWqfkTxUrgQTaagwjXSsVRkI5IBIX6CKfGMn/iaHcEQuTVmMJMxIT1X1XRJJqNw==
+"@embroider/compat@^3.5.7":
+  version "3.5.7"
+  resolved "https://registry.yarnpkg.com/@embroider/compat/-/compat-3.5.7.tgz#5f5ee718221821be5aed4fb74f2ef9d0786bb545"
+  integrity sha512-eQd53Or/G94iUxfnERplqUQMbl9twAoJc1ncn8MtOZH3GacKYtU32QppmYATQ6RlJa/C2TKLRyxGt9YCkZFhNg==
   dependencies:
     "@babel/code-frame" "^7.14.5"
     "@babel/core" "^7.14.5"
