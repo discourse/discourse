@@ -72,7 +72,6 @@ class DiscoursePluginRegistry
   define_register :demon_processes, Set
   define_register :groups_callback_for_users_search_controller_action, Hash
   define_register :mail_pollers, Set
-  define_register :custom_filters, Hash
 
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields
@@ -127,6 +126,8 @@ class DiscoursePluginRegistry
   define_filtered_register :problem_checks
 
   define_filtered_register :flag_applies_to_types
+
+  define_filtered_register :custom_filter_mappings
 
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
@@ -211,10 +212,6 @@ class DiscoursePluginRegistry
   def self.register_html_builder(name, &block)
     html_builders[name] ||= []
     html_builders[name] << block
-  end
-
-  def self.register_custom_filter(filter_name, &block)
-    self.custom_filters[filter_name] = block
   end
 
   def self.build_html(name, ctx = nil)

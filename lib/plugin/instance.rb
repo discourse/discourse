@@ -243,12 +243,11 @@ class Plugin::Instance
   # Ensure proper input sanitization before using it in a query.
   #
   # Example usage:
-  #   register_custom_filter("word_count") do |scope, value|
+  #   add_filter_custom_filter("word_count") do |scope, value|
   #     scope.where(word_count: value)
   #   end
-  def register_custom_filter(filter_name, &block)
-    plugin = self
-    DiscoursePluginRegistry.register_custom_filter(filter_name, &block) if plugin.enabled?
+  def add_filter_custom_filter(name, &block)
+    DiscoursePluginRegistry.register_custom_filter_mapping({ name => block }, self)
   end
 
   # Allows to define custom "status:" filter. Example usage:
