@@ -873,8 +873,8 @@ en:
           prefill:
             title: "Prefill with settings for:"
             gmail: "Gmail"
-            outlook: "Outlook"
-            office365: "Office365"
+            outlook: "Outlook.com"
+            office365: "Microsoft 365"
           ssl_modes:
             none: "None"
             ssl_tls: "SSL/TLS"

@@ -275,30 +275,6 @@ RSpec.describe EmailSettingsValidator do
       }.to raise_error(ArgumentError)
     end
 
-    it "corrects tls settings for gmail based on port 587" do
-      net_smtp_stub.expects(:enable_starttls_auto).once
-      net_smtp_stub.expects(:enable_tls).never
-      described_class.validate_smtp(
-        host: host,
-        port: 587,
-        username: username,
-        password: password,
-        domain: domain,
-      )
-    end
-
-    it "corrects tls settings for gmail based on port 465" do
-      net_smtp_stub.expects(:enable_starttls_auto).never
-      net_smtp_stub.expects(:enable_tls).once
-      described_class.validate_smtp(
-        host: host,
-        port: 465,
-        username: username,
-        password: password,
-        domain: domain,
-      )
-    end
-
     it "corrects authentication method to login for office365" do
       net_smtp_stub.expects(:start).with("office365.com", username, password, :login)
       described_class.validate_smtp(

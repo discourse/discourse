@@ -1297,7 +1297,6 @@ end
 #  mentionable_level                  :integer          default(0)
 #  smtp_server                        :string
 #  smtp_port                          :integer
-#  smtp_ssl                           :boolean
 #  imap_server                        :string
 #  imap_port                          :integer
 #  imap_ssl                           :boolean
