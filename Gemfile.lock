@@ -193,7 +193,7 @@ GEM
     iso8601 (0.13.0)
     jmespath (1.6.2)
     json (2.7.2)
-    json-schema (4.3.0)
+    json-schema (4.3.1)
       addressable (>= 2.8)
     json_schemer (2.3.0)
       bigdecimal
