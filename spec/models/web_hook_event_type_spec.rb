@@ -4,7 +4,7 @@ RSpec.describe WebHookEventType do
   describe "#active" do
     it "returns only active types" do
       core_event_types = WebHookEventType.active.map(&:name)
-      expect(core_event_types).to eq(
+      expect(core_event_types).to match_array(
         %w[
           topic_created
           topic_revised
@@ -47,10 +47,10 @@ RSpec.describe WebHookEventType do
 
       SiteSetting.stubs(:solved_enabled).returns(true)
       SiteSetting.stubs(:assign_enabled).returns(true)
-      SiteSetting.stubs(:voting_enabled).returns(true)
+      SiteSetting.stubs(:topic_voting_enabled).returns(true)
       SiteSetting.stubs(:chat_enabled).returns(true)
       plugins_event_types = WebHookEventType.active.map(&:name) - core_event_types
-      expect(plugins_event_types).to eq(
+      expect(plugins_event_types).to match_array(
         %w[
           accepted_solution
           unaccepted_solution

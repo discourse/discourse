@@ -103,7 +103,7 @@ class WebHookEventType < ActiveRecord::Base
     unless defined?(SiteSetting.assign_enabled) && SiteSetting.assign_enabled
       ids_to_exclude.concat([TYPES[:assign_assigned], TYPES[:assign_unassigned]])
     end
-    unless defined?(SiteSetting.voting_enabled) && SiteSetting.voting_enabled
+    unless defined?(SiteSetting.topic_voting_enabled) && SiteSetting.topic_voting_enabled
       ids_to_exclude.concat([TYPES[:voting_topic_upvote], TYPES[:voting_topic_unvote]])
     end
     unless defined?(SiteSetting.chat_enabled) && SiteSetting.chat_enabled
