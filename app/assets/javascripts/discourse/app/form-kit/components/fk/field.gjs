@@ -48,6 +48,8 @@ export default class FKField extends Component {
     this.field = this.args.registerField(this.name, {
       triggerRevalidationFor: this.args.triggerRevalidationFor,
       title: this.args.title,
+      subtitle: this.args.subtitle,
+      description: this.args.description,
       showTitle: this.args.showTitle,
       collectionIndex: this.args.collectionIndex,
       set: this.args.set,
