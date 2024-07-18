@@ -1,5 +1,6 @@
 import { click, currentRouteName, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { GROUP_SMTP_SSL_MODES } from "discourse/lib/constants";
 import {
   acceptance,
   exists,
@@ -85,22 +86,23 @@ acceptance(
 
       await click("#prefill_smtp_gmail");
       assert.strictEqual(
-        query("input[name='smtp_server']").value,
+        query(".group-smtp-form__smtp-server").value,
         "smtp.gmail.com",
         "prefills SMTP server settings for gmail"
       );
       assert.strictEqual(
-        query("input[name='smtp_port']").value,
+        query(".group-smtp-form__smtp-port").value,
         "587",
         "prefills SMTP port settings for gmail"
       );
-      assert.ok(
-        exists("#enable_ssl:checked"),
-        "prefills SMTP ssl settings for gmail"
+      assert.strictEqual(
+        selectKit(".group-smtp-form__smtp-ssl-mode").header().value(),
+        GROUP_SMTP_SSL_MODES.starttls.toString(),
+        "prefills SSL mode to STARTTLS for gmail"
       );
 
       assert.ok(
-        exists(".test-smtp-settings:disabled"),
+        exists(".group-smtp-form__test-smtp-settings:disabled"),
         "does not allow testing settings if not all fields are filled"
       );
 
@@ -108,9 +110,12 @@ acceptance(
       await fillIn('input[name="password"]', "password@gmail.com");
       await fillIn("#from_alias", "akasomegroup@example.com");
 
-      await click(".test-smtp-settings");
+      await click(".group-smtp-form__test-smtp-settings");
 
-      assert.ok(exists(".smtp-settings-ok"), "tested settings are ok");
+      assert.ok(
+        exists(".group-smtp-form__smtp-settings-ok"),
+        "tested settings are ok"
+      );
 
       await click(".group-manage-save");
 
@@ -141,7 +146,7 @@ acceptance(
       await click("#prefill_smtp_gmail");
       await fillIn('input[name="username"]', "myusername@gmail.com");
       await fillIn('input[name="password"]', "password@gmail.com");
-      await click(".test-smtp-settings");
+      await click(".group-smtp-form__test-smtp-settings");
       await click(".group-manage-save");
 
       assert.notOk(
@@ -168,7 +173,7 @@ acceptance(
         "prefills IMAP port settings for gmail"
       );
       assert.ok(
-        exists("#enable_ssl:checked"),
+        exists("#enable_ssl_imap:checked"),
         "prefills IMAP ssl settings for gmail"
       );
       await click(".test-imap-settings");
@@ -239,7 +244,7 @@ acceptance(
             message_count: 2,
             smtp_server: "smtp.gmail.com",
             smtp_port: 587,
-            smtp_ssl: true,
+            smtp_ssl_mode: GROUP_SMTP_SSL_MODES.starttls,
             smtp_enabled: true,
             smtp_updated_at: "2021-06-16T02:58:12.739Z",
             smtp_updated_by: {
@@ -324,13 +329,6 @@ acceptance(
         ),
         "shows last updated imap details"
       );
-      assert.ok(exists(".group-email-last-updated-details.for-smtp"));
-      assert.ok(
-        regex.test(
-          query(".group-email-last-updated-details.for-smtp").innerText.trim()
-        ),
-        "shows last updated smtp details"
-      );
     });
   }
 );
@@ -359,7 +357,7 @@ acceptance(
       await click("#prefill_smtp_gmail");
       await fillIn('input[name="username"]', "myusername@gmail.com");
       await fillIn('input[name="password"]', "password@gmail.com");
-      await click(".test-smtp-settings");
+      await click(".group-smtp-form__test-smtp-settings");
 
       assert.strictEqual(
         query(".dialog-body").innerText.trim(),

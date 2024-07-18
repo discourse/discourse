@@ -542,7 +542,7 @@ class PostRevisor
     flaggers = []
     @post
       .post_actions
-      .where(post_action_type_id: PostActionType.flag_types_without_custom.values)
+      .where(post_action_type_id: PostActionType.flag_types_without_additional_message.values)
       .each do |action|
         flaggers << action.user if action.user
         action.remove_act!(Discourse.system_user)

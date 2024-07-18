@@ -1,14 +1,15 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { Input } from "@ember/component";
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { TextArea } from "@ember/legacy-built-in-components";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import dIcon from "discourse-common/helpers/d-icon";
@@ -23,6 +24,7 @@ export default class AdminFlagsForm extends Component {
   @service site;
 
   @tracked enabled = true;
+  @tracked requireMessage = false;
   @tracked name;
   @tracked description;
   @tracked appliesTo;
@@ -33,6 +35,7 @@ export default class AdminFlagsForm extends Component {
       this.name = this.args.flag.name;
       this.description = this.args.flag.description;
       this.appliesTo = this.args.flag.applies_to;
+      this.requireMessage = this.args.flag.require_message;
       this.enabled = this.args.flag.enabled;
     }
   }
@@ -73,6 +76,16 @@ export default class AdminFlagsForm extends Component {
     this.isUpdate ? this.update() : this.create();
   }
 
+  @action
+  onToggleRequireMessage(e) {
+    this.requireMessage = e.target.checked;
+  }
+
+  @action
+  onToggleEnabled(e) {
+    this.enabled = e.target.checked;
+  }
+
   @bind
   create() {
     return ajax(`/admin/config/flags`, {
@@ -98,6 +111,7 @@ export default class AdminFlagsForm extends Component {
         this.args.flag.name = response.flag.name;
         this.args.flag.description = response.flag.description;
         this.args.flag.applies_to = response.flag.applies_to;
+        this.args.flag.require_message = response.flag.require_message;
         this.args.flag.enabled = response.flag.enabled;
         this.router.transitionTo("adminConfig.flags");
       })
@@ -112,6 +126,7 @@ export default class AdminFlagsForm extends Component {
       name: this.name,
       description: this.description,
       applies_to: this.appliesTo,
+      require_message: this.requireMessage,
       enabled: this.enabled,
     };
   }
@@ -132,12 +147,13 @@ export default class AdminFlagsForm extends Component {
             <label for="name">
               {{i18n "admin.config_areas.flags.form.name"}}
             </label>
-            <Input
+            <input
               name="name"
-              @type="text"
-              @value={{this.name}}
+              type="text"
+              value={{this.name}}
               maxlength="200"
               class="admin-flag-form__name"
+              {{on "input" (withEventValue (fn (mut this.name)))}}
             />
           </div>
 
@@ -165,8 +181,30 @@ export default class AdminFlagsForm extends Component {
           </div>
 
           <div class="control-group">
+            <label class="checkbox-label admin-flag-form__require-reason">
+              <input
+                {{on "input" this.onToggleRequireMessage}}
+                type="checkbox"
+                checked={{this.requireMessage}}
+              />
+              <div>
+                {{i18n "admin.config_areas.flags.form.require_message"}}
+                <div class="admin-flag-form__require-message-description">
+                  {{i18n
+                    "admin.config_areas.flags.form.require_message_description"
+                  }}
+                </div>
+              </div>
+            </label>
+          </div>
+
+          <div class="control-group">
             <label class="checkbox-label admin-flag-form__enabled">
-              <Input @type="checkbox" @checked={{this.enabled}} />
+              <input
+                {{on "input" this.onToggleEnabled}}
+                type="checkbox"
+                checked={{this.enabled}}
+              />
               {{i18n "admin.config_areas.flags.form.enabled"}}
             </label>
           </div>

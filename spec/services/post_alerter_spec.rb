@@ -2408,7 +2408,7 @@ RSpec.describe PostAlerter do
         :group,
         smtp_server: "smtp.gmail.com",
         smtp_port: 587,
-        smtp_ssl: true,
+        smtp_ssl_mode: Group.smtp_ssl_modes[:starttls],
         imap_server: "imap.gmail.com",
         imap_port: 993,
         imap_ssl: true,

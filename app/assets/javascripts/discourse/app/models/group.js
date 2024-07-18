@@ -344,7 +344,7 @@ export default class Group extends RestModel {
       incoming_email: this.incoming_email,
       smtp_server: this.smtp_server,
       smtp_port: this.smtp_port,
-      smtp_ssl: this.smtp_ssl,
+      smtp_ssl_mode: this.smtp_ssl_mode,
       smtp_enabled: this.smtp_enabled,
       imap_server: this.imap_server,
       imap_port: this.imap_port,

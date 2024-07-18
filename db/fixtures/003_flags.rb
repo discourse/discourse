@@ -5,7 +5,7 @@ Flag.seed do |s|
   s.name = "notify_user"
   s.notify_type = false
   s.auto_action_type = false
-  s.custom_type = true
+  s.require_message = true
   s.applies_to = %w[Post Chat::Message]
 end
 Flag.seed do |s|
@@ -13,7 +13,7 @@ Flag.seed do |s|
   s.name = "off_topic"
   s.notify_type = true
   s.auto_action_type = true
-  s.custom_type = false
+  s.require_message = false
   s.applies_to = %w[Post Chat::Message]
 end
 Flag.seed do |s|
@@ -21,7 +21,7 @@ Flag.seed do |s|
   s.name = "inappropriate"
   s.notify_type = true
   s.auto_action_type = true
-  s.custom_type = false
+  s.require_message = false
   s.applies_to = %w[Post Topic Chat::Message]
 end
 Flag.seed do |s|
@@ -29,7 +29,7 @@ Flag.seed do |s|
   s.name = "spam"
   s.notify_type = true
   s.auto_action_type = true
-  s.custom_type = false
+  s.require_message = false
   s.applies_to = %w[Post Topic Chat::Message]
 end
 Flag.seed do |s|
@@ -37,7 +37,7 @@ Flag.seed do |s|
   s.name = "illegal"
   s.notify_type = true
   s.auto_action_type = false
-  s.custom_type = true
+  s.require_message = true
   s.applies_to = %w[Post Topic Chat::Message]
 end
 Flag.seed do |s|
@@ -45,7 +45,7 @@ Flag.seed do |s|
   s.name = "notify_moderators"
   s.notify_type = true
   s.auto_action_type = false
-  s.custom_type = true
+  s.require_message = true
   s.applies_to = %w[Post Topic Chat::Message]
 end
 Flag.unscoped.seed do |s|
@@ -53,7 +53,7 @@ Flag.unscoped.seed do |s|
   s.name = "needs_approval"
   s.notify_type = false
   s.auto_action_type = false
-  s.custom_type = false
+  s.require_message = false
   s.score_type = true
   s.applies_to = %w[]
 end

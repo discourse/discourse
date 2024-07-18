@@ -740,7 +740,7 @@ RSpec.describe Email::Receiver do
       Please find some text file attached.
 
       [details="#{I18n.t("emails.incoming.attachments")}"]
-      
+
       #{UploadMarkdown.new(upload).to_markdown}
 
       [/details]
@@ -1223,7 +1223,7 @@ RSpec.describe Email::Receiver do
           incoming_email: "team@somesmtpaddress.com|support+team@bar.com",
           smtp_server: "smtp.test.com",
           smtp_port: 587,
-          smtp_ssl: true,
+          smtp_ssl_mode: Group.smtp_ssl_modes[:starttls],
           smtp_enabled: true,
         )
       end
@@ -1318,7 +1318,7 @@ RSpec.describe Email::Receiver do
           incoming_email: "team@somesmtpaddress.com|suppor+team@bar.com",
           smtp_server: "smtp.test.com",
           smtp_port: 587,
-          smtp_ssl: true,
+          smtp_ssl_mode: Group.smtp_ssl_modes[:starttls],
           smtp_enabled: true,
         )
         process(:email_to_group_email_username_1)
