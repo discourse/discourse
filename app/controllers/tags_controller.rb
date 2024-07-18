@@ -96,7 +96,7 @@ class TagsController < ::ApplicationController
           .map do |c|
             category_tags =
               self.class.tag_counts_json(
-                DiscourseTagging.filter_visible(c.none_synonym_tags, guardian),
+                DiscourseTagging.filter_visible(c.none_synonym_tags, guardian).all,
                 guardian,
               )
 
@@ -471,6 +471,8 @@ class TagsController < ::ApplicationController
         elsif t.respond_to? :tag_group_names
           groups = t.tag_group_names & DiscourseTagging.cached_tag_groups(guardian)
         elsif t.is_a? Tag
+          # TODO Try to reduce the number of times this statement is executed,
+          # as it can cause performance issues when there are too many tags.
           groups = t.visible_tag_groups_names(guardian)
         else
           groups = []

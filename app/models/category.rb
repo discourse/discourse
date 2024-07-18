@@ -150,7 +150,7 @@ class Category < ActiveRecord::Base
   has_many :category_tags, dependent: :destroy
   has_many :tags, through: :category_tags
   has_many :none_synonym_tags,
-           -> { where(target_tag_id: nil) },
+           -> { with_groups.where(target_tag_id: nil) },
            through: :category_tags,
            source: :tag
   has_many :category_tag_groups, dependent: :destroy
