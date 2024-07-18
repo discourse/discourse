@@ -38,7 +38,7 @@ export default class TopicMapSummary extends Component {
   @service mapCache;
 
   @tracked allLinksShown = false;
-  @tracked mostLikedPosts = [];
+  @tracked top3LikedPosts = [];
   @tracked views = [];
   @tracked loading = true;
 
@@ -134,12 +134,12 @@ export default class TopicMapSummary extends Component {
 
   @action
   fetchMostLiked() {
-    const cacheKey = `mostLikedPosts_${this.args.topic.id}`;
+    const cacheKey = `top3LikedPosts_${this.args.topic.id}`;
     const cachedData = this.mapCache.get(cacheKey);
     this.loading = true;
 
     if (cachedData) {
-      this.mostLikedPosts = cachedData;
+      this.top3LikedPosts = cachedData;
       this.loading = false;
       return;
     }
@@ -148,13 +148,13 @@ export default class TopicMapSummary extends Component {
 
     ajax(filter)
       .then((data) => {
-        data.posts.sort((a, b) => b.like_count - a.like_count);
-        const mostLikedPosts = data.posts
-          .filter((post) => post.post_number !== 1 && post.like_count !== 0)
+        const top3LikedPosts = data.posts
+          .filter((post) => post.post_number > 1 && post.like_count > 0)
+          .sort((a, b) => b.like_count - a.like_count)
           .slice(0, 3);
 
-        this.mapCache.set(cacheKey, mostLikedPosts);
-        this.mostLikedPosts = mostLikedPosts;
+        this.mapCache.set(cacheKey, top3LikedPosts);
+        this.top3LikedPosts = top3LikedPosts;
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
@@ -264,7 +264,7 @@ export default class TopicMapSummary extends Component {
               <h3>{{i18n "topic_map.menu_titles.replies"}}</h3>
               <ConditionalLoadingSpinner @condition={{this.loading}}>
                 <ul>
-                  {{#each this.mostLikedPosts as |post|}}
+                  {{#each this.top3LikedPosts as |post|}}
                     <li>
                       <a
                         href="/t/{{@topic.slug}}/{{@topic.id}}/{{post.post_number}}"
