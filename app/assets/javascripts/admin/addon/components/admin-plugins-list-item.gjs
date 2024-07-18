@@ -66,7 +66,10 @@ export default class AdminPluginsListItem extends Component {
       }}
     >
       <td class="admin-plugins-list__name-details">
-        <PluginOutlet @name="admin-plugin-list-item-name-details" @outletArgs={{hash plugin=@plugin}}>
+        <PluginOutlet
+          @name="admin-plugin-list-item-name-details"
+          @outletArgs={{hash plugin=@plugin}}
+        >
           <div class="admin-plugins-list__name-with-badges">
             <div class="admin-plugins-list__name">
               {{@plugin.nameTitleized}}
@@ -99,14 +102,20 @@ export default class AdminPluginsListItem extends Component {
         </PluginOutlet>
       </td>
       <td class="admin-plugins-list__version">
-        <PluginOutlet @name="admin-plugin-list-item-version" @outletArgs={{hash plugin=@plugin}}>
+        <PluginOutlet
+          @name="admin-plugin-list-item-version"
+          @outletArgs={{hash plugin=@plugin}}
+        >
           <div class="label">{{i18n "admin.plugins.version"}}</div>
           {{@plugin.version}}<br />
           <PluginCommitHash @plugin={{@plugin}} />
         </PluginOutlet>
       </td>
       <td class="admin-plugins-list__enabled">
-        <PluginOutlet @name="admin-plugin-list-item-enabled" @outletArgs={{hash plugin=@plugin}}>
+        <PluginOutlet
+          @name="admin-plugin-list-item-enabled"
+          @outletArgs={{hash plugin=@plugin}}
+        >
           <div class="label">{{i18n "admin.plugins.enabled"}}</div>
           {{#if @plugin.enabledSetting}}
             <DToggleSwitch
@@ -119,7 +128,10 @@ export default class AdminPluginsListItem extends Component {
         </PluginOutlet>
       </td>
       <td class="admin-plugins-list__settings">
-        <PluginOutlet @name="admin-plugin-list-item-settings" @outletArgs={{hash plugin=@plugin}}>
+        <PluginOutlet
+          @name="admin-plugin-list-item-settings"
+          @outletArgs={{hash plugin=@plugin}}
+        >
           {{#if this.showPluginSettingsButton}}
             {{#if @plugin.useNewShowRoute}}
               <LinkTo
