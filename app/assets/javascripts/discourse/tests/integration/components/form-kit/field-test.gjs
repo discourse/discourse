@@ -35,6 +35,30 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     assert.dom(".form-kit__row .form-kit__col.--col-8").hasText("Test");
   });
 
+  test("@subtitle", async function (assert) {
+    await render(<template>
+      <Form as |form|>
+        <form.Field @name="foo" @title="Foo" @subtitle="foo foo" as |field|>
+          <field.Input />
+        </form.Field>
+      </Form>
+    </template>);
+
+    assert.form().field("foo").hasSubtitle("foo foo");
+  });
+
+  test("@description", async function (assert) {
+    await render(<template>
+      <Form as |form|>
+        <form.Field @name="foo" @title="Foo" @description="foo foo" as |field|>
+          <field.Input />
+        </form.Field>
+      </Form>
+    </template>);
+
+    assert.form().field("foo").hasDescription("foo foo");
+  });
+
   test("invalid @name", async function (assert) {
     setupOnerror((error) => {
       assert.deepEqual(error.message, "@name can't include `.` or `-`.");

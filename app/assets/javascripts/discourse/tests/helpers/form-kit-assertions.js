@@ -3,8 +3,13 @@ import QUnit from "qunit";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 
 class FieldHelper {
-  constructor(element, context) {
+  constructor(element, context, name) {
     this.element = element;
+
+    if (!this.element) {
+      throw new Error(`Could not find element (name: ${name}).`);
+    }
+
     this.context = context;
   }
 
@@ -73,6 +78,18 @@ class FieldHelper {
     return this.element.dataset.disabled === "";
   }
 
+  hasSubtitle(subtitle, message) {
+    this.context
+      .dom(this.element.querySelector(".form-kit__container-subtitle"))
+      .hasText(subtitle, message);
+  }
+
+  hasDescription(description, message) {
+    this.context
+      .dom(this.element.querySelector(".form-kit__meta-description"))
+      .hasText(description, message);
+  }
+
   hasCharCounter(current, max, message) {
     this.context
       .dom(this.element.querySelector(".form-kit__char-counter"))
@@ -129,7 +146,8 @@ class FormHelper {
   field(name) {
     return new FieldHelper(
       query(`.form-kit__field[data-name="${name}"]`, this.element),
-      this.context
+      this.context,
+      name
     );
   }
 }
@@ -150,6 +168,12 @@ export function setupFormKitAssertions() {
         return {
           doesNotExist: (message) => {
             field.doesNotExist(message);
+          },
+          hasSubtitle: (value, message) => {
+            field.hasSubtitle(value, message);
+          },
+          hasDescription: (value, message) => {
+            field.hasDescription(value, message);
           },
           exists: (message) => {
             field.exists(message);
