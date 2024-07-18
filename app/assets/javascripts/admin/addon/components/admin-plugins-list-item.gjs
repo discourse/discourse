@@ -5,12 +5,12 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import SiteSetting from "admin/models/site-setting";
 import PluginCommitHash from "./plugin-commit-hash";
-import PluginOutlet from "discourse/components/plugin-outlet";
 
 export default class AdminPluginsListItem extends Component {
   @service session;
