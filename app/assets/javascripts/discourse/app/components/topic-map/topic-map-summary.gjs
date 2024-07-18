@@ -116,6 +116,17 @@ export default class TopicMapSummary extends Component {
       : this.topicLinks.slice(0, TRUNCATED_LINKS_LIMIT);
   }
 
+  get hasLikes() {
+    return (
+      this.args.topic.like_count > MIN_LIKES_COUNT &&
+      this.args.topic.posts_count > MIN_POSTS_COUNT
+    );
+  }
+
+  get hasUsers() {
+    return this.args.topic.participant_count > MIN_PARTICIPANTS_COUNT;
+  }
+
   @action
   showAllLinks() {
     this.allLinksShown = true;
@@ -236,12 +247,7 @@ export default class TopicMapSummary extends Component {
         </:content>
       </DMenu>
 
-      {{#if
-        (and
-          (gt @topic.like_count MIN_LIKES_COUNT)
-          (gt @topic.posts_count MIN_POSTS_COUNT)
-        )
-      }}
+      {{#if this.hasLikes}}
         <DMenu
           @arrow={{true}}
           @identifier="map-likes"
@@ -293,7 +299,7 @@ export default class TopicMapSummary extends Component {
         </DMenu>
       {{/if}}
 
-      {{#if (gt this.linksCount 0)}}
+      {{#if this.linksCount}}
         <DMenu
           @arrow={{true}}
           @identifier="map-links"
@@ -360,7 +366,8 @@ export default class TopicMapSummary extends Component {
           </:content>
         </DMenu>
       {{/if}}
-      {{#if (gt @topic.participant_count MIN_PARTICIPANTS_COUNT)}}
+
+      {{#if this.hasUsers}}
         <DMenu
           @arrow={{true}}
           @identifier="map-users"
@@ -389,6 +396,7 @@ export default class TopicMapSummary extends Component {
           </:content>
         </DMenu>
       {{/if}}
+
       {{#if this.shouldShowParticipants}}
         <li class="avatars">
           <TopicParticipants
