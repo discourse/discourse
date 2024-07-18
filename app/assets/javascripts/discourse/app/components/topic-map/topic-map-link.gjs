@@ -2,6 +2,8 @@ import Component from "@glimmer/component";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import and from "truth-helpers/helpers/and";
 
+const TRUNCATE_LENGTH_LIMIT = 85;
+
 export default class TopicMapLink extends Component {
   get linkClasses() {
     return this.args.attachment
@@ -10,10 +12,9 @@ export default class TopicMapLink extends Component {
   }
 
   get truncatedContent() {
-    const truncateLength = 85;
     const content = this.args.title || this.args.url;
-    return content.length > truncateLength
-      ? `${content.slice(0, truncateLength).trim()}...`
+    return content.length > TRUNCATE_LENGTH_LIMIT
+      ? `${content.slice(0, TRUNCATE_LENGTH_LIMIT).trim()}...`
       : content;
   }
 
