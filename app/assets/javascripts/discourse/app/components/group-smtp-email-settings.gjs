@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { getProperties } from "@ember/object";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
@@ -10,6 +11,7 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import Form from "discourse/components/form";
 import formatDate from "discourse/helpers/format-date";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
@@ -27,14 +29,16 @@ export default class GroupSmtpEmailSettings extends Component {
   @tracked smtpSettingsValid = false;
   @tracked testingSettings = false;
 
-  form = new TrackedObject({
-    email_username: this.args.group.email_username,
-    email_password: this.args.group.email_password,
-    email_from_alias: this.args.group.email_from_alias,
-    smtp_server: this.args.group.smtp_server,
-    smtp_port: (this.args.group.smtp_port || "").toString(),
-    smtp_ssl_mode: this.args.group.smtp_ssl_mode || GROUP_SMTP_SSL_MODES.none,
-  });
+  // form = getProperties(
+  //   this.args.group,
+  //   "email_username",
+  //   "email_password",
+  //   "email_from_alias",
+  //   "smtp_server",
+  //   "smtp_port",
+  //   "smtp_ssl_mode"
+  // );
+  form = {};
 
   get sslModes() {
     return Object.keys(GROUP_SMTP_SSL_MODES).map((key) => {
@@ -100,9 +104,17 @@ export default class GroupSmtpEmailSettings extends Component {
   }
 
   @action
-  prefillSettings(provider, event) {
+  prefillSettings(provider, data, event) {
     event?.preventDefault();
-    Object.assign(this.form, emailProviderDefaultSettings(provider, "smtp"));
+    // this.form = Object.assign(
+    //   this.form,
+    //   emailProviderDefaultSettings(provider, "smtp")
+    // );
+    data.smtp_server = "XXX";
+    // emailProviderDefaultSettings(
+    //   provider,
+    //   "smtp"
+    // ).smtp_server;
   }
 
   @action
@@ -139,6 +151,95 @@ export default class GroupSmtpEmailSettings extends Component {
 
   <template>
     <div class="group-smtp-email-settings">
+      <Form @data={{this.form}} as |form data|>
+        <form.Field
+          @name="smtp_server"
+          @title={{i18n "groups.manage.email.credentials.smtp_server"}}
+          @validation="required"
+          as |field|
+        >
+          <field.Input />
+        </form.Field>
+
+        <form.Field
+          @name="smtp_port"
+          @title={{i18n "groups.manage.email.credentials.smtp_port"}}
+          @validation="required"
+          as |field|
+        >
+          <field.Input />
+        </form.Field>
+
+        <form.Field
+          @name="email_username"
+          @title={{i18n "groups.manage.email.credentials.username"}}
+          @validation="required"
+          as |field|
+        >
+          <field.Input />
+        </form.Field>
+
+        <form.Field
+          @name="email_password"
+          @title={{i18n "groups.manage.email.credentials.password"}}
+          @validation="required"
+          as |field|
+        >
+          <field.Password />
+        </form.Field>
+
+        <form.Field
+          @name="smtp_ssl_mode"
+          @title={{i18n "groups.manage.email.credentials.smtp_ssl_mode"}}
+          @validation="required"
+          as |field|
+        >
+          <field.Select as |select|>
+            {{#each this.sslModes as |sslMode|}}
+              <select.Option
+                @value={{sslMode.value}}
+              >{{sslMode.name}}</select.Option>
+            {{/each}}
+          </field.Select>
+        </form.Field>
+
+        <form.Field
+          @name="email_from_alias"
+          @title={{i18n "groups.manage.email.settings.from_alias"}}
+          @description={{i18n "groups.manage.email.settings.from_alias_hint"}}
+          as |field|
+        >
+          <field.Input />
+        </form.Field>
+
+        <form.Container class="group-smtp-prefill-options">
+          {{i18n "groups.manage.email.prefill.title"}}
+          <ul>
+            <li>
+              <a
+                id="prefill_smtp_gmail"
+                href
+                {{on "click" (fn this.prefillSettings "gmail" data)}}
+              >{{i18n "groups.manage.email.prefill.gmail"}}</a>
+            </li>
+            <li>
+              <a
+                id="prefill_smtp_outlook"
+                href
+                {{on "click" (fn this.prefillSettings "outlook" data)}}
+              >{{i18n "groups.manage.email.prefill.outlook"}}</a>
+            </li>
+            <li>
+              <a
+                id="prefill_smtp_office365"
+                href
+                {{on "click" (fn this.prefillSettings "office365" data)}}
+              >{{i18n "groups.manage.email.prefill.office365"}}</a>
+            </li>
+          </ul>
+        </form.Container>
+      </Form>
+
       <form class="groups-form form-horizontal group-smtp-form">
         <div>
           <div class="control-group">
