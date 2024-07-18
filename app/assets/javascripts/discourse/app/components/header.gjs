@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
 import { and, eq, not, or } from "truth-helpers";
@@ -115,17 +114,15 @@ export default class GlimmerHeader extends Component {
 
   @action
   closeCurrentMenu() {
-    schedule("afterRender", () => {
-      if (this.search.visible) {
-        this.toggleSearchMenu();
-      } else if (this.header.userVisible) {
-        this.toggleUserMenu();
-        document.getElementById(USER_BUTTON_ID)?.focus();
-      } else if (this.header.hamburgerVisible) {
-        this.toggleHamburger();
-        document.getElementById(HAMBURGER_BUTTON_ID)?.focus();
-      }
-    });
+    if (this.search.visible) {
+      this.toggleSearchMenu();
+    } else if (this.header.userVisible) {
+      this.toggleUserMenu();
+      document.getElementById(USER_BUTTON_ID)?.focus();
+    } else if (this.header.hamburgerVisible) {
+      this.toggleHamburger();
+      document.getElementById(HAMBURGER_BUTTON_ID)?.focus();
+    }
   }
 
   @action
