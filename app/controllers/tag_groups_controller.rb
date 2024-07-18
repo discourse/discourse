@@ -59,8 +59,32 @@ class TagGroupsController < ApplicationController
 
   def update
     guardian.ensure_can_admin_tag_groups!
-    json_result(@tag_group, serializer: TagGroupSerializer) do |tag_group|
-      @tag_group.update(tag_groups_params)
+    original_permissions =
+      @tag_group.tag_group_permissions.map do |perm|
+        perm.attributes.slice("group_id", "permission_type")
+      end
+
+    if @tag_group.update(tag_groups_params)
+      new_permissions =
+        @tag_group.tag_group_permissions.map do |perm|
+          perm.attributes.slice("group_id", "permission_type")
+        end
+
+      permissions_changed = original_permissions != new_permissions
+
+      if permissions_changed
+        DiscourseEvent.trigger(
+          :tag_group_permissions_updated,
+          current_user,
+          @tag_group,
+          original_permissions,
+          new_permissions,
+        )
+      end
+
+      render_serialized(@tag_group, TagGroupSerializer)
+    else
+      render_json_error(@tag_group.errors.full_messages)
     end
   end
 
