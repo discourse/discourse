@@ -937,7 +937,7 @@ class Search
 
           nil
         elsif word =~ /\Ainclude:(invisible|unlisted)\z/i
-          @include_invisible = true
+          @include_invisible = true if @guardian.can_see_unlisted_topics?
           nil
         else
           found ? nil : word
