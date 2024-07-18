@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Flag < ActiveRecord::Base
+  # TODO(2025-01-15): krisk remove
+  self.ignored_columns = ["custom_type"]
+
   DEFAULT_VALID_APPLIES_TO = %w[Post Topic]
   MAX_SYSTEM_FLAG_ID = 1000
   MAX_NAME_LENGTH = 200
@@ -62,7 +65,7 @@ end
 #  description      :text
 #  notify_type      :boolean          default(FALSE), not null
 #  auto_action_type :boolean          default(FALSE), not null
-#  custom_type      :boolean          default(FALSE), not null
+#  require_message  :boolean          default(FALSE), not null
 #  applies_to       :string           not null, is an Array
 #  position         :integer          not null
 #  enabled          :boolean          default(TRUE), not null
