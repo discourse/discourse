@@ -2544,8 +2544,8 @@ RSpec.describe Search do
   describe "include:invisible / include:unlisted" do
     it "allows including invisible topics in the results" do
       topic = Fabricate(:topic, title: "I am testing a search", visible: false)
-      _post2 = Fabricate(:post, topic: topic, raw: "this is the second post", post_number: 2)
       post = Fabricate(:post, topic: topic, raw: "this is the first post", post_number: 1)
+      _post2 = Fabricate(:post, topic: topic, raw: "this is the second post", post_number: 2)
 
       results = Search.execute("testing include:invisible")
       expect(results.posts.map(&:id)).to eq([post.id])
