@@ -144,6 +144,11 @@ export default class TopicMapSummary extends Component {
   }
 
   @action
+  postUrl(post) {
+    return this.args.topic.urlForPostNumber(post.post_number);
+  }
+
+  @action
   fetchMostLiked() {
     const cacheKey = `top3LikedPosts_${this.args.topic.id}`;
     const cachedData = this.mapCache.get(cacheKey);
@@ -272,9 +277,7 @@ export default class TopicMapSummary extends Component {
                 <ul>
                   {{#each this.top3LikedPosts as |post|}}
                     <li>
-                      <a
-                        href="/t/{{@topic.slug}}/{{@topic.id}}/{{post.post_number}}"
-                      >
+                      <a href={{this.postUrl post}}>
                         <span class="like-section__user">
                           {{avatar
                             post.avatar_template
