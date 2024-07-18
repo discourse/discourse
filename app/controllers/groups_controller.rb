@@ -716,8 +716,6 @@ class GroupsController < ApplicationController
     params.require(:username)
     params.require(:password)
 
-    raise Discourse::InvalidParameters if params[:ssl_mode].blank? && params[:ssl].blank?
-
     group = Group.find(params[:group_id])
     guardian.ensure_can_edit!(group)
 
@@ -734,6 +732,8 @@ class GroupsController < ApplicationController
       begin
         case params[:protocol]
         when "smtp"
+          raise Discourse::InvalidParameters if params[:ssl_mode].blank?
+
           settings.delete(:ssl_mode)
 
           if params[:ssl_mode].blank? ||
@@ -752,6 +752,8 @@ class GroupsController < ApplicationController
             **final_settings.to_h.symbolize_keys,
           )
         when "imap"
+          raise Discourse::InvalidParameters if params[:ssl].blank?
+
           final_settings =
             settings.merge(ssl: settings[:ssl] == "true").permit(
               :host,
