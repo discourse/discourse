@@ -6,6 +6,7 @@ import { htmlSafe } from "@ember/template";
 import { or } from "truth-helpers";
 import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";
 import concatClass from "discourse/helpers/concat-class";
+import runAfterFramePaint from "discourse/lib/after-frame-paint";
 import icon from "discourse-common/helpers/d-icon";
 import deprecated from "discourse-common/lib/deprecated";
 import I18n from "discourse-i18n";
@@ -127,7 +128,7 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
           if (forwardEvent) {
             actionVal(actionParam, event);
           } else {
-            actionVal(actionParam);
+            runAfterFramePaint(() => actionVal(actionParam));
           }
         }
       } else if (route) {
