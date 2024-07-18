@@ -1,5 +1,4 @@
 import DEBUG from "@glimmer/env";
-import { registerWaiter } from "@ember/test";
 import { isTesting } from "discourse-common/config/environment";
 
 /**
@@ -7,10 +6,9 @@ import { isTesting } from "discourse-common/config/environment";
  * ref: https://webperf.tips/tip/measuring-paint-time
  */
 export default function runAfterFramePaint(callback) {
-  let done = false;
-
-  if (DEBUG && isTesting()) {
-    registerWaiter(() => done);
+  if (DEBUG || isTesting()) {
+    callback();
+    return;
   }
 
   // Queue a "before Render Steps" callback via requestAnimationFrame.
@@ -21,7 +19,6 @@ export default function runAfterFramePaint(callback) {
 
     // Setup the callback to run in a Task
     messageChannel.port1.onmessage = () => {
-      done = true;
       callback();
     };
 
