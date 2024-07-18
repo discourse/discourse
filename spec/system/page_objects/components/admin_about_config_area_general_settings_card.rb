@@ -4,23 +4,23 @@ module PageObjects
   module Components
     class AdminAboutConfigAreaGeneralSettingsCard < PageObjects::Components::Base
       def community_name_input
-        card.find(".community-name-input input")
+        form.field("name")
       end
 
       def community_summary_input
-        card.find(".community-summary-input input")
+        form.field("summary")
       end
 
       def community_description_editor
-        card.find(".community-description-input .d-editor-input")
+        form.field("extendedDescription")
       end
 
       def banner_image_uploader
         PageObjects::Components::UppyImageUploader.new(card.find(".image-uploader"))
       end
 
-      def save_button
-        card.find(".btn-primary.admin-config-area-card__btn-save")
+      def submit
+        form.submit
       end
 
       def has_saved_successfully?
@@ -31,6 +31,12 @@ module PageObjects
 
       def card
         find(".admin-config-area-about__general-settings-section")
+      end
+
+      def form
+        PageObjects::Components::FormKit.new(
+          ".admin-config-area-about__general-settings-section .form-kit",
+        )
       end
     end
   end
