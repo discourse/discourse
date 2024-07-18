@@ -27,8 +27,12 @@ import not from "truth-helpers/helpers/not";
 
 const TRUNCATED_LINKS_LIMIT = 5;
 const MIN_POST_READ_TIME = 4;
+const MIN_LIKES_COUNT = 5;
+const MIN_POSTS_COUNT = 10;
+const MIN_PARTICIPANTS_COUNT = 5;
+const MIN_USERS_COUNT_FOR_AVATARS = 2;
 
-export default class SimpleTopicMapSummary extends Component {
+export default class TopicMapSummary extends Component {
   @service site;
   @service siteSettings;
   @service mapCache;
@@ -40,8 +44,9 @@ export default class SimpleTopicMapSummary extends Component {
 
   get shouldShowParticipants() {
     return (
-      this.args.topic.posts_count >= 10 &&
-      this.args.topicDetails.participants?.length >= 2 &&
+      this.args.topic.posts_count >= MIN_POSTS_COUNT &&
+      this.args.topicDetails.participants?.length >=
+        MIN_USERS_COUNT_FOR_AVATARS &&
       !this.site.mobileView
     );
   }
@@ -82,9 +87,10 @@ export default class SimpleTopicMapSummary extends Component {
   get loneStat() {
     const hasViews = this.args.topic.views >= 0;
     const hasLikes =
-      this.args.topic.like_count > 5 && this.args.topic.posts_count > 10;
+      this.args.topic.like_count > MIN_LIKES_COUNT &&
+      this.args.topic.posts_count > MIN_POSTS_COUNT;
     const hasLinks = this.linksCount > 0;
-    const hasUsers = this.args.topic.participant_count > 5;
+    const hasUsers = this.args.topic.participant_count > MIN_PARTICIPANTS_COUNT;
     const canSummarize = this.args.topic.has_summary;
 
     if (canSummarize) {
@@ -230,7 +236,12 @@ export default class SimpleTopicMapSummary extends Component {
         </:content>
       </DMenu>
 
-      {{#if (and (gt @topic.like_count 5) (gt @topic.posts_count 10))}}
+      {{#if
+        (and
+          (gt @topic.like_count MIN_LIKES_COUNT)
+          (gt @topic.posts_count MIN_POSTS_COUNT)
+        )
+      }}
         <DMenu
           @arrow={{true}}
           @identifier="map-likes"
@@ -349,7 +360,7 @@ export default class SimpleTopicMapSummary extends Component {
           </:content>
         </DMenu>
       {{/if}}
-      {{#if (gt @topic.participant_count 5)}}
+      {{#if (gt @topic.participant_count MIN_PARTICIPANTS_COUNT)}}
         <DMenu
           @arrow={{true}}
           @identifier="map-users"
@@ -381,7 +392,11 @@ export default class SimpleTopicMapSummary extends Component {
       {{#if this.shouldShowParticipants}}
         <li class="avatars">
           <TopicParticipants
-            @participants={{slice 0 5 @topicDetails.participants}}
+            @participants={{slice
+              0
+              MIN_PARTICIPANTS_COUNT
+              @topicDetails.participants
+            }}
             @userFilters={{@userFilters}}
           />
         </li>
