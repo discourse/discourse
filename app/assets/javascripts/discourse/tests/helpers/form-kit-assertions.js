@@ -5,15 +5,15 @@ import { query } from "discourse/tests/helpers/qunit-helpers";
 class FieldHelper {
   constructor(element, context, name) {
     this.element = element;
-
-    if (!this.element) {
-      throw new Error(`Could not find element (name: ${name}).`);
-    }
-
+    this.name = name;
     this.context = context;
   }
 
   get value() {
+    this.context
+      .dom(this.element)
+      .exists(`Could not find element (name: ${this.name}).`);
+
     switch (this.element.dataset.controlType) {
       case "image": {
         return this.element
@@ -75,6 +75,10 @@ class FieldHelper {
   }
 
   get isDisabled() {
+    this.context
+      .dom(this.element)
+      .exists(`Could not find field (name: ${this.name}).`);
+
     return this.element.dataset.disabled === "";
   }
 
