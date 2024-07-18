@@ -180,7 +180,11 @@ RSpec.describe TagsController do
       end
 
       it "does not result in N+1 queries with multiple tag_groups" do
-        tag_group1 = Fabricate(:tag_group, tags: [test_tag, topic_tag, synonym])
+        COUNT1 = 20
+        COUNT2 = 80
+
+        tag_group1s = []
+        COUNT1.times { tag_group1s << Fabricate(:tag_group, tags: [test_tag, topic_tag, synonym]) }
 
         # warm up
         get "/tags.json"
@@ -194,13 +198,14 @@ RSpec.describe TagsController do
 
             tag_groups = response.parsed_body.dig("extras", "tag_groups")
 
-            expect(tag_groups.length).to eq(1)
+            expect(tag_groups.length).to eq(COUNT1)
             expect(tag_groups.map { |tag_group| tag_group["name"] }).to contain_exactly(
-              tag_group1.name,
+              *(tag_group1s.map { |g| g.name }),
             )
           end.length
 
-        tag_group2 = Fabricate(:tag_group, tags: [topic_tag])
+        tag_group2s = []
+        COUNT2.times { tag_group2s << Fabricate(:tag_group, tags: [topic_tag]) }
 
         new_sql_queries_count =
           track_sql_queries do
@@ -210,13 +215,14 @@ RSpec.describe TagsController do
 
             tag_groups = response.parsed_body.dig("extras", "tag_groups")
 
-            expect(tag_groups.length).to eq(2)
+            expect(tag_groups.length).to eq(COUNT1 + COUNT2)
             expect(tag_groups.map { |tag_group| tag_group["name"] }).to contain_exactly(
-              tag_group1.name,
-              tag_group2.name,
+              *(tag_group1s.map { |g| g.name }),
+              *(tag_group2s.map { |g| g.name }),
             )
           end.length
 
+        # We have to execute the SQL a constant number of times to get the visible tag groups
         expect(new_sql_queries_count).to be <= initial_sql_queries_count
       end
     end
@@ -291,7 +297,11 @@ RSpec.describe TagsController do
             expect(categories[0]["tags"].map { |tag| tag["name"] }).to eq([test_tag.name])
           end.length
 
-        category2 = Fabricate(:category, tags: [topic_tag])
+        many_tags = []
+        100.times { many_tags << Fabricate(:tag) }
+        many_tag_names = many_tags.map { |t| t.name }
+
+        category2 = Fabricate(:category, tags: many_tags)
 
         new_sql_queries_count =
           track_sql_queries do
@@ -301,8 +311,12 @@ RSpec.describe TagsController do
 
             tags = response.parsed_body["tags"]
 
-            expect(tags.length).to eq(2)
-            expect(tags.map { |tag| tag["name"] }).to eq([test_tag.name, topic_tag.name])
+            expect(tags.length).to eq(102)
+            expect(tags.map { |tag| tag["name"] }).to contain_exactly(
+              test_tag.name,
+              topic_tag.name,
+              *many_tag_names,
+            )
 
             categories = response.parsed_body["extras"]["categories"]
 
@@ -310,7 +324,9 @@ RSpec.describe TagsController do
             expect(categories[0]["id"]).to eq(category.id)
             expect(categories[0]["tags"].map { |tag| tag["name"] }).to eq([test_tag.name])
             expect(categories[1]["id"]).to eq(category2.id)
-            expect(categories[1]["tags"].map { |tag| tag["name"] }).to eq([topic_tag.name])
+            expect(categories[1]["tags"].map { |tag| tag["name"] }).to contain_exactly(
+              *many_tag_names,
+            )
           end.length
 
         expect(new_sql_queries_count).to eq(initial_sql_queries_count)

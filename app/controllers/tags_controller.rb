@@ -45,6 +45,9 @@ class TagsController < ::ApplicationController
       ungrouped_tags = ungrouped_tags.used_tags_in_regular_topics(guardian) unless show_all_tags
       ungrouped_tags = ungrouped_tags.order(:id)
 
+      visible_tag_groups_names = DiscourseTagging.cached_tag_groups(guardian)
+      membership_dict = {}
+
       grouped_tag_counts =
         TagGroup
           .visible(guardian)
@@ -54,14 +57,28 @@ class TagsController < ::ApplicationController
             {
               id: tag_group.id,
               name: tag_group.name,
-              tags: self.class.tag_counts_json(tag_group.none_synonym_tags, guardian),
+              tags:
+                self
+                  .class
+                  .tag_counts_json(tag_group.none_synonym_tags, guardian, groups_override: [])
+                  .each do |tag|
+                    membership_dict[tag[:id]] ||= []
+                    membership_dict[tag[:id]].push tag_group.name
+                  end,
             }
           end
 
-      @tags = self.class.tag_counts_json(ungrouped_tags, guardian)
+      grouped_tag_counts.each do |tag_group|
+        tag_group[:tags].each do |tag|
+          tag[:groups] = membership_dict[tag[:id]] & visible_tag_groups_names
+        end
+      end
+
+      @tags = self.class.tag_counts_json(ungrouped_tags, guardian, groups_override: [])
       @extras = { tag_groups: grouped_tag_counts }
     else
-      tags = show_all_tags ? Tag.all : Tag.used_tags_in_regular_topics(guardian)
+      tags = Tag.with_groups
+      tags = show_all_tags ? tags.all : tags.used_tags_in_regular_topics(guardian)
       tags = tags.order(:id)
       unrestricted_tags = DiscourseTagging.filter_visible(tags.where(target_tag_id: nil), guardian)
 
@@ -433,7 +450,7 @@ class TagsController < ::ApplicationController
     end
   end
 
-  def self.tag_counts_json(tags, guardian)
+  def self.tag_counts_json(tags, guardian, groups_override: nil)
     show_pm_tags = guardian.can_tag_pms?
     target_tags = Tag.where(id: tags.map(&:target_tag_id).compact.uniq).select(:id, :name)
 
@@ -445,12 +462,18 @@ class TagsController < ::ApplicationController
 
         next if topic_count == 0 && t.pm_topic_count > 0 && !show_pm_tags
 
-        if t.respond_to? :tag_group_id
+        if groups_override != nil
+          groups = groups_override
+        elsif t.respond_to? :tag_group_id
           groups =
             [TagGroup.find_by(id: t.tag_group_id)&.name] &
               DiscourseTagging.cached_tag_groups(guardian)
+        elsif t.respond_to? :tag_group_names
+          groups = t.tag_group_names & DiscourseTagging.cached_tag_groups(guardian)
         elsif t.is_a? Tag
           groups = t.visible_tag_groups_names(guardian)
+        else
+          groups = []
         end
 
         attrs = {

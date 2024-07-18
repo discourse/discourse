@@ -27,7 +27,9 @@ module TopicTagsMixin
   def tags_groups
     all_tags
       .each
-      .with_object({}) { |tag, acc| acc[tag.name] = tag.visible_tag_groups_names(scope) }
+      .with_object({}) do |tag, acc|
+        acc[tag.name] = tag.tag_group_names & DiscourseTagging.cached_tag_groups(scope)
+      end
       .compact
   end
 

@@ -38,6 +38,13 @@ class Tag < ActiveRecord::Base
   scope :used_tags_in_regular_topics,
         ->(guardian) { where("tags.#{Tag.topic_count_column(guardian)} > 0") }
 
+  scope :with_groups,
+        -> do
+          left_outer_joins(:tag_groups).select(
+            "tags.*, array_agg(tag_groups.name) as tag_group_names",
+          ).group("tags.id")
+        end
+
   scope :base_tags, -> { where(target_tag_id: nil) }
   scope :visible, ->(guardian = nil) { merge(DiscourseTagging.visible_tags(guardian)) }
 

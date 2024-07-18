@@ -806,6 +806,7 @@ module DiscourseTagging
       Discourse.cache.write(
         TAGS_GROUP_CACHE_KEY,
         [true, guardian.user&.id, visible_tag_groups_names],
+        expires_in: 1.minute,
       )
     end
 
