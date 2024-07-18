@@ -2542,18 +2542,37 @@ RSpec.describe Search do
   end
 
   describe "include:invisible / include:unlisted" do
-    it "allows including invisible topics in the results" do
+    it "allows including invisible topics in the results for users that can see unlisted topics" do
       topic = Fabricate(:topic, title: "I am testing a search", visible: false)
       post = Fabricate(:post, topic: topic, raw: "this is the first post", post_number: 1)
-      _post2 = Fabricate(:post, topic: topic, raw: "this is the second post", post_number: 2)
 
-      results = Search.execute("testing include:invisible")
+      results = Search.execute("testing include:invisible", guardian: Guardian.new(admin))
       expect(results.posts.map(&:id)).to eq([post.id])
 
-      results = Search.execute("testing include:unlisted")
+      results =
+        Search.execute(
+          "testing include:unlisted",
+          guardian: Guardian.new(Fabricate(:trust_level_4)),
+        )
       expect(results.posts.map(&:id)).to eq([post.id])
 
-      results = Search.execute("testing")
+      results = Search.execute("testing", guardian: Guardian.new(admin))
+      expect(results.posts).to eq([])
+    end
+
+    it "won't work for users that can't see unlisted topics" do
+      topic = Fabricate(:topic, title: "I am testing a search", visible: false)
+      _post = Fabricate(:post, topic: topic, raw: "this is the first post", post_number: 1)
+
+      results =
+        Search.execute("testing include:invisible", guardian: Guardian.new(Fabricate(:user)))
+      expect(results.posts).to eq([])
+
+      results =
+        Search.execute(
+          "testing include:unlisted",
+          guardian: Guardian.new(Fabricate(:trust_level_3)),
+        )
       expect(results.posts).to eq([])
     end
   end
