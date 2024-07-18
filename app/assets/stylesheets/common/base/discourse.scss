@@ -7,8 +7,8 @@
   --d-input-bg-color: var(--secondary);
   --d-input-text-color: var(--primary);
   --d-input-border: 1px solid var(--primary-400);
-  --d-input-bg-color--disabled: var(--primary-low);
-  --d-input-text-color--disabled: var(--primary);
+  --d-input-bg-color--disabled: var(--primary-very-low);
+  --d-input-text-color--disabled: var(--primary-medium);
   --d-input-border--disabled: 1px solid var(--primary-low);
   --d-nav-color: var(--primary);
   --d-nav-bg-color: transparent;
@@ -137,6 +137,7 @@ span.relative-date {
 legend {
   color: var(--primary-high);
   font-weight: bold;
+  font-size: var(--font-down-1-rem);
 }
 
 label {

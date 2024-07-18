@@ -82,6 +82,8 @@ sk:
         breakdown: "Sumár"
         percentage: "Percento"
         count: "Počet"
+      ranked_choice:
+        none: "Žiadny"
       options:
         label: "Možnosti"
       error_while_toggling_status: "Ľutujeme, nastala chyba pri prepínaní stavu tohto hlasovania."

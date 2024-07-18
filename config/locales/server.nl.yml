@@ -908,8 +908,6 @@ nl:
     pop3_authentication_error: "Er was een probleem met de opgegeven POP3-aanmeldgegevens. Controleer de gebruikersnaam en het wachtwoord en probeer het opnieuw."
     imap_authentication_error: "Er was een probleem met de opgegeven IMAP-aanmeldgegevens. Controleer de gebruikersnaam en het wachtwoord en probeer het opnieuw."
     imap_no_response_error: "Er is een fout opgetreden tijdens de communicatie met de IMAP-server. %{message}"
-    smtp_authentication_error: "Er was een probleem met de opgegeven SMTP-aanmeldgegevens. Controleer de gebruikersnaam en het wachtwoord en probeer het opnieuw."
-    authentication_error_gmail_app_password: 'Toepassingsspecifiek wachtwoord vereist. Zie <a target="_blank" href="https://support.google.com/accounts/answer/185833">dit Google Help-artikel</a> voor meer informatie.'
     smtp_server_busy_error: "De SMTP-server is momenteel bezig, probeer het later opnieuw."
     smtp_unhandled_error: "Er is een onafgehandelde fout opgetreden tijdens de communicatie met de SMTP-server. %{message}"
     imap_unhandled_error: "Er is een onafgehandelde fout opgetreden tijdens de communicatie met de IMAP-server. %{message}"
@@ -1396,8 +1394,6 @@ nl:
       ram: "Je server werkt met minder dan 1 GB aan totaal geheugen. Minstens 1 GB geheugen wordt aanbevolen."
       subfolder_ends_in_slash: "Je submapconfiguratie is onjuist; de DISCOURSE_RELATIVE_URL_ROOT eindigt met een schuine streep."
       missing_mailgun_api_key: "De server is geconfigureerd om e-mails via Mailgun te verzenden, maar je hebt geen API-sleutel opgegeven voor verificatie van de webhookberichten."
-      out_of_date_themes: "Er zijn updates voor de volgende thema's beschikbaar:"
-      unreachable_themes: "We konden niet op updates controleren voor de volgende thema's:"
       google_analytics_version: "Je Discourse gebruikt momenteel Google Analytics 3, dat na juli 2023 niet meer wordt ondersteund. <a href='https://meta.discourse.org/t/260498'>Upgrade nu naar Google Analytics 4</a> om waardevolle inzichten en analyses te blijven ontvangen voor de prestaties van je website."
   site_settings:
     allow_bulk_invite: "Bulkuitnodigingen toestaan door een CSV-bestand te uploaden"

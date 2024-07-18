@@ -198,7 +198,7 @@ RSpec.describe JsLocaleHelper do
       it "translates messages properly" do
         expect(
           translated_message,
-        ).to eq "Ce sujet comprend 3 réponses avec un taux très élevé de « J'aime » par message\n"
+        ).to eq "3 réponses, avec un taux très élevé de « J'aime » par message, aller au premier ou dernier message...\n"
       end
 
       context "when a translation is missing" do

@@ -1595,6 +1595,13 @@ ko:
     modal:
       close: "닫기"
       dismiss_error: "오류 무시"
+    form_kit:
+      reset: 리셋
+      optional: 선택 사항
+      errors:
+        required: "필수"
+        too_short:
+          other: "최소 %{count}자 이상이어야 합니다."
     close: "닫기"
     logout: "로그아웃되었습니다."
     refresh: "새로 고침"
@@ -3083,20 +3090,16 @@ ko:
     pending_posts:
       label: "보류 중"
       label_with_count: "보류 중(%{count})"
+    posters: "게시자"
     original_post: "원본 게시물"
     views: "조회수"
-    sr_views: "조회수별 정렬"
     views_lowercase:
       other: "조회수"
     replies: "댓글"
-    sr_replies: "댓글별 정렬"
     views_long:
       other: "이 주제는 %{number}번 조회되었습니다"
     activity: "활동"
-    sr_activity: "활동별 정렬"
     likes: "좋아요"
-    sr_likes: "좋아요순으로 정렬"
-    sr_op_likes: "원 글의 좋아요로 정렬"
     likes_lowercase:
       other: "좋아요"
     users: "사용자"
@@ -3473,8 +3476,8 @@ ko:
       no_read_topics_title: "아직 읽은 주제가 없습니다."
     no_group_messages_title: "그룹 메시지가 없습니다"
     topic_entrance:
-      sr_jump_top_button: "첫 번째 게시물로 이동"
-      sr_jump_bottom_button: "마지막 게시물로 이동"
+      jump_top_button_title: "첫 번째 게시물로 이동"
+      jump_bottom_button_title: "마지막 게시물로 이동"
     fullscreen_table:
       expand_btn: "표 펼치기"
     sidebar:
@@ -5024,6 +5027,7 @@ ko:
           add_image_types: "이미지"
           add_audio_types: "오디오"
       badges:
+        status: 상태
         title: 배지
         new_badge: 새 배지
         new: New
@@ -5031,8 +5035,6 @@ ko:
         badge: 배지
         display_name: 표시 이름
         description: 설명
-        long_description: 긴 설명
-        badge_type: 배지 종류
         badge_grouping: 그룹
         badge_groupings:
           modal_title: 배지 그룹화
@@ -5062,7 +5064,6 @@ ko:
         image: 이미지
         graphic: 그래픽
         icon_help: "Font Awesome 아이콘 이름을 입력하세요(일반 아이콘에는 접두사 'far-', 브랜드 아이콘에는 'fab-' 사용)"
-        image_help: "둘 다 설정된 경우 이미지 업로드가 아이콘 필드를 오버라이드합니다."
         select_an_icon: "아이콘 선택"
         upload_an_image: "이미지 업로드"
         read_only_setting_help: "사용자 지정 텍스트"

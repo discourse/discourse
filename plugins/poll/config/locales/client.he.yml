@@ -82,6 +82,8 @@ he:
         breakdown: "פילוח"
         percentage: "אחוזים"
         count: "ספירה"
+      ranked_choice:
+        none: "ללא"
       options:
         label: "אפשרויות"
       error_while_toggling_status: "חלה שגיאה בשינוי המצב של סקר זה, עמך הסליחה."

@@ -1888,6 +1888,11 @@ es:
     modal:
       close: "cerrar"
       dismiss_error: "Descartar error"
+    form_kit:
+      reset: Restablecer
+      optional: opcional
+      errors:
+        required: "Obligatorio"
     close: "Cerrar"
     logout: "Has cerrado sesión."
     refresh: "Volver a cargar"
@@ -3710,29 +3715,19 @@ es:
     pending_posts:
       label: "Pendiente"
       label_with_count: "Pendientes (%{count})"
-    posts_likes_MF: |
-      Este tema tiene {count,  plural, one {# respuesta} other {# respuestas}} {ratio, select,
-       low {con una proporción de me gusta por publicación alta}
-       med {con una proporción de me gusta por publicación muy alta}
-       high {con una proporción de me gusta por publicación extremadamente alta}
-       other {}}
+    posters: "Participantes"
     latest_poster_link: "Perfil de %{username}, último participante"
     original_post: "Publicación original"
     views: "Vistas"
-    sr_views: "Ordenar por núm. de visitas"
     views_lowercase:
       one: "visita"
       other: "vistas"
     replies: "Respuestas"
-    sr_replies: "Ordenar por núm. de respuestas"
     views_long:
       one: "este tema se ha visto %{count} vez"
       other: "este tema se ha visto %{number} veces"
     activity: "Actividad"
-    sr_activity: "Ordenar por fecha de actividad"
     likes: "Me gusta"
-    sr_likes: "Ordenar por núm. de me gusta"
-    sr_op_likes: "Ordenar por núm. de me gusta de la primera publicación"
     likes_lowercase:
       one: "me gusta"
       other: "me gusta"
@@ -4168,8 +4163,8 @@ es:
       no_read_topics_body: "Cuando empieces a leer temas, los verás aquí en una lista. Puedes empezar a buscar temas que te interesen en <a href='%{topUrl}'>Destacados</a>, la lista de <a href='%{categoriesUrl}'>Categorías</a> o buscando palabras %{searchIcon}"
     no_group_messages_title: "No hay ningún mensaje en el grupo"
     topic_entrance:
-      sr_jump_top_button: "Ir a la primera publicación"
-      sr_jump_bottom_button: "Ir a la última publicación"
+      jump_top_button_title: "Ir a la primera publicación"
+      jump_bottom_button_title: "Ir a la última publicación"
     fullscreen_table:
       expand_btn: "Expandir tabla"
       view_table: "Ver Tabla"
@@ -6131,6 +6126,7 @@ es:
           add_types_title: "Permitir extensiones %{types}"
           add_types_toast: "%{types} tipos de archivo añadidos"
       badges:
+        status: Estado
         title: Insignias
         new_badge: Nueva insignia
         new: Nueva
@@ -6138,8 +6134,6 @@ es:
         badge: Insignia
         display_name: Nombre que se muestra
         description: Descripción
-        long_description: Descripción completa
-        badge_type: Tipo de insignia
         badge_grouping: Grupo
         badge_groupings:
           modal_title: Grupos de insignias
@@ -6169,7 +6163,6 @@ es:
         image: Imagen
         graphic: Gráfico
         icon_help: "Introduce un nombre de icono de Font Awesome (usa el prefijo «far-» para iconos normales y «fab-» para iconos de marca)"
-        image_help: "Subir una imagen sobrescribirá el campo del icono si ambos tienen valores."
         select_an_icon: "Selecciona un icono"
         upload_an_image: "Sube una imagen"
         read_only_setting_help: "Personalizar texto"

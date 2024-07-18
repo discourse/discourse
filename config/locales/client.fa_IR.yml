@@ -1634,6 +1634,11 @@ fa_IR:
     modal:
       close: "بسته"
       dismiss_error: "رد کردن خطا"
+    form_kit:
+      reset: بازنشانی
+      optional: اختیاری
+      errors:
+        required: "مورد نیاز"
     close: "بستن"
     logout: "شما از سایت خارج شده‌اید."
     refresh: "تازه کردن"
@@ -3057,6 +3062,7 @@ fa_IR:
     pending_posts:
       label: "در انتظار"
       label_with_count: "(%{count}) در انتظار"
+    posters: "ارسال کنندگان"
     original_post: "نوشته اصلی"
     views: "نمایش‌ها"
     views_lowercase:
@@ -4646,6 +4652,7 @@ fa_IR:
         file_types_list:
           add_image_types: "تصاویر"
       badges:
+        status: وضعیت
         title: نشان‌ها
         new_badge: نشان جدید
         new: جدید
@@ -4653,8 +4660,6 @@ fa_IR:
         badge: نشان
         display_name: نام نمایشی
         description: توضیح
-        long_description: شرح کامل
-        badge_type: نوع نشان
         badge_grouping: گروه
         badge_groupings:
           modal_title: گروه بندی نشان
@@ -4682,6 +4687,8 @@ fa_IR:
         disabled: غیرفعال شده
         icon: آیکن
         image: تصویر
+        select_an_icon: "یک آیکون را انتخاب کنید"
+        upload_an_image: "تصویری را بارگذاری کنید"
         query: پرس جوی نشان (SQL)
         target_posts: پرس‌و‌جوی نوشته‌های هدف
         auto_revoke: اجرای روزانه پروس‌و‌جوی لغو

@@ -10,7 +10,11 @@ module PageObjects
       end
 
       def component
-        find(@context)
+        if @context.is_a?(Capybara::Node::Element)
+          @context
+        else
+          find(@context)
+        end
       end
 
       def visible?
@@ -40,6 +44,10 @@ module PageObjects
 
       def is_not_disabled?
         has_css?(@context + ":not(.disabled)", wait: 0)
+      end
+
+      def value
+        component.find(".select-kit-header")["data-value"]
       end
 
       def has_selected_value?(value)

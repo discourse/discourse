@@ -1400,6 +1400,13 @@ zh_TW:
         fixed: "載入頁面"
     modal:
       close: "關閉"
+    form_kit:
+      reset: 重置
+      optional: 選擇性
+      errors:
+        required: "必要設定"
+        too_short:
+          other: "必須至少 %{count} 個字"
     close: "關閉"
     logout: "已登出"
     refresh: "重新整理"
@@ -2606,12 +2613,12 @@ zh_TW:
     pending_posts:
       label: "申請中"
       label_with_count: "等待中 (%{count})"
+    posters: "發表人"
     original_post: "原始貼文"
     views: "觀看"
     views_lowercase:
       other: "觀看"
     replies: "回覆"
-    sr_replies: "依回覆排序"
     views_long:
       other: "這個話題已經被檢視過 %{number} 次"
     activity: "活動"
@@ -4222,6 +4229,7 @@ zh_TW:
         file_types_list:
           add_image_types: "圖片"
       badges:
+        status: 狀態
         title: 徽章
         new_badge: 新徽章
         new: 新
@@ -4229,8 +4237,6 @@ zh_TW:
         badge: 徽章
         display_name: 顯示名稱
         description: 簡述
-        long_description: 詳情
-        badge_type: 徽章類型
         badge_grouping: 群組
         badge_groupings:
           modal_title: 徽章群組
@@ -4258,6 +4264,8 @@ zh_TW:
         disabled: 停用
         icon: 圖示
         image: 圖片
+        select_an_icon: "選擇圖示"
+        upload_an_image: "上傳圖片"
         read_only_setting_help: "自訂文字"
         query: 徽章查詢語法 (SQL)
         target_posts: 查詢貼文張貼目標

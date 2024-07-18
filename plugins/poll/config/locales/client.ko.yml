@@ -56,6 +56,8 @@ ko:
         breakdown: "분석"
         percentage: "백분율"
         count: "수"
+      ranked_choice:
+        none: "없음"
       options:
         label: "옵션"
       error_while_toggling_status: "죄송합니다. 이 투표의 상태를 바꾸는 도중 에러가 발생하였습니다."

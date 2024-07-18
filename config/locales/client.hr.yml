@@ -1968,6 +1968,11 @@ hr:
     modal:
       close: "zatvori"
       dismiss_error: "Odbaci pogrešku"
+    form_kit:
+      reset: Resetirati
+      optional: neobvezno
+      errors:
+        required: "Potrebno"
     close: "Zatvori"
     assets_changed_confirm: "Ova je stranica upravo primila ažuriranje softvera. Ažurirati na najnoviju verziju sada?"
     logout: "Odjavljeni ste."
@@ -3839,30 +3844,20 @@ hr:
     pending_posts:
       label: "Na čekanju"
       label_with_count: "Na čekanju (%{count})"
-    posts_likes_MF: |
-      Ova tema ima {count, plural, one {# Odgovori} few {# Odgovori} other {# Odgovori}} {ratio, select,
-        low {s visokim kao da post omjer}
-        med {s vrlo visokim kao da post omjer}
-        high {s iznimno visokim kao da post omjer}
-        other {}}
+    posters: "Objavili"
     original_post: "Originalna objava"
     views: "Pogledi"
-    sr_views: "Poredaj po pregledima"
     views_lowercase:
       one: "pregledi"
       few: "pogledi"
       other: "pregledi"
     replies: "Odgovori"
-    sr_replies: "Poredaj po odgovorima"
     views_long:
       one: "ova je tema pregledana %{count} puta"
       few: "ova je tema pregledana %{count} puta"
       other: "ova je tema pregledana %{count} puta"
     activity: "Aktivnosti"
-    sr_activity: "Poredaj po aktivnosti"
     likes: "Like-ova"
-    sr_likes: "Poredaj po lajkovima"
-    sr_op_likes: "Poredaj prema lajkovima originalne objave"
     likes_lowercase:
       one: "likeovi"
       few: "sviđanja"
@@ -4285,8 +4280,8 @@ hr:
       no_read_topics_body: "Kada počnete čitati rasprave, ovdje ćete vidjeti popis. Da biste počeli čitati, potražite teme koje vas zanimaju u <a href='%{topUrl}'>Top</a> ili <a href='%{categoriesUrl}'>kategorije</a> ili pretražite po ključnoj riječi %{searchIcon}"
     no_group_messages_title: "Nisu pronađene grupne poruke"
     topic_entrance:
-      sr_jump_top_button: "Skoči na prvi post"
-      sr_jump_bottom_button: "Skoči na zadnji post"
+      jump_top_button_title: "Skoči na prvi post"
+      jump_bottom_button_title: "Skoči na zadnji post"
     fullscreen_table:
       expand_btn: "Proširite tablicu"
     second_factor_auth:
@@ -5957,6 +5952,7 @@ hr:
         file_types_list:
           add_image_types: "Slike"
       badges:
+        status: Statust
         title: Značke
         new_badge: Nova značka
         new: Novo
@@ -5964,8 +5960,6 @@ hr:
         badge: Značka
         display_name: Ime prikaza
         description: Opis
-        long_description: dugi opis
-        badge_type: Tip značke
         badge_grouping: Grupa
         badge_groupings:
           modal_title: Grupiranja znački
@@ -5995,9 +5989,8 @@ hr:
         image: Slika
         graphic: Grafički
         icon_help: "Unesite naziv ikone Font Awesome (koristite prefiks 'far-' za obične ikone i 'fab-' za ikone marke)"
-        image_help: "Prijenos slike nadjačava polje ikone ako su postavljena oba."
-        select_an_icon: "Odaberite ikonu"
-        upload_an_image: "Prenesite sliku"
+        select_an_icon: "Odaberi ikonu"
+        upload_an_image: "Učitaj sliku"
         read_only_setting_help: "Prilagodite tekst"
         query: Upitnik značke (SQL)
         target_posts: Upitnik cilja objave

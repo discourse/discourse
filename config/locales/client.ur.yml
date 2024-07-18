@@ -1610,6 +1610,11 @@ ur:
     modal:
       close: "بند کریں"
       dismiss_error: "غلطی کو مسترد کریں"
+    form_kit:
+      reset: رِی سَیٹ
+      optional: اختیاری
+      errors:
+        required: "درکار"
     close: "بند کریں"
     logout: "آپ لاگ آؤٹ ہو گئے تھے۔"
     refresh: "رِیفریش"
@@ -3117,28 +3122,18 @@ ur:
     pending_posts:
       label: "زیرِاِلتوَاء"
       label_with_count: "زیرِاِلتوَاء (%{count})"
-    posts_likes_MF: |
-      یہ موضوع ہے {count, plural, one {#جواب} other {# جوابات}} {ratio, select,
-        low {ایک اعلی پوسٹ کرنے کے تناسب کے ساتھ}
-        med {پوسٹ کرنے کا تناسب بہت زیادہ ہے}
-        high {پوسٹ کرنے کا تناسب انتہائی اعلی کے ساتھ}
-        other {}}
+    posters: "پوسٹ کرنے والے"
     original_post: "اصل پوسٹ"
     views: "وِیوز"
-    sr_views: "خیالات کے لحاظ سے ترتیب دیں"
     views_lowercase:
       one: "وِیو"
       other: "وِیوز"
     replies: "جوابات"
-    sr_replies: "جوابات کے لحاظ سے ترتیب دیں"
     views_long:
       one: "اِس ٹاپک کو %{count} دفعہ دیکھا جا چکا ہے"
       other: "اِس ٹاپک کو %{number} دفعہ دیکھا جا چکا ہے"
     activity: "سرگرمی"
-    sr_activity: "سرگرمی کے لحاظ سے ترتیب دیں"
     likes: "لائیکس"
-    sr_likes: "پسند کی طرف سے ترتیب دیں"
-    sr_op_likes: "اصل پوسٹ کی پسند کی طرف سے ترتیب دیں"
     likes_lowercase:
       one: "لائیک"
       other: "لائیکس"
@@ -3532,8 +3527,8 @@ ur:
       no_read_topics_body: "ایک بار جب آپ بحثیں پڑھنا شروع کر دیں، تو آپ کو یہاں ایک فہرست نظر آئے گی۔ پڑھنا شروع کرنے کے لیے، ایسے عنوانات تلاش کریں جو آپ کی دلچسپی <a href='%{topUrl}'>ٹاپ</a> یا <a href='%{categoriesUrl}'>زمرہ جات</a> یا کلیدی لفظ %{searchIcon}کے ذریعے تلاش کریں۔"
     no_group_messages_title: "کوئی گروپ پیغامات نہیں ملے"
     topic_entrance:
-      sr_jump_top_button: "پہلی پوسٹ پر جائیں"
-      sr_jump_bottom_button: "آخری پوسٹ پر جائیں"
+      jump_top_button_title: "پہلی پوسٹ پر جائیں"
+      jump_bottom_button_title: "آخری پوسٹ پر جائیں"
     fullscreen_table:
       expand_btn: "ٹیبل کو پھیلائیں"
     second_factor_auth:
@@ -5058,6 +5053,7 @@ ur:
         file_types_list:
           add_image_types: "تصاویر"
       badges:
+        status: سٹیٹس
         title: بَیج
         new_badge: نیا بَیج
         new: نیا
@@ -5065,8 +5061,6 @@ ur:
         badge: بَیج
         display_name: ڈِسپلے نام
         description: تفصیل
-        long_description: طویل تفصیل
-        badge_type: بیج قِسم
         badge_grouping: گروپ
         badge_groupings:
           modal_title: بَیجوں کے گروپ
@@ -5095,9 +5089,8 @@ ur:
         image: تصویر
         graphic: گرافک
         icon_help: "ایک فونٹ اَوسم آئیکن کا نام درج کریں (عام آئیکنز کیلئے 'far-' سابقہ اور برانڈ آئیکنز کیلئے 'fab-' سابقہ استعمال کریں)"
-        image_help: "تصویر اپ لوڈ کرنا آئیکن فیلڈ کو اوور رائیڈ کرتا ہےاگر دونوں سیٹ ہیں تو ۔"
         select_an_icon: "ایک آئکن منتخب کریں"
-        upload_an_image: "ایک تصویر اپ لوڈ کریں"
+        upload_an_image: "تصویر اپ لوڈ کریں"
         read_only_setting_help: "متن میں ترمیم"
         query: بَیج قُوَیری (SQL)
         target_posts: ھدف پوسٹس کو قُوَیری کریں

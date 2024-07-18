@@ -13,6 +13,8 @@ te:
         label: "ఎగుమతి"
       close:
         label: "మూసివేయి"
+      ranked_choice:
+        none: "ఏదీ లేదు"
       options:
         label: "ఎంపికలు"
       ui_builder:

@@ -127,6 +127,8 @@ class DiscoursePluginRegistry
 
   define_filtered_register :flag_applies_to_types
 
+  define_filtered_register :custom_filter_mappings
+
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
   end

@@ -33,8 +33,6 @@ ug:
         icons:
           title: "سىنبەلگە"
           full_list: "Font Awesome سىنبەلگىسىنىڭ تولۇق تىزىمىنى كۆرسىتىدۇ"
-        input_fields:
-          title: "كىرگۈزۈش بۆلىكى"
         buttons:
           title: "توپچە"
         dropdowns:

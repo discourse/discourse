@@ -1988,6 +1988,11 @@ cs:
     modal:
       close: "zavřít"
       dismiss_error: "Skrýt chybu"
+    form_kit:
+      reset: obnovit výchozí
+      optional: volitelné
+      errors:
+        required: "Nezbytnosti"
     close: "Zavřít"
     assets_changed_confirm: "Tato stránka právě obdržela softwarovou aktualizaci. Získat nejnovější verzi?"
     logout: "Byli jste odhlášeni."
@@ -4017,39 +4022,23 @@ cs:
     pending_posts:
       label: "Čeká na schválení"
       label_with_count: "Nevyřízeno (%{count})"
-    posts_likes_MF: |
-      Toto téma má { count, plural,
-          one {# odpověď}
-          few {# odpovědi}
-          many {# odpovědí}
-        other {# odpovědí}
-      } { ratio, select,
-          low {s vysokým poměrem lajků na odpověď}
-          med {s velmi vysokým poměrem lajků na odpověď}
-         high {s extrémně vysokým poměrem lajků na odpověď}
-        other {}
-      }
+    posters: "Přispěvatelé"
     latest_poster_link: "Profil uživatele %{username}, nejnovější přispěvatel"
     original_post: "Původní příspěvek"
     views: "Zobrazení"
-    sr_views: "Seřadit podle zobrazení"
     views_lowercase:
       one: "zobrazení"
       few: "zobrazení"
       many: "zobrazení"
       other: "zobrazení"
     replies: "Odpovědi"
-    sr_replies: "Seřadit podle odpovědí"
     views_long:
       one: "Toto téma bylo zobrazeno %{count} krát"
       few: "Toto téma bylo zobrazeno %{number} krát"
       many: "Toto téma bylo zobrazeno %{number} krát"
       other: "Toto téma bylo zobrazeno %{number} krát"
     activity: "Aktivita"
-    sr_activity: "Seřadit podle aktivity"
     likes: "Líbí se"
-    sr_likes: "Seřadit podle líbí se mi"
-    sr_op_likes: "Řadit podle líbí se mi původního příspěvku"
     likes_lowercase:
       one: "líbí se"
       few: "líbí se"
@@ -4511,8 +4500,8 @@ cs:
       no_read_topics_body: "Jakmile začnete číst diskuse, uvidíte zde seznam. Pro začátek čtení, hledejte témata, která vás zajímají v <a href='%{topUrl}'>Top</a> nebo <a href='%{categoriesUrl}'>Kategorie</a> nebo hledejte podle klíčového slova %{searchIcon}"
     no_group_messages_title: "Nenalezeny žádné skupinové zprávy"
     topic_entrance:
-      sr_jump_top_button: "Přejít na první příspěvek"
-      sr_jump_bottom_button: "Přeskočit na poslední příspěvek"
+      jump_top_button_title: "Přejít na první příspěvek"
+      jump_bottom_button_title: "Přeskočit na poslední příspěvek"
     fullscreen_table:
       expand_btn: "Rozbalit tabulku"
       view_table: "Zobrazit tabulku"
@@ -6165,6 +6154,7 @@ cs:
           add_types_title: "Povolit koncovky %{types}"
           add_types_toast: "Přidány typy souborů %{types}"
       badges:
+        status: Stav
         title: Odznaky
         new_badge: Nový odznak
         new: Nové
@@ -6172,8 +6162,6 @@ cs:
         badge: Odznak
         display_name: Zobrazované jméno
         description: Popis
-        long_description: Dlouhý Popis
-        badge_type: Typ odznaku
         badge_grouping: Skupina
         badge_groupings:
           modal_title: Sdružování odznaků
@@ -6201,6 +6189,8 @@ cs:
         disabled: vypnuto
         icon: Ikona
         image: Obrázek
+        select_an_icon: "Vyberte ikonu"
+        upload_an_image: "Nahrát obrázek"
         query: Dotaz na odznak (SQL)
         target_posts: Zeptat se na cílový příspěvek
         auto_revoke: Denně spouštět zrušení dotazu

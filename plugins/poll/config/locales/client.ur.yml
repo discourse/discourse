@@ -58,6 +58,8 @@ ur:
         breakdown: "تجزیہ"
         percentage: "فیصد"
         count: "شمار"
+      ranked_choice:
+        none: "کوئی نہیں"
       options:
         label: "اختیارات"
       error_while_toggling_status: "معذرت، اِس پول کا سٹیٹس تبدیل کرتے وقت ایک تکنیکی خرابی کا سامنا کرنا پڑا۔"

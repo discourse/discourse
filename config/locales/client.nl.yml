@@ -1890,6 +1890,11 @@ nl:
     modal:
       close: "sluiten"
       dismiss_error: "Fout negeren"
+    form_kit:
+      reset: Resetten
+      optional: optioneel
+      errors:
+        required: "Vereist"
     close: "Sluiten"
     logout: "Je bent afgemeld."
     refresh: "Vernieuwen"
@@ -3713,29 +3718,19 @@ nl:
     pending_posts:
       label: "Wachtend"
       label_with_count: "Wachtend (%{count})"
-    posts_likes_MF: |
-      Dit topic heeft {count, plural, one {# antwoord} other {# antwoorden}} {ratio, select,
-      low {met een hoge verhouding likes per bericht}
-      med {met een erg hoge verhouding likes per bericht}
-      high {met een zeer hoge verhouding likes per bericht}
-      other {}}
+    posters: "Auteurs"
     latest_poster_link: "Profiel van %{username}, laatste schrijver"
     original_post: "Oorspronkelijk bericht"
     views: "Weergaven"
-    sr_views: "Sorteren op weergaven"
     views_lowercase:
       one: "weergave"
       other: "weergaven"
     replies: "Antwoorden"
-    sr_replies: "Sorteren op antwoorden"
     views_long:
       one: "dit topic is %{count} keer bekeken"
       other: "dit topic is %{count} keer bekeken"
     activity: "Activiteit"
-    sr_activity: "Sorteren op activiteit"
     likes: "Likes"
-    sr_likes: "Sorteren op likes"
-    sr_op_likes: "Sorteren op likes voor originele berichten"
     likes_lowercase:
       one: "like"
       other: "likes"
@@ -4175,8 +4170,8 @@ nl:
       no_read_topics_body: "Wanneer je discussies gaat lezen, zie je hier een lijst. Om te beginnen met lezen, kun je zoeken naar interessante topics onder <a href='%{topUrl}'>Top</a> of <a href='%{categoriesUrl}'>Categorieën</a> of zoeken op trefwoorden %{searchIcon}"
     no_group_messages_title: "Geen groepsberichten gevonden"
     topic_entrance:
-      sr_jump_top_button: "Naar eerste bericht"
-      sr_jump_bottom_button: "Naar laatste bericht"
+      jump_top_button_title: "Naar eerste bericht"
+      jump_bottom_button_title: "Naar laatste bericht"
     fullscreen_table:
       expand_btn: "Tabel uitvouwen"
       view_table: "Tabel weergeven"
@@ -6142,6 +6137,7 @@ nl:
           add_types_title: "Extensies toestaan %{types}"
           add_types_toast: "%{types} bestandstypen toegevoegd"
       badges:
+        status: Status
         title: Badges
         new_badge: Nieuwe badge
         new: Nieuw
@@ -6149,8 +6145,6 @@ nl:
         badge: Badge
         display_name: Weergavenaam
         description: Beschrijving
-        long_description: Lange beschrijving
-        badge_type: Badgetype
         badge_grouping: Groep
         badge_groupings:
           modal_title: Badgegroeperingen
@@ -6180,7 +6174,6 @@ nl:
         image: Afbeelding
         graphic: Grafisch
         icon_help: "Voer een Font Awesome-pictogramnaam in (gebruik het voorvoegsel 'far-' voor normale pictogrammen en 'fab-' voor merkpictogrammen)"
-        image_help: "Het uploaden van een afbeelding overschrijft het pictogramveld als beide zijn ingesteld."
         select_an_icon: "Selecteer een pictogram"
         upload_an_image: "Upload een afbeelding"
         read_only_setting_help: "Tekst aanpassen"

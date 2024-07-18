@@ -733,6 +733,10 @@ be:
         fixed: "загрузка Старонкі"
     modal:
       close: "схаваць"
+    form_kit:
+      reset: скінуць
+      errors:
+        required: "абавязковыя"
     close: "зачыніць"
     refresh: "абнавіць"
     home: "дома"
@@ -2144,6 +2148,7 @@ be:
         file_types_list:
           add_image_types: "Выява"
       badges:
+        status: Статус
         title: значкі
         new_badge: новы значок
         new: Новыя
@@ -2151,7 +2156,6 @@ be:
         badge: значок
         display_name: Адлюстроўваецца імя
         description: апісанне
-        long_description: пашыранае апісанне
         badge_grouping: група
         save: захаваць
         delete: выдаліць

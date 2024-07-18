@@ -27,8 +27,6 @@ en_GB:
         icons:
           title: "Icons"
           full_list: "See the full list of Font Awesome Icons"
-        input_fields:
-          title: "Input Fields"
         buttons:
           title: "Buttons"
         dropdowns:

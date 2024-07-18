@@ -60,6 +60,8 @@ sl:
         breakdown: "Razčlenitev"
         percentage: "Odstotki"
         count: "Število"
+      ranked_choice:
+        none: "Brez"
       options:
         label: "Možnosti"
       error_while_toggling_status: "Prišlo je do napake med spreminjanjem statusa te ankete."

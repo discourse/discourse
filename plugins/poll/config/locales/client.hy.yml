@@ -44,6 +44,8 @@ hy:
         age: "Փակված է՝ <strong>%{age}</strong>"
       breakdown:
         count: "Քանակ"
+      ranked_choice:
+        none: "Ոչ մի"
       options:
         label: "Տարբերակներ"
       error_while_toggling_status: "Ներողություն, այս հարցման կարգավիճակը փոխելիս տեղի է ունեցել սխալ:"

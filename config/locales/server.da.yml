@@ -783,7 +783,6 @@ da:
     pop3_authentication_error: "Der var et problem med de angivne POP3-legitimationsoplysninger, tjek brugernavnet og adgangskoden, og prøv igen."
     imap_authentication_error: "Der var et problem med de leverede IMAP-legitimationsoplysninger, tjek brugernavnet og adgangskoden, og prøv igen."
     imap_no_response_error: "Der opstod en fejl under kommunikation med IMAP-serveren. %{message}"
-    smtp_authentication_error: "Der var et problem med de angivne SMTP-legitimationsoplysninger, tjek brugernavnet og adgangskoden, og prøv igen."
     smtp_server_busy_error: "SMTP-serveren er i øjeblikket optaget, prøv igen senere."
     smtp_unhandled_error: "Der opstod en uhåndteret fejl under kommunikation med SMTP-serveren. %{message}"
     connection_error: "Der var et problem med forbindelsen til serveren, tjek serverens navn og port og prøv igen."
@@ -1237,8 +1236,6 @@ da:
       ram: "Din server kører med mindre end 1 GB samlet hukommelse. Det anbefales at have mindst 1 GB hukommelse."
       subfolder_ends_in_slash: "Din undermappe opsætning er forkert; DISCOURSE_RELATIVE_URL_ROOT ender med en skråstreg."
       missing_mailgun_api_key: "Serveren er konfigureret til at sende e-mails via Mailgun, men du har ikke angivet en API-nøgle, der bruges til at bekræfte webhook-meddelelserne."
-      out_of_date_themes: "Opdateringer er tilgængelige for følgende temaer:"
-      unreachable_themes: "Vi kunne ikke tjekke for opdateringer til følgende temaer:"
       google_analytics_version: "Din Discourse bruger i øjeblikket Google Analytics 3, som ikke længere vil blive understøttet efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Opgrader til Google Analytics 4</a> nu for fortsat at modtage værdifulde indsigter og analyser af dit websteds ydeevne."
   site_settings:
     disabled: "deaktiveret"
