@@ -44,8 +44,7 @@ export default class ChatFooter extends Component {
   }
   get shouldRenderFooter() {
     return (
-      this.chatStateManager.hasPreloadedChannels &&
-      this.enabledRouteCount > 1
+      this.chatStateManager.hasPreloadedChannels && this.enabledRouteCount > 1
     );
   }
 

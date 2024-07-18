@@ -133,6 +133,7 @@ export default class ChatDrawerRouter extends Service {
   @service chatHistory;
   @service chat;
   @service siteSettings;
+  @service chatStateManager;
   @service chatChannelsManager;
 
   @tracked component = null;
@@ -187,14 +188,13 @@ export default class ChatDrawerRouter extends Service {
     this.drawerRoute?.deactivate?.(this.chatHistory.currentRoute);
 
     this.chatHistory.visit(route);
-
     this.drawerRoute = ROUTES[route.name];
     this.params = this.drawerRoute?.extractParams?.(route) || route.params;
     this.component = this.drawerRoute?.name || ChatDrawerRoutesChannels;
     if (
-      (this.siteSettings.chat_preferred_index !== "channels" ||
-        !this.#isPublicChannelsEnabled()) &&
-      this.component.name === "ChatDrawerRoutesChannels" // we should not redirect to channels
+      this.siteSettings.chat_preferred_index !== "channels" &&
+      !this.chatStateManager.isDrawerActive && // only when opening the drawer
+      this.component.name === "ChatDrawerRoutesChannels" // we should check if redirect to channels
     ) {
       this.#redirect();
     }
