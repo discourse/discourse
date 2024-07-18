@@ -24,7 +24,7 @@ class GroupShowSerializer < BasicGroupSerializer
   admin_attributes :automatic_membership_email_domains,
                    :smtp_server,
                    :smtp_port,
-                   :smtp_ssl,
+                   :smtp_ssl_mode,
                    :smtp_enabled,
                    :smtp_updated_at,
                    :smtp_updated_by,

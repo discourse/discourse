@@ -873,11 +873,17 @@ en:
           prefill:
             title: "Prefill with settings for:"
             gmail: "Gmail"
+            outlook: "Outlook.com"
+            office365: "Microsoft 365"
+          ssl_modes:
+            none: "None"
+            ssl_tls: "SSL/TLS"
+            starttls: "STARTTLS"
           credentials:
             title: "Credentials"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
-            smtp_ssl: "Use SSL for SMTP"
+            smtp_ssl_mode: "SSL Mode"
             imap_server: "IMAP Server"
             imap_port: "IMAP Port"
             imap_ssl: "Use SSL for IMAP"

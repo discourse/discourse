@@ -62,9 +62,6 @@ class EmailSettingsValidator
   # Attempts to start an SMTP session and if that raises an error then it is
   # assumed the credentials or other settings are wrong.
   #
-  # For Gmail, the port should be 587, enable_starttls_auto should be true,
-  # and enable_tls should be false.
-  #
   # @param domain [String] - Used for HELO, should be the FQDN of the server sending the mail
   #                          localhost can be used in development mode.
   #                          See https://datatracker.ietf.org/doc/html/rfc788#section-4
@@ -83,9 +80,6 @@ class EmailSettingsValidator
     debug: Rails.env.development?
   )
     begin
-      port, enable_tls, enable_starttls_auto =
-        SmtpProviderOverrides.ssl_override(host, port, enable_tls, enable_starttls_auto)
-
       if enable_tls && enable_starttls_auto
         raise ArgumentError, "TLS and STARTTLS are mutually exclusive"
       end
