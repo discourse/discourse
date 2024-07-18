@@ -92,7 +92,12 @@ export default class GlimmerHeader extends Component {
         return;
       }
 
-      if (!panelBody.contains(event.relatedTarget)) {
+      // don't remove focus from newly opened modal
+      const isFocusInModal = document
+        .querySelector(".d-modal")
+        ?.contains(event.relatedTarget);
+
+      if (!panelBody.contains(event.relatedTarget) && !isFocusInModal) {
         this.closeCurrentMenu();
       }
     };
