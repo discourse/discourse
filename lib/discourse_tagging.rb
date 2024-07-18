@@ -606,6 +606,19 @@ module DiscourseTagging
 
     result = builder.query(builder_params).uniq { |t| t.id }
 
+    tag_groups =
+      Tag
+        .with_groups
+        .where(id: result.map { |t| t.id })
+        .each
+        .with_object({}) { |tag, hash| hash[tag.id] = tag.tag_group_names }
+
+    result.each do |tag|
+      tag.define_singleton_method :tag_group_names do
+        tag_groups[tag.id] || []
+      end
+    end
+
     if opts[:with_context]
       context = {}
       if required_category_tag_group

@@ -464,10 +464,6 @@ class TagsController < ::ApplicationController
 
         if groups_override != nil
           groups = groups_override
-        elsif t.respond_to? :tag_group_id
-          groups =
-            [TagGroup.find_by(id: t.tag_group_id)&.name] &
-              DiscourseTagging.cached_tag_groups(guardian)
         elsif t.respond_to? :tag_group_names
           groups = t.tag_group_names & DiscourseTagging.cached_tag_groups(guardian)
         elsif t.is_a? Tag

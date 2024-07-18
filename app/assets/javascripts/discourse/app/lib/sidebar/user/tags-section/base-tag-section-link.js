@@ -51,4 +51,8 @@ export default class BaseTagSectionLink {
   get prefixColor() {
     return customTagSectionLinkPrefixIcons[this.tagName]?.prefixColor;
   }
+
+  get tagGroups() {
+    return escape(this.tag.groups?.join(", "));
+  }
 }

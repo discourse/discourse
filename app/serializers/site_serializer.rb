@@ -269,7 +269,7 @@ class SiteSerializer < ApplicationSerializer
   def navigation_menu_site_top_tags
     if top_tags.present?
       tag_names = top_tags[0...SIDEBAR_TOP_TAGS_TO_SHOW]
-      serialized = serialize_tags(Tag.where(name: tag_names))
+      serialized = serialize_tags(Tag.with_groups.where(name: tag_names))
 
       # Ensures order of top tags is preserved
       serialized.sort_by { |tag| tag_names.index(tag[:name]) }
@@ -289,7 +289,7 @@ class SiteSerializer < ApplicationSerializer
           SiteSetting.default_navigation_menu_tags.split("|") -
             DiscourseTagging.hidden_tag_names(scope)
 
-        serialize_tags(Tag.where(name: tag_names).order(:name))
+        serialize_tags(Tag.with_groups.where(name: tag_names).order(:name))
       end
   end
 

@@ -390,7 +390,7 @@ class User < ActiveRecord::Base
     user_guardian ||= guardian
 
     DiscourseTagging.filter_visible(
-      Tag.where(
+      Tag.with_groups.where(
         id: SidebarSectionLink.where(user_id: self.id, linkable_type: "Tag").select(:linkable_id),
       ),
       user_guardian,
