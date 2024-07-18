@@ -9,6 +9,14 @@ export default Controller.extend({
     "siteSettings.experimental_rename_faq_to_guidelines"
   ),
 
+  @discourseComputed("siteSettings.experimental_redesigned_about_page_groups")
+  displayV2Design(groups) {
+    const allowedGroupIds = groups.split("|").map((id) => parseInt(id, 10));
+    return this.currentUser?.groups.any((group) =>
+      allowedGroupIds.includes(group.id)
+    );
+  },
+
   @discourseComputed("model.contact_url", "model.contact_email")
   contactInfo(url, email) {
     if (url) {

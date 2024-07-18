@@ -344,6 +344,16 @@ en:
       active_user_count: "Active users"
       contact: "Contact us"
       contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_info}."
+      member_count:
+        one: "%{formatted_number} Member"
+        other: "%{formatted_number} Members"
+      admin_count:
+        one: "%{formatted_number} Admin"
+        other: "%{formatted_number} Admins"
+      moderator_count:
+        one: "%{formatted_number} Moderator"
+        other: "%{formatted_number} Moderators"
+      report_inappropriate_content: "If you come across any inappropriate content, don't hesitate to start a conversation with our moderators and admins. Remember to log in before reaching out."
 
     bookmarked:
       title: "Bookmark"

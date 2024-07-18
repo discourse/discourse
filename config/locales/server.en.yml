@@ -2685,6 +2685,7 @@ en:
     show_user_menu_avatars: "Show user avatars in the user menu"
     view_raw_email_allowed_groups: "Groups which can view the raw email content of a post if it was created by an incoming email. This includes email headers and other technical information."
     experimental_flags_admin_page_enabled_groups: "EXPERIMENTAL: Remove the Moderation Flags link from the admin sidebar."
+    experimental_redesigned_about_page_groups: "EXPERIMENTAL: Enable the new layout for the /about page."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
