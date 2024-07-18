@@ -122,3 +122,8 @@
     max-width: 50%;
   }
 }
+#main-chat-outlet.chat-view {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
