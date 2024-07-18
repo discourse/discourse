@@ -4125,6 +4125,15 @@ en:
       clicks:
         one: "%{count} click"
         other: "%{count} clicks"
+      menu_titles:
+        replies: Most liked replies
+        views: Recent views
+      view_explainer: One view per unique visitor every 8 hours.
+      no_views: No view stats yet, check back later.
+      chart_error: Error rendering chart, please try again.
+      so_far: (so far)
+      read: read
+      minutes: min
     post_links:
       about: "expand more links for this post"
       title:

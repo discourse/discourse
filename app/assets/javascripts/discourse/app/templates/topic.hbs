@@ -211,6 +211,20 @@
         />
       </div>
 
+      {{#if (gt this.model.posts_count 10)}}
+        <div class="topic-map">
+          <TopicMap
+            @model={{this.model}}
+            @topicDetails={{this.model.details}}
+            @postStream={{this.model.postStream}}
+            @showPMMap={{eq this.model.archetype "private_message"}}
+            @showInvite={{route-action "showInvite"}}
+            @removeAllowedGroup={{action "removeAllowedGroup"}}
+            @removeAllowedUser={{action "removeAllowedUser"}}
+          />
+        </div>
+      {{/if}}
+
       <PluginOutlet @name="above-timeline" @connectorTagName="div" />
 
       <TopicNavigation

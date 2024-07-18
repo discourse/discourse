@@ -1,0 +1,657 @@
+article {
+  .topic-map {
+    border-top: 1px solid var(--primary-low);
+    border-bottom: none;
+  }
+}
+
+.topic-map {
+  --chart-line-color: var(--tertiary);
+  --chart-point-color: var(--tertiary-medium);
+  --chart-prediction-color: var(--primary-low-mid);
+  position: relative;
+  border-bottom: 1px solid var(--primary-low);
+  background: var(--secondary);
+  margin: 0 !important;
+
+  li.avatars {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    overflow: hidden;
+    height: 2em;
+    align-self: center;
+    flex: 1 2 0;
+    gap: 0.25em;
+    padding-block: 0 !important;
+
+    .avatar {
+      width: 2em;
+      height: 2em;
+      margin-right: 0.33em;
+    }
+
+    .avatar-flair,
+    .post-count {
+      display: none;
+    }
+
+    a {
+      display: block;
+      position: relative;
+    }
+
+    div {
+      container-type: inline-size;
+      width: auto;
+      flex: 0 1 32px;
+      @container (max-width: 31px) {
+        a {
+          display: none;
+        }
+      }
+    }
+  }
+
+  section {
+    border-top: 1px solid var(--primary-low);
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    list-style: none;
+  }
+
+  margin-inline: 0 !important;
+  grid-area: posts;
+  grid-row: 2;
+  max-width: calc(
+    var(--topic-avatar-width) + var(--topic-body-width) +
+      (var(--topic-body-width-padding) * 2)
+  );
+
+  @include breakpoint(mobile-large) {
+    font-size: var(--font-down-1);
+  }
+
+  a {
+    overflow-wrap: anywhere;
+  }
+
+  .fk-d-menu__content {
+    .fk-d-menu__inner-content,
+    .d-modal__container {
+      box-sizing: border-box;
+      max-height: 80dvh;
+      min-width: 320px;
+      width: 100%;
+      overflow: auto;
+      align-items: start;
+      overscroll-behavior: contain;
+      .desktop-view & {
+        @include breakpoint(mobile-large) {
+          min-width: unset;
+          max-width: 90dvw;
+        }
+      }
+    }
+
+    .d-modal__body {
+      width: 100%;
+    }
+
+    .loading-container {
+      width: 100%;
+    }
+
+    .toggle-summary,
+    section {
+      box-sizing: border-box;
+      border: none;
+      padding: 1.5em;
+      width: 100%;
+
+      h3 {
+        font-weight: bold;
+        font-size: var(--font-up-1);
+        margin-top: -0.35em;
+        margin-bottom: 0.5em;
+        width: 100%;
+      }
+    }
+  }
+
+  .map {
+    border: none;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0.5em 0 0.5em
+      calc(var(--topic-body-width-padding) + var(--topic-avatar-width));
+
+    @media screen and (max-width: 500px) {
+      padding: 0.5em 0 0 0.8em;
+    }
+
+    .number {
+      font-size: var(--font-up-1);
+      line-height: 1.2;
+    }
+
+    span {
+      margin: 0;
+    }
+
+    li {
+      padding: 0;
+      width: 100%;
+      float: none;
+    }
+    .d-icon {
+      font-size: var(--font-0); // core rule messes up menu caret
+    }
+
+    > ul {
+      flex-direction: row;
+      flex-wrap: nowrap;
+      gap: 0.75em;
+      > button {
+        div {
+          display: flex;
+          min-width: 0;
+          width: 100%;
+          overflow: hidden;
+        }
+        span {
+          display: block;
+          min-width: 0;
+          font-size: var(--font-down-1);
+          color: var(--primary-medium);
+          width: 100%;
+          @include ellipsis;
+        }
+      }
+
+      &.--single-stat {
+        button {
+          flex-direction: row;
+          gap: 0.25em;
+
+          span {
+            font-size: var(--font-0);
+            color: var(--primary-700) !important;
+            min-width: unset;
+            overflow: visible;
+          }
+        }
+      }
+
+      .fk-d-menu__trigger {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        background: transparent;
+        min-width: 0;
+
+        .number {
+          color: var(--tertiary);
+        }
+      }
+    }
+  }
+
+  .map:first-of-type {
+    display: block;
+  }
+
+  section.information {
+    padding: 0.5em 0 0.5em
+      calc(var(--topic-body-width-padding) + var(--topic-avatar-width));
+
+    &:not(:has(*)) {
+      padding: 0;
+      border: none;
+    }
+  }
+
+  .summarization-buttons {
+    &:has(.topic-strategy-summarization) {
+      .top-replies {
+        display: none;
+      }
+    }
+
+    .top-replies,
+    .topic-strategy-summarization {
+      .d-icon {
+        font-size: var(--font-up-1);
+        margin-right: 0.35em;
+      }
+      &:not([disabled]) {
+        .discourse-no-touch & {
+          &:focus,
+          &:hover {
+            .d-icon {
+              color: var(--primary-low);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+
+    .btn {
+      margin-right: 0.5em;
+
+      &:last-child {
+        margin: 0;
+      }
+    }
+  }
+
+  .participants {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    & + .controls {
+      margin-top: 0.5em;
+    }
+
+    &.hide-names .user {
+      .username,
+      .group-name {
+        display: none;
+      }
+    }
+
+    .user {
+      @include ellipsis;
+      border: 1px solid var(--primary-low);
+      border-radius: 0.25em;
+      padding: 0;
+      margin: 0.125em 0.25em 0.125em 0;
+      display: flex;
+      align-items: center;
+      height: 26px;
+
+      .user-link,
+      .group-link {
+        @include ellipsis;
+        color: var(--primary-high);
+
+        &:hover {
+          color: var(--primary);
+        }
+      }
+
+      .avatar,
+      .d-icon-users {
+        margin-left: 0.25em;
+        margin-right: 0.25em;
+      }
+
+      .username,
+      .group-name {
+        margin-right: 0.25em;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      .remove-invited {
+        display: flex;
+        flex: 1 0 0px;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        height: calc(100% + 0.25em);
+        margin-right: -4px;
+      }
+    }
+  }
+
+  .add-remove-participant-btn {
+    .d-icon {
+      margin-left: 0.25em;
+    }
+  }
+}
+
+.map-buttons {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+}
+
+.view-explainer {
+  color: var(--primary-700);
+  font-size: var(--font-down-1);
+  margin-top: 1em;
+}
+
+.estimated-read-time {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: end;
+  line-height: 1.2;
+  color: var(--primary-high);
+  white-space: nowrap;
+
+  span:first-child {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  @media screen and (max-width: 475px) {
+    display: none;
+  }
+}
+
+.map-summary-content {
+  .topic-map {
+    width: 100%;
+    margin: 0;
+    background: transparent;
+    border: none;
+  }
+
+  .d-modal__body {
+    width: 100%;
+  }
+
+  .fk-d-menu__trigger {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+  }
+
+  .fk-d-menu__inner-content {
+    max-height: 500px;
+    max-width: 90vw;
+    overflow: auto;
+
+    @media screen and (min-width: 400px) {
+      width: 400px;
+    }
+  }
+
+  .toggle-summary .summary-box {
+    margin-top: 0;
+  }
+
+  .generated-summary {
+    > p:first-of-type {
+      margin-top: 0;
+    }
+
+    ul {
+      list-style-type: disc;
+    }
+
+    ul,
+    ol {
+      padding-left: 1em;
+    }
+
+    li {
+      &:not(:last-child) {
+        margin-bottom: 0.5em;
+      }
+      p {
+        margin: 0;
+      }
+      ul,
+      ol {
+        margin-top: 0.5em;
+      }
+    }
+  }
+
+  .toggle-summary p:empty {
+    display: none;
+  }
+
+  .summarized-on {
+    p {
+      color: var(--primary-medium);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 0;
+      gap: 0.5em;
+      .fk-d-tooltip__trigger {
+        display: none;
+      }
+    }
+  }
+}
+
+.gap {
+  // temporarily fixes missing dividing border between gap posts and map
+  border-top: 1px solid var(--primary-low);
+  max-width: calc(
+    var(--topic-avatar-width) + var(--topic-body-width) +
+      (var(--topic-body-width-padding) * 2)
+  );
+  padding-top: 0.5em;
+}
+
+.mobile-view {
+  [class*="map-"] {
+    .d-modal__body {
+      padding: 1em 1em 2em 1em;
+
+      h3 {
+        width: 100%;
+        font-weight: bold;
+        font-size: var(--font-up-2);
+      }
+    }
+  }
+}
+
+// Popups
+
+.map-likes-content {
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    li > a {
+      display: grid;
+      grid-template-areas: "user likes" "post post";
+      grid-template-columns: auto 1fr;
+      border-top: 1px solid var(--primary-low);
+      padding: 1em 0;
+      gap: 0.25em;
+
+      .discourse-no-touch & {
+        &:hover {
+          background: var(--primary-very-low);
+          box-shadow: -0.5em 0px 0px 0px var(--primary-very-low),
+            0.5em 0px 0px 0px var(--primary-very-low);
+        }
+      }
+    }
+
+    .like-section__user {
+      grid-area: user;
+
+      color: var(--primary-high);
+      justify-content: start;
+      display: flex;
+      align-items: start;
+      font-weight: bold;
+      gap: 0.5em;
+      img {
+        position: relative;
+        top: 0.2em;
+      }
+    }
+
+    .like-section__likes {
+      grid-area: likes;
+      display: flex;
+      align-items: start;
+
+      gap: 0.25em;
+      color: var(--primary-medium);
+      justify-content: end;
+      font-size: var(--font-0);
+      .d-icon {
+        font-size: var(--font-down-1);
+        color: var(--love);
+        position: relative;
+        top: 0.28em;
+      }
+    }
+
+    p {
+      grid-area: post;
+      overflow-wrap: anywhere;
+      color: var(--primary-high);
+      text-align: left;
+      margin: 0;
+      padding-left: 2.15em;
+    }
+  }
+}
+
+.map-users-content {
+  .avatars {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    h3 {
+      margin-bottom: 0.25em;
+    }
+  }
+  .poster {
+    display: block;
+    position: relative;
+
+    img {
+      width: 35px;
+      height: 35px;
+    }
+  }
+  .post-count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 100px;
+    padding: 0.15em 0.4em 0.2em;
+    text-align: center;
+    font-weight: normal;
+    font-size: var(--font-down-2);
+    line-height: var(--line-height-small);
+  }
+  .avatar-flair {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: -0.25em;
+    z-index: 2;
+    bottom: -0.15em;
+    border-radius: 1em;
+    font-size: var(--font-down-2);
+    width: 1.5em;
+    height: 1.5em;
+    background-size: contain;
+  }
+}
+
+.map-links-content {
+  .topic-links {
+    width: 100%;
+
+    tbody {
+      border: none;
+    }
+    tr {
+      border-top: 1px solid var(--primary-low);
+      border-bottom: none;
+      td:nth-of-type(2) {
+        padding-left: 0.5em;
+      }
+    }
+
+    .badge-notification {
+      margin: 1px 5px 2px 0;
+    }
+  }
+
+  td {
+    vertical-align: top;
+    padding: 0.5em 0;
+    word-break: break-all;
+  }
+
+  span.domain {
+    font-size: var(--font-down-2);
+    color: var(--primary-med-or-secondary-med);
+  }
+
+  .link-summary .btn {
+    width: 100%;
+    .d-icon {
+      color: var(--primary-high);
+    }
+    .discourse-no-touch & {
+      &:hover {
+        background: var(--primary-low);
+      }
+    }
+  }
+}
+
+.topic-views {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 1 auto;
+  padding: 0.5em 1em 0;
+
+  &__wrapper {
+    display: flex;
+    width: 100%;
+    align-items: space-between;
+  }
+  &__views {
+    font-size: var(--font-up-4);
+    color: var(--primary-high);
+  }
+  &__so-far {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    font-style: italic;
+  }
+  &__date {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+}
+
+.map-views-content:has(.topic-views) {
+  .fk-d-menu__inner-content {
+    min-width: unset !important; // override too-specific selector
+  }
+  h3 {
+    text-align: center;
+  }
+}
