@@ -131,12 +131,57 @@ const ROUTES = {
 export default class ChatDrawerRouter extends Service {
   @service router;
   @service chatHistory;
+  @service chat;
+  @service siteSettings;
+  @service chatChannelsManager;
 
   @tracked component = null;
   @tracked drawerRoute = null;
   @tracked params = null;
 
   routeNames = Object.keys(ROUTES);
+
+  #hasThreads() {
+    if (!this.siteSettings.chat_threads_enabled) {
+      return false;
+    }
+
+    return this.chatChannelsManager.hasThreadedChannels;
+  }
+
+  #hasDirectMessages() {
+    return this.chat.userCanAccessDirectMessages;
+  }
+
+  #isPublicChannelsEnabled() {
+    return this.siteSettings.enable_public_channels;
+  }
+
+  #routeFromURL(url) {
+    let route = this.router.recognize(url);
+
+    // ember might recognize the index subroute
+    if (route.localName === "index") {
+      route = route.parent;
+    }
+
+    return route;
+  }
+
+  #redirect() {
+    if (
+      this.siteSettings.chat_preferred_index === "my_threads" &&
+      this.#hasThreads()
+    ) {
+      return this.stateFor(this.#routeFromURL("/chat/threads"));
+    }
+    if (
+      this.siteSettings.chat_preferred_index === "direct_messages" &&
+      this.#hasDirectMessages()
+    ) {
+      return this.stateFor(this.#routeFromURL("/chat/direct-messages"));
+    }
+  }
 
   stateFor(route) {
     this.drawerRoute?.deactivate?.(this.chatHistory.currentRoute);
@@ -146,7 +191,13 @@ export default class ChatDrawerRouter extends Service {
     this.drawerRoute = ROUTES[route.name];
     this.params = this.drawerRoute?.extractParams?.(route) || route.params;
     this.component = this.drawerRoute?.name || ChatDrawerRoutesChannels;
-
+    if (
+      (this.siteSettings.chat_preferred_index !== "channels" ||
+        !this.#isPublicChannelsEnabled()) &&
+      this.component.name === "ChatDrawerRoutesChannels" // we should not redirect to channels
+    ) {
+      this.#redirect();
+    }
     this.drawerRoute.activate?.(route);
   }
 }

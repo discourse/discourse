@@ -35,10 +35,17 @@ export default class ChatFooter extends Component {
     return routeName === "chat" ? "chat.channels" : routeName;
   }
 
+  get enabledRouteCount() {
+    return [
+      this.includeThreads,
+      this.directMessagesEnabled,
+      this.siteSettings.enable_public_channels,
+    ].filter(Boolean).length;
+  }
   get shouldRenderFooter() {
     return (
       this.chatStateManager.hasPreloadedChannels &&
-      (this.includeThreads || this.directMessagesEnabled)
+      this.enabledRouteCount > 1
     );
   }
 
