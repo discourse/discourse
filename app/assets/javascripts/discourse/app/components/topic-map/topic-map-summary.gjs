@@ -38,25 +38,6 @@ export default class SimpleTopicMapSummary extends Component {
   @tracked views = [];
   @tracked loading = true;
 
-  get linksCount() {
-    return this.args.topicDetails.links?.length ?? 0;
-  }
-
-  get topicLinks() {
-    return this.args.topicDetails.links;
-  }
-
-  get linksToShow() {
-    return this.allLinksShown
-      ? this.topicLinks
-      : this.topicLinks.slice(0, TRUNCATED_LINKS_LIMIT);
-  }
-
-  @action
-  showAllLinks() {
-    this.allLinksShown = true;
-  }
-
   get shouldShowParticipants() {
     return (
       this.args.topic.posts_count >= 10 &&
@@ -88,18 +69,14 @@ export default class SimpleTopicMapSummary extends Component {
     return I18n.t("summary.short_title");
   }
 
-  get topRepliesLabel() {
-    const label = this.topRepliesSummaryEnabled ? "All Replies" : "Top Replies";
-
-    return label;
+  get topRepliesIcon() {
+    return this.topRepliesSummaryEnabled ? "arrows-alt-v" : "layer-group";
   }
 
-  get topRepliesIcon() {
-    if (this.topRepliesSummaryEnabled) {
-      return;
-    }
-
-    return "layer-group";
+  get topRepliesLabel() {
+    return this.topRepliesSummaryEnabled
+      ? I18n.t("summary.show_all_label")
+      : I18n.t("summary.short_label");
   }
 
   get loneStat() {
@@ -117,6 +94,36 @@ export default class SimpleTopicMapSummary extends Component {
     return (
       [hasViews, hasLikes, hasLinks, hasUsers].filter(Boolean).length === 1
     );
+  }
+
+  get linksCount() {
+    return this.args.topicDetails.links?.length ?? 0;
+  }
+
+  get topicLinks() {
+    return this.args.topicDetails.links;
+  }
+
+  get linksToShow() {
+    return this.allLinksShown
+      ? this.topicLinks
+      : this.topicLinks.slice(0, TRUNCATED_LINKS_LIMIT);
+  }
+
+  @action
+  showAllLinks() {
+    this.allLinksShown = true;
+  }
+
+  @action
+  showTopReplies() {
+    this.args.postStream.showTopReplies();
+  }
+
+  @action
+  cancelFilter() {
+    this.args.postStream.cancelFilter();
+    this.args.postStream.refresh();
   }
 
   @action
@@ -184,17 +191,6 @@ export default class SimpleTopicMapSummary extends Component {
       .finally(() => {
         this.loading = false;
       });
-  }
-
-  @action
-  cancelFilter() {
-    this.args.postStream.cancelFilter();
-    this.args.postStream.refresh();
-  }
-
-  @action
-  showTopReplies() {
-    this.args.postStream.showTopReplies();
   }
 
   <template>

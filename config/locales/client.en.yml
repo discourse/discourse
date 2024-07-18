@@ -2227,6 +2227,7 @@ en:
       enable: "Show top replies"
       disable: "Show All Posts"
       short_label: "Top replies"
+      show_all_label: "Show all"
       short_title: "Show this topic top replies: the most interesting posts as determined by the community"
 
     deleted_filter:
