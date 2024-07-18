@@ -4,6 +4,7 @@ module DiscourseTagging
   TAGS_FIELD_NAME ||= "tags"
   TAGS_FILTER_REGEXP ||= /[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/ # /?#[]@!$&'()*+,;=.%\`^|{}"<>
   TAGS_STAFF_CACHE_KEY ||= "staff_tag_names"
+  TAGS_GROUP_CACHE_KEY ||= "cached_tag_group_names"
 
   TAG_GROUP_TAG_IDS_SQL ||= <<-SQL
       SELECT tag_id
@@ -716,6 +717,7 @@ module DiscourseTagging
 
   def self.clear_cache!
     Discourse.cache.delete(TAGS_STAFF_CACHE_KEY)
+    Discourse.cache.delete(TAGS_GROUP_CACHE_KEY)
   end
 
   def self.clean_tag(tag)
@@ -793,5 +795,20 @@ module DiscourseTagging
   def self.muted_tags(user)
     return [] unless user
     TagUser.lookup(user, :muted).joins(:tag).pluck("tags.name")
+  end
+
+  def self.cached_tag_groups(guardian)
+    valid, uid, visible_tag_groups_names = Discourse.cache.read(TAGS_GROUP_CACHE_KEY)
+    if valid != true || uid != guardian.user&.id
+      # update cache
+      uid = guardian.user&.id
+      visible_tag_groups_names = TagGroup.visible(guardian).pluck(:name)
+      Discourse.cache.write(
+        TAGS_GROUP_CACHE_KEY,
+        [true, guardian.user&.id, visible_tag_groups_names],
+      )
+    end
+
+    visible_tag_groups_names
   end
 end

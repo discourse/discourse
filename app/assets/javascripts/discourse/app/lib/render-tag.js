@@ -71,7 +71,7 @@ export function defaultRenderTag(tag, params, extra) {
     {
       href: path && getURL(path),
       "data-tag-name": tag,
-      "data-tag-groups": params.tagGroup || params.tagGroups?.join(","),
+      "data-tag-groups": params.tagGroups?.join(","),
       title: hoverDescription,
       class: classes.join(" "),
       ...(extra.attrs ?? {}),

@@ -437,13 +437,21 @@ class TagsController < ::ApplicationController
     show_pm_tags = guardian.can_tag_pms?
     target_tags = Tag.where(id: tags.map(&:target_tag_id).compact.uniq).select(:id, :name)
 
-    tag_groups = TagGroup.visible_of_tags(Tag.where(name: tags.map(&:name).compact.uniq), guardian)
+    # tag_groups = TagGroup.visible_of_tags(Tag.where(name: tags.map(&:name).compact.uniq), guardian)
 
     tags
       .map do |t|
         topic_count = t.public_send(Tag.topic_count_column(guardian))
 
         next if topic_count == 0 && t.pm_topic_count > 0 && !show_pm_tags
+
+        if t.respond_to? :tag_group_id
+          groups =
+            [TagGroup.find_by(id: t.tag_group_id)&.name] &
+              DiscourseTagging.cached_tag_groups(guardian)
+        elsif t.is_a? Tag
+          groups = t.visible_tag_groups_names(guardian)
+        end
 
         attrs = {
           id: t.name,
@@ -454,7 +462,7 @@ class TagsController < ::ApplicationController
           pm_only: topic_count == 0 && t.pm_topic_count > 0,
           target_tag:
             t.target_tag_id ? target_tags.find { |x| x.id == t.target_tag_id }&.name : nil,
-          groups: tag_groups[t.name],
+          groups:,
         }
 
         if show_pm_tags && SiteSetting.display_personal_messages_tag_counts

@@ -262,6 +262,10 @@ class Tag < ActiveRecord::Base
     end
   end
 
+  def visible_tag_groups_names(guardian)
+    tag_groups.pluck(:name) & DiscourseTagging.cached_tag_groups(guardian)
+  end
+
   private
 
   def sanitize_description

@@ -25,7 +25,10 @@ module TopicTagsMixin
   end
 
   def tags_groups
-    TagGroup.visible_of_tags(all_tags, scope).select { |_, v| v.size > 0 }
+    all_tags
+      .each
+      .with_object({}) { |tag, acc| acc[tag.name] = tag.visible_tag_groups_names(scope) }
+      .compact
   end
 
   def topic
