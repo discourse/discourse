@@ -211,7 +211,7 @@
         />
       </div>
 
-      {{#if (gt this.model.posts_count 10)}}
+      {{#if this.showBottomTopicMap}}
         <div class="topic-map">
           <TopicMap
             @model={{this.model}}

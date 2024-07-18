@@ -239,6 +239,11 @@ export default Controller.extend(bufferedProperty("model"), {
     return Category.findById(categoryId)?.minimumRequiredTags || 0;
   },
 
+  @discourseComputed("model.posts_count")
+  showBottomTopicMap(postsCount) {
+    return postsCount > 10;
+  },
+
   _removeDeleteOnOwnerReplyBookmarks() {
     // the user has already navigated away from the topic. the PostCreator
     // in rails already handles deleting the bookmarks that need to be
