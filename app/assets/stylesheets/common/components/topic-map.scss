@@ -106,7 +106,6 @@ article {
       width: 100%;
     }
 
-    .toggle-summary,
     section {
       box-sizing: border-box;
       border: none;
@@ -218,14 +217,7 @@ article {
   }
 
   .summarization-buttons {
-    &:has(.topic-strategy-summarization) {
-      .top-replies {
-        display: none;
-      }
-    }
-
-    .top-replies,
-    .topic-strategy-summarization {
+    .top-replies {
       .d-icon {
         font-size: var(--font-up-1);
         margin-right: 0.35em;
@@ -357,85 +349,6 @@ article {
 
   @media screen and (max-width: 475px) {
     display: none;
-  }
-}
-
-.map-summary-content {
-  .topic-map {
-    width: 100%;
-    margin: 0;
-    background: transparent;
-    border: none;
-  }
-
-  .d-modal__body {
-    width: 100%;
-  }
-
-  .fk-d-menu__trigger {
-    display: flex;
-    flex-direction: row;
-    gap: 1em;
-  }
-
-  .fk-d-menu__inner-content {
-    max-height: 500px;
-    max-width: 90vw;
-    overflow: auto;
-
-    @media screen and (min-width: 400px) {
-      width: 400px;
-    }
-  }
-
-  .toggle-summary .summary-box {
-    margin-top: 0;
-  }
-
-  .generated-summary {
-    > p:first-of-type {
-      margin-top: 0;
-    }
-
-    ul {
-      list-style-type: disc;
-    }
-
-    ul,
-    ol {
-      padding-left: 1em;
-    }
-
-    li {
-      &:not(:last-child) {
-        margin-bottom: 0.5em;
-      }
-      p {
-        margin: 0;
-      }
-      ul,
-      ol {
-        margin-top: 0.5em;
-      }
-    }
-  }
-
-  .toggle-summary p:empty {
-    display: none;
-  }
-
-  .summarized-on {
-    p {
-      color: var(--primary-medium);
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: 0;
-      gap: 0.5em;
-      .fk-d-tooltip__trigger {
-        display: none;
-      }
-    }
   }
 }
 

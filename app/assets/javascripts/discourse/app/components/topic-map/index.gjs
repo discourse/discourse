@@ -14,7 +14,7 @@ const TopicMap = <template>
     </section>
   {{/unless}}
 
-  <section class="information">
+  <section class="information toggle-summary">
     <PluginOutlet
       @name="topic-map-expanded-after"
       @defaultGlimmer={{true}}
