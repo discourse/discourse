@@ -936,6 +936,9 @@ class Search
           end
 
           nil
+        elsif word =~ /\Ainclude:(invisible|unlisted)\z/i
+          @include_invisible = true
+          nil
         else
           found ? nil : word
         end
@@ -1113,7 +1116,7 @@ class Search
     end
 
     is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
-    posts = posts.where("topics.visible") unless is_topic_search
+    posts = posts.where("topics.visible") unless is_topic_search || @include_invisible
 
     if type_filter == "private_messages" || (is_topic_search && @search_context.private_message?)
       posts =
