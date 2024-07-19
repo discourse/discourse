@@ -408,7 +408,7 @@ class TopicsFilter
       break if key_prefix && key_prefix != "-"
 
       value.scan(
-        /\A(?<tag_names>([\p{N}\p{L}\-]+)(?<delimiter>[,+])?([\p{N}\p{L}\-]+)?(\k<delimiter>[\p{N}\p{L}\-]+)*)\z/,
+        /\A(?<tag_names>([\p{N}\p{L}\-_]+)(?<delimiter>[,+])?([\p{N}\p{L}\-]+)?(\k<delimiter>[\p{N}\p{L}\-]+)*)\z/,
       ) do |tag_names, delimiter|
         match_all =
           if delimiter == ","
