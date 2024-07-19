@@ -3,6 +3,8 @@
 module PageObjects
   class CDP
     include Capybara::DSL
+    include SystemHelpers
+    include RSpec::Matchers
 
     def allow_clipboard
       cdp_params = {
@@ -26,6 +28,13 @@ module PageObjects
 
     def read_clipboard
       page.evaluate_async_script("navigator.clipboard.readText().then(arguments[0])")
+    end
+
+    def clipboard_has_text?(text, chomp: false, strict: true)
+      try_until_success do
+        clipboard_text = chomp ? read_clipboard.chomp : read_clipboard
+        expect(clipboard_text).to strict ? eq(text) : include(text)
+      end
     end
 
     def with_network_disconnected
