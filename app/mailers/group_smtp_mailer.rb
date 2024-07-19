@@ -18,7 +18,8 @@ class GroupSmtpMailer < ActionMailer::Base
       # NOTE: Might be better at some point to store this authentication method in the database
       # against the group.
       authentication: SmtpProviderOverrides.authentication_override(from_group.smtp_server),
-      enable_starttls_auto: from_group.smtp_ssl,
+      enable_starttls_auto: from_group.smtp_ssl_mode == Group.smtp_ssl_modes[:starttls],
+      enable_ssl: from_group.smtp_ssl_mode == Group.smtp_ssl_modes[:ssl_tls],
       return_response: true,
       open_timeout: GlobalSetting.group_smtp_open_timeout,
       read_timeout: GlobalSetting.group_smtp_read_timeout,

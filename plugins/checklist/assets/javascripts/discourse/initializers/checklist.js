@@ -1,4 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
@@ -154,6 +155,8 @@ export function checklistSyntax(elem, postDecorator) {
 
         postWidget.attrs.isSaving = false;
         postWidget.scheduleRerender();
+      } catch (e) {
+        popupAjaxError(e);
       } finally {
         boxes.forEach((e) => e.classList.remove("readonly"));
         box.classList.remove("hidden");

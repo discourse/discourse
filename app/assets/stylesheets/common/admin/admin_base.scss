@@ -84,7 +84,7 @@ $mobile-breakpoint: 700px;
   position: relative;
   .nav-stacked {
     @media screen and (max-width: 700px) {
-      margin: 0 15px 0 -10px;
+      margin: 0;
     }
   }
 
@@ -95,6 +95,14 @@ $mobile-breakpoint: 700px;
   }
   .row:after {
     clear: both;
+  }
+
+  &.admin-site-settings-category {
+    overflow: hidden;
+
+    @media (max-width: 500px) {
+      background-color: var(--primary-very-low);
+    }
   }
 }
 
@@ -710,7 +718,7 @@ $mobile-breakpoint: 700px;
   width: 82%;
   box-sizing: border-box;
   @media (max-width: $mobile-breakpoint) {
-    width: 95%;
+    width: 100%;
     border: none;
   }
 }
@@ -730,7 +738,7 @@ $mobile-breakpoint: 700px;
   @media (max-width: $mobile-breakpoint) {
     transition: transform 0.3s ease;
     @include transform(translateX(0));
-    margin-left: -10px;
+    padding: 30px 20px;
   }
 }
 

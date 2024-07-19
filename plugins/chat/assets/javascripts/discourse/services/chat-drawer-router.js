@@ -198,6 +198,7 @@ export default class ChatDrawerRouter extends Service {
     ) {
       this.#redirect();
     }
+    this.currentRouteName = route.name;
     this.drawerRoute.activate?.(route);
   }
 }

@@ -83,11 +83,10 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
   it "allows links to be filtered" do
     visit("/admin")
     sidebar.toggle_all_sections
-    all_links_count = page.all(".sidebar-section-link-content-text").count
 
-    links = page.all(".sidebar-section-link-content-text")
-    expect(links.count).to eq(all_links_count)
+    expect(page).to have_selector(".sidebar-section-link-content-text", minimum: 50)
     expect(page).to have_no_css(".sidebar-no-results")
+    all_links_count = page.all(".sidebar-section-link-content-text").count
 
     filter.filter("ie")
     links = page.all(".sidebar-section-link-content-text")
@@ -218,16 +217,16 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
   it "allows sections to be expanded" do
     visit("/admin")
     sidebar.toggle_all_sections
-    all_links_count = page.all(".sidebar-section-link-content-text").count
-    sidebar.toggle_all_sections
-
-    links = page.all(".sidebar-section-link-content-text")
-    expect(links.count).to eq(3)
-    expect(links.map(&:text)).to eq(["Dashboard", "Users", "All Site Settings"])
+    expect(page).to have_selector(".sidebar-section-link-content-text", minimum: 50)
 
     sidebar.toggle_all_sections
-    links = page.all(".sidebar-section-link-content-text")
-    expect(links.count).to eq(all_links_count)
+    expect(page).to have_selector(".sidebar-section-link-content-text", count: 3)
+    expect(all(".sidebar-section-link-content-text").map(&:text)).to eq(
+      ["Dashboard", "Users", "All Site Settings"],
+    )
+
+    sidebar.toggle_all_sections
+    expect(page).to have_selector(".sidebar-section-link-content-text", minimum: 50)
   end
 
   it "accepts hidden keywords like installed plugin names for filter" do

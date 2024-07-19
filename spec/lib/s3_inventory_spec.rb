@@ -169,7 +169,9 @@ RSpec.describe S3Inventory do
       capture_stdout { inventory.backfill_etags_and_list_missing }
     end
 
-    it "should not run if inventory files are not at least #{described_class::WAIT_AFTER_RESTORE_DAYS.days} days older than the last restore date" do
+    it "should not run if inventory files are not at least #{described_class::WAIT_AFTER_RESTORE_DAYS.days} days older than the last restore date and reset stats count" do
+      Discourse.stats.set("missing_s3_uploads", 2)
+
       inventory.s3_client.stub_responses(
         :list_objects_v2,
         {
@@ -186,6 +188,8 @@ RSpec.describe S3Inventory do
       inventory.s3_client.expects(:get_object).never
 
       capture_stdout { inventory.backfill_etags_and_list_missing }
+
+      expect(Discourse.stats.get("missing_s3_uploads")).to eq(0)
     end
   end
 

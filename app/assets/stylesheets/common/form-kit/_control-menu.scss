@@ -10,11 +10,5 @@
     &:hover {
       background: var(--d-hover);
     }
-
-    &:last-child {
-      .btn {
-        color: var(--tertiary);
-      }
-    }
   }
 }

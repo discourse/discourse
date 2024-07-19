@@ -14,7 +14,7 @@ export default class FKCollection extends Component {
   }
 
   <template>
-    <div class="form-kit__colection">
+    <div class="form-kit__collection">
       {{#each this.collectionValue key="index" as |data index|}}
         {{yield
           (hash

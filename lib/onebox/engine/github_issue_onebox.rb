@@ -38,6 +38,7 @@ module Onebox
 
       def data
         result = raw(github_auth_header(match[:org])).clone
+        repo = load_repo
         created_at = Time.parse(result["created_at"])
         closed_at = Time.parse(result["closed_at"]) if result["closed_at"]
         body, excerpt = compute_body(result["body"])
@@ -65,7 +66,20 @@ module Onebox
           avatar: "https://avatars1.githubusercontent.com/u/#{result["user"]["id"]}?v=2&s=96",
           domain: "#{ulink.host}/#{ulink.path.split("/")[1]}/#{ulink.path.split("/")[2]}",
           i18n: i18n,
+          is_private: repo["private"],
         }
+      end
+
+      private
+
+      def load_repo
+        load_json("https://api.github.com/repos/#{match[:org]}/#{match[:repo]}")
+      end
+
+      def load_json(url)
+        ::MultiJson.load(
+          URI.parse(url).open({ read_timeout: timeout }.merge(github_auth_header(match[:org]))),
+        )
       end
     end
   end

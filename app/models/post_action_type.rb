@@ -59,9 +59,9 @@ class PostActionType < ActiveRecord::Base
       @public_type_ids ||= public_types.values
     end
 
-    def flag_types_without_custom
-      return flag_settings.without_custom_types if overridden_by_plugin_or_skipped_db?
-      flag_enum(all_flags.reject(&:custom_type))
+    def flag_types_without_additional_message
+      return flag_settings.without_additional_message_types if overridden_by_plugin_or_skipped_db?
+      flag_enum(all_flags.reject(&:require_message))
     end
 
     def flag_types
@@ -106,9 +106,9 @@ class PostActionType < ActiveRecord::Base
       flag_enum(all_flags.filter(&:enabled))
     end
 
-    def custom_types
-      return flag_settings.custom_types if overridden_by_plugin_or_skipped_db?
-      flag_enum(all_flags.select(&:custom_type))
+    def additional_message_types
+      return flag_settings.with_additional_message if overridden_by_plugin_or_skipped_db?
+      flag_enum(all_flags.select(&:require_message))
     end
 
     def names

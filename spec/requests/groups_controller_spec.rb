@@ -2766,6 +2766,7 @@ RSpec.describe GroupsController do
     let(:params) do
       {
         protocol: protocol,
+        ssl_mode: ssl_mode,
         ssl: ssl,
         port: port,
         host: host,
@@ -2784,7 +2785,8 @@ RSpec.describe GroupsController do
       let(:username) { "test@gmail.com" }
       let(:password) { "password" }
       let(:domain) { nil }
-      let(:ssl) { true }
+      let(:ssl_mode) { Group.smtp_ssl_modes[:starttls] }
+      let(:ssl) { nil }
       let(:host) { "smtp.somemailsite.com" }
       let(:port) { 587 }
 
@@ -2811,11 +2813,12 @@ RSpec.describe GroupsController do
       let(:password) { "password" }
       let(:domain) { nil }
       let(:ssl) { true }
+      let(:ssl_mode) { nil }
       let(:host) { "imap.somemailsite.com" }
       let(:port) { 993 }
 
       it "validates with the correct TLS settings" do
-        EmailSettingsValidator.expects(:validate_imap).with(has_entry(ssl: true))
+        EmailSettingsValidator.expects(:validate_imap).with(has_entries(ssl: true))
         post "/groups/#{group.id}/test_email_settings.json", params: params
         expect(response.status).to eq(200)
       end
@@ -2844,6 +2847,7 @@ RSpec.describe GroupsController do
       let(:username) { "test@gmail.com" }
       let(:password) { "password" }
       let(:ssl) { true }
+      let(:ssl_mode) { nil }
 
       context "when the protocol is not accepted" do
         let(:protocol) { "sigma" }

@@ -23,7 +23,7 @@
     "@json-editor/json-editor": "2.15.1",
     "@messageformat/core": "^3.3.0",
     "@messageformat/runtime": "^3.0.1",
-    "ace-builds": "^1.35.2",
+    "ace-builds": "^1.35.3",
     "decorator-transforms": "^2.0.0",
     "discourse-hbr": "1.0.0",
     "discourse-widget-hbs": "1.0.0",

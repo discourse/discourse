@@ -3,12 +3,17 @@ import QUnit from "qunit";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 
 class FieldHelper {
-  constructor(element, context) {
+  constructor(element, context, name) {
     this.element = element;
+    this.name = name;
     this.context = context;
   }
 
   get value() {
+    this.context
+      .dom(this.element)
+      .exists(`Could not find element (name: ${this.name}).`);
+
     switch (this.element.dataset.controlType) {
       case "image": {
         return this.element
@@ -70,7 +75,23 @@ class FieldHelper {
   }
 
   get isDisabled() {
+    this.context
+      .dom(this.element)
+      .exists(`Could not find field (name: ${this.name}).`);
+
     return this.element.dataset.disabled === "";
+  }
+
+  hasSubtitle(subtitle, message) {
+    this.context
+      .dom(this.element.querySelector(".form-kit__container-subtitle"))
+      .hasText(subtitle, message);
+  }
+
+  hasDescription(description, message) {
+    this.context
+      .dom(this.element.querySelector(".form-kit__meta-description"))
+      .hasText(description, message);
   }
 
   hasCharCounter(current, max, message) {
@@ -129,7 +150,8 @@ class FormHelper {
   field(name) {
     return new FieldHelper(
       query(`.form-kit__field[data-name="${name}"]`, this.element),
-      this.context
+      this.context,
+      name
     );
   }
 }
@@ -150,6 +172,12 @@ export function setupFormKitAssertions() {
         return {
           doesNotExist: (message) => {
             field.doesNotExist(message);
+          },
+          hasSubtitle: (value, message) => {
+            field.hasSubtitle(value, message);
+          },
+          hasDescription: (value, message) => {
+            field.hasDescription(value, message);
           },
           exists: (message) => {
             field.exists(message);

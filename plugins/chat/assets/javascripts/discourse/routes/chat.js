@@ -34,6 +34,10 @@ export default class ChatRoute extends DiscourseRoute {
     ) {
       transition.abort();
 
+      if (this.chatDrawerRouter.currentRouteName === transition.targetName) {
+        return;
+      }
+
       let url = transition.intent.url;
       if (transition.targetName.startsWith("chat.channel")) {
         url ??= this.router.urlFor(

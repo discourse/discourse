@@ -20,7 +20,7 @@ describe "Post selection | Copy quote", type: :system do
       select_text_range("#{topic_page.post_by_number_selector(1)} .cooked p", 0, 10)
       topic_page.copy_quote_button.click
 
-      expect(cdp.read_clipboard.chomp).to eq(<<~QUOTE.chomp)
+      cdp.clipboard_has_text?(<<~QUOTE.chomp, chomp: true)
     [quote=\"#{post.user.username}, post:1, topic:#{topic.id}\"]\nHello worl\n[/quote]\n
     QUOTE
     end
