@@ -123,7 +123,7 @@ export default class GroupSmtpEmailSettings extends Component {
           @validation="required"
           as |field|
         >
-          <field.Input @type="number" />
+          <field.Input @type="number" @step="1" />
         </form.Field>
 
         <form.Field
