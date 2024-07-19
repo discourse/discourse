@@ -129,8 +129,7 @@ export default class GroupSmtpEmailSettings extends Component {
               <field.Input />
             </form.Field>
           </row.Col>
-        </form.Row>
-        <form.Row as |row|>
+
           <row.Col @size={{6}}>
             <form.Field
               @name="smtp_port"
@@ -151,8 +150,7 @@ export default class GroupSmtpEmailSettings extends Component {
               <field.Password />
             </form.Field>
           </row.Col>
-        </form.Row>
-        <form.Row as |row|>
+
           <row.Col @size={{6}}>
             <form.Field
               @name="smtp_ssl_mode"
@@ -183,6 +181,15 @@ export default class GroupSmtpEmailSettings extends Component {
           </row.Col>
         </form.Row>
 
+        <form.Submit
+          @disabled={{or this.testingSettings}}
+          @icon="cog"
+          @label="groups.manage.email.test_settings"
+          @title="groups.manage.email.settings_required"
+          tabindex="7"
+          class="btn-primary group-smtp-form__test-smtp-settings"
+        />
+
         <form.Container class="group-smtp-prefill-options">
           {{i18n "groups.manage.email.prefill.title"}}
           <ul>
@@ -209,15 +216,6 @@ export default class GroupSmtpEmailSettings extends Component {
             </li>
           </ul>
         </form.Container>
-
-        <form.Submit
-          @disabled={{or this.testingSettings}}
-          @icon="cog"
-          @label="groups.manage.email.test_settings"
-          @title="groups.manage.email.settings_required"
-          tabindex="7"
-          class="btn-primary group-smtp-form__test-smtp-settings"
-        />
       </Form>
 
       {{#if @group.smtp_updated_at}}
