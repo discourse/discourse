@@ -28,6 +28,22 @@ RSpec.describe Onebox::Engine::GithubRepoOnebox do
       expect(html).to include("https://opengraph.githubassets.com/1234/discourse/discourse")
     end
 
+    it "sets the data-github-private-repo attr to false" do
+      expect(html).to include("data-github-private-repo=\"false\"")
+    end
+
+    context "when the PR is in a private repo" do
+      let(:response) do
+        resp = MultiJson.load(onebox_response(described_class.onebox_name))
+        resp["private"] = true
+        MultiJson.dump(resp)
+      end
+
+      it "sets the data-github-private-repo attr to true" do
+        expect(html).to include("data-github-private-repo=\"true\"")
+      end
+    end
+
     context "when the repo has no description" do
       let(:response) do
         resp = onebox_response(described_class.onebox_name)

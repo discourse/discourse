@@ -40,6 +40,7 @@ module Onebox
 
         result["description"] = description
         result["title"] = title
+        result["is_private"] = result["private"]
 
         # The SecureRandom part of this doesn't matter, it's just used for caching the
         # repo thumbnail which is generated on the fly by GitHub. There isn't detail
