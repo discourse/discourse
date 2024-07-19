@@ -30,7 +30,7 @@ module("Unit | Utility | render-tag", function (hooks) {
       renderTag("foo", {
         tagGroups: ["group1", "group2"],
       }),
-      '<a href="/tag/foo" data-tag-name="foo" data-tag-groups="group1,group2" class="discourse-tag simple">foo</a>',
+      '<a href="/tag/foo" data-tag-name="foo" data-tag-groups="group1, group2" class="discourse-tag simple">foo</a>',
       "adds the tag-groups to data"
     );
 
