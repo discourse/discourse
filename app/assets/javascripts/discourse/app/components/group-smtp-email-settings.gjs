@@ -108,65 +108,80 @@ export default class GroupSmtpEmailSettings extends Component {
         @onSubmit={{this.testSmtpSettings}}
         as |form|
       >
-        <form.Field
-          @name="smtp_server"
-          @title={{i18n "groups.manage.email.credentials.smtp_server"}}
-          @validation="required"
-          as |field|
-        >
-          <field.Input />
-        </form.Field>
-
-        <form.Field
-          @name="smtp_port"
-          @title={{i18n "groups.manage.email.credentials.smtp_port"}}
-          @validation="required"
-          as |field|
-        >
-          <field.Input @type="number" @step="1" />
-        </form.Field>
-
-        <form.Field
-          @name="email_username"
-          @title={{i18n "groups.manage.email.credentials.username"}}
-          @validation="required"
-          as |field|
-        >
-          <field.Input />
-        </form.Field>
-
-        <form.Field
-          @name="email_password"
-          @title={{i18n "groups.manage.email.credentials.password"}}
-          @validation="required"
-          as |field|
-        >
-          <field.Password />
-        </form.Field>
-
-        <form.Field
-          @name="smtp_ssl_mode"
-          @title={{i18n "groups.manage.email.credentials.smtp_ssl_mode"}}
-          @validation="required"
-          as |field|
-        >
-          <field.Select as |select|>
-            {{#each this.sslModes as |sslMode|}}
-              <select.Option
-                @value={{sslMode.value}}
-              >{{sslMode.name}}</select.Option>
-            {{/each}}
-          </field.Select>
-        </form.Field>
-
-        <form.Field
-          @name="email_from_alias"
-          @title={{i18n "groups.manage.email.settings.from_alias"}}
-          @description={{i18n "groups.manage.email.settings.from_alias_hint"}}
-          as |field|
-        >
-          <field.Input />
-        </form.Field>
+        <form.Row as |row|>
+          <row.Col @size={{6}}>
+            <form.Field
+              @name="smtp_server"
+              @title={{i18n "groups.manage.email.credentials.smtp_server"}}
+              @validation="required"
+              as |field|
+            >
+              <field.Input />
+            </form.Field>
+          </row.Col>
+          <row.Col @size={{6}}>
+            <form.Field
+              @name="email_username"
+              @title={{i18n "groups.manage.email.credentials.username"}}
+              @validation="required"
+              as |field|
+            >
+              <field.Input />
+            </form.Field>
+          </row.Col>
+        </form.Row>
+        <form.Row as |row|>
+          <row.Col @size={{6}}>
+            <form.Field
+              @name="smtp_port"
+              @title={{i18n "groups.manage.email.credentials.smtp_port"}}
+              @validation="required"
+              as |field|
+            >
+              <field.Input @type="number" />
+            </form.Field>
+          </row.Col>
+          <row.Col @size={{6}}>
+            <form.Field
+              @name="email_password"
+              @title={{i18n "groups.manage.email.credentials.password"}}
+              @validation="required"
+              as |field|
+            >
+              <field.Password />
+            </form.Field>
+          </row.Col>
+        </form.Row>
+        <form.Row as |row|>
+          <row.Col @size={{6}}>
+            <form.Field
+              @name="smtp_ssl_mode"
+              @title={{i18n "groups.manage.email.credentials.smtp_ssl_mode"}}
+              @validation="required"
+              as |field|
+            >
+              <field.Select as |select|>
+                {{#each this.sslModes as |sslMode|}}
+                  <select.Option
+                    @value={{sslMode.value}}
+                  >{{sslMode.name}}</select.Option>
+                {{/each}}
+              </field.Select>
+            </form.Field>
+          </row.Col>
+          <row.Col @size={{6}}>
+            <form.Field
+              @name="email_from_alias"
+              @title={{i18n "groups.manage.email.settings.from_alias"}}
+              @description={{i18n
+                "groups.manage.email.settings.from_alias_hint"
+              }}
+              as |field|
+            >
+              <field.Input />
+            </form.Field>
+          </row.Col>
+        </form.Row>
 
         <form.Container class="group-smtp-prefill-options">
           {{i18n "groups.manage.email.prefill.title"}}
