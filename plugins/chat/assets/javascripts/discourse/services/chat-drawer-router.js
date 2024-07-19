@@ -146,6 +146,7 @@ export default class ChatDrawerRouter extends Service {
     this.drawerRoute = ROUTES[route.name];
     this.params = this.drawerRoute?.extractParams?.(route) || route.params;
     this.component = this.drawerRoute?.name || ChatDrawerRoutesChannels;
+    this.currentRouteName = route.name;
 
     this.drawerRoute.activate?.(route);
   }
