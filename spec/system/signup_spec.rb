@@ -95,6 +95,8 @@ shared_examples "signup scenarios" do
         expect(signup_modal).to have_valid_fields
         signup_modal.click_create_account
 
+        wait_for(timeout: 5) { User.find_by(username: "john") != nil }
+
         visit "/"
         login_modal.open
         login_modal.fill_username("john")
@@ -102,7 +104,6 @@ shared_examples "signup scenarios" do
         login_modal.click_login
         expect(login_modal).to have_content(I18n.t("login.not_approved"))
 
-        wait_for(timeout: 5) { User.find_by(username: "john") != nil }
         user = User.find_by(username: "john")
         user.update!(approved: true)
         EmailToken.confirm(Fabricate(:email_token, user: user).token)
