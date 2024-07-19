@@ -27,6 +27,12 @@ export default class Validator {
     return errors;
   }
 
+  integerValidator(value) {
+    if (!Number.isInteger(Number(value))) {
+      return I18n.t("form_kit.errors.not_an_integer");
+    }
+  }
+
   lengthValidator(value, rule) {
     if (rule.max) {
       if (value?.length > rule.max) {
