@@ -16,7 +16,13 @@
     <form.Field @title="Before" @name="before" as |field|>
       <field.Input @before="https://" />
     </form.Field>
-    <form.Field @title="Secret" @name="secret" as |field|>
+    <form.Field
+      @title="Secret"
+      @subtitle="Another secret"
+      @name="secret"
+      @description="An important password"
+      as |field|
+    >
       <field.Password />
     </form.Field>
   </Form>

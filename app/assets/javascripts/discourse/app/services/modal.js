@@ -26,6 +26,8 @@ export default class ModalService extends Service {
 
   @tracked containerElement;
 
+  triggerElement = null;
+
   @action
   setContainerElement(element) {
     this.containerElement = element;
@@ -69,6 +71,7 @@ export default class ModalService extends Service {
 
     this.opts = opts ??= {};
     this.activeModal = { component: modal, opts, resolveShowPromise };
+    this.triggerElement = document.activeElement;
 
     const unsupportedOpts = Object.keys(opts).filter((key) =>
       LEGACY_OPTS.has(key)
@@ -89,5 +92,9 @@ export default class ModalService extends Service {
     this.activeModal?.resolveShowPromise?.(data);
     this.activeModal = null;
     this.opts = {};
+    if (this.triggerElement) {
+      this.triggerElement.focus();
+      this.triggerElement = null;
+    }
   }
 }

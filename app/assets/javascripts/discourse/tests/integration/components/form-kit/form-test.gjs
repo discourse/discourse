@@ -213,4 +213,22 @@ module("Integration | Component | FormKit | Form", function (hooks) {
 
     assert.dom(".foo").hasText("2");
   });
+
+  test("yielded setProperties", async function (assert) {
+    await render(<template>
+      <Form @data={{hash foo=1 bar=1}} as |form data|>
+        <div class="foo">{{data.foo}}</div>
+        <div class="bar">{{data.bar}}</div>
+        <form.Button
+          class="test"
+          @action={{fn form.setProperties (hash foo=2 bar=2)}}
+        />
+      </Form>
+    </template>);
+
+    await click(".test");
+
+    assert.dom(".foo").hasText("2");
+    assert.dom(".bar").hasText("2");
+  });
 });
