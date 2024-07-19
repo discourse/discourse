@@ -15,7 +15,7 @@ module PageObjects
 
       def open_browse
         mouseout
-        find("#{VISIBLE_DRAWER} .open-browse-page-btn").click
+        find("#{VISIBLE_DRAWER} .channel-list-empty-message button").click
       end
 
       def close

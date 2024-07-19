@@ -18,7 +18,7 @@ module PageObjects
         end
 
         def open_browse
-          component.find(".open-browse-page-btn").click
+          component.find(".channel-list-empty-message button").click
         end
 
         def open_channel(channel)
