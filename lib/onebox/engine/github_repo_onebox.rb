@@ -13,7 +13,7 @@ module Onebox
 
       GITHUB_COMMENT_REGEX = /(<!--.*?-->\r\n)/
 
-      matches_regexp(%r{^https?://(?:www\.)?(?:(?:\w)+\.)?(github)\.com/[^/]+/[^/]+/?$})
+      matches_regexp(%r{^https?:\/\/(?:www\.)?(?!gist\.)[^\/]*github\.com\/[^\/]+\/[^\/]+\/?$})
       always_https
 
       def url
