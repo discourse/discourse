@@ -36,6 +36,7 @@ class FKForm extends Component {
 
     this.args.onRegisterApi?.({
       set: this.set,
+      setProperties: this.setProperties,
       submit: this.onSubmit,
       reset: this.onReset,
     });
@@ -118,6 +119,13 @@ class FKForm extends Component {
 
     if (this.fieldValidationEvent === VALIDATION_TYPES.change) {
       await this.triggerRevalidationFor(name);
+    }
+  }
+
+  @action
+  async setProperties(object) {
+    for (const [name, value] of Object.entries(object)) {
+      await this.set(name, value);
     }
   }
 
@@ -283,6 +291,7 @@ class FKForm extends Component {
             triggerRevalidationFor=this.triggerRevalidationFor
           )
           set=this.set
+          setProperties=this.setProperties
           addItemToCollection=this.addItemToCollection
         )
         this.formData.draftData

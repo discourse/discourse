@@ -34,6 +34,8 @@ export default class FKFieldData {
    * @param {boolean} [options.disabled=false] - Indicates if the field is disabled.
    * @param {Function} [options.validate] - The custom validation function.
    * @param {Function} [options.title] - The custom field title.
+   * @param {Function} [options.subtitle] - The custom field subtitle.
+   * @param {Function} [options.description] - The custom field description.
    * @param {Function} [options.showTitle=true] - Indicates if the field title should be shown.
    * @param {Function} [options.triggerRevalidationFor] - The function to trigger revalidation.
    * @param {Function} [options.addError] - The function to add an error message.
@@ -47,6 +49,8 @@ export default class FKFieldData {
       disabled = false,
       validate,
       title,
+      subtitle,
+      description,
       showTitle = true,
       triggerRevalidationFor,
       collectionIndex,
@@ -55,6 +59,8 @@ export default class FKFieldData {
   ) {
     this.name = name;
     this.title = title;
+    this.subtitle = subtitle;
+    this.description = description;
     this.collectionIndex = collectionIndex;
     this.addError = addError;
     this.showTitle = showTitle;

@@ -174,6 +174,19 @@ describe "Custom sidebar sections", type: :system do
     expect(is_focused).to be true
   end
 
+  it "accessibility - when customization modal is closed, trigger is refocused" do
+    sign_in user
+    visit("/latest")
+
+    sidebar.click_add_section_button
+
+    find(".modal-close").click
+
+    is_focused = page.evaluate_script("document.activeElement.classList.contains('add-section')")
+
+    expect(is_focused).to be true
+  end
+
   it "allows the user to edit custom section" do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
     sidebar_url_1 = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags")
