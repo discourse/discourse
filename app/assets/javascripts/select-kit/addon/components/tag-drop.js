@@ -125,7 +125,6 @@ export default ComboBoxComponent.extend(TagsMixin, {
         name: t.tag_name,
         id: t.tag_name,
         tag_group_names: t.tag_group_names,
-        count: t.sum_topic_count,
       })) || []
     );
   },
