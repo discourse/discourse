@@ -3,8 +3,10 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { isiPad } from "discourse/lib/utilities";
+import observeIntersection from "discourse/modifiers/observe-intersection";
 
 export let topicTitleDecorators = [];
 
@@ -17,6 +19,8 @@ export function resetTopicTitleDecorators() {
 }
 
 export default class TopicTitle extends Component {
+  @service header;
+
   @action
   applyDecorators(element) {
     const fancyTitle = element.querySelector(".fancy-title");
@@ -54,6 +58,7 @@ export default class TopicTitle extends Component {
     <div
       {{didInsert this.applyDecorators}}
       {{on "keydown" this.keyDown}}
+      {{observeIntersection this.header.titleIntersectionChanged}}
       id="topic-title"
       class="container"
     >

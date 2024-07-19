@@ -39,19 +39,20 @@ export default class TopicFromParams extends DiscourseRoute {
       });
   }
 
-  afterModel() {
+  afterModel(model) {
     const topic = this.modelFor("topic");
 
     if (topic.isPrivateMessage && topic.suggested_topics) {
       this.pmTopicTrackingState.startTracking();
     }
 
-    this.header.topicInfo = topic;
+    this.header.enterTopic(topic, model.nearPost);
   }
 
   deactivate() {
     super.deactivate(...arguments);
     this.controllerFor("topic").unsubscribe();
+    this.header.clearTopic();
   }
 
   setupController(controller, params, { _discourse_anchor }) {
