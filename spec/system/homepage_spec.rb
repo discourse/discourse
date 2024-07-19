@@ -107,7 +107,7 @@ describe "Homepage", type: :system do
 
       # Wait for the save to complete
       find(".btn-primary.save-changes:not([disabled])", wait: 5)
-      expect(user.user_option.homepage_id).to eq(-1)
+      expect(user.reload.user_option.homepage_id).to_not eq(UserOption::HOMEPAGES.key("top"))
 
       find("#site-logo").click
 
