@@ -186,23 +186,33 @@ RSpec.describe TopicUser do
   end
 
   describe "visited at" do
-    it "set upon initial visit" do
+    it "set upon initial visit and fires DiscourseEvent" do
       freeze_time yesterday
 
-      TopicUser.track_visit!(topic.id, user.id)
+      event =
+        DiscourseEvent
+          .track_events(:user_first_visit_to_topic) { TopicUser.track_visit!(topic.id, user.id) }
+          .first
+      expect(event[:params].first[:user_id]).to eq(user.id)
+      expect(event[:params].first[:topic_id]).to eq(topic.id)
 
       expect(topic_user.first_visited_at.to_i).to eq(yesterday.to_i)
       expect(topic_user.last_visited_at.to_i).to eq(yesterday.to_i)
     end
 
-    it "updates upon repeat visit" do
+    it "updates upon repeat visit and doesn't fire DiscourseEvent" do
       freeze_time yesterday
 
       TopicUser.track_visit!(topic.id, user.id)
 
       freeze_time Time.zone.now
 
-      TopicUser.track_visit!(topic.id, user.id)
+      events =
+        DiscourseEvent.track_events(:user_first_visit_to_topic) do
+          TopicUser.track_visit!(topic.id, user.id)
+        end
+      expect(events).to be_blank
+
       # reload is a no go
       topic_user = TopicUser.get(topic, user)
       expect(topic_user.first_visited_at.to_i).to eq(yesterday.to_i)
