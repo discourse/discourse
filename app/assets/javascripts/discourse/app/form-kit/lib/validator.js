@@ -98,7 +98,7 @@ export default class Validator {
         }
         break;
       case "input-number":
-        if (typeof value === "undefined" || isNaN(Number(value))) {
+        if (!value || typeof value === "undefined" || isNaN(Number(value))) {
           error = true;
         }
         break;
