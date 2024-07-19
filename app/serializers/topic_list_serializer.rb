@@ -6,6 +6,7 @@ class TopicListSerializer < ApplicationSerializer
              :for_period,
              :per_page,
              :top_tags,
+             :top_tags_with_groups,
              :tags,
              :shared_drafts
 

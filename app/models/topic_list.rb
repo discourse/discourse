@@ -61,9 +61,13 @@ class TopicList
   end
 
   def top_tags
+    top_tags_with_groups.map { |t| t.tag_name }
+  end
+
+  def top_tags_with_groups
     opts = @category ? { category: @category } : {}
     opts[:guardian] = Guardian.new(@current_user)
-    Tag.top_tags(**opts)
+    Tag.top_tags_query(**opts)
   end
 
   def preload_key

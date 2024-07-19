@@ -93,7 +93,7 @@ export function translateResults(results, opts) {
       return EmberObject.create({
         id: tagName,
         url: getURL("/tag/" + tagName),
-        groups: tag.groups,
+        tag_group_names: tag.tag_group_names,
         description: tag.description,
         count: tag.topic_count,
       });

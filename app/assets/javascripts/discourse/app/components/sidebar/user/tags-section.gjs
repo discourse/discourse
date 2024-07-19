@@ -98,22 +98,40 @@ export default class SidebarUserTagsSection extends Component {
       @collapsable={{@collapsable}}
     >
       {{#each this.sectionLinks as |sectionLink|}}
-        <SectionLink
-          @route={{sectionLink.route}}
-          @title={{sectionLink.title}}
-          @content={{sectionLink.text}}
-          @currentWhen={{sectionLink.currentWhen}}
-          @prefixType={{sectionLink.prefixType}}
-          @prefixValue={{sectionLink.prefixValue}}
-          @prefixColor={{sectionLink.prefixColor}}
-          @badgeText={{sectionLink.badgeText}}
-          @models={{sectionLink.models}}
-          @suffixCSSClass={{sectionLink.suffixCSSClass}}
-          @suffixValue={{sectionLink.suffixValue}}
-          @suffixType={{sectionLink.suffixType}}
-          data-tag-name={{sectionLink.tagName}}
-          data-tag-groups={{sectionLink.tagGroups}}
-        />
+        {{#if sectionLink.tagGroups}}
+          <SectionLink
+            @route={{sectionLink.route}}
+            @title={{sectionLink.title}}
+            @content={{sectionLink.text}}
+            @currentWhen={{sectionLink.currentWhen}}
+            @prefixType={{sectionLink.prefixType}}
+            @prefixValue={{sectionLink.prefixValue}}
+            @prefixColor={{sectionLink.prefixColor}}
+            @badgeText={{sectionLink.badgeText}}
+            @models={{sectionLink.models}}
+            @suffixCSSClass={{sectionLink.suffixCSSClass}}
+            @suffixValue={{sectionLink.suffixValue}}
+            @suffixType={{sectionLink.suffixType}}
+            data-tag-name={{sectionLink.tagName}}
+            data-tag-groups={{sectionLink.tagGroups}}
+          />
+        {{else}}
+          <SectionLink
+            @route={{sectionLink.route}}
+            @title={{sectionLink.title}}
+            @content={{sectionLink.text}}
+            @currentWhen={{sectionLink.currentWhen}}
+            @prefixType={{sectionLink.prefixType}}
+            @prefixValue={{sectionLink.prefixValue}}
+            @prefixColor={{sectionLink.prefixColor}}
+            @badgeText={{sectionLink.badgeText}}
+            @models={{sectionLink.models}}
+            @suffixCSSClass={{sectionLink.suffixCSSClass}}
+            @suffixValue={{sectionLink.suffixValue}}
+            @suffixType={{sectionLink.suffixType}}
+            data-tag-name={{sectionLink.tagName}}
+          />
+        {{/if}}
       {{/each}}
 
       <AllTagsSectionLink />

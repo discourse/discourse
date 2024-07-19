@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DetailedTagSerializer < TagSerializer
-  attributes :synonyms, :tag_group_names, :category_restricted
+  attributes :synonyms, :category_restricted
 
   has_many :categories, serializer: BasicCategorySerializer
 
@@ -19,9 +19,5 @@ class DetailedTagSerializer < TagSerializer
 
   def include_tag_group_names?
     scope.is_admin? || SiteSetting.tags_listed_by_group == true
-  end
-
-  def tag_group_names
-    object.tag_groups.map(&:name)
   end
 end

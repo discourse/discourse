@@ -23,6 +23,7 @@ class SiteSerializer < ApplicationSerializer
     :can_tag_pms,
     :tags_filter_regexp,
     :top_tags,
+    :top_tags_with_groups,
     :navigation_menu_site_top_tags,
     :can_associate_groups,
     :wizard_required,
@@ -196,8 +197,16 @@ class SiteSerializer < ApplicationSerializer
     Tag.include_tags?
   end
 
+  def include_top_tags_with_groups?
+    Tag.include_tags?
+  end
+
   def top_tags
-    @top_tags ||= Tag.top_tags(guardian: scope)
+    top_tags_with_groups.map { |t| t.tag_name }
+  end
+
+  def top_tags_with_groups
+    @top_tags_with_groups ||= Tag.top_tags_query
   end
 
   def wizard_required

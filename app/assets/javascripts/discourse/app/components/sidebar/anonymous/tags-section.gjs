@@ -41,17 +41,32 @@ export default class SidebarAnonymousTagsSection extends Component {
       >
 
         {{#each this.sectionLinks as |sectionLink|}}
-          <SectionLink
-            @route={{sectionLink.route}}
-            @content={{sectionLink.text}}
-            @title={{sectionLink.title}}
-            @currentWhen={{sectionLink.currentWhen}}
-            @prefixType={{sectionLink.prefixType}}
-            @prefixValue={{sectionLink.prefixValue}}
-            @prefixColor={{sectionLink.prefixColor}}
-            @models={{sectionLink.models}}
-            data-tag-name={{sectionLink.tagName}}
-          />
+          {{#if sectionLink.tagGroups}}
+            <SectionLink
+              @route={{sectionLink.route}}
+              @content={{sectionLink.text}}
+              @title={{sectionLink.title}}
+              @currentWhen={{sectionLink.currentWhen}}
+              @prefixType={{sectionLink.prefixType}}
+              @prefixValue={{sectionLink.prefixValue}}
+              @prefixColor={{sectionLink.prefixColor}}
+              @models={{sectionLink.models}}
+              data-tag-name={{sectionLink.tagName}}
+              data-tag-groups={{sectionLink.tagGroups}}
+            />
+          {{else}}
+            <SectionLink
+              @route={{sectionLink.route}}
+              @content={{sectionLink.text}}
+              @title={{sectionLink.title}}
+              @currentWhen={{sectionLink.currentWhen}}
+              @prefixType={{sectionLink.prefixType}}
+              @prefixValue={{sectionLink.prefixValue}}
+              @prefixColor={{sectionLink.prefixColor}}
+              @models={{sectionLink.models}}
+              data-tag-name={{sectionLink.tagName}}
+            />
+          {{/if}}
         {{/each}}
 
         <AllTagsSectionLink />

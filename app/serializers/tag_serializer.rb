@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TagSerializer < ApplicationSerializer
-  attributes :id, :name, :topic_count, :staff, :description, :groups
+  attributes :id, :name, :topic_count, :staff, :description, :tag_group_names
 
   def topic_count
     object.public_send(Tag.topic_count_column(scope))
@@ -11,7 +11,7 @@ class TagSerializer < ApplicationSerializer
     DiscourseTagging.staff_tag_names.include?(name)
   end
 
-  def groups
+  def tag_group_names
     object.visible_tag_groups_names(scope)
   end
 end

@@ -119,23 +119,43 @@ export default ComboBoxComponent.extend(TagsMixin, {
     return shortcuts;
   }),
 
+  tagConverter(tags) {
+    return (
+      tags?.map((t) => ({
+        name: t.tag_name,
+        id: t.tag_name,
+        tag_group_names: t.tag_group_names,
+        count: t.sum_topic_count,
+      })) || []
+    );
+  },
+
   topTags: computed(
     "currentCategory",
     "site.category_top_tags.[]",
-    "site.top_tags.[]",
+    "site.top_tags_with_groups.[]",
     function () {
-      if (this.currentCategory && this.site.category_top_tags) {
-        return this.site.category_top_tags || [];
+      if (this.currentCategory) {
+        if (this.site.category_top_tags_with_groups) {
+          return this.tagConverter(this.site.category_top_tags_with_groups);
+        } else if (this.site.category_top_tags) {
+          return this.site.category_top_tags;
+        }
       }
 
-      return this.site.top_tags || [];
+      return this.tagConverter(this.site.top_tags_with_groups);
     }
   ),
 
   content: computed("topTags.[]", "shortcuts.[]", function () {
     const topTags = this.topTags.slice(0, this.maxTagsInFilterList);
     if (this.sortTagsAlphabetically && topTags) {
-      return this.shortcuts.concat(topTags.sort());
+      return this.shortcuts.concat(
+        topTags.sort((a, b) => {
+          const nameOf = (x) => (typeof x === "string" ? x : x.tag_name);
+          return nameOf(a) < nameOf(b);
+        })
+      );
     } else {
       return this.shortcuts.concat(makeArray(topTags));
     }
@@ -168,6 +188,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
         if (!context.currentCategory) {
           content.count = r.count;
         }
+        content.tag_group_names = r.tag_group_names;
         content.pmCount = r.pm_count;
         return content;
       });

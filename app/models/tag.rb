@@ -142,7 +142,7 @@ class Tag < ActiveRecord::Base
     self.find_by("lower(name) = ?", name.downcase)
   end
 
-  def self.top_tags(limit_arg: nil, category: nil, guardian: Guardian.new)
+  def self.top_tags_query(limit_arg: nil, category: nil, guardian: Guardian.new)
     # we add 1 to max_tags_in_filter_list to efficiently know we have more tags
     # than the limit. Frontend is responsible to enforce limit.
     limit = limit_arg || (SiteSetting.max_tags_in_filter_list + 1)
@@ -160,10 +160,12 @@ class Tag < ActiveRecord::Base
         end
       )
 
-    tag_names_with_counts = DB.query <<~SQL
-      SELECT tags.name as tag_name, SUM(stats.topic_count) AS sum_topic_count
+    result = DB.query <<~SQL
+      SELECT tags.name as tag_name, SUM(stats.topic_count) AS sum_topic_count, array_agg(tag_groups.name) as tag_group_names
         FROM category_tag_stats stats
         JOIN tags ON stats.tag_id = tags.id AND stats.topic_count > 0
+        LEFT OUTER JOIN tag_group_memberships ON tag_group_memberships.tag_id = tags.id
+        LEFT OUTER JOIN tag_groups ON tag_groups.id = tag_group_memberships.tag_group_id
        WHERE stats.category_id in (#{scope_category_ids.join(",")})
        #{filter_sql}
     GROUP BY tags.name
@@ -171,7 +173,11 @@ class Tag < ActiveRecord::Base
        LIMIT #{limit}
     SQL
 
-    tag_names_with_counts.map { |row| row.tag_name }
+    result.each { |tag| tag.tag_group_names &= DiscourseTagging.cached_tag_groups(guardian) }
+  end
+
+  def self.top_tags(limit_arg: nil, category: nil, guardian: Guardian.new)
+    top_tags_query(limit_arg:, category:, guardian:).map { |row| row.tag_name }
   end
 
   def self.topic_count_column(guardian)

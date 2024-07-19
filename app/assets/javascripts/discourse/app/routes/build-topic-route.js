@@ -74,8 +74,16 @@ export async function findTopicList(
   if (list.topic_list?.top_tags) {
     if (list.filter.startsWith("c/") || list.filter.startsWith("tags/c/")) {
       Site.currentProp("category_top_tags", list.topic_list.top_tags);
+      Site.currentProp(
+        "category_top_tags_with_groups",
+        list.topic_list.top_tags_with_groups
+      );
     } else {
       Site.currentProp("top_tags", list.topic_list.top_tags);
+      Site.currentProp(
+        "top_tags_with_groups",
+        list.topic_list.top_tags_with_groups
+      );
     }
   }
 

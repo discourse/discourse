@@ -39,7 +39,11 @@
         </div>
       {{else}}
         <div class="tag-name-wrapper">
-          {{discourse-tag this.tagInfo.name tagName="div"}}
+          {{discourse-tag
+            this.tagInfo.name
+            tagName="div"
+            tagGroups=this.tagInfo.tag_group_names
+          }}
           {{#if this.canAdminTag}}
             <a
               href
@@ -89,7 +93,12 @@
         <div class="tag-list">
           {{#each this.tagInfo.synonyms as |tag|}}
             <div class="tag-box">
-              {{discourse-tag tag.id pmOnly=tag.pmOnly tagName="div"}}
+              {{discourse-tag
+                tag.id
+                pmOnly=tag.pmOnly
+                tagName="div"
+                tagGroups=tag.tag_group_names
+              }}
               {{#if this.editSynonymsMode}}
                 <a
                   href

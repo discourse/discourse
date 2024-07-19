@@ -70,7 +70,7 @@ class TagsController < ::ApplicationController
 
       grouped_tag_counts.each do |tag_group|
         tag_group[:tags].each do |tag|
-          tag[:groups] = membership_dict[tag[:id]] & visible_tag_groups_names
+          tag[:tag_group_names] = membership_dict[tag[:id]] & visible_tag_groups_names
         end
       end
 
@@ -463,15 +463,16 @@ class TagsController < ::ApplicationController
         next if topic_count == 0 && t.pm_topic_count > 0 && !show_pm_tags
 
         if groups_override != nil
-          groups = groups_override
+          tag_group_names = groups_override
         elsif t.respond_to? :tag_group_names
-          groups = t.tag_group_names & DiscourseTagging.cached_tag_groups(guardian)
-        elsif t.is_a? Tag
-          # TODO Try to reduce the number of times this statement is executed,
-          # as it can cause performance issues when there are too many tags.
-          groups = t.visible_tag_groups_names(guardian)
+          tag_group_names = t.tag_group_names & DiscourseTagging.cached_tag_groups(guardian)
         else
-          groups = []
+          begin
+            raise "There is an unimplemented tag_group."
+          rescue Exception => e
+            Rails.logger.warn("#{e}\n#{e.backtrace.join("\n")}")
+          end
+          tag_group_names = []
         end
 
         attrs = {
@@ -483,7 +484,7 @@ class TagsController < ::ApplicationController
           pm_only: topic_count == 0 && t.pm_topic_count > 0,
           target_tag:
             t.target_tag_id ? target_tags.find { |x| x.id == t.target_tag_id }&.name : nil,
-          groups:,
+          tag_group_names:,
         }
 
         if show_pm_tags && SiteSetting.display_personal_messages_tag_counts

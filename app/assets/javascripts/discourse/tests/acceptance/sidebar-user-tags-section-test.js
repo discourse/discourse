@@ -24,8 +24,8 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     watched_tags: ["tag2", "tag3"],
     watching_first_post_tags: [],
     sidebar_tags: [
-      { name: "tag2", pm_only: false },
-      { name: "tag1", pm_only: false },
+      { name: "tag2", pm_only: false, groups: [] },
+      { name: "tag1", pm_only: false, groups: ["group1", "group2"] },
       {
         name: "tag4",
         pm_only: true,
@@ -80,20 +80,30 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       "4 section links under the section"
     );
 
+    const tag1 = query(".sidebar-section-link-wrapper[data-tag-name=tag1]");
+
     assert.strictEqual(
-      query(
-        ".sidebar-section-link-wrapper[data-tag-name=tag1]"
-      ).textContent.trim(),
+      tag1.textContent.trim(),
       "tag1",
       "displays the tag1 name for the link text"
     );
+    assert.strictEqual(
+      tag1.dataset.tagGroups,
+      "group1, group2",
+      "have the tag1's groups in the dataset"
+    );
+
+    const tag2 = query(".sidebar-section-link-wrapper[data-tag-name=tag2]");
 
     assert.strictEqual(
-      query(
-        ".sidebar-section-link-wrapper[data-tag-name=tag2]"
-      ).textContent.trim(),
+      tag2.textContent.trim(),
       "tag2",
       "displays the tag2 name for the link text"
+    );
+    assert.strictEqual(
+      tag2.dataset.tagGroups,
+      undefined,
+      "have no tagGroups in tag2's dataset"
     );
 
     assert.strictEqual(

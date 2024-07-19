@@ -134,6 +134,7 @@ export function applyDefaultHandlers(pretender) {
                 text: "Escort",
                 count: 1,
                 pm_only: false,
+                tag_group_names: ["Ford Cars"],
               },
               {
                 id: "focus",
@@ -141,6 +142,7 @@ export function applyDefaultHandlers(pretender) {
                 text: "focus",
                 count: 3,
                 pm_only: false,
+                tag_group_names: ["Ford Cars"],
               },
             ],
           },
@@ -154,6 +156,7 @@ export function applyDefaultHandlers(pretender) {
                 text: "civic",
                 count: 4,
                 pm_only: false,
+                tag_group_names: ["Honda Cars"],
               },
               {
                 id: "accord",
@@ -161,6 +164,7 @@ export function applyDefaultHandlers(pretender) {
                 text: "accord",
                 count: 2,
                 pm_only: false,
+                tag_group_names: ["Honda Cars"],
               },
             ],
           },
@@ -174,6 +178,7 @@ export function applyDefaultHandlers(pretender) {
                 text: "ford",
                 count: 5,
                 pm_only: false,
+                tag_group_names: ["Makes"],
               },
               {
                 id: "honda",
@@ -181,6 +186,7 @@ export function applyDefaultHandlers(pretender) {
                 text: "honda",
                 count: 6,
                 pm_only: false,
+                tag_group_names: ["Makes"],
               },
             ],
           },
