@@ -698,7 +698,6 @@ aside.quote {
 .topic-avatar,
 .avatar-flair-preview,
 .user-card-avatar,
-.topic-map .poster,
 .user-profile-avatar,
 .user-image,
 .latest-topic-list-item {
@@ -745,38 +744,6 @@ aside.quote {
   }
   .fa {
     font-size: var(--font-up-4);
-  }
-}
-.topic-map .poster .avatar-flair {
-  right: 0;
-  background-size: 12px 12px;
-  width: 16px;
-  height: 16px;
-  bottom: -3px;
-  color: var(--primary);
-  &.rounded {
-    background-size: 12px 12px;
-    border-radius: 8px;
-    width: 16px;
-    height: 16px;
-    bottom: -2px;
-    right: 0;
-  }
-  .d-icon {
-    font-size: var(--font-down-2);
-  }
-}
-
-.map {
-  &:first-of-type {
-    display: flex;
-    .buttons {
-      margin-left: auto;
-      order: 15;
-      .btn {
-        height: 100%;
-      }
-    }
   }
 }
 

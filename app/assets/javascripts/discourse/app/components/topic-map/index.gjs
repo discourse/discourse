@@ -5,7 +5,7 @@ import TopicMapSummary from "discourse/components/topic-map/topic-map-summary";
 
 const TopicMap = <template>
   {{#unless @model.postStream.loadingFilter}}
-    <section class="map">
+    <section class="topic-map__contents">
       <TopicMapSummary
         @topic={{@model}}
         @topicDetails={{@topicDetails}}
@@ -14,7 +14,7 @@ const TopicMap = <template>
     </section>
   {{/unless}}
 
-  <section class="information toggle-summary">
+  <section class="topic-map__additional-contents">
     <PluginOutlet
       @name="topic-map-expanded-after"
       @defaultGlimmer={{true}}
@@ -23,7 +23,7 @@ const TopicMap = <template>
   </section>
 
   {{#if @showPMMap}}
-    <section class="information private-message-map">
+    <section class="topic-map__private-message-map">
       <PrivateMessageMap
         @topicDetails={{@topicDetails}}
         @showInvite={{@showInvite}}

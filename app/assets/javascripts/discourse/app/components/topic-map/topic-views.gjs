@@ -61,7 +61,7 @@ export default class TopicViews extends Component {
     <div class="topic-views__wrapper">
       {{#each this.updatedStats as |stat|}}
         <div class="topic-views">
-          <div class="topic-views__views">
+          <div class="topic-views__count">
             {{stat.views}}
           </div>
           <div class="topic-views__date">

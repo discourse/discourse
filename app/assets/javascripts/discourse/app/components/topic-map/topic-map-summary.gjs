@@ -216,10 +216,10 @@ export default class TopicMapSummary extends Component {
   }
 
   <template>
-    <ul class={{if this.loneStat "--single-stat"}}>
+    <div class="topic-map__stats {{if this.loneStat '--single-stat'}}">
       <DMenu
         @arrow={{true}}
-        @identifier="map-views"
+        @identifier="topic-map__views"
         @interactive={{true}}
         @triggers="click"
         @modalForMobile={{true}}
@@ -230,32 +230,29 @@ export default class TopicMapSummary extends Component {
       >
         <:trigger>
           {{number @topic.views noTitle="true"}}
-          <span role="presentation">{{i18n
-              "views_lowercase"
-              count=@topic.views
-            }}</span>
+          <span class="topic-map__stat-label">
+            {{i18n "views_lowercase" count=@topic.views}}
+          </span>
         </:trigger>
         <:content>
-          <section class="views topic-map-views">
-            <h3>{{i18n "topic_map.menu_titles.views"}}</h3>
-            <ConditionalLoadingSpinner @condition={{this.loading}}>
-              {{#if (gt this.views.stats.length 2)}}
-                <TopicViewsChart
-                  @views={{this.views}}
-                  @created={{@topic.created_at}}
-                />
-              {{else}}
-                <TopicViews @views={{this.views}} />
-              {{/if}}
-            </ConditionalLoadingSpinner>
-          </section>
+          <h3>{{i18n "topic_map.menu_titles.views"}}</h3>
+          <ConditionalLoadingSpinner @condition={{this.loading}}>
+            {{#if (gt this.views.stats.length 2)}}
+              <TopicViewsChart
+                @views={{this.views}}
+                @created={{@topic.created_at}}
+              />
+            {{else}}
+              <TopicViews @views={{this.views}} />
+            {{/if}}
+          </ConditionalLoadingSpinner>
         </:content>
       </DMenu>
 
       {{#if this.hasLikes}}
         <DMenu
           @arrow={{true}}
-          @identifier="map-likes"
+          @identifier="topic-map__likes"
           @interactive={{true}}
           @triggers="click"
           @modalForMobile={{true}}
@@ -265,39 +262,38 @@ export default class TopicMapSummary extends Component {
         >
           <:trigger>
             {{number @topic.like_count noTitle="true"}}
-            <span role="presentation">{{i18n
-                "likes_lowercase"
-                count=@topic.like_count
-              }}</span>
+            <span class="topic-map__stat-label">
+              {{i18n "likes_lowercase" count=@topic.like_count}}
+            </span>
           </:trigger>
           <:content>
-            <section class="likes" {{didInsert this.fetchMostLiked}}>
-              <h3>{{i18n "topic_map.menu_titles.replies"}}</h3>
-              <ConditionalLoadingSpinner @condition={{this.loading}}>
-                <ul>
-                  {{#each this.top3LikedPosts as |post|}}
-                    <li>
-                      <a href={{this.postUrl post}}>
-                        <span class="like-section__user">
-                          {{avatar
-                            post.avatar_template
-                            "tiny"
-                            (hash title=post.username)
-                          }}
-                          {{post.username}}
-                        </span>
-                        <span class="like-section__likes">
-                          {{post.like_count}}
-                          {{dIcon "heart"}}</span>
-                        <p>
-                          {{htmlSafe (emojiUnescape post.blurb)}}
-                        </p>
-                      </a>
-                    </li>
-                  {{/each}}
-                </ul>
-              </ConditionalLoadingSpinner>
-            </section>
+            <h3 {{didInsert this.fetchMostLiked}}>{{i18n
+                "topic_map.menu_titles.replies"
+              }}</h3>
+            <ConditionalLoadingSpinner @condition={{this.loading}}>
+              <ul>
+                {{#each this.top3LikedPosts as |post|}}
+                  <li>
+                    <a href={{this.postUrl post}}>
+                      <span class="like-section__user">
+                        {{avatar
+                          post.avatar_template
+                          "tiny"
+                          (hash title=post.username)
+                        }}
+                        {{post.username}}
+                      </span>
+                      <span class="like-section__likes">
+                        {{post.like_count}}
+                        {{dIcon "heart"}}</span>
+                      <p>
+                        {{htmlSafe (emojiUnescape post.blurb)}}
+                      </p>
+                    </a>
+                  </li>
+                {{/each}}
+              </ul>
+            </ConditionalLoadingSpinner>
           </:content>
         </DMenu>
       {{/if}}
@@ -305,7 +301,7 @@ export default class TopicMapSummary extends Component {
       {{#if this.linksCount}}
         <DMenu
           @arrow={{true}}
-          @identifier="map-links"
+          @identifier="topic-map__links"
           @interactive={{true}}
           @triggers="click"
           @modalForMobile={{true}}
@@ -315,57 +311,54 @@ export default class TopicMapSummary extends Component {
         >
           <:trigger>
             {{number this.linksCount noTitle="true"}}
-            <span role="presentation">{{i18n
-                "links_lowercase"
-                count=this.linksCount
-              }}</span>
+            <span class="topic-map__stat-label">
+              {{i18n "links_lowercase" count=this.linksCount}}
+            </span>
           </:trigger>
           <:content>
-            <section class="links">
-              <h3>{{i18n "topic_map.links_title"}}</h3>
-              <table class="topic-links">
-                <tbody>
-                  {{#each this.linksToShow as |link|}}
-                    <tr>
-                      <td>
-                        <span
-                          class="badge badge-notification clicks"
-                          title={{i18n "topic_map.clicks" count=link.clicks}}
-                        >
-                          {{link.clicks}}
-                        </span>
-                      </td>
-                      <td>
-                        <TopicMapLink
-                          @attachment={{link.attachment}}
-                          @title={{link.title}}
-                          @rootDomain={{link.root_domain}}
-                          @url={{link.url}}
-                          @userId={{link.user_id}}
-                        />
-                      </td>
-                    </tr>
-                  {{/each}}
-                </tbody>
-              </table>
-              {{#if
-                (and
-                  (not this.allLinksShown)
-                  (lt TRUNCATED_LINKS_LIMIT this.topicLinks.length)
-                )
-              }}
-                <div class="link-summary">
-                  <span>
-                    <DButton
-                      @action={{this.showAllLinks}}
-                      @title="topic_map.links_shown"
-                      @icon="chevron-down"
-                      class="btn-flat"
-                    />
-                  </span>
-                </div>
-              {{/if}}
-            </section>
+            <h3>{{i18n "topic_map.links_title"}}</h3>
+            <table class="topic-links">
+              <tbody>
+                {{#each this.linksToShow as |link|}}
+                  <tr>
+                    <td>
+                      <span
+                        class="badge badge-notification clicks"
+                        title={{i18n "topic_map.clicks" count=link.clicks}}
+                      >
+                        {{link.clicks}}
+                      </span>
+                    </td>
+                    <td>
+                      <TopicMapLink
+                        @attachment={{link.attachment}}
+                        @title={{link.title}}
+                        @rootDomain={{link.root_domain}}
+                        @url={{link.url}}
+                        @userId={{link.user_id}}
+                      />
+                    </td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+            {{#if
+              (and
+                (not this.allLinksShown)
+                (lt TRUNCATED_LINKS_LIMIT this.topicLinks.length)
+              )
+            }}
+              <div class="link-summary">
+                <span>
+                  <DButton
+                    @action={{this.showAllLinks}}
+                    @title="topic_map.links_shown"
+                    @icon="chevron-down"
+                    class="btn-flat"
+                  />
+                </span>
+              </div>
+            {{/if}}
           </:content>
         </DMenu>
       {{/if}}
@@ -373,7 +366,7 @@ export default class TopicMapSummary extends Component {
       {{#if this.hasUsers}}
         <DMenu
           @arrow={{true}}
-          @identifier="map-users"
+          @identifier="topic-map__users"
           @interactive={{true}}
           @triggers="click"
           @placement="right"
@@ -383,36 +376,31 @@ export default class TopicMapSummary extends Component {
         >
           <:trigger>
             {{number @topic.participant_count noTitle="true"}}
-            <span role="presentation">{{i18n
-                "users_lowercase"
-                count=@topic.participant_count
-              }}</span>
+            <span class="topic-map__stat-label">
+              {{i18n "users_lowercase" count=@topic.participant_count}}
+            </span>
           </:trigger>
           <:content>
-            <section class="avatars">
-              <TopicParticipants
-                @title={{i18n "topic_map.participants_title"}}
-                @userFilters={{@userFilters}}
-                @participants={{@topicDetails.participants}}
-              />
-            </section>
+            <TopicParticipants
+              @title={{i18n "topic_map.participants_title"}}
+              @userFilters={{@userFilters}}
+              @participants={{@topicDetails.participants}}
+            />
           </:content>
         </DMenu>
       {{/if}}
 
       {{#if this.shouldShowParticipants}}
-        <li class="avatars">
-          <TopicParticipants
-            @participants={{slice
-              0
-              MIN_PARTICIPANTS_COUNT
-              @topicDetails.participants
-            }}
-            @userFilters={{@userFilters}}
-          />
-        </li>
+        <TopicParticipants
+          @participants={{slice
+            0
+            MIN_PARTICIPANTS_COUNT
+            @topicDetails.participants
+          }}
+          @userFilters={{@userFilters}}
+        />
       {{/if}}
-      <div class="map-buttons">
+      <div class="topic-map__buttons">
         {{#if this.readTime}}
           <div class="estimated-read-time">
             <span> {{i18n "topic_map.read"}} </span>
@@ -438,6 +426,6 @@ export default class TopicMapSummary extends Component {
           {{/if}}
         </div>
       </div>
-    </ul>
+    </div>
   </template>
 }
