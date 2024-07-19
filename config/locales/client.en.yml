@@ -5463,8 +5463,8 @@ en:
           screened_ips: "Screened IPs"
           screened_urls: "Screened URLs"
           search_logs: "Search Logs"
-          security: "Security"
-          spam: "Spam"
+          security: "Security settings"
+          spam: "Spam settings"
           staff_action_logs: "Staff Action Logs"
 
       config_areas:
