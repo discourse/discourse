@@ -796,8 +796,8 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
-    assert.dom(".map-users-trigger").doesNotExist();
-    assert.dom(".avatars a.poster").exists({ count: 2 });
+    assert.dom(".topic-map__users-trigger").doesNotExist();
+    assert.dom(".topic-map__users-list a.poster").exists({ count: 2 });
   });
 
   test("topic map - participants", async function (assert) {
@@ -823,10 +823,12 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
-    assert.dom(".avatars a.poster").exists({ count: 5 });
+    assert.dom(".topic-map__users-list a.poster").exists({ count: 5 });
 
-    await click(".map-users-trigger");
-    assert.dom(".map-users-content .avatars a.poster").exists({ count: 6 });
+    await click(".topic-map__users-trigger");
+    assert
+      .dom(".topic-map__users-content .topic-map__users-list a.poster")
+      .exists({ count: 6 });
   });
 
   test("topic map - links", async function (assert) {
@@ -845,12 +847,12 @@ module("Integration | Component | Widget | post", function (hooks) {
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
     assert.dom(".topic-map").exists({ count: 1 });
-    assert.dom(".map-links-content").doesNotExist();
-    await click(".map-links-trigger");
-    assert.dom(".map-links-content").exists({ count: 1 });
-    assert.dom(".map-links-content .topic-link").exists({ count: 5 });
+    assert.dom(".topic-map__links-content").doesNotExist();
+    await click(".topic-map__links-trigger");
+    assert.dom(".topic-map__links-content").exists({ count: 1 });
+    assert.dom(".topic-map__links-content .topic-link").exists({ count: 5 });
     await click(".link-summary button");
-    assert.dom(".map-links-content .topic-link").exists({ count: 6 });
+    assert.dom(".topic-map__links-content .topic-link").exists({ count: 6 });
   });
 
   test("topic map - no top reply summary", async function (assert) {
@@ -860,7 +862,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.dom(".toggle-summary .top-replies").doesNotExist();
+    assert.dom(".summarization-buttons .top-replies").doesNotExist();
   });
 
   test("topic map - has top replies summary", async function (assert) {
@@ -870,7 +872,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.dom(".toggle-summary").exists({ count: 1 });
+    assert.dom(".summarization-buttons .top-replies").exists({ count: 1 });
   });
 
   test("pm map", async function (assert) {
@@ -887,8 +889,8 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.dom(".private-message-map").exists({ count: 1 });
-    assert.dom(".private-message-map .user").exists({ count: 1 });
+    assert.dom(".topic-map__private-message-map").exists({ count: 1 });
+    assert.dom(".topic-map__private-message-map .user").exists({ count: 1 });
   });
 
   test("post notice - with username", async function (assert) {

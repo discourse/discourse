@@ -11,7 +11,7 @@ acceptance("User Card", function (needs) {
 
   test("opens and closes properly", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(".map-users-trigger");
+    await click(".topic-map__users-trigger");
     await click('a[data-user-card="charlie"]');
 
     assert.dom(".user-card .card-content").exists();
@@ -33,7 +33,7 @@ acceptance("User Card - Show Local Time", function (needs) {
     currentUser.user_option.timezone = "Australia/Brisbane";
 
     await visit("/t/internationalization-localization/280");
-    await click(".map-users-trigger");
+    await click(".topic-map__users-trigger");
     await click('a[data-user-card="charlie"]');
 
     assert
@@ -101,7 +101,7 @@ acceptance("User Card - User Status", function (needs) {
 
     await visit("/t/internationalization-localization/280");
 
-    await click(".map-users-trigger");
+    await click(".topic-map__users-trigger");
     await click('a[data-user-card="charlie"]');
 
     assert.dom(".user-card .user-status").exists();
@@ -112,7 +112,7 @@ acceptance("User Card - User Status", function (needs) {
 
     await visit("/t/internationalization-localization/280");
 
-    await click(".map-users-trigger");
+    await click(".topic-map__users-trigger");
     await click('a[data-user-card="charlie"]');
 
     assert.dom(".user-card .user-status").doesNotExist();
