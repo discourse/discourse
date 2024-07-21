@@ -110,7 +110,7 @@
     "loader.js": "^4.7.0",
     "message-bus-client": "^4.3.8",
     "pretender": "^3.4.7",
-    "qunit": "^2.21.0",
+    "qunit": "^2.21.1",
     "qunit-dom": "^3.2.0",
     "sass": "^1.77.7",
     "select-kit": "1.0.0",
