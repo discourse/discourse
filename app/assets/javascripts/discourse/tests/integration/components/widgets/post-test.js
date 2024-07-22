@@ -779,9 +779,13 @@ module("Integration | Component | Widget | post", function (hooks) {
     assert.dom(".topic-map").doesNotExist();
   });
 
-  test("topic map - few posts", async function (assert) {
+  test("topic map - few participants", async function (assert) {
     const store = getOwner(this).lookup("service:store");
-    const topic = store.createRecord("topic", { id: 123 });
+    const topic = store.createRecord("topic", {
+      id: 123,
+      posts_count: 10,
+      participant_count: 2,
+    });
     topic.details.set("participants", [
       { username: "eviltrout" },
       { username: "codinghorror" },
@@ -789,25 +793,28 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", {
       topic,
       showTopicMap: true,
-      topicPostsCount: 2,
     });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
-    assert.dom("li.avatars a.poster").doesNotExist();
-
-    await click("nav.buttons button");
-    assert.dom(".topic-map-expanded a.poster").exists({ count: 2 });
+    assert.dom(".topic-map__users-trigger").doesNotExist();
+    assert.dom(".topic-map__users-list a.poster").exists({ count: 2 });
   });
 
   test("topic map - participants", async function (assert) {
     const store = getOwner(this).lookup("service:store");
-    const topic = store.createRecord("topic", { id: 123, posts_count: 10 });
+    const topic = store.createRecord("topic", {
+      id: 123,
+      posts_count: 10,
+      participant_count: 6,
+    });
     topic.postStream.setProperties({ userFilters: ["sam", "codinghorror"] });
     topic.details.set("participants", [
       { username: "eviltrout" },
       { username: "codinghorror" },
       { username: "sam" },
-      { username: "ZogStrIP" },
+      { username: "zogstrip" },
+      { username: "joffreyjaffeux" },
+      { username: "david" },
     ]);
 
     this.set("args", {
@@ -816,12 +823,12 @@ module("Integration | Component | Widget | post", function (hooks) {
     });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
-    assert.dom("li.avatars a.poster").exists({ count: 3 });
+    assert.dom(".topic-map__users-list a.poster").exists({ count: 5 });
 
-    await click("nav.buttons button");
-    assert.dom("li.avatars a.poster").doesNotExist();
-    assert.dom(".topic-map-expanded a.poster").exists({ count: 4 });
-    assert.dom("a.poster.toggled").exists({ count: 2 });
+    await click(".topic-map__users-trigger");
+    assert
+      .dom(".topic-map__users-content .topic-map__users-list a.poster")
+      .exists({ count: 6 });
   });
 
   test("topic map - links", async function (assert) {
@@ -840,17 +847,12 @@ module("Integration | Component | Widget | post", function (hooks) {
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
     assert.dom(".topic-map").exists({ count: 1 });
-    assert.dom(".map.map-collapsed").exists({ count: 1 });
-    assert.dom(".topic-map-expanded").doesNotExist();
-
-    await click("nav.buttons button");
-    assert.dom(".map.map-collapsed").doesNotExist();
-    assert.dom(".topic-map .d-icon-chevron-up").exists({ count: 1 });
-    assert.dom(".topic-map-expanded").exists({ count: 1 });
-    assert.dom(".topic-map-expanded .topic-link").exists({ count: 5 });
-
+    assert.dom(".topic-map__links-content").doesNotExist();
+    await click(".topic-map__links-trigger");
+    assert.dom(".topic-map__links-content").exists({ count: 1 });
+    assert.dom(".topic-map__links-content .topic-link").exists({ count: 5 });
     await click(".link-summary button");
-    assert.dom(".topic-map-expanded .topic-link").exists({ count: 6 });
+    assert.dom(".topic-map__links-content .topic-link").exists({ count: 6 });
   });
 
   test("topic map - no top reply summary", async function (assert) {
@@ -860,23 +862,17 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.dom(".toggle-summary .top-replies").doesNotExist();
+    assert.dom(".summarization-buttons .top-replies").doesNotExist();
   });
 
   test("topic map - has top replies summary", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 123, has_summary: true });
     this.set("args", { topic, showTopicMap: true });
-    this.set("showTopReplies", () => (this.summaryToggled = true));
 
-    await render(
-      hbs`<MountWidget @widget="post" @args={{this.args}} @showTopReplies={{this.showTopReplies}} />`
-    );
+    await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.dom(".toggle-summary").exists({ count: 1 });
-
-    await click(".toggle-summary button");
-    assert.ok(this.summaryToggled);
+    assert.dom(".summarization-buttons .top-replies").exists({ count: 1 });
   });
 
   test("pm map", async function (assert) {
@@ -893,8 +889,8 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.dom(".private-message-map").exists({ count: 1 });
-    assert.dom(".private-message-map .user").exists({ count: 1 });
+    assert.dom(".topic-map__private-message-map").exists({ count: 1 });
+    assert.dom(".topic-map__private-message-map .user").exists({ count: 1 });
   });
 
   test("post notice - with username", async function (assert) {

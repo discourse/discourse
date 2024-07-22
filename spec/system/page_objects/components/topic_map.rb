@@ -3,7 +3,7 @@
 module PageObjects
   module Components
     class TopicMap < PageObjects::Components::Base
-      TOPIC_MAP_KLASS = ".topic-map"
+      TOPIC_MAP_KLASS = ".topic-map.--op"
 
       def is_visible?
         has_css?(TOPIC_MAP_KLASS)
@@ -13,68 +13,53 @@ module PageObjects
         has_no_css?(TOPIC_MAP_KLASS)
       end
 
-      def is_collapsed?
-        has_css?("#{TOPIC_MAP_KLASS} .map-collapsed")
-      end
-
-      def expand
-        find("#{TOPIC_MAP_KLASS} .map-collapsed .btn").click if is_collapsed?
+      def has_no_users?
+        has_no_css?("#{TOPIC_MAP_KLASS} .topic-map__users-trigger")
       end
 
       def has_no_likes?
-        has_no_css?("#{TOPIC_MAP_KLASS} .likes")
+        has_no_css?("#{TOPIC_MAP_KLASS} .topic-map__likes-trigger")
       end
 
       def has_no_links?
-        has_no_css?("#{TOPIC_MAP_KLASS} .links")
+        has_no_css?("#{TOPIC_MAP_KLASS} .topic-map__links-trigger")
       end
 
       def users_count
-        find("#{TOPIC_MAP_KLASS} .users .number").text.to_i
-      end
-
-      def replies_count
-        find("#{TOPIC_MAP_KLASS} .replies .number").text.to_i
+        find("#{TOPIC_MAP_KLASS} .topic-map__users-trigger .number").text.to_i
       end
 
       def likes_count
-        find("#{TOPIC_MAP_KLASS} .likes .number").text.to_i
+        find("#{TOPIC_MAP_KLASS} .topic-map__likes-trigger .number").text.to_i
       end
 
       def links_count
-        find("#{TOPIC_MAP_KLASS} .links .number").text.to_i
+        find("#{TOPIC_MAP_KLASS} .topic-map__links-trigger .number").text.to_i
       end
 
       def views_count
-        find("#{TOPIC_MAP_KLASS} .views .number").text.to_i
-      end
-
-      def created_details
-        find("#{TOPIC_MAP_KLASS} .topic-map-post.created-at")
-      end
-
-      def created_relative_date
-        created_details.find(".relative-date").text
-      end
-
-      def last_reply_details
-        find("#{TOPIC_MAP_KLASS} .topic-map-post.last-reply")
-      end
-
-      def last_reply_relative_date
-        last_reply_details.find(".relative-date").text
+        find("#{TOPIC_MAP_KLASS} .topic-map__views-trigger .number").text.to_i
       end
 
       def avatars_details
-        find("#{TOPIC_MAP_KLASS} .map .avatars").all(".poster.trigger-user-card")
+        find("#{TOPIC_MAP_KLASS} .topic-map__users-list").all(".poster.trigger-user-card")
       end
 
-      def expanded_map_avatars_details
-        find("#{TOPIC_MAP_KLASS} .topic-map-expanded .avatars").all(".poster.trigger-user-card")
+      def expanded_avatars_details
+        find("#{TOPIC_MAP_KLASS} .topic-map__users-trigger").click
+        find("#{TOPIC_MAP_KLASS} .topic-map__users-content").all(".poster.trigger-user-card")
       end
 
       def has_no_avatars_details_in_map?
-        has_no_css?("#{TOPIC_MAP_KLASS} .map .avatars")
+        has_no_css?("#{TOPIC_MAP_KLASS} .topic-map__users-list")
+      end
+
+      def has_bottom_map?
+        has_css?(".topic-map.--bottom")
+      end
+
+      def has_no_bottom_map?
+        has_no_css?(".topic-map.--bottom")
       end
     end
   end
