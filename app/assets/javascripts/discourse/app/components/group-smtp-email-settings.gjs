@@ -134,7 +134,7 @@ export default class GroupSmtpEmailSettings extends Component {
             <form.Field
               @name="smtp_port"
               @title={{i18n "groups.manage.email.credentials.smtp_port"}}
-              @validation="required"
+              @validation="required|integer"
               as |field|
             >
               <field.Input @type="number" />
