@@ -4211,7 +4211,6 @@ he:
       { count, plural,
           one {תגובה,}
           two {שתי תגובות,}
-          many {# תגובות,}
         other {# תגובות,}
       }{ ratio, select,
           low { יחס גבוה בין פוסטים ללייקים,}
