@@ -1,15 +1,7 @@
 # frozen_string_literal: true
 
 class PostActionType < ActiveRecord::Base
-  after_save :expire_cache
-  after_destroy :expire_cache
-
   include AnonCacheInvalidator
-
-  def expire_cache
-    ApplicationSerializer.expire_cache_fragment!(/\Apost_action_types_/)
-    ApplicationSerializer.expire_cache_fragment!(/\Apost_action_flag_types_/)
-  end
 
   class << self
     attr_reader :flag_settings
@@ -35,7 +27,6 @@ class PostActionType < ActiveRecord::Base
       @all_flags = nil
       @flag_settings = FlagSettings.new
       ReviewableScore.reload_types
-      PostActionType.new.expire_cache
     end
 
     def overridden_by_plugin_or_skipped_db?
