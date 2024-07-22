@@ -167,44 +167,45 @@ class FooterNav extends Component {
 
     <div
       class={{concatClass
-        "footer-nav-widget"
         "footer-nav"
         (unless this.mobileScrollDirection "visible")
       }}
       {{this.registerScrollhandler}}
       {{this.registerAppEvents}}
     >
-      <DButton
-        @action={{this.goBack}}
-        @icon="chevron-left"
-        class="btn-flat btn-large"
-        @disabled={{not this.canGoBack}}
-        @title="footer_nav.back"
-      />
-
-      <DButton
-        @action={{this.goForward}}
-        @icon="chevron-right"
-        class="btn-flat btn-large"
-        @disabled={{not this.canGoForward}}
-        @title="footer_nav.forward"
-      />
-
-      {{#if this.capabilities.isAppWebview}}
+      <div class="footer-nav-widget">
         <DButton
-          @action={{this.share}}
-          @icon="link"
+          @action={{this.goBack}}
+          @icon="chevron-left"
           class="btn-flat btn-large"
-          @title="footer_nav.share"
+          @disabled={{not this.canGoBack}}
+          @title="footer_nav.back"
         />
 
         <DButton
-          @action={{this.dismiss}}
-          @icon="chevron-down"
+          @action={{this.goForward}}
+          @icon="chevron-right"
           class="btn-flat btn-large"
-          @title="footer_nav.dismiss"
+          @disabled={{not this.canGoForward}}
+          @title="footer_nav.forward"
         />
-      {{/if}}
+
+        {{#if this.capabilities.isAppWebview}}
+          <DButton
+            @action={{this.share}}
+            @icon="link"
+            class="btn-flat btn-large"
+            @title="footer_nav.share"
+          />
+
+          <DButton
+            @action={{this.dismiss}}
+            @icon="chevron-down"
+            class="btn-flat btn-large"
+            @title="footer_nav.dismiss"
+          />
+        {{/if}}
+      </div>
     </div>
   </template>
 }
