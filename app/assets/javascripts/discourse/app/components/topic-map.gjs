@@ -4,6 +4,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PrivateMessageMap from "discourse/components/topic-map/private-message-map";
@@ -96,26 +97,28 @@ export default class TopicMap extends Component {
       </section>
     {{/unless}}
 
-    <section class="information toggle-summary">
-      {{#if @model.has_summary}}
-        <p>{{htmlSafe this.topRepliesSummaryInfo}}</p>
-      {{/if}}
-      <PluginOutlet
-        @name="topic-map-expanded-after"
-        @defaultGlimmer={{true}}
-        @outletArgs={{hash topic=@model postStream=@postStream}}
-      >
+    {{#if (or @model.summarizable @model.has_summary)}}
+      <section class="information toggle-summary">
         {{#if @model.has_summary}}
-          <DButton
-            @action={{if @postStream.summary @cancelFilter @showTopReplies}}
-            @translatedTitle={{this.topRepliesTitle}}
-            @translatedLabel={{this.topRepliesLabel}}
-            @icon={{this.topRepliesIcon}}
-            class="top-replies"
-          />
+          <p>{{htmlSafe this.topRepliesSummaryInfo}}</p>
         {{/if}}
-      </PluginOutlet>
-    </section>
+        <PluginOutlet
+          @name="topic-map-expanded-after"
+          @defaultGlimmer={{true}}
+          @outletArgs={{hash topic=@model postStream=@postStream}}
+        >
+          {{#if @model.has_summary}}
+            <DButton
+              @action={{if @postStream.summary @cancelFilter @showTopReplies}}
+              @translatedTitle={{this.topRepliesTitle}}
+              @translatedLabel={{this.topRepliesLabel}}
+              @icon={{this.topRepliesIcon}}
+              class="top-replies"
+            />
+          {{/if}}
+        </PluginOutlet>
+      </section>
+    {{/if}}
 
     {{#if @showPMMap}}
       <section class="information private-message-map">
