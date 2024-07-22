@@ -43,7 +43,7 @@ RSpec.describe "List channels | no sidebar", type: :system do
 
       it "sorts them alphabetically" do
         visit("/chat")
-
+        chat.toggle_browse
         expect(page.find("#public-channels a:nth-child(1)")["data-chat-channel-id"]).to eq(
           channel_2.id.to_s,
         )
@@ -76,7 +76,7 @@ RSpec.describe "List channels | no sidebar", type: :system do
   context "when no category channels" do
     it "shows the empty channel list" do
       visit("/chat")
-      expect(page).to have_css(".c-list-empty-state")
+      expect(page).to have_css(".channel-list-empty-message")
     end
 
     it "does not show the create channel button" do
@@ -89,6 +89,7 @@ RSpec.describe "List channels | no sidebar", type: :system do
 
       it "shows the new channel button" do
         visit("/chat")
+        chat.toggle_browse
         expect(page).to have_css(".c-navbar__new-channel-button")
       end
     end
