@@ -14,6 +14,7 @@ import ChangePostNoticeModal from "discourse/components/modal/change-post-notice
 import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-public-topic";
 import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
 import JumpToPost from "discourse/components/modal/jump-to-post";
+import { MIN_POSTS_COUNT } from "discourse/components/topic-map/topic-map-summary";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -241,7 +242,7 @@ export default Controller.extend(bufferedProperty("model"), {
 
   @discourseComputed("model.posts_count")
   showBottomTopicMap(postsCount) {
-    return postsCount > 10;
+    return postsCount > MIN_POSTS_COUNT;
   },
 
   _removeDeleteOnOwnerReplyBookmarks() {

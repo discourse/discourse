@@ -14,28 +14,26 @@ import TopicViews from "discourse/components/topic-map/topic-views";
 import TopicViewsChart from "discourse/components/topic-map/topic-views-chart";
 import avatar from "discourse/helpers/bound-avatar-template";
 import number from "discourse/helpers/number";
-import slice from "discourse/helpers/slice";
 import { ajax } from "discourse/lib/ajax";
 import { emojiUnescape } from "discourse/lib/text";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
-import and from "truth-helpers/helpers/and";
-import lt from "truth-helpers/helpers/lt";
-import not from "truth-helpers/helpers/not";
 
 const TRUNCATED_LINKS_LIMIT = 5;
 const MIN_POST_READ_TIME = 4;
 const MIN_LIKES_COUNT = 5;
-const MIN_POSTS_COUNT = 10;
 const MIN_PARTICIPANTS_COUNT = 5;
 const MIN_USERS_COUNT_FOR_AVATARS = 2;
+
+export const MIN_POSTS_COUNT = 10;
 
 export default class TopicMapSummary extends Component {
   @service site;
   @service siteSettings;
   @service mapCache;
+  @service dialog;
 
   @tracked allLinksShown = false;
   @tracked top3LikedPosts = [];
@@ -51,7 +49,11 @@ export default class TopicMapSummary extends Component {
     );
   }
 
-  get readTime() {
+  get first5Participants() {
+    return this.args.topicDetails.participants;
+  }
+
+  get readTimeMinutes() {
     const calculatedTime = Math.ceil(
       Math.max(
         this.args.topic.word_count / this.siteSettings.read_time_word_count,
@@ -85,20 +87,14 @@ export default class TopicMapSummary extends Component {
   }
 
   get loneStat() {
-    const hasViews = this.args.topic.views >= 0;
-    const hasLikes =
-      this.args.topic.like_count > MIN_LIKES_COUNT &&
-      this.args.topic.posts_count > MIN_POSTS_COUNT;
-    const hasLinks = this.linksCount > 0;
-    const hasUsers = this.args.topic.participant_count > MIN_PARTICIPANTS_COUNT;
-    const canSummarize = this.args.topic.has_summary;
-
-    if (canSummarize) {
+    if (this.args.topic.has_summary) {
       return false;
     }
 
     return (
-      [hasViews, hasLikes, hasLinks, hasUsers].filter(Boolean).length === 1
+      [this.hasViews, this.hasLikes, this.hasUsers, this.hasLinks].filter(
+        Boolean
+      ).length === 1
     );
   }
 
@@ -113,7 +109,15 @@ export default class TopicMapSummary extends Component {
   get linksToShow() {
     return this.allLinksShown
       ? this.topicLinks
-      : this.topicLinks.slice(0, TRUNCATED_LINKS_LIMIT);
+      : this.topicLinks?.slice(0, TRUNCATED_LINKS_LIMIT);
+  }
+
+  get hasMoreLinks() {
+    return !this.allLinksShown && this.linksCount > TRUNCATED_LINKS_LIMIT;
+  }
+
+  get hasViews() {
+    return this.args.topic.views > 1;
   }
 
   get hasLikes() {
@@ -125,6 +129,10 @@ export default class TopicMapSummary extends Component {
 
   get hasUsers() {
     return this.args.topic.participant_count > MIN_PARTICIPANTS_COUNT;
+  }
+
+  get hasLinks() {
+    return this.linksCount > 0;
   }
 
   @action
@@ -173,8 +181,11 @@ export default class TopicMapSummary extends Component {
         this.top3LikedPosts = top3LikedPosts;
       })
       .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error("Error fetching posts:", error);
+        this.dialog.alert(
+          I18n.t("generic_error_with_reason", {
+            error: `http: ${error.status} - ${error.body}`,
+          })
+        );
       })
       .finally(() => {
         this.loading = false;
@@ -207,8 +218,11 @@ export default class TopicMapSummary extends Component {
         this.mapCache.set(cacheKey, data);
       })
       .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error("Error fetching views:", error);
+        this.dialog.alert(
+          I18n.t("generic_error_with_reason", {
+            error: `http: ${error.status} - ${error.body}`,
+          })
+        );
       })
       .finally(() => {
         this.loading = false;
@@ -342,12 +356,7 @@ export default class TopicMapSummary extends Component {
                 {{/each}}
               </tbody>
             </table>
-            {{#if
-              (and
-                (not this.allLinksShown)
-                (lt TRUNCATED_LINKS_LIMIT this.topicLinks.length)
-              )
-            }}
+            {{#if this.hasMoreLinks}}
               <div class="link-summary">
                 <span>
                   <DButton
@@ -392,20 +401,16 @@ export default class TopicMapSummary extends Component {
 
       {{#if this.shouldShowParticipants}}
         <TopicParticipants
-          @participants={{slice
-            0
-            MIN_PARTICIPANTS_COUNT
-            @topicDetails.participants
-          }}
+          @participants={{this.first5Participants}}
           @userFilters={{@userFilters}}
         />
       {{/if}}
       <div class="topic-map__buttons">
-        {{#if this.readTime}}
+        {{#if this.readTimeMinutes}}
           <div class="estimated-read-time">
             <span> {{i18n "topic_map.read"}} </span>
             <span>
-              {{this.readTime}}
+              {{this.readTimeMinutes}}
               {{i18n "topic_map.minutes"}}
             </span>
           </div>
