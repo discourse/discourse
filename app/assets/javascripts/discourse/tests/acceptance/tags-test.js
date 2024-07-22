@@ -114,6 +114,15 @@ acceptance("Tags", function (needs) {
     );
     assert.ok(exists(`[data-tag-name="eviltrout"]`), "shows the eviltrout tag");
   });
+  test("have the tag-groups data", async function (assert) {
+    await visit("/tags");
+
+    assert.strictEqual(
+      query(`[data-tag-name="escort"]`).dataset.tagGroups,
+      "Ford Cars",
+      "has the correct tag group"
+    );
+  });
 
   test("dismiss notifications", async function (assert) {
     await visit("/tag/test/l/unread");
