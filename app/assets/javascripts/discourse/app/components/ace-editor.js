@@ -136,6 +136,15 @@ export default class AceEditor extends Component {
           bindKey: { mac: "cmd-s", win: "ctrl-s" },
         });
       }
+      if (this.commit) {
+        editor.commands.addCommand({
+          name: "commit",
+          exec: () => {
+            this.commit();
+          },
+          bindKey: { mac: "cmd-return", win: "ctrl-enter" },
+        });
+      }
 
       editor.on("blur", () => {
         this.warnSCSSDeprecations();
