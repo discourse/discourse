@@ -661,7 +661,8 @@ acceptance("Topic stats update automatically", function () {
   test("Likes count updates automatically", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const likesCountSelectors = "#post_1 .topic-map .map-likes-trigger .number";
+    const likesCountSelectors =
+      "#post_1 .topic-map .topic-map__likes-trigger .number";
     const oldLikesCount = query(likesCountSelectors).textContent;
     const likesChangedFixture = {
       id: 280,

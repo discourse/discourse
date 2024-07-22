@@ -903,7 +903,7 @@ createWidget("post-article", {
   buildTopicMap(attrs) {
     return new RenderGlimmer(
       this,
-      "div.topic-map",
+      "div.topic-map.--op",
       hbs`<TopicMap
         @model={{@data.model}}
         @topicDetails={{@data.topicDetails}}
