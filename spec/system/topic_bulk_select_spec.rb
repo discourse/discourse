@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 describe "Topic bulk select", type: :system do
-  before { SiteSetting.experimental_topic_bulk_actions_enabled_groups = "1" }
   fab!(:topics) { Fabricate.times(10, :post).map(&:topic) }
   fab!(:admin)
   fab!(:user)

@@ -2,15 +2,11 @@
 {{#if bulkSelectEnabled}}
   <th class="bulk-select topic-list-data">
     {{#if canBulkSelect}}
-      {{#if experimentalTopicBulkActionsEnabled }}
-        {{raw "flat-button" class="bulk-select" icon="tasks" title="topics.bulk.toggle"}}
-      {{else}}
-        {{raw "flat-button" class="bulk-select" icon="list" title="topics.bulk.toggle"}}
-      {{/if}}
+      {{raw "flat-button" class="bulk-select" icon="tasks" title="topics.bulk.toggle"}}
     {{/if}}
   </th>
 {{/if}}
-{{raw "topic-list-header-column" order='default' name=listTitle bulkSelectEnabled=bulkSelectEnabled showBulkToggle=toggleInTitle canBulkSelect=canBulkSelect canDoBulkActions=canDoBulkActions showTopicsAndRepliesToggle=showTopicsAndRepliesToggle newListSubset=newListSubset newRepliesCount=newRepliesCount newTopicsCount=newTopicsCount experimentalTopicBulkActionsEnabled=experimentalTopicBulkActionsEnabled bulkSelectHelper=bulkSelectHelper }}
+{{raw "topic-list-header-column" order='default' name=listTitle bulkSelectEnabled=bulkSelectEnabled showBulkToggle=toggleInTitle canBulkSelect=canBulkSelect canDoBulkActions=canDoBulkActions showTopicsAndRepliesToggle=showTopicsAndRepliesToggle newListSubset=newListSubset newRepliesCount=newRepliesCount newTopicsCount=newTopicsCount bulkSelectHelper=bulkSelectHelper }}
 {{raw-plugin-outlet name="topic-list-header-after-main-link"}}
 {{#if showPosters}}
   {{raw "topic-list-header-column" name='posters' screenreaderOnly='true'}}
