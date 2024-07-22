@@ -39,7 +39,7 @@
   gu: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| n == 1 ? :one : :other } } } },
   guw: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| [0, 1].include?(n) ? :one : :other } } } },
   ha: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| n == 1 ? :one : :other } } } },
-  he: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| n == 1 ? :one : :other } } } },
+  he: { i18n: { plural: { keys: [:zero, :one, :two, :many, :other], rule: lambda { |n| n == 0 ? :zero : n == 1 ? :one : n == 2 ? :two : n > 2 ? :many : :other } } } },
   hi: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| [0, 1].include?(n) ? :one : :other } } } },
   hr: { i18n: { plural: { keys: [:one, :few, :other], rule: lambda { |n| n % 10 == 1 && n % 100 != 11 ? :one : [2, 3, 4].include?(n % 10) && ![12, 13, 14].include?(n % 100) ? :few : :other } } } },
   # The next line has a fix for ruby-i18n. Hungarian has plural forms. See https://meta.discourse.org/t/issue-with-pluralized-count-translation-override/316019/8
@@ -48,7 +48,7 @@
   id: { i18n: { plural: { keys: [:other], rule: lambda { |n| :other } } } },
   is: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| n == 1 ? :one : :other } } } },
   it: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| n == 1 ? :one : :other } } } },
-  iw: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| n == 1 ? :one : :other } } } },
+  iw: { i18n: { plural: { keys: [:zero, :one, :two, :many, :other], rule: lambda { |n| n == 0 ? :zero : n == 1 ? :one : n == 2 ? :two : n > 2 ? :many : :other } } } },
   ja: { i18n: { plural: { keys: [:other], rule: lambda { |n| :other } } } },
   jv: { i18n: { plural: { keys: [:other], rule: lambda { |n| :other } } } },
   ka: { i18n: { plural: { keys: [:other], rule: lambda { |n| :other } } } },
