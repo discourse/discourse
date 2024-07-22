@@ -38,8 +38,12 @@ module PostGuardian
 
     taken = opts[:taken_actions].try(:keys).to_a
     is_flag =
-      PostActionType.notify_flag_types[action_key] ||
-        PostActionType.additional_message_types[action_key]
+      if (opts[:notify_flag_types] && opts[:additional_message_types])
+        opts[:notify_flag_types][action_key] || opts[:additional_message_types][action_key]
+      else
+        PostActionType.notify_flag_types[action_key] ||
+          PostActionType.additional_message_types[action_key]
+      end
     already_taken_this_action = taken.any? && taken.include?(PostActionType.types[action_key])
     already_did_flagging = taken.any? && (taken & PostActionType.notify_flag_types.values).any?
 

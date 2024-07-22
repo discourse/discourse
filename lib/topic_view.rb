@@ -631,6 +631,14 @@ class TopicView
     @public_flag_types ||= PostActionType.public_types
   end
 
+  def notify_flag_types
+    @notify_flag_types ||= PostActionType.notify_flag_types
+  end
+
+  def additional_message_types
+    @additional_message_types ||= PostActionType.additional_message_types
+  end
+
   def suggested_topics
     if @include_suggested
       @suggested_topics ||=

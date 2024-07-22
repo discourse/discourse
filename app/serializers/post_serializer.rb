@@ -304,6 +304,22 @@ class PostSerializer < BasicPostSerializer
            sym,
            opts: {
              taken_actions: actions,
+             notify_flag_types:
+               (
+                 if @topic_view.present?
+                   @topic_view.notify_flag_types
+                 else
+                   PostActionType.notify_flag_types
+                 end
+               ),
+             additional_message_types:
+               (
+                 if @topic_view.present?
+                   @topic_view.additional_message_types
+                 else
+                   PostActionType.additional_message_types
+                 end
+               ),
            },
            can_see_post: can_see_post,
          )
