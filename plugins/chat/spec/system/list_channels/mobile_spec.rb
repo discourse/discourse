@@ -216,7 +216,7 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
       it "redirects to channels" do
         visit("/chat")
 
-        expect(page).to have_current_path("/chat/channels")
+        expect(page).to have_current_path("/chat/browse/open")
       end
     end
   end
@@ -250,7 +250,7 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
       it "redirects to channels" do
         visit("/chat")
 
-        expect(page).to have_current_path("/chat/channels")
+        expect(page).to have_current_path("/chat/browse/open")
       end
     end
   end
