@@ -50,7 +50,7 @@ export default class TopicMapSummary extends Component {
   }
 
   get first5Participants() {
-    return this.args.topicDetails.participants;
+    return this.args.topicDetails.participants.slice(0, MIN_PARTICIPANTS_COUNT);
   }
 
   get readTimeMinutes() {
