@@ -97,7 +97,7 @@ RSpec.describe "List channels | no sidebar", type: :system do
   context "when no direct message channels" do
     it "shows the empty channel list" do
       visit("/chat")
-      expect(page).to have_css(".c-list-empty-state")
+      expect(page).to have_css(".channel-list-empty-message")
     end
   end
 
