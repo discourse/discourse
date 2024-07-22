@@ -1,0 +1,32 @@
+<div class="wizard-container__radio-choices">
+  {{#each this.field.choices as |c|}}
+    <div class="wizard-container__radio-choice {{if c.selected 'selected'}}">
+      <label class="wizard-container__label">
+        <PluginOutlet
+          @name="wizard-radio"
+          @outletArgs={{hash disabled=c.disabled}}
+        >
+          <Input
+            @type="radio"
+            @value={{c.id}}
+            class="wizard-container__radio"
+            disabled={{c.disabled}}
+            selected={{c.selected}}
+            {{on "click" (action "changed")}}
+          />
+          <span class="wizard-container__radio-label">
+            {{#if c.icon}}
+              {{d-icon c.icon}}
+            {{/if}}
+            <span>{{c.label}}</span>
+          </span>
+        </PluginOutlet>
+
+        <PluginOutlet
+          @name="below-wizard-radio"
+          @outletArgs={{hash disabled=c.disabled}}
+        />
+      </label>
+    </div>
+  {{/each}}
+</div>
