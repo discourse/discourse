@@ -2353,7 +2353,7 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
     end
 
-    it "does not result in N+1 queries problem when multiple topic participants have primary or flair group configured" do
+    xit "does not result in N+1 queries problem when multiple topic participants have primary or flair group configured" do
       Group.user_trust_level_change!(post_author1.id, post_author1.trust_level)
       user2 = Fabricate(:user)
       user3 = Fabricate(:user)

@@ -623,6 +623,14 @@ class TopicView
     @pm_params ||= TopicQuery.new(@user).get_pm_params(topic)
   end
 
+  def flag_types
+    @flag_types ||= PostActionType.types
+  end
+
+  def public_flag_types
+    @public_flag_types ||= PostActionType.public_types
+  end
+
   def suggested_topics
     if @include_suggested
       @suggested_topics ||=
