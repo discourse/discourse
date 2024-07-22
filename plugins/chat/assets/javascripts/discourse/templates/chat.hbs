@@ -17,7 +17,11 @@
 
     <div
       id="main-chat-outlet"
-      class={{concat-class "main-chat-outlet" this.mainOutletModifierClasses}}
+      class={{concat-class
+        "main-chat-outlet"
+        this.mainOutletModifierClasses
+        (if this.shouldUseChatFooter "with-footer")
+      }}
     >
       {{outlet}}
       {{#if this.shouldUseChatFooter}}

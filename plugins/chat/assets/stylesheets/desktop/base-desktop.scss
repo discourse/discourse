@@ -122,10 +122,9 @@
     max-width: 50%;
   }
 }
-:has(.c-footer) {
-  #main-chat-outlet.chat-view {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
+
+#main-chat-outlet.chat-view.with-footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }

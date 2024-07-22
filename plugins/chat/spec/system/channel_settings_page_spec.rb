@@ -15,7 +15,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
 
   context "when visiting from browse page" do
     context "when clicking back button" do
-      it "redirects to browse page" do
+      it "redirects to empty channels page" do
         chat_page.visit_browse
         find(".c-navbar__back-button").click
 
@@ -49,7 +49,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
   context "as not allowed to see the channel" do
     fab!(:channel_1) { Fabricate(:private_category_channel) }
 
-    it "redirects to browse page" do
+    it "redirects to empty channels page" do
       chat_page.visit_channel_settings(channel_1)
       expect(page).to have_current_path("/chat/channels")
     end
