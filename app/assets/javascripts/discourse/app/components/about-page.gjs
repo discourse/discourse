@@ -58,7 +58,7 @@ export default class AboutPage extends Component {
       });
     } else if (email) {
       return I18n.t("about.contact_info", {
-        contact_info: email,
+        contact_info: `<a href="mailto:${email}">${email}</a>`,
       });
     } else {
       return null;
