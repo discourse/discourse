@@ -4,6 +4,7 @@ import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
+import escape from "discourse-common/lib/escape";
 import I18n from "discourse-i18n";
 
 export default class AboutPage extends Component {
@@ -49,8 +50,8 @@ export default class AboutPage extends Component {
   }
 
   get contactInfo() {
-    const url = this.args.model.contact_url;
-    const email = this.args.model.contact_email;
+    const url = escape(this.args.model.contact_url || "");
+    const email = escape(this.args.model.contact_email || "");
 
     if (url) {
       return I18n.t("about.contact_info", {
