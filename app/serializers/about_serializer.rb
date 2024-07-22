@@ -73,13 +73,8 @@ class AboutSerializer < ApplicationSerializer
   end
 
   def render_redesigned_about_page?
-    return false if !scope.user
+    return false if scope.anonymous?
 
-    return @render_redesigned_about_page if @render_redesigned_about_page != nil
-
-    @render_redesigned_about_page =
-      (
-        scope.user.groups.pluck(:id) & SiteSetting.experimental_redesigned_about_page_groups_map
-      ).present?
+    scope.user.in_any_groups?(SiteSetting.experimental_redesigned_about_page_groups_map)
   end
 end
