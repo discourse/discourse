@@ -11,7 +11,11 @@ if enable_logstash_logger
   require_relative "../lib/discourse_logstash_logger"
   require_relative "../lib/unicorn_logstash_patch"
   FileUtils.touch(unicorn_stderr_path) if !File.exist?(unicorn_stderr_path)
-  logger DiscourseLogstashLogger.logger(logdev: unicorn_stderr_path, type: :unicorn)
+  logger DiscourseLogstashLogger.logger(
+           logdev: unicorn_stderr_path,
+           type: :unicorn,
+           customize_event: lambda { |event| event["@timestamp"] = ::Time.now.utc },
+         )
 else
   logger Logger.new(STDOUT)
 end
