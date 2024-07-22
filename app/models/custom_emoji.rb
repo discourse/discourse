@@ -35,7 +35,7 @@ end
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  group      :string(20)
-#  user_id    :integer          not null
+#  user_id    :integer          default(-1), not null
 #
 # Indexes
 #
