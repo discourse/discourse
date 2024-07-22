@@ -101,6 +101,12 @@ export default class GroupSmtpEmailSettings extends Component {
       .finally(() => (this.testingSettings = false));
   }
 
+  @action
+  resetTestingSettings(field, value, { set }) {
+    this.changeSmtpSettingsValid(false);
+    set(field, value);
+  }
+
   <template>
     <div class="group-smtp-email-settings">
       <Form
@@ -114,6 +120,7 @@ export default class GroupSmtpEmailSettings extends Component {
               @name="smtp_server"
               @title={{i18n "groups.manage.email.credentials.smtp_server"}}
               @validation="required"
+              @onSet={{fn this.resetTestingSettings "smtp_server"}}
               as |field|
             >
               <field.Input />
@@ -124,6 +131,7 @@ export default class GroupSmtpEmailSettings extends Component {
               @name="email_username"
               @title={{i18n "groups.manage.email.credentials.username"}}
               @validation="required"
+              @onSet={{fn this.resetTestingSettings "email_username"}}
               as |field|
             >
               <field.Input />
@@ -135,6 +143,7 @@ export default class GroupSmtpEmailSettings extends Component {
               @name="smtp_port"
               @title={{i18n "groups.manage.email.credentials.smtp_port"}}
               @validation="required|integer"
+              @onSet={{fn this.resetTestingSettings "smtp_port"}}
               as |field|
             >
               <field.Input @type="number" />
@@ -145,6 +154,7 @@ export default class GroupSmtpEmailSettings extends Component {
               @name="email_password"
               @title={{i18n "groups.manage.email.credentials.password"}}
               @validation="required"
+              @onSet={{fn this.resetTestingSettings "email_password"}}
               as |field|
             >
               <field.Password />
@@ -156,6 +166,7 @@ export default class GroupSmtpEmailSettings extends Component {
               @name="smtp_ssl_mode"
               @title={{i18n "groups.manage.email.credentials.smtp_ssl_mode"}}
               @validation="required"
+              @onSet={{fn this.resetTestingSettings "smtp_ssl_mode"}}
               as |field|
             >
               <field.Select as |select|>
