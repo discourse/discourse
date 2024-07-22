@@ -1,12 +1,5 @@
 # frozen_string_literal: true
 
-# We use ActiveSupport mb_chars from here to properly support non ascii downcase
-# TODO remove when ruby 2.4 lands
-require "active_support/core_ext/string/multibyte"
-
-#
-# Given a string, tell us whether or not is acceptable.
-#
 class TextSentinel
   attr_accessor :text
 
@@ -43,11 +36,9 @@ class TextSentinel
     TextSentinel.new(text, min_entropy: entropy, max_word_length: SiteSetting.title_max_word_length)
   end
 
-  # Entropy is a number of how many unique characters the string needs.
-  # Non-ASCII characters are weighted heavier since they contain more "information"
+  # Number of unique bytes
   def entropy
-    chars = @text.to_s.strip.split("")
-    @entropy ||= chars.pack("M*" * chars.size).gsub("\n", "").split("=").uniq.size
+    @entropy ||= @text.strip.bytes.uniq.size
   end
 
   def valid?
@@ -55,39 +46,32 @@ class TextSentinel
       seems_quiet?
   end
 
+  # Ensure minumum entropy
   def seems_meaningful?
-    # Minimum entropy if entropy check required
-    @opts[:min_entropy].blank? || (entropy >= @opts[:min_entropy])
+    @opts[:min_entropy].nil? || entropy >= @opts[:min_entropy]
   end
 
+  # At least one non-symbol character
   def seems_pronounceable?
-    # At least some non-symbol characters
-    # (We don't have a comprehensive list of symbols, but this will eliminate some noise)
-    @text.gsub(symbols_regex, "").size > 0
+    @text.match?(/\p{Alnum}/)
   end
 
+  # Ensure maximum word length
   def seems_unpretentious?
-    return true if skipped_locale.include?(SiteSetting.default_locale)
-    # Don't allow super long words if there is a word length maximum
-
-    @opts[:max_word_length].blank? ||
-      (@text.split(%r{\s|/|-|\.|:}).map(&:size).max || 0) <= @opts[:max_word_length]
+    skipped_locales.include?(SiteSetting.default_locale) || @opts[:max_word_length].nil? ||
+      @text.scan(/\p{Alnum}+/).map(&:size).max.to_i <= @opts[:max_word_length]
   end
 
+  # Ensure at least one lowercase letter
   def seems_quiet?
-    return true if skipped_locale.include?(SiteSetting.default_locale)
-    # We don't allow all upper case content
-    SiteSetting.allow_uppercase_posts || @text == @text.mb_chars.downcase.to_s ||
-      @text != @text.mb_chars.upcase.to_s
+    SiteSetting.allow_uppercase_posts || @text.match?(/\p{Lowercase_Letter}|\p{Other_Letter}/) ||
+      !@text.match?(/\p{Letter}/)
   end
 
   private
 
-  def symbols_regex
-    /[\ -\/\[-\`\:-\@\{-\~]/m
-  end
-
-  def skipped_locale
-    %w[zh_CN zh_TW ko ja].freeze
+  # Hard to tell "word length" for CJK languages
+  def skipped_locales
+    @skipped_locales ||= %w[ja ko zh_CN zh_TW].freeze
   end
 end
