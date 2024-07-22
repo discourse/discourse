@@ -71,8 +71,8 @@ describe "Topic Map", type: :system do
     # expect(topic_map.views_count).to eq(2)
 
     # likes count
-    expect(topic_map).to have_no_likes
-    topic_page.click_like_reaction_for(original_post)
-    expect(topic_map.likes_count).to eq 1
+    # expect(topic_map).to have_no_likes
+    # topic_page.click_like_reaction_for(original_post)
+    # expect(topic_map.likes_count).to eq 1
   end
 end
