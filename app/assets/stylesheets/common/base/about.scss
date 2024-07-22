@@ -1,3 +1,30 @@
+.about {
+  &__main-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: 4em;
+  }
+
+  &__stats {
+    display: flex;
+    border-top: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--primary-low);
+    padding: 1em 1em;
+    margin-bottom: 1em;
+  }
+
+  &__stats-item {
+    flex-grow: 1;
+    flex-basis: 0;
+  }
+
+  &__banner {
+    margin-bottom: 1em;
+    min-height: 300px;
+    max-height: 300px;
+  }
+}
+
 section.about {
   margin-bottom: 3em;
 

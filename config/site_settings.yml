@@ -2437,6 +2437,11 @@ developer:
     list_type: compact
     allow_any: false
     refresh: true
+  experimental_redesigned_about_page_groups:
+    default: ""
+    type: group_list
+    hidden: true
+    allow_any: false
 
 navigation:
   navigation_menu:
