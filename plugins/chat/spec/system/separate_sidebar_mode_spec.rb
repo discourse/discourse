@@ -216,8 +216,8 @@ RSpec.describe "Separate sidebar mode", type: :system do
 
       it "has the expected behavior" do
         visit("/discuss/about")
-
         sidebar_component.switch_to_chat
+        chat_page.toggle_browse
         expect(channel_browse_page.component).to be_present
 
         sidebar_component.switch_to_main
