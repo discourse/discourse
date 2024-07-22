@@ -142,7 +142,7 @@ export default class AceEditor extends Component {
           exec: () => {
             this.commit();
           },
-          bindKey: { mac: "cmd-return", win: "ctrl-enter" },
+          bindKey: { mac: "cmd-enter", win: "ctrl-enter" },
         });
       }
 
