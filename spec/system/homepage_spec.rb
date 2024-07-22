@@ -34,6 +34,10 @@ describe "Homepage", type: :system do
 
     # Wait for the save to complete
     find(".btn-primary.save-changes:not([disabled])", wait: 5)
+    try_until_success do
+      visit "/u/#{user.username}/preferences/interface"
+      homepage_picker.has_selected_name?("Top")
+    end
 
     visit "/"
 
@@ -89,9 +93,12 @@ describe "Homepage", type: :system do
       homepage_picker.select_row_by_name("Top")
       page.find(".btn-primary.save-changes").click
 
-      # Wait for the save to complete
+      # Make sure save is complete
       find(".btn-primary.save-changes:not([disabled])", wait: 5)
-      expect(user.user_option.homepage_id).to eq(UserOption::HOMEPAGES.key("top"))
+      try_until_success do
+        visit "/u/#{user.username}/preferences/interface"
+        homepage_picker.has_selected_name?("Top")
+      end
 
       find("#site-logo").click
       expect(page).to have_css(".navigation-container .top.active", text: "Top")
@@ -107,7 +114,10 @@ describe "Homepage", type: :system do
 
       # Wait for the save to complete
       find(".btn-primary.save-changes:not([disabled])", wait: 5)
-      expect(user.reload.user_option.homepage_id).to_not eq(UserOption::HOMEPAGES.key("top"))
+      try_until_success do
+        visit "/u/#{user.username}/preferences/interface"
+        homepage_picker.has_selected_name?("(default)")
+      end
 
       find("#site-logo").click
 

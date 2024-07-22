@@ -2,6 +2,7 @@ import { alias, match } from "@ember/object/computed";
 import Mixin from "@ember/object/mixin";
 import { schedule, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
+import runAfterFramePaint from "discourse/lib/after-frame-paint";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import DiscourseURL from "discourse/lib/url";
@@ -86,9 +87,11 @@ export default Mixin.create({
     document.querySelector(".card-cloak")?.classList.remove("hidden");
 
     this.appEvents.trigger("user-card:show", { username });
-    this._positionCard(target, event);
-    this._showCallback(username).then((user) => {
-      this.appEvents.trigger("user-card:after-show", { user });
+    runAfterFramePaint(() => {
+      this._positionCard(target, event);
+      this._showCallback(username).then((user) => {
+        this.appEvents.trigger("user-card:after-show", { user });
+      });
     });
 
     // We bind scrolling on mobile after cards are shown to hide them if user scrolls
