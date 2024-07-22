@@ -22,7 +22,8 @@ import I18n from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
 const TRUNCATED_LINKS_LIMIT = 5;
-const MIN_POST_READ_TIME = 4;
+const MIN_POST_READ_TIME_MINUTES = 4;
+const MIN_READ_TIME_MINUTES = 3;
 const MIN_LIKES_COUNT = 5;
 const MIN_PARTICIPANTS_COUNT = 5;
 const MIN_USERS_COUNT_FOR_AVATARS = 2;
@@ -57,11 +58,11 @@ export default class TopicMapSummary extends Component {
     const calculatedTime = Math.ceil(
       Math.max(
         this.args.topic.word_count / this.siteSettings.read_time_word_count,
-        (this.args.topic.posts_count * MIN_POST_READ_TIME) / 60
+        (this.args.topic.posts_count * MIN_POST_READ_TIME_MINUTES) / 60
       )
     );
 
-    return calculatedTime > 3 ? calculatedTime : null;
+    return calculatedTime > MIN_READ_TIME_MINUTES ? calculatedTime : null;
   }
 
   get topRepliesSummaryEnabled() {
