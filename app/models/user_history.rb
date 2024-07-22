@@ -148,6 +148,8 @@ class UserHistory < ActiveRecord::Base
         filled_in_required_fields: 109,
         topic_slow_mode_set: 110,
         topic_slow_mode_removed: 111,
+        custom_emoji_create: 112,
+        custom_emoji_destroy: 113,
       )
   end
 
@@ -258,6 +260,8 @@ class UserHistory < ActiveRecord::Base
       delete_watched_word_group
       topic_slow_mode_set
       topic_slow_mode_removed
+      custom_emoji_create
+      custom_emoji_destroy
     ]
   end
 
