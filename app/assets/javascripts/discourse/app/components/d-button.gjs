@@ -119,11 +119,11 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
             );
           }
         } else if (typeof actionVal === "object" && actionVal.value) {
-          if (forwardEvent) {
-            actionVal.value(actionParam, event);
-          } else {
-            actionVal.value(actionParam);
-          }
+          runAfterFramePaint(() =>
+            forwardEvent
+              ? actionVal.value(actionParam, event)
+              : actionVal.value(actionParam)
+          );
         } else if (typeof actionVal === "function") {
           runAfterFramePaint(() =>
             forwardEvent
