@@ -35,7 +35,7 @@
               }}</LinkTo></li>
         {{/if}}
       </ul>
-      {{#if this.displayV2Design}}
+      {{#if this.currentUser.render_experimental_about_page}}
         <AboutPage @model={{this.model}} />
       {{else}}
         <section class="about description">

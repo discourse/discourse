@@ -2440,7 +2440,7 @@ developer:
   experimental_redesigned_about_page_groups:
     default: ""
     type: group_list
-    client: true
+    hidden: true
     allow_any: false
 
 navigation:
