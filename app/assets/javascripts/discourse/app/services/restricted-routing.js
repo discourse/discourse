@@ -38,6 +38,16 @@ export default class RestrictedRouting extends Service {
     return true;
   }
 
+  get redirectRoute() {
+    if (this._needs2fa) {
+      return "preferences.second-factor";
+    }
+
+    if (this._needsRequiredFields) {
+      return "preferences.profile";
+    }
+  }
+
   get _needs2fa() {
     // NOTE: Matches the should_enforce_2fa? and disqualified_from_2fa_enforcement
     // methods in ApplicationController.
