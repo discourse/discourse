@@ -136,11 +136,11 @@ export default class AceEditor extends Component {
           bindKey: { mac: "cmd-s", win: "ctrl-s" },
         });
       }
-      if (this.commit) {
+      if (this.submit) {
         editor.commands.addCommand({
-          name: "commit",
+          name: "submit",
           exec: () => {
-            this.commit();
+            this.submit();
           },
           bindKey: { mac: "cmd-enter", win: "ctrl-enter" },
         });
