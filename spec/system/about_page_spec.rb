@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe "About page", type: :system do
-  fab!(:user)
-  fab!(:group) { Fabricate(:group, users: [user]) }
+  fab!(:current_user) { Fabricate(:user) }
+  fab!(:group) { Fabricate(:group, users: [current_user]) }
   fab!(:image_upload)
   fab!(:admin) { Fabricate(:admin, last_seen_at: 1.hour.ago) }
   fab!(:moderator) { Fabricate(:moderator, last_seen_at: 1.hour.ago) }
@@ -24,7 +24,7 @@ describe "About page", type: :system do
 
   describe "legacy version" do
     it "renders successfully for a logged-in user" do
-      sign_in(user)
+      sign_in(current_user)
 
       visit("/about")
 
@@ -49,10 +49,10 @@ describe "About page", type: :system do
 
     before do
       SiteSetting.experimental_redesigned_about_page_groups = group.id.to_s
-      sign_in(user)
+      sign_in(current_user)
     end
 
-    it "adsaf" do
+    it "renders successfully for a logged in user" do
       about_page.visit
 
       expect(about_page).to have_banner_image(image_upload)
