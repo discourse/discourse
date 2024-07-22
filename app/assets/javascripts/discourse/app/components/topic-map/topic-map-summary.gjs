@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { gt } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import TopicMapLink from "discourse/components/topic-map/topic-map-link";
@@ -97,6 +96,10 @@ export default class TopicMapSummary extends Component {
         Boolean
       ).length === 1
     );
+  }
+
+  get shouldShowViewsChart() {
+    return this.views.stats.length > 2;
   }
 
   get linksCount() {
@@ -252,7 +255,7 @@ export default class TopicMapSummary extends Component {
         <:content>
           <h3>{{i18n "topic_map.menu_titles.views"}}</h3>
           <ConditionalLoadingSpinner @condition={{this.loading}}>
-            {{#if (gt this.views.stats.length 2)}}
+            {{#if this.shouldShowViewsChart}}
               <TopicViewsChart
                 @views={{this.views}}
                 @created={{@topic.created_at}}
