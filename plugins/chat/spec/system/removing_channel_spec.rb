@@ -27,8 +27,7 @@ RSpec.describe "Removing channel", type: :system do
     it "redirects to browse page" do
       chat_page.visit_channel(channel_2)
       chat_sidebar_page.remove_channel(channel_2)
-
-      expect(page).to have_current_path("/chat/browse/open")
+      expect(page).to have_current_path("/chat/channels")
     end
   end
 
