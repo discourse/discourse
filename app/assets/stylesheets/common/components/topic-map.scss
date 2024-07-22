@@ -156,6 +156,16 @@ article {
     }
   }
 
+  &__additional-contents {
+    padding-left: calc(
+      var(--topic-body-width-padding) + var(--topic-avatar-width)
+    );
+
+    @media screen and (max-width: 500px) {
+      padding-left: 0;
+    }
+  }
+
   .controls {
     display: flex;
     align-items: center;
