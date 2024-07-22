@@ -68,9 +68,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
 
     it "shows settings page" do
       chat_page.visit_channel_settings(channel_1)
-      can leave channel expect(page).to have_current_path(
-                          "/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings",
-                        )
+      expect(page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings")
     end
 
     it "shows channel info" do
