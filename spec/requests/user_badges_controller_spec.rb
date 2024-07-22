@@ -166,9 +166,9 @@ RSpec.describe UserBadgesController do
     end
 
     context "with hidden profiles" do
-      before { user.user_option.update_columns(hide_profile_and_presence: true) }
+      before { user.user_option.update_columns(hide_profile: true) }
 
-      it "returns 404 if `hide_profile_and_presence` user option is checked" do
+      it "returns 404 if `hide_profile` user option is checked" do
         get "/user-badges/#{user.username}.json"
         expect(response.status).to eq(404)
       end

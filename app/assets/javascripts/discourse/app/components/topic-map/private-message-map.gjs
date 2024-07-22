@@ -162,7 +162,7 @@ class PmMapUser extends Component {
   }
 
   <template>
-    <div class="user">
+    <div class="user" data-participant-username={{@model.username}}>
       <a class="user-link" href={{@model.path}}>
         <a
           class="trigger-user-card"

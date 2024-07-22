@@ -112,7 +112,7 @@ RSpec.describe UserGuardian do
 
       let(:hidden_user) do
         result = Fabricate(:user)
-        result.user_option.update_column(:hide_profile_and_presence, true)
+        result.user_option.update_column(:hide_profile, true)
         result
       end
 

@@ -21,6 +21,8 @@ class UserOption < ActiveRecord::Base
   belongs_to :user
   before_create :set_defaults
 
+  before_save :ensure_backwards_compat_for_hide_profile_and_presence
+
   after_save :update_tracked_topics
 
   scope :human_users, -> { where("user_id > 0") }
@@ -93,7 +95,9 @@ class UserOption < ActiveRecord::Base
 
     self.title_count_mode = SiteSetting.default_title_count_mode
 
-    self.hide_profile_and_presence = SiteSetting.default_hide_profile_and_presence
+    self.hide_profile = SiteSetting.default_hide_profile
+    self.hide_presence = SiteSetting.default_hide_presence
+
     self.sidebar_link_to_filtered_list = SiteSetting.default_sidebar_link_to_filtered_list
     self.sidebar_show_count_of_new_items = SiteSetting.default_sidebar_show_count_of_new_items
 
@@ -226,6 +230,22 @@ class UserOption < ActiveRecord::Base
     return unless saved_change_to_auto_track_topics_after_msecs?
     TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
   end
+
+  # This gives time to existing plugins to switch from using #hide_profile_and_presence (HPP)
+  # to using #hide_profile (HPO) and #hide_presence (HPS).
+  # All core code should already be using HPO and HPS directly.
+  #
+  # If HPP is changed, then HPO and HPS will take the HPP value (the original behavior)
+  # If HPO or HPS is true, then HPP will also be switched to true (the inverse of the original behavior)
+  # :nodoc:
+  def ensure_backwards_compat_for_hide_profile_and_presence
+    if hide_profile_and_presence_changed?
+      self.hide_profile = hide_profile_and_presence
+      self.hide_presence = hide_profile_and_presence
+    elsif hide_profile_changed? || hide_presence_changed?
+      self.hide_profile_and_presence = hide_profile || hide_presence
+    end
+  end
 end
 
 # == Schema Information
@@ -284,6 +304,8 @@ end
 #  chat_separate_sidebar_mode           :integer          default(0), not null
 #  topics_unread_when_closed            :boolean          default(TRUE), not null
 #  show_thread_title_prompts            :boolean          default(TRUE), not null
+#  hide_profile                         :boolean          default(FALSE), not null
+#  hide_presence                        :boolean          default(FALSE), not null
 #
 # Indexes
 #
