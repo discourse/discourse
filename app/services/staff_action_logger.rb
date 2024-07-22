@@ -1030,6 +1030,20 @@ class StaffActionLogger
     )
   end
 
+  def log_custom_emoji_create(name, opts = {})
+    opts[:details] = "Group: #{opts[:group]}" if opts[:group].present?
+
+    UserHistory.create!(
+      params(opts).merge(action: UserHistory.actions[:custom_emoji_create], new_value: name),
+    )
+  end
+
+  def log_custom_emoji_destroy(name, opts = {})
+    UserHistory.create!(
+      params(opts).merge(action: UserHistory.actions[:custom_emoji_destroy], previous_value: name),
+    )
+  end
+
   private
 
   def json_params(previous_value, new_value)
