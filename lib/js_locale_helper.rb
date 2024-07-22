@@ -162,6 +162,11 @@ module JsLocaleHelper
       #{transpiled}
       require("discourse-mf");
     JS
+  rescue => e
+    Rails.logger.error("Failed to compile message formats for #{locale} '#{e}'")
+    <<~JS
+      console.error("Failed to compile message formats for #{locale}. Some translation strings will be missing.");
+    JS
   end
 
   def self.output_locale(locale)
