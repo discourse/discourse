@@ -2105,6 +2105,7 @@ en:
       errors:
         required: "Required"
         invalid_url: "Must be a valid URL"
+        not_an_integer: "Must be an integer"
         not_accepted: "Must be accepted"
         not_a_number: "Must be a number"
         too_high: "Must be at most %{count}"

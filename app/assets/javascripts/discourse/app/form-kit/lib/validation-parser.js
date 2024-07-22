@@ -11,7 +11,7 @@ export default class ValidationParser {
       if (this[ruleName + "Rule"]) {
         rules[ruleName] = this[ruleName + "Rule"](args);
       } else {
-        throw new Error(`Unknown rule: ${ruleName}`);
+        rules[ruleName] = {};
       }
     });
 
@@ -23,18 +23,6 @@ export default class ValidationParser {
     return {
       trim: option === "trim",
     };
-  }
-
-  urlRule() {
-    return {};
-  }
-
-  acceptedRule() {
-    return {};
-  }
-
-  numberRule() {
-    return {};
   }
 
   betweenRule(args) {

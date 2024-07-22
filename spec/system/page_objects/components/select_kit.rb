@@ -27,7 +27,7 @@ module PageObjects
 
       def expanded_component
         expand_if_needed
-        find(@context + ".is-expanded")
+        find(@context + ".is-expanded", wait: 5)
       end
 
       def collapsed_component

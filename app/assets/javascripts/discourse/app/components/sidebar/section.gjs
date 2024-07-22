@@ -71,7 +71,7 @@ export default class SidebarSection extends Component {
   }
 
   @action
-  toggleSectionDisplay() {
+  toggleSectionDisplay(_, event) {
     if (this.displaySectionContent) {
       this.sidebarState.collapseSection(this.args.sectionName);
     } else {

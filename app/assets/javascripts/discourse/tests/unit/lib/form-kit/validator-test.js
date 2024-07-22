@@ -92,6 +92,25 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
     );
   });
 
+  test("integer", async function (assert) {
+    let errors = await new Validator(1.2, {
+      integer: {},
+    }).validate();
+
+    assert.deepEqual(
+      errors,
+      [I18n.t("form_kit.errors.not_an_integer")],
+      "it returns an error when the value is not an integer"
+    );
+
+    errors = await new Validator(1, { integer: {} }).validate();
+    assert.deepEqual(
+      errors,
+      [],
+      "it returns no errors when the value is an integer"
+    );
+  });
+
   test("number", async function (assert) {
     let errors = await new Validator("A", {
       number: {},

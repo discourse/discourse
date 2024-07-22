@@ -17,9 +17,7 @@ describe "Post menu", type: :system, js: true do
     it "copies the absolute link to the post when clicked" do
       topic_page.visit_topic(post.topic)
       topic_page.click_post_action_button(post, :copy_link)
-      expect(cdp.read_clipboard).to eq(
-        post.full_url(share_url: true) + "?u=#{current_user.username}",
-      )
+      cdp.clipboard_has_text?(post.full_url(share_url: true) + "?u=#{current_user.username}")
     end
   end
 end

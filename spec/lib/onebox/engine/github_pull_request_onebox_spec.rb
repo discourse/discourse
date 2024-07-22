@@ -3,13 +3,9 @@
 RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
   let(:gh_link) { "https://github.com/discourse/discourse/pull/1253/" }
   let(:api_uri) { "https://api.github.com/repos/discourse/discourse/pulls/1253" }
+  let(:response) { onebox_response(described_class.onebox_name) }
 
-  before do
-    stub_request(:get, api_uri).to_return(
-      status: 200,
-      body: onebox_response(described_class.onebox_name),
-    )
-  end
+  before { stub_request(:get, api_uri).to_return(status: 200, body: response) }
 
   include_context "with engines" do
     let(:link) { gh_link }
@@ -53,18 +49,37 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
       expect(html).to include("http://meta.discourse.org/t/audio-html5-tag/8168")
       expect(html).not_to include("test comment")
     end
+
+    it "sets the data-github-private-repo attr to false" do
+      expect(html).to include("data-github-private-repo=\"false\"")
+    end
+
+    context "when the PR is in a private repo" do
+      let(:response) do
+        resp = MultiJson.load(onebox_response(described_class.onebox_name))
+        resp["base"]["repo"]["private"] = true
+        MultiJson.dump(resp)
+      end
+
+      it "sets the data-github-private-repo attr to true" do
+        expect(html).to include("data-github-private-repo=\"true\"")
+      end
+    end
   end
 
   context "with commit links" do
     let(:gh_link) do
       "https://github.com/discourse/discourse/pull/1253/commits/d7d3be1130c665cc7fab9f05dbf32335229137a6"
     end
+    let(:pr_commit_url) do
+      "https://api.github.com/repos/discourse/discourse/commits/d7d3be1130c665cc7fab9f05dbf32335229137a6"
+    end
 
     before do
-      stub_request(
-        :get,
-        "https://api.github.com/repos/discourse/discourse/commits/d7d3be1130c665cc7fab9f05dbf32335229137a6",
-      ).to_return(status: 200, body: onebox_response(described_class.onebox_name + "_commit"))
+      stub_request(:get, pr_commit_url).to_return(
+        status: 200,
+        body: onebox_response(described_class.onebox_name + "_commit"),
+      )
     end
 
     it "includes commit name" do
@@ -74,20 +89,49 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
         "http://meta.discourse.org/t/audio-html5-tag/8168",
       )
     end
+
+    context "when github_onebox_access_token is configured" do
+      before { SiteSetting.github_onebox_access_tokens = "discourse|github_pat_1234" }
+
+      it "sends it as part of the request" do
+        html
+        expect(WebMock).to have_requested(:get, pr_commit_url).with(
+          headers: {
+            "Authorization" => "Bearer github_pat_1234",
+          },
+        )
+      end
+    end
   end
 
   context "with comment links" do
     let(:gh_link) { "https://github.com/discourse/discourse/pull/1253/#issuecomment-21597425" }
+    let(:comment_api_url) do
+      "https://api.github.com/repos/discourse/discourse/issues/comments/21597425"
+    end
 
     before do
-      stub_request(
-        :get,
-        "https://api.github.com/repos/discourse/discourse/issues/comments/21597425",
-      ).to_return(status: 200, body: onebox_response(described_class.onebox_name + "_comment"))
+      stub_request(:get, comment_api_url).to_return(
+        status: 200,
+        body: onebox_response(described_class.onebox_name + "_comment"),
+      )
     end
 
     it "includes comment" do
       expect(html).to include("You&#39;ve signed the CLA")
+    end
+
+    context "when github_onebox_access_token is configured" do
+      before { SiteSetting.github_onebox_access_tokens = "discourse|github_pat_1234" }
+
+      it "sends it as part of the request" do
+        html
+        expect(WebMock).to have_requested(:get, api_uri).with(
+          headers: {
+            "Authorization" => "Bearer github_pat_1234",
+          },
+        )
+      end
     end
   end
 

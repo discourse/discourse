@@ -5468,6 +5468,7 @@ en:
       comment_by: "Comment by"
       review_by: "Review by"
       pr_summary: "%{commits} commits changed %{changed_files} files with %{additions} additions and %{deletions} deletions"
+      no_description: "Contribute to %{repo} development by creating an account on GitHub."
 
   discourse_push_notifications:
     popup:

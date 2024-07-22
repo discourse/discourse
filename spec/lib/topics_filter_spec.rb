@@ -964,6 +964,18 @@ RSpec.describe TopicsFilter do
           ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
         end
       end
+
+      describe "when query string is `tags:tag_name`" do
+        before { tag.update!(name: "tag_with_underscore") }
+        it "should return topics even when tag contains underscore" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:#{tag.name}")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
+        end
+      end
     end
 
     describe "when filtering by tag_groups" do

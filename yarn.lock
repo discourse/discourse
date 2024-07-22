@@ -2879,10 +2879,10 @@ accepts@~1.3.4, accepts@~1.3.5, accepts@~1.3.8:
     mime-types "~2.1.34"
     negotiator "0.6.3"
 
-ace-builds@^1.35.2:
-  version "1.35.2"
-  resolved "https://registry.yarnpkg.com/ace-builds/-/ace-builds-1.35.2.tgz#2c26d2317ed8e378927e90e5c0d4fa17be92db79"
-  integrity sha512-06d00u4jDZx+ieI0jLlgy/uefx8kcgz7lhI0mCIFEu8NVWirH00U5IEP7tePHy4sjPsRcJUH4VbJZacoit2Hng==
+ace-builds@^1.35.3:
+  version "1.35.3"
+  resolved "https://registry.yarnpkg.com/ace-builds/-/ace-builds-1.35.3.tgz#f1250d43df1f534dd2ed565b389d2d591e7bfdc3"
+  integrity sha512-4cHLy+4L3FHOTis4IrDYsHZYhyYrIqtmA4HRiRXcxLTpmjQMbJ6Vutoc3c2uC9xS11g/rDwqcw+3zXHPSHD/qw==
 
 acorn-globals@^6.0.0:
   version "6.0.0"

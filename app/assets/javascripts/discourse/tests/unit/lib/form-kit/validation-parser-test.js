@@ -12,10 +12,6 @@ module("Unit | Lib | FormKit | ValidationParser", function (hooks) {
     assert.deepEqual(rules.url, {});
   });
 
-  test("unknown rule", function (assert) {
-    assert.throws(() => ValidationParser.parse("foo"), "Unknown rule: foo");
-  });
-
   test("required", function (assert) {
     const rules = ValidationParser.parse("required");
 

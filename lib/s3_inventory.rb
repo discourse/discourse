@@ -155,7 +155,7 @@ class S3Inventory
               end
             end
 
-            Discourse.stats.set("missing_s3_#{table_name}", missing_count)
+            set_missing_s3_discourse_stats(missing_count)
           ensure
             connection.exec("DROP TABLE #{tmp_table_name}") unless connection.nil?
           end
@@ -250,6 +250,7 @@ class S3Inventory
         if BackupMetadata.last_restore_date.present? &&
              (symlink_file.last_modified - WAIT_AFTER_RESTORE_DAYS.days) <
                BackupMetadata.last_restore_date
+          set_missing_s3_discourse_stats(0)
           return []
         end
 
@@ -316,5 +317,9 @@ class S3Inventory
 
   def error(message)
     log(message, StandardError.new(message))
+  end
+
+  def set_missing_s3_discourse_stats(count)
+    Discourse.stats.set("missing_s3_#{@model.table_name}", count)
   end
 end
