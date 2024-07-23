@@ -81,7 +81,7 @@ class FinalDestination
     @user_agent =
       (
         if @force_custom_user_agent_hosts.any? { |host| hostname_matches?(host) }
-          Onebox.options.user_agent
+          Onebox::Helpers.user_agent
         else
           @default_user_agent
         end
