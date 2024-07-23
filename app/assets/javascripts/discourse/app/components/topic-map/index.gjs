@@ -12,26 +12,26 @@ const TopicMap = <template>
         @postStream={{@postStream}}
       />
     </section>
-  {{/unless}}
 
-  <section class="topic-map__additional-contents toggle-summary">
-    <PluginOutlet
-      @name="topic-map-expanded-after"
-      @defaultGlimmer={{true}}
-      @outletArgs={{hash topic=@model postStream=@postStream}}
-    />
-  </section>
-
-  {{#if @showPMMap}}
-    <section class="topic-map__private-message-map">
-      <PrivateMessageMap
-        @topicDetails={{@topicDetails}}
-        @showInvite={{@showInvite}}
-        @removeAllowedGroup={{@removeAllowedGroup}}
-        @removeAllowedUser={{@removeAllowedUser}}
+    <section class="topic-map__additional-contents toggle-summary">
+      <PluginOutlet
+        @name="topic-map-expanded-after"
+        @defaultGlimmer={{true}}
+        @outletArgs={{hash topic=@model postStream=@postStream}}
       />
     </section>
-  {{/if}}
+
+    {{#if @showPMMap}}
+      <section class="topic-map__private-message-map">
+        <PrivateMessageMap
+          @topicDetails={{@topicDetails}}
+          @showInvite={{@showInvite}}
+          @removeAllowedGroup={{@removeAllowedGroup}}
+          @removeAllowedUser={{@removeAllowedUser}}
+        />
+      </section>
+    {{/if}}
+  {{/unless}}
 </template>;
 
 export default TopicMap;
