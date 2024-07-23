@@ -48,7 +48,10 @@ class TranslationOverride < ActiveRecord::Base
   attribute :status, :integer
   enum status: { up_to_date: 0, outdated: 1, invalid_interpolation_keys: 2, deprecated: 3 }
 
-  scope :mf_locales, ->(locale) { where(locale: locale).where("translation_key LIKE '%_MF'") }
+  scope :mf_locales,
+        ->(locale) do
+          where(locale: locale, status: "up_to_date").where("translation_key LIKE '%_MF'")
+        end
   scope :client_locales,
         ->(locale) do
           where(locale: locale, status: "up_to_date")
