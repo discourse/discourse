@@ -118,11 +118,11 @@ class FooterNav extends Component {
   }
 
   get canGoBack() {
-    return this.currentRouteIndex > 1 || document.referrer ? true : false;
+    return this.currentRouteIndex > 1 || !!document.referrer;
   }
 
   get canGoForward() {
-    return this.currentRouteIndex < this.routeHistory.length ? true : false;
+    return this.currentRouteIndex < this.routeHistory.length;
   }
 
   <template>
