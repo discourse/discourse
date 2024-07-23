@@ -17,7 +17,7 @@ describe "Admin Dashboard New Features Page", type: :system do
           "description" => "New feature description",
           "link" => "https://meta.discourse.org",
           "tier" => [],
-          "discourse_version" => "",
+          "discourse_version" => "3.3.0.beta4",
           "created_at" => "2023-11-10T02:52:41.462Z",
           "updated_at" => "2023-11-10T04:28:47.020Z",
           "screenshot_url" =>
@@ -30,6 +30,8 @@ describe "Admin Dashboard New Features Page", type: :system do
     expect(new_features_page).to have_screenshot
     expect(new_features_page).to have_learn_more_link
     expect(new_features_page).to have_no_emoji
+    expect(new_features_page).to have_date("November 2023")
+    expect(new_features_page).to have_version("3.3.0.beta4")
   end
 
   it "displays new features with emoji when no screenshot" do
