@@ -59,7 +59,7 @@ class TextSentinel
   # Ensure maximum word length
   def seems_unpretentious?
     skipped_locales.include?(SiteSetting.default_locale) || @opts[:max_word_length].nil? ||
-      @text.scan(/\p{Alnum}+/).map(&:size).max.to_i <= @opts[:max_word_length]
+      !@text.match?(/\p{Alnum}{#{@opts[:max_word_length] + 1},}/)
   end
 
   # Ensure at least one lowercase letter
