@@ -285,6 +285,7 @@ it:
     requires_groups: "L'invito non è stato salvato perché l'argomento specificato non è accessibile. Aggiungi uno dei seguenti gruppi: %{groups}."
     max_invite_emails_limit_exceeded: "Richiesta non riuscita perché il numero di e-mail ha superato il massimo (%{max})."
     domain_not_allowed: "La tua email non può essere usata per riscattare l’invito."
+    domain_not_allowed_admin: "Impossibile utilizzare il dominio per gli inviti."
     max_redemptions_allowed_one: "per gli inviti via e-mail dovrebbe essere 1."
     redemption_count_less_than_max: "deve essere minore di %{max_redemptions_allowed}."
     email_xor_domain: "I campi e-mail e dominio non sono consentiti contemporaneamente"
@@ -4236,8 +4237,8 @@ it:
     discourse:
       user_joined_community: "Iscrizione: %{date}"
     github:
-      opened: "aperti"
-      closed: "chiusi"
+      opened: "aperto"
+      closed: "chiuso"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ti ha menzionato in ''%{topic}'' - %{site_title}'

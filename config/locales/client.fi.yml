@@ -1021,6 +1021,7 @@ fi:
       said: "%{username}:"
       profile: "Profiili"
       profile_possessive: "Käyttäjän %{username} profiili"
+      account_possessive: "Käyttäjän %{name} tili"
       mute: "Vaimenna"
       edit: "Muokkaa asetuksia"
       download_archive:
@@ -2719,6 +2720,7 @@ fi:
         progress:
           one: "Edetty: <strong>%{count}</strong> ketju"
           other: "Edetty: <strong>%{count}</strong> ketjua"
+        silent: "Suorita tämä toiminto hiljaisesti."
       none:
         unread: "Sinulla ei ole lukemattomia ketjuja."
         unseen: "Sinulla ei ole näkemättömiä ketjuja."
@@ -2729,6 +2731,7 @@ fi:
         bookmarks: "Et ole vielä lisännyt ketjuja kirjanmerkkeihin."
         category: "Alueella %{category} ei ole ketjua."
         top: "Suosittuja ketjuja ei ole."
+        hot: "Suosittuja ketjuja ei ole."
         filter: "Ketjuja ei ole."
         educate:
           new: '<p>Sinulle uudet ketjut näytetään tässä. Oletuksena ketju tulkitaan uudeksi ja sen yhteydessä näytetään <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-merkintä, jos se on aloitettu edellisten kahden päivän aikana.</p><p>Aikarajaa voit muuttaa <a href="%{userPrefsUrl}">käyttäjäasetuksissasi</a>.</p>'
@@ -2744,11 +2747,15 @@ fi:
         category: "Alueen %{category} ketjuja ei ole enempää."
         tag: "Tunnisteella %{tag} merkittyjä ketjuja ei ole enempää."
         top: "Suosittuja ketjuja ei ole enempää."
+        hot: "Suosittuja ketjuja ei ole enempää."
         bookmarks: "Kirjanmerkkeihin lisättyjä ketjuja ei ole enempää."
         filter: "Ketjuja ei ole enempää."
     topic_bulk_actions:
       close_topics:
         name: "Sulje ketjut"
+      update_category:
+        name: "Päivitä alue"
+        description: "Valitse uusi alue valituille ketjuille"
     topic:
       filter_to:
         one: "%{count} viesti ketjussa"
@@ -3750,6 +3757,10 @@ fi:
         title: "Näkemätön"
         lower_title: "näkemätön"
         help: "uudet ketjut ja ketjut, joita seuraat tai tarkkailet tällä hetkellä ja joissa on lukemattomia viestejä"
+      hot:
+        title: "Suosittu"
+        lower_title: "suosittu"
+        help: "suositut viimeaikaiset ketjut"
       new:
         lower_title_with_count:
           one: "%{count} uusi"

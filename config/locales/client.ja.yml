@@ -964,6 +964,7 @@ ja:
       said: "%{username}:"
       profile: "プロファイル"
       profile_possessive: "%{username} のプロファイル"
+      account_possessive: "%{name} のアカウント"
       mute: "ミュート"
       edit: "プロファイルを編集"
       download_archive:
@@ -1387,6 +1388,9 @@ ja:
           description: "メールアドレスを次のように変更することを確認してください:"
           description_add: "代替メールアドレスを追加することを確認してください:"
         authorizing_old:
+          title: "古いメールアドレスの確認"
+          description: "メールアドレスの変更を続けるには、古いメールアドレスを確認してください:"
+          description_add: "代替アドレスの追加を続けるには、既存のメールアドレスを確認してください:"
           old_email: "古いメール: %{email}"
           new_email: "新しいメール: %{email}"
           confirm_success: "新しいメールアドレスに変更を確認するためのメールを送信しました！"
@@ -3562,6 +3566,9 @@ ja:
         title: "未読"
         lower_title: "未読"
         help: "新しいトピックと、未読の投稿のあるウォッチ中または追跡中のトピック"
+      hot:
+        title: "ホット"
+        lower_title: "ホット"
       new:
         lower_title_with_count:
           other: "新規 %{count}"

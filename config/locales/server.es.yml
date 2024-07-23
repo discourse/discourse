@@ -285,6 +285,7 @@ es:
     requires_groups: "La invitación no se ha guardado porque el tema especificado es inaccesible. Añade uno de los siguientes grupos: %{groups}."
     max_invite_emails_limit_exceeded: "La solicitud ha fallado porque el número de correos electrónicos ha superado el máximo (%{max})."
     domain_not_allowed: "Esta invitación no permite registrarte con esta dirección de correo."
+    domain_not_allowed_admin: "Este dominio no puede usarse para invitaciones."
     max_redemptions_allowed_one: "para las invitaciones por correo electrónico debe ser 1."
     redemption_count_less_than_max: "debe ser inferior a %{max_redemptions_allowed}."
     email_xor_domain: "Los campos de correo electrónico y dominio no están permitidos al mismo tiempo"
@@ -1425,6 +1426,7 @@ es:
     watched_word_regexp_error: "Expresión regular no válida para las palabras vigiladas con acción de «%{action}». Por favor, revisa los <a href='%{base_path}/admin/customize/watched_words'>ajustes sobre palabras vigiladas</a> o desactiva el ajuste «watched words regular expressions»."
     v3_analytics_deprecated: "Tu Discourse utiliza actualmente Google Analytics 3, que dejará de ser compatible después de julio de 2023. <a href='https://meta.discourse.org/t/260498'>Actualízate a Google Analytics 4</a> ahora para seguir recibiendo información y análisis valiosos sobre el rendimiento de tu sitio web."
     category_style_deprecated: "Tu Discourse utiliza actualmente un estilo de categoría obsoleto que se eliminará antes de la versión beta final de Discourse 3.2. Consulta <a href='https://meta.discourse.org/t/282441'>Cambiar a una configuración de sitio de estilo de categoría única</a> para obtener instrucciones sobre cómo mantener el estilo de categoría seleccionado."
+    ember_version_warning: "Su sitio se está ejecutando con la configuración EMBER_VERSION=3 no compatible. Esto puede provocar problemas inesperados con estilos/complementos. Elimine la configuración EMBER_VERSION de su archivo app.yml y reconstrúyalo. Consulte <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a> para obtener más información."
   site_settings:
     allow_bulk_invite: "Permitir invitaciones en masa subiendo un archivo CSV"
     disabled: "desactivado"
@@ -1639,6 +1641,7 @@ es:
     log_out_strict: "Al cerrar sesión, cierra TODAS las sesiones del usuario en todos los dispositivos"
     version_checks: "Ping el Discourse Hub para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard <a href='<a href='%{base_path}/admin' target='_blank'>/admin' target='_blank'>/admin</a>."
     new_version_emails: "Enviar un correo electrónico a la dirección contact_email cuando esté disponible una nueva versión de Discourse."
+    include_in_discourse_discover: "Permite que CDCK, Inc. (\"Discourse\") presente esta comunidad en la <a href='https://discover.discourse.org' target='_blank'>página Discover</a> y en los materiales de marketing de Discourse. Al hacerlo, compartirás los datos necesarios para que tu sitio se incluya en el servicio. Ten en cuenta que la promoción de las comunidades queda a discreción de Discourse."
     invite_expiry_days: "Tiempo durante el cual las claves de invitación de usuarios son válidas, en días"
     invite_only: "Todos los usuarios nuevos deben ser invitados de forma explícita por usuarios de confianza o un miembro del equipo. Los registros públicos están desactivados."
     login_required: "Requerir autenticación para leer el contenido de este sitio, desactivar el acceso anónimo."
@@ -1820,10 +1823,13 @@ es:
     self_wiki_allowed_groups: "Grupos en los que los usuarios pueden crear su propia wiki de publicaciones."
     min_trust_to_send_messages: "DEPRECIADO, utiliza en su lugar el ajuste «grupos habilitados para mensajes personales». El nivel de confianza mínimo requerido para crear nuevos mensajes personales."
     min_trust_to_send_email_messages: "Nivel de confianza mínimo para mandar mensajes personales a través de correo electrónico."
+    send_email_messages_allowed_groups: "Grupos que pueden enviar mensajes personales por correo."
     min_trust_to_flag_posts: "El nivel mínimo de confianza requerido para denunciar publicaciones"
     flag_post_allowed_groups: "Grupos que pueden denunciar publicaciones."
     min_trust_to_post_links: "El nivel mínimo de confianza requerido para incluir enlaces en una publicación"
+    post_links_allowed_groups: "Grupos que pueden editar publicaciones."
     min_trust_to_post_embedded_media: "Nivel confianza mínimo para incluir imágenes en una publicación"
+    embedded_media_post_allowed_groups: "Los usuarios de estos grupos pueden insertar elementos multimedia en una publicación."
     min_trust_level_to_allow_profile_background: "Nivel confianza mínimo para subir un fondo de perfil"
     min_trust_level_to_allow_user_card_background: "Nivel confianza mínimo para subir un fondo de tarjeta de usuario"
     user_card_background_allowed_groups: "Grupos que pueden subir un fondo de tarjeta de usuario."
@@ -2057,6 +2063,7 @@ es:
     share_anonymized_statistics: "Compartir estadísticas de uso anonimizadas."
     auto_handle_queued_age: "Maneja automáticamente los registros que están esperando para ser revisados después de esta cantidad de días. Las denuncias serán ignoradas. Los mensajes y usuarios en cola serán rechazados. Establece el valor en 0 para desactivar esta función."
     penalty_step_hours: "Tiempo de sanción por defecto al silenciar o suspender usuarios (en horas). El primer valor se usará para la primera sanción, el segundo para la segunda, y así sucesivamente."
+    penalty_include_post_message: "Incluir automáticamente el mensaje ofensivo en la plantilla del mensaje de correo electrónico al silenciar o suspender a un usuario"
     svg_icon_subset: "Añade iconos adicionales de FontAwesome 5 que te gustaría incluir en tus activos. Usa el prefijo «fa-» para iconos sólidos, «far-» para los iconos normales y «fab-» para los iconos de marca."
     max_prints_per_hour_per_user: "Número máximo de impresiones de páginas /print (establecer en 0 para deshabilitar la impresión)"
     full_name_required: "El nombre completo es un campo obligatorio del perfil de usuario."
@@ -2095,6 +2102,11 @@ es:
     enable_inline_emoji_translation: "Activa la traducción de emojis en línea (sin ningún espacio ni puntuación antes)"
     emoji_deny_list: "Estos emoji no estarán disponibles para su uso en menús o shortcodes."
     approve_post_count: "La cantidad de publicaciones de usuarios nuevos o de nivel básico que deben ser aprobadas"
+    approve_unless_trust_level: "Selecciona el estilo de emoji que prefieras. Diferentes conjuntos de emoji pueden proporcionar apariencias únicas a los emojis que aparecen en el sitio."
+    approve_unless_allowed_groups: "Las publicaciones de usuarios que no pertenezcan a estos grupos deben ser aprobadas."
+    approve_new_topics_unless_trust_level: "Los temas nuevos creados por usuarios por debajo de este nivel de confianza deben aprobarse"
+    approve_new_topics_unless_allowed_groups: "Los nuevos temas para usuarios que no pertenezcan a estos grupos deben ser aprobados"
+    approve_unless_staged: "Los nuevos temas y mensajes creados por usuarios escalonados deben aprobarse"
     notify_about_queued_posts_after: "Si hay publicaciones que han estado esperando para ser revisadas por más de este número de horas, enviar una notificación a todos los moderadores. Establece el valor en 0 para desactivar estas notificaciones."
     reviewable_revision_reasons: "Lista de razones que pueden seleccionarse al rechazar una publicación en cola revisable con una revisión. También está siempre disponible Other, que permite introducir un motivo personalizado."
     auto_close_messages_post_count: "Número máximo de publicaciones permitidas en un mensaje antes de que se cierre automáticamente (0 para desactivar)"
@@ -2102,6 +2114,7 @@ es:
     auto_close_topics_create_linked_topic: "Crear un nuevo tema enlazado de continuación cuando un tema es cerrado automáticamente basado en la configuración de 'auto close topics post count'"
     code_formatting_style: "El botón de código en el editor establecerá por defecto este estilo de formato de código"
     max_allowed_message_recipients: "Cantidad máxima de destinatarios permitidos en un mensaje."
+    disable_watched_word_checking_in_user_fields: "desactivar la comprobación de palabras vigiladas en los campos de usuario"
     watched_words_regular_expressions: "Las palabras vigiladas son expresiones regulares."
     enable_diffhtml_preview: "Funcionalidad experimental, usar diffHTML para sincronizar la vista previa en lugar de volver a renderizar toda de nuevo."
     enable_fast_edit: "Añade un botón al menú de selección de publicaciones para editar una pequeña selección en línea."
@@ -2111,6 +2124,7 @@ es:
     returning_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de usuarios que vuelven."
     returning_users_days: "Cuántos días deben transcurrir antes de que se considere que un usuario está regresando."
     review_media_unless_trust_level: "El personal revisará las publicaciones de los usuarios con niveles de confianza bajos si tiene contenidos multimedia integrados."
+    skip_review_media_groups: "Las publicaciones de los usuarios que no pertenezcan a ninguno de estos grupos se enviarán al personal para su revisión si contienen medios incrustados."
     blur_tl0_flagged_posts_media: "Difuminar imágenes en publicaciones denunciadas para ocultar contenido potencialmente delicado."
     enable_page_publishing: "Permitir que los miembros del personal publiquen temas en nuevas URL con su propio estilo."
     show_published_pages_login_required: "Los usuarios anónimos pueden ver páginas publicadas, incluso cuando sea necesario iniciar sesión."
@@ -2159,6 +2173,9 @@ es:
     min_trust_level_for_user_api_key: |
       Nivel de confianza requerido para la generación de claves API de usuario.<br>
       <b>ADVERTENCIA</b>: Cambiar el nivel de confianza impedirá a los usuarios con un nivel de confianza inferior iniciar sesión a través de Discourse Hub
+    user_api_key_allowed_groups: |
+      Se requiere la pertenencia a un grupo para generar claves API de usuario.<br>
+      <b>ATENCIÓN</b>: Cambiar el nivel de confianza impedirá a los usuarios con un nivel de confianza inferior iniciar sesión a través de Discourse Hub. Los administradores y moderadores siempre pueden crear claves API de usuario.
     allowed_user_api_auth_redirects: "URL permitida para autenticar redirección para claves API de usuario. Símbolo comodín * puede ser usado para que coincida cualquier parte de la misma (por ejemplo www.ejemplo.com/*)."
     allowed_user_api_push_urls: "URLs permitidas para el push del servidor al API de usuario"
     revoke_user_api_keys_unused_days: "Número de días transcurridos desde que se utilizó por última vez una clave API de usuario antes de que se revoque automáticamente (0 para nunca)."
@@ -2177,6 +2194,7 @@ es:
     tag_style: "Estilo visual de las etiquetas."
     pm_tags_allowed_for_groups: "Permitir que los miembros de los grupos incluidos etiqueten cualquier mensaje personal"
     min_trust_level_to_tag_topics: "Nivel mínimo de confianza requerido para etiquetar temas"
+    tag_topic_allowed_groups: "Grupos que tienen permiso para etiquetar temas."
     suppress_overlapping_tags_in_list: "Si alguna etiqueta coincide con palabras en el título de los temas, ocultarla."
     remove_muted_tags_from_latest: "No muestre temas etiquetados unicamente con etiquetas silenciadas en la lista de temas más reciente."
     force_lowercase_tags: "Forzar que todas las etiquetas estén completamente en minúscula"
@@ -2214,6 +2232,7 @@ es:
     use_name_for_username_suggestions: "Usar el nombre completo para sugerir nombres de usuario"
     suggest_weekends_in_date_pickers: "Incluir fines de semana (sábados y domingos) en las sugerencias de los selectores de fecha (desactiva esto si solo usas Discourse de lunes a viernes)"
     splash_screen: "Muestra una pantalla de carga temporal mientras los archivos de la página se cargan"
+    navigation_menu: "Determina qué menú de navegación usar."
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
     experimental_new_new_view_groups: 'EXPERIMENTAL: Habilita una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
@@ -2221,6 +2240,8 @@ es:
     experimental_topics_filter: "EXPERIMENTAL: Habilita la ruta del filtro de temas experimentales en /filter"
     enable_experimental_lightbox: "EXPERIMENTAL: Sustituye el lightbox de imágenes por defecto por el diseño renovado."
     experimental_form_templates: "EXPERIMENTAL: Activa la función de plantillas de formulario. <b>Una vez activada,</b> gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
+    admin_sidebar_enabled_groups: "EXPERIMENTAL: Habilitar la navegación en la barra lateral para la interfaz de administración para los grupos especificados, reemplazando los botones de navegación principales."
+    lazy_load_categories_groups: "EXPERIMENTAL: Carga lenta de la información de categoría solo para los usuarios de estos grupos. Esto mejora el rendimiento en sitios con muchas categorías."
     page_loading_indicator: "Configura el indicador de carga que aparece durante la navegación por las páginas dentro de Discourse. «Spinner» es un indicador de página completa. «Slider» muestra una barra estrecha en la parte superior de la pantalla."
     show_user_menu_avatars: "Mostrar avatares de usuario en el menú de usuario"
     errors:
@@ -2298,6 +2319,12 @@ es:
       ignore_allowed_groups: "min_trust_level_to_allow_ignore"
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
       create_tag_allowed_groups: "min_trust_to_create_tag"
+      send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
+      skip_review_media_groups: "review_media_unless_trust_level"
+      embedded_media_allowed_groups: "min_trust_to_post_embedded_media"
+      post_links_allowed_groups: "min_trust_to_post_links"
+      user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
+      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.ejemplo.com"
@@ -4635,9 +4662,22 @@ es:
   onebox:
     discourse:
       user_joined_community: "Se unió el %{date}"
+    gitlab:
+      truncated_file: "Este archivo se ha truncado."
+      show_original: "mostrar original"
     github:
+      binary_file: "Este archivo es binario."
+      truncated_file: "Este archivo se ha truncado."
+      show_original: "mostrar original"
+      requires_iframe: "El visor requiere iframe."
+      committed: "commit realizado"
+      more_than_three_files: "Hay más de tres archivos."
       opened: "abierto"
       closed: "cerrado"
+      commit_by: "Commit por"
+      comment_by: "Comentario de"
+      review_by: "Revisado por"
+      pr_summary: "%{commits} commits cambiaron %{changed_files} archivos con %{additions} adiciones y %{deletions} eliminaciones"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} te mencionó en «%{topic}» - %{site_title}'
@@ -4652,6 +4692,7 @@ es:
       confirm_body: "¡Bien! Se han activado las notificaciones."
       custom: "Notificación de %{username} en %{site_title}"
   staff_action_logs:
+    json_too_long: "Valores no registrados porque superan los límites de longitud de columna"
     not_found: "no encontrado"
     unknown: "desconocido"
     user_merged: "%{username} se ha unido en esta cuenta"
