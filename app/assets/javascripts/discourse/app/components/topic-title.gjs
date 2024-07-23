@@ -58,7 +58,8 @@ export default class TopicTitle extends Component {
   handleIntersectionChange(e) {
     // Title is in the viewport or  below it – unusual, but can be caused by
     // small viewport and/or large headers. Treat same as if title is on screen.
-    this.header.mainTopicTitleVisible = e.isIntersecting || e.boundingClientRect.top > 0;
+    this.header.mainTopicTitleVisible =
+      e.isIntersecting || e.boundingClientRect.top > 0;
   }
 
   @action
