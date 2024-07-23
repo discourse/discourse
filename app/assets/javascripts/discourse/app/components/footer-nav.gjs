@@ -1,9 +1,6 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
-import { modifier as modifierFn } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import htmlClass from "discourse/helpers/html-class";
@@ -17,36 +14,7 @@ class FooterNav extends Component {
   @service scrollDirection;
   @service composer;
   @service modal;
-
-  @tracked currentRouteIndex = 0;
-
-  routeHistory = new TrackedArray();
-  backForwardClicked = false;
-
-  registerAppEvents = modifierFn(() => {
-    this.appEvents.on("page:changed", this, "_routeChanged");
-
-    return () => {
-      this.appEvents.off("page:changed", this, "_routeChanged");
-    };
-  });
-
-  @action
-  _routeChanged(route) {
-    // only update route history if not using back/forward nav
-    if (this.backForwardClicked) {
-      this.backForwardClicked = null;
-      return;
-    }
-
-    // we only keep last 100 routes in history
-    if (this.routeHistory.length >= 100) {
-      this.routeHistory.shift();
-    }
-
-    this.routeHistory.push(route.url);
-    this.currentRouteIndex = this.routeHistory.length;
-  }
+  @service historyStore;
 
   _modalOn() {
     const backdrop = document.querySelector(".modal-backdrop");
@@ -96,17 +64,15 @@ class FooterNav extends Component {
   }
 
   @action
-  goBack() {
-    this.currentRouteIndex -= 1;
-    this.backForwardClicked = true;
+  goBack(_, event) {
     window.history.back();
+    event.preventDefault();
   }
 
   @action
-  goForward() {
-    this.currentRouteIndex += 1;
-    this.backForwardClicked = true;
+  goForward(_, event) {
     window.history.forward();
+    event.preventDefault();
   }
 
   get isVisible() {
@@ -118,11 +84,11 @@ class FooterNav extends Component {
   }
 
   get canGoBack() {
-    return this.currentRouteIndex > 1 || !!document.referrer;
+    return this.historyStore.hasPastEntries || !!document.referrer;
   }
 
   get canGoForward() {
-    return this.currentRouteIndex < this.routeHistory.length;
+    return this.historyStore.hasFutureEntries;
   }
 
   <template>
@@ -134,10 +100,7 @@ class FooterNav extends Component {
       {{htmlClass "footer-nav-visible"}}
     {{/if}}
 
-    <div
-      class={{concatClass "footer-nav" (if this.isVisible "visible")}}
-      {{this.registerAppEvents}}
-    >
+    <div class={{concatClass "footer-nav" (if this.isVisible "visible")}}>
       <div class="footer-nav-widget">
         <DButton
           @action={{this.goBack}}
@@ -145,6 +108,7 @@ class FooterNav extends Component {
           class="btn-flat btn-large"
           @disabled={{not this.canGoBack}}
           @title="footer_nav.back"
+          @forwardEvent={{true}}
         />
 
         <DButton
@@ -153,6 +117,7 @@ class FooterNav extends Component {
           class="btn-flat btn-large"
           @disabled={{not this.canGoForward}}
           @title="footer_nav.forward"
+          @forwardEvent={{true}}
         />
 
         {{#if this.capabilities.isAppWebview}}
