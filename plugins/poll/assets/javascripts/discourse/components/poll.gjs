@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+// import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import round from "discourse/lib/round";
@@ -21,8 +21,6 @@ import PollResultsTabs from "../components/poll-results-tabs";
 
 const FETCH_VOTERS_COUNT = 25;
 const STAFF_ONLY = "staff_only";
-const MULTIPLE = "multiple";
-const NUMBER = "number";
 const REGULAR = "regular";
 const RANKED_CHOICE = "ranked_choice";
 const ON_VOTE = "on_vote";
@@ -36,31 +34,14 @@ export default class PollComponent extends Component {
   @service router;
   @service modal;
   @tracked isStaff = this.currentUser && this.currentUser.staff;
-  @tracked vote = this.args.attrs.vote || [];
-  @tracked titleHTML = htmlSafe(this.args.attrs.titleHTML);
-  @tracked topicArchived = this.args.attrs.post.get("topic.archived");
+  @tracked titleHTML = htmlSafe(this.args.titleHTML);
   @tracked options = [];
-  @tracked poll = this.args.attrs.poll;
-  @tracked voters = this.poll.voters || 0;
-  @tracked preloadedVoters = this.args.preloadedVoters || [];
-  @tracked isRankedChoice = this.poll.type === RANKED_CHOICE;
-  @tracked rankedChoiceOutcome = this.poll.ranked_choice_outcome || [];
-  @tracked isMultiVoteType = this.isRankedChoice || this.isMultiple;
-  @tracked staffOnly = this.poll.results === STAFF_ONLY;
-  @tracked isMultiple = this.poll.type === MULTIPLE;
-  @tracked isNumber = this.poll.type === NUMBER;
-  @tracked showingResults = false;
-  @tracked hasSavedVote = this.args.attrs.hasSavedVote;
-  @tracked status = this.poll.status;
   @tracked
   showResults =
-    this.hasSavedVote ||
-    this.showingResults ||
-    (this.topicArchived && !this.staffOnly) ||
-    (this.closed && !this.staffOnly);
-  post = this.args.attrs.post;
-  isMe =
-    this.currentUser && this.args.attrs.post.user_id === this.currentUser.id;
+    this.args.hasSavedVote ||
+    (this.args.topicArchived && !this.args.staffOnly) ||
+    (this.args.closed && !this.args.staffOnly);
+  isMe = this.currentUser && this.args.post.user_id === this.currentUser.id;
 
   checkUserGroups = (user, poll) => {
     const pollGroups =
@@ -75,59 +56,7 @@ export default class PollComponent extends Component {
 
     return userGroups && pollGroups.some((g) => userGroups.includes(g));
   };
-  castVotes = (option) => {
-    if (!this.canCastVotes) {
-      return;
-    }
-    if (!this.currentUser) {
-      return;
-    }
 
-    return ajax("/polls/vote", {
-      type: "PUT",
-      data: {
-        post_id: this.args.attrs.post.id,
-        poll_name: this.poll.name,
-        options: this.vote,
-      },
-    })
-      .then(({ poll }) => {
-        this.options = [...poll.options];
-        this.hasSavedVote = true;
-        this.rankedChoiceOutcome = poll.ranked_choice_outcome || [];
-        this.poll.setProperties(poll);
-        this.appEvents.trigger(
-          "poll:voted",
-          poll,
-          this.args.attrs.post,
-          this.args.attrs.vote
-        );
-
-        const voters = poll.voters;
-        this.voters = [Number(voters)][0];
-
-        if (this.poll.results !== "on_close") {
-          this.showResults = true;
-        }
-        if (this.poll.results === "staff_only") {
-          if (this.currentUser && this.currentUser.staff) {
-            this.showResults = true;
-          } else {
-            this.showResults = false;
-          }
-        }
-      })
-      .catch((error) => {
-        if (error) {
-          if (!this.isMultiple && !this.isRankedChoice) {
-            this._toggleOption(option);
-          }
-          popupAjaxError(error);
-        } else {
-          this.dialog.alert(I18n.t("poll.error_while_casting_votes"));
-        }
-      });
-  };
   areRanksValid = (arr) => {
     let ranks = new Set(); // Using a Set to keep track of unique ranks
     let hasNonZeroDuplicate = false;
@@ -146,49 +75,8 @@ export default class PollComponent extends Component {
 
     return !hasNonZeroDuplicate;
   };
-  _toggleOption = (option, rank = 0) => {
-    let options = this.options;
-    let vote = this.vote;
-
-    if (this.isMultiple) {
-      const chosenIdx = vote.indexOf(option.id);
-
-      if (chosenIdx !== -1) {
-        vote.splice(chosenIdx, 1);
-      } else {
-        vote.push(option.id);
-      }
-    } else if (this.isRankedChoice) {
-      options.forEach((candidate, i) => {
-        const chosenIdx = vote.findIndex(
-          (object) => object.digest === candidate.id
-        );
-
-        if (chosenIdx === -1) {
-          vote.push({
-            digest: candidate.id,
-            rank: candidate.id === option ? rank : 0,
-          });
-        } else {
-          if (candidate.id === option) {
-            vote[chosenIdx].rank = rank;
-            options[i].rank = rank;
-          }
-        }
-      });
-    } else {
-      vote = [option.id];
-    }
-
-    this.vote = [...vote];
-    this.options = [...options];
-  };
   constructor() {
     super(...arguments);
-    this.id = this.args.attrs.id;
-    this.post = this.args.attrs.post;
-    this.options = this.poll.options;
-    this.groupableUserFields = this.args.attrs.groupableUserFields;
     this.rankedChoiceDropdownContent = [];
 
     if (this.isRankedChoice) {
@@ -198,14 +86,14 @@ export default class PollComponent extends Component {
       });
     }
 
-    this.options.forEach((option, i) => {
+    this.args.options.forEach((option, i) => {
       option.rank = 0;
       if (this.isRankedChoice) {
         this.rankedChoiceDropdownContent.push({
           id: i + 1,
           name: (i + 1).toString(),
         });
-        this.args.attrs.vote.forEach((vote) => {
+        this.args.vote.forEach((vote) => {
           if (vote.digest === option.id) {
             option.rank = vote.rank;
           }
@@ -214,8 +102,45 @@ export default class PollComponent extends Component {
     });
   }
 
+  @action
+  async castVotes(option) {
+    let success = false;
+    if (!this.currentUser) {
+      return;
+    }
+    await this.args.castVotes(option).then(() => {
+      success = true;
+    });
+    if (success) {
+      if (this.args.poll.results !== "on_close") {
+        this.showResults = true;
+      }
+      if (this.args.poll.results === "staff_only") {
+        if (this.currentUser && this.currentUser.staff) {
+          this.showResults = true;
+        } else {
+          this.showResults = false;
+        }
+      }
+    }
+  }
+
+  @action
+  async removeVote() {
+    let success = false;
+    if (!this.currentUser) {
+      return;
+    }
+    await this.args.removeVote().then(() => {
+      success = true;
+    });
+    if (success) {
+      this.showResults = false;
+    }
+  }
+
   get min() {
-    let min = parseInt(this.args.attrs.poll.min, 10);
+    let min = parseInt(this.args.poll.min, 10);
     if (isNaN(min) || min < 0) {
       min = 1;
     }
@@ -224,65 +149,22 @@ export default class PollComponent extends Component {
   }
 
   get max() {
-    let max = parseInt(this.args.attrs.poll.max, 10);
-    const numOptions = this.args.attrs.poll.options.length;
+    let max = parseInt(this.args.poll.max, 10);
+    const numOptions = this.args.poll.options.length;
     if (isNaN(max) || max > numOptions) {
       max = numOptions;
     }
     return max;
   }
 
-  get closed() {
-    return this.status === "closed" || this.isAutomaticallyClosed;
-  }
-
-  get isAutomaticallyClosed() {
-    const poll = this.poll;
-    return (
-      (poll.close ?? false) &&
-      moment.utc(poll.close, "YYYY-MM-DD HH:mm:ss Z") <= moment()
-    );
-  }
-
   get hasVoted() {
-    return this.vote && this.vote.length > 0;
+    return this.args.vote && this.args.vote.length > 0;
   }
 
   get hideResultsDisabled() {
-    return !this.staffOnly && (this.closed || this.topicArchived);
-  }
-
-  @action
-  toggleOption(option, rank = 0) {
-    if (this.closed) {
-      return;
-    }
-    if (!this.currentUser) {
-      // unlikely, handled by template logic
-      return;
-    }
-    if (!this.checkUserGroups(this.currentUser, this.poll)) {
-      return;
-    }
-
-    if (
-      !this.isMultiple &&
-      !this.isRankedChoice &&
-      this.vote.length === 1 &&
-      this.vote[0] === option.id
-    ) {
-      return this.removeVote();
-    }
-
-    if (!this.isMultiple && !this.isRankedChoice) {
-      this.vote.length = 0;
-    }
-
-    this._toggleOption(option, rank);
-
-    if (!this.isMultiple && !this.isRankedChoice) {
-      this.castVotes(option);
-    }
+    return (
+      !this.args.staffOnly && (this.args.closed || this.args.topicArchived)
+    );
   }
 
   @action
@@ -291,21 +173,54 @@ export default class PollComponent extends Component {
     this.showResults = showResults;
   }
 
+  @action
+  toggleOption(option, rank = 0) {
+    if (this.args.closed) {
+      return;
+    }
+    if (!this.currentUser) {
+      // unlikely, handled by template logic
+      return;
+    }
+    if (!this.checkUserGroups(this.currentUser, this.args.poll)) {
+      return;
+    }
+
+    if (
+      !this.args.isMultiple &&
+      !this.args.isRankedChoice &&
+      this.args.vote.length === 1 &&
+      this.args.vote[0] === option.id
+    ) {
+      return this.removeVote();
+    }
+
+    if (!this.args.isMultiple && !this.args.isRankedChoice) {
+      this.args.vote.length = 0;
+    }
+
+    this.args.toggleOption(option, rank);
+
+    if (!this.args.isMultiple && !this.args.isRankedChoice) {
+      this.castVotes(option);
+    }
+  }
+
   get canCastVotes() {
-    if (this.closed || this.showingResults || !this.currentUser) {
+    if (this.args.closed || !this.currentUser) {
       return false;
     }
 
-    const selectedOptionCount = this.vote?.length || 0;
+    const selectedOptionCount = this.args.vote?.length || 0;
 
-    if (this.isMultiple) {
+    if (this.args.isMultiple) {
       return selectedOptionCount >= this.min && selectedOptionCount <= this.max;
     }
 
-    if (this.isRankedChoice) {
+    if (this.args.isRankedChoice) {
       return (
-        this.options.length === this.vote.length &&
-        this.areRanksValid(this.vote)
+        this.args.options.length === this.args.vote.length &&
+        this.areRanksValid(this.args.vote)
       );
     }
 
@@ -313,15 +228,19 @@ export default class PollComponent extends Component {
   }
 
   get notInVotingGroup() {
-    return !this.checkUserGroups(this.currentUser, this.poll);
+    return !this.checkUserGroups(this.currentUser, this.args.poll);
   }
 
   get pollGroups() {
-    return I18n.t("poll.results.groups.title", { groups: this.poll.groups });
+    return I18n.t("poll.results.groups.title", {
+      groups: this.args.poll.groups,
+    });
   }
 
   get showCastVotesButton() {
-    return (this.isMultiple || this.isRankedChoice) && !this.showResults;
+    return (
+      (this.args.isMultiple || this.args.isRankedChoice) && !this.showResults
+    );
   }
 
   get castVotesButtonClass() {
@@ -346,24 +265,28 @@ export default class PollComponent extends Component {
     return (
       !this.showResults &&
       !this.hideResultsDisabled &&
-      !(this.poll.results === ON_VOTE && !this.hasSavedVote && !this.isMe) &&
-      !(this.poll.results === ON_CLOSE && !this.closed) &&
-      !(this.poll.results === STAFF_ONLY && !this.isStaff) &&
-      this.voters > 0
+      !(
+        this.args.poll.results === ON_VOTE &&
+        !this.args.hasSavedVote &&
+        !this.isMe
+      ) &&
+      !(this.args.poll.results === ON_CLOSE && !this.args.closed) &&
+      !(this.args.poll.results === STAFF_ONLY && !this.args.isStaff) &&
+      this.args.voters > 0
     );
   }
 
   get showRemoveVoteButton() {
     return (
-      !this.showResults &&
-      !this.closed &&
+      this.showResults &&
+      !this.args.closed &&
       !this.hideResultsDisabled &&
-      this.hasSavedVote
+      this.args.hasSavedVote
     );
   }
 
   get isCheckbox() {
-    if (this.isMultiple) {
+    if (this.args.isMultiple) {
       return true;
     } else {
       return false;
@@ -371,39 +294,25 @@ export default class PollComponent extends Component {
   }
 
   get resultsWidgetTypeClass() {
-    const type = this.poll.type;
-    return this.isNumber || this.poll.chart_type !== PIE_CHART_TYPE
+    const type = this.args.poll.type;
+    return this.args.isNumber || this.args.poll.chart_type !== PIE_CHART_TYPE
       ? `discourse-poll-${type}-results`
       : "discourse-poll-pie-chart";
   }
 
   get resultsPie() {
-    return this.poll.chart_type === PIE_CHART_TYPE;
+    return this.args.poll.chart_type === PIE_CHART_TYPE;
   }
 
   get averageRating() {
-    const totalScore = this.options.reduce((total, o) => {
+    const totalScore = this.args.options.reduce((total, o) => {
       return total + parseInt(o.html, 10) * parseInt(o.votes, 10);
     }, 0);
 
-    const average = this.voters === 0 ? 0 : round(totalScore / this.voters, -2);
+    const average =
+      this.args.voters === 0 ? 0 : round(totalScore / this.args.voters, -2);
 
     return htmlSafe(I18n.t("poll.average_rating", { average }));
-  }
-
-  @action
-  updatedVoters() {
-    this.preloadedVoters = this.args.preloadedVoters;
-    this.options = [...this.args.options];
-    if (this.isRankedChoice) {
-      this.options.forEach((candidate) => {
-        let specificVote = this.vote.find(
-          (vote) => vote.digest === candidate.id
-        );
-        let rank = specificVote ? specificVote.rank : 0;
-        candidate.rank = rank;
-      });
-    }
   }
 
   @action
@@ -474,71 +383,6 @@ export default class PollComponent extends Component {
   }
 
   @action
-  removeVote() {
-    return ajax("/polls/vote", {
-      type: "DELETE",
-      data: {
-        post_id: this.post.id,
-        poll_name: this.poll.name,
-      },
-    })
-      .then(({ poll }) => {
-        if (this.poll.type === RANKED_CHOICE) {
-          poll.options.forEach((option) => {
-            option.rank = 0;
-          });
-        }
-        this.options = [...poll.options];
-        this.poll.setProperties(poll);
-        this.rankedChoiceOutcome = poll.ranked_choice_outcome || [];
-        this.vote = [];
-        this.voters = poll.voters;
-        this.hasSavedVote = false;
-        this.appEvents.trigger("poll:voted", poll, this.post, this.vote);
-      })
-      .catch((error) => popupAjaxError(error));
-  }
-
-  @action
-  toggleStatus() {
-    if (this.isAutomaticallyClosed) {
-      return;
-    }
-
-    this.dialog.yesNoConfirm({
-      message: I18n.t(this.closed ? "poll.open.confirm" : "poll.close.confirm"),
-      didConfirm: () => {
-        const status = this.closed ? "open" : "closed";
-        ajax("/polls/toggle_status", {
-          type: "PUT",
-          data: {
-            post_id: this.post.id,
-            poll_name: this.poll.name,
-            status,
-          },
-        })
-          .then(() => {
-            this.poll.status = status;
-            this.status = status;
-            if (
-              this.poll.results === "on_close" ||
-              this.poll.results === "always"
-            ) {
-              this.showResults = this.status === "closed";
-            }
-          })
-          .catch((error) => {
-            if (error) {
-              popupAjaxError(error);
-            } else {
-              this.dialog.alert(I18n.t("poll.error_while_toggling_status"));
-            }
-          });
-      },
-    });
-  }
-
-  @action
   showBreakdown() {
     this.modal.show(PollBreakdownModal, {
       model: this.args.attrs,
@@ -587,36 +431,35 @@ export default class PollComponent extends Component {
           this.dialog.alert(I18n.t("poll.error_while_exporting_results"));
         }
       });
+    // {{didUpdate this.updatedVoters @preloadedVoters}}
   }
+
   <template>
-    <div
-      {{didUpdate this.updatedVoters @preloadedVoters}}
-      class="poll-container"
-    >
-      {{this.titleHTML}}
+    <div class="poll-container">
+      {{htmlSafe this.titleHTML}}
       {{#if this.notInVotingGroup}}
         <div class="alert alert-danger">{{this.pollGroups}}</div>
       {{/if}}
       {{#if this.showResults}}
         <div class={{this.resultsWidgetTypeClass}}>
-          {{#if this.isNumber}}
+          {{#if @isNumber}}
             <span>{{this.averageRating}}</span>
           {{else}}
             {{#if this.resultsPie}}
               <PollResultsPie @id={{this.id}} @options={{this.options}} />
             {{else}}
               <PollResultsTabs
-                @options={{this.options}}
-                @pollName={{this.poll.name}}
-                @pollType={{this.poll.type}}
-                @isRankedChoice={{this.isRankedChoice}}
-                @isPublic={{this.poll.public}}
-                @postId={{this.post.id}}
-                @vote={{this.vote}}
-                @voters={{this.preloadedVoters}}
-                @votersCount={{this.poll.voters}}
+                @options={{@options}}
+                @pollName={{@poll.name}}
+                @pollType={{@poll.type}}
+                @isRankedChoice={{@isRankedChoice}}
+                @isPublic={{@poll.public}}
+                @postId={{@post.id}}
+                @vote={{@vote}}
+                @voters={{@preloadedVoters}}
+                @votersCount={{@poll.voters}}
                 @fetchVoters={{this.fetchVoters}}
-                @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
+                @rankedChoiceOutcome={{@rankedChoiceOutcome}}
               />
             {{/if}}
           {{/if}}
@@ -624,83 +467,83 @@ export default class PollComponent extends Component {
       {{else}}
         <PollOptions
           @isCheckbox={{this.isCheckbox}}
-          @isRankedChoice={{this.isRankedChoice}}
+          @isRankedChoice={{@isRankedChoice}}
           @rankedChoiceDropdownContent={{this.rankedChoiceDropdownContent}}
-          @options={{this.options}}
-          @votes={{this.vote}}
+          @options={{@options}}
+          @votes={{@vote}}
           @sendOptionSelect={{this.toggleOption}}
         />
       {{/if}}
     </div>
     <PollInfo
-      @options={{this.options}}
+      @options={{@options}}
       @min={{this.min}}
       @max={{this.max}}
-      @isMultiple={{this.isMultiple}}
-      @close={{this.close}}
-      @closed={{this.closed}}
-      @results={{this.poll.results}}
+      @isMultiple={{@isMultiple}}
+      @close={{@close}}
+      @closed={{@closed}}
+      @results={{@poll.results}}
       @showResults={{this.showResults}}
-      @postUserId={{this.poll.post.user_id}}
-      @isPublic={{this.poll.public}}
+      @postUserId={{@poll.post.user_id}}
+      @isPublic={{@poll.public}}
       @hasVoted={{this.hasVoted}}
-      @voters={{this.voters}}
+      @voters={{@voters}}
     />
     <div class="poll-buttons">
       {{#if this.showCastVotesButton}}
-        <button
-          class={{this.castVotesButtonClass}}
-          title="poll.cast-votes.title"
-          disabled={{this.castVotesDisabled}}
-          {{on "click" this.castVotes}}
+        <DButton
+          @class={{this.castVotesButtonClass}}
+          @title="poll.cast-votes.title"
+          @disabled={{this.castVotesDisabled}}
+          @action={{this.castVotes}}
         >
           {{icon this.castVotesButtonIcon}}
           <span class="d-button-label">{{i18n "poll.cast-votes.label"}}</span>
-        </button>
+        </DButton>
       {{/if}}
 
       {{#if this.showHideResultsButton}}
-        <button
+        <DButton
           class="btn btn-default toggle-results"
           title="poll.hide-results.title"
-          {{on "click" this.toggleResults}}
+          @action={{this.toggleResults}}
         >
           {{icon "chevron-left"}}
           <span class="d-button-label">{{i18n "poll.hide-results.label"}}</span>
-        </button>
+        </DButton>
       {{/if}}
 
       {{#if this.showShowResultsButton}}
-        <button
-          class="btn btn-default toggle-results"
-          title="poll.show-results.title"
-          {{on "click" this.toggleResults}}
+        <DButton
+          @class="btn btn-default toggle-results"
+          @title="poll.show-results.title"
+          @action={{this.toggleResults}}
         >
           {{icon "chart-bar"}}
           <span class="d-button-label">{{i18n "poll.show-results.label"}}</span>
-        </button>
+        </DButton>
       {{/if}}
 
       {{#if this.showRemoveVoteButton}}
-        <button
-          class="btn btn-default remove-vote"
-          title="poll.remove-vote.title"
-          {{on "click" this.removeVote}}
+        <DButton
+          @class="btn btn-default remove-vote"
+          @title="poll.remove-vote.title"
+          @action={{this.removeVote}}
         >
           {{icon "undo"}}
           <span class="d-button-label">{{i18n "poll.remove-vote.label"}}</span>
-        </button>
+        </DButton>
       {{/if}}
 
       <PollButtonsDropdown
-        @closed={{this.closed}}
-        @voters={{this.voters}}
-        @isStaff={{this.isStaff}}
+        @closed={{@closed}}
+        @voters={{@voters}}
+        @isStaff={{@isStaff}}
         @isMe={{this.isMe}}
-        @isRankedChoice={{this.isRankedChoice}}
-        @topicArchived={{this.topicArchived}}
-        @groupableUserFields={{this.groupableUserFields}}
-        @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
+        @isRankedChoice={{@isRankedChoice}}
+        @topicArchived={{@topicArchived}}
+        @groupableUserFields={{@groupableUserFields}}
+        @isAutomaticallyClosed={{@isAutomaticallyClosed}}
         @dropDownClick={{this.dropDownClick}}
       />
     </div>
