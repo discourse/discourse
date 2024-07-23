@@ -9,6 +9,7 @@ import {
 } from "discourse/components/composer-editor";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
+import { addBeforeLoadMoreCallback as addBeforeLoadMoreDiscoveryTopicsListCallback } from "discourse/components/discovery-topics-list";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
@@ -156,7 +157,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.34.0";
+export const PLUGIN_API_VERSION = "1.35.0";
 
 const DEPRECATED_HEADER_WIDGETS = [
   "header",
@@ -981,6 +982,21 @@ class PluginApi {
    */
   addBeforeLoadMoreNotificationsCallback(fn) {
     addBeforeLoadMoreNotificationsCallback(fn);
+  }
+
+  /**
+   * Registers a callback that will be evaluated when infinite scrolling would cause
+   * more topics to be loaded in the discovery topics list component. This can be used to prevent loading more unless
+   * a specific condition is met.
+   *
+   * Example:
+   *
+   * api.addBeforeLoadMoreNotificationsCallback((discoveryTopicsList) => {
+   *   return discoveryTopicsList.model.allowLoadMore;
+   * });
+   */
+  addBeforeLoadMoreDiscoveryTopicsListCallback(fn) {
+    addBeforeLoadMoreDiscoveryTopicsListCallback(fn);
   }
 
   /**
