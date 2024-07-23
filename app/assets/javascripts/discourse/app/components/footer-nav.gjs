@@ -71,12 +71,14 @@ class FooterNav extends Component {
 
   _modalOn() {
     const backdrop = document.querySelector(".modal-backdrop");
-    if (backdrop) {
-      postRNWebviewMessage(
-        "headerBg",
-        getComputedStyle(backdrop)["background-color"]
-      );
+    if (!backdrop) {
+      return;
     }
+
+    postRNWebviewMessage(
+      "headerBg",
+      getComputedStyle(backdrop)["background-color"]
+    );
   }
 
   _modalOff() {
