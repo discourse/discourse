@@ -664,11 +664,12 @@ nb_NO:
           imap_mailbox_not_selected: "Du må velge en Mailbox for denne IMAP-konfigurasjonen, eller ingen e-postbokser vil bli synkronisert!"
           prefill:
             title: "Forhåndsfyll med innstillinger for:"
+          ssl_modes:
+            none: "Ingen"
           credentials:
             title: "Legitimasjon"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP port"
-            smtp_ssl: "Bruk SSL for SMTP"
             imap_server: "IMAP Server"
             imap_port: "IMAP port"
             imap_ssl: "Bruk SSL for IMAP"
@@ -1581,6 +1582,7 @@ nb_NO:
       description_time_MF: |
         Det {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svarer}} med en estimert lesetid på <b>{readingTime, plural, one {# minutt} other {# minutter}}</b>.
       disable: "Vis alle innlegg"
+      show_all_label: "Vis alle"
     deleted_filter:
       enabled_description: "Dette emnet inneholder slettede innlegg, som er blitt skjult."
       disabled_description: "Slettede innlegg i emnet vises."
@@ -2914,6 +2916,9 @@ nb_NO:
       clicks:
         one: "%{count} klikk"
         other: "%{count} klikk"
+      views: "Visninger"
+      read: les
+      minutes: minimum
     post_links:
       about: "utvid flere lenker for dette innlegget"
       title:

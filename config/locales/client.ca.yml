@@ -638,11 +638,12 @@ ca:
           last_updated: "Darrera actualització:"
           last_updated_by: "per"
           settings_required: "Tots els paràmetres són obligatoris, si us plau ompli tots els camps abans de la validació."
+          ssl_modes:
+            none: "Cap"
           credentials:
             title: "Credencials"
             smtp_server: "Servidor SMTP"
             smtp_port: "Port SMTP"
-            smtp_ssl: "Utilitza SSL per a SMTP"
             imap_server: "Servidor IMAP"
             imap_port: "Port IMAP"
             imap_ssl: "Utilitza SSL per a SMTP"
@@ -2530,6 +2531,9 @@ ca:
       clicks:
         one: "%{count} clic"
         other: "%{count} clics"
+      views: "Vistes"
+      read: llegeix
+      minutes: mínim
     post_links:
       about: "expandeix més enllaços per a aquesta publicació"
       title:

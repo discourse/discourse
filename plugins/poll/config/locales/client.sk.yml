@@ -29,6 +29,9 @@ sk:
           title: "Výsledky sa zobrazia po <strong>uzavretí</strong>"
         staff:
           title: "Výsledky sa zobrazujú len <strong>zamestnancom</strong>."
+        tabs:
+          votes: "Hlasy"
+          outcome: "Výsledok"
       multiple:
         help:
           at_least_min_options:
@@ -83,9 +86,28 @@ sk:
         percentage: "Percento"
         count: "Počet"
       ranked_choice:
+        title:
+          rounds: "Kolá"
+          outcome: "Výsledok"
         none: "Žiadny"
+        majority: "Väčšina"
+        eliminated: "Eliminované"
+        round: "Kolo"
+        winner:
+          one: "Víťazom sa stal %{winner} po jednom kole."
+          few: "Víťazom sa stal %{winner} po %{count} kolách."
+          many: "Víťazom sa stal %{winner} po %{count} kolách."
+          other: "Víťazom sa stal %{winner} po %{count} kolách."
+        tied:
+          one: "Rovnosť hlasov po jednom kole medzi týmito kandidátmi:"
+          few: "Rovnosť bodov po %{count} kolách medzi týmito kandidátmi:"
+          many: "Rovnosť bodov po %{count} kolách medzi týmito kandidátmi:"
+          other: "Rovnosť bodov po %{count} kolách medzi týmito kandidátmi:"
       options:
         label: "Možnosti"
+        ranked_choice:
+          abstain: "Zdržať sa hlasovania"
+          login: "Prihláste sa a hlasujte!"
       error_while_toggling_status: "Ľutujeme, nastala chyba pri prepínaní stavu tohto hlasovania."
       error_while_casting_votes: "Ľutujeme, nastala chyba pri prideľovaní Vašich hlasov."
       error_while_fetching_voters: "Ľutujeme, nastala chyba pri zobrazení účastníkov."
@@ -104,6 +126,7 @@ sk:
           label: Typ
           regular: Jedna možnosť
           multiple: Viacero možností
+          ranked_choice: Hodnotená voľba
           number: Číselné hodnotenie
         poll_result:
           label: Zobraziť výsledky...

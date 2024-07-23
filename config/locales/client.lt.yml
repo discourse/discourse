@@ -750,11 +750,12 @@ lt:
           imap_mailbox_not_selected: "Šiai IMAP konfigūracijai turite pasirinkti pašto dėžutę arba pašto dėžutės nebus sinchronizuojamos!"
           prefill:
             title: "Užpildykite nustatymus:"
+          ssl_modes:
+            none: "Nieko"
           credentials:
             title: "Įgaliojimai"
             smtp_server: "SMTP serveris"
             smtp_port: "SMTP prievadas"
-            smtp_ssl: "SMTP naudokite SSL"
             imap_server: "IMAP serveris"
             imap_port: "IMAP prievadas"
             imap_ssl: "SSL naudojimas IMAP"
@@ -1690,6 +1691,7 @@ lt:
     summary:
       disable: "Peržiūrėti visus Įrašus"
       short_label: "Populiariausi Atsakymai"
+      show_all_label: "Rodyti viską"
     deleted_filter:
       enabled_description: "Šioje temoje yra ištrintų įrašų, kurie yra paslėpti."
       disabled_description: "Ištrinti temos įrašai vėl rodomi."
@@ -3086,6 +3088,8 @@ lt:
         few: "%{count} paspaudimai"
         many: "%{count} paspaudimų"
         other: "%{count} paspaudimų"
+      views: "Peržiūros"
+      read: skaityti
     post_links:
       title:
         one: "%{count} daugiau"

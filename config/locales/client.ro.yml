@@ -811,11 +811,12 @@ ro:
           imap_mailbox_not_selected: "Trebuie să selectezi o cutie poștală pentru această configurație IMAP, altfel nicio cutie poștală nu va fi sincronizată!"
           prefill:
             title: "Pre-completare cu setări pentru:"
+          ssl_modes:
+            none: "Nimeni"
           credentials:
             title: "Date de conectare"
             smtp_server: "Server SMTP"
             smtp_port: "Port SMTP"
-            smtp_ssl: "Folosește SSL pentru SMTP"
             imap_server: "Server IMAP"
             imap_port: "Port IMAP"
             imap_ssl: "Folosește SSL pentru IMAP"
@@ -2790,6 +2791,9 @@ ro:
         one: "%{count} click"
         few: "%{count} click-uri"
         other: "%{count} de click-uri"
+      views: "Afișări"
+      read: citire
+      minutes: minim
     post_links:
       about: "afișează mai multe link-uri din această postare"
       title:

@@ -780,11 +780,12 @@ sv:
           prefill:
             title: "Förfyll med inställningar för:"
             gmail: "Gmail"
+          ssl_modes:
+            none: "Ingen"
           credentials:
             title: "Kontouppgifter"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
-            smtp_ssl: "Använd SSL för SMTP"
             imap_server: "IMAP Server"
             imap_port: "IMAP Port"
             imap_ssl: "Använd SSL för IMAP"
@@ -1966,6 +1967,7 @@ sv:
       enable: "Visa toppsvar"
       disable: "Visa alla inlägg"
       short_label: "Toppsvar"
+      show_all_label: "Visa alla"
       short_title: "Visa toppsvaren i detta ämne som forumets användare tycker är mest intressanta"
     deleted_filter:
       enabled_description: "Det här ämnet innehåller borttagna inlägg som har dolts."
@@ -3697,6 +3699,9 @@ sv:
       clicks:
         one: "%{count} klick"
         other: "%{count} klick"
+      views: "Visningar"
+      read: läs
+      minutes: min
     post_links:
       about: "utvidga fler länkar för det här inlägget"
       title:

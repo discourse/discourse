@@ -29,6 +29,9 @@ he:
           title: "התוצאות יופיעו לאחר <strong>הסגירה</strong>."
         staff:
           title: "התוצאות זמינות לחברי <strong>סגל</strong> בלבד."
+        tabs:
+          votes: "הצבעות"
+          outcome: "תוצאה"
       multiple:
         help:
           at_least_min_options:
@@ -83,9 +86,28 @@ he:
         percentage: "אחוזים"
         count: "ספירה"
       ranked_choice:
+        title:
+          rounds: "סיבובים"
+          outcome: "תוצאה"
         none: "ללא"
+        majority: "הרוב"
+        eliminated: "הודח"
+        round: "סיבוב"
+        winner:
+          one: "הניצחון לטובת %{winner} לאחר סיבוב אחד."
+          two: "הניצחון לטובת %{winner} אחרי שני סיבובים."
+          many: "הניצחון לטובת %{winner} אחרי %{count} סיבובים."
+          other: "הניצחון לטובת %{winner} אחרי %{count} סיבובים."
+        tied:
+          one: "שוויון לאחר סיבוב אחד בין המתמודדים:"
+          two: "שוויון לאחר שני סיבובים בין המתמודדים:"
+          many: "שוויון לאחר %{count} סיבובים בין המתמודדים הבאים:"
+          other: "שוויון לאחר %{count} סיבובים בין המתמודדים הבאים:"
       options:
         label: "אפשרויות"
+        ranked_choice:
+          abstain: "הימנעות"
+          login: "יש להיכנס כדי להצביע!"
       error_while_toggling_status: "חלה שגיאה בשינוי המצב של סקר זה, עמך הסליחה."
       error_while_casting_votes: "חלה שגיאה בהצבעתך, עמך הסליחה."
       error_while_fetching_voters: "חלה שגיאה בהצגת המצביעים, עמך הסליחה."
@@ -104,6 +126,7 @@ he:
           label: סוג
           regular: בחירה בודדת
           multiple: בחירה מרובה
+          ranked_choice: בחירה לפי דירוג
           number: ציון מספרי
         poll_result:
           label: להציג תוצאות...

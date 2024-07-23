@@ -295,6 +295,10 @@ es:
         not_found: |-
           Oh no, mi publicación desagradable todavía no ha sido denunciada. :worried: ¿Puedes denunciarla como inapropiada usando el botón de **denunciar** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? No olvides que esa opción está oculta, así que primero debes presionar el botón ver más <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para que se muestren otras opciones para cada mensaje.
       search:
+        instructions: |-
+          _psst_ ... He escondido una sorpresa en este tema. Si te apetece el reto, **selecciona el icono de búsqueda** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> arriba a la derecha &#8599;, elige «en este tema», y luego búscalo.
+
+          Intenta buscar el término «capi&#8203;bara» en este tema
         hidden_message: |-
           ¿Cómo pudiste pasar por alto este capibara? :wink:
 

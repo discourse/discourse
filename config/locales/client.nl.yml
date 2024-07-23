@@ -307,6 +307,9 @@ nl:
       active_user_count: "Actieve gebruikers"
       contact: "Contact"
       contact_info: "Neem in het geval van een kritieke kwestie of dringende vraagstukken in verband met deze website contact met ons op via %{contact_info}."
+      member_count:
+        one: "%{formatted_number} Lid"
+        other: "%{formatted_number} Leden"
     bookmarked:
       title: "Bladwijzer"
       edit_bookmark: "Bladwijzer bewerken"
@@ -776,11 +779,12 @@ nl:
           prefill:
             title: "Vooraf invullen met instellingen voor:"
             gmail: "Gmail"
+          ssl_modes:
+            none: "Geen"
           credentials:
             title: "Aanmeldgegevens"
             smtp_server: "SMTP-server"
             smtp_port: "SMTP-poort"
-            smtp_ssl: "SSL gebruiken voor SMTP"
             imap_server: "IMAP-server"
             imap_port: "IMAP-poort"
             imap_ssl: "SSL gebruiken voor IMAP"
@@ -1958,6 +1962,7 @@ nl:
       enable: "Topantwoorden weergeven"
       disable: "Alle berichten weergeven"
       short_label: "Topantwoorden"
+      show_all_label: "Alles weergeven"
       short_title: "Geef de topantwoorden van dit topic weer: de interessantste berichten volgens de community"
     deleted_filter:
       enabled_description: "Dit topic bevat verwijderde berichten, die zijn verborgen."
@@ -3686,6 +3691,9 @@ nl:
       clicks:
         one: "%{count} klik"
         other: "%{count} klikken"
+      views: "Weergaven"
+      read: lezen
+      minutes: min
     post_links:
       about: "meer links voor dit bericht uitvouwen"
       title:

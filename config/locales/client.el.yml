@@ -658,11 +658,12 @@ el:
           imap_title: "IMAP"
           imap_additional_settings: "Πρόσθετες ρυθμίσεις"
           imap_settings_valid: "Έγκυρες ρυθμίσεις IMAP."
+          ssl_modes:
+            none: "Κανένα"
           credentials:
             title: "Διαπιστευτήρια"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
-            smtp_ssl: "Χρήση SSL για SMTP"
             imap_server: "IMAP Server"
             imap_port: "IMAP Port"
             imap_ssl: "Χρήση SSL για SMTP"
@@ -1542,6 +1543,7 @@ el:
         one: "Υπάρχει <b>%{count}</b> απάντηση."
         other: "Υπάρχουν <b>%{count}</b> απαντήσεις."
       disable: "Εμφάνιση όλων των αναρτήσεων"
+      show_all_label: "Εμφάνιση όλων"
     deleted_filter:
       enabled_description: "Αυτό το νήμα περιέχει σβησμένες αναρτήσεις, οι οποίες αποκρύπτονται."
       disabled_description: "Σε αυτό το νήμα εμφανίζονται oι σβησμένες αναρτήσεις."
@@ -2852,6 +2854,9 @@ el:
       clicks:
         one: "%{count} κλικ"
         other: "%{count} κλικ"
+      views: "Προβολές"
+      read: ανάγνωση
+      minutes: ελάχιστο
     post_links:
       about: "ανάπτυξε περισσότερους συνδέσμους για αυτή την ανάρτηση"
       title:

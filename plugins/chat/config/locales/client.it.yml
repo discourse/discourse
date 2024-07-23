@@ -296,7 +296,7 @@ it:
         back: "Indietro"
         title: Canali
         filter_all: Tutti
-        filter_open: Aperto
+        filter_open: Aperta
         filter_closed: Chiusi
         filter_archived: Archiviati
         filter_input_placeholder: Cerca canale per nome

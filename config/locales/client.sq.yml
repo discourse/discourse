@@ -373,6 +373,8 @@ sq:
         email:
           title: "Email"
           last_updated_by: "nga"
+          ssl_modes:
+            none: "Asnjë"
           credentials:
             username: "Emri i përdoruesit"
             password: "Fjalëkalimi"
@@ -1640,6 +1642,9 @@ sq:
       clicks:
         one: "%{count} klik"
         other: "%{count} klikime"
+      views: "Shikimet"
+      read: lexuar
+      minutes: minimumi
     post_links:
       about: "trego më shumë lidhje për këtë postim"
       title:

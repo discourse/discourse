@@ -836,11 +836,12 @@ hr:
           prefill:
             title: "Unaprijed ispunite postavke za:"
             gmail: "Gmail"
+          ssl_modes:
+            none: "Ništa"
           credentials:
             title: "Vjerodajnice"
             smtp_server: "SMTP poslužitelj"
             smtp_port: "SMTP priključak"
-            smtp_ssl: "Koristi SSL za SMTP"
             imap_server: "IMAP poslužitelj"
             imap_port: "IMAP priključak"
             imap_ssl: "Koristi SSL za IMAP"
@@ -2036,6 +2037,7 @@ hr:
       enable: "Prikaži glavne odgovore"
       disable: "Prikaži sve članke"
       short_label: "Glavni odgovori"
+      show_all_label: "Prikaži sve"
       short_title: "Prikaži glavne odgovore ove teme: najzanimljivije objave koje je odredila zajednica"
     deleted_filter:
       enabled_description: "Ova tema sadrži prisane članke, koji su skriveni."
@@ -3811,6 +3813,9 @@ hr:
         one: "%{count} klik"
         few: "%{count} klikova"
         other: "%{count} klikova"
+      views: "Pregledi"
+      read: pročitajte
+      minutes: min
     post_links:
       about: "prikaži više poveznica za ovu objavu"
       title:
