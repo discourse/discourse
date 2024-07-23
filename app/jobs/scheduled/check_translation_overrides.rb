@@ -19,9 +19,9 @@ module Jobs
         end
       end
 
-      TranslationOverride.where(id: deprecated_ids).update_all(status: "deprecated")
       TranslationOverride.where(id: outdated_ids).update_all(status: "outdated")
       TranslationOverride.where(id: invalid_ids).update_all(status: "invalid_interpolation_keys")
+      TranslationOverride.where(id: deprecated_ids).update_all(status: "deprecated")
     end
   end
 end
