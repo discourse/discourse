@@ -22,9 +22,8 @@ acceptance("User Activity / Read - bulk actions", function (needs) {
     await click("button.bulk-select");
     await click(queryAll("input.bulk-select")[0]);
     await click(queryAll("input.bulk-select")[1]);
-    await click("button.bulk-select-actions");
-
-    await click("div.bulk-buttons button.bulk-actions__close-topics");
+    await click(".bulk-select-topics-dropdown-trigger");
+    await click(".dropdown-menu__item .close-topics");
 
     assert
       .dom("div.bulk-buttons")

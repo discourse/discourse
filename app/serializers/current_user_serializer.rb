@@ -72,7 +72,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :sidebar_category_ids,
              :sidebar_sections,
              :new_new_view_enabled?,
-             :use_experimental_topic_bulk_actions?,
              :use_admin_sidebar,
              :can_view_raw_email,
              :use_glimmer_topic_list?,
@@ -321,10 +320,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def unseen_reviewable_count
     Reviewable.unseen_reviewable_count(object)
-  end
-
-  def use_experimental_topic_bulk_actions?
-    scope.user.in_any_groups?(SiteSetting.experimental_topic_bulk_actions_enabled_groups_map)
   end
 
   def can_view_raw_email

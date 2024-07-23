@@ -14,7 +14,6 @@ import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from 
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
 import { headerIconsDAG } from "discourse/components/header/icons";
-import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 import MountWidget, {
   addWidgetCleanCallback,
 } from "discourse/components/mount-widget";
@@ -3036,7 +3035,6 @@ class PluginApi {
    * @param {string} opts.actionType - type of the action, either performanAndRefresh or setComponent
    */
   addBulkActionButton(opts) {
-    _addBulkButton(opts);
     addBulkDropdownButton(opts);
   }
 
