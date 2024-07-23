@@ -52,7 +52,6 @@ export default class TopicFromParams extends DiscourseRoute {
   deactivate() {
     super.deactivate(...arguments);
     this.controllerFor("topic").unsubscribe();
-    this.header.clearTopic();
   }
 
   setupController(controller, params, { _discourse_anchor }) {
@@ -122,8 +121,14 @@ export default class TopicFromParams extends DiscourseRoute {
   }
 
   @action
-  willTransition() {
+  willTransition(transition) {
     this.controllerFor("topic").set("previousURL", document.location.pathname);
+
+    transition.followRedirects().finally(() => {
+      if (!this.router.currentRouteName.startsWith("topic.")) {
+        this.header.clearTopic();
+      }
+    });
 
     // NOTE: omitting this return can break the back button when transitioning quickly between
     // topics and the latest page.
