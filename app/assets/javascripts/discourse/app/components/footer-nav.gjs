@@ -29,6 +29,10 @@ class FooterNav extends Component {
   scrollEventDisabled = false;
 
   registerScrollhandler = modifierFn(() => {
+    if (this.capabilities.isIpadOS) {
+      return;
+    }
+
     window.addEventListener("resize", this.scrolled);
     this.bindScrolling();
 
@@ -41,21 +45,29 @@ class FooterNav extends Component {
 
   registerAppEvents = modifierFn(() => {
     this.appEvents.on("page:changed", this, "_routeChanged");
+
     if (this.capabilities.isAppWebview) {
       this.appEvents.on("modal:body-shown", this, "_modalOn");
       this.appEvents.on("modal:body-dismissed", this, "_modalOff");
     }
-    this.appEvents.on("composer:opened", this, "_composerOpened");
-    this.appEvents.on("composer:closed", this, "_composerClosed");
+
+    if (!this.capabilities.isIpadOS) {
+      this.appEvents.on("composer:opened", this, "_composerOpened");
+      this.appEvents.on("composer:closed", this, "_composerClosed");
+    }
 
     return () => {
       this.appEvents.off("page:changed", this, "_routeChanged");
+
       if (this.capabilities.isAppWebview) {
         this.appEvents.off("modal:body-shown", this, "_modalOn");
         this.appEvents.off("modal:body-removed", this, "_modalOff");
       }
-      this.appEvents.off("composer:opened", this, "_composerOpened");
-      this.appEvents.off("composer:closed", this, "_composerClosed");
+
+      if (!this.capabilities.isIpadOS) {
+        this.appEvents.off("composer:opened", this, "_composerOpened");
+        this.appEvents.off("composer:closed", this, "_composerClosed");
+      }
     };
   });
 
