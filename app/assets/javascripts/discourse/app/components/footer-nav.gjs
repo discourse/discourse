@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
 import DButton from "discourse/components/d-button";
@@ -11,13 +13,12 @@ import { SCROLLED_UP, UNSCROLLED } from "discourse/services/scroll-direction";
 import { bind } from "discourse-common/utils/decorators";
 import not from "truth-helpers/helpers/not";
 
-const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 150;
-
 class FooterNav extends Component {
   @service appEvents;
   @service capabilities;
   @service scrollDirection;
   @service composer;
+  @service modal;
 
   @tracked shouldToggleMobileFooter = false;
   @tracked canGoBack = false;
@@ -27,37 +28,29 @@ class FooterNav extends Component {
   routeHistory = [];
   backForwardClicked = false;
 
-  registerScrollhandler = modifierFn(() => {
+  registerAppEvents = modifierFn(() => {
+    this.appEvents.on("page:changed", this, "_routeChanged");
+
+    return () => {
+      this.appEvents.off("page:changed", this, "_routeChanged");
+    };
+  });
+
+  @bind
+  registerDirectionObserver() {
     this.scrollDirection.addObserver(
       "lastScrollDirection",
       this.toggleMobileFooter
     );
+  }
 
-    return () => {
-      this.scrollDirection.removeObserver(
-        "lastScrollDirection",
-        this.toggleMobileFooter
-      );
-    };
-  });
-
-  registerAppEvents = modifierFn(() => {
-    this.appEvents.on("page:changed", this, "_routeChanged");
-
-    if (this.capabilities.isAppWebview) {
-      this.appEvents.on("modal:body-shown", this, "_modalOn");
-      this.appEvents.on("modal:body-dismissed", this, "_modalOff");
-    }
-
-    return () => {
-      this.appEvents.off("page:changed", this, "_routeChanged");
-
-      if (this.capabilities.isAppWebview) {
-        this.appEvents.off("modal:body-shown", this, "_modalOn");
-        this.appEvents.off("modal:body-removed", this, "_modalOff");
-      }
-    };
-  });
+  @bind
+  unregisterDirectionObserver() {
+    this.scrollDirection.removeObserver(
+      "lastScrollDirection",
+      this.toggleMobileFooter
+    );
+  }
 
   @action
   _routeChanged(route) {
@@ -76,7 +69,6 @@ class FooterNav extends Component {
     return !this.composer.isOpen && this.shouldToggleMobileFooter;
   }
 
-  @action
   _modalOn() {
     const backdrop = document.querySelector(".modal-backdrop");
     if (backdrop) {
@@ -87,7 +79,6 @@ class FooterNav extends Component {
     }
   }
 
-  @action
   _modalOff() {
     const dheader = document.querySelector(".d-header");
     if (!dheader) {
@@ -98,6 +89,19 @@ class FooterNav extends Component {
       "headerBg",
       getComputedStyle(dheader)["background-color"]
     );
+  }
+
+  @action
+  setDiscourseHubHeaderBg(hasAnActiveModal) {
+    if (!this.capabilities.isAppWebview) {
+      return;
+    }
+
+    if (hasAnActiveModal) {
+      this._modalOn();
+    } else {
+      this._modalOff();
+    }
   }
 
   @action
@@ -141,6 +145,8 @@ class FooterNav extends Component {
   }
 
   <template>
+    {{this.setDiscourseHubHeaderBg this.modal.activeModal}}
+
     {{#if this.capabilities.isIpadOS}}
       {{htmlClass "footer-nav-ipad"}}
     {{else}}
@@ -151,7 +157,8 @@ class FooterNav extends Component {
 
     <div
       class={{concatClass "footer-nav" (if this.isFooterVisible "visible")}}
-      {{this.registerScrollhandler}}
+      {{didInsert this.registerDirectionObserver}}
+      {{willDestroy this.unregisterDirectionObserver}}
       {{this.registerAppEvents}}
     >
       <div class="footer-nav-widget">
