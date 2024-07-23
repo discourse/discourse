@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
@@ -17,7 +18,8 @@ class FooterNav extends Component {
   @service composer;
   @service modal;
 
-  currentRouteIndex = 0;
+  @tracked currentRouteIndex = 0;
+
   routeHistory = new TrackedArray();
   backForwardClicked = false;
 
