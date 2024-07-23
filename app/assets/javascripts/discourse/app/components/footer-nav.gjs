@@ -1,8 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
 import DButton from "discourse/components/d-button";
@@ -139,8 +137,6 @@ class FooterNav extends Component {
 
     <div
       class={{concatClass "footer-nav" (if this.isVisible "visible")}}
-      {{didInsert this.registerDirectionObserver}}
-      {{willDestroy this.unregisterDirectionObserver}}
       {{this.registerAppEvents}}
     >
       <div class="footer-nav-widget">
