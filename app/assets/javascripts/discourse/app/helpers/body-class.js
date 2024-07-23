@@ -7,7 +7,7 @@ export default class BodyClass extends Helper {
   compute([...classes]) {
     this.elementClasses.registerClasses(
       this,
-      document.documentElement,
+      document.body,
       classes.flatMap((c) => c?.split(" ")).filter(Boolean)
     );
   }
