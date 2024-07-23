@@ -35,7 +35,7 @@
     "prettier": "^2.8.8",
     "puppeteer-core": "^22.13.0",
     "squoosh": "discourse/squoosh#dc9649d",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.4"
   },
   "scripts": {
     "dev": "concurrently \"bin/ember-cli server --environment=development\" \"RAILS_ENV=development bin/rails server\"",
