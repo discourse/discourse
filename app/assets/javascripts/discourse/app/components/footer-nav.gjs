@@ -127,4 +127,3 @@ export default class FooterNav extends Component {
   </template>
 }
 
-export default FooterNav;
