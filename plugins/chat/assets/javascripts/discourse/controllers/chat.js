@@ -17,10 +17,22 @@ export default class ChatController extends Controller {
     if (this.shouldUseCoreSidebar) {
       return false;
     }
-
+    if (
+      this.publicMessageChannelsEmpty &&
+      this.enabledRouteCount === 1 &&
+      this.chat.userCanAccessDirectMessages
+    ) {
+      return false;
+    }
     return true;
   }
 
+  get publicMessageChannelsEmpty() {
+    return (
+      this.chatChannelsManager.publicMessageChannels?.length === 0 &&
+      this.chatStateManager.hasPreloadedChannels
+    );
+  }
   get shouldUseCoreSidebar() {
     return this.siteSettings.navigation_menu === "sidebar";
   }

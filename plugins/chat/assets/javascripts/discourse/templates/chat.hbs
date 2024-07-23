@@ -8,7 +8,11 @@
   <div
     class={{concat-class
       "full-page-chat"
-      (if this.shouldUseCoreSidebar "full-page-chat-sidebar-enabled")
+      (if
+        this.shouldUseCoreSidebar
+        "full-page-chat-sidebar-enabled"
+        "full-page-chat-sidebar-disabled"
+      )
     }}
   >
     {{#if this.shouldUseChatSidebar}}
