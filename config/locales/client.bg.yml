@@ -745,11 +745,12 @@ bg:
           imap_mailbox_not_selected: "Трябва да изберете пощенска кутия за тази IMAP конфигурация или пощенските кутии няма да се синхронизират!"
           prefill:
             title: "Предварително попълване с настройки за:"
+          ssl_modes:
+            none: "Без"
           credentials:
             title: "Данни за удостоверяване"
             smtp_server: "SMTP сървър"
             smtp_port: "SMTP порт"
-            smtp_ssl: "Използвайте SSL за SMTP"
             imap_server: "IMAP сървър"
             imap_port: "IMAP порт"
             imap_ssl: "Използвайте SSL за IMAP"
@@ -3096,6 +3097,9 @@ bg:
       clicks:
         one: "%{count} кликване"
         other: "%{count} кликвания"
+      views: "Прегледи"
+      read: четене
+      minutes: минимално
     post_links:
       title:
         one: "още %{count}"

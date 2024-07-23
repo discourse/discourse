@@ -781,11 +781,12 @@ te:
           prefill:
             title: "సెట్టింగ్‌లతో ముందుగా పూరించండి:"
             gmail: "జి మెయిల్"
+          ssl_modes:
+            none: "ఏదీ లేదు"
           credentials:
             title: "ఆధారాలు"
             smtp_server: "SMTP సర్వర్"
             smtp_port: "SMTP పోర్ట్"
-            smtp_ssl: "SMTP కోసం SSLని ఉపయోగించండి"
             imap_server: "IMAP సర్వర్"
             imap_port: "IMAP పోర్ట్"
             imap_ssl: "IMAP కోసం SSLని ఉపయోగించండి"
@@ -1997,6 +1998,7 @@ te:
       enable: "అగ్ర ప్రత్యుత్తరాలను చూపించండి"
       disable: "అన్ని పోస్ట్‌లను చూపించండి"
       short_label: "అగ్ర ప్రత్యుత్తరాలు"
+      show_all_label: "అన్నీ చూపండి"
       short_title: "ఈ విషయానికి అగ్ర ప్రత్యుత్తరాలను చూపండి: సంఘం నిర్ణయించిన అత్యంత ఆసక్తికరమైన పోస్ట్‌లు"
     deleted_filter:
       enabled_description: "ఈ విషయం తొలగించిన పోస్టులను కలిగి ఉంది. అవి దాయబడ్డాయి."
@@ -3742,6 +3744,8 @@ te:
       clicks:
         one: "%{count} క్లిక్"
         other: "%{count} క్లిక్‌లు"
+      views: "వీక్షణలు"
+      read: చదివిన
     post_links:
       about: "ఈ పోస్ట్ కోసం మరిన్ని లింక్‌లను విస్తరించండి"
       title:

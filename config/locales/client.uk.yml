@@ -377,6 +377,22 @@ uk:
       active_user_count: "Активні користувачі"
       contact: "Зв'язатися з нами"
       contact_info: "У випадку серйозних проблем з цим сайтом, будь ласка, звʼяжіться з нами через %{contact_info}."
+      member_count:
+        one: "%{formatted_number} Учасник"
+        few: "%{formatted_number} Учасники"
+        many: "%{formatted_number} Учасників"
+        other: "%{formatted_number} Учасників"
+      admin_count:
+        one: "%{formatted_number} Адміністратор"
+        few: "%{formatted_number} Адміністратори"
+        many: "%{formatted_number} Адміністраторів"
+        other: "%{formatted_number} Адміністраторів"
+      moderator_count:
+        one: "%{formatted_number} Модератор"
+        few: "%{formatted_number} Модератори"
+        many: "%{formatted_number} Модераторів"
+        other: "%{formatted_number} Модераторів"
+      report_inappropriate_content: "Якщо ви натрапите на будь-який неприйнятний вміст, не соромтеся почати розмову з нашими модераторами та адміністраторами. Не забудьте увійти, перш ніж звертатися."
     bookmarked:
       title: "Закладки"
       edit_bookmark: "Редагувати закладку"
@@ -913,11 +929,17 @@ uk:
           prefill:
             title: "Заповніть початкові налаштування для:"
             gmail: "Gmail"
+            outlook: "Outlook.com"
+            office365: "Microsoft 365"
+          ssl_modes:
+            none: "Немає"
+            ssl_tls: "SSL/TLS"
+            starttls: "STARTTLS"
           credentials:
             title: "Дані доступу"
             smtp_server: "SMTP-сервер"
             smtp_port: "Порт SMTP"
-            smtp_ssl: "Використовувати SSL для SMTP"
+            smtp_ssl_mode: "Режим SSL"
             imap_server: "Сервер IMAP"
             imap_port: "Порт IMAP"
             imap_ssl: "Використовувати SSL для IMAP"
@@ -2135,9 +2157,21 @@ uk:
     form_kit:
       reset: Скинути
       optional: опціонально
+      errors_summary_title: "Ця форма містить помилки:"
+      dirty_form: "Ви не надсилали свої зміни! Ви впевнені, що хочете піти?"
       errors:
         required: "Обов'язкові"
         invalid_url: "Має бути дійсною URL-адресою"
+        not_an_integer: "Має бути цілим числом"
+        not_accepted: "Повинна бути прийнята"
+        not_a_number: "Має бути числом"
+        too_high: "Має бути не більше %{count}"
+        too_low: "Має бути не менше %{count}"
+        too_long:
+          one: "Має бути не більше ніж %{count} символ"
+          few: "Має бути не більше %{count} символів"
+          many: "Має бути не більше %{count} символів"
+          other: "Має бути не більше %{count} символів"
         too_short:
           one: "Має бути не менше ніж %{count} символ"
           few: "Має бути не менше %{count} символи"
@@ -2213,6 +2247,7 @@ uk:
       enable: "Показати найкращі відповіді"
       disable: "Показати всі дописи"
       short_label: "Найпопулярніші відповіді"
+      show_all_label: "Показати всі"
       short_title: "Показати в цій темі найпопулярніші відповіді: найцікавіші публікації, визначені спільнотою"
     deleted_filter:
       enabled_description: "Ця тема містить видалені дописи, які були сховані."
@@ -4178,6 +4213,17 @@ uk:
         few: "%{count} кліка"
         many: "%{count} кліків"
         other: "%{count} кліків"
+      menu_titles:
+        replies: Найбільш вподобані відповіді
+        views: Останні перегляди
+      view_explainer: Один перегляд на одного унікального відвідувача кожні 8 годин.
+      no_views: Статистики переглядів ще немає, перевірте пізніше.
+      chart_error: Помилка відображення діаграми, будь ласка, спробуйте ще раз.
+      views: "Перегляди"
+      predicted_views: "Прогнозовані перегляди"
+      so_far: (поки що)
+      read: читання
+      minutes: мін
     post_links:
       about: "розгорнути додаткові посилання для цього допису"
       title:
@@ -5619,6 +5665,8 @@ uk:
             non_editable: "Ви не можете редагувати цей прапор, оскільки він є системним прапором або вже використовувався в системі перегляду, однак ви все одно можете вимкнути його."
             delete_flag: "Видалити прапор"
             non_deletable: "Ви не можете видалити цей прапорець, оскільки він є системним або вже використовувався в системі перегляду, однак ви все одно можете вимкнути його."
+            require_message: "Запропонувати користувачам вказати додаткові причини"
+            require_message_description: "Коли вибрано цей прапор, користувачеві буде показано текстове поле для надання додаткової інформації про те, чому він позначає вміст"
           more_options:
             title: "Більше опцій"
             move_up: "Посунути вгору"
@@ -6302,6 +6350,10 @@ uk:
             create_flag: "створити прапор"
             update_flag: "оновити прапор"
             delete_flag: "видалити прапор"
+            topic_slow_mode_set: "встановити повільний режим теми"
+            topic_slow_mode_removed: "видалити повільний режим теми"
+            custom_emoji_create: "створити власні емодзі"
+            custom_emoji_destroy: "видалити власні емодзі"
         screened_emails:
           title: "Screened Emails"
           description: "Коли хтось намагатиметься створити новий обліковий запис, наступні електронні скриньки буде перевірено, і реєстрацію заблоковано, або вжито якихось інших дій."
@@ -6953,6 +7005,7 @@ uk:
             prompt: "Ви збираєтеся змінити політику паролів. Відтепер це вплине на всіх користувачів, які змінюють свої паролі. Ви впевнені, що хочете продовжити?"
             confirm: "Так, оновити політику паролів"
       badges:
+        disable_system: Цей значок є системним значком і не може бути вимкнений та / або видалений.
         status: Статус
         title: Нагороди
         new_badge: Нова нагорода
@@ -6961,6 +7014,8 @@ uk:
         badge: Нагорода
         display_name: Ім'я, що відображається
         description: Опис
+        long_description: Докладний опис
+        badge_type: Тип значка
         badge_grouping: Група
         badge_groupings:
           modal_title: Типи Нагороди
@@ -6989,6 +7044,7 @@ uk:
         icon: Іконка
         image: Зображення
         graphic: Іконка бейджа
+        icon_or_image: Значок вимагає піктограми або зображення
         icon_help: "Введіть назву значка Font Awesome (використовуйте префікс 'far-' для звичайних значків та 'fab-' для значків брендів)"
         select_an_icon: "Виберіть піктограму"
         upload_an_image: "Завантажити зображення"

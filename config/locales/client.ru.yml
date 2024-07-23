@@ -371,6 +371,11 @@ ru:
       active_user_count: "Активные пользователи"
       contact: "Связаться с нами"
       contact_info: "В случае возникновения критической ошибки или срочного вопроса, касающегося этого сайта, свяжитесь с нами по адресу %{contact_info}."
+      member_count:
+        one: "%{formatted_number} Участник"
+        few: "%{formatted_number} Участника"
+        many: "%{formatted_number} Участников"
+        other: "%{formatted_number} Участников"
     bookmarked:
       title: "Закладки"
       edit_bookmark: "Изменить закладку"
@@ -883,11 +888,12 @@ ru:
           prefill:
             title: "Заполните предварительные настройки для:"
             gmail: "Gmail"
+          ssl_modes:
+            none: "Нет"
           credentials:
             title: "Учётные данные"
             smtp_server: "SMTP-сервер"
             smtp_port: "SMTP-порт"
-            smtp_ssl: "Использовать SSL для SMTP"
             imap_server: "IMAP-сервер"
             imap_port: "IMAP-порт"
             imap_ssl: "Использовать SSL для IMAP"
@@ -2141,6 +2147,7 @@ ru:
       enable: "Показать лучшие ответы"
       disable: "Показать все сообщения"
       short_label: "Лучшие ответы"
+      show_all_label: "Показать все"
       short_title: "Показать лучшие ответы в теме — только самые интересные сообщения по мнению сообщества"
     deleted_filter:
       enabled_description: "Эта тема содержит удаленные сообщения, которые сейчас скрыты."
@@ -4045,6 +4052,9 @@ ru:
         few: "%{count} клика"
         many: "%{count} кликов"
         other: "%{count} клика"
+      views: "Просмотров"
+      read: чтение
+      minutes: мин.
     post_links:
       about: "показать все ссылки для этого сообщения"
       title:

@@ -712,11 +712,12 @@ da:
           imap_disable_confirm: "Hvis du deaktiverer IMAP, vil alle IMAP-indstillinger blive nulstillet, og den tilknyttede funktion vil blive deaktiveret. Er du sikker på, at du vil fortsætte?"
           prefill:
             title: "Forudfyld med indstillinger for:"
+          ssl_modes:
+            none: "Ingen"
           credentials:
             title: "Legitimationsoplysninger"
             smtp_server: "SMTP-server"
             smtp_port: "SMTP-port"
-            smtp_ssl: "Brug SSL til SMTP"
             imap_server: "IMAP-server"
             imap_port: "IMAP-port"
             imap_ssl: "Brug SSL til IMAP"
@@ -1707,6 +1708,7 @@ da:
         Der {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svar}} med en anslået læsetid på <b>{readingTime, plural, one {# minut} other {# minutter}}</b>.
       disable: "Vis alle indlæg"
       short_label: "Top svar"
+      show_all_label: "Vis alle"
     deleted_filter:
       enabled_description: "Dette emne indeholder slettede indlæg, som er blevet skjult."
       disabled_description: "Slettede indlæg i emnet bliver vist."
@@ -3173,6 +3175,9 @@ da:
       clicks:
         one: "%{count} klik"
         other: "%{count} klik"
+      views: "Visninger"
+      read: læst
+      minutes: min
     post_links:
       about: "udvid flere links for dette indlæg"
       title:

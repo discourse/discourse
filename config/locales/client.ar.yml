@@ -339,7 +339,7 @@ ar:
         us_west_2: "غرب الولايات المتحدة (أوريغون)"
     clear_input: "مسح الإدخال"
     edit: "تعديل"
-    edit_topic: "عدَّل عنوان هذا الموضوع وفئته"
+    edit_topic: "تعديل عنوان هذا الموضوع وفئته"
     expand: "وسّع"
     not_implemented: "عذرًا، لم يتم تنفيذ هذه الميزة بعد."
     no_value: "لا"
@@ -989,11 +989,12 @@ ar:
           prefill:
             title: "الملء المسبق بإعدادات:"
             gmail: "Gmail"
+          ssl_modes:
+            none: "لا يوجد"
           credentials:
             title: "بيانات الاعتماد"
             smtp_server: "خادم SMTP"
             smtp_port: "منفذ SMTP"
-            smtp_ssl: "استخدام SSL لخادم SMTP"
             imap_server: "خادم IMAP"
             imap_port: "منفذ IMAP"
             imap_ssl: "استخدام SSL لخادم IMAP"
@@ -2322,6 +2323,7 @@ ar:
       enable: "عرض أهم الردود"
       disable: "عرض كل المنشورات"
       short_label: "أهم الردود"
+      show_all_label: "إظهار الكل"
       short_title: "عرض أبرز الردود على هذا الموضوع: المنشورات الأكثر إثارة وفقًا للمجتمع"
     deleted_filter:
       enabled_description: "يتتضمَّن هذا الموضوع منشورات محذوفة، والتي تم إخفاؤها."
@@ -2510,8 +2512,8 @@ ar:
     category_row:
       subcategory_count:
         zero: "+%{count} فئة فرعية"
-        one: "+%{count} تصنيفات فرعية"
-        two: "+%{count} تصنيف فرعي واحد و تصنيفات فرعية"
+        one: "+فئة فرعية واحدة (%{count})"
+        two: "+فئتان فرعيتان (%{count})"
         few: "+%{count} فئات فرعية"
         many: "+%{count} فئة فرعية"
         other: "+%{count} فئة فرعية"
@@ -4412,6 +4414,9 @@ ar:
         few: "%{count} نقرات"
         many: "%{count} نقرة"
         other: "%{count} نقرة"
+      views: "مرات العرض"
+      read: قراءة
+      minutes: الحد الأدنى
     post_links:
       about: "توسيع المزيد من الروابط لهذا المنشور"
       title:

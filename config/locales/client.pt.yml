@@ -737,11 +737,12 @@ pt:
           imap_mailbox_not_selected: "Tem de selecionar uma caixa de correio para esta configuração IMAP ou nenhuma caixa de correio será sincronizada!"
           prefill:
             title: "Preencher com configurações para:"
+          ssl_modes:
+            none: "Nenhuma"
           credentials:
             title: "Credenciais"
             smtp_server: "Servidor SMTP"
             smtp_port: "Porta SMTP"
-            smtp_ssl: "Utilizar SSL para SMTP"
             imap_server: "Servidor IMAP"
             imap_port: "Porta IMAP"
             imap_ssl: "Utilizar SSL para IMAP"
@@ -1703,6 +1704,7 @@ pt:
       intro: "Olá! Parece que está a gostar da conversa, mas ainda não tem uma conta."
     summary:
       disable: "Mostrar Todas As Publicações"
+      show_all_label: "Mostrar tudo"
     deleted_filter:
       enabled_description: "Este tópico contém respostas eliminadas, que foram ocultadas."
       disabled_description: "As publicações eliminadas no tópico são exibidas."
@@ -3093,6 +3095,9 @@ pt:
       clicks:
         one: "%{count} clique"
         other: "%{count} cliques"
+      views: "Vistas"
+      read: ler
+      minutes: mínimo
     post_links:
       about: "expandir mais ligações para esta publicação"
       title:

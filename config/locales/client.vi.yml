@@ -672,11 +672,12 @@ vi:
           imap_mailbox_not_selected: "Bạn phải chọn Hộp thư cho cấu hình IMAP này nếu không sẽ không có hộp thư nào được đồng bộ hóa!"
           prefill:
             title: "Điền sẵn các cài đặt cho:"
+          ssl_modes:
+            none: "Không có gì"
           credentials:
             title: "Thông tin đăng nhập"
             smtp_server: "Máy chủ SMTP"
             smtp_port: "Cổng SMTP"
-            smtp_ssl: "Sử dụng SSL cho SMTP"
             imap_server: "Máy chủ IMAP"
             imap_port: "Cổng IMAP"
             imap_ssl: "Sử dụng SSL cho IMAP"
@@ -1628,6 +1629,7 @@ vi:
       description:
         other: "Có <b>%{count}</b> trả lời."
       disable: "HIển thị tất cả các bài viết"
+      show_all_label: "Hiển thị tất cả"
     deleted_filter:
       enabled_description: "Chủ để này có chứa các bài viết bị xoá, chúng đã bị ẩn đi"
       disabled_description: "Xoá các bài viết trong các chủ để được hiển thị"
@@ -3103,6 +3105,9 @@ vi:
       links_shown: "hiện thêm liên kết…"
       clicks:
         other: "%{count} nhấp chuột"
+      views: "Lượt xem"
+      read: đọc
+      minutes: tối thiểu
     post_links:
       about: "mở rộng nhiều liên kết hơn cho bài đăng này"
       title:

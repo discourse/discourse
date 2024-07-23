@@ -40,8 +40,8 @@ es:
             label: Cuerpo
         pms:
           confirm_remove_pm: "¿Seguro que quieres eliminar este MP?"
-          placeholder_title: Título del mensaje
-          add_pm: Añadir mensaje
+          placeholder_title: Título del MP
+          add_pm: Añadir MP
           no_pm_created: Todavía no has creado ningún MP. Los MP se enviarán una vez que se active tu automatización.
           title:
             label: Título
@@ -137,7 +137,7 @@ es:
         point_in_time:
           fields:
             execute_at:
-              label: Ejecutar en
+              label: Ejecutar a las
         topic:
           fields:
             restricted_topic:
@@ -170,6 +170,20 @@ es:
               description: Se activará solo si el tema es el primer tema que creó un usuario
           created: Creado
           edited: Editado
+        user_updated:
+          fields:
+            user_profile:
+              label: Campos del perfil de usuario
+              description: Se activará solo si el usuario ha completado todos estos campos
+            custom_fields:
+              label: Campos personalizados del usuario
+              description: Solo se activará si el usuario ha rellenado todos estos campos
+            once_per_user:
+              label: Una vez por usuario
+              description: Solo se activará una vez por usuario
+            new_users_only:
+              label: Solo nuevos usuarios
+              description: Se activará solo para los nuevos usuarios que se unan después de que esta automatización esté habilitada
         category_created_edited:
           fields:
             restricted_category:
@@ -220,6 +234,7 @@ es:
               description: Solo responde una vez por tema
             word_answer_list:
               label: Lista de pares de palabras/respuestas
+              description: "Define una lista de grupos clave/valor, donde «clave» es el término buscado, y «valor» el texto de la respuesta. La «clave» puede dejarse en blanco para responder a todos los activadores, independientemente de su contenido. Ten en cuenta que «value» acepta «{{key}}» como marcador de posición que se sustituirá por el valor de «clave» en la respuesta. Ten en cuenta que «clave» se evaluará como una expresión regular, y que los caracteres especiales como «.» deben escaparse si en realidad se trata de un punto, p. ej.: «\\»."
             answering_user:
               label: Usuario que responde
               description: Por defecto, usuario del sistema
@@ -232,10 +247,25 @@ es:
           fields:
             creator:
               label: Creador
+              post_creator_context: El creador de la publicación.
+              updated_user_context: El usuario actualizado
             topic:
               label: ID del tema
             post:
               label: Contenido de la publicación
+        topic:
+          fields:
+            creator:
+              label: Creador
+              updated_user_context: El usuario actualizado
+            body:
+              label: Cuerpo del tema
+            title:
+              label: Título del tema
+            category:
+              label: Categoría del tema
+            tags:
+              label: Etiquetas del tema
         group_category_notification_default:
           fields:
             group:
@@ -254,7 +284,7 @@ es:
               description: Acepta HTML, ¡no incluyas contenido inseguro o de terceros!
           levels:
             warning: Advertencia
-            info: Info
+            info: Información
             success: Éxito
             error: Error
         user_group_membership_through_badge:
