@@ -17,15 +17,7 @@ class FooterNav extends Component {
   @service historyStore;
 
   _modalOn() {
-    const backdrop = document.querySelector(".modal-backdrop");
-    if (!backdrop) {
-      return;
-    }
-
-    postRNWebviewMessage(
-      "headerBg",
-      getComputedStyle(backdrop)["background-color"]
-    );
+    postRNWebviewMessage("headerBg", "rgb(0, 0, 0)");
   }
 
   _modalOff() {
