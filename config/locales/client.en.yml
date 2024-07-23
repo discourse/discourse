@@ -6250,6 +6250,8 @@ en:
             topic_slow_mode_removed: "remove topic slow mode"
             custom_emoji_create: "create custom emoji"
             custom_emoji_destroy: "delete custom emoji"
+            delete_post_permanently: "permanently delete post"
+            delete_topic_permanently: "permanently delete topic"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
