@@ -29,11 +29,6 @@ class FooterNav extends Component {
   }
 
   _modalOff() {
-    const dheader = document.querySelector(".d-header");
-    if (!dheader) {
-      return;
-    }
-
     postRNWebviewMessage(
       "headerBg",
       document.documentElement.style.getPropertyValue("--header_background")
