@@ -300,6 +300,28 @@ RSpec.describe PostsController do
           delete "/posts/#{post.id}.json", params: { force_destroy: true }
           expect(response.status).to eq(403)
         end
+
+        it "creates a log and clean up previously recorded sensitive information" do
+          sign_in(admin)
+
+          delete "/posts/#{post.id}.json"
+          expect(response.status).to eq(200)
+          expect(post.reload.deleted_by_id).to eq(admin.id)
+
+          post.update!(deleted_at: 10.minutes.ago)
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(200)
+
+          UserHistory.last.tap do |h|
+            expect(h.action).to eq(UserHistory.actions[:delete_post_permanently])
+            expect(h.acting_user_id).to eq(admin.id)
+          end
+
+          UserHistory
+            .where(post_id: post.id)
+            .each { |h| expect(h.details).to eq("(permanently deleted)") }
+        end
       end
     end
   end

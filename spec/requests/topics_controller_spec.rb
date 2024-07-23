@@ -1535,6 +1535,25 @@ RSpec.describe TopicsController do
         expect(Post.find_by(id: small_action_post.id)).to eq(nil)
       end
 
+      it "creates a log and clean up previously recorded sensitive information" do
+        small_action_post = Fabricate(:small_action, topic: topic)
+        PostDestroyer.new(Discourse.system_user, post).destroy
+        PostDestroyer.new(Discourse.system_user, small_action_post).destroy
+
+        delete "/t/#{topic.id}.json", params: { force_destroy: true }
+
+        expect(response.status).to eq(200)
+
+        UserHistory.last.tap do |h|
+          expect(h.action).to eq(UserHistory.actions[:delete_topic_permanently])
+          expect(h.acting_user_id).to eq(admin.id)
+        end
+
+        UserHistory
+          .where(topic_id: topic.id)
+          .each { |h| expect(h.details).to eq("(permanently deleted)") }
+      end
+
       it "does not allow to destroy topic if not all posts were force destroyed" do
         _other_post = Fabricate(:post, topic: topic, post_number: 2)
         PostDestroyer.new(Discourse.system_user, post).destroy

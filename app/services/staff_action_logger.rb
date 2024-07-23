@@ -82,10 +82,11 @@ class StaffActionLogger
       "post_number: #{deleted_post.post_number}",
       "raw: #{truncate(deleted_post.raw)}",
     ]
+    details = [] if opts[:permanent]
 
     UserHistory.create!(
       params(opts).merge(
-        action: UserHistory.actions[:delete_post],
+        action: UserHistory.actions[opts[:permanent] ? :delete_post_permanently : :delete_post],
         post_id: deleted_post.id,
         details: details.join("\n"),
       ),
@@ -107,6 +108,8 @@ class StaffActionLogger
     if first_post = topic.ordered_posts.with_deleted.first
       details << "raw: #{truncate(first_post.raw)}"
     end
+
+    details = [] if action == "delete_topic_permanently"
 
     UserHistory.create!(
       params(opts).merge(
