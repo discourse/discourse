@@ -51,7 +51,7 @@ class TranslationOverride < ActiveRecord::Base
   scope :mf_locales, ->(locale) { where(locale: locale).where("translation_key LIKE '%_MF'") }
   scope :client_locales,
         ->(locale) do
-          where(locale: locale)
+          where(locale: locale, status: "up_to_date")
             .where("translation_key LIKE 'js.%' OR translation_key LIKE 'admin_js.%'")
             .where.not("translation_key LIKE '%_MF'")
         end
