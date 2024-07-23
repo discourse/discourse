@@ -15,6 +15,7 @@ export default class ChatFooter extends Component {
   @service chat;
   @service chatHistory;
   @service siteSettings;
+  @service site;
   @service currentUser;
   @service chatChannelsManager;
   @service chatStateManager;
@@ -44,7 +45,9 @@ export default class ChatFooter extends Component {
   }
   get shouldRenderFooter() {
     return (
-      this.chatStateManager.hasPreloadedChannels && this.enabledRouteCount > 1
+      (this.site.mobileView || this.chatStateManager.isDrawerExpanded) &&
+      this.chatStateManager.hasPreloadedChannels &&
+      this.enabledRouteCount > 1
     );
   }
 

@@ -142,7 +142,7 @@ export default class ChatDrawerRouter extends Service {
 
   routeNames = Object.keys(ROUTES);
 
-  #hasThreads() {
+  get hasThreads() {
     if (!this.siteSettings.chat_threads_enabled) {
       return false;
     }
@@ -150,12 +150,8 @@ export default class ChatDrawerRouter extends Service {
     return this.chatChannelsManager.hasThreadedChannels;
   }
 
-  #hasDirectMessages() {
+  get hasDirectMessages() {
     return this.chat.userCanAccessDirectMessages;
-  }
-
-  #isPublicChannelsEnabled() {
-    return this.siteSettings.enable_public_channels;
   }
 
   #routeFromURL(url) {
@@ -172,13 +168,13 @@ export default class ChatDrawerRouter extends Service {
   #redirect() {
     if (
       this.siteSettings.chat_preferred_index === "my_threads" &&
-      this.#hasThreads()
+      this.hasThreads
     ) {
       return this.stateFor(this.#routeFromURL("/chat/threads"));
     }
     if (
       this.siteSettings.chat_preferred_index === "direct_messages" &&
-      this.#hasDirectMessages()
+      this.hasDirectMessages
     ) {
       return this.stateFor(this.#routeFromURL("/chat/direct-messages"));
     }
