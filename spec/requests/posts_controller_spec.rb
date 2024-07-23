@@ -313,14 +313,14 @@ RSpec.describe PostsController do
           delete "/posts/#{post.id}.json", params: { force_destroy: true }
           expect(response.status).to eq(200)
 
-          UserHistory.last.tap do |h|
-            expect(h.action).to eq(UserHistory.actions[:delete_post_permanently])
-            expect(h.acting_user_id).to eq(admin.id)
-          end
+          expect(UserHistory.last).to have_attributes(
+            action: UserHistory.actions[:delete_post_permanently],
+            acting_user_id: admin.id,
+          )
 
-          UserHistory
-            .where(post_id: post.id)
-            .each { |h| expect(h.details).to eq("(permanently deleted)") }
+          expect(UserHistory.where(post_id: post.id, details: "(permanently deleted)").count).to eq(
+            2,
+          )
         end
       end
     end

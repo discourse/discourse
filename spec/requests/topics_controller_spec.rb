@@ -1544,14 +1544,14 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(200)
 
-        UserHistory.last.tap do |h|
-          expect(h.action).to eq(UserHistory.actions[:delete_topic_permanently])
-          expect(h.acting_user_id).to eq(admin.id)
-        end
+        expect(UserHistory.last).to have_attributes(
+          action: UserHistory.actions[:delete_topic_permanently],
+          acting_user_id: admin.id,
+        )
 
-        UserHistory
-          .where(topic_id: topic.id)
-          .each { |h| expect(h.details).to eq("(permanently deleted)") }
+        expect(UserHistory.where(topic_id: topic.id, details: "(permanently deleted)").count).to eq(
+          2,
+        )
       end
 
       it "does not allow to destroy topic if not all posts were force destroyed" do
