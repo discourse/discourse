@@ -1272,6 +1272,10 @@ class Category < ActiveRecord::Base
     tags.count > 0 || tag_groups.count > 0
   end
 
+  def reviewable_by_groups
+    category_groups.where(can_moderate: true).map(&:group)
+  end
+
   private
 
   def ensure_category_setting

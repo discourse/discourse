@@ -1,12 +1,10 @@
-<span class="group-name">
+<td class="group-name">
   <span class="group-name-label">{{this.group_name}}</span>
-  <a class="remove-permission" href {{on "click" this.removeRow}}>
-    {{d-icon "far-trash-alt"}}
-  </a>
-</span>
-<span class="options actionable">
+</td>
+<td>
   <DButton @icon="check-square" @disabled={{true}} class="btn-flat see" />
-
+</td>
+<td>
   <DButton
     @icon={{this.canReplyIcon}}
     @action={{action "setPermissionReply"}}
@@ -14,7 +12,8 @@
     @disabled={{this.replyDisabled}}
     class={{concat-class "btn btn-flat reply-toggle" this.replyGranted}}
   />
-
+</td>
+<td>
   <DButton
     @icon={{this.canCreateIcon}}
     @action={{action "setPermissionFull"}}
@@ -22,4 +21,22 @@
     @disabled={{this.createDisabled}}
     class={{concat-class "btn-flat create-toggle" this.createGranted}}
   />
-</span>
+</td>
+<td class="separator"></td>
+{{#if this.siteSettings.enable_category_group_moderation}}
+<td>
+  <DButton
+    @icon={{this.canModerateIcon}}
+    @action={{action "setPermissionModerate"}}
+    @title="category.permissions.toggle_moderate"
+    @disabled={{this.moderateDisabled}}
+    class={{concat-class "btn-flat moderate-toggle" this.moderateGranted}}
+  />
+</td>
+<td class="separator"></td>
+{{/if}}
+<td>
+  <a class="remove-permission" href {{on "click" this.removeRow}}>
+    {{d-icon "far-trash-alt"}}
+  </a>
+</td>
