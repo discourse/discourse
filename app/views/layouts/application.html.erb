@@ -7,7 +7,7 @@
     <meta name="discourse_theme_id" content="<%= theme_id %>">
     <meta name="discourse_current_homepage" content="<%= current_homepage %>">
 
-    <%- if GlobalSetting.early_hint_header_mode == "prefetch" %>
+    <%- if preload_stylesheet? %>
       <%= render partial: "common/discourse_preload_stylesheet" %>
     <%- end %>
     <%= render partial: "layouts/head" %>

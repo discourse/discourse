@@ -773,4 +773,8 @@ module ApplicationHelper
         current_user ? nil : value
       end
   end
+
+  def preload_stylesheet?
+    GlobalSetting.early_hint_header_mode == "prefetch" || params["preload_stylesheets"] == "true"
+  end
 end
