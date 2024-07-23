@@ -2219,6 +2219,7 @@ en:
         }.
 
     learn_more: "Learn more…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>Learn more…</a>"
 
     mute: Mute
     unmute: Unmute
@@ -5658,6 +5659,8 @@ en:
 
       backups:
         title: "Backups"
+        description: "Discourse backups include the full site database, which contains everything on the site: topics, posts, users, groups, settings, themes, etc. Depending on how the backup file is created, it may or may not include uploads."
+        learn_more_url: ""
         menu:
           backups: "Backups"
           logs: "Logs"

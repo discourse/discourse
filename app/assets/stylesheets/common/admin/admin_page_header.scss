@@ -1,0 +1,42 @@
+.admin-page-header {
+  .admin-page-header__title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1em;
+
+    h1 {
+      margin: 0;
+    }
+
+    .admin-page-header__actions {
+      display: flex;
+      align-items: center;
+      button {
+        margin-left: 1em;
+      }
+    }
+  }
+
+  .admin-nav-submenu {
+    background: transparent;
+    border-bottom: 1px solid var(--primary-low);
+
+    .horizontal-overflow-nav {
+      background: transparent;
+
+      &:before {
+        display: none;
+      }
+
+      &:after {
+        display: none;
+      }
+    }
+
+    .nav-pills {
+      width: auto;
+      margin: 0;
+    }
+  }
+}
