@@ -29,5 +29,8 @@
       <this.endComponent />
     {{/if}}
   </a>
+  {{#if this.note}}
+    <span class="item-note">{{this.note}}</span>
+  {{/if}}
   <PluginOutlet @name="menu-item-end" @outletArgs={{this.endOutletArgs}} />
 </li>
