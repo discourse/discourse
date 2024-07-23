@@ -97,14 +97,14 @@ class FooterNav extends Component {
 
   @action
   goBack() {
-    this.currentRouteIndex = this.currentRouteIndex - 1;
+    this.currentRouteIndex -= 1;
     this.backForwardClicked = true;
     window.history.back();
   }
 
   @action
   goForward() {
-    this.currentRouteIndex = this.currentRouteIndex + 1;
+    this.currentRouteIndex += 1;
     this.backForwardClicked = true;
     window.history.forward();
   }
