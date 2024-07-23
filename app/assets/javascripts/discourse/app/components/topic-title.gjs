@@ -56,15 +56,9 @@ export default class TopicTitle extends Component {
 
   @action
   handleIntersectionChange(e) {
-    if (e.isIntersecting) {
-      this.header.mainTopicTitleVisible = true;
-    } else if (e.boundingClientRect.top > 0) {
-      // Title is below the curent viewport position. Unusual, but can be caused with
-      // small viewport and/or large headers. Treat same as if title is on screen.
-      this.header.mainTopicTitleVisible = true;
-    } else {
-      this.header.mainTopicTitleVisible = false;
-    }
+    // Title is in the viewport or  below it – unusual, but can be caused by
+    // small viewport and/or large headers. Treat same as if title is on screen.
+    this.header.mainTopicTitleVisible = e.isIntersecting || e.boundingClientRect.top > 0;
   }
 
   @action
