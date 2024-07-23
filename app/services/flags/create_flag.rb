@@ -22,7 +22,7 @@ class Flags::CreateFlag
     validates :description, presence: true
     validates :name, length: { maximum: Flag::MAX_NAME_LENGTH }
     validates :description, length: { maximum: Flag::MAX_DESCRIPTION_LENGTH }
-    validates :applies_to, inclusion: { in: Flag.valid_applies_to_types }, allow_nil: false
+    validates :applies_to, inclusion: { in: -> { Flag.valid_applies_to_types } }, allow_nil: false
   end
 
   private
