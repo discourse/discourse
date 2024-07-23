@@ -5,7 +5,7 @@ require "bundler/inline"
 
 gemfile(true) do
   source "https://rubygems.org"
-  gem "extralite-bundle", github: "digital-fabric/extralite"
+  gem "extralite-bundle"
 end
 
 require "etc"
