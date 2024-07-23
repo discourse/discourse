@@ -37,9 +37,9 @@ class FooterNav extends Component {
     this.bindScrolling();
 
     return () => {
-      cancel(this._throttleHandler);
       window.removeEventListener("resize", this.scrolled);
       this.unbindScrolling();
+      cancel(this._throttleHandler);
     };
   });
 
