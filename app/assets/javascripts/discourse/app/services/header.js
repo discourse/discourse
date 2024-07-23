@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
-import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import Service, { service } from "@ember/service";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
@@ -127,22 +126,6 @@ export default class Header extends Service {
       });
     });
     return Array.from(buttonsToHide);
-  }
-
-  /**
-   * Called by a modifier attached to the main topic title element.
-   */
-  @action
-  titleIntersectionChanged(e) {
-    if (e.isIntersecting) {
-      this.mainTopicTitleVisible = true;
-    } else if (e.boundingClientRect.top > 0) {
-      // Title is below the curent viewport position. Unusual, but can be caused with
-      // small viewport and/or large headers. Treat same as if title is on screen.
-      this.mainTopicTitleVisible = true;
-    } else {
-      this.mainTopicTitleVisible = false;
-    }
   }
 
   /**

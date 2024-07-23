@@ -3,6 +3,7 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { isiPad } from "discourse/lib/utilities";
@@ -53,12 +54,26 @@ export default class TopicTitle extends Component {
     }
   }
 
+  @action
+  handleIntersectionChange(e) {
+    // Title is in the viewport or  below it – unusual, but can be caused by
+    // small viewport and/or large headers. Treat same as if title is on screen.
+    this.header.mainTopicTitleVisible =
+      e.isIntersecting || e.boundingClientRect.top > 0;
+  }
+
+  @action
+  handleTitleDestroy() {
+    this.header.mainTopicTitleVisible = false;
+  }
+
   <template>
     {{! template-lint-disable no-invalid-interactive }}
     <div
       {{didInsert this.applyDecorators}}
       {{on "keydown" this.keyDown}}
-      {{observeIntersection this.header.titleIntersectionChanged}}
+      {{observeIntersection this.handleIntersectionChange}}
+      {{willDestroy this.handleTitleDestroy}}
       id="topic-title"
       class="container"
     >
