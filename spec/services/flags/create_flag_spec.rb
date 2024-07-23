@@ -61,7 +61,14 @@ RSpec.describe(Flags::CreateFlag) do
 
   context "when user is allowed to perform the action" do
     fab!(:current_user) { Fabricate(:admin) }
+    let(:applies_to) { ["Topic::Custom"] }
 
+    before do
+      DiscoursePluginRegistry.register_flag_applies_to_type(
+        "Topic::Custom",
+        OpenStruct.new(enabled?: true),
+      )
+    end
     after { Flag.destroy_by(name: "custom flag name") }
 
     it "sets the service result as successful" do
@@ -73,7 +80,7 @@ RSpec.describe(Flags::CreateFlag) do
       flag = Flag.last
       expect(flag.name).to eq("custom flag name")
       expect(flag.description).to eq("custom flag description")
-      expect(flag.applies_to).to eq(["Topic"])
+      expect(flag.applies_to).to eq(["Topic::Custom"])
       expect(flag.require_message).to be true
       expect(flag.enabled).to be true
     end
@@ -83,7 +90,7 @@ RSpec.describe(Flags::CreateFlag) do
       expect(UserHistory.last).to have_attributes(
         custom_type: "create_flag",
         details:
-          "name: custom flag name\ndescription: custom flag description\napplies_to: [\"Topic\"]\nrequire_message: true\nenabled: true",
+          "name: custom flag name\ndescription: custom flag description\napplies_to: [\"Topic::Custom\"]\nrequire_message: true\nenabled: true",
       )
     end
   end
