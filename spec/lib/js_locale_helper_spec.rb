@@ -230,7 +230,7 @@ RSpec.describe JsLocaleHelper do
   end
 
   describe ".output_client_overrides" do
-    it "should not output deprecated or outdated translation overrides" do
+    it "should not output deprecated translation overrides" do
       Fabricate(
         :translation_override,
         locale: "en",
