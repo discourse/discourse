@@ -7,9 +7,11 @@ import I18n from "discourse-i18n";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
 
 const STAFF_ONLY = "staff_only";
+const REGULAR = "regular";
 const MULTIPLE = "multiple";
 const NUMBER = "number";
 const RANKED_CHOICE = "ranked_choice";
+const FETCH_VOTERS_COUNT = 25;
 
 export default createWidget("discourse-poll", {
   tagName: "div",
@@ -41,18 +43,19 @@ export default createWidget("discourse-poll", {
       closed: this.closed(attrs),
       topicArchived: this.topicArchived(attrs),
       staffOnly: this.staffOnly(attrs),
+      rankedChoiceDropdownContent: this.setupRankedChoiceDropdownContent(attrs),
       voters: attrs.poll.voters,
       vote: attrs.vote,
       hasSavedVote: attrs.hasSavedVote,
       options: attrs.poll.options,
-      preloaded_voters: attrs.poll.preloaded_voters,
+      preloadedVoters: attrs.poll.preloaded_voters,
       groupableUserFields: attrs.groupableUserFields,
-      rankedChoiceOutcome: attrs.rankedChoiceOutcome || [],
+      rankedChoiceOutcome: attrs.poll.ranked_choice_outcome || [],
     };
   },
 
   closed(attrs) {
-    return attrs.status === "closed" || this.isAutomaticallyClosed(attrs);
+    return attrs.poll.status === "closed" || this.isAutomaticallyClosed(attrs);
   },
 
   topicArchived(attrs) {
@@ -61,6 +64,25 @@ export default createWidget("discourse-poll", {
 
   staffOnly(attrs) {
     return attrs.poll.results === STAFF_ONLY;
+  },
+
+  setupRankedChoiceDropdownContent(attrs) {
+    let rankedChoiceDropdownContent = [];
+
+    rankedChoiceDropdownContent.push({
+      id: 0,
+      name: I18n.t("poll.options.ranked_choice.abstain"),
+    });
+
+    attrs.poll.options.forEach((option, i) => {
+      option.rank = 0;
+      rankedChoiceDropdownContent.push({
+        id: i + 1,
+        name: (i + 1).toString(),
+      });
+    });
+
+    return rankedChoiceDropdownContent;
   },
 
   isAutomaticallyClosed(attrs) {
@@ -86,18 +108,16 @@ export default createWidget("discourse-poll", {
   },
 
   toggleStatus() {
-    if (this.isAutomaticallyClosed) {
-      return;
-    }
-
     this.dialog.yesNoConfirm({
-      message: I18n.t(this.closed ? "poll.open.confirm" : "poll.close.confirm"),
+      message: I18n.t(
+        this.state.closed ? "poll.open.confirm" : "poll.close.confirm"
+      ),
       didConfirm: () => {
-        const status = this.closed ? "open" : "closed";
+        const status = this.state.closed ? "open" : "closed";
         ajax("/polls/toggle_status", {
           type: "PUT",
           data: {
-            post_id: this.attrs.post.id,
+            post_id: this.state.post.id,
             poll_name: this.state.poll.name,
             status,
           },
@@ -105,12 +125,7 @@ export default createWidget("discourse-poll", {
           .then(() => {
             this.state.poll.status = status;
             this.state.status = status;
-            if (
-              this.state.poll.results === "on_close" ||
-              this.state.poll.results === "always"
-            ) {
-              this.state.showResults = this.state.status === "closed";
-            }
+            this.state.closed = status === "closed";
           })
           .catch((error) => {
             if (error) {
@@ -118,6 +133,10 @@ export default createWidget("discourse-poll", {
             } else {
               this.dialog.alert(I18n.t("poll.error_while_toggling_status"));
             }
+          })
+          .finally(() => {
+            this.scheduleRerender();
+            return status;
           });
       },
     });
@@ -159,9 +178,11 @@ export default createWidget("discourse-poll", {
 
     this.state.vote = [...vote];
     this.state.options = [...options];
+    this.scheduleRerender();
   },
 
   castVotes() {
+    let successfulVote = false;
     return ajax("/polls/vote", {
       type: "PUT",
       data: {
@@ -173,7 +194,6 @@ export default createWidget("discourse-poll", {
       .then(({ poll }) => {
         this.state.options = [...poll.options];
         this.state.hasSavedVote = true;
-        // this.state.vote = this.attrs.vote;
         this.state.rankedChoiceOutcome = poll.ranked_choice_outcome || [];
         this.state.poll.setProperties(poll);
         this.appEvents.trigger(
@@ -185,10 +205,10 @@ export default createWidget("discourse-poll", {
 
         const voters = poll.voters;
         this.state.voters = [Number(voters)][0];
-        this.scheduleRerender();
-        return true;
+        successfulVote = true;
       })
       .catch((error) => {
+        successfulVote = false;
         if (error) {
           if (!this.state.isMultiple && !this.state.isRankedChoice) {
             // this._toggleOption(option);
@@ -199,7 +219,8 @@ export default createWidget("discourse-poll", {
         }
       })
       .finally(() => {
-        return false;
+        this.scheduleRerender();
+        return successfulVote;
       });
   },
 
@@ -229,17 +250,92 @@ export default createWidget("discourse-poll", {
           this.state.post,
           this.state.vote
         );
+        this.scheduleRerender();
         return true;
       })
       .catch((error) => {
         popupAjaxError(error);
-      })
-      .finally(() => {
         return false;
       });
   },
 
+  fetchVoters(optionId) {
+    let votersCount;
+    // this.loading = true;
+    // let options = this.state.options;
+    // options.find((option) => option.id === optionId).loading = true;
+    // this.state.options = [...options];
+
+    votersCount = this.state.options.find(
+      (option) => option.id === optionId
+    ).votes;
+
+    return ajax("/polls/voters.json", {
+      data: {
+        post_id: this.state.post.id,
+        poll_name: this.state.poll.name,
+        option_id: optionId,
+        page: Math.floor(votersCount / FETCH_VOTERS_COUNT) + 1,
+        limit: FETCH_VOTERS_COUNT,
+      },
+    })
+      .then((result) => {
+        const voters =
+          (optionId
+            ? this.state.preloadedVoters[optionId]
+            : this.state.preloadedVoters) || [];
+
+        const newVoters = optionId ? result.voters[optionId] : result.voters;
+        if (this.state.isRankedChoice) {
+          this.state.preloadedVoters[optionId] = [...new Set([...newVoters])];
+        } else {
+          const votersSet = new Set(voters.map((voter) => voter.username));
+          newVoters.forEach((voter) => {
+            if (!votersSet.has(voter.username)) {
+              votersSet.add(voter.username);
+              voters.push(voter);
+            }
+          });
+          // remove users who changed their vote
+          if (this.state.poll.type === REGULAR) {
+            Object.keys(this.state.preloadedVoters).forEach((otherOptionId) => {
+              if (optionId !== otherOptionId) {
+                this.state.preloadedVoters[otherOptionId] =
+                  this.state.preloadedVoters[otherOptionId].filter(
+                    (voter) => !votersSet.has(voter.username)
+                  );
+              }
+            });
+          }
+        }
+        this.state.preloadedVoters[optionId] = [...new Set([...newVoters])];
+      })
+      .catch((error) => {
+        if (error) {
+          popupAjaxError(error);
+        } else {
+          this.dialog.alert(I18n.t("poll.error_while_fetching_voters"));
+        }
+      })
+      .finally(() => {
+        this.scheduleRerender();
+        // options.find((option) => option.id === optionId).loading = false;
+        // this.options = [...options];
+      });
+  },
+
   html(attrs) {
+    attrs.poll.options.forEach((option) => {
+      option.rank = 0;
+      if (this.state.isRankedChoice) {
+        this.state.vote.forEach((vote) => {
+          if (vote.digest === option.id) {
+            option.rank = vote.rank;
+          }
+        });
+      }
+    });
+
     return [
       new RenderGlimmer(
         this,
@@ -257,10 +353,11 @@ export default createWidget("discourse-poll", {
           @closed={{@data.closed}}
           @topicArchived={{@data.topicArchived}}
           @staffOnly={{@data.staffOnly}}
-          @voters={{@data.voters}}
-          @vote={{@data.vote}}
           @preloadedVoters={{@data.preloadedVoters}}
           @options={{@data.options}}
+          @voters={{@data.voters}}
+          @vote={{@data.vote}}
+          @rankedChoiceDropdownContent={{@data.rankedChoiceDropdownContent}}
           @hasSavedVote={{@data.hasSavedVote}}
           @rankedChoiceOutcome={{@data.rankedChoiceOutcome}}
           @groupableUserFields={{@data.groupableUserFields}}
@@ -268,6 +365,7 @@ export default createWidget("discourse-poll", {
           @castVotes={{action @data.castVotes}}
           @toggleStatus={{action @data.toggleStatus}}
           @toggleOption={{action @data.toggleOption}}
+          @fetchVoters={{action @data.fetchVoters}}
         />`,
         {
           attrs,
@@ -285,7 +383,8 @@ export default createWidget("discourse-poll", {
           options: attrs.poll.options,
           voters: attrs.poll.voters,
           vote: this.state.vote,
-          preloadedVoters: this.state.preloaded_voters,
+          preloadedVoters: this.state.preloadedVoters,
+          rankedChoiceDropdownContent: this.state.rankedChoiceDropdownContent,
           hasSavedVote: this.state.hasSavedVote,
           rankedChoiceOutcome: this.state.rankedChoiceOutcome,
           groupableUserFields: this.state.groupableUserFields,
@@ -293,6 +392,7 @@ export default createWidget("discourse-poll", {
           castVotes: this.castVotes.bind(this),
           toggleStatus: this.toggleStatus.bind(this),
           toggleOption: this.toggleOption.bind(this),
+          fetchVoters: this.fetchVoters.bind(this),
         }
       ),
     ];

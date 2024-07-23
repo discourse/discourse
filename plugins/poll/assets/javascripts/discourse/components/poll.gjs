@@ -19,9 +19,7 @@ import PollOptions from "../components/poll-options";
 import PollResultsPie from "../components/poll-results-pie";
 import PollResultsTabs from "../components/poll-results-tabs";
 
-const FETCH_VOTERS_COUNT = 25;
 const STAFF_ONLY = "staff_only";
-const REGULAR = "regular";
 const RANKED_CHOICE = "ranked_choice";
 const ON_VOTE = "on_vote";
 const ON_CLOSE = "on_close";
@@ -34,8 +32,6 @@ export default class PollComponent extends Component {
   @service router;
   @service modal;
   @tracked isStaff = this.currentUser && this.currentUser.staff;
-  @tracked titleHTML = htmlSafe(this.args.titleHTML);
-  @tracked options = [];
   @tracked
   showResults =
     this.args.hasSavedVote ||
@@ -75,32 +71,6 @@ export default class PollComponent extends Component {
 
     return !hasNonZeroDuplicate;
   };
-  constructor() {
-    super(...arguments);
-    this.rankedChoiceDropdownContent = [];
-
-    if (this.isRankedChoice) {
-      this.rankedChoiceDropdownContent.push({
-        id: 0,
-        name: I18n.t("poll.options.ranked_choice.abstain"),
-      });
-    }
-
-    this.args.options.forEach((option, i) => {
-      option.rank = 0;
-      if (this.isRankedChoice) {
-        this.rankedChoiceDropdownContent.push({
-          id: i + 1,
-          name: (i + 1).toString(),
-        });
-        this.args.vote.forEach((vote) => {
-          if (vote.digest === option.id) {
-            option.rank = vote.rank;
-          }
-        });
-      }
-    });
-  }
 
   @action
   async castVotes(option) {
@@ -316,70 +286,21 @@ export default class PollComponent extends Component {
   }
 
   @action
-  fetchVoters(optionId) {
-    let votersCount;
-    this.loading = true;
-    let options = this.options;
-    options.find((option) => option.id === optionId).loading = true;
-    this.options = [...options];
-
-    votersCount = this.options.find((option) => option.id === optionId).votes;
-
-    return ajax("/polls/voters.json", {
-      data: {
-        post_id: this.post.id,
-        poll_name: this.poll.name,
-        option_id: optionId,
-        page: Math.floor(votersCount / FETCH_VOTERS_COUNT) + 1,
-        limit: FETCH_VOTERS_COUNT,
-      },
-    })
-      .then((result) => {
-        const voters = optionId
-          ? this.preloadedVoters[optionId]
-          : this.preloadedVoters;
-        const newVoters = optionId ? result.voters[optionId] : result.voters;
-        if (this.isRankedChoice) {
-          this.preloadedVoters[optionId] = [...new Set([...newVoters])];
-        } else {
-          const votersSet = new Set(voters.map((voter) => voter.username));
-          newVoters.forEach((voter) => {
-            if (!votersSet.has(voter.username)) {
-              votersSet.add(voter.username);
-              voters.push(voter);
-            }
-          });
-          // remove users who changed their vote
-          if (this.poll.type === REGULAR) {
-            Object.keys(this.preloadedVoters).forEach((otherOptionId) => {
-              if (optionId !== otherOptionId) {
-                this.preloadedVoters[otherOptionId] = this.preloadedVoters[
-                  otherOptionId
-                ].filter((voter) => !votersSet.has(voter.username));
-              }
-            });
-          }
-        }
-        this.preloadedVoters[optionId] = [
-          ...new Set([...this.preloadedVoters[optionId], ...newVoters]),
-        ];
-      })
-      .catch((error) => {
-        if (error) {
-          popupAjaxError(error);
-        } else {
-          this.dialog.alert(I18n.t("poll.error_while_fetching_voters"));
-        }
-      })
-      .finally(() => {
-        options.find((option) => option.id === optionId).loading = false;
-        this.options = [...options];
-      });
+  dropDownClick(dropDownAction) {
+    this[dropDownAction]();
   }
 
   @action
-  dropDownClick(dropDownAction) {
-    this[dropDownAction]();
+  async toggleStatus() {
+    let status;
+    status = await this.args.toggleStatus();
+
+    if (
+      this.state.poll.results === "on_close" ||
+      this.state.poll.results === "always"
+    ) {
+      this.showResults = status === "closed";
+    }
   }
 
   @action
@@ -392,7 +313,7 @@ export default class PollComponent extends Component {
   @action
   exportResults() {
     const queryID =
-      this.poll.type === RANKED_CHOICE
+      this.args.poll.type === RANKED_CHOICE
         ? this.siteSettings.poll_export_ranked_choice_data_explorer_query_id
         : this.siteSettings.poll_export_data_explorer_query_id;
 
@@ -403,8 +324,8 @@ export default class PollComponent extends Component {
       data: {
         // needed for data-explorer route compatibility
         params: JSON.stringify({
-          poll_name: this.poll.name,
-          post_id: this.post.id.toString(), // needed for data-explorer route compatibility
+          poll_name: this.args.poll.name,
+          post_id: this.args.post.id.toString(), // needed for data-explorer route compatibility
         }),
         explain: false,
         limit: 1000000,
@@ -419,7 +340,7 @@ export default class PollComponent extends Component {
         downloadLink.href = URL.createObjectURL(blob);
         downloadLink.setAttribute(
           "download",
-          `poll-export-${this.poll.name}-${this.post.id}.csv`
+          `poll-export-${this.args.poll.name}-${this.args.post.id}.csv`
         );
         downloadLink.click();
         downloadLink.remove();
@@ -436,7 +357,7 @@ export default class PollComponent extends Component {
 
   <template>
     <div class="poll-container">
-      {{htmlSafe this.titleHTML}}
+      {{htmlSafe @titleHTML}}
       {{#if this.notInVotingGroup}}
         <div class="alert alert-danger">{{this.pollGroups}}</div>
       {{/if}}
@@ -446,7 +367,7 @@ export default class PollComponent extends Component {
             <span>{{this.averageRating}}</span>
           {{else}}
             {{#if this.resultsPie}}
-              <PollResultsPie @id={{this.id}} @options={{this.options}} />
+              <PollResultsPie @id={{this.id}} @options={{this.args.options}} />
             {{else}}
               <PollResultsTabs
                 @options={{@options}}
@@ -458,7 +379,7 @@ export default class PollComponent extends Component {
                 @vote={{@vote}}
                 @voters={{@preloadedVoters}}
                 @votersCount={{@poll.voters}}
-                @fetchVoters={{this.fetchVoters}}
+                @fetchVoters={{@fetchVoters}}
                 @rankedChoiceOutcome={{@rankedChoiceOutcome}}
               />
             {{/if}}
@@ -468,7 +389,7 @@ export default class PollComponent extends Component {
         <PollOptions
           @isCheckbox={{this.isCheckbox}}
           @isRankedChoice={{@isRankedChoice}}
-          @rankedChoiceDropdownContent={{this.rankedChoiceDropdownContent}}
+          @rankedChoiceDropdownContent={{this.args.rankedChoiceDropdownContent}}
           @options={{@options}}
           @votes={{@vote}}
           @sendOptionSelect={{this.toggleOption}}
