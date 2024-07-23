@@ -1021,6 +1021,7 @@ fr:
       said: "%{username} :"
       profile: "Profil"
       profile_possessive: "Profil de %{username}"
+      account_possessive: "Compte de %{name}"
       mute: "Mettre en sourdine"
       edit: "Modifier les préférences"
       download_archive:
@@ -1462,6 +1463,9 @@ fr:
           description: "Veuillez confirmer que vous souhaitez remplacer votre adresse e-mail par :"
           description_add: "Veuillez confirmer que vous souhaitez ajouter une adresse e-mail alternative :"
         authorizing_old:
+          title: "Vérifier l'ancienne adresse e-mail"
+          description: "Veuillez vérifier votre ancienne adresse e-mail pour continuer à modifier votre adresse e-mail :"
+          description_add: "Vérifiez votre adresse e-mail existante pour continuer l'ajout d'une autre adresse :"
           old_email: "Adresse e-mail précédente : %{email}"
           new_email: "Nouvelle adresse e-mail : %{email}"
           confirm_success: "Nous avons envoyé un e-mail à votre nouvelle adresse pour confirmer le changement !"
@@ -2164,7 +2168,7 @@ fr:
       activities: Activités
       objects: Objets
       symbols: Symboles
-      flags: Drapeaux
+      flags: Signalements
       recent: Utilisés récemment
       default_tone: Aucun teint
       light_tone: Teint clair
@@ -3753,6 +3757,10 @@ fr:
         title: "Non lu(s)"
         lower_title: "non lu(s)"
         help: "nouveaux sujets et sujets que vous suivez ou surveillez avec des messages non lus"
+      hot:
+        title: "Populaire"
+        lower_title: "populaire"
+        help: "principaux sujets récents"
       new:
         lower_title_with_count:
           one: "%{count} nouveau"

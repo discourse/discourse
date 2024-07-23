@@ -834,7 +834,7 @@ es:
       leave: "Abandonar"
       request: "Solicitar"
       message: "Mensaje"
-      confirm_leave: "¿Estás seguro de que quieres salir de este grupo?"
+      confirm_leave: "¿Seguro que quieres salir de este grupo?"
       allow_membership_requests: "Permitir a los usuarios enviar solicitudes de membresía a propietarios de grupo (el grupo tiene que ser públicamente visible)"
       membership_request_template: "Plantilla personalizada que se muestra a los usuarios cuando envían una solicitud de membresía"
       membership_request:
@@ -1010,7 +1010,7 @@ es:
       read_time: "tiempo de lectura"
       topics_entered: "temas visitados"
       post_count: "nº. de publicaciones"
-      confirm_delete_other_accounts: "¿Estás seguro de que quieres eliminar estas cuentas?"
+      confirm_delete_other_accounts: "¿Seguro que quieres eliminar estas cuentas?"
       powered_by: "usando <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copiado"
     user_fields:
@@ -1021,6 +1021,7 @@ es:
       said: "%{username}:"
       profile: "Perfil"
       profile_possessive: "Perfil de %{username}"
+      account_possessive: "Cuenta de %{name}"
       mute: "Silenciar"
       edit: "Editar preferencias"
       download_archive:
@@ -1079,7 +1080,7 @@ es:
         save: "Guardar"
         clear:
           title: "Quitar filtros"
-          warning: "¿Estás seguro de que quieres quitar tu tema destacado?"
+          warning: "¿Seguro que quieres quitar tu tema destacado?"
       use_current_timezone: "Usar zona horaria actual"
       profile_hidden: "El perfil público de este usuario está oculto."
       inactive_user: "Este usuario ya no está activo."
@@ -1456,15 +1457,18 @@ es:
         success_via_admin: "Hemos enviado un correo electrónico a esa dirección. El usuario tendrá que seguir las instrucciones de confirmación."
         success_staff: "Hemos enviado un correo electrónico a tu dirección actual. Sigue las instrucciones de confirmación."
         back_to_preferences: "Volver a preferencias"
-        confirm_success: "Se actualizó tu correo electrónico."
+        confirm_success: "Se ha actualizado tu correo electrónico."
         confirm: "Confirmar"
         authorizing_new:
           description: "Confirma que quieres cambiar tu dirección de correo electrónico a:"
           description_add: "Confirma que quieres añadir una dirección de correo electrónico alternativa:"
         authorizing_old:
+          title: "Verificar la antigua dirección de correo electrónico"
+          description: "Verifica tu antigua dirección de correo electrónico para continuar cambiando tu correo electrónico:"
+          description_add: "Verifica tu dirección de correo electrónico actual para seguir añadiendo una dirección alternativa:"
           old_email: "Correo electrónico antiguo: %{email}"
           new_email: "Correo electrónico nuevo: %{email}"
-          confirm_success: "¡Enviamos un correo electrónico a tu nueva dirección de correo electrónico para confirmar el cambio!"
+          confirm_success: "Hemos enviado un correo electrónico a tu nueva dirección de correo electrónico para confirmar el cambio."
       change_avatar:
         title: "Cambiar tu imagen de perfil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, basado en"
@@ -1678,7 +1682,7 @@ es:
         removed_all: "Se han eliminado todas las invitaciones caducadas"
         remove_all_confirm: "¿Quieres eliminar todas las invitaciones caducadas?"
         reinvite_all: "Reenviar todas las invitaciones"
-        reinvite_all_confirm: "¿Estás seguro de que quieres reenviar todas las invitaciones?"
+        reinvite_all_confirm: "¿Seguro que quieres reenviar todas las invitaciones?"
         reinvited_all: "¡Todas las invitaciones se han enviado!"
         time_read: "Tiempo de lectura"
         days_visited: "Días visitados"
@@ -2178,7 +2182,7 @@ es:
       notice: "Este tema solo es visible para aquellos que pueden publicar borradores compartidos."
       destination_category: "Categoría de destino"
       publish: "Publicar borrador compartido"
-      confirm_publish: "¿Estás seguro de que quieres publicar este borrador?"
+      confirm_publish: "¿Seguro que quieres publicar este borrador?"
       publishing: "Publicando tema…"
     composer:
       emoji: "Emoji :)"
@@ -2716,6 +2720,7 @@ es:
         progress:
           one: "Progreso: <strong>%{count}</strong> tema"
           other: "Progreso: <strong>%{count}</strong> temas"
+        silent: "Realiza esta acción en silencio."
       none:
         unread: "No tienes temas sin leer."
         unseen: "Has visto todos los temas."
@@ -2726,6 +2731,7 @@ es:
         bookmarks: "Todavía no tienes temas guardados en marcadores."
         category: "No hay temas con la categoría %{category}."
         top: "No hay temas destacados."
+        hot: "No hay temas candentes."
         filter: "No hay temas."
         educate:
           new: '<p>Tus nuevos temas aparecerán aquí. Por defecto, los temas se consideran nuevos y mostrarán un <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicador si se crearon hace menos de 2 días.</p><p>Visita tus <a href="%{userPrefsUrl}">preferencias</a> para cambiarlo.</p>'
@@ -2741,6 +2747,7 @@ es:
         category: "No hay más temas de la categoría %{category}."
         tag: "No hay más temas con la etiqueta %{tag}."
         top: "No hay más temas destacados."
+        hot: "Ya no hay temas candentes."
         bookmarks: "No hay más temas guardados en marcadores."
         filter: "No hay más temas."
     topic_bulk_actions:
@@ -2748,6 +2755,7 @@ es:
         name: "Cerrar temas"
       update_category:
         name: "Actualizar Categoría"
+        description: "Elige la nueva categoría para los temas seleccionados"
     topic:
       filter_to:
         one: "%{count} publicación en el tema"
@@ -3749,6 +3757,10 @@ es:
         title: "No vistos"
         lower_title: "no vistos"
         help: "nuevos temas y temas que estés vigilando, siguiendo, o que tengan respuestas sin leer"
+      hot:
+        title: "Caliente"
+        lower_title: "caliente"
+        help: "principales temas recientes"
       new:
         lower_title_with_count:
           one: "%{count} nuevo"
@@ -4067,7 +4079,7 @@ es:
         name_placeholder: "Nombre"
         save: "Guardar"
         delete: "Eliminar"
-        confirm_delete: "¿Estás seguro de que quieres eliminar este grupo de etiquetas?"
+        confirm_delete: "¿Seguro que quieres eliminar este grupo de etiquetas?"
         everyone_can_use: "Todos pueden utilizar las etiquetas"
         usable_only_by_groups: "Las etiquetas son visibles para todo el mundo, pero solo los siguientes grupos las pueden usar"
         visible_only_to_groups: "Las etiquetas solo son visibles para los siguientes grupos"
@@ -5729,7 +5741,7 @@ es:
           confirmation:
             title: "Eliminar todas las publicaciones de @%{username}"
             description: |
-              <p>¿Estás seguro de que quieres eliminar <b>%{post_count}</b> publicaciones de @%{username}?
+              <p>¿Seguro que quieres eliminar <b>%{post_count}</b> publicaciones de @%{username}?
 
               <p><b>¡Esto no se puede deshacer!</b></p>
 
@@ -6018,11 +6030,11 @@ es:
         reason_help: (Enlace a una publicación o tema)
         save: Guardar
         delete: Eliminar
-        delete_confirm: '¿Estás seguro de que quieres eliminar esta insignia?'
+        delete_confirm: '¿Seguro que quieres eliminar esta insignia?'
         revoke: Revocar
         reason: Motivo
         expand: Expandir &hellip;
-        revoke_confirm: '¿Estás seguro de que quieres revocar esta insignia?'
+        revoke_confirm: '¿Seguro que quieres revocar esta insignia?'
         edit_badges: Editar insignias
         grant_badge: Conceder insignia
         granted_badges: Insignias concedidas

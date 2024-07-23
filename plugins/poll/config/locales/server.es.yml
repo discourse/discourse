@@ -14,6 +14,8 @@ es:
     poll_groupable_user_fields: "Un grupo de nombres de campos de usuario que se pueden usar para agrupar y filtrar los resultados de encuestas."
     poll_export_data_explorer_query_id: "ID de la consulta del explorador de datos que se usa para exportar los resultados de la encuesta (0 para desactivar)."
     poll_default_public: "Al crear una nueva encuesta, activar por defecto la opción «mostrar quién ha votado»."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
   poll:
     poll: "encuesta"
     invalid_argument: "Valor no válido «%{value}» para el argumento «%{argument}»."

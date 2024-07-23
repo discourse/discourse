@@ -1426,7 +1426,7 @@ de:
     watched_word_regexp_error: "Der reguläre Ausdruck für „%{action}“ überwachte Wörter ist ungültig. Bitte überprüfe deine <a href='%{base_path}/admin/customize/watched_words'>Einstellungen für überwachte Wörter</a> oder deaktiviere die Website-Einstellung „watched words regular expressions“."
     v3_analytics_deprecated: "Dein Discourse verwendet derzeit Google Analytics 3, das ab Juli 2023 nicht mehr unterstützt wird. <a href='https://meta.discourse.org/t/260498'>Aktualisiere jetzt auf Google Analytics 4</a>, um weiterhin wertvolle Einblicke und Analysen zur Leistung deiner Website zu erhalten."
     category_style_deprecated: "Dein Discourse verwendet zurzeit einen veralteten Kategoriestil, der vor der endgültigen Beta-Version von Discourse 3.2 entfernt wird. Wie du deinen gewählten Kategoriestil beibehalten kannst, erfährst du unter <a href='https://meta.discourse.org/t/282441'>Umstellung auf einen einzigen Kategoriestil (Website-Einstellung)</a> ."
-    ember_version_warning: "Deine Website läuft mit der nicht unterstützten Konfiguration EMBER_VERSION=3. Dies kann zu unerwarteten Problemen mit Themes/Plugins führen. Bitte entferne die EMBER_VERSION-Konfiguration aus deiner app.yml-Datei und erstelle sie neu. Siehe <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a> für weitere Informationen."
+    ember_version_warning: "Deine Website läuft mit der nicht unterstützten Konfiguration EMBER_VERSION=3. Dies kann zu unerwarteten Problemen mit Themes/Plug-ins führen. Bitte entferne die EMBER_VERSION-Konfiguration aus deiner app.yml-Datei und erstelle sie neu. Siehe <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a> für weitere Informationen."
   site_settings:
     allow_bulk_invite: "Erlaube Masseneinladungen durch Hochladen einer CSV-Datei"
     disabled: "deaktiviert"
@@ -3976,9 +3976,9 @@ de:
 
       ## [Dies ist ein zivilisierter Ort für öffentliche Diskussionen](#civilized)
 
-      Bitte behandle dieses Diskussionsforum mit demselben Respekt wie einen öffentlichen Park. Auch wir sind eine gemeinschaftliche Community-Ressource &mdash; ein Ort, um Fähigkeiten, Wissen und Interessen durch einen fortlaufenden Dialog zu teilen.
+      Bitte behandle dieses Diskussionsforum mit demselben Respekt wie einen öffentlichen Park. Auch wir sind eine Communityliche Community-Ressource &mdash; ein Ort, um Fähigkeiten, Wissen und Interessen durch einen fortlaufenden Dialog zu teilen.
 
-      Dies sind keine harten oder festen Regeln, sondern vielmehr Hilfen für die menschliche Einschätzung unserer Community. Sie sind Richtlinien, die das menschliche Urteilsvermögen unserer Gemeinschaft fördern und dafür sorgen sollen, dass dies ein freundlicher Ort für einen zivilisierten, öffentlichen Diskurs bleibt.
+      Dies sind keine harten oder festen Regeln, sondern vielmehr Hilfen für die menschliche Einschätzung unserer Community. Sie sind Richtlinien, die das menschliche Urteilsvermögen unserer Community fördern und dafür sorgen sollen, dass dies ein freundlicher Ort für einen zivilisierten, öffentlichen Diskurs bleibt.
 
 
       <a name="improve"></a>

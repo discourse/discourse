@@ -117,6 +117,7 @@ es:
         direct_message_cta: "Iniciar un chat personal"
         direct_message: "También puedes iniciar un chat personal con uno o más usuarios."
         title: "No se han encontrado canales"
+        my_threads: "Aún no tienes ningún tema. Los temas en los que participes se mostrarán aquí."
       email_frequency:
         description: "Solo te enviaremos un correo electrónico si no te hemos visto en los últimos 15 minutos."
         never: "Nunca"
@@ -226,6 +227,7 @@ es:
         header: "Encabezado del chat"
         composer: "Compositor del chat"
         channels_list: "Lista de canales de chat"
+      no_direct_message_channels: "No te has unido a ningún canal de mensajes directos."
       no_public_channels: "No te has unido a ningún canal."
       kicked_from_channel: "Ya no puedes acceder a este canal."
       only_chat_push_notifications:
@@ -343,6 +345,7 @@ es:
         filter: "Filtro"
         cant_add_more_members: "Número máximo de miembros alcanzado"
         create_new_group_chat: "Crear chat de grupo"
+        group_with_too_many_members: "tiene demasiados miembros (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Editar canal
         input_placeholder: Añadir un nombre
@@ -477,7 +480,12 @@ es:
           description: "Esto exporta todos los mensajes de todos los canales."
           create_export: "Crear exportación"
           export_has_started: "La exportación ha comenzado. Recibirás un MP cuando esté lista."
+      my_threads:
+        title: Mis hilos
+        aria_label: "Cambiar a mi lista de hilos"
       direct_messages:
+        title: "MDs"
+        aria_label: "Cambiar a mensajes directos"
         new: "Crear un chat personal"
         create: "Ir"
         leave: "Abandonar este chat personal"
@@ -485,6 +493,7 @@ es:
         cannot_create: "Lo sentimos, no puedes enviar mensajes directos."
       channel_list:
         title: "Canales"
+        aria_label: "Cambiar a la lista de canales"
       incoming_webhooks:
         back: "Atrás"
         channel_placeholder: "Selecciona un canal"
@@ -547,6 +556,9 @@ es:
         short:
           one: "%{count} día"
           other: "%{count} días"
+        long:
+          one: "Se han configurado los ajustes del chat para que conserve los mensajes del canal durante %{count} día."
+          other: "Se han configurado los ajustes del chat para que conserve los mensajes del canal durante %{count} días."
       flags:
         off_topic: "Este mensaje no es relevante para la discusión actual, tal y como se define en el título del canal, y probablemente debería moverse a otro lugar."
         inappropriate: "Este mensaje tiene un contenido que una persona razonable consideraría ofensivo, abusivo o que viola las <a href=\"%{basePath}/guidelines\">directrices de nuestra comunidad</a>."

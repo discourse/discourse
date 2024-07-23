@@ -1021,6 +1021,7 @@ it:
       said: "%{username}:"
       profile: "Profilo"
       profile_possessive: "Profilo di %{username}"
+      account_possessive: "Account di %{name}"
       mute: "Silenzia"
       edit: "Modifica opzioni"
       download_archive:
@@ -1456,15 +1457,18 @@ it:
         success_via_admin: "Abbiamo inviato un'email a quell'indirizzo. L'utente dovrà seguire le istruzioni di conferma contenute nell'email."
         success_staff: "Abbiamo inviato una email al tuo indirizzo corrente. Segui le istruzioni di conferma."
         back_to_preferences: "Torna alle preferenze"
-        confirm_success: "La tua email è stata aggiornata."
+        confirm_success: "La tua e-mail è stata aggiornata."
         confirm: "Conferma"
         authorizing_new:
-          description: "Conferma di voler cambiare il tuo indirizzo email in:"
-          description_add: "Conferma di voler aggiungere un indirizzo email alternativo:"
+          description: "Conferma di voler cambiare il tuo indirizzo e-mail in:"
+          description_add: "Conferma di voler aggiungere un indirizzo e-mail alternativo:"
         authorizing_old:
-          old_email: "Vecchia email: %{email}"
-          new_email: "Nuova email: %{email}"
-          confirm_success: "Abbiamo inviato un'email al tuo nuovo indirizzo per confermare la modifica!"
+          title: "Verifica il vecchio indirizzo e-mail"
+          description: "Per proseguire con la modifica dell'indirizzo e-mail, verifica il vecchio indirizzo e-mail:"
+          description_add: "Per proseguire con l'aggiunta di un indirizzo e-mail alternativo, verifica l'indirizzo e-mail esistente:"
+          old_email: "Vecchia e-mail: %{email}"
+          new_email: "Nuova e-mail: %{email}"
+          confirm_success: "Abbiamo inviato un'e-mail al tuo nuovo indirizzo per confermare la modifica!"
       change_avatar:
         title: "Cambia l'immagine del tuo profilo"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, basato su"
@@ -2147,7 +2151,7 @@ it:
         categories_admin_dropdown:
           title: "Gestisci le categorie"
         bulk_select_topics_dropdown:
-          title: "Azioni Multiple"
+          title: "Azioni collettive"
     date_time_picker:
       from: Da
       to: A
@@ -2716,6 +2720,7 @@ it:
         progress:
           one: "Avanzamento: <strong>%{count}</strong> argomento"
           other: "Avanzamento: <strong>%{count}</strong> argomenti"
+        silent: "Esegui questa azione in silenzio."
       none:
         unread: "Non ci sono argomenti non letti."
         unseen: "Non hai argomenti non visualizzati."
@@ -2726,6 +2731,7 @@ it:
         bookmarks: "Non hai ancora argomenti nei segnalibri."
         category: "Non ci sono argomenti in %{category}."
         top: "Non ci sono argomenti popolari."
+        hot: "Non ci sono argomenti popolari."
         filter: "Non ci sono argomenti."
         educate:
           new: '<p>I tuoi nuovi argomenti appariranno qui. Per impostazione predefinita, gli argomenti sono considerati nuovi e mostreranno un <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>indicatore se sono stati creati negli ultimi 2 giorni.</p><p>Visita le tue <a href="%{userPrefsUrl}">preferenze</a> per cambiare questa opzione.</p>'
@@ -2741,11 +2747,15 @@ it:
         category: "Non ci sono altri argomenti nella categoria %{category}."
         tag: "Non ci sono altri argomenti con l'etichetta %{tag}."
         top: "Non ci sono altri argomenti popolari."
+        hot: "Non ci sono altri argomenti popolari."
         bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
         filter: "Non ci sono altri argomenti."
     topic_bulk_actions:
       close_topics:
         name: "Chiudi argomenti"
+      update_category:
+        name: "Aggiorna categoria"
+        description: "Scegli la nuova categoria per gli argomenti selezionati"
     topic:
       filter_to:
         one: "%{count} messaggio in questo argomento"
@@ -3189,6 +3199,8 @@ it:
       quote_reply_shortcut: "Cita (o premi q)"
       quote_edit: "Modifica"
       quote_edit_shortcut: "Modifica (o premi e)"
+      quote_copy: "Copia citazione"
+      quote_copied_to_clibboard: "Citazione copiata negli appunti"
       quote_share: "Condividi"
       edit_reason: "Motivo:"
       post_number: "messaggio %{number}"
@@ -3745,6 +3757,10 @@ it:
         title: "Non visualizzati"
         lower_title: "non visualizzati"
         help: "nuovi argomenti e argomenti che stai osservando o seguendo contenenti messaggi non letti"
+      hot:
+        title: "Novità"
+        lower_title: "novità"
+        help: "argomenti di punta recenti"
       new:
         lower_title_with_count:
           one: "%{count} nuovo"

@@ -187,14 +187,14 @@ he:
           two: "כעבור שנתיים"
           many: "כעבור %{count} שנה"
           other: "כעבור %{count} שנים"
-      previous_month: "חודש קודם"
-      next_month: "חודש הבא"
+      previous_month: "החודש הקודם"
+      next_month: "החודש הבא"
       placeholder: תאריך
       from_placeholder: "מתאריך"
       to_placeholder: "עד תאריך"
     share:
       topic_html: 'נושא: <span class="topic-title">%{topicTitle}</span>'
-      post: "הודעה מס׳ %{postNumber} מאת ‎@%{username}"
+      post: "פוסט מס׳ %{postNumber} מאת ‎@%{username}"
       close: "סגירה"
       twitter: "שיתוף בטוויטר"
       facebook: "שיתוף בפייסבוק"
@@ -252,7 +252,7 @@ he:
       broken_theme_alert: "יתכן שהאתר שלך לא יתפקד כיוון שבערכת העיצוב / הרכיב יש שגיאות."
       error_caused_by: "נגרם על ידי ‚%{name}’. <a target='blank' href='%{path}'>יש ללחוץ כאן</a> כדי לעדכן, להגדיר מחדש או להשבית."
       only_admins: "(הודעה זו מופיע רק למנהלי האתר)"
-    broken_decorator_alert: "פרסומים עלולים שלא להופיע כראוי כיוון שאחד ממעצבי התוכן באתר שלך העלה שגיאה."
+    broken_decorator_alert: "פוסטים עלולים שלא להופיע כראוי כיוון שאחד ממעצבי התוכן באתר שלך העלה שגיאה."
     broken_page_change_alert: "מטפל ב־onPageChange הרים שגיאה. כלי המפתחים יציגו לך פרטים נוספים על כך."
     broken_plugin_alert: "קרה בגלל התוסף ‚%{name}’"
     critical_deprecation:
@@ -363,7 +363,7 @@ he:
         last_30_days: "30 ימים"
       like_count: "לייקים"
       topic_count: "נושאים"
-      post_count: "פרסומים"
+      post_count: "פוסטים"
       user_count: "הרשמות"
       active_user_count: "משתמשים פעילים"
       contact: "יצירת קשר אתנו"
@@ -374,18 +374,18 @@ he:
       clear_bookmarks: "מחיקת סימניות"
       help:
         bookmark: "יש ללחוץ כדי להוסיף סימנייה לנושא הזה"
-        edit_bookmark: "יש ללחוץ כדי לערוך את הסימנייה לפרסום בנושא זה"
+        edit_bookmark: "יש ללחוץ כדי לערוך את הסימנייה לפוסט בנושא זה"
         edit_bookmark_for_topic: "יש ללחוץ כדי לערוך את הסימניה לנושא זה"
         unbookmark: "יש ללחוץ כדי להסיר את כל הסימניות בנושא זה"
         unbookmark_with_reminder: "יש ללחוץ כדי להסיר את כל הסימניות והתזכורות בנושא זה"
     bookmarks:
-      created: "הוספת את ההודעה הזו לסימניות. %{name}"
+      created: "הוספת את הפוסט הזה לסימניות. %{name}"
       created_generic: "הוספת את זה לסימניות. %{name}"
       create: "יצירת סימנייה"
       edit: "עריכת סימנייה"
-      not_bookmarked: "סימון הודעה זו בסימנייה"
+      not_bookmarked: "סימון פוסט זה בסימנייה"
       remove_reminder_keep_bookmark: "הסרת תזכורת ושמירת הסימנייה"
-      created_with_reminder: "סימנת את ההודעה הזו עם תזכורת %{date}. %{name}"
+      created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}. %{name}"
       created_with_reminder_generic: "סימנת את זה עם תזכורת %{date}. %{name}"
       delete: "מחיקת סימנייה"
       confirm_delete: "למחוק את הסימנייה הזאת? גם התזכורת תימחק."
@@ -394,14 +394,14 @@ he:
       no_timezone: 'עדיין לא הגדרת אזור זמן. לא תהיה לך אפשרות להגדיר תזכורות. ניתן להגדיר אותו <a href="%{basePath}/my/preferences/profile">בפרופיל שלך</a>.'
       invalid_custom_datetime: "התאריך והשעה שסיפקת שגויים, נא לנסות שוב."
       list_permission_denied: "אין לך הרשאה לצפות בסימניות של המשתמש הזה."
-      no_user_bookmarks: "לא הוספת הודעות לסימניות, סימניות מאפשרות לך לפנות במהירות להודעות מסוימות."
+      no_user_bookmarks: "לא הוספת פוסטים לסימניות, סימניות מאפשרות לך לפנות במהירות לפוסטים מסוימים."
       auto_delete_preference:
         label: "לאחר שקיבלת התראה"
         never: "לשמור על הסימנייה"
         when_reminder_sent: "מחיקת סימנייה"
         on_owner_reply: "מחיקת מסד נתונים, לאחר התגובה"
         clear_reminder: "לשמור על הסימנייה ולפנות את התזכורת"
-      search_placeholder: "חיפוש סימניות לפי שם, כותרת הנושא או תוכן ההודעה"
+      search_placeholder: "חיפוש סימניות לפי שם, כותרת הנושא או תוכן הפוסט"
       search: "חיפוש"
       reminders:
         today_with_time: "היום ב־%{time}"
@@ -502,7 +502,7 @@ he:
         subtotal: "סכום ביניים"
         total: "סה״כ"
         min_score_visibility: "ניקוד מזערי כדי שיופיע"
-        score_to_hide: "ניקוד להסתרת הפרסום"
+        score_to_hide: "ניקוד להסתרת הפוסט"
         take_action_bonus:
           name: "ננקטה פעולה"
           title: "כאשר חבר סגל בוחר לנקוט בפעולה הדגל מקבל בונוס."
@@ -547,17 +547,17 @@ he:
       none: "אין פריטים לסקירה."
       view_pending: "הצגת ממתינים"
       topic_has_pending:
-        one: "לנושא זה יש תגובה <b>אחת</b> שממתינה לאישור"
-        two: "לנושא זה יש <b>תגובותיים</b> שממתינות לאישור"
-        many: "לנושא זה יש <b>%{count}</b> תגובות שממתינות לאישור"
-        other: "לנושא זה יש <b>%{count}</b> תגובות שממתינות לאישור"
+        one: "לנושא זה יש <b>פוסט</b> שממתין לאישור"
+        two: "לנושא זה יש <b>שני</b> פוסטים שממתינים לאישור"
+        many: "לנושא זה יש <b>%{count}</b> פוסטים שממתינים לאישור"
+        other: "לנושא זה יש <b>%{count}</b> פוסטים שממתינים לאישור"
       title: "סקירה"
       topic: "נושא:"
       filtered_topic: "סיננת לתוכן שממתין לסקירה בנושא מסוים."
       filtered_user: "משתמש"
       filtered_reviewed_by: "נסקר על ידי"
       show_all_topics: "להציג את כל הנושאים"
-      deleted_post: "(פרסום נמחק)"
+      deleted_post: "(פוסט נמחק)"
       deleted_user: "(משתמש נמחק)"
       user:
         bio: "קורות חיים"
@@ -650,7 +650,7 @@ he:
         approved_user:
           title: "המשתמש אישר"
         approved_post:
-          title: "הפרסום אושר"
+          title: "הפוסט אושר"
         rejected:
           title: "נדחה"
         rejected_flag:
@@ -658,11 +658,11 @@ he:
         rejected_user:
           title: "המשתמש דחה"
         rejected_post:
-          title: "הפרסום נדחה"
+          title: "הפוסט נדחה"
         ignored:
           title: "הסימון זכה להתעלמות"
         deleted:
-          title: "הנושא או התגובה נמחקו"
+          title: "הנושא או הפוסט נמחקו"
         reviewed:
           title: "כל אלו שנסקרו"
         all:
@@ -673,27 +673,27 @@ he:
         something_else_wrong: "משהו לא תקין ב%{reviewable_type} הזאת?"
       types:
         reviewable_flagged_post:
-          title: "פרסום שדוגל"
+          title: "פוסט שסומן"
           flagged_by: "דוגל על ידי"
-          noun: "פרסום"
+          noun: "פוסט"
         reviewable_queued_topic:
           title: "נושא בתור"
           noun: "נושא"
         reviewable_queued_post:
-          title: "פרסום ממתין בתור"
-          noun: "פרסום"
+          title: "פוסט ממתין בתור"
+          noun: "פוסט"
         reviewable_user:
           title: "משתמש"
           noun: "משתמש"
         reviewable_post:
-          title: "פרסום"
-          noun: "פרסום"
+          title: "פוסט"
+          noun: "פוסט"
       approval:
-        title: "הפרסום זקוק לאישור"
-        description: "הפרסום התקבל אך הוא נתון לאישור מפקח בטרם הצגתו. נא להתאזר בסבלנות."
+        title: "הפוסט זקוק לאישור"
+        description: "הפוסט התקבל אך הוא נתון לאישור מפקח בטרם הצגתו. נא להתאזר בסבלנות."
         pending_posts:
-          one: "יש לך פרסום <strong>אחד</strong> ממתין."
-          two: "יש לך <strong>פרסומיים</strong> ממתינים."
+          one: "יש לך <strong>פוסט</strong> ממתין."
+          two: "יש לך <strong>שני</strong> פוסטים ממתינים."
           many: "יש לך <strong>%{count}</strong> פרסומים ממתינים."
           other: "יש לך <strong>%{count}</strong> פרסומים ממתינים."
         ok: "אישור"
@@ -1929,7 +1929,7 @@ he:
           other: "ימים שבוקרו"
         topics_entered:
           one: "נושא נצפה"
-          two: "נושאים נצפו"
+          two: "שני נושאים נצפו"
           many: "נושאים נצפו"
           other: "נושאים נצפו"
         posts_read:
@@ -2112,10 +2112,10 @@ he:
       short_label: "תגובות מובילות"
       short_title: "להציג את התגובות המובילות של הנושא הזה: הפוסטים המעניינים ביותר בהתאם להחלטות הקהילה"
     deleted_filter:
-      enabled_description: "נושא זה מכיל תגובות שנמחקו ולכן אינן מוצגות."
-      disabled_description: "תגובות שנמחקו בנושא זה מוצגות כעת."
-      enable: "הסתרת הודעות שנמחקו"
-      disable: "הסתרת הודעות שנמחקו"
+      enabled_description: "הנושא הזה מכיל פוסטים שנמחקו ולכן הם מוסתרים."
+      disabled_description: "פוסטים שנמחקו בנושא הזה מוצגים."
+      enable: "הסתרת פוסטים שנמחקו"
+      disable: "הצגת פוסטים שנמחקו"
     private_message_info:
       title: "הודעה"
       invite: "להזמין אחרים…"
@@ -2424,7 +2424,7 @@ he:
           two: "על הכותרת להיות עד %{count} תווים."
           many: "על הכותרת להיות עד %{count} תווים."
           other: "על הכותרת להיות עד %{count} תווים."
-        post_missing: "הפרסום לא יכול להיות ריק"
+        post_missing: "הפוסט לא יכול להיות ריק"
         post_length:
           one: "על ההודעה להיות באורך תו אחד לפחות"
           two: "על הפוסט להיות באורך שני תווים לפחות"
@@ -2547,7 +2547,7 @@ he:
       tooltip:
         regular:
           one: "התראה אחת שלא נצפתה"
-          two: "%{count} התראות שלא נצפו"
+          two: "שתי התראות שלא נצפו"
           many: "%{count} התראות שלא נצפו"
           other: "%{count} התראות שלא נצפו"
         message:
@@ -2955,7 +2955,7 @@ he:
         choose_new_category: "נא לבחור קטגוריה לנושאים:"
         selected:
           one: "בחרת בנושא <b>אחד</b>."
-          two: "בחרת ב־<b>%{count}</b> נושאים."
+          two: "בחרת ב־<b>שני</b> נושאים."
           many: "בחרת ב־<b>%{count}</b> נושאים."
           other: "בחרת ב־<b>%{count}</b> נושאים."
         change_tags: "החלפת תגיות"
@@ -3524,7 +3524,7 @@ he:
       expand_collapse: "הרחב/צמצם"
       sr_below_embedded_posts_description: "תגובות לפוסט מס׳ %{post_number}"
       sr_embedded_reply_description: "תגובה מאת ‎@%{username} לפוסט %{post_number}"
-      locked: "חבר סגל נעל את האפשרות לערוך את ההודעה הזו"
+      locked: "חבר סגל נעל את האפשרות לערוך את הפוסט הזה"
       gap:
         one: "הצג תגובה אחת שהוסתרה"
         two: "הצגת %{count} תגובות שהוסתרו"
@@ -3648,9 +3648,9 @@ he:
         change_owner: "החלפת בעלות…"
         grant_badge: "הענקת עיטור…"
         lock_post: "נעילת פוסט"
-        lock_post_description: "למנוע מהמפרסם לערוך את ההודעה הזו"
+        lock_post_description: "למנוע מהמפרסם לערוך את הפוסט הזה"
         unlock_post: "שחרור פוסט"
-        unlock_post_description: "לאפשר למפרסם לערוך את ההודעה הזו"
+        unlock_post_description: "לאפשר למפרסם לערוך את הפוסט הזה"
         delete_topic_disallowed_modal: "אין לך הרשאות למחוק את הנושא הזה. כדי למחוק אותו לצמיתות, יש לסמן אותו בדגל כדי שיקבל את תשומת לב הפיקוח לרבות סיבת הסימון."
         delete_topic_disallowed: "אין לך הרשאה למחוק את הנושא הזה"
         delete_topic_confirm_modal:
@@ -6152,7 +6152,7 @@ he:
         approve_success: "משתמש אושר ונשלחה לו הודעות דואר אלקטרוני עם הוראות הפעלה"
         approve_bulk_success: "הידד! כל המשתמשים שנבחרו אושרו ויודעו על כך."
         time_read: "זמן קריאה"
-        post_edits_count: "עריכות של פרסומים"
+        post_edits_count: "עריכות של פוסטים"
         anonymize: "הפיכת משתמשים לאלמוניים"
         anonymize_confirm: "<b>באמת<\\b> להפוך חשבון זה לאלמוני? פעולה זו תשנה את שם המשתמש ואת כתובת הדוא״ל ותאפס את כל נתוני הפרופיל."
         anonymize_yes: "כן, נא להפוך חשבון זה לאלמוני"

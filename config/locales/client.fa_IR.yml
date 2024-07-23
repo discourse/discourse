@@ -3501,7 +3501,7 @@ fa_IR:
         version_check_pending: "گویا به‌تازگی به‌روز کرده‌اید. عالیه!"
         installed_version: "نصب"
         latest_version: "آخرین"
-        problems_found: "چند توصیه براثاث تنظیمات فعلی سایت شما"
+        problems_found: "چند توصیه بر اساس تنظیمات فعلی سایت شما"
         new_features:
           learn_more: "بیشتر بدانید..."
         last_checked: " آخرین بررسی"

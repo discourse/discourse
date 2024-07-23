@@ -1464,11 +1464,11 @@ de:
           description_add: "Bitte bestätige, dass du eine alternative E-Mail-Adresse hinzufügen möchtest:"
         authorizing_old:
           title: "Alte E-Mail-Adresse verifizieren"
-          description: "Bitte bestätige deine alte E-Mail-Adresse, um mit dem Ändern deiner E-Mail fortzufahren:"
-          description_add: "Bitte überprüfe deine bestehende E-Mail-Adresse, um mit dem Hinzufügen einer alternativen Adresse fortzufahren:"
-          old_email: "Alte Adresse: %{email}"
-          new_email: "Neue Adresse: %{email}"
-          confirm_success: "Wir haben eine E-Mail an deine neue Adresse gesendet, um die Änderung zu bestätigen!"
+          description: "Bitte bestätige deine alte E-Mail-Adresse, um mit dem Ändern deiner E-Mail-Adresse fortzufahren:"
+          description_add: "Bitte bestätige deine bestehende E-Mail-Adresse, um mit dem Hinzufügen einer alternativen Adresse fortzufahren:"
+          old_email: "Alte E-Mail-Adresse: %{email}"
+          new_email: "Neue E-Mail-Adresse: %{email}"
+          confirm_success: "Wir haben eine E-Mail an deine neue E-Mail-Adresse gesendet, um die Änderung zu bestätigen!"
       change_avatar:
         title: "Ändere dein Profilbild"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, basierend auf"
