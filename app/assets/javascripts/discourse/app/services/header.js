@@ -1,15 +1,20 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
+import { action } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import Service, { service } from "@ember/service";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import deprecated from "discourse-common/lib/deprecated";
+import { SCROLLED_UP } from "./scroll-direction";
 
 const VALID_HEADER_BUTTONS_TO_HIDE = ["search", "login", "signup"];
 
 @disableImplicitInjections
 export default class Header extends Service {
   @service siteSettings;
+  @service scrollDirection;
+  @service site;
 
   /**
    * The topic currently viewed on the page.
@@ -20,14 +25,7 @@ export default class Header extends Service {
    */
   @tracked topicInfo = null;
 
-  /**
-   * Indicates whether the topic information is visible on the header.
-   *
-   * The information is updated when the user scrolls the page.
-   *
-   * @type {boolean}
-   */
-  @tracked topicInfoVisible = false;
+  @tracked mainTopicTitleVisible = false;
 
   @tracked hamburgerVisible = false;
   @tracked userVisible = false;
@@ -46,6 +44,33 @@ export default class Header extends Service {
     );
 
     return this.topicInfoVisible ? this.topicInfo : null;
+  }
+
+  /**
+   * Indicates whether topic info should be displayed
+   * in the header.
+   */
+  @dependentKeyCompat // For legacy `site-header` observer compat
+  get topicInfoVisible() {
+    if (!this.topicInfo) {
+      // Not on a topic page
+      return false;
+    }
+
+    if (this.mainTopicTitleVisible) {
+      // Title is already visible on screen, no need to duplicate
+      return false;
+    }
+
+    if (
+      this.site.mobileView &&
+      this.scrollDirection.lastScrollDirection === SCROLLED_UP
+    ) {
+      // On mobile, we hide the topic info when scrolling up
+      return false;
+    }
+
+    return true;
   }
 
   get useGlimmerHeader() {
@@ -102,5 +127,36 @@ export default class Header extends Service {
       });
     });
     return Array.from(buttonsToHide);
+  }
+
+  /**
+   * Called by a modifier attached to the main topic title element.
+   */
+  @action
+  titleIntersectionChanged(e) {
+    if (e.isIntersecting) {
+      this.mainTopicTitleVisible = true;
+    } else if (e.boundingClientRect.top > 0) {
+      // Title is below the curent viewport position. Unusual, but can be caused with
+      // small viewport and/or large headers. Treat same as if title is on screen.
+      this.mainTopicTitleVisible = true;
+    } else {
+      this.mainTopicTitleVisible = false;
+    }
+  }
+
+  /**
+   * Called whenever a topic route is entered. Sets the current topicInfo,
+   * and makes a guess about whether the main topic title is likely to be visible
+   * on initial load. The IntersectionObserver will correct this later if needed.
+   */
+  enterTopic(topic, postNumber) {
+    this.topicInfo = topic;
+    this.mainTopicTitleVisible = !postNumber || postNumber === 1;
+  }
+
+  clearTopic() {
+    this.topicInfo = null;
+    this.mainTopicTitleVisible = false;
   }
 }

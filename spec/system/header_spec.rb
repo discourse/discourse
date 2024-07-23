@@ -259,4 +259,32 @@ RSpec.describe "Glimmer Header", type: :system do
       expect(search).to have_no_search_menu_visible
     end
   end
+
+  describe "mobile topic-info" do
+    fab!(:topic)
+    fab!(:posts) { Fabricate.times(5, :post, topic: topic) }
+
+    it "only shows when scrolled down", mobile: true do
+      visit "/t/#{topic.slug}/#{topic.id}"
+
+      expect(page).to have_css("#topic-title") # Main topic title
+      expect(page).to have_css("header.d-header .auth-buttons .login-button") # header buttons visible when no topic-info in header
+
+      page.execute_script("document.querySelector('#post_4').scrollIntoView()")
+
+      expect(page).not_to have_css("header.d-header .auth-buttons .login-button") # No header buttons
+      expect(page).to have_css("header.d-header .title-wrapper .topic-link") # Title is shown in header
+
+      page.execute_script("window.scrollTo(0, 0)")
+      expect(page).to have_css("#topic-title") # Main topic title
+      expect(page).to have_css("header.d-header .auth-buttons .login-button") # header buttons visible when no topic-info in header
+    end
+
+    it "shows when navigating direct to a later post", mobile: true do
+      visit "/t/#{topic.slug}/#{topic.id}/4"
+
+      expect(page).not_to have_css("header.d-header .auth-buttons .login-button") # No header buttons
+      expect(page).to have_css("header.d-header .title-wrapper .topic-link") # Title is shown in header
+    end
+  end
 end
