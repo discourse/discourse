@@ -1,16 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { mixin } from "@ember/object/mixin";
-import { cancel, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import htmlClass from "discourse/helpers/html-class";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
-import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
-import Scrolling from "discourse/mixins/scrolling";
+import { SCROLLED_UP, UNSCROLLED } from "discourse/services/scroll-direction";
+import { bind } from "discourse-common/utils/decorators";
 import not from "truth-helpers/helpers/not";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 150;
@@ -18,28 +16,28 @@ const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 150;
 class FooterNav extends Component {
   @service appEvents;
   @service capabilities;
+  @service scrollDirection;
+  @service composer;
 
+  @tracked shouldToggleMobileFooter = false;
   @tracked canGoBack = false;
   @tracked canGoForward = false;
-  @tracked mobileScrollDirection = "down";
 
   currentRouteIndex = 0;
   routeHistory = [];
   backForwardClicked = false;
-  scrollEventDisabled = false;
 
   registerScrollhandler = modifierFn(() => {
-    if (this.capabilities.isIpadOS) {
-      return;
-    }
-
-    window.addEventListener("resize", this.scrolled);
-    this.bindScrolling();
+    this.scrollDirection.addObserver(
+      "lastScrollDirection",
+      this.toggleMobileFooter
+    );
 
     return () => {
-      window.removeEventListener("resize", this.scrolled);
-      this.unbindScrolling();
-      cancel(this._throttleHandler);
+      this.scrollDirection.removeObserver(
+        "lastScrollDirection",
+        this.toggleMobileFooter
+      );
     };
   });
 
@@ -51,22 +49,12 @@ class FooterNav extends Component {
       this.appEvents.on("modal:body-dismissed", this, "_modalOff");
     }
 
-    if (!this.capabilities.isIpadOS) {
-      this.appEvents.on("composer:opened", this, "_composerOpened");
-      this.appEvents.on("composer:closed", this, "_composerClosed");
-    }
-
     return () => {
       this.appEvents.off("page:changed", this, "_routeChanged");
 
       if (this.capabilities.isAppWebview) {
         this.appEvents.off("modal:body-shown", this, "_modalOn");
         this.appEvents.off("modal:body-removed", this, "_modalOff");
-      }
-
-      if (!this.capabilities.isIpadOS) {
-        this.appEvents.off("composer:opened", this, "_composerOpened");
-        this.appEvents.off("composer:closed", this, "_composerClosed");
       }
     };
   });
@@ -84,16 +72,8 @@ class FooterNav extends Component {
     this.setBackForward();
   }
 
-  @action
-  _composerOpened() {
-    this.mobileScrollDirection = "down";
-    this.scrollEventDisabled = true;
-  }
-
-  @action
-  _composerClosed() {
-    this.mobileScrollDirection = null;
-    this.scrollEventDisabled = false;
+  get isFooterVisible() {
+    return !this.composer.isOpen && this.shouldToggleMobileFooter;
   }
 
   @action
@@ -146,18 +126,10 @@ class FooterNav extends Component {
     window.history.forward();
   }
 
-  // The user has scrolled the window, or it is finished rendering and ready for processing.
-  @action
-  scrolled() {
-    if (this.scrollEventDisabled) {
-      return;
-    }
-
-    this._throttleHandler = throttle(
-      this,
-      this.calculateDirection,
-      window.pageYOffset,
-      MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE
+  @bind
+  toggleMobileFooter() {
+    this.shouldToggleMobileFooter = [UNSCROLLED, SCROLLED_UP].includes(
+      this.scrollDirection.lastScrollDirection
     );
   }
 
@@ -172,16 +144,13 @@ class FooterNav extends Component {
     {{#if this.capabilities.isIpadOS}}
       {{htmlClass "footer-nav-ipad"}}
     {{else}}
-      {{#unless this.mobileScrollDirection}}
+      {{#if this.isFooterVisible}}
         {{htmlClass "footer-nav-visible"}}
-      {{/unless}}
+      {{/if}}
     {{/if}}
 
     <div
-      class={{concatClass
-        "footer-nav"
-        (unless this.mobileScrollDirection "visible")
-      }}
+      class={{concatClass "footer-nav" (if this.isFooterVisible "visible")}}
       {{this.registerScrollhandler}}
       {{this.registerAppEvents}}
     >
@@ -221,8 +190,5 @@ class FooterNav extends Component {
     </div>
   </template>
 }
-
-mixin(FooterNav.prototype, MobileScrollDirection);
-mixin(FooterNav.prototype, Scrolling);
 
 export default FooterNav;
