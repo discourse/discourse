@@ -130,10 +130,8 @@ class FooterNav extends Component {
 
     {{#if this.capabilities.isIpadOS}}
       {{htmlClass "footer-nav-ipad"}}
-    {{else}}
-      {{#if this.isVisible}}
-        {{htmlClass "footer-nav-visible"}}
-      {{/if}}
+    {{else if this.isVisible}}
+      {{htmlClass "footer-nav-visible"}}
     {{/if}}
 
     <div
