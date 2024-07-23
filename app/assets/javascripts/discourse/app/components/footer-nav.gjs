@@ -7,7 +7,7 @@ import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import documentClass from "discourse/helpers/document-class";
+import htmlClass from "discourse/helpers/html-class";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
 import Scrolling from "discourse/mixins/scrolling";
@@ -158,10 +158,10 @@ class FooterNav extends Component {
 
   <template>
     {{#if this.capabilities.isIpadOS}}
-      {{documentClass "footer-nav-ipad"}}
+      {{htmlClass "footer-nav-ipad"}}
     {{else}}
       {{#unless this.mobileScrollDirection}}
-        {{documentClass "footer-nav-visible"}}
+        {{htmlClass "footer-nav-visible"}}
       {{/unless}}
     {{/if}}
 
