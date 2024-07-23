@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { modifier as modifierFn } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
@@ -17,12 +18,8 @@ class FooterNav extends Component {
   @service composer;
   @service modal;
 
-  @tracked shouldToggleMobileFooter = false;
-  @tracked canGoBack = false;
-  @tracked canGoForward = false;
-
   currentRouteIndex = 0;
-  routeHistory = [];
+  routeHistory = new TrackedArray();
   backForwardClicked = false;
 
   registerAppEvents = modifierFn(() => {
@@ -41,9 +38,13 @@ class FooterNav extends Component {
       return;
     }
 
+    // we only keep last 100 routes in history
+    if (this.routeHistory.length >= 100) {
+      this.routeHistory.shift();
+    }
+
     this.routeHistory.push(route.url);
     this.currentRouteIndex = this.routeHistory.length;
-    this.setBackForward();
   }
 
   _modalOn() {
@@ -96,7 +97,6 @@ class FooterNav extends Component {
   @action
   goBack() {
     this.currentRouteIndex = this.currentRouteIndex - 1;
-    this.setBackForward();
     this.backForwardClicked = true;
     window.history.back();
   }
@@ -104,7 +104,6 @@ class FooterNav extends Component {
   @action
   goForward() {
     this.currentRouteIndex = this.currentRouteIndex + 1;
-    this.setBackForward();
     this.backForwardClicked = true;
     window.history.forward();
   }
@@ -117,11 +116,12 @@ class FooterNav extends Component {
     );
   }
 
-  setBackForward() {
-    this.canGoBack =
-      this.currentRouteIndex > 1 || document.referrer ? true : false;
-    this.canGoForward =
-      this.currentRouteIndex < this.routeHistory.length ? true : false;
+  get canGoBack() {
+    return this.currentRouteIndex > 1 || document.referrer ? true : false;
+  }
+
+  get canGoForward() {
+    return this.currentRouteIndex < this.routeHistory.length ? true : false;
   }
 
   <template>
