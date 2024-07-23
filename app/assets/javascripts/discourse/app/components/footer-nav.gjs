@@ -10,7 +10,6 @@ import concatClass from "discourse/helpers/concat-class";
 import htmlClass from "discourse/helpers/html-class";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import { SCROLLED_UP, UNSCROLLED } from "discourse/services/scroll-direction";
-import { bind } from "discourse-common/utils/decorators";
 import not from "truth-helpers/helpers/not";
 
 class FooterNav extends Component {
@@ -36,22 +35,6 @@ class FooterNav extends Component {
     };
   });
 
-  @bind
-  registerDirectionObserver() {
-    this.scrollDirection.addObserver(
-      "lastScrollDirection",
-      this.toggleMobileFooter
-    );
-  }
-
-  @bind
-  unregisterDirectionObserver() {
-    this.scrollDirection.removeObserver(
-      "lastScrollDirection",
-      this.toggleMobileFooter
-    );
-  }
-
   @action
   _routeChanged(route) {
     // only update route history if not using back/forward nav
@@ -63,10 +46,6 @@ class FooterNav extends Component {
     this.routeHistory.push(route.url);
     this.currentRouteIndex = this.routeHistory.length;
     this.setBackForward();
-  }
-
-  get isFooterVisible() {
-    return !this.composer.isOpen && this.shouldToggleMobileFooter;
   }
 
   _modalOn() {
@@ -132,10 +111,11 @@ class FooterNav extends Component {
     window.history.forward();
   }
 
-  @bind
-  toggleMobileFooter() {
-    this.shouldToggleMobileFooter = [UNSCROLLED, SCROLLED_UP].includes(
-      this.scrollDirection.lastScrollDirection
+  get isVisible() {
+    return (
+      [UNSCROLLED, SCROLLED_UP].includes(
+        this.scrollDirection.lastScrollDirection
+      ) && !this.composer.isOpen
     );
   }
 
@@ -152,13 +132,13 @@ class FooterNav extends Component {
     {{#if this.capabilities.isIpadOS}}
       {{htmlClass "footer-nav-ipad"}}
     {{else}}
-      {{#if this.isFooterVisible}}
+      {{#if this.isVisible}}
         {{htmlClass "footer-nav-visible"}}
       {{/if}}
     {{/if}}
 
     <div
-      class={{concatClass "footer-nav" (if this.isFooterVisible "visible")}}
+      class={{concatClass "footer-nav" (if this.isVisible "visible")}}
       {{didInsert this.registerDirectionObserver}}
       {{willDestroy this.unregisterDirectionObserver}}
       {{this.registerAppEvents}}
