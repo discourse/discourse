@@ -1,20 +1,6 @@
 // styles that apply to the popup that appears when you show the edit history of a post
 
 .modal.history-modal {
-  .modal-inner-container {
-    max-width: var(--d-max-width);
-    width: 100dvw;
-  }
-  &.--mode-inline {
-    .modal-inner-container {
-      width: auto;
-    }
-  }
-
-  .modal-body:not(.theme-change-modal-body) {
-    min-height: 65dvh;
-  }
-
   .d-modal__footer {
     justify-content: space-between;
   }

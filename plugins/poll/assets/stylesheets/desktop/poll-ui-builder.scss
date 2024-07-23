@@ -1,13 +1,4 @@
 .poll-ui-builder.modal {
-  .modal-inner-container {
-    width: 40em; // scale with user font-size
-    max-width: 100vw; // prevent overflow if user font-size is enormous
-  }
-
-  .modal-body {
-    max-height: unset;
-  }
-
   .poll-number {
     margin-right: 10px;
 

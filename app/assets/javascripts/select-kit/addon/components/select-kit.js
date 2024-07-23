@@ -994,7 +994,7 @@ export default Component.extend(
               fn: ({ state }) => {
                 if (inModal) {
                   const innerModal = document.querySelector(
-                    ".fixed-modal div.modal-inner-container"
+                    ".fixed-modal .d-modal__container"
                   );
 
                   if (innerModal) {
