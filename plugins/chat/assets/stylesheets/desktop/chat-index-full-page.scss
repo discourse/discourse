@@ -3,7 +3,7 @@
     .channels-list {
       height: calc(100vh - var(--header-offset));
       border-right: 1px solid var(--primary-low);
-      background: var(--primary-very-low);
+      background: var(--secondary);
       overflow-y: auto;
 
       .channel-list-empty-message {
