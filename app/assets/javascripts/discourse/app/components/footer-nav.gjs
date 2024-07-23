@@ -66,7 +66,7 @@ class FooterNav extends Component {
 
     postRNWebviewMessage(
       "headerBg",
-      getComputedStyle(dheader)["background-color"]
+      document.documentElement.style.getPropertyValue("--header_background")
     );
   }
 
