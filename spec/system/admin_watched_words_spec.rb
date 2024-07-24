@@ -17,4 +17,12 @@ describe "Admin Watched Words", type: :system, js: true do
 
     expect(ww_page).to have_word
   end
+
+  it "shows the 'outputs HTML' option when action=replace" do
+    ww_page.visit
+    expect(ww_page).to have_no_css(".html-checkbox input")
+
+    ww_page.visit("replace")
+    expect(ww_page).to have_css(".html-checkbox input")
+  end
 end
