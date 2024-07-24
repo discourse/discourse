@@ -130,6 +130,16 @@ RSpec.describe ApplicationController do
     let(:admin) { Fabricate(:admin) }
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
+    let(:store) { ActionDispatch::Session::CookieStore.new({}) }
+    let(:session_stub) do
+      ActionDispatch::Request::Session.create(store, ActionDispatch::TestRequest.create, {})
+    end
+
+    before do
+      session_stub[:oauth] = true
+      ActionDispatch::Request.any_instance.stubs(:session).returns(session_stub)
+    end
+
     before do
       admin # to skip welcome wizard at home page `/`
     end
@@ -153,7 +163,6 @@ RSpec.describe ApplicationController do
     it "should redirect users when enforce_second_factor is 'all' and authenticated via oauth" do
       SiteSetting.enforce_second_factor = "all"
       sign_in(user)
-      session[:oauth] = true
 
       get "/"
       expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
@@ -163,7 +172,6 @@ RSpec.describe ApplicationController do
       SiteSetting.enforce_second_factor = "all"
       SiteSetting.enforce_second_factor_on_external_auth = false
       sign_in(user)
-      session[:oauth] = true
 
       get "/"
       expect(response.status).to eq(200)
