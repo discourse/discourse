@@ -3,7 +3,7 @@
 module PageObjects
   module Pages
     class AdminWatchedWords < PageObjects::Pages::Base
-      def visit(action = "block")
+      def visit(action: "block")
         page.visit "admin/customize/watched_words/action/#{action}"
         self
       end
