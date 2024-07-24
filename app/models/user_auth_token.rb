@@ -79,8 +79,9 @@ class UserAuthToken < ActiveRecord::Base
     path: nil,
     staff: nil,
     impersonate: false,
-    login_method: Auth::LOGIN_METHOD_LOCAL
+    login_method: nil
   )
+    login_method = Auth::LOGIN_METHOD_LOCAL if !login_method
     token = SecureRandom.hex(16)
     hashed_token = hash_token(token)
     user_auth_token =
