@@ -35,9 +35,7 @@ class FKForm extends Component {
   constructor() {
     super(...arguments);
 
-    const isDirtyCheck = () => {
-      return this.formData.isDirty;
-    };
+    const isDirtyCheck = () => this.formData.isDirty;
     next(() => {
       this.args.onRegisterApi?.({
         set: this.set,
