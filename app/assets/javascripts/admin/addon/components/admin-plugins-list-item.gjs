@@ -66,40 +66,41 @@ export default class AdminPluginsListItem extends Component {
       }}
     >
       <td class="admin-plugins-list__name-details">
-        <PluginOutlet
-          @name="admin-plugin-list-item-name-details"
-          @outletArgs={{hash plugin=@plugin}}
-        >
-          <div class="admin-plugins-list__name-with-badges">
-            <div class="admin-plugins-list__name">
-              {{@plugin.nameTitleized}}
-            </div>
+        <div class="admin-plugins-list__name-with-badges">
+          <div class="admin-plugins-list__name">
+            {{@plugin.nameTitleized}}
+          </div>
 
-            <div class="badges">
-              {{#if @plugin.label}}
-                <span class="admin-plugins-list__badge">
-                  {{@plugin.label}}
-                </span>
-              {{/if}}
-            </div>
-          </div>
-          <div class="admin-plugins-list__author">
-            {{@plugin.author}}
-          </div>
-          <div class="admin-plugins-list__about">
-            {{@plugin.about}}
-            {{#if @plugin.linkUrl}}
-              <a
-                href={{@plugin.linkUrl}}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                {{i18n "admin.plugins.learn_more"}}
-                {{icon "external-link-alt"}}
-              </a>
+          <div class="badges">
+            {{#if @plugin.label}}
+              <span class="admin-plugins-list__badge">
+                {{@plugin.label}}
+              </span>
             {{/if}}
           </div>
-        </PluginOutlet>
+
+          <PluginOutlet
+            @name="admin-plugin-list-name-badge-after"
+            @connectorTagName="span"
+            @outletArgs={{hash plugin=@plugin}}
+          />
+        </div>
+        <div class="admin-plugins-list__author">
+          {{@plugin.author}}
+        </div>
+        <div class="admin-plugins-list__about">
+          {{@plugin.about}}
+          {{#if @plugin.linkUrl}}
+            <a
+              href={{@plugin.linkUrl}}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              {{i18n "admin.plugins.learn_more"}}
+              {{icon "external-link-alt"}}
+            </a>
+          {{/if}}
+        </div>
       </td>
       <td class="admin-plugins-list__version">
         <PluginOutlet
