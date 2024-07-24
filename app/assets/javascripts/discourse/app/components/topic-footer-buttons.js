@@ -1,7 +1,7 @@
-import { getOwner } from "@ember/application";
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { alias, or } from "@ember/object/computed";
+import { getOwner } from "@ember/owner";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { getTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";

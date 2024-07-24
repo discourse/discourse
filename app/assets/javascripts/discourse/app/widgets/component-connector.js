@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { scheduleOnce } from "@ember/runloop";
 
 export default class ComponentConnector {

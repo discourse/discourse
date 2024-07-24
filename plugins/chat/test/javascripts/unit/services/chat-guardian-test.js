@@ -1,5 +1,5 @@
-import { getOwner } from "@ember/application";
 import { set } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";

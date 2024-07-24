@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { getOwner, setOwner } from "@ember/application";
+import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { NotificationLevels } from "discourse/lib/notification-levels";

@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import Service from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import DDefaultToast from "float-kit/components/d-default-toast";

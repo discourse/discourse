@@ -1,4 +1,4 @@
-import { getOwner, setOwner } from "@ember/application";
+import { getOwner, setOwner } from "@ember/owner";
 import { run, throttle } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { headerOffset } from "discourse/lib/offset-calculator";

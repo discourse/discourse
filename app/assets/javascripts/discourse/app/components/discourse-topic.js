@@ -1,6 +1,6 @@
-import { getOwner } from "@ember/application";
 import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
+import { getOwner } from "@ember/owner";
 import { schedule, scheduleOnce } from "@ember/runloop";
 import { isBlank } from "@ember/utils";
 import $ from "jquery";

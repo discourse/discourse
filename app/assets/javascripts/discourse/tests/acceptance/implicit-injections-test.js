@@ -1,4 +1,4 @@
-import { getOwner, setOwner } from "@ember/application";
+import { getOwner, setOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 import { test } from "qunit";
 import RestModel from "discourse/models/rest";

@@ -1,4 +1,4 @@
-import { setOwner } from "@ember/application";
+import { setOwner } from "@ember/owner";
 import Handlebars from "handlebars";
 import {
   createHelperContext,

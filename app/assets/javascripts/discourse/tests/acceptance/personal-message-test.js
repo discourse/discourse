@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";

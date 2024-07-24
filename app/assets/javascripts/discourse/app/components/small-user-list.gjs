@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import avatar from "discourse/helpers/bound-avatar-template";
 import { userPath } from "discourse/lib/url";
 import i18n from "discourse-common/helpers/i18n";

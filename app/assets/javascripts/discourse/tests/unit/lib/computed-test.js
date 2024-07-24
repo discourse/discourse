@@ -1,5 +1,5 @@
-import { getOwner } from "@ember/application";
 import EmberObject from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";

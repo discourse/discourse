@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { setOwner } from "@ember/application";
+import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import AboutSectionLink from "discourse/lib/sidebar/common/community-section/about-section-link";
 import BadgesSectionLink from "discourse/lib/sidebar/common/community-section/badges-section-link";
