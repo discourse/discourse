@@ -658,11 +658,12 @@ el:
           imap_title: "IMAP"
           imap_additional_settings: "Πρόσθετες ρυθμίσεις"
           imap_settings_valid: "Έγκυρες ρυθμίσεις IMAP."
+          ssl_modes:
+            none: "Κανένα"
           credentials:
             title: "Διαπιστευτήρια"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
-            smtp_ssl: "Χρήση SSL για SMTP"
             imap_server: "IMAP Server"
             imap_port: "IMAP Port"
             imap_ssl: "Χρήση SSL για SMTP"
@@ -889,6 +890,7 @@ el:
     user_fields:
       none: "(διαλέξτε μία επιλογή)"
       required: 'Παρακαλώ εισαγάγετε μια τιμή για το "%{name}»'
+      optional: (προεραιτικό)
     user:
       said: "%{username}:"
       profile: "Προφίλ"
@@ -1506,6 +1508,11 @@ el:
     modal:
       close: "κλείσιμο"
       dismiss_error: "Παράβλεψη σφάλματος"
+    form_kit:
+      reset: Επαναφορά
+      optional: προεραιτικό
+      errors:
+        required: "Απαιτείται"
     close: "Κλείσιμο"
     logout: "Αποσυνδέθηκες."
     refresh: "Ανανέωση"
@@ -1536,6 +1543,7 @@ el:
         one: "Υπάρχει <b>%{count}</b> απάντηση."
         other: "Υπάρχουν <b>%{count}</b> απαντήσεις."
       disable: "Εμφάνιση όλων των αναρτήσεων"
+      show_all_label: "Εμφάνιση όλων"
     deleted_filter:
       enabled_description: "Αυτό το νήμα περιέχει σβησμένες αναρτήσεις, οι οποίες αποκρύπτονται."
       disabled_description: "Σε αυτό το νήμα εμφανίζονται oι σβησμένες αναρτήσεις."
@@ -1560,9 +1568,10 @@ el:
       header_title: "Καλωσόρισες!"
       subheader_title: "Ας δημιουργήσουμε τον λογαριασμό σας"
       disclaimer: "Κάνοντας εγγραφή συμφωνείς με την <a href='%{privacy_link}'>πολιτική ιδιωτικότητας</a> και με τους <a href='%{tos_link}'>όρους χρήσης</a>."
-      title: "Δημιουργήστε τον λογαριασμό σας"
+      title: "Εγγραφή"
       failed: "Κάτι πήγε στραβά. Ίσως αυτή η διεύθυνση email να είναι ήδη δηλωμένη. Δοκίμασε την λειτουργία «ξέχασα τον κωδικό μου»."
       associate: "Έχετε ήδη λογαριασμό; <a href='%{associate_link}'>Συνδεθείτε</a> για να συνδέσετε τον λογαριασμό σας %{provider}."
+      already_have_account: "Έχετε ήδη λογαριασμό;"
     forgot_password:
       title: "Επαναφορά Κωδικού"
       action: "Ξέχασα τον κωδικό πρόσβασής μου"
@@ -1695,8 +1704,8 @@ el:
       enter: "Enter"
     category_row:
       subcategory_count:
-        one: "+ %{count} υποκατηγορία"
-        other: "+ %{count} υποκατηγορίες"
+        one: "+%{count} υποκατηγορία"
+        other: "+%{count} υποκατηγορίες"
       topic_count:
         one: "%{count} θέμα σε αυτήν την κατηγορία"
         other: "%{count} θέματα σε αυτήν την κατηγορία"
@@ -2845,6 +2854,9 @@ el:
       clicks:
         one: "%{count} κλικ"
         other: "%{count} κλικ"
+      views: "Προβολές"
+      read: ανάγνωση
+      minutes: ελάχιστο
     post_links:
       about: "ανάπτυξε περισσότερους συνδέσμους για αυτή την ανάρτηση"
       title:
@@ -2877,19 +2889,17 @@ el:
     pending_posts:
       label: "Εκκρεμή"
       label_with_count: "Εκρεμείς (%{count})"
+    posters: "Συμμετέχοντες"
     original_post: "Αρχική Ανάρτηση"
     views: "Προβολές"
-    sr_views: "Ταξινόμηση κατά προβολές"
     views_lowercase:
       one: "προβολή"
       other: "προβολές"
     replies: "Απαντήσεις"
-    sr_replies: "Ταξινόμηση κατά απαντήσεις"
     views_long:
       one: "αυτό το νήμα έχει προβληθεί %{count} φορά"
       other: "αυτό το νήμα έχει προβληθεί %{number} φορές"
     activity: "Δραστηριότητα"
-    sr_activity: "Ταξινόμηση ανά δραστηριότητα"
     likes: "«Μου αρέσει»"
     likes_lowercase:
       one: "μου αρέσει"
@@ -3246,8 +3256,8 @@ el:
         leader: "αρχηγός"
     no_group_messages_title: "Δε βρέθηκαν ομαδικά μηνύματα"
     topic_entrance:
-      sr_jump_top_button: "Μετάβαση στην πρώτη δημοσίευση"
-      sr_jump_bottom_button: "Μετάβαση στην τελευταία δημοσίευση"
+      jump_top_button_title: "Μετάβαση στην πρώτη δημοσίευση"
+      jump_bottom_button_title: "Μετάβαση στην τελευταία δημοσίευση"
     fullscreen_table:
       expand_btn: "Ανάπτυξη Πίνακα"
     sidebar:
@@ -3669,6 +3679,19 @@ el:
         about:
           optional: "(προεραιτικό)"
           update: "Ενημέρωση"
+          saved: "αποθηκεύτηκε!"
+        flags:
+          description: "Περιγραφή"
+          enabled: "Ενεργοποιημένο;"
+          edit: "Επεξεργασία"
+          delete: "Σβήσιμο"
+          delete_confirm: 'Είστε βέβαιοι πως θέλετε να διαγράψετε το «%{name}»;'
+          form:
+            save: "Αποθήκευση"
+            name: "Όνομα"
+            description: "Περιγραφή"
+            topic: "θέματα"
+            post: "αναρτήσεις"
       plugins:
         title: "Plugins"
         installed: "Εγκατεστημένα Plugins"
@@ -4633,6 +4656,7 @@ el:
         file_types_list:
           add_image_types: "Εικόνες"
       badges:
+        status: Κατάσταση
         title: Παράσημα
         new_badge: Νέο Παράσημο
         new: Νέο
@@ -4640,8 +4664,6 @@ el:
         badge: Παράσημο
         display_name: Όνομα που θα φαίνεται
         description: Περιγραφή
-        long_description: Μακρά Περιγραφή
-        badge_type: Τύπος Παράσημου
         badge_grouping: Ομάδα
         badge_groupings:
           modal_title: Ομαδοποίηση Παράσημων
@@ -4669,6 +4691,8 @@ el:
         icon: Σύμβολο
         image: Εικόνα
         icon_help: "Εισαγάγετε ένα όνομα εικονιδίου FontAwesome (χρησιμοποιήστε το πρόθεμα «far-» για κανονικά εικονίδια και «fab-» για εικονίδια επωνυμίας)"
+        select_an_icon: "Επιλέξτε ένα εικονίδιο"
+        upload_an_image: "Επιφορτώστε μια εικόνα"
         query: Ερώτηση παράσημου (SQL)
         target_posts: Το ερώτημα αφορά αναρτήσεις
         auto_revoke: Τρέξε καθημερινά το ερώτημα για την ανάκληση

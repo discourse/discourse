@@ -23,6 +23,7 @@ pl_PL:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -376,6 +377,11 @@ pl_PL:
       active_user_count: "Aktywni użytkownicy"
       contact: "Skontaktuj się z nami"
       contact_info: "W sprawach wymagających szybkiej reakcji lub związanych z poprawnym funkcjonowaniem serwisu, prosimy o kontakt: %{contact_info}."
+      member_count:
+        one: "%{formatted_number} Członek"
+        few: "%{formatted_number} Członków"
+        many: "%{formatted_number} Członków"
+        other: "%{formatted_number} Członków"
     bookmarked:
       title: "Zakładka"
       edit_bookmark: "Edytuj zakładkę"
@@ -907,11 +913,12 @@ pl_PL:
           prefill:
             title: "Wstępne wypełnienie ustawieniami dla:"
             gmail: "Gmail"
+          ssl_modes:
+            none: "Brak"
           credentials:
             title: "Poświadczenia"
             smtp_server: "Serwer SMTP"
             smtp_port: "Port SMTP"
-            smtp_ssl: "Użyj SSL dla SMTP"
             imap_server: "Serwer IMAP"
             imap_port: "Port IMAP"
             imap_ssl: "Użyj SSL dla IMAP"
@@ -1187,6 +1194,7 @@ pl_PL:
       none: "(wybierz opcję)"
       required: 'Wprowadź wartość dla "%{name}”'
       same_as_password: "Twoje hasło nie powinno się powtarzać w innych polach."
+      optional: (opcjonalne)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1221,6 +1229,7 @@ pl_PL:
         ignore_option: "Zignorowany"
         add_ignored_user: "Dodaj…"
         mute_option: "Wyciszenie"
+        mute_option_title: "Nie będziesz otrzymywać żadnych powiadomień, wiadomości osobistych ani bezpośrednich wiadomości na czacie od tego użytkownika."
         normal_option: "Normalny"
         normal_option_title: "Zostaniesz powiadomiony, jeśli ten użytkownik odpowie ci, zacytuje lub o tobie wspomni."
       notification_schedule:
@@ -1242,6 +1251,8 @@ pl_PL:
       read_help: "Ostatnio przeczytane tematy"
       preferences:
         title: "Ustawienia"
+        profile:
+          enforced_required_fields: "Przed dalszym korzystaniem z tej witryny musisz podać dodatkowe informacje."
       feature_topic_on_profile:
         open_search: "Wybierz nowy temat"
         title: "Wybierz temat"
@@ -1549,6 +1560,7 @@ pl_PL:
         set_password: "Ustaw hasło"
         choose_new: "Wyberz nowe hasło"
         choose: "Wybierz hasło"
+        verify_identity: "Aby kontynuować, zweryfikuj swoją tożsamość."
         title: "Reset hasła"
       second_factor_backup:
         title: "Kody zapasowe weryfikacji dwuskładnikowej"
@@ -1593,6 +1605,7 @@ pl_PL:
           Uwierzytelnianie dwuskładnikowe zapewnia dodatkowe bezpieczeństwo konta, wymagając jednorazowego tokena oprócz hasła. Tokeny można generować na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>urządzeniach z systemem Android</a> i <a href="https://www.google.com/search?q=authenticator+apps+for+ios">systemem iOS</a>.
         oauth_enabled_warning: "Pamiętaj, że logowanie kontem społecznościowym zostanie wyłączone po włączeniu uwierzytelniania dwuskładnikowego na Twoim koncie."
         use: "Użyj aplikacji Authenticator"
+        enforced_with_oauth_notice: "Musisz włączyć uwierzytelnianie dwuskładnikowe. Zostaniesz poproszony o użycie tej opcji tylko podczas logowania przy użyciu hasła, a nie przy użyciu zewnętrznego uwierzytelniania lub metod logowania społecznościowego."
         enforced_notice: "Aby uzyskać dostęp do tej witryny, musisz włączyć uwierzytelnianie dwuskładnikowe."
         disable: "Wyłącz"
         disable_confirm: "Czy na pewno chcesz wyłączyć uwierzytelnianie dwuskładnikowe?"
@@ -1954,10 +1967,20 @@ pl_PL:
         fine_print: "Prosimy o potwierdzenie Twojej tożsamości, ponieważ jest to potencjalnie wrażliwe działanie. Po uwierzytelnieniu zostaniesz poproszony o ponowne uwierzytelnienie po kilku godzinach bezczynności."
       password:
         title: "Hasło"
+        too_short:
+          one: "Twoje hasło jest za krótkie (minimum %{count} znak)."
+          few: "Twoje hasło jest za krótkie (minimum %{count} znaki)."
+          many: "Twoje hasło jest za krótkie (minimum %{count} znaków)."
+          other: "Twoje hasło jest za krótkie (minimum %{count} znaków)."
         common: "To hasło jest zbyt popularne."
         same_as_username: "Twoje hasło jest takie samo jak nazwa użytkownika."
         same_as_email: "Twoje hasło jest takie samo jak twój e-mail."
         ok: "Twoje hasło wygląda na poprawne."
+        instructions:
+          one: "Co najmniej %{count} znak."
+          few: "Co najmniej %{count} znaki."
+          many: "Co najmniej %{count} znaków."
+          other: "Co najmniej %{count} znaków."
         required: "Wprowadź hasło"
         confirm: "Potwierdź"
         incorrect_password: "Wpisane hasło jest nieprawidłowe."
@@ -2103,6 +2126,12 @@ pl_PL:
     modal:
       close: "zamknij"
       dismiss_error: "Odrzuć błąd"
+    form_kit:
+      reset: Przywróć
+      optional: opcjonalnie
+      errors:
+        required: "Wymagane"
+        invalid_url: "Musi być prawidłowym adresem URL"
     close: "Zamknij"
     assets_changed_confirm: "Ta strona właśnie otrzymała aktualizację oprogramowania. Pobrać najnowszą wersję teraz?"
     logout: "Nastąpiło wylogowanie."
@@ -2173,6 +2202,7 @@ pl_PL:
       enable: "Pokaż najlepsze odpowiedzi"
       disable: "Pokaż wszystkie posty"
       short_label: "Najlepsze odpowiedzi"
+      show_all_label: "Pokaż wszystkie"
       short_title: "Pokaż najlepsze odpowiedzi w tym temacie: najciekawsze posty określone przez społeczność"
     deleted_filter:
       enabled_description: "Ten temat posiada usunięte wpisy, które zostały ukryte."
@@ -2202,10 +2232,11 @@ pl_PL:
       header_title: "Witamy!"
       subheader_title: "Utwórzmy Twoje konto"
       disclaimer: "Rejestrując się, wyrażasz zgodę na <a href='%{privacy_link}' target='blank'>politykę prywatności</a> i <a href='%{tos_link}' target='blank'>warunki świadczenia usług</a> ."
-      title: "Utwórz swoje konto"
+      title: "Rejestracja"
       failed: "Coś poszło nie tak, możliwe, że wybrany adres email jest już zarejestrowany, spróbuj użyć odnośnika przypomnienia hasła"
       associate: "Masz już konto? <a href='%{associate_link}'>Zaloguj się</a> , aby połączyć swoje konto %{provider}."
       activation_title: "Aktywuj swoje konto"
+      already_have_account: "Masz już konto?"
     forgot_password:
       title: "Reset hasła"
       action: "Zapomniałem(-łam) hasła"
@@ -2264,6 +2295,7 @@ pl_PL:
       error: "Nieznany błąd"
       cookies_error: "Wygląda na to, że masz wyłączoną obsługę plików cookie. Możesz nie być w stanie zalogować się bez uprzedniego włączenia ich."
       rate_limit: "Poczekaj, zanim ponowisz próbę logowania."
+      password_expired: "Hasło wygasło. <a href='%{reset_url}'>Zresetuj swoje hasło</a>."
       blank_username: "Podaj swój adres e-mail lub nazwę użytkownika."
       blank_username_or_password: "Podaj swój email lub nazwę użytkownika i hasło"
       reset_password: "Resetuj hasło"
@@ -2362,10 +2394,10 @@ pl_PL:
       loading: Ładowanie…
     category_row:
       subcategory_count:
-        one: "+ %{count} podkategoria"
-        few: "+ %{count} podkategorie"
-        many: "+ %{count} podkategorii"
-        other: "+ %{count} podkategorii"
+        one: "+%{count} podkategoria"
+        few: "+%{count} podkategorie"
+        many: "+%{count} podkategorii"
+        other: "+%{count} podkategorii"
       topic_count:
         one: "%{count} temat w tej kategorii"
         few: "%{count} tematy w tej kategorii"
@@ -3036,6 +3068,7 @@ pl_PL:
         close_topics: "Zamknij tematy"
         archive_topics: "Zarchiwizuj tematy"
         move_messages_to_inbox: "Przenieś do skrzynki odbiorczej"
+        archive_messages: "Przenieś do archiwum"
         notification_level: "Powiadomienia…"
         change_notification_level: "Zmień poziom powiadomień"
         choose_new_category: "Wybierz nową kategorię dla tematów:"
@@ -3109,8 +3142,14 @@ pl_PL:
         optional: (opcjonalne)
       archive_topics:
         name: "Archiwum"
+      archive_messages:
+        name: "Przenieś do archiwum"
       move_messages_to_inbox:
         name: "Przenieś do skrzynki odbiorczej"
+      unlist_topics:
+        name: "Usuń z listy"
+      relist_topics:
+        name: "Dodaj do listy"
       remove_tags:
         name: "Usuń tagi"
       append_tags:
@@ -4128,6 +4167,9 @@ pl_PL:
         few: "%{count} kliknięć"
         many: "%{count} kliknięć"
         other: "%{count} kliknięć"
+      views: "Odsłony"
+      read: odczyt
+      minutes: min
     post_links:
       about: "rozwiń więcej linków dla tego wpisu"
       title:
@@ -4167,33 +4209,23 @@ pl_PL:
     pending_posts:
       label: "Oczekujące"
       label_with_count: "Oczekujące (%{count})"
-    posts_likes_MF: |
-      Ten temat ma {count, plural, one {# odpowiedź} few {# odpowiedzi} many {# odpowiedzi} other {# odpowiedzi}} {ratio, select,
-        low {z wysokim stosunkiem polubień na post}
-        med {z bardzo wysokim stosunkiem polubień na post}
-        high {z ekstremalnie wysokim stosunkiem polubień na post}
-        other {}}
+    posters: "Napisali"
     latest_poster_link: "Profil %{username}, najnowszy postujący"
     original_post: "Oryginalny wpis"
     views: "Odsłony"
-    sr_views: "Sortuj według wyświetleń"
     views_lowercase:
       one: "odsłona"
       few: "odsłony"
       many: "odsłon"
       other: "odsłon"
     replies: "Odpowiedzi"
-    sr_replies: "Sortuj według odpowiedzi"
     views_long:
       one: "ten temat był przeglądany %{count} raz"
       few: "ten temat był przeglądany %{number} razy"
       many: "ten temat był przeglądany %{number} razy"
       other: "ten temat był przeglądany %{number} razy"
     activity: "Aktywność"
-    sr_activity: "Sortuj według aktywności"
     likes: "Polubienia"
-    sr_likes: "Sortuj według polubień"
-    sr_op_likes: "Sortuj według polubień oryginalnego postu"
     likes_lowercase:
       one: "polubienie"
       few: "polubienia"
@@ -4684,8 +4716,8 @@ pl_PL:
       no_read_topics_body: "Gdy zaczniesz czytać dyskusje, zobaczysz tutaj listę. Aby rozpocząć czytanie, poszukaj tematów, które Cię interesują w <a href='%{topUrl}'>popularnych</a> lub <a href='%{categoriesUrl}'>kategoriach</a> lub wyszukaj według słowa kluczowego %{searchIcon}"
     no_group_messages_title: "Nie znaleziono wiadomości grupowych"
     topic_entrance:
-      sr_jump_top_button: "Przejdź do pierwszego posta"
-      sr_jump_bottom_button: "Przejdź do ostatniego posta"
+      jump_top_button_title: "Przejdź do pierwszego posta"
+      jump_bottom_button_title: "Przejdź do ostatniego posta"
     fullscreen_table:
       expand_btn: "Rozwiń tabelę"
       view_table: "Zobacz tabelę"
@@ -4848,6 +4880,9 @@ pl_PL:
       panels:
         forum:
           label: Forum
+      back_to_forum: "Powrót do forum"
+      collapse_all_sections: "Zwiń wszystkie sekcje"
+      expand_all_sections: "Rozwiń wszystkie sekcje"
       filter: "Filtr..."
       clear_filter: "Wyczyść filtr"
       no_results:
@@ -4966,10 +5001,7 @@ pl_PL:
     admin:
       title: "Administrator Discourse"
       moderator: "Moderator"
-      back_to_forum: "Powrót do forum"
       filter_reports: Filtruj zgłoszenia
-      expand_all_sections: "Rozwiń wszystkie sekcje"
-      collapse_all_sections: "Zwiń wszystkie sekcje"
       tags:
         remove_muted_tags_from_latest:
           always: "zawsze"
@@ -5083,6 +5115,10 @@ pl_PL:
         title: "Flagi moderacji"
         description: "Opis"
         enabled: "Włączona?"
+        more_options:
+          title: "Więcej opcji"
+          move_up: "Przenieś wyżej"
+          move_down: "Przenieś niżej"
       groups:
         new:
           title: "Nowa grupa"
@@ -5406,6 +5442,8 @@ pl_PL:
           completion: "Czas wykonania"
           actions: "Akcje"
           filter_status:
+            all: "Wszystkie zdarzenia"
+            successful: "Dostarczony"
             failed: "Niepowodzenie"
       home:
         title: "Strona główna"
@@ -5469,7 +5507,15 @@ pl_PL:
       config_areas:
         about:
           header: "O Twojej witrynie"
+          general_settings: "Ustawienia główne"
           community_name: "Nazwa społeczności"
+          community_summary: "Podsumowanie społeczności"
+          community_description: "Opis społeczności"
+          banner_image: "Obraz banera"
+          contact_information: "Informacje kontaktowe"
+          community_owner: "Właściciel społeczności"
+          contact_email: "E-mail kontaktowy"
+          contact_url: "URL kontaktowy"
           your_organization: "Twoja organizacja"
           company_name: "Nazwa firmy"
           governing_law: "Obowiązujące prawo"
@@ -5478,6 +5524,35 @@ pl_PL:
             Określ miasto, które będzie używane jako jurysdykcja do rozstrzygania wszelkich sporów związanych z korzystaniem z tego forum. Informacje te są zazwyczaj zawarte w dokumentach prawnych, takich jak warunki korzystania z forum.
           optional: "(opcjonalne)"
           update: "Aktualizuj"
+          toasts:
+            general_settings_saved: "Ustawienia ogólne zostały zapisane"
+            contact_information_saved: "Dane kontaktowe zostały zapisane"
+            your_organization_saved: "Twoja organizacja została zapisana"
+          saved: "zapisano!"
+        flags:
+          header: "Flagi moderacji"
+          description: "Opis"
+          enabled: "Włączona?"
+          add: "Dodaj flagę"
+          edit: "Edytuj"
+          back: "Powrót do flag"
+          delete: "Usuń"
+          delete_confirm: 'Czy na pewno chcesz usunąć "%{name}"?'
+          form:
+            add_header: "Dodaj flagę"
+            edit_header: "Edytuj flagę"
+            save: "Zapisz"
+            name: "Nazwa"
+            description: "Opis"
+            topic: "tematy"
+            post: "wpisy"
+            chat_message: "wiadomości czatu"
+            edit_flag: "Edytuj flagę"
+            delete_flag: "Usuń flagę"
+          more_options:
+            title: "Więcej opcji"
+            move_up: "Przenieś wyżej"
+            move_down: "Przenieś niżej"
       plugins:
         title: "Wtyczki"
         installed: "Zainstalowane wtyczki"
@@ -6668,6 +6743,7 @@ pl_PL:
         recommended: "Zalecamy zmianę poniższego tekstu, aby lepiej odpowiadał Twoim potrzebom:"
         show_overriden: "Pokaż tylko nadpisane"
         show_outdated: "Pokaż tylko nieaktualne/nieprawidłowe"
+        show_untranslated: "Pokazuj tylko nieprzetłumaczone"
         locale: "Język:"
         more_than_50_results: "Istnieje ponad 50 wyników. Zawęź wyszukiwanie."
         no_results: "Nie znaleziono pasujących tekstów witryny"
@@ -6755,7 +6831,11 @@ pl_PL:
           add_types_title: "Zezwalaj na rozszerzenia %{types}"
           add_types_toast: "%{types} dodane typy plików"
         mandatory_group: "Grupa jest obowiązkowa"
+        requires_confirmation_messages:
+          default:
+            confirm: "Tak, jestem pewny/a"
       badges:
+        status: Status
         title: Odznaki
         new_badge: Nowa odznaka
         new: Nowa
@@ -6763,8 +6843,6 @@ pl_PL:
         badge: Odznaka
         display_name: Wyświetlana nazwa
         description: Opis
-        long_description: Długi opis
-        badge_type: Typ odznaki
         badge_grouping: Grupa
         badge_groupings:
           modal_title: Grupy odznak
@@ -6794,9 +6872,8 @@ pl_PL:
         image: Grafika
         graphic: Grafika
         icon_help: "Wprowadź nazwę ikony Font Awesome (użyj prefiksu \"far-\" dla zwykłych ikon i \"fab-\" dla ikon marek)"
-        image_help: "Przesyłanie obrazu zastępuje pole ikony, jeśli oba są ustawione."
         select_an_icon: "Wybierz ikonę"
-        upload_an_image: "Prześlij obrazek"
+        upload_an_image: "Prześlij obraz"
         read_only_setting_help: "Dostosuj tekst"
         query: Zapytanie odznaki (SQL)
         target_posts: Wpisy powiązane z odznaką

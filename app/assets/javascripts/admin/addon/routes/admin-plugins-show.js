@@ -8,11 +8,10 @@ export default class AdminPluginsShowRoute extends Route {
   @service router;
   @service adminPluginNavManager;
 
-  model(params) {
+  async model(params) {
     const pluginId = sanitize(params.plugin_id).substring(0, 100);
-    return ajax(`/admin/plugins/${pluginId}.json`).then((plugin) => {
-      return AdminPlugin.create(plugin);
-    });
+    const pluginAttrs = await ajax(`/admin/plugins/${pluginId}.json`);
+    return AdminPlugin.create(pluginAttrs);
   }
 
   afterModel(model) {

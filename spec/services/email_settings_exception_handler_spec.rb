@@ -23,28 +23,10 @@ RSpec.describe EmailSettingsExceptionHandler do
       )
     end
 
-    it "formats a general Net::IMAP::NoResponseError with application-specific password Gmail error" do
-      exception =
-        Net::IMAP::NoResponseError.new(
-          stub(data: stub(text: "NO Application-specific password required")),
-        )
-      expect(described_class.friendly_exception_message(exception, "imap.gmail.com")).to eq(
-        I18n.t("email_settings.authentication_error_gmail_app_password"),
-      )
-    end
-
     it "formats a Net::SMTPAuthenticationError" do
       exception = Net::SMTPAuthenticationError.new("invalid credentials")
       expect(described_class.friendly_exception_message(exception, "smtp.test.com")).to eq(
-        I18n.t("email_settings.smtp_authentication_error"),
-      )
-    end
-
-    it "formats a Net::SMTPAuthenticationError with application-specific password Gmail error" do
-      exception =
-        Net::SMTPAuthenticationError.new(nil, message: "Application-specific password required")
-      expect(described_class.friendly_exception_message(exception, "smtp.gmail.com")).to eq(
-        I18n.t("email_settings.authentication_error_gmail_app_password"),
+        I18n.t("email_settings.smtp_authentication_error", message: "invalid credentials"),
       )
     end
 

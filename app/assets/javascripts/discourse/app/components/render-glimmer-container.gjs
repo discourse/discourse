@@ -5,15 +5,13 @@ export default class RenderGlimmerContainer extends Component {
   @service renderGlimmer;
 
   <template>
-    {{#each this.renderGlimmer._registrations as |info|}}
-      {{#in-element info.element insertBefore=null}}
-        {{~! no whitespace ~}}
+    {{~#each this.renderGlimmer._registrations as |info|~}}
+      {{~#in-element info.element insertBefore=null~}}
         <info.component
           @data={{info.data}}
           @setWrapperElementAttrs={{info.setWrapperElementAttrs}}
         />
-        {{~! no whitespace ~}}
-      {{/in-element}}
-    {{/each}}
+      {{~/in-element~}}
+    {{~/each~}}
   </template>
 }

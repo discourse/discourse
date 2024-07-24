@@ -98,12 +98,33 @@ RSpec.describe Badge do
   end
 
   describe "#image_url" do
-    it "has CDN url" do
+    before do
       SiteSetting.enable_s3_uploads = true
       SiteSetting.s3_cdn_url = "https://some-s3-cdn.amzn.com"
-      upload = Fabricate(:upload_s3)
-      badge = Fabricate(:badge, image_upload_id: upload.id)
-      expect(badge.image_url).to start_with("https://some-s3-cdn.amzn.com")
+    end
+
+    context "when the badge has an existing image" do
+      it "has a CDN url" do
+        upload = Fabricate(:upload_s3)
+        badge = Fabricate(:badge, image_upload_id: upload.id)
+
+        expect(badge.image_url).to start_with("https://some-s3-cdn.amzn.com")
+      end
+    end
+
+    context "when the badge does not have a related image" do
+      it "does not have a CDN url" do
+        upload = Fabricate(:upload_s3)
+        badge = Fabricate(:badge, image_upload_id: upload.id)
+
+        store = stub
+        store.expects(:remove_upload).returns(true)
+        Discourse.stubs(:store).returns(store)
+
+        upload.destroy!
+
+        expect(badge.reload.image_url).to eq(nil)
+      end
     end
   end
 

@@ -1,8 +1,8 @@
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse-common/utils/decorators";
-import SidebarCustomSection from "../common/custom-sections";
+import SidebarCustomSections from "../common/custom-sections";
 
-export default class SidebarUserCustomSections extends SidebarCustomSection {
+export default class SidebarUserCustomSections extends SidebarCustomSections {
   constructor() {
     super(...arguments);
     this.messageBus.subscribe("/refresh-sidebar-sections", this._refresh);

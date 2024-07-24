@@ -696,7 +696,9 @@ class Topic < ActiveRecord::Base
   MAX_SIMILAR_BODY_LENGTH ||= 200
 
   def self.similar_to(title, raw, user = nil)
+    return [] if SiteSetting.max_similar_results == 0
     return [] if title.blank?
+
     raw = raw.presence || ""
     search_data = Search.prepare_data(title.strip)
 

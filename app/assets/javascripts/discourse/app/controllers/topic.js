@@ -14,6 +14,7 @@ import ChangePostNoticeModal from "discourse/components/modal/change-post-notice
 import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-public-topic";
 import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
 import JumpToPost from "discourse/components/modal/jump-to-post";
+import { MIN_POSTS_COUNT } from "discourse/components/topic-map/topic-map-summary";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -239,6 +240,11 @@ export default Controller.extend(bufferedProperty("model"), {
     return Category.findById(categoryId)?.minimumRequiredTags || 0;
   },
 
+  @discourseComputed("model.posts_count", "model.postStream.loadingFilter")
+  showBottomTopicMap(postsCount, loading) {
+    return !loading && postsCount > MIN_POSTS_COUNT;
+  },
+
   _removeDeleteOnOwnerReplyBookmarks() {
     // the user has already navigated away from the topic. the PostCreator
     // in rails already handles deleting the bookmarks that need to be
@@ -340,11 +346,11 @@ export default Controller.extend(bufferedProperty("model"), {
 
   @action
   jumpTop(event) {
-    if (wantsNewWindow(event)) {
+    if (event && wantsNewWindow(event)) {
       return;
     }
 
-    event.preventDefault();
+    event?.preventDefault();
     DiscourseURL.routeTo(this.get("model.firstPostUrl"), {
       skipIfOnScreen: false,
       keepFilter: true,
@@ -566,14 +572,6 @@ export default Controller.extend(bufferedProperty("model"), {
           DiscourseURL.routeTo(this.model.urlForPostNumber(nearestPost));
           this.updateQueryParams();
         });
-    },
-
-    collapseSummary() {
-      this.get("model.postStream").collapseSummary();
-    },
-
-    showSummary() {
-      this.get("model.postStream").showSummary(this.currentUser);
     },
 
     removeAllowedUser(user) {
@@ -1649,9 +1647,6 @@ export default Controller.extend(bufferedProperty("model"), {
       this.onMessage,
       this.get("model.message_bus_last_id")
     );
-
-    const summariesChannel = `/summaries/topic/${this.get("model.id")}`;
-    this.messageBus.subscribe(summariesChannel, this._updateSummary);
   },
 
   unsubscribe() {
@@ -1661,13 +1656,6 @@ export default Controller.extend(bufferedProperty("model"), {
     }
 
     this.messageBus.unsubscribe("/topic/*", this.onMessage);
-    this.messageBus.unsubscribe("/summaries/topic/*", this._updateSummary);
-  },
-
-  @bind
-  _updateSummary(update) {
-    const postStream = this.get("model.postStream");
-    postStream.processSummaryUpdate(update);
   },
 
   @bind

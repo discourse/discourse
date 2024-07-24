@@ -1535,6 +1535,25 @@ RSpec.describe TopicsController do
         expect(Post.find_by(id: small_action_post.id)).to eq(nil)
       end
 
+      it "creates a log and clean up previously recorded sensitive information" do
+        small_action_post = Fabricate(:small_action, topic: topic)
+        PostDestroyer.new(Discourse.system_user, post).destroy
+        PostDestroyer.new(Discourse.system_user, small_action_post).destroy
+
+        delete "/t/#{topic.id}.json", params: { force_destroy: true }
+
+        expect(response.status).to eq(200)
+
+        expect(UserHistory.last).to have_attributes(
+          action: UserHistory.actions[:delete_topic_permanently],
+          acting_user_id: admin.id,
+        )
+
+        expect(UserHistory.where(topic_id: topic.id, details: "(permanently deleted)").count).to eq(
+          2,
+        )
+      end
+
       it "does not allow to destroy topic if not all posts were force destroyed" do
         _other_post = Fabricate(:post, topic: topic, post_number: 2)
         PostDestroyer.new(Discourse.system_user, post).destroy
@@ -2697,8 +2716,8 @@ RSpec.describe TopicsController do
       end
     end
 
-    it "records a view" do
-      expect do get "/t/#{topic.slug}/#{topic.id}.json" end.to change(TopicViewItem, :count).by(1)
+    it "does not record a topic view" do
+      expect { get "/t/#{topic.slug}/#{topic.id}.json" }.not_to change(TopicViewItem, :count)
     end
 
     it "records a view to invalid post_number" do
@@ -3018,7 +3037,6 @@ RSpec.describe TopicsController do
 
           expect(response.status).to eq(200)
           topic.reload
-          expect(topic.views).to eq(1)
         end
 
         it "returns 403 for an invalid key" do
@@ -5032,6 +5050,26 @@ RSpec.describe TopicsController do
         expect(execute_at).to eq(updated_timestamp)
       end
     end
+
+    describe "changes slow mode" do
+      before { sign_in(admin) }
+
+      it "should create a staff log entry" do
+        put "/t/#{topic.id}/slow_mode.json", params: { seconds: "3600" }
+
+        log = UserHistory.last
+        expect(log.acting_user_id).to eq(admin.id)
+        expect(log.topic_id).to eq(topic.id)
+        expect(log.action).to eq(UserHistory.actions[:topic_slow_mode_set])
+
+        put "/t/#{topic.id}/slow_mode.json", params: { seconds: "0" }
+
+        log = UserHistory.last
+        expect(log.acting_user_id).to eq(admin.id)
+        expect(log.topic_id).to eq(topic.id)
+        expect(log.action).to eq(UserHistory.actions[:topic_slow_mode_removed])
+      end
+    end
   end
 
   describe "#invite" do
@@ -5383,6 +5421,12 @@ RSpec.describe TopicsController do
         )
       end
 
+      it "works even when the author has been deleted" do
+        topic.update!(user_id: nil)
+
+        get "#{topic.relative_url}/2"
+      end
+
       context "with canonical_url" do
         fab!(:topic_embed) { Fabricate(:topic_embed, embed_url: "https://markvanlan.com") }
         let!(:user_agent) do
@@ -5700,128 +5744,6 @@ RSpec.describe TopicsController do
         expect(TopicUser.find_by(user: user, topic: topic).notification_level).to eq(
           NotificationLevels.topic_levels[:watching],
         )
-      end
-    end
-  end
-
-  describe "#summary" do
-    fab!(:topic) { Fabricate(:topic, highest_post_number: 2) }
-    fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
-    fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
-    let(:plugin) { Plugin::Instance.new }
-    let(:strategy) { DummyCustomSummarization.new({ summary: "dummy", chunks: [] }) }
-
-    before do
-      plugin.register_summarization_strategy(strategy)
-      SiteSetting.summarization_strategy = strategy.model
-    end
-
-    after { DiscoursePluginRegistry.reset_register!(:summarization_strategies) }
-
-    context "for anons" do
-      it "returns a 404 if there is no cached summary" do
-        get "/t/#{topic.id}/strategy-summary.json"
-
-        expect(response.status).to eq(404)
-      end
-
-      it "returns a cached summary" do
-        section =
-          SummarySection.create!(
-            target: topic,
-            summarized_text: "test",
-            algorithm: "test",
-            original_content_sha: "test",
-          )
-
-        get "/t/#{topic.id}/strategy-summary.json"
-
-        expect(response.status).to eq(200)
-
-        summary = response.parsed_body
-        expect(summary.dig("topic_summary", "summarized_text")).to eq(section.summarized_text)
-      end
-    end
-
-    context "when the user is a member of an allowlisted group" do
-      fab!(:user) { Fabricate(:leader) }
-
-      before do
-        sign_in(user)
-        Group.find(Group::AUTO_GROUPS[:trust_level_3]).add(user)
-      end
-
-      it "returns a 404 if there is no topic" do
-        invalid_topic_id = 999
-
-        get "/t/#{invalid_topic_id}/strategy-summary.json"
-
-        expect(response.status).to eq(404)
-      end
-
-      it "returns a 403 if not allowed to see the topic" do
-        pm = Fabricate(:private_message_topic)
-
-        get "/t/#{pm.id}/strategy-summary.json"
-
-        expect(response.status).to eq(403)
-      end
-
-      it "returns a summary" do
-        get "/t/#{topic.id}/strategy-summary.json"
-
-        expect(response.status).to eq(200)
-        summary = response.parsed_body["topic_summary"]
-        section = SummarySection.last
-
-        expect(summary["summarized_text"]).to eq(section.summarized_text)
-        expect(summary["algorithm"]).to eq(strategy.model)
-        expect(summary["outdated"]).to eq(false)
-        expect(summary["can_regenerate"]).to eq(true)
-        expect(summary["new_posts_since_summary"]).to be_zero
-      end
-
-      it "signals the summary is outdated" do
-        get "/t/#{topic.id}/strategy-summary.json"
-
-        Fabricate(:post, topic: topic, post_number: 3)
-        topic.update!(highest_post_number: 3)
-
-        get "/t/#{topic.id}/strategy-summary.json"
-        expect(response.status).to eq(200)
-        summary = response.parsed_body["topic_summary"]
-
-        expect(summary["outdated"]).to eq(true)
-        expect(summary["new_posts_since_summary"]).to eq(1)
-      end
-    end
-
-    context "when the user is not a member of an allowlisted group" do
-      fab!(:user)
-
-      before { sign_in(user) }
-
-      it "return a 404 if there is no cached summary" do
-        get "/t/#{topic.id}/strategy-summary.json"
-
-        expect(response.status).to eq(404)
-      end
-
-      it "returns a cached summary" do
-        section =
-          SummarySection.create!(
-            target: topic,
-            summarized_text: "test",
-            algorithm: "test",
-            original_content_sha: "test",
-          )
-
-        get "/t/#{topic.id}/strategy-summary.json"
-
-        expect(response.status).to eq(200)
-
-        summary = response.parsed_body
-        expect(summary.dig("topic_summary", "summarized_text")).to eq(section.summarized_text)
       end
     end
   end

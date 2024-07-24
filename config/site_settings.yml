@@ -291,7 +291,6 @@ basic:
   enable_direct_s3_uploads:
     client: true
     default: false
-    hidden: true
   enable_upload_debug_mode:
     default: false
     hidden: true
@@ -411,6 +410,22 @@ basic:
   show_user_menu_avatars:
     client: true
     default: false
+  extended_site_description:
+    default: ""
+    max: 10_000
+    hidden: true
+  extended_site_description_cooked:
+    default: ""
+    hidden: true
+    max: 15_000
+  about_banner_image:
+    default: ""
+    type: upload
+    hidden: true
+  community_owner:
+    default: ""
+    max: 300
+    hidden: true
 login:
   invite_only:
     refresh: true
@@ -778,6 +793,8 @@ users:
   hide_user_activity_tab:
     default: false
     client: true
+  delete_associated_accounts_on_password_reset:
+    default: false
 
 groups:
   enable_group_directory:
@@ -1318,10 +1335,13 @@ email:
   enable_imap:
     default: false
     client: true
+    hidden: true
   enable_imap_write:
     default: false
+    hidden: true
   enable_imap_idle:
     default: false
+    hidden: true
   enable_smtp:
     default: false
     client: true
@@ -2058,9 +2078,12 @@ security:
       - "same-origin"
       - "same-origin-allow-popups"
     hidden: true
-  cross_origin_opener_unsafe_none_referrers:
+  cross_origin_opener_unsafe_none_groups:
+    type: group_list
+    list_type: compact
     default: ""
-    type: host_list
+    allow_any: false
+    refresh: true
     hidden: true
 
 onebox:
@@ -2083,6 +2106,9 @@ onebox:
     list_type: compact
   enable_inline_onebox_on_all_domains:
     default: true
+  onebox_user_agent:
+    default: ""
+    hidden: true
   force_custom_user_agent_hosts:
     default: "http://codepen.io"
     type: list
@@ -2105,6 +2131,11 @@ onebox:
   cache_onebox_user_agent:
     default: ""
     hidden: true
+  github_onebox_access_tokens:
+    default: ""
+    type: list
+    secret: true
+    list_type: secret
 spam:
   add_rel_nofollow_to_user_content: true
   hide_post_sensitivity:
@@ -2329,13 +2360,6 @@ developer:
   bypass_wizard_check:
     default: false
     hidden: true
-  logging_provider:
-    hidden: true
-    default: "default"
-    type: "list"
-    choices:
-      - "default"
-      - "lograge"
   bootstrap_error_pages:
     hidden: true
     default: false
@@ -2404,12 +2428,17 @@ developer:
     default: ""
     client: true
     hidden: true
-  experimental_topic_bulk_actions_enabled_groups:
+  experimental_flags_admin_page_enabled_groups:
     default: ""
     type: group_list
     list_type: compact
     allow_any: false
     refresh: true
+  experimental_redesigned_about_page_groups:
+    default: ""
+    type: group_list
+    hidden: true
+    allow_any: false
 
 navigation:
   navigation_menu:
@@ -2501,6 +2530,9 @@ backups:
     hidden: true
     default: ""
     regex: '^[a-z0-9\-\/_]+$' # can't use '.' when using HTTPS
+  s3_inventory_bucket_region:
+    hidden: true
+    default: ""
   s3_disable_cleanup:
     default: false
   backup_time_of_day:
@@ -2660,10 +2692,12 @@ uncategorized:
 
   summarization_strategy:
     client: true
+    hidden: true
     default: ""
     enum: "SummarizationStrategy"
     validator: "SummarizationValidator"
   custom_summarization_allowed_groups:
+    hidden: true
     type: group_list
     list_type: compact
     default: "3|13" # 3: @staff, 13: @trust_level_3

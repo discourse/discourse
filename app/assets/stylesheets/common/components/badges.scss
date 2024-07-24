@@ -30,6 +30,7 @@
     align-items: baseline;
     gap: 0.33em;
     color: var(--primary-high);
+    min-width: 0;
 
     &:before {
       content: "";
@@ -43,6 +44,7 @@
       color: currentColor;
       text-overflow: ellipsis;
       overflow: hidden;
+      min-width: 0;
     }
 
     &.--has-parent {

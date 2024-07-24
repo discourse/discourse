@@ -211,7 +211,7 @@ RSpec.describe Onebox::Helpers do
     context "with custom option" do
       around do |example|
         previous_options = Onebox.options.to_h
-        Onebox.options = { user_agent: "EvilTroutBot v0.1" }
+        Onebox.options = { user_agent: "EvilTroutBot" }
 
         example.run
 
@@ -221,7 +221,7 @@ RSpec.describe Onebox::Helpers do
       it "has the custom user agent" do
         stub_request(:get, "http://example.com/some-resource").with(
           headers: {
-            "user-agent" => "EvilTroutBot v0.1",
+            "user-agent" => "EvilTroutBot v#{Discourse::VERSION::STRING}",
           },
         ).to_return(status: 200, body: "test")
 

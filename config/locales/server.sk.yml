@@ -259,6 +259,7 @@ sk:
       maximum_staged_user_per_email_reached: "Dosiahnutý maximálny počet nezaktívnených používateľov vytvorených emailom."
       no_subject: "(bez predmetu)"
       no_body: "(bez tela)"
+      attachments: "(prílohy)"
       missing_attachment: "(Chýba príloha %{filename})"
       continuing_old_discussion:
         one: "Pokračovanie diskusie z [%{title}](%{url}), pretože bola vytvorená pred viac ako %{count} dňami."
@@ -348,6 +349,7 @@ sk:
         other: nesprávna dĺžka (musí byť %{count} znakov)
       other_than: "musí byť iný než %{count}"
       auth_overrides_username: "Používateľské meno je potrebné aktualizovať na strane poskytovateľa overovania, pretože je povolené nastavenie `auth_overrides_username`."
+      required: "musí existovať"
     template:
       body: ! "Nastal problém s nasledujúcimi položkami:"
       header:
@@ -1181,8 +1183,7 @@ sk:
     pop3_authentication_error: "Vyskytol sa problém so zadanými povereniami POP3, skontrolujte používateľské meno a heslo a skúste to znova."
     imap_authentication_error: "Vyskytol sa problém so zadanými povereniami IMAP, skontrolujte používateľské meno a heslo a skúste to znova."
     imap_no_response_error: "Pri komunikácii so serverom IMAP došlo k chybe. %{message}"
-    smtp_authentication_error: "Vyskytol sa problém so zadanými povereniami SMTP, skontrolujte používateľské meno a heslo a skúste to znova."
-    authentication_error_gmail_app_password: 'Vyžaduje sa heslo špecifické pre aplikáciu. Viac informácií nájdete v <a target="_blank" href="https://support.google.com/accounts/answer/185833">tomto článku Pomocníka Google</a>'
+    smtp_authentication_error: "Vyskytol sa problém so zadanými povereniami SMTP, skontrolujte používateľské meno a heslo a skúste to znova. %{message}"
     smtp_server_busy_error: "Server SMTP je momentálne zaneprázdnený, skúste to znova neskôr."
     smtp_unhandled_error: "Pri komunikácii so serverom SMTP sa vyskytla neošetrená chyba. %{message}"
     imap_unhandled_error: "Pri komunikácii so serverom IMAP sa vyskytla neošetrená chyba. %{message}"
@@ -1304,6 +1305,8 @@ sk:
     errors:
       already_handled: "Označenie už bolo spracované"
       wrong_move: "Vlajku nie je možné presunúť"
+      system: "Systémový príznak nie je možné aktualizovať ani odstrániť."
+      used: "Príznak nemožno aktualizovať ani vymazať, pretože už bol použitý."
   reports:
     default:
       labels:
@@ -1620,6 +1623,11 @@ sk:
         user_agent: "Používateľský agent"
         page_views: "Zobrazenia stránky"
       description: "Zoznam používateľských agentov webového prehľadávača zoradených podľa zobrazení stránok."
+    web_hook_events_daily_aggregate:
+      title: "Udalosti Web Hook"
+      xaxis: "Deň"
+      yaxis: "Počet udalostí"
+      description: "Počet spustených udalostí web hook alebo ich priemerné trvanie."
     suspicious_logins:
       title: "Podozrivé prihlásenia"
       labels:
@@ -1672,6 +1680,14 @@ sk:
         user: Používateľ
         qtt_like: Obdržaných 'páči sa mi'
       description: "Top 10 používateľov, ktorí získali lajky od širokej škály ľudí."
+    topic_view_stats:
+      title: "Štatistiky zobrazenia témy"
+      labels:
+        topic: Témy
+        logged_in_views: Prihlásený
+        anon_views: Anonymný
+        total_views: Celkovo
+      description: "100 najnavštevovanejších tém v rozmedzí dátumu, kombinácia prihlásených a anonymných zobrazení. Možno filtrovať podľa kategórie."
   dashboard:
     problem:
       twitter_login: 'Zdá sa, že prihlásenie na Twitter momentálne nefunguje. Skontrolujte prihlasovacie údaje v <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">nastaveniach stránky</a>.'
@@ -1702,8 +1718,8 @@ sk:
       poll_pop3_timeout: "Pripojenie k serveru POP3 je časovo obmedzené. Prichádzajúcu poštu sa nepodarilo načítať. Skontrolujte <a href='%{base_path}/admin/site_settings/category/email'>nastavenia POP3</a> a poskytovateľa služieb."
       poll_pop3_auth_error: "Pripojenie k serveru POP3 zlyháva s chybou overovania. Skontrolujte <a href='%{base_path}/admin/site_settings/category/email'>nastavenia POP3</a>."
       force_https: "Vaša webová stránka používa protokol SSL. Ale v nastaveniach vašej stránky ešte nie je povolená funkcia <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>`force_https`</a>."
-      out_of_date_themes: "K dispozícii sú aktualizácie pre nasledujúce témy:"
-      unreachable_themes: "Nepodarilo sa nám skontrolovať aktualizácie nasledujúcich tém:"
+      out_of_date_themes: "K dispozícii sú aktualizácie pre tieto témy:%{themes_list}"
+      unreachable_themes: "Nepodarilo sa nám skontrolovať aktualizácie týchto tém:%{themes_list}"
       watched_words: "Regulárny výraz pre %{action} sledované slová je neplatný. Skontrolujte <a href='%{base_path}/admin/customize/watched_words'>nastavenia sledovaných slov</a> alebo vypnite nastavenie stránky \"sledované slová regulárne výrazy\"."
       google_analytics_version: "Tvoj Discourse momentálne používa Google Analytics 3, ktorý už nebude podporovaný po júli 2023. <a href='https://meta.discourse.org/t/260498'>Aktualizuj na Google Analytics 4</a> teraz, aby si naďalej získaval cenné prehľady a analytické údaje o výkonnosti tvojej webovej stránky."
       category_style_deprecated: "Váš Discourse v súčasnosti používa zastaraný štýl kategórie, ktorý bude odstránený pred konečným vydaním beta verzie Discusu 3.2. Pokyny, ako zachovať zvolený štýl kategórie, nájdete v časti <a href='https://meta.discourse.org/t/282441'>Presun na nastavenie lokality v štýle jednej kategórie</a> ."
@@ -1790,6 +1806,7 @@ sk:
     force_custom_user_agent_hosts: "Hostitelia, pre ktorých sa má používať vlastný používateľský agent onebox na všetky požiadavky. (Obzvlášť užitočné pre hostiteľov, ktorí obmedzujú prístup podľa používateľského agenta)."
     max_oneboxes_per_post: "Nastavenie maximálneho počtu oneboxov, ktoré môžu byť zahrnuté v jednom príspevku. Oneboxy poskytujú náhľad prepojeného obsahu v rámci príspevku."
     facebook_app_access_token: "Token vygenerovaný z vášho ID a tajomstva aplikácie Facebook. Používa sa na generovanie instagramových oneboxov."
+    github_onebox_access_tokens: "Mapovanie organizácie alebo používateľa GitHub na prístupový token GitHub, ktorý sa používa na generovanie oneboxov GitHub pre súkromné repozitáre, revízie, žiadosti o stiahnutie, problémy a obsah súborov. Bez toho budú oneboxované len verejné adresy URL GitHub."
     logo: "Obrázok loga v ľavom hornom rohu vašej stránky. Použite široký obdĺžnikový obrázok s výškou 120 a pomerom strán väčším ako 3:1. Ak zostane prázdny, zobrazí sa text názvu lokality."
     logo_small: "Malý obrázok loga v ľavom hornom rohu vašej stránky, ktorý vidíte pri posúvaní nadol. Použite štvorcový obrázok s rozmermi 120 × 120. Ak zostane prázdny, zobrazí sa domovský glyf."
     digest_logo: "Alternatívny obrázok loga, ktorý sa používa v hornej časti súhrnu e-mailu na vašej stránke. Použite široký obdĺžnikový obrázok. Nepoužívajte obrázok SVG. Ak zostane prázdny, použije sa obrázok z nastavenia `logo`."
@@ -1882,6 +1899,7 @@ sk:
     content_security_policy_report_only: "Povoliť Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_collect_reports: "Povolenie zberu správ o porušeniach CSP na adrese /csp_reports"
     content_security_policy_frame_ancestors: "Obmedziť, kto môže túto stránku vložiť do iframe prostredníctvom CSP. Kontrola povolených hostiteľov pri <a href='%{base_path}/admin/customize/embedding'>vkladaní</a>"
+    content_security_policy_script_src: "Ďalšie zdroje skriptov uvedené v zozname povolených zdrojov. Aktuálny hostiteľ a CDN sú predvolene zahrnuté. Pozrite si časť <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Zmiernenie útokov XSS pomocou zásad zabezpečenia obsahu.</a> (CSP). Ostatné zdroje hostiteľa sú ignorované, pretože je povolená funkcia strict-dynamic."
     invalidate_inactive_admin_email_after_days: "Účty administrátorov, ktorí nenavštívili stránku počas tohto počtu dní, budú musieť pred prihlásením znovu overiť svoju e-mailovú adresu. Nastavte na 0, aby ste to zakázali."
     include_secure_categories_in_tag_counts: "Ak je táto možnosť povolená, počet tém pre značku bude zahŕňať témy, ktoré sú v kategóriách s obmedzeným čítaním pre všetkých používateľov. Ak je vypnuté, bežným používateľom sa zobrazí len počet tém pre značku, v ktorej sú všetky témy vo verejných kategóriách."
     display_personal_messages_tag_counts: "Ak je táto možnosť povolená, zobrazí sa počet osobných správ označených danou značkou."
@@ -1994,9 +2012,10 @@ sk:
     s3_configure_tombstone_policy: "Povolenie politiky automatického odstraňovania pre nahrávanie náhrobných kameňov. DÔLEŽITÉ: Ak je táto funkcia vypnutá, po vymazaní nahraných súborov nebude obnovené žiadne miesto."
     s3_disable_cleanup: "Zabrániť odstráneniu starých záloh zo služby S3, ak je ich viac, ako je povolené maximum."
     s3_use_acls: "AWS odporúča nepoužívať ACL na vedrách S3; ak sa riadite touto radou, zrušte začiarknutie tejto možnosti. Táto možnosť musí byť povolená, ak používate zabezpečené nahrávanie."
+    enable_direct_s3_uploads: "Umožňuje priame nahrávanie viacerých častí do Amazon S3, viac informácií nájdete na stránke https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469."
     backup_time_of_day: "Čas v UTC, kedy sa má spustiť záloha."
     backup_with_uploads: "Do pravidelných záloh ulož i nahrané súbory. Pri vypnutej voľbe sa uloží iba záloha databázy."
-    backup_location: "Miesto, kde sú uložené zálohy. DÔLEŽITÉ: S3 vyžaduje platné poverenia S3 zadané v nastaveniach súborov."
+    backup_location: "Miesto, kde sú uložené zálohy. DÔLEŽITÉ: S3 vyžaduje platné poverenia S3 zadané v nastaveniach súborov. Keď to zmeníte na S3 z Local, musíte spustiť úlohu rake `s3:ensure_cors_rules`."
     backup_gzip_compression_level_for_uploads: "Úroveň kompresie Gzip používaná na komprimovanie odosielania."
     include_thumbnails_in_backups: "Zahrnúť vygenerované miniatúry do záloh. Ak túto funkciu zakážete, zálohy budú menšie, ale po obnovení sa budú musieť všetky príspevky znovu obnoviť."
     active_user_rate_limit_secs: "Ako často máme aktualizovať pole 'naposledy videný o', v sekundách"
@@ -2310,6 +2329,7 @@ sk:
     hide_user_profiles_from_public: "Vypnúť používateľské karty, profily a adresár pre anonymných používateľov."
     allow_users_to_hide_profile: "Umožniť používateľom skryť svoj profil a prítomnosť"
     hide_user_activity_tab: "Skryť kartu aktivity v používateľských profiloch okrem profilov administrátora a seba."
+    delete_associated_accounts_on_password_reset: "Odstránenie účtu spojeného s používateľom, keď používateľ zmení heslo."
     allow_featured_topic_on_user_profiles: "Umožniť používateľom uviesť odkaz na tému na karte používateľa a v profile."
     show_inactive_accounts: "Umožniť prihláseným používateľom prezerať profily neaktívnych účtov."
     hide_suspension_reasons: "Nezobrazujte dôvody pozastavenia verejne v profiloch používateľov."
@@ -2454,6 +2474,7 @@ sk:
     default_sidebar_show_count_of_new_items: "Nastaviť, aby odkazy navigačnej ponuky v predvolenom nastavení zobrazovali počet nových položiek namiesto odznakov."
     default_sidebar_switch_panel_position: "Poloha tlačidla na bočnom paneli na prepnutie do chatu"
     retain_web_hook_events_period_days: "Počet dní, počas ktorých sa majú uchovávať záznamy o udalostiach webového háčika."
+    retain_web_hook_events_aggregate_days: "Počet dní uchovávania súhrnných záznamov udalostí webového háku."
     retry_web_hook_events: "Automaticky opakovať neúspešné udalosti web hook 4-krát. Časové intervaly medzi opakovaniami sú 1, 5, 25 a 125 minút."
     revoke_api_keys_unused_days: "Počet dní od posledného použitia kľúča API pred jeho automatickým zrušením (0 pre nikdy)"
     revoke_api_keys_maxlife_days: "Počet dní pred automatickým zrušením kľúča API (0 pre nikdy)"
@@ -2534,10 +2555,10 @@ sk:
     experimental_form_templates: "EXPERIMENTÁLNE: Povoľte funkciu šablón formulárov. <b>Po povolení</b> spravujte šablóny na <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
     admin_sidebar_enabled_groups: "Povolenie navigácie v bočnom paneli pre používateľské rozhranie správcu pre zadané skupiny, ktorá nahradí navigačné tlačidlá správcu na najvyššej úrovni."
     lazy_load_categories_groups: "EXPERIMENTÁLNE: Informácie o kategórii pomalého načítania len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
-    experimental_topic_bulk_actions_enabled_groups: "EXPERIMENTÁLNE: Povoľte nové rozbaľovacie okno hromadných akcií."
     page_loading_indicator: "Nakonfigurujte indikátor načítania, ktorý sa zobrazí počas navigácie po stránkach v rámci Discourse. „Spinner“ je indikátor celej strany. „Posuvník“ zobrazuje úzky pruh v hornej časti obrazovky."
     show_user_menu_avatars: "Zobraziť používateľské avatary v používateľskej ponuke"
     view_raw_email_allowed_groups: "Skupiny, ktoré môžu zobraziť nespracovaný obsah e-mailu, ak bol príspevok vytvorený pomocou prichádzajúceho e-mailu. To zahŕňa hlavičky e-mailov a ďalšie technické informácie."
+    experimental_flags_admin_page_enabled_groups: "EXPERIMENTÁLNE: Odstráňte odkaz Moderovanie príznakov z bočného panela administrátora."
     errors:
       invalid_css_color: "Neplatná farba. Zadajte názov farby alebo hexadecimálnu hodnotu."
       invalid_email: "Nesprávna emailová adresa."
@@ -2566,6 +2587,7 @@ sk:
       invalid_reply_by_email_address: "Hodnota musí obsahovať '%{reply_key}' a byť odlišná od notifikačného emailu."
       invalid_alternative_reply_by_email_addresses: "Všetky hodnoty musia obsahovať '%{reply_key}' a musia sa líšiť od notifikačného e-mailu."
       invalid_domain_hostname: "Nesmie obsahovať znaky * alebo ?."
+      invalid_csp_script_src: "Hodnota musí byť buď 'unsafe-eval' alebo 'wasm-unsafe-eval', alebo v tvare '<hash algorithm>-<base64 value>', kde podporované hash algoritmy sú sha256, sha384 alebo sha512. Uistite sa, že váš vstup je zabalený do jednoduchých úvodzoviek."
       pop3_polling_host_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 adresu'."
       pop3_polling_username_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 používateľské meno'."
       pop3_polling_password_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 heslo'."
@@ -2832,6 +2854,7 @@ sk:
     email_too_long: "Emailová adresa je príliš dlhá. Meno priečinka musí byť kratšie ako 254 znakov a meno domény musí byť kratšie ako 253 znakov."
     wrong_invite_code: "Zadaný kód pozvánky bol nesprávny."
     reserved_username: "Toto užívateľské meno nie je povolené."
+    missing_user_field: "Nevyplnili ste všetky požadované polia používateľa"
     auth_complete: "Overovanie je dokončené."
     click_to_continue: "Kliknutím sem pokračujte."
     already_logged_in: "Prepáčte! Táto pozvánka je určená pre nových používateľov, ktorí ešte nemajú vytvorené konto."
@@ -4386,6 +4409,98 @@ sk:
   guidelines_topic:
     title: "FAQ/Pravidlá"
     guidelines_title: "Pokyny"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Toto je civilizované miesto pre verejnú diskusiu](#civilizované)
+
+      Prosím, správajte sa k tomuto diskusnému fóru s rovnakým rešpektom ako k verejnému parku. Aj my sme spoločným zdrojom komunity &mdash; , ktorý je miestom na zdieľanie zručností, vedomostí a záujmov prostredníctvom prebiehajúcej diskusie.
+
+      Toto nie sú tvrdé a pevné pravidlá. Sú to usmernenia, ktoré majú napomôcť ľudskému úsudku našej komunity a zachovať toto láskavé, priateľské miesto pre civilizovanú verejnú diskusiu.
+
+      <a name="improve"></a>
+
+      ## [Zlepšovanie diskusie](#improve)
+
+      Pomôžte nám urobiť z tejto stránky skvelé miesto na diskusiu tým, že do nej vždy pridáte niečo pozitívne, hoci aj malé. Ak si nie ste istí, či váš príspevok prispieva k diskusii, premyslite si, čo chcete povedať, a skúste to neskôr.
+
+      Jedným zo spôsobov, ako zlepšiť diskusiu, je objaviť tie, ktoré už prebiehajú. Pred tým, ako odpoviete alebo začnete vlastnú tému, venujte čas prezeraniu tunajších tém a budete mať väčšiu šancu stretnúť sa s ostatnými, ktorí majú rovnaké záujmy.
+
+      Témy, o ktorých sa tu diskutuje, sú pre nás dôležité a chceme, aby ste sa aj vy správali tak, ako keby boli dôležité pre vás. Buďte úctiví k témam a k ľuďom, ktorí o nich diskutujú, aj keď s niektorými vyjadreniami nesúhlasíte.
+
+      <a name="agreeable"></a>
+
+      ## [Buďte ústretoví, aj keď nesúhlasíte](#agreeable)
+
+      Možno budete chcieť reagovať nesúhlasom. To je v poriadku. Nezabudnite však _kritizovať myšlienky, nie ľudí_. Vyvarujte sa, prosím, týchto vecí:
+
+      * Nadávkam
+      * Útokom ad hominem
+      * Reagovaniu na tón príspevku namiesto jeho skutočného obsahu
+      * Protirečeniu na kolene
+
+      Namiesto toho poskytnite premyslené postrehy, ktoré zlepšia konverzáciu.
+
+      <a name="participate"></a>
+
+      ## [Vaša účasť sa počíta](#participate)
+
+      Rozhovory, ktoré tu vedieme, udávajú tón každému novému príchodu. Pomôžte nám ovplyvniť budúcnosť tejto komunity tým, že sa budete zapájať do diskusií, ktoré robia toto fórum zaujímavým miestom &mdash; , a vyhnete sa tým, ktoré ho nezaujímajú.
+
+      Diskurz poskytuje nástroje, ktoré komunite umožňujú spoločne identifikovať najlepšie (a najhoršie) príspevky: záložky, lajky, vlajky, odpovede, úpravy, sledovanie, stlmenie atď. Využívajte tieto nástroje na zlepšenie vlastnej skúsenosti a tiež skúsenosti všetkých ostatných.
+
+      Zanechajme našu komunitu lepšiu, ako sme ju našli.
+
+      <a name="flag-problems"></a>
+
+      ## [Ak vidíte problém, označte ho](#flag-problems)
+
+      Moderátori majú osobitné právomoci; sú zodpovední za toto fórum. Ale aj vy. S vašou pomocou môžu byť moderátori sprostredkovateľmi komunity, nielen upratovačmi alebo policajtmi.
+
+      Keď vidíte zlé správanie, neodpovedajte. Odpovedanie podporuje zlé správanie tým, že ho potvrdzuje, spotrebúva vašu energiu a mrhá časom všetkých. Jednoducho ho označte. Ak sa nazbiera dostatok príznakov, budú prijaté opatrenia, buď automaticky, alebo zásahom moderátora.
+
+      V záujme zachovania našej komunity si moderátori vyhradzujú právo kedykoľvek odstrániť akýkoľvek obsah a akýkoľvek používateľský účet z akéhokoľvek dôvodu. Moderátori neprezerajú nové príspevky; moderátori a prevádzkovatelia stránky nenesú žiadnu zodpovednosť za akýkoľvek obsah zverejnený komunitou.
+
+      <a name="be-civil"></a>
+
+      ## [Vždy buďte zdvorilí](#be-civil)
+
+      Nič tak nesabotuje zdravú konverzáciu ako hrubosť:
+
+      * Buďte zdvorilí. Nezverejňujte nič, čo by rozumný človek považoval za urážlivé, hanlivé alebo nenávistné prejavy.
+      * Zachovajte čistotu. Nezverejňujte nič obscénne alebo sexuálne explicitné.
+      * Rešpektujte sa navzájom. Nikoho neobťažujte ani neurážajte, nevydávajte sa za ľudí ani nezverejňujte ich súkromné informácie.
+      * Rešpektujte naše fórum. Neposielajte spam ani inak neničte fórum.
+
+      Toto nie sú konkrétne pojmy s presnými definíciami &mdash; vyhnite sa dokonca aj _zjavu_ niektorej z týchto vecí. Ak si nie ste istí, spýtajte sa sami seba, ako by ste sa cítili, keby sa váš príspevok objavil na titulnej strane veľkého spravodajského webu.
+
+      Toto je verejné fórum a vyhľadávače tieto diskusie indexujú. Jazyk, odkazy a obrázky nechajte bezpečné pre rodinu a priateľov.
+
+      <a name="keep-tidy"></a>
+
+      ## [Udržujte poriadok](#keep-tidy)
+
+      Vynaložte úsilie, aby ste veci umiestnili na správne miesto, aby sme mohli stráviť viac času diskusiou a menej upratovaním. Takže:
+
+      * Nezakladajte tému v nesprávnej kategórii; prečítajte si definície kategórií.
+      * Nevkladajte krížom-krážom tú istú vec do viacerých tém.
+      * Nezverejňujte odpovede bez obsahu.
+      * Neodvracajte tému tým, že ju zmeníte uprostred prúdu.
+      * Nepodpisujte svoje príspevky &mdash; ku každému príspevku sú pripojené informácie z vášho profilu.
+
+      Namiesto toho, aby ste písali "+1" alebo "Súhlasím", použite radšej tlačidlo Páči sa mi to. Namiesto toho, aby ste existujúcu tému posunuli radikálne iným smerom, použite radšej odpoveď ako prepojenú tému.
+
+      <a name="stealing"></a>
+
+      ## [Post Only Your Own Stuff](#krádež)
+
+      Nesmiete zverejňovať nič digitálne, čo patrí niekomu inému, bez povolenia. Nesmiete zverejňovať popisy, odkazy alebo metódy na krádež cudzieho duševného vlastníctva (softvér, video, zvuk, obrázky) alebo na porušenie akéhokoľvek iného zákona.
+
+      <a name="power"></a>
+
+      ## [Powered by You](#power)
+
+      Túto stránku prevádzkuje váš [priateľský moderátorský tím](%{base_path}/about) a *vy*, komunita. Ak máte ďalšie otázky o tom, ako by tu mali veci fungovať, otvorte novú tému na %{feedback_category} a poďme diskutovať! Ak sa vyskytne kritický alebo naliehavý problém, ktorý sa nedá vyriešiť pomocou meta témy alebo príznaku, [kontaktujte moderátorov](%{base_path}/o).
   tos_topic:
     title: "Podmienky používania"
     body: |
@@ -5110,6 +5225,7 @@ sk:
       comment_by: "Komentár od"
       review_by: "Recenzia od"
       pr_summary: "%{commits} revízie zmenili súbory %{changed_files} s pridaním %{additions} a odstránením %{deletions}"
+      no_description: "Prispejte k vývoju %{repo} vytvorením účtu na GitHub."
   discourse_push_notifications:
     popup:
       mentioned: '%{username} Vás zmienil v "%{topic}" - %{site_title}'

@@ -81,8 +81,6 @@ pt:
       flag: "Denunciar"
       join: "Entrar"
       last_visit: "última visita"
-      summarization:
-        summarize: "Resumir"
       no_public_channels_cta: "Navegar canais"
       only_chat_push_notifications:
         title: "Enviar notificações push apenas para chat"

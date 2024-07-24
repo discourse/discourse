@@ -20,6 +20,7 @@ ko:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}천"
         millions: "%{number}백만"
@@ -37,6 +38,7 @@ ko:
       long_date_without_year: "MMM D, LT"
       long_date_with_year_without_time: "YYYY MMM D"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, YYYY <br/>LT"
       wrap_ago: "%{date} 전"
       wrap_on: "%{date}"
       tiny:
@@ -114,6 +116,8 @@ ko:
       facebook: "페이스북에 공유"
       email: "이메일로 공유"
       url: "URL 복사 및 공유"
+    word_connector:
+      last_item: ","
     action_codes:
       public_topic: "이 글을 %{when}에 공개"
       open_topic: "%{when}에 주제로 변환됨"
@@ -149,7 +153,7 @@ ko:
       forwarded: "위의 이메일을 전달했습니다."
     topic_admin_menu: "주제 관리"
     skip_to_main_content: "메인 콘텐츠로 건너뛰기"
-    emails_are_disabled: "관리자에 의해 모든 이메일의 발신이 비활성화되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
+    emails_are_disabled: "운영자에 의해 모든 이메일의 발신이 비활성화되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
     emails_are_disabled_non_staff: "직원이 아닌 사용자의 발신 이메일이 비활성화되었습니다."
     software_update_prompt:
       dismiss: "무시"
@@ -158,7 +162,7 @@ ko:
       default_description: "기본"
       broken_theme_alert: "테마/구성 요소에 오류가 있어 사이트가 작동하지 않을 수 있습니다."
       error_caused_by: "'%{name}' 테마에서 오류가 발생하였습니다. <a target='blank' href='%{path}'>여기</a>를 클릭해 업데이트, 재설정 혹은 테마 사용을 중지하세요."
-      only_admins: "(이 메시지는 사이트 관리자에게만 표시됩니다)"
+      only_admins: "(이 메시지는 사이트 운영자에게만 표시됩니다)"
     s3:
       regions:
         ap_northeast_1: "아시아 태평양(도쿄)"
@@ -252,6 +256,8 @@ ko:
       topic_count: "글"
       post_count: "게시물"
       contact_info: "이 사이트에 영향을 미치는 중대하거나 긴급한 문제가 발생한 경우 %{contact_info}으로 문의하세요."
+      member_count:
+        other: "회원 %{formatted_number}명"
     bookmarked:
       title: "북마크"
       edit_bookmark: "북마크 편집"
@@ -373,7 +379,7 @@ ko:
           title: "신뢰 레벨이 더 높은 사용자가 만든 검토 가능 항목은 더 높은 점수를 받습니다."
         type_bonus:
           name: "유형 보너스"
-          title: "특정 검토 가능 유형에는 운영진이 보너스를 할당하여 우선순위를 높일 수 있습니다."
+          title: "특정한 검토 유형에는 관리자가 보너스를 할당하여 우선 순위를 높일 수 있습니다."
       revise_and_reject_post:
         reason: "이유"
         optional: "선택 사항"
@@ -657,11 +663,12 @@ ko:
           imap_mailbox_not_selected: "이 IMAP 구성에 대해 메일함을 선택해야합니다. 그렇지 않으면 메일함이 동기화되지 않습니다!"
           prefill:
             title: "다음 설정으로 미리 채우기:"
+          ssl_modes:
+            none: "없음"
           credentials:
             title: "크리덴셜"
             smtp_server: "SMTP 서버"
             smtp_port: "SMTP 포트"
-            smtp_ssl: "SMTP에 SSL 사용"
             imap_server: "IMAP 서버"
             imap_port: "IMAP 포트"
             imap_ssl: "IMAP에 SSL 사용"
@@ -908,6 +915,7 @@ ko:
       none: "(옵션 선택)"
       required: '''%{name}''에 대한 값을 입력하세요'
       same_as_password: "비밀번호를 다른 필드에 반복해서 입력해서는 안 됩니다."
+      optional: (선택 사항)
     user:
       said: "%{username}:"
       profile: "프로필"
@@ -1026,9 +1034,9 @@ ko:
       change: "변경"
       featured_topic: "추천 주제"
       moderator: "%{user} 님은 운영자입니다"
-      admin: "%{user} 님은 관리자입니다"
+      admin: "%{user} 님은 운영자입니다"
       moderator_tooltip: "이 사용자는 운영자입니다"
-      admin_tooltip: "이 사용자는 관리자입니다"
+      admin_tooltip: "이 사용자는 운영자입니다"
       silenced_tooltip: "이 사용자는 차단되었습니다"
       suspended_notice: "이 사용자는 %{date}까지 정지되었습니다."
       suspended_permanently: "이 사용자는 정지되었습니다."
@@ -1590,6 +1598,13 @@ ko:
     modal:
       close: "닫기"
       dismiss_error: "오류 무시"
+    form_kit:
+      reset: 리셋
+      optional: 선택 사항
+      errors:
+        required: "필수"
+        too_short:
+          other: "최소 %{count}자 이상이어야 합니다."
     close: "닫기"
     logout: "로그아웃되었습니다."
     refresh: "새로 고침"
@@ -1600,13 +1615,13 @@ ko:
       logout_disabled: "사이트가 읽기 전용 모드인 동안에는 로그아웃이 비활성화됩니다."
     logs_error_rate_notice:
       reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/시간} other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/시간} other {#개의 오류/시간}}에 도달했습니다.
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/시간}}에 도달했습니다.
       reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/분} other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/분} other {#개의 오류/분}}에 도달했습니다.
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/분}}에 도달했습니다.
       exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/시간} other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/시간} other {#개의 오류/시간}}을 초과했습니다.
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/시간}}을 초과했습니다.
       exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/분} other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/분} other {#개의 오류/분}}을 초과했습니다.
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/분}}을 초과했습니다.
     mute: 뮤트
     unmute: 뮤트 해제
     last_post: 게시됨
@@ -1628,6 +1643,7 @@ ko:
       description:
         other: "<b>%{count}</b>개의 댓글이 있습니다."
       disable: "모든 게시물 표시"
+      show_all_label: "모두 보기"
     deleted_filter:
       enabled_description: "이 주제에는 숨김 처리된 삭제된 게시물이 있습니다."
       disabled_description: "주제에 삭제된 게시물이 표시됩니다."
@@ -1651,7 +1667,7 @@ ko:
       header_title: "환영합니다!"
       subheader_title: "계정을 만드세요"
       disclaimer: "등록하면 <a href='%{privacy_link}' target='blank'>개인정보 취급방침</a> 및 <a href='%{tos_link}' target='blank'>이용약관</a>에 동의하게 됩니다."
-      title: "계정 만들기"
+      title: "회원가입"
       failed: "문제가 발생했습니다. 이 이메일이 이미 등록되어 있을 수 있습니다. 비밀번호 찾기 링크를 시도해 보세요."
       associate: "이미 계정이 있나요? <a href='%{associate_link}'>로그인</a>하여 %{provider} 계정을 연결하세요."
     forgot_password:
@@ -1788,7 +1804,7 @@ ko:
       enter: "시작"
     category_row:
       subcategory_count:
-        other: "+ %{count}개의 하위 카테고리"
+        other: "+%{count}개의 하위 카테고리"
       topic_count:
         other: "이 카테고리에는 %{count}개의 주제가 있습니다"
     select_kit:
@@ -3019,7 +3035,7 @@ ko:
       delete_spammer: "스팸 사용자 삭제"
       flag_for_review: "검토 대기열"
       delete_confirm_MF: |
-        이 사용자의 {POSTS, plural, one {<b>#</b>개의 게시물} other {<b>#</b>개의 게시물}} 및 {TOPICS, plural, one {<b>#</b>개의 주제} other {<b>#</b>개의 주제}}를 삭제하고, 사용자의 계정을 제거하고, 해당 IP 주소 <b>{ip_address}</b>의 가입을 차단하고, 해당 이메일 주소(<b>{email}</b>)를 영구 차단 목록에 추가하려 합니다. 이 사용자가 정말 스팸 사용자인가요?
+        이 사용자의 {POSTS, plural, other {<b>#</b>개의 게시물}} 및 {TOPICS, plural, other {<b>#</b>개의 주제}}를 삭제하고, 사용자의 계정을 제거하고, 해당 IP 주소 <b>{ip_address}</b>의 가입을 차단하고, 해당 이메일 주소(<b>{email}</b>)를 영구 차단 목록에 추가하려 합니다. 이 사용자가 정말 스팸 사용자인가요?
       yes_delete_spammer: "예, 스팸 사용자를 삭제합니다"
       ip_address_missing: "(해당 사항 없음)"
       hidden_email_address: "(숨김)"
@@ -3047,6 +3063,9 @@ ko:
       links_title: "인기 링크"
       clicks:
         other: "클릭 수 %{count}회"
+      views: "조회"
+      read: 읽기
+      minutes: 최소
     post_links:
       about: "이 게시물의 링크 더 보기"
       title:
@@ -3078,20 +3097,16 @@ ko:
     pending_posts:
       label: "보류 중"
       label_with_count: "보류 중(%{count})"
+    posters: "게시자"
     original_post: "원본 게시물"
     views: "조회수"
-    sr_views: "조회수별 정렬"
     views_lowercase:
       other: "조회수"
     replies: "댓글"
-    sr_replies: "댓글별 정렬"
     views_long:
       other: "이 주제는 %{number}번 조회되었습니다"
     activity: "활동"
-    sr_activity: "활동별 정렬"
     likes: "좋아요"
-    sr_likes: "좋아요순으로 정렬"
-    sr_op_likes: "원 글의 좋아요로 정렬"
     likes_lowercase:
       other: "좋아요"
     users: "사용자"
@@ -3468,8 +3483,8 @@ ko:
       no_read_topics_title: "아직 읽은 주제가 없습니다."
     no_group_messages_title: "그룹 메시지가 없습니다"
     topic_entrance:
-      sr_jump_top_button: "첫 번째 게시물로 이동"
-      sr_jump_bottom_button: "마지막 게시물로 이동"
+      jump_top_button_title: "첫 번째 게시물로 이동"
+      jump_bottom_button_title: "마지막 게시물로 이동"
     fullscreen_table:
       expand_btn: "표 펼치기"
     sidebar:
@@ -3929,6 +3944,19 @@ ko:
             모든 자동 메시지에 초대 할 유효한 그룹 이름입니다.
           optional: "(선택 사항)"
           update: "업데이트"
+          saved: "저장되었습니다!"
+        flags:
+          description: "내용"
+          enabled: "활성화?"
+          edit: "편집"
+          delete: "삭제하기"
+          delete_confirm: '&quot;%{name}&quot;를 삭제 하시겠습니까?'
+          form:
+            save: "저장"
+            name: "그룹명"
+            description: "내용"
+            topic: "글"
+            post: "포스트"
       plugins:
         title: "플러그인"
         installed: "설치된 플러그인"
@@ -4698,7 +4726,7 @@ ko:
           title: "페널티 히스토리 지우기"
           description: "페널티가 있는 사용자는 신뢰 레벨 3을 받을 수 없음"
         delete_all_posts_confirm_MF: |
-          {POSTS, plural, one {#개의 댓글} other {#개의 댓글}} 및 {TOPICS, plural, one {#개의 주제} other {#개의 주제}}를 삭제하려고 합니다. 계속할까요?
+          {POSTS, plural, other {#개의 댓글}} 및 {TOPICS, plural, other {#개의 주제}}를 삭제하려고 합니다. 계속할까요?
         silence: "차단"
         unsilence: "차단 해제"
         silenced: "차단되었나요?"
@@ -5006,6 +5034,7 @@ ko:
           add_image_types: "이미지"
           add_audio_types: "오디오"
       badges:
+        status: 상태
         title: 배지
         new_badge: 새 배지
         new: New
@@ -5013,8 +5042,6 @@ ko:
         badge: 배지
         display_name: 표시 이름
         description: 설명
-        long_description: 긴 설명
-        badge_type: 배지 종류
         badge_grouping: 그룹
         badge_groupings:
           modal_title: 배지 그룹화
@@ -5044,7 +5071,6 @@ ko:
         image: 이미지
         graphic: 그래픽
         icon_help: "Font Awesome 아이콘 이름을 입력하세요(일반 아이콘에는 접두사 'far-', 브랜드 아이콘에는 'fab-' 사용)"
-        image_help: "둘 다 설정된 경우 이미지 업로드가 아이콘 필드를 오버라이드합니다."
         select_an_icon: "아이콘 선택"
         upload_an_image: "이미지 업로드"
         read_only_setting_help: "사용자 지정 텍스트"

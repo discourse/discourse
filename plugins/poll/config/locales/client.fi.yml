@@ -72,6 +72,8 @@ fi:
         breakdown: "Erittely"
         percentage: "Prosenttiosuus"
         count: "Lukumäärä"
+      ranked_choice:
+        none: "Ei valittu"
       options:
         label: "Asetukset"
       error_while_toggling_status: "Kyselyn tilaa muutettaessa tapahtui virhe."

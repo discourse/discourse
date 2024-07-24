@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import TopicBulkActions from "discourse/components/modal/topic-bulk-actions";
 import NewListHeaderControls from "discourse/components/topic-list/new-list-header-controls";
 import TopicBulkSelectDropdown from "discourse/components/topic-list/topic-bulk-select-dropdown";
 import concatClass from "discourse/helpers/concat-class";
@@ -49,17 +48,6 @@ export default class TopicListHeaderColumn extends Component {
   }
 
   @action
-  bulkSelectActions() {
-    this.modal.show(TopicBulkActions, {
-      model: {
-        topics: this.args.bulkSelectHelper.selected,
-        category: this.category,
-        refreshClosure: () => this.router.refresh(),
-      },
-    });
-  }
-
-  @action
   onClick() {
     this.args.changeSort(this.args.order);
   }
@@ -83,9 +71,6 @@ export default class TopicListHeaderColumn extends Component {
       {{(if @sortable (modifier on "keydown" this.onKeyDown))}}
       data-sort-order={{@order}}
       scope="col"
-      tabindex={{if @sortable "0"}}
-      role={{if @sortable "button"}}
-      aria-pressed={{this.isSorting}}
       aria-sort={{this.ariaSort}}
       class={{concatClass
         "topic-list-data"
@@ -103,24 +88,17 @@ export default class TopicListHeaderColumn extends Component {
             title={{i18n "topics.bulk.toggle"}}
             class="btn-flat bulk-select"
           >
-            {{icon (if @experimentalTopicBulkActionsEnabled "tasks" "list")}}
+            {{icon "tasks"}}
           </button>
         {{/if}}
 
         {{#if @bulkSelectEnabled}}
           <span class="bulk-select-topics">
             {{#if @canDoBulkActions}}
-              {{#if @experimentalTopicBulkActionsEnabled}}
-                <TopicBulkSelectDropdown
-                  @bulkSelectHelper={{@bulkSelectHelper}}
-                  @afterBulkActionComplete={{this.afterBulkActionComplete}}
-                />
-              {{else}}
-                <button
-                  {{on "click" this.bulkSelectActions}}
-                  class="btn btn-icon no-text bulk-select-actions"
-                >{{icon "cog"}}&#8203;</button>
-              {{/if}}
+              <TopicBulkSelectDropdown
+                @bulkSelectHelper={{@bulkSelectHelper}}
+                @afterBulkActionComplete={{this.afterBulkActionComplete}}
+              />
             {{/if}}
 
             <button
@@ -144,7 +122,14 @@ export default class TopicListHeaderColumn extends Component {
             @changeNewListSubset={{@changeNewListSubset}}
           />
         {{else}}
-          <span>{{this.localizedName}}</span>
+          <span
+            class={{if @screenreaderOnly "sr-only"}}
+            tabindex={{if @sortable "0"}}
+            role={{if @sortable "button"}}
+            aria-pressed={{this.isSorting}}
+          >
+            {{this.localizedName}}
+          </span>
         {{/if}}
       {{/unless}}
 

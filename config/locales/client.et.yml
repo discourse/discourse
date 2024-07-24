@@ -21,6 +21,7 @@ et:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -542,6 +543,8 @@ et:
           last_updated_by: "autor"
           prefill:
             gmail: "Gmail"
+          ssl_modes:
+            none: "Pole"
           credentials:
             username: "Kasutajanimi"
             password: "Parool"
@@ -759,6 +762,7 @@ et:
       copied: "kopeeritud"
     user_fields:
       none: "(vali võimalus)"
+      optional: (valikuline)
     user:
       said: "%{username}:"
       profile: "Profiil"
@@ -1228,6 +1232,11 @@ et:
         fixed: "Lae lehekülg"
     modal:
       close: "Sulge"
+    form_kit:
+      reset: Lähtesta
+      optional: valikuline
+      errors:
+        required: "Nõutud"
     close: "Sulge"
     logout: "Sind logiti välja."
     refresh: "Värskenda"
@@ -1249,6 +1258,7 @@ et:
       hide_forever: "tänan, ei"
     summary:
       disable: "Näita kõiki postitusi"
+      show_all_label: "Näita kõiki"
     deleted_filter:
       enabled_description: "See teema sisaldab kustutatud postitusi, mis on peidetud."
       disabled_description: "Selle teema kustutatud postitused on nähtaval."
@@ -1271,6 +1281,7 @@ et:
     search_hint: "kasutajanimi, meil või IP-aadress"
     create_account:
       header_title: "Tere tulemast!"
+      title: "Liitu"
       failed: "Miski läks valesti - võimalik, et see meiliaadress on juba registreeritud. Proovi viidet unustatud parooli lehele"
       activation_title: "Aktiveeri oma konto"
     forgot_password:
@@ -2260,6 +2271,9 @@ et:
       clicks:
         one: "%{count} klikk"
         other: "%{count} klikki"
+      views: "Vaatamisi"
+      read: lugemine
+      minutes: miinumum
     post_links:
       about: "laienda veel selles postuses olevaid viiteid"
       title:
@@ -2289,6 +2303,7 @@ et:
     pending_posts:
       label: "Ootel"
       label_with_count: "Ootel (%{count})"
+    posters: "Postitajad"
     original_post: "Algne postitus"
     views: "Vaatamisi"
     views_lowercase:
@@ -2865,6 +2880,18 @@ et:
       config_areas:
         about:
           optional: "(valikuline)"
+          saved: "salvestatud!"
+        flags:
+          description: "Kirjeldus"
+          enabled: "Sisse lülitatud?"
+          edit: "Muuda"
+          delete: "Kustuta"
+          form:
+            save: "Salvesta"
+            name: "Nimi"
+            description: "Kirjeldus"
+            topic: "teemasid"
+            post: "postitused"
       plugins:
         title: "Plugin"
         installed: "Paigaldatud pluginad"
@@ -3584,6 +3611,7 @@ et:
         file_types_list:
           add_image_types: "Pildid"
       badges:
+        status: Staatus
         title: Märgised
         new_badge: Uus märgis
         new: Uus
@@ -3591,8 +3619,6 @@ et:
         badge: Märgis
         display_name: Kuvatav nimi
         description: Kirjeldus
-        long_description: Pikk kirjeldus
-        badge_type: Märgise tüüp
         badge_grouping: Grupp
         badge_groupings:
           modal_title: Märgiste grupeeringud
@@ -3620,6 +3646,8 @@ et:
         disabled: välja lülitatud
         icon: Ikoon
         image: Pilt
+        select_an_icon: "Vali ikoon"
+        upload_an_image: "Lae pilt üles"
         query: Märgise päring (SQL)
         target_posts: Päri sihtmärkide postitusi
         auto_revoke: Jooksuta tühistamispäringut igapäevaselt

@@ -69,6 +69,8 @@ export const AUTO_GROUPS = {
   },
 };
 
+export const GROUP_SMTP_SSL_MODES = { none: 0, ssl_tls: 1, starttls: 2 };
+
 export const MAX_NOTIFICATIONS_LIMIT_PARAMS = 60;
 
 export const TOPIC_VISIBILITY_REASONS = {

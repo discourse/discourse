@@ -132,3 +132,7 @@ if Rails.env == "test" || $0 =~ /rake$/
   # disable keepalive in testing
   MessageBus.keepalive_interval = -1
 end
+
+if !Rails.env.test?
+  MessageBus.subscribe("/reload_post_action_types") { PostActionType.reload_types }
+end

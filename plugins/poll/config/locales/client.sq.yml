@@ -32,6 +32,8 @@ sq:
         title: "Mbyll sondazhin"
         label: "Mbyll"
         confirm: "Jeni të sigurt për të mbyllur këtë sondazh?"
+      ranked_choice:
+        none: "Asnjë"
       options:
         label: "Opsione"
       error_while_toggling_status: "Ndjesë, u has në një gabim kur u ndryshua gjendja e këtij sondazhi."

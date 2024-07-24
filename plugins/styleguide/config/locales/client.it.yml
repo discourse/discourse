@@ -34,8 +34,6 @@ it:
         icons:
           title: "Icone"
           full_list: "Vedi l'elenco completo delle icone Font Awesome"
-        input_fields:
-          title: "Campi di inserimento"
         buttons:
           title: "Pulsanti"
         dropdowns:

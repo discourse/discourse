@@ -7,6 +7,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import {
   extraConnectorClass,
   extraConnectorComponent,
@@ -14,10 +15,14 @@ import {
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
-import {
+import deprecated, {
   withSilencedDeprecations,
   withSilencedDeprecationsAsync,
 } from "discourse-common/lib/deprecated";
+import {
+  disableRaiseOnDeprecation,
+  enableRaiseOnDeprecation,
+} from "../../helpers/raise-on-deprecation";
 
 const TEMPLATE_PREFIX = "discourse/plugins/some-plugin/templates/connectors";
 const CLASS_PREFIX = "discourse/plugins/some-plugin/connectors";
@@ -423,6 +428,172 @@ module("Integration | Component | plugin-outlet", function (hooks) {
       "other outlet is left untouched"
     );
   });
+
+  module("deprecated arguments", function (innerHooks) {
+    innerHooks.beforeEach(function () {
+      this.consoleWarnStub = sinon.stub(console, "warn");
+      disableRaiseOnDeprecation();
+    });
+
+    innerHooks.afterEach(function () {
+      this.consoleWarnStub.restore();
+      enableRaiseOnDeprecation();
+    });
+
+    test("deprecated parameters with default message", async function (assert) {
+      await render(<template>
+        <PluginOutlet
+          @name="test-name"
+          @deprecatedArgs={{hash
+            shouldDisplay=(deprecatedOutletArgument value=true)
+          }}
+        />
+      </template>);
+
+      // deprecated argument still works
+      assert.dom(".conditional-render").exists("renders conditional outlet");
+
+      assert.strictEqual(
+        this.consoleWarnStub.callCount,
+        1,
+        "console warn was called once"
+      );
+      assert.strictEqual(
+        this.consoleWarnStub.calledWith(
+          "Deprecation notice: outlet arg `shouldDisplay` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
+        ),
+        true,
+        "logs the default message to the console"
+      );
+    });
+
+    test("deprecated parameters with custom deprecation data", async function (assert) {
+      await render(<template>
+        <PluginOutlet
+          @name="test-name"
+          @deprecatedArgs={{hash
+            shouldDisplay=(deprecatedOutletArgument
+              value=true
+              message="The 'shouldDisplay' is deprecated on this test"
+              id="discourse.plugin-connector.deprecated-arg.test"
+              since="3.3.0.beta4-dev"
+              dropFrom="3.4.0"
+            )
+          }}
+        />
+      </template>);
+
+      // deprecated argument still works
+      assert.dom(".conditional-render").exists("renders conditional outlet");
+
+      assert.strictEqual(
+        this.consoleWarnStub.callCount,
+        1,
+        "console warn was called once"
+      );
+      assert.strictEqual(
+        this.consoleWarnStub.calledWith(
+          sinon.match(/The 'shouldDisplay' is deprecated on this test/)
+        ),
+        true,
+        "logs the custom deprecation message to the console"
+      );
+      assert.strictEqual(
+        this.consoleWarnStub.calledWith(
+          sinon.match(
+            /deprecation id: discourse.plugin-connector.deprecated-arg.test/
+          )
+        ),
+        true,
+        "logs custom deprecation id"
+      );
+      assert.strictEqual(
+        this.consoleWarnStub.calledWith(
+          sinon.match(/deprecated since Discourse 3.3.0.beta4-dev/)
+        ),
+        true,
+        "logs deprecation since information"
+      );
+      assert.strictEqual(
+        this.consoleWarnStub.calledWith(
+          sinon.match(/removal in Discourse 3.4.0/)
+        ),
+        true,
+        "logs dropFrom information"
+      );
+    });
+
+    test("silence nested deprecations", async function (assert) {
+      const deprecatedData = {
+        get display() {
+          deprecated("Test message", {
+            id: "discourse.deprecation-that-should-not-be-logged",
+          });
+          return true;
+        },
+      };
+
+      await render(<template>
+        <PluginOutlet
+          @name="test-name"
+          @deprecatedArgs={{hash
+            shouldDisplay=(deprecatedOutletArgument
+              value=deprecatedData.display
+              silence="discourse.deprecation-that-should-not-be-logged"
+            )
+          }}
+        />
+      </template>);
+
+      // deprecated argument still works
+      assert.dom(".conditional-render").exists("renders conditional outlet");
+
+      assert.strictEqual(
+        this.consoleWarnStub.callCount,
+        1,
+        "console warn was called once"
+      );
+      assert.strictEqual(
+        this.consoleWarnStub.calledWith(
+          sinon.match(
+            /deprecation id: discourse.deprecation-that-should-not-be-logged/
+          )
+        ),
+        false,
+        "does not log silence deprecation"
+      );
+      assert.strictEqual(
+        this.consoleWarnStub.calledWith(
+          sinon.match(
+            /deprecation id: discourse.plugin-connector.deprecated-arg/
+          )
+        ),
+        true,
+        "logs expected deprecation"
+      );
+    });
+
+    test("unused arguments", async function (assert) {
+      await render(<template>
+        <PluginOutlet
+          @name="test-name"
+          @outletArgs={{hash shouldDisplay=true}}
+          @deprecatedArgs={{hash
+            argNotUsed=(deprecatedOutletArgument value=true)
+          }}
+        />
+      </template>);
+
+      // deprecated argument still works
+      assert.dom(".conditional-render").exists("renders conditional outlet");
+
+      assert.strictEqual(
+        this.consoleWarnStub.callCount,
+        0,
+        "console warn not called"
+      );
+    });
+  });
 });
 
 module(
@@ -434,10 +605,8 @@ module(
       registerTemporaryModule(
         `${TEMPLATE_PREFIX}/test-name/my-connector`,
         hbs`
-          <span class="outletArgHelloValue">{{@outletArgs.hello}}</span><span
-            class="thisHelloValue"
-          >{{this.hello}}</span>
-        `
+          <span class="outletArgHelloValue">{{@outletArgs.hello}}</span>
+          <span class="thisHelloValue">{{this.hello}}</span>`
       );
     });
 
@@ -582,6 +751,205 @@ module(
       await settled();
 
       assert.dom(".outletArgHelloValue").doesNotExist();
+    });
+
+    module("deprecated arguments", function (innerHooks) {
+      innerHooks.beforeEach(function () {
+        this.consoleWarnStub = sinon.stub(console, "warn");
+        disableRaiseOnDeprecation();
+      });
+
+      innerHooks.afterEach(function () {
+        this.consoleWarnStub.restore();
+        enableRaiseOnDeprecation();
+      });
+
+      test("using classic PluginConnector by default", async function (assert) {
+        await render(hbs`
+        <PluginOutlet @name="test-name" @deprecatedArgs={{hash hello=(deprecated-outlet-argument value="world")}} />
+      `);
+
+        // deprecated argument still works
+        assert.dom(".outletArgHelloValue").hasText("world");
+        assert.dom(".thisHelloValue").hasText("world");
+
+        assert.strictEqual(
+          this.consoleWarnStub.callCount,
+          2,
+          "console warn was called twice"
+        );
+        assert.strictEqual(
+          this.consoleWarnStub.calledWith(
+            "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
+          ),
+          true,
+          "logs the expected message for @outletArgs.hello"
+        );
+        assert.strictEqual(
+          this.consoleWarnStub.calledWith(
+            "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [used on connector discourse/plugins/some-plugin/templates/connectors/test-name/my-connector] [deprecation id: discourse.plugin-connector.deprecated-arg]"
+          ),
+          true,
+          "logs the expected message for this.hello"
+        );
+      });
+
+      test("using templateOnly by default when @defaultGlimmer=true", async function (assert) {
+        await render(hbs`
+        <PluginOutlet
+          @name="test-name"
+          @deprecatedArgs={{hash hello=(deprecated-outlet-argument value="world")}}
+          @defaultGlimmer={{true}}
+        />
+      `);
+
+        // deprecated argument still works
+        assert.dom(".outletArgHelloValue").hasText("world");
+        assert.dom(".thisHelloValue").hasText(""); // `this.` unavailable in templateOnly components
+
+        assert.strictEqual(
+          this.consoleWarnStub.callCount,
+          1,
+          "console warn was called once"
+        );
+        assert.strictEqual(
+          this.consoleWarnStub.calledWith(
+            "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
+          ),
+          true,
+          "logs the expected message for @outletArgs.hello"
+        );
+        assert.strictEqual(
+          this.consoleWarnStub.calledWith(
+            "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [used on connector discourse/plugins/some-plugin/templates/connectors/test-name/my-connector] [deprecation id: discourse.plugin-connector.deprecated-arg]"
+          ),
+          false,
+          "does not log the message for this.hello"
+        );
+      });
+
+      test("using simple object when provided", async function (assert) {
+        registerTemporaryModule(`${CLASS_PREFIX}/test-name/my-connector`, {
+          setupComponent(args, component) {
+            component.reopen({
+              get hello() {
+                return args.hello + " from setupComponent";
+              },
+            });
+          },
+        });
+
+        await render(hbs`
+        <PluginOutlet @name="test-name" @deprecatedArgs={{hash hello=(deprecated-outlet-argument value="world")}} />
+      `);
+
+        // deprecated argument still works
+        assert.dom(".outletArgHelloValue").hasText("world");
+        assert.dom(".thisHelloValue").hasText("world from setupComponent");
+
+        assert.strictEqual(
+          this.consoleWarnStub.callCount,
+          2,
+          "console warn was called twice"
+        );
+        assert.strictEqual(
+          this.consoleWarnStub.calledWith(
+            "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
+          ),
+          true,
+          "logs the expected message for @outletArgs.hello"
+        );
+        assert.strictEqual(
+          this.consoleWarnStub.calledWith(
+            "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [used on connector discourse/plugins/some-plugin/connectors/test-name/my-connector] [deprecation id: discourse.plugin-connector.deprecated-arg]"
+          ),
+          true,
+          "logs the expected message for this.hello"
+        );
+      });
+
+      test("using custom component class if provided", async function (assert) {
+        registerTemporaryModule(
+          `${CLASS_PREFIX}/test-name/my-connector`,
+          class MyOutlet extends Component {
+            get hello() {
+              return this.args.outletArgs.hello + " from custom component";
+            }
+          }
+        );
+
+        await render(hbs`
+        <PluginOutlet @name="test-name" @deprecatedArgs={{hash hello=(deprecated-outlet-argument value="world")}} />
+      `);
+
+        // deprecated argument still works
+        assert.dom(".outletArgHelloValue").hasText("world");
+        assert.dom(".thisHelloValue").hasText("world from custom component");
+
+        assert.strictEqual(
+          this.consoleWarnStub.callCount,
+          2,
+          "console warn was called twice"
+        );
+        assert.strictEqual(
+          this.consoleWarnStub.calledWith(
+            "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
+          ),
+          true,
+          "logs the expected message for @outletArgs.hello"
+        );
+        assert.strictEqual(
+          this.consoleWarnStub.calledWith(
+            "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
+          ),
+          true,
+          "logs the expected message for this.hello"
+        );
+      });
+
+      test("using custom templateOnly() if provided", async function (assert) {
+        registerTemporaryModule(
+          `${CLASS_PREFIX}/test-name/my-connector`,
+          templateOnly()
+        );
+
+        await render(hbs`
+        <PluginOutlet @name="test-name" @deprecatedArgs={{hash hello=(deprecated-outlet-argument value="world")}} />
+      `);
+
+        // deprecated argument still works
+        assert.dom(".outletArgHelloValue").hasText("world");
+        assert.dom(".thisHelloValue").hasText(""); // `this.` unavailable in templateOnly components
+
+        assert.strictEqual(
+          this.consoleWarnStub.callCount,
+          1,
+          "console warn was called twice"
+        );
+        assert.strictEqual(
+          this.consoleWarnStub.calledWith(
+            "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
+          ),
+          true,
+          "logs the expected message for @outletArgs.hello"
+        );
+      });
+
+      test("unused arguments", async function (assert) {
+        await render(hbs`
+          <PluginOutlet @name="test-name" @outletArgs={{hash hello="world"}} @deprecatedArgs={{hash argNotUsed=(deprecated-outlet-argument value="not used")}} />
+        `);
+
+        // deprecated argument still works
+        assert.dom(".outletArgHelloValue").hasText("world");
+        assert.dom(".thisHelloValue").hasText("world");
+
+        assert.strictEqual(
+          this.consoleWarnStub.callCount,
+          0,
+          "console warn was called twice"
+        );
+      });
     });
   }
 );

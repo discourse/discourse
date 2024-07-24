@@ -27,8 +27,6 @@ pt:
         icons:
           title: "Ícones"
           full_list: "Veja a lista completa dos Ícones do Font Awesome"
-        input_fields:
-          title: "Campos de Entrada"
         buttons:
           title: "Botões"
         dropdowns:

@@ -105,7 +105,7 @@ class UsersController < ApplicationController
                      ]
   skip_before_action :redirect_to_profile_if_required, only: %i[show staff_info update]
 
-  after_action :add_noindex_header, only: %i[show my_redirect]
+  before_action :add_noindex_header, only: %i[show my_redirect]
 
   allow_in_staff_writes_only_mode :admin_login
   allow_in_staff_writes_only_mode :email_login
@@ -220,7 +220,12 @@ class UsersController < ApplicationController
         value = nil if value === "false"
         value = value[0...UserField.max_length] if value
 
-        if value.blank? && field.required?
+        if value.blank? &&
+             (
+               field.for_all_users? ||
+                 field.on_signup? &&
+                   user.custom_fields["#{User::USER_FIELD_PREFIX}#{field_id}"].present?
+             )
           return render_json_error(I18n.t("login.missing_user_field"))
         end
         attributes[:custom_fields]["#{User::USER_FIELD_PREFIX}#{field.id}"] = value
@@ -901,6 +906,10 @@ class UsersController < ApplicationController
           secure_session["password-#{token}"] = nil
           secure_session["second-factor-#{token}"] = nil
 
+          if SiteSetting.delete_associated_accounts_on_password_reset
+            @user.user_associated_accounts.destroy_all
+          end
+
           UserHistory.create!(
             target_user: @user,
             acting_user: @user,
@@ -1544,12 +1553,14 @@ class UsersController < ApplicationController
           .select(:id, :name, :last_used, :created_at, :method)
           .where(enabled: true)
           .order(:created_at)
+          .as_json(only: %i[id name method last_used])
 
       security_keys =
         current_user
           .security_keys
           .where(factor_type: UserSecurityKey.factor_types[:second_factor])
           .order(:created_at)
+          .as_json(only: %i[id user_id credential_id public_key factor_type enabled name last_used])
 
       render json: success_json.merge(totps: totp_second_factors, security_keys: security_keys)
     else

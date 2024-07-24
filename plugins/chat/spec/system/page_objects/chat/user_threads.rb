@@ -5,7 +5,7 @@ module PageObjects
     class UserThreads < PageObjects::Pages::Base
       def has_threads?(count: nil)
         has_no_css?(".spinner")
-        has_css?(".c-user-thread", count: count)
+        has_css?(".c-user-thread", count: count, visible: :all)
       end
 
       def open_thread(thread)

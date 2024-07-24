@@ -16,6 +16,10 @@ module Onebox
         "https://api.github.com/gists/#{match[:sha]}"
       end
 
+      def self.priority
+        110 # overlaps with GithubRepoOnebox
+      end
+
       private
 
       def data

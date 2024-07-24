@@ -5,7 +5,7 @@ import DButton from "discourse/components/d-button";
 import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import routeAction from "discourse/helpers/route-action";
-import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
+import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 
 export default class SidebarFooter extends Component {
   @service capabilities;
@@ -16,7 +16,7 @@ export default class SidebarFooter extends Component {
   @service sidebarState;
 
   get showManageSectionsButton() {
-    return this.currentUser && !this.sidebarState.isCurrentPanel(ADMIN_PANEL);
+    return this.currentUser && this.sidebarState.isCurrentPanel(MAIN_PANEL);
   }
 
   get showToggleMobileButton() {

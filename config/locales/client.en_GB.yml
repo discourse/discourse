@@ -130,6 +130,11 @@ en_GB:
       appearance:
         sidebar_link:
           navigation: "Navigation"
+      config_areas:
+        flags:
+          description: "Description"
+          form:
+            description: "Description"
       backups:
         upload:
           error: "There has been an error whilst uploading '%{filename}': %{message}"

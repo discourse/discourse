@@ -177,8 +177,6 @@ ja:
         other: "%{count} 人のメンバー"
       and_x_others:
         other: "および他 %{count} 人"
-    summaries:
-      no_targets: "選択された期間中にメッセージはありませんでした。"
     transcript:
       default_thread_title: "スレッド"
       split_thread_range: "メッセージ %{start}～%{end} / %{total}"

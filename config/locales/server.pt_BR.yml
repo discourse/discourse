@@ -909,8 +909,6 @@ pt_BR:
     pop3_authentication_error: "Ocorreu um problema com as credenciais POP3 informadas, verifique o nome do(a) usuário(a) e a senha e tente novamente."
     imap_authentication_error: "Ocorreu um problema com as credenciais IMAP informadas, verifique o nome do(a) usuário(a) e a senha e tente novamente."
     imap_no_response_error: "Ocorreu um erro ao se comunicar com o servidor IMAP. %{message}"
-    smtp_authentication_error: "Ocorreu um problema com as credenciais SMTP informadas, verifique o nome do(a) usuário(a) e a senha e tente novamente."
-    authentication_error_gmail_app_password: 'É preciso ter uma senha específica para o aplicativo. Saiba mais neste <a target="_blank" href="https://support.google.com/accounts/answer/185833">artigo de ajuda do Google</a>'
     smtp_server_busy_error: "O servidor SMTP está ocupado neste momento, tente novamente mais tarde."
     smtp_unhandled_error: "Ocorreu um erro sem tratamento ao se comunicar com o servidor SMTP. %{message}"
     imap_unhandled_error: "Ocorreu um erro sem tratamento ao se comunicar com o servidor IMAP. %{message}"
@@ -1329,6 +1327,8 @@ pt_BR:
         user_agent: "Agente de usuário(a)"
         page_views: "Visualizações de página"
       description: "Lista de agentes de usuários(a) de rastreadores da web, classificados por visualizações de página."
+    web_hook_events_daily_aggregate:
+      xaxis: "Dia"
     suspicious_logins:
       title: "Entradas com conta suspeitas"
       labels:
@@ -1381,6 +1381,12 @@ pt_BR:
         user: Usuário(a)
         qtt_like: Curtidas recebidas
       description: "Melhores dez usuários(as) que receberam curtidas de uma ampla variedade de pessoas."
+    topic_view_stats:
+      labels:
+        topic: Tópico
+        logged_in_views: Entrou
+        anon_views: Anônimo(a)
+        total_views: Total
   dashboard:
     problem:
       rails_env: "Seu servidor está rodando no modo %{env}."
@@ -1389,8 +1395,6 @@ pt_BR:
       ram: "Seu servidor está rodando com menos de 1 GB de memória total. Pelo menos 1 GB é quantidade de memória recomendada."
       subfolder_ends_in_slash: "Sua configuração de subdiretórios está incorreta. DISCOURSE_RELATIVE_URL_ROOT termina com uma barra."
       missing_mailgun_api_key: "O servidor está configurado para enviar e-mails pelo Mailgun, mas você não informou a chave de API usada para verificar as mensagens do webhook."
-      out_of_date_themes: "Atualizações estão disponíveis para os seguintes temas:"
-      unreachable_themes: "Não foi possível verificar se há atualizações para os seguintes temas:"
       google_analytics_version: "Atualmente, seu Discourse está usando o Google Analytics 3, que não será mais compatível depois de julho de 2023. <a href='https://meta.discourse.org/t/260498'>Atualize para o Google Analytics 4</a> agora para continuar recebendo informações e análises valiosas para o desempenho do seu site."
   site_settings:
     allow_bulk_invite: "Permitir convites em massa com o uso de um arquivo CSV"
@@ -1658,7 +1662,6 @@ pt_BR:
     s3_use_acls: "O AWS não recomenda utilizar ACLs em buckets S3. Se você estiver seguindo essa recomendação, desmarque esta opção. Isto deve estar ativado se você estiver usando envios seguros."
     backup_time_of_day: "Hora do dia, em UTC, em que o backup deve ocorrer."
     backup_with_uploads: "Inclua envios nos backups programados. Desative para copiar apenas a base de dados."
-    backup_location: "Local onde os backups são armazenados. IMPORTANTE: o S3 requer credenciais S3 válidas inseridas nas Configurações de arquivos."
     backup_gzip_compression_level_for_uploads: "Nível de compactação Gzip usado para compactar envios."
     include_thumbnails_in_backups: "Incluir miniaturas geradas em backups. Desativar isto tornará os backups menores, mas exigirá o reprocessamento de todas as postagens após a restauração."
     active_user_rate_limit_secs: "Frequencia de atualização do campo \"última vez visto em\", em segundos."

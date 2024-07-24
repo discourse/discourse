@@ -104,9 +104,7 @@ module Onebox
 
         headers ||= {}
 
-        if Onebox.options.user_agent && !headers["User-Agent"]
-          headers["User-Agent"] = Onebox.options.user_agent
-        end
+        headers["User-Agent"] ||= user_agent if user_agent
 
         request = Net::HTTP::Get.new(uri.request_uri, headers)
         start_time = Time.now
@@ -230,6 +228,12 @@ module Onebox
       rescue ArgumentError, URI::BadURIError, URI::InvalidURIError
         src
       end
+    end
+
+    def self.user_agent
+      user_agent = SiteSetting.onebox_user_agent.presence || Onebox.options.user_agent
+      user_agent = "#{user_agent} v#{Discourse::VERSION::STRING}"
+      user_agent
     end
 
     # Percent-encodes a URI string per RFC3986 - https://tools.ietf.org/html/rfc3986

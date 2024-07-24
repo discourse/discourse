@@ -8,9 +8,9 @@
   }
 }
 
-.c-routes-direct-messages,
-.c-routes-channels,
-.c-routes-threads {
+.c-routes.--direct-messages,
+.c-routes.--channels,
+.c-routes.--threads {
   background: var(--primary-very-low);
   max-width: 100vw;
 }

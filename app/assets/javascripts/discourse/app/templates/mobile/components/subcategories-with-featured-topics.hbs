@@ -7,7 +7,7 @@
         }}</span>
     </div>
     <div class="subcategories">
-      {{#each category.subcategories as |subCategory|}}
+      {{#each category.serializedSubcategories as |subCategory|}}
         <ParentCategoryRow @category={{subCategory}} @showTopics={{true}} />
       {{else}}
         {{! No subcategories... so just show the parent to avoid confusion }}

@@ -34,7 +34,7 @@ module Middleware
       if exception
         begin
           fake_controller = ApplicationController.new
-          fake_controller.response = response
+          fake_controller.set_response!(response)
           fake_controller.request = request = ActionDispatch::Request.new(env)
 
           # We can not re-dispatch bad mime types

@@ -27,8 +27,6 @@ ko:
         icons:
           title: "아이콘"
           full_list: "Font Awesome Icons의 전체 목록보기"
-        input_fields:
-          title: "입력 필드"
         buttons:
           title: "버튼"
         dropdowns:

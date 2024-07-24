@@ -1001,6 +1001,8 @@ zh_TW:
         user_agent: "使用者代理"
         page_views: "頁面瀏覽次數"
       description: "網路爬蟲使用者代理清單，按頁面瀏覽量排序"
+    web_hook_events_daily_aggregate:
+      xaxis: "天"
     suspicious_logins:
       title: "可疑登入"
       labels:
@@ -1047,6 +1049,12 @@ zh_TW:
       labels:
         user: 使用者
         qtt_like: 收到的讚
+    topic_view_stats:
+      labels:
+        topic: 話題
+        logged_in_views: 已登入
+        anon_views: 匿名
+        total_views: 總數
   dashboard:
     problem:
       rails_env: "伺服器現在運行 %{env} 模式。"
@@ -1055,8 +1063,6 @@ zh_TW:
       ram: "伺服器記憶體少於 1GB，建議配置至少 1GB 記憶體"
       subfolder_ends_in_slash: "你的子目錄設置不正確；DISCOURSE_RELATIVE_URL_ROOT以斜杠結尾。"
       missing_mailgun_api_key: "伺服器設置使用 Mailgun 寄送電子郵件，但你尚未設置用來驗證 webhook 訊息的 API 鑰匙。"
-      out_of_date_themes: "以下主題可更新："
-      unreachable_themes: "我們無法檢查以下主題是否可更新："
       google_analytics_version: "您的 Discourse 目前正在使用 Google Analytics 3，將在 2023 年 7 月後失去支援。 <a href='https://meta.discourse.org/t/260498'>立即升級到 Google Analytics 4</a> 以繼續接收有關您網站性能的寶貴見解和分析。"
   site_settings:
     disabled: "停用"
@@ -1197,7 +1203,6 @@ zh_TW:
     s3_configure_tombstone_policy: "啟用上傳的自動刪除功能。重要提醒：如果禁用此功能，在檔案刪除後，不會回收空間。"
     backup_time_of_day: "備份的 UTC 時間"
     backup_with_uploads: "在備份日程中包括上傳。關閉此項僅備份資料庫。"
-    backup_location: "讀取備份資料的位置。注意：Amazon S3 需要在“文件”設定中輸入有效的 S3 驗證資料。"
     backup_gzip_compression_level_for_uploads: "Gzip壓縮等級用於壓縮上傳圖片。"
     include_thumbnails_in_backups: "在備份中包含生成的縮圖。禁用此選項會使備份檔案大小變得更小，但需要在還原後重新啟動所有貼文。"
     active_user_rate_limit_secs: "更新“最後一次見到”資料的頻率，單位為秒"

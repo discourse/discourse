@@ -448,12 +448,12 @@ ro:
       none_found: "Niciun subiect găsit."
       title:
         search: "Caută un subiect"
-        placeholder: "introdu aici titlul subiectului, URL-ul sau ID-ul"
+        placeholder: "scrie aici titlul subiectului, URL-ul sau ID-ul"
     choose_message:
       none_found: "Niciun mesaj găsit."
       title:
         search: "Căutați un mesaj"
-        placeholder: "introdu aici titlul mesajului, URL-ul sau ID-ul"
+        placeholder: "scrie aici titlul mesajului, URL-ul sau ID-ul"
     review:
       show_more: "Arată mai mult"
       show_less: "Arată mai puțin"
@@ -811,11 +811,12 @@ ro:
           imap_mailbox_not_selected: "Trebuie să selectezi o cutie poștală pentru această configurație IMAP, altfel nicio cutie poștală nu va fi sincronizată!"
           prefill:
             title: "Pre-completare cu setări pentru:"
+          ssl_modes:
+            none: "Nimeni"
           credentials:
             title: "Date de conectare"
             smtp_server: "Server SMTP"
             smtp_port: "Port SMTP"
-            smtp_ssl: "Folosește SSL pentru SMTP"
             imap_server: "Server IMAP"
             imap_port: "Port IMAP"
             imap_ssl: "Folosește SSL pentru IMAP"
@@ -891,7 +892,7 @@ ro:
       group_name: "Nume grup"
       user_count: "Utilizatori"
       bio: "Despre grup"
-      selector_placeholder: "introdu username"
+      selector_placeholder: "Nume Utilizator"
       owner: "Proprietar"
       index:
         title: "Grupuri"
@@ -1038,6 +1039,7 @@ ro:
     user_fields:
       none: "(alege o opțiune)"
       required: 'Te rog introdu o valoare pentru "%{name}"'
+      optional: (opțional)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1252,7 +1254,7 @@ ro:
         in_progress: "(se trimite email)"
         error: "(eroare)"
         action: "Trimite email pentru resetare parolă"
-        set_password: "Introdu parolă"
+        set_password: "Parola"
         choose_new: "Alege o parolă nouă"
         choose: "Alege o parolă"
         title: "Resetare parolă"
@@ -1340,7 +1342,7 @@ ro:
         admin_note: "Notă: Un utilizator de administrator care modifică adresa email a altui utilizator non-administrator indică faptul că utilizatorul a pierdut accesul la contul de email original, astfel încât un email de resetare a parolei va fi trimis la noua adresă. Adresa email a utilizatorului nu se va schimba până când acesta nu finalizează procesul de resetare a parolei."
         ok: "Îți vom trimite un email pentru confirmare."
         required: "Te rugăm să introduci o adresă de e-mail"
-        invalid: "Introduceți o adresă de email validă."
+        invalid: "Adaugă o adresă de email validă."
         authenticated: "Emailul a fost autentificat de către %{provider}."
         frequency:
           one: "Vom trimite un email doar dacă nu te-am văzut în ultimul minut."
@@ -1613,6 +1615,12 @@ ro:
         fixed: "Încărcare pagină"
     modal:
       close: "Închide"
+    form_kit:
+      reset: Resetare
+      optional: opțional
+      errors:
+        required: "Necesare"
+        invalid_url: "Trebuie să fie un URL valid"
     close: "Închide"
     logout: "Aţi fost deconectat."
     refresh: "Reîmprospătează"
@@ -1664,7 +1672,7 @@ ro:
       header_title: "Bun venit!"
       subheader_title: "Să-ți creăm contul"
       disclaimer: "Prin înregistrare, ești de acord cu politica de confidențialitate <a href='%{privacy_link}' target='blank'></a> și <a href='%{tos_link}' target='blank'>termenii de utilizare</a>."
-      title: "Creează-ți contul"
+      title: "Înregistrare"
       failed: "Ceva s-a întâmplat, poate că acest email este deja înregistrat, încearcă să-ți resetezi parola la link-ul respectiv."
       associate: "Ai deja un cont? <a href='%{associate_link}'>Loghează-te</a> pentru a conecta contul tău %{provider}."
     forgot_password:
@@ -1779,12 +1787,12 @@ ro:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
-      enter: "Introdu"
+      enter: "Enter"
     category_row:
       subcategory_count:
-        one: "+ %{count} subcategorie"
-        few: "+ %{count} subcategorii"
-        other: "+ %{count} de subcategorii"
+        one: "+%{count} subcategorie"
+        few: "+%{count} subcategorii"
+        other: "+%{count} de subcategorii"
     select_kit:
       delete_item: "Șterge %{name}"
       no_content: Nu s-au găsit potriviri
@@ -2783,6 +2791,9 @@ ro:
         one: "%{count} click"
         few: "%{count} click-uri"
         other: "%{count} de click-uri"
+      views: "Afișări"
+      read: citire
+      minutes: minim
     post_links:
       about: "afișează mai multe link-uri din această postare"
       title:
@@ -2813,6 +2824,7 @@ ro:
     pending_posts:
       label: "În așteptare"
       label_with_count: "În așteptare: (%{count})"
+    posters: "Autori"
     original_post: "Postare inițială"
     views: "Vizualizări"
     views_lowercase:
@@ -3197,6 +3209,9 @@ ro:
       panels:
         forum:
           label: Forum
+      back_to_forum: "Înapoi la forum"
+      collapse_all_sections: "Restrânge toate secțiunile"
+      expand_all_sections: "Extinde toate secțiunile"
       filter: "Filtru..."
       clear_filter: "Elimină filtrul"
       no_results:
@@ -3216,7 +3231,7 @@ ro:
         create: "Construiește tabel"
         help:
           title: "Folosind Editorul de foi de calcul"
-          enter_key: "Introdu"
+          enter_key: "Enter"
           tab_key: "Filă"
           new_row: "la sfârșitul unui rând pentru a introduce un rând nou."
           new_col: "la sfârșitul unei coloane pentru a introduce o coloană nouă."
@@ -3271,10 +3286,7 @@ ro:
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
-      back_to_forum: "Înapoi la forum"
       filter_reports: Filtrează rapoarte
-      expand_all_sections: "Extinde toate secțiunile"
-      collapse_all_sections: "Restrânge toate secțiunile"
       tags:
         remove_muted_tags_from_latest:
           always: "întotdeauna"
@@ -3527,6 +3539,18 @@ ro:
       config_areas:
         about:
           optional: "(opțional)"
+          saved: "salvat!"
+        flags:
+          description: "Descriere"
+          enabled: "Activat?"
+          edit: "Modifică"
+          delete: "Șterge"
+          form:
+            save: "Salvare"
+            name: "Nume"
+            description: "Descriere"
+            topic: "discuții"
+            post: "Postări"
       plugins:
         title: "Plugin-uri"
         installed: "Plugin-uri instalate"
@@ -4313,6 +4337,7 @@ ro:
           add_types_title: "Permite extensiile %{types}"
           add_types_toast: "Tipurile de fișier %{types} au fost adăugate"
       badges:
+        status: Stare
         title: Insigne
         new_badge: Ecuson nou
         new: Nou
@@ -4320,8 +4345,6 @@ ro:
         badge: Insignă
         display_name: Afișează numele
         description: Descriere
-        long_description: Descriere lungă
-        badge_type: Tipul ecusonului
         badge_grouping: Grup
         badge_groupings:
           modal_title: Grupuri ecusoane
@@ -4349,6 +4372,8 @@ ro:
         disabled: dezactivat
         icon: Pictogramă
         image: Imagine
+        select_an_icon: "Alege o pictogramă"
+        upload_an_image: "Încarcă o imagine"
         query: Interogare ecusoane (SQL)
         target_posts: Interogarea mesajelor utilizatorilor-ţintă
         auto_revoke: Pornește verificarea de revocare în fiecare zi

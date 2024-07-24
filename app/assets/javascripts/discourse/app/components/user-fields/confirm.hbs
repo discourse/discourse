@@ -1,7 +1,7 @@
 {{#if this.field.name}}
   <label class="control-label">
     {{this.field.name}}
-    {{#if this.field.required}}<span class="required">*</span>{{/if}}
+    {{~#unless this.field.required}} {{i18n "user_fields.optional"}}{{/unless~}}
   </label>
 {{/if}}
 

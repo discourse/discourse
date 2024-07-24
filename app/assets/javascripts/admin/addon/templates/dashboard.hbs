@@ -18,51 +18,52 @@
   @problemsTimestamp={{this.problemsTimestamp}}
   @refreshProblems={{action "refreshProblems"}}
 />
-
-<ul class="nav nav-pills">
-  <li class="navigation-item general">
-    <LinkTo @route="admin.dashboard.general" class="navigation-link">
-      {{i18n "admin.dashboard.general_tab"}}
-    </LinkTo>
-  </li>
-
-  {{#if this.isModerationTabVisible}}
-    <li class="navigation-item moderation">
-      <LinkTo @route="admin.dashboardModeration" class="navigation-link">
-        {{i18n "admin.dashboard.moderation_tab"}}
+<nav>
+  <ul class="nav nav-pills">
+    <li class="navigation-item general">
+      <LinkTo @route="admin.dashboard.general" class="navigation-link">
+        {{i18n "admin.dashboard.general_tab"}}
       </LinkTo>
     </li>
-  {{/if}}
 
-  {{#if this.isSecurityTabVisible}}
-    <li class="navigation-item security">
-      <LinkTo @route="admin.dashboardSecurity" class="navigation-link">
-        {{i18n "admin.dashboard.security_tab"}}
-      </LinkTo>
-    </li>
-  {{/if}}
+    {{#if this.isModerationTabVisible}}
+      <li class="navigation-item moderation">
+        <LinkTo @route="admin.dashboardModeration" class="navigation-link">
+          {{i18n "admin.dashboard.moderation_tab"}}
+        </LinkTo>
+      </li>
+    {{/if}}
 
-  {{#if this.isReportsTabVisible}}
-    <li class="navigation-item reports">
-      <LinkTo @route="admin.dashboardReports" class="navigation-link">
-        {{i18n "admin.dashboard.reports_tab"}}
-      </LinkTo>
-    </li>
-  {{/if}}
+    {{#if this.isSecurityTabVisible}}
+      <li class="navigation-item security">
+        <LinkTo @route="admin.dashboardSecurity" class="navigation-link">
+          {{i18n "admin.dashboard.security_tab"}}
+        </LinkTo>
+      </li>
+    {{/if}}
 
-  {{#if this.isNewFeaturesTabVisible}}
-    <li class="navigation-item new-features">
-      <LinkTo @route="admin.dashboardNewFeatures" class="navigation-link">
-        {{#if this.hasUnseenFeatures}}
-          {{replace-emoji ":gift:"}}
-        {{/if}}
-        {{i18n "admin.dashboard.new_features.title"}}
-      </LinkTo>
-    </li>
-  {{/if}}
+    {{#if this.isReportsTabVisible}}
+      <li class="navigation-item reports">
+        <LinkTo @route="admin.dashboardReports" class="navigation-link">
+          {{i18n "admin.dashboard.reports_tab"}}
+        </LinkTo>
+      </li>
+    {{/if}}
 
-  <PluginOutlet @name="admin-dashboard-tabs-after" />
-</ul>
+    {{#if this.isNewFeaturesTabVisible}}
+      <li class="navigation-item new-features">
+        <LinkTo @route="admin.dashboardNewFeatures" class="navigation-link">
+          {{#if this.hasUnseenFeatures}}
+            {{replace-emoji ":gift:"}}
+          {{/if}}
+          {{i18n "admin.dashboard.new_features.title"}}
+        </LinkTo>
+      </li>
+    {{/if}}
+
+    <PluginOutlet @name="admin-dashboard-tabs-after" />
+  </ul>
+</nav>
 
 {{outlet}}
 

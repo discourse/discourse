@@ -564,6 +564,8 @@ hy:
         email:
           title: "Էլ. հասցե"
           last_updated_by: "կողմից"
+          ssl_modes:
+            none: "Ոչ մի"
           credentials:
             username: "Օգտանուն"
             password: "Գաղտնաբառ"
@@ -761,6 +763,7 @@ hy:
       copied: "կրկօրինակված"
     user_fields:
       none: "(ընտրել)"
+      optional: (ընտրովի)
     user:
       said: "%{username} ՝"
       profile: "Պրոֆիլ"
@@ -1278,6 +1281,11 @@ hy:
     modal:
       close: "փակել"
       dismiss_error: "Չեղարկել սխալը"
+    form_kit:
+      reset: Զրոյացնել
+      optional: ընտրովի
+      errors:
+        required: "Պարտադիր"
     close: "Փակել"
     logout: "Դուք դուրս եք գրվել:"
     refresh: "Թարմացնել"
@@ -1326,6 +1334,7 @@ hy:
     create_account:
       header_title: "Բարի գալուստ!"
       disclaimer: "Գրանցվելով դուք ընդունում եք <a href='%{privacy_link}' target='blank'> գաղտնիության քաղաքականությունը </a> և <a href='%{tos_link}' target='blank'> պայմանները </a>:"
+      title: "Գրանցվել"
       failed: "Ինչ-որ սխալ է տեղի ունեցել, հնարավոր է՝ այս էլ. հասցեն արդեն գրանցված է, փորձեք կատարել գաղտնաբառի վերականգնում:"
     forgot_password:
       title: "Գաղտնաբառի Վերականգնում"
@@ -2457,6 +2466,9 @@ hy:
       clicks:
         one: "%{count} սեղմում"
         other: "%{count} սեղմում"
+      views: "Դիտում"
+      read: կարդացած
+      minutes: նվազագույնը
     post_links:
       about: "Ցուցադրել ավելի շատ հղումներ այս գրառման համար"
       title:
@@ -2489,6 +2501,7 @@ hy:
     pending_posts:
       label: "Սպասող"
       label_with_count: "Սպասող (%{count})"
+    posters: "Հրապարակողների"
     original_post: "Սկզբնական Գրառումը"
     views: "Դիտում"
     views_lowercase:
@@ -3196,6 +3209,19 @@ hy:
       config_areas:
         about:
           optional: "(ընտրովի)"
+          saved: "պահված է!"
+        flags:
+          description: "Նկարագրությունը"
+          enabled: "Միացվա՞ծ է:"
+          edit: "Խմբագրել"
+          delete: "Ջնջել"
+          delete_confirm: 'Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել <<%{name}>> :'
+          form:
+            save: "Պահպանել"
+            name: "Անուն"
+            description: "Նկարագրությունը"
+            topic: "թեմաներ"
+            post: "գրառումներ"
       plugins:
         title: "Հավելումներ"
         installed: "Տեղադրված Հավելումները"
@@ -4140,6 +4166,7 @@ hy:
         file_types_list:
           add_image_types: "Նկարներ"
       badges:
+        status: Ստատուս
         title: Կրծքանշաններ
         new_badge: Նոր Կրծքանշան
         new: Նոր
@@ -4147,8 +4174,6 @@ hy:
         badge: Կրծքանշան
         display_name: Ցուցադրվող Անվանումը
         description: Նկարագրությունը
-        long_description: Ընդարձակ Նկարագրությունը
-        badge_type: Կրծքանշանի Տիպը
         badge_grouping: Խմբավորել
         badge_groupings:
           modal_title: Կրծքանշանների Խմբավորումները

@@ -1071,6 +1071,8 @@ hr:
         user_agent: "Korisnički agent"
         page_views: "Pregledi stranica"
       description: "Popis korisničkih agenata alata za indeksiranje, poredanih po prikazima stranica."
+    web_hook_events_daily_aggregate:
+      xaxis: "Dan"
     suspicious_logins:
       title: "Sumnjive prijave"
       labels:
@@ -1097,6 +1099,12 @@ hr:
       labels:
         user: Korisnik
         qtt_like: Like-ova primljeno
+    topic_view_stats:
+      labels:
+        topic: Tema
+        logged_in_views: Prijavljeni
+        anon_views: Anonimno
+        total_views: Ukupno
   dashboard:
     problem:
       rails_env: "Server vam radi na %{env} način."

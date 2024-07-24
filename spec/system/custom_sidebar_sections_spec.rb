@@ -174,6 +174,19 @@ describe "Custom sidebar sections", type: :system do
     expect(is_focused).to be true
   end
 
+  it "accessibility - when customization modal is closed, trigger is refocused" do
+    sign_in user
+    visit("/latest")
+
+    sidebar.click_add_section_button
+
+    find(".modal-close").click
+
+    is_focused = page.evaluate_script("document.activeElement.classList.contains('add-section')")
+
+    expect(is_focused).to be true
+  end
+
   it "allows the user to edit custom section" do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
     sidebar_url_1 = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags")
@@ -394,5 +407,40 @@ describe "Custom sidebar sections", type: :system do
     expect(page.find(".value.warning")).to have_content("Link cannot be blank")
 
     expect(section_modal).to have_disabled_save
+  end
+
+  it "allows the user to expand/collapse section containing unicode titles separately" do
+    sidebar_section1 = Fabricate(:sidebar_section, title: "談話", user: user)
+    Fabricate(:sidebar_url, name: "Sidebar Latest", value: "/latest").tap do |sidebar_url|
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section1, linkable: sidebar_url)
+    end
+
+    sidebar_section2 = Fabricate(:sidebar_section, title: "趣", user: user)
+    Fabricate(:sidebar_url, name: "Sidebar Categories", value: "/categories").tap do |sidebar_url|
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section2, linkable: sidebar_url)
+    end
+
+    sign_in user
+
+    visit("/latest")
+
+    expect(sidebar).to have_section_expanded("談話")
+    expect(sidebar).to have_section_expanded("趣")
+
+    sidebar.click_section_header("談話")
+    expect(sidebar).to have_section_collapsed("談話")
+    expect(sidebar).to have_section_expanded("趣")
+
+    sidebar.click_section_header("趣")
+    expect(sidebar).to have_section_collapsed("談話")
+    expect(sidebar).to have_section_collapsed("趣")
+
+    sidebar.click_section_header("談話")
+    expect(sidebar).to have_section_expanded("談話")
+    expect(sidebar).to have_section_collapsed("趣")
+
+    sidebar.click_section_header("趣")
+    expect(sidebar).to have_section_expanded("談話")
+    expect(sidebar).to have_section_expanded("趣")
   end
 end

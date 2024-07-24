@@ -17,6 +17,7 @@ en:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -343,6 +344,16 @@ en:
       active_user_count: "Active users"
       contact: "Contact us"
       contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_info}."
+      member_count:
+        one: "%{formatted_number} Member"
+        other: "%{formatted_number} Members"
+      admin_count:
+        one: "%{formatted_number} Admin"
+        other: "%{formatted_number} Admins"
+      moderator_count:
+        one: "%{formatted_number} Moderator"
+        other: "%{formatted_number} Moderators"
+      report_inappropriate_content: "If you come across any inappropriate content, don't hesitate to start a conversation with our moderators and admins. Remember to log in before reaching out."
 
     bookmarked:
       title: "Bookmark"
@@ -872,11 +883,17 @@ en:
           prefill:
             title: "Prefill with settings for:"
             gmail: "Gmail"
+            outlook: "Outlook.com"
+            office365: "Microsoft 365"
+          ssl_modes:
+            none: "None"
+            ssl_tls: "SSL/TLS"
+            starttls: "STARTTLS"
           credentials:
             title: "Credentials"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
-            smtp_ssl: "Use SSL for SMTP"
+            smtp_ssl_mode: "SSL Mode"
             imap_server: "IMAP Server"
             imap_port: "IMAP Port"
             imap_ssl: "Use SSL for IMAP"
@@ -1141,6 +1158,7 @@ en:
       none: "(select an option)"
       required: 'Please enter a value for "%{name}"'
       same_as_password: "Your password should not be repeated in other fields."
+      optional: (optional)
 
     user:
       said: "%{username}:"
@@ -2089,6 +2107,26 @@ en:
     modal:
       close: "close"
       dismiss_error: "Dismiss error"
+    form_kit:
+      reset: Reset
+      optional: optional
+      errors_summary_title: "This form contains errors:"
+      dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
+      errors:
+        required: "Required"
+        invalid_url: "Must be a valid URL"
+        not_an_integer: "Must be a whole number"
+        not_accepted: "Must be accepted"
+        not_a_number: "Must be a number"
+        too_high: "Must be at most %{count}"
+        too_low: "Must be at least %{count}"
+        too_long:
+          one: "Must be at most %{count} character"
+          other: "Must be at most %{count} characters"
+        too_short:
+          one: "Must be at least %{count} character"
+          other: "Must be at least %{count} characters"
+
     close: "Close"
     assets_changed_confirm: "This site just received a software update. Get the latest version now?"
     logout: "You were logged out."
@@ -2199,6 +2237,7 @@ en:
       enable: "Show top replies"
       disable: "Show All Posts"
       short_label: "Top replies"
+      show_all_label: "Show all"
       short_title: "Show this topic top replies: the most interesting posts as determined by the community"
 
     deleted_filter:
@@ -2232,10 +2271,11 @@ en:
       header_title: "Welcome!"
       subheader_title: "Let's create your account"
       disclaimer: "By registering, you agree to the <a href='%{privacy_link}' target='blank'>privacy policy</a> and <a href='%{tos_link}' target='blank'>terms of service</a>."
-      title: "Create your account"
+      title: "Sign Up"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
       associate: "Already have an account? <a href='%{associate_link}'>Log In</a> to link your %{provider} account."
       activation_title: "Activate your account"
+      already_have_account: "Already have an account?"
 
     forgot_password:
       title: "Password Reset"
@@ -4096,6 +4136,17 @@ en:
       clicks:
         one: "%{count} click"
         other: "%{count} clicks"
+      menu_titles:
+        replies: Most liked replies
+        views: Recent views
+      view_explainer: One view per unique visitor every 8 hours.
+      no_views: No view stats yet, check back later.
+      chart_error: Error rendering chart, please try again.
+      views: "Views"
+      predicted_views: "Predicted Views"
+      so_far: (so far)
+      read: read
+      minutes: min
     post_links:
       about: "expand more links for this post"
       title:
@@ -4138,36 +4189,33 @@ en:
     pending_posts:
       label: "Pending"
       label_with_count: "Pending (%{count})"
+    sr_topic_list_caption: Topic list, column headers with buttons are sortable.
 
     # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
     posts_likes_MF: |
-      This topic has { count, plural,
-          one {# reply}
-        other {# replies}
-      } { ratio, select,
-          low {with a high like to post ratio}
-          med {with a very high like to post ratio}
-         high {with an extremely high like to post ratio}
+      { count, plural,
+          one {# reply,}
+        other {# replies,}
+      }{ ratio, select,
+          low { high like to post ratio,}
+          med { very high like to post ratio,}
+         high { extremely high like to post ratio,}
         other {}
-      }
+      } jump to the first or last post…
 
+    posters: "Posters"
     latest_poster_link: "%{username}'s profile, latest poster"
     original_post: "Original Post"
     views: "Views"
-    sr_views: "Sort by views"
     views_lowercase:
       one: "view"
       other: "views"
     replies: "Replies"
-    sr_replies: "Sort by replies"
     views_long:
       one: "this topic has been viewed %{count} time"
       other: "this topic has been viewed %{count} times"
     activity: "Activity"
-    sr_activity: "Sort by activity"
     likes: "Likes"
-    sr_likes: "Sort by likes"
-    sr_op_likes: "Sort by original post likes"
     likes_lowercase:
       one: "like"
       other: "likes"
@@ -4642,8 +4690,10 @@ en:
     no_group_messages_title: "No group messages found"
 
     topic_entrance:
-      sr_jump_top_button: "Jump to the first post"
-      sr_jump_bottom_button: "Jump to the last post"
+      sr_jump_top_button: "Jump to the first post - %{date}"
+      sr_jump_bottom_button: "Jump to the last post - %{date}"
+      jump_top_button_title: "Jump to the first post"
+      jump_bottom_button_title: "Jump to the last post"
     fullscreen_table:
       expand_btn: "Expand Table"
       view_table: "View Table"
@@ -4803,6 +4853,9 @@ en:
       panels:
         forum:
           label: Forum
+      back_to_forum: "Back to Forum"
+      collapse_all_sections: "Collapse all sections"
+      expand_all_sections: "Expand all sections"
       filter: "Filter..."
       clear_filter: "Clear filter"
       no_results:
@@ -4923,10 +4976,7 @@ en:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
-      back_to_forum: "Back to Forum"
       filter_reports: Filter reports
-      expand_all_sections: "Expand all sections"
-      collapse_all_sections: "Collapse all sections"
 
       tags:
         remove_muted_tags_from_latest:
@@ -5048,7 +5098,6 @@ en:
           title: "More options"
           move_up: "Move up"
           move_down: "Move down"
-
       groups:
         new:
           title: "New Group"
@@ -5346,6 +5395,7 @@ en:
         events:
           none: "There are no related events."
           redeliver: "Redeliver"
+          redeliver_failed: "Redeliver Failed"
           incoming:
             one: "There is a new event."
             other: "There are %{count} new events."
@@ -5355,6 +5405,10 @@ en:
           request: "Request"
           response: "Response"
           redeliver_confirm: "Are you sure you want to redeliver the same payload?"
+          redeliver_failed_confirm:
+            one: "Are you sure you want to redeliver %{count} webhook event?"
+            other: "Are you sure you want to redeliver %{count} webhook events?"
+          no_events_to_redeliver: "No events to redeliver."
           headers: "Headers"
           payload: "Payload"
           body: "Body"
@@ -5475,6 +5529,43 @@ en:
             Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service.
           optional: "(optional)"
           update: "Update"
+          toasts:
+            general_settings_saved: "General settings saved"
+            contact_information_saved: "Contact information saved"
+            your_organization_saved: "Your organization saved"
+          saved: "saved!"
+        flags:
+          header: "Moderation Flags"
+          subheader: "The flagging system in Discourse helps you and your moderator team manage content and user behavior, keeping your community respectful and healthy. The defaults are suitable for most communities and you don’t have to change them. However, if your site has particular requirements you can disable flags you don’t need and add your own custom flags."
+          description: "Description"
+          enabled: "Enabled?"
+          add: "Add Flag"
+          edit: "Edit"
+          back: "Back to flags"
+          delete: "Delete"
+          delete_confirm: 'Are you sure you want to delete "%{name}"?'
+          form:
+            add_header: "Add flag"
+            edit_header: "Edit flag"
+            save: "Save"
+            name: "Name"
+            description: "Description"
+            applies_to: "Display this flag on"
+            topic: "topics"
+            post: "posts"
+            chat_message: "chat messages"
+            enabled: "Enable this custom flag after saving"
+            alert: "Once a custom flag has been used, it can only be disabled but not edited or deleted."
+            edit_flag: "Edit flag"
+            non_editable: "You cannot edit this flag because it is a system flag or has already been used in the review system, however you can still disable it."
+            delete_flag: "Delete flag"
+            non_deletable: "You cannot delete this flag because it is a system flag or has already been used in the review system, however you can still disable it."
+            require_message: "Prompt users to provide additional reasons"
+            require_message_description: "When this flag is selected, a text field will be displayed for the user to provide additional detail about why they are flagging the content"
+          more_options:
+            title: "More options"
+            move_up: "Move up"
+            move_down: "Move down"
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"
@@ -6152,6 +6243,15 @@ en:
             delete_watched_word_group: "delete watched word group"
             toggle_flag: "toggle flag"
             move_flag: "move flag"
+            create_flag: "create flag"
+            update_flag: "update flag"
+            delete_flag: "delete flag"
+            topic_slow_mode_set: "set topic slow mode"
+            topic_slow_mode_removed: "remove topic slow mode"
+            custom_emoji_create: "create custom emoji"
+            custom_emoji_destroy: "delete custom emoji"
+            delete_post_permanently: "permanently delete post"
+            delete_topic_permanently: "permanently delete topic"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -6823,6 +6923,8 @@ en:
             confirm: "Yes, update password policy"
 
       badges:
+        disable_system: This badge is a system badge and cannot be disabled and/or deleted.
+        status: Status
         title: Badges
         new_badge: New Badge
         new: New
@@ -6830,8 +6932,8 @@ en:
         badge: Badge
         display_name: Display Name
         description: Description
-        long_description: Long Description
-        badge_type: Badge Type
+        long_description: Long description
+        badge_type: Badge type
         badge_grouping: Group
         badge_groupings:
           modal_title: Badge Groupings
@@ -6860,10 +6962,10 @@ en:
         icon: Icon
         image: Image
         graphic: Graphic
+        icon_or_image: A badge requires an icon or an image
         icon_help: "Enter a Font Awesome icon name (use prefix 'far-' for regular icons and 'fab-' for brand icons)"
-        image_help: "Uploading an image overrides icon field if both are set."
-        select_an_icon: "Select an Icon"
-        upload_an_image: "Upload an Image"
+        select_an_icon: "Select an icon"
+        upload_an_image: "Upload an image"
         read_only_setting_help: "Customize text"
         query: Badge Query (SQL)
         target_posts: Query targets posts

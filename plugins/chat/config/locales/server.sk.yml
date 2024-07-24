@@ -220,8 +220,6 @@ sk:
         few: "a %{count} ďalšie"
         many: "a %{count} ďalších"
         other: "a %{count} ďalších"
-    summaries:
-      no_targets: "Počas vybraného obdobia neboli zaznamenané žiadne správy."
     transcript:
       default_thread_title: "Vlákno"
       split_thread_range: "správy %{start} až %{end} z %{total}"

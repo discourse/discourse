@@ -21,7 +21,7 @@ html.has-full-page-chat {
       &.has-side-panel-expanded {
         grid-template-columns: 1fr;
 
-        .c-routes-channel {
+        .c-routes.--channel {
           display: none;
         }
       }
@@ -56,12 +56,6 @@ html.has-full-page-chat {
 
 .sidebar-container .channels-list .chat-channel-row {
   padding: 0.5em;
-}
-
-.create-channel-modal {
-  .modal-inner-container {
-    width: 95%;
-  }
 }
 
 .chat-message-separator {

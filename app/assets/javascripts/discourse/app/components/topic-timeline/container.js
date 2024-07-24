@@ -193,7 +193,7 @@ export default class TopicTimelineScrollArea extends Component {
 
   get nowDateOptions() {
     return {
-      customTitle: I18n.t("topic_entrance.sr_jump_bottom_button"),
+      customTitle: I18n.t("topic_entrance.jump_bottom_button_title"),
       addAgo: true,
       defaultFormat: timelineDate,
     };

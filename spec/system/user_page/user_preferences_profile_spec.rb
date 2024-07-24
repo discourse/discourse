@@ -7,6 +7,18 @@ describe "User preferences | Profile", type: :system do
 
   before { sign_in(user) }
 
+  describe "changing bio" do
+    it "correctly updates the bio" do
+      user_preferences_profile_page.visit(user)
+
+      user_preferences_profile_page.expand_profile_details
+      user_preferences_profile_page.fill_bio(with: "I am a human.")
+      user_preferences_profile_page.save
+
+      expect(user_preferences_profile_page.cooked_bio).to have_text("I am a human.")
+    end
+  end
+
   describe "enforcing required fields" do
     before do
       UserRequiredFieldsVersion.create!
@@ -19,8 +31,23 @@ describe "User preferences | Profile", type: :system do
       )
     end
 
-    it "redirects to the profile page to fill up required fields" do
+    it "server-side redirects to the profile page to fill up required fields" do
       visit("/")
+
+      expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
+
+      expect(page).to have_selector(
+        ".alert-error",
+        text: I18n.t("js.user.preferences.profile.enforced_required_fields"),
+      )
+    end
+
+    it "client-side redirects to the profile page to fill up required fields" do
+      visit("/faq")
+
+      expect(page).to have_current_path("/faq")
+
+      find("#site-logo").click
 
       expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
 

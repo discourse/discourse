@@ -21,7 +21,7 @@ RSpec.describe FlagSettings do
       settings.add(4, :inappropriate, topic_type: true)
       expect(settings.flag_types).to include(:inappropriate)
       expect(settings.topic_flag_types).to include(:inappropriate)
-      expect(settings.without_custom_types).to include(:inappropriate)
+      expect(settings.without_additional_message_types).to include(:inappropriate)
     end
 
     it "will add a notify type" do
@@ -36,11 +36,11 @@ RSpec.describe FlagSettings do
       expect(settings.auto_action_types).to include(:notify_moderators)
     end
 
-    it "will add a custom type" do
-      settings.add(7, :notify_user, custom_type: true)
+    it "will add a type which requires message" do
+      settings.add(7, :notify_user, require_message: true)
       expect(settings.flag_types).to include(:notify_user)
-      expect(settings.custom_types).to include(:notify_user)
-      expect(settings.without_custom_types).to be_empty
+      expect(settings.additional_message_types).to include(:notify_user)
+      expect(settings.without_additional_message_types).to be_empty
     end
   end
 end

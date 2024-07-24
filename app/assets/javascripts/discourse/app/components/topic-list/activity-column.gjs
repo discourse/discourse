@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -29,6 +30,7 @@ export default class ActivityColumn extends Component {
       >{{! no whitespace
         }}<PluginOutlet
           @name="topic-list-before-relative-date"
+          @outletArgs={{hash topic=@topic}}
         />
         {{~formatDate @topic.bumpedAt format="tiny" noTitle="true"~}}
       </a>

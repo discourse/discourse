@@ -5,9 +5,11 @@ class Admin::EmojisController < Admin::AdminController
     render_serialized(Emoji.custom, EmojiSerializer, root: false)
   end
 
-  # TODO (martin) Figure out a way that this kind of custom logic can
+  # NOTE: This kind of custom logic also needs to be implemented to
   # be run in the ExternalUploadManager when a direct S3 upload is completed,
   # related to preventDirectS3Uploads in the UppyUploadMixin.
+  #
+  # Until then, preventDirectS3Uploads is set to true in the UppyUploadMixin.
   def create
     file = params[:file] || params[:files].first
     name = params[:name] || File.basename(file.original_filename, ".*")
@@ -26,9 +28,12 @@ class Admin::EmojisController < Admin::AdminController
 
       data =
         if upload.persisted?
-          custom_emoji = CustomEmoji.new(name: name, upload: upload, group: group)
+          custom_emoji =
+            CustomEmoji.new(name: name, upload: upload, group: group, user: current_user)
 
           if custom_emoji.save
+            StaffActionLogger.new(current_user).log_custom_emoji_create(name, group: group)
+
             Emoji.clear_cache
             { name: custom_emoji.name, url: custom_emoji.upload.url, group: group }
           else
@@ -48,7 +53,12 @@ class Admin::EmojisController < Admin::AdminController
     name = params.require(:id)
 
     # NOTE: the upload will automatically be removed by the 'clean_up_uploads' job
-    CustomEmoji.find_by(name: name)&.destroy!
+    emoji = CustomEmoji.find_by(name: name)
+
+    if emoji.present?
+      StaffActionLogger.new(current_user).log_custom_emoji_destroy(name)
+      emoji.destroy!
+    end
 
     Emoji.clear_cache
 

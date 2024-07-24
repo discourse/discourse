@@ -107,50 +107,6 @@
 
 //legacy
 
-.fixed-modal:not(#discourse-modal) {
-  // new <DModal /> only, not <DModalLegacy />
-  pointer-events: none; // Allow clicks through wrappers so they hit the adjacent backdrop element
-}
-
-.modal-outer-container {
-  width: 100%;
-  height: 100%;
-}
-
-.modal-middle-container {
-  display: flex;
-  height: 100%;
-  align-items: center;
-}
-
-.modal-inner-container {
-  pointer-events: auto;
-  --modal-max-width: 47em; // set in ems to scale with user font-size
-  box-sizing: border-box;
-  flex: 0 1 auto;
-  margin: 0 auto;
-  max-width: var(--modal-max-width);
-  background-color: var(--secondary);
-  box-shadow: var(--shadow-modal);
-
-  .select-kit {
-    width: 220px;
-
-    &.tag-chooser {
-      width: 100%;
-    }
-  }
-}
-
-.modal-open {
-  .popover {
-    z-index: z("modal", "popover");
-  }
-  .tooltip {
-    z-index: z("modal", "tooltip");
-  }
-}
-
 .input-hint-text {
   margin-left: 0.5em;
   color: var(--secondary-high);
@@ -190,40 +146,6 @@
   }
 }
 
-.inline-modal {
-  .modal-inner-container {
-    border: 1px solid var(--secondary-medium);
-  }
-}
-
-.fixed-modal {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  z-index: z("modal", "content");
-  overflow: auto;
-
-  html.keyboard-visible body.ios-safari-composer-hacks & {
-    height: calc(var(--composer-vh, 1vh) * 100);
-    .modal-inner-container {
-      max-height: 100%;
-      margin-bottom: 0px;
-    }
-  }
-
-  &:not(.bookmark-reminder-modal):not(.history-modal) {
-    .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(
-        .poll-breakdown
-      ) {
-      max-height: 80vh !important;
-      @media screen and (max-height: 500px) {
-        max-height: 65vh !important;
-      }
-    }
-  }
-}
-
 .modal-form {
   margin-bottom: 0;
 }
@@ -240,98 +162,6 @@
 
   &.hidden {
     display: none;
-  }
-
-  .modal-body {
-    overflow-y: auto;
-    max-height: 400px;
-    padding: 1em;
-
-    &.full-height-modal {
-      max-height: calc(100vh - 150px);
-    }
-
-    &.insert-link {
-      overflow-y: visible;
-      input {
-        min-width: 300px;
-      }
-
-      .inputs {
-        position: relative;
-        .spinner {
-          position: absolute;
-          right: 8px;
-          top: -15px;
-          width: 10px;
-          height: 10px;
-        }
-        .internal-link-results {
-          position: absolute;
-          top: 70%;
-          padding: 5px 10px;
-          box-shadow: var(--shadow-card);
-          z-index: 5;
-          background-color: var(--secondary);
-          max-height: 150px;
-          width: 90%;
-          overflow-y: auto;
-          > .search-link {
-            padding: 6px;
-            border-bottom: 1px solid var(--primary-low);
-            cursor: pointer;
-            display: block;
-            &:hover,
-            &:focus {
-              background-color: var(--highlight-bg);
-            }
-            .search-category {
-              display: flex;
-              align-items: center;
-            }
-            .discourse-tags {
-              font-size: var(--font-down-1);
-            }
-          }
-        }
-      }
-    }
-    textarea {
-      width: 100%;
-      height: 80px;
-      box-sizing: border-box;
-    }
-    p {
-      font-size: var(--font-0);
-    }
-    .archetype-option {
-      margin-bottom: 20px;
-    }
-    .warning {
-      color: var(--danger) !important;
-    }
-  }
-
-  .password-confirmation {
-    display: none;
-  }
-
-  section.field {
-    padding: 0.25em 0;
-    margin-bottom: 5px;
-    &.with-items {
-      display: flex;
-      align-items: flex-start;
-    }
-    .field-item {
-      display: inline-block;
-      margin-right: 10px;
-    }
-  }
-
-  // password reset modal
-  .modal-body.forgot-password-modal p {
-    font-size: var(--font-0);
   }
 
   pre code {
@@ -493,41 +323,6 @@
   }
 }
 
-.modal .modal-body.change-timestamp {
-  #date-container {
-    .pika-single {
-      width: 100%;
-      box-sizing: border-box;
-      display: flex;
-      justify-content: center;
-    }
-  }
-
-  form {
-    display: flex;
-
-    .date-picker-wrapper,
-    input[type="time"] {
-      width: 50%;
-    }
-
-    .date-picker-wrapper {
-      display: flex;
-      flex: 1;
-
-      .date-picker {
-        flex: 1;
-      }
-    }
-
-    input.date-picker,
-    input[type="time"] {
-      text-align: left;
-      margin: 0;
-    }
-  }
-}
-
 .change-timestamp {
   width: 28em; // scales with user font-size
   max-width: 90vw; // prevents overflow due to extra large user font-size
@@ -638,14 +433,6 @@
   .description {
     width: 100%;
     margin-top: 0.25em;
-  }
-}
-
-.modal-body .codeblock-buttons {
-  margin: 0;
-
-  button {
-    top: 21px;
   }
 }
 

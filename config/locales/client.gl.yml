@@ -21,6 +21,7 @@ gl:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -632,11 +633,12 @@ gl:
           title: "Correo electrónico"
           status: "Sincronizados os correos %{old_emails} / %{total_emails} vía IMAP."
           last_updated_by: "por"
+          ssl_modes:
+            none: "Ningunha"
           credentials:
             title: "Acreditacións"
             smtp_server: "Servidor SMTP"
             smtp_port: "Porto SMTP"
-            smtp_ssl: "Use SSL para SMTP"
             imap_server: "Servidor SMTP"
             imap_port: "Porto IMAP"
             imap_ssl: "Use SSL para IMAP"
@@ -883,6 +885,7 @@ gl:
     user_fields:
       none: "(seleccione unha opción)"
       required: 'Escriba un valor para "%{name}"'
+      optional: (opcional)
     user:
       said: "%{username}:"
       profile: "Perfil"
@@ -1515,6 +1518,11 @@ gl:
     modal:
       close: "pechar"
       dismiss_error: "Desbotar erro"
+    form_kit:
+      reset: Restabelecer
+      optional: opcional
+      errors:
+        required: "Obrigatorio"
     close: "Pechar"
     logout: "Pechouselle a sesión."
     refresh: "Actualizar"
@@ -1555,6 +1563,7 @@ gl:
       description_time_MF: |
         Hai {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} que supoñen un tempo estimado de lectura de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
       disable: "Amosar todas as publicacións"
+      show_all_label: "Amosar todas"
     deleted_filter:
       enabled_description: "Este tema contén publicacións eliminadas, que se ocultaron."
       disabled_description: "Amósanse as publicacións eliminadas do tema."
@@ -1578,7 +1587,7 @@ gl:
       header_title: "Dámoslle a benvida!"
       subheader_title: "Déixenos crear a súa conta"
       disclaimer: "Ao rexistrarse, acepta a <a href='%{privacy_link}' target='blank'>norma de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos de servizo</a>."
-      title: "Crear unha conta nova"
+      title: "Crear conta"
       failed: "Algo foi mal, quizais este correo electrónico xa está rexistrado, ténteo coa ligazón de «Esqueceume o contrasinal»"
     forgot_password:
       title: "Contrasinal restabelecido"
@@ -1697,8 +1706,8 @@ gl:
       enter: "Intro"
     category_row:
       subcategory_count:
-        one: "+ %{count} subcategoría"
-        other: "+ %{count} subcategorías"
+        one: "+%{count} subcategoría"
+        other: "+%{count} subcategorías"
       topic_count:
         one: "%{count} tema nesta categoría"
         other: "%{count} temas nesta categoría"
@@ -2891,6 +2900,9 @@ gl:
       clicks:
         one: "%{count} clic"
         other: "%{count} clics"
+      views: "Visualizacións"
+      read: lectura
+      minutes: mín
     post_links:
       about: "despregar máis ligazóns para esta publicación"
       title:
@@ -2923,12 +2935,7 @@ gl:
     pending_posts:
       label: "Pendente"
       label_with_count: "Pendentes (%{count})"
-    posts_likes_MF: |
-      Este tema ten {count, plural, one {# resposta} other {# respostas}} {ratio, select,
-        low {cun alto nivel de valoración da publicación}
-        med {cun moi alto nivel de valoración da publicación}
-        high {cun extremo nivel de valoración da publicación}
-        other {}}
+    posters: "Autores"
     original_post: "Publicación orixinal"
     views: "Vistas"
     views_lowercase:
@@ -3699,6 +3706,19 @@ gl:
         about:
           optional: "(opcional)"
           update: "Actualizar"
+          saved: "gardado!"
+        flags:
+          description: "Descrición"
+          enabled: "Activado?"
+          edit: "Editar"
+          delete: "Eliminar"
+          delete_confirm: 'Confirma a eliminación de «%{name}»?'
+          form:
+            save: "Gardar"
+            name: "Nome"
+            description: "Descrición"
+            topic: "temas"
+            post: "publicacións"
       plugins:
         title: "Complementos"
         installed: "Complementos instalados"
@@ -4729,6 +4749,7 @@ gl:
           add_image_types: "Imaxes"
           add_audio_types: "Audio"
       badges:
+        status: Estado
         title: Insignias
         new_badge: Nova insignia
         new: Novo
@@ -4736,8 +4757,6 @@ gl:
         badge: Insignia
         display_name: Nome público
         description: Descrición
-        long_description: Descrición longa
-        badge_type: Tipo de insignia
         badge_grouping: Grupo
         badge_groupings:
           modal_title: Grupos de insignias
@@ -4767,7 +4786,6 @@ gl:
         image: Imaxe
         graphic: Gráfico
         icon_help: "Escriba un nome de icona Font Awesome (use o prefixo «far-» para as iconas normais e «fab-» para as iconas de marca)"
-        image_help: "Ao cargar unha imaxe sobrescríbese o campo da icona se ambos estivesen determinados."
         select_an_icon: "Seleccionar unha icona"
         upload_an_image: "Cargar unha imaxe"
         read_only_setting_help: "Personalice o texto"

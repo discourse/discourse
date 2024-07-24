@@ -239,6 +239,17 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_editable_group_custom_field(field, self)
   end
 
+  # Allows to define custom filter utilizing the user's input.
+  # Ensure proper input sanitization before using it in a query.
+  #
+  # Example usage:
+  #   add_filter_custom_filter("word_count") do |scope, value|
+  #     scope.where(word_count: value)
+  #   end
+  def add_filter_custom_filter(name, &block)
+    DiscoursePluginRegistry.register_custom_filter_mapping({ name => block }, self)
+  end
+
   # Allows to define custom "status:" filter. Example usage:
   #   register_custom_filter_by_status("foobar") do |scope|
   #     scope.where("word_count = 42")
@@ -831,14 +842,28 @@ class Plugin::Instance
   end
 
   def register_reviewable_type(reviewable_type_class)
-    extend_list_method Reviewable, :types, [reviewable_type_class.name]
+    return unless reviewable_type_class < Reviewable
+    extend_list_method(Reviewable, :types, reviewable_type_class)
   end
 
   def extend_list_method(klass, method, new_attributes)
-    current_list = klass.public_send(method)
-    current_list.concat(new_attributes)
+    register_name = [klass, method].join("_").underscore
+    DiscoursePluginRegistry.define_filtered_register(register_name)
+    DiscoursePluginRegistry.public_send(
+      "register_#{register_name.singularize}",
+      new_attributes,
+      self,
+    )
 
-    reloadable_patch { klass.public_send(:define_singleton_method, method) { current_list } }
+    original_method_alias = "__original_#{method}__"
+    return if klass.respond_to?(original_method_alias)
+    reloadable_patch do
+      klass.singleton_class.alias_method(original_method_alias, method)
+      klass.define_singleton_method(method) do
+        public_send(original_method_alias) |
+          DiscoursePluginRegistry.public_send(register_name).flatten
+      end
+    end
   end
 
   def directory_name
@@ -1182,6 +1207,9 @@ class Plugin::Instance
   # to summarize content. Staff can select which strategy to use
   # through the `summarization_strategy` setting.
   def register_summarization_strategy(strategy)
+    Discourse.deprecate(
+      "register_summarization_strategy is deprecated. Summarization code is now moved to Discourse AI",
+    )
     if !strategy.class.ancestors.include?(Summarization::Base)
       raise ArgumentError.new("Not a valid summarization strategy")
     end
@@ -1272,13 +1300,6 @@ class Plugin::Instance
       locale_chain = opts[:fallbackLocale] ? [locale, opts[:fallbackLocale]] : [locale]
       lib_locale_path = File.join(root_path, "lib/javascripts/locale")
 
-      path = File.join(lib_locale_path, "message_format")
-      opts[:message_format] = find_locale_file(locale_chain, path)
-      opts[:message_format] = JsLocaleHelper.find_message_format_locale(
-        locale_chain,
-        fallback_to_english: false,
-      ) unless opts[:message_format]
-
       path = File.join(lib_locale_path, "moment_js")
       opts[:moment_js] = find_locale_file(locale_chain, path)
       opts[:moment_js] = JsLocaleHelper.find_moment_locale(locale_chain) unless opts[:moment_js]
@@ -1354,8 +1375,7 @@ class Plugin::Instance
   def valid_locale?(custom_locale)
     File.exist?(custom_locale[:client_locale_file]) &&
       File.exist?(custom_locale[:server_locale_file]) &&
-      File.exist?(custom_locale[:js_locale_file]) && custom_locale[:message_format] &&
-      custom_locale[:moment_js]
+      File.exist?(custom_locale[:js_locale_file]) && custom_locale[:moment_js]
   end
 
   def find_locale_file(locale_chain, path)

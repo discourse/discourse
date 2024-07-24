@@ -46,7 +46,7 @@ de:
       user_promoted:
         title: Benutzer befördert
         description: Wenn ein Benutzer von einer Vertrauensstufe zur nächsten befördert wird
-        transition_placeholder: "von %{from_level_name} bis %{to_level_name}"
+        transition_placeholder: "von %{from_level_name} zu %{to_level_name}"
       stalled_wiki:
         title: Festgefahrenes Wiki
         description: Wenn ein Wiki für einen längeren als den definierten Zeitraum nicht bearbeitet wurde, wird die Automatisierung ausgelöst
@@ -113,7 +113,7 @@ de:
       user_global_notice_with_stalled_topic:
         doc: Wenn dies durch ein festgefahrenes Thema ausgelöst wird, erhält der Themeninhaber den globalen Hinweis.
       user_global_notice_with_first_accepted_solution:
-        doc: Bei Auslösung durch die erste akzeptierte Lösung erhält der Lösungsautor die globale Benachrichtigung.
+        doc: Bei Auslösung durch die erste akzeptierte Lösung erhält der Verfasser der Lösung den globalen Hinweis.
       send_pms_with_api_call:
         doc: Bei Verwendung des Skripts `send pms` mit dem Auslöser `api call` wird der Parameter `usernames` aus deiner Anfrage verwendet, um die Empfängerliste auszufüllen.
       topic_required_words:

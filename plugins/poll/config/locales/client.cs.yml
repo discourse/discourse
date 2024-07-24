@@ -82,6 +82,8 @@ cs:
         breakdown: "Rozpis"
         percentage: "Procento"
         count: "Počet"
+      ranked_choice:
+        none: "Žádná"
       options:
         label: "Možnosti"
       error_while_toggling_status: "Došlo k chybě při změně statusu hlasování"

@@ -556,7 +556,7 @@ class Post < ActiveRecord::Base
 
   def flags
     post_actions.where(
-      post_action_type_id: PostActionType.flag_types_without_custom.values,
+      post_action_type_id: PostActionType.flag_types_without_additional_message.values,
       deleted_at: nil,
     )
   end

@@ -32,7 +32,7 @@
     }
   }
 
-  .poll-public .d-toggle-switch--label {
+  .poll-public .d-toggle-switch__label {
     margin-bottom: 0;
   }
 
@@ -50,6 +50,9 @@
   }
 
   .poll-type {
+    .poll-type-value {
+      font-size: var(--font-down-1);
+    }
     padding: 0;
     margin-top: 0;
     border: none;

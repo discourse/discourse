@@ -1060,6 +1060,8 @@ cs:
     web_crawlers:
       labels:
         page_views: "Zobrazení stránky "
+    web_hook_events_daily_aggregate:
+      xaxis: "Den"
     suspicious_logins:
       labels:
         user: Uživatel
@@ -1097,6 +1099,12 @@ cs:
         user: Uživatel
         qtt_like: Obdržených 'líbí se'
       description: "Top 10 uživatelů, kteří měli Líbí se od širokého spektra lidí."
+    topic_view_stats:
+      labels:
+        topic: Témata
+        logged_in_views: Přihlášen
+        anon_views: Anonymní
+        total_views: Celkem
   dashboard:
     problem:
       rails_env: "Váš server běží v módu %{env}."

@@ -57,6 +57,8 @@ zh_TW:
         breakdown: "故障"
         percentage: "百分比"
         count: "次數"
+      ranked_choice:
+        none: "無"
       options:
         label: "選項"
       error_while_toggling_status: "對不起，改變投票狀態時出錯了。"

@@ -34,8 +34,6 @@ nl:
         icons:
           title: "Pictogrammen"
           full_list: "Zie de volledige lijst van Font Awesome-pictogrammen"
-        input_fields:
-          title: "Invoervelden"
         buttons:
           title: "Knoppen"
         dropdowns:

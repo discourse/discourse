@@ -24,8 +24,6 @@ vi:
         icons:
           title: "Biểu tượng"
           full_list: "Xem danh sách đầy đủ các biểu tượng Font Awesome"
-        input_fields:
-          title: "Trường đầu vào"
         buttons:
           title: "Nút"
         dropdowns:

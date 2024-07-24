@@ -552,7 +552,26 @@ acceptance("Poll results", function (needs) {
       }
     });
 
-    server.delete("/polls/vote", () => helper.response({ success: "OK" }));
+    server.delete("/polls/vote", () =>
+      helper.response({
+        success: "OK",
+        poll: {
+          options: [
+            {
+              id: "db753fe0bc4e72869ac1ad8765341764",
+              html: 'Option <span class="hashtag">#1</span>',
+              votes: 0,
+            },
+            {
+              id: "d8c22ff912e03740d9bc19e133e581e0",
+              html: 'Option <span class="hashtag">#2</span>',
+              votes: 0,
+            },
+          ],
+          voters: 0,
+        },
+      })
+    );
   });
 
   test("can load more voters", async function (assert) {
@@ -620,12 +639,13 @@ acceptance("Poll results", function (needs) {
       count(".poll-container .results li:nth-child(1) .poll-voters li"),
       1
     );
+
     assert.strictEqual(
       count(".poll-container .results li:nth-child(2) .poll-voters li"),
       1
     );
 
-    await click(".poll-voters-toggle-expand a");
+    await click(".poll-voters-toggle-expand");
     await visit("/t/load-more-poll-voters/134");
 
     assert.strictEqual(
@@ -640,6 +660,7 @@ acceptance("Poll results", function (needs) {
 
   test("can unvote", async function (assert) {
     await visit("/t/load-more-poll-voters/134");
+
     await click(".toggle-results");
 
     assert.strictEqual(count(".poll-container .d-icon-circle"), 1);

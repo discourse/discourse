@@ -68,12 +68,6 @@ id:
         never: "Tidak pernah"
       heading: "Obrolan"
       join: "Gabung"
-      summarization:
-        title: "Meringkas pesan"
-        description: "Pilih opsi di bawah untuk meringkas percakapan yang dikirim selama jangka waktu yang diinginkan."
-        summarize: "Meringkas"
-        since:
-          other: "%{count} jam terakhir"
       mention_warning:
         invitations_sent:
           other: "Undangan terkirim"
@@ -91,6 +85,7 @@ id:
       reply: "Balas"
       edit: "Ubah"
       copy_text: "Salin teks"
+      message_too_long: "Pesan terlalu panjang, pesan harus maksimal %{count} karakter."
       bookmark_message: "Penandaan"
       bookmark_message_edit: "Edit Bookmark"
       save: "Simpan"

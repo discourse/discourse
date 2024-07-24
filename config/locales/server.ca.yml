@@ -1052,6 +1052,8 @@ ca:
         user_agent: "Agent d'usuari"
         page_views: "Pàgines vistes"
       description: "Llista d'agents d'usuari de rastrejadors web, ordenats per pàgines vistes."
+    web_hook_events_daily_aggregate:
+      xaxis: "Dia"
     suspicious_logins:
       title: "Inicis de sessió sospitosos"
       labels:
@@ -1097,6 +1099,12 @@ ca:
       labels:
         user: Usuari
         qtt_like: '''M''agrada'' rebuts'
+    topic_view_stats:
+      labels:
+        topic: Tema
+        logged_in_views: Sessió iniciada
+        anon_views: Anònim
+        total_views: Total
   dashboard:
     problem:
       rails_env: "El vostre servidor s'executa en mode %{env}."
@@ -1105,8 +1113,6 @@ ca:
       ram: "El vostre servidor s'està executant amb menys d'1 GB de memòria total. Es recomana com a mínim un 1 GB de memòria."
       subfolder_ends_in_slash: "La vostra configuració de subcarpeta no és correcta; DISCOURSE_RELATIVE_URL_ROOT acaba amb barra inclinada."
       missing_mailgun_api_key: "El servidor està configurat per a enviar correus electrònics mitjançant Mailgun, però no heu proporcionat cap clau d'API per a verificar els missatges del webhook."
-      out_of_date_themes: "Hi ha actualitzacions disponibles per a les aparences següents:"
-      unreachable_themes: "No hem pogut comprovar si hi ha actualitzacions de les aparences següents:"
   site_settings:
     disabled: "desactivat"
     censored_words: "Paraules que es reemplaçaran automàticament amb &#9632;&#9632;&#9632;&#9632;"
@@ -1255,7 +1261,6 @@ ca:
     s3_configure_tombstone_policy: "Activa la política de supressió automàtica per a càrregues 'tombstone'. IMPORTANT: si és desactivat, no es reclamarà cap espai després de suprimir les càrregues."
     backup_time_of_day: "Hora del dia (UTC) en què s'hauria de fer la còpia de seguretat."
     backup_with_uploads: "Inclou els fitxers carregats en les còpies de seguretat planificades. Si s'inhabilita, només es farà còpia de seguretat de la base de dades."
-    backup_location: "Ubicació on s'emmagatzemen les còpies de seguretat. IMPORTANT: S3 requereix credencials S3 vàlides introduïdes en la configuració de fitxers."
     backup_gzip_compression_level_for_uploads: "Nivell de compressió gzip per a comprimir els fitxers carregats."
     include_thumbnails_in_backups: "Inclou les miniatures generades en les còpies de seguretat. Desactivar-ho farà les còpies de seguretat menys voluminoses, però requereix regenerar totes les publicacions després d'una restauració."
     active_user_rate_limit_secs: "Amb quina freqüència actualitzem el camp 'last_seen_at', en segons."

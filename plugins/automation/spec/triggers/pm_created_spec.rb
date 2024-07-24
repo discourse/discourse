@@ -164,7 +164,7 @@ describe "PMCreated" do
           incoming_email: "team@somesmtpaddress.com|suppor+team@bar.com",
           smtp_server: "smtp.test.com",
           smtp_port: 587,
-          smtp_ssl: true,
+          smtp_ssl_mode: Group.smtp_ssl_modes[:starttls],
           smtp_enabled: true,
         )
         SiteSetting.email_in = true

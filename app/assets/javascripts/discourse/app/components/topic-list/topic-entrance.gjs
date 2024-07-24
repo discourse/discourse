@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DiscourseURL from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
+import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
@@ -66,6 +67,7 @@ export default class TopicEntrance extends Component {
 
   <template>
     <DMenu
+      @title={{@title}}
       @ariaLabel={{@title}}
       @placement="center"
       @autofocus={{true}}
@@ -79,7 +81,11 @@ export default class TopicEntrance extends Component {
         <div id="topic-entrance" class="--glimmer">
           <button
             {{on "click" (fn this.jumpTo @topic.url)}}
-            aria-label="topic_entrance.sr_jump_top_button"
+            aria-label={{i18n
+              "topic_entrance.sr_jump_top_button"
+              date=this.topDate
+            }}
+            title={{i18n "topic_entrance.jump_top_button_title"}}
             class="btn btn-default full jump-top"
           >
             {{icon "step-backward"}}
@@ -88,7 +94,11 @@ export default class TopicEntrance extends Component {
 
           <button
             {{on "click" (fn this.jumpTo @topic.lastPostUrl)}}
-            aria-label="topic_entrance.sr_jump_bottom_button"
+            aria-label={{i18n
+              "topic_entrance.sr_jump_bottom_button"
+              date=this.bottomDate
+            }}
+            title={{i18n "topic_entrance.jump_bottom_button_title"}}
             class="btn btn-default full jump-bottom"
           >
             {{htmlSafe this.bottomDate}}

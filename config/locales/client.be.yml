@@ -733,6 +733,10 @@ be:
         fixed: "загрузка Старонкі"
     modal:
       close: "схаваць"
+    form_kit:
+      reset: скінуць
+      errors:
+        required: "абавязковыя"
     close: "зачыніць"
     refresh: "абнавіць"
     home: "дома"
@@ -769,6 +773,7 @@ be:
     search_hint: "імя карыстальніка, email або IP-адрас"
     create_account:
       header_title: "жаданы!"
+      title: "рэгістрацыя"
       failed: "Нешта пайшло не так; хутчэй за ўсё, гэтую электронную пошту ўжо зарэгістравана, паспрабуйце спасылкі Забыўся пароль"
     forgot_password:
       title: "Скід пароля"
@@ -1217,6 +1222,8 @@ be:
       notify_action: "паведамленне"
     topic_map:
       title: "Рэзюмэ запісу"
+      views: "прагляды"
+      read: счытванне
     topic_statuses:
       pinned:
         title: "замацаваныя"
@@ -1623,6 +1630,19 @@ be:
           screened_urls: "Screened URLs"
           security: "Бяспека"
           spam: "Спам"
+      config_areas:
+        about:
+          saved: "захавана!"
+        flags:
+          description: "Апісанне"
+          edit: "рэдагаваць"
+          delete: "Выдаліць"
+          form:
+            save: "захаваць"
+            name: "імя"
+            description: "Апісанне"
+            topic: "тэмы"
+            post: "паведамленняў"
       plugins:
         title: "Плагіны"
         name: "Назва"
@@ -2130,6 +2150,7 @@ be:
         file_types_list:
           add_image_types: "Выява"
       badges:
+        status: Статус
         title: значкі
         new_badge: новы значок
         new: Новыя
@@ -2137,7 +2158,6 @@ be:
         badge: значок
         display_name: Адлюстроўваецца імя
         description: апісанне
-        long_description: пашыранае апісанне
         badge_grouping: група
         save: захаваць
         delete: выдаліць

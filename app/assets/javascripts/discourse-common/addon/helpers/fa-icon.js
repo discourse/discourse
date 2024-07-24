@@ -9,6 +9,8 @@ export function iconHTML(id, params) {
 
 registerRawHelper("fa-icon", faIcon);
 export default function faIcon(icon, params) {
-  deprecated("Use `{{d-icon}}` instead of `{{fa-icon}}");
+  deprecated("Use `{{d-icon}}` instead of `{{fa-icon}}", {
+    id: "discourse.fa-icon",
+  });
   return htmlSafe(iconHTML(icon, params));
 }

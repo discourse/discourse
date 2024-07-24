@@ -269,6 +269,25 @@ table.group-category-permissions {
   }
 }
 
+.group-smtp-prefill-options {
+  ul {
+    display: inline;
+    margin: 0;
+
+    li {
+      display: inline-block;
+
+      &:before {
+        content: "|";
+      }
+
+      &:first-child:before {
+        content: "";
+      }
+    }
+  }
+}
+
 .group-smtp-email-settings,
 .group-imap-email-settings {
   background-color: var(--primary-very-low);
@@ -287,10 +306,6 @@ table.group-category-permissions {
       width: 100%;
     }
   }
-}
-
-.groups-form__enable-ssl {
-  margin-bottom: 1em;
 }
 
 .group-manage-email-additional-settings-wrapper {

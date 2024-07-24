@@ -143,15 +143,6 @@ ru:
       heading: "Чат"
       join: "Подписаться"
       last_visit: "последнее посещение"
-      summarization:
-        title: "Делать сводку сообщений"
-        description: "Выберите ниже вариант сводки беседы для отправки в указанный период."
-        summarize: "Сводка"
-        since:
-          one: "Последний %{count} час"
-          few: "Последние %{count} часа"
-          many: "Последние %{count} часов"
-          other: "Последние %{count} часа"
       mention_warning:
         invitations_sent:
           one: "Приглашение отправлено"
@@ -279,6 +270,7 @@ ru:
       copy_link: "Копировать ссылку"
       copy_text: "Копировать текст"
       rebake_message: "Перестроить HTML"
+      message_too_long: "Сообщение слишком длинное, оно должно содержать не более %{count} символа."
       retry_staged_message:
         title: "Ошибка сети"
         action: "Отправить ещё раз?"

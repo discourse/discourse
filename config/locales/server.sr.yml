@@ -343,6 +343,11 @@ sr:
       labels:
         user: Korisnik
         qtt_like: Primljeno Lajkova
+    topic_view_stats:
+      labels:
+        topic: Tema
+        anon_views: Anonimno
+        total_views: Ukupno
   site_settings:
     min_topic_title_length: "Minimalna dozvoljena dužina naslova teme u znakovima"
     max_topic_title_length: "Maksimalna dozvoljena dužina naslova teme u znakovima"

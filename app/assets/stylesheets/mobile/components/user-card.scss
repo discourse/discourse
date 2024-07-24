@@ -40,16 +40,16 @@
       }
     }
   }
-  h1 {
+  .names__primary {
     font-size: var(--font-up-3);
     .d-icon {
       font-size: var(--font-down-2);
     }
   }
-  h2 {
+  .names__secondary {
     font-size: var(--font-0);
   }
-  h3 {
+  .user-status {
     font-size: var(--font-down-1);
   }
 }

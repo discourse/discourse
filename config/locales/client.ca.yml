@@ -638,11 +638,12 @@ ca:
           last_updated: "Darrera actualització:"
           last_updated_by: "per"
           settings_required: "Tots els paràmetres són obligatoris, si us plau ompli tots els camps abans de la validació."
+          ssl_modes:
+            none: "Cap"
           credentials:
             title: "Credencials"
             smtp_server: "Servidor SMTP"
             smtp_port: "Port SMTP"
-            smtp_ssl: "Utilitza SSL per a SMTP"
             imap_server: "Servidor IMAP"
             imap_port: "Port IMAP"
             imap_ssl: "Utilitza SSL per a SMTP"
@@ -841,6 +842,7 @@ ca:
       copied: "copiat"
     user_fields:
       none: "(trieu una opció)"
+      optional: (opcional)
     user:
       said: "%{username}:"
       profile: "Perfil"
@@ -1363,6 +1365,11 @@ ca:
         fixed: "Carrega la pàgina"
     modal:
       close: "tanca"
+    form_kit:
+      reset: Restableix
+      optional: opcional
+      errors:
+        required: "Necessari"
     close: "Tanca"
     logout: "Heu tancat la sessió."
     refresh: "Actualitza"
@@ -1419,6 +1426,7 @@ ca:
     create_account:
       header_title: "Benvingut!"
       disclaimer: "Registrant-vos, accepteu la <a href='%{privacy_link}' target='blank'>política de privacitat</a> i les <a href='%{tos_link}' target='blank'>condicions del servei</a>."
+      title: "Registre"
       failed: "Alguna cosa ha anat malament. Potser aquest correu electrònic ja ha estat registrat; proveu-ho amb l'enllaç de contrasenya oblidada"
     forgot_password:
       title: "Restabliment de contrasenya"
@@ -2523,6 +2531,9 @@ ca:
       clicks:
         one: "%{count} clic"
         other: "%{count} clics"
+      views: "Vistes"
+      read: llegeix
+      minutes: mínim
     post_links:
       about: "expandeix més enllaços per a aquesta publicació"
       title:
@@ -2555,6 +2566,7 @@ ca:
     pending_posts:
       label: "Pendent"
       label_with_count: "Pendents (%{count})"
+    posters: "Persones que han publicat"
     original_post: "Publicació original"
     views: "Vistes"
     views_lowercase:
@@ -3230,6 +3242,19 @@ ca:
       config_areas:
         about:
           optional: "(opcional)"
+          saved: "desat!"
+        flags:
+          description: "Descripció"
+          enabled: "Activat?"
+          edit: "Edita"
+          delete: "Suprimeix"
+          delete_confirm: 'Esteu segur que voleu suprimir "%{name}"?'
+          form:
+            save: "Desa"
+            name: "Nom"
+            description: "Descripció"
+            topic: "temes"
+            post: "publicacions"
       plugins:
         title: "Connectors"
         installed: "Connectors instal·lats"
@@ -4145,6 +4170,7 @@ ca:
           add_image_types: "Imatges"
           add_audio_types: "Àudio"
       badges:
+        status: Estat
         title: Insígnies
         new_badge: Insígnia nova
         new: Nou
@@ -4152,8 +4178,6 @@ ca:
         badge: Insígnia
         display_name: Mostra el nom
         description: Descripció
-        long_description: Descripció llarga
-        badge_type: Tipus d'insígnia
         badge_grouping: Grup
         badge_groupings:
           modal_title: Agrupacions d'insígnies

@@ -21,6 +21,7 @@ te:
             kb: కేబీ
             mb: యంబీ
             tb: టీబీ
+      percent: "%{count}%"
       short:
         thousands: "%{number} వేల"
         millions: "%{number}0 ల"
@@ -780,11 +781,12 @@ te:
           prefill:
             title: "సెట్టింగ్‌లతో ముందుగా పూరించండి:"
             gmail: "జి మెయిల్"
+          ssl_modes:
+            none: "ఏదీ లేదు"
           credentials:
             title: "ఆధారాలు"
             smtp_server: "SMTP సర్వర్"
             smtp_port: "SMTP పోర్ట్"
-            smtp_ssl: "SMTP కోసం SSLని ఉపయోగించండి"
             imap_server: "IMAP సర్వర్"
             imap_port: "IMAP పోర్ట్"
             imap_ssl: "IMAP కోసం SSLని ఉపయోగించండి"
@@ -1042,6 +1044,7 @@ te:
       none: "(ఒక ఎంపికను ఎంచుకోండి)"
       required: 'దయచేసి "%{name}" కోసం విలువను నమోదు చేయండి'
       same_as_password: "మీ పాస్‌వర్డ్ ఇతర ఫీల్డ్‌లలో పునరావృతం కాకూడదు."
+      optional: (ఐచ్ఛికం)
     user:
       said: "%{username}:"
       profile: "ప్రొఫైల్"
@@ -1896,6 +1899,12 @@ te:
     modal:
       close: "మూసివేయండి"
       dismiss_error: "లోపాన్ని తీసివేయండి"
+    form_kit:
+      reset: రీసెట్ చేయండి
+      optional: ఐచ్ఛికం
+      errors:
+        required: "అవసరం"
+        invalid_url: "తప్పక చెల్లుబాటు అయ్యే URL అయి ఉండాలి"
     close: "మూసివేయండి"
     logout: "మీరు లాగవుట్ అయ్యారు."
     refresh: "రిఫ్రెష్ చేయండి"
@@ -1989,6 +1998,7 @@ te:
       enable: "అగ్ర ప్రత్యుత్తరాలను చూపించండి"
       disable: "అన్ని పోస్ట్‌లను చూపించండి"
       short_label: "అగ్ర ప్రత్యుత్తరాలు"
+      show_all_label: "అన్నీ చూపండి"
       short_title: "ఈ విషయానికి అగ్ర ప్రత్యుత్తరాలను చూపండి: సంఘం నిర్ణయించిన అత్యంత ఆసక్తికరమైన పోస్ట్‌లు"
     deleted_filter:
       enabled_description: "ఈ విషయం తొలగించిన పోస్టులను కలిగి ఉంది. అవి దాయబడ్డాయి."
@@ -2018,10 +2028,11 @@ te:
       header_title: "స్వాగతం!"
       subheader_title: "మీ ఖాతాను సృష్టిద్దాం"
       disclaimer: "నమోదు చేయడం ద్వారా, మీరు <a href='%{privacy_link}' target='blank'>గోప్యతా విధానం</a> మరియు <a href='%{tos_link}' target='blank'>సేవా నిబంధనలను</a> అంగీకరిస్తున్నారు."
-      title: "మీ ఖాతాను సృష్టించండి"
+      title: "సైన్ అప్"
       failed: "ఏదో తేడా జరిగింది. బహుశా ఈమెయిల్ ఇప్పటికే ఈసైటులో రిజిస్టరు అయి ఉందేమో, సంకేతపదం మర్చిపోయా లంకె ప్రయత్నించు."
       associate: "ఖాతా కలిగి ఉన్నారా? మీ %{provider} ఖాతాను లింక్ చేయడానికి <a href='%{associate_link}'>లాగిన్</a> చేయండి."
       activation_title: "మీ ఖాతాను సక్రియం చేయండి"
+      already_have_account: "ఖాతా కలిగి ఉన్నారా?"
     forgot_password:
       title: "పాస్వర్డ్ రీసెట్"
       action: "నేను నా సంకేతపదాన్ని మర్చిపోయాను"
@@ -2174,9 +2185,6 @@ te:
     conditional_loading_section:
       loading: లోడ్ అవుతోంది…
     category_row:
-      subcategory_count:
-        one: "+ %{count} ఉపవర్గం"
-        other: "+ %{count} ఉపవర్గాలు"
       topic_count:
         one: "ఈ వర్గంలో %{count} విషయం"
         other: "ఈ వర్గంలోని %{count} విషయాలు"
@@ -3736,6 +3744,8 @@ te:
       clicks:
         one: "%{count} క్లిక్"
         other: "%{count} క్లిక్‌లు"
+      views: "వీక్షణలు"
+      read: చదివిన
     post_links:
       about: "ఈ పోస్ట్ కోసం మరిన్ని లింక్‌లను విస్తరించండి"
       title:
@@ -3768,33 +3778,19 @@ te:
     pending_posts:
       label: "పెండింగు"
       label_with_count: "పెండింగ్‌లో ఉన్నాయి (%{count})"
-    posts_likes_MF: |
-      ఈ విషయానికి { count, plural,
-          one {# ప్రత్యుత్తరం ఉంది,}
-        other {# ప్రత్యుత్తరాలు ఉన్నాయి,}
-      } { ratio, select,
-          low {పోస్ట్‌ల కంటే ఎక్కువ లైక్‌లతో}
-          med {పోస్ట్‌ల కంటే చాలా ఎక్కువ లైక్‌లతో}
-         high {పోస్ట్‌ల కంటే చాలా చాలా ఎక్కువ లైక్‌లతో}
-        other {}
-      }
+    posters: "పోస్టర్లు"
     latest_poster_link: "%{username}యొక్క ప్రొఫైల్, తాజా పోస్టర్"
     original_post: "అసలు పోస్ట్"
     views: "వీక్షణలు"
-    sr_views: "వీక్షణాల ద్వారా క్రమబద్ధీకరించండి"
     views_lowercase:
       one: "వీక్షణ"
       other: "వీక్షణలు"
     replies: "ప్రత్యుత్తరాలు"
-    sr_replies: "ప్రత్యుత్తరాల ద్వారా క్రమబద్ధీకరించండి"
     views_long:
       one: "ఈ విషయం %{count} సారి వీక్షించబడింది"
       other: "ఈ విషయం %{count} సార్లు వీక్షించబడింది"
     activity: "కలాపం"
-    sr_activity: "కార్యాచరణ ఆధారంగా క్రమబద్ధీకరించండి"
     likes: "ఇష్టాలు"
-    sr_likes: "ఇష్టాల ద్వారా క్రమబద్ధీకరించండి"
-    sr_op_likes: "అసలు పోస్ట్ ఇష్టాల ద్వారా క్రమబద్ధీకరించండి"
     likes_lowercase:
       one: "ఇష్టం"
       other: "ఇష్టాలు"
@@ -4235,8 +4231,8 @@ te:
       no_read_topics_body: "మీరు చర్చలను చదవడం ప్రారంభించిన తర్వాత, మీకు ఇక్కడ జాబితా కనిపిస్తుంది. చదవడం ప్రారంభించడానికి, <a href='%{topUrl}'>అగ్ర</a> లేదా <a href='%{categoriesUrl}'>వర్గాల్లో</a> లేదా కీలకపదం కోసం శోధించండి %{searchIcon}."
     no_group_messages_title: "సమూహ సందేశాలు ఏవీ కనుగొనబడలేదు"
     topic_entrance:
-      sr_jump_top_button: "మొదటి పోస్ట్‌కి వెళ్లండి"
-      sr_jump_bottom_button: "చివరి పోస్ట్‌కి వెళ్లండి"
+      jump_top_button_title: "మొదటి పోస్ట్‌కి వెళ్లండి"
+      jump_bottom_button_title: "చివరి పోస్ట్‌కి వెళ్లండి"
     fullscreen_table:
       expand_btn: "పట్టికను విస్తరించండి"
       view_table: "పట్టికను వీక్షించండి"
@@ -4378,6 +4374,7 @@ te:
       panels:
         forum:
           label: ఫోరం
+      back_to_forum: "తిరిగి ఫోరమ్కి"
       clear_filter: "ఫిల్టర్‌ని క్లియర్ చేయండి"
       no_results:
         title: "ఫలితాలు లేవు"
@@ -4486,7 +4483,6 @@ te:
     admin:
       title: "డిస్కోర్స్ అడ్మిన్"
       moderator: "నిర్వాహకుడు"
-      back_to_forum: "తిరిగి ఫోరమ్కి"
       filter_reports: నివేదికలను ఫిల్టర్ చేయండి
       tags:
         remove_muted_tags_from_latest:
@@ -4965,6 +4961,19 @@ te:
           city_for_disputes: "వివాదాలకు నగరం"
           optional: "(ఐచ్ఛికం)"
           update: "నవీకరించండి"
+          saved: "సేవ్ చేయబడింది!"
+        flags:
+          description: "వివరణ"
+          enabled: "ప్రారంభించబడిందా?"
+          edit: "సవరించండి"
+          delete: "తొలగించండి"
+          delete_confirm: 'మీరు "%{name}"ని ఖచ్చితంగా తొలగించాలనుకుంటున్నారా?'
+          form:
+            save: "సేవ్ చేయండి"
+            name: "పేరు"
+            description: "వివరణ"
+            topic: "విషయాలు"
+            post: "టపాలు"
       plugins:
         title: "చొప్పింతలు"
         installed: "ప్రతిష్టించిన చొప్పింతలు"
@@ -6204,6 +6213,7 @@ te:
           add_types_title: "పొడిగింపులను అనుమతించండి %{types}"
           add_types_toast: "%{types} ఫైల్ రకాలు జోడించబడ్డాయి"
       badges:
+        status: స్థితి
         title: బ్యాడ్జీలు
         new_badge: కొత్త బ్యాడ్జీ
         new: కొత్త
@@ -6211,8 +6221,6 @@ te:
         badge: బ్యాడ్జ్
         display_name: ప్రదర్శన పేరు
         description: వివరణ
-        long_description: సుదీర్ఘ వివరణ
-        badge_type: బ్యాడ్జ్ రకం
         badge_grouping: సమూహం
         badge_groupings:
           modal_title: బ్యాడ్జ్ సమూహాలు
@@ -6242,7 +6250,6 @@ te:
         image: చిత్రం
         graphic: గ్రాఫిక్
         icon_help: "Font Awesome చిహ్నం పేరును నమోదు చేయండి (సాధారణ చిహ్నాల కోసం 'far-' మరియు బ్రాండ్ చిహ్నాల కోసం 'fab-' ఉపసర్గ ఉపయోగించండి)"
-        image_help: "రెండూ సెట్ చేయబడితే, చిత్రాన్ని అప్‌లోడ్ చేయడం ఐకాన్ ఫీల్డ్‌ను భర్తీ చేస్తుంది."
         select_an_icon: "చిహ్నాన్ని ఎంచుకోండి"
         upload_an_image: "చిత్రాన్ని అప్‌లోడ్ చేయండి"
         read_only_setting_help: "వచనాన్ని అనుకూలీకరించండి"

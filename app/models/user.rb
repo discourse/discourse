@@ -158,7 +158,9 @@ class User < ActiveRecord::Base
             unless: :should_skip_user_fields_validation?
 
   validates_associated :primary_email,
-                       message: ->(_, user_email) { user_email[:value]&.errors&.[](:email)&.first }
+                       message: ->(_, user_email) do
+                         user_email[:value]&.errors&.[](:email)&.first.to_s
+                       end
 
   after_initialize :add_trust_level
 
@@ -250,6 +252,9 @@ class User < ActiveRecord::Base
 
   # Cache for user custom fields. Currently it is used to display quick search results
   attr_accessor :custom_data
+
+  # Information if user was authenticated with OAuth
+  attr_accessor :authenticated_with_oauth
 
   scope :with_email,
         ->(email) { joins(:user_emails).where("lower(user_emails.email) IN (?)", email) }
@@ -602,8 +607,20 @@ class User < ActiveRecord::Base
   end
 
   def invited_by
+    # this is unfortunate, but when an invite is redeemed,
+    # any user created by the invite is created *after*
+    # the invite's redeemed_at
+    invite_redemption_delay = 5.seconds
     used_invite =
-      Invite.with_deleted.joins(:invited_users).where("invited_users.user_id = ?", self.id).first
+      Invite
+        .with_deleted
+        .joins(:invited_users)
+        .where(
+          "invited_users.user_id = ? AND invited_users.redeemed_at <= ?",
+          self.id,
+          self.created_at + invite_redemption_delay,
+        )
+        .first
     used_invite.try(:invited_by)
   end
 
@@ -1211,7 +1228,7 @@ class User < ActiveRecord::Base
   def flags_given_count
     PostAction.where(
       user_id: id,
-      post_action_type_id: PostActionType.flag_types_without_custom.values,
+      post_action_type_id: PostActionType.flag_types_without_additional_message.values,
     ).count
   end
 
@@ -1222,7 +1239,10 @@ class User < ActiveRecord::Base
   def flags_received_count
     posts
       .includes(:post_actions)
-      .where("post_actions.post_action_type_id" => PostActionType.flag_types_without_custom.values)
+      .where(
+        "post_actions.post_action_type_id" =>
+          PostActionType.flag_types_without_additional_message.values,
+      )
       .count
   end
 
@@ -2035,7 +2055,7 @@ class User < ActiveRecord::Base
         end
     end
 
-    TagUser.insert_all!(values) if values.present?
+    TagUser.insert_all(values) if values.present?
   end
 
   def self.purge_unactivated

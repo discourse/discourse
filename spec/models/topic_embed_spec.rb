@@ -371,6 +371,18 @@ RSpec.describe TopicEmbed do
         imported_page = TopicEmbed.import(user, url, title, contents, tags: tags)
         expect(imported_page.topic.tags).to match_array([tag1, tag2])
       end
+
+      it "does not update tags if tags are nil or unspecified" do
+        imported_page = TopicEmbed.import(user, url, title, contents)
+        expect(imported_page.topic.tags).to match_array([tag1])
+        imported_page = TopicEmbed.import(user, url, title, contents, tags: nil)
+        expect(imported_page.topic.tags).to match_array([tag1])
+      end
+
+      it "does update tags if tags are empty" do
+        imported_page = TopicEmbed.import(user, url, title, contents, tags: [])
+        expect(imported_page.topic.tags).to match_array([])
+      end
     end
 
     context "with specified user and tags" do

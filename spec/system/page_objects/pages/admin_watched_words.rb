@@ -20,6 +20,10 @@ module PageObjects
       def has_word?
         has_css?(".watched-words-detail .show-words-checkbox")
       end
+
+      def has_error?(error)
+        has_css?(".dialog-container .dialog-body", text: error)
+      end
     end
   end
 end

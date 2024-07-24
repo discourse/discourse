@@ -946,7 +946,7 @@ RSpec.describe SessionController do
           get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
 
           expect(response.status).to eq(403)
-          expect(response.parsed_body).to include(I18n.t("discourse_connect.account_not_approved"))
+          expect(response.body).to include(I18n.t("discourse_connect.account_not_approved"))
         end.to change { User.count }.by(1)
 
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
@@ -1124,7 +1124,7 @@ RSpec.describe SessionController do
         login_with_sso_and_invite
 
         expect(response.status).to eq(403)
-        expect(response.parsed_body).to include(I18n.t("discourse_connect.account_not_approved"))
+        expect(response.body).to include(I18n.t("discourse_connect.account_not_approved"))
         expect(invite.reload.redeemed?).to eq(true)
 
         user = User.find_by_email("bob@bob.com")
@@ -2010,6 +2010,7 @@ RSpec.describe SessionController do
 
           expect(session[:current_user_id]).to eq(user.id)
           expect(user.user_auth_tokens.count).to eq(1)
+          expect(user.user_auth_tokens.last.authenticated_with_oauth).to be false
           unhashed_token = decrypt_auth_cookie(cookies[:_t])[:token]
           expect(UserAuthToken.hash_token(unhashed_token)).to eq(
             user.user_auth_tokens.first.auth_token,

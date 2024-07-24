@@ -1144,6 +1144,8 @@ lt:
     web_crawlers:
       labels:
         page_views: "Puslapio peržiūros"
+    web_hook_events_daily_aggregate:
+      xaxis: "Diena"
     suspicious_logins:
       title: "Įtartini prisijungimai"
       labels:
@@ -1191,10 +1193,15 @@ lt:
       labels:
         user: Narys
         qtt_like: Gauta patikimų
+    topic_view_stats:
+      labels:
+        topic: Tema
+        logged_in_views: Prisijungęs
+        anon_views: Anonimas
+        total_views: Viso
   dashboard:
     problem:
       rails_env: "Jūsų serveris veikia %{env} režimu."
-      out_of_date_themes: "Galimi naujiniai šioms temoms:"
   site_settings:
     disabled: "uždrausta"
     display_local_time_in_user_card: "Rodyti vietinį laiką pagal vartotojo laiko juostą, kai atidaroma vartotojo kortelė."

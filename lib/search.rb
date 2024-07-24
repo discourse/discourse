@@ -306,6 +306,7 @@ class Search
           term: @clean_term,
           search_type: @opts[:search_type],
           ip_address: @opts[:ip_address],
+          user_agent: @opts[:user_agent],
           user_id: @opts[:user_id],
         )
       @results.search_log_id = search_log_id unless status == :error
@@ -935,6 +936,9 @@ class Search
           end
 
           nil
+        elsif word =~ /\Ainclude:(invisible|unlisted)\z/i
+          @include_invisible = true if @guardian.can_see_unlisted_topics?
+          nil
         else
           found ? nil : word
         end
@@ -1112,7 +1116,7 @@ class Search
     end
 
     is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
-    posts = posts.where("topics.visible") unless is_topic_search
+    posts = posts.where("topics.visible") unless is_topic_search || @include_invisible
 
     if type_filter == "private_messages" || (is_topic_search && @search_context.private_message?)
       posts =

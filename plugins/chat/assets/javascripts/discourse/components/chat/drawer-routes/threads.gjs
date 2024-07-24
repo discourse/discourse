@@ -10,22 +10,24 @@ export default class ChatDrawerRoutesThreads extends Component {
   @service chatStateManager;
 
   <template>
-    <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
-      <navbar.Title @title={{i18n "chat.heading"}} />
-      <navbar.Actions as |action|>
-        <action.ThreadsListButton />
-        <action.ToggleDrawerButton />
-        <action.FullPageButton />
-        <action.CloseDrawerButton />
-      </navbar.Actions>
-    </Navbar>
+    <div class="c-drawer-routes --threads">
+      <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
+        <navbar.Title @title={{i18n "chat.heading"}} />
+        <navbar.Actions as |action|>
+          <action.ThreadsListButton />
+          <action.ToggleDrawerButton />
+          <action.FullPageButton />
+          <action.CloseDrawerButton />
+        </navbar.Actions>
+      </Navbar>
 
-    {{#if this.chatStateManager.isDrawerExpanded}}
-      <div class="chat-drawer-content">
-        <UserThreads />
-      </div>
-    {{/if}}
+      {{#if this.chatStateManager.isDrawerExpanded}}
+        <div class="chat-drawer-content">
+          <UserThreads />
+        </div>
+      {{/if}}
 
-    <ChatFooter />
+      <ChatFooter />
+    </div>
   </template>
 }

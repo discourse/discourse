@@ -154,33 +154,36 @@ module SiteSettingExtension
   end
 
   def client_settings_json
-    Discourse
-      .cache
-      .fetch(SiteSettingExtension.client_settings_cache_key, expires_in: 30.minutes) do
-        client_settings_json_uncached
-      end
+    key = SiteSettingExtension.client_settings_cache_key
+    json = Discourse.cache.fetch(key, expires_in: 30.minutes) { client_settings_json_uncached }
+    Rails.logger.error("Nil client_settings_json from the cache for '#{key}'") if json.nil?
+    json || ""
+  rescue => e
+    Rails.logger.error("Error while retrieving client_settings_json: #{e.message}")
+    ""
   end
 
   def client_settings_json_uncached
     MultiJson.dump(
       Hash[
-        *@client_settings
-          .map do |name|
-            value =
-              if deprecated_settings.include?(name.to_s)
-                public_send(name, warn: false)
-              else
-                public_send(name)
-              end
-            type = type_supervisor.get_type(name)
-            value = value.to_s if type == :upload
-            value = value.map(&:to_s).join("|") if type == :uploaded_image_list
+        *@client_settings.flat_map do |name|
+          value =
+            if deprecated_settings.include?(name.to_s)
+              public_send(name, warn: false)
+            else
+              public_send(name)
+            end
+          type = type_supervisor.get_type(name)
+          value = value.to_s if type == :upload
+          value = value.map(&:to_s).join("|") if type == :uploaded_image_list
 
-            [name, value]
-          end
-          .flatten
+          [name, value]
+        end
       ],
     )
+  rescue => e
+    Rails.logger.error("Error while generating client_settings_json_uncached: #{e.message}")
+    nil
   end
 
   # Retrieve all settings
@@ -190,7 +193,8 @@ module SiteSettingExtension
     only_overridden: false,
     filter_categories: nil,
     filter_plugin: nil,
-    filter_names: nil
+    filter_names: nil,
+    filter_allowed_hidden: nil
   )
     locale_setting_hash = {
       setting: "default_locale",
@@ -211,7 +215,15 @@ module SiteSettingExtension
       .reject do |setting_name, _|
         plugins[name] && !Discourse.plugins_by_name[plugins[name]].configurable?
       end
-      .reject { |setting_name, _| !include_hidden && hidden_settings.include?(setting_name) }
+      .select do |setting_name, _|
+        is_hidden = hidden_settings.include?(setting_name)
+
+        next true if !is_hidden
+        next false if !include_hidden
+        next true if filter_allowed_hidden.nil?
+
+        filter_allowed_hidden.include?(setting_name)
+      end
       .select do |setting_name, _|
         if filter_categories && filter_categories.any?
           filter_categories.include?(categories[setting_name])
@@ -274,7 +286,7 @@ module SiteSettingExtension
   end
 
   def description(setting)
-    I18n.t("site_settings.#{setting}", base_path: Discourse.base_path)
+    I18n.t("site_settings.#{setting}", base_path: Discourse.base_path, default: "")
   end
 
   def keywords(setting)

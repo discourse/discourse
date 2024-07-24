@@ -73,6 +73,28 @@ RSpec.describe "Glimmer Header", type: :system do
     expect(page).not_to have_selector(".user-menu.revamped")
   end
 
+  it "closes menu-panel when keyboard focus leaves it" do
+    sign_in(current_user)
+    visit "/"
+    find(".header-dropdown-toggle.current-user").click
+    find("##{header.active_element_id}").send_keys(%i[shift tab])
+    expect(page).not_to have_selector(".user-menu.revamped")
+  end
+
+  it "automatically focuses the first link in the hamburger panel" do
+    SiteSetting.navigation_menu = "header dropdown"
+
+    visit "/"
+
+    find("#toggle-hamburger-menu").click
+    expect(page).to have_selector(".panel-body")
+    first_link = find(".panel-body a", match: :first)
+    first_link_href = first_link[:href]
+    focused_element_href = evaluate_script("document.activeElement.href")
+
+    expect(focused_element_href).to eq(first_link_href)
+  end
+
   it "sets header's height css property" do
     sign_in(current_user)
     visit "/"
@@ -235,6 +257,48 @@ RSpec.describe "Glimmer Header", type: :system do
       expect(search).to have_search_menu_visible
       header.search_in_topic_keyboard_shortcut
       expect(search).to have_no_search_menu_visible
+    end
+  end
+
+  describe "mobile topic-info" do
+    fab!(:topic)
+    fab!(:posts) { Fabricate.times(21, :post, topic: topic) }
+
+    it "only shows when scrolled down", mobile: true do
+      visit "/t/#{topic.slug}/#{topic.id}"
+
+      expect(page).to have_css("#topic-title") # Main topic title
+      expect(page).to have_css("header.d-header .auth-buttons .login-button") # header buttons visible when no topic-info in header
+
+      page.execute_script("document.querySelector('#post_4').scrollIntoView()")
+
+      expect(page).not_to have_css("header.d-header .auth-buttons .login-button") # No header buttons
+      expect(page).to have_css("header.d-header .title-wrapper .topic-link") # Title is shown in header
+
+      page.execute_script("window.scrollTo(0, 0)")
+      expect(page).to have_css("#topic-title") # Main topic title
+      expect(page).to have_css("header.d-header .auth-buttons .login-button") # header buttons visible when no topic-info in header
+    end
+
+    it "shows when navigating direct to a later post", mobile: true do
+      visit "/t/#{topic.slug}/#{topic.id}/4"
+
+      expect(page).not_to have_css("header.d-header .auth-buttons .login-button") # No header buttons
+      expect(page).to have_css("header.d-header .title-wrapper .topic-link") # Title is shown in header
+    end
+
+    it "shows when jumping from OP to much later post", mobile: true do
+      visit "/t/#{topic.slug}/#{topic.id}"
+
+      expect(page).to have_css("#topic-title") # Main topic title
+      expect(page).to have_css("header.d-header .auth-buttons .login-button") # header buttons visible when no topic-info in header
+
+      page.execute_script("Discourse.visit('/t/#{topic.slug}/#{topic.id}/21');")
+
+      expect(page).to have_css("#post_21")
+
+      expect(page).not_to have_css("header.d-header .auth-buttons .login-button") # No header buttons
+      expect(page).to have_css("header.d-header .title-wrapper .topic-link") # Title is shown in header
     end
   end
 end

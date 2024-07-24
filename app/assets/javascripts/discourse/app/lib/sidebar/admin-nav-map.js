@@ -103,12 +103,6 @@ export const ADMIN_NAV_MAP = [
         label: "admin.community.sidebar_link.legal",
         icon: "gavel",
       },
-      {
-        name: "admin_moderation_flags",
-        route: "adminConfig.flags",
-        label: "admin.community.sidebar_link.moderation_flags",
-        icon: "flag",
-      },
     ],
   },
   {

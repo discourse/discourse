@@ -27,6 +27,7 @@ export default class SpreadsheetEditor extends Component {
   spreadsheet = null;
   defaultColWidth = 150;
   isEditingTable = !!this.args.model.tableTokens;
+  alignments = null;
 
   constructor() {
     super(...arguments);
@@ -89,7 +90,10 @@ export default class SpreadsheetEditor extends Component {
 
   @action
   insertTable() {
-    const updatedHeaders = this.spreadsheet.getHeaders().split(","); // keys
+    const updatedHeaders = this.spreadsheet
+      .getHeaders()
+      .split(",")
+      .map((c) => c.trim()); // keys
     const updatedData = this.spreadsheet.getData(); // values
     const markdownTable = this.buildTableMarkdown(updatedHeaders, updatedData);
 
@@ -174,6 +178,25 @@ export default class SpreadsheetEditor extends Component {
       .map((t) => t.content);
   }
 
+  extractTableAlignments(data) {
+    return data
+      .flat()
+      .filter((t) => t.type === "td_open")
+      .map((t) => {
+        for (const attr of t.attrs?.flat() ?? []) {
+          switch (attr) {
+            case "text-align:left":
+              return "left";
+            case "text-align:center":
+              return "center";
+            case "text-align:right":
+              return "right";
+          }
+        }
+        return null; // default
+      });
+  }
+
   buildPopulatedTable(tableTokens) {
     const contentRows = tokenRange(tableTokens, "tr_open", "tr_close");
     const rows = [];
@@ -185,18 +208,24 @@ export default class SpreadsheetEditor extends Component {
         // headings
         headings = this.extractTableContent(row).map((heading) => {
           return {
-            title: heading,
+            title: heading || " ",
             width: Math.max(
               heading.length * rowWidthFactor,
               this.defaultColWidth
             ),
-            align: "left",
           };
         });
       } else {
+        if (this.alignments == null) {
+          this.alignments = this.extractTableAlignments(row);
+        }
         // rows:
         rows.push(this.extractTableContent(row));
       }
+    });
+
+    headings.forEach((h, i) => {
+      h.align = this.alignments?.[i] ?? "left";
     });
 
     return this.buildSpreadsheet(rows, headings);
@@ -276,7 +305,7 @@ export default class SpreadsheetEditor extends Component {
       table.push(result);
     });
 
-    return arrayToTable(table, headers);
+    return arrayToTable(table, headers, "col", this.alignments);
   }
 
   localeMapping() {

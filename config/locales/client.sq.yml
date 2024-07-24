@@ -373,6 +373,8 @@ sq:
         email:
           title: "Email"
           last_updated_by: "nga"
+          ssl_modes:
+            none: "Asnjë"
           credentials:
             username: "Emri i përdoruesit"
             password: "Fjalëkalimi"
@@ -893,6 +895,10 @@ sq:
         fixed: "Ngarko faqen"
     modal:
       close: "mbylle"
+    form_kit:
+      reset: Rivendos
+      errors:
+        required: "E nevojshme"
     close: "Mbyll"
     logout: "Ju jeni shkëputur!"
     refresh: "Rifresko"
@@ -932,6 +938,7 @@ sq:
     search_hint: "emri i anëtarit, email ose adresë IP"
     create_account:
       header_title: "Mirë se vini!"
+      title: "Regjistrohu"
       failed: "Diçka nuk funksionoi siç duhet, mbase kjo adresë emaili është e regjistruar në faqe. Provoni butonin e fjalëkalimit të humbur. "
     forgot_password:
       title: "Rivendos fjalëkalimin"
@@ -1635,6 +1642,9 @@ sq:
       clicks:
         one: "%{count} klik"
         other: "%{count} klikime"
+      views: "Shikimet"
+      read: lexuar
+      minutes: minimumi
     post_links:
       about: "trego më shumë lidhje për këtë postim"
       title:
@@ -2141,6 +2151,20 @@ sq:
           screened_urls: "Kontroll URL-sh"
           security: "Siguria"
           spam: "Spam"
+      config_areas:
+        about:
+          saved: "u ruajt!"
+        flags:
+          description: "Përshkrimi"
+          enabled: "Aktivizuar?"
+          edit: "Redakto"
+          delete: "Fshij"
+          form:
+            save: "Ruaj"
+            name: "Emri"
+            description: "Përshkrimi"
+            topic: "topics"
+            post: "postime"
       plugins:
         title: "Pluginet"
         installed: "Pluginet e instaluar"
@@ -2766,8 +2790,6 @@ sq:
         badge: Stemë
         display_name: Emri Shfaqur
         description: Përshkrimi
-        long_description: Përshkrim i gjatë
-        badge_type: Lloj Steme
         badge_grouping: Grupi
         badge_groupings:
           modal_title: Grupime Steme

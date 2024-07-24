@@ -133,6 +133,7 @@ module ChatSDK
           enforce_membership: enforce_membership,
           force_thread: force_thread,
           strip_whitespaces: strip_whitespaces,
+          created_by_sdk: true,
         ) do
           on_model_not_found(:channel) { raise "Couldn't find channel with id: `#{channel_id}`" }
           on_model_not_found(:membership) do

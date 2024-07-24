@@ -18,6 +18,21 @@ RSpec.describe S3Inventory do
     expect(output).to eq("Failed to list inventory from S3\n")
   end
 
+  it "should forward custom s3 options to the S3Helper when initializing" do
+    inventory =
+      S3Inventory.new(
+        :upload,
+        s3_inventory_bucket: "some-inventory-bucket",
+        s3_options: {
+          region: "us-west-1",
+        },
+      )
+
+    inventory.s3_helper.stub_client_responses!
+
+    expect(inventory.s3_helper.s3_client.config.region).to eq("us-west-1")
+  end
+
   describe "verifying uploads" do
     before do
       freeze_time
@@ -154,7 +169,9 @@ RSpec.describe S3Inventory do
       capture_stdout { inventory.backfill_etags_and_list_missing }
     end
 
-    it "should not run if inventory files are not at least #{described_class::WAIT_AFTER_RESTORE_DAYS.days} days older than the last restore date" do
+    it "should not run if inventory files are not at least #{described_class::WAIT_AFTER_RESTORE_DAYS.days} days older than the last restore date and reset stats count" do
+      Discourse.stats.set("missing_s3_uploads", 2)
+
       inventory.s3_client.stub_responses(
         :list_objects_v2,
         {
@@ -171,6 +188,8 @@ RSpec.describe S3Inventory do
       inventory.s3_client.expects(:get_object).never
 
       capture_stdout { inventory.backfill_etags_and_list_missing }
+
+      expect(Discourse.stats.get("missing_s3_uploads")).to eq(0)
     end
   end
 

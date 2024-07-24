@@ -238,12 +238,9 @@ RSpec.describe SearchIndexer do
       Jobs.run_immediately!
       SiteSetting.max_image_width = 1
 
-      stub_request(:get, "https://1.2.3.4/some.png").to_return(
-        status: 200,
-        body: file_from_fixtures("logo.png").read,
-      )
-
       src = "https://meta.discourse.org/some.png"
+
+      stub_request(:get, src).to_return(status: 200, body: file_from_fixtures("logo.png").read)
 
       post = Fabricate(:post, raw: <<~RAW)
       Let me see how I can fix this image

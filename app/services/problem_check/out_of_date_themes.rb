@@ -11,19 +11,23 @@ class ProblemCheck::OutOfDateThemes < ProblemCheck
 
   private
 
+  def translation_data
+    { themes_list: }
+  end
+
   def out_of_date_themes
     @out_of_date_themes ||= RemoteTheme.out_of_date_themes
   end
 
-  def message
-    "#{I18n.t("dashboard.problem.out_of_date_themes")}<ul>#{themes_list}</ul>"
-  end
-
   def themes_list
-    out_of_date_themes
-      .map do |name, id|
-        "<li><a href=\"#{Discourse.base_path}/admin/customize/themes/#{id}\">#{CGI.escapeHTML(name)}</a></li>"
-      end
-      .join("\n")
+    <<~HTML.squish
+      <ul>#{
+      out_of_date_themes
+        .map do |name, id|
+          "<li><a href=\"#{Discourse.base_path}/admin/customize/themes/#{id}\">#{CGI.escapeHTML(name)}</a></li>"
+        end
+        .join("\n")
+    }</ul>
+    HTML
   end
 end

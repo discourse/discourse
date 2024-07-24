@@ -11,6 +11,7 @@ acceptance("User Card", function (needs) {
 
   test("opens and closes properly", async function (assert) {
     await visit("/t/internationalization-localization/280");
+    await click(".topic-map__users-trigger");
     await click('a[data-user-card="charlie"]');
 
     assert.dom(".user-card .card-content").exists();
@@ -32,6 +33,7 @@ acceptance("User Card - Show Local Time", function (needs) {
     currentUser.user_option.timezone = "Australia/Brisbane";
 
     await visit("/t/internationalization-localization/280");
+    await click(".topic-map__users-trigger");
     await click('a[data-user-card="charlie"]');
 
     assert
@@ -57,9 +59,9 @@ acceptance(
       await click('a[data-user-card="eviltrout"]');
 
       assert
-        .dom(".user-card h1.username .name-username-wrapper")
+        .dom(".user-card .username .name-username-wrapper")
         .hasText("eviltrout");
-      assert.dom(".user-card h2.full-name").hasText("Robin Ward");
+      assert.dom(".user-card .full-name").hasText("Robin Ward");
     });
   }
 );
@@ -79,9 +81,9 @@ acceptance(
       await click('a[data-user-card="eviltrout"]');
 
       assert
-        .dom(".user-card h1.full-name .name-username-wrapper")
+        .dom(".user-card .full-name .name-username-wrapper")
         .hasText("Robin Ward");
-      assert.dom(".user-card h2.username").hasText("eviltrout");
+      assert.dom(".user-card .username").hasText("eviltrout");
     });
   }
 );
@@ -98,18 +100,22 @@ acceptance("User Card - User Status", function (needs) {
     this.siteSettings.enable_user_status = true;
 
     await visit("/t/internationalization-localization/280");
+
+    await click(".topic-map__users-trigger");
     await click('a[data-user-card="charlie"]');
 
-    assert.dom(".user-card h3.user-status").exists();
+    assert.dom(".user-card .user-status").exists();
   });
 
   test("doesn't show user status if disabled", async function (assert) {
     this.siteSettings.enable_user_status = false;
 
     await visit("/t/internationalization-localization/280");
+
+    await click(".topic-map__users-trigger");
     await click('a[data-user-card="charlie"]');
 
-    assert.dom(".user-card h3.user-status").doesNotExist();
+    assert.dom(".user-card .user-status").doesNotExist();
   });
 });
 

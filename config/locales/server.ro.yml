@@ -845,6 +845,8 @@ ro:
     web_crawlers:
       labels:
         page_views: "Vizualizări"
+    web_hook_events_daily_aggregate:
+      xaxis: "Zi"
     suspicious_logins:
       labels:
         user: Utilizator
@@ -868,6 +870,12 @@ ro:
       labels:
         user: Utilizator
         qtt_like: Aprecieri primite
+    topic_view_stats:
+      labels:
+        topic: Discuție
+        logged_in_views: Autentificați
+        anon_views: Anonimi
+        total_views: Total
   dashboard:
     problem:
       twitter_login: 'Conectarea la Twitter pare să nu funcționeze în acest moment. Verifică datele de conectare în <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">setările site-ului</a>.'
@@ -1183,7 +1191,6 @@ ro:
     shared_drafts_allowed_groups: "Permit utilizatorilor din aceste grupuri să vadă și să editeze ciorne comune."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Afișează un meniu de acces rapid pentru semne de carte în articole și un nou modal reproiectat"
     glimmer_header_mode: "Controlează dacă se utilizează noua implementare a antetului cu efect de „licărire”. Valoarea implicită este „auto”, care va fi activată automat odată ce toate temele și modulele sunt gata. https://meta.discourse.org/t/296544"
-    experimental_topic_bulk_actions_enabled_groups: "EXPERIMENTAL: Activează noua listă derulantă de acțiuni în masă."
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
     errors:
       invalid_email: "Adresă de email invalidă."

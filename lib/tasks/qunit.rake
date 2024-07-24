@@ -55,7 +55,6 @@ task "qunit:test", %i[timeout qunit_path filter] do |_, args|
 
   begin
     success = true
-    test_path = "#{Rails.root}/test"
     qunit_path = args[:qunit_path]
     filter = args[:filter]
 

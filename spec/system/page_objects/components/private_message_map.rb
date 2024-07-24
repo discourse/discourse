@@ -3,7 +3,8 @@
 module PageObjects
   module Components
     class PrivateMessageMap < PageObjects::Components::Base
-      PRIVATE_MESSAGE_MAP_KLASS = ".private-message-map"
+      PRIVATE_MESSAGE_MAP_KLASS = ".topic-map__private-message-map"
+
       def is_visible?
         has_css?(PRIVATE_MESSAGE_MAP_KLASS)
       end

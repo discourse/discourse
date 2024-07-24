@@ -54,6 +54,8 @@ fa_IR:
         votes: "%{count} رای"
         percentage: "درصد"
         count: "تعداد"
+      ranked_choice:
+        none: "هیچ کدام"
       options:
         label: "تنظیمات"
       error_while_toggling_status: "متاسفانه در تغییر وضعیت این نظرسنجی، خطایی رخ داده است."

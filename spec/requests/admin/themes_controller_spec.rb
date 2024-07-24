@@ -222,7 +222,7 @@ RSpec.describe Admin::ThemesController do
       end
 
       it "can import a theme from Git" do
-        RemoteTheme.stubs(:import_theme)
+        RemoteTheme.stubs(:import_theme).returns(Fabricate(:theme))
         post "/admin/themes/import.json",
              params: {
                remote: "    https://github.com/discourse/discourse-brand-header.git       ",
@@ -1076,12 +1076,11 @@ RSpec.describe Admin::ThemesController do
       end
 
       it "should return the right error when value used to update a theme setting of `objects` typed is invalid" do
-        field =
-          theme.set_field(
-            target: :settings,
-            name: "yaml",
-            value: File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml"),
-          )
+        theme.set_field(
+          target: :settings,
+          name: "yaml",
+          value: File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml"),
+        )
 
         theme.save!
 
@@ -1101,12 +1100,11 @@ RSpec.describe Admin::ThemesController do
       end
 
       it "should be able to update a theme setting of `objects` typed" do
-        field =
-          theme.set_field(
-            target: :settings,
-            name: "yaml",
-            value: File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml"),
-          )
+        theme.set_field(
+          target: :settings,
+          name: "yaml",
+          value: File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml"),
+        )
 
         theme.save!
 
@@ -1354,7 +1352,7 @@ RSpec.describe Admin::ThemesController do
 
     let(:theme_setting) do
       yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml")
-      field = theme.set_field(target: :settings, name: "yaml", value: yaml)
+      theme.set_field(target: :settings, name: "yaml", value: yaml)
       theme.save!
       theme.settings
     end

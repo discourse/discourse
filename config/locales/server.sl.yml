@@ -699,9 +699,11 @@ sl:
       labels:
         user: Uporabnik
         qtt_like: Všečkov prejetih
-  dashboard:
-    problem:
-      out_of_date_themes: "Posodobitve so na voljo za naslednje prilagoditve:"
+    topic_view_stats:
+      labels:
+        topic: Tema
+        anon_views: Anonimni
+        total_views: Skupaj
   site_settings:
     disabled: "onemogočeno"
     allow_uncategorized_topics: "Dovoli ustvarjanje tem brez kategorije. OPOZORILO: Če obstajajo nerazvrščene teme, jih morate ponovno razvrstiti, preden izklopite to nastavitev."

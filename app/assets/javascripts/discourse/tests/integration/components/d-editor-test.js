@@ -5,7 +5,7 @@ import {
   focus,
   render,
   settled,
-  triggerKeyEvent,
+  triggerEvent,
 } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
@@ -983,13 +983,30 @@ third line`
     }
   );
 
+  // Smart list functionality relies on beforeinput, which QUnit does not send with
+  // `typeIn` synthetic events. We need to send it ourselves manually along with `input`.
+  // Not ideal, but gets the job done.
+  //
+  // c.f. https://github.com/emberjs/ember-test-helpers/blob/master/API.md#typein and
+  // https://github.com/emberjs/ember-test-helpers/issues/1336
+  async function triggerEnter(textarea) {
+    await triggerEvent(textarea, "beforeinput", {
+      inputType: "insertLineBreak",
+    });
+    await triggerEvent(textarea, "input", {
+      inputType: "insertText",
+      data: "\n",
+    });
+  }
+
   testCase(
     "smart lists - pressing enter on a line with a list item starting with * creates a list item on the next line",
     async function (assert, textarea) {
       const initialValue = "* first item in list\n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      await triggerKeyEvent(textarea, "keyup", "Enter");
+      await triggerEnter(textarea);
+
       assert.strictEqual(this.value, initialValue + "* ");
     }
   );
@@ -1000,7 +1017,7 @@ third line`
       const initialValue = "- first item in list\n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      await triggerKeyEvent(textarea, "keyup", "Enter");
+      await triggerEnter(textarea);
       assert.strictEqual(this.value, initialValue + "- ");
     }
   );
@@ -1011,7 +1028,7 @@ third line`
       const initialValue = "1. first item in list\n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      await triggerKeyEvent(textarea, "keyup", "Enter");
+      await triggerEnter(textarea);
       assert.strictEqual(this.value, initialValue + "2. ");
     }
   );
@@ -1022,7 +1039,7 @@ third line`
       const initialValue = "* first item in list\n\n* second item in list";
       this.set("value", initialValue);
       setCaretPosition(textarea, 21);
-      await triggerKeyEvent(textarea, "keyup", "Enter");
+      await triggerEnter(textarea);
       assert.strictEqual(
         this.value,
         "* first item in list\n* \n* second item in list"
@@ -1036,7 +1053,7 @@ third line`
       const initialValue = "1. first item in list\n\n2. second item in list";
       this.set("value", initialValue);
       setCaretPosition(textarea, 22);
-      await triggerKeyEvent(textarea, "keyup", "Enter");
+      await triggerEnter(textarea);
       assert.strictEqual(
         this.value,
         "1. first item in list\n2. \n3. second item in list"
@@ -1050,7 +1067,7 @@ third line`
       const initialValue = "* first item in list with empty line\n* \n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
-      await triggerKeyEvent(textarea, "keyup", "Enter");
+      await triggerEnter(textarea);
       assert.strictEqual(this.value, "* first item in list with empty line\n");
     }
   );

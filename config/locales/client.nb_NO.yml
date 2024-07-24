@@ -21,6 +21,7 @@ nb_NO:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -663,11 +664,12 @@ nb_NO:
           imap_mailbox_not_selected: "Du må velge en Mailbox for denne IMAP-konfigurasjonen, eller ingen e-postbokser vil bli synkronisert!"
           prefill:
             title: "Forhåndsfyll med innstillinger for:"
+          ssl_modes:
+            none: "Ingen"
           credentials:
             title: "Legitimasjon"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP port"
-            smtp_ssl: "Bruk SSL for SMTP"
             imap_server: "IMAP Server"
             imap_port: "IMAP port"
             imap_ssl: "Bruk SSL for IMAP"
@@ -903,6 +905,7 @@ nb_NO:
     user_fields:
       none: "(velg et alternativ)"
       required: 'Skriv inn en verdi for "%{name}'
+      optional: (valgfritt)
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1536,6 +1539,11 @@ nb_NO:
     modal:
       close: "lukk"
       dismiss_error: "Avvis feil"
+    form_kit:
+      reset: Tilbakestill
+      optional: valgfritt
+      errors:
+        required: "Påkrevd"
     close: "Lukk"
     logout: "Du ble logget ut"
     refresh: "Refresh"
@@ -1574,6 +1582,7 @@ nb_NO:
       description_time_MF: |
         Det {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svarer}} med en estimert lesetid på <b>{readingTime, plural, one {# minutt} other {# minutter}}</b>.
       disable: "Vis alle innlegg"
+      show_all_label: "Vis alle"
     deleted_filter:
       enabled_description: "Dette emnet inneholder slettede innlegg, som er blitt skjult."
       disabled_description: "Slettede innlegg i emnet vises."
@@ -1597,7 +1606,7 @@ nb_NO:
       header_title: "Velkommen!"
       subheader_title: "La oss opprette kontoen din"
       disclaimer: "Ved å registrere deg, godtar du <a href='%{privacy_link}' target='blank'>retningslinjer for personvern</a> og <a href='%{tos_link}' target='blank'>vilkår for bruk</a>."
-      title: "Opprett konto"
+      title: "Registrer deg"
       failed: "Noe gikk galt, kanskje denne e-postadressen allerede er registrert. Prøv lenke for glemt passord"
     forgot_password:
       title: "Nullstill Passord"
@@ -1718,8 +1727,8 @@ nb_NO:
       enter: "Angi"
     category_row:
       subcategory_count:
-        one: "+ %{count} underkategori"
-        other: "+ %{count} underkategorier"
+        one: "+%{count} underkategori"
+        other: "+%{count} underkategorier"
       topic_count:
         one: "%{count} emne i denne kategori"
         other: "%{count} emner i denne kategorien"
@@ -2907,6 +2916,9 @@ nb_NO:
       clicks:
         one: "%{count} klikk"
         other: "%{count} klikk"
+      views: "Visninger"
+      read: les
+      minutes: minimum
     post_links:
       about: "utvid flere lenker for dette innlegget"
       title:
@@ -2939,12 +2951,7 @@ nb_NO:
     pending_posts:
       label: "På vent"
       label_with_count: "Ventende (%{count})"
-    posts_likes_MF: |
-      Dette emnet har {count, plural, one {1 svar} other {# svar}} {ratio, select,
-      low {med mange likes i forhold til innlegg}
-      med {med veldig mange likes i forhold til innlegg}
-      high {med ekstremt mange likes i forhold til innlegg}
-      other {}}
+    posters: "Innleggsskrivere"
     original_post: "Originalt innlegg"
     views: "Visninger"
     views_lowercase:
@@ -3686,6 +3693,19 @@ nb_NO:
         about:
           optional: "(valgfritt)"
           update: "Oppdater"
+          saved: "lagret!"
+        flags:
+          description: "Beskrivelse"
+          enabled: "Aktivert?"
+          edit: "Endre"
+          delete: "Slett"
+          delete_confirm: 'Er du sikker på at du vil slette "%{name}?'
+          form:
+            save: "Lagre"
+            name: "Navn"
+            description: "Beskrivelse"
+            topic: "emner"
+            post: "innlegg"
       plugins:
         title: "Utvidelser"
         installed: "Installerte utvidelser"
@@ -4576,6 +4596,7 @@ nb_NO:
         file_types_list:
           add_image_types: "Bilder"
       badges:
+        status: Status
         title: Merker
         new_badge: Nytt merke
         new: Ny
@@ -4583,8 +4604,6 @@ nb_NO:
         badge: Merke
         display_name: Visningsnavn
         description: Beskrivelse
-        long_description: Helhetlig beskrivelse
-        badge_type: Merketype
         badge_grouping: Gruppe
         badge_groupings:
           modal_title: Merkegrupper
@@ -4612,6 +4631,8 @@ nb_NO:
         disabled: deaktivert
         icon: Ikon
         image: Bilde
+        select_an_icon: "Velg et ikon"
+        upload_an_image: "Last opp et bilde"
         query: Spørring for merke (SQL)
         target_posts: Spørring har innlegg som mål
         auto_revoke: Kjør tilbakedragningsspørring daglig

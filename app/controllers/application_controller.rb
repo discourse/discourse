@@ -609,7 +609,7 @@ class ApplicationController < ActionController::Base
 
   def login_method
     return if current_user.anonymous?
-    secure_session["oauth"] == "true" ? Auth::LOGIN_METHOD_OAUTH : Auth::LOGIN_METHOD_LOCAL
+    current_user.authenticated_with_oauth ? Auth::LOGIN_METHOD_OAUTH : Auth::LOGIN_METHOD_LOCAL
   end
 
   private
@@ -1023,16 +1023,11 @@ class ApplicationController < ActionController::Base
   end
 
   def set_cross_origin_opener_policy_header
-    response.headers[
-      "Cross-Origin-Opener-Policy"
-    ] = if SiteSetting.cross_origin_opener_unsafe_none_referrers.present? &&
-         SiteSetting
-           .cross_origin_opener_unsafe_none_referrers
-           .split("|")
-           .include?(UrlHelper.relaxed_parse(request.referrer.to_s)&.host)
-      "unsafe-none"
+    if current_user.present? && SiteSetting.cross_origin_opener_unsafe_none_groups_map.any? &&
+         current_user.in_any_groups?(SiteSetting.cross_origin_opener_unsafe_none_groups_map)
+      response.headers["Cross-Origin-Opener-Policy"] = "unsafe-none"
     else
-      SiteSetting.cross_origin_opener_policy_header
+      response.headers["Cross-Origin-Opener-Policy"] = SiteSetting.cross_origin_opener_policy_header
     end
   end
 

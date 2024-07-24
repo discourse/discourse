@@ -26,6 +26,7 @@ export default class ChatStateManager extends Service {
   @service chatHistory;
   @service router;
   @service site;
+  @service chatDrawerRouter;
 
   @tracked isSidePanelExpanded = false;
   @tracked isDrawerExpanded = false;
@@ -118,6 +119,7 @@ export default class ChatStateManager extends Service {
       }
     });
 
+    this.chatDrawerRouter.currentRouteName = null;
     this.isDrawerActive = false;
     this.isDrawerExpanded = false;
     this.chat.updatePresence();

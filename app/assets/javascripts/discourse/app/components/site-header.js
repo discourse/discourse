@@ -1,4 +1,5 @@
 import { DEBUG } from "@glimmer/env";
+import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
 import { waitForPromise } from "@ember/test-waiters";
 import ItsATrap from "@discourse/itsatrap";
@@ -212,9 +213,14 @@ const SiteHeaderComponent = MountWidget.extend(
       }
     },
 
-    setTopic(topic) {
+    setTopic() {
+      const header = getOwner(this).lookup("service:header");
+      if (header.topicInfoVisible) {
+        this._topic = header.topicInfo;
+      } else {
+        this._topic = null;
+      }
       this.eventDispatched("dom:clean", "header");
-      this._topic = topic;
       this.queueRerender();
     },
 
@@ -231,8 +237,9 @@ const SiteHeaderComponent = MountWidget.extend(
       this._resizeDiscourseMenuPanel = () => this.afterRender();
       window.addEventListener("resize", this._resizeDiscourseMenuPanel);
 
-      this.appEvents.on("header:show-topic", this, "setTopic");
-      this.appEvents.on("header:hide-topic", this, "setTopic");
+      const headerService = getOwner(this).lookup("service:header");
+      headerService.addObserver("topicInfoVisible", this, "setTopic");
+      headerService.topicInfoVisible; // Access property to set up observer
 
       this.appEvents.on("user-menu:rendered", this, "_animateMenu");
 
@@ -299,9 +306,9 @@ const SiteHeaderComponent = MountWidget.extend(
       this._super(...arguments);
 
       window.removeEventListener("resize", this._resizeDiscourseMenuPanel);
-
-      this.appEvents.off("header:show-topic", this, "setTopic");
-      this.appEvents.off("header:hide-topic", this, "setTopic");
+      getOwner(this)
+        .lookup("service:header")
+        .removeObserver("topicInfoVisible", this, "setTopic");
       this.appEvents.off("dom:clean", this, "_cleanDom");
       this.appEvents.off("user-menu:rendered", this, "_animateMenu");
 

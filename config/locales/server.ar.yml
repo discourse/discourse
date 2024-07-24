@@ -1120,8 +1120,6 @@ ar:
     pop3_authentication_error: "حدثت مشكلة في بيانات اعتماد POP3 المقدَّمة، تحقَّق من اسم المستخدم وكلمة المرور وحاول مرة أخرى."
     imap_authentication_error: "حدثت مشكلة في بيانات اعتماد IMAP المقدَّمة، تحقَّق من اسم المستخدم وكلمة المرور وحاول مرة أخرى."
     imap_no_response_error: "حدث خطأ في أثناء الاتصال بخادم IMAP. %{message}"
-    smtp_authentication_error: "حدثت مشكلة في بيانات اعتماد SMTP المقدَّمة، تحقَّق من اسم المستخدم وكلمة المرور وحاول مرة أخرى."
-    authentication_error_gmail_app_password: 'مطلوب كلمة مرور خاصة بالتطبيقات. تعرَّف على مزيد من المعلومات من خلال <a target="_blank" href="https://support.google.com/accounts/answer/185833">مقالة المساعدة هذه من Google</a>'
     smtp_server_busy_error: "خادم SMTP مشغول حاليًا، حاول مرة أخرى لاحقًا."
     smtp_unhandled_error: "حدث خطأ لم تتم معالجته عند الاتصال بخادم SMTP. %{message}"
     imap_unhandled_error: "حدث خطأ لم تتم معالجته عند الاتصال بخادم IMAP. %{message}"
@@ -1540,6 +1538,8 @@ ar:
         user_agent: "وكيل المستخدم"
         page_views: "مرات عرض الصفحة"
       description: "قائمة وكلاء مستخدمي زاحفات الويب، مرتَّبة حسب مرات عرض الصفحة."
+    web_hook_events_daily_aggregate:
+      xaxis: "اليوم"
     suspicious_logins:
       title: "عمليات تسجيل الدخول المشبوهة"
       labels:
@@ -1592,6 +1592,12 @@ ar:
         user: المستخدم
         qtt_like: تسجيلات الإعجاب المتلقاة
       description: "أبرز 10 مستخدمين حصلوا على إعجابات من مجموعة واسعة من الأشخاص."
+    topic_view_stats:
+      labels:
+        topic: الموضوع
+        logged_in_views: مسجِّل الدخول
+        anon_views: مجهول
+        total_views: الإجمالي
   dashboard:
     problem:
       rails_env: "الخادم يعمل في وضع %{env}."
@@ -1600,8 +1606,6 @@ ar:
       ram: "يعمل الخادم بإجمالي ذاكرة أقل من 1 غ.ب. يوصى بتوفُّر 1 غ.ب من الذاكرة على الأقل."
       subfolder_ends_in_slash: "إعداد المجلد الفرعي غير صحيح، تنتهي قيمة DISCOURSE_RELATIVE_URL_ROOT بشرطة مائلة."
       missing_mailgun_api_key: "تم إعداد الخادم لإرسال الرسائل الإلكترونية عبر Mailgun، لكنك لم تقدِّم مفتاح API المُستخدَم للتحقُّق من رسائل خطاف الويب."
-      out_of_date_themes: "تتوفَّر تحديثات للسمات التالية:"
-      unreachable_themes: "لم نتمكن من التحقُّق من وجود تحديثات للسمات التالية:"
       google_analytics_version: "يستخدم Discourse لديك حاليًا Google Analytics 3، والذي سيتوقف دعمه بعد يوليو 2023. <a href='https://meta.discourse.org/t/260498'>قم بالترقية إلى Google Analytics 4</a> الآن للاستمرار في تلقي رؤى وتحليلات قيمة لأداء موقعك الإلكتروني."
   site_settings:
     allow_bulk_invite: "السماح بالدعوات الجماعية عن طريق تحميل ملف CSV"
@@ -1869,7 +1873,6 @@ ar:
     s3_use_acls: "توصي AWS بعدم استخدام قوائم ACL في حاويات S3؛ إذا كنت تتبع هذه النصيحة، فقم بإلغاء تحديد هذا الخيار. يجب تفعيل هذا الخيار إذا كنت تستخدم تحميلات آمنة."
     backup_time_of_day: "الوقت من اليوم (بالتوقيت العالمي الموحَّد) الذي يجب أن يتم فيه النسخ الاحتياطي"
     backup_with_uploads: "تضمين عمليات التحميل في النسخ الاحتياطية المجدولة. سيؤدي إيقاف هذا الإعداد إلى نسخ قاعدة البيانات احتياطيًا فقط."
-    backup_location: "موقع تخزين النسخ الاحتياطية. هام: يتطلب S3 إدخال بيانات اعتماد S3 صالحة في إعدادات الملفات."
     backup_gzip_compression_level_for_uploads: "مستوى ضغط Gzip المُستخدَم لضغط التحميلات"
     include_thumbnails_in_backups: "تضمين الصور المصغَّرة التي تم إنشاؤها في النسخ الاحتياطية. سيؤدي إيقاف هذا الإعداد إلى جعل النسخ الاحتياطية أصغر حجمًا، ولكنه يتطلب إنشاء جميع المنشورات بعد الاستعادة."
     active_user_rate_limit_secs: "عدد مرات تحديث حقل \"last_seen_at\" بالثواني"

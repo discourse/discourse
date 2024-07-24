@@ -1,311 +1,328 @@
-<section class="current-badge content-body">
-  <div class="control-group current-badge__toggle-badge">
-    <DToggleSwitch
-      @state={{this.buffered.enabled}}
-      @label={{this.badgeEnabledLabel}}
-      {{on "click" this.toggleBadge}}
-    />
-  </div>
+<Form
+  @data={{this.formData}}
+  @onSubmit={{this.handleSubmit}}
+  @validate={{this.validateForm}}
+  class="badge-form current-badge content-body"
+  as |form data|
+>
 
-  <form class="form-horizontal">
-    <div class="control-group">
-      <label for="name">{{i18n "admin.badges.name"}}</label>
-      {{#if this.readOnly}}
-        <Input
-          @type="text"
-          name="name"
-          @value={{this.buffered.name}}
-          disabled={{true}}
-        />
-        <p class="help">
-          <LinkTo
-            @route="adminSiteText"
-            @query={{hash q=(concat this.textCustomizationPrefix "name")}}
-          >
-            {{i18n "admin.badges.read_only_setting_help"}}
-          </LinkTo>
-        </p>
-      {{else}}
-        <Input @type="text" name="name" @value={{this.buffered.name}} />
-      {{/if}}
-    </div>
+  <h1 class="current-badge-header">
+    {{iconOrImage data}}
+    <span class="badge-display-name">{{data.name}}</span>
+  </h1>
 
-    <div class="control-group">
-      <label for="graphic">{{i18n "admin.badges.graphic"}}</label>
-      <div class="radios inline-form full-width">
-        <label class="radio-label" for="badge-icon">
-          <RadioButton
-            @name="badge-icon"
-            @id="badge-icon"
-            @value="icon"
-            @selection={{this.selectedGraphicType}}
-            @onChange={{action "changeGraphicType"}}
-          />
-          <span>{{i18n "admin.badges.select_an_icon"}}</span>
-        </label>
-
-        <label class="radio-label" for="badge-image">
-          <RadioButton
-            @name="badge-image"
-            @id="badge-image"
-            @value="image"
-            @selection={{this.selectedGraphicType}}
-            @onChange={{action "changeGraphicType"}}
-          />
-          <span>{{i18n "admin.badges.upload_an_image"}}</span>
-        </label>
-      </div>
-      {{#if this.imageUploaderSelected}}
-        <UppyImageUploader
-          @id="badge-image-uploader"
-          @imageUrl={{this.buffered.image_url}}
-          @type="badge_image"
-          @onUploadDone={{action "setImage"}}
-          @onUploadDeleted={{action "removeImage"}}
-          class="no-repeat contain-image"
-        />
-        <div class="control-instructions">
-          <p class="help">{{i18n "admin.badges.image_help"}}</p>
-        </div>
-      {{else if this.iconSelectorSelected}}
-        <IconPicker
-          @name="icon"
-          @value={{this.buffered.icon}}
-          @options={{hash maximum=1}}
-          @onChange={{fn (mut this.buffered.icon)}}
-        />
-      {{/if}}
-    </div>
-
-    <div class="control-group">
-      <label for="badge_type_id">{{i18n "admin.badges.badge_type"}}</label>
-      <ComboBox
-        @name="badge_type_id"
-        @value={{this.buffered.badge_type_id}}
-        @content={{this.badgeTypes}}
-        @onChange={{fn (mut this.buffered.badge_type_id)}}
-        @options={{hash disabled=this.readOnly}}
+  {{#if this.readOnly}}
+    <form.Alert @icon="info-circle">
+      {{i18n "admin.badges.disable_system"}}
+    </form.Alert>
+  {{else}}
+    <form.Field
+      @name="enabled"
+      @disabled={{this.readOnly}}
+      @validation="required"
+      @title={{i18n "admin.badges.status"}}
+      as |field|
+    >
+      <field.Question
+        @yesLabel={{i18n "admin.badges.enabled"}}
+        @noLabel={{i18n "admin.badges.disabled"}}
       />
-    </div>
+    </form.Field>
+  {{/if}}
 
-    <div class="control-group">
-      <label for="badge_grouping_id">{{i18n
-          "admin.badges.badge_grouping"
-        }}</label>
+  {{#if this.readOnly}}
+    <form.Container data-name="name" @title={{i18n "admin.badges.name"}}>
+      <span class="readonly-field">
+        {{this.model.name}}
+      </span>
+      <LinkTo
+        @route="adminSiteText.edit"
+        @models={{array (concat this.textCustomizationPrefix "name")}}
+        @query={{hash locale="en"}}
+      >
+        {{d-icon "pencil-alt"}}
+      </LinkTo>
+    </form.Container>
+  {{else}}
+    <form.Field
+      @title={{i18n "admin.badges.name"}}
+      @name="name"
+      @disabled={{this.readOnly}}
+      @validation="required"
+      as |field|
+    >
+      <field.Input />
+    </form.Field>
+  {{/if}}
 
-      <div class="badge-grouping-control">
-        <ComboBox
-          @name="badge_grouping_id"
-          @value={{this.buffered.badge_grouping_id}}
-          @content={{this.badgeGroupings}}
-          class="badge-selector"
-          @nameProperty="name"
-          @onChange={{fn (mut this.buffered.badge_grouping_id)}}
-        />
-        <DButton
-          @action={{route-action "editGroupings"}}
-          @icon="pencil-alt"
-          class="btn-default"
-        />
-      </div>
-    </div>
+  <form.Section @title="Design">
+    <form.Field
+      @name="badge_type_id"
+      @title={{i18n "admin.badges.badge_type"}}
+      @disabled={{this.readOnly}}
+      as |field|
+    >
+      <field.Select as |select|>
+        {{#each this.badgeTypes as |badgeType|}}
+          <select.Option @value={{badgeType.id}}>
+            {{badgeType.name}}
+          </select.Option>
+        {{/each}}
+      </field.Select>
+    </form.Field>
 
-    <div class="control-group">
-      <label for="description">{{i18n "admin.badges.description"}}</label>
-      {{#if this.buffered.system}}
-        <Textarea
-          name="description"
-          @value={{this.buffered.description}}
-          disabled={{true}}
-        />
-        <p class="help">
-          <LinkTo
-            @route="adminSiteText"
-            @query={{hash
-              q=(concat this.textCustomizationPrefix "description")
-            }}
+    <form.ConditionalContent
+      @activeName={{if data.image "upload-image" "choose-icon"}}
+      as |cc|
+    >
+      <cc.Conditions as |Condition|>
+        <Condition @name="choose-icon">
+          {{i18n "admin.badges.select_an_icon"}}
+        </Condition>
+        <Condition @name="upload-image">
+          {{i18n "admin.badges.upload_an_image"}}
+        </Condition>
+      </cc.Conditions>
+      <cc.Contents as |Content|>
+        <Content @name="choose-icon">
+          <form.Field
+            @title={{i18n "admin.badges.icon"}}
+            @showTitle={{false}}
+            @name="icon"
+            @onSet={{this.onSetIcon}}
+            as |field|
           >
-            {{i18n "admin.badges.read_only_setting_help"}}
-          </LinkTo>
-        </p>
-      {{else}}
-        <Textarea name="description" @value={{this.buffered.description}} />
-      {{/if}}
-    </div>
-
-    <div class="control-group">
-      <label for="long_description">{{i18n
-          "admin.badges.long_description"
-        }}</label>
-      {{#if this.buffered.system}}
-        <Textarea
-          name="long_description"
-          @value={{this.buffered.long_description}}
-          disabled={{true}}
-        />
-        <p class="help">
-          <LinkTo
-            @route="adminSiteText"
-            @query={{hash
-              q=(concat this.textCustomizationPrefix "long_description")
-            }}
+            <field.Icon />
+          </form.Field>
+        </Content>
+        <Content @name="upload-image">
+          <form.Field
+            @name="image"
+            @showTitle={{false}}
+            @title={{i18n "admin.badges.image"}}
+            @onSet={{this.onSetImage}}
+            @onUnset={{this.onUnsetImage}}
+            as |field|
           >
-            {{i18n "admin.badges.read_only_setting_help"}}
-          </LinkTo>
-        </p>
-      {{else}}
-        <Textarea
-          name="long_description"
-          @value={{this.buffered.long_description}}
-        />
-      {{/if}}
-    </div>
+            <field.Image />
+          </form.Field>
+        </Content>
+      </cc.Contents>
+    </form.ConditionalContent>
 
-    {{#if this.siteSettings.enable_badge_sql}}
-      <div class="control-group">
-        <label for="query">{{i18n "admin.badges.query"}}</label>
-        <AceEditor
-          @content={{this.buffered.query}}
-          @mode="sql"
-          @disabled={{this.readOnly}}
-        />
-      </div>
-
-      {{#if this.hasQuery}}
-        <a
-          href
-          {{on "click" (fn this.showPreview this.buffered "false")}}
-          class="preview-badge"
+    {{#if this.readOnly}}
+      <form.Container
+        data-name="description"
+        @title={{i18n "admin.badges.description"}}
+      >
+        <span class="readonly-field">
+          {{this.model.description}}
+        </span>
+        <LinkTo
+          @route="adminSiteText.edit"
+          @models={{array (concat this.textCustomizationPrefix "description")}}
+          @query={{hash locale="en"}}
         >
-          {{i18n "admin.badges.preview.link_text"}}</a>
-        |
-        <a
-          href
-          {{on "click" (fn this.showPreview this.buffered "true")}}
-          class="preview-badge-plan"
-        >
-          {{i18n "admin.badges.preview.plan_text"}}
-        </a>
-        {{#if this.preview_loading}}
-          {{i18n "loading"}}
-        {{/if}}
-
-        <div class="control-group">
-          <label>
-            <Input
-              name="auto_revoke"
-              @type="checkbox"
-              @checked={{this.buffered.auto_revoke}}
-              disabled={{this.readOnly}}
-            />
-            {{i18n "admin.badges.auto_revoke"}}
-          </label>
-        </div>
-
-        <div class="control-group">
-          <label>
-            <Input
-              name="target_posts"
-              @type="checkbox"
-              @checked={{this.buffered.target_posts}}
-              disabled={{this.readOnly}}
-            />
-            {{i18n "admin.badges.target_posts"}}
-          </label>
-        </div>
-
-        <div class="control-group">
-          <label for="trigger">{{i18n "admin.badges.trigger"}}</label>
-          <ComboBox
-            name="trigger"
-            @value={{this.buffered.trigger}}
-            @content={{this.badgeTriggers}}
-            @onChange={{fn (mut this.buffered.trigger)}}
-            @options={{hash disabled=this.readOnly}}
-          />
-        </div>
-      {{/if}}
+          {{d-icon "pencil-alt"}}
+        </LinkTo>
+      </form.Container>
+    {{else}}
+      <form.Field
+        @title={{i18n "admin.badges.description"}}
+        @name="description"
+        @disabled={{this.readOnly}}
+        as |field|
+      >
+        <field.Textarea />
+      </form.Field>
     {{/if}}
 
-    <div class="control-group">
-      <div>
-        <label class="checkbox-label">
-          <Input @type="checkbox" @checked={{this.buffered.allow_title}} />
-          {{i18n "admin.badges.allow_title"}}
-        </label>
-      </div>
+    {{#if this.readOnly}}
+      <form.Container
+        data-name="long_description"
+        @title={{i18n "admin.badges.long_description"}}
+      >
+        <span class="readonly-field">
+          {{this.model.long_description}}
+        </span>
 
-      <div>
-        <label class="checkbox-label">
-          <Input
-            @type="checkbox"
-            @checked={{this.buffered.multiple_grant}}
-            disabled={{this.readOnly}}
-          />
-          {{i18n "admin.badges.multiple_grant"}}
-        </label>
-      </div>
+        <LinkTo
+          @route="adminSiteText.edit"
+          @models={{array
+            (concat this.textCustomizationPrefix "long_description")
+          }}
+          @query={{hash locale="en"}}
+        >
+          {{d-icon "pencil-alt"}}
+        </LinkTo>
+      </form.Container>
+    {{else}}
+      <form.Field
+        @name="long_description"
+        @title={{i18n "admin.badges.long_description"}}
+        @disabled={{this.readOnly}}
+        as |field|
+      >
+        <field.Textarea />
+      </form.Field>
+    {{/if}}
+  </form.Section>
 
-      <div>
-        <label class="checkbox-label">
-          <Input
-            @type="checkbox"
-            @checked={{this.buffered.listable}}
-            disabled={{this.readOnly}}
-          />
-          {{i18n "admin.badges.listable"}}
-        </label>
-      </div>
+  {{#if this.siteSettings.enable_badge_sql}}
+    <form.Section @title="Query">
+      <form.Field
+        @name="query"
+        @title={{i18n "admin.badges.query"}}
+        @disabled={{this.readOnly}}
+        as |field|
+      >
+        <field.Code @lang="sql" />
+      </form.Field>
 
-      <div>
-        <label class="checkbox-label">
-          <Input
-            @type="checkbox"
-            @checked={{this.buffered.show_posts}}
-            disabled={{this.readOnly}}
+      {{#if (this.hasQuery data.query)}}
+        <form.Container>
+          <form.Button
+            @isLoading={{this.preview_loading}}
+            @label="admin.badges.preview.link_text"
+            class="preview-badge"
+            @action={{fn this.showPreview data "false"}}
           />
-          {{i18n "admin.badges.show_posts"}}
-        </label>
+          <form.Button
+            @isLoading={{this.preview_loading}}
+            @label="admin.badges.preview.plan_text"
+            class="preview-badge-plan"
+            @action={{fn this.showPreview data "true"}}
+          />
+        </form.Container>
+
+        <form.Field
+          @name="auto_revoke"
+          @disabled={{this.readOnly}}
+          @showTitle={{false}}
+          @title={{i18n "admin.badges.auto_revoke_label"}}
+          as |field|
+        >
+          <field.Checkbox>
+            {{i18n "admin.badges.auto_revoke"}}
+          </field.Checkbox>
+        </form.Field>
+
+        <form.Field
+          @name="target_posts"
+          @disabled={{this.readOnly}}
+          @title={{i18n "admin.badges.target_posts_label"}}
+          @showTitle={{false}}
+          as |field|
+        >
+          <field.Checkbox>
+            {{i18n "admin.badges.target_posts"}}
+          </field.Checkbox>
+        </form.Field>
+
+        <form.Field
+          @name="trigger"
+          @disabled={{this.readOnly}}
+          @validation="required"
+          @title={{i18n "admin.badges.trigger"}}
+          as |field|
+        >
+          <field.Select as |select|>
+            {{#each this.badgeTriggers as |badgeType|}}
+              <select.Option @value={{badgeType.id}}>
+                {{badgeType.name}}
+              </select.Option>
+            {{/each}}
+          </field.Select>
+        </form.Field>
+      {{/if}}
+    </form.Section>
+  {{/if}}
+
+  <form.Section @title="Settings">
+    <form.Field
+      @name="badge_grouping_id"
+      @disabled={{this.readOnly}}
+      @validation="required"
+      @title={{i18n "admin.badges.badge_grouping"}}
+      as |field|
+    >
+      <field.Menu @selection={{this.currentBadgeGrouping data}} as |menu|>
+        {{#each this.badgeGroupings as |grouping|}}
+          <menu.Item @value={{grouping.id}}>{{grouping.name}}</menu.Item>
+        {{/each}}
+        <menu.Divider />
+        <menu.Item @action={{route-action "editGroupings"}}>Add new group</menu.Item>
+      </field.Menu>
+    </form.Field>
+
+    <form.Field
+      @title={{i18n "admin.badges.allow_title_label"}}
+      @showTitle={{false}}
+      @name="allow_title"
+      as |field|
+    >
+      <field.Checkbox>{{i18n "admin.badges.allow_title"}}</field.Checkbox>
+    </form.Field>
+
+    <form.Field
+      @title={{i18n "admin.badges.multiple_grant_label"}}
+      @showTitle={{false}}
+      @name="multiple_grant"
+      @disabled={{this.readOnly}}
+      as |field|
+    >
+      <field.Checkbox>{{i18n "admin.badges.multiple_grant"}}</field.Checkbox>
+    </form.Field>
+
+    <form.Field
+      @title={{i18n "admin.badges.listable_label"}}
+      @showTitle={{false}}
+      @name="listable"
+      @disabled={{this.readOnly}}
+      as |field|
+    >
+      <field.Checkbox>{{i18n "admin.badges.listable"}}</field.Checkbox>
+    </form.Field>
+
+    <form.Field
+      @title={{i18n "admin.badges.show_posts_label"}}
+      @showTitle={{false}}
+      @name="show_posts"
+      @disabled={{this.readOnly}}
+      as |field|
+    >
+      <field.Checkbox>{{i18n "admin.badges.show_posts"}}</field.Checkbox>
+    </form.Field>
+  </form.Section>
+
+  <PluginOutlet
+    @name="admin-above-badge-buttons"
+    @outletArgs={{hash badge=this.buffered form=form}}
+  />
+
+  <form.Actions>
+    <form.Submit />
+
+    {{#unless this.readOnly}}
+      <form.Button @action={{this.handleDelete}} class="btn-danger">
+        {{i18n "admin.badges.delete"}}
+      </form.Button>
+    {{/unless}}
+  </form.Actions>
+
+  {{#if this.grant_count}}
+    <div class="content-body current-badge-actions">
+      <div>
+        <LinkTo @route="badges.show" @model={{this}}>
+          {{html-safe
+            (i18n
+              "badges.awarded"
+              count=this.displayCount
+              number=(number this.displayCount)
+            )
+          }}
+        </LinkTo>
       </div>
     </div>
-
-    <PluginOutlet
-      @name="admin-above-badge-buttons"
-      @outletArgs={{hash badge=this.buffered}}
-    />
-
-    <div class="buttons">
-      <DButton
-        @action={{this.save}}
-        @disabled={{this.saving}}
-        @label="admin.badges.save"
-        type="submit"
-        class="btn-primary"
-      />
-      <span class="saving">{{this.savingStatus}}</span>
-      {{#unless this.readOnly}}
-        <DButton
-          @action={{this.destroyBadge}}
-          @label="admin.badges.delete"
-          class="btn-danger"
-        />
-      {{/unless}}
-    </div>
-  </form>
-</section>
-
-{{#if this.grant_count}}
-  <div class="content-body current-badge-actions">
-    <div>
-      <LinkTo @route="badges.show" @model={{this}}>
-        {{html-safe
-          (i18n
-            "badges.awarded"
-            count=this.displayCount
-            number=(number this.displayCount)
-          )
-        }}
-      </LinkTo>
-    </div>
-  </div>
-{{/if}}
+  {{/if}}
+</Form>

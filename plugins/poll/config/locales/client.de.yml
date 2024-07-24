@@ -25,6 +25,9 @@ de:
           title: "Ergebnisse werden angezeigt, sobald die Abstimmung <strong>beendet</strong> ist."
         staff:
           title: "Ergebnisse werden nur <strong>Team-Mitgliedern</strong> angezeigt."
+        tabs:
+          votes: "Stimmen"
+          outcome: "Ergebnis"
       multiple:
         help:
           at_least_min_options:
@@ -72,8 +75,25 @@ de:
         breakdown: "Aufschlüsselung"
         percentage: "Prozentsatz"
         count: "Anzahl"
+      ranked_choice:
+        title:
+          rounds: "Runden"
+          outcome: "Ergebnis"
+        none: "Keiner"
+        majority: "Mehrheit"
+        eliminated: "Eliminiert"
+        round: "Runde"
+        winner:
+          one: "Der Gewinner war %{winner} nach einer Runde."
+          other: "Der Gewinner war %{winner} nach %{count} Runden."
+        tied:
+          one: "Gleichstand nach einer Runde zwischen folgenden Kandidaten:"
+          other: "Gleichstand nach %{count} Runden zwischen folgenden Kandidaten:"
       options:
         label: "Optionen"
+        ranked_choice:
+          abstain: "Enthalten"
+          login: "Einloggen zum Abstimmen!"
       error_while_toggling_status: "Leider ist beim Umschalten des Status dieser Umfrage ein Fehler aufgetreten."
       error_while_casting_votes: "Leider ist beim Abgeben deiner Stimmen ein Fehler aufgetreten."
       error_while_fetching_voters: "Leider ist beim Anzeigen der Teilnehmer ein Fehler aufgetreten."
@@ -92,6 +112,7 @@ de:
           label: Art
           regular: Einfachauswahl
           multiple: Mehrfachauswahl
+          ranked_choice: Rangfolgewahl
           number: Bewertung
         poll_result:
           label: Ergebnisse anzeigen …

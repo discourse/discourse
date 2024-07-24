@@ -5,7 +5,8 @@ const SidebarSectionHeader = <template>
     <DButton
       @title="sidebar.toggle_section"
       @action={{@toggleSectionDisplay}}
-      aria-controls={{@sidebarSectionContentID}}
+      @forwardEvent={{true}}
+      aria-controls={{@sidebarSectionContentId}}
       aria-expanded={{if @isExpanded "true" "false"}}
       class="sidebar-section-header sidebar-section-header-collapsable btn-transparent"
     >

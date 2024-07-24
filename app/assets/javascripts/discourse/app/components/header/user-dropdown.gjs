@@ -36,6 +36,7 @@ export default class UserDropdown extends Component {
     >
       <PluginOutlet @name="user-dropdown-button__before" />
       <button
+        id="toggle-current-user"
         class="icon btn-flat"
         aria-haspopup="true"
         aria-expanded={{@active}}

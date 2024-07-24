@@ -49,6 +49,10 @@ class ListController < ApplicationController
                   :filter,
                 ].flatten
 
+  rescue_from ActionController::Redirecting::UnsafeRedirectError do
+    raise Discourse::NotFound
+  end
+
   # Create our filters
   Discourse.filters.each do |filter|
     define_method(filter) do |options = nil|

@@ -3,12 +3,11 @@
 module Discourse
   VERSION_REGEXP ||= /\A\d+\.\d+\.\d+(\.beta\d+)?\z/
   VERSION_COMPATIBILITY_FILENAME ||= ".discourse-compatibility"
-
   # work around reloader
   unless defined?(::Discourse::VERSION)
     module VERSION #:nodoc:
       # Use the `version_bump:*` rake tasks to update this value
-      STRING = "3.3.0.beta3-dev"
+      STRING = "3.3.0.beta5-dev"
 
       PARTS = STRING.split(".")
       private_constant :PARTS
@@ -16,8 +15,8 @@ module Discourse
       MAJOR = PARTS[0].to_i
       MINOR = PARTS[1].to_i
       TINY = PARTS[2].to_i
-      PRE = PARTS[3]&.split("-", 2)&.first
-      DEV = PARTS[3]&.split("-", 2)&.second
+      PRE = PARTS[3]&.split("-", 2)&.[](0)
+      DEV = PARTS[3]&.split("-", 2)&.[](1)
     end
   end
 

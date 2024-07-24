@@ -27,8 +27,6 @@ hu:
         icons:
           title: "Ikonok"
           full_list: "A Font Awesome ikonok teljes listájának megtekintése"
-        input_fields:
-          title: "Beviteli mezők"
         buttons:
           title: "Gombok"
         dropdowns:

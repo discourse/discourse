@@ -16,7 +16,7 @@ const TopicListHeader = <template>
             title={{i18n "topics.bulk.toggle"}}
             class="btn-flat bulk-select"
           >
-            {{icon (if @experimentalTopicBulkActionsEnabled "tasks" "list")}}
+            {{icon "tasks"}}
           </button>
         {{/if}}
       </th>
@@ -37,7 +37,6 @@ const TopicListHeader = <template>
       @newListSubset={{@newListSubset}}
       @newRepliesCount={{@newRepliesCount}}
       @newTopicsCount={{@newTopicsCount}}
-      @experimentalTopicBulkActionsEnabled={{@experimentalTopicBulkActionsEnabled}}
       @bulkSelectHelper={{@bulkSelectHelper}}
       @changeNewListSubset={{@changeNewListSubset}}
     />
@@ -50,6 +49,8 @@ const TopicListHeader = <template>
         @activeOrder={{@order}}
         @changeSort={{@changeSort}}
         @ascending={{@ascending}}
+        @name="posters"
+        @screenreaderOnly={{true}}
         aria-label={{i18n "category.sort_options.posters"}}
       />
     {{/if}}
@@ -62,7 +63,6 @@ const TopicListHeader = <template>
       @changeSort={{@changeSort}}
       @ascending={{@ascending}}
       @name="replies"
-      aria-label={{i18n "sr_replies"}}
     />
 
     {{#if @showLikes}}
@@ -74,7 +74,6 @@ const TopicListHeader = <template>
         @changeSort={{@changeSort}}
         @ascending={{@ascending}}
         @name="likes"
-        aria-label={{i18n "sr_likes"}}
       />
     {{/if}}
 
@@ -87,7 +86,6 @@ const TopicListHeader = <template>
         @changeSort={{@changeSort}}
         @ascending={{@ascending}}
         @name="likes"
-        aria-label={{i18n "sr_op_likes"}}
       />
     {{/if}}
 
@@ -99,7 +97,6 @@ const TopicListHeader = <template>
       @changeSort={{@changeSort}}
       @ascending={{@ascending}}
       @name="views"
-      aria-label={{i18n "sr_views"}}
     />
 
     <TopicListHeaderColumn
@@ -110,7 +107,6 @@ const TopicListHeader = <template>
       @changeSort={{@changeSort}}
       @ascending={{@ascending}}
       @name="activity"
-      aria-label={{i18n "sr_activity"}}
     />
 
     <PluginOutlet @name="topic-list-header-after" />

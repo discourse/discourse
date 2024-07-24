@@ -27,8 +27,6 @@ cs:
         icons:
           title: "Ikony"
           full_list: "Podívejte se na úplný seznam Font Awesome Icons"
-        input_fields:
-          title: "Vstupní pole"
         buttons:
           title: "Tlačítka"
         dropdowns:

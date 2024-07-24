@@ -22,8 +22,10 @@ module PageObjects
         self
       end
 
-      def find_setting(setting_name)
-        find(".admin-detail .row.setting[data-setting='#{setting_name}']")
+      def find_setting(setting_name, overridden: false)
+        find(
+          ".admin-detail .row.setting[data-setting='#{setting_name}']#{overridden ? ".overridden" : ""}",
+        )
       end
 
       def toggle_setting(setting_name, text = "")
@@ -47,6 +49,10 @@ module PageObjects
 
       def save_setting(setting_element)
         setting_element.find(".setting-controls button.ok").click
+      end
+
+      def has_overridden_setting?(setting_name)
+        find_setting(setting_name, overridden: true)
       end
 
       def values_in_list(setting_name)
@@ -84,11 +90,6 @@ module PageObjects
       def has_greater_than_n_results?(count)
         assert_selector(".admin-detail .row.setting", minimum: count)
       end
-    end
-
-    # TODO (martin) Remove this after discourse-topic-voting no longer
-    # relies on this, it was renamed to AdminSiteSettings.
-    class AdminSettings < PageObjects::Pages::AdminSiteSettings
     end
   end
 end

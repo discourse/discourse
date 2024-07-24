@@ -68,6 +68,8 @@ ro:
         votes: "%{count} voturi"
         percentage: "Procent"
         count: "Număr"
+      ranked_choice:
+        none: "Nimeni"
       options:
         label: "Opțiuni"
       error_while_toggling_status: "Ne pare rău, a apărut o eroare la schimbarea stării acestui sondaj."

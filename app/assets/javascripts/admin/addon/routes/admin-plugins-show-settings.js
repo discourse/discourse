@@ -9,10 +9,10 @@ export default class AdminPluginsShowSettingsRoute extends Route {
     filter: { replace: true },
   };
 
-  model(params) {
+  async model(params) {
     const plugin = this.modelFor("adminPlugins.show");
-    return SiteSetting.findAll({ plugin: plugin.name }).then((settings) => {
-      return { plugin, settings, initialFilter: params.filter };
-    });
+    const settings = await SiteSetting.findAll({ plugin: plugin.name });
+
+    return { plugin, settings, initialFilter: params.filter };
   }
 }

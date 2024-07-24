@@ -27,7 +27,7 @@
     <% add_resource_preload_list(script_asset_path("browser-update"), "script") %>
     <link rel="preload" href="<%= script_asset_path "start-discourse" %>" as="script" nonce="<%= csp_nonce_placeholder %>">
     <link rel="preload" href="<%= script_asset_path "browser-update" %>" as="script" nonce="<%= csp_nonce_placeholder %>">
-    
+
     <%= preload_script 'browser-detect' %>
 
     <%= preload_script "vendor" %>
@@ -37,8 +37,9 @@
     <%- end %>
 
     <%= preload_script "locales/#{I18n.locale}" %>
+    <%= preload_script_url ExtraLocalesController.url("mf") %>
     <%- if ExtraLocalesController.client_overrides_exist? %>
-      <%= preload_script_url ExtraLocalesController.url('overrides') %>
+      <%= preload_script_url ExtraLocalesController.url("overrides") %>
     <%- end %>
 
     <%- if staff? %>

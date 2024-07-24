@@ -33,6 +33,8 @@ et:
         confirm: "Kas sa oled kindel, et sa tahad antud hääletuse sulgeda?"
       breakdown:
         count: "Arv"
+      ranked_choice:
+        none: "Pole"
       options:
         label: "Suvandid"
       error_while_toggling_status: "Kahjuks tekkis postituse staatuse ümberlülitamisel tõrge."
