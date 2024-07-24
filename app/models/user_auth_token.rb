@@ -78,7 +78,8 @@ class UserAuthToken < ActiveRecord::Base
     client_ip: nil,
     path: nil,
     staff: nil,
-    impersonate: false
+    impersonate: false,
+    login_method: Auth::LOGIN_METHOD_LOCAL
   )
     token = SecureRandom.hex(16)
     hashed_token = hash_token(token)
@@ -90,6 +91,7 @@ class UserAuthToken < ActiveRecord::Base
         auth_token: hashed_token,
         prev_auth_token: hashed_token,
         rotated_at: Time.zone.now,
+        login_method: login_method,
       )
     user_auth_token.unhashed_auth_token = token
 
