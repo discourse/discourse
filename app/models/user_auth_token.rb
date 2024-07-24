@@ -79,9 +79,8 @@ class UserAuthToken < ActiveRecord::Base
     path: nil,
     staff: nil,
     impersonate: false,
-    login_method: nil
+    authenticated_with_oauth: false
   )
-    login_method = Auth::LOGIN_METHOD_LOCAL if !login_method
     token = SecureRandom.hex(16)
     hashed_token = hash_token(token)
     user_auth_token =
@@ -92,7 +91,7 @@ class UserAuthToken < ActiveRecord::Base
         auth_token: hashed_token,
         prev_auth_token: hashed_token,
         rotated_at: Time.zone.now,
-        login_method: login_method,
+        authenticated_with_oauth: !!authenticated_with_oauth,
       )
     user_auth_token.unhashed_auth_token = token
 
@@ -281,18 +280,18 @@ end
 #
 # Table name: user_auth_tokens
 #
-#  id              :integer          not null, primary key
-#  user_id         :integer          not null
-#  auth_token      :string           not null
-#  prev_auth_token :string           not null
-#  user_agent      :string
-#  auth_token_seen :boolean          default(FALSE), not null
-#  client_ip       :inet
-#  rotated_at      :datetime         not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  seen_at         :datetime
-#  login_method    :string(5)        default("local")
+#  id                       :integer          not null, primary key
+#  user_id                  :integer          not null
+#  auth_token               :string           not null
+#  prev_auth_token          :string           not null
+#  user_agent               :string
+#  auth_token_seen          :boolean          default(FALSE), not null
+#  client_ip                :inet
+#  rotated_at               :datetime         not null
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  seen_at                  :datetime
+#  authenticated_with_oauth :boolean          default(FALSE)
 #
 # Indexes
 #

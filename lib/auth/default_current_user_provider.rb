@@ -140,7 +140,7 @@ class Auth::DefaultCurrentUserProvider
           end
 
         current_user = @user_token.try(:user)
-        current_user.login_method = @user_token.login_method if current_user
+        current_user.authenticated_with_oauth = @user_token.authenticated_with_oauth if current_user
       end
 
       if !current_user
@@ -268,7 +268,7 @@ class Auth::DefaultCurrentUserProvider
         client_ip: @request.ip,
         staff: user.staff?,
         impersonate: opts[:impersonate],
-        login_method: opts[:login_method],
+        authenticated_with_oauth: opts[:authenticated_with_oauth],
       )
 
     set_auth_cookie!(@user_token.unhashed_auth_token, user, cookie_jar)

@@ -182,7 +182,7 @@ class Users::OmniauthCallbacksController < ApplicationController
         return
       end
 
-      log_on_user(user, { login_method: Auth::LOGIN_METHOD_OAUTH })
+      log_on_user(user, { authenticated_with_oauth: true })
       Invite.invalidate_for_email(user.email) # invite link can't be used to log in anymore
       session[:authentication] = nil # don't carry around old auth info, perhaps move elsewhere
       @auth_result.authenticated = true

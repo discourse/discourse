@@ -397,7 +397,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         user.reload
         expect(user.email_confirmed?).to eq(true)
-        expect(user.user_auth_tokens.last.login_method).to eq("oauth")
+        expect(user.user_auth_tokens.last.authenticated_with_oauth).to be true
       end
 
       it "should return the authenticated response with the correct path for subfolders" do
