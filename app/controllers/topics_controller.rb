@@ -1028,9 +1028,12 @@ class TopicsController < ApplicationController
         .symbolize_keys
 
     raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?
+
     operator = TopicsBulkAction.new(current_user, topic_ids, operation, group: operation[:group])
-    changed_topic_ids = operator.perform!
-    render_json_dump topic_ids: changed_topic_ids
+    hijack(info: "topics bulk action #{operation[:type]}") do
+      changed_topic_ids = operator.perform!
+      render_json_dump topic_ids: changed_topic_ids
+    end
   end
 
   def private_message_reset_new
