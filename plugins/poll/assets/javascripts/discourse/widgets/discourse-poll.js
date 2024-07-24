@@ -225,6 +225,7 @@ export default createWidget("discourse-poll", {
   },
 
   removeVote() {
+    let successfulRetraction = false;
     return ajax("/polls/vote", {
       type: "DELETE",
       data: {
@@ -250,12 +251,14 @@ export default createWidget("discourse-poll", {
           this.state.post,
           this.state.vote
         );
-        this.scheduleRerender();
-        return true;
+        successfulRetraction = true;
       })
       .catch((error) => {
         popupAjaxError(error);
-        return false;
+      })
+      .finally(() => {
+        this.scheduleRerender();
+        return successfulRetraction;
       });
   },
 
