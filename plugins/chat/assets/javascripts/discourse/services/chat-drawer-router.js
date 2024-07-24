@@ -16,7 +16,7 @@ const ROUTES = {
   // order matters, non index before index
   "chat.browse": {
     name: ChatDrawerRoutesBrowse,
-    extractParams: () => ({ currentTab: "all" }),
+    extractParams: () => ({ currentTab: "open" }),
   },
   "chat.browse.index": {
     name: ChatDrawerRoutesBrowse,

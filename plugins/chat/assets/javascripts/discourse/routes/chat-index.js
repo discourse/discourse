@@ -47,12 +47,6 @@ export default class ChatIndexRoute extends DiscourseRoute {
       this.siteSettings.chat_preferred_index === "channels" &&
       this.isPublicChannelsEnabled
     ) {
-      const id = this.currentUser.custom_fields.last_chat_channel_id;
-      if (id && this.site.desktopView) {
-        return this.chatChannelsManager.find(id).then((c) => {
-          return this.router.replaceWith("chat.channel", ...c.routeModels);
-        });
-      }
       return this.router.replaceWith("chat.channels");
     }
     return this.router.replaceWith("chat.browse");
