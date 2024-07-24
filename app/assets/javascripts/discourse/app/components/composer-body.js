@@ -207,10 +207,6 @@ export default Component.extend({
   },
 
   keyDown(e) {
-    if (document.body.classList.contains("modal-open")) {
-      return;
-    }
-
     if (e.key === "Escape") {
       e.preventDefault();
       this.cancelled();
