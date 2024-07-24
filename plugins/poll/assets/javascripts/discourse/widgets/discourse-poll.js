@@ -48,10 +48,25 @@ export default createWidget("discourse-poll", {
       vote: attrs.vote,
       hasSavedVote: attrs.hasSavedVote,
       options: attrs.poll.options,
-      preloadedVoters: attrs.poll.preloaded_voters,
+      preloadedVoters: this.populatePreloadedVoters(attrs),
       groupableUserFields: attrs.groupableUserFields,
       rankedChoiceOutcome: attrs.poll.ranked_choice_outcome || [],
     };
+  },
+
+  populatePreloadedVoters(attrs) {
+    let preloadedVoters = {};
+
+    if (attrs.poll.public) {
+      Object.keys(attrs.poll.preloaded_voters).forEach((key) => {
+        preloadedVoters[key] = {
+          voters: attrs.poll.preloaded_voters[key],
+          loading: false,
+        };
+      });
+    }
+
+    return preloadedVoters;
   },
 
   closed(attrs) {
@@ -250,9 +265,15 @@ export default createWidget("discourse-poll", {
 
   fetchVoters(optionId) {
     let votersCount;
-    let options = this.state.options;
-    options.find((option) => option.id === optionId).loading = true;
-    this.state.options = [...options];
+    let preloadedVoters = this.state.preloadedVoters;
+
+    Object.keys(preloadedVoters).forEach((key) => {
+      if (key === optionId) {
+        preloadedVoters[key].loading = true;
+      }
+    });
+
+    this.state.preloadedVoters = Object.assign(preloadedVoters);
 
     votersCount = this.state.options.find(
       (option) => option.id === optionId
@@ -270,7 +291,7 @@ export default createWidget("discourse-poll", {
       .then((result) => {
         const voters =
           (optionId
-            ? this.state.preloadedVoters[optionId]
+            ? this.state.preloadedVoters[optionId].voters
             : this.state.preloadedVoters) || [];
 
         const newVoters = optionId ? result.voters[optionId] : result.voters;
@@ -288,15 +309,32 @@ export default createWidget("discourse-poll", {
           if (this.state.poll.type === REGULAR) {
             Object.keys(this.state.preloadedVoters).forEach((otherOptionId) => {
               if (optionId !== otherOptionId) {
-                this.state.preloadedVoters[otherOptionId] =
-                  this.state.preloadedVoters[otherOptionId].filter(
+                this.state.preloadedVoters[otherOptionId].voters =
+                  this.state.preloadedVoters[otherOptionId].voters.filter(
                     (voter) => !votersSet.has(voter.username)
                   );
               }
             });
           }
         }
-        this.state.preloadedVoters[optionId] = [...new Set([...newVoters])];
+        const combinedArray = [
+          ...this.state.preloadedVoters[optionId].voters,
+          ...newVoters,
+        ];
+
+        const uniqueUsers = combinedArray.reduce((acc, user) => {
+          acc[user.username] = user;
+          return acc;
+        }, {});
+
+        const uniqueArray = Object.values(uniqueUsers);
+
+        preloadedVoters = {
+          voters: uniqueArray,
+          loading: false,
+        };
+
+        this.state.preloadedVoters[optionId] = Object.assign(preloadedVoters);
       })
       .catch((error) => {
         if (error) {
@@ -306,15 +344,14 @@ export default createWidget("discourse-poll", {
         }
       })
       .finally(() => {
-        options.find((option) => option.id === optionId).loading = false;
-        this.state.options = [...options];
+        // this.state.preloadedVoters = preloadedVoters;
         this.scheduleRerender();
       });
   },
 
   html(attrs) {
     this.state.options = attrs.poll.options;
-    this.state.preloadedVoters = attrs.poll.preloaded_voters;
+    this.state.preloadedVoters = this.populatePreloadedVoters(attrs);
     if (this.state.isRankedChoice) {
       this.state.rankedChoiceOutcome = attrs.poll.ranked_choice_outcome || [];
     }

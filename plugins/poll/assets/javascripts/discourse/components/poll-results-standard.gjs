@@ -40,10 +40,14 @@ export default class PollResultsStandardComponent extends Component {
       const chosen = (this.args.vote || []).includes(option.id);
       option.percentage = per;
       option.chosen = chosen;
-      let voters = this.args.isPublic ? this.args.voters[option.id] || [] : [];
+      let voters = this.args.isPublic
+        ? this.args.voters[option.id]?.voters || []
+        : [];
       option.voters = [...voters];
+      option.loading = this.args.isPublic
+        ? this.args.voters[option.id]?.loading || false
+        : false;
     });
-
     return ordered;
   };
 
