@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-// import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
@@ -352,7 +351,6 @@ export default class PollComponent extends Component {
           this.dialog.alert(I18n.t("poll.error_while_exporting_results"));
         }
       });
-    // {{didUpdate this.updatedVoters @preloadedVoters}}
   }
 
   <template>

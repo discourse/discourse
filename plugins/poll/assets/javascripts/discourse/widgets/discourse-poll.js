@@ -93,20 +93,6 @@ export default createWidget("discourse-poll", {
     );
   },
 
-  updatedVoters() {
-    // this.preloadedVoters = this.args.preloadedVoters;
-    // this.options = [...this.args.options];
-    if (this.isRankedChoice) {
-      this.options.forEach((candidate) => {
-        let specificVote = this.vote.find(
-          (vote) => vote.digest === candidate.id
-        );
-        let rank = specificVote ? specificVote.rank : 0;
-        candidate.rank = rank;
-      });
-    }
-  },
-
   toggleStatus() {
     this.dialog.yesNoConfirm({
       message: I18n.t(
@@ -264,10 +250,9 @@ export default createWidget("discourse-poll", {
 
   fetchVoters(optionId) {
     let votersCount;
-    // this.loading = true;
-    // let options = this.state.options;
-    // options.find((option) => option.id === optionId).loading = true;
-    // this.state.options = [...options];
+    let options = this.state.options;
+    options.find((option) => option.id === optionId).loading = true;
+    this.state.options = [...options];
 
     votersCount = this.state.options.find(
       (option) => option.id === optionId
@@ -321,13 +306,18 @@ export default createWidget("discourse-poll", {
         }
       })
       .finally(() => {
+        options.find((option) => option.id === optionId).loading = false;
+        this.state.options = [...options];
         this.scheduleRerender();
-        // options.find((option) => option.id === optionId).loading = false;
-        // this.options = [...options];
       });
   },
 
   html(attrs) {
+    this.state.options = attrs.poll.options;
+    this.state.preloadedVoters = attrs.poll.preloaded_voters;
+    if (this.state.isRankedChoice) {
+      this.state.rankedChoiceOutcome = attrs.poll.ranked_choice_outcome || [];
+    }
     attrs.poll.options.forEach((option) => {
       option.rank = 0;
       if (this.state.isRankedChoice) {
@@ -383,7 +373,7 @@ export default createWidget("discourse-poll", {
           closed: this.state.closed,
           topicArchived: this.state.topicArchived,
           staffOnly: this.state.staffOnly,
-          options: attrs.poll.options,
+          options: this.state.options,
           voters: attrs.poll.voters,
           vote: this.state.vote,
           preloadedVoters: this.state.preloadedVoters,
