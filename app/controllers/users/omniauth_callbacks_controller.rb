@@ -29,6 +29,8 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     authenticator = self.class.find_authenticator(params[:provider])
 
+    session[:oauth] = true
+
     if session.delete(:auth_reconnect) && authenticator.can_connect_existing_user? && current_user
       path = persist_auth_token(auth)
       return redirect_to path
@@ -86,7 +88,6 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     cookies["_bypass_cache"] = true
     cookies[:authentication_data] = { value: client_hash.to_json, path: Discourse.base_path("/") }
-    secure_session.set("oauth", true, expires: SiteSetting.maximum_session_age.hours)
     redirect_to @origin
   end
 
