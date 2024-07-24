@@ -292,7 +292,7 @@ end
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  seen_at         :datetime
-#  login_method    :string           default("local")
+#  login_method    :string(5)        default("local")
 #
 # Indexes
 #
