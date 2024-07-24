@@ -20,7 +20,7 @@ const ROUTES = {
   },
   "chat.browse.index": {
     name: ChatDrawerRoutesBrowse,
-    extractParams: () => ({ currentTab: "all" }),
+    extractParams: () => ({ currentTab: "open" }),
   },
   "chat.browse.open": {
     name: ChatDrawerRoutesBrowse,
