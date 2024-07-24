@@ -116,13 +116,16 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @title={{i18n "admin.config_areas.about.site_contact_name"}}
         @subtitle={{i18n "admin.config_areas.about.site_contact_group_help"}}
         @onSet={{this.setContactUsername}}
+        @format="large"
         as |field|
       >
-        <UserChooser
-          @value={{field.value}}
-          @options={{hash maximum=1}}
-          @onChange={{field.set}}
-        />
+        <field.Custom>
+          <UserChooser
+            @value={{field.value}}
+            @options={{hash maximum=1}}
+            @onChange={{field.set}}
+          />
+        </field.Custom>
       </form.Field>
 
       <form.Field
@@ -130,14 +133,17 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @title={{i18n "admin.config_areas.about.site_contact_group"}}
         @subtitle={{i18n "admin.config_areas.about.site_contact_group_help"}}
         @onSet={{this.setContactGroup}}
+        @format="large"
         as |field|
       >
-        <GroupChooser
-          @content={{this.site.groups}}
-          @value={{this.contactGroupId}}
-          @options={{hash maximum=1}}
-          @onChange={{field.set}}
-        />
+        <field.Custom>
+          <GroupChooser
+            @content={{this.site.groups}}
+            @value={{this.contactGroupId}}
+            @options={{hash maximum=1}}
+            @onChange={{field.set}}
+          />
+        </field.Custom>
       </form.Field>
 
       <form.Submit
