@@ -150,7 +150,7 @@ module JsLocaleHelper
           )
         end
         .compact_blank
-    compiled = MessageFormat.compile(message_formats.keys, message_formats)
+    compiled = MessageFormat.compile(message_formats.keys, message_formats, strict: false)
     transpiled = DiscourseJsProcessor.transpile(<<~JS, "", "discourse-mf")
       import Messages from '@messageformat/runtime/messages';
       #{compiled.sub("export default", "const msgData =")};
