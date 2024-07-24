@@ -317,10 +317,6 @@ export default function setupTests(config) {
     resetPretender();
     clearPresenceState();
 
-    // Clean up the DOM. Some tests might leave extra classes or elements behind.
-    Array.from(document.getElementsByClassName("d-modal__backdrop")).forEach(
-      (e) => e.remove()
-    );
     document.body.removeAttribute("class");
     let html = document.documentElement;
     html.removeAttribute("class");
