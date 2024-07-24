@@ -38,7 +38,7 @@ export default class PollVotersComponent extends Component {
         {{/if}}
         {{#each rank.voters as |user|}}
           <li>
-            {{avatar user.user.avatar_template "tiny"}}
+            <a data-user-card="{{user.username}}" >{{avatar user.avatar_template "tiny" usernamePath=user.username namePath=user.name title=user.username}}</a>
           </li>
         {{/each}}
       </ul>
