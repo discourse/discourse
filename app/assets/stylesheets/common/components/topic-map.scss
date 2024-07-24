@@ -42,7 +42,10 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  column-gap: 0.75em;
+
+  &:has(.topic-map__additional-contents *) {
+    column-gap: 0.75em;
+  }
 
   .--users-summary {
     display: flex;

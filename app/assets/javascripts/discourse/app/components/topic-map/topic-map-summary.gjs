@@ -12,6 +12,7 @@ import TopicParticipants from "discourse/components/topic-map/topic-participants
 import TopicViews from "discourse/components/topic-map/topic-views";
 import TopicViewsChart from "discourse/components/topic-map/topic-views-chart";
 import avatar from "discourse/helpers/bound-avatar-template";
+import concatClass from "discourse/helpers/concat-class";
 import number from "discourse/helpers/number";
 import { ajax } from "discourse/lib/ajax";
 import { emojiUnescape } from "discourse/lib/text";
@@ -95,6 +96,12 @@ export default class TopicMapSummary extends Component {
       [this.hasViews, this.hasLikes, this.hasUsers, this.hasLinks].filter(
         Boolean
       ).length === 1
+    );
+  }
+
+  get manyStats() {
+    return [this.hasViews, this.hasLikes, this.hasUsers, this.hasLinks].every(
+      Boolean
     );
   }
 
@@ -234,7 +241,13 @@ export default class TopicMapSummary extends Component {
   }
 
   <template>
-    <div class="topic-map__stats {{if this.loneStat '--single-stat'}}">
+    <div
+      class={{concatClass
+        "topic-map__stats"
+        (if this.loneStat "--single-stat")
+        (if this.manyStats "--many-stats")
+      }}
+    >
       <DMenu
         @arrow={{true}}
         @identifier="topic-map__views"
