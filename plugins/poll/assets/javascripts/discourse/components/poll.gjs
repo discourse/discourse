@@ -365,7 +365,7 @@ export default class PollComponent extends Component {
             <span>{{this.averageRating}}</span>
           {{else}}
             {{#if this.resultsPie}}
-              <PollResultsPie @id={{this.id}} @options={{this.args.options}} />
+              <PollResultsPie @id={{this.id}} @options={{@options}} />
             {{else}}
               <PollResultsTabs
                 @options={{@options}}
@@ -387,7 +387,7 @@ export default class PollComponent extends Component {
         <PollOptions
           @isCheckbox={{this.isCheckbox}}
           @isRankedChoice={{@isRankedChoice}}
-          @rankedChoiceDropdownContent={{this.args.rankedChoiceDropdownContent}}
+          @rankedChoiceDropdownContent={{@rankedChoiceDropdownContent}}
           @options={{@options}}
           @votes={{@vote}}
           @sendOptionSelect={{this.toggleOption}}
