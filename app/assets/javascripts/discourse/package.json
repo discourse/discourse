@@ -47,7 +47,7 @@
     "@ember/optional-features": "^2.1.0",
     "@ember/render-modifiers": "^2.1.0",
     "@ember/string": "^4.0.0",
-    "@ember/test-helpers": "^3.3.0",
+    "@ember/test-helpers": "^3.3.1",
     "@embroider/compat": "^3.6.0",
     "@embroider/core": "^3.4.14",
     "@embroider/macros": "^1.13.1",
