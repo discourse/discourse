@@ -2221,8 +2221,8 @@ en:
         other: "There are <b>%{count}</b> replies."
       buttons:
         hide: "Hide summary"
-        generate: "Summarize with AI"
-        regenerate: "Regenerate summary"
+        generate: "Summarize"
+        regenerate: "Regenerate"
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       description_time_MF: |

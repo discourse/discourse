@@ -419,8 +419,8 @@ export default class TopicMapSummary extends Component {
             </span>
           </div>
         {{/if}}
-        <div class="summarization-buttons">
-          {{#if @topic.has_summary}}
+        {{#if @topic.has_summary}}
+          <div class="summarization-button">
             <DButton
               @action={{if
                 @postStream.summary
@@ -432,8 +432,8 @@ export default class TopicMapSummary extends Component {
               @icon={{this.topRepliesIcon}}
               class="top-replies"
             />
-          {{/if}}
-        </div>
+          </div>
+        {{/if}}
       </div>
     </div>
   </template>
