@@ -139,6 +139,10 @@ export default class ComposerService extends Service {
     return getOwnerWithFallback(this).lookup("controller:topic");
   }
 
+  get isOpen() {
+    return this.model?.composeState === Composer.OPEN;
+  }
+
   @on("init")
   _setupPreview() {
     const val = this.site.mobileView
