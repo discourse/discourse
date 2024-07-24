@@ -66,7 +66,9 @@ export default class FooterNav extends Component {
     return (
       [UNSCROLLED, SCROLLED_UP].includes(
         this.scrollDirection.lastScrollDirection
-      ) && !this.composer.isOpen
+      ) &&
+      !this.composer.isOpen &&
+      (this.capabilities.isAppWebview || this.canGoBack || this.canGoForward)
     );
   }
 
