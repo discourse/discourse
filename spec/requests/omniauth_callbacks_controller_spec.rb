@@ -236,11 +236,6 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(data["email_valid"]).to eq(true)
         expect(data["can_edit_username"]).to eq(true)
         expect(data["destination_url"]).to eq(destination_url)
-        expect(read_secure_session["oauth"]).to eq("true")
-        expect(Discourse.redis.ttl("#{session[:secure_session_id]}oauth")).to be_between(
-          SiteSetting.maximum_session_age.hours.seconds - 10,
-          SiteSetting.maximum_session_age.hours.seconds,
-        )
       end
 
       it "should return the right response for staged users" do
@@ -402,6 +397,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         user.reload
         expect(user.email_confirmed?).to eq(true)
+        expect(user.user_auth_tokens.last.authenticated_with_oauth).to be true
       end
 
       it "should return the authenticated response with the correct path for subfolders" do
