@@ -29,3 +29,9 @@
 <%- if theme_id.present? %>
   <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_theme : :desktop_theme) %>
 <%- end %>
+
+<%- if async_stylesheets %>
+  <script nonce="<%= csp_nonce_placeholder %>">
+    <%= AsyncStylesheetsHelper.raw_js %>
+  </script>
+<%- end %>

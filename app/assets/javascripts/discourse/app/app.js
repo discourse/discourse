@@ -54,9 +54,51 @@ class Discourse extends Application {
     _pluginCallbacks.push({ version, code });
   }
 
+  _cssReady() {
+    const stylesheetElements =
+      document.getElementsByClassName("async-css-loading");
+
+    if (stylesheetElements.length === 0) {
+      return true;
+    }
+
+    const processed = [...stylesheetElements].every((stylesheetElement) => {
+      return stylesheetElement.dataset.processed === "true";
+    });
+
+    if (processed) {
+      [...stylesheetElements].forEach((stylesheetElement) => {
+        stylesheetElement.media = stylesheetElement.dataset.media;
+        delete stylesheetElement.dataset["media"];
+      });
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  _displayApp() {
+    document.querySelector("#d-splash")?.remove();
+    document.getElementById("main").classList.remove("app-hidden");
+    document.getElementById("app-hidden-style")?.remove();
+  }
+
   ready() {
     performance.mark("discourse-ready");
-    document.querySelector("#d-splash")?.remove();
+
+    if (this._cssReady()) {
+      return this._displayApp();
+    }
+
+    let interval;
+
+    interval = setInterval(() => {
+      if (this._cssReady()) {
+        clearInterval(interval);
+        this._displayApp();
+      }
+    }, 50);
   }
 }
 

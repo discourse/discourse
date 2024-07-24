@@ -121,7 +121,15 @@
       <%= build_plugin_html 'server:header' %>
     <%- end %>
 
-    <section id='main'>
+    <%- if async_stylesheets %>
+      <style id="app-hidden-style">
+        .app-hidden {
+          display: none;
+        }
+      </style>
+    <%- end %>
+
+    <section id='main' <%= async_stylesheets ? "class=app-hidden" : "" %> >
     </section>
 
     <% unless current_user %>

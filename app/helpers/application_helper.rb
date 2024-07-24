@@ -536,6 +536,10 @@ module ApplicationHelper
     end
   end
 
+  def async_stylesheets
+    params["async_stylesheets"].to_s == "true"
+  end
+
   def stylesheet_manager
     return @stylesheet_manager if defined?(@stylesheet_manager)
     @stylesheet_manager = Stylesheet::Manager.new(theme_id: theme_id)
@@ -627,7 +631,12 @@ module ApplicationHelper
         stylesheet_manager
       end
 
-    manager.stylesheet_link_tag(name, "all", self.method(:add_resource_preload_list))
+    manager.stylesheet_link_tag(
+      name,
+      "all",
+      self.method(:add_resource_preload_list),
+      async_stylesheets,
+    )
   end
 
   def discourse_preload_color_scheme_stylesheets
@@ -650,6 +659,7 @@ module ApplicationHelper
       scheme_id,
       "all",
       self.method(:add_resource_preload_list),
+      async_stylesheets,
     )
 
     if dark_scheme_id != -1
@@ -657,6 +667,7 @@ module ApplicationHelper
         dark_scheme_id,
         "(prefers-color-scheme: dark)",
         self.method(:add_resource_preload_list),
+        async_stylesheets,
       )
     end
 

@@ -257,7 +257,7 @@ class Stylesheet::Manager
       .html_safe
   end
 
-  def stylesheet_link_tag(target = :desktop, media = "all", preload_callback = nil)
+  def stylesheet_link_tag(target = :desktop, media = "all", preload_callback = nil, async = false)
     stylesheets = stylesheet_details(target, media)
     stylesheets
       .map do |stylesheet|
@@ -267,7 +267,12 @@ class Stylesheet::Manager
         data_theme_id = theme_id ? "data-theme-id=\"#{theme_id}\"" : ""
         theme_name = stylesheet[:theme_name]
         data_theme_name = theme_name ? "data-theme-name=\"#{CGI.escapeHTML(theme_name)}\"" : ""
-        %[<link href="#{href}" media="#{media}" rel="stylesheet" data-target="#{target}" #{data_theme_id} #{data_theme_name}/>]
+
+        if async
+          %[<link class='async-css-loading' href="#{href}" media="print" rel="stylesheet" type="text/css" data-media="#{media}" data-target="#{target}" #{data_theme_id} #{data_theme_name}/>]
+        else
+          %[<link href="#{href}" media="#{media}" rel="stylesheet" data-target="#{target}" #{data_theme_id} #{data_theme_name}/>]
+        end
       end
       .join("\n")
       .html_safe
@@ -382,7 +387,12 @@ class Stylesheet::Manager
     %[<link href="#{href}" rel="preload" as="style"/>].html_safe
   end
 
-  def color_scheme_stylesheet_link_tag(color_scheme_id = nil, media = "all", preload_callback = nil)
+  def color_scheme_stylesheet_link_tag(
+    color_scheme_id = nil,
+    media = "all",
+    preload_callback = nil,
+    async = false
+  )
     stylesheet = color_scheme_stylesheet_details(color_scheme_id, media)
 
     return "" if !stylesheet
@@ -392,6 +402,10 @@ class Stylesheet::Manager
 
     css_class = media == "all" ? "light-scheme" : "dark-scheme"
 
-    %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"/>].html_safe
+    if async
+      %[<link class="async-css-loading #{css_class}" href="#{href}" media="print" data-media="#{media}" rel="stylesheet" type="text/css" />].html_safe
+    else
+      %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"/>].html_safe
+    end
   end
 end
