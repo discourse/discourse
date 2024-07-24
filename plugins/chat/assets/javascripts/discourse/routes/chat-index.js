@@ -49,6 +49,6 @@ export default class ChatIndexRoute extends DiscourseRoute {
     ) {
       return this.router.replaceWith("chat.channels");
     }
-    return this.router.replaceWith("chat.browse.all");
+    return this.router.replaceWith("chat.browse.open");
   }
 }
