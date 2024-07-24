@@ -7,8 +7,6 @@ import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import round from "discourse/lib/round";
-import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import PollBreakdownModal from "../components/modal/poll-breakdown";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
@@ -411,47 +409,43 @@ export default class PollComponent extends Component {
     <div class="poll-buttons">
       {{#if this.showCastVotesButton}}
         <DButton
-          @class={{this.castVotesButtonClass}}
+          class={{this.castVotesButtonClass}}
           @title="poll.cast-votes.title"
           @disabled={{this.castVotesDisabled}}
           @action={{this.castVotes}}
-        >
-          {{icon this.castVotesButtonIcon}}
-          <span class="d-button-label">{{i18n "poll.cast-votes.label"}}</span>
-        </DButton>
+          @icon={{this.castVotesButtonIcon}}
+          @label="poll.cast-votes.label"
+        />
       {{/if}}
 
       {{#if this.showHideResultsButton}}
         <DButton
           class="btn btn-default toggle-results"
-          title="poll.hide-results.title"
+          @title="poll.hide-results.title"
           @action={{this.toggleResults}}
-        >
-          {{icon "chevron-left"}}
-          <span class="d-button-label">{{i18n "poll.hide-results.label"}}</span>
-        </DButton>
+          @icon="chevron-left"
+          @label="poll.hide-results.label"
+        />
       {{/if}}
 
       {{#if this.showShowResultsButton}}
         <DButton
-          @class="btn btn-default toggle-results"
+          class="btn btn-default toggle-results"
           @title="poll.show-results.title"
           @action={{this.toggleResults}}
-        >
-          {{icon "chart-bar"}}
-          <span class="d-button-label">{{i18n "poll.show-results.label"}}</span>
-        </DButton>
+          @icon="chart-bar"
+          @label="poll.show-results.label"
+        />
       {{/if}}
 
       {{#if this.showRemoveVoteButton}}
         <DButton
-          @class="btn btn-default remove-vote"
+          class="btn btn-default remove-vote"
           @title="poll.remove-vote.title"
           @action={{this.removeVote}}
-        >
-          {{icon "undo"}}
-          <span class="d-button-label">{{i18n "poll.remove-vote.label"}}</span>
-        </DButton>
+          @icon="undo"
+          @label="poll.remove-vote.label"
+        />
       {{/if}}
 
       <PollButtonsDropdown
