@@ -2428,12 +2428,6 @@ developer:
     default: ""
     client: true
     hidden: true
-  experimental_flags_admin_page_enabled_groups:
-    default: ""
-    type: group_list
-    list_type: compact
-    allow_any: false
-    refresh: true
   experimental_redesigned_about_page_groups:
     default: ""
     type: group_list
