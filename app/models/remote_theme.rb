@@ -84,8 +84,10 @@ class RemoteTheme < ActiveRecord::Base
 
   # This is only used in the development and test environment and is currently not supported for other environments
   if Rails.env.test? || Rails.env.development?
-    def self.import_theme_from_directory(directory)
-      update_theme(ThemeStore::DirectoryImporter.new(directory))
+    def self.import_theme_from_directory(directory, update_components: false)
+      update_theme(
+        ThemeStore::DirectoryImporter.new(directory, update_components: update_components),
+      )
     end
   end
 
