@@ -35,10 +35,6 @@ export default class TopicTitle extends Component {
 
   @action
   keyDown(e) {
-    if (document.body.classList.contains("modal-open")) {
-      return;
-    }
-
     if (e.key === "Escape") {
       e.preventDefault();
       this.args.cancelled();

@@ -2010,6 +2010,7 @@ RSpec.describe SessionController do
 
           expect(session[:current_user_id]).to eq(user.id)
           expect(user.user_auth_tokens.count).to eq(1)
+          expect(user.user_auth_tokens.last.authenticated_with_oauth).to be false
           unhashed_token = decrypt_auth_cookie(cookies[:_t])[:token]
           expect(UserAuthToken.hash_token(unhashed_token)).to eq(
             user.user_auth_tokens.first.auth_token,

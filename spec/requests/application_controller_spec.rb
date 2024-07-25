@@ -152,8 +152,8 @@ RSpec.describe ApplicationController do
 
     it "should redirect users when enforce_second_factor is 'all' and authenticated via oauth" do
       SiteSetting.enforce_second_factor = "all"
-      write_secure_session("oauth", true)
       sign_in(user)
+      user.user_auth_tokens.last.update(authenticated_with_oauth: true)
 
       get "/"
       expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
@@ -162,8 +162,8 @@ RSpec.describe ApplicationController do
     it "should not redirect users when enforce_second_factor is 'all', authenticated via oauth but enforce_second_factor_on_external_auth is false" do
       SiteSetting.enforce_second_factor = "all"
       SiteSetting.enforce_second_factor_on_external_auth = false
-      write_secure_session("oauth", true)
       sign_in(user)
+      user.user_auth_tokens.last.update(authenticated_with_oauth: true)
 
       get "/"
       expect(response.status).to eq(200)

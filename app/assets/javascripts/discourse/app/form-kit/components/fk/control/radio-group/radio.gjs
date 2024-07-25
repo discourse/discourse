@@ -1,8 +1,17 @@
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { eq } from "truth-helpers";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import uniqueId from "discourse/helpers/unique-id";
 import withEventValue from "discourse/helpers/with-event-value";
+
+const radioTitle = <template>
+  <span class="form-kit__control-radio-title">{{yield}}</span>
+</template>;
+
+const radioDescription = <template>
+  <span class="form-kit__control-radio-description">{{yield}}</span>
+</template>;
 
 const FKControlRadioGroupRadio = <template>
   {{#let (uniqueId) as |uuid|}}
@@ -19,7 +28,9 @@ const FKControlRadioGroupRadio = <template>
           ...attributes
           {{on "change" (withEventValue @field.set)}}
         />
-        <span>{{yield}}</span>
+        <span class="form-kit__control-radio-content">
+          {{yield (hash Title=radioTitle Description=radioDescription)}}
+        </span>
       </FKLabel>
     </div>
   {{/let}}

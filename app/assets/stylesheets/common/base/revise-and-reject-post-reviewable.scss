@@ -1,21 +1,4 @@
 .modal.revise-and-reject-reviewable {
-  .modal-inner-container {
-    max-width: 30em;
-  }
-
-  .modal-body {
-    .control-label {
-      font-weight: 700;
-    }
-
-    .select-kit {
-      width: 100%;
-      summary {
-        height: 100%;
-      }
-    }
-  }
-
   .revise-and-reject-reviewable__optional {
     margin-left: 0.5em;
     color: var(--primary-low-mid);

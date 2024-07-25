@@ -140,8 +140,8 @@ module.exports = function (defaults) {
           chunkFilename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
         },
         optimization: {
-          // Disable webpack minimization. Embroider automatically applies terser after webpack.
-          minimize: false,
+          // TODO: Minimization being disabled is a bug and we are currently working to restore it.
+          minimize: process.env.DISCOURSE_WEBPACK_MINIMIZE === "1",
         },
         cache: isProduction
           ? false
