@@ -4,11 +4,14 @@ class Jobs::Onceoff < ::Jobs::Base
   sidekiq_options retry: false
 
   class << self
-    attr_reader :onceoff_job_klasses
+    @@onceoff_job_klasses = Set.new
 
     def inherited(klass)
-      @onceoff_job_klasses ||= Set.new
-      @onceoff_job_klasses << klass
+      @@onceoff_job_klasses << klass
+    end
+
+    def onceoff_job_klasses
+      @@onceoff_job_klasses
     end
   end
 
