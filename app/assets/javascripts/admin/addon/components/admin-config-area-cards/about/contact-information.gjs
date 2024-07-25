@@ -86,7 +86,11 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @format="large"
         as |field|
       >
-        <field.Input />
+        <field.Input
+          placeholder={{i18n
+            "admin.config_areas.about.community_owner_placeholder"
+          }}
+        />
       </form.Field>
 
       <form.Field
@@ -97,7 +101,11 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @format="large"
         as |field|
       >
-        <field.Input />
+        <field.Input
+          placeholder={{i18n
+            "admin.config_areas.about.contact_email_placeholder"
+          }}
+        />
       </form.Field>
 
       <form.Field
@@ -108,7 +116,11 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         @format="large"
         as |field|
       >
-        <field.Input />
+        <field.Input
+          placeholder={{i18n
+            "admin.config_areas.about.contact_url_placeholder"
+          }}
+        />
       </form.Field>
 
       <form.Field

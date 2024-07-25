@@ -71,7 +71,11 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         @format="large"
         as |field|
       >
-        <field.Input />
+        <field.Input
+          placeholder={{i18n
+            "admin.config_areas.about.community_name_placeholder"
+          }}
+        />
       </form.Field>
 
       <form.Field
