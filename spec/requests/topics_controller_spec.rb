@@ -5767,7 +5767,7 @@ RSpec.describe TopicsController do
     end
 
     it "does nothing if user from ID does not exist" do
-      topic.destroy!
+      user.destroy!
       expect {
         TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
         Scheduler::Defer.do_all_work
