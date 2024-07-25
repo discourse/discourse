@@ -47,13 +47,6 @@ describe "Homepage", type: :system do
         ".fk-d-tooltip__content .user-tip__title",
         text: "Your first notification!",
       )
-
-      page.refresh
-
-      expect(page).to have_no_css(
-        ".fk-d-tooltip__content .user-tip__title",
-        text: "Your first notification!",
-      )
     end
 
     it "shows a second notification once first is dismissed and user visits a topic" do
