@@ -1,21 +1,17 @@
-article {
+.topic-map.--op {
   // topic map under OP
-  .topic-map {
-    border-top: 1px solid var(--primary-low);
-    border-bottom: none;
-  }
+  border-top: 1px solid var(--primary-low);
+  border-bottom: none;
 }
 
-.container.posts {
+.topic-map.--bottom {
   // topic map at bottom of topic
-  > .topic-map {
-    grid-area: posts;
-    grid-row: 2;
-    max-width: calc(
-      var(--topic-avatar-width) + var(--topic-body-width) +
-        (var(--topic-body-width-padding) * 2)
-    );
-  }
+  grid-area: posts;
+  grid-row: 2;
+  max-width: calc(
+    var(--topic-avatar-width) + var(--topic-body-width) +
+      (var(--topic-body-width-padding) * 2)
+  );
 }
 
 .topic-map {
@@ -34,6 +30,23 @@ article {
     font-size: var(--font-down-1);
   }
 
+  @media screen and (max-width: 500px) {
+    padding-left: 0;
+  }
+
+  padding-left: calc(
+    var(--topic-body-width-padding) + var(--topic-avatar-width)
+  );
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  &:has(.topic-map__additional-contents *) {
+    column-gap: 0.75em;
+  }
+
   .--users-summary {
     display: flex;
     flex-wrap: wrap;
@@ -43,6 +56,8 @@ article {
     align-self: center;
     flex: 1 2 0;
     gap: 0.25em;
+    min-width: 2em;
+    width: 0;
 
     .avatar {
       width: 2em;
@@ -102,12 +117,8 @@ article {
   }
 
   &__contents {
-    padding: 0.5em 0 0.5em
-      calc(var(--topic-body-width-padding) + var(--topic-avatar-width));
-
-    @media screen and (max-width: 500px) {
-      padding: 0.5em 0;
-    }
+    padding-block: 0.5em;
+    flex-grow: 1;
 
     .number {
       font-size: var(--font-up-1);
@@ -153,16 +164,6 @@ article {
           @include ellipsis;
         }
       }
-    }
-  }
-
-  &__additional-contents {
-    padding-left: calc(
-      var(--topic-body-width-padding) + var(--topic-avatar-width)
-    );
-
-    @media screen and (max-width: 500px) {
-      padding-left: 0;
     }
   }
 
