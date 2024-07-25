@@ -258,13 +258,6 @@ export default class BookmarkMenu extends Component {
           {{/unless}}
 
           {{#if this.showEditDeleteMenu}}
-            {{#if this.site.mobileView}}
-              <dropdown.item class="bookmark-menu__title">
-                {{icon "bookmark"}}
-                <span>{{i18n "bookmarks.bookmark"}}</span>
-              </dropdown.item>
-            {{/if}}
-
             <dropdown.item
               class="bookmark-menu__row -edit"
               data-menu-option-id="edit"
