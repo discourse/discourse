@@ -5,6 +5,8 @@ export function setup(helper) {
 
   helper.registerPlugin((md) => {
     md.core.ruler.push("anchor", (state) => {
+      const postId = helper.getOptions().postId;
+
       for (
         let idx = 0, lvl = 0, headingId = 0;
         idx < state.tokens.length;
@@ -44,6 +46,10 @@ export function setup(helper) {
         }
 
         slug = `${slug || "h"}-${++headingId}`;
+
+        if (postId) {
+          slug = `p-${postId}-${slug}`;
+        }
 
         linkOpen.attrSet("name", slug);
         linkOpen.attrSet("class", "anchor");
