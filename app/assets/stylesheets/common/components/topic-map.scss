@@ -14,6 +14,20 @@
   );
 }
 
+body:not(.archetype-private_message) {
+  .topic-map {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    &:has(.topic-map__additional-contents *) {
+      column-gap: 0.75em;
+    }
+  }
+}
+
 .topic-map {
   // both topic maps
   --chart-line-color: var(--tertiary);
@@ -37,15 +51,6 @@
   padding-left: calc(
     var(--topic-body-width-padding) + var(--topic-avatar-width)
   );
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-
-  &:has(.topic-map__additional-contents *) {
-    column-gap: 0.75em;
-  }
 
   .--users-summary {
     display: flex;
