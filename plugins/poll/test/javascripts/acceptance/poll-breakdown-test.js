@@ -66,8 +66,6 @@ acceptance("Poll breakdown", function (needs) {
   test("Displaying the poll breakdown modal", async function (assert) {
     await visit("/t/-/topic_with_pie_chart_poll");
 
-    await click(".widget-dropdown-header");
-
     assert.ok(
       exists("button.show-breakdown"),
       "shows the breakdown button when poll_groupable_user_fields is non-empty"
@@ -91,7 +89,6 @@ acceptance("Poll breakdown", function (needs) {
 
   test("Changing the display mode from percentage to count", async function (assert) {
     await visit("/t/-/topic_with_pie_chart_poll");
-    await click(".widget-dropdown-header");
 
     await click("button.show-breakdown");
 
