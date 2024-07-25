@@ -178,6 +178,18 @@ export default class ChatDrawerRouter extends Service {
     ) {
       return this.stateFor(this.#routeFromURL("/chat/direct-messages"));
     }
+
+    if (this.siteSettings.chat_default_channel_id) {
+      return this.chatChannelsManager
+        .find(this.siteSettings.chat_default_channel_id)
+        .then((c) => {
+          return this.router.replaceWith("chat.channel", ...c.routeModels);
+        });
+    }
+
+    if (!this.siteSettings.enable_public_channels) {
+      return this.stateFor(this.#routeFromURL("/chat/direct-messages"));
+    }
   }
 
   stateFor(route) {
@@ -187,13 +199,14 @@ export default class ChatDrawerRouter extends Service {
     this.drawerRoute = ROUTES[route.name];
     this.params = this.drawerRoute?.extractParams?.(route) || route.params;
     this.component = this.drawerRoute?.name || ChatDrawerRoutesChannels;
+
     if (
-      this.siteSettings.chat_preferred_index !== "channels" &&
       !this.chatStateManager.isDrawerActive && // only when opening the drawer
       this.component.name === "ChatDrawerRoutesChannels" // we should check if redirect to channels
     ) {
       this.#redirect();
     }
+
     this.currentRouteName = route.name;
     this.drawerRoute.activate?.(route);
   }
