@@ -16,7 +16,7 @@ const TopicListHeader = <template>
             title={{i18n "topics.bulk.toggle"}}
             class="btn-flat bulk-select"
           >
-            {{icon (if @experimentalTopicBulkActionsEnabled "tasks" "list")}}
+            {{icon "tasks"}}
           </button>
         {{/if}}
       </th>
@@ -37,7 +37,6 @@ const TopicListHeader = <template>
       @newListSubset={{@newListSubset}}
       @newRepliesCount={{@newRepliesCount}}
       @newTopicsCount={{@newTopicsCount}}
-      @experimentalTopicBulkActionsEnabled={{@experimentalTopicBulkActionsEnabled}}
       @bulkSelectHelper={{@bulkSelectHelper}}
       @changeNewListSubset={{@changeNewListSubset}}
     />

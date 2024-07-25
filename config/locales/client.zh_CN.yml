@@ -161,7 +161,7 @@ zh_CN:
     emails_are_disabled: "所有外发电子邮件已被管理员全局禁用。任何类型的电子邮件通知都不会发出。"
     emails_are_disabled_non_staff: "非管理员用户无法向外发送电子邮件。"
     software_update_prompt:
-      message: "我们已经更新了网站， <span>请刷新</span> 以保持一切顺利进行。"
+      message: "我们更新了网站，<span>请刷新</span>以保持网站顺利运行。"
       dismiss: "忽略"
     bootstrap_mode: "使用入门"
     back_button: "返回"
@@ -281,6 +281,13 @@ zh_CN:
       active_user_count: "活跃用户"
       contact: "联系我们"
       contact_info: "如果出现影响此站点的关键问题或紧急事项，请联系我们：%{contact_info}。"
+      member_count:
+        other: "%{formatted_number} 个成员"
+      admin_count:
+        other: "%{formatted_number} 管理员"
+      moderator_count:
+        other: "%{formatted_number} 版主"
+      report_inappropriate_content: "如果你发现任何不当内容，请立即与我们的版主和管理员进行对话。请记住，联系前请先登录。"
     bookmarked:
       title: "加入书签"
       edit_bookmark: "编辑书签"
@@ -748,11 +755,17 @@ zh_CN:
           prefill:
             title: "使用设置预填充："
             gmail: "Gmail"
+            outlook: "Outlook.com"
+            office365: "Microsoft 365"
+          ssl_modes:
+            none: "无"
+            ssl_tls: "SSL/TLS"
+            starttls: "STARTTLS"
           credentials:
             title: "凭据"
             smtp_server: "SMTP 服务器"
             smtp_port: "SMTP 端口"
-            smtp_ssl: "为 SMTP 使用 SSL"
+            smtp_ssl_mode: "SSL 模式"
             imap_server: "IMAP 服务器"
             imap_port: "IMAP 端口"
             imap_ssl: "为 IMAP 使用 SSL"
@@ -1850,9 +1863,17 @@ zh_CN:
     form_kit:
       reset: 重置
       optional: 可选
+      errors_summary_title: "此表单包含错误："
+      dirty_form: "你没有提交更改！你确定要离开吗？"
       errors:
         required: "必选"
         invalid_url: "必须是有效的 URL"
+        not_accepted: "必须被接受"
+        not_a_number: "必须是一个数字"
+        too_high: "必须最多是 %{count}"
+        too_low: "必须至少为 %{count}"
+        too_long:
+          other: "必须最多为 %{count} 个字符"
         too_short:
           other: "必须至少为 %{count} 个字符"
     close: "关闭"
@@ -1916,6 +1937,7 @@ zh_CN:
       enable: "显示热门回复"
       disable: "显示所有帖子"
       short_label: "热门回复"
+      show_all_label: "全部显示"
       short_title: "显示此话题的热门回复：由社区决定的最有趣的帖子"
     deleted_filter:
       enabled_description: "此话题包含已删除的帖子，它们已被隐藏。"
@@ -3599,6 +3621,16 @@ zh_CN:
       links_shown: "显示更多链接…"
       clicks:
         other: "%{count} 次点击"
+      menu_titles:
+        replies: 最受喜欢的回复
+      view_explainer: 每个独立访客每 8 小时浏览一次。
+      no_views: 尚无浏览统计数据，请稍后再查看。
+      chart_error: 渲染图表错误，请重试。
+      views: "浏览量"
+      predicted_views: "预测浏览量"
+      so_far: (迄今为止)
+      read: 读取
+      minutes: 最小
     post_links:
       about: "展开此帖子的更多链接"
       title:
@@ -4910,6 +4942,8 @@ zh_CN:
             non_editable: "你无法编辑此举报，因为它是系统举报或已在审核系统中使用，但你仍然可以禁用它。"
             delete_flag: "删除举报"
             non_deletable: "你无法删除此举报，因为它是系统举报或已在审核系统中使用，但你仍然可以禁用它。"
+            require_message: "提示用户提供更多原因"
+            require_message_description: "选择该举报后，将显示一个文本字段，供用户提供更多细节，说明举报内容的原因"
           more_options:
             title: "更多选项"
             move_up: "上移"
@@ -5572,6 +5606,10 @@ zh_CN:
             create_flag: "创建举报"
             update_flag: "更新举报"
             delete_flag: "删除举报"
+            topic_slow_mode_set: "设置主题慢速模式"
+            topic_slow_mode_removed: "移除话题慢速模式"
+            custom_emoji_create: "创建自定义 emoji"
+            custom_emoji_destroy: "删除自定义 emoji"
         screened_emails:
           title: "已屏蔽的电子邮件"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"
@@ -6199,6 +6237,7 @@ zh_CN:
             prompt: "你即将修改密码策略。这将影响所有从现在起更改密码的用户。你确定要继续吗？"
             confirm: "是的，更新密码策略"
       badges:
+        disable_system: 此徽章为系统徽章，不能禁用和/或删除。
         status: 状态
         title: 徽章
         new_badge: 新徽章
@@ -6207,6 +6246,8 @@ zh_CN:
         badge: 徽章
         display_name: 显示名称
         description: 描述
+        long_description: 详细描述
+        badge_type: 徽章类型
         badge_grouping: 组
         badge_groupings:
           modal_title: 徽章组
@@ -6235,6 +6276,7 @@ zh_CN:
         icon: 图标
         image: 图片
         graphic: 图形
+        icon_or_image: 徽章需要一个图标或图像
         icon_help: "输入一个 Font Awsome 图标名称（使用前缀“far-”表示常规图标，使用前缀“fab-”表示品牌图标）"
         select_an_icon: "选择一个图标"
         upload_an_image: "上传图片"

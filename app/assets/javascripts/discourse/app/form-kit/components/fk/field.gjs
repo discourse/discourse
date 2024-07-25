@@ -4,6 +4,7 @@ import { hash } from "@ember/helper";
 import FKControlCheckbox from "discourse/form-kit/components/fk/control/checkbox";
 import FKControlCode from "discourse/form-kit/components/fk/control/code";
 import FKControlComposer from "discourse/form-kit/components/fk/control/composer";
+import FKControlCustom from "discourse/form-kit/components/fk/control/custom";
 import FKControlIcon from "discourse/form-kit/components/fk/control/icon";
 import FKControlImage from "discourse/form-kit/components/fk/control/image";
 import FKControlInput from "discourse/form-kit/components/fk/control/input";
@@ -92,6 +93,14 @@ export default class FKField extends Component {
     <this.wrapper @size={{@size}}>
       {{yield
         (hash
+          Custom=(component
+            FKControlWrapper
+            errors=@errors
+            component=FKControlCustom
+            value=this.value
+            field=this.field
+            format=@format
+          )
           Code=(component
             FKControlWrapper
             errors=@errors

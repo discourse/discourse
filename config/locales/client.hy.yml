@@ -564,6 +564,8 @@ hy:
         email:
           title: "Էլ. հասցե"
           last_updated_by: "կողմից"
+          ssl_modes:
+            none: "Ոչ մի"
           credentials:
             username: "Օգտանուն"
             password: "Գաղտնաբառ"
@@ -2464,6 +2466,9 @@ hy:
       clicks:
         one: "%{count} սեղմում"
         other: "%{count} սեղմում"
+      views: "Դիտում"
+      read: կարդացած
+      minutes: նվազագույնը
     post_links:
       about: "Ցուցադրել ավելի շատ հղումներ այս գրառման համար"
       title:

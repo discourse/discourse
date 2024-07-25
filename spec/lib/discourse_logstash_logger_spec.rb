@@ -74,7 +74,7 @@ RSpec.describe DiscourseLogstashLogger do
         expect(parsed["exception.class"]).to eq("Some::StandardError")
         expect(parsed["exception.message"]).to eq("some job error message")
         expect(parsed["job.class"]).to eq("SomeJob")
-        expect(parsed["job.opts"]).to eq({ "user_id" => 1 })
+        expect(parsed["job.opts"]).to eq("{\"user_id\"=>1}")
         expect(parsed["job.problem_db"]).to eq("some_db")
       end
     end

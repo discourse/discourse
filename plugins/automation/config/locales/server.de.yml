@@ -113,7 +113,7 @@ de:
       user_global_notice_with_stalled_topic:
         doc: Wenn dies durch ein festgefahrenes Thema ausgelöst wird, erhält der Themeninhaber den globalen Hinweis.
       user_global_notice_with_first_accepted_solution:
-        doc: Bei Auslösung durch die erste akzeptierte Lösung erhält der Lösungsautor die globale Benachrichtigung.
+        doc: Bei Auslösung durch die erste akzeptierte Lösung erhält der Verfasser der Lösung den globalen Hinweis.
       send_pms_with_api_call:
         doc: Bei Verwendung des Skripts `send pms` mit dem Auslöser `api call` wird der Parameter `usernames` aus deiner Anfrage verwendet, um die Empfängerliste auszufüllen.
       topic_required_words:

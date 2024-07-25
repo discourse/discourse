@@ -39,14 +39,14 @@ export default class TopicFromParams extends DiscourseRoute {
       });
   }
 
-  afterModel() {
+  afterModel(model) {
     const topic = this.modelFor("topic");
 
     if (topic.isPrivateMessage && topic.suggested_topics) {
       this.pmTopicTrackingState.startTracking();
     }
 
-    this.header.topicInfo = topic;
+    this.header.enterTopic(topic, model.nearPost);
   }
 
   deactivate() {
@@ -121,8 +121,14 @@ export default class TopicFromParams extends DiscourseRoute {
   }
 
   @action
-  willTransition() {
+  willTransition(transition) {
     this.controllerFor("topic").set("previousURL", document.location.pathname);
+
+    transition.followRedirects().finally(() => {
+      if (!this.router.currentRouteName.startsWith("topic.")) {
+        this.header.clearTopic();
+      }
+    });
 
     // NOTE: omitting this return can break the back button when transitioning quickly between
     // topics and the latest page.

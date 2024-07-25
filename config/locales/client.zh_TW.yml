@@ -253,6 +253,8 @@ zh_TW:
       topic_count: "話題"
       post_count: "貼文"
       contact_info: "若有重大問題或關係到網站的緊急時間，請透過 %{contact_info} 聯絡我們"
+      member_count:
+        other: "%{formatted_number} 位成員"
     bookmarked:
       title: "書籤"
       edit_bookmark: "編輯書籤"
@@ -633,10 +635,11 @@ zh_TW:
           imap_title: "IMAP"
           imap_additional_settings: "其他設定"
           imap_settings_valid: "IMAP 設定有效。"
+          ssl_modes:
+            none: "無"
           credentials:
             smtp_server: "SMTP 伺服器"
             smtp_port: "SMTP 通訊埠"
-            smtp_ssl: "在 SMTP 上使用 SSL"
             imap_server: "IMAP 伺服器"
             imap_port: "IMAP 連接埠"
             imap_ssl: "在 IMAP 上使用 SSL"
@@ -1435,6 +1438,7 @@ zh_TW:
       description:
         other: "有 <b>%{count}</b> 個回覆。"
       disable: "顯示所有貼文"
+      show_all_label: "顯示全部"
     deleted_filter:
       enabled_description: "這個話題含有被刪除的回覆，這些回覆已被隱藏。"
       disabled_description: "話題內刪除的回復已被顯示。"
@@ -2585,6 +2589,9 @@ zh_TW:
       links_title: "熱門連結"
       clicks:
         other: "%{count} 點擊"
+      views: "觀看"
+      read: 閲讀
+      minutes: 最小
     post_links:
       about: "為本帖展開更多連結"
       title:

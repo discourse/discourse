@@ -73,7 +73,7 @@ it:
         percentage: "Percentuale"
         count: "Conteggio"
       ranked_choice:
-        none: "Nessun orario"
+        none: "Nessuna"
       options:
         label: "Opzioni"
       error_while_toggling_status: "Spiacenti, si è verificato un errore nel cambiamento di stato di questo sondaggio."

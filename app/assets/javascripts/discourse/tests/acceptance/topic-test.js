@@ -661,7 +661,8 @@ acceptance("Topic stats update automatically", function () {
   test("Likes count updates automatically", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const likesCountSelectors = "#post_1 .topic-map .likes .number";
+    const likesCountSelectors =
+      "#post_1 .topic-map .topic-map__likes-trigger .number";
     const oldLikesCount = query(likesCountSelectors).textContent;
     const likesChangedFixture = {
       id: 280,
@@ -678,89 +679,6 @@ acceptance("Topic stats update automatically", function () {
       oldLikesCount,
       expectedLikesCount,
       "it updates the likes count on the topic stats"
-    );
-  });
-
-  const postsChangedFixture = {
-    id: 280,
-    type: "stats",
-    posts_count: 999,
-    last_posted_at: "2022-06-20T21:01:45.844Z",
-    last_poster: {
-      id: 1,
-      username: "test",
-      name: "Mr. Tester",
-      avatar_template: "/images/d-logo-sketch-small.png",
-    },
-  };
-
-  test("Replies count updates automatically", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-
-    const repliesCountSelectors = "#post_1 .topic-map .replies .number";
-    const oldRepliesCount = query(repliesCountSelectors).textContent;
-    const expectedRepliesCount = (
-      postsChangedFixture.posts_count - 1
-    ).toString();
-
-    // simulate the topic posts_count being changed
-    await publishToMessageBus("/topic/280", postsChangedFixture);
-
-    assert.dom(repliesCountSelectors).hasText(expectedRepliesCount);
-    assert.notEqual(
-      oldRepliesCount,
-      expectedRepliesCount,
-      "it updates the replies count on the topic stats"
-    );
-  });
-
-  test("Last replier avatar updates automatically", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    const avatarSelectors = "#post_1 .topic-map .last-reply .avatar";
-    const avatarImg = query(avatarSelectors);
-
-    const oldAvatarTitle = avatarImg.title;
-    const oldAvatarSrc = avatarImg.src;
-    const expectedAvatarTitle = postsChangedFixture.last_poster.name;
-    const expectedAvatarSrc = postsChangedFixture.last_poster.avatar_template;
-
-    // simulate the topic posts_count being changed
-    await publishToMessageBus("/topic/280", postsChangedFixture);
-
-    assert.dom(avatarSelectors).hasAttribute("title", expectedAvatarTitle);
-    assert.notEqual(
-      oldAvatarTitle,
-      expectedAvatarTitle,
-      "it updates the last poster avatar title on the topic stats"
-    );
-
-    assert.dom(avatarSelectors).hasAttribute("src", expectedAvatarSrc);
-    assert.notEqual(
-      oldAvatarSrc,
-      expectedAvatarSrc,
-      "it updates the last poster avatar src on the topic stats"
-    );
-  });
-
-  test("Last replied at updates automatically", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-
-    const lastRepliedAtSelectors =
-      "#post_1 .topic-map .last-reply .relative-date";
-    const lastRepliedAtDisplay = query(lastRepliedAtSelectors);
-    const oldTime = lastRepliedAtDisplay.dataset.time;
-    const expectedTime = Date.parse(
-      postsChangedFixture.last_posted_at
-    ).toString();
-
-    // simulate the topic posts_count being changed
-    await publishToMessageBus("/topic/280", postsChangedFixture);
-
-    assert.dom(lastRepliedAtSelectors).hasAttribute("data-time", expectedTime);
-    assert.notEqual(
-      oldTime,
-      expectedTime,
-      "it updates the last posted time on the topic stats"
     );
   });
 });

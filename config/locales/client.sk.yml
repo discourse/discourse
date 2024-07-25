@@ -377,6 +377,22 @@ sk:
       active_user_count: "Aktívni používatelia"
       contact: "Kontaktujte nás"
       contact_info: "V prípade kritickej chyby alebo naliehavej záležitosti nás prosím konaktujte na %{contact_info}."
+      member_count:
+        one: "%{formatted_number}/ Člen"
+        few: "%{formatted_number} Členovia"
+        many: "%{formatted_number} Členov"
+        other: "%{formatted_number}/ Členov"
+      admin_count:
+        one: "%{formatted_number} Administrátor"
+        few: "%{formatted_number} Administrátorov"
+        many: "%{formatted_number} Administrátorov"
+        other: "%{formatted_number} Administrátori"
+      moderator_count:
+        one: "%{formatted_number} Moderátor"
+        few: "%{formatted_number} Moderátorov"
+        many: "%{formatted_number} Moderátorov"
+        other: "%{formatted_number} Moderátori"
+      report_inappropriate_content: "Ak narazíte na nevhodný obsah, neváhajte začať konverzáciu s našimi moderátormi a administrátormi. Pred oslovením sa nezabudnite prihlásiť."
     bookmarked:
       title: "Záložka"
       edit_bookmark: "Upraviť záložku"
@@ -913,11 +929,17 @@ sk:
           prefill:
             title: "Predplňte nastavenia pre:"
             gmail: "Gmail"
+            outlook: "Outlook.com"
+            office365: "Microsoft 365"
+          ssl_modes:
+            none: "Žiadny"
+            ssl_tls: "SSL/TLS"
+            starttls: "STARTTLS"
           credentials:
             title: "Poverenia"
             smtp_server: "Server SMTP"
             smtp_port: "Port SMTP"
-            smtp_ssl: "Použite SSL pre SMTP"
+            smtp_ssl_mode: "Režim SSL"
             imap_server: "Server IMAP"
             imap_port: "Port IMAP"
             imap_ssl: "Pre IMAP použite SSL"
@@ -2121,9 +2143,21 @@ sk:
     form_kit:
       reset: Resetovať
       optional: nepovinné
+      errors_summary_title: "Tento formulár obsahuje chyby:"
+      dirty_form: "Neodoslali ste svoje zmeny! Naozaj chcete odísť?"
       errors:
         required: "Povinné"
         invalid_url: "Musí byť platná adresa URL"
+        not_an_integer: "Musí to byť celé číslo"
+        not_accepted: "Musí byť prijaté"
+        not_a_number: "Musí to byť číslo"
+        too_high: "Musí byť maximálne %{count}"
+        too_low: "Musí mať aspoň %{count}"
+        too_long:
+          one: "Musí mať maximálne %{count} znak"
+          few: "Musí mať maximálne %{count} znakov"
+          many: "Musí mať maximálne %{count} znakov"
+          other: "Musí obsahovať najviac %{count} znaky"
         too_short:
           one: "Musí mať aspoň %{count} znak"
           few: "Musí mať minimálne %{count} znaky"
@@ -2229,6 +2263,7 @@ sk:
       enable: "Zobraziť najlepšie odpovede"
       disable: "Zobraziť všetky príspevky"
       short_label: "Najlepšie odpovede"
+      show_all_label: "Zobraziť všetko"
       short_title: "Zobrazujte odpovede na túto tému: najzaujímavejšie príspevky určené komunitou"
     deleted_filter:
       enabled_description: "Táto téma obsahuje zmazané príspevky, ktoré boli skryté."
@@ -4192,6 +4227,17 @@ sk:
         few: "%{count} kliky"
         many: "%{count} klikov"
         other: "%{count} klikov"
+      menu_titles:
+        replies: Najobľúbenejšie odpovede
+        views: Nedávne zobrazenia
+      view_explainer: Jedno zobrazenie na jedinečného návštevníka každých 8 hodín.
+      no_views: Zatiaľ nie sú k dispozícii žiadne štatistiky, skúste to neskôr.
+      chart_error: Chyba pri vykresľovaní grafu, skúste to znova.
+      views: "Zobrazenia"
+      predicted_views: "Predpokladané zobrazenia"
+      so_far: (zatiaľ)
+      read: čítať
+      minutes: min
     post_links:
       about: "rozbaliť ďalšie odkazy na tento príspevok"
       title:
@@ -5638,6 +5684,8 @@ sk:
             non_editable: "Tento príznak nemôžete upraviť, pretože je to systémový príznak alebo už bol použitý v systéme hodnotenia, môžete ho však vypnúť."
             delete_flag: "Odstrániť príznak"
             non_deletable: "Tento príznak nemôžete odstrániť, pretože je to systémový príznak alebo už bol použitý v systéme hodnotenia, môžete ho však vypnúť."
+            require_message: "Vyzvať používateľov, aby uviedli ďalšie dôvody"
+            require_message_description: "Po výbere tohto príznaku sa zobrazí textové pole, v ktorom môže používateľ uviesť ďalšie podrobnosti o dôvode označenia obsahu."
           more_options:
             title: "Ďalšie možnosti"
             move_up: "Posunúť sa nahor"
@@ -6321,6 +6369,12 @@ sk:
             create_flag: "vytvoriť príznak"
             update_flag: "aktualizovať príznak"
             delete_flag: "odstrániť príznak"
+            topic_slow_mode_set: "nastaviť pomalý režim témy"
+            topic_slow_mode_removed: "odstránenie pomalého režimu témy"
+            custom_emoji_create: "vytvoriť vlastné emoji"
+            custom_emoji_destroy: "odstrániť vlastné emotikony"
+            delete_post_permanently: "natrvalo odstrániť príspevok"
+            delete_topic_permanently: "natrvalo odstrániť tému"
         screened_emails:
           title: "Kontrolované emaily"
           description: "Keď niekto skúsi vytvoriť nový účet, nasledujúce emailove adresy budú preverené a registrácia bude zablokovaná, alebo bude vykonaná nejaka iná akcia. "
@@ -6978,6 +7032,7 @@ sk:
             prompt: "Chystáte sa zmeniť zásady používania hesiel. Odteraz sa to bude týkať všetkých používateľov, ktorí si menia svoje heslá. Ste si istí, že chcete pokračovať?"
             confirm: "Áno, aktualizujte zásady používania hesiel"
       badges:
+        disable_system: Tento odznak je systémový odznak a nie je možné ho vypnúť a/alebo odstrániť.
         status: Stav
         title: Odznaky
         new_badge: Nový odznak
@@ -6986,6 +7041,8 @@ sk:
         badge: Odznak
         display_name: Zobrazované meno
         description: Popis
+        long_description: Dlhý popis
+        badge_type: Typ odznaku
         badge_grouping: Skupina
         badge_groupings:
           modal_title: Zoskupovanie odznakov
@@ -7014,6 +7071,7 @@ sk:
         icon: Ikona
         image: Obrázok
         graphic: Grafika
+        icon_or_image: Odznak vyžaduje ikonu alebo obrázok
         icon_help: "Zadajte názov ikony Font Awesome (pre bežné ikony použite prefix \"far-\" a pre ikony značky \"fab-\")"
         select_an_icon: "Vyberte ikonu"
         upload_an_image: "Nahrajte obrázok"

@@ -5,7 +5,6 @@ import { on } from "@ember/object/evented";
 import { service } from "@ember/service";
 import LoadMore from "discourse/mixins/load-more";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import TopicBulkActions from "./modal/topic-bulk-actions";
 
 export default Component.extend(LoadMore, {
   modal: service(),
@@ -48,11 +47,6 @@ export default Component.extend(LoadMore, {
     return (
       !this.bulkSelectHelper?.bulkSelectEnabled && this.get("canBulkSelect")
     );
-  },
-
-  @discourseComputed
-  experimentalTopicBulkActionsEnabled() {
-    return this.currentUser?.use_experimental_topic_bulk_actions;
   },
 
   @discourseComputed
@@ -194,16 +188,6 @@ export default Component.extend(LoadMore, {
     onClick("th.sortable", (element) => {
       this.changeSort(element.dataset.sortOrder);
       this.rerender();
-    });
-
-    onClick("button.bulk-select-actions", () => {
-      this.modal.show(TopicBulkActions, {
-        model: {
-          topics: this.bulkSelectHelper.selected,
-          category: this.category,
-          refreshClosure: () => this.router.refresh(),
-        },
-      });
     });
 
     onClick("button.topics-replies-toggle", (element) => {

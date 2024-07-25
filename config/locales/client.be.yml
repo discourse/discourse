@@ -1222,6 +1222,8 @@ be:
       notify_action: "паведамленне"
     topic_map:
       title: "Рэзюмэ запісу"
+      views: "прагляды"
+      read: счытванне
     topic_statuses:
       pinned:
         title: "замацаваныя"

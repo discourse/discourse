@@ -12,6 +12,7 @@ class Theme < ActiveRecord::Base
   end
 
   attr_accessor :child_components
+  attr_accessor :skip_child_components_update
 
   def self.cache
     @cache ||= DistributedCache.new("theme:compiler:#{BASE_COMPILER_VERSION}")
@@ -152,7 +153,7 @@ class Theme < ActiveRecord::Base
   end
 
   def update_child_components
-    if !component? && child_components.present?
+    if !component? && child_components.present? && !skip_child_components_update
       child_components.each do |url|
         url = ThemeStore::GitImporter.new(url.strip).url
         theme = RemoteTheme.find_by(remote_url: url)&.theme

@@ -26,6 +26,8 @@ module PageObjects
           component.find(".fk-d-menu__trigger")["data-value"]
         when "select"
           component.find("select").value
+        when "composer"
+          component.find("textarea").value
         end
       end
 

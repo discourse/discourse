@@ -1,4 +1,4 @@
-import { setOwner } from "@ember/application";
+import { setOwner } from "@ember/owner";
 import { debounce } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { getHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";

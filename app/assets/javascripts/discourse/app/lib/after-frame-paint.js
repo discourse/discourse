@@ -1,4 +1,4 @@
-import { DEBUG } from "@glimmer/env";
+import DEBUG from "@glimmer/env";
 import { registerWaiter } from "@ember/test";
 import { isTesting } from "discourse-common/config/environment";
 

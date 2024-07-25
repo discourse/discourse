@@ -609,7 +609,7 @@ class ApplicationController < ActionController::Base
 
   def login_method
     return if current_user.anonymous?
-    secure_session["oauth"] == "true" ? Auth::LOGIN_METHOD_OAUTH : Auth::LOGIN_METHOD_LOCAL
+    current_user.authenticated_with_oauth ? Auth::LOGIN_METHOD_OAUTH : Auth::LOGIN_METHOD_LOCAL
   end
 
   private

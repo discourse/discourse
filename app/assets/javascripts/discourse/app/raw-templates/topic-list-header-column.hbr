@@ -1,20 +1,12 @@
 <th data-sort-order='{{order}}' class='{{view.className}} topic-list-data' scope="col" {{#if view.ariaSort}}aria-sort='{{view.ariaSort}}'{{/if}}>
   {{~#if canBulkSelect}}
     {{~#if showBulkToggle}}
-      {{~#if experimentalTopicBulkActionsEnabled }}
-        {{raw "flat-button" class="bulk-select" icon="tasks" title="topics.bulk.toggle"}}
-      {{else}}
-        {{raw "flat-button" class="bulk-select" icon="list" title="topics.bulk.toggle"}}
-      {{/if ~}}
+      {{raw "flat-button" class="bulk-select" icon="tasks" title="topics.bulk.toggle"}}
     {{/if ~}}
     {{~#if bulkSelectEnabled}}
       <span class='bulk-select-topics'>
         {{~#if canDoBulkActions}}
-          {{~#if experimentalTopicBulkActionsEnabled }}
-            {{raw "topic-bulk-select-dropdown" bulkSelectHelper=bulkSelectHelper}}
-          {{else}}
-            <button class='btn btn-icon no-text bulk-select-actions'>{{d-icon "cog"}}&#8203;</button>
-          {{/if ~}}
+          {{raw "topic-bulk-select-dropdown" bulkSelectHelper=bulkSelectHelper}}
         {{/if ~}}
         <button class='btn btn-default bulk-select-all'>{{i18n "topics.bulk.select_all"}}</button>
         <button class='btn btn-default bulk-clear-all'>{{i18n "topics.bulk.clear_all"}}</button>

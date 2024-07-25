@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
-import { setOwner } from "@ember/application";
 import { inject as controller } from "@ember/controller";
-import { inject as service } from "@ember/service";
+import { setOwner } from "@ember/owner";
+import { service } from "@ember/service";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import Bookmark from "discourse/models/bookmark";
 

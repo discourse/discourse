@@ -6,7 +6,6 @@ import { htmlSafe } from "@ember/template";
 import { or } from "truth-helpers";
 import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";
 import concatClass from "discourse/helpers/concat-class";
-import runAfterFramePaint from "discourse/lib/after-frame-paint";
 import icon from "discourse-common/helpers/d-icon";
 import deprecated from "discourse-common/lib/deprecated";
 import I18n from "discourse-i18n";
@@ -119,17 +118,17 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
             );
           }
         } else if (typeof actionVal === "object" && actionVal.value) {
-          runAfterFramePaint(() =>
-            forwardEvent
-              ? actionVal.value(actionParam, event)
-              : actionVal.value(actionParam)
-          );
+          if (forwardEvent) {
+            actionVal.value(actionParam, event);
+          } else {
+            actionVal.value(actionParam);
+          }
         } else if (typeof actionVal === "function") {
-          runAfterFramePaint(() =>
-            forwardEvent
-              ? actionVal(actionParam, event)
-              : actionVal(actionParam)
-          );
+          if (forwardEvent) {
+            actionVal(actionParam, event);
+          } else {
+            actionVal(actionParam);
+          }
         }
       } else if (route) {
         this.router.transitionTo(route);

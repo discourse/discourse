@@ -130,7 +130,7 @@ fr:
       separate_sidebar_mode:
         title: "Afficher des modes de barre latérale distincts pour le forum et la discussion"
       enable: "Activer la discussion"
-      flag: "Drapeau"
+      flag: "Signalement"
       emoji: "Insérer un émoji"
       flagged: "Ce message a été signalé pour examen"
       invalid_access: "Vous n'avez pas accès à ce canal de discussion"
@@ -560,7 +560,7 @@ fr:
         animals_&_nature: "Animaux et nature"
         food_&_drink: "Nourriture et boissons"
         activities: "Activités"
-        flags: "Drapeaux"
+        flags: "Signalements"
         symbols: "Symboles"
         search_placeholder: "Recherche par nom d'émoji et alias…"
         no_results: "Aucun résultat"

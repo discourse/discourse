@@ -789,11 +789,12 @@ hu:
           prefill:
             title: "Beállítások előre kitöltése ehhez:"
             gmail: "Gmail"
+          ssl_modes:
+            none: "Egyik sem"
           credentials:
             title: "Hitelesítő adatok"
             smtp_server: "SMTP-kiszolgáló"
             smtp_port: "SMTP-port"
-            smtp_ssl: "SSL használata az SMTP-hez"
             imap_server: "IMAP-kiszolgáló"
             imap_port: "IMAP-port"
             imap_ssl: "SSL használata az IMAP-hoz"
@@ -1982,6 +1983,7 @@ hu:
       enable: "Legnépszerűbb válaszok megjelenítése"
       disable: "Összes bejegyzés megjelenítése"
       short_label: "Legnépszerűbb válaszok"
+      show_all_label: "Mutasd mindet"
       short_title: "A témában a legnépszerűbb válaszok megjelenítése: a közösség által meghatározott legérdekesebb bejegyzések"
     deleted_filter:
       enabled_description: "Ez a téma törölt bejegyzéseket is tartalmaz, melyek el lettek rejtve."
@@ -3739,6 +3741,9 @@ hu:
       clicks:
         one: "%{count} kattintás"
         other: "%{count} kattintás"
+      views: "Megtekintések"
+      read: olvasható
+      minutes: min
     post_links:
       about: "bővíts további linkeket ehhez a bejegyzéshez"
       title:

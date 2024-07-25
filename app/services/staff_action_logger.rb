@@ -74,18 +74,22 @@ class StaffActionLogger
     name = deleted_post.user.try(:name) || I18n.t("staff_action_logs.unknown")
     topic_title = topic.try(:title) || I18n.t("staff_action_logs.not_found")
 
-    details = [
-      "id: #{deleted_post.id}",
-      "created_at: #{deleted_post.created_at}",
-      "user: #{username} (#{name})",
-      "topic: #{topic_title}",
-      "post_number: #{deleted_post.post_number}",
-      "raw: #{truncate(deleted_post.raw)}",
-    ]
+    if opts[:permanent]
+      details = []
+    else
+      details = [
+        "id: #{deleted_post.id}",
+        "created_at: #{deleted_post.created_at}",
+        "user: #{username} (#{name})",
+        "topic: #{topic_title}",
+        "post_number: #{deleted_post.post_number}",
+        "raw: #{truncate(deleted_post.raw)}",
+      ]
+    end
 
     UserHistory.create!(
       params(opts).merge(
-        action: UserHistory.actions[:delete_post],
+        action: UserHistory.actions[opts[:permanent] ? :delete_post_permanently : :delete_post],
         post_id: deleted_post.id,
         details: details.join("\n"),
       ),
@@ -97,15 +101,19 @@ class StaffActionLogger
 
     user = topic.user ? "#{topic.user.username} (#{topic.user.name})" : "(deleted user)"
 
-    details = [
-      "id: #{topic.id}",
-      "created_at: #{topic.created_at}",
-      "user: #{user}",
-      "title: #{topic.title}",
-    ]
+    if action == "delete_topic_permanently"
+      details = []
+    else
+      details = [
+        "id: #{topic.id}",
+        "created_at: #{topic.created_at}",
+        "user: #{user}",
+        "title: #{topic.title}",
+      ]
 
-    if first_post = topic.ordered_posts.with_deleted.first
-      details << "raw: #{truncate(first_post.raw)}"
+      if first_post = topic.ordered_posts.with_deleted.first
+        details << "raw: #{truncate(first_post.raw)}"
+      end
     end
 
     UserHistory.create!(

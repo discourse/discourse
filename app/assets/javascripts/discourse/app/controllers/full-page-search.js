@@ -4,7 +4,6 @@ import { gt, or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
-import TopicBulkActions from "discourse/components/modal/topic-bulk-actions";
 import { ajax } from "discourse/lib/ajax";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
@@ -230,11 +229,6 @@ export default Controller.extend({
     if (this.searchTerm !== this.q) {
       this.setSearchTerm(this.q);
     }
-  },
-
-  @discourseComputed("currentUser.use_experimental_topic_bulk_actions")
-  useNewBulkActions() {
-    return this.currentUser?.use_experimental_topic_bulk_actions;
   },
 
   @discourseComputed("q")
@@ -547,15 +541,6 @@ export default Controller.extend({
     toggleBulkSelect() {
       this.toggleProperty("bulkSelectEnabled");
       this.bulkSelectHelper.selected.clear();
-    },
-
-    showBulkActions() {
-      this.modal.show(TopicBulkActions, {
-        model: {
-          topics: this.bulkSelectHelper.selected,
-          refreshClosure: this._search,
-        },
-      });
     },
 
     search(options = {}) {

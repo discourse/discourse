@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { emojiSearch } from "pretty-text/emoji";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";

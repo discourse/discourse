@@ -17,6 +17,7 @@ const withSideWatch = require("./lib/with-side-watch");
 const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
 const crypto = require("crypto");
 const commonBabelConfig = require("./lib/common-babel-config");
+const TerserPlugin = require("terser-webpack-plugin");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
@@ -140,8 +141,12 @@ module.exports = function (defaults) {
           chunkFilename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
         },
         optimization: {
-          // Disable webpack minimization. Embroider automatically applies terser after webpack.
-          minimize: false,
+          minimize: isProduction,
+          minimizer: [
+            new TerserPlugin({
+              minify: TerserPlugin.swcMinify,
+            }),
+          ],
         },
         cache: isProduction
           ? false

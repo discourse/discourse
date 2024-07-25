@@ -110,19 +110,10 @@
               class="btn-default bulk-select"
             />
             {{#if this.bulkSelectHelper.selected}}
-              {{#if this.useNewBulkActions}}
-                <TopicList::TopicBulkSelectDropdown
-                  @bulkSelectHelper={{this.bulkSelectHelper}}
-                  @afterBulkActionComplete={{this.afterBulkActionComplete}}
-                />
-              {{else}}
-                <DButton
-                  @selected={{this.bulkSelectHelper.selected}}
-                  @action={{action "showBulkActions"}}
-                  @icon="wrench"
-                  class="btn-default bulk-select-btn"
-                />
-              {{/if}}
+              <TopicList::TopicBulkSelectDropdown
+                @bulkSelectHelper={{this.bulkSelectHelper}}
+                @afterBulkActionComplete={{this.afterBulkActionComplete}}
+              />
             {{/if}}
           {{/if}}
 

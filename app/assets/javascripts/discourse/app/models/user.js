@@ -1,10 +1,10 @@
 import { tracked } from "@glimmer/tracking";
-import { getOwner, setOwner } from "@ember/application";
 import { A } from "@ember/array";
 import EmberObject, { computed, get, getProperties } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
 import Evented from "@ember/object/evented";
+import { getOwner, setOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";

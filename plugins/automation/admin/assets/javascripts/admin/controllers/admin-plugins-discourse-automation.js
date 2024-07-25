@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 
 export default class Automation extends Controller {
   @service router;

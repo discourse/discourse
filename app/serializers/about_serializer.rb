@@ -20,6 +20,8 @@ class AboutSerializer < ApplicationSerializer
 
   attributes :stats,
              :description,
+             :extended_site_description,
+             :banner_image,
              :title,
              :locale,
              :version,
@@ -52,6 +54,14 @@ class AboutSerializer < ApplicationSerializer
     SiteSetting.contact_email
   end
 
+  def include_extended_site_description?
+    render_redesigned_about_page?
+  end
+
+  def include_banner_image?
+    render_redesigned_about_page?
+  end
+
   private
 
   def can_see_about_stats
@@ -60,5 +70,11 @@ class AboutSerializer < ApplicationSerializer
 
   def can_see_site_contact_details
     scope.can_see_site_contact_details?
+  end
+
+  def render_redesigned_about_page?
+    return false if scope.anonymous?
+
+    scope.user.in_any_groups?(SiteSetting.experimental_redesigned_about_page_groups_map)
   end
 end

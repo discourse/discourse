@@ -632,11 +632,12 @@ bs_BA:
           title: "Email"
           status: "Sinkronizirano %{old_emails} / %{total_emails} e-pošte putem IMAP-a."
           last_updated_by: "by"
+          ssl_modes:
+            none: "Ništa"
           credentials:
             title: "Identifikacija"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
-            smtp_ssl: "Koristi SSL za SMTP"
             imap_server: "IMAP Server"
             imap_port: "IMAP Port"
             imap_ssl: "Koristi SSL za IMAP"
@@ -2610,6 +2611,9 @@ bs_BA:
         one: "%{count} click"
         few: "%{count} klika"
         other: "%{count} klika"
+      views: "Pregledi"
+      read: čitao
+      minutes: minimalno
     post_links:
       about: "prikaži više poveznica za ovu objavu"
       title:
