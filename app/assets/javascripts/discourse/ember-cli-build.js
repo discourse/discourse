@@ -102,7 +102,7 @@ module.exports = function (defaults) {
   app.project.liveReloadFilterPatterns = [/.*\.scss/];
 
   const terserPlugin = app.project.findAddonByName("ember-cli-terser");
-  const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
+  const applyTerser = (tree) => tree; //terserPlugin.postprocessTree("all", tree);
 
   let extraPublicTrees = [
     createI18nTree(discourseRoot, vendorJs),
