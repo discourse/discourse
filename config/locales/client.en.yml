@@ -418,12 +418,12 @@ en:
         name: "Clear Reminders"
         description:
           one: "Are you sure you want to clear the reminder for this bookmark?"
-          other: "Are you sure you want to clear the reminder for these <b>%{count}</b> bookmarks."
+          other: "Are you sure you want to clear the reminder for these <b>%{count}</b> bookmarks?"
       delete_bookmarks:
         name: "Delete Bookmark"
         description:
           one: "Are you sure you want to delete this bookmark?"
-          other: "Are you sure you want to delete these <b>%{count}</b> bookmarks."
+          other: "Are you sure you want to delete these <b>%{count}</b> bookmarks?"
 
     copy_codeblock:
       copied: "copied!"
