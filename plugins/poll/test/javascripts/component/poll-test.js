@@ -2,9 +2,12 @@ import EmberObject from "@ember/object";
 import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { count, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
-module("Poll | Component | poll", function () {
+module("Poll | Component | poll", function (hooks) {
+  setupRenderingTest(hooks);
+
   test("no vote", async function (assert) {
     this.setProperties({
       attributes: EmberObject.create({
