@@ -155,20 +155,10 @@ RSpec.describe JsLocaleHelper do
       )
     end
     fab!(:overriden_translation_ja) do
-      Fabricate(
-        :translation_override,
-        locale: "ja",
-        translation_key: "js.posts_likes_MF",
-        value: "{ count, plural, one {返信 # 件、} other {返信 # 件、} }",
-      )
+      Fabricate(:translation_override, locale: "ja", translation_key: "js.posts_likes_MF")
     end
     fab!(:overriden_translation_he) do
-      Fabricate(
-        :translation_override,
-        locale: "he",
-        translation_key: "js.posts_likes_MF",
-        value: "{ count, plural, ",
-      )
+      Fabricate(:translation_override, locale: "he", translation_key: "js.posts_likes_MF")
     end
     let(:output) { described_class.output_MF(locale).gsub(/^import.*$/, "") }
     let(:generated_locales) { v8_ctx.eval("Object.keys(I18n._mfMessages._data)") }
@@ -176,7 +166,13 @@ RSpec.describe JsLocaleHelper do
       v8_ctx.eval("I18n._mfMessages.get('posts_likes_MF', {count: 3, ratio: 'med'})")
     end
 
-    before { v8_ctx.eval(output) }
+    before do
+      overriden_translation_ja.update_columns(
+        value: "{ count, plural, one {返信 # 件、} other {返信 # 件、} }",
+      )
+      overriden_translation_he.update_columns(value: "{ count, plural, ")
+      v8_ctx.eval(output)
+    end
 
     context "when locale is 'en'" do
       let(:locale) { "en" }

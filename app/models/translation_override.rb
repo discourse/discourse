@@ -44,6 +44,7 @@ class TranslationOverride < ActiveRecord::Base
   validates_presence_of :locale, :translation_key, :value
 
   validate :check_interpolation_keys
+  validate :check_MF_string, if: :message_format?
 
   attribute :status, :integer
   enum status: { up_to_date: 0, outdated: 1, invalid_interpolation_keys: 2, deprecated: 3 }
@@ -165,6 +166,10 @@ class TranslationOverride < ActiveRecord::Base
     I18n.overrides_disabled { I18n.t(transformed_key, locale: :en) }
   end
 
+  def message_format?
+    translation_key.to_s.end_with?("_MF")
+  end
+
   private
 
   def transformed_key
@@ -184,6 +189,14 @@ class TranslationOverride < ActiveRecord::Base
         count: invalid_keys.size,
       ),
     )
+  end
+
+  def check_MF_string
+    require "messageformat"
+
+    MessageFormat.compile(locale, { key: value }, strict: true)
+  rescue MessageFormat::Compiler::CompileError => e
+    errors.add(:base, e.cause.message)
   end
 end
 
