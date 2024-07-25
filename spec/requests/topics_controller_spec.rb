@@ -5747,4 +5747,52 @@ RSpec.describe TopicsController do
       end
     end
   end
+
+  describe ".defer_topic_view" do
+    fab!(:topic)
+    fab!(:user)
+
+    before do
+      Jobs.run_immediately!
+      Scheduler::Defer.async = true
+      Scheduler::Defer.timeout = 0.1
+    end
+
+    after do
+      Scheduler::Defer.async = false
+      Scheduler::Defer.timeout = Scheduler::Deferrable::DEFAULT_TIMEOUT
+    end
+
+    it "does nothing if topic does not exist" do
+      topic.destroy!
+      expect {
+        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        Scheduler::Defer.do_all_work
+      }.not_to change { TopicViewItem.count }
+    end
+
+    it "does nothing if user from ID does not exist" do
+      user.destroy!
+      expect {
+        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        Scheduler::Defer.do_all_work
+      }.not_to change { TopicViewItem.count }
+    end
+
+    it "does nothing if user cannot see topic" do
+      topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+
+      expect {
+        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        Scheduler::Defer.do_all_work
+      }.not_to change { TopicViewItem.count }
+    end
+
+    it "creates a topic view" do
+      expect {
+        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        Scheduler::Defer.do_all_work
+      }.to change { TopicViewItem.count }
+    end
+  end
 end
