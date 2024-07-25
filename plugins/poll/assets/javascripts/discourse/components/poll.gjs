@@ -245,7 +245,7 @@ export default class PollComponent extends Component {
 
   get showRemoveVoteButton() {
     return (
-      this.showResults &&
+      !this.showResults &&
       !this.args.closed &&
       !this.hideResultsDisabled &&
       this.args.hasSavedVote
