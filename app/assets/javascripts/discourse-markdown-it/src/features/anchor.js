@@ -45,6 +45,11 @@ export function setup(helper) {
 
         slug = `${slug || "h"}-${++headingId}`;
 
+        const postId = helper.getOptions().postId;
+        if (postId) {
+          slug = `p-${postId}-${slug}`;
+        }
+
         linkOpen.attrSet("name", slug);
         linkOpen.attrSet("class", "anchor");
         linkOpen.attrSet("href", "#" + slug);
