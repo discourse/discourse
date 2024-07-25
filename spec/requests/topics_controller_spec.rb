@@ -5758,6 +5758,11 @@ RSpec.describe TopicsController do
       Scheduler::Defer.timeout = 0.1
     end
 
+    after do
+      Scheduler::Defer.async = false
+      Scheduler::Defer.timeout = Scheduler::Deferrable::DEFAULT_TIMEOUT
+    end
+
     it "does nothing if topic does not exist" do
       topic.destroy!
       expect {
