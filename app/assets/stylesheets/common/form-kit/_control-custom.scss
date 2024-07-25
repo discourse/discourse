@@ -2,7 +2,11 @@
   width: auto !important;
   min-width: var(--form-kit-small-input);
 
-  .form-kit__container-content > * {
+  .form-kit__control-custom {
+    width: 100%;
+  }
+
+  .form-kit__control-custom > * {
     width: 100% !important;
   }
 }

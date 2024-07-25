@@ -1,9 +1,11 @@
 import Component from "@glimmer/component";
 
-export default class FKControlToggle extends Component {
+export default class FKControlCustom extends Component {
   static controlType = "custom";
 
   <template>
-    {{yield}}
+    <div class="form-kit__control-custom">
+      {{yield}}
+    </div>
   </template>
 }
