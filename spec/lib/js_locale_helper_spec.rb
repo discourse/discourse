@@ -147,17 +147,33 @@ RSpec.describe JsLocaleHelper do
   end
 
   describe ".output_MF" do
-    let(:output) { described_class.output_MF(locale).gsub(/^import.*$/, "") }
-    let(:generated_locales) { v8_ctx.eval("Object.keys(I18n._mfMessages._data)") }
-    let(:translated_message) do
-      v8_ctx.eval("I18n._mfMessages.get('posts_likes_MF', {count: 3, ratio: 'med'})")
-    end
-    let!(:overriden_translation) do
+    fab!(:overriden_translation_en) do
       Fabricate(
         :translation_override,
         translation_key: "admin_js.admin.user.penalty_history_MF",
         value: "OVERRIDEN",
       )
+    end
+    fab!(:overriden_translation_ja) do
+      Fabricate(
+        :translation_override,
+        locale: "ja",
+        translation_key: "js.posts_likes_MF",
+        value: "{ count, plural, one {返信 # 件、} other {返信 # 件、} }",
+      )
+    end
+    fab!(:overriden_translation_he) do
+      Fabricate(
+        :translation_override,
+        locale: "he",
+        translation_key: "js.posts_likes_MF",
+        value: "{ count, plural, ",
+      )
+    end
+    let(:output) { described_class.output_MF(locale).gsub(/^import.*$/, "") }
+    let(:generated_locales) { v8_ctx.eval("Object.keys(I18n._mfMessages._data)") }
+    let(:translated_message) do
+      v8_ctx.eval("I18n._mfMessages.get('posts_likes_MF', {count: 3, ratio: 'med'})")
     end
 
     before { v8_ctx.eval(output) }
@@ -172,7 +188,7 @@ RSpec.describe JsLocaleHelper do
       it "translates messages properly" do
         expect(
           translated_message,
-        ).to eq "This topic has 3 replies with a very high like to post ratio\n"
+        ).to eq "3 replies, very high like to post ratio, jump to the first or last post…\n"
       end
 
       context "when the translation is overriden" do
@@ -198,7 +214,7 @@ RSpec.describe JsLocaleHelper do
       it "translates messages properly" do
         expect(
           translated_message,
-        ).to eq "Ce sujet comprend 3 réponses avec un taux très élevé de « J'aime » par message\n"
+        ).to eq "3 réponses, avec un taux très élevé de « J'aime » par message, aller au premier ou dernier message...\n"
       end
 
       context "when a translation is missing" do
@@ -207,7 +223,7 @@ RSpec.describe JsLocaleHelper do
         it "returns the fallback translation" do
           expect(
             translated_message,
-          ).to eq "This topic has 3 replies with a very high like to post ratio\n"
+          ).to eq "3 replies, very high like to post ratio, jump to the first or last post…\n"
         end
 
         context "when the fallback translation is overriden" do
@@ -225,6 +241,22 @@ RSpec.describe JsLocaleHelper do
             expect(translated_message).to eq "OVERRIDEN"
           end
         end
+      end
+    end
+
+    context "when locale contains invalid plural keys" do
+      let(:locale) { "ja" }
+
+      it "does not raise an error" do
+        expect(generated_locales).to match(%w[ja en])
+      end
+    end
+
+    context "when locale contains malformed messages" do
+      let(:locale) { "he" }
+
+      it "raises an error" do
+        expect(output).to match(/Failed to compile message formats/)
       end
     end
   end

@@ -33,7 +33,7 @@ it:
       recurring:
         title: Ricorrente
       point_in_time:
-        title: Momento di tempo
+        title: Momento temporale
         description: Al raggiungimento della data l'automazione sarà attivata
       user_added_to_group:
         title: Utente aggiunto al gruppo
@@ -68,7 +68,7 @@ it:
         title: Crea un argomento
       flag_post_on_words:
         title: Contrassegna messaggio in base alle parole
-        description: Contrassegna un messaggio se contiene parole specificate
+        description: Contrassegna un messaggio se contiene parole specifiche
         flag_message: "Il messaggio contiene parole non consentite: %{words}"
         doc: I messaggi contenenti tutte le parole indicate contemporaneamente saranno contrassegnati e nascosti. La definizione di più parole delimitate da una virgola verrà considerata come un elenco composto di parole (ogni parola deve essere presente).
       zapier_webhook:
@@ -81,7 +81,7 @@ it:
         title: Etichetta automaticamente argomenti
         description: Aggiungi automaticamente etichette a un argomento
       pin_topic:
-        title: Appunta Argomento
+        title: Appunta argomento
         description: Fissa un argomento specificato in una determinata data
       banner_topic:
         title: Crea argomento banner
@@ -92,8 +92,8 @@ it:
         doc: Lo scambio di regali richiede un gruppo con almeno 3 utenti. Alla data prescelta ogni utente del gruppo sarà abbinato a un donatore e a un destinatario di un regalo.
       send_pms:
         title: Invia MP
-        description: Consente di inviare messaggi personali (con eventuale ritardo).
-        doc: Consente di inviare più messaggi personali a un utente. Ogni PM può essere inviato con un ritardo.
+        description: Consente di inviare MP (con eventuale ritardo).
+        doc: Consente di inviare più messaggi personali a un utente. Ogni MP può essere inviato con un ritardo.
       suspend_user_by_email:
         title: Sospendi utente per e-mail
       user_global_notice:
@@ -117,7 +117,7 @@ it:
         errors:
           must_include_word: "Il messaggio deve includere almeno una di queste parole: %{words}"
       close_topic:
-        title: Chiudi Argomento
+        title: Chiudi argomento
         description: Chiude un argomento con un messaggio di chiusura facoltativo
       append_last_edited_by:
         title: Aggiungi info ultima modifica di
@@ -128,7 +128,7 @@ it:
         description: Aggiunge i dettagli di 'ultimo controllo' del messaggio in coda al contenuto preparato.
         text: "Ultimo controllo di @%{username} %{date_time}"
         summary: Controlla documento
-        details: "Esegue il controllo sul documento: "
+        details: "Esegui il controllo sul documento: "
         button_text: Fatto
       add_user_to_group_through_custom_field:
         title: "Aggiungi utente al gruppo tramite il campo personalizzato utente"

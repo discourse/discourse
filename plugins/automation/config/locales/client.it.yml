@@ -12,13 +12,13 @@ it:
       update: Aggiorna
       select_script: Seleziona uno script
       select_trigger: Seleziona evento di attivazione
-      confirm_automation_reset: Questa azione ripristinerà script e le opzioni di attivazione, il nuovo stato verrà salvato, vuoi procedere?
+      confirm_automation_reset: Questa azione ripristinerà script e le opzioni di attivazione e il nuovo stato verrà salvato. Vuoi procedere?
       confirm_automation_trigger: Questa azione attiverà l'automazione, vuoi procedere?
       no_automation_yet: Non hai ancora creato alcuna automazione.
       edit_automation:
         trigger_section:
           forced: Questa azione di attivazione è forzata dallo script.
-          next_pending_automation: "La prossima automazione si attiverà il: %{date}"
+          next_pending_automation: "La prossima automazione si attiverà il giorno: %{date}"
           trigger_now: "Attiva ora"
           title: Quando/Cosa...
         fields_section:
@@ -30,7 +30,7 @@ it:
           label_without_count: "Configura"
           label_with_count:
             one: "Modifica configurazione (%{count})"
-            other: "Modifica configurazione (%{count})"
+            other: "Modifica configurazioni (%{count})"
         user:
           label: Utente
         pm:
@@ -56,7 +56,7 @@ it:
         text:
           label: Testo
       triggerables:
-        not_found: Impossibile trovare azione di attivazione `%{trigger}` per l'automazione `%{automation}`, verifica che il plugin associato sia installato
+        not_found: 'Impossibile trovare l''azione di attivazione `%{trigger}` per l''automazione `%{automation}`: verifica che il plugin associato sia installato'
         user_badge_granted:
           fields:
             badge:
@@ -110,10 +110,10 @@ it:
               label: Limitato alla categoria
             stalled_after:
               label: Ritardo di attivazione
-              description: Definisce il ritardo tra l'ultima modifica wiki e l'attivazione dell'automazione
+              description: Definisce il ritardo tra l'ultima modifica della wiki e l'attivazione dell'automazione
             retriggered_after:
               label: Ritardo di riattivazione
-              description: Definisce il ritardo tra la prima attivazione e la successiva, se wiki non è stato ancora modificato dopo la prima attivazione
+              description: Definisce il ritardo tra la prima attivazione e la successiva, se la wiki non è stata ancora modificata dopo la prima attivazione
         user_added_to_group:
           fields:
             joined_group:
@@ -146,16 +146,16 @@ it:
           fields:
             action_type:
               label: Tipo di azione
-              description: "Facoltativo, limitare l'attivazione solo agli eventi creati o modificati"
+              description: "Facoltativo, limita l'attivazione solo agli eventi creati o modificati"
             valid_trust_levels:
               label: Livelli di attendibilità validi
               description: L'attivazione avverrà solo se il messaggio viene creato da utenti in questi livelli di attendibilità, il valore predefinito è qualsiasi livello di attendibilità
             restricted_category:
               label: Categoria
-              description: Facoltativo, verrà attivato solo se l'argomento del post rientra in questa categoria
+              description: Facoltativo, l'attivazione avverrà solo se l'argomento del post rientra in questa categoria
             restricted_group:
               label: Gruppo
-              description: Facoltativo, verrà attivato solo se l'argomento del post è un messaggio privato nella posta in arrivo di questo gruppo
+              description: Facoltativo, l'attivazione avverrà solo se l'argomento del post è un messaggio privato nella posta in arrivo di questo gruppo
             ignore_group_members:
               label: Ignora i membri del gruppo
               description: Salta l'attivazione se il mittente è un membro del gruppo specificato sopra
@@ -164,28 +164,28 @@ it:
               description: Salta l'attivazione se il mittente ha un'e-mail che non accetta risposte o che proviene da una fonte automatizzata. Si applica solo ai messaggi creati via e-mail
             first_post_only:
               label: Solo il primo messaggio
-              description: Si attiverà solo se il messaggio è il primo messaggio creato da un utente
+              description: L'attivazione avverrà solo se il messaggio è il primo messaggio creato da un utente
             first_topic_only:
               label: Solo il primo argomento
-              description: Si attiverà solo se l'argomento è il primo creato da un utente
-          created: Creazione
-          edited: Modificati
+              description: L'attivazione avverrà solo se l'argomento è il primo creato da un utente
+          created: Creato
+          edited: Modificato
         category_created_edited:
           fields:
             restricted_category:
-              label: Categoria Superiore
+              label: Categoria superiore
               description: Facoltativo, consente di limitare l'attivazione di questa categoria
         pm_created:
           fields:
             restricted_user:
               label: Utenti
-              description: Si attiverà solo per i MP inviati a questo utente
+              description: L'attivazione avverrà solo per i MP inviati a questo utente
             restricted_group:
               label: Gruppo
-              description: Si attiverà solo per i MP inviati a questo gruppo
+              description: L'attivazione avverrà solo per i MP inviati a questo gruppo
             ignore_staff:
               label: Ignora staff
-              description: Salta l'attivazione se il mittente è un utente dello staff
+              description: L'attivazione avverrà se il mittente è un utente dello staff
             ignore_group_members:
               label: Ignora i membri del gruppo
               description: Salta l'attivazione se il mittente è un membro del gruppo specificato sopra
@@ -202,10 +202,10 @@ it:
               description: L'attivazione avverrà solo se il messaggio viene creato da utenti in questi livelli di attendibilità, il valore predefinito è qualsiasi livello di attendibilità
             restricted_category:
               label: Categoria
-              description: Facoltativo, verrà attivato solo se l'argomento del post rientra in questa categoria
+              description: Facoltativo, l'attivazione avverrà solo se l'argomento del post rientra in questa categoria
             restricted_tags:
               label: Etichette
-              description: Facoltativo, si attiverà solo se il messaggio ha una di queste etichette
+              description: Facoltativo, l'attivazione avverrà solo se il messaggio ha una di queste etichette
       scriptables:
         not_found: Impossibile trovare lo script `%{script}` per l'automazione `%{automation}`, verifica che il plugin associato sia installato
         zapier_webhook:
@@ -222,7 +222,7 @@ it:
               label: Elenco di coppie parole/risposte
             answering_user:
               label: Utente che risponde
-              description: Ripristina impostazione predefinita Utente di sistema
+              description: Utente di sistema come predefinito
         auto_tag_topic:
           fields:
             tags:
@@ -255,7 +255,7 @@ it:
           levels:
             warning: Avvertenza
             info: Info
-            success: Riuscito
+            success: Operazione riuscita
             error: Errore
         user_group_membership_through_badge:
           fields:

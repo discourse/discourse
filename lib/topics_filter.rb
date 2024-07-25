@@ -82,6 +82,11 @@ class TopicsFilter
         filter_by_number_of_views(min: filter_values)
       when "views-max"
         filter_by_number_of_views(max: filter_values)
+      else
+        if custom_filter =
+             DiscoursePluginRegistry.custom_filter_mappings.find { |hash| hash.key?(filter) }
+          @scope = custom_filter[filter].call(@scope, filter_values)
+        end
       end
     end
 
@@ -403,7 +408,7 @@ class TopicsFilter
       break if key_prefix && key_prefix != "-"
 
       value.scan(
-        /\A(?<tag_names>([\p{N}\p{L}\-]+)(?<delimiter>[,+])?([\p{N}\p{L}\-]+)?(\k<delimiter>[\p{N}\p{L}\-]+)*)\z/,
+        /\A(?<tag_names>([\p{N}\p{L}\-_]+)(?<delimiter>[,+])?([\p{N}\p{L}\-]+)?(\k<delimiter>[\p{N}\p{L}\-]+)*)\z/,
       ) do |tag_names, delimiter|
         match_all =
           if delimiter == ","

@@ -56,6 +56,8 @@ gl:
         breakdown: "Detalle"
         percentage: "Porcentaxe"
         count: "Conta"
+      ranked_choice:
+        none: "Ningunha"
       options:
         label: "Opcións"
       error_while_toggling_status: "Desculpe, produciuse un erro ao trocar o status desta enquisa."

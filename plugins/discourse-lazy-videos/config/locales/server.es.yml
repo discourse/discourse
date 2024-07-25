@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 es:
+  site_settings:
+    lazy_videos_enabled: "Habilita el complemento «Lazy Videos»"
+    lazy_youtube_enabled: "Habilitar la carga lenta para incrustaciones de YouTube"
+    lazy_vimeo_enabled: "Habilitar la carga lenta para las incrustaciones de Vimeo"
+    lazy_tiktok_enabled: "Habilitar la carga lenta para las incrustaciones de TikTok (experimental)"

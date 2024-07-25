@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import BookmarkModal from "discourse/components/modal/bookmark";
@@ -258,13 +258,6 @@ export default class BookmarkMenu extends Component {
           {{/unless}}
 
           {{#if this.showEditDeleteMenu}}
-            {{#if this.site.mobileView}}
-              <dropdown.item class="bookmark-menu__title">
-                {{icon "bookmark"}}
-                <span>{{i18n "bookmarks.bookmark"}}</span>
-              </dropdown.item>
-            {{/if}}
-
             <dropdown.item
               class="bookmark-menu__row -edit"
               data-menu-option-id="edit"

@@ -58,6 +58,8 @@ sr:
         breakdown: "Detalji"
         percentage: "Procenat"
         count: "Broj"
+      ranked_choice:
+        none: "Ništa"
       options:
         label: "Opcije"
       error_while_toggling_status: "Žao nam je, došlo je do greške pri prikazivanju statusa ove ankete."

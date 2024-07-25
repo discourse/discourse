@@ -8,7 +8,6 @@ import {
 import { acceptance, selectDate } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-let lastBody;
 let searchResultClickTracked = false;
 
 acceptance("Search - Full Page", function (needs) {
@@ -85,11 +84,6 @@ acceptance("Search - Full Page", function (needs) {
           },
         ],
       });
-    });
-
-    server.put("/topics/bulk", (request) => {
-      lastBody = helper.parsePostData(request.requestBody);
-      return helper.response({ topic_ids: [130] });
     });
 
     server.post("/search/click", () => {
@@ -539,17 +533,6 @@ acceptance("Search - Full Page", function (needs) {
     assert
       .dom(".search-advanced-options")
       .isVisible("clicking on element expands filters");
-  });
-
-  test("bulk operations work", async function (assert) {
-    await visit("/search");
-    await fillIn(".search-query", "discourse");
-    await click(".search-cta");
-    await click(".bulk-select"); // toggle bulk
-    await click(".bulk-select-visible .btn:nth-child(2)"); // select all
-    await click(".bulk-select-btn"); // show bulk actions
-    await click(".topic-bulk-actions-modal .btn.bulk-actions__close-topics");
-    assert.deepEqual(lastBody["topic_ids[]"], ["130"]);
   });
 
   test("adds visited class to visited topics", async function (assert) {

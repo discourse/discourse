@@ -76,6 +76,11 @@ const ApplicationRoute = DiscourseRoute.extend({
       !this.restrictedRouting.isAllowedRoute(transition.to.name)
     ) {
       transition.abort();
+      this.router.replaceWith(
+        this.restrictedRouting.redirectRoute,
+        this.currentUser
+      );
+
       return false;
     }
 

@@ -300,6 +300,28 @@ RSpec.describe PostsController do
           delete "/posts/#{post.id}.json", params: { force_destroy: true }
           expect(response.status).to eq(403)
         end
+
+        it "creates a log and clean up previously recorded sensitive information" do
+          sign_in(admin)
+
+          delete "/posts/#{post.id}.json"
+          expect(response.status).to eq(200)
+          expect(post.reload.deleted_by_id).to eq(admin.id)
+
+          post.update!(deleted_at: 10.minutes.ago)
+
+          delete "/posts/#{post.id}.json", params: { force_destroy: true }
+          expect(response.status).to eq(200)
+
+          expect(UserHistory.last).to have_attributes(
+            action: UserHistory.actions[:delete_post_permanently],
+            acting_user_id: admin.id,
+          )
+
+          expect(UserHistory.where(post_id: post.id, details: "(permanently deleted)").count).to eq(
+            2,
+          )
+        end
       end
     end
   end
@@ -640,6 +662,24 @@ RSpec.describe PostsController do
 
       expect(response.status).to eq(403)
       expect(post.topic.reload.category_id).not_to eq(category.id)
+    end
+
+    describe "trying to add a link without permission" do
+      it "returns an error message if links are added to posts when not allowed" do
+        post = create_post
+        sign_in(post.user)
+        SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:admins]
+
+        put "/posts/#{post.id}",
+            params: {
+              post: {
+                raw: "I'm editing this post to add www.linkhere.com",
+              },
+            }
+
+        expect(response.status).to eq(422)
+        expect(response.body).to include("Sorry, you can't include links in your posts.")
+      end
     end
 
     describe "with Post.plugin_permitted_update_params" do

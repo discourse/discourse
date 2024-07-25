@@ -60,6 +60,8 @@ hr:
         breakdown: "Slom"
         percentage: "Postotak"
         count: "Količina"
+      ranked_choice:
+        none: "Ništa"
       options:
         label: "Mogućnosti"
       error_while_toggling_status: "Nažalost, došlo je do pogreške prilikom izmjene statusa ove ankete."

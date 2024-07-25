@@ -27,8 +27,6 @@ hr:
         icons:
           title: "Ikone"
           full_list: "Pogledajte cijeli popis ikona Font Awesome"
-        input_fields:
-          title: "Polja za unos"
         buttons:
           title: "Gumbi"
         dropdowns:

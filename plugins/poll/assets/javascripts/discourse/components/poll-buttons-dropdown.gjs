@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { action, get } from "@ember/object";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse-common/helpers/d-icon";
@@ -56,7 +56,9 @@ export default class PollButtonsDropdownComponent extends Component {
     const isAdmin = this.currentUser && this.currentUser.admin;
 
     const dataExplorerEnabled = this.siteSettings.data_explorer_enabled;
-    const exportQueryID = this.siteSettings.poll_export_data_explorer_query_id;
+    const exportQueryID = this.args.isRankedChoice
+      ? this.siteSettings.poll_export_ranked_choice_data_explorer_query_id
+      : this.siteSettings.poll_export_data_explorer_query_id;
 
     const {
       closed,
@@ -107,26 +109,38 @@ export default class PollButtonsDropdownComponent extends Component {
 
   <template>
     <div class="poll-buttons-dropdown">
-      <DMenu class="widget-dropdown-header">
-        <:trigger>
-          {{icon "cog"}}
-        </:trigger>
-        <:content>
-          <DropdownMenu as |dropdown|>
-            {{#each this.getDropdownContent as |content|}}
-              <dropdown.item>
-                <DButton
-                  class="widget-button {{content.className}}"
-                  @icon={{content.icon}}
-                  @label={{content.label}}
-                  @action={{fn this.dropDownClick content.action}}
-                />
-              </dropdown.item>
-              <dropdown.divider />
-            {{/each}}
-          </DropdownMenu>
-        </:content>
-      </DMenu>
+      {{#if this.showDropdown}}
+        <DMenu class="widget-dropdown-header">
+          <:trigger>
+            {{icon "cog"}}
+          </:trigger>
+          <:content>
+            <DropdownMenu as |dropdown|>
+              {{#each this.getDropdownContent as |content|}}
+                <dropdown.item>
+                  <DButton
+                    class="widget-button {{content.className}}"
+                    @icon={{content.icon}}
+                    @label={{content.label}}
+                    @action={{fn this.dropDownClick content.action}}
+                  />
+                </dropdown.item>
+                <dropdown.divider />
+              {{/each}}
+            </DropdownMenu>
+          </:content>
+        </DMenu>
+      {{else if this.showDropdownAsButton}}
+        <DButton
+          class="widget-button {{get this.getDropdownContent '0.className'}}"
+          @icon={{get this.getDropdownContent "0.icon"}}
+          @label={{get this.getDropdownContent "0.label"}}
+          @action={{fn
+            this.dropDownClick
+            (get this.getDropdownContent "0.action")
+          }}
+        />
+      {{/if}}
     </div>
   </template>
 }

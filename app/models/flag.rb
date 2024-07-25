@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Flag < ActiveRecord::Base
+  # TODO(2025-01-15): krisk remove
+  self.ignored_columns = ["custom_type"]
+
   DEFAULT_VALID_APPLIES_TO = %w[Post Topic]
   MAX_SYSTEM_FLAG_ID = 1000
   MAX_NAME_LENGTH = 200
@@ -10,8 +13,7 @@ class Flag < ActiveRecord::Base
 
   before_save :set_position
   before_save :set_name_key
-  after_save :reset_flag_settings!
-  after_destroy :reset_flag_settings!
+  after_commit :reset_flag_settings!
 
   default_scope { order(:position).where(score_type: false) }
 
@@ -27,7 +29,7 @@ class Flag < ActiveRecord::Base
   def self.reset_flag_settings!
     # Flags are memoized for better performance. After the update, we need to reload them in all processes.
     PostActionType.reload_types
-    DiscourseEvent.trigger(:reload_post_action_types)
+    MessageBus.publish("/reload_post_action_types", {})
   end
 
   def system?
@@ -63,7 +65,7 @@ end
 #  description      :text
 #  notify_type      :boolean          default(FALSE), not null
 #  auto_action_type :boolean          default(FALSE), not null
-#  custom_type      :boolean          default(FALSE), not null
+#  require_message  :boolean          default(FALSE), not null
 #  applies_to       :string           not null, is an Array
 #  position         :integer          not null
 #  enabled          :boolean          default(TRUE), not null

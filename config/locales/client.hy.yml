@@ -564,6 +564,8 @@ hy:
         email:
           title: "Էլ. հասցե"
           last_updated_by: "կողմից"
+          ssl_modes:
+            none: "Ոչ մի"
           credentials:
             username: "Օգտանուն"
             password: "Գաղտնաբառ"
@@ -1279,6 +1281,11 @@ hy:
     modal:
       close: "փակել"
       dismiss_error: "Չեղարկել սխալը"
+    form_kit:
+      reset: Զրոյացնել
+      optional: ընտրովի
+      errors:
+        required: "Պարտադիր"
     close: "Փակել"
     logout: "Դուք դուրս եք գրվել:"
     refresh: "Թարմացնել"
@@ -2459,6 +2466,9 @@ hy:
       clicks:
         one: "%{count} սեղմում"
         other: "%{count} սեղմում"
+      views: "Դիտում"
+      read: կարդացած
+      minutes: նվազագույնը
     post_links:
       about: "Ցուցադրել ավելի շատ հղումներ այս գրառման համար"
       title:
@@ -2491,6 +2501,7 @@ hy:
     pending_posts:
       label: "Սպասող"
       label_with_count: "Սպասող (%{count})"
+    posters: "Հրապարակողների"
     original_post: "Սկզբնական Գրառումը"
     views: "Դիտում"
     views_lowercase:
@@ -4155,6 +4166,7 @@ hy:
         file_types_list:
           add_image_types: "Նկարներ"
       badges:
+        status: Ստատուս
         title: Կրծքանշաններ
         new_badge: Նոր Կրծքանշան
         new: Նոր
@@ -4162,8 +4174,6 @@ hy:
         badge: Կրծքանշան
         display_name: Ցուցադրվող Անվանումը
         description: Նկարագրությունը
-        long_description: Ընդարձակ Նկարագրությունը
-        badge_type: Կրծքանշանի Տիպը
         badge_grouping: Խմբավորել
         badge_groupings:
           modal_title: Կրծքանշանների Խմբավորումները

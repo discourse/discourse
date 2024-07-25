@@ -305,25 +305,13 @@ RSpec.describe "Navigation", type: :system do
       end
     end
 
-    context "when opening browse page from drawer in drawer mode" do
-      it "opens browser page in full page" do
-        visit("/")
-        chat_page.open_from_header
-        chat_drawer_page.open_browse
-
-        expect(page).to have_current_path("/chat/browse/open")
-        expect(page).not_to have_css(".chat-drawer.is-expanded")
-      end
-    end
-
     context "when opening browse page from sidebar in drawer mode" do
       it "opens browser page in full page" do
         visit("/")
         chat_page.open_from_header
         sidebar_page.open_browse
 
-        expect(page).to have_current_path("/chat/browse/open")
-        expect(page).not_to have_css(".chat-drawer.is-expanded")
+        expect(chat_drawer_page.browse).to have_channel(name: category_channel.name)
       end
     end
 

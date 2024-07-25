@@ -28,19 +28,19 @@ module Onebox
       end
 
       def raw_regexp
-        %r{github\.com/(?<user>[^/]+)/(?<repo>[^/]+)/blob/(?<sha1>[^/]+)/(?<file>[^#]+)(#(L(?<from>[^-]*)(-L(?<to>.*))?))?}mi
+        %r{github\.com/(?<org>[^/]+)/(?<repo>[^/]+)/blob/(?<sha1>[^/]+)/(?<file>[^#]+)(#(L(?<from>[^-]*)(-L(?<to>.*))?))?}mi
       end
 
-      def raw_template(m)
-        "https://raw.githubusercontent.com/#{m[:user]}/#{m[:repo]}/#{m[:sha1]}/#{m[:file]}"
+      def raw_template(match)
+        "https://raw.githubusercontent.com/#{match[:org]}/#{match[:repo]}/#{match[:sha1]}/#{match[:file]}"
       end
 
       def title
         Sanitize.fragment(Onebox::Helpers.uri_unencode(link).sub(%r{^https?\://github\.com/}, ""))
       end
 
-      def auth_headers
-        github_auth_header
+      def auth_headers(match)
+        github_auth_header(match[:org])
       end
     end
   end

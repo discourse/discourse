@@ -17,7 +17,7 @@ export default class TrapTabModifier extends Modifier {
     autofocus ??= true;
     this.preventScroll = preventScroll ?? true;
     this.originalElement = element;
-    this.element = element.querySelector(".modal-inner-container") || element;
+    this.element = element.querySelector(".d-modal__container") || element;
     this.originalElement.addEventListener("keydown", this.trapTab);
 
     // on first trap we don't allow to focus modal-close
@@ -36,7 +36,7 @@ export default class TrapTabModifier extends Modifier {
         this.element.querySelector(
           FOCUSABLE_ELEMENTS + ", button:not(.modal-close)"
         ) ||
-        this.element.querySelector(".modal-body")
+        this.element.querySelector(".d-modal__body")
       )?.focus({
         preventScroll: this.preventScroll,
       });

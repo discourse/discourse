@@ -5,7 +5,7 @@ import I18n from "discourse-i18n";
 export default class DToggleSwitch extends Component {
   <template>
     <div class="d-toggle-switch">
-      <label class="d-toggle-switch--label">
+      <label class="d-toggle-switch__label">
         {{! template-lint-disable no-redundant-role }}
         <button
           class="d-toggle-switch__checkbox"
@@ -23,9 +23,11 @@ export default class DToggleSwitch extends Component {
         </span>
       </label>
 
-      <span class="d-toggle-switch__checkbox-label">
-        {{this.computedLabel}}
-      </span>
+      {{#if this.computedLabel}}
+        <span class="d-toggle-switch__checkbox-label">
+          {{this.computedLabel}}
+        </span>
+      {{/if}}
     </div>
   </template>
 

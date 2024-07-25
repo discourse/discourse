@@ -1,4 +1,4 @@
-import { setOwner } from "@ember/application";
+import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { until } from "discourse/lib/formatter";
 import { emojiUnescape } from "discourse/lib/text";

@@ -253,6 +253,9 @@ class User < ActiveRecord::Base
   # Cache for user custom fields. Currently it is used to display quick search results
   attr_accessor :custom_data
 
+  # Information if user was authenticated with OAuth
+  attr_accessor :authenticated_with_oauth
+
   scope :with_email,
         ->(email) { joins(:user_emails).where("lower(user_emails.email) IN (?)", email) }
 
@@ -1225,7 +1228,7 @@ class User < ActiveRecord::Base
   def flags_given_count
     PostAction.where(
       user_id: id,
-      post_action_type_id: PostActionType.flag_types_without_custom.values,
+      post_action_type_id: PostActionType.flag_types_without_additional_message.values,
     ).count
   end
 
@@ -1236,7 +1239,10 @@ class User < ActiveRecord::Base
   def flags_received_count
     posts
       .includes(:post_actions)
-      .where("post_actions.post_action_type_id" => PostActionType.flag_types_without_custom.values)
+      .where(
+        "post_actions.post_action_type_id" =>
+          PostActionType.flag_types_without_additional_message.values,
+      )
       .count
   end
 

@@ -31,8 +31,23 @@ describe "User preferences | Profile", type: :system do
       )
     end
 
-    it "redirects to the profile page to fill up required fields" do
+    it "server-side redirects to the profile page to fill up required fields" do
       visit("/")
+
+      expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
+
+      expect(page).to have_selector(
+        ".alert-error",
+        text: I18n.t("js.user.preferences.profile.enforced_required_fields"),
+      )
+    end
+
+    it "client-side redirects to the profile page to fill up required fields" do
+      visit("/faq")
+
+      expect(page).to have_current_path("/faq")
+
+      find("#site-logo").click
 
       expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
 

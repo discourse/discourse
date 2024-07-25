@@ -28,9 +28,12 @@ class Admin::EmojisController < Admin::AdminController
 
       data =
         if upload.persisted?
-          custom_emoji = CustomEmoji.new(name: name, upload: upload, group: group)
+          custom_emoji =
+            CustomEmoji.new(name: name, upload: upload, group: group, user: current_user)
 
           if custom_emoji.save
+            StaffActionLogger.new(current_user).log_custom_emoji_create(name, group: group)
+
             Emoji.clear_cache
             { name: custom_emoji.name, url: custom_emoji.upload.url, group: group }
           else
@@ -50,7 +53,12 @@ class Admin::EmojisController < Admin::AdminController
     name = params.require(:id)
 
     # NOTE: the upload will automatically be removed by the 'clean_up_uploads' job
-    CustomEmoji.find_by(name: name)&.destroy!
+    emoji = CustomEmoji.find_by(name: name)
+
+    if emoji.present?
+      StaffActionLogger.new(current_user).log_custom_emoji_destroy(name)
+      emoji.destroy!
+    end
 
     Emoji.clear_cache
 

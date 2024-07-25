@@ -2,7 +2,11 @@
 
 describe "Topic Map - Private Message", type: :system do
   fab!(:user) { Fabricate(:admin, refresh_auto_groups: true) }
-  fab!(:other_user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:other_user_1) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:other_user_2) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:other_user_3) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:other_user_4) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:other_user_5) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:last_post_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic) do
     Fabricate(
@@ -11,7 +15,11 @@ describe "Topic Map - Private Message", type: :system do
       user: user,
       topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: user),
-        Fabricate.build(:topic_allowed_user, user: other_user),
+        Fabricate.build(:topic_allowed_user, user: other_user_1),
+        Fabricate.build(:topic_allowed_user, user: other_user_2),
+        Fabricate.build(:topic_allowed_user, user: other_user_3),
+        Fabricate.build(:topic_allowed_user, user: other_user_4),
+        Fabricate.build(:topic_allowed_user, user: other_user_5),
         Fabricate.build(:topic_allowed_user, user: last_post_user),
       ],
     )
@@ -38,41 +46,35 @@ describe "Topic Map - Private Message", type: :system do
     # topic map appears after OP
     expect(topic_page).to have_topic_map
 
-    # created avatar display
-    expect(topic_map.created_details).to have_selector("img[src=\"#{avatar_url(user, 24)}\"]")
-    expect(topic_map.created_relative_date).to eq "1d"
+    # user count
+    expect(topic_map).to have_no_users
+    [other_user_1, other_user_2, other_user_3, other_user_4, other_user_5].each do |usr|
+      Fabricate(:post, topic: topic, user: usr, created_at: 1.day.ago)
+    end
+    page.refresh
+    expect(topic_map.users_count).to eq 6
 
-    # replies, user count
     expect {
-      Fabricate(:post, topic: topic, user: user, created_at: 1.day.ago)
       sign_in(last_post_user)
       topic_page.visit_topic_and_open_composer(topic)
       topic_page.send_reply("this is a cool-cat post") # fabricating posts doesn't update the last post details
       topic_page.visit_topic(topic)
-    }.to change(topic_map, :replies_count).by(2).and change(topic_map, :users_count).by(1)
-
-    #last reply avatar display
-    expect(topic_map.last_reply_details).to have_selector(
-      "img[src=\"#{avatar_url(last_post_user, 24)}\"]",
-    )
-    expect(topic_map.last_reply_relative_date).to eq "1m"
+    }.to change(topic_map, :users_count).by(1)
 
     # avatars details with post counts
-    2.times { Fabricate(:post, topic: topic) }
-    Fabricate(:post, user: user, topic: topic)
+    2.times { Fabricate(:post, user: user, topic: topic) }
     Fabricate(:post, user: last_post_user, topic: topic)
     page.refresh
     avatars = topic_map.avatars_details
-    expect(avatars.length).to eq 3 # max no. of avatars in a collapsed map
-    expect(avatars[0]).to have_selector("img[src=\"#{avatar_url(user, 48)}\"]")
-    expect(avatars[0].find(".post-count").text).to eq "3"
-    expect(avatars[1]).to have_selector("img[src=\"#{avatar_url(last_post_user, 48)}\"]")
-    expect(avatars[1].find(".post-count").text).to eq "2"
-    expect(avatars[2]).to have_no_css(".post-count")
+    expect(avatars.length).to eq 5 # max no. of avatars in a collapsed map
 
-    topic_map.expand
-    expect(topic_map).to have_no_avatars_details_in_map
-    expect(topic_map.expanded_map_avatars_details.length).to eq 4
+    expanded_avatars = topic_map.expanded_avatars_details
+    expect(expanded_avatars[0]).to have_selector("img[src=\"#{avatar_url(user, 48)}\"]")
+    expect(expanded_avatars[0].find(".post-count").text).to eq "3"
+    expect(expanded_avatars[1]).to have_selector("img[src=\"#{avatar_url(last_post_user, 48)}\"]")
+    expect(expanded_avatars[1].find(".post-count").text).to eq "2"
+    expect(expanded_avatars[2]).to have_no_css(".post-count")
+    expect(expanded_avatars.length).to eq 7
 
     # views count
     # TODO (martin) Investigate flakiness
@@ -84,8 +86,11 @@ describe "Topic Map - Private Message", type: :system do
 
     # likes count
     expect(topic_map).to have_no_likes
+    Fabricate(:post, topic: topic, like_count: 5)
+    page.refresh
+    expect(topic_map).to have_no_likes
     topic_page.click_like_reaction_for(original_post)
-    expect(topic_map.likes_count).to eq 1
+    expect(topic_map.likes_count).to eq 6
   end
 
   it "has private message map that shows correct participants and allows editing of participant invites" do
@@ -98,7 +103,17 @@ describe "Topic Map - Private Message", type: :system do
     # participants' links and avatars
     private_message_map
       .participants_details
-      .zip([user, other_user, last_post_user]) do |details, usr|
+      .zip(
+        [
+          user,
+          other_user_1,
+          other_user_2,
+          other_user_3,
+          other_user_4,
+          other_user_5,
+          last_post_user,
+        ],
+      ) do |details, usr|
         expect(details).to have_link(usr.username, href: "/u/#{usr.username}")
         expect(details.find(".trigger-user-card")).to have_selector(
           "img[src=\"#{avatar_url(usr, 24)}\"]",
@@ -134,7 +149,7 @@ describe "Topic Map - Private Message", type: :system do
       expect(private_message_map).to have_add_participants_button
       private_message_map.click_add_participants_button
       expect(private_message_invite_modal).to be_open
-      private_message_invite_modal.select_invitee(other_user)
+      private_message_invite_modal.select_invitee(other_user_1)
       private_message_invite_modal.click_primary_button
       expect(private_message_invite_modal).to have_invitee_already_exists_error
       private_message_invite_modal.select_invitee(last_post_user)

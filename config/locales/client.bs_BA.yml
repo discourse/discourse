@@ -632,11 +632,12 @@ bs_BA:
           title: "Email"
           status: "Sinkronizirano %{old_emails} / %{total_emails} e-pošte putem IMAP-a."
           last_updated_by: "by"
+          ssl_modes:
+            none: "Ništa"
           credentials:
             title: "Identifikacija"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
-            smtp_ssl: "Koristi SSL za SMTP"
             imap_server: "IMAP Server"
             imap_port: "IMAP Port"
             imap_ssl: "Koristi SSL za IMAP"
@@ -1421,6 +1422,11 @@ bs_BA:
     modal:
       close: "zatvori"
       dismiss_error: "Odbaci grešku"
+    form_kit:
+      reset: Resetovati
+      optional: opciono
+      errors:
+        required: "Required"
     close: "Zatvori"
     logout: "Izlogovani ste."
     refresh: "Osvježi"
@@ -2605,6 +2611,9 @@ bs_BA:
         one: "%{count} click"
         few: "%{count} klika"
         other: "%{count} klika"
+      views: "Pregledi"
+      read: čitao
+      minutes: minimalno
     post_links:
       about: "prikaži više poveznica za ovu objavu"
       title:
@@ -2638,6 +2647,7 @@ bs_BA:
     pending_posts:
       label: "Na čekanju"
       label_with_count: "Na čekanju (%{count})"
+    posters: "Posteri"
     original_post: "Originalni Odgovor"
     views: "Pregledi"
     views_lowercase:
@@ -4295,6 +4305,7 @@ bs_BA:
         file_types_list:
           add_image_types: "Images"
       badges:
+        status: Status
         title: Bedž
         new_badge: Novi Bedž
         new: Novo
@@ -4302,8 +4313,6 @@ bs_BA:
         badge: Bedž
         display_name: Prikazano Ime
         description: Opis
-        long_description: Dugi
-        badge_type: Bedž Tip
         badge_grouping: Grupa
         badge_groupings:
           modal_title: Grupiranje bedževa
@@ -4332,6 +4341,8 @@ bs_BA:
         icon: Icon
         image: Slika
         icon_help: "Unesite ime ikone fonta Awesome (upotrebite prefiks „daleko“ za regularne ikone i „fab-“ za ikone marke)"
+        select_an_icon: "Odaberi ikonu"
+        upload_an_image: "Učitaj sliku"
         query: Badge Query (SQL)
         target_posts: Query targets posts
         auto_revoke: Run revocation query daily

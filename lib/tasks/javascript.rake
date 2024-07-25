@@ -154,6 +154,8 @@ task "javascript:update_constants" => :environment do
 
     export const AUTO_GROUPS = #{auto_groups.to_json};
 
+    export const GROUP_SMTP_SSL_MODES = #{Group.smtp_ssl_modes.to_json};
+
     export const MAX_NOTIFICATIONS_LIMIT_PARAMS = #{NotificationsController::INDEX_LIMIT};
 
     export const TOPIC_VISIBILITY_REASONS = #{Topic.visibility_reasons.to_json};

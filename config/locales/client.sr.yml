@@ -544,6 +544,8 @@ sr:
         email:
           title: "E-mail"
           last_updated_by: "od"
+          ssl_modes:
+            none: "Ništa"
           credentials:
             username: "Korisničko ime"
             password: "Šifra"
@@ -994,6 +996,9 @@ sr:
         fixed: "Učitaj stranicu"
     modal:
       close: "zatvori"
+    form_kit:
+      errors:
+        required: "Potrebno"
     close: "Zatvori"
     logout: "Odjavljeni ste."
     refresh: "Osveži"
@@ -1572,6 +1577,9 @@ sr:
         one: "%{count} klik"
         few: "%{count} klikova"
         other: "%{count} klikova"
+      views: "Pregledi"
+      read: pročitano
+      minutes: minimalno
     post_links:
       title:
         one: "još %{count} član"
@@ -2554,7 +2562,6 @@ sr:
         badge: Značka
         display_name: Ime Prikaza
         description: Opis
-        badge_type: Tip Značke
         badge_grouping: Grupa
         badge_groupings:
           modal_title: Grupiranja Znački

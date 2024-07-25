@@ -1,6 +1,6 @@
-import { getOwner, setOwner } from "@ember/application";
 import Helper from "@ember/component/helper";
 import { registerDestructor } from "@ember/destroyable";
+import { getOwner, setOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";

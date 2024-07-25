@@ -12,7 +12,7 @@
     align-items: center;
     justify-content: space-between;
   }
-  .d-toggle-switch--label {
+  .d-toggle-switch__label {
     margin-bottom: 0;
   }
   .d-toggle-switch {
@@ -55,6 +55,15 @@
   }
   &__applies-to.select-kit.multi-select {
     width: 60%;
+  }
+  &__require-message-description {
+    clear: both;
+    flex-basis: 100%;
+    font-size: var(--font-down-2);
+    margin-top: 0.25em;
+  }
+  label {
+    flex-wrap: wrap;
   }
 }
 

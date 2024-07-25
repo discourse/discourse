@@ -3,15 +3,17 @@
 RSpec.describe Onebox::Engine::GithubCommitOnebox do
   describe "regular commit url" do
     before do
-      @link =
-        "https://github.com/discourse/discourse/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"
-      @uri =
-        "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919"
-
-      stub_request(:get, @uri).to_return(status: 200, body: onebox_response("githubcommit"))
+      stub_request(
+        :get,
+        "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919",
+      ).to_return(status: 200, body: onebox_response("githubcommit"))
     end
 
-    include_context "with engines"
+    include_context "with engines" do
+      let(:link) do
+        "https://github.com/discourse/discourse/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"
+      end
+    end
     it_behaves_like "an engine"
 
     describe "#to_html" do
@@ -53,30 +55,31 @@ RSpec.describe Onebox::Engine::GithubCommitOnebox do
     end
 
     context "when github_onebox_access_token is configured" do
-      before { SiteSetting.github_onebox_access_token = "1234" }
+      before { SiteSetting.github_onebox_access_tokens = "discourse|github_pat_1234" }
 
       it "sends it as part of the request" do
         html
-        expect(WebMock).to have_requested(:get, @uri).with(
-          headers: {
-            "Authorization" => "Bearer #{SiteSetting.github_onebox_access_token}",
-          },
-        )
+        expect(WebMock).to have_requested(
+          :get,
+          "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919",
+        ).with(headers: { "Authorization" => "Bearer github_pat_1234" })
       end
     end
   end
 
   describe "PR with commit URL" do
     before do
-      @link =
-        "https://github.com/discourse/discourse/pull/4662/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"
-      @uri =
-        "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919"
-
-      stub_request(:get, @uri).to_return(status: 200, body: onebox_response("githubcommit"))
+      stub_request(
+        :get,
+        "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919",
+      ).to_return(status: 200, body: onebox_response("githubcommit"))
     end
 
-    include_context "with engines"
+    include_context "with engines" do
+      let(:link) do
+        "https://github.com/discourse/discourse/pull/4662/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919"
+      end
+    end
     # TODO: fix test to make sure it's not failing when matching object
     # it_behaves_like "an engine"
 
@@ -119,15 +122,14 @@ RSpec.describe Onebox::Engine::GithubCommitOnebox do
     end
 
     context "when github_onebox_access_token is configured" do
-      before { SiteSetting.github_onebox_access_token = "1234" }
+      before { SiteSetting.github_onebox_access_tokens = "discourse|github_pat_1234" }
 
       it "sends it as part of the request" do
         html
-        expect(WebMock).to have_requested(:get, @uri).with(
-          headers: {
-            "Authorization" => "Bearer #{SiteSetting.github_onebox_access_token}",
-          },
-        )
+        expect(WebMock).to have_requested(
+          :get,
+          "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919",
+        ).with(headers: { "Authorization" => "Bearer github_pat_1234" })
       end
     end
   end

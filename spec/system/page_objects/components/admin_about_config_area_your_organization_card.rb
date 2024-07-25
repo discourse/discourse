@@ -4,19 +4,19 @@ module PageObjects
   module Components
     class AdminAboutConfigAreaYourOrganizationCard < PageObjects::Components::Base
       def company_name_input
-        card.find(".company-name-input input")
+        form.field("companyName")
       end
 
       def governing_law_input
-        card.find(".governing-law-input input")
+        form.field("governingLaw")
       end
 
       def city_for_disputes_input
-        card.find(".city-for-disputes-input input")
+        form.field("cityForDisputes")
       end
 
-      def save_button
-        card.find(".btn-primary.admin-config-area-card__btn-save")
+      def submit
+        form.submit
       end
 
       def has_saved_successfully?
@@ -25,8 +25,10 @@ module PageObjects
         )
       end
 
-      def card
-        find(".admin-config-area-about__your-organization-section")
+      def form
+        PageObjects::Components::FormKit.new(
+          ".admin-config-area-about__your-organization-section .form-kit",
+        )
       end
     end
   end

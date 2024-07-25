@@ -1,4 +1,4 @@
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 
 export default class RestrictedRouting extends Service {
   @service currentUser;
@@ -38,12 +38,22 @@ export default class RestrictedRouting extends Service {
     return true;
   }
 
+  get redirectRoute() {
+    if (this._needs2fa) {
+      return "preferences.second-factor";
+    }
+
+    if (this._needsRequiredFields) {
+      return "preferences.profile";
+    }
+  }
+
   get _needs2fa() {
     // NOTE: Matches the should_enforce_2fa? and disqualified_from_2fa_enforcement
     // methods in ApplicationController.
     const enforcing2fa =
       (this.siteSettings.enforce_second_factor === "staff" &&
-        this.currentUser.staff) ||
+        this.currentUser?.staff) ||
       this.siteSettings.enforce_second_factor === "all";
 
     const exemptedFrom2faEnforcement =

@@ -173,7 +173,7 @@ module Onebox
               contents =
                 URI
                   .parse(self.raw_template(m))
-                  .open({ read_timeout: timeout }.merge(self.auth_headers))
+                  .open({ read_timeout: timeout }.merge(self.auth_headers(m)))
                   .read
 
               if contents.encoding == Encoding::BINARY || contents.bytes.include?(0)

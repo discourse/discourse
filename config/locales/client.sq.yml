@@ -373,6 +373,8 @@ sq:
         email:
           title: "Email"
           last_updated_by: "nga"
+          ssl_modes:
+            none: "Asnjë"
           credentials:
             username: "Emri i përdoruesit"
             password: "Fjalëkalimi"
@@ -893,6 +895,10 @@ sq:
         fixed: "Ngarko faqen"
     modal:
       close: "mbylle"
+    form_kit:
+      reset: Rivendos
+      errors:
+        required: "E nevojshme"
     close: "Mbyll"
     logout: "Ju jeni shkëputur!"
     refresh: "Rifresko"
@@ -1636,6 +1642,9 @@ sq:
       clicks:
         one: "%{count} klik"
         other: "%{count} klikime"
+      views: "Shikimet"
+      read: lexuar
+      minutes: minimumi
     post_links:
       about: "trego më shumë lidhje për këtë postim"
       title:
@@ -2781,8 +2790,6 @@ sq:
         badge: Stemë
         display_name: Emri Shfaqur
         description: Përshkrimi
-        long_description: Përshkrim i gjatë
-        badge_type: Lloj Steme
         badge_grouping: Grupi
         badge_groupings:
           modal_title: Grupime Steme

@@ -97,6 +97,7 @@ export default class HamburgerDropdownWrapper extends Component {
           secondaryTargetSelector=".hamburger-dropdown"
         )
       }}
+      ...attributes
     >
       <SidebarHamburgerDropdown
         @forceMainSidebarPanel={{this.forceMainSidebarPanel}}

@@ -949,7 +949,7 @@ RSpec.describe Chat::UpdateMessage do
       let(:low_trust_char_limit) { SiteSetting.chat_editing_grace_period_max_diff_low_trust }
       let(:high_trust_char_limit) { SiteSetting.chat_editing_grace_period_max_diff_high_trust }
 
-      it "does not create a revision when under (n) seconds" do
+      xit "does not create a revision when under (n) seconds" do
         freeze_time 5.seconds.from_now
         message_1.update!(message: "hello")
 

@@ -56,6 +56,8 @@ el:
         breakdown: "Ανάλυση"
         percentage: "Ποσοστό"
         count: "Άθροισμα"
+      ranked_choice:
+        none: "Κανένα"
       options:
         label: "Επιλογές"
       error_while_toggling_status: "Λυπάμαι, παρουσιάστηκε σφάλμα κατά την εναλλαγή της κατάστασης αυτής της δημοσκόπησης."

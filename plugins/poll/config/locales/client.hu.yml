@@ -58,6 +58,8 @@ hu:
         breakdown: "Bontás"
         percentage: "Százalék"
         count: "Számláló"
+      ranked_choice:
+        none: "Egyik sem"
       options:
         label: "Beállítások"
       error_while_toggling_status: "Sajnáljuk, hiba történt a szavazás állapotának átváltásakor."

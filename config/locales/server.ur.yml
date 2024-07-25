@@ -811,8 +811,6 @@ ur:
     pop3_authentication_error: "فراہم کردہ POP3 شناخت میں ایک مسئلہ تھا، صارف نام اور پاس ورڈ چیک کریں اور دوبارہ کوشش کریں۔"
     imap_authentication_error: "فراہم کردہ IMAP شناخت کے ساتھ ایک مسئلہ تھا، صارف نام اور پاس ورڈ چیک کریں اور دوبارہ کوشش کریں۔"
     imap_no_response_error: "IMAP سرور کے ساتھ مواصلت کرتے وقت ایک خرابی پیش آگئی۔ %{message}"
-    smtp_authentication_error: "فراہم کردہ SMTP شناخت میں ایک مسئلہ تھا، صارف نام اور پاس ورڈ چیک کریں اور دوبارہ کوشش کریں۔"
-    authentication_error_gmail_app_password: 'درخواست کے لیے مخصوص پاس ورڈ درکار ہے۔<a target="_blank" href="https://support.google.com/accounts/answer/185833"> اس گوگل ہیلپ آرٹیکل پر مزید جانیں</a>۔'
     smtp_server_busy_error: "SMTP سرور فی الحال مصروف ہے، بعد میں دوبارہ کوشش کریں۔"
     smtp_unhandled_error: "SMTP سرور کے ساتھ مواصلت کرتے وقت ایک بگڑی ہوئی خرابی تھی۔ %{message}"
     imap_unhandled_error: "IMAP سرور کے ساتھ مواصلت کرتے وقت ایک بگڑی ہوئی خرابی تھی۔ %{message}"
@@ -1291,8 +1289,6 @@ ur:
       ram: "آپ کا سرور مجموعی طور پر 1 GB سے کم میموری کے ساتھ چل رہا ہے۔ کم ازکم 1 GB میموری تجویز کی گئی ہے۔"
       subfolder_ends_in_slash: "آپ کا سب-فولڈر سیٹ اپ غلط ہے؛ DISCOURSE_RELATIVE_URL_ROOT ایک سلَیش میں ختم ہوتا ہے۔"
       missing_mailgun_api_key: "سرور کو بذریعہ مَیلگَن ای میل بھیجنے کیلئے ترتیب دیا گیا ہے، لیکن آپ نے وَیب ھُوک٘ پیغامات کی توثیق کرنے کیلئے API کلید فراہم نہیں کی ہے۔"
-      out_of_date_themes: "مندرجہ ذیل تِھیمز کیلئے اَپ ڈیٹس دستیاب ہیں:"
-      unreachable_themes: "ہم مندرجہ ذیل تِھیمز کیلئے اپ ڈیٹس کو چیک نہ کر سکے:"
   site_settings:
     allow_bulk_invite: "CSV فائل اپ لوڈ کرکے کَثْرَتی دعوتوں کی اجازت دیں"
     disabled: "غیر فعال"

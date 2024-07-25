@@ -72,6 +72,8 @@ nl:
         breakdown: "Verdeling"
         percentage: "Percentage"
         count: "Aantal"
+      ranked_choice:
+        none: "Geen"
       options:
         label: "Opties"
       error_while_toggling_status: "Sorry, er is een fout opgetreden bij het omschakelen van de status van deze poll."

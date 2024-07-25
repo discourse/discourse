@@ -92,6 +92,8 @@ ar:
         breakdown: "التفاصيل"
         percentage: "النسبة المئوية"
         count: "العدد"
+      ranked_choice:
+        none: "لا يوجد"
       options:
         label: "الخيارات"
       error_while_toggling_status: "عذرًا، حدث خطأ أدى إلى تبديل حالة استطلاع الرأي هذا."

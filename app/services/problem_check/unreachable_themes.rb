@@ -11,19 +11,23 @@ class ProblemCheck::UnreachableThemes < ProblemCheck
 
   private
 
+  def translation_data
+    { themes_list: }
+  end
+
   def unreachable_themes
     @unreachable_themes ||= RemoteTheme.unreachable_themes
   end
 
-  def message
-    "#{I18n.t("dashboard.problem.unreachable_themes")}<ul>#{themes_list}</ul>"
-  end
-
   def themes_list
-    unreachable_themes
-      .map do |name, id|
-        "<li><a href=\"/admin/customize/themes/#{id}\">#{CGI.escapeHTML(name)}</a></li>"
-      end
-      .join("\n")
+    <<~HTML.squish
+      <ul>#{
+      unreachable_themes
+        .map do |name, id|
+          "<li><a href=\"/admin/customize/themes/#{id}\">#{CGI.escapeHTML(name)}</a></li>"
+        end
+        .join("\n")
+    }</ul>
+    HTML
   end
 end

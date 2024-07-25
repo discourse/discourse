@@ -413,6 +413,8 @@ sw:
         email:
           title: "Barua Pepe"
           last_updated_by: "na"
+          ssl_modes:
+            none: "Hakuna"
           credentials:
             username: "Jina la mtumiaji"
             password: "Nywila"
@@ -1016,6 +1018,11 @@ sw:
         fixed: "Pakua Ukurasa"
     modal:
       close: "funga"
+    form_kit:
+      reset: Anza Upya
+      optional: sio muhimu
+      errors:
+        required: "Muhimu na Inahitajika"
     close: "Funga"
     logout: "Ulitolewa."
     refresh: "Rudisha Tena"
@@ -1963,6 +1970,9 @@ sw:
       title: "Muhtasari wa Mada"
       participants_title: "Wachapishaji wa Mara kwa Mara"
       links_title: "Viungo Maarufu"
+      views: "Imeonwa"
+      read: soma
+      minutes: kiwango cha chini
     topic_statuses:
       warning:
         help: "Hii ni onyo rasmi."
@@ -1987,6 +1997,7 @@ sw:
     pending_posts:
       label: "subiria"
       label_with_count: "(%{count}) zinasubiria"
+    posters: "Wachapishaji"
     original_post: "Chapisho la Kwanza"
     views: "Imeonwa"
     views_lowercase:
@@ -3296,8 +3307,6 @@ sw:
         badge: Beji
         display_name: Jina la Kutumia
         description: Maelezo
-        long_description: Maelezo Marefu
-        badge_type: Aina ya beji
         badge_grouping: Kikundi
         badge_groupings:
           modal_title: VIkundi vya beji

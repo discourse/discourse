@@ -27,8 +27,6 @@ ur:
         icons:
           title: "آئیکن"
           full_list: "فونٹ آسم آئیکن کی مکمل فہرست ملاحظہ کریں"
-        input_fields:
-          title: "ان پٹ فیلڈز"
         buttons:
           title: "بٹن"
         dropdowns:

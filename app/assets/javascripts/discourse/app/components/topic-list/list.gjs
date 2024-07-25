@@ -32,10 +32,6 @@ export default class TopicList extends Component {
     return !this.bulkSelectEnabled && this.args.canBulkSelect;
   }
 
-  get experimentalTopicBulkActionsEnabled() {
-    return this.currentUser?.use_experimental_topic_bulk_actions;
-  }
-
   get sortable() {
     return !!this.args.changeSort;
   }
@@ -101,6 +97,7 @@ export default class TopicList extends Component {
         (if this.bulkSelectEnabled "sticky-header")
       }}
     >
+      <caption class="sr-only">{{i18n "sr_topic_list_caption"}}</caption>
       <thead class="topic-list-header">
         <TopicListHeader
           @canBulkSelect={{@canBulkSelect}}
@@ -117,7 +114,6 @@ export default class TopicList extends Component {
           @listTitle={{or @listTitle "topic.title"}}
           @bulkSelectEnabled={{this.bulkSelectEnabled}}
           @bulkSelectHelper={{@bulkSelectHelper}}
-          @experimentalTopicBulkActionsEnabled={{this.experimentalTopicBulkActionsEnabled}}
           @canDoBulkActions={{this.canDoBulkActions}}
           @showTopicsAndRepliesToggle={{@showTopicsAndRepliesToggle}}
           @newListSubset={{@newListSubset}}

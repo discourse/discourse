@@ -1120,8 +1120,6 @@ ar:
     pop3_authentication_error: "حدثت مشكلة في بيانات اعتماد POP3 المقدَّمة، تحقَّق من اسم المستخدم وكلمة المرور وحاول مرة أخرى."
     imap_authentication_error: "حدثت مشكلة في بيانات اعتماد IMAP المقدَّمة، تحقَّق من اسم المستخدم وكلمة المرور وحاول مرة أخرى."
     imap_no_response_error: "حدث خطأ في أثناء الاتصال بخادم IMAP. %{message}"
-    smtp_authentication_error: "حدثت مشكلة في بيانات اعتماد SMTP المقدَّمة، تحقَّق من اسم المستخدم وكلمة المرور وحاول مرة أخرى."
-    authentication_error_gmail_app_password: 'مطلوب كلمة مرور خاصة بالتطبيقات. تعرَّف على مزيد من المعلومات من خلال <a target="_blank" href="https://support.google.com/accounts/answer/185833">مقالة المساعدة هذه من Google</a>'
     smtp_server_busy_error: "خادم SMTP مشغول حاليًا، حاول مرة أخرى لاحقًا."
     smtp_unhandled_error: "حدث خطأ لم تتم معالجته عند الاتصال بخادم SMTP. %{message}"
     imap_unhandled_error: "حدث خطأ لم تتم معالجته عند الاتصال بخادم IMAP. %{message}"
@@ -1608,8 +1606,6 @@ ar:
       ram: "يعمل الخادم بإجمالي ذاكرة أقل من 1 غ.ب. يوصى بتوفُّر 1 غ.ب من الذاكرة على الأقل."
       subfolder_ends_in_slash: "إعداد المجلد الفرعي غير صحيح، تنتهي قيمة DISCOURSE_RELATIVE_URL_ROOT بشرطة مائلة."
       missing_mailgun_api_key: "تم إعداد الخادم لإرسال الرسائل الإلكترونية عبر Mailgun، لكنك لم تقدِّم مفتاح API المُستخدَم للتحقُّق من رسائل خطاف الويب."
-      out_of_date_themes: "تتوفَّر تحديثات للسمات التالية:"
-      unreachable_themes: "لم نتمكن من التحقُّق من وجود تحديثات للسمات التالية:"
       google_analytics_version: "يستخدم Discourse لديك حاليًا Google Analytics 3، والذي سيتوقف دعمه بعد يوليو 2023. <a href='https://meta.discourse.org/t/260498'>قم بالترقية إلى Google Analytics 4</a> الآن للاستمرار في تلقي رؤى وتحليلات قيمة لأداء موقعك الإلكتروني."
   site_settings:
     allow_bulk_invite: "السماح بالدعوات الجماعية عن طريق تحميل ملف CSV"

@@ -14,6 +14,8 @@ es:
         invalid_field: El componente del campo «%{component}» no es utilizable en «%{target}:%{target_name}».
         invalid_metadata: Los datos de «%{field}» no son válidos o el componente «%{component}» es desconocido.
     triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "Debe proporcionarse al menos uno de los campos «custom_fields» o «user_profile»."
       user_badge_granted:
         title: Credencial de usuario concedida
         doc: Activa una automatización cuando un usuario recibe una insignia.
@@ -31,16 +33,16 @@ es:
         title: Categoría creada/editada
         description: Cuando se cree o edite una categoría se activará la automatización
       recurring:
-        title: Periódico
+        title: Recurrente
       point_in_time:
         title: Fecha y hora
         description: Cuando se alcance la fecha, se activará la automatización
       user_added_to_group:
         title: Usuario añadido a un grupo
-        description: Cuando un usuario sea añadido al grupo especificado, se activará la automatización
+        description: Cuando un usuario se añada al grupo especificado, se activará la automatización
       user_removed_from_group:
         title: Usuario eliminado del grupo
-        description: Cuando un usuario sea eliminado del grupo especificado, se activará la automatización
+        description: Cuando un usuario se elimine del grupo especificado, se activará la automatización
       user_promoted:
         title: Usuario sube de nivel de confianza
         description: Cuando un usuario asciende de nivel de confianza
@@ -60,12 +62,16 @@ es:
       after_post_cook:
         title: Después de cocinar la publicación
         description: Cuando se cocine el contenido de una publicación se activará la automatización
+      user_updated:
+        title: Después de actualizar el usuario
+        description: Cuando un usuario actualiza cualquier información, se activará la automatización.
     scriptables:
       post:
         title: Crear una publicación
         description: Crear una publicación sobre un tema específico
       topic:
         title: Crear un tema
+        description: Crear un tema como usuario específico
       flag_post_on_words:
         title: Denunciar publicación según su contenido
         description: Denuncia una publicación si contiene las palabras especificadas
@@ -78,7 +84,7 @@ es:
         title: Respuesta automática
         description: Responde a un mensaje que incluya las palabras clave especificadas
       auto_tag_topic:
-        title: Etiquetar automáticamente tea
+        title: Etiquetar automáticamente tema
         description: Añadir etiquetas automáticamente a un tema
       pin_topic:
         title: Anclar tema
@@ -93,9 +99,9 @@ es:
       send_pms:
         title: Enviar mensajes privados
         description: Permite enviar MPs (posiblemente con retardo).
-        doc: Permite enviar varios pms a un usuario. Cada PM acepta un retardo.
+        doc: Permite enviar varios MPs a un usuario. Cada MP acepta un retardo.
       suspend_user_by_email:
-        title: Suspender usuario con un correo electrónico
+        title: Suspender al usuario por correo electrónico
       user_global_notice:
         title: Aviso global para un usuario
         description: Permite mostrarle un aviso global a un usuario
@@ -103,7 +109,7 @@ es:
         title: Pertenencia a grupos de usuarios mediante una insignia
         description: Modificar la pertenencia a un grupo de usuarios en función de una insignia
       suspend_user_by_email_with_api_call:
-        doc: Al activar «suspend_user_by_email» con una llamada API, se espera que haya un «email» válido en los parámetros enviados. También se pueden utilizar «reasons» y «suspend_until (formato ISO 8601)» para anular los valores de los campos por defecto.
+        doc: Al activar «suspend_user_by_email» con una llamada API, se espera que haya un «email» válido en los parámetros enviados. También se pueden utilizar «reasons» y «suspend_until (formato ISO 8601)» para reemplazar los valores de los campos por defecto.
       user_global_notice_with_stalled_topic:
         doc: Cuando se active a través de un tema estancado, el autor del tema recibirá el aviso global
       user_global_notice_with_first_accepted_solution:
@@ -112,8 +118,8 @@ es:
         doc: Si utilizas el script «send pms» con el activador «api call», el parámetro «usernames» de tu solicitud se utilizará para rellenar la lista de destinatarios.
       topic_required_words:
         title: Palabras requeridas en un tema
-        description: Permite definir una lista de palabras requeridas en un tema, al menos una debe ser utilizada en cada publicación.
-        doc: Palabras requeridas en un tema necesita un tema. Cuando se cree o edite una publicación, se verificará que incluya al menos una de las palabras requeridas.
+        description: Permite definir una lista de palabras requeridas en un tema, debe utilizarse al menos una en cada publicación.
+        doc: Se necesita un tema para usar las Palabras requeridas en un tema. Cuando se cree o edite una publicación, se verificará que incluya al menos una de las palabras requeridas.
         errors:
           must_include_word: "La publicación debe contener al menos una de las siguientes palabras: %{words}"
       close_topic:
@@ -121,11 +127,11 @@ es:
         description: Cierra un tema y permite opcionalmente incluir un mensaje
       append_last_edited_by:
         title: Anexar la última edición realizada por
-        description: Añade los datos de «last edited by» de la publicación en la parte inferior del contenido cocinado.
+        description: Añade los datos de «Editado por última vez por» de la publicación en la parte inferior del contenido cocinado.
         text: "Editado por última vez por @%{username} %{date_time}"
       append_last_checked_by:
         title: Anexar la última comprobación realizada por
-        description: Añade los datos de «last checked by» de la parte inferior del contenido cocinado de la publicación.
+        description: Añade los datos de «Comprobado por última vez por» de la parte inferior del contenido cocinado de la publicación.
         text: "Comprobado por última vez por @%{username} %{date_time}"
         summary: Comprobar documento
         details: "Realiza la comprobación del documento: "

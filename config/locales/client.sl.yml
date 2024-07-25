@@ -732,11 +732,12 @@ sl:
           imap_settings_valid: "Nastavitve IMAP so veljavne."
           prefill:
             gmail: "Gmail"
+          ssl_modes:
+            none: "Brez"
           credentials:
             title: "Poverilnice"
             smtp_server: "Strežnik SMTP"
             smtp_port: "Vrata SMTP"
-            smtp_ssl: "Uporabi SSL za SMTP"
             imap_server: "Strežnik IMAP"
             imap_port: "Vrata IMAP"
             imap_ssl: "Uporabi SSL za IMAP"
@@ -1663,6 +1664,11 @@ sl:
     modal:
       close: "zapri"
       dismiss_error: "Opustite napako"
+    form_kit:
+      reset: Ponastavi
+      optional: neobvezno
+      errors:
+        required: "Zahtevano"
     close: "Zapri"
     logout: "Bili ste odjavljeni."
     refresh: "Osveži"
@@ -1712,6 +1718,7 @@ sl:
         generate: "Povzemi z AI"
         regenerate: "Ponovno ustvari povzetek"
       disable: "Prikaži vse prispevke"
+      show_all_label: "Pokaži vse"
     deleted_filter:
       enabled_description: "Ta tema vsebuje izbrisane prispevke, ki so skriti."
       disabled_description: "Izbrisani prispevki so prikazani."
@@ -3105,6 +3112,9 @@ sl:
         two: "%{count} klika"
         few: "%{count} kliki"
         other: "%{count} klikov"
+      views: "Ogledov"
+      read: prebrano
+      minutes: najmanj
     post_links:
       about: "razširi več povezav za to temo"
       title:
@@ -3139,6 +3149,7 @@ sl:
     pending_posts:
       label: "Za potrditev"
       label_with_count: "V teku (%{count})"
+    posters: "Avtorji"
     original_post: "Izvirni prispevek"
     views: "Ogledi"
     views_lowercase:
@@ -4591,6 +4602,7 @@ sl:
         file_types_list:
           add_image_types: "Slike"
       badges:
+        status: Stanje
         title: Značke
         new_badge: Nova značka
         new: Nova
@@ -4598,8 +4610,6 @@ sl:
         badge: Značka
         display_name: Ime za prikaz
         description: Opis
-        long_description: Dolg opis
-        badge_type: Tip značke
         badge_grouping: Skupina
         badge_groupings:
           modal_title: Skupine značk
@@ -4627,6 +4637,8 @@ sl:
         disabled: onemogočeno
         icon: Ikona
         image: Slika
+        select_an_icon: "Izberite ikono"
+        upload_an_image: "Naložite sliko"
         read_only_setting_help: "Prilagodite besedilo"
         query: poizvedba (SQL) značke
         show_posts: Prikaži prispevek za značko na strani z značkami

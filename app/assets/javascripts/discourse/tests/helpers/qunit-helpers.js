@@ -20,7 +20,6 @@ import {
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import { clearExtraHeaderButtons as clearExtraGlimmerHeaderButtons } from "discourse/components/header";
 import { clearExtraHeaderIcons as clearExtraGlimmerHeaderIcons } from "discourse/components/header/icons";
-import { clearBulkButtons } from "discourse/components/modal/topic-bulk-actions";
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
 import { resetItemSelectCallbacks } from "discourse/components/search-menu/results/assistant-item";
@@ -101,6 +100,7 @@ import { cloneJSON, deepMerge } from "discourse-common/lib/object";
 import { clearResolverOptions } from "discourse-common/resolver";
 import I18n from "discourse-i18n";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
+import { setupFormKitAssertions } from "./form-kit-assertions";
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
 
 export function currentUser() {
@@ -243,7 +243,6 @@ export function testCleanup(container, app) {
   resetMentions();
   cleanupTemporaryModuleRegistrations();
   cleanupCssGeneratorTags();
-  clearBulkButtons();
   resetBeforeAuthCompleteCallbacks();
   clearPopupMenuOptions();
   clearAdditionalAdminSidebarSectionLinks();
@@ -447,7 +446,7 @@ export function controllerFor(controller, model) {
   deprecated(
     'controllerFor is deprecated. Use the standard `getOwner(this).lookup("controller:NAME")` instead',
     {
-      id: "controller-for",
+      id: "discourse.controller-for",
       since: "3.0.0.beta14",
     }
   );
@@ -504,6 +503,8 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
     message,
   });
 };
+
+setupFormKitAssertions();
 
 export async function selectDate(selector, date) {
   const elem = document.querySelector(selector);

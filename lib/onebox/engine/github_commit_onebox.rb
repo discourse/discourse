@@ -16,7 +16,7 @@ module Onebox
       always_https
 
       def url
-        "https://api.github.com/repos/#{match[:owner]}/#{match[:repository]}/commits/#{match[:sha]}"
+        "https://api.github.com/repos/#{match[:org]}/#{match[:repository]}/commits/#{match[:sha]}"
       end
 
       private
@@ -24,18 +24,17 @@ module Onebox
       def match
         return @match if defined?(@match)
 
-        @match =
-          @url.match(%{github\.com/(?<owner>[^/]+)/(?<repository>[^/]+)/commit/(?<sha>[^/]+)})
+        @match = @url.match(%{github\.com/(?<org>[^/]+)/(?<repository>[^/]+)/commit/(?<sha>[^/]+)})
         @match ||=
           @url.match(
-            %{github\.com/(?<owner>[^/]+)/(?<repository>[^/]+)/pull/(?<pr>[^/]+)/commit/(?<sha>[^/]+)},
+            %{github\.com/(?<org>[^/]+)/(?<repository>[^/]+)/pull/(?<pr>[^/]+)/commit/(?<sha>[^/]+)},
           )
 
         @match
       end
 
       def data
-        result = raw(github_auth_header).clone
+        result = raw(github_auth_header(match[:org])).clone
 
         lines = result["commit"]["message"].split("\n")
         result["title"] = lines.first

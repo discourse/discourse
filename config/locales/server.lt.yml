@@ -1202,7 +1202,6 @@ lt:
   dashboard:
     problem:
       rails_env: "Jūsų serveris veikia %{env} režimu."
-      out_of_date_themes: "Galimi naujiniai šioms temoms:"
   site_settings:
     disabled: "uždrausta"
     display_local_time_in_user_card: "Rodyti vietinį laiką pagal vartotojo laiko juostą, kai atidaroma vartotojo kortelė."

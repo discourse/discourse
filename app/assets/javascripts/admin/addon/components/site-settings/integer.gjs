@@ -13,7 +13,10 @@ export default class SiteSettingsInteger extends Component {
       return;
     }
 
-    this.args.changeValueCallback(num);
+    // Settings are stored as strings, this way the main site setting component
+    // doesn't get confused and think the value has changed from default if the
+    // admin sets it to the same number as the default.
+    this.args.changeValueCallback(num.toString());
   }
 
   @action

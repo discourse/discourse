@@ -344,6 +344,16 @@ en:
       active_user_count: "Active users"
       contact: "Contact us"
       contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_info}."
+      member_count:
+        one: "%{formatted_number} Member"
+        other: "%{formatted_number} Members"
+      admin_count:
+        one: "%{formatted_number} Admin"
+        other: "%{formatted_number} Admins"
+      moderator_count:
+        one: "%{formatted_number} Moderator"
+        other: "%{formatted_number} Moderators"
+      report_inappropriate_content: "If you come across any inappropriate content, don't hesitate to start a conversation with our moderators and admins. Remember to log in before reaching out."
 
     bookmarked:
       title: "Bookmark"
@@ -408,12 +418,12 @@ en:
         name: "Clear Reminders"
         description:
           one: "Are you sure you want to clear the reminder for this bookmark?"
-          other: "Are you sure you want to clear the reminder for these <b>%{count}</b> bookmarks."
+          other: "Are you sure you want to clear the reminder for these <b>%{count}</b> bookmarks?"
       delete_bookmarks:
         name: "Delete Bookmark"
         description:
           one: "Are you sure you want to delete this bookmark?"
-          other: "Are you sure you want to delete these <b>%{count}</b> bookmarks."
+          other: "Are you sure you want to delete these <b>%{count}</b> bookmarks?"
 
     copy_codeblock:
       copied: "copied!"
@@ -868,16 +878,22 @@ en:
           imap_alpha_warning: "Warning: This is an alpha-stage feature. Only Gmail is officially supported. Use at your own risk!"
           imap_settings_valid: "IMAP settings valid."
           smtp_disable_confirm: "If you disable SMTP, all SMTP and IMAP settings will be reset and the associated functionality will be disabled. Are you sure you want to continue?"
-          imap_disable_confirm: "If you disable IMAP all IMAP settings will be reset and the associated functionality will be disabled. Are you sure you want to continue?"
+          imap_disable_confirm: "If you disable IMAP, all IMAP settings will be reset and the associated functionality will be disabled. Are you sure you want to continue?"
           imap_mailbox_not_selected: "You must select a Mailbox for this IMAP configuration or no mailboxes will be synced!"
           prefill:
             title: "Prefill with settings for:"
             gmail: "Gmail"
+            outlook: "Outlook.com"
+            office365: "Microsoft 365"
+          ssl_modes:
+            none: "None"
+            ssl_tls: "SSL/TLS"
+            starttls: "STARTTLS"
           credentials:
             title: "Credentials"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
-            smtp_ssl: "Use SSL for SMTP"
+            smtp_ssl_mode: "SSL Mode"
             imap_server: "IMAP Server"
             imap_port: "IMAP Port"
             imap_ssl: "Use SSL for IMAP"
@@ -2091,6 +2107,26 @@ en:
     modal:
       close: "close"
       dismiss_error: "Dismiss error"
+    form_kit:
+      reset: Reset
+      optional: optional
+      errors_summary_title: "This form contains errors:"
+      dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
+      errors:
+        required: "Required"
+        invalid_url: "Must be a valid URL"
+        not_an_integer: "Must be a whole number"
+        not_accepted: "Must be accepted"
+        not_a_number: "Must be a number"
+        too_high: "Must be at most %{count}"
+        too_low: "Must be at least %{count}"
+        too_long:
+          one: "Must be at most %{count} character"
+          other: "Must be at most %{count} characters"
+        too_short:
+          one: "Must be at least %{count} character"
+          other: "Must be at least %{count} characters"
+
     close: "Close"
     assets_changed_confirm: "This site just received a software update. Get the latest version now?"
     logout: "You were logged out."
@@ -2185,8 +2221,8 @@ en:
         other: "There are <b>%{count}</b> replies."
       buttons:
         hide: "Hide summary"
-        generate: "Summarize with AI"
-        regenerate: "Regenerate summary"
+        generate: "Summarize"
+        regenerate: "Regenerate"
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       description_time_MF: |
@@ -2201,6 +2237,7 @@ en:
       enable: "Show top replies"
       disable: "Show All Posts"
       short_label: "Top replies"
+      show_all_label: "Show all"
       short_title: "Show this topic top replies: the most interesting posts as determined by the community"
 
     deleted_filter:
@@ -4099,6 +4136,17 @@ en:
       clicks:
         one: "%{count} click"
         other: "%{count} clicks"
+      menu_titles:
+        replies: Most liked replies
+        views: Recent views
+      view_explainer: One view per unique visitor every 8 hours.
+      no_views: No view stats yet, check back later.
+      chart_error: Error rendering chart, please try again.
+      views: "Views"
+      predicted_views: "Predicted Views"
+      so_far: (so far)
+      read: read
+      minutes: min
     post_links:
       about: "expand more links for this post"
       title:
@@ -4141,36 +4189,33 @@ en:
     pending_posts:
       label: "Pending"
       label_with_count: "Pending (%{count})"
+    sr_topic_list_caption: Topic list, column headers with buttons are sortable.
 
     # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
     posts_likes_MF: |
-      This topic has { count, plural,
-          one {# reply}
-        other {# replies}
-      } { ratio, select,
-          low {with a high like to post ratio}
-          med {with a very high like to post ratio}
-         high {with an extremely high like to post ratio}
+      { count, plural,
+          one {# reply,}
+        other {# replies,}
+      }{ ratio, select,
+          low { high like to post ratio,}
+          med { very high like to post ratio,}
+         high { extremely high like to post ratio,}
         other {}
-      }
+      } jump to the first or last post…
 
+    posters: "Posters"
     latest_poster_link: "%{username}'s profile, latest poster"
     original_post: "Original Post"
     views: "Views"
-    sr_views: "Sort by views"
     views_lowercase:
       one: "view"
       other: "views"
     replies: "Replies"
-    sr_replies: "Sort by replies"
     views_long:
       one: "this topic has been viewed %{count} time"
       other: "this topic has been viewed %{count} times"
     activity: "Activity"
-    sr_activity: "Sort by activity"
     likes: "Likes"
-    sr_likes: "Sort by likes"
-    sr_op_likes: "Sort by original post likes"
     likes_lowercase:
       one: "like"
       other: "likes"
@@ -4645,8 +4690,10 @@ en:
     no_group_messages_title: "No group messages found"
 
     topic_entrance:
-      sr_jump_top_button: "Jump to the first post"
-      sr_jump_bottom_button: "Jump to the last post"
+      sr_jump_top_button: "Jump to the first post - %{date}"
+      sr_jump_bottom_button: "Jump to the last post - %{date}"
+      jump_top_button_title: "Jump to the first post"
+      jump_bottom_button_title: "Jump to the last post"
     fullscreen_table:
       expand_btn: "Expand Table"
       view_table: "View Table"
@@ -5358,7 +5405,9 @@ en:
           request: "Request"
           response: "Response"
           redeliver_confirm: "Are you sure you want to redeliver the same payload?"
-          redeliver_failed_confirm: "Are you sure you want to redeliver %{count} webhook events?"
+          redeliver_failed_confirm:
+            one: "Are you sure you want to redeliver %{count} webhook event?"
+            other: "Are you sure you want to redeliver %{count} webhook events?"
           no_events_to_redeliver: "No events to redeliver."
           headers: "Headers"
           payload: "Payload"
@@ -5445,6 +5494,7 @@ en:
           header: "About your site"
           general_settings: "General settings"
           community_name: "Community name"
+          community_name_placeholder: "Example Community"
           community_summary: "Community summary"
           community_description: "Community description"
           banner_image: "Banner image"
@@ -5452,12 +5502,15 @@ en:
             This will be used on your About page. Recommended size: 800x300px. Accepted types: JPG, PNG, and SVG up to 10MB.
           contact_information: "Contact information"
           community_owner: "Community owner"
+          community_owner_placeholder: "Johnny Smith"
           community_owner_help: |
             Name of key contact responsible for this site. Used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
           contact_email: "Contact email"
+          contact_email_placeholder: "contact@johnny-smith.com"
           contact_email_help: |
             Email address of key contact responsible for this site. Used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
           contact_url: "Contact URL"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
             Contact URL for this site. When present, replaces contact email address on /about and visible to anonymous users on public sites.
           site_contact_name: "Site contact name"
@@ -5468,14 +5521,17 @@ en:
             A valid name of a group that gets invited to all automatically sent private messages.
           your_organization: "Your organization"
           company_name: "Company name"
+          company_name_placeholder: "Sample Company Inc."
           company_name_help: |
             Name of your company or organization.
           company_name_warning: |
             If left blank, no boilerplate Terms of Service or Privacy Notice will be provided.
           governing_law: "Governing law"
+          governing_law_placeholder: "State of New York"
           governing_law_help: |
             Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Notice. This is typically the country or state where the company operating the site is registered or conducts business.
           city_for_disputes: "City for disputes"
+          city_for_disputes_placeholder: "New York City"
           city_for_disputes_help: |
             Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service.
           optional: "(optional)"
@@ -5511,6 +5567,8 @@ en:
             non_editable: "You cannot edit this flag because it is a system flag or has already been used in the review system, however you can still disable it."
             delete_flag: "Delete flag"
             non_deletable: "You cannot delete this flag because it is a system flag or has already been used in the review system, however you can still disable it."
+            require_message: "Prompt users to provide additional reasons"
+            require_message_description: "When this flag is selected, a text field will be displayed for the user to provide additional detail about why they are flagging the content"
           more_options:
             title: "More options"
             move_up: "Move up"
@@ -6195,6 +6253,12 @@ en:
             create_flag: "create flag"
             update_flag: "update flag"
             delete_flag: "delete flag"
+            topic_slow_mode_set: "set topic slow mode"
+            topic_slow_mode_removed: "remove topic slow mode"
+            custom_emoji_create: "create custom emoji"
+            custom_emoji_destroy: "delete custom emoji"
+            delete_post_permanently: "permanently delete post"
+            delete_topic_permanently: "permanently delete topic"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -6866,6 +6930,8 @@ en:
             confirm: "Yes, update password policy"
 
       badges:
+        disable_system: This badge is a system badge and cannot be disabled and/or deleted.
+        status: Status
         title: Badges
         new_badge: New Badge
         new: New
@@ -6873,8 +6939,8 @@ en:
         badge: Badge
         display_name: Display Name
         description: Description
-        long_description: Long Description
-        badge_type: Badge Type
+        long_description: Long description
+        badge_type: Badge type
         badge_grouping: Group
         badge_groupings:
           modal_title: Badge Groupings
@@ -6903,10 +6969,10 @@ en:
         icon: Icon
         image: Image
         graphic: Graphic
+        icon_or_image: A badge requires an icon or an image
         icon_help: "Enter a Font Awesome icon name (use prefix 'far-' for regular icons and 'fab-' for brand icons)"
-        image_help: "Uploading an image overrides icon field if both are set."
-        select_an_icon: "Select an Icon"
-        upload_an_image: "Upload an Image"
+        select_an_icon: "Select an icon"
+        upload_an_image: "Upload an image"
         read_only_setting_help: "Customize text"
         query: Badge Query (SQL)
         target_posts: Query targets posts
@@ -6954,7 +7020,7 @@ en:
             other: "Your CSV was received and %{count} users will receive their badge shortly."
           csv_has_unmatched_users: "The following entries are in the CSV file but they couldn't be matched to existing users, and therefore won't receive the badge:"
           csv_has_unmatched_users_truncated_list:
-            one: "There was %{count} entry in the CSV file that couldn't be matched to existing users, and therefore won't receive the badge. Due to the large number of unmatched entries, only the first 100 are shown:"
+            one: "There was %{count} entry in the CSV file that couldn't be matched to existing users, and therefore won't receive the badge."
             other: "There were %{count} entries in the CSV file that couldn't be matched to existing users, and therefore won't receive the badge. Due to the large number of unmatched entries, only the first 100 are shown:"
           replace_owners: Remove the badge from previous owners
           grant_existing_holders: Grant additional badges to existing badge holders

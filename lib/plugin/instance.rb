@@ -239,6 +239,17 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_editable_group_custom_field(field, self)
   end
 
+  # Allows to define custom filter utilizing the user's input.
+  # Ensure proper input sanitization before using it in a query.
+  #
+  # Example usage:
+  #   add_filter_custom_filter("word_count") do |scope, value|
+  #     scope.where(word_count: value)
+  #   end
+  def add_filter_custom_filter(name, &block)
+    DiscoursePluginRegistry.register_custom_filter_mapping({ name => block }, self)
+  end
+
   # Allows to define custom "status:" filter. Example usage:
   #   register_custom_filter_by_status("foobar") do |scope|
   #     scope.where("word_count = 42")
@@ -831,14 +842,28 @@ class Plugin::Instance
   end
 
   def register_reviewable_type(reviewable_type_class)
-    extend_list_method Reviewable, :types, [reviewable_type_class.name]
+    return unless reviewable_type_class < Reviewable
+    extend_list_method(Reviewable, :types, reviewable_type_class)
   end
 
   def extend_list_method(klass, method, new_attributes)
-    current_list = klass.public_send(method)
-    current_list.concat(new_attributes)
+    register_name = [klass, method].join("_").underscore
+    DiscoursePluginRegistry.define_filtered_register(register_name)
+    DiscoursePluginRegistry.public_send(
+      "register_#{register_name.singularize}",
+      new_attributes,
+      self,
+    )
 
-    reloadable_patch { klass.public_send(:define_singleton_method, method) { current_list } }
+    original_method_alias = "__original_#{method}__"
+    return if klass.respond_to?(original_method_alias)
+    reloadable_patch do
+      klass.singleton_class.alias_method(original_method_alias, method)
+      klass.define_singleton_method(method) do
+        public_send(original_method_alias) |
+          DiscoursePluginRegistry.public_send(register_name).flatten
+      end
+    end
   end
 
   def directory_name

@@ -40,6 +40,7 @@ after_initialize do
   require_relative "app/serializers/poll_serializer"
   require_relative "jobs/regular/close_poll"
   require_relative "lib/poll"
+  require_relative "lib/ranked_choice"
   require_relative "lib/polls_updater"
   require_relative "lib/polls_validator"
   require_relative "lib/post_validator"
@@ -220,13 +221,22 @@ after_initialize do
   ) do
     preloaded_polls
       .map do |poll|
-        user_poll_votes =
-          poll
-            .poll_votes
-            .where(user_id: scope.user.id)
-            .joins(:poll_option)
-            .pluck("poll_options.digest")
-
+        if poll.ranked_choice?
+          user_poll_votes =
+            poll
+              .poll_votes
+              .where(user_id: scope.user.id)
+              .joins(:poll_option)
+              .pluck("poll_options.digest", "poll_votes.rank")
+              .map { |digest, rank| { digest: digest, rank: rank } }
+        else
+          user_poll_votes =
+            poll
+              .poll_votes
+              .where(user_id: scope.user.id)
+              .joins(:poll_option)
+              .pluck("poll_options.digest")
+        end
         [poll.name, user_poll_votes]
       end
       .to_h

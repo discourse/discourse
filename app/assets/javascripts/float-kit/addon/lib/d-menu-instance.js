@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
-import { getOwner, setOwner } from "@ember/application";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
+import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { MENU } from "float-kit/lib/constants";
 import FloatKitInstance from "float-kit/lib/float-kit-instance";

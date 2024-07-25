@@ -860,8 +860,6 @@ ja:
     pop3_authentication_error: "指定された POP3 の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。"
     imap_authentication_error: "指定された IMAP の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。"
     imap_no_response_error: "IMAP サーバーとの通信中にエラーが発生しました。%{message}"
-    smtp_authentication_error: "指定された SMTP の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。"
-    authentication_error_gmail_app_password: 'アプリケーション固有のパスワードが必要です。<a target="_blank" href="https://support.google.com/accounts/answer/185833">こちらの Google ヘルプ記事</a>をご覧ください。'
     smtp_server_busy_error: "SMTP サーバーは現在ビジー状態です。後でもう一度お試しください。"
     smtp_unhandled_error: "SMTP サーバーとの通信中に未処理のエラーが発生しました。%{message}"
     imap_unhandled_error: "IMAP サーバーとの通信中に未処理のエラーが発生しました。%{message}"
@@ -1348,8 +1346,6 @@ ja:
       ram: "現在サーバーは 1 GB 未満の総メモリで実行しています。推奨メモリサイズは 1 GB 以上です。"
       subfolder_ends_in_slash: "サブフォルダのセットアップが誤っています。DISCOURSE_RELATIVE_URL_ROOT はスラッシュで終了します。"
       missing_mailgun_api_key: "サーバーは Mailgun 経由でメールを送信するように構成されていますが、Webhook メッセージを確認するために使用される API キーが指定されていません。"
-      out_of_date_themes: "次のテーマの更新があります:"
-      unreachable_themes: "次のテーマの更新を確認できませんでした:"
       google_analytics_version: "あなたの Discourse は現在 Google Analytics 3 を使用していますが、2023 年 7 月以降はサポートされなくなります。今すぐ <a href='https://meta.discourse.org/t/260498'>Google Analytics 4 にアップグレード</a>して、ウェブサイトのパフォーマンスに関する貴重なインサイトと分析を引き続き受け取りましょう。"
   site_settings:
     allow_bulk_invite: "CSV ファイルのアップロードによる一括招待を許可する"

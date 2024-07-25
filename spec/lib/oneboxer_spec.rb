@@ -570,26 +570,59 @@ RSpec.describe Oneboxer do
     end
   end
 
-  it "uses the Onebox custom user agent on specified hosts" do
-    SiteSetting.force_custom_user_agent_hosts = "http://codepen.io|https://video.discourse.org/"
-    url = "https://video.discourse.org/presentation.mp4"
+  describe "onebox custom user agent" do
+    let!(:default_onebox_user_agent) do
+      "#{Onebox.options.user_agent} v#{Discourse::VERSION::STRING}"
+    end
 
-    stub_request(:head, url).to_return(status: 403, body: "", headers: {})
-    stub_request(:get, url).to_return(status: 403, body: "", headers: {})
-    stub_request(:head, url).with(headers: { "User-Agent" => Onebox.options.user_agent }).to_return(
-      status: 200,
-      body: "",
-      headers: {
-      },
-    )
-    stub_request(:get, url).with(headers: { "User-Agent" => Onebox.options.user_agent }).to_return(
-      status: 200,
-      body: "",
-      headers: {
-      },
-    )
+    it "uses the site setting value" do
+      SiteSetting.force_custom_user_agent_hosts = "http://codepen.io|https://video.discourse.org/"
+      url = "https://video.discourse.org/presentation.mp4"
+      custom_user_agent = "Custom User Agent"
 
-    expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to be_present
+      %i[head get].each do |method|
+        stub_request(method, url).with(
+          headers: {
+            "User-Agent" => default_onebox_user_agent,
+          },
+        ).to_return(status: 403, body: "", headers: {})
+        stub_request(method, url).with(
+          headers: {
+            "User-Agent" => "#{custom_user_agent} v#{Discourse::VERSION::STRING}",
+          },
+        ).to_return(status: 200, body: "", headers: {})
+      end
+
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("onebox-warning-message")
+
+      SiteSetting.onebox_user_agent = custom_user_agent
+
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
+        "onebox-placeholder-container",
+      )
+    end
+
+    it "forcing on specified hosts" do
+      SiteSetting.force_custom_user_agent_hosts = "http://codepen.io|https://video.discourse.org/"
+      url = "https://video.discourse.org/presentation.mp4"
+
+      stub_request(:head, url).to_return(status: 403, body: "", headers: {})
+      stub_request(:get, url).to_return(status: 403, body: "", headers: {})
+      stub_request(:head, url).with(
+        headers: {
+          "User-Agent" => default_onebox_user_agent,
+        },
+      ).to_return(status: 200, body: "", headers: {})
+      stub_request(:get, url).with(
+        headers: {
+          "User-Agent" => default_onebox_user_agent,
+        },
+      ).to_return(status: 200, body: "", headers: {})
+
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
+        "onebox-placeholder-container",
+      )
+    end
   end
 
   context "with youtube stub" do

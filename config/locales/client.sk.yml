@@ -377,6 +377,22 @@ sk:
       active_user_count: "Aktívni používatelia"
       contact: "Kontaktujte nás"
       contact_info: "V prípade kritickej chyby alebo naliehavej záležitosti nás prosím konaktujte na %{contact_info}."
+      member_count:
+        one: "%{formatted_number}/ Člen"
+        few: "%{formatted_number} Členovia"
+        many: "%{formatted_number} Členov"
+        other: "%{formatted_number}/ Členov"
+      admin_count:
+        one: "%{formatted_number} Administrátor"
+        few: "%{formatted_number} Administrátorov"
+        many: "%{formatted_number} Administrátorov"
+        other: "%{formatted_number} Administrátori"
+      moderator_count:
+        one: "%{formatted_number} Moderátor"
+        few: "%{formatted_number} Moderátorov"
+        many: "%{formatted_number} Moderátorov"
+        other: "%{formatted_number} Moderátori"
+      report_inappropriate_content: "Ak narazíte na nevhodný obsah, neváhajte začať konverzáciu s našimi moderátormi a administrátormi. Pred oslovením sa nezabudnite prihlásiť."
     bookmarked:
       title: "Záložka"
       edit_bookmark: "Upraviť záložku"
@@ -913,11 +929,17 @@ sk:
           prefill:
             title: "Predplňte nastavenia pre:"
             gmail: "Gmail"
+            outlook: "Outlook.com"
+            office365: "Microsoft 365"
+          ssl_modes:
+            none: "Žiadny"
+            ssl_tls: "SSL/TLS"
+            starttls: "STARTTLS"
           credentials:
             title: "Poverenia"
             smtp_server: "Server SMTP"
             smtp_port: "Port SMTP"
-            smtp_ssl: "Použite SSL pre SMTP"
+            smtp_ssl_mode: "Režim SSL"
             imap_server: "Server IMAP"
             imap_port: "Port IMAP"
             imap_ssl: "Pre IMAP použite SSL"
@@ -2118,6 +2140,29 @@ sk:
     modal:
       close: "zatvoriť"
       dismiss_error: "Odmietnuť chybu"
+    form_kit:
+      reset: Resetovať
+      optional: nepovinné
+      errors_summary_title: "Tento formulár obsahuje chyby:"
+      dirty_form: "Neodoslali ste svoje zmeny! Naozaj chcete odísť?"
+      errors:
+        required: "Povinné"
+        invalid_url: "Musí byť platná adresa URL"
+        not_an_integer: "Musí to byť celé číslo"
+        not_accepted: "Musí byť prijaté"
+        not_a_number: "Musí to byť číslo"
+        too_high: "Musí byť maximálne %{count}"
+        too_low: "Musí mať aspoň %{count}"
+        too_long:
+          one: "Musí mať maximálne %{count} znak"
+          few: "Musí mať maximálne %{count} znakov"
+          many: "Musí mať maximálne %{count} znakov"
+          other: "Musí obsahovať najviac %{count} znaky"
+        too_short:
+          one: "Musí mať aspoň %{count} znak"
+          few: "Musí mať minimálne %{count} znaky"
+          many: "Musí mať minimálne %{count} znaky"
+          other: "Musí mať minimálne %{count} znaky"
     close: "Zatvoriť"
     assets_changed_confirm: "Táto stránka práve dostala aktualizáciu softvéru. Chcete teraz získať najnovšiu verziu?"
     logout: "Boli ste odhlásený."
@@ -2218,6 +2263,7 @@ sk:
       enable: "Zobraziť najlepšie odpovede"
       disable: "Zobraziť všetky príspevky"
       short_label: "Najlepšie odpovede"
+      show_all_label: "Zobraziť všetko"
       short_title: "Zobrazujte odpovede na túto tému: najzaujímavejšie príspevky určené komunitou"
     deleted_filter:
       enabled_description: "Táto téma obsahuje zmazané príspevky, ktoré boli skryté."
@@ -4181,6 +4227,17 @@ sk:
         few: "%{count} kliky"
         many: "%{count} klikov"
         other: "%{count} klikov"
+      menu_titles:
+        replies: Najobľúbenejšie odpovede
+        views: Nedávne zobrazenia
+      view_explainer: Jedno zobrazenie na jedinečného návštevníka každých 8 hodín.
+      no_views: Zatiaľ nie sú k dispozícii žiadne štatistiky, skúste to neskôr.
+      chart_error: Chyba pri vykresľovaní grafu, skúste to znova.
+      views: "Zobrazenia"
+      predicted_views: "Predpokladané zobrazenia"
+      so_far: (zatiaľ)
+      read: čítať
+      minutes: min
     post_links:
       about: "rozbaliť ďalšie odkazy na tento príspevok"
       title:
@@ -4224,37 +4281,36 @@ sk:
     pending_posts:
       label: "Čakajúce správy"
       label_with_count: "Čakajúce (%{count})"
+    sr_topic_list_caption: Zoznam tém, hlavičky stĺpcov s tlačidlami sa dajú triediť.
     posts_likes_MF: |
-      Táto téma má { count, plural,
-          one {# odpoveď}
-        other {# odpovedí}
-      } { ratio, select,
-          low {s vysokým pomerom lajkov na príspevok}
-          med {s veľmi vysokým pomerom lajkov na príspevok}
-         high {s extrémne vysokým pomerom lajkov na príspevok}
+      { count, plural,
+          one {# reply,}
+          few {# replies,}
+          many {# replies,}
+        other {# replies,}
+      }{ ratio, select,
+          low { high like to post ratio,}
+          med { very high like to post ratio,}
+         high { extremely high like to post ratio,}
         other {}
-      }
+      } jump to the first or last post…
+    posters: "Plagáty"
     latest_poster_link: "Profil používateľa %{username}, najnovší plagát"
     original_post: "Pôvodný príspevok"
     views: "Zobrazenia"
-    sr_views: "Zoradiť podľa zobrazení"
     views_lowercase:
       one: "zobrazenie"
       few: "zobrazenia"
       many: "zobrazení"
       other: "zobrazení"
     replies: "Odpovede"
-    sr_replies: "Zoradiť podľa odpovedí"
     views_long:
       one: "táto téma bola zobrazená %{count} krát"
       few: "táto téma bola zobrazená %{count} krát"
       many: "táto téma bola zobrazená %{count} krát"
       other: "táto téma bola zobrazená %{count} krát"
     activity: "Aktivita"
-    sr_activity: "Zoradiť podľa aktivity"
     likes: "Páči sa mi"
-    sr_likes: "Zoradiť podľa lajkov"
-    sr_op_likes: "Zoradiť podľa lajkov pôvodného príspevku"
     likes_lowercase:
       one: "\"Páči sa\""
       few: "\"Páči sa\""
@@ -4745,8 +4801,10 @@ sk:
       no_read_topics_body: "Keď začnete čítať diskusie, zobrazí sa vám zoznam. Ak chcete začať čítať, vyhľadajte témy, ktoré vás zaujímajú <a href='%{topUrl}'>Najlepšie</a> alebo <a href='%{categoriesUrl}'>Kategórie</a> alebo hľadajte podľa kľúčového slova %{searchIcon}"
     no_group_messages_title: "Nenašli sa žiadne skupinové správy"
     topic_entrance:
-      sr_jump_top_button: "Prejsť na prvý príspevok"
-      sr_jump_bottom_button: "Prejsť na posledný príspevok"
+      sr_jump_top_button: "Prejsť na prvý príspevok - %{date}"
+      sr_jump_bottom_button: "Prejsť na posledný príspevok - %{date}"
+      jump_top_button_title: "Prejsť na prvý príspevok"
+      jump_bottom_button_title: "Prejsť na posledný príspevok"
     fullscreen_table:
       expand_btn: "Rozbaliť tabuľku"
       view_table: "Zobraziť tabuľku"
@@ -5461,6 +5519,7 @@ sk:
         events:
           none: "Neexistujú žiadne súvisiace udalosti."
           redeliver: "Opätovné doručenie"
+          redeliver_failed: "Opätovné doručenie zlyhalo"
           incoming:
             one: "Je tu nová udalosť."
             few: "Tu sú %{count} nové udalosti."
@@ -5474,6 +5533,12 @@ sk:
           request: "Požiadavka"
           response: "Odpoveď"
           redeliver_confirm: "Ste si istí, že chcete znova doručiť rovnaké dáta?"
+          redeliver_failed_confirm:
+            one: "Naozaj chcete znova doručiť %{count} udalosť webhooku ?"
+            few: "Naozaj chcete znova doručiť %{count} udalostí webhooku?"
+            many: "Naozaj chcete znova doručiť %{count} udalostí webhooku?"
+            other: "Naozaj chcete znova doručiť %{count} udalostí webhooku?"
+          no_events_to_redeliver: "Žiadne udalosti na opätovné doručenie."
           headers: "Hlavičky"
           payload: "Payload"
           body: "Telo"
@@ -5619,6 +5684,8 @@ sk:
             non_editable: "Tento príznak nemôžete upraviť, pretože je to systémový príznak alebo už bol použitý v systéme hodnotenia, môžete ho však vypnúť."
             delete_flag: "Odstrániť príznak"
             non_deletable: "Tento príznak nemôžete odstrániť, pretože je to systémový príznak alebo už bol použitý v systéme hodnotenia, môžete ho však vypnúť."
+            require_message: "Vyzvať používateľov, aby uviedli ďalšie dôvody"
+            require_message_description: "Po výbere tohto príznaku sa zobrazí textové pole, v ktorom môže používateľ uviesť ďalšie podrobnosti o dôvode označenia obsahu."
           more_options:
             title: "Ďalšie možnosti"
             move_up: "Posunúť sa nahor"
@@ -6302,6 +6369,12 @@ sk:
             create_flag: "vytvoriť príznak"
             update_flag: "aktualizovať príznak"
             delete_flag: "odstrániť príznak"
+            topic_slow_mode_set: "nastaviť pomalý režim témy"
+            topic_slow_mode_removed: "odstránenie pomalého režimu témy"
+            custom_emoji_create: "vytvoriť vlastné emoji"
+            custom_emoji_destroy: "odstrániť vlastné emotikony"
+            delete_post_permanently: "natrvalo odstrániť príspevok"
+            delete_topic_permanently: "natrvalo odstrániť tému"
         screened_emails:
           title: "Kontrolované emaily"
           description: "Keď niekto skúsi vytvoriť nový účet, nasledujúce emailove adresy budú preverené a registrácia bude zablokovaná, alebo bude vykonaná nejaka iná akcia. "
@@ -6959,6 +7032,8 @@ sk:
             prompt: "Chystáte sa zmeniť zásady používania hesiel. Odteraz sa to bude týkať všetkých používateľov, ktorí si menia svoje heslá. Ste si istí, že chcete pokračovať?"
             confirm: "Áno, aktualizujte zásady používania hesiel"
       badges:
+        disable_system: Tento odznak je systémový odznak a nie je možné ho vypnúť a/alebo odstrániť.
+        status: Stav
         title: Odznaky
         new_badge: Nový odznak
         new: Nový
@@ -6996,10 +7071,10 @@ sk:
         icon: Ikona
         image: Obrázok
         graphic: Grafika
+        icon_or_image: Odznak vyžaduje ikonu alebo obrázok
         icon_help: "Zadajte názov ikony Font Awesome (pre bežné ikony použite prefix \"far-\" a pre ikony značky \"fab-\")"
-        image_help: "Odoslanie obrázka má prednosť pred poľom ikony, ak sú nastavené obe."
-        select_an_icon: "Výber ikony"
-        upload_an_image: "Nahratie obrázka"
+        select_an_icon: "Vyberte ikonu"
+        upload_an_image: "Nahrajte obrázok"
         read_only_setting_help: "Prispôsobenie textu"
         query: Požiadavka na Odznak (SQL)
         target_posts: Požiadavka cieli príspevky

@@ -89,7 +89,7 @@ RSpec.describe Admin::WatchedWordsController do
 
       it "should delete watched word group if it's the last word" do
         watched_word_group = Fabricate(:watched_word_group)
-        watched_word.update!(watched_word_group: watched_word_group)
+        watched_word = watched_word_group.watched_words.first
 
         delete "/admin/customize/watched_words/#{watched_word.id}.json"
 

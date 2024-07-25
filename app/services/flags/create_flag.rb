@@ -15,22 +15,24 @@ class Flags::CreateFlag
   class Contract
     attribute :name, :string
     attribute :description, :string
+    attribute :require_message, :boolean
     attribute :enabled, :boolean
     attribute :applies_to
     validates :name, presence: true
     validates :description, presence: true
     validates :name, length: { maximum: Flag::MAX_NAME_LENGTH }
     validates :description, length: { maximum: Flag::MAX_DESCRIPTION_LENGTH }
-    validates :applies_to, inclusion: { in: Flag.valid_applies_to_types }, allow_nil: false
+    validates :applies_to, inclusion: { in: -> { Flag.valid_applies_to_types } }, allow_nil: false
   end
 
   private
 
-  def instantiate_flag(name:, description:, applies_to:, enabled:)
+  def instantiate_flag(name:, description:, applies_to:, require_message:, enabled:)
     Flag.new(
       name: name,
       description: description,
       applies_to: applies_to,
+      require_message: require_message,
       enabled: enabled,
       notify_type: true,
     )
@@ -51,6 +53,7 @@ class Flags::CreateFlag
         name: flag.name,
         description: flag.description,
         applies_to: flag.applies_to,
+        require_message: flag.require_message,
         enabled: flag.enabled,
       },
     )
