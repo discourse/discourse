@@ -13,7 +13,7 @@ export default class PollOptionsComponent extends Component {
   @service currentUser;
 
   isChosen = (option) => {
-    return this.args.votes.includes(option.id);
+    return this.args.votes?.includes(option.id);
   };
 
   @action

@@ -34,7 +34,7 @@ export default class PollComponent extends Component {
     this.args.hasSavedVote ||
     (this.args.topicArchived && !this.args.staffOnly) ||
     (this.args.closed && !this.args.staffOnly);
-  isMe = this.currentUser && this.args.post.user_id === this.currentUser.id;
+  isMe = this.currentUser && this.args.post?.user_id === this.currentUser.id;
 
   checkUserGroups = (user, poll) => {
     const pollGroups =
