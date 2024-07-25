@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DHeadlessMenu from "float-kit/components/d-headless-menu";
 
 export default class DMenus extends Component {

@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import discourseDebounce from "discourse-common/lib/debounce";

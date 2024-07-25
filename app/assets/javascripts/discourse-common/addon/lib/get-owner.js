@@ -1,14 +1,14 @@
-import { getOwner as emberGetOwner, setOwner } from "@ember/application";
+import { getOwner as emberGetOwner, setOwner } from "@ember/owner";
 import deprecated from "discourse-common/lib/deprecated";
 
 let _default = {};
 
 /**
- * Works similarly to { getOwner } from `@ember/application`, but has a fallback
+ * Works similarly to { getOwner } from `@ember/owner`, but has a fallback
  * when the passed object doesn't have an owner.
  *
  * This exists for historical reasons. Ideally, any uses of it should be updated to use
- * the official `@ember/application` implementation.
+ * the official `@ember/owner` implementation.
  */
 export function getOwnerWithFallback(obj) {
   if (emberGetOwner) {

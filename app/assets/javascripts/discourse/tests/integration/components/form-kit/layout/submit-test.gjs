@@ -2,7 +2,7 @@ import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 module("Integration | Component | FormKit | Layout | Submit", function (hooks) {
   setupRenderingTest(hooks);

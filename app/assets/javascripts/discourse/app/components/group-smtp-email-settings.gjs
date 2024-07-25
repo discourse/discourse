@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, getProperties } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { or } from "truth-helpers";
 import Form from "discourse/components/form";
 import formatDate from "discourse/helpers/format-date";
@@ -13,7 +13,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { GROUP_SMTP_SSL_MODES } from "discourse/lib/constants";
 import emailProviderDefaultSettings from "discourse/lib/email-provider-default-settings";
 import i18n from "discourse-common/helpers/i18n";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class GroupSmtpEmailSettings extends Component {
   @service currentUser;

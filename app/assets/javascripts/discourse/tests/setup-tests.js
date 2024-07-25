@@ -3,7 +3,7 @@ import Application from "../app";
 import "./loader-shims";
 /* eslint-enable simple-import-sort/imports */
 
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import {
   getSettledState,
   isSettled,

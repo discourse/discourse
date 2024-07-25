@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { hbs } from "ember-cli-htmlbars";
 import { Promise } from "rsvp";
 import { h } from "virtual-dom";

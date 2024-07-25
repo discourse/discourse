@@ -1,5 +1,5 @@
-import { getOwner } from "@ember/application";
 import EmberObject from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { click, render, triggerEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
