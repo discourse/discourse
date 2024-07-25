@@ -7013,7 +7013,7 @@ en:
             other: "Your CSV was received and %{count} users will receive their badge shortly."
           csv_has_unmatched_users: "The following entries are in the CSV file but they couldn't be matched to existing users, and therefore won't receive the badge:"
           csv_has_unmatched_users_truncated_list:
-            one: "There was %{count} entry in the CSV file that couldn't be matched to existing users, and therefore won't receive the badge. Due to the large number of unmatched entries, only the first 100 are shown:"
+            one: "There was %{count} entry in the CSV file that couldn't be matched to existing users, and therefore won't receive the badge."
             other: "There were %{count} entries in the CSV file that couldn't be matched to existing users, and therefore won't receive the badge. Due to the large number of unmatched entries, only the first 100 are shown:"
           replace_owners: Remove the badge from previous owners
           grant_existing_holders: Grant additional badges to existing badge holders
