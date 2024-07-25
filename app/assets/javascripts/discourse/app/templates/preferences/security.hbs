@@ -91,7 +91,7 @@
     </div>
 
     {{#if this.canShowAllAuthTokens}}
-      <a {{on "click" this.toggleShowAllAuthTokens}}>
+      <a href {{on "click" this.toggleShowAllAuthTokens}}>
         {{#if this.showAllAuthTokens}}
           {{d-icon "caret-up"}}
           <span>{{i18n "user.auth_tokens.show_few"}}</span>
@@ -108,6 +108,7 @@
     {{/if}}
 
     <a
+      href
       {{on "click" (fn this.revokeAuthToken null)}}
       class="pull-right text-danger"
     >
