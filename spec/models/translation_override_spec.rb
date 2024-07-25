@@ -148,6 +148,32 @@ RSpec.describe TranslationOverride do
         end
       end
     end
+
+    describe "MessageFormat translations" do
+      subject(:override) do
+        described_class.new(
+          translation_key: "admin_js.admin.user.delete_all_posts_confirm_MF",
+          locale: "en",
+        )
+      end
+
+      it do
+        is_expected.to allow_value(
+          "This has {COUNT, plural, one{one member} other{# members}}.",
+        ).for(:value).against(:base)
+      end
+      it do
+        is_expected.not_to allow_value(
+          "This has {COUNT, plural, one{one member} many{# members} other{# members}}.",
+        ).for(:value).with_message(/plural case many is not valid/, against: :base)
+      end
+      it do
+        is_expected.not_to allow_value("This has {COUNT, ").for(:value).with_message(
+          /invalid syntax/,
+          against: :base,
+        )
+      end
+    end
   end
 
   it "upserts values" do
@@ -338,6 +364,22 @@ RSpec.describe TranslationOverride do
       translation.update_attribute("value", "Hello, %{name}! Welcome to %{site_name}. %{foo}")
 
       expect(translation.invalid_interpolation_keys).to contain_exactly("foo")
+    end
+  end
+
+  describe "#message_format?" do
+    subject(:override) { described_class.new(translation_key: key) }
+
+    context "when override is for a MessageFormat translation" do
+      let(:key) { "admin_js.admin.user.delete_all_posts_confirm_MF" }
+
+      it { is_expected.to be_a_message_format }
+    end
+
+    context "when override is not for a MessageFormat translation" do
+      let(:key) { "admin_js.type_to_filter" }
+
+      it { is_expected.not_to be_a_message_format }
     end
   end
 end
