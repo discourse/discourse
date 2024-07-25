@@ -142,11 +142,6 @@ module.exports = function (defaults) {
         },
         optimization: {
           minimize: isProduction,
-          minimizer: [
-            new TerserPlugin({
-              minify: TerserPlugin.swcMinify,
-            }),
-          ],
         },
         cache: isProduction
           ? false
