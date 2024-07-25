@@ -75,6 +75,24 @@
       width: 100%;
       height: 80px;
     }
+
+    .password-confirmation {
+      display: none;
+    }
+
+    section.field {
+      padding: 0.25em 0;
+      margin-bottom: 5px;
+      &.with-items {
+        display: flex;
+        align-items: flex-start;
+      }
+      .field-item {
+        display: inline-block;
+        margin-right: 10px;
+      }
+    }
+
     pre code {
       white-space: pre-wrap;
       max-width: 100%;
