@@ -3,6 +3,15 @@
 class Jobs::Onceoff < ::Jobs::Base
   sidekiq_options retry: false
 
+  class << self
+    attr_reader :onceoff_job_klasses
+
+    def inherited(klass)
+      @onceoff_job_klasses ||= Set.new
+      @onceoff_job_klasses << klass
+    end
+  end
+
   def self.name_for(klass)
     klass.name.sub(/\AJobs\:\:/, "")
   end
@@ -31,12 +40,9 @@ class Jobs::Onceoff < ::Jobs::Base
   def self.enqueue_all
     previously_ran = OnceoffLog.pluck(:job_name).uniq
 
-    ObjectSpace
-      .each_object(Class)
-      .select { |klass| klass < self }
-      .each do |klass|
-        job_name = name_for(klass)
-        Jobs.enqueue(job_name.underscore.to_sym) if previously_ran.exclude?(job_name)
-      end
+    self.onceoff_job_klasses.each do |klass|
+      job_name = name_for(klass)
+      Jobs.enqueue(job_name.underscore.to_sym) if previously_ran.exclude?(job_name)
+    end
   end
 end

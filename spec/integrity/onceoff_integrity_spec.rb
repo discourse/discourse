@@ -7,9 +7,6 @@ RSpec.describe ::Jobs::Onceoff do
       require_relative "../../app/jobs/onceoff/" + File.basename(f)
     end
 
-    ObjectSpace
-      .each_object(Class)
-      .select { |klass| klass.superclass == ::Jobs::Onceoff }
-      .each { |job| job.new.execute_onceoff(nil) }
+    described_class.onceoff_job_klasses.each { |job| job.new.execute_onceoff(nil) }
   end
 end
