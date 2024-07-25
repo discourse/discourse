@@ -76,7 +76,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_view_raw_email,
              :use_glimmer_topic_list?,
              :login_method,
-             :show_experimental_flags_admin_page,
              :render_experimental_about_page
 
   delegate :user_stat, to: :object, private: true
@@ -142,16 +141,8 @@ class CurrentUserSerializer < BasicUserSerializer
     object.staff?
   end
 
-  def show_experimental_flags_admin_page
-    object.in_any_groups?(SiteSetting.experimental_flags_admin_page_enabled_groups_map)
-  end
-
   def render_experimental_about_page
     object.in_any_groups?(SiteSetting.experimental_redesigned_about_page_groups_map)
-  end
-
-  def include_show_experimental_flags_admin_page?
-    object.admin?
   end
 
   def can_post_anonymously
