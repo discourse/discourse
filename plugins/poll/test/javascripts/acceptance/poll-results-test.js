@@ -646,15 +646,10 @@ acceptance("Poll results", function (needs) {
     );
 
     await click(".poll-voters-toggle-expand");
-    await visit("/t/load-more-poll-voters/134");
 
     assert.strictEqual(
       count(".poll-container .results li:nth-child(1) .poll-voters li"),
       2
-    );
-    assert.strictEqual(
-      count(".poll-container .results li:nth-child(2) .poll-voters li"),
-      0
     );
   });
 

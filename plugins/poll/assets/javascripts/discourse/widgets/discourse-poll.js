@@ -317,24 +317,6 @@ export default createWidget("discourse-poll", {
             });
           }
         }
-        const combinedArray = [
-          ...this.state.preloadedVoters[optionId].voters,
-          ...newVoters,
-        ];
-
-        const uniqueUsers = combinedArray.reduce((acc, user) => {
-          acc[user.username] = user;
-          return acc;
-        }, {});
-
-        const uniqueArray = Object.values(uniqueUsers);
-
-        preloadedVoters = {
-          voters: uniqueArray,
-          loading: false,
-        };
-
-        this.state.preloadedVoters[optionId] = Object.assign(preloadedVoters);
       })
       .catch((error) => {
         if (error) {
@@ -344,7 +326,6 @@ export default createWidget("discourse-poll", {
         }
       })
       .finally(() => {
-        // this.state.preloadedVoters = preloadedVoters;
         this.scheduleRerender();
       });
   },
