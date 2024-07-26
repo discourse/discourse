@@ -14,7 +14,7 @@ RawHandlebars.registerHelper("plugin-outlet", function (options) {
   return htmlSafe(
     rawRenderGlimmer(
       this,
-      tagName || "span",
+      `${tagName || "span"}.hbr-ember-outlet`,
       <template>
         {{~! no whitespace ~}}
         <PluginOutlet @name={{@data.name}} @outletArgs={{@data.outletArgs}} />
