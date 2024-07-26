@@ -1,16 +1,10 @@
 # frozen_string_literal: true
 
 describe "glimmer topic list", type: :system do
-  fab!(:user)
-  fab!(:group) { Fabricate(:group, users: [user]) }
-
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
-  before do
-    SiteSetting.experimental_glimmer_topic_list_groups = group.name
-    sign_in(user)
-  end
+  before { SiteSetting.experimental_glimmer_topic_list_groups = Group::AUTO_GROUPS[:everyone] }
 
   describe "/latest" do
     it "shows the list" do
@@ -22,8 +16,11 @@ describe "glimmer topic list", type: :system do
   end
 
   describe "/new" do
+    fab!(:user)
+    before { sign_in(user) }
+
     it "shows the list and the toggle buttons" do
-      SiteSetting.experimental_new_new_view_groups = group.name
+      SiteSetting.experimental_new_new_view_groups = Group::AUTO_GROUPS[:everyone]
       Fabricate(:topic)
       Fabricate(:new_reply_topic, current_user: user)
 
@@ -37,7 +34,10 @@ describe "glimmer topic list", type: :system do
   end
 
   describe "categories-with-featured-topics page" do
+    fab!(:user)
     let(:category_list) { PageObjects::Components::CategoryList.new }
+
+    before { sign_in(user) }
 
     it "shows the list" do
       SiteSetting.desktop_category_page_style = "categories_with_featured_topics"
@@ -54,6 +54,9 @@ describe "glimmer topic list", type: :system do
   end
 
   describe "suggested topics" do
+    fab!(:user)
+    before { sign_in(user) }
+
     it "shows the list" do
       topic1 = Fabricate(:post).topic
       topic2 = Fabricate(:post).topic
@@ -72,6 +75,8 @@ describe "glimmer topic list", type: :system do
   end
 
   describe "topic highlighting" do
+    fab!(:user)
+    before { sign_in(user) }
     # TODO: Those require `Capybara.disable_animation = false`
 
     skip "highlights newly received topics" do
@@ -97,6 +102,37 @@ describe "glimmer topic list", type: :system do
       page.go_back
 
       topic_list.has_highlighted_topic?(topic)
+    end
+  end
+
+  describe "bulk topic selection" do
+    fab!(:moderator)
+    before { sign_in(moderator) }
+
+    it "handles it" do
+      topics = Fabricate.times(2, :topic)
+      visit("/latest")
+
+      find("button.bulk-select").click
+      expect(topic_list).to have_topic_checkbox(topics.first)
+      expect(page).to have_no_css("button.bulk-select-topics-dropdown-trigger")
+
+      topic_list.click_topic_checkbox(topics.first)
+      expect(page).to have_css("button.bulk-select-topics-dropdown-trigger")
+    end
+
+    context "when on mobile", mobile: true do
+      it "handles it" do
+        topics = Fabricate.times(2, :topic)
+        visit("/latest")
+
+        find("button.bulk-select").click
+        expect(topic_list).to have_topic_checkbox(topics.first)
+        expect(page).to have_no_css("button.bulk-select-topics-dropdown-trigger")
+
+        topic_list.click_topic_checkbox(topics.first)
+        expect(page).to have_css("button.bulk-select-topics-dropdown-trigger")
+      end
     end
   end
 end
