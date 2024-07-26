@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Admin::EmailTemplatesController < Admin::AdminController
+  # to update the list of keys below, run the `list_email_templates_strings`
+  # rake task and replace the list below with the output from the rake task
   def self.email_keys
     @email_keys ||= %w[
       admin_confirmation_mailer
