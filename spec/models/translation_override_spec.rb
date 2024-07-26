@@ -382,4 +382,36 @@ RSpec.describe TranslationOverride do
       it { is_expected.not_to be_a_message_format }
     end
   end
+
+  describe "#make_up_to_date!" do
+    fab!(:override) { Fabricate(:translation_override, translation_key: "js.posts_likes_MF") }
+
+    context "when override is not outdated" do
+      it "does nothing" do
+        expect { override.make_up_to_date! }.not_to change { override.reload.attributes }
+      end
+
+      it "returns a falsy value" do
+        expect(override.make_up_to_date!).to be_falsy
+      end
+    end
+
+    context "when override is outdated" do
+      before { override.update_columns(status: :outdated, value: "{ Invalid MF syntax") }
+
+      it "updates its original translation to match the current default" do
+        expect { override.make_up_to_date! }.to change { override.reload.original_translation }.to(
+          I18n.t("js.posts_likes_MF"),
+        )
+      end
+
+      it "sets its status to 'up_to_date'" do
+        expect { override.make_up_to_date! }.to change { override.reload.up_to_date? }.to(true)
+      end
+
+      it "returns a truthy value" do
+        expect(override.make_up_to_date!).to be_truthy
+      end
+    end
+  end
 end

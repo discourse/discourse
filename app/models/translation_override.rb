@@ -170,6 +170,12 @@ class TranslationOverride < ActiveRecord::Base
     translation_key.to_s.end_with?("_MF")
   end
 
+  def make_up_to_date!
+    return unless outdated?
+    self.original_translation = current_default
+    update_attribute!(:status, :up_to_date)
+  end
+
   private
 
   def transformed_key
