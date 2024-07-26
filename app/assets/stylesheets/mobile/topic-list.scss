@@ -36,6 +36,11 @@
         flex: 1 1 auto;
       }
     }
+
+    .navigation-controls .bulk-select,
+    .plugin-outlet-component {
+      display: none;
+    }
   }
 
   .nav-pills {
@@ -45,6 +50,25 @@
     position: relative;
     .navigation-toggle {
       flex: 0 1 auto;
+      border: 0;
+
+      .toggle-link {
+        font-size: var(--font-up-1-rem);
+        font-weight: bold;
+        color: var(--primary-high);
+        padding: 0;
+
+        &:hover,
+        &:focus {
+          background: none;
+        }
+
+        .d-icon {
+          color: inherit;
+          font-size: var(--font-down-2);
+          margin-left: 0.5em;
+        }
+      }
     }
     > li {
       margin-right: 0;
@@ -460,6 +484,9 @@ td .main-link {
   }
 }
 .topic-list {
+  &-body {
+    border-top: 0;
+  }
   .num.posts-map {
     font-size: var(--font-up-2);
     padding: 0;
