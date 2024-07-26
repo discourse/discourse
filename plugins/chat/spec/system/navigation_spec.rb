@@ -87,6 +87,16 @@ RSpec.describe "Navigation", type: :system do
     end
   end
 
+  context "when visiting mobile only routes on desktop" do
+    it "redirects /chat/channels to browse" do
+      visit("/chat/channels")
+
+      expect(page).to have_current_path(
+        chat.channel_path(category_channel.slug, category_channel.id),
+      )
+    end
+  end
+
   context "when opening chat" do
     it "opens the drawer by default" do
       visit("/")

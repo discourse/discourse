@@ -1,8 +1,12 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { and } from "truth-helpers";
+import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import EmptyChannelsList from "discourse/plugins/chat/discourse/components/empty-channels-list";
@@ -11,6 +15,7 @@ import ChatChannelRow from "./chat-channel-row";
 export default class ChannelsListDirect extends Component {
   @service chat;
   @service chatChannelsManager;
+  @service chatStateManager;
   @service site;
   @service modal;
 
@@ -62,6 +67,36 @@ export default class ChannelsListDirect extends Component {
       @tagName=""
       @outletArgs={{hash inSidebar=this.inSidebar}}
     />
+    {{#if (and this.showDirectMessageChannels this.site.desktopView this.chatStateManager.isDrawerActive)}}
+      <div class="chat-channel-divider direct-message-channels-section">
+        {{#if this.inSidebar}}
+          <span
+            class="title-caret"
+            id="direct-message-channels-caret"
+            role="button"
+            title="toggle nav list"
+            {{on
+              "click"
+              (fn this.toggleChannelSection "direct-message-channels")
+            }}
+            data-toggleable="direct-message-channels"
+          >
+            {{dIcon "angle-up"}}
+          </span>
+        {{/if}}
+
+        <span class="channel-title">{{i18n "chat.direct_messages.title"}}</span>
+
+        {{#if this.canCreateDirectMessageChannel}}
+          <DButton
+            @icon="plus"
+            class="no-text btn-flat open-new-message-btn"
+            @action={{this.openNewMessageModal}}
+            title={{i18n this.createDirectMessageChannelLabel}}
+          />
+        {{/if}}
+      </div>
+    {{/if}}
 
     <div
       id="direct-message-channels"

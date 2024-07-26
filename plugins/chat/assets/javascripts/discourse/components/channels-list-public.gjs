@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
@@ -81,6 +82,33 @@ export default class ChannelsListPublic extends Component {
           </div>
         {{/if}}
       </LinkTo>
+    {{/if}}
+
+    {{#if (and this.displayPublicChannels this.site.desktopView)}}
+      <div class="chat-channel-divider public-channels-section">
+        {{#if this.inSidebar}}
+          <span
+            class="title-caret"
+            id="public-channels-caret"
+            role="button"
+            title="toggle nav list"
+            {{on "click" (fn this.toggleChannelSection "public-channels")}}
+            data-toggleable="public-channels"
+          >
+            {{dIcon "angle-up"}}
+          </span>
+        {{/if}}
+
+        <span class="channel-title">{{i18n "chat.chat_channels"}}</span>
+
+        <LinkTo
+          @route="chat.browse"
+          class="btn no-text btn-flat open-browse-page-btn title-action"
+          title={{i18n "chat.channels_list_popup.browse"}}
+        >
+          {{dIcon "pencil-alt"}}
+        </LinkTo>
+      </div>
     {{/if}}
 
     <div

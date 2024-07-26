@@ -20,14 +20,14 @@ RSpec.describe "List channels | no sidebar", type: :system do
 
         it "shows the channel in the correct section" do
           visit("/chat")
-          expect(page).to have_content(category_channel_1.title)
+          expect(page.find(".public-channels")).to have_content(category_channel_1.title)
         end
       end
 
       context "when not member of the channel" do
         it "doesn’t show the channel" do
           visit("/chat")
-          expect(page).to have_no_content(category_channel_1.title)
+          expect(page.find(".public-channels")).to have_no_content(category_channel_1.title)
         end
       end
     end
@@ -75,7 +75,7 @@ RSpec.describe "List channels | no sidebar", type: :system do
   context "when no category channels" do
     it "shows the empty channel list" do
       visit("/chat")
-      expect(page).to have_css(".channel-list-empty-message")
+      expect(page).to have_css(".c-list-empty-state")
     end
 
     it "does not show the create channel button" do
@@ -96,7 +96,7 @@ RSpec.describe "List channels | no sidebar", type: :system do
   context "when no direct message channels" do
     it "shows the empty channel list" do
       visit("/chat")
-      expect(page).to have_css(".channel-list-empty-message")
+      expect(page).to have_css(".c-list-empty-state")
     end
   end
 

@@ -213,7 +213,7 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
     context "when user can't use direct messages" do
       before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff] }
 
-      it "redirects to channels" do
+      it "redirects to browse" do
         visit("/chat")
 
         expect(page).to have_current_path("/chat/browse/open")
@@ -247,7 +247,7 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
     context "when no threads" do
       before { SiteSetting.chat_threads_enabled = false }
 
-      it "redirects to channels" do
+      it "redirects to browse" do
         visit("/chat")
 
         expect(page).to have_current_path("/chat/browse/open")
