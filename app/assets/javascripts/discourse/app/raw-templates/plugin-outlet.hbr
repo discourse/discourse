@@ -1,3 +1,0 @@
-{{~#if view.shouldRender}}
-  {{~html-safe view.html~}}
-{{/if~}}
