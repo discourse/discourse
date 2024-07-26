@@ -1934,7 +1934,7 @@ class PluginApi {
   /**
    * Allows for manipulation of the header icons. This includes, adding, removing, or modifying the order of icons.
    *
-   * Only the passing of components is supported, and by default the icons are added to the left of exisiting icons.
+   * Only the passing of components is supported, and by default the icons are added to the left of existing icons.
    *
    * Example: Add the chat icon to the header icons after the search icon
    * ```
@@ -1984,7 +1984,7 @@ class PluginApi {
   /**
    * Allows for manipulation of the header buttons. This includes, adding, removing, or modifying the order of buttons.
    *
-   * Only the passing of components is supported, and by default the buttons are added to the left of exisiting buttons.
+   * Only the passing of components is supported, and by default the buttons are added to the left of existing buttons.
    *
    * Example: Add a `foo` button to the header buttons after the auth buttons
    * ```
@@ -3032,7 +3032,7 @@ class PluginApi {
    * @param {string} opts.class
    * @param {buttonVisibilityCallback} opts.visible
    * @param {buttonAction} opts.action
-   * @param {string} opts.actionType - type of the action, either performanAndRefresh or setComponent
+   * @param {string} opts.actionType - type of the action, either performAndRefresh or setComponent
    */
   addBulkActionButton(opts) {
     addBulkDropdownButton(opts);
