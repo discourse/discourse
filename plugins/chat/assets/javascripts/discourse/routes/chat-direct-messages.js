@@ -11,15 +11,10 @@ export default class ChatDirectMessagesRoute extends DiscourseRoute {
 
   beforeModel() {
     if (this.site.desktopView) {
-      const id = this.currentUser.custom_fields.last_chat_channel_id;
-      if (id) {
-        return this.chatChannelsManager.find(id).then((c) => {
-          return this.router.replaceWith("chat.channel", ...c.routeModels);
-        });
+      if (this.chatChannelsManager.directMessageChannels.length === 0) {
+        // first time browsing chat and the preferred index is dms
+        this.router.replaceWith("chat.direct-messages");
       }
-      // first time browsing chat and the preferred index is dms
-      // if no dm, redirect to browse
-      return this.router.replaceWith("chat.browse.open");
     }
   }
 

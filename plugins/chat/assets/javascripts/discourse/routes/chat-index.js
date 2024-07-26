@@ -49,6 +49,9 @@ export default class ChatIndexRoute extends DiscourseRoute {
     ) {
       return this.router.replaceWith("chat.channels");
     }
+    if (!this.isPublicChannelsEnabled && this.hasDirectMessages) {
+      return this.router.replaceWith("chat.direct-messages");
+    }
     return this.router.replaceWith("chat.browse.open");
   }
 }
