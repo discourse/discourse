@@ -118,7 +118,7 @@ export default class SwipeEvents {
     this.element.addEventListener("touchcancel", this.touchCancel, opts);
   }
 
-  // Remove touch listeners to be called by client on destory
+  // Remove touch listeners to be called by client on destroy
   removeTouchListeners() {
     this.element.removeEventListener("touchstart", this.touchStart);
     this.element.removeEventListener("touchmove", this.touchMove);

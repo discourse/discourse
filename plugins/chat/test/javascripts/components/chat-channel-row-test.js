@@ -33,7 +33,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
     assert.dom(".chat-channel-row").hasAttribute("tabindex", "0");
   });
 
-  test("channel data attrite tabbing", async function (assert) {
+  test("channel id data attribute", async function (assert) {
     await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
 
     assert

@@ -25,7 +25,7 @@ export async function waitForClosedKeyboard(context) {
     new Promise((resolve) => {
       timeout = setTimeout(() => {
         // eslint-disable-next-line no-console
-        console.warn("Keyboard visibility didnt change after 1s.");
+        console.warn("Keyboard visibility didn't change after 1s.");
 
         resolve();
       }, 1000);
