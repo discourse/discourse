@@ -15,11 +15,11 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
 
   context "when visiting from browse page" do
     context "when clicking back button" do
-      it "redirects to empty channels page" do
+      it "redirects to brow page" do
         chat_page.visit_browse
         find(".c-navbar__back-button").click
 
-        expect(page).to have_current_path("/chat/channels")
+        expect(page).to have_current_path("/chat/browse/open")
       end
     end
   end
@@ -51,7 +51,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
 
     it "redirects to empty channels page" do
       chat_page.visit_channel_settings(channel_1)
-      expect(page).to have_current_path("/chat/channels")
+      expect(page).to have_current_path("/chat/browse/open")
     end
   end
 
@@ -157,7 +157,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
 
       chat_page.visit_channel_settings(channel_1)
       click_button(I18n.t("js.chat.channel_settings.leave_channel"))
-      expect(page).to have_current_path("/chat/channels")
+      expect(page).to have_current_path("/chat/browse/open")
       expect(membership.reload.following).to eq(false)
     end
 
@@ -174,7 +174,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
         chat_page.visit_channel_settings(channel_1)
         click_button(I18n.t("js.chat.channel_settings.leave_channel"))
 
-        expect(page).to have_current_path("/chat/channels")
+        expect(page).to have_current_path("/chat/browse/open")
         expect(Chat::UserChatChannelMembership.exists?(membership.id)).to eq(false)
         expect(
           channel_1.chatable.direct_message_users.where(user_id: current_user.id).exists?,

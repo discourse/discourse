@@ -102,14 +102,6 @@ module PageObjects
         visit("/chat/new-message?recipients=#{recipients}")
       end
 
-      def toggle_browse
-        find(".c-navbar__browse-button").click
-      end
-
-      def toggle_drawer
-        find("c-navbar__open-drawer-button").click
-      end
-
       def has_preloaded_channels?
         has_css?("body.has-preloaded-chat-channels")
       end

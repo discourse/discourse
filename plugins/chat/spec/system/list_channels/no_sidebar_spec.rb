@@ -43,7 +43,6 @@ RSpec.describe "List channels | no sidebar", type: :system do
 
       it "sorts them alphabetically" do
         visit("/chat")
-        chat.toggle_browse
         expect(page.find("#public-channels a:nth-child(1)")["data-chat-channel-id"]).to eq(
           channel_2.id.to_s,
         )
@@ -89,7 +88,6 @@ RSpec.describe "List channels | no sidebar", type: :system do
 
       it "shows the new channel button" do
         visit("/chat")
-        chat.toggle_browse
         expect(page).to have_css(".c-navbar__new-channel-button")
       end
     end
