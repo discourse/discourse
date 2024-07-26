@@ -1171,10 +1171,10 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
-"@babel/standalone@^7.24.10":
-  version "7.24.10"
-  resolved "https://registry.yarnpkg.com/@babel/standalone/-/standalone-7.24.10.tgz#6a6c57b4b460fd60f82caf988d881cfe4f8c506b"
-  integrity sha512-nGC37EKfmelpyCXto1pw6SBkD5ZQRdMbL6WISi28xWit9dtiy9dChU1WgEfzturUTxrmOGkMDRrCydFMA7uOaQ==
+"@babel/standalone@^7.25.0":
+  version "7.25.0"
+  resolved "https://registry.yarnpkg.com/@babel/standalone/-/standalone-7.25.0.tgz#d46a1945debca6640f214fe4d5e29dfb19740cb9"
+  integrity sha512-rNWV2wcTwMJVBNa/tkzGxM8wF/ReyFA+rAOUJnHP0rErDfRV7VehQZSIjUBKoWXOXgUyuEk9bIt7dXqYtsWCUw==
 
 "@babel/template@^7.22.5", "@babel/template@^7.24.7":
   version "7.24.7"
