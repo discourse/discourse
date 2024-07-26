@@ -401,7 +401,7 @@ RSpec.describe TranslationOverride do
 
       it "updates its original translation to match the current default" do
         expect { override.make_up_to_date! }.to change { override.reload.original_translation }.to(
-          I18n.t("js.posts_likes_MF"),
+          I18n.overrides_disabled { I18n.t("js.posts_likes_MF") },
         )
       end
 
