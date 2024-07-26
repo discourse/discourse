@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
 describe "glimmer topic list", type: :system do
+  fab!(:user)
+
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
-  before { SiteSetting.experimental_glimmer_topic_list_groups = Group::AUTO_GROUPS[:everyone] }
+  before do
+    SiteSetting.experimental_glimmer_topic_list_groups = Group::AUTO_GROUPS[:everyone]
+    sign_in(user)
+  end
 
   describe "/latest" do
     it "shows the list" do
@@ -16,9 +21,6 @@ describe "glimmer topic list", type: :system do
   end
 
   describe "/new" do
-    fab!(:user)
-    before { sign_in(user) }
-
     it "shows the list and the toggle buttons" do
       SiteSetting.experimental_new_new_view_groups = Group::AUTO_GROUPS[:everyone]
       Fabricate(:topic)
@@ -34,10 +36,7 @@ describe "glimmer topic list", type: :system do
   end
 
   describe "categories-with-featured-topics page" do
-    fab!(:user)
     let(:category_list) { PageObjects::Components::CategoryList.new }
-
-    before { sign_in(user) }
 
     it "shows the list" do
       SiteSetting.desktop_category_page_style = "categories_with_featured_topics"
@@ -54,9 +53,6 @@ describe "glimmer topic list", type: :system do
   end
 
   describe "suggested topics" do
-    fab!(:user)
-    before { sign_in(user) }
-
     it "shows the list" do
       topic1 = Fabricate(:post).topic
       topic2 = Fabricate(:post).topic
@@ -75,8 +71,6 @@ describe "glimmer topic list", type: :system do
   end
 
   describe "topic highlighting" do
-    fab!(:user)
-    before { sign_in(user) }
     # TODO: Those require `Capybara.disable_animation = false`
 
     skip "highlights newly received topics" do
@@ -106,10 +100,9 @@ describe "glimmer topic list", type: :system do
   end
 
   describe "bulk topic selection" do
-    fab!(:moderator)
-    before { sign_in(moderator) }
+    fab!(:user) { Fabricate!(:moderator) }
 
-    it "handles it" do
+    it "shows the buttons and checkboxes" do
       topics = Fabricate.times(2, :topic)
       visit("/latest")
 
@@ -122,7 +115,7 @@ describe "glimmer topic list", type: :system do
     end
 
     context "when on mobile", mobile: true do
-      it "handles it" do
+      it "shows the buttons and checkboxes" do
         topics = Fabricate.times(2, :topic)
         visit("/latest")
 
