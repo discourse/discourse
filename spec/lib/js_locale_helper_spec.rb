@@ -144,6 +144,10 @@ RSpec.describe JsLocaleHelper do
         expect(content).to_not eq("")
       end
     end
+
+    it "generates valid MF locales for the '#{locale[:value]}' locale" do
+      expect(described_class.output_MF(locale[:value])).not_to match(/Failed to compile/)
+    end
   end
 
   describe ".output_MF" do
