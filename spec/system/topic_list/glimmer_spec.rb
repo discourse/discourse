@@ -100,7 +100,7 @@ describe "glimmer topic list", type: :system do
   end
 
   describe "bulk topic selection" do
-    fab!(:user) { Fabricate!(:moderator) }
+    fab!(:user) { Fabricate(:moderator) }
 
     it "shows the buttons and checkboxes" do
       topics = Fabricate.times(2, :topic)
