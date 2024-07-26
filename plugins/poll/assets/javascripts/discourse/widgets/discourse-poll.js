@@ -7,6 +7,8 @@ import I18n from "discourse-i18n";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
 
 const STAFF_ONLY = "staff_only";
+const CLOSED = "closed";
+const ON_CLOSE = "on_close";
 const REGULAR = "regular";
 const MULTIPLE = "multiple";
 const NUMBER = "number";
@@ -40,6 +42,7 @@ export default createWidget("discourse-poll", {
       isNumber: attrs.poll.type === NUMBER,
       post: attrs.post,
       status: attrs.poll.status,
+      showResults: this.defaultShowResults(attrs),
       closed: this.closed(attrs),
       topicArchived: this.topicArchived(attrs),
       staffOnly: this.staffOnly(attrs),
@@ -52,6 +55,21 @@ export default createWidget("discourse-poll", {
       groupableUserFields: attrs.groupableUserFields,
       rankedChoiceOutcome: attrs.poll.ranked_choice_outcome || [],
     };
+  },
+
+  defaultShowResults(attrs) {
+    const closed = this.closed(attrs);
+    const staffOnly = this.staffOnly(attrs);
+    const topicArchived = this.topicArchived(attrs);
+    const resultsOnClose = this.attrs.poll.results === ON_CLOSE;
+
+    return (
+      !(resultsOnClose && !closed) &&
+      (attrs.hasSavedVote ||
+        (resultsOnClose && closed) ||
+        (topicArchived && !staffOnly) ||
+        (closed && !staffOnly))
+    );
   },
 
   populatePreloadedVoters(attrs) {
@@ -70,7 +88,7 @@ export default createWidget("discourse-poll", {
   },
 
   closed(attrs) {
-    return attrs.poll.status === "closed" || this.isAutomaticallyClosed(attrs);
+    return attrs.poll.status === CLOSED || this.isAutomaticallyClosed(attrs);
   },
 
   topicArchived(attrs) {
@@ -127,6 +145,12 @@ export default createWidget("discourse-poll", {
             this.state.poll.status = status;
             this.state.status = status;
             this.state.closed = status === "closed";
+            if (
+              this.state.poll.results === "on_close" ||
+              this.state.poll.results === "always"
+            ) {
+              this.state.showResults = status === "closed";
+            }
           })
           .catch((error) => {
             if (error) {
@@ -137,10 +161,15 @@ export default createWidget("discourse-poll", {
           })
           .finally(() => {
             this.scheduleRerender();
-            return status;
           });
       },
+      // didCancel: () => { this.scheduleRerender(); },
     });
+  },
+
+  toggleResults() {
+    const showResults = !this.state.showResults;
+    this.state.showResults = showResults;
   },
 
   toggleOption(option, rank = 0) {
@@ -183,7 +212,6 @@ export default createWidget("discourse-poll", {
   },
 
   castVotes() {
-    let successfulVote = false;
     return ajax("/polls/vote", {
       type: "PUT",
       data: {
@@ -206,10 +234,19 @@ export default createWidget("discourse-poll", {
 
         const voters = poll.voters;
         this.state.voters = [Number(voters)][0];
-        successfulVote = true;
+
+        if (this.state.poll.results !== "on_close") {
+          this.state.showResults = true;
+        }
+        if (this.state.poll.results === "staff_only") {
+          if (this.currentUser && this.currentUser.staff) {
+            this.state.showResults = true;
+          } else {
+            this.state.showResults = false;
+          }
+        }
       })
       .catch((error) => {
-        successfulVote = false;
         if (error) {
           if (!this.state.isMultiple && !this.state.isRankedChoice) {
             // this._toggleOption(option);
@@ -221,12 +258,10 @@ export default createWidget("discourse-poll", {
       })
       .finally(() => {
         this.scheduleRerender();
-        return successfulVote;
       });
   },
 
   removeVote() {
-    let successfulRetraction = false;
     return ajax("/polls/vote", {
       type: "DELETE",
       data: {
@@ -252,14 +287,13 @@ export default createWidget("discourse-poll", {
           this.state.post,
           this.state.vote
         );
-        successfulRetraction = true;
+        this.state.showResults = false;
       })
       .catch((error) => {
         popupAjaxError(error);
       })
       .finally(() => {
         this.scheduleRerender();
-        return successfulRetraction;
       });
   },
 
@@ -361,6 +395,7 @@ export default createWidget("discourse-poll", {
           @isMultiple={{@data.isMultiple}}
           @isNumber={{@data.isNumber}}
           @status={{@data.status}}
+          @showResults={{@data.showResults}}
           @closed={{@data.closed}}
           @topicArchived={{@data.topicArchived}}
           @staffOnly={{@data.staffOnly}}
@@ -388,6 +423,7 @@ export default createWidget("discourse-poll", {
           isNumber: this.state.isNumber,
           post: this.state.post,
           status: this.state.status,
+          showResults: this.state.showResults,
           closed: this.state.closed,
           topicArchived: this.state.topicArchived,
           staffOnly: this.state.staffOnly,
