@@ -5,22 +5,21 @@ require "lru_redux"
 
 module Migrations::Database
   class Connection
-    DEFAULT_JOURNAL_MODE = "wal"
     TRANSACTION_BATCH_SIZE = 1000
     PREPARED_STATEMENT_CACHE_SIZE = 5
 
     DEFAULT_INSERT_ACTIONS = { "config" => "OR REPLACE", "uploads" => "OR IGNORE" }
 
-    def self.open_database(path:, journal_mode: DEFAULT_JOURNAL_MODE)
+    def self.open_database(path:)
       FileUtils.mkdir_p(File.dirname(path))
 
       db = Extralite::Database.new(path)
       db.pragma(
         busy_timeout: 60_000, # 60 seconds
-        journal_mode: journal_mode,
+        journal_mode: "wal",
         synchronous: "off",
         temp_store: "memory",
-        locking_mode: journal_mode == "wal" ? "normal" : "exclusive",
+        locking_mode: "normal",
         cache_size: -10_000, # 10_000 pages
       )
       db
@@ -29,15 +28,10 @@ module Migrations::Database
     attr_reader :db
     attr_reader :path
 
-    def initialize(
-      path:,
-      journal_mode: DEFAULT_JOURNAL_MODE,
-      transaction_batch_size: TRANSACTION_BATCH_SIZE
-    )
+    def initialize(path:, transaction_batch_size: TRANSACTION_BATCH_SIZE)
       @path = path
-      @journal_mode = journal_mode
       @transaction_batch_size = transaction_batch_size
-      @db = self.class.open_database(path: path, journal_mode: journal_mode)
+      @db = self.class.open_database(path: path)
       @statement_counter = 0
 
       # don't cache too many prepared statements
@@ -57,7 +51,7 @@ module Migrations::Database
 
     def reconnect
       close
-      @db = self.class.open_database(path: @path, journal_mode: @journal_mode)
+      @db = self.class.open_database(path: @path)
     end
 
     def copy_from(source_db_paths, insert_actions: DEFAULT_INSERT_ACTIONS)
@@ -94,11 +88,13 @@ module Migrations::Database
 
     def begin_transaction
       return if @db.transaction_active?
+
       @db.execute("BEGIN DEFERRED TRANSACTION")
     end
 
     def commit_transaction
       return unless @db.transaction_active?
+
       @db.execute("COMMIT")
     end
   end

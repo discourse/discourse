@@ -2,7 +2,7 @@
 
 RSpec.describe Migrations::Database::Connection do
   describe ".open_database" do
-    it "creates a database at the given path with default `journal_mode`" do
+    it "creates a database at the given path " do
       Dir.mktmpdir do |storage_path|
         db_path = File.join(storage_path, "test.db")
         db = described_class.open_database(path: db_path)
@@ -10,18 +10,6 @@ RSpec.describe Migrations::Database::Connection do
         expect(File.exist?(db_path)).to eq(true)
         expect(db.pragma("journal_mode")).to eq("wal")
         expect(db.pragma("locking_mode")).to eq("normal")
-      ensure
-        db.close if db
-      end
-    end
-
-    it "creates a database with the specified `journal_mode`" do
-      Dir.mktmpdir do |storage_path|
-        db_path = File.join(storage_path, "test.db")
-        db = described_class.open_database(path: db_path, journal_mode: "off")
-
-        expect(db.pragma("journal_mode")).to eq("off")
-        expect(db.pragma("locking_mode")).to eq("exclusive")
       ensure
         db.close if db
       end
@@ -79,8 +67,8 @@ RSpec.describe Migrations::Database::Connection do
   end
 
   describe "#reconnect" do
-    it "reopens the correct database and keeps settings" do
-      create_connection(journal_mode: "off") do |connection|
+    it "reopens the correct database" do
+      create_connection do |connection|
         path = connection.path
         db = connection.db
         db.execute("CREATE TABLE foo (id INTEGER)")
@@ -92,7 +80,6 @@ RSpec.describe Migrations::Database::Connection do
         db = connection.db
 
         expect(db).not_to be_closed
-        expect(db.pragma("journal_mode")).to eq("off")
         expect(connection.path).to eq(path)
         expect(db.tables).to contain_exactly("foo")
       end
