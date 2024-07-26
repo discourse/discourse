@@ -145,6 +145,14 @@ module.exports = function (defaults) {
           minimizer: [
             new TerserPlugin({
               minify: TerserPlugin.swcMinify,
+              terserOptions: {
+                compress: {
+                  // Stop swc unwrapping 'unnecessary' IIFE wrappers which are added by Babel
+                  // to workaround a bug in Safari 15 class fields.
+                  inline: false,
+                  reduce_funcs: false,
+                },
+              },
             }),
           ],
         },
