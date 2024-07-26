@@ -130,7 +130,7 @@ GEM
     discourse_dev_assets (0.0.4)
       faker (~> 2.16)
       literate_randomizer
-    docile (1.4.0)
+    docile (1.4.1)
     drb (2.2.1)
     email_reply_trimmer (0.1.13)
     erubi (1.13.0)

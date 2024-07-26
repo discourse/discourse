@@ -148,6 +148,32 @@ RSpec.describe TranslationOverride do
         end
       end
     end
+
+    describe "MessageFormat translations" do
+      subject(:override) do
+        described_class.new(
+          translation_key: "admin_js.admin.user.delete_all_posts_confirm_MF",
+          locale: "en",
+        )
+      end
+
+      it do
+        is_expected.to allow_value(
+          "This has {COUNT, plural, one{one member} other{# members}}.",
+        ).for(:value).against(:base)
+      end
+      it do
+        is_expected.not_to allow_value(
+          "This has {COUNT, plural, one{one member} many{# members} other{# members}}.",
+        ).for(:value).with_message(/plural case many is not valid/, against: :base)
+      end
+      it do
+        is_expected.not_to allow_value("This has {COUNT, ").for(:value).with_message(
+          /invalid syntax/,
+          against: :base,
+        )
+      end
+    end
   end
 
   it "upserts values" do
@@ -338,6 +364,54 @@ RSpec.describe TranslationOverride do
       translation.update_attribute("value", "Hello, %{name}! Welcome to %{site_name}. %{foo}")
 
       expect(translation.invalid_interpolation_keys).to contain_exactly("foo")
+    end
+  end
+
+  describe "#message_format?" do
+    subject(:override) { described_class.new(translation_key: key) }
+
+    context "when override is for a MessageFormat translation" do
+      let(:key) { "admin_js.admin.user.delete_all_posts_confirm_MF" }
+
+      it { is_expected.to be_a_message_format }
+    end
+
+    context "when override is not for a MessageFormat translation" do
+      let(:key) { "admin_js.type_to_filter" }
+
+      it { is_expected.not_to be_a_message_format }
+    end
+  end
+
+  describe "#make_up_to_date!" do
+    fab!(:override) { Fabricate(:translation_override, translation_key: "js.posts_likes_MF") }
+
+    context "when override is not outdated" do
+      it "does nothing" do
+        expect { override.make_up_to_date! }.not_to change { override.reload.attributes }
+      end
+
+      it "returns a falsy value" do
+        expect(override.make_up_to_date!).to be_falsy
+      end
+    end
+
+    context "when override is outdated" do
+      before { override.update_columns(status: :outdated, value: "{ Invalid MF syntax") }
+
+      it "updates its original translation to match the current default" do
+        expect { override.make_up_to_date! }.to change { override.reload.original_translation }.to(
+          I18n.overrides_disabled { I18n.t("js.posts_likes_MF") },
+        )
+      end
+
+      it "sets its status to 'up_to_date'" do
+        expect { override.make_up_to_date! }.to change { override.reload.up_to_date? }.to(true)
+      end
+
+      it "returns a truthy value" do
+        expect(override.make_up_to_date!).to be_truthy
+      end
     end
   end
 end
