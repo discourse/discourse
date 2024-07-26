@@ -2,13 +2,12 @@
 
 describe "glimmer topic list", type: :system do
   fab!(:user)
-  fab!(:group) { Fabricate(:group, users: [user]) }
 
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
   before do
-    SiteSetting.experimental_glimmer_topic_list_groups = group.name
+    SiteSetting.experimental_glimmer_topic_list_groups = Group::AUTO_GROUPS[:everyone]
     sign_in(user)
   end
 
@@ -23,7 +22,7 @@ describe "glimmer topic list", type: :system do
 
   describe "/new" do
     it "shows the list and the toggle buttons" do
-      SiteSetting.experimental_new_new_view_groups = group.name
+      SiteSetting.experimental_new_new_view_groups = Group::AUTO_GROUPS[:everyone]
       Fabricate(:topic)
       Fabricate(:new_reply_topic, current_user: user)
 
@@ -97,6 +96,36 @@ describe "glimmer topic list", type: :system do
       page.go_back
 
       topic_list.has_highlighted_topic?(topic)
+    end
+  end
+
+  describe "bulk topic selection" do
+    fab!(:user) { Fabricate(:moderator) }
+
+    it "shows the buttons and checkboxes" do
+      topics = Fabricate.times(2, :topic)
+      visit("/latest")
+
+      find("button.bulk-select").click
+      expect(topic_list).to have_topic_checkbox(topics.first)
+      expect(page).to have_no_css("button.bulk-select-topics-dropdown-trigger")
+
+      topic_list.click_topic_checkbox(topics.first)
+      expect(page).to have_css("button.bulk-select-topics-dropdown-trigger")
+    end
+
+    context "when on mobile", mobile: true do
+      it "shows the buttons and checkboxes" do
+        topics = Fabricate.times(2, :topic)
+        visit("/latest")
+
+        find("button.bulk-select").click
+        expect(topic_list).to have_topic_checkbox(topics.first)
+        expect(page).to have_no_css("button.bulk-select-topics-dropdown-trigger")
+
+        topic_list.click_topic_checkbox(topics.first)
+        expect(page).to have_css("button.bulk-select-topics-dropdown-trigger")
+      end
     end
   end
 end
