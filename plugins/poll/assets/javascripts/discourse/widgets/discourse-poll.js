@@ -57,7 +57,7 @@ export default createWidget("discourse-poll", {
   populatePreloadedVoters(attrs) {
     let preloadedVoters = {};
 
-    if (attrs.poll.public) {
+    if (attrs.poll.public && attrs.poll.preloaded_voters) {
       Object.keys(attrs.poll.preloaded_voters).forEach((key) => {
         preloadedVoters[key] = {
           voters: attrs.poll.preloaded_voters[key],
