@@ -2130,7 +2130,7 @@ en:
     edit_post_allowed_groups: "Groups that are allowed to edit posts. Admins and moderators can always edit posts."
 
     min_trust_to_allow_self_wiki: "The minimum trust level required to make user's own post wiki."
-    self_wiki_allowed_groups: "Groups where users can make their own post wiki. Admins and moderators can always make their own post wiki."
+    self_wiki_allowed_groups: "Allow users in these groups to make their own posts wiki. Admins and moderators can always make their own posts wiki."
 
     min_trust_to_send_messages: "DEPRECATED, use the 'personal message enabled groups' setting instead. The minimum trust level required to create new personal messages."
     min_trust_to_send_email_messages: "The minimum trust level required to send personal messages via email."
