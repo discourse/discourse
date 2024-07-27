@@ -170,6 +170,7 @@ export default createWidget("discourse-poll", {
   toggleResults() {
     const showResults = !this.state.showResults;
     this.state.showResults = showResults;
+    this.scheduleRerender();
   },
 
   toggleOption(option, rank = 0) {
@@ -411,6 +412,7 @@ export default createWidget("discourse-poll", {
           @castVotes={{action @data.castVotes}}
           @toggleStatus={{action @data.toggleStatus}}
           @toggleOption={{action @data.toggleOption}}
+          @toggleResults={{action @data.toggleResults}}
           @fetchVoters={{action @data.fetchVoters}}
         />`,
         {
@@ -439,6 +441,7 @@ export default createWidget("discourse-poll", {
           castVotes: this.castVotes.bind(this),
           toggleStatus: this.toggleStatus.bind(this),
           toggleOption: this.toggleOption.bind(this),
+          toggleResults: this.toggleResults.bind(this),
           fetchVoters: this.fetchVoters.bind(this),
         }
       ),

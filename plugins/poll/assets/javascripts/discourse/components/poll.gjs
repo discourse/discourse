@@ -180,7 +180,8 @@ export default class PollComponent extends Component {
 
   get showCastVotesButton() {
     return (
-      (this.args.isMultiple || this.args.isRankedChoice) && !this.showResults
+      (this.args.isMultiple || this.args.isRankedChoice) &&
+      !this.args.showResults
     );
   }
 
@@ -199,12 +200,12 @@ export default class PollComponent extends Component {
   }
 
   get showHideResultsButton() {
-    return this.showResults && !this.hideResultsDisabled;
+    return this.args.showResults && !this.hideResultsDisabled;
   }
 
   get showShowResultsButton() {
     return (
-      !this.showResults &&
+      !this.args.showResults &&
       !this.hideResultsDisabled &&
       !(
         this.args.poll.results === ON_VOTE &&
@@ -219,7 +220,7 @@ export default class PollComponent extends Component {
 
   get showRemoveVoteButton() {
     return (
-      !this.showResults &&
+      !this.args.showResults &&
       !this.args.closed &&
       !this.hideResultsDisabled &&
       this.args.hasSavedVote
@@ -322,6 +323,7 @@ export default class PollComponent extends Component {
       {{#if this.notInVotingGroup}}
         <div class="alert alert-danger">{{this.pollGroups}}</div>
       {{/if}}
+      {{log this.args.showResults}}
       {{#if this.args.showResults}}
         <div class={{this.resultsWidgetTypeClass}}>
           {{#if @isNumber}}
@@ -365,7 +367,7 @@ export default class PollComponent extends Component {
       @close={{@close}}
       @closed={{@closed}}
       @results={{@poll.results}}
-      @showResults={{this.showResults}}
+      @showResults={{@showResults}}
       @postUserId={{@poll.post.user_id}}
       @isPublic={{@poll.public}}
       @hasVoted={{this.hasVoted}}
