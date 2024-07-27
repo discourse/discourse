@@ -68,6 +68,7 @@ module("Poll | Component | poll", function (hooks) {
       removeVote: () => {},
       castVotes: () => {},
       toggleStatus: () => {},
+      toggleResults: () => {},
       toggleOption: () => {},
       fetchVoters: () => {},
     });
@@ -98,6 +99,7 @@ module("Poll | Component | poll", function (hooks) {
         @removeVote={{this.removeVote}}
         @castVotes={{this.castVotes}}
         @toggleStatus={{this.toggleStatus}}
+        @toggleResults={{this.toggleResults}}
         @toggleOption={{this.toggleOption}}
         @fetchVoters={{this.fetchVoters}}
       />`
@@ -168,6 +170,7 @@ module("Poll | Component | poll", function (hooks) {
       removeVote: () => {},
       castVotes: () => {},
       toggleStatus: () => {},
+      toggleResults: () => {},
       toggleOption: () => {},
       fetchVoters: () => {},
     });
@@ -198,6 +201,7 @@ module("Poll | Component | poll", function (hooks) {
         @removeVote={{this.removeVote}}
         @castVotes={{this.castVotes}}
         @toggleStatus={{this.toggleStatus}}
+        @toggleResults={{this.toggleResults}}
         @toggleOption={{this.toggleOption}}
         @fetchVoters={{this.fetchVoters}}
       />`
@@ -268,6 +272,7 @@ module("Poll | Component | poll", function (hooks) {
       removeVote: () => {},
       castVotes: () => {},
       toggleStatus: () => {},
+      toggleResults: () => {},
       toggleOption: () => {},
       fetchVoters: () => {},
     });
@@ -298,6 +303,7 @@ module("Poll | Component | poll", function (hooks) {
         @removeVote={{this.removeVote}}
         @castVotes={{this.castVotes}}
         @toggleStatus={{this.toggleStatus}}
+        @toggleResults={{this.toggleResults}}
         @toggleOption={{this.toggleOption}}
         @fetchVoters={{this.fetchVoters}}
       />`
