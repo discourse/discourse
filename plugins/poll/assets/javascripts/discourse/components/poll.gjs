@@ -323,8 +323,7 @@ export default class PollComponent extends Component {
       {{#if this.notInVotingGroup}}
         <div class="alert alert-danger">{{this.pollGroups}}</div>
       {{/if}}
-      {{log this.args.showResults}}
-      {{#if this.args.showResults}}
+      {{#if @showResults}}
         <div class={{this.resultsWidgetTypeClass}}>
           {{#if @isNumber}}
             <span>{{this.averageRating}}</span>
