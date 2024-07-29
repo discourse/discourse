@@ -453,4 +453,12 @@ RSpec.describe Admin::EmailTemplatesController do
       expect(I18n.t(key)).to_not include("Translation missing")
     end
   end
+
+  describe ".email_keys" do
+    it "returns a list that contains all the email templates in the server.en.yml file" do
+      expect(Admin::EmailTemplatesController.email_keys).to contain_exactly(
+        *EmailTemplatesFinder.list,
+      )
+    end
+  end
 end

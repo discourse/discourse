@@ -63,6 +63,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
       system_messages.restore_succeeded
       system_messages.reviewable_queued_post_revise_and_reject
       system_messages.reviewable_queued_post_revise_and_reject_new_topic
+      system_messages.reviewables_reminder
       system_messages.silenced_by_staff
       system_messages.spam_post_blocked
       system_messages.tl2_promotion_message
