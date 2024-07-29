@@ -17,6 +17,7 @@ class UserApiKeysController < ApplicationController
       return
     end
 
+    find_client
     require_params
     validate_params
 
@@ -36,8 +37,8 @@ class UserApiKeysController < ApplicationController
       return
     end
 
-    @application_name = params[:application_name]
-    @public_key = params[:public_key]
+    @application_name = params[:application_name] || @client&.application_name
+    @public_key = params[:public_key] || @client&.public_key
     @nonce = params[:nonce]
     @client_id = params[:client_id]
     @auth_redirect = params[:auth_redirect]
@@ -49,24 +50,30 @@ class UserApiKeysController < ApplicationController
   end
 
   def create
+    find_client
     require_params
 
     if params.key?(:auth_redirect)
-      raise Discourse::InvalidAccess if UserApiKey.invalid_auth_redirect?(params[:auth_redirect])
+      if UserApiKeyClient.invalid_auth_redirect?(params[:auth_redirect], client: @client)
+        raise Discourse::InvalidAccess
+      end
     end
 
     raise Discourse::InvalidAccess unless meets_tl?
 
     validate_params
-    @application_name = params[:application_name]
     scopes = params[:scopes].split(",")
 
-    UserApiKey.where(client_id: params[:client_id]).destroy_all
+    @client = UserApiKeyClient.new(client_id: params[:client_id]) if @client.blank?
+    @client.application_name = params[:application_name] if params[:application_name].present?
+    @client.public_key = params[:public_key] if params[:public_key].present?
+    @client.save! if @client.new_record? || @client.changed?
+
+    # destroy any old keys the user had with the client
+    @client.keys.where(user_id: current_user.id).destroy_all
 
     key =
-      UserApiKey.create!(
-        application_name: @application_name,
-        client_id: params[:client_id],
+      @client.keys.create!(
         user_id: current_user.id,
         push_url: params[:push_url],
         scopes: scopes.map { |name| UserApiKeyScope.new(name: name) },
@@ -81,7 +88,7 @@ class UserApiKeysController < ApplicationController
       api: AUTH_API_VERSION,
     }.to_json
 
-    public_key = OpenSSL::PKey::RSA.new(params[:public_key])
+    public_key = OpenSSL::PKey::RSA.new(@client.public_key)
     @payload = Base64.encode64(public_key.public_encrypt(@payload))
 
     if scopes.include?("one_time_password")
@@ -102,7 +109,8 @@ class UserApiKeysController < ApplicationController
       respond_to do |format|
         format.html { render :show }
         format.json do
-          instructions = I18n.t("user_api_key.instructions", application_name: @application_name)
+          instructions =
+            I18n.t("user_api_key.instructions", application_name: @client.application_name)
           render json: { payload: @payload, instructions: instructions }
         end
       end
@@ -167,8 +175,14 @@ class UserApiKeysController < ApplicationController
     key
   end
 
+  def find_client
+    @client = UserApiKeyClient.find_by(client_id: params[:client_id])
+  end
+
   def require_params
-    %i[public_key nonce scopes client_id application_name].each { |p| params.require(p) }
+    %i[nonce scopes client_id].each { |p| params.require(p) }
+    params.require(:public_key) if @client&.public_key.blank?
+    params.require(:application_name) if @client&.application_name.blank?
   end
 
   def validate_params
@@ -176,7 +190,7 @@ class UserApiKeysController < ApplicationController
     raise Discourse::InvalidAccess unless UserApiKey.allowed_scopes.superset?(requested_scopes)
 
     # our pk has got to parse
-    OpenSSL::PKey::RSA.new(params[:public_key])
+    OpenSSL::PKey::RSA.new(params[:public_key]) if params[:public_key]
   end
 
   def require_params_otp
