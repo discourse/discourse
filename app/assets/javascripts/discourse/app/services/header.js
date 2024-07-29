@@ -133,9 +133,9 @@ export default class Header extends Service {
    * and makes a guess about whether the main topic title is likely to be visible
    * on initial load. The IntersectionObserver will correct this later if needed.
    */
-  enterTopic(topic, postNumber) {
+  enterTopic(topic, isLoadingFirstPost) {
     this.topicInfo = topic;
-    this.mainTopicTitleVisible = !postNumber || postNumber === 1;
+    this.mainTopicTitleVisible = isLoadingFirstPost;
   }
 
   clearTopic() {
