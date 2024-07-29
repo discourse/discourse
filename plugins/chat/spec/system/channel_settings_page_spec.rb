@@ -51,6 +51,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
 
     it "redirects to browse page" do
       chat_page.visit_channel_settings(channel_1)
+
       expect(page).to have_current_path("/chat/browse/open")
     end
   end
@@ -68,6 +69,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
 
     it "shows settings page" do
       chat_page.visit_channel_settings(channel_1)
+
       expect(page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings")
     end
 
@@ -157,6 +159,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
 
       chat_page.visit_channel_settings(channel_1)
       click_button(I18n.t("js.chat.channel_settings.leave_channel"))
+
       expect(page).to have_current_path("/chat/browse/open")
       expect(membership.reload.following).to eq(false)
     end

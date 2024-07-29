@@ -43,6 +43,7 @@ RSpec.describe "List channels | no sidebar", type: :system do
 
       it "sorts them alphabetically" do
         visit("/chat")
+
         expect(page.find("#public-channels a:nth-child(1)")["data-chat-channel-id"]).to eq(
           channel_2.id.to_s,
         )

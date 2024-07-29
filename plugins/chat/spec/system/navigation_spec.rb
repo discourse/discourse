@@ -257,6 +257,27 @@ RSpec.describe "Navigation", type: :system do
     end
   end
 
+  context "when public channels are disabled" do
+    before { SiteSetting.enable_public_channels = false }
+
+    it "only show dms in drawer" do
+      visit("/")
+      chat_page.open_from_header
+      expect(page).to have_css("#c-footer-direct-messages")
+      expect(page).to have_no_css("#c-footer-channels")
+      expect(chat_page).to have_no_messages
+    end
+
+    it "only show dms in desktop" do
+      visit("/")
+      chat_page.prefers_full_page
+      chat_page.open_from_header
+
+      expect(chat_page).to have_no_messages
+      expect(page).to have_css(".c-routes.--direct-messages")
+    end
+  end
+
   context "when sidebar is configured as the navigation menu" do
     before { SiteSetting.navigation_menu = "sidebar" }
 

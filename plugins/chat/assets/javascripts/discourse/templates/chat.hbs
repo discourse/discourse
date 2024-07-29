@@ -8,11 +8,7 @@
   <div
     class={{concat-class
       "full-page-chat"
-      (if
-        this.shouldUseCoreSidebar
-        "full-page-chat-sidebar-enabled"
-        "full-page-chat-sidebar-disabled"
-      )
+      (if this.shouldUseCoreSidebar "full-page-chat-sidebar-enabled")
     }}
   >
     {{#if this.shouldUseChatSidebar}}
@@ -21,11 +17,7 @@
 
     <div
       id="main-chat-outlet"
-      class={{concat-class
-        "main-chat-outlet"
-        this.mainOutletModifierClasses
-        (if this.shouldUseChatFooter "with-footer")
-      }}
+      class={{concat-class "main-chat-outlet" this.mainOutletModifierClasses}}
     >
       {{outlet}}
       {{#if this.shouldUseChatFooter}}
