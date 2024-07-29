@@ -1438,25 +1438,25 @@ en:
             true {
               { UNREAD, plural,
                    =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a>}
-                other {There are <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a>}
+                  one {There is <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># unread</a>}
+                other {There are <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># unread</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one { and <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> message remaining, or browse other messages in {groupLink}}
-                other { and <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> messages remaining, or browse other messages in {groupLink}}
+                  one { and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># new</a> message remaining, or browse other messages in {groupLink}}
+                other { and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># new</a> messages remaining, or browse other messages in {groupLink}}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a> message remaining, or browse other messages in {groupLink}}
-                other {There are <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a> messages remaining, or browse other messages in {groupLink}}
+                  one {There is <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># unread</a> message remaining, or browse other messages in {groupLink}}
+                other {There are <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># unread</a> messages remaining, or browse other messages in {groupLink}}
               }
               { NEW, plural,
                    =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> message remaining, or browse other messages in {groupLink}}
-                other {There are <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> messages remaining, or browse other messages in {groupLink}}
+                  one {There is <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># new</a> message remaining, or browse other messages in {groupLink}}
+                other {There are <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># new</a> messages remaining, or browse other messages in {groupLink}}
               }
             }
             other {}
@@ -1471,25 +1471,25 @@ en:
             true {
               { UNREAD, plural,
                    =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/unread'># unread</a>}
-                other {There are <a href='{basePath}/u/{username}/messages/unread'># unread</a>}
+                  one {There is <a href="{basePath}/u/{username}/messages/unread"># unread</a>}
+                other {There are <a href="{basePath}/u/{username}/messages/unread"># unread</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one { and <a href='{basePath}/u/{username}/messages/new'># new</a> message remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
-                other { and <a href='{basePath}/u/{username}/messages/new'># new</a> messages remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+                  one { and <a href="{basePath}/u/{username}/messages/new"># new</a> message remaining, or browse other <a href="{basePath}/u/{username}/messages">personal messages</a>}
+                other { and <a href="{basePath}/u/{username}/messages/new"># new</a> messages remaining, or browse other <a href="{basePath}/u/{username}/messages">personal messages</a>}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/unread'># unread</a> message remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
-                other {There are <a href='{basePath}/u/{username}/messages/unread'># unread</a> messages remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+                  one {There is <a href="{basePath}/u/{username}/messages/unread"># unread</a> message remaining, or browse other <a href="{basePath}/u/{username}/messages">personal messages</a>}
+                other {There are <a href="{basePath}/u/{username}/messages/unread"># unread</a> messages remaining, or browse other <a href="{basePath}/u/{username}/messages">personal messages</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/new'># new</a> message remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
-                other {There are <a href='{basePath}/u/{username}/messages/new'># new</a> messages remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+                  one {There is <a href="{basePath}/u/{username}/messages/new"># new</a> message remaining, or browse other <a href="{basePath}/u/{username}/messages">personal messages</a>}
+                other {There are <a href="{basePath}/u/{username}/messages/new"># new</a> messages remaining, or browse other <a href="{basePath}/u/{username}/messages">personal messages</a>}
               }
             }
             other {}
@@ -2142,7 +2142,7 @@ en:
     logs_error_rate_notice:
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/hour}
           other {# errors/hour}
         }</a> reached site setting limit of {limit, plural,
@@ -2152,7 +2152,7 @@ en:
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/minute}
           other {# errors/minute}
         }</a> reached site setting limit of { limit, plural,
@@ -2162,7 +2162,7 @@ en:
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/hour}
           other {# errors/hour}
         }</a> exceeded site setting limit of { limit, plural,
@@ -2172,7 +2172,7 @@ en:
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/minute}
           other {# errors/minute}
         }</a> exceeded site setting limit of { limit, plural,
