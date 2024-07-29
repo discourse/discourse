@@ -263,8 +263,8 @@ RSpec.describe "Navigation", type: :system do
     it "only show dms in drawer" do
       visit("/")
       chat_page.open_from_header
-      expect(page).to have_css("#c-footer-direct-messages")
-      expect(page).to have_no_css("#c-footer-channels")
+
+      expect(page).to have_css(".direct-message-channels.center-empty-channels-list")
       expect(chat_page).to have_no_messages
     end
 
