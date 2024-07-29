@@ -5,6 +5,7 @@ import { action, set } from "@ember/object";
 import { hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse-common/helpers/d-icon";
+import withEventValue from "discourse/helpers/with-event-value";
 
 export default class Radio extends Component {
   constructor() {
@@ -19,22 +20,13 @@ export default class Radio extends Component {
 
   @action
   selectionChanged(input) {
-    this.field.value = input.target.value;
-    this._resetSelected();
+    this.field.value = input;
     this._setSelected();
-  }
-
-  _resetSelected() {
-    for (let choice of this.field.choices) {
-      set(choice, "selected", false);
-    }
   }
 
   _setSelected() {
     for (let choice of this.field.choices) {
-      if (this.field.value === choice.id) {
-        set(choice, "selected", true);
-      }
+      set(choice, "selected", this.field.value === choice.id);
     }
   }
 
@@ -49,13 +41,13 @@ export default class Radio extends Component {
               @name="wizard-radio"
               @outletArgs={{hash disabled=c.disabled}}
             >
-              <Input
-                @type="radio"
-                @value={{c.id}}
+              <input
+                type="radio"
+                value={{c.id}}
                 class="wizard-container__radio"
                 disabled={{c.disabled}}
-                selected={{c.selected}}
-                {{on "click" this.selectionChanged}}
+                checked={{c.selected}}
+                {{on "change" (withEventValue this.selectionChanged)}}
               />
               <span class="wizard-container__radio-label">
                 {{#if c.icon}}
