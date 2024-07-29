@@ -2085,6 +2085,8 @@ en:
 
     simultaneous_uploads: "Maximum number of files that can be dragged & dropped in the composer"
 
+    enable_precise_disk_space_calculation: "Calculates the precise disk usage of a directory by using the 'du' command (slower) rather than the 'df' command (faster but often incorrect) which calculates partition usage."
+
     default_invitee_trust_level: "Default trust level (0-4) for invited users."
     default_trust_level: "Default trust level (0-4) for all new users. WARNING! Changing this will put you at serious risk for spam."
 

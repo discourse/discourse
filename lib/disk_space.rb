@@ -30,7 +30,13 @@ class DiskSpace
   end
 
   def self.used(path)
-    Discourse::Utils.execute_command("du", "-s", path).to_i * 1024
+    if SiteSetting.enable_precise_disk_space_calculation?
+      Discourse::Utils.execute_command("du", "-s", path).to_i * 1024
+    else
+      output = Discourse::Utils.execute_command("df", "-Pk", path)
+      size_line = output.split("\n")[1]
+      size_line.split(/\s+/)[2].to_i * 1024
+    end
   end
 
   def self.uploads_path
