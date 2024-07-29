@@ -2058,6 +2058,7 @@ it:
     share_anonymized_statistics: "Condividi statistiche anonime di utilizzo."
     auto_handle_queued_age: "Gestisci automaticamente i record che sono in attesa di essere rivisti dopo tale numero di giorni. Le segnalazioni saranno ignorate. I messaggi in attesa e gli utenti saranno rifiutati. Impostare su 0 per disattivare questa funzionalità."
     penalty_step_hours: "Penalità predefinite per silenziare o sospendere gli utenti definite in ore. La prima infrazione porta una penalità pari al primo valore, la seconda infrazione porta una penalità pari al secondo valore, ecc."
+    penalty_include_post_message: "Quando si silenzia o si sospende un utente, il messaggio offensivo pubblicato viene incluso automaticamente nel modello email"
     svg_icon_subset: "Aggiungi ulteriori icone FontAwesome 5 che desideri includere nelle tue risorse. Usa il prefisso 'fa-' per le icone solide, 'far-' per le icone regolari e 'fab-' per le icone di marchi."
     max_prints_per_hour_per_user: "Numero massimo di pagine da stampare (imposta a 0 per disattivare stampa)"
     full_name_required: "Il nome completo è un campo obbligatorio del profilo utente."
@@ -2096,6 +2097,9 @@ it:
     enable_inline_emoji_translation: "Abilita la traduzione per gli emoji in linea (senza spazio o punteggiatura precedente)"
     emoji_deny_list: "Queste emoji non saranno disponibili per l'uso nei menu o nei codici brevi."
     approve_post_count: "La quantità di messaggi di un utente nuovo o di base che deve essere approvata"
+    approve_unless_trust_level: "I messaggi di utenti al di sotto di questo livello di attendibilità devono essere approvati"
+    approve_new_topics_unless_trust_level: "I nuovi argomenti di utenti al di sotto di questo livello di attendibilità devono essere approvati"
+    approve_unless_staged: "Nuovi argomenti e messaggi di utenti temporanei devono essere approvati"
     notify_about_queued_posts_after: "Se ci sono messaggi che sono in attesa di essere revisionati per più di questo numero di ore, invia una notifica a tutti i moderatori. Impostare su 0 per disabilitare queste notifiche."
     reviewable_revision_reasons: "Elenco di motivi che possono essere selezionati quando si rifiuta un messaggio in coda di revisione con una revisione. È sempre disponibile anche Altro, che consente di inserire un motivo personalizzato."
     auto_close_messages_post_count: "Numero massimo di messaggi consentiti in un messaggio privato prima di essere automaticamente chiuso (0 per disabilitare)"
@@ -2103,8 +2107,11 @@ it:
     auto_close_topics_create_linked_topic: "Quando un argomento viene chiuso in base all'impostazione \"chiudi automaticamente argomenti per il numero dei post\", creane un altro collegato."
     code_formatting_style: "Il pulsante del testo preformattato nel composer verrà predefinito a questo stile di formattazione del codice"
     max_allowed_message_recipients: "Numero massimo di destinatari consentiti in un messaggio privato."
+    disable_watched_word_checking_in_user_fields: "disabilita il controllo delle parole osservate nei campi utente"
     watched_words_regular_expressions: "Le parole osservate sono espressioni regolari."
     enable_diffhtml_preview: "Funzionalità sperimentale che utilizza diffHTML per sincronizzare l'anteprima anziché effettuare un nuovo rendering completo"
+    enable_fast_edit: "Aggiunge al menu di selezione messaggio un pulsante per modificare una piccola selezione in linea."
+    enable_quote_copy: "Aggiunge al menu di selezione messaggio un pulsante per copiare la sezione negli appunti come citazione in formato markdown."
     old_post_notice_days: "I giorni prima che l'avviso del messaggi diventi vecchio"
     new_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le nuove notifiche dei messaggi utente."
     returning_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le notifiche dei messaggi di utenti che ritornano."
@@ -2220,6 +2227,7 @@ it:
     experimental_topics_filter: "SPERIMENTALE: abilita il percorso del filtro degli argomenti sperimentali in /filter"
     enable_experimental_lightbox: "SPERIMENTALE: sostituisci la lightbox dell'immagine predefinita con il design rinnovato."
     experimental_form_templates: "SPERIMENTALE: abilita la funzionalità dei modelli di modulo. <b>Dopo l'abilitazione,</b> gestisci i modelli in <a href='%{base_path}/admin/customize/form-templates'>Personalizza / Modelli</a>."
+    lazy_load_categories_groups: "SPERIMENTALE: caricamento lazy delle informazioni di categoria solo per gli utenti di questi gruppi. Migliora le prestazioni sui siti con numerose categorie."
     page_loading_indicator: "Configura l'indicatore di caricamento che appare durante la navigazione delle pagine all'interno di Discourse. 'Spinner' come un indicatore a pagina intera. 'Slider' mostra una barra stretta nella parte superiore dello schermo."
     show_user_menu_avatars: "Mostra gli avatar utente nel menu utente"
     errors:
@@ -2297,6 +2305,12 @@ it:
       ignore_allowed_groups: "min_trust_level_to_allow_ignore"
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
       create_tag_allowed_groups: "min_trust_to_create_tag"
+      send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
+      skip_review_media_groups: "review_media_unless_trust_level"
+      embedded_media_allowed_groups: "min_trust_to_post_embedded_media"
+      post_links_allowed_groups: "min_trust_to_post_links"
+      user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
+      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4236,9 +4250,22 @@ it:
   onebox:
     discourse:
       user_joined_community: "Iscrizione: %{date}"
+    gitlab:
+      truncated_file: "Questo file è stato troncato."
+      show_original: "mostra originale"
     github:
+      binary_file: "Questo file è binario."
+      truncated_file: "Questo file è stato troncato."
+      show_original: "mostra originale"
+      requires_iframe: "Il visualizzatore richiede IFrame."
+      committed: "commit eseguito"
+      more_than_three_files: "Sono presenti più di tre file."
       opened: "aperto"
       closed: "chiuso"
+      commit_by: "Commit di"
+      comment_by: "Commento di"
+      review_by: "Revisione di"
+      pr_summary: "%{commits} commit, %{changed_files} file modificati con %{additions} aggiunte e %{deletions} eliminazioni"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ti ha menzionato in ''%{topic}'' - %{site_title}'
@@ -4253,6 +4280,7 @@ it:
       confirm_body: "Operazione riuscite! Le notifiche sono state abilitate."
       custom: "Notifica da %{username} su %{site_title}"
   staff_action_logs:
+    json_too_long: "Valori non registrati perché superano i limiti di lunghezza della colonna"
     not_found: "non trovato"
     unknown: "sconosciuto"
     user_merged: "%{username} è stato unito a questo account"

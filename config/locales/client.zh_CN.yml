@@ -155,7 +155,7 @@ zh_CN:
         disabled: "%{when}移除了此横幅。它将不再显示在每个页面的顶部。"
       forwarded: "转发了上述电子邮件"
     topic_admin_menu: "话题操作"
-    skip_to_main_content: "跳转到主要内容"
+    skip_to_main_content: "跳到主要内容"
     skip_user_nav: "跳到个人资料内容"
     emails_are_disabled: "所有外发电子邮件已被管理员全局禁用。任何类型的电子邮件通知都不会发出。"
     emails_are_disabled_non_staff: "非管理员用户无法向外发送电子邮件。"
@@ -165,10 +165,10 @@ zh_CN:
     bootstrap_mode: "使用入门"
     themes:
       default_description: "默认"
-      broken_theme_alert: "您的站点可能无法运行，因为主题/组件有错误。"
+      broken_theme_alert: "您的网站可能无法运行，因为主题/组件有错误。"
       error_caused_by: "由 '%{name}' 引起。<a target='blank' href='%{path}'>点击此处</a>进行更新、重新配置或禁用。"
-      only_admins: "（此消息仅向站点管理员显示）"
-    broken_decorator_alert: "帖子可能无法正确显示，因为您的站点上的其中一个帖子内容装饰器引发错误。"
+      only_admins: "（此消息仅向网站管理员显示）"
+    broken_decorator_alert: "帖子可能无法正确显示，因为您的网站上的其中一个帖子内容装饰器引发错误。"
     broken_page_change_alert: "onPageChange 处理程序出错。请查看浏览器开发者工具了解更多信息。"
     broken_plugin_alert: "由插件 '%{name}' 引起"
     critical_deprecation:
@@ -259,7 +259,7 @@ zh_CN:
     about:
       simple_title: "关于"
       title: "关于%{title}"
-      stats: "站点统计信息"
+      stats: "网站统计信息"
       our_admins: "我们的管理员"
       our_moderators: "我们的版主"
       moderators: "版主"
@@ -274,7 +274,7 @@ zh_CN:
       user_count: "注册"
       active_user_count: "活跃用户"
       contact: "联系我们"
-      contact_info: "如果出现影响此站点的关键问题或紧急事项，请联系我们：%{contact_info}。"
+      contact_info: "如果出现影响此网站的关键问题或紧急事项，请联系我们：%{contact_info}。"
     bookmarked:
       title: "加入书签"
       edit_bookmark: "编辑书签"
@@ -964,7 +964,7 @@ zh_CN:
       said: "%{username}："
       profile: "个人资料"
       profile_possessive: "%{username} 的个人资料"
-      account_possessive: "%{name} 的账户"
+      account_possessive: "%{name} 的帐户"
       mute: "免打扰"
       edit: "编辑偏好设置"
       download_archive:
@@ -1055,7 +1055,7 @@ zh_CN:
       dismiss_messages_tooltip: "将所有未读个人信息通知标记为已读"
       no_likes_title: "您尚未收到任何赞"
       no_likes_body: >
-        每当有人为您的帖子点赞时，您都会在此处收到通知，这样您就可以看到其他人认为有价值的内容。当您也点赞他们的帖子时，其他人也会在此处看到通知！<br><br>点赞通知绝不会通过电子邮件发送给您，但您可以在<a href='%{preferencesUrl}'>通知偏好设置</a>中调整您在站点上接收点赞通知的方式。
+        每当有人为您的帖子点赞时，您都会在此处收到通知，这样您就可以看到其他人认为有价值的内容。当您也点赞他们的帖子时，其他人也会在此处看到通知！<br><br>点赞通知绝不会通过电子邮件发送给您，但您可以在<a href='%{preferencesUrl}'>通知偏好设置</a>中调整您在网站上接收点赞通知的方式。
       no_messages_title: "您没有任何消息"
       no_messages_body: >
         需要直接与某人对话而不是公开讨论？选择他的头像并点击 %{icon} 消息按钮，向他们发送消息。<br><br> 如果您需要帮助，可以<a href='%{aboutUrl}'>向管理人员发送消息</a>。
@@ -1086,7 +1086,7 @@ zh_CN:
         undo: "重置"
         regular: "常规"
         dark: "深色模式"
-        default_dark_scheme: "（站点默认）"
+        default_dark_scheme: "（网站默认）"
       dark_mode: "深色模式"
       dark_mode_enable: "启用自动深色模式配色方案"
       text_size_default_on_all_devices: "将其设为我所有设备上的默认文本大小"
@@ -1312,7 +1312,7 @@ zh_CN:
           双重身份验证会要求您提供除密码之外的一次性令牌，从而为您的帐户增加额外的安全性。可以在 <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> 和 <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> 设备上生成令牌。
         oauth_enabled_warning: "请注意，一旦您为帐户启用双重身份验证，社交登录将被禁用。"
         use: "使用身份验证器应用"
-        enforced_notice: "在访问此站点之前，您需要启用双重身份验证。"
+        enforced_notice: "在访问此网站之前，您需要启用双重身份验证。"
         disable: "禁用"
         disable_confirm: "确定要禁用双重身份验证吗？"
         delete: "删除"
@@ -1385,14 +1385,14 @@ zh_CN:
         confirm_success: "您的电子邮件已更新。"
         confirm: "确认"
         authorizing_new:
-          description: "请确认您要使用的新电子邮件地址："
-          description_add: "请确认您要添加的备用电子邮件地址："
+          description: "请确认您希望将电子邮件地址更改为："
+          description_add: "请确认您希望添加备用电子邮件地址："
         authorizing_old:
           title: "验证旧电子邮件地址"
-          description: "请验证你的旧电子邮件地址，以继续更改你的电子邮件："
-          description_add: "请验证你现有的电子邮件地址，以便继续添加备用地址："
-          old_email: "旧电子邮件：%{email}"
-          new_email: "新电子邮件：%{email}"
+          description: "请验证您的旧电子邮件地址，以继续更改您的电子邮件地址："
+          description_add: "请验证您的现有电子邮件地址，以继续添加备用地址："
+          old_email: "旧电子邮件地址：%{email}"
+          new_email: "新电子邮件地址：%{email}"
           confirm_success: "我们已向您的新电子邮件地址发送电子邮件以确认更改！"
       change_avatar:
         title: "更改个人资料照片"
@@ -1405,7 +1405,7 @@ zh_CN:
         uploaded_avatar_empty: "上传自定义图片"
         upload_title: "上传图片"
         image_is_not_a_square: "警告：我们已经裁剪了您的图片；宽度和高度不相等。"
-        logo_small: "站点的小徽标。默认情况下使用。"
+        logo_small: "网站的小徽标。默认情况下使用。"
         use_custom: "或上传自定义头像："
       change_profile_background:
         title: "个人资料标题"
@@ -1623,7 +1623,7 @@ zh_CN:
         invite:
           new_title: "创建邀请"
           edit_title: "编辑邀请"
-          instructions: "分享此链接以立即授予访问此站点的权限："
+          instructions: "分享此链接以立即授予访问此网站的权限："
           copy_link: "复制链接"
           expires_in_time: "于 %{time}过期"
           expired_at_time: "过期时间为 %{time}"
@@ -1797,20 +1797,20 @@ zh_CN:
     refresh: "刷新"
     home: "首页"
     read_only_mode:
-      enabled: "此站点处于只读模式。您可以继续浏览，但是回复、点赞和其他操作暂时被禁用。"
-      login_disabled: "当站点处于只读模式时，登录被禁用。"
-      logout_disabled: "当站点处于只读模式时，退出被禁用。"
+      enabled: "此网站处于只读模式。您可以继续浏览，但是回复、点赞和其他操作暂时被禁用。"
+      login_disabled: "当网站处于只读模式时，登录被禁用。"
+      logout_disabled: "当网站处于只读模式时，退出被禁用。"
     staff_writes_only_mode:
-      enabled: "此站点处于管理人员专用模式。请继续浏览，但回复、赞和其他操作仅限于管理人员。"
+      enabled: "此网站处于管理人员专用模式。请继续浏览，但回复、赞和其他操作仅限于管理人员。"
     logs_error_rate_notice:
       reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {# 个错误/小时}}</a>达到了站点设置中 {limit, plural, other {# 个错误/小时}}的限制。
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {# 个错误/小时}}</a>达到了网站设置中 {limit, plural, other {# 个错误/小时}}的限制。
       reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {# 个错误/分钟}}</a>达到了站点设置中 {limit, plural, other {# 个错误/分钟}}的限制。
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {# 个错误/分钟}}</a>达到了网站设置中 {limit, plural, other {# 个错误/分钟}}的限制。
       exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {# 个错误/小时}}</a>超过了站点设置中 {limit, plural, other {# 个错误/小时}}的限制。
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {# 个错误/小时}}</a>超过了网站设置中 {limit, plural, other {# 个错误/小时}}的限制。
       exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {# 个错误/分钟}}</a>超过了站点设置中 {limit, plural, other {# 个错误/分钟}}的限制。
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {# 个错误/分钟}}</a>超过了网站设置中 {limit, plural, other {# 个错误/分钟}}的限制。
     learn_more: "了解详情…"
     mute: 免打扰
     unmute: 取消免打扰
@@ -1839,7 +1839,7 @@ zh_CN:
       model_used: "使用的 AI：%{model}"
       outdated: "摘要已过时"
       outdated_posts:
-        other: "（%{count} 篇帖子缺失）"
+        other: "（%{count} 个帖子缺失）"
       enabled_description: "您正在浏览的是此话题的热门回复：由社区决定的最有趣的帖子。"
       description:
         other: "有 <b>%{count}</b> 个回复。"
@@ -1999,7 +1999,7 @@ zh_CN:
         security_key: "改用安全密钥"
       no_login_methods:
         title: "没有登录方法"
-        description: "未配置登录方法。管理员可访问 <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> 重新配置站点。"
+        description: "未配置登录方法。管理员可访问 <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> 重新配置网站。"
     invites:
       accept_title: "邀请"
       welcome_to: "欢迎来到 %{site_name}！"
@@ -2303,7 +2303,7 @@ zh_CN:
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
       votes_released: "%{description} - 已完成"
       new_features: "有新功能可用！"
-      admin_problems: "站点信息中心的新建议"
+      admin_problems: "网站信息中心的新建议"
       dismiss_confirmation:
         body:
           default:
@@ -2356,7 +2356,7 @@ zh_CN:
         reaction: "新回应"
         votes_released: "投票额度已释放"
         new_features: "已发布新的 Discourse 功能！"
-        admin_problems: "站点信息中心有新建议"
+        admin_problems: "网站信息中心有新建议"
     upload_selector:
       uploading: "正在上传"
       processing: "正在处理上传"
@@ -2601,7 +2601,7 @@ zh_CN:
         bookmarks: "您还没有将任何话题加入书签。"
         category: "没有%{category}话题。"
         top: "没有热门话题。"
-        hot: "没有热议话题了。"
+        hot: "没有热门话题。"
         filter: "没有话题。"
         educate:
           new: '<p>您的新话题将显示在这里。默认情况下，如果是在过去 2 天内创建的，话题会被视为新话题，还会显示 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 指示器。</p><p>访问您的<a href="%{userPrefsUrl}">偏好设置</a>可以更改此设置。</p>'
@@ -2617,7 +2617,7 @@ zh_CN:
         category: "没有更多%{category}话题了。"
         tag: "没有更多%{tag}话题了。"
         top: "没有更多热门话题了。"
-        hot: "没有更多热议话题了。"
+        hot: "没有更多热门话题了。"
         bookmarks: "没有更多已加入书签的话题了。"
         filter: "没有更多话题了。"
     topic_bulk_actions:
@@ -2625,7 +2625,7 @@ zh_CN:
         name: "关闭话题"
       update_category:
         name: "更新类别"
-        description: "为所选主题选择新类别"
+        description: "为所选话题选择新类别"
     topic:
       filter_to:
         other: "话题中的 %{count} 个帖子"
@@ -2709,8 +2709,8 @@ zh_CN:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>浏览所有类别</a>、<a href='%{basePath}/latest'>查看最新话题</a>或查看热门话题："
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>浏览所有标签</a>或<a href='%{basePath}/latest'>查看最新话题</a>。"
       suggest_create_topic: 准备好<a href>开始新对话</a>了吗？
-      jump_reply: "跳转到帖子的原始位置"
-      jump_reply_aria: "跳转到 @%{username} 帖子的原始位置"
+      jump_reply: "跳到帖子的原始位置"
+      jump_reply_aria: "跳到 @%{username} 帖子的原始位置"
       deleted: "该话题已被删除"
       slow_mode_update:
         title: "慢速模式"
@@ -2792,10 +2792,10 @@ zh_CN:
         replies_short: "%{current} / %{total}"
       progress:
         title: 话题进度
-        jump_prompt: "跳转到…"
+        jump_prompt: "跳到…"
         jump_prompt_of:
           other: "/%{count} 个帖子"
-        jump_prompt_long: "跳转到…"
+        jump_prompt_long: "跳到…"
         jump_prompt_to_date: "截至日期"
         jump_prompt_or: "或者"
       notifications:
@@ -3573,8 +3573,8 @@ zh_CN:
         lower_title: "未读"
         help: "新话题和您当前正在关注或跟踪，具有未读帖子的话题"
       hot:
-        title: "热议"
-        lower_title: "热议"
+        title: "热门"
+        lower_title: "热门"
         help: "最近热门话题"
       new:
         lower_title_with_count:
@@ -3661,7 +3661,7 @@ zh_CN:
       title: "键盘快捷键"
       short_title: "快捷键"
       jump_to:
-        title: "跳转到"
+        title: "跳到"
         home: "%{shortcut} 首页"
         latest: "%{shortcut} 最新"
         new: "%{shortcut} 新"
@@ -3903,7 +3903,7 @@ zh_CN:
       custom_message_template_forum: "嘿，您应该加入此论坛！"
       custom_message_template_topic: "嘿，我想您可能会喜欢此话题！"
     forced_anonymous: "由于负载过大，暂时向所有人显示退出登录的用户可以看到的内容。"
-    forced_anonymous_login_required: "该站点正处于极端负载状态，当前无法加载，请在几分钟后再试。"
+    forced_anonymous_login_required: "该网站正处于极端负载状态，当前无法加载，请在几分钟后再试。"
     footer_nav:
       back: "返回"
       forward: "前进"
@@ -3969,7 +3969,7 @@ zh_CN:
       categories_form_modal:
         title: "编辑类别导航"
         subtitle:
-          text: "我们将自动显示此站点最受欢迎的类别"
+          text: "我们将自动显示此网站最受欢迎的类别"
         filter_placeholder: "筛选类别"
         no_categories: "没有与给定术语匹配的类别。"
       tags_form_modal:
@@ -3977,7 +3977,7 @@ zh_CN:
         filter_placeholder: "筛选标签"
         no_tags: "没有与给定术语匹配的标签。"
         subtitle:
-          text: "我们将自动显示此站点的热门标签"
+          text: "我们将自动显示此网站的热门标签"
       edit_navigation_modal_form:
         deselect_button_text: "取消全选"
         reset_to_defaults: "重置为默认值"
@@ -4053,10 +4053,10 @@ zh_CN:
           links:
             about:
               content: "关于"
-              title: "关于此站点的更多详细信息"
+              title: "关于此网站的更多详细信息"
             admin:
               content: "管理员"
-              title: "站点设置和报告"
+              title: "网站设置和报告"
             badges:
               content: "徽章"
               title: "所有可获得的徽章"
@@ -4065,7 +4065,7 @@ zh_CN:
               title: "所有话题"
             faq:
               content: "常见问题解答"
-              title: "使用此站点的准则"
+              title: "使用此网站的准则"
             groups:
               content: "群组"
               title: "可用用户群组列表"
@@ -4211,7 +4211,7 @@ zh_CN:
         version_check_pending: "看起来您最近升级了。太棒了！"
         installed_version: "已安装"
         latest_version: "最新"
-        problems_found: "基于您当前站点设置的一些建议"
+        problems_found: "基于您当前网站设置的一些建议"
         new_features:
           title: "最新变化"
           previous_announcements: "您可以在 <a href='%{url}' target='_blank'>Discourse Meta</a> 上查看以前的新功能公告。"
@@ -4477,7 +4477,7 @@ zh_CN:
       web_hooks:
         title: "网络钩子"
         none: "当前没有网络钩子。"
-        instruction: "网络钩子让 Discourse 可以在您的站点发生特定事件时通知外部服务。当网络钩子被触发时，将向提供的 URL 发送一个 POST 请求。"
+        instruction: "网络钩子让 Discourse 可以在您的网站发生特定事件时通知外部服务。当网络钩子被触发时，将向提供的 URL 发送一个 POST 请求。"
         detailed_instruction: "当选择的事件发生时，将向提供的 URL 发送一个 POST 请求。"
         new: "新网络钩子"
         create: "创建"
@@ -4556,7 +4556,7 @@ zh_CN:
           user_badge_revoked: "用户的徽章被撤销"
         like_event:
           group_name: "点赞事件"
-          post_liked: "当用户点赞一篇帖子时。"
+          post_liked: "当用户点赞一个帖子时。"
         notification_event:
           group_name: "通知事件"
           notification_created: "用户在他们的 Feed 中收到通知"
@@ -4659,7 +4659,7 @@ zh_CN:
             title: "移除备份"
             confirm: "确定要删除此备份吗？"
           restore:
-            is_disabled: "恢复在站点设置中已被禁用。"
+            is_disabled: "恢复在网站设置中已被禁用。"
             label: "恢复"
             title: "恢复该备份"
             confirm: "确定要恢复此备份吗？"
@@ -4689,7 +4689,7 @@ zh_CN:
       customize:
         title: "自定义"
         preview: "预览"
-        explain_preview: "查看启用此主题的站点"
+        explain_preview: "查看启用此主题的网站"
         syntax_error: "语法错误"
         settings_editor: "设置编辑器"
         validation_settings_keys: "每个条目必须只有一个 'setting' 键和一个 'value' 键。"
@@ -4702,8 +4702,8 @@ zh_CN:
         delete: "删除"
         delete_confirm: '确定要删除“%{theme_name}”吗？'
         bulk_delete: "确定吗？"
-        bulk_themes_delete_confirm: "这将卸载以下主题，您站点上的任何用户将无法再使用它们："
-        bulk_components_delete_confirm: "这将卸载以下主题组件，您站点上的任何用户将无法再使用它们："
+        bulk_themes_delete_confirm: "这将卸载以下主题，您网站上的任何用户将无法再使用它们："
+        bulk_components_delete_confirm: "这将卸载以下主题组件，您网站上的任何用户将无法再使用它们："
         color: "颜色"
         opacity: "不透明度"
         copy: "复制"
@@ -4743,7 +4743,7 @@ zh_CN:
           create_type: "类型"
           create_name: "名称"
           save: "保存"
-          long_title: "修改您的站点的颜色、CSS 和 HTML 内容"
+          long_title: "修改您的网站的颜色、CSS 和 HTML 内容"
           edit: "编辑"
           edit_confirm: "这是一个远程主题，如果您编辑 CSS/HTML，在下一次更新该主题时这些变更将被擦除。"
           update_confirm: "这些本地变更将被更新擦除。确定要继续吗？"
@@ -4786,7 +4786,7 @@ zh_CN:
           cancel: "取消"
           broken_theme_tooltip: "此主题的 CSS、HTML 或 YAML 中存在错误"
           disabled_component_tooltip: "此组件已被禁用"
-          default_theme_tooltip: "此主题是站点的默认主题"
+          default_theme_tooltip: "此主题是网站的默认主题"
           updates_available_tooltip: "此主题有可用更新"
           and_x_more: "和其他 %{count} 个。"
           collapse: 收起
@@ -4867,7 +4867,7 @@ zh_CN:
             title: "输入自定义 CSS，我们接受所有有效的 CSS 和 SCSS 样式"
           header:
             text: "页眉"
-            title: "输入要显示在站点标头上方的 HTML"
+            title: "输入要显示在网站标头上方的 HTML"
           after_header:
             text: "页眉后"
             title: "输入要显示在所有页面的页眉后的 HTML"
@@ -4940,10 +4940,10 @@ zh_CN:
             description: "导航链接。"
           header_background:
             name: "页眉背景"
-            description: "站点标头的背景色。"
+            description: "网站标头的背景色。"
           header_primary:
             name: "页眉主要"
-            description: "站点标头的文本和图标。"
+            description: "网站标头的文本和图标。"
           highlight:
             name: "突出显示"
             description: "页面上突出显示元素的背景色，例如帖子和话题。"
@@ -4969,9 +4969,9 @@ zh_CN:
             name: "悬停"
             description: "元素（例如列表条目）在鼠标悬停或具有键盘焦点时的背景色。"
         robots:
-          title: "替换您的站点的 robots.txt 文件："
-          warning: "这将永久替换任何相关的站点设置。"
-          overridden: 您的站点的默认 robots.txt 文件已被覆盖。
+          title: "替换您的网站的 robots.txt 文件："
+          warning: "这将永久替换任何相关的网站设置。"
+          overridden: 您的网站的默认 robots.txt 文件已被覆盖。
         email_style:
           title: "电子邮件样式"
           heading: "自定义电子邮件样式"
@@ -5106,10 +5106,10 @@ zh_CN:
             delete_user: "删除用户"
             change_trust_level: "更改信任级别"
             change_username: "更改用户名"
-            change_site_setting: "更改站点设置"
+            change_site_setting: "更改网站设置"
             change_theme: "更改主题"
             delete_theme: "删除主题"
-            change_site_text: "更改站点文本"
+            change_site_text: "更改网站文本"
             suspend_user: "封禁用户"
             unsuspend_user: "取消封禁用户"
             removed_suspend_user: "封禁用户（已移除）"
@@ -5266,8 +5266,8 @@ zh_CN:
           require_approval: "包含这些字词的帖子需要管理人员批准后才能被其他人看到。"
           flag: "允许包含这些字词的帖子，但将它们举报为不当言论以供版主审核。"
           replace: "使用其他字词替换帖子中的字词。"
-          tag: "如果第一篇帖子包含特定字词，则自动为话题添加标签。"
-          silence: "如果新帐户的第一篇帖子包含这些字词，则将其禁言。该帖子将被自动隐藏，直到工作人员批准。"
+          tag: "如果第一个帖子包含特定字词，则自动为话题添加标签。"
+          silence: "如果新帐户的第一个帖子包含这些字词，则将其禁言。该帖子将被自动隐藏，直到工作人员批准。"
           link: "使用链接替换帖子中的字词。"
         form:
           label: "包含字词或短语"
@@ -5708,7 +5708,7 @@ zh_CN:
         show_outdated: "仅显示过期/无效"
         locale: "语言："
         more_than_50_results: "结果超过 50 个。请优化您的搜索。"
-        no_results: "找不到匹配的站点文本"
+        no_results: "找不到匹配的网站文本"
         interpolation_keys: "可用的插值键："
         outdated:
           title: "此翻译已过时"
@@ -5893,7 +5893,7 @@ zh_CN:
         get_started: "如果您想将 Discourse 嵌入另一个网站，请先添加其主机。"
         confirm_delete: "确定要删除该主机吗？"
         sample: |
-          <p>将以下 HTML 代码粘贴到您的站点以创建和嵌入 Discourse 话题。将 <b>EMBED_URL</b> 替换为您要嵌入它的页面的规范 URL。</p>
+          <p>将以下 HTML 代码粘贴到您的网站以创建和嵌入 Discourse 话题。将 <b>EMBED_URL</b> 替换为您要嵌入它的页面的规范 URL。</p>
 
           <p>如果要自定义样式，请取消注释并将 <b>CLASS_NAME</b> 替换为主题的<i>嵌入式 CSS</i> 中定义的 CSS 类。</p>
 

@@ -398,7 +398,7 @@ de:
   removed_direct_reply_full_quotes: "Automatisch entferntes Zitat des gesamten vorherigen Beitrags."
   watched_words_auto_tag: "Thema automatisch mit Schlagwort versehen"
   secure_upload_not_allowed_in_public_topic: "Entschuldige, die folgenden sicheren Uploads können nicht in einem öffentlichen Thema verwendet werden: %{upload_filenames}."
-  create_pm_on_existing_topic: "Entschuldige, du kannst keine private Nachricht zu einem bestehenden Thema erstellen."
+  create_pm_on_existing_topic: "Entschuldige, du kannst keine persönliche Nachricht zu einem bestehenden Thema erstellen."
   slow_mode_enabled: "Dieses Thema befindet sich im langsamen Modus."
   just_posted_that: "ist einer vor Kurzem von dir geschriebenen Nachricht zu ähnlich"
   invalid_characters: "enthält ungültige Zeichen"
@@ -1078,7 +1078,7 @@ de:
         time_read: Lesezeit
         topic_count: Erstellte Themen
         post_count: Erstellte Beiträge
-        pm_count: Erstellte private Nachrichten
+        pm_count: Erstellte persönliche Nachrichten
         revision_count: Überarbeitungen
       description: Liste der Moderator-Aktivität einschließlich gesichteter Meldungen, Lesezeit, erstellter Themen, erstellter Beiträge, erstellter persönlicher Nachrichten und Überarbeitungen.
     flags_status:
@@ -1773,7 +1773,7 @@ de:
     png_to_jpg_quality: "Qualität der umgewandelten JPG-Datei (1 ist die niedrigste, 99 die beste Qualität, 100 deaktiviert die Funktion)."
     recompress_original_jpg_quality: "Qualität der hochgeladenen Bilddateien (1 ist die niedrigste Qualität, 99 ist die beste Qualität, 100 zum Deaktivieren)."
     image_preview_jpg_quality: "Qualität der skalierten Bilddateien (1 ist die niedrigste Qualität, 99 ist die beste Qualität, 100 zum Deaktivieren)."
-    allow_staff_to_upload_any_file_in_pm: "Erlaube Team-Mitgliedern, in privaten Nachrichten alle Dateien hochzuladen."
+    allow_staff_to_upload_any_file_in_pm: "Erlaube Team-Mitgliedern, in persönlichen Nachrichten alle Dateien hochzuladen."
     strip_image_metadata: "Bild-Metadaten entfernen."
     composer_media_optimization_image_enabled: "Aktiviert die clientseitige Medienoptimierung hochgeladener Bilddateien."
     composer_media_optimization_image_bytes_optimization_threshold: "Mindestgröße der Bilddatei, um die clientseitige Optimierung auszulösen"
@@ -1875,7 +1875,7 @@ de:
     max_similar_results: "Anzahl ähnlicher Themen, die beim Erstellen eines neuen Themas über dem Editor angezeigt werden. Ähnlichkeit wird anhand des Titels und Inhalts bestimmt."
     max_image_megapixels: "Maximal zulässige Anzahl von Megapixeln für ein Bild. Bilder mit einer höheren Anzahl von Megapixeln werden abgelehnt."
     title_prettify: "Verhindert gängige Fehler im Titel, z. B. reine Großschreibung, Kleinbuchstaben am Anfang, mehrere ! und ?, überflüssiger . am Ende usw."
-    title_remove_extraneous_space: "Entferne führende Leerzeichen vor dem Ende-Zeichen."
+    title_remove_extraneous_space: "Entferne führende Leerzeichen vor dem Satzzeichen am Ende."
     automatic_topic_heat_values: 'Aktualisiere automatisch die Einstellungen „topic views heat“ und „topic post like heat“ basierend auf der Website-Aktivität.'
     topic_views_heat_low: "Aufrufe-Feld leicht hervorheben, sobald das Thema so oft gelesen wurde."
     topic_views_heat_medium: "Aufrufe-Feld mäßig hervorheben, sobald das Thema so oft gelesen wurde."
@@ -2063,7 +2063,7 @@ de:
     share_anonymized_statistics: "Anonymisierte Nutzungsdaten teilen."
     auto_handle_queued_age: "Bearbeite Einträge automatisch, die so viele Tage auf Überprüfung warten. Meldungen werden ignoriert. Beiträge und Benutzer in der Warteschlange werden zurückgewiesen. Setze den Wert auf 0, um diese Funktion zu deaktivieren."
     penalty_step_hours: "Standardstrafen für das Stummschalten oder Sperren von Benutzern in Stunden. Beim ersten Verstoß wird standardmäßig der erste Wert verwendet, beim zweiten Verstoß standardmäßig der zweite Wert usw."
-    penalty_include_post_message: "Füge automatisch die Nachricht des beanstandeten Beitrags in die E-Mail-Vorlage ein, wenn du einen Benutzer stummschaltest oder sperrst."
+    penalty_include_post_message: "Füge automatisch die Nachricht des beanstandeten Beitrags in die E-Mail-Vorlage ein, wenn du einen Benutzer stummschaltest oder sperrst"
     svg_icon_subset: "Füge zusätzliche „FontAwesome 5“-Symbole hinzu, die du in deine Assets einbinden möchtest. Verwende das Präfix „fa-“ für einfarbige Symbole, „far-“ für normale Symbole und „fab-“ für Markensymbole."
     max_prints_per_hour_per_user: "Maximale Anzahl von /print-Seitenaufrufen (auf 0 setzen, um das Drucken zu deaktivieren)"
     full_name_required: "Vollständiger Name ist ein Pflichtfeld des Benutzerprofils."
@@ -2114,7 +2114,7 @@ de:
     auto_close_topics_create_linked_topic: "Erstelle ein neues verknüpftes Thema, wenn ein Thema basierend auf der Einstellung „auto close topics post count“ automatisch geschlossen wird"
     code_formatting_style: "Code-Schaltfläche im Editor wird standardmäßig diesen Formatierungsstil anwenden"
     max_allowed_message_recipients: "Maximale Anzahl von Empfängern in einer Nachricht."
-    disable_watched_word_checking_in_user_fields: "Deaktiviere die Prüfung überwachter Wörter in Benutzerfeldern"
+    disable_watched_word_checking_in_user_fields: "deaktiviere die Prüfung überwachter Wörter in Benutzerfeldern"
     watched_words_regular_expressions: "Beobachtete Wörter sind reguläre Ausdrücke."
     enable_diffhtml_preview: "Experimentelle Funktion, die diffHTML verwendet, um die Vorschau zu synchronisieren, anstatt sie vollständig neu zu rendern"
     enable_fast_edit: "Fügt dem Beitragsauswahlmenü eine Schaltfläche hinzu, um eine kleine Auswahl inline zu bearbeiten."
@@ -2241,7 +2241,7 @@ de:
     enable_experimental_lightbox: "EXPERIMENTELL: Die Standard-Bild-Lightbox durch das überarbeitete Design ersetzen."
     experimental_form_templates: "EXPERIMENTELL: Aktiviere die Funktion „Formularvorlagen“. <b>Nachdem du sie aktiviert hast, verwalte</b> die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
     admin_sidebar_enabled_groups: "EXPERIMENTELL: Aktiviere die Seitenleistennavigation für die Administrator-Benutzeroberfläche für die angegebenen Gruppen, wodurch die Administrator-Navigationsschaltflächen der obersten Ebene ersetzt werden."
-    lazy_load_categories_groups: "EXPERIMENTELL: Lazy-Load-Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
+    lazy_load_categories_groups: "EXPERIMENTELL: Lazy Loading von Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     errors:
@@ -3434,7 +3434,7 @@ de:
 
       %{topic_url}
     user_invited_to_private_message_pm_group:
-      title: "Benutzer hat Gruppe zu privater Nachricht eingeladen"
+      title: "Benutzer hat Gruppe zu persönlicher Nachricht eingeladen"
       subject_template: "[%{email_prefix}] %{username} hat @%{group_name} zu einer Unterhaltung „%{topic_title}“ eingeladen"
       text_body_template: |
         %{header_instructions}
@@ -3443,7 +3443,7 @@ de:
 
         %{respond_instructions}
     user_invited_to_private_message_pm:
-      title: "Benutzer zu privater Nachricht eingeladen"
+      title: "Benutzer zu persönlicher Nachricht eingeladen"
       subject_template: "[%{email_prefix}] %{username} hat dich zu einer Unterhaltung „%{topic_title}“ eingeladen"
       text_body_template: |
         %{header_instructions}
@@ -3602,7 +3602,7 @@ de:
 
         %{respond_instructions}
     user_posted_pm:
-      title: "Benutzer hat private Nachricht geschrieben"
+      title: "Benutzer hat persönliche Nachricht geschrieben"
       subject_template: "[%{email_prefix}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3976,7 +3976,7 @@ de:
 
       ## [Dies ist ein zivilisierter Ort für öffentliche Diskussionen](#civilized)
 
-      Bitte behandle dieses Diskussionsforum mit demselben Respekt wie einen öffentlichen Park. Auch wir sind eine Communityliche Community-Ressource &mdash; ein Ort, um Fähigkeiten, Wissen und Interessen durch einen fortlaufenden Dialog zu teilen.
+      Bitte behandle dieses Diskussionsforum mit demselben Respekt wie einen öffentlichen Park. Auch wir sind eine gemeinschaftliche Community-Ressource &mdash; ein Ort, um Fähigkeiten, Wissen und Interessen durch einen fortlaufenden Dialog zu teilen.
 
       Dies sind keine harten oder festen Regeln, sondern vielmehr Hilfen für die menschliche Einschätzung unserer Community. Sie sind Richtlinien, die das menschliche Urteilsvermögen unserer Community fördern und dafür sorgen sollen, dass dies ein freundlicher Ort für einen zivilisierten, öffentlichen Diskurs bleibt.
 
@@ -4769,14 +4769,14 @@ de:
       truncated_file: "Diese Datei wurde abgeschnitten."
       show_original: "Original zeigen"
       requires_iframe: "Der Viewer benötigt einen Iframe."
-      committed: "übertragen"
+      committed: "committed"
       more_than_three_files: "Es gibt mehr als drei Dateien."
       opened: "offen"
       closed: "geschlossen"
-      commit_by: "Übertragen von"
+      commit_by: "Commit von"
       comment_by: "Kommentar von"
-      review_by: "Überprüft von"
-      pr_summary: "%{commits} Ändert %{changed_files} Dateien mit %{additions} Ergänzungen und %{deletions} Löschungen"
+      review_by: "Überprüfung durch"
+      pr_summary: "%{commits} Commits haben %{changed_files} Dateien durch %{additions} Ergänzungen und %{deletions} Löschungen geändert"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} hat dich erwähnt in „%{topic}“ – %{site_title}'

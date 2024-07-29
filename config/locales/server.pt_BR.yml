@@ -285,6 +285,7 @@ pt_BR:
     requires_groups: "O convite não foi salvo porque o tópico especificado está inacessível. Adicione um dos seguintes grupos: %{groups}."
     max_invite_emails_limit_exceeded: "Ocorreu uma falha no pedido porque a quantidade de e-mails excedeu o máximo (%{max})."
     domain_not_allowed: "Seu e-mail não pode ser usado para resgatar este convite."
+    domain_not_allowed_admin: "Este domínio não pode user usado para convites"
     max_redemptions_allowed_one: "para convites por e-mail, deve ser 1."
     redemption_count_less_than_max: "deve ser menor que %{max_redemptions_allowed}."
     email_xor_domain: "Campos de e-mail e domínio não são permitidos ao mesmo tempo"
@@ -1690,10 +1691,10 @@ pt_BR:
     facebook_app_id: "ID do app para compartilhamento e autenticaçao do Facebook, registrado em <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "Segredo do aplicativo para autenticação do Facebook, registrado em <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_github_logins: "Ative a autenticação do GitHub, requer github_client_id and github_client_secret. Consulte <a href='https://meta.discourse.org/t/13745' target='_blank'>Configurando a entrada com conta do GitHub para o Discourse</a>."
-    github_client_id: "ID do cliente para autenticação do GitHub, registrado em <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    github_client_id: "ID de cliente para autenticação do GitHub, registrado em <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Segredo do cliente para autenticação do GitHub, registrado em <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "Permitir que os(as) usuários(as) façam autenticação via Discord?"
-    discord_client_id: 'ID do cliente Discord (precisa de uma? acesse <a href="https://discordapp.com/developers/applications/me">o portal do desenvolvedor Discord</a>)'
+    discord_client_id: 'ID de cliente Discord (precisa de um? acesse <a href="https://discordapp.com/developers/applications/me">o portal do desenvolvedor Discord</a>)'
     discord_secret: "Chave secreta do Discord"
     discord_trusted_guilds: 'Permita que apenas membros destas guildas do Discord entrem com a conta via Discord. Use a ID numérica para a guilda. Para obter mais informações, confira as instruções <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">aqui</a>. Deixe em branco para permitir qualquer guilda.'
     enable_backups: "Permitir que administradores(as) criem backups do fórum"
@@ -2058,6 +2059,7 @@ pt_BR:
     share_anonymized_statistics: "Compartilhe estatísticas de uso anônimas."
     auto_handle_queued_age: "Trate automaticamente os registros que estão aguardando revisão há vários dias. Sinalizadores serão ignorados. Postagens na fila e usuários serão rejeitados. Defina como 0 para desativar esse recurso."
     penalty_step_hours: "Penalidades padrão por silenciar ou suspender usuários(as). A primeira ofensa é padronizada para o primeiro valor, a segunda ofensa para o segundo valor, etc."
+    penalty_include_post_message: "Incluir automaticamente a mensagem de postagem ofensiva no modelo de mensagem de e-mail ao silenciar ou suspender um(a) usuário(a)"
     svg_icon_subset: "Adicione mais ícones FontAwesome 5 que você gostaria de incluir em seus ativos. Use o prefixo \"fa-\" para ícones consolidados, \"far-\" para ícones regulares e \"fab-\" para ícones de marca."
     max_prints_per_hour_per_user: "Quantidade máxima de impressões de páginas (defina como 0 para desativar impressão)"
     full_name_required: "O nome completo é um campo obrigatório do perfil do(a) usuário(a)."
@@ -2096,6 +2098,9 @@ pt_BR:
     enable_inline_emoji_translation: "Permite a tradução de emojis em linha (sem qualquer espaço ou pontuação antes)"
     emoji_deny_list: "Estes emojis não estarão disponíveis para uso nos menus ou shortcodes."
     approve_post_count: "A quantidade de postagens de um(a) usuário(a) novo(a) ou básico(a) que devem ser aprovadas"
+    approve_unless_trust_level: "Postagens criadas por usuários(as) abaixo deste nível de confiança devem ser aprovadas"
+    approve_new_topics_unless_trust_level: "Novos tópicos criados por usuários(as) abaixo deste nível de confiança devem ser aprovados"
+    approve_unless_staged: "Novos tópicos e postagens criados por usuários(as) encenados(as) devem ser aprovados"
     notify_about_queued_posts_after: "Se houver postagens que estão aguardando revisão por muitas horas, envie uma notificação a todos(as) os(as) moderadores(as). Defina como 0 para desativar essas notificações."
     reviewable_revision_reasons: "A lista de motivos que podem ser selecionados ao recusar uma postagem revisável na fila com uma revisão. Sempre há disponível uma opção alternativa para inserir um motivo personalizado."
     auto_close_messages_post_count: "Quantidade máxima de postagens permitidas em uma mensagem antes de ser automaticamente fechada (0 para desativar)"
@@ -2103,6 +2108,7 @@ pt_BR:
     auto_close_topics_create_linked_topic: "Crie um novo tópico relacionado quando um tópico é fechado automaticamente com base na configuração \"fechar automaticamente a contagem de postagens\""
     code_formatting_style: "O botão de código no compositor será este estilo de formatação de código por padrão"
     max_allowed_message_recipients: "Quantidade máxima de destinatários permitidos em uma mensagem."
+    disable_watched_word_checking_in_user_fields: "desabilitar verificação de palavras monitoradas nos campos de usuário(a)"
     watched_words_regular_expressions: "Palavras acompanhadas são expressões regulares."
     enable_diffhtml_preview: "Recurso experimental que usa diffHTML para sincronizar pré-visualização em vez de outra renderização total"
     enable_fast_edit: "Adiciona um botão ao menu de seleção de postagem para editar um pequeno conteúdo embutido de seleção."
@@ -2223,6 +2229,7 @@ pt_BR:
     enable_experimental_lightbox: "EXPERIMENTAL: substitua a lightbox da imagem padrão pelo design renovado."
     experimental_form_templates: "EXPERIMENTAL: ative o recurso de modelo de formulário. <b>Quando ativado,</b> gerencie os modelos em <a href='%{base_path}/admin/customize/form-templates'>Personalizar/Modelos</a>."
     admin_sidebar_enabled_groups: "EXPERIMENTAL: ative a navegação da barra lateral da IU da administração para grupos específicos, que substitui os botões de navegação da administração superiores."
+    lazy_load_categories_groups: "EXPERIMENTAL: Carregue informações de forma ociosa apenas para os(as) usuários(as) destes grupos. Melhora o desempenho em sites com várias categorias."
     page_loading_indicator: "Configure o indicador de carregamento mostrado durante as navegações da página no Discourse. O \"Controle giratório\" é um indicador de página completo. O \"Controle deslizante\" mostra uma barra estreita no topo da tela."
     show_user_menu_avatars: "Mostrar avatadores de usuário(a) no menu do(a) usuário(a)"
     errors:
@@ -2301,6 +2308,11 @@ pt_BR:
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
       create_tag_allowed_groups: "min_trust_to_create_tag"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
+      skip_review_media_groups: "review_media_unless_trust_level"
+      embedded_media_allowed_groups: "min_trust_to_post_embedded_media"
+      post_links_allowed_groups: "min_trust_to_post_links"
+      user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
+      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exemplo.com.br"
@@ -4629,9 +4641,22 @@ pt_BR:
   onebox:
     discourse:
       user_joined_community: "Juntou-se em %{date}"
+    gitlab:
+      truncated_file: "Este arquivo está truncado."
+      show_original: "exibir original"
     github:
+      binary_file: "Este arquivo é binário."
+      truncated_file: "Este arquivo está truncado."
+      show_original: "exibir original"
+      requires_iframe: "O visualizador requer iframe."
+      committed: "confirmado"
+      more_than_three_files: "Há mais de três aquivos."
       opened: "abertos"
       closed: "fechados"
+      commit_by: "Confirmação por"
+      comment_by: "Comentário de"
+      review_by: "Revisão por"
+      pr_summary: "%{commits} confirma %{changed_files} arquivos alterados com %{additions} adições e %{deletions} exclusões"
   discourse_push_notifications:
     popup:
       mentioned: 'Você foi mencionado(a) por %{username} em "%{topic}" - %{site_title}'
@@ -4646,6 +4671,7 @@ pt_BR:
       confirm_body: "Tudo pronto! As notificações foram ativadas."
       custom: "Notificação de %{username} em %{site_title}"
   staff_action_logs:
+    json_too_long: "Valores não registrados, os limites de tamanho da coluna foram excedidos"
     not_found: "não encontrado(a)"
     unknown: "desconhecido(a)"
     user_merged: "%{username} foi mesclado(a) nesta conta"

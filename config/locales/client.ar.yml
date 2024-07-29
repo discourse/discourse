@@ -408,7 +408,7 @@ ar:
       pill: "الرسائل ذات الصلة"
       see_all: 'عرض <a href="%{path}">كل الرسائل</a> من ⁨@%{username}⁩...'
     suggested_topics:
-      title: "مواضيع جديدة وغير مقروءة"
+      title: "موضوعات جديدة وغير مقروءة"
       pill: "مُقترح"
       pm_title: "الرسائل المقترحة"
     about:
@@ -426,7 +426,7 @@ ar:
       like_count: "تسجيلات الإعجاب"
       topic_count: "الموضوعات"
       post_count: "المنشورات"
-      user_count: "التسجيلات"
+      user_count: "الاشتراكات"
       active_user_count: "المستخدمون النشطون"
       contact: "تواصل معنا"
       contact_info: "في حال حدوث مشكلة خطيرة أو أمر عاجل يؤثر على الموقع، يُرجى مراسلتنا على %{contact_info}."
@@ -572,7 +572,7 @@ ar:
       explain:
         why: "اشرح سبب دخول هذا العنصر في قائمة الانتظار"
         title: "التقييم القابل للمراجعة"
-        formula: "المعادلة"
+        formula: "المُعادلة"
         subtotal: "الإجمالي الفرعي"
         total: "الإجمالي"
         min_score_visibility: "الحد الأدنى من النقاط للرؤية"
@@ -1138,11 +1138,11 @@ ar:
         muted:
           title: "الكتم"
           description: "لن تتلقى أي إشعارات أبدًا بخصوص الرسائل من هذه المجموعة."
-      flair_url: "صورة الطابع للصورة الرمزية المميزة"
+      flair_url: "صورة الطابع للصورة الرمزية المميَّزة"
       flair_upload_description: "استخدم صورًا مربعة الشكل لا يقل حجمها عن 20 بكسل × 20 بكسل."
-      flair_bg_color: "لون خلفية الطابع للصورة الرمزية المميزة"
+      flair_bg_color: "لون خلفية الطابع للصورة الرمزية المميَّزة"
       flair_bg_color_placeholder: "(اختياري) القيمة السداسية للون"
-      flair_color: "لون الطابع للصورة الرمزية المميزة"
+      flair_color: "لون الطابع للصورة الرمزية المميَّزة"
       flair_color_placeholder: "(اختياري) القيمة السداسية للون"
       flair_preview_icon: "معاينة الأيقونة"
       flair_preview_image: "معاينة الصورة"
@@ -1308,7 +1308,7 @@ ar:
         save: "حفظ"
         clear:
           title: "مسح"
-          warning: "هل تريد بالتأكيد مسح موضوعك المميز؟"
+          warning: "هل تريد بالتأكيد مسح موضوعك المميَّز؟"
       use_current_timezone: "استخدام المنطقة الزمنية الحالية"
       profile_hidden: "الملف الشخصي العام لهذا المستخدم مخفي."
       inactive_user: "لم يعُد هذا المستخدم نشطًا."
@@ -1377,7 +1377,7 @@ ar:
       text_size_default_on_all_devices: "جعل هذا الحجم الافتراضي للنص على جميع أجهزتي"
       allow_private_messages: "السماح للمستخدمين الآخرين بإرسال رسائل خاصة إليَّ"
       external_links_in_new_tab: "فتح كل الروابط الخارجية في علامة تبويب جديدة"
-      enable_quoting: "تفعيل الرد باقتباس للنص المميز"
+      enable_quoting: "تفعيل الرد باقتباس للنص المميَّز"
       enable_defer: "تفعيل التأجيل لوضع علامة على الموضوعات كغير مقروءة"
       experimental_sidebar:
         enable: "تفعيل الشريط الجانبي"
@@ -1387,7 +1387,7 @@ ar:
         link_to_filtered_list_checkbox_description: "رابط إلى القائمة التي تمت تصفيتها"
         show_count_new_items_checkbox_description: "عرض عدد العناصر الجديدة"
       change: "تغيير"
-      featured_topic: "الموضوع المميز"
+      featured_topic: "الموضوع المميَّز"
       moderator: "‏%{user} مشرف في الموقع"
       admin: "‏%{user} مسؤول في الموقع"
       moderator_tooltip: "هذا المستخدم مشرف في الموقع"
@@ -1676,7 +1676,7 @@ ar:
         short_description: |
           قم بحماية حسابك باستخدام رموز الأمان لمرة واحدة أو مفاتيح الأمان المادية.
         extended_description: |
-          تضيف المصادقة الثنائية أمانًا إضافيًا إلى حسابك من خلال طلب رمز مميز لمرة واحدة بالإضافة إلى كلمة مرورك. يمكن إنشاء الرموز المميزة على الأجهزة التي تعمل بنظام التشغيل <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> و<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
+          تضيف المصادقة الثنائية أمانًا إضافيًا إلى حسابك من خلال طلب رمز مميَّز لمرة واحدة بالإضافة إلى كلمة مرورك. يمكن إنشاء الرموز المميَّزة على الأجهزة التي تعمل بنظام التشغيل <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> و<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "يُرجى العلم بأنه سيتم إيقاف تسجيل الدخول بحسابات التواصل الاجتماعي بعد تفعيل المصادقة الثنائية على حسابك."
         use: "استخدام تطبيق المصادقة"
         enforced_notice: "يلزم تفعيل المصادقة الثنائية قبل الوصول إلى هذا الموقع."
@@ -1696,7 +1696,7 @@ ar:
         enable_security_key_description: |
           عندما يكون <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">مفتاح الأمان المحمول</a> أو جهاز الجوَّال المتوافق لديك جاهزًا، اضغط على الزر "تسجيل" أدناه.
         totp:
-          title: "تطبيقات المصادقة المعتمدة على الرموز المميزة"
+          title: "تطبيقات المصادقة المعتمدة على الرموز المميَّزة"
           add: "إضافة تطبيق مصادقة"
           default_name: "تطبيق المصادقة الخاص بي"
           name_and_code_required_error: "يجب عليك إدخال اسم، والرمز من تطبيق المصادقة."
@@ -1781,7 +1781,7 @@ ar:
         title: "خلفية بطاقة المستخدم"
         instructions: "سيتم توسيط صور الخلفية وسيكون عرضها الافتراضي 590 بكسل."
       change_featured_topic:
-        title: "الموضوع المميز"
+        title: "الموضوع المميَّز"
         instructions: "سيتم وضع رابط إلى هذا الموضوع على بطاقة المستخدم والملف الشخصي الخاصين بك."
       email:
         title: "البريد الإلكتروني"
@@ -1833,7 +1833,7 @@ ar:
         ok: "اسمك يبدو جيدًا"
       username:
         title: "اسم المستخدم"
-        instructions: "مميز، وبلا مسافات، وقصير."
+        instructions: "مميَّز، وبلا مسافات، وقصير."
         short_instructions: "يمكن للأشخاص الإشارة إليك هكذا: ⁨@%{username}⁩"
         available: "اسم المستخدم متوفر"
         not_available: "غير متاح. هل تريد تجربة %{suggestion}؟"
@@ -1853,7 +1853,7 @@ ar:
         title: "تكرار كلمة المرور"
       invite_code:
         title: "رمز الدعوة"
-        instructions: "يتطلب تسجيل الحساب رمز دعوة"
+        instructions: "يتطلَّب تسجيل الحساب رمز دعوة"
       auth_tokens:
         title: "الأجهزة المستخدمة حديثًا"
         short_description: "هذه قائمة بالأجهزة التي سجَّلت الدخول إلى حسابك مؤخرًا."
@@ -2090,12 +2090,12 @@ ar:
           many: "أيام الزيارة"
           other: "أيام الزيارة"
         topics_entered:
-          zero: "المواضيع المعروضة"
-          one: "المواضيع المعروضة"
-          two: "المواضيع المعروضة"
-          few: "المواضيع المعروضة"
-          many: "المواضيع المعروضة"
-          other: "المواضيع المعروضة"
+          zero: "الموضوعات المعروضة"
+          one: "الموضوعات المعروضة"
+          two: "الموضوعات المعروضة"
+          few: "الموضوعات المعروضة"
+          many: "الموضوعات المعروضة"
+          other: "الموضوعات المعروضة"
         posts_read:
           zero: "منشور مقروء"
           one: "منشور واحد مقروء"
@@ -2431,7 +2431,7 @@ ar:
         security_key: "استخدم مفتاح أمان بدلًا من ذلك"
       no_login_methods:
         title: "لا توجد طرق لتسجيل الدخول"
-        description: "لم يتم تكوين أي طرق لتسجيل الدخول. يمكن للمسؤولين زيارة <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> لإعادة تكوين الموقع."
+        description: "لم يتم إعداد أي طرق لتسجيل الدخول. يمكن للمسؤولين زيارة <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> لإعادة إعداد الموقع."
     invites:
       accept_title: "الدعوة"
       welcome_to: "مرحبًا بك في %{site_name}!"
@@ -2454,13 +2454,13 @@ ar:
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "الفئات فقط"
-      categories_with_featured_topics: "الفئات ذات الموضوعات المميزة"
+      categories_with_featured_topics: "الفئات ذات الموضوعات المميَّزة"
       categories_and_latest_topics: "الفئات وأحدث الموضوعات"
       categories_and_latest_topics_created_date: "الفئات وأحدث الموضوعات (الترتيب حسب تاريخ إنشاء الموضوع)"
       categories_and_top_topics: "الفئات والموضوعات الأكثر نشاطًا"
       categories_boxes: "المربعات ذات الفئات الفرعية"
-      categories_boxes_with_topics: "مربعات بالموضوعات المميزة"
-      subcategories_with_featured_topics: "الفئات الفرعية ذات الموضوعات المميزة"
+      categories_boxes_with_topics: "مربعات بالموضوعات المميَّزة"
+      subcategories_with_featured_topics: "الفئات الفرعية ذات الموضوعات المميَّزة"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2782,7 +2782,7 @@ ar:
       none: "يتعذَّر تحميل الإشعارات في الوقت الحالي."
       empty: "لم يتم العثور على إشعارات."
       post_approved: "تمت الموافقة على منشورك"
-      reviewable_items: "عناصر تتطلب المراجعة"
+      reviewable_items: "عناصر تتطلَّب المراجعة"
       watching_first_post_label: "موضوع جديد"
       user_moved_post: "تم نقل %{username}"
       mentioned: "‏<span>⁨%{username}⁩</span> ‏%{description}"
@@ -2839,7 +2839,7 @@ ar:
       reaction: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       reaction_2: "<span>%{username} و%{username2}</span> %{description}"
       votes_released: "%{description} - اكتمل"
-      new_features: "تتوفر ميزات جديدة!"
+      new_features: "تتوفَّر ميزات جديدة!"
       admin_problems: "نصيحة جديدة بشأن لوحة معلومات موقعك"
       dismiss_confirmation:
         body:
@@ -3136,7 +3136,7 @@ ar:
         deleted_post: "(منشور محذوف)"
         post_number_with_topic_title: "المنشور #%{post_number} - %{title}"
         new_post_in_topic: "منشور جديد في %{title}"
-        user_requires_approval: "%{username} يتطلب الموافقة"
+        user_requires_approval: "%{username} يتطلَّب الموافقة"
         default_item: "العنصر القابل للمراجعة #%{reviewable_id}"
     topics:
       new_messages_marker: "آخر زيارة"
@@ -3243,7 +3243,7 @@ ar:
         bookmarks: "لم تضع إشارة مرجعية على أي موضوع بعد."
         category: "لا توجد موضوعات في الفئة %{category}."
         top: "لا توجد موضوعات في الأكثر نشاطًا."
-        hot: "لا توجد مواضيع ساخنة."
+        hot: "لا توجد موضوعات ساخنة."
         filter: "لا توجد موضوعات."
         educate:
           new: '<p>ستظهر موضوعاتك الجديدة هنا. تُعتبَر الموضوعات جديدة بشكلٍ افتراضي وستعرض مؤشر <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> إذا كان قد تم إنشاؤها في آخر يومين.</p><p>يمكنك الانتقال إلى <a href="%{userPrefsUrl}">تفضيلاتك</a> لتغيير ذلك.</p>'
@@ -3259,7 +3259,7 @@ ar:
         category: "لا يوجد المزيد من الموضوعات في الفئة %{category}."
         tag: "لا يوجد المزيد من الوضوعات التي تحمل الوسم %{tag}."
         top: "لا يوجد المزيد من الموضوعات الأكثر نشاطًا."
-        hot: "لا يوجد المزيد من المواضيع الساخنة."
+        hot: "لا يوجد المزيد من الموضوعات الساخنة."
         bookmarks: "لا يوجد المزيد من الموضوعات ذات الإشارات المرجعية."
         filter: "لا توجد موضوعات أخرى."
     topic_bulk_actions:
@@ -3267,7 +3267,7 @@ ar:
         name: "إغلاق الموضوعات"
       update_category:
         name: "تحديث الفئة"
-        description: "اختر الفئة الجديدة للموضوعات المحددة"
+        description: "اختر الفئة الجديدة للموضوعات المحدَّدة"
     topic:
       filter_to:
         zero: "%{count} منشور في الموضوع"
@@ -3304,7 +3304,7 @@ ar:
         zero: "%{count} موضوع غير مقروء"
         one: "موضوع واحد (%{count}) غير مقروء"
         two: "موضوعان (%{count}) غير مقروءين"
-        few: "%{count} مواضيع غير مقروءة"
+        few: "%{count} موضوعات غير مقروءة"
         many: "%{count} موضوعًا غير مقروء"
         other: "%{count} موضوع غير مقروء"
       title: "الموضوع"
@@ -3803,8 +3803,8 @@ ar:
       quote_reply_shortcut: "اقتباس (أو اضغط على q)"
       quote_edit: "تعديل"
       quote_edit_shortcut: "تعديل (أو اضغط على e)"
-      quote_copy: "انسخ الاقتباس"
-      quote_copied_to_clibboard: "نسخت الاقتباس إلى الحافظة"
+      quote_copy: "نسخ الاقتباس"
+      quote_copied_to_clibboard: "تم نسخ الاقتباس إلى الحافظة"
       quote_share: "مشاركة"
       edit_reason: "السبب: "
       post_number: "المنشور %{number}"
@@ -3984,12 +3984,12 @@ ar:
         delete_topic_disallowed_modal: "ليس لديك إذن بحذف هذا الموضوع. إذا كنت تريد حقًا حذفه، فأبلِغ عنه مع ذكر السبب للفت انتباه أحد المشرفين إليه."
         delete_topic_disallowed: "ليس لديك الإذن بحذف هذا الموضوع"
         delete_topic_confirm_modal:
-          zero: "هذا الموضوع يحتوي حاليا على أكثر من %{count} مشاهدة، وقد يكون مشهورًا في نتائج البحث. هل متأكد من حذف هذا الموضوع بالكامل، بدلاً من تعديله لتحسينه؟"
+          zero: "هذا الموضوع يحتوي حاليا على أكثر من %{count} مشاهدة، وقد يكون مشهورًا في نتائج البحث. هل متأكد من حذف هذا الموضوع بالكامل، بدلًا من تعديله لتحسينه؟"
           one: "يحتوي هذا الموضوع حاليًا على أكثر من مرة عرض واحدة (%{count})، وقد يصبح رائجًا في نتائج البحث. هل تريد بالتأكيد حذف هذا الموضوع بالكامل بدلًا من تعديله لتحسينه؟"
-          two: "هذا الموضوع يحتوي حاليا على أكثر من %{count} مشاهدة، وقد يكون مشهورًا في نتائج البحث. هل متأكد من حذف هذا الموضوع بالكامل، بدلاً من تعديله لتحسينه؟"
-          few: "هذا الموضوع يحتوي حاليا على أكثر من %{count} مشاهدة، وقد يكون مشهورًا في نتائج البحث. هل متأكد من حذف هذا الموضوع بالكامل، بدلاً من تعديله لتحسينه؟"
-          many: "هذا الموضوع يحتوي حاليا على أكثر من %{count} مشاهدة، وقد يكون مشهورًا في نتائج البحث. هل متأكد من حذف هذا الموضوع بالكامل، بدلاً من تعديله لتحسينه؟"
-          other: "هذا الموضوع يحتوي حاليا على أكثر من %{count} مشاهدة، وقد يكون مشهورًا في نتائج البحث. هل متأكد من حذف هذا الموضوع بالكامل، بدلاً من تعديله لتحسينه؟"
+          two: "هذا الموضوع يحتوي حاليا على أكثر من %{count} مشاهدة، وقد يكون مشهورًا في نتائج البحث. هل متأكد من حذف هذا الموضوع بالكامل، بدلًا من تعديله لتحسينه؟"
+          few: "هذا الموضوع يحتوي حاليا على أكثر من %{count} مشاهدة، وقد يكون مشهورًا في نتائج البحث. هل متأكد من حذف هذا الموضوع بالكامل، بدلًا من تعديله لتحسينه؟"
+          many: "هذا الموضوع يحتوي حاليا على أكثر من %{count} مشاهدة، وقد يكون مشهورًا في نتائج البحث. هل متأكد من حذف هذا الموضوع بالكامل، بدلًا من تعديله لتحسينه؟"
+          other: "هذا الموضوع يحتوي حاليا على أكثر من %{count} مشاهدة، وقد يكون مشهورًا في نتائج البحث. هل متأكد من حذف هذا الموضوع بالكامل، بدلًا من تعديله لتحسينه؟"
         delete_topic_confirm_modal_yes: "نعم، حذف هذا الموضوع"
         delete_topic_confirm_modal_no: "لا، الاحتفاظ بهذا الموضوع"
         delete_topic_error: "حدث خطأ في أثناء حذف هذا الموضوع"
@@ -4149,7 +4149,7 @@ ar:
         delete: "حذف"
         add: "إضافة مجموعة الوسوم المطلوبة"
         placeholder: "تحديد مجموعة الوسوم…"
-      topic_featured_link_allowed: "السماح بالروابط المميزة في هذه الفئة."
+      topic_featured_link_allowed: "السماح بالروابط المميَّزة في هذه الفئة."
       delete: "حذف الفئة"
       create: "فئة جديدة"
       create_long: "إنشاء فئة جديدة"
@@ -4200,7 +4200,7 @@ ar:
       show_subcategory_list: "اعرض قائمة الفئات الفرعية أعلى الموضوعات في هذه الفئة."
       read_only_banner: "نص البانر عندما لا يستطيع المستخدم إنشاء موضوع في هذه الفئة:"
       num_featured_topics: "عدد الموضوعات المعروضة في صفحة الفئات:"
-      subcategory_num_featured_topics: "عدد الموضوعات المميزة في صفحة الفئة الرئيسية."
+      subcategory_num_featured_topics: "عدد الموضوعات المميَّزة في صفحة الفئة الرئيسية."
       all_topics_wiki: "تحويل الموضوعات الجديدة إلى Wiki بشكلٍ افتراضي"
       allow_unlimited_owner_edits_on_first_post: "السماح للمالك بعدد غير محدود من التعديلات على أول منشور"
       subcategory_list_style: "نمط قائمة الفئات الفرعية:"
@@ -4264,9 +4264,9 @@ ar:
       sort_descending: "تنازلي"
       subcategory_list_styles:
         rows: "صفوف"
-        rows_with_featured_topics: "صفوف بالموضوعات المميزة"
+        rows_with_featured_topics: "صفوف بالموضوعات المميَّزة"
         boxes: "مربعات"
-        boxes_with_featured_topics: "مربعات بالموضوعات المميزة"
+        boxes_with_featured_topics: "مربعات بالموضوعات المميَّزة"
       settings_sections:
         general: "عام"
         moderation: "الإشراف"
@@ -4488,7 +4488,7 @@ ar:
       hot:
         title: "ساخن"
         lower_title: "ساخن"
-        help: "أهم المواضيع الأخيرة"
+        help: "أهم الموضوعات الحديثة"
       new:
         lower_title_with_count:
           zero: "%{count} جديد"
@@ -5047,13 +5047,13 @@ ar:
           click_to_get_started: "انقر هنا للبدء."
           header_link_text: "الوسوم"
           header_action_title: "تعديل وسوم الشريط الجانبي"
-          configure_defaults: "تكوين الإعدادات الافتراضية"
+          configure_defaults: "إعداد الإعدادات الافتراضية"
         categories:
           none: "لم تضف أي فئات."
           click_to_get_started: "انقر هنا للبدء."
           header_link_text: "الفئات"
           header_action_title: "تعديل فئات الشريط الجانبي"
-          configure_defaults: "تكوين الإعدادات الافتراضية"
+          configure_defaults: "إعداد الإعدادات الافتراضية"
         community:
           edit_section:
             sidebar: "تخصيص هذا القسم"
@@ -5468,7 +5468,7 @@ ar:
             topics:
               read: قراءة موضوع أو منشور محدَّد فيه. يتم دعم RSS أيضًا.
               write: إنشاء موضوع جديد أو النشر في موضوع موجود
-              update: تحديث موضوع. يمكنك تغيير العنوان، والفئة، والوسوم، والحالة، والنموذج الأولي، والرابط المميز، وما إلى ذلك.
+              update: تحديث موضوع. يمكنك تغيير العنوان، والفئة، والوسوم، والحالة، والنموذج الأولي، والرابط المميَّز، وما إلى ذلك.
               delete: حذف موضوع.
               read_lists: قراءة قوائم الموضوعات مثل الأكثر نشاطًا، والجديدة، والحديثة، وما إلى ذلك. يتم دعم RSS أيضًا.
               status: "تحديث حالة موضوع. الحالة: مغلق، مؤرشف، مرئي، مثبَّت. مفعَّل: true, false. حدِّد category_id هنا وفي حمولة الطلب للسماح بتغييرات الحالة في الموضوعات في تلك الفئة فقط."
@@ -5906,8 +5906,8 @@ ar:
           disabled_by: "لقد تم إيقاف هذا المكوِّن بواسطة"
           required_version:
             error: "تم إيقاف هذه السمة تلقائيًا لأنها غير متوافقة مع هذا الإصدار من Discourse."
-            minimum: "تتطلب الإصدار %{version} من Discourse أو أحدث."
-            maximum: "تتطلب الإصدار %{version} من Discourse أو أقدم."
+            minimum: "تتطلَّب الإصدار %{version} من Discourse أو أحدث."
+            maximum: "تتطلَّب الإصدار %{version} من Discourse أو أقدم."
           update_to_latest: "تحديث إلى الإصدار الأخير"
           check_for_updates: "التحقُّق من وجود تحديثات"
           updating: "جارٍ التحديث…"
@@ -5915,7 +5915,7 @@ ar:
           has_overwritten_history: "لم يعُد إصدار السمة الحالي موجودًا لأن سجل Git قد تم استبداله إجباريًا."
           add: "إضافة"
           theme_settings: "إعدادات السمة"
-          overriden_settings_explanation: "يتم تمييز الإعدادات المُستبدَلة بنقطة ولون مميز. لإعادة تعيين تلك الإعدادات إلى القيمة الافتراضية، اضغط على زر إعادة التعيين بجوارها."
+          overriden_settings_explanation: "يتم تمييز الإعدادات المُستبدَلة بنقطة ولون مميَّز. لإعادة تعيين تلك الإعدادات إلى القيمة الافتراضية، اضغط على زر إعادة التعيين بجوارها."
           no_settings: "لا توجد إعدادات لهذه السمة."
           theme_translations: "ترجمات السمة"
           empty: "لا توجد عناصر"
@@ -6014,7 +6014,7 @@ ar:
             description: "النصوص والأيقونات في رأس الموقع."
           highlight:
             name: "التمييز"
-            description: "لون خلفية العناصر المميزة في الصفحة، كالمنشورات والموضوعات."
+            description: "لون خلفية العناصر المميَّزة في الصفحة، كالمنشورات والموضوعات."
           highlight-high:
             name: "تمييز قوي"
           highlight-medium:
@@ -6413,7 +6413,7 @@ ar:
             required:
               key: "مطلوب"
               type: "قيمة منطقية"
-              description: "يتطلب إكمال الحقل لإرسال النموذج."
+              description: "يتطلَّب إكمال الحقل لإرسال النموذج."
             minimum:
               key: "الحد الأدنى"
               type: "عدد صحيح"
@@ -6733,8 +6733,8 @@ ar:
           flagged_by_users: "المستخدمون المُبلِغون"
           likes_given: "تسجيلات الإعجاب الممنوحة"
           likes_received: "تسجيلات الإعجاب المتلقاة"
-          likes_received_days: "تسجيلات الإعجاب المتلقاة: الأيام المميزة"
-          likes_received_users: "تسجيلات الإعجاب المتلقاة: الأعضاء المميزون"
+          likes_received_days: "تسجيلات الإعجاب المتلقاة: الأيام المميَّزة"
+          likes_received_users: "تسجيلات الإعجاب المتلقاة: الأعضاء المميَّزون"
           suspended: "معلَّق (آخر 6 أشهر)"
           silenced: "مكتوم (آخر 6 أشهر)"
           qualifies: "مؤهل لمستوى الثقة 3."
@@ -7060,7 +7060,7 @@ ar:
       finish: "الخروج من الإعداد"
       back: "الرجوع"
       next: "التالي"
-      configure_more: "تكوين المزيد…"
+      configure_more: "إعداد المزيد…"
       step-text: "الخطوة"
       step: "%{current} من %{total}"
       upload: "تحميل ملف"

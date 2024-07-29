@@ -117,6 +117,7 @@ fr:
         direct_message_cta: "Commencer une discussion privée"
         direct_message: "Vous pouvez également démarrer une discussion privée avec un ou plusieurs utilisateurs."
         title: "Aucun canal trouvé"
+        my_threads: "Vous n'avez pas encore de fils de discussion. Les sujets auxquels vous participez seront affichés ici."
       email_frequency:
         description: "Nous ne vous enverrons un e-mail que si nous ne vous avons pas vu au cours des 15 dernières minutes."
         never: "Jamais"
@@ -226,6 +227,7 @@ fr:
         header: "En-tête de discussion"
         composer: "Compositeur de discussion"
         channels_list: "Liste des canaux de discussion"
+      no_direct_message_channels: "Vous n'avez rejoint aucun canal de messagerie directe."
       no_public_channels: "Vous n'avez rejoint aucun canal."
       kicked_from_channel: "Vous ne pouvez plus accéder à ce canal."
       only_chat_push_notifications:
@@ -343,6 +345,7 @@ fr:
         filter: "Filtrer"
         cant_add_more_members: "Nombre maximal de membres atteint"
         create_new_group_chat: "Créer une discussion de groupe"
+        group_with_too_many_members: "a trop de membres (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Modifier le canal
         input_placeholder: Ajouter un nom
@@ -477,7 +480,12 @@ fr:
           description: "Cela permet d'exporter tous les messages de tous les canaux."
           create_export: "Créer une exportation"
           export_has_started: "L'exportation a commencé. Vous recevrez un MP quand elle sera prête."
+      my_threads:
+        title: Mes fils de discussion
+        aria_label: "Passer à ma liste de fils de discussion"
       direct_messages:
+        title: "DM"
+        aria_label: "Passer aux messages directs"
         new: "Créer une conversation personnelle"
         create: "Valider"
         leave: "Quitter cette discussion privée"
@@ -485,6 +493,7 @@ fr:
         cannot_create: "Nous sommes désolés, vous ne pouvez pas envoyer de messages privés."
       channel_list:
         title: "Canaux"
+        aria_label: "Passer à la liste des chaînes"
       incoming_webhooks:
         back: "Retour"
         channel_placeholder: "Sélectionnez un canal"

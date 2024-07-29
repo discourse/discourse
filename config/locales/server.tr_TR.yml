@@ -373,7 +373,7 @@ tr_TR:
   too_many_mentions_newuser:
     one: "Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler."
     other: "Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler."
-  no_embedded_media_allowed_group: "Maalesef bir gönderiye medya ögeleri ekleyemezsiniz."
+  no_embedded_media_allowed_group: "Maalesef bir gönderiye medya ögesi ekleyemezsiniz."
   no_embedded_media_allowed: "Üzgünüz, yeni kullanıcılar medya ögelerini gönderilere gömemez."
   too_many_embedded_media:
     one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece 1 görüntü gömebilirler."
@@ -2095,9 +2095,9 @@ tr_TR:
     enable_inline_emoji_translation: "Satır içi emoji'ler (öncesinde boşluk veya noktalama işareti olmayan) için çeviriyi etkinleştirir"
     emoji_deny_list: "Bu emoji'ler menülerde veya kısa kodlarda kullanılamaz."
     approve_post_count: "Yeni veya temel bir kullanıcının onaylanması gereken gönderi miktarı"
-    approve_unless_trust_level: "Bu güven seviyesinin altındaki kullanıcıların gönderileri onaylanmalıdır"
+    approve_unless_trust_level: "Bu güven seviyesinin altındaki kullanıcıların oluşturduğu gönderiler onaylanmalıdır"
     approve_unless_allowed_groups: "Bu gruplarda yer almayan kullanıcıların gönderileri onaylanmalıdır"
-    approve_new_topics_unless_trust_level: "Bu güven seviyesinin altındaki kullanıcıların gönderileri onaylanmalıdır"
+    approve_new_topics_unless_trust_level: "Bu güven seviyesinin altındaki kullanıcıların oluşturduğu yeni konular onaylanmalıdır"
     approve_new_topics_unless_allowed_groups: "Bu gruplarda yer almayan kullanıcıların gönderileri onaylanmalıdır"
     approve_unless_staged: "Aşamalı kullanıcılar için yeni konular ve gönderiler onaylanmalıdır"
     notify_about_queued_posts_after: "Şu kadar saatten uzun süredir incelenmeyi bekleyen gönderiler varsa tüm moderatörlere bir bildirim gönderin. Bu bildirimleri devre dışı bırakmak için 0 olarak ayarlayın."
@@ -2234,7 +2234,7 @@ tr_TR:
     enable_experimental_lightbox: "DENEYSEL: Varsayılan görüntü lightbox'ını yenilenen tasarımla değiştirin."
     experimental_form_templates: "DENEYSEL: Form şablonları özelliğini etkinleştirin. <b>Etkinleştirildikten sonra,</b> bu şablonları <a href='%{base_path}/admin/customize/form-templates'>Özelleştir / Şablonlar</a> altında yönetin."
     admin_sidebar_enabled_groups: "DENEYSEL: Belirtilen gruplar için yönetici kullanıcı arayüzünde üst düzey yönetici gezinme düğmelerinin yerini alan kenar çubuğu gezinmesini etkinleştirin."
-    lazy_load_categories_groups: "DENEYSEL: Kategori bilgilerini yalnızca bu gruplardaki kullanıcılar için tembel olarak yükleyin. Bu, çok sayıda kategoriye sahip sitelerde performansı artırır."
+    lazy_load_categories_groups: "DENEYSEL: Tembel yükleme kategori bilgilerini yalnızca bu grupların kullanıcıları içindir. Bu, birçok kategoriye sahip sitelerde performansı artırır."
     page_loading_indicator: "Discourse içinde sayfa geçişleri sırasında görünen yükleme göstergesini yapılandırın. \"Spinner\" bir tam sayfa göstergesidir. \"Slider\" ekranın üst kısmındaki dar bir çubuğu gösterir."
     show_user_menu_avatars: "Kullanıcı menüsünde kullanıcı avatarlarını göster"
     errors:
@@ -4618,21 +4618,21 @@ tr_TR:
     discourse:
       user_joined_community: "%{date} tarihinde katıldı"
     gitlab:
-      truncated_file: "Bu dosya parçalara ayrıldı."
-      show_original: "Aslını göster"
+      truncated_file: "Bu dosya kesildi."
+      show_original: "orjinali göster"
     github:
-      binary_file: "Bu dosya ikiliktir."
-      truncated_file: "Bu dosya parçalara ayrıldı."
-      show_original: "aslını göster"
+      binary_file: "Bu dosya ikilidir."
+      truncated_file: "Bu dosya kesildi."
+      show_original: "orjinali göster"
       requires_iframe: "Görüntüleyici iframe gerektirir."
-      committed: "Teslim edildi"
+      committed: "işlendi"
       more_than_three_files: "Üçten fazla dosya var."
       opened: "açıldı"
       closed: "kapatıldı"
-      commit_by: "ile teslim et"
-      comment_by: "Yorum yapan"
-      review_by: "İnceleyen"
-      pr_summary: "%{commits} teslimi %{changed_files} dosyalarını %{additions} eklemeler ve %{deletions} silmelerle değiştirdi"
+      commit_by: "Şununla işle:"
+      comment_by: "Yorum sahibi:"
+      review_by: "İnceleyen:"
+      pr_summary: "%{commits} işlem %{changed_files} dosyalarını %{additions} eklemeler ve %{deletions} silmelerle değiştirdi"
   discourse_push_notifications:
     popup:
       mentioned: '%{username}, "%{topic}" konusunda sizden bahsetti - %{site_title}'
@@ -4795,7 +4795,7 @@ tr_TR:
   old_keys_reminder:
     title: "Eski giriş bilgileri hakkında hatırlatma"
     body: |
-      Merhaba! Bu, Discourse örneğinizden rutin bir yıllık güvenlik hatırlatmasıdır.
+      Merhaba! Bu, Discourse örneğinizden rutin bir yıllık güvenlik anımsatıcısıdır.
 
       Nezaketen, Discourse örneğinizde kullanılan aşağıdaki giriş bilgilerinin iki yıldan uzun süredir güncellenmediğini size bildirmek istedik:
 

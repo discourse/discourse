@@ -1385,7 +1385,7 @@ ja:
         confirm_success: "メールアドレスが更新されました。"
         confirm: "確認"
         authorizing_new:
-          description: "メールアドレスを次のように変更することを確認してください:"
+          description: "次のメールアドレスに変更することを確認してください:"
           description_add: "代替メールアドレスを追加することを確認してください:"
         authorizing_old:
           title: "古いメールアドレスの確認"
@@ -2590,6 +2590,7 @@ ja:
           other: "<b>%{count}</b> 件のトピックからすべてのタグが削除されます。よろしいですか？"
         progress:
           other: "進捗状況: <strong>%{count}</strong> 件のトピック"
+        silent: "この操作をサイレントで実行します。"
       none:
         unread: "未読のトピックはありません。"
         unseen: "未読のトピックはありません。"
@@ -2600,6 +2601,7 @@ ja:
         bookmarks: "ブックマークしたトピックはありません。"
         category: "%{category} のトピックはありません。"
         top: "人気のトピックはありません。"
+        hot: "ホットなトピックはありません。"
         filter: "トピックはありません。"
         educate:
           new: '<p>新しいトピックがここに表示されます。デフォルトでは、2 日以内に作成されたトピックは新しいトピックとみなされ、<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> が表示されます。</p><p>この設定はユーザー<a href="%{userPrefsUrl}">設定</a>で変更できます。</p>'
@@ -2615,11 +2617,15 @@ ja:
         category: "%{category} のトピックは以上です。"
         tag: "%{tag} のトピックは以上です。"
         top: "人気のトピックは以上です。"
+        hot: "ホットなトピックは以上です。"
         bookmarks: "ブックマーク済みのトピックは以上です。"
         filter: "トピックは以上です。"
     topic_bulk_actions:
       close_topics:
         name: "トピックをクローズ"
+      update_category:
+        name: "カテゴリを更新"
+        description: "選択したトピックの新しいカテゴリを選択します"
     topic:
       filter_to:
         other: "トピックの %{count} 件の投稿"
@@ -3569,6 +3575,7 @@ ja:
       hot:
         title: "ホット"
         lower_title: "ホット"
+        help: "最近の人気トピック"
       new:
         lower_title_with_count:
           other: "新規 %{count}"
@@ -5573,7 +5580,7 @@ ja:
         activate: "アカウントを有効化"
         activate_failed: "ユーザーのアクティベーションに問題が発生しました。"
         deactivate_account: "アカウントを無効化"
-        deactivate_failed: "ユーザーのアクティベーション解除に問題が発生しました。"
+        deactivate_failed: "ユーザーを無効化中に問題が発生しました。"
         unsilence_failed: "ユーザーの投稿禁止を解除中に問題が発生しました。"
         silence_failed: "ユーザーを投稿禁止中に問題が発生しました。"
         silence_confirm: "このユーザーを投稿禁止にしてもよろしいですか？このユーザーは新しいトピックや投稿を作成できなくなります。"

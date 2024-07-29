@@ -1460,7 +1460,7 @@ fi:
         confirm_success: "Sähköpostiosoite päivitetty."
         confirm: "Vahvista"
         authorizing_new:
-          description: "Vahvista, että haluat sähköpostiosoitteesi muutettavan seuraavasti:"
+          description: "Vahvista, että haluat vaihtaa sähköpostiosoitteeksesi:"
           description_add: "Vahvista, että haluat lisätä vaihtoehtoisen sähköpostiosoitteen:"
         authorizing_old:
           title: "Vahvista vanha sähköpostiosoite"
@@ -4325,7 +4325,7 @@ fi:
           one: "Syötteen täytyy olla ainakin %{count} merkki."
           other: "Syötteen täytyy olla ainakin %{count} merkkiä."
         tooLong:
-          one: "Syötteen täytyy olla alle %{count} merkkiä."
+          one: "Syötteen täytyy olla alle %{count} merkki."
           other: "Syötteen täytyy olla alle %{count} merkkiä."
         rangeOverflow:
           one: "Syötteen täytyy olla vähemmän kuin %{count}."

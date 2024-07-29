@@ -285,6 +285,7 @@ nl:
     requires_groups: "Uitnodiging is niet opgeslagen omdat het opgegeven topic niet toegankelijk is. Voeg een van de volgende groepen toe: %{groups}."
     max_invite_emails_limit_exceeded: "Verzoek mislukt omdat het aantal e-mails het maximum overschreed (%{max})."
     domain_not_allowed: "Je e-mailadres kan niet worden gebruikt om deze uitnodiging te verzilveren."
+    domain_not_allowed_admin: "Dit domein kan niet worden gebruikt voor uitnodigingen."
     max_redemptions_allowed_one: "voor e-mailuitnodigingen moet 1 zijn."
     redemption_count_less_than_max: "moet minder dan %{max_redemptions_allowed} zijn."
     email_xor_domain: "De velden E-mailadres en Domein mogen niet tegelijk voorkomen"
@@ -2060,6 +2061,7 @@ nl:
     share_anonymized_statistics: "Geanonimiseerde gebruiksstatistieken delen."
     auto_handle_queued_age: "Records die dit aantal dagen op beoordeling wachten automatisch verwijderen. Markeringen worden genegeerd. Berichten en gebruikers in de wachtrij worden geweigerd. Stel dit in op 0 om deze functie uit te schakelen."
     penalty_step_hours: "Standaardstraffen bij demping of schorsing van gebruikers in uren. Bij de eerste overtreding wordt standaard de eerste waarde gebruikt, bij de tweede overtreding de tweede waarde, enz."
+    penalty_include_post_message: "Beledigend bericht automatisch opnemen in e-mailberichtsjabloon bij dempen of schorsen van een gebruiker"
     svg_icon_subset: "Extra FontAwesome 5-pictogrammen toevoegen die je in je assets wilt opnemen. Gebruik het voorvoegsel 'fa-' voor effen pictogrammen, 'far-' voor normale pictogrammen en 'fab-' voor merkpictogrammen."
     max_prints_per_hour_per_user: "Maximale aantal /print-pagina-impressies (stel dit in op 0 om afdrukken uit te schakelen)"
     full_name_required: "Volledige naam is een verplicht veld van een gebruikersprofiel."
@@ -2100,6 +2102,8 @@ nl:
     approve_post_count: "Het aantal berichten van een nieuwe of basisgebruiker dat moet worden goedgekeurd"
     approve_unless_trust_level: "Berichten gemaakt door gebruikers onder dit vertrouwensniveau moeten worden goedgekeurd"
     approve_unless_allowed_groups: "Berichten gemaakt door gebruikers niet in deze groepen moeten worden goedgekeurd"
+    approve_new_topics_unless_trust_level: "Nieuwe topics gemaakt door gebruikers onder dit vertrouwensniveau moeten worden goedgekeurd"
+    approve_unless_staged: "Nieuwe topics en berichten gemaakt door gefaseerde gebruikers moeten worden goedgekeurd"
     notify_about_queued_posts_after: "Als er berichten zijn die meer dan dit aantal uren op beoordeling wachten, een melding naar alle moderators sturen. Stel dit in op 0 om deze meldingen uit te schakelen."
     reviewable_revision_reasons: "Lijst van redenen die kunnen worden geselecteerd bij het afwijzen van een te beoordelen bericht in de wachtrij met een revisie. 'Anders' is ook altijd beschikbaar, waarmee een aangepaste reden kan worden ingevoerd."
     auto_close_messages_post_count: "Maximale aantal toegestane berichten in een bericht voordat het automatisch wordt gesloten (0 voor uitschakelen)"
@@ -2107,6 +2111,7 @@ nl:
     auto_close_topics_create_linked_topic: "Een nieuw gekoppeld topic maken wanneer een topic automatisch wordt gesloten op basis van de instelling 'auto close topics post count'"
     code_formatting_style: "Codeknop in editor gebruikt standaard deze stijl voor codeopmaak"
     max_allowed_message_recipients: "Maximale aantal ontvangers in een bericht."
+    disable_watched_word_checking_in_user_fields: "Schakel de controle van geobserveerde woorden uit in gebruikersvelden"
     watched_words_regular_expressions: "Geobserveerde woorden zijn reguliere expressies."
     enable_diffhtml_preview: "Experimentele functie die diffHTML gebruikt om het voorbeeld te synchroniseren in plaats van volledig opnieuw te renderen"
     enable_fast_edit: "Voegt een knop toe aan het berichtselectiemenu om een kleine selectie inline te bewerken."
@@ -2229,6 +2234,7 @@ nl:
     enable_experimental_lightbox: "EXPERIMENTEEL: vervangt de standaard afbeeldingslightbox door het vernieuwde ontwerp."
     experimental_form_templates: "EXPERIMENTEEL: schakel de functie Formuliersjablonen in. <b>Nadat je deze functie hebt ingeschakeld,</b> kun je de sjablonen beheren via <a href='%{base_path}/admin/customize/form-templates'>Aanpassen / Sjablonen</a>."
     admin_sidebar_enabled_groups: "EXPERIMENTEEL: schakel zijbalknavigatie in voor de beheerinterface voor de opgegeven groepen, die de beheernavigatieknoppen op het hoogste niveau vervangt."
+    lazy_load_categories_groups: "EXPERIMENTEEL: categorie-informatie voor lui laden, alleen voor gebruikers van deze groepen. Dit verbetert de prestaties op sites met veel categorieën."
     page_loading_indicator: "Configureer de laadindicator die wordt weergegeven tijdens paginanavigatie binnen Discourse. 'Spinner' is een indicator voor een volledige pagina. 'Slider' geeft een smalle balk weer bovenaan het scherm."
     show_user_menu_avatars: "Gebruikersavatars weergeven in het gebruikersmenu"
     errors:
@@ -2693,7 +2699,7 @@ nl:
 
       - Upgrade via onze eenvoudige **[browserupgrade in één klik](%{base_url}/admin/upgrade)**
 
-      - Lees wat er nieuw is in de [release-opmerkingen](https://meta.discourse.org/tag/release-notes), of bekijk de [ruwe GitHub-veranderingslog](https://github.com/discourse/discourse/commits/master)
+      - Lees wat er nieuw is in de [release-opmerkingen](https://meta.discourse.org/tag/release-notes), of bekijk de [ruwe GitHub-veranderingslog](https://github.com/discourse/discourse/commits/main)
 
       - Bezoek [meta.discourse.org](https://meta.discourse.org) voor nieuws, discussie en ondersteuning voor Discourse
 
@@ -4656,15 +4662,20 @@ nl:
       user_joined_community: "Lid sinds %{date}"
     gitlab:
       truncated_file: "Dit bestand is afgekapt."
-      show_original: "toon origineel"
+      show_original: "origineel weergeven"
     github:
       binary_file: "Dit bestand is binair."
       truncated_file: "Dit bestand is afgekapt."
-      show_original: "toon origineel"
+      show_original: "origineel weergeven"
+      requires_iframe: "Viewer vereist iframe."
+      committed: "gecommit"
       more_than_three_files: "Er zijn meer dan drie bestanden."
       opened: "geopend"
       closed: "gesloten"
+      commit_by: "Commit van"
+      comment_by: "Reactie van"
       review_by: "Review door"
+      pr_summary: "%{commits} commits hebben %{changed_files} bestanden gewijzigd met %{additions} toevoegingen en %{deletions} verwijderingen"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} heeft je genoemd in ''%{topic}'' - %{site_title}'
@@ -4679,6 +4690,7 @@ nl:
       confirm_body: "Gelukt! Meldingen zijn ingeschakeld."
       custom: "Melding van %{username} op %{site_title}"
   staff_action_logs:
+    json_too_long: "Waarden zijn niet gelogd, omdat ze de limiet voor de kolomlengte overschrijden"
     not_found: "niet gevonden"
     unknown: "onbekend"
     user_merged: "%{username} is met deze account samengevoegd"

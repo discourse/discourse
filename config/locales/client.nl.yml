@@ -1021,7 +1021,7 @@ nl:
       said: "%{username}:"
       profile: "Profiel"
       profile_possessive: "Profiel van %{username}"
-      account_possessive: "%{name}'s account"
+      account_possessive: "Account van %{name}"
       mute: "Dempen"
       edit: "Voorkeuren bewerken"
       download_archive:
@@ -1463,9 +1463,9 @@ nl:
           description: "Bevestig dat je je e-mailadres wilt wijzigen naar:"
           description_add: "Bevestig dat je een alternatief e-mailadres wilt toevoegen:"
         authorizing_old:
-          title: "Verifieer oud e-mailadres"
-          description: "Controleer je oude e-mailadres om door te gaan met het wijzigen van je e-mailadres:"
-          description_add: "Controleer je bestaande e-mailadres om door te gaan met het toevoegen van een alternatief adres:"
+          title: "Oud e-mailadres verifiëren"
+          description: "Verifieer je oude e-mailadres om door te gaan met het wijzigen van je e-mailadres:"
+          description_add: "Verifieer je bestaande e-mailadres om door te gaan met het toevoegen van een alternatief adres:"
           old_email: "Oud e-mailadres: %{email}"
           new_email: "Nieuw e-mailadres: %{email}"
           confirm_success: "Er is een e-mail naar je nieuwe e-mailadres gestuurd om de wijziging te bevestigen!"
@@ -2755,7 +2755,7 @@ nl:
         name: "Topics sluiten"
       update_category:
         name: "Categorie bijwerken"
-        description: "Kies de nieuwe categorie voor de geselecteerde onderwerpen"
+        description: "Kies de nieuwe categorie voor de geselecteerde topics"
     topic:
       filter_to:
         one: "%{count} bericht in topic"

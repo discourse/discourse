@@ -1464,8 +1464,8 @@ pt_BR:
           description_add: "Confirme que você gostaria de adicionar um endereço de e-mail alternativo:"
         authorizing_old:
           title: "Verifique o endereço de e-mail antigo"
-          description: "Por favor, verifique o seu endereço de e-mail antigo para continuar a mudar o seu e-mail:"
-          description_add: "Por favor, verifique o seu endereço de e-mail existente para continuar adicionando um endereço alternativo:"
+          description: "Verifique o seu endereço de e-mail antigo para continuar mudando seu e-mail:"
+          description_add: "Verifique o seu endereço de e-mail existente para continuar adicionando um endereço alternativo:"
           old_email: "E-mail antigo: %{email}"
           new_email: "Novo e-mail: %{email}"
           confirm_success: "Enviamos um e-mail para o seu novo endereço de e-mail para confirmar a alteração!"
@@ -2720,7 +2720,7 @@ pt_BR:
         progress:
           one: "Progresso: <strong>%{count}</strong> tópico"
           other: "Progresso: <strong>%{count}</strong> tópicos"
-        silent: "Realizar esta ação silenciosamente."
+        silent: "Realize esta ação silenciosamente."
       none:
         unread: "Você não tem tópicos não lidos."
         unseen: "Você não tem tópicos não vistos."
@@ -3758,8 +3758,8 @@ pt_BR:
         lower_title: "não vistos"
         help: "novos tópicos e tópicos que você está acompanhando ou monitorando com postagens não lidas"
       hot:
-        title: "Quente"
-        lower_title: "quente"
+        title: "Em alta"
+        lower_title: "em alta"
         help: "Principais tópicos recentes"
       new:
         lower_title_with_count:
@@ -5202,7 +5202,7 @@ pt_BR:
         settings: "Configurações"
         templates: "Modelos"
         templates_title: "Modelos de e-mail"
-        preview_digest: "Visualizar resumo"
+        preview_digest: "Pré-visualizar resumo"
         advanced_test:
           title: "Teste avançado"
           desc: "Veja como o Discourse processa os e-mails recebidos. Para conseguir processar o e-mail corretamente, cole abaixo a mensagem original inteira do e-mail."

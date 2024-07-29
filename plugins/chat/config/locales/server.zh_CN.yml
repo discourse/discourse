@@ -34,7 +34,7 @@ zh_CN:
     errors:
       chat_default_channel: "默认聊天频道必须是公共频道。"
       direct_message_enabled_groups_invalid: "您必须为此设置至少指定一个群组。如果您不希望管理人员以外的任何人发送直接消息，请选择管理人员群组。"
-      chat_upload_not_allowed_secure_uploads: "当启用安全上传站点设置时，不允许在聊天中上传文件。"
+      chat_upload_not_allowed_secure_uploads: "当启用安全上传网站设置时，不允许在聊天中上传文件。"
   system_messages:
     private_channel_title: "频道 %{id}"
     chat_channel_archive_complete:
@@ -94,8 +94,8 @@ zh_CN:
       over_chat_max_direct_message_users:
         other: "您无法创建与超过 %{count} 个其他用户的直接消息。"
       original_message_not_found: "找不到您要回复信息的上级内容，或相关内容已被删除。"
-      thread_invalid_for_channel: "该对话不是所提供频道的一部分。"
-      thread_does_not_match_parent: "对话与父消息不匹配。"
+      thread_invalid_for_channel: "该消息串不是所提供频道的一部分。"
+      thread_does_not_match_parent: "消息串与父消息不匹配。"
     reviewables:
       message_already_handled: "谢谢，但我们已经审核此消息，并确定它不需要被再次举报。"
       actions:
@@ -182,7 +182,7 @@ zh_CN:
     summaries:
       no_targets: "在所选时间段内没有消息。"
     transcript:
-      default_thread_title: "对话"
+      default_thread_title: "消息串"
       split_thread_range: "%{start} 到 %{end} 的消息（共 %{total} 条）"
   discourse_push_notifications:
     popup:
