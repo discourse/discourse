@@ -18,9 +18,7 @@ export default class DashboardNewFeatures extends Component {
     ajax("/admin/dashboard/whats-new.json")
       .then((json) => {
         const items = json.new_features.reduce((acc, feature) => {
-          const key = feature.released_at
-            ? moment(feature.released_at).format("YYYY-MM")
-            : moment(feature.created_at).format("YYYY-MM");
+          const key = moment(feature.released_at || feature.created_at).format("YYYY-MM");
           acc[key] = acc[key] || [];
           acc[key].push(feature);
           return acc;
