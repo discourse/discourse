@@ -1976,8 +1976,8 @@ hu:
         other: "<b>%{count}</b> válasz van."
       buttons:
         hide: "Összegzés elrejtése"
-        generate: "Összefoglal M.I.-val"
-        regenerate: "Összegzés újragenerálása"
+        generate: "Összefoglalás"
+        regenerate: "Újragenerálás"
       description_time_MF: |
         {replyCount, plural, one {<b>#</b> válasz} other {<b>#</b> válasz}} található, a becsült olvasási idő <b>{readingTime, plural, one {# perc} other {# perc}}</b>.
       enable: "Legnépszerűbb válaszok megjelenítése"
@@ -4976,6 +4976,7 @@ hu:
       config_areas:
         about:
           header: "Az Ön webhelyéről"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(nem kötelező)"
           update: "Frissítés"
           saved: "mentve!"

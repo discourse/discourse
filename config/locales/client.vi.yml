@@ -1628,6 +1628,9 @@ vi:
     summary:
       description:
         other: "Có <b>%{count}</b> trả lời."
+      buttons:
+        generate: "Tóm tắt"
+        regenerate: "Khởi tạo lại"
       disable: "HIển thị tất cả các bài viết"
       show_all_label: "Hiển thị tất cả"
     deleted_filter:
@@ -4035,6 +4038,7 @@ vi:
           spam: "Rác"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(tùy chọn)"
           update: "Cập nhật"
           saved: "đã lưu"

@@ -21,7 +21,7 @@ fr:
             kb: Ko
             mb: Mo
             tb: To
-      percent: "%{count}%"
+      percent: "%{count} %"
       short:
         thousands: "%{number} k"
         millions: "%{number} M"
@@ -36,11 +36,11 @@ fr:
       long_with_year: "DD MMM YYYY HH:mm"
       long_with_year_no_time: "DD MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM YYYY, HH:mm"
+      long_date_with_year: "DD MMM YYYY, HH:mm"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "DD MMM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM YYYY <br/>HH:mm"
+      long_date_with_year_with_linebreak: "DD MMM YYYY <br/>HH:mm"
       wrap_ago: "il y a %{date}"
       wrap_on: "le %{date}"
       tiny:
@@ -189,10 +189,10 @@ fr:
     emails_are_disabled: "L'e-mail sortant a été désactivé par un administrateur. Aucune notification par e-mail ne sera envoyée."
     emails_are_disabled_non_staff: "L'envoi d'e-mail est désactivé pour les utilisateurs ne faisant pas partie des responsables."
     software_update_prompt:
-      message: "Nous avons mis à jour ce site, <span>veuillez actualiser</span> pour que tout fonctionne correctement."
+      message: "Nous avons mis à jour ce site, <span>veuillez l'actualiser</span> pour que tout fonctionne correctement."
       dismiss: "Rejeter"
     bootstrap_mode: "Pour commencer"
-    back_button: "Revenir en arrière"
+    back_button: "Retour"
     themes:
       default_description: "Par défaut"
       broken_theme_alert: "Votre site risque de ne pas fonctionner, car un thème ou un composant comprend des erreurs."
@@ -202,9 +202,9 @@ fr:
     broken_page_change_alert: "Un gestionnaire onPageChange a généré une erreur. Consultez les outils de développement du navigateur pour obtenir plus d'informations."
     broken_plugin_alert: "Causé par l'extension « %{name}»"
     critical_deprecation:
-      notice: "<b>[Avis d'administration]</b> L'un de vos thèmes ou extensions doit être mis à jour pour être compatible avec les prochaines modifications principales de Discourse."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
+      notice: "<b>[Avis d'administration]</b> L'un de vos thèmes ou l'une de vos extensions doit être mise à jour pour assurer la compatibilité avec les prochaines modifications principales de Discourse."
+      id: "(id :<em>%{id}</em>)"
+      linked_id: "(id :<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
       theme_source: "Thème identifié : <a target='_blank' href='%{path}'>« %{name} »</a>."
       plugin_source: "Extension identifiée : « %{name} »"
     s3:
@@ -257,7 +257,7 @@ fr:
       one: "lien"
       other: "liens"
     faq: "FAQ"
-    guidelines: "Charte"
+    guidelines: "Lignes directrices"
     privacy_policy: "Politique de confidentialité"
     privacy: "Confidentialité"
     tos: "Conditions générales d'utilisation"
@@ -314,8 +314,8 @@ fr:
       contact: "Nous contacter"
       contact_info: "En cas de problème critique ou de sujet urgent concernant ce site, veuillez nous contacter à : %{contact_info}."
       member_count:
-        one: "%{formatted_number} Membre"
-        other: "%{formatted_number} Membres"
+        one: "%{formatted_number} membre"
+        other: "%{formatted_number} membres"
       admin_count:
         one: "%{formatted_number} administrateur"
         other: "%{formatted_number} administrateurs"
@@ -329,7 +329,7 @@ fr:
       clear_bookmarks: "Retirer les signets"
       help:
         bookmark: "Cliquez pour mettre ce sujet en signet"
-        edit_bookmark: "Clique pour modifier le signet d'un message dans ce sujet."
+        edit_bookmark: "Cliquez pour modifier le signet d'une publication dans ce sujet."
         edit_bookmark_for_topic: "Cliquez pour modifier le signet associé à ce sujet"
         unbookmark: "Cliquez pour retirer tous les signets de ce sujet"
         unbookmark_with_reminder: "Cliquez pour retirer tous les signets et rappels de ce sujet"
@@ -360,8 +360,8 @@ fr:
         when_reminder_sent: "Supprimer le signet"
         on_owner_reply: "Supprimer le signet quand j'aurai répondu"
         clear_reminder: "Conserver le signet et supprimer le rappel"
-        after_reminder_label: "Après le rappel nous devrions..."
-        after_reminder_checkbox: "Définir cette option par défaut pour tous les futurs rappels de signets."
+        after_reminder_label: "Après le rappel, nous devrions..."
+        after_reminder_checkbox: "Définir cette option par défaut pour tous les futurs rappels de signets"
       search_placeholder: "Rechercher des signets par nom, titre de sujet ou contenu de message"
       search: "Recherche"
       bookmark: "Signet"
@@ -370,10 +370,10 @@ fr:
         reminders_cleared: "Les rappels de signets ont été effacés avec succès."
         toggle: "activer/désactiver la sélection multiple des signets"
         select_all: "Tout sélectionner"
-        clear_all: "Tout supprimer"
+        clear_all: "Tout effacer"
         selected_count:
-          one: "%{count} sélectionné"
-          other: "%{count} sélectionné"
+          one: "Sélection : %{count}"
+          other: "Sélection : %{count}"
       reminders:
         today_with_time: "aujourd'hui à %{time}"
         tomorrow_with_time: "demain à %{time}"
@@ -816,7 +816,7 @@ fr:
             outlook: "Outlook.com"
             office365: "Microsoft 365"
           ssl_modes:
-            none: "Jamais"
+            none: "Aucun"
             ssl_tls: "SSL/TLS"
             starttls: "STARTTLS"
           credentials:
@@ -1507,7 +1507,7 @@ fr:
         save: "Enregistrer"
         title: "Clés d'accès"
         short_description: "Les clés d'accès sont des remplacements de mots de passe qui valident votre identité de manière biométrique (par exemple, tactile, faceID) ou via le code PIN/mot de passe de l'appareil."
-        added_date: "Ajout de %{date}"
+        added_date: "Ajouté le %{date}"
         last_used_date: "Dernière utilisation : %{date}"
         never_used: "Jamais utilisée"
         not_allowed_error: "Le processus d'enregistrement de la clé d'accès a expiré, a été annulé ou n'est pas autorisé."
@@ -1975,8 +1975,8 @@ fr:
           one: "Doit contenir un maximum de %{count} caractère"
           other: "Doit contenir un maximum de %{count} caractères"
         too_short:
-          one: "Doit contenir un minimum de %{count} caractère"
-          other: "Doit contenir un minimum de %{count} caractères"
+          one: "Doit contenir au moins %{count} caractère"
+          other: "Doit contenir au moins %{count} caractères"
     close: "Fermer"
     assets_changed_confirm: "Une mise à jour est disponible pour ce site. Souhaitez-vous obtenir la dernière version ?"
     logout: "Vous avez été déconnecté(e)."
@@ -2034,8 +2034,8 @@ fr:
         other: "Il y a <b>%{count}</b> réponses."
       buttons:
         hide: "Masquer le résumé"
-        generate: "Résumer avec l'IA"
-        regenerate: "Générer à nouveau le résumé"
+        generate: "Résumer"
+        regenerate: "Régénérer"
       description_time_MF: |
         Il y a {replyCount, plural, one {<b>#</b> réponse} other {<b>#</b> réponses}} avec un temps de lecture estimé à <b>{readingTime, plural, one {# minute} other {# minutes}}</b>.
       enable: "Afficher les meilleures réponses"
@@ -2463,7 +2463,7 @@ fr:
       image_alt_text:
         aria_label: Texte alternatif pour l'image
         title: "Ajouter une description de l'image"
-      image_scale_button: "Mettre l'image à l'échelle de %{percent}%"
+      image_scale_button: "Mettre l'image à l'échelle de %{percent} %"
       delete_image_button: Supprimer l'image
       toggle_image_grid: Activer/désactiver la grille des images
     notifications:
@@ -2835,8 +2835,8 @@ fr:
           one: "Vous avez sélectionné <b>%{count}</b> sujet de la catégorie :"
           other: "Vous avez sélectionné <b>%{count}</b> sujets de la catégorie :"
         selected_count:
-          one: "%{count} sélectionné"
-          other: "%{count} sélectionné"
+          one: "Sélection : %{count}"
+          other: "Sélection : %{count}"
         change_tags: "Remplacer des étiquettes"
         append_tags: "Ajouter des étiquettes"
         choose_new_tags: "Choisissez de nouvelles étiquettes pour ces sujets :"
@@ -2850,8 +2850,8 @@ fr:
           one: "Progression : <strong>%{count}</strong> sujet"
           other: "Progression : <strong>%{count}</strong> sujets"
         silent: "Effectue cette action sans notification."
-        performing: "Effectue des opérations en masse, merci de patienter…"
-        completed: "Les opérations en masse ont été menées à bien !"
+        performing: "Effectue des opérations groupées, merci de patienter…"
+        completed: "Les opérations groupées sont terminées !"
       none:
         unread: "Vous n'avez aucun sujet non lu."
         unseen: "Vous n'avez aucun sujet non lu."
@@ -2862,7 +2862,7 @@ fr:
         bookmarks: "Vous n'avez encore attribué aucun signet."
         category: "Il n'y a pas de sujets dans %{category}."
         top: "Il n'y a pas de meilleurs sujets."
-        hot: "Il n'y a pas de sujets en tendance."
+        hot: "Il n'y a aucun sujet populaire."
         filter: "Il n'y a pas de sujets."
         educate:
           new: '<p>Vos nouveaux sujets vont apparaître ici. Par défaut, les sujets sont considérés comme nouveaux et affichent l''indicateur <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> lorsqu''ils ont été créés depuis moins de 2 jours.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
@@ -2878,7 +2878,7 @@ fr:
         category: "Il n'y a pas d'autres sujets à consulter dans %{category}."
         tag: "Il n'y a pas d'autres sujets à consulter dans %{tag}."
         top: "Il n'y a pas d'autres meilleurs sujets à consulter."
-        hot: "Il n'y a plus de sujets en tendance."
+        hot: "Il n'y a plus de sujets populaires."
         bookmarks: "Il n'y a pas d'autres sujets enregistrés dans les signets."
         filter: "Il n'y a plus de sujets."
     topic_bulk_actions:
@@ -2887,7 +2887,7 @@ fr:
         note: "Note"
         optional: (facultatif)
       archive_topics:
-        name: "Archivés"
+        name: "Archive"
       archive_messages:
         name: "Déplacer vers les archives"
       move_messages_to_inbox:
@@ -2906,10 +2906,10 @@ fr:
         name: "Supprimer"
       update_category:
         name: "Mettre à jour la catégorie"
-        description: "Choisir la nouvelle catégorie pour les sujets sélectionnés"
+        description: "Choisissez la nouvelle catégorie pour les sujets sélectionnés"
       reset_bump_dates:
         name: "Réinitialiser la date d'actualisation"
-        description: "Réinitialise la date de démarrage du sujet à la date du dernier message créé, ce qui affecte l'ordre dans la liste des sujets."
+        description: "Réinitialisez la date d'actualisation du sujet à la date de la dernière publication créée, ce qui affecte l'ordre dans la liste des sujets"
       defer:
         name: "Marquer comme non lu"
         description: "Marquer les sujets comme non lus"
@@ -3596,7 +3596,7 @@ fr:
             name: "Épingler le signet"
             description: "Épingler le signet. Ceci permet de le faire figurer au sommet de votre liste de signets."
           unpin_bookmark:
-            name: "Désépingler le signet"
+            name: "Détacher le signet"
             description: "Désépingler le signet. Il n'apparaîtra plus en haut de votre liste de signets."
       filtered_replies:
         viewing_posts_by: "Affichage de %{post_count} messages par"
@@ -3877,11 +3877,11 @@ fr:
           one {# réponse,}
         other {# réponses,}
       }{ ratio, select,
-          low { avec un taux élevé de « J'aime » par message,}
-          med { avec un taux très élevé de « J'aime » par message,}
-         high { avec un taux extrêmement élevé de « J'aime » par message,}
+          low { avec un taux élevé de « J'aime » par publication,}
+          med { avec un taux très élevé de « J'aime » par publication,}
+         high { avec un taux extrêmement élevé de « J'aime » par publication,}
         other {}
-      } aller au premier ou dernier message...
+      } accéder à la première ou dernière publication...
     posters: "Auteurs"
     latest_poster_link: "Profil de %{username}, dernier auteur"
     original_post: "Message original"
@@ -4068,7 +4068,7 @@ fr:
         filter_sidebar: "%{shortcut} Barre latérale des filtres"
         help: "%{shortcut} Ouvrir l'aide du clavier"
         toggle_bulk_select: "%{shortcut} Activer/désactiver la sélection groupée"
-        dismiss: "%{shortcut} Ignorer les sujets sélectionnés"
+        dismiss: "%{shortcut} Rejeter les sujets sélectionnés"
         x: "%{shortcut} Basculer la sélection (en mode de sélection groupée)"
         log_out: "%{shortcut} Se déconnecter"
       composing:
@@ -4343,8 +4343,8 @@ fr:
     topic_entrance:
       sr_jump_top_button: "Accéder à la première publication - %{date}"
       sr_jump_bottom_button: "Accéder à la dernière publication - %{date}"
-      jump_top_button_title: "Accéder au premier message"
-      jump_bottom_button_title: "Accéder au dernier message"
+      jump_top_button_title: "Accéder à la première publication"
+      jump_bottom_button_title: "Accéder à la dernière publication"
     fullscreen_table:
       expand_btn: "Développer le tableau"
       view_table: "Voir le tableau"
@@ -4475,7 +4475,7 @@ fr:
               content: "FAQ"
               title: "Lignes directrices pour l'utilisation de ce site"
             guidelines:
-              content: "Charte"
+              content: "Lignes directrices"
               title: "Lignes directrices pour l'utilisation de ce site"
             groups:
               content: "Groupes"
@@ -4504,7 +4504,7 @@ fr:
       back_to_forum: "Retour au forum"
       collapse_all_sections: "Réduire toutes les sections"
       expand_all_sections: "Développer toutes les sections"
-      filter: "Filtrer ..."
+      filter: "Filtrer..."
       clear_filter: "Effacer le filtre"
       no_results:
         title: "Aucun résultat"
@@ -4609,7 +4609,7 @@ fr:
           copy: "Copier..."
           paste: "Coller..."
           save: "Enregistrer sous..."
-    powered_by_discourse: "Propulsé par Discourse"
+    powered_by_discourse: "Alimenté par Discourse"
   admin_js:
     type_to_filter: "commencez votre saisie pour filtrer…"
     admin:
@@ -4640,7 +4640,7 @@ fr:
         please_update: "Veuillez mettre à jour !"
         no_check_performed: "Une vérification de mises à jour n'a pas été effectuée. Vérifiez que sidekiq est en cours d'exécution."
         stale_data: "Une vérification de mises à jour n'a pas été effectuée récemment. Vérifiez que sidekiq est en cours d'exécution."
-        version_check_pending: "On dirait que vous avez mis à jour récemment. Fantastique!"
+        version_check_pending: "Il semble que vous avez effectué une mise à jour récemment. Fantastique !"
         installed_version: "Installée"
         latest_version: "Dernière"
         problems_found: "Quelques conseils d'après vos paramètres actuels"
@@ -4728,7 +4728,7 @@ fr:
       flags:
         title: "Signalements de modération"
         description: "Description"
-        enabled: "Activée ?"
+        enabled: "Activé ?"
         more_options:
           title: "Plus d'options"
           move_up: "Déplacer vers le haut"
@@ -4868,7 +4868,7 @@ fr:
             posts:
               edit: Modifiez n'importe quel message ou un message spécifique.
               delete: Supprimez un message.
-              recover: Récupérer un message.
+              recover: Récupérer une publication.
               list: Répertorier les derniers messages et les messages privés. Le RSS est également pris en charge.
             revisions:
               read: "Obtenir la dernière révision ou une révision spécifique."
@@ -5075,7 +5075,7 @@ fr:
           users: "Utilisateurs"
           user_fields: "Champs utilisateurs"
           watched_words: "Mots surveillés"
-          legal: "Légal"
+          legal: "Mentions légales"
           moderation_flags: "Signalements de modération"
       appearance:
         title: "Apparence"
@@ -5094,7 +5094,7 @@ fr:
         title: "Paramètres de messagerie"
         sidebar_link:
           appearance: "Apparence"
-          preview_summary: "Prévisualisation de l'e-mail"
+          preview_summary: "Aperçu du résumé"
           server_setup: "Configuration du serveur"
       email_logs:
         title: "Journaux des e-mails"
@@ -5107,7 +5107,7 @@ fr:
       security:
         title: "Sécurité"
         sidebar_link:
-          error_logs: "Journal d'erreurs"
+          error_logs: "Journaux d'erreurs"
           screened_emails: "E-mails filtrés"
           screened_ips: "IP sous surveillance"
           screened_urls: "URL sous surveillance"
@@ -5133,6 +5133,7 @@ fr:
           contact_email_help: |
             Adresse e-mail de la personne responsable de ce site. Elle est utilisée pour les notifications critiques et également affichée sur la page /about pour les questions urgentes. Visible par les utilisateurs anonymes sur les sites publics.
           contact_url: "URL de contact"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
             Adresse URL de contact pour ce site. Lorsqu'elle est présente, elle remplace l'adresse e-mail du contact sur la page /about et est visible par les utilisateurs anonymes sur les sites publics.
           site_contact_name: "Nom du contact du site"
@@ -5159,12 +5160,12 @@ fr:
             general_settings_saved: "Paramètres généraux enregistrés"
             contact_information_saved: "Informations de contact enregistrées"
             your_organization_saved: "Votre organisation enregistrée"
-          saved: "enregistré avec succès !"
+          saved: "enregistré !"
         flags:
           header: "Signalements de modération"
           subheader: "Le système de signalement de Discourse vous aide, vous et votre équipe de modérateurs, à gérer le contenu et le comportement des utilisateurs, en gardant ainsi votre communauté respectueuse et saine. Les valeurs par défaut conviennent à la plupart des communautés et vous n'avez pas besoin de les modifier. Cependant, si votre site a des exigences particulières, vous pouvez désactiver les indicateurs dont vous n'avez pas besoin et ajouter vos propres indicateurs personnalisés."
           description: "Description"
-          enabled: "Activée ?"
+          enabled: "Activé ?"
           add: "Ajouter un signalement"
           edit: "Modifier"
           back: "Retour aux signalements"
@@ -5178,7 +5179,7 @@ fr:
             description: "Description"
             applies_to: "Afficher ce signalement sur"
             topic: "sujets"
-            post: "messages"
+            post: "publications"
             chat_message: "messages de discussion"
             enabled: "Activer ce signalement personnalisé après l'enregistrement"
             alert: "Une fois qu'un signalement personnalisé a été utilisé, il peut être désactivé, mais pas modifié ni supprimé."
@@ -5216,7 +5217,7 @@ fr:
         sidebar_link:
           api_keys: "Clés d'API"
           developer: "Développeur"
-          embedding: "Intégration externe"
+          embedding: "Intégration"
           rate_limits: "Limites d'utilisation"
           user_api: "API utilisateur"
           web_hooks: "Webhooks"
@@ -5402,8 +5403,8 @@ fr:
           inactive_themes: "Thèmes inactifs :"
           inactive_components: "Composants non utilisés :"
           selected:
-            one: "%{count} sélectionné"
-            other: "%{count} sélectionné"
+            one: "Sélection : %{count}"
+            other: "Sélection : %{count}"
           cancel: "Annuler"
           broken_theme_tooltip: "Ce thème comporte des erreurs de CSS, HTML ou YAML"
           disabled_component_tooltip: "Ce composant a été désactivé"
@@ -5636,7 +5637,7 @@ fr:
         settings: "Paramètres de messagerie"
         templates: "Modèles"
         templates_title: "Modèles d'e-mails"
-        preview_digest: "Prévisualisation de l'e-mail"
+        preview_digest: "Aperçu du résumé"
         advanced_test:
           title: "Test avancé"
           desc: "Vérifiez comment Discourse gère les e-mails reçus. Pour que l'e-mail soit géré correctement, veuillez coller ci-dessous la totalité de l'e-mail original."
@@ -6540,7 +6541,7 @@ fr:
         icon_or_image: Un badge nécessite une icône ou une image
         icon_help: "Saisissez un nom d'icône Font Awesome (utilisez le préfixe « far- » pour les icônes classiques et « fab- » pour les icônes de marques)"
         select_an_icon: "Sélectionner une icône"
-        upload_an_image: "Insérer une image"
+        upload_an_image: "Envoyer une image"
         read_only_setting_help: "Personnaliser le texte"
         query: Requête du badge (SQL)
         target_posts: Requête sur les messages
@@ -6587,9 +6588,6 @@ fr:
             one: "Votre fichier CSV a été envoyé et %{count} utilisateur obtiendra bientôt son badge."
             other: "Votre fichier CSV a été envoyé et %{count} utilisateurs obtiendront bientôt leurs badges."
           csv_has_unmatched_users: "Les entrées suivantes se trouvent dans le fichier CSV, mais elles n'ont pas pu être associées à des utilisateurs existants et ne recevront donc pas le badge :"
-          csv_has_unmatched_users_truncated_list:
-            one: "Il y avait %{count} entrée dans le fichier CSV qui n'a pas pu être associée à des utilisateurs existants et qui ne recevra donc pas le badge. En raison du grand nombre d'entrées sans correspondance, seules les 100 premières sont affichées :"
-            other: "Il y avait %{count} entrées dans le fichier CSV qui n'ont pas pu être associées à des utilisateurs existants et qui ne recevront donc pas le badge. En raison du grand nombre d'entrées sans correspondance, seules les 100 premières sont affichées :"
           replace_owners: Retirer le badge des propriétaires précédents
           grant_existing_holders: Accordez des badges supplémentaires aux détenteurs de badges existants
       emoji:

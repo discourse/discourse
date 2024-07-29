@@ -35,7 +35,7 @@ zh_CN:
           title: "图标"
           full_list: "查看 Font Awesome 图标的完整列表"
         forms:
-          title: "形式"
+          title: "表单"
         buttons:
           title: "按钮"
         dropdowns:
@@ -77,7 +77,7 @@ zh_CN:
         topic_map:
           title: "话题图"
         site_header:
-          title: "站点标头"
+          title: "网站标头"
         suggested_topics:
           title: "建议的话题"
         post_menu:

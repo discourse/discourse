@@ -56,12 +56,17 @@ it:
       cancel_reply: "Annulla risposta"
       chat_channels: "Canali"
       browse_all_channels: "Sfoglia tutti i canali"
+      see_in: "Da' un'occhiata"
       move_to_channel:
         title: "Sposta i messaggi sul canale"
         instructions:
           one: "Stai spostando il messaggio <strong>%{count}</strong> . Seleziona un canale di destinazione. Verrà creato un messaggio segnaposto nel canale <strong>%{channelTitle}</strong> per indicare che questo messaggio è stato spostato. Tieni presente che le catene di risposta non verranno mantenute nel nuovo canale e i messaggi nel vecchio canale non verranno più visualizzati come risposta ai messaggi spostati."
           other: "Stai spostando <strong>%{count}</strong> messaggi. Seleziona un canale di destinazione. Verrà creato un messaggio segnaposto nel canale <strong>%{channelTitle}</strong> per indicare che questi messaggi sono stati spostati. Tieni presente che le catene di risposta non verranno mantenute nel nuovo canale e i messaggi nel vecchio canale non verranno più visualizzati come risposta ai messaggi spostati."
         confirm_move: "Sposta messaggi"
+      delete_messages:
+        confirm:
+          one: "Intendi davvero eliminare questo messaggio?"
+          other: "Intendi davvero eliminare questi %{count} messaggi?"
       channel_settings:
         title: "Impostazioni del canale"
         edit: "Modifica"
@@ -116,6 +121,7 @@ it:
         direct_message_cta: "Avvia una chat personale"
         direct_message: "Puoi anche avviare una chat personale con uno o più utenti."
         title: "Nessun canale trovato"
+        my_threads: "Ancora nessun thread. I thread a cui parteciperai appariranno qui."
       email_frequency:
         description: "Ti invieremo un'e-mail solo se non ti sei fatto vedere negli ultimi 15 minuti."
         never: "Mai"
@@ -218,6 +224,9 @@ it:
         header: "Intestazione della chat"
         composer: "Compositore di chat"
         channels_list: "Elenco dei canali di chat"
+      no_direct_message_channels: "Non hai ancora aderito a nessun messaggio diretto!"
+      no_direct_message_channels_cta: "Iniziare una conversazione"
+      no_public_channels: "Non hai ancora aderito a nessun canale!"
       no_public_channels_cta: "Sfoglia i canali"
       kicked_from_channel: "Non puoi più accedere a questo canale."
       only_chat_push_notifications:
@@ -226,6 +235,9 @@ it:
       ignore_channel_wide_mention:
         title: "Ignora le menzioni a livello di canale"
         description: "Non inviare notifiche per menzioni a livello di canale (@here e @all)"
+      show_thread_title_prompts:
+        title: "Mostra suggerimenti per i titoli di thread"
+        description: "Mostra suggerimenti per scegliere il titolo dei nuovi thread"
       open: "Apri chat"
       open_full_page: "Apri chat a schermo intero"
       close_full_page: "Chiudi la chat a schermo intero"
@@ -336,6 +348,7 @@ it:
         filter: "Filtro"
         cant_add_more_members: "Numero massimo di membri raggiunto"
         create_new_group_chat: "Crea chat di gruppo"
+        group_with_too_many_members: "ha troppi membri (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Modifica canale
         input_placeholder: Aggiungi un nome
@@ -470,7 +483,12 @@ it:
           description: "Questa operazione esporta tutti i messaggi da tutti i canali."
           create_export: "Crea esportazione"
           export_has_started: "L'esportazione è iniziata. Riceverai un messaggio personale quando sarà pronto."
+      my_threads:
+        title: I miei thread
+        aria_label: "Passa all'elenco dei miei thread"
       direct_messages:
+        title: "DM"
+        aria_label: "Passa ai messaggi diretti"
         new: "Crea una chat personale"
         create: "Vai"
         leave: "Lascia questa chat personale"
@@ -478,6 +496,7 @@ it:
         cannot_create: "Spiacenti, non puoi inviare messaggi diretti."
       channel_list:
         title: "Canali"
+        aria_label: "Passa all'elenco dei canali"
       incoming_webhooks:
         back: "Indietro"
         channel_placeholder: "Seleziona un canale"
@@ -508,6 +527,7 @@ it:
         cancel: "Annulla"
         quote_selection: "Cita in argomento"
         copy: "Copia"
+        delete: "Elimina (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "Sposta nel canale"
         error: "Si è verificato un errore durante lo spostamento dei messaggi di chat"
         title: "Sposta la chat nell'argomento"
@@ -546,6 +566,7 @@ it:
       flags:
         off_topic: "Questo messaggio non è rilevante per la discussione in corso in base alla definizione del titolo del canale e probabilmente dovrebbe essere spostato altrove."
         inappropriate: "Questo messaggio ha contenuti che chiunque considererebbe offensivi o ingiuriosi, oppure contiene violazioni delle <a href=\"%{basePath}/guidelines\">nostre linee guida della community</a>."
+        illegal: "Ho portato questo messaggio all'attenzione dello staff perché ritengo che il suo contenuto sia illegale."
         spam: "Questo messaggio è un annuncio pubblicitario o un atto vandalico. Non è utile o rilevante per il canale corrente."
         notify_user: "Voglio parlare con questa persona direttamente e personalmente del suo messaggio."
         notify_moderators: "Questo messaggio richiede l'attenzione dello staff per motivi diversi da quelli sopra indicati"
@@ -586,6 +607,17 @@ it:
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
+      thread_title_toast:
+        title: "Imposta un titolo per il thread"
+        message: "Aiuta altri membri a scoprire questa conversazione."
+        dismiss_action: "Non mostrare più"
+        primary_action: "Imposta titolo"
+      thread_title_modal:
+        title: "Imposta titolo thread"
+        input_placeholder: "Spiega agli altri membri l'argomento della conversazione..."
+        discourse_ai:
+          title: "Genera i titoli dei thread automaticamente"
+          description: "Vai a %{url} per ulteriori informazioni su questo miglioramento della tua esperienza su Discourse e altri ancora."
       threads:
         open: "Apri Discussione"
         list: "Thread"

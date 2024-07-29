@@ -114,7 +114,7 @@ fr:
       optimized_link: Les liens optimisés d'images sont éphémères et ne devraient pas être inclus dans le code source d'un thème.
     settings_errors:
       invalid_yaml: "Le YAML est invalide"
-      data_type_inclusion: "Le type « %{name} » n'est pas supporté. Les types supportés sont « integer », « bool », « list », « enum » et « upload »"
+      data_type_inclusion: "Le type « %{name} » n'est pas pris en charge. Les types pris en charge sont « integer », « bool », « list », « enum » et « upload »"
       name_too_long: "Il y a un paramètre avec un nom trop long. Longueur maximum 255"
       default_value_missing: "Le paramètre « %{name} » n'a pas de valeur par défaut."
       default_not_match_type: "Le type de la valeur par défaut du paramètre « %{name} » ne correspond pas au type du paramètre."
@@ -194,13 +194,13 @@ fr:
         humanize_not_valid_upload_value: "La propriété du pointeur JSON « %{property_json_pointer} » doit être un identifiant de téléversement valide."
         not_valid_upload_value: "doit être un identifiant de téléversement valide"
         humanize_string_value_not_valid_min:
-          one: "La propriété du pointeur JSON « %{property_json_pointer} » doit comporter au moins %{count} caractères."
+          one: "La propriété du pointeur JSON « %{property_json_pointer} » doit comporter au moins %{count} caractère."
           other: "La propriété du pointeur JSON « %{property_json_pointer} » doit comporter au moins %{count} caractères."
         string_value_not_valid_min:
           one: "doit comporter au moins %{count} caractère"
           other: "doit comporter au moins %{count} caractères"
         humanize_string_value_not_valid_max:
-          one: "La propriété du pointeur JSON « %{property_json_pointer} » doit comporter au plus %{count} caractères."
+          one: "La propriété du pointeur JSON « %{property_json_pointer} » doit comporter au plus %{count} caractère."
           other: "La propriété du pointeur JSON « %{property_json_pointer} » doit comporter au plus %{count} caractères."
         string_value_not_valid_max:
           one: "doit comporter au plus %{count} caractère"
@@ -253,7 +253,7 @@ fr:
     format_with_full_message: "<b>%{attribute}</b> : %{message}"
     messages:
       too_long_validation:
-        one: "est limité à %{count} caractères ; vous en avez saisi %{length}."
+        one: "est limité à %{count} caractère ; vous en avez saisi %{length}."
         other: "est limité à %{count} caractères ; vous en avez saisi %{length}."
       invalid_boolean: "Booléen invalide."
       taken: "a déjà été pris"
@@ -464,7 +464,7 @@ fr:
   too_many_mentions_newuser:
     one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent mentionner qu'un utilisateur dans un même message."
     other: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent mentionner que %{count} utilisateurs dans un même message."
-  no_embedded_media_allowed_group: "Nous sommes désolés, il ne vous est pas possible d'inclure des médias dans un message."
+  no_embedded_media_allowed_group: "Nous sommes désolés, vous ne pouvez pas inclure des éléments multimédias dans une publication."
   no_embedded_media_allowed: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent pas inclure de médias dans leurs messages."
   too_many_embedded_media:
     one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent inclure qu'un seul média dans leurs messages."
@@ -596,7 +596,7 @@ fr:
       one: "%{count} message"
       other: "%{count} messages"
     "new-topic": |
-      Bienvenue sur %{site_name} - **merci de débuter une nouvelle conversation !**
+      Bienvenue sur %{site_name}. **Merci de débuter une nouvelle conversation !**
 
       - Le titre vous semble-t-il intéressant lorsque vous le lisez à haute voix ? Est-ce une bonne synthèse de votre message ?
 
@@ -604,9 +604,9 @@ fr:
 
       - Incluez des mots fréquents dans votre sujet pour que les utilisateurs puissent le *retrouver*. Pour le regrouper avec des sujets liés, sélectionnez une catégorie (ou une étiquette).
 
-      Pour plus d'informations, [consultez la charte de la communauté](%{base_path}/guidelines). Ce message apparaîtra uniquement pour vos premiers %{education_posts_text}.
+      Pour obtenir plus d'informations, [consultez les lignes directrives de la communauté](%{base_path}/guidelines). Ce message apparaîtra uniquement pour vos premiers %{education_posts_text}.
     "new-reply": |
-      Bienvenue sur %{site_name} - **merci de contribuer !**
+      Bienvenue sur %{site_name}. **Merci de contribuer !**
 
       - Faites preuve de bienveillance à l'égard des membres de la communauté.
 
@@ -614,7 +614,7 @@ fr:
 
       - Les critiques constructives sont les bienvenues, mais critiquez les *idées*, pas les individus.
 
-      Pour plus d'informations, [consultez la charte de la communauté](%{base_path}/guidelines). Ce message apparaîtra uniquement pour vos premiers %{education_posts_text}.
+      Pour obtenir plus d'informations, [consultez les lignes directrices de la communauté](%{base_path}/guidelines). Ce message apparaîtra uniquement pour vos premiers %{education_posts_text}.
     avatar: |
       ### Avez-vous pensé à une photo de profil ?
 
@@ -765,7 +765,7 @@ fr:
 
       :open_book: **Apprenez à connaître la communauté** en [parcourant les discussions](%{base_path}/latest) qui ont déjà lieu ici. Lorsque vous trouvez un message intéressant, informatif ou divertissant, utilisez le :heart: pour montrer votre intérêt ou votre soutien !
 
-      :handshake: **Contribuez** en commentant, en partageant votre propre point de vue, en posant des questions ou en publiant des commentaires dans la discussion. Avant de répondre ou de commencer de nouveaux sujets, veuillez consulter notre [Charte communautaire](%{base_path}/faq).
+      :handshake: **Contribuez** en commentant, en partageant votre propre point de vue, en posant des questions ou en publiant des commentaires dans la discussion. Avant de répondre ou de commencer de nouveaux sujets, veuillez consulter les [Lignes directrices de notre communauté](%{base_path}/faq).
 
       Si vous avez besoin d'aide ou si vous avez des suggestions à apporter, n'hésitez pas à poser vos questions dans %{feedback_category} ou à [contacter les administrateurs](%{base_path}/about).
   admin_quick_start_title: "Guide de l'administrateur : premiers pas"
@@ -992,13 +992,13 @@ fr:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Répréhensible"
-      description: 'Le contenu de ce message serait jugé offensant, injurieux, haineux ou en infraction avec la <a href="%{base_path}/guidelines">charte communautaire</a> par une personne raisonnable.'
-      short_description: 'Une transgression de <a href="%{base_path}/guidelines">notre charte communautaire</a>'
+      description: 'Le contenu de ce message serait jugé offensant, injurieux, haineux ou en infraction avec les <a href="%{base_path}/guidelines">lignes directrices de la communauté</a> par une personne raisonnable.'
+      short_description: 'Une transgression des <a href="%{base_path}/guidelines">lignes directrices de notre communauté</a>'
     illegal:
       title: "Illégal"
       description: "Cette publication requiert l'attention du personnel, car je pense qu'elle contient du contenu illégal."
       short_description: "C'est illégal"
-      email_title: 'Un message dans « %{title} » nécessite l''attention des responsables'
+      email_title: 'Une publication dans « %{title} » nécessite l''attention du personnel'
       email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Envoyer un message à @%{username}"
@@ -1068,12 +1068,12 @@ fr:
       short_description: "Ceci est une publicité"
     inappropriate:
       title: "Répréhensible"
-      description: 'Le contenu de ce sujet serait jugé offensant, injurieux, haineux ou en infraction avec la <a href="%{base_path}/guidelines">charte communautaire</a> par une personne raisonnable.'
+      description: 'Le contenu de ce sujet serait jugé offensant, injurieux, haineux ou en infraction avec les <a href="%{base_path}/guidelines">lignes directrices de notre communauté</a> par une personne raisonnable.'
       long_form: "signalé comme répréhensible"
-      short_description: 'Une transgression de <a href="%{base_path}/guidelines">notre charte communautaire</a>'
+      short_description: 'Une transgression des <a href="%{base_path}/guidelines">lignes directrices de notre communauté</a>'
     notify_moderators:
       title: "Autre chose"
-      description: 'Ce sujet nécessite l''intervention des responsables, selon la <a href="%{base_path}/guidelines">charte de la communauté</a>, <a href="%{tos_url}">les conditions d''utilisation</a> ou pour une autre raison.'
+      description: 'Ce sujet nécessite l''intervention du personnel, selon les <a href="%{base_path}/guidelines">lignes directrices de la communauté</a>, <a href="%{tos_url}">les conditions d''utilisation</a> ou pour une autre raison.'
       long_form: "signalé pour modération"
       short_description: "Nécessite l'attention des responsables pour une autre raison"
       email_title: 'Le sujet « %{title} » nécessite l''attention d''un modérateur'
@@ -1082,7 +1082,7 @@ fr:
       title: "Illégal"
       description: "Ce sujet requiert l'attention du personnel, car je pense qu'il contient du contenu illégal."
       short_description: "C'est illégal"
-      email_title: 'Un message dans « %{title} » nécessite l''attention des responsables'
+      email_title: 'Une publication dans « %{title} » nécessite l''attention du personnel'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Votre message a été signalé par la communauté. Veuillez <a href="%{path}">consulter vos messages directs</a>.</p>'
@@ -1559,12 +1559,12 @@ fr:
       s3_cdn: 'Le serveur est configuré pour envoyer les fichiers à S3, mais aucun CDN S3 n''est configuré. Cela peut entraîner des coûts S3 élevés et réduire les performances du site. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Consultez « Utiliser un espace de stockage d''objets pour les envois » pour en savoir plus</a>.'
       image_magick: 'Le serveur est configuré pour créer des aperçus des grandes images, mais ImageMagick n''est pas installé. Installez ImageMagick en utilisant votre gestionnaire de paquets favori ou <a href="https://www.imagemagick.org/script/download.php" target="_blank">téléchargez directement la dernière version</a>.'
       failing_emails: 'Il y a %{num_failed_jobs} tâches d''envoi d''e-mail échouées. Vérifiez votre fichier app.yml et assurez-vous de la conformité des paramètres du serveur de messagerie. <a href="%{base_path}/sidekiq/retries" target="_blank">Consultez également les processus en échec dans Sidekiq</a>.'
-      subfolder_ends_in_slash: "Votre configuration de sous-répertoire est erronée ; DISCOURSE_RELATIVE_URL_ROOT se termine avec une barre oblique ."
+      subfolder_ends_in_slash: "Votre configuration de sous-répertoire est erronée ; DISCOURSE_RELATIVE_URL_ROOT se termine avec une barre oblique."
       translation_overrides: "Certaines de vos modifications de traduction ne sont pas à jour. Veuillez vérifier vos <a href='%{base_path}/admin/customize/site_texts?outdated=true'>personnalisations de texte</a>."
       email_polling_errored_recently:
         one: "La vérification des e-mails a généré une erreur au cours des dernières 24 heures. Consultez <a href='%{base_path}/logs' target='_blank'>le journal</a> pour en savoir plus."
         other: "La vérification des e-mails a généré %{count} erreurs au cours des dernières 24 heures. Consultez <a href='%{base_path}/logs' target='_blank'>le journal</a> pour en savoir plus."
-      missing_mailgun_api_key: "Le serveur est configuré pour envoyer des e-mails via Mailgun, mais vous n'avez pas fourni la clé API nécessaire pour vérifier les messages Webhook."
+      missing_mailgun_api_key: "Le serveur est configuré pour envoyer des e-mails via Mailgun, mais vous n'avez pas fourni la clé API nécessaire pour vérifier les messages webhook."
       bad_favicon_url: "Impossible de charger le favicon. Vérifiez le paramètre favicon dans les <a href='%{base_path}/admin/site_settings'>paramètres du site</a>"
       poll_pop3_timeout: "La connexion au serveur POP3 arrive à expiration. Les e-mails entrants n'ont pas pu être récupérés. Vérifiez vos paramètres POP3 <a href='%{base_path}/admin/site_settings/category/email'></a> et votre fournisseur de services."
       poll_pop3_auth_error: "La connexion au serveur POP3 échoue avec une erreur d'authentification. Veuillez vérifier vos <a href='%{base_path}/admin/site_settings/category/email'>paramètres POP3</a>."
@@ -1847,7 +1847,7 @@ fr:
     github_client_secret: "Clé secrète du client pour l'authentification GitHub, enregistrée sur <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "Permettre aux utilisateurs de s'authentifier via Discord ?"
     discord_client_id: 'Identifiant de l''utilisateur Discord (en cas de besoin, le créer via <a href="https://discordapp.com/developers/applications/me">le portail de développement Discord</a>)'
-    discord_secret: "Clé secrète du client Discord utilisée pour authentifier et activer les fonctionnalités liées à Discord sur le site, telles que les connexions Discord. Cette clé secrète correspond à l'application Discord créée pour le site Web et est nécessaire pour communiquer en toute sécurité avec l'API Discord."
+    discord_secret: "Le secret du client Discord utilisé pour authentifier et activer les fonctionnalités liées à Discord sur le site, telles que les connexions Discord. Ce secret client correspond à l'application Discord créée pour le site Web et est nécessaire pour communiquer en toute sécurité avec l'API Discord."
     discord_trusted_guilds: 'Seuls les membres de ces guildes Discord peuvent se connecter via Discord. Utilisez les identifiants numériques des guildes. Pour plus d''informations, suivez les instructions <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">ici</a>. Laissez vide pour autoriser toutes les guildes.'
     enable_linkedin_oidc_logins: "Activez l'authentification LinkedIn, nécessite linkedin_client_id et linkedin_client_secret."
     linkedin_oidc_client_id: "ID client pour l'authentification LinkedIn, enregistré à l'adresse <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
@@ -1973,7 +1973,6 @@ fr:
     min_trust_to_edit_post: "Le niveau de confiance minimal requis pour modifier des messages."
     edit_post_allowed_groups: "Groupes autorisés à modifier des publications. Les administrateurs et les modérateurs peuvent toujours modifier les publications."
     min_trust_to_allow_self_wiki: "Le niveau de confiance minimal requis pour transformer ses propres messages en type wiki."
-    self_wiki_allowed_groups: "Groupes dans lesquels les utilisateurs peuvent créer leur propre wiki de publication. Les administrateurs et les modérateurs peuvent toujours créer leur propre wiki de publication."
     min_trust_to_send_messages: "OBSOLÈTE, utilisez plutôt le paramètre « Groupes activés par messages directs ». Le niveau de confiance minimal requis pour créer de nouveaux messages directs."
     min_trust_to_send_email_messages: "Le niveau de confiance minimal pour envoyer un message privé par e-mail."
     send_email_messages_allowed_groups: "Groupes autorisés à envoyer des messages personnels par e-mail. Les administrateurs et les modérateurs peuvent toujours envoyer des messages personnels par e-mail."
@@ -2353,7 +2352,9 @@ fr:
     tags_sort_alphabetically: "Afficher les étiquettes par ordre alphabétique. Par défaut, elles sont affichées par ordre de popularité."
     tags_listed_by_group: "Lister les étiquettes par groupe d'étiquettes sur la <a href='%{base_path}/tags' target='_blank'>page Étiquettes</a>."
     tag_style: "Définissez l'apparence visuelle des badges d'étiquette sur le site. Ce paramètre vous permet de personnaliser la représentation visuelle des étiquettes dans toutes les zones du site, en améliorant ainsi la cohérence de la mise en page et l'accessibilité pour les utilisateurs."
+    pm_tags_allowed_for_groups: "Autorisez les membres des groupes inclus à étiqueter n'importe quel message personnel"
     min_trust_level_to_tag_topics: "Niveau de confiance minimal requis pour étiqueter des sujets"
+    tag_topic_allowed_groups: "Groupes autorisés à étiqueter des sujets. Les administrateurs et les modérateurs peuvent toujours étiqueter les sujets."
     suppress_overlapping_tags_in_list: "Si des étiquettes correspondent exactement à des mots du titre d'un sujet, ne pas afficher ces étiquettes"
     remove_muted_tags_from_latest: "Ne pas afficher les sujets avec des étiquettes mises en sourdine dans la liste des sujets récents."
     force_lowercase_tags: "Forcer les nouvelles étiquettes à être en minuscule."
@@ -2361,10 +2362,14 @@ fr:
     automatically_clean_unused_tags: "Supprimez automatiquement les étiquettes qui ne sont utilisées dans aucun sujet ou message privé au quotidien."
     watched_precedence_over_muted: "M'avertir des sujets des catégories ou des étiquettes que je regarde et qui appartiennent également à un sujet que j'ai désactivé"
     company_name: "Nom de votre entreprise ou organisation. Si ce champ est laissé vide, aucune condition d'utilisation ni aucun avis de confidentialité ne seront fournis."
+    governing_law: "Précisez la juridiction qui régit les aspects juridiques du site, y compris les Conditions d'utilisation et la Politique de confidentialité. Il s'agit généralement du pays ou de l'État dans lequel la société exploitant le site est enregistrée ou exerce ses activités."
+    city_for_disputes: "Précisez la ville qui sera utilisée comme juridiction pour résoudre tout litige lié à l'utilisation de ce forum. Ces informations sont généralement incluses dans des documents juridiques tels que les conditions d'utilisation du forum."
     shared_drafts_category: "Activez la fonction Brouillons partagés en désignant une catégorie pour les brouillons de sujet. Les sujets repris dans cette catégorie ne figureront pas dans les listes de sujets pour les responsables."
     shared_drafts_min_trust_level: "Autoriser les utilisateurs à afficher et à modifier les brouillons partagés."
     shared_drafts_allowed_groups: "Autorisez les utilisateurs de ces groupes à voir et à modifier les brouillons partagés."
+    push_notifications_prompt: "Affichez une bannière de consentement de l'utilisateur pour les notifications push. Ce paramètre déclenche une invite demandant aux utilisateurs l'autorisation de leur envoyer des notifications push. Elle apparaît uniquement lorsque les notifications push ne sont pas déjà activées, sont prises en charge par l'appareil de l'utilisateur et que celui-ci a publié un message ou utilise une Progressive Web App (PWA). L'invite ne sera pas affichée à nouveau si l'utilisateur l'a déjà rejetée ou si l'autorisation a déjà été accordée ou refusée."
     push_notifications_icon: "L'icône du badge qui apparaît dans les notifications. Une image monochrome de taille 96×96 et au format PNG avec transparence est recommandée."
+    enable_desktop_push_notifications: "Activez les notifications push pour l'interface d'ordinateur. Cette fonctionnalité permet d'envoyer des alertes en temps réel depuis le site directement sur votre ordinateur, en améliorant ainsi l'interaction et en garantissant que les utilisateurs sont toujours informés. Cependant, l'efficacité de cette fonctionnalité repose sur la prise en charge des notifications push par les navigateurs."
     push_notification_time_window_mins: "Attendre (n) minutes avant d'envoyer la notification push. Cela permet d'empêcher l'envoi de notifications push à un utilisateur en ligne actif."
     base_font: "Police de base à utiliser pour la plupart des textes du site. Les thèmes peuvent remplacer cette police via la propriété personnalisée CSS « --font-family »."
     heading_font: "Police à utiliser pour les titres du site. Les thèmes peuvent remplacer cette police via la propriété personnalisée CSS « --heading-font-family »."
@@ -2376,6 +2381,9 @@ fr:
     dashboard_hidden_reports: "Permettre de masquer les rapports du tableau de bord."
     dashboard_visible_tabs: "Choisissez les onglets visibles sur le tableau de bord."
     dashboard_general_tab_activity_metrics: "Sélectionnez les rapports à afficher comme indicateurs d'activité dans l'onglet général."
+    gravatar_name: "Spécifiez le nom du fournisseur de services Gravatar. Ce nom est généralement utilisé pour identifier la source fournissant des avatars Gravatar au site."
+    gravatar_base_url: "Spécifiez l'URL d'accès à l'API du fournisseur Gravatar. Ce paramètre est essentiel pour convertir les adresses e-mail en URL Gravatar dans lesquelles les images d'avatar sont stockées."
+    gravatar_login_url: "URL relative à gravatar_base_url, qui fournit à l'utilisateur la connexion au service Gravatar."
     share_quote_buttons: "Choisissez les éléments qui apparaissent dans le bouton de partage de citation, ainsi que leur ordre."
     share_quote_visibility: "Choisissez quand afficher le bouton de partage de citation : jamais, uniquement aux utilisateurs anonymes ou à tous les utilisateurs. "
     create_revision_on_bulk_topic_moves: "Créer une révision pour les premiers messages lorsque les sujets sont déplacés en masse dans une nouvelle catégorie."
@@ -2384,15 +2392,23 @@ fr:
     use_name_for_username_suggestions: "Utiliser le nom complet d'un utilisateur lorsque vous suggérez des noms d'utilisateur."
     suggest_weekends_in_date_pickers: "Inclure les week-ends dans les suggestions du sélectionneur de date (désactivez ce paramètre si vous n'utilisez Discourse que les jours de semaine)."
     splash_screen: "Affiche un écran de chargement temporaire pendant le chargement des ressources du site"
+    navigation_menu: "Spécifiez la barre latérale ou la liste déroulante d'en-tête comme menu de navigation principal de votre site. La barre latérale est recommandée."
     default_navigation_menu_categories: "Les catégories sélectionnées seront affichées par défaut dans la section Catégories du menu de navigation."
     default_navigation_menu_tags: "Les étiquettes sélectionnées seront affichées par défaut dans la section Étiquettes du menu de navigation."
     experimental_new_new_view_groups: 'EXPÉRIMENTAL : activer une nouvelle liste de sujets qui combine les sujets non lus et les nouveaux sujets, et faire en sorte que le lien « Tout » de la barre latérale y renvoie l''utilisateur.'
     enable_custom_sidebar_sections: "EXPÉRIMENTAL : activer les sections personnalisées de la barre latérale"
     experimental_topics_filter: "EXPÉRIMENTAL : activer l'itinéraire de filtrage des sujets expérimentaux dans /filter"
     enable_experimental_lightbox: "EXPÉRIMENTAL : remplacer la visionneuse d'image par défaut par le design remanié."
+    enable_experimental_bookmark_redesign_groups: "EXPÉRIMENTAL : affichez un menu d'accès rapide pour les signets sur les publications et une nouvelle fenêtre modale repensée"
+    glimmer_header_mode: "Contrôlez si la nouvelle implémentation d'en-tête « Glimmer » est utilisée. La valeur par défaut est « auto », qui s'activera automatiquement une fois que tous vos thèmes et extensions seront prêts. https://meta.discourse.org/t/296544"
+    experimental_glimmer_topic_list_groups: "EXPÉRIMENTAL : activez la nouvelle implémentation de la liste de sujets « Glimmer ». Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions sur la base de celui-ci tant que l'implémentation n'est pas finalisée et annoncée."
     experimental_form_templates: "EXPÉRIMENTAL : activez la fonctionnalité des modèles de formulaires. <b>Une fois la fonctionnalité activée,</b> gérez les modèles dans <a href='%{base_path}/admin/customize/form-templates'>Personnaliser/modèles</a>."
+    admin_sidebar_enabled_groups: "Activez la navigation dans la barre latérale pour l'interface utilisateur d'administration pour les groupes spécifiés, qui remplace les boutons de navigation d'administration de niveau supérieur."
+    lazy_load_categories_groups: "EXPÉRIMENTAL : les informations sur les catégories ne sont disponibles que pour les utilisateurs de ces groupes, ce qui améliore les performances sur les sites avec de nombreuses catégories."
     page_loading_indicator: "Configurer l'indicateur de chargement qui apparaît lors de la navigation dans Discourse. « Spinner » est un indicateur de pleine page. Le « curseur » affiche une barre étroite en haut de l'écran."
     show_user_menu_avatars: "Afficher les avatars des utilisateurs dans le menu utilisateur"
+    view_raw_email_allowed_groups: "Groupes qui peuvent consulter le contenu brut d'un e-mail s'il a été créé par un e-mail entrant. Cela inclut les en-têtes des e-mails et d'autres informations techniques."
+    experimental_flags_admin_page_enabled_groups: "EXPÉRIMENTAL : supprimez le lien Indicateurs de modération de la barre latérale d'administration."
     errors:
       invalid_css_color: "Couleur non valide. Indiquez un nom de couleur ou une valeur hexadécimale."
       invalid_email: "Adresse e-mail invalide."
@@ -2407,10 +2423,17 @@ fr:
       must_include_latest: "Le menu du haut doit contenir l'onglet « Récents »."
       invalid_string: "Valeur invalide."
       invalid_string_min_max: "La chaîne de caractères doit contenir entre %{min} et %{max} caractères."
+      invalid_string_min:
+        one: "Doit contenir au moins %{count} caractère."
+        other: "Doit contenir au moins %{count} caractères."
+      invalid_string_max:
+        one: "Ne doit pas contenir plus de %{count} caractère."
+        other: "Ne doit pas contenir plus de %{count} caractères."
       invalid_json: "Données JSON non valides."
       invalid_reply_by_email_address: "La valeur doit contenir « %{reply_key} » et être différente de l'e-mail de notification."
       invalid_alternative_reply_by_email_addresses: "Toutes les valeurs doivent contenir « %{reply_key} » et être différentes de l'e-mail de notification."
       invalid_domain_hostname: "Ne peut inclure les caractères « * » ou « ? »."
+      invalid_csp_script_src: "La valeur doit être « unsafe-eval » ou « wasm-unsafe-eval », ou sous la forme « <hash algorithm>-<base64 value> » où les algorithmes de hachage pris en charge sont sha256, sha384 ou sha512. Assurez-vous que votre saisie est entourée de guillemets simples."
       pop3_polling_host_is_empty: "Vous devez définir « pop3 polling host » avant d'activer le relevé via POP3."
       pop3_polling_username_is_empty: "Vous devez définir « pop3 polling username » avant d'activer le relevé via POP3."
       pop3_polling_password_is_empty: "Vous devez définir « pop3 polling password » avant d'activer le relevé via POP3."
@@ -2439,8 +2462,12 @@ fr:
         regex_invalid: "L'expression régulière n'est pas valide : %{error}"
         leading_trailing_slash: "L'expression régulière ne doit pas commencer et se terminer par une barre oblique."
       unicode_usernames_avatars: "Les avatars du système n'acceptent pas les noms d'utilisateurs contenant des caractères Unicode."
+      list_value_count:
+        one: "La liste doit contenir exactement %{count} valeur."
+        other: "La liste doit contenir exactement %{count} valeurs."
       markdown_linkify_tlds: "Vous ne pouvez pas inclure la valeur « * »."
       google_oauth2_hd_groups: "Vous devez configurer tous les paramètres « google oauth2 HD » avant d'activer ce paramètre."
+      linkedin_oidc_credentials: "Vous devez configurer les informations d'identification OIDC de LinkedIn (« linkedin_oidc_client_id » et « linkedin_oidc_client_secret ») avant d'activer ce paramètre."
       search_tokenize_chinese_enabled: "Pour activer ce paramètre, vous devez d'abord désactiver « search_tokenize_chinese »."
       search_tokenize_japanese_enabled: "Pour activer ce paramètre, vous devez d'abord désactiver « search_tokenize_japanese »."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Vous ne pouvez pas activer DiscourseConnect si la 2FA est obligatoire."
@@ -2466,17 +2493,23 @@ fr:
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
       create_tag_allowed_groups: "min_trust_to_create_tag"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
+      skip_review_media_groups: "review_media_unless_trust_level"
+      embedded_media_allowed_groups: "min_trust_to_post_embedded_media"
+      post_links_allowed_groups: "min_trust_to_post_links"
+      user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
+      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
+      profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
       clean_up_inactive_users_after_days:
-      - ""
+      - "désactivé"
       - "inactif"
-      - ""
+      - "non activé"
       purge_unactivated_users_grace_period_days:
-      - ""
+      - "désactivé"
       - "inactif"
-      - ""
+      - "non activé"
       navigation_menu:
       - "barre latérale"
-      - ""
+      - "menu déroulant d'en-tête"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2503,6 +2536,8 @@ fr:
     missing_secret: "L'authentification a échoué du fait de l'absence d'une clé secrète. Nous vous invitons à contacter l'administrateur du site afin de résoudre ce problème."
     invite_redeem_failed: "Il n'a pas été possible d'utiliser ce lien d'invitation. Nous vous invitons à contacter l'administrateur du site."
     invalid_parameter_value: "L'authentification a échoué en raison d'une valeur non valide pour le paramètre « %{param} ». Contactez les administrateurs du site pour résoudre ce problème."
+    payload_parse_error: "L'authentification a échoué (la charge utile n'est pas valide en Base64). Merci de contacter l'administrateur du site."
+    signature_error: "L'authentification a échoué (signature incorrecte). Merci de contacter l'administrateur du site."
   original_poster: "Créateur du sujet"
   most_recent_poster: "Auteur le plus récent"
   frequent_poster: "Auteur fréquent"
@@ -2625,6 +2660,7 @@ fr:
     email_too_long: "L'e-mail renseigné est trop long. Les noms d'adresses e-mail ne doivent pas dépasser 254 caractères et les noms de domaines ne doivent pas dépasser 253 caractères."
     wrong_invite_code: "Le code d'invitation est invalide."
     reserved_username: "Ce nom d'utilisateur n'est pas autorisé."
+    missing_user_field: "Vous n'avez pas rempli tous les champs d'utilisateur obligatoires"
     auth_complete: "Authentification terminée."
     click_to_continue: "Cliquez ici pour continuer."
     already_logged_in: "Nous sommes désolés ! Cette invitation est destinée aux nouveaux utilisateurs qui n'ont pas encore de compte existant."
@@ -2663,6 +2699,7 @@ fr:
         updating_site_settings: "Mise à jour des paramètres du site…"
         updating_user_stats: "Mise à jour des statistiques utilisateur…"
         merging_user_attributes: "Fusion des attributs utilisateur…"
+        merging_user_associated_accounts: "Fusion des comptes associés aux utilisateurs…"
         updating_user_ids: "Mise à jour des identifiants utilisateur…"
         deleting_source_user: "Suppression de l'utilisateur source…"
   user:
@@ -2675,6 +2712,12 @@ fr:
     new_user_typed_too_fast: "Le nouvel utilisateur écrivait trop rapidement"
     content_matches_auto_silence_regex: "Le contenu correspond à l'expression régulière de mise en sourdine automatique"
     username:
+      short:
+        one: "doit contenir au moins %{count} caractère"
+        other: "doit contenir au moins %{count} caractères"
+      long:
+        one: "ne doit pas contenir plus de %{count} caractère"
+        other: "ne doit pas contenir plus de %{count} caractères"
       too_long: "est trop long"
       characters: "doit uniquement contenir des chiffres, lettres, points, tirets et tirets bas."
       unique: "doit être unique"
@@ -2843,17 +2886,44 @@ fr:
   new_version_mailer:
     title: "Nouvelle version"
     subject_template: "[%{email_prefix}] Nouvelle version de Discourse, mise à jour disponible"
+    text_body_template: |
+      Hourra ! Une nouvelle version de [Discourse](https://www.discourse.org) est disponible !
+
+      Votre version : %{installed_version}
+      Nouvelle version : **%{new_version}**
+
+      - Effectuez facilement la mise à jour depuis votre navigateur en utilisant la **[mise à jour en 1 clic](%{base_url}/admin/update)**
+
+      - Découvrez les nouveautés en consultant les [notes de version](https://meta.discourse.org/tag/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/main)
+
+      - Rendez vous sur [meta.discourse.org](https://meta.discourse.org) pour consulter des actualités, des discussions et obtenir de l'aide concernant Discourse
   new_version_mailer_with_notes:
     title: "Nouvelle version avec notes de modifications"
     subject_template: "[%{email_prefix}] Mise à jour disponible"
+    text_body_template: |
+      Hourra ! Une nouvelle version de [Discourse](https://www.discourse.org) est disponible !
+
+      Votre version : %{installed_version}
+      Nouvelle version : **%{new_version}**
+
+      - Effectuez facilement la mise à jour depuis votre navigateur en utilisant la **[mise à jour en 1 clic](%{base_url}/admin/update)**
+
+      - Découvrez les nouveautés en consultant les [notes de version](https://meta.discourse.org/tag/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/main)
+
+      - Rendez vous sur [meta.discourse.org](https://meta.discourse.org) pour consulter des actualités, des discussions et obtenir de l'aide concernant Discourse
+
+      ### Notes de version
+
+      %{notes}
   flag_reasons:
     off_topic: "Votre message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond pas au sujet en question qui est défini par son titre et son premier message."
-    inappropriate: "Votre message a été signalé comme étant **inapproprié** : la communauté estime qu'il est offensant, abusif, qu'il s'agit d'un comportement haineux ou qu'il enfreint notre [charte communautaire](%{base_path}/directives)."
+    inappropriate: "Votre message a été signalé comme étant **inapproprié** : la communauté estime qu'il est offensant, abusif, qu'il s'agit d'un comportement haineux ou qu'il enfreint les [lignes directrices de notre communauté](%{base_path}/guidelines)."
+    illegal: "Votre publication a été signalée comme **illégale** : la communauté pense qu'elle enfreint peut-être la loi."
     spam: "Votre message a été signalé comme étant du **spam** : la communauté considère qu'il s'agit d'une publicité ou du contenu trop promotionnel au lieu d'être utile et pertinent au regard du sujet."
     notify_moderators: "Votre message a été **signalé aux modérateurs** : la communauté considère qu'il nécessite l'intervention d'un responsable."
     responder:
       off_topic: "Ce message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond pas au sujet en question tel que défini par son titre et son premier message."
-      inappropriate: "Le message a été signalé comme étant **inapproprié** : la communauté estime qu'il est offensant, abusif, qu'il s'agit d'un comportement haineux ou qu'il enfreint notre [charte communautaire](%{base_path}/directives)."
+      inappropriate: "Le message a été signalé comme étant **inapproprié** : la communauté estime qu'il est offensant, abusif, qu'il s'agit d'un comportement haineux ou qu'il enfreint les [lignes directrices de notre communauté](%{base_path}/guidelines)."
       spam: "Ce message a été signalé comme étant du **courrier indésirable** : la communauté considère qu'il s'agit d'une publicité, c'est-à-dire d'un message de nature trop promotionnelle au lieu d'être utile et pertinent au regard du sujet."
       notify_moderators: "Ce message a été **signalé aux modérateurs** : la communauté considère qu'il nécessite l'intervention d'un responsable."
   flags_dispositions:
@@ -2887,9 +2957,9 @@ fr:
 
         Ce message a été masqué suite à des signalements de la communauté. Nous vous invitons par conséquent à envisager de le modifier en prenant en considération leurs commentaires. **Vous pourrez modifier votre message d'ici %{edit_delay} minutes, et il sera ensuite rendu automatiquement visible à nouveau.**
 
-        Toutefois, si ce message est masqué par la communauté une seconde fois, il le restera jusqu'à ce qu'il soit examiné par des responsables.
+        Toutefois, si ce message était masqué par la communauté une seconde fois, il le resterait jusqu'à ce qu'il soit examiné par des responsables.
 
-        Pour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/charte).
+        Pour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject:
       title: "Commentaires sur votre message"
       subject_template: "Commentaires sur votre message dans %{topic_title}"
@@ -2948,7 +3018,7 @@ fr:
 
         La communauté a signalé ce message et il est maintenant masqué. **Ce message ayant été masqué plus d'une fois, il le restera jusqu'à ce qu'un responsable intervienne.**
 
-        Pour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/charte).
+        Pour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
     queued_by_staff:
       title: "Message en attente de vérification"
       subject_template: "Message masqué par un responsable, en attente de vérification"
@@ -2961,7 +3031,7 @@ fr:
 
         Votre message restera masqué jusqu'à ce qu'un responsable en prenne connaissance et l'examine.
 
-        Pour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
+        Pour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
     flags_disagreed:
       title: "Le message signalé a été rétabli par un responsable"
       subject_template: "Le message signalé a été rétabli par un responsable"
@@ -2993,7 +3063,7 @@ fr:
         %{flagged_post_raw_content}
         ```
 
-        Pour plus d'informations, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
+        Pour plus d'informations, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
     flags_agreed_and_post_deleted_for_responders:
       title: "Cette réponse à un message signalé a été supprimée par un responsable."
       subject_template: "Cette réponse à un message signalé a été supprimée par un responsable."
@@ -3016,7 +3086,7 @@ fr:
         %{flagged_post_response_raw_content}
         ```
 
-        Pour plus d'informations, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
+        Pour plus d'informations, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Pour connaître quelques astuces qui vous aideront à démarrer en tant que nouveau membre, [rendez-vous sur cette page](https://meta.discourse.org/t/fr-trucs-et-astuces-pour-nouveaux-utilisateurs/84100/).
@@ -3117,9 +3187,41 @@ fr:
     bulk_invite_succeeded:
       title: "Invitation en masse réussie"
       subject_template: "Envoi des invitations en masse réussi"
+      text_body_template: |
+        Votre fichier d'invitations groupées d'utilisateurs a été traité, %{sent} invitations ont été envoyées, %{skipped} invitations ont été ignorées et %{warnings} invitations comprennent un avertissement.
+
+        Invitations ignorées pour les e-mails :
+
+        ```text
+        %{skipped_emails}
+        ```
+
+        ```text
+        %{logs}
+        ```
     bulk_invite_failed:
       title: "Invitation en masse échouée"
       subject_template: "Envoi des invitations en masse effectué avec des erreurs"
+      text_body_template: |
+        Votre fichier d'invitations groupées d'utilisateurs a été traité, %{sent} invitations ont été envoyées, %{skipped} invitations ont été ignorées, %{warnings} invitations comprennent un avertissement et %{failed} invitations comprennent une erreur.
+
+        Invitations ignorées pour les e-mails :
+
+        ```text
+        %{skipped_emails}
+        ```
+
+        Invitations échouées pour les e-mails :
+
+        ```text
+        %{failed_emails}
+        ```
+
+        Voici le journal :
+
+        ```text
+        %{logs}
+        ```
     user_added_to_group_as_owner:
       title: "Désigné(e) comme propriétaire du groupe"
       subject_template: "Vous avez été désigné(e) comme l'un(e) des propriétaire du groupe %{group_name}"
@@ -3376,7 +3478,7 @@ fr:
     ignored_users_summary:
       title: "Un utilisateur ignoré a dépassé le seuil"
       subject_template: "Un utilisateur a été ignoré par de nombreux utilisateurs"
-      text_body_template: "Bonjour, \n\nCe message vous est envoyé de manière automatisée par %{site_name} pour vous informer que @%{username} a été ignoré par %{ignores_threshold} utilisateurs. Cela pourrait être le signe qu'un problème est en train de se développer au sein de votre communauté.\n\nVous souhaiterez peut-être [examiner les messages récents](%{base_url}/u/%{username}/summary) de cet utilisateur et, éventuellement, examiner la situation des autres utilisateurs figurant dans le [rapport des utilisateurs ignorés et mis en sourdine](%{base_url}/admin/reports/top_ignored_users).\n\nPour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).\n"
+      text_body_template: "Bonjour, \n\nCe message vous est envoyé de manière automatisée par %{site_name} pour vous informer que @%{username} a été ignoré par %{ignores_threshold} utilisateurs. Cela pourrait être le signe qu'un problème est en train de se développer au sein de votre communauté.\n\nVous souhaiterez peut-être [examiner les messages récents](%{base_url}/u/%{username}/summary) de cet utilisateur et, éventuellement, examiner la situation des autres utilisateurs figurant dans le [rapport des utilisateurs ignorés et mis en sourdine](%{base_url}/admin/reports/top_ignored_users).\n\nPour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).\n"
     too_many_spam_flags:
       title: "Trop de signalements de spam"
       subject_template: "Nouveau compte bloqué"
@@ -3387,7 +3489,7 @@ fr:
 
         Par mesure de précaution, votre nouveau compte a été mis en sourdine. Vous ne pourrez plus publier de réponses ni de nouveaux sujets tant qu'un responsable n'aura pas examiné la situation de votre compte. Nous vous prions de nous excuser pour la gêne occasionnée.
 
-        Pour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
+        Pour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "Trop de signalements en provenance d'utilisateurs de niveau de confiance 3"
       subject_template: "Nouveau compte bloqué"
@@ -3398,7 +3500,7 @@ fr:
 
         Par mesure de précaution, votre nouveau compte a été mis en sourdine. Vous ne pourrez pas publier de réponses ni de nouveaux sujets tant qu'un responsable n'aura pas examiné la situation de votre compte. Nous vous prions de nous excuser pour la gêne occasionnée.
 
-        Pour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
+        Pour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
     silenced_by_staff:
       title: "Mis en sourdine par un responsable"
       subject_template: "Compte temporairement bloqué"
@@ -3409,7 +3511,7 @@ fr:
 
         Vous pouvez continuer de consulter le forum, mais vous ne pourrez plus répondre ni créer de sujets tant qu'[un responsable](%{base_url}/about) n'aura pas examiné vos messages récents. Nous vous prions de nous excuser pour la gêne occasionnée.
 
-        Pour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
+        Pour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
     user_automatically_silenced:
       title: "Utilisateur automatiquement mis en sourdine"
       subject_template: "Nouvel utilisateur %{username} mis en sourdine suite à des signalements de la communauté"
@@ -3778,6 +3880,7 @@ fr:
 
         Si vous avez des questions, [contactez notre équipe](%{base_url}/about).
     digest:
+      why: "Un bref résumé de %{site_link} depuis %{since}"
       since_last_visit: "Depuis votre dernière visite"
       new_topics: "Nouveaux sujets"
       unread_notifications: "Notifications non lues"
@@ -3793,6 +3896,7 @@ fr:
       your_email_settings: "vos préférences d'e-mail"
       click_here: "cliquez ici"
       from: "%{site_name}"
+      preheader: "Un bref résumé depuis %{since}"
     forgot_password:
       title: "Mot de passe oublié"
       subject_template: "[%{email_prefix}] Réinitialisation du mot de passe"
@@ -4013,6 +4117,7 @@ fr:
     images:
       too_large: "Nous sommes désolés, l'image que vous essayez d'envoyer est trop grande (la taille maximale autorisée est de %{max_size_kb} Ko). Veuillez la redimensionner puis réessayez."
       too_large_humanized: "Nous sommes désolés, l'image que vous essayez d'envoyer est trop grande (la taille maximale autorisée est de %{max_size}). Veuillez la redimensionner, puis réessayez."
+      larger_than_x_megapixels: "Nous sommes désolés, l'image que vous essayez d'envoyer est trop grande (la dimension maximale est de %{max_image_megapixels} mégapixels). Veuillez la redimensionner, puis réessayez."
       size_not_found: "Nous sommes désolés, mais nous n'avons pas pu déterminer la taille de votre image. Peut-être est-elle corrompue ?"
     placeholders:
       too_large: "(image plus grande que %{max_size_kb} Ko)"
@@ -4086,8 +4191,100 @@ fr:
   static_topic_first_reply: |
     Modifiez le premier message de ce sujet pour changer le contenu de la page %{page_name}.
   guidelines_topic:
-    title: "FAQ/Charte"
-    guidelines_title: "Charte"
+    title: "FAQ/lignes directrices"
+    guidelines_title: "Lignes directrices"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Il s'agit d'un lieu civilisé pour la discussion publique](#civilized)
+
+      Veuillez traiter ce forum de discussion avec le même respect que vous le feriez pour un parc public. Nous aussi, nous constituons une ressource communautaire partagée et un lieu où partager nos compétences, nos connaissances et nos intérêts au moyen de conversations continues.
+
+      Ce ne sont pas des règles strictes. Il s'agit de lignes directrices pour favoriser le bon sens de notre communauté et faire de ce forum un endroit bienveillant et amical pour le discours public civilisé.
+
+      <a name="improve"></a>
+
+      ## [Améliorer la discussion](#improve)
+
+      Aidez-nous à faire de ce lieu un lieu de discussion en ajoutant toujours quelque chose de positif à la discussion, même si cela semble peu. Si vous n'êtes pas sûr(e) que votre message contribuera à la conversation, réfléchissez à ce que vous voulez dire et réessayez plus tard.
+
+      Une façon d'améliorer les discussions est de découvrir celles qui sont déjà en cours. Passez du temps à parcourir les sujets ici avant de répondre ou de commencer le vôtre, et vous aurez plus de chances de rencontrer d'autres personnes qui partagent vos centres d'intérêt.
+
+      Les sujets abordés ici sont importants pour nous et nous voulons que vous agissiez comme s'ils l'étaient également pour vous. Faites preuve de respect à l'égard des sujets et des personnes qui en discutent, même si vous n'êtes pas d'accord avec ce qui est dit.
+
+      <a name="agreeable"></a>
+
+      ## [Soyez agréable, même quand vous n'êtes pas d'accord](#agreeable)
+
+      Vous pouvez répondre en désapprouvant. C'est une bonne chose. Mais n'oubliez pas de critiquer les idées et non les individus. Veuillez éviter :
+
+      * Les insultes
+      * Les attaques ad hominem
+      * Les réponses au ton d'un message plutôt qu'à son contenu réel
+      * La contradiction instinctive
+
+      Au lieu de cela, fournissez des idées réfléchies qui améliorent la conversation.
+
+      <a name="participate"></a>
+
+      ## [Votre participation compte](#participate)
+
+      Les conversations que nous avons ici donnent le ton à chaque nouvelle arrivée. Aidez-nous à influencer l'avenir de cette communauté en choisissant de participer aux discussions qui permettent de faire de ce forum un endroit intéressant et en évitant celles qui servent l'objectif inverse.
+
+      Discourse fournit des outils qui permettent à la communauté d'identifier collectivement les meilleures (et les pires) contributions : signets, mentions J'aime, signalements, réponses, modifications, observations, mises en sourdine, etc. Utilisez ces outils pour améliorer votre propre expérience et celle de tous les autres.
+
+      Améliorons notre communauté en permanence.
+
+      <a name="flag-problems"></a>
+
+      ## [Si vous voyez un problème, signalez-le](#flag-problems)
+
+      Les modérateurs ont une autorité spéciale : ils sont responsables de ce forum. Mais vous aussi. Avec votre aide, les modérateurs peuvent être des facilitateurs communautaires, et pas seulement des concierges ou des policiers.
+
+      Lorsque vous voyez un mauvais comportement, ne répondez pas. Répondre encourage le mauvais comportement en le reconnaissant, consomme votre énergie et fait perdre du temps à tout le monde. _Signalez-le simplement_. Si un nombre suffisant de signalements sont obtenus, des mesures seront prises, soit automatiquement, soit par l'intervention d'un modérateur.
+
+      Afin de maintenir notre communauté, les modérateurs se réservent le droit de supprimer tout contenu et tout compte d'utilisateur pour quelque raison que ce soit à tout moment. Les modérateurs ne prévisualisent pas les nouveaux messages. Les modérateurs et les opérateurs du site n'assument aucune responsabilité à l'égard du contenu publié par la communauté.
+
+      <a name="be-civil"></a>
+
+      ## [Faites toujours preuve de civilité](#be-civil)
+
+      Il n'y a rien de pire que la grossièreté pour saboter les conversations saines :
+
+      * Faites preuve de civilité. N'affichez rien qu'une personne raisonnable considérerait comme offensant, abusif ou haineux.
+      * Faites preuve de décence. Ne publiez rien d'obscène ou de sexuellement explicite.
+      * Respectez-vous les uns les autres. Ne harcelez personne, évitez de faire de la peine à quelqu'un, ne vous faites pas passer pour d'autres individus et ne divulguez pas de renseignements personnels.
+      * Respectez notre forum. Ne publiez pas de spam et ne vandalisez pas le forum.
+
+      Ce ne sont pas des termes concrets avec des définitions précises, et nous évitons même l'apparition de l'un ou l'autre de ces concepts. Si vous avez des doutes, demandez-vous comment vous vous sentiriez si votre message était présenté sur la première page d'un site d'actualités important.
+
+      Il s'agit d'un forum public et les moteurs de recherche indexent ses discussions. Faites en sorte que le langage, les liens et les images soient sans risque pour un usage familial et amical.
+
+      <a name="keep-tidy"></a>
+
+      ## [Maintenez l'ordre du forum](#keep-tidy)
+
+      Faites l'effort de mettre les choses au bon endroit, pour que nous puissions passer plus de temps à discuter et moins de temps à faire le ménage.
+
+      * Ne commencez pas un sujet dans la mauvaise catégorie. Lisez les définitions des catégories.
+      * Ne publiez pas la même chose dans plusieurs sujets.
+      * Ne publiez pas de réponses sans contenu.
+      * Ne détournez pas un sujet en le changeant au milieu du flux.
+      * Ne signez pas vos messages. Chaque message contient les renseignements de votre profil.
+
+      Au lieu d'afficher « +1 » ou « D'accord », utilisez le bouton J'aime. Plutôt que de prendre un sujet existant dans une direction radicalement différente, utilisez Répondre dans un sujet lié.
+
+      <a name="stealing"></a>
+
+      ## [Publiez uniquement vos contenus](#stealing)
+
+      Vous ne pouvez publier aucun élément numérique qui appartienne à quelqu'un d'autre sans son autorisation. Vous ne pouvez pas publier des descriptions, des liens ou des méthodes permettant de voler la propriété intellectuelle d'autrui (logiciel, vidéo, contenu audio, images), ou d'enfreindre toute autre loi.
+
+      <a name="power"></a>
+
+      ## [Alimenté par les utilisateurs](#power)
+
+      Ce site est géré par votre [équipe amicale de modérateurs](%{base_path}/about) et *vous*, la communauté. Si vous avez d'autres questions sur la façon dont les choses devraient fonctionner ici, ouvrez un nouveau sujet dans %{feedback_category} et discutons-en ! Si vous rencontrez un problème critique ou urgent qui ne peut pas être traité par un méta-sujet ou un indicateur, [contactez les modérateurs](%{base_path}/about).
   tos_topic:
     title: "Conditions générales d'utilisation"
     body: |
@@ -4355,6 +4552,9 @@ fr:
     mass_award:
       errors:
         invalid_csv: Une erreur s'est produite à la ligne %{line_number}. Veuillez confirmer que le fichier CSV contient une adresse e-mail par ligne.
+        too_many_csv_entries:
+          one: Trop de lignes dans le fichier CSV. Veuillez fournir un fichier CSV contenant un maximum de %{count} entrée.
+          other: Trop de lignes dans le fichier CSV. Veuillez fournir un fichier CSV contenant un maximum de %{count} entrées.
         badge_disabled: Veuillez préalablement activer le badge %{badge_name}.
         cant_grant_multiple_times: Impossible d'attribuer le badge %{badge_name} plusieurs fois à un même utilisateur.
     editor:
@@ -4491,7 +4691,7 @@ fr:
       name: Règlement lu
       description: A lu le <a href="%{base_uri}/guidelines">règlement de la communauté</a>
       long_description: |
-        Ce badge est accordé après <a href="%{base_uri}/guidelines">la lecture de la charte de la communauté</a>. Le respect et le partage de ces règles simples permettent de construire une communauté sûre, agréable et durable. Souvenez-vous toujours qu'il y a une autre personne, tout comme vous, de l'autre côté de l'écran. Faites preuve de courtoisie !
+        Ce badge est accordé après <a href="%{base_uri}/guidelines">la lecture des lignes directrices de la communauté</a>. Le respect et le partage de ces règles simples permettent de construire une communauté sûre, agréable et durable. Souvenez-vous toujours qu'il y a une autre personne, tout comme vous, de l'autre côté de l'écran. Faites preuve de courtoisie !
     reader:
       name: Lecteur
       description: A lu tous les messages d'un sujet contenant plus de 100 messages
@@ -4639,6 +4839,7 @@ fr:
     limited_to_one_tag_from_group: "Les étiquettes %{tags} ne peuvent pas être utilisées simultanément. Merci de n'en inclure qu'une seule."
     invalid_target_tag: "ne peut pas être un synonyme d'un synonyme"
     synonyms_exist: "n'est pas autorisé lorsque des synonymes existent"
+    user_not_permitted: "Vous n'avez pas l'autorisation d'étiqueter des sujets"
   rss_by_tag: "Sujets avec l'étiquette %{tag}"
   finish_installation:
     congratulations: "Félicitations, vous avez installé Discourse !"
@@ -4679,17 +4880,18 @@ fr:
           default_locale:
             label: "Langue "
       privacy:
-        title: "Expérience des membres"
         fields:
           login_required:
-            placeholder: "Privé"
-            extra_description: "Seuls les utilisateurs connectés peuvent accéder à cette communauté"
+            label: "Visibilité"
+            choices:
+              public:
+                label: "Public"
+              private:
+                label: "Privé"
           invite_only:
-            placeholder: "Sur invitation uniquement"
-            extra_description: "Les utilisateurs doivent être invités par des utilisateurs ou des responsables de confiance, autrement les utilisateurs peuvent s'inscrire par eux-mêmes"
-          must_approve_users:
-            placeholder: "Requiert une approbation"
-            extra_description: "Les utilisateurs doivent être approuvés par un responsable"
+            choices:
+              invite_only:
+                label: "Sur invitation uniquement"
           chat_enabled:
             placeholder: "Activer la discussion"
             extra_description: "Interagissez avec vos membres en temps réel"
@@ -4775,9 +4977,23 @@ fr:
   onebox:
     discourse:
       user_joined_community: "S'est inscrit(e) le %{date}"
+    gitlab:
+      truncated_file: "Ce fichier a été tronqué."
+      show_original: "afficher l'original"
     github:
+      binary_file: "Ce fichier est binaire."
+      truncated_file: "Ce fichier a été tronqué."
+      show_original: "afficher l'original"
+      requires_iframe: "La visionneuse nécessite une iframe."
+      committed: "validé"
+      more_than_three_files: "Il y a plus de trois fichiers."
       opened: "ouvert"
       closed: "fermé"
+      commit_by: "Validation par"
+      comment_by: "Commentaire de"
+      review_by: "Révision par"
+      pr_summary: "%{commits} validations ont modifié %{changed_files} fichiers avec %{additions} ajouts et %{deletions} suppressions"
+      no_description: "Contribuez au développement de %{repo} en créant un compte sur GitHub."
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vous a mentionné(e) dans « %{topic} » - %{site_title}'
@@ -4792,6 +5008,7 @@ fr:
       confirm_body: "Les notifications ont été activées."
       custom: "Notification de %{username} sur %{site_title}"
   staff_action_logs:
+    json_too_long: "Valeurs non enregistrées, car elles dépassent les limites de longueur des colonnes"
     not_found: "non trouvé"
     unknown: "inconnu"
     user_merged: "%{username} a été fusionné avec ce compte"
@@ -4863,6 +5080,9 @@ fr:
       agree_and_hide:
         title: "Masquer le message"
         description: "Acceptez ce signalement, masquez le message et envoyez automatiquement un message à l'utilisateur pour l'inciter à le modifier"
+      agree_and_edit:
+        title: "Accepter et modifier la publication"
+        description: "Acceptez le signalement et ouvrez une fenêtre de composition pour modifier le message."
       delete_single:
         title: "Supprimer"
       delete:

@@ -11,7 +11,7 @@ he:
     models:
       fields:
         required_field: את השדה `%{name}` חובה למלא ב־`%{target}:%{target_name}`.
-        invalid_field: רכיב השדה `%{component}` אינו ניתן לשימוש ב- `%{target}:%{target_name}.`
+        invalid_field: רכיב השדה `%{component}` אינו זמין לשימוש ב־`%{target}:%{target_name}.`
         invalid_metadata: הנתונים עבור `%{field}` אינם חוקיים או שהרכיב `%{component}` אינו ידוע.
     triggerables:
       errors:
@@ -52,7 +52,7 @@ he:
         description: כאשר ויקי לא נערך במשך תקופה ארוכה מזו שהוגדרה, האוטומציה תופעל
       post_created_edited:
         title: פוסט נוצר/נערך
-        description: כאשר הודעה חוקית נערכת או נוצרת, האוטומציה תופעל
+        description: כאשר הודעה תקפה נערכת או נוצרת, האוטומציה תוזנק
       pm_created:
         title: נוצרה הודעה פרטית
         description: כאשר הודעה פרטית תקפה האוטומציה תוקפץ
@@ -88,7 +88,7 @@ he:
         description: להוסיף תגיות לנושא אוטומטית
       pin_topic:
         title: נעץ נושא
-        description: מצמיד נושא מוגדר בתאריך נתון
+        description: הצמדת נושא מוגדר בתאריך נתון
       banner_topic:
         title: להציב ככרזה לנושא
         description: הפיכת נושא לכרזה
@@ -97,7 +97,7 @@ he:
         description: מאפשר התאמה אנונימית למשתמשים בקבוצה לשלוח אחד לשני מתנה (משחק גמד-ענק).
         doc: החלפת מתנות דורשת קבוצה קיימת עם שלושה משתמשים לפחות. בתאריך שנבחר כל המשתמשים בקבוצה יצומדו עם משתמש/ת שיעניקו להם מתנה ומשתמש/ת שיקבל מהם מתנה.
       send_pms:
-        title: שלח הודעות פרטיות
+        title: שליחת הודעות פרטיות
         description: מאפשר לשלוח הודעות פרטיות (עם אפשרות שליחה דחויה).
         doc: מאפשר לשלוח מספר הודעות פרטיות למשתמש. כל הודעה מקבלת שליחה דחויה.
       suspend_user_by_email:

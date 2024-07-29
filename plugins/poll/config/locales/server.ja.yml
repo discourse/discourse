@@ -10,9 +10,11 @@ ja:
     poll_maximum_options: "投票で許可されるオプションの最大数。"
     poll_edit_window_mins: "投稿作成後に投票を編集できる時間 (分)"
     poll_minimum_trust_level_to_create: "投票の作成に必要な最低信頼レベルを定義します。"
+    poll_create_allowed_groups: "投票を作成できるグループ。"
     poll_groupable_user_fields: "投票結果をグループ化およびフィルタするために使用できるユーザーフィールド名のセット。"
-    poll_export_data_explorer_query_id: "投票結果のエクスポートに使用するデータエクスプローラのクエリの ID (無効にする場合は 0)。"
     poll_default_public: "新しい投票を作成する際に、デフォルトで '投票者を表示する' オプションを有効にします。"
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
   poll:
     poll: "投票"
     invalid_argument: "引数 '%{argument}' の値 '%{value}' が無効です。"
@@ -44,8 +46,12 @@ ja:
       other: この投票では %{count} 票まで投票できます。
     min_vote_per_user:
       other: この投票には最低 %{count} 票が必要です。
+    ranked_choice:
+      no_group_results_support: "投票タイプが無効です。ranked_choice はグループ化された結果をサポートしていません。"
     topic_must_be_open_to_toggle_status: "ステータスを切り替えるには、トピックがオープンになっている必要があります。"
     only_staff_or_op_can_toggle_status: "スタッフメンバーまたは元の投稿者のみが投票のステータスを切り替えることができます。"
+    errors:
+      poll_not_found: "投票が見つかりません。パラメーターを確認してください。"
     insufficient_rights_to_create: "投票を作成することは許可されていません。"
     email:
       link_to_poll: "クリックして投票を表示します。"

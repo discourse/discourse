@@ -1827,7 +1827,11 @@ id:
       privacy:
         fields:
           login_required:
-            placeholder: "Pribadi"
+            choices:
+              public:
+                label: "Umum"
+              private:
+                label: "Pribadi"
           chat_enabled:
             placeholder: "Aktifkan obrolan"
       styling:

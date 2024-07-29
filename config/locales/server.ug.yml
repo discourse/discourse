@@ -2460,17 +2460,18 @@ ug:
           default_locale:
             label: "تىل"
       privacy:
-        title: "ئەزا تەجرىبىسى"
         fields:
           login_required:
-            placeholder: "شەخسىي"
-            extra_description: "پەقەت تىزىمغا كىرگەن ئىشلەتكۈچىلەرلا بۇ جامائەتنى زىيارەت قىلالايدۇ"
+            label: "كۆرۈنۈشچانلىقى"
+            choices:
+              public:
+                label: "ئاممىۋى"
+              private:
+                label: "شەخسىي"
           invite_only:
-            placeholder: "تەكلىپلا"
-            extra_description: "ئىشلەتكۈچىنى چوقۇم ئىشەنچلىك ئىشلەتكۈچى ياكى باشقۇرغۇچى تەكلىپ قىلىشى كېرەك، بولمىسا ئىشلەتكۈچى ئۆزى تىزىملاتسا بولىدۇ"
-          must_approve_users:
-            placeholder: "تەستىقلاش كېرەك"
-            extra_description: "ئىشلەتكۈچىنى چوقۇم باشقۇرغۇچى تەستىقلىشى كېرەك"
+            choices:
+              invite_only:
+                label: "تەكلىپلا"
           chat_enabled:
             placeholder: "سۆھبەتنى قوزغات"
             extra_description: "ئەزالار بىلەن شۇئان ئالاقە قىلالايسىز"

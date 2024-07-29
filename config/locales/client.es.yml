@@ -343,7 +343,7 @@ es:
       create: "Crear marcador"
       edit: "Editar marcador"
       not_bookmarked: "guarda esta publicación en marcadores"
-      remove_reminder_keep_bookmark: "Quitar recordatorio y mantener marcador"
+      remove_reminder_keep_bookmark: "Eliminar recordatorio y mantener marcador"
       created_with_reminder: "Has marcado esta publicación con un recordatorio %{date}. %{name}"
       created_with_reminder_generic: "Has añadido esto a marcadores con un recordatorio %{date}. %{name}"
       delete: "Eliminar marcador"
@@ -368,7 +368,7 @@ es:
       bulk:
         delete_completed: "Marcadores eliminados correctamente."
         reminders_cleared: "Recordatorios de marcadores borrados correctamente."
-        toggle: "activar la selección de favoritos en bloque"
+        toggle: "activar la selección de marcadores en bloque"
         select_all: "Seleccionar todo"
         clear_all: "Limpiar todo"
         selected_count:
@@ -929,26 +929,26 @@ es:
         title: "Miembros"
         filter_placeholder_admin: "nombre de usuario o correo electrónico"
         filter_placeholder: "nombre de usuario"
-        remove_member: "Quitar miembro"
-        remove_member_description: "Quitar a <b>%{username}</b> de este grupo"
+        remove_member: "Eliminar miembro"
+        remove_member_description: "Eliminar a <b>%{username}</b> de este grupo"
         make_owner: "Hacer propietario"
         make_owner_description: "Hacer a <b>%{username}</b> un propietario de este grupo"
-        remove_owner: "Quitar como propietario"
-        remove_owner_description: "Quitar a <b>%{username}</b> como propietario de este grupo"
+        remove_owner: "Eliminar como propietario"
+        remove_owner_description: "Eliminar a <b>%{username}</b> como propietario de este grupo"
         make_primary: "Elegir como principal"
         make_primary_description: "Hacer de este el grupo principal de <b>%{username}</b>"
-        remove_primary: "Quitar como principal"
-        remove_primary_description: "Quitar esto como el grupo principal de <b>%{username}</b>"
-        remove_members: "Quitar miembros"
-        remove_members_description: "Quitar a los usuarios seleccionados de este grupo"
+        remove_primary: "Eliminar como principal"
+        remove_primary_description: "Eliminar esto como el grupo principal de <b>%{username}</b>"
+        remove_members: "Eliminar miembros"
+        remove_members_description: "Eliminar a los usuarios seleccionados de este grupo"
         make_owners: "Hacer propietarios"
         make_owners_description: "Convertir a los usuarios seleccionados en propietarios de este grupo"
-        remove_owners: "Quitar propietarios"
-        remove_owners_description: "Quitar a los usuarios seleccionados de propietarios de este grupo"
+        remove_owners: "Eliminar propietarios"
+        remove_owners_description: "Eliminar a los usuarios seleccionados de propietarios de este grupo"
         make_all_primary: "Hacer todo principal"
         make_all_primary_description: "Hacer este grupo el principal de todos los usuarios seleccionados"
-        remove_all_primary: "Quitar como principal"
-        remove_all_primary_description: "Quitar este grupo como principal"
+        remove_all_primary: "Eliminar como principal"
+        remove_all_primary_description: "Eliminar este grupo como principal"
         status: "Estado"
         owner: "Propietario"
         primary: "Principal"
@@ -999,7 +999,7 @@ es:
       default_notifications:
         modal_title: "Notificaciones predeterminadas del usuario"
         modal_description:
-          one: "¿Quieres aplicar este cambio históricamente? Esto cambiará las preferencias del %{count} usuario existente."
+          one: "¿Quieres aplicar este cambio históricamente? Esto cambiará las preferencias de %{count} usuario existente."
           other: "¿Quieres aplicar este cambio históricamente? Esto cambiará las preferencias de %{count} usuarios existentes."
         modal_yes: "Sí"
         modal_no: "No, solo aplicar el cambio a partir de ahora"
@@ -1203,10 +1203,10 @@ es:
         Te notificaremos de actividad relevante para ti, como cuando alguien responda a tus temas o mensajes, te <b>@mencione</b> o cite, y también cuando alguien responda a temas que estés vigilando. Además, te mandaremos las notificaciones a tu correo electrónico cuando no te hayamos visto por aquí en un tiempo. <br><br>Busca el icono %{icon} para decidir las categorías o etiquetas sobre las que quieres que mandemos notificaciones. Para más ajustes, pásate por tus <a href='%{preferencesUrl}'>preferencias de notificaciones</a>.
       dynamic_favicon: "Mostrar número en el icono del navegador"
       skip_new_user_tips:
-        description: "Omitir consejos e insignias de bienvenida"
+        description: "Omitir consejos y medallas de bienvenida"
       reset_seen_user_tips: "Mostrar consejos de usuario de nuevo"
       theme_default_on_all_devices: "Hacer que este sea el tema por defecto en todos mis dispositivos"
-      color_scheme_default_on_all_devices: "Establecer la combinación de colores por defecto en todos mis dispositivos"
+      color_scheme_default_on_all_devices: "Establecer el esquema de colores por defecto en todos mis dispositivos"
       color_scheme: "Combinación de colores"
       color_schemes:
         default_description: "Tema predeterminado"
@@ -1461,7 +1461,7 @@ es:
           La autenticación de dos factores añade una capa extra de seguridad a tu cuenta al pedirte un código de un solo uso además de tu contraseña. Los códigos se pueden generar en dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Ten en cuenta que los inicios de sesión con redes sociales y páginas de terceros se desactivarán para tu cuenta una vez que actives la autenticación de dos factores."
         use: "Utilizar la aplicación de autenticación"
-        enforced_with_oauth_notice: "Debes activar la autenticación de dos factores. Solo se te pedirá que la utilices cuando inicies sesión con una contraseña, no con métodos de autenticación externa o de inicio de sesión social."
+        enforced_with_oauth_notice: "Debes activar la autenticación de dos factores. Solo se te pedirá que la utilices cuando inicies sesión con una contraseña, no con métodos de autenticación externa o de inicio de sesión con red social."
         enforced_notice: "Es obligatorio que actives la autenticación de dos factores antes de acceder al sitio web."
         disable: "Desactivar"
         disable_confirm: "¿Seguro que quieres desactivar todos la autenticación de dos factores?"
@@ -1577,7 +1577,7 @@ es:
         resent_label: "correo electrónico enviado"
         update_email: "Cambiar correo electrónico"
         set_primary: "Establecer como correo electrónico principal"
-        destroy: "Quitar correo electrónico"
+        destroy: "Eliminar correo electrónico"
         add_email: "Añadir correo electrónico alternativo"
         auth_override_instructions: "El correo electrónico se puede actualizar desde el proveedor de autenticación."
         no_secondary: "Sin correos electrónicos secundarios"
@@ -1869,9 +1869,9 @@ es:
         top_topics: "Temas destacados"
         no_topics: "No hay temas aún."
         more_topics: "Más temas"
-        top_badges: "Insignias destacadas"
-        no_badges: "Todavía no hay insignias."
-        more_badges: "Más insignias"
+        top_badges: "Medallas destacadas"
+        no_badges: "Todavía no hay medallas."
+        more_badges: "Más medallas"
         top_links: "Enlaces destacados"
         no_links: "No hay enlaces aún."
         most_liked_by: "Recibió más me gusta de"
@@ -1916,7 +1916,7 @@ es:
       set_custom_status: "Escribir estado personalizado"
       what_are_you_doing: "¿Qué estás haciendo?"
       pause_notifications: "Pausar notificaciones"
-      remove_status: "Quitar estado"
+      remove_status: "Eliminar estado"
     user_tips:
       button: "¡Entendido!"
       skip: "Omitir consejos"
@@ -1978,7 +1978,7 @@ es:
           one: "Debe tener al menos %{count} carácter"
           other: "Debe tener al menos %{count} caracteres"
     close: "Cerrar"
-    assets_changed_confirm: "Se ha recibido una actualización de software. ¿Actualizar ahora?"
+    assets_changed_confirm: "Se ha recibido una actualización de software. ¿Obtener la última versión ahora?"
     logout: "Has cerrado sesión."
     refresh: "Volver a cargar"
     home: "Inicio"
@@ -2034,8 +2034,8 @@ es:
         other: "Hay <b>%{count}</b> respuestas."
       buttons:
         hide: "Ocultar resumen"
-        generate: "Resumir con IA"
-        regenerate: "Regenerar resumen"
+        generate: "Resumir"
+        regenerate: "Generar nuevos"
       description_time_MF: |
         Hay {replyCount, plural, one {Hay <b>#</b> respuesta} other {Hay <b>#</b> respuestas}} con un tiempo estimado de lectura de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
       enable: "Mostrar las respuestas principales"
@@ -2052,14 +2052,14 @@ es:
       title: "Mensaje"
       invite: "Invitar a más gente…"
       edit: "Añadir o quitar…"
-      remove: "Quitar…"
+      remove: "Eliminar…"
       add: "Añadir…"
       leave_message: "¿Quieres abandonar este mensaje?"
       remove_allowed_user: "¿Quieres quitar a %{name} de este mensaje?"
       remove_allowed_group: "¿Quieres quitar a %{name} de este mensaje?"
       leave: "Abandonar"
-      remove_group: "Quitar grupo"
-      remove_user: "Quitar usuario"
+      remove_group: "Eliminar grupo"
+      remove_user: "Eliminar usuario"
     email: "Correo electrónico"
     username: "Nombre de usuario"
     last_seen: "Visto por última vez"
@@ -2578,7 +2578,7 @@ es:
         linked: "enlazado"
         bookmark_reminder: "recordatorio de marcador"
         bookmark_reminder_with_name: "recordatorio de marcador - %{name}"
-        granted_badge: "insignia concedida"
+        granted_badge: "medalla concedida"
         invited_to_topic: "invitado al tema"
         group_mentioned: "grupo mencionado"
         group_message_summary: "nuevos mensajes grupales"
@@ -2671,7 +2671,7 @@ es:
         in_group:
           label: En el grupo
         with_badge:
-          label: Con insignia
+          label: Con medalla
         with_tags:
           label: Etiquetado
           aria_label: Filtrar por etiqueta
@@ -2897,7 +2897,7 @@ es:
       relist_topics:
         name: "Volver a publicar"
       remove_tags:
-        name: "Quitar etiquetas"
+        name: "Eliminar etiquetas"
       append_tags:
         name: "Añadir etiquetas"
       replace_tags:
@@ -2908,7 +2908,7 @@ es:
         name: "Actualizar Categoría"
         description: "Elige la nueva categoría para los temas seleccionados"
       reset_bump_dates:
-        name: "Reajustar las fechas de reflote"
+        name: "Restablecer las fechas de reflote"
         description: "Restablecer la fecha de reflote del tema a la fecha de la última publicación creada, lo que afecta a la ordenación en la lista de temas."
       defer:
         name: "Marcar como no leído"
@@ -3042,7 +3042,7 @@ es:
         save: "Configurar temporizador"
         num_of_hours: "Número de horas:"
         num_of_days: "Número de días:"
-        remove: "Quitar temporizador"
+        remove: "Eliminar temporizador"
         publish_to: "Publicar en:"
         when: "Cuándo:"
         time_frame_required: "Selecciona un intervalo de tiempo"
@@ -3171,7 +3171,7 @@ es:
         unpin: "Desanclar tema"
         pin_globally: "Anclar tema globalmente"
         make_banner: "Convertir el tema en banner"
-        remove_banner: "Quitar tema de banner"
+        remove_banner: "Eliminar tema de banner"
       reply:
         title: "Responder"
         help: "comienza a escribir un mensaje en este tema"
@@ -3198,8 +3198,8 @@ es:
       feature_topic:
         title: "Características de este tema"
         pin: "Hacer que este tema aparezca de primero en la categoría %{categoryLink} hasta"
-        unpin: "Quitar este tema del principio de la lista en la categoría %{categoryLink}."
-        unpin_until: "Quitar este tema de los destacados de la categoría %{categoryLink} o esperar al <strong>%{until}</strong>."
+        unpin: "Eliminar este tema del principio de la lista en la categoría %{categoryLink}."
+        unpin_until: "Eliminar este tema de los destacados de la categoría %{categoryLink} o esperar al <strong>%{until}</strong>."
         pin_note: "Los usuarios pueden desanclar el tema de forma individual por sí mismos."
         pin_validation: "Es obligatorio especificar una fecha para anclar este tema."
         not_pinned: "No hay temas anclados en %{categoryLink}."
@@ -3210,8 +3210,8 @@ es:
         confirm_pin_globally:
           one: "Ya tienes %{count} tema anclado globalmente. Demasiados temas anclados puede ser una molestia para los usuarios nuevos y anónimos. ¿Quieres anclar otro tema globalmente?"
           other: "Ya tienes %{count} temas anclados globalmente. Demasiados temas anclados pueden ser una molestia para los usuarios nuevos y anónimos. ¿Quieres anclar otro tema globalmente?"
-        unpin_globally: "Quitar este tema de la parte superior de todas las listas de temas."
-        unpin_globally_until: "Quitar este tema de la parte superior de todas las listas de temas o esperar hasta <strong>%{until}</strong>."
+        unpin_globally: "Eliminar este tema de la parte superior de todas las listas de temas."
+        unpin_globally_until: "Eliminar este tema de la parte superior de todas las listas de temas o esperar hasta <strong>%{until}</strong>."
         global_pin_note: "Los usuarios pueden desanclar el tema de forma individual por sí mismos."
         not_pinned_globally: "No hay temas anclados globalmente."
         already_pinned_globally:
@@ -3256,7 +3256,7 @@ es:
         n_posts:
           one: "%{count} publicación"
           other: "%{count} publicaciones"
-        cancel: "Quitar filtro"
+        cancel: "Eliminar filtro"
       move_to:
         title: "Mover a"
         action: "mover a"
@@ -3480,7 +3480,7 @@ es:
         wiki: "Transformar en formato wiki"
         unwiki: "Deshacer formato wiki"
         convert_to_moderator: "Añadir color del personal"
-        revert_to_regular: "Revertir color del personal"
+        revert_to_regular: "Eliminar color del personal"
         rebake: "Reconstruir HTML"
         publish_page: "Publicación de página"
         unhide: "Deshacer ocultar"
@@ -3647,7 +3647,7 @@ es:
       logo_dark: "Imagen del logotipo de la categoría en modo oscuro"
       background_image: "Imagen de fondo de la categoría"
       background_image_dark: "Imagen de fondo de categoría oscura"
-      badge_colors: "Colores de las insignias"
+      badge_colors: "Colores de las medallas"
       background_color: "Color de fondo"
       foreground_color: "Colores de primer plano"
       name_placeholder: "Una o dos palabras máximo"
@@ -3691,7 +3691,7 @@ es:
       default_view: "Lista de temas por defecto:"
       default_top_period: "Período por defecto para estar en la parte superior:"
       default_list_filter: "Filtro de lista por defecto:"
-      allow_badges_label: "Permitir que se concedan insignias en esta categoría"
+      allow_badges_label: "Permitir que se concedan medallas en esta categoría"
       edit_permissions: "Editar permisos"
       reviewable_by_group: "Además del personal, los siguientes grupos también pueden revisar el contenido de esta categoría:"
       review_group_name: "nombre del grupo"
@@ -4119,25 +4119,25 @@ es:
         full_page_search: "%{shortcut} Lanza la página de búsqueda"
     badges:
       earned_n_times:
-        one: "Insignia ganada %{count} vez"
-        other: "Insignia ganada %{count} veces"
+        one: "Medalla ganada %{count} vez"
+        other: "Medalla ganada %{count} veces"
       granted_on: "Concedido hace %{date}"
       others_count:
         one: "Concedido a otros %{count} vez"
         other: "Concedido a otros %{count} veces"
-      title: Insignias
-      allow_title: "Puedes usar esta insignia como título"
-      multiple_grant: "Puedes ganar esta insignia varias veces"
+      title: Medallas
+      allow_title: "Puedes usar esta medalla como título"
+      multiple_grant: "Puedes ganar esta medalla varias veces"
       badge_count:
-        one: "%{count} insignia"
-        other: "%{count} insignias"
+        one: "%{count} medalla"
+        other: "%{count} medallas"
       more_badges:
         one: "+%{count} Más"
         other: "+%{count} Más"
       awarded:
         one: "%{number} otorgado"
         other: "%{number} otorgados"
-      select_badge_for_title: Selecciona una insignia para utilizar como tu título
+      select_badge_for_title: Selecciona una medalla para utilizar como tu título
       none: "(ninguna)"
       successfully_granted: "%{badge} concedida exitosamente a %{username}"
       badge_grouping:
@@ -4151,9 +4151,9 @@ es:
           name: Otros
         posting:
           name: Publicaciones
-      favorite_max_reached: "No puedes marcar más insignias como favoritas."
-      favorite_max_not_reached: "Marcar esta insignia como favorita"
-      favorite_count: "%{count}/%{max} insignias marcadas como favoritas"
+      favorite_max_reached: "No puedes marcar más medallas como favoritas."
+      favorite_max_not_reached: "Marcar esta medalla como favorita"
+      favorite_count: "%{count}/%{max} medallas marcadas como favoritas"
     download_calendar:
       title: "Descargar calendario"
       save_ics: "Descargar archivo.ics"
@@ -4200,7 +4200,7 @@ es:
         one: "Se cambiará la etiqueta en cualquier sitio que esté en uso, sustituyéndose por <b>%{tag_name}</b> en su lugar. ¿Seguro que quieres hacer el cambio?"
         other: "Se cambiarán las etiquetas en todos los lugares en los que estén en uso y se sustituirán por <b>%{tag_name}</b> en su lugar. ¿Seguro de que quieres hacer este cambio?"
       add_synonyms_failed: "No se han podido añadir las siguientes etiquetas como sinónimos: <b>%{tag_names}</b>. Asegúrate de que no tienen sinónimos y de que no son sinónimos de otra etiqueta."
-      remove_synonym: "Quitar sinónimo"
+      remove_synonym: "Eliminar sinónimo"
       delete_synonym_confirm: '¿Seguro que quieres eliminar el sinónimo «%{tag_name}»?'
       delete_tag: "Eliminar etiqueta"
       delete_confirm:
@@ -4466,8 +4466,8 @@ es:
               content: "Administrador"
               title: "Ajustes del sitio e informes"
             badges:
-              content: "Insignias"
-              title: "Todas las insignias disponibles para ganar"
+              content: "Medallas"
+              title: "Todas las medallas disponibles para ganar"
             topics:
               content: "Temas"
               title: "Todos los temas"
@@ -4508,7 +4508,7 @@ es:
       clear_filter: "Limpiar filtro"
       no_results:
         title: "No hay resultados"
-        description: 'No hemos encontrado nada que coincida con «%{filter}».<br><br>¿Quieres <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">buscar en la configuración del sitio</a> o en la <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">lista de usuarios de administración?</a>'
+        description: 'No hemos encontrado nada que coincida con «%{filter}».<br><br>¿Quieres <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">buscar en los ajustes del sitio</a> o en la <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">lista de usuarios de administración?</a>'
     welcome_topic_banner:
       title: "Crea tu tema de bienvenida"
       description: "Tu tema de bienvenida es lo primero que leerán los nuevos miembros. Piensa en él como tu «discurso breve» o una «declaración de misión». Haz que todos sepan para quién es esta comunidad, qué pueden esperar encontrar aquí y qué te gustaría que hicieran primero."
@@ -4726,7 +4726,7 @@ es:
             type_of_web_hook_event:
               label: "Tipo de evento"
       flags:
-        title: "Indicadores de moderación"
+        title: "Banderas de moderación"
         description: "Descripción"
         enabled: "¿Activado?"
         more_options:
@@ -4796,7 +4796,7 @@ es:
         delete_warning: "Los grupos eliminados no se pueden recuperar"
         delete_failed: "No se pudo eliminar el grupo. Si este es un grupo automático, no se puede destruir."
         delete_automatic_group: Este grupo se ha creado automáticamente y no se puede eliminar.
-        delete_owner_confirm: "¿Quitar los privilegios de propietario a «%{username}»?"
+        delete_owner_confirm: "¿Eliminar los privilegios de propietario a «%{username}»?"
         add: "Añadir"
         custom: "Personalizado"
         automatic: "Automático"
@@ -5066,7 +5066,7 @@ es:
         title: "Comunidad"
         sidebar_link:
           about_your_site: "Acerca de tu sitio"
-          badges: "Insignias"
+          badges: "Medallas"
           login_and_authentication: "Inicio de sesión y autenticación"
           notifications: "Notificaciones"
           permalinks: "Enlaces permanentes"
@@ -5084,13 +5084,13 @@ es:
           color_schemes: "Esquemas de color"
           emoji: "Emoji"
           navigation: "Navegación"
-          themes: "Tema"
+          themes: "Temas"
           components:
             title: "Componentes"
             keywords: "tema|extensión"
           site_texts: "Textos del sitio"
       email_settings:
-        title: "Ajustes de correo"
+        title: "Ajustes del correo electrónico"
         sidebar_link:
           appearance: "Aspecto"
           preview_summary: "Vista previa resumen"
@@ -5132,9 +5132,10 @@ es:
           contact_email_help: |
             Dirección de correo electrónico del contacto clave responsable de este sitio. Se utiliza para notificaciones críticas y también se muestra en /about. Visible para usuarios anónimos en sitios públicos.
           contact_url: "URL de contacto"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
             URL de contacto para este sitio. Cuando está presente, sustituye a la dirección de correo electrónico de contacto en /about y es visible para los usuarios anónimos en los sitios públicos.
-          site_contact_name: "Nombre del contacto"
+          site_contact_name: "Nombre del contacto del sitio"
           site_contact_name_help: |
             Un nombre de usuario de personal válido desde el que enviar todos los mensajes automatizados. Si se deja en blanco, se utilizará la cuenta predeterminada del Sistema.
           site_contact_group: "Grupo de contacto del sitio"
@@ -5274,7 +5275,7 @@ es:
             title: "Enviar correo electrónico con enlace de descarga"
             alert: "El enlace para descargar esta copia de seguridad se te envió por correo electrónico."
           destroy:
-            title: "Quitar la copia de seguridad"
+            title: "Eliminar la copia de seguridad"
             confirm: "¿Seguro que quieres destruir esta copia de seguridad?"
           restore:
             is_disabled: "Restaurar está desactivado en la configuración del sitio."
@@ -5763,8 +5764,8 @@ es:
             unsuspend_user: "desbloquear usuario"
             removed_suspend_user: "suspender usuario (eliminado)"
             removed_unsuspend_user: "anular suspensión del usuario (eliminado)"
-            grant_badge: "conceder insignia"
-            revoke_badge: "retirar insignia"
+            grant_badge: "conceder medalla"
+            revoke_badge: "retirar medalla"
             check_email: "comprobar correo electrónico"
             delete_topic: "eliminar tema"
             recover_topic: "recuperar tema"
@@ -5806,9 +5807,9 @@ es:
             topic_published: "tema publicado"
             post_approved: "publicación aprobada"
             post_rejected: "publicación rechazada"
-            create_badge: "crear insignia"
-            change_badge: "cambiar insignia"
-            delete_badge: "eliminar insignia"
+            create_badge: "crear medalla"
+            change_badge: "cambiar medalla"
+            delete_badge: "eliminar medalla"
             merge_user: "fusionar usuario"
             entity_export: "entidad exportadora"
             change_name: "cambiar nombre"
@@ -6497,54 +6498,54 @@ es:
             prompt: "Estás a punto de cambiar tu política de contraseñas. Esto afectará a todos los usuarios que cambien sus contraseñas a partir de ahora. ¿Seguro que quieres proceder?"
             confirm: "Sí, actualizar la política de contraseñas"
       badges:
-        disable_system: Esta insignia es una insignia del sistema y no se puede desactivar ni eliminar.
+        disable_system: Esta medalla es una medalla del sistema y no se puede desactivar ni eliminar.
         status: Estado
-        title: Insignias
-        new_badge: Nueva insignia
+        title: Medallas
+        new_badge: Nueva medalla
         new: Nueva
         name: Nombre
-        badge: Insignia
+        badge: Medalla
         display_name: Nombre que se muestra
         description: Descripción
         long_description: Descripción larga
-        badge_type: Tipo de insignia
+        badge_type: Tipo de medalla
         badge_grouping: Grupo
         badge_groupings:
-          modal_title: Grupos de insignias
+          modal_title: Grupos de medallas
         granted_by: Concedido por
         granted_at: Concedido en
         reason_help: (Enlace a una publicación o tema)
         save: Guardar
         delete: Eliminar
-        delete_confirm: '¿Seguro que quieres eliminar esta insignia?'
+        delete_confirm: '¿Seguro que quieres eliminar esta medalla?'
         revoke: Revocar
         reason: Motivo
         expand: Expandir &hellip;
-        revoke_confirm: '¿Seguro que quieres revocar esta insignia?'
-        edit_badges: Editar insignias
-        grant_badge: Conceder insignia
-        granted_badges: Insignias concedidas
+        revoke_confirm: '¿Seguro que quieres revocar esta medalla?'
+        edit_badges: Editar medallas
+        grant_badge: Conceder medalla
+        granted_badges: Medallas concedidas
         grant: Conceder
-        no_user_badges: "%{name} no ha recibido ninguna insignia."
-        no_badges: No hay insignias que puedan ser concedidas.
-        none_selected: "Selecciona una insignia para empezar"
-        allow_title: Permitir que se use la insignia como título
+        no_user_badges: "%{name} no ha recibido ninguna medalla."
+        no_badges: No hay medallas que puedan ser concedidas.
+        none_selected: "Selecciona una medalla para empezar"
+        allow_title: Permitir que se use la medalla como título
         multiple_grant: Se puede conceder varias veces
-        listable: Mostrar insignia en la página pública de insignias
+        listable: Mostrar medalla en la página pública de medallas
         enabled: activado
         disabled: desactivado
         icon: Icono
         image: Imagen
         graphic: Gráfico
-        icon_or_image: Una insignia requiere un icono o una imagen
+        icon_or_image: Una medalla requiere un icono o una imagen
         icon_help: "Introduce un nombre de icono de Font Awesome (usa el prefijo «far-» para iconos normales y «fab-» para iconos de marca)"
         select_an_icon: "Selecciona un icono"
         upload_an_image: "Sube una imagen"
         read_only_setting_help: "Personalizar texto"
-        query: Consulta de insignia (SQL)
+        query: Consulta de medalla (SQL)
         target_posts: Publicaciones destino de la consulta
         auto_revoke: Ejecutar diariamente la consulta de revocación
-        show_posts: Mostrar la publicación por la cual se concedió la insignia en la página de insignias
+        show_posts: Mostrar la publicación por la cual se concedió la medalla en la página de medallas
         trigger: Activador
         trigger_type:
           none: "Actualizar diariamente"
@@ -6553,18 +6554,18 @@ es:
           trust_level_change: "Cuando un usuario cambia el nivel de confianza"
           user_change: "Cuando se edita o se crea un usuario"
         preview:
-          link_text: "Vista previa de las insignias concedidas"
+          link_text: "Vista previa de las medallas concedidas"
           plan_text: "Vista previa con el plan de ejecución de tu consulta"
-          modal_title: "Vista previa de la consulta para la insignia"
+          modal_title: "Vista previa de la consulta para la medalla"
           sql_error_header: "Ocurrió un error con la consulta."
-          error_help: "Mira los siguientes enlaces para ayudarte con las solicitudes de las insignias"
+          error_help: "Mira los siguientes enlaces para ayudarte con las solicitudes de las medallas"
           bad_count_warning:
             header: "¡ADVERTENCIA!"
-            text: "Faltan algunas muestras de concesiones. Esto ocurre cuando la solicitud de la insignia devuelve ID de usuarios o de publicaciones que no existen. Esto podría causar resultados inesperados más tarde. Revisa de nuevo tu solicitud."
-          no_grant_count: "No hay insignias para asignar."
+            text: "Faltan algunas muestras de concesiones. Esto ocurre cuando la solicitud de la medalla devuelve ID de usuarios o de publicaciones que no existen. Esto podría causar resultados inesperados más tarde. Revisa de nuevo tu solicitud."
+          no_grant_count: "No hay medallas para asignar."
           grant_count:
-            one: "<b>%{count}</b> insignia para conceder."
-            other: "<b>%{count}</b> insignias para conceder."
+            one: "<b>%{count}</b> medalla para conceder."
+            other: "<b>%{count}</b> medallas para conceder."
           sample: "Muestra:"
           grant:
             with: <span class="username">%{username}</span>
@@ -6572,24 +6573,21 @@ es:
             with_post_time: <span class="username">%{username}</span> por la publicación en %{link} a las <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> a las <span class="time">%{time}</span>
         badge_intro:
-          title: "Selecciona una insignia existente o crea una para empezar"
-          what_are_badges_title: "¿Qué son las insignias?"
-          badge_query_examples_title: "Ejemplos de consultas de insignias"
+          title: "Selecciona una medalla existente o crea una para empezar"
+          what_are_badges_title: "¿Qué son las medallas?"
+          badge_query_examples_title: "Ejemplos de consultas de medallas"
         mass_award:
           title: Conceder en masa
-          description: Concede la misma insignia a muchos usuarios a la vez.
-          no_badge_selected: Selecciona una insignia para empezar.
-          perform: "Conceder insignia a los usuarios"
+          description: Concede la misma medalla a muchos usuarios a la vez.
+          no_badge_selected: Selecciona una medalla para empezar.
+          perform: "Conceder medalla a los usuarios"
           upload_csv: Sube un archivo CSV con correos electrónicos o nombres de usuario
           aborted: Sube un archivo CSV que contenga correos electrónicos o nombres de usuario
           success:
-            one: "Se ha recibido tu CSV y %{count} usuario recibirá su insignia en breve."
-            other: "Se ha recibido tu CSV y %{count} usuarios recibirán su insignia en breve."
+            one: "Se ha recibido tu CSV y %{count} usuario recibirá su medalla en breve."
+            other: "Se ha recibido tu CSV y %{count} usuarios recibirán su medalla en breve."
           csv_has_unmatched_users: "Las siguientes filas del CSV no se han podido enlazar con usuarios existentes, por lo que no se les distribuirá ninguna medalla:"
-          csv_has_unmatched_users_truncated_list:
-            one: "%{count} entrada en el archivo CSV que no se pudo emparejar con usuarios existentes, y por lo tanto no recibirá la insignia. Debido al gran número de entradas no coincidentes, solo se muestran las 100 primeras:"
-            other: "%{count} entradas en el archivo CSV que no se pudieron emparejar con usuarios existentes, y por lo tanto no recibirán la insignia. Debido al gran número de entradas no coincidentes, solo se muestran las 100 primeras:"
-          replace_owners: Quitar insignia de los anteriores propietarios
+          replace_owners: Eliminar medalla de los anteriores propietarios
           grant_existing_holders: Conceder una vez más la medalla a las cuentas que ya la tengan
       emoji:
         title: "Emoji"

@@ -12,7 +12,6 @@ pl_PL:
     poll_minimum_trust_level_to_create: "Minimalny poziom zaufania potrzebny do stworzenia ankiety."
     poll_create_allowed_groups: "Grupy, które mogą tworzyć ankiety."
     poll_groupable_user_fields: "Zestaw nazw pól użytkownika, który może zostać użyty do grupowania i filtrowania wyników ankiet."
-    poll_export_data_explorer_query_id: "ID zapytania Data Explorera do używania w trakcie eksportowania wyników ankiet (0, by wyłączyć)."
     poll_default_public: "Podczas tworzenia nowej ankiety domyślnie włącz opcję 'show who voted'."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"

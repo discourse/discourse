@@ -64,6 +64,10 @@ ru:
     enabled_filter: "Включено"
     disabled_filter: "Отключено"
     updates_available_filter: "Доступны обновления"
+  theme_settings:
+    errors:
+      json_value:
+        too_large: "превышает максимальный размер в %{max_size} Б."
   themes:
     bad_color_scheme: "Не удаётся обновить тему, недопустимая цветовая палитра"
     other_error: "При обновлении темы оформления что-то пошло не так"
@@ -116,11 +120,135 @@ ru:
       name_too_long: "Есть настройка со слишком длинным названием. Максимальная длина — 255 символов."
       default_value_missing: "Настройка `%{name}` не имеет значения по умолчанию."
       default_not_match_type: "Стандартные значения настройки `%{name}` не соответствуют допустимым типам."
+      default_value_not_valid: "Недействительное значение по умолчанию для настройки `%{name}`. %{error_messages}"
       enum_value_not_valid: "Выбранное значение не является одним из вариантов перечисления."
       number_value_not_valid_min_max: "Значение должно быть от %{min} до %{max}."
+      number_value_not_valid_min: "Значение должно быть равно или больше %{min}."
+      number_value_not_valid_max: "Значение должно быть равно или меньше %{max}."
+      string_value_not_valid_min_max: "Значение должно содержать от %{min} до %{max} симв."
+      string_value_not_valid_min:
+        one: "Значение должно содержать минимум %{count} символ."
+        few: "Значение должно содержать минимум %{count} символа."
+        many: "Значение должно содержать минимум %{count} символов."
+        other: "Значение должно содержать минимум %{count} символа."
+      string_value_not_valid_max:
+        one: "Значение должно содержать максимум %{count} символ."
+        few: "Значение должно содержать максимум %{count} символа."
+        many: "Значение должно содержать максимум %{count} символов."
+        other: "Значение должно содержать максимум %{count} символа."
       objects:
+        humanize_required: "Свойство JSON Pointer '%{property_json_pointer}' не может быть пустым."
         required: "не может быть пустым"
+        humanize_invalid_type: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь тип «%{type}»."
+        invalid_type: "Тип «%{type}» не является допустимым"
+        humanize_not_valid_string_value: "Свойство JSON Pointer '%{property_json_pointer}' должно быть строкой."
+        not_valid_string_value: "должно быть строкой"
+        humanize_not_valid_integer_value: "Свойство JSON Pointer '%{property_json_pointer}' должно быть целым числом."
         not_valid_integer_value: "должно быть целым"
+        humanize_not_valid_float_value: "Свойство JSON Pointer '%{property_json_pointer}' должно быть числом с плавающей запятой."
+        not_valid_float_value: "должно быть числом с плавающей запятой"
+        humanize_not_valid_boolean_value: "Свойство JSON Pointer '%{property_json_pointer}' должно быть логическим значением."
+        not_valid_boolean_value: "должно быть логическим значением"
+        humanize_not_valid_enum_value: "Свойство JSON Pointer '%{property_json_pointer}' должно быть одним из следующих значений: %{choices}."
+        not_valid_enum_value: "должно быть одним из следующих значений: %{choices}"
+        humanize_not_valid_categories_value: "Свойство JSON Pointer '%{property_json_pointer}' должно быть массивом допустимых идентификаторов категорий."
+        not_valid_categories_value: "должно быть массивом допустимых идентификаторов категорий"
+        humanize_categories_value_not_valid_min:
+          one: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь минимум %{count} идентификатор категории."
+          few: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь минимум %{count} идентификатора категорий."
+          many: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь минимум %{count} идентификаторов категорий."
+          other: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь минимум %{count} идентификатора категории."
+        categories_value_not_valid_min:
+          one: "должно иметь минимум %{count} идентификатор категории"
+          few: "должно иметь минимум %{count} идентификатора категорий"
+          many: "должно иметь минимум %{count} идентификаторов категорий"
+          other: "должно иметь минимум %{count} идентификатора категории"
+        humanize_categories_value_not_valid_max:
+          one: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь максимум %{count} идентификатор категории."
+          few: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь максимум %{count} идентификатора категорий."
+          many: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь максимум %{count} идентификаторов категорий."
+          other: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь максимум %{count} идентификатора категории."
+        categories_value_not_valid_max:
+          one: "должно иметь максимум %{count} идентификатор категории"
+          few: "должно иметь максимум %{count} идентификатора категорий"
+          many: "должно иметь максимум %{count} идентификаторов категорий"
+          other: "должно иметь максимум %{count} идентификатора категории"
+        humanize_not_valid_topic_value: "Свойство JSON Pointer '%{property_json_pointer}' должно быть действительным идентификатором темы."
+        not_valid_topic_value: "должно быть действительным идентификатором темы"
+        humanize_not_valid_post_value: "Свойство JSON Pointer '%{property_json_pointer}' должно быть действительным идентификатором публикации."
+        not_valid_post_value: "должно быть действительным идентификатором публикации"
+        humanize_not_valid_groups_value: "Свойство JSON Pointer '%{property_json_pointer}' должно быть массивом допустимых идентификаторов групп."
+        not_valid_groups_value: "должно быть массивом допустимых идентификаторов групп"
+        humanize_groups_value_not_valid_min:
+          one: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь минимум %{count} идентификатор группы."
+          few: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь минимум %{count} идентификатора групп."
+          many: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь минимум %{count} идентификаторов групп."
+          other: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь минимум %{count} идентификатора группы."
+        groups_value_not_valid_min:
+          one: "должно иметь минимум %{count} идентификатор группы"
+          few: "должно иметь минимум %{count} идентификатора групп"
+          many: "должно иметь минимум %{count} идентификаторов групп"
+          other: "должно иметь минимум %{count} идентификатора группы"
+        humanize_groups_value_not_valid_max:
+          one: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь максимум %{count} идентификатор группы."
+          few: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь максимум %{count} идентификатора групп."
+          many: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь максимум %{count} идентификаторов групп."
+          other: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь максимум %{count} идентификатора группы."
+        groups_value_not_valid_max:
+          one: "должно иметь максимум %{count} идентификатор группы"
+          few: "должно иметь максимум %{count} идентификатора групп"
+          many: "должно иметь максимум %{count} идентификаторов групп"
+          other: "должно иметь максимум %{count} идентификатора группы"
+        humanize_not_valid_tags_value: "Свойство JSON Pointer '%{property_json_pointer}' должно быть массивом допустимых имен тегов."
+        not_valid_tags_value: "должно быть массивом допустимых имен тегов"
+        humanize_tags_value_not_valid_min:
+          one: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь минимум %{count} имя тега."
+          few: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь минимум %{count} имени тегов."
+          many: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь минимум %{count} имен тегов."
+          other: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь минимум %{count} имени тега."
+        tags_value_not_valid_min:
+          one: "должно иметь минимум %{count} имя тега"
+          few: "должно иметь минимум %{count} имени тегов"
+          many: "должно иметь минимум %{count} имен тегов"
+          other: "должно иметь минимум %{count} имени тега"
+        humanize_tags_value_not_valid_max:
+          one: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь максимум %{count} имя тега."
+          few: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь максимум %{count} имени тегов."
+          many: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь максимум %{count} имен тегов."
+          other: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь максимум %{count} имени тега."
+        tags_value_not_valid_max:
+          one: "должно иметь максимум %{count} имя тега"
+          few: "должно иметь максимум %{count} имени тегов"
+          many: "должно иметь максимум %{count} имен тегов"
+          other: "должно иметь максимум %{count} имени тега"
+        humanize_not_valid_upload_value: "Свойство JSON Pointer '%{property_json_pointer}' должно быть действительным идентификатором загрузки."
+        not_valid_upload_value: "должно быть действительным идентификатором загрузки"
+        humanize_string_value_not_valid_min:
+          one: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь минимум %{count} символ."
+          few: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь минимум %{count} символа."
+          many: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь минимум %{count} символов."
+          other: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь минимум %{count} символа."
+        string_value_not_valid_min:
+          one: "должно иметь минимум %{count} символ"
+          few: "должно иметь минимум %{count} символа"
+          many: "должно иметь минимум %{count} символов"
+          other: "должно иметь минимум %{count} символа"
+        humanize_string_value_not_valid_max:
+          one: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь максимум %{count} символ."
+          few: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь максимум %{count} символа."
+          many: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь максимум %{count} символов."
+          other: "Свойство JSON Pointer '%{property_json_pointer}' должно иметь максимум %{count} символа."
+        string_value_not_valid_max:
+          one: "должно иметь максимум %{count} символ"
+          few: "должно иметь максимум %{count} символа"
+          many: "должно иметь максимум %{count} символов"
+          other: "должно иметь максимум %{count} символа"
+        humanize_number_value_not_valid_min: "Свойство JSON Pointer '%{property_json_pointer}' должно быть равно или больше %{min}."
+        number_value_not_valid_min: "должно быть равно или больше %{min}"
+        humanize_number_value_not_valid_max: "Свойство JSON Pointer '%{property_json_pointer}' должно быть равно или меньше %{max}."
+        number_value_not_valid_max: "должно быть равно или меньше %{max}"
+        humanize_string_value_not_valid_url: "Свойство JSON Pointer '%{property_json_pointer}' должно быть действительным URL."
+        string_value_not_valid_url: "должно быть действительным URL"
     locale_errors:
       top_level_locale: "Ключ верхнего уровня в файле локали должен соответствовать имени локали"
       invalid_yaml: "Неверный перевод YAML-файла"
@@ -131,6 +259,7 @@ ru:
       maximum_staged_user_per_email_reached: "Достигнуто максимальное количество сымитированных пользователей, созданных по электронной почте."
       no_subject: "(нет темы)"
       no_body: "(нет содержимого)"
+      attachments: "(вложения)"
       missing_attachment: "(Вложение %{filename} отсутствует)"
       continuing_old_discussion:
         one: "Продолжение обсуждение темы [%{title}](%{url}), поскольку указанная тема была создана более %{count} дня назад."
@@ -163,6 +292,11 @@ ru:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
+      too_long_validation:
+        one: "не может быть длиннее %{count} символа, а введено %{length}."
+        few: "не может быть длиннее %{count} симв., а введено %{length}."
+        many: "не может быть длиннее %{count} симв., а введено %{length}."
+        other: "не может быть длиннее %{count} симв., а введено %{length}."
       invalid_boolean: "Неправильное логическое значение."
       taken: "уже занято"
       accepted: должно быть принято
@@ -215,6 +349,7 @@ ru:
         other: неправильная длина (должно быть %{count} символов)
       other_than: "не должно быть равно %{count}"
       auth_overrides_username: "Имя пользователя должно быть обновлено на стороне поставщика аутентификации, так как включена настройка `sso_overrides_username`."
+      required: "требуется"
     template:
       body: ! "Обнаружены ошибки в следующих полях:"
       header:
@@ -227,6 +362,8 @@ ru:
     site_settings:
       invalid_site_setting: "Настройка с именем «%{name}» не существует"
       invalid_category_id: "Вы указали несуществующую категорию"
+      site_setting_is_hidden: "Вы не можете изменять скрытые настройки"
+      site_setting_is_unconfigurable: "Вы не можете изменять неконфигурируемые настройки"
       invalid_choice:
         one: "«%{name}» — недопустимые варианты."
         few: "«%{name}» — недопустимые варианты."
@@ -297,6 +434,7 @@ ru:
     requires_groups: "Приглашение не сохранено: указанная тема недоступна. Добавьте одну из следующих групп: %{groups}."
     max_invite_emails_limit_exceeded: "Запрос не выполнен, поскольку количество писем превысило максимальное (%{max})."
     domain_not_allowed: "Ваш адрес электронной почты не может быть использован для активации этого приглашения."
+    domain_not_allowed_admin: "Этот домен нельзя использовать для приглашений."
     max_redemptions_allowed_one: "для приглашений по электронной почте должно быть равно 1."
     redemption_count_less_than_max: "должно быть меньше %{max_redemptions_allowed}."
     email_xor_domain: "Одновременное указание домена и адреса электронной почты не допускается"
@@ -435,7 +573,9 @@ ru:
   is_invalid: "не совсем ясно, это предложение закончено?"
   next_page: "следующая страница →"
   prev_page: "← предыдущая страница"
+  show_post_in_topic: "показать публикацию в теме"
   page_num: "Страница %{num}"
+  crawler_content_hidden: "HTML-контент пропущен, поскольку вы вошли в систему или используете современное мобильное устройство."
   home_title: "Главная"
   topics_in_category: "Темы в категории «%{category}»"
   rss_posts_in_topic: "RSS-лента темы «%{topic}»"
@@ -453,6 +593,7 @@ ru:
   read_full_topic: "Читать всю тему"
   private_message_abbrev: "Сообщ."
   rss_description:
+    hot: "Горячие темы"
     latest: "Последние темы"
     top: "Лучшие темы"
     top_all: "Лучшие темы за всё время"
@@ -581,6 +722,11 @@ ru:
 
       Большинству намного проще читать темы, содержащие несколько ответов в одном сообщении, чем много отдельных коротких ответов.
     dominating_topic: Вы активно пишете в этой теме! Стоит дать и другим возможность ответить и обсудить тему.
+    get_a_room:
+      one: Вы ответили пользователю @%{reply_username} %{count} раз — возможно, было бы удобнее отправить личное сообщение?
+      few: Вы ответили пользователю @%{reply_username} %{count} р. — возможно, было бы удобнее отправить личное сообщение?
+      many: Вы ответили пользователю @%{reply_username} %{count} р. — возможно, было бы удобнее отправить личное сообщение?
+      other: Вы ответили пользователю @%{reply_username} %{count} р. — возможно, было бы удобнее отправить личное сообщение?
     dont_feed_the_trolls: Это сообщение уже помечено как требующее внимания модератора. Действительно ответить на него? Ответы на негативный контент обычно только поощряют негативное поведение.
     too_many_replies: |
       ### Вы дали максимально возможное количество ответов в этой теме
@@ -632,6 +778,7 @@ ru:
               same_as_username: "совпадает с именем пользователя. Придумайте более надёжный пароль."
               same_as_email: "совпадает с адресом электронной почты. Придумайте более надёжный пароль."
               same_as_current: "совпадает с текущим паролем."
+              same_as_previous: "совпадает с предыдущим паролем."
               same_as_name: "совпадает с именем."
               unique_characters: "содержит слишком много повторяющихся символов. Придумайте более надёжный пароль."
             username:
@@ -686,6 +833,7 @@ ru:
             base:
               invalid_url: "Указанный URL не является корректной ссылкой"
               invalid_tag_list: "Некорректный список замещающих тегов"
+              invalid_html: "HTML можно использовать только для замены"
         sidebar_section_link:
           attributes:
             linkable_type:
@@ -700,7 +848,23 @@ ru:
   staff_category_description: "Закрытая категория для персонала. Темы видны только администраторам и модераторам."
   discourse_welcome_topic:
     title: "Добро пожаловать на сайт %{site_title}! :wave:"
+    body: |
+      Мы рады, что вы присоединились к нам!
+
+      %{site_info_quote}
+
+      С чего мы рекомендуем начать:
+
+      :speaking_head: **Представьтесь**. Добавьте аватар и информацию о себе и своих интересах в [профиль](%{base_path}/my/preferences/account). Дайте нам знать, на вопросы по какой теме вы бы охотно ответили.
+
+      :open_book: **Познакомьтесь с сообществом**. [Посмотрите актуальные обсуждения](%{base_path}/latest). Если одна из публикаций покажется вам интересной, информативной или забавной, выразите свою признательность или поддержку — поставьте :heart:!
+
+      :handshake: **Участвуйте в жизни сообщества**. Комментируйте, делитесь своей точкой зрения, задавайте вопросы и давайте обратную связь в обсуждении. Прежде чем отвечать или создавать новые темы, ознакомьтесь с [рекомендациями для сообщества](%{base_path}/faq).
+
+      > Если нужна помощь или у вас есть предложение, задайте вопрос в разделе %{feedback_category} или [обратитесь к администраторам](%{base_path}/about).
   admin_quick_start_title: "Руководство администратора. Начало работы"
+  topic_view_stats:
+    invalid_date: "Дата имеет неверный формат. Используйте YYYY-MM-DD"
   category:
     topic_prefix: "Описание категории «%{category}»"
     replace_paragraph: "(Замените этот первый абзац кратким описанием новой категории. Оно будет показано под названием при отображении списка категорий, поэтому старайтесь, чтобы оно не превышало 200 символов.)"
@@ -977,6 +1141,9 @@ ru:
       description: 'Это сообщение содержит контент, который обоснованно можно считать оскорбительным, разжигающим ненависть или нарушающим <a href="%{base_path}/guidelines">рекомендации для сообщества</a>.'
       short_description: 'Нарушение <a href="%{base_path}/guidelines">рекомендаций для сообщества</a>'
     illegal:
+      title: "Незаконный контент"
+      description: "Эта публикация требует внимания персонала — я считаю, она содержит незаконный контент."
+      short_description: "Это незаконный контент"
       email_title: 'Сообщение в теме «%{title}» требует внимания персонала'
       email_body: "%{link}\n\n%{message}"
     notify_user:
@@ -1015,6 +1182,7 @@ ru:
     pop3_authentication_error: "Возникла проблема с учётными данными POP3, проверьте имя пользователя и пароль и повторите попытку."
     imap_authentication_error: "Возникла проблема с учётными данными IMAP, проверьте имя пользователя и пароль и повторите попытку."
     imap_no_response_error: "Произошла ошибка при подключении к IMAP-серверу. %{message}"
+    smtp_authentication_error: "Возникла проблема с учётными данными SMTP, проверьте имя пользователя и пароль и повторите попытку. %{message}"
     smtp_server_busy_error: "SMTP-сервер сейчас занят, повторите попытку позже."
     smtp_unhandled_error: "Произошла необработанная ошибка при подключении к SMTP-серверу. %{message}"
     imap_unhandled_error: "Произошла необработанная ошибка при подключении к IMAP-серверу. %{message}"
@@ -1057,7 +1225,10 @@ ru:
       email_title: 'Тема «%{title}» требует внимания модератора'
       email_body: "%{link}\n\n%{message}"
     illegal:
-      email_title: 'Сообщение в теме «%{title}» требует внимания персонала'
+      title: "Незаконный контент"
+      description: "Эта тема требует внимания персонала — я считаю, что она содержит незаконный контент."
+      short_description: "Это незаконный контент"
+      email_title: 'Публикация в теме «%{title}» требует внимания персонала'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>На ваше сообщение поступила жалоба от сообщества. <a href="%{path}">Проверьте личные сообщения</a>.</p>'
@@ -1132,6 +1303,9 @@ ru:
   flags:
     errors:
       already_handled: "Жалоба уже была обработана"
+      wrong_move: "Жалобу нельзя переместить"
+      system: "Системную метку нельзя обновить или удалить."
+      used: "Метку нельзя обновить или удалить, так как она уже используется."
   reports:
     default:
       labels:
@@ -1185,6 +1359,7 @@ ru:
       title: "Визиты пользователей"
       xaxis: "Дата"
       yaxis: "Количество визитов"
+      description: "Количество визитов авторизованных пользователей."
     signups:
       title: "Регистрации"
       xaxis: "Дата"
@@ -1225,7 +1400,14 @@ ru:
       yaxis: "Дата"
       description: "Запросы к API для обычных и пользовательских API-ключей."
     consolidated_page_views_browser_detection:
-      yaxis: "Дата"
+      title: "Объединенная статистика просмотров с определением браузера (экспериментальная функция)"
+      xaxis:
+        page_view_anon_browser: "Анонимный браузер"
+        page_view_logged_in_browser: "Авторизованный браузер"
+        page_view_crawler: "Опознанный поисковый робот"
+        page_view_other: "Другие просмотры"
+      yaxis: "День"
+      description: "Просмотры авторизованных пользователей, анонимных пользователей, опознанных поисковых роботов и других. Этот экспериментальный отчет позволяет перед подсчетом убедиться, что запросы авторизованных/анонимных пользователей поступают из реальных браузеров."
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Дата"
@@ -1386,9 +1568,15 @@ ru:
       yaxis: "Анонимные просмотры с мобильных устройств"
       description: "Количество новых просмотров с мобильных устройств посетителями, которые не вошли в систему."
     page_view_anon_browser_reqs:
-      xaxis: "Дата"
+      title: "Просмотры от авторизованных пользователей в браузере"
+      xaxis: "День"
+      yaxis: "Просмотры от анонимных пользователей в браузере"
+      description: "Количество просмотров от анонимных посетителей, использующих реальные браузеры."
     page_view_logged_in_browser_reqs:
-      xaxis: "Дата"
+      title: "Просмотры от авторизованных пользователей в браузере"
+      xaxis: "День"
+      yaxis: "Просмотры от авторизованных пользователей в браузере"
+      description: "Количество просмотров от авторизованных посетителей, использующих реальные браузеры."
     http_background_reqs:
       title: "Фоновые"
       xaxis: "Дата"
@@ -1427,6 +1615,7 @@ ru:
       title: "Посещения с мобильных устройств"
       xaxis: "Дата"
       yaxis: "Количество визитов"
+      description: "Количество уникальных авторизованных пользователей, посетивших сайт с мобильных устройств."
     web_crawlers:
       title: "Поисковые роботы"
       labels:
@@ -1434,7 +1623,10 @@ ru:
         page_views: "Просмотры"
       description: "Список поисковых роботов, отсортированный по просмотрам страниц."
     web_hook_events_daily_aggregate:
-      xaxis: "Дата"
+      title: "События вебхука"
+      xaxis: "День"
+      yaxis: "Количество событий"
+      description: "Количество срабатываний событий вебхука или их средняя продолжительность."
     suspicious_logins:
       title: "Подозрительные входы"
       labels:
@@ -1488,20 +1680,50 @@ ru:
         qtt_like: Получено лайков
       description: "Топ-10 пользователей по количеству лайков, полученных от различных пользователей."
     topic_view_stats:
+      title: "Статистика просмотров тем"
       labels:
-        topic: Перенаправление в тему
+        topic: Тема
         logged_in_views: Авторизованные пользователи
         anon_views: Анонимные просмотры
         total_views: Всего
+      description: "Топ-100 самых просматриваемых тем за определенный период с учетом просмотров от авторизованных и анонимных пользователей. Можно фильтровать по категориям."
   dashboard:
     problem:
+      twitter_login: 'Похоже, вход в Твиттер/X сейчас не работает. Проверьте учетные данные в <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">в настройках сайта</a>.'
+      group_email_credentials: 'Возникла проблема с учетными данными электронной почты для группы <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Электронная почта не будет отправляться из почтового ящика группы, пока эта проблема не будет решена. %{error}'
       rails_env: "Сервер работает в режиме %{env}."
       host_names: "Файл config/database.yml использует имя хоста localhost по умолчанию. Измените его на имя хоста сайта."
-      queue_size: "Большое количество заданий в очереди: %{queue_size}. Это может привести к проблемам с процессами Sidekiq — придётся добавить больше рабочих процессов Sidekiq."
+      sidekiq: 'Планировщик заданий Sidekiq не запущен. Многие задачи, в том числе отправка писем, должны выполняться им асинхронно. Должен быть запущен хотя бы один процесс sidekiq. Подробнее о Sidekiq — <a href="https://github.com/mperham/sidekiq" target="_blank">здесь</a>.'
+      queue_size: "Большое количество заданий в очереди: %{queue_size}. Это может привести к проблемам с процессами Sidekiq — придется добавить больше рабочих процессов Sidekiq."
       ram: "Сервер использует менее 1 ГБ памяти. Рекомендовано использовать минимум 1 ГБ."
+      google_oauth2_config: 'Сервер настроен так, чтобы разрешать регистрацию и вход с помощью Google OAuth2 (enable_google_oauth2_logins), но идентификатор клиента и значения секретного кода клиента не заданы. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и измените параметры. Подробнее — в <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">этом руководстве</a>.'
+      facebook_config: 'Сервер настроен так, чтобы разрешать регистрацию и вход с помощью Facebook (enable_facebook_logins), но идентификатор приложения и значения ключа приложения не заданы. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и измените параметры. Подробнее — в <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">этом руководстве</a>.'
+      twitter_config: 'Сервер настроен так, чтобы разрешать регистрацию и вход с помощью Twitter (enable_twitter_logins), но ключ и значения ключа не заданы. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и измените параметры. Подробнее — в <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">этом руководстве</a>.'
+      github_config: 'Сервер настроен, так, чтобы разрешать регистрацию и вход с помощью GitHub (enable_github_logins), но идентификатор клиента и значения ключа не заданы. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и измените параметры. Подробнее — в <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">этом руководстве</a>.'
+      s3_upload_config: 'Сервер настроен на загрузку файлов в S3, но как минимум один из следующих параметров не задан: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile или s3_upload_bucket. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и измените параметры. Подробнее — на странице <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">«Как настроить загрузку изображений в S3»</a>.'
+      s3_backup_config: 'Сервер настроен на загрузку резервных копий в S3, но как минимум один из следующих параметров не задан: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile или s3_backup_bucket. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и измените параметры. Подробнее — на странице <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">«Как настроить загрузку изображений в S3»</a>.'
+      s3_cdn: 'Сервер настроен на загрузку файлов в S3, но CDN не настроена. Это может привести к увеличению затрат на хранение данных и снижению производительности сайта. Подробнее — на странице <a href="https://meta.discourse.org/t/-/148916" target="_blank">«Использование объектного хранилища для загрузок»</a>.'
+      image_magick: 'Сервер настроен на создание миниатюр больших изображений, но ImageMagick не установлен. Установите ImageMagick с помощью менеджера пакетов или <a href="https://www.imagemagick.org/script/download.php" target="_blank">скачайте последнюю версию</a> с официального сайта.'
+      failing_emails: 'Не удалось выполнить задания электронной почты в количестве %{num_failed_jobs}. Проверьте настройки почтового сервера в файле app.yml. <a href="%{base_path}/sidekiq/retries" target="_blank">Смотрите невыполненные задания в Sidekiq</a>.'
       subfolder_ends_in_slash: "Неверная настройка вложенной папки; DISCOURSE_RELATIVE_URL_ROOT заканчивается косой чертой."
+      translation_overrides: "Некоторые из ваших переопределений перевода устарели. Проверьте <a href='%{base_path}/admin/customize/site_texts?outdated=true'>настройки текстового оформления</a>."
+      email_polling_errored_recently:
+        one: "Опрос электронной почты вызвал %{count} ошибку за последние 24 часа. Подробности смотрите в <a href='%{base_path}/logs' target='_blank'>журналах</a>."
+        few: "Опрос электронной почты вызвал %{count} ошибки за последние 24 часа. Подробности смотрите в <a href='%{base_path}/logs' target='_blank'>журналах</a>."
+        many: "Опрос электронной почты вызвал %{count} ошибок за последние 24 часа. Подробности смотрите в <a href='%{base_path}/logs' target='_blank'>журналах</a>."
+        other: "Опрос электронной почты вызвал %{count} ошибки за последние 24 часа. Подробности смотрите в <a href='%{base_path}/logs' target='_blank'>журналах</a>."
       missing_mailgun_api_key: "Сервер настроен на отправку писем через Mailgun, но вы не предоставили ключ API, используемый для проверки сообщений вебхука."
+      bad_favicon_url: "Значок сайта не загружается. Проверьте его параметры в <a href='%{base_path}/admin/site_settings'>настройках сайта</a>."
+      poll_pop3_timeout: "Время подключения к серверу POP3 истекло. Не удалось получить входящую почту. Проверьте <a href='%{base_path}/admin/site_settings/category/email'>настройки POP3</a> и поставщика услуг."
+      poll_pop3_auth_error: "Не удается подключиться к серверу POP3 из-за ошибки аутентификации. Проверьте <a href='%{base_path}/admin/site_settings/category/email'>настройки POP3</a>."
+      force_https: "Ваш сайт использует SSL. Но параметр `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` еще не включен в настройках вашего сайта."
+      out_of_date_themes: "Есть обновления для следующих тем: %{themes_list}"
+      unreachable_themes: "Не удается проверить наличие обновлений для следующих тем: %{themes_list}"
+      watched_words: "Недопустимое регулярное выражение для контролируемых слов типа «%{action}». Проверьте <a href='%{base_path}/admin/customize/watched_words'>параметры контролируемых слов</a> или отключите в настройках сайта пункт 'watched words regular expressions'."
       google_analytics_version: "Ваша версия Discourse использует Google Аналитику 3, поддержка которой прекратится после июля 2023 года. <a href='https://meta.discourse.org/t/260498'>Обновитесь до Google Аналитики 4</a> — так вы сможете и в дальнейшем получать ценную информацию и статистику о работе веб-сайта."
+      category_style_deprecated: "Сейчас в вашем Discourse используется устаревший стиль категорий, который будет удален до выхода финальной бета-версии Discourse 3.2. Инструкции о том, как сохранить выбранный стиль категории, см. в статье <a href='https://meta.discourse.org/t/282441'>«Переход к настройке сайта с единым стилем категорий»</a>."
+      maxmind_db_configuration: 'Сервер сконфигурирован на использование баз данных MaxMind для обратного поиска IP-адресов, но действительный идентификатор аккаунта MaxMind не настроен, что может привести к невозможности загрузки баз данных MaxMind в будущем. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Чтобы узнать больше, прочтите это руководство</a>.'
+    back_from_logster_text: "Вернуться на сайт"
   site_settings:
     allow_bulk_invite: "Разрешить массовые приглашения путём загрузки CSV-файла"
     disabled: "отключено"
@@ -1516,11 +1738,13 @@ ru:
     min_first_post_length: "Минимально допустимая длина первой публикации (основного текста темы) (без учета личных сообщений)"
     min_personal_message_post_length: "Минимально допустимая длина публикации в символах (как первого сообщения, так и ответов)"
     max_post_length: "Максимум символов в сообщении"
+    topic_featured_link_enabled: "Разрешает пользователям добавлять к создаваемой теме избранную ссылку. Если включить этот параметр, к темам можно будет прикреплять видную всем выделенную ссылку, которую можно будет изменить, если у пользователя достаточно прав. Избранная ссылка позволяет добавить контекст для лучшего понимания темы."
     show_topic_featured_link_in_digest: "Показывать ссылку на избранную тему в дайджесте по эл. почте."
     min_topic_views_for_delete_confirm: "Минимальное количество просмотров темы, при котором появляется всплывающее окно с запросом подтверждения при её удалении"
     min_topic_title_length: "Минимум символов в названии темы"
     max_topic_title_length: "Максимум символов в названии темы"
     min_personal_message_title_length: "Минимум символов в заголовке сообщения"
+    max_emojis_in_title: "Максимальное количество эмодзи в названии темы. Если указать ноль, использование эмодзи в названии тем будет запрещено."
     min_search_term_length: "Минимальное количество символов в поисковом запросе"
     search_tokenize_chinese: "Принудительный поиск для токенизации китайского языка даже на некитайских сайтах"
     search_tokenize_japanese: "Принудительный поиск для токенизации японского языка даже на неяпонских сайтах"
@@ -1529,6 +1753,7 @@ ru:
     log_search_queries: "Сохранять в журнале поисковые запросы пользователей"
     search_query_log_max_size: "Максимальное количество сохраняемых поисковых запросов"
     search_query_log_max_retention_days: "Максимальное количество дней хранения поисковых запросов."
+    search_ignore_accents: "Если этот параметр включен, диакритические знаки в поиске игнорируются, что позволяет находить результаты по запросам, в которых не указаны правильные диакритические знаки."
     search_default_sort_order: "Порядок сортировки по умолчанию для полностраничного поиска"
     category_search_priority_low_weight: "Вес, применяемый к ранжированию для низкого приоритета поиска категории."
     category_search_priority_high_weight: "Вес, применяемый к ранжированию для высокого приоритета поиска категории."
@@ -1574,10 +1799,13 @@ ru:
     show_pinned_excerpt_desktop: "Показывать фрагменты закреплённых тем на настольных устройствах."
     post_onebox_maxlength: "Максимальная длина сообщения в режиме умной вставки."
     blocked_onebox_domains: "Список доменов, которые не будут преобразовываться в умную вставку, например wikipedia.org\n(подстановочные знаки «*» и «?» не поддерживаются)."
+    block_onebox_on_redirect: "Запрещает OneBox для URL-адресов, ведущих на страницу с перенаправлением. Эта настройка не дает создавать визуальные карточки (умная вставка, OneBox) для URL-адресов, которые перенаправляют пользователя на другую страницу. Благодаря этому приоритет отдается прямым URL без перенаправления."
     allowed_inline_onebox_domains: "Список доменов, контент с которых будет преобразовываться в умную вставку, если ссылка указана без заголовка."
     enable_inline_onebox_on_all_domains: "Игнорировать параметр сайта allowed_inline_onebox_domains и разрешить умную вставку для всех доменов."
     force_custom_user_agent_hosts: "Хосты, для которых можно использовать пользовательский User-Agent умных вставок для всех запросов. (Особенно полезно для хостов, которые ограничивают доступ пользовательским агентам.)"
+    max_oneboxes_per_post: "Максимальное количество вставок OneBox в одной публикации. OneBox отображает предпросмотр контента по ссылке в публикации."
     facebook_app_access_token: "Токен, созданный на основе идентификатора и ключа приложения Facebook. Используется для создания умных вставок для Instagram."
+    github_onebox_access_tokens: "Сопоставление организации или пользователя GitHub с токеном доступа GitHub, который используется для создания умных вставок GitHub для частных репозиториев, коммитов, запросов на включение изменений, проблем и контента файлов. Без этого в умной вставке будут только общедоступные URL-адреса GitHub."
     logo: "Логотип в левом верхнем углу сайта. Используйте широкое прямоугольное изображение с высотой 120 и соотношением сторон более чем 3:1. Если оставить поле пустым, будет показан текст заголовка сайта."
     logo_small: "Уменьшенный логотип в левом верхнем углу сайта, отображаемый при прокрутке вниз. Используйте квадратное изображение 120 × 120. Если оставить поле пустым, будет отображаться значок главной страницы."
     digest_logo: "Альтернативный логотип, используемый в верхней части страницы, отображающей письма со сводками. Используйте широкое прямоугольное изображение. Не используйте изображение в формате SVG. Если оставить поле пустым, будет использоваться логотип из настройки `logo`."
@@ -1596,6 +1824,8 @@ ru:
     email_custom_headers: "Разделённый вертикальной чертой список дополнительных заголовков в почтовых сообщениях"
     email_subject: "Настраиваемый формат темы для стандартных писем. См. тему <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>."
     detailed_404: "Предоставление пользователям более подробной информации о том, почему они не могут получить доступ к определённой теме. Примечание: это менее безопасно, поскольку пользователи будут знать, ссылается ли URL-адрес на допустимую тему."
+    enforce_second_factor: "Требовать от пользователей включения двухфакторной аутентификации, прежде чем они смогут получить доступ к пользовательскому интерфейсу Discourse. Этот параметр не влияет на аутентификацию API или поставщика DiscourseConnect. Если параметр enforce_second_factor_on_external_auth включен, пользователи не смогут войти в систему с помощью внешних поставщиков аутентификации после того, как они настроят двухфакторную аутентификацию."
+    enforce_second_factor_on_external_auth: "Требовать от пользователей всегда использовать двухфакторную аутентификацию. Если этот параметр включен, пользователи не смогут входить в систему с использованием внешних методов аутентификации, таких как вход через соцсети, если у них включена двухфакторная аутентификация. Если параметр отключен, пользователям нужно будет только подтвердить двухфакторную аутентификацию при входе с именем пользователя и паролем. Посмотрите также настройку `enforce_second_factor`."
     force_https: "Принудительное использование протокола HTTPS. ВНИМАНИЕ: НЕ ВКЛЮЧАЙТЕ этот параметр, пока не убедитесь, что HTTPS полностью настроен и работает абсолютно везде! Настройки CDN, вход через соцсети, внешние логотипы и зависимости должны корректно работать через HTTPS."
     summary_score_threshold: "Минимальная оценка сообщения, необходимая для включения его в сводку по теме"
     summary_posts_required: "Минимальное количество сообщений, необходимое для получения сводки по теме. Изменения этого параметра будут применены к темам за прошедшую неделю."
@@ -1606,6 +1836,7 @@ ru:
     summarization_strategy: "Дополнительные способы получения сводок для контента, зарегистрированного плагинами"
     custom_summarization_allowed_groups: "Группы, которым разрешено делать сводку контента с помощью `summarization_strategy`."
     enable_personal_messages: "УСТАРЕЛО: вместо этого параметра используйте параметр «personal message enabled groups». Разрешать пользователям уровня доверия 1 (настраивается через минимальный уровень доверия для отправки сообщений) создавать сообщения и отвечать на них. Персонал может отправлять сообщения независимо от уровня доверия."
+    personal_message_enabled_groups: "Разрешить пользователям в этих группах СОЗДАВАТЬ личные сообщения. ВАЖНО: 1) Все пользователи могут ОТВЕТИТЬ на сообщения. 2) Администраторы и модераторы могут СОЗДАВАТЬ сообщения любому пользователю. 3) Группы уровня доверия включают более высокие уровни; выберите уровень доверия_1, чтобы разрешить TL1, TL2, TL3, TL4, но не разрешать TL0. 4) Настройки группового взаимодействия переопределяют этот параметр для обмена сообщениями с определенными группами."
     enable_system_message_replies: "Разрешить пользователям отвечать на системные сообщения, даже если личные сообщения отключены"
     enable_chunked_encoding: "Разрешить фрагментацию сообщений («chunked encoding») на сервере. Эта функция работает в большинстве случаев, однако некоторые прокси могут буферизировать контент, вызывая задержку ответов."
     long_polling_base_url: "Базовый URL, используемый для «long polling» (при использовании CDN для раздачи динамического контента установите в этом параметре адрес «origin pull»), например: http://origin.site.com"
@@ -1633,6 +1864,7 @@ ru:
     notify_mods_when_user_silenced: "Отправлять сообщение всем модераторам, если пользователь автоматически заморожен."
     flag_sockpuppets: "Если новый пользователь отвечает на тему с того же IP-адреса, что и пользователь, создавший тему, пометить обе его публикации как потенциальный спам."
     traditional_markdown_linebreaks: "Использовать стандартный способ переноса строки в Markdown: строка должна заканчиваться двумя пробелами."
+    enable_markdown_typographer: "Использовать правила типографики для улучшения читаемости текста: заменять прямые кавычки «фигурными»; (tm) — соответствующим символом, вместо -- подставлять длинное тире (—) и т. д."
     enable_markdown_linkify: "Автоматически отображать текст, который выглядит как ссылка, в виде ссылки: www.example.com и https://example.com будут автоматически отображены в виде ссылок"
     markdown_linkify_tlds: "Список доменов верхнего уровня, которые автоматически обрабатываются как ссылки"
     markdown_typographer_quotation_marks: "Список пар замены двойных и одинарных кавычек"
@@ -1662,9 +1894,11 @@ ru:
     blocked_crawler_user_agents: "Уникальное нечувствительное к регистру слово в строке User-Agent, идентифицирующее поисковых роботов, которым запрещён доступ к сайту. Не применяется, если определён белый список."
     slow_down_crawler_user_agents: 'Значения User Agent, для которых скорость работы должна быть ограничена в соответствии с настройкой «slow down crawler rate». Каждое значение должно состоять не менее чем из трех символов.'
     slow_down_crawler_rate: "Если указано значение «slow_down_crawler_user_agents» (количество секунд между запросами), то это значение будет применяться ко всем поисковым роботам"
+    content_security_policy: "Включить Content-Security-Policy (CSP). CSP — это дополнительный уровень защиты, который помогает предотвратить определенные типы атак, включая межсайтовый скриптинг (XSS) и внедрение данных."
     content_security_policy_report_only: "Включить Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_collect_reports: "Включить отчёты о нарушениях CSP в /csp_reports"
     content_security_policy_frame_ancestors: "Ограничить через CSP число тех, кто может встроить этот сайт в iframes. Перечень разрешённых хостов настраивается на закладке <a href='%{base_path}/admin/customize/embedding'>Встраивание</a>."
+    content_security_policy_script_src: "Дополнительные источники сценариев в белом списке. Текущий хост и CDN включены по умолчанию. См. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>«Смягчение атак XSS с помощью политики безопасности контента (CSP)».</a> Другие хост-источники игнорируются, так как включена директива strict-dynamic."
     invalidate_inactive_admin_email_after_days: "Аккаунты администраторов, которые не посещали сайт в течение указанного здесь количества дней, должны будут повторно подтвердить свой адрес электронной почты перед входом в систему. Для отключения параметра установите это значение в 0."
     include_secure_categories_in_tag_counts: "Если включить, число тем для тега будет включать в себя темы в категориях с ограничением на чтение для всех пользователей. Если отключить, обычные пользователи будут видеть число тем для тега, где все темы в общедоступных категориях."
     display_personal_messages_tag_counts: "Если включить, будет отображаться количество личных сообщений, помеченных данным тегом."
@@ -1687,10 +1921,12 @@ ru:
     topics_per_period_in_top_page: "Количество тем в разделе «Обсуждаемые», отображаемое дополнительно при прокрутке до конца страницы."
     redirect_users_to_top_page: "Автоматически перенаправлять новых и давно отсутствовавших пользователей в раздел «Обсуждаемые»."
     top_page_default_timeframe: "Период времени на верхней странице по умолчанию для анонимных пользователей (автоматически настраивается для вошедших в систему пользователей на основе их последнего посещения)."
+    moderators_view_emails: "Разрешать модераторам просматривать адреса электронной почты пользователей."
     prioritize_username_in_ux: "Показывать имя пользователя первым на странице пользователя, карточке пользователя и сообщениях (когда отключённое имя показывается первым)"
     enable_rich_text_paste: "Включить автоматическое преобразование HTML в Markdown при вставке текста в редактор. (Экспериментальная функция.)"
     send_old_credential_reminder_days: "Напомнить о старых учётных данных через указанное количество дней"
     email_token_valid_hours: "Ссылка на восстановление пароля (активацию аккаунта) будет действовать в течение указанного здесь количества часов."
+    enable_badges: "Включите систему наград — форму геймификации, которая позволяет закрепить положительные действия пользователей. Подробнее смотрите на странице <a href='https://meta.discourse.org/t/what-are-badges/32540' _target='blank'>«Что такое награды?»</a> на Discourse Meta."
     max_favorite_badges: "Максимальное количество наград, которое может выбрать пользователь"
     whispers_allowed_groups: "Разрешать участникам указанных групп создавать скрытые сообщения в темах."
     hidden_post_visible_groups: "Разрешить участникам этих групп просматривать скрытые сообщения. Сотрудники могут просматривать скрытые сообщения в любом случае."
@@ -1703,6 +1939,7 @@ ru:
     log_out_strict: "Когда пользователь выходит из системы, закрывать все сеансы на всех устройствах пользователя."
     version_checks: "Проверять обновления на Discourse Hub и отображать сообщения о новых версиях в <a href='%{base_path}/admin' target='_blank'>панели</a> администратора"
     new_version_emails: "Отправлять сообщение на адрес «contact_email», когда будут доступны новые версии Discourse."
+    include_in_discourse_discover: "Разрешите CDCK, Inc. («Discourse») представить это сообщество на странице <a href='https://discover.discourse.org' target='_blank'>Discover</a> и в маркетинговых материалах Discourse. Тем самым вы поделитесь данными, необходимыми для включения вашего сайта в сервис. Обратите внимание, что продвижение сообществ осуществляется на усмотрение Discourse."
     invite_expiry_days: "Количество дней, в течение которых высланные приглашённому пользователю ключи являются действительными."
     invite_only: "Все новые пользователи должны явно приглашаться доверенными пользователями или сотрудниками. Публичная регистрация отключена."
     login_required: "Требовать авторизации для доступа к сайту. Анонимный доступ запрещён."
@@ -1711,6 +1948,8 @@ ru:
     unicode_usernames: "Разрешать буквы и цифры Unicode в именах пользователей и названиях групп."
     allowed_unicode_username_characters: "Регулярное выражение, позволяющее использовать только некоторые символы Юникода в именах пользователей. Буквы и цифры ASCII всегда будут разрешены и могут не включаться в белый список."
     reserved_usernames: "Имена, которые нельзя использовать при регистрации на форуме. Подстановочный знак «*» — совпадение с любым символом ноль или более раз."
+    min_password_length: "Определяет наименьшее количество символов для паролей пользователей на сайте. Слишком малое значение может поставить под угрозу безопасность: короткий пароль будет подобрать легче. Слишком большое значение может затруднить запоминание паролей пользователями."
+    min_admin_password_length: "Укажите минимальную длину пароля для пользователей с правами администратора. Пароли администраторов должны будут соответствовать определенным требованиям к длине, что повышает безопасность. Этот параметр необходим для защиты аккаунтов администраторов от несанкционированного доступа."
     password_unique_characters: "Минимальное количество уникальных символов в пароле."
     block_common_passwords: "Не разрешать пароли из списка 10 000 самых часто используемых."
     auth_skip_create_confirm: При регистрации через внешнюю авторизацию пропустить всплывающее окно создания аккаунта. Лучше всего использовать вместе с параметрами «auth_overrides_email», «auth_overrides_username» и «auth_overrides_name».
@@ -1738,6 +1977,7 @@ ru:
     allow_new_registrations: "Разрешать регистрацию новых пользователей. Отключите этот параметр, если вы хотите запретить создавать новые аккаунты."
     enable_signup_cta: "Показывать уведомление возвращающимся на форум анонимным пользователям, предложив им зарегистрировать аккаунт."
     enable_google_oauth2_logins: "Включить аутентификацию Google Oauth2. Это метод аутентификации, который в настоящее время поддерживает Google. Требуется ключ и секрет. См. тему <a href='https://meta.discourse.org/t/15858' target='_blank'>Configuring Google login for Discourse</a>."
+    google_oauth2_client_id: "Уникальный идентификатор клиента, предоставленный вашим приложением Google и используемый для аутентификации."
     google_oauth2_client_secret: "Секрет клиента для приложения Google"
     google_oauth2_prompt: "Необязательный список строковых значений, разделенных пробелами, который указывает, запрашивает ли сервер авторизации у пользователя повторную аутентификацию и согласие. Возможные значения см. в <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>этом разделе</a>."
     google_oauth2_hd: "Необязательный домен, указанный в G Suite, доступ к которому будет ограничен. Подробнее см. в <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>этом разделе</a>."
@@ -1755,19 +1995,26 @@ ru:
     github_client_secret: "Секрет клиента для аутентификации GitHub, зарегистрированный на <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>."
     enable_discord_logins: "Разрешать пользователям проходить аутентификацию с использованием Discord?"
     discord_client_id: 'Идентификатор клиента Discord (его можно получить на <a href="https://discordapp.com/developers/applications/me">портале разработчиков Discord</a>)'
+    discord_secret: "Ключ секретного кода для клиента Discord. Используется для аутентификации и включения на сайте функций (например, вход в аккаунт), связанных с Discord. Секретный ключ соответствует приложению Discord, созданному для веб-сайта, и необходим для защищенного взаимодействия с API Discord."
     discord_trusted_guilds: 'Разрешать вход в систему через Discord только членам этих гильдий. Используйте числовой идентификатор гильдии. Подробнее — в <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">здесь</a>. Чтобы разрешить все гильдии, оставьте поле пустым.'
+    enable_linkedin_oidc_logins: "Включает аутентификацию LinkedIn, требуются linkedin_client_id и linkedin_client_secret."
+    linkedin_oidc_client_id: "Идентификатор клиента для аутентификации LinkedIn, зарегистрированный на <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>."
+    linkedin_oidc_client_secret: "Секретный код клиента для аутентификации LinkedIn, зарегистрированный на <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>."
     enable_backups: "Разрешить администраторам создавать резервные копии форума"
     allow_restore: "Разрешить восстановление, которое может заменить ВСЕ данные сайта. Оставьте опцию выключенной, если не планируете делать восстановление из резервной копии."
     maximum_backups: "Максимальное количество хранимых резервных копий. Старые резервные копии будут автоматически удаляться."
     remove_older_backups: "Удалять резервные копии старше указанного количества дней. Оставьте пустым, чтобы отключить параметр."
     automatic_backups_enabled: "Запускать автоматическое создание резервных копий с указанной в настройках периодичностью"
+    backup_frequency: "Указывает интервал создания резервных копий сайта (в днях). Например, если установлено значение 7, резервная копия будет создаваться каждую неделю. Активация этой настройки зависит от параметра `automatic_backups_enabled`."
     s3_backup_bucket: "Адрес папки удалённого сервера для резервных копий. ВНИМАНИЕ! Убедитесь, что место назначения защищено от посторонних."
     s3_endpoint: "Конечная точка для резервного копирования может быть изменена на другую S3-совместимую службу, такую как DigitalOcean Spaces или Minio. ВНИМАНИЕ! Оставьте поле пустым, если используется AWS S3."
     s3_configure_tombstone_policy: "Включить политику автоматического удаления загрузок, помеченных как «удалённые». ВАЖНО! Если этот параметр отключён, удалённые загрузки будут фактически занимать место на диске."
     s3_disable_cleanup: "Не допускать удаление старых резервных копий из S3, когда резервных копий больше, чем максимально допустимо."
     s3_use_acls: "AWS рекомендует не использовать ACL для корзин S3. Если вы следуете этому совету, отключите этот параметр. Если вы используете защищенную загрузку, включите его."
+    enable_direct_s3_uploads: "Разрешить прямую многокомпонентную загрузку в Amazon S3. Подробнее см. здесь: https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469."
     backup_time_of_day: "Время создания резервной копии (UTC)."
     backup_with_uploads: "Сохранять в резервной копии все загружаемые файлы. В противном случае будет сохраняться только база данных."
+    backup_location: "Место хранения резервных копий. ВАЖНО: S3 требует действительных учетных данных S3, введенных в настройках файлов. При изменении этого значения на S3 с Local нужно запустить rake-задачу `s3:ensure_cors_rules`."
     backup_gzip_compression_level_for_uploads: "Уровень gzip-сжатия для загружаемых файлов."
     include_thumbnails_in_backups: "Включать создаваемые эскизы в резервные копии. Отключение этого параметра сделает резервные копии меньше, но потребует обновления всех сообщений после восстановления."
     active_user_rate_limit_secs: "Частота обновления поля «last_seen_at», в секундах"
@@ -1815,17 +2062,20 @@ ru:
     s3_cdn_url: "URL-адрес CDN, используемый для всех ресурсов s3 (например, https://cdn.где-то.com). ВНИМАНИЕ: после изменения этого параметра нужно обновить все старые сообщения."
     s3_use_cdn_url_for_all_uploads: "Использовать URL-адрес CDN для всех загруженных на S3 файлов, а не только для изображений."
     avatar_sizes: "Перечень размеров автоматически создаваемых аватаров."
+    external_system_avatars_enabled: "Позволяет использовать внешний сервис для создания системных аватаров. Если настройка включена, аватары пользователей не создаются в системе Discourse, а генерируются и предоставляются внешним сервисом, который указывается параметром `external_system_avatars_url`."
     external_system_avatars_url: "URL внешнего сервиса загрузки аватаров. Допустимые замены: {username} {first_letter} {color} {size}"
     external_emoji_url: "URL-адрес внешнего сервиса эмодзи. Оставьте поле пустым, если внешний сервис не требуется."
     use_site_small_logo_as_system_avatar: "Использовать логотип сайта вместо аватара пользователя системы. Требуется наличие логотипа."
     restrict_letter_avatar_colors: "Список шестизначных шестнадцатеричных значений цвета, которые будут использоваться для фона буквенного аватара."
     enable_listing_suspended_users_on_search: "Разрешить обычным пользователям находить заблокированных."
     selectable_avatars_mode: "Разрешить пользователям выбирать аватар из списка «selectable_avatars» и ограничивать загрузку своих аватаров выбранным уровнем доверия."
+    selectable_avatars: "Укажите коллекцию аватаров, из которых пользователи могут выбирать изображение профиля. Этот выбор появляется при создании профиля пользователя и при обновлении аватара профиля."
     allow_all_attachments_for_group_messages: "Разрешать все типы почтовых вложений для групповых сообщений."
     png_to_jpg_quality: "Качество преобразованного файла JPG (1 — низкое, 99 — лучшее, 100 — отключить параметр)."
     recompress_original_jpg_quality: "Качество загружаемых файлов JPG (1 — низкое, 99 — лучшее, 100 — отключить параметр)."
     image_preview_jpg_quality: "Качество файлов JPG при изменении их размера (1 — низкое, 99 — лучшее, 100 — отключить параметр)."
     allow_staff_to_upload_any_file_in_pm: "Разрешать сотрудникам загружать любые файлы в личных сообщениях."
+    strip_image_metadata: "Эта настройка позволяет удалять с загруженных на сайт изображений всю дополнительную информацию. Сюда входят такие данные, как модель камеры, место и время съемки и т. д. Это может быть полезно по соображениям конфиденциальности: удаление этих данных не даст пользователям непреднамеренно опубликовать конфиденциальную информацию."
     composer_media_optimization_image_enabled: "Включить оптимизацию загружаемых файлов изображений на стороне клиента."
     composer_media_optimization_image_bytes_optimization_threshold: "Минимальный размер файла изображения для запуска оптимизации на стороне клиента"
     composer_media_optimization_image_resize_dimensions_threshold: "Минимальная ширина изображения для изменения размера изображения на стороне клиента"
@@ -1864,19 +2114,30 @@ ru:
     edit_all_topic_groups: "Разрешить пользователям в этой группе изменять названия, теги и категории тем других пользователей"
     edit_all_post_groups: "Разрешить пользователям в этой группе изменять сообщения других пользователей"
     min_trust_to_create_topic: "Минимальный уровень доверия для создания новой темы."
+    create_topic_allowed_groups: "Группы, которым разрешено создавать новые темы. Администраторы и модераторы всегда могут создавать темы."
     allow_flagging_staff: "Разрешать пользователям жаловаться на сообщения персонала."
     min_trust_to_edit_wiki_post: "Минимальный уровень доверия, требуемый для редактирования вики-сообщения."
+    edit_wiki_post_allowed_groups: "Группы, которым разрешено редактировать публикации, помеченные как вики-сообщения. Администраторы и модераторы всегда могут редактировать публикации, помеченные как вики-сообщения."
     min_trust_to_edit_post: "Минимальный уровень доверия, требуемый для редактирования сообщений."
+    edit_post_allowed_groups: "Группы, которым разрешено редактировать публикации. Администраторы и модераторы всегда могут редактировать публикации."
     min_trust_to_allow_self_wiki: "Минимальный уровень доверия, требуемый для создания вики-сообщения."
     min_trust_to_send_messages: "УСТАРЕЛО: вместо этого параметра используйте параметр «personal message enabled groups». Минимальный уровень доверия, необходимый для создания личных сообщений."
     min_trust_to_send_email_messages: "Минимальный уровень доверия, необходимый для отправки личных сообщений по электронной почте."
+    send_email_messages_allowed_groups: "Группы, которым разрешено отправлять личные сообщения по электронной почте. Администраторы и модераторы всегда могут отправлять личные сообщения по электронной почте."
     min_trust_to_flag_posts: "Минимальный уровень доверия, необходимый для создания жалобы на сообщение."
+    flag_post_allowed_groups: "Группы, которым разрешено жаловаться на публикации. Администраторы и модераторы всегда могут жаловаться на публикации."
     min_trust_to_post_links: "Минимальный уровень доверия, необходимый для включения ссылок в сообщения"
+    post_links_allowed_groups: "Группы, которым разрешено добавлять ссылки в публикации. Администраторам и модераторам это разрешено в любом случае."
     min_trust_to_post_embedded_media: "Минимальный уровень доверия, необходимый для встраивания медиафайлов в сообщение"
+    embedded_media_post_allowed_groups: "Пользователям этих групп разрешено вставлять медиафайлы в публикацию. Администраторы и модераторы всегда могут вставлять медиафайлы."
     min_trust_level_to_allow_profile_background: "Минимальный уровень доверия, необходимый для загрузки шапки профиля"
+    profile_background_allowed_groups: "Группы, которым разрешено загружать фон профиля. Администраторы и модераторы всегда могут загружать фон профиля."
     min_trust_level_to_allow_user_card_background: "Минимальный уровень доверия, необходимый для загрузки фона карточки пользователя"
+    user_card_background_allowed_groups: "Группы, которым разрешено загружать фон карточки пользователя. Администраторы и модераторы всегда могут загружать фон карточки пользователя."
     min_trust_level_to_allow_invite: "Минимальный уровень доверия, необходимый для приглашения пользователей"
+    invite_allowed_groups: "Группы, которым разрешено приглашать пользователей. Администраторы и модераторы всегда могут приглашать пользователей."
     min_trust_level_to_allow_ignore: "Минимальный уровень доверия, необходимый для игнорирования пользователей"
+    ignore_allowed_groups: "Группы, которым разрешено игнорировать других пользователей. Администраторы и модераторы всегда могут игнорировать других пользователей."
     allowed_link_domains: "Домены, на которые пользователи могут ссылаться, даже если у них нет соответствующего уровня доверия для публикации ссылок"
     newuser_max_links: "Максимальное количество ссылок, которое новый пользователь может вставлять в сообщение."
     newuser_max_embedded_media: "Максимальное количество медиафайлов, которое новый пользователь может добавить в сообщение."
@@ -1885,9 +2146,11 @@ ru:
     newuser_max_replies_per_topic: "Максимальное количество ответов нового пользователя в одной теме до того, как кто-нибудь напишет ответ."
     max_mentions_per_post: "Максимальное число упоминаний других пользователей, которое любой пользователь может сделать в одном сообщении."
     max_users_notified_per_group_mention: "Максимальное количество пользователей, которые могут получать уведомления при упоминании группы (при достижении порогового значения уведомления создаваться не будут)"
+    enable_mentions: "Позволяет пользователям отмечать и ссылаться друг на друга в публикациях, используя символ «@»."
     here_mention: "Название для переменной @here, позволяющее пользователям с соответствующим уровнем доверия уведомлять до «max_here_mentioned» пользователей, участвующих в теме. Не должно быть существующим именем пользователя."
     max_here_mentioned: "Максимальное количество пользователей для упоминания при использовании @here."
     min_trust_level_for_here_mention: "Минимальный уровень доверия, при котором допускается использование @here."
+    here_mention_allowed_groups: "Группы, которым разрешено использовать упоминание @here. Администраторы и модераторы всегда могут использовать упоминание @here."
     create_thumbnails: "Создавать миниатюры слишком больших изображений в сообщениях, показывать большие оригиналы в отдельно открывающемся окне."
     email_time_window_mins: "Подождать указанное здесь количество минут перед отправкой почтовых уведомлений, чтобы дать автору возможность перечитать и отредактировать только что созданное сообщение."
     personal_email_time_window_seconds: "Подождать указанное здесь количество секунд перед отправкой письма с уведомлением о личном сообщении, чтобы дать автору возможность перечитать и отредактировать только что созданное сообщение."
@@ -1901,6 +2164,7 @@ ru:
     enable_filtered_replies_view: 'Кнопка ответов отображает только текущее сообщение и ответы на него — остальные сворачиваются.'
     title_fancy_entities: "В заголовках тем преобразовывать обычные символы ASCII и пунктуацию <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>SmartyPants</a> в объекты HTML"
     min_title_similar_length: "Минимальная длина названия темы, при которой название будет проверено на наличие похожих тем."
+    desktop_category_page_style: "Определяет визуальный макет страницы /categories на ПК. Сюда входят такие параметры, как отображение подкатегорий с избранными темами, отображение последних тем или показ самых популярных тем. От выбранного стиля зависит то, как пользователи взаимодействуют с сайтом и перемещаются по категориям."
     category_colors: "Список шестнадцатеричных кодов палитры цветов, разрешённых в категориях."
     default_dark_mode_color_scheme_id: "Цветовая схема, используемая в тёмном режиме."
     dark_mode_none: "Нет"
@@ -1954,12 +2218,14 @@ ru:
     high_trust_flaggers_auto_hide_posts: "Сообщения нового пользователя автоматически скрываются, если они помечаются как спам пользователем с уровнем доверия 3 и выше"
     cooldown_hours_until_reflag: "Количество часов, в течение которых пользователи не смогут повторно пожаловаться на сообщение"
     slow_mode_prevents_editing: "Запрещать редактирование сообщений в замедленном режиме по прошествии периода «editing_grace_period»?"
+    reply_by_email_enabled: "Позволяет пользователям отвечать на темы напрямую по электронной почте, не входя на веб-сайт. Подробнее — в <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>руководстве на Meta</a>."
     reply_by_email_address: "Шаблон для ответа по электронной почте в формате: %%{reply_key}@reply.example.com или replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Список альтернативных шаблонов для ответа, применяемый на основе входящих адресов электронной почты. Пример: %%{reply_key}@reply.example.com|replies+1%%{reply_key}@example.com"
     incoming_email_prefer_html: "Использовать HTML вместо обычного текста для входящих писем."
     strip_incoming_email_lines: "Удалять начальные и конечные пробелы из каждой строки входящих писем."
     disable_emails: "Запретить отправлять электронные письма. Выберите «yes», чтобы отключить электронную почту для всех пользователей. Выберите «non-staff», чтобы отключить электронную почту для пользователей, не являющихся персоналом."
     strip_images_from_short_emails: "Удалять картинки из коротких писем — размером менее 2800 байт"
+    short_email_length: "Максимальная длина в байтах, при которой электронное письмо будет определено как «короткое». Если размер письма не превышает это значение, изображения в нем (например, аватары и эмодзи) будут удалены."
     display_name_on_email_from: "Отображать в поле «От» полные имена отправителей электронных писем"
     unsubscribe_via_email: "Разрешать пользователям отказываться от подписки на электронные письма, отправив электронное письмо, содержащее «unsubscribe» в теме или теле письма"
     unsubscribe_via_email_footer: "Отображать ссылку на отписку под текстом отправляемого письма"
@@ -1995,15 +2261,21 @@ ru:
     delete_rejected_email_after_days: "Удалять отклонённые письма старше указанного здесь количества дней."
     require_change_email_confirmation: "Требовать от обычных пользователей подтверждения старого адреса электронной почты перед его изменением. Не относится к сотрудникам: им всегда необходимо подтверждать старый адрес электронной почты."
     manual_polling_enabled: "Отправлять электронную почту, используя API для ответов."
+    pop3_polling_enabled: "Активировать опрос POP3 для получения ответов по электронной почте. После активации система будет проверять указанный почтовый ящик POP3 на новые письма и обрабатывать их как ответы в темах. Подробнее — в <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>руководстве на Meta</a>."
     pop3_polling_ssl: "Использовать SSL при подключении к POP3-серверу. (Рекомендуется.)"
     pop3_polling_openssl_verify: "Проверять сертификат сервера TLS (по умолчанию включено)"
+    pop3_polling_period_mins: "Период в минутах между проверками аккаунта POP3 на наличие писем. ВНИМАНИЕ: требуется перезапуск."
+    pop3_polling_port: "Порт сервера POP3 для опроса электронной почты."
+    pop3_polling_host: "Хост сервера POP3 для опроса электронной почты."
     pop3_polling_username: "Имя пользователя (логин) аккаунта POP3 для загрузки эл. писем."
     pop3_polling_password: "Пароль аккаунта POP3 для загрузки эл. писем."
     pop3_polling_delete_from_server: "Удалять электронную почту с сервера. ПРИМЕЧАНИЕ: при отключении этого параметра необходимо вручную очищать почтовый ящик."
     log_mail_processing_failures: "Записывать все ошибки обработки электронной почты в файл <a href='%{base_path}/logs' target='_blank'>журнала</a>"
     email_in: "Разрешить пользователям публиковать новые темы по электронной почте. Включив этот параметр, вы сможете настроить входящие адреса электронной почты для групп и категорий."
     email_in_min_trust: "Минимальный уровень доверия, требуемый для создания новых тем через электронные письма."
+    email_in_allowed_groups: "Группы, которым разрешено публиковать новые темы по электронной почте. Администраторы и модераторы всегда могут публиковать новые темы по электронной почте."
     email_in_authserv_id: "Идентификатор службы, выполняющей проверку подлинности входящих писем. Подробнее — в теме <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a>."
+    email_in_spam_header: "Заголовок электронных писем, который будет использоваться для выявления спама. Варианты: X-Spam-Flag, X-Spam-Status или X-SES-Spam-Verdict. Письмо помечается как спам на основе значения заголовка. Например, если выбран параметр X-Spam-Flag, то письмо со значением ДА (YES) в этом заголовке будет отнесено ко спаму."
     enable_imap: "Включить IMAP для синхронизации групповых сообщений."
     enable_imap_write: "Включить двустороннюю синхронизацию IMAP. При выключенном параметре все операции записи в аккаунтах IMAP отключены."
     enable_imap_idle: "Использовать механизм IMAP IDLE для ожидания новых писем."
@@ -2034,6 +2306,7 @@ ru:
     suppress_digest_email_after_days: "Не рассылать письма со сводками для пользователей, не появлявшихся на форуме более указанного здесь количества дней."
     digest_suppress_categories: "Не отображать содержимое этих категорий в письмах со сводками."
     digest_suppress_tags: "Не отображать эти теги в письмах со сводками."
+    disable_digest_emails: "Отключает письма со сводками для всех пользователей на сайте. Пользователи перестанут получать письма с популярными темами и сводками другого контента с вашего сайта."
     apply_custom_styles_to_digest: "Применять пользовательский шаблон писем и CSS к письмам со сводками."
     email_accent_bg_color: "Цвет фона, отображаемого в электронных письмах, созданных в формате HTML. Введите название цвета («red») или его шестнадцатеричное значение («#FF0000»)."
     email_accent_fg_color: "Цвет текста, отображаемого в электронных письмах, созданных в формате HTML. Введите название цвета («white») или его шестнадцатеричное значение («#FFFFFF»)."
@@ -2046,11 +2319,15 @@ ru:
     enable_group_directory: "Указать каталог групп для просмотра"
     enable_category_group_moderation: "Разрешать группам модерировать контент в определённых категориях"
     group_in_subject: "Установить переменную %%{optional_pm} в теме электронного письма в соответствии с именем первой группы в личном кабинете, см. тему <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Настройка формата темы для стандартных электронных писем</a>"
+    allow_anonymous_posting: "Разрешает пользователям переходить в анонимный режим размещения публикаций. Если параметр включен, пользователи могут скрывать свою личность, когда создают публикацию или тему на сайте. См. также `allow_anonymous_likes`."
+    allow_anonymous_likes: "Включите этот параметр, чтобы пользователи, анонимно просматривающие ваш сайт, могли ставить лайк публикациям. Если параметр включен, пользователи могут скрывать свою личность, когда ставят лайк публикации или теме на сайте. См. также `allow_anonymous_posting`."
     anonymous_posting_min_trust_level: "Минимальный уровень доверия для возможности создавать темы от имени анонимного пользователя."
     anonymous_posting_allowed_groups: "Группы, которым разрешено включать анонимное размещение публикаций"
     anonymous_account_duration_minutes: "Защита от слишком частого создания новых аккаунтов. Пример: если значение установлено в 600, это означает, что должно пройти не менее 600 минут с момента последнего сообщения пользователя и его выхода из системы, после чего он сможет создать новый аккаунт."
     hide_user_profiles_from_public: "Отключить отображение карточек пользователей, профилей и списка участников форума для анонимных пользователей."
     allow_users_to_hide_profile: "Разрешить пользователям скрывать свой профиль и присутствие на форуме"
+    hide_user_activity_tab: "Скрыть вкладку действий в профилях пользователей (за исключением своего профиля и администратора)."
+    delete_associated_accounts_on_password_reset: "Удалять аккаунт, связанный с пользователем, когда пользователь меняет пароль."
     allow_featured_topic_on_user_profiles: "Разрешать пользователям размещать ссылку на избранную тему в карточке пользователя и в профиле."
     show_inactive_accounts: "Разрешать авторизованным пользователям просматривать профили неактивных аккаунтов."
     hide_suspension_reasons: "Не отображать публично причины заморозки в профиле пользователей."
@@ -2079,6 +2356,7 @@ ru:
     disable_tags_edit_notifications: "Отключить уведомления об изменениях тегов тем. Сюда входят темы, которые были «опубликованы» (например, общие черновики)."
     notification_consolidation_threshold: "Максимальное количество уведомлений о полученных лайках или запросах на вступление в группу, после которого уведомления будут объединяться в одно. Для отключения параметра установите это значение в 0."
     likes_notification_consolidation_window_mins: "Количество минут, по прошествии которых уведомления о полученных лайках будут объединяться в одно, если достигнуто пороговое значение (настраивается в параметре `SiteSetting.notification_consolidation_threshold`)."
+    linked_notification_consolidation_window_mins: "Количество минут, по прошествии которых связанные уведомления объединяются в одно, если достигнуто пороговое значение (настраивается в параметре `SiteSetting.notification_consolidation_threshold`)."
     automatically_unpin_topics: "Автоматически откреплять полностью прочтённые темы."
     read_time_word_count: "Количество слов, читаемых за минуту, для расчёта предполагаемого времени чтения."
     topic_page_title_includes_category: "<a href='https://developer.mozilla.org/ru/docs/Web/HTML/Element/title' target='_blank'>Элемент заголовка</a> темы включает в себя название категории."
@@ -2086,8 +2364,11 @@ ru:
     native_app_install_banner_android: "Отображать баннер DiscourseHub на устройствах Android для обычных пользователей (уровень доверия 1) и выше."
     app_association_android: "Содержимое конечной точки <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, используемой для Google Digital Asset Links API."
     app_association_ios: "Содержимое конечной точки <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, используемой для создания универсальных ссылок между этим сайтом и приложениями iOS."
+    share_anonymized_statistics: "Разрешить передачу анонимной статистики использования в компанию CDCK, Inc. («Discourse»). Данные об использовании сайта будут собираться и передаваться в анонимной форме, что гарантирует защиту личной информации."
+    enable_powered_by_discourse: "Показывать ссылку «На платформе Discourse», ведущую на discourse.org, внизу большинства страниц."
     auto_handle_queued_age: "По истечении указанного здесь количества дней автоматически обрабатывать сообщения, ожидающие проверки. Жалобы будут игнорироваться. Сообщения в очереди на проверку будут отклоняться. Установите значение в 0, если необходимо отключить этот параметр."
     penalty_step_hours: "Стандартная продолжительность санкций для замороженных и заблокированных пользователей в часах. Первое нарушение по умолчанию принимает первое значение, второе нарушение — второе значение и т. д."
+    penalty_include_post_message: "Автоматически включать оскорбительную публикацию в шаблон сообщения электронной почты при заморозке или блокировке пользователя"
     svg_icon_subset: "Добавить дополнительные значки из коллекции FontAwesome 5, которые вы хотели бы включить в свои ресурсы. Используйте префикс «fa-» для solid-значков, «far-» для regular-значков и «fab-» для brand-значков."
     max_prints_per_hour_per_user: "Максимальное количество распечаток страницы (0 — отключить распечатку)"
     full_name_required: "Обязательно указывать полное имя в профиле пользователя."
@@ -2101,25 +2382,37 @@ ru:
     highlighted_languages: "Включить правила подсветки синтаксиса. (Предупреждение: включение слишком большого количества языков может повлиять на производительность.) Демонстрацию см. здесь: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>."
     show_copy_button_on_codeblocks: "Отображать кнопку в блоке кода для копирования содержимого блока в буфер обмена."
     embed_any_origin: "Разрешать встраиваемый контент независимо от происхождения. Требуется для мобильных приложений со статическим HTML."
+    embed_topics_list: "Разрешить встраивание списков тем в формате HTML. Позволяет встраивать списки тем с форума на другие веб-сайты совместимым и простым в использовании способом."
     embed_set_canonical_url: "Установить канонический URL для встроенных тем в URL встроенного содержимого."
+    embed_truncate: "Сокращать контент публикаций, встроенных из внешних источников. При встраивании публикации на сайт с внешнего URL будет отображаться только начало контента. Чтобы отображался весь контент внешних публикаций, отключите этот параметр."
     embed_unlisted: "Вложенные темы не будут отображаться до тех пор, пока пользователь не ответит на них."
+    import_embed_unlisted: "Импортированные встроенные темы будут скрыты до тех пор, пока пользователь не ответит (даже если параметр сайта `embed unlisted` отключен)."
     embed_support_markdown: "Поддержка форматирования Markdown для встроенных сообщений."
     allowed_embed_selectors: "Разделённый запятыми перечень элементов CSS, которые разрешены для встраивания."
     allowed_href_schemes: "Схемы, разрешённые в ссылках помимо http и https."
     embed_post_limit: "Максимальное количество встроенных сообщений."
     embed_username_required: "Для создания темы требуется имя пользователя."
     notify_about_reviewable_item_after: "Отправлять личное сообщение модератору, если есть элементы на проверку, не обработанные в течение указанного количества часов. 0 — отключить параметр."
+    delete_drafts_older_than_n_days: "Удалять черновики, которые не изменялись более указанного числа дней (n)."
     delete_merged_stub_topics_after_days: "Количество дней, после которого темы, из которых были перемещены все сообщения, будут автоматически удалены. Для отключения параметра установите значение в 0."
+    bootstrap_mode_min_users: "Минимальное количество пользователей, необходимое для отключения специального режима и удаления кнопки «Начало работы» (0 — отключить параметр; может понадобиться до 24 часов)."
     prevent_anons_from_downloading_files: "Запретить анонимным пользователям скачивать вложения."
     secure_uploads: 'Ограничивать доступ ко ВСЕМ загрузкам (изображения, видео, аудио, текст, PDF, ZIP-файлы и другие). Если включено требования входа, только авторизованные пользователи будут получать доступ к загрузкам. При отключённом параметре загрузки будут недоступны только в личных сообщениях и в закрытых категориях. ВНИМАНИЕ! Этот сложный параметр. Аминистратор, используя его, должен отдавать себе отчёт в своих действиях. См. тему <a target="_blank" href="https://meta.discourse.org/t/-/140017">об ограничении доступа к загружаемому контенту на Meta</a>.'
     secure_uploads_allow_embed_images_in_emails: "Разрешать встраивать изображения с ограниченным доступом в письма, если их размер не превышает значения, указанного в параметре «secure uploads max email embed image size kb»."
     secure_uploads_max_email_embed_image_size_kb: "Размер, до которого будут уменьшены встроенные в письма изображения с ограниченным доступом, если включён параметр «secure uploads allow embed in emails». Если этот параметр не включен, это значение не учитывается."
     slug_generation_method: "Метод создания слагов. При выборе «encoded» будет выполняться процентное кодирование строки. При выборе «none» слаги создаваться не будут."
+    enable_emoji: "Включить отображение и использование эмодзи в вашем экземпляре Discourse. Если этот параметр отключен, эмодзи не будут отображаться, и пользователи не смогут получить к ним доступ или использовать их в текстовых полях."
     enable_emoji_shortcuts: "Обычные смайлы, например :), :p и :(, будут преобразовываться в эмодзи"
+    emoji_set: "Выберите предпочитаемый стиль эмодзи. Различные наборы эмодзи могут придавать смайликам, отображаемым на сайте, уникальный внешний вид."
     emoji_autocomplete_min_chars: "Минимальное количество символов, необходимое для появления всплывающего окна с эмодзи"
     enable_inline_emoji_translation: "Включить перевод для встроенных эмодзи (без пробелов и знаков препинания)"
     emoji_deny_list: "Эти эмодзи нельзя будет использовать в меню и шорткодах."
     approve_post_count: "Минимальное количество сообщений от новичка или обычного пользователя, которые должны быть утверждены"
+    approve_unless_trust_level: "Публикации, создаваемые пользователями с уровнем доверия ниже указанного, должны пройти одобрение"
+    approve_unless_allowed_groups: "Публикации, созданные пользователями, не входящими в эти группы, должны быть одобрены. Публикации, созданные администраторами и модераторами, всегда одобряются."
+    approve_new_topics_unless_trust_level: "Новые темы, создаваемые пользователями ниже этого уровня доверия, должны пройти одобрение"
+    approve_new_topics_unless_allowed_groups: "Новые темы, созданные пользователями, не входящими в эти группы, должны быть одобрены. Темы, созданные администраторами и модераторами, всегда одобряются."
+    approve_unless_staged: "Новые темы и публикации, создаваемые сымитированными пользователями, должны пройти одобрение"
     notify_about_queued_posts_after: "Отправлять уведомления всем модераторам, если сообщения находятся в очереди на проверку дольше, чем указанное здесь количество часов. Для отключения уведомлений установите это значение в 0."
     reviewable_revision_reasons: "Список причин, которые можно выбрать при отклонении проверяемой в очереди публикации с редакцией. Кроме того, доступен вариант «Прочее», где можно указать пользовательскую причину."
     auto_close_messages_post_count: "Максимальное количество обычных сообщений, разрешенных в личном сообщении, после чего оно будет автоматически закрыто. Для отключения параметра установите это значение в 0."
@@ -2127,13 +2420,17 @@ ru:
     auto_close_topics_create_linked_topic: "Создавать новую связанную тему, если тема автоматически закрывается на основе настроенного параметра «auto close topics post count»"
     code_formatting_style: "Кнопка кода в редакторе будет использовать по умолчанию этот стиль форматирования кода"
     max_allowed_message_recipients: "Максимальное число получателей сообщения."
+    disable_watched_word_checking_in_user_fields: "отключить проверку контролируемых слов в полях пользователей"
+    watched_words_regular_expressions: "Разрешает использовать регулярные выражения для фильтрации слов. Если этот параметр включен, чувствительные слова группируются с учетом их регистра. Затем все выбранные слова компилируются в одно регулярное выражение с добавлением границ слов для регулярных выражений контролируемых слов. Следовательно, этот метод фильтрации на основе регулярных выражений добавляет дополнительный уровень контроля над модерацией контента, поддерживая более сложные шаблоны слов. Параметр также позволяет легко заменить исходный текст на выбранный вариант."
     enable_diffhtml_preview: "Экспериментальная функция, которая использует diffHTML для синхронизации предпросмотра вместо полного повторного рендеринга."
     enable_fast_edit: "Добавляет в меню выбора публикаций кнопку для быстрого редактирования небольшого выделения в строке."
     enable_quote_copy: "Добавляет в меню выбора публикации кнопку, позволяющую скопировать выделение в буфер обмена в виде цитаты в формате Markdown."
+    old_post_notice_days: "Количество дней, по прошествии которых уведомление о публикации считается устаревшим. Это визуально отличает его от новых уведомлений на сайте."
     new_user_notice_tl: "Минимальный уровень доверия, необходимый для просмотра уведомлений о сообщениях новых пользователей."
     returning_user_notice_tl: "Минимальный уровень доверия, необходимый для просмотра уведомлений о сообщениях вернувшихся пользователей."
     returning_users_days: "Количество дней, после которого пользователь будет считаться вернувшимся на форум."
     review_media_unless_trust_level: "Отправлять сообщения пользователей с низким уровнем доверия на проверку, если они содержат встроенные медиафайлы."
+    skip_review_media_groups: "Публикации пользователей, не входящих ни в одну из этих групп, будут отправлены на рассмотрение персоналу, если публикация содержит встроенные медиафайлы. Публикации администраторов и модераторов всегда разрешены."
     blur_tl0_flagged_posts_media: "Размывать изображения в находящихся на проверке сообщениях для сокрытия возможного NSFW-контента."
     enable_page_publishing: "Разрешить сотрудникам публиковать темы на новых URL-адресах с их собственным стилем."
     show_published_pages_login_required: "Опубликованные страницы доступны анонимным пользователям, для этого не требуется регистрация на форуме."
@@ -2156,6 +2453,7 @@ ru:
     default_other_enable_defer: "Включить функцию отложенных тем по умолчанию."
     default_other_dynamic_favicon: "Показывать количество новых/обновлённых тем на значке браузера по умолчанию."
     default_other_skip_new_user_tips: "Не выдавать награды и не показывать советы новым пользователям."
+    default_other_like_notification_frequency: "Устанавливает частоту по умолчанию, с которой пользователи получают уведомления о лайках. Этот параметр будет действовать для пользователей, которые не настроили уведомления."
     default_topics_automatic_unpin: "По умолчанию автоматически откреплять полностью прочтённые темы."
     default_categories_watching: "Список наблюдаемых категорий по умолчанию."
     default_categories_tracking: "Список отслеживаемых категорий по умолчанию."
@@ -2167,10 +2465,14 @@ ru:
     default_tags_tracking: "Список тегов по умолчанию, которыми помечаются отслеживаемые темы."
     default_tags_muted: "Список тегов по умолчанию, которыми помечаются темы с отключенными уведомлениями."
     default_tags_watching_first_post: "Список тегов, в которых по умолчанию будет включено наблюдение за первым сообщением в каждой новой теме."
+    default_text_size: "Задает размер шрифта по умолчанию для всех текстовых элементов на сайте. Этот размер впоследствии каждый пользователь может изменить по своему усмотрению."
+    default_title_count_mode: "Выберите режим по умолчанию для подсчета заголовков страниц, отображаемых на сайте. Параметр будет применяться ко всем страницам, если не будет изменен индивидуально."
     enable_offline_indicator: "Сообщать пользователям, если отсутствует подключение к сети"
     default_sidebar_link_to_filtered_list: "Ссылки меню навигации по умолчанию — фильтрованный список."
     default_sidebar_show_count_of_new_items: "Ссылки меню навигации по умолчанию отображают количество новых элементов (вместо наград)."
+    default_sidebar_switch_panel_position: "Положение кнопки на боковой панели для перехода в чат"
     retain_web_hook_events_period_days: "Количество дней, в течение которых сохраняются записи событий вебхука."
+    retain_web_hook_events_aggregate_days: "Количество дней, в течение которых сохраняются объединенные записи событий вебхука."
     retry_web_hook_events: "Автоматически повторять неудачные события вебхука 4 раза. Промежуток времени между повторными попытками составляет 1, 5, 25 и 125 минут."
     revoke_api_keys_unused_days: "Количество дней с момента последнего использования API-ключа до его автоматического отзыва (0 — никогда)."
     revoke_api_keys_maxlife_days: "Количество дней до автоматического отзыва ключа API (0 — никогда)"
@@ -2178,11 +2480,17 @@ ru:
     min_trust_level_for_user_api_key: |
       Уровень доверия, необходимый для создания пользовательских API-ключей пользователей.<br>
       <b>ВНИМАНИЕ</b>! Изменение уровня доверия не позволит пользователям с более низким уровнем доверия входить через Discourse Hub.
+    user_api_key_allowed_groups: |
+      Участие в группе требуется для создания пользовательских API-ключей.<br>
+      <b>ПРЕДУПРЕЖДЕНИЕ</b>. Изменение уровня доверия не позволит пользователям с более низким уровнем доверия войти в систему через Discourse Hub.<br>
+       Администраторы и модераторы всегда могут создавать пользовательские API-ключи.
     allowed_user_api_auth_redirects: "Разрешённый URL для перенаправления аутентификации для API-ключей пользователя. Подстановочный знак * может использоваться для соответствия любой его части (например, www.example.com/*)."
     allowed_user_api_push_urls: "Разрешённые URL-адреса для отправки на сервер к пользовательскому API"
     revoke_user_api_keys_unused_days: "Количество дней с момента последнего использования пользовательского API-ключа до его автоматического отзыва (0 — никогда)"
     revoke_user_api_keys_maxlife_days: "Количество дней до автоматического отзыва пользовательского ключа API (0 — никогда)"
+    tagging_enabled: "Включить теги в темах? Дополнительную информацию см. в <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>руководстве администратора по мета-тегам</a>."
     min_trust_to_create_tag: "Минимальный уровень доверия для создания тега."
+    create_tag_allowed_groups: "Группы, которым разрешено создавать теги. Администраторы и модераторы всегда могут создавать теги."
     max_tags_per_topic: "Максимальное количество тегов, которое может быть применено к теме."
     enable_max_tags_per_email_subject: "Использовать «max_tags_per_email_subject» при создании темы электронного письма"
     max_tags_per_email_subject: "Максимальное количество тегов, которое может быть в теме электронного письма"
@@ -2191,7 +2499,10 @@ ru:
     max_tags_in_filter_list: "Максимальное количество тегов для отображения в списке фильтрации. Будут показаны самые часто используемые теги."
     tags_sort_alphabetically: "Отображать теги в алфавитном порядке. По умолчанию теги отображаются в порядке популярности."
     tags_listed_by_group: "Список тегов с группировкой тегов по группам на <a href='%{base_path}/tags' target='_blank'>странице тегов</a>."
+    tag_style: "Определяет внешний вид значков тегов на сайте. Этот параметр позволяет настроить визуальное представление тегов во всех областях сайта, повышая согласованность макета и доступность для пользователей."
+    pm_tags_allowed_for_groups: "Разрешать участникам групп помечать тегом любое личное сообщение"
     min_trust_level_to_tag_topics: "Минимальный уровень доверия для отметки тем тегами."
+    tag_topic_allowed_groups: "Группы, которым разрешено добавлять тег к теме. Администраторы и модераторы всегда могут добавлять тег к теме."
     suppress_overlapping_tags_in_list: "Не отображать тег, если он полностью совпадает с заголовком темы"
     remove_muted_tags_from_latest: "Не показывать темы в списке последних тем, если они помечены только тегами, отключающими уведомления."
     force_lowercase_tags: "Вводить все новые теги только строчными буквами."
@@ -2199,10 +2510,14 @@ ru:
     automatically_clean_unused_tags: "Автоматически удаляет теги, которые не используются в каких-либо темах или личных сообщениях ежедневно."
     watched_precedence_over_muted: "Уведомлять меня о темах в отслеживаемых категориях и тегах (включая те, для которых уведомления отключены)"
     company_name: "Название вашей компании или организации. Если оставить это поле пустым, то никаких шаблонных Пользовательских соглашений или Уведомлений о конфиденциальности предоставляться не будет."
+    governing_law: "Укажите юрисдикцию, которая регулирует юридические аспекты сайта, включая Условия использования и Политику конфиденциальности. Обычно это страна или штат, где зарегистрирована или ведет деятельность компания, управляющая сайтом."
+    city_for_disputes: "Укажите город, который будет рассматриваться в качестве юрисдикции для разрешения любых споров, связанных с использованием данного форума. Эта информация обычно указана в юридических документах, таких как Условия использования форума."
     shared_drafts_category: "Включить функцию «Общие черновики», назначив категорию для черновиков тем. Персонал не будет видеть подобные темы в разделе «Обсуждаемые»."
     shared_drafts_min_trust_level: "Разрешить пользователям просматривать и редактировать общие черновики."
     shared_drafts_allowed_groups: "Разрешить пользователям в этих группах просматривать и редактировать общие черновики."
+    push_notifications_prompt: "Показывать баннер с запросом согласия пользователя на push-уведомления. Этот параметр вызывает всплывающее окно с просьбой разрешетить отправку push-уведомлений пользователю. Баннер появляется только в том случае, если push-уведомления еще не включены, поддерживаются устройством пользователя и пользователь либо опубликовал публикацию, либо использует прогрессивное веб-приложение (PWA). Запрос больше не будет показываться, если пользователь уже закрыл баннер или предоставил/отклонил разрешение."
     push_notifications_icon: "Иконка значка, который появляется в углу уведомлений. Рекомендуется монохроматическое изображение в формате PNG размером 96 × 96 пикселей с поддержкой прозрачности."
+    enable_desktop_push_notifications: "Активирует push-уведомления для интерфейса для настольного компьютера. Эта функция позволяет получать оповещения в режиме реального времени с сайта прямо на рабочий стол, повышая вовлеченность и гарантируя, что пользователи всегда будут в курсе событий. Однако эффективность этой функции зависит от поддержки браузером push-уведомлений."
     push_notification_time_window_mins: "Подождать указанное количество минут перед отправкой push-уведомления. Предотвращает отправку push-уведомлений активным пользователям, которые находятся онлайн."
     base_font: "Основной шрифт, используемый для большей части текста на сайте. Шрифт тем можно переопределить с помощью настраиваемого свойства CSS `--font-family`."
     heading_font: "Шрифт, используемый для заголовков. Шрифт тем можно переопределить с помощью настраиваемого свойства CSS `--font-family`."
@@ -2214,6 +2529,9 @@ ru:
     dashboard_hidden_reports: "Разрешать скрывать отдельные отчёты в панели управления."
     dashboard_visible_tabs: "Закладки, которые будут отображаться в панели управления."
     dashboard_general_tab_activity_metrics: "Отчёты, отображаемые в метриках активности на основной вкладке панели управления."
+    gravatar_name: "Укажите имя поставщика услуг Gravatar. Это имя обычно используется для идентификации источника, предоставляющего сайту аватары Gravatar."
+    gravatar_base_url: "Укажите URL-адрес для доступа к API поставщика Gravatar. Этот параметр имеет решающее значение для преобразования адресов электронной почты в URL-адреса Gravatar, где хранятся изображения аватаров."
+    gravatar_login_url: "URL-адрес, связанный с `gravatar_base_url`, который обеспечивает вход пользователя в сервис Gravatar."
     share_quote_buttons: "Какие элементы должны отображаться в окне «Поделиться» и в какой последовательности."
     share_quote_visibility: "Когда показывать кнопки публикации цитат: никогда, только анонимным пользователям или всем пользователям. "
     create_revision_on_bulk_topic_moves: "Добавлять первые сообщения в историю редактирования при массовом перемещении тем в другую категорию."
@@ -2222,15 +2540,23 @@ ru:
     use_name_for_username_suggestions: "Предлагать в качестве имени пользователя полное имя."
     suggest_weekends_in_date_pickers: "Отображать выходные (субботу и воскресенье) при выборе даты (отключите этот параметр, если вы используете Discourse только в будние дни, с понедельника по пятницу)."
     splash_screen: "Отображать временный экран загрузки во время загрузки ресурсов сайта"
+    navigation_menu: "Укажите боковую панель или раскрывающийся список заголовка в качестве главного меню навигации вашего сайта. Рекомендуется использовать боковую панель."
     default_navigation_menu_categories: "Выбранные категории по умолчанию будут отображаться в соответствующем разделе меню навигации."
     default_navigation_menu_tags: "Выбранные теги по умолчанию будут отображаться в соответствующем разделе меню навигации."
     experimental_new_new_view_groups: 'ЭКСПЕРИМЕНТАЛЬНАЯ ФУНКЦИЯ: включить новый список тем, который объединяет непрочитанные и новые темы, и сделать на него ссылку «Все» на боковой панели.'
     enable_custom_sidebar_sections: "ЭКСПЕРИМЕНТАЛЬНАЯ ФУНКЦИЯ: включить настраиваемые разделы боковой панели"
     experimental_topics_filter: "ЭКСПЕРИМЕНТАЛЬНАЯ ФУНКЦИЯ: включить экспериментальный маршрут фильтрации тем по ссылке /filter"
     enable_experimental_lightbox: "ЭКСПЕРИМЕНТАЛЬНАЯ ФУНКЦИЯ: новый дизайн стандартного лайтбокса изображений."
+    enable_experimental_bookmark_redesign_groups: "ЭКСПЕРИМЕНТАЛЬНАЯ ФУНКЦИЯ: показать меню быстрого доступа к закладкам в публикациях и новое переработанное модальное окно"
+    glimmer_header_mode: "Контролирует, будет ли использоваться новая реализация заголовка 'glimmer'. По умолчанию установлено значение 'auto', которое включится автоматически, как только все ваши темы и плагины будут готовы. https://meta.discourse.org/t/296544"
+    experimental_glimmer_topic_list_groups: "ЭКСПЕРИМЕНТАЛЬНАЯ ФУНКЦИЯ: включает новую реализацию списка тем 'glimmer'. Эта реализация находится в стадии активной разработки и не предназначена для промышленной эксплуатации. Не разрабатывайте темы/плагины для нее до завершения разработки реализации и объявления о ее выходе."
     experimental_form_templates: "ЭКСПЕРИМЕНТАЛЬНАЯ ФУНКЦИЯ: включить функцию шаблонов форм. <b>После включения</b> шаблонами можно управлять по адресу <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
+    admin_sidebar_enabled_groups: "Включить навигацию на боковой панели пользовательского интерфейса администратора для указанных групп, которая заменяет кнопки навигации администратора верхнего уровня."
+    lazy_load_categories_groups: "ЭКСПЕРИМЕНТАЛЬНАЯ ФУНКЦИЯ. Ленивая загрузка информации о категориях только для пользователей указанных групп. Повышает производительность на сайтах со множеством категорий."
     page_loading_indicator: "Выбор индикатора загрузки, который появляется во время перехода по страницам в Discourse. «Спиннер» — индикатор на всю страницу. «Слайдер» — узкая полоса вверху экрана."
     show_user_menu_avatars: "Показать аватары пользователей в пользовательском меню"
+    view_raw_email_allowed_groups: "Группы, которые могут просматривать исходный контент электронного письма для публикации, созданной входящим письмом. Сюда входят заголовки писем и другая техническая информация."
+    experimental_flags_admin_page_enabled_groups: "ЭКСПЕРИМЕНТАЛЬНАЯ ФУНКЦИЯ: удаляет ссылку «Метки модерации» с боковой панели администратора."
     errors:
       invalid_css_color: "Недопустимый цвет. Введите название цвета или шестнадцатеричное значение."
       invalid_email: "Неправильный адрес электронной почты."
@@ -2245,10 +2571,21 @@ ru:
       must_include_latest: "Верхнее меню должно содержать вкладку «Последние»."
       invalid_string: "Недопустимое значение."
       invalid_string_min_max: "Допустимое количество символов: от %{min} до %{max}."
+      invalid_string_min:
+        one: "Минимум символов: %{count}."
+        few: "Минимум символов: %{count}."
+        many: "Минимум символов: %{count}."
+        other: "Минимум символов: %{count}."
+      invalid_string_max:
+        one: "Максимум символов: %{count}."
+        few: "Максимум символов: %{count}."
+        many: "Максимум символов: %{count}."
+        other: "Максимум символов: %{count}."
       invalid_json: "Недопустимый формат JSON."
       invalid_reply_by_email_address: "Значение должно содержать «%{reply_key}» и должно отличаться от письма уведомления."
       invalid_alternative_reply_by_email_addresses: "Все значения должны содержать «%{reply_key}» и должны отличаться от письма уведомления."
       invalid_domain_hostname: "Не может содержать символы * и ?."
+      invalid_csp_script_src: "Значение должно быть либо 'unsafe-eval', либо 'wasm-unsafe-eval', либо в форме '<hash algorithm>-<base64 value>', где поддерживаются алгоритмы хеширования sha256, sha384 или sha512. Убедитесь, что вводимые данные заключены в одинарные кавычки."
       pop3_polling_host_is_empty: "Перед включением проверки почты по POP3 нужно установить «pop3 polling host»."
       pop3_polling_username_is_empty: "Перед включением проверки почты по POP3 нужно установить «pop3 polling username»."
       pop3_polling_password_is_empty: "Перед включением проверки почты по POP3 нужно установить «pop3 polling password»."
@@ -2277,8 +2614,14 @@ ru:
         regex_invalid: "Недопустимое регулярное выражение: %{error}"
         leading_trailing_slash: "Регулярное выражение не должно начинаться или заканчиваться прямой косой чертой."
       unicode_usernames_avatars: "Внутренние системные аватары не поддерживают имена пользователей в формате Unicode."
+      list_value_count:
+        one: "В списке должно быть ровно %{count} значение."
+        few: "Значений в списке должно быть ровно %{count}."
+        many: "Значений в списке должно быть ровно %{count}."
+        other: "Значений в списке должно быть ровно %{count}."
       markdown_linkify_tlds: "Нельзя использовать значение «*»."
       google_oauth2_hd_groups: "Перед включением этого параметра необходимо задать все настройки «google oauth2 hd»."
+      linkedin_oidc_credentials: "Прежде чем включать этот параметр, необходимо настроить учетные данные LinkedIn OIDC ('linkedin_oidc_client_id' and 'linkedin_oidc_client_secret')."
       search_tokenize_chinese_enabled: "Перед включением этого параметра нужно отключить «search_tokenize_chinese»."
       search_tokenize_japanese_enabled: "Перед включением этого параметра нужно отключить «search_tokenize_japanese»."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Нельзя включить DiscourseConnect, если принудительно включена двухфакторная аутентификация."
@@ -2305,17 +2648,22 @@ ru:
       create_tag_allowed_groups: "min_trust_to_create_tag"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
       skip_review_media_groups: "review_media_unless_trust_level"
+      embedded_media_allowed_groups: "min_trust_to_post_embedded_media"
+      post_links_allowed_groups: "min_trust_to_post_links"
+      user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
+      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
+      profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
       clean_up_inactive_users_after_days:
-      - ""
-      - "неактивна"
-      - ""
+      - "выключено"
+      - "неактивно"
+      - "выключено"
       purge_unactivated_users_grace_period_days:
-      - ""
-      - "неактивна"
-      - ""
+      - "выключено"
+      - "неактивно"
+      - "выключено"
       navigation_menu:
       - "боковая панель"
-      - ""
+      - "выпадающий список заголовка"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2342,6 +2690,8 @@ ru:
     missing_secret: "Сбой аутентификации из-за отсутствия ключа. Для решения проблемы обратитесь к администраторам сайта."
     invite_redeem_failed: "Не удалось активировать приглашение по ссылке. Свяжитесь с администратором сайта."
     invalid_parameter_value: "Аутентификацию не удалось выполнить из-за недопустимого значения параметра `%{param}`. Обратись к администраторам сайта, чтобы устранить эту проблему."
+    payload_parse_error: "Сбой аутентификации (полезная нагрузка недействительна в Base64). Свяжитесь с администратором сайта."
+    signature_error: "Сбой аутентификации (подпись некорректная). Свяжитесь с администратором сайта."
   original_poster: "Исходный автор"
   most_recent_poster: "Последний автор"
   frequent_poster: "Частый автор"
@@ -2502,6 +2852,7 @@ ru:
     email_too_long: "Эл. почта, которую вы указали, слишком длинная. Имя почтового ящика должно быть не длиннее 254 символов, а доменное имя не более 253 символов."
     wrong_invite_code: "Вы указали неверный код приглашения."
     reserved_username: "Запрещенное имя пользователя."
+    missing_user_field: "Вы не заполнили все обязательные пользовательские поля"
     auth_complete: "Аутентификация завершена."
     click_to_continue: "Нажмите здесь для продолжения."
     already_logged_in: "Это приглашение предназначено для новых пользователей, у которых ещё нет аккаунта."
@@ -2540,6 +2891,7 @@ ru:
         updating_site_settings: "Обновление настроек сайта…"
         updating_user_stats: "Обновление статистики пользователя…"
         merging_user_attributes: "Объединение атрибутов пользователя…"
+        merging_user_associated_accounts: "Объединение связанных с пользователем аккаунтов…"
         updating_user_ids: "Обновление идентификаторов пользователя…"
         deleting_source_user: "Удаление исходного пользователя…"
   user:
@@ -2554,6 +2906,16 @@ ru:
     new_user_typed_too_fast: "Новый пользователь набирает текст слишком быстро"
     content_matches_auto_silence_regex: "Контент соответствует регулярному выражению автоматической заморозки первых сообщений"
     username:
+      short:
+        one: "минимум символов: %{count}"
+        few: "минимум символов: %{count}"
+        many: "минимум символов: %{count}"
+        other: "минимум символов: %{count}"
+      long:
+        one: "максимум символов: %{count}"
+        few: "максимум символов: %{count}"
+        many: "максимум символов: %{count}"
+        other: "максимум символов: %{count}"
       too_long: "слишком длинное"
       characters: "может содержать только цифры, буквы, тире, точки и символ подчёркивания"
       unique: "должно быть уникально"
@@ -2715,12 +3077,39 @@ ru:
   new_version_mailer:
     title: "Выход новой версии"
     subject_template: "[%{email_prefix}] Вышла новая версия Discourse"
+    text_body_template: |
+      Ура! Вышла свежая версия [Discourse](https://www.discourse.org)!
+
+      Установленная версия: %{installed_version}
+      Новая версия: **%{new_version}**
+
+      - Обновитесь, используя наш способ онлайн-обновления **[в один клик](%{base_url}/admin/update)**.
+
+      - Посмотрите, что появилось в последней версии: либо на [нашем сайте](https://meta.discourse.org/tag/release-notes), либо на сайте [GitHub](https://github.com/discourse/discourse/commits/main).
+
+      - На форуме [meta.discourse.org](https://meta.discourse.org) вы найдете актуальные новости, обсуждения и оперативную техническую поддержку по Discourse.
   new_version_mailer_with_notes:
     title: "Выход новой версии (с описанием)"
     subject_template: "[%{email_prefix}] Вышло обновление"
+    text_body_template: |
+      Ура! Вышла свежая версия [Discourse](https://www.discourse.org)!
+
+      Установленная версия: %{installed_version}
+      Новая версия: **%{new_version}**
+
+      - Обновитесь, используя наш способ онлайн-обновления **[в один клик](%{base_url}/admin/update)**.
+
+      - Посмотрите, что появилось в последней версии: либо на [нашем сайте](https://meta.discourse.org/tag/release-notes), либо на сайте [GitHub](https://github.com/discourse/discourse/commits/main).
+
+      - На форуме [meta.discourse.org](https://meta.discourse.org) вы найдете актуальные новости, обсуждения и оперативную техническую поддержку по Discourse.
+
+      ### Что нового
+
+      %{notes}
   flag_reasons:
     off_topic: "Ваше сообщение расценено как **оффтопик**. Сообщество считает, что ваше сообщение **не относится к теме**, учитывая заголовок темы и содержание первого сообщения."
     inappropriate: "Сообщество считает ваше сообщение **неприемлемым**, т. е. оскорбительным, непристойным, разжигающим ненависть или нарушающим [рекомендации для сообщества](%{base_path}/guidelines)."
+    illegal: "Публикация помечена как **незаконный контент**: сообщество считает, что она может нарушать закон."
     spam: "Ваше сообщение расценено как **спам**. Сообщество считает, что ваше сообщение не имеет отношения к теме, не является актуальным и носит рекламный характер."
     notify_moderators: "Ваше сообщение расценено как **требующее внимания модератора**. Сообщество считает, что сообщение требует отдельного внимания персонала."
     responder:
@@ -2993,9 +3382,41 @@ ru:
     bulk_invite_succeeded:
       title: "Массовое приглашение выполнено"
       subject_template: "Массовое приглашение пользователей выполнено"
+      text_body_template: |
+        Файл массового приглашения пользователей обработан, приглашений отправлено: %{sent}, пропущено: %{skipped}, выдано предупреждений: %{warnings}.
+
+        Пропущено приглашений по почте:
+
+        ``` text
+        %{skipped_emails}
+        ```
+
+        ``` text
+        %{logs}
+        ```
     bulk_invite_failed:
       title: "Массовое приглашение не выполнено"
       subject_template: "Массовое приглашение пользователей выполнено с ошибками"
+      text_body_template: |
+        Файл массового приглашения пользователей обработан, приглашений отправлено: %{sent}, пропущено: %{skipped}, выдано предупреждений: %{warnings}, ошибок: %{failed}.
+
+        Пропущено приглашений по почте:
+
+        ``` text
+        %{skipped_emails}
+        ```
+
+        Неудачных приглашений по почте:
+
+        ``` text
+        %{failed_emails}
+        ```
+
+        Вот журнал:
+
+        ``` text
+        %{logs}
+        ```
     user_added_to_group_as_owner:
       title: "Добавление в группу в качестве владельца"
       subject_template: "Вы были добавлены в группу «%{group_name}» в качестве владельца"
@@ -3669,6 +4090,7 @@ ru:
 
         Если у вас есть вопросы, [свяжитесь с нашим дружелюбным персоналом](%{base_url}/about).
     digest:
+      why: "Краткая сводка по %{site_link} с %{since}"
       since_last_visit: "Что нового появилось за время вашего отсутствия:"
       new_topics: "Новые темы"
       unread_notifications: "Непрочитанные уведомления"
@@ -3684,6 +4106,7 @@ ru:
       your_email_settings: "настройки рассылки"
       click_here: "отписаться"
       from: "%{site_name}"
+      preheader: "Краткая сводка с %{since}"
     forgot_password:
       title: "Восстановление забытого пароля"
       subject_template: "[%{email_prefix}] Восстановление пароля"
@@ -3904,6 +4327,7 @@ ru:
     images:
       too_large: "Вы пытаетесь загрузить слишком большое изображение (максимальный размер — %{max_size_kb} кБ). Уменьшите размер изображения и повторите попытку."
       too_large_humanized: "Вы пытаетесь загрузить слишком большое изображение (максимальный размер — %{max_size}). Уменьшите размер изображения и повторите попытку."
+      larger_than_x_megapixels: "Вы пытаетесь загрузить слишком большое изображение (максимальный размер — %{max_image_megapixels} Мпикс). Уменьшите размер изображения и повторите попытку."
       size_not_found: "Мы не можем определить размер изображения. Возможно, изображение повреждено?"
     placeholders:
       too_large: "(размер изображения превышает %{max_size_kb} кБ)"
@@ -3979,6 +4403,99 @@ ru:
   guidelines_topic:
     title: "Правила и рекомендации"
     guidelines_title: "Рекомендации"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Это цивилизованное место для публичных обсуждений](#civilized)
+
+      Относитесь к этому форуму для обсуждения с тем же уважением, что и к общественному парку. Мы тоже являемся общим ресурсом — местом для обмена навыками, знаниями и интересами через постоянное общение.
+
+      Это не строгие правила. Это рекомендации, которые помогут участникам нашего сообщества принимать разумные решения и поддерживать на этом форуме дружелюбное пространство для цивилизованных обсуждений.
+
+
+      <a name="improve"></a>
+
+      ## [Улучшите обсуждение](#improve)
+
+      Помогите нам создать прекрасное местом для обсуждения — добавляйте в обсуждение позитивные и конструктивные мысли. Если вы не уверены, что ваша публикация дополнит обсуждение, подумайте на тем, что вы хотите высказать, и попробуйте сформулировать свое видение еще раз чуть позже.
+
+      Один из способов улучшить обсуждение — пользоваться поиском среди уже обговариваемых тем. Просмотрите текущие темы здесь, прежде чем отвечать на чужие или начинать собственную, и у вас будет больше шансов встретить людей, разделяющих ваши интересы.
+
+      Для нас важны темы, которые здесь обсуждаются, и мы хотим, чтобы вы также относились к ним уважительно. Проявляйте уважение к темам и людям, которые их обсуждают, даже если вы не разделяете их мнение.
+
+      <a name="agreeable"></a>
+
+      ## [Будьте вежливы, даже если не согласны](#agreeable)
+
+      Если вы не согласны с высказанным мнением, вы можете захотеть его оспорить. Это нормально. Но помните, что нужно критиковать _идеи, а не людей_. Избегайте:
+
+      * оскорблений;
+      * личных нападок;
+      * ответов на тон сообщения, а не на его содержание;
+      * импульсивных противоречий.
+
+      Вместо этого поделитесь обоснованными и вдумчивыми замечаниями, которые улучшат обсуждение.
+
+      <a name="participate"></a>
+
+      ## [Ваше участие имеет значение](#participate)
+
+      Обсуждения, которые мы здесь ведем, задают тон для каждого нового участника. Помогите нам повлиять на будущее этого сообщества: участвуйте в обсуждениях, которые делают этот форум интереснее, и наоборот — не поддерживайте бессмысленных дискуссий.
+
+      Discourse предоставляет инструменты, которые позволяют сообществу коллективно определять лучшие (и худшие) вклады: закладки, лайки, жалобы, ответы, правки, отслеживание, отключение уведомлений и т. д. Используйте эти инструменты для улучшения своего и чужого опыта.
+
+      Пусть ваше участие сделает сообщество еще лучше.
+
+      <a name="flag-problems"></a>
+
+       ## [Если вы видите проблему, сообщите о ней](#flag-problems)
+
+      Модераторы обладают особыми полномочиями: они отвечают за этот форум. Но и вы тоже. С вашей помощью модераторы могут проявить себя как организаторы сообщества, а не только как чистильщики или полиция.
+
+      Когда вы видите плохое поведение, не отвечайте. Ответ поощряет плохое поведение, признавая его важность, потребляя ваше внимание и забирая время у всех остальных. _Просто отправьте жалобу_. Если накопится достаточно жалоб, будут приняты меры, либо автоматически, либо через вмешательство модератора.
+
+      Чтобы поддерживать наше сообщество, модераторы оставляют за собой право удалять любой контент и любой аккаунт пользователя по любой причине и в любое время. Модераторы не просматривают новые сообщения; модераторы и операторы сайта не несут ответственности за любой контент, размещенный сообществом.
+
+       <a name="be-civil"></a>
+
+       ## [Всегда будьте вежливы](#be-civil)
+
+      Ничто так не подрывает здоровую беседу как грубость:
+
+      * Будьте вежливы. Не публикуйте ничего, что разумный человек счел бы оскорбительным, обидным или разжигающим ненависть.
+      * Соблюдайте добропорядочность. Не публикуйте контент непристойного или откровенно сексуального характера.
+      * Уважайте друг друга. В нашем сообществе нет места харрасменту, домогательствам, преследованию, выдаче себя за другого человека и раскрытию чужой личной информации. 
+      * Уважайте наш форум. Не публикуйте спам и не нарушайте работу форума иным образом. 
+
+       Это не конкретные термины с точными определениями — избегайте даже _намека_ на что-либо из вышеперечисленного. Если вы не уверены, представьте, что ваша публикация оказалась на первой странице крупного новостного сайта. Это публичный форум, и поисковые системы индексируют эти обсуждения. 
+
+      Следите за тем, чтобы язык, ссылки и изображения были безопасными для семьи и друзей.
+
+       <a name="keep-tidy"></a>
+
+      ## [Соблюдайте порядок](#keep-tidy)
+
+      Старайтесь размещать материалы в нужном месте, чтобы мы могли больше времени уделять обсуждению, а не модерации. Поэтому: 
+
+      * Не начинайте тему в неправильной категории — пожалуйста, прочтите определения категорий.
+      * Не публикуйте одно и то же сообщение в нескольких темах.
+      * Не создавайте публикацию без содержания.
+      * Не отклоняйтесь от темы в процессе ее обсуждения.
+      * Не подписывайте свои публикации — к каждой публикации прикреплена информация о вашем профиле
+
+       Вместо того чтобы публиковать «+1» или «Поддерживаю», используйте кнопку «Нравится». И не уводите обсуждение темы в радикально ином направлении — используйте функцию «Ответить в новой связанной теме».
+
+       <a name="stealing"></a>
+
+       ## [Публикуйте только свои материалы](#stealing)
+
+      Вы не можете публиковать чужой цифровой контент без разрешения. Нельзя публиковать описания, ссылки или методы кражи чьей-либо интеллектуальной собственности (программного обеспечения, видео, аудио, изображения) или нарушения любого другого закона.
+
+       <a name="power"></a> 
+
+       ## [Вы принимаете непосредственное участие в жизни сообщества ](#power)
+
+      Этот сайт управляется [дружелюбной командой модераторов](%{base_path}/about) и *вами* как участником сообщества. Если у вас есть дополнительные вопросы о том, как здесь всё устроено, откройте новую тему в категории %{feedback_category} и давайте вместе всё обсудим! Если возникла критическая или срочная проблема, которую нельзя решить с помощью темы или жалобы, [свяжитесь с модераторами](%{base_path}/about).
   tos_topic:
     title: "Условия использования"
     body: |
@@ -4246,6 +4763,11 @@ ru:
     mass_award:
       errors:
         invalid_csv: Мы обнаружили ошибку в строке %{line_number}. В CSV-файле должен быть указан один адрес электронной почты на строку.
+        too_many_csv_entries:
+          one: Слишком много записей в CSV-файле. Загрузите файл с не более чем %{count} записью.
+          few: Слишком много записей в CSV-файле. Загрузите файл с не более чем %{count} записями.
+          many: Слишком много записей в CSV-файле. Загрузите файл с не более чем %{count} записями.
+          other: Слишком много записей в CSV-файле. Загрузите файл с не более чем %{count} записями.
         badge_disabled: Сначала активируйте использование награды «%{badge_name}».
         cant_grant_multiple_times: Награду «%{badge_name}» нельзя присвоить одному пользователю несколько раз.
     editor:
@@ -4542,6 +5064,7 @@ ru:
     limited_to_one_tag_from_group: "Теги %{tags} нельзя использовать одновременно. Используйте только один из них."
     invalid_target_tag: "не может быть синонимом синонима"
     synonyms_exist: "не допускается, пока существуют синонимы"
+    user_not_permitted: "Вы не можете добавлять тег к темам"
   rss_by_tag: "Темы, отмеченные тегом %{tag}"
   finish_installation:
     congratulations: "Поздравляем, вы установили Discourse!"
@@ -4582,17 +5105,18 @@ ru:
           default_locale:
             label: "Язык"
       privacy:
-        title: "Конфиденциальность"
         fields:
           login_required:
-            placeholder: "Закрытое сообщество"
-            extra_description: "Только зарегистрированные пользователи могут получить доступ к этому сообществу"
+            label: "Видимость"
+            choices:
+              public:
+                label: "Публичное"
+              private:
+                label: "Закрытое"
           invite_only:
-            placeholder: "Только по приглашению"
-            extra_description: "Пользователи должны быть приглашены доверенными пользователями или сотрудниками"
-          must_approve_users:
-            placeholder: "Требовать одобрения"
-            extra_description: "Пользователи должны быть одобрены персоналом"
+            choices:
+              invite_only:
+                label: "Только по приглашению"
           chat_enabled:
             placeholder: "Включить чат"
             extra_description: "Взаимодействие с участниками в реальном времени"
@@ -4678,9 +5202,23 @@ ru:
   onebox:
     discourse:
       user_joined_community: "Регистрация: %{date}"
+    gitlab:
+      truncated_file: "Файл был обрезан."
+      show_original: "показать оригинал"
     github:
+      binary_file: "Двоичный файл."
+      truncated_file: "Файл был обрезан."
+      show_original: "показать оригинал"
+      requires_iframe: "Для средства просмотра требуется iframe."
+      committed: "зафиксировано"
+      more_than_three_files: "Файлов больше трех."
       opened: "открытые"
       closed: "закрытые"
+      commit_by: "Автор фиксации"
+      comment_by: "Автор комментария"
+      review_by: "Кем проверено"
+      pr_summary: "Фиксаций: %{commits}. В них изменено файлов: %{changed_files}. Добавлений: %{additions}. Удалений: %{deletions}."
+      no_description: "Внесите свой вклад в развитие %{repo}, создав аккаунт на GitHub."
   discourse_push_notifications:
     popup:
       mentioned: '%{username} упомянул(а) вас в теме «%{topic}» —%{site_title}'
@@ -4695,6 +5233,7 @@ ru:
       confirm_body: "Готово! Уведомления включены."
       custom: "Уведомление от пользователя %{username} на сайте %{site_title}"
   staff_action_logs:
+    json_too_long: "Значения не регистрируются, поскольку они превышают ограничения на длину столбца"
     not_found: "не найдено"
     unknown: "неизвестно"
     user_merged: "Пользователь %{username} был объединён с этим аккаунтом"
@@ -4770,6 +5309,9 @@ ru:
       agree_and_hide:
         title: "Скрыть сообщение"
         description: "Согласиться с жалобой и скрыть сообщение, а также автоматически отправить пользователю уведомление с просьбой его отредактировать."
+      agree_and_edit:
+        title: "Согласиться и изменить публикацию"
+        description: "Согласиться с жалобой и открыть окно редактора, чтобы изменить публикацию."
       delete_single:
         title: "Удалить"
       delete:

@@ -1642,6 +1642,9 @@ ko:
     summary:
       description:
         other: "<b>%{count}</b>개의 댓글이 있습니다."
+      buttons:
+        generate: "요약하기"
+        regenerate: "재생성"
       disable: "모든 게시물 표시"
       show_all_label: "모두 보기"
     deleted_filter:
@@ -3940,6 +3943,7 @@ ko:
       config_areas:
         about:
           community_name: "커뮤니티 이름"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           site_contact_group_help: |
             모든 자동 메시지에 초대 할 유효한 그룹 이름입니다.
           optional: "(선택 사항)"

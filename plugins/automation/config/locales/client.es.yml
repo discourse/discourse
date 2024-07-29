@@ -60,7 +60,7 @@ es:
         user_badge_granted:
           fields:
             badge:
-              label: Insignia
+              label: Medalla
             only_first_grant:
               label: Solo en la primera concesión
         stalled_topic:
@@ -183,7 +183,7 @@ es:
               description: Solo se activará una vez por usuario
             new_users_only:
               label: Solo nuevos usuarios
-              description: Se activará solo para los nuevos usuarios que se unan después de que esta automatización esté habilitada
+              description: Se activará solo para los nuevos usuarios que se unan después de que esta automatización esté activada
         category_created_edited:
           fields:
             restricted_category:
@@ -290,19 +290,19 @@ es:
         user_group_membership_through_badge:
           fields:
             badge_name:
-              label: Nombre de la insignia
+              label: Nombre de la medalla
             group:
               label: Grupo
-              description: Grupo objetivo. Los usuarios con la insignia especificada se añadirán a este grupo
+              description: Grupo objetivo. Los usuarios con la medalla especificada se añadirán a este grupo
             update_user_title_and_flair:
               label: Actualizar el título y el estilo del usuario
               description: Opcional, actualizar el título y el estilo del usuario
             remove_members_without_badge:
-              label: Eliminar miembros existentes sin insignia
-              description: Opcional, eliminar miembros del grupo existentes sin la insignia especificada
+              label: Eliminar miembros existentes sin medalla
+              description: Opcional, eliminar miembros del grupo existentes sin la medalla especificada
             badge:
-              label: Insignia
-              description: Seleccionar insignia
+              label: Medalla
+              description: Seleccionar medalla
         suspend_user_by_email:
           fields:
             suspend_until:
@@ -317,15 +317,15 @@ es:
             pinnable_topic:
               label: ID del tema
             pinned_globally:
-              label: Fijado globalmente
+              label: Anclado globalmente
             pinned_until:
-              label: Fijado hasta
+              label: Anclado hasta
         banner_topic:
           fields:
             topic_id:
               label: ID del tema
             banner_until:
-              label: Hacer banner hasta
+              label: Convertir en banner hasta
             user:
               label: Usuario
               description: "Usuario que crea el banner (por defecto: system)"

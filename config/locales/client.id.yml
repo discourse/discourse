@@ -1472,8 +1472,7 @@ id:
         other: "Terdapat <b>%{count}</b> balasan."
       buttons:
         hide: "Sembunyikan ringkasan"
-        generate: "Meringkas dengan AI"
-        regenerate: "Buat ulang ringkasan"
+        generate: "Meringkas"
       enable: "Tampilkan balasan teratas"
       disable: "Tampilkan Semua Postingan"
       short_label: "Balasan teratas"
@@ -2369,6 +2368,7 @@ id:
       config_areas:
         about:
           community_name: "Nama komunitas"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(opsional)"
           toasts:
             general_settings_saved: "Pengaturan umum disimpan"

@@ -1703,6 +1703,9 @@ pt:
       hidden_for_session: "OK, perguntaremos a você amanhã. Você sempre pode usar 'Efetuar Login' para criar uma conta, também."
       intro: "Olá! Parece que está a gostar da conversa, mas ainda não tem uma conta."
     summary:
+      buttons:
+        generate: "Resumir"
+        regenerate: "Regenerar"
       disable: "Mostrar Todas As Publicações"
       show_all_label: "Mostrar tudo"
     deleted_filter:
@@ -3893,6 +3896,7 @@ pt:
           spam: "Spam"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(opcional)"
           update: "Atualização"
           saved: "guardado!"

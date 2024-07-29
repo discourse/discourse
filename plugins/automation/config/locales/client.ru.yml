@@ -8,7 +8,7 @@ ru:
   js:
     discourse_automation:
       title: Автоматизация
-      create: Создание
+      create: Создать
       update: Обновить
       select_script: Выберите скрипт
       select_trigger: Выберите триггер
@@ -67,21 +67,21 @@ ru:
               label: Только при первой выдаче
         stalled_topic:
           durations:
-            PT1H: "Один час"
-            P1D: "Один день"
-            P1W: "Одна неделя"
-            P2W: "Через 2 недели"
-            P1M: "Один месяц"
-            P3M: "Через 3 месяца"
-            P6M: "Через 6 месяцев"
-            P1Y: "Через год"
+            PT1H: "1 час"
+            P1D: "1 день"
+            P1W: "1 неделя"
+            P2W: "2 недели"
+            P1M: "1 месяц"
+            P3M: "3 месяца"
+            P6M: "6 месяцев"
+            P1Y: "1 год"
           fields:
             categories:
               label: Ограничено по категориям
             tags:
               label: Ограничено по тегам
             stalled_after:
-              label: Считать неактивной через
+              label: 'Считать неактивной после периода: '
         recurring:
           every: Кажд.
           frequencies:
@@ -99,14 +99,14 @@ ru:
               label: Дата начала
         stalled_wiki:
           durations:
-            PT1H: "Один час"
-            P1D: "Один день"
-            P1W: "Одна неделя"
-            P2W: "Через 2 недели"
-            P1M: "Один месяц"
-            P3M: "Через 3 месяца"
-            P6M: "Через 6 месяцев"
-            P1Y: "Через год"
+            PT1H: "1 час"
+            P1D: "1 день"
+            P1W: "1 неделя"
+            P2W: "2 недели"
+            P1M: "1 месяц"
+            P3M: "3 месяца"
+            P6M: "6 месяцев"
+            P1Y: "1 год"
           fields:
             restricted_category:
               label: Ограничено по категории
@@ -170,8 +170,22 @@ ru:
             first_topic_only:
               label: Только первая тема
               description: Срабатывает только в том случае, если это первая тема пользователя
-          created: Создан
+          created: Создано
           edited: Изменено
+        user_updated:
+          fields:
+            user_profile:
+              label: Поля профиля пользователя
+              description: Сработает только в том случае, если пользователь заполнил все эти поля
+            custom_fields:
+              label: Пользовательские поля
+              description: Сработает только в том случае, если пользователь заполнил все эти поля
+            once_per_user:
+              label: Один раз на пользователя
+              description: Срабатывает только один раз для каждого пользователя
+            new_users_only:
+              label: Только новые пользователи
+              description: Срабатывает только для новых пользователей, которые присоединятся после включения этой автоматизации
         category_created_edited:
           fields:
             restricted_category:
@@ -180,7 +194,7 @@ ru:
         pm_created:
           fields:
             restricted_user:
-              label: По пользователям
+              label: Пользователи
               description: Сработает только для личных сообщений, отправленных этому пользователю
             restricted_group:
               label: Группа
@@ -222,9 +236,10 @@ ru:
               description: Отвечает только один раз на тему
             word_answer_list:
               label: Список пар «слово — ответ»
+              description: "Определяет список групп «ключ — значение», где «ключ» — это искомый термин, а «значение» — текст ответа. «Ключ» можно оставить пустым, чтобы реагировать на все триггеры, независимо от контента. Обратите внимание, что `value` принимает `{{key}}` в качестве заполнителя, который будет заменен значением `key` в ответе. При этом `key` будет оцениваться как регулярное выражение, а специальные символы, такие как `.`, должны быть экранированы, например: `\\.`"
             answering_user:
               label: Отвечающий пользователь
-              description: Пользователь по умолчанию — система
+              description: Пользователь по умолчанию — System
         auto_tag_topic:
           fields:
             tags:
@@ -234,10 +249,25 @@ ru:
           fields:
             creator:
               label: Автор
+              post_creator_context: Автор публикации
+              updated_user_context: Обновленный пользователь
             topic:
               label: ID темы
             post:
-              label: Контент записи
+              label: Контент публикации
+        topic:
+          fields:
+            creator:
+              label: Автор
+              updated_user_context: Обновленный пользователь
+            body:
+              label: Текст темы
+            title:
+              label: Название темы
+            category:
+              label: Категория темы
+            tags:
+              label: Теги темы
         group_category_notification_default:
           fields:
             group:
@@ -257,7 +287,7 @@ ru:
           levels:
             warning: Предупреждение
             info: Информация
-            success: Слово добавлено
+            success: Успех
             error: Ошибка
         user_group_membership_through_badge:
           fields:
@@ -278,12 +308,12 @@ ru:
         suspend_user_by_email:
           fields:
             suspend_until:
-              label: Заморозить до (по умолчанию)
+              label: Заблокировать до (по умолчанию)
             reason:
               label: Причина (по умолчанию)
             actor:
               label: Пользователь
-              description: "Пользователь, ответственный за заморозку (по умолчанию — система)"
+              description: "Пользователь, ответственный за блокировку (по умолчанию — System)"
         pin_topic:
           fields:
             pinnable_topic:
@@ -300,7 +330,7 @@ ru:
               label: Сделать баннером до
             user:
               label: Пользователь
-              description: "Пользователь, создающий баннер (по умолчанию — система)"
+              description: "Пользователь, создающий баннер (по умолчанию — System)"
         flag_post_on_words:
           fields:
             words:
@@ -334,7 +364,7 @@ ru:
               description: "Необязательное сообщение для показа при закрытии темы"
             user:
               label: Пользователь
-              description: "Пользователь, закрывающий тему (по умолчанию — система)"
+              description: "Пользователь, закрывающий тему (по умолчанию — System)"
         add_user_to_group_through_custom_field:
           fields:
             custom_field_name:
@@ -358,7 +388,7 @@ ru:
           enabled:
             label: Включено
           disabled:
-            label: Отключен
+            label: Отключено
           placeholders:
             label: Заполнители
           last_updated_at:

@@ -1715,8 +1715,7 @@ sl:
         other: "Obstaja <b>%{count}</b> odgovorov."
       buttons:
         hide: "Skrij povzetek"
-        generate: "Povzemi z AI"
-        regenerate: "Ponovno ustvari povzetek"
+        regenerate: "Ponovno ustvari"
       disable: "Prikaži vse prispevke"
       show_all_label: "Pokaži vse"
     deleted_filter:

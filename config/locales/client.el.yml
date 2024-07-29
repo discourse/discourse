@@ -1542,6 +1542,8 @@ el:
       description:
         one: "Υπάρχει <b>%{count}</b> απάντηση."
         other: "Υπάρχουν <b>%{count}</b> απαντήσεις."
+      buttons:
+        regenerate: "Αναδημιουγία"
       disable: "Εμφάνιση όλων των αναρτήσεων"
       show_all_label: "Εμφάνιση όλων"
     deleted_filter:
@@ -3677,6 +3679,7 @@ el:
           spam: "Ανεπιθύμητα"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(προεραιτικό)"
           update: "Ενημέρωση"
           saved: "αποθηκεύτηκε!"

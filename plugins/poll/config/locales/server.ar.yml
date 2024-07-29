@@ -12,7 +12,8 @@ ar:
     poll_minimum_trust_level_to_create: "الحد الأدنى لمستوى الثقة المطلوب لإنشاء استطلاعات الرأي"
     poll_create_allowed_groups: "المجموعات المسموح لها بإنشاء استطلاعات الرأي."
     poll_groupable_user_fields: "مجموعة أسماء حقول المستخدم التي يمكن استخدامها لتجميع نتائج الاستطلاع وتصفيتها"
-    poll_export_data_explorer_query_id: "معرِّف استعلام مستكشف البيانات الذي سيتم استخدامه لتصدير نتائج الاستطلاع (اتعيين القيمة على 0 للإيقاف)."
+    poll_export_data_explorer_query_id: "معرِّف استعلام مستكشف البيانات الذي سيتم استخدامه لتصدير نتائج الاستطلاع (اضبط القيمة على 0 للإيقاف)."
+    poll_export_ranked_choice_data_explorer_query_id: "معرِّف استعلام مستكشف البيانات المطلوب استخدامه لتصدير نتائج استطلاع تصويت جولة الإعادة الفورية."
     poll_default_public: "تفعيل الخيار \"إظهار من قام بالتصويت\" افتراضيًا عند إنشاء استطلاع جديد."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
@@ -67,8 +68,13 @@ ar:
       few: مطلوب ما لا يقل عن %{count} أصوات لهذا الاستطلاع.
       many: مطلوب ما لا يقل عن %{count} صوتًا لهذا الاستطلاع.
       other: مطلوب ما لا يقل عن %{count} صوت لهذا الاستطلاع.
+    ranked_choice:
+      vote_options_mismatch: "بالنسبة إلى جولة الإعادة الفورية، يجب أن يتطابق عدد الاختيارات التي تم إجراؤها في التصويت مع عدد الخيارات. عدد الخيارات هو %{count} وعدد الاختيارات التي تم إجراؤها هو %{provided}."
+      no_group_results_support: "نوع الاستطلاع غير صالح، لا يدعم‎ ranking_choice ‎النتائج المجمَّعة‎."
     topic_must_be_open_to_toggle_status: "يجب أن يكون الموضوع مفتوحًا لتبديل الحالة."
     only_staff_or_op_can_toggle_status: "يمكن لعضو فريق العمل أو الناشر الأصلي فقط تبديل حالة الاستطلاع."
+    errors:
+      poll_not_found: "لم يتم العثور على الاستطلاع، يُرجى تأكيد المعلمات‎."
     insufficient_rights_to_create: "غير مسموح لك بإنشاء استطلاعات."
     email:
       link_to_poll: "انقر لعرض الاستطلاع."

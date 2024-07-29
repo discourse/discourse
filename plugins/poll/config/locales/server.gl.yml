@@ -11,7 +11,6 @@ gl:
     poll_edit_window_mins: "Número de minutos en que se permite editar a enquisa desde o momento en que se crea unha publicación"
     poll_minimum_trust_level_to_create: "Defina o nivel de confianza mínimo para crear enquisas"
     poll_groupable_user_fields: "Un conxunto de nomes de campo de usuario que se poden empregar para agrupar e filtrar os resultados da votación."
-    poll_export_data_explorer_query_id: "ID da Consulta do Explorador de datos que se usa para exportar os resultados da enquisa (0 para desactivar)."
   poll:
     poll: "enquisa"
     invalid_argument: "O valor «%{value}» non é válido para o argumento «%{argument}»."

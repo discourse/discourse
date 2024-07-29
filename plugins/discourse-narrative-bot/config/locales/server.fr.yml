@@ -297,6 +297,10 @@ fr:
         not_found: |-
           Oh non ! Mon vilain message n'a pas encore été signalé comme étant répréhensible. :worried: Pouvez-vous le signaler comme étant répréhensible avec l'**indicateur** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ? Pensez à utiliser le bouton « Afficher plus » <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> afin de faire apparaître les autres actions relatives aux messages.
       search:
+        instructions: |-
+          _psst_ … J'ai caché une surprise dans ce sujet. Si vous aimez les défis, sélectionnez **l'icône de recherche** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> située en haut à droite &#8599;, choisissez « dans ce sujet », puis tentez de la trouver.
+
+          Essayez de chercher le terme « capy​&#8203;bara » dans ce sujet.
         hidden_message: |-
           Comment avez-vous manqué ce capybara ? :wink:
 

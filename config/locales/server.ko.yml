@@ -3648,8 +3648,12 @@ ko:
       privacy:
         fields:
           login_required:
-            placeholder: "비공개"
-            extra_description: "로그인 한 사용자 만이 커뮤니티에 액세스 할 수 있습니다"
+            label: "시계"
+            choices:
+              public:
+                label: "공개"
+              private:
+                label: "비공개"
           chat_enabled:
             placeholder: "채팅 활성화"
       styling:

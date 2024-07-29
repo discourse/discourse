@@ -17,7 +17,7 @@ ar:
       no_automation_yet: لم تُنشئ أي أتمتة حتى الآن.
       edit_automation:
         trigger_section:
-          forced: يتم فرض هذا المشغِّل بواسطة البرنامج النصي.
+          forced: يتم فرض هذا المشغِّل بواسطة برنامج نصي.
           next_pending_automation: "سيتم تشغيل الأتمتة التالية في: %{date}"
           trigger_now: "التشغيل الآن"
           title: متى/ماذا...
@@ -29,12 +29,12 @@ ar:
         key_value:
           label_without_count: "التهيئة"
           label_with_count:
-            zero: "تعديل التكوين (%{count})"
-            one: "تعديل التكوين (%{count})"
-            two: "تعديل التكوين (%{count})"
-            few: "تعديل التكوين (%{count})"
-            many: "تعديل التكوين (%{count})"
-            other: "تعديل التكوين (%{count})"
+            zero: "تعديل الإعداد (%{count})"
+            one: "تعديل الإعداد (%{count})"
+            two: "تعديل الإعداد (%{count})"
+            few: "تعديل الإعداد (%{count})"
+            many: "تعديل الإعداد (%{count})"
+            other: "تعديل الإعداد (%{count})"
         user:
           label: المستخدم
         pm:
@@ -173,7 +173,21 @@ ar:
               label: الموضوع الأول فقط
               description: لن يتم تشغيله إلا إذا كان الموضوع هو أول موضوع أنشأه المستخدم
           created: تاريخ الإنشاء
-          edited: تم تحريرها
+          edited: تاريخ التحرير
+        user_updated:
+          fields:
+            user_profile:
+              label: حقول ملف تعريف المستخدم
+              description: سيتم تشغيله فقط إذا ملأ المستخدم كل هذه الحقول
+            custom_fields:
+              label: الحقول المخصَّصة للمستخدم
+              description: سيتم تشغيله فقط إذا ملأ المستخدم كل هذه الحقول
+            once_per_user:
+              label: مرة واحدة لكل مستخدم
+              description: سيتم تشغيله مرة واحدة فقط لكل مستخدم
+            new_users_only:
+              label: المستخدمون الجُدد فقط
+              description: سيتم تشغيله فقط للمستخدمين الجُدد الذين ينضمون بعد تفعيل هذه الأتمتة
         category_created_edited:
           fields:
             restricted_category:
@@ -224,6 +238,7 @@ ar:
               description: يستجيب مرة واحدة فقط لكل موضوع
             word_answer_list:
               label: قائمة أزواج الكلمات/الإجابات
+              description: "يحدِّد قائمة بمجموعات المفاتيح/القيم، حيث يكون \"‎المفتاح\" ‎ هو المصطلح الذي تم البحث عنه، و‎\"‎القيمة‎\" هي نص الرد. يمكن ترك‎ \"‎المفتاح‎\" ‎فارغًا للرد على جميع المشغِّلات، بغض النظر عن المحتوى. لاحظ أن‎ \"‎القيمة‎\" ‎تقبل‎ \"{{key}}\" ‎كعنصر نائب ليتم استبداله بقيمة‎ \"‎المفتاح‎\" ‎في الرد. لاحظ أن‎ `key` ‎سيتم تقييمه كتعبير عادي، ويجب تجنب الأحرف الخاصة مثل `.` إذا كنت تقصد نقطة بالفعل، على سبيل المثال‎: `\\.`"
             answering_user:
               label: المستخدم المجيب
               description: يتم تعيينه افتراضيًا إلى مستخدم النظام
@@ -236,10 +251,25 @@ ar:
           fields:
             creator:
               label: المُنشئ
+              post_creator_context: منشئ المنشور
+              updated_user_context: المستخدم المحدَّث
             topic:
               label: معرِّف الموضوع
             post:
               label: محتوى المنشور
+        topic:
+          fields:
+            creator:
+              label: المنشئ
+              updated_user_context: المستخدم المحدَّث
+            body:
+              label: نص الموضوع
+            title:
+              label: عنوان الموضوع
+            category:
+              label: فئة الموضوع
+            tags:
+              label: وسوم الموضوع
         group_category_notification_default:
           fields:
             group:
@@ -255,7 +285,7 @@ ar:
               label: المستوى
             notice:
               label: الإخطار
-              description: يقبل HTML، لا تملأ هذا بإدخال غير موثوق فيه!
+              description: يقبل HTML، لا تملأ هذا الحقل بإدخالٍ غير موثوق به!
           levels:
             warning: تحذير
             info: المعلومات

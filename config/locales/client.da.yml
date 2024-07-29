@@ -263,9 +263,13 @@ da:
       moderators: "Moderatorer"
       stat:
         last_day: "24 timer"
+        last_7_days: "7 dage"
+        last_30_days: "30 dage"
       like_count: "Synes godt om"
       topic_count: "Emner"
       post_count: "Indlæg"
+      active_user_count: "Aktive brugere"
+      contact: "Kontakt os"
       contact_info: "I tilfælde af en kritisk begivenhed eller vigtige spørgsmål angående denne side, kontakt os venligst på %{contact_info}."
     bookmarked:
       title: "Bogmærke"
@@ -276,6 +280,8 @@ da:
         unbookmark: "Klik for at fjerne alle bogmærker i dette emne"
         unbookmark_with_reminder: "Klik for at fjerne alle bogmærker og påmindelser i dette emne"
     bookmarks:
+      bookmarked_success: "Bogmærket!"
+      deleted_bookmark_success: "Bogmærke slettet!"
       created: "Du har sat et bogmærke for dette indlæg. %{name}"
       created_generic: "Du har bogmærket dette. %{name}"
       create: "Opret bogmærke"
@@ -301,6 +307,7 @@ da:
       search: "Søg"
       bookmark: "Bogmærk"
       bulk:
+        delete_completed: "Bogmærker blev slettet."
         select_all: "Vælg Alle"
         clear_all: "Ryd Alle"
       reminders:
@@ -712,12 +719,18 @@ da:
           imap_disable_confirm: "Hvis du deaktiverer IMAP, vil alle IMAP-indstillinger blive nulstillet, og den tilknyttede funktion vil blive deaktiveret. Er du sikker på, at du vil fortsætte?"
           prefill:
             title: "Forudfyld med indstillinger for:"
+            gmail: "Gmail"
+            outlook: "Outlook.com"
+            office365: "Microsoft 365"
           ssl_modes:
             none: "Ingen"
+            ssl_tls: "SSL/TLS"
+            starttls: "STARTTLS"
           credentials:
             title: "Legitimationsoplysninger"
             smtp_server: "SMTP-server"
             smtp_port: "SMTP-port"
+            smtp_ssl_mode: "SSL- Tilstand"
             imap_server: "IMAP-server"
             imap_port: "IMAP-port"
             imap_ssl: "Brug SSL til IMAP"
@@ -1028,6 +1041,7 @@ da:
           warning: "Er du sikker på, at du vil rydde dit fremhævede emne?"
       use_current_timezone: "Brug den aktuelle tidszone"
       profile_hidden: "Denne brugers offentlige profil er skjult."
+      login_to_view_profile: "Du skal logge ind for at se brugerprofiler"
       inactive_user: "Denne bruger er ikke længere aktiv."
       expand_profile: "Udvid"
       sr_expand_profile: "Udvid profildetaljer"
@@ -1206,6 +1220,8 @@ da:
         title: "To-faktor backup koder"
         regenerate: "Regenerér"
         disable: "Deaktiver"
+        enable: "Opret backup-koder"
+        enable_long: "Tilføj backup-koder"
         manage:
           one: "Du har <strong>%{count}</strong> backup kode tilbage."
           other: "Du har <strong>%{count}</strong> backup koder tilbage."
@@ -1239,6 +1255,7 @@ da:
         enforced_notice: "Du skal aktivere To-faktor godkendelse før du kan gå ind på denne side."
         disable: "Deaktivér"
         delete: "Slet"
+        delete_backup_codes_confirm_title: "Sletning af backup-koder"
         save: "Gem"
         edit: "Rediger"
         edit_title: "Rediger godkendelsesenhed"
@@ -1261,6 +1278,7 @@ da:
           name_required_error: "Du skal angive et navn til din sikkerhedsnøgle."
       passkeys:
         save: "Gem"
+        added_date: "Tilføjet %{date}"
       change_about:
         title: "Skift “Om mig”"
         error: "Der opstod en fejl ved ændringen af denne værdi."
@@ -1540,6 +1558,8 @@ da:
           progress: "Overført %{progress}…"
           success: "Filen blev overført. Du får besked via besked, når processen er fuldført."
           error: "Desværre, filen skal være CSV format."
+      confirm_access:
+        title: "Bekræft adgang"
       password:
         title: "Adgangskode"
         common: "Denne adgangskode er for almindelig."
@@ -1663,6 +1683,12 @@ da:
       optional: valgfri
       errors:
         required: "Obligatoriske"
+        invalid_url: "Skal være en gyldig URL"
+        not_an_integer: "Skal være et helt tal"
+        not_accepted: "Skal accepteres"
+        not_a_number: "Skal være et tal"
+        too_high: "Må højst være %{count}"
+        too_low: "Skal være mindst %{count}"
     close: "Luk"
     logout: "Du er blevet logget ud."
     refresh: "Opdater"
@@ -1704,6 +1730,8 @@ da:
       description:
         one: "Der er <b>%{count}</b> svar."
         other: "Der er <b>%{count}</b> svar."
+      buttons:
+        regenerate: "Regenerér"
       description_time_MF: |
         Der {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svar}} med en anslået læsetid på <b>{readingTime, plural, one {# minut} other {# minutter}}</b>.
       disable: "Vis alle indlæg"
@@ -1745,6 +1773,7 @@ da:
       title: "Nulstil kodeord"
       action: "Jeg har glemt min adgangskode"
       invite: "Skriv brugernavn eller e-mail-adresse, så sender vi dig en mail så du kan nulstille din adgangskode."
+      email-username: "E-mail eller brugernavn"
       reset: "Nulstil adgangskode"
       complete_username: "Hvis en konto findes med brugernavnet <b>%{username}</b>, vil du om lidt modtage en email med instruktioner om hvordan du nulstiller passwordet."
       complete_email: "Hvis en konto findes med <b>%{email}</b>, vil du om lidt modtage en email med instruktioner om hvordan man nulstiller passwordet."
@@ -1842,6 +1871,10 @@ da:
         name: "Discord"
         title: "Log ind med Discord"
         sr_title: "Log ind med Discord"
+      linkedin_oidc:
+        name: "LinkedIn"
+        title: "Log ind med LinkedIn"
+        sr_title: "Log ind med LinkedIn"
       second_factor_toggle:
         totp: "Brug en godkendelsesapp i stedet"
         backup_code: "Brug en backup kode i stedet"
@@ -1984,6 +2017,7 @@ da:
       reply: "Svar"
       cancel: "Annuller"
       create_topic: "Opret emne"
+      create_pm: "Send Besked"
       create_whisper: "Hvisk"
       create_shared_draft: "Opret delt kladde"
       edit_shared_draft: "Rediger delt kladde"
@@ -2072,6 +2106,7 @@ da:
       ignore: "Ignorér"
       image_alt_text:
         aria_label: Alternativ tekst til billede
+        title: "Tilføj billedbeskrivelse"
       delete_image_button: Slet Billede
     notifications:
       tooltip:
@@ -2262,6 +2297,7 @@ da:
           seen: Jeg læste
           unseen: Jeg ikke har læst
           wiki: er wiki
+          images: inkludere billeder
           all_tags: Alle ovenstående mærker
         statuses:
           label: Hvor emner
@@ -2319,6 +2355,7 @@ da:
         clear_all: "Ryd alle"
         unlist_topics: "Fjern emner fra liste"
         relist_topics: "Genindlæs emner"
+        defer: "Markér som ulæst"
         delete: "Slet emner"
         dismiss: "Skjul"
         dismiss_read: "Afvis alle ulæste"
@@ -2328,9 +2365,11 @@ da:
         dismiss_new: "Afvis nye"
         toggle: "vælg flere emner af gangen"
         actions: "Handlinger på flere indlæg"
+        change_category: "Indstil kategori…"
         close_topics: "Luk indlæg"
         archive_topics: "Arkiver Emner"
         move_messages_to_inbox: "Flyt til indbakke"
+        archive_messages: "Flyt til arkiv"
         notification_level: "Underretninger…"
         change_notification_level: "Skift Notifikationsniveau"
         choose_new_category: "Vælg den nye kategori for emnerne:"
@@ -2393,6 +2432,7 @@ da:
         one: "%{count} indlæg i emnet"
         other: "%{count} indlæg i emnet"
       create: "Nyt emne"
+      create_disabled_category: "Du har ikke tilladelse til at oprette emner i denne kategori"
       create_long: "Opret et nyt emne i debatten"
       open_draft: "Åbn kladde"
       private_message: "Start en besked"
@@ -2402,6 +2442,8 @@ da:
       move_to_inbox:
         title: "Flyt til Indbakke"
         help: "Flyt beskeder tilbage til Indbakke"
+      defer:
+        help: "Markér emne som ulæst"
       list: "Emner"
       new: "nyt emne"
       unread: "ulæste"
@@ -2432,8 +2474,10 @@ da:
       options: "Emneindstillinger"
       show_links: "vis links i dette emne"
       unread_indicator: "Intet medlem har læst det sidste indlæg i dette emne endnu."
+      participant_groups: "Deltagergrupper"
       bumped_at: "Senest: %{date}"
       suggest_create_topic: Klar til <a href>at starte en ny samtale?</a>
+      jump_reply_button: "Hop til indlæg"
       deleted: "Emnet er blevet slettet"
       slow_mode_update:
         title: "Langsom Tilstand"
@@ -2577,6 +2621,8 @@ da:
         unpin: "Fjern fastgøring af Emne..."
         unarchive: "Gendan emne fra arkiv"
         archive: "Arkivér emne"
+        invisible: "Skjul Emne"
+        visible: "Offentliggør Emne"
         reset_read: "Glem hvilke emner jeg har læst"
         make_public: "Gør til Offentligt Emne…"
         make_private: "Lav privat besked"
@@ -2769,8 +2815,10 @@ da:
           other: "Du har valgt <b>%{count}</b> indlæg."
       deleted_by_author_simple: "(emne slettet af forfatteren)"
     post:
+      confirm_delete: "Er du sikker på, at du vil slette dette indlæg?"
       quote_reply: "Citér"
       quote_edit: "Rediger"
+      quote_copy: "Kopier citat"
       quote_share: "Del"
       edit_reason: "Grund: "
       post_number: "indlæg %{number}"
@@ -2851,6 +2899,7 @@ da:
         delete: "slet dette indlæg"
         undelete: "annullér sletning"
         share: "del et link til dette indlæg"
+        link_copied: "Link kopieret!"
         more: "Mere"
         delete_replies:
           confirm: "Vil du også slette svarene på dette indlæg?"
@@ -2922,6 +2971,7 @@ da:
           last: "Sidste udgave"
           hide: "Skjul udgave"
           show: "Vis udgave"
+          destroy: "Slet revisioner"
           revert: "Vend tilbage til revision %{revision}"
           edit_wiki: "Ret Wiki"
           edit_post: "Ret Indlæg"
@@ -3151,6 +3201,7 @@ da:
         off_topic: "Det holder sig ikke til emnet"
         inappropriate: "Det er upassende"
         spam: "Det er spam"
+        illegal: "Det er ulovligt"
       custom_placeholder_notify_user: "Vær præcis, vær kontruktiv og vær altid venlig."
       custom_placeholder_notify_moderators: "Lad os vide præcis hvad du er bekymret over og giv relevante links og eksempler hvor det er muligt."
       custom_message:
@@ -3334,6 +3385,9 @@ da:
     experimental_lightbox:
       buttons:
         close: "Luk (Esc)"
+        download: "Hent billede"
+        newtab: "Åbn billede i en ny fane"
+        rotate: "Roter billede (R-tast)"
     cannot_render_video: Denne video kan ikke afspilles, fordi din browser ikke understøtter codec.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -3677,6 +3731,7 @@ da:
           header_link_text: "Tags"
           configure_defaults: "Konfigurer standardindstillinger"
         categories:
+          none: "Du har ikke tilføjet nogen kategorier."
           click_to_get_started: "Klik her for at komme i gang."
           header_link_text: "Kategorier"
           configure_defaults: "Konfigurer standardindstillinger"
@@ -3711,6 +3766,8 @@ da:
         forum:
           label: Forum
       filter: "Filter..."
+      no_results:
+        title: "Ingen resultater"
     until: "Indtil:"
     form_templates:
       upload_field:
@@ -3719,7 +3776,9 @@ da:
       errors:
         type_mismatch:
           default: "Indtast venligst en gyldig værdi."
+          date: "Indtast venligst en dato."
           email: "Indtast venligst en gyldig email adresse."
+          number: "Indtast venligst et tal."
     table_builder:
       modal:
         help:
@@ -3729,9 +3788,19 @@ da:
           cancel: "annuller"
           create: "Gem"
           reason: "hvorfor redigerer du?"
+      default_header:
+        col_1: "Kolonne 1"
+        col_2: "Kolonne 2"
+        col_3: "Kolonne 3"
+        col_4: "Kolonne 4"
       spreadsheet:
         show: "Vis"
         about: "Om"
+        context_menu:
+          copy: "Kopiér..."
+          paste: "Indsæt..."
+          save: "Gem som..."
+    powered_by_discourse: "Drevet af Discourse"
   admin_js:
     type_to_filter: "skriv for at filtrere…"
     admin:
@@ -3748,6 +3817,8 @@ da:
         sidebar_title: "Rapporter"
         sidebar_link:
           all: "Alle"
+      new_features:
+        title: "Hvad er nyt"
       dashboard:
         title: "Dashboard"
         last_updated: "instrumentbræt opdateret:"
@@ -3756,12 +3827,15 @@ da:
         up_to_date: "Du kører den seneste version af Discourse."
         critical_available: "En kritisk opdatering er tilgængelig."
         updates_available: "Opdatering er tilgængelige."
+        please_update: "Opdatér venligst!"
         no_check_performed: "Der er ikke blevet søgt efter opdateringer. Kontrollér om sidekiq kører."
         stale_data: "Der er ikke blevet søgt efter opdateringer på det seneste. Kontrollér om sidekiq kører."
+        version_check_pending: "Det ser ud til, at du har opdateret for nylig. Fantastisk!"
         installed_version: "Installeret"
         latest_version: "Seneste version"
         problems_found: "Nogle råd baseret på dine nuværende sideindstillinger"
         new_features:
+          title: "Hvad er nyt"
           learn_more: "Lær mere..."
         last_checked: "Sidst kontrolleret"
         refresh_problems: "Opdatér"
@@ -3840,6 +3914,9 @@ da:
       flags:
         description: "Beskrivelse"
         enabled: "Aktiveret?"
+        more_options:
+          move_up: "Flyt op"
+          move_down: "Flyt ned"
       groups:
         new:
           title: "Ny Gruppe"
@@ -4082,6 +4159,7 @@ da:
           spam: "Spam"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(valgfri)"
           update: "Opdater"
           saved: "gemt!"
@@ -4265,7 +4343,7 @@ da:
           is_default: "Tema er slået til som standard"
           user_selectable: "Tema kan vælges af brugerne"
           color_scheme_user_selectable: "Farveskema kan vælges af brugere"
-          auto_update: "Opdater automatisk når Discource er blevet opdateret"
+          auto_update: "Opdater automatisk når Discourse er blevet opdateret"
           color_scheme: "Farvepalet"
           default_light_scheme: "Lys (standard)"
           color_scheme_select: "Vælg farver som temaet skal anvende"
@@ -5084,7 +5162,7 @@ da:
           external_avatar_url: "Profilbillede URL"
           last_payload: "Sidste Payload"
           delete_sso_record: "Slet SSO Registrering"
-          confirm_delete: "Er du sikker på at, du vil slette dette DiscourceConect-Indlæg?"
+          confirm_delete: "Er du sikker på at, du vil slette dette DiscourseConect-Indlæg?"
       user_fields:
         title: "Bruger felter"
         help: "Tilføj felter, som dine brugere kan udfylde"

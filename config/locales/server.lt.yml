@@ -2600,8 +2600,12 @@ lt:
       privacy:
         fields:
           login_required:
-            placeholder: "Privatu"
-            extra_description: "Tik prisijungę vartotojai gali pasiekti šią bendruomenę"
+            label: "Matomumas"
+            choices:
+              public:
+                label: "Vieša"
+              private:
+                label: "Privatu"
       styling:
         fields:
           color_scheme:

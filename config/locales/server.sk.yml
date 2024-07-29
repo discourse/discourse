@@ -2122,7 +2122,6 @@ sk:
     min_trust_to_edit_post: "Minimálna úroveň dôveryhodnosti potrebná na úpravu príspevkov."
     edit_post_allowed_groups: "Skupiny, ktoré majú povolené upravovať príspevky. Administrátori a moderátori môžu upravovať príspevky vždy."
     min_trust_to_allow_self_wiki: "MInimálna úroveň dôvery k tomu aby mohol používateľ svoje témy meniť na wiki."
-    self_wiki_allowed_groups: "Skupiny, v ktorých môžu používatelia vytvárať vlastné príspevky wiki. Administrátori a moderátori si môžu vždy vytvoriť vlastnú príspevkovú wiki."
     min_trust_to_send_messages: "ODSTRÁNENÉ, namiesto toho použite nastavenie \"skupiny povolené pre osobné správy\". Minimálna úroveň dôveryhodnosti potrebná na vytvorenie nových osobných správ."
     min_trust_to_send_email_messages: "Minimálna úroveň dôveryhodnosti potrebná na odosielanie osobných správ prostredníctvom e-mailu."
     send_email_messages_allowed_groups: "Skupiny, ktoré majú povolené posielať osobné správy prostredníctvom e-mailu. Správcovia a moderátori môžu vždy posielať osobné správy prostredníctvom e-mailu."
@@ -5113,17 +5112,18 @@ sk:
           default_locale:
             label: "Jazyk"
       privacy:
-        title: "Skúsenosti členov"
         fields:
           login_required:
-            placeholder: "Súkromné"
-            extra_description: "Prístup do tejto komunity majú len prihlásení používatelia"
+            label: "Viditeľnosť"
+            choices:
+              public:
+                label: "Verejné"
+              private:
+                label: "Súkromné"
           invite_only:
-            placeholder: "Len na pozvánky"
-            extra_description: "Používateľov musia pozvať dôveryhodní používatelia alebo personál, inak sa môžu zaregistrovať sami."
-          must_approve_users:
-            placeholder: "Vyžadovať schválenie"
-            extra_description: "Používatelia musia byť schválení personálom"
+            choices:
+              invite_only:
+                label: "Len na pozvánky"
           chat_enabled:
             placeholder: "Povoliť chat"
             extra_description: "Spojte sa so svojimi členmi v reálnom čase"

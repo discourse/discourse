@@ -12,8 +12,6 @@ es:
     poll_minimum_trust_level_to_create: "Definir el nivel de confianza mínimo requerido para crear encuestas."
     poll_create_allowed_groups: "Grupos que pueden crear encuestas."
     poll_groupable_user_fields: "Un grupo de nombres de campos de usuario que se pueden usar para agrupar y filtrar los resultados de encuestas."
-    poll_export_data_explorer_query_id: "ID de la consulta del explorador de datos que se usa para exportar los resultados de la encuesta (0 para desactivar)."
-    poll_export_ranked_choice_data_explorer_query_id: "ID de la consulta del Explorador de Datos que se utilizará para exportar los resultados de la votación de la segunda vuelta instantánea."
     poll_default_public: "Al crear una nueva encuesta, activar por defecto la opción «mostrar quién ha votado»."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
@@ -53,7 +51,6 @@ es:
       one: En esta encuesta hace falta %{count} voto.
       other: En esta encuesta hacen falta %{count} votos.
     ranked_choice:
-      vote_options_mismatch: "Para la segunda vuelta instantánea, el número de opciones proporcionadas en una votación debe coincidir con el número de opciones. El número de opciones es %{count} y el número proporcionado fue %{provided}."
       no_group_results_support: "Tipo de encuesta no válida, ranked_choice no admite resultados agrupados."
     topic_must_be_open_to_toggle_status: "El tema debe estar abierto para cambiar el estado."
     only_staff_or_op_can_toggle_status: "Solo un miembro del equipo o la persona que realizó la publicación original pueden cambiar el estado de una encuesta."

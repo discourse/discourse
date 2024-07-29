@@ -12,8 +12,6 @@ sk:
     poll_minimum_trust_level_to_create: "Definuj minimálny stupeň dôvery na vytvorenie hlasonia."
     poll_create_allowed_groups: "Skupiny, ktoré majú povolené vytvárať ankety."
     poll_groupable_user_fields: "Súbor názvov užívateľských polí, ktoré možno použiť na zoskupovanie a filtrovanie výsledkov prieskumu."
-    poll_export_data_explorer_query_id: "ID dotazu Prieskumníka údajov, ktorý sa má použiť na export výsledkov prieskumu (0 pre vypnutie)."
-    poll_export_ranked_choice_data_explorer_query_id: "ID dotazu Prieskumníka údajov, ktorý sa má použiť na export výsledkov hlasovania v rámci okamžitého hlasovania."
     poll_default_public: "Pri vytváraní novej ankety predvolene povoľte možnosť „Zobraziť, kto hlasoval“."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
@@ -61,7 +59,6 @@ sk:
       many: Pre túto anketu je potrebné minimálne %{count} hlasov.
       other: Pre túto anketu je potrebné minimálne %{count} hlasov.
     ranked_choice:
-      vote_options_mismatch: "V prípade okamžitého hlasovania sa počet možností uvedených v hlasovaní musí zhodovať s počtom možností.  Počet možností je %{count} a počet poskytnutých možností bol %{provided}."
       no_group_results_support: "Nesprávny typ ankety, anketa ranked_choice nepodporuje zoskupené výsledky."
     topic_must_be_open_to_toggle_status: "Na zmenu stavu musí byť téma otvorená."
     only_staff_or_op_can_toggle_status: "Zmeniť stav hlasovania môže iba zamestnanec alebo pôvodný prispievateľ."

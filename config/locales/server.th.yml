@@ -507,7 +507,11 @@ th:
       privacy:
         fields:
           login_required:
-            placeholder: "ส่วนตัว"
+            choices:
+              public:
+                label: "สาธารณะ"
+              private:
+                label: "ส่วนตัว"
       styling:
         fields:
           styling_preview:

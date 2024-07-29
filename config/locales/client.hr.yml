@@ -2030,8 +2030,8 @@ hr:
         other: "Ima <b>%{count}</b> odgovora."
       buttons:
         hide: "Sakrij sažetak"
-        generate: "Sažmite pomoću umjetne inteligencije"
-        regenerate: "Ponovno generiraj sažetak"
+        generate: "Rezimirati"
+        regenerate: "Regeneriraj"
       description_time_MF: |
         Tamo {replyCount, plural, one {je <b>#</b> odgovor} few {su <b>#</b> odgovora} other {su <b>#</b> odgovora}} s predviđenim vremenom čitanja <b>{readingTime, plural, one {# minuta} few {# minuta} other {# minuta}}</b>.
       enable: "Prikaži glavne odgovore"
@@ -4825,6 +4825,7 @@ hr:
           spam: "Nepoželjno"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(opcionalno)"
           update: "Ažuriraj"
           saved: "spremljeno!"

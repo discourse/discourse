@@ -36,11 +36,11 @@ pt_BR:
       long_with_year: "D MMM, YYYY H:mm"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "D [de] MMMM, YYYY"
-      long_date_with_year: "D MMM, YYYY LT"
+      long_date_with_year: "DD MM YYYY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM, YYYY"
+      long_date_with_year_without_time: "DD MM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM, YYYY <br/>LT"
+      long_date_with_year_with_linebreak: "DD MM YYYY <br/>LT"
       wrap_ago: "%{date} atrás"
       wrap_on: "em %{date}"
       tiny:
@@ -76,7 +76,7 @@ pt_BR:
           one: "%{count} a"
           other: "%{count} a"
         date_month: "D MMM"
-        date_year: "MMM YYYY"
+        date_year: "MM YYYY"
       medium:
         less_than_x_minutes:
           one: "menos de %{count} min"
@@ -105,7 +105,7 @@ pt_BR:
         almost_x_years:
           one: "há quase %{count} ano"
           other: "há quase %{count} anos"
-        date_year: "D MMM, YYYY"
+        date_year: "DD MM YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} minuto atrás"
@@ -189,7 +189,7 @@ pt_BR:
     emails_are_disabled: "Todos os envios de e-mail foram desabilitados globalmente por um administrador. Nenhuma notificação por e-mail de qualquer tipo será enviada."
     emails_are_disabled_non_staff: "O e-mail de saída foi desabilitado para usuários que não são da equipe."
     software_update_prompt:
-      message: "Este site foi atualizado, <span>renove a página</span> para manter tudo funcionando bem."
+      message: "Este site foi atualizado, <span>atualize a página</span> para manter tudo funcionando."
       dismiss: "Descartar"
     bootstrap_mode: "Primeiros passos"
     back_button: "Voltar"
@@ -318,11 +318,11 @@ pt_BR:
         other: "%{formatted_number} Membros"
       admin_count:
         one: "%{formatted_number} Administrador(a)"
-        other: "%{formatted_number} Administradores"
+        other: "%{formatted_number} Administradores(as)"
       moderator_count:
         one: "%{formatted_number} Moderador"
-        other: "%{formatted_number} Moderadores"
-      report_inappropriate_content: "Se você encontrar algum conteúdo inapropriado, inicie uma conversa com nossos moderadores e administradores. Não se esqueça de fazer login antes de fazer isso."
+        other: "%{formatted_number} Moderadores(as)"
+      report_inappropriate_content: "Se você encontrar conteúdo inapropriado, inicie uma conversa com nossos moderadores(as) e administradores(as). Não se esqueça de fazer login antes disso."
     bookmarked:
       title: "Favorito"
       edit_bookmark: "Editar favorito"
@@ -731,7 +731,7 @@ pt_BR:
       post_count_long: "Respostas postadas"
       no_results:
         body: "Aqui será exibida uma lista de membros da comunidade com as atividades deles. Como a comunidade é recente, por enquanto a lista está vazia!"
-        extra_body: "Administradores e moderadores podem ver e gerenciar os usuários em <a href='%{basePath}/admin/users/'>Administrador(a) de Usuário(a)</a>."
+        extra_body: "Administradores(as) e moderadores(as) podem ver e gerenciar os(as) usuários(as) em <a href='%{basePath}/admin/users/'>Administrador(a) de Usuário(a)</a>."
       no_results_with_search: "Nenhum resultado foi encontrado."
       days_visited: "Acessos"
       days_visited_long: "Dias acessados"
@@ -999,7 +999,7 @@ pt_BR:
       default_notifications:
         modal_title: "Notificações padrão do(a) usuário(a)"
         modal_description:
-          one: "Você gostaria de aplicar esta alteração historicamente? Isso mudará as preferências de %{count} usuário existente."
+          one: "Você gostaria de aplicar esta alteração historicamente? Isso mudará as preferências de %{count} usuário(a) existente."
           other: "Você gostaria de aplicar esta alteração historicamente? Isso mudará as preferências de %{count} usuários(as) existentes."
         modal_yes: "Sim"
         modal_no: "Não, apenas aplique alterações daqui para frente"
@@ -1026,7 +1026,7 @@ pt_BR:
       plus_more_count:
         one: "mais %{count}"
         other: "mais %{count}"
-      view_all: "ver tudo"
+      view_all: "visualizar tudo"
       category: "Categoria"
       category_list: "Exibir lista de categorias"
       reorder:
@@ -1120,7 +1120,7 @@ pt_BR:
         ignore_option_title: "Você não receberá notificações relacionadas a este(a) usuário(a), e todo o conteúdo relacionado será oculto."
         add_ignored_user: "Adicionar…"
         mute_option: "Silenciado(a)"
-        mute_option_title: "Você não receberá nenhuma notificação, mensagem pessoal ou mensagem direta deste(a) usuário(a) no chat."
+        mute_option_title: "Você não receberá notificações, mensagens pessoais ou mensagens diretas deste(a) usuário(a) no chat."
         normal_option: "Normal"
         normal_option_title: "Você receberá uma notificação se este(a) usuário(a) responder, citar ou mencionar."
       notification_schedule:
@@ -1461,7 +1461,7 @@ pt_BR:
           A autenticação de dois fatores adiciona segurança extra à sua conta, exigindo um token único além da sua senha. Tokens podem ser gerados em dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Observe que as entradas com rede social serão desativadas após a ativação da autenticação de dois fatores na sua conta."
         use: "Usar app autenticador"
-        enforced_with_oauth_notice: "É preciso ativar a autenticação de dois fatores. Será solicitado que você use a autenticação ao entrar com uma senha e não com redes sociais ou algum método de autenticação externa."
+        enforced_with_oauth_notice: "É preciso ativar a autenticação de dois fatores. Será solicitado o uso da autenticação ao entrar com uma senha e não com redes sociais ou algum método de autenticação externo."
         enforced_notice: "Você precisa ativar a autenticação de dois fatores antes de acessar este site."
         disable: "Desativar"
         disable_confirm: "Tem certeza de que deseja desativar a autenticação de dois fatores?"
@@ -1539,8 +1539,8 @@ pt_BR:
           description_add: "Confirme que você gostaria de adicionar um endereço de e-mail alternativo:"
         authorizing_old:
           title: "Verifique o endereço de e-mail antigo"
-          description: "Por favor, verifique o seu endereço de e-mail antigo para continuar a mudar o seu e-mail:"
-          description_add: "Por favor, verifique o seu endereço de e-mail existente para continuar adicionando um endereço alternativo:"
+          description: "Verifique o seu endereço de e-mail antigo para continuar mudando seu e-mail:"
+          description_add: "Verifique o seu endereço de e-mail existente para continuar adicionando um endereço alternativo:"
           old_email: "E-mail antigo: %{email}"
           new_email: "Novo e-mail: %{email}"
           confirm_success: "Enviamos um e-mail para o seu novo endereço de e-mail para confirmar a alteração!"
@@ -1925,7 +1925,7 @@ pt_BR:
         content: "As notificações são usadas para que você se atualize sobre o que está acontecendo na comunidade."
       topic_timeline:
         title: "Linha do tempo do tópico"
-        content: "Percorra rapidamente tópicos longos usando a linha do tempo do tópico."
+        content: "Percorra rapidamente tópicos longos usando a linha de tempo do tópico."
       post_menu:
         title: "Menu de postagem"
         content: "Mostre mais maneiras de interagir com a postagem ao clicar nos três pontos!"
@@ -2034,8 +2034,8 @@ pt_BR:
         other: "Existem <b>%{count}</b> respostas."
       buttons:
         hide: "Ocultar o resumo"
-        generate: "Resumir com IA"
-        regenerate: "Gerar resumo novamente"
+        generate: "Resumir"
+        regenerate: "Gerar novamente"
       description_time_MF: |
         Há {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} com um tempo de leitura estimado de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
       enable: "Exibir as melhores respostas"
@@ -2849,7 +2849,7 @@ pt_BR:
         progress:
           one: "Progresso: <strong>%{count}</strong> tópico"
           other: "Progresso: <strong>%{count}</strong> tópicos"
-        silent: "Realizar esta ação silenciosamente."
+        silent: "Realize esta ação silenciosamente."
         performing: "Realizando operações em massa, aguarde…"
         completed: "Operações em massa concluídas!"
       none:
@@ -2915,7 +2915,7 @@ pt_BR:
         description: "Marcar tópicos como não lidos"
       update_notifications:
         name: "Atualizar notificações"
-        description: "Alterar nível de notificação para Acompanhando, Monitorando, Normal, Silenciada"
+        description: "Alterar nível de notificação para Acompanhando, Monitorando, Normal, Silenciado"
     topic:
       filter_to:
         one: "%{count} postagem no tópico"
@@ -3010,7 +3010,7 @@ pt_BR:
       suggest_create_topic: Tudo pronto para <a href>começar uma nova conversa?</a>
       jump_reply: "Ir para o local da postagem original"
       jump_reply_aria: "Ir para a postagem de @%{username} em sua localização original"
-      jump_reply_button: "Saltar para postagem"
+      jump_reply_button: "Ir para postagem"
       deleted: "Este tópico foi excluído"
       slow_mode_update:
         title: "Modo lento"
@@ -3828,8 +3828,8 @@ pt_BR:
       views: "Visualizações"
       predicted_views: "Visualizações previstas"
       so_far: (até aqui)
-      read: ler
-      minutes: mín
+      read: leitura
+      minutes: min
     post_links:
       about: "expandir mais links para esta mensagem"
       title:
@@ -3878,11 +3878,11 @@ pt_BR:
         other {# respostas,}
       }{ ratio, select,
           low { alta taxa de curtida de postagem,}
-          med { muito alta taxa de curtida de postagem,}
+          med { taxa de curtida de postagem muito alta,}
          high { taxa de curtida de postagem extremamente alta,}
         other {}
       } ir para a primeira ou última publicação…
-    posters: "Autores"
+    posters: "Publicadores(as)"
     latest_poster_link: "perfil de %{username}, autor(a) da postagem mais recente"
     original_post: "Postagem original"
     views: "Visualizações"
@@ -3943,8 +3943,8 @@ pt_BR:
         lower_title: "não vistos"
         help: "novos tópicos e tópicos que você está acompanhando ou monitorando com postagens não lidas"
       hot:
-        title: "Quente"
-        lower_title: "quente"
+        title: "Em alta"
+        lower_title: "em alta"
         help: "Principais tópicos recentes"
       new:
         lower_title_with_count:
@@ -4389,9 +4389,9 @@ pt_BR:
           save: "Salvar"
           delete: "Excluir"
           delete_confirm: "Tem certeza de que deseja excluir essa seção?"
-          delete_public_confirm: "Esta seção é <strong>visível para todos</strong>, deseja mesmo excluir?"
-          update_public_confirm: "As alterações estarão <strong>visíveis para todos</strong> no site. Prosseguir?"
-          mark_as_private_confirm: "Esta seção está <strong>visível para todos</strong>. Após a atualização, estará <strong>visível apenas para você</strong>. Prosseguir?"
+          delete_public_confirm: "Esta seção é <strong>visível para todos(as)</strong>, deseja mesmo excluir?"
+          update_public_confirm: "As alterações estarão <strong>visíveis para todos(as)</strong> no site. Prosseguir?"
+          mark_as_private_confirm: "Esta seção está <strong>visível para todos(as)</strong>. Após a atualização, estará <strong>visível apenas para você</strong>. Prosseguir?"
           reset_confirm: "Tem certeza de que deseja redefinir esta seção para o padrão?"
           public: "Visível para todos(as)"
           always_public: "O conteúdo nesta seção é sempre público"
@@ -4496,7 +4496,7 @@ pt_BR:
               title: "Publicações sinalizadas e outros itens na fila"
               pending_count:
                 one: "%{count} pendente"
-                other: "%{count} pendente"
+                other: "%{count} pendentes"
         global_section: "Seção global, visível para todos"
       panels:
         forum:
@@ -4508,7 +4508,7 @@ pt_BR:
       clear_filter: "Limpar filtro"
       no_results:
         title: "Nenhum resultado"
-        description: 'Não foi possível encontrar nenhum "%{filter}" correspondente.<br><br>Você queria <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">procurar as configurações do site</a> ou a <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">lista de usuários administradores?</a>'
+        description: 'Não foi possível encontrar nenhum "%{filter}" correspondente.<br><br>Você queria <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">procurar as configurações do site</a> ou a <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">lista de usuários(as) administradores(as)?</a>'
     welcome_topic_banner:
       title: "Crie seu Tópico de Boas-Vindas"
       description: "Seu tópico de boas-vindas é a primeira coisa que os novos membros vão ler. Pense nisso como seu “argumento de elevador” ou “declaração de missão”. Informe a todos sobre quem é o público desta comunidade, o que eles podem esperar encontrar aqui e o que você gostaria que eles fizessem primeiro."
@@ -4539,11 +4539,11 @@ pt_BR:
           text: "Insira um valor de texto."
           url: "Insira um URL válido."
         too_short:
-          one: "A entrada deve conter %{count} caractere ou mais."
-          other: "A entrada deve conter %{count} caracteres ou mais."
+          one: "A entrada deve ter pelo menos %{count} caractere."
+          other: "A entrada deve ter pelo menos %{count} caracteres."
         too_long:
           one: "A entrada deve ter menos de %{count} caractere."
-          other: "A entrada deve ser inferior a %{count} caracteres."
+          other: "A entrada deve ter menos de %{count} caracteres."
         range_overflow:
           one: "A entrada deve ser menor que %{count}."
           other: "A entrada deve ser menor que %{count}."
@@ -4646,6 +4646,7 @@ pt_BR:
         problems_found: "Algumas dicas baseadas nas configurações atuais do seu site"
         new_features:
           title: "Novidades"
+          subtitle: "Para obter ainda mais informações sobre os recursos e melhorias novas que são adicionados o tempo todo, veja as <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>notas de versão</a>."
           previous_announcements: "Confira os anúncios de recursos novos no <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Saiba mais..."
         last_checked: "Última verificação"
@@ -4862,18 +4863,18 @@ pt_BR:
               write: Crie um novo tópico ou poste em algum que já existe.
               update: Atualize um tópico. Altere o título, categoria, etiquetas, status, arquétipo, featured_link etc.
               delete: Exclua um tópico.
-              recover: Recuperar um tópico.
+              recover: Recupere um tópico.
               read_lists: Leia listas de tópico como melhores, novidades, mais recentes. RSS também é compatível.
               status: "Atualiza o status de um tópico. Status: fechado, arquivado, visível, fixado. Ativado: verdadeiro, falso. Especifique um category_id aqui e no conteúdo do pedido para permitir apenas mudanças de status em tópicos dessa categoria."
             posts:
               edit: Edite qualquer postagem ou especifique uma.
               delete: Exclua uma postagem.
-              recover: Recuperar uma postagem.
+              recover: Recupere uma postagem.
               list: Liste as postagens mais recentes e postagens privadas. RSS também é compatível.
             revisions:
-              read: "Obter uma revisão específica ou a mais recente."
-              modify: "Ocultar, exibir ou reverter revisões."
-              permanently_delete: "Excluir permanentemente uma revisão."
+              read: "Obtenha uma revisão específica ou a mais recente."
+              modify: "Oculte, exiba ou reverta revisões."
+              permanently_delete: "Exclua permanentemente uma revisão."
             tags:
               list: Liste etiquetas.
             tag_groups:
@@ -5038,8 +5039,8 @@ pt_BR:
           response: "Resposta"
           redeliver_confirm: "Tem certeza que deseja enviar o mesmo conteúdo novamente?"
           redeliver_failed_confirm:
-            one: "Deseja mesmo entregar noamente %{count} evento de webhook?"
-            other: "Deseja mesmo entregar noamente %{count} eventos de webhook?"
+            one: "Deseja mesmo entregar novamente %{count} evento de webhook?"
+            other: "Deseja mesmo entregar novamente %{count} eventos de webhook?"
           no_events_to_redeliver: "Nenhum evento para entregar novamente."
           headers: "Cabeçalhos"
           payload: "Conteúdo"
@@ -5074,7 +5075,7 @@ pt_BR:
           trust_levels: "Níveis de confiança"
           users: "Usuários(as)"
           user_fields: "Campos de usuário(a)"
-          watched_words: "Palavras acompanhadas"
+          watched_words: "Palavras em acompanhamento"
           legal: "Jurídico"
           moderation_flags: "Sinalizadores de moderação"
       appearance:
@@ -5094,7 +5095,7 @@ pt_BR:
         title: "Configurações de e-mail"
         sidebar_link:
           appearance: "Aparência"
-          preview_summary: "Visualizar resumo"
+          preview_summary: "Pré-visualizar resumo"
           server_setup: "Configurações do servidor"
       email_logs:
         title: "Registros de e-mail"
@@ -5120,6 +5121,7 @@ pt_BR:
           header: "Sobre seu site"
           general_settings: "Configurações gerais"
           community_name: "Nome da comunidade"
+          community_name_placeholder: "Comunidade de exemplo"
           community_summary: "Resumo da comunidade"
           community_description: "Descrição da comunidade"
           banner_image: "Imagem do banner"
@@ -5127,32 +5129,38 @@ pt_BR:
             Será usado na sua página Sobre. Tamanho recomendado: 800x300px. Tipos aceitos: JPG, PNG e SVG de até 10 MB.
           contact_information: "Informações de contato"
           community_owner: "Proprietário(a) da Comunidade"
+          community_owner_placeholder: "Johnny Smith"
           community_owner_help: |
-            Nome do contato principal responsável por este site. É usado para notificações críticas e também na página /about para assuntos urgentes. Visível para usuários anônimos em sites públicos.
+            Nome do contato principal responsável por este site. É usado para notificações críticas e também na página /about para assuntos urgentes. Visível para usuários(as) anônimos(as) em sites públicos.
           contact_email: "E-mail de contato"
+          contact_email_placeholder: "contact@johnny-smith.com"
           contact_email_help: |
-            Endereço de e-mail do contato principal responsável por este site. É usado para notificações críticas e também na página /about para assuntos urgentes. Visível para usuários anônimos em sites públicos.
+            Endereço de e-mail do contato principal responsável por este site. É usado para notificações críticas e também na página /about para assuntos urgentes. Visível para usuários(as) anônimos(as) em sites públicos.
           contact_url: "URL de contato"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
-            URL de contato para este site. Quando presente, substitui o endereço de e-mail de contato em /about e fica visível para usuários anônimos em sites públicos.
+            URL de contato para este site. Quando presente, substitui o endereço de e-mail de contato em /about e fica visível para usuários(as) anônimos(as) em sites públicos.
           site_contact_name: "Nome do contato do site"
           site_contact_name_help: |
-            Um nome de usuário(a) válido da equipe do qual enviar todas as mensagens automáticas. Se for deixado em branco, a conta padrão do sistema será utilizada.
-          site_contact_group: "Nome do contato do grupo"
+            Um nome de usuário(a) válido da equipe para ser usado ao enviar mensagens automáticas. Se for deixado em branco, a conta padrão do sistema será utilizada.
+          site_contact_group: "Grupo de contato do site"
           site_contact_group_help: |
             Um nome válido de um grupo convidado para todas as mensagens privadas enviadas automaticamente.
           your_organization: "Sua organização"
           company_name: "Nome da empresa"
+          company_name_placeholder: "Empresa de exemplo LTDA."
           company_name_help: |
             Nome da sua empresa ou organização.
           company_name_warning: |
-            Se deixado em branco, os Termos de Serviço ou Aviso de Privacidade padrão não será fornecido.
+            Se deixado em branco, os Termos de Serviço ou Aviso de Privacidade padrão não serão fornecidos.
           governing_law: "Lei aplicável"
+          governing_law_placeholder: "Estado de Nova Iorque"
           governing_law_help: |
             Especifique a jurisdição que rege os aspectos legais do site, inclusive os Termos de Serviço e Aviso de Privacidade. Geralmente é o país onde a empresa que opera o site está registrada ou faz negócios
           city_for_disputes: "Cidade para disputas"
+          city_for_disputes_placeholder: "Cidade de Nova Iorque"
           city_for_disputes_help: |
-            Especifique a cidade que será usada como jurisdição para solução de disputas relacionadas ao uso deste fórum. Geralmente essa informação está inclusa nos documentos legais, como os Termos de Serviço do fórum.
+            Especifique a cidade que será usada como jurisdição para a resolução de disputas relacionadas ao uso deste fórum. Geralmente essa informação está inclusa nos documentos legais, como os Termos de Serviço do fórum.
           optional: "(opcional)"
           update: "Atualizar"
           toasts:
@@ -5165,7 +5173,7 @@ pt_BR:
           subheader: "O sistema de sinalização do Discourse ajuda o(a) usuário(a) e sua equipe de moderadores(as) a gerenciar conteúdo e comportamento do(a) usuário(a), promovendo um ambiente saudável e respeitoso na comunidade. As definições padrão são apropriadas para a maior parte das comunidades e não precisarão ser alteradas. Contudo, caso seu site tenha algum requisito específico, você pode desativar os sinalizadores desnecessários e adicionar os seus."
           description: "Descrição"
           enabled: "Ativado(a)?"
-          add: "Adicionar sinalizadores"
+          add: "Adicionar sinalizador"
           edit: "Editar"
           back: "Voltar para sinalizadores"
           delete: "Excluir"
@@ -5183,11 +5191,11 @@ pt_BR:
             enabled: "Ativar este sinalizador personalizado após salvar"
             alert: "Após ser utilizado, o sinalizador personalizado poderá ser desativado, mas não ser editado nem excluído."
             edit_flag: "Editar sinalizador"
-            non_editable: "Você não pode editar este sinalizador porque é um sinalizador de sistema ou já foi utilizado no sistema de revisão. Mas ainda pode ser desativado."
+            non_editable: "Você não pode editar este sinalizador porque é um sinalizador de sistema ou já foi utilizado no sistema de revisão. Mas ainda pode desativar."
             delete_flag: "Excluir sinalizador"
             non_deletable: "Você não pode excluir este sinalizador porque é um sinalizador de sistema ou já foi utilizado no sistema de revisão. Mas ainda pode ser desativado."
             require_message: "Solicitar aos(às) usuários(as) fornecer motivos adicionais"
-            require_message_description: "Quando este sinalizador for selecionado, um campo de texto será exibido para o(a) usuário(a) fornecer mais informações sobre o motivo pelo qual o conteúdo foi sinalizado"
+            require_message_description: "Quando este sinalizador for selecionado, um campo de texto será exibido para o(a) usuário(a) fornecer mais informações sobre o motivo da sinalização do conteúdo"
           more_options:
             title: "Mais opções"
             move_up: "Mover para cima"
@@ -5548,14 +5556,14 @@ pt_BR:
                   other: "Requer pelo menos %{count} categorias"
               tags:
                 at_least:
-                  one: "Requer pelo menos %{count} tag"
-                  other: "Requer pelo menos %{count} tags"
+                  one: "Requer pelo menos %{count} etiqueta"
+                  other: "Requer pelo menos %{count} etiquetas"
               string:
                 too_short:
                   one: "deve ter no mínimo %{count} caractere"
                   other: "deve ter no mínimo %{count} caracteres"
               number:
-                too_small: "precisa ser maior ou igual a %{count}"
+                too_small: "deve ser maior ou igual a %{count}"
                 too_large: "deve ser menor ou igual a %{count}"
         colors:
           select_base:
@@ -5636,7 +5644,7 @@ pt_BR:
         settings: "Configurações de e-mail"
         templates: "Modelos"
         templates_title: "Modelos de e-mail"
-        preview_digest: "Visualizar resumo"
+        preview_digest: "Pré-visualizar resumo"
         advanced_test:
           title: "Teste avançado"
           desc: "Veja como o Discourse processa os e-mails recebidos. Para conseguir processar o e-mail corretamente, cole abaixo a mensagem original inteira do e-mail."
@@ -5861,6 +5869,8 @@ pt_BR:
             topic_slow_mode_removed: "remover modo lento no tópico"
             custom_emoji_create: "criar emoji personalizado"
             custom_emoji_destroy: "excluir emoji personalizado"
+            delete_post_permanently: "excluir postagem permanentemente"
+            delete_topic_permanently: "excluir tópico permanentemente"
         screened_emails:
           title: "E-mails filtrados"
           description: "Quando alguém tentar criar uma conta nova, os seguintes endereços de e-mail serão verificados e o registro será bloqueado, ou outra ação será executada."
@@ -6352,12 +6362,12 @@ pt_BR:
           optional:
             title: "Opcional"
           for_all_users:
-            title: "Para todos os usuários"
-            description: "Ao se cadastrarem, os usuários novos precisam preencher este campo. Quando os usuários existentes retornarem para este site e este campo for novo para eles, o preenchimento também será solicitado. Para solicitar outra vez a todos os usuários, exclua este campo personalizado e crie novamente."
+            title: "Para todos(as) os(as) usuários(as)"
+            description: "Ao se cadastrarem, os(as) usuários(as) novos(as) precisam preencher este campo. Quando os(as) usuários(as) existentes retornarem para este site e este campo for novo para eles(as), o preenchimento também será solicitado. Para solicitar isso outra vez a todos(as) os(as) usuários(as), exclua este campo personalizado e crie novamente."
           on_signup:
             title: "Durante o cadastro"
-            description: "Ao se cadastrarem, os usuários novos precisam preencher este campo. Os usuários existentes não serão afetados."
-          confirmation: "Assim, será solicitado aos usuários existentes que preencham este campo, e eles não poderão fazer mais nada no site até que isso seja feito. Prosseguir?"
+            description: "Ao se cadastrarem, os(as) usuários(as) novos(as) precisam preencher este campo. Os(as) usuários(as) existentes não serão afetados(as)."
+          confirmation: "Assim, será solicitado aos(às) usuários(as) existentes que preencham este campo, e eles(as) não poderão fazer mais nada no site até que isso seja feito. Prosseguir?"
         editable:
           title: "Editável após criar conta"
           enabled: "editável"
@@ -6462,8 +6472,8 @@ pt_BR:
           invalid_input: "Os campos de entrada não podem estar vazios ou conter o caractere de barra vertical."
         default_categories:
           modal_description:
-            one: "Você gostaria de aplicar esta alteração historicamente? Isso mudará as preferências de %{count} usuário existente."
-            other: "Você gostaria de aplicar esta alteração historicamente? Isto mudará as preferências de %{count} usuários(as) existentes."
+            one: "Você gostaria de aplicar esta alteração historicamente? Isso mudará as preferências de %{count} usuário(a) existente."
+            other: "Você gostaria de aplicar esta alteração historicamente? Isso mudará as preferências de %{count} usuários(as) existentes."
           modal_yes: "Sim"
           modal_no: "Não, apenas aplique alterações daqui para frente"
         simple_list:
@@ -6484,16 +6494,16 @@ pt_BR:
             prompt: "A alteração desta configuração pode ter consequências inesperadas em diversas áreas do seu site. Deseja mesmo prosseguir?"
             confirm: "Sim, claro"
           min_password_length:
-            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos os usuários que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
+            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) usuários(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
           min_admin_password_length:
-            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos os administradores que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
+            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) administradores(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
           password_unique_charactes:
-            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos os usuários que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
+            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) usuários(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
           block_common_passwords:
-            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos os usuários que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
+            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) usuários(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
       badges:
         disable_system: Este emblema é um emblema de sistema e não pode ser desativado e/ou excluído.
@@ -6535,7 +6545,7 @@ pt_BR:
         icon: Ícone
         image: Imagem
         graphic: Gráfico
-        icon_or_image: Um emblema requer um ícone ou imagem
+        icon_or_image: O emblema requer um ícone ou imagem
         icon_help: "Digite um nome de ícone do tipo Font Awesome (use o prefixo \"far-\" para ícones comuns e \"fab-\" para ícones de marca)"
         select_an_icon: "Selecione um ícone"
         upload_an_image: "Enviar uma imagem"
@@ -6582,12 +6592,12 @@ pt_BR:
           upload_csv: Enviar um CSV com e-mails ou nomes de usuário(a)
           aborted: Envie um CSV contendo e-mails ou nomes de usuário(a)
           success:
-            one: "Seu CSV foi recebido e %{count} usuário(a) receberão seu emblema em breve."
+            one: "Seu CSV foi recebido e %{count} usuário(a) receberá seu emblema em breve."
             other: "Seu CSV foi recebido e %{count} usuários(as) receberão seu emblema em breve."
           csv_has_unmatched_users: "As entradas a seguir estão no arquivo CSV, mas não corresponderam a nenhum(a) usuário(a) existente e por isso não receberão o emblema:"
           csv_has_unmatched_users_truncated_list:
-            one: "Havia %{count} entrada no arquivo CSV que não corresponderam a nenhum(a) usuário(a) e, por isso, não receberam o emblema. Devido à grande quantidade de entradas sem correspondência, apenas as 100 primeiras são exibidas:"
-            other: "Havia %{count} entradas no arquivo CSV que não corresponderam a nenhum(a) usuário(a) e, por isso, não receberam o emblema. Devido à grande quantidade de entradas sem correspondência, apenas as 100 primeiras são exibidas:"
+            one: "Havia %{count} entrada no arquivo CSV que não correspondeu a nenhum(a) usuário(a) existente e, por isso, nenhum emblema será concedido."
+            other: "Havia %{count} entradas no arquivo CSV que não corresponderam a nenhum(a) usuário(a) existente e, por isso, nenhum emblema será concedido. Devido à grande quantidade de entradas sem correspondência, apenas as 100 primeiras são exibidas:"
           replace_owners: Remover o emblema dos(as) proprietários(as) anteriores
           grant_existing_holders: Conceder emblemas adicionais a titulares de emblema existentes
       emoji:
@@ -6616,7 +6626,7 @@ pt_BR:
         allowed_paths: "Caminho Allowlist"
         edit: "editar"
         category: "Postar na categoria"
-        tags: "Tags de tópico"
+        tags: "Etiquetas de tópico"
         post_author: "Autor(a) da postagem - padrão para %{author}"
         add_host: "Adicionar host"
         settings: "Configurações de incorporação"
