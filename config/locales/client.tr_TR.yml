@@ -1021,7 +1021,7 @@ tr_TR:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username} adlı kullanıcının profili"
-      account_possessive: "%{name}'in hesabı"
+      account_possessive: "%{name} adlı kişinin hesabı"
       mute: "Sessiz"
       edit: "Tercihleri Düzenle"
       download_archive:
@@ -2747,7 +2747,7 @@ tr_TR:
         category: "Başka %{category} konusu yok."
         tag: "Başka %{tag} konusu yok."
         top: "Başka popüler konu yok."
-        hot: "Daha fazla popüler konu yok."
+        hot: "Başka popüler konu yok."
         bookmarks: "Başka yer imli konu yok."
         filter: "Başka konu kalmadı."
     topic_bulk_actions:
@@ -3422,7 +3422,7 @@ tr_TR:
         actions:
           delete_bookmark:
             name: "Yer imini sil"
-            description: "Yer imini profilinizden kaldırır ve yer imi için tüm hatırlatıcıları durdurur"
+            description: "Yer imini profilinizden kaldırır ve yer imi için tüm anımsatıcıları durdurur"
           edit_bookmark:
             name: "Yer imini düzenle"
             description: "Yer imi adını düzenleyin veya anımsatıcı tarih ve saatini değiştirin"
@@ -3760,7 +3760,7 @@ tr_TR:
       hot:
         title: "Popüler"
         lower_title: "popüler"
-        help: "en yeni konular"
+        help: "en son konular"
       new:
         lower_title_with_count:
           one: "%{count} yeni"
@@ -3943,8 +3943,8 @@ tr_TR:
         one: "%{count} Rozet"
         other: "%{count} Rozet"
       more_badges:
-        one: "+%{count} Daha"
-        other: "+%{count} Daha"
+        one: "+%{count} Tane Daha"
+        other: "+%{count} Tane Daha"
       awarded:
         one: "%{number} verildi"
         other: "%{number} verildi"

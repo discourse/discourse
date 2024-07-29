@@ -1135,6 +1135,7 @@ ru:
       said: "%{username}:"
       profile: "Профиль"
       profile_possessive: "Профиль пользователя %{username}"
+      account_possessive: "Аккаунт %{name}"
       mute: "Отключить"
       edit: "Изменить настройки"
       download_archive:
@@ -1606,14 +1607,17 @@ ru:
         success_via_admin: "На указанный адрес электронной почты отправлено письмо. Для подтверждения адреса пользователь должен следовать инструкциям в письме."
         success_staff: "На текущий адрес электронной почты отправлено письмо. Следуйте инструкциям по подтверждению в письме."
         back_to_preferences: "Вернуться в настройки"
-        confirm_success: "Адрес электронной почты обновлён."
+        confirm_success: "Адрес электронной почты обновлен."
         confirm: "Подтвердить"
         authorizing_new:
           description: "Подтвердите изменение адреса электронной почты на новый:"
           description_add: "Подтвердите добавление дополнительного адреса электронной почты:"
         authorizing_old:
-          old_email: "Старая эл. почта: %{email}"
-          new_email: "Новая эл. почта: %{email}"
+          title: "Подтвердите старый адрес электронной почты"
+          description: "Чтобы изменить адрес эл. почты, подтвердите старый адрес эл. почты:"
+          description_add: "Подтвердите текущий адрес эл. почты, чтобы добавить альтернативный адрес:"
+          old_email: "Старый адрес эл. почты: %{email}"
+          new_email: "Новый адрес эл. почты: %{email}"
           confirm_success: "Мы отправили письмо на новый адрес, чтобы подтвердить изменение!"
       change_avatar:
         title: "Изменить аватар"
@@ -2327,7 +2331,7 @@ ru:
         many: "Выберите хотя бы %{count} элементов."
         other: "Выберите хотя бы %{count} элемента."
       components:
-        filter_for_more: Больше тегов…
+        filter_for_more: Фильтровать еще…
         categories_admin_dropdown:
           title: "Управление категориями"
         bulk_select_topics_dropdown:
@@ -2976,6 +2980,7 @@ ru:
           few: "Выполнено: <strong>%{count}</strong> темы"
           many: "Выполнено: <strong>%{count}</strong> тем"
           other: "Выполнено: <strong>%{count}</strong> темы"
+        silent: "Выполнить это действие без уведомления."
       none:
         unread: "Нет непрочитанных тем."
         unseen: "Нет непросмотренных тем."
@@ -2986,6 +2991,7 @@ ru:
         bookmarks: "У вас пока нет тем в закладках."
         category: "В категории «%{category}» отсутствуют темы."
         top: "Нет обсуждаемых тем."
+        hot: "Нет горячих тем."
         filter: "Тем нет."
         educate:
           new: '<p>Здесь появятся ваши новые темы. По умолчанию темы считаются новыми и обозначаются индикатором <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, если были созданы за последние 2 дня.</p><p>Изменить этот период можно в <a href="%{userPrefsUrl}">настройках</a>.</p>'
@@ -3001,11 +3007,15 @@ ru:
         category: "В категории %{category} больше нет тем."
         tag: "Нет больше тем, помеченных тегом %{tag}."
         top: "Обсуждаемых тем больше нет."
+        hot: "Горячих тем больше нет."
         bookmarks: "Тем, помеченных закладкам,. больше нет."
         filter: "Тем больше нет."
     topic_bulk_actions:
       close_topics:
         name: "Закрыть темы"
+      update_category:
+        name: "Обновить категорию"
+        description: "Выбор новой категории для выбранных тем"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"
@@ -4117,6 +4127,10 @@ ru:
         title: "Непросмотренные"
         lower_title: "непросмотренные"
         help: "новые темы, наблюдаемые и отслеживаемые темы с непрочитанными сообщениями"
+      hot:
+        title: "Горячие"
+        lower_title: "горячие"
+        help: "самые последние темы"
       new:
         lower_title_with_count:
           one: "%{count} новая"

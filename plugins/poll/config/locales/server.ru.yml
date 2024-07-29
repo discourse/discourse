@@ -10,9 +10,12 @@ ru:
     poll_maximum_options: "Максимальное количество вариантов ответов, допустимых в опросе."
     poll_edit_window_mins: "Количество минут с момента создания сообщения, в течение которых разрешено редактирование опросов."
     poll_minimum_trust_level_to_create: "Определить минимальный уровень доверия, необходимый для создания опросов."
+    poll_create_allowed_groups: "Группы, которым разрешено создавать опросы."
     poll_groupable_user_fields: "Набор имен пользователей, которые можно использовать для группировки и фильтрации результатов опроса."
     poll_export_data_explorer_query_id: "ID Data Explorer Query, который будет использоваться для экспорта результатов опроса (0 для отключения)."
     poll_default_public: "При создании нового опроса включите опцию «Показывать проголосовавших» по умолчанию."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
   poll:
     poll: "опрос"
     invalid_argument: "Неверное значение «%{value}» для аргумента «%{argument}»."

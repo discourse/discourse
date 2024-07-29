@@ -12,7 +12,7 @@ ar:
     poll_minimum_trust_level_to_create: "الحد الأدنى لمستوى الثقة المطلوب لإنشاء استطلاعات الرأي"
     poll_create_allowed_groups: "المجموعات المسموح لها بإنشاء استطلاعات الرأي."
     poll_groupable_user_fields: "مجموعة أسماء حقول المستخدم التي يمكن استخدامها لتجميع نتائج الاستطلاع وتصفيتها"
-    poll_export_data_explorer_query_id: "معرِّف استعلام مستكشف البيانات الذي سيتم استخدامه لتصدير نتائج الاستطلاع (اتعيين القيمة على 0 للإيقاف)."
+    poll_export_data_explorer_query_id: "معرِّف استعلام مستكشف البيانات الذي سيتم استخدامه لتصدير نتائج الاستطلاع (اضبط القيمة على 0 للإيقاف)."
     poll_default_public: "تفعيل الخيار \"إظهار من قام بالتصويت\" افتراضيًا عند إنشاء استطلاع جديد."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"

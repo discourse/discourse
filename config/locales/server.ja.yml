@@ -275,6 +275,7 @@ ja:
     requires_groups: "指定されたトピックにアクセスできないため、招待は保存されませんでした。次のいずれかのグループを追加してください: %{groups}。"
     max_invite_emails_limit_exceeded: "メールの件数が最大数 (%{max}) を超えたため、リクエストは失敗しました。"
     domain_not_allowed: "あなたのメールアドレスは、この招待の引き換えに使用できません。"
+    domain_not_allowed_admin: "このドメインは招待に使用できません。"
     max_redemptions_allowed_one: "招待メールは 1 である必要があります。"
     redemption_count_less_than_max: "は %{max_redemptions_allowed} より小さい値である必要があります。"
     email_xor_domain: "メールアドレスとドメインのフィールドを同時に使用できません"
@@ -1792,7 +1793,7 @@ ja:
     min_trust_level_for_here_mention: "@here をメンションできる最低信頼レベルです。"
     here_mention_allowed_groups: "@here をメンションできるグループ。"
     create_thumbnails: "大きすぎて投稿に収まらないが画像のサムネイルを作成し、ライトボックスにします。"
-    email_time_window_mins: "ユーザーに最終編集の機会を与えられるよう、通知メールを送信するまで (n) 分待機する。"
+    email_time_window_mins: "ユーザーが投稿を最終編集できるよう、(n) 分待機してから通知メールを送信する。"
     personal_email_time_window_seconds: "ユーザーがメッセージの最終編集を行えるよう、 (n) 秒待ってから個人メッセージの通知メールを送信する。"
     email_posts_context: "通知メールにコンテキストとして含める以前の返信の件数。"
     flush_timings_secs: "サーバーに消去タイミングデータを送信する頻度 (秒)。"
@@ -2004,6 +2005,7 @@ ja:
     share_anonymized_statistics: "匿名化された使用統計を共有する。"
     auto_handle_queued_age: "この日数後に、レビュー待ちのレコードを自動的に処理する。通報は無視されます。キューに入れられた投稿とユーザーは拒否されます。0 に設定するとこの機能は無効になります。"
     penalty_step_hours: "ユーザーの投稿禁止または凍結に使用されるデフォルトのペナルティ (時間)。最初の違反はデフォルトで最初の値になり、2 番目の違反はデフォルトで 2 番目の値になります。"
+    penalty_include_post_message: "ユーザーを投稿禁止または凍結する際に、メールメッセージのテンプレートに問題のある投稿メッセージを自動的に含めます。"
     svg_icon_subset: "アセットに含める追加の FontAwesome 5 アイコンを追加する。ソリッドアイコンには 'fa-'、通常のアイコンには 'far-'、ブランドアイコンには 'fab-' のプレフィックスを使用します。"
     max_prints_per_hour_per_user: "/print ページの最大インプレッション数 (0 に設定すると出力が無効になります)"
     full_name_required: "ユーザープロファイルのフルネームを必須にします。"
@@ -2042,6 +2044,9 @@ ja:
     enable_inline_emoji_translation: "インライン絵文字の翻訳を有効にする (前にスペースや句読点を使用しない)"
     emoji_deny_list: "これらの絵文字はメニューやショートコードで使用できません。"
     approve_post_count: "承認が必要な新規またはベーシックユーザーの投稿数"
+    approve_unless_trust_level: "この信頼レベル以下のユーザーが作成した投稿には承認が必要"
+    approve_new_topics_unless_trust_level: "この信頼レベル以下のユーザーが作成した新規トピックには承認が必要"
+    approve_unless_staged: "ステージングユーザーが作成した新規トピックと投稿には承認が必要"
     notify_about_queued_posts_after: "この時間以上レビュー待ち状態の投稿がある場合、すべてのモデレーターに通知を送信する。0 に設定するとこれらの通知が無効になります。"
     reviewable_revision_reasons: "リビジョンのあるレビュー待ちキューに入れられた投稿を拒否する場合に選択できる理由のリスト。カスタムの理由を入力できる「その他」も常に利用可能です。"
     auto_close_messages_post_count: "メッセージが自動的にクローズされるまでに許可される投稿の最大数 (0 に設定すると無効になります)"
@@ -2049,6 +2054,7 @@ ja:
     auto_close_topics_create_linked_topic: "'auto close topics post count' 設定に基づいてトピックが自動クローズするときに、リンクされた新しいトピックを作成する"
     code_formatting_style: "コンポーザーのコードボタンはデフォルトでこのコード書式設定スタイルになります"
     max_allowed_message_recipients: "メッセージに許可される最大受信者数。"
+    disable_watched_word_checking_in_user_fields: "ユーザーフィールドでのウォッチ中の単語のチェックを無効にする"
     watched_words_regular_expressions: "ウォッチ語は正規表現です。"
     enable_diffhtml_preview: "完全な再レンダリングの代わりに diffHTML を使ってプレビューを同期する実験的機能"
     enable_fast_edit: "投稿選択メニューにインラインで小さな選択範囲を編集できるボタンを追加します。"
@@ -2170,6 +2176,7 @@ ja:
     enable_experimental_lightbox: "実験的: デフォルトの画像ライトボックスを改良されたデザインに置き換えます。"
     experimental_form_templates: "実験的: フォームのテンプレート機能を有効にします。<b>有効にした後</b>は、<a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a> でテンプレートを管理します。"
     admin_sidebar_enabled_groups: "実験的: 指定したグループの管理者 UI のサイドバーナビゲーションを有効にします。これは、トップレベル管理者ナビゲーションボタンを置き換えます。"
+    lazy_load_categories_groups: "実験的: これらのグループのユーザーに対してのみ、カテゴリ情報を遅延読み込みします。これにより、カテゴリ数の多いサイトのパフォーマンスが改善されます。"
     page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。「スピナー」はページ全体のインジケーターです。「スライダー」は画面上部に細いバーを表示します。"
     show_user_menu_avatars: "ユーザーメニューにユーザーアバターを表示する"
     errors:
@@ -2249,6 +2256,10 @@ ja:
       create_tag_allowed_groups: "min_trust_to_create_tag"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
       skip_review_media_groups: "review_media_unless_trust_level"
+      embedded_media_allowed_groups: "min_trust_to_post_embedded_media"
+      post_links_allowed_groups: "min_trust_to_post_links"
+      user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
+      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4537,9 +4548,22 @@ ja:
   onebox:
     discourse:
       user_joined_community: "%{date} に参加"
+    gitlab:
+      truncated_file: "このファイルは切り詰められています。"
+      show_original: "オリジナルを表示"
     github:
+      binary_file: "このファイルはバイナリです。"
+      truncated_file: "このファイルは切り詰められています。"
+      show_original: "オリジナルを表示"
+      requires_iframe: "ビューアーには iframe が必要です。"
+      committed: "コミット済み"
+      more_than_three_files: "ファイルが 4 個以上あります。"
       opened: "オープン"
       closed: "閉鎖"
+      commit_by: "コミット作成者"
+      comment_by: "コメント作成者"
+      review_by: "レビュー担当者"
+      pr_summary: "%{commits} 個のコミットにより %{changed_files} 個のファイルが変更されました。%{additions} 個が追加され、%{deletions} 個が削除されました。"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} が「%{topic}」であなたをメンションしました - %{site_title}'
@@ -4554,6 +4578,7 @@ ja:
       confirm_body: "成功！通知を有効にしました！"
       custom: "%{username} からの通知（%{site_title}）"
   staff_action_logs:
+    json_too_long: "値は列の長さ制限を超えているため、ログに記録されません"
     not_found: "は見つかりません"
     unknown: "不明"
     user_merged: "%{username} がこのアカウントにマージされました"

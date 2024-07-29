@@ -484,7 +484,7 @@ de:
         title: Meine Threads
         aria_label: "Zu meiner Thread-Liste wechseln"
       direct_messages:
-        title: "DMs"
+        title: "DN"
         aria_label: "Zu Direktnachrichten wechseln"
         new: "Persönlichen Chat erstellen"
         create: "Los"
@@ -651,9 +651,9 @@ de:
         view: "Transkript früherer Nachrichten anzeigen"
       types:
         chat_reviewable_message:
-          title: "Markierte Chat-Nachricht"
+          title: "Gemeldete Chat-Nachricht"
         reviewable_chat_message:
-          title: "Markierte Chat-Nachricht"
+          title: "Gemeldete Chat-Nachricht"
           noun: "Chat-Nachricht"
     keyboard_shortcuts_help:
       chat:

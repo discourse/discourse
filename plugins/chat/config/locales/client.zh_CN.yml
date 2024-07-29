@@ -115,7 +115,7 @@ zh_CN:
         direct_message_cta: "开始个人聊天"
         direct_message: "您还可以与一位或多位用户开始个人聊天。"
         title: "找不到频道"
-        my_threads: "你还没有任何对话。你参与的主题将在此处显示。"
+        my_threads: "您还没有任何消息串。您参与的消息串将在此处显示。"
       email_frequency:
         description: "只有在过去 15 分钟内没有见到您，我们才会给您发送电子邮件。"
         never: "永不"
@@ -214,7 +214,7 @@ zh_CN:
         header: "聊天标题"
         composer: "聊天输入框"
         channels_list: "聊天频道列表"
-      no_direct_message_channels: "你还没有加入任何私信渠道。"
+      no_direct_message_channels: "您还没有加入任何直接消息频道。"
       no_public_channels: "您还没有加入任何频道。"
       kicked_from_channel: "您无法再访问此频道。"
       only_chat_push_notifications:
@@ -229,7 +229,7 @@ zh_CN:
       open_message: "在聊天中打开消息"
       placeholder_self: "做些记录"
       placeholder_channel: "在 %{channelName} 中聊天"
-      placeholder_thread: "在对话中聊天"
+      placeholder_thread: "在消息串中聊天"
       placeholder_users: "与 %{commaSeparatedNames} 聊天"
       placeholder_new_message_disallowed:
         archived: "频道已归档，您现在无法发送新消息。"
@@ -254,7 +254,7 @@ zh_CN:
       select: "选择"
       return_to_list: "返回频道列表"
       return_to_channel: "返回频道"
-      return_to_threads_list: "返回对话列表"
+      return_to_threads_list: "返回消息串列表"
       unread_threads_count:
         other: "您有 %{count} 条未读讨论"
       scroll_to_bottom: "滚动到底部"
@@ -269,7 +269,7 @@ zh_CN:
       title_capitalized: "聊天"
       upload: "附加文件"
       upload_to_channel: "上传到 %{title}"
-      upload_to_thread: "上传到对话"
+      upload_to_thread: "上传到消息串"
       uploaded_files:
         other: "%{count} 个文件"
       you_flagged: "您已举报此消息"
@@ -357,7 +357,7 @@ zh_CN:
           other: "%{count} 个成员"
       create_channel:
         threading:
-          label: "启用整理"
+          label: "启用消息串"
         auto_join_users:
           public_category_warning: "%{category}是公共类别。是否自动将所有最近活跃的用户添加到此频道？"
           warning_1_group:
@@ -410,7 +410,7 @@ zh_CN:
       quote:
         original_channel: '最初在<a href="%{channelLink}">%{channel}</a>中发送。'
         copy_success: "聊天引用已复制到剪贴板"
-        default_thread_title: "对话"
+        default_thread_title: "消息串"
       notification_levels:
         never: "永不"
         mention: "仅限提及"
@@ -418,8 +418,8 @@ zh_CN:
       settings:
         channel_wide_mentions_label: "允许 @all 和 @here 提及"
         channel_wide_mentions_description: "允许用户使用 @all 通知#%{channel} 的所有成员，或仅使用 @here 通知当前活跃的成员"
-        channel_threading_label: "整理"
-        channel_threading_description: "启用整理后，对聊天消息的回复将创建一个单独的对话，该对话将与主频道并存。"
+        channel_threading_label: "消息串"
+        channel_threading_description: "启用消息串后，对聊天消息的回复将创建一个单独的对话，该对话将与主频道并存。"
         auto_join_users_label: "自动添加用户"
         auto_join_users_info: "每小时检查哪些用户在过去 3 个月中活跃。如果他们可以访问%{category}类别，请将其添加到此频道。"
         auto_join_users_info_no_category: "每小时检查哪些用户在过去 3 个月中活跃。如果他们可以访问所选类别，请将其添加到此频道。"
@@ -452,11 +452,11 @@ zh_CN:
           create_export: "创建导出"
           export_has_started: "导出已开始。导出完成后，您将收到一条私信。"
       my_threads:
-        title: 我的对话
-        aria_label: "切换到我的对话列表"
+        title: 我的消息串
+        aria_label: "切换到我的消息串列表"
       direct_messages:
-        title: "私信"
-        aria_label: "切换到私信"
+        title: "直接消息"
+        aria_label: "切换到直接消息"
         new: "创建个人聊天"
         create: "开始"
         leave: "离开此个人聊天"
@@ -547,11 +547,11 @@ zh_CN:
         no_results: "没有结果"
       thread:
         title: "标题"
-        view_thread: 查看对话
+        view_thread: 查看消息串
         replies:
           other: "%{count} 个回复"
-        label: 对话
-        close: "关闭对话"
+        label: 消息串
+        close: "关闭消息串"
         original_message:
           started_by: "发起人"
         settings: "设置"
@@ -559,16 +559,16 @@ zh_CN:
         notifications:
           regular:
             title: "正常"
-            description: "如果其他人在此对话中提及 (@) 您的名字，您将收到通知。"
+            description: "如果其他人在此消息串中提及 (@) 您的名字，您将收到通知。"
           tracking:
             title: "跟踪"
-            description: "此对话将在对话列表和频道中显示的新回复数。如果其他人在此对话中提及 (@) 您的名字，您将收到通知。"
+            description: "此消息串将在消息串列表和频道中显示的新回复数。如果其他人在此消息串中提及 (@) 您的名字，您将收到通知。"
         participants_other_count:
           other: "+%{count}"
       threads:
-        open: "打开对话"
-        list: "对话"
-        none: "您没有参与此频道中的任何对话。"
+        open: "打开消息串"
+        list: "消息串"
+        none: "您没有参与此频道中的任何消息串。"
       draft_channel_screen:
         header: "新消息"
         cancel: "取消"

@@ -117,7 +117,7 @@ pt_BR:
         direct_message_cta: "Inicie um chat pessoal"
         direct_message: "Você também pode iniciar um chat pessoal com um(as) ou mais usuários(as)."
         title: "Nenhum canal encontrado"
-        my_threads: "Você ainda não tem nenhum tópico. Tópicos em que você participa serão exibidos aqui."
+        my_threads: "Você ainda não tem nenhum tópico. Os tópicos de que você participa serão exibidos aqui."
       email_frequency:
         description: "Só enviaremos um e-mail mediante ausência nos últimos 15 minutos."
         never: "Nunca"
@@ -345,7 +345,7 @@ pt_BR:
         filter: "Filtro"
         cant_add_more_members: "Número máximo de membros alcançado"
         create_new_group_chat: "Criar chat em grupo"
-        group_with_too_many_members: "tem membros demais (%{membersCount})"
+        group_with_too_many_members: "tem membros de mais (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Editar canal
         input_placeholder: Adicionar um nome
@@ -484,7 +484,7 @@ pt_BR:
         title: Meus tópicos
         aria_label: "Mudar para minha lista de tópicos"
       direct_messages:
-        title: "PV"
+        title: "MDs"
         aria_label: "Mudar para mensagens diretas"
         new: "Criar um chat pessoal"
         create: "Ir"

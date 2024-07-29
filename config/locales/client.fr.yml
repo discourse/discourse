@@ -252,7 +252,7 @@ fr:
       one: "lien"
       other: "liens"
     faq: "FAQ"
-    guidelines: "Charte"
+    guidelines: "Lignes directrices"
     privacy_policy: "Politique de confidentialité"
     privacy: "Confidentialité"
     tos: "Conditions générales d'utilisation"
@@ -312,7 +312,7 @@ fr:
       clear_bookmarks: "Retirer les signets"
       help:
         bookmark: "Cliquez pour mettre ce sujet en signet"
-        edit_bookmark: "Clique pour modifier le signet d'un message dans ce sujet."
+        edit_bookmark: "Cliquez pour modifier le signet d'une publication dans ce sujet."
         edit_bookmark_for_topic: "Cliquez pour modifier le signet associé à ce sujet"
         unbookmark: "Cliquez pour retirer tous les signets de ce sujet"
         unbookmark_with_reminder: "Cliquez pour retirer tous les signets et rappels de ce sujet"
@@ -2731,7 +2731,7 @@ fr:
         bookmarks: "Vous n'avez encore attribué aucun signet."
         category: "Il n'y a pas de sujets dans %{category}."
         top: "Il n'y a pas de meilleurs sujets."
-        hot: "Il n'y a pas de sujets en tendance."
+        hot: "Il n'y a aucun sujet populaire."
         filter: "Il n'y a pas de sujets."
         educate:
           new: '<p>Vos nouveaux sujets vont apparaître ici. Par défaut, les sujets sont considérés comme nouveaux et affichent l''indicateur <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> lorsqu''ils ont été créés depuis moins de 2 jours.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
@@ -2747,7 +2747,7 @@ fr:
         category: "Il n'y a pas d'autres sujets à consulter dans %{category}."
         tag: "Il n'y a pas d'autres sujets à consulter dans %{tag}."
         top: "Il n'y a pas d'autres meilleurs sujets à consulter."
-        hot: "Il n'y a plus de sujets en tendance."
+        hot: "Il n'y a plus de sujets populaires."
         bookmarks: "Il n'y a pas d'autres sujets enregistrés dans les signets."
         filter: "Il n'y a plus de sujets."
     topic_bulk_actions:
@@ -2755,7 +2755,7 @@ fr:
         name: "Fermer les sujets"
       update_category:
         name: "Mettre à jour la catégorie"
-        description: "Choisir la nouvelle catégorie pour les sujets sélectionnés"
+        description: "Choisissez la nouvelle catégorie pour les sujets sélectionnés"
     topic:
       filter_to:
         one: "%{count} message dans le sujet"
@@ -3433,7 +3433,7 @@ fr:
             name: "Épingler le signet"
             description: "Épingler le signet. Ceci permet de le faire figurer au sommet de votre liste de signets."
           unpin_bookmark:
-            name: "Désépingler le signet"
+            name: "Détacher le signet"
             description: "Désépingler le signet. Il n'apparaîtra plus en haut de votre liste de signets."
       filtered_replies:
         viewing_posts_by: "Affichage de %{post_count} messages par"
@@ -4772,7 +4772,7 @@ fr:
           post_liked: "Lorsqu'un utilisateur attribue un « J'aime »"
         notification_event:
           group_name: "Événements de notification"
-          notification_created: "Un utilisateur reçoit une notification dans son fil"
+          notification_created: "Un utilisateur reçoit une notification dans son fil d'actualité"
         group_user_event:
           group_name: "Événements pour les utilisateurs du groupe"
           user_added_to_group: "Un utilisateur est ajouté à un groupe"
@@ -5202,7 +5202,7 @@ fr:
         settings: "Paramètres"
         templates: "Modèles"
         templates_title: "Modèles d'e-mails"
-        preview_digest: "Prévisualisation de l'e-mail"
+        preview_digest: "Aperçu du résumé"
         advanced_test:
           title: "Test avancé"
           desc: "Vérifiez comment Discourse gère les e-mails reçus. Pour que l'e-mail soit géré correctement, veuillez coller ci-dessous la totalité de l'e-mail original."

@@ -115,6 +115,7 @@ ja:
         direct_message_cta: "パーソナルチャットを開始"
         direct_message: "1 人または複数のユーザーとパーソナルチャットを開始することもできます。"
         title: "チャンネルが見つかりません"
+        my_threads: "まだスレッドがありません。ここに、参加しているスレッドが表示されます。"
       email_frequency:
         description: "15 分以上アクセスがない場合にのみメールで通知します。"
         never: "なし"
@@ -328,6 +329,7 @@ ja:
         filter: "フィルタ"
         cant_add_more_members: "メンバーの最大数に達しました"
         create_new_group_chat: "グループチャットを作成"
+        group_with_too_many_members: "にはメンバーが多すぎます (%{membersCount} 人)"
       channel_edit_name_slug_modal:
         title: チャンネルを編集する
         input_placeholder: 名前を追加してください
@@ -448,7 +450,12 @@ ja:
           description: "これによりすべてのチャンネルのすべてのメッセージがエクスポートされます。"
           create_export: "エクスポートを作成"
           export_has_started: "エクスポートが開始されました。準備ができたら PM が届きます。"
+      my_threads:
+        title: 自分のスレッド
+        aria_label: "スレッドリストに切り替える"
       direct_messages:
+        title: "DM"
+        aria_label: "ダイレクトメッセージに切り替える"
         new: "パーソナルチャットを作成"
         create: "開始"
         leave: "このパーソナルチャットから退出する"
@@ -456,6 +463,7 @@ ja:
         cannot_create: "ダイレクトメッセージを送信できません。"
       channel_list:
         title: "チャンネル"
+        aria_label: "チャンネルリストに切り替える"
       incoming_webhooks:
         back: "戻る"
         channel_placeholder: "チャンネルを選択する"

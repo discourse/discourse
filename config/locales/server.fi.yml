@@ -4646,9 +4646,22 @@ fi:
   onebox:
     discourse:
       user_joined_community: "Liittynyt %{date}"
+    gitlab:
+      truncated_file: "Tämä tiedosto on lyhennetty."
+      show_original: "näytä alkuperäinen"
     github:
+      binary_file: "Tämä tiedosto on binaarinen."
+      truncated_file: "Tämä tiedosto on lyhennetty."
+      show_original: "näytä alkuperäinen"
+      requires_iframe: "Tarkastelija vaatii iframen."
+      committed: "solmittu"
+      more_than_three_files: "Tiedostoja on enemmän kuin kolme."
       opened: "avattu"
       closed: "suljettu"
+      commit_by: "Solminut"
+      comment_by: "Kommentoinut"
+      review_by: "Tarkistanut"
+      pr_summary: "%{commits} solmua muutti %{changed_files} tiedostoa %{additions} lisäyksellä ja %{deletions} poistolla"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainitsi sinut ketjussa "%{topic}" – %{site_title}'
@@ -4663,6 +4676,7 @@ fi:
       confirm_body: "Onnistui! Ilmoitukset ovat käytössä."
       custom: "Ilmoitus käyttäjältä %{username} sivustolla %{site_title}"
   staff_action_logs:
+    json_too_long: "Arvoja ei kirjata lokiin, koska ne ylittävät sarakkeen pituusrajoitukset"
     not_found: "ei löytynyt"
     unknown: "tuntematon"
     user_merged: "%{username} yhdistettiin tähän käyttäjätiliin"

@@ -373,7 +373,7 @@ fr:
   too_many_mentions_newuser:
     one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent mentionner qu'un utilisateur dans un même message."
     other: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent mentionner que %{count} utilisateurs dans un même message."
-  no_embedded_media_allowed_group: "Nous sommes désolés, il ne vous est pas possible d'inclure des médias dans un message."
+  no_embedded_media_allowed_group: "Nous sommes désolés, vous ne pouvez pas inclure des éléments multimédias dans une publication."
   no_embedded_media_allowed: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent pas inclure de médias dans leurs messages."
   too_many_embedded_media:
     one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent inclure qu'un seul média dans leurs messages."
@@ -504,7 +504,7 @@ fr:
       one: "%{count} message"
       other: "%{count} messages"
     "new-topic": |
-      Bienvenue sur %{site_name} - **merci de débuter une nouvelle conversation !**
+      Bienvenue sur %{site_name}. **Merci de débuter une nouvelle conversation !**
 
       - Le titre vous semble-t-il intéressant lorsque vous le lisez à haute voix ? Est-ce une bonne synthèse de votre message ?
 
@@ -512,9 +512,9 @@ fr:
 
       - Incluez des mots fréquents dans votre sujet pour que les utilisateurs puissent le *retrouver*. Pour le regrouper avec des sujets liés, sélectionnez une catégorie (ou une étiquette).
 
-      Pour plus d'informations, [consultez la charte de la communauté](%{base_path}/guidelines). Ce message apparaîtra uniquement pour vos premiers %{education_posts_text}.
+      Pour obtenir plus d'informations, [consultez les lignes directrives de la communauté](%{base_path}/guidelines). Ce message apparaîtra uniquement pour vos premiers %{education_posts_text}.
     "new-reply": |
-      Bienvenue sur %{site_name} - **merci de contribuer !**
+      Bienvenue sur %{site_name}. **Merci de contribuer !**
 
       - Faites preuve de bienveillance à l'égard des membres de la communauté.
 
@@ -522,7 +522,7 @@ fr:
 
       - Les critiques constructives sont les bienvenues, mais critiquez les *idées*, pas les individus.
 
-      Pour plus d'informations, [consultez la charte de la communauté](%{base_path}/guidelines). Ce message apparaîtra uniquement pour vos premiers %{education_posts_text}.
+      Pour obtenir plus d'informations, [consultez les lignes directrices de la communauté](%{base_path}/guidelines). Ce message apparaîtra uniquement pour vos premiers %{education_posts_text}.
     avatar: |
       ### Avez-vous pensé à une photo de profil ?
 
@@ -667,7 +667,7 @@ fr:
 
       :open_book: **Apprenez à connaître la communauté** en [parcourant les discussions](%{base_path}/top) qui ont déjà lieu ici. Lorsque vous trouvez un message intéressant, informatif ou divertissant, utilisez le :heart: pour montrer votre appréciation ou votre soutien !
 
-      :handshake: **Contribuez** en commentant, en partageant votre propre point de vue, en posant des questions ou en publiant des commentaires dans la discussion. Avant de répondre ou de commencer de nouveaux sujets, veuillez consulter notre [Charte communautaire](%{base_path}/faq).
+      :handshake: **Contribuez** en commentant, en partageant votre propre point de vue, en posant des questions ou en publiant des commentaires dans la discussion. Avant de répondre ou de commencer de nouveaux sujets, veuillez consulter les [lignes directrices de notre communauté](%{base_path}/guidelines).
 
       Si vous avez besoin d'aide ou des suggestions à apporter, n'hésitez pas à poser vos questions dans %{feedback_category} ou [contactez les administrateurs](%{base_path}/about).
   admin_quick_start_title: "Guide de l'administrateur : premiers pas"
@@ -892,8 +892,8 @@ fr:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Répréhensible"
-      description: 'Le contenu de ce message serait jugé offensant, injurieux, haineux ou en infraction avec la <a href="%{base_path}/guidelines">charte communautaire</a> par une personne raisonnable.'
-      short_description: 'Une transgression de <a href="%{base_path}/guidelines">notre charte communautaire</a>'
+      description: 'Le contenu de ce message serait jugé offensant, injurieux, haineux ou en infraction avec les <a href="%{base_path}/guidelines">lignes directrices de la communauté</a> par une personne raisonnable.'
+      short_description: 'Une transgression des <a href="%{base_path}/guidelines">lignes directrices de notre communauté</a>'
     notify_user:
       title: "Envoyer un message à @%{username}"
       description: "J'aimerais m'adresser à cette personne directement et personnellement au sujet de son message."
@@ -963,12 +963,12 @@ fr:
       short_description: "Ceci est une publicité"
     inappropriate:
       title: "Répréhensible"
-      description: 'Le contenu de ce sujet serait jugé offensant, injurieux, haineux ou en infraction avec la <a href="%{base_path}/guidelines">charte communautaire</a> par une personne raisonnable.'
+      description: 'Le contenu de ce sujet serait jugé offensant, injurieux, haineux ou en infraction avec les <a href="%{base_path}/guidelines">lignes directrices de notre communauté</a> par une personne raisonnable.'
       long_form: "signalé comme répréhensible"
-      short_description: 'Une transgression de <a href="%{base_path}/guidelines">notre charte communautaire</a>'
+      short_description: 'Une transgression des <a href="%{base_path}/guidelines">lignes directrices de notre communauté</a>'
     notify_moderators:
       title: "Autre chose"
-      description: 'Ce sujet nécessite l''intervention des responsables, selon la <a href="%{base_path}/guidelines">charte de la communauté</a>, <a href="%{tos_url}">les conditions d''utilisation</a> ou pour une autre raison.'
+      description: 'Ce sujet nécessite l''intervention du personnel, selon les <a href="%{base_path}/guidelines">lignes directrices de la communauté</a>, <a href="%{tos_url}">les conditions d''utilisation</a> ou pour une autre raison.'
       long_form: "signalé pour modération"
       short_description: "Nécessite l'attention des responsables pour une autre raison"
       email_title: 'Le sujet « %{title} » nécessite l''attention d''un modérateur'
@@ -1426,6 +1426,7 @@ fr:
     watched_word_regexp_error: "L'expression régulière pour détecter des mots suivis et déclencher l'action « %{action} » n'est pas valide. Veuillez vérifier la <a href='%{base_path}/admin/customize/watched_words'>configuration des mots surveillés</a> ou désactiver le paramètre « watched words regular expressions »."
     v3_analytics_deprecated: "Votre Discourse utilise actuellement Google Analytics 3, qui ne sera plus pris en charge après le mois de juillet 2023. <a href='https://meta.discourse.org/t/260498'>Passez à Google Analytics 4</a> dès maintenant pour continuer à recevoir des informations et des analyses précieuses sur les performances de votre site Web."
     category_style_deprecated: "Votre Discourse utilise actuellement un style de catégorie obsolète qui sera supprimé avant la version bêta finale de Discourse 3.2. Veuillez vous référer à <a href='https://meta.discourse.org/t/282441'>Passage à un paramètre de site de style de catégorie unique</a> pour obtenir des instructions sur la façon de conserver le style de catégorie sélectionné."
+    ember_version_warning: "Votre site fonctionne avec la configuration EMBER_VERSION=3 non prise en charge. Cela peut entraîner des problèmes inattendus avec les thèmes/extensions. Supprimez la configuration EMBER_VERSION de votre fichier app.yml et reconstruisez-la. Consultez <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a> pour obtenir plus d'informations."
   site_settings:
     allow_bulk_invite: "Autoriser l'envoi d'invitations multiples via l'importation d'un fichier CSV"
     disabled: "désactivé"
@@ -1640,6 +1641,7 @@ fr:
     log_out_strict: "Lors de la déconnexion, déconnecter TOUTES les sessions de l'utilisateur sur tous les appareils"
     version_checks: "Vérifier périodiquement les serveurs Discourse pour obtenir des informations de mises à jour et les afficher sur le tableau de bord <a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Envoyer un e-mail à contact_email quand une nouvelle version de Discourse est disponible."
+    include_in_discourse_discover: "Laissez CDCK, Inc. (« Discourse ») présenter cette communauté sur la page <a href='https://www.discourse.org/discover'>Découvrir</a> et dans les contenus de marketing de Discourse. Vous partagerez ainsi les métadonnées de la communauté et des statistiques d'utilisation anonymisées avec Discourse. Veuillez noter que la promotion des communautés est laissée à la discrétion de Discourse."
     invite_expiry_days: "La période (en jours) pendant laquelle les clés d'invitation sont valides"
     invite_only: "Tous les nouveaux utilisateurs doivent être explicitement invités par des utilisateurs de confiance ou des responsables. L'inscription publique est désactivée."
     login_required: "Exiger l'authentification pour lire le contenu du site et interdire l'accès anonyme."
@@ -1825,7 +1827,9 @@ fr:
     min_trust_to_flag_posts: "Le niveau de confiance minimal requis pour signaler des messages"
     flag_post_allowed_groups: "Groupes autorisés à signaler des messages."
     min_trust_to_post_links: "Le niveau de confiance minimal requis pour inclure des liens dans les messages"
+    post_links_allowed_groups: "Groupes autorisés à inclure des liens dans les publications."
     min_trust_to_post_embedded_media: "Le niveau de confiance minimal requis pour intégrer des éléments multimédia dans un message"
+    embedded_media_post_allowed_groups: "Les utilisateurs de ces groupes sont autorisés à intégrer des éléments multimédias dans les publications."
     min_trust_level_to_allow_profile_background: "Le niveau de confiance minimal requis pour envoyer un arrière-plan de profil"
     min_trust_level_to_allow_user_card_background: "Le niveau de confiance minimal requis pour envoyer un arrière-plan de carte utilisateur"
     user_card_background_allowed_groups: "Groupes autorisés à téléverser un arrière-plan de carte utilisateur."
@@ -2099,7 +2103,9 @@ fr:
     emoji_deny_list: "Ces émojis ne seront pas disponibles dans les menus ou les shortcodes."
     approve_post_count: "Le nombre de messages d'un utilisateur nouveau ou basique devant être approuvés"
     approve_unless_trust_level: "Les publications créées par des utilisateurs en dessous de ce niveau de confiance doivent être approuvées"
+    approve_unless_allowed_groups: "Les publications créées par des utilisateurs ne faisant pas partie de ces groupes doivent être approuvées"
     approve_new_topics_unless_trust_level: "Les nouveaux sujets créés par les utilisateurs en dessous de ce niveau de confiance doivent être approuvés"
+    approve_new_topics_unless_allowed_groups: "Les nouveaux sujets créés par des utilisateurs ne faisant pas partie de ces groupes doivent être approuvés"
     approve_unless_staged: "Les nouveaux sujets et publications créés par les utilisateurs distants doivent être approuvés"
     notify_about_queued_posts_after: "Après tant d'heures écoulées, envoyer un e-mail à tous les modérateurs si des messages sont en attente d'examen. Désactiver l'envoi de ces e-mails en renseignant la valeur « 0 »."
     reviewable_revision_reasons: "Liste des raisons qui peuvent être sélectionnées lors du rejet d'un message révisable en file d'attente avec une révision. L'option Autre est également toujours disponible, ce qui permet de saisir une raison personnalisée."
@@ -2118,6 +2124,7 @@ fr:
     returning_user_notice_tl: "Niveau de confiance minimum requis pour voir les avis postés par les utilisateurs de retour."
     returning_users_days: "Combien de jours doivent s'écouler avant qu'un utilisateur soit considéré comme étant de retour."
     review_media_unless_trust_level: "Les messages envoyés par les utilisateurs ayant un niveau de confiance inférieur à celui-ci et qui contiennent des médias intégrés devront être examinés par un responsable."
+    skip_review_media_groups: "Les publications des utilisateurs qui ne font partie d'aucun de ces groupes seront envoyées au personnel pour examen si elles contiennent des éléments multimédias intégrés."
     blur_tl0_flagged_posts_media: "Flouter les images des messages signalés pour masquer du contenu potentiellement NSFW."
     enable_page_publishing: "Autoriser les responsables de publier des sujets vers de nouvelles URL utilisant leur propre style."
     show_published_pages_login_required: "Les utilisateurs anonymes peuvent voir les pages publiées, même quand la connexion est nécessaire."
@@ -2166,6 +2173,9 @@ fr:
     min_trust_level_for_user_api_key: |
       Niveau de confiance requis pour la génération de clés API utilisateur.<br>
       <b>AVERTISSEMENT</b> : la modification du niveau de confiance empêchera les utilisateurs dont le niveau de confiance est inférieur de se connecter via Discourse Hub
+    user_api_key_allowed_groups: |
+      L'appartenance à un groupe est requise pour la génération de clés d'API utilisateur.<br>
+      <b>AVERTISSEMENT</b> : la modification du niveau de confiance empêchera les utilisateurs dont le niveau de confiance est inférieur de se connecter via Discourse Hub
     allowed_user_api_auth_redirects: "URL autorisée pour la redirection d'un utilisateur lors de l'authentification via les clés d'API. Le symbole « * » peut être utilisé pour remplacer n'importe quelle partie de cette adresse (p. ex. : www.exemple.fr/*)."
     allowed_user_api_push_urls: "Adresses URL autorisées pour le service push du serveur vers l'API utilisateur"
     revoke_user_api_keys_unused_days: "Nombre de jours écoulés depuis la dernière utilisation d'une clé API utilisateur avant qu'elle soit automatiquement révoquée (0 pour jamais)"
@@ -2184,6 +2194,7 @@ fr:
     tag_style: "Style visuel pour les badges d'étiquette."
     pm_tags_allowed_for_groups: "Autoriser les membres du ou des groupes inclus à étiqueter tout message personnel"
     min_trust_level_to_tag_topics: "Niveau de confiance minimal requis pour étiqueter des sujets"
+    tag_topic_allowed_groups: "Groupes autorisés à étiqueter les sujets."
     suppress_overlapping_tags_in_list: "Si des étiquettes correspondent exactement à des mots du titre d'un sujet, ne pas afficher ces étiquettes"
     remove_muted_tags_from_latest: "Ne pas afficher les sujets avec des étiquettes mises en sourdine dans la liste des sujets récents."
     force_lowercase_tags: "Forcer les nouvelles étiquettes à être en minuscule."
@@ -2221,6 +2232,7 @@ fr:
     use_name_for_username_suggestions: "Utiliser le nom complet d'un utilisateur lorsque vous suggérez des noms d'utilisateur."
     suggest_weekends_in_date_pickers: "Inclure les week-ends dans les suggestions du sélectionneur de date (désactivez ce paramètre si vous n'utilisez Discourse que les jours de semaine)."
     splash_screen: "Affiche un écran de chargement temporaire pendant le chargement des ressources du site"
+    navigation_menu: "Déterminez le menu de navigation à utiliser."
     default_navigation_menu_categories: "Les catégories sélectionnées seront affichées par défaut dans la section Catégories du menu de navigation."
     default_navigation_menu_tags: "Les étiquettes sélectionnées seront affichées par défaut dans la section Étiquettes du menu de navigation."
     experimental_new_new_view_groups: 'EXPÉRIMENTAL : activer une nouvelle liste de sujets qui combine les sujets non lus et les nouveaux sujets, et faire en sorte que le lien « Tout » de la barre latérale y renvoie l''utilisateur.'
@@ -2229,6 +2241,7 @@ fr:
     enable_experimental_lightbox: "EXPÉRIMENTAL : remplacer la visionneuse d'image par défaut par le design remanié."
     experimental_form_templates: "EXPÉRIMENTAL : activez la fonctionnalité des modèles de formulaires. <b>Une fois la fonctionnalité activée,</b> gérez les modèles dans <a href='%{base_path}/admin/customize/form-templates'>Personnaliser/modèles</a>."
     admin_sidebar_enabled_groups: "EXPÉRIMENTAL : activez la navigation dans la barre latérale pour l'interface utilisateur d'administration pour les groupes spécifiés, qui remplace les boutons de navigation d'administration de niveau supérieur."
+    lazy_load_categories_groups: "EXPÉRIMENTAL : les informations sur les catégories ne sont disponibles que pour les utilisateurs de ces groupes, ce qui améliore les performances sur les sites avec de nombreuses catégories."
     page_loading_indicator: "Configurer l'indicateur de chargement qui apparaît lors de la navigation dans Discourse. « Spinner » est un indicateur de pleine page. Le « curseur » affiche une barre étroite en haut de l'écran."
     show_user_menu_avatars: "Afficher les avatars des utilisateurs dans le menu utilisateur"
     errors:
@@ -2307,6 +2320,11 @@ fr:
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
       create_tag_allowed_groups: "min_trust_to_create_tag"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
+      skip_review_media_groups: "review_media_unless_trust_level"
+      embedded_media_allowed_groups: "min_trust_to_post_embedded_media"
+      post_links_allowed_groups: "min_trust_to_post_links"
+      user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
+      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2707,12 +2725,12 @@ fr:
       %{notes}
   flag_reasons:
     off_topic: "Votre message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond pas au sujet en question qui est défini par son titre et son premier message."
-    inappropriate: "Votre message a été signalé comme étant **inapproprié** : la communauté estime qu'il est offensant, abusif, qu'il s'agit d'un comportement haineux ou qu'il enfreint notre [charte communautaire](%{base_path}/directives)."
+    inappropriate: "Votre message a été signalé comme étant **inapproprié** : la communauté estime qu'il est offensant, abusif, qu'il s'agit d'un comportement haineux ou qu'il enfreint les [lignes directrices de notre communauté](%{base_path}/guidelines)."
     spam: "Votre message a été signalé comme étant du **spam** : la communauté considère qu'il s'agit d'une publicité ou du contenu trop promotionnel au lieu d'être utile et pertinent au regard du sujet."
     notify_moderators: "Votre message a été **signalé aux modérateurs** : la communauté considère qu'il nécessite l'intervention d'un responsable."
     responder:
       off_topic: "Ce message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond pas au sujet en question tel que défini par son titre et son premier message."
-      inappropriate: "Le message a été signalé comme étant **inapproprié** : la communauté estime qu'il est offensant, abusif, qu'il s'agit d'un comportement haineux ou qu'il enfreint notre [charte communautaire](%{base_path}/directives)."
+      inappropriate: "Le message a été signalé comme étant **inapproprié** : la communauté estime qu'il est offensant, abusif, qu'il s'agit d'un comportement haineux ou qu'il enfreint les [lignes directrices de notre communauté](%{base_path}/guidelines)."
       spam: "Ce message a été signalé comme étant du **courrier indésirable** : la communauté considère qu'il s'agit d'une publicité, c'est-à-dire d'un message de nature trop promotionnelle au lieu d'être utile et pertinent au regard du sujet."
       notify_moderators: "Ce message a été **signalé aux modérateurs** : la communauté considère qu'il nécessite l'intervention d'un responsable."
   flags_dispositions:
@@ -2746,9 +2764,9 @@ fr:
 
         Ce message a été masqué suite à des signalements de la communauté. Nous vous invitons par conséquent à envisager de le modifier en prenant en considération leurs commentaires. **Vous pourrez modifier votre message d'ici %{edit_delay} minutes, et il sera ensuite rendu automatiquement visible à nouveau.**
 
-        Toutefois, si ce message est masqué par la communauté une seconde fois, il le restera jusqu'à ce qu'il soit examiné par des responsables.
+        Toutefois, si ce message était masqué par la communauté une seconde fois, il le resterait jusqu'à ce qu'il soit examiné par des responsables.
 
-        Pour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/charte).
+        Pour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject:
       title: "Commentaires sur votre message"
       subject_template: "Commentaires sur votre message dans %{topic_title}"
@@ -2807,7 +2825,7 @@ fr:
 
         La communauté a signalé ce message et il est maintenant masqué. **Ce message ayant été masqué plus d'une fois, il le restera jusqu'à ce qu'un responsable intervienne.**
 
-        Pour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/charte).
+        Pour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
     queued_by_staff:
       title: "Message en attente de vérification"
       subject_template: "Message masqué par un responsable, en attente de vérification"
@@ -2820,7 +2838,7 @@ fr:
 
         Votre message restera masqué jusqu'à ce qu'un responsable en prenne connaissance et l'examine.
 
-        Pour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
+        Pour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
     flags_disagreed:
       title: "Le message signalé a été rétabli par un responsable"
       subject_template: "Le message signalé a été rétabli par un responsable"
@@ -2852,7 +2870,7 @@ fr:
         %{flagged_post_raw_content}
         ```
 
-        Pour plus d'informations, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
+        Pour plus d'informations, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
     flags_agreed_and_post_deleted_for_responders:
       title: "Cette réponse à un message signalé a été supprimée par un responsable."
       subject_template: "Cette réponse à un message signalé a été supprimée par un responsable."
@@ -2875,7 +2893,7 @@ fr:
         %{flagged_post_response_raw_content}
         ```
 
-        Pour plus d'informations, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
+        Pour plus d'informations, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Pour connaître quelques astuces qui vous aideront à démarrer en tant que nouveau membre, [rendez-vous sur cette page](https://meta.discourse.org/t/fr-trucs-et-astuces-pour-nouveaux-utilisateurs/84100/).
@@ -3249,7 +3267,7 @@ fr:
     ignored_users_summary:
       title: "Un utilisateur ignoré a dépassé le seuil"
       subject_template: "Un utilisateur a été ignoré par de nombreux utilisateurs"
-      text_body_template: "Bonjour, \n\nCe message vous est envoyé de manière automatisée par %{site_name} pour vous informer que @%{username} a été ignoré par %{ignores_threshold} utilisateurs. Cela pourrait être le signe qu'un problème est en train de se développer au sein de votre communauté.\n\nVous souhaiterez peut-être [examiner les messages récents](%{base_url}/u/%{username}/summary) de cet utilisateur et, éventuellement, examiner la situation des autres utilisateurs figurant dans le [rapport des utilisateurs ignorés et mis en sourdine](%{base_url}/admin/reports/top_ignored_users).\n\nPour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).\n"
+      text_body_template: "Bonjour, \n\nCe message vous est envoyé de manière automatisée par %{site_name} pour vous informer que @%{username} a été ignoré par %{ignores_threshold} utilisateurs. Cela pourrait être le signe qu'un problème est en train de se développer au sein de votre communauté.\n\nVous souhaiterez peut-être [examiner les messages récents](%{base_url}/u/%{username}/summary) de cet utilisateur et, éventuellement, examiner la situation des autres utilisateurs figurant dans le [rapport des utilisateurs ignorés et mis en sourdine](%{base_url}/admin/reports/top_ignored_users).\n\nPour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).\n"
     too_many_spam_flags:
       title: "Trop de signalements de spam"
       subject_template: "Nouveau compte bloqué"
@@ -3260,7 +3278,7 @@ fr:
 
         Par mesure de précaution, votre nouveau compte a été mis en sourdine. Vous ne pourrez plus publier de réponses ni de nouveaux sujets tant qu'un responsable n'aura pas examiné la situation de votre compte. Nous vous prions de nous excuser pour la gêne occasionnée.
 
-        Pour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
+        Pour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "Trop de signalements en provenance d'utilisateurs de niveau de confiance 3"
       subject_template: "Nouveau compte bloqué"
@@ -3271,7 +3289,7 @@ fr:
 
         Par mesure de précaution, votre nouveau compte a été mis en sourdine. Vous ne pourrez pas publier de réponses ni de nouveaux sujets tant qu'un responsable n'aura pas examiné la situation de votre compte. Nous vous prions de nous excuser pour la gêne occasionnée.
 
-        Pour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
+        Pour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
     silenced_by_staff:
       title: "Mis en sourdine par un responsable"
       subject_template: "Compte temporairement bloqué"
@@ -3282,7 +3300,7 @@ fr:
 
         Vous pouvez continuer de consulter le forum, mais vous ne pourrez plus répondre ni créer de sujets tant qu'[un responsable](%{base_url}/about) n'aura pas examiné vos messages récents. Nous vous prions de nous excuser pour la gêne occasionnée.
 
-        Pour obtenir davantage de conseils, nous vous invitons à consulter notre [charte communautaire](%{base_url}/guidelines).
+        Pour obtenir davantage de conseils, nous vous invitons à consulter les [lignes directrices de notre communauté](%{base_url}/guidelines).
     user_automatically_silenced:
       title: "Utilisateur automatiquement mis en sourdine"
       subject_template: "Nouvel utilisateur %{username} mis en sourdine suite à des signalements de la communauté"
@@ -3962,7 +3980,105 @@ fr:
   static_topic_first_reply: |
     Modifiez le premier message de ce sujet pour changer le contenu de la page %{page_name}.
   guidelines_topic:
-    title: "FAQ/Charte"
+    title: "FAQ/lignes directrices"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Il s'agit d'un lieu civilisé pour la discussion publique](#civilized)
+
+      Veuillez traiter ce forum de discussion avec le même respect que vous le feriez pour un parc public. Nous aussi, nous constituons une ressource communautaire partagée et un lieu où partager nos compétences, nos connaissances et nos intérêts au moyen de conversations continues.
+
+      Ce ne sont pas des règles strictes. Il s'agit de lignes directrices pour favoriser le bon sens de notre communauté et faire de ce forum un endroit bienveillant et amical pour le discours public civilisé.
+
+      <a name="improve"></a>
+
+      ## [Améliorer la discussion](#improve)
+
+      Aidez-nous à faire de ce lieu un lieu de discussion en ajoutant toujours quelque chose de positif à la discussion, même si cela semble peu. Si vous n'êtes pas sûr(e) que votre message contribuera à la conversation, réfléchissez à ce que vous voulez dire et réessayez plus tard.
+
+      Une façon d'améliorer les discussions est de découvrir celles qui sont déjà en cours. Passez du temps à parcourir les sujets ici avant de répondre ou de commencer le vôtre, et vous aurez plus de chances de rencontrer d'autres personnes qui partagent vos centres d'intérêt.
+
+      Les sujets abordés ici sont importants pour nous et nous voulons que vous agissiez comme s'ils l'étaient également pour vous. Faites preuve de respect à l'égard des sujets et des personnes qui en discutent, même si vous n'êtes pas d'accord avec ce qui est dit.
+
+      <a name="agreeable"></a>
+
+      ## [Soyez agréable, même quand vous n'êtes pas d'accord](#agreeable)
+
+      Vous pouvez répondre en désapprouvant. C'est une bonne chose. Mais n'oubliez pas de critiquer les idées et non les individus. Veuillez éviter :
+
+      * Les insultes
+      * Les attaques ad hominem
+      * Les réponses au ton d'un message plutôt qu'à son contenu réel
+      * La contradiction instinctive
+
+      Au lieu de cela, fournissez des idées réfléchies qui améliorent la conversation.
+
+      <a name="participate"></a>
+
+      ## [Votre participation compte](#participate)
+
+      Les conversations que nous avons ici donnent le ton à chaque nouvelle arrivée. Aidez-nous à influencer l'avenir de cette communauté en choisissant de participer aux discussions qui permettent de faire de ce forum un endroit intéressant et en évitant celles qui servent l'objectif inverse.
+
+      Discourse fournit des outils qui permettent à la communauté d'identifier collectivement les meilleures (et les pires) contributions : signets, mentions J'aime, signalements, réponses, modifications, observations, mises en sourdine, etc. Utilisez ces outils pour améliorer votre propre expérience et celle de tous les autres.
+
+      Améliorons notre communauté en permanence.
+
+      <a name="flag-problems"></a>
+
+      ## [Si vous voyez un problème, signalez-le](#flag-problems)
+
+      Les modérateurs ont une autorité spéciale : ils sont responsables de ce forum. Mais vous aussi. Avec votre aide, les modérateurs peuvent être des facilitateurs communautaires, et pas seulement des concierges ou des policiers.
+
+      Lorsque vous voyez un mauvais comportement, ne répondez pas. Répondre encourage le mauvais comportement en le reconnaissant, consomme votre énergie et fait perdre du temps à tout le monde. _Signalez-le simplement_. Si un nombre suffisant de signalements sont obtenus, des mesures seront prises, soit automatiquement, soit par l'intervention d'un modérateur.
+
+      Afin de maintenir notre communauté, les modérateurs se réservent le droit de supprimer tout contenu et tout compte d'utilisateur pour quelque raison que ce soit à tout moment. Les modérateurs ne prévisualisent pas les nouveaux messages. Les modérateurs et les opérateurs du site n'assument aucune responsabilité à l'égard du contenu publié par la communauté.
+
+      <a name="be-civil"></a>
+
+      ## [Faites toujours preuve de civilité](#be-civil)
+
+      Il n'y a rien de pire que la grossièreté pour saboter les conversations saines :
+
+      * Faites preuve de civilité. N'affichez rien qu'une personne raisonnable considérerait comme offensant, abusif ou haineux.
+      * Faites preuve de décence. Ne publiez rien d'obscène ou de sexuellement explicite.
+      * Respectez-vous les uns les autres. Ne harcelez personne, évitez de faire de la peine à quelqu'un, ne vous faites pas passer pour d'autres individus et ne divulguez pas de renseignements personnels.
+      * Respectez notre forum. Ne publiez pas de spam et ne vandalisez pas le forum.
+
+      Ce ne sont pas des termes concrets avec des définitions précises, et nous évitons même l'apparition de l'un ou l'autre de ces concepts. Si vous avez des doutes, demandez-vous comment vous vous sentiriez si votre message était présenté sur la première page d'un site d'actualités important.
+
+      Il s'agit d'un forum public et les moteurs de recherche indexent ses discussions. Faites en sorte que le langage, les liens et les images soient sans risque pour un usage familial et amical.
+
+      <a name="keep-tidy"></a>
+
+      ## [Maintenez l'ordre du forum](#keep-tidy)
+
+      Faites l'effort de mettre les choses au bon endroit, pour que nous puissions passer plus de temps à discuter et moins de temps à faire le ménage.
+
+      * Ne commencez pas un sujet dans la mauvaise catégorie. Lisez les définitions des catégories.
+      * Ne publiez pas la même chose dans plusieurs sujets.
+      * Ne publiez pas de réponses sans contenu.
+      * Ne détournez pas un sujet en le changeant au milieu du flux.
+      * Ne signez pas vos messages. Chaque message contient les renseignements de votre profil.
+
+      Au lieu d'afficher « +1 » ou « D'accord », utilisez le bouton J'aime. Plutôt que de prendre un sujet existant dans une direction radicalement différente, utilisez Répondre dans un sujet lié.
+
+      <a name="stealing"></a>
+
+      ## [Publiez uniquement vos contenus](#stealing)
+
+      Vous ne pouvez publier aucun élément numérique qui appartienne à quelqu'un d'autre sans son autorisation. Vous ne pouvez pas publier des descriptions, des liens ou des méthodes permettant de voler la propriété intellectuelle d'autrui (logiciel, vidéo, contenu audio, images), ou d'enfreindre toute autre loi.
+
+      <a name="power"></a>
+
+      ## [Alimenté par vous](#power)
+
+      Ce site est géré par votre [personnel local amical](%{base_path}/about) et *vous*, la communauté. Si vous avez d'autres questions sur la façon dont les choses devraient fonctionner ici, ouvrez un nouveau sujet dans %{feedback_category_hashtag} et discutons-en ! Si vous rencontrez un problème critique ou urgent qui ne peut pas être traité par un méta-sujet ou un indicateur, contactez-nous via la [page du personnel](%{base_path}/about).
+
+      <a name="tos"></a>
+
+      ## [Conditions générales d'utilisation](#tos)
+
+      Oui, le jargon juridique est ennuyeux, mais nous devons nous protéger et par extension, vous et vos données contre les individus peu amicaux. Nous avons des [Conditions générales d'utilisation](%{base_path}/tos) décrivant vos (et nos) comportements et droits liés au contenu, à la vie privée et aux lois. Pour utiliser ce service, vous devez accepter de respecter nos [CGU] (%{base_path}/tos).
   tos_topic:
     title: "Conditions générales d'utilisation"
     body: |
@@ -4367,7 +4483,7 @@ fr:
       name: Règlement lu
       description: A lu le <a href="%{base_uri}/guidelines">règlement de la communauté</a>
       long_description: |
-        Ce badge est accordé après <a href="%{base_uri}/guidelines">la lecture de la charte de la communauté</a>. Le respect et le partage de ces règles simples permettent de construire une communauté sûre, agréable et durable. Souvenez-vous toujours qu'il y a une autre personne, tout comme vous, de l'autre côté de l'écran. Faites preuve de courtoisie !
+        Ce badge est accordé après <a href="%{base_uri}/guidelines">la lecture des lignes directrices de la communauté</a>. Le respect et le partage de ces règles simples permettent de construire une communauté sûre, agréable et durable. Souvenez-vous toujours qu'il y a une autre personne, tout comme vous, de l'autre côté de l'écran. Faites preuve de courtoisie !
     reader:
       name: Lecteur
       description: A lu tous les messages d'un sujet contenant plus de 100 messages
@@ -4654,9 +4770,22 @@ fr:
   onebox:
     discourse:
       user_joined_community: "S'est inscrit(e) le %{date}"
+    gitlab:
+      truncated_file: "Ce fichier a été tronqué."
+      show_original: "afficher l'original"
     github:
+      binary_file: "Ce fichier est binaire."
+      truncated_file: "Ce fichier a été tronqué."
+      show_original: "afficher l'original"
+      requires_iframe: "La visionneuse nécessite une iframe."
+      committed: "validé"
+      more_than_three_files: "Il y a plus de trois fichiers."
       opened: "ouvert"
       closed: "fermé"
+      commit_by: "Validation par"
+      comment_by: "Commentaire de"
+      review_by: "Révision par"
+      pr_summary: "%{commits} validations ont modifié %{changed_files} fichiers avec %{additions} ajouts et %{deletions} suppressions"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vous a mentionné(e) dans « %{topic} » - %{site_title}'
@@ -4671,6 +4800,7 @@ fr:
       confirm_body: "Les notifications ont été activées."
       custom: "Notification de %{username} sur %{site_title}"
   staff_action_logs:
+    json_too_long: "Valeurs non enregistrées, car elles dépassent les limites de longueur des colonnes"
     not_found: "non trouvé"
     unknown: "inconnu"
     user_merged: "%{username} a été fusionné avec ce compte"

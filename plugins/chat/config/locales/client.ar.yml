@@ -125,7 +125,7 @@ ar:
         direct_message_cta: "بدء دردشة شخصية"
         direct_message: "يمكنك أيضًا بدء دردشة شخصية مع أحد المستخدمين أو أكثر."
         title: "لم يتم العثور على أي قناة"
-        my_threads: "ليس لديك أية سلاسل دردشة حتى الآن. سيتم عرض سلاسل الدردشة التي تشارك فيها هنا."
+        my_threads: "ليس لديك أي سلاسل دردشة حتى الآن. سيتم عرض سلاسل الدردشة التي تشارك فيها هنا."
       email_frequency:
         description: "سنراسلك عبر البريد الإلكتروني فقط إذا لم نرك في آخر 15 دقيقة."
         never: "أبدًا"
@@ -255,7 +255,7 @@ ar:
         header: "رأس الدردشة"
         composer: "أداة إنشاء الدردشة"
         channels_list: "قائمة قنوات الدردشة"
-      no_direct_message_channels: "لم تنضم إلى أي قنوات الرسائل المباشرة."
+      no_direct_message_channels: "لم تنضم إلى أي قنوات للرسائل المباشرة."
       no_public_channels: "لم تنضم إلى أي قنوات."
       kicked_from_channel: "لم يعُد بإمكانك الوصول إلى هذه القناة."
       only_chat_push_notifications:
@@ -381,7 +381,7 @@ ar:
         filter: "عامل التصفية"
         cant_add_more_members: "تم بلوغ أقصى عدد من الأعضاء"
         create_new_group_chat: "إنشاء دردشة جماعية"
-        group_with_too_many_members: "لديه عدد كبير جدًا من الأعضاء (%{membersCount})"
+        group_with_too_many_members: "بها عدد كبير جدًا من الأعضاء (%{membersCount})"
       channel_edit_name_slug_modal:
         title: تعديل القناة
         input_placeholder: أضِف اسمًا
@@ -652,7 +652,7 @@ ar:
         inappropriate: "تحتوي هذه الرسالة على محتوى قد يعتبره الشخص العاقل مسيئًا أو مهينًا أو ينتهك <a href=\"%{basePath}/guidelines\">إرشادات المجتمع</a> لدينا."
         spam: "هذه الرسالة إعلانية أو تخريبية. إنها ليست مفيدة أو ذات صلة بالقناة الحالية."
         notify_user: "أريد التحدث إلى هذا الشخص مباشرةً وشخصيًا بشأن رسالته."
-        notify_moderators: "تتطلب هذه الرسالة انتباه فريق العمل لسبب آخر غير مُدرَج أعلاه."
+        notify_moderators: "تتطلَّب هذه الرسالة انتباه فريق العمل لسبب آخر غير مُدرَج أعلاه."
       flagging:
         action: "الإبلاغ عن الرسالة"
       emoji_picker:

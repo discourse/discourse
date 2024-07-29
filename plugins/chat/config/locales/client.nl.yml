@@ -117,7 +117,7 @@ nl:
         direct_message_cta: "Start een privéchat"
         direct_message: "Je kunt ook een privéchat starten met een of meer gebruikers."
         title: "Geen kanalen gevonden"
-        my_threads: "Je hebt nog geen onderwerpen. Discussies waaraan je deelneemt, worden hier weergegeven."
+        my_threads: "Je hebt nog geen threads. Threads waaraan je deelneemt, worden hier weergegeven."
       email_frequency:
         description: "We sturen alleen een e-mail als we je de afgelopen 15 minuten niet hebben gezien."
         never: "Nooit"
@@ -481,10 +481,10 @@ nl:
           create_export: "Export maken"
           export_has_started: "Het exporteren is begonnen. Je ontvangt een privébericht als het klaar is."
       my_threads:
-        title: Mijn discussies
-        aria_label: "Wissel naar lijst met mijn discussies"
+        title: Mijn threads
+        aria_label: "Wisselen naar mijn threadslijst"
       direct_messages:
-        title: "DM's"
+        title: "Directe berichten"
         aria_label: "Wisselen naar privéberichten"
         new: "Maak een persoonlijke chat"
         create: "Gaan"

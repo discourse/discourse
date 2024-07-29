@@ -117,6 +117,7 @@ fi:
         direct_message_cta: "Aloita henkilökohtainen chat"
         direct_message: "Voit myös aloittaa henkilökohtaisen chatin yhden tai useamman käyttäjän kanssa."
         title: "Kanavia ei löytynyt"
+        my_threads: "Sinulla ei ole vielä ketjuja. Ketjut, joihin osallistut, näytetään täällä."
       email_frequency:
         description: "Lähetämme sinulle sähköpostia vain, jos emme ole nähneet sinua viimeisen 15 minuutin aikana."
         never: "Ei koskaan"
@@ -290,6 +291,7 @@ fi:
         filter: "Suodatin"
         cant_add_more_members: "Jäsenten enimmäismäärä saavutettu"
         create_new_group_chat: "Luo ryhmäkeskustelu"
+        group_with_too_many_members: "sisältää liian monta jäsentä (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Muokkaa kanavaa
         input_placeholder: Lisää nimi
@@ -424,7 +426,12 @@ fi:
           description: "Tämä vie kaikki viestit kaikilta kanavilta."
           create_export: "Luo vienti"
           export_has_started: "Vienti on alkanut. Saat yksityisviestin, kun se on valmis."
+      my_threads:
+        title: Omat ketjut
+        aria_label: "Vaihda ketjuluettelooni"
       direct_messages:
+        title: "Yksityisviestit"
+        aria_label: "Vaihda yksityisviesteihin"
         new: "Luo yksityis-chat"
         create: "Siirry"
         leave: "Poistu tästä henkilökohtaisesta chatista"
@@ -432,6 +439,7 @@ fi:
         cannot_create: "Valitettavasti et voi lähettää yksityisviestejä."
       channel_list:
         title: "Kanavat"
+        aria_label: "Vaihda kanavaluetteloon"
       incoming_webhooks:
         back: "Takaisin"
         channel_placeholder: "Valitse kanava"

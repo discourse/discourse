@@ -117,6 +117,7 @@ it:
         direct_message_cta: "Avvia una chat personale"
         direct_message: "Puoi anche avviare una chat personale con uno o più utenti."
         title: "Nessun canale trovato"
+        my_threads: "Ancora nessun thread. I thread a cui parteciperai appariranno qui."
       email_frequency:
         description: "Ti invieremo un'e-mail solo se non ti sei fatto vedere negli ultimi 15 minuti."
         never: "Mai"
@@ -343,6 +344,7 @@ it:
         filter: "Filtro"
         cant_add_more_members: "Numero massimo di membri raggiunto"
         create_new_group_chat: "Crea chat di gruppo"
+        group_with_too_many_members: "ha troppi membri (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Modifica canale
         input_placeholder: Aggiungi un nome
@@ -477,7 +479,12 @@ it:
           description: "Questa operazione esporta tutti i messaggi da tutti i canali."
           create_export: "Crea esportazione"
           export_has_started: "L'esportazione è iniziata. Riceverai un messaggio personale quando sarà pronto."
+      my_threads:
+        title: I miei thread
+        aria_label: "Passa all'elenco dei miei thread"
       direct_messages:
+        title: "DM"
+        aria_label: "Passa ai messaggi diretti"
         new: "Crea una chat personale"
         create: "Vai"
         leave: "Lascia questa chat personale"
@@ -485,6 +492,7 @@ it:
         cannot_create: "Spiacenti, non puoi inviare messaggi diretti."
       channel_list:
         title: "Canali"
+        aria_label: "Passa all'elenco dei canali"
       incoming_webhooks:
         back: "Indietro"
         channel_placeholder: "Seleziona un canale"

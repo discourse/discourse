@@ -10,9 +10,12 @@ ja:
     poll_maximum_options: "投票で許可されるオプションの最大数。"
     poll_edit_window_mins: "投稿作成後に投票を編集できる時間 (分)"
     poll_minimum_trust_level_to_create: "投票の作成に必要な最低信頼レベルを定義します。"
+    poll_create_allowed_groups: "投票を作成できるグループ。"
     poll_groupable_user_fields: "投票結果をグループ化およびフィルタするために使用できるユーザーフィールド名のセット。"
     poll_export_data_explorer_query_id: "投票結果のエクスポートに使用するデータエクスプローラのクエリの ID (無効にする場合は 0)。"
     poll_default_public: "新しい投票を作成する際に、デフォルトで '投票者を表示する' オプションを有効にします。"
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
   poll:
     poll: "投票"
     invalid_argument: "引数 '%{argument}' の値 '%{value}' が無効です。"

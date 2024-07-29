@@ -117,7 +117,7 @@ tr_TR:
         direct_message_cta: "Kişisel bir Sohbet başlatın"
         direct_message: "Bir veya daha fazla kullanıcıyla da kişisel sohbet başlatabilirsiniz."
         title: "Kanal bulunamadı"
-        my_threads: "Henüz konunuz yok. Katıldığınız konular burada görüntülenecektir."
+        my_threads: "Henüz konunuz yok. Katıldığınız konular burada gösterilir."
       email_frequency:
         description: "Yalnızca sizi son 15 dakika içinde görmediğimiz takdirde size e-posta göndeririz."
         never: "Asla"
@@ -423,13 +423,13 @@ tr_TR:
         you_and_single_user: "<span>Siz ve %{username} şu şekilde tepki verdiniz: </span>:%{emoji}:"
         you_and_multiple_users: "<span>Siz, %{commaSeparatedUsernames} ve %{username} şu şekilde tepki verdiniz</span>:%{emoji}"
         you_multiple_users_and_more:
-          one: "<span>Siz, %{commaSeparatedUsernames} ve diğer %{count} kişi şu şekilde tepki verdiniz: </span>:%{emoji}:"
-          other: "<span>Siz, %{commaSeparatedUsernames} ve diğer %{count} kişi şu şekilde tepki verdiniz: </span>:%{emoji}:"
+          one: "<span>Siz, %{commaSeparatedUsernames} ve %{count} kişi daha şu şekilde tepki verdiniz: </span>:%{emoji}:"
+          other: "<span>Siz, %{commaSeparatedUsernames} ve %{count} kişi daha şu şekilde tepki verdiniz: </span>:%{emoji}:"
         single_user: "<span>%{username} şu şekilde tepki verdi</span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} ve %{username} şu şekilde tepki verdi</span>:%{emoji}:"
         multiple_users_and_more:
-          one: "<span>%{commaSeparatedUsernames} ve diğer %{count} kişi şu şekilde tepki verdi: </span>:%{emoji}:"
-          other: "<span>%{commaSeparatedUsernames} ve diğer %{count} kişi şu şekilde tepki verdi: </span>:%{emoji}:"
+          one: "<span>%{commaSeparatedUsernames} ve %{count} kişi daha şu şekilde tepki verdi: </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} ve %{count} kişi daha şu şekilde tepki verdi: </span>:%{emoji}:"
       composer:
         toggle_toolbar: "Araç çubuğunu aç/kapat"
         italic_text: "vurgulanan yazı"
@@ -484,8 +484,8 @@ tr_TR:
         title: Konularım
         aria_label: "Konu listeme geç"
       direct_messages:
-        title: "Direkt Mesajlar"
-        aria_label: "Doğrudan mesajlara geçin"
+        title: "DM'ler"
+        aria_label: "Doğrudan mesajlara geç"
         new: "Kişisel sohbet oluşturun"
         create: "Git"
         leave: "Bu kişisel sohbetten ayrıl"
@@ -493,7 +493,7 @@ tr_TR:
         cannot_create: "Üzgünüz, doğrudan mesaj gönderemezsiniz."
       channel_list:
         title: "Kanallar"
-        aria_label: "Kanal listesine dön"
+        aria_label: "Kanal listesine geç"
       incoming_webhooks:
         back: "Geri"
         channel_placeholder: "Kanal seçin"
