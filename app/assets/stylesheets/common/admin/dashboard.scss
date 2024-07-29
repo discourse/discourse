@@ -644,13 +644,26 @@
   }
 }
 
+.whats-new,
+.dashboard {
+  .admin-config-area-card__title {
+    font-size: var(--font-up-1);
+    margin-bottom: 1em;
+  }
+  .admin-new-feature-item__learn-more {
+    margin-bottom: 1em;
+    display: inline-block;
+  }
+}
+
 .admin-new-feature-item {
   display: flex;
   align-items: flex-start;
   margin-bottom: 1.5em;
-  background-color: var(--primary-very-low);
-  padding: 1em;
-  max-width: 45rem;
+  border-bottom: 1px solid var(--primary-low);
+  &:last-child {
+    border-bottom: none;
+  }
 
   &__new-feature-emoji {
     font-size: 1.2em;
@@ -665,11 +678,14 @@
   &__header {
     display: flex;
     align-items: flex-start;
-    font-size: var(--font-up-1);
     font-weight: bold;
     margin-bottom: 0.5em;
   }
   &__screenshot {
     width: 100%;
+  }
+  &__new-feature-version {
+    margin-left: auto;
+    color: var(--primary-low-mid);
   }
 }
