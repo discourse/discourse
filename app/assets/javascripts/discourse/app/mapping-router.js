@@ -5,7 +5,7 @@ import getURL from "discourse-common/lib/get-url";
 import applyRouterHomepageOverrides from "./lib/homepage-router-overrides";
 
 class BareRouter extends EmbroiderRouter {
-  location = isTesting() ? "none" : "history";
+  location = isTesting() ? "none" : "discourse-location";
 
   setupRouter() {
     const didSetup = super.setupRouter(...arguments);
