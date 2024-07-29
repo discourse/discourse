@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
-import { Input } from "@ember/component";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
-import { hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse-common/helpers/d-icon";
+import concatClass from "discourse/helpers/concat-class";
 import withEventValue from "discourse/helpers/with-event-value";
+import icon from "discourse-common/helpers/d-icon";
 
 export default class Radio extends Component {
   constructor() {
@@ -34,7 +34,10 @@ export default class Radio extends Component {
     <div class="wizard-container__radio-choices">
       {{#each @field.choices as |c|}}
         <div
-          class="wizard-container__radio-choice {{if c.selected 'selected'}}"
+          class={{concatClass
+            "wizard-container__radio-choice"
+            (if c.selected "--selected")
+          }}
         >
           <label class="wizard-container__label">
             <PluginOutlet

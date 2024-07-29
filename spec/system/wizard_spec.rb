@@ -13,14 +13,14 @@ describe "Wizard", type: :system do
     visit("/wizard/steps/privacy")
 
     expect(page).to have_css(
-      ".wizard-container__radio-choice.selected",
+      ".wizard-container__radio-choice.--selected",
       text: I18n.t("wizard.step.privacy.fields.login_required.choices.public.label"),
     )
 
     wizard_page.select_access_option("Private")
 
     expect(page).to have_css(
-      ".wizard-container__radio-choice.selected",
+      ".wizard-container__radio-choice.--selected",
       text: I18n.t("wizard.step.privacy.fields.login_required.choices.private.label"),
     )
 
@@ -32,7 +32,7 @@ describe "Wizard", type: :system do
     visit("/wizard/steps/privacy")
 
     expect(page).to have_css(
-      ".wizard-container__radio-choice.selected",
+      ".wizard-container__radio-choice.--selected",
       text: I18n.t("wizard.step.privacy.fields.login_required.choices.private.label"),
     )
   end

@@ -650,7 +650,7 @@ body.wizard {
     flex-grow: 1;
     display: flex;
 
-    &.selected {
+    &.--selected {
       .wizard-container__label {
         background-color: var(--tertiary-very-low);
         border-color: var(--tertiary-high);
