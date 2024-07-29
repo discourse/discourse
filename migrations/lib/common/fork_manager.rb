@@ -34,8 +34,6 @@ module Migrations
     def fork
       run_before_fork_hooks
 
-      Process.warmup
-
       Process.fork do
         run_after_fork_hooks
         yield

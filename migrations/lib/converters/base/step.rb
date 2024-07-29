@@ -11,7 +11,7 @@ module Migrations::Converters::Base
     end
 
     def execute
-      puts self.class.title
+      # do nothing
     end
 
     class << self
