@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 class FinalDestination::HTTP < Net::HTTP
+  def initialize(*args, &block)
+    super(*args, &block)
+
+    ## START PATCH
+    # Remove this patch once https://github.com/ruby/net-http/commit/fed3dcd0c2b1270a1f0eb9c4a58bed8497989c9a has been
+    # released in a new `net-http` version. See `config/initializers/100-http.rb` for more information.
+    self.read_timeout = GlobalSetting.http_read_timeout_seconds.to_f
+    self.open_timeout = GlobalSetting.http_open_timeout_seconds.to_f
+    self.write_timeout = GlobalSetting.http_write_timeout_seconds.to_f
+    ## END PATCH
+  end
+
   def connect
     raise ArgumentError.new("address cannot be nil or empty") if @address.blank?
 

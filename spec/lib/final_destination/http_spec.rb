@@ -29,6 +29,18 @@ describe FinalDestination::HTTP do
     TCPSocket.stubs(:open).with { |addr| addr == stub_addr }.once.raises(exception)
   end
 
+  it "sets the right default timeouts" do
+    global_setting :http_read_timeout_seconds, 0.001
+    global_setting :http_open_timeout_seconds, 0.002
+    global_setting :http_write_timeout_seconds, 0.003
+
+    http = FinalDestination::HTTP.new("example.com")
+
+    expect(http.read_timeout).to eq(0.001)
+    expect(http.open_timeout).to eq(0.002)
+    expect(http.write_timeout).to eq(0.003)
+  end
+
   it "works through each IP address until success" do
     stub_ip_lookup("example.com", %w[1.1.1.1 2.2.2.2 3.3.3.3])
     stub_tcp_to_raise("1.1.1.1", Errno::ETIMEDOUT)

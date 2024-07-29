@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class WebHookEmitter
-  REQUEST_TIMEOUT = 20
-
   def initialize(webhook, webhook_event)
     @webhook = webhook
     @webhook_event = webhook_event
@@ -11,20 +9,13 @@ class WebHookEmitter
   def emit!(headers:, body:)
     uri = URI(@webhook.payload_url.strip)
 
-    connection_opts = {
-      request: {
-        write_timeout: REQUEST_TIMEOUT,
-        read_timeout: REQUEST_TIMEOUT,
-        open_timeout: REQUEST_TIMEOUT,
-      },
-    }
-
     headers =
       DiscoursePluginRegistry.apply_modifier(:web_hook_event_headers, headers, body, @webhook_event)
 
+    connection_opts = {}
     connection_opts[:ssl] = { verify: false } if !@webhook.verify_certificate
 
-    conn = Faraday.new(nil, connection_opts) { |f| f.adapter FinalDestination::FaradayAdapter }
+    conn = Faraday.new(nil, connection_opts)
 
     start = Process.clock_gettime(Process::CLOCK_MONOTONIC, :millisecond)
     error = nil
