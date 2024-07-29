@@ -260,4 +260,25 @@ RSpec.describe JsLocaleHelper do
       end
     end
   end
+
+  describe ".output_client_overrides" do
+    it "should not output deprecated translation overrides" do
+      Fabricate(
+        :translation_override,
+        locale: "en",
+        translation_key: "js.user.preferences.title",
+        value: "SHOULD_SHOW",
+      )
+      Fabricate(
+        :translation_override,
+        locale: "en",
+        translation_key: "js.user.preferences",
+        value: "SHOULD_NOT_SHOW",
+        status: "deprecated",
+      )
+
+      expect(described_class.output_client_overrides("en").include? "SHOULD_SHOW").to eq(true)
+      expect(described_class.output_client_overrides("en").include? "SHOULD_NOT_SHOW").to eq(false)
+    end
+  end
 end
