@@ -18,7 +18,7 @@ export default class PollVotersComponent extends Component {
         {{else}}
           {{#each @voters as |user|}}
             <li>
-              <a data-user-card="{{user.username}}">{{avatar
+              <a data-user-card={{user.username}}>{{avatar
                   user.avatar_template
                   "tiny"
                   usernamePath=user.username
