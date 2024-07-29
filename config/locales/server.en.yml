@@ -5345,18 +5345,32 @@ en:
             label: "Language"
 
       privacy:
-        title: "Member experience"
+        title: "Member access"
 
         fields:
           login_required:
-            placeholder: "Private"
-            extra_description: "Only logged in users can access this community"
+            label: "Visibility"
+            description: "Is your community public or private?"
+            choices:
+              public:
+                label: "Public"
+              private:
+                label: "Private"
           invite_only:
-            placeholder: "Invite only"
-            extra_description: "Users must be invited by trusted users or staff, otherwise users can sign up on their own"
+            label: "Registration"
+            description: "How can members join this community?"
+            choices:
+              sign_up:
+                label: "Sign up"
+              invite_only:
+                label: "Invite only"
           must_approve_users:
-            placeholder: "Require approval"
-            extra_description: "Users must be approved by staff"
+            description: "Do you want to approve member accounts?"
+            choices:
+              "no":
+                label: "No, new members can join immediately"
+              "yes":
+                label: "Yes, new members must be approved by moderators"
           chat_enabled:
             placeholder: "Enable chat"
             extra_description: "Engage with your members in real time"

@@ -61,13 +61,13 @@ RSpec.describe WizardSerializer do
       expect(privacy_step).to_not be_nil
 
       login_required_field = privacy_step["fields"].find { |f| f["id"] == "login_required" }
-      expect(login_required_field["value"]).to eq(true)
+      expect(login_required_field["value"]).to eq("private")
 
       invite_only_field = privacy_step["fields"].find { |f| f["id"] == "invite_only" }
-      expect(invite_only_field["value"]).to eq(true)
+      expect(invite_only_field["value"]).to eq("invite_only")
 
       must_approve_users_field = privacy_step["fields"].find { |f| f["id"] == "must_approve_users" }
-      expect(must_approve_users_field["value"]).to eq(true)
+      expect(must_approve_users_field["value"]).to eq("yes")
     end
   end
 end
