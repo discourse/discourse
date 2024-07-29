@@ -262,7 +262,9 @@ RSpec.describe JsLocaleHelper do
   end
 
   describe ".output_client_overrides" do
-    it "should not output deprecated translation overrides" do
+    subject(:client_overrides) { described_class.output_client_overrides("en") }
+
+    before do
       Fabricate(
         :translation_override,
         locale: "en",
@@ -276,9 +278,11 @@ RSpec.describe JsLocaleHelper do
         value: "SHOULD_NOT_SHOW",
         status: "deprecated",
       )
+    end
 
-      expect(described_class.output_client_overrides("en").include? "SHOULD_SHOW").to eq(true)
-      expect(described_class.output_client_overrides("en").include? "SHOULD_NOT_SHOW").to eq(false)
+    it "does not output deprecated translation overrides" do
+      expect(client_overrides).to include("SHOULD_SHOW")
+      expect(client_overrides).not_to include("SHOULD_NOT_SHOW")
     end
   end
 end
