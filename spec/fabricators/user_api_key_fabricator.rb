@@ -7,6 +7,7 @@ Fabricator(:user_api_key) do
     if key.client.blank?
       client = Fabricate(:user_api_key_client)
       key.user_api_key_client_id = client.id
+      key.save!
     end
   end
 end

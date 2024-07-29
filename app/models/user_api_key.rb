@@ -44,11 +44,11 @@ class UserApiKey < ActiveRecord::Base
     update_args = { last_used_at: Time.zone.now }
     if client_id.present? && client_id != self.client.client_id
       new_client =
-        create_user_api_key_client!(
+        UserApiKeyClient.create!(
           client_id: client_id,
           application_name: self.client.application_name,
         )
-      update_args[:client_id] = new_client.id
+      update_args[:user_api_key_client_id] = new_client.id
     end
     self.update_columns(**update_args)
   end
