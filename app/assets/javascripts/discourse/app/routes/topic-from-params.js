@@ -46,7 +46,10 @@ export default class TopicFromParams extends DiscourseRoute {
       this.pmTopicTrackingState.startTracking();
     }
 
-    this.header.enterTopic(topic, model.nearPost);
+    const isLoadingFirstPost =
+      topic.postStream.firstPostPresent &&
+      !(model.nearPost && model.nearPost > 1);
+    this.header.enterTopic(topic, isLoadingFirstPost);
   }
 
   deactivate() {
