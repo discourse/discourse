@@ -2,68 +2,78 @@
 
 module Migrations::Converters::Base
   class Worker
-    def initialize(index, work_queue, item_handler, progress_queue)
+    def initialize(index, input_queue, output_queue, job)
       @index = index
-      @work_queue = work_queue
-      @item_handler = item_handler
-      @progress_queue = progress_queue
+      @input_queue = input_queue
+      @output_queue = output_queue
+      @job = job
+
+      @threads = []
     end
 
     def start
-      start_fork
-      start_thread
+      parent_input_stream, parent_output_stream = IO.pipe
+      fork_input_stream, fork_output_stream = IO.pipe
+
+      worker_pid =
+        start_fork(parent_input_stream, parent_output_stream, fork_input_stream, fork_output_stream)
+
+      fork_output_stream.close
+      parent_input_stream.close
+
+      start_input_thread(parent_output_stream, worker_pid)
+      start_output_thread(fork_input_stream)
+
+      self
+    end
+
+    def wait
+      @threads.each(&:join)
     end
 
     private
 
-    def start_fork
-      parent_reader, parent_writer = IO.pipe
-      child_reader, child_writer = IO.pipe
+    def start_fork(parent_input_stream, parent_output_stream, fork_input_stream, fork_output_stream)
+      Migrations::ForkManager.fork do
+        begin
+          Process.setproctitle("worker_process#{@index}")
 
-      @worker_pid =
-        Migrations::ForkManager.instance.fork do
-          begin
-            Process.setproctitle("worker_process#{@index}")
+          parent_output_stream.close
+          fork_input_stream.close
 
-            parent_writer.close
-            child_reader.close
-
-            @item_handler.after_fork
-
-            Oj.load(parent_reader) do |data|
-              stats = @item_handler.handle(data)
-              child_writer.write(Oj.dump(stats), "\n")
-            end
-          rescue SignalException
-            warn "Worker process #{@index} terminated by signal: #{e.message}"
-            exit(1)
-          ensure
-            @item_handler.close
+          Oj.load(parent_input_stream) do |data|
+            @job.run(data)
+            fork_output_stream.write(Oj.dump(stats))
           end
+        rescue SignalException
+          exit(1)
         end
-
-      child_writer.close
-      parent_reader.close
-
-      @writer = parent_writer
-      @reader = child_reader
+      end
     end
 
-    def start_thread
-      Thread.new do
-        Thread.current.name = "worker_thread#{@index}"
+    def start_input_thread(output_stream, worker_pid)
+      @threads << Thread.new do
+        Thread.current.name = "worker_#{@index}_input"
 
         begin
-          while (data = @work_queue.pop)
-            @writer.write(Oj.dump(data))
-            @progress_queue.push(Oj.load(@reader.readline))
+          while (data = @input_queue.pop)
+            output_stream.write(Oj.dump(data))
           end
-        rescue => e
-          warn "Worker thread #{@index} encountered an error: #{e.message}"
         ensure
-          @writer.close
-          Process.waitpid(@worker_pid) if @worker_pid
-          @reader.close
+          output_stream.close
+          Process.waitpid(worker_pid)
+        end
+      end
+    end
+
+    def start_output_thread(input_stream)
+      @threads << Thread.new do
+        Thread.current.name = "worker_#{@index}_output"
+
+        begin
+          Oj.load(input_stream) { |data| @output_queue.push(data) }
+        ensure
+          input_stream.close
         end
       end
     end
