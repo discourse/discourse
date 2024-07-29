@@ -51,11 +51,11 @@ zh_CN:
           prefers_encrypt:
             label: 加密 PM（如果可用）
         group:
-          label: 组
+          label: 群组
         text:
           label: 文本
       triggerables:
-        not_found: 找不到用于自动化 `%{automation}` 的触发器 `%{trigger}`，请确保相关插件已安装
+        not_found: 找不到用于自动化 `%{automation}` 的触发器 `%{trigger}`，请确保关联插件已安装
         user_badge_granted:
           fields:
             badge:
@@ -64,28 +64,28 @@ zh_CN:
               label: 仅在第一次授予时
         stalled_topic:
           durations:
-            PT1H: "一小时"
-            P1D: "一天"
-            P1W: "一周"
-            P2W: "两周"
-            P1M: "一个月"
-            P3M: "三个月"
-            P6M: "六个月"
-            P1Y: "一年"
+            PT1H: "1 小时"
+            P1D: "1 天"
+            P1W: "1 周"
+            P2W: "2 周"
+            P1M: "1 个月"
+            P3M: "3 个月"
+            P6M: "6 个月"
+            P1Y: "1 年"
           fields:
             categories:
               label: 限制为类别
             tags:
               label: 限制为标签
             stalled_after:
-              label: 此时长后停止
+              label: 此时长后停滞：
         recurring:
           every: 每
           frequencies:
             minute: 分钟
             hour: 小时
             day: 天
-            weekday: 工作日
+            weekday: 平日
             week: 周
             month: 月
             year: 年
@@ -96,23 +96,23 @@ zh_CN:
               label: 开始日期
         stalled_wiki:
           durations:
-            PT1H: "一小时"
-            P1D: "一天"
-            P1W: "一周"
-            P2W: "两周"
-            P1M: "一个月"
-            P3M: "三个月"
-            P6M: "六个月"
-            P1Y: "一年"
+            PT1H: "1 小时"
+            P1D: "1 天"
+            P1W: "1 周"
+            P2W: "2 周"
+            P1M: "1 个月"
+            P3M: "3 个月"
+            P6M: "6 个月"
+            P1Y: "1 年"
           fields:
             restricted_category:
               label: 限制为类别
             stalled_after:
-              label: 触发延迟
-              description: 定义上次 Wiki 编辑和自动化触发器之间的延迟
+              label: 触发器延迟
+              description: 定义上次 Wiki 编辑与自动化触发器之间的延迟
             retriggered_after:
               label: 重新触发延迟
-              description: 定义第一个触发器和下一个触发器之间的延迟（如果在第一个触发器后 Wiki 仍未被编辑）
+              description: 定义第一个触发器与下一个触发器之间的延迟（如果在第一个触发器后 Wiki 仍未被编辑）
         user_added_to_group:
           fields:
             joined_group:
@@ -148,41 +148,41 @@ zh_CN:
               description: "可选，仅限创建或编辑事件触发"
             valid_trust_levels:
               label: 有效信任级别
-              description: 仅当这些信任级别的用户创建帖子时才会触发，默认为任意信任级别
+              description: 仅在这些信任级别的用户创建帖子时触发，默认为任意信任级别
             restricted_category:
               label: 类别
-              description: 可选，仅当帖子所属话题属于此类别时才会触发
+              description: 可选，仅在帖子所属话题属于此类别时触发
             restricted_group:
-              label: 组
-              description: 可选，仅当帖子所属话题是此群组收件箱中的私信时才会触发
+              label: 群组
+              description: 可选，仅在帖子所属话题是此群组收件箱中的私信时触发
             ignore_group_members:
               label: 忽略群组成员
-              description: 如果发出者是上面指定的群组的成员，则跳过触发器
+              description: 如果发件人是上面指定的群组的成员，则跳过触发器
             ignore_automated:
-              label: 忽略机器人发出的帖子
-              description: 如果发出者的电子邮件地址包含 noreply 或来自机器人来源，则跳过触发器。仅适用于通过电子邮件创建的帖子
+              label: 忽略自动源
+              description: 如果发件人的电子邮件地址包含 noreply 或来自动源，则跳过触发器。仅适用于通过电子邮件创建的帖子
             first_post_only:
               label: 仅第一个帖子
-              description: 仅当该帖子是用户创建的第一个帖子时才会触发
+              description: 仅在该帖子是用户创建的第一个帖子时触发
             first_topic_only:
               label: 仅第一个话题
-              description: 仅当该话题是用户创建的第一个话题时才会触发
+              description: 仅在该话题是用户创建的第一个话题时触发
           created: 创建
-          edited: 编辑
+          edited: 已编辑
         user_updated:
           fields:
             user_profile:
               label: 用户个人资料字段
-              description: 仅当用户填写了所有这些字段时才会触发
+              description: 仅在用户填写了所有这些字段时触发
             custom_fields:
               label: 用户自定义字段
-              description: 仅当用户填写了所有这些字段时才会触发
+              description: 仅在用户填写了所有这些字段时触发
             once_per_user:
               label: 每个用户一次
               description: 每个用户仅触发一次
             new_users_only:
               label: 仅限新用户
-              description: 只有在启用此自动化后加入的新用户才会触发
+              description: 仅对在启用此自动化后加入的新用户触发
         category_created_edited:
           fields:
             restricted_category:
@@ -192,35 +192,35 @@ zh_CN:
           fields:
             restricted_user:
               label: 用户
-              description: 仅对发送给此用户的私信触发
+              description: 仅对发送给此用户的 PM 触发
             restricted_group:
-              label: 组
-              description: 仅对发送给此群组的私信触发
+              label: 群组
+              description: 仅对发送给此群组的 PM 触发
             ignore_staff:
               label: 忽略管理人员
-              description: 如果发出者是管理人员用户，则跳过触发器
+              description: 如果发件人是管理人员用户，则跳过触发器
             ignore_group_members:
               label: 忽略群组成员
-              description: 如果发出者是上面指定的群组的成员，则跳过触发器
+              description: 如果发件人是上面指定的群组的成员，则跳过触发器
             ignore_automated:
-              label: 忽略机器人发出的帖子
-              description: 如果发出者的电子邮件地址包含 noreply 或来自机器人来源，则跳过触发器。仅适用于通过电子邮件创建的私信
+              label: 忽略自动源
+              description: 如果发件人的电子邮件地址包含 noreply 或来自动源，则跳过触发器。仅适用于通过电子邮件创建的 PM
             valid_trust_levels:
               label: 有效信任级别
-              description: 仅当这些信任级别的用户创建帖子时才会触发，默认为任意信任级别
+              description: 仅在这些信任级别的用户创建帖子时触发，默认为任意信任级别
         after_post_cook:
           fields:
             valid_trust_levels:
               label: 有效信任级别
-              description: 仅当这些信任级别的用户创建帖子时才会触发，默认为任意信任级别
+              description: 仅在这些信任级别的用户创建帖子时触发，默认为任意信任级别
             restricted_category:
               label: 类别
-              description: 可选，仅当帖子所属话题属于此类别时才会触发
+              description: 可选，仅在帖子所属话题属于此类别时触发
             restricted_tags:
               label: 标签
-              description: 可选，仅当帖子具有以下任意标签时才会触发
+              description: 可选，仅在帖子具有以下任意标签时触发
       scriptables:
-        not_found: 找不到用于自动化 `%{automation}` 的脚本 `%{script}`，请确保相关插件已安装
+        not_found: 找不到用于自动化 `%{automation}` 的脚本 `%{script}`，请确保关联插件已安装
         zapier_webhook:
           fields:
             webhook_url:
@@ -233,7 +233,7 @@ zh_CN:
               description: 仅按话题回复一次
             word_answer_list:
               label: 字词/答案对列表
-              description: "定义关键字/值组列表，其中 `key` 是搜索的术语，`value` 是回复的文本。key \"可以留空，以响应所有触发器，无论其内容如何。注意 `value` 接受 `{{key}}` 作为占位符，将在回复中被 `key` 的值替换。请注意，\"key \"将作为一个 regex 进行评估，如果你实际上指的是一个点，则应转义特殊字符，如\".\"，例如：\"\\.\"。"
+              description: "定义键/值群组列表，其中 `key` 是搜索的术语，`value` 是回复的文本。`key` 可以留空，以响应所有触发器，无论内容如何。请注意，`value` 接受 `{{key}}` 作为占位符，将在回复中被 `key` 的值替换。请注意，`key` 将作为一个正则表达式进行求值，如果您实际上指的是一个点（例如 `\\.`），则应转义 `.` 等特殊字符。"
             answering_user:
               label: 回答用户
               description: 默认为系统用户
@@ -246,8 +246,8 @@ zh_CN:
           fields:
             creator:
               label: 创建者
-              post_creator_context: 该帖子的创建者
-              updated_user_context: 已更新的用户
+              post_creator_context: 帖子的创建者
+              updated_user_context: 更新的用户
             topic:
               label: 话题 ID
             post:
@@ -256,7 +256,7 @@ zh_CN:
           fields:
             creator:
               label: 创建者
-              updated_user_context: 已更新的用户
+              updated_user_context: 更新的用户
             body:
               label: 话题正文
             title:
@@ -268,7 +268,7 @@ zh_CN:
         group_category_notification_default:
           fields:
             group:
-              label: 组
+              label: 群组
             notification_level:
               label: 通知级别
             update_existing_members:
@@ -280,7 +280,7 @@ zh_CN:
               label: 级别
             notice:
               label: 通知
-              description: 接受 HTML，不要使用不可信的输入进行填充！
+              description: 接受 HTML，不要使用不可信的输入内容进行填充！
           levels:
             warning: 警告
             info: 信息
@@ -291,14 +291,14 @@ zh_CN:
             badge_name:
               label: 徽章名称
             group:
-              label: 组
+              label: 群组
               description: 目标群组。具有指定徽章的用户将被添加到此群组
             update_user_title_and_flair:
-              label: 更新用户头衔和资质
-              description: 可选，更新用户头衔和资质
+              label: 更新用户头衔和荣誉
+              description: 可选，更新用户头衔和荣誉
             remove_members_without_badge:
               label: 移除没有徽章的现有成员
-              description: 可选，移除群组中没有指定徽章的现有成员
+              description: 可选，移除没有指定徽章的现有群组成员
             badge:
               label: 徽章
               description: 选择徽章
@@ -372,12 +372,12 @@ zh_CN:
             label: 脚本
         trigger:
           name:
-            label: 触发条件
+            label: 触发器
         automation:
           name:
             label: 名称
           trigger:
-            label: 触发条件
+            label: 触发器
           script:
             label: 脚本
           version:

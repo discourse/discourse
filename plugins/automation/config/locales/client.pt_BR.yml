@@ -12,15 +12,15 @@ pt_BR:
       update: Atualizar
       select_script: Selecione um script
       select_trigger: Selecione um acionador
-      confirm_automation_reset: Esta ação redefinirá as opções de script e de acionamento, o novo estado será salvo, deseja continuar?
-      confirm_automation_trigger: Esta ação acionará a automação, deseja continuar?
+      confirm_automation_reset: Esta ação redefinirá as opções de script e de acionamento, o novo estado será salvo. Deseja continuar?
+      confirm_automation_trigger: Esta ação acionará a automação. Deseja continuar?
       no_automation_yet: Você ainda não criou nenhuma automação.
       edit_automation:
         trigger_section:
           forced: Este acionador é forçado por script.
           next_pending_automation: "A próxima automação será acionada em: %{date}"
           trigger_now: "Acionar agora"
-          title: Quando/O quê...
+          title: Quando/o que...
         fields_section:
           title: Opções de script
       destroy_automation:
@@ -39,10 +39,10 @@ pt_BR:
           raw:
             label: Corpo
         pms:
-          confirm_remove_pm: "Tem certeza de que deseja excluir esta PM?"
-          placeholder_title: Título da PM
-          add_pm: Adicionar PM
-          no_pm_created: Você ainda não criou nenhuma MP. PMs serão enviadas assim que sua automação for acionada.
+          confirm_remove_pm: "Tem certeza de que deseja remover esta MP?"
+          placeholder_title: Título da MP
+          add_pm: Adicionar MP
+          no_pm_created: Você ainda não criou nenhuma MP. MPs serão enviadas assim que a automação for acionada.
           title:
             label: Título
           raw:
@@ -56,7 +56,7 @@ pt_BR:
         text:
           label: Texto
       triggerables:
-        not_found: Não foi possível encontrar o acionador `%{trigger}` para automação `%{automation}`, verifique se o plugin associado está instalado
+        not_found: Não foi possível encontrar o acionador `%{trigger}` para automação `%{automation}`. Verifique se o plugin associado está instalado
         user_badge_granted:
           fields:
             badge:
@@ -77,7 +77,7 @@ pt_BR:
             categories:
               label: Limitado a categorias
             tags:
-              label: Limitado a tags
+              label: Limitado a etiquetas
             stalled_after:
               label: Parado depois
         recurring:
@@ -113,15 +113,15 @@ pt_BR:
               description: Define o atraso entre a última edição do wiki e o acionador da automação
             retriggered_after:
               label: Atraso do reacionador
-              description: Define o atraso entre o primeiro acionador e o próximo acionador, se o wiki ainda não foi editado após o primeiro acionador
+              description: Define o atraso entre o primeiro acionador e o próximo acionador, se o wiki ainda não tiver sido editado após o primeiro acionador
         user_added_to_group:
           fields:
             joined_group:
-              label: Grupo rastreado
+              label: Grupo monitorado
         user_removed_from_group:
           fields:
             left_group:
-              label: Grupo rastreado
+              label: Grupo monitorado
         user_promoted:
           fields:
             restricted_group:
@@ -152,13 +152,13 @@ pt_BR:
               description: Será acionado apenas se a postagem for criada pelo(a) usuário(a) nesses níveis de confiança, o padrão é qualquer nível de confiança
             restricted_category:
               label: Categoria
-              description: Opcional, ativa apenas se o tópico da postagem estiver nesta categoria
+              description: Opcional, ativação apenas se o tópico da postagem estiver nesta categoria
             restricted_group:
               label: Grupo
-              description: Opcional, será ativado apenas se o tópico da postagem for uma mensagem privada na caixa de mensagens deste grupo
+              description: Opcional. Será ativado apenas se o tópico da postagem for uma mensagem privada na caixa de mensagens deste grupo
             ignore_group_members:
               label: Ignorar membros de grupo
-              description: Ignorar o gatilho se o remetente for um mebro do Grupo especificado acima
+              description: Ignorar o gatilho se o(a) remetente for um membro do Grupo especificado acima
             ignore_automated:
               label: Ignorar automatizado
               description: Ignore o gatilho se o remetente tiver um e-mail sem resposta ou for de uma fonte automatizada. Aplica-se apenas a postagens criadas por e-mail.
@@ -170,11 +170,25 @@ pt_BR:
               description: Ativa apenas se o tópico for o primeiro tópico criado pelo(a) usuário(a)
           created: Criado(a)
           edited: Editado(a)
+        user_updated:
+          fields:
+            user_profile:
+              label: Campos de perfil do(a) usuário(a)
+              description: Este recurso será acionado apenas se o(a) usuário(a) preencher todos estes campos
+            custom_fields:
+              label: Campos personalizados por usuário(a)
+              description: Este recurso será acionado apenas se o(a) usuário(a) preencher todos estes campos
+            once_per_user:
+              label: Uma vez por usuário(a)
+              description: Este recurso será acionado uma vez por usuário(a)
+            new_users_only:
+              label: Apenas usuários(as) novos(as)
+              description: Este recurso será acionado apenas para os(as) novos(as) usuários(as) que entrarem após a ativação da automação
         category_created_edited:
           fields:
             restricted_category:
               label: Categoria principal
-              description: Opcional, permite limitar a execução do acionador a esta categoria
+              description: Opcional. Permite limitar a execução do acionador a esta categoria
         pm_created:
           fields:
             restricted_user:
@@ -185,10 +199,10 @@ pt_BR:
               description: Ativa apenas para MPs enviadas a este grupo
             ignore_staff:
               label: Ignorar equipe
-              description: Ignore o acionador se o remetente for um usuário da equipe
+              description: Ignore o acionador se o(a) remetente for um(a) usuário(a) da equipe
             ignore_group_members:
               label: Ignorar membros de grupo
-              description: Ignorar o gatilho se o remetente for um mebro do Grupo especificado acima
+              description: Ignorar o gatilho se o(a) remetente for um membro do Grupo especificado acima
             ignore_automated:
               label: Ignorar automatizado
               description: Ignore o gatilho se o remetente tiver um e-mail sem resposta ou for de uma fonte automatizada. Aplica-se apenas a MPs criadas por e-mail.
@@ -202,10 +216,10 @@ pt_BR:
               description: Será acionado apenas se a postagem for criada pelo(a) usuário(a) nesses níveis de confiança, o padrão é qualquer nível de confiança
             restricted_category:
               label: Categoria
-              description: Opcional, ativa apenas se o tópico da postagem estiver nesta categoria
+              description: Opcional, ativação apenas se o tópico da postagem estiver nesta categoria
             restricted_tags:
               label: Etiquetas
-              description: Opcional, ativa apenas se a postagem tiver alguma destas etiquetas
+              description: Opcional, ativação apenas se a postagem tiver alguma destas etiquetas
       scriptables:
         not_found: Não foi possível encontrar o script `%{script}` para automação `%{automation}`, verifique se o plugin associado está instalado
         zapier_webhook:
@@ -217,25 +231,41 @@ pt_BR:
           fields:
             once:
               label: Uma vez
-              description: Responde apenas uma vez por tópico
+              description: Responder apenas uma vez por tópico
             word_answer_list:
               label: Lista de pares palavra/resposta
+              description: "Define uma lista de grupos de chaves/valores, em que \"key\" é o termo procurado, e \"valor\" é o texto da resposta. \"key\" pode ficar em branco para responder a todos os gatilhos, independentemente do conteúdo. Observação: \"value\" aceita \"{{key}}\" como espaço reservado a ser substituído pelo valor de \"key\" na resposta. Observação: \"key\" será avaliado como uma expressão regular, e caracteres especiais, como \".\", devem ser evitados se você estiver mesmo se referindo a um ponto, por exemplo: \"\\.\""
             answering_user:
-              label: Respondendo ao usuário
-              description: Padrões para o usuário do Sistema
+              label: Respondendo ao(à) usuário(a)
+              description: Padrões para o(a) usuário(a) do Sistema
         auto_tag_topic:
           fields:
             tags:
               label: Etiquetas
-              description: Lista de tags para adicionar ao tópico.
+              description: Lista de etiquetas para adicionar ao tópico.
         post:
           fields:
             creator:
-              label: Criador
+              label: Criador(a)
+              post_creator_context: Criador(a) da postagem
+              updated_user_context: Usuário(a) atualizado(a)
             topic:
               label: ID do tópico
             post:
-              label: Publicar conteúdo
+              label: Postar conteúdo
+        topic:
+          fields:
+            creator:
+              label: Criador(a)
+              updated_user_context: Usuário(a) atualizado(a)
+            body:
+              label: Corpo do tópico
+            title:
+              label: Título do tópico
+            category:
+              label: Categoria do tópico
+            tags:
+              label: Etiquetas de tópico
         group_category_notification_default:
           fields:
             group:
@@ -298,7 +328,7 @@ pt_BR:
               label: Criar banner até
             user:
               label: Usuário(a)
-              description: "O usuário que cria o banner (padrão: sistema)"
+              description: "O(a) usuário(a) que cria o banner (padrão: sistema)"
         flag_post_on_words:
           fields:
             words:
@@ -315,14 +345,14 @@ pt_BR:
               label: Mensagens enviadas ao presenteador
         send_pms:
           add_a_pm_btn:
-            label: Adicionar uma PM
+            label: Adicionar uma MP
           fields:
             receiver:
-              label: Receptor da PM
+              label: Receptor da MP
             sendable_pms:
-              label: PMs
+              label: MPs
             sender:
-              label: Remetente de PMs
+              label: Remetente de MPs
         close_topic:
           fields:
             topic:
@@ -332,11 +362,11 @@ pt_BR:
               description: "Mensagem opcional para ser exibida no registro Tópico Fechado"
             user:
               label: Usuário(a)
-              description: "O usuário que fecha o tópico (padrão: sistema)"
+              description: "O(a) usuário(a) que fecha o tópico (padrão: sistema)"
         add_user_to_group_through_custom_field:
           fields:
             custom_field_name:
-              label: "Nome do campo personalizado do usuário"
+              label: "Nome do campo personalizado do(a) usuário(a)"
       models:
         script:
           name:

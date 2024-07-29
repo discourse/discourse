@@ -20,7 +20,7 @@ ja:
             kb: KB
             mb: MB
             tb: TB
-      percent: "%{count} 件%"
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -282,7 +282,12 @@ ja:
       contact: "お問い合わせ"
       contact_info: "このサイトに影響を与える重要な問題や緊急の問題が発生した場合は、%{contact_info} までご連絡ください。"
       member_count:
-        other: "%{formatted_number} 人のメンバー"
+        other: "%{formatted_number} メンバー"
+      admin_count:
+        other: "%{formatted_number} 管理者"
+      moderator_count:
+        other: "%{formatted_number} モデレーター"
+      report_inappropriate_content: "不適切なコンテンツに遭遇した場合は、モデレーターや管理者にお伝えください。ご連絡の前に必ずログインしてください。"
     bookmarked:
       title: "ブックマーク"
       edit_bookmark: "ブックマークを編集"
@@ -668,7 +673,7 @@ ja:
       post_count: "返信"
       post_count_long: "投稿の返信数"
       no_results:
-        body: "アクティビティを表示するコミュニティメンバーのリストがここに表示されます。現時点ではコミュニティがまだ新しいため、リストは空です！"
+        body: "アクティビティを表示するコミュニティーメンバーのリストがここに表示されます。現時点ではコミュニティーがまだ新しいため、リストは空です！"
         extra_body: "管理者とモデレーターは<a href='%{basePath}/admin/users/'>ユーザー管理者</a>でユーザーの表示と管理を行えます。"
       no_results_with_search: "結果はありませんでした。"
       days_visited: "アクセス"
@@ -1444,7 +1449,7 @@ ja:
         confirm_success: "メールアドレスが更新されました。"
         confirm: "確認"
         authorizing_new:
-          description: "メールアドレスを次のように変更することを確認してください:"
+          description: "次のメールアドレスに変更することを確認してください:"
           description_add: "代替メールアドレスを追加することを確認してください:"
         authorizing_old:
           title: "古いメールアドレスの確認"
@@ -1863,9 +1868,17 @@ ja:
       errors:
         required: "必須"
         invalid_url: "有効な URL である必要があります"
+        not_an_integer: "整数である必要があります"
+        not_accepted: "同意する必要があります"
+        not_a_number: "数値である必要があります"
+        too_high: "%{count} 以下である必要があります"
+        too_low: "%{count} 以上である必要があります"
+        too_long:
+          other: "%{count} 文字以上である必要があります"
         too_short:
-          other: "は少なくとも %{count} 文字である必要があります"
+          other: "%{count} 文字以上である必要があります"
     close: "閉じる"
+    assets_changed_confirm: "このサイトのソフトウェアが更新されました。今すぐ最新バージョンを入手しますか？"
     logout: "ログアウトしました。"
     refresh: "更新"
     home: "ホーム"
@@ -1918,8 +1931,8 @@ ja:
         other: "<b>%{count}</b> 件の返信があります。"
       buttons:
         hide: "要約を非表示にする"
-        generate: "AI で要約する"
-        regenerate: "要約を再生成する"
+        generate: "要約"
+        regenerate: "再生成"
       description_time_MF: |
         {replyCount, plural, other {<b>#</b> 件の返信}}があります。読了目安時間は <b>{readingTime, plural, other {# 分}}</b>です。
       enable: "上位返信を表示する"
@@ -2018,6 +2031,7 @@ ja:
       error: "不明なエラー"
       cookies_error: "お使いのブラウザで Cookie が無効になっているようです。有効でない場合、ログインできないことがあります。"
       rate_limit: "しばらく待ってから再度ログインをお試しください。"
+      password_expired: "パスワードの有効期限が切れました。<a href='%{reset_url}'>パスワードをリセット</a>してください。"
       blank_username: "あなたのメールまたはユーザー名を入力してください。"
       blank_username_or_password: "あなたのメールまたはユーザー名、およびパスワードを入力してください。"
       reset_password: "パスワードをリセット"
@@ -2066,6 +2080,10 @@ ja:
         name: "Discord"
         title: "Discord でログイン"
         sr_title: "Discord でログイン"
+      linkedin_oidc:
+        name: "LinkedIn"
+        title: "LinkedIn でログイン"
+        sr_title: "LinkedIn でログイン"
       passkey:
         name: "パスキーでログイン"
       second_factor_toggle:
@@ -2229,6 +2247,7 @@ ja:
       reply: "返信"
       cancel: "キャンセル"
       create_topic: "トピックを作成"
+      create_pm: "メッセージを送信"
       create_whisper: "ささやき"
       create_shared_draft: "共有の下書きを作成"
       edit_shared_draft: "共有の下書きを編集"
@@ -2283,6 +2302,7 @@ ja:
       hide_toolbar: "コンポーザーツールバーを非表示"
       modal_ok: "OK"
       cant_send_pm: "%{username} にメッセージを送ることはできません。"
+      create_message_error: "メッセージを作成中にエラーが発生しました。もう一度お試しください。"
       yourself_confirm:
         title: "受信者を追加し忘れましたか？"
         body: "現時点では、このメッセージは自分にしか送信されません！"
@@ -2325,6 +2345,8 @@ ja:
       ignore: "無視する"
       image_alt_text:
         aria_label: 画像の代替テキスト
+        title: "画像の説明の追加"
+      image_scale_button: "画像の表示率を %{percent}% に変更"
       delete_image_button: 画像を削除
       toggle_image_grid: 画像グリッドを切り替える
     notifications:
@@ -2364,6 +2386,8 @@ ja:
       liked_consolidated_description:
         other: "はあなたの %{count} 件の投稿に「いいね！」しました"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated_description:
+        other: "%{count} 件の投稿をリンクしました"
       linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -2430,6 +2454,7 @@ ja:
         watching_first_post: "新規トピック"
         topic_reminder: "トピックのリマインダー"
         liked_consolidated: "新しい「いいね！」"
+        linked_consolidated: "新しいリンク"
         post_approved: "投稿が承認されました"
         membership_request_consolidated: "新しいメンバーシップリクエスト"
         reaction: "新しいリアクション"
@@ -2533,6 +2558,7 @@ ja:
           seen: 既読
           unseen: 未読
           wiki: ウィキ
+          images: 画像を含める
           all_tags: 上記のすべてのタグ
         statuses:
           label: トピック
@@ -2623,6 +2649,7 @@ ja:
         unlist_topics: "トピックを非表示"
         relist_topics: "トピックを表示"
         reset_bump_dates: "バンプ日をリセットする"
+        defer: "未読にする"
         delete: "トピックを削除"
         dismiss: "閉じる"
         dismiss_read: "未読をすべて閉じる"
@@ -2652,11 +2679,14 @@ ja:
         close_topics: "トピックをクローズ"
         archive_topics: "トピックをアーカイブ"
         move_messages_to_inbox: "受信トレイに移動"
+        archive_messages: "アーカイブに移動"
         notification_level: "通知…"
         change_notification_level: "通知レベルを変更"
         choose_new_category: "このトピックの新しいカテゴリを選択:"
         selected:
           other: "<b>%{count}</b> 件のトピックを選択しました。"
+        selected_sole_category:
+          other: "カテゴリから <b>%{count} 件</b>のトピックを選択しました:"
         selected_count:
           other: "%{count} 個選択済み"
         change_tags: "タグを置換"
@@ -2669,6 +2699,9 @@ ja:
           other: "<b>%{count}</b> 件のトピックからすべてのタグが削除されます。よろしいですか？"
         progress:
           other: "進捗状況: <strong>%{count}</strong> 件のトピック"
+        silent: "この操作をサイレントで実行します。"
+        performing: "一括操作を実行中です。お待ちください…"
+        completed: "一括操作が完了しました！"
       none:
         unread: "未読のトピックはありません。"
         unseen: "未読のトピックはありません。"
@@ -2679,6 +2712,7 @@ ja:
         bookmarks: "ブックマークしたトピックはありません。"
         category: "%{category} のトピックはありません。"
         top: "人気のトピックはありません。"
+        hot: "ホットなトピックはありません。"
         filter: "トピックはありません。"
         educate:
           new: '<p>新しいトピックがここに表示されます。デフォルトでは、2 日以内に作成されたトピックは新しいトピックとみなされ、<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> が表示されます。</p><p>この設定はユーザー<a href="%{userPrefsUrl}">設定</a>で変更できます。</p>'
@@ -2694,22 +2728,44 @@ ja:
         category: "%{category} のトピックは以上です。"
         tag: "%{tag} のトピックは以上です。"
         top: "人気のトピックは以上です。"
+        hot: "ホットなトピックは以上です。"
         bookmarks: "ブックマーク済みのトピックは以上です。"
         filter: "トピックは以上です。"
     topic_bulk_actions:
       close_topics:
-        name: "クローズ"
+        name: "閉じる"
+        note: "注意"
         optional: (オプション)
       archive_topics:
         name: "アーカイブ"
+      archive_messages:
+        name: "アーカイブに移動"
       move_messages_to_inbox:
         name: "受信トレイに移動"
+      unlist_topics:
+        name: "掲載取消"
+      relist_topics:
+        name: "再掲載"
+      remove_tags:
+        name: "タグを削除"
       append_tags:
         name: "タグを追加"
       replace_tags:
         name: "タグを置換"
       delete_topics:
         name: "削除"
+      update_category:
+        name: "カテゴリを更新"
+        description: "選択したトピックの新しいカテゴリを選択します"
+      reset_bump_dates:
+        name: "バンプ日をリセット"
+        description: "トピックのバンプ日を投稿の最終作成日にリセットします。これにより、トピックリストの順序が変わります。"
+      defer:
+        name: "未読にする"
+        description: "トピックを未読としてマーク"
+      update_notifications:
+        name: "通知を更新"
+        description: "通知レベルをウォッチ中、追跡中、通常、またはミュートに変更します"
     topic:
       filter_to:
         other: "トピックの %{count} 件の投稿"
@@ -2724,6 +2780,9 @@ ja:
       move_to_inbox:
         title: "受信トレイに移動"
         help: "受信トレイにメッセージを戻す"
+      defer:
+        help: "トピックを未読としてマーク"
+        title: "未読にする"
       list: "トピック"
       new: "新規トピック"
       unread: "未読"
@@ -2792,6 +2851,7 @@ ja:
       suggest_create_topic: <a href>新しい会話を開始しますか？</a>
       jump_reply: "投稿の下の場所にジャンプする"
       jump_reply_aria: "元の場所にある @%{username} の投稿にジャンプする"
+      jump_reply_button: "投稿にジャンプ"
       deleted: "トピックは削除されました"
       slow_mode_update:
         title: "低速モード"
@@ -3273,8 +3333,10 @@ ja:
           off_topic: "関係のない話題として通報しました"
           spam: "迷惑として通報しました"
           inappropriate: "不適切として通報しました"
+          illegal: "これを違法として通報しました"
           notify_moderators: "スタッフによる確認が必要として通報しました"
           notify_user: "このユーザーにメッセージを送信しました"
+          custom: "このトピックを%{custom}として通報しました"
       delete:
         confirm:
           other: "%{count} 件の投稿を削除してもよろしいですか？"
@@ -3535,10 +3597,13 @@ ja:
         off_topic: "話題に関係ない"
         inappropriate: "不適切"
         spam: "迷惑コンテンツ"
+        illegal: "違法です"
       custom_placeholder_notify_user: "具体的に、建設的に、そして常に親切に説明しましょう。"
       notify_user_textarea_label: "ユーザーへのメッセージ"
       custom_placeholder_notify_moderators: "具体的にどのような問題が発生しているか説明してください。可能なら、関連するリンクや例を含めてください。"
       notify_moderators_textarea_label: "モデレーターへのメッセージ"
+      custom_placeholder_illegal: "具体的になぜこのコンテンツが違法だと思うのか説明してください。可能なら、関連するリンクと例を含めてください。"
+      confirmation_illegal: "上記の記述は正確かつ完全です。"
       custom_message:
         at_least:
           other: "%{count} 文字以上を入力してください"
@@ -3563,11 +3628,11 @@ ja:
       view_explainer: 8 時間ごとのユニークビジターあたり 1 ビュー。
       no_views: ビュー統計はまだありません。後で確認してください。
       chart_error: チャートのレンダリング中にエラーが発生しました。もう一度お試しください。
-      views: "表示回数"
+      views: "ビュー"
       predicted_views: "予測ビュー"
       so_far: (現時点まで)
-      read: 読み取り
-      minutes: 最小
+      read: 読了
+      minutes: 分
     post_links:
       about: "この投稿のリンクをもっと表示"
       title:
@@ -3593,16 +3658,16 @@ ja:
         title: "固定"
         help: "このトピックは固定されています。常にカテゴリのトップに表示されます"
       unlisted:
-        help: "このトピックは非表示です。トピックリストには表示されません。直リンクでのみアクセス可能です。%{unlistedReason}"
+        help: "このトピックは未掲載です。トピックリストには表示されません。直リンクでのみアクセス可能です。%{unlistedReason}"
       personal_message:
         title: "このトピックは個人メッセージです"
         help: "このトピックは個人メッセージです"
       visibility_reasons:
-        op_flag_threshold_reached: "このトピックは通報のしきい値に達したため、自動的に非表示になりました"
-        op_unhidden: "このトピックは作成者によって再表示されました"
-        embedded_topic: "このトピックは埋め込みトピックであるため再表示されました"
-        manually_unlisted: "このトピックは作成者またはモデレーターによって手動で非表示にされました"
-        manually_relisted: "このトピックは管理者またはモデレーターによって手動で非表示にされました"
+        op_flag_threshold_reached: "このトピックは通報のしきい値に達したため、自動的に掲載取消になりました"
+        op_unhidden: "このトピックは作成者によって再掲載されました"
+        embedded_topic: "このトピックは埋め込みトピックであるため再掲載されました"
+        manually_unlisted: "このトピックは管理者またはモデレーターによって手動で掲載取消にされました"
+        manually_relisted: "このトピックは管理者またはモデレーターによって手動で再掲載されました"
         bulk_action: "このトピックの表示状態は、ユーザーが実行した一括操作により変更されました"
     posts: "投稿"
     pending_posts:
@@ -3674,6 +3739,7 @@ ja:
       hot:
         title: "ホット"
         lower_title: "ホット"
+        help: "最近の人気トピック"
       new:
         lower_title_with_count:
           other: "新規 %{count}"
@@ -4199,7 +4265,7 @@ ja:
               content: "レビュー"
               title: "通報された投稿とその他の待機中の項目"
               pending_count:
-                other: "保留中 %{count}"
+                other: "%{count} 保留中"
         global_section: "グローバルセクション、全員が閲覧可能"
       panels:
         forum:
@@ -4766,7 +4832,7 @@ ja:
           trust_levels: "信頼レベル"
           users: "ユーザー"
           user_fields: "ユーザーフィールド"
-          watched_words: "ウォッチ中の言葉"
+          watched_words: "ウォッチ中の語"
           legal: "法関連"
           moderation_flags: "モデレーション通報"
       appearance:
@@ -4791,10 +4857,10 @@ ja:
       email_logs:
         title: "メールのロゴ"
         sidebar_link:
-          sent: "送信"
+          sent: "送信済み"
           skipped: "スキップ"
           bounced: "バウンス"
-          received: "受け取った"
+          received: "受信"
           rejected: "拒否"
       security:
         title: "セキュリティ"
@@ -4812,6 +4878,7 @@ ja:
           header: "サイトについて"
           general_settings: "一般設定"
           community_name: "コミュニティー名"
+          community_name_placeholder: "サンプルコミュニティー"
           community_summary: "コミュニティーの概要"
           community_description: "コミュニティーの説明"
           banner_image: "バナー画像"
@@ -4819,12 +4886,15 @@ ja:
             これは「情報」ページで使用されます。推奨サイズ: 800x300px。許容される形式: 10 MB 以下の JPG、PNG、SVG。
           contact_information: "連絡先情報"
           community_owner: "コミュニティーオーナー"
+          community_owner_placeholder: "ジョニー・スミス"
           community_owner_help: |
             このサイトの責任者の主要連絡先の名前。重要な通知に使用され、サイト情報にも表示されます。公開サイトの匿名ユーザーにも表示されます。
           contact_email: "連絡先メールアドレス"
+          contact_email_placeholder: "contact@johnny-smith.com"
           contact_email_help: |
             このサイトの責任者の主要連絡先のメールアドレス。重要な通知に使用され、サイト情報にも表示されます。公開サイトの匿名ユーザーにも表示されます。
           contact_url: "連絡先 URL"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
             このサイトの連絡先 URL。存在する場合、/about の連絡先メールアドレスを置き換え、公開サイトの匿名ユーザーにも表示されます。
           site_contact_name: "サイトの連絡先名"
@@ -4835,14 +4905,17 @@ ja:
             自動的に送信されるすべてのプライベートメッセージに招待される有効なグループ名。
           your_organization: "あなたの組織"
           company_name: "会社名"
+          company_name_placeholder: "サンプルカンパニー Inc."
           company_name_help: |
             会社または組織の名前。
           company_name_warning: |
             空白の場合、定型の利用規約またはプライバシーに関する通知は提供されません。
           governing_law: "準拠法"
+          governing_law_placeholder: "ニューヨーク州"
           governing_law_help: |
             利用規約やプライバシーに関する通知など、サイトの法的な側面を管理する管轄を指定します。これは通常、サイトを運営する会社が登録している国または州、または事業を行っている国または州です。
           city_for_disputes: "紛争都市"
+          city_for_disputes_placeholder: "ニューヨーク市"
           city_for_disputes_help: |
             このフォーラムの使用に関連する紛争を解決するための管轄として使用される都市を指定します。この情報は通常、フォーラムの利用規約などの法的文書に含まれます。
           optional: "(オプション)"
@@ -4851,7 +4924,7 @@ ja:
             general_settings_saved: "一般設定が保存されました"
             contact_information_saved: "連絡先情報が保存されました"
             your_organization_saved: "組織が保存されました"
-          saved: "保存済み!"
+          saved: "保存しました！"
         flags:
           header: "モデレーション通報"
           subheader: "Discourse の通報システムは、あなたとあなたのモデレーターチームがコミュニティーの尊厳と健全性を保つためにコンテンツとユーザーの行動を管理する上で役立ちます。デフォルト設定はほとんどのコミュニティーに最適であるため、変更の必要はありません。ただし、サイトに特別な要件がある場合は、不要な通報を無効にし、独自のカスタム通報を追加できます。"
@@ -4868,15 +4941,22 @@ ja:
             save: "保存"
             name: "名前"
             description: "説明"
-            applies_to: "個の通報を表示する:"
+            applies_to: "この通報を表示する:"
             topic: "トピック"
             post: "投稿"
             chat_message: "チャットメッセージ"
             enabled: "保存後にこのカスタム通報を有効にする"
             alert: "カスタム通報が使用されると、無効にすることはできますが、編集や削除は行えません。"
             edit_flag: "通報を編集"
-            non_editable: "これはシステム通報であるかレビューシステムですでに使用されているため、編集できません。無効にすることはできます。"
+            non_editable: "これはシステム通報であるかレビューシステムですでに使用されているため編集できません。無効にすることはできます。"
             delete_flag: "通報を削除"
+            non_deletable: "これはシステム通報であるかレビューシステムですでに使用されているため削除できません。無効にすることはできます。"
+            require_message: "ユーザーに追加の理由を提供するよう求める"
+            require_message_description: "この通報が選択されると、コンテンツを通報する理由に関する追加情報を提供するためのテキストフィールドが表示されます"
+          more_options:
+            title: "その他のオプション"
+            move_up: "上に移動"
+            move_down: "下に移動"
       plugins:
         title: "プラグイン"
         installed: "インストール済みプラグイン"
@@ -4887,6 +4967,7 @@ ja:
         is_enabled: "はい"
         not_enabled: "いいえ"
         change_settings_short: "設定"
+        settings_disabled: "このプラグインは有効または無効のみが可能であり、追加の設定はありません。"
         howto: "プラグインをインストールするには？"
         official: "Discourse 公式プラグイン"
         broken_route: "'%{name}' へのリンクを構成できません。広告ブロッカーが無効になっていることを確認し、ページを再読み込みしてみてください。"
@@ -4898,15 +4979,18 @@ ja:
       advanced:
         title: "高度"
         sidebar_link:
+          api_keys: "API キー"
           developer: "開発者"
           embedding: "埋め込み"
-          rate_limits: "投稿制限"
+          rate_limits: "レート制限"
           user_api: "ユーザー API"
           web_hooks: "Webhook"
-          onebox: "Onebox"
+          onebox: "ワンボックス"
           files: "ファイル"
           other_options: "その他"
           search: "検索"
+          experimental: "実験的"
+          all_site_settings: "すべてのサイトの設定"
       navigation_menu:
         sidebar: "サイドバー"
         header_dropdown: "ヘッダードロップダウン"
@@ -5130,6 +5214,7 @@ ja:
           install_upload: "自分のデバイスから"
           install_git_repo: "git リポジトリから"
           install_create: "新規作成"
+          installing_message: "テーマをインストール中です。これには数分かかる場合があります..."
           duplicate_remote_theme: "テーマのコンポーネント “%{name}” はすでにインストールされています。別のコピーをインストールしてもよろしいですか？"
           force_install: "Git リポジトリにアクセスできないため、テーマをインストールできません。インストールを続行してもよろしいですか？"
           create_placeholder: "プレースホルダーを作成"
@@ -5154,6 +5239,7 @@ ja:
           has_overwritten_history: "現在のテーマのバージョンは、Git 履歴が強制プッシュで上書きされたため、存在しなくなりました。"
           add: "追加"
           theme_settings: "テーマの設定"
+          edit_objects_theme_setting: "オブジェクト設定エディター"
           overriden_settings_explanation: "オーバーライドされた設定はドットでマークされ、ハイライト表示されます。これらの設定をデフォルトの値にリセットするには、その横にあるリセットボタンを押します。"
           no_settings: "このテーマには設定がありません。"
           theme_translations: "テーマの翻訳"
@@ -5210,11 +5296,22 @@ ja:
           inactive_filter: "非アクティブ"
           updates_available_filter: "アップデートあり"
           schema:
+            title: "%{name} 設定の編集"
+            back_button: "%{name} に戻る"
             fields:
               required: "*必須"
+              groups:
+                at_least:
+                  other: "%{count} 個以上のグループが必要です"
+              categories:
+                at_least:
+                  other: "%{count} 個以上のカテゴリが必要です"
+              tags:
+                at_least:
+                  other: "%{count} 個以上のタグが必要です"
               string:
                 too_short:
-                  other: "は少なくとも %{count} 文字である必要があります"
+                  other: "は %{count} 文字以上である必要があります"
               number:
                 too_small: "は %{count} 以上である必要があります"
                 too_large: "は %{count} 以下の値である必要があります"
@@ -5248,6 +5345,7 @@ ja:
             description: "リンク、一部のボタン、通知、およびアクセントカラー。"
           quaternary:
             name: "クォータナリー"
+            description: "テーマでオプションとして使用します。"
           header_background:
             name: "ヘッダー背景"
             description: "サイトのヘッダー背景色。"
@@ -5293,6 +5391,7 @@ ja:
           instructions: "すべての HTML メールがレンダリングされるテンプレートをカスタマイズし、CSS を使ってスタイルを設定します。"
       email:
         title: "メール"
+        settings: "メールの設定"
         templates: "テンプレート"
         templates_title: "メールのテンプレート"
         preview_digest: "要約をプレビュー"
@@ -5508,6 +5607,20 @@ ja:
             update_public_sidebar_section: "公開サイドバーセクションを更新"
             destroy_public_sidebar_section: "公開サイドバーセクションを破棄"
             reset_bounce_score: "バウンススコアをリセット"
+            create_watched_word_group: "ウォッチ中の単語グループを作成する"
+            update_watched_word_group: "ウォッチ中の単語グループを更新する"
+            delete_watched_word_group: "ウォッチ中の単語グループを削除する"
+            toggle_flag: "通報を切り替える"
+            move_flag: "通報を移動する"
+            create_flag: "通報を作成する"
+            update_flag: "通報を更新する"
+            delete_flag: "通報を削除する"
+            topic_slow_mode_set: "トピックの低速モードに設定する"
+            topic_slow_mode_removed: "トピックの低速モードを削除する"
+            custom_emoji_create: "カスタム絵文字を作成する"
+            custom_emoji_destroy: "カスタム絵文字を削除する"
+            delete_post_permanently: "投稿を永久に削除する"
+            delete_topic_permanently: "トピックを永久に削除する"
         screened_emails:
           title: "スクリーン対象メール"
           description: "誰かが新規アカウントを作成すると、次のメールアドレスがチェックされるか、登録がブロックされるか、ほかの操作が実行されます。"
@@ -5555,6 +5668,7 @@ ja:
         show_words:
           other: "%{count} 語を表示"
         case_sensitive: "(大文字と小文字を区別)"
+        html: "(html)"
         download: ダウンロード
         clear_all: すべてクリア
         clear_all_confirm: "%{action}操作のすべてのウォッチ語をクリアしてもよろしいですか？"
@@ -5579,6 +5693,9 @@ ja:
           silence: "新規アカウントの最初の投稿にこれらのいずれかの語が含まれる場合、そのアカウントを投稿禁止にします。投稿はスタッフが承認するまで自動的に非表示になります。"
           link: "投稿内の語をリンクに置き換える."
         form:
+          label: "語またはフレーズがある"
+          placeholder: "語またはフレーズ (* はワイルドカード)"
+          placeholder_regexp: "正規表現"
           replace_label: "置換"
           replace_placeholder: "例"
           tag_label: "タグ"
@@ -5592,6 +5709,8 @@ ja:
           case_sensitivity_label: "大文字と小文字を区別"
           case_sensitivity_description: "大文字と小文字が一致する語のみ"
           html_label: "HTML"
+          html_description: "置換先に HTML を出力します"
+          words_or_phrases: "語またはフレーズ"
         test:
           button_label: "テスト"
           modal_title: "%{action}: ウォッチ語をテスト"
@@ -5887,7 +6006,7 @@ ja:
         activate: "アカウントを有効化"
         activate_failed: "ユーザーのアクティベーションに問題が発生しました。"
         deactivate_account: "アカウントを無効化"
-        deactivate_failed: "ユーザーのアクティベーション解除に問題が発生しました。"
+        deactivate_failed: "ユーザーを無効化中に問題が発生しました。"
         unsilence_failed: "ユーザーの投稿禁止を解除中に問題が発生しました。"
         silence_failed: "ユーザーを投稿禁止中に問題が発生しました。"
         silence_confirm: "このユーザーを投稿禁止にしてもよろしいですか？このユーザーは新しいトピックや投稿を作成できなくなります。"
@@ -5931,6 +6050,7 @@ ja:
             other: "過去 %{count} 日:"
           value_heading: "値"
           requirement_heading: "要件"
+          posts_read_days: "読了した投稿: ユニーク日数"
           days: "日"
           topics_replied_to: "返信するトピック"
           topics_viewed: "閲覧したトピック数"
@@ -5982,8 +6102,16 @@ ja:
           enabled: "必須"
           disabled: "オプション"
         requirement:
+          title: "フィールド要件"
           optional:
             title: "オプション"
+          for_all_users:
+            title: "すべてのユーザー"
+            description: "新規ユーザーは登録時にこのフィールドに入力する必要があります。サイトに戻った既存ユーザーにとって、これが新しいフィールドである場合にも、入力が求められます。すべてのユーザーに対してもう一度表示する場合には、このカスタムフィールを削除して再作成してください。"
+          on_signup:
+            title: "登録時"
+            description: "新規ユーザーは登録時のこのフィールド入力する必要があります。既存のユーザーには影響しません。"
+          confirmation: "これにより、既存のユーザーにこのフィールドへの入力が求められるようになり、フィールドへの入力が完了するまでは、サイト上で他の操作ができなくなります。続行しますか？"
         editable:
           title: "登録後に編集可能"
           enabled: "編集可能"
@@ -6016,6 +6144,7 @@ ja:
         recommended: "ニーズに合わせて次のテキストをカスタマイズすることをお勧めします。"
         show_overriden: "上書き部分のみ表示"
         show_outdated: "古い/無効なもののみを表示する"
+        show_untranslated: "未翻訳のみを表示"
         locale: "言語:"
         more_than_50_results: "結果が 50 件以上あります。検索を絞り込んでください。"
         no_results: "一致するサイトテキストは見つかりませんでした"
@@ -6049,6 +6178,7 @@ ja:
           empty: "写真はまだありません。アップロードしてください。"
           upload:
             label: "アップロード"
+            title: "画像のアップロード"
         selectable_avatars:
           title: "ユーザーが選択できるアバターのリスト"
         categories:
@@ -6100,6 +6230,7 @@ ja:
           add_document_types: "ドキュメント"
           add_types_title: "拡張子 %{types} を許可する"
           add_types_toast: "%{types} ファイルタイプが追加されました"
+        mandatory_group: "グループは必須です"
         requires_confirmation_messages:
           default:
             prompt: "この設定を変更すると、サイトに広範に適用されるか意図しない結果が生じる可能性があります。続行してもよろしいですか？"

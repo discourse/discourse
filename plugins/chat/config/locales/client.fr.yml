@@ -56,12 +56,17 @@ fr:
       cancel_reply: "Annuler la réponse"
       chat_channels: "Canaux"
       browse_all_channels: "Parcourir tous les canaux"
+      see_in: "Voir dans"
       move_to_channel:
         title: "Déplacer les messages vers le canal"
         instructions:
           one: "Vous déplacez <strong>%{count}</strong> message. Sélectionnez un canal de destination. Un message d'espace réservé sera créé dans le canal <strong>%{channelTitle}</strong> pour indiquer que ce message a été déplacé. Notez que les chaînes de réponses ne seront pas conservées dans le nouveau canal et que les messages de l'ancien canal ne seront plus affichés comme réponses aux messages déplacés."
           other: "Vous déplacez <strong>%{count}</strong> messages. Sélectionnez un canal de destination. Un message d'espace réservé sera créé dans le canal <strong>%{channelTitle}</strong> pour indiquer que ce message a été déplacé. Notez que les chaînes de réponses ne seront pas conservées dans le nouveau canal et que les messages de l'ancien canal ne seront plus affichés comme réponses aux messages déplacés."
         confirm_move: "Déplacer les messages"
+      delete_messages:
+        confirm:
+          one: "Voulez-vous vraiment supprimer ce message ?"
+          other: "Voulez-vous vraiment supprimer ces %{count} messages ?"
       channel_settings:
         title: "Paramètres du canal"
         edit: "Modifier"
@@ -116,6 +121,7 @@ fr:
         direct_message_cta: "Commencer une discussion privée"
         direct_message: "Vous pouvez également démarrer une discussion privée avec un ou plusieurs utilisateurs."
         title: "Aucun canal trouvé"
+        my_threads: "Vous n'avez pas encore de fils de discussion. Les sujets auxquels vous participez seront affichés ici."
       email_frequency:
         description: "Nous ne vous enverrons un e-mail que si nous ne vous avons pas vu au cours des 15 dernières minutes."
         never: "Jamais"
@@ -218,6 +224,9 @@ fr:
         header: "En-tête de discussion"
         composer: "Compositeur de discussion"
         channels_list: "Liste des canaux de discussion"
+      no_direct_message_channels: "Vous n'avez encore rejoint aucun message direct !"
+      no_direct_message_channels_cta: "Commencer une conversation"
+      no_public_channels: "Vous n'avez encore rejoint aucune chaîne !"
       no_public_channels_cta: "Parcourir les canaux"
       kicked_from_channel: "Vous ne pouvez plus accéder à ce canal."
       only_chat_push_notifications:
@@ -226,6 +235,9 @@ fr:
       ignore_channel_wide_mention:
         title: "Ignorer les mentions à l'échelle du canal"
         description: "Ne pas envoyer de notifications pour les mentions à l'échelle du canal (@here et @all)"
+      show_thread_title_prompts:
+        title: "Afficher les invites relatives au titre du fil de discussion"
+        description: "Afficher les invites pour définir un titre pour les nouveaux fils de discussion"
       open: "Ouvrir la discussion"
       open_full_page: "Ouvrir la discussion en plein écran"
       close_full_page: "Fermer la discussion en plein écran"
@@ -336,6 +348,7 @@ fr:
         filter: "Filtrer"
         cant_add_more_members: "Nombre maximal de membres atteint"
         create_new_group_chat: "Créer une discussion de groupe"
+        group_with_too_many_members: "a trop de membres (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Modifier le canal
         input_placeholder: Ajouter un nom
@@ -470,7 +483,12 @@ fr:
           description: "Cela permet d'exporter tous les messages de tous les canaux."
           create_export: "Créer une exportation"
           export_has_started: "L'exportation a commencé. Vous recevrez un MP quand elle sera prête."
+      my_threads:
+        title: Mes fils de discussion
+        aria_label: "Passer à ma liste de fils de discussion"
       direct_messages:
+        title: "DM"
+        aria_label: "Passer aux messages directs"
         new: "Créer une conversation personnelle"
         create: "Valider"
         leave: "Quitter cette discussion privée"
@@ -478,6 +496,7 @@ fr:
         cannot_create: "Nous sommes désolés, vous ne pouvez pas envoyer de messages privés."
       channel_list:
         title: "Canaux"
+        aria_label: "Passer à la liste des chaînes"
       incoming_webhooks:
         back: "Retour"
         channel_placeholder: "Sélectionnez un canal"
@@ -508,6 +527,7 @@ fr:
         cancel: "Annuler"
         quote_selection: "Citation dans le sujet"
         copy: "Copie"
+        delete: "Supprimer (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "Déplacer vers le canal"
         error: "Une erreur s'est produite lors du déplacement des messages de la discussion"
         title: "Déplacer la discussion vers le sujet"
@@ -546,6 +566,7 @@ fr:
       flags:
         off_topic: "Ce message n'est pas pertinent pour la discussion en cours telle que définie par le titre du canal et devrait probablement être déplacé ailleurs."
         inappropriate: "Ce message contient du contenu qu'une personne raisonnable considérerait comme offensant, abusif ou contraire à nos <a href=\"%{basePath}/guidelines\">consignes communautaires</a>."
+        illegal: "Cette publication requiert l'attention du personnel, car je pense qu'elle contient du contenu illégal."
         spam: "Ce message est une publicité ou du vandalisme. Il n'est pas utile ou pertinent pour le canal actuel."
         notify_user: "Je veux parler à cette personne directement et personnellement de son message."
         notify_moderators: "Ce message requiert l'attention d'un responsable pour une autre raison non répertoriée ci-dessus."
@@ -586,6 +607,17 @@ fr:
         participants_other_count:
           one: "+ %{count}"
           other: "+ %{count}"
+      thread_title_toast:
+        title: "Définir un titre de fil de discussion"
+        message: "Aidez les autres à découvrir cette conversation."
+        dismiss_action: "Ne plus afficher"
+        primary_action: "Définir le titre"
+      thread_title_modal:
+        title: "Définir le titre du fil de discussion"
+        input_placeholder: "Dites aux autres en quoi consiste cette conversation..."
+        discourse_ai:
+          title: "Générez automatiquement des titres de fils de discussion"
+          description: "Consultez %{url} pour en savoir plus à ce sujet et pour en savoir plus sur les autres améliorations apportées à votre expérience Discourse."
       threads:
         open: "Ouvrir le fil"
         list: "Fils de discussion"

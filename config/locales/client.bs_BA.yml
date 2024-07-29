@@ -1453,6 +1453,8 @@ bs_BA:
       hide_forever: "ne hvala"
       intro: "Zdravo! Čini se da uživate u raspravi, ali još se niste prijavili za račun."
     summary:
+      buttons:
+        regenerate: "Regenerate"
       disable: "Prikaži sve objave"
     deleted_filter:
       enabled_description: "Ova tema sadrži obrisane objave, vidljive za administratore dok su za ostale korisnike skrivene."
@@ -3392,6 +3394,7 @@ bs_BA:
           spam: "Spam"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(opciono)"
           saved: "sačuvano!"
         flags:

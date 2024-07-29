@@ -1437,6 +1437,9 @@ zh_TW:
     summary:
       description:
         other: "有 <b>%{count}</b> 個回覆。"
+      buttons:
+        generate: "總結"
+        regenerate: "重新產生"
       disable: "顯示所有貼文"
       show_all_label: "顯示全部"
     deleted_filter:
@@ -3308,6 +3311,7 @@ zh_TW:
           spam: "垃圾內容"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(選擇性)"
           update: "更新"
           saved: "儲存完畢!"

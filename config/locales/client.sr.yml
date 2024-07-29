@@ -1017,6 +1017,8 @@ sr:
     signup_cta:
       sign_up: "Registrujte se"
     summary:
+      buttons:
+        regenerate: "Regeneriši"
       disable: "Prikaži Sve Poruke"
     deleted_filter:
       enabled_description: "Ova tema sadrži brisane poruke, koji su skriveni."

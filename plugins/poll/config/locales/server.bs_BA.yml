@@ -11,7 +11,6 @@ bs_BA:
     poll_edit_window_mins: "Broj minuta nakon kreiranja posta tokom kojih se mogu uređivati ankete."
     poll_minimum_trust_level_to_create: "Definišite minimalni nivo povjerenja potreban za kreiranje anketa."
     poll_groupable_user_fields: "Set polja korisničkih imena koji može biti iskorišten za grupisanje i filtriranje rezultata ankete."
-    poll_export_data_explorer_query_id: "ID od Data Explorer Query koji se koristi za izvoz (export) rezultata ankete (0 za isključi)."
   poll:
     poll: "anketa"
     invalid_argument: "Nevažeća vrijednost '%{value}' za argument '%{argument}'."

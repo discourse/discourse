@@ -2031,7 +2031,11 @@ ro:
       privacy:
         fields:
           login_required:
-            placeholder: "Privat"
+            choices:
+              public:
+                label: "Public"
+              private:
+                label: "Privat"
       styling:
         fields:
           styling_preview:

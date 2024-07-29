@@ -1874,6 +1874,9 @@ bg:
         one: "(%{count} липсваща публикация)"
         other: "(%{count} липсващи публикации)"
       enabled_description: "Вие разглеждате топ отговорите на тази тема: най-интересните публикации, определени от общността."
+      buttons:
+        generate: "Обобщаване"
+        regenerate: "Регенерирай"
       description_time_MF: |
         Има{replyCount, plural, one {<b>#</b> reply} other { <b>#</b> отговора}} с очаквано време за четене <b>{readingTime, plural, one {# минута} other {# минути}}</b>.
       disable: "Покажи всички публикации"

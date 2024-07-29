@@ -159,20 +159,20 @@ he:
           many: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות לפחות %{count} תחומים."
           other: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות לפחות %{count} תחומים."
         categories_value_not_valid_min:
-          one: "חייב להיות לפחות תחום אחד"
-          two: "חייבים להיות לפחות שני תחומים"
-          many: "חייבים להיות לפחות %{count} תחומים"
-          other: "חייבים להיות לפחות %{count} תחומים"
+          one: "חייב להיות לפחות מזהה קטגוריה אחד"
+          two: "חייבים להיות לפחות שני מזהי קטגוריות"
+          many: "חייבים להיות לפחות %{count} מזהי קטגוריות"
+          other: "חייבים להיות לפחות %{count} מזהי קטגוריות"
         humanize_categories_value_not_valid_max:
           one: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות תחום אחד לכל היותר."
           two: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות שני תחומים לכל היותר."
           many: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות %{count} תחומים לכל היותר."
           other: "למאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייבים להיות %{count} תחומים לכל היותר."
         categories_value_not_valid_max:
-          one: "חייב להיות תחום אחד לכל היותר"
-          two: "חייבים להיות שני תחומים לכל היותר"
-          many: "חייבים להיות %{count} תחומים לכל היותר"
-          other: "חייבים להיות %{count} תחומים לכל היותר"
+          one: "חייב להיות מזהה קטגוריה אחד לכל היותר"
+          two: "חייבים להיות שני מזהי קטגוריות לכל היותר"
+          many: "חייבים להיות %{count} מזהי קטגוריות לכל היותר"
+          other: "חייבים להיות %{count} מזהי קטגוריות לכל היותר"
         humanize_not_valid_topic_value: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות מזהה נושא תקין."
         not_valid_topic_value: "חייב להיות מזהה נושא תקין"
         humanize_not_valid_post_value: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות מזהה פוסט תקין."
@@ -1977,7 +1977,7 @@ he:
     allow_new_registrations: "לאפשר הרשמות של משתמשים חדשים. יש לבטל סימון זה כדי למנוע יצירת חשבונות חדשים."
     enable_signup_cta: "להציג מודעה למשתמשים אלמוניים חוזרים שמציעה להם להירשם כדי לקבל חשבון."
     enable_google_oauth2_logins: "להפעיל אימות עם Oauth2 מול Google. זו שיטת האימות שכרגע נתמכת מול Google. דורשת מפתח וסוד. יש לעיין ב<a href='https://meta.discourse.org/t/15858' target='_blank'>הגדרת כניסה עם Google ל־Discourse</a>."
-    google_oauth2_client_id: "מזהה הלקוח הייחודי שסופק על ידי אפליקציית Google שלך, המשמש לתהליך האימות."
+    google_oauth2_client_id: "מזהה הלקוח הייחודי שסופק על ידי יישום ה־Google שלך, המשמש לתהליך האימות."
     google_oauth2_client_secret: "קוד סודי של לקוח (client secret) של אפליקציית Google."
     google_oauth2_prompt: "רשימת רשות של ערכי מחרוזות מופרדים ברווחים שמציינת האם שרת האימות מבקש מהמשתמש אימות מחודש והסכמה. יש לעיין ב־<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> לצפייה בערכים האפשריים."
     google_oauth2_hd: "שם מתחם שמתארח ב־Google Apps שאליו תוגבל הכניסה. יש לעיין ב־<a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> לפרטים נוספים."
@@ -2121,7 +2121,6 @@ he:
     min_trust_to_edit_post: "דרגת האמון המזערית הנדרשת לעריכת פוסטים."
     edit_post_allowed_groups: "קבוצות שמורשות לערוך פוסטים. מנהלים ומפקחים תמיד יכולים לערוך פוסטים."
     min_trust_to_allow_self_wiki: "דרגת האמון המזערית הנדרשת להפיכת פוסט עצמי של משתמש לוויקי."
-    self_wiki_allowed_groups: "קבוצות שמתמשים בהן יכולים ליצור ויקי פוסט משלהם. מנהלים ומפקחים תמיד יכולים ליצור ויקי פוסטים משלהם."
     min_trust_to_send_messages: "יצא מכלל שימוש, יש להשתמש בהגדרה ‚קבוצות בהן מופעלות הודעות אישיות’. דרגת האמון המזערית שנדרשת ליצירת הודעות אישיות."
     min_trust_to_send_email_messages: "דרגת האמון המזערית שנדרשת לשליחת הודעות פרטיות בדוא״ל."
     send_email_messages_allowed_groups: "קבוצות שמורשות לשלוח הודעות אישיות בדוא״ל. מנהלים ומפקחים תמיד יכולים לשלוח הודעות אישיות בדוא״ל."
@@ -2578,10 +2577,10 @@ he:
         many: "חייבים להיות %{count} תווים לפחות."
         other: "חייבים להיות %{count} תווים לפחות."
       invalid_string_max:
-        one: "חייב להיות תו אחד לכל היותר."
-        two: "נדרשים לא יותר משני תווים."
-        many: "נדרשים לא יותר מ-%{count} תווים."
-        other: "נדרשים לא יותר מ-%{count} תווים."
+        one: "אסור יותר מתו."
+        two: "אסור יותר משני תווים."
+        many: "אסור יותר מ־%{count} תווים."
+        other: "אסור יותר מ־%{count} תווים."
       invalid_json: "JSON פגום."
       invalid_reply_by_email_address: "הערך חייב להכיל '%{reply_key}' ולהיות שונה מכתובת הדוא״ל להתראה."
       invalid_alternative_reply_by_email_addresses: "על כל הערכים לכלול ‚%{reply_key}’ ולהיות שונים מהדוא״ל לעדכונים."
@@ -2913,10 +2912,10 @@ he:
         many: "חייבים להיות לפחות %{count} תווים"
         other: "חייבים להיות לפחות %{count} תווים"
       long:
-        one: "חייב להיות תו אחד לכל היותר"
-        two: "נדרשים לא יותר משני תווים"
-        many: "נדרשים לא יותר מ־%{count} תווים"
-        other: "נדרשים לא יותר מ־%{count} תווים"
+        one: "אסור יותר מתו"
+        two: "אסור יותר משני תווים"
+        many: "אסור יותר מ־%{count} תווים"
+        other: "אסור יותר מ־%{count} תווים"
       too_long: "ארוך מדי"
       characters: "חייב לכלול מספרים, אותיות, מינוסים, נקודות וקווים תחתיים בלבד"
       unique: "חייב להיות ייחודי"
@@ -3144,13 +3143,15 @@ he:
       text_body_template: |
         שלום,
 
-        זו הודעה אוטומטית מאת %{site_name} כדי ליידע אותך שהפרסום שלך הוסתר.
+        זו הודעה אוטומטית מאת %{site_name} כדי ליידע אותך שהפוסט שלך הוסתר.
 
         <%{base_url}%{url}>
 
         %{flag_reason}
 
-        הפרסום הזה הוסתר עקב סימוני דגל רבים מצד הקהילה, לכן מומלץ לשקול כיצד להתאים את הנוסח והתוכן כך שיענו על המשוב המבוקש. **ניתן לערוך את הפרסום שלך תוך %{edit_delay} דקות וההסתרה תבוטל אוטומטית.**
+        הפרסום הזה הוסתר עקב סימונים רבים מצד הקהילה, לכן מומלץ לשקול כיצד להתאים את הנוסח והתוכן כך שיענו על המשוב המבוקש. **ניתן לערוך את הפוסט שלך תוך %{edit_delay} דקות וההסתרה תבוטל אוטומטית.**
+
+        עם זאת, אם הפוסט יוסתר על ידי הקהילה פעם נוספת, הוא יישאר מוסתר עד שיטופל על ידי הסגל.
 
         להנחיות נוספות, נא לפנות אל [הנחיות הקהילה](%{base_url}/guidelines) שלנו.
     reviewable_queued_post_revise_and_reject:
@@ -3393,9 +3394,9 @@ he:
       title: "הזמנה קבוצתית נכשלה"
       subject_template: "ההזמנה המרוכזת עובדה עם שגיאות"
       text_body_template: |
-        קובץ שלך להזמנת משתמשים באצווה עבר עיבוד, %{sent} הזמנות נשלחו בדואר, %{skipped} דולגו, %{warnings} אזהרות ו־%{failed} שגיאות.
+        קובץ שלך להזמנת משתמשים במרוכז עבר עיבוד, %{sent} הזמנות נשלחו בדוא״ל, %{skipped} נפסחו, %{warnings} אזהרות ו־%{failed} שגיאות.
 
-        הזמנות שדולגו:
+        הזמנות שנפסחו:
 
         ```text
         %{skipped_emails}
@@ -3673,7 +3674,7 @@ he:
 
         זו הודעה אוטומטית מטעם %{site_name} כדי ליידע אותך ש־‎@%{username} נכנס לרשימת ההתעלמות של %{ignores_threshold} משתמשים. ייתכן שמדובר במחדל שהולך ומתפתח בקרב קהילתנו.
 
-        מוטב אולי [לסקור את הפרסומים העדכניים ביותר](%{base_url}/u/%{username}/summary) שיצר המשתמש, ואולי גם משתמשים אחרים ש[דוח המשתמשים שבהתעלמות](%{base_url}/admin/reports/top_ignored_users).
+        מוטב אולי [לסקור את הפוסטים העדכניים ביותר](%{base_url}/u/%{username}/summary) שיצר המשתמש, ואולי גם של משתמשים אחרים שב[דוח המשתמשים שבהתעלמות](%{base_url}/admin/reports/top_ignored_users).
 
         להנחיות נוספות, נא לפנות אל [הנחיות הקהילה](%{base_url}/guidelines) שלנו.
     too_many_spam_flags:
@@ -3682,7 +3683,7 @@ he:
       text_body_template: |
         שלום,
 
-        זו הודעה אוטומטית מהאתר %{site_name} כדי ליידע אותך שהפרסומים שלך הוסתרו באופן זמני כיוון שסומנו בדגל על ידי הקהילה.
+        זו הודעה אוטומטית מהאתר %{site_name} כדי ליידע אותך שהפוסטים שלך הוסתרו באופן זמני כיוון שסומנו על ידי הקהילה.
 
         ליתר בטחון, החשבון החדש שלך הושתק ולא תהיה לך אפשרות להגיב או ליצור נושאים עד שחבר סגל יוכל לסקור את החשבון שלך. אנו מתנצלים על חוסר הנעימות.
 
@@ -3706,7 +3707,7 @@ he:
 
         זו הודעה אוטומטית מאת %{site_name} כדי ליידע אותך שהחשבון שלך הושעה באופן זמני מטעמי משנה זהירות.
 
-        עדיין מותר לך לעיין באתר, אך לא לענות או ליצור נושאים עד אשר [חבר סגל](%{base_url}/about) יסקור את הפרסומים האחרונים שלך. אנו מתנצלים על אי הנוחות.
+        עדיין מותר לך לעיין באתר, אך לא לענות או ליצור נושאים עד אשר [חבר סגל](%{base_url}/about) יסקור את הפוסטים האחרונים שלך. אנו מתנצלים על אי הנוחות.
 
         להנחיות נוספות, נא לפנות ל[הנחיות הקהילה](%{base_url}/guidelines).
     user_automatically_silenced:
@@ -4327,7 +4328,7 @@ he:
     user_email_notification_already_read: "ההתראה שעבורה נשלחה הודעה זו כבר נקראה"
     user_email_notification_topic_nil: "post.topic הוא nil"
     user_email_post_user_deleted: "המשתמש של הפוסט הזה נמחק."
-    user_email_post_deleted: "הפרסום נמחק על ידי הכותב.ת שלו"
+    user_email_post_deleted: "הפוסט נמחק על ידי הכותב או הכותבת שלו"
     user_email_user_suspended: "המשתמש הושעה"
     user_email_already_read: "המשתמש כבר קרא פוסט זה"
     user_email_access_denied: "למשתמש אין הרשאה לצפות בפוסט הזה"
@@ -4983,17 +4984,18 @@ he:
           default_locale:
             label: "שפה"
       privacy:
-        title: "חוויית החברים"
         fields:
           login_required:
-            placeholder: "פרטי"
-            extra_description: "רק משתמשים שנכנסו למערכת יכולים לגשת לקהילה הזו"
+            label: "חשיפה"
+            choices:
+              public:
+                label: "פומבי"
+              private:
+                label: "פרטי"
           invite_only:
-            placeholder: "בהזמנה בלבד"
-            extra_description: "משתמשים חייבים לקבל הזמנה ממשתמשים מהימנים או מהסגל, אחרת משתמשים יוכלו להירשם בעצמם"
-          must_approve_users:
-            placeholder: "לדרוש אישור"
-            extra_description: "המשתמשים חייבים לעבור את אישור הסגל"
+            choices:
+              invite_only:
+                label: "בהזמנה בלבד"
           chat_enabled:
             placeholder: "הפעלת צ׳אט"
             extra_description: "יצירת חיבור מיידי לחבריך בזמן אמת"

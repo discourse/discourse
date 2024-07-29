@@ -2097,8 +2097,7 @@ cs:
       enabled_description: "Prohlížíte si nejlepší odpovědi na toto téma: nejzajímavější příspěvky jsou stanovené komunitou."
       buttons:
         hide: "Skrýt shrnutí"
-        generate: "Shrnout pomocí AI"
-        regenerate: "Vygenerovat shrnutí"
+        regenerate: "Vytvořit znovu"
       description_time_MF: |
         Zde { replyCount, plural,
             one {je <b>#</b> odpověď}
@@ -5229,6 +5228,7 @@ cs:
           staff_action_logs: "Protokoly akcí redaktorů"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(volitelné)"
           update: "Aktualizovat"
           saved: "uloženo!"

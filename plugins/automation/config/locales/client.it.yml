@@ -152,7 +152,7 @@ it:
               description: L'attivazione avverrà solo se il messaggio viene creato da utenti in questi livelli di attendibilità, il valore predefinito è qualsiasi livello di attendibilità
             restricted_category:
               label: Categoria
-              description: Facoltativo, l'attivazione avverrà solo se l'argomento del post rientra in questa categoria
+              description: Facoltativo, l'attivazione avverrà solo se l'argomento del messaggio rientra in questa categoria
             restricted_group:
               label: Gruppo
               description: Facoltativo, l'attivazione avverrà solo se l'argomento del post è un messaggio privato nella posta in arrivo di questo gruppo
@@ -170,6 +170,20 @@ it:
               description: L'attivazione avverrà solo se l'argomento è il primo creato da un utente
           created: Creato
           edited: Modificato
+        user_updated:
+          fields:
+            user_profile:
+              label: Campi utente profilo
+              description: Si attiverà solo se l'utente compila tutti questi campi
+            custom_fields:
+              label: Campi utente personalizzati
+              description: Si attiverà solo se l'utente compila tutti questi campi
+            once_per_user:
+              label: Una volta per utente
+              description: Si attiverà solo una volta per utente
+            new_users_only:
+              label: Solo nuovi utenti
+              description: Si attiverà solo per i nuovi utenti che si iscriveranno dopo che questa automazione sarà stata abilitata
         category_created_edited:
           fields:
             restricted_category:
@@ -202,7 +216,7 @@ it:
               description: L'attivazione avverrà solo se il messaggio viene creato da utenti in questi livelli di attendibilità, il valore predefinito è qualsiasi livello di attendibilità
             restricted_category:
               label: Categoria
-              description: Facoltativo, l'attivazione avverrà solo se l'argomento del post rientra in questa categoria
+              description: Facoltativo, l'attivazione avverrà solo se l'argomento del messaggio rientra in questa categoria
             restricted_tags:
               label: Etichette
               description: Facoltativo, l'attivazione avverrà solo se il messaggio ha una di queste etichette
@@ -220,6 +234,7 @@ it:
               description: Risponde solo una volta per argomento
             word_answer_list:
               label: Elenco di coppie parole/risposte
+              description: "Definisce un elenco di gruppi key/value dove `key` è il termine di ricerca e `value` è il testo della risposta. Il campo `key` può essere lasciato vuoto per rispondere a tutti i trigger indipendentemente dal contenuto. N.B. `value` accetta `{{key}}` come valore segnaposto da rimpiazzare con il valore di `key` nella risposta. `key` viene considerato un'espressione regolare, quindi è necessario inserire una sequenza di escape (es. `\\.`) davanti ai caratteri speciali (es. `.`) che intendi usare come carattere normale e non come sintassi dell'espressione."
             answering_user:
               label: Utente che risponde
               description: Utente di sistema come predefinito
@@ -232,10 +247,25 @@ it:
           fields:
             creator:
               label: Autore
+              post_creator_context: L'autore del messaggio
+              updated_user_context: L'utente aggiornato
             topic:
               label: ID dell'argomento
             post:
               label: Contenuto messaggio
+        topic:
+          fields:
+            creator:
+              label: Autore
+              updated_user_context: L'utente aggiornato
+            body:
+              label: Corpo argomento
+            title:
+              label: Titolo argomento
+            category:
+              label: Categoria argomento
+            tags:
+              label: Etichette argomento
         group_category_notification_default:
           fields:
             group:
@@ -287,7 +317,7 @@ it:
             pinnable_topic:
               label: ID dell'argomento
             pinned_globally:
-              label: Fissato a livello globale
+              label: Appuntato globalmente
             pinned_until:
               label: Fissato fino a
         banner_topic:

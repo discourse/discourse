@@ -10,9 +10,8 @@ nl:
     poll_maximum_options: "Maximale aantal toegestane opties in een poll."
     poll_edit_window_mins: "Aantal minuten na het maken van een bericht waarin polls kunnen worden bewerkt."
     poll_minimum_trust_level_to_create: "Het minimale vertrouwensniveau dat nodig is om polls te maken."
-    poll_create_allowed_groups: "De groepen die peilingen mogen maken."
+    poll_create_allowed_groups: "De groepen die polls mogen maken."
     poll_groupable_user_fields: "Een aantal gebruikersveldnamen die voor het groeperen en filteren van pollresultaten kunnen worden gebruikt."
-    poll_export_data_explorer_query_id: "ID van de te gebruiken gegevensverkennerquery voor het exporteren van pollresultaten (0 voor uitschakelen)."
     poll_default_public: "Schakel bij het maken van een nieuwe poll standaard de optie 'Weergeven wie er heeft gestemd' in."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
@@ -51,8 +50,12 @@ nl:
     min_vote_per_user:
       one: Er is minimaal %{count} stem vereist voor deze poll.
       other: Er zijn minimaal %{count} stemmen vereist voor deze poll.
+    ranked_choice:
+      no_group_results_support: "Ongeldig polltype, ranked_choice ondersteunt geen gegroepeerde resultaten."
     topic_must_be_open_to_toggle_status: "Het topic moet geopend zijn om de status te kunnen omschakelen."
     only_staff_or_op_can_toggle_status: "Alleen een medewerker of de oorspronkelijke plaatser van een bericht kan de status van een poll omschakelen."
+    errors:
+      poll_not_found: "Poll niet gevonden, controleer de parameters."
     insufficient_rights_to_create: "Je mag geen polls maken."
     email:
       link_to_poll: "Klik om de poll weer te geven."

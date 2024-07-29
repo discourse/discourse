@@ -252,6 +252,9 @@ fi:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
+      too_long_validation:
+        one: "on rajoitettu %{count} merkkiin; sinä syötit %{length} merkkiä."
+        other: "on rajoitettu %{count} merkkiin; sinä syötit %{length} merkkiä."
       invalid_boolean: "Totuusarvomuuttuja ei kelpaa"
       taken: "on jo varattu"
       accepted: täytyy hyväksyä
@@ -629,6 +632,9 @@ fi:
 
       On helpompaa lukea ketjua, jossa on vähemmän pidempiä vastauksia kuin sellaista, jossa on paljon lyhyitä yksittäisiä vastauksia.
     dominating_topic: Olet kirjoittanut paljon tähän ketjuun! Voisit antaa muille mahdollisuuden vastata täällä ja keskustella asioista myös keskenään.
+    get_a_room:
+      one: Olet vastannut käyttäjälle @%{reply_username} kerran, tiesitkö, että voit lähettää hänelle yksityisviestin?
+      other: Olet vastannut käyttäjälle @%{reply_username} %{count} kertaa, tiesitkö, että voit lähettää hänelle yksityisviestin?
     dont_feed_the_trolls: Tästä viestistä on jo ilmoitettu ylläpidolle. Haluatko varmasti vastata siihen? Vastaukset negatiiviseen sisältöön rohkaisevat negatiivisempaan käyttäytymiseen.
     too_many_replies: |
       ### Olet kirjoittanut enimmäismäärän vastauksia tähän ketjuun
@@ -1532,7 +1538,7 @@ fi:
       labels:
         topic: Ketju
         logged_in_views: Kirjautuneita
-        anon_views: Anonyymi
+        anon_views: Anonyymeja
         total_views: Yhteensä
       description: "100 katsotuinta ketjua päivämääräalueella yhdistäen kirjautuneet ja anonyymit katselukerrat. Voidaan suodattaa aleen mukaan."
   dashboard:
@@ -1542,7 +1548,7 @@ fi:
       rails_env: "Palvelintasi ajetaan tilassa %{env}."
       host_names: "Sivuston config/database.yml tiedosto käyttää oletusarvoista localhost-isäntänimeä. Päivitä se käyttämään sivuston isäntänimeä."
       sidekiq: 'Sidekiq ei ole käynnissä. Monet tehtävät, kuten sähköpostien lähettäminen, suoritetaan asynkronisesti Sidekiqin avulla. Varmista, että vähintään yksi Sidekiq-prosessi on käynnissä. <a href="https://github.com/mperham/sidekiq" target="_blank">Lue lisää Sidekiqista täällä</a>.'
-      queue_size: "Jonossa olevien tehtävien määrä on %{queue_size}, joka on korkea. Tämä voi olla merkki ongelmista Sidekiq prosesseissa, tai sinun voi täytyä lisätä Sidekiqin workerien määrää."
+      queue_size: "Jonossa olevien tehtävien määrä on %{queue_size}, joka on korkea. Tämä voi olla merkki ongelmista Sidekiq-prosesseissa, tai sinun voi täytyä lisätä Sidekiqin workerien määrää."
       ram: "Palvelimella on alle 1 Gt muistia. Vähintään 1 Gt muistia on suositeltavaa."
       google_oauth2_config: 'Palvelin on määritetty hyväksymään rekisteröityminen ja kirjautuminen Google OAuth2:n kautta (enable_google_oauth2_logins), mutta client id- ja client secret -arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Lue lisää tästä oppaasta</a>.'
       facebook_config: 'Palvelin on määritetty hyväksymään rekisteröityminen ja kirjautuminen Facebookin kautta (enable_facebook_logins), mutta app id- ja app secret -arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Lue lisää tästä oppaasta</a>.'
@@ -1558,7 +1564,7 @@ fi:
       email_polling_errored_recently:
         one: "Sähköpostin pollaus on aiheuttanut virheen edellisten 24 tunnin aikana. Tarkastele <a href='%{base_path}/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
         other: "Sähköpostin pollaus aiheutti %{count} virhettä edellisten 24 tunnin aikana. Tarkastele <a href='%{base_path}/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
-      missing_mailgun_api_key: "Palvelin on määritelty lähettämään sähköpostit Mailgunin avulla, muttet ole määrittänyt API-avainta, jolla varmistetaan webhook-viestien aitous."
+      missing_mailgun_api_key: "Palvelin on määritetty lähettämään sähköpostit Mailgunilla, muttet ole määrittänyt API-avainta, jolla varmistetaan webhook-viestien aitous."
       bad_favicon_url: "Favicon ei lataudu. Tarkista favicon-asetus <a href='%{base_path}/admin/site_settings'>sivuston asetuksissa</a>."
       poll_pop3_timeout: "Yhteys POP3-palvelimeen aikakatkaistaan. Saapuvia sähköposteja ei voitu hakea. Tarkista <a href='%{base_path}/admin/site_settings/category/email'>POP3-asetukset</a> ja palveluntarjoaja."
       poll_pop3_auth_error: "Yhteys POP3-palvelimelle epäonnistuu todennusvirheen vuoksi. Tarkista <a href='%{base_path}/admin/site_settings/category/email'>POP3-asetukset</a>."
@@ -1744,7 +1750,7 @@ fi:
     content_security_policy_report_only: "Käytä epäilyttävän sisällön raportointia (Content-Security-Policy-Report-Only)"
     content_security_policy_collect_reports: "Ota käyttöön CSP-seulontojen kerääminen lokiin kohteessa /csp_reports"
     content_security_policy_frame_ancestors: "Rajoita sitä, ketkä voivat upottaa tämän sivuston iframe-kehyksiin CSP:n kautta. Hallitse sallittuja isäntiä <a href='%{base_path}/admin/customize/embedding'>Upottaminen</a>-sivulla"
-    content_security_policy_script_src: "Muut sallitut skriptilähteet. Nykyinen palvelin ja CDN sallitaan oletusarvoisesti. Katso <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP) Muut isäntälähteet ohitetaan, koska strict-dynamic on käytössä."
+    content_security_policy_script_src: "Muut sallitut skriptilähteet. Nykyinen palvelin ja CDN sallitaan oletuksena. Katso <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP) Muut isäntälähteet ohitetaan, koska strict-dynamic on käytössä."
     invalidate_inactive_admin_email_after_days: "Ylläpitäjätilit, jotka eivät ole vierailleet sivustolla näin moneen päivään, joutuvat vahvistamaan sähköpostiosoitteensa uudelleen ennen sisäänkirjautumista. Aseta 0 poistaaksesi käytöstä."
     include_secure_categories_in_tag_counts: "Kun tämä on käytössä, tunnisteen ketjujen määrä sisältää ketjut, jotka kuuluvat kaikkien käyttäjien lukurajoitetuille alueille. Kun tämä ei ole käytössä, normaaleille käyttäjille näytetään vain ketjujen määrä tunnisteelle, joissa kaikki ketjut ovat julkisilla alueilla."
     display_personal_messages_tag_counts: "Kun tämä on käytössä, tietyllä tunnisteella merkittyjen yksityisviestien määrä näytetään."
@@ -1908,7 +1914,7 @@ fi:
     s3_cdn_url: "CDN:n URL, jota käytetään S3:ssa sijaitseville tiedostoille (esimerkiksi https://cdn.jossain.com). VAROITUS: tämän asetuksen muuttamisen jälkeen sinun täytyy rakentaa uudelleen kaikki vanhat viestit."
     s3_use_cdn_url_for_all_uploads: "Käytä sisällynjakeluverkon URL-osoitetta kaikille s3:een ladatuille tiedostoille, eikä vain kuvatiedostoille."
     avatar_sizes: "Avatareista automaattisesti luotavat koot."
-    external_system_avatars_enabled: "Mahdollistaa ulkoisen palvelun käytön järjestelmän avatarien luomiseen. Kun tämä asetus on käytössä, käyttäjien avatareja ei tuoteta Discordin järjestelmässä, vaan ne luodaan ja tarjotaan ulkoisen palvelun avulla, jonka määrittää \"external_system_avatars_url\"-asetus."
+    external_system_avatars_enabled: "Mahdollistaa ulkoisen palvelun käytön järjestelmän avatarien luomiseen. Kun tämä asetus on käytössä, käyttäjien avatareja ei tuoteta Discoursen järjestelmässä, vaan ne luodaan ja tarjotaan ulkoisen palvelun avulla, jonka määrittää \"external_system_avatars_url\"-asetus."
     external_system_avatars_url: "Ulkoisen avatarpalvelun URL. Sallitut vaihdokset ovat {username} {first_letter} {color} {size}"
     external_emoji_url: "Emoji-kuvien ulkoisen palvelun URL-osoite. Poista käytöstä jättämällä tyhjäksi."
     use_site_small_logo_as_system_avatar: "Käytä sivuston pientä logoa järjestelmäkäyttäjän avatarin sijasta. Edellyttää, että logo on asetettu."
@@ -1967,7 +1973,6 @@ fi:
     min_trust_to_edit_post: "Viestin muokkaamiseen vaadittava luottamustaso."
     edit_post_allowed_groups: "Ryhmät, jotka voivat muokata viestejä. Ylläpitäjät ja valvojat voivat aina muokata viestejä."
     min_trust_to_allow_self_wiki: "Minimiluottamustaso, jolla käyttäjä voi tehdä omasta viestistään wiki-viestin."
-    self_wiki_allowed_groups: "Ryhmät, joissa käyttäjät voivat luoda oman viestiwikin. Ylläpitäjät ja valvojat voivat aina luoda oman viestiwikin."
     min_trust_to_send_messages: "VANHENTUNUT, käytä tämän sijaan 'personal message enabled groups' -asetusta. Uusien yksityisviestin luomiseen vaadittava vähimmäisluottamustaso."
     min_trust_to_send_email_messages: "Vähimmäisluottamustaso, jolla voi lähettää yksityisviestejä sähköpostitse."
     send_email_messages_allowed_groups: "Ryhmät, jotka voivat lähettää yksityisviestejä sähköpostitse. Ylläpitäjät ja valvojat voivat aina lähettää yksityisviestejä sähköpostitse."
@@ -2395,7 +2400,7 @@ fi:
     enable_experimental_lightbox: "KOKEELLINEN: Korvaa kuvien oletusarvoinen lightbox-tehoste uudistetulla tyylillä."
     enable_experimental_bookmark_redesign_groups: "KOKEELLINEN: näytä kirjanmerkkien pikavalikko viesteissä ja uusi uudistettu modaali"
     glimmer_header_mode: "Hallitse, käytetäänkö uutta glimmer-yläpalkkiuudistus. Oletusarvo on \"auto\", joka otetaan käyttöön automaattisesti, kun kaikki teemasi ja lisäosasi ovat valmiita. https://meta.discourse.org/t/296544"
-    experimental_glimmer_topic_list_groups: "KOKEELLINEN: Ota käyttöön uusi glimme-ketjuluettelouudistus. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
+    experimental_glimmer_topic_list_groups: "KOKEELLINEN: Ota käyttöön uusi glimmer-ketjuluettelouudistus. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
     experimental_form_templates: "KOKEELLINEN: Ota lomakemalliominaisuus käyttöön. <b>Kun ominaisuus on otettu käyttöön,</b> voit hallinnoida malleja kohdassa <a href='%{base_path}/admin/customize/form-templates'>Mukauta / Mallit</a>."
     admin_sidebar_enabled_groups: "Ota käyttöön sivupalkkinavigointi ylläpitäjän käyttöliittymässä määritetyille ryhmille, mikä korvaa ylätason ylläpitäjän navigointipainikkeet."
     lazy_load_categories_groups: "KOKEELLINEN: käytä laiskaa latausta alueen tietoihin vain näiden ryhmien käyttäjille. Tämä parantaa suorituskykyä sivustoilla, joilla on useita alueita."
@@ -2417,6 +2422,12 @@ fi:
       must_include_latest: "Ylävalikon täytyy sisältää 'tuoreimmat'-välilehti."
       invalid_string: "Arvo ei kelpaa."
       invalid_string_min_max: "Merkkien lukumäärän täytyy olla %{min}–%{max}."
+      invalid_string_min:
+        one: "Täytyy olla vähintään %{count} merkki."
+        other: "Täytyy olla vähintään %{count} merkkiä."
+      invalid_string_max:
+        one: "Ei saa olla yli %{count} merkkiä"
+        other: "Ei saa olla yli %{count} merkkiä."
       invalid_json: "Virheellinen JSON."
       invalid_reply_by_email_address: "Arvon täytyy sisältää '%{reply_key}' ja erota ilmoitusten sähköpostiosoitteesta."
       invalid_alternative_reply_by_email_addresses: "Kaikkien arvojen täytyy sisältää '%{reply_key}' ja erota ilmoitusten sähköpostiosoitteesta."
@@ -2450,6 +2461,9 @@ fi:
         regex_invalid: "Säännöllinen lauseke ei kelpaa: %{error}"
         leading_trailing_slash: "Säännöllinen lauseke ei voi alkaa eikä loppua kauttaviivalla."
       unicode_usernames_avatars: "Sisäinen avatarjärjestelmä ei tue Unicode-käyttäjätunnuksia."
+      list_value_count:
+        one: "Luettelon täytyy sisältää täsmälleen %{count} arvo."
+        other: "Luettelon täytyy sisältää täsmälleen %{count} arvoa."
       markdown_linkify_tlds: "Et voi lisätä arvoa \"*\"."
       google_oauth2_hd_groups: "Sinun täytyy määrittää kaikki \"google oauth2 hd\" -asetukset ennen kuin otat tämän asetuksen käyttöön."
       linkedin_oidc_credentials: "Sinun täytyy määrittää LinkedIn OIDC -tunnistetiedot (\"linkedin_oidc_client_id\" ja \"linkedin_oidc_client_secret\") ennen tämän asetuksen käyttöönottoa."
@@ -2697,6 +2711,12 @@ fi:
     new_user_typed_too_fast: "Uusi käyttäjä näppäili liian nopeasti"
     content_matches_auto_silence_regex: "Sisältö vastaa automaattisesti hiljennettävää säännöllistä lauseketta"
     username:
+      short:
+        one: "täytyy olla vähintään %{count} merkki"
+        other: "täytyy olla vähintään %{count} merkkiä"
+      long:
+        one: "ei saa olla yli %{count} merkkiä"
+        other: "ei saa olla yli %{count} merkkiä"
       too_long: "on liian pitkä"
       characters: "voi sisältää vain numeroita, kirjaimia, väliviivoja, pisteitä ja alaviivoja"
       unique: "täytyy olla uniikki"
@@ -4160,6 +4180,7 @@ fi:
   guidelines_topic:
     title: "UKK/Ohjeet"
     guidelines_title: "Ohjeet"
+    body: "<a name=\"civilized\"></a> \n\n## [Tämä on sivistynyt paikka julkiselle keskustelulle](#civilized) \n\nKohtele tätä keskustelufoorumia samalla kunnioituksella kuin kohtelisit julkista puistoa. Mekin olemme yhteinen yhteisön resurssi ja paikka jakaa taitoja, tietoa ja kiinnostuksen kohteita jatkuvan keskustelun kautta.\n\nNämä eivät ole ehdottomia sääntöjä. Nämä ovat ohjeita, jotka auttavat yhteisömme inhimillistä harkintakykyä ja pitävät tämän ystävällisenä paikkana sivistyneelle julkiselle keskustelulle.\n\n<a name=\"improve\"></a>\n\n## [Paranna keskustelua](#improve) \n\nAuta meitä tekemään tästä mahtava paikka keskustelulle lisäämällä aina edes jotakin positiivista keskusteluun. Jos et ole varma siitä, mitä viestisi tuo keskusteluun, mieti mitä haluat sanoa ja kokeile myöhemmin uudelleen. \n\nYksi tapa parantaa keskustelua on tutustua jo käynnissä oleviin. Käytä aikaa ketjujen selaamiseen ennen kuin vastaat niihin tai aloitat omasi, ja sinulla on paremmat mahdollisuudet tavata muita, jotka jakavat mielenkiinnon kohteesi. \n\nTäällä keskustelluilla aiheilla on meille merkitystä, ja haluamme sinun käyttäytyvän niin kuin niillä olisi merkitystä myös sinullekin. Kunnioita aiheita ja niistä keskustelevia ihmisiä, vaikka olisitkin eri mieltä joistakin kommenteista. \n\n<a name=\"agreeable\"></a> \n## [Ole miellyttävä myös silloin, kun olet eri mieltä](#agreeable) \n\nSaatat haluta vastata olemalla eri mieltä. Se on ok. Mutta muista _kritisoida ideoita, älä ihmisiä_. Vältä: \n\n* nimittelyä \n* ad hominen -hyökkäyksiä \n* vastaamista viestin sävyyn sen sisällön sijaan \n* vaistomaista reagoimista \n\nTarjoa sen sijaan harkittuja ajatuksia, jotka parantavat keskustelua. \n\n<a name=\"participate\"></a> \n\n## [Osallistumisellasi on väliä](#participate) \n\nTäällä käymämme keskustelut asettavat sävyn jokaiselle uudelle saapujalle. Auta meitä vaikuttamaan tämän yhteisön tulevaisuuteen ottamalla osaa keskusteluihin, jotka tekevät tästä foorumista mielenkiintoisen paikan, ja välttämällä niitä, jotka eivät tee. \n\nDiscourse tarjoaa työkaluja, joilla yhteisö voi kollektiivisesti tunnistaa parhaat (ja huonoimmat) kontribuutiot: kirjanmerkit, tykkäykset, merkinnät, vastaukset, muokkaukset, tarkkailu, vaimennus jne. Käytä näitä työkaluja omasi ja kaikkien muidenkin kokemuksen parantamiseen. \n\nJätetään yhteisömme parempaan tilaan kuin missä löysimme sen. \n\n<a name=\"flag-problems\"></a> \n\n## [Jos havaitset ongelman, liputa se](#flag-problems) \n\nValvojilla on erityinen valta, he vastaavat tästä foorumista. Mutta niin vastaat myös sinäkin. Avullasi valvojat voivat olla yhteisön fasilitaattoreita, eivät vain siivoojia tai poliiseja. \n\nKun näet huonoa käyttäytymistä, älä vastaa. Vastaaminen kannustaa huonoon käytökseen tiedostamalla sen, kuluttaa energiaasi ja tuhlaa kaikkien aikaa. _Merkitse se sen sijaan_. Jos merkintöjä kertyy tarpeeksi, toimia tehdään joko automaattisesti tai valvojan toimesta. \n\nYhteisömme ylläpitämiseksi valvojat pidättävät oikeuden poistaa mitä tahansa sisältöä ja minkä tahansa käyttäjätilin mistä tahansa syystä milloin tahansa. Valvojat eivät esikatsele uusia viestejä; valvojat ja sivuston ylläpitäjät eivät vastaa yhteisössä julkaistusta sisällöstä. \n\n<a name=\"be-civil\"></a> ## [Ole aina kohtelias](#be-civil) \n\nMikään ei pilaa tervettä keskustelua niin kuin töykeys: \n\n* Ole kohtelias. Älä julkaise mitään, mitä kohtuullinen henkilö voisi pitää loukkaavana, herjaavana tai vihapuheena. \n* Pidä sisältö siistinä. Älä julkaise mitään hävytöntä tai seksuaalista. \n* Kunnioittakaa toisianne. Älä häiritse ketään, matki ihmisiä tai paljasta heidän yksityisiä tietojaan. \n* Kunnioita foorumia. Älä lähetä roskapostia tai muutoin vandalisoi foorumia. \n\nNämä eivät ole tarkasti määriteltyjä tiukkoja ehtoja, ja niiden ei ole missään nimessä tarkoitus olla sellaisia. Jos olet epävarma, kysy itseltäsi miltä sinusta tuntuisi, jos viestisi julkaistaisiin suuren uutissivuston etusivulla. \n\nTämä on julkinen foorumi, ja hakukoneet indeksoivat näitä keskusteluita. Pidä kielenkäyttö, linkit ja kuvat turvallisina perheenjäsenille ja ystäville. \n\n<a name=\"keep-tidy\"></a> \n\n## [Pidä paikat siistinä](#keep-tidy) \n\nPyri laittamaan asiat oikeaan paikkaan, jotta voimme käyttää enemmän aikaa keskusteluun ja vähemmän aikaa siivoamiseen: \n\n* Älä aloita ketjua väärällä alueella; lue alueiden kuvaukset. \n* Älä lähetä samaa viestiä useaan ketjuun. \n* Älä lähetä vastauksia ilman sisältöä. \n* Älä eksy ketjun aiheesta muuttamalla sitä kesken kaiken. \n* Älä lisää allekirjoituksia viesteihisi; jokaiseen viestiin on liitetty profiilitietosi. \n\nKäytä tykkäyspainiketta sen sijaan, että vastaisit ”+1” tai ”Samaa mieltä”. Käytä Vastaa liittyvässä ketjussa -toimintoa sen sijaan, että ohjaisit olemassa olevan ketjun aivan eri suuntaan. \n\n<a name=\"stealing\"></a> \n\n## [Julkaise vain omaa sisältöäsi](#stealing) \n\nEt saa julkaista luvatta mitään digitaalista, joka kuuluu jollekulle muulle. Et saa julkaista kuvauksia, linkkejä tai menetelmiä jonkun immateriaalioikeuksien (ohjelmisto, video, ääni, kuvat) rikkomiseen tai minkään muun lain rikkomiseen. \n\n<a name=\"power\"></a> \n## [Sinun ylläpitämäsi](#power) \n\nTätä sivustoa ylläpitää [ystävällinen paikallinen henkilökunta](%{base_path}/about) ja *te*, yhteisö. Jos sinulla on lisäkysymyksiä siitä, miten asioiden tulisi toimia täällä, aloita uusi ketju alueella %{feedback_category}, ja keskustellaan siitä! Jos sinulla on kriittinen tai kiireellinen ongelma, jota ei voi käsitellä metaketjun tai liputuksen kautta, [ota yhteyttä valvojiin](%{base_path}/about).\n"
   tos_topic:
     title: "Käyttöehdot"
     body: |
@@ -4427,6 +4448,9 @@ fi:
     mass_award:
       errors:
         invalid_csv: Rivillä %{line_number} havaittiin virhe. Varmista, että CSV:ssä on yksi sähköpostiosoite riviä kohden.
+        too_many_csv_entries:
+          one: Liian monta merkintää CSV-tiedostossa. Anna CSV-tiedosto, jossa on enintään %{count} merkintä.
+          other: Liian monta merkintää CSV-tiedostossa. Anna CSV-tiedosto, jossa on enintään %{count} merkintää.
         badge_disabled: Ota kunniamerkki %{badge_name} käyttöön ensin.
         cant_grant_multiple_times: Kunniamerkkiä %{badge_name} ei voi myöntää useita kertoja yhdelle käyttäjälle.
     editor:
@@ -4711,6 +4735,7 @@ fi:
     limited_to_one_tag_from_group: "Tunnisteiden %{tags} samanaikainen käyttö ei ole mahdollista. Sisällytä vain yksi."
     invalid_target_tag: "ei voi olla synonyymin synonyymi"
     synonyms_exist: "ei ole sallittua, kun synonyymejä on olemassa"
+    user_not_permitted: "Sinulla ei ole oikeutta merkitä ketjuja tunnisteilla."
   rss_by_tag: "Ketjut tunnisteella %{tag}"
   finish_installation:
     congratulations: "Onneksi olkoon, asensit Discoursen!"
@@ -4751,17 +4776,18 @@ fi:
           default_locale:
             label: "Kieli"
       privacy:
-        title: "Jäsenkokemus"
         fields:
           login_required:
-            placeholder: "Yksityinen"
-            extra_description: "Vain kirjautuneilla käyttäjillä on pääsy yhteisöön"
+            label: "Näkyvyys"
+            choices:
+              public:
+                label: "Julkinen"
+              private:
+                label: "Yksityinen"
           invite_only:
-            placeholder: "Vain kutsusta"
-            extra_description: "Luotettujen käyttäjien tai henkilökunnan on kutsuttava käyttäjät, muutoin käyttäjät voivat rekisteröityä itse"
-          must_approve_users:
-            placeholder: "Vaadi hyväksyntä"
-            extra_description: "Henkilökunnan täytyy hyväksyä käyttäjät"
+            choices:
+              invite_only:
+                label: "Vain kutsusta"
           chat_enabled:
             placeholder: "Ota chat käyttöön"
             extra_description: "Pidä yhteyttä jäseniisi reaaliajassa"
@@ -4847,9 +4873,23 @@ fi:
   onebox:
     discourse:
       user_joined_community: "Liittynyt %{date}"
+    gitlab:
+      truncated_file: "Tämä tiedosto on lyhennetty."
+      show_original: "näytä alkuperäinen"
     github:
+      binary_file: "Tämä tiedosto on binaarinen."
+      truncated_file: "Tämä tiedosto on lyhennetty."
+      show_original: "näytä alkuperäinen"
+      requires_iframe: "Tarkastelija vaatii iframen."
+      committed: "solmittu"
+      more_than_three_files: "Tiedostoja on enemmän kuin kolme."
       opened: "avattu"
       closed: "suljettu"
+      commit_by: "Solminut"
+      comment_by: "Kommentoinut"
+      review_by: "Tarkistanut"
+      pr_summary: "%{commits} solmua muutti %{changed_files} tiedostoa %{additions} lisäyksellä ja %{deletions} poistolla"
+      no_description: "Auta tietovaraston %{repo} kehityksessä luomalla tili GitHubissa."
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainitsi sinut ketjussa "%{topic}" – %{site_title}'
@@ -4864,6 +4904,7 @@ fi:
       confirm_body: "Onnistui! Ilmoitukset ovat käytössä."
       custom: "Ilmoitus käyttäjältä %{username} sivustolla %{site_title}"
   staff_action_logs:
+    json_too_long: "Arvoja ei kirjata lokiin, koska ne ylittävät sarakkeen pituusrajoitukset"
     not_found: "ei löytynyt"
     unknown: "tuntematon"
     user_merged: "%{username} yhdistettiin tähän käyttäjätiliin"
@@ -4935,6 +4976,9 @@ fi:
       agree_and_hide:
         title: "Piilota viesti"
         description: "Hyväksy liputtamalla ja piilota julkaisu + lähetä käyttäjälle automattisesti yksityisviesti, jossa häntä pyydetään muokkaamaan sitä."
+      agree_and_edit:
+        title: "Hyväksy ja muokkaa viestiä"
+        description: "Hyväksy lipulla ja avaa kirjoitusikkuna viestin muokkaamiseksi."
       delete_single:
         title: "Poista"
       delete:

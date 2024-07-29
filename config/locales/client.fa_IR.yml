@@ -1683,6 +1683,7 @@ fa_IR:
         other: "<b>%{count}</b> پاسخ داده شده."
       buttons:
         hide: "پنهان کردن خلاصه"
+        regenerate: "ایجاد مجدد"
       disable: "نمایش همه‌ی نوشته‌ها"
     deleted_filter:
       enabled_description: "این موضوع شامل نوشته‌های حذف شده‌ای است، که مخفی شده‌اند."
@@ -3824,6 +3825,7 @@ fa_IR:
         about:
           header: "درباره سایت شما"
           community_name: "نام انجمن"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "سازمان شما"
           company_name: "نام شرکت"
           optional: "(اختیاری)"

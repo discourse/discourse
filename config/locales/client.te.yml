@@ -1985,8 +1985,7 @@ te:
         other: "<b>%{count}</b> ప్రత్యుత్తరాలు ఉన్నాయి."
       buttons:
         hide: "సారాంశాన్ని దాచండి"
-        generate: "AI తో సంగ్రహించండి"
-        regenerate: "సారాంశాన్ని పునరుద్ధరించండి"
+        regenerate: "పునరుత్పత్తించు"
       description_time_MF: |
         ఇక్కడ{ replyCount, plural,
             one { <b>#</b> ప్రత్యుత్తరం}
@@ -4953,6 +4952,7 @@ te:
         about:
           header: "మీ సైట్ గురించి"
           community_name: "సంఘం పేరు"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           site_contact_group_help: |
             స్వయంచాలకంగా పంపబడిన అన్ని ప్రైవేట్ సందేశాలకు ఆహ్వానించబడిన సమూహం యొక్క చెల్లుబాటు అయ్యే పేరు.
           your_organization: "మీ సంస్థ"

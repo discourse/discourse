@@ -2292,8 +2292,11 @@ be:
       privacy:
         fields:
           login_required:
-            placeholder: "прыватны"
-            extra_description: "Толькі зарэгістраваныя карыстальнікі могуць атрымаць доступ да гэтай супольнасці"
+            choices:
+              public:
+                label: "грамадскага"
+              private:
+                label: "прыватны"
       styling:
         fields:
           styling_preview:

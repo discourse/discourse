@@ -3267,8 +3267,12 @@ ur:
       privacy:
         fields:
           login_required:
-            placeholder: "ذاتی"
-            extra_description: "صرف لاگ اِن کردہ صارفین اِس کمیونٹی تک رسائی حاصل کر سکتا ہے"
+            label: "نموداری"
+            choices:
+              public:
+                label: "عوامی"
+              private:
+                label: "ذاتی"
       styling:
         fields:
           styling_preview:

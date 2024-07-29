@@ -14,6 +14,8 @@ it:
         invalid_field: Il componente del campo `%{component}` non è utilizzabile su `%{target}:%{target_name}.`
         invalid_metadata: I dati per `%{field}` non sono validi o il componente `%{component}` è sconosciuto.
     triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "Inserisci almeno uno tra \"custom_fields\" o \"user_profile\"."
       user_badge_granted:
         title: Distintivo utente concesso
         doc: Attiva un'automazione quando a un utente viene riconosciuto un distintivo.
@@ -22,7 +24,7 @@ it:
         doc: Attiva un'automazione quando un utente accede per la prima volta.
       stalled_topic:
         title: Argomento bloccato
-        doc: Attiva un'automazione quando l'argomento non ha ricevuto una nuova risposta dal proprietario dell'argomento per un periodo di tempo specificato. Si consiglia di limitare questa azione di attivazione a un tag/categoria poiché il numero di argomenti interessati può essere molto elevato. Per motivi di sicurezza, il numero di argomenti interessati è limitato a 250.
+        doc: Attiva un'automazione quando l'argomento non ha ricevuto una nuova risposta dal proprietario dell'argomento per un periodo di tempo specificato. Si consiglia di limitare questa azione di attivazione a un'etichetta/categoria poiché il numero di argomenti interessati può essere molto elevato. Per motivi di sicurezza, il numero di argomenti interessati è limitato a 250.
       api_call:
         title: Chiamata API
         description: Effettuare una richiesta POST per attivare un'automazione
@@ -60,12 +62,16 @@ it:
       after_post_cook:
         title: Dopo l'elaborazione del messaggio
         description: Quando il contenuto di un messaggio viene elaborato, l'automazione verrà attivata
+      user_updated:
+        title: Dopo l'aggiornamento dell'utente
+        description: L'automazione si attiva quando l'utente aggiorna una qualsiasi informazione
     scriptables:
       post:
         title: Crea un messaggio
         description: Crea un messaggio su un argomento specificato
       topic:
         title: Crea un argomento
+        description: Crea un argomento come utente specifico
       flag_post_on_words:
         title: Contrassegna messaggio in base alle parole
         description: Contrassegna un messaggio se contiene parole specifiche

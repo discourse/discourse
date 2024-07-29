@@ -335,7 +335,7 @@ de:
         unbookmark_with_reminder: "Klicke, um alle Lesezeichen und Erinnerungen in diesem Thema zu entfernen"
     bookmarks:
       also_set_reminder: "Erinnerung hinzufügen?"
-      bookmarked_success: "Mit einem Lesezeichen versehen!"
+      bookmarked_success: "Gespeichert!"
       deleted_bookmark_success: "Lesezeichen gelöscht!"
       reminder_set_success: "Erinnerung gesetzt!"
       created: "Du hast diesen Beitrag mit einem Lesezeichen versehen. %{name}"
@@ -1255,15 +1255,15 @@ de:
         warning: "Mailinglisten-Modus aktiviert. Einstellungen zur Benachrichtigung per E-Mail werden nicht berücksichtigt."
       tag_settings: "Schlagwörter"
       watched_tags: "Beobachtet"
-      watched_tags_instructions: "Du wirst automatisch alle neuen Themen mit diesen Schlagwörtern beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt und die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
+      watched_tags_instructions: "Du wirst automatisch alle neuen Themen mit diesen Schlagwörtern beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt und die Anzahl der neuen Beiträge wird bei den betroffenen Themen angezeigt."
       tracked_tags: "Verfolgt"
-      tracked_tags_instructions: "Du wirst automatisch alle Themen mit diesen Schlagwörtern verfolgen. Die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
+      tracked_tags_instructions: "Du wirst automatisch alle Themen mit diesen Schlagwörtern verfolgen. Die Anzahl der neuen Beiträge wird bei den betroffenen Themen angezeigt."
       muted_tags: "Stummgeschaltet"
       muted_tags_instructions: "Du erhältst keine Benachrichtigungen über neue Themen mit diesen Schlagwörtern und die Themen werden auch nicht in der Liste der aktuellen Themen erscheinen."
       watched_categories: "Beobachtet"
       watched_categories_instructions: "Du wirst automatisch alle neuen Themen in diesen Kategorien beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt und die Anzahl der neuen Beiträge wird bei den betroffenen Themen angezeigt."
       tracked_categories: "Verfolgt"
-      tracked_categories_instructions: "Du wirst automatisch alle Themen in diesen Kategorien verfolgen. Die Anzahl der neuen Beiträge wird neben dem Thema erscheinen."
+      tracked_categories_instructions: "Du wirst automatisch alle Themen in diesen Kategorien verfolgen. Die Anzahl der neuen Beiträge wird bei den betroffenen Themen angezeigt."
       watched_first_post_categories: "Ersten Beitrag beobachten"
       watched_first_post_categories_instructions: "Du erhältst eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema in diesen Kategorien."
       watched_first_post_tags: "Ersten Beitrag beobachten"
@@ -1593,7 +1593,7 @@ de:
           one: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich nicht innerhalb der letzten Minute gesehen haben."
           other: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich nicht innerhalb der letzten %{count} Minuten gesehen haben."
       associated_accounts:
-        title: "Zugehörige Konten"
+        title: "Verknüpfte Konten"
         connect: "Verbinden"
         revoke: "Entziehen"
         cancel: "Abbrechen"
@@ -2034,8 +2034,8 @@ de:
         other: "Es gibt <b>%{count}</b> Antworten."
       buttons:
         hide: "Zusammenfassung ausblenden"
-        generate: "Zusammenfassen mit KI"
-        regenerate: "Zusammenfassung neu generieren"
+        generate: "Zusammenfassen"
+        regenerate: "Erneuern"
       description_time_MF: |
         Es gibt {replyCount, plural, one {<b>#</b> Antwort} other {<b>#</b> Antworten}} mit einer geschätzten Lesezeit von <b>{readingTime, plural, one {# Minute} other {# Minuten}}</b>.
       enable: "Top-Antworten anzeigen"
@@ -3880,7 +3880,7 @@ de:
           low { mit einem hohen Verhältnis von „Gefällt mir“ zu Beiträgen;}
           med { mit einem sehr hohen Verhältnis von „Gefällt mir“ zu Beiträgen;}
          high { mit einem extrem hohen Verhältnis von „Gefällt mir“ zu Beiträgen;}
-        other {}
+        other {;}
       } springe zum ersten oder letzten Beitrag …
     posters: "Beitragende"
     latest_poster_link: "Profil von %{username}, neuester Beitragender"
@@ -4105,7 +4105,7 @@ de:
         edit: "%{shortcut} Beitrag bearbeiten"
         delete: "%{shortcut} Beitrag löschen"
         mark_muted: "%{shortcut} Thema stummschalten"
-        mark_regular: "%{shortcut} Normales (Standard-)Thema"
+        mark_regular: "%{shortcut} Thema auf Normal (Standard) setzen"
         mark_tracking: "%{shortcut} Thema verfolgen"
         mark_watching: "%{shortcut} Thema beobachten"
         print: "%{shortcut} Thema ausdrucken"
@@ -4646,6 +4646,7 @@ de:
         problems_found: "Ein paar Ratschläge basierend auf deinen aktuellen Website-Einstellungen"
         new_features:
           title: "Was ist neu?"
+          subtitle: "Noch mehr Details zu den neuen Funktionen und Verbesserungen, die wir ständig hinzufügen, findest du in den <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Versionshinweisen</a>."
           previous_announcements: "Du kannst frühere Ankündigungen neuer Funktionen bei <a href='%{url}' target='_blank'>Discourse Meta</a> sehen."
           learn_more: "Mehr erfahren …"
         last_checked: "Zuletzt geprüft"
@@ -4726,7 +4727,7 @@ de:
             type_of_web_hook_event:
               label: "Art des Ereignisses"
       flags:
-        title: "Moderationsmeldungen"
+        title: "Meldungsgründe"
         description: "Beschreibung"
         enabled: "Aktiviert?"
         more_options:
@@ -5068,7 +5069,7 @@ de:
         sidebar_link:
           about_your_site: "Über deine Website"
           badges: "Abzeichen"
-          login_and_authentication: "Anmeldung und Authentifizierung"
+          login_and_authentication: "Anmeldung u. Auth."
           notifications: "Benachrichtigungen"
           permalinks: "Permalinks"
           trust_levels: "Vertrauensstufen"
@@ -5076,7 +5077,7 @@ de:
           user_fields: "Benutzerfelder"
           watched_words: "Beobachtete Wörter"
           legal: "Rechtliches"
-          moderation_flags: "Moderationsmeldungen"
+          moderation_flags: "Meldungsgründe"
       appearance:
         title: "Erscheinungsbild"
         sidebar_link:
@@ -5120,6 +5121,7 @@ de:
           header: "Über deine Website"
           general_settings: "Allgemeine Einstellungen"
           community_name: "Name der Community"
+          community_name_placeholder: "Beispiel-Community"
           community_summary: "Kurzbeschreibung der Community"
           community_description: "Beschreibung der Community"
           banner_image: "Bannerbild"
@@ -5127,12 +5129,15 @@ de:
             Dies wird auf deiner „Über uns“-Seite verwendet. Empfohlene Größe: 800 x 300px. Akzeptierte Typen: JPG, PNG und SVG bis zu 10 MB.
           contact_information: "Kontaktinformationen"
           community_owner: "Eigentümer der Community"
+          community_owner_placeholder: "Max Mustermann"
           community_owner_help: |
             Name einer verantwortlichen Person für diese Website. Wird verwendet für kritische Benachrichtigungen und unter /about angezeigt. Sichtbar für anonyme Benutzer auf öffentlichen Websites.
           contact_email: "Kontakt-E-Mail-Adresse"
+          contact_email_placeholder: "kontakt@max-mustermann.com"
           contact_email_help: |
             E-Mail-Adresse einer verantwortlichen Person für diese Website. Wird verwendet für kritische Benachrichtigungen und unter /about angezeigt. Sichtbar für anonyme Benutzer auf öffentlichen Websites.
           contact_url: "Kontakt-URL"
+          contact_url_placeholder: "https://max-mustermann.com/kontakt"
           contact_url_help: |
             Kontakt-URL für diese Website. Wenn vorhanden, ersetzt sie die Kontakt-E-Mail-Adresse unter /about und ist für anonyme Benutzer auf öffentlichen Websites sichtbar.
           site_contact_name: "Website-Ansprechpartner"
@@ -5143,14 +5148,17 @@ de:
             Ein gültiger Name einer Gruppe, die zu allen automatisch versendeten persönlichen Nachrichten eingeladen wird.
           your_organization: "Deine Organisation"
           company_name: "Firmenname"
+          company_name_placeholder: "Musterfirma"
           company_name_help: |
             Name deiner Firma oder deiner Organisation.
           company_name_warning: |
             Wenn du nichts angibst, werden keine vorgefertigten allgemeinen Geschäftsbedingungen oder eine entsprechende Datenschutzrichtlinie bereitgestellt.
           governing_law: "Anzuwendendes Recht"
+          governing_law_placeholder: "Musterland"
           governing_law_help: |
             Gib die Gerichtsbarkeit an, die für die rechtlichen Aspekte der Website gilt, einschließlich der Nutzungsbedingungen und der Datenschutzrichtlinie. Dies ist in der Regel das Land oder der Staat, in dem das Unternehmen, das die Seite betreibt, registriert ist oder Geschäfte tätigt.
           city_for_disputes: "Stadt für Rechtsstreitigkeiten"
+          city_for_disputes_placeholder: "Musterstadt"
           city_for_disputes_help: |
             Gib die Stadt an, die für die Beilegung von Streitigkeiten im Zusammenhang mit der Nutzung dieses Forums zuständig sein soll. Diese Information ist normalerweise in rechtlichen Dokumenten wie den Nutzungsbedingungen des Forums enthalten.
           optional: "(optional)"
@@ -6588,8 +6596,8 @@ de:
             other: "Deine CSV-Datei wurde empfangen und %{count} Benutzer werden in Kürze ihr Abzeichen erhalten."
           csv_has_unmatched_users: "Die folgenden Einträge befinden sich in der CSV-Datei, konnten jedoch nicht mit vorhandenen Benutzern abgeglichen werden (entsprechend wird ihnen kein Abzeichen verliehen):"
           csv_has_unmatched_users_truncated_list:
-            one: "Es gab %{count} Eintrag in der CSV-Datei, der keinem vorhandenen Benutzer zugeordnet werden konnte und der daher das Abzeichen nicht erhält. Aufgrund der großen Anzahl nicht übereinstimmender Einträge werden nur die ersten 100 angezeigt:"
-            other: "Es gab %{count} Einträge in der CSV-Datei, die keinem vorhandenen Benutzer zugeordnet werden konnten und die daher das Abzeichen nicht erhalten. Aufgrund der großen Anzahl nicht übereinstimmender Einträge werden nur die ersten 100 angezeigt:"
+            one: "Es befand sich %{count} Eintrag in der CSV-Datei, der keinem bestehenden Benutzer zugeordnet werden konnte, sodass er kein Abzeichen erhalten wird."
+            other: "Es befanden sich %{count} Einträge in der CSV-Datei, die keinem bestehenden Benutzer zugeordnet werden konnten und die daher das Abzeichen nicht erhalten. Aufgrund der großen Anzahl nicht übereinstimmender Einträge werden maximal die ersten 100 angezeigt:"
           replace_owners: Entferne das Abzeichen von vorherigen Eigentümern
           grant_existing_holders: Weitere Abzeichen an bestehende Abzeicheninhaber verleihen
       emoji:

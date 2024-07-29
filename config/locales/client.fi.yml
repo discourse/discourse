@@ -36,11 +36,11 @@ fi:
       long_with_year: "D. MMMM[ta] YYYY H.mm"
       long_with_year_no_time: "D. MMMM[ta] YYYY"
       full_with_year_no_time: "Do MMMM[ta] YYYY"
-      long_date_with_year: "D. MMM YYYY, LT"
+      long_date_with_year: "D. MMMM[ta] YYYY, LT"
       long_date_without_year: "D. MMMM[ta] LT"
       long_date_with_year_without_time: "D. MMMM[ta] YYYY"
       long_date_without_year_with_linebreak: "D. MMMM[ta] <br/>LT"
-      long_date_with_year_with_linebreak: "D. MMM YYYY <br/>LT"
+      long_date_with_year_with_linebreak: "D. MMMM[ta] YYYY <br/>LT"
       wrap_ago: "%{date} sitten"
       wrap_on: "%{date}"
       tiny:
@@ -76,7 +76,7 @@ fi:
           one: "%{count} v"
           other: "%{count} v"
         date_month: "D. MMM"
-        date_year: "MMM YYYY"
+        date_year: "MMMM YYYY"
       medium:
         less_than_x_minutes:
           one: "alle %{count} min"
@@ -998,6 +998,9 @@ fi:
         image: "Lataa kuva"
       default_notifications:
         modal_title: "Käyttäjän oletusilmoitukset"
+        modal_description:
+          one: "Haluatko tämän muutoksen vaikuttavan takautuvasti? Tämä muuttaa kaikkien %{count}:n olemassa olevan käyttäjän asetusta."
+          other: "Haluatko tämän muutoksen vaikuttavan takautuvasti? Tämä muuttaa kaikkien %{count}:n olemassa olevan käyttäjän asetusta."
         modal_yes: "Kyllä"
         modal_no: "Ei, käytä muutosta vain jatkossa"
     user_action_groups:
@@ -1016,7 +1019,7 @@ fi:
       "15": "Luonnokset"
       "17": "Linkit"
     categories:
-      categories_label: "luokat"
+      categories_label: "alueet"
       subcategories_label: "ala-alueet"
       no_subcategories: "ei ala-alueita"
       remove_filter: "poista suodatin"
@@ -1532,7 +1535,7 @@ fi:
         confirm_success: "Sähköpostiosoite päivitetty."
         confirm: "Vahvista"
         authorizing_new:
-          description: "Vahvista, että haluat sähköpostiosoitteesi muutettavan seuraavasti:"
+          description: "Vahvista, että haluat vaihtaa sähköpostiosoitteeksesi:"
           description_add: "Vahvista, että haluat lisätä vaihtoehtoisen sähköpostiosoitteen:"
         authorizing_old:
           title: "Vahvista vanha sähköpostiosoite"
@@ -1811,7 +1814,7 @@ fi:
         logged_in_as: "Olet kirjautunut tunnuksella: "
         forgot_password: "Unohditko salasanasi?"
         password_reset_email_sent: "Salasanan palautusviesti on lähetetty."
-        cannot_send_password_reset_email: "Salasanan nollausviestiä ei voitu lähettää."
+        cannot_send_password_reset_email: "Salasanan palautusviestiä ei voitu lähettää."
         instructions: "Vahvista henkilöllisyytesi suorittaaksesi tämän toimenpiteen loppuun."
         fine_print: "Pyydämme sinua todentamaan henkilöllisyytesi, koska tämä voi olla arkaluonteinen toimenpide. Kun olet tunnistautunut, todennusta pyydetään uudelleen vain muutaman tunnin käyttämättömyyden kuluttua."
       password:
@@ -1823,6 +1826,9 @@ fi:
         same_as_username: "Salasanasi on sama kuin käyttäjätunnuksesi."
         same_as_email: "Salasanasi on sama kuin sähköpostisosoitteesi."
         ok: "Salasana vaikuttaa hyvältä."
+        instructions:
+          one: "Vähintään %{count} merkki."
+          other: "Vähintään %{count} merkkiä."
         required: "Syötä salasana"
         confirm: "Vahvista"
         incorrect_password: "Syötetty salasana on virheellinen."
@@ -1953,12 +1959,12 @@ fi:
       close: "sulje"
       dismiss_error: "Hylkää virhe"
     form_kit:
-      reset: Nollaa
+      reset: Palauta
       optional: valinnainen
       errors_summary_title: "Tämä lomake sisältää virheitä:"
       dirty_form: "Et lähettänyt muutoksiasi! Oletko varma, että haluat poistua?"
       errors:
-        required: "Pakolliset"
+        required: "Pakollinen"
         invalid_url: "Täytyy olla kelvollinen URL"
         not_an_integer: "Täytyy olla kokonaisluku"
         not_accepted: "Täytyy hyväksyä"
@@ -1968,6 +1974,9 @@ fi:
         too_long:
           one: "Täytyy olla enintään %{count} merkki"
           other: "Täytyy olla enintään %{count} merkkiä"
+        too_short:
+          one: "Täytyy olla vähintään %{count} merkki"
+          other: "Täytyy olla vähintään %{count} merkkiä"
     close: "Sulje"
     assets_changed_confirm: "Tämä sivusto sai juuri ohjelmistopäivityksen. Haetaanko uusin versio nyt?"
     logout: "Sinut kirjattiin ulos."
@@ -2025,8 +2034,8 @@ fi:
         other: "Ketjussa on <b>%{count}</b> vastausta."
       buttons:
         hide: "Piilota yhteenveto"
-        generate: "Tiivistä tekoälyllä"
-        regenerate: "Luo yhteenveto uudelleen"
+        generate: "Tee yhteenveto"
+        regenerate: "Tee uusi"
       description_time_MF: |
         Ketjussa {replyCount, plural, one {on <b>#</b> vastaus} other {on <b>#</b> vastausta}}, joiden arvioitu lukuaika on <b>{readingTime, plural, one {# minuutti} other {# minuuttia}}</b>.
       enable: "Näytä suosituimmat vastaukset"
@@ -2312,6 +2321,9 @@ fi:
       group_mentioned:
         one: "Ryhmän %{group} mainitsemisesta ilmoitetaan <a href='%{group_link}'>%{count} henkilölle</a>."
         other: "Ryhmän %{group} mainitsemisesta ilmoitetaan <a href='%{group_link}'>%{count} henkilölle</a>."
+      larger_group_mentioned:
+        one: "Ryhmän %{group} mainitsemisesta ilmoitetaan <a href='%{group_link}'>%{count} henkilölle</a>. Oletko varma?"
+        other: "Ryhmän %{group} mainitsemisesta ilmoitetaan <a href='%{group_link}'>%{count} henkilölle</a>. Oletko varma?"
       cannot_see_mention:
         category: "Mainitsit käyttäjän @%{username}, mutta hän ei saa ilmoitusta, koska hänellä ei ole pääsyä tälle alueelle. Hänet täytyy lisätä ryhmään, jolla on pääsy alueelle."
         private: "Mainitsit käyttäjän @%{username}, mutta hän ei saa ilmoitusta, koska hän ei näe tätä yksityiskeskustelua. Hänet täytyy kutsua tähän yksityiskeskusteluun."
@@ -3817,7 +3829,7 @@ fi:
       predicted_views: "Ennustetut katselukerrat"
       so_far: (toistaiseksi)
       read: luku
-      minutes: väh.
+      minutes: min
     post_links:
       about: "laajenna lisää linkkejä tähän viestiin"
       title:
@@ -3850,7 +3862,7 @@ fi:
         help: "Tämä ketju on yksityisviesti"
       visibility_reasons:
         op_flag_threshold_reached: "Tämä ketju piilotettiin automaattisesti, koska se saavutti liputusrajan"
-        op_unhidden: "Kirjoittasi listasi tämän ketjun uudelleen"
+        op_unhidden: "Kirjoittaja listasi tämän ketjun uudelleen"
         embedded_topic: "Tämä ketju listattiin uudelleen, koska se on upotettu ketju"
         manually_unlisted: "Ylläpitäjä tai valvoja poisti tämän ketjun listauksen manuaalisesti"
         manually_relisted: "Ylläpitäjä tai valvoja listasi tämän ketjun uudelleen manuaalisesti"
@@ -4393,24 +4405,30 @@ fi:
               validation:
                 blank: "Kuvake ei voi olla tyhjä"
                 maximum:
-                  one: "Kuvakkeen on oltava alle %{count} merkkiä"
+                  one: "Kuvakkeen on oltava alle %{count} merkki"
                   other: "Kuvakkeen nimen täytyy olla lyhyempi kuin %{count} merkkiä"
             name:
               label: "Nimi"
               validation:
                 blank: "Nimi ei voi olla tyhjä"
                 maximum:
-                  one: "Nimen on oltava alle %{count} merkkiä"
+                  one: "Nimen on oltava alle %{count} merkki"
                   other: "Nimen on oltava alle %{count} merkkiä"
             value:
               label: "Linkki"
               validation:
                 blank: "Linkki ei voi olla tyhjä"
+                maximum:
+                  one: "Linkin täytyy olla lyhyempi kuin %{count} merkki"
+                  other: "Linkin täytyy olla lyhyempi kuin %{count} merkkiä"
                 invalid: "Muoto on virheellinen"
           title:
             label: "Osion otsikko"
             validation:
               blank: "Otsikko ei voi olla tyhjä"
+              maximum:
+                one: "Otsikon täytyy olla lyhyempi kuin %{count} merkki"
+                other: "Otsikon täytyy olla lyhyempi kuin %{count} merkkiä"
         about:
           header_link_text: "Tietoa"
         messages:
@@ -4524,7 +4542,7 @@ fi:
           one: "Syötteen täytyy olla ainakin %{count} merkki."
           other: "Syötteen täytyy olla ainakin %{count} merkkiä."
         too_long:
-          one: "Syötteen täytyy olla alle %{count} merkkiä."
+          one: "Syötteen täytyy olla alle %{count} merkki."
           other: "Syötteen täytyy olla alle %{count} merkkiä."
         range_overflow:
           one: "Syötteen täytyy olla vähemmän kuin %{count}."
@@ -4610,7 +4628,7 @@ fi:
         sidebar_link:
           all: "Kaikki"
       new_features:
-        title: "Uutta"
+        title: "Mitä uutta"
       dashboard:
         title: "Hallintapaneeli"
         last_updated: "Hallintapaneeli päivitetty:"
@@ -5053,10 +5071,10 @@ fi:
           notifications: "Ilmoitukset"
           permalinks: "Pysyvät linkit"
           trust_levels: "Luottamustasot"
-          users: "Käyttäjiä"
+          users: "Käyttäjät"
           user_fields: "Käyttäjäkentät"
           watched_words: "Tarkkaillut sanat"
-          legal: "Säännöt"
+          legal: "Oikeudelliset tiedot"
           moderation_flags: "Valvontaliput"
       appearance:
         title: "Ulkoasu"
@@ -5095,7 +5113,7 @@ fi:
           search_logs: "Hakulokit"
           security: "Tietoturva"
           spam: "Roskaposti"
-          staff_action_logs: "Henkilöstön toimintalokit"
+          staff_action_logs: "Henkilökunnan toimintalokit"
       config_areas:
         about:
           header: "Tietoa sivustostasi"
@@ -5114,6 +5132,7 @@ fi:
           contact_email_help: |
             Sivustosta vastaavan henkilön sähköpostiosoite. Siihen lähetetään kriittiset ilmoitukset, ja se näkyy myös /about-sivulla. Näkyy anonyymeille käyttäjille julkisilla sivustoilla.
           contact_url: "Yhteydenotto-URL"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
             Tämän sivuston yhteydenotto-URL. Kun tämä on asetettu, se korvaa yhteyssähköpostiosoitteen /about-sivulla ja näkyy anonyymeille käyttäjille julkisilla sivustoilla.
           site_contact_name: "Sivuston yhteyshenkilön nimi"
@@ -5150,7 +5169,7 @@ fi:
           edit: "Muokkaa"
           back: "Takaisin lippuihin"
           delete: "Poista"
-          delete_confirm: 'Haluatko varmasti poistaa teeman "%{name}"?'
+          delete_confirm: 'Haluatko varmasti poistaa lipun "%{name}"?'
           form:
             add_header: "Lisää lippu"
             edit_header: "Muokkaa lippua"
@@ -5531,9 +5550,13 @@ fi:
                 at_least:
                   one: "vähintään %{count} tunniste vaaditaan"
                   other: "vähintään %{count} tunnistetta vaaditaan"
+              string:
+                too_short:
+                  one: "täytyy olla vähintään %{count} merkki"
+                  other: "täytyy olla vähintään %{count} merkkiä"
               number:
-                too_small: "täytyy olla yhtä suuri tai suurempi kuin %{count}"
-                too_large: "täytyy olla yhtä suuri tai pienempi kuin %{count}"
+                too_small: "täytyy olla suurempi tai yhtä suuri kuin %{count}"
+                too_large: "täytyy olla pienempi tai yhtä suuri kuin %{count}"
         colors:
           select_base:
             title: "Valitse perusväripaletti"
@@ -6440,6 +6463,9 @@ fi:
         secret_list:
           invalid_input: "Tekstikentät eivät voi olla tyhjiä tai sisältää pystyviivamerkkiä."
         default_categories:
+          modal_description:
+            one: "Haluatko tämän muutoksen vaikuttavan takautuvasti? Tämä muuttaa kaikkien %{count}:n olemassa olevan käyttäjän asetusta."
+            other: "Haluatko tämän muutoksen vaikuttavan takautuvasti? Tämä muuttaa kaikkien %{count}:n olemassa olevan käyttäjän asetusta."
           modal_yes: "Kyllä"
           modal_no: "Ei, käytä muutosta vain jatkossa"
         simple_list:
@@ -6557,6 +6583,9 @@ fi:
           perform: "Myönnä kunniamerkki käyttäjille"
           upload_csv: Lataa CSV, jossa on joko käyttäjien sähköpostiosoitteita tai käyttäjätunnuksia
           aborted: Lataa CSV, joka sisältää joko käyttäjien sähköpostiosoitteita tai käyttäjätunnuksia
+          success:
+            one: "CSV tuli perille ja %{count} käyttäjä saa kunniamerkkinsä pian."
+            other: "CSV tuli perille ja %{count} käyttäjää saavat kunniamerkkinsä pian."
           csv_has_unmatched_users: "Seuraavat merkinnät ovat CSV-tiedostossa, mutta niitä ei voitu yhdistää olemassa oleviin käyttäjiin, joten he eivät saa kunniamerkkiä:"
           replace_owners: Poista kunniamerkki aiemmilta omistajilta
           grant_existing_holders: Myönnä lisämerkkejä nykyisille kunniamerkkien haltijoille

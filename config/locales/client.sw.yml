@@ -1046,6 +1046,8 @@ sw:
       sign_up: "Jiunge"
       hide_forever: "hapana asante"
     summary:
+      buttons:
+        regenerate: "Tengeneza Upya"
       disable: "Onyesha Machapisho Yote"
     deleted_filter:
       enabled_description: "Mada hii ina machapisho yaliyofutwa, ambayo yamefichwa."
@@ -2534,6 +2536,7 @@ sw:
           spam: "Barua Taka"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(sio muhimu)"
           saved: "imehifadhiwa!"
         flags:

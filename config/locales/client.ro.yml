@@ -1648,6 +1648,9 @@ ro:
       hide_forever: "Nu, mulțumesc"
       intro: "Salut! Se pare că îți place discuția, dar încă nu te-ai înscris pentru un cont."
     summary:
+      buttons:
+        generate: "Rezumat"
+        regenerate: "Regenerare"
       disable: "Arată toate postările"
     deleted_filter:
       enabled_description: "Acest subiect conține postări șterse, care au fost ascunse. "
@@ -3538,6 +3541,7 @@ ro:
           staff_action_logs: "Jurnal de acțiuni ale personalului"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(opțional)"
           saved: "salvat!"
         flags:

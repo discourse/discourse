@@ -1403,6 +1403,8 @@ ca:
       hide_forever: "no, gràcies"
       intro: "Bon dia! Sembla que gaudiu de la discussió, però no heu registrat un compte."
     summary:
+      buttons:
+        regenerate: "Regenera"
       disable: "Mostra totes les publicacions"
     deleted_filter:
       enabled_description: "Aquest tema conté publicacions suprimides, que han estat amagades."
@@ -3241,6 +3243,7 @@ ca:
           spam: "Brossa"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(opcional)"
           saved: "desat!"
         flags:

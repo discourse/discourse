@@ -24,7 +24,7 @@ de:
         doc: Löst eine Automatisierung aus, wenn sich ein Benutzer zum ersten Mal anmeldet.
       stalled_topic:
         title: Festgefahrenes Thema
-        doc: Löst eine Automatisierung aus, wenn das Thema für einen bestimmten Zeitraum keine neue Antwort vom Themeninhaber erhalten hat. Es wird empfohlen, diesen Auslöser auf ein Tag/eine Kategorie zu beschränken, da die Anzahl der betroffenen Themen sehr hoch sein kann. Als Sicherheitsmaßnahme ist die Anzahl der betroffenen Themen auf 250 begrenzt.
+        doc: Löst eine Automatisierung aus, wenn das Thema für einen bestimmten Zeitraum keine neue Antwort vom Themeneigentümer erhalten hat. Es wird empfohlen, diesen Auslöser auf ein Schlagwort/eine Kategorie zu beschränken, da die Anzahl der betroffenen Themen sehr hoch sein kann. Als Sicherheitsmaßnahme ist die Anzahl der betroffenen Themen auf 250 begrenzt.
       api_call:
         title: API-Aufruf
         description: Erstellen einer POST-Anfrage, um eine Automatisierung auszulösen
@@ -111,7 +111,7 @@ de:
       suspend_user_by_email_with_api_call:
         doc: Beim Auslösen von `suspend_user_by_email` mit einem API-Aufruf erwartet der Endpunkt, dass eine gültige `email` in den gesendeten Parametern vorhanden ist. `reasons` und `suspend_until (ISO 8601 format)` können auch verwendet werden, um Standardfeldwerte zu überschreiben.
       user_global_notice_with_stalled_topic:
-        doc: Wenn dies durch ein festgefahrenes Thema ausgelöst wird, erhält der Themeninhaber den globalen Hinweis.
+        doc: Wenn dies durch ein festgefahrenes Thema ausgelöst wird, erhält der Themeneigentümer den globalen Hinweis.
       user_global_notice_with_first_accepted_solution:
         doc: Bei Auslösung durch die erste akzeptierte Lösung erhält der Verfasser der Lösung den globalen Hinweis.
       send_pms_with_api_call:

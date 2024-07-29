@@ -1689,6 +1689,9 @@ lt:
     offline_indicator:
       refresh_page: "Atnaujinti puslapį"
     summary:
+      buttons:
+        generate: "Apibendrinti"
+        regenerate: "Pergeneruoti"
       disable: "Peržiūrėti visus Įrašus"
       short_label: "Populiariausi Atsakymai"
       show_all_label: "Rodyti viską"
@@ -3934,6 +3937,7 @@ lt:
           spam: "Šlamštas"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           site_contact_group_help: |
             Galiojantis grupės pavadinimas, kuris yra pakviestas į visas automatiškai siunčiamas privačias žinutes.
           optional: "(pasoronktinai)"

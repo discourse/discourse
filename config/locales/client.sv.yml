@@ -1960,8 +1960,8 @@ sv:
         other: "Det finns <b>%{count}</b> svar."
       buttons:
         hide: "Dölj sammanfattning"
-        generate: "Sammanfatta med AI"
-        regenerate: "Generera ny sammanfattning"
+        generate: "Sammanfatta"
+        regenerate: "Generera ny"
       description_time_MF: |
         Det {replyCount, plural, one {finns <b>#</b> svar} other {finns <b>#</b> svar}} med en uppskattad lästid på <b>{readingTime, plural, one {# minut} other {# minuter}}</b>.
       enable: "Visa toppsvar"
@@ -4904,6 +4904,7 @@ sv:
         about:
           header: "Om din webbplats"
           community_name: "Forumets namn"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "Din organisation"
           company_name: "Företagsnamn"
           governing_law: "Gällande lag"

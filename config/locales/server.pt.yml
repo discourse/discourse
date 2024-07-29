@@ -2052,7 +2052,12 @@ pt:
       privacy:
         fields:
           login_required:
-            placeholder: "Privado"
+            label: "Visibilidade"
+            choices:
+              public:
+                label: "Público"
+              private:
+                label: "Privado"
       styling:
         fields:
           styling_preview:

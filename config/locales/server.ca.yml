@@ -2812,8 +2812,12 @@ ca:
       privacy:
         fields:
           login_required:
-            placeholder: "Privat"
-            extra_description: "Sols els usuaris que han iniciat la sessió poden accedir a aquesta comunitat"
+            label: "Visibilitat"
+            choices:
+              public:
+                label: "Públic"
+              private:
+                label: "Privat"
       styling:
         fields:
           styling_preview:

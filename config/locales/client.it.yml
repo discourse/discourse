@@ -314,8 +314,15 @@ it:
       contact: "Contattaci"
       contact_info: "Nel caso di un problema grave o urgente riguardante il sito, per favore contattaci all'indirizzo %{contact_info}."
       member_count:
-        one: "%{formatted_number} Membro"
-        other: "%{formatted_number} Membri"
+        one: "%{formatted_number} membro"
+        other: "%{formatted_number} membri"
+      admin_count:
+        one: "%{formatted_number} amministratore"
+        other: "%{formatted_number} amministratori"
+      moderator_count:
+        one: "%{formatted_number} moderatore"
+        other: "%{formatted_number} moderatori"
+      report_inappropriate_content: "Se ti imbatti in contenuti inappropriati, contatta senza esitazione i nostri moderatori e amministratori. Autenticati per fare la segnalazione."
     bookmarked:
       title: "Segnalibro"
       edit_bookmark: "Modifica Segnalibro"
@@ -1959,6 +1966,7 @@ it:
       errors:
         required: "Obbligatorio"
         invalid_url: "L'URL deve essere valido"
+        not_an_integer: "Deve essere un numero intero"
         not_accepted: "Deve essere accettato"
         not_a_number: "Deve essere un numero"
         too_high: "Deve essere al massimo %{count}"
@@ -2026,8 +2034,8 @@ it:
         other: "Ci sono <b>%{count}</b> risposte."
       buttons:
         hide: "Nascondi il riepilogo"
-        generate: "Riassumi con l'intelligenza artificiale"
-        regenerate: "Rigenera riepilogo"
+        generate: "Riassumi"
+        regenerate: "Rigenera"
       description_time_MF: |
         {replyCount, plural, one {C'è <b>#</b> risposta} other {Ci sono <b>#</b> risposte}} con un tempo di lettura stimato di <b>{readingTime, plural, one {# minuto} other {# minuti}}</b>.
       enable: "Mostra le risposte migliori"
@@ -3519,7 +3527,7 @@ it:
           illegal: "L'hai segnalato come illegale"
           notify_moderators: "L'hai segnalato per un controllo dei moderatori"
           notify_user: "Hai inviato un messaggio a questo utente"
-          custom: "Hai contrassegnato questo argomento come %{custom}"
+          custom: "Hai segnalato questo argomento come %{custom}"
       delete:
         confirm:
           one: "Vuoi davvero eliminare il messaggio?"
@@ -3811,7 +3819,15 @@ it:
       clicks:
         one: "%{count} click"
         other: "%{count} clic"
+      menu_titles:
+        replies: Risposte con più "mi piace"
+        views: Visualizzazioni recenti
+      view_explainer: Una visualizzazione per visitatore distinto ogni 8 ore.
+      no_views: Le statistiche di visualizzazioni non sono ancora disponibili. Riprova più tardi.
+      chart_error: Errore nel rendering del grafico. Riprova.
       views: "Visualizzazioni"
+      predicted_views: "Visualizzazioni previste"
+      so_far: (finora)
       read: lettura
       minutes: minimo
     post_links:
@@ -3840,12 +3856,12 @@ it:
         title: "Appuntato"
         help: "Questo argomento è appuntato per te; verrà mostrato in cima alla sua categoria"
       unlisted:
-        help: "Questo argomento è invisibile; non verrà mostrato negli elenchi argomenti ed è possibile accedervi solo tramite collegamento diretto. %{unlistedReason}"
+        help: "Questo argomento è invisibile: non verrà mostrato negli elenchi argomenti ed è possibile accedervi solo tramite collegamento diretto. %{unlistedReason}"
       personal_message:
         title: "Questo argomento è un messaggio personale"
         help: "Questo argomento è un messaggio personale"
       visibility_reasons:
-        op_flag_threshold_reached: "Questo argomento è stato reso automaticamente invisibile perché ha raggiunto la soglia di segnalazione"
+        op_flag_threshold_reached: "Questo argomento è stato reso automaticamente invisibile perché ha raggiunto la soglia di segnalazioni"
         op_unhidden: "L'argomento è stato ripubblicato dal suo autore"
         embedded_topic: "L'argomento è stato ripubblicato in quanto argomento incorporato"
         manually_unlisted: "Questo argomento è stato reso invisibile manualmente da un amministratore o moderatore"
@@ -4509,8 +4525,8 @@ it:
       errors:
         value_missing:
           default: "Compila questo campo."
-          select_one: "Seleziona un elemento nella lista."
-          select_multiple: "Seleziona almeno un elemento nella lista."
+          select_one: "Seleziona un elemento in elenco."
+          select_multiple: "Seleziona almeno un elemento in elenco."
           checkbox: "Spunta questa casella se vuoi procedere."
         type_mismatch:
           default: "Inserisci un valore valido."
@@ -5112,13 +5128,14 @@ it:
           contact_information: "Informazioni di contatto"
           community_owner: "Proprietario della comunità"
           community_owner_help: |
-            Nome del contatto responsabile del sito. Riceve le notifiche di importanza critica e viene visualizzato su /about. Risulta visibile agli utenti anonimi sui siti pubblici.
+            Nome del contatto responsabile del sito. Riceve le notifiche di importanza critica e compare su /about. Risulta visibile agli utenti anonimi sui siti pubblici.
           contact_email: "Email di contatto"
           contact_email_help: |
-            Indirizzo email del contatto responsabile del sito. Riceve le notifiche di importanza critica e viene visualizzato su /about. Risulta visibile agli utenti anonimi sui siti pubblici.
+            Indirizzo email del contatto responsabile del sito. Riceve le notifiche di importanza critica e compare su /about. Risulta visibile agli utenti anonimi sui siti pubblici.
           contact_url: "URL di contatto"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
-            URL di contatto per questo sito. Se presente, sostituisce l'indirizzo email di contatto sul modulo /about. Risulta visibile agli utenti anonimi sui siti pubblici.
+            URL di contatto per questo sito. Se presente, sostituisce l'indirizzo email di contatto su /about. Risulta visibile agli utenti anonimi sui siti pubblici.
           site_contact_name: "Nome contatto del sito"
           site_contact_name_help: |
             Nome utente valido appartenente a un membro dello staff da cui inviare tutti i messaggi automatici. Se non compilato, verrà usato l'account predefinito di sistema.
@@ -5130,7 +5147,7 @@ it:
           company_name_help: |
             Nome della tua azienda o organizzazione.
           company_name_warning: |
-            Se non compilato, non avrà a disposizione Termini di servizio o Informativa sulla privacy standard.
+            Se non compilato, non avrai a disposizione Termini di servizio o Informativa sulla privacy standard.
           governing_law: "Diritto applicabile"
           governing_law_help: |
             Specifica la giurisdizione competente che disciplina gli aspetti legali del sito, inclusi i Termini di servizio e l'Informativa sulla privacy. Solitamente essa corrisponde alla giurisdizione del paese o stato in cui la società che gestisce il sito è registrata o svolge le sue attività.
@@ -5165,13 +5182,13 @@ it:
             post: "messaggi"
             chat_message: "messaggi di chat"
             enabled: "Abilita questa segnalazione personalizzata dopo il salvataggio"
-            alert: "Una volta che una segnalazione personalizzata è stata usata, può essere disabilitata ma non può più essere modificata o eliminata."
+            alert: "Una volta che una segnalazione personalizzata è stata usata, non può più essere modificata o eliminata, ma solo disabilitata."
             edit_flag: "Modifica segnalazione"
             non_editable: "Impossibile modificare la segnalazione: è una segnalazione di sistema oppure è già stata usata nel sistema di revisione. È però possibile disabilitarla."
             delete_flag: "Elimina segnalazione"
             non_deletable: "Impossibile eliminare la segnalazione: è una segnalazione di sistema oppure è già stata usata nel sistema di revisione. È però possibile disabilitarla."
             require_message: "Chiedi all'utente di fornire motivi aggiuntivi"
-            require_message_description: "Quando questa segnalazione è selezionata, comparirà un campo di testo in cui l'utente potrà inserire più informazioni sulla natura della segnalazione"
+            require_message_description: "Quando questa segnalazione è selezionata, all'utente verrà mostrato un campo di testo in cui inserire più informazioni sul motivo della segnalazione"
           more_options:
             title: "Altre opzioni"
             move_up: "Sposta su"
@@ -5845,6 +5862,8 @@ it:
             topic_slow_mode_removed: "rimuovi modalità lenta per argomento"
             custom_emoji_create: "crea emoji personalizzata"
             custom_emoji_destroy: "elimina emoji personalizzata"
+            delete_post_permanently: "elimina definitivamente messaggio"
+            delete_topic_permanently: "elimina definitivamente argomento"
         screened_emails:
           title: "Email scansionate"
           description: "Quando qualcuno cerca di creare un nuovo account, i seguenti indirizzi email saranno controllati e la loro registrazione bloccata, oppure sarà eseguita qualche altra azione."
@@ -6280,7 +6299,7 @@ it:
             other: "Negli ultimi %{count} giorni:"
           value_heading: "Valore"
           requirement_heading: "Requisito"
-          posts_read_days: "Messaggi letti: in un singolo giorno"
+          posts_read_days: "Messaggi letti: in giorni distinti"
           days: "giorni"
           topics_replied_to: "Argomenti cui hai risposto"
           topics_viewed: "Argomenti Visti"
@@ -6336,12 +6355,12 @@ it:
           optional:
             title: "Facoltativo"
           for_all_users:
-            title: "Per qualsiasi utente"
-            description: "All'atto dell'iscrizione, l'utente dovrà compilare questo campo. Se l'utente già iscritto non ha mai compilato il campo, gli verrà chiesto di farlo quando tornerà al sito."
+            title: "Per ogni utente"
+            description: "All'atto dell'iscrizione, l'utente dovrà compilare questo campo. Se un utente già iscritto non ha mai compilato il campo, gli verrà chiesto di farlo quando tornerà al sito. Per richiedere la compilazione a tutti gli utenti, elimina e poi ricrea il campo personalizzato."
           on_signup:
             title: "All'iscrizione"
-            description: "All'atto dell'iscrizione, l'utente dovrà compilare questo campo. Questa impostazione non interessa gli utenti già iscritti"
-          confirmation: "Agli utenti già iscritti verrà richiesto di compilare campo e non potranno intraprendere altre azioni sul sito finché non avranno eseguito. Intendi procedere?"
+            description: "All'atto dell'iscrizione, l'utente dovrà compilare questo campo. Questa impostazione non interessa gli utenti già iscritti."
+          confirmation: "Agli utenti già iscritti verrà richiesto di compilare il campo e non potranno intraprendere altre azioni sul sito finché non avranno eseguito. Intendi procedere?"
         editable:
           title: "Modificabile dopo l'iscrizione"
           enabled: "modificabile"
@@ -6446,7 +6465,7 @@ it:
           invalid_input: "I campi di inserimento non possono essere vuoti o contenere il carattere barra verticale."
         default_categories:
           modal_description:
-            one: "Intendi applicare questa modifica retroattivamente? Questo cambierà le preferenze per %{count} utenti esistenti."
+            one: "Intendi applicare questa modifica retroattivamente? Questo cambierà le preferenze per %{count} utente esistente."
             other: "Intendi applicare questa modifica retroattivamente? Questo cambierà le preferenze per %{count} utenti esistenti."
           modal_yes: "Sì"
           modal_no: "No, applica le modifiche solo da adesso in avanti"
@@ -6465,19 +6484,19 @@ it:
         mandatory_group: "Gruppo è un campo obbligatorio"
         requires_confirmation_messages:
           default:
-            prompt: "Modificare questa impostazione potrebbe risultare in conseguenze su vasta scala o comunque indesiderate sul sito. Intendi procedere?"
+            prompt: "Modificare questa impostazione potrebbe risultare in conseguenze rilevanti o comunque indesiderate per il sito. Intendi procedere?"
             confirm: "Sì, procedi"
           min_password_length:
-            prompt: "Stai per modificare i criteri della password. La modifica interesserà tutti gli utenti che modificheranno la password da ora in avanti. Intendi procedere?"
+            prompt: "Stai per modificare i criteri della password. La modifica interesserà ogni utente che modificherà la password da ora in avanti. Intendi procedere?"
             confirm: "Sì, aggiorna i criteri della password"
           min_admin_password_length:
             prompt: "Stai per modificare i criteri della password. La modifica interesserà tutti gli amministratore che modificheranno la password da ora in avanti. Intendi procedere?"
             confirm: "Sì, aggiorna i criteri della password"
           password_unique_charactes:
-            prompt: "Stai per modificare i criteri della password. La modifica interesserà tutti gli utenti che modificheranno la password da ora in avanti. Intendi procedere?"
+            prompt: "Stai per modificare i criteri della password. La modifica interesserà ogni utente che modificherà la password da ora in avanti. Intendi procedere?"
             confirm: "Sì, aggiorna i criteri della password"
           block_common_passwords:
-            prompt: "Stai per modificare i criteri della password. La modifica interesserà tutti gli utenti che modificheranno la password da ora in avanti. Intendi procedere?"
+            prompt: "Stai per modificare i criteri della password. La modifica interesserà ogni utente che modificherà la password da ora in avanti. Intendi procedere?"
             confirm: "Sì, aggiorna i criteri della password"
       badges:
         disable_system: 'Questo è un distintivo di sistema: non può essere disabilitato e/o eliminato.'
@@ -6569,9 +6588,6 @@ it:
             one: "Il tuo CSV è stato ricevuto e %{count} utente riceverà il suo distintivo a breve."
             other: "Il tuo CSV è stato ricevuto e %{count} utenti riceveranno il loro distintivo a breve."
           csv_has_unmatched_users: "Le seguenti voci sono nel file CSV ma non possono essere abbinate agli utenti esistenti e quindi non riceveranno il distintivo:"
-          csv_has_unmatched_users_truncated_list:
-            one: "Il file CSV conteneva %{count} elemento che non è stato possibile abbinare a utenti esistenti. Per esso, nessuno riceverà il badge. A causa dell'elevato numero di elementi privi di abbinamenti, sono mostrati solo i primi 100:"
-            other: "Il file CSV conteneva %{count} elementi che non è stato possibile abbinare a utenti esistenti. Per essi, nessuno riceverà il badge. A causa dell'elevato numero di elementi privi di abbinamenti, sono mostrati solo i primi 100:"
           replace_owners: Rimuovi il distintivo dai precedenti proprietari
           grant_existing_holders: Assegna distintivi aggiuntivi ai titolari di distintivi già esistenti
       emoji:

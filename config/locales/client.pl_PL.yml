@@ -382,6 +382,7 @@ pl_PL:
         few: "%{formatted_number} Członków"
         many: "%{formatted_number} Członków"
         other: "%{formatted_number} Członków"
+      report_inappropriate_content: "Jeśli natkniesz się na nieodpowiednie treści, nie wahaj się i rozpocznij rozmowę z naszymi moderatorami i administratorami. Pamiętaj, aby zalogować się przed kontaktem."
     bookmarked:
       title: "Zakładka"
       edit_bookmark: "Edytuj zakładkę"
@@ -443,6 +444,11 @@ pl_PL:
     bookmark_bulk_actions:
       clear_reminders:
         name: "Wyczyść przypomnienia"
+        description:
+          one: "Czy na pewno chcesz wyczyścić przypomnienie dla tej zakładki?"
+          few: "Czy na pewno chcesz wyczyścić przypomnienie dla tych <b>%{count}</b> zakładek?"
+          many: "Czy na pewno chcesz wyczyścić przypomnienie dla tych <b>%{count}</b> zakładek?"
+          other: "Czy na pewno chcesz wyczyścić przypomnienie dla tych <b>%{count}</b> zakładek?"
       delete_bookmarks:
         name: "Usuń zakładkę"
         description:
@@ -2129,9 +2135,14 @@ pl_PL:
     form_kit:
       reset: Przywróć
       optional: opcjonalnie
+      errors_summary_title: "Ten formularz zawiera błędy:"
+      dirty_form: "Nie przesłano zmian. Czy na pewno chcesz wyjść?"
       errors:
         required: "Wymagane"
         invalid_url: "Musi być prawidłowym adresem URL"
+        not_an_integer: "Musi być liczbą całkowitą"
+        not_accepted: "Musi zostać zaakceptowane"
+        not_a_number: "Musi być liczbą"
     close: "Zamknij"
     assets_changed_confirm: "Ta strona właśnie otrzymała aktualizację oprogramowania. Pobrać najnowszą wersję teraz?"
     logout: "Nastąpiło wylogowanie."
@@ -2195,8 +2206,8 @@ pl_PL:
         other: "Jest <b>%{count}</b> odpowiedzi."
       buttons:
         hide: "Ukryj podsumowanie"
-        generate: "Podsumuj z AI"
-        regenerate: "Wygeneruj ponownie podsumowanie"
+        generate: "Podsumuj"
+        regenerate: "Odnów"
       description_time_MF: |
         Istnieje {replyCount, plural, one {<b>#</b> odpowiedź} few {<b>#</b> odpowiedzi} many {<b>#</b> odpowiedzi} other {<b>#</b> odpowiedzi}} z szacowanym czasem czytania <b>{readingTime, plural, one {# minuty} few {# minut} many {# minut} other {# minut}}</b>.
       enable: "Pokaż najlepsze odpowiedzi"
@@ -4167,6 +4178,9 @@ pl_PL:
         few: "%{count} kliknięć"
         many: "%{count} kliknięć"
         other: "%{count} kliknięć"
+      menu_titles:
+        replies: Najbardziej lubiane odpowiedzi
+        views: Ostatnie wyświetlenia
       views: "Odsłony"
       read: odczyt
       minutes: min
@@ -5111,6 +5125,8 @@ pl_PL:
               label: Kategoria
             include_subcategories:
               label: "Uwzględnij podkategorie"
+            type_of_web_hook_event:
+              label: "Rodzaj zdarzenia"
       flags:
         title: "Flagi moderacji"
         description: "Opis"
@@ -5509,15 +5525,22 @@ pl_PL:
           header: "O Twojej witrynie"
           general_settings: "Ustawienia główne"
           community_name: "Nazwa społeczności"
+          community_name_placeholder: "Przykładowa społeczność"
           community_summary: "Podsumowanie społeczności"
           community_description: "Opis społeczności"
           banner_image: "Obraz banera"
+          banner_image_help: |
+            To zdjęcie zostanie wykorzystane na Twojej stronie "O nas". Zalecany rozmiar: 800x300 pikseli. Akceptowane formaty: JPG, PNG i SVG, do 10 MB.
           contact_information: "Informacje kontaktowe"
           community_owner: "Właściciel społeczności"
+          community_owner_help: |
+            Nazwa kluczowego kontaktu odpowiedzialnego za tę witrynę. Używana do krytycznych powiadomień, a także wyświetlana na /about. Widoczna dla anonimowych użytkowników w publicznych witrynach.
           contact_email: "E-mail kontaktowy"
           contact_url: "URL kontaktowy"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "Twoja organizacja"
           company_name: "Nazwa firmy"
+          company_name_placeholder: "Przykładowa firma Inc."
           governing_law: "Obowiązujące prawo"
           city_for_disputes: "Miasto do sporów"
           city_for_disputes_help: |
@@ -6209,6 +6232,16 @@ pl_PL:
             update_watched_word_group: "Zaktualizuj grupę obserwowanych słów"
             delete_watched_word_group: "Usuń grupę obserwowanych słów"
             toggle_flag: "przełącz flagę"
+            move_flag: "przenieś flagę"
+            create_flag: "utwórz flagę"
+            update_flag: "zaktualizuj flagę"
+            delete_flag: "usuń flagę"
+            topic_slow_mode_set: "ustaw tryb spowolnienia tematu"
+            topic_slow_mode_removed: "usuń tryb spowolnienia tematu"
+            custom_emoji_create: "utwórz niestandardowe emoji"
+            custom_emoji_destroy: "usuń niestandardowe emoji"
+            delete_post_permanently: "trwale usuń post"
+            delete_topic_permanently: "trwale usuń temat"
         screened_emails:
           title: "Ekranowane emaile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -6299,6 +6332,7 @@ pl_PL:
           case_sensitivity_label: "Rozróżniana jest wielkość liter"
           case_sensitivity_description: "Tylko słowa z dopasowaną wielkością liter"
           html_label: "HTML"
+          html_description: "Wyświetla HTML w zastępstwie"
           words_or_phrases: "słowa lub frazy"
         test:
           button_label: "Sprawdź"
@@ -6709,6 +6743,8 @@ pl_PL:
           title: "Pole obowiązkowe"
           optional:
             title: "Opcjonalnie"
+          for_all_users:
+            title: "Dla wszystkich użytkowników"
           on_signup:
             title: "Podczas rejestracji"
         editable:
@@ -6834,6 +6870,14 @@ pl_PL:
         requires_confirmation_messages:
           default:
             confirm: "Tak, jestem pewny/a"
+          min_password_length:
+            confirm: "Tak, zaktualizuj politykę haseł"
+          min_admin_password_length:
+            confirm: "Tak, zaktualizuj politykę haseł"
+          password_unique_charactes:
+            confirm: "Tak, zaktualizuj politykę haseł"
+          block_common_passwords:
+            confirm: "Tak, zaktualizuj politykę haseł"
       badges:
         status: Status
         title: Odznaki
@@ -6843,6 +6887,8 @@ pl_PL:
         badge: Odznaka
         display_name: Wyświetlana nazwa
         description: Opis
+        long_description: Długi opis
+        badge_type: Typ odznaki
         badge_grouping: Grupa
         badge_groupings:
           modal_title: Grupy odznak
@@ -6871,6 +6917,7 @@ pl_PL:
         icon: Ikona
         image: Grafika
         graphic: Grafika
+        icon_or_image: Odznaka wymaga ikony lub obrazu
         icon_help: "Wprowadź nazwę ikony Font Awesome (użyj prefiksu \"far-\" dla zwykłych ikon i \"fab-\" dla ikon marek)"
         select_an_icon: "Wybierz ikonę"
         upload_an_image: "Prześlij obraz"

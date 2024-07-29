@@ -11,7 +11,6 @@ pt:
     poll_edit_window_mins: "O número de minutos depois da criação da publicação durante os quais as sondagens podem ser editadas."
     poll_minimum_trust_level_to_create: "Defina o nível de confiança mínimo necessário para criar sondagens."
     poll_groupable_user_fields: "Um conjunto de nomes de campos de utilizador que podem ser usados para agrupar e filtrar os resultados da sondagem."
-    poll_export_data_explorer_query_id: "ID do Data Explorer Query a ser usado para exportar resultados da sondagem (0 para desativar)."
   poll:
     poll: "enquete"
     invalid_argument: "Valor inválido '%{value}' para o argumento '%{argument}'."

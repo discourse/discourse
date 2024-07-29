@@ -10,7 +10,6 @@ lt:
     poll_maximum_options: "Maskimalus įterpiamų įrašų skaičius"
     poll_edit_window_mins: "Minutės po įrašo sukūrimo, per kurias galima redaguoti apklausas."
     poll_minimum_trust_level_to_create: "Nustatykite minimalų patikimumo lygį, reikalingą apklausoms kurti."
-    poll_export_data_explorer_query_id: "„Data Explorer“ užklausos ID, naudojamas eksportuoti apklausos rezultatus (0, kad išjungtumėte)."
   poll:
     poll: "apklausa"
     invalid_argument: "Netinkama argumento „%{argument}“ reikšmė „%{value}“."
