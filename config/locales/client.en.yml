@@ -5010,6 +5010,7 @@ en:
         problems_found: "Some advice based on your current site settings"
         new_features:
           title: "What's new"
+          subtitle: "For even more detail about new features and improvements we are adding all the time, see <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Release notes</a>."
           previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Learn more..."
         last_checked: "Last checked"
