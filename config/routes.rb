@@ -387,6 +387,8 @@ Discourse::Application.routes.draw do
         end
       end
       namespace :config, constraints: StaffConstraint.new do
+        resources :site_settings, only: %i[index]
+
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
           put "reorder/:direction" => "flags#reorder"
