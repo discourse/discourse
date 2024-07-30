@@ -95,14 +95,6 @@ RSpec.describe "Navigation", type: :system do
         chat.channel_path(category_channel.slug, category_channel.id),
       )
     end
-
-    it "redirects /chat/direct-messages to browse" do
-      visit("/chat/direct-messages")
-
-      expect(page).to have_current_path(
-        chat.channel_path(category_channel.slug, category_channel.id),
-      )
-    end
   end
 
   context "when opening chat" do
@@ -262,6 +254,27 @@ RSpec.describe "Navigation", type: :system do
           expect(side_panel_page).to be_closed
         end
       end
+    end
+  end
+
+  context "when public channels are disabled" do
+    before { SiteSetting.enable_public_channels = false }
+
+    it "only show dms in drawer" do
+      visit("/")
+      chat_page.open_from_header
+
+      expect(page).to have_css(".direct-message-channels.center-empty-channels-list")
+      expect(chat_page).to have_no_messages
+    end
+
+    it "only show dms in desktop" do
+      visit("/")
+      chat_page.prefers_full_page
+      chat_page.open_from_header
+
+      expect(chat_page).to have_no_messages
+      expect(page).to have_css(".c-routes.--direct-messages")
     end
   end
 

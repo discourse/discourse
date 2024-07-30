@@ -12,6 +12,7 @@ export default class ChatRoutesDirectMessages extends Component {
       <Navbar as |navbar|>
         <navbar.Title @title={{i18n "chat.direct_messages.title"}} />
         <navbar.Actions as |action|>
+          <action.OpenDrawerButton />
           <action.NewDirectMessageButton />
         </navbar.Actions>
       </Navbar>
