@@ -94,20 +94,14 @@ button.ru {
   }
 }
 
-.backup-options {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  .btn {
-    margin-right: 0.5em;
+.backup-message {
+  margin-left: auto;
+  margin-top: 1em;
+  @include breakpoint(mobile-extra-large) {
+    margin: 1.25em 0 0;
   }
-  .backup-message {
-    margin-left: auto;
-    @include breakpoint(mobile-extra-large) {
-      margin: 1.25em 0 0;
-    }
-  }
-  label {
-    font-weight: normal;
-  }
+}
+
+label.admin-backups-upload {
+  font-weight: 400;
 }

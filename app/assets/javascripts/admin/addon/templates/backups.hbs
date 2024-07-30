@@ -12,38 +12,12 @@
       />
     </:breadcrumbs>
     <:actions as |actions|>
-      {{#if this.model.canRollback}}
-        <actions.Default
-          @action={{route-action "rollback"}}
-          @label="admin.backups.operations.rollback.label"
-          @title="admin.backups.operations.rollback.title"
-          @icon="ambulance"
-          @disabled={{this.rollbackDisabled}}
-          @defaultClass="btn-rollback admin-backups__rollback"
-        />
-      {{/if}}
-      {{#if this.model.isOperationRunning}}
-        <actions.Danger
-          @action={{route-action "cancelOperation"}}
-          @title="admin.backups.operations.cancel.title"
-          @label="admin.backups.operations.cancel.label"
-          @icon="times"
-          @dangerClass="admin-backups__cancel"
-        />
-      {{else}}
-        <actions.Primary
-          @action={{route-action "showStartBackupModal"}}
-          @title="admin.backups.operations.backup.title"
-          @label="admin.backups.operations.backup.label"
-          @icon="rocket"
-          @primaryClass="admin-backups__start"
-        />
-      {{/if}}
+      <AdminBackupsActions @actions={{actions}} @backups={{@model}} />
     </:actions>
     <:tabs>
       <NavItem
         @route="admin.backups.index"
-        @label="admin.backups.menu.backups"
+        @label="admin.backups.menu.backup_files"
       />
       <NavItem @route="admin.backups.logs" @label="admin.backups.menu.logs" />
       <PluginOutlet @name="downloader" @connectorTagName="div" />
