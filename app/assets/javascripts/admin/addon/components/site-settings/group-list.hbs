@@ -2,9 +2,10 @@
   @value={{this.settingValue}}
   @choices={{this.groupChoices}}
   @settingName="name"
+  @mandatoryValues={{this.setting.mandatory_values}}
   @nameProperty={{this.nameProperty}}
   @valueProperty={{this.valueProperty}}
   @onChange={{this.onChangeGroupListSetting}}
 />
 <SettingValidationMessage @message={{this.validationMessage}} />
-<div class="desc">{{html-safe this.setting.description}}</div>
+<SiteSettings::Description @description={{this.setting.description}} />

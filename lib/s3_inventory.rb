@@ -4,16 +4,22 @@ require "aws-sdk-s3"
 require "csv"
 
 class S3Inventory
-  attr_reader :type, :model, :inventory_date
+  attr_reader :type, :inventory_date, :s3_helper
 
-  CSV_KEY_INDEX ||= 1
-  CSV_ETAG_INDEX ||= 2
-  INVENTORY_PREFIX ||= "inventory"
-  INVENTORY_VERSION ||= "1"
-  INVENTORY_LAG ||= 2.days
+  CSV_KEY_INDEX = 1
+  CSV_ETAG_INDEX = 2
+  INVENTORY_PREFIX = "inventory"
+  INVENTORY_LAG = 2.days
+  WAIT_AFTER_RESTORE_DAYS = 2
 
-  def initialize(s3_helper, type, preloaded_inventory_file: nil, preloaded_inventory_date: nil)
-    @s3_helper = s3_helper
+  def initialize(
+    type,
+    s3_inventory_bucket:,
+    preloaded_inventory_file: nil,
+    preloaded_inventory_date: nil,
+    s3_options: {}
+  )
+    @s3_helper = S3Helper.new(s3_inventory_bucket, "", s3_options)
 
     if preloaded_inventory_file && preloaded_inventory_date
       # Data preloaded, so we don't need to fetch it again
@@ -24,9 +30,12 @@ class S3Inventory
     if type == :upload
       @type = "original"
       @model = Upload
+      @scope = @model.by_users.without_s3_file_missing_confirmed_verification_status
     elsif type == :optimized
       @type = "optimized"
-      @model = OptimizedImage
+      @scope = @model = OptimizedImage
+    else
+      raise "Invalid type: #{type}"
     end
   end
 
@@ -41,12 +50,14 @@ class S3Inventory
         download_and_decompress_files if !@preloaded_inventory_file
 
         multisite_prefix = Discourse.store.upload_path
+
         ActiveRecord::Base.transaction do
           begin
             connection.exec(
-              "CREATE TEMP TABLE #{table_name}(url text UNIQUE, etag text, PRIMARY KEY(etag, url))",
+              "CREATE TEMP TABLE #{tmp_table_name}(url text UNIQUE, etag text, PRIMARY KEY(etag, url))",
             )
-            connection.copy_data("COPY #{table_name} FROM STDIN CSV") do
+
+            connection.copy_data("COPY #{tmp_table_name} FROM STDIN CSV") do
               for_each_inventory_row do |row|
                 key = row[CSV_KEY_INDEX]
 
@@ -58,66 +69,70 @@ class S3Inventory
               end
             end
 
+            table_name = @model.table_name
+
             # backfilling etags
             connection.async_exec(
-              "UPDATE #{model.table_name}
-              SET etag = #{table_name}.etag
-              FROM #{table_name}
-              WHERE #{model.table_name}.etag IS NULL AND
-                #{model.table_name}.url = #{table_name}.url",
+              "UPDATE #{table_name}
+              SET etag = #{tmp_table_name}.etag
+              FROM #{tmp_table_name}
+              WHERE #{table_name}.etag IS NULL AND
+                #{table_name}.url = #{tmp_table_name}.url",
             )
 
-            uploads = model.where("updated_at < ?", inventory_date)
-            uploads = uploads.by_users if model == Upload
+            uploads = @scope.where("updated_at < ?", inventory_date)
 
             missing_uploads =
               uploads.joins(
-                "LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag",
-              ).where("#{table_name}.etag IS NULL")
+                "LEFT JOIN #{tmp_table_name} ON #{tmp_table_name}.etag = #{table_name}.etag",
+              ).where("#{tmp_table_name}.etag IS NULL")
 
             exists_with_different_etag =
               missing_uploads
                 .joins(
-                  "LEFT JOIN #{table_name} inventory2 ON inventory2.url = #{model.table_name}.url",
+                  "LEFT JOIN #{tmp_table_name} inventory2 ON inventory2.url = #{table_name}.url",
                 )
                 .where("inventory2.etag IS NOT NULL")
                 .pluck(:id)
 
             # marking as verified/not verified
-            if model == Upload
+            if @model == Upload
               sql_params = {
                 inventory_date: inventory_date,
                 invalid_etag: Upload.verification_statuses[:invalid_etag],
+                s3_file_missing_confirmed: Upload.verification_statuses[:s3_file_missing_confirmed],
                 verified: Upload.verification_statuses[:verified],
-                seeded_id_threshold: model::SEEDED_ID_THRESHOLD,
+                seeded_id_threshold: @model::SEEDED_ID_THRESHOLD,
               }
 
               DB.exec(<<~SQL, sql_params)
-                UPDATE #{model.table_name}
+                UPDATE #{table_name}
                 SET verification_status = :verified
                 WHERE etag IS NOT NULL
                   AND verification_status <> :verified
+                  AND verification_status <> :s3_file_missing_confirmed
                   AND updated_at < :inventory_date
                   AND id > :seeded_id_threshold
                   AND EXISTS
                     (
                         SELECT 1
-                        FROM #{table_name}
-                        WHERE #{table_name}.etag = #{model.table_name}.etag
+                        FROM #{tmp_table_name}
+                        WHERE #{tmp_table_name}.etag = #{table_name}.etag
                     )
               SQL
 
               DB.exec(<<~SQL, sql_params)
-                UPDATE #{model.table_name}
+                UPDATE #{table_name}
                 SET verification_status = :invalid_etag
                 WHERE verification_status <> :invalid_etag
+                  AND verification_status <> :s3_file_missing_confirmed
                   AND updated_at < :inventory_date
                   AND id > :seeded_id_threshold
                   AND NOT EXISTS
                     (
                         SELECT 1
-                        FROM #{table_name}
-                        WHERE #{table_name}.etag = #{model.table_name}.etag
+                        FROM #{tmp_table_name}
+                        WHERE #{tmp_table_name}.etag = #{table_name}.etag
                     )
               SQL
             end
@@ -133,16 +148,16 @@ class S3Inventory
                   end
                 end
 
-              log "#{missing_count} of #{uploads.count} #{model.name.underscore.pluralize} are missing"
+              log "#{missing_count} of #{uploads.count} #{@scope.name.underscore.pluralize} are missing"
               if exists_with_different_etag.present?
                 log "#{exists_with_different_etag.count} of these are caused by differing etags"
                 log "Null the etag column and re-run for automatic backfill"
               end
             end
 
-            Discourse.stats.set("missing_s3_#{model.table_name}", missing_count)
+            set_missing_s3_discourse_stats(missing_count)
           ensure
-            connection.exec("DROP TABLE #{table_name}") unless connection.nil?
+            connection.exec("DROP TABLE #{tmp_table_name}") unless connection.nil?
           end
         end
       ensure
@@ -179,43 +194,6 @@ class S3Inventory
     )
   end
 
-  def update_bucket_policy
-    @s3_helper.s3_client.put_bucket_policy(
-      bucket: bucket_name,
-      policy: {
-        Version: "2012-10-17",
-        Statement: [
-          {
-            Sid: "InventoryAndAnalyticsPolicy",
-            Effect: "Allow",
-            Principal: {
-              Service: "s3.amazonaws.com",
-            },
-            Action: ["s3:PutObject"],
-            Resource: ["#{inventory_path_arn}/*"],
-            Condition: {
-              ArnLike: {
-                "aws:SourceArn": bucket_arn,
-              },
-              StringEquals: {
-                "s3:x-amz-acl": "bucket-owner-full-control",
-              },
-            },
-          },
-        ],
-      }.to_json,
-    )
-  end
-
-  def update_bucket_inventory_configuration
-    @s3_helper.s3_client.put_bucket_inventory_configuration(
-      bucket: bucket_name,
-      id: inventory_id,
-      inventory_configuration: inventory_configuration,
-      use_accelerate_endpoint: false,
-    )
-  end
-
   def prepare_for_all_sites
     db_names = RailsMultisite::ConnectionManagement.all_dbs
     db_files = {}
@@ -238,6 +216,10 @@ class S3Inventory
     cleanup!
   end
 
+  def s3_client
+    @s3_helper.s3_client
+  end
+
   private
 
   def cleanup!
@@ -252,16 +234,25 @@ class S3Inventory
     @connection ||= ActiveRecord::Base.connection.raw_connection
   end
 
-  def table_name
+  def tmp_table_name
     "#{type}_inventory"
   end
 
   def files
     return if @preloaded_inventory_file
+
     @files ||=
       begin
         symlink_file = unsorted_files.sort_by { |file| -file.last_modified.to_i }.first
+
         return [] if symlink_file.blank?
+
+        if BackupMetadata.last_restore_date.present? &&
+             (symlink_file.last_modified - WAIT_AFTER_RESTORE_DAYS.days) <
+               BackupMetadata.last_restore_date
+          set_missing_s3_discourse_stats(0)
+          return []
+        end
 
         @inventory_date = symlink_file.last_modified - INVENTORY_LAG
         log "Downloading symlink file to tmp directory..."
@@ -269,6 +260,9 @@ class S3Inventory
         filename = File.join(tmp_directory, File.basename(symlink_file.key))
 
         @s3_helper.download_file(symlink_file.key, filename, failure_message)
+
+        return [] if !File.exist?(filename)
+
         File
           .readlines(filename)
           .map do |key|
@@ -297,31 +291,6 @@ class S3Inventory
       end
   end
 
-  def inventory_configuration
-    filter_prefix = type
-    filter_prefix = bucket_folder_path if bucket_folder_path.present?
-
-    {
-      destination: {
-        s3_bucket_destination: {
-          bucket: bucket_arn,
-          prefix: inventory_path,
-          format: "CSV",
-        },
-      },
-      filter: {
-        prefix: filter_prefix,
-      },
-      is_enabled: SiteSetting.enable_s3_inventory,
-      id: inventory_id,
-      included_object_versions: "Current",
-      optional_fields: ["ETag"],
-      schedule: {
-        frequency: "Daily",
-      },
-    }
-  end
-
   def bucket_name
     @s3_helper.s3_bucket_name
   end
@@ -332,36 +301,13 @@ class S3Inventory
 
   def unsorted_files
     objects = []
-
-    hive_path = File.join(inventory_path, bucket_name, inventory_id, "hive")
+    hive_path = File.join(bucket_folder_path, "hive")
     @s3_helper.list(hive_path).each { |obj| objects << obj if obj.key.match?(/symlink\.txt\z/i) }
 
     objects
   rescue Aws::Errors::ServiceError => e
     log("Failed to list inventory from S3", e)
     []
-  end
-
-  def inventory_id
-    @inventory_id ||=
-      begin
-        id = Rails.configuration.multisite ? "original" : type # TODO: rename multisite path to "uploads"
-        bucket_folder_path.present? ? "#{bucket_folder_path}-#{id}" : id
-      end
-  end
-
-  def inventory_path_arn
-    File.join(bucket_arn, inventory_path)
-  end
-
-  def inventory_path
-    path = File.join(INVENTORY_PREFIX, INVENTORY_VERSION)
-    path = File.join(bucket_folder_path, path) if bucket_folder_path.present?
-    path
-  end
-
-  def bucket_arn
-    "arn:aws:s3:::#{bucket_name}"
   end
 
   def log(message, ex = nil)
@@ -371,5 +317,9 @@ class S3Inventory
 
   def error(message)
     log(message, StandardError.new(message))
+  end
+
+  def set_missing_s3_discourse_stats(count)
+    Discourse.stats.set("missing_s3_#{@model.table_name}", count)
   end
 end

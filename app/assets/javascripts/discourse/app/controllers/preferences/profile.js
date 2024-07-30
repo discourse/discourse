@@ -1,12 +1,11 @@
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import FeatureTopicOnProfileModal from "discourse/components/modal/feature-topic-on-profile";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { cook } from "discourse/lib/text";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
@@ -42,6 +41,13 @@ export default Controller.extend({
       return;
     }
 
+    if (this.showEnforcedRequiredFieldsNotice) {
+      return this._missingRequiredFields(
+        this.site.user_fields,
+        this.model.user_fields
+      );
+    }
+
     // Staff can edit fields that are not `editable`
     if (!this.currentUser.staff) {
       siteUserFields = siteUserFields.filterBy("editable", true);
@@ -51,6 +57,11 @@ export default Controller.extend({
       const value = this.model.user_fields?.[field.id.toString()];
       return EmberObject.create({ field, value });
     });
+  },
+
+  @discourseComputed("currentUser.needs_required_fields_check")
+  showEnforcedRequiredFieldsNotice(needsRequiredFieldsCheck) {
+    return needsRequiredFieldsCheck;
   },
 
   @discourseComputed("model.user_option.default_calendar")
@@ -79,6 +90,16 @@ export default Controller.extend({
       },
     });
     document.querySelector(".feature-topic-on-profile-btn")?.focus();
+  },
+
+  _missingRequiredFields(siteFields, userFields) {
+    return siteFields
+      .filter(
+        (siteField) =>
+          siteField.requirement === "for_all_users" &&
+          isEmpty(userFields[siteField.id])
+      )
+      .map((field) => EmberObject.create({ field, value: "" }));
   },
 
   actions: {
@@ -120,22 +141,18 @@ export default Controller.extend({
 
     save() {
       this.set("saved", false);
-      const model = this.model;
 
       // Update the user fields
       this.send("_updateUserFields");
 
-      return model
+      return this.model
         .save(this.saveAttrNames)
-        .then(() => {
-          cook(model.get("bio_raw"))
-            .then(() => {
-              model.set("bio_cooked");
-              this.set("saved", true);
-            })
-            .catch(popupAjaxError);
-        })
-        .catch(popupAjaxError);
+        .then(({ user }) => this.model.set("bio_cooked", user.bio_cooked))
+        .catch(popupAjaxError)
+        .finally(() => {
+          this.currentUser.set("needs_required_fields_check", false);
+          this.set("saved", true);
+        });
     },
   },
 });

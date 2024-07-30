@@ -50,7 +50,6 @@ RSpec.describe Users::OmniauthCallbacksController do
             end
             .new
 
-        provider.enabled_setting = "ubuntu_login_enabled"
         provider
       end
 
@@ -398,6 +397,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         user.reload
         expect(user.email_confirmed?).to eq(true)
+        expect(user.user_auth_tokens.last.authenticated_with_oauth).to be true
       end
 
       it "should return the authenticated response with the correct path for subfolders" do
@@ -629,6 +629,21 @@ RSpec.describe Users::OmniauthCallbacksController do
 
           expect(response.status).to eq(302)
           expect(JSON.parse(cookies[:authentication_data])["email"]).to eq(user.email)
+        end
+      end
+
+      context "when user has TOTP enabled but enforce_second_factor_on_external_auth is false" do
+        before { user.create_totp(enabled: true) }
+
+        it "should return the right response" do
+          SiteSetting.enforce_second_factor_on_external_auth = false
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(302)
+
+          data = JSON.parse(cookies[:authentication_data])
+
+          expect(data["authenticated"]).to eq(true)
         end
       end
 

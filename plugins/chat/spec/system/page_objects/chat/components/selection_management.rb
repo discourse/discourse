@@ -48,6 +48,10 @@ module PageObjects
           click_button("move")
         end
 
+        def delete
+          click_button("delete")
+        end
+
         private
 
         def selector_for(action)
@@ -60,6 +64,8 @@ module PageObjects
             "chat-cancel-selection-btn"
           when "move"
             "chat-move-to-channel-btn"
+          when "delete"
+            "chat-delete-btn"
           end
         end
 

@@ -3,7 +3,7 @@ import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-ico
 import ChannelName from "discourse/plugins/chat/discourse/components/channel-name";
 
 const ChatChannelTitle = <template>
-  <div
+  <span
     class={{concatClass
       "chat-channel-title"
       (if @channel.isDirectMessageChannel "is-dm" "is-category")
@@ -15,7 +15,7 @@ const ChatChannelTitle = <template>
     {{#if (has-block)}}
       {{yield}}
     {{/if}}
-  </div>
+  </span>
 </template>;
 
 export default ChatChannelTitle;

@@ -74,7 +74,7 @@ end
 
 RSpec.describe WorkQueue::FairQueue do
   subject(:queue) do
-    WorkQueue::FairQueue.new(global_limit) { WorkQueue::BoundedQueue.new(per_key_limit) }
+    WorkQueue::FairQueue.new(:key, global_limit) { WorkQueue::BoundedQueue.new(per_key_limit) }
   end
 
   let(:global_limit) { 5 }

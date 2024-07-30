@@ -2,7 +2,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { alias, gt, not, or } from "@ember/object/computed";
 import { next } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import UserStatusModal from "discourse/components/modal/user-status";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyNotEqual, setting } from "discourse/lib/computed";

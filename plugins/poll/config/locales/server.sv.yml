@@ -12,7 +12,6 @@ sv:
     poll_minimum_trust_level_to_create: "Definiera lägsta förtroendenivå som krävs för att skapa omröstningar."
     poll_create_allowed_groups: "Grupperna som får skapa omröstningar."
     poll_groupable_user_fields: "En uppsättning användarfältsnamn som kan användas för att gruppera och filtrera undersökningsresultat."
-    poll_export_data_explorer_query_id: "ID för Dataundersökningsfrågan som ska användas för att exportera undersökningsresultat (0 för att inaktivera)."
     poll_default_public: "När en ny omröstning skapas ska alternativet \"Visa vem som röstat\" aktiveras som standard."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"

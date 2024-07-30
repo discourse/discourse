@@ -1,30 +1,33 @@
 /* eslint-disable simple-import-sort/imports */
+import "decorator-transforms/globals";
 import "./loader-shims";
 import "./global-compat";
+import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
 /* eslint-enable simple-import-sort/imports */
 
+// Register Discourse's standard implicit injections on common framework classes.
+registerDiscourseImplicitInjections();
+
 import Application from "@ember/application";
+import { VERSION } from "@ember/version";
 import require from "require";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
-import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { isTesting } from "discourse-common/config/environment";
 import { buildResolver } from "discourse-common/resolver";
-import { VERSION } from "@ember/version";
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
-const Discourse = Application.extend({
-  modulePrefix: "discourse",
+class Discourse extends Application {
+  modulePrefix = "discourse";
+  rootElement = "#main";
 
-  rootElement: "#main",
-
-  customEvents: {
+  customEvents = {
     paste: "paste",
-  },
+  };
 
-  Resolver: buildResolver("discourse"),
+  Resolver = buildResolver("discourse");
 
   // Start up the Discourse application by running all the initializers we've defined.
   start() {
@@ -36,9 +39,6 @@ const Discourse = Application.extend({
     // between Glimmer and Classic components.
     normalizeEmberEventHandling(this);
 
-    // Register Discourse's standard implicit injections on common framework classes.
-    registerDiscourseImplicitInjections();
-
     if (Error.stackTraceLimit) {
       // We need Errors to have full stack traces for `lib/source-identifier`
       Error.stackTraceLimit = Infinity;
@@ -49,18 +49,18 @@ const Discourse = Application.extend({
     window.history.scrollRestoration = "manual";
 
     loadInitializers(this);
-  },
+  }
 
   _registerPluginCode(version, code) {
     _pluginCallbacks.push({ version, code });
-  },
+  }
 
   ready() {
     performance.mark("discourse-ready");
     const event = new CustomEvent("discourse-ready");
     document.dispatchEvent(event);
-  },
-});
+  }
+}
 
 function moduleThemeId(moduleName) {
   const match = moduleName.match(/^discourse\/theme\-(\d+)\//);

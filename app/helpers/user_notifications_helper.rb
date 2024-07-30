@@ -45,7 +45,7 @@ module UserNotificationsHelper
         end
       end
 
-    return result unless result.blank?
+    return result if result.present?
 
     # If there is no first paragraph with text, return the first paragraph with
     # something else (an image) or div (a onebox).
@@ -66,7 +66,7 @@ module UserNotificationsHelper
   def show_username_on_post(post)
     return true unless SiteSetting.enable_names?
     return true unless SiteSetting.display_name_on_posts?
-    return true unless post.user.name.present?
+    return true if post.user.name.blank?
 
     normalize_name(post.user.name) != normalize_name(post.user.username)
   end

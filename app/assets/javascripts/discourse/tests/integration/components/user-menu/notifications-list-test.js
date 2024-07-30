@@ -65,17 +65,13 @@ module(
       assert.strictEqual(queryParams.silent, undefined);
     });
 
-    test("displays a show all button that takes to the notifications page of the current user", async function (assert) {
+    test("show all button for all notifications page", async function (assert) {
       await render(template);
       const showAllBtn = query(".panel-body-bottom .btn.show-all");
-      assert.ok(
-        showAllBtn.href.endsWith("/u/eviltrout/notifications"),
-        "it takes you to the notifications page"
-      );
       assert.strictEqual(
-        showAllBtn.getAttribute("title"),
+        showAllBtn.title,
         I18n.t("user_menu.view_all_notifications"),
-        "title attribute is present"
+        "has the correct title"
       );
     });
 

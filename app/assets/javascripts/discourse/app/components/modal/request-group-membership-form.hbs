@@ -10,7 +10,11 @@
         {{i18n "groups.membership_request.reason"}}
       </label>
 
-      <ExpandingTextArea @value={{this.reason}} @maxlength="5000" />
+      <ExpandingTextArea
+        {{on "input" (with-event-value (fn (mut this.reason)))}}
+        value={{this.reason}}
+        maxlength="5000"
+      />
     </div>
   </:body>
 

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import MentionWithoutMembership from "discourse/plugins/chat/discourse/components/chat/notices/mention_without_membership";
 
@@ -38,7 +38,7 @@ export default class ChatNotices extends Component {
       <DButton
         @icon="times"
         @action={{this.clearNotice}}
-        class="btn-flat chat-notices__notice__clear"
+        class="btn-transparent chat-notices__notice__clear"
       />
     </div>
   </template>

@@ -17,7 +17,7 @@ module PageObjects
       end
 
       def header
-        @header ||= PageObjects::Components::Chat::ThreadHeader.new(".c-routes-channel-thread")
+        @header ||= PageObjects::Components::Chat::ThreadHeader.new(".c-routes.--channel-thread")
       end
 
       def notifications_button
@@ -94,7 +94,9 @@ module PageObjects
       end
 
       def click_composer
-        find(".chat-thread .chat-composer__input").click # ensures autocomplete is closed and not masking anything
+        if has_no_css?(".dialog-overlay", wait: 0) # we can't click composer if a dialog is open, in case of error for exampel
+          find(".chat-thread .chat-composer__input").click # ensures autocomplete is closed and not masking anything
+        end
       end
 
       def send_message(text = nil)
@@ -139,6 +141,10 @@ module PageObjects
       def edit_message(message, text = nil)
         messages.edit(message)
         send_message(message.message + " " + text) if text
+      end
+
+      def has_bookmarked_message?(message)
+        find(message_by_id_selector(message.id) + ".-bookmarked")
       end
     end
   end

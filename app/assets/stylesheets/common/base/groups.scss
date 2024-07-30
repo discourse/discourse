@@ -47,8 +47,6 @@
     color: var(--primary);
 
     .discourse-no-touch & {
-      transition: all 0.25s;
-
       &:hover {
         box-shadow: var(--shadow-card);
         border-color: var(--primary-low-mid-or-secondary-high);
@@ -153,6 +151,7 @@
     display: inline;
   }
   &.groups-notifications-form {
+    max-width: 33em;
     .control-instructions {
       color: var(--primary-medium);
       margin-bottom: 10px;

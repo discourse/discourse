@@ -27,6 +27,10 @@
       class="btn-default"
     />
   {{/if}}
+  <LinkTo @route="adminSiteSettingsCategory" @model="backups">
+    {{i18n "admin.backups.settings"}}
+  </LinkTo>
+
   <div class="backup-message">
     {{#if this.status.restoreDisabled}}
       <a href="site_settings/category/all_results?filter=allow_restore">{{d-icon

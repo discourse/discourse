@@ -2,7 +2,8 @@ details {
   position: relative;
 
   .topic-body .cooked &,
-  .d-editor-preview & {
+  .d-editor-preview,
+  &.details__boxed {
     background-color: var(--primary-very-low);
     padding: 0.25rem 0.75rem;
     margin-bottom: 0.5rem;
@@ -20,6 +21,12 @@ details {
     code {
       background-color: rgba(var(--primary-rgb), 0.05);
     }
+  }
+}
+
+details.details__boxed {
+  summary {
+    font-weight: bold;
   }
 }
 

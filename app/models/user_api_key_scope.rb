@@ -10,6 +10,7 @@ class UserApiKeyScope < ActiveRecord::Base
     notifications: [
       RouteMatcher.new(methods: :post, actions: "message_bus"),
       RouteMatcher.new(methods: :get, actions: "notifications#index"),
+      RouteMatcher.new(methods: :get, actions: "notifications#totals"),
       RouteMatcher.new(methods: :put, actions: "notifications#mark_read"),
     ],
     session_info: [

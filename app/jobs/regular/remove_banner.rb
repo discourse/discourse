@@ -5,7 +5,7 @@ module Jobs
     def execute(args)
       topic_id = args[:topic_id]
 
-      return unless topic_id.present?
+      return if topic_id.blank?
 
       topic = Topic.find_by(id: topic_id)
       topic.remove_banner!(Discourse.system_user) if topic.present?

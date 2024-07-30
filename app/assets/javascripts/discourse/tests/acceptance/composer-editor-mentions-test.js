@@ -1,18 +1,19 @@
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { setCaretPosition } from "discourse/lib/utilities";
 import {
   acceptance,
-  emulateAutocomplete,
   exists,
   fakeTime,
   loggedInUser,
   query,
   queryAll,
+  simulateKeys,
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Composer - editor mentions", function (needs) {
   let clock = null;
+
   const status = {
     emoji: "tooth",
     description: "off to dentist",
@@ -21,12 +22,7 @@ acceptance("Composer - editor mentions", function (needs) {
 
   needs.user();
   needs.settings({ enable_mentions: true, allow_uncategorized_topics: true });
-
-  needs.hooks.afterEach(() => {
-    if (clock) {
-      clock.restore();
-    }
-  });
+  needs.hooks.afterEach(() => clock?.restore());
 
   needs.pretender((server, helper) => {
     server.get("/u/search/users", () => {
@@ -65,11 +61,12 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    await emulateAutocomplete(".d-editor-input", "abc @u");
-    await click(".autocomplete.ac-user .selected");
+    const editor = query(".d-editor-input");
+
+    await simulateKeys(editor, "abc @u\r");
 
     assert.strictEqual(
-      query(".d-editor-input").value,
+      editor.value,
       "abc @user ",
       "should replace mention correctly"
     );
@@ -78,21 +75,13 @@ acceptance("Composer - editor mentions", function (needs) {
   test("selecting user mentions after deleting characters", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    await fillIn(".d-editor-input", "abc @user a");
 
-    // Emulate user typing `@` and `u` in the editor
-    await triggerKeyEvent(".d-editor-input", "keydown", "Backspace");
-    await fillIn(".d-editor-input", "abc @user ");
-    await triggerKeyEvent(".d-editor-input", "keyup", "Backspace");
+    const editor = query(".d-editor-input");
 
-    await triggerKeyEvent(".d-editor-input", "keydown", "Backspace");
-    await fillIn(".d-editor-input", "abc @user");
-    await triggerKeyEvent(".d-editor-input", "keyup", "Backspace");
-
-    await click(".autocomplete.ac-user .selected");
+    await simulateKeys(editor, "abc @user a\b\b\r");
 
     assert.strictEqual(
-      query(".d-editor-input").value,
+      editor.value,
       "abc @user ",
       "should replace mention correctly"
     );
@@ -102,25 +91,14 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    // Emulate user pressing backspace in the editor
     const editor = query(".d-editor-input");
-    await fillIn(".d-editor-input", "abc @user 123");
+
+    await simulateKeys(editor, "abc @user 123");
     await setCaretPosition(editor, 9);
-
-    await triggerKeyEvent(".d-editor-input", "keydown", "Backspace");
-    await fillIn(".d-editor-input", "abc @use 123");
-    await triggerKeyEvent(".d-editor-input", "keyup", "Backspace");
-    await setCaretPosition(editor, 8);
-
-    await triggerKeyEvent(".d-editor-input", "keydown", "Backspace");
-    await fillIn(".d-editor-input", "abc @us 123");
-    await triggerKeyEvent(".d-editor-input", "keyup", "Backspace");
-    await setCaretPosition(editor, 7);
-
-    await click(".autocomplete.ac-user .selected");
+    await simulateKeys(editor, "\b\b\r");
 
     assert.strictEqual(
-      query(".d-editor-input").value,
+      editor.value,
       "abc @user 123",
       "should replace mention correctly"
     );
@@ -134,12 +112,15 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    await emulateAutocomplete(".d-editor-input", "@u");
+    const editor = query(".d-editor-input");
+
+    await simulateKeys(editor, "@u");
 
     assert.ok(
       exists(`.autocomplete .emoji[alt='${status.emoji}']`),
       "status emoji is shown"
     );
+
     assert.equal(
       query(
         ".autocomplete .user-status-message-description"
@@ -153,14 +134,16 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    await emulateAutocomplete(".d-editor-input", "abc @u");
+    const editor = query(".d-editor-input");
+
+    await simulateKeys(editor, "abc @u");
 
     assert.deepEqual(
       [...queryAll(".ac-user .username")].map((e) => e.innerText),
       ["user", "user2", "user_group", "foo"]
     );
 
-    await emulateAutocomplete(".d-editor-input", "abc @f");
+    await simulateKeys(editor, "\bf");
 
     assert.deepEqual(
       [...queryAll(".ac-user .username")].map((e) => e.innerText),

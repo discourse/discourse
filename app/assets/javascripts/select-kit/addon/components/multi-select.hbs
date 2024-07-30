@@ -26,6 +26,7 @@
               this.selectKit.options.selectedChoiceComponent
               item=item
               selectKit=this.selectKit
+              mandatoryValues=@mandatoryValues
             }}
           {{/each}}
         </div>
@@ -42,7 +43,7 @@
     {{/each}}
 
     {{#if this.selectKit.filter}}
-      {{#if this.selectKit.hasNoContent}}
+      {{#if (and this.selectKit.hasNoContent (not this.selectKit.isLoading))}}
         <span class="no-content" role="alert">
           {{i18n "select_kit.no_content"}}
         </span>

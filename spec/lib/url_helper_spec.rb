@@ -271,4 +271,53 @@ RSpec.describe UrlHelper do
       expect(described_class.rails_route_from_url(url)).to eq(nil)
     end
   end
+
+  describe ".is_valid_url?" do
+    it "should return true for a valid HTTP URL" do
+      expect(described_class.is_valid_url?("http://www.example.com")).to eq(true)
+    end
+
+    it "should return true for a valid HTTPS URL" do
+      expect(described_class.is_valid_url?("https://www.example.com")).to eq(true)
+    end
+
+    it "should return true for a valid FTP URL" do
+      expect(described_class.is_valid_url?("ftp://example.com")).to eq(true)
+    end
+
+    it "should return true for a valid mailto URL" do
+      expect(described_class.is_valid_url?("mailto:someone@discourse.org")).to eq(true)
+    end
+
+    it "should return true for a valid LDAP URL" do
+      expect(described_class.is_valid_url?("ldap://ldap.example.com/dc=example;dc=com?quer")).to eq(
+        true,
+      )
+    end
+
+    it "should return true for a path" do
+      expect(described_class.is_valid_url?("/some/path")).to eq(true)
+    end
+
+    it "should return true for a path with query params" do
+      expect(described_class.is_valid_url?("/some/path?query=param")).to eq(true)
+    end
+
+    it "should return true for anchor links" do
+      expect(described_class.is_valid_url?("#anchor")).to eq(true)
+      expect(described_class.is_valid_url?("#")).to eq(true)
+    end
+
+    it "should return false for invalid urls" do
+      expect(described_class.is_valid_url?("")).to eq(false)
+      expect(described_class.is_valid_url?("http//www.example.com")).to eq(false)
+      expect(described_class.is_valid_url?("http:/www.example.com")).to eq(false)
+      expect(described_class.is_valid_url?("https:///www.example.com")).to eq(false)
+      expect(described_class.is_valid_url?("mailtoooo:someone@discourse.org")).to eq(false)
+      expect(described_class.is_valid_url?("ftp://")).to eq(false)
+      expect(described_class.is_valid_url?("http://")).to eq(false)
+      expect(described_class.is_valid_url?("https://")).to eq(false)
+      expect(described_class.is_valid_url?("ldap://")).to eq(false)
+    end
+  end
 end

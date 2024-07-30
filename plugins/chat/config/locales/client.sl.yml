@@ -75,6 +75,7 @@ sl:
       browse:
         back: "Nazaj"
         filter_all: Vse
+        filter_open: Odpri
         filter_closed: Zaprto
       chat_message_separator:
         today: Danes

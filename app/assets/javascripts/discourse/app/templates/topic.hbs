@@ -17,6 +17,7 @@
       @tags={{this.model.tags}}
     />
     <AddTopicStatusClasses @topic={{this.model}} />
+    {{body-class (concat "archetype-" this.model.archetype)}}
     <div class="container">
       <DiscourseBanner
         @overlay={{this.hasScrolled}}
@@ -49,10 +50,7 @@
       >
         {{#if this.editingTopic}}
           <div class="edit-topic-title">
-            <PrivateMessageGlyph
-              @shouldShow={{this.model.isPrivateMessage}}
-              @tagName=""
-            />
+            <PrivateMessageGlyph @shouldShow={{this.model.isPrivateMessage}} />
 
             <TextField
               @id="edit-title"
@@ -128,12 +126,10 @@
                   @href={{this.pmPath}}
                   @title="topic_statuses.personal_message.title"
                   @ariaLabel="user.messages.inbox"
-                  @tagName=""
                 />
               {{else}}
                 <PrivateMessageGlyph
                   @shouldShow={{this.model.isPrivateMessage}}
-                  @tagName=""
                 />
               {{/if}}
             {{/unless}}
@@ -154,7 +150,7 @@
                 href
                 {{on "click" this.editTopic}}
                 class="edit-topic"
-                title={{i18n "edit"}}
+                title={{i18n "edit_topic"}}
               >{{d-icon "pencil-alt"}}</a>
             {{/if}}
 
@@ -214,6 +210,20 @@
           @selectAll={{action "selectAll"}}
         />
       </div>
+
+      {{#if (and this.showBottomTopicMap this.loadedAllPosts)}}
+        <div class="topic-map --bottom">
+          <TopicMap
+            @model={{this.model}}
+            @topicDetails={{this.model.details}}
+            @postStream={{this.model.postStream}}
+            @showPMMap={{eq this.model.archetype "private_message"}}
+            @showInvite={{route-action "showInvite"}}
+            @removeAllowedGroup={{action "removeAllowedGroup"}}
+            @removeAllowedUser={{action "removeAllowedUser"}}
+          />
+        </div>
+      {{/if}}
 
       <PluginOutlet @name="above-timeline" @connectorTagName="div" />
 
@@ -279,7 +289,7 @@
                 }}
               />
             </span>
-            <TopicAdminMenuButton
+            <TopicAdminMenu
               @topic={{this.model}}
               @openUpwards="true"
               @rightSide="true"
@@ -360,8 +370,6 @@
                 @toggleWiki={{action "toggleWiki"}}
                 @showTopReplies={{action "showTopReplies"}}
                 @cancelFilter={{action "cancelFilter"}}
-                @collapseSummary={{action "collapseSummary"}}
-                @showSummary={{action "showSummary"}}
                 @removeAllowedUser={{action "removeAllowedUser"}}
                 @removeAllowedGroup={{action "removeAllowedGroup"}}
                 @topVisibleChanged={{action "topVisibleChanged"}}
@@ -392,7 +400,10 @@
               {{#if this.model.pending_posts}}
                 <div class="pending-posts">
                   {{#each this.model.pending_posts as |pending|}}
-                    <div class="reviewable-item">
+                    <div
+                      class="reviewable-item"
+                      data-reviewable-id={{pending.id}}
+                    >
                       <div class="reviewable-meta-data">
                         <span class="reviewable-type">
                           {{i18n "review.awaiting_approval"}}
@@ -402,21 +413,19 @@
                         </span>
                       </div>
                       <div class="post-contents-wrapper">
-                        <ReviewableCreatedBy
-                          @user={{this.currentUser}}
-                          @tagName=""
-                        />
+                        <ReviewableCreatedBy @user={{this.currentUser}} />
                         <div class="post-contents">
-                          <ReviewableCreatedByName
-                            @user={{this.currentUser}}
-                            @tagName=""
-                          />
+                          <ReviewableCreatedByName @user={{this.currentUser}} />
                           <div class="post-body"><CookText
                               @rawText={{pending.raw}}
                             /></div>
                         </div>
                       </div>
                       <div class="reviewable-actions">
+                        <PluginOutlet
+                          @name="topic-additional-reviewable-actions"
+                          @outletArgs={{hash pending=pending}}
+                        />
                         <DButton
                           @label="review.delete"
                           @icon="trash-alt"
@@ -462,6 +471,7 @@
               <TopicTimerInfo
                 @topicClosed={{this.model.closed}}
                 @statusType={{this.model.topic_timer.status_type}}
+                @statusUpdate={{this.model.topic_status_update}}
                 @executeAt={{this.model.topic_timer.execute_at}}
                 @basedOnLastPost={{this.model.topic_timer.based_on_last_post}}
                 @durationMinutes={{this.model.topic_timer.duration_minutes}}
@@ -500,6 +510,11 @@
             {{/if}}
           </ConditionalLoadingSpinner>
 
+          <PluginOutlet
+            @name="topic-area-bottom"
+            @connectorTagName="div"
+            @outletArgs={{hash model=this.model}}
+          />
         </section>
       </div>
 
@@ -558,6 +573,10 @@
       </span>
 
       <MoreTopics @topic={{this.model}} />
+      <PluginOutlet
+        @name="topic-below-suggested"
+        @outletArgs={{hash model=this.model}}
+      />
     {{/if}}
   {{else}}
     <div class="container">

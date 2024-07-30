@@ -99,6 +99,7 @@ RSpec.describe SessionController do
           expect(response_body_parsed["can_login"]).to eq(true)
           expect(response_body_parsed["second_factor_required"]).to eq(true)
           expect(response_body_parsed["backup_codes_enabled"]).to eq(true)
+          expect(response_body_parsed["totp_enabled"]).to eq(true)
         end
       end
 
@@ -945,7 +946,7 @@ RSpec.describe SessionController do
           get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
 
           expect(response.status).to eq(403)
-          expect(response.parsed_body).to include(I18n.t("discourse_connect.account_not_approved"))
+          expect(response.body).to include(I18n.t("discourse_connect.account_not_approved"))
         end.to change { User.count }.by(1)
 
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
@@ -1123,7 +1124,7 @@ RSpec.describe SessionController do
         login_with_sso_and_invite
 
         expect(response.status).to eq(403)
-        expect(response.parsed_body).to include(I18n.t("discourse_connect.account_not_approved"))
+        expect(response.body).to include(I18n.t("discourse_connect.account_not_approved"))
         expect(invite.reload.redeemed?).to eq(true)
 
         user = User.find_by_email("bob@bob.com")
@@ -1268,6 +1269,23 @@ RSpec.describe SessionController do
       end
     end
 
+    it "returns the correct error code for invalid payload" do
+      sso = get_sso("/hello/world")
+      sso.external_id = "997"
+      sso.sso_url = "http://somewhere.over.com/sso_login"
+
+      params = Rack::Utils.parse_query(sso.payload)
+      params["sso"] = "#{params["sso"]}%3C"
+      params["sig"] = sso.sign(params["sso"])
+
+      get "/session/sso_login", params: params, headers: headers
+      expect(response.status).to eq(422)
+      expect(response.body).to include(I18n.t("discourse_connect.payload_parse_error"))
+
+      logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+      expect(logged_on_user).to eq(nil)
+    end
+
     it "returns the correct error code for invalid signature" do
       sso = get_sso("/hello/world")
       sso.external_id = "997"
@@ -1278,6 +1296,7 @@ RSpec.describe SessionController do
           params: correct_params.merge(sig: "thisisnotthesigyouarelookingfor"),
           headers: headers
       expect(response.status).to eq(422)
+      expect(response.body).to include(I18n.t("discourse_connect.signature_error"))
       expect(response.body).not_to include(correct_params["sig"]) # Check we didn't send the real sig back to the client
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
       expect(logged_on_user).to eq(nil)
@@ -1973,7 +1992,7 @@ RSpec.describe SessionController do
         end
       end
 
-      describe "success by username" do
+      describe "success by username and password" do
         it "logs in correctly" do
           events =
             DiscourseEvent.track_events do
@@ -1991,6 +2010,7 @@ RSpec.describe SessionController do
 
           expect(session[:current_user_id]).to eq(user.id)
           expect(user.user_auth_tokens.count).to eq(1)
+          expect(user.user_auth_tokens.last.authenticated_with_oauth).to be false
           unhashed_token = decrypt_auth_cookie(cookies[:_t])[:token]
           expect(UserAuthToken.hash_token(unhashed_token)).to eq(
             user.user_auth_tokens.first.auth_token,
@@ -2009,6 +2029,31 @@ RSpec.describe SessionController do
             expect(response.parsed_body["error"]).not_to be_present
             expect(user.reload.user_option.timezone).to eq("Australia/Melbourne")
           end
+        end
+      end
+
+      describe "when user's password has been marked as expired" do
+        let!(:expired_user_password) do
+          Fabricate(
+            :expired_user_password,
+            user:,
+            password: "myawesomepassword",
+            password_salt: user.salt,
+            password_algorithm: user.password_algorithm,
+          )
+        end
+
+        before { RateLimiter.enable }
+
+        use_redis_snapshotting
+
+        it "should return an error response code with the right error message" do
+          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to eq("expired")
+          expect(response.parsed_body["reason"]).to eq("expired")
+          expect(session[:current_user_id]).to eq(nil)
         end
       end
 

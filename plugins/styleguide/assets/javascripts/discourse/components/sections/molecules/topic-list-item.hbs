@@ -31,5 +31,9 @@
 </StyleguideExample>
 
 <StyleguideExample @title="<TopicListItem> - latest" class="half-size">
-  <LatestTopicListItem @topic={{@dummy.topic}} />
+  {{#if this.currentUser.use_glimmer_topic_list}}
+    <TopicList::LatestTopicListItem @topic={{@dummy.topic}} />
+  {{else}}
+    <LatestTopicListItem @topic={{@dummy.topic}} />
+  {{/if}}
 </StyleguideExample>

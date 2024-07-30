@@ -1,14 +1,24 @@
 # frozen_string_literal: true
 
 # See http://unicorn.bogomips.org/Unicorn/Configurator.html
+discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 
-if (ENV["LOGSTASH_UNICORN_URI"] || "").length > 0
+enable_logstash_logger = ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
+unicorn_stderr_path = "#{discourse_path}/log/unicorn.stderr.log"
+unicorn_stdout_path = "#{discourse_path}/log/unicorn.stdout.log"
+
+if enable_logstash_logger
   require_relative "../lib/discourse_logstash_logger"
   require_relative "../lib/unicorn_logstash_patch"
-  logger DiscourseLogstashLogger.logger(uri: ENV["LOGSTASH_UNICORN_URI"], type: :unicorn)
+  FileUtils.touch(unicorn_stderr_path) if !File.exist?(unicorn_stderr_path)
+  logger DiscourseLogstashLogger.logger(
+           logdev: unicorn_stderr_path,
+           type: :unicorn,
+           customize_event: lambda { |event| event["@timestamp"] = ::Time.now.utc },
+         )
+else
+  logger Logger.new(STDOUT)
 end
-
-discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 
 # tune down if not enough ram
 worker_processes (ENV["UNICORN_WORKERS"] || 3).to_i
@@ -25,18 +35,18 @@ FileUtils.mkdir_p("#{discourse_path}/tmp/pids") if !File.exist?("#{discourse_pat
 # feel free to point this anywhere accessible on the filesystem
 pid(ENV["UNICORN_PID_PATH"] || "#{discourse_path}/tmp/pids/unicorn.pid")
 
-if ENV["RAILS_ENV"] != "production"
-  logger Logger.new(STDOUT)
-  # we want a longer timeout in dev cause first request can be really slow
-  timeout(ENV["UNICORN_TIMEOUT"] && ENV["UNICORN_TIMEOUT"].to_i || 60)
-else
+if ENV["RAILS_ENV"] == "production"
   # By default, the Unicorn logger will write to stderr.
   # Additionally, some applications/frameworks log to stderr or stdout,
   # so prevent them from going to /dev/null when daemonized here:
-  stderr_path "#{discourse_path}/log/unicorn.stderr.log"
-  stdout_path "#{discourse_path}/log/unicorn.stdout.log"
+  stderr_path unicorn_stderr_path
+  stdout_path unicorn_stdout_path
+
   # nuke workers after 30 seconds instead of 60 seconds (the default)
   timeout 30
+else
+  # we want a longer timeout in dev cause first request can be really slow
+  timeout(ENV["UNICORN_TIMEOUT"] && ENV["UNICORN_TIMEOUT"].to_i || 60)
 end
 
 # important for Ruby 2.0
@@ -71,7 +81,7 @@ before_fork do |server, worker|
       Thread.new do
         while true
           unless File.exist?("/proc/#{supervisor}")
-            puts "Kill self supervisor is gone"
+            server.logger.error "Kill self supervisor is gone"
             Process.kill "TERM", Process.pid
           end
           sleep 2
@@ -85,13 +95,7 @@ before_fork do |server, worker|
 
       require "demon/sidekiq"
       Demon::Sidekiq.after_fork { DiscourseEvent.trigger(:sidekiq_fork_started) }
-
-      Demon::Sidekiq.start(sidekiqs)
-
-      Signal.trap("SIGTSTP") do
-        STDERR.puts "#{Time.now}: Issuing stop to sidekiq"
-        Demon::Sidekiq.stop
-      end
+      Demon::Sidekiq.start(sidekiqs, logger: server.logger)
 
       # Trap USR1, so we can re-issue to sidekiq workers
       # but chain the default unicorn implementation as well
@@ -104,20 +108,47 @@ before_fork do |server, worker|
 
     if ENV["DISCOURSE_ENABLE_EMAIL_SYNC_DEMON"] == "true"
       server.logger.info "starting up EmailSync demon"
-      Demon::EmailSync.start
-      Signal.trap("SIGTSTP") do
-        STDERR.puts "#{Time.now}: Issuing stop to EmailSync"
-        Demon::EmailSync.stop
-      end
+      Demon::EmailSync.start(1, logger: server.logger)
     end
 
     DiscoursePluginRegistry.demon_processes.each do |demon_class|
       server.logger.info "starting #{demon_class.prefix} demon"
-      demon_class.start
+      demon_class.start(1, logger: server.logger)
     end
 
     class ::Unicorn::HttpServer
       alias master_sleep_orig master_sleep
+
+      # Original source: https://github.com/defunkt/unicorn/blob/6c9c442fb6aa12fd871237bc2bb5aec56c5b3538/lib/unicorn/http_server.rb#L477-L496
+      def murder_lazy_workers
+        next_sleep = @timeout - 1
+        now = time_now.to_i
+        @workers.dup.each_pair do |wpid, worker|
+          tick = worker.tick
+          0 == tick and next # skip workers that haven't processed any clients
+          diff = now - tick
+          tmp = @timeout - diff
+
+          # START MONKEY PATCH
+          if tmp < 2
+            logger.error "worker=#{worker.nr} PID:#{wpid} running too long " \
+                           "(#{diff}s), sending USR2 to dump thread backtraces"
+            kill_worker(:USR2, wpid)
+          end
+          # END MONKEY PATCH
+
+          if tmp >= 0
+            next_sleep > tmp and next_sleep = tmp
+            next
+          end
+          next_sleep = 0
+          logger.error "worker=#{worker.nr} PID:#{wpid} timeout " \
+                         "(#{diff}s > #{@timeout}s), killing"
+
+          kill_worker(:KILL, wpid) # take no prisoners for timeout violations
+        end
+        next_sleep <= 0 ? 1 : next_sleep
+      end
 
       def max_sidekiq_rss
         rss =
@@ -165,11 +196,11 @@ before_fork do |server, worker|
               "Sidekiq is consuming too much memory (using: %0.2fM) for '%s', restarting" %
                 [(sidekiq_rss.to_f / 1.megabyte), ENV["DISCOURSE_HOSTNAME"]],
             )
+
             restart = true
           end
 
           if last_heartbeat < Time.now.to_i - @sidekiq_heartbeat_interval
-            STDERR.puts "Sidekiq heartbeat test failed, restarting"
             Rails.logger.warn "Sidekiq heartbeat test failed, restarting"
 
             restart = true
@@ -218,19 +249,21 @@ before_fork do |server, worker|
         last_heartbeat_ago =
           Time.now.to_i - Discourse.redis.get(Demon::EmailSync::HEARTBEAT_KEY).to_i
         if last_heartbeat_ago > Demon::EmailSync::HEARTBEAT_INTERVAL.to_i
-          STDERR.puts(
+          Rails.logger.warn(
             "EmailSync heartbeat test failed (last heartbeat was #{last_heartbeat_ago}s ago), restarting",
           )
+
           restart = true
         end
 
         # Restart process if memory usage is too high
         email_sync_rss = max_email_sync_rss
         if email_sync_rss > max_allowed_email_sync_rss
-          STDERR.puts(
+          Rails.logger.warn(
             "EmailSync is consuming too much memory (using: %0.2fM) for '%s', restarting" %
               [(email_sync_rss.to_f / 1.megabyte), ENV["DISCOURSE_HOSTNAME"]],
           )
+
           restart = true
         end
 
@@ -268,4 +301,14 @@ end
 after_fork do |server, worker|
   DiscourseEvent.trigger(:web_fork_started)
   Discourse.after_fork
+  SignalTrapLogger.instance.after_fork
+
+  Signal.trap("USR2") do
+    message = <<~MSG
+    Unicorn worker received USR2 signal indicating it is about to timeout, dumping backtrace for main thread
+    #{Thread.current.backtrace&.join("\n")}
+    MSG
+
+    SignalTrapLogger.instance.log(Rails.logger, message, level: :warn)
+  end
 end

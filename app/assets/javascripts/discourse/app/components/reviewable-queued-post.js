@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import RawEmailModal from "discourse/components/modal/raw-email";
 
 export default class ReviewableQueuedPost extends Component {

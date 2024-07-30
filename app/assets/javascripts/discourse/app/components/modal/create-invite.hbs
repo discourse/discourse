@@ -152,7 +152,7 @@
             @content={{this.allGroups}}
             @value={{this.buffered.groupIds}}
             @labelProperty="name"
-            @onChange={{action (mut this.buffered.groupIds)}}
+            @onChange={{fn (mut this.buffered.groupIds)}}
           />
         </div>
       {{/if}}
@@ -165,7 +165,7 @@
             @customShortcuts={{this.timeShortcuts}}
             @clearable={{true}}
             @input={{this.buffered.expires_at}}
-            @onChangeInput={{action (mut this.buffered.expires_at)}}
+            @onChangeInput={{fn (mut this.buffered.expires_at)}}
           />
         </div>
       {{else}}

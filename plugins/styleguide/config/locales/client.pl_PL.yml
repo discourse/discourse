@@ -34,8 +34,6 @@ pl_PL:
         icons:
           title: "Ikony"
           full_list: "Zobacz pełną listę niesamowitych ikon czcionek"
-        input_fields:
-          title: "Pola wejściowe"
         buttons:
           title: "Przyciski"
         dropdowns:

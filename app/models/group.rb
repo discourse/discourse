@@ -3,8 +3,9 @@
 require "net/imap"
 
 class Group < ActiveRecord::Base
-  # TODO(2021-05-26): remove
-  self.ignored_columns = %w[flair_url]
+  # TODO: Remove flair_url when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
+  # TODO: Remove smtp_ssl when db/post_migrate/20240717053710_drop_groups_smtp_ssl has been promoted to pre-deploy
+  self.ignored_columns = %w[flair_url smtp_ssl]
 
   include HasCustomFields
   include AnonCacheInvalidator
@@ -144,6 +145,10 @@ class Group < ActiveRecord::Base
 
   def self.visibility_levels
     @visibility_levels = Enum.new(public: 0, logged_on_users: 1, members: 2, staff: 3, owners: 4)
+  end
+
+  def self.smtp_ssl_modes
+    @visibility_levels = Enum.new(none: 0, ssl_tls: 1, starttls: 2)
   end
 
   def self.auto_groups_between(lower, upper)
@@ -434,29 +439,6 @@ class Group < ActiveRecord::Base
     result.order("posts.created_at desc")
   end
 
-  def messages_for(guardian, opts = nil)
-    opts ||= {}
-
-    result =
-      Post
-        .includes(:user, :topic, topic: :category)
-        .references(:posts, :topics, :category)
-        .where("topics.archetype = ?", Archetype.private_message)
-        .where(post_type: Post.types[:regular])
-        .where(
-          "topics.id IN (SELECT topic_id FROM topic_allowed_groups WHERE group_id = ?)",
-          self.id,
-        )
-
-    if opts[:category_id].present?
-      result = result.where("topics.category_id = ?", opts[:category_id].to_i)
-    end
-
-    result = guardian.filter_allowed_categories(result)
-    result = result.where("posts.id < ?", opts[:before_post_id].to_i) if opts[:before_post_id]
-    result.order("posts.created_at desc")
-  end
-
   def mentioned_posts_for(guardian, opts = nil)
     opts ||= {}
     result =
@@ -474,11 +456,12 @@ class Group < ActiveRecord::Base
 
     result = guardian.filter_allowed_categories(result)
     result = result.where("posts.id < ?", opts[:before_post_id].to_i) if opts[:before_post_id]
+    result = result.where("posts.created_at < ?", opts[:before].to_datetime) if opts[:before]
     result.order("posts.created_at desc")
   end
 
   def self.trust_group_ids
-    (10..19).to_a
+    Group.auto_groups_between(:trust_level_0, :trust_level_4).to_a
   end
 
   def set_message_default_notification_levels!(topic, ignore_existing: false)
@@ -880,7 +863,7 @@ class Group < ActiveRecord::Base
   end
 
   def bulk_add(user_ids)
-    return unless user_ids.present?
+    return if user_ids.blank?
 
     Group.transaction do
       sql = <<~SQL
@@ -1315,7 +1298,6 @@ end
 #  mentionable_level                  :integer          default(0)
 #  smtp_server                        :string
 #  smtp_port                          :integer
-#  smtp_ssl                           :boolean
 #  imap_server                        :string
 #  imap_port                          :integer
 #  imap_ssl                           :boolean
@@ -1339,6 +1321,7 @@ end
 #  imap_updated_at                    :datetime
 #  imap_updated_by_id                 :integer
 #  email_from_alias                   :string
+#  smtp_ssl_mode                      :integer          default(0), not null
 #
 # Indexes
 #

@@ -47,11 +47,9 @@ export default class BaseCommunitySectionLink {
   }
 
   /**
-   * @returns {string} Ember route
+   * @returns {string|undefined} Ember route
    */
-  get route() {
-    this._notImplemented();
-  }
+  get route() {}
 
   /**
    * @returns {string} href attribute for the link. This property will take precedence over the `route` property when set.

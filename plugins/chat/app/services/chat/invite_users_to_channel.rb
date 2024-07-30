@@ -35,15 +35,15 @@ module Chat
 
     private
 
-    def fetch_channel(contract:, **)
+    def fetch_channel(contract:)
       ::Chat::Channel.find_by(id: contract.channel_id)
     end
 
-    def can_view_channel(guardian:, channel:, **)
+    def can_view_channel(guardian:, channel:)
       guardian.can_preview_chat_channel?(channel)
     end
 
-    def fetch_users(contract:, **)
+    def fetch_users(contract:)
       ::User
         .joins(:user_option)
         .where(user_options: { chat_enabled: true })
@@ -52,7 +52,7 @@ module Chat
         .limit(50)
     end
 
-    def send_invite_notifications(channel:, guardian:, users:, contract:, **)
+    def send_invite_notifications(channel:, guardian:, users:, contract:)
       users&.each do |invited_user|
         next if !invited_user.guardian.can_join_chat_channel?(channel)
 

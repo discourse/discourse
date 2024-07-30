@@ -415,6 +415,63 @@ describe Chat::ChannelFetcher do
     end
   end
 
+  describe ".unreads_total" do
+    it "returns correct totals for DMs and mentions" do
+      result = described_class.unreads_total(guardian)
+
+      expect(result).to eq(0)
+
+      Fabricate(
+        :user_chat_channel_membership_for_dm,
+        chat_channel: direct_message_channel1,
+        user: user1,
+        following: true,
+      )
+      Chat::DirectMessageUser.create!(direct_message: dm_channel1, user: user1)
+      Chat::DirectMessageUser.create!(direct_message: dm_channel1, user: user2)
+      Fabricate(
+        :user_chat_channel_membership_for_dm,
+        chat_channel: direct_message_channel2,
+        user: user1,
+        following: true,
+      )
+      Chat::DirectMessageUser.create!(direct_message: dm_channel2, user: user1)
+      Chat::DirectMessageUser.create!(direct_message: dm_channel2, user: user2)
+
+      dm_1 = Fabricate(:chat_message, user: user1, chat_channel: direct_message_channel1)
+      dm_2 = Fabricate(:chat_message, user: user1, chat_channel: direct_message_channel2)
+
+      direct_message_channel1.update!(last_message: dm_1)
+      direct_message_channel1.last_message.update!(created_at: 1.day.ago)
+      direct_message_channel2.update!(last_message: dm_2)
+      direct_message_channel2.last_message.update!(created_at: 1.hour.ago)
+
+      result = described_class.unreads_total(guardian)
+      expect(result).to eq(2)
+
+      membership =
+        Fabricate(:user_chat_channel_membership, chat_channel: category_channel, user: user1)
+      message =
+        Fabricate(:chat_message, chat_channel: category_channel, message: "bonjour", user: user2)
+      notification =
+        Notification.create!(
+          notification_type: Notification.types[:chat_mention],
+          user_id: user1.id,
+          data: { chat_message_id: message.id, chat_channel_id: category_channel.id }.to_json,
+        )
+      Chat::UserMention.create!(notifications: [notification], user: user1, chat_message: message)
+
+      result = described_class.unreads_total(guardian)
+      expect(result).to eq(3) # 2 DMs + 1 mention
+
+      # mark mention as read
+      membership.update!(last_read_message_id: message.id)
+
+      result = described_class.unreads_total(guardian)
+      expect(result).to eq(2) # only 2 DMs left unread
+    end
+  end
+
   describe ".find_with_access_check" do
     it "raises NotFound if the channel does not exist" do
       category_channel.destroy!

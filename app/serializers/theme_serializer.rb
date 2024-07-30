@@ -3,8 +3,7 @@
 require "base64"
 
 class ThemeSerializer < BasicThemeSerializer
-  attributes :color_scheme,
-             :color_scheme_id,
+  attributes :color_scheme_id,
              :user_selectable,
              :auto_update,
              :remote_theme_id,
@@ -16,6 +15,7 @@ class ThemeSerializer < BasicThemeSerializer
              :disabled_at,
              :theme_fields
 
+  has_one :color_scheme, serializer: ColorSchemeSerializer, embed: :object
   has_one :user, serializer: UserNameSerializer, embed: :object
   has_one :disabled_by, serializer: UserNameSerializer, embed: :object
 
@@ -56,7 +56,9 @@ class ThemeSerializer < BasicThemeSerializer
   end
 
   def settings
-    object.settings.map { |setting| ThemeSettingsSerializer.new(setting, root: false) }
+    object.settings.map do |_name, setting|
+      ThemeSettingsSerializer.new(setting, scope:, root: false)
+    end
   rescue ThemeSettingsParser::InvalidYaml => e
     @errors << e.message
     nil

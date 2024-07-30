@@ -46,6 +46,19 @@
             @closeSearchMenu={{@closeSearchMenu}}
             @searchTermChanged={{@searchTermChanged}}
           />
+
+          {{#if
+            (and
+              this.currentUser
+              this.siteSettings.log_search_queries
+              this.displayInitialOptions
+            )
+          }}
+            <SearchMenu::Results::RecentSearches
+              @closeSearchMenu={{@closeSearchMenu}}
+              @searchTermChanged={{@searchTermChanged}}
+            />
+          {{/if}}
         {{/if}}
       {{else}}
         <SearchMenu::Results::RandomQuickTip

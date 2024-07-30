@@ -977,7 +977,7 @@ RSpec.describe UserMerger do
   end
 
   it "merges user visits" do
-    freeze_time DateTime.parse("2010-01-01 12:00")
+    freeze_time_safe
 
     UserVisit.create!(
       user_id: source_user.id,
@@ -1081,6 +1081,44 @@ RSpec.describe UserMerger do
 
       expect(SiteSetting.site_contact_username).to eq(target_user.username)
       expect(SiteSetting.embed_by_username).to eq(walter.username)
+    end
+  end
+
+  context "with user associated accounts (UAAs)" do
+    context "when only merging account has UAAs" do
+      it "transfers the source user UAA to the target" do
+        source_uaa = Fabricate(:user_associated_account, user: source_user)
+
+        merge_users!
+
+        expect(source_uaa.reload.user).to eq(target_user)
+      end
+    end
+
+    context "when both accounts have UAAs" do
+      context "when both accounts' UAAs have different provider_names" do
+        it "transfers the source user UAA to the target and keeps both" do
+          source_uaa = Fabricate(:user_associated_account, user: source_user, provider_name: "x")
+          target_uaa = Fabricate(:user_associated_account, user: target_user, provider_name: "y")
+
+          merge_users!
+
+          expect(target_uaa.reload.user).to eq(target_user)
+          expect(source_uaa.reload.user).to eq(target_user)
+        end
+      end
+
+      context "when both accounts' UAAs have same provider_names" do
+        it "keeps only the target UAA" do
+          source_uaa = Fabricate(:user_associated_account, user: source_user, provider_name: "x")
+          target_uaa = Fabricate(:user_associated_account, user: target_user, provider_name: "x")
+
+          merge_users!
+
+          expect(target_uaa.reload.user).to eq(target_user)
+          expect(source_uaa.reload.user).to eq(nil)
+        end
+      end
     end
   end
 

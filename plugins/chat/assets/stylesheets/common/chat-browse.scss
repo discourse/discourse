@@ -22,11 +22,11 @@
   &__cards {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 2rem;
+    grid-gap: 1.25rem;
 
     @include breakpoint(tablet) {
       grid-template-columns: repeat(1, 1fr);
-      grid-gap: 1.5rem;
+      grid-gap: 1rem;
     }
   }
 
@@ -34,6 +34,16 @@
     display: flex;
     justify-content: space-between;
     align-items: end;
+
+    .c-drawer-routes.--browse & {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+
+      .filter-input {
+        width: 100%;
+      }
+    }
 
     @include breakpoint(tablet) {
       flex-direction: column;
@@ -56,15 +66,10 @@
     &:before {
       content: none; //there is a strange thing applied on nav-pills and this resets it
     }
-
-    @include breakpoint(mobile-large) {
-      justify-content: space-between;
-    }
   }
 
   &__filter {
     display: inline;
-    margin-right: 1em;
 
     &:last-of-type {
       margin-right: 0;
@@ -78,25 +83,11 @@
   &__filter-link,
   &__filter-link:visited {
     color: var(--primary);
-    font-size: var(--font-up-2);
+    font-size: var(--font-up-1);
     padding: 0 0.25rem;
 
     @include breakpoint(tablet) {
       font-size: var(--font-up-1);
-    }
-  }
-
-  .chat-channel-card {
-    .chat-channel-card__leave-btn {
-      padding: 0;
-      &:hover,
-      &:focus {
-        background: none;
-      }
-
-      &:focus {
-        @include default-focus;
-      }
     }
   }
 }

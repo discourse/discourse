@@ -299,7 +299,7 @@ he:
           אללי, הפוסט הנבזי שלי עדיין לא סומן בגדל כבלתי הולם. :worried: אפשר לבקש ממך לסמן אותו ב**דגל** כתוכן בלתי הולם <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? לא לשכוח להשתמש בכפתור להציג עוד <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> כדי לחשוף פעולות נוספות עבור כל פוסט.
       search:
         instructions: |-
-          _פססט_ … החבאתי הפתעה בנושא הזה. אם מעניין אותך להיענות לאתגר, **עליך לבחור בסמל החיפוש** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> שבפינה השמאלית העליונה &#8599; כדי לחפש אותה.
+          _פססט_ … החבאתי הפתעה בנושא הזה. אם מעניין אותך להיענות לאתגר, **עליך לבחור בסמל החיפוש** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> שבפינה השמאלית העליונה &#8599;, לבחור את ‚בנושא הזה’ ואז לחפש אותה.
 
           יש לנסות לחפש את הביטוי „capy&#8203;bara” בנושא הזה
         hidden_message: |-

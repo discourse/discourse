@@ -37,21 +37,21 @@ module Chat
 
     private
 
-    def fetch_channel(contract:, **)
+    def fetch_channel(contract:)
       Chat::Channel.find_by(id: contract.channel_id)
     end
 
-    def can_upsert_draft(guardian:, channel:, **)
+    def can_upsert_draft(guardian:, channel:)
       guardian.can_chat? && guardian.can_join_chat_channel?(channel)
     end
 
-    def check_thread_exists(contract:, channel:, **)
+    def check_thread_exists(contract:, channel:)
       if contract.thread_id.present?
         fail!("Thread not found") if !channel.threads.exists?(id: contract.thread_id)
       end
     end
 
-    def upsert_draft(contract:, guardian:, **)
+    def upsert_draft(contract:, guardian:)
       if contract.data.present?
         draft =
           Chat::Draft.find_or_initialize_by(

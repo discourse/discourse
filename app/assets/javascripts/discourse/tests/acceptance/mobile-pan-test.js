@@ -1,10 +1,5 @@
 import { click, triggerEvent, visit } from "@ember/test-helpers";
-import {
-  acceptance,
-  chromeTest,
-  count,
-  exists,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, chromeTest } from "discourse/tests/helpers/qunit-helpers";
 
 async function triggerSwipeStart(touchTarget) {
   const emberTesting = document.querySelector("#ember-testing-container");
@@ -70,10 +65,15 @@ async function triggerSwipeEnd({ x, y, touchTarget }) {
 acceptance("Mobile - menu swipes", function (needs) {
   needs.mobileView();
   needs.user();
+  needs.settings({
+    glimmer_header_mode: "enabled",
+  });
 
   chromeTest("swipe to close hamburger", async function (assert) {
     await visit("/");
-    await click(".hamburger-dropdown");
+    await click(".hamburger-dropdown button");
+
+    assert.dom(document.documentElement).hasClass(/scroll-lock/);
 
     const touchTarget = document.querySelector(".panel-body");
     let swipe = await triggerSwipeStart(touchTarget);
@@ -81,17 +81,17 @@ acceptance("Mobile - menu swipes", function (needs) {
     await triggerSwipeMove(swipe);
     await triggerSwipeEnd(swipe);
 
-    assert.ok(
-      !exists(".panel-body"),
-      "it should close hamburger on a left swipe"
-    );
+    assert
+      .dom(".panel-body")
+      .doesNotExist("it closes hamburger on a left swipe");
+    assert.dom(document.documentElement).doesNotHaveClass(/scroll-lock/);
   });
 
   chromeTest(
     "swipe back and flick to re-open hamburger",
     async function (assert) {
       await visit("/");
-      await click(".hamburger-dropdown");
+      await click(".hamburger-dropdown button");
 
       const touchTarget = document.querySelector(".panel-body");
       let swipe = await triggerSwipeStart(touchTarget);
@@ -101,17 +101,17 @@ acceptance("Mobile - menu swipes", function (needs) {
       await triggerSwipeMove(swipe);
       await triggerSwipeEnd(swipe);
 
-      assert.strictEqual(
-        count(".panel-body"),
-        1,
-        "it should re-open hamburger on a right swipe"
-      );
+      assert
+        .dom(".panel-body")
+        .exists({ count: 1 }, "it re-opens hamburger on a right swipe");
     }
   );
 
   chromeTest("swipe to user menu", async function (assert) {
     await visit("/");
-    await click("#current-user");
+    await click("#current-user button");
+
+    assert.dom(document.documentElement).hasClass(/scroll-lock/);
 
     const touchTarget = document.querySelector(".panel-body");
     let swipe = await triggerSwipeStart(touchTarget);
@@ -119,9 +119,10 @@ acceptance("Mobile - menu swipes", function (needs) {
     await triggerSwipeMove(swipe);
     await triggerSwipeEnd(swipe);
 
-    assert.ok(
-      !exists(".panel-body"),
-      "it should close user menu on a left swipe"
-    );
+    assert
+      .dom(".panel-body")
+      .doesNotExist("it closes user menu on a left swipe");
+
+    assert.dom(document.documentElement).doesNotHaveClass(/scroll-lock/);
   });
 });

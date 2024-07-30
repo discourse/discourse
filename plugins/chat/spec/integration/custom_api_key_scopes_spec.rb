@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe "API keys scoped to chat#create_message" do
   before do
     SiteSetting.chat_enabled = true

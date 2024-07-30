@@ -32,7 +32,7 @@
     }
   }
 
-  .poll-public .d-toggle-switch--label {
+  .poll-public .d-toggle-switch__label {
     margin-bottom: 0;
   }
 
@@ -50,19 +50,12 @@
   }
 
   .poll-type {
-    display: block;
-
     .poll-type-value {
-      border: none;
-      color: var(--primary);
-      display: inline-block;
-      padding: 6px 12px 3px;
-
-      &.active {
-        background-color: var(--quaternary);
-        color: var(--secondary);
-      }
+      font-size: var(--font-down-1);
     }
+    padding: 0;
+    margin-top: 0;
+    border: none;
   }
 
   .poll-options {

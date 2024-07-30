@@ -253,17 +253,13 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
     );
   });
 
-  test("show all link", async function (assert) {
+  test("show all button for message notifications", async function (assert) {
     await render(template);
     const link = query(".panel-body-bottom .show-all");
-    assert.ok(
-      link.href.endsWith("/u/eviltrout/messages"),
-      "links to the user's messages page"
-    );
     assert.strictEqual(
       link.title,
       I18n.t("user_menu.view_all_messages"),
-      "has a title"
+      "has the correct title"
     );
   });
 

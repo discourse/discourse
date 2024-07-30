@@ -3,7 +3,7 @@
 module Jobs
   class SyncTopicUserBookmarked < ::Jobs::Base
     def execute(args = {})
-      raise Discourse::InvalidParameters.new(:topic_id) unless args[:topic_id].present?
+      raise Discourse::InvalidParameters.new(:topic_id) if args[:topic_id].blank?
 
       DB.exec(<<~SQL, topic_id: args[:topic_id])
         SELECT bookmarks.user_id, COUNT(*)

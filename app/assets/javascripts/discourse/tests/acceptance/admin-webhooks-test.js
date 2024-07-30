@@ -5,6 +5,7 @@ import pretender, {
   response,
 } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Admin - Webhooks", function (needs) {
   needs.user();
@@ -16,6 +17,7 @@ acceptance("Admin - Webhooks", function (needs) {
         total_rows_web_hooks: 0,
         load_more_web_hooks: "/admin/api/web_hooks.json?limit=50&offset=50",
         extras: {
+          categories: [],
           content_types: [
             { id: 1, name: "application/json" },
             { id: 2, name: "application/x-www-form-urlencoded" },
@@ -65,8 +67,12 @@ acceptance("Admin - Webhooks", function (needs) {
     await click(".admin-webhooks__new-button");
 
     await fillIn(`[name="payload-url"`, "https://example.com/webhook");
-    await click(".admin-webhooks__save-button");
 
+    const categorySelector = selectKit(".category-selector");
+    await categorySelector.expand();
+    categorySelector.selectRowByName("support");
+
+    await click(".admin-webhooks__save-button");
     assert.strictEqual(currentURL(), "/admin/api/web_hooks/1");
   });
 });

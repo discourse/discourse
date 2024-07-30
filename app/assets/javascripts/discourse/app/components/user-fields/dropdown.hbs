@@ -3,9 +3,7 @@
   for={{concat "user-" this.elementId}}
 >
   {{this.field.name}}
-  {{#if this.field.required}}
-    <span class="required">*</span>
-  {{/if}}
+  {{~#unless this.field.required}} {{i18n "user_fields.optional"}}{{/unless~}}
 </label>
 
 <div class="controls">
@@ -15,7 +13,7 @@
     @valueProperty={{null}}
     @nameProperty={{null}}
     @value={{this.value}}
-    @onChange={{action (mut this.value)}}
+    @onChange={{fn (mut this.value)}}
     @options={{hash none=this.noneLabel}}
   />
   <div class="instructions">{{html-safe this.field.description}}</div>

@@ -7,16 +7,45 @@ import getURL from "discourse-common/lib/get-url";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 
-function ajax(opts) {
-  if (opts.complete) {
-    const oldComplete = opts.complete;
-    opts.complete = function (xhr, stat) {
-      handleLogoff(xhr);
-      oldComplete(xhr, stat);
-    };
-  } else {
-    opts.complete = handleLogoff;
+let _sendDeferredPageview = false;
+let _deferredViewTopicId = null;
+
+export function sendDeferredPageview() {
+  _sendDeferredPageview = true;
+}
+
+function mbAjax(messageBus, opts) {
+  opts.headers ||= {};
+
+  if (messageBus.baseUrl !== "/") {
+    const key = document.querySelector(
+      "meta[name=shared_session_key]"
+    )?.content;
+
+    opts.headers["X-Shared-Session-Key"] = key;
   }
+
+  if (userPresent()) {
+    opts.headers["Discourse-Present"] = "true";
+  }
+
+  if (_sendDeferredPageview) {
+    opts.headers["Discourse-Deferred-Track-View"] = "true";
+
+    if (_deferredViewTopicId) {
+      opts.headers["Discourse-Deferred-Track-View-Topic-Id"] =
+        _deferredViewTopicId;
+    }
+
+    _sendDeferredPageview = false;
+    _deferredViewTopicId = null;
+  }
+
+  const oldComplete = opts.complete;
+  opts.complete = function (xhr, stat) {
+    handleLogoff(xhr);
+    oldComplete?.(xhr, stat);
+  };
 
   return $.ajax(opts);
 }
@@ -32,7 +61,8 @@ export default {
 
     const messageBus = owner.lookup("service:message-bus"),
       user = owner.lookup("service:current-user"),
-      siteSettings = owner.lookup("service:site-settings");
+      siteSettings = owner.lookup("service:site-settings"),
+      router = owner.lookup("service:router");
 
     messageBus.alwaysLongPoll = !isProduction();
     messageBus.shouldLongPollCallback = () =>
@@ -65,6 +95,13 @@ export default {
     // pass in a position
     const interval = setInterval(() => {
       if (document.readyState === "complete") {
+        if (
+          router.currentRouteName === "topic.fromParams" ||
+          router.currentRouteName === "topic.fromParamsNear"
+        ) {
+          _deferredViewTopicId = router.currentRoute.parent.params.id;
+        }
+
         clearInterval(interval);
         messageBus.start();
       }
@@ -78,28 +115,9 @@ export default {
 
     messageBus.enableChunkedEncoding = siteSettings.enable_chunked_encoding;
 
-    if (messageBus.baseUrl !== "/") {
-      messageBus.ajax = function (opts) {
-        opts.headers = opts.headers || {};
-        opts.headers["X-Shared-Session-Key"] = $(
-          "meta[name=shared_session_key]"
-        ).attr("content");
-        if (userPresent()) {
-          opts.headers["Discourse-Present"] = "true";
-        }
-        return ajax(opts);
-      };
-    } else {
-      messageBus.ajax = function (opts) {
-        opts.headers = opts.headers || {};
-        if (userPresent()) {
-          opts.headers["Discourse-Present"] = "true";
-        }
-        return ajax(opts);
-      };
+    messageBus.ajax = (opts) => mbAjax(messageBus, opts);
 
-      messageBus.baseUrl = getURL("/");
-    }
+    messageBus.baseUrl = getURL("/");
 
     if (user) {
       messageBus.callbackInterval = siteSettings.polling_interval;

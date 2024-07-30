@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Chat::Api::ChannelThreadMessagesController do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:thread) do
@@ -62,15 +60,11 @@ RSpec.describe Chat::Api::ChannelThreadMessagesController do
       end
     end
 
-    context "when channel disabled threading" do
-      fab!(:thread) do
-        Fabricate(:chat_thread, channel: Fabricate(:chat_channel, threading_enabled: false))
-      end
+    context "when params are invalid" do
+      it "returns a 400" do
+        get "/chat/api/channels/#{thread.channel.id}/threads/#{thread.id}/messages?page_size=9999"
 
-      it "returns a 404" do
-        get "/chat/api/channels/#{thread.channel.id}/threads/#{thread.id}/messages"
-
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(400)
       end
     end
   end

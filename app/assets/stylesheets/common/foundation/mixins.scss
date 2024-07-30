@@ -253,12 +253,30 @@ $hpad: 0.65em;
 }
 
 @mixin mention() {
-  display: inline-block; // https://bugzilla.mozilla.org/show_bug.cgi?id=1656119
+  display: inline;
   font-size: 0.93em;
   font-weight: normal;
   color: var(--primary);
-  padding: 0 0.4em 0.07em;
+  padding: 0.14em 0.34em 0.19em;
   background: var(--primary-low);
   border-radius: 0.6em;
   text-decoration: none;
+  text-wrap: nowrap;
+}
+
+@mixin nav-active() {
+  color: var(--d-nav-color--active);
+  background: var(--d-nav-bg-color--active);
+  .d-icon {
+    color: var(--d-nav-color--active);
+  }
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: var(--d-nav-underline-height);
+    background: var(--d-nav-color--active);
+  }
 }

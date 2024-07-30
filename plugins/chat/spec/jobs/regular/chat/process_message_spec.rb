@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::Chat::ProcessMessage do
   fab!(:chat_message) { Fabricate(:chat_message, message: "https://discourse.org/team") }
 

@@ -1554,6 +1554,27 @@ export default {
           description_excerpt:
             "Discussion about features or potential features of Discourse: how they work, why they work, etc.",
           featured_user_ids: [1917, 4385, 2072, 32, 4263],
+          subcategory_list: [
+            {
+              id: 26,
+              name: "spec",
+              color: "33B0B0",
+              text_color: "FFFFFF",
+              slug: "spec",
+              topic_count: 20,
+              post_count: 278,
+              description:
+                "My idea here is to have mini specs for features we would like built but have no bandwidth to build",
+              description_text:
+                "My idea here is to have mini specs for features we would like built but have no bandwidth to build",
+              topic_url: "/t/about-the-spec-category/13965",
+              read_restricted: false,
+              permission: 1,
+              parent_category_id: 2,
+              notification_level: null,
+              background_url: null,
+            },
+          ],
           topics: [
             {
               id: 11997,

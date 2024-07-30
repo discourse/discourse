@@ -41,26 +41,26 @@ module Chat
 
     private
 
-    def fetch_channel(contract:, **)
+    def fetch_channel(contract:)
       ::Chat::Channel.find_by(id: contract.channel_id)
     end
 
-    def fetch_original_message(channel:, contract:, **)
+    def fetch_original_message(channel:, contract:)
       ::Chat::Message.find_by(
         id: contract.original_message_id,
         chat_channel_id: contract.channel_id,
       )
     end
 
-    def can_view_channel(guardian:, channel:, **)
+    def can_view_channel(guardian:, channel:)
       guardian.can_preview_chat_channel?(channel)
     end
 
-    def threading_enabled_for_channel(channel:, **)
+    def threading_enabled_for_channel(channel:)
       channel.threading_enabled
     end
 
-    def find_or_create_thread(channel:, original_message:, contract:, **)
+    def find_or_create_thread(channel:, original_message:, contract:)
       if original_message.thread_id.present?
         return context.thread = ::Chat::Thread.find_by(id: original_message.thread_id)
       end
@@ -74,15 +74,15 @@ module Chat
       fail!(context.thread.errors.full_messages.join(", ")) if context.thread.invalid?
     end
 
-    def associate_thread_to_message(original_message:, **)
+    def associate_thread_to_message(original_message:)
       original_message.update(thread: context.thread)
     end
 
-    def fetch_membership(guardian:, **)
+    def fetch_membership(guardian:)
       context.membership = context.thread.membership_for(guardian.user)
     end
 
-    def publish_new_thread(channel:, original_message:, **)
+    def publish_new_thread(channel:, original_message:)
       ::Chat::Publisher.publish_thread_created!(channel, original_message, context.thread.id)
     end
 

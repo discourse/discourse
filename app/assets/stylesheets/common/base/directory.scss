@@ -70,18 +70,9 @@
       }
     }
   }
-  .modal-footer {
-    display: flex;
+  .d-modal__footer {
     justify-content: space-between;
-
-    .reset-to-default {
-      margin-right: 0;
-    }
   }
-}
-
-.edit-user-directory-columns-modal .modal-inner-container {
-  min-width: 450px;
 }
 
 @container (min-width: 47em) {

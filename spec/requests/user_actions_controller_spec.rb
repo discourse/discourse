@@ -28,6 +28,14 @@ RSpec.describe UserActionsController do
         expect(actions.first).not_to include "email"
       end
 
+      it "returns categories when lazy load categories is enabled" do
+        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+        user_actions
+        expect(response.status).to eq(200)
+        category_ids = response.parsed_body["categories"].map { |category| category["id"] }
+        expect(category_ids).to contain_exactly(post.topic.category.id)
+      end
+
       context "when 'acting_username' is provided" do
         let(:user) { Fabricate(:user) }
 

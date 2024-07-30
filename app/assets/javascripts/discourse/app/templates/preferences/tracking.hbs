@@ -49,6 +49,11 @@
         }}
       />
     </div>
+
+    <PreferenceCheckbox
+      @labelKey="user.topics_unread_when_closed"
+      @checked={{this.model.user_option.topics_unread_when_closed}}
+    />
   </div>
 </div>
 

@@ -12,6 +12,10 @@ module Jobs
         return
       end
 
+      if SiteSetting.pending_users_reminder_delay_minutes == 5
+        SiteSetting.set_and_log("pending_users_reminder_delay_minutes", 480)
+      end
+
       if SiteSetting.default_trust_level == TrustLevel[1]
         SiteSetting.set_and_log("default_trust_level", TrustLevel[0])
       end

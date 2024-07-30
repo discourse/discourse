@@ -26,7 +26,7 @@ Discourse::Application.configure do
 
   # production has "show exceptions" on so we better have it
   # in test as well
-  config.action_dispatch.show_exceptions = true
+  config.action_dispatch.show_exceptions = :all
 
   # Disable request forgery protection in test environment
   config.action_controller.allow_forgery_protection = false
@@ -63,6 +63,10 @@ Discourse::Application.configure do
     },
   ]
 
+  # Catch missing translations during test runs.
+  config.i18n.raise_on_missing_translations = true
+  config.i18n.load_path += Dir[Rails.root.join("spec", "support", "locales", "**", "*.yml")]
+
   config.after_initialize do
     ActiveRecord::LogSubscriber.backtrace_cleaner.add_silencer do |line|
       line =~ %r{lib/freedom_patches}
@@ -95,11 +99,6 @@ Discourse::Application.configure do
       # Most existing tests were written assuming allow_uncategorized_topics
       # was enabled, so we should set it to true.
       s.set_regardless_of_locale(:allow_uncategorized_topics, true)
-
-      # disable plugins
-      if ENV["LOAD_PLUGINS"] == "1"
-        s.set_regardless_of_locale(:discourse_narrative_bot_enabled, false)
-      end
     end
 
     SiteSetting.refresh!

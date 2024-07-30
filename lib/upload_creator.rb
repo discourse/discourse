@@ -301,12 +301,12 @@ class UploadCreator
       @upload.errors.add(:base, I18n.t("upload.empty"))
     elsif pixels == 0 && @image_info.type.to_s != "svg"
       @upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
-    elsif max_image_pixels > 0 && pixels >= max_image_pixels * 2
+    elsif max_image_pixels > 0 && pixels >= max_image_pixels
       @upload.errors.add(
         :base,
         I18n.t(
           "upload.images.larger_than_x_megapixels",
-          max_image_megapixels: SiteSetting.max_image_megapixels * 2,
+          max_image_megapixels: SiteSetting.max_image_megapixels,
         ),
       )
     end
@@ -418,7 +418,7 @@ class UploadCreator
 
   MAX_CONVERT_FORMAT_SECONDS = 20
   def execute_convert(from, to, opts = {})
-    command = ["convert", from, "-auto-orient", "-background", "white", "-interlace", "none"]
+    command = ["magick", from, "-auto-orient", "-background", "white", "-interlace", "none"]
     command << "-flatten" unless opts[:flatten] == false
     command << "-debug" << "all" if opts[:debug]
     command << "-quality" << opts[:quality].to_s if opts[:quality]
@@ -526,7 +526,7 @@ class UploadCreator
     path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
 
     Discourse::Utils.execute_command(
-      "convert",
+      "magick",
       path,
       "-auto-orient",
       path,
@@ -663,7 +663,7 @@ class UploadCreator
           # Only GIFs, WEBPs and a few other unsupported image types can be animated
           OptimizedImage.ensure_safe_paths!(@file.path)
 
-          command = ["identify", "-format", "%n\\n", @file.path]
+          command = ["identify", "-ping", "-format", "%n\\n", @file.path]
           frames =
             begin
               Discourse::Utils.execute_command(*command, timeout: Upload::MAX_IDENTIFY_SECONDS).to_i

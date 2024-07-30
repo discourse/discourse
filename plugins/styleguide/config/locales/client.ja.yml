@@ -34,8 +34,8 @@ ja:
         icons:
           title: "アイコン"
           full_list: "Font Awesome Icons の全リストを表示"
-        input_fields:
-          title: "入力フィールド"
+        forms:
+          title: "フォーム"
         buttons:
           title: "ボタン"
         dropdowns:

@@ -5,6 +5,7 @@
 
   .nav {
     margin-block: 0;
+    top: 2px;
     li {
       .btn {
         color: var(--primary);
@@ -63,5 +64,10 @@
     margin-right: 0;
     line-height: 0.8;
     max-width: 150px;
+  }
+
+  .more-topics__list-title,
+  .more-topics__browse-more {
+    padding-left: 0.5em;
   }
 }

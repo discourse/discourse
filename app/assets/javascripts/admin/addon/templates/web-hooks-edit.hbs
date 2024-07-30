@@ -23,7 +23,7 @@
         @content={{this.contentTypes}}
         @name="content-type"
         @value={{this.model.content_type}}
-        @onChange={{action (mut this.model.content_type)}}
+        @onChange={{fn (mut this.model.content_type)}}
       />
     </div>
 
@@ -43,7 +43,7 @@
       <label class="subscription-choice">
         <RadioButton
           @name="subscription-choice"
-          @onChange={{action (mut this.model.wildcard_web_hook) false}}
+          @onChange={{fn (mut this.model.wildcard_web_hook) false}}
           @value={{false}}
           @selection={{this.model.wildcard_web_hook}}
         />
@@ -71,7 +71,7 @@
       <label class="subscription-choice">
         <RadioButton
           @name="subscription-choice"
-          @onChange={{action (mut this.model.wildcard_web_hook) true}}
+          @onChange={{fn (mut this.model.wildcard_web_hook) true}}
           @value={{true}}
           @selection={{this.model.wildcard_web_hook}}
         />
@@ -86,7 +86,7 @@
           }}</label>
         <CategorySelector
           @categories={{this.model.categories}}
-          @onChange={{action (mut this.model.categories)}}
+          @onChange={{fn (mut this.model.categories)}}
         />
         <div class="instructions">{{i18n
             "admin.web_hooks.categories_filter_instructions"

@@ -18,4 +18,8 @@ class MemInfo
         nil
       end
   end
+
+  def unknown?
+    mem_total.nil?
+  end
 end

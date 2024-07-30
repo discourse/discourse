@@ -15,6 +15,10 @@ class Reporter extends TapReporter {
     if (process.env.GITHUB_ACTIONS) {
       colors.enable();
     }
+
+    if (process.env.GITHUB_ACTIONS) {
+      this.out.write("::group:: Verbose QUnit test output\n");
+    }
   }
 
   reportMetadata(tag, metadata) {
@@ -105,6 +109,10 @@ class Reporter extends TapReporter {
   }
 
   finish() {
+    if (process.env.GITHUB_ACTIONS) {
+      this.out.write("::endgroup::");
+    }
+
     super.finish();
 
     this.reportDeprecations();
@@ -128,7 +136,6 @@ module.exports = {
   test_page: "tests/index.html?hidepassed",
   disable_watching: true,
   launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
-  // launch_in_dev: ["Chrome"] // Ember-CLI always launches testem in 'CI' mode
   tap_failed_tests_only: false,
   parallel: -1,
   browser_start_timeout: 120,

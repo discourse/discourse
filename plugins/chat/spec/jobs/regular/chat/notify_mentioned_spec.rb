@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::Chat::NotifyMentioned do
   subject(:job) { described_class.new }
 

@@ -1,10 +1,14 @@
 <div id="second-factor">
   <h3>{{this.secondFactorTitle}}</h3>
+
   {{#if this.optionalText}}
     <p>{{html-safe this.optionalText}}</p>
   {{/if}}
-  <p>{{this.secondFactorDescription}}</p>
+
+  <p class="second-factor__description">{{this.secondFactorDescription}}</p>
+
   {{yield}}
+
   {{#if this.showToggleMethodLink}}
     <p>
       <a

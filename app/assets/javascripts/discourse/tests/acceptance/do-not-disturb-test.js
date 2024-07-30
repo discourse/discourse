@@ -27,7 +27,7 @@ acceptance("Do not disturb", function (needs) {
     updateCurrentUser({ do_not_disturb_until: null });
 
     await visit("/");
-    await click(".header-dropdown-toggle.current-user");
+    await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
     await click("#quick-access-profile .do-not-disturb .btn");
 
@@ -41,8 +41,10 @@ acceptance("Do not disturb", function (needs) {
     assert.dom(".d-modal").doesNotExist("modal is hidden");
 
     assert.ok(
-      exists(".header-dropdown-toggle .do-not-disturb-background .d-icon-moon"),
-      "moon icon is present in header"
+      exists(
+        ".header-dropdown-toggle .do-not-disturb-background .d-icon-discourse-dnd"
+      ),
+      "dnd icon is present in header"
     );
   });
 
@@ -50,7 +52,7 @@ acceptance("Do not disturb", function (needs) {
     updateCurrentUser({ do_not_disturb_until: null });
 
     await visit("/");
-    await click(".header-dropdown-toggle.current-user");
+    await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
     await click("#quick-access-profile .do-not-disturb .btn");
 
@@ -73,8 +75,10 @@ acceptance("Do not disturb", function (needs) {
       .doesNotExist("DND modal is hidden after making a choice");
 
     assert.ok(
-      exists(".header-dropdown-toggle .do-not-disturb-background .d-icon-moon"),
-      "moon icon is shown in header avatar"
+      exists(
+        ".header-dropdown-toggle .do-not-disturb-background .d-icon-discourse-dnd"
+      ),
+      "dnd icon is shown in header avatar"
     );
   });
 
@@ -87,10 +91,10 @@ acceptance("Do not disturb", function (needs) {
 
     assert.ok(
       exists(".do-not-disturb-background"),
-      "The active moon icon is shown"
+      "The active dnd icon is shown"
     );
 
-    await click(".header-dropdown-toggle.current-user");
+    await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
     assert.strictEqual(
       query(".do-not-disturb .relative-date").textContent.trim(),
@@ -106,7 +110,7 @@ acceptance("Do not disturb", function (needs) {
 
     assert.notOk(
       exists(".do-not-disturb-background"),
-      "The active moon icons are removed"
+      "The active dnd icon is removed"
     );
     assert.notOk(
       exists(".do-not-disturb .relative-date"),
@@ -122,7 +126,7 @@ acceptance("Do not disturb", function (needs) {
     this.siteSettings.enable_user_status = true;
 
     await visit("/");
-    await click(".header-dropdown-toggle.current-user");
+    await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
     await click("#quick-access-profile .do-not-disturb .btn");
 
@@ -133,7 +137,7 @@ acceptance("Do not disturb", function (needs) {
     updateCurrentUser({ do_not_disturb_until: DoNotDisturb.forever });
 
     await visit("/");
-    await click(".header-dropdown-toggle.current-user");
+    await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
 
     assert.dom(".do-not-disturb .relative-date").doesNotExist();

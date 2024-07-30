@@ -185,11 +185,9 @@ RSpec.describe CookedPostProcessor do
              - #{url_with_query_param}
           RAW
 
-        let(:staff_post) do
-          Fabricate(:post, user: Fabricate(:admin, refresh_auto_groups: true), raw: <<~RAW)
+        let(:staff_post) { Fabricate(:post, user: Fabricate(:admin), raw: <<~RAW) }
           This is a #{url_with_path} topic
           RAW
-        end
 
         before do
           urls.each do |url|
@@ -1162,7 +1160,7 @@ RSpec.describe CookedPostProcessor do
         Oneboxer.unstub(:onebox)
       end
 
-      context "when the post is with_secure_uploads and the upload is secure and secure uploads is enabled" do
+      context "when the post is should_secure_uploads and the upload is secure and secure uploads is enabled" do
         before do
           setup_s3
           upload.update(secure: true)
@@ -1908,13 +1906,12 @@ RSpec.describe CookedPostProcessor do
     end
 
     context "with an unmodified quote" do
-      let(:cp) do
-        Fabricate(
-          :post,
-          raw:
-            "[quote=\"#{pp.user.username}, post: #{pp.post_number}, topic:#{pp.topic_id}]\nripe for quoting\n[/quote]\ntest",
-        )
-      end
+      let(:cp) { Fabricate(:post, raw: <<~MARKDOWN) }
+        [quote="#{pp.user.username}, post: #{pp.post_number}, topic:#{pp.topic_id}"]
+        ripe for quoting
+        [/quote]
+        test
+      MARKDOWN
 
       it "should not be marked as modified" do
         cpp.post_process_quotes
@@ -1923,13 +1920,12 @@ RSpec.describe CookedPostProcessor do
     end
 
     context "with a modified quote" do
-      let(:cp) do
-        Fabricate(
-          :post,
-          raw:
-            "[quote=\"#{pp.user.username}, post: #{pp.post_number}, topic:#{pp.topic_id}]\nmodified\n[/quote]\ntest",
-        )
-      end
+      let(:cp) { Fabricate(:post, raw: <<~MARKDOWN) }
+        [quote="#{pp.user.username}, post: #{pp.post_number}, topic:#{pp.topic_id}"]
+        modified
+        [/quote]
+        test
+      MARKDOWN
 
       it "should be marked as modified" do
         cpp.post_process_quotes
@@ -1938,13 +1934,12 @@ RSpec.describe CookedPostProcessor do
     end
 
     context "with external discourse instance quote" do
-      let(:external_raw) { <<~RAW.strip }
+      let(:cp) { Fabricate(:post, user: user_with_auto_groups, raw: <<~MARKDOWN.strip) }
         [quote="random_guy_not_from_our_discourse, post:2004, topic:401"]
         this quote is not from our discourse
         [/quote]
         and this is a reply
-        RAW
-      let(:cp) { Fabricate(:post, user: user_with_auto_groups, raw: external_raw) }
+      MARKDOWN
 
       it "it should be marked as missing" do
         cpp.post_process_quotes

@@ -46,7 +46,7 @@ def write_template(path, task_name, template)
 
   File.write(output_path, "#{header}\n\n#{template}")
   puts "#{basename} created"
-  `yarn run prettier --write #{output_path}`
+  system("yarn run prettier --write #{output_path}", exception: true)
   puts "#{basename} prettified"
 end
 
@@ -59,21 +59,14 @@ def write_hbs_template(path, task_name, template)
   basename = File.basename(path)
   output_path = "#{Rails.root}/app/assets/javascripts/#{path}"
   File.write(output_path, "#{header}\n#{template}")
-  `yarn run prettier --write #{output_path}`
+  system("yarn run prettier --write #{output_path}", exception: true)
   puts "#{basename} created"
 end
 
 def dependencies
   [
-    { source: "ace-builds/src-min-noconflict/ace.js", destination: "ace.js", public: true },
-    {
-      source: "@json-editor/json-editor/dist/jsoneditor.js",
-      package_name: "@json-editor/json-editor",
-      public: true,
-    },
     { source: "chart.js/dist/chart.min.js", public: true },
     { source: "chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js", public: true },
-    { source: "diffhtml/dist/diffhtml.min.js", public: true },
     { source: "magnific-popup/dist/jquery.magnific-popup.min.js", public: true },
     { source: "pikaday/pikaday.js", public: true },
     { source: "moment/moment.js" },
@@ -161,7 +154,15 @@ task "javascript:update_constants" => :environment do
 
     export const AUTO_GROUPS = #{auto_groups.to_json};
 
+    export const GROUP_SMTP_SSL_MODES = #{Group.smtp_ssl_modes.to_json};
+
     export const MAX_NOTIFICATIONS_LIMIT_PARAMS = #{NotificationsController::INDEX_LIMIT};
+
+    export const TOPIC_VISIBILITY_REASONS = #{Topic.visibility_reasons.to_json};
+
+    export const SYSTEM_FLAG_IDS = #{PostActionType.types.to_json}
+
+    export const SITE_SETTING_REQUIRES_CONFIRMATION_TYPES = #{SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.to_json}
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")
@@ -203,8 +204,7 @@ end
 task "javascript:update" => "clean_up" do
   require "uglifier"
 
-  yarn = system("yarn install")
-  abort('Unable to run "yarn install"') unless yarn
+  system("yarn install", exception: true)
 
   versions = {}
   start = Time.now
@@ -238,23 +238,6 @@ task "javascript:update" => "clean_up" do
       dest = "#{vendor_js}/#{filename}"
     end
 
-    if src.include? "ace.js"
-      versions["ace/ace.js"] = versions.delete("ace.js")
-      ace_root = "#{library_src}/ace-builds/src-min-noconflict/"
-      addtl_files = %w[
-        ext-searchbox
-        mode-html
-        mode-scss
-        mode-sql
-        mode-yaml
-        theme-chrome
-        theme-chaos
-        worker-html
-      ]
-      dest_path = dest.split("/")[0..-2].join("/")
-      addtl_files.each { |file| FileUtils.cp_r("#{ace_root}#{file}.js", dest_path) }
-    end
-
     STDERR.puts "New dependency added: #{dest}" unless File.exist?(dest)
 
     FileUtils.cp_r(src, dest)
@@ -276,7 +259,7 @@ task "javascript:clean_up" do
     next if processed.include?(package_dir_name)
 
     versions = Dir["#{File.join(public_js, package_dir_name)}/*"].collect { |p| p.split("/").last }
-    next unless versions.present?
+    next if versions.blank?
 
     versions = versions.sort { |a, b| Gem::Version.new(a) <=> Gem::Version.new(b) }
     puts "Keeping #{package_dir_name} version: #{versions[-1]}"

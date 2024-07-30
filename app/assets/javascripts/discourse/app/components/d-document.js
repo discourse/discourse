@@ -1,6 +1,7 @@
 import Component from "@ember/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { setLogoffCallback } from "discourse/lib/ajax";
+import { clearAllBodyScrollLocks } from "discourse/lib/body-scroll-lock";
 import logout from "discourse/lib/logout";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
@@ -59,6 +60,9 @@ export default Component.extend({
 
   @bind
   _focusChanged() {
+    // changing app while keyboard is up could cause the keyboard to not collapse and not release lock
+    clearAllBodyScrollLocks();
+
     if (document.visibilityState === "hidden") {
       if (this.session.hasFocus) {
         this.documentTitle.setFocus(false);

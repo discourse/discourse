@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DoNotDisturbModal from "discourse/components/modal/do-not-disturb";
 import UserStatusModal from "discourse/components/modal/user-status";
 import { ajax } from "discourse/lib/ajax";
@@ -27,12 +27,7 @@ export default class UserMenuProfileTabContent extends Component {
 
   get showToggleAnonymousButton() {
     return (
-      (this.siteSettings.allow_anonymous_posting &&
-        this.siteSettings.userInAnyGroups(
-          "anonymous_posting_allowed_groups",
-          this.currentUser
-        )) ||
-      this.currentUser.is_anonymous
+      this.currentUser.can_post_anonymously || this.currentUser.is_anonymous
     );
   }
 

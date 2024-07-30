@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { array } from "@ember/helper";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import ChatChannel from "./chat-channel";
 
 export default class FullPageChat extends Component {

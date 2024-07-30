@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 
@@ -11,6 +12,10 @@ export default class UserTipContainer extends Component {
     return htmlSafe(this.args.data.contentHtml);
   }
 
+  get showSkipButton() {
+    return this.args.data.showSkipButton;
+  }
+
   @action
   handleDismiss(_, event) {
     event.preventDefault();
@@ -18,26 +23,49 @@ export default class UserTipContainer extends Component {
     this.userTips.hideUserTipForever(this.args.data.id);
   }
 
+  @action
+  handleSkip(_, event) {
+    event.preventDefault();
+    this.args.close();
+    this.userTips.skipTips();
+  }
+
+  @action
+  onClick(e) {
+    if (e.target.nodeName === "A") {
+      // Close tip if user clicks on a link in its description
+      this.args.close();
+    }
+  }
+
   <template>
     <div class="user-tip__container">
       <div class="user-tip__title">{{@data.titleText}}</div>
-      <div class="user-tip__content">
+      {{! template-lint-disable no-invalid-interactive }}
+      <div class="user-tip__content" {{on "click" this.onClick}}>
         {{#if @data.contentHtml}}
           {{this.safeHtmlContent}}
         {{else}}
           {{@data.contentText}}
         {{/if}}
       </div>
-      {{#if @data.onDismiss}}
-        <div class="user-tip__buttons">
+      <div class="user-tip__buttons">
+        <DButton
+          class="btn-primary"
+          @translatedLabel={{@data.buttonText}}
+          @action={{this.handleDismiss}}
+          @forwardEvent={{true}}
+        />
+
+        {{#if this.showSkipButton}}
           <DButton
-            class="btn-primary"
-            @translatedLabel={{@data.buttonText}}
-            @action={{this.handleDismiss}}
+            class="btn-flat btn-text"
+            @translatedLabel={{@data.buttonSkipText}}
+            @action={{this.handleSkip}}
             @forwardEvent={{true}}
           />
-        </div>
-      {{/if}}
+        {{/if}}
+      </div>
     </div>
   </template>
 }

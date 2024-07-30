@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 
 // This route is only here as a convenience method for a clean `/c/:channelTitle/:channelId/t/:threadId/:messageId` URL.

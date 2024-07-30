@@ -8,10 +8,8 @@ fa_IR:
   site_settings:
     chat_enabled: "گفتگو را فعال کنید."
     enable_public_channels: "کانال های عمومی را بر اساس دسته ها فعال کنید."
-    chat_allowed_groups: "کاربران در این گروه‌ها می‌توانند گفتگو کنند. توجه داشته باشید که کارکنان همیشه می‌توانند به گفتگو دسترسی داشته باشند."
     chat_allow_uploads: "بارگذاری در کانال‌های گفتگو عمومی و کانال‌های پیام مستقیم مجاز است."
     default_emoji_reactions: "واکنش‌های شکلک پیش‌فرض برای پیام‌های گفتگو. برای واکنش سریع تا ۵ شکلک اضافه کنید."
-    chat_message_flag_allowed_groups: "کاربران در این گروه‌ها مجاز به گزارش دادن، پیام‌های گفتگو هستند."
     errors:
       chat_upload_not_allowed_secure_uploads: "وقتی که در تنظیمات سایت آپلودهای ایمن فعال باشد، آپلود گفتگو مجاز نیست."
   system_messages:
@@ -91,18 +89,6 @@ fa_IR:
         one: "شما یک پیام گفتگو جدیدی دارید"
         other: "شما پیام‌های گفتگو جدیدی دارید"
       from: "%{site_name}"
-      subject:
-        direct_message_from_1: "[%{email_prefix}] پیام جدید از %{username}"
-        direct_message_from_2: "[%{email_prefix}] پیام جدید از %{username1} و %{username2}"
-        direct_message_from_more:
-          one: "[%{email_prefix}] پیام جدید از %{username} و %{count} نفر دیگر"
-          other: "[%{email_prefix}] پیام جدید از %{username} و %{count} نفر دیگر"
-        chat_channel_1: "[%{email_prefix}] پیام جدید در %{channel}"
-        chat_channel_2: "[%{email_prefix}] پیام جدید در %{channel1} و %{channel2}"
-        chat_channel_more:
-          one: "[%{email_prefix}] پیام جدید در %{channel} و %{count} نفر دیگر"
-          other: "[%{email_prefix}] پیام جدید در %{channel} و %{count} نفر دیگر"
-        chat_channel_and_direct_message: "[%{email_prefix}] پیام جدید در %{channel} و از %{username}"
       view_messages:
         one: "مشاهده پیام"
         other: "مشاهده %{count} پیام"

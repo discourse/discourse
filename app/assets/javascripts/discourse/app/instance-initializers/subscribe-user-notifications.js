@@ -68,7 +68,7 @@ export default {
     if (!isTesting()) {
       this.messageBus.subscribe(alertChannel(this.currentUser), this.onAlert);
 
-      initDesktopNotifications(this.messageBus, this.appEvents);
+      initDesktopNotifications(this.messageBus);
 
       if (isPushNotificationsEnabled(this.currentUser)) {
         disableDesktopNotifications();
@@ -259,6 +259,11 @@ export default {
 
   @bind
   onAlert(data) {
-    return onNotification(data, this.siteSettings, this.currentUser);
+    return onNotification(
+      data,
+      this.siteSettings,
+      this.currentUser,
+      this.appEvents
+    );
   },
 };

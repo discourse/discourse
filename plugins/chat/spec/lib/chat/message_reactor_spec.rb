@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::MessageReactor do
   subject(:message_reactor) { described_class.new(reacting_user, channel) }
 

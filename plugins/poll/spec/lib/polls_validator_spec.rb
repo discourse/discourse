@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe ::DiscoursePoll::PollsValidator do
   subject(:validator) { described_class.new(post) }
 

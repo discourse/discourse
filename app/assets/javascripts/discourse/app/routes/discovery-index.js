@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { homepageDestination } from "discourse/lib/homepage-router-overrides";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import DiscourseRoute from "./discourse";

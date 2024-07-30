@@ -1,4 +1,4 @@
-import { click, visit, waitFor } from "@ember/test-helpers";
+import { click, triggerEvent, visit, waitFor } from "@ember/test-helpers";
 import $ from "jquery";
 import { test } from "qunit";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
@@ -38,7 +38,8 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
       "cloak sidebar is displayed"
     );
 
-    await click("#main-outlet");
+    await triggerEvent(document.querySelector(".header-cloak"), "pointerdown");
+
     assert.ok(
       !exists(".sidebar-hamburger-dropdown"),
       "cloak sidebar is collapsed"
@@ -66,7 +67,7 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
       timeout: 5000,
     });
 
-    await click(".header-dropdown-toggle.current-user");
+    await click(".header-dropdown-toggle.current-user button");
     $(".header-dropdown-toggle.current-user").click();
 
     assert.ok(exists(".quick-access-panel"));

@@ -6,12 +6,11 @@
 >
   <:body>
     <ChooseTopic
+      @topicChangedCallback={{this.newTopicSelected}}
       @currentTopicId={{@model.user.featured_topic.id}}
-      @selectedTopicId={{this.newFeaturedTopicId}}
+      @loadOnInit={{true}}
       @additionalFilters="status:public"
       @label="user.feature_topic_on_profile.search_label"
-      @topicChangedCallback={{this.newTopicSelected}}
-      @loadOnInit={{true}}
     />
   </:body>
   <:footer>

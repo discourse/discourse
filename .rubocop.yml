@@ -8,6 +8,30 @@ Discourse/NoAddReferenceOrAliasesActiveRecordMigration:
 Discourse/NoResetColumnInformationInMigrations:
   Enabled: true
 
+Discourse/Plugins/CallRequiresPlugin:
+  Include:
+    - "plugins/*/app/controllers/**/*"
+
+Discourse/Plugins/UsePluginInstanceOn:
+  Include:
+    - "plugins/**/*"
+
+Discourse/Plugins/NamespaceMethods:
+  Include:
+    - "plugins/**/*"
+
+Discourse/Plugins/NamespaceConstants:
+  Include:
+    - "plugins/**/*"
+
+Discourse/Plugins/UseRequireRelative:
+  Include:
+    - "plugins/**/*"
+
+Discourse/Plugins/NoMonkeyPatching:
+  Include:
+    - "plugins/**/*"
+
 Lint/Debugger:
   Exclude:
     - script/**/*

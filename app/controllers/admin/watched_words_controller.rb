@@ -13,20 +13,39 @@ class Admin::WatchedWordsController < Admin::StaffController
   end
 
   def create
-    watched_word = WatchedWord.create_or_update_word(watched_words_params)
-    if watched_word.valid?
-      StaffActionLogger.new(current_user).log_watched_words_creation(watched_word)
-      render json: watched_word, root: false
+    opts = watched_words_params
+    action = WatchedWord.actions[opts[:action_key].to_sym]
+    words = opts.delete(:words)
+
+    watched_word_group = WatchedWordGroup.new(action: action)
+    watched_word_group.create_or_update_members(words, opts)
+
+    if watched_word_group.valid?
+      StaffActionLogger.new(current_user).log_watched_words_creation(watched_word_group)
+      render_json_dump WatchedWordListSerializer.new(
+                         watched_word_group.watched_words,
+                         scope: guardian,
+                         root: false,
+                       )
     else
-      render_json_error(watched_word)
+      render_json_error(watched_word_group)
     end
   end
 
   def destroy
     watched_word = WatchedWord.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless watched_word
-    watched_word.destroy!
-    StaffActionLogger.new(current_user).log_watched_words_deletion(watched_word)
+
+    watched_word_group = watched_word.watched_word_group
+
+    if watched_word_group&.watched_words&.count == 1
+      watched_word_group.destroy!
+      StaffActionLogger.new(current_user).log_watched_words_deletion(watched_word_group)
+    else
+      watched_word.destroy!
+      StaffActionLogger.new(current_user).log_watched_words_deletion(watched_word)
+    end
+
     render json: success_json
   end
 
@@ -100,6 +119,7 @@ class Admin::WatchedWordsController < Admin::StaffController
   private
 
   def watched_words_params
-    params.permit(:id, :word, :replacement, :action_key, :case_sensitive)
+    @watched_words_params ||=
+      params.permit(:id, :replacement, :action_key, :case_sensitive, :html, words: [])
   end
 end

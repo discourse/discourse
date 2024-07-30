@@ -3,31 +3,41 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { and } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
-import and from "truth-helpers/helpers/and";
+import EmptyChannelsList from "discourse/plugins/chat/discourse/components/empty-channels-list";
 import ChatChannelRow from "./chat-channel-row";
 
 export default class ChannelsListPublic extends Component {
   @service chatChannelsManager;
+  @service chatStateManager;
   @service chatTrackingStateManager;
   @service site;
   @service siteSettings;
   @service currentUser;
+  @service router;
 
   get inSidebar() {
     return this.args.inSidebar ?? false;
   }
 
   get publicMessageChannelsEmpty() {
-    return this.chatChannelsManager.publicMessageChannels?.length === 0;
+    return (
+      this.chatChannelsManager.publicMessageChannels?.length === 0 &&
+      this.chatStateManager.hasPreloadedChannels
+    );
   }
 
   get displayPublicChannels() {
     if (!this.siteSettings.enable_public_channels) {
+      return false;
+    }
+
+    if (!this.chatStateManager.hasPreloadedChannels) {
       return false;
     }
 
@@ -45,10 +55,8 @@ export default class ChannelsListPublic extends Component {
     return this.chatTrackingStateManager.hasUnreadThreads;
   }
 
-  get isThreadEnabledInAnyChannel() {
-    return this.currentUser?.chat_channels?.public_channels?.some(
-      (channel) => channel.threading_enabled
-    );
+  get hasThreadedChannels() {
+    return this.chatChannelsManager.hasThreadedChannels;
   }
 
   @action
@@ -56,8 +64,13 @@ export default class ChannelsListPublic extends Component {
     this.args.toggleSection(section);
   }
 
+  @action
+  openBrowseChannels() {
+    this.router.transitionTo("chat.browse");
+  }
+
   <template>
-    {{#if (and this.site.desktopView this.isThreadEnabledInAnyChannel)}}
+    {{#if (and this.site.desktopView this.inSidebar this.hasThreadedChannels)}}
       <LinkTo @route="chat.threads" class="chat-channel-row --threads">
         <span class="chat-channel-title">
           {{dIcon "discourse-threads" class="chat-user-threads__icon"}}
@@ -71,62 +84,57 @@ export default class ChannelsListPublic extends Component {
       </LinkTo>
     {{/if}}
 
-    {{#if this.displayPublicChannels}}
-      {{#if this.site.desktopView}}
-        <div class="chat-channel-divider public-channels-section">
-          {{#if this.inSidebar}}
-            <span
-              class="title-caret"
-              id="public-channels-caret"
-              role="button"
-              title="toggle nav list"
-              {{on "click" (fn this.toggleChannelSection "public-channels")}}
-              data-toggleable="public-channels"
-            >
-              {{dIcon "angle-up"}}
-            </span>
-          {{/if}}
-
-          <span class="channel-title">{{i18n "chat.chat_channels"}}</span>
-
-          <LinkTo
-            @route="chat.browse"
-            class="btn no-text btn-flat open-browse-page-btn title-action"
-            title={{i18n "chat.channels_list_popup.browse"}}
+    {{#if (and this.displayPublicChannels this.site.desktopView)}}
+      <div class="chat-channel-divider public-channels-section">
+        {{#if this.inSidebar}}
+          <span
+            class="title-caret"
+            id="public-channels-caret"
+            role="button"
+            title="toggle nav list"
+            {{on "click" (fn this.toggleChannelSection "public-channels")}}
+            data-toggleable="public-channels"
           >
-            {{dIcon "pencil-alt"}}
-          </LinkTo>
-        </div>
-      {{/if}}
-
-      <div
-        id="public-channels"
-        class={{concatClass
-          "channels-list-container"
-          "public-channels"
-          (if this.inSidebar "collapsible-sidebar-section")
-        }}
-      >
-        {{#if this.publicMessageChannelsEmpty}}
-          <div class="channel-list-empty-message">
-            <span class="channel-title">{{i18n
-                "chat.no_public_channels"
-              }}</span>
-            <LinkTo @route="chat.browse">
-              {{i18n "chat.click_to_join"}}
-            </LinkTo>
-          </div>
-        {{else}}
-          {{#each this.chatChannelsManager.publicMessageChannels as |channel|}}
-            <ChatChannelRow
-              @channel={{channel}}
-              @options={{hash settingsButton=true}}
-            />
-          {{/each}}
+            {{dIcon "angle-up"}}
+          </span>
         {{/if}}
 
+        <span class="channel-title">{{i18n "chat.chat_channels"}}</span>
+
+        <LinkTo
+          @route="chat.browse"
+          class="btn no-text btn-flat open-browse-page-btn title-action"
+          title={{i18n "chat.channels_list_popup.browse"}}
+        >
+          {{dIcon "pencil-alt"}}
+        </LinkTo>
       </div>
     {{/if}}
+
+    <div
+      id="public-channels"
+      class={{concatClass
+        "channels-list-container"
+        "public-channels"
+        (if this.inSidebar "collapsible-sidebar-section")
+      }}
+    >
+      {{#if this.publicMessageChannelsEmpty}}
+        <EmptyChannelsList
+          @title={{i18n "chat.no_public_channels"}}
+          @ctaTitle={{i18n "chat.no_public_channels_cta"}}
+          @ctaAction={{this.openBrowseChannels}}
+          @showCTA={{this.displayPublicChannels}}
+        />
+      {{else}}
+        {{#each this.chatChannelsManager.publicMessageChannels as |channel|}}
+          <ChatChannelRow
+            @channel={{channel}}
+            @options={{hash settingsButton=true}}
+          />
+        {{/each}}
+      {{/if}}
+    </div>
 
     <PluginOutlet
       @name="below-public-chat-channels"

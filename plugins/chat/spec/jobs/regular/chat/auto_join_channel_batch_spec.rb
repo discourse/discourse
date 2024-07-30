@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::Chat::AutoJoinChannelBatch do
   it "can successfully queue this job" do
     expect {

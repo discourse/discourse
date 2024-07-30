@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { render, waitUntil } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -56,9 +56,10 @@ module(
           )
         )
     }} />`);
-      const lines = document.querySelectorAll(".ace_line");
-      const indexOf = lines[0].innerHTML.indexOf("[");
-      assert.ok(indexOf >= 0);
+
+      await waitUntil(() => document.querySelectorAll(".ace_line")[0]);
+
+      assert.dom(".ace_line").hasText("[");
     });
 
     test("input is valid json", async function (assert) {

@@ -1,14 +1,27 @@
-import { resetAjax, trackNextAjaxAsPageview } from "discourse/lib/ajax";
+import {
+  resetAjax,
+  trackNextAjaxAsPageview,
+  trackNextAjaxAsTopicView,
+} from "discourse/lib/ajax";
 import {
   googleTagManagerPageChanged,
   resetPageTracking,
   startPageTracking,
 } from "discourse/lib/page-tracker";
+import { sendDeferredPageview } from "./message-bus";
 
 export default {
   after: "inject-objects",
+  before: "message-bus",
 
   initialize(owner) {
+    const isErrorPage =
+      document.querySelector("meta#discourse-error")?.dataset.discourseError ===
+      "true";
+    if (!isErrorPage) {
+      sendDeferredPageview();
+    }
+
     // Tell our AJAX system to track a page transition
     // eslint-disable-next-line ember/no-private-routing-service
     const router = owner.lookup("router:main");
@@ -77,6 +90,13 @@ export default {
     }
 
     trackNextAjaxAsPageview();
+
+    if (
+      transition.to.name === "topic.fromParamsNear" ||
+      transition.to.name === "topic.fromParams"
+    ) {
+      trackNextAjaxAsTopicView(transition.to.parent.params.id);
+    }
   },
 
   teardown() {

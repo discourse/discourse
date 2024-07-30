@@ -63,7 +63,10 @@ function _findAndReplaceSeenHashtagPlaceholder(
     // Replace raw span for the hashtag with a cooked one
     const matchingSeenHashtag = seenHashtags[type]?.[slugRef];
     if (matchingSeenHashtag) {
-      generatePlaceholderHashtagHTML(type, hashtagSpan, matchingSeenHashtag);
+      generatePlaceholderHashtagHTML(type, hashtagSpan, {
+        preloaded: true,
+        ...matchingSeenHashtag,
+      });
     }
   });
 }
@@ -97,6 +100,7 @@ export function decorateHashtags(element, site) {
         .generateIconHTML({
           icon: site.hashtag_icons[hashtagType],
           id: hashtagEl.dataset.id,
+          slug: hashtagEl.dataset.slug,
         })
         .trim();
       iconPlaceholderEl.replaceWith(domFromString(hashtagIconHTML)[0]);

@@ -5,7 +5,7 @@ require "topic_subtype"
 
 RSpec.describe PostCreator do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:admin)
   fab!(:coding_horror) { Fabricate(:coding_horror, refresh_auto_groups: true) }
   fab!(:evil_trout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
   let(:topic) { Fabricate(:topic, user: user) }
@@ -259,26 +259,19 @@ RSpec.describe PostCreator do
         p = nil
         messages = MessageBus.track_publish { p = creator.create }
 
-        latest = messages.find { |m| m.channel == "/latest" }
-        expect(latest).not_to eq(nil)
+        expect(messages.find { _1.channel == "/latest" }).not_to eq(nil)
+        expect(messages.find { _1.channel == "/new" }).not_to eq(nil)
+        expect(messages.find { _1.channel == "/unread/#{p.user_id}" }).not_to eq(nil)
+        expect(messages.find { _1.channel == "/user-drafts/#{p.user_id}" }).not_to eq(nil)
 
-        latest = messages.find { |m| m.channel == "/new" }
-        expect(latest).not_to eq(nil)
-
-        read = messages.find { |m| m.channel == "/unread/#{p.user_id}" }
-        expect(read).not_to eq(nil)
-
-        user_action = messages.find { |m| m.channel == "/u/#{p.user.username}" }
-        expect(user_action).not_to eq(nil)
-
-        draft_count = messages.find { |m| m.channel == "/user-drafts/#{p.user_id}" }
-        expect(draft_count).not_to eq(nil)
+        user_action = messages.find { _1.channel == "/u/#{p.user.username}" }
+        expect(user_action).to eq(nil)
 
         topics_stats =
           messages.find { |m| m.channel == "/topic/#{p.topic.id}" && m.data[:type] == :stats }
         expect(topics_stats).to eq(nil)
 
-        expect(messages.filter { |m| m.channel != "/distributed_hash" }.length).to eq(7)
+        expect(messages.filter { _1.channel != "/distributed_hash" }.size).to eq(6)
       end
 
       it "extracts links from the post" do
@@ -680,8 +673,7 @@ RSpec.describe PostCreator do
     fab!(:topic) { Fabricate(:topic, user: user) }
 
     it "whispers do not mess up the public view" do
-      # turns out this can fail on leap years if we don't do this
-      freeze_time DateTime.parse("2010-01-01 12:00")
+      freeze_time_safe
 
       first = PostCreator.new(user, topic_id: topic.id, raw: "this is the first post").create
 
@@ -743,6 +735,7 @@ RSpec.describe PostCreator do
         highest_staff_post_number: 0,
         highest_post_number: 0,
         posts_count: 0,
+        word_count: 0,
         last_posted_at: 1.year.ago,
       )
 
@@ -751,6 +744,7 @@ RSpec.describe PostCreator do
       topic.reload
       expect(topic.highest_post_number).to eq(1)
       expect(topic.posts_count).to eq(1)
+      expect(topic.word_count).to eq(5)
       expect(topic.last_posted_at).to eq_time(first.created_at)
       expect(topic.highest_staff_post_number).to eq(3)
     end
@@ -760,7 +754,7 @@ RSpec.describe PostCreator do
     fab!(:topic) { Fabricate(:topic, user: user) }
 
     it "silent do not mess up the public view" do
-      freeze_time DateTime.parse("2010-01-01 12:00")
+      freeze_time_safe
 
       first = PostCreator.new(user, topic_id: topic.id, raw: "this is the first post").create
 
@@ -1195,10 +1189,10 @@ RSpec.describe PostCreator do
       )
     end
 
-    it "does not increase posts count for small actions" do
+    it "does not increase posts/words count for small actions" do
       topic = Fabricate(:private_message_topic, user: Fabricate(:user, refresh_auto_groups: true))
 
-      Fabricate(:post, topic: topic)
+      p1 = Fabricate(:post, topic: topic)
 
       1.upto(3) do |i|
         user = Fabricate(:user)
@@ -1208,13 +1202,19 @@ RSpec.describe PostCreator do
         expect(topic.posts.where(post_type: Post.types[:small_action]).count).to eq(i)
       end
 
-      Fabricate(:post, topic: topic)
-      Topic.reset_highest(topic.id)
-      expect(topic.reload.posts_count).to eq(2)
+      expect(topic.word_count).to eq(0)
 
-      Fabricate(:post, topic: topic)
+      p2 = Fabricate(:post, topic: topic)
+      Topic.reset_highest(topic.id)
+      topic.reload
+      expect(topic.posts_count).to eq(2)
+      expect(topic.word_count).to eq([p1, p2].sum(&:word_count))
+
+      p3 = Fabricate(:post, topic: topic)
       Topic.reset_all_highest!
-      expect(topic.reload.posts_count).to eq(3)
+      topic.reload
+      expect(topic.posts_count).to eq(3)
+      expect(topic.word_count).to eq([p1, p2, p3].sum(&:word_count))
     end
   end
 
@@ -1494,6 +1494,23 @@ RSpec.describe PostCreator do
       creator.create
       expect(creator.errors).to be_blank
       expect(TopicEmbed.where(content_sha1: content_sha1).exists?).to eq(true)
+    end
+
+    context "when embed_unlisted is true" do
+      before { SiteSetting.embed_unlisted = true }
+
+      it "unlists the topic" do
+        creator =
+          PostCreator.new(
+            user,
+            embed_url: embed_url,
+            title: "Reviews of Science Ovens",
+            raw: "Did you know that you can use microwaves to cook your dinner? Science!",
+          )
+        post = creator.create
+        expect(creator.errors).to be_blank
+        expect(post.topic).not_to be_visible
+      end
     end
   end
 

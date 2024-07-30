@@ -23,7 +23,7 @@ module Onebox
       end
 
       def data
-        return nil unless %w[story comment].include?(raw["type"])
+        return nil if %w[story comment].exclude?(raw["type"])
 
         html_entities = HTMLEntities.new
         data = {

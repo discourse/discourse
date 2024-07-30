@@ -115,6 +115,11 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
   end
 end
 
+Fabricator(:chat_mention_notification, class_name: "Chat::MentionNotification") do
+  chat_mention { Fabricate(:user_chat_mention) }
+  notification { Fabricate(:notification) }
+end
+
 Fabricator(:user_chat_mention, class_name: "Chat::UserMention") do
   transient read: false
   transient high_priority: true
@@ -216,7 +221,7 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
   original_message do |attrs|
     Fabricate(
       :chat_message,
-      chat_channel: attrs[:channel] || Fabricate(:chat_channel),
+      chat_channel: attrs[:channel] || Fabricate(:chat_channel, threading_enabled: true),
       user: attrs[:original_message_user] || Fabricate(:user),
       use_service: attrs[:use_service],
     )

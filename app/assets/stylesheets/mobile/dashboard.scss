@@ -1,4 +1,3 @@
-.dashboard,
 .dashboard-next {
   .activity-metrics .counters-list {
     font-size: var(--font-down-1);
@@ -20,5 +19,14 @@
     &__new-feature-emoji {
       padding-left: 0em;
     }
+  }
+}
+
+.admin-new-feature-item {
+  h3 {
+    margin-right: 0.5em;
+  }
+  &__new-feature-version {
+    font-size: var(--font-down-1);
   }
 }

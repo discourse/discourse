@@ -56,11 +56,15 @@ ja:
       cancel_reply: "返信をキャンセルする"
       chat_channels: "チャンネル"
       browse_all_channels: "すべてのチャンネルを閲覧する"
+      see_in: "表示:"
       move_to_channel:
         title: "メッセージをチャンネルに移動する"
         instructions:
           other: "<strong>%{count}</strong> のメッセージを移動しようとしています。移動先のチャンネルを選択してください。これらのメッセージが移動されたことを示すために、プレースホルダーメッセージは、<strong>%{channelTitle}</strong> チャンネルに作成されます。新しいチャンネルでは返信チェーンが保持されないため、古いチャンネルのメッセージは移動されたメッセージへの返信としては表示されなくなることに注意してください。"
         confirm_move: "メッセージを移動"
+      delete_messages:
+        confirm:
+          other: "これら %{count} 件のメッセージを削除してもよろしいですか？"
       channel_settings:
         title: "チャンネルの設定"
         edit: "編集"
@@ -98,7 +102,6 @@ ja:
       channels_list_popup:
         browse: "チャンネルを閲覧する"
         create: "新しいチャンネル"
-      click_to_join: "利用可能なチャンネルを表示するにはここをクリックします。"
       close: "閉じる"
       remove: "削除"
       collapse: "チャットドロワーを折りたたむ"
@@ -139,12 +142,6 @@ ja:
       heading: "チャット"
       join: "参加"
       last_visit: "最後の訪問"
-      summarization:
-        title: "メッセージを要約する"
-        description: "以下から、希望する期間に送信される会話を要約するオプションを選択してください。"
-        summarize: "要約"
-        since:
-          other: "過去 %{count} 時間"
       mention_warning:
         invitations_sent:
           other: "招待状を送信しました"
@@ -214,7 +211,10 @@ ja:
         header: "チャットヘッダー"
         composer: "チャット作成ツール"
         channels_list: "チャットのチャンネルリスト"
-      no_public_channels: "どのチャンネルにも参加していません。"
+      no_direct_message_channels: "まだダイレクトメッセージに参加していません！"
+      no_direct_message_channels_cta: "会話を始める"
+      no_public_channels: "まだチャンネルに参加していません！"
+      no_public_channels_cta: "チャンネルを閲覧する"
       kicked_from_channel: "このチャンネルにアクセスできなくなりました。"
       only_chat_push_notifications:
         title: "チャットのプッシュ通知のみ送信する"
@@ -222,6 +222,9 @@ ja:
       ignore_channel_wide_mention:
         title: "チャンネル全体のメンションを無視する"
         description: "チャット全体のメンション（@here および @all）の通知を送信しません"
+      show_thread_title_prompts:
+        title: "スレッドタイトルのプロンプトの表示"
+        description: "新しいスレッドのタイトルを設定するプロンプトを表示します"
       open: "チャットを開く"
       open_full_page: "全画面チャットを開く"
       close_full_page: "全画面チャットを閉じる"
@@ -242,6 +245,7 @@ ja:
       copy_link: "リンクをコピーする"
       copy_text: "テキストをコピー"
       rebake_message: "HTML を再構築"
+      message_too_long: "メッセージが長すぎます。メッセージは最大 %{count} 文字までです。"
       retry_staged_message:
         title: "ネットワークエラー"
         action: "もう一度送信しますか？"
@@ -494,6 +498,7 @@ ja:
         cancel: "キャンセル"
         quote_selection: "トピックで引用"
         copy: "コピー"
+        delete: "削除 (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "チャンネルに移動"
         error: "チャットメッセージを移動中にエラーが発生しました"
         title: "チャットをトピックに移動"
@@ -526,6 +531,7 @@ ja:
       flags:
         off_topic: "このメッセージは、チャンネルのタイトルで定義された現在のディスカッションとは関係がないため、おそらく別の場所に移動する必要があります。"
         inappropriate: "このメッセージには、合理的な人が攻撃的、虐待的、または<a href=\"%{basePath}/guidelines\">コミュニティーガイドライン</a>に違反すると見なすコンテンツが含まれます。"
+        illegal: "この投稿には違法なコンテンツが含まれていると思われるため、スタッフの注意が必要です。"
         spam: "このメッセージは広告または荒らし行為です。現在のチャンネルに有益な内容でなく、関連性もありません。"
         notify_user: "この人のメッセージについて、この人に直接個人的に話を聞きたいと思います。"
         notify_moderators: "このメッセージには、上記以外の理由でスタッフの注意が必要です。"
@@ -564,6 +570,17 @@ ja:
             description: "スレッドリストとチャンネルに、このスレッドの新しい返信数が表示されます。スレッドで誰かが @name であなたをメンションすると、通知されます。"
         participants_other_count:
           other: "+%{count} 件"
+      thread_title_toast:
+        title: "スレッドタイトルの設定"
+        message: "他の人がこの会話を見つけられるようにします。"
+        dismiss_action: "再度表示しない"
+        primary_action: "タイトルを設定"
+      thread_title_modal:
+        title: "スレッドタイトルの設定"
+        input_placeholder: "他の人にこの会話の内容について伝えましょう..."
+        discourse_ai:
+          title: "スレッドタイトルの自動生成"
+          description: "この機能や Discourse エクスペリエンスの他の強化の詳細については、%{url} をご覧ください。"
       threads:
         open: "スレッドを開く"
         list: "スレッド"

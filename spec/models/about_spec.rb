@@ -87,7 +87,7 @@ RSpec.describe About do
 
     it "lists moderators of the category that the current user can see" do
       results = About.new(private_cat_moderator).category_moderators
-      expect(results.map(&:category_id)).to contain_exactly(public_cat.id, private_cat.id)
+      expect(results.map(&:category).map(&:id)).to contain_exactly(public_cat.id, private_cat.id)
       expect(results.map(&:moderators).flatten.map(&:id).uniq).to contain_exactly(
         public_cat_moderator.id,
         common_moderator.id,
@@ -97,7 +97,7 @@ RSpec.describe About do
 
       [public_cat_moderator, user, nil].each do |u|
         results = About.new(u).category_moderators
-        expect(results.map(&:category_id)).to contain_exactly(public_cat.id)
+        expect(results.map(&:category).map(&:id)).to contain_exactly(public_cat.id)
         expect(results.map(&:moderators).flatten.map(&:id)).to eq(
           [public_cat_moderator.id, common_moderator.id, common_moderator_2.id],
         )
@@ -110,6 +110,24 @@ RSpec.describe About do
       results = about.category_moderators
       expect(results.size).to eq(2)
       results.each { |res| expect(res.moderators.size).to eq(2) }
+    end
+  end
+
+  describe "#admins" do
+    fab!(:admin_mark) { Fabricate(:admin, name: "mark") }
+    fab!(:admin_matt) { Fabricate(:admin, name: "matt") }
+    fab!(:admin_kate) { Fabricate(:admin, name: "kate") }
+
+    context "with about_admins plugin modifier registered" do
+      let(:modifier_block) { Proc.new { |admins| admins.select { |admin| admin.name != "mark" } } }
+
+      it "Applies registered modifiers (filtering out admins in this case)" do
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(:about_admins, &modifier_block)
+        expect(About.new(Fabricate(:user)).admins).to match_array([admin_matt, admin_kate])
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin_instance, :about_admins, &modifier_block)
+      end
     end
   end
 end

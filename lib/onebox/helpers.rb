@@ -13,15 +13,20 @@ module Onebox
       html.gsub(/<[^>]+>/, " ").gsub(/\n/, "")
     end
 
+    # Fetches the HTML response body for a URL.
+    #
+    # Note that the size of the response body is capped at `Onebox.options.max_download_kb`. When the limit has been reached,
+    # this method will return the response body that has been downloaded up to the limit.
     def self.fetch_html_doc(url, headers = nil, body_cacher = nil)
       response =
         (
           begin
-            fetch_response(url, headers: headers, body_cacher: body_cacher)
+            fetch_response(url, headers:, body_cacher:, raise_error_when_response_too_large: false)
           rescue StandardError
             nil
           end
         )
+
       doc = Nokogiri.HTML(response)
       uri = Addressable::URI.parse(url)
 
@@ -45,7 +50,12 @@ module Onebox
             response =
               (
                 begin
-                  fetch_response(uri.to_s, headers: headers, body_cacher: body_cacher)
+                  fetch_response(
+                    uri.to_s,
+                    headers:,
+                    body_cacher:,
+                    raise_error_when_response_too_large: false,
+                  )
                 rescue StandardError
                   nil
                 end
@@ -63,7 +73,9 @@ module Onebox
       redirect_limit: 5,
       domain: nil,
       headers: nil,
-      body_cacher: nil
+      body_cacher: nil,
+      raise_error_when_response_too_large: true,
+      allow_cross_domain_cookies: false
     )
       redirect_limit = Onebox.options.redirect_limit if redirect_limit >
         Onebox.options.redirect_limit
@@ -92,9 +104,7 @@ module Onebox
 
         headers ||= {}
 
-        if Onebox.options.user_agent && !headers["User-Agent"]
-          headers["User-Agent"] = Onebox.options.user_agent
-        end
+        headers["User-Agent"] ||= user_agent if user_agent
 
         request = Net::HTTP::Get.new(uri.request_uri, headers)
         start_time = Time.now
@@ -102,6 +112,7 @@ module Onebox
         size_bytes = Onebox.options.max_download_kb * 1024
         http.request(request) do |response|
           if cookie = response.get_fields("set-cookie")
+            headers["Cookie"] = cookie.join("; ") if allow_cross_domain_cookies
             # HACK: If this breaks again in the future, use HTTP::CookieJar from gem 'http-cookie'
             # See test: it "does not send cookies to the wrong domain"
             redir_header = { "Cookie" => cookie.join("; ") }
@@ -111,21 +122,26 @@ module Onebox
 
           code = response.code.to_i
           unless code === 200
-            response.error! unless [301, 302, 303, 307, 308].include?(code)
+            response.error! if [301, 302, 303, 307, 308].exclude?(code)
 
             return(
               fetch_response(
                 response["location"],
                 redirect_limit: redirect_limit - 1,
                 domain: "#{uri.scheme}://#{uri.host}",
-                headers: redir_header,
+                headers: allow_cross_domain_cookies ? headers : redir_header,
+                allow_cross_domain_cookies: allow_cross_domain_cookies,
               )
             )
           end
 
           response.read_body do |chunk|
             result.write(chunk)
-            raise DownloadTooLarge.new if result.size > size_bytes
+
+            if result.size > size_bytes
+              raise_error_when_response_too_large ? raise(DownloadTooLarge.new) : break
+            end
+
             raise Timeout::Error.new if (Time.now - start_time) > Onebox.options.timeout
           end
 
@@ -212,6 +228,12 @@ module Onebox
       rescue ArgumentError, URI::BadURIError, URI::InvalidURIError
         src
       end
+    end
+
+    def self.user_agent
+      user_agent = SiteSetting.onebox_user_agent.presence || Onebox.options.user_agent
+      user_agent = "#{user_agent} v#{Discourse::VERSION::STRING}"
+      user_agent
     end
 
     # Percent-encodes a URI string per RFC3986 - https://tools.ietf.org/html/rfc3986

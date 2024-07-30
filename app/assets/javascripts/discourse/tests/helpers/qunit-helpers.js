@@ -1,9 +1,9 @@
 import { run } from "@ember/runloop";
 import {
-  fillIn,
   getApplication,
   settled,
   triggerKeyEvent,
+  typeIn,
 } from "@ember/test-helpers";
 import { isEmpty } from "@ember/utils";
 import { setupApplicationTest } from "ember-qunit";
@@ -18,10 +18,12 @@ import {
   cleanUpComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
-import { clearBulkButtons } from "discourse/components/modal/topic-bulk-actions";
+import { clearExtraHeaderButtons as clearExtraGlimmerHeaderButtons } from "discourse/components/header";
+import { clearExtraHeaderIcons as clearExtraGlimmerHeaderIcons } from "discourse/components/header/icons";
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
 import { resetItemSelectCallbacks } from "discourse/components/search-menu/results/assistant-item";
+import { resetQuickSearchRandomTips } from "discourse/components/search-menu/results/random-quick-tip";
 import { resetOnKeyUpCallbacks } from "discourse/components/search-menu/search-term";
 import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
@@ -29,6 +31,8 @@ import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
+import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
+import { rollbackAllModifications } from "discourse/lib/class-prepend";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
@@ -61,6 +65,7 @@ import {
   resetHighestReadCache,
   setTopicList,
 } from "discourse/lib/topic-list-tracker";
+import { resetTransformers } from "discourse/lib/transformer";
 import { clearRewrites } from "discourse/lib/url";
 import { resetUserMenuTabs } from "discourse/lib/user-menu/tab";
 import {
@@ -81,14 +86,12 @@ import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
-import { clearExtraHeaderIcons } from "discourse/widgets/header";
+import {
+  clearExtraHeaderButtons,
+  clearExtraHeaderIcons,
+} from "discourse/widgets/header";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
-import {
-  initSearchData,
-  resetOnKeyDownCallbacks,
-} from "discourse/widgets/search-menu";
-import { resetQuickSearchRandomTips } from "discourse/widgets/search-menu-results";
 import { resetDecorators } from "discourse/widgets/widget";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
@@ -97,6 +100,7 @@ import { cloneJSON, deepMerge } from "discourse-common/lib/object";
 import { clearResolverOptions } from "discourse-common/resolver";
 import I18n from "discourse-i18n";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
+import { setupFormKitAssertions } from "./form-kit-assertions";
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
 
 export function currentUser() {
@@ -188,7 +192,6 @@ export function testCleanup(container, app) {
   clearOutletCache();
   clearHTMLCache();
   clearRewrites();
-  initSearchData();
   resetDecorators();
   resetPostCookedDecorators();
   resetPluginOutletDecorators();
@@ -228,8 +231,10 @@ export function testCleanup(container, app) {
   clearToolbarCallbacks();
   resetNotificationTypeRenderers();
   resetSidebarPanels();
+  clearExtraGlimmerHeaderIcons();
+  clearExtraGlimmerHeaderButtons();
   clearExtraHeaderIcons();
-  resetOnKeyDownCallbacks();
+  clearExtraHeaderButtons();
   resetOnKeyUpCallbacks();
   resetItemSelectCallbacks();
   resetUserMenuTabs();
@@ -238,10 +243,12 @@ export function testCleanup(container, app) {
   resetMentions();
   cleanupTemporaryModuleRegistrations();
   cleanupCssGeneratorTags();
-  clearBulkButtons();
   resetBeforeAuthCompleteCallbacks();
   clearPopupMenuOptions();
   clearAdditionalAdminSidebarSectionLinks();
+  resetAdminPluginConfigNav();
+  resetTransformers();
+  rollbackAllModifications();
 }
 
 function cleanupCssGeneratorTags() {
@@ -350,7 +357,7 @@ export function acceptance(name, optionsOrCallback) {
           updateCurrentUser(userChanges);
         }
 
-        User.current().trackStatus();
+        User.current().statusManager.trackStatus();
       }
 
       if (settingChanges) {
@@ -378,7 +385,7 @@ export function acceptance(name, optionsOrCallback) {
       let app = getApplication();
       options?.afterEach?.call(this);
       if (loggedIn) {
-        User.current().stopTrackingStatus();
+        User.current().statusManager.stopTrackingStatus();
       }
       testCleanup(this.container, app);
 
@@ -439,7 +446,7 @@ export function controllerFor(controller, model) {
   deprecated(
     'controllerFor is deprecated. Use the standard `getOwner(this).lookup("controller:NAME")` instead',
     {
-      id: "controller-for",
+      id: "discourse.controller-for",
       since: "3.0.0.beta14",
     }
   );
@@ -496,6 +503,8 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
     message,
   });
 };
+
+setupFormKitAssertions();
 
 export async function selectDate(selector, date) {
   const elem = document.querySelector(selector);
@@ -608,14 +617,31 @@ export async function paste(element, text, otherClipboardData = {}) {
   return e;
 }
 
-export async function emulateAutocomplete(inputSelector, text) {
-  await triggerKeyEvent(inputSelector, "keydown", "Backspace");
-  await fillIn(inputSelector, `${text} `);
-  await triggerKeyEvent(inputSelector, "keyup", "Backspace");
+export async function simulateKey(element, key) {
+  if (key === "\b") {
+    await triggerKeyEvent(element, "keydown", "Backspace");
 
-  await triggerKeyEvent(inputSelector, "keydown", "Backspace");
-  await fillIn(inputSelector, text);
-  await triggerKeyEvent(inputSelector, "keyup", "Backspace");
+    const pos = element.selectionStart;
+    element.value = element.value.slice(0, pos - 1) + element.value.slice(pos);
+    element.selectionStart = pos - 1;
+    element.selectionEnd = pos - 1;
+
+    await triggerKeyEvent(element, "keyup", "Backspace");
+  } else if (key === "\t") {
+    await triggerKeyEvent(element, "keydown", "Tab");
+    await triggerKeyEvent(element, "keyup", "Tab");
+  } else if (key === "\r") {
+    await triggerKeyEvent(element, "keydown", "Enter");
+    await triggerKeyEvent(element, "keyup", "Enter");
+  } else {
+    await typeIn(element, key);
+  }
+}
+
+export async function simulateKeys(element, keys) {
+  for (let key of keys) {
+    await simulateKey(element, key);
+  }
 }
 
 // The order of attributes can vary in different browsers. When comparing

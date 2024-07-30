@@ -317,7 +317,7 @@ class Autospec::Manager
         if @queue.first && @queue.first[0] == "focus"
           focus = @queue.shift
           @queue.unshift([file, spec, runner])
-          unless spec.include?(":") && focus[1].include?(spec.split(":")[0])
+          if spec.exclude?(":") || focus[1].exclude?(spec.split(":")[0])
             @queue.unshift(focus) if focus[1].include?(spec) || file != spec
           end
         else

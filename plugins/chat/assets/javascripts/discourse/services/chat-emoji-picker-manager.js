@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { later } from "@ember/runloop";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";

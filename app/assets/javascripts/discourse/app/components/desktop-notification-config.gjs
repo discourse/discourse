@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import i18n from "discourse-common/helpers/i18n";
 
@@ -23,7 +23,9 @@ export default class DesktopNotificationsConfig extends Component {
           @disabled="true"
           class="btn-default"
         />
-        {{i18n "user.desktop_notifications.perm_denied_expl"}}
+        <span>
+          {{i18n "user.desktop_notifications.perm_denied_expl"}}
+        </span>
       {{else}}
         {{#if this.desktopNotifications.isSubscribed}}
           <DButton

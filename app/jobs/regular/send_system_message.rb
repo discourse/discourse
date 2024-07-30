@@ -5,8 +5,8 @@ require "image_sizer"
 module Jobs
   class SendSystemMessage < ::Jobs::Base
     def execute(args)
-      raise Discourse::InvalidParameters.new(:user_id) unless args[:user_id].present?
-      raise Discourse::InvalidParameters.new(:message_type) unless args[:message_type].present?
+      raise Discourse::InvalidParameters.new(:user_id) if args[:user_id].blank?
+      raise Discourse::InvalidParameters.new(:message_type) if args[:message_type].blank?
 
       user = User.find_by(id: args[:user_id])
       return if user.blank?

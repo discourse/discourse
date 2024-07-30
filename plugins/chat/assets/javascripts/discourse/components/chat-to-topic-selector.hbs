@@ -52,7 +52,7 @@
       <CategoryChooser
         @id="new-topic-category-selector"
         @value={{this.categoryId}}
-        @onChange={{action (mut this.categoryId)}}
+        @onChange={{fn (mut this.categoryId)}}
         class="small"
       />
 
@@ -70,7 +70,7 @@
   {{#if this.existingTopic}}
     <p>{{this.existingTopicInstruction}}</p>
     <form>
-      <ChooseTopic @selectedTopicId={{this.selectedTopicId}} />
+      <ChooseTopic @topicChangedCallback={{@topicChangedCallback}} />
     </form>
   {{/if}}
 

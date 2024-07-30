@@ -27,11 +27,10 @@ $google: #ffffff !default;
 $google-hover: darken($google, 5%) !default;
 $instagram: #e1306c !default;
 $instagram-hover: darken($instagram, 15%) !default;
-$facebook: #1877f2 !default;
+$facebook: #0866ff !default;
 $facebook-hover: darken($facebook, 15%) !default;
 $cas: #70ba61 !default;
-$twitter: #1da1f2 !default;
-$twitter-hover: darken($twitter, 10%) !default;
+$twitter: #000 !default;
 $github: #100e0f !default;
 $github-hover: lighten($github, 20%) !default;
 $discord: #7289da !default;
@@ -96,6 +95,7 @@ $z-layers: (
   "header": 1000,
   "footer-nav": 900,
   "tooltip": 600,
+  "usercard": 500,
   "composer": (
     "dropdown": 700,
     "tooltip": 600,
@@ -103,7 +103,7 @@ $z-layers: (
     "content": 400,
   ),
   "dropdown": 300,
-  "usercard": 200,
+  "chat-drawer": 200,
   "timeline": 100,
   "base": 1,
 );

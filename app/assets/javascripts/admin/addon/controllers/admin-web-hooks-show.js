@@ -1,6 +1,7 @@
+import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
 
@@ -8,6 +9,9 @@ export default class AdminWebHooksShowController extends Controller {
   @service dialog;
   @service router;
   @controller adminWebHooks;
+  @tracked status;
+
+  queryParams = ["status"];
 
   @action
   edit() {

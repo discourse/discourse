@@ -104,6 +104,13 @@ RSpec.describe Chat::CreateDirectMessageChannel do
           expect { result }.to change { Chat::UserChatChannelMembership.count }.by(4)
           expect(result).to be_a_success
         end
+
+        it "succeeds when target_usernames is equal to max direct users" do
+          SiteSetting.chat_max_direct_message_users = 2
+
+          expect { result }.to change { Chat::UserChatChannelMembership.count }.by(3) # current user + user_1 + user_2
+          expect(result).to be_a_success
+        end
       end
 
       context "when there is an existing direct message channel for the target users" do
@@ -165,9 +172,9 @@ RSpec.describe Chat::CreateDirectMessageChannel do
     end
 
     context "when target_usernames exceeds chat_max_direct_message_users" do
-      before { SiteSetting.chat_max_direct_message_users = 2 }
+      before { SiteSetting.chat_max_direct_message_users = 1 }
 
-      it { is_expected.to fail_a_step(:validate_user_count) }
+      it { is_expected.to fail_a_policy(:satisfies_dms_max_users_limit) }
     end
 
     context "when the current user cannot make direct messages" do
@@ -176,6 +183,22 @@ RSpec.describe Chat::CreateDirectMessageChannel do
       before { SiteSetting.direct_message_enabled_groups = Fabricate(:group).id }
 
       it { is_expected.to fail_a_policy(:can_create_direct_message) }
+    end
+
+    context "when the plugin modifier returns false" do
+      it "fails a policy" do
+        modifier_block = Proc.new { false }
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(:chat_can_create_direct_message_channel, &modifier_block)
+
+        expect(result).to fail_a_policy(:can_create_direct_message)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :chat_can_create_direct_message_channel,
+          &modifier_block
+        )
+      end
     end
 
     context "when the actor is not allowing anyone to message them" do

@@ -51,7 +51,8 @@ createWidget("topic-header-participant", {
     this.appEvents.trigger(
       `topic-header:trigger-${this.attrs.type}-card`,
       this.attrs.username,
-      e.target
+      e.target,
+      e
     );
     e.preventDefault();
   },
@@ -142,7 +143,7 @@ export default createWidget("header-topic-info", {
         if (parentCategory) {
           if (
             this.siteSettings.max_category_nesting > 2 &&
-            !this.site.mobileView
+            this.site.desktopView
           ) {
             const grandParentCategory = parentCategory.get("parentCategory");
             if (grandParentCategory) {

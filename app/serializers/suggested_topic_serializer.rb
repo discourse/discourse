@@ -7,7 +7,7 @@ class SuggestedTopicSerializer < ListableTopicSerializer
   # front page json gets away without embedding
   class SuggestedPosterSerializer < ApplicationSerializer
     attributes :extras, :description
-    has_one :user, serializer: BasicUserSerializer, embed: :objects
+    has_one :user, serializer: PosterSerializer, embed: :objects
   end
 
   attributes :archetype,

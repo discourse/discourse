@@ -54,6 +54,7 @@ export default function renderTopicFeaturedLink(topic) {
     return "";
   }
 }
+// deprecated per components/header/topic/featured-link.gjs
 export function topicFeaturedLinkNode(topic) {
   const meta = extractLinkMeta(topic);
   if (meta) {

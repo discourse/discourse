@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class BasicUserSerializer < ApplicationSerializer
+  include UserStatusMixin
+
   attributes :id, :username, :name, :avatar_template
 
   def name

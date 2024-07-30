@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe NewPostManager do
   let(:user) { Fabricate(:newuser, refresh_auto_groups: true) }
   let(:admin) { Fabricate(:admin, refresh_auto_groups: true) }

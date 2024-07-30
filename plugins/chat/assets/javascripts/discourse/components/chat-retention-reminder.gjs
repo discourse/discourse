@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -41,7 +41,7 @@ export default class ChatRetentionReminder extends Component {
         <DButton
           @action={{this.dismiss}}
           @icon="times"
-          class="btn no-text btn-icon btn-flat no-text dismiss-btn"
+          class="no-text btn-icon btn-transparent dismiss-btn"
         />
       </div>
     {{/if}}

@@ -1,6 +1,7 @@
 .mobile-view.has-full-page-chat {
   &.disable-message-actions-touch {
     .chat-message-actions {
+      + .d-modal__backdrop,
       > * {
         pointer-events: none;
       }

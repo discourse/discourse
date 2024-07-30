@@ -104,6 +104,8 @@ class UserActionManager
         UserAction::MENTION
       when Notification.types[:edited]
         UserAction::EDIT
+      when Notification.types[:linked]
+        UserAction::LINKED
       end
 
     # skip any invalid items, eg failed to save post and so on

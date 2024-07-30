@@ -4,6 +4,8 @@
 #  A class that handles interaction between a plugin and the Discourse App.
 #
 class DiscoursePluginRegistry
+  @@register_names = Set.new
+
   # Plugins often need to be able to register additional handlers, data, or
   # classes that will be used by core classes. This should be used if you
   # need to control which type the registry is, and if it doesn't need to
@@ -15,7 +17,7 @@ class DiscoursePluginRegistry
   #   - Defines instance method as a shortcut to the singleton method
   #   - Automatically deletes the register on registry.reset!
   def self.define_register(register_name, type)
-    @@register_names ||= Set.new
+    return if respond_to?(register_name)
     @@register_names << register_name
 
     define_singleton_method(register_name) do
@@ -36,13 +38,13 @@ class DiscoursePluginRegistry
   #   - Defines instance method as a shortcut to the singleton method
   #   - Automatically deletes the register on registry.reset!
   def self.define_filtered_register(register_name)
+    return if respond_to?(register_name)
     define_register(register_name, Array)
 
     singleton_class.alias_method :"_raw_#{register_name}", :"#{register_name}"
 
     define_singleton_method(register_name) do
-      unfiltered = public_send(:"_raw_#{register_name}")
-      unfiltered.filter { |v| v[:plugin].enabled? }.map { |v| v[:value] }.uniq
+      public_send(:"_raw_#{register_name}").filter_map { |h| h[:value] if h[:plugin].enabled? }.uniq
     end
 
     define_singleton_method("register_#{register_name.to_s.singularize}") do |value, plugin|
@@ -53,18 +55,15 @@ class DiscoursePluginRegistry
   define_register :javascripts, Set
   define_register :auth_providers, Set
   define_register :service_workers, Set
-  define_register :admin_javascripts, Set
   define_register :stylesheets, Hash
   define_register :mobile_stylesheets, Hash
   define_register :desktop_stylesheets, Hash
   define_register :color_definition_stylesheets, Hash
-  define_register :handlebars, Set
   define_register :serialized_current_user_fields, Set
   define_register :seed_data, HashWithIndifferentAccess
   define_register :locales, HashWithIndifferentAccess
   define_register :svg_icons, Set
   define_register :custom_html, Hash
-  define_register :asset_globs, Set
   define_register :html_builders, Hash
   define_register :seed_path_builders, Set
   define_register :vendored_pretty_text, Set
@@ -124,6 +123,12 @@ class DiscoursePluginRegistry
 
   define_filtered_register :post_strippers
 
+  define_filtered_register :problem_checks
+
+  define_filtered_register :flag_applies_to_types
+
+  define_filtered_register :custom_filter_mappings
+
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
   end
@@ -158,34 +163,11 @@ class DiscoursePluginRegistry
     Archetype.register(name, options)
   end
 
-  def self.register_glob(root, extension, options = nil)
-    self.asset_globs << [root, extension, options || {}]
-  end
-
-  def self.each_globbed_asset(each_options = nil)
-    each_options ||= {}
-
-    self.asset_globs.each do |g|
-      root, ext, options = *g
-
-      if options[:admin]
-        next unless each_options[:admin]
-      else
-        next if each_options[:admin]
-      end
-
-      Dir.glob("#{root}/**/*.#{ext}") { |f| yield f }
-    end
-  end
-
   JS_REGEX = /\.js$|\.js\.erb$|\.js\.es6\z/
-  HANDLEBARS_REGEX = /\.(hb[rs]|js\.handlebars)\z/
 
   def self.register_asset(asset, opts = nil, plugin_directory_name = nil)
     if asset =~ JS_REGEX
-      if opts == :admin
-        self.admin_javascripts << asset
-      elsif opts == :vendored_pretty_text
+      if opts == :vendored_pretty_text
         self.vendored_pretty_text << asset
       elsif opts == :vendored_core_pretty_text
         self.vendored_core_pretty_text << asset
@@ -205,8 +187,6 @@ class DiscoursePluginRegistry
         self.stylesheets[plugin_directory_name] ||= Set.new
         self.stylesheets[plugin_directory_name] << asset
       end
-    elsif asset =~ HANDLEBARS_REGEX
-      self.handlebars << asset
     end
   end
 

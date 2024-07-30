@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import Sharing from "discourse/lib/sharing";
@@ -58,12 +59,11 @@ export default Component.extend({
     }, 200);
   },
 
-  actions: {
-    share(source) {
-      Sharing.shareSource(source, {
-        url: this.shareUrl,
-        title: this.get("topic.title"),
-      });
-    },
+  @action
+  share(source) {
+    Sharing.shareSource(source, {
+      url: this.shareUrl,
+      title: this.topic.get("title"),
+    });
   },
 });

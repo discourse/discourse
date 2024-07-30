@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  site_settings:
+    lazy_videos_enabled: "Povolenie pluginu Lazy Videos"
+    lazy_youtube_enabled: "Povoliť pomalé načítanie pre vložené položky YouTube"
+    lazy_vimeo_enabled: "Povoliť pomalé načítanie pre vloženia Vimeo"
+    lazy_tiktok_enabled: "Povoliť pomalé načítanie pre vloženia TikTok (experimentálne)"

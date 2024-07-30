@@ -83,24 +83,44 @@ module Jobs
           cc_addresses: cc_addresses,
           bcc_addresses: bcc_addresses,
         )
-      Email::Sender.new(message, :group_smtp, recipient_user).send
+
+      begin
+        Email::Sender.new(message, :group_smtp, recipient_user).send
+      rescue Net::ReadTimeout => err
+        # We can't be sure if the send actually failed or if ENTER . ENTER (to end
+        # the SMTP data sequence) just timed out, as is the case with Gmail occassionaly,
+        # where they can do this if they suspect you are sending spam.
+        Discourse.warn_exception(
+          err,
+          message: "Got SMTP read timeout when sending group SMTP email",
+          env: args,
+        )
+      end
 
       # Create an incoming email record to avoid importing again from IMAP
       # server. While this may not be technically required if IMAP is not
       # currently enabled for the group, it will help a lot with the initial
       # sync if it is turned on at a later date.
-      IncomingEmail.create!(
-        user_id: post.user_id,
-        topic_id: post.topic_id,
-        post_id: post.id,
-        raw: message.to_s,
-        subject: message.subject,
-        message_id: message.message_id,
-        to_addresses: message.to,
-        cc_addresses: message.cc,
-        from_address: message.from,
-        created_via: IncomingEmail.created_via_types[:group_smtp],
-      )
+      begin
+        IncomingEmail.create!(
+          user_id: post.user_id,
+          topic_id: post.topic_id,
+          post_id: post.id,
+          raw: message.to_s,
+          subject: message.subject,
+          message_id: message.message_id,
+          to_addresses: message.to,
+          cc_addresses: message.cc,
+          from_address: message.from,
+          created_via: IncomingEmail.created_via_types[:group_smtp],
+        )
+      rescue => err
+        Discourse.warn_exception(
+          err,
+          message: "Failed to create IncomingEmail record when sending group SMTP email",
+          env: args,
+        )
+      end
     end
 
     def quit_email_early?

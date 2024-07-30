@@ -78,8 +78,12 @@ def migrate_databases(parallel: false, load_plugins: false)
   success
 end
 
+def number_of_processors
+  Etc.nprocessors
+end
+
 def system_tests_parallel_tests_processors_env
-  "PARALLEL_TEST_PROCESSORS=#{Etc.nprocessors / 2}"
+  "PARALLEL_TEST_PROCESSORS=#{number_of_processors / 2}"
 end
 
 # Environment Variables (specific to this rake task)
@@ -294,7 +298,7 @@ task "docker:test" do
         unless ENV["SKIP_CORE"]
           @good &&=
             run_or_fail(
-              "cd app/assets/javascripts/discourse && CI=1 yarn ember exam --load-balance --parallel=3 --random",
+              "cd app/assets/javascripts/discourse && CI=1 yarn ember exam --load-balance --parallel=#{number_of_processors / 2} --random",
             )
         end
 
@@ -305,7 +309,10 @@ task "docker:test" do
                 "CI=1 bundle exec rake plugin:qunit['#{ENV["SINGLE_PLUGIN"]}','#{js_timeout}']",
               )
           else
-            @good &&= run_or_fail("CI=1 bundle exec rake plugin:qunit['*','#{js_timeout}']")
+            @good &&=
+              run_or_fail(
+                "QUNIT_PARALLEL=#{number_of_processors / 2}  CI=1 bundle exec rake plugin:qunit['*','#{js_timeout}']",
+              )
           end
         end
       end

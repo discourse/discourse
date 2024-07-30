@@ -125,7 +125,7 @@ module ImportExport
 
       @export_data[:categories].each do |c|
         c[:permissions_params].each do |group_name, _|
-          group_names << group_name unless auto_group_names.include?(group_name.to_s)
+          group_names << group_name if auto_group_names.exclude?(group_name.to_s)
         end
       end
 

@@ -338,7 +338,7 @@ body.wizard {
     font-size: var(--font-0);
     border: 0;
     padding: 0.5em;
-    transition: background-color 0.3s;
+    transition: var(--d-button-transition);
     text-decoration: none;
     background-color: var(--secondary);
     color: var(--primary-very-high);
@@ -366,7 +366,6 @@ body.wizard {
   }
 
   &__button.primary {
-    margin-left: 1em;
     background-color: var(--tertiary);
     color: var(--secondary);
     @include breakpoint("mobile-extra-large") {
@@ -388,7 +387,7 @@ body.wizard {
   }
 
   &__button.configure-more {
-    //background-color: var(--primary-200);
+    margin-right: 1em;
     background-color: transparent;
     color: var(--tertiary);
     @include breakpoint("mobile-extra-large") {
@@ -505,7 +504,8 @@ body.wizard {
 
   &__description {
     color: var(--primary-high);
-    font-size: var(--font-down-1);
+    font-size: var(--font-0);
+    font-weight: normal;
     margin: 0.25em 0 0.5em 0;
 
     a {
@@ -535,7 +535,6 @@ body.wizard {
     padding: 10px;
     background-color: var(--secondary);
     border: 1px solid var(--primary-low-mid);
-    transition: border-color 0.5s;
   }
 
   &__dropdown {
@@ -630,6 +629,58 @@ body.wizard {
   &__checkbox-label {
     position: relative;
     top: 2px;
+  }
+
+  &__radio {
+    position: absolute;
+    visibility: hidden;
+  }
+
+  &__radio-choices {
+    align-items: stretch;
+    display: flex;
+    gap: 1em;
+    @include breakpoint(mobile-extra-large) {
+      flex-direction: column;
+    }
+  }
+
+  &__radio-choice {
+    flex-basis: 0;
+    flex-grow: 1;
+    display: flex;
+
+    &.--selected {
+      .wizard-container__label {
+        background-color: var(--tertiary-very-low);
+        border-color: var(--tertiary-high);
+        border-width: 2px;
+        margin: 0;
+      }
+    }
+
+    .wizard-container__label {
+      border-radius: 4px;
+      border: 1px solid var(--primary-low-mid);
+      flex-grow: 1;
+      margin: 1px 0;
+    }
+
+    label {
+      align-content: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      font-weight: normal;
+      padding: 1em;
+      text-align: center;
+
+      .svg-icon {
+        margin-bottom: 0.5em;
+        width: 100%;
+      }
+    }
   }
 
   label .svg-icon {

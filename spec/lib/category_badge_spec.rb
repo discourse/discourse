@@ -10,7 +10,7 @@ RSpec.describe CategoryBadge do
 
     expect(html).not_to include("<b>title</b>")
     expect(html).not_to include("<b>name</b>")
-    expect(html).to include(ERB::Util.html_escape("<b>name</b>"))
+    expect(html).to include("&lt;b&gt;name&lt;/b&gt;")
     expect(html).to include("title='title'")
   end
 
@@ -31,5 +31,13 @@ RSpec.describe CategoryBadge do
         style: "--category-badge-color: #123456; --category-badge-text-color: #654321;",
       },
     )
+  end
+
+  it "includes inline color style when inline_style is true" do
+    c = Fabricate(:category, color: "123456")
+
+    html = CategoryBadge.html_for(c, inline_style: true)
+
+    expect(html).to include("background-color: #123456;")
   end
 end

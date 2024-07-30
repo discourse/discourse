@@ -150,6 +150,25 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
     end
 
+    it "should redirect users when enforce_second_factor is 'all' and authenticated via oauth" do
+      SiteSetting.enforce_second_factor = "all"
+      sign_in(user)
+      user.user_auth_tokens.last.update(authenticated_with_oauth: true)
+
+      get "/"
+      expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
+    end
+
+    it "should not redirect users when enforce_second_factor is 'all', authenticated via oauth but enforce_second_factor_on_external_auth is false" do
+      SiteSetting.enforce_second_factor = "all"
+      SiteSetting.enforce_second_factor_on_external_auth = false
+      sign_in(user)
+      user.user_auth_tokens.last.update(authenticated_with_oauth: true)
+
+      get "/"
+      expect(response.status).to eq(200)
+    end
+
     it "should not redirect anonymous users when enforce_second_factor is 'all'" do
       SiteSetting.enforce_second_factor = "all"
       SiteSetting.allow_anonymous_posting = true
@@ -237,6 +256,45 @@ RSpec.describe ApplicationController do
     end
   end
 
+  describe "#redirect_to_profile_if_required" do
+    fab!(:user)
+
+    before { sign_in(user) }
+
+    context "when the user is missing required custom fields" do
+      before do
+        Fabricate(:user_field, requirement: "for_all_users")
+        UserRequiredFieldsVersion.create!
+      end
+
+      it "redirects the user to the profile preferences" do
+        get "/hot"
+        expect(response).to redirect_to("/u/#{user.username}/preferences/profile")
+      end
+
+      it "only logs user history once per day" do
+        expect do
+          RateLimiter.enable
+          get "/hot"
+          get "/hot"
+        end.to change { UserHistory.count }.by(1)
+      end
+    end
+
+    context "when the user has filled up all required custom fields" do
+      before do
+        Fabricate(:user_field, requirement: "for_all_users")
+        UserRequiredFieldsVersion.create!
+        user.bump_required_fields_version
+      end
+
+      it "redirects the user to the profile preferences" do
+        get "/hot"
+        expect(response).not_to redirect_to("/u/#{user.username}/preferences/profile")
+      end
+    end
+  end
+
   describe "invalid request params" do
     before do
       @old_logger = Rails.logger
@@ -268,7 +326,7 @@ RSpec.describe ApplicationController do
 
       expect(log).not_to include("exception app middleware")
 
-      expect(response.parsed_body).to eq("status" => 400, "error" => "Bad Request")
+      expect(response.status).to eq(400)
     end
   end
 
@@ -547,6 +605,45 @@ RSpec.describe ApplicationController do
         expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("unsafe-none")
       end
     end
+
+    describe "when `cross_origin_opener_unsafe_none_groups` site setting has been set" do
+      fab!(:group)
+      fab!(:current_user) { Fabricate(:user) }
+
+      before do
+        SiteSetting.cross_origin_opener_policy_header = "same-origin"
+        SiteSetting.cross_origin_opener_unsafe_none_groups = group.id
+      end
+
+      context "for logged in user" do
+        before { sign_in(current_user) }
+
+        it "sets `Cross-Origin-Opener-Policy` to `unsafe-none` for a listed group" do
+          group.add(current_user)
+
+          get "/latest"
+
+          expect(response.status).to eq(200)
+          expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("unsafe-none")
+        end
+
+        it "sets `Cross-Origin-Opener-Policy` to configured value when group is missing" do
+          get "/latest"
+
+          expect(response.status).to eq(200)
+          expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("same-origin")
+        end
+      end
+
+      context "for anon" do
+        it "sets `Cross-Origin-Opener-Policy` to configured value" do
+          get "/latest"
+
+          expect(response.status).to eq(200)
+          expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("same-origin")
+        end
+      end
+    end
   end
 
   describe "splash_screen" do
@@ -647,14 +744,14 @@ RSpec.describe ApplicationController do
       get "/"
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
 
-      expect(script_src).to_not include("example.com")
+      expect(script_src).to_not include("'unsafe-eval'")
 
-      SiteSetting.content_security_policy_script_src = "example.com"
+      SiteSetting.content_security_policy_script_src = "'unsafe-eval'"
 
       get "/"
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
 
-      expect(script_src).to include("example.com")
+      expect(script_src).to include("'unsafe-eval'")
     end
 
     it "does not set CSP when responding to non-HTML" do
@@ -699,7 +796,7 @@ RSpec.describe ApplicationController do
       get "/latest"
 
       expect(response.headers["X-Discourse-Cached"]).to eq("store")
-      expect(response.headers).not_to include("Discourse-GTM-Nonce-Placeholder")
+      expect(response.headers).not_to include("Discourse-CSP-Nonce-Placeholder")
 
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
       report_only_script_src =
@@ -716,7 +813,7 @@ RSpec.describe ApplicationController do
       get "/latest"
 
       expect(response.headers["X-Discourse-Cached"]).to eq("true")
-      expect(response.headers).not_to include("Discourse-GTM-Nonce-Placeholder")
+      expect(response.headers).not_to include("Discourse-CSP-Nonce-Placeholder")
 
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
       report_only_script_src =
@@ -732,19 +829,6 @@ RSpec.describe ApplicationController do
       expect(gtm_meta_tag["data-nonce"]).to eq(second_nonce)
     end
 
-    it "when splash screen is enabled it adds the fingerprint to the policy" do
-      SiteSetting.content_security_policy = true
-      SiteSetting.splash_screen = true
-
-      get "/latest"
-      fingerprint = SplashScreenHelper.fingerprint
-      expect(response.headers).to include("Content-Security-Policy")
-
-      script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
-      expect(script_src.to_s).to include(fingerprint)
-      expect(response.body).to include(SplashScreenHelper.inline_splash_screen_script)
-    end
-
     def parse(csp_string)
       csp_string
         .split(";")
@@ -756,7 +840,7 @@ RSpec.describe ApplicationController do
     end
 
     def extract_nonce_from_script_src(script_src)
-      nonce = script_src.find { |src| src.match?(/\A'nonce-\h{32}'\z/) }[-33...-1]
+      nonce = script_src.lazy.map { |src| src[/\A'nonce-([^']+)'\z/, 1] }.find(&:itself)
       expect(nonce).to be_present
       nonce
     end
@@ -1116,13 +1200,17 @@ RSpec.describe ApplicationController do
   end
 
   describe "crawlers in slow_down_crawler_user_agents site setting" do
-    before { RateLimiter.enable }
+    before do
+      Fabricate(:admin) # to prevent redirect to the wizard
+      RateLimiter.enable
+
+      SiteSetting.slow_down_crawler_rate = 128
+      SiteSetting.slow_down_crawler_user_agents = "badcrawler|problematiccrawler"
+    end
 
     use_redis_snapshotting
 
     it "are rate limited" do
-      SiteSetting.slow_down_crawler_rate = 128
-      SiteSetting.slow_down_crawler_user_agents = "badcrawler|problematiccrawler"
       now = Time.zone.now
       freeze_time now
 
@@ -1153,6 +1241,21 @@ RSpec.describe ApplicationController do
 
       get "/", headers: { "HTTP_USER_AGENT" => "iam problematiccrawler" }
       expect(response.status).to eq(200)
+    end
+
+    context "with anonymous caching" do
+      before do
+        global_setting :anon_cache_store_threshold, 1
+        Middleware::AnonymousCache.enable_anon_cache
+      end
+
+      it "don't bypass crawler rate limits" do
+        get "/", headers: { "HTTP_USER_AGENT" => "iam badcrawler" }
+        expect(response.status).to eq(200)
+
+        get "/", headers: { "HTTP_USER_AGENT" => "iam badcrawler" }
+        expect(response.status).to eq(429)
+      end
     end
   end
 
@@ -1201,32 +1304,50 @@ RSpec.describe ApplicationController do
     end
   end
 
-  describe "preload Link header" do
-    context "with GlobalSetting.preload_link_header" do
-      before { global_setting :preload_link_header, true }
+  describe "Early hint header" do
+    before { global_setting :cdn_url, "https://cdn.example.com/something" }
 
-      it "should have the Link header with assets on full page requests" do
-        get("/latest")
-        expect(response.headers).to include("Link")
+    it "is not included by default" do
+      get "/latest"
+      expect(response.status).to eq(200)
+      expect(response.headers["Link"]).to eq(nil)
+    end
+
+    context "when in preconnect mode" do
+      before { global_setting :early_hint_header_mode, "preconnect" }
+
+      it "includes the preconnect hint" do
+        get "/latest"
+        expect(response.status).to eq(200)
+        expect(response.headers["Link"]).to include("<https://cdn.example.com>; rel=preconnect")
+        expect(response.headers["Link"]).not_to include("rel=preload")
       end
 
-      it "shouldn't have the Link header on xhr api requests" do
-        get("/latest.json")
-        expect(response.headers).not_to include("Link")
+      it "can use a different header" do
+        global_setting :early_hint_header_name, "X-Discourse-Early-Hint"
+        get "/latest"
+        expect(response.status).to eq(200)
+        expect(response.headers["X-Discourse-Early-Hint"]).to include(
+          "<https://cdn.example.com>; rel=preconnect",
+        )
+        expect(response.headers["Link"]).to eq(nil)
+      end
+
+      it "is skipped for non-app URLs" do
+        get "/latest.json"
+        expect(response.status).to eq(200)
+        expect(response.headers["Link"]).to eq(nil)
       end
     end
 
-    context "without GlobalSetting.preload_link_header" do
-      before { global_setting :preload_link_header, false }
+    context "when in preload mode" do
+      before { global_setting :early_hint_header_mode, "preload" }
 
-      it "shouldn't have the Link header with assets on full page requests" do
-        get("/latest")
-        expect(response.headers).not_to include("Link")
-      end
-
-      it "shouldn't have the Link header on xhr api requests" do
-        get("/latest.json")
-        expect(response.headers).not_to include("Link")
+      it "includes the preload hint" do
+        get "/latest"
+        expect(response.status).to eq(200)
+        expect(response.headers["Link"]).to include('.js>; rel="preload"')
+        expect(response.headers["Link"]).to include('.css?__ws=test.localhost>; rel="preload"')
       end
     end
   end
@@ -1308,6 +1429,7 @@ RSpec.describe ApplicationController do
             "topicTrackingStates",
             "topicTrackingStateMeta",
             "fontMap",
+            "visiblePlugins",
           ],
         )
       end
@@ -1319,6 +1441,33 @@ RSpec.describe ApplicationController do
         expect(font_map.keys).to match_array(
           DiscourseFonts.fonts.filter { |f| f[:variants].present? }.map { |f| f[:key] },
         )
+      end
+
+      it "has correctly loaded visiblePlugins" do
+        get "/latest"
+        expect(JSON.parse(preloaded_json["visiblePlugins"])).to eq([])
+      end
+    end
+
+    describe "readonly serialization" do
+      it "serializes regular readonly mode correctly" do
+        Discourse.enable_readonly_mode(Discourse::USER_READONLY_MODE_KEY)
+
+        get "/latest"
+        expect(JSON.parse(preloaded_json["isReadOnly"])).to eq(true)
+        expect(JSON.parse(preloaded_json["isStaffWritesOnly"])).to eq(false)
+      ensure
+        Discourse.disable_readonly_mode(Discourse::USER_READONLY_MODE_KEY)
+      end
+
+      it "serializes staff readonly mode correctly" do
+        Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
+
+        get "/latest"
+        expect(JSON.parse(preloaded_json["isReadOnly"])).to eq(true)
+        expect(JSON.parse(preloaded_json["isStaffWritesOnly"])).to eq(true)
+      ensure
+        Discourse.disable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
       end
     end
   end

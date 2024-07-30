@@ -10,7 +10,7 @@ task "smoke:test" do
     abort err.message
   end
 
-  system("yarn install")
+  system("yarn install", exception: true)
 
   url = ENV["URL"]
   if !url
@@ -63,7 +63,7 @@ task "smoke:test" do
 
   node_arguments = []
   node_arguments << "--inspect-brk" if ENV["DEBUG_NODE"]
-  node_arguments << "#{Rails.root}/test/smoke_test.js"
+  node_arguments << "#{Rails.root}/test/smoke-test.mjs"
   node_arguments << url
 
   IO

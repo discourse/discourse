@@ -24,6 +24,7 @@ export default {
             applicationController.calculateShowSidebar()
           );
           applicationController.appEvents.trigger("site-header:force-refresh");
+          owner.lookup("service:header").hamburgerVisible = false;
         }
       }
     });

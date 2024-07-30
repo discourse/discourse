@@ -30,5 +30,7 @@ createWidget("header-contents", {
     {{before-header-panel-outlet attrs=attrs}}
 
     <div class="panel" role="navigation">{{yield}}</div>
+
+    {{after-header-panel-outlet attrs=attrs}}
   `,
 });

@@ -1,5 +1,5 @@
-import { getOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
+import { getOwner } from "@ember/owner";
+import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class UserIndex extends DiscourseRoute {

@@ -293,10 +293,6 @@ pt:
         not_found: |-
           Oh não, minha postagem desagradável ainda não foi sinalizada como inadequada. :worried: Você poderia sinalizá-la como imprópria usando **sinalizar** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Não se esqueça de usar o botão mostrar mais <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para exibir mais ações para cada postagem.
       search:
-        instructions: |-
-          _psst_ … Eu escondi uma surpresa neste tópico. Se você está pronto para o desafio, **selecione o ícone de pesquisa** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> no canto superior direito &#8599; para procurá-la.
-
-          Experimente pesquisar o termo "capi&#8203;vara" neste tópico
         hidden_message: |-
           Como você perdeu este capybara? :wink:
 

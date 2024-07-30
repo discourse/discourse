@@ -1,13 +1,40 @@
+import { tracked } from "@glimmer/tracking";
 import { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
-import Category from "discourse/models/category";
 import Group from "discourse/models/group";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import discourseComputed from "discourse-common/utils/decorators";
 
+class WebHookExtras {
+  @tracked categories;
+
+  constructor(args) {
+    this.categories = args.categories || [];
+    this.content_types = args.content_types || [];
+    this.default_event_types = args.default_event_types || [];
+    this.delivery_statuses = args.delivery_statuses || [];
+    this.grouped_event_types = args.grouped_event_types || [];
+  }
+
+  addCategories(categories) {
+    this.categories = this.categories.concat(categories).uniqBy((c) => c.id);
+  }
+
+  get categoriesById() {
+    if (this.categories) {
+      return new Map(this.categories.map((c) => [c.id, c]));
+    }
+  }
+
+  findCategoryById(id) {
+    return this.categoriesById?.get(id);
+  }
+}
+
 export default class WebHook extends RestModel {
+  static ExtrasClass = WebHookExtras;
   content_type = 1; // json
   last_delivery_status = 1; // inactive
   wildcard_web_hook = false;
@@ -27,10 +54,15 @@ export default class WebHook extends RestModel {
 
   @computed("category_ids")
   get categories() {
-    return Category.findByIds(this.category_ids);
+    return (this.category_ids || []).map((id) =>
+      this.extras.findCategoryById(id)
+    );
   }
 
   set categories(value) {
+    this.extras ||= new WebHookExtras({});
+    this.extras.addCategories(value);
+
     this.set(
       "category_ids",
       value.map((c) => c.id)

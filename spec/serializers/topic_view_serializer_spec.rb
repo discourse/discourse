@@ -14,7 +14,7 @@ RSpec.describe TopicViewSerializer do
   fab!(:topic)
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user_2) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:admin)
 
   describe "#featured_link and #featured_link_root_domain" do
     fab!(:featured_link) { "http://meta.discourse.org" }

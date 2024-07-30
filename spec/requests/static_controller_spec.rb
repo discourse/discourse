@@ -54,6 +54,14 @@ RSpec.describe StaticController do
         expect(response.media_type).to eq("image/png")
         expect(response.body.bytesize).to eq(upload.filesize)
       end
+
+      context "when favicon fails to load" do
+        before { FileHelper.stubs(:download).raises(SocketError) }
+
+        it "creates an admin notice" do
+          expect { get "/favicon/proxied" }.to change { AdminNotice.problem.count }.by(1)
+        end
+      end
     end
   end
 
@@ -282,7 +290,7 @@ RSpec.describe StaticController do
       end
     end
 
-    context "with a full url to someone else" do
+    context "with a full url to an external host" do
       it "redirects to the root path" do
         post "/login.json", params: { redirect: "http://eviltrout.com/foo" }
         expect(response).to redirect_to("/")
@@ -312,6 +320,13 @@ RSpec.describe StaticController do
         expect(response).to redirect_to("/")
       end
     end
+
+    context "when the redirect path is invalid" do
+      it "redirects to the root URL" do
+        post "/login.json", params: { redirect: "test" }
+        expect(response).to redirect_to("/")
+      end
+    end
   end
 
   describe "#service_worker_asset" do
@@ -319,7 +334,7 @@ RSpec.describe StaticController do
       get "/service-worker.js"
       expect(response.status).to eq(200)
       expect(response.content_type).to start_with("application/javascript")
-      expect(response.body).to include("workbox")
+      expect(response.body).to include("addEventListener")
     end
 
     it "replaces sourcemap URL" do

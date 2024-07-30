@@ -25,6 +25,26 @@ module(
       assert.dom(".fk-d-default-toast__icon-container").doesNotExist();
     });
 
+    test("progress bar", async function (assert) {
+      this.toast = new DToastInstance(this, {});
+
+      await render(
+        hbs`<DDefaultToast @data={{this.toast.options.data}} @showProgressBar={{true}} @onRegisterProgressBar={{(noop)}} />`
+      );
+
+      assert.dom(".fk-d-default-toast__progress-bar").exists();
+    });
+
+    test("no progress bar", async function (assert) {
+      this.toast = new DToastInstance(this, {});
+
+      await render(
+        hbs`<DDefaultToast @data={{this.toast.options.data}} @showProgressBar={{false}} />`
+      );
+
+      assert.dom(".fk-d-default-toast__progress-bar").doesNotExist();
+    });
+
     test("title", async function (assert) {
       this.toast = new DToastInstance(this, { data: { title: "Title" } });
 

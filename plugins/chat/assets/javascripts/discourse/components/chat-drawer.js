@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { cancel, next, throttle } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";

@@ -1,5 +1,5 @@
-import { schedule } from "@ember/runloop";
-import Service, { inject as service } from "@ember/service";
+import { next, schedule } from "@ember/runloop";
+import Service, { service } from "@ember/service";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
@@ -43,9 +43,12 @@ export default class RouteScrollManager extends Service {
     }
 
     const scrollLocation = this.historyStore.get(STORE_KEY) || [0, 0];
-    schedule("afterRender", () => {
-      this.scrollElement.scrollTo(...scrollLocation);
-    });
+
+    next(() =>
+      schedule("afterRender", () =>
+        this.scrollElement.scrollTo(...scrollLocation)
+      )
+    );
   }
 
   #shouldScroll(routeInfo) {

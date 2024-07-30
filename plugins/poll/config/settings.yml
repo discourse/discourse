@@ -30,6 +30,10 @@ plugins:
     default: -16
     min: -9999
     client: true
+  poll_export_ranked_choice_data_explorer_query_id:
+    default: -19
+    min: -9999
+    client: true
   poll_default_public:
     default: true
     client: true

@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import $ from "jquery";
 import { module, test } from "qunit";
@@ -110,11 +110,11 @@ module("Unit | Utility | category-badge", function (hooks) {
     let tag = $.parseHTML(categoryBadgeHTML(rtlCategory))[0];
 
     let dirSpan = tag.children[0].children[0];
-    assert.strictEqual(dirSpan.dir, "rtl");
+    assert.strictEqual(dirSpan.dir, "auto");
 
     tag = $.parseHTML(categoryBadgeHTML(ltrCategory))[0];
     dirSpan = tag.children[0].children[0];
-    assert.strictEqual(dirSpan.dir, "ltr");
+    assert.strictEqual(dirSpan.dir, "auto");
   });
 
   test("recursive", function (assert) {

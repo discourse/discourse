@@ -29,7 +29,7 @@ class NewPostResult
     if arr.empty?
       @success = true
     else
-      arr.each { |e| errors.add(:base, e) unless errors[:base].include?(e) }
+      arr.each { |e| errors.add(:base, e) if errors[:base].exclude?(e) }
     end
   end
 

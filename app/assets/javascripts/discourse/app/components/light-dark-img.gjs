@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import CdnImg from "discourse/components/cdn-img";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 

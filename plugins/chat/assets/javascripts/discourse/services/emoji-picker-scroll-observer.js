@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { bind } from "discourse-common/utils/decorators";
 
 export default class EmojiPickerScrollObserver extends Service {

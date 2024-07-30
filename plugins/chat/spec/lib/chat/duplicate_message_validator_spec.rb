@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::DuplicateMessageValidator do
   let(:chat_channel) { Fabricate(:chat_channel) }
 

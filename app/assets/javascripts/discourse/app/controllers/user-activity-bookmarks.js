@@ -1,10 +1,11 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { equal, notEmpty } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import Bookmark from "discourse/models/bookmark";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -22,6 +23,13 @@ export default Controller.extend({
   permissionDenied: false,
   inSearchMode: notEmpty("q"),
   noContent: equal("model.bookmarks.length", 0),
+
+  bulkSelectHelper: null,
+
+  init() {
+    this._super(...arguments);
+    this.bulkSelectHelper = new BulkSelectHelper(this);
+  },
 
   searchTerm: computed("q", {
     get() {
@@ -77,6 +85,11 @@ export default Controller.extend({
       .finally(() => this.set("loadingMore", false));
   },
 
+  @action
+  updateAutoAddBookmarksToBulkSelect(value) {
+    this.bulkSelectHelper.autoAddBookmarksToBulkSelect = value;
+  },
+
   _loadMoreBookmarks(searchQuery) {
     if (!this.model.loadMoreUrl) {
       return Promise.resolve();
@@ -96,7 +109,7 @@ export default Controller.extend({
     this.set("permissionDenied", true);
   },
 
-  _processLoadResponse(searchTerm, response) {
+  async _processLoadResponse(searchTerm, response) {
     if (!response || !response.user_bookmark_list) {
       this.model.loadMoreUrl = null;
       return;
@@ -108,6 +121,7 @@ export default Controller.extend({
 
     if (response.bookmarks) {
       const bookmarkModels = response.bookmarks.map(this.transform);
+      await Bookmark.applyTransformations(bookmarkModels);
       this.model.bookmarks.pushObjects(bookmarkModels);
       this.session.set("bookmarksModel", this.model);
     }

@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import { Promise } from "rsvp";

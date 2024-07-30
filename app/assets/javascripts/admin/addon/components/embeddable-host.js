@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { or } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -18,6 +18,8 @@ export default class EmbeddableHost extends Component.extend(
   editToggled = false;
   categoryId = null;
   category = null;
+  tags = null;
+  user = null;
 
   @or("host.isNew", "editToggled") editing;
 
@@ -28,7 +30,9 @@ export default class EmbeddableHost extends Component.extend(
     const categoryId = host.category_id || this.site.uncategorized_category_id;
     const category = Category.findById(categoryId);
 
-    host.set("category", category);
+    this.set("category", category);
+    this.set("tags", host.tags || []);
+    this.set("user", host.user);
   }
 
   @discourseComputed("buffered.host", "host.isSaving")
@@ -38,10 +42,12 @@ export default class EmbeddableHost extends Component.extend(
 
   @action
   edit() {
-    this.set("categoryId", this.get("host.category.id"));
     this.set("editToggled", true);
   }
-
+  @action
+  onUserChange(user) {
+    this.set("user", user);
+  }
   @action
   save() {
     if (this.cantSave) {
@@ -53,14 +59,16 @@ export default class EmbeddableHost extends Component.extend(
       "allowed_paths",
       "class_name"
     );
-    props.category_id = this.categoryId;
+    props.category_id = this.category.id;
+    props.tags = this.tags;
+    props.user =
+      Array.isArray(this.user) && this.user.length > 0 ? this.user[0] : null;
 
     const host = this.host;
 
     host
       .save(props)
       .then(() => {
-        host.set("category", Category.findById(this.categoryId));
         this.set("editToggled", false);
       })
       .catch(popupAjaxError);

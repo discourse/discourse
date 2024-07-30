@@ -34,8 +34,8 @@ fi:
         icons:
           title: "Kuvakkeet"
           full_list: "Katso täydellinen luettelo Font Awesome -kuvakkeista"
-        input_fields:
-          title: "Tekstikentät"
+        forms:
+          title: "Lomakkeet"
         buttons:
           title: "Painikkeet"
         dropdowns:

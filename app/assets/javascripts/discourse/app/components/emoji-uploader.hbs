@@ -9,7 +9,7 @@
         name="name"
         placeholder={{i18n "admin.emoji.name"}}
         @value={{readonly this.name}}
-        {{on "input" (action (mut this.name) value="target.value")}}
+        {{on "input" (with-event-value (fn (mut this.name)))}}
       />
     </div>
   </div>

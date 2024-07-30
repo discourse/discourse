@@ -1,5 +1,5 @@
 import { cancel, debounce } from "@ember/runloop";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { isTesting } from "discourse-common/config/environment";
 
 const KEEP_ALIVE_DURATION_SECONDS = 10;

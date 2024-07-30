@@ -3,9 +3,7 @@
 require "cache"
 
 RSpec.describe Cache do
-  let :cache do
-    Cache.new
-  end
+  subject(:cache) { Cache.new }
 
   it "supports exist?" do
     cache.write("testing", 1.1)
@@ -103,5 +101,25 @@ RSpec.describe Cache do
     cache.write "foo:bar", "baz", expires_in: 3.minutes
 
     expect(cache.redis.ttl("#{cache.namespace}:foo:bar")).to eq(180)
+  end
+
+  describe ".fetch" do
+    subject(:fetch_value) { cache.fetch("my_key") { "bob" } }
+
+    context "when the cache is corrupt" do
+      before do
+        cache.delete("my_key")
+        Discourse.redis.setex(cache.normalize_key("my_key"), described_class::MAX_CACHE_AGE, "")
+      end
+
+      it "runs and return the provided block" do
+        expect(fetch_value).to eq("bob")
+      end
+
+      it "generates a new cache entry" do
+        fetch_value
+        expect(cache.read("my_key")).to eq("bob")
+      end
+    end
   end
 end

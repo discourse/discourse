@@ -41,6 +41,7 @@ export const REPLACEMENTS = {
   "notification.invitee_accepted": "user",
   "notification.moved_post": "sign-out-alt",
   "notification.linked": "link",
+  "notification.linked_consolidated": "link",
   "notification.granted_badge": "certificate",
   "notification.topic_reminder": "far-clock",
   "notification.watching_first_post": "discourse-bell-one",
@@ -51,6 +52,9 @@ export const REPLACEMENTS = {
   "notification.reaction": "bell",
   "notification.votes_released": "plus",
   "notification.chat_quoted": "quote-right",
+  "user_menu.replies": "reply",
+  "user_menu.drafts": "pencil-alt",
+  "sidebar.all_categories": "list",
 };
 
 export function replaceIcon(source, destination) {

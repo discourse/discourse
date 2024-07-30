@@ -17,6 +17,31 @@ RSpec.describe DiscourseHub do
     end
   end
 
+  describe ".discover_enrollment" do
+    it "should trigger a POST request to hub" do
+      stub_request(
+        :post,
+        (ENV["HUB_BASE_URL"] || "http://local.hub:3000/api") + "/discover/enroll",
+      ).with(body: JSON[DiscourseHub.discover_enrollment_payload]).to_return(
+        status: 200,
+        body: "",
+        headers: {
+        },
+      )
+
+      DiscourseHub.discover_enrollment
+    end
+  end
+
+  describe ".discover_enrollment_payload" do
+    it "should return the correct payload" do
+      payload = DiscourseHub.discover_enrollment_payload
+      expect(payload[:forum_url]).to eq(Discourse.base_url)
+      expect(payload[:forum_title]).to eq(SiteSetting.title)
+      expect(payload[:locale]).to eq(I18n.locale)
+    end
+  end
+
   describe ".version_check_payload" do
     describe "when Discourse Hub has not fetched stats since past 7 days" do
       it "should include stats" do

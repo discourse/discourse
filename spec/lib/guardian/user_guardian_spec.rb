@@ -139,6 +139,28 @@ RSpec.describe UserGuardian do
     end
   end
 
+  describe "#can_see_user_actions?" do
+    it "is true by default" do
+      expect(Guardian.new.can_see_user_actions?(nil, [])).to eq(true)
+    end
+
+    context "with 'hide_user_activity_tab' setting" do
+      before { SiteSetting.hide_user_activity_tab = false }
+
+      it "returns true for self" do
+        expect(Guardian.new(user).can_see_user_actions?(user, [])).to eq(true)
+      end
+
+      it "returns true for admin" do
+        expect(Guardian.new(admin).can_see_user_actions?(user, [])).to eq(true)
+      end
+
+      it "returns false for regular user" do
+        expect(Guardian.new.can_see_user_actions?(user, [])).to eq(true)
+      end
+    end
+  end
+
   describe "#allowed_user_field_ids" do
     let! :fields do
       [
@@ -429,15 +451,15 @@ RSpec.describe UserGuardian do
       expect(guardian.can_upload_profile_header?(admin)).to eq(true)
     end
 
-    it "returns true if the trust level of user matches site setting" do
+    it "returns true if the group of user matches site setting" do
       guardian = Guardian.new(trust_level_2)
-      SiteSetting.min_trust_level_to_allow_profile_background = 2
+      SiteSetting.profile_background_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       expect(guardian.can_upload_profile_header?(trust_level_2)).to eq(true)
     end
 
-    it "returns false if the trust level of user does not matches site setting" do
+    it "returns false if the group of user does not matches site setting" do
       guardian = Guardian.new(trust_level_1)
-      SiteSetting.min_trust_level_to_allow_profile_background = 2
+      SiteSetting.profile_background_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       expect(guardian.can_upload_profile_header?(trust_level_1)).to eq(false)
     end
   end

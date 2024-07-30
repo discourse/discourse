@@ -4,7 +4,7 @@ class Jobs::CreateUserReviewable < ::Jobs::Base
   attr_reader :reviewable
 
   def execute(args)
-    raise Discourse::InvalidParameters unless args[:user_id].present?
+    raise Discourse::InvalidParameters if args[:user_id].blank?
 
     reason = nil
     reason ||= :must_approve_users if SiteSetting.must_approve_users?

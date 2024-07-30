@@ -88,7 +88,6 @@ cs:
       channels_list_popup:
         browse: "Procházet kanály"
         create: "Nový kanál"
-      click_to_join: "Kliknutím sem zobrazíte dostupné kanály."
       close: "Zavřít"
       remove: "Smazat"
       collapse: "Sbalit panel chatu"
@@ -122,12 +121,9 @@ cs:
       heading: "Chat"
       join: "Přidat se ke skupině"
       last_visit: "poslední návštěva"
-      summarization:
-        title: "Shrnout zprávy"
       aria_roles:
         channels_list: "Seznam kanálů chatu"
-      no_direct_message_channels: "Zatím jste se nepřipojili k žádným kanálům přímých zpráv."
-      no_public_channels: "Zatím jste se nepřipojili k žádným kanálům."
+      no_public_channels_cta: "Procházet kanály"
       open_full_page: "Otevřít chat na celou obrazovku"
       close_full_page: "Zavřít chat na celé obrazovce"
       placeholder_channel: "Pište v %{channelName}"
@@ -156,6 +152,7 @@ cs:
         back: "Zpět"
         title: Kanály
         filter_all: Vše
+        filter_open: Otevřené
         filter_closed: Zavřené
         filter_archived: Archivované
         filter_input_placeholder: Vyhledat kanál podle názvu

@@ -82,6 +82,10 @@
     &.sidebar-section-header-collapsable {
       justify-content: flex-start;
 
+      &:hover {
+        color: var(--primary);
+      }
+
       &:focus {
         background: transparent;
       }

@@ -43,10 +43,13 @@
           type="submit"
           class="btn-primary"
         />
-        <CancelLink
+        <LinkTo
           @route="preferences.account"
-          @args={{this.model.username}}
-        />
+          @model={{this.model.username}}
+          class="cancel"
+        >
+          {{i18n "cancel"}}
+        </LinkTo>
       </div>
     {{/if}}
   </form>

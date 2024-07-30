@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import PeriodChooser from "select-kit/components/period-chooser";
 import CustomDateRangeModal from "../components/modal/custom-date-range";

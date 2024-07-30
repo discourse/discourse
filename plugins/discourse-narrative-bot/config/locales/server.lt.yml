@@ -249,10 +249,6 @@ lt:
         not_found: |-
           Oi ne, mano bjaurus pranešimas dar nebuvo pažymėtas kaip netinkamas. :worried: Ar galite pažymėti jį kaip netinkamą naudojant **vėliavą** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nepamirškite naudoti Rodyti daugiau mygtuko <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> , kad atskleistumėte daugiau veiksmų kiekvienam įrašui.
       search:
-        instructions: |-
-          _psst_ … Šioje temoje paslėpiau staigmeną. Jei pasiruošę iššūkiui, **pasirinkite paieškos piktogramą** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> viršuje dešinėje &#8599; ir ieškokite jos.
-
-          Pabandykite šioje temoje ieškoti termino „capy&#8203;bara“.
         hidden_message: |-
           Kaip jūs praleidote šį capybara? :wink:
 

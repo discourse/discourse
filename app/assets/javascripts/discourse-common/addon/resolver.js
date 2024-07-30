@@ -135,7 +135,6 @@ function lookupModuleBySuffix(suffix) {
       "discourse-common/",
       "select-kit/",
       "admin/",
-      "truth-helpers/",
     ];
     Object.keys(requirejs.entries).forEach((name) => {
       if (

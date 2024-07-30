@@ -16,6 +16,8 @@ RSpec.describe Upload do
   let(:attachment_path) { __FILE__ }
   let(:attachment) { File.new(attachment_path) }
 
+  it { is_expected.to have_many(:badges).dependent(:nullify) }
+
   describe ".with_no_non_post_relations" do
     it "does not find non-post related uploads" do
       post_upload = Fabricate(:upload)
@@ -74,6 +76,7 @@ RSpec.describe Upload do
   end
 
   it "can reconstruct dimensions on demand" do
+    SiteSetting.max_image_megapixels = 85
     upload = UploadCreator.new(huge_image, "image.png").create_for(user_id)
 
     upload.update_columns(width: nil, height: nil, thumbnail_width: nil, thumbnail_height: nil)
@@ -93,6 +96,7 @@ RSpec.describe Upload do
   end
 
   it "dimension calculation returns nil on missing image" do
+    SiteSetting.max_image_megapixels = 85
     upload = UploadCreator.new(huge_image, "image.png").create_for(user_id)
     upload.update_columns(width: nil, height: nil, thumbnail_width: nil, thumbnail_height: nil)
 
@@ -107,7 +111,7 @@ RSpec.describe Upload do
     upload = UploadCreator.new(huge_image, "image.png").create_for(user_id)
     expect(upload.persisted?).to eq(false)
     expect(upload.errors.messages[:base].first).to eq(
-      I18n.t("upload.images.larger_than_x_megapixels", max_image_megapixels: 20),
+      I18n.t("upload.images.larger_than_x_megapixels", max_image_megapixels: 10),
     )
   end
 
@@ -805,6 +809,30 @@ RSpec.describe Upload do
       )
 
       expect { u.update!(dominant_color: "abcd") }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+  end
+
+  describe ".mark_invalid_s3_uploads_as_missing" do
+    it "should update all upload records with a `verification_status` of `invalid_etag` to `s3_file_missing`" do
+      upload_1 =
+        Fabricate(:upload_s3, verification_status: Upload.verification_statuses[:invalid_etag])
+
+      upload_2 =
+        Fabricate(:upload_s3, verification_status: Upload.verification_statuses[:invalid_etag])
+
+      upload_3 = Fabricate(:upload_s3, verification_status: Upload.verification_statuses[:verified])
+
+      Upload.mark_invalid_s3_uploads_as_missing
+
+      expect(upload_1.reload.verification_status).to eq(
+        Upload.verification_statuses[:s3_file_missing_confirmed],
+      )
+
+      expect(upload_2.reload.verification_status).to eq(
+        Upload.verification_statuses[:s3_file_missing_confirmed],
+      )
+
+      expect(upload_3.reload.verification_status).to eq(Upload.verification_statuses[:verified])
     end
   end
 end

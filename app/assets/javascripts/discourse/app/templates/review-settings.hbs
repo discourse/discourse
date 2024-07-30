@@ -8,7 +8,7 @@
         <ComboBox
           @value={{rst.reviewable_priority}}
           @content={{this.settings.reviewable_priorities}}
-          @onChange={{action (mut rst.reviewable_priority)}}
+          @onChange={{fn (mut rst.reviewable_priority)}}
         />
       </div>
     </div>

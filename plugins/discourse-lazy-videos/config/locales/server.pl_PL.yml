@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  site_settings:
+    lazy_videos_enabled: "Włącz wtyczkę Lazy Videos"
+    lazy_youtube_enabled: "Włącz leniwe ładowanie dla osadzonych materiałów YouTube"
+    lazy_vimeo_enabled: "Włącz leniwe ładowanie dla osadzonych materiałów Vimeo"
+    lazy_tiktok_enabled: "Włącz leniwe ładowanie dla osadzonych materiałów TikTok (eksperymentalnie)"

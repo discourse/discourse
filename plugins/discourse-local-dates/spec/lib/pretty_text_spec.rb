@@ -2,13 +2,13 @@
 
 def generate_html(text, opts = {})
   output = "<p><span"
-  output += " data-date=\"#{opts[:date]}\"" if opts[:date]
-  output += " data-time=\"#{opts[:time]}\"" if opts[:time]
   output += " class=\"discourse-local-date\""
-  output += " data-timezones=\"#{opts[:timezones]}\"" if opts[:timezones]
-  output += " data-timezone=\"#{opts[:timezone]}\"" if opts[:timezone]
-  output += " data-format=\"#{opts[:format]}\"" if opts[:format]
+  output += " data-date=\"#{opts[:date]}\"" if opts[:date]
   output += " data-email-preview=\"#{opts[:email_preview]}\"" if opts[:email_preview]
+  output += " data-format=\"#{opts[:format]}\"" if opts[:format]
+  output += " data-time=\"#{opts[:time]}\"" if opts[:time]
+  output += " data-timezone=\"#{opts[:timezone]}\"" if opts[:timezone]
+  output += " data-timezones=\"#{opts[:timezones]}\"" if opts[:timezones]
   output += ">"
   output += text
   output + "</span></p>"
@@ -46,13 +46,13 @@ RSpec.describe PrettyText do
     it "works with multiple timezones" do
       cooked =
         PrettyText.cook(
-          '[date=2018-05-08 timezone="Europe/Paris" timezones="America/Los_Angeles|Pacific/Auckland"]',
+          '[date=2023-05-08 timezone="Europe/Paris" timezones="America/Los_Angeles|Pacific/Auckland"]',
         )
       cooked_mail =
         generate_html(
-          "2018-05-07T22:00:00Z UTC",
-          date: "2018-05-08",
-          email_preview: "2018-05-07T22:00:00Z UTC",
+          "2023-05-07T22:00:00Z UTC",
+          date: "2023-05-08",
+          email_preview: "2023-05-07T22:00:00Z UTC",
           timezone: "Europe/Paris",
           timezones: "America/Los_Angeles|Pacific/Auckland",
         )

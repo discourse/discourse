@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { module, test } from "qunit";
@@ -209,13 +209,13 @@ module("Unit | Model | topic", function (hooks) {
 
     assert.strictEqual(
       rtlTopic.fancyTitle,
-      `<span dir="rtl">هذا اختبار</span>`,
-      "sets the dir-span to rtl"
+      `<span dir="auto">هذا اختبار</span>`,
+      "sets the dir-span to auto"
     );
     assert.strictEqual(
       ltrTopic.fancyTitle,
-      `<span dir="ltr">This is a test</span>`,
-      "sets the dir-span to ltr"
+      `<span dir="auto">This is a test</span>`,
+      "sets the dir-span to auto"
     );
   });
 

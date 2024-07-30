@@ -544,6 +544,9 @@ RSpec.describe PostAction do
       expect(post.hidden_at).to be_present
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flag_threshold_reached])
       expect(post.topic.visible).to eq(false)
+      expect(post.topic.visibility_reason_id).to eq(
+        Topic.visibility_reasons[:op_flag_threshold_reached],
+      )
 
       post.revise(post.user, raw: post.raw + " ha I edited it ")
 
@@ -553,6 +556,7 @@ RSpec.describe PostAction do
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flag_threshold_reached]) # keep most recent reason
       expect(post.hidden_at).to be_present # keep the most recent hidden_at time
       expect(post.topic.visible).to eq(true)
+      expect(post.topic.visibility_reason_id).to eq(Topic.visibility_reasons[:op_unhidden])
 
       PostActionCreator.spam(eviltrout, post)
       PostActionCreator.off_topic(walterwhite, post)
@@ -567,6 +571,9 @@ RSpec.describe PostAction do
       expect(post.hidden_at).to be_present
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flag_threshold_reached_again])
       expect(post.topic.visible).to eq(false)
+      expect(post.topic.visibility_reason_id).to eq(
+        Topic.visibility_reasons[:op_flag_threshold_reached],
+      )
 
       post.revise(post.user, raw: post.raw + " ha I edited it again ")
 
@@ -575,7 +582,10 @@ RSpec.describe PostAction do
       expect(post.hidden).to eq(true)
       expect(post.hidden_at).to be_present
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flag_threshold_reached_again])
-      expect(post.topic.visible).to eq(false)
+      expect(post.topic.reload.visible).to eq(false)
+      expect(post.topic.visibility_reason_id).to eq(
+        Topic.visibility_reasons[:op_flag_threshold_reached],
+      )
     end
 
     it "doesn't fail when post has nil user" do
@@ -755,11 +765,11 @@ RSpec.describe PostAction do
     end
   end
 
-  it "prevents user to act twice at the same time" do
-    # flags are already being tested
-    all_types_except_flags =
-      PostActionType.types.except(*PostActionType.flag_types_without_custom.keys)
-    all_types_except_flags.values.each do |action|
+  # flags are already being tested
+  all_types_except_flags =
+    PostActionType.types.except(*PostActionType.flag_types_without_additional_message.keys)
+  all_types_except_flags.values.each do |action|
+    it "prevents user to act twice at the same time" do
       expect(PostActionCreator.new(eviltrout, post, action).perform).to be_success
       expect(PostActionCreator.new(eviltrout, post, action).perform).to be_failed
     end
@@ -771,6 +781,25 @@ RSpec.describe PostAction do
       expect(result).to be_success
       expect(result.post_action.related_post_id).to be_nil
       expect(result.reviewable_score.meta_topic_id).to be_nil
+    end
+
+    it "does not create a message for custom flag when message is not required" do
+      flag_without_message =
+        Fabricate(:flag, name: "flag without message", notify_type: true, require_message: false)
+
+      result =
+        PostActionCreator.new(
+          Discourse.system_user,
+          post,
+          PostActionType.types[:flag_without_message],
+          message: "WAT",
+        ).perform
+
+      expect(result).to be_success
+      expect(result.post_action.related_post_id).to be_nil
+      expect(result.reviewable_score.meta_topic_id).to be_nil
+
+      flag_without_message.destroy!
     end
 
     %i[notify_moderators notify_user spam].each do |post_action_type|
@@ -785,6 +814,25 @@ RSpec.describe PostAction do
         expect(result).to be_success
         expect(result.post_action.related_post_id).to be_present
       end
+    end
+
+    it "creates a message for custom flags when message is required" do
+      flag_with_message =
+        Fabricate(:flag, name: "flag with message", notify_type: true, require_message: true)
+
+      result =
+        PostActionCreator.new(
+          Discourse.system_user,
+          post,
+          PostActionType.types[:flag_with_message],
+          message: "WAT",
+        ).perform
+
+      expect(result).to be_success
+      expect(result.post_action.related_post_id).to be_present
+      expect(result.reviewable_score.meta_topic_id).to be_present
+
+      flag_with_message.destroy!
     end
 
     it "should raise the right errors when it fails to create a post" do

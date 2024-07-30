@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
-import { setOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
+import { setOwner } from "@ember/owner";
+import { service } from "@ember/service";
 import AboutSectionLink from "discourse/lib/sidebar/common/community-section/about-section-link";
 import BadgesSectionLink from "discourse/lib/sidebar/common/community-section/badges-section-link";
 import EverythingSectionLink from "discourse/lib/sidebar/common/community-section/everything-section-link";
@@ -12,7 +12,6 @@ import {
   secondaryCustomSectionLinks,
 } from "discourse/lib/sidebar/custom-community-section-links";
 import SectionLink from "discourse/lib/sidebar/section-link";
-import AdminRevampSectionLink from "discourse/lib/sidebar/user/community-section/admin-revamp-section-link";
 import AdminSectionLink from "discourse/lib/sidebar/user/community-section/admin-section-link";
 import MyPostsSectionLink from "discourse/lib/sidebar/user/community-section/my-posts-section-link";
 import ReviewSectionLink from "discourse/lib/sidebar/user/community-section/review-section-link";
@@ -26,7 +25,6 @@ const SPECIAL_LINKS_MAP = {
   "/review": ReviewSectionLink,
   "/badges": BadgesSectionLink,
   "/admin": AdminSectionLink,
-  "/admin-revamp": AdminRevampSectionLink,
   "/g": GroupsSectionLink,
 };
 
@@ -57,21 +55,27 @@ export default class CommunitySection {
       });
     });
 
-    this.apiLinks = customSectionLinks
-      .concat(secondaryCustomSectionLinks)
-      .map((link) => this.#initializeSectionLink(link, { inMoreDrawer: true }));
+    this.apiPrimaryLinks = customSectionLinks.map((link) =>
+      this.#initializeSectionLink(link, { inMoreDrawer: false })
+    );
 
-    this.links = this.section.links.reduce((filtered, link) => {
-      if (link.segment === "primary") {
-        const generatedLink = this.#generateLink(link);
+    this.apiSecondaryLinks = secondaryCustomSectionLinks.map((link) =>
+      this.#initializeSectionLink(link, { inMoreDrawer: true })
+    );
 
-        if (generatedLink) {
-          filtered.push(generatedLink);
+    this.links = this.section.links
+      .reduce((filtered, link) => {
+        if (link.segment === "primary") {
+          const generatedLink = this.#generateLink(link);
+
+          if (generatedLink) {
+            filtered.push(generatedLink);
+          }
         }
-      }
 
-      return filtered;
-    }, []);
+        return filtered;
+      }, [])
+      .concat(this.apiPrimaryLinks);
 
     this.moreLinks = this.section.links
       .reduce((filtered, link) => {
@@ -85,7 +89,7 @@ export default class CommunitySection {
 
         return filtered;
       }, [])
-      .concat(this.apiLinks);
+      .concat(this.apiSecondaryLinks);
   }
 
   teardown() {

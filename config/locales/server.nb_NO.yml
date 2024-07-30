@@ -66,17 +66,13 @@ nb_NO:
     settings_errors:
       invalid_yaml: "YAML koden er ikke gyldig."
       name_too_long: "En eller flere innstillinger har for langt navn. Maksimal lengde er 255 tegn"
-      default_value_missing: "Innstilling `%{name}` har ingen standardverdi"
+      default_value_missing: "Innstilling `%{name}` har ingen standardverdi."
       default_not_match_type: "Innstilling `%{name}` har en type standardverdi som ikke stemmer med den definerte typen for innstillingen."
-      default_out_range: "Innstilling `%{name}` sin standardverdi er utenfor de tillatte grenseverdiene."
       enum_value_not_valid: "Den valgte verdien er ikke en av de oppførte valgmulighetene."
-      number_value_not_valid: "Ny verdi er utenfor de tillatte grenseverdiene."
-      number_value_not_valid_min_max: "Den må være mellom %{min} og %{max}."
-      number_value_not_valid_min: "Den må være større enn eller lik %{min}."
-      number_value_not_valid_max: "Den må være mindre enn eller lik %{max}."
-      string_value_not_valid: "Lengden på ny verdi er ikke innenfor grensen."
-      string_value_not_valid_min: "Den må være minst %{min} tegn lang."
-      string_value_not_valid_max: "Den må være maksimalt %{max} tegn lang."
+      number_value_not_valid_min_max: "Verdien må være mellom %{min} og %{max}."
+      objects:
+        required: "Må være til stede"
+        not_valid_integer_value: "må være ett heltall"
   emails:
     incoming:
       default_subject: "Emnet trenger en tittel"
@@ -106,7 +102,6 @@ nb_NO:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "er begrenset til %{max} tegn; du brukte %{length}."
       invalid_boolean: "Ugyldig boolsk verdi."
       taken: "er allerede tatt"
       accepted: må bli godkjent
@@ -336,6 +331,8 @@ nb_NO:
         raw: "Body"
       user_profile:
         bio_raw: "Om meg"
+      user:
+        password: "Passord"
     errors:
       models:
         topic:
@@ -547,6 +544,9 @@ nb_NO:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Upassende"
+    illegal:
+      email_title: 'Et innlegg i "%{title}" krever oppfølging av staben'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Send en melding til @%{username}"
       description: "Jeg ønsker å snakke med denne personen direkte og personlig om innlegget."
@@ -581,6 +581,9 @@ nb_NO:
       long_form: "Markert for mederering"
       short_description: "Krever handling fra staben av en annen grunn"
       email_title: 'Emnet "%{title}" krever oppmerksomhet fra en moderator'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Et innlegg i "%{title}" krever oppfølging av staben'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Innlegget ditt ble flagget av samfunnet. Vennligst <a href="%{path}">sjekk meldingene dine</a>.</p>'
@@ -694,6 +697,8 @@ nb_NO:
       xaxis:
         api: "API"
         user_api: "Bruker-API"
+      yaxis: "Dag"
+    consolidated_page_views_browser_detection:
       yaxis: "Dag"
     dau_by_mau:
       title: "DAB/MAB"
@@ -827,6 +832,10 @@ nb_NO:
       title: "Anonyme Sidevisninger"
       xaxis: "Dag"
       yaxis: "Mobile Anonyme Sidevisninger"
+    page_view_anon_browser_reqs:
+      xaxis: "Dag"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Dag"
     http_background_reqs:
       title: "Bakgrunn"
       xaxis: "Dag"
@@ -867,6 +876,8 @@ nb_NO:
       labels:
         user_agent: "Brukeragent"
         page_views: "Sidevisninger"
+    web_hook_events_daily_aggregate:
+      xaxis: "Dag"
     suspicious_logins:
       labels:
         user: Bruker
@@ -891,21 +902,19 @@ nb_NO:
       labels:
         user: Bruker
         qtt_like: Likes mottatt
+    topic_view_stats:
+      labels:
+        topic: Emne
+        logged_in_views: Innlogget
+        anon_views: Anonym
+        total_views: Total
   dashboard:
-    rails_env_warning: "Serveren din kjører i %{env] modus."
-    host_names_warning: "Din config/database.yml-fil bruker forvalgt lokalvert-vertsnavn. Oppdater det til å bruke din sides vertsnavn."
-    sidekiq_warning: 'Sidekiq kjører ikke. Mange oppgaver, som å sende e-post, kjøres i bakgrunnen av sidekiq. Vennligst verifiser at minst én sidekiq-prosess kjører. <a href="https://github.com/mperham/sidekiq" target="_blank">Lær mer om Sidekiq her</a>.'
-    queue_size_warning: "Antallet jobber som står i kø er %{queue_size}, som er høyt. Dette kan være en indikasjon på at Sidekiq-prosessen(e) har et problem, eller det kan tenkes du bare trenger flere samtidige Sidekiq-arbeidere."
-    memory_warning: "Serveren din kjører med mindre enn 1 GB med minne. Minst 1 GB RAM er anbefalt."
-    subfolder_ends_in_slash: "Oppsettet av undermappe er feil; variablen DISCOURSE_RELATIVE_URL_ROOT slutter med en skråstrek."
-    email_polling_errored_recently:
-      one: "Henting av e-post har generert en feil de siste 24 timene. Se i <a href='%{base_path}/logs' target='_blank'>loggene</a> for mer detaljer."
-      other: "Henting av e-post har generert %{count} feil de siste 24 timene. Se i <a href='%{base_path}/logs' target='_blank'>loggene</a> for mer detaljer."
-    missing_mailgun_api_key: "Serveren er konfigurert til å sende e-post via Mailgun men du har ikke satt API-nøkkelen som brukes til å verifisere webhook meldinger."
-    poll_pop3_timeout: "Tilkoblingen til POP3 serveren får timeout. Vi får ikke hentet innkommende e-post. Vennligst sjekk <a href='%{base_path}/admin/site_settings/category/email'>instillingene for POP3</a> eller leverandøren av posttjenesten."
-    poll_pop3_auth_error: "Tilkoblingen til POP3 serveren feiler på grunn av problemer med autentisering. Vennligst sjekk <a href='%{base_path}/admin/site_settings/category/email'>POP3 instillingene</a>. "
-    force_https_warning: "Nettstedet ditt bruker SSL. Men `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` er ikke aktivert enda i instillingene."
-    out_of_date_themes: "Oppdateringer er tilgjengelig for følgende drakter:"
+    problem:
+      host_names: "Din config/database.yml-fil bruker forvalgt lokalvert-vertsnavn. Oppdater det til å bruke din sides vertsnavn."
+      queue_size: "Antallet jobber som står i kø er %{queue_size}, som er høyt. Dette kan være en indikasjon på at Sidekiq-prosessen(e) har et problem, eller det kan tenkes du bare trenger flere samtidige Sidekiq-arbeidere."
+      ram: "Serveren din kjører med mindre enn 1 GB med minne. Minst 1 GB RAM er anbefalt."
+      subfolder_ends_in_slash: "Oppsettet av undermappe er feil; variablen DISCOURSE_RELATIVE_URL_ROOT slutter med en skråstrek."
+      missing_mailgun_api_key: "Serveren er konfigurert til å sende e-post via Mailgun men du har ikke satt API-nøkkelen som brukes til å verifisere webhook meldinger."
   site_settings:
     disabled: "deaktivert"
     censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"
@@ -913,12 +922,10 @@ nb_NO:
     allow_user_locale: "Tillat brukere å velge eget språk"
     support_mixed_text_direction: "Tillat blanding av skriftspråk som bruker venstre-til-høyre og høyre-til-venstre."
     max_post_length: "Maksimum tillatt lengde for innlegg i tegn"
-    topic_featured_link_enabled: "Tillat publisering av lenker som emner."
     show_topic_featured_link_in_digest: "Vis den fremhevede lenken fra et emne i e-postsammendrag."
     min_topic_title_length: "Minimum tillatt lengde for tittel i tegn"
     max_topic_title_length: "Maksimum tillatt lengde for innlegg i tegn"
     min_personal_message_title_length: "Minste lengde i antall tegn for en meldingstittel"
-    max_emojis_in_title: "Maksimalt antall emojier i en emnetittel"
     min_search_term_length: "Minimum lengde på søkeord i tegn"
     search_prefer_recent_posts: "Hvis søking er tregt på et stort forum, vil dette valget forsøke å søke i en index av de nyeste innleggene først"
     search_recent_posts_size: "Hvor mange innlegg som beholdes i indeksen"
@@ -947,7 +954,6 @@ nb_NO:
     show_pinned_excerpt_desktop: "Vis utdrag fra festede emner i desktop visning."
     post_onebox_maxlength: "Maksimal lengde på et onebox Discourse innlegg i antall tegn."
     allowed_inline_onebox_domains: "En liste over domener hvor onebox brukes i miniatyrstørrelse hvis lenken ikke har en tittel"
-    max_oneboxes_per_post: "Maksimalt antall oneboxer i hvert innlegg."
     notification_email: "Adressen som skal brukes som avsender: på alle viktige system e-poster. Domenet som spesifiseres her må ha SPF, DKIM og reverse PTR record satt korrekt for at e-post skal nå frem."
     email_custom_headers: "En liste over tilpassede e-posthoder med pipe-tegn mellom hvert element"
     force_https: "Tving dette nettstedet til å bare tillate HTTPS. ADVARSEL: Du må IKKE aktivere dette valget før du har verifisert at HTTPS er riktig satt opp og fungerer absolutt alle steder! Har du sjekket CDN, alle sosiale loginmetoder og eventuelle eksterne ressurser for å sikre at de også er kompatible med HTTPS?"
@@ -960,18 +966,13 @@ nb_NO:
     send_welcome_message: "Send alle nye brukere en velkomstmelding med en rask startveileder."
     topics_per_period_in_top_summary: "Antall emner som vises i standard oppsummering av mest populære emner."
     email_token_valid_hours: "Glemt passord / aktiver konto tokens er gyldig for (n) timer."
-    enable_badges: "Aktiver badge system"
     log_out_strict: "Ved utlogging, logg ut av ALLE enheter som er pålogget"
     invite_expiry_days: "Hvor lenge en bruker invitasjons nøkkel er gyldig i dager"
-    min_password_length: "Minimums passordslengde."
-    min_admin_password_length: "Minimums passordslengde for administrator."
-    google_oauth2_client_id: "Klient-ID tilhørende din Google-søknad."
     rate_limit_create_post: "Etter et innlegg må ny brukere vente (n) sekunder før de kan skrive et nytt"
     rate_limit_new_user_create_post: "Etter et innlegg må ny brukere vente (n) sekunder før de kan skrive et nytt"
     max_likes_per_day: "Maximum antall likes per bruker per dag"
     max_invites_per_day: "Maksimalt antall invitasjoner en bruker kan sende hver dag."
     max_logins_per_ip_per_hour: "Maksimalt antall innlogginger som tillates for hver IP-adresse per time."
-    selectable_avatars: "Liste over avatarer brukere kan velge mellom."
     allow_staff_to_upload_any_file_in_pm: "Tillat medlemmer av staben å laste opp hvilken som helst fil i private samtaler"
     newuser_max_links: "Hvor mange linker en ny bruker kan legge til i et innlegg."
     dark_mode_none: "Ingen"
@@ -989,16 +990,12 @@ nb_NO:
     digest_min_excerpt_length: "Minimal lengde på utdrag av innlegg i e-post-oppsummeringen, i antall tegn."
     suppress_digest_email_after_days: "Utelat oppsummerings-eposter for brukere ikke sett på nettstedet siden mer enn (n) dager."
     digest_suppress_categories: "Utelat disse kategoriene i oppsummerings-eposter"
-    disable_digest_emails: "Deaktiver oppsummerings-eposter for alle brukere."
     allow_profile_backgrounds: "Gi brukere mulighet til å laste opp profilbakgrunner."
     enable_mobile_theme: "Mobilenheter bruker et mobilvennlig drakt, med muligheten til å gå til den fulle siden. Deaktiver dette hvis du ønsker å bruke et tilpasset stilark."
     dominating_topic_minimum_percent: "Hvor mange innlegg en bruker kan lage innenfor en topic før de blir påminnet om dominering av en topic."
     automatically_unpin_topics: "Automatisk fjern feste for emner når brukeren når bunnen."
-    embed_truncate: "Forkort de innebygde innleggene."
     embed_post_limit: "Maksimalt antall innlegg som skal bygges inn."
     embed_username_required: "Brukernavn kreves for opprettelse av emne."
-    enable_emoji: "Aktiver emoji."
-    emoji_set: "Hvordan vil du ha din emoji?"
     default_email_digest_frequency: "Forvalgt innstilling for hvor ofte brukere mottar oppsummerings-e-poster"
     default_include_tl0_in_digests: "Inkluder innlegg fra nye brukere i oppsummerings-e-poster som forvalg. Brukere kan endre dette i innstillingene sine."
     default_email_mailing_list_mode_frequency: "Brukere som slår på e-postlistemodus, vil motta e-poster så ofte som forvalg"
@@ -1015,10 +1012,17 @@ nb_NO:
       invalid_integer_min_max: "Verdien må være mellom %{min} og %{max}."
       invalid_integer: "Verdien må være et heltall."
       invalid_string: "Ugyldig verdi"
-      invalid_string_min: "Må være minst %{min} tegn."
-      invalid_string_max: "Må ikke være mer enn %{max} tegn."
       min_username_length_range: "Du kan ikke sette minimum høyere enn maksimum."
       max_username_length_range: "Du kan ikke sette maksimum under minimum."
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "inaktiv"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "inaktiv"
+      - ""
   search:
     within_post: "#%{post_number} av %{username}"
     types:
@@ -1074,7 +1078,6 @@ nb_NO:
     new_registrations_disabled: "Nye kontoregistreringer tillates ikke per nå."
     password_too_long: "Passord er begrenset til 200 tegn."
     reserved_username: "Det brukernavnet tillates ikke."
-    missing_user_field: "Du har ikke fylt ut alle brukerfeltene."
     second_factor_title: "To-faktor autentisering"
     second_factor_backup_description: "Vennligst skriv en av reservekodene dine:"
     second_factor_toggle:
@@ -1084,8 +1087,6 @@ nb_NO:
       sent_test: "sendt!"
   user:
     username:
-      short: "må være på minst %{min} tegn"
-      long: "kan ikke være mer enn %{max} tegn"
       unique: "må være unik"
       blank: "Må være til stede"
     email:
@@ -1146,7 +1147,6 @@ nb_NO:
       title: "Konto sperret"
       subject_template: "[%{email_prefix}] Kontoen din er blitt sperret"
     digest:
-      why: "Dette har skjedd på %{site_link} siden ditt forrige besøk %{last_seen_at}"
       since_last_visit: "Siden siste besøk"
       new_topics: "Nye emner"
       unread_notifications: "Uleste varslinger."
@@ -1157,7 +1157,6 @@ nb_NO:
       popular_posts: "Populære innlegg"
       more_new: "Nytt for deg"
       click_here: "trykk her"
-      preheader: "En kort oppsummering siden ditt siste besøk på %{last_seen_at}"
     forgot_password:
       title: "Glemt passord"
     set_password:
@@ -1200,6 +1199,7 @@ nb_NO:
     rate_limit_error: "Innlegg kan lastes ned en gang om dagen, prøv igjen i morgen."
   guidelines_topic:
     title: "O-S-S/retningslinjer"
+    guidelines_title: "Retningslinjer"
   tos_topic:
     title: "Bruksvilkår"
   privacy_topic:
@@ -1300,7 +1300,12 @@ nb_NO:
       privacy:
         fields:
           login_required:
-            placeholder: "Privat"
+            label: "Synlighet"
+            choices:
+              public:
+                label: "Offentlig"
+              private:
+                label: "Privat"
       styling:
         fields:
           styling_preview:

@@ -14,20 +14,19 @@ export default Component.extend({
 
   @discourseComputed("flag.name_key")
   customPlaceholder(nameKey) {
-    return I18n.t("flagging.custom_placeholder_" + nameKey);
+    return I18n.t("flagging.custom_placeholder_" + nameKey, {
+      defaultValue: I18n.t("flagging.custom_placeholder_notify_moderators"),
+    });
   },
 
-  @discourseComputed(
-    "flag.name",
-    "flag.name_key",
-    "flag.is_custom_flag",
-    "username"
-  )
-  formattedName(name, nameKey, isCustomFlag, username) {
-    if (isCustomFlag) {
+  @discourseComputed("flag.name", "flag.name_key", "username")
+  formattedName(name, nameKey, username) {
+    if (["notify_user", "notify_moderators"].includes(nameKey)) {
       return name.replace(/{{username}}|%{username}/, username);
     } else {
-      return I18n.t("flagging.formatted_name." + nameKey);
+      return I18n.t("flagging.formatted_name." + nameKey, {
+        defaultValue: name,
+      });
     }
   },
 
@@ -36,7 +35,8 @@ export default Component.extend({
     return flag === selectedFlag;
   },
 
-  showMessageInput: and("flag.is_custom_flag", "selected"),
+  showMessageInput: and("flag.require_message", "selected"),
+  showConfirmation: and("flag.isIllegal", "selected"),
   showDescription: not("showMessageInput"),
   isNotifyUser: equal("flag.name_key", "notify_user"),
 

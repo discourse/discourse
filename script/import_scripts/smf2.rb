@@ -278,7 +278,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
         attachment[:file_hash],
         attachment[:filename],
       )
-    raise "Attachment for post #{post[:id]} failed: #{attachment[:filename]}" unless path.present?
+    raise "Attachment for post #{post[:id]} failed: #{attachment[:filename]}" if path.blank?
     upload = create_upload(post[:user_id], path, attachment[:filename])
     unless upload.persisted?
       raise "Attachment for post #{post[:id]} failed: #{upload.errors.full_messages.join(", ")}"
@@ -378,7 +378,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
         pattern, emitter = *p
         body.gsub!(pattern) do |s|
           next s if (num = $~[:num].to_i - 1) < 0
-          next s unless (upload = attachments[num]).present?
+          next s if (upload = attachments[num]).blank?
           use_count[num] += 1
           instance_exec(upload, &emitter)
         end

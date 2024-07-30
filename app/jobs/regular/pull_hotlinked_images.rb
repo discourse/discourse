@@ -14,6 +14,17 @@ module Jobs
       @post_id = args[:post_id]
       raise Discourse::InvalidParameters.new(:post_id) if @post_id.blank?
 
+      # in test we have no choice cause we don't want to cause a deadlock
+      if Jobs.run_immediately?
+        pull_hotlinked_images
+      else
+        DistributedMutex.synchronize("pull_hotlinked_images_#{@post_id}", validity: 2.minutes) do
+          pull_hotlinked_images
+        end
+      end
+    end
+
+    def pull_hotlinked_images
       post = Post.find_by(id: @post_id)
       return if post.nil? || post.topic.nil?
 
@@ -152,7 +163,7 @@ module Jobs
 
     def should_download_image?(src, post = nil)
       # make sure we actually have a url
-      return false unless src.present?
+      return false if src.blank?
 
       local_bases =
         [Discourse.base_url, Discourse.asset_host, SiteSetting.external_emoji_url.presence].compact

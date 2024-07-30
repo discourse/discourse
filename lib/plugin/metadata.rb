@@ -16,10 +16,8 @@ class Plugin::Metadata
         discourse-apple-auth
         discourse-assign
         discourse-auto-deactivate
-        discourse-automation
         discourse-bbcode
         discourse-bbcode-color
-        discourse-bcc
         discourse-cakeday
         discourse-calendar
         discourse-categories-suppressed
@@ -49,7 +47,7 @@ class Plugin::Metadata
         discourse-logster-transporter
         discourse-lti
         discourse-math
-        discourse-moderator-attention
+        discourse-microsoft-auth
         discourse-narrative-bot
         discourse-newsletter-integration
         discourse-no-bump
@@ -57,8 +55,6 @@ class Plugin::Metadata
         discourse-openid-connect
         discourse-patreon
         discourse-perspective-api
-        discourse-linkedin-auth
-        discourse-microsoft-auth
         discourse-policy
         discourse-post-voting
         discourse-presence
@@ -71,9 +67,7 @@ class Plugin::Metadata
         discourse-salesforce
         discourse-saml
         discourse-saved-searches
-        discourse-shared-edits
         discourse-signatures
-        discourse-sitemap
         discourse-solved
         discourse-staff-alias
         discourse-steam-login
@@ -91,28 +85,18 @@ class Plugin::Metadata
         discourse-yearly-review
         discourse-zendesk-plugin
         discourse-zoom
-        docker_manager
+        automation
         chat
-        poll
-        styleguide
         checklist
+        docker_manager
         footnote
+        poll
         spoiler-alert
+        styleguide
       ],
     )
 
-  FIELDS ||= %i[
-    name
-    about
-    version
-    authors
-    contact_emails
-    url
-    required_version
-    transpile_js
-    meta_topic_id
-    label
-  ]
+  FIELDS ||= %i[name about version authors contact_emails url required_version meta_topic_id label]
   attr_accessor(*FIELDS)
 
   MAX_FIELD_LENGTHS ||= {

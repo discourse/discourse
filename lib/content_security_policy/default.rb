@@ -13,7 +13,7 @@ class ContentSecurityPolicy
           directives[:base_uri] = [:self]
           directives[:object_src] = [:none]
           directives[:script_src] = script_src
-          directives[:worker_src] = worker_src
+          directives[:worker_src] = []
           directives[
             :report_uri
           ] = report_uri if SiteSetting.content_security_policy_collect_reports
@@ -60,42 +60,10 @@ class ContentSecurityPolicy
     end
 
     def script_src
-      [
-        "#{base_url}/logs/",
-        "#{base_url}/sidekiq/",
-        "#{base_url}/mini-profiler-resources/",
-        *script_assets,
-      ].tap do |sources|
-        sources << :report_sample if SiteSetting.content_security_policy_collect_reports
-        sources << :unsafe_eval if Rails.env.development? # TODO remove this once we have proper source maps in dev
+      sources = ["'strict-dynamic'"]
+      sources << :report_sample if SiteSetting.content_security_policy_collect_reports
 
-        # Support Ember CLI Live reload
-        if Rails.env.development?
-          sources << "#{base_url}/ember-cli-live-reload.js"
-          sources << "#{base_url}/_lr/"
-        end
-
-        # we need analytics.js still as gtag/js is a script wrapper for it
-        if SiteSetting.ga_universal_tracking_code.present?
-          sources << "https://www.google-analytics.com/analytics.js"
-        end
-        if SiteSetting.ga_universal_tracking_code.present? && SiteSetting.ga_version == "v4_gtag"
-          sources << "https://www.googletagmanager.com/gtag/js"
-        end
-        if SiteSetting.gtm_container_id.present?
-          sources << "https://www.googletagmanager.com/gtm.js"
-        end
-
-        sources << "'#{SplashScreenHelper.fingerprint}'" if SiteSetting.splash_screen
-        sources << "'#{DeferScriptHelper.fingerprint}'"
-      end
-    end
-
-    def worker_src
-      [
-        "'self'", # For service worker
-        *script_assets(worker: true),
-      ]
+      sources
     end
 
     def report_uri

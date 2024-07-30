@@ -11,8 +11,6 @@ describe "Uploading files in the composer", type: :system do
   before { sign_in(current_user) }
 
   it "uploads multiple files at once" do
-    sign_in(current_user)
-
     visit "/new-topic"
     expect(composer).to be_opened
 
@@ -25,8 +23,6 @@ describe "Uploading files in the composer", type: :system do
   end
 
   it "allows cancelling uploads" do
-    sign_in(current_user)
-
     visit "/new-topic"
     expect(composer).to be_opened
 
@@ -47,13 +43,7 @@ describe "Uploading files in the composer", type: :system do
       SiteSetting.authorized_extensions += "|mp4"
     end
 
-    # TODO (martin): Video streaming is not yet available in Chrome for Testing,
-    # we need to come back to this in a few months and try again.
-    #
-    # c.f. https://groups.google.com/g/chromedriver-users/c/1SMbByMfO2U
-    xit "generates a topic preview thumbnail from the video" do
-      sign_in(current_user)
-
+    it "generates a topic preview thumbnail from the video" do
       visit "/new-topic"
       expect(composer).to be_opened
       topic.fill_in_composer_title("Video upload test")
@@ -67,13 +57,10 @@ describe "Uploading files in the composer", type: :system do
       composer.submit
 
       expect(find("#topic-title")).to have_content("Video upload test")
-      # I think topic list previews need to be enabled for this?
-      #expect(topic.image_upload_id).to eq(Upload.last.id)
+      expect(Topic.last.image_upload_id).to eq(Upload.last.id)
     end
 
     it "generates a thumbnail from the video" do
-      sign_in(current_user)
-
       visit "/new-topic"
       expect(composer).to be_opened
       topic.fill_in_composer_title("Video upload test")
@@ -83,6 +70,11 @@ describe "Uploading files in the composer", type: :system do
 
       expect(composer).to have_no_in_progress_uploads
       expect(composer.preview).to have_css(".onebox-placeholder-container")
+
+      expect(page).to have_css(
+        '.onebox-placeholder-container[style*="background-image"]',
+        wait: Capybara.default_max_wait_time,
+      )
 
       composer.submit
 
@@ -94,6 +86,26 @@ describe "Uploading files in the composer", type: :system do
       within(selector) do
         expect(page).to have_css(".video-placeholder-container[data-thumbnail-src]")
       end
+    end
+
+    it "shows video player in composer" do
+      SiteSetting.enable_diffhtml_preview = true
+
+      visit "/new-topic"
+      expect(composer).to be_opened
+      topic.fill_in_composer_title("Video upload test")
+
+      file_path_1 = file_from_fixtures("small.mp4", "media").path
+      attach_file(file_path_1) { composer.click_toolbar_button("upload") }
+
+      expect(composer).to have_no_in_progress_uploads
+      expect(composer.preview).to have_css(".video-container video")
+
+      expect(page).to have_css(
+        ".video-container video source[src]",
+        visible: false,
+        wait: Capybara.default_max_wait_time,
+      )
     end
   end
 end

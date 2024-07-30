@@ -113,6 +113,8 @@ th:
       topic:
         title: "ชื่อเรื่อง"
         category_id: "หมวดหมู่"
+      user:
+        password: "รหัสผ่าน"
     errors:
       <<: *errors
   general_category_name: "ทั่วไป"
@@ -290,9 +292,23 @@ th:
       labels:
         user: ผู้ใช้
         qtt_like: ได้รับการชอบ
+    topic_view_stats:
+      labels:
+        topic: หัวข้อ
+        anon_views: ไม่ระบุชื่อ
+        total_views: ทั้งหมด
   site_settings:
     disabled: "ปิดใช้งานแล้ว"
     dark_mode_none: "ไม่มี"
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "ไม่ใช้งาน"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "ไม่ใช้งาน"
+      - ""
   search:
     within_post: "#%{post_number} ด้วย %{username}"
     types:
@@ -462,6 +478,8 @@ th:
     boolean_yes: "ใช่"
     boolean_no: "ไม่ใช่"
     rate_limit_error: "สามารถดาวน์โหลดโพสต์ได้วันละหนึ่งครั้งเท่านั้น กรุณาลองใหม่พรุ่งนี้"
+  guidelines_topic:
+    guidelines_title: "คู่มือ"
   tos_topic:
     title: "เงื่อนไขการบริการ"
   privacy_topic:
@@ -489,7 +507,11 @@ th:
       privacy:
         fields:
           login_required:
-            placeholder: "ส่วนตัว"
+            choices:
+              public:
+                label: "สาธารณะ"
+              private:
+                label: "ส่วนตัว"
       styling:
         fields:
           styling_preview:

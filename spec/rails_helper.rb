@@ -19,6 +19,7 @@ require "rbtrace" if RUBY_ENGINE == "ruby"
 require "pry"
 require "pry-byebug"
 require "pry-rails"
+require "pry-stack_explorer"
 require "fabrication"
 require "mocha/api"
 require "certified"
@@ -151,6 +152,8 @@ module TestSetup
     OmniAuth.config.test_mode = false
 
     Middleware::AnonymousCache.disable_anon_cache
+    BlockRequestsMiddleware.allow_requests!
+    BlockRequestsMiddleware.current_example_location = nil
   end
 end
 
@@ -199,6 +202,10 @@ RSpec.configure do |config|
   config.include UploadsHelpers
   config.include OneboxHelpers
   config.include FastImageHelpers
+  config.include WithServiceHelper
+  config.include ServiceMatchers
+  config.include I18nHelpers
+
   config.mock_framework = :mocha
   config.order = "random"
   config.infer_spec_type_from_file_location!
@@ -232,11 +239,13 @@ RSpec.configure do |config|
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = true
 
+  config.full_cause_backtrace = true
+
   config.before(:suite) do
     CachedCounting.disable
 
     begin
-      ActiveRecord::Migration.check_pending!
+      ActiveRecord::Migration.check_all_pending!
     rescue ActiveRecord::PendingMigrationError
       raise "There are pending migrations, run RAILS_ENV=test bin/rake db:migrate"
     end
@@ -421,23 +430,6 @@ RSpec.configure do |config|
       Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
-    Capybara.register_driver :selenium_firefox_headless do |app|
-      options =
-        Selenium::WebDriver::Firefox::Options.new(
-          args: %w[--window-size=1400,1400 --headless],
-          prefs: {
-            "browser.download.dir": Downloads::FOLDER,
-          },
-          log_level: ENV["SELENIUM_BROWSER_LOG_LEVEL"] || :warn,
-        )
-      Capybara::Selenium::Driver.new(
-        app,
-        browser: :firefox,
-        timeout: BROWSER_READ_TIMEOUT,
-        options: options,
-      )
-    end
-
     if ENV["ELEVATED_UPLOADS_ID"]
       DB.exec "SELECT setval('uploads_id_seq', 10000)"
     else
@@ -526,6 +518,33 @@ RSpec.configure do |config|
         sleep 0.01 while !mutex.synchronize { is_waiting }
       end
     end
+
+    # This is a monkey patch for the `Capybara.using_session` method in `capybara`. For some
+    # unknown reasons on Github Actions, we are seeing system tests failing intermittently with the error
+    # `Socket::ResolutionError: getaddrinfo: Temporary failure in name resolution` when the app tries to resolve
+    # `localhost` from within a `Capybara#using_session` block.
+    #
+    # Too much time has been spent trying to debug this issue and the root cause is still unknown so we are just dropping
+    # this workaround for now where we will retry the block once before raising the error.
+    #
+    # Potentially related: https://bugs.ruby-lang.org/issues/20172
+    module Capybara
+      class << self
+        def using_session_with_localhost_resolution(name, &block)
+          attempts = 0
+          self._using_session(name, &block)
+        rescue Socket::ResolutionError
+          puts "Socket::ResolutionError error encountered... Current thread count: #{Thread.list.size}"
+          attempts += 1
+          attempts <= 1 ? retry : raise
+        end
+      end
+    end
+
+    Capybara.singleton_class.class_eval do
+      alias_method :_using_session, :using_session
+      alias_method :using_session, :using_session_with_localhost_resolution
+    end
   end
 
   if ENV["DISCOURSE_RSPEC_PROFILE_EACH_EXAMPLE"]
@@ -572,9 +591,10 @@ RSpec.configure do |config|
       #
       # The long term fix here is to get `selenium-manager` to download the `chromedriver` binary to a unique path for each
       # process but the `--cache-path` option for `selenium-manager` is currently not supported in `selenium-webdriver`.
-      if !File.directory?(File.expand_path("~/.cache/selenium"))
-        File.open("#{Rails.root}/tmp/chrome_driver_flock", "w") do |file|
-          file.flock(File::LOCK_EX)
+      File.open("#{Rails.root}/tmp/chrome_driver_flock", File::RDWR | File::CREAT, 0644) do |file|
+        file.flock(File::LOCK_EX)
+
+        if !File.directory?(File.expand_path("~/.cache/selenium"))
           `#{Selenium::WebDriver::SeleniumManager.send(:binary)} --browser chrome`
         end
       end
@@ -593,18 +613,13 @@ RSpec.configure do |config|
 
     driver = [:selenium]
     driver << :mobile if example.metadata[:mobile]
-    driver << (aarch64? ? :firefox : :chrome)
+    driver << :chrome
     driver << :headless unless ENV["SELENIUM_HEADLESS"] == "0"
-
-    if driver.include?(:firefox)
-      STDERR.puts(
-        "WARNING: Running system specs using the Firefox driver is not officially supported. Some tests will fail.",
-      )
-    end
-
     driven_by driver.join("_").to_sym
 
     setup_system_test
+
+    BlockRequestsMiddleware.current_example_location = example.location
   end
 
   config.after(:each, type: :system) do |example|
@@ -619,8 +634,7 @@ RSpec.configure do |config|
       lines << "~~~~~ END DRIVER LOGS ~~~~~"
     end
 
-    # The logs API isn’t available (yet?) with the Firefox driver
-    js_logs = aarch64? ? [] : page.driver.browser.logs.get(:browser)
+    js_logs = page.driver.browser.logs.get(:browser)
 
     # Recommended that this is not disabled, since it makes debugging
     # failed system tests a lot trickier.
@@ -660,6 +674,11 @@ RSpec.configure do |config|
     end
 
     page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
+
+    # Block all incoming requests before resetting Capybara session which will wait for all requests to finish
+    BlockRequestsMiddleware.block_requests!
+
+    Capybara.reset_session!
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
     Discourse.redis.flushdb
   end
@@ -674,7 +693,12 @@ RSpec.configure do |config|
         lines << "\n"
         lines << "Error encountered while proccessing #{path}"
         lines << "  #{ex.class}: #{ex.message}"
-        ex.backtrace.each { |line| lines << "    #{line}\n" }
+        ex.backtrace.each_with_index do |line, backtrace_index|
+          if ENV["RSPEC_EXCLUDE_GEMS_IN_BACKTRACE"]
+            next if line.match?(%r{/gems/})
+          end
+          lines << "    #{line}\n"
+        end
       end
 
       lines << "~~~~~~~ END SERVER EXCEPTIONS ~~~~~~~"
@@ -694,7 +718,7 @@ RSpec.configure do |config|
   end
 
   config.after(:each, type: :multisite) do
-    ActiveRecord::Base.clear_all_connections!
+    ActiveRecord::Base.connection_handler.clear_all_connections!
     Rails.configuration.multisite = false # rubocop:disable Discourse/NoDirectMultisiteManipulation
     RailsMultisite::ConnectionManagement.clear_settings!
     ActiveRecord::Base.establish_connection
@@ -755,6 +779,14 @@ def set_cdn_url(cdn_url)
   end
 end
 
+# Time.now can cause flaky tests, especially in cases like
+# leap days. This method freezes time at a "safe" specific
+# time (the Discourse 1.1 release date), so it will not be
+# affected by further temporal disruptions.
+def freeze_time_safe
+  freeze_time(DateTime.parse("2014-08-26 12:00:00"))
+end
+
 def freeze_time(now = Time.now)
   time = now
   datetime = now
@@ -795,10 +827,38 @@ def unfreeze_time
   TrackTimeStub.unstub(:stubbed)
 end
 
-def file_from_fixtures(filename, directory = "images")
+def file_from_fixtures(filename, directory = "images", root_path = "#{Rails.root}/spec/fixtures")
   tmp_file_path = File.join(concurrency_safe_tmp_dir, SecureRandom.hex << filename)
-  FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", tmp_file_path)
+  FileUtils.cp("#{root_path}/#{directory}/#{filename}", tmp_file_path)
   File.new(tmp_file_path)
+end
+
+def plugin_file_from_fixtures(filename, directory = "images")
+  # We [1] here instead of [0] because the first caller is the current method.
+  #
+  # /home/mb/repos/discourse-ai/spec/lib/modules/ai_bot/tools/discourse_meta_search_spec.rb:17:in `block (2 levels) in <main>'
+  first_non_gem_caller = caller_locations.select { |loc| !loc.to_s.match?(/gems/) }[1]&.path
+  raise StandardError.new("Could not find caller for fixture #{filename}") if !first_non_gem_caller
+
+  # This is the full path of the plugin spec file that needs a fixture.
+  # realpath makes sure we follow symlinks.
+  #
+  # #<Pathname:/home/mb/repos/discourse-ai/spec/lib/modules/ai_bot/tools/discourse_meta_search_spec.rb>
+  plugin_caller_path = Pathname.new(first_non_gem_caller).realpath
+
+  plugin_match =
+    Discourse.plugins.find do |plugin|
+      # realpath makes sure we follow symlinks
+      plugin_caller_path.to_s.starts_with?(Pathname.new(plugin.root_dir).realpath.to_s)
+    end
+
+  if !plugin_match
+    raise StandardError.new(
+            "Could not find matching plugin for #{plugin_caller_path} and fixture #{filename}",
+          )
+  end
+
+  file_from_fixtures(filename, directory, "#{plugin_match.root_dir}/spec/fixtures")
 end
 
 def file_from_contents(contents, filename, directory = "images")
@@ -920,10 +980,6 @@ def apply_base_chrome_options(options)
   if ENV["CHROME_DISABLE_FORCE_DEVICE_SCALE_FACTOR"].blank?
     options.add_argument("--force-device-scale-factor=1")
   end
-end
-
-def aarch64?
-  RUBY_PLATFORM == "aarch64-linux"
 end
 
 class SpecSecureRandom

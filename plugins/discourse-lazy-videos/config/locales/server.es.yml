@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  site_settings:
+    lazy_videos_enabled: "Activa el plugin «Lazy Videos»"
+    lazy_youtube_enabled: "Activar la carga lenta para incrustaciones de YouTube"
+    lazy_vimeo_enabled: "Activar la carga lenta para las incrustaciones de Vimeo"
+    lazy_tiktok_enabled: "Activar la carga lenta para las incrustaciones de TikTok (experimental)"

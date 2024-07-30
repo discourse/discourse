@@ -89,7 +89,7 @@ class Wizard
         .pluck(:context)
 
     # First uncompleted step
-    steps_with_fields.each { |s| return s unless completed.include?(s.id) }
+    steps_with_fields.each { |s| return s if completed.exclude?(s.id) }
 
     @first_step
   end

@@ -58,6 +58,8 @@ bg:
         breakdown: "Разбивка"
         percentage: "Процент"
         count: "Брой"
+      ranked_choice:
+        none: "Без"
       options:
         label: "Опции"
       error_while_toggling_status: "Съжаляваме, получи се грешка при превключване статуса на тази анкета."

@@ -11,7 +11,7 @@
     <CategorySelector
       @categories={{@model.watchedCategories}}
       @blockedCategories={{@selectedCategories}}
-      @onChange={{action (mut @model.watchedCategories)}}
+      @onChange={{fn (mut @model.watchedCategories)}}
     />
   </div>
   <div class="instructions">{{i18n
@@ -28,7 +28,7 @@
     <CategorySelector
       @categories={{@model.trackedCategories}}
       @blockedCategories={{@selectedCategories}}
-      @onChange={{action (mut @model.trackedCategories)}}
+      @onChange={{fn (mut @model.trackedCategories)}}
     />
   </div>
   <div class="instructions">{{i18n
@@ -43,7 +43,7 @@
     <CategorySelector
       @categories={{@model.watchedFirstPostCategories}}
       @blockedCategories={{@selectedCategories}}
-      @onChange={{action (mut @model.watchedFirstPostCategories)}}
+      @onChange={{fn (mut @model.watchedFirstPostCategories)}}
     />
   </div>
   <div class="instructions">{{i18n
@@ -58,7 +58,7 @@
       <CategorySelector
         @categories={{@model.regularCategories}}
         @blockedCategories={{@selectedCategories}}
-        @onChange={{action (mut @model.regularCategories)}}
+        @onChange={{fn (mut @model.regularCategories)}}
       />
     </div>
     <div class="instructions">{{i18n
@@ -77,7 +77,7 @@
       <CategorySelector
         @categories={{@model.mutedCategories}}
         @blockedCategories={{@selectedCategories}}
-        @onChange={{action (mut @model.mutedCategories)}}
+        @onChange={{fn (mut @model.mutedCategories)}}
       />
     </div>
 

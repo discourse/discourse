@@ -34,8 +34,8 @@ ar:
         icons:
           title: "الأيقونات"
           full_list: "طالِع قائمة أيقونات Font Awesome كاملةً"
-        input_fields:
-          title: "حقول الإدخال"
+        forms:
+          title: "النماذج"
         buttons:
           title: "الأزرار"
         dropdowns:

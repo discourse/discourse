@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { defaultHomepage } from "discourse/lib/utilities";
 import RestrictedUserRoute from "discourse/routes/restricted-user";
 

@@ -9,7 +9,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 
 async function openUserStatusModal() {
-  await click(".header-dropdown-toggle.current-user");
+  await click(".header-dropdown-toggle.current-user button");
   await click("#user-menu-button-profile");
   await click(".set-user-status button");
 }
@@ -56,7 +56,7 @@ acceptance("User Status", function (needs) {
     });
 
     await visit("/");
-    await click(".header-dropdown-toggle.current-user");
+    await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
 
     assert.equal(
@@ -155,7 +155,7 @@ acceptance("User Status", function (needs) {
       "shows user status emoji on the user avatar in the header"
     );
 
-    await click(".header-dropdown-toggle.current-user");
+    await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
     assert.equal(
       query(
@@ -184,7 +184,7 @@ acceptance("User Status", function (needs) {
     await pickEmoji(userStatusEmoji);
     await click(".btn-primary"); // save
 
-    await click(".header-dropdown-toggle.current-user");
+    await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
     assert.equal(
       query(
@@ -217,12 +217,20 @@ acceptance("User Status", function (needs) {
     await visit("/");
     await openUserStatusModal();
 
-    await fillIn(".user-status-description", userStatus);
+    await fillIn(".user-status-description", "off to <img src=''> dentist");
     await pickEmoji(userStatusEmoji);
     await click("#tap_tile_one_hour");
     await click(".btn-primary"); // save
 
-    await click(".header-dropdown-toggle.current-user");
+    assert
+      .dom(".user-status-background img")
+      .hasAttribute(
+        "title",
+        /^off to <img src=''> dentist/,
+        "title is properly escaped"
+      );
+
+    await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
 
     assert.equal(
@@ -374,7 +382,7 @@ acceptance(
       await click(".btn-primary"); // save
 
       assert
-        .dom(".do-not-disturb-background .d-icon-moon")
+        .dom(".do-not-disturb-background .d-icon-discourse-dnd")
         .exists("the DnD mode indicator on the menu is shown");
     });
 
@@ -390,7 +398,7 @@ acceptance(
       await click(".btn-primary"); // save
 
       assert
-        .dom(".do-not-disturb-background .d-icon-moon")
+        .dom(".do-not-disturb-background .d-icon-discourse-dnd")
         .exists("the DnD mode indicator on the menu is shown");
     });
 
@@ -404,7 +412,7 @@ acceptance(
       await click(".btn.delete-status");
 
       assert
-        .dom(".do-not-disturb-background .d-icon-moon")
+        .dom(".do-not-disturb-background .d-icon-discourse-dnd")
         .doesNotExist("there is no DnD mode indicator on the menu");
     });
 
@@ -421,7 +429,7 @@ acceptance(
       await click(".btn-primary"); // save
 
       assert
-        .dom(".do-not-disturb-background .d-icon-moon")
+        .dom(".do-not-disturb-background .d-icon-discourse-dnd")
         .doesNotExist("there is no DnD mode indicator on the menu");
     });
 
@@ -476,7 +484,7 @@ acceptance("User Status - user menu", function (needs) {
     this.siteSettings.enable_user_status = false;
 
     await visit("/");
-    await click(".header-dropdown-toggle.current-user");
+    await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
 
     assert.notOk(exists("li.set-user-status"));
@@ -486,7 +494,7 @@ acceptance("User Status - user menu", function (needs) {
     this.siteSettings.enable_user_status = true;
 
     await visit("/");
-    await click(".header-dropdown-toggle.current-user");
+    await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
 
     assert.ok(exists("li.set-user-status .btn"), "shows the button");
@@ -503,7 +511,7 @@ acceptance("User Status - user menu", function (needs) {
     });
 
     await visit("/");
-    await click(".header-dropdown-toggle.current-user");
+    await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
 
     assert.equal(
@@ -529,7 +537,7 @@ acceptance("User Status - user menu", function (needs) {
     this.siteSettings.enable_user_status = true;
 
     await visit("/");
-    await click(".header-dropdown-toggle.current-user");
+    await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
     await click(".set-user-status button");
 

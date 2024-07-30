@@ -10,7 +10,7 @@
       @content={{this.shortcuts}}
       @clearable={{this.clearable}}
       @onChangeInput={{this.onChangeInput}}
-      @onChange={{action (mut this.selection)}}
+      @onChange={{fn (mut this.selection)}}
       @options={{hash none="time_shortcut.select_timeframe"}}
     />
   </div>
@@ -33,7 +33,7 @@
         class="time-input"
         @value={{this._time}}
         disabled={{this.timeInputDisabled}}
-        {{on "input" (action "onChangeTime" value="target.value")}}
+        {{on "input" (with-event-value this.onChangeTime)}}
       />
     </div>
   {{/if}}

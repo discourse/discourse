@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { equal, reads } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import CreateInvite from "discourse/components/modal/create-invite";
 import CreateInviteBulk from "discourse/components/modal/create-invite-bulk";
 import { popupAjaxError } from "discourse/lib/ajax-error";

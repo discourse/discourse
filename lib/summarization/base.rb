@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# TODO(@keegan): Remove after removing SiteSetting.summarization_strategy
+# Keeping because its still needed for SiteSetting to function.
+# Remove after settings are migrated to AI
+
 # Base class that defines the interface that every summarization
 # strategy must implement.
 # Above each method, you'll find an explanation of what
@@ -24,6 +28,7 @@ module Summarization
 
       def can_see_summary?(target, user)
         return false if SiteSetting.summarization_strategy.blank?
+        return false if target.class == Topic && target.private_message?
 
         has_cached_summary = SummarySection.exists?(target: target, meta_section_id: nil)
         return has_cached_summary if user.nil?

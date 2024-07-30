@@ -80,18 +80,18 @@ class LetterAvatar
         -fill
         #FFFFFFCC
         -font
-        Helvetica
+        NimbusSans-Regular
         -gravity
         Center
         -annotate
-        -0+26
+        -0+34
         #{letter}
         -depth
         8
         #{filename}
       ]
 
-      Discourse::Utils.execute_command("convert", *instructions)
+      Discourse::Utils.execute_command("magick", *instructions)
 
       ## do not optimize image, it will end up larger than original
       filename
@@ -109,7 +109,7 @@ class LetterAvatar
             sleep 2
             cleanup_old
           end
-          Digest::MD5.hexdigest(`convert --version` << `convert -list font`)
+          Digest::MD5.hexdigest(`magick --version` << `magick -list font`)
         end
     end
 

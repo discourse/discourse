@@ -9,8 +9,7 @@ def library_src
 end
 
 task "svgicons:update" do
-  yarn = system("yarn install")
-  abort('Unable to run "yarn install"') unless yarn
+  system("yarn install", exception: true)
 
   dependencies = [{ source: "@fortawesome/fontawesome-free/sprites", destination: "fontawesome" }]
 

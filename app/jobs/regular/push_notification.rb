@@ -22,7 +22,7 @@ module Jobs
         .each do |push_url, group|
           notifications = group.map { |client_id, _| notification.merge(client_id: client_id) }
 
-          next unless push_url.present?
+          next if push_url.blank?
 
           result =
             Excon.post(

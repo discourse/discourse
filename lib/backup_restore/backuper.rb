@@ -153,7 +153,7 @@ module BackupRestore
         RailsMultisite::ConnectionManagement.establish_connection(db: @current_db)
         while pg_dump_running
           message = logs.pop.strip
-          log(message) unless message.blank?
+          log(message) if message.present?
         end
       end
 

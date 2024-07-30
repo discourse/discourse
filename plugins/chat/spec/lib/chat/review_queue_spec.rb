@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::ReviewQueue do
   subject(:queue) { described_class.new }
 

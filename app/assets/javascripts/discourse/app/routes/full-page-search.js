@@ -11,15 +11,16 @@ import { escapeExpression } from "discourse/lib/utilities";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
-export default DiscourseRoute.extend({
-  queryParams: {
+export default class FullPageSearch extends DiscourseRoute {
+  queryParams = {
     q: {},
     expanded: false,
     context_id: {},
     context: {},
     skip_context: {},
-  },
-  category: null,
+  };
+
+  category = null;
 
   titleToken() {
     return I18n.t("search.results_page", {
@@ -27,7 +28,7 @@ export default DiscourseRoute.extend({
         this.controllerFor("full-page-search").get("searchTerm")
       ),
     });
-  },
+  }
 
   model(params) {
     const cached = getTransient("lastSearch");
@@ -57,11 +58,11 @@ export default DiscourseRoute.extend({
       setTransient("lastSearch", { searchKey, model }, 5);
       return model;
     });
-  },
+  }
 
   @action
   didTransition() {
     this.controllerFor("full-page-search")._afterTransition();
     return true;
-  },
-});
+  }
+}

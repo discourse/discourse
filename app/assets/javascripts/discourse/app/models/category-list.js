@@ -2,44 +2,14 @@ import ArrayProxy from "@ember/array/proxy";
 import { ajax } from "discourse/lib/ajax";
 import { number } from "discourse/lib/formatter";
 import PreloadStore from "discourse/lib/preload-store";
-import Category from "discourse/models/category";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
+import deprecated from "discourse-common/lib/deprecated";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-const CategoryList = ArrayProxy.extend({
-  init() {
-    this.set("content", this.categories || []);
-    this._super(...arguments);
-    this.set("page", 1);
-    this.set("fetchedLastPage", false);
-  },
-
-  @bind
-  async loadMore() {
-    if (this.isLoading || this.fetchedLastPage) {
-      return;
-    }
-
-    this.set("isLoading", true);
-
-    const data = { page: this.page + 1 };
-    const result = await ajax("/categories.json", { data });
-
-    this.set("page", data.page);
-    if (result.category_list.categories.length === 0) {
-      this.set("fetchedLastPage", true);
-    }
-    this.set("isLoading", false);
-
-    const newCategoryList = CategoryList.categoriesFrom(this.store, result);
-    newCategoryList.forEach((c) => this.categories.pushObject(c));
-  },
-});
-
-CategoryList.reopenClass({
-  categoriesFrom(store, result, parentCategory = null) {
+export default class CategoryList extends ArrayProxy {
+  static categoriesFrom(store, result, parentCategory = null) {
     // Find the period that is most relevant
     const statPeriod =
       ["week", "month"].find(
@@ -60,35 +30,16 @@ CategoryList.reopenClass({
     result.category_list.categories.forEach((c) => {
       c = this._buildCategoryResult(c, statPeriod);
       if (
-        !c.parent_category_id ||
-        c.parent_category_id === parentCategory?.id
+        (parentCategory && c.parent_category_id === parentCategory.id) ||
+        (!parentCategory && !c.parent_category_id)
       ) {
         categories.pushObject(c);
       }
     });
     return categories;
-  },
+  }
 
-  _buildCategoryResult(c, statPeriod) {
-    if (c.parent_category_id) {
-      c.parentCategory = Category.findById(c.parent_category_id);
-    }
-
-    if (c.subcategory_list) {
-      c.subcategories = c.subcategory_list.map((subCategory) =>
-        this._buildCategoryResult(subCategory, statPeriod)
-      );
-    } else if (c.subcategory_ids) {
-      c.subcategories = c.subcategory_ids.map((subCategoryId) =>
-        Category.findById(parseInt(subCategoryId, 10))
-      );
-    }
-
-    if (c.subcategories) {
-      // TODO: Not all subcategory_ids have been loaded
-      c.subcategories = c.subcategories?.filter(Boolean);
-    }
-
+  static _buildCategoryResult(c, statPeriod) {
     if (c.topics) {
       c.topics = c.topics.map((t) => Topic.create(t));
     }
@@ -126,32 +77,66 @@ CategoryList.reopenClass({
     const record = Site.current().updateCategory(c);
     record.setupGroupsAndPermissions();
     return record;
-  },
+  }
 
-  listForParent(store, category) {
-    return ajax(
-      `/categories.json?parent_category_id=${category.get("id")}`
-    ).then((result) =>
-      CategoryList.create({
-        store,
-        categories: this.categoriesFrom(store, result, category),
-        parentCategory: category,
-      })
+  static listForParent(store, category) {
+    deprecated(
+      "The listForParent method of CategoryList is deprecated. Use list instead",
+      { id: "discourse.category-list.listForParent" }
     );
-  },
 
-  list(store) {
-    return PreloadStore.getAndRemove("categories_list", () =>
-      ajax("/categories.json")
-    ).then((result) =>
-      CategoryList.create({
+    return CategoryList.list(store, category);
+  }
+
+  static list(store, parentCategory = null) {
+    return PreloadStore.getAndRemove("categories_list", () => {
+      const data = {};
+      if (parentCategory) {
+        data.parent_category_id = parentCategory?.id;
+      }
+      return ajax("/categories.json", { data });
+    }).then((result) => {
+      return CategoryList.create({
         store,
-        categories: this.categoriesFrom(store, result),
+        categories: this.categoriesFrom(store, result, parentCategory),
+        parentCategory,
         can_create_category: result.category_list.can_create_category,
         can_create_topic: result.category_list.can_create_topic,
-      })
-    );
-  },
-});
+      });
+    });
+  }
 
-export default CategoryList;
+  init() {
+    this.set("content", this.categories || []);
+    super.init(...arguments);
+    this.set("page", 1);
+    this.set("fetchedLastPage", false);
+  }
+
+  @bind
+  async loadMore() {
+    if (this.isLoading || this.fetchedLastPage) {
+      return;
+    }
+
+    this.set("isLoading", true);
+
+    const data = { page: this.page + 1 };
+    if (this.parentCategory) {
+      data.parent_category_id = this.parentCategory.id;
+    }
+    const result = await ajax("/categories.json", { data });
+
+    this.set("page", data.page);
+    if (result.category_list.categories.length === 0) {
+      this.set("fetchedLastPage", true);
+    }
+    this.set("isLoading", false);
+
+    CategoryList.categoriesFrom(
+      this.store,
+      result,
+      this.parentCategory
+    ).forEach((c) => this.categories.pushObject(c));
+  }
+}

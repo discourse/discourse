@@ -25,7 +25,11 @@
             <NavItem @route="adminEmail" @label="admin.email.title" />
           {{/if}}
           <NavItem @route="adminLogs" @label="admin.logs.title" />
-          <NavItem @route="adminCustomize" @label="admin.customize.title" />
+          <NavItem
+            @route="adminCustomizeThemes"
+            @routeParam="themes"
+            @label="admin.customize.title"
+          />
           {{#if this.currentUser.admin}}
             <NavItem @route="adminApi" @label="admin.api.title" />
             {{#if this.siteSettings.enable_backups}}

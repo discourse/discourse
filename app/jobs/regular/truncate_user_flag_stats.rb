@@ -7,7 +7,7 @@ class Jobs::TruncateUserFlagStats < ::Jobs::Base
 
   # To give users a chance to improve, we limit their flag stats to the last N flags
   def execute(args)
-    raise Discourse::InvalidParameters.new(:user_ids) unless args[:user_ids].present?
+    raise Discourse::InvalidParameters.new(:user_ids) if args[:user_ids].blank?
 
     args[:user_ids].each do |u|
       user_stat = UserStat.find_by(user_id: u)

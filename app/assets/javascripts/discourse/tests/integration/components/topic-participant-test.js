@@ -15,7 +15,7 @@ module("Integration | Component | topic-participant", function (hooks) {
 
     await render(hbs`<TopicMap::TopicParticipant @participant={{this.args}}/>`);
 
-    assert.dom("a.poster.trigger-user-card").exists();
+    assert.dom("a.poster.trigger-user-card").hasAttribute("href", "/u/test");
     assert.dom("span.post-count").doesNotExist();
     assert.dom(".avatar-flair").doesNotExist();
   });
@@ -34,7 +34,7 @@ module("Integration | Component | topic-participant", function (hooks) {
 
     await render(hbs`<TopicMap::TopicParticipant @participant={{this.args}}/>`);
 
-    assert.dom("a.poster.trigger-user-card").exists();
+    assert.dom("a.poster.trigger-user-card").hasAttribute("href", "/u/test");
     assert.dom("span.post-count").exists();
     assert.dom(".group-devs a.poster").exists();
     assert.dom(".avatar-flair.avatar-flair-devs").exists();

@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { cancel, next } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import $ from "jquery";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
@@ -11,6 +11,10 @@ import { translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { SKIP } from "discourse/lib/autocomplete";
+import {
+  disableBodyScroll,
+  enableBodyScroll,
+} from "discourse/lib/body-scroll-lock";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import { emojiUrlFor } from "discourse/lib/text";
 import userSearch from "discourse/lib/user-search";
@@ -22,7 +26,6 @@ import {
 import { cloneJSON } from "discourse-common/lib/object";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import I18n from "discourse-i18n";
-import ChatModalChannelSummary from "discourse/plugins/chat/discourse/components/chat/modal/channel-summary";
 import { chatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import TextareaInteractor from "discourse/plugins/chat/discourse/lib/textarea-interactor";
@@ -141,6 +144,7 @@ export default class ChatComposer extends Component {
 
   @action
   setup() {
+    this.composer.scroller = this.args.scroller;
     this.appEvents.on("chat:modify-selection", this, "modifySelection");
     this.appEvents.on(
       "chat:open-insert-link-modal",
@@ -275,14 +279,22 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  onTextareaFocusIn(textarea) {
+  onTextareaFocusOut(event) {
+    this.isFocused = false;
+    enableBodyScroll(event.target);
+  }
+
+  @action
+  onTextareaFocusIn(event) {
+    this.isFocused = true;
+    const textarea = event.target;
+    disableBodyScroll(textarea);
+
     if (!this.capabilities.isIOS) {
       return;
     }
 
     // hack to prevent the whole viewport to move on focus input
-    // we need access to native node
-    textarea = this.composer.textarea.textarea;
     textarea.style.transform = "translateY(-99999px)";
     textarea.focus();
     window.requestAnimationFrame(() => {
@@ -381,13 +393,6 @@ export default class ChatComposer extends Component {
     } else {
       this.chatComposerWarningsTracker.reset();
     }
-  }
-
-  @action
-  showChannelSummaryModal() {
-    this.modal.show(ChatModalChannelSummary, {
-      model: { channelId: this.args.channel.id },
-    });
   }
 
   #addMentionedUser(userData) {

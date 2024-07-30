@@ -55,9 +55,7 @@ module ChatSystemHelpers
   end
 
   def thread_excerpt(message)
-    CGI.escapeHTML(
-      message.censored_excerpt(max_length: ::Chat::Thread::EXCERPT_LENGTH).gsub("&hellip;", "…"),
-    )
+    message.excerpt
   end
 end
 
@@ -115,6 +113,12 @@ module ChatSpecHelpers
   end
 
   def create_draft(channel, thread: nil, user: Discourse.system_user, data: { message: "draft" })
+    if data[:uploads]
+      data[:uploads] = data[:uploads].map do |upload|
+        UploadSerializer.new(upload, root: false).as_json
+      end
+    end
+
     result =
       ::Chat::UpsertDraft.call(
         guardian: user.guardian,
@@ -130,8 +134,6 @@ end
 RSpec.configure do |config|
   config.include ChatSystemHelpers, type: :system
   config.include ChatSpecHelpers
-  config.include Chat::WithServiceHelper
-  config.include Chat::ServiceMatchers
 
   config.expect_with :rspec do |c|
     # Or a very large value, if you do want to truncate at some point

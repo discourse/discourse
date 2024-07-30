@@ -10,13 +10,13 @@ RSpec.describe "User card", type: :system do
 
   shared_examples "not showing chat button" do
     it "doesn’t show the chat button" do
-      expect(page).to have_no_css(".chat-user-card-btn")
+      expect(page).to have_no_css(".chat-direct-message-btn")
     end
   end
 
   shared_examples "showing chat button" do
     it "shows the chat button" do
-      expect(page).to have_css(".chat-user-card-btn")
+      expect(page).to have_css(".chat-direct-message-btn")
     end
   end
 
@@ -49,7 +49,7 @@ RSpec.describe "User card", type: :system do
         include_examples "showing chat button"
 
         context "when clicking chat button" do
-          before { find(".chat-user-card-btn").click }
+          before { find(".chat-direct-message-btn").click }
 
           it "opens correct channel" do
             # at this point the ChatChannel is not created yet

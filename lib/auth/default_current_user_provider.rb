@@ -140,6 +140,7 @@ class Auth::DefaultCurrentUserProvider
           end
 
         current_user = @user_token.try(:user)
+        current_user.authenticated_with_oauth = @user_token.authenticated_with_oauth if current_user
       end
 
       if !current_user
@@ -165,7 +166,15 @@ class Auth::DefaultCurrentUserProvider
               )
       end
       raise Discourse::InvalidAccess if current_user.suspended? || !current_user.active
-      admin_api_key_limiter.performed! if !Rails.env.profile?
+
+      if !Rails.env.profile?
+        admin_api_key_limiter.performed!
+
+        # Don't enforce the default per ip limits for authenticated admin api
+        # requests
+        (@env["DISCOURSE_RATE_LIMITERS"] || []).each(&:rollback!)
+      end
+
       @env[API_KEY_ENV] = true
     end
 
@@ -259,6 +268,7 @@ class Auth::DefaultCurrentUserProvider
         client_ip: @request.ip,
         staff: user.staff?,
         impersonate: opts[:impersonate],
+        authenticated_with_oauth: opts[:authenticated_with_oauth],
       )
 
     set_auth_cookie!(@user_token.unhashed_auth_token, user, cookie_jar)

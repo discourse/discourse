@@ -36,7 +36,7 @@ RSpec.describe TopicViewDetailsSerializer do
     before { SiteSetting.can_permanently_delete = true }
 
     it "is true for admins" do
-      admin = Fabricate(:admin, refresh_auto_groups: true)
+      admin = Fabricate(:admin)
 
       serializer = described_class.new(TopicView.new(post.topic, admin), scope: Guardian.new(admin))
       expect(serializer.as_json.dig(:topic_view_details, :can_permanently_delete)).to eq(true)

@@ -30,6 +30,15 @@ RSpec.describe "Local Dates" do
 
     expect(cooked).to include('data-timezone="Asia/Calcutta"')
     expect(cooked).to include("05/08/2018 4:30:00 PM")
+
+    post = Fabricate(:post, raw: <<~MD)
+      [date=2018-05-08 time=22:00 format="L LTS" timezone="IST"]
+    MD
+
+    cooked = post.cooked
+
+    expect(cooked).to include('data-timezone="IST"')
+    expect(cooked).to include("05/08/2018 4:30:00 PM")
   end
 
   it "requires the right attributes to convert to a local date" do

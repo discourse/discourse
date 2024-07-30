@@ -91,8 +91,8 @@
         return isFuture
             ? format[key][0]
             : withoutSuffix
-            ? format[key][0]
-            : format[key][1];
+              ? format[key][0]
+              : format[key][1];
     }
 
     return tzl;

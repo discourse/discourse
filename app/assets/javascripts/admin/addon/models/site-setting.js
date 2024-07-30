@@ -5,8 +5,10 @@ import I18n from "discourse-i18n";
 import Setting from "admin/mixins/setting-object";
 
 export default class SiteSetting extends EmberObject.extend(Setting) {
-  static findAll() {
-    return ajax("/admin/site_settings").then(function (settings) {
+  static findAll(params = {}) {
+    return ajax("/admin/site_settings", { data: params }).then(function (
+      settings
+    ) {
       // Group the results by category
       const categories = {};
       settings.site_settings.forEach(function (s) {

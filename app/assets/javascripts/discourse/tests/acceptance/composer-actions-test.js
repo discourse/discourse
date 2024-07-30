@@ -153,6 +153,18 @@ acceptance("Composer Actions", function (needs) {
     assert.ok(!exists(".dialog-body"));
   });
 
+  test("reply_as_new_topic without a permission to create topic", async function (assert) {
+    updateCurrentUser({ can_create_topic: false });
+    await visit("/t/internationalization-localization/280");
+    await click(".create.reply");
+    const composerActions = selectKit(".composer-actions");
+    await composerActions.expand();
+    assert.ok(
+      !exists(".composer-actions svg.d-icon-plus"),
+      "reply as new topic icon is not visible"
+    );
+  });
+
   test("reply_as_new_group_message", async function (assert) {
     await visit("/t/lorem-ipsum-dolor-sit-amet/130");
     await click(".create.reply");

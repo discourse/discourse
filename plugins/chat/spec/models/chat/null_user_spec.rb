@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::NullUser do
   subject(:null_user) { described_class.new }
 

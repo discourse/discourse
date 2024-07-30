@@ -1,0 +1,246 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  js:
+    discourse_automation:
+      title: Automatizálás
+      create: Létrehozás
+      update: Frissítés
+      select_script: Válasszon egy parancsfájlt
+      select_trigger: Válasszon egy aktiválót
+      confirm_automation_reset: Ez a művelet visszaállítja a parancsfájlt és az aktiválási beállításokat, az új állapot mentésre kerül. Folytatja?
+      confirm_automation_trigger: Ez a művelet aktiválja az automatizálást, folytatja?
+      no_automation_yet: Még nem hozott létre automatizálást.
+      edit_automation:
+        trigger_section:
+          forced: Ez az aktiválót a parancsfájl kényszeríti ki.
+          next_pending_automation: "A következő automatizálás ekkor aktiválódik: %{date}"
+          trigger_now: "Aktiválás most"
+          title: Mikor/mi…
+        fields_section:
+          title: Parancsfájl beállításai
+      destroy_automation:
+        confirm: "Biztos, hogy törli: „%{name}\"?"
+      fields:
+        key_value:
+          label_without_count: "Beállítás"
+        user:
+          label: Felhasználó
+        pm:
+          title:
+            label: Cím
+          raw:
+            label: Törzs
+        pms:
+          confirm_remove_pm: "Biztos, hogy eltávolítja ezt a PÜ-t?"
+          placeholder_title: PÜ címe
+          add_pm: PÜ hozzáadása
+          no_pm_created: Még nem hozott létre PÜ-t. A PÜ-k az automatizálás aktiválása után lesznek elküldve.
+          title:
+            label: Cím
+          raw:
+            label: Törzs
+          delay:
+            label: Késleltetés (perc)
+          prefers_encrypt:
+            label: PÜ titkosítása, ha elérhető
+        group:
+          label: Csoport
+        text:
+          label: Szöveg
+      triggerables:
+        not_found: Nem találta a(z) `%{trigger}` kiváltóját a(z) `%{automation}` automatizáláshoz, győződjön meg róla, hogy a kapcsolódó bővítmény telepítve van-e.
+        user_badge_granted:
+          fields:
+            badge:
+              label: Jelvény
+            only_first_grant:
+              label: Csak az első megadás esetén
+        stalled_topic:
+          durations:
+            PT1H: "Egy óra"
+            P1D: "Egy nap"
+            P1W: "Egy hét"
+            P2W: "Két hét múlva"
+            P1M: "Egy hónap"
+            P3M: "Három hónap múlva"
+            P6M: "Hat hónap múlva"
+            P1Y: "Egy év múlva"
+          fields:
+            categories:
+              label: Kategóriákra korlátozva
+            tags:
+              label: Címkékre korlátozva
+            stalled_after:
+              label: Ennyi idő után elakadt
+        recurring:
+          every: Minden
+          frequencies:
+            minute: perc
+            hour: óra
+            day: nap
+            weekday: hétköznapon
+            week: hét
+            month: hónap
+            year: év
+          fields:
+            recurrence:
+              label: Ismétlődés
+            start_date:
+              label: Kezdő dátum
+        stalled_wiki:
+          durations:
+            PT1H: "Egy óra"
+            P1D: "Egy nap"
+            P1W: "Egy hét"
+            P2W: "Két hét múlva"
+            P1M: "Egy hónap"
+            P3M: "Három hónap múlva"
+            P6M: "Hat hónap múlva"
+            P1Y: "Egy év múlva"
+          fields:
+            stalled_after:
+              label: Aktiváló késleltetése
+              description: Meghatározza a késleltetést az utolsó wikiszerkesztés és az automatizálás aktiválása között.
+            retriggered_after:
+              label: Késleltetés újraaktiválása
+              description: Meghatározza az első és a következő aktiválás közötti késleltetést, ha a wiki még mindig nem lett szerkesztve az első aktiválás után
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Nyomon követett csoport
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Nyomon követett csoport
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Csoportra korlátozás
+            trust_level_transition:
+              label: Bizalmi szint átmenete
+          trust_levels:
+            ALL: "Összes bizalmi szintnél"
+            TL01: "BSZ0 → BSZ1"
+            TL12: "BSZ1 → BSZ2"
+            TL23: "BSZ2 → BSZ3"
+            TL34: "BSZ3 → BSZ4"
+        topic:
+          fields:
+            restricted_topic:
+              label: Témaazonosító
+        post_created_edited:
+          fields:
+            valid_trust_levels:
+              label: Érvényes bizalmi szintek
+            restricted_category:
+              label: Kategória
+            restricted_group:
+              label: Csoport
+          created: Létrehozott
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Szülő kategória
+        pm_created:
+          fields:
+            restricted_user:
+              label: Felhasználók
+            restricted_group:
+              label: Csoport
+            ignore_staff:
+              label: Stáb figyelmen kívül hagyása
+              description: Az aktiválás kihagyása, ha a küldő stábtag
+            valid_trust_levels:
+              label: Érvényes bizalmi szintek
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Érvényes bizalmi szintek
+            restricted_category:
+              label: Kategória
+            restricted_tags:
+              label: Címkék
+      scriptables:
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: Webhook webcíme
+        auto_responder:
+          fields:
+            word_answer_list:
+              label: Szó/válasz párok listája
+            answering_user:
+              label: Válaszoló felhasználó
+              description: Alapértelmezetten a rendszerfelhasználó
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Címkék
+        post:
+          fields:
+            topic:
+              label: Témaazonosító
+        group_category_notification_default:
+          fields:
+            group:
+              label: Csoport
+        user_global_notice:
+          fields:
+            level:
+              label: Szint
+            notice:
+              label: Értesítés
+              description: Elfogad HTML-t, ne töltse ki nem megbízható bevitellel!
+          levels:
+            warning: Figyelmeztetés
+            info: Információ
+            success: Siker
+            error: Hiba
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Csoport
+            badge:
+              label: Jelvény
+        suspend_user_by_email:
+          fields:
+            reason:
+              label: Ok (alapértelmezett)
+            actor:
+              label: Felhasználó
+              description: "A felfüggesztésért felelős felhasználó (alapértelmezett: rendszer)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Témaazonosító
+            pinned_globally:
+              label: Globálisan kitűzve
+            pinned_until:
+              label: Kitűzve eddig
+        banner_topic:
+          fields:
+            topic_id:
+              label: Témaazonosító
+            user:
+              label: Felhasználó
+        close_topic:
+          fields:
+            topic:
+              label: Témaazonosító
+            user:
+              label: Felhasználó
+      models:
+        automation:
+          name:
+            label: Név
+          version:
+            label: Verzió
+          enabled:
+            label: Engedélyezed
+          disabled:
+            label: Kikapcsolt

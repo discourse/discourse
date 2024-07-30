@@ -2,8 +2,9 @@
 
 RSpec.describe "Discobot Certificate" do
   let(:user) { Fabricate(:user, name: "Jeff Atwood") }
-
   let(:params) { { date: Time.zone.now.strftime("%b %d %Y"), user_id: user.id } }
+
+  before { SiteSetting.discourse_narrative_bot_enabled = true }
 
   describe "when viewing the certificate" do
     describe "when no logged in" do

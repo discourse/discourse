@@ -459,6 +459,17 @@ RSpec.describe HasCustomFields do
         expect(test_item.custom_fields["abc"]).to eq("ghi")
       end
 
+      it "updates the updated_at timestamp" do
+        test_item = CustomFieldsTestItem.create
+        test_item.upsert_custom_fields(foo: "bar")
+        field = CustomFieldsTestItemCustomField.find_by(name: "foo")
+        prev_updated_at = field.updated_at
+
+        test_item.upsert_custom_fields(foo: "baz")
+
+        expect(prev_updated_at).not_to eq(field.reload.updated_at)
+      end
+
       it "allows upsert to use keywords" do
         test_item = CustomFieldsTestItem.create
         test_item.upsert_custom_fields(hello: "world", abc: "def")

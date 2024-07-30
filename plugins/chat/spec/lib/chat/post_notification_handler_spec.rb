@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::PostNotificationHandler do
   subject(:handler) { described_class.new(post, notified_users) }
 

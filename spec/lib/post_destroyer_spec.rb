@@ -4,7 +4,7 @@ RSpec.describe PostDestroyer do
   before { UserActionManager.enable }
 
   fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
-  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:admin)
   fab!(:coding_horror) { Fabricate(:coding_horror, refresh_auto_groups: true) }
   let(:post) { create_post }
 

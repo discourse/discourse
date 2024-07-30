@@ -131,13 +131,10 @@ module DiscoursePoll
         return true if old_poll.public_send(attr) != new_poll.public_send(attr)
       end
 
-      # an option was changed?
-      if old_poll.poll_options.map { |o| o.digest }.sort != new_options.map { |o| o["id"] }.sort
-        return true
-      end
+      sorted_old_options = old_poll.poll_options.map { |o| o.digest }.sort
+      sorted_new_options = new_options.map { |o| o["id"] }.sort
 
-      # it's the same!
-      false
+      sorted_old_options != sorted_new_options
     end
   end
 end

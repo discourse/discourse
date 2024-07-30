@@ -125,7 +125,7 @@
     }
 
     & + .chat-message-separator__line-container {
-      padding: 20px 0 20px var(--scrollbarWidth);
+      padding: 20px var(--scrollbarWidth) 20px var(--scrollbarWidth);
       box-sizing: border-box;
 
       .chat-message-separator__line {

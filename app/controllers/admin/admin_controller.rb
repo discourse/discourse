@@ -1,19 +1,12 @@
 # frozen_string_literal: true
 
 class Admin::AdminController < ApplicationController
+  include WithServiceHelper
+
   requires_login
   before_action :ensure_admin
 
   def index
     render body: nil
-  end
-
-  private
-
-  def preload_additional_json
-    store_preloaded(
-      "enabledPluginAdminRoutes",
-      MultiJson.dump(Discourse.plugins_sorted_by_name.filter_map(&:admin_route)),
-    )
   end
 end

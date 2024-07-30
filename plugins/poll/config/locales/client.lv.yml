@@ -49,6 +49,8 @@ lv:
         breakdown: "Sadalījums"
         percentage: "Procentuāli"
         count: "Skaits"
+      ranked_choice:
+        none: "Nav"
       options:
         label: "Opcijas"
       error_while_toggling_status: "Diemžēl, mainot šīs aptaujas statusu, radās kļūda."

@@ -140,21 +140,15 @@ class LocaleFileChecker
   end
 
   def check_message_format
-    mf_locale, mf_filename =
-      JsLocaleHelper.find_message_format_locale([@locale], fallback_to_english: true)
+    require "messageformat"
 
     traverse_hash(@locale_yaml, []) do |keys, value|
       next unless keys.last.ends_with?("_MF")
 
       begin
-        JsLocaleHelper.with_context do |ctx|
-          ctx.load(mf_filename) if File.exist?(mf_filename)
-          ctx.eval("mf = new MessageFormat('#{mf_locale}');")
-          ctx.eval("mf.precompile(mf.parse(#{value.to_s.inspect}))")
-        end
-      rescue MiniRacer::EvalError => error
-        error_message = error.message.sub(/at undefined[:\d]+/, "").strip
-        add_error(keys, TYPE_INVALID_MESSAGE_FORMAT, error_message, pluralized: false)
+        MessageFormat.compile(@locale, { key: value }, strict: true)
+      rescue MessageFormat::Compiler::CompileError => e
+        add_error(keys, TYPE_INVALID_MESSAGE_FORMAT, e.cause.message, pluralized: false)
       end
     end
   end

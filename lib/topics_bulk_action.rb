@@ -13,6 +13,7 @@ class TopicsBulkAction
     @operations ||= %w[
       change_category
       close
+      silent_close
       archive
       change_notification_level
       destroy_post_timing
@@ -36,7 +37,7 @@ class TopicsBulkAction
   end
 
   def perform!
-    unless TopicsBulkAction.operations.include?(@operation[:type])
+    if TopicsBulkAction.operations.exclude?(@operation[:type])
       raise Discourse::InvalidParameters.new(:operation)
     end
     # careful these are private methods, we need send
@@ -164,7 +165,21 @@ class TopicsBulkAction
   def close
     topics.each do |t|
       if guardian.can_moderate?(t)
-        t.update_status("closed", true, @user)
+        t.update_status("closed", true, @user, { message: @operation[:message] })
+        @changed_ids << t.id
+      end
+    end
+  end
+
+  def silent_close
+    topics.each do |t|
+      if guardian.can_moderate?(t)
+        t.update_status(
+          "closed",
+          true,
+          @user,
+          { message: @operation[:message], silent_tracking: true },
+        )
         @changed_ids << t.id
       end
     end
@@ -173,7 +188,12 @@ class TopicsBulkAction
   def unlist
     topics.each do |t|
       if guardian.can_moderate?(t)
-        t.update_status("visible", false, @user)
+        t.update_status(
+          "visible",
+          false,
+          @user,
+          { visibility_reason_id: Topic.visibility_reasons[:bulk_action] },
+        )
         @changed_ids << t.id
       end
     end
@@ -182,7 +202,12 @@ class TopicsBulkAction
   def relist
     topics.each do |t|
       if guardian.can_moderate?(t)
-        t.update_status("visible", true, @user)
+        t.update_status(
+          "visible",
+          true,
+          @user,
+          { visibility_reason_id: Topic.visibility_reasons[:bulk_action] },
+        )
         @changed_ids << t.id
       end
     end

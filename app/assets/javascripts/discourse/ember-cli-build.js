@@ -10,32 +10,16 @@ const discourseScss = require("./lib/discourse-scss");
 const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
 const DeprecationSilencer = require("deprecation-silencer");
-const generateWorkboxTree = require("./lib/workbox-tree-builder");
 const { compatBuild } = require("@embroider/compat");
 const { Webpack } = require("@embroider/webpack");
 const { StatsWriterPlugin } = require("webpack-stats-plugin");
 const withSideWatch = require("./lib/with-side-watch");
 const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
 const crypto = require("crypto");
-
-const EMBER_MAJOR_VERSION = parseInt(
-  require("ember-source/package.json").version.split(".")[0],
-  10
-);
+const commonBabelConfig = require("./lib/common-babel-config");
+const TerserPlugin = require("terser-webpack-plugin");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
-
-function filterForEmberVersion(tree) {
-  if (EMBER_MAJOR_VERSION < 4) {
-    return tree;
-  }
-
-  return funnel(tree, {
-    // d-modal-legacy includes a named outlet which would cause
-    // a build failure in modern Ember
-    exclude: ["**/components/d-modal-legacy.hbs"],
-  });
-}
 
 module.exports = function (defaults) {
   const discourseRoot = path.resolve("../../../..");
@@ -76,13 +60,7 @@ module.exports = function (defaults) {
       exclude: ["**/highlightjs/*", "**/javascripts/*"],
     },
 
-    "ember-cli-babel": {
-      throwUnlessParallelizable: true,
-    },
-
-    babel: {
-      plugins: [require.resolve("deprecation-silencer")],
-    },
+    ...commonBabelConfig(),
 
     vendorFiles: {
       // Freedom patch - includes bug fix and async stack support
@@ -92,23 +70,15 @@ module.exports = function (defaults) {
     },
 
     trees: {
-      app: filterForEmberVersion(
-        RawHandlebarsCompiler(
-          withSideWatch("app", { watching: ["../discourse-markdown-it"] })
-        )
+      app: RawHandlebarsCompiler(
+        withSideWatch("app", {
+          watching: ["../discourse-markdown-it", "../truth-helpers"],
+        })
       ),
     },
   });
 
-  if (EMBER_MAJOR_VERSION < 4) {
-    // TODO: remove me
-    // Ember 3.28 still has some internal dependency on jQuery being a global,
-    // for the time being we will bring it in vendor.js
-    app.import("node_modules/jquery/dist/jquery.js", { prepend: true });
-  }
-
   // WARNING: We should only import scripts here if they are not in NPM.
-  app.import(vendorJs + "bootbox.js");
   app.import(discourseRoot + "/app/assets/javascripts/polyfills.js");
 
   app.import(
@@ -138,7 +108,6 @@ module.exports = function (defaults) {
     createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
-    generateWorkboxTree(),
     applyTerser(
       concat(adminTree, {
         inputFiles: ["**/*.js"],
@@ -162,11 +131,30 @@ module.exports = function (defaults) {
     staticAppPaths: ["static"],
     packagerOptions: {
       webpackConfig: {
-        devtool: "source-map",
+        devtool:
+          process.env.CHEAP_SOURCE_MAPS === "1"
+            ? "cheap-source-map"
+            : "source-map",
         output: {
           publicPath: "auto",
           filename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
           chunkFilename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
+        },
+        optimization: {
+          minimize: isProduction,
+          minimizer: [
+            new TerserPlugin({
+              minify: TerserPlugin.swcMinify,
+              terserOptions: {
+                compress: {
+                  // Stop swc unwrapping 'unnecessary' IIFE wrappers which are added by Babel
+                  // to workaround a bug in Safari 15 class fields.
+                  inline: false,
+                  reduce_funcs: false,
+                },
+              },
+            }),
+          ],
         },
         cache: isProduction
           ? false
@@ -186,8 +174,7 @@ module.exports = function (defaults) {
             if (
               !request.includes("-embroider-implicit") &&
               // TODO: delete special case for jquery when removing app.import() above
-              ((EMBER_MAJOR_VERSION < 4 && request === "jquery") ||
-                request.startsWith("admin/") ||
+              (request.startsWith("admin/") ||
                 request.startsWith("discourse/plugins/") ||
                 request.startsWith("discourse/theme-"))
             ) {
@@ -203,22 +190,6 @@ module.exports = function (defaults) {
               exportsPresence: "error",
             },
           },
-          rules: [
-            {
-              test: require.resolve("bootstrap/js/modal"),
-              use: [
-                {
-                  loader: "imports-loader",
-                  options: {
-                    imports: {
-                      moduleName: "jquery",
-                      name: "jQuery",
-                    },
-                  },
-                },
-              ],
-            },
-          ],
         },
         plugins: [
           // The server use this output to map each asset to its chunks
@@ -255,6 +226,14 @@ module.exports = function (defaults) {
         ],
       },
     },
+    skipBabel: [
+      {
+        package: "qunit",
+      },
+      {
+        package: "sinon",
+      },
+    ],
   });
 
   return mergeTrees([appTree, mergeTrees(extraPublicTrees)]);

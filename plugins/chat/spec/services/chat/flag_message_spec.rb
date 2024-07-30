@@ -22,7 +22,7 @@ RSpec.describe Chat::FlagMessage do
     let(:guardian) { Guardian.new(current_user) }
     let(:channel_id) { channel_1.id }
     let(:message_id) { message_1.id }
-    let(:flag_type_id) { ReviewableScore.types.values.first }
+    let(:flag_type_id) { ReviewableScore.types[:off_topic] }
     let(:message) { nil }
     let(:is_warning) { nil }
     let(:take_action) { nil }

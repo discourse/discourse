@@ -6,20 +6,20 @@ source "https://rubygems.org"
 
 gem "bootsnap", require: false, platform: :mri
 
-gem "actionmailer", "< 7.1"
-gem "actionpack", "< 7.1"
-gem "actionview", "< 7.1"
-gem "activemodel", "< 7.1"
-gem "activerecord", "< 7.1"
-gem "activesupport", "< 7.1"
-gem "railties", "< 7.1"
+gem "actionmailer", "~> 7.1.0"
+gem "actionpack", "~> 7.1.0"
+gem "actionview", "~> 7.1.0"
+gem "activemodel", "~> 7.1.0"
+gem "activerecord", "~> 7.1.0"
+gem "activesupport", "~> 7.1.0"
+gem "railties", "~> 7.1.0"
 gem "sprockets-rails"
 
 gem "json"
 
 # TODO: At the moment Discourse does not work with Sprockets 4, we would need to correct internals
 # We intend to drop sprockets rather than upgrade to 4.x
-gem "sprockets", git: "https://github.com/rails/sprockets", branch: "3.x"
+gem "sprockets", "~> 3.7.3"
 
 # this will eventually be added to rails,
 # allows us to precompile all our templates in the unicorn master
@@ -31,7 +31,9 @@ gem "mail"
 gem "mini_mime"
 gem "mini_suffix"
 
-gem "redis"
+# config/initializers/006-mini_profiler.rb depends upon the RedisClient#call.
+# Rework this when upgrading to redis client 5.0 and above.
+gem "redis", "< 5.0"
 
 # This is explicitly used by Sidekiq and is an optional dependency.
 # We tell Sidekiq to use the namespace "sidekiq" which triggers this
@@ -87,6 +89,7 @@ gem "mini_sql"
 gem "pry-rails", require: false
 gem "pry-byebug", require: false
 gem "rtlcss", require: false
+gem "messageformat-wrapper", require: false
 gem "rake"
 
 gem "thor", require: false
@@ -123,7 +126,6 @@ group :test do
   gem "capybara", require: false
   gem "webmock", require: false
   gem "fakeweb", require: false
-  gem "minitest", require: false
   gem "simplecov", require: false
   gem "selenium-webdriver", "~> 4.14", require: false
   gem "selenium-devtools", require: false
@@ -145,6 +147,7 @@ group :test, :development do
 
   gem "shoulda-matchers", require: false
   gem "rspec-html-matchers"
+  gem "pry-stack_explorer", require: false
   gem "byebug", require: ENV["RM_INFO"].nil?, platform: :mri
   gem "rubocop-discourse", require: false
   gem "parallel_tests"
@@ -210,7 +213,6 @@ gem "cppjieba_rb", require: false
 
 gem "lograge", require: false
 gem "logstash-event", require: false
-gem "logstash-logger", require: false
 gem "logster"
 
 # A fork of sassc with dart-sass support
@@ -270,3 +272,7 @@ gem "csv", require: false
 # TODO: Can be removed once we upgrade to Rails 7.1
 gem "mutex_m"
 gem "drb"
+
+# dependencies for the automation plugin
+gem "iso8601"
+gem "rrule"

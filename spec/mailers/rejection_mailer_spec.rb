@@ -3,7 +3,7 @@
 RSpec.describe RejectionMailer do
   describe "send_rejection" do
     context "when sending rejection email" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       let(:template_args) do
         { former_title: "Mail Subject", destination: user.email, site_name: SiteSetting.title }
       end

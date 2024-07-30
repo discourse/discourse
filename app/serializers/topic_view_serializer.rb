@@ -43,6 +43,7 @@ class TopicViewSerializer < ApplicationSerializer
     :image_url,
     :slow_mode_seconds,
     :external_id,
+    :visibility_reason_id,
   )
 
   attributes(
@@ -63,7 +64,6 @@ class TopicViewSerializer < ApplicationSerializer
     :is_warning,
     :chunk_size,
     :bookmarked,
-    :bookmarks,
     :message_archived,
     :topic_timer,
     :unicode_title,
@@ -78,12 +78,12 @@ class TopicViewSerializer < ApplicationSerializer
     :user_last_posted_at,
     :is_shared_draft,
     :slow_mode_enabled_until,
-    :summarizable,
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
   has_many :pending_posts, serializer: TopicPendingPostSerializer, root: false, embed: :objects
-  has_many :categories, serializer: TopicCategorySerializer, embed: :objects
+  has_many :categories, serializer: CategoryBadgeSerializer, embed: :objects
+  has_many :bookmarks, serializer: TopicViewBookmarkSerializer, root: false, embed: :objects
 
   has_one :published_page, embed: :objects
 
@@ -200,10 +200,6 @@ class TopicViewSerializer < ApplicationSerializer
     object.has_bookmarks?
   end
 
-  def bookmarks
-    object.bookmarks
-  end
-
   def topic_timer
     topic_timer = object.topic.public_topic_timer
 
@@ -314,11 +310,11 @@ class TopicViewSerializer < ApplicationSerializer
     object.topic.slow_mode_topic_timer&.execute_at
   end
 
-  def summarizable
-    object.summarizable?
-  end
-
   def include_categories?
     scope.can_lazy_load_categories?
+  end
+
+  def include_visibility_reason_id?
+    object.topic.visibility_reason_id.present?
   end
 end

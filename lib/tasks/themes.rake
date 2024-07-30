@@ -62,24 +62,28 @@ def update_themes
     .includes(:remote_theme)
     .where(enabled: true, auto_update: true)
     .find_each do |theme|
-      theme.transaction do
-        remote_theme = theme.remote_theme
-        next if remote_theme.blank? || remote_theme.remote_url.blank?
+      begin
+        theme.transaction do
+          remote_theme = theme.remote_theme
+          next if remote_theme.blank? || remote_theme.remote_url.blank?
 
-        print "Checking '#{theme.name}' for '#{RailsMultisite::ConnectionManagement.current_db}'... "
-        remote_theme.update_remote_version
-        if remote_theme.out_of_date?
-          puts "updating from #{remote_theme.local_version[0..7]} to #{remote_theme.remote_version[0..7]}"
-          remote_theme.update_from_remote(already_in_transaction: true)
-        else
-          puts "up to date"
-        end
+          print "Checking '#{theme.name}' for '#{RailsMultisite::ConnectionManagement.current_db}'... "
 
-        if remote_theme.last_error_text.present?
-          raise RemoteTheme::ImportError.new(remote_theme.last_error_text)
+          remote_theme.update_remote_version
+
+          if remote_theme.out_of_date?
+            puts "updating from #{remote_theme.local_version[0..7]} to #{remote_theme.remote_version[0..7]}"
+            remote_theme.update_from_remote(already_in_transaction: true)
+          else
+            puts "up to date"
+          end
+
+          if remote_theme.last_error_text.present?
+            raise RemoteTheme::ImportError.new(remote_theme.last_error_text)
+          end
         end
       rescue => e
-        STDERR.puts "Failed to update '#{theme.name}': #{e}"
+        $stderr.puts "[#{RailsMultisite::ConnectionManagement.current_db}] Failed to update '#{theme.name}' (#{theme.id}): #{e}"
         raise if ENV["RAISE_THEME_ERRORS"] == "1"
       end
     end

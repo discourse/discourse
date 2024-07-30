@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { scheduleOnce } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import $ from "jquery";
 import DiscourseURL from "discourse/lib/url";
 import CleansUp from "discourse/mixins/cleans-up";

@@ -56,11 +56,15 @@ zh_CN:
       cancel_reply: "取消回复"
       chat_channels: "频道"
       browse_all_channels: "浏览所有频道"
+      see_in: "参见"
       move_to_channel:
         title: "将消息移至频道"
         instructions:
           other: "您正在移动 <strong>%{count}</strong> 条消息。选择目标频道。将在 <strong>%{channelTitle}</strong> 频道中创建占位符消息，以表明这些消息已被移动。请注意，新频道中不会保留回复链，旧频道中的消息将不再显示为回复任何移动的消息。"
         confirm_move: "移动消息"
+      delete_messages:
+        confirm:
+          other: "确定要删除 %{count} 条消息吗？"
       channel_settings:
         title: "频道设置"
         edit: "编辑"
@@ -98,7 +102,6 @@ zh_CN:
       channels_list_popup:
         browse: "浏览频道"
         create: "新建频道"
-      click_to_join: "点击此处查看可用频道。"
       close: "关闭"
       remove: "移除"
       collapse: "收起聊天抽屉"
@@ -139,12 +142,6 @@ zh_CN:
       heading: "聊天"
       join: "加入"
       last_visit: "上次访问"
-      summarization:
-        title: "总结消息"
-        description: "选择以下选项，以总结在所需时间范围内发送的对话。"
-        summarize: "总结"
-        since:
-          other: "过去 %{count} 小时"
       mention_warning:
         invitations_sent:
           other: "已发送邀请"
@@ -214,8 +211,10 @@ zh_CN:
         header: "聊天标题"
         composer: "聊天输入框"
         channels_list: "聊天频道列表"
-      no_direct_message_channels: "您还没有加入任何直接消息频道。"
+      no_direct_message_channels: "您还没有加入任何直接消息。"
+      no_direct_message_channels_cta: "开始一个对话"
       no_public_channels: "您还没有加入任何频道。"
+      no_public_channels_cta: "浏览频道"
       kicked_from_channel: "您无法再访问此频道。"
       only_chat_push_notifications:
         title: "只发送聊天推送通知"
@@ -223,6 +222,9 @@ zh_CN:
       ignore_channel_wide_mention:
         title: "忽略频道范围内的提及"
         description: "不发送频道范围内提及（@here 和 @all）的通知"
+      show_thread_title_prompts:
+        title: "显示消息串标题提示"
+        description: "显示为新消息串设置标题的提示"
       open: "打开聊天"
       open_full_page: "打开全屏聊天"
       close_full_page: "关闭全屏聊天"
@@ -243,6 +245,7 @@ zh_CN:
       copy_link: "复制链接"
       copy_text: "复制文本"
       rebake_message: "重建 HTML"
+      message_too_long: "消息过长，最多只能包含 %{count} 个字符。"
       retry_staged_message:
         title: "网络错误"
         action: "重新发送？"
@@ -290,7 +293,7 @@ zh_CN:
         back: "返回"
         title: 频道
         filter_all: 所有
-        filter_open: 已打开
+        filter_open: 开放
         filter_closed: 已关闭
         filter_archived: 已归档
         filter_input_placeholder: 按名称搜索频道
@@ -495,6 +498,7 @@ zh_CN:
         cancel: "取消"
         quote_selection: "话题中的引用"
         copy: "复制"
+        delete: "删除 (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "移至频道"
         error: "移动聊天消息时出错"
         title: "将聊天移动到话题"
@@ -527,6 +531,7 @@ zh_CN:
       flags:
         off_topic: "此消息与频道标题定义的当前讨论无关，可能应当移至其他地方。"
         inappropriate: "此消息包含理性的人会认为具有攻击性、辱骂性或违反<a href=\"%{basePath}/guidelines\">我们的社区准则</a>的内容。"
+        illegal: "此帖子需要工作人员注意，因为我认为其中包含非法内容。"
         spam: "此消息是广告或破坏行为。它对当前频道没有用，也不相关。"
         notify_user: "我想亲自直接与此人谈谈他们的消息。"
         notify_moderators: "由于上面未列出的另一个原因，此消息需要管理人员加以注意。"
@@ -565,6 +570,17 @@ zh_CN:
             description: "此消息串将在消息串列表和频道中显示的新回复数。如果其他人在此消息串中提及 (@) 您的名字，您将收到通知。"
         participants_other_count:
           other: "+%{count}"
+      thread_title_toast:
+        title: "设置一个消息串标题"
+        message: "帮助他人发现此对话。"
+        dismiss_action: "不再显示"
+        primary_action: "设置标题"
+      thread_title_modal:
+        title: "设置消息串标题"
+        input_placeholder: "告诉其他人此对话的主题…"
+        discourse_ai:
+          title: "自动生成消息串标题"
+          description: "查看 %{url} 详细了解此功能和 Discourse 体验的其他增强功能。"
       threads:
         open: "打开消息串"
         list: "消息串"

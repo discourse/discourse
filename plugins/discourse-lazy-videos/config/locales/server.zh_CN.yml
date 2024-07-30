@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    lazy_videos_enabled: "启用 Lazy Videos 插件"
+    lazy_youtube_enabled: "为 YouTube 嵌入式视频启用延迟加载"
+    lazy_vimeo_enabled: "为 Vimeo 嵌入式视频启用延迟加载"
+    lazy_tiktok_enabled: "为 TikTok 嵌入式视频启用延迟加载（实验性）"

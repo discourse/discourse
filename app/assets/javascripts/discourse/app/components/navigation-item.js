@@ -32,14 +32,14 @@ export default Component.extend({
     return contentFilterType === filterType;
   },
 
-  @discourseComputed("content.count")
-  isHidden(count) {
+  @discourseComputed("content.count", "content.name")
+  isHidden(count, name) {
     return (
       !this.active &&
       this.currentUser &&
+      !this.currentUser.new_new_view_enabled &&
       this.currentUser.trust_level > 0 &&
-      (this.content.get("name") === "new" ||
-        this.content.get("name") === "unread") &&
+      (name === "new" || name === "unread") &&
       count < 1
     );
   },

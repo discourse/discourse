@@ -4,12 +4,14 @@ require "rotp"
 
 RSpec.describe UsersController do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:user1) { Fabricate(:user, username: "someusername", refresh_auto_groups: true) }
+  fab!(:user1) do
+    Fabricate(:user, username: "someusername", refresh_auto_groups: true, created_at: 6.minutes.ago)
+  end
   fab!(:another_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:invitee) { Fabricate(:user) }
   fab!(:inviter) { Fabricate(:user) }
 
-  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:admin)
   fab!(:moderator)
   fab!(:inactive_user)
 
@@ -300,6 +302,31 @@ RSpec.describe UsersController do
               timezone: "America/Chicago",
             }
         expect(user1.user_option.reload.timezone).to eq("America/Chicago")
+      end
+
+      it "deletes user associated accounts" do
+        SiteSetting.delete_associated_accounts_on_password_reset = true
+        UserAssociatedAccount.create(
+          user_id: user.id,
+          provider_uid: "example0",
+          provider_name: "facebook",
+        )
+        UserAssociatedAccount.create(
+          user_id: user1.id,
+          provider_uid: "example1",
+          provider_name: "facebook",
+        )
+
+        get "/u/password-reset/#{email_token.token}"
+
+        expect do
+          put "/u/password-reset/#{email_token.token}",
+              params: {
+                password: "hg9ow8yhg98oadminlonger",
+              }
+        end.to change { UserAssociatedAccount.count }.by(-1)
+
+        expect(UserAssociatedAccount.count).to eq(1)
       end
 
       it "logs the password change" do
@@ -1430,7 +1457,7 @@ RSpec.describe UsersController do
     context "with custom fields" do
       fab!(:user_field)
       fab!(:another_field) { Fabricate(:user_field) }
-      fab!(:optional_field) { Fabricate(:user_field, required: false) }
+      fab!(:optional_field) { Fabricate(:user_field, requirement: "optional") }
 
       context "without a value for the fields" do
         let(:create_params) do
@@ -1490,7 +1517,7 @@ RSpec.describe UsersController do
           it "value can't be nil or empty if the field is required" do
             put update_user_url, params: { user_fields: { field_id => valid_options } }
 
-            user_field.update!(required: true)
+            user_field.for_all_users!
 
             expect do
               put update_user_url, params: { user_fields: { field_id => nil } }
@@ -1501,10 +1528,24 @@ RSpec.describe UsersController do
             end.not_to change { user1.reload.user_fields[field_id] }
           end
 
+          it "value is required only on sign-up" do
+            user_field.on_signup!
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => "" } }
+            end.to change { user1.reload.user_fields[field_id] }.from(nil).to("")
+
+            put update_user_url, params: { user_fields: { field_id => valid_options } }
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => "" } }
+            end.not_to change { user1.reload.user_fields[field_id] }
+          end
+
           it "value can nil or empty if the field is not required" do
             put update_user_url, params: { user_fields: { field_id => valid_options } }
 
-            user_field.update!(required: false)
+            user_field.optional!
 
             expect do
               put update_user_url, params: { user_fields: { field_id => nil } }
@@ -1545,7 +1586,7 @@ RSpec.describe UsersController do
           it "value can't be nil if the field is required" do
             put update_user_url, params: { user_fields: { field_id => valid_options.first } }
 
-            user_field.update!(required: true)
+            user_field.for_all_users!
 
             expect do
               put update_user_url, params: { user_fields: { field_id => nil } }
@@ -1555,7 +1596,7 @@ RSpec.describe UsersController do
           it "value can be set to nil if the field is not required" do
             put update_user_url, params: { user_fields: { field_id => valid_options.last } }
 
-            user_field.update!(required: false)
+            user_field.optional!
 
             expect do
               put update_user_url, params: { user_fields: { field_id => nil } }
@@ -1612,7 +1653,7 @@ RSpec.describe UsersController do
     end
 
     context "with only optional custom fields" do
-      fab!(:user_field) { Fabricate(:user_field, required: false) }
+      fab!(:user_field) { Fabricate(:user_field, requirement: "optional") }
 
       context "without values for the fields" do
         let(:create_params) do
@@ -1737,7 +1778,7 @@ RSpec.describe UsersController do
         body = response.parsed_body
 
         expect(body["errors"].first).to include(
-          I18n.t("user.username.short", min: User.username_length.begin),
+          I18n.t("user.username.short", count: User.username_length.begin),
         )
 
         expect(user.reload.username).to eq(old_username)
@@ -1891,7 +1932,7 @@ RSpec.describe UsersController do
       it 'should return the "too long" message' do
         expect(response.status).to eq(200)
         expect(response.parsed_body["errors"]).to include(
-          I18n.t(:"user.username.long", max: SiteSetting.max_username_length),
+          I18n.t(:"user.username.long", count: SiteSetting.max_username_length),
         )
       end
     end
@@ -2376,8 +2417,8 @@ RSpec.describe UsersController do
 
         context "with user fields" do
           context "with an editable field" do
-            fab!(:user_field)
-            fab!(:optional_field) { Fabricate(:user_field, required: false) }
+            fab!(:user_field) { Fabricate(:user_field, requirement: "for_all_users") }
+            fab!(:optional_field) { Fabricate(:user_field, requirement: "optional") }
 
             it "should update the user field" do
               put "/u/#{user.username}.json",
@@ -3170,7 +3211,10 @@ RSpec.describe UsersController do
       fab!(:badge) { Fabricate(:badge, name: "Demogorgon", allow_title: true) }
       let(:user_badge) { BadgeGranter.grant(badge, user1) }
 
-      before { TranslationOverride.upsert!("en", "badges.demogorgon.name", "Boss") }
+      before do
+        I18n.backend.store_translations(:en, { badges: { demogorgon: { name: "D'Artagnan" } } })
+        TranslationOverride.upsert!("en", "badges.demogorgon.name", "Boss")
+      end
 
       after { TranslationOverride.revert!("en", ["badges.demogorgon.name"]) }
 
@@ -4526,6 +4570,7 @@ RSpec.describe UsersController do
         expect(parsed["username"]).to eq(user.username)
         expect(parsed["profile_hidden"]).to be_blank
         expect(parsed["trust_level"]).to be_present
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
       it "returns a hidden profile" do
@@ -4538,14 +4583,24 @@ RSpec.describe UsersController do
         expect(parsed["username"]).to eq(user.username)
         expect(parsed["profile_hidden"]).to eq(true)
         expect(parsed["trust_level"]).to be_blank
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
-      it "should redirect to login page for anonymous user when profiles are hidden" do
+      it "should 403 for anonymous user when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}.json"
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
         expect(response).to have_http_status(:forbidden)
         get "/u/#{user.username}/messages.json"
         expect(response).to have_http_status(:forbidden)
+      end
+
+      it "should 403 correctly for crawlers when profiles are hidden" do
+        SiteSetting.hide_user_profiles_from_public = true
+        get "/u/#{user.username}", headers: { "User-Agent" => "Googlebot" }
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).to have_tag("body.crawler")
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
       describe "user profile views" do
@@ -4578,12 +4633,14 @@ RSpec.describe UsersController do
       it "returns not found when the username doesn't exist" do
         get "/u/madeuppity.json"
         expect(response).not_to be_successful
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
       it "returns not found when the user is inactive" do
         inactive = Fabricate(:user, active: false)
         get "/u/#{inactive.username}.json"
         expect(response).not_to be_successful
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
       it "returns success when show_inactive_accounts is true and user is logged in" do
@@ -4597,6 +4654,7 @@ RSpec.describe UsersController do
         Guardian.any_instance.expects(:can_see?).with(user1).returns(false)
         get "/u/#{user1.username}.json"
         expect(response).to be_forbidden
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
       describe "user profile views" do
@@ -4780,17 +4838,30 @@ RSpec.describe UsersController do
         expect(response.parsed_body["user"]["inactive"]).to eq(true)
       end
 
-      it "returns partial response when hidden users" do
-        user.user_option.update!(hide_profile_and_presence: true)
-        get "/u/#{user.username}/card.json"
-        expect(response).to be_successful
-        expect(response.parsed_body["user"]["profile_hidden"]).to eq(true)
-      end
-
       it "raises an error on invalid access" do
         Guardian.any_instance.expects(:can_see?).with(user).returns(false)
         get "/u/#{user.username}/card.json"
         expect(response).to be_forbidden
+      end
+
+      context "when hidden users" do
+        before { user.user_option.update!(hide_profile_and_presence: true) }
+
+        it "returns the correct partial response when the user has messages enabled" do
+          user.user_option.update!(allow_private_messages: true)
+          get "/u/#{user.username}/card.json"
+          expect(response).to be_successful
+          expect(response.parsed_body["user"]["profile_hidden"]).to eq(true)
+          expect(response.parsed_body["user"]["can_send_private_message_to_user"]).to eq(true)
+        end
+
+        it "returns the correct partial response when the user has messages disabled" do
+          user.user_option.update!(allow_private_messages: false)
+          get "/u/#{user.username}/card.json"
+          expect(response).to be_successful
+          expect(response.parsed_body["user"]["profile_hidden"]).to eq(true)
+          expect(response.parsed_body["user"]["can_send_private_message_to_user"]).to eq(false)
+        end
       end
     end
   end
@@ -4901,7 +4972,7 @@ RSpec.describe UsersController do
   end
 
   describe "#search_users" do
-    fab!(:topic) { Fabricate :topic }
+    fab!(:topic)
     let(:user) { Fabricate :user, username: "joecabot", name: "Lawrence Tierney" }
     let(:post1) { Fabricate(:post, user: user, topic: topic) }
     let(:staged_user) { Fabricate(:user, staged: true) }
@@ -5485,6 +5556,19 @@ RSpec.describe UsersController do
 
           expect(response_body["key"]).to be_present
           expect(response_body["qr"]).to be_present
+        end
+
+        it "raises an error for a user created > 5 mins ago without a confirmed session" do
+          post "/users/create_second_factor_totp.json"
+
+          expect(response.status).to eq(403)
+        end
+
+        it "does not require confirming session for a user created < 5 mins ago" do
+          user1.update(created_at: Time.now.utc - 4.minutes)
+          post "/users/create_second_factor_totp.json"
+
+          expect(response.status).to eq(200)
         end
       end
     end
@@ -6498,12 +6582,21 @@ RSpec.describe UsersController do
       expect(response.status).to eq(403)
     end
 
-    it "resopnds with a 'failed' result by default" do
+    it "responds with a 'failed' result by default" do
       sign_in(user1)
 
       get "/u/trusted-session.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body["failed"]).to eq("FAILED")
+    end
+
+    it "responds with a 'success' result if user was recently created" do
+      sign_in(user1)
+      user1.update(created_at: Time.now.utc - 4.minutes)
+
+      get "/u/trusted-session.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq("OK")
     end
 
     it "response with 'success' on a confirmed session" do
@@ -6600,7 +6693,7 @@ RSpec.describe UsersController do
       expect(response.status).to eq(403)
     end
 
-    it "returns an error if the the current user does not have access" do
+    it "returns an error if the current user does not have access" do
       sign_in(user1)
       topic.update(user_id: another_user.id)
       put "/u/#{another_user.username}/clear-featured-topic.json"
@@ -7061,6 +7154,37 @@ RSpec.describe UsersController do
         notifications = response.parsed_body["notifications"]
         expect(notifications.size).to eq(1)
         expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
+      end
+
+      it "shows unread notifications even if the bookmark has been deleted if they have bookmarkable data" do
+        bookmark_with_reminder.destroy!
+
+        get "/u/#{user.username}/user-menu-bookmarks"
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(1)
+        expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
+      end
+
+      it "does not show unread notifications if the bookmark has been deleted if they only have the bookmark_id data" do
+        notif =
+          Notification.find_by(
+            topic: bookmark_with_reminder.bookmarkable.topic,
+            post_number: bookmark_with_reminder.bookmarkable.post_number,
+          )
+        new_data = notif.data_hash
+        new_data.delete(:bookmarkable_type)
+        new_data.delete(:bookmarkable_id)
+        notif.update!(data: JSON.dump(new_data))
+
+        bookmark_with_reminder.destroy!
+
+        get "/u/#{user.username}/user-menu-bookmarks"
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(0)
       end
 
       context "with `show_user_menu_avatars` setting enabled" do

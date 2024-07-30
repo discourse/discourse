@@ -2,6 +2,7 @@
 @import "chat-height-mixin";
 @import "base-common";
 @import "sidebar-extensions";
+@import "chat-drawer-routes";
 @import "chat-browse";
 @import "chat-channel";
 @import "chat-channel-card";
@@ -68,3 +69,6 @@
 @import "chat-navbar";
 @import "chat-thread-title";
 @import "chat-audio-upload";
+@import "chat-message-text";
+@import "chat-messages-scroller";
+@import "chat-footer";

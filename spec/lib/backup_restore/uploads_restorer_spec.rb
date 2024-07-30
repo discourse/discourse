@@ -6,7 +6,7 @@ require_relative "shared_context_for_backup_restore"
 RSpec.describe BackupRestore::UploadsRestorer do
   subject(:restorer) { BackupRestore::UploadsRestorer.new(logger) }
 
-  include_context "with shared stuff"
+  include_context "with shared backup restore context"
 
   def with_temp_uploads_directory(name: "default", with_optimized: false)
     Dir.mktmpdir do |directory|

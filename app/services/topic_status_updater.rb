@@ -13,7 +13,11 @@ TopicStatusUpdater =
         if updated
           highest_post_number = topic.highest_post_number
           create_moderator_post_for(status, opts)
-          update_read_state_for(status, highest_post_number)
+          update_read_state_for(
+            status,
+            highest_post_number,
+            silent_tracking: opts[:silent_tracking],
+          )
         end
       end
 
@@ -55,6 +59,12 @@ TopicStatusUpdater =
         )
       end
 
+      if status.visible?
+        topic.update(
+          visibility_reason_id: opts[:visibility_reason_id] || Topic.visibility_reasons[:unknown],
+        )
+      end
+
       if @topic_timer
         if status.manually_closing_topic? || status.closing_topic?
           topic.delete_topic_timer(TopicTimer.types[:close])
@@ -84,11 +94,26 @@ TopicStatusUpdater =
       topic.reload
     end
 
-    def update_read_state_for(status, old_highest_read)
-      if status.autoclosed? && status.enabled?
+    def update_read_state_for(status, old_highest_read, silent_tracking: false)
+      if (status.autoclosed? && status.enabled?) || (status.closed? && silent_tracking)
         # let's pretend all the people that read up to the autoclose message
         # actually read the topic
         PostTiming.pretend_read(topic.id, old_highest_read, topic.highest_post_number)
+      end
+
+      if status.closed? && status.enabled?
+        sql_query = <<-SQL
+          SELECT DISTINCT post_timings.user_id
+          FROM post_timings
+          JOIN user_options ON user_options.user_id = post_timings.user_id
+          WHERE post_timings.topic_id = :topic_id
+            AND user_options.topics_unread_when_closed = 'f'
+        SQL
+        user_ids = DB.query_single(sql_query, topic_id: topic.id)
+
+        if user_ids.present?
+          PostTiming.pretend_read(topic.id, old_highest_read, topic.highest_post_number, user_ids)
+        end
       end
     end
 

@@ -9,12 +9,15 @@ class Admin::PluginsController < Admin::StaffController
     )
   end
 
-  private
+  def show
+    plugin = Discourse.plugins_by_name[params[:plugin_id]]
 
-  def preload_additional_json
-    store_preloaded(
-      "enabledPluginAdminRoutes",
-      MultiJson.dump(Discourse.plugins_sorted_by_name.filter_map(&:admin_route)),
-    )
+    # An escape hatch in case a plugin is using an un-prefixed
+    # version of their plugin name for a route.
+    plugin = Discourse.plugins_by_name["discourse-#{params[:plugin_id]}"] if !plugin
+
+    raise Discourse::NotFound if !plugin&.visible?
+
+    render_serialized(plugin, AdminPluginSerializer, root: nil)
   end
 end

@@ -181,9 +181,17 @@ RSpec.describe UserNotifications do
     end
 
     context "with new topics" do
-      let!(:popular_topic) do
-        Fabricate(:topic, user: Fabricate(:coding_horror), created_at: 1.hour.ago)
+      fab!(:coding_horror)
+
+      let!(:popular_topic) { Fabricate(:topic, user: coding_horror, created_at: 1.hour.ago) }
+
+      let!(:another_popular_topic) do
+        Fabricate(:topic, user: coding_horror, created_at: 1.hour.ago)
       end
+
+      let!(:post) { Fabricate(:post, topic: popular_topic, post_number: 1) }
+
+      let!(:another_post) { Fabricate(:post, topic: another_popular_topic, post_number: 1) }
 
       it "works" do
         expect(email.to).to eq([user.email])
@@ -192,6 +200,10 @@ RSpec.describe UserNotifications do
         expect(email.html_part.body.to_s).to be_present
         expect(email.text_part.body.to_s).to be_present
         expect(email.header["List-Unsubscribe"].to_s).to match(/\/email\/unsubscribe\/\h{64}/)
+        expect(email.header["X-Discourse-Topic-Ids"].to_s).to eq(
+          "#{another_popular_topic.id},#{popular_topic.id}",
+        )
+        expect(email.header["X-Discourse-Post-Ids"].to_s).to eq("#{another_post.id},#{post.id}")
         expect(email.html_part.body.to_s).to include("New Users")
       end
 
@@ -437,6 +449,29 @@ RSpec.describe UserNotifications do
 
         expect(html).to match(' lang="pl-PL"')
         expect(html).to match(' xml:lang="pl-PL"')
+      end
+
+      it "uses digest_attempted_at when user hasn't been seen in a while" do
+        user.update!(last_seen_at: 7.days.ago)
+        user.user_stat.update!(digest_attempted_at: 30.minutes.ago)
+        expect(email.to).to be_nil
+      end
+
+      it "uses last_seen_at when user has been sent a digest in a while" do
+        user.update!(last_seen_at: 30.minutes.ago)
+        user.user_stat.update!(digest_attempted_at: 7.days.ago)
+        expect(email.to).to be_nil
+      end
+
+      it "caps at 1 month when user has never been seen or sent a digest" do
+        old_topic = Fabricate(:topic, created_at: 2.months.ago)
+
+        user.update!(last_seen_at: nil)
+        user.user_stat.update!(digest_attempted_at: nil)
+        expect(email.to).to contain_exactly(user.email)
+
+        html = email.html_part.body.to_s
+        expect(html).not_to include(old_topic.title)
       end
     end
   end
@@ -1471,6 +1506,23 @@ RSpec.describe UserNotifications do
         expect(mail.body).to include(date)
       end
     end
+
+    context "when user timezone is invalid" do
+      before { user.user_option.timezone = "" }
+
+      it "doesn't raise error" do
+        expect { UserNotifications.account_silenced(user) }.not_to raise_error
+      end
+
+      it "adds the silenced_till date in UTC" do
+        date = "May 25, 2020, 12:00pm"
+        user.silenced_till = DateTime.parse(date)
+
+        mail = UserNotifications.account_silenced(user, { user_history: user_history })
+
+        expect(mail.body).to include(date)
+      end
+    end
   end
 
   describe ".account_suspended" do
@@ -1487,6 +1539,23 @@ RSpec.describe UserNotifications do
 
     context "when user doesn't have timezone set" do
       before { user.user_option.timezone = nil }
+
+      it "doesn't raise error" do
+        expect { UserNotifications.account_suspended(user) }.not_to raise_error
+      end
+
+      it "adds the suspended_till date in UTC" do
+        date = "May 25, 2020, 12:00pm"
+        user.suspended_till = DateTime.parse(date)
+
+        mail = UserNotifications.account_suspended(user, { user_history: user_history })
+
+        expect(mail.body).to include(date)
+      end
+    end
+
+    context "when user timezone is invalid" do
+      before { user.user_option.timezone = "" }
 
       it "doesn't raise error" do
         expect { UserNotifications.account_suspended(user) }.not_to raise_error

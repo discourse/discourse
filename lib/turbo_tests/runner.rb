@@ -89,6 +89,8 @@ module TurboTests
         start_regular_subprocess(tests, process_id + 1, **subprocess_opts)
       end
 
+      @reporter.start
+
       handle_messages
 
       @reporter.finish
@@ -122,15 +124,11 @@ module TurboTests
 
       ActiveRecord::Tasks::DatabaseTasks.migrations_paths = %w[db/migrate db/post_migrate]
 
-      conn = ActiveRecord::Base.establish_connection(config).connection
-
       begin
-        ActiveRecord::Migration.check_pending!(conn)
+        ActiveRecord::Migration.check_all_pending!
       rescue ActiveRecord::PendingMigrationError
         puts "There are pending migrations, run rake parallel:migrate"
         exit 1
-      ensure
-        conn.close
       end
     end
 

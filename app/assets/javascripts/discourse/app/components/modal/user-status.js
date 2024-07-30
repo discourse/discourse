@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import ItsATrap from "@discourse/itsatrap";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { popupAjaxError } from "discourse/lib/ajax-error";

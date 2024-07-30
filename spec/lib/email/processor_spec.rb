@@ -180,10 +180,7 @@ RSpec.describe Email::Processor do
     fab!(:topic)
     fab!(:post) { Fabricate(:post, topic: topic, created_at: 3.days.ago) }
     let(:mail) do
-      file_from_fixtures("old_destination.eml", "emails")
-        .read
-        .gsub("424242", topic.id.to_s)
-        .gsub("123456", post.id.to_s)
+      file_from_fixtures("old_destination.eml", "emails").read.gsub(":post_id", post.id.to_s)
     end
 
     it "rejects the email with the right response" do

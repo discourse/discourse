@@ -84,7 +84,7 @@ task "emails:test", [:email] => [:environment] do |_, args|
       domain: smtp[:domain] || "localhost",
       username: smtp[:user_name],
       password: smtp[:password],
-      authentication: smtp[:authentication] || "plain",
+      authentication: smtp[:authentication],
     )
   rescue Exception => e
     if e.to_s.match(/execution expired/)
@@ -238,7 +238,7 @@ task "emails:fix_mailman_users" => :environment do
     .includes(:user, :post)
     .where("raw LIKE '%X-Mailman-Version: %'")
     .find_each do |ie|
-      next unless ie.post.present?
+      next if ie.post.blank?
 
       mail = Mail.new(ie.raw)
       email, name = Email::Receiver.extract_email_address_and_name_from_mailman(mail)

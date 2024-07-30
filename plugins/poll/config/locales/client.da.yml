@@ -65,8 +65,14 @@ da:
         breakdown: "Fordeling"
         percentage: "Procentdel"
         count: "Antal"
+      ranked_choice:
+        title:
+          outcome: "Resultat"
+        none: "Ingen"
       options:
         label: "Indstillinger"
+        ranked_choice:
+          abstain: "Afstå"
       error_while_toggling_status: "Beklager, der opstod en fejl under statusskifte for denne afstemning."
       error_while_casting_votes: "Beklager, der opstod en fejl under afgivelse af dine stemmer."
       error_while_fetching_voters: "Beklager, der opstod en fejl med at vise deltagerne."

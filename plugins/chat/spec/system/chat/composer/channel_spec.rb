@@ -18,7 +18,12 @@ RSpec.describe "Chat | composer | channel", type: :system do
   describe "reply to message" do
     context "when raw contains html" do
       fab!(:message_1) do
-        Fabricate(:chat_message, chat_channel: channel_1, message: "<mark>not marked</mark>")
+        Fabricate(
+          :chat_message,
+          use_service: true,
+          chat_channel: channel_1,
+          message: "<mark>not marked</mark>",
+        )
       end
 
       it "renders text in the details" do

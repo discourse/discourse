@@ -44,8 +44,20 @@ class TranslationOverride < ActiveRecord::Base
   validates_presence_of :locale, :translation_key, :value
 
   validate :check_interpolation_keys
+  validate :check_MF_string, if: :message_format?
 
-  enum :status, %i[up_to_date outdated invalid_interpolation_keys deprecated]
+  attribute :status, :integer
+  enum status: { up_to_date: 0, outdated: 1, invalid_interpolation_keys: 2, deprecated: 3 }
+
+  scope :mf_locales,
+        ->(locale) { not_deprecated.where(locale: locale).where("translation_key LIKE '%_MF'") }
+  scope :client_locales,
+        ->(locale) do
+          not_deprecated
+            .where(locale: locale)
+            .where("translation_key LIKE 'js.%' OR translation_key LIKE 'admin_js.%'")
+            .where.not("translation_key LIKE '%_MF'")
+        end
 
   def self.upsert!(locale, key, value)
     params = { locale: locale, translation_key: key }
@@ -57,10 +69,6 @@ class TranslationOverride < ActiveRecord::Base
       I18n.overrides_disabled { I18n.t(transform_pluralized_key(key), locale: :en) }
 
     data = { value: sanitized_value, original_translation: original_translation }
-    if key.end_with?("_MF")
-      _, filename = JsLocaleHelper.find_message_format_locale([locale], fallback_to_english: false)
-      data[:compiled_js] = JsLocaleHelper.compile_message_format(filename, locale, sanitized_value)
-    end
 
     params.merge!(data) if translation_override.new_record?
     i18n_changed(locale, [key]) if translation_override.update(data)
@@ -160,6 +168,16 @@ class TranslationOverride < ActiveRecord::Base
     I18n.overrides_disabled { I18n.t(transformed_key, locale: :en) }
   end
 
+  def message_format?
+    translation_key.to_s.end_with?("_MF")
+  end
+
+  def make_up_to_date!
+    return unless outdated?
+    self.original_translation = current_default
+    update_attribute!(:status, :up_to_date)
+  end
+
   private
 
   def transformed_key
@@ -179,6 +197,14 @@ class TranslationOverride < ActiveRecord::Base
         count: invalid_keys.size,
       ),
     )
+  end
+
+  def check_MF_string
+    require "messageformat"
+
+    MessageFormat.compile(locale, { key: value }, strict: true)
+  rescue MessageFormat::Compiler::CompileError => e
+    errors.add(:base, e.cause.message)
   end
 end
 

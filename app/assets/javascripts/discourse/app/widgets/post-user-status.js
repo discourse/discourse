@@ -9,7 +9,7 @@ createWidget("post-user-status", {
     return [
       new RenderGlimmer(
         this,
-        "div",
+        "span",
         hbs`<UserStatusMessage @status={{@data.attrs}} />`,
         {
           attrs,

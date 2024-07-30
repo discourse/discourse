@@ -39,15 +39,15 @@ module Chat
         SiteSetting.chat_enabled
       end
 
-      def fetch_category(contract:, **)
+      def fetch_category(contract:)
         Category.find_by(id: contract.category_id)
       end
 
-      def fetch_category_channel_ids(category:, **)
+      def fetch_category_channel_ids(category:)
         Chat::Channel.where(chatable: category).pluck(:id)
       end
 
-      def fetch_users(category_channel_ids:, **)
+      def fetch_users(category_channel_ids:)
         User
           .real
           .activated
@@ -58,7 +58,7 @@ module Chat
           .where("NOT admin AND NOT moderator")
       end
 
-      def remove_users_without_channel_permission(users:, category_channel_ids:, **)
+      def remove_users_without_channel_permission(users:, category_channel_ids:)
         memberships_to_remove =
           Chat::Action::CalculateMembershipsForRemoval.call(
             scoped_users: users,
@@ -72,7 +72,7 @@ module Chat
         )
       end
 
-      def publish(users_removed_map:, **)
+      def publish(users_removed_map:)
         Chat::Action::PublishAutoRemovedUser.call(
           event_type: :category_updated,
           users_removed_map: users_removed_map,

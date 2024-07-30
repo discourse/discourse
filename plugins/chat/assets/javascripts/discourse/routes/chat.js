@@ -1,5 +1,5 @@
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { scrollTop } from "discourse/mixins/scroll-top";
@@ -15,6 +15,7 @@ export default class ChatRoute extends DiscourseRoute {
   @service chat;
   @service router;
   @service chatStateManager;
+  @service chatDrawerRouter;
   @service currentUser;
 
   titleToken() {
@@ -26,28 +27,16 @@ export default class ChatRoute extends DiscourseRoute {
       return this.router.transitionTo(`discovery.${defaultHomepage()}`);
     }
 
-    const INTERCEPTABLE_ROUTES = [
-      "chat.channel",
-      "chat.direct-messages",
-      "chat.channels",
-      "chat.threads",
-      "chat.channel.thread",
-      "chat.channel.thread.index",
-      "chat.channel.thread.near-message",
-      "chat.channel.threads",
-      "chat.channel.index",
-      "chat.channel.near-message",
-      "chat.channel-legacy",
-      "chat",
-      "chat.index",
-    ];
-
     if (
       transition.from && // don't intercept when directly loading chat
       this.chatStateManager.isDrawerPreferred &&
-      INTERCEPTABLE_ROUTES.includes(transition.targetName)
+      this.chatDrawerRouter.routeNames.includes(transition.targetName)
     ) {
       transition.abort();
+
+      if (this.chatDrawerRouter.currentRouteName === transition.targetName) {
+        return;
+      }
 
       let url = transition.intent.url;
       if (transition.targetName.startsWith("chat.channel")) {
@@ -98,7 +87,12 @@ export default class ChatRoute extends DiscourseRoute {
     });
 
     if (transition) {
-      const url = this.router.urlFor(transition.from.name);
+      let url = this.router.urlFor(transition.from.name);
+
+      if (this.router.rootURL !== "/") {
+        url = url.replace(new RegExp(`^${this.router.rootURL}`), "/");
+      }
+
       this.chatStateManager.storeChatURL(url);
     }
 

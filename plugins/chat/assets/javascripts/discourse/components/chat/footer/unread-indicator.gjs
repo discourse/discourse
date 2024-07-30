@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 
 const CHANNELS_TAB = "channels";
 const DMS_TAB = "dms";
@@ -58,13 +58,13 @@ export default class FooterUnreadIndicator extends Component {
 
   <template>
     {{#if this.showUrgent}}
-      <div class="chat-channel-unread-indicator -urgent">
-        <div class="chat-channel-unread-indicator__number">
+      <div class="c-unread-indicator -urgent">
+        <div class="c-unread-indicator__number">
           {{this.urgentBadgeCount}}
         </div>
       </div>
     {{else if this.showUnread}}
-      <div class="chat-channel-unread-indicator"></div>
+      <div class="c-unread-indicator"></div>
     {{/if}}
   </template>
 }

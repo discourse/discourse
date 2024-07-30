@@ -2,7 +2,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { fmt } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";

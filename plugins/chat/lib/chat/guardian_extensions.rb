@@ -13,7 +13,11 @@ module Chat
 
     def can_chat?
       return false if anonymous?
-      @user.staff? || @user.in_any_groups?(Chat.allowed_group_ids)
+      @user.bot? || @user.in_any_groups?(Chat.allowed_group_ids)
+    end
+
+    def can_direct_message?
+      @user.in_any_groups?(SiteSetting.direct_message_enabled_groups_map)
     end
 
     def can_create_chat_message?
@@ -21,7 +25,7 @@ module Chat
     end
 
     def can_create_direct_message?
-      is_staff? || @user.in_any_groups?(SiteSetting.direct_message_enabled_groups_map)
+      is_staff? || can_direct_message?
     end
 
     def hidden_tag_names
@@ -136,8 +140,6 @@ module Chat
 
     def can_flag_chat_messages?
       return false if @user.silenced?
-      return true if @user.staff?
-
       @user.in_any_groups?(SiteSetting.chat_message_flag_allowed_groups_map)
     end
 
@@ -213,7 +215,7 @@ module Chat
     end
 
     def can_edit_chat?(message)
-      (message.user_id == @user.id && !@user.silenced?)
+      (message.user_id == @user.id && !@user.silenced?) || is_admin?
     end
 
     def can_react?

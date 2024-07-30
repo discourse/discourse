@@ -79,20 +79,14 @@ RSpec.describe Wizard::Builder do
       chat_enabled_field = fields.second_to_last if defined?(::Chat)
       navigation_menu_field = fields.last
 
-      count = defined?(::Chat) ? 5 : 4
+      count = defined?(::Chat) ? 4 : 3
       expect(fields.length).to eq(count)
       expect(login_required_field.id).to eq("login_required")
-      expect(login_required_field.value).to eq(true)
+      expect(login_required_field.value).to eq("private")
       expect(invite_only_field.id).to eq("invite_only")
-      expect(invite_only_field.value).to eq(false)
+      expect(invite_only_field.value).to eq("sign_up")
       expect(must_approve_users_field.id).to eq("must_approve_users")
-      expect(must_approve_users_field.value).to eq(true)
-      if defined?(::Chat)
-        expect(chat_enabled_field.id).to eq("chat_enabled")
-        expect(chat_enabled_field.value).to eq(true)
-      end
-      expect(navigation_menu_field.id).to eq("enable_sidebar")
-      expect(navigation_menu_field.value).to eq(true)
+      expect(must_approve_users_field.value).to eq("yes")
     end
   end
 

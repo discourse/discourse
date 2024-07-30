@@ -19,7 +19,7 @@ export function setTextDirections(elem) {
       if (e.tagName === "ASIDE" && e.classList.contains("quote")) {
         setTextDirectionsForQuote(e);
       } else {
-        e.setAttribute("dir", isRTL(e.textContent) ? "rtl" : "ltr");
+        e.setAttribute("dir", "auto");
       }
     }
   }
@@ -43,9 +43,6 @@ function setTextDirectionsForQuote(quoteElem) {
     titleElem.setAttribute("dir", siteDir());
   }
   for (let quoteParagraphElem of quoteElem.querySelectorAll("blockquote > p")) {
-    quoteParagraphElem.setAttribute(
-      "dir",
-      isRTL(quoteParagraphElem.textContent) ? "rtl" : "ltr"
-    );
+    quoteParagraphElem.setAttribute("dir", "auto");
   }
 }

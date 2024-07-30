@@ -1,9 +1,9 @@
 /* eslint-disable ember/no-private-routing-service */
-import { getOwner } from "@ember/application";
 import { A } from "@ember/array";
 import Helper from "@ember/component/helper";
 import { assert, runInDebug } from "@ember/debug";
 import { computed, get } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { join } from "@ember/runloop";
 
 function getCurrentRouteInfos(router) {
@@ -45,14 +45,13 @@ function routeAction(actionName, router, ...params) {
   };
 }
 
-export default Helper.extend({
-  router: computed({
-    get() {
-      return getOwner(this).lookup("router:main");
-    },
-  }),
+export default class RouteAction extends Helper {
+  @computed
+  get router() {
+    return getOwner(this).lookup("router:main");
+  }
 
   compute([actionName, ...params]) {
     return routeAction(actionName, get(this, "router"), ...params);
-  },
-});
+  }
+}

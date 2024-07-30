@@ -1,7 +1,7 @@
 import { cached } from "@glimmer/tracking";
 import ClassicComponent from "@ember/component";
 import { get } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";
 import {
   buildArgsWithDeprecations,
@@ -50,7 +50,6 @@ const ARGS_DEPRECATION_MSG =
 
 export default class PluginOutletComponent extends GlimmerComponentWithDeprecatedParentView {
   @service clientErrorHandler;
-
   context = {
     ...helperContext(),
     get parentView() {
@@ -63,6 +62,8 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
       return get(this, ...arguments);
     },
   };
+
+  #parentView;
 
   constructor() {
     const result = super(...arguments);
@@ -102,8 +103,14 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
     return connectors;
   }
 
-  get connectorsExist() {
-    return connectorsExist(this.args.name);
+  @bind
+  connectorsExist({ hasBlock } = {}) {
+    return (
+      connectorsExist(this.args.name) ||
+      (hasBlock &&
+        (connectorsExist(this.args.name + "__before") ||
+          connectorsExist(this.args.name + "__after")))
+    );
   }
 
   // Traditionally, pluginOutlets had an argument named 'args'. However, that name is reserved
@@ -121,7 +128,8 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
 
     return buildArgsWithDeprecations(
       this.outletArgs,
-      this.args.deprecatedArgs || {}
+      this.args.deprecatedArgs || {},
+      { outletName: this.args.name }
     );
   }
 
@@ -129,10 +137,13 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
     deprecated(`${PARENT_VIEW_DEPRECATION_MSG} (outlet: ${this.args.name})`, {
       id: "discourse.plugin-outlet-parent-view",
     });
-    return this._parentView;
+    return this.#parentView;
   }
   set parentView(value) {
-    this._parentView = value;
+    this.#parentView = value;
+  }
+  get _parentView() {
+    return this.parentView;
   }
 
   // Older plugin outlets have a `tagName` which we need to preserve for backwards-compatibility
@@ -142,16 +153,21 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
 }
 
 class PluginOutletWithTagNameWrapper extends ClassicComponent {
+  #parentView;
+
   // Overridden parentView to make this wrapper 'transparent'
   // Calling this will trigger the deprecation notice in PluginOutletComponent
   get parentView() {
     // init() of CoreView calls `this.parentView`. That would trigger the deprecation notice,
     // so skip it until this component is initialized.
     if (this._state) {
-      return this._parentView.parentView;
+      return this.#parentView.parentView;
     }
   }
   set parentView(value) {
-    this._parentView = value;
+    this.#parentView = value;
+  }
+  get _parentView() {
+    return this.parentView;
   }
 }

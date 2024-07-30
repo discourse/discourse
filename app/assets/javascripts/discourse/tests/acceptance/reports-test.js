@@ -13,17 +13,21 @@ acceptance("Reports", function (needs) {
   test("Visit reports page", async function (assert) {
     await visit("/admin/reports");
 
-    assert.strictEqual(count(".reports-list .report"), 1);
+    assert.strictEqual(count(".admin-reports-list__report"), 1);
 
-    const report = query(".reports-list .report:first-child");
+    const report = query(".admin-reports-list__report:first-child");
 
     assert.strictEqual(
-      report.querySelector(".report-title").innerHTML.trim(),
+      report
+        .querySelector(".admin-reports-list__report-title")
+        .innerHTML.trim(),
       "My report"
     );
 
     assert.strictEqual(
-      report.querySelector(".report-description").innerHTML.trim(),
+      report
+        .querySelector(".admin-reports-list__report-description")
+        .innerHTML.trim(),
       "List of my activities"
     );
   });

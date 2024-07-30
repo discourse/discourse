@@ -38,13 +38,14 @@ module Jobs
     end
 
     def validate_argument!(key)
-      raise Discourse::InvalidParameters.new(key) unless @arguments[key].present?
+      raise Discourse::InvalidParameters.new(key) if @arguments[key].blank?
     end
 
     def send_webhook!
       web_hook_body = build_webhook_body
       web_hook_event = create_webhook_event(web_hook_body)
       uri = URI(@web_hook.payload_url.strip)
+
       web_hook_headers = build_webhook_headers(uri, web_hook_body, web_hook_event)
 
       emitter = WebHookEmitter.new(@web_hook, web_hook_event)

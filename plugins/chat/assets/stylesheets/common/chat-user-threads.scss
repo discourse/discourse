@@ -17,12 +17,29 @@
     }
   }
 
-  .chat__thread-title__name {
-    font-size: var(--font-up-1-rem);
-
-    &:hover {
-      color: var(--primary-very-high);
+  .chat__thread-title {
+    &-container {
+      display: flex;
+      gap: 1rem;
     }
+
+    &__name {
+      font-size: var(--font-up-1-rem);
+      word-break: break-all;
+
+      &:hover {
+        color: var(--primary-very-high);
+      }
+    }
+  }
+
+  .chat-channel-icon {
+    font-size: var(--font-down-1-rem);
+  }
+
+  .chat-channel-name {
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-high);
   }
 
   .chat-channel-title__name {

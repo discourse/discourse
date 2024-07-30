@@ -4,24 +4,28 @@ require "mini_racer"
 
 RSpec.describe JsLocaleHelper do
   let(:v8_ctx) do
-    node_modules = "#{Rails.root}/app/assets/javascripts/node_modules/"
-
+    node_modules = "#{Rails.root}/node_modules/"
     transpiler = DiscourseJsProcessor::Transpiler.new
-    discourse_i18n =
-      transpiler.perform(
-        File.read("#{Rails.root}/app/assets/javascripts/discourse-i18n/src/index.js"),
-        "app/assets/javascripts/discourse",
-        "discourse-i18n",
-      )
-
     ctx = MiniRacer::Context.new
     ctx.load("#{node_modules}/loader.js/dist/loader/loader.js")
     ctx.eval("var window = globalThis;")
-    ctx.eval(discourse_i18n)
+    {
+      "@messageformat/runtime/messages": "#{node_modules}/@messageformat/runtime/esm/messages.js",
+      "@messageformat/runtime": "#{node_modules}/@messageformat/runtime/esm/runtime.js",
+      "@messageformat/runtime/lib/cardinals":
+        "#{node_modules}/@messageformat/runtime/esm/cardinals.js",
+      "make-plural/cardinals": "#{node_modules}/make-plural/cardinals.mjs",
+      "discourse-i18n": "#{Rails.root}/app/assets/javascripts/discourse-i18n/src/index.js",
+    }.each do |module_name, path|
+      ctx.eval(transpiler.perform(File.read(path), "", module_name.to_s))
+    end
     ctx.eval <<~JS
       define("discourse/loader-shims", () => {})
     JS
-    ctx.load("#{Rails.root}/app/assets/javascripts/locales/i18n.js")
+    # As there are circular references in the return value, this raises an
+    # error if we let MiniRacer try to convert the value to JSON. Forcing
+    # returning `null` from `#eval` will prevent that.
+    ctx.eval("#{File.read("#{Rails.root}/app/assets/javascripts/locales/i18n.js")};null")
     ctx
   end
 
@@ -51,116 +55,6 @@ RSpec.describe JsLocaleHelper do
         "admin_js",
         "wizard_js",
       )
-    end
-  end
-
-  describe "message format" do
-    def message_format_filename(locale)
-      Rails.root + "lib/javascripts/locale/#{locale}.js"
-    end
-
-    def setup_message_format(format)
-      filename = message_format_filename("en")
-      compiled = JsLocaleHelper.compile_message_format(filename, "en", format)
-
-      @ctx = MiniRacer::Context.new
-      @ctx.eval("MessageFormat = {locale: {}};")
-      @ctx.load(filename)
-      @ctx.eval("var test = #{compiled}")
-    end
-
-    def localize(opts)
-      @ctx.eval("test(#{opts.to_json})")
-    end
-
-    it "handles plurals" do
-      setup_message_format(
-        "{NUM_RESULTS, plural,
-              one {1 result}
-            other {# results}
-          }",
-      )
-      expect(localize(NUM_RESULTS: 1)).to eq("1 result")
-      expect(localize(NUM_RESULTS: 2)).to eq("2 results")
-    end
-
-    it "handles double plurals" do
-      setup_message_format(
-        "{NUM_RESULTS, plural,
-              one {1 result}
-            other {# results}
-          } and {NUM_APPLES, plural,
-              one {1 apple}
-            other {# apples}
-          }",
-      )
-
-      expect(localize(NUM_RESULTS: 1, NUM_APPLES: 2)).to eq("1 result and 2 apples")
-      expect(localize(NUM_RESULTS: 2, NUM_APPLES: 1)).to eq("2 results and 1 apple")
-    end
-
-    it "handles select" do
-      setup_message_format("{GENDER, select, male {He} female {She} other {They}} read a book")
-      expect(localize(GENDER: "male")).to eq("He read a book")
-      expect(localize(GENDER: "female")).to eq("She read a book")
-      expect(localize(GENDER: "none")).to eq("They read a book")
-    end
-
-    it "can strip out message formats" do
-      hash = { "a" => "b", "c" => { "d" => { "f_MF" => "bob" } } }
-      expect(JsLocaleHelper.strip_out_message_formats!(hash)).to eq("c.d.f_MF" => "bob")
-      expect(hash["c"]["d"]).to eq({})
-    end
-
-    it "handles message format special keys" do
-      JsLocaleHelper.set_translations(
-        "en",
-        "en" => {
-          "js" => {
-            "hello" => "world",
-            "test_MF" => "{HELLO} {COUNT, plural, one {1 duck} other {# ducks}}",
-            "error_MF" => "{{BLA}",
-            "simple_MF" => "{COUNT, plural, one {1} other {#}}",
-          },
-          "admin_js" => {
-            "foo_MF" => "{HELLO} {COUNT, plural, one {1 duck} other {# ducks}}",
-          },
-        },
-      )
-
-      ctx = MiniRacer::Context.new
-      ctx.eval("I18n = { pluralizationRules: {} };")
-      ctx.eval(JsLocaleHelper.output_locale("en"))
-
-      expect(ctx.eval('I18n.translations["en"]["js"]["hello"]')).to eq("world")
-      expect(ctx.eval('I18n.translations["en"]["js"]["test_MF"]')).to eq(nil)
-
-      expect(ctx.eval('I18n.messageFormat("test_MF", { HELLO: "hi", COUNT: 3 })')).to eq(
-        "hi 3 ducks",
-      )
-      expect(ctx.eval('I18n.messageFormat("error_MF", { HELLO: "hi", COUNT: 3 })')).to match(
-        /Invalid Format/,
-      )
-      expect(ctx.eval('I18n.messageFormat("missing", {})')).to match(/missing/)
-      expect(ctx.eval('I18n.messageFormat("simple_MF", {})')).to match(/COUNT/) # error
-      expect(ctx.eval('I18n.messageFormat("foo_MF", { HELLO: "hi", COUNT: 4 })')).to eq(
-        "hi 4 ducks",
-      )
-    end
-
-    it "load pluralization rules before precompile" do
-      message = JsLocaleHelper.compile_message_format(message_format_filename("ru"), "ru", "format")
-      expect(message).not_to match "Plural Function not found"
-    end
-
-    it "uses message formats from fallback locale" do
-      translations = JsLocaleHelper.translations_for(:en_GB)
-      en_gb_message_formats = JsLocaleHelper.remove_message_formats!(translations, :en_GB)
-      expect(en_gb_message_formats).to_not be_empty
-
-      translations = JsLocaleHelper.translations_for(:en)
-      en_message_formats = JsLocaleHelper.remove_message_formats!(translations, :en)
-      expect(en_gb_message_formats).to eq(en_message_formats)
     end
   end
 
@@ -235,34 +129,6 @@ RSpec.describe JsLocaleHelper do
     end
   end
 
-  it "correctly evaluates message formats in en fallback" do
-    JsLocaleHelper.set_translations("en", "en" => { "js" => { "something_MF" => "en mf" } })
-
-    JsLocaleHelper.set_translations("de", "de" => { "js" => { "something_MF" => "de mf" } })
-
-    TranslationOverride.upsert!("en", "js.something_MF", <<~MF.strip)
-      There {
-        UNREAD, plural,
-        =0 {are no}
-        one {is one unread}
-        other {are # unread}
-      }
-    MF
-
-    v8_ctx.eval(JsLocaleHelper.output_locale("de"))
-    v8_ctx.eval(JsLocaleHelper.output_client_overrides("de"))
-    v8_ctx.eval(<<~JS)
-      for (let [key, value] of Object.entries(I18n._mfOverrides || {})) {
-        key = key.replace(/^[a-z_]*js\./, "");
-        I18n._compiledMFs[key] = value;
-      }
-    JS
-
-    expect(v8_ctx.eval("I18n.messageFormat('something_MF', { UNREAD: 1 })")).to eq(
-      "There is one unread",
-    )
-  end
-
   LocaleSiteSetting.values.each do |locale|
     it "generates valid date helpers for #{locale[:value]} locale" do
       js = JsLocaleHelper.output_locale(locale[:value])
@@ -278,33 +144,145 @@ RSpec.describe JsLocaleHelper do
         expect(content).to_not eq("")
       end
     end
+
+    it "generates valid MF locales for the '#{locale[:value]}' locale" do
+      expect(described_class.output_MF(locale[:value])).not_to match(/Failed to compile/)
+    end
   end
 
-  describe ".find_message_format_locale" do
-    it "finds locale's message format rules" do
-      locale, filename =
-        JsLocaleHelper.find_message_format_locale([:de], fallback_to_english: false)
-      expect(locale).to eq("de")
-      expect(filename).to end_with("/de.js")
+  describe ".output_MF" do
+    fab!(:overriden_translation_en) do
+      Fabricate(
+        :translation_override,
+        translation_key: "admin_js.admin.user.penalty_history_MF",
+        value: "OVERRIDEN",
+      )
+    end
+    fab!(:overriden_translation_ja) do
+      Fabricate(:translation_override, locale: "ja", translation_key: "js.posts_likes_MF")
+    end
+    fab!(:overriden_translation_he) do
+      Fabricate(:translation_override, locale: "he", translation_key: "js.posts_likes_MF")
+    end
+    let(:output) { described_class.output_MF(locale).gsub(/^import.*$/, "") }
+    let(:generated_locales) { v8_ctx.eval("Object.keys(I18n._mfMessages._data)") }
+    let(:translated_message) do
+      v8_ctx.eval("I18n._mfMessages.get('posts_likes_MF', {count: 3, ratio: 'med'})")
     end
 
-    it "finds locale for en_GB" do
-      locale, filename =
-        JsLocaleHelper.find_message_format_locale([:en_GB], fallback_to_english: false)
-      expect(locale).to eq("en")
-      expect(filename).to end_with("/en.js")
-
-      locale, filename =
-        JsLocaleHelper.find_message_format_locale(["en_GB"], fallback_to_english: false)
-      expect(locale).to eq("en")
-      expect(filename).to end_with("/en.js")
+    before do
+      overriden_translation_ja.update_columns(
+        value: "{ count, plural, one {返信 # 件、} other {返信 # 件、} }",
+      )
+      overriden_translation_he.update_columns(value: "{ count, plural, ")
+      v8_ctx.eval(output)
     end
 
-    it "falls back to en when locale doesn't have own message format rules" do
-      locale, filename =
-        JsLocaleHelper.find_message_format_locale([:nonexistent], fallback_to_english: true)
-      expect(locale).to eq("en")
-      expect(filename).to end_with("/en.js")
+    context "when locale is 'en'" do
+      let(:locale) { "en" }
+
+      it "generates messages for the 'en' locale only" do
+        expect(generated_locales).to eq %w[en]
+      end
+
+      it "translates messages properly" do
+        expect(
+          translated_message,
+        ).to eq "3 replies, very high like to post ratio, jump to the first or last post…\n"
+      end
+
+      context "when the translation is overriden" do
+        let(:translated_message) do
+          v8_ctx.eval(
+            "I18n._mfMessages.get('admin.user.penalty_history_MF', { SUSPENDED: 3, SILENCED: 2 })",
+          )
+        end
+
+        it "returns the overriden translation" do
+          expect(translated_message).to eq "OVERRIDEN"
+        end
+      end
+    end
+
+    context "when locale is not 'en'" do
+      let(:locale) { "fr" }
+
+      it "generates messages for the current locale and uses 'en' as fallback" do
+        expect(generated_locales).to match(%w[fr en])
+      end
+
+      it "translates messages properly" do
+        expect(
+          translated_message,
+        ).to eq "3 réponses, avec un taux très élevé de « J'aime » par publication, accéder à la première ou dernière publication...\n"
+      end
+
+      context "when a translation is missing" do
+        before { v8_ctx.eval("delete I18n._mfMessages._data.fr.posts_likes_MF") }
+
+        it "returns the fallback translation" do
+          expect(
+            translated_message,
+          ).to eq "3 replies, very high like to post ratio, jump to the first or last post…\n"
+        end
+
+        context "when the fallback translation is overriden" do
+          let(:translated_message) do
+            v8_ctx.eval(
+              "I18n._mfMessages.get('admin.user.penalty_history_MF', { SUSPENDED: 3, SILENCED: 2 })",
+            )
+          end
+
+          before do
+            v8_ctx.eval("delete I18n._mfMessages._data.fr['admin.user.penalty_history_MF']")
+          end
+
+          it "returns the overriden fallback translation" do
+            expect(translated_message).to eq "OVERRIDEN"
+          end
+        end
+      end
+    end
+
+    context "when locale contains invalid plural keys" do
+      let(:locale) { "ja" }
+
+      it "does not raise an error" do
+        expect(generated_locales).to match(%w[ja en])
+      end
+    end
+
+    context "when locale contains malformed messages" do
+      let(:locale) { "he" }
+
+      it "raises an error" do
+        expect(output).to match(/Failed to compile message formats/)
+      end
+    end
+  end
+
+  describe ".output_client_overrides" do
+    subject(:client_overrides) { described_class.output_client_overrides("en") }
+
+    before do
+      Fabricate(
+        :translation_override,
+        locale: "en",
+        translation_key: "js.user.preferences.title",
+        value: "SHOULD_SHOW",
+      )
+      Fabricate(
+        :translation_override,
+        locale: "en",
+        translation_key: "js.user.preferences",
+        value: "SHOULD_NOT_SHOW",
+        status: "deprecated",
+      )
+    end
+
+    it "does not output deprecated translation overrides" do
+      expect(client_overrides).to include("SHOULD_SHOW")
+      expect(client_overrides).not_to include("SHOULD_NOT_SHOW")
     end
   end
 end

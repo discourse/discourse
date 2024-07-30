@@ -6,6 +6,7 @@ RSpec.describe "Chat composer draft", type: :system do
   fab!(:message_1) do
     Fabricate(
       :chat_message,
+      use_service: true,
       chat_channel: channel_1,
       message: "This is a message for draft and replies",
     )
@@ -129,7 +130,7 @@ RSpec.describe "Chat composer draft", type: :system do
         )
       end
 
-      it "loads the draft with replied to mesage" do
+      it "loads the draft with replied to message" do
         chat_page.visit_channel(channel_1)
 
         expect(channel_page.composer.value).to eq("draft")

@@ -2,6 +2,7 @@
 
 require "method_profiler"
 require "middleware/anonymous_cache"
+require "http_user_agent_encoder"
 
 class Middleware::RequestTracker
   @@detailed_request_loggers = nil
@@ -74,9 +75,57 @@ class Middleware::RequestTracker
       elsif data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in)
         ApplicationRequest.increment!(:page_view_logged_in_mobile) if data[:is_mobile]
+
+        if data[:explicit_track_view]
+          # Must be a browser if it had this header from our ajax implementation
+          ApplicationRequest.increment!(:page_view_logged_in_browser)
+          ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
+
+          if data[:topic_id].present? && data[:current_user_id].present?
+            TopicsController.defer_topic_view(
+              data[:topic_id],
+              data[:request_remote_ip],
+              data[:current_user_id],
+            )
+          end
+        end
       elsif !SiteSetting.login_required
         ApplicationRequest.increment!(:page_view_anon)
         ApplicationRequest.increment!(:page_view_anon_mobile) if data[:is_mobile]
+
+        if data[:explicit_track_view]
+          # Must be a browser if it had this header from our ajax implementation
+          ApplicationRequest.increment!(:page_view_anon_browser)
+          ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
+
+          if data[:topic_id].present?
+            TopicsController.defer_topic_view(data[:topic_id], data[:request_remote_ip])
+          end
+        end
+      end
+    end
+
+    # Message-bus requests may include this 'deferred track' header which we use to detect
+    # 'real browser' views.
+    if data[:deferred_track] && !data[:is_crawler]
+      if data[:has_auth_cookie]
+        ApplicationRequest.increment!(:page_view_logged_in_browser)
+        ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
+
+        if data[:topic_id].present? && data[:current_user_id].present?
+          TopicsController.defer_topic_view(
+            data[:topic_id],
+            data[:request_remote_ip],
+            data[:current_user_id],
+          )
+        end
+      elsif !SiteSetting.login_required
+        ApplicationRequest.increment!(:page_view_anon_browser)
+        ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
+
+        if data[:topic_id].present?
+          TopicsController.defer_topic_view(data[:topic_id], data[:request_remote_ip])
+        end
       end
     end
 
@@ -98,19 +147,53 @@ class Middleware::RequestTracker
 
   def self.get_data(env, result, timing, request = nil)
     status, headers = result
+
+    # result may be nil if the downstream app raised an exception
     status = status.to_i
+    headers ||= {}
 
     request ||= Rack::Request.new(env)
     helper = Middleware::AnonymousCache::Helper.new(env, request)
 
+    # Since ActionDispatch::RemoteIp middleware is run before this middleware,
+    # we have access to the normalised remote IP based on ActionDispatch::RemoteIp::GetIp
+    #
+    # NOTE: Locally with MessageBus requests, the remote IP ends up as ::1 because
+    # of the X-Forwarded-For header set...somewhere, whereas all other requests
+    # end up as 127.0.0.1.
+    request_remote_ip = env["action_dispatch.remote_ip"].to_s
+
+    # Value of the discourse-track-view request header, set in `lib/ajax.js`
     env_track_view = env["HTTP_DISCOURSE_TRACK_VIEW"]
-    track_view = status == 200
-    track_view &&= env_track_view != "0" && env_track_view != "false"
-    track_view &&=
-      env_track_view || (request.get? && !request.xhr? && headers["Content-Type"] =~ %r{text/html})
-    track_view = !!track_view
-    has_auth_cookie = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request).present?
-    has_auth_cookie ||= Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env).present?
+
+    # Was the discourse-track-view request header set to true? Likely
+    # set by our ajax library to indicate a page view.
+    explicit_track_view = status == 200 && %w[1 true].include?(env_track_view)
+
+    # An HTML response to a GET request is tracked implicitly
+    implicit_track_view =
+      status == 200 && !%w[0 false].include?(env_track_view) && request.get? && !request.xhr? &&
+        headers["Content-Type"] =~ %r{text/html}
+
+    # This header is sent on a follow-up request after a real browser loads up a page
+    # see `scripts/pageview.js` and `instance-initializers/page-tracking.js`
+    deferred_track_view = %w[1 true].include?(env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW"])
+
+    # This is treated separately from deferred tracking in #log_request, this is
+    # why deferred_track_view is not counted here.
+    track_view = !!(explicit_track_view || implicit_track_view)
+
+    # These are set in the same place as the respective track view headers in the client.
+    topic_id =
+      if deferred_track_view
+        env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_TOPIC_ID"]
+      elsif explicit_track_view || implicit_track_view
+        env["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"]
+      end
+
+    auth_cookie = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request)
+    auth_cookie ||= Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env)
+    has_auth_cookie = auth_cookie.present?
 
     is_api ||= !!env[Auth::DefaultCurrentUserProvider::API_KEY_ENV]
     is_user_api ||= !!env[Auth::DefaultCurrentUserProvider::USER_API_KEY_ENV]
@@ -118,10 +201,31 @@ class Middleware::RequestTracker
     is_message_bus = request.path.start_with?("#{Discourse.base_path}/message-bus/")
     is_topic_timings = request.path.start_with?("#{Discourse.base_path}/topics/timings")
 
+    # Auth cookie can be used to find the ID for logged in users, but API calls must look up the
+    # current user based on env variables.
+    #
+    # We only care about this for topic views, other pageviews it's enough to know if the user is
+    # logged in or not, and we have separate pageview tracking for API views.
+    current_user_id =
+      if topic_id.present?
+        begin
+          (auth_cookie&.[](:user_id) || CurrentUser.lookup_from_env(env)&.id)
+        rescue Discourse::InvalidAccess => err
+          # This error is raised when the API key is invalid, no need to stop the show.
+          Discourse.warn_exception(
+            err,
+            message: "RequestTracker.get_data failed with an invalid API key error",
+          )
+          nil
+        end
+      end
+
     h = {
       status: status,
       is_crawler: helper.is_crawler?,
       has_auth_cookie: has_auth_cookie,
+      current_user_id: current_user_id,
+      topic_id: topic_id,
       is_api: is_api,
       is_user_api: is_user_api,
       is_background: is_message_bus || is_topic_timings,
@@ -129,6 +233,9 @@ class Middleware::RequestTracker
       track_view: track_view,
       timing: timing,
       queue_seconds: env["REQUEST_QUEUE_SECONDS"],
+      explicit_track_view: explicit_track_view,
+      deferred_track: deferred_track_view,
+      request_remote_ip: request_remote_ip,
     }
 
     if h[:is_background]
@@ -147,10 +254,7 @@ class Middleware::RequestTracker
 
     if h[:is_crawler]
       user_agent = env["HTTP_USER_AGENT"]
-      if user_agent && (user_agent.encoding != Encoding::UTF_8)
-        user_agent = user_agent.encode("utf-8")
-        user_agent.scrub!
-      end
+      user_agent = HttpUserAgentEncoder.ensure_utf8(user_agent) if user_agent
       h[:user_agent] = user_agent
     end
 
@@ -162,11 +266,16 @@ class Middleware::RequestTracker
   end
 
   def log_request_info(env, result, info, request = nil)
-    # we got to skip this on error ... its just logging
+    # We've got to skip this on error ... its just logging
     data =
       begin
         self.class.get_data(env, result, info, request)
-      rescue StandardError
+      rescue StandardError => err
+        Discourse.warn_exception(err, message: "RequestTracker.get_data failed")
+
+        # This is super hard to find if in testing, we should still raise in this case.
+        raise err if Rails.env.test?
+
         nil
       end
 
@@ -218,6 +327,7 @@ class Middleware::RequestTracker
         Error code: #{error_code}.
       TEXT
       headers = {
+        "Content-Type" => "text/plain",
         "Retry-After" => available_in.to_s,
         "Discourse-Rate-Limit-Error-Code" => error_code,
       }
@@ -226,6 +336,20 @@ class Middleware::RequestTracker
       end
       return 429, headers, [message]
     end
+
+    if !cookie
+      if error_details = check_crawler_limits(env)
+        available_in, error_code = error_details
+        message = "Too many crawling requests. Error code: #{error_code}."
+        headers = {
+          "Content-Type" => "text/plain",
+          "Retry-After" => available_in.to_s,
+          "Discourse-Rate-Limit-Error-Code" => error_code,
+        }
+        return 429, headers, [message]
+      end
+    end
+
     env["discourse.request_tracker"] = self
 
     MethodProfiler.start
@@ -401,5 +525,31 @@ class Middleware::RequestTracker
         nil
       end
     end
+  end
+
+  def check_crawler_limits(env)
+    slow_down_agents = SiteSetting.slow_down_crawler_user_agents
+    return if slow_down_agents.blank?
+
+    user_agent = HttpUserAgentEncoder.ensure_utf8(env["HTTP_USER_AGENT"])&.downcase
+    return if user_agent.blank?
+
+    return if !CrawlerDetection.crawler?(user_agent)
+
+    slow_down_agents
+      .downcase
+      .split("|")
+      .each do |crawler|
+        if user_agent.include?(crawler)
+          key = "#{crawler}_crawler_rate_limit"
+          limiter =
+            RateLimiter.new(nil, key, 1, SiteSetting.slow_down_crawler_rate, error_code: key)
+          limiter.performed!
+          break
+        end
+      end
+    nil
+  rescue RateLimiter::LimitExceeded => e
+    [e.available_in, e.error_code]
   end
 end

@@ -275,6 +275,28 @@ RSpec.describe EmailSettingsValidator do
       }.to raise_error(ArgumentError)
     end
 
+    it "corrects authentication method to login for office365" do
+      net_smtp_stub.expects(:start).with("office365.com", username, password, :login)
+      described_class.validate_smtp(
+        host: "smtp.office365.com",
+        port: port,
+        username: username,
+        password: password,
+        domain: "office365.com",
+      )
+    end
+
+    it "corrects authentication method to login for outlook" do
+      net_smtp_stub.expects(:start).with("outlook.com", username, password, :login)
+      described_class.validate_smtp(
+        host: "smtp-mail.outlook.com",
+        port: port,
+        username: username,
+        password: password,
+        domain: "outlook.com",
+      )
+    end
+
     context "when the domain is not provided" do
       let(:domain) { nil }
       it "gets the domain from the host" do

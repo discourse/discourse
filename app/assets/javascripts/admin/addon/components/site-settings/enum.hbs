@@ -1,7 +1,7 @@
 <ComboBox
   @content={{this.setting.validValues}}
   @value={{this.value}}
-  @onChange={{action (mut this.value)}}
+  @onChange={{fn (mut this.value)}}
   @valueProperty={{this.setting.computedValueProperty}}
   @nameProperty={{this.setting.computedNameProperty}}
   @options={{hash castInteger=true allowAny=this.setting.allowsNone}}
@@ -10,7 +10,4 @@
 {{this.preview}}
 
 <SettingValidationMessage @message={{this.validationMessage}} />
-
-<div class="desc">
-  {{html-safe this.setting.description}}
-</div>
+<SiteSettings::Description @description={{this.setting.description}} />

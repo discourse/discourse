@@ -13,12 +13,16 @@ class Admin::ApiController < Admin::AdminController
     keys =
       ApiKey
         .where(hidden: false)
-        .includes(:user, :api_key_scopes)
+        .includes(:user)
         .order("revoked_at DESC NULLS FIRST, created_at DESC")
         .offset(offset)
         .limit(limit)
 
-    render_json_dump(keys: serialize_data(keys, ApiKeySerializer), offset: offset, limit: limit)
+    render_json_dump(
+      keys: serialize_data(keys, BasicApiKeySerializer),
+      offset: offset,
+      limit: limit,
+    )
   end
 
   def show

@@ -70,6 +70,13 @@ export default MultiSelectComponent.extend(TagsMixin, {
   }),
 
   search(filter) {
+    const maximum = this.selectKit.options.maximum;
+    if (maximum === 0) {
+      const key = "select_kit.max_content_reached";
+      this.addError(I18n.t(key, { count: maximum }));
+      return [];
+    }
+
     const data = {
       q: filter || "",
       limit: this.maxTagSearchResults,

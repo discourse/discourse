@@ -4,7 +4,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
-export default DiscourseRoute.extend({
+export default class UserPrivateMessagesTagsIndex extends DiscourseRoute {
   model() {
     const username = this.modelFor("user").get("username_lower");
 
@@ -13,11 +13,11 @@ export default DiscourseRoute.extend({
         return result.tags.map((tag) => EmberObject.create(tag));
       })
       .catch(popupAjaxError);
-  },
+  }
 
   titleToken() {
     return [I18n.t("tagging.tags"), I18n.t("user.private_messages")];
-  },
+  }
 
   setupController(controller, model) {
     controller.setProperties({
@@ -32,5 +32,5 @@ export default DiscourseRoute.extend({
       showToggleBulkSelect: false,
     });
     this.controllerFor("user-topics-list").bulkSelectHelper.clear();
-  },
-});
+  }
+}

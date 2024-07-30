@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import $ from "jquery";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import SwipeEvents from "discourse/lib/swipe-events";
@@ -83,7 +83,6 @@ export default Component.extend({
           !$parents.is(".widget-button") &&
           !$parents.is("#discourse-modal") &&
           !$target.is("#discourse-modal") &&
-          !$parents.is(".modal-footer") &&
           ($target.is(".topic-timeline") ||
             !$parents.is("#topic-progress-wrapper")) &&
           !$parents.is(".timeline-open-jump-to-post-prompt-btn") &&

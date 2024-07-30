@@ -72,7 +72,11 @@ RSpec.describe SpamRule::AutoSilence do
     end
 
     it "returns 0 when there is one flag that has a reason other than spam" do
-      Fabricate(:flag, post: post, post_action_type_id: PostActionType.types[:off_topic])
+      Fabricate(
+        :flag_post_action,
+        post: post,
+        post_action_type_id: PostActionType.types[:off_topic],
+      )
       expect(count).to eq(0)
     end
 

@@ -2,9 +2,18 @@
   {{#if this.embedding.embeddable_hosts}}
     <table class="embedding grid">
       <thead>
-        <th style="width: 30%">{{i18n "admin.embedding.host"}}</th>
-        <th style="width: 30%">{{i18n "admin.embedding.allowed_paths"}}</th>
-        <th style="width: 30%">{{i18n "admin.embedding.category"}}</th>
+        <th style="width: 18%">{{i18n "admin.embedding.host"}}</th>
+        <th style="width: 18%">{{i18n "admin.embedding.allowed_paths"}}</th>
+        <th style="width: 18%">{{i18n "admin.embedding.category"}}</th>
+        <th style="width: 18%">{{i18n "admin.embedding.tags"}}</th>
+        {{#if this.embedding.embed_by_username}}
+          <th style="width: 18%">{{i18n
+              "admin.embedding.post_author"
+              author=this.embedding.embed_by_username
+            }}</th>
+        {{else}}
+          <th style="width: 18%">{{i18n "admin.embedding.post_author"}}</th>
+        {{/if}}
         <th style="width: 10%">&nbsp;</th>
       </thead>
       <tbody>

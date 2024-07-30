@@ -26,3 +26,8 @@ ro:
       bookmark:
         instructions: |-
           Dacă vrei să afli mai multe, selectează <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> de mai jos şi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marchează ca semn de carte acest mesaj**. Dacă o faci, ar putea fi un :gift: în viitor!
+      search:
+        instructions: |-
+          _psst_ … Am ascuns o surpriză în acest subiect. Dacă ești gata pentru o provocare, **selectează pictograma de căutare** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> din dreapta sus &#8599;, alege „în acest subiect”, apoi caută.
+
+          Încearcă să cauți termenul „capy&#8203;bara” în acest subiect

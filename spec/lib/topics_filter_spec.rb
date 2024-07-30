@@ -212,6 +212,43 @@ RSpec.describe TopicsFilter do
       end
     end
 
+    describe "when filtering with custom filters" do
+      fab!(:topic)
+      fab!(:word_count_topic) { Fabricate(:topic, word_count: 42) }
+      fab!(:word_count_topic_2) { Fabricate(:topic, word_count: 42) }
+
+      let(:word_count_block) { Proc.new { |scope, value| scope.where(word_count: value) } }
+      let(:id_block) { Proc.new { |scope, value| scope.where(id: value) } }
+      let(:plugin) { Plugin::Instance.new }
+
+      it "supports a custom filter" do
+        plugin.add_filter_custom_filter("word_count", &word_count_block)
+
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("word_count:42")
+            .pluck(:id),
+        ).to contain_exactly(word_count_topic.id, word_count_topic_2.id)
+      ensure
+        DiscoursePluginRegistry.reset_register!(:custom_filter_mappings)
+      end
+
+      it "supports multiple custom filters" do
+        plugin.add_filter_custom_filter("word_count", &word_count_block)
+        plugin.add_filter_custom_filter("id", &id_block)
+
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("word_count:42 id:#{word_count_topic.id}")
+            .pluck(:id),
+        ).to contain_exactly(word_count_topic.id)
+      ensure
+        DiscoursePluginRegistry.reset_register!(:custom_filter_mappings)
+      end
+    end
+
     describe "when filtering by categories" do
       fab!(:category) { Fabricate(:category, name: "category") }
 
@@ -617,6 +654,20 @@ RSpec.describe TopicsFilter do
       fab!(:closed_topic) { Fabricate(:topic, closed: true) }
       fab!(:archived_topic) { Fabricate(:topic, archived: true) }
       fab!(:deleted_topic_id) { Fabricate(:topic, deleted_at: Time.zone.now).id }
+      fab!(:foobar_topic) { Fabricate(:topic, closed: true, word_count: 42) }
+
+      after { TopicsFilter.custom_status_filters.clear }
+
+      it "supports custom status filters" do
+        TopicsFilter.add_filter_by_status("foobar") { |scope| scope.where("word_count = 42") }
+
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("status:foobar")
+            .pluck(:id),
+        ).to contain_exactly(foobar_topic.id)
+      end
 
       it "should only return topics that have not been closed or archived when query string is `status:open`" do
         expect(
@@ -642,7 +693,7 @@ RSpec.describe TopicsFilter do
             .new(guardian: Guardian.new)
             .filter_from_query_string("status:deleted")
             .pluck(:id),
-        ).to contain_exactly(topic.id, closed_topic.id, archived_topic.id)
+        ).to contain_exactly(topic.id, closed_topic.id, archived_topic.id, foobar_topic.id)
       end
 
       it "should only return topics that have been archived when query string is `status:archived`" do
@@ -913,8 +964,86 @@ RSpec.describe TopicsFilter do
           ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
         end
       end
+
+      describe "when query string is `tags:tag_name`" do
+        before { tag.update!(name: "tag_with_underscore") }
+        it "should return topics even when tag contains underscore" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:#{tag.name}")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
+        end
+      end
     end
 
+    describe "when filtering by tag_groups" do
+      fab!(:tag) { Fabricate(:tag, name: "tag1") }
+      fab!(:tag2) { Fabricate(:tag, name: "tag2") }
+      fab!(:tag3) { Fabricate(:tag, name: "tag3") }
+
+      fab!(:topic_without_tag) { Fabricate(:topic) }
+      fab!(:topic_with_tag) { Fabricate(:topic, tags: [tag]) }
+      fab!(:topic_with_tag_and_tag2) { Fabricate(:topic, tags: [tag, tag2]) }
+      fab!(:topic_with_tag2) { Fabricate(:topic, tags: [tag2]) }
+
+      fab!(:tag_group) { Fabricate(:tag_group, tag_names: [tag.name, tag2.name]) }
+      fab!(:topic_with_tag3) { Fabricate(:topic, tags: [tag3]) }
+
+      fab!(:staff_only_tag) { Fabricate(:tag, name: "group-only-tag") }
+      fab!(:group)
+      let!(:staff_tag_group) do
+        Fabricate(
+          :tag_group,
+          permissions: {
+            group.name => TagGroupPermission.permission_types[:full],
+          },
+          name: "staff-only-tag-group",
+          tag_names: [staff_only_tag.name],
+        )
+      end
+
+      fab!(:topic_with_staff_only_tag) { Fabricate(:topic, tags: [staff_only_tag]) }
+
+      it "should only return topics that are tagged with any of the specified tag_group when query string is tag_group:tag_group_name" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("tag_group:#{tag_group.name}")
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id, topic_with_tag2.id)
+      end
+
+      it "should only return topics that are not excluded by the specified tag_group when query string is -tag_group:tag_group_name" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-tag_group:#{tag_group.name}")
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag3.id, topic_without_tag.id, topic_with_staff_only_tag.id)
+      end
+
+      it "should return the right topics when query string is `tag_group:staff_tag_group` and user has access to specified tag" do
+        group.add(admin)
+
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new(admin))
+            .filter_from_query_string("tag_group:#{staff_tag_group.name}")
+            .pluck(:id),
+        ).to contain_exactly(topic_with_staff_only_tag.id)
+      end
+
+      it "should not return any topics when query string is `tag_group:staff_tag_group` because specified tag is hidden to user" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("tag_group:#{staff_tag_group.name}")
+            .pluck(:id),
+        ).to eq([])
+      end
+    end
     describe "when filtering by topic author" do
       fab!(:user2) { Fabricate(:user, username: "username2") }
       fab!(:topic_by_user) { Fabricate(:topic, user: user) }

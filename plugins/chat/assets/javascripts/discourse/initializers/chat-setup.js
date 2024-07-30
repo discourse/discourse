@@ -6,6 +6,7 @@ import I18n from "discourse-i18n";
 import { MENTION_KEYWORDS } from "discourse/plugins/chat/discourse/components/chat-message";
 import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
+import ChatHeaderIcon from "../components/chat/header/icon";
 import chatStyleguide from "../components/styleguide/organisms/chat";
 
 let _lastForcedRefreshAt;
@@ -96,28 +97,6 @@ export default {
         },
       });
 
-      const summarizationAllowedGroups =
-        this.siteSettings.custom_summarization_allowed_groups
-          .split("|")
-          .map((id) => parseInt(id, 10));
-
-      const canSummarize =
-        this.siteSettings.summarization_strategy &&
-        this.currentUser &&
-        this.currentUser.groups.some((g) =>
-          summarizationAllowedGroups.includes(g.id)
-        );
-
-      if (canSummarize) {
-        api.registerChatComposerButton({
-          translatedLabel: "chat.summarization.title",
-          id: "channel-summary",
-          icon: "discourse-sparkles",
-          position: "dropdown",
-          action: "showChannelSummaryModal",
-        });
-      }
-
       // we want to decorate the chat quote dates regardless
       // of whether the current user has chat enabled
       api.decorateCookedElement((elem) => {
@@ -154,13 +133,7 @@ export default {
 
       document.body.classList.add("chat-enabled");
 
-      const currentUser = api.getCurrentUser();
-
-      // NOTE: chat_channels is more than a simple array, it also contains
-      // tracking and membership data, see Chat::StructuredChannelSerializer
-      if (currentUser?.chat_channels) {
-        this.chatService.setupWithPreloadedChannels(currentUser.chat_channels);
-      }
+      this.chatService.loadChannels();
 
       const chatNotificationManager = container.lookup(
         "service:chat-notification-manager"
@@ -174,7 +147,9 @@ export default {
 
       api.addCardClickListenerSelector(".chat-drawer-outlet");
 
-      api.addToHeaderIcons("chat-header-icon");
+      if (this.chatService.userCanChat) {
+        api.headerIcons.add("chat", ChatHeaderIcon);
+      }
 
       api.addStyleguideSection?.({
         component: chatStyleguide,

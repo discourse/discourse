@@ -46,6 +46,7 @@ class SearchController < ApplicationController
 
     search_args[:search_type] = :full_page
     search_args[:ip_address] = request.remote_ip
+    search_args[:user_agent] = request.user_agent
     search_args[:user_id] = current_user.id if current_user.present?
 
     if rate_limit_search
@@ -99,6 +100,7 @@ class SearchController < ApplicationController
 
     search_args[:search_type] = :header
     search_args[:ip_address] = request.remote_ip
+    search_args[:user_agent] = request.user_agent
     search_args[:user_id] = current_user.id if current_user.present?
     search_args[:restrict_to_archetype] = params[:restrict_to_archetype] if params[
       :restrict_to_archetype
@@ -220,7 +222,7 @@ class SearchController < ApplicationController
     end
 
     if search_context.present?
-      unless SearchController.valid_context_types.include?(search_context[:type])
+      if SearchController.valid_context_types.exclude?(search_context[:type])
         raise Discourse::InvalidParameters.new(:search_context)
       end
       raise Discourse::InvalidParameters.new(:search_context) if search_context[:id].blank?

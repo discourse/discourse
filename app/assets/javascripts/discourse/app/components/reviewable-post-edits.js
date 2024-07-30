@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { gt } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import HistoryModal from "discourse/components/modal/history";
 import { longDate } from "discourse/lib/formatter";
 import { historyHeat } from "discourse/widgets/post-edits-indicator";

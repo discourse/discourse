@@ -2,6 +2,7 @@
 
 class SidebarSection < ActiveRecord::Base
   MAX_TITLE_LENGTH = 30
+  MAX_USER_CATEGORY_LINKS = 100
 
   belongs_to :user
   has_many :sidebar_section_links, -> { order("position") }, dependent: :destroy

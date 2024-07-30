@@ -615,7 +615,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
             it "should not trigger the bot" do
               post.update!(
                 raw:
-                  "`@discobot #{I18n.t("discourse_narrative_bot.track_selector.reset_trigger")} #{I18n.t(DiscourseNarrativeBot::NewUserNarrative.reset_trigger)}`",
+                  "`@discobot #{I18n.t("discourse_narrative_bot.track_selector.reset_trigger")} #{DiscourseNarrativeBot::NewUserNarrative.reset_trigger}`",
               )
 
               expect { described_class.new(:reply, user, post_id: post.id).select }.to_not change {
@@ -750,7 +750,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
                   user: Fabricate(:user),
                   topic: topic,
                   raw:
-                    "@discobot #{I18n.t("discourse_narrative_bot.track_selector.reset_trigger")} #{I18n.t(DiscourseNarrativeBot::NewUserNarrative.reset_trigger)}",
+                    "@discobot #{I18n.t("discourse_narrative_bot.track_selector.reset_trigger")} #{DiscourseNarrativeBot::NewUserNarrative.reset_trigger}",
                 )
 
               user

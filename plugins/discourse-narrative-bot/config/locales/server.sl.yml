@@ -278,10 +278,6 @@ sl:
         not_found: |-
           Oh ne, moja grda objava še vedno ni bila označena kot neprimerna. :worried: Ali jo lahko označite kot neprimerno z uporabo **zastavice** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Ne pozabite uporabiti gumba <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> , ki razkrije več dejanj za vsako objavo.
       search:
-        instructions: |-
-          _psst_ … V to temo sem skril presenečenje. Če ste pripravljeni sprejeti ta izziv, **izberite išči ikono** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> zgoraj desno &#8599; za iskanje.
-
-          Poskusite poiskati "capy&#8203;bara" v tej temi.
         hidden_message: |-
           Kako ste lahko zgrešili to kapibaro? :wink:
 

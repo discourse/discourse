@@ -3,7 +3,7 @@ import EmberObject from "@ember/object";
 import { or } from "@ember/object/computed";
 import Mixin from "@ember/object/mixin";
 import { run } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import AwsS3 from "@uppy/aws-s3";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";

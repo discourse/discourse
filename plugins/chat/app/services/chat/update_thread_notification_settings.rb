@@ -45,19 +45,19 @@ module Chat
 
     private
 
-    def fetch_thread(contract:, **)
+    def fetch_thread(contract:)
       Chat::Thread.find_by(id: contract.thread_id, channel_id: contract.channel_id)
     end
 
-    def can_view_channel(guardian:, thread:, **)
+    def can_view_channel(guardian:, thread:)
       guardian.can_preview_chat_channel?(thread.channel)
     end
 
-    def threading_enabled_for_channel(thread:, **)
+    def threading_enabled_for_channel(thread:)
       thread.channel.threading_enabled
     end
 
-    def create_or_update_membership(thread:, guardian:, contract:, **)
+    def create_or_update_membership(thread:, guardian:, contract:)
       membership = thread.membership_for(guardian.user)
       if !membership
         membership = thread.add(guardian.user)

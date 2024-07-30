@@ -41,6 +41,12 @@ module SiteSettings::DeprecatedSettings
     ["min_trust_to_post_links", "post_links_allowed_groups", false, "3.3"],
     ["min_trust_level_for_user_api_key", "user_api_key_allowed_groups", false, "3.3"],
     ["min_trust_level_to_tag_topics", "tag_topic_allowed_groups", false, "3.3"],
+    [
+      "min_trust_level_to_allow_profile_background",
+      "profile_background_allowed_groups",
+      false,
+      "3.3",
+    ],
   ]
 
   OVERRIDE_TL_GROUP_SETTINGS = %w[
@@ -66,6 +72,7 @@ module SiteSettings::DeprecatedSettings
     min_trust_to_post_links
     min_trust_level_for_user_api_key
     min_trust_level_to_tag_topics
+    min_trust_level_to_allow_profile_background
   ]
 
   def group_to_tl(old_setting, new_setting)

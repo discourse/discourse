@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -8,7 +8,7 @@ import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import ChatMessageInteractor, {
   resetRemovedChatComposerSecondaryActions,
 } from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Chat | Unit | Utility | plugin-api", function (hooks) {
   setupTest(hooks);
@@ -40,7 +40,7 @@ module("Chat | Unit | Utility | plugin-api", function (hooks) {
         instantiate: false,
       });
 
-      const message = fabricators.message({
+      const message = new ChatFabricators(getOwner(this)).message({
         user: currentUser,
       });
       const context = "channel";

@@ -1,5 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 
 export default Controller.extend({
   router: service(),

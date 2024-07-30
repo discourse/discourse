@@ -1,10 +1,12 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   acceptance,
   exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 acceptance("Topic - Admin Menu Anonymous Users", function () {
   test("Enter as a regular user", async function (assert) {
@@ -44,16 +46,34 @@ acceptance("Topic - Admin Menu", function (needs) {
     );
   });
 
-  test("Toggle the menu as admin focuses the first item", async function (assert) {
+  test("Button added using addTopicAdminMenuButton", async function (assert) {
     updateCurrentUser({ admin: true });
+    this.set("actionCalled", false);
+
+    withPluginApi("1.31.0", (api) => {
+      api.addTopicAdminMenuButton(() => {
+        return {
+          className: "extra-button",
+          icon: "heart",
+          label: "yes_value",
+          action: () => {
+            this.set("actionCalled", true);
+          },
+        };
+      });
+    });
 
     await visit("/t/internationalization-localization/280");
     assert.ok(exists("#topic"), "The topic was rendered");
     await click(".toggle-admin-menu");
-
-    assert.strictEqual(
-      document.activeElement,
-      document.querySelector(".topic-admin-multi-select > button")
+    assert.ok(
+      exists(".extra-button svg.d-icon-heart"),
+      "The icon was rendered"
     );
+    assert
+      .dom(".extra-button .d-button-label")
+      .hasText(I18n.t("yes_value"), "The label was rendered");
+    await click(".extra-button");
+    assert.ok(this.actionCalled, "The action was called");
   });
 });

@@ -4,17 +4,14 @@
       padding-bottom: 0.5em;
     }
   }
-  input[type="text"] {
-    margin: 0;
-    max-width: 2.5em;
-    padding: 0.35em;
-    text-align: center;
 
-    @include breakpoint(mobile-extra-large) {
-      width: 2em;
-    }
+  input[type="number"] {
+    margin: 0;
+    max-width: 4em;
   }
+
   table {
+    width: 100%;
     padding-bottom: 150px;
     margin: 0 0.667em;
     td {
@@ -25,16 +22,22 @@
       }
     }
   }
+
   .badge-category__wrapper .badge-category {
     max-width: 20em;
     @include breakpoint(mobile-extra-large) {
       max-width: 30vw;
     }
   }
+
+  &__header-position {
+    text-align: right;
+  }
 }
 
 .reorder-categories-actions {
   display: flex;
+  justify-content: end;
   gap: 0.5rem;
 }
 

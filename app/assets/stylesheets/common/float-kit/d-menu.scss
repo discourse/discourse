@@ -56,7 +56,6 @@
   }
 
   .arrow {
-    z-index: z("max");
     position: absolute;
     color: var(--secondary);
   }
@@ -70,7 +69,7 @@
 
   &[data-placement^="bottom"] {
     .arrow {
-      top: -9px;
+      top: -10px;
     }
   }
 

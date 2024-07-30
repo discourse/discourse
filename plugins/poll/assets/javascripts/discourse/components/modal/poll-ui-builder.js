@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import { gt, or } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
@@ -12,6 +12,7 @@ export const PIE_CHART_TYPE = "pie";
 export const REGULAR_POLL_TYPE = "regular";
 export const NUMBER_POLL_TYPE = "number";
 export const MULTIPLE_POLL_TYPE = "multiple";
+export const RANKED_CHOICE_POLL_TYPE = "ranked_choice";
 
 const ALWAYS_POLL_RESULT = "always";
 const VOTE_POLL_RESULT = "on_vote";
@@ -36,7 +37,10 @@ export default class PollUiBuilderModal extends Component {
   publicPoll = this.siteSettings.poll_default_public;
 
   @or("showAdvanced", "isNumber") showNumber;
+  @or("showAdvanced", "isRankedChoice") showRankedChoice;
   @gt("pollOptions.length", 1) canRemoveOption;
+  @or("isRankedChoice", "isRegular") rankedChoiceOrRegular;
+  @or("isRankedChoice", "isNumber") rankedChoiceOrNumber;
 
   @discourseComputed("currentUser.staff")
   pollResults(staff) {
@@ -78,6 +82,11 @@ export default class PollUiBuilderModal extends Component {
   @discourseComputed("pollType")
   isMultiple(pollType) {
     return pollType === MULTIPLE_POLL_TYPE;
+  }
+
+  @discourseComputed("pollType")
+  isRankedChoice(pollType) {
+    return pollType === RANKED_CHOICE_POLL_TYPE;
   }
 
   @discourseComputed("pollOptions.@each.value")

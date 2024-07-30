@@ -50,6 +50,7 @@ nb_NO:
       browse:
         back: "Forrige"
         filter_all: Alle
+        filter_open: Åpne
         filter_closed: Lukket
       chat_message_separator:
         today: I dag

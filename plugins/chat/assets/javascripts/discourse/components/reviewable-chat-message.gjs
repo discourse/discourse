@@ -2,12 +2,12 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { or } from "truth-helpers";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
-import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
-import or from "truth-helpers/helpers/or";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
@@ -40,10 +40,7 @@ export default class ReviewableChatMessage extends Component {
     {{/if}}
 
     <div class="post-contents-wrapper">
-      <ReviewableCreatedBy
-        @user={{@reviewable.target_created_by}}
-        @tagName=""
-      />
+      <ReviewableCreatedBy @user={{@reviewable.target_created_by}} />
       <div class="post-contents">
         <ReviewablePostHeader
           @reviewable={{@reviewable}}

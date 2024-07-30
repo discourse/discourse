@@ -198,7 +198,7 @@ RSpec.describe RemoteTheme do
       expect(mapped.length).to eq(12)
 
       expect(theme.settings.length).to eq(1)
-      expect(theme.settings.first.value).to eq(true)
+      expect(theme.settings[:boolean_setting].value).to eq(true)
 
       expect(remote.remote_updated_at).to eq_time(time)
 
@@ -247,7 +247,7 @@ RSpec.describe RemoteTheme do
       expect(mapped["1-scss"]).to eq(scss_data)
 
       expect(theme.settings.length).to eq(1)
-      expect(theme.settings.first.value).to eq(32)
+      expect(theme.settings[:integer_setting].value).to eq(32)
 
       expect(remote.remote_updated_at).to eq_time(time)
       expect(remote.about_url).to eq("https://newsite.com/about")

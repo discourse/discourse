@@ -1,6 +1,7 @@
 <Discovery::Layout @model={{this.model}}>
   <:navigation>
     <Discovery::Navigation
+      @category={{this.model.parentCategory}}
       @showCategoryAdmin={{this.model.can_create_category}}
       @canCreateTopic={{this.model.can_create_topic}}
       @createTopic={{this.createTopic}}

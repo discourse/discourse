@@ -35,8 +35,6 @@ vi:
       flag: "Gắn cờ"
       join: "Tham gia"
       last_visit: "lần thăm cuối"
-      summarization:
-        summarize: "Tóm tắt"
       mention_warning:
         groups:
           header:
@@ -58,6 +56,7 @@ vi:
       browse:
         back: "Quay lại"
         filter_all: All
+        filter_open: Mở
         filter_closed: Đã
       chat_message_separator:
         today: Hôm nay

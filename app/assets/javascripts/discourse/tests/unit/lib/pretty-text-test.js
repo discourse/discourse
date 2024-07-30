@@ -678,6 +678,15 @@ eviltrout</p>
     );
   });
 
+  test("Heading anchors with post id", function (assert) {
+    assert.cookedOptions(
+      "# 1\n\n# one",
+      { postId: 1234 },
+      '<h1><a name="p-1234-h-1-1" class="anchor" href="#p-1234-h-1-1"></a>1</h1>\n' +
+        '<h1><a name="p-1234-one-2" class="anchor" href="#p-1234-one-2"></a>one</h1>'
+    );
+  });
+
   test("bold and italics", function (assert) {
     assert.cooked(
       'a "**hello**"',
@@ -1223,6 +1232,11 @@ eviltrout</p>
       "[code]\n   s\n[/code]",
       '<pre><code class="lang-auto">   s</code></pre>',
       "it doesn't trim leading whitespace"
+    );
+    assert.cooked(
+      "> [code]\n> line 1\n> line 2\n> line 3\n> [/code]",
+      '<blockquote>\n<pre><code class="lang-auto">line 1\nline 2\nline 3</code></pre>\n</blockquote>',
+      "supports quoting a whole [code] block"
     );
   });
 

@@ -1,4 +1,4 @@
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import {
   DOCUMENT_ELEMENT_LIGHTBOX_OPEN_CLASS,

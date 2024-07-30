@@ -9,8 +9,8 @@ module Chat
         .where(user_options: { chat_enabled: true })
         .where(
           "username IN (?) OR (groups.name IN (?) AND group_users.user_id IS NOT NULL)",
-          usernames,
-          groups,
+          usernames&.map(&:to_s),
+          groups&.map(&:to_s),
         )
         .where.not(id: excluded_user_ids)
         .distinct

@@ -86,6 +86,10 @@ class RegisteredBookmarkable
     bookmarkable_klass.can_see?(guardian, bookmark)
   end
 
+  def can_see_bookmarkable?(guardian, bookmarkable)
+    bookmarkable_klass.can_see_bookmarkable?(guardian, bookmarkable)
+  end
+
   def bookmark_metadata(bookmark, user)
     bookmarkable_klass.bookmark_metadata(bookmark, user)
   end

@@ -16,7 +16,7 @@
         @name="reason"
         @content={{this.configuredReasons}}
         @value={{this.reason}}
-        @onChange={{action (mut this.reason)}}
+        @onChange={{fn (mut this.reason)}}
         class="revise-and-reject-reviewable__reason"
       />
     </div>
@@ -46,7 +46,7 @@
       <DTextarea
         @name="feedback"
         @value={{this.feedback}}
-        @onChange={{action (mut this.feedback)}}
+        @onChange={{fn (mut this.feedback)}}
         class="revise-and-reject-reviewable__feedback"
       />
     </div>

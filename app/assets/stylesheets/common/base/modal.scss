@@ -38,9 +38,19 @@
     padding: 0.5rem 0.5rem 0.5rem 1.5rem; //offset for close button padding
     border-bottom: 1px solid var(--primary-low);
 
-    .modal-close .d-icon {
-      font-size: var(--font-up-2);
-      color: var(--primary-high);
+    .modal-close {
+      margin-left: auto;
+      .d-icon {
+        font-size: var(--font-up-2);
+        color: var(--primary-high);
+      }
+    }
+  }
+
+  .d-modal__primary-action,
+  .d-modal__dismiss-action {
+    .btn {
+      text-transform: capitalize;
     }
   }
 
@@ -65,6 +75,24 @@
       width: 100%;
       height: 80px;
     }
+
+    .password-confirmation {
+      display: none;
+    }
+
+    section.field {
+      padding: 0.25em 0;
+      margin-bottom: 5px;
+      &.with-items {
+        display: flex;
+        align-items: flex-start;
+      }
+      .field-item {
+        display: inline-block;
+        margin-right: 10px;
+      }
+    }
+
     pre code {
       white-space: pre-wrap;
       max-width: 100%;
@@ -88,7 +116,6 @@
     z-index: z("modal", "overlay");
     background-color: #000;
     animation: fade 0.3s forwards;
-    filter: alpha(opacity=70);
 
     @media (prefers-reduced-motion) {
       animation-duration: 0s;
@@ -98,93 +125,9 @@
 
 //legacy
 
-.fixed-modal:not(#discourse-modal) {
-  // new <DModal /> only, not <DModalLegacy />
-  pointer-events: none; // Allow clicks through wrappers so they hit the adjacent backdrop element
-}
-
-.modal-outer-container {
-  width: 100%;
-  height: 100%;
-}
-
-.modal-middle-container {
-  display: flex;
-  height: 100%;
-  align-items: center;
-}
-
-.modal-inner-container {
-  pointer-events: auto;
-  --modal-max-width: 47em; // set in ems to scale with user font-size
-  box-sizing: border-box;
-  flex: 0 1 auto;
-  margin: 0 auto;
-  max-width: var(--modal-max-width);
-  background-color: var(--secondary);
-  box-shadow: var(--shadow-modal);
-
-  .select-kit {
-    width: 220px;
-
-    &.tag-chooser {
-      width: 100%;
-    }
-  }
-}
-
-.modal-open {
-  .popover {
-    z-index: z("modal", "popover");
-  }
-  .tooltip {
-    z-index: z("modal", "tooltip");
-  }
-}
-
-.bootbox.modal {
-  position: fixed;
-  z-index: z("modal", "content");
-  overflow: auto;
-  height: auto;
-  background-color: var(--secondary);
-  box-shadow: var(--shadow-card);
-  background-clip: padding-box;
-}
-
 .input-hint-text {
   margin-left: 0.5em;
   color: var(--secondary-high);
-}
-
-.modal-header {
-  display: flex;
-  padding: 10px 15px;
-  border-bottom: 1px solid var(--primary-low);
-  align-items: center;
-
-  .title {
-    margin-right: 1em;
-
-    h3 {
-      margin-bottom: 0;
-    }
-
-    p {
-      margin: 0;
-    }
-  }
-
-  .modal-close {
-    order: 2;
-    margin-left: auto;
-    align-self: start;
-    padding: 0.15em 0;
-
-    .close {
-      color: var(--primary-high);
-    }
-  }
 }
 
 .modal-backdrop {
@@ -217,61 +160,12 @@
     opacity: 0;
   }
   to {
-    opacity: 0.7;
-  }
-}
-
-.inline-modal {
-  .modal-inner-container {
-    border: 1px solid var(--secondary-medium);
-  }
-}
-
-.fixed-modal {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  z-index: z("modal", "content");
-  overflow: auto;
-
-  html.keyboard-visible body.ios-safari-composer-hacks & {
-    height: calc(var(--composer-vh, 1vh) * 100);
-    .modal-inner-container {
-      max-height: 100%;
-      margin-bottom: 0px;
-    }
-  }
-
-  &:not(.bookmark-reminder-modal):not(.history-modal) {
-    .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(
-        .poll-breakdown
-      ) {
-      max-height: 80vh !important;
-      @media screen and (max-height: 500px) {
-        max-height: 65vh !important;
-      }
-    }
+    opacity: 0.6;
   }
 }
 
 .modal-form {
   margin-bottom: 0;
-}
-
-.modal-footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  padding: 14px 15px 10px;
-  border-top: 1px solid var(--primary-low);
-  gap: 0.3em 0;
-  .btn {
-    margin: 0 0.75em 0 0;
-    &[href] {
-      min-height: unset;
-    }
-  }
 }
 
 .modal {
@@ -286,98 +180,6 @@
 
   &.hidden {
     display: none;
-  }
-
-  .modal-body {
-    overflow-y: auto;
-    max-height: 400px;
-    padding: 1em;
-
-    &.full-height-modal {
-      max-height: calc(100vh - 150px);
-    }
-
-    &.insert-link {
-      overflow-y: visible;
-      input {
-        min-width: 300px;
-      }
-
-      .inputs {
-        position: relative;
-        .spinner {
-          position: absolute;
-          right: 8px;
-          top: -15px;
-          width: 10px;
-          height: 10px;
-        }
-        .internal-link-results {
-          position: absolute;
-          top: 70%;
-          padding: 5px 10px;
-          box-shadow: var(--shadow-card);
-          z-index: 5;
-          background-color: var(--secondary);
-          max-height: 150px;
-          width: 90%;
-          overflow-y: auto;
-          > .search-link {
-            padding: 6px;
-            border-bottom: 1px solid var(--primary-low);
-            cursor: pointer;
-            display: block;
-            &:hover,
-            &:focus {
-              background-color: var(--highlight-bg);
-            }
-            .search-category {
-              display: flex;
-              align-items: center;
-            }
-            .discourse-tags {
-              font-size: var(--font-down-1);
-            }
-          }
-        }
-      }
-    }
-    textarea {
-      width: 100%;
-      height: 80px;
-      box-sizing: border-box;
-    }
-    p {
-      font-size: var(--font-0);
-    }
-    .archetype-option {
-      margin-bottom: 20px;
-    }
-    .warning {
-      color: var(--danger) !important;
-    }
-  }
-
-  .password-confirmation {
-    display: none;
-  }
-
-  section.field {
-    padding: 0.25em 0;
-    margin-bottom: 5px;
-    &.with-items {
-      display: flex;
-      align-items: flex-start;
-    }
-    .field-item {
-      display: inline-block;
-      margin-right: 10px;
-    }
-  }
-
-  // password reset modal
-  .modal-body.forgot-password-modal p {
-    font-size: var(--font-0);
   }
 
   pre code {
@@ -470,14 +272,6 @@
   }
 }
 
-.delete-user-modal {
-  .modal-footer {
-    .btn {
-      line-height: var(--line-height-medium);
-    }
-  }
-}
-
 .admin-delete-user-posts-progress-modal {
   .progress-bar {
     height: 15px;
@@ -501,7 +295,6 @@
   max-height: 80vh;
 
   .btn {
-    transition: none;
     background-color: transparent;
     margin-right: 5px;
     &:hover,
@@ -548,41 +341,6 @@
   }
 }
 
-.modal .modal-body.change-timestamp {
-  #date-container {
-    .pika-single {
-      width: 100%;
-      box-sizing: border-box;
-      display: flex;
-      justify-content: center;
-    }
-  }
-
-  form {
-    display: flex;
-
-    .date-picker-wrapper,
-    input[type="time"] {
-      width: 50%;
-    }
-
-    .date-picker-wrapper {
-      display: flex;
-      flex: 1;
-
-      .date-picker {
-        flex: 1;
-      }
-    }
-
-    input.date-picker,
-    input[type="time"] {
-      text-align: left;
-      margin: 0;
-    }
-  }
-}
-
 .change-timestamp {
   width: 28em; // scales with user font-size
   max-width: 90vw; // prevents overflow due to extra large user font-size
@@ -612,11 +370,20 @@
 }
 
 .flag-modal-body {
-  max-height: 450px;
+  form {
+    margin: 0;
+  }
+  .flag-action-type .controls .checkbox-label {
+    margin-bottom: 0.25em;
+  }
   .flag-action-type-details {
     width: 100%;
     // max-width: 500px;
     line-height: var(--line-height-large);
+  }
+  .flag-confirmation {
+    margin-top: 0.5em;
+    padding-left: 1.125em;
   }
 }
 
@@ -687,14 +454,6 @@
   }
 }
 
-.modal-body .codeblock-buttons {
-  margin: 0;
-
-  button {
-    top: 21px;
-  }
-}
-
 .json-editor-btn-delete {
   @extend .btn-danger;
   @extend .no-text;
@@ -708,22 +467,26 @@
 
 .confirm-session {
   &__instructions {
-    margin-bottom: 1.5em;
+    margin-bottom: 0.5em;
   }
 
   form {
     margin: 1.5em 0;
   }
 
-  &__passkey .btn {
-    padding-left: 0.25em;
-    padding-right: 0.25em;
+  &__passkey {
+    margin-top: 1em;
   }
 
   &__fine-print {
     font-size: var(--font-down-1);
     color: var(--primary-medium);
-    max-width: 500px;
+    max-width: 600px;
+  }
+
+  &__reset {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
   }
 }
 

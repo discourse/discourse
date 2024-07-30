@@ -29,12 +29,6 @@
     }
   }
 
-  .touch & {
-    &.-active {
-      box-shadow: var(--shadow-dropdown);
-    }
-  }
-
   .no-touch & {
     &:hover {
       box-shadow: var(--shadow-dropdown);

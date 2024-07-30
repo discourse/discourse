@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import { cancel } from "@ember/runloop";
+import { cancel, next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { DELETE_REPLIES_TYPE } from "discourse/components/modal/edit-topic-timer";
 import Category from "discourse/models/category";
@@ -69,7 +69,17 @@ export default Component.extend({
 
     const topicStatus = this.topicClosed ? "close" : "open";
     const topicStatusKnown = this.topicClosed !== undefined;
+    const topicStatusUpdate = this.statusUpdate !== undefined;
     if (topicStatusKnown && topicStatus === this.statusType) {
+      if (!topicStatusUpdate) {
+        return;
+      }
+
+      // The topic status has just been toggled, so we can hide the timer info.
+      this.set("showTopicTimer", null);
+      // The timer has already been removed on the back end. The front end is not aware of the change yet.
+      // TODO: next() is a hack, to-be-removed
+      next(() => this.set("executeAt", null));
       return;
     }
 

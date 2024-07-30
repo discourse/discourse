@@ -1,8 +1,8 @@
-import { getOwner } from "@ember/application";
 import Component from "@ember/component";
 import { on } from "@ember/object/evented";
+import { getOwner } from "@ember/owner";
 import { later } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import $ from "jquery";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ClickTrack from "discourse/lib/click-track";

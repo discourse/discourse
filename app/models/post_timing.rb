@@ -7,28 +7,35 @@ class PostTiming < ActiveRecord::Base
   validates_presence_of :post_number
   validates_presence_of :msecs
 
-  def self.pretend_read(topic_id, actual_read_post_number, pretend_read_post_number)
+  def self.pretend_read(topic_id, actual_read_post_number, pretend_read_post_number, user_ids = nil)
     # This is done in SQL cause the logic is quite tricky and we want to do this in one db hit
     #
-    DB.exec(
-      "INSERT INTO post_timings(topic_id, user_id, post_number, msecs)
+    user_ids_condition = user_ids.present? ? "AND user_id = ANY(ARRAY[:user_ids]::int[])" : ""
+    sql_query = <<-SQL
+      INSERT INTO post_timings(topic_id, user_id, post_number, msecs)
               SELECT :topic_id, user_id, :pretend_read_post_number, 1
               FROM post_timings pt
               WHERE topic_id = :topic_id AND
-                    post_number = :actual_read_post_number AND
-                    NOT EXISTS (
+                    post_number = :actual_read_post_number
+                    #{user_ids_condition}
+                    AND NOT EXISTS (
                         SELECT 1 FROM post_timings pt1
                         WHERE pt1.topic_id = pt.topic_id AND
                               pt1.post_number = :pretend_read_post_number AND
                               pt1.user_id = pt.user_id
                     )
-             ",
+    SQL
+
+    params = {
       pretend_read_post_number: pretend_read_post_number,
       topic_id: topic_id,
       actual_read_post_number: actual_read_post_number,
-    )
+    }
+    params[:user_ids] = user_ids if user_ids.present?
 
-    TopicUser.ensure_consistency!(topic_id)
+    DB.exec(sql_query, params)
+
+    TopicUser.update_last_read_post_number(topic_id:)
   end
 
   def self.record_new_timing(args)
@@ -141,6 +148,16 @@ class PostTiming < ActiveRecord::Base
   MAX_READ_TIME_PER_BATCH = 60 * 1000.0
 
   def self.process_timings(current_user, topic_id, topic_time, timings, opts = {})
+    lookup_column = current_user.whisperer? ? "highest_staff_post_number" : "highest_post_number"
+    highest_post_number = DB.query_single(<<~SQL, topic_id: topic_id).first
+          SELECT #{lookup_column}
+          FROM topics
+          WHERE id = :topic_id
+        SQL
+
+    # does not exist log nothing
+    return if highest_post_number.nil?
+
     UserStat.update_time_read!(current_user.id)
 
     max_time_per_post = ((Time.now - current_user.created_at) * 1000.0)
@@ -156,6 +173,7 @@ class PostTiming < ActiveRecord::Base
       i -= 1
       timings[i][1] = max_time_per_post if timings[i][1] > max_time_per_post
       timings.delete_at(i) if timings[i][0] < 1
+      timings.delete_at(i) if timings[i][0] > highest_post_number
     end
 
     timings.each_with_index do |(post_number, time), index|
@@ -189,7 +207,7 @@ SQL
       new_posts_read = timings.size - existing.size if is_regular
 
       timings.each_with_index do |(post_number, time), index|
-        unless existing.include?(index)
+        if existing.exclude?(index)
           PostTiming.record_new_timing(
             topic_id: topic_id,
             post_number: post_number,

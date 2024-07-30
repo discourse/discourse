@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DModal from "discourse/components/d-modal";
 import MessageCreator from "discourse/plugins/chat/discourse/components/chat/message-creator";
 

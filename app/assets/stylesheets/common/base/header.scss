@@ -2,13 +2,17 @@
   @include sticky;
   top: 0;
   z-index: z("header");
+
+  .footer-nav-ipad & {
+    top: var(--footer-nav-height, 0px);
+  }
 }
 
 .d-header {
   display: flex;
   align-items: center;
+  flex-direction: column;
   width: 100%;
-  z-index: z("header");
   background-color: var(--header_background);
   box-shadow: var(--shadow-header);
   backface-visibility: hidden; /** do magic for scrolling performance **/
@@ -57,6 +61,7 @@
     min-width: var(--d-logo-height);
     a,
     a:visited {
+      min-width: 0;
       color: var(--header_primary);
     }
 
@@ -72,6 +77,10 @@
     width: auto;
     max-width: 100%;
     object-fit: contain;
+  }
+
+  .home-logo-wrapper-outlet {
+    overflow: hidden;
   }
 
   #site-text-logo {
@@ -102,6 +111,10 @@
     align-items: center;
     margin-top: 0.2em;
     white-space: nowrap;
+
+    .auth-buttons {
+      display: flex;
+    }
   }
 
   .login-button,
@@ -145,7 +158,6 @@
     text-decoration: none;
     cursor: pointer;
     border: 1px solid transparent;
-    transition: all linear 0.15s;
     outline: none;
     img.avatar {
       width: 2.1333em;
@@ -300,6 +312,9 @@
     }
     .topic-header-extra {
       grid-area: extra;
+      .archetype-private_message & {
+        grid-area: categories;
+      }
     }
   }
   .topic-link {
@@ -346,6 +361,12 @@
       .discourse-tag {
         display: inline; // tags need to stay inline in order for them to truncate
         vertical-align: unset;
+      }
+    }
+    .topic-featured-link {
+      align-self: baseline;
+      .d-icon {
+        font-size: var(--font-down-2);
       }
     }
   }
@@ -434,4 +455,14 @@ $mobile-avatar-height: 1.532em;
     color: var(--header_primary-high);
     background: transparent;
   }
+}
+
+#additional-panel-wrapper {
+  position: absolute;
+  // positions are relative to the .d-header .panel div
+  top: 100%; // directly underneath .panel
+  right: -10px; // 10px to the right of .panel - adjust as needed
+  max-height: 80vh;
+  border-radius: var(--d-border-radius-large);
+  overflow: auto;
 }

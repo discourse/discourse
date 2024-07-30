@@ -91,6 +91,10 @@
   .badge-notification {
     vertical-align: text-bottom;
   }
+
+  .sidebar-filter {
+    width: calc(320px - 2 * var(--d-sidebar-row-horizontal-padding));
+  }
 }
 
 .search-menu .menu-panel {
@@ -122,9 +126,14 @@
 
     .btn {
       display: flex;
-      padding: 0.857em;
       position: relative;
-      border-radius: 0px;
+      border-radius: 0;
+      padding: 0.857em;
+      @media screen and (max-height: 400px) {
+        // helps with 400% zoom level
+        font-size: var(--font-down-1);
+        padding: 0.5em 0.875em;
+      }
 
       .d-icon {
         color: var(--primary-medium);
@@ -136,6 +145,11 @@
         right: 6px;
         top: 6px;
         font-size: var(--font-down-3);
+        @media screen and (max-height: 400px) {
+          // helps with 400% zoom level
+          right: 0;
+          top: 0;
+        }
       }
 
       &.active {
@@ -226,17 +240,6 @@
 }
 
 .hamburger-panel {
-  // remove once glimmer search menu in place
-  a.widget-link {
-    width: 100%;
-    box-sizing: border-box;
-    @include ellipsis;
-  }
-  a.search-link {
-    width: 100%;
-    box-sizing: border-box;
-    @include ellipsis;
-  }
   .panel-body {
     overflow-y: auto;
   }
@@ -343,6 +346,24 @@
 
   div.discourse-tags {
     font-size: var(--font-down-1);
+  }
+
+  .sidebar-panel-header__row {
+    width: calc(320px - 2 * var(--d-sidebar-row-horizontal-padding));
+  }
+
+  .sidebar-sections {
+    &__back-to-forum {
+      color: var(--d-sidebar-link-color);
+      display: flex;
+      align-items: center;
+      svg {
+        margin-right: var(--d-sidebar-section-link-prefix-margin-right);
+        height: 0.75em;
+        width: 0.75em;
+        color: var(--d-sidebar-link-icon-color);
+      }
+    }
   }
 }
 
@@ -562,6 +583,7 @@
   li.bookmark,
   li.message {
     a {
+      color: var(--primary);
       align-items: center;
       padding: 0.15em 0;
 
@@ -659,7 +681,7 @@
 
   height: var(--base-height);
 
-  body.footer-nav-ipad & {
+  html.footer-nav-ipad & {
     height: calc(var(--base-height) - var(--footer-nav-height));
   }
 }

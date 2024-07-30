@@ -5,9 +5,9 @@
         {{#if this.currentUser.staff}}
           <a href={{this.banner.url}} class="btn btn-transparent edit-banner">
             {{d-icon "pencil-alt"}}
-            {{#unless this.site.mobileView}}
+            {{#if this.site.desktopView}}
               {{html-safe (i18n "banner.edit")}}
-            {{/unless}}
+            {{/if}}
           </a>
         {{/if}}
 

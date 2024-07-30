@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -40,12 +40,10 @@ export function applyLocalDates(dates, siteSettings) {
     element.innerText = "";
     element.insertAdjacentHTML(
       "beforeend",
-      `
-        <svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
+      `<svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
           <use href="#globe-americas"></use>
         </svg>
-        <span class="relative-time">${localDateBuilder.formatted}</span>
-      `
+        <span class="relative-time">${localDateBuilder.formatted}</span>`
     );
     element.setAttribute("aria-label", localDateBuilder.textPreview);
 
@@ -361,7 +359,7 @@ export default {
         },
       ]);
 
-      return tooltip.close();
+      return tooltip.close("local-date");
     }
 
     if (!event?.target?.classList?.contains("discourse-local-date")) {
@@ -370,6 +368,7 @@ export default {
 
     const siteSettings = this.container.lookup("service:site-settings");
     return tooltip.show(event.target, {
+      identifier: "local-date",
       content: htmlSafe(buildHtmlPreview(event.target, siteSettings)),
     });
   },

@@ -295,10 +295,6 @@ da:
         not_found: |-
           Å nej, mit grimme indlæg er endnu ikke markeret som upassende. :worried: Kan du markere det som upassende ved hjælp af **flaget** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Glem ikke at bruge knappen Vis mere <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> for at afsløre flere handlinger for hvert indlæg.
       search:
-        instructions: |-
-          _psst_ … Jeg har skjult en overraskelse i dette emne. Hvis du er klar til udfordringen, **vælg søgeikonet** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> øverst til højre &#8599; for at søge efter det.
-
-          Prøv at søge efter udtrykket "capy&#8203;bara" i dette emne
         hidden_message: |-
           Hvordan kunne du overse denne capybara? :wink:
 

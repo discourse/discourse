@@ -1,6 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import AdminDashboard from "admin/models/admin-dashboard";

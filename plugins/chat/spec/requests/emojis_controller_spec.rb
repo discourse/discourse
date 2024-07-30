@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Chat::EmojisController do
   fab!(:user_1) { Fabricate(:user) }
 

@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import htmlSafe from "discourse-common/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import i18n from "discourse-common/helpers/i18n";
 import { isCollapsible } from "discourse/plugins/chat/discourse/components/chat-message-collapser";
 import ChatMessageCollapser from "./chat-message-collapser";

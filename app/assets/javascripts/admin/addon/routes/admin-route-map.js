@@ -55,17 +55,14 @@ export default function () {
 
         this.route(
           "adminCustomizeThemes",
-          { path: "themes", resetNamespace: true },
+          { path: "/:type", resetNamespace: true },
           function () {
-            this.route("show", { path: "/:theme_id" });
+            this.route("show", { path: "/:theme_id" }, function () {
+              this.route("schema", { path: "schema/:setting_name" });
+            });
             this.route("edit", { path: "/:theme_id/:target/:field_name/edit" });
           }
         );
-
-        this.route("adminCustomizeThemeComponents", {
-          path: "theme-components",
-          resetNamespace: true,
-        });
 
         this.route(
           "adminSiteText",
@@ -156,6 +153,7 @@ export default function () {
       "adminReports",
       { path: "/reports", resetNamespace: true },
       function () {
+        this.route("index", { path: "/" });
         this.route("show", { path: ":type" });
       }
     );
@@ -212,21 +210,33 @@ export default function () {
     );
 
     this.route(
+      "adminConfig",
+      { path: "/config", resetNamespace: true },
+      function () {
+        this.route("flags", function () {
+          this.route("index", { path: "/" });
+          this.route("new");
+          this.route("edit", { path: "/:flag_id" });
+        });
+
+        this.route("about");
+      }
+    );
+
+    this.route(
       "adminPlugins",
       { path: "/plugins", resetNamespace: true },
       function () {
         this.route("index", { path: "/" });
+        this.route("show", { path: "/:plugin_id" }, function () {
+          this.route("settings");
+        });
       }
     );
-  });
 
-  // EXPERIMENTAL: These admin routes are hidden behind an `enable_experimental_admin_ui_groups`
-  // site setting and are subject to constant change.
-  this.route("admin-revamp", { resetNamespace: true }, function () {
-    this.route("lobby", { path: "/" }, function () {});
-
-    this.route("config", function () {
-      this.route("area", { path: "/:area" });
+    this.route("admin.whatsNew", {
+      path: "/whats-new",
+      resetNamespace: true,
     });
   });
 }

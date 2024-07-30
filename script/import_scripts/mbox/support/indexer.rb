@@ -218,7 +218,7 @@ module ImportScripts::Mbox
     end
 
     def read_mail_from_string(raw_message)
-      unless raw_message.blank?
+      if raw_message.present?
         Email::Receiver.new(raw_message, convert_plaintext: true, skip_trimming: false)
       end
     end

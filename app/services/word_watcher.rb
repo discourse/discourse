@@ -31,12 +31,11 @@ class WordWatcher
       .where(action: WatchedWord.actions[action.to_sym])
       .limit(WatchedWord::MAX_WORDS_PER_ACTION)
       .order(:id)
-      .pluck(:word, :replacement, :case_sensitive)
-      .to_h do |w, r, c|
-        [
-          word_to_regexp(w, match_word: false),
-          { word: w, replacement: r, case_sensitive: c }.compact,
-        ]
+      .pluck(:word, :replacement, :case_sensitive, :html)
+      .to_h do |w, r, c, h|
+        opts = { word: w, replacement: r, case_sensitive: c }.compact
+        opts[:html] = true if h
+        [word_to_regexp(w, match_word: false), opts]
       end
   end
 

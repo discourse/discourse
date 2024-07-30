@@ -2,7 +2,7 @@
 
 module Chat
   class DirectMessageChannel < Channel
-    alias_attribute :direct_message, :chatable
+    alias_method :direct_message, :chatable
 
     def direct_message_channel?
       true
@@ -21,7 +21,7 @@ module Chat
     end
 
     def generate_auto_slug
-      false if !self.slug.present?
+      self.slug.blank?
     end
   end
 end

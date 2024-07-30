@@ -163,6 +163,8 @@ export default {
               .lookup("service:chat-api")
               .sendMessage(channelId, {
                 thread_id: options.threadId,
+                post_ids: options.postIds,
+                topic_id: options.topicId,
                 message: options.message,
                 uploads: options.uploads,
               });

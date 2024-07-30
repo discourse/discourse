@@ -1,4 +1,4 @@
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { fileToImageData } from "discourse/lib/media-optimization-utils";

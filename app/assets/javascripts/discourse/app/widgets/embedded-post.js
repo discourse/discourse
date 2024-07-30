@@ -8,7 +8,7 @@ createWidget("post-link-arrow", {
   tagName: "div.post-link-arrow",
 
   template: hbs`
-      <a href={{attrs.shareUrl}} class="post-info arrow" title={{i18n "topic.jump_reply"}} aria-label={{i18n 
+      <a href={{attrs.shareUrl}} class="post-info arrow" title={{i18n "topic.jump_reply"}} aria-label={{i18n
         "topic.jump_reply_aria" username=attrs.name
       }}>
       {{#if attrs.above}}
@@ -16,6 +16,7 @@ createWidget("post-link-arrow", {
       {{else}}
         {{d-icon "arrow-down"}}
       {{/if}}
+      {{i18n "topic.jump_reply_button"}}
       </a>
   `,
 });

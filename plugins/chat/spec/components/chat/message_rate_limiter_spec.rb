@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::MessageRateLimiter do
   fab!(:user) { Fabricate(:user, trust_level: 3) }
   let(:limiter) { described_class.new(user) }

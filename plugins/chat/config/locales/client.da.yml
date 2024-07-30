@@ -69,7 +69,6 @@ da:
       channels_list_popup:
         browse: "Gennemse kanaler"
         create: "Ny kanal"
-      click_to_join: "Klik her for at se tilgængelige kanaler."
       close: "Luk"
       remove: "Fjern"
       deleted:
@@ -142,6 +141,7 @@ da:
         back: "Tilbage"
         title: Kanaler
         filter_all: Alle
+        filter_open: Åbn
         filter_closed: Lukket
         filter_archived: Arkiveret
       chat_message_separator:

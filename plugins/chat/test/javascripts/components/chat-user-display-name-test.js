@@ -28,7 +28,7 @@ module(
 
       await render(hbs`<ChatUserDisplayName @user={{this.user}} />`);
 
-      assert.strictEqual(displayName(), "bob — Bobcat");
+      assert.strictEqual(displayName(), "bob Bobcat");
     });
   }
 );
@@ -53,7 +53,7 @@ module(
 
       await render(hbs`<ChatUserDisplayName @user={{this.user}} />`);
 
-      assert.strictEqual(displayName(), "Bobcat — bob");
+      assert.strictEqual(displayName(), "Bobcat bob");
     });
   }
 );

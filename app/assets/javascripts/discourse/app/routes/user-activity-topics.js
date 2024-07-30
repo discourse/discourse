@@ -5,14 +5,15 @@ import UserTopicListRoute from "discourse/routes/user-topic-list";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
 
-export default UserTopicListRoute.extend({
-  userActionType: UserAction.TYPES.topics,
+export default class UserActivityTopics extends UserTopicListRoute {
+  userActionType = UserAction.TYPES.topics;
 
-  model() {
+  model(params = {}) {
     return this.store
       .findFiltered("topicList", {
         filter:
           "topics/created-by/" + this.modelFor("user").get("username_lower"),
+        params,
       })
       .then((model) => {
         // andrei: we agreed that this is an anti pattern,
@@ -22,7 +23,7 @@ export default UserTopicListRoute.extend({
         model.set("emptyState", this.emptyState());
         return model;
       });
-  },
+  }
 
   emptyState() {
     const user = this.modelFor("user");
@@ -42,14 +43,14 @@ export default UserTopicListRoute.extend({
     }
 
     return { title, body };
-  },
+  }
 
   titleToken() {
     return I18n.t("user_action_groups.4");
-  },
+  }
 
   @action
   triggerRefresh() {
     this.refresh();
-  },
-});
+  }
+}

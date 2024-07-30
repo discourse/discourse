@@ -256,6 +256,7 @@ class DiscourseConnect < DiscourseConnectBase
           name: resolve_name,
           username: resolve_username,
           ip_address: ip_address,
+          registration_ip_address: ip_address,
         }
 
         if SiteSetting.allow_user_locale && locale && LocaleSiteSetting.valid_value?(locale)
@@ -352,7 +353,7 @@ class DiscourseConnect < DiscourseConnectBase
       user.name = name || User.suggest_name(username.blank? ? email : username)
     end
 
-    if locale_force_update && SiteSetting.allow_user_locale && locale &&
+    if locale_force_update && SiteSetting.allow_user_locale && locale.present? &&
          LocaleSiteSetting.valid_value?(locale)
       user.locale = locale
     end

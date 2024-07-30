@@ -14,54 +14,77 @@ module("Unit | Utility | url", function (hooks) {
   setupTest(hooks);
 
   test("isInternal with a HTTP url", function (assert) {
-    sinon.stub(DiscourseURL, "origin").returns("http://eviltrout.com");
+    sinon.stub(DiscourseURL, "origin").get(() => "http://eviltrout.com");
 
-    assert.notOk(DiscourseURL.isInternal(null), "a blank URL is not internal");
-    assert.ok(DiscourseURL.isInternal("/test"), "relative URLs are internal");
-    assert.ok(
+    assert.false(DiscourseURL.isInternal(null), "a blank URL is not internal");
+    assert.true(DiscourseURL.isInternal("/test"), "relative URLs are internal");
+    assert.true(
+      DiscourseURL.isInternal("docs"),
+      "non-prefixed relative URLs are internal"
+    );
+    assert.true(DiscourseURL.isInternal("#foo"), "anchor URLs are internal");
+    assert.true(
       DiscourseURL.isInternal("//eviltrout.com"),
       "a url on the same host is internal (protocol-less)"
     );
-    assert.ok(
+    assert.true(
       DiscourseURL.isInternal("http://eviltrout.com/tophat"),
       "a url on the same host is internal"
     );
-    assert.ok(
+    assert.true(
       DiscourseURL.isInternal("https://eviltrout.com/moustache"),
       "a url on a HTTPS of the same host is internal"
     );
-    assert.notOk(
+    assert.false(
       DiscourseURL.isInternal("//twitter.com.com"),
       "a different host is not internal (protocol-less)"
     );
-    assert.notOk(
+    assert.false(
       DiscourseURL.isInternal("http://twitter.com"),
       "a different host is not internal"
+    );
+    assert.false(
+      DiscourseURL.isInternal("ftp://eviltrout.com"),
+      "a different protocol is not internal"
+    );
+    assert.false(
+      DiscourseURL.isInternal("ftp::/eviltrout.com"),
+      "an invalid URL is not internal"
     );
   });
 
   test("isInternal with a HTTPS url", function (assert) {
-    sinon.stub(DiscourseURL, "origin").returns("https://eviltrout.com");
-    assert.ok(
+    sinon.stub(DiscourseURL, "origin").get(() => "https://eviltrout.com");
+    assert.true(
       DiscourseURL.isInternal("http://eviltrout.com/monocle"),
       "HTTPS urls match HTTP urls"
+    );
+    assert.true(
+      DiscourseURL.isInternal("https://eviltrout.com/monocle"),
+      "HTTPS urls match HTTPS urls"
     );
   });
 
   test("isInternal on subfolder install", function (assert) {
-    sinon.stub(DiscourseURL, "origin").returns("http://eviltrout.com/forum");
-    assert.notOk(
+    sinon.stub(DiscourseURL, "origin").get(() => "http://eviltrout.com/forum");
+    assert.false(
       DiscourseURL.isInternal("http://eviltrout.com"),
       "the host root is not internal"
     );
-    assert.notOk(
+    assert.false(
       DiscourseURL.isInternal("http://eviltrout.com/tophat"),
       "a url on the same host but on a different folder is not internal"
     );
-    assert.ok(
+    assert.true(
       DiscourseURL.isInternal("http://eviltrout.com/forum/moustache"),
       "a url on the same host and on the same folder is internal"
     );
+    assert.true(DiscourseURL.isInternal("/test"), "relative URLs are internal");
+    assert.true(
+      DiscourseURL.isInternal("docs"),
+      "non-prefixed relative URLs are internal"
+    );
+    assert.true(DiscourseURL.isInternal("#foo"), "anchor URLs are internal");
   });
 
   test("userPath", function (assert) {

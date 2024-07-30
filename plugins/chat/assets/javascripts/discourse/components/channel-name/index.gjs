@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { get, hash } from "@ember/helper";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserStatusMessage from "discourse/components/user-status-message";

@@ -7,63 +7,8 @@ import RestModel from "discourse/models/rest";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 
-const Badge = RestModel.extend({
-  newBadge: none("id"),
-  image: alias("image_url"),
-
-  @discourseComputed
-  url() {
-    return getURL(`/badges/${this.id}/${this.slug}`);
-  },
-
-  updateFromJson(json) {
-    if (json.badge) {
-      Object.keys(json.badge).forEach((key) => this.set(key, json.badge[key]));
-    }
-    if (json.badge_types) {
-      json.badge_types.forEach((badgeType) => {
-        if (badgeType.id === this.badge_type_id) {
-          this.set("badge_type", Object.create(badgeType));
-        }
-      });
-    }
-  },
-
-  @discourseComputed("badge_type.name")
-  badgeTypeClassName(type) {
-    type = type || "";
-    return `badge-type-${type.toLowerCase()}`;
-  },
-
-  save(data) {
-    let url = "/admin/badges",
-      type = "POST";
-
-    if (this.id) {
-      // We are updating an existing badge.
-      url += `/${this.id}`;
-      type = "PUT";
-    }
-
-    return ajax(url, { type, data }).then((json) => {
-      this.updateFromJson(json);
-      return this;
-    });
-  },
-
-  destroy() {
-    if (this.newBadge) {
-      return Promise.resolve();
-    }
-
-    return ajax(`/admin/badges/${this.id}`, {
-      type: "DELETE",
-    });
-  },
-});
-
-Badge.reopenClass({
-  createFromJson(json) {
+export default class Badge extends RestModel {
+  static createFromJson(json) {
     // Create BadgeType objects.
     const badgeTypes = {};
     if ("badge_types" in json) {
@@ -103,9 +48,9 @@ Badge.reopenClass({
     } else {
       return badges;
     }
-  },
+  }
 
-  findAll(opts) {
+  static findAll(opts) {
     let listable = "";
     if (opts && opts.onlyListable) {
       listable = "?only_listable=true";
@@ -114,13 +59,65 @@ Badge.reopenClass({
     return ajax(`/badges.json${listable}`, { data: opts }).then((badgesJson) =>
       Badge.createFromJson(badgesJson)
     );
-  },
+  }
 
-  findById(id) {
+  static findById(id) {
     return ajax(`/badges/${id}`).then((badgeJson) =>
       Badge.createFromJson(badgeJson)
     );
-  },
-});
+  }
 
-export default Badge;
+  @none("id") newBadge;
+
+  @alias("image_url") image;
+
+  @discourseComputed
+  url() {
+    return getURL(`/badges/${this.id}/${this.slug}`);
+  }
+
+  updateFromJson(json) {
+    if (json.badge) {
+      Object.keys(json.badge).forEach((key) => this.set(key, json.badge[key]));
+    }
+    if (json.badge_types) {
+      json.badge_types.forEach((badgeType) => {
+        if (badgeType.id === this.badge_type_id) {
+          this.set("badge_type", Object.create(badgeType));
+        }
+      });
+    }
+  }
+
+  @discourseComputed("badge_type.name")
+  badgeTypeClassName(type) {
+    type = type || "";
+    return `badge-type-${type.toLowerCase()}`;
+  }
+
+  save(data) {
+    let url = "/admin/badges",
+      type = "POST";
+
+    if (this.id) {
+      // We are updating an existing badge.
+      url += `/${this.id}`;
+      type = "PUT";
+    }
+
+    return ajax(url, { type, data }).then((json) => {
+      this.updateFromJson(json);
+      return this;
+    });
+  }
+
+  destroy() {
+    if (this.newBadge) {
+      return Promise.resolve();
+    }
+
+    return ajax(`/admin/badges/${this.id}`, {
+      type: "DELETE",
+    });
+  }
+}

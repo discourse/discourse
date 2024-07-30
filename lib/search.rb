@@ -71,8 +71,16 @@ class Search
     end
   end
 
-  def self.wrap_unaccent(str)
-    SiteSetting.search_ignore_accents ? "unaccent(#{str})" : str
+  def self.unaccent(str)
+    if SiteSetting.search_ignore_accents
+      DB.query("SELECT unaccent(:str)", str: str)[0].unaccent
+    else
+      str
+    end
+  end
+
+  def self.wrap_unaccent(expr)
+    SiteSetting.search_ignore_accents ? "unaccent(#{expr})" : expr
   end
 
   def self.segment_chinese?
@@ -266,6 +274,7 @@ class Search
         search_context: @search_context,
         blurb_length: @blurb_length,
         is_header_search: !use_full_page_limit,
+        can_lazy_load_categories: @guardian.can_lazy_load_categories?,
       )
   end
 
@@ -305,6 +314,7 @@ class Search
           term: @clean_term,
           search_type: @opts[:search_type],
           ip_address: @opts[:ip_address],
+          user_agent: @opts[:user_agent],
           user_id: @opts[:user_id],
         )
       @results.search_log_id = search_log_id unless status == :error
@@ -348,19 +358,19 @@ class Search
   end
 
   def self.advanced_order(trigger, &block)
-    (@advanced_orders ||= {})[trigger] = block
+    advanced_orders[trigger] = block
   end
 
   def self.advanced_orders
-    @advanced_orders
+    @advanced_orders ||= {}
   end
 
   def self.advanced_filter(trigger, &block)
-    (@advanced_filters ||= {})[trigger] = block
+    advanced_filters[trigger] = block
   end
 
   def self.advanced_filters
-    @advanced_filters
+    @advanced_filters ||= {}
   end
 
   def self.custom_topic_eager_load(tables = nil, &block)
@@ -541,20 +551,46 @@ class Search
 
   advanced_filter(/\Awith:images\z/i) { |posts| posts.where("posts.image_upload_id IS NOT NULL") }
 
-  advanced_filter(/\Acategory:(.+)\z/i) do |posts, match|
-    exact = false
+  advanced_filter(/\Acategor(?:y|ies):(.+)\z/i) do |posts, terms|
+    category_ids = []
 
-    if match[0] == "="
-      exact = true
-      match = match[1..-1]
+    matches =
+      terms
+        .split(",")
+        .map do |term|
+          if term[0] == "="
+            [term[1..-1], true]
+          else
+            [term, false]
+          end
+        end
+        .to_h
+
+    if matches.present?
+      sql = <<~SQL
+      SELECT c.id, term
+      FROM
+          categories c
+      JOIN
+          unnest(ARRAY[:matches]) AS term ON
+          c.slug ILIKE term OR
+          c.name ILIKE term OR
+          (term ~ '^[0-9]{1,10}$' AND c.id = term::int)
+      SQL
+
+      found = DB.query(sql, matches: matches.keys)
+
+      if found.present?
+        found.each do |row|
+          category_ids << row.id
+          @category_filter_matched ||= true
+          category_ids += Category.subcategory_ids(row.id) if !matches[row.term]
+        end
+      end
     end
 
-    category_ids =
-      Category.where("slug ilike ? OR name ilike ? OR id = ?", match, match, match.to_i).pluck(:id)
     if category_ids.present?
-      category_ids += Category.subcategory_ids(category_ids.first) unless exact
-      @category_filter_matched ||= true
-      posts.where("topics.category_id IN (?)", category_ids)
+      posts.where("topics.category_id IN (?)", category_ids.uniq)
     else
       posts.where("1 = 0")
     end
@@ -831,9 +867,9 @@ class Search
         FROM topic_tags tt, tags
         WHERE tt.tag_id = tags.id
         GROUP BY tt.topic_id
-        HAVING to_tsvector(#{default_ts_config}, #{Search.wrap_unaccent("array_to_string(array_agg(lower(tags.name)), ' ')")}) @@ to_tsquery(#{default_ts_config}, #{Search.wrap_unaccent("?")})
+        HAVING to_tsvector(#{default_ts_config}, #{Search.wrap_unaccent("array_to_string(array_agg(lower(tags.name)), ' ')")}) @@ to_tsquery(#{default_ts_config}, ?)
       )",
-        tags.join("&"),
+        Search.unaccent(tags.join("&")),
       )
     else
       tags = match.split(",")
@@ -908,6 +944,9 @@ class Search
           end
 
           nil
+        elsif word =~ /\Ainclude:(invisible|unlisted)\z/i
+          @include_invisible = true if @guardian.can_see_unlisted_topics?
+          nil
         else
           found ? nil : word
         end
@@ -918,7 +957,7 @@ class Search
 
   def find_grouped_results
     if @results.type_filter.present?
-      unless Search.facets.include?(@results.type_filter)
+      if Search.facets.exclude?(@results.type_filter)
         raise Discourse::InvalidAccess.new("invalid type filter")
       end
       # calling protected methods
@@ -1075,7 +1114,7 @@ class Search
 
   def posts_query(limit, type_filter: nil, aggregate_search: false)
     posts =
-      Post.where(post_type: Topic.visible_post_types(@guardian.user)).joins(
+      Post.where(post_type: Topic.visible_post_types(@guardian.user), hidden: false).joins(
         :post_search_data,
         :topic,
       )
@@ -1085,7 +1124,7 @@ class Search
     end
 
     is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
-    posts = posts.where("topics.visible") unless is_topic_search
+    posts = posts.where("topics.visible") unless is_topic_search || @include_invisible
 
     if type_filter == "private_messages" || (is_topic_search && @search_context.private_message?)
       posts =
@@ -1164,9 +1203,9 @@ class Search
 
           posts.where("topics.category_id in (?)", category_ids)
         elsif is_topic_search
-          posts.where("topics.id = ?", @search_context.id).order(
-            "posts.post_number #{@order == :latest ? "DESC" : ""}",
-          )
+          posts = posts.where("topics.id = ?", @search_context.id)
+          posts = posts.order("posts.post_number ASC") unless @order
+          posts
         elsif @search_context.is_a?(Tag)
           posts =
             posts.joins("LEFT JOIN topic_tags ON topic_tags.topic_id = topics.id").joins(
@@ -1329,11 +1368,11 @@ class Search
 
   def self.to_tsquery(ts_config: nil, term:, joiner: nil)
     ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
-    escaped_term = wrap_unaccent("'#{escape_string(term)}'")
+    escaped_term = "'#{escape_string(unaccent(term))}'"
     tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, #{escaped_term})"
     # PG 14 and up default to using the followed by operator
     # this restores the old behavior
-    tsquery = "REPLACE(#{tsquery}::text, '<->', '&')::tsquery"
+    tsquery = "REGEXP_REPLACE(#{tsquery}::text, '<->|<\\d+>', '&', 'g')::tsquery"
     tsquery = "REPLACE(#{tsquery}::text, '&', '#{escape_string(joiner)}')::tsquery" if joiner
     tsquery
   end
@@ -1447,7 +1486,7 @@ class Search
 
   def posts_eager_loads(query)
     query = query.includes(:user, :post_search_data)
-    topic_eager_loads = [:category]
+    topic_eager_loads = [{ category: :parent_category }]
 
     topic_eager_loads << :tags if SiteSetting.tagging_enabled
 

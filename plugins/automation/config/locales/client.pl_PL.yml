@@ -1,0 +1,289 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  js:
+    discourse_automation:
+      title: Automatyzacja
+      create: Utwórz
+      update: Aktualizuj
+      select_script: Wybierz skrypt
+      select_trigger: Wybierz wyzwalacz
+      confirm_automation_reset: Ta czynność spowoduje zresetowanie opcji skryptu i wyzwalacza, nowy stan zostanie zapisany, czy chcesz kontynuować?
+      confirm_automation_trigger: Ta czynność uruchomi automatyzację, czy chcesz kontynuować?
+      no_automation_yet: Nie utworzyłeś jeszcze żadnej automatyzacji.
+      edit_automation:
+        trigger_section:
+          forced: Ten wyzwalacz jest wymuszany przez skrypt.
+          next_pending_automation: "Następna automatyzacja uruchomi się: %{date}"
+          trigger_now: "Uruchom teraz"
+          title: Kiedy/Co...
+        fields_section:
+          title: Opcje skryptu
+      destroy_automation:
+        confirm: "Czy na pewno chcesz usunąć `%{name}`?"
+      fields:
+        key_value:
+          label_without_count: "Skonfiguruj"
+          label_with_count:
+            one: "Edytuj konfigurację (%{count})"
+            few: "Edytuj konfigurację (%{count})"
+            many: "Edytuj konfigurację (%{count})"
+            other: "Edytuj konfigurację (%{count})"
+        user:
+          label: Użytkownik
+        pm:
+          title:
+            label: Tytuł
+          raw:
+            label: Treść
+        pms:
+          confirm_remove_pm: "Czy na pewno chcesz usunąć tę wiadomość prywatną?"
+          placeholder_title: Tytuł PW
+          add_pm: Dodaj PW
+          title:
+            label: Tytuł
+          raw:
+            label: Treść
+        group:
+          label: Grupa
+        text:
+          label: Tekst
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Odznaka
+        stalled_topic:
+          durations:
+            PT1H: "Jedna godzina"
+            P1D: "Jeden dzień"
+            P1W: "Jeden tydzień"
+            P2W: "Dwa tygodnie"
+            P1M: "Jeden miesiąc"
+            P3M: "Trzy miesiące"
+            P6M: "Sześć miesięcy"
+            P1Y: "Rok"
+        recurring:
+          every: Co
+          frequencies:
+            minute: minuta
+            hour: godzina
+            day: dzień
+            weekday: dzień powszedni
+            week: tydzień
+            month: miesiąc
+            year: rok
+          fields:
+            recurrence:
+              label: Powtarzanie
+            start_date:
+              label: Data rozpoczęcia
+        stalled_wiki:
+          durations:
+            PT1H: "Jedna godzina"
+            P1D: "Jeden dzień"
+            P1W: "Jeden tydzień"
+            P2W: "Dwa tygodnie"
+            P1M: "Jeden miesiąc"
+            P3M: "Trzy miesiące"
+            P6M: "Sześć miesięcy"
+            P1Y: "Rok"
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Śledzona grupa
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Śledzona grupa
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Ogranicz do grupy
+          trust_levels:
+            ALL: "Wszystkie poziomy zaufania"
+            TL01: "TL0 do TL1"
+            TL12: "TL1 do TL2"
+            TL23: "TL2 do TL3"
+            TL34: "TL3 do TL4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: Wykonaj o
+        topic:
+          fields:
+            restricted_topic:
+              label: ID tematu
+        post_created_edited:
+          fields:
+            action_type:
+              label: Typ akcji
+            valid_trust_levels:
+              label: Prawidłowe poziomy zaufania
+            restricted_category:
+              label: Kategoria
+            restricted_group:
+              label: Grupa
+          created: Utworzono
+          edited: Edytowany
+        user_updated:
+          fields:
+            user_profile:
+              label: Pola profilu użytkownika
+            custom_fields:
+              label: Pola niestandardowe użytkownika
+            once_per_user:
+              label: Raz na użytkownika
+            new_users_only:
+              label: Tylko nowi użytkownicy
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Kategoria rodzica
+        pm_created:
+          fields:
+            restricted_user:
+              label: Użytkownicy
+            restricted_group:
+              label: Grupa
+            ignore_staff:
+              label: Ignoruj personel
+            ignore_group_members:
+              label: Ignoruj członków grupy
+            valid_trust_levels:
+              label: Prawidłowe poziomy zaufania
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Prawidłowe poziomy zaufania
+            restricted_category:
+              label: Kategoria
+            restricted_tags:
+              label: Tagi
+      scriptables:
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: URL webhooka
+        auto_responder:
+          fields:
+            once:
+              label: Raz
+              description: Odpowiedzi tylko raz na temat
+            answering_user:
+              label: Odpowiada użytkownikowi
+              description: Domyślnie użytkownik systemowy
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Tagi
+              description: Lista tagów do dodania do tematu.
+        post:
+          fields:
+            creator:
+              label: Twórca
+              post_creator_context: Twórca postu
+              updated_user_context: Zaktualizowany użytkownik
+            topic:
+              label: ID tematu
+            post:
+              label: Treść postu
+        topic:
+          fields:
+            creator:
+              label: Twórca
+              updated_user_context: Zaktualizowany użytkownik
+            body:
+              label: Treść tematu
+            title:
+              label: Tytuł tematu
+            category:
+              label: Kategoria tematu
+            tags:
+              label: Tagi tematu
+        group_category_notification_default:
+          fields:
+            group:
+              label: Grupa
+            notification_level:
+              label: Poziom powiadomienia
+            update_existing_members:
+              label: Zaktualizuj istniejących członków
+              description: Aktualizuje poziom powiadomień dla istniejących członków grupy
+        user_global_notice:
+          fields:
+            level:
+              label: Poziom
+          levels:
+            warning: Ostrzeżenie
+            info: Informacje
+            success: Sukces
+            error: Błąd
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Grupa
+            update_user_title_and_flair:
+              label: Zaktualizuj tytuł i znacznik użytkownika
+              description: Opcjonalnie, zaktualizuj tytuł i znacznik użytkownika
+            badge:
+              label: Odznaka
+              description: Wybierz odznakę
+        suspend_user_by_email:
+          fields:
+            reason:
+              label: Powód (domyślny)
+            actor:
+              label: Użytkownik
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID tematu
+            pinned_globally:
+              label: Przypięty globalnie
+            pinned_until:
+              label: Przypięty do
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID tematu
+            user:
+              label: Użytkownik
+        close_topic:
+          fields:
+            topic:
+              label: ID tematu
+            message:
+              label: Wiadomość zamykająca
+              description: "Opcjonalny komunikat do wyświetlenia w rekordzie Zamknięty Temat"
+            user:
+              label: Użytkownik
+              description: "Użytkownik zamykający temat (domyślnie: system)"
+      models:
+        script:
+          name:
+            label: Skrypt
+        trigger:
+          name:
+            label: Aktywacja
+        automation:
+          name:
+            label: Nazwa
+          trigger:
+            label: Aktywacja
+          script:
+            label: Skrypt
+          version:
+            label: Wersja
+          enabled:
+            label: Włączona
+          disabled:
+            label: Wyłączone
+          last_updated_at:
+            label: Ostatnia aktualizacja
+          last_updated_by:
+            label: Zaktualizowany przez

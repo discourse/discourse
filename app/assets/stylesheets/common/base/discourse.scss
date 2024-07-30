@@ -7,27 +7,21 @@
   --d-input-bg-color: var(--secondary);
   --d-input-text-color: var(--primary);
   --d-input-border: 1px solid var(--primary-400);
-  --d-input-bg-color--disabled: var(--primary-low);
-  --d-input-text-color--disabled: var(--primary);
+  --d-input-bg-color--disabled: var(--primary-very-low);
+  --d-input-text-color--disabled: var(--primary-medium);
   --d-input-border--disabled: 1px solid var(--primary-low);
+  --d-nav-color: var(--primary);
+  --d-nav-bg-color: transparent;
+  --d-nav-color--hover: var(--primary);
+  --d-nav-bg-color--hover: var(--d-hover);
+  --d-nav-color--active: var(--tertiary);
+  --d-nav-bg-color--active: transparent;
+  --d-nav-border-color--active: var(--d-nav-color--active);
+  --d-nav-underline-height: 0.125em;
+  --safe-area-inset-bottom: env(safe-area-inset-bottom);
 }
 
 // Animation Keyframes
-@keyframes ping {
-  0% {
-    transform: scale(0.6);
-    box-shadow: 0 0 0 0 rgba(var(--success-rgb), 0.7);
-  }
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 10px rgba(var(--success-rgb), 0);
-  }
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(var(--success-rgb), 0);
-  }
-}
-
 @keyframes rotate-forever {
   0% {
     transform: rotate(0deg);
@@ -115,7 +109,7 @@ a.cancel {
   margin-left: 1.25em;
   line-height: normal;
   color: var(--primary-high);
-  transition: color 250ms;
+  transition: var(--d-button-transition);
   &:hover {
     color: var(--danger);
   }
@@ -138,6 +132,12 @@ img.avatar {
 //                                                      '15
 span.relative-date {
   white-space: nowrap;
+}
+
+legend {
+  color: var(--primary-high);
+  font-weight: bold;
+  font-size: var(--font-down-1-rem);
 }
 
 label {
@@ -212,6 +212,7 @@ input {
     background-color: var(--d-input-bg-color);
     border: var(--d-input-border);
     border-radius: var(--d-input-border-radius);
+    color-scheme: var(--scheme-type);
     &:focus {
       @include default-focus;
     }
@@ -332,7 +333,7 @@ textarea {
 
 .radio.inline .radio.inline,
 .checkbox.inline .checkbox.inline {
-  margin-left: 10px;
+  margin-left: 0.67em;
 }
 
 .container {
@@ -340,10 +341,11 @@ textarea {
 }
 
 .wrap {
+  --d-wrap-padding-h: 0.67em;
   max-width: var(--d-max-width);
   margin-right: auto;
   margin-left: auto;
-  padding: 0 10px;
+  padding: 0 var(--d-wrap-padding-h);
   .contents {
     position: relative;
   }
@@ -392,7 +394,6 @@ textarea {
   position: absolute;
   left: 0;
   bottom: -1px;
-  z-index: 1002;
 }
 
 .do-not-disturb-background {
@@ -400,16 +401,15 @@ textarea {
   align-items: center;
   justify-content: center;
   width: 1.25em;
-  background-color: var(--tertiary-med-or-tertiary);
+  background-color: var(--secondary);
   border-radius: 50%;
   height: 1.25em;
 
-  .d-icon.d-icon-moon {
-    display: block;
-    color: var(--tertiary-or-white) !important;
-    line-height: unset;
-    font-size: 0.875em;
-    margin: 0 !important;
+  .d-icon.d-icon-discourse-dnd {
+    color: var(--header_primary-medium) !important;
+    font-size: 1em;
+    height: 1em;
+    width: 1em;
   }
 }
 
@@ -588,8 +588,12 @@ textarea {
     line-height: var(--line-height-large);
   }
 
+  .control-group,
   .controls {
     margin-left: 0;
+    label {
+      font-weight: normal;
+    }
   }
 }
 
@@ -599,7 +603,10 @@ textarea {
   box-sizing: border-box;
   width: 100%;
   display: grid;
-  grid-template-areas: "sidebar content";
+  grid-template-areas:
+    "sidebar content"
+    "sidebar below-content";
+  grid-template-rows: 1fr auto;
   grid-template-columns: 0 minmax(0, 1fr); // 0 column width needs to be set for CSS transitions
   gap: 0;
 
@@ -668,26 +675,64 @@ textarea {
 }
 
 .pref-email {
-  .row {
-    border-bottom: 1px solid #ddd;
-    margin: 5px 0px;
-    padding-bottom: 5px;
+  display: grid;
+  grid-template-areas:
+    "title title"
+    "email email"
+    "instructions controls";
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0 0.5em;
 
-    &:last-child {
-      border-bottom: 0;
-    }
+  .control-label {
+    grid-area: title;
+  }
+
+  .emails {
+    grid-area: email;
+  }
+
+  .instructions {
+    grid-area: instructions;
+  }
+
+  .controls {
+    margin-top: 0.5em;
+    grid-area: controls;
+  }
+
+  .resend-email-confirmation {
+    background: transparent;
+    border: none;
+    color: var(--tertiary);
+    padding: 0;
+    text-align: left;
+  }
+
+  .row {
+    border-bottom: 1px solid var(--primary-low);
+    padding: 0.25em 0;
+    display: grid;
+    grid-template-areas:
+      "email dropdown"
+      "meta dropdown";
+    grid-template-columns: 1fr auto;
+    grid-template-rows: 1fr auto;
   }
 
   .email-first {
-    font-size: 1.1em;
+    grid-area: email;
+    align-self: center;
+    overflow-wrap: break-word;
+    min-width: 0;
   }
 
   .email-second {
+    grid-area: meta;
     color: var(--primary-medium);
 
     .primary {
       color: var(--success);
-      font-weight: bold;
     }
 
     .unconfirmed {
@@ -696,12 +741,11 @@ textarea {
   }
 
   .email-dropdown {
-    float: right;
-
-    .btn,
-    .btn:hover {
+    grid-area: dropdown;
+    align-self: center;
+    justify-self: end;
+    summary {
       background: transparent;
-
       .d-icon {
         color: var(--primary-high);
       }
@@ -710,10 +754,6 @@ textarea {
 
   .dropdown-menu {
     width: 120px;
-
-    & .icon {
-      margin-top: auto;
-    }
   }
 }
 
@@ -776,6 +816,7 @@ textarea {
   }
 }
 
+a#user-nav-skip-link,
 a#skip-link {
   padding: 0.25em 0.5em;
   position: fixed;

@@ -4,9 +4,7 @@ RSpec.describe Chat::ListChannelThreadMessages do
   subject(:result) { described_class.call(params) }
 
   fab!(:user)
-  fab!(:thread) do
-    Fabricate(:chat_thread, channel: Fabricate(:chat_channel, threading_enabled: true))
-  end
+  fab!(:thread) { Fabricate(:chat_thread, channel: Fabricate(:chat_channel)) }
 
   let(:guardian) { Guardian.new(user) }
   let(:thread_id) { thread.id }
@@ -37,34 +35,35 @@ RSpec.describe Chat::ListChannelThreadMessages do
     end
   end
 
-  context "when ensure_thread_enabled?" do
-    context "when channel threading is disabled" do
-      before { thread.channel.update!(threading_enabled: false) }
-
-      it { is_expected.to fail_a_policy(:ensure_thread_enabled) }
-    end
-
-    context "when channel and site setting are enabling threading" do
-      before { thread.channel.update!(threading_enabled: true) }
-
-      it { is_expected.to be_a_success }
-    end
-  end
-
   context "when can_view_thread" do
     context "when channel is private" do
-      fab!(:thread) do
-        Fabricate(
-          :chat_thread,
-          channel: Fabricate(:private_category_channel, threading_enabled: true),
-        )
-      end
+      fab!(:thread) { Fabricate(:chat_thread, channel: Fabricate(:private_category_channel)) }
 
       it { is_expected.to fail_a_policy(:can_view_thread) }
+
+      context "with system user" do
+        fab!(:user) { Discourse.system_user }
+
+        it { is_expected.to be_a_success }
+      end
     end
   end
 
   context "when determine_target_message_id" do
+    let(:optional_params) { { fetch_from_last_message: true } }
+
+    context "when fetch_from_last_message is true" do
+      it "sets target_message_id to last thread message id" do
+        expect(result.target_message_id).to eq(thread.chat_messages.last.id)
+      end
+    end
+
+    context "when fetch_from_first_message is true" do
+      it "sets target_message_id to first thread message id" do
+        expect(result.target_message_id).to eq(thread.chat_messages.first.id)
+      end
+    end
+
     context "when fetch_from_last_read is true" do
       let(:optional_params) { { fetch_from_last_read: true } }
 

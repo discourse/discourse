@@ -60,7 +60,7 @@
           @content={{this.allGroups}}
           @value={{this.groupIds}}
           @labelProperty="name"
-          @onChange={{action (mut this.groupIds)}}
+          @onChange={{fn (mut this.groupIds)}}
         />
       </div>
     {{/if}}

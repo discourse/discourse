@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { getLoadedFaker } from "discourse/lib/load-faker";
 import I18n from "discourse-i18n";
 
 export default class extends Component {
@@ -9,7 +10,7 @@ export default class extends Component {
   @tracked dismissable = true;
   @tracked modalTagName = "div";
   @tracked title = I18n.t("styleguide.sections.modal.header");
-  @tracked body = this.args.dummy.shortLorem;
+  @tracked body = getLoadedFaker().faker.lorem.lines(5);
   @tracked subtitle = "";
   @tracked flash = "";
   @tracked flashType = "success";

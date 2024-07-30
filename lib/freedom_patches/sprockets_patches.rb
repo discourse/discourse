@@ -54,8 +54,6 @@ Sprockets::DirectiveProcessor.prepend(
 Sprockets::Asset.prepend(
   Module.new do
     def digest_path
-      # Workbox assets are already in a folder with a digest in the name
-      return logical_path if logical_path.start_with?("workbox-")
       # Webpack chunks are already named based on their contents
       return logical_path if logical_path.start_with?("chunk.")
       super

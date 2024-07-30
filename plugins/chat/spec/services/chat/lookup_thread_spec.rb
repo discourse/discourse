@@ -56,6 +56,12 @@ RSpec.describe Chat::LookupThread do
       before { channel.update!(threading_enabled: false) }
 
       it { is_expected.to fail_a_policy(:threading_enabled_for_channel) }
+
+      context "when thread is forced" do
+        before { thread.update!(force: true) }
+
+        it { is_expected.to be_a_success }
+      end
     end
   end
 end

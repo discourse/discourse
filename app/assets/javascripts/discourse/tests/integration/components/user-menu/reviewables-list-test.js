@@ -12,14 +12,13 @@ module(
 
     const template = hbs`<UserMenu::ReviewablesList/>`;
 
-    test("has a 'show all' link", async function (assert) {
+    test("show all button for reviewable notifications", async function (assert) {
       await render(template);
-      const showAll = query(".panel-body-bottom a.show-all");
-      assert.ok(showAll.href.endsWith("/review"), "links to the /review page");
+      const showAll = query(".panel-body-bottom .show-all");
       assert.strictEqual(
         showAll.title,
         I18n.t("user_menu.reviewable.view_all"),
-        "the 'show all' link has a title"
+        "has the correct title"
       );
     });
 

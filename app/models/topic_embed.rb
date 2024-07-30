@@ -60,7 +60,10 @@ class TopicEmbed < ActiveRecord::Base
     # If there is no embed, create a topic, post and the embed.
     if embed.blank?
       Topic.transaction do
-        eh = EmbeddableHost.record_for_url(url)
+        if eh = EmbeddableHost.record_for_url(url)
+          tags = eh.tags.presence&.map(&:name) || tags
+          user = eh.user.presence || user
+        end
 
         cook_method ||=
           if SiteSetting.embed_support_markdown
@@ -79,6 +82,18 @@ class TopicEmbed < ActiveRecord::Base
           embed_url: url,
           embed_content_sha1: content_sha1,
         }
+        create_args[:visible] = false if SiteSetting.import_embed_unlisted?
+
+        # always return `args` when using this modifier, e.g:
+        #
+        # plugin.register_modifier(:topic_embed_import_create_args) do |args|
+        #   args[:title] = "MODIFIED: #{args[:title]}"
+        #
+        #   args # returning args is important to prevent errors
+        # end
+        create_args =
+          DiscoursePluginRegistry.apply_modifier(:topic_embed_import_create_args, create_args) ||
+            create_args
 
         post = PostCreator.create(user, create_args)
         post.topic.topic_embed.update!(embed_content_cache: original_contents)
@@ -86,6 +101,11 @@ class TopicEmbed < ActiveRecord::Base
     else
       absolutize_urls(url, contents)
       post = embed.post
+
+      if eh = EmbeddableHost.record_for_url(url)
+        tags = eh.tags.presence || tags
+        user = eh.user.presence || user
+      end
 
       # Update the topic if it changed
       if post&.topic
@@ -101,8 +121,16 @@ class TopicEmbed < ActiveRecord::Base
           post.reload
         end
 
-        if (content_sha1 != embed.content_sha1) || (title && title != post&.topic&.title)
+        existing_tag_names = post.topic.tags.pluck(:name).sort
+        incoming_tag_names = Array(tags).map { |tag| tag.respond_to?(:name) ? tag.name : tag }.sort
+
+        tags_changed = !tags.nil? && existing_tag_names != incoming_tag_names
+
+        if (content_sha1 != embed.content_sha1) || (title && title != post&.topic&.title) ||
+             tags_changed
           changes = { raw: absolutize_urls(url, contents) }
+
+          changes[:tags] = incoming_tag_names if SiteSetting.tagging_enabled && tags_changed
           changes[:title] = title if title.present?
 
           post.revise(user, changes, skip_validations: true, bypass_rate_limiter: true)
@@ -135,9 +163,31 @@ class TopicEmbed < ActiveRecord::Base
     require "ruby-readability"
 
     opts = {
-      tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote figure figcaption],
+      tags: %w[
+        div
+        p
+        code
+        pre
+        h1
+        h2
+        h3
+        b
+        em
+        i
+        strong
+        a
+        img
+        ul
+        li
+        ol
+        blockquote
+        figure
+        figcaption
+        details
+      ],
       attributes: %w[href src class],
       remove_empty_nodes: false,
+      elements_to_score: %w[p],
     }
 
     opts[
@@ -287,7 +337,7 @@ class TopicEmbed < ActiveRecord::Base
           return result if result.size >= 100
         end
       end
-    return result unless result.blank?
+    return result if result.present?
 
     # If there is no first paragraph, return the first div (onebox)
     doc.css("div").first.to_s

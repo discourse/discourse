@@ -661,125 +661,24 @@ acceptance("Topic stats update automatically", function () {
   test("Likes count updates automatically", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const likesDisplay = query("#post_1 .topic-map .likes .number");
-    const oldLikes = likesDisplay.textContent;
-
+    const likesCountSelectors =
+      "#post_1 .topic-map .topic-map__likes-trigger .number";
+    const oldLikesCount = query(likesCountSelectors).textContent;
     const likesChangedFixture = {
       id: 280,
       type: "stats",
-      like_count: 999,
+      like_count: parseInt(oldLikesCount, 10) + 42,
     };
+    const expectedLikesCount = likesChangedFixture.like_count.toString();
 
     // simulate the topic like_count being changed
     await publishToMessageBus("/topic/280", likesChangedFixture);
 
-    const newLikes = likesDisplay.textContent;
-
+    assert.dom(likesCountSelectors).hasText(expectedLikesCount);
     assert.notEqual(
-      oldLikes,
-      newLikes,
-      "it updates the like count on the topic stats"
-    );
-    assert.equal(
-      newLikes,
-      likesChangedFixture.like_count,
-      "it updates the like count with the expected value"
-    );
-  });
-
-  const postsChangedFixture = {
-    id: 280,
-    type: "stats",
-    posts_count: 999,
-    last_posted_at: "2022-06-20T21:01:45.844Z",
-    last_poster: {
-      id: 1,
-      username: "test",
-      name: "Mr. Tester",
-      avatar_template: "/images/d-logo-sketch-small.png",
-    },
-  };
-
-  test("Replies count updates automatically", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-
-    const repliesDisplay = query("#post_1 .topic-map .replies .number");
-    const oldReplies = repliesDisplay.textContent;
-
-    // simulate the topic posts_count being changed
-    await publishToMessageBus("/topic/280", postsChangedFixture);
-
-    const newLikes = repliesDisplay.textContent;
-
-    assert.notEqual(
-      oldReplies,
-      newLikes,
-      "it updates the replies count on the topic stats"
-    );
-    assert.equal(
-      newLikes,
-      postsChangedFixture.posts_count - 1, // replies = posts_count - 1
-      "it updates the replies count with the expected value"
-    );
-  });
-
-  test("Last replier avatar updates automatically", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-
-    const avatarImg = query("#post_1 .topic-map .last-reply .avatar");
-    const oldAvatarTitle = avatarImg.title;
-    const oldAvatarSrc = avatarImg.src;
-
-    // simulate the topic posts_count being changed
-    await publishToMessageBus("/topic/280", postsChangedFixture);
-
-    const newAvatarTitle = avatarImg.title;
-    const newAvatarSrc = avatarImg.src;
-
-    assert.notEqual(
-      oldAvatarTitle,
-      newAvatarTitle,
-      "it updates the last poster avatar title on the topic stats"
-    );
-    assert.equal(
-      newAvatarTitle,
-      postsChangedFixture.last_poster.name,
-      "it updates the last poster avatar title with the expected value"
-    );
-    assert.notEqual(
-      oldAvatarSrc,
-      newAvatarSrc,
-      "it updates the last poster avatar src on the topic stats"
-    );
-    assert.equal(
-      newAvatarSrc,
-      `${document.location.origin}${postsChangedFixture.last_poster.avatar_template}`,
-      "it updates the last poster avatar src with the expected value"
-    );
-  });
-
-  test("Last replied at updates automatically", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-
-    const lastRepliedAtDisplay = query(
-      "#post_1 .topic-map .last-reply .relative-date"
-    );
-    const oldTime = lastRepliedAtDisplay.dataset.time;
-
-    // simulate the topic posts_count being changed
-    await publishToMessageBus("/topic/280", postsChangedFixture);
-
-    const newTime = lastRepliedAtDisplay.dataset.time;
-
-    assert.notEqual(
-      oldTime,
-      newTime,
-      "it updates the last posted time on the topic stats"
-    );
-    assert.equal(
-      newTime,
-      new Date(postsChangedFixture.last_posted_at).getTime(),
-      "it updates the last posted time with the expected value"
+      oldLikesCount,
+      expectedLikesCount,
+      "it updates the likes count on the topic stats"
     );
   });
 });

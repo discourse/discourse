@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  site_settings:
+    lazy_videos_enabled: "Activez l'extension Lazy Videos"
+    lazy_youtube_enabled: "Activer le chargement différé pour les intégrations YouTube"
+    lazy_vimeo_enabled: "Activer le chargement différé pour les intégrations de Vimeo"
+    lazy_tiktok_enabled: "Activer le chargement différé pour les intégrations de TikTok (expérimental)"

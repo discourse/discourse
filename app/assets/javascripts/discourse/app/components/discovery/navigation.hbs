@@ -1,4 +1,7 @@
-<AddCategoryTagClasses @category={{@category}} @tags={{array @tag.id}} />
+<AddCategoryTagClasses
+  @category={{@category}}
+  @tags={{if @tag (array @tag.id)}}
+/>
 
 {{#if @category}}
   <PluginOutlet
@@ -52,6 +55,11 @@
     @skipCategoriesNavItem={{this.skipCategoriesNavItem}}
     @toggleInfo={{@toggleTagInfo}}
     @tagNotification={{@tagNotification}}
+    @model={{@model}}
+    @showDismissRead={{@showDismissRead}}
+    @showResetNew={{@showResetNew}}
+    @dismissRead={{@dismissRead}}
+    @resetNew={{@resetNew}}
   />
 
   {{#if @category}}

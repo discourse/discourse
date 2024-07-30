@@ -1,5 +1,6 @@
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
+import { htmlSafe } from "@ember/template";
 import CreateAccount from "discourse/components/modal/create-account";
 import LoginModal from "discourse/components/modal/login";
 import cookie, { removeCookie } from "discourse/lib/cookie";
@@ -90,7 +91,7 @@ export default {
             for (let i = 0; i < AuthErrors.length; i++) {
               const cond = AuthErrors[i];
               if (options[cond]) {
-                return loginError(I18n.t(`login.${cond}`));
+                return loginError(htmlSafe(I18n.t(`login.${cond}`)));
               }
             }
 

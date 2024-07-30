@@ -78,7 +78,7 @@ Fabricator(:post_with_uploaded_image, from: :post) do
 end
 
 Fabricator(:post_with_an_attachment, from: :post) do
-  raw "<a class=\"attachment\" href=\"/#{Discourse.store.upload_path}/origina/1X/66b3ed1503efc936.zip\">archive.zip</a>"
+  raw "<a class=\"attachment\" href=\"/#{Discourse.store.upload_path}/original/1X/66b3ed1503efc936.zip\">archive.zip</a>"
 end
 
 Fabricator(:post_with_unsized_images, from: :post) do

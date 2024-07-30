@@ -156,7 +156,7 @@ RSpec.describe ColorScheme do
       expect(resolved["secondary"]).to eq("123123") # From custom scheme
       expect(resolved["tertiary"]).to eq("0088cc") # From `foundation/colors.scss`
     ensure
-      ColorScheme::CUSTOM_SCHEMES.delete(custom_scheme_id)
+      ColorScheme::CUSTOM_SCHEMES.delete(custom_scheme_id.to_sym)
     end
 
     it "calculates 'hover' and 'selected' from existing db colors in dark mode" do

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Chat::Api::CategoryChatablesController < ApplicationController
+  requires_plugin Chat::PLUGIN_NAME
+
   def permissions
     category = Category.find(params[:id])
 

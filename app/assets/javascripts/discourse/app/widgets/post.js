@@ -1,4 +1,5 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
+import { hbs } from "ember-cli-htmlbars";
 import { Promise } from "rsvp";
 import { h } from "virtual-dom";
 import ShareTopicModal from "discourse/components/modal/share-topic";
@@ -15,10 +16,11 @@ import { transformBasicPost } from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
 import { clipboardCopy, formatUsername } from "discourse/lib/utilities";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
-import hbs from "discourse/widgets/hbs-compiler";
+import widgetHbs from "discourse/widgets/hbs-compiler";
 import PostCooked from "discourse/widgets/post-cooked";
 import { postTransformCallbacks } from "discourse/widgets/post-stream";
 import RawHtml from "discourse/widgets/raw-html";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { isTesting } from "discourse-common/config/environment";
 import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
@@ -161,6 +163,7 @@ createWidget("reply-to-tab", {
     };
 
     if (!this.attrs.mobileView) {
+      result["role"] = "button";
       result["aria-controls"] = `embedded-posts__top--${attrs.post_number}`;
       result["aria-expanded"] = this.attrs.repliesAbove.length
         ? "true"
@@ -263,7 +266,7 @@ createWidget("post-avatar", {
 
 createWidget("post-locked-indicator", {
   tagName: "div.post-info.post-locked",
-  template: hbs`{{d-icon "lock"}}`,
+  template: widgetHbs`{{d-icon "lock"}}`,
   title: () => I18n.t("post.locked"),
 });
 
@@ -740,9 +743,6 @@ createWidget("post-body", {
     result.push(postContents);
     result.push(this.attach("actions-summary", attrs));
     result.push(this.attach("post-links", attrs));
-    if (attrs.showTopicMap) {
-      result.push(this.attach("topic-map", attrs));
-    }
 
     return result;
   },
@@ -830,6 +830,11 @@ createWidget("post-article", {
         }),
       ])
     );
+
+    if (attrs.showTopicMap) {
+      rows.push(this.buildTopicMap(attrs));
+    }
+
     return rows;
   },
 
@@ -893,6 +898,33 @@ createWidget("post-article", {
           });
         });
     }
+  },
+
+  buildTopicMap(attrs) {
+    return new RenderGlimmer(
+      this,
+      "div.topic-map.--op",
+      hbs`<TopicMap
+        @model={{@data.model}}
+        @topicDetails={{@data.topicDetails}}
+        @postStream={{@data.postStream}}
+        @showPMMap={{@data.showPMMap}}
+        @showInvite={{@data.showInvite}}
+        @removeAllowedGroup={{@data.removeAllowedGroup}}
+        @removeAllowedUser={{@data.removeAllowedUser}}
+      />`,
+      {
+        model: attrs.topic,
+        topicDetails: attrs.topic.get("details"),
+        postStream: attrs.topic.postStream,
+        showPMMap: attrs.showPMMap,
+        showInvite: () => this.sendWidgetAction("showInvite"),
+        removeAllowedGroup: (group) =>
+          this.sendWidgetAction("removeAllowedGroup", group),
+        removeAllowedUser: (user) =>
+          this.sendWidgetAction("removeAllowedUser", user),
+      }
+    );
   },
 });
 
@@ -977,10 +1009,7 @@ export default createWidget("post", {
       return "";
     }
 
-    return [
-      this.attach("post-user-tip-shim"),
-      this.attach("post-article", attrs),
-    ];
+    return [this.attach("post-article", attrs)];
   },
 
   toggleLike() {

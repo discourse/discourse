@@ -561,6 +561,20 @@ RSpec.describe Email::Sender do
       )
     end
 
+    context "with a plugin" do
+      before { DiscoursePluginRegistry.clear_modifiers! }
+      after { DiscoursePluginRegistry.clear_modifiers! }
+
+      it "allows plugins to control whether attachments are included" do
+        SiteSetting.email_total_attachment_size_limit_kb = 10_000
+
+        Plugin::Instance.new.register_modifier(:should_add_email_attachments) { false }
+
+        Email::Sender.new(message, :valid_type).send
+        expect(message.attachments.size).to eq(0)
+      end
+    end
+
     it "adds only non-image uploads as attachments to the email" do
       SiteSetting.email_total_attachment_size_limit_kb = 10_000
       Email::Sender.new(message, :valid_type).send
@@ -638,6 +652,59 @@ RSpec.describe Email::Sender do
           expect(message.attachments.size).to eq(2)
           expect(message.to_s.scan(/cid:[\w\-@.]+/).length).to eq(2)
           expect(message.to_s.scan(/cid:[\w\-@.]+/).uniq.length).to eq(2)
+        end
+
+        it "attaches allowed images from multiple posts in the activity summary" do
+          digest_post = Fabricate(:post)
+          other_digest_post = Fabricate(:post)
+
+          Topic.stubs(:for_digest).returns(
+            Topic.where(id: [digest_post.topic_id, other_digest_post.topic_id]),
+          )
+
+          summary = UserNotifications.digest(post.user, since: 24.hours.ago)
+
+          @secure_image_2 =
+            UploadCreator.new(
+              file_from_fixtures("logo-dev.png", "images"),
+              "something-cool.png",
+            ).create_for(Discourse.system_user.id)
+          @secure_image_2.update_secure_status(override: true)
+          @secure_image_2.update(access_control_post_id: digest_post.id)
+
+          @secure_image_3 =
+            UploadCreator.new(
+              file_from_fixtures("logo.png", "images"),
+              "something-cooler.png",
+            ).create_for(Discourse.system_user.id)
+          @secure_image_3.update_secure_status(override: true)
+          @secure_image_3.update(access_control_post_id: other_digest_post.id)
+
+          Jobs::PullHotlinkedImages.any_instance.expects(:execute)
+          digest_post.update(
+            raw:
+              "#{UploadMarkdown.new(@secure_image).image_markdown}\n#{UploadMarkdown.new(@secure_image_2).image_markdown}",
+          )
+          digest_post.rebake!
+
+          other_digest_post.update(raw: "#{UploadMarkdown.new(@secure_image_3).image_markdown}")
+          other_digest_post.rebake!
+
+          summary.header["X-Discourse-Post-Id"] = nil
+          summary.header["X-Discourse-Post-Ids"] = "#{digest_post.id},#{other_digest_post.id}"
+
+          Email::Sender.new(summary, "digest").send
+
+          expect(summary.content_type).to eq(
+            "multipart/mixed; boundary=\"#{summary.body.boundary}\"",
+          )
+          expect(summary.attachments.map(&:filename)).to include(
+            *[@secure_image, @secure_image_2, @secure_image_3].map(&:original_filename),
+          )
+          expect(summary.to_s.scan("Content-Type: text/html;").length).to eq(1)
+          expect(summary.to_s.scan("Content-Type: text/plain;").length).to eq(1)
+          expect(summary.to_s.scan(/cid:[\w\-@.]+/).length).to eq(3)
+          expect(summary.to_s.scan(/cid:[\w\-@.]+/).uniq.length).to eq(3)
         end
 
         it "does not attach images that are not marked as secure, in the case of a non-secure upload copied to a PM" do

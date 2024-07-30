@@ -96,20 +96,72 @@ class BookmarkQuery
         .unread
         .where(notification_type: Notification.types[:bookmark_reminder])
 
+    reminder_bookmark_ids = reminder_notifications.map { |n| n.data_hash[:bookmark_id] }.compact
+
     # We preload associations like we do above for the list to avoid
     # N1s in the can_see? guardian calls for each bookmark.
-    bookmarks =
-      Bookmark.where(
-        id: reminder_notifications.map { |n| n.data_hash[:bookmark_id] }.compact,
-        user: @user,
-      )
+    bookmarks = Bookmark.where(user: @user, id: reminder_bookmark_ids)
     BookmarkQuery.preload(bookmarks, self)
 
-    reminder_notifications.select do |n|
-      bookmark = bookmarks.find { |bm| bm.id == n.data_hash[:bookmark_id] }
-      next if bookmark.blank?
-      bookmarkable = Bookmark.registered_bookmarkable_from_type(bookmark.bookmarkable_type)
-      bookmarkable.can_see?(@guardian, bookmark)
+    # Any bookmarks that no longer exist, we need to find the associated
+    # records using bookmarkable details.
+    #
+    # First we want to group these by type into a hash to reduce queries:
+    #
+    # {
+    #   "Post": {
+    #     1234: <Post>,
+    #     566: <Post>,
+    #   },
+    #   "Topic": {
+    #     123: <Topic>,
+    #     99: <Topic>,
+    #   }
+    # }
+    #
+    # We may not need to do this most of the time. It depends mostly on
+    # a user's auto_delete_preference for bookmarks.
+    deleted_bookmark_ids = reminder_bookmark_ids - bookmarks.map(&:id)
+    deleted_bookmarkables =
+      reminder_notifications
+        .select do |notif|
+          deleted_bookmark_ids.include?(notif.data_hash[:bookmark_id]) &&
+            notif.data_hash[:bookmarkable_type].present?
+        end
+        .inject({}) do |hash, notif|
+          hash[notif.data_hash[:bookmarkable_type]] ||= {}
+          hash[notif.data_hash[:bookmarkable_type]][notif.data_hash[:bookmarkable_id]] = nil
+          hash
+        end
+
+    # Then, we can actually find the associated records for each type in the database.
+    deleted_bookmarkables.each do |type, bookmarkable|
+      records = Bookmark.registered_bookmarkable_from_type(type).model.where(id: bookmarkable.keys)
+      records.each { |record| deleted_bookmarkables[type][record.id] = record }
+    end
+
+    reminder_notifications.select do |notif|
+      bookmark = bookmarks.find { |bm| bm.id == notif.data_hash[:bookmark_id] }
+
+      # This is the happy path, it's easiest to look up using a bookmark
+      # that hasn't been deleted.
+      if bookmark.present?
+        bookmarkable = Bookmark.registered_bookmarkable_from_type(bookmark.bookmarkable_type)
+        bookmarkable.can_see?(@guardian, bookmark)
+      else
+        # Otherwise, we have to use our cached records from the deleted
+        # bookmarks' related bookmarkable (e.g. Post, Topic) to determine
+        # secure access.
+        bookmarkable =
+          deleted_bookmarkables.dig(
+            notif.data_hash[:bookmarkable_type],
+            notif.data_hash[:bookmarkable_id],
+          )
+        bookmarkable.present? &&
+          Bookmark.registered_bookmarkable_from_type(
+            notif.data_hash[:bookmarkable_type],
+          ).can_see_bookmarkable?(@guardian, bookmarkable)
+      end
     end
   end
 end

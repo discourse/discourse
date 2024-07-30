@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import ChatNotice from "./chat-notice";
 import ChatRetentionReminder from "./chat-retention-reminder";
 

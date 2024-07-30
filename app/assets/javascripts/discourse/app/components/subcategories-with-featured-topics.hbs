@@ -13,7 +13,7 @@
       </tr>
     </thead>
     <tbody aria-labelledby="categories-only-category">
-      {{#each category.subcategories as |subCategory|}}
+      {{#each category.serializedSubcategories as |subCategory|}}
         <ParentCategoryRow @category={{subCategory}} @showTopics={{true}} />
       {{else}}
         {{! No subcategories... so just show the parent to avoid confusion }}

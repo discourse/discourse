@@ -11,6 +11,24 @@
   }
 }
 
+.user-summary-page .details .controls ul,
+.user-main .details .controls ul {
+  display: flex;
+  flex-direction: column;
+
+  li:first-child {
+    order: -2;
+  }
+
+  li.user-profile-controls-outlet.chat-button {
+    order: -1;
+  }
+}
+
+.user-main .collapsed-info .details .controls ul {
+  flex-direction: row;
+}
+
 // TODO (davidb): remove once consolidated chat notifications is complete
 .user-stream .large-notifications .item {
   &:has(.chat-message) {

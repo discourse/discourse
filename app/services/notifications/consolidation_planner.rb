@@ -15,6 +15,7 @@ module Notifications
       consolidation_plans = [
         liked_by_two_users,
         liked,
+        linked,
         group_message_summary,
         group_membership,
         new_features_notification,
@@ -96,6 +97,26 @@ module Notifications
                 data[:previous_notification_id].present?
             end,
         )
+    end
+
+    def linked
+      ConsolidateNotifications
+        .new(
+          from: Notification.types[:linked],
+          to: Notification.types[:linked_consolidated],
+          threshold: -> { SiteSetting.notification_consolidation_threshold },
+          consolidation_window: SiteSetting.linked_notification_consolidation_window_mins.minutes,
+          unconsolidated_query_blk: filtered_by_data_attribute("display_username"),
+          consolidated_query_blk: filtered_by_data_attribute("display_username"),
+        )
+        .set_mutations(
+          set_data_blk:
+            Proc.new do |notification|
+              data = notification.data_hash
+              data.merge(username: data[:display_username])
+            end,
+        )
+        .set_precondition(precondition_blk: Proc.new { |data| data[:username2].blank? })
     end
 
     def group_membership

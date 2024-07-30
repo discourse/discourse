@@ -21,6 +21,14 @@ module Jobs
     @run_immediately = false
   end
 
+  def self.with_immediate_jobs
+    prior = @run_immediately
+    run_immediately!
+    yield
+  ensure
+    @run_immediately = prior
+  end
+
   def self.last_job_performed_at
     Sidekiq.redis do |r|
       int = r.get("last_job_perform_at")

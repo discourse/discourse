@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: Թեմա
+    scriptables:
+      pin_topic:
+        title: Ամրակցել Թեման
+      close_topic:
+        title: Փակել Թեման
+      append_last_checked_by:
+        button_text: Կատարված է

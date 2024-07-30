@@ -2,7 +2,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "discourse-i18n";
 
@@ -40,7 +40,7 @@ export default class extends Controller {
   @readOnly("site.can_tag_pms") pmTaggingEnabled;
 
   get bulkSelectHelper() {
-    this.userTopicsList.bulkSelectHelper;
+    return this.userTopicsList.bulkSelectHelper;
   }
 
   get messagesDropdownValue() {

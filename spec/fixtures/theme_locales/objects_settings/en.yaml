@@ -1,0 +1,17 @@
+en:
+  theme_metadata:
+    settings:
+      objects_setting:
+        description: "This is a description for objects setting"
+        schema:
+          properties:
+            name:
+              label: Name
+              description: "Section Name"
+            links:
+              name:
+                label: Name
+                description: "Name of the link"
+              url:
+                label: URL
+                description: "URL of the link"

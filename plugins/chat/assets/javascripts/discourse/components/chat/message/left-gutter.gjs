@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { eq } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import dIcon from "discourse-common/helpers/d-icon";
-import eq from "truth-helpers/helpers/eq";
 import formatChatDate from "../../../helpers/format-chat-date";
 
 export default class ChatMessageLeftGutter extends Component {
@@ -25,7 +26,10 @@ export default class ChatMessageLeftGutter extends Component {
         </div>
       {{else if this.site.desktopView}}
         <span class="chat-message-left-gutter__date">
-          {{formatChatDate @message "tiny"}}
+          {{formatChatDate
+            @message
+            (hash mode="tiny" threadContext=@threadContext)
+          }}
         </span>
       {{/if}}
       {{#if @message.bookmark}}

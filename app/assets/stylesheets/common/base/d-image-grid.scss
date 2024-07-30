@@ -24,6 +24,10 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    .button-wrapper {
+      bottom: 0;
+      min-width: unset;
+    }
 
     > div,
     > span {
@@ -85,17 +89,6 @@
         &[editing] .wrap-image-grid-button {
           display: none;
         }
-      }
-    }
-  }
-
-  .mobile-view .d-editor-preview & {
-    .image-wrapper {
-      .button-wrapper {
-        opacity: 0;
-      }
-      &:hover .button-wrapper {
-        opacity: 1;
       }
     }
   }

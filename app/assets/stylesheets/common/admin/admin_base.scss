@@ -74,10 +74,17 @@ $mobile-breakpoint: 700px;
 }
 
 .admin-contents {
+  --space-1: 0.25rem;
+  --space-2: calc(0.25rem * 2);
+  --space-3: calc(0.25rem * 3);
+  --space-4: calc(0.25rem * 4);
+  --space-5: calc(0.25rem * 5);
+  --space-6: calc(0.25rem * 6);
+
   position: relative;
   .nav-stacked {
     @media screen and (max-width: 700px) {
-      margin: 0 15px 0 -10px;
+      margin: 0;
     }
   }
 
@@ -88,6 +95,14 @@ $mobile-breakpoint: 700px;
   }
   .row:after {
     clear: both;
+  }
+
+  &.admin-site-settings-category {
+    overflow: hidden;
+
+    @media (max-width: 500px) {
+      background-color: var(--primary-very-low);
+    }
   }
 }
 
@@ -334,7 +349,6 @@ $mobile-breakpoint: 700px;
 }
 
 .admin-content {
-  margin-bottom: 50px;
   .admin-contents {
     padding: 0 0 8px 0;
     @include clearfix();
@@ -490,8 +504,8 @@ $mobile-breakpoint: 700px;
 
 .admin-controls {
   display: flex;
-  background-color: var(--primary-low);
   align-items: center;
+  background: var(--primary-low);
 
   .admin-actions {
     margin-left: auto;
@@ -544,9 +558,9 @@ $mobile-breakpoint: 700px;
   }
 
   .nav-pills {
-    width: calc(100% - 10px);
+    width: 100%;
     display: inline-flex;
-    padding: 10px;
+    padding: 0.5em;
     margin: 0;
     white-space: nowrap;
     overflow-x: auto;
@@ -558,12 +572,6 @@ $mobile-breakpoint: 700px;
 
     &:before {
       display: none;
-    }
-    > li {
-      margin: 0;
-      a.active {
-        background: var(--primary-medium);
-      }
     }
   }
   h1 {
@@ -686,6 +694,20 @@ $mobile-breakpoint: 700px;
   @media (max-width: 500px) {
     width: 50%;
   }
+  .nav-stacked {
+    background-color: inherit;
+
+    a.active {
+      color: var(--primary);
+      background-color: initial;
+      font-weight: 700;
+      border-right: 4px solid var(--d-nav-color--active);
+
+      &::after {
+        display: none; // Hides the arrow
+      }
+    }
+  }
 }
 
 .admin-detail {
@@ -696,7 +718,7 @@ $mobile-breakpoint: 700px;
   width: 82%;
   box-sizing: border-box;
   @media (max-width: $mobile-breakpoint) {
-    width: 95%;
+    width: 100%;
     border: none;
   }
 }
@@ -716,7 +738,7 @@ $mobile-breakpoint: 700px;
   @media (max-width: $mobile-breakpoint) {
     transition: transform 0.3s ease;
     @include transform(translateX(0));
-    margin-left: -10px;
+    padding: 30px 20px;
   }
 }
 
@@ -1030,18 +1052,22 @@ a.inline-editable-field {
 
 // Styles for subtabs in admin
 @import "common/admin/dashboard";
+@import "common/admin/sidebar";
 @import "common/admin/settings";
 @import "common/admin/users";
 @import "common/admin/penalty";
 @import "common/admin/badges";
 @import "common/admin/emails";
+@import "common/admin/flags";
 @import "common/admin/json_schema_editor";
+@import "common/admin/schema_field";
 @import "common/admin/staff_logs";
 @import "common/admin/customize";
 @import "common/admin/customize-install-theme";
 @import "common/admin/api";
 @import "common/admin/backups";
 @import "common/admin/plugins";
+@import "common/admin/admin_config_area";
 @import "common/admin/admin_reports";
 @import "common/admin/admin_report";
 @import "common/admin/admin_report_counters";
@@ -1053,6 +1079,5 @@ a.inline-editable-field {
 @import "common/admin/admin_intro";
 @import "common/admin/admin_emojis";
 @import "common/admin/mini_profiler";
-
-// EXPERIMENTAL: Revamped admin styles, probably can be split up later down the line.
-@import "common/admin/admin_revamp";
+@import "common/admin/schema_theme_setting_editor";
+@import "common/admin/customize_themes_show_schema";

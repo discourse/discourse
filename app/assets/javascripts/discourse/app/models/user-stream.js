@@ -5,16 +5,21 @@ import { url } from "discourse/lib/computed";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
+import Site from "discourse/models/site";
 import UserAction from "discourse/models/user-action";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
-export default RestModel.extend({
-  loaded: false,
+export default class UserStream extends RestModel {
+  loaded = false;
+  itemsLoaded = 0;
+  content = [];
 
-  @on("init")
-  _initialize() {
-    this.setProperties({ itemsLoaded: 0, content: [] });
-  },
+  @url(
+    "itemsLoaded",
+    "user.username_lower",
+    "/user_actions.json?offset=%@&username=%@"
+  )
+  baseUrl;
 
   @discourseComputed("filter")
   filterParam(filter) {
@@ -27,13 +32,7 @@ export default RestModel.extend({
     }
 
     return filter;
-  },
-
-  baseUrl: url(
-    "itemsLoaded",
-    "user.username_lower",
-    "/user_actions.json?offset=%@&username=%@"
-  ),
+  }
 
   filterBy(opts) {
     this.setProperties(
@@ -48,7 +47,7 @@ export default RestModel.extend({
     );
 
     return this.findItems();
-  },
+  }
 
   @discourseComputed("baseUrl", "filterParam", "actingUsername")
   nextFindUrl() {
@@ -62,17 +61,17 @@ export default RestModel.extend({
     }
 
     return findUrl;
-  },
+  }
 
   @discourseComputed("loaded", "content.[]")
   noContent(loaded, content) {
     return loaded && content.length === 0;
-  },
+  }
 
   @discourseComputed("nextFindUrl", "lastLoadedUrl")
   canLoadMore() {
     return this.nextFindUrl !== this.lastLoadedUrl;
-  },
+  }
 
   remove(userAction) {
     // 1) remove the user action from the child groups
@@ -93,7 +92,7 @@ export default RestModel.extend({
     });
 
     this.setProperties({ content, itemsLoaded: content.length });
-  },
+  }
 
   findItems() {
     if (!this.canLoadMore) {
@@ -112,6 +111,11 @@ export default RestModel.extend({
       .then((result) => {
         if (result && result.user_actions) {
           const copy = A();
+
+          result.categories?.forEach((category) => {
+            Site.current().updateCategory(category);
+          });
+
           result.user_actions.forEach((action) => {
             action.title = emojiUnescape(escapeExpression(action.title));
             copy.pushObject(UserAction.create(action));
@@ -130,5 +134,5 @@ export default RestModel.extend({
           lastLoadedUrl: findUrl,
         })
       );
-  },
-});
+  }
+}

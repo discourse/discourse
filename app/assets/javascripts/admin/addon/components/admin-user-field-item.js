@@ -1,8 +1,9 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { Promise } from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n, propertyEqual } from "discourse/lib/computed";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
@@ -12,6 +13,7 @@ import UserField from "admin/models/user-field";
 
 export default Component.extend(bufferedProperty("userField"), {
   adminCustomUserFields: service(),
+  dialog: service(),
 
   tagName: "",
   isEditing: false,
@@ -44,15 +46,12 @@ export default Component.extend(bufferedProperty("userField"), {
   },
 
   @discourseComputed(
-    "userField.{editable,required,show_on_profile,show_on_user_card,searchable}"
+    "userField.{editable,show_on_profile,show_on_user_card,searchable}"
   )
   flags(userField) {
     const ret = [];
     if (userField.editable) {
       ret.push(I18n.t("admin.user_fields.editable.enabled"));
-    }
-    if (userField.required) {
-      ret.push(I18n.t("admin.user_fields.required.enabled"));
     }
     if (userField.show_on_profile) {
       ret.push(I18n.t("admin.user_fields.show_on_profile.enabled"));
@@ -67,20 +66,51 @@ export default Component.extend(bufferedProperty("userField"), {
     return ret.join(", ");
   },
 
+  @discourseComputed("buffered.requirement")
+  editableDisabled(requirement) {
+    return requirement === "for_all_users";
+  },
+
   @action
-  save() {
+  changeRequirementType(requirement) {
+    this.buffered.set("requirement", requirement);
+    this.buffered.set("editable", requirement === "for_all_users");
+  },
+
+  async _confirmChanges() {
+    return new Promise((resolve) => {
+      this.dialog.yesNoConfirm({
+        message: I18n.t("admin.user_fields.requirement.confirmation"),
+        didCancel: () => resolve(false),
+        didConfirm: () => resolve(true),
+      });
+    });
+  },
+
+  @action
+  async save() {
     const attrs = this.buffered.getProperties(
       "name",
       "description",
       "field_type",
       "editable",
-      "required",
+      "requirement",
       "show_on_profile",
       "show_on_user_card",
       "searchable",
       "options",
       ...this.adminCustomUserFields.additionalProperties
     );
+
+    let confirm = true;
+
+    if (attrs.requirement === "for_all_users") {
+      confirm = await this._confirmChanges();
+    }
+
+    if (!confirm) {
+      return;
+    }
 
     return this.userField
       .save(attrs)

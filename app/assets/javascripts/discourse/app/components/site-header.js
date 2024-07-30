@@ -1,11 +1,16 @@
 import { DEBUG } from "@glimmer/env";
+import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
 import { waitForPromise } from "@ember/test-waiters";
 import ItsATrap from "@discourse/itsatrap";
 import MountWidget from "discourse/components/mount-widget";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 import scrollLock from "discourse/lib/scroll-lock";
-import SwipeEvents from "discourse/lib/swipe-events";
+import SwipeEvents, {
+  getMaxAnimationTimeMs,
+  shouldCloseMenu,
+} from "discourse/lib/swipe-events";
+import { isDocumentRTL } from "discourse/lib/text-direction";
 import Docking from "discourse/mixins/docking";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
 import { isTesting } from "discourse-common/config/environment";
@@ -57,9 +62,9 @@ const SiteHeaderComponent = MountWidget.extend(
 
     _animateOpening(panel, event = null) {
       const headerCloak = document.querySelector(".header-cloak");
-      let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
+      let durationMs = getMaxAnimationTimeMs();
       if (event && this.pxClosed > 0) {
-        durationMs = this._swipeEvents.getMaxAnimationTimeMs(
+        durationMs = getMaxAnimationTimeMs(
           this.pxClosed / Math.abs(event.velocityX)
         );
       }
@@ -76,10 +81,10 @@ const SiteHeaderComponent = MountWidget.extend(
     _animateClosing(event, panel, menuOrigin) {
       this._animate = true;
       const headerCloak = document.querySelector(".header-cloak");
-      let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
+      let durationMs = getMaxAnimationTimeMs();
       if (event && this.pxClosed > 0) {
         const distancePx = this._PANEL_WIDTH - this.pxClosed;
-        durationMs = this._swipeEvents.getMaxAnimationTimeMs(
+        durationMs = getMaxAnimationTimeMs(
           distancePx / Math.abs(event.velocityX)
         );
       }
@@ -104,12 +109,8 @@ const SiteHeaderComponent = MountWidget.extend(
       this.pxClosed = null;
     },
 
-    _isRTL() {
-      return document.querySelector("html").classList["direction"] === "rtl";
-    },
-
     _leftMenuClass() {
-      return this._isRTL() ? "user-menu" : "hamburger-panel";
+      return isDocumentRTL() ? "user-menu" : "hamburger-panel";
     },
 
     @bind
@@ -142,7 +143,7 @@ const SiteHeaderComponent = MountWidget.extend(
       const menuOrigin = this._swipeMenuOrigin;
       scrollLock(false, document.querySelector(".panel-body"));
       menuPanels.forEach((panel) => {
-        if (this._swipeEvents.shouldCloseMenu(e, menuOrigin)) {
+        if (shouldCloseMenu(e, menuOrigin)) {
           this._animateClosing(e, panel, menuOrigin);
         } else {
           this._animateOpening(panel, e);
@@ -212,9 +213,14 @@ const SiteHeaderComponent = MountWidget.extend(
       }
     },
 
-    setTopic(topic) {
+    setTopic() {
+      const header = getOwner(this).lookup("service:header");
+      if (header.topicInfoVisible) {
+        this._topic = header.topicInfo;
+      } else {
+        this._topic = null;
+      }
       this.eventDispatched("dom:clean", "header");
-      this._topic = topic;
       this.queueRerender();
     },
 
@@ -231,8 +237,9 @@ const SiteHeaderComponent = MountWidget.extend(
       this._resizeDiscourseMenuPanel = () => this.afterRender();
       window.addEventListener("resize", this._resizeDiscourseMenuPanel);
 
-      this.appEvents.on("header:show-topic", this, "setTopic");
-      this.appEvents.on("header:hide-topic", this, "setTopic");
+      const headerService = getOwner(this).lookup("service:header");
+      headerService.addObserver("topicInfoVisible", this, "setTopic");
+      this.setTopic();
 
       this.appEvents.on("user-menu:rendered", this, "_animateMenu");
 
@@ -299,9 +306,9 @@ const SiteHeaderComponent = MountWidget.extend(
       this._super(...arguments);
 
       window.removeEventListener("resize", this._resizeDiscourseMenuPanel);
-
-      this.appEvents.off("header:show-topic", this, "setTopic");
-      this.appEvents.off("header:hide-topic", this, "setTopic");
+      getOwner(this)
+        .lookup("service:header")
+        .removeObserver("topicInfoVisible", this, "setTopic");
       this.appEvents.off("dom:clean", this, "_cleanDom");
       this.appEvents.off("user-menu:rendered", this, "_animateMenu");
 

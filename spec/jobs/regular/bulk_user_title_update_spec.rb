@@ -34,6 +34,10 @@ RSpec.describe Jobs::BulkUserTitleUpdate do
     let(:customized_badge_name) { "Merit Badge" }
 
     before do
+      I18n.backend.store_translations(
+        :en,
+        { badges: { protector_of_the_realm: { name: "Protector of the Realm" } } },
+      )
       TranslationOverride.upsert!(I18n.locale, Badge.i18n_key(badge.name), customized_badge_name)
       BadgeGranter.grant(badge, user)
       user.update(title: customized_badge_name)

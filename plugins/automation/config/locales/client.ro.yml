@@ -1,0 +1,158 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  js:
+    discourse_automation:
+      create: Creează
+      fields:
+        user:
+          label: Utilizatori
+        pm:
+          title:
+            label: Titlu
+          raw:
+            label: Corp
+        pms:
+          title:
+            label: Titlu
+          raw:
+            label: Corp
+        group:
+          label: Grup
+        text:
+          label: Text
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Insignă
+        stalled_topic:
+          durations:
+            P2W: "Două săptămâni"
+            P3M: "Trei luni"
+            P6M: "Șase luni"
+            P1Y: "Un an"
+        recurring:
+          frequencies:
+            minute: minut
+            hour: oră
+            day: zi
+            week: săptămană
+            month: lună
+            year: an
+          fields:
+            recurrence:
+              label: Recurență
+        stalled_wiki:
+          durations:
+            P2W: "Două săptămâni"
+            P3M: "Trei luni"
+            P6M: "Șase luni"
+            P1Y: "Un an"
+        topic:
+          fields:
+            restricted_topic:
+              label: ID discuție
+        post_created_edited:
+          fields:
+            restricted_category:
+              label: Categorie
+            restricted_group:
+              label: Grup
+          created: Creat
+        user_updated:
+          fields:
+            new_users_only:
+              label: Doar pentru utilizatorii noi
+              description: Se va declanșa doar pentru utilizatorii noi care se alătură după ce această automatizare este activată
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Categorie părinte
+        pm_created:
+          fields:
+            restricted_user:
+              label: Utilizatori
+            restricted_group:
+              label: Grup
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Categorie
+            restricted_tags:
+              label: Etichete
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Etichete
+        post:
+          fields:
+            topic:
+              label: ID discuție
+        topic:
+          fields:
+            creator:
+              label: Creator
+              updated_user_context: Utilizatorul actualizat
+            body:
+              label: Corp subiect
+            title:
+              label: Titlu subiect
+            category:
+              label: Categorie subiect
+            tags:
+              label: Etichete subiect
+        group_category_notification_default:
+          fields:
+            group:
+              label: Grup
+        user_global_notice:
+          levels:
+            success: Succes
+            error: Eroare
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Grup
+            badge:
+              label: Insignă
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: Utilizatori
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID discuție
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID discuție
+            user:
+              label: Utilizatori
+        close_topic:
+          fields:
+            topic:
+              label: ID discuție
+            user:
+              label: Utilizatori
+      models:
+        trigger:
+          name:
+            label: Declanșator
+        automation:
+          name:
+            label: Nume
+          trigger:
+            label: Declanșator
+          version:
+            label: Versiune
+          enabled:
+            label: Activat
+          disabled:
+            label: Dezactivat

@@ -13,32 +13,11 @@
     }
   }
 }
-//legacy
-// Hardcode to be the same as before for now. I would recommend not using bootbox, or finding a way so the html structure can be the same
-.bootbox.modal {
-  top: 50%;
-  left: 50%;
-  width: 610px;
-  margin: -250px 0 0 -305px;
-  .cancel {
-    margin-left: 1em;
-  }
-}
 
 .modal.in {
   animation: fade 0.25s;
   @media (prefers-reduced-motion) {
     animation-duration: 0s;
-  }
-}
-
-.modal-footer .btn.right {
-  float: right;
-}
-
-.modal-header {
-  h3 {
-    font-size: var(--font-up-3);
   }
 }
 
@@ -58,20 +37,9 @@
   .category-chooser {
     width: 50%;
   }
-
-  .modal-body.insert-link {
-    input {
-      min-width: 450px;
-    }
-  }
 }
 
 .choose-topic-modal {
-  .modal-body {
-    position: relative;
-    min-height: 350px;
-  }
-
   #choosing-topic {
     // prevents content from moving when user selects different move options 525px
     // is the same width we set on category edit modal
@@ -113,12 +81,6 @@
   }
 }
 
-.change-post-notice-modal {
-  .modal-body {
-    min-width: 450px;
-  }
-}
-
 .create-invite-modal,
 .create-invite-bulk-modal,
 .share-topic-modal {
@@ -129,15 +91,5 @@
     .subtitle {
       margin-left: 0.5em;
     }
-  }
-
-  &.modal .modal-body {
-    margin: 1em;
-    padding: unset;
-  }
-
-  .modal-inner-container {
-    width: 40em; // scale with user font-size
-    max-width: 100vw; // prevent overflow if user font-size is enormous
   }
 }

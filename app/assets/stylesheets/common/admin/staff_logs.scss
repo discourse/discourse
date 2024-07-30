@@ -5,9 +5,6 @@
     white-space: pre-wrap;
     max-height: 250px;
   }
-  .modal-tab {
-    width: 95%;
-  }
 }
 
 .staff-actions {
@@ -282,6 +279,9 @@ table.screened-ip-addresses {
 
 .watched-words-uploader {
   display: inline-block;
+  label {
+    font-weight: normal;
+  }
 }
 
 .watched-words-list {
@@ -344,6 +344,7 @@ table.screened-ip-addresses {
   }
   .select-kit.multi-select.watched-word-input-field {
     width: 300px;
+    margin-bottom: 9px;
   }
 
   + .btn-primary {

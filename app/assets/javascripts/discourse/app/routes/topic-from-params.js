@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
@@ -8,8 +8,9 @@ import DiscourseRoute from "discourse/routes/discourse";
 import { isTesting } from "discourse-common/config/environment";
 
 // This route is used for retrieving a topic based on params
-export default DiscourseRoute.extend({
-  composer: service(),
+export default class TopicFromParams extends DiscourseRoute {
+  @service composer;
+  @service header;
 
   // Avoid default model hook
   model(params) {
@@ -36,20 +37,25 @@ export default DiscourseRoute.extend({
         params._loading_error = true;
         return params;
       });
-  },
+  }
 
-  afterModel() {
+  afterModel(model) {
     const topic = this.modelFor("topic");
 
     if (topic.isPrivateMessage && topic.suggested_topics) {
       this.pmTopicTrackingState.startTracking();
     }
-  },
+
+    const isLoadingFirstPost =
+      topic.postStream.firstPostPresent &&
+      !(model.nearPost && model.nearPost > 1);
+    this.header.enterTopic(topic, isLoadingFirstPost);
+  }
 
   deactivate() {
-    this._super(...arguments);
+    super.deactivate(...arguments);
     this.controllerFor("topic").unsubscribe();
-  },
+  }
 
   setupController(controller, params, { _discourse_anchor }) {
     // Don't do anything else if we couldn't load
@@ -115,14 +121,20 @@ export default DiscourseRoute.extend({
         topic,
       });
     }
-  },
+  }
 
   @action
-  willTransition() {
+  willTransition(transition) {
     this.controllerFor("topic").set("previousURL", document.location.pathname);
+
+    transition.followRedirects().finally(() => {
+      if (!this.router.currentRouteName.startsWith("topic.")) {
+        this.header.clearTopic();
+      }
+    });
 
     // NOTE: omitting this return can break the back button when transitioning quickly between
     // topics and the latest page.
     return true;
-  },
-});
+  }
+}

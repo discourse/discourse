@@ -38,6 +38,13 @@ export default class BaseCustomSidebarSection {
     return true;
   }
 
+  /**
+   * @returns {Boolean} Whether or not to collapse the entire section by default.
+   */
+  get collapsedByDefault() {
+    return false;
+  }
+
   _notImplemented() {
     throw "not implemented";
   }

@@ -30,7 +30,7 @@ acceptance("Sidebar - Anonymous User", function (needs) {
     this.siteSettings.navigation_menu = "header dropdown";
 
     await visit("/");
-    await click(".hamburger-dropdown");
+    await click(".hamburger-dropdown button");
 
     assert.ok(
       exists(".sidebar-hamburger-dropdown .sidebar-sections-anonymous"),

@@ -4,7 +4,7 @@ import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
@@ -78,41 +78,45 @@ export default class ChatDrawerRoutesChannelThread extends Component {
   }
 
   <template>
-    <Navbar
-      @onClick={{this.chat.toggleDrawer}}
-      @showFullTitle={{this.showfullTitle}}
-      as |navbar|
+    <div
+      class="c-drawer-routes --channel-thread"
+      {{didInsert this.fetchChannelAndThread}}
+      {{didUpdate this.fetchChannelAndThread @params.channelId}}
+      {{didUpdate this.fetchChannelAndThread @params.threadId}}
     >
-      <navbar.BackButton
-        @title={{this.backButton.title}}
-        @route={{this.backButton.route}}
-        @routeModels={{this.backButton.models}}
-      />
-      <navbar.Title @title={{this.threadTitle}} @icon="discourse-threads" />
-      <navbar.Actions as |a|>
-        <a.ToggleDrawerButton />
-        <a.FullPageButton />
-        <a.CloseDrawerButton />
-      </navbar.Actions>
-    </Navbar>
+      {{#if this.chat.activeChannel}}
+        <Navbar
+          @onClick={{this.chat.toggleDrawer}}
+          @showFullTitle={{this.showfullTitle}}
+          as |navbar|
+        >
+          <navbar.BackButton
+            @title={{this.backButton.title}}
+            @route={{this.backButton.route}}
+            @routeModels={{this.backButton.models}}
+          />
+          <navbar.Title @title={{this.threadTitle}} @icon="discourse-threads" />
+          <navbar.Actions as |a|>
+            <a.ToggleDrawerButton />
+            <a.FullPageButton />
+            <a.CloseDrawerButton />
+          </navbar.Actions>
+        </Navbar>
 
-    {{#if this.chatStateManager.isDrawerExpanded}}
-      <div
-        class="chat-drawer-content"
-        {{didInsert this.fetchChannelAndThread}}
-        {{didUpdate this.fetchChannelAndThread @params.channelId}}
-        {{didUpdate this.fetchChannelAndThread @params.threadId}}
-      >
-        {{#each (array this.chat.activeChannel.activeThread) as |thread|}}
-          {{#if thread}}
-            <ChatThread
-              @thread={{thread}}
-              @targetMessageId={{@params.messageId}}
-              @setFullTitle={{this.setFullTitle}}
-            />
-          {{/if}}
-        {{/each}}
-      </div>
-    {{/if}}
+        {{#if this.chatStateManager.isDrawerExpanded}}
+          <div class="chat-drawer-content">
+            {{#each (array this.chat.activeChannel.activeThread) as |thread|}}
+              {{#if thread}}
+                <ChatThread
+                  @thread={{thread}}
+                  @targetMessageId={{@params.messageId}}
+                  @setFullTitle={{this.setFullTitle}}
+                />
+              {{/if}}
+            {{/each}}
+          </div>
+        {{/if}}
+      {{/if}}
+    </div>
   </template>
 }

@@ -1,9 +1,9 @@
-import { getOwner } from "@ember/application";
 import { warn } from "@ember/debug";
 import EmberObject from "@ember/object";
 import Mixin from "@ember/object/mixin";
+import { getOwner } from "@ember/owner";
 import { run } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
@@ -319,13 +319,13 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     });
 
     this._uppyInstance.on("upload-success", (file, response) => {
-      run(() => {
+      run(async () => {
         if (!this._uppyInstance) {
           return;
         }
         this._removeInProgressUpload(file.id);
         let upload = response.body;
-        const markdown = this.uploadMarkdownResolvers.reduce(
+        const markdown = await this.uploadMarkdownResolvers.reduce(
           (md, resolver) => resolver(upload) || md,
           getUploadMarkdown(upload)
         );

@@ -10,13 +10,15 @@ function sexpValue(value) {
     return;
   }
 
-  let pValue = value.original;
-  if (value.type === "StringLiteral") {
-    return JSON.stringify(pValue);
+  if (value.type === "PathExpression") {
+    return resolve(value.original);
+  } else if (value.type === "StringLiteral") {
+    return JSON.stringify(value.value);
   } else if (value.type === "SubExpression") {
     return sexp(value);
+  } else {
+    return resolve(value.value);
   }
-  return resolve(pValue);
 }
 
 function pairsToObj(pairs) {
@@ -133,12 +135,12 @@ function mustacheValue(node, state) {
         return `this.attach(${widgetString}, ${pairsToObj(hash.pairs)})`;
       }
 
-      if (node.escaped) {
-        return `${resolve(path)}`;
-      } else {
+      if (node.trusting) {
         return `new ${useHelper(state, "rawHtml")}({ html: '<span>' + ${resolve(
           path
         )} + '</span>'})`;
+      } else {
+        return `${resolve(path)}`;
       }
   }
 }

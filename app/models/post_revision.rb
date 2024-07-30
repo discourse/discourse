@@ -4,7 +4,7 @@ class PostRevision < ActiveRecord::Base
   belongs_to :post
   belongs_to :user
 
-  serialize :modifications, Hash
+  serialize :modifications, type: Hash
 
   after_create :create_notification
 
@@ -26,6 +26,12 @@ class PostRevision < ActiveRecord::Base
        WHERE version <> 1 + (SELECT COUNT(*) FROM post_revisions WHERE post_id = posts.id)
           OR public_version <> 1 + (SELECT COUNT(*) FROM post_revisions pr WHERE post_id = posts.id AND pr.hidden = 'f')
     SQL
+  end
+
+  def categories
+    return [] if modifications["category_id"].blank?
+
+    @categories ||= Category.with_parents(modifications["category_id"])
   end
 
   def hide!

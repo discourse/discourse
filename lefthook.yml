@@ -39,6 +39,20 @@ pre-commit:
       glob: "**/{client,server}.en.yml"
       run: bundle exec ruby script/i18n_lint.rb {staged_files}
 
+fix-staged:
+  parallel: false
+  commands:
+    prettier:
+      glob: "*.js"
+      include: "app/assets/javascripts|plugins/.+?/assets/javascripts"
+      run: yarn pprettier --write {staged_files}
+    rubocop:
+      glob: "*.rb"
+      run: bundle exec rubocop --force-exclusion -A {staged_files}
+    syntax_tree:
+      glob: "*.{rb,rake}"
+      run: bundle exec stree write Gemfile {staged_files}
+
 lints:
   parallel: true
   commands:

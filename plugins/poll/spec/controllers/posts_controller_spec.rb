@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe PostsController do
   let!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let!(:title) { "Testing Poll Plugin" }
@@ -206,7 +204,25 @@ RSpec.describe PostsController do
           expect(json["post"]["polls"][0]["options"][2]["html"]).to eq("C")
         end
 
-        it "resets the votes" do
+        it "does not clear votes when poll has no change" do
+          DiscoursePoll::Poll.vote(user, post_id, "poll", ["5c24fc1df56d764b550ceae1b9319125"])
+          put :update,
+              params: {
+                id: post_id,
+                post: {
+                  raw: "[poll]\n- A\n- B\n[/poll]\n This poll has no change, but the raw does.",
+                },
+              },
+              format: :json
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["post"]["polls_votes"]["poll"]).to match_array(
+            "5c24fc1df56d764b550ceae1b9319125",
+          )
+        end
+
+        it "resets the votes when poll is changed" do
           DiscoursePoll::Poll.vote(user, post_id, "poll", ["5c24fc1df56d764b550ceae1b9319125"])
 
           put :update,

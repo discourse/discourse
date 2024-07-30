@@ -1,7 +1,9 @@
-import { getOwner } from "@ember/application";
+// deprecated in favor of discourse/tests/integration/components/home-logo-test.gjs
+import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import MountWidget from "discourse/components/mount-widget";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 
@@ -198,6 +200,32 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
       query("#site-logo").getAttribute("src"),
       bigLogo,
       "uses regular logo on dark scheme if no dark logo"
+    );
+  });
+
+  test("the home logo href url defaults to /", async function (assert) {
+    await render(<template><MountWidget @widget="home-logo" /></template>);
+
+    const anchorElement = query("#site-logo").closest("a");
+    assert.strictEqual(
+      anchorElement.getAttribute("href"),
+      "/",
+      "home logo href equals /"
+    );
+  });
+
+  test("api.registerHomeLogoHrefCallback can be used to change the logo href url", async function (assert) {
+    withPluginApi("1.32.0", (api) => {
+      api.registerHomeLogoHrefCallback(() => "https://example.com");
+    });
+
+    await render(<template><MountWidget @widget="home-logo" /></template>);
+
+    const anchorElement = query("#site-logo").closest("a");
+    assert.strictEqual(
+      anchorElement.getAttribute("href"),
+      "https://example.com",
+      "home logo href equals the one set by the callback"
     );
   });
 });

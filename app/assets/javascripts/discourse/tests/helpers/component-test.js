@@ -1,6 +1,5 @@
 import { render } from "@ember/test-helpers";
 import { setupRenderingTest as emberSetupRenderingTest } from "ember-qunit";
-import $ from "jquery";
 import QUnit, { test } from "qunit";
 import { autoLoadModules } from "discourse/instance-initializers/auto-load-modules";
 import { AUTO_GROUPS } from "discourse/lib/constants";
@@ -48,8 +47,6 @@ export function setupRenderingTest(hooks) {
 
     autoLoadModules(this.owner, this.registry);
     this.owner.lookup("service:store");
-
-    $.fn.autocomplete = function () {};
   });
 }
 

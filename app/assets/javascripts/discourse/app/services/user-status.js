@@ -1,4 +1,4 @@
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";

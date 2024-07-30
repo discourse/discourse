@@ -72,6 +72,7 @@ Fabricator(:admin, from: :user) do
   username { sequence(:username) { |i| "anne#{i}" } }
   email { sequence(:email) { |i| "anne#{i}@discourse.org" } }
   admin true
+  trust_level TrustLevel[4]
 
   after_create do |user|
     user.group_users << Fabricate(:group_user, user: user, group: Group[:admins])

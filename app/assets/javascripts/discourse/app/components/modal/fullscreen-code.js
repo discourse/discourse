@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import CodeblockButtons from "discourse/lib/codeblock-buttons";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 

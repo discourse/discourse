@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
 import { formatUsername } from "discourse/lib/utilities";
 
@@ -30,7 +30,6 @@ export default class ChatUserDisplayName extends Component {
     <span class="chat-user-display-name">
       {{#if this.shouldShowNameFirst}}
         <span class="chat-user-display-name__name -first">{{@user.name}}</span>
-        <span class="separator">—</span>
       {{/if}}
 
       <span
@@ -43,7 +42,6 @@ export default class ChatUserDisplayName extends Component {
       </span>
 
       {{#if this.shouldShowNameLast}}
-        <span class="separator">—</span>
         <span class="chat-user-display-name__name">{{@user.name}}</span>
       {{/if}}
     </span>

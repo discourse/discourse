@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::Seeder do
   fab!(:staff_category) { Fabricate(:private_category, name: "Staff", group: Group[:staff]) }
   fab!(:general_category) { Fabricate(:category, name: "General") }

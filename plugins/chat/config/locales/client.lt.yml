@@ -47,8 +47,7 @@ lt:
       heading: "Pokalbis"
       join: "Prisijungti"
       last_visit: "paskutinis apsilankymas"
-      summarization:
-        summarize: "Apibendrinti"
+      no_public_channels_cta: "Naršyti kanalus"
       reply: "Atsakyti"
       edit: "Redaguoti"
       rebake_message: "Perkurti HTML"
@@ -66,6 +65,7 @@ lt:
       browse:
         back: "Atgal"
         filter_all: Visos
+        filter_open: Atidaryti
         filter_closed: Uždaryta
       chat_message_separator:
         today: Šiandien

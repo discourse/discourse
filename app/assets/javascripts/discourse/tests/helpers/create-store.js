@@ -9,19 +9,19 @@ import { currentSettings } from "discourse/tests/helpers/site-settings";
 import deprecated from "discourse-common/lib/deprecated";
 import { buildResolver } from "discourse-common/resolver";
 
-const CatAdapter = RestAdapter.extend({
-  primaryKey: "cat_id",
-});
+class CatAdapter extends RestAdapter {
+  primaryKey = "cat_id";
+}
 
-const CachedCatAdapter = RestAdapter.extend({
-  primaryKey: "cat_id",
-  cache: true,
+class CachedCatAdapter extends RestAdapter {
+  primaryKey = "cat_id";
+  cache = true;
   apiNameFor() {
     return "cat";
-  },
-});
+  }
+}
 
-const CachedCat = RestModel.extend({
+class CachedCat extends RestModel {
   init(...args) {
     // Simulate an implicit injection
     Object.defineProperty(this, "injectedProperty", {
@@ -29,9 +29,9 @@ const CachedCat = RestModel.extend({
       enumerable: true,
       value: "hello world",
     });
-    this._super(...args);
-  },
-});
+    return super.init(...args);
+  }
+}
 
 export default function (customLookup = () => {}) {
   deprecated(

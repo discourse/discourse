@@ -22,7 +22,6 @@ class WebHookTopicViewSerializer < TopicViewSerializer
     slow_mode_seconds
     slow_mode_enabled_until
     bookmarks
-    summarizable
   ].each { |attr| define_method("include_#{attr}?") { false } }
 
   def include_show_read_indicator?

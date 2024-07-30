@@ -8,7 +8,7 @@
   --transform-y: 0;
 
   position: fixed;
-  top: 5px;
+  top: calc(var(--header-offset) + 0.33rem);
   right: 5px;
   z-index: z("max");
   display: flex;

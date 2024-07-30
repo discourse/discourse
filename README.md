@@ -14,7 +14,7 @@ To learn more, visit [**discourse.org**](https://www.discourse.org) and join our
 
 <a href="https://bbs.boingboing.net"><img alt="Boing Boing" src="https://github-production-user-asset-6210df.s3.amazonaws.com/5862206/261580781-1413ac96-5d08-40b2-bc8e-27c3f2d3bfe6.png" width="720px"></a>
 
-<a href="https://twittercommunity.com/"><img src="https://user-images.githubusercontent.com/1681963/52239250-04ad8280-289c-11e9-9e42-574f6eaab9d7.png" width="720px"></a>
+<a href="https://twittercommunity.com/"><img alt="X Community" src="https://github.com/discourse/discourse/assets/2790986/ebb63eee-1927-4060-ada1-cf1bc774084c.png" width="720px"></a>
 
 <img src="https://user-images.githubusercontent.com/1681963/52239118-b304f800-289b-11e9-9904-16450680d9ec.jpg" alt="Mobile" width="414">
 

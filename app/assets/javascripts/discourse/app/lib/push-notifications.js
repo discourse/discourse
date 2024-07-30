@@ -47,7 +47,7 @@ export function isPushNotificationsEnabled(user) {
   );
 }
 
-export function register(user, router) {
+export function register(user, router, appEvents) {
   if (!isPushNotificationsSupported()) {
     return;
   }
@@ -74,6 +74,7 @@ export function register(user, router) {
   navigator.serviceWorker.addEventListener("message", (event) => {
     if ("url" in event.data) {
       router.transitionTo(event.data.url);
+      appEvents.trigger("push-notification-opened", { url: event.data.url });
     }
   });
 }
@@ -83,8 +84,8 @@ export function subscribe(callback, applicationServerKey) {
     return;
   }
 
-  navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
-    serviceWorkerRegistration.pushManager
+  return navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
+    return serviceWorkerRegistration.pushManager
       .subscribe({
         userVisibleOnly: true,
         applicationServerKey: new Uint8Array(applicationServerKey.split("|")), // eslint-disable-line no-undef
@@ -94,10 +95,12 @@ export function subscribe(callback, applicationServerKey) {
         if (callback) {
           callback();
         }
+        return true;
       })
       .catch((e) => {
         // eslint-disable-next-line no-console
         console.error(e);
+        return false;
       });
   });
 }
@@ -108,7 +111,7 @@ export function unsubscribe(user, callback) {
   }
 
   keyValueStore.setItem(userSubscriptionKey(user), "");
-  navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
+  return navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
     serviceWorkerRegistration.pushManager
       .getSubscription()
       .then((subscription) => {
@@ -131,5 +134,6 @@ export function unsubscribe(user, callback) {
     if (callback) {
       callback();
     }
+    return true;
   });
 }

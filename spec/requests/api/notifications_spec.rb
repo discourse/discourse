@@ -40,7 +40,7 @@ RSpec.describe "notifications" do
                          type: :string,
                        },
                        post_number: {
-                         type: %i[string null],
+                         type: %i[integer null],
                        },
                        topic_id: {
                          type: %i[integer null],
@@ -107,6 +107,11 @@ RSpec.describe "notifications" do
       produces "application/json"
       response "200", "notifications marked read" do
         schema type: :object, properties: { success: { type: :string } }
+
+        let(:notification) do
+          notification = Fabricate(:notification)
+          NotificationSerializer.new(notification).as_json
+        end
 
         run_test!
       end

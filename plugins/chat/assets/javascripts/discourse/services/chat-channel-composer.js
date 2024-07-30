@@ -1,6 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import Service, { inject as service } from "@ember/service";
+import { schedule } from "@ember/runloop";
+import Service, { service } from "@ember/service";
+import { disableBodyScroll } from "discourse/lib/body-scroll-lock";
 
 export default class ChatChannelComposer extends Service {
   @service chat;
@@ -9,17 +11,37 @@ export default class ChatChannelComposer extends Service {
   @service router;
   @service("chat-thread-composer") threadComposer;
   @service loadingSlider;
+  @service capabilities;
+  @service appEvents;
+  @service site;
 
   @tracked textarea;
+  @tracked scroller;
+
+  init() {
+    super.init(...arguments);
+    this.appEvents.on("discourse:focus-changed", this, this.blur);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off("discourse:focus-changed", this, this.blur);
+  }
 
   @action
   focus(options = {}) {
     this.textarea?.focus(options);
+
+    schedule("afterRender", () => {
+      if (this.capabilities.isIOS && !this.capabilities.isIpadOS) {
+        disableBodyScroll(this.scroller, { reverse: true });
+      }
+    });
   }
 
   @action
   blur() {
-    this.textarea.blur();
+    this.textarea?.blur();
   }
 
   @action
@@ -27,7 +49,10 @@ export default class ChatChannelComposer extends Service {
     this.chat.activeMessage = null;
     message.editing = true;
     message.channel.draft = message;
-    this.focus({ refreshHeight: true, ensureAtEnd: true });
+
+    if (this.site.desktopView) {
+      this.focus({ refreshHeight: true, ensureAtEnd: true });
+    }
   }
 
   @action
@@ -53,10 +78,16 @@ export default class ChatChannelComposer extends Service {
 
       message.channel.resetDraft(this.currentUser);
 
-      await this.router.transitionTo(
-        "chat.channel.thread",
-        ...message.thread.routeModels
-      );
+      try {
+        await this.router.transitionTo(
+          "chat.channel.thread",
+          ...message.thread.routeModels
+        );
+      } catch (e) {
+        if (e.name !== "TransitionAborted") {
+          throw e;
+        }
+      }
 
       this.threadComposer.focus({ ensureAtEnd: true, refreshHeight: true });
     } else {

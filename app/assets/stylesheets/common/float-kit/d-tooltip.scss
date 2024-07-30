@@ -9,17 +9,6 @@
 }
 
 .fk-d-tooltip {
-  background-color: var(--secondary);
-  border-radius: var(--d-border-radius);
-  border: 1px solid var(--primary-low);
-  box-shadow: var(--shadow-menu-panel);
-  z-index: z("max");
-  width: max-content;
-  position: absolute;
-  top: 0;
-  display: flex !important;
-  padding: 0;
-
   &__trigger {
     display: inline-flex;
     cursor: pointer;
@@ -27,25 +16,9 @@
     .touch & {
       @include unselectable;
     }
-  }
 
-  &.-animated {
-    animation: d-tooltip-opening 0.15s ease-in;
-
-    &[data-placement^="bottom"] {
-      transform-origin: top center;
-    }
-
-    &[data-placement^="top"] {
-      transform-origin: bottom center;
-    }
-
-    &[data-placement^="right"] {
-      transform-origin: center left;
-    }
-
-    &[data-placement^="left"] {
-      transform-origin: center right;
+    &-container {
+      display: flex;
     }
   }
 
@@ -57,35 +30,74 @@
     align-items: center;
   }
 
-  .arrow {
+  &__content {
+    background-color: var(--secondary);
+    border-radius: var(--d-border-radius);
+    border: 1px solid var(--primary-low);
+    box-shadow: var(--shadow-menu-panel);
     z-index: z("max");
+    width: max-content;
     position: absolute;
-  }
+    top: 0;
+    display: flex !important;
+    padding: 0;
 
-  &[data-placement^="top"] {
-    .arrow {
-      bottom: -9px;
-      rotate: 180deg;
+    &.-animated {
+      animation: d-tooltip-opening 0.15s ease-in;
+
+      &[data-placement^="bottom"] {
+        transform-origin: top center;
+      }
+
+      &[data-placement^="top"] {
+        transform-origin: bottom center;
+      }
+
+      &[data-placement^="right"] {
+        transform-origin: center left;
+      }
+
+      &[data-placement^="left"] {
+        transform-origin: center right;
+      }
     }
-  }
 
-  &[data-placement^="bottom"] {
     .arrow {
-      top: -9px;
+      z-index: z("max");
+      position: absolute;
     }
-  }
 
-  &[data-placement^="right"] {
-    .arrow {
-      rotate: -90deg;
-      left: -9px;
+    &[data-placement^="top"] {
+      .arrow {
+        bottom: -10px;
+        rotate: 180deg;
+      }
     }
-  }
 
-  &[data-placement^="left"] {
-    .arrow {
-      rotate: 90deg;
-      right: -9px;
+    &[data-placement^="top-start"] {
+      .arrow {
+        margin-left: 10px;
+      }
+    }
+
+    &[data-placement^="bottom"] {
+      .arrow {
+        top: -10px;
+      }
+    }
+
+    &[data-placement^="right"] {
+      .arrow {
+        rotate: -90deg;
+        left: -10px;
+      }
+    }
+
+    &[data-placement^="left"] {
+      .arrow {
+        rotate: 90deg;
+        right: -10px;
+      }
     }
   }
 }

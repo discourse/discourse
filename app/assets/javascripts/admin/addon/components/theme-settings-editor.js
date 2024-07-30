@@ -1,8 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { ajax } from "discourse/lib/ajax";
+import { service } from "@ember/service";
 import I18n from "discourse-i18n";
 
 export default class ThemeSettingsEditor extends Component {
@@ -52,6 +51,7 @@ export default class ThemeSettingsEditor extends Component {
     if (!this.theme) {
       return null;
     }
+
     return this.theme.settings.map((setting) => ({
       setting: setting.setting,
       value: setting.value,
@@ -86,11 +86,14 @@ export default class ThemeSettingsEditor extends Component {
     this.saving = true;
     this.errors = [];
     this.success = "";
+
     if (!this.editedContent) {
       // no changes.
       return;
     }
+
     let newSettings = "";
+
     try {
       newSettings = JSON.parse(this.editedContent);
     } catch (e) {
@@ -104,6 +107,7 @@ export default class ThemeSettingsEditor extends Component {
       this.saving = false;
       return;
     }
+
     if (!this.validateSettingsKeys(newSettings)) {
       this.errors = [
         ...this.errors,
@@ -119,14 +123,17 @@ export default class ThemeSettingsEditor extends Component {
     const originalNames = this.theme
       ? this.theme.settings.map((setting) => setting.setting)
       : [];
+
     const newNames = newSettings.map((setting) => setting.setting);
     const deletedNames = originalNames.filter(
       (originalName) => !newNames.find((newName) => newName === originalName)
     );
+
     const addedNames = newNames.filter(
       (newName) =>
         !originalNames.find((originalName) => originalName === newName)
     );
+
     if (deletedNames.length) {
       this.errors = [
         ...this.errors,
@@ -136,6 +143,7 @@ export default class ThemeSettingsEditor extends Component {
         },
       ];
     }
+
     if (addedNames.length) {
       this.errors = [
         ...this.errors,
@@ -151,41 +159,49 @@ export default class ThemeSettingsEditor extends Component {
       return;
     }
 
-    const changedSettings = newSettings.filter((newSetting) => {
+    const changedSettings = [];
+
+    newSettings.forEach((newSetting) => {
       const originalSetting = this.theme.settings.find(
         (_originalSetting) => _originalSetting.setting === newSetting.setting
       );
-      return originalSetting.value !== newSetting.value;
+
+      if (originalSetting.value !== newSetting.value) {
+        changedSettings.push({
+          originalSetting,
+          value: newSetting.value,
+        });
+      }
     });
-    for (let setting of changedSettings) {
+
+    for (let changedSetting of changedSettings) {
       try {
-        await this.saveSetting(this.theme.id, setting);
+        await this.saveSetting(this.theme.id, changedSetting);
       } catch (err) {
         const errorObjects = JSON.parse(err.jqXHR.responseText).errors.map(
           (error) => ({
-            setting: setting.setting,
+            setting: changedSetting.originalSetting.setting,
             errorMessage: error,
           })
         );
+
         this.errors = [...this.errors, ...errorObjects];
       }
     }
+
     if (this.errors.length === 0) {
       this.editedContent = null;
     }
+
     this.saving = false;
     this.dialog.cancel();
     this.customizeThemeShowController.send("routeRefreshModel");
   }
 
-  async saveSetting(themeId, setting) {
-    const updateUrl = `/admin/themes/${themeId}/setting`;
-    return await ajax(updateUrl, {
-      type: "PUT",
-      data: {
-        name: setting.setting,
-        value: setting.value,
-      },
-    });
+  async saveSetting(themeId, changedSetting) {
+    return await changedSetting.originalSetting.updateSetting(
+      themeId,
+      changedSetting.value
+    );
   }
 }

@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Group from "discourse/models/group";

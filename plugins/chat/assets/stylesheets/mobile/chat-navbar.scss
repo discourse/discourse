@@ -23,12 +23,4 @@
     left: 0.25rem;
     width: calc(100% - 0.5rem);
   }
-
-  .c-navbar__title {
-    .c-routes-direct-messages &,
-    .c-routes-channels &,
-    .c-routes-threads & {
-      padding-left: 1.25rem;
-    }
-  }
 }

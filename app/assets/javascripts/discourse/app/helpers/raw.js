@@ -1,8 +1,8 @@
-import { getOwner, setOwner } from "@ember/application";
 import Helper from "@ember/component/helper";
 import { registerDestructor } from "@ember/destroyable";
+import { getOwner, setOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { helperContext, registerRawHelper } from "discourse-common/lib/helpers";
 import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";

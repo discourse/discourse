@@ -56,6 +56,7 @@ pl_PL:
       cancel_reply: "Anuluj odpowiedź"
       chat_channels: "Kanały"
       browse_all_channels: "Przeglądaj wszystkie kanały"
+      see_in: "Zobacz w"
       move_to_channel:
         title: "Przenieś wiadomości na kanał"
         instructions:
@@ -101,7 +102,6 @@ pl_PL:
       channels_list_popup:
         browse: "Przeglądaj kanały"
         create: "Nowy kanał"
-      click_to_join: "Kliknij tutaj, aby wyświetlić dostępne kanały."
       close: "Zamknij"
       remove: "Usuń"
       collapse: "Zwiń szufladę czatu"
@@ -145,15 +145,6 @@ pl_PL:
       heading: "Czat"
       join: "Dołącz"
       last_visit: "ostatnia wizyta"
-      summarization:
-        title: "Podsumuj wiadomości"
-        description: "Wybierz opcję poniżej, aby podsumować rozmowę wysłaną w żądanym przedziale czasowym."
-        summarize: "Podsumuj"
-        since:
-          one: "Ostatnia godzina"
-          few: "Ostatnie %{count} godziny"
-          many: "Ostatnie %{count} godzin"
-          other: "Ostatnie %{count} godzin"
       mention_warning:
         invitations_sent:
           one: "Zaproszenie wysłane"
@@ -241,8 +232,10 @@ pl_PL:
         header: "Nagłówek czatu"
         composer: "Edytor czatu"
         channels_list: "Lista kanałów czatu"
-      no_direct_message_channels: "Nie dołączyłeś do żadnego kanału wiadomości bezpośrednich."
-      no_public_channels: "Nie dołączyłeś do żadnego kanału."
+      no_direct_message_channels: "Nie dołączyłeś jeszcze do żadnych bezpośrednich wiadomości!"
+      no_direct_message_channels_cta: "Rozpocząć rozmowę"
+      no_public_channels: "Jeszcze nie dołączyłeś(aś) do żadnych kanałów!"
+      no_public_channels_cta: "Przeglądaj kanały"
       kicked_from_channel: "Nie masz już dostępu do tego kanału."
       only_chat_push_notifications:
         title: "Wysyłaj tylko powiadomienia push czatu"
@@ -270,6 +263,7 @@ pl_PL:
       copy_link: "Skopiuj link"
       copy_text: "Skopiuj tekst"
       rebake_message: "Odśwież HTML"
+      message_too_long: "Wiadomość jest zbyt długa, wiadomości muszą mieć maksymalnie %{count} znaków."
       retry_staged_message:
         title: "Błąd sieci"
         action: "Wyślij ponownie?"
@@ -323,7 +317,7 @@ pl_PL:
         back: "Poprzednia"
         title: Kanały
         filter_all: Wszystkie
-        filter_open: Otwarty
+        filter_open: Otwórz
         filter_closed: Zamknięte
         filter_archived: Zarchiwizowany
         filter_input_placeholder: Szukaj kanału według nazwy
@@ -610,6 +604,7 @@ pl_PL:
       flags:
         off_topic: "Ta wiadomość nie jest związana z bieżącą dyskusją określoną w tytule kanału i prawdopodobnie powinna zostać przeniesiona w inne miejsce."
         inappropriate: "Ta wiadomość zawiera treści, które rozsądna osoba mogłaby uznać za obraźliwe, krzywdzące lub stanowiące naruszenie <a href=\"%{basePath}/guidelines\">naszych wytycznych dotyczących społeczności</a>."
+        illegal: "Ten post wymaga uwagi personelu, ponieważ uważam, że zawiera treści niezgodne z prawem."
         spam: "Ta wiadomość to reklama lub akt wandalizmu. Nie jest przydatna ani istotna dla bieżącego kanału."
         notify_user: "Chcę porozmawiać z tą osobą bezpośrednio i osobiście o jej przesłaniu."
         notify_moderators: "Ta wiadomość wymaga uwagi personelu z innego powodu niewymienionego powyżej."
@@ -654,6 +649,12 @@ pl_PL:
           few: "+%{count}"
           many: "+%{count}"
           other: "+%{count}"
+      thread_title_toast:
+        title: "Ustaw tytuł wątku"
+        dismiss_action: "Nie pokazuj ponownie"
+        primary_action: "Ustaw tytuł"
+      thread_title_modal:
+        title: "Ustaw tytuł wątku"
       threads:
         open: "Otwórz wątek"
         list: "Wątki"

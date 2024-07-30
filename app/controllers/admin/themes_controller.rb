@@ -83,7 +83,7 @@ class Admin::ThemesController < Admin::AdminController
 
       if @theme.save
         log_theme_change(nil, @theme)
-        render json: @theme, status: :created
+        render json: serialize_data(@theme, ThemeSerializer), status: :created
       else
         render json: @theme.errors, status: :unprocessable_entity
       end
@@ -113,7 +113,7 @@ class Admin::ThemesController < Admin::AdminController
 
           @theme =
             RemoteTheme.import_theme(remote, theme_user, private_key: private_key, branch: branch)
-          render json: @theme, status: :created
+          render json: serialize_data(@theme, ThemeSerializer), status: :created
         rescue RemoteTheme::ImportError => e
           if params[:force]
             theme_name = params[:remote].gsub(/.git\z/, "").split("/").last
@@ -128,7 +128,7 @@ class Admin::ThemesController < Admin::AdminController
             @theme.remote_theme = remote_theme
             @theme.save!
 
-            render json: @theme, status: :created
+            render json: serialize_data(@theme, ThemeSerializer), status: :created
           else
             render_json_error e.message
           end
@@ -156,7 +156,7 @@ class Admin::ThemesController < Admin::AdminController
           )
 
         log_theme_change(nil, @theme)
-        render json: @theme, status: :created
+        render json: serialize_data(@theme, ThemeSerializer), status: :created
       rescue RemoteTheme::ImportError => e
         render_json_error e.message
       end
@@ -173,10 +173,10 @@ class Admin::ThemesController < Admin::AdminController
     @color_schemes = ColorScheme.all.includes(:theme, color_scheme_colors: :color_scheme).to_a
 
     payload = {
-      themes: ActiveModel::ArraySerializer.new(@themes, each_serializer: ThemeSerializer),
+      themes: serialize_data(@themes, ThemeSerializer),
       extras: {
-        color_schemes:
-          ActiveModel::ArraySerializer.new(@color_schemes, each_serializer: ColorSchemeSerializer),
+        color_schemes: serialize_data(@color_schemes, ColorSchemeSerializer),
+        locale: current_user.effective_locale,
       },
     }
 
@@ -200,7 +200,7 @@ class Admin::ThemesController < Admin::AdminController
       if @theme.save
         update_default_theme
         log_theme_change(nil, @theme)
-        format.json { render json: @theme, status: :created }
+        format.json { render json: serialize_data(@theme, ThemeSerializer), status: :created }
       else
         format.json { render json: @theme.errors, status: :unprocessable_entity }
       end
@@ -250,7 +250,7 @@ class Admin::ThemesController < Admin::AdminController
         log_theme_component_disabled if disables_component
         log_theme_component_enabled if enables_component
 
-        format.json { render json: @theme, status: :ok }
+        format.json { render json: serialize_data(@theme, ThemeSerializer), status: :ok }
       else
         format.json do
           error = @theme.errors.full_messages.join(", ").presence
@@ -279,7 +279,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def bulk_destroy
     themes = Theme.where(id: params[:theme_ids])
-    raise Discourse::InvalidParameters.new(:id) unless themes.present?
+    raise Discourse::InvalidParameters.new(:id) if themes.blank?
 
     ActiveRecord::Base.transaction do
       themes.each { |theme| StaffActionLogger.new(current_user).log_theme_destroy(theme) }
@@ -293,7 +293,7 @@ class Admin::ThemesController < Admin::AdminController
     @theme = Theme.include_relations.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
-    render json: ThemeSerializer.new(@theme)
+    render_serialized(@theme, ThemeSerializer)
   end
 
   def export
@@ -311,6 +311,25 @@ class Admin::ThemesController < Admin::AdminController
     exporter.cleanup!
   end
 
+  def get_translations
+    params.require(:locale)
+    if I18n.available_locales.exclude?(params[:locale].to_sym)
+      raise Discourse::InvalidParameters.new(:locale)
+    end
+
+    I18n.locale = params[:locale]
+
+    @theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless @theme
+
+    translations =
+      @theme.translations.map do |translation|
+        { key: translation.key, value: translation.value, default: translation.default }
+      end
+
+    render json: { translations: translations }, status: :ok
+  end
+
   def update_single_setting
     params.require("name")
     @theme = Theme.find_by(id: params[:id])
@@ -320,13 +339,32 @@ class Admin::ThemesController < Admin::AdminController
     new_value = params[:value] || nil
 
     previous_value = @theme.cached_settings[setting_name]
-    @theme.update_setting(setting_name, new_value)
+
+    begin
+      @theme.update_setting(setting_name, new_value)
+    rescue Discourse::InvalidParameters => e
+      return render_json_error e.message
+    end
+
     @theme.save
 
     log_theme_setting_change(setting_name, previous_value, new_value)
 
     updated_setting = @theme.cached_settings.select { |key, val| key == setting_name }
     render json: updated_setting, status: :ok
+  end
+
+  def schema
+  end
+
+  def objects_setting_metadata
+    theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless theme
+
+    theme_setting = theme.settings[params[:setting_name].to_sym]
+    raise Discourse::InvalidParameters.new(:setting_name) unless theme_setting
+
+    render_serialized(theme_setting, ThemeObjectsSettingMetadataSerializer, root: false)
   end
 
   private
@@ -365,6 +403,7 @@ class Admin::ThemesController < Admin::AdminController
           :component,
           :enabled,
           :auto_update,
+          :locale,
           settings: {
           },
           translations: {
@@ -403,6 +442,14 @@ class Admin::ThemesController < Admin::AdminController
 
   def update_translations
     return unless target_translations = theme_params[:translations]
+
+    locale = theme_params[:locale].presence
+    if locale
+      if I18n.available_locales.exclude?(locale.to_sym)
+        raise Discourse::InvalidParameters.new(:locale)
+      end
+      I18n.locale = locale
+    end
 
     target_translations.each_pair do |translation_key, new_value|
       @theme.update_translation(translation_key, new_value)

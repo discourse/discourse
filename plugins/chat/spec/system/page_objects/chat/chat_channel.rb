@@ -35,7 +35,9 @@ module PageObjects
       end
 
       def click_composer
-        find(".chat-channel .chat-composer__input").click # ensures autocomplete is closed and not masking anything
+        if has_no_css?(".dialog-overlay", wait: 0) # we can't click composer if a dialog is open, in case of error for exampel
+          find(".chat-channel .chat-composer__input").click # ensures autocomplete is closed and not masking anything
+        end
       end
 
       def click_send_message
@@ -86,6 +88,7 @@ module PageObjects
       def bookmark_message(message)
         if page.has_css?("html.mobile-view", wait: 0)
           click_message_action_mobile(message, "bookmark")
+          expect(page).to have_css(".d-modal:not(.is-animating)")
         else
           hover_message(message)
           find(".bookmark-btn").click

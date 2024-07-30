@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe "Group activity", type: :system do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:user)
+  fab!(:group)
 
   context "when on the posts activity page" do
     let(:posts_page) { PageObjects::Pages::GroupActivityPosts.new }

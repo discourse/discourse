@@ -3,6 +3,7 @@ import EmberObject, { computed, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import Mixin from "@ember/object/mixin";
 import { bind, cancel, next, schedule, throttle } from "@ember/runloop";
+import { service } from "@ember/service";
 import { isEmpty, isNone, isPresent } from "@ember/utils";
 import { createPopper } from "@popperjs/core";
 import { Promise } from "rsvp";
@@ -10,6 +11,7 @@ import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import deprecated from "discourse-common/lib/deprecated";
 import { makeArray } from "discourse-common/lib/helpers";
+import { bind as bindDecorator } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import PluginApiMixin, {
   applyContentPluginApiCallbacks,
@@ -59,6 +61,7 @@ export default Component.extend(
     labelProperty: null,
     titleProperty: null,
     langProperty: null,
+    appEvents: service(),
 
     init() {
       this._super(...arguments);
@@ -192,8 +195,12 @@ export default Component.extend(
     didInsertElement() {
       this._super(...arguments);
 
+      this.appEvents.on("keyboard-visibility-change", this, this._updatePopper);
+
       if (this.selectKit.options.expandedOnInsert) {
-        this._open();
+        next(() => {
+          this._open();
+        });
       }
     },
 
@@ -206,6 +213,12 @@ export default Component.extend(
       this._super(...arguments);
 
       this._cancelSearch();
+
+      this.appEvents.off(
+        "keyboard-visibility-change",
+        this,
+        this._updatePopper
+      );
 
       if (this.popper) {
         this.popper.destroy();
@@ -371,9 +384,11 @@ export default Component.extend(
     },
 
     addError(error) {
-      this.errorsCollection.pushObject(error);
+      if (!this.errorsCollection.includes(error)) {
+        this.errorsCollection.pushObject(error);
+      }
 
-      this._safeAfterRender(() => this.popper && this.popper.update());
+      this._safeAfterRender(() => this._updatePopper());
     },
 
     clearErrors() {
@@ -407,7 +422,7 @@ export default Component.extend(
     },
 
     _onInput(event) {
-      this.popper && this.popper.update();
+      this._updatePopper();
 
       if (this._searchPromise) {
         cancel(this._searchPromise);
@@ -479,7 +494,7 @@ export default Component.extend(
           if (this.selectKit.options.focusAfterOnChange) {
             this._safeAfterRender(() => {
               this._focusFilter();
-              this.popper && this.popper.update();
+              this._updatePopper();
             });
           }
         }
@@ -639,13 +654,19 @@ export default Component.extend(
         "selectKit.isLoading": true,
         "selectKit.enterDisabled": true,
       });
-      this._safeAfterRender(() => this.popper && this.popper.update());
+      this._safeAfterRender(() => this._updatePopper());
 
       let content = [];
 
       return Promise.resolve(this.search(filter))
         .then((result) => {
           if (this.isDestroyed || this.isDestroying) {
+            return [];
+          }
+
+          if (this.selectKit.options.maximum === 0) {
+            this.set("selectKit.isLoading", false);
+            this.set("selectKit.hasNoContent", false);
             return [];
           }
 
@@ -699,7 +720,7 @@ export default Component.extend(
 
           this._safeAfterRender(() => {
             if (this.selectKit.isExpanded) {
-              this.popper && this.popper.update();
+              this._updatePopper();
               this._focusFilter();
             }
           });
@@ -897,6 +918,26 @@ export default Component.extend(
         );
         const strategy = this._computePlacementStrategy();
 
+        let bottomOffset = 0;
+        if (this.capabilities.isIOS) {
+          bottomOffset +=
+            parseInt(
+              getComputedStyle(document.documentElement)
+                .getPropertyValue("--safe-area-inset-bottom")
+                .trim(),
+              10
+            ) || 0;
+        }
+        if (this.site.mobileView) {
+          bottomOffset +=
+            parseInt(
+              getComputedStyle(document.documentElement)
+                .getPropertyValue("--footer-nav-height")
+                .trim(),
+              10
+            ) || 0;
+        }
+
         this.popper = createPopper(anchor, popper, {
           eventsEnabled: false,
           strategy,
@@ -905,8 +946,8 @@ export default Component.extend(
             {
               name: "eventListeners",
               options: {
-                resize: !this.site.mobileView,
-                scroll: !this.site.mobileView,
+                resize: this.site.desktopView,
+                scroll: this.site.desktopView,
               },
             },
             {
@@ -921,6 +962,7 @@ export default Component.extend(
                       ),
                       10
                     ) || 0,
+                  bottom: bottomOffset,
                 },
               },
             },
@@ -1016,7 +1058,7 @@ export default Component.extend(
       this._safeAfterRender(() => {
         this._focusFilter();
         this._scrollToCurrent();
-        this.popper && this.popper.update();
+        this._updatePopper();
       });
     },
 
@@ -1092,6 +1134,11 @@ export default Component.extend(
       this._deprecateValueAttribute();
       this._deprecateMutations();
       this._handleDeprecatedArgs();
+    },
+
+    @bindDecorator
+    _updatePopper() {
+      this.popper?.update?.();
     },
 
     _computePlacementStrategy() {

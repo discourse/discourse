@@ -1,13 +1,12 @@
 import PreloadStore from "discourse/lib/preload-store";
-import DisableSidebar from "discourse/mixins/disable-sidebar";
 import DiscourseRoute from "discourse/routes/discourse";
 import { deepMerge } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
-export default DiscourseRoute.extend(DisableSidebar, {
+export default class InvitesShow extends DiscourseRoute {
   titleToken() {
     return I18n.t("invites.accept_title");
-  },
+  }
 
   model(params) {
     if (PreloadStore.get("invite_info")) {
@@ -17,26 +16,26 @@ export default DiscourseRoute.extend(DisableSidebar, {
     } else {
       return {};
     }
-  },
+  }
 
   activate() {
-    this._super(...arguments);
+    super.activate(...arguments);
 
     this.controllerFor("application").setProperties({
       showSiteHeader: false,
     });
-  },
+  }
 
   deactivate() {
-    this._super(...arguments);
+    super.deactivate(...arguments);
 
     this.controllerFor("application").setProperties({
       showSiteHeader: true,
     });
-  },
+  }
 
   setupController(controller, model) {
-    this._super(...arguments);
+    super.setupController(...arguments);
 
     if (model.user_fields) {
       controller.userFields.forEach((userField) => {
@@ -45,5 +44,5 @@ export default DiscourseRoute.extend(DisableSidebar, {
         }
       });
     }
-  },
-});
+  }
+}

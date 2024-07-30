@@ -62,11 +62,7 @@ class EmailSettingsValidator
   # Attempts to start an SMTP session and if that raises an error then it is
   # assumed the credentials or other settings are wrong.
   #
-  # For Gmail, the port should be 587, enable_starttls_auto should be true,
-  # and enable_tls should be false.
-  #
-  # @param domain [String] - Used for HELO, will be the email sender's domain, so often
-  #                          will just be the host e.g. the domain for test@gmail.com is gmail.com.
+  # @param domain [String] - Used for HELO, should be the FQDN of the server sending the mail
   #                          localhost can be used in development mode.
   #                          See https://datatracker.ietf.org/doc/html/rfc788#section-4
   # @param debug [Boolean] - When set to true, any errors will be logged at a warning
@@ -77,22 +73,25 @@ class EmailSettingsValidator
     username:,
     password:,
     domain: nil,
-    authentication: GlobalSetting.smtp_authentication,
+    authentication: nil,
     enable_starttls_auto: GlobalSetting.smtp_enable_start_tls,
     enable_tls: GlobalSetting.smtp_force_tls,
     openssl_verify_mode: GlobalSetting.smtp_openssl_verify_mode,
     debug: Rails.env.development?
   )
     begin
-      port, enable_tls, enable_starttls_auto =
-        provider_specific_ssl_overrides(host, port, enable_tls, enable_starttls_auto)
-
       if enable_tls && enable_starttls_auto
         raise ArgumentError, "TLS and STARTTLS are mutually exclusive"
       end
 
-      if !%i[plain login cram_md5].include?(authentication.to_sym)
-        raise ArgumentError, "Invalid authentication method. Must be plain, login, or cram_md5."
+      if username || password
+        authentication = SmtpProviderOverrides.authentication_override(host) if authentication.nil?
+        authentication = authentication.to_sym
+        if !%i[plain login cram_md5].include?(authentication)
+          raise ArgumentError, "Invalid authentication method. Must be plain, login, or cram_md5."
+        end
+      else
+        authentication = nil
       end
 
       if domain.blank?
@@ -125,9 +124,13 @@ class EmailSettingsValidator
       smtp.enable_tls(ssl_context) if enable_tls
 
       smtp.open_timeout = 5
-      smtp.read_timeout = 5
 
-      smtp.start(domain, username, password, authentication.to_sym)
+      # Some SMTP servers have a higher delay to respond with errors
+      # as a tarpit measure that slows down clients who are sending "bad" commands.
+      # 10s is the minimum, we might need to increase this in the future.
+      smtp.read_timeout = 10
+
+      smtp.start(domain, username, password, authentication)
       smtp.finish
     rescue => err
       log_and_raise(err, debug)
@@ -170,21 +173,5 @@ class EmailSettingsValidator
       )
     end
     raise err
-  end
-
-  def self.provider_specific_ssl_overrides(host, port, enable_tls, enable_starttls_auto)
-    # Gmail acts weirdly if you do not use the correct combinations of
-    # TLS settings based on the port, we clean these up here for the user.
-    if host == "smtp.gmail.com"
-      if port.to_i == 587
-        enable_starttls_auto = true
-        enable_tls = false
-      elsif port.to_i == 465
-        enable_starttls_auto = false
-        enable_tls = true
-      end
-    end
-
-    [port, enable_tls, enable_starttls_auto]
   end
 end

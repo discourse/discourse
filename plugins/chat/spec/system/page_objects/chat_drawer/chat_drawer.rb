@@ -5,8 +5,12 @@ module PageObjects
     class ChatDrawer < PageObjects::Pages::Base
       VISIBLE_DRAWER = ".chat-drawer.is-expanded"
 
-      def channel_index
-        @channel_index ||= ::PageObjects::Components::Chat::ChannelIndex.new(VISIBLE_DRAWER)
+      def channels_index
+        @channels_index ||= ::PageObjects::Components::Chat::ChannelsIndex.new(VISIBLE_DRAWER)
+      end
+
+      def browse
+        @browse ||= ::PageObjects::Pages::ChatBrowse.new(".c-drawer-routes.--browse")
       end
 
       def open_browse
@@ -24,25 +28,40 @@ module PageObjects
         find("#{VISIBLE_DRAWER} .c-navbar__back-button").click
       end
 
+      def visit_index
+        visit("/")
+        PageObjects::Pages::Chat.new.open_from_header
+      end
+
+      def visit_channel(channel)
+        visit_index
+        open_channel(channel)
+      end
+
+      def visit_browse
+        visit_index
+        open_browse
+      end
+
       def open_channel(channel)
-        channel_index.open_channel(channel)
+        channels_index.open_channel(channel)
         has_no_css?(".chat-skeleton")
       end
 
       def has_unread_channel?(channel)
-        channel_index.has_unread_channel?(channel)
+        channels_index.has_unread_channel?(channel)
       end
 
       def has_no_unread_channel?(channel)
-        channel_index.has_no_unread_channel?(channel)
+        channels_index.has_no_unread_channel?(channel)
       end
 
       def has_user_threads_section?
-        has_css?(".chat-channel-row.--threads[href='/chat/threads']")
+        has_css?("#c-footer-threads")
       end
 
       def has_no_user_threads_section?
-        has_no_css?(".chat-channel-row.--threads[href='/chat/threads']")
+        has_no_css?("#c-footer-threads")
       end
 
       def has_unread_user_threads?
@@ -53,8 +72,16 @@ module PageObjects
         has_no_css?(".chat-channel-row.--threads .c-unread-indicator")
       end
 
+      def click_channels
+        find("#c-footer-channels").click
+      end
+
+      def click_direct_messages
+        find("#c-footer-direct-messages").click
+      end
+
       def click_user_threads
-        find(".chat-channel-row.--threads").click
+        find("#c-footer-threads").click
       end
 
       def maximize
@@ -72,6 +99,26 @@ module PageObjects
 
       def has_open_channel?(channel)
         has_css?("#{VISIBLE_DRAWER} .chat-channel[data-id='#{channel.id}']")
+      end
+
+      def has_channel_settings?
+        has_css?("#{VISIBLE_DRAWER} .c-channel-settings")
+      end
+
+      def has_channel_members?
+        has_css?("#{VISIBLE_DRAWER} .c-channel-members")
+      end
+
+      def has_open_channels?
+        has_css?("#{VISIBLE_DRAWER} .public-channels")
+      end
+
+      def has_open_direct_messages?
+        has_css?("#{VISIBLE_DRAWER} .direct-message-channels")
+      end
+
+      def has_open_user_threads?
+        has_css?("#{VISIBLE_DRAWER} .c-user-threads")
       end
 
       def has_open_thread_list?

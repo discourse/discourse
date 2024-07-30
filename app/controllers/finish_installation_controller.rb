@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class FinishInstallationController < ApplicationController
-  skip_before_action :check_xhr, :preload_json, :redirect_to_login_if_required
+  skip_before_action :check_xhr,
+                     :preload_json,
+                     :redirect_to_login_if_required,
+                     :redirect_to_profile_if_required
   layout "finish_installation"
 
   before_action :ensure_no_admins, except: %w[confirm_email resend_email]
@@ -15,7 +18,7 @@ class FinishInstallationController < ApplicationController
     @user = User.new
     if request.post?
       email = params[:email].strip
-      raise Discourse::InvalidParameters.new unless @allowed_emails.include?(email)
+      raise Discourse::InvalidParameters.new if @allowed_emails.exclude?(email)
 
       if existing_user = User.find_by_email(email)
         @user = existing_user

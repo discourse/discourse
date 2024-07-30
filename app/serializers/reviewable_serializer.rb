@@ -49,7 +49,7 @@ class ReviewableSerializer < ApplicationSerializer
   end
 
   def claimed_by
-    return nil unless @options[:claimed_topics].present?
+    return nil if @options[:claimed_topics].blank?
     @options[:claimed_topics][object.topic_id]
   end
 

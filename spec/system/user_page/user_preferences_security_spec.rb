@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User preferences for Security", type: :system do
+describe "User preferences | Security", type: :system do
   fab!(:password) { "kungfukenny" }
   fab!(:email) { "email@user.com" }
   fab!(:user) { Fabricate(:user, email: email, password: password) }
@@ -9,6 +9,9 @@ describe "User preferences for Security", type: :system do
 
   before do
     user.activate
+    # testing the enforced 2FA flow requires a user that was created > 5 minutes ago
+    user.created_at = 6.minutes.ago
+    user.save!
     sign_in(user)
 
     # system specs run on their own host + port
@@ -42,9 +45,9 @@ describe "User preferences for Security", type: :system do
       find("#security-key .btn-primary").click
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
-
+    ensure
       # clear authenticator (otherwise it will interfere with other tests)
-      authenticator.remove!
+      authenticator&.remove!
     end
   end
 
@@ -103,9 +106,9 @@ describe "User preferences for Security", type: :system do
 
       # ensures that we are redirected to the destination_url cookie
       expect(page.driver.current_url).to include("/new")
-
+    ensure
       # clear authenticator (otherwise it will interfere with other tests)
-      authenticator.remove!
+      authenticator&.remove!
     end
   end
 

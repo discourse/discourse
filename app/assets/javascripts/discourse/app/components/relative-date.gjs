@@ -3,12 +3,7 @@ import { longDate, relativeAge } from "discourse/lib/formatter";
 
 export default class RelativeDate extends Component {
   get datetime() {
-    if (this.memoizedDatetime) {
-      return this.memoizedDatetime;
-    }
-
-    this.memoizedDatetime = new Date(this.args.date);
-    return this.memoizedDatetime;
+    return new Date(this.args.date);
   }
 
   get title() {

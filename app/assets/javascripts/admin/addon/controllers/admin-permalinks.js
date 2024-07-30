@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { or } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";

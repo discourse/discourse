@@ -12,16 +12,14 @@
         />
       {{/if}}
     </div>
-    {{#unless this.mobileView}}
-      {{#if this.model.id}}
-        <DButton
-          @action={{action "goBack"}}
-          @label="category.back"
-          @icon="caret-left"
-          class="category-back"
-        />
-      {{/if}}
-    {{/unless}}
+    {{#if (and this.site.desktopView this.model.id)}}
+      <DButton
+        @action={{action "goBack"}}
+        @label="category.back"
+        @icon="caret-left"
+        class="category-back"
+      />
+    {{/if}}
   </div>
 
   <div class="edit-category-nav">

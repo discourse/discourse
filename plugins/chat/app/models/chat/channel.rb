@@ -296,7 +296,6 @@ end
 #  description                 :text
 #  status                      :integer          default("open"), not null
 #  user_count                  :integer          default(0), not null
-#  last_message_sent_at        :datetime         not null
 #  auto_join_users             :boolean          default(FALSE), not null
 #  user_count_stale            :boolean          default(FALSE), not null
 #  slug                        :string

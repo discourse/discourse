@@ -5,6 +5,7 @@ class SessionController < ApplicationController
                 only: %i[create forgot_password passkey_challenge passkey_login]
   before_action :rate_limit_login, only: %i[create email_login]
   skip_before_action :redirect_to_login_if_required
+  skip_before_action :redirect_to_profile_if_required
   skip_before_action :preload_json,
                      :check_xhr,
                      only: %i[sso sso_login sso_provider destroy one_time_password]
@@ -15,6 +16,7 @@ class SessionController < ApplicationController
   allow_in_staff_writes_only_mode :email_login
 
   ACTIVATE_USER_KEY = "activate_user"
+  FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY = 6
 
   def csrf
     render json: { csrf: form_authenticity_token }
@@ -168,13 +170,19 @@ class SessionController < ApplicationController
 
     begin
       sso = DiscourseConnect.parse(request.query_string, secure_session: secure_session)
-    rescue DiscourseConnect::ParseError => e
+    rescue DiscourseConnect::PayloadParseError => e
       connect_verbose_warn do
-        "Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}"
+        "Verbose SSO log: Payload is not base64\n\n#{e.message}\n\n#{sso&.diagnostics}"
+      end
+
+      return render_sso_error(text: I18n.t("discourse_connect.payload_parse_error"), status: 422)
+    rescue DiscourseConnect::SignatureError => e
+      connect_verbose_warn do
+        "Verbose SSO log: Signature verification failed\n\n#{e.message}\n\n#{sso&.diagnostics}"
       end
 
       # Do NOT pass the error text to the client, it would give them the correct signature
-      return render_sso_error(text: I18n.t("discourse_connect.login_error"), status: 422)
+      return render_sso_error(text: I18n.t("discourse_connect.signature_error"), status: 422)
     end
 
     if !sso.nonce_valid?
@@ -326,8 +334,10 @@ class SessionController < ApplicationController
     rate_limit_second_factor!(user)
 
     if user.present?
-      # If their password is correct
-      unless user.confirm_password?(params[:password])
+      password = params[:password]
+
+      # If their password is incorrect
+      if !user.confirm_password?(password)
         invalid_credentials
         return
       end
@@ -341,6 +351,12 @@ class SessionController < ApplicationController
       # User signed on with username and password, so let's prevent the invite link
       # from being used to log in (if one exists).
       Invite.invalidate_for_email(user.email)
+
+      # User's password has expired so they need to reset it
+      if user.password_expired?(password)
+        render json: { error: "expired", reason: "expired" }
+        return
+      end
     else
       invalid_credentials
       return
@@ -403,6 +419,7 @@ class SessionController < ApplicationController
         response.merge!(
           second_factor_required: true,
           backup_codes_enabled: matched_user&.backup_codes_enabled?,
+          totp_enabled: matched_user&.totp_enabled?,
         )
       end
 
@@ -616,15 +633,7 @@ class SessionController < ApplicationController
       end
 
     if user
-      RateLimiter.new(nil, "forgot-password-login-day-#{user.username}", 6, 1.day).performed!
-      email_token =
-        user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:password_reset])
-      Jobs.enqueue(
-        :critical_user_email,
-        type: "forgot_password",
-        user_id: user.id,
-        email_token: email_token.token,
-      )
+      enqueue_password_reset_for_user(user)
     else
       RateLimiter.new(
         nil,
@@ -643,7 +652,7 @@ class SessionController < ApplicationController
 
   def current
     if current_user.present?
-      render_serialized(current_user, CurrentUserSerializer)
+      render_serialized(current_user, CurrentUserSerializer, { login_method: login_method })
     else
       render body: nil, status: 404
     end
@@ -890,5 +899,24 @@ class SessionController < ApplicationController
     return true if allowed_domains.split("|").include?("*")
 
     allowed_domains.split("|").include?(hostname)
+  end
+
+  def enqueue_password_reset_for_user(user)
+    RateLimiter.new(
+      nil,
+      "forgot-password-login-day-#{user.username}",
+      FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY,
+      1.day,
+    ).performed!
+
+    email_token =
+      user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:password_reset])
+
+    Jobs.enqueue(
+      :critical_user_email,
+      type: "forgot_password",
+      user_id: user.id,
+      email_token: email_token.token,
+    )
   end
 end

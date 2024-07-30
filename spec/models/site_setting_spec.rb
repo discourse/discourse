@@ -171,4 +171,29 @@ RSpec.describe SiteSetting do
 
     expect(settings.test_setting).to eq(value)
   end
+
+  describe "#all_settings" do
+    it "does not include the `default_locale` setting if include_locale_setting is false" do
+      expect(SiteSetting.all_settings.map { |s| s[:setting] }).to include("default_locale")
+      expect(
+        SiteSetting.all_settings(include_locale_setting: false).map { |s| s[:setting] },
+      ).not_to include("default_locale")
+    end
+
+    it "does not include the `default_locale` setting if filter_categories are specified" do
+      expect(
+        SiteSetting.all_settings(filter_categories: ["branding"]).map { |s| s[:setting] },
+      ).not_to include("default_locale")
+    end
+
+    it "does not include the `default_locale` setting if filter_plugin is specified" do
+      expect(
+        SiteSetting.all_settings(filter_plugin: "chat").map { |s| s[:setting] },
+      ).not_to include("default_locale")
+    end
+
+    it "includes only settings for the specified category" do
+      expect(SiteSetting.all_settings(filter_categories: ["required"]).count).to eq(12)
+    end
+  end
 end

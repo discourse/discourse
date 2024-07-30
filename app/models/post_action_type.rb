@@ -14,48 +14,73 @@ class PostActionType < ActiveRecord::Base
   class << self
     attr_reader :flag_settings
 
-    def replace_flag_settings(settings)
-      if settings
-        @flag_settings = settings
-      else
-        initialize_flag_settings
-      end
-      @types = nil
+    def initialize_flag_settings
+      @flag_settings = FlagSettings.new
     end
 
-    def ordered
-      order("position asc")
+    def replace_flag_settings(settings)
+      Discourse.deprecate("Flags should not be replaced. Insert custom flags as database records.")
+      @flag_settings = settings || FlagSettings.new
     end
 
     def types
-      unless @types
-        # NOTE: Previously bookmark was type 1 but that has been superseded
-        # by the separate Bookmark model and functionality
-        @types = Enum.new(like: 2)
-        @types.merge!(flag_settings.flag_types)
+      if overridden_by_plugin_or_skipped_db?
+        return Enum.new(like: 2).merge!(flag_settings.flag_types)
       end
+      Enum.new(like: 2).merge(flag_types)
+    end
 
-      @types
+    def expire_cache
+      Discourse.redis.keys("post_action_types_*").each { |key| Discourse.redis.del(key) }
+      Discourse.redis.keys("post_action_flag_types_*").each { |key| Discourse.redis.del(key) }
+    end
+
+    def reload_types
+      @flag_settings = FlagSettings.new
+      ReviewableScore.reload_types
+      PostActionType.new.expire_cache
+    end
+
+    def overridden_by_plugin_or_skipped_db?
+      flag_settings.flag_types.present? || GlobalSetting.skip_db?
+    end
+
+    def all_flags
+      Flag.unscoped.order(:position).all
     end
 
     def auto_action_flag_types
-      flag_settings.auto_action_types
+      return flag_settings.auto_action_types if overridden_by_plugin_or_skipped_db?
+      flag_enum(all_flags.select(&:auto_action_type))
     end
 
     def public_types
-      @public_types ||= types.except(*flag_types.keys << :notify_user)
+      types.except(*flag_types.keys << :notify_user)
     end
 
     def public_type_ids
       @public_type_ids ||= public_types.values
     end
 
-    def flag_types_without_custom
-      flag_settings.without_custom_types
+    def flag_types_without_additional_message
+      return flag_settings.without_additional_message_types if overridden_by_plugin_or_skipped_db?
+      flag_enum(all_flags.reject(&:require_message))
     end
 
     def flag_types
-      flag_settings.flag_types
+      return flag_settings.flag_types if overridden_by_plugin_or_skipped_db?
+
+      # Once replace_flag API is fully deprecated, then we can drop respond_to. It is needed right now for migration to be evaluated.
+      # TODO (krisk)
+      flag_enum(all_flags.reject { |flag| flag.respond_to?(:score_type) && flag.score_type })
+    end
+
+    def score_types
+      return flag_settings.flag_types if overridden_by_plugin_or_skipped_db?
+
+      # Once replace_flag API is fully deprecated, then we can drop respond_to. It is needed right now for migration to be evaluated.
+      # TODO (krisk)
+      flag_enum(all_flags.filter { |flag| flag.respond_to?(:score_type) && flag.score_type })
     end
 
     # flags resulting in mod notifications
@@ -64,15 +89,41 @@ class PostActionType < ActiveRecord::Base
     end
 
     def notify_flag_types
-      flag_settings.notify_types
+      return flag_settings.notify_types if overridden_by_plugin_or_skipped_db?
+      flag_enum(all_flags.select(&:notify_type))
     end
 
     def topic_flag_types
-      flag_settings.topic_flag_types
+      if overridden_by_plugin_or_skipped_db?
+        flag_settings.topic_flag_types
+      else
+        flag_enum(all_flags.select { |flag| flag.applies_to?("Topic") })
+      end
     end
 
-    def custom_types
-      flag_settings.custom_types
+    def disabled_flag_types
+      flag_enum(all_flags.reject(&:enabled))
+    end
+
+    def enabled_flag_types
+      flag_enum(all_flags.filter(&:enabled))
+    end
+
+    def additional_message_types
+      return flag_settings.with_additional_message if overridden_by_plugin_or_skipped_db?
+      flag_enum(all_flags.select(&:require_message))
+    end
+
+    def names
+      all_flags.pluck(:id, :name).to_h
+    end
+
+    def descriptions
+      all_flags.pluck(:id, :description).to_h
+    end
+
+    def applies_to
+      all_flags.pluck(:id, :applies_to).to_h
     end
 
     def is_flag?(sym)
@@ -81,25 +132,8 @@ class PostActionType < ActiveRecord::Base
 
     private
 
-    def initialize_flag_settings
-      @flag_settings = FlagSettings.new
-      @flag_settings.add(3, :off_topic, notify_type: true, auto_action_type: true)
-      @flag_settings.add(
-        4,
-        :inappropriate,
-        topic_type: true,
-        notify_type: true,
-        auto_action_type: true,
-      )
-      @flag_settings.add(8, :spam, topic_type: true, notify_type: true, auto_action_type: true)
-      @flag_settings.add(6, :notify_user, topic_type: false, notify_type: false, custom_type: true)
-      @flag_settings.add(
-        7,
-        :notify_moderators,
-        topic_type: true,
-        notify_type: true,
-        custom_type: true,
-      )
+    def flag_enum(scope)
+      Enum.new(scope.map { |flag| [flag.name_key.to_sym, flag.id] }.to_h)
     end
   end
 

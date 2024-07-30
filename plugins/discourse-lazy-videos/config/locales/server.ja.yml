@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  site_settings:
+    lazy_videos_enabled: "Lazy Videos プラグインを有効にします"
+    lazy_youtube_enabled: "YouTube 埋め込みの遅延読み込みを有効にします"
+    lazy_vimeo_enabled: "Vimeo 埋め込みの遅延読み込みを有効にします"
+    lazy_tiktok_enabled: "TikTok 埋め込みの遅延読み込みを有効にします (実験的)"

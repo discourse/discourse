@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";

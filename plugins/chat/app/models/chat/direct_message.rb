@@ -17,9 +17,9 @@ module Chat
     class << self
       def polymorphic_class_mapping = { "DirectMessage" => Chat::DirectMessage }
 
-      def for_user_ids(user_ids)
+      def for_user_ids(user_ids, group: false)
         joins(:users)
-          .where(group: false)
+          .where(group: group)
           .group("direct_message_channels.id")
           .having("ARRAY[?] = ARRAY_AGG(users.id ORDER BY users.id)", user_ids.sort)
           .first

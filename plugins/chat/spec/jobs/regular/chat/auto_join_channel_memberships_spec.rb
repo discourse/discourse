@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::Chat::AutoJoinChannelMemberships do
   let(:user) { Fabricate(:user, last_seen_at: 15.minutes.ago) }
   let(:category) { Fabricate(:category, user: user) }

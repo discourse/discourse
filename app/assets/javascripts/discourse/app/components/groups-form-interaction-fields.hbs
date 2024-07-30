@@ -12,7 +12,7 @@
       @valueProperty="value"
       @value={{this.model.visibility_level}}
       @content={{this.visibilityLevelOptions}}
-      @onChange={{action (mut this.model.visibility_level)}}
+      @onChange={{fn (mut this.model.visibility_level)}}
       @options={{hash castInteger=true}}
       class="groups-form-visibility-level"
     />
@@ -32,7 +32,7 @@
       @valueProperty="value"
       @value={{this.membersVisibilityLevel}}
       @content={{this.visibilityLevelOptions}}
-      @onChange={{action (mut this.model.members_visibility_level)}}
+      @onChange={{fn (mut this.model.members_visibility_level)}}
       class="groups-form-members-visibility-level"
     />
 
@@ -57,7 +57,7 @@
     @valueProperty="value"
     @value={{this.mentionableLevel}}
     @content={{this.aliasLevelOptions}}
-    @onChange={{action (mut this.model.mentionable_level)}}
+    @onChange={{fn (mut this.model.mentionable_level)}}
     class="groups-form-mentionable-level"
   />
 </div>
@@ -70,7 +70,7 @@
     @valueProperty="value"
     @value={{this.messageableLevel}}
     @content={{this.aliasLevelOptions}}
-    @onChange={{action (mut this.model.messageable_level)}}
+    @onChange={{fn (mut this.model.messageable_level)}}
     class="groups-form-messageable-level"
   />
 </div>
@@ -130,7 +130,7 @@
   <NotificationsButton
     @value={{this.defaultNotificationLevel}}
     @options={{hash i18nPrefix="groups.notifications"}}
-    @onChange={{action (mut this.model.default_notification_level)}}
+    @onChange={{fn (mut this.model.default_notification_level)}}
     class="groups-form-default-notification-level"
   />
 </div>

@@ -9,11 +9,16 @@ import { isTesting } from "discourse-common/config/environment";
 import getURL from "discourse-common/lib/get-url";
 
 let _trackView = false;
+let _topicId = null;
 let _transientHeader = null;
 let _logoffCallback;
 
 export function setTransientHeader(key, value) {
   _transientHeader = { key, value };
+}
+
+export function trackNextAjaxAsTopicView(topicId) {
+  _topicId = topicId;
 }
 
 export function trackNextAjaxAsPageview() {
@@ -92,8 +97,12 @@ export function ajax() {
 
     if (_trackView && (!args.type || args.type === "GET")) {
       _trackView = false;
-      // DON'T CHANGE: rack is prepending "HTTP_" in the header's name
       args.headers["Discourse-Track-View"] = "true";
+
+      if (_topicId) {
+        args.headers["Discourse-Track-View-Topic-Id"] = _topicId;
+      }
+      _topicId = null;
     }
 
     if (userPresent()) {

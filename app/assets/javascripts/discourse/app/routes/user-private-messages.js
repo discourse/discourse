@@ -1,42 +1,28 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import Composer from "discourse/models/composer";
-import Draft from "discourse/models/draft";
+import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 
-export default DiscourseRoute.extend({
-  templateName: "user/messages",
-  composer: service(),
+export default class UserPrivateMessages extends DiscourseRoute {
+  @service composer;
+
+  templateName = "user/messages";
 
   afterModel() {
     this.pmTopicTrackingState.startTracking();
-  },
+  }
 
   setupController() {
-    this._super(...arguments);
-
-    if (this.currentUser) {
-      Draft.get("new_private_message").then((data) => {
-        if (data.draft) {
-          this.composer.open({
-            draft: data.draft,
-            draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY,
-            ignoreIfChanged: true,
-            draftSequence: data.draft_sequence,
-          });
-        }
-      });
-    }
-  },
+    super.setupController(...arguments);
+  }
 
   @action
   triggerRefresh() {
     this.refresh();
-  },
+  }
 
   @action
   willTransition() {
-    this._super(...arguments);
+    super.willTransition(...arguments);
     return true;
-  },
-});
+  }
+}

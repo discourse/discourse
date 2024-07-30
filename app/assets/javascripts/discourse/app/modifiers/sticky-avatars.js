@@ -1,6 +1,6 @@
 import { registerDestructor } from "@ember/destroyable";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import Modifier from "ember-modifier";
 import {
   addWidgetCleanCallback,
@@ -18,8 +18,6 @@ export default class StickyAvatars extends Modifier {
 
   element;
   intersectionObserver;
-  direction = "⬇️";
-  prevOffset = -1;
 
   constructor() {
     super(...arguments);
@@ -71,17 +69,10 @@ export default class StickyAvatars extends Modifier {
   @bind
   _handleScroll(offset) {
     if (offset <= 0) {
-      this.direction = "⬇️";
       this.element
         .querySelectorAll(`${TOPIC_POST_SELECTOR}.${STICKY_CLASS}`)
         .forEach((node) => node.classList.remove(STICKY_CLASS));
-    } else if (offset > this.prevOffset) {
-      this.direction = "⬇️";
-    } else {
-      this.direction = "⬆️";
     }
-
-    this.prevOffset = offset;
   }
 
   @bind
@@ -122,14 +113,7 @@ export default class StickyAvatars extends Modifier {
               return;
             }
 
-            const postContentHeight =
-              entry.target.querySelector(".contents")?.clientHeight;
-            if (
-              this.direction === "⬆️" ||
-              postContentHeight > window.innerHeight - offset
-            ) {
-              entry.target.classList.add(STICKY_CLASS);
-            }
+            entry.target.classList.add(STICKY_CLASS);
           });
         },
         {

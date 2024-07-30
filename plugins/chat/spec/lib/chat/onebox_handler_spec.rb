@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::OneboxHandler do
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
   fab!(:private_channel) { Fabricate(:category_channel, chatable: private_category) }

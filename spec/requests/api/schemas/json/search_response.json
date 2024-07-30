@@ -74,6 +74,17 @@
             "null"
           ]
         },
+        "extra": {
+          "type": "object",
+          "properties": {
+            "categories": {
+              "type": [
+                "array",
+                "null"
+              ]
+            }
+          }
+        },
         "post_ids": {
           "type": "array",
           "items": {

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::ChannelMembershipsQuery do
   fab!(:user_1) { Fabricate(:user, username: "Aline", name: "Boetie") }
   fab!(:user_2) { Fabricate(:user, username: "Bertrand", name: "Arlan") }

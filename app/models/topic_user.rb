@@ -2,7 +2,7 @@
 
 class TopicUser < ActiveRecord::Base
   self.ignored_columns = [
-    :highest_seen_post_number, # Remove after 01 Jan 2022
+    :highest_seen_post_number, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   ]
 
   belongs_to :user
@@ -299,8 +299,10 @@ class TopicUser < ActiveRecord::Base
     def track_visit!(topic_id, user_id)
       now = DateTime.now
       rows = TopicUser.where(topic_id: topic_id, user_id: user_id).update_all(last_visited_at: now)
-
-      change(user_id, topic_id, last_visited_at: now, first_visited_at: now) if rows == 0
+      if rows == 0
+        change(user_id, topic_id, last_visited_at: now, first_visited_at: now)
+        DiscourseEvent.trigger(:user_first_visit_to_topic, user_id: user_id, topic_id: topic_id)
+      end
     end
 
     # Update the last read and the last seen post count, but only if it doesn't exist.
@@ -308,7 +310,14 @@ class TopicUser < ActiveRecord::Base
     UPDATE_TOPIC_USER_SQL = <<~SQL
       UPDATE topic_users
       SET
-        last_read_post_number = GREATEST(:post_number, tu.last_read_post_number),
+        last_read_post_number =
+          LEAST(
+            CASE WHEN :whisperer
+              THEN highest_staff_post_number
+              ELSE highest_post_number END
+            ,
+            GREATEST(:post_number, tu.last_read_post_number)
+          ),
         total_msecs_viewed = LEAST(tu.total_msecs_viewed + :msecs,86400000),
         notification_level =
            case when tu.notifications_reason_id is null and (tu.total_msecs_viewed + :msecs) >
@@ -357,6 +366,7 @@ class TopicUser < ActiveRecord::Base
         msecs: msecs,
         tracking: notification_levels[:tracking],
         threshold: SiteSetting.default_other_auto_track_topics_after_msecs,
+        whisperer: user.whisperer?,
       }
 
       rows = DB.query(UPDATE_TOPIC_USER_SQL, args)
@@ -523,8 +533,11 @@ SQL
   end
 
   def self.ensure_consistency!(topic_id = nil)
-    update_post_action_cache(topic_id: topic_id)
+    update_post_action_cache(topic_id:)
+    update_last_read_post_number(topic_id:)
+  end
 
+  def self.update_last_read_post_number(topic_id: nil)
     # TODO this needs some reworking, when we mark stuff skipped
     # we up these numbers so they are not in-sync
     # the simple fix is to add a column here, but table is already quite big

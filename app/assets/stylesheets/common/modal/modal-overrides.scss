@@ -55,7 +55,6 @@
 }
 
 .jump-to-post-modal {
-  .modal-body,
   .d-modal__body {
     overflow-y: visible;
     #post-jump {
@@ -218,7 +217,17 @@
   }
 }
 
+.topic-bulk-actions-modal {
+  &__selection-info {
+    margin-bottom: 0.5em;
+  }
+}
+
 .d-modal.topic-bulk-actions-modal {
+  .d-modal__title-text {
+    font-size: var(--font-up-2);
+  }
+
   .d-modal {
     &__container {
       display: flex;
@@ -227,8 +236,11 @@
   p {
     margin-top: 0;
   }
-  #bulk-topics-confirm {
+  #bulk-topics-cancel {
     margin-left: auto;
+  }
+  .bulk-close-note-section {
+    margin-top: 1em;
   }
 }
 

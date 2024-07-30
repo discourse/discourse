@@ -1,5 +1,5 @@
 import { registerDeprecationHandler } from "@ember/debug";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import identifySource from "discourse/lib/source-identifier";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -11,11 +11,17 @@ import I18n from "discourse-i18n";
 // To avoid 'crying wolf', we should only add values here when we're sure they're
 // not being triggered by core or official themes/plugins.
 export const CRITICAL_DEPRECATIONS = [
-  /^discourse.modal-controllers$/,
+  "discourse.modal-controllers",
+  "discourse.bootbox",
+  "discourse.add-header-panel",
+  "discourse.header-widget-overrides",
+  "discourse.plugin-outlet-tag-name",
+  "discourse.plugin-outlet-parent-view",
+  "discourse.d-button-action-string",
   /^(?!discourse\.)/, // All unsilenced ember deprecations
 ];
 
-// Deprecation handling APIs don't have any way to unregister handlers, so we set up permenant
+// Deprecation handling APIs don't have any way to unregister handlers, so we set up permanent
 // handlers and link them up to the application lifecycle using module-local state.
 let handler;
 registerDeprecationHandler((message, opts, next) => {
@@ -57,10 +63,10 @@ export default class DeprecationWarningHandler extends Service {
       return;
     }
 
-    this.maybeNotifyAdmin(opts.id, source);
+    this.maybeNotifyAdmin(opts, source);
   }
 
-  maybeNotifyAdmin(id, source) {
+  maybeNotifyAdmin(opts, source) {
     if (this.#adminWarned) {
       return;
     }
@@ -73,15 +79,34 @@ export default class DeprecationWarningHandler extends Service {
       return;
     }
 
-    if (CRITICAL_DEPRECATIONS.some((pattern) => pattern.test(id))) {
-      this.notifyAdmin(id, source);
+    if (
+      CRITICAL_DEPRECATIONS.some((pattern) => {
+        if (typeof pattern === "string") {
+          return pattern === opts.id;
+        } else {
+          return pattern.test(opts.id);
+        }
+      })
+    ) {
+      this.notifyAdmin(opts, source);
     }
   }
 
-  notifyAdmin(id, source) {
+  notifyAdmin({ id, url }, source) {
     this.#adminWarned = true;
 
-    let notice = I18n.t("critical_deprecation.notice");
+    let notice = I18n.t("critical_deprecation.notice") + " ";
+
+    if (url) {
+      notice += I18n.t("critical_deprecation.linked_id", {
+        id: escapeExpression(id),
+        url: escapeExpression(url),
+      });
+    } else {
+      notice += I18n.t("critical_deprecation.id", {
+        id: escapeExpression(id),
+      });
+    }
 
     if (this.siteSettings.warn_critical_js_deprecations_message) {
       notice += " " + this.siteSettings.warn_critical_js_deprecations_message;

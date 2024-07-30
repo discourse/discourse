@@ -21,7 +21,7 @@
       class="user-nav__notifications-responses"
     >
       {{d-icon "reply"}}
-      <span>{{i18n "user_action_groups.6"}}</span>
+      <span>{{i18n "user_action_groups.5"}}</span>
     </DNavigationItem>
 
     <DNavigationItem
@@ -51,6 +51,15 @@
     >
       {{d-icon "pencil-alt"}}
       <span>{{i18n "user_action_groups.11"}}</span>
+    </DNavigationItem>
+
+    <DNavigationItem
+      @route="userNotifications.links"
+      @ariaCurrentContext="subNav"
+      class="user-nav__notifications-links"
+    >
+      {{d-icon "link"}}
+      <span>{{i18n "user_action_groups.17"}}</span>
     </DNavigationItem>
 
     <PluginOutlet

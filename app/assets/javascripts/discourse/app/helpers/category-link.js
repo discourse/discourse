@@ -1,7 +1,6 @@
 import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import categoryVariables from "discourse/helpers/category-variables";
-import { isRTL } from "discourse/lib/text-direction";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import getURL from "discourse-common/lib/get-url";
@@ -33,6 +32,7 @@ export function addExtraIconRenderer(renderer) {
     @param {Boolean} [opts.recursive] If true, the function will be called recursively for all parent categories
     @param {Number}  [opts.depth] Current category depth, used for limiting recursive calls
     @param {Boolean} [opts.previewColor] If true, category color will be set as an inline style.
+    @param {Array}   [opts.ancestors] The ancestors of the category to generate the badge for.
 **/
 export function categoryBadgeHTML(category, opts) {
   const { site, siteSettings } = helperContext();
@@ -48,7 +48,13 @@ export function categoryBadgeHTML(category, opts) {
   }
 
   const depth = (opts.depth || 1) + 1;
-  if (opts.recursive && depth <= siteSettings.max_category_nesting) {
+  if (opts.ancestors) {
+    const { ancestors, ...otherOpts } = opts;
+    return [category, ...ancestors]
+      .reverse()
+      .map((c) => categoryBadgeHTML(c, otherOpts))
+      .join("");
+  } else if (opts.recursive && depth <= siteSettings.max_category_nesting) {
     const parentCategory = Category.findById(category.parent_category_id);
     const lastSubcategory = !opts.depth;
     opts.depth = depth;
@@ -87,6 +93,9 @@ export function categoryLinkHTML(category, options) {
     }
     if (options.recursive) {
       categoryOptions.recursive = true;
+    }
+    if (options.ancestors) {
+      categoryOptions.ancestors = options.ancestors;
     }
   }
   return htmlSafe(categoryBadgeHTML(category, categoryOptions));
@@ -135,10 +144,10 @@ export function defaultCategoryLinkRenderer(category, opts) {
     dataAttributes += ` data-parent-category-id="${parentCat.id}"`;
   }
 
-  html += `<span 
-    ${dataAttributes} 
-    data-drop-close="true" 
-    class="${classNames}" 
+  html += `<span
+    ${dataAttributes}
+    data-drop-close="true"
+    class="${classNames}"
     ${
       opts.previewColor
         ? `style="--category-badge-color: #${category.color}"`
@@ -150,7 +159,7 @@ export function defaultCategoryLinkRenderer(category, opts) {
   let categoryName = escapeExpression(get(category, "name"));
 
   if (siteSettings.support_mixed_text_direction) {
-    categoryDir = isRTL(categoryName) ? 'dir="rtl"' : 'dir="ltr"';
+    categoryDir = 'dir="auto"';
   }
 
   if (restricted) {
@@ -167,6 +176,13 @@ export function defaultCategoryLinkRenderer(category, opts) {
 
   if (opts.topicCount) {
     html += buildTopicCount(opts.topicCount);
+  }
+
+  if (opts.subcategoryCount) {
+    html += `<span class="plus-subcategories">${I18n.t(
+      "category_row.subcategory_count",
+      { count: opts.subcategoryCount }
+    )}</span>`;
   }
 
   if (href) {

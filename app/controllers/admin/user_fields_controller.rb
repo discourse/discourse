@@ -7,7 +7,7 @@ class Admin::UserFieldsController < Admin::AdminController
       field_type
       editable
       description
-      required
+      requirement
       show_on_profile
       show_on_user_card
       position
@@ -20,7 +20,6 @@ class Admin::UserFieldsController < Admin::AdminController
     field = UserField.new(params.require(:user_field).permit(*Admin::UserFieldsController.columns))
 
     field.position = (UserField.maximum(:position) || 0) + 1
-    field.required = params[:user_field][:required] == "true"
     update_options(field)
 
     json_result(field, serializer: UserFieldSerializer) { field.save }

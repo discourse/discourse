@@ -138,6 +138,8 @@ class IncomingLinksReport
         num_clicks.keys,
         category_id: report.category_id,
         include_subcategories: report.include_subcategories,
+        start_date: report.start_date,
+        end_date: report.end_date,
       )
     report.data = []
     num_clicks.each_key do |domain|
@@ -176,7 +178,12 @@ class IncomingLinksReport
       include_subcategories: options[:include_subcategories],
     )
       .joins(incoming_referer: :incoming_domain)
-      .where("incoming_links.created_at > ? AND incoming_domains.name IN (?)", 30.days.ago, domains)
+      .where(
+        "incoming_links.created_at > ? AND incoming_links.created_at < ?",
+        options[:start_date],
+        options[:end_date],
+      )
+      .where("incoming_domains.name IN (?)", domains)
       .group("incoming_domains.name")
   end
 

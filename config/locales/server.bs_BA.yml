@@ -72,18 +72,12 @@ bs_BA:
     settings_errors:
       invalid_yaml: "Korišteni YAML fajl nije validan."
       name_too_long: "Postoji postavka sa predugim imenom. Maksimalna dužina je 255"
-      default_value_missing: "Postavka `%{name}` nema uobičajenu (default) vrijednost"
+      default_value_missing: "Postavka `%{name}` nema uobičajenu (default) vrijednost."
       default_not_match_type: "Postavka `%{name}` default uobičajena vrijednosti se ne podudara sa tipom postavke."
-      default_out_range: "Postavka `%{name}` default uobičajena vrijednost nije u specificiranim granicama (range)."
       enum_value_not_valid: "Označena vrijednost nije jedna od enum izbora"
-      number_value_not_valid: "Nova vrijednost nije unutar dozvoljenih granica (range)."
-      number_value_not_valid_min_max: "Mora biti izmeđi %{min} i %{max}."
-      number_value_not_valid_min: "Mora biti veće ili jednako %{min}."
-      number_value_not_valid_max: "Mora biti manje ili jednako %{max}."
-      string_value_not_valid: "Nova vrijednost za dužinu nije u okviru dozvoljenih granica (range)."
-      string_value_not_valid_min_max: "Mora biti između %{min} i %{max} znakova."
-      string_value_not_valid_min: "Mora biti najmanje %{min} Karaktera dugo."
-      string_value_not_valid_max: "Mora biti najviše %{max} karaktera dugo."
+      number_value_not_valid_min_max: "Value must be between %{min} and %{max}."
+      objects:
+        required: "must be present"
     locale_errors:
       top_level_locale: "Ključ gornjeg nivoa u datoteci locale mora odgovarati nazivu jezika"
       invalid_yaml: "Prevod YAML invalid"
@@ -112,7 +106,6 @@ bs_BA:
         screened_email_error: "Dešava se kada je adresa e-pošte pošiljaoca već prikazana."
   errors: &errors
     messages:
-      too_long_validation: "is limited to %{max} characters; you entered %{length}."
       invalid_boolean: "Invalid boolean."
       taken: "has already been taken"
       exclusion: je rezvisan
@@ -210,6 +203,8 @@ bs_BA:
         raw: "Tijelo"
       user_profile:
         bio_raw: "O Meni"
+      user:
+        password: "Lozinka"
     errors:
       models:
         topic:
@@ -334,6 +329,8 @@ bs_BA:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Neprikladno"
+    illegal:
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       email_title: 'Tvoj post u temi "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -361,6 +358,8 @@ bs_BA:
       description: 'Ova tema zahtijeva opću pažnju administratora na osnovu <a href="%{base_path}/guidelines">smjernica</a>, <a href="%{tos_url}">TOS</a> ili iz drugog razloga koji nije gore naveden.'
       long_form: "moderator obaviješten"
       email_title: 'Ova tema "%{title}" treba pažnju moderatora'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>This post was flagged by the community and is temporarily hidden.</p>"
@@ -430,6 +429,8 @@ bs_BA:
       xaxis:
         api: "API"
         user_api: "Korisnički API"
+      yaxis: "Day"
+    consolidated_page_views_browser_detection:
       yaxis: "Day"
     dau_by_mau:
       xaxis: "Day"
@@ -544,6 +545,10 @@ bs_BA:
       xaxis: "Day"
     page_view_anon_mobile_reqs:
       xaxis: "Day"
+    page_view_anon_browser_reqs:
+      xaxis: "Day"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Day"
     http_background_reqs:
       xaxis: "Day"
     http_2xx_reqs:
@@ -569,6 +574,8 @@ bs_BA:
     web_crawlers:
       labels:
         page_views: "Pagevieovi"
+    web_hook_events_daily_aggregate:
+      xaxis: "Day"
     suspicious_logins:
       labels:
         user: User
@@ -592,11 +599,16 @@ bs_BA:
       labels:
         user: User
         qtt_like: Likes Received
+    topic_view_stats:
+      labels:
+        topic: Topic
+        anon_views: Anoniman
+        total_views: Suma
   dashboard:
-    rails_env_warning: "Your server is running in %{env} mode."
-    host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
-    sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
-    memory_warning: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
+    problem:
+      rails_env: "Your server is running in %{env} mode."
+      host_names: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
+      ram: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
   site_settings:
     disabled: "deaktiviran"
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
@@ -641,14 +653,11 @@ bs_BA:
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
-    enable_badges: "Enable the badge system"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
     login_required: "Require authentication to read content on this site, disallow anonymous access."
-    min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
-    google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
@@ -669,7 +678,6 @@ bs_BA:
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
     enable_s3_uploads: "Place uploads on Amazon S3 storage. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods."
-    selectable_avatars: "Popis avatara koje korisnici mogu izabrati."
     default_invitee_trust_level: "Default trust level (0-4) for invited users."
     default_trust_level: "Default trust level (0-4) for all new users."
     tl1_requires_topics_entered: "How many topics a new user must enter before promotion to trust level 1."
@@ -719,15 +727,9 @@ bs_BA:
     allowed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
     min_ban_entries_for_roll_up: "Kada kliknete tipku Roll up, stvorit ćete novi unos za subnet ban ako ima najmanje (N) unosa."
-    reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
-    short_email_length: "Short email length in Bytes"
-    pop3_polling_enabled: "Poll via POP3 for email replies."
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
-    pop3_polling_period_mins: "The period in minutes between checking the POP3 account for email. NOTE: requires restart."
-    pop3_polling_port: "The port to poll a POP3 account on."
-    pop3_polling_host: "The host to poll for email via POP3."
     pop3_polling_username: "The username for the POP3 account to poll for email."
     pop3_polling_password: "The password for the POP3 account to poll for email."
     email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
@@ -749,9 +751,7 @@ bs_BA:
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
-    embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Maximum number of posts to embed."
-    enable_emoji: "Omogući smajlije"
     default_other_skip_new_user_tips: "Preskoči savjete i upute za novoregistrirane korisnike."
     errors:
       invalid_email: "Invalid email address."
@@ -763,8 +763,15 @@ bs_BA:
       regex_mismatch: "Value doesn't match the required format."
       invalid_string: "Invalid value."
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
-      invalid_string_min: "Must be at least %{min} characters."
-      invalid_string_max: "Must be no more than %{max} characters."
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "neaktivan"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "neaktivan"
+      - ""
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -805,7 +812,6 @@ bs_BA:
     omniauth_confirm_button: "Nastavi"
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
-    missing_user_field: "You have not completed all the user fields"
     click_to_continue: "Klikni ovdje da nastavite dalje"
     second_factor_backup_description: "Molim ukucajte jedan od vaši rezevni kodova"
     second_factor_toggle:
@@ -815,8 +821,6 @@ bs_BA:
       sent_test: "sent!"
   user:
     username:
-      short: "must be at least %{min} characters"
-      long: "must be no more than %{max} characters"
       unique: "must be unique"
       blank: "must be present"
     email:
@@ -892,7 +896,6 @@ bs_BA:
     previous_discussion: "Prošli Postovi"
     posted_by: "Kreirano od %{username} na dan %{post_date}"
     digest:
-      why: "Ukratko šta se dešavalo na %{site_link} od vaše zadnje posjete %{last_seen_at}."
       liked_received: "Likes Received"
       new_users: "Users"
       join_the_discussion: "Pročitaj Više"
@@ -954,6 +957,7 @@ bs_BA:
     Edit the first post in this topic to change the contents of the %{page_name} page.
   guidelines_topic:
     title: "FAQ/Guidelines"
+    guidelines_title: "Smjernice"
   tos_topic:
     title: "Terms of Service"
   privacy_topic:
@@ -1022,7 +1026,12 @@ bs_BA:
       privacy:
         fields:
           login_required:
-            placeholder: "Privatno"
+            label: "Vidljivost"
+            choices:
+              public:
+                label: "Javno"
+              private:
+                label: "Privatno"
       styling:
         fields:
           styling_preview:

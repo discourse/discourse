@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 
 export default function withChatChannel(extendedClass) {
   return class WithChatChannel extends extendedClass {

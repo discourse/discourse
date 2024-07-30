@@ -9,7 +9,8 @@ class ThemeSettingsSerializer < ApplicationSerializer
              :valid_values,
              :list_type,
              :textarea,
-             :json_schema
+             :json_schema,
+             :objects_schema
 
   def setting
     object.name
@@ -28,12 +29,11 @@ class ThemeSettingsSerializer < ApplicationSerializer
   end
 
   def description
+    description_regexp = /^theme_metadata\.settings\.#{setting}(\.description)?$/
+
     locale_file_description =
-      object
-        .theme
-        .internal_translations
-        .find { |t| t.key == "theme_metadata.settings.#{setting}" }
-        &.value
+      object.theme.internal_translations.find { |t| t.key.match?(description_regexp) }&.value
+
     locale_file_description || object.description
   end
 
@@ -63,6 +63,14 @@ class ThemeSettingsSerializer < ApplicationSerializer
 
   def include_textarea?
     object.type == ThemeSetting.types[:string]
+  end
+
+  def objects_schema
+    object.schema
+  end
+
+  def include_objects_schema?
+    object.type == ThemeSetting.types[:objects]
   end
 
   def json_schema

@@ -41,9 +41,9 @@ class StringSettingValidator
       if @opts[:min] && @opts[:max]
         I18n.t("site_settings.errors.invalid_string_min_max", min: @opts[:min], max: @opts[:max])
       elsif @opts[:min]
-        I18n.t("site_settings.errors.invalid_string_min", min: @opts[:min])
+        I18n.t("site_settings.errors.invalid_string_min", count: @opts[:min])
       else
-        I18n.t("site_settings.errors.invalid_string_max", max: @opts[:max])
+        I18n.t("site_settings.errors.invalid_string_max", count: @opts[:max])
       end
     elsif @json_fail
       I18n.t("site_settings.errors.invalid_json")

@@ -90,3 +90,14 @@ files:
   - source_path: plugins/footnote/config/locales/server.en.yml
     destination_path: plugins/footnote/server.yml
     label: footnote
+
+  - source_path: plugins/discourse-lazy-videos/config/locales/server.en.yml
+    destination_path: plugins/lazy-videos/server.yml
+    label: lazy-videos
+
+  - source_path: plugins/automation/config/locales/client.en.yml
+    destination_path: plugins/automation/client.yml
+    label: automation
+  - source_path: plugins/automation/config/locales/server.en.yml
+    destination_path: plugins/automation/server.yml
+    label: automation

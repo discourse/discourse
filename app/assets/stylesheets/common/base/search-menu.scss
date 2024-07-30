@@ -46,7 +46,7 @@ $search-pad-horizontal: 0.5em;
       margin: 2px;
       margin-right: 0;
       white-space: nowrap;
-      background-color: var(--primary-300);
+      background-color: var(--primary-200);
       &:hover {
         background-color: var(--primary-medium);
       }
@@ -124,61 +124,27 @@ $search-pad-horizontal: 0.5em;
     }
 
     .search-result-category {
+      .badge-category__wrapper {
+        font-size: var(--font-0);
+      }
       .widget-link {
         margin-bottom: 0;
       }
     }
 
     .search-result-group .group-result,
-    .search-result-user .user-result {
-      display: flex;
-      align-items: center;
-      font-size: var(--font-down-1);
-    }
-    .search-result-group .group-result {
-      .d-icon,
-      .avatar-flair {
-        width: 20px;
-        height: 20px;
-      }
+    .search-result-user {
+      .search-link {
+        display: flex;
+        align-items: center;
 
-      .avatar-flair,
-      .d-icon-users {
-        margin-right: 0.5em;
-      }
-
-      .avatar-flair {
-        border-radius: 50%;
-        &.avatar-flair-image {
-          background-repeat: no-repeat;
-          background-size: 100% 100%;
-        }
-        .d-icon {
-          margin-right: 0;
+        img.avatar {
+          margin-right: 10px;
         }
       }
 
-      .group-names {
-        @include user-item-flex;
-        .name,
-        .slug {
-          @include ellipsis;
-        }
-
-        .name {
-          font-weight: 700;
-        }
-      }
-    }
-
-    .search-result-user .user-result {
       .user-titles {
         @include user-item-flex;
-
-        .username,
-        .name {
-          @include ellipsis;
-        }
 
         .name {
           font-weight: 700;
@@ -194,6 +160,67 @@ $search-pad-horizontal: 0.5em;
           font-size: var(--font-down-2);
         }
       }
+      .user-result {
+        display: flex;
+        align-items: center;
+        font-size: var(--font-down-1);
+      }
+    }
+
+    .search-result-group .group-result {
+      display: flex;
+      gap: 0.5em;
+      align-items: center;
+
+      &:not(.--with-flair) {
+        svg {
+          padding: 0.43em; // matching avatar-flair width
+          background: var(--primary-200);
+          border-radius: 50%;
+        }
+      }
+
+      .d-icon {
+        font-size: var(--font-down-1);
+      }
+
+      .avatar-flair {
+        width: 1.62em;
+        height: 1.6em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: var(--primary-200);
+        color: var(--primary-medium);
+
+        .d-icon {
+          font-size: var(--font-down-2);
+          color: currentColor;
+        }
+      }
+
+      .avatar-flair {
+        border-radius: 50%;
+        &.avatar-flair-image {
+          background-repeat: no-repeat;
+          background-size: 100% 100%;
+        }
+      }
+
+      .group-names {
+        @include user-item-flex;
+        min-width: 0;
+        .name,
+        .slug {
+          @include ellipsis;
+        }
+
+        &.--group-with-slug {
+          .name {
+            font-weight: 700;
+          }
+        }
+      }
     }
 
     .search-result-category,
@@ -205,15 +232,29 @@ $search-pad-horizontal: 0.5em;
     }
 
     .search-result-user .user-result img.avatar,
-    .search-item-user img.avatar {
-      width: 20px;
-      height: 20px;
-      margin-right: 0.5em;
+    .search-item-user {
+      display: flex;
+      align-self: center;
+
+      img.avatar {
+        width: 20px;
+        height: 20px;
+        margin-right: 0.5em;
+      }
+      .username {
+        margin-right: 0.33em;
+      }
     }
 
     .label-suffix {
       color: var(--primary-medium);
       margin-right: 0.33em;
+    }
+
+    .badge-category__wrapper + .search-item-tag {
+      display: flex;
+      align-items: baseline;
+      margin-left: 0.33em;
     }
 
     .search-item-tag {
@@ -226,6 +267,9 @@ $search-pad-horizontal: 0.5em;
     }
 
     .search-item-slug {
+      overflow-wrap: anywhere;
+      white-space: wrap;
+      min-width: 0;
       .keyword {
         margin-right: 0.33em;
       }
@@ -263,9 +307,8 @@ $search-pad-horizontal: 0.5em;
           vertical-align: middle;
         }
         .d-icon-tag {
-          font-size: var(--font-down-2);
+          font-size: 0.7em;
         }
-
         .d-icon-search {
           font-size: var(--font-down-1);
         }
@@ -292,6 +335,9 @@ $search-pad-horizontal: 0.5em;
   .search-menu-recent {
     @include separator;
 
+    .search-menu-assistant-item .search-link {
+      flex-wrap: nowrap;
+    }
     .heading {
       display: flex;
       justify-content: space-between;
@@ -320,7 +366,7 @@ $search-pad-horizontal: 0.5em;
       margin-top: 2px;
     }
 
-    a.show-advanced-search,
+    .show-advanced-search,
     a.clear-search {
       padding: 0px 3px;
       display: inline-block;
@@ -374,58 +420,6 @@ $search-pad-horizontal: 0.5em;
   .search-result-post {
     .search-link {
       padding: 0.5em;
-    }
-  }
-}
-
-// these styles will become the default once the glimmer search menu
-// is enabled for all users, and the old search menu is removed
-// we can then drop any '!important' rules
-.search-menu.glimmer-search-menu {
-  .search-item-tag .d-icon {
-    margin-right: 0 !important;
-  }
-
-  .search-item-user {
-    display: flex;
-    align-self: center;
-
-    .username {
-      margin-right: 0.33em;
-    }
-  }
-
-  .search-result-user {
-    .search-link {
-      display: flex;
-      align-items: center;
-
-      img.avatar {
-        margin-right: 10px;
-      }
-    }
-
-    .user-titles {
-      @include user-item-flex;
-
-      .username,
-      .name {
-        @include ellipsis;
-      }
-
-      .name {
-        font-weight: 700;
-      }
-
-      .username,
-      .name,
-      .custom-field {
-        color: var(--primary-high-or-secondary-low);
-      }
-
-      .custom-field {
-        font-size: var(--font-down-2);
-      }
     }
   }
 }

@@ -1025,6 +1025,21 @@ RSpec.describe Search do
       results = Search.execute("tiger", guardian: Guardian.new(user))
       expect(results.posts).to eq([post])
     end
+
+    it "does not return hidden posts" do
+      Fabricate(:post, raw: "Can you see me? I'm a hidden post", hidden: true)
+
+      results = Search.execute("hidden post")
+      expect(results.posts.count).to eq(0)
+    end
+
+    it "does not rely on postgres's proximity opreators" do
+      topic.update!(title: "End-to-end something something testing")
+
+      results = Search.execute("end-to-end test")
+
+      expect(results.posts).to eq([post])
+    end
   end
 
   describe "topics" do
@@ -1238,6 +1253,41 @@ RSpec.describe Search do
         slug: "test",
         search_priority: Searchable::PRIORITIES[:ignore],
       )
+    end
+
+    it "allow searching for multiple categories" do
+      category2 = Fabricate(:category, name: "abc")
+      topic2 = Fabricate(:topic, category: category2)
+      post2 = Fabricate(:post, topic: topic2, raw: "snow monkey")
+
+      category3 = Fabricate(:category, name: "def")
+      topic3 = Fabricate(:topic, category: category3)
+      post3 = Fabricate(:post, topic: topic3, raw: "snow monkey")
+
+      search = Search.execute("monkey category:abc,def")
+      expect(search.posts.map(&:id)).to contain_exactly(post2.id, post3.id)
+
+      search = Search.execute("monkey categories:abc,def")
+      expect(search.posts.map(&:id)).to contain_exactly(post2.id, post3.id)
+
+      search = Search.execute("monkey categories:xxxxx,=abc,=def")
+      expect(search.posts.map(&:id)).to contain_exactly(post2.id, post3.id)
+
+      search = Search.execute("snow category:abc,#{category.id}")
+      expect(search.posts.map(&:id)).to contain_exactly(post.id, post2.id)
+
+      child_category = Fabricate(:category, parent_category: category2)
+      child_topic = Fabricate(:topic, category: child_category)
+      child_post = Fabricate(:post, topic: child_topic, raw: "snow monkey")
+
+      search = Search.execute("monkey category:zzz,nnn,=abc,mmm")
+      expect(search.posts.map(&:id)).to contain_exactly(post2.id)
+
+      search =
+        Search.execute(
+          "monkey category:0007847874874874874748749398384398439843984938439843948394834984934839483984983498394834983498349834983,zzz,nnn,abc,mmm",
+        )
+      expect(search.posts.map(&:id)).to contain_exactly(post2.id, child_post.id)
     end
 
     it "should return the right categories" do
@@ -2126,6 +2176,18 @@ RSpec.describe Search do
       expect(Search.execute("Topic max_views:150").posts.map(&:id)).to eq([post.id])
     end
 
+    it "can order by likes" do
+      raw = "Foo bar lorem ipsum"
+      topic = Fabricate(:topic)
+      post1 = Fabricate(:post, topic:, raw:, like_count: 1)
+      post2 = Fabricate(:post, topic:, raw:, like_count: 2)
+      post3 = Fabricate(:post, topic:, raw:, like_count: 3)
+
+      expect(Search.execute("topic:#{topic.id} bar order:likes").posts.map(&:id)).to eq(
+        [post3, post2, post1].map(&:id),
+      )
+    end
+
     it "can search for terms with dots" do
       post = Fabricate(:post, raw: "Will.2000 Will.Bob.Bill...")
       expect(Search.execute("bill").posts.map(&:id)).to eq([post.id])
@@ -2375,12 +2437,18 @@ RSpec.describe Search do
 
     it "escapes the term correctly" do
       expect(Search.ts_query(term: 'Title with trailing backslash\\')).to eq(
-        "REPLACE(TO_TSQUERY('english', '''Title with trailing backslash\\\\\\\\'':*')::text, '<->', '&')::tsquery",
+        "REGEXP_REPLACE(TO_TSQUERY('english', '''Title with trailing backslash\\\\\\\\'':*')::text, '<->|<\\d+>', '&', 'g')::tsquery",
       )
 
       expect(Search.ts_query(term: "Title with trailing quote'")).to eq(
-        "REPLACE(TO_TSQUERY('english', '''Title with trailing quote'''''':*')::text, '<->', '&')::tsquery",
+        "REGEXP_REPLACE(TO_TSQUERY('english', '''Title with trailing quote'''''':*')::text, '<->|<\\d+>', '&', 'g')::tsquery",
       )
+    end
+
+    it "remaps postgres's proximity operators '<->' and its `<N>` variant" do
+      expect(
+        DB.query_single("SELECT #{Search.ts_query(term: "end-to-end")}::text"),
+      ).to contain_exactly("'end-to-end':* & 'end':* & 'end':*")
     end
   end
 
@@ -2470,6 +2538,42 @@ RSpec.describe Search do
 
       results = Search.execute("in:title status:open Discourse")
       expect(results.posts.length).to eq(1)
+    end
+  end
+
+  describe "include:invisible / include:unlisted" do
+    it "allows including invisible topics in the results for users that can see unlisted topics" do
+      topic = Fabricate(:topic, title: "I am testing a search", visible: false)
+      post = Fabricate(:post, topic: topic, raw: "this is the first post", post_number: 1)
+
+      results = Search.execute("testing include:invisible", guardian: Guardian.new(admin))
+      expect(results.posts.map(&:id)).to eq([post.id])
+
+      results =
+        Search.execute(
+          "testing include:unlisted",
+          guardian: Guardian.new(Fabricate(:trust_level_4)),
+        )
+      expect(results.posts.map(&:id)).to eq([post.id])
+
+      results = Search.execute("testing", guardian: Guardian.new(admin))
+      expect(results.posts).to eq([])
+    end
+
+    it "won't work for users that can't see unlisted topics" do
+      topic = Fabricate(:topic, title: "I am testing a search", visible: false)
+      _post = Fabricate(:post, topic: topic, raw: "this is the first post", post_number: 1)
+
+      results =
+        Search.execute("testing include:invisible", guardian: Guardian.new(Fabricate(:user)))
+      expect(results.posts).to eq([])
+
+      results =
+        Search.execute(
+          "testing include:unlisted",
+          guardian: Guardian.new(Fabricate(:trust_level_3)),
+        )
+      expect(results.posts).to eq([])
     end
   end
 
@@ -2623,10 +2727,14 @@ RSpec.describe Search do
 
     it "allows to define custom filter" do
       expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+
       Search.advanced_filter(/^min_chars:(\d+)$/) do |posts, match|
         posts.where("(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?", match.to_i)
       end
+
       expect(Search.new("advanced min_chars:50").execute.posts).to eq([post0])
+    ensure
+      Search.advanced_filters.delete(/^min_chars:(\d+)$/)
     end
 
     it "allows to define custom order" do
@@ -2635,6 +2743,8 @@ RSpec.describe Search do
       Search.advanced_order(:chars) { |posts| posts.reorder("MAX(LENGTH(posts.raw)) DESC") }
 
       expect(Search.new("advanced order:chars").execute.posts).to eq([post0, post1])
+    ensure
+      Search.advanced_orders.delete(:chars)
     end
   end
 

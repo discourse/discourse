@@ -193,11 +193,15 @@ class PostDestroyer
         if @post.topic && @post.is_first_post?
           StaffActionLogger.new(@user).log_topic_delete_recover(
             @post.topic,
-            "delete_topic",
+            permanent? ? "delete_topic_permanently" : "delete_topic",
             @opts.slice(:context),
           )
         else
-          StaffActionLogger.new(@user).log_post_deletion(@post, @opts.slice(:context))
+          StaffActionLogger.new(@user).log_post_deletion(
+            @post,
+            **@opts.slice(:context),
+            permanent: permanent?,
+          )
         end
       end
 
@@ -210,6 +214,13 @@ class PostDestroyer
       update_associated_category_latest_topic
       update_user_counts if !permanent?
       TopicUser.update_post_action_cache(post_id: @post.id)
+
+      if permanent?
+        if @post.topic && @post.is_first_post?
+          UserHistory.where(topic_id: @post.topic.id).update_all(details: "(permanently deleted)")
+        end
+        UserHistory.where(post_id: @post.id).update_all(details: "(permanently deleted)")
+      end
 
       DB.after_commit do
         if @opts[:reviewable]

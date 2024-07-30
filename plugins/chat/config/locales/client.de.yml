@@ -56,12 +56,17 @@ de:
       cancel_reply: "Antwort verwerfen"
       chat_channels: "Kanäle"
       browse_all_channels: "Alle Kanäle durchsuchen"
+      see_in: "Ansehen in"
       move_to_channel:
         title: "Nachrichten in Kanal verschieben"
         instructions:
           one: "Du verschiebst <strong>%{count}</strong> Nachricht. Wähle einen Zielkanal aus. Im Kanal <strong>%{channelTitle}</strong> wird eine Platzhalter-Nachricht erstellt, um anzuzeigen, dass diese Nachricht verschoben wurde. Beachte, dass Antwortketten im neuen Kanal nicht erhalten bleiben und dass Nachrichten im alten Kanal nicht mehr als Antwort auf verschobene Nachrichten angezeigt werden."
           other: "Du verschiebst <strong>%{count}</strong> Nachrichten. Wähle einen Zielkanal aus. Im Kanal <strong>%{channelTitle}</strong> wird eine Platzhalter-Nachricht erstellt, um anzuzeigen, dass diese Nachrichten verschoben wurden. Beachte, dass die Antwortketten im neuen Kanal nicht erhalten bleiben und dass die Nachrichten im alten Kanal nicht mehr als Antwort auf die verschobenen Nachrichten angezeigt werden."
         confirm_move: "Nachrichten verschieben"
+      delete_messages:
+        confirm:
+          one: "Bist du sicher, dass du diese Nachricht löschen willst?"
+          other: "Bist du sicher, dass du diese %{count} Nachrichten löschen willst?"
       channel_settings:
         title: "Kanaleinstellungen"
         edit: "Bearbeiten"
@@ -99,7 +104,6 @@ de:
       channels_list_popup:
         browse: "Kanäle durchsuchen"
         create: "Neuer Kanal"
-      click_to_join: "Klicke hier, um die verfügbaren Kanäle zu sehen."
       close: "Schließen"
       remove: "Entfernen"
       collapse: "Chat-Bereich ausblenden"
@@ -141,13 +145,6 @@ de:
       heading: "Chat"
       join: "Beitreten"
       last_visit: "letzter Besuch"
-      summarization:
-        title: "Nachrichten zusammenfassen"
-        description: "Wähle unten eine Option aus, um die im gewünschten Zeitraum gesendete Konversation zusammenzufassen."
-        summarize: "Zusammenfassen"
-        since:
-          one: "Letzte Stunde"
-          other: "Letzte %{count} Stunden"
       mention_warning:
         invitations_sent:
           one: "Einladung gesendet"
@@ -227,8 +224,10 @@ de:
         header: "Chat-Kopfzeile"
         composer: "Chat-Composer"
         channels_list: "Liste der Chat-Kanäle"
-      no_direct_message_channels: "Du bist keinem Direktnachrichtenkanal beigetreten."
-      no_public_channels: "Du bist keinem Kanal beigetreten."
+      no_direct_message_channels: "Du bist noch keiner Unterhaltung per Direktnachricht beigetreten!"
+      no_direct_message_channels_cta: "Eine Unterhaltung starten"
+      no_public_channels: "Du bist noch keinem Kanal beigetreten!"
+      no_public_channels_cta: "Kanäle durchsuchen"
       kicked_from_channel: "Du kannst nicht mehr auf diesen Kanal zugreifen."
       only_chat_push_notifications:
         title: "Nur Chat-Push-Benachrichtigungen senden"
@@ -236,6 +235,9 @@ de:
       ignore_channel_wide_mention:
         title: "Kanalweite Erwähnungen ignorieren"
         description: "Keine Benachrichtigungen für kanalweite Erwähnungen senden (@here und @all)"
+      show_thread_title_prompts:
+        title: "Eingabeaufforderungen für Thread-Titel anzeigen"
+        description: "Eingabeaufforderungen zum Festlegen eines Titels für neue Threads anzeigen"
       open: "Chat öffnen"
       open_full_page: "Vollbild-Chat öffnen"
       close_full_page: "Vollbild-Chat schließen"
@@ -256,6 +258,7 @@ de:
       copy_link: "Link kopieren"
       copy_text: "Text kopieren"
       rebake_message: "HTML neu erstellen"
+      message_too_long: "Nachricht ist zu lang. Nachrichten dürfen maximal %{count} Zeichen lang sein."
       retry_staged_message:
         title: "Netzwerkfehler"
         action: "Erneut senden?"
@@ -524,6 +527,7 @@ de:
         cancel: "Abbrechen"
         quote_selection: "In Thema zitieren"
         copy: "Kopieren"
+        delete: "Löschen (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "In Kanal verschieben"
         error: "Beim Verschieben der Chat-Nachrichten ist ein Fehler aufgetreten"
         title: "Chat in Thema verschieben"
@@ -562,6 +566,7 @@ de:
       flags:
         off_topic: "Diese Nachricht ist für die aktuelle Diskussion im Sinne des Kanaltitels nicht relevant und sollte wahrscheinlich an eine andere Stelle verschoben werden."
         inappropriate: "Diese Nachricht enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder als Verstoß gegen <a href=\"%{basePath}/guidelines\">unsere Community-Richtlinien</a> ansehen würde."
+        illegal: "Dieser Beitrag erfordert die Aufmerksamkeit des Teams, da er meiner Meinung nach rechtswidrige Inhalte enthält."
         spam: "Diese Nachricht ist Werbung oder Vandalismus. Sie ist nicht nützlich oder relevant für den aktuellen Kanal."
         notify_user: "Ich möchte mit dieser Person direkt und persönlich über ihre Nachricht sprechen."
         notify_moderators: "Diese Nachricht erfordert die Aufmerksamkeit des Teams aus einem anderen, oben nicht aufgeführten Grund."
@@ -602,6 +607,17 @@ de:
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
+      thread_title_toast:
+        title: "Thread-Titel festlegen"
+        message: "Hilf anderen, diese Unterhaltung zu entdecken."
+        dismiss_action: "Nicht erneut anzeigen"
+        primary_action: "Titel festlegen"
+      thread_title_modal:
+        title: "Thread-Titel festlegen"
+        input_placeholder: "Sag anderen, worum es in dieser Unterhaltung geht …"
+        discourse_ai:
+          title: "Thread-Titel automatisch generieren"
+          description: "Unter %{url} erfährst du mehr über diese und andere Verbesserungen für dein Discourse-Erlebnis."
       threads:
         open: "Thread öffnen"
         list: "Threads"

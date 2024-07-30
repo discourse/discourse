@@ -10,6 +10,7 @@ class AdminPluginSerializer < ApplicationSerializer
              :enabled,
              :enabled_setting,
              :has_settings,
+             :has_only_enabled_setting,
              :is_official,
              :is_discourse_owned,
              :label,
@@ -54,8 +55,16 @@ class AdminPluginSerializer < ApplicationSerializer
     object.enabled_site_setting
   end
 
+  def plugin_settings
+    @plugin_settings ||= SiteSetting.plugins.select { |_, v| v == id }
+  end
+
   def has_settings
-    SiteSetting.plugins.values.include?(id)
+    plugin_settings.values.any?
+  end
+
+  def has_only_enabled_setting
+    plugin_settings.keys.length == 1 && plugin_settings.keys.first == enabled_setting
   end
 
   def include_url?
@@ -67,7 +76,12 @@ class AdminPluginSerializer < ApplicationSerializer
     return unless route
 
     ret = route.slice(:location, :label)
-    ret[:full_location] = "adminPlugins.#{ret[:location]}"
+    if route[:use_new_show_route]
+      ret[:full_location] = "adminPlugins.show"
+      ret[:use_new_show_route] = true
+    else
+      ret[:full_location] = "adminPlugins.#{ret[:location]}"
+    end
     ret
   end
 

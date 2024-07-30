@@ -26,7 +26,7 @@ module Encodings
   end
 
   def self.delete_bom!(string)
-    string.sub!(/\A\xEF\xBB\xBF/, "") unless string.blank?
+    string.sub!(/\A\xEF\xBB\xBF/, "") if string.present?
     string
   end
 end

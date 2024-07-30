@@ -44,6 +44,25 @@ describe "Admin Customize Form Templates", type: :system do
       form_template_page.click_toggle_preview
       expect(form_template_page).to have_input_field("input")
     end
+
+    context "when using the view template modal" do
+      it "should navigate to the edit page when clicking the edit button" do
+        form_template_page.visit
+        form_template_page.click_view_form_template
+        form_template_page.find(".d-modal__footer .btn-primary").click
+        expect(page).to have_current_path("/admin/customize/form-templates/#{form_template.id}")
+      end
+
+      it "should delete the form template when clicking the delete button" do
+        form_template_page.visit
+        original_template_name = form_template.name
+        form_template_page.click_view_form_template
+        form_template_page.find(".d-modal__footer .btn-danger").click
+        form_template_page.find(".dialog-footer .btn-primary").click
+
+        expect(form_template_page).to have_no_form_template(original_template_name)
+      end
+    end
   end
 
   describe "when visiting the page to edit a form template" do

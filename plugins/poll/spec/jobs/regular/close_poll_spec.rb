@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Jobs::ClosePoll do
   let(:post) { Fabricate(:post, raw: "[poll]\n- A\n- B\n[/poll]") }
 

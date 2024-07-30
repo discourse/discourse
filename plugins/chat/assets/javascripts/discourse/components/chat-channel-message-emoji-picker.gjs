@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { createPopper } from "@popperjs/core";
 import { modifier } from "ember-modifier";
 import { headerOffset } from "discourse/lib/offset-calculator";

@@ -21,17 +21,18 @@ class Admin::SiteTextsController < Admin::AdminController
   def index
     overridden = params[:overridden] == "true"
     outdated = params[:outdated] == "true"
+    untranslated = params[:untranslated] == "true"
     extras = {}
 
     query = params[:q] || ""
 
     locale = fetch_locale(params[:locale])
 
-    if query.blank? && !overridden && !outdated
+    if query.blank? && !overridden && !outdated && !untranslated
       extras[:recommended] = true
       results = self.class.preferred_keys.map { |k| record_for(key: k, locale: locale) }
     else
-      results = find_translations(query, overridden, outdated, locale)
+      results = find_translations(query, overridden, outdated, locale, untranslated)
 
       if results.any?
         extras[:regex] = I18n::Backend::DiscourseI18n.create_search_regexp(query, as_string: true)
@@ -134,14 +135,7 @@ class Admin::SiteTextsController < Admin::AdminController
 
     raise Discourse::NotFound if override.blank?
 
-    if override.outdated?
-      override.update!(
-        status: "up_to_date",
-        original_translation:
-          I18n.overrides_disabled do
-            I18n.t(TranslationOverride.transform_pluralized_key(params[:id]), locale: :en)
-          end,
-      )
+    if override.make_up_to_date!
       render json: success_json
     else
       render json: failed_json.merge(message: "Can only dismiss outdated translations"), status: 422
@@ -209,9 +203,12 @@ class Admin::SiteTextsController < Admin::AdminController
     raise Discourse::NotFound
   end
 
-  def find_translations(query, overridden, outdated, locale)
+  def find_translations(query, overridden, outdated, locale, untranslated)
     translations = Hash.new { |hash, key| hash[key] = {} }
-    search_results = I18n.with_locale(locale) { I18n.search(query, only_overridden: overridden) }
+    search_results =
+      I18n.with_locale(locale) do
+        I18n.search(query, only_overridden: overridden, only_untranslated: untranslated)
+      end
 
     if outdated
       outdated_keys =

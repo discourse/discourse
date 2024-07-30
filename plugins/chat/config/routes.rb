@@ -7,8 +7,8 @@ Chat::Engine.routes.draw do
     get "/me/channels" => "current_user_channels#index"
     get "/me/threads" => "current_user_threads#index"
     post "/channels" => "channels#create"
-    put "/channels/read/" => "reads#update_all"
-    put "/channels/:channel_id/read/:message_id" => "reads#update"
+    put "/channels/read" => "channels_read#update_all"
+    put "/channels/:channel_id/read" => "channels_read#update"
     post "/channels/:channel_id/messages/:message_id/flags" => "channels_messages_flags#create"
     post "/channels/:channel_id/drafts" => "channels_drafts#create"
     delete "/channels/:channel_id" => "channels#destroy"
@@ -18,6 +18,8 @@ Chat::Engine.routes.draw do
     get "/channels/:channel_id/messages" => "channel_messages#index"
     put "/channels/:channel_id/messages/:message_id" => "channel_messages#update"
     post "/channels/:channel_id/messages/moves" => "channels_messages_moves#create"
+    delete "/channels/:channel_id/messages/:message_id/streaming" =>
+             "channels_messages_streaming#destroy"
     post "/channels/:channel_id/invites" => "channels_invites#create"
     post "/channels/:channel_id/archives" => "channels_archives#create"
     get "/channels/:channel_id/memberships" => "channels_memberships#index"
@@ -43,19 +45,17 @@ Chat::Engine.routes.draw do
     put "/channels/:channel_id/threads/:thread_id" => "channel_threads#update"
     get "/channels/:channel_id/threads/:thread_id" => "channel_threads#show"
     get "/channels/:channel_id/threads/:thread_id/messages" => "channel_thread_messages#index"
-    put "/channels/:channel_id/threads/:thread_id/read" => "thread_reads#update"
+    put "/channels/:channel_id/threads/:thread_id/read" => "channels_threads_read#update"
     post "/channels/:channel_id/threads/:thread_id/drafts" => "channels_threads_drafts#create"
     put "/channels/:channel_id/threads/:thread_id/notifications-settings/me" =>
           "channel_threads_current_user_notifications_settings#update"
-
-    # TODO (martin) Remove this when we refactor the DM channel creation to happen
-    # via message creation in a different API controller.
+    post "/channels/:channel_id/threads/:thread_id/mark-thread-title-prompt-seen/me" =>
+           "channel_threads_current_user_title_prompt_seen#update"
     post "/direct-message-channels" => "direct_messages#create"
 
     put "/channels/:channel_id/messages/:message_id/restore" => "channel_messages#restore"
     delete "/channels/:channel_id/messages/:message_id" => "channel_messages#destroy"
-
-    get "/channels/:channel_id/summarize" => "summaries#get_summary"
+    delete "/channels/:channel_id/messages" => "channel_messages#bulk_destroy"
   end
 
   namespace :admin, defaults: { format: :json, constraints: StaffConstraint.new } do
@@ -73,6 +73,7 @@ Chat::Engine.routes.draw do
 
   # chat_controller routes
   get "/" => "chat#respond"
+  get "/new-message" => "chat#respond"
   get "/direct-messages" => "chat#respond"
   get "/channels" => "chat#respond"
   get "/threads" => "chat#respond"

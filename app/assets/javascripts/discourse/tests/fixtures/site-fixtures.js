@@ -521,6 +521,7 @@ export default {
           notification_level: null,
           background_url: null,
           has_children: true,
+          subcategory_count: 2,
         },
         {
           id: 1002,
@@ -567,7 +568,7 @@ export default {
           is_flag: false,
           icon: null,
           id: 1,
-          is_custom_flag: false,
+          require_message: false,
         },
         {
           name_key: "like",
@@ -577,7 +578,7 @@ export default {
           is_flag: false,
           icon: "heart",
           id: 2,
-          is_custom_flag: false,
+          require_message: false,
         },
         {
           name_key: "off_topic",
@@ -588,7 +589,9 @@ export default {
           is_flag: true,
           icon: null,
           id: 3,
-          is_custom_flag: false,
+          require_message: false,
+          enabled: true,
+          applies_to: ["Post", "Chat::Message"]
         },
         {
           name_key: "inappropriate",
@@ -600,7 +603,9 @@ export default {
           is_flag: true,
           icon: null,
           id: 4,
-          is_custom_flag: false,
+          require_message: false,
+          enabled: true,
+          applies_to: ["Post", "Topic", "Chat::Message"]
         },
         {
           name_key: "vote",
@@ -610,7 +615,8 @@ export default {
           is_flag: false,
           icon: null,
           id: 5,
-          is_custom_flag: false,
+          require_message: false,
+          enabled: true
         },
         {
           name_key: "spam",
@@ -621,7 +627,9 @@ export default {
           is_flag: true,
           icon: null,
           id: 8,
-          is_custom_flag: false,
+          require_message: false,
+          enabled: true,
+          applies_to: ["Post", "Topic", "Chat::Message"]
         },
         {
           name_key: "notify_user",
@@ -633,7 +641,9 @@ export default {
           is_flag: true,
           icon: null,
           id: 6,
-          is_custom_flag: true,
+          require_message: true,
+          enabled: true,
+          applies_to: ["Post", "Topic", "Chat::Message"]
         },
         {
           name_key: "notify_moderators",
@@ -644,7 +654,9 @@ export default {
           is_flag: true,
           icon: null,
           id: 7,
-          is_custom_flag: true,
+          require_message: true,
+          enabled: true,
+          applies_to: ["Post", "Topic", "Chat::Message"]
         },
       ],
       topic_flag_types: [
@@ -656,7 +668,9 @@ export default {
           is_flag: true,
           icon: null,
           id: 4,
-          is_custom_flag: false,
+          require_message: false,
+          enabled: true,
+          applies_to: ["Post", "Topic", "Chat::Message"]
         },
         {
           name_key: "spam",
@@ -666,7 +680,9 @@ export default {
           is_flag: true,
           icon: null,
           id: 8,
-          is_custom_flag: false,
+          require_message: false,
+          enabled: true,
+          applies_to: ["Post", "Topic", "Chat::Message"]
         },
         {
           name_key: "notify_moderators",
@@ -676,7 +692,9 @@ export default {
           is_flag: true,
           icon: null,
           id: 7,
-          is_custom_flag: true,
+          require_message: true,
+          enabled: true,
+          applies_to: ["Post", "Topic", "Chat::Message"]
         },
       ],
       archetypes: [

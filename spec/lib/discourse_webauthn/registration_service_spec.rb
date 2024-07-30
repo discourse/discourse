@@ -157,10 +157,10 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
     it "raises a UserPresenceError" do
       # simulate missing user presence by flipping first bit to 0
       flags = "00000010"
-      overridenAuthData = service.send(:auth_data)
-      overridenAuthData[32] = [flags].pack("b*")
+      overriddenAuthData = service.send(:auth_data)
+      overriddenAuthData[32] = [flags].pack("b*")
 
-      service.instance_variable_set(:@auth_data, overridenAuthData)
+      service.instance_variable_set(:@auth_data, overriddenAuthData)
 
       expect { service.register_security_key }.to raise_error(
         DiscourseWebauthn::UserPresenceError,
@@ -213,10 +213,10 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
       it "raises a UserVerificationError" do
         # simulate missing user verification by flipping third bit to 0
         flags = "10000010" # correct flag sequence is "10100010"
-        overriden_auth_data = service.send(:auth_data)
-        overriden_auth_data[32] = [flags].pack("b*")
+        overridden_auth_data = service.send(:auth_data)
+        overridden_auth_data[32] = [flags].pack("b*")
 
-        service.instance_variable_set(:@auth_data, overriden_auth_data)
+        service.instance_variable_set(:@auth_data, overridden_auth_data)
 
         expect { service.register_security_key }.to raise_error(
           DiscourseWebauthn::UserVerificationError,

@@ -148,12 +148,12 @@ RSpec.describe Post do
     end
   end
 
-  describe "with_secure_uploads?" do
+  describe "should_secure_uploads?" do
     let(:topic) { Fabricate(:topic) }
     let!(:post) { Fabricate(:post, topic: topic) }
 
     it "returns false if secure uploads is not enabled" do
-      expect(post.with_secure_uploads?).to eq(false)
+      expect(post.should_secure_uploads?).to eq(false)
     end
 
     context "when secure uploads is enabled" do
@@ -167,14 +167,14 @@ RSpec.describe Post do
         before { SiteSetting.login_required = true }
 
         it "returns true" do
-          expect(post.with_secure_uploads?).to eq(true)
+          expect(post.should_secure_uploads?).to eq(true)
         end
 
         context "if secure_uploads_pm_only" do
           before { SiteSetting.secure_uploads_pm_only = true }
 
           it "returns false" do
-            expect(post.with_secure_uploads?).to eq(false)
+            expect(post.should_secure_uploads?).to eq(false)
           end
         end
       end
@@ -184,7 +184,7 @@ RSpec.describe Post do
         before { topic.change_category_to_id(category.id) }
 
         it "returns true" do
-          expect(post.with_secure_uploads?).to eq(true)
+          expect(post.should_secure_uploads?).to eq(true)
         end
 
         context "when the topic is deleted" do
@@ -194,7 +194,7 @@ RSpec.describe Post do
           end
 
           it "returns true" do
-            expect(post.with_secure_uploads?).to eq(true)
+            expect(post.should_secure_uploads?).to eq(true)
           end
         end
 
@@ -202,7 +202,7 @@ RSpec.describe Post do
           before { SiteSetting.secure_uploads_pm_only = true }
 
           it "returns false" do
-            expect(post.with_secure_uploads?).to eq(false)
+            expect(post.should_secure_uploads?).to eq(false)
           end
         end
       end
@@ -211,14 +211,14 @@ RSpec.describe Post do
         let(:topic) { Fabricate(:private_message_topic) }
 
         it "returns true" do
-          expect(post.with_secure_uploads?).to eq(true)
+          expect(post.should_secure_uploads?).to eq(true)
         end
 
         context "when the topic is deleted" do
           before { topic.trash! }
 
           it "returns true" do
-            expect(post.with_secure_uploads?).to eq(true)
+            expect(post.should_secure_uploads?).to eq(true)
           end
         end
 
@@ -226,7 +226,7 @@ RSpec.describe Post do
           before { SiteSetting.secure_uploads_pm_only = true }
 
           it "returns true" do
-            expect(post.with_secure_uploads?).to eq(true)
+            expect(post.should_secure_uploads?).to eq(true)
           end
         end
       end
@@ -716,7 +716,7 @@ RSpec.describe Post do
           SiteSetting.max_mentions_per_post = 1
         end
 
-        it "allows vmax_mentions_per_post mentions" do
+        it "allows max_mentions_per_post mentions" do
           post_with_one_mention.user.trust_level = TrustLevel[1]
           expect(post_with_one_mention).to be_valid
         end
@@ -1168,20 +1168,30 @@ RSpec.describe Post do
       expect(post.cooked).to match(/noopener nofollow ugc/)
     end
 
-    it "passes the last_editor_id as the markdown user_id option" do
+    it "passes the last_editor_id as the markdown user_id option and post_id" do
       post.save
       post.reload
       PostAnalyzer
         .any_instance
         .expects(:cook)
-        .with(post.raw, { cook_method: Post.cook_methods[:regular], user_id: post.last_editor_id })
+        .with(
+          post.raw,
+          {
+            cook_method: Post.cook_methods[:regular],
+            user_id: post.last_editor_id,
+            post_id: post.id,
+          },
+        )
       post.cook(post.raw)
       user_editor = Fabricate(:user)
       post.update!(last_editor_id: user_editor.id)
       PostAnalyzer
         .any_instance
         .expects(:cook)
-        .with(post.raw, { cook_method: Post.cook_methods[:regular], user_id: user_editor.id })
+        .with(
+          post.raw,
+          { cook_method: Post.cook_methods[:regular], user_id: user_editor.id, post_id: post.id },
+        )
       post.cook(post.raw)
     end
 
@@ -1540,6 +1550,25 @@ RSpec.describe Post do
 
       expect(post.hidden).to eq(false)
       expect(hidden_topic.visible).to eq(true)
+      expect(hidden_topic.visibility_reason_id).to eq(Topic.visibility_reasons[:op_unhidden])
+    end
+
+    it "will not unhide the topic if the topic visibility_reason_id is not op_flag_threshold_reached" do
+      hidden_topic =
+        Fabricate(
+          :topic,
+          visible: false,
+          visibility_reason_id: Topic.visibility_reasons[:manually_unlisted],
+        )
+      post = create_post(topic: hidden_topic)
+      post.update_columns(hidden: true, hidden_at: Time.now, hidden_reason_id: 1)
+      post.reload
+
+      expect(post.hidden).to eq(true)
+      post.unhide!
+
+      hidden_topic.reload
+      expect(hidden_topic.visible).to eq(false)
     end
 
     it "should increase user_stat topic_count for first post" do
@@ -2068,6 +2097,25 @@ RSpec.describe Post do
       expect(urls).to be_empty
     end
 
+    it "should skip external URLs following the `/uploads/short-url` pattern if a host is present and the host is not the configured host" do
+      upload = Fabricate(:upload)
+
+      raw = <<~RAW
+      [Upload link with Discourse.base_url](#{Discourse.base_url}/uploads/short-url/#{upload.sha1}.#{upload.extension})
+      [Upload link without Discourse.base_url](https://some.other.host/uploads/short-url/#{upload.sha1}.#{upload.extension})
+      [Upload link without host](/uploads/short-url/#{upload.sha1}.#{upload.extension})
+      RAW
+
+      post = Fabricate(:post, raw: raw)
+      urls = []
+      post.each_upload_url { |src, _, _| urls << src }
+
+      expect(urls).to contain_exactly(
+        "#{Discourse.base_url}/uploads/short-url/#{upload.sha1}.#{upload.extension}",
+        "/uploads/short-url/#{upload.sha1}.#{upload.extension}",
+      )
+    end
+
     it "skip S3 cdn urls with different path" do
       setup_s3
       SiteSetting.Upload.stubs(:s3_cdn_url).returns("https://cdn.example.com/site1")
@@ -2200,9 +2248,20 @@ RSpec.describe Post do
     end
   end
 
+  describe "full_url" do
+    it "returns the correct post url with subfolder install" do
+      set_subfolder "/forum"
+      post = Fabricate(:post)
+
+      expect(post.full_url).to eq(
+        "#{Discourse.base_url_no_prefix}/forum/t/#{post.topic.slug}/#{post.topic.id}/#{post.post_number}",
+      )
+    end
+  end
+
   describe "public_posts_count_per_day" do
     before do
-      freeze_time DateTime.parse("2017-03-01 12:00")
+      freeze_time_safe
 
       Fabricate(:post)
       Fabricate(:post, created_at: 1.day.ago)

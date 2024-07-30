@@ -31,12 +31,12 @@
     rgba(0, 0, 0, 0)
   );
   border-radius: var(--d-button-border-radius);
-  transition: background 0.25s, color 0.25s;
+  transition: var(--d-button-transition);
   cursor: pointer;
   .d-icon {
     color: $icon-color;
     margin-right: 0.45em;
-    transition: color 0.25s;
+    transition: var(--d-button-transition);
     // For Windows High Contrast (see whcm.scss for more)
     @media (forced-colors: active) {
       color: ButtonText;
@@ -231,7 +231,7 @@
     }
     &:hover,
     &:focus {
-      color: currentColor;
+      color: inherit;
     }
   }
 
@@ -275,6 +275,8 @@
       }
     }
   }
+  // https://developers.facebook.com/docs/facebook-login/userexperience/#buttondesign
+  // if you are unable to use Facebook blue, revert to black and white.
 }
 
 // Button Sizes
@@ -300,10 +302,10 @@
   background: transparent;
   border: 0;
   line-height: var(--line-height-small);
-  transition: background 0.25s, color 0.25s;
+  transition: var(--d-button-transition);
   .d-icon {
     color: var(--primary-low-mid);
-    transition: color 0.25s;
+    transition: var(--d-button-transition);
   }
   .discourse-no-touch & {
     &:hover,
@@ -372,6 +374,9 @@
       color: var(--primary);
     }
   }
+  &.back-button {
+    margin-bottom: 1em;
+  }
 }
 
 .btn-link {
@@ -399,7 +404,7 @@
 @mixin btn-colors($btn-color) {
   color: var(--#{$btn-color});
   .d-icon {
-    color: currentColor;
+    color: inherit;
   }
   &:focus,
   &:focus-visible {
@@ -425,14 +430,14 @@
     &:focus-visible {
       color: var(--tertiary-hover);
       .d-icon {
-        color: currentColor;
+        color: inherit;
       }
     }
     .discourse-no-touch & {
       &:hover {
         color: var(--tertiary-hover);
         .d-icon {
-          color: currentColor;
+          color: inherit;
         }
       }
     }
@@ -452,16 +457,9 @@
   border-radius: var(--d-border-radius);
   padding: 0.4em 0.467em;
   .d-icon {
-    color: var(--primary-high);
+    color: var(--primary-medium);
   }
   @include hover {
-    background: transparent;
-    .d-icon {
-      color: var(--primary);
-    }
-  }
-  &:focus {
-    background: var(--primary-low);
     .d-icon {
       color: var(--primary);
     }

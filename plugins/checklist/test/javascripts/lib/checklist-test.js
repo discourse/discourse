@@ -10,7 +10,10 @@ let currentRaw;
 
 async function prepare(raw) {
   const cooked = await cook(raw, {
-    siteSettings: { checklist_enabled: true },
+    siteSettings: {
+      checklist_enabled: true,
+      discourse_local_dates_enabled: true,
+    },
   });
 
   const widget = { attrs: {}, scheduleRerender() {} };
@@ -36,6 +39,36 @@ acceptance("discourse-checklist | checklist", function (needs) {
       { "Content-Type": "application/json" },
       { raw: currentRaw },
     ]);
+  });
+
+  test("does not clash with date-range bbcode", async function (assert) {
+    const [$elem, updated] = await prepare(`
+[date-range from=2024-03-22 to=2024-03-23]
+
+[ ] task 1
+[ ] task 2
+[x] task 3
+    `);
+
+    assert.equal($elem.find(".discourse-local-date").length, 2);
+    assert.equal($elem.find(".chcklst-box").length, 3);
+    $elem.find(".chcklst-box")[0].click();
+
+    const output = await updated;
+    assert.ok(output.includes("[x] task 1"));
+  });
+
+  test("does not check an image URL", async function (assert) {
+    const [$elem, updated] = await prepare(`
+![](upload://zLd8FtsWc2ZSg3cZKIhwvhYxTcn.jpg)
+[] first
+[] second
+    `);
+
+    $elem.find(".chcklst-box")[0].click();
+
+    const output = await updated;
+    assert.ok(output.includes("[x] first"));
   });
 
   test("make checkboxes readonly while updating", async function (assert) {

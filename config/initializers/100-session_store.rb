@@ -16,7 +16,7 @@ Rails.application.config.session_store(
 )
 
 Rails.application.config.to_prepare do
-  if Rails.env.development? && SiteSetting.force_https
+  if Rails.env.development? && SiteSetting.force_https && !ENV["DISCOURSE_DEV_ALLOW_HTTPS"]
     STDERR.puts
     STDERR.puts "WARNING: force_https is enabled in dev"
     STDERR.puts "It is very unlikely you are running HTTPS in dev."

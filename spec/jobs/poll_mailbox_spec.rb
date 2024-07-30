@@ -45,9 +45,9 @@ RSpec.describe Jobs::PollMailbox do
 
         poller.poll_pop3
 
-        i18n_key = "dashboard.poll_pop3_auth_error"
+        i18n_key = "dashboard.problem.poll_pop3_auth_error"
 
-        expect(AdminDashboardData.problem_message_check(i18n_key)).to eq(
+        expect(AdminNotice.find_by(identifier: "poll_pop3_auth_error").message).to eq(
           I18n.t(i18n_key, base_path: Discourse.base_path),
         )
       end
@@ -57,9 +57,9 @@ RSpec.describe Jobs::PollMailbox do
 
         4.times { poller.poll_pop3 }
 
-        i18n_key = "dashboard.poll_pop3_timeout"
+        i18n_key = "dashboard.problem.poll_pop3_timeout"
 
-        expect(AdminDashboardData.problem_message_check(i18n_key)).to eq(
+        expect(AdminNotice.find_by(identifier: "poll_pop3_timeout").message).to eq(
           I18n.t(i18n_key, base_path: Discourse.base_path),
         )
       end

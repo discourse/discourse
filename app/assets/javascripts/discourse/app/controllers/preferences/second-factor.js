@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
 import SecondFactorAddSecurityKey from "discourse/components/modal/second-factor-add-security-key";
@@ -20,6 +20,7 @@ import I18n from "discourse-i18n";
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
   modal: service(),
+  siteSettings: service(),
   loading: false,
   dirty: false,
   errorMessage: null,
@@ -34,13 +35,34 @@ export default Controller.extend(CanCheckEmails, {
   },
 
   @discourseComputed
-  displayOAuthWarning() {
+  hasOAuth() {
     return findAll().length > 0;
+  },
+
+  @discourseComputed
+  displayOAuthWarning() {
+    return (
+      this.hasOAuth && this.siteSettings.enforce_second_factor_on_external_auth
+    );
+  },
+
+  @discourseComputed("currentUser")
+  showEnforcedWithOAuthNotice(user) {
+    return (
+      user &&
+      user.enforcedSecondFactor &&
+      this.hasOAuth &&
+      !this.siteSettings.enforce_second_factor_on_external_auth
+    );
   },
 
   @discourseComputed("currentUser")
   showEnforcedNotice(user) {
-    return user && user.enforcedSecondFactor;
+    return (
+      user &&
+      user.enforcedSecondFactor &&
+      this.siteSettings.enforce_second_factor_on_external_auth
+    );
   },
 
   @discourseComputed("totps", "security_keys")

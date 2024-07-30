@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { ORIGINS } from "discourse/plugins/chat/discourse/services/chat-channel-info-route-origin-manager";
@@ -19,30 +19,30 @@ module(
     });
 
     test(".origin", function (assert) {
-      this.manager.origin = ORIGINS.channnel;
-      assert.strictEqual(this.manager.origin, ORIGINS.channnel);
+      this.manager.origin = ORIGINS.channel;
+      assert.strictEqual(this.manager.origin, ORIGINS.channel);
     });
 
     test(".isBrowse", function (assert) {
       this.manager.origin = ORIGINS.browse;
-      assert.strictEqual(this.manager.isBrowse, true);
+      assert.true(this.manager.isBrowse);
 
       this.manager.origin = null;
-      assert.strictEqual(this.manager.isBrowse, false);
+      assert.false(this.manager.isBrowse);
 
       this.manager.origin = ORIGINS.channel;
-      assert.strictEqual(this.manager.isBrowse, false);
+      assert.false(this.manager.isBrowse);
     });
 
     test(".isChannel", function (assert) {
-      this.manager.origin = ORIGINS.channnel;
-      assert.strictEqual(this.manager.isChannel, true);
+      this.manager.origin = ORIGINS.channel;
+      assert.true(this.manager.isChannel);
 
       this.manager.origin = ORIGINS.browse;
-      assert.strictEqual(this.manager.isChannel, false);
+      assert.false(this.manager.isChannel);
 
       this.manager.origin = null;
-      assert.strictEqual(this.manager.isChannel, true);
+      assert.true(this.manager.isChannel);
     });
   }
 );

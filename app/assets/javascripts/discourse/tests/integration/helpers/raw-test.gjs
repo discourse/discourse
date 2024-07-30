@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import RenderGlimmerContainer from "discourse/components/render-glimmer-container";
@@ -88,5 +88,20 @@ module("Integration | Helper | raw", function (hooks) {
     );
 
     assert.true(willDestroyCalled, "component was cleaned up correctly");
+  });
+
+  test("does not add extra whitespace", async function (assert) {
+    const SimpleTemplate = <template>baz</template>;
+
+    addRawTemplate("raw-test", () =>
+      rawRenderGlimmer(this, "span.bar", SimpleTemplate)
+    );
+
+    await render(<template>
+      <RenderGlimmerContainer />
+      {{raw "raw-test"}}
+    </template>);
+
+    assert.dom("span.bar").hasText(/^baz$/);
   });
 });

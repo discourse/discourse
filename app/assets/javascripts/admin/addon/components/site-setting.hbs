@@ -25,26 +25,49 @@
 </div>
 
 <div class="setting-value">
-  {{component
-    this.componentName
-    setting=this.setting
-    value=this.buffered.value
-    validationMessage=this.validationMessage
-    preview=this.preview
-    isSecret=this.isSecret
-    allowAny=this.allowAny
-    changeValueCallback=this.changeValueCallback
-  }}
+  {{#if this.settingEditButton}}
+    <DButton
+      @action={{this.settingEditButton.action}}
+      @icon={{this.settingEditButton.icon}}
+      @label={{this.settingEditButton.label}}
+      class="setting-value-edit-button"
+    />
+
+    <SiteSettings::Description @description={{this.setting.description}} />
+  {{else}}
+    {{component
+      this.componentName
+      setting=this.setting
+      value=this.buffered.value
+      validationMessage=this.validationMessage
+      preview=this.preview
+      isSecret=this.isSecret
+      allowAny=this.allowAny
+      changeValueCallback=this.changeValueCallback
+    }}
+  {{/if}}
 </div>
 
 {{#if this.dirty}}
   <div class="setting-controls">
-    <DButton class="ok" @action={{this.update}} @icon="check" />
-    <DButton class="cancel" @action={{this.cancel}} @icon="times" />
+    <DButton
+      @action={{this.update}}
+      @icon="check"
+      class="ok setting-controls__ok"
+    />
+    <DButton
+      @action={{this.cancel}}
+      @icon="times"
+      class="cancel setting-controls__cancel"
+    />
   </div>
-{{else if this.setting.overridden}}
+{{else if this.overridden}}
   {{#if this.setting.secret}}
-    <DButton @action={{this.toggleSecret}} @icon="far-eye-slash" />
+    <DButton
+      @action={{this.toggleSecret}}
+      @icon="far-eye-slash"
+      class="setting-toggle-secret"
+    />
   {{/if}}
 
   <DButton

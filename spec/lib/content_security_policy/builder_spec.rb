@@ -5,16 +5,16 @@ RSpec.describe ContentSecurityPolicy::Builder do
   describe "#<<" do
     it "normalizes directive name" do
       builder << {
-        :script_src => ["symbol_underscore"],
-        :"script-src" => ["symbol_dash"],
-        "script_src" => ["string_underscore"],
-        "script-src" => ["string_dash"],
+        :script_src => ["'symbol_underscore'"],
+        :"script-src" => ["'symbol_dash'"],
+        "script_src" => ["'string_underscore'"],
+        "script-src" => ["'string_dash'"],
       }
 
       script_srcs = parse(builder.build)["script-src"]
 
       expect(script_srcs).to include(
-        *%w[symbol_underscore symbol_dash string_underscore symbol_underscore],
+        *%w['symbol_underscore' 'symbol_dash' 'string_underscore' 'symbol_underscore'],
       )
     end
 

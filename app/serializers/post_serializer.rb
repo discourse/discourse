@@ -290,7 +290,10 @@ class PostSerializer < BasicPostSerializer
     result = []
     can_see_post = scope.can_see_post?(object)
 
-    PostActionType.types.each do |sym, id|
+    public_flag_types =
+      (@topic_view.present? ? @topic_view.public_flag_types : PostActionType.public_types)
+
+    (@topic_view.present? ? @topic_view.flag_types : PostActionType.types).each do |sym, id|
       count_col = "#{sym}_count".to_sym
 
       count = object.public_send(count_col) if object.respond_to?(count_col)
@@ -301,6 +304,22 @@ class PostSerializer < BasicPostSerializer
            sym,
            opts: {
              taken_actions: actions,
+             notify_flag_types:
+               (
+                 if @topic_view.present?
+                   @topic_view.notify_flag_types
+                 else
+                   PostActionType.notify_flag_types
+                 end
+               ),
+             additional_message_types:
+               (
+                 if @topic_view.present?
+                   @topic_view.additional_message_types
+                 else
+                   PostActionType.additional_message_types
+                 end
+               ),
            },
            can_see_post: can_see_post,
          )
@@ -327,11 +346,11 @@ class PostSerializer < BasicPostSerializer
       end
 
       # only show public data
-      unless scope.is_staff? || PostActionType.public_types.values.include?(id)
+      unless scope.is_staff? || public_flag_types.values.include?(id)
         summary[:count] = summary[:acted] ? 1 : 0
       end
 
-      summary.delete(:count) if summary[:count] == 0
+      summary.delete(:count) if summary[:count].to_i.zero?
 
       # Only include it if the user can do it or it has a count
       result << summary if summary[:can_act] || summary[:count]
@@ -581,12 +600,12 @@ class PostSerializer < BasicPostSerializer
       if @topic_view && (mentioned_users = @topic_view.mentioned_users[object.id])
         mentioned_users
       else
-        query = User
+        query = User.includes(:user_option)
         query = query.includes(:user_status) if SiteSetting.enable_user_status
         query = query.where(username: object.mentions)
       end
 
-    users.map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
+    users.map { |user| BasicUserSerializer.new(user, root: false, include_status: true).as_json }
   end
 
   def include_mentioned_users?

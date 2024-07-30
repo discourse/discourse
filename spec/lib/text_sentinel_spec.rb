@@ -30,15 +30,15 @@ RSpec.describe TextSentinel do
     end
 
     it "Works on foreign characters" do
-      expect(TextSentinel.new("去年十社會警告").entropy).to eq(19)
+      expect(TextSentinel.new("去年十社會警告").entropy).to eq(18)
     end
 
     it "generates enough entropy for short foreign strings" do
-      expect(TextSentinel.new("又一个测").entropy).to eq(11)
+      expect(TextSentinel.new("又一个测").entropy).to eq(10)
     end
 
     it "handles repeated foreign characters" do
-      expect(TextSentinel.new("又一个测试话题" * 3).entropy).to eq(18)
+      expect(TextSentinel.new("又一个测试话题" * 3).entropy).to eq(17)
     end
   end
 
@@ -108,8 +108,7 @@ RSpec.describe TextSentinel do
       expect(TextSentinel.new("去年十二月，北韓不顧國際社會警告")).to be_valid
     end
 
-    it "skips uppercase text for CJK locale" do
-      SiteSetting.default_locale = "zh_CN"
+    it "allows all caps for CJK characters" do
       expect(TextSentinel.new("去年SHIER月，北韓不顧國際社會警告")).to be_valid
     end
 

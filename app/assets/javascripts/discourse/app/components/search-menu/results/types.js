@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { logSearchLinkClick } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
 
 export default class Types extends Component {
@@ -22,7 +23,13 @@ export default class Types extends Component {
   }
 
   @action
-  onClick(event) {
+  onClick({ resultType, result }, event) {
+    logSearchLinkClick({
+      searchLogId: this.args.searchLogId,
+      searchResultId: result.id,
+      searchResultType: resultType.type,
+    });
+
     if (wantsNewWindow(event)) {
       return;
     }
@@ -32,7 +39,7 @@ export default class Types extends Component {
   }
 
   @action
-  onKeydown(event) {
+  onKeydown({ resultType, result }, event) {
     if (event.key === "Escape") {
       this.args.closeSearchMenu();
       event.preventDefault();
@@ -40,6 +47,11 @@ export default class Types extends Component {
     } else if (event.key === "Enter") {
       event.preventDefault();
       event.stopPropagation();
+      logSearchLinkClick({
+        searchLogId: this.args.searchLogId,
+        searchResultId: result.id,
+        searchResultType: resultType.type,
+      });
       this.routeToSearchResult(event.target.href);
       return false;
     }

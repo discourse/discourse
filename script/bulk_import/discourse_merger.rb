@@ -910,7 +910,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def process_post_action(post_action)
-    return nil unless post_action["post_id"].present?
+    return nil if post_action["post_id"].blank?
     post_action["related_post_id"] = post_id_from_imported_id(post_action["related_post_id"])
     post_action["deferred_by_id"] = user_id_from_imported_id(post_action["deferred_by_id"])
     post_action["agreed_by_id"] = user_id_from_imported_id(post_action["agreed_by_id"])
@@ -969,7 +969,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def process_group_archived_message(gam)
-    return nil unless gam["topic_id"].present? && gam["group_id"].present?
+    return nil if gam["topic_id"].blank? || gam["group_id"].blank?
     gam
   end
 
@@ -990,14 +990,12 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     user_avatar["gravatar_upload_id"] = upload_id_from_imported_id(
       user_avatar["gravatar_upload_id"],
     ) if user_avatar["gravatar_upload_id"]
-    unless user_avatar["custom_upload_id"].present? || user_avatar["gravatar_upload_id"].present?
-      return nil
-    end
+    return nil if user_avatar["custom_upload_id"].blank? && user_avatar["gravatar_upload_id"].blank?
     user_avatar
   end
 
   def process_user_history(user_history)
-    return nil unless user_history["group_id"].present?
+    return nil if user_history["group_id"].blank?
     user_history["acting_user_id"] = user_id_from_imported_id(
       user_history["acting_user_id"],
     ) if user_history["acting_user_id"]
@@ -1011,7 +1009,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     user_warning["created_by_id"] = user_id_from_imported_id(
       user_warning["created_by_id"],
     ) if user_warning["created_by_id"]
-    return nil unless user_warning["created_by_id"].present?
+    return nil if user_warning["created_by_id"].blank?
     user_warning
   end
 

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe TopicBookmarkable do
   subject(:registered_bookmarkable) { RegisteredBookmarkable.new(TopicBookmarkable) }
 
@@ -122,6 +120,8 @@ RSpec.describe TopicBookmarkable do
           display_username: bookmark1.user.username,
           bookmark_name: bookmark1.name,
           bookmark_id: bookmark1.id,
+          bookmarkable_type: bookmark1.bookmarkable_type,
+          bookmarkable_id: bookmark1.bookmarkable_id,
         }.to_json,
       )
     end

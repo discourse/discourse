@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie from "discourse/lib/cookie";
 import discourseComputed from "discourse-common/utils/decorators";

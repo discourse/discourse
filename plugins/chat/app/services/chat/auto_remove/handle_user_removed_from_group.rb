@@ -50,15 +50,15 @@ module Chat
         !SiteSetting.chat_allowed_groups_map.include?(Group::AUTO_GROUPS[:everyone])
       end
 
-      def fetch_user(contract:, **)
+      def fetch_user(contract:)
         User.find_by(id: contract.user_id)
       end
 
-      def user_not_staff(user:, **)
+      def user_not_staff(user:)
         !user.staff?
       end
 
-      def remove_if_outside_chat_allowed_groups(user:, **)
+      def remove_if_outside_chat_allowed_groups(user:)
         if SiteSetting.chat_allowed_groups_map.empty? ||
              !GroupUser.exists?(group_id: SiteSetting.chat_allowed_groups_map, user: user)
           memberships_to_remove =
@@ -75,7 +75,7 @@ module Chat
         end
       end
 
-      def remove_from_private_channels(user:, **)
+      def remove_from_private_channels(user:)
         memberships_to_remove =
           Chat::Action::CalculateMembershipsForRemoval.call(scoped_users: [user])
 
@@ -89,7 +89,7 @@ module Chat
         )
       end
 
-      def publish(users_removed_map:, **)
+      def publish(users_removed_map:)
         Chat::Action::PublishAutoRemovedUser.call(
           event_type: :user_removed_from_group,
           users_removed_map: users_removed_map,

@@ -4,6 +4,7 @@ require "guardian/bookmark_guardian"
 require "guardian/category_guardian"
 require "guardian/ensure_magic"
 require "guardian/group_guardian"
+require "guardian/flag_guardian"
 require "guardian/post_guardian"
 require "guardian/post_revision_guardian"
 require "guardian/sidebar_guardian"
@@ -16,6 +17,7 @@ class Guardian
   include BookmarkGuardian
   include CategoryGuardian
   include EnsureMagic
+  include FlagGuardian
   include GroupGuardian
   include PostGuardian
   include PostRevisionGuardian
@@ -557,8 +559,7 @@ class Guardian
 
   def can_ignore_users?
     return false if anonymous?
-    @user.staff? || @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_ignore.to_i) ||
-      @user.in_any_groups?(SiteSetting.ignore_allowed_groups_map)
+    @user.staff? || @user.in_any_groups?(SiteSetting.ignore_allowed_groups_map)
   end
 
   def allowed_theme_repo_import?(repo)
@@ -624,8 +625,7 @@ class Guardian
     return false if !authenticated?
     return false if User.where(username_lower: SiteSetting.here_mention).exists?
 
-    @user.in_any_groups?(SiteSetting.here_mention_allowed_groups_map) ||
-      @user.has_trust_level_or_staff?(SiteSetting.min_trust_level_for_here_mention)
+    @user.in_any_groups?(SiteSetting.here_mention_allowed_groups_map)
   end
 
   def can_lazy_load_categories?
@@ -640,16 +640,6 @@ class Guardian
   private
 
   def is_my_own?(obj)
-    # NOTE: This looks strange...but we are checking if someone is posting anonymously
-    # as a AnonymousUser model, _not_ as Guardian::AnonymousUser which is a different thing
-    # used when !authenticated?
-    if authenticated? && is_anonymous?
-      return(
-        SiteSetting.allow_anonymous_likes? && obj.class == PostAction && obj.is_like? &&
-          obj.user_id == @user.id
-      )
-    end
-
     return false if anonymous?
     return obj.user_id == @user.id if obj.respond_to?(:user_id) && obj.user_id && @user.id
     return obj.user == @user if obj.respond_to?(:user)

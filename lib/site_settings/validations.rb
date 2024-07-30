@@ -187,12 +187,6 @@ module SiteSettings::Validations
     end
   end
 
-  def validate_enable_s3_inventory(new_val)
-    if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
-      validate_error :enable_s3_uploads_is_required
-    end
-  end
-
   def validate_backup_location(new_val)
     return unless new_val == BackupLocationSiteSetting::S3
     if SiteSetting.s3_backup_bucket.blank?
@@ -224,15 +218,6 @@ module SiteSettings::Validations
   def validate_enforce_second_factor(new_val)
     if new_val != "no" && SiteSetting.enable_discourse_connect?
       return validate_error :second_factor_cannot_be_enforced_with_discourse_connect_enabled
-    end
-    if new_val == "all" && Discourse.enabled_auth_providers.count > 0
-      auth_provider_names = Discourse.enabled_auth_providers.map(&:name).join(", ")
-      return(
-        validate_error(
-          :second_factor_cannot_enforce_with_socials,
-          auth_provider_names: auth_provider_names,
-        )
-      )
     end
     return if SiteSetting.enable_local_logins
     return if new_val == "no"

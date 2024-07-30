@@ -14,18 +14,9 @@ require "bundler/setup" if File.exist?(ENV["BUNDLE_GEMFILE"])
 
 if (ENV["DISABLE_BOOTSNAP"] != "1")
   begin
-    require "bootsnap"
+    require "bootsnap/setup"
   rescue LoadError
     # not a strong requirement
-  end
-
-  if defined?(Bootsnap)
-    Bootsnap.setup(
-      cache_dir: "tmp/cache", # Path to your cache
-      load_path_cache: true, # Should we optimize the LOAD_PATH with a cache?
-      compile_cache_iseq: true, # Should compile Ruby code into ISeq cache?
-      compile_cache_yaml: false, # Skip YAML cache for now, cause we were seeing issues with it
-    )
   end
 end
 

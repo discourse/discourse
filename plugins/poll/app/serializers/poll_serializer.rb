@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class PollSerializer < ApplicationSerializer
-  attributes :name,
+  attributes :id,
+             :name,
              :type,
              :status,
              :public,
@@ -15,7 +16,8 @@ class PollSerializer < ApplicationSerializer
              :preloaded_voters,
              :chart_type,
              :groups,
-             :title
+             :title,
+             :ranked_choice_outcome
 
   def public
     true
@@ -73,5 +75,13 @@ class PollSerializer < ApplicationSerializer
 
   def include_preloaded_voters?
     object.can_see_voters?(scope.user)
+  end
+
+  def include_ranked_choice_outcome?
+    object.ranked_choice?
+  end
+
+  def ranked_choice_outcome
+    DiscoursePoll::RankedChoice.outcome(object.id)
   end
 end

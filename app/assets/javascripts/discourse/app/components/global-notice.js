@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { tagName } from "@ember-decorators/component";

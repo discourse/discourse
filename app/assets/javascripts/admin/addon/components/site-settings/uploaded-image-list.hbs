@@ -5,5 +5,5 @@
     (hash value=this.value setting=this.setting)
   }}
 />
-<div class="desc">{{html-safe this.setting.description}}</div>
+<SiteSettings::Description @description={{this.setting.description}} />
 <SettingValidationMessage @message={{this.validationMessage}} />

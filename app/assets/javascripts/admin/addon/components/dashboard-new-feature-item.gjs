@@ -1,7 +1,6 @@
+import { and, not } from "truth-helpers";
 import CookText from "discourse/components/cook-text";
 import i18n from "discourse-common/helpers/i18n";
-import and from "truth-helpers/helpers/and";
-import not from "truth-helpers/helpers/not";
 
 const DashboardNewFeatureItem = <template>
   <div class="admin-new-feature-item">
@@ -15,6 +14,11 @@ const DashboardNewFeatureItem = <template>
         <h3>
           {{@item.title}}
         </h3>
+        {{#if @item.discourse_version}}
+          <div class="admin-new-feature-item__new-feature-version">
+            {{@item.discourse_version}}
+          </div>
+        {{/if}}
       </div>
 
       {{#if @item.screenshot_url}}

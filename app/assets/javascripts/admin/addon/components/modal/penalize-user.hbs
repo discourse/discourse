@@ -12,7 +12,7 @@
             @label="admin.user.suspend_duration"
             @clearable={{false}}
             @input={{this.penalizeUntil}}
-            @onChangeInput={{action (mut this.penalizeUntil)}}
+            @onChangeInput={{fn (mut this.penalizeUntil)}}
             class="suspend-until"
           />
         {{else if (eq @model.penaltyType "silence")}}
@@ -20,7 +20,7 @@
             @label="admin.user.silence_duration"
             @clearable={{false}}
             @input={{this.penalizeUntil}}
-            @onChangeInput={{action (mut this.penalizeUntil)}}
+            @onChangeInput={{fn (mut this.penalizeUntil)}}
             class="silence-until"
           />
         {{/if}}

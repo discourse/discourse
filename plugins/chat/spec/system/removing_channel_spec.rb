@@ -36,7 +36,10 @@ RSpec.describe "Removing channel", type: :system do
     fab!(:channel_1) { Fabricate(:chat_channel) }
     fab!(:channel_2) { Fabricate(:direct_message_channel, users: [current_user, Fabricate(:user)]) }
 
-    before { channel_1.add(current_user) }
+    before do
+      current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => channel_1.id)
+      channel_1.add(current_user)
+    end
 
     it "redirects to another followed channgel" do
       chat_page.visit_channel(channel_2)

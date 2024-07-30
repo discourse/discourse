@@ -79,7 +79,7 @@ class ImportScripts::Zoho < ImportScripts::Base
       @all_posts << row.dup
       @categories[row.forum_name] = [] if @categories[row.forum_name].nil?
 
-      unless @categories[row.forum_name].include?(row.category_name)
+      if @categories[row.forum_name].exclude?(row.category_name)
         @categories[row.forum_name] << row.category_name
       end
     end

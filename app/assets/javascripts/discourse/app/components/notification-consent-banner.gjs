@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { keyValueStore as pushNotificationKeyValueStore } from "discourse/lib/push-notifications";
 import i18n from "discourse-common/helpers/i18n";
@@ -70,7 +70,7 @@ export default class NotificationConsentBanner extends Component {
             @icon="times"
             @action={{this.dismiss}}
             @title="banner.close"
-            class="btn-flat close"
+            class="btn-transparent close"
           />
         </div>
       </div>

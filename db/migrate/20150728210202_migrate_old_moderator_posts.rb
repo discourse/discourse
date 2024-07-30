@@ -10,6 +10,7 @@ class MigrateOldModeratorPosts < ActiveRecord::Migration[4.2]
   end
 
   def up
+    Rails.application.config.i18n.raise_on_missing_translations = false
     migrate_key("closed.enabled")
     migrate_key("closed.disabled")
     migrate_key("archived.enabled")
@@ -18,5 +19,6 @@ class MigrateOldModeratorPosts < ActiveRecord::Migration[4.2]
     migrate_key("pinned.disabled")
     migrate_key("pinned_globally.enabled")
     migrate_key("pinned_globally.disabled")
+    Rails.application.config.i18n.raise_on_missing_translations = true
   end
 end

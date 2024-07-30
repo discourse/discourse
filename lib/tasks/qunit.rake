@@ -17,7 +17,7 @@ task "qunit:test", %i[timeout qunit_path filter] do |_, args|
 
   report_requests = ENV["REPORT_REQUESTS"] == "1"
 
-  system("yarn install")
+  system("yarn install", exception: true)
 
   # ensure we have this port available
   def port_available?(port)
@@ -55,7 +55,6 @@ task "qunit:test", %i[timeout qunit_path filter] do |_, args|
 
   begin
     success = true
-    test_path = "#{Rails.root}/test"
     qunit_path = args[:qunit_path]
     filter = args[:filter]
 
@@ -108,7 +107,13 @@ task "qunit:test", %i[timeout qunit_path filter] do |_, args|
     if qunit_path
       # Bypass `ember test` - it only works properly for the `/tests` path.
       # We have to trigger a `build` manually so that JS is available for rails to serve.
-      system("yarn", "ember", "build", chdir: "#{Rails.root}/app/assets/javascripts/discourse")
+      system(
+        "yarn",
+        "ember",
+        "build",
+        chdir: "#{Rails.root}/app/assets/javascripts/discourse",
+        exception: true,
+      )
 
       env["THEME_TEST_PAGES"] = if ENV["THEME_IDS"]
         ENV["THEME_IDS"]

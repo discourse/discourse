@@ -1,12 +1,15 @@
 import { capitalize } from "@ember/string";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
-import { cleanNullQueryParams } from "discourse/lib/utilities";
 import createPMRoute from "discourse/routes/build-private-messages-route";
 import I18n from "discourse-i18n";
 
 export default (inboxType, filter) => {
-  return createPMRoute(inboxType, "private-messages-groups", filter).extend({
-    groupName: null,
+  return class extends createPMRoute(
+    inboxType,
+    "private-messages-groups",
+    filter
+  ) {
+    groupName = null;
 
     titleToken() {
       const groupName = this.groupName;
@@ -20,7 +23,7 @@ export default (inboxType, filter) => {
 
         return [title, I18n.t(`user.private_messages`)];
       }
-    },
+    }
 
     model(params = {}) {
       const username = this.modelFor("user").get("username_lower");
@@ -41,8 +44,6 @@ export default (inboxType, filter) => {
         return lastTopicList;
       }
 
-      params = cleanNullQueryParams(params);
-
       return this.store
         .findFiltered("topicList", {
           filter: topicListFilter,
@@ -56,7 +57,7 @@ export default (inboxType, filter) => {
           topicList.set("emptyState", this.emptyState());
           return topicList;
         });
-    },
+    }
 
     afterModel(model) {
       const filters = model.get("filter").split("/");
@@ -71,10 +72,10 @@ export default (inboxType, filter) => {
       const group = this.modelFor("userPrivateMessages.group");
 
       this.setProperties({ groupName, group });
-    },
+    }
 
     setupController() {
-      this._super.apply(this, arguments);
+      super.setupController(...arguments);
 
       const userTopicsListController = this.controllerFor("user-topics-list");
       userTopicsListController.set("group", this.group);
@@ -85,19 +86,19 @@ export default (inboxType, filter) => {
       );
 
       this.controllerFor("user-private-messages").set("group", this.group);
-    },
+    }
 
     emptyState() {
       return {
         title: I18n.t("user.no_messages_title"),
         body: "",
       };
-    },
+    }
 
     dismissReadOptions() {
       return {
         group_name: this.get("groupName"),
       };
-    },
-  });
+    }
+  };
 };

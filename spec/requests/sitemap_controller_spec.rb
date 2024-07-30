@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe SitemapController do
   describe "before_action :check_sitemap_enabled" do
     it "returns a 404 if sitemap is disabled" do

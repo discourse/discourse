@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe FormTemplateYamlValidator, type: :validator do
   subject(:validator) { described_class.new }
 
@@ -129,6 +127,23 @@ RSpec.describe FormTemplateYamlValidator, type: :validator do
             attributes:
               label: "Full name"
               description: "What is your full name? Details <script>window.alert('hey');</script>."
+        YAML
+
+      it "adds a validation error" do
+        validator.validate(form_template)
+        expect(form_template.errors[:template]).to include(
+          I18n.t("form_templates.errors.unsafe_description"),
+        )
+      end
+    end
+
+    context "when description field has unsafe anchor href" do
+      let(:yaml_content) { <<~YAML }
+          - type: input
+            id: name
+            attributes:
+              label: "Full name"
+              description: "What is your full name? Details <a href='javascript:alert()'>here</a>."
         YAML
 
       it "adds a validation error" do

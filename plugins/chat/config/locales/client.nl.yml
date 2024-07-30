@@ -56,12 +56,17 @@ nl:
       cancel_reply: "Antwoord annuleren"
       chat_channels: "Kanalen"
       browse_all_channels: "Alle kanalen bekijken"
+      see_in: "Bekijken in"
       move_to_channel:
         title: "Berichten verplaatsen naar kanaal"
         instructions:
           one: "Je verplaatst <strong>%{count}</strong> bericht. Selecteer een bestemmingskanaal. Er wordt een plaatsvervangend bericht gemaakt in het kanaal <strong>%{channelTitle}</strong> om aan te geven dat dit bericht is verplaatst. Antwoordketens blijven niet behouden in het nieuwe kanaal en berichten in het oude kanaal worden niet langer weergegeven als antwoord op verplaatste berichten."
           other: "Je verplaatst <strong>%{count}</strong> berichten. Selecteer een bestemmingskanaal. Er wordt een plaatsvervangend bericht gemaakt in het kanaal <strong>%{channelTitle}</strong> om aan te geven dat deze berichten zijn verplaatst. Antwoordketens blijven niet behouden in het nieuwe kanaal en berichten in het oude kanaal worden niet langer weergegeven als antwoord op verplaatste berichten."
         confirm_move: "Berichten verplaatsen"
+      delete_messages:
+        confirm:
+          one: "Weet je zeker dat je dit bericht wilt verwijderen?"
+          other: "Weet je zeker dat je deze %{count} berichten wilt verwijderen?"
       channel_settings:
         title: "Kanaalinstellingen"
         edit: "Bewerken"
@@ -99,7 +104,6 @@ nl:
       channels_list_popup:
         browse: "Kanalen bekijken"
         create: "Nieuw kanaal"
-      click_to_join: "Klik hier om de beschikbare kanalen te bekijken."
       close: "Sluiten"
       remove: "Verwijderen"
       collapse: "Chatlade samenvouwen"
@@ -141,13 +145,6 @@ nl:
       heading: "Chat"
       join: "Deelnemen"
       last_visit: "laatste bezoek"
-      summarization:
-        title: "Berichten samenvatten"
-        description: "Selecteer hieronder een optie om het gesprek samen te vatten dat tijdens de gewenste periode is gevoerd."
-        summarize: "Samenvatten"
-        since:
-          one: "Afgelopen uur"
-          other: "Afgelopen %{count} uur"
       mention_warning:
         invitations_sent:
           one: "Uitnodiging gestuurd"
@@ -227,8 +224,10 @@ nl:
         header: "Chatkop"
         composer: "Chateditor"
         channels_list: "Chatkanalenlijst"
-      no_direct_message_channels: "Je bent geen lid geworden van directe berichtkanalen."
-      no_public_channels: "Je bent geen lid geworden van kanalen."
+      no_direct_message_channels: "Je neemt nog niet deel aan directe berichten!"
+      no_direct_message_channels_cta: "Gesprek starten"
+      no_public_channels: "Je neemt nog niet deel aan kanalen!"
+      no_public_channels_cta: "Kanalen bekijken"
       kicked_from_channel: "Je hebt geen toegang meer tot dit kanaal."
       only_chat_push_notifications:
         title: "Alleen chatpushmeldingen sturen"
@@ -236,6 +235,9 @@ nl:
       ignore_channel_wide_mention:
         title: "Kanaalbrede vermeldingen negeren"
         description: "Stuur geen meldingen voor kanaalbrede vermeldingen (@here en @all)"
+      show_thread_title_prompts:
+        title: "Threadtitelvragen weergeven"
+        description: "Geef vragen weer om een titel in te stellen voor nieuwe threads"
       open: "Chat openen"
       open_full_page: "Chat openen op volledig scherm"
       close_full_page: "Chat op volledig scherm sluiten"
@@ -256,6 +258,7 @@ nl:
       copy_link: "Link kopiëren"
       copy_text: "Tekst kopiëren"
       rebake_message: "HTML opnieuw opbouwen"
+      message_too_long: "Bericht is te lang, berichten mogen maximaal %{count} tekens lang zijn."
       retry_staged_message:
         title: "Netwerkfout"
         action: "Opnieuw sturen?"
@@ -305,7 +308,7 @@ nl:
         back: "Terug"
         title: Kanalen
         filter_all: Alle
-        filter_open: Geopend
+        filter_open: Open
         filter_closed: Gesloten
         filter_archived: Gearchiveerd
         filter_input_placeholder: Kanaal zoeken op naam
@@ -524,6 +527,7 @@ nl:
         cancel: "Annuleren"
         quote_selection: "Citaat in topic"
         copy: "Kopiëren"
+        delete: "Verwijderen (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "Verplaatsen naar kanaal"
         error: "Er was een fout bij het verplaatsen van de chatberichten"
         title: "Chat verplaatsen naar topic"
@@ -562,6 +566,7 @@ nl:
       flags:
         off_topic: "Dit bericht is niet relevant voor de huidige discussie zoals gedefinieerd door de kanaaltitel en moet waarschijnlijk worden verplaats naar elders."
         inappropriate: "Dit bericht bevat inhoud die een redelijk persoon als aanstootgevend, kwetsend of een overtreding van <a href=\"%{basePath}/guidelines\">onze communityrichtlijnen</a> zou beschouwen."
+        illegal: "Dit bericht vereist de aandacht van het personeel omdat ik van mening ben dat het inhoud bevat die illegaal is."
         spam: "Dit bericht is een advertentie of vandalisme. Het is niet nuttig of relevant voor het huidige kanaal."
         notify_user: "Ik wil deze persoon rechtstreeks en persoonlijk spreken over diens bericht."
         notify_moderators: "Dit bericht vereist aandacht van een medewerker om een andere reden dan hierboven vermeld."
@@ -602,6 +607,17 @@ nl:
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
+      thread_title_toast:
+        title: "Stel een threadtitel in"
+        message: "Help anderen dit gesprek te ontdekken."
+        dismiss_action: "Niet meer weergeven"
+        primary_action: "Titel instellen"
+      thread_title_modal:
+        title: "Threadtitel instellen"
+        input_placeholder: "Vertel anderen waar dit gesprek over gaat..."
+        discourse_ai:
+          title: "Automatisch threadtitels genereren"
+          description: "Zie %{url} voor meer informatie over deze en andere verbeteringen in je Discourse-ervaring."
       threads:
         open: "Thread openen"
         list: "Threads"

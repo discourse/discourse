@@ -36,6 +36,7 @@ function cookie(key, value, options) {
       options.path ? "; path=" + options.path : "",
       options.domain ? "; domain=" + options.domain : "",
       options.secure ? "; secure" : "",
+      ";samesite=Lax",
     ].join(""));
   }
 

@@ -50,7 +50,7 @@ module Chat
         !SiteSetting.chat_allowed_groups_map.include?(Group::AUTO_GROUPS[:everyone])
       end
 
-      def fetch_scoped_users(destroyed_group_user_ids:, **)
+      def fetch_scoped_users(destroyed_group_user_ids:)
         User
           .real
           .activated
@@ -63,7 +63,7 @@ module Chat
           .distinct
       end
 
-      def remove_users_outside_allowed_groups(scoped_users:, **)
+      def remove_users_outside_allowed_groups(scoped_users:)
         users = scoped_users
 
         # Remove any of these users from all category channels if they
@@ -96,7 +96,7 @@ module Chat
         )
       end
 
-      def remove_users_without_channel_permission(scoped_users:, **)
+      def remove_users_without_channel_permission(scoped_users:)
         memberships_to_remove =
           Chat::Action::CalculateMembershipsForRemoval.call(scoped_users: scoped_users)
 
@@ -110,7 +110,7 @@ module Chat
         )
       end
 
-      def publish(users_removed_map:, **)
+      def publish(users_removed_map:)
         Chat::Action::PublishAutoRemovedUser.call(
           event_type: :destroyed_group,
           users_removed_map: users_removed_map,
