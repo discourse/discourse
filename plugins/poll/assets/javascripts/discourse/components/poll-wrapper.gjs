@@ -381,6 +381,6 @@ export default class PollWrapperComponent extends Component {
       @toggleOption={{this.toggleOption}}
       @toggleResults={{this.toggleResults}}
       @fetchVoters={{this.fetchVoters}}
-    />\`
+    />
   </template>
 }
