@@ -321,7 +321,7 @@ ar:
             pinnable_topic:
               label: معرِّف الموضوع
             pinned_globally:
-              label: مثبَّت بشكلٍ عام
+              label: مثبَّت بشكلٍٍ عام
             pinned_until:
               label: مثبَّت حتى
         banner_topic:
