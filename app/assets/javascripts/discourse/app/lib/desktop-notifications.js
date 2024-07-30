@@ -149,8 +149,6 @@ async function onNotification(data, siteSettings, user, appEvents) {
   }
 
   if (!liveEnabled) {
-    // eslint-disable-next-line no-console
-    console.warn("Desktop notifications are not enabled");
     return false;
   }
 
