@@ -1343,62 +1343,6 @@ it:
         warnings: "Avvertimenti ufficiali"
         read_more_in_group: "Vuoi continuare a leggere? Sfoglia altri messaggi in %{groupLink}."
         read_more: "Vuoi continuare a leggere? Sfoglia altri messaggi in <a href='%{basePath}/u/%{username}/messages'>messaggi personali</a>."
-        read_more_group_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {C'è <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># messaggio non letto</a>}
-                other {Ci sono <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># messaggi non letti</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { e <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nuovo</a> messaggio rimanente, oppure puoi sfogliare altri messaggi in {groupLink}}
-                other { e <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nuovi</a> messaggi rimanenti, oppure puoi sfogliare altri messaggi in {groupLink}}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {C'è <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># messaggio non letto</a> rimanente, oppure puoi sfogliare altri messaggi in {groupLink}}
-                other {Ci sono <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># messaggi non letti</a> rimanenti, oppure puoi sfogliare altri messaggi in {groupLink}}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {C'è <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nuovo</a> messaggio rimanente, oppure puoi sfogliare altri messaggi in {groupLink}}
-                other {Ci sono <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nuovi</a> messaggi rimanenti, oppure puoi sfogliare altri messaggi in {groupLink}}
-              }
-            }
-            other {}
-          }
-        read_more_personal_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {C'è <a href='{basePath}/u/{username}/messages/unread'># messaggio non letto</a>}
-                other {Ci sono <a href='{basePath}/u/{username}/messages/unread'># messaggi non letti</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { e <a href='{basePath}/u/{username}/messages/new'># nuovo</a> messaggio rimanente, oppure puoi sfogliare altri <a href='{basePath}/u/{username}/messages'>messaggi personali</a>}
-                other { e <a href='{basePath}/u/{username}/messages/new'># nuovi</a> messaggi rimanenti, oppure puoi sfogliare altri <a href='{basePath}/u/{username}/messages'>messaggi personali</a>}
-              }
-            }
-           false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {C'è <a href='{basePath}/u/{username}/messages/unread'># messaggio non letto</a> rimanente, oppure puoi sfogliare altri <a href='{basePath}/u/{username}/messages'>messaggi personali</a>}
-                other {Ci sono <a href='{basePath}/u/{username}/messages/unread'># messaggi non letti</a> rimanenti, oppure puoi sfogliare altri <a href='{basePath}/u/{username}/messages'>messaggi personali</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {C'è <a href='{basePath}/u/{username}/messages/new'># nuovo</a> messaggio rimanente, oppure puoi sfogliare altri <a href='{basePath}/u/{username}/messages'>messaggi personali</a>}
-                other {Ci sono <a href='{basePath}/u/{username}/messages/new'># nuovi</a> messaggi rimanenti, oppure puoi sfogliare altri <a href='{basePath}/u/{username}/messages'>messaggi personali</a>}
-              }
-            }
-            other {}
-          }
       preferences_nav:
         account: "Account"
         security: "Sicurezza"
@@ -1988,15 +1932,6 @@ it:
       logout_disabled: "La disconnessione è disabilitata quando il sito è in modalità di sola lettura."
     staff_writes_only_mode:
       enabled: "Questo sito è in modalità di sola lettura per lo staff. Puoi continuare a navigare nel sito, ma le risposte, i \"Mi piace\" e altre azioni sono limitate ai soli membri dello staff."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ore}}</a> ha raggiunto il limite di {limit, plural, one {# errore/ora} other {# errori/ora}} impostato dal sito.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha raggiunto il limite di {limit, plural, one {# errore/minuto} other {# errori/minuto}} impostato dal sito.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ora}}</a> ha superato il limite di {limit, plural, one {# errore/ora} other {# errori/ora}} impostato dal sito.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha superato il limite di {limit, plural, one {# errore/minuto} other {# errori/minuto}} impostato dal sito.
     learn_more: "Ulteriori informazioni…"
     mute: Silenzia
     unmute: Riattiva
@@ -4273,7 +4208,6 @@ it:
         everyone_can_use: "Le etichette possono essere usate da tutti"
         usable_only_by_groups: "Le etichette sono visibili a tutti, ma solo i gruppi seguenti possono usarle"
         visible_only_to_groups: "Le etichette sono visibili soltanto ai seguenti gruppi"
-        cannot_save: "Impossibile salvare il gruppo di etichette. Assicurati che ci sia almeno un'etichetta, che il nome del gruppo di etichette non sia vuoto e che sia selezionato un gruppo etichette per i permessi."
         tags_placeholder: "Cerca o crea etichette"
         parent_tag_placeholder: "Facoltativo"
         select_groups_placeholder: "Seleziona gruppi…"

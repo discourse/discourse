@@ -1650,15 +1650,6 @@ fa_IR:
       logout_disabled: "سایت در حال فقط خواندنی است و امکان خروج در این حالت وجود ندارد."
     staff_writes_only_mode:
       enabled: "این سایت در حالت فقط کارکنان است. می‌توانید موضوعات را مشاهده کنید، ولی امکان پاسخ دادن، پسندیدن و سایر اقدامات فقط برای اعضای کارکنان محدود شده است."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> به حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} رسیده است.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> به حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} رسیده است.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> از حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} عبور کرده است.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> از حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} عبور کرده است.
     learn_more: "بیشتر بدانید…"
     mute: خاموش
     unmute: صدادار

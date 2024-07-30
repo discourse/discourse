@@ -1267,54 +1267,6 @@ ja:
         warnings: "運営スタッフからの警告"
         read_more_in_group: "もっと読みますか？%{groupLink} で他のメッセージを閲覧できます。"
         read_more: "もっと読みますか？<a href='%{basePath}/u/%{username}/messages'>個人メッセージ</a>で他のメッセージを閲覧できます。"
-        read_more_group_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                other {残り <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># 件の未読</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                other {と <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># 件の新着</a>メッセージがあります。または {groupLink} で他のメッセージを閲覧してください}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                other {残り <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># 件の未読</a>メッセージがあります。または {groupLink} で他のメッセージを閲覧してください}
-              }
-              { NEW, plural,
-                   =0 {}
-                other {残り <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># 件の新着</a>メッセージがあります。または {groupLink} で他のメッセージを閲覧してください}
-              }
-            }
-            other {}
-          }
-        read_more_personal_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                other {残り <a href='{basePath}/u/{username}/messages/unread'># 件の未読</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                other {と <a href='{basePath}/u/{username}/messages/new'># 件の新着</a>メッセージがあります。または他の<a href='{basePath}/u/{username}/messages'>個人メッセージ</a>を閲覧してください}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                other {残り <a href='{basePath}/u/{username}/messages/unread'># 件の未読</a>メッセージがあります。または他の<a href='{basePath}/u/{username}/messages'>個人メッセージ</a>を閲覧してください}
-              }
-              { NEW, plural,
-                   =0 {}
-                other {残り <a href='{basePath}/u/{username}/messages/new'># 件の新着</a>メッセージがあります。または他の<a href='{basePath}/u/{username}/messages'>個人メッセージ</a>を閲覧してください}
-              }
-            }
-            other {}
-          }
       preferences_nav:
         account: "アカウント"
         security: "セキュリティ"
@@ -1888,15 +1840,6 @@ ja:
       logout_disabled: "閲覧専用モードのため、ログアウトできません。"
     staff_writes_only_mode:
       enabled: "このサイトはスタッフ専用モードになっています。このまま閲覧できますが、返信や「いいね！」、その他の操作はスタッフメンバーのみに制限されています。"
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 時間当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限に達しました。
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 分当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限に達しました。
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 時間当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限を超えました。
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 分当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限を超えました。
     learn_more: "もっと読む…"
     mute: ミュート
     unmute: ミュート解除
@@ -4050,7 +3993,6 @@ ja:
         everyone_can_use: "全員がタグを使用できます。"
         usable_only_by_groups: "タグは全員に表示されますが、次のグループのみが使用できます。"
         visible_only_to_groups: "タグは次のグループにのみ表示されます"
-        cannot_save: "タググループを保存できません。少なくとも 1 つのタグが存在し、タググループ名が空でなく、タグ権限のグループが選択されていることを確認してください。"
         tags_placeholder: "タグを検索または作成"
         parent_tag_placeholder: "オプション"
         select_groups_placeholder: "グループを選択…"

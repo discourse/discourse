@@ -65,7 +65,7 @@ zh_CN:
         almost_x_years:
           other: "%{count} 年"
         date_month: "M 月 D 日"
-        date_year: "YYYY 年 MMM 月"
+        date_year: "YYYY 年 M 月"
       medium:
         less_than_x_minutes:
           other: "小于 %{count} 分钟"
@@ -85,7 +85,7 @@ zh_CN:
           other: "超过 %{count} 年"
         almost_x_years:
           other: "将近 %{count} 年"
-        date_year: "YYYY 年 MMM 月 D 日"
+        date_year: "YYYY 年 M 月 D 日"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分钟前"
@@ -1267,50 +1267,26 @@ zh_CN:
         warnings: "官方警告"
         read_more_in_group: "想阅读更多？浏览 %{groupLink} 中的其他消息。"
         read_more: "想阅读更多？在<a href='%{basePath}/u/%{username}/messages'>个人消息</a>中浏览其他消息。"
-        read_more_group_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                other {有 <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># 条未读</a>消息}
-              }
-              { NEW, plural,
-                   =0 {}
-                other {和 <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># 条新</a>消息，或浏览{groupLink}中的其他消息}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                other {还有 <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># 条未读</a>消息，或浏览{groupLink}中的其他消息}
-              }
-              { NEW, plural,
-                   =0 {}
-                other {还有 <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># 条新</a>消息，或浏览{groupLink}中的其他消息}
-              }
-            }
-            other {}
-          }
         read_more_personal_pm_MF: |
           { HAS_UNREAD_AND_NEW, select,
             true {
               { UNREAD, plural,
                    =0 {}
-                other {有 <a href='{basePath}/u/{username}/messages/unread'># 条未读</a>消息}
+                other {还有 <a href="{basePath}/u/{username}/messages/unread"># 个未读</a>话题}
               }
               { NEW, plural,
                    =0 {}
-                other {和 <a href='{basePath}/u/{username}/messages/new'># 条新</a>消息，或浏览其他<a href='{basePath}/u/{username}/messages'>个人消息</a>}
+                other {和<a href="{basePath}/u/{username}/messages/new"># 个新</a>话题，或者浏览其他<a href="{basePath}/u/{username}/messages">个人消息</a>}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                other {还有 <a href='{basePath}/u/{username}/messages/unread'># 条未读</a>消息，或浏览其他<a href='{basePath}/u/{username}/messages'>个人消息</a>}
+                other {还有 <a href="{basePath}/u/{username}/messages/unread"># 个未读</a>话题，或者浏览其他<a href="{basePath}/u/{username}/messages">个人消息</a>}
               }
               { NEW, plural,
                    =0 {}
-                other {还有 <a href='{basePath}/u/{username}/messages/new'># 条新</a>消息，或浏览其他<a href='{basePath}/u/{username}/messages'>个人消息</a>}
+                other {还有 <a href="{basePath}/u/{username}/messages/new"># 个新</a>话题，或者浏览其他<a href="{basePath}/u/{username}/messages">个人消息</a>}
               }
             }
             other {}
@@ -1890,13 +1866,15 @@ zh_CN:
       enabled: "此网站处于管理人员专用模式。请继续浏览，但回复、赞和其他操作仅限于管理人员。"
     logs_error_rate_notice:
       reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {# 个错误/小时}}</a>达到了网站设置中 {limit, plural, other {# 个错误/小时}}的限制。
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{rate, plural, other {# 个错误/小时}}</a>达到了网站设置中 {limit, plural, other {# 个错误/小时}}的限制。
       reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {# 个错误/分钟}}</a>达到了网站设置中 {limit, plural, other {# 个错误/分钟}}的限制。
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{rate, plural, other {# 个错误/分钟}}</a>达到了网站设置中 {limit, plural, other {# 个错误/分钟}}的限制。
       exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {# 个错误/小时}}</a>超过了网站设置中 {limit, plural, other {# 个错误/小时}}的限制。
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{rate, plural, other {# 个错误/小时}}</a>超过了网站设置中 {limit, plural, other {# 个错误/小时}}的限制。
       exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {# 个错误/分钟}}</a>超过了网站设置中 {limit, plural, other {# 个错误/分钟}}的限制。
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+        other { # 个错误每分钟}
+        }</a>超出了站点设置中{ limit, plural,other { # 个错误每分钟}}的限制。
     learn_more: "了解详情…"
     mute: 免打扰
     unmute: 取消免打扰
@@ -4050,7 +4028,7 @@ zh_CN:
         everyone_can_use: "每个人都可以使用标签"
         usable_only_by_groups: "标签对所有人可见，但只有以下群组可以使用它们"
         visible_only_to_groups: "标签仅对以下群组可见"
-        cannot_save: "无法保存标签组。确保至少存在一个标签，标签组名称不为空，并为标签权限选择一个组。"
+        cannot_save: "无法保存标签组。确保至少存在一个标签，标签组名称不为空且少于100个字符，并为标签权限选择一个组。"
         tags_placeholder: "搜索或创建标签"
         parent_tag_placeholder: "可选"
         select_groups_placeholder: "选择群组…"
@@ -4411,6 +4389,7 @@ zh_CN:
         problems_found: "基于您当前网站设置的一些建议"
         new_features:
           title: "最新变化"
+          subtitle: "关于我们一直在添加的新功能和改进，详请参阅 <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>发行说明</a>。"
           previous_announcements: "您可以在 <a href='%{url}' target='_blank'>Discourse Meta</a> 上查看以前的新功能公告。"
           learn_more: "了解详情…"
         last_checked: "上次检查"
@@ -4878,6 +4857,7 @@ zh_CN:
           header: "关于您的网站"
           general_settings: "常规设置"
           community_name: "社区名称"
+          community_name_placeholder: "示例社区"
           community_summary: "社区摘要"
           community_description: "社区描述"
           banner_image: "横幅图片"
@@ -4885,9 +4865,11 @@ zh_CN:
             这将用于您的“关于”页面。推荐大小：800x300 像素。接受的类型：JPG、PNG 和 SVG，最大为 10MB。
           contact_information: "联系信息"
           community_owner: "社区所有者"
+          community_owner_placeholder: "Johnny Smith"
           community_owner_help: |
             负责此网站的主要联系人的名称。用于重要通知，也会显示在 /about 上。对公开网站上的匿名用户可见。
           contact_email: "联系电子邮件地址"
+          contact_email_placeholder: "contact@johnny-smith.com"
           contact_email_help: |
             负责此网站的主要联系人的电子邮件地址。用于重要通知，也会显示在 /about 上。对公开网站上的匿名用户可见。
           contact_url: "联系 URL"
@@ -4902,14 +4884,17 @@ zh_CN:
             被邀请至所有自动发送的私信的群组的有效名称。
           your_organization: "您的组织"
           company_name: "公司名称"
+          company_name_placeholder: "示例公司"
           company_name_help: |
             您的公司或组织的名称。
           company_name_warning: |
             如果留空，将不提供样板《服务条款》或《隐私声明》。
           governing_law: "适用法律"
+          governing_law_placeholder: "纽约州"
           governing_law_help: |
             指定管辖网站法律方面（包括《服务条款》和《隐私声明》）的司法管辖区。这通常是运营网站的公司注册或开展业务的国家/地区或州。
           city_for_disputes: "争议城市"
+          city_for_disputes_placeholder: "纽约市"
           city_for_disputes_help: |
             指定将用作解决与使用此论坛相关的任何争议的管辖城市。此信息通常包含在法律文件（例如论坛的《服务条款》）中。
           optional: "（可选）"

@@ -1343,62 +1343,6 @@ tr_TR:
         warnings: "Resmi Uyarılar"
         read_more_in_group: "Daha fazla okumak ister misiniz? %{groupLink} bağlantısındaki diğer mesajlara göz atın."
         read_more: "Daha fazla okumak isterseniz <a href='%{basePath}/u/%{username}/messages'>kişisel mesajlardaki</a> diğer mesajlara göz atın."
-        read_more_group_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># okunmamış</a>}
-                other { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># okunmamış</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { ve <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># yeni</a> mesaj kaldı veya {groupLink} içindeki diğer mesajlara göz atın}
-                other { ve <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># yeni</a> mesaj kaldı veya {groupLink} içindeki diğer mesajlara göz atın}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># okunmamış</a> mesaj kaldı veya {groupLink} içindeki diğer mesajlara göz atın!}
-                other { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># okunmamış</a> mesaj kaldı veya {groupLink} içindeki diğer mesajlara göz atın}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># yeni</a> mesaj kaldı veya {groupLink} içindeki diğer mesajlara göz atın}
-                other { <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># yeni</a> mesaj kaldı veya {groupLink} içindeki diğer mesajlara göz atın}
-              }
-            }
-            other {}
-          }
-        read_more_personal_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one { <a href='{basePath}/u/{username}/messages/unread'># okunmamış</a>}
-                other { <a href='{basePath}/u/{username}/messages/unread'># okunmamış</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { ve <a href='{basePath}/u/{username}/messages/new'># yeni</a> mesaj kaldı veya diğer <a href='{basePath}/u/{username}/messages'>kişisel mesajlara</a> göz atın}
-                other { ve <a href='{basePath}/u/{username}/messages/new'># yeni</a> mesaj kaldı veya diğer <a href='{basePath}/u/{username}/messages'>kişisel mesajlara</a> göz atın}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one { <a href='{basePath}/u/{username}/messages/unread'># okunmamış</a> mesaj kaldı veya diğer <a href='{basePath}/u/{username}/messages'>kişisel mesajlarına</a> göz atın}
-                other { <a href='{basePath}/u/{username}/messages/unread'># okunmamış</a> mesaj kaldı veya diğer <a href='{basePath}/u/{username}/messages'>kişisel mesajlarına</a> göz atın}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { <a href='{basePath}/u/{username}/messages/new'># yeni</a> mesaj kaldı veya diğer <a href='{basePath}/u/{username}/messages'>kişisel mesajlarına</a> göz atın}
-                other { <a href='{basePath}/u/{username}/messages/new'># yeni</a> mesaj kaldı veya diğer <a href='{basePath}/u/{username}/messages'>kişisel mesajlarına</a> göz atın}
-              }
-            }
-            other {}
-          }
       preferences_nav:
         account: "Hesap"
         security: "Güvenlik"
@@ -1988,15 +1932,6 @@ tr_TR:
       logout_disabled: "Site salt okunur moddayken çıkış yapma devre dışı bırakılır."
     staff_writes_only_mode:
       enabled: "Bu site sadece personel modundadır. Lütfen göz atmaya devam edin, ancak yanıtlama, beğenme ve diğer işlemler yalnızca personel üyeleriyle sınırlıdır."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/saat}}</a> site limitlerine ulaştı {limit, plural, one {# hata/saat} other {# hata/saat}}.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/dakika}}</a> site limitlerine ulaştı {limit, plural, one {# hata/dakika} other {# hata/dakika}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/saat}}</a> site ayarlanmış limitini aştı {limit, plural, one {# hata/saat} other {# hata/saat}}.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/dakika}}</a> site ayarlanmış limitlerini aştı {limit, plural, one {# hata/dakika} other {# hata/dakika}}.
     learn_more: "Daha fazla bilgi…"
     mute: Sessize al
     unmute: Sesi aç
@@ -4273,7 +4208,6 @@ tr_TR:
         everyone_can_use: "Etiketler herkes tarafından kullanılabilir"
         usable_only_by_groups: "Etiketler herkes tarafından görülebilir, ancak yalnızca aşağıdaki gruplar bunları kullanabilir"
         visible_only_to_groups: "Etiketler yalnızca aşağıdaki gruplar tarafından görülebilir"
-        cannot_save: "Etiket grubu kaydedilemiyor. En az bir etiket bulunduğundan, etiket grubu adının boş olmadığından ve etiket izni için bir grubun seçildiğinden emin olun."
         tags_placeholder: "Etiket arayın veya oluşturun"
         parent_tag_placeholder: "İsteğe bağlı"
         select_groups_placeholder: "Grupları seç…"
