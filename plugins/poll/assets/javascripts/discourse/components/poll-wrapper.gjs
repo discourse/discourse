@@ -353,10 +353,6 @@ export default class PollWrapperComponent extends Component {
   }
 
   <template>
-    {{log this.args.attrs.vote}}
-    {{log this.vote}}
-    {{log this.args.attrs.poll.voters}}
-    {{log this.voters}}
     <Poll
       @attrs={{@attrs}}
       @id={{this.id}}
