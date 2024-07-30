@@ -2796,8 +2796,12 @@ HTML
   end
 
   describe "video thumbnails" do
-    SiteSetting.authorized_extensions = "mp4|png"
-    fab!(:video_upload)
+    before do
+      SiteSetting.authorized_extensions = "mp4|png"
+      @video_upload = Fabricate(:upload, original_filename: "video.mp4", extension: "mp4")
+    end
+
+    after { Upload.where(original_filename: ["404.png", "#{@video_upload.sha1}.png"]).destroy_all }
 
     it "does not link to a thumbnail image if the video source is missing" do
       Fabricate(:upload, original_filename: "404.png", extension: "png")
@@ -2813,16 +2817,16 @@ HTML
 
     it "links to a thumbnail image if the video source is valid" do
       thumbnail =
-        Fabricate(:upload, original_filename: "#{video_upload.sha1}.png", extension: "png")
+        Fabricate(:upload, original_filename: "#{@video_upload.sha1}.png", extension: "png")
 
       html = <<~HTML
-        <p></p><div class="video-placeholder-container" data-video-src="#{video_upload.url}"></div><p></p>
+        <p></p><div class="video-placeholder-container" data-video-src="#{@video_upload.url}"></div><p></p>
       HTML
       doc = Nokogiri::HTML5.fragment(html)
       described_class.add_video_placeholder_image(doc)
 
       html_with_thumbnail = <<~HTML
-        <p></p><div class="video-placeholder-container" data-video-src="#{video_upload.url}" data-thumbnail-src="http://test.localhost#{thumbnail.url}"></div><p></p>
+        <p></p><div class="video-placeholder-container" data-video-src="#{@video_upload.url}" data-thumbnail-src="http://test.localhost#{thumbnail.url}"></div><p></p>
       HTML
 
       expect(doc.to_html).to eq(html_with_thumbnail)
