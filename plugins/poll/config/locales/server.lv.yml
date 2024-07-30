@@ -11,7 +11,6 @@ lv:
     poll_edit_window_mins: "Minūšu skaits pēc ieraksta izveides, kura laikā var rediģēt aptaujas."
     poll_minimum_trust_level_to_create: "Definējiet minimālo uzticības līmeni, kas nepieciešams aptauju izveidei."
     poll_groupable_user_fields: "Lietotāju lauku nosaukumu kopa, ko var izmantot aptauju rezultātu grupēšanai un filtrēšanai."
-    poll_export_data_explorer_query_id: "Datu pārlūka vaicājuma ID, ko izmantot aptaujas rezultātu eksportēšanai (0 atspējot)."
   poll:
     poll: "aptauja"
     invalid_argument: "Nederīga vērtība “%{value}” argumentam “%{argument}”."

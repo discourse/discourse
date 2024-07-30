@@ -3522,8 +3522,12 @@ gl:
       privacy:
         fields:
           login_required:
-            placeholder: "Privada"
-            extra_description: "Só os usuarios rexistrados poden acceder á comunidade"
+            label: "Visibilidade"
+            choices:
+              public:
+                label: "Pública"
+              private:
+                label: "Privada"
       styling:
         fields:
           body_font:

@@ -1,5 +1,6 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
@@ -10,10 +11,29 @@ acceptance("User Tips - first_notification", function (needs) {
   test("Shows first notification user tip", async function (assert) {
     this.siteSettings.enable_user_tips = true;
 
+    let requestsCount = 0;
+    pretender.put("/u/eviltrout.json", () => {
+      requestsCount += 1;
+
+      return response(200, {
+        user: {
+          user_option: {
+            seen_popups: [1],
+          },
+        },
+      });
+    });
+
     await visit("/t/internationalization-localization/280");
     assert.equal(
       query(".user-tip__title").textContent.trim(),
       I18n.t("user_tips.first_notification.title")
+    );
+
+    assert.strictEqual(
+      requestsCount,
+      1,
+      "Seeing the user tip updates the user option via a background request"
     );
   });
 });

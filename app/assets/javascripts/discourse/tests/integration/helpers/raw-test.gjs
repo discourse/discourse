@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import RenderGlimmerContainer from "discourse/components/render-glimmer-container";

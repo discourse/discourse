@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 import $ from "jquery";
 import { getAndClearUnhandledThemeErrors } from "discourse/app";

@@ -93,7 +93,7 @@ de:
         label: "Optionen"
         ranked_choice:
           abstain: "Enthalten"
-          login: "Einloggen zum Abstimmen!"
+          login: "Zum Abstimmen anmelden!"
       error_while_toggling_status: "Leider ist beim Umschalten des Status dieser Umfrage ein Fehler aufgetreten."
       error_while_casting_votes: "Leider ist beim Abgeben deiner Stimmen ein Fehler aufgetreten."
       error_while_fetching_voters: "Leider ist beim Anzeigen der Teilnehmer ein Fehler aufgetreten."

@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DHeadlessTooltip from "float-kit/components/d-headless-tooltip";
 
 export default class DTooltips extends Component {

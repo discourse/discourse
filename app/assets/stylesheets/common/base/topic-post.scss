@@ -1509,33 +1509,6 @@ iframe {
   position: relative;
 }
 
-.fullscreen-table-modal .modal-inner-container,
-.fullscreen-code-modal .modal-inner-container {
-  width: max-content;
-  max-width: 90%;
-  margin: 0 auto;
-  padding: 10px;
-
-  .modal-body {
-    padding-top: 0;
-  }
-
-  thead {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background-color: var(--secondary);
-  }
-
-  tbody {
-    overflow-x: hidden;
-  }
-
-  td {
-    padding: 0.5rem;
-  }
-}
-
 .fullscreen-code-modal {
   pre code {
     max-width: none;

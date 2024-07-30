@@ -17,14 +17,14 @@ tr_TR:
       no_automation_yet: Henüz otomasyon oluşturmadınız.
       edit_automation:
         trigger_section:
-          forced: Bu tetikleyici komut dosyası ile zorlanır.
+          forced: Bu tetikleyici, komut dosyası ile zorlanır.
           next_pending_automation: "Bir sonraki otomasyon şu saatte tetiklenecek: %{date}"
           trigger_now: "Şimdi tetikle"
           title: Ne zaman/Ne...
         fields_section:
           title: Komut dosyası seçenekleri
       destroy_automation:
-        confirm: "Şunu silmek istediğinizden emin misiniz: \"%{name}\"?"
+        confirm: "`%{name}` ögesini silmek istediğinizden emin misiniz?"
       fields:
         key_value:
           label_without_count: "Yapılandır"
@@ -39,10 +39,10 @@ tr_TR:
           raw:
             label: Gövde
         pms:
-          confirm_remove_pm: "Bu özel mesajı kaldırmak istediğinizden emin misiniz?"
-          placeholder_title: Özel mesaj başlığı
-          add_pm: Özel mesaj ekle
-          no_pm_created: Henüz özel mesaj oluşturmadınız. Otomasyonunuz tetiklendiğinde özel mesajlar gönderilecek.
+          confirm_remove_pm: "Bu kişisel mesajı kaldırmak istediğinizden emin misiniz?"
+          placeholder_title: Kişisel mesaj başlığı
+          add_pm: Kişisel mesaj ekle
+          no_pm_created: Henüz kişisel mesaj oluşturmadınız. Özel mesajlar otomasyonunuz tetiklendiğinde gönderilir.
           title:
             label: Başlık
           raw:
@@ -50,13 +50,13 @@ tr_TR:
           delay:
             label: Gecikme (dakika)
           prefers_encrypt:
-            label: Mümkünse özel mesajı şifreler
+            label: Mümkünse kişisel mesajı şifreler
         group:
           label: Grup
         text:
           label: Metin
       triggerables:
-        not_found: '"%{automation}" otomasyonu için "%{trigger}" tetikleyicisi bulunamadı, ilişkili eklentinin yüklü olduğundan emin olun'
+        not_found: Otomasyon `%{automation}` için `%{trigger}` tetikleyicisi bulunamadı, ilgili eklentinin kurulu olduğundan emin olun
         user_badge_granted:
           fields:
             badge:
@@ -86,13 +86,13 @@ tr_TR:
             minute: dakika
             hour: saat
             day: gün
-            weekday: hafta içi günü
+            weekday: hafta içi gün
             week: hafta
             month: ay
             year: yıl
           fields:
             recurrence:
-              label: Tekrarlama
+              label: Yinelenme
             start_date:
               label: Başlangıç tarihi
         stalled_wiki:
@@ -110,10 +110,10 @@ tr_TR:
               label: Kategori ile sınırlı
             stalled_after:
               label: Tetikleyici gecikmesi
-              description: Son viki düzenlemesi ile otomasyonun tetiklenmesi arasındaki gecikmeyi tanımlar
+              description: Son wiki düzenlemesi ile otomasyon tetikleyicisi arasındaki gecikmeyi tanımlar
             retriggered_after:
               label: Yeniden tetikleyici gecikmesi
-              description: İlk tetiklemeden sonra viki hala düzenlenmemişse ilk tetikleyici ile sonraki tetikleyici arasındaki gecikmeyi tanımlar
+              description: İlk tetikleyiciden sonra wiki hâlâ düzenlenmemişse, ilk tetikleyici ile sonraki tetikleyici arasındaki gecikmeyi tanımlar
         user_added_to_group:
           fields:
             joined_group:
@@ -174,6 +174,16 @@ tr_TR:
           fields:
             user_profile:
               label: Kullanıcı profili alanları
+              description: Yalnızca kullanıcı tüm bu alanları doldurmuşsa tetiklenir
+            custom_fields:
+              label: Kullanıcı özel alanları
+              description: Yalnızca kullanıcı tüm bu alanları doldurmuşsa tetiklenir
+            once_per_user:
+              label: Kullanıcı başına bir kez
+              description: Kullanıcı başına yalnızca bir kez tetiklenir
+            new_users_only:
+              label: Yalnızca yeni kullanıcılar
+              description: Yalnızca bu otomasyon etkinleştirildikten sonra katılan yeni kullanıcılar için tetiklenir
         category_created_edited:
           fields:
             restricted_category:
@@ -211,7 +221,7 @@ tr_TR:
               label: Etiketler
               description: 'İsteğe bağlı, yalnızca gönderide şu etiketlerden herhangi biri varsa tetiklenir:'
       scriptables:
-        not_found: '"%{automation}" otomasyonu için "%{script}" komut dosyası bulunamadı, ilişkili eklentinin yüklü olduğundan emin olun'
+        not_found: Otomasyon `%{automation}` için `%{script}` komut dosyası bulunamadı, ilgili eklentinin kurulu olduğundan emin olun
         zapier_webhook:
           fields:
             webhook_url:
@@ -223,9 +233,10 @@ tr_TR:
               label: Bir kez
               description: Konuya göre yalnızca bir kez yanıt verir
             word_answer_list:
-              label: Kelime/yanıt çiftlerinin listesi
+              label: Kelime/cevap çiftlerinin listesi
+              description: "Key/value gruplarının bir listesini tanımlar; burada `key` aranan terim, `value` ise yanıt metnidir. İçeriğe bakılmaksızın tüm tetikleyicilere yanıt vermek için `key` boş bırakılabilir. `value` ifadesinin, yanıtta `key` değeriyle değiştirilecek bir yer tutucu olarak `{{key}}` ifadesini kabul ettiğini unutmayın. `key`in bir regex olarak değerlendirileceğini ve `.` gibi özel karakterlerin aslında bir noktayı kastediyorsanız kaçınılması gerektiğini unutmayın, ör.: `\\.`"
             answering_user:
-              label: Yanıtlayan kullanıcı
+              label: Cevaplayan kullanıcı
               description: Varsayılan olarak Sistem kullanıcısını ayarlar
         auto_tag_topic:
           fields:
@@ -236,10 +247,25 @@ tr_TR:
           fields:
             creator:
               label: Oluşturucu
+              post_creator_context: Gönderinin oluşturucusu
+              updated_user_context: Güncellenmiş kullanıcı
             topic:
               label: Konu kimliği
             post:
               label: Gönderi içeriği
+        topic:
+          fields:
+            creator:
+              label: Oluşturucu
+              updated_user_context: Güncellenmiş kullanıcı
+            body:
+              label: Konu gövdesi
+            title:
+              label: Konu başlığı
+            category:
+              label: Konu kategorisi
+            tags:
+              label: Konu etiketleri
         group_category_notification_default:
           fields:
             group:
@@ -247,7 +273,7 @@ tr_TR:
             notification_level:
               label: Bildirim seviyesi
             update_existing_members:
-              label: Mevcut üyeleri güncelleyin
+              label: Mevcut üyeleri güncelle
               description: Mevcut grup üyeleri için bildirim seviyesini günceller
         user_global_notice:
           fields:
@@ -269,11 +295,11 @@ tr_TR:
               label: Grup
               description: Hedef grup. Belirtilen rozete sahip kullanıcılar bu gruba eklenir
             update_user_title_and_flair:
-              label: Kullanıcı unvanını ve yeteneğini güncelle
-              description: İsteğe bağlı, Kullanıcı unvanını ve yeteneğini güncelle
+              label: Kullanıcı unvanını ve becerisini güncelle
+              description: İsteğe bağlı, Kullanıcı unvanını ve becerisini güncelle
             remove_members_without_badge:
               label: Rozeti olmayan mevcut üyeleri kaldır
-              description: İsteğe bağlı, Belirtilen rozete sahip olmayan mevcut grup üyelerini kaldır
+              description: İsteğe bağlı, Belirtilen rozete sahip olmayan mevcut grup üyeleri kaldır
             badge:
               label: Rozet
               description: Rozet seç
@@ -319,14 +345,14 @@ tr_TR:
               label: Hediye eden kişiye gönderilen mesajlar
         send_pms:
           add_a_pm_btn:
-            label: Özel mesaj ekle
+            label: Kişisel mesaj ekle
           fields:
             receiver:
-              label: Özel mesaj alıcısı
+              label: Kişisel mesaj alıcısı
             sendable_pms:
-              label: Özel mesajlar
+              label: Kişisel mesajlar
             sender:
-              label: Özel mesajı gönderen
+              label: Kişisel mesajı gönderen
         close_topic:
           fields:
             topic:
@@ -358,7 +384,7 @@ tr_TR:
           version:
             label: Sürüm
           enabled:
-            label: Etkin mi
+            label: Etkin
           disabled:
             label: Devre Dışı
           placeholders:
@@ -366,4 +392,4 @@ tr_TR:
           last_updated_at:
             label: Son güncelleme
           last_updated_by:
-            label: Güncelleyen
+            label: 'Güncelleyen:'

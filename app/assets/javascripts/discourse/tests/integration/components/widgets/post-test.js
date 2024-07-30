@@ -1,5 +1,5 @@
-import { getOwner } from "@ember/application";
 import EmberObject from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { click, render, triggerEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
@@ -862,7 +862,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.dom(".summarization-buttons .top-replies").doesNotExist();
+    assert.dom(".summarization-button .top-replies").doesNotExist();
   });
 
   test("topic map - has top replies summary", async function (assert) {
@@ -872,7 +872,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.dom(".summarization-buttons .top-replies").exists({ count: 1 });
+    assert.dom(".summarization-button .top-replies").exists({ count: 1 });
   });
 
   test("pm map", async function (assert) {

@@ -56,12 +56,17 @@ fi:
       cancel_reply: "Peruuta vastaus"
       chat_channels: "Kanavat"
       browse_all_channels: "Selaa kaikkia kanavia"
+      see_in: "Katso:"
       move_to_channel:
         title: "Siirrä viestit kanavalle"
         instructions:
           one: "Olet siirtämässä <strong>%{count}</strong> viestin. Valitse kohdekanava. Kanavalle <strong>%{channelTitle}</strong> luodaan paikkamerkkiviesti, joka osoittaa, että tämä viesti on siirretty. Huomaa, että vastausketjut eivät säily uudella kanavalla, eikä vanhan kanavan viestejä enää näytetä vastauksina siirrettyihin viesteihin."
           other: "Olet siirtämässä <strong>%{count}</strong> viestiä. Valitse kohdekanava. Kanavalle <strong>%{channelTitle}</strong> luodaan paikkamerkkiviesti, joka osoittaa, että tämä viesti on siirretty. Huomaa, että vastausketjut eivät säily uudella kanavalla, eikä vanhan kanavan viestejä enää näytetä vastauksina siirrettyihin viesteihin."
         confirm_move: "Siirrä viestit"
+      delete_messages:
+        confirm:
+          one: "Haluatko varmasti poistaa tämän viestin?"
+          other: "Haluatko varmasti poistaa nämä %{count} viestiä?"
       channel_settings:
         title: "Kanavan asetukset"
         edit: "Muokkaa"
@@ -116,6 +121,7 @@ fi:
         direct_message_cta: "Aloita henkilökohtainen chat"
         direct_message: "Voit myös aloittaa henkilökohtaisen chatin yhden tai useamman käyttäjän kanssa."
         title: "Kanavia ei löytynyt"
+        my_threads: "Sinulla ei ole vielä ketjuja. Ketjut, joihin osallistut, näytetään täällä."
       email_frequency:
         description: "Lähetämme sinulle sähköpostia vain, jos emme ole nähneet sinua viimeisen 15 minuutin aikana."
         never: "Ei koskaan"
@@ -165,6 +171,9 @@ fi:
         header: "Chatin ylätunniste"
         composer: "Chatin tekstieditori"
         channels_list: "Chat-kanavien luettelo"
+      no_direct_message_channels: "Et ole vielä liittynyt yksityisviesteihin!"
+      no_direct_message_channels_cta: "Aloita keskustelu"
+      no_public_channels: "Et ole vielä liittynyt kanaville!"
       no_public_channels_cta: "Selaa kanavia"
       kicked_from_channel: "Et voi enää käyttää tätä kanavaa."
       only_chat_push_notifications:
@@ -173,6 +182,9 @@ fi:
       ignore_channel_wide_mention:
         title: "Ohita kanavanlaajuiset maininnat"
         description: "Älä lähetä ilmoituksia kanavanlaajuisista maininnoista (@here ja @all)"
+      show_thread_title_prompts:
+        title: "Näytä ketjun otsikkokehotteet"
+        description: "Näytä kehotteita uusien viestiketjujen otsikon asettamiseksi"
       open: "Avaa chat"
       open_full_page: "Avaa koko näytön chat"
       close_full_page: "Sulje koko näytön chat"
@@ -283,6 +295,7 @@ fi:
         filter: "Suodatin"
         cant_add_more_members: "Jäsenten enimmäismäärä saavutettu"
         create_new_group_chat: "Luo ryhmäkeskustelu"
+        group_with_too_many_members: "sisältää liian monta jäsentä (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Muokkaa kanavaa
         input_placeholder: Lisää nimi
@@ -417,7 +430,12 @@ fi:
           description: "Tämä vie kaikki viestit kaikilta kanavilta."
           create_export: "Luo vienti"
           export_has_started: "Vienti on alkanut. Saat yksityisviestin, kun se on valmis."
+      my_threads:
+        title: Omat ketjut
+        aria_label: "Vaihda ketjuluettelooni"
       direct_messages:
+        title: "Yksityisviestit"
+        aria_label: "Vaihda yksityisviesteihin"
         new: "Luo yksityis-chat"
         create: "Siirry"
         leave: "Poistu tästä henkilökohtaisesta chatista"
@@ -425,6 +443,7 @@ fi:
         cannot_create: "Valitettavasti et voi lähettää yksityisviestejä."
       channel_list:
         title: "Kanavat"
+        aria_label: "Vaihda kanavaluetteloon"
       incoming_webhooks:
         back: "Takaisin"
         channel_placeholder: "Valitse kanava"
@@ -455,6 +474,7 @@ fi:
         cancel: "Peruuta"
         quote_selection: "Lainaus ketjussa"
         copy: "Kopioi"
+        delete: "Poista (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "Siirrä kanavalle"
         error: "Chat-viestien siirtämisessä tapahtui virhe"
         title: "Siirrä chat ketjuun"
@@ -493,6 +513,7 @@ fi:
       flags:
         off_topic: "Tämä viesti ei liity nykyiseen keskusteluun kanavan otsikon mukaan, ja se pitäisi todennäköisesti siirtää muualle."
         inappropriate: "Tämä viesti sisältää sisältöä, jota kohtuullinen henkilö pitäisi loukkaavana, herjaavana tai <a href=\"%{basePath}/guidelines\">yhteisömme ohjeiden vastaisena</a>."
+        illegal: "Tämä viesti vaatii henkilökunnan huomiota, koska uskon, että se sisältää laitonta sisältöä."
         spam: "Tämä viesti on mainos tai ilkivaltaa. Se ei ole hyödyllinen tai olennainen nykyiselle kanavalle."
         notify_user: "Haluan keskustella tämän henkilön kanssa suoraan ja henkilökohtaisesti hänen viestistään."
         notify_moderators: "Tämä viesti vaatii henkilökunnan huomion muusta syystä, jota ei ole mainittu edellä."
@@ -533,6 +554,17 @@ fi:
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
+      thread_title_toast:
+        title: "Aseta ketjun otsikko"
+        message: "Auta muita löytämään tämä keskustelu."
+        dismiss_action: "Älä näytä uudelleen"
+        primary_action: "Aseta otsikko"
+      thread_title_modal:
+        title: "Aseta ketjun otsikko"
+        input_placeholder: "Kerro muille, mistä tässä keskustelussa on kyse..."
+        discourse_ai:
+          title: "Luo ketjujen otsikot automaattisesti"
+          description: "Katso %{url} saadaksesi lisätietoja tästä ja muista Discourse-kokemuksesi parannuksista."
       threads:
         open: "Avaa ketju"
         list: "Ketjut"

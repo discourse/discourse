@@ -2,23 +2,6 @@
   .select-kit.combo-box {
     width: 100%;
   }
-  .modal-inner-container {
-    box-sizing: border-box;
-    min-width: 310px;
-  }
-  .modal-body {
-    max-height: none;
-    width: 375px;
-    box-sizing: border-box;
-
-    @media (max-width: 600px) {
-      width: 100%;
-    }
-
-    .control-label {
-      font-weight: 700;
-    }
-  }
   .radios {
     margin-bottom: 10px;
   }

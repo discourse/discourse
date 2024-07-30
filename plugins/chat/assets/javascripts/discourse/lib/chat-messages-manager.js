@@ -1,5 +1,5 @@
 import { cached, tracked } from "@glimmer/tracking";
-import { setOwner } from "@ember/application";
+import { setOwner } from "@ember/owner";
 
 export default class ChatMessagesManager {
   @tracked messages = [];

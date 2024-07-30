@@ -159,6 +159,7 @@ module PrettyText
   #  markdown_it_rules - An array of markdown rule names which will be applied to the markdown-it engine. Currently used by plugins to customize what markdown-it rules should be
   #                      enabled when rendering markdown.
   #  topic_id          - Topic id for the post being cooked.
+  #  post_id           - Post id for the post being cooked.
   #  user_id           - User id for the post being cooked.
   #  force_quote_link  - Always create the link to the quoted topic for [quote] bbcode. Normally this only happens
   #                      if the topic_id provided is different from the [quote topic:X].
@@ -208,6 +209,7 @@ module PrettyText
       JS
 
       buffer << "__optInput.topicId = #{opts[:topic_id].to_i};\n" if opts[:topic_id]
+      buffer << "__optInput.postId = #{opts[:post_id].to_i};\n" if opts[:post_id]
 
       if opts[:force_quote_link]
         buffer << "__optInput.forceQuoteLink = #{opts[:force_quote_link]};\n"

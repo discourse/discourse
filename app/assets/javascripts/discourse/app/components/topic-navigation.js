@@ -83,7 +83,6 @@ export default Component.extend({
           !$parents.is(".widget-button") &&
           !$parents.is("#discourse-modal") &&
           !$target.is("#discourse-modal") &&
-          !$parents.is(".modal-footer") &&
           ($target.is(".topic-timeline") ||
             !$parents.is("#topic-progress-wrapper")) &&
           !$parents.is(".timeline-open-jump-to-post-prompt-btn") &&

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";

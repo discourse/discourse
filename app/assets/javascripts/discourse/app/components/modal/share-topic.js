@@ -1,7 +1,7 @@
-import { getOwner } from "@ember/application";
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import CreateInvite from "discourse/components/modal/create-invite";
 import { longDateNoYear } from "discourse/lib/formatter";

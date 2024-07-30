@@ -1,5 +1,5 @@
-import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
 import Service from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";

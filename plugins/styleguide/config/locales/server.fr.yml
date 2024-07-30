@@ -8,3 +8,4 @@ fr:
   site_settings:
     styleguide_enabled: 'Activer un chemin « /styleguide » pour faciliter la personnalisation de Discourse'
     styleguide_admin_only: "Restreint la visibilité du guide de style aux seuls administrateurs"
+    styleguide_allowed_groups: "Limite la visibilité du guide de style aux membres des groupes fournis"

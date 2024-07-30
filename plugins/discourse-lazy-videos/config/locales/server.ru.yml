@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 ru:
+  site_settings:
+    lazy_videos_enabled: "Включает плагин Lazy Videos"
+    lazy_youtube_enabled: "Включает ленивую загрузку для встроенных видео YouTube"
+    lazy_vimeo_enabled: "Включает ленивую загрузку для встроенных видео Vimeo"
+    lazy_tiktok_enabled: "Включает ленивую загрузку для встроенных видео TikTok (экспериментальная функция)"

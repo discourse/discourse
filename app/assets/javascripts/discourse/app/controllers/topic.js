@@ -240,9 +240,9 @@ export default Controller.extend(bufferedProperty("model"), {
     return Category.findById(categoryId)?.minimumRequiredTags || 0;
   },
 
-  @discourseComputed("model.posts_count")
-  showBottomTopicMap(postsCount) {
-    return postsCount > MIN_POSTS_COUNT;
+  @discourseComputed("model.posts_count", "model.postStream.loadingFilter")
+  showBottomTopicMap(postsCount, loading) {
+    return !loading && postsCount > MIN_POSTS_COUNT;
   },
 
   _removeDeleteOnOwnerReplyBookmarks() {

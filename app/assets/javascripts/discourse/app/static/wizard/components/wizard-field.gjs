@@ -3,6 +3,7 @@ import { assert } from "@ember/debug";
 import { hash } from "@ember/helper";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
+import { or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import fields from "./fields";
 
@@ -42,7 +43,7 @@ export default class WizardFieldComponent extends Component {
 
   <template>
     <div class={{this.classes}}>
-      {{#if @field.label}}
+      {{#if (or @field.label @field.description)}}
         <label for={{@field.id}}>
           <span class="wizard-container__label">
             {{@field.label}}

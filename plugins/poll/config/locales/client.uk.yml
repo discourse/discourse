@@ -29,6 +29,9 @@ uk:
           title: "Результати будуть показані після <strong>закриття</strong> ."
         staff:
           title: "Результати показуються лише <strong>членам команди обслуговування</strong> ."
+        tabs:
+          votes: "Голоси"
+          outcome: "Результат"
       multiple:
         help:
           at_least_min_options:
@@ -83,9 +86,28 @@ uk:
         percentage: "Відсоток"
         count: "Кількість"
       ranked_choice:
+        title:
+          rounds: "Раунди"
+          outcome: "Результат"
         none: "Немає"
+        majority: "Більшість"
+        eliminated: "Ліквідований"
+        round: "Раунд"
+        winner:
+          one: "Переможець %{winner} після одного раунду."
+          few: "Переможець %{winner} після %{count} раундів."
+          many: "Переможець %{winner} після %{count} раундів."
+          other: "Переможець %{winner} після %{count} раундів."
+        tied:
+          one: "Нічия після одного раунду між такими кандидатами:"
+          few: "Нічия після %{count} раундів між такими кандидатами:"
+          many: "Нічия після %{count} раундів між такими кандидатами:"
+          other: "Нічия після %{count} раундів між такими кандидатами:"
       options:
         label: "Параметри"
+        ranked_choice:
+          abstain: "Утриматись"
+          login: "Увійдіть, щоб проголосувати!"
       error_while_toggling_status: "На жаль, виникла помилка зміни статусу цього опитування."
       error_while_casting_votes: "На жаль, сталася помилка під час голосування."
       error_while_fetching_voters: "На жаль, під час відображення тих, хто проголосував, сталася помилка."
@@ -104,6 +126,7 @@ uk:
           label: Тип
           regular: Єдиний вибір
           multiple: Широкий вибір
+          ranked_choice: Рейтинговий вибір
           number: Рейтинг в цифрах
         poll_result:
           label: Показати результати...

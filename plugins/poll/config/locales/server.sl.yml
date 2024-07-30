@@ -11,7 +11,6 @@ sl:
     poll_edit_window_mins: "Število minut po objavi prispevka, ko je možno anketo še spreminjati."
     poll_minimum_trust_level_to_create: "Določite najnižjo stopnjo zaupanja za dodajanje anket."
     poll_groupable_user_fields: "Nabor imen uporabniških polj, ki jih lahko uporabite za združevanje in filtriranje rezultatov ankete."
-    poll_export_data_explorer_query_id: "ID poizvedbe raziskovalca podatkov, ki jo želite uporabiti za izvoz rezultatov ankete (0, če želite onemogočiti)."
   poll:
     poll: "anketa"
     invalid_argument: "Napačna vrednost '%{value}' za parameter '%{argument}'."

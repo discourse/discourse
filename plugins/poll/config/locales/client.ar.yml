@@ -33,6 +33,9 @@ ar:
           title: "ستظهر النتائج بعد <strong>إغلاق الاستطلاع</strong>."
         staff:
           title: "تظهر النتائج لأعضاء <strong>فريق العمل</strong> فقط."
+        tabs:
+          votes: "الأصوات"
+          outcome: "النتيجة"
       multiple:
         help:
           at_least_min_options:
@@ -93,9 +96,32 @@ ar:
         percentage: "النسبة المئوية"
         count: "العدد"
       ranked_choice:
+        title:
+          rounds: "الجولات"
+          outcome: "النتيجة"
         none: "لا يوجد"
+        majority: "الأغلبية"
+        eliminated: "مستبعد"
+        round: "الجولة"
+        winner:
+          zero: "كان الفائز هو‎ %{winner} ‎بعد‎ %{count} ‎جولة‎."
+          one: "كان الفائز هو‎ %{winner} ‎بعد جولة واحدة‎."
+          two: "كان الفائز هو‎ %{winner} ‎بعد جولتَين ‎(%{count})"
+          few: "كان الفائز هو‎ %{winner} ‎بعد‎ %{count} ‎جولات‎."
+          many: "كان الفائز هو‎ %{winner} ‎بعد‎ %{count} ‎جولة‎."
+          other: "كان الفائز هو‎ %{winner} ‎بعد‎ %{count} ‎جولة‎."
+        tied:
+          zero: "تعادل بعد‎ %{count} ‎جولة بين المرشحين التاليين‎:"
+          one: "تعادل بعد جولة واحدة بين المرشحين التاليين‎:"
+          two: "تعادل بعد جولتَين‎ (%{count}) ‎بين المرشحين التاليين‎:"
+          few: "تعادل بعد‎ %{count} ‎جولات بين المرشحين التاليين‎:"
+          many: "تعادل بعد‎ %{count} ‎جولة بين المرشحين التاليين‎:"
+          other: "تعادل بعد‎ %{count} ‎جولة بين المرشحين التاليين‎:"
       options:
         label: "الخيارات"
+        ranked_choice:
+          abstain: "الامتناع"
+          login: "سجِّل الدخول للتصويت‎!"
       error_while_toggling_status: "عذرًا، حدث خطأ أدى إلى تبديل حالة استطلاع الرأي هذا."
       error_while_casting_votes: "عذرًا، حدث خطأ في الإدلاء بأصواتك."
       error_while_fetching_voters: "عذرًا، حدث خطأ في عرض الناخبين."
@@ -114,6 +140,7 @@ ar:
           label: النوع
           regular: اختيار فردي
           multiple: اختيارات متعددة
+          ranked_choice: اختيار مصنَّف
           number: التقييم بالأرقام
         poll_result:
           label: عرض النتائج...

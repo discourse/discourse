@@ -2347,7 +2347,12 @@ hr:
       privacy:
         fields:
           login_required:
-            placeholder: "Privatno"
+            label: "Vidljivost"
+            choices:
+              public:
+                label: "Javnost"
+              private:
+                label: "Privatno"
           chat_enabled:
             placeholder: "Omogući chat"
       styling:

@@ -1,5 +1,5 @@
 // deprecated in favor of discourse/tests/integration/components/home-logo-test.gjs
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import MountWidget from "discourse/components/mount-widget";

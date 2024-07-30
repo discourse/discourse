@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import RequestGroupMembershipForm from "discourse/components/modal/request-group-membership-form";

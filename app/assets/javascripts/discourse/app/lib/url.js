@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-private-routing-service */
-import { setOwner } from "@ember/application";
 import EmberObject from "@ember/object";
+import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
 import $ from "jquery";

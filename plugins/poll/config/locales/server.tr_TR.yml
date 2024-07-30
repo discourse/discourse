@@ -12,7 +12,6 @@ tr_TR:
     poll_minimum_trust_level_to_create: "Anket oluşturmak için gereken minimum güven seviyesini tanımlayın."
     poll_create_allowed_groups: "Anket oluşturmasına izin verilen gruplar."
     poll_groupable_user_fields: "Anket sonuçlarını gruplamak ve filtrelemek için kullanılabilecek bir dizi kullanıcı alanı adı."
-    poll_export_data_explorer_query_id: "Anket sonuçlarını dışa aktarmak için kullanılacak Veri Gezgini Sorgusunun kimliği (devre dışı bırakmak için 0)."
     poll_default_public: "Yeni bir anket oluştururken, varsayılan olarak \"kimin oy verdiğini göster\" seçeneğini etkinleştirin."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
@@ -51,8 +50,12 @@ tr_TR:
     min_vote_per_user:
       one: Bu anket için en az %{count} oy gereklidir.
       other: Bu anket için en az %{count} oy gereklidir.
+    ranked_choice:
+      no_group_results_support: "Geçersiz anket türü, ranked_choice gruplanmış sonuçları desteklemiyor."
     topic_must_be_open_to_toggle_status: "Durumu açmak/kapatmak için konu açık olmalıdır."
     only_staff_or_op_can_toggle_status: "Yalnızca bir personel üyesi veya orijinal gönderi sahibi anket durumunu açabilir/kapatabilir."
+    errors:
+      poll_not_found: "Anket bulunamadı, lütfen parametreleri onaylayın."
     insufficient_rights_to_create: "Anket oluşturmanıza izin verilmiyor."
     email:
       link_to_poll: "Anketi görüntülemek için tıklayın."

@@ -108,11 +108,6 @@
     }
   }
 
-  .desktop-view & .modal-inner-container {
-    --modal-max-width: 75vw;
-    min-width: 55vw;
-  }
-
   .card-title.level-1,
   .card-title.je-object__title {
     > .json-editor-btn-collapse {

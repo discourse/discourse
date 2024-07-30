@@ -11,7 +11,6 @@ nb_NO:
     poll_edit_window_mins: "Antall minutter etter at et innlegg er opprettet som avstemninger kan redigeres."
     poll_minimum_trust_level_to_create: "Definer minimumstillitsnivå som trengs for å opprette avstemninger."
     poll_groupable_user_fields: "Et sett med brukerfeltnavn som kan brukes til å gruppere og filtrere avstemningsresultater."
-    poll_export_data_explorer_query_id: "ID til Data Explorer-spørringen som skal brukes for å eksportere avstemningsresultatene (0 for å deaktivere)."
   poll:
     poll: "Avstemming"
     invalid_argument: "Ugyldig verdi '%{value}' for argument '%{argument}'."

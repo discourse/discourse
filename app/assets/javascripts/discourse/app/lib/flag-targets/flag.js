@@ -13,7 +13,7 @@ export default class Flag {
     // an instance of ActionSummary
     const postAction = this.postActionFor(flagModal);
     flagModal.appEvents.trigger(
-      this.flagCreatedEvent,
+      this.flagCreatedEvent(),
       flagModal.args.model.flagModel,
       postAction,
       opts

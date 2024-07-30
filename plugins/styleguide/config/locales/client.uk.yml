@@ -34,6 +34,8 @@ uk:
         icons:
           title: "Іконки"
           full_list: "Перегляньте повний список значків Font Awesome"
+        forms:
+          title: "Форми"
         buttons:
           title: "Кнопки"
         dropdowns:

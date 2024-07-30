@@ -1,8 +1,10 @@
 {{#if this.site.mobileView}}
   <li class="navigation-toggle">
     <a href {{on "click" this.toggleDrop}} class="toggle-link">
-      {{this.selectedNavItem.displayName}}
-      {{d-icon "caret-down"}}
+      <span
+        class="toggle-link__text"
+      >{{this.selectedNavItem.displayName}}</span>
+      {{d-icon "discourse-chevron-expand"}}
     </a>
   </li>
   {{#if this.expanded}}

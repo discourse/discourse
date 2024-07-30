@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import {

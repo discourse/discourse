@@ -1,10 +1,8 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
+import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import withEventValue from "discourse/helpers/with-event-value";
+import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import i18n from "discourse-common/helpers/i18n";
@@ -17,17 +15,26 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
   governingLaw = this.args.yourOrganization.governingLaw.value;
   cityForDisputes = this.args.yourOrganization.cityForDisputes.value;
 
+  @cached
+  get data() {
+    return {
+      companyName: this.args.yourOrganization.companyName.value,
+      governingLaw: this.args.yourOrganization.governingLaw.value,
+      cityForDisputes: this.args.yourOrganization.cityForDisputes.value,
+    };
+  }
+
   @action
-  async save() {
+  async save(data) {
     this.args.setGlobalSavingStatus(true);
     try {
       await ajax("/admin/config/about.json", {
         type: "PUT",
         data: {
           your_organization: {
-            company_name: this.companyName,
-            governing_law: this.governingLaw,
-            city_for_disputes: this.cityForDisputes,
+            company_name: data.companyName,
+            governing_law: data.governingLaw,
+            city_for_disputes: data.cityForDisputes,
           },
         },
       });
@@ -47,62 +54,56 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
   }
 
   <template>
-    <div class="control-group company-name-input">
-      <label>
-        <span>{{i18n "admin.config_areas.about.company_name"}}</span>
-        <span class="admin-config-area-card__label-optional">{{i18n
-            "admin.config_areas.about.optional"
-          }}</span>
-      </label>
-      <p class="admin-config-area-card__additional-help">
-        {{i18n "admin.config_areas.about.company_name_help"}}
-      </p>
-      <p class="admin-config-area-card__warning-banner">
+    <Form @data={{this.data}} @onSubmit={{this.save}} as |form|>
+      <form.Field
+        @name="companyName"
+        @title={{i18n "admin.config_areas.about.company_name"}}
+        @subtitle={{i18n "admin.config_areas.about.company_name_help"}}
+        @format="large"
+        as |field|
+      >
+        <field.Input
+          placeholder={{i18n
+            "admin.config_areas.about.company_name_placeholder"
+          }}
+        />
+      </form.Field>
+      <form.Alert @type="error">
         {{i18n "admin.config_areas.about.company_name_warning"}}
-      </p>
-      <input
-        {{on "input" (withEventValue (fn (mut this.companyName)))}}
-        type="text"
-        value={{this.companyName}}
+      </form.Alert>
+
+      <form.Field
+        @name="governingLaw"
+        @title={{i18n "admin.config_areas.about.governing_law"}}
+        @subtitle={{i18n "admin.config_areas.about.governing_law_help"}}
+        @format="large"
+        as |field|
+      >
+        <field.Input
+          placeholder={{i18n
+            "admin.config_areas.about.governing_law_placeholder"
+          }}
+        />
+      </form.Field>
+
+      <form.Field
+        @name="cityForDisputes"
+        @title={{i18n "admin.config_areas.about.city_for_disputes"}}
+        @subtitle={{i18n "admin.config_areas.about.city_for_disputes_help"}}
+        @format="large"
+        as |field|
+      >
+        <field.Input
+          placeholder={{i18n
+            "admin.config_areas.about.city_for_disputes_placeholder"
+          }}
+        />
+      </form.Field>
+
+      <form.Submit
+        @label="admin.config_areas.about.update"
+        @disabled={{@globalSavingStatus}}
       />
-    </div>
-    <div class="control-group governing-law-input">
-      <label>
-        <span>{{i18n "admin.config_areas.about.governing_law"}}</span>
-        <span class="admin-config-area-card__label-optional">{{i18n
-            "admin.config_areas.about.optional"
-          }}</span>
-      </label>
-      <p class="admin-config-area-card__additional-help">
-        {{i18n "admin.config_areas.about.governing_law_help"}}
-      </p>
-      <input
-        {{on "input" (withEventValue (fn (mut this.governingLaw)))}}
-        type="text"
-        value={{this.governingLaw}}
-      />
-    </div>
-    <div class="control-group city-for-disputes-input">
-      <label>
-        <span>{{i18n "admin.config_areas.about.city_for_disputes"}}</span>
-        <span class="admin-config-area-card__label-optional">{{i18n
-            "admin.config_areas.about.optional"
-          }}</span>
-      </label>
-      <p class="admin-config-area-card__additional-help">
-        {{i18n "admin.config_areas.about.city_for_disputes_help"}}
-      </p>
-      <input
-        {{on "input" (withEventValue (fn (mut this.cityForDisputes)))}}
-        type="text"
-        value={{this.cityForDisputes}}
-      />
-    </div>
-    <DButton
-      @label="admin.config_areas.about.update"
-      @action={{this.save}}
-      @disabled={{@globalSavingStatus}}
-      class="btn-primary admin-config-area-card__btn-save"
-    />
+    </Form>
   </template>
 }

@@ -1,7 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import Validator from "discourse/form-kit/lib/validator";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 module("Unit | Lib | FormKit | Validator", function (hooks) {
   setupTest(hooks);

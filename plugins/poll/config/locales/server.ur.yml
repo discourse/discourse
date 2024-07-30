@@ -11,7 +11,6 @@ ur:
     poll_edit_window_mins: "پوسٹ بنانے کے بعد کتنے منت تک پولز کی ترمیم کی جاسکتی ہے۔"
     poll_minimum_trust_level_to_create: "پول بنانے کیلئے کم از کم ٹرسٹ لَیول واضح کریں۔"
     poll_groupable_user_fields: "صارف کے فیلڈ کے ناموں کا ایک سیٹ جو پول کے نتائج کو گروپ اور فلٹر کرنے کے لیے استعمال کیا جا سکتا ہے۔"
-    poll_export_data_explorer_query_id: "رائے شماری کے نتائج برآمد کرنےکے لیے ڈیٹا ایکسپلورر استفسار کی ID (غیر فعال کرنے کے لیے 0)۔"
   poll:
     poll: "پَول"
     invalid_argument: "آرگیومنٹ کیلئے '%{argument}' غلط وَیلِیو '%{value}'۔"

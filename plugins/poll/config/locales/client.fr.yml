@@ -25,6 +25,9 @@ fr:
           title: "Les résultats sont affichés après la <strong>fermeture</strong> du sondage."
         staff:
           title: "Les résultats ne sont montrés qu'aux <strong>responsables</strong>."
+        tabs:
+          votes: "Votes"
+          outcome: "Résultat"
       multiple:
         help:
           at_least_min_options:
@@ -73,9 +76,24 @@ fr:
         percentage: "Pourcentage"
         count: "Nombre"
       ranked_choice:
-        none: "Jamais"
+        title:
+          rounds: "Tours"
+          outcome: "Résultat"
+        none: "Aucun"
+        majority: "Majorité"
+        eliminated: "Éliminé"
+        round: "Tour"
+        winner:
+          one: "Le gagnant était %{winner} après un tour."
+          other: "Le gagnant était %{winner} après %{count} tours."
+        tied:
+          one: "Égalité après un tour entre les candidats suivants :"
+          other: "Égalité après %{count} tours entre les candidats suivants :"
       options:
         label: "Options"
+        ranked_choice:
+          abstain: "Abstention"
+          login: "Connectez-vous pour voter !"
       error_while_toggling_status: "Nous sommes désolés, une erreur s'est produite lors du changement de statut de ce sondage."
       error_while_casting_votes: "Nous sommes désolés, une erreur s'est produite lors de l'envoi de vos votes."
       error_while_fetching_voters: "Nous sommes désolés, une erreur s'est produite lors de l'affichage des votants."
@@ -94,6 +112,7 @@ fr:
           label: Type
           regular: Choix unique
           multiple: Choix multiple
+          ranked_choice: Choix classé
           number: Nombre
         poll_result:
           label: Afficher les résultats…

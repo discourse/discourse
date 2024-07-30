@@ -176,6 +176,26 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
         route: "adminPlugins.index",
         icon: "cog",
       });
+
+      api.addCommunitySectionLink(
+        {
+          name: "primary",
+          route: "discovery.unread",
+          title: "Link in primary",
+          text: "Link in primary",
+        },
+        false
+      );
+
+      api.addCommunitySectionLink(
+        {
+          name: "secondary",
+          route: "discovery.unread",
+          title: "Link in secondary",
+          text: "Link in secondary",
+        },
+        true
+      );
     });
   });
 
@@ -209,6 +229,35 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
       ),
       "invalid link with an invalid I18n key is not appended to the root section"
     );
+  });
+
+  test("community section links are added to primary and secondary sections with the plugin API", async function (assert) {
+    await visit("/");
+
+    assert.ok(
+      exists(
+        "#sidebar-section-content-community .sidebar-section-link[data-link-name='primary']"
+      )
+    );
+    assert.notOk(
+      exists(
+        "#sidebar-section-content-community .sidebar-section-link[data-link-name='secondary']"
+      )
+    );
+
+    await click(".sidebar-more-section-links-details-summary");
+
+    assert.notOk(
+      exists(
+        ".sidebar-more-section-links-details-content .sidebar-section-link[data-link-name='primary']"
+      )
+    );
+    assert.ok(
+      exists(
+        ".sidebar-more-section-links-details-content .sidebar-section-link[data-link-name='secondary']"
+      )
+    );
+    assert.ok(true);
   });
 });
 

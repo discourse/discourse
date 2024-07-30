@@ -25,6 +25,9 @@ tr_TR:
           title: "Sonuçlar <strong>kapandığında</strong> gösterilir."
         staff:
           title: "Sonuçlar sadece <strong>personel</strong> üyelerine gösterilir."
+        tabs:
+          votes: "Oylar"
+          outcome: "Sonuç"
       multiple:
         help:
           at_least_min_options:
@@ -73,9 +76,24 @@ tr_TR:
         percentage: "Yüzde"
         count: "Sayı"
       ranked_choice:
+        title:
+          rounds: "Turlar"
+          outcome: "Sonuç"
         none: "Yok"
+        majority: "Çoğunluk"
+        eliminated: "Elendi"
+        round: "Tur"
+        winner:
+          one: "Bir turdan sonra kazanan %{winner} oldu."
+          other: "%{count} turdan sonra kazanan %{winner} oldu."
+        tied:
+          one: "Aşağıdaki adaylar bir tur sonunda berabere kaldı:"
+          other: "Aşağıdaki adaylar %{count} tur sonunda berabere kaldı:"
       options:
         label: "Seçenekler"
+        ranked_choice:
+          abstain: "Çekimser"
+          login: "Oy vermek için giriş yapın!"
       error_while_toggling_status: "Üzgünüz, bu anketin durumunu değiştirirken bir hata oluştu."
       error_while_casting_votes: "Üzgünüm, oylarınızı kullanırken bir hata oluştu."
       error_while_fetching_voters: "Üzgünüz, oy verenler gösterilirken bir hata oluştu."
@@ -94,6 +112,7 @@ tr_TR:
           label: Tür
           regular: Tek Seçim
           multiple: Çoktan Seçmeli
+          ranked_choice: Sıralamalı Seçim
           number: Sayı Derecelendirme
         poll_result:
           label: Sonuçları göster...

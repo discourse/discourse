@@ -432,6 +432,8 @@ export default class TopicListItem extends Component {
             {{#if @bulkSelectEnabled}}
               <label for="bulk-select-{{@topic.id}}">
                 <input
+                  {{on "click" this.onBulkSelectToggle}}
+                  checked={{this.isSelected}}
                   type="checkbox"
                   id="bulk-select-{{@topic.id}}"
                   class="bulk-select"

@@ -352,6 +352,11 @@ cs:
       active_user_count: "Aktivní uživatelé"
       contact: "Kontaktujte nás"
       contact_info: "V případě kritické chyby nebo urgentní záležitosti ovlivňující tuto stránku nás prosím kontaktujte na %{contact_info}."
+      member_count:
+        one: "%{formatted_number} Člen"
+        few: "%{formatted_number} Členové"
+        many: "%{formatted_number} Členů"
+        other: "%{formatted_number} Členů"
     bookmarked:
       title: "Záložka"
       edit_bookmark: "Upravit záložku"
@@ -847,11 +852,12 @@ cs:
           prefill:
             title: "Předvyplnění s nastavením pro:"
             gmail: "Gmail"
+          ssl_modes:
+            none: "Žádná"
           credentials:
             title: "Údaje"
             smtp_server: "SMTP server"
             smtp_port: "SMTP port"
-            smtp_ssl: "Použít SSL pro SMTP"
             imap_server: "IMAP server"
             imap_port: "IMAP port"
             imap_ssl: "Použít SSL pro IMAP"
@@ -2091,8 +2097,7 @@ cs:
       enabled_description: "Prohlížíte si nejlepší odpovědi na toto téma: nejzajímavější příspěvky jsou stanovené komunitou."
       buttons:
         hide: "Skrýt shrnutí"
-        generate: "Shrnout pomocí AI"
-        regenerate: "Vygenerovat shrnutí"
+        regenerate: "Vytvořit znovu"
       description_time_MF: |
         Zde { replyCount, plural,
             one {je <b>#</b> odpověď}
@@ -2108,6 +2113,7 @@ cs:
       enable: "Zobrazit nejlepší odpovědi"
       disable: "Přepnout na normální zobrazení"
       short_label: "Nejlepší odpovědi"
+      show_all_label: "Zobrazit vše"
       short_title: "Zobrazit nejlepší odpovědi na toto téma: nejzajímavější příspěvky stanovené komunitou"
     deleted_filter:
       enabled_description: "Toto téma obsahuje schované smazané příspěvky."
@@ -3988,6 +3994,9 @@ cs:
         few: "%{count} kliknutí"
         many: "%{count} kliknutí"
         other: "%{count} kliknutí"
+      views: "Zobrazení"
+      read: přečtené
+      minutes: min
     post_links:
       about: "expandovat více odkazů v tomto příspěvku"
       title:
@@ -5219,6 +5228,7 @@ cs:
           staff_action_logs: "Protokoly akcí redaktorů"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(volitelné)"
           update: "Aktualizovat"
           saved: "uloženo!"

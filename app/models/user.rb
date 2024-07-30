@@ -253,6 +253,9 @@ class User < ActiveRecord::Base
   # Cache for user custom fields. Currently it is used to display quick search results
   attr_accessor :custom_data
 
+  # Information if user was authenticated with OAuth
+  attr_accessor :authenticated_with_oauth
+
   scope :with_email,
         ->(email) { joins(:user_emails).where("lower(user_emails.email) IN (?)", email) }
 

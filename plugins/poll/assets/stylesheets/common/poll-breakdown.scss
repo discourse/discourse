@@ -1,18 +1,6 @@
 .poll-breakdown.modal {
-  .modal-inner-container {
-    max-width: unset;
-    width: 90vw;
-  }
-
   .modal-tabs {
     justify-content: flex-end;
-  }
-
-  .modal-body {
-    display: grid;
-    height: 80vh;
-    grid: auto-flow / 2fr 5fr;
-    padding: 0;
   }
 }
 

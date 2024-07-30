@@ -23,6 +23,9 @@ ja:
           title: "結果は投票が<strong>クローズ</strong>になると表示されます。"
         staff:
           title: "結果は<strong>スタッフ</strong>メンバーにのみ表示されます。"
+        tabs:
+          votes: "投票"
+          outcome: "結果"
       multiple:
         help:
           at_least_min_options:
@@ -68,9 +71,22 @@ ja:
         percentage: "割合"
         count: "票数"
       ranked_choice:
+        title:
+          rounds: "ラウンド"
+          outcome: "結果"
         none: "なし"
+        majority: "過半数"
+        eliminated: "排除"
+        round: "ラウンド"
+        winner:
+          other: "%{count} ラウンドの末、%{winner} が勝者となりました。"
+        tied:
+          other: "%{count} ラウンドの末、次の候補者が引き分けとなりました:"
       options:
         label: "オプション"
+        ranked_choice:
+          abstain: "棄権"
+          login: "ログインして投票！"
       error_while_toggling_status: "この投票のステータスを切り替える際にエラーが発生しました。"
       error_while_casting_votes: "投票の際にエラーが発生しました。"
       error_while_fetching_voters: "投票者を表示する際にエラーが発生しました。"
@@ -89,6 +105,7 @@ ja:
           label: タイプ
           regular: 単一選択
           multiple: 複数選択
+          ranked_choice: ランク付けされた選択肢
           number: 数字評価
         poll_result:
           label: 結果を表示する...

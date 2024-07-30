@@ -25,6 +25,11 @@ da:
           title: "Resultaterne vil blive vist, når den er <strong>afsluttet</strong>."
         staff:
           title: "Resultaterne vises kun for <strong>personale</strong> medlemmer."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Vælg mindst <strong>%{count} valgmulighed</strong>."
+            other: "Vælg mindst <strong>%{count} valgmuligheder</strong>."
       cast-votes:
         title: "Afgiv dine stemmer"
         label: "Stem nu!"
@@ -33,8 +38,10 @@ da:
         label: "Resultater"
       remove-vote:
         title: "Fjern din stemme"
+        label: "Fortryd stemmeafgivning"
       hide-results:
         title: "Tilbage til dine stemmer"
+        label: "Stemmeafgivelse"
       group-results:
         title: "Gruppér stemmer efter brugerfelt"
         label: "Vis fordeling"
@@ -59,9 +66,13 @@ da:
         percentage: "Procentdel"
         count: "Antal"
       ranked_choice:
+        title:
+          outcome: "Resultat"
         none: "Ingen"
       options:
         label: "Indstillinger"
+        ranked_choice:
+          abstain: "Afstå"
       error_while_toggling_status: "Beklager, der opstod en fejl under statusskifte for denne afstemning."
       error_while_casting_votes: "Beklager, der opstod en fejl under afgivelse af dine stemmer."
       error_while_fetching_voters: "Beklager, der opstod en fejl med at vise deltagerne."

@@ -683,11 +683,12 @@ ur:
           imap_mailbox_not_selected: "آپ کو اس IMAP کنفیگریشن کے لیے ایک میل باکس کا انتخاب کرنا چاہیے ورنہ کوئی میل باکس مطابقت پذیر نہیں ہوگا!"
           prefill:
             title: "ترتیبات کے ساتھ پہلے سے بھریں:"
+          ssl_modes:
+            none: "کوئی نہیں"
           credentials:
             title: "شہادت"
             smtp_server: "SMTP سرور"
             smtp_port: "SMTP پورٹ"
-            smtp_ssl: "SMTP کے لیے SSL استعمال کریں"
             imap_server: "IMAP سرور"
             imap_port: "IMAP پورٹ"
             imap_ssl: "IMAP کے لیے SSL استعمال کریں"
@@ -1644,9 +1645,13 @@ ur:
       description:
         one: "یہاں<b>%{count}</b> جواب ہے۔"
         other: "یہاں<b>%{count}</b> جوابات ہیں۔"
+      buttons:
+        generate: "خلاصہ"
+        regenerate: "دوبارہ تخلیق کریں"
       description_time_MF: |
         وہاں {replyCount, plural, one { <b>#</b> جواب ہے} other { <b>#</b> جوابات ہیں}} ایک متوقع مطالعہ <b>{readingTime, plural, one {# منٹ} other {# منٹ}}</b>۔
       disable: "تمام پوسٹیں دکھائیں"
+      show_all_label: "تمام دکھائیں"
     deleted_filter:
       enabled_description: "اِس ٹاپک میں حذف شدہ پوسٹ شامل ہیں، جو چھپا دی گئی ہیں۔"
       disabled_description: "ٹاپک کی حذف شدہ پوسٹ دکھائی گئی ہیں۔"
@@ -3090,6 +3095,9 @@ ur:
       clicks:
         one: "%{count} کلک"
         other: "%{count} کلکس"
+      views: "وِیوز"
+      read: رِیڈ
+      minutes: کم از کم
     post_links:
       about: "اِس پوسٹ کے لئے مزید لنکس دکھائیں"
       title:
@@ -3978,6 +3986,7 @@ ur:
           spam: "سپَیم"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(اختیاری)"
           update: "اپ ڈیٹ"
           saved: "محفوظ کر لیا گیا!"

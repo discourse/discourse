@@ -9,7 +9,7 @@ zh_CN:
     chat_separate_sidebar_mode: "为论坛和聊天显示单独的边栏模式。"
     chat_enabled: "启用聊天。"
     enable_public_channels: "基于类别启用公开频道。"
-    chat_allowed_groups: "这些组中的用户可以聊天。请注意，管理员和版主可以随时访问聊天。"
+    chat_allowed_groups: "这些群组中的用户可以聊天。请注意，管理员和版主始终可以访问聊天。"
     chat_channel_retention_days: "常规频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
     chat_dm_retention_days: "个人聊天频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
     chat_auto_silence_duration: "用户超过聊天消息创建速率限制时将被禁言的分钟数。设置为 0 将禁用自动禁言。"
@@ -24,7 +24,7 @@ zh_CN:
     chat_archive_destination_topic_status: "频道归档完成后目标话题应处于的状态。这仅适用于目标话题是新话题而不是现有话题的情况。"
     default_emoji_reactions: "聊天消息的默认表情符号回应。最多可添加 5 个表情符号进行快速回应。"
     direct_message_enabled_groups: "允许这些群组中的用户创建用户间的个人聊天。请注意：管理人员始终可以创建个人聊天，用户将能够回复有权创建个人聊天的用户发起的个人聊天。"
-    chat_message_flag_allowed_groups: "这些组中的用户可以举报聊天消息。请注意，管理员和版主可以随时举报聊天消息。"
+    chat_message_flag_allowed_groups: "这些群组中的用户可以举报聊天消息。请注意，管理员和版主始终可以举报聊天消息。"
     max_mentions_per_chat_message: "用户可以在聊天消息中使用的 @name 通知的最大数量。"
     chat_max_direct_message_users: "在创建新的直接消息时，用户无法添加超过此数量的其他用户。设置为 0 只允许给自己发送消息。管理人员不受此设置的影响。"
     chat_allow_archiving_channels: "允许管理人员在关闭频道时将消息归档到某个话题。"
@@ -35,7 +35,7 @@ zh_CN:
     errors:
       chat_default_channel: "默认聊天频道必须是公共频道。"
       direct_message_enabled_groups_invalid: "您必须为此设置至少指定一个群组。如果您不希望管理人员以外的任何人发送直接消息，请选择管理人员群组。"
-      chat_upload_not_allowed_secure_uploads: "当启用安全上传站点设置时，不允许在聊天中上传文件。"
+      chat_upload_not_allowed_secure_uploads: "当启用安全上传网站设置时，不允许在聊天中上传文件。"
   system_messages:
     private_channel_title: "频道 %{id}"
     chat_channel_archive_complete:
@@ -95,9 +95,9 @@ zh_CN:
       over_chat_max_direct_message_users:
         other: "您无法创建与超过 %{count} 个其他用户的直接消息。"
       original_message_not_found: "找不到您要回复信息的上级内容，或相关内容已被删除。"
-      thread_invalid_for_channel: "该对话不是所提供频道的一部分。"
-      thread_does_not_match_parent: "对话与父消息不匹配。"
-      invalid_direct_message: "你不能创建此私信。"
+      thread_invalid_for_channel: "该消息串不是所提供频道的一部分。"
+      thread_does_not_match_parent: "消息串与父消息不匹配。"
+      invalid_direct_message: "您无权创建此直接消息。"
     reviewables:
       message_already_handled: "谢谢，但我们已经审核此消息，并确定它不需要被再次举报。"
       actions:
@@ -182,7 +182,7 @@ zh_CN:
       and_x_others:
         other: "和其他 %{count} 人"
     transcript:
-      default_thread_title: "对话"
+      default_thread_title: "消息串"
       split_thread_range: "%{start} 到 %{end} 的消息（共 %{total} 条）"
   discourse_push_notifications:
     popup:
@@ -221,13 +221,13 @@ zh_CN:
           other: "[%{site_name}] 新消息"
         chat_dm_1:
           other: "[%{site_name}] 来自 %{name} 的新消息"
-        chat_dm_2: "[%{site_name}] 来自%{name_1}和%{name_2}的新消息"
-        chat_dm_3_or_more: "[%{site_name}] 来自 %{name} 和 %{count} 个其他人的新信息"
+        chat_dm_2: "[%{site_name}] 来自 %{name_1} 和 %{name_2} 的新消息"
+        chat_dm_3_or_more: "[%{site_name}] 来自 %{name} 和其他 %{count} 人的新消息"
         chat_channel_1:
           other: "[%{site_name}] %{channel} 中的新消息"
-        chat_channel_2: "[%{site_name}] %{channel_1}和%{channel_2}中的新消息"
-        chat_channel_3_or_more: "[%{site_name}] %{channel} 和其他 %{count} 个频道的新信息"
-        chat_channel_and_dm: "[%{site_name}] %{channel} 和来自 %{name} 的新消息"
+        chat_channel_2: "[%{site_name}] %{channel_1} 和 %{channel_2} 中的新消息"
+        chat_channel_3_or_more: "[%{site_name}] %{channel} 和其他 %{count} 个频道中的新消息"
+        chat_channel_and_dm: "[%{site_name}] %{channel} 中和来自 %{name} 的新消息"
       unsubscribe: "此聊天总结在您离开时从%{site_link}发送。更改您的%{email_preferences_link}，或者%{unsubscribe_link}以退订。"
       unsubscribe_no_link: "此聊天总结在您离开时从%{site_link}发送。更改您的%{email_preferences_link}。"
       view_messages:

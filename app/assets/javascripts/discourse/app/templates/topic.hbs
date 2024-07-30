@@ -211,7 +211,7 @@
         />
       </div>
 
-      {{#if this.showBottomTopicMap}}
+      {{#if (and this.showBottomTopicMap this.loadedAllPosts)}}
         <div class="topic-map --bottom">
           <TopicMap
             @model={{this.model}}

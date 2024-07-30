@@ -14,6 +14,7 @@ class Wizard
       field = Field.new(attrs)
       field.step = self
       @fields << field
+      yield field if block_given?
       field
     end
 

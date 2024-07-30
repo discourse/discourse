@@ -94,13 +94,15 @@
       <a href {{on "click" this.toggleShowAllAuthTokens}}>
         {{#if this.showAllAuthTokens}}
           {{d-icon "caret-up"}}
-          {{i18n "user.auth_tokens.show_few"}}
+          <span>{{i18n "user.auth_tokens.show_few"}}</span>
         {{else}}
           {{d-icon "caret-down"}}
-          {{i18n
-            "user.auth_tokens.show_all"
-            count=this.model.user_auth_tokens.length
-          }}
+          <span>
+            {{i18n
+              "user.auth_tokens.show_all"
+              count=this.model.user_auth_tokens.length
+            }}
+          </span>
         {{/if}}
       </a>
     {{/if}}
@@ -109,7 +111,12 @@
       href
       {{on "click" (fn this.revokeAuthToken null)}}
       class="pull-right text-danger"
-    >{{d-icon "sign-out-alt"}} {{i18n "user.auth_tokens.log_out_all"}}</a>
+    >
+      {{d-icon "sign-out-alt"}}
+      <span>
+        {{i18n "user.auth_tokens.log_out_all"}}
+      </span>
+    </a>
   </div>
 {{/if}}
 

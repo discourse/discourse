@@ -543,6 +543,8 @@ et:
           last_updated_by: "autor"
           prefill:
             gmail: "Gmail"
+          ssl_modes:
+            none: "Pole"
           credentials:
             username: "Kasutajanimi"
             password: "Parool"
@@ -1255,7 +1257,10 @@ et:
       sign_up: "Liitu"
       hide_forever: "tänan, ei"
     summary:
+      buttons:
+        regenerate: "Genereeri uus"
       disable: "Näita kõiki postitusi"
+      show_all_label: "Näita kõiki"
     deleted_filter:
       enabled_description: "See teema sisaldab kustutatud postitusi, mis on peidetud."
       disabled_description: "Selle teema kustutatud postitused on nähtaval."
@@ -2268,6 +2273,9 @@ et:
       clicks:
         one: "%{count} klikk"
         other: "%{count} klikki"
+      views: "Vaatamisi"
+      read: lugemine
+      minutes: miinumum
     post_links:
       about: "laienda veel selles postuses olevaid viiteid"
       title:
@@ -2873,6 +2881,7 @@ et:
           spam: "Spämm"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(valikuline)"
           saved: "salvestatud!"
         flags:

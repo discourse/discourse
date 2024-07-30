@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";

@@ -1,5 +1,5 @@
-import { getOwner } from "@ember/application";
 import Component from "@ember/component";
+import { getOwner } from "@ember/owner";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 

@@ -1,7 +1,7 @@
-import { getOwner } from "@ember/application";
 import Component from "@ember/component";
 import EmberObject, { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
+import { getOwner } from "@ember/owner";
 import { next, schedule, throttle } from "@ember/runloop";
 import { BasePlugin } from "@uppy/core";
 import $ from "jquery";

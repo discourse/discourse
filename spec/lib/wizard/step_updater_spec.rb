@@ -51,9 +51,9 @@ RSpec.describe Wizard::StepUpdater do
       updater =
         wizard.create_updater(
           "privacy",
-          login_required: false,
-          invite_only: false,
-          must_approve_users: false,
+          login_required: "public",
+          invite_only: "sign_up",
+          must_approve_users: "no",
         )
       updater.update
       expect(updater.success?).to eq(true)
@@ -67,9 +67,9 @@ RSpec.describe Wizard::StepUpdater do
       updater =
         wizard.create_updater(
           "privacy",
-          login_required: true,
-          invite_only: true,
-          must_approve_users: true,
+          login_required: "private",
+          invite_only: "invite_only",
+          must_approve_users: "yes",
         )
       updater.update
       expect(updater.success?).to eq(true)

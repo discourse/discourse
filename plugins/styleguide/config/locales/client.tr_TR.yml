@@ -34,6 +34,8 @@ tr_TR:
         icons:
           title: "Simgeler"
           full_list: "Font Awesome Simgelerinin tam listesine bakın"
+        forms:
+          title: "Formlar"
         buttons:
           title: "Düğmeler"
         dropdowns:

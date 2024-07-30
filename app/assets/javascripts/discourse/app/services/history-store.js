@@ -1,4 +1,5 @@
 import { DEBUG } from "@glimmer/env";
+import { cached } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -18,7 +19,7 @@ const HANDLED_TRANSITIONS = new WeakSet();
 export default class HistoryStore extends Service {
   @service router;
 
-  #routeData = new Map();
+  #routeData = new TrackedMap();
   #uuid;
   #pendingStore;
 
@@ -58,6 +59,36 @@ export default class HistoryStore extends Service {
    */
   delete(key) {
     return this.#currentStore.delete(key);
+  }
+
+  @cached
+  get hasFutureEntries() {
+    // Keys will be returned in insertion order. Return true if there is any key **after** the current one
+    let foundCurrent = false;
+    for (const key of this.#routeData.keys()) {
+      if (foundCurrent) {
+        return true;
+      }
+
+      if (key === this.#uuid) {
+        foundCurrent = true;
+      }
+    }
+    return false;
+  }
+
+  @cached
+  get hasPastEntries() {
+    // Keys will be returned in insertion order. Return false if we find the current uuid before any other
+    for (const key of this.#routeData.keys()) {
+      if (key === undefined) {
+        continue;
+      }
+      if (key === this.#uuid) {
+        return false;
+      }
+      return true;
+    }
   }
 
   #pruneOldData() {

@@ -11,7 +11,6 @@ ko:
     poll_edit_window_mins: "포스트 생성 이후 투표를 편집할 수 있는 시간(분)"
     poll_minimum_trust_level_to_create: "설문을 만들 수 있는 최소 회원 레벨을 설정합니다."
     poll_groupable_user_fields: "설문 조사 결과를 그룹화하고 필터링하는 데 사용할 수있는 사용자 필드 이름 세트입니다."
-    poll_export_data_explorer_query_id: "폴링 결과를 내보내는 데 사용할 Data Explorer Query의 ID입니다 (0은 사용 안함)."
   poll:
     poll: "투표"
     invalid_argument: "&#39;%{argument}&#39;인수에 대해 &#39;%{value}&#39;값이 잘못되었습니다."

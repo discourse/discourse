@@ -56,13 +56,17 @@ tr_TR:
       cancel_reply: "Yanıtı iptal et"
       chat_channels: "Kanallar"
       browse_all_channels: "Tüm kanallara göz atın"
-      see_in: "Bakınız"
+      see_in: "Şurada bak:"
       move_to_channel:
         title: "Mesajları kanala taşı"
         instructions:
           one: "<strong>%{count}</strong> mesajı taşıyorsunuz. Hedef kanal seçin. Bu mesajın taşındığını belirtmek için <strong>%{channelTitle}</strong> adlı kanalda bir yer tutucu mesaj oluşturulacak. Yanıt zincirlerinin yeni kanalda saklanmayacağını ve eski kanaldaki iletilerin artık taşınan iletilere yanıt veriyormuş gibi görünmeyeceğini unutmayın."
           other: "<strong>%{count}</strong> mesajı taşıyorsunuz. Hedef kanal seçin. Bu mesajın taşındığını belirtmek için <strong>%{channelTitle}</strong> adlı kanalda bir yer tutucu mesaj oluşturulacak. Yanıt zincirlerinin yeni kanalda saklanmayacağını ve eski kanaldaki iletilerin artık taşınan iletilere yanıt veriyormuş gibi görünmeyeceğini unutmayın."
         confirm_move: "Mesajları Taşı"
+      delete_messages:
+        confirm:
+          one: "Bu mesajı silmek istediğinizden emin misiniz?"
+          other: "Bu %{count} mesajı silmek istediğinizden emin misiniz?"
       channel_settings:
         title: "Kanal ayarları"
         edit: "Düzenle"
@@ -117,7 +121,7 @@ tr_TR:
         direct_message_cta: "Kişisel bir Sohbet başlatın"
         direct_message: "Bir veya daha fazla kullanıcıyla da kişisel sohbet başlatabilirsiniz."
         title: "Kanal bulunamadı"
-        my_threads: "Henüz konunuz yok. Katıldığınız konular burada görüntülenecektir."
+        my_threads: "Henüz konunuz yok. Katıldığınız konular burada gösterilir."
       email_frequency:
         description: "Yalnızca sizi son 15 dakika içinde görmediğimiz takdirde size e-posta göndeririz."
         never: "Asla"
@@ -220,7 +224,10 @@ tr_TR:
         header: "Sohbet başlığı"
         composer: "Sohbet oluşturucu"
         channels_list: "Sohbet kanalları listesi"
-      no_public_channels_cta: "Kanallara göz atın"
+      no_direct_message_channels: "Henüz herhangi bir doğrudan mesaja katılmadınız!"
+      no_direct_message_channels_cta: "Konuşma başlat"
+      no_public_channels: "Henüz hiçbir kanala katılmadınız!"
+      no_public_channels_cta: "Kanallara göz at"
       kicked_from_channel: "Artık bu kanala erişemezsiniz."
       only_chat_push_notifications:
         title: "Yalnızca sohbet anlık bildirimleri gönder"
@@ -228,6 +235,9 @@ tr_TR:
       ignore_channel_wide_mention:
         title: "Kanal genelindeki bahsetmeleri yok say"
         description: "Kanal genelindeki bahsetmeler için bildirim gönderme (@here ve @all)"
+      show_thread_title_prompts:
+        title: "Konu başlığı istemlerini göster"
+        description: "Yeni konular için başlık ayarlama istemlerini göster"
       open: "Sohbeti aç"
       open_full_page: "Tam ekran sohbeti aç"
       close_full_page: "Tam ekran sohbeti kapat"
@@ -416,13 +426,13 @@ tr_TR:
         you_and_single_user: "<span>Siz ve %{username} şu şekilde tepki verdiniz: </span>:%{emoji}:"
         you_and_multiple_users: "<span>Siz, %{commaSeparatedUsernames} ve %{username} şu şekilde tepki verdiniz</span>:%{emoji}"
         you_multiple_users_and_more:
-          one: "<span>Siz, %{commaSeparatedUsernames} ve diğer %{count} kişi şu şekilde tepki verdiniz: </span>:%{emoji}:"
-          other: "<span>Siz, %{commaSeparatedUsernames} ve diğer %{count} kişi şu şekilde tepki verdiniz: </span>:%{emoji}:"
+          one: "<span>Siz, %{commaSeparatedUsernames} ve %{count} kişi daha şu şekilde tepki verdiniz: </span>:%{emoji}:"
+          other: "<span>Siz, %{commaSeparatedUsernames} ve %{count} kişi daha şu şekilde tepki verdiniz: </span>:%{emoji}:"
         single_user: "<span>%{username} şu şekilde tepki verdi</span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} ve %{username} şu şekilde tepki verdi</span>:%{emoji}:"
         multiple_users_and_more:
-          one: "<span>%{commaSeparatedUsernames} ve diğer %{count} kişi şu şekilde tepki verdi: </span>:%{emoji}:"
-          other: "<span>%{commaSeparatedUsernames} ve diğer %{count} kişi şu şekilde tepki verdi: </span>:%{emoji}:"
+          one: "<span>%{commaSeparatedUsernames} ve %{count} kişi daha şu şekilde tepki verdi: </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} ve %{count} kişi daha şu şekilde tepki verdi: </span>:%{emoji}:"
       composer:
         toggle_toolbar: "Araç çubuğunu aç/kapat"
         italic_text: "vurgulanan yazı"
@@ -477,8 +487,8 @@ tr_TR:
         title: Konularım
         aria_label: "Konu listeme geç"
       direct_messages:
-        title: "Direkt Mesajlar"
-        aria_label: "Doğrudan mesajlara geçin"
+        title: "DM'ler"
+        aria_label: "Doğrudan mesajlara geç"
         new: "Kişisel sohbet oluşturun"
         create: "Git"
         leave: "Bu kişisel sohbetten ayrıl"
@@ -486,7 +496,7 @@ tr_TR:
         cannot_create: "Üzgünüz, doğrudan mesaj gönderemezsiniz."
       channel_list:
         title: "Kanallar"
-        aria_label: "Kanal listesine dön"
+        aria_label: "Kanal listesine geç"
       incoming_webhooks:
         back: "Geri"
         channel_placeholder: "Kanal seçin"
@@ -517,6 +527,7 @@ tr_TR:
         cancel: "İptal et"
         quote_selection: "Konu İçinde Alıntı Yap"
         copy: "Kopyala"
+        delete: "Sil (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "Kanala Taşı"
         error: "Sohbet mesajlarını taşırken bir hata oluştu"
         title: "Sohbeti Konuya Taşı"
@@ -555,7 +566,7 @@ tr_TR:
       flags:
         off_topic: "Bu mesaj, kanal başlığı tarafından tanımlanan mevcut tartışma ile ilgili değildir ve muhtemelen başka bir yere taşınmalıdır."
         inappropriate: "Bu mesaj, makul bir kişinin saldırgan, taciz edici veya <a href=\"%{basePath}/guidelines\">topluluk kurallarımızı</a> ihlal ettiğini düşüneceği içerik içeriyor."
-        illegal: "Bu gönderi yetkililerin dikkatini çekmesi gerekiyor çünkü illegal içerikler içeriyor."
+        illegal: "Bu gönderi, personelin dikkatini gerektiriyor çünkü yasa dışı içerikler barındırıyor."
         spam: "Bu mesaj bir reklam veya vandalizm içerikli. Kullanışlı veya mevcut kanalla ilgili değil."
         notify_user: "Bu kişiyle doğrudan ve kişisel olarak mesajı hakkında konuşmak istiyorum."
         notify_moderators: "Bu mesaj, yukarıda listelenmeyen başka bir nedenden dolayı personelin dikkatini gerektiriyor."
@@ -596,6 +607,17 @@ tr_TR:
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
+      thread_title_toast:
+        title: "Konu başlığı belirleyin"
+        message: "Başkalarının bu konuşmayı keşfetmesine yardımcı olun."
+        dismiss_action: "Tekrar gösterme"
+        primary_action: "Başlık belirle"
+      thread_title_modal:
+        title: "Konu başlığı belirleyin"
+        input_placeholder: "Başkalarına bu konuşmanın neyle ilgili olduğunu anlatın..."
+        discourse_ai:
+          title: "Konu başlıklarını otomatik olarak oluşturun"
+          description: "Bu konu ve Discourse deneyiminizdeki diğer geliştirmeler hakkında daha fazla bilgi edinmek için %{url} adresine göz atın."
       threads:
         open: "Konu aç"
         list: "İleti dizileri"

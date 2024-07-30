@@ -2360,7 +2360,12 @@ el:
       privacy:
         fields:
           login_required:
-            placeholder: "Ιδιωτική"
+            label: "Ορατότητα"
+            choices:
+              public:
+                label: "Δημόσια"
+              private:
+                label: "Ιδιωτική"
       styling:
         fields:
           styling_preview:

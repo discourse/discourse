@@ -9,6 +9,7 @@ fi:
     chat_separate_sidebar_mode: "Näytä erilliset sivupalkkitilat foorumille ja chatille."
     chat_enabled: "Ota chat käyttöön."
     enable_public_channels: "Käytä julkisia kanavia kategorioiden perusteella."
+    chat_allowed_groups: "Näiden ryhmien käyttäjät voivat keskustella chatissa. Huomaa, että ylläpitäjillä ja valvojilla on aina chatin käyttöoikeus."
     chat_channel_retention_days: "Tavallisten kanavien chat-viestit säilytetään näin monta päivää. Viestit säilytetään ikuisesti, jos asetat arvoksi 0."
     chat_dm_retention_days: "Henkilökohtaisten chat-kanavien chat-viestit säilytetään näin monta päivää. Viestit säilytetään ikuisesti, jos asetat arvoksi 0."
     chat_auto_silence_duration: "Määrä minuutteina, jonka ajaksi käyttäjät hiljennetään heidän ylittäessään chat-viestien luontirajan. Voit poistaa automaattisen hiljentämisen käytöstä asettamalla arvoksi 0."
@@ -23,12 +24,14 @@ fi:
     chat_archive_destination_topic_status: "Tila, jossa kohdeketjun tulisi olla, kun kanavan arkistointi on valmis. Tätä käytetään vain, kun kohdeketju on uusi ketju, ei olemassa oleva."
     default_emoji_reactions: "Chat-viestien oletusarvoiset emoji-reaktiot. Lisää enintään 5 emojia nopeaa reagointia varten."
     direct_message_enabled_groups: "Salli näiden ryhmien käyttäjien luoda käyttäjien välisiä henkilökohtaisia chat-keskusteluja. Huomautus: henkilökunta voi aina luoda henkilökohtaisia chat-keskusteluja, ja käyttäjät voivat vastata henkilökohtaisiin chat-keskusteluihin, jotka on aloittanut käyttäjä, jolla on oikeus luoda niitä."
+    chat_message_flag_allowed_groups: "Näiden ryhmien käyttäjät voivat liputtaa chat-viestejä. Huomaa, että ylläpitäjät ja valvojat voivat aina liputtaa chat-viestejä."
     max_mentions_per_chat_message: "Kuinka monta @nimi-ilmoitusta käyttäjä voi lisätä chat-viestiin."
     chat_max_direct_message_users: "Käyttäjät eivät voi lisätä tätä määrää enempää muita käyttäjiä luodessaan uutta yksityisviestiä. Aseta arvoksi 0, jos haluat sallia ainostaan viestit itselle. Tämä asetus ei koske henkilökuntaa."
     chat_allow_archiving_channels: "Salli henkilökunnan arkistoida viestejä ketjuun suljettaessa kanavaa."
     chat_editing_grace_period: "(n) sekunnin ajan chatin lähettämisen jälkeen muokkaaminen ei näytä (muokattu)-tunnistetta chat-viestissä."
     chat_editing_grace_period_max_diff_low_trust: "Kuinka monen merkin muutos sallitaan chatin muokkauksen katumusaikana. Jos muutos on isompi, chat-viestin yhteydessä näytetään (muokattu)-tunniste (luottamustasot 0 ja 1)."
     chat_editing_grace_period_max_diff_high_trust: "Kuinka monen merkin muutos sallitaan chatin muokkauksen katumusaikana. Jos muutos on isompi, chat-viestin yhteydessä näytetään (muokattu)-tunniste (luottamustasosta 2 ylöspäin)."
+    chat_preferred_mobile_index: "Ensisijainen välilehti ladattaessa /chat mobiililaitteella."
     errors:
       chat_default_channel: "Oletus-chat-kanavan täytyy olla julkinen kanava."
       direct_message_enabled_groups_invalid: "Sinun täytyy määrittää vähintään yksi ryhmä tälle asetukselle. Jos et halua muiden kuin henkilökunnan lähettävän yksityisviestejä, valitse henkilökunnan ryhmä."
@@ -97,6 +100,7 @@ fi:
       original_message_not_found: "Sen viestin edeltäjää, johon olet vastaamassa, ei löydy, tai se on poistettu."
       thread_invalid_for_channel: "Ketju ei kuulu ilmoitetulle kanavalle."
       thread_does_not_match_parent: "Ketju ei vastaa ylemmän tason viestiä."
+      invalid_direct_message: "Et saa luoda tätä yksityisviestiä."
     reviewables:
       message_already_handled: "Kiitos, mutta olemme jo käsitelleet tämän viestin ja todenneet, ettei sitä tarvitse liputtaa uudelleen."
       actions:
@@ -227,8 +231,20 @@ fi:
         other: "Sinulla on uusia chat-viestejä"
       from: "%{site_name}"
       subject:
+        private_email:
+          one: "[%{site_name}] Uusi viesti"
+          other: "[%{site_name}] Uusia viestejä"
+        chat_dm_1:
+          one: "[%{site_name}] Uusi viesti käyttäjältä %{name}"
+          other: "[%{site_name}] Uusia viestejä käyttäjältä %{name}"
         chat_dm_2: "[%{site_name}] Uusia viestejä käyttäjältä %{name_1} ja %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] Uusia viestejä käyttäjältä %{name} ja %{count} muulta"
+        chat_channel_1:
+          one: "[%{site_name}] Uusi viesti kanavalta %{channel}"
+          other: "[%{site_name}] Uusia viestejä kanavalta %{channel}"
         chat_channel_2: "[%{site_name}] Uusia viestejä kanavalta %{channel_1} ja %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] Uusia viestejä kanavalla %{channel} ja %{count} muulla"
+        chat_channel_and_dm: "[%{site_name}] Uusia viestejä kanavalla %{channel} ja käyttäjältä %{name}"
       unsubscribe: "Tämä chat-yhteenveto lähetetään sivustolta %{site_link}, kun olet poissa. Määritä %{email_preferences_link} tai %{unsubscribe_link} peruuttaaksesi tilauksen."
       unsubscribe_no_link: "Tämä chat-yhteenveto lähetetään sivustolta %{site_link}, kun olet poissa. Määritä %{email_preferences_link}."
       view_messages:

@@ -34,7 +34,7 @@ export default class AdminPenaltyPostAction extends Component {
   @afterRender
   _focusEditTextarea() {
     const elem = this.element;
-    const body = elem.closest(".modal-body");
+    const body = elem.closest(".d-modal__body");
     body.scrollTo(0, body.clientHeight);
     elem.querySelector(".post-editor").focus();
   }

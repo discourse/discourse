@@ -71,18 +71,27 @@ da:
         create: "Ny kanal"
       close: "Luk"
       remove: "Fjern"
+      deleted:
+        one: "En besked blev slettet. [vis]"
+        other: "%{count} beskeder blev slettet. [vis alle]"
+      hidden: "En meddelelse blev skjult. [vis]"
       delete: "Slet"
       edited: "redigeret"
       muted: "stille!"
       joined: "tilmeldt"
+      empty_state:
+        direct_message_cta: "Start en personlig chat"
+        title: "Ingen kanaler fundet"
       email_frequency:
         never: "Aldrig"
       header_indicator_preference:
+        all_new: "Alle Nye Beskeder"
         never: "Aldrig"
       separate_sidebar_mode:
         title: "Vis separate sidebjælke-tilstande for forum og chat"
       enable: "Aktiver chat"
       flag: "Rapportér"
+      emoji: "Indsæt humørikon"
       invalid_access: "Du har ikke adgang til at se denne chatkanal"
       invitation_notification: "<span>%{username}</span> <span>inviterede dig til at deltage i en chatkanal</span>"
       in_reply_to: "Som svar til"
@@ -94,9 +103,17 @@ da:
           one: "Invitation sendt"
           other: "Invitationer sendt"
         invite: "Inviter til kanal"
+      placeholder_channel: "Chat i %{channelName}"
+      remove_upload: "Fjern fil"
+      react: "Reagér med humørikon"
       reply: "Svar"
       edit: "Rediger"
+      copy_link: "Kopiér link"
+      copy_text: "Kopiér tekst"
       rebake_message: "Gendan HTML"
+      retry_staged_message:
+        title: "Netværksfejl"
+        action: "Send igen?"
       bookmark_message: "Bogmærk"
       bookmark_message_edit: "Rediger Bogmærke"
       save: "Gem"
@@ -130,6 +147,9 @@ da:
       chat_message_separator:
         today: I dag
         yesterday: I går
+      members_view:
+        add_member: Tilføj Medlem
+        back_to_settings: "Tilbage til indstillinger"
       about_view:
         title: Titel
         name: Navn
@@ -142,9 +162,14 @@ da:
       new_message_modal:
         no_items: "Ingen punkter"
         filter: "Filter"
+      channel_edit_description_modal:
+        title: Rediger beskrivelse
+        input_placeholder: Tilføj en beskrivelse
       direct_message_creator:
+        add_to_channel: "Føj til kanal"
         title: Ny Besked
         prefix: "Til:"
+        no_results: Ingen resultater
       create_channel:
         choose_category:
           label: "Vælg en kategori"
@@ -166,6 +191,7 @@ da:
         send: "Send"
       quote:
         copy_success: "Chat-citat kopieret til udklipsholderen"
+        default_thread_title: "Tråd"
       notification_levels:
         never: "Aldrig"
       settings:

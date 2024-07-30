@@ -34,6 +34,8 @@ it:
         icons:
           title: "Icone"
           full_list: "Vedi l'elenco completo delle icone Font Awesome"
+        forms:
+          title: "Moduli"
         buttons:
           title: "Pulsanti"
         dropdowns:

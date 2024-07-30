@@ -1613,7 +1613,12 @@ bg:
       privacy:
         fields:
           login_required:
-            placeholder: "Затворени"
+            label: "Видимост"
+            choices:
+              public:
+                label: "Публични"
+              private:
+                label: "Затворени"
       styling:
         fields:
           styling_preview:

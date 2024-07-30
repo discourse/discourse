@@ -2606,14 +2606,18 @@ te:
           default_locale:
             label: "భాష"
       privacy:
-        title: "సభ్యుల అనుభవం"
         fields:
           login_required:
-            placeholder: "అంతరంగికం"
+            label: "దృశ్యమానత"
+            choices:
+              public:
+                label: "బహిరంగం"
+              private:
+                label: "అంతరంగికం"
           invite_only:
-            placeholder: "ఆహ్వానం మాత్రమే"
-          must_approve_users:
-            placeholder: "ఆమోదం అవసరం"
+            choices:
+              invite_only:
+                label: "ఆహ్వానం మాత్రమే"
           chat_enabled:
             placeholder: "చాట్‌ని ప్రారంభించండి"
             extra_description: "మీ సభ్యులతో నిజ సమయంలో పాల్గొనండి"

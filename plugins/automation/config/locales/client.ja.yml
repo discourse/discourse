@@ -34,7 +34,7 @@ ja:
           label: ユーザー
         pm:
           title:
-            label: タグライン
+            label: タイトル
           raw:
             label: 本文
         pms:
@@ -43,11 +43,11 @@ ja:
           add_pm: PM を追加
           no_pm_created: まだ PM を作成していません。PM は自動化がトリガーされると送信されます。
           title:
-            label: タグライン
+            label: タイトル
           raw:
             label: 本文
           delay:
-            label: 遅延（分）
+            label: 遅延 (分)
           prefers_encrypt:
             label: 可能な場合は PM を暗号化する
         group:
@@ -109,7 +109,7 @@ ja:
               label: カテゴリに限定
             stalled_after:
               label: トリガー遅延
-              description: 最後のウィキ編集と自動化のトリガーの間の遅延を定義します
+              description: 最後の Wiki 編集と自動化のトリガーの間の遅延を定義します
             retriggered_after:
               label: 再トリガー遅延
               description: 最初のトリガーの後にまだWikiが編集されていない場合に、最初のトリガーと次のトリガーの間の遅延を定義します。
@@ -144,7 +144,7 @@ ja:
         post_created_edited:
           fields:
             action_type:
-              label: アクションのタイプ
+              label: 操作のタイプ
               description: "オプション。トリガーを作成または編集されたイベントのみに制限します"
             valid_trust_levels:
               label: 有効な信頼レベル
@@ -169,6 +169,20 @@ ja:
               description: トピックがユーザーが作成した最初のトピックである場合にのみトリガーされます。
           created: 作成
           edited: 編集
+        user_updated:
+          fields:
+            user_profile:
+              label: ユーザープロファイルのフィールド
+              description: ユーザーがこれらすべてのフィールドに入力した場合にのみトリガーされます
+            custom_fields:
+              label: ユーザーカスタムフィールド
+              description: ユーザーがこれらすべてのフィールドに入力した場合にのみトリガーされます
+            once_per_user:
+              label: ユーザーごとに 1 回
+              description: ユーザーごとに 1 回のみトリガーされます
+            new_users_only:
+              label: 新規ユーザーのみ
+              description: この自動化が有効化された後に参加する新規ユーザーに対してのみトリガーされます
         category_created_edited:
           fields:
             restricted_category:
@@ -219,6 +233,7 @@ ja:
               description: トピックごとに 1 回だけ応答します
             word_answer_list:
               label: 単語/回答ペアのリスト
+              description: "キー/値グループのリストを定義します。`key` は検索語で、`value` は返信のテキストです。`key` を空白にすると、コンテンツに関係なくすべてのトリガーに応答します。`value` は、返信で `key` の値を置換するプレースホルダーとして `{{key}}` を受け入れます。`key` は正規表現として評価され、`.` などの特殊文字については、実際にドットを意味する場合は `\\.` のようにエスケープする必要があることに注意してください。"
             answering_user:
               label: 回答するユーザー
               description: デフォルトでシステムユーザー
@@ -231,10 +246,25 @@ ja:
           fields:
             creator:
               label: 作成者
+              post_creator_context: 投稿の作成者
+              updated_user_context: 更新されたユーザー
             topic:
               label: トピック ID
             post:
               label: 投稿内容
+        topic:
+          fields:
+            creator:
+              label: 作成者
+              updated_user_context: 更新されたユーザー
+            body:
+              label: トピック本文
+            title:
+              label: トピックタイトル
+            category:
+              label: トピックのカテゴリ
+            tags:
+              label: トピックのタグ
         group_category_notification_default:
           fields:
             group:
@@ -275,12 +305,12 @@ ja:
         suspend_user_by_email:
           fields:
             suspend_until:
-              label: 凍結期間（デフォルト）
+              label: 凍結期間 (デフォルト)
             reason:
-              label: 理由（デフォルト）
+              label: 理由 (デフォルト)
             actor:
               label: ユーザー
-              description: "凍結を管理するユーザー（デフォルト: システム）"
+              description: "凍結を管理するユーザー (デフォルト: システム)"
         pin_topic:
           fields:
             pinnable_topic:
@@ -297,7 +327,7 @@ ja:
               label: バナー設定期間
             user:
               label: ユーザー
-              description: "バナーを作成するユーザー（デフォルト: システム）"
+              description: "バナーを作成するユーザー (デフォルト: システム)"
         flag_post_on_words:
           fields:
             words:
@@ -314,7 +344,7 @@ ja:
               label: 贈り主に送信されるメッセージ
         send_pms:
           add_a_pm_btn:
-            label: PM を追加する
+            label: PM を追加
           fields:
             receiver:
               label: PM 受信者
@@ -331,7 +361,7 @@ ja:
               description: "トピック閉鎖レコードに表示されるオプションのメッセージ"
             user:
               label: ユーザー
-              description: "トピックを閉鎖するユーザー（デフォルト: システム）"
+              description: "トピックを閉鎖するユーザー (デフォルト: システム)"
         add_user_to_group_through_custom_field:
           fields:
             custom_field_name:

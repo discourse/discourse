@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "@ember/application";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";

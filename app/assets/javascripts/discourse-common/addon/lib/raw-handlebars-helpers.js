@@ -96,7 +96,7 @@ function lazyLoadHelpers(hbs, owner) {
   hbs.registerHelper("helperMissing", function (...args) {
     const opts = args[args.length - 1];
     if (opts?.name) {
-      // Lookup and evaluate the relevant module. Raw helpers may be registed as a side effect
+      // Lookup and evaluate the relevant module. Raw helpers may be registered as a side effect
       owner.lookup(`helper:${opts.name}`);
 
       if (hbs.helpers[opts.name]) {

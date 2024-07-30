@@ -25,6 +25,9 @@ fi:
           title: "Tulokset näytetään kyselyn <strong>sulkeuduttua</strong>."
         staff:
           title: "Tulokset näytetään vain <strong>henkilökunnan</strong> jäsenille."
+        tabs:
+          votes: "Äänet"
+          outcome: "Tulos"
       multiple:
         help:
           at_least_min_options:
@@ -73,9 +76,24 @@ fi:
         percentage: "Prosenttiosuus"
         count: "Lukumäärä"
       ranked_choice:
+        title:
+          rounds: "Kierrokset"
+          outcome: "Tulos"
         none: "Ei valittu"
+        majority: "Enemmistö"
+        eliminated: "Eliminoitu"
+        round: "Kierros"
+        winner:
+          one: "Voittaja oli %{winner} yhden kierroksen jälkeen."
+          other: "Voittaja oli %{winner} %{count} kierroksen jälkeen."
+        tied:
+          one: "Tasatulos yhden kierroksen jälkeen seuraavien ehdokkaiden välillä:"
+          other: "Tasatulos %{count} kierroksen jälkeen seuraavien ehdokkaiden välillä:"
       options:
         label: "Asetukset"
+        ranked_choice:
+          abstain: "Pidättäydy äänestämästä"
+          login: "Kirjaudu sisään äänestääksesi!"
       error_while_toggling_status: "Kyselyn tilaa muutettaessa tapahtui virhe."
       error_while_casting_votes: "Ääntä annettaessa tapahtui virhe."
       error_while_fetching_voters: "Äänestäneiden näyttämisessä tapahtui virhe."
@@ -94,6 +112,7 @@ fi:
           label: Tyyppi
           regular: Yksi valinta
           multiple: Monivalinta
+          ranked_choice: Sijoitettu valinta
           number: Numeroarviointi
         poll_result:
           label: Näytä tulokset...

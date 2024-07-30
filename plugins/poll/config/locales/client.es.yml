@@ -25,6 +25,9 @@ es:
           title: "Los resultados se mostrarán una vez que la encuesta esté <strong>cerrada</strong>."
         staff:
           title: "Los resultados solo se muestran a miembros del <strong>equipo</strong>."
+        tabs:
+          votes: "Votos"
+          outcome: "Resultado"
       multiple:
         help:
           at_least_min_options:
@@ -73,9 +76,24 @@ es:
         percentage: "Porcentaje"
         count: "Cantidad"
       ranked_choice:
+        title:
+          rounds: "Rondas"
+          outcome: "Resultado"
         none: "Ninguno"
+        majority: "Mayoría"
+        eliminated: "Eliminado"
+        round: "Ronda"
+        winner:
+          one: "El ganador fue %{winner} tras una ronda."
+          other: "El ganador fue %{winner} tras %{count} rondas."
+        tied:
+          one: "Empate tras una ronda entre los siguientes candidatos:"
+          other: "Empate tras %{count} rondas entre los siguientes candidatos:"
       options:
         label: "Opciones"
+        ranked_choice:
+          abstain: "Abstenerse"
+          login: "Inicia sesión para votar"
       error_while_toggling_status: "Lo sentimos, se ha producido un error al cambiar el estado de esta encuesta."
       error_while_casting_votes: "Lo sentimos, se ha producido un error al emitir tus votos."
       error_while_fetching_voters: "Lo sentimos, se produjo un error al mostrar los votantes."
@@ -94,6 +112,7 @@ es:
           label: Tipo
           regular: Una opción
           multiple: Múltiples opciones
+          ranked_choice: Elección por rango
           number: Valoración numérica
         poll_result:
           label: Ver resultados...

@@ -2231,8 +2231,12 @@ fa_IR:
       privacy:
         fields:
           login_required:
-            placeholder: "خصوصی"
-            extra_description: "فقط کاربرانی که در حسای‌کاربردی خود وارد شده‌اند، می‌توانند به این انجمن دسترسی داشته باشند"
+            label: "قابل مشاهده"
+            choices:
+              public:
+                label: "عمومی"
+              private:
+                label: "خصوصی"
           chat_enabled:
             placeholder: "فعال کردن گفتگو"
       ready:

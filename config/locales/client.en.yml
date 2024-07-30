@@ -418,12 +418,12 @@ en:
         name: "Clear Reminders"
         description:
           one: "Are you sure you want to clear the reminder for this bookmark?"
-          other: "Are you sure you want to clear the reminder for these <b>%{count}</b> bookmarks."
+          other: "Are you sure you want to clear the reminder for these <b>%{count}</b> bookmarks?"
       delete_bookmarks:
         name: "Delete Bookmark"
         description:
           one: "Are you sure you want to delete this bookmark?"
-          other: "Are you sure you want to delete these <b>%{count}</b> bookmarks."
+          other: "Are you sure you want to delete these <b>%{count}</b> bookmarks?"
 
     copy_codeblock:
       copied: "copied!"
@@ -878,7 +878,7 @@ en:
           imap_alpha_warning: "Warning: This is an alpha-stage feature. Only Gmail is officially supported. Use at your own risk!"
           imap_settings_valid: "IMAP settings valid."
           smtp_disable_confirm: "If you disable SMTP, all SMTP and IMAP settings will be reset and the associated functionality will be disabled. Are you sure you want to continue?"
-          imap_disable_confirm: "If you disable IMAP all IMAP settings will be reset and the associated functionality will be disabled. Are you sure you want to continue?"
+          imap_disable_confirm: "If you disable IMAP, all IMAP settings will be reset and the associated functionality will be disabled. Are you sure you want to continue?"
           imap_mailbox_not_selected: "You must select a Mailbox for this IMAP configuration or no mailboxes will be synced!"
           prefill:
             title: "Prefill with settings for:"
@@ -1438,25 +1438,25 @@ en:
             true {
               { UNREAD, plural,
                    =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a>}
-                other {There are <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a>}
+                  one {There is <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># unread</a>}
+                other {There are <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># unread</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one { and <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> message remaining, or browse other messages in {groupLink}}
-                other { and <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> messages remaining, or browse other messages in {groupLink}}
+                  one { and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># new</a> message remaining, or browse other messages in {groupLink}}
+                other { and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># new</a> messages remaining, or browse other messages in {groupLink}}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a> message remaining, or browse other messages in {groupLink}}
-                other {There are <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a> messages remaining, or browse other messages in {groupLink}}
+                  one {There is <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># unread</a> message remaining, or browse other messages in {groupLink}}
+                other {There are <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># unread</a> messages remaining, or browse other messages in {groupLink}}
               }
               { NEW, plural,
                    =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> message remaining, or browse other messages in {groupLink}}
-                other {There are <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> messages remaining, or browse other messages in {groupLink}}
+                  one {There is <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># new</a> message remaining, or browse other messages in {groupLink}}
+                other {There are <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># new</a> messages remaining, or browse other messages in {groupLink}}
               }
             }
             other {}
@@ -1471,25 +1471,25 @@ en:
             true {
               { UNREAD, plural,
                    =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/unread'># unread</a>}
-                other {There are <a href='{basePath}/u/{username}/messages/unread'># unread</a>}
+                  one {There is <a href="{basePath}/u/{username}/messages/unread"># unread</a>}
+                other {There are <a href="{basePath}/u/{username}/messages/unread"># unread</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one { and <a href='{basePath}/u/{username}/messages/new'># new</a> message remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
-                other { and <a href='{basePath}/u/{username}/messages/new'># new</a> messages remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+                  one { and <a href="{basePath}/u/{username}/messages/new"># new</a> message remaining, or browse other <a href="{basePath}/u/{username}/messages">personal messages</a>}
+                other { and <a href="{basePath}/u/{username}/messages/new"># new</a> messages remaining, or browse other <a href="{basePath}/u/{username}/messages">personal messages</a>}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/unread'># unread</a> message remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
-                other {There are <a href='{basePath}/u/{username}/messages/unread'># unread</a> messages remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+                  one {There is <a href="{basePath}/u/{username}/messages/unread"># unread</a> message remaining, or browse other <a href="{basePath}/u/{username}/messages">personal messages</a>}
+                other {There are <a href="{basePath}/u/{username}/messages/unread"># unread</a> messages remaining, or browse other <a href="{basePath}/u/{username}/messages">personal messages</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/new'># new</a> message remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
-                other {There are <a href='{basePath}/u/{username}/messages/new'># new</a> messages remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+                  one {There is <a href="{basePath}/u/{username}/messages/new"># new</a> message remaining, or browse other <a href="{basePath}/u/{username}/messages">personal messages</a>}
+                other {There are <a href="{basePath}/u/{username}/messages/new"># new</a> messages remaining, or browse other <a href="{basePath}/u/{username}/messages">personal messages</a>}
               }
             }
             other {}
@@ -2142,7 +2142,7 @@ en:
     logs_error_rate_notice:
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/hour}
           other {# errors/hour}
         }</a> reached site setting limit of {limit, plural,
@@ -2152,7 +2152,7 @@ en:
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/minute}
           other {# errors/minute}
         }</a> reached site setting limit of { limit, plural,
@@ -2162,7 +2162,7 @@ en:
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/hour}
           other {# errors/hour}
         }</a> exceeded site setting limit of { limit, plural,
@@ -2172,7 +2172,7 @@ en:
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/minute}
           other {# errors/minute}
         }</a> exceeded site setting limit of { limit, plural,
@@ -2222,8 +2222,8 @@ en:
         other: "There are <b>%{count}</b> replies."
       buttons:
         hide: "Hide summary"
-        generate: "Summarize with AI"
-        regenerate: "Regenerate summary"
+        generate: "Summarize"
+        regenerate: "Regenerate"
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       description_time_MF: |
@@ -5011,6 +5011,7 @@ en:
         problems_found: "Some advice based on your current site settings"
         new_features:
           title: "What's new"
+          subtitle: "For even more detail about new features and improvements we are adding all the time, see <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Release notes</a>."
           previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Learn more..."
         last_checked: "Last checked"
@@ -5495,6 +5496,7 @@ en:
           header: "About your site"
           general_settings: "General settings"
           community_name: "Community name"
+          community_name_placeholder: "Example Community"
           community_summary: "Community summary"
           community_description: "Community description"
           banner_image: "Banner image"
@@ -5502,12 +5504,15 @@ en:
             This will be used on your About page. Recommended size: 800x300px. Accepted types: JPG, PNG, and SVG up to 10MB.
           contact_information: "Contact information"
           community_owner: "Community owner"
+          community_owner_placeholder: "Johnny Smith"
           community_owner_help: |
             Name of key contact responsible for this site. Used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
           contact_email: "Contact email"
+          contact_email_placeholder: "contact@johnny-smith.com"
           contact_email_help: |
             Email address of key contact responsible for this site. Used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
           contact_url: "Contact URL"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
             Contact URL for this site. When present, replaces contact email address on /about and visible to anonymous users on public sites.
           site_contact_name: "Site contact name"
@@ -5518,14 +5523,17 @@ en:
             A valid name of a group that gets invited to all automatically sent private messages.
           your_organization: "Your organization"
           company_name: "Company name"
+          company_name_placeholder: "Sample Company Inc."
           company_name_help: |
             Name of your company or organization.
           company_name_warning: |
             If left blank, no boilerplate Terms of Service or Privacy Notice will be provided.
           governing_law: "Governing law"
+          governing_law_placeholder: "State of New York"
           governing_law_help: |
             Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Notice. This is typically the country or state where the company operating the site is registered or conducts business.
           city_for_disputes: "City for disputes"
+          city_for_disputes_placeholder: "New York City"
           city_for_disputes_help: |
             Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service.
           optional: "(optional)"
@@ -6253,6 +6261,8 @@ en:
             topic_slow_mode_removed: "remove topic slow mode"
             custom_emoji_create: "create custom emoji"
             custom_emoji_destroy: "delete custom emoji"
+            delete_post_permanently: "permanently delete post"
+            delete_topic_permanently: "permanently delete topic"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -7014,7 +7024,7 @@ en:
             other: "Your CSV was received and %{count} users will receive their badge shortly."
           csv_has_unmatched_users: "The following entries are in the CSV file but they couldn't be matched to existing users, and therefore won't receive the badge:"
           csv_has_unmatched_users_truncated_list:
-            one: "There was %{count} entry in the CSV file that couldn't be matched to existing users, and therefore won't receive the badge. Due to the large number of unmatched entries, only the first 100 are shown:"
+            one: "There was %{count} entry in the CSV file that couldn't be matched to existing users, and therefore won't receive the badge."
             other: "There were %{count} entries in the CSV file that couldn't be matched to existing users, and therefore won't receive the badge. Due to the large number of unmatched entries, only the first 100 are shown:"
           replace_owners: Remove the badge from previous owners
           grant_existing_holders: Grant additional badges to existing badge holders

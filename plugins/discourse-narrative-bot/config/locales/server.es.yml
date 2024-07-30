@@ -18,12 +18,12 @@ es:
       name: Certificado
       description: "Tutorial de usuario nuevo completado"
       long_description: |
-        Esta insignia se otorga al completar con éxito el tutorial interactivo para usuarios nuevos. ¡Tomaste la iniciativa de aprender las herramientas básicas de discusión y ahora estás certificado!
+        Esta medalla se otorga al completar con éxito el tutorial interactivo para usuarios nuevos. ¡Tomaste la iniciativa de aprender las herramientas básicas de discusión y ahora estás certificado!
     licensed:
       name: Con licencia
       description: "Tutorial de usuario avanzado completado"
       long_description: |
-        Esta insignia se otorga al completar con éxito el tutorial interactivo para usuarios avanzados. Has dominado las herramientas avanzadas de discusión y ¡ahora tienes licencia completa!
+        Esta medalla se otorga al completar con éxito el tutorial interactivo para usuarios avanzados. Has dominado las herramientas avanzadas de discusión y ¡ahora tienes licencia completa!
   discourse_narrative_bot:
     bio: "Hola, no soy una persona real. Soy un robot que te puedo enseñar a usar este sitio. Para interactuar conmigo mándame un mensaje o mencióname por nombre."
     tl2_promotion_message:
@@ -165,7 +165,7 @@ es:
 
           - Solo soy un robot, pero [nuestro amable personal](%{base_uri}/about) también está aquí para ayudarte si necesitas comunicarte con una persona.
 
-          - Por razones de seguridad, limitamos temporalmente lo que los nuevos usuarios pueden hacer. Obtendrás [nuevas habilidades](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (e [insignias](%{base_uri}/badges)) a medida que te conozcamos.
+          - Por razones de seguridad, limitamos temporalmente lo que los nuevos usuarios pueden hacer. Obtendrás [nuevas habilidades](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (e [medallas](%{base_uri}/badges)) a medida que te conozcamos.
 
           - Creemos en [el comportamiento de una comunidad civilizada](%{base_uri}/guidelines) en todo momento.
       onebox:
@@ -295,6 +295,10 @@ es:
         not_found: |-
           Oh no, mi publicación desagradable todavía no ha sido denunciada. :worried: ¿Puedes denunciarla como inapropiada usando el botón de **denunciar** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? No olvides que esa opción está oculta, así que primero debes presionar el botón ver más <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para que se muestren otras opciones para cada mensaje.
       search:
+        instructions: |-
+          _psst_ ... He escondido una sorpresa en este tema. Si te apetece el reto, **selecciona el icono de búsqueda** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> arriba a la derecha &#8599;, elige «en este tema», y luego búscalo.
+
+          Intenta buscar el término «capi&#8203;bara» en este tema
         hidden_message: |-
           ¿Cómo pudiste pasar por alto este capibara? :wink:
 

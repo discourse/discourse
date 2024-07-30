@@ -811,11 +811,12 @@ ro:
           imap_mailbox_not_selected: "Trebuie să selectezi o cutie poștală pentru această configurație IMAP, altfel nicio cutie poștală nu va fi sincronizată!"
           prefill:
             title: "Pre-completare cu setări pentru:"
+          ssl_modes:
+            none: "Nimeni"
           credentials:
             title: "Date de conectare"
             smtp_server: "Server SMTP"
             smtp_port: "Port SMTP"
-            smtp_ssl: "Folosește SSL pentru SMTP"
             imap_server: "Server IMAP"
             imap_port: "Port IMAP"
             imap_ssl: "Folosește SSL pentru IMAP"
@@ -1647,6 +1648,9 @@ ro:
       hide_forever: "Nu, mulțumesc"
       intro: "Salut! Se pare că îți place discuția, dar încă nu te-ai înscris pentru un cont."
     summary:
+      buttons:
+        generate: "Rezumat"
+        regenerate: "Regenerare"
       disable: "Arată toate postările"
     deleted_filter:
       enabled_description: "Acest subiect conține postări șterse, care au fost ascunse. "
@@ -2790,6 +2794,9 @@ ro:
         one: "%{count} click"
         few: "%{count} click-uri"
         other: "%{count} de click-uri"
+      views: "Afișări"
+      read: citire
+      minutes: minim
     post_links:
       about: "afișează mai multe link-uri din această postare"
       title:
@@ -3534,6 +3541,7 @@ ro:
           staff_action_logs: "Jurnal de acțiuni ale personalului"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(opțional)"
           saved: "salvat!"
         flags:

@@ -1,5 +1,5 @@
-import { getOwner, setOwner } from "@ember/application";
 import { get } from "@ember/object";
+import { getOwner, setOwner } from "@ember/owner";
 import { camelize } from "@ember/string";
 import { Promise } from "rsvp";
 import { h } from "virtual-dom";

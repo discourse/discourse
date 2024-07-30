@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 fi:
+  site_settings:
+    lazy_videos_enabled: "Ota Lazy Videos -lisäosa käyttöön"
+    lazy_youtube_enabled: "Ota laiska lataus käyttöön YouTube-upotuksissa"
+    lazy_vimeo_enabled: "Ota laiska lataus käyttöön Vimeo-upotuksissa"
+    lazy_tiktok_enabled: "Ota laiska lataus käyttöön TikTok-upotuksissa (kokeellinen)"

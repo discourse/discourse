@@ -10,9 +10,11 @@ fi:
     poll_maximum_options: "Kyselyn vaihtoehtojen suurin sallittu määrä."
     poll_edit_window_mins: "Kuinka monta minuuttia on aikaa muokata kyselyä sen luomisen jälkeen."
     poll_minimum_trust_level_to_create: "Vähimmäisluottamustaso, jolla voi luoda kyselyitä."
+    poll_create_allowed_groups: "Ryhmät, joilla on oikeus luoda kyselyitä."
     poll_groupable_user_fields: "Käyttäjäkenttäluokat, joiden mukaan kyselyiden tuloksia voi ryhmitellä ja suodattaa."
-    poll_export_data_explorer_query_id: "ID, jonka määräät kyselyn tulosten viemiseen liittyville tietoselauskyselyille (0 poistaa käytöstä)."
     poll_default_public: "Ota \"Näytä äänestäneet\" -valinta käyttöön oletuksena luotaessa uutta kyselyä."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
   poll:
     poll: "kysely"
     invalid_argument: "Arvo \"%{value}\" ei kelpaa argumentiksi \"%{argument}\"."
@@ -48,8 +50,12 @@ fi:
     min_vote_per_user:
       one: Tähän kyselyyn vaaditaan vähintään %{count} ääni.
       other: Tähän kyselyyn vaaditaan vähintään %{count} ääntä.
+    ranked_choice:
+      no_group_results_support: "Virheellinen kyselytyyppi, ranked_choice ei tue ryhmiteltyjä tuloksia."
     topic_must_be_open_to_toggle_status: "Vain avoimessa ketjussa voi muuttaa kyselyn tilaa."
     only_staff_or_op_can_toggle_status: "Vain henkilökunta tai kyselyn laatija voi muuttaa kyselyn tilaa."
+    errors:
+      poll_not_found: "Kyselyä ei löydy, vahvista parametrit."
     insufficient_rights_to_create: "Sinulla ei ole oikeutta luoda kyselyitä."
     email:
       link_to_poll: "Näytä kysely napsauttamalla tätä."

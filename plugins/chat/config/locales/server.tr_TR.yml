@@ -9,6 +9,7 @@ tr_TR:
     chat_separate_sidebar_mode: "Forum ve sohbet için ayrı kenar çubuğu modları göster"
     chat_enabled: "Sohbeti etkinleştir."
     enable_public_channels: "Kategorilere göre herkese açık kanalları etkinleştirin."
+    chat_allowed_groups: "Bu gruplardaki kullanıcılar sohbet edebilir. Yöneticilerin ve moderatörlerin her zaman sohbete erişebileceğini unutmayın."
     chat_channel_retention_days: "Normal kanallardaki sohbet mesajları bu kadar gün boyunca saklanır. Mesajları sonsuza kadar saklamak için \"0\" olarak ayarlayın."
     chat_dm_retention_days: "Kişisel sohbet kanallarındaki sohbet mesajları bu kadar gün boyunca saklanır. Mesajları sonsuza kadar saklamak için \"0\" olarak ayarlayın."
     chat_auto_silence_duration: "Kullanıcıların sohbet mesajı oluşturma hızı sınırını aştıklarında susturulacağı dakika sayısı. Otomatik susturmayı devre dışı bırakmak için \"0\" olarak ayarlayın."
@@ -23,6 +24,7 @@ tr_TR:
     chat_archive_destination_topic_status: "Kanal arşivi tamamlandıktan sonra hedef konunun olması gereken durum. Bu, yalnızca hedef konu mevcut bir konu değil, yeni bir konu olduğunda geçerlidir."
     default_emoji_reactions: "Sohbet mesajları için varsayılan emoji tepkileri. Hızlı tepki için en fazla 5 emoji ekleyin."
     direct_message_enabled_groups: "Bu gruplardaki kullanıcıların kullanıcıdan kullanıcıya Kişisel Sohbetler oluşturmasına izin verin. Not: Personel her zaman Kişisel Sohbetler oluşturabilir ve kullanıcılar, bunları oluşturma iznine sahip kullanıcılar tarafından başlatılan Kişisel Sohbetlere yanıt verebilir."
+    chat_message_flag_allowed_groups: "Bu gruplardaki kullanıcıların sohbet mesajlarını işaretlemesine izin verilir. Yöneticilerin ve moderatörlerin sohbet mesajlarını her zaman işaretleyebileceğini unutmayın."
     max_mentions_per_chat_message: "Bir kullanıcının bir sohbet mesajında kullanabileceği maksimum @name bildirimi sayısı."
     chat_max_direct_message_users: "Kullanıcılar, yeni bir doğrudan mesaj oluştururken bu sayıdan daha fazla kullanıcı ekleyemez. Yalnızca kendisine mesaj gönderilmesine izin vermek için 0 olarak ayarlayın. Personel bu ayardan muaftır."
     chat_allow_archiving_channels: "Personelin bir kanalı kapatırken mesajları bir konuya arşivlemesine izin verin."
@@ -229,8 +231,20 @@ tr_TR:
         other: "Yeni sohbet mesajlarınız var"
       from: "%{site_name}"
       subject:
+        private_email:
+          one: "[%{site_name}] Yeni mesaj"
+          other: "[%{site_name}] Yeni mesajlar"
+        chat_dm_1:
+          one: "[%{site_name}] %{name} adlı kullanıcıdan yeni mesaj"
+          other: "[%{site_name}] %{name} adlı kullanıcıdan yeni mesajlar"
         chat_dm_2: "[%{site_name}] %{name_1} ve %{name_2} kişiden daha yeni mesajlar"
-        chat_channel_2: "[%{site_name}] %{channel_1} ve %{channel_2} başlıklı mesajda yeni mesajlar"
+        chat_dm_3_or_more: "[%{site_name}] %{name} ve %{count} kişiden daha yeni mesajlar"
+        chat_channel_1:
+          one: "[%{site_name}] %{channel} adlı kanalda yeni mesaj"
+          other: "[%{site_name}] %{channel} adlı kanalda yeni mesajlar"
+        chat_channel_2: "[%{site_name}] %{channel_1} ve %{channel_2} kanallarında yeni mesajlar"
+        chat_channel_3_or_more: "[%{site_name}] %{channel} ve %{count} kanaldan daha yeni mesajlar"
+        chat_channel_and_dm: "[%{site_name}] %{channel} adlı kanalda ve %{name} adlı kişiden yeni mesajlar"
       unsubscribe: "Bu sohbet özeti siz yokken %{site_link} tarafından gönderildi. %{email_preferences_link} değiştirin veya abonelikten çıkmak için %{unsubscribe_link} bağlantısını kullanın."
       unsubscribe_no_link: "Bu sohbet özeti, siz yokken %{site_link} tarafından gönderildi. %{email_preferences_link} değiştirin."
       view_messages:

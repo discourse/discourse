@@ -34,6 +34,8 @@ he:
         icons:
           title: "סמלים"
           full_list: "הצגת רשימת הסמלים המלאה של Font Awesome"
+        forms:
+          title: "טפסים"
         buttons:
           title: "כפתורים"
         dropdowns:

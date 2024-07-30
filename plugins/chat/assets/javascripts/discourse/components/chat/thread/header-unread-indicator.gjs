@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class ThreadHeaderUnreadIndicator extends Component {
   @service currentUser;

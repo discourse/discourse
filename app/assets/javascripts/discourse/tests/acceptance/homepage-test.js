@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { click, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { setDefaultHomepage } from "discourse/lib/utilities";

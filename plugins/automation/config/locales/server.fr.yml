@@ -14,6 +14,8 @@ fr:
         invalid_field: Le composant du champ « %{component} » n'est pas utilisable sur « %{target}:%{target_name} ».
         invalid_metadata: Les données pour « %{field} » ne sont pas valides ou le composant « %{component} » est inconnu.
     triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "Au moins l'un des champs « custom_fields » ou « user_profile » doit être fourni."
       user_badge_granted:
         title: Badge d'utilisateur accordé
         doc: Déclenche une automatisation lorsqu'un utilisateur reçoit un badge.
@@ -49,34 +51,38 @@ fr:
         title: Wiki bloqué
         description: Lorsqu'un wiki n'a pas été édité pendant une période supérieure à celle définie, l'automatisation sera déclenchée
       post_created_edited:
-        title: Message créé/modifié
+        title: Publication créée/modifiée
         description: Lorsqu'un message valide est modifié ou créé, l'automatisation est déclenchée
       pm_created:
         title: Message privé créé
         description: Lorsqu'un MP valide est créé, l'automatisation est déclenchée
       topic:
         title: Sujet
-        description: Le script associé ne sera utilisé que sur le sujet spécifié, ceci est utile pour les scripts utilisation la validation par exemple
+        description: Le script associé ne sera utilisé que sur le sujet spécifié, cela est utile, par exemple, pour les scripts utilisant la validation
       after_post_cook:
-        title: Après la préparation du message
+        title: Après la préparation de la publication
         description: Lorsqu'un contenu de publication est préparé, l'automatisation est déclenchée
+      user_updated:
+        title: Après la mise à jour de l'utilisateur
+        description: Lorsqu'un utilisateur met à jour des informations, l'automatisation est déclenchée
     scriptables:
       post:
-        title: Créer un message
-        description: Créer un message sur un sujet spécifique
+        title: Créer une publication
+        description: Créer une publication sur un sujet spécifique
       topic:
         title: Créer un sujet
+        description: Créer un sujet en tant qu'utilisateur spécifique
       flag_post_on_words:
-        title: Signaler un message en fonction des mots
-        description: Signale un message s'il contient des mots spécifiés
-        flag_message: "Le message contient des mots interdits : %{words}"
-        doc: Les messages contenant tous les mots donnés à la fois seront signalés et masqués. Notez que la définition de plusieurs mots délimités par une virgule sera utilisée comme un ensemble (chaque mot doit être présent).
+        title: Signaler une publication en fonction des mots
+        description: Signale une publication s'il contient des mots spécifiés
+        flag_message: "La publication contient des mots interdits : %{words}"
+        doc: Les publications contenant tous les mots donnés à la fois seront signalés et masqués. Notez que la définition de plusieurs mots délimités par une virgule sera utilisée comme un ensemble (chaque mot doit être présent).
       zapier_webhook:
         title: Webhook Zapier
         description: Appelle un zap avec le contexte d'un déclencheur comme corps
       auto_responder:
         title: Répondeur automatique
-        description: Publie une réponse à un message incluant des mots-clés spécifiés
+        description: Publie une réponse à une publication incluant des mots-clés spécifiés
       auto_tag_topic:
         title: Marquage automatique du sujet
         description: Ajouter automatiquement des étiquettes à un sujet
@@ -112,24 +118,24 @@ fr:
         doc: Lorsque vous utilisez le script « send pms » avec le déclencheur « api call », le paramètre « usernames » de votre requête sera utilisé pour remplir la liste des destinataires.
       topic_required_words:
         title: Mots requis pour le sujet
-        description: Permet de définir une liste de mots obligatoires sur un sujet, au moins un mot doit être utilisé dans chaque message.
-        doc: Les mots obligatoires du sujet nécessitent un sujet. Lorsqu'un message est édité/créé, le message sera validé par rapport à la liste de mots, au moins un mot doit y être présent.
+        description: Permet de définir une liste de mots obligatoires sur un sujet, au moins un mot doit être utilisé dans chaque publication.
+        doc: Les mots obligatoires du sujet nécessitent un sujet. Lorsqu'une publication est éditée/créée, elle sera validée par rapport à la liste de mots, au moins un mot doit y être présent.
         errors:
-          must_include_word: "Le message doit inclure au moins un de ces mots : %{words}"
+          must_include_word: "La publication doit inclure au moins un de ces mots : %{words}"
       close_topic:
         title: Fermer le sujet
         description: Ferme un sujet avec un message de fermeture facultatif
       append_last_edited_by:
         title: Ajouter la dernière modification par
-        description: Ajoute les détails de la « dernière modification par » du message au bas du contenu préparé.
+        description: Ajoute les détails de la « dernière modification par » de la publication au bas du contenu préparé.
         text: "Dernière modification par @%{username} %{date_time}"
       append_last_checked_by:
         title: Ajouter la dernière vérification par
-        description: Ajoute les détails de la « dernière vérification par » au bas du message après sa préparation.
+        description: Ajoute les détails de la « dernière vérification par » au bas de la publication après sa préparation.
         text: "Dernière vérification par @%{username} %{date_time}"
         summary: Vérifier le document
         details: "Effectuer une vérification du document : "
-        button_text: Terminer
+        button_text: Terminé
       add_user_to_group_through_custom_field:
         title: "Ajouter un utilisateur au groupe via le champ personnalisé de l'utilisateur"
       group_category_notification_default:

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import ThreadSettingsModal from "discourse/plugins/chat/discourse/components/chat/modal/thread-settings";
 import { THREAD_TITLE_PROMPT_THRESHOLD } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";

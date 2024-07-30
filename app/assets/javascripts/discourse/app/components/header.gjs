@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "@ember/application";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
 import { and, eq, not, or } from "truth-helpers";

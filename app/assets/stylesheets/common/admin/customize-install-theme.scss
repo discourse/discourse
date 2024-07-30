@@ -1,9 +1,3 @@
-.admin-install-theme-modal {
-  .modal-inner-container {
-    width: 100%;
-  }
-}
-
 .install-theme {
   display: flex;
   @include breakpoint(mobile-extra-large) {

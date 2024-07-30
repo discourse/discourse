@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
-import { getOwner, setOwner } from "@ember/application";
 import { action } from "@ember/object";
+import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import FlagModal from "discourse/components/modal/flag";

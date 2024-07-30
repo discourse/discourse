@@ -11,7 +11,6 @@ hr:
     poll_edit_window_mins: "Vrijeme nakon objave posta kada anketa može biti uređena."
     poll_minimum_trust_level_to_create: "Definirajte minimalnu razinu povjerenja potrebnu za izradu anketa."
     poll_groupable_user_fields: "Skup imena korisničkih polja koja se mogu koristiti za grupiranje i filtriranje rezultata ankete."
-    poll_export_data_explorer_query_id: "ID upita Data Explorera koji će se koristiti za izvoz rezultata ankete (0 za onemogućavanje)."
   poll:
     poll: "anketa"
     invalid_argument: "Neispravna vrijednost '%{value}' za argument '%{argument}'."

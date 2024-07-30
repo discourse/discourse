@@ -3149,8 +3149,12 @@ da:
       privacy:
         fields:
           login_required:
-            placeholder: "Privat"
-            extra_description: "Kun brugere, der er logget ind, har adgang til dette fællesskab"
+            label: "Synlighed"
+            choices:
+              public:
+                label: "Offentlig"
+              private:
+                label: "Privat"
           chat_enabled:
             placeholder: "Aktiver chat"
       styling:

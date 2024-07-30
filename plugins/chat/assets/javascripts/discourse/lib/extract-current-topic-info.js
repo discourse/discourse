@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 
 export function extractCurrentTopicInfo(context) {
   const topic = getOwner(context).lookup("controller:topic")?.model;

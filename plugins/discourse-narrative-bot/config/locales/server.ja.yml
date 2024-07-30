@@ -296,6 +296,10 @@ ja:
         not_found: |-
           おや？私の不愉快な投稿はまだ不適切の通報を受けていないようです。:worried: **通報** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> を使って投稿を不適切だと通報してみてください。投稿の操作をさらに表示するには、もっと表示ボタン <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> を使用してくださいね。
       search:
+        instructions: |-
+          _トントン_ … このトピックにサプライズを仕掛けましたよ。受けて立つなら、右上&#8599; にある**検索アイコンを選択** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">し、'このトピック' を選択してからサプライズを検索してみましょう。
+
+          このトピックから "カピ&#8203;バラ" という言葉を探してみましょう
         hidden_message: |-
           カピバラを見逃しましたか？:wink:
 
@@ -336,7 +340,7 @@ ja:
         instructions: |-
           誰でもミスは起こします。でも心配する必要はありません。投稿はいつでも編集して修正することができます！
 
-          まずは、あなたの代わりに作成した投稿を**削除**することから始めましょう。
+          まずは、あなたの代わりに作成した投稿を**編集**することから始めましょう。
         not_found: |-
           あなたのために私が作成した[post](%{url})をまだ編集していないようです。もう一度やってみましょう。
 

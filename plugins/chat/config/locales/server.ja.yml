@@ -9,6 +9,7 @@ ja:
     chat_separate_sidebar_mode: "フォーラムとチャットに個別のサイドバーモードを表示します。"
     chat_enabled: "チャットを有効にする。"
     enable_public_channels: "カテゴリに基づいて公開チャンネルを有効にします。"
+    chat_allowed_groups: "これらのグループのユーザーがチャットできます。管理者とモデレーターはいつでもチャットにアクセスできます。"
     chat_channel_retention_days: "通常のチャンネルのチャットメッセージは、この日数の間保持されます。メッセージを永久に保持するには、'0' に設定します。"
     chat_dm_retention_days: "パーソナルチャットチャンネルのチャットメッセージは、この日数の間保持されます。メッセージを永久に保持するには、'0' に設定します。"
     chat_auto_silence_duration: "チャットメッセージの作成速度制限を超えた場合にユーザーが投稿禁止になる分数。自動投稿禁止を無効にするには '0' に設定します。"
@@ -23,12 +24,14 @@ ja:
     chat_archive_destination_topic_status: "チャンネルのアーカイブが完了した後のアーカイブ先トピックのステータス。これは、アーカイブ先のトピックが既存のトピックではなく新しいトピックである場合にのみ適用されます。"
     default_emoji_reactions: "チャットメッセージのデフォルトの絵文字リアクション。即時にリアクションするための絵文字を最大 5 個追加できます。"
     direct_message_enabled_groups: "これらのグループのユーザーがユーザー間のパーソナルチャットを作成することを許可します。注意: スタッフはいつでもパーソナルチャットを作成でき、ユーザーは作成権限のあるユーザーが開始したパーソナルチャットに返信できます。"
+    chat_message_flag_allowed_groups: "これらのグループに属するユーザーは、チャットメッセージを通報できます。管理者とモデレーターは、チャットメッセージをいつでも通報できます。"
     max_mentions_per_chat_message: "ユーザーがチャットメッセージで @name 通知を行える最大回数。"
     chat_max_direct_message_users: "ユーザーは、新しいダイレクトメッセージを作成する際に、この数を超えるユーザーを追加できません。自分宛のメッセージのみを許可する場合は 0 に設定します。スタッフはこの設定から除外されます。"
     chat_allow_archiving_channels: "チャンネルを閉じる時に、スタッフがメッセージをトピックにアーカイブすることを許可します。"
     chat_editing_grace_period: "チャットを送信してから (n) 秒間は、チャットメッセージを編集しても (編集済み) タグは表示されません。"
     chat_editing_grace_period_max_diff_low_trust: "チャットの編集猶予期間で変更が許可される最大文字数。これを超える変更が行われた場合は、チャットメッセージに (編集済み) タグが表示されます (信頼レベル 0 と 1)。"
     chat_editing_grace_period_max_diff_high_trust: "チャットの編集猶予期間で変更が許可される最大文字数。これを超える変更が行われた場合は、チャットメッセージに (編集済み) タグが表示されます (信頼レベル 2 以上)。"
+    chat_preferred_mobile_index: "モバイルで /chat を読み込む際の優先タブ。"
     errors:
       chat_default_channel: "デフォルトのチャットチャンネルは公開チャンネルである必要があります。"
       direct_message_enabled_groups_invalid: "この設定には、少なくとも 1 つのグループを指定する必要があります。スタッフ以外がダイレクトメッセージを送れないようにするには、スタッフグループを選択します。"
@@ -94,6 +97,7 @@ ja:
       original_message_not_found: "返信しようとしているメッセージの先祖が見つからないか、削除されています。"
       thread_invalid_for_channel: "スレッドは指定されたチャンネルの一部ではありません。"
       thread_does_not_match_parent: "スレッドは親メッセージに一致しません。"
+      invalid_direct_message: "このダイレクトメッセージを作成できません。"
     reviewables:
       message_already_handled: "ありがとうございます。ただ、このメッセージはすでにレビュー済みで、通報の必要がないと判断されています。"
       actions:
@@ -213,8 +217,17 @@ ja:
         other: "新しいチャットメッセージがあります"
       from: "%{site_name}"
       subject:
-        chat_dm_2: "[%{site_name}] %{name_1} と他 %{name_2} 件のチャットの新しいメッセージ"
-        chat_channel_2: "[%{site_name}] %{channel_1} と他 %{channel_2} 件の新しいメッセージ"
+        private_email:
+          other: "[%{site_name}] 新しいメッセージ"
+        chat_dm_1:
+          other: "[%{site_name}] %{name} からの新しいメッセージ"
+        chat_dm_2: "[%{site_name}] %{name_1} と %{name_2} からの新しいメッセージ"
+        chat_dm_3_or_more: "[%{site_name}] %{name} と他 %{count} 人からの新しいメッセージ"
+        chat_channel_1:
+          other: "[%{site_name}] %{channel} の新しいメッセージ"
+        chat_channel_2: "[%{site_name}] %{channel_1} と%{channel_2} の新しいメッセージ"
+        chat_channel_3_or_more: "[%{site_name}] %{channel} と他 %{count} 個のチャンネルの新しいメッセージ"
+        chat_channel_and_dm: "[%{site_name}] %{channel} に %{name} からの新しいメッセージがあります"
       unsubscribe: "このチャットの要約は、あなたが退席中のときに %{site_link} から送信されます。%{email_preferences_link} を変更するか、%{unsubscribe_link} から購読を停止します。"
       unsubscribe_no_link: "このチャットの要約は、あなたが退席中のときに %{site_link} から送信されます。%{email_preferences_link} を変更します。"
       view_messages:

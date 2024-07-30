@@ -1,5 +1,5 @@
 import { hash } from "@ember/helper";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";

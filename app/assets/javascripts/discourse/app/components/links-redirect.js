@@ -1,5 +1,5 @@
-import { getOwner } from "@ember/application";
 import Component from "@ember/component";
+import { getOwner } from "@ember/owner";
 import ClickTrack from "discourse/lib/click-track";
 
 export default Component.extend({

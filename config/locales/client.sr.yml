@@ -544,6 +544,8 @@ sr:
         email:
           title: "E-mail"
           last_updated_by: "od"
+          ssl_modes:
+            none: "Ništa"
           credentials:
             username: "Korisničko ime"
             password: "Šifra"
@@ -1015,6 +1017,8 @@ sr:
     signup_cta:
       sign_up: "Registrujte se"
     summary:
+      buttons:
+        regenerate: "Regeneriši"
       disable: "Prikaži Sve Poruke"
     deleted_filter:
       enabled_description: "Ova tema sadrži brisane poruke, koji su skriveni."
@@ -1575,6 +1579,9 @@ sr:
         one: "%{count} klik"
         few: "%{count} klikova"
         other: "%{count} klikova"
+      views: "Pregledi"
+      read: pročitano
+      minutes: minimalno
     post_links:
       title:
         one: "još %{count} član"

@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { ajax } from "discourse/lib/ajax";

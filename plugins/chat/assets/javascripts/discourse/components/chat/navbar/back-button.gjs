@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import icon from "discourse-common/helpers/d-icon";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class ChatNavbarBackButton extends Component {
   get icon() {

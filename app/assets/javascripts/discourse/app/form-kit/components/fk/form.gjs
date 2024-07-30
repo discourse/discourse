@@ -17,7 +17,7 @@ import FKSection from "discourse/form-kit/components/fk/section";
 import { VALIDATION_TYPES } from "discourse/form-kit/lib/constants";
 import FKFieldData from "discourse/form-kit/lib/fk-field-data";
 import FKFormData from "discourse/form-kit/lib/fk-form-data";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 class FKForm extends Component {
   @service dialog;

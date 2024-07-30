@@ -373,6 +373,8 @@ sq:
         email:
           title: "Email"
           last_updated_by: "nga"
+          ssl_modes:
+            none: "Asnjë"
           credentials:
             username: "Emri i përdoruesit"
             password: "Fjalëkalimi"
@@ -916,6 +918,8 @@ sq:
       sign_up: "Regjistrohu"
       hide_forever: "jo faleminderit"
     summary:
+      buttons:
+        regenerate: "Rigjenero"
       disable: "Shfaq të gjithë postimet"
     deleted_filter:
       enabled_description: "Kjo temë përmban postime të fshira, që tani janë fshehur."
@@ -1640,6 +1644,9 @@ sq:
       clicks:
         one: "%{count} klik"
         other: "%{count} klikime"
+      views: "Shikimet"
+      read: lexuar
+      minutes: minimumi
     post_links:
       about: "trego më shumë lidhje për këtë postim"
       title:

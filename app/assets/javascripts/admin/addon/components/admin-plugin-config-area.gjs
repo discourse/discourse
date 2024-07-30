@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
 import I18n from "discourse-i18n";
 

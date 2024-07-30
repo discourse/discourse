@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
-import { setOwner } from "@ember/application";
 import { warn } from "@ember/debug";
 import EmberObject from "@ember/object";
+import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import Uppy from "@uppy/core";
 import { isVideo } from "discourse/lib/uploads";

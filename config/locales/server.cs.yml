@@ -1790,7 +1790,12 @@ cs:
       privacy:
         fields:
           login_required:
-            placeholder: "Soukromé"
+            label: "Viditelnost"
+            choices:
+              public:
+                label: "Veřejné"
+              private:
+                label: "Soukromé"
       ready:
         description: "A je to! Provedli jste základní nastavení komunity. Nyní se na to můžete vrhnout a porozhlédnout se, napsat uvítací téma a posílat pozvánky!<br><br>Bavte se!"
       styling:

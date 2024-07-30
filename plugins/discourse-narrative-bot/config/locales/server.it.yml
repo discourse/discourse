@@ -296,6 +296,10 @@ it:
         not_found: |-
           Oh no, il mio brutto messaggio non è ancora stato segnalato come inappropriato. :worried: Puoi contrassegnarlo come inappropriato usando il pulsante **segnala** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Non dimenticare di usare il pulsante 'mostra altro' <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare gli altri pulsanti.
       search:
+        instructions: |-
+          _psst_ … Ho nascosto una sorpresa in questo argomento. Se vuoi cogliere la sfida, **seleziona l'icona di ricerca** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> in alto a destra &#8599; e poi seleziona "in questo argomento" per trovarla.
+
+          Prova a cercare il termine "capi&#8203;bara" in questo argomento
         hidden_message: |-
           Come hai fatto a perderti questo capibara? :wink:
 

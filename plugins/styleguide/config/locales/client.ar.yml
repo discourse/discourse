@@ -34,6 +34,8 @@ ar:
         icons:
           title: "الأيقونات"
           full_list: "طالِع قائمة أيقونات Font Awesome كاملةً"
+        forms:
+          title: "النماذج"
         buttons:
           title: "الأزرار"
         dropdowns:
@@ -53,11 +55,11 @@ ar:
         topic_link:
           title: "رابط الموضوع"
         topic_list_item:
-          title: "العنصر في قائمة المواضيع"
+          title: "العنصر في قائمة الموضوعات"
         topic_statuses:
-          title: "حالات المواضيع"
+          title: "حالات الموضوعات"
         topic_list:
-          title: "قائمة المواضيع"
+          title: "قائمة الموضوعات"
         basic_topic_list:
           title: "قائمة الموضوعات الأساسية"
         footer_message:
@@ -65,7 +67,7 @@ ar:
         signup_cta:
           title: "عبارة الحث على الاشتراك"
         topic_timer_info:
-          title: "مؤقّتات المواضيع"
+          title: "مؤقّتات الموضوعات"
         topic_footer_buttons:
           title: "أزرار تذييل الموضوع"
         topic_notifications:

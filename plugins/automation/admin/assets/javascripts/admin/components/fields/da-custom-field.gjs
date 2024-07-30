@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { bind } from "discourse-common/utils/decorators";
 import ComboBox from "select-kit/components/combo-box";
 import BaseField from "./da-base-field";

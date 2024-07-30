@@ -71,8 +71,16 @@ class Search
     end
   end
 
-  def self.wrap_unaccent(str)
-    SiteSetting.search_ignore_accents ? "unaccent(#{str})" : str
+  def self.unaccent(str)
+    if SiteSetting.search_ignore_accents
+      DB.query("SELECT unaccent(:str)", str: str)[0].unaccent
+    else
+      str
+    end
+  end
+
+  def self.wrap_unaccent(expr)
+    SiteSetting.search_ignore_accents ? "unaccent(#{expr})" : expr
   end
 
   def self.segment_chinese?
@@ -859,9 +867,9 @@ class Search
         FROM topic_tags tt, tags
         WHERE tt.tag_id = tags.id
         GROUP BY tt.topic_id
-        HAVING to_tsvector(#{default_ts_config}, #{Search.wrap_unaccent("array_to_string(array_agg(lower(tags.name)), ' ')")}) @@ to_tsquery(#{default_ts_config}, #{Search.wrap_unaccent("?")})
+        HAVING to_tsvector(#{default_ts_config}, #{Search.wrap_unaccent("array_to_string(array_agg(lower(tags.name)), ' ')")}) @@ to_tsquery(#{default_ts_config}, ?)
       )",
-        tags.join("&"),
+        Search.unaccent(tags.join("&")),
       )
     else
       tags = match.split(",")
@@ -1360,7 +1368,7 @@ class Search
 
   def self.to_tsquery(ts_config: nil, term:, joiner: nil)
     ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
-    escaped_term = wrap_unaccent("'#{escape_string(term)}'")
+    escaped_term = "'#{escape_string(unaccent(term))}'"
     tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, #{escaped_term})"
     # PG 14 and up default to using the followed by operator
     # this restores the old behavior

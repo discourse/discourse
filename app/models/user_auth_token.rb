@@ -78,7 +78,8 @@ class UserAuthToken < ActiveRecord::Base
     client_ip: nil,
     path: nil,
     staff: nil,
-    impersonate: false
+    impersonate: false,
+    authenticated_with_oauth: false
   )
     token = SecureRandom.hex(16)
     hashed_token = hash_token(token)
@@ -90,6 +91,7 @@ class UserAuthToken < ActiveRecord::Base
         auth_token: hashed_token,
         prev_auth_token: hashed_token,
         rotated_at: Time.zone.now,
+        authenticated_with_oauth: !!authenticated_with_oauth,
       )
     user_auth_token.unhashed_auth_token = token
 
@@ -278,17 +280,18 @@ end
 #
 # Table name: user_auth_tokens
 #
-#  id              :integer          not null, primary key
-#  user_id         :integer          not null
-#  auth_token      :string           not null
-#  prev_auth_token :string           not null
-#  user_agent      :string
-#  auth_token_seen :boolean          default(FALSE), not null
-#  client_ip       :inet
-#  rotated_at      :datetime         not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  seen_at         :datetime
+#  id                       :integer          not null, primary key
+#  user_id                  :integer          not null
+#  auth_token               :string           not null
+#  prev_auth_token          :string           not null
+#  user_agent               :string
+#  auth_token_seen          :boolean          default(FALSE), not null
+#  client_ip                :inet
+#  rotated_at               :datetime         not null
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  seen_at                  :datetime
+#  authenticated_with_oauth :boolean          default(FALSE)
 #
 # Indexes
 #

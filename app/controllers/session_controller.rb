@@ -370,7 +370,6 @@ class SessionController < ApplicationController
     return render(json: @second_factor_failure_payload) if !second_factor_auth_result.ok
 
     if user.active && user.email_confirmed?
-      secure_session["oauth"] = false if !SiteSetting.persistent_sessions
       login(user, second_factor_auth_result)
     else
       not_activated(user)

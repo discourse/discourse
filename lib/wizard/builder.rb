@@ -59,41 +59,38 @@ class Wizard
 
       @wizard.append_step("privacy") do |step|
         step.emoji = "hugs"
+
         step.add_field(
           id: "login_required",
-          type: "checkbox",
-          icon: "unlock",
-          value: SiteSetting.login_required,
-        )
+          type: "radio",
+          value: SiteSetting.login_required ? "private" : "public",
+        ) do |field|
+          field.add_choice("public")
+          field.add_choice("private")
+        end
 
         step.add_field(
           id: "invite_only",
-          type: "checkbox",
-          icon: "user-plus",
-          value: SiteSetting.invite_only,
-        )
+          type: "radio",
+          value: SiteSetting.invite_only ? "invite_only" : "sign_up",
+        ) do |field|
+          field.add_choice("sign_up", icon: "user-plus")
+          field.add_choice("invite_only", icon: "paper-plane")
+        end
 
         step.add_field(
           id: "must_approve_users",
-          type: "checkbox",
-          icon: "user-shield",
-          value: SiteSetting.must_approve_users,
-        )
-
-        if defined?(::Chat)
-          step.add_field(
-            id: "chat_enabled",
-            type: "checkbox",
-            icon: "d-chat",
-            value: SiteSetting.chat_enabled,
-          )
+          type: "radio",
+          value: SiteSetting.must_approve_users ? "yes" : "no",
+        ) do |field|
+          field.add_choice("no")
+          field.add_choice("yes")
         end
 
         step.on_update do |updater|
-          updater.update_setting(:login_required, updater.fields[:login_required])
-          updater.update_setting(:invite_only, updater.fields[:invite_only])
-          updater.update_setting(:must_approve_users, updater.fields[:must_approve_users])
-          updater.update_setting(:chat_enabled, updater.fields[:chat_enabled]) if defined?(::Chat)
+          updater.update_setting(:login_required, updater.fields[:login_required] == "private")
+          updater.update_setting(:invite_only, updater.fields[:invite_only] == "invite_only")
+          updater.update_setting(:must_approve_users, updater.fields[:must_approve_users] == "yes")
         end
       end
 

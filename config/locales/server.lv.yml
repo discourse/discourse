@@ -505,7 +505,11 @@ lv:
       privacy:
         fields:
           login_required:
-            placeholder: "Privāts"
+            choices:
+              public:
+                label: "Publisks"
+              private:
+                label: "Privāts"
       styling:
         fields:
           styling_preview:

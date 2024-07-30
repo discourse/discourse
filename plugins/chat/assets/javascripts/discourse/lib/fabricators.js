@@ -4,8 +4,8 @@ The following fabricators are available in lib folder to allow
 styleguide to use them, and eventually to generate dummy data
 in a placeholder component. It should not be used for any other case.
 */
-import { setOwner } from "@ember/application";
 import ApplicationInstance from "@ember/application/instance";
+import { setOwner } from "@ember/owner";
 import CoreFabricators, { incrementSequence } from "discourse/lib/fabricators";
 import Category from "discourse/models/category";
 import ChatChannel, {

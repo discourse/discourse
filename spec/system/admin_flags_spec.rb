@@ -8,7 +8,6 @@ describe "Admin Flags Page", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:admin_flags_page) { PageObjects::Pages::AdminFlags.new }
   let(:admin_flag_form_page) { PageObjects::Pages::AdminFlagForm.new }
-  let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   before { sign_in(admin) }
 
@@ -161,18 +160,5 @@ describe "Admin Flags Page", type: :system do
     visit "/admin/config/flags"
     admin_flags_page.open_flag_menu("off_topic")
     expect(page).not_to have_css(".dropdown-menu__item .move-up")
-  end
-
-  it "does not show the moderation flags link in the sidebar by default" do
-    visit "/admin"
-    sidebar.toggle_all_sections
-    expect(sidebar).to have_no_section_link(
-      I18n.t("admin_js.admin.community.sidebar_link.moderation_flags"),
-    )
-    SiteSetting.experimental_flags_admin_page_enabled_groups = Group::AUTO_GROUPS[:admins]
-    visit "/admin"
-    expect(sidebar).to have_section_link(
-      I18n.t("admin_js.admin.community.sidebar_link.moderation_flags"),
-    )
   end
 end

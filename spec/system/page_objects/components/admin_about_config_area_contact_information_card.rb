@@ -4,31 +4,31 @@ module PageObjects
   module Components
     class AdminAboutConfigAreaContactInformationCard < PageObjects::Components::Base
       def community_owner_input
-        card.find(".community-owner-input input")
+        form.field("communityOwner")
       end
 
       def contact_email_input
-        card.find(".contact-email-input input")
+        form.field("contactEmail")
       end
 
       def contact_url_input
-        card.find(".contact-url-input input")
+        form.field("contactURL")
       end
 
       def site_contact_user_selector
         PageObjects::Components::SelectKit.new(
-          ".admin-config-area-about__contact-information-section .site-contact-username-input .user-chooser",
+          ".admin-config-area-about__contact-information-section .user-chooser",
         )
       end
 
       def site_contact_group_selector
         PageObjects::Components::SelectKit.new(
-          ".admin-config-area-about__contact-information-section .site-contact-group-input .group-chooser",
+          ".admin-config-area-about__contact-information-section .group-chooser",
         )
       end
 
-      def save_button
-        card.find(".btn-primary.admin-config-area-card__btn-save")
+      def submit
+        form.submit
       end
 
       def has_saved_successfully?
@@ -37,8 +37,10 @@ module PageObjects
         )
       end
 
-      def card
-        find(".admin-config-area-about__contact-information-section")
+      def form
+        PageObjects::Components::FormKit.new(
+          ".admin-config-area-about__contact-information-section .form-kit",
+        )
       end
     end
   end

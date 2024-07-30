@@ -37,20 +37,9 @@
   .category-chooser {
     width: 50%;
   }
-
-  .modal-body.insert-link {
-    input {
-      min-width: 450px;
-    }
-  }
 }
 
 .choose-topic-modal {
-  .modal-body {
-    position: relative;
-    min-height: 350px;
-  }
-
   #choosing-topic {
     // prevents content from moving when user selects different move options 525px
     // is the same width we set on category edit modal
@@ -92,12 +81,6 @@
   }
 }
 
-.change-post-notice-modal {
-  .modal-body {
-    min-width: 450px;
-  }
-}
-
 .create-invite-modal,
 .create-invite-bulk-modal,
 .share-topic-modal {
@@ -108,15 +91,5 @@
     .subtitle {
       margin-left: 0.5em;
     }
-  }
-
-  &.modal .modal-body {
-    margin: 1em;
-    padding: unset;
-  }
-
-  .modal-inner-container {
-    width: 40em; // scale with user font-size
-    max-width: 100vw; // prevent overflow if user font-size is enormous
   }
 }

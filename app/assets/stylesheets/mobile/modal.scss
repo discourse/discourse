@@ -63,14 +63,6 @@ html:not(.keyboard-visible.mobile-view) {
 }
 
 //legacy
-.modal-open #main {
-  overflow: hidden;
-}
-
-.modal-middle-container {
-  max-width: 100%;
-  margin-bottom: 30px; // For iOS Safari issues
-}
 
 .modal {
   &.fade {
@@ -79,15 +71,6 @@ html:not(.keyboard-visible.mobile-view) {
   }
   &.fade.in {
     top: 50%;
-  }
-  .modal-body {
-    padding: 0.667em;
-    overflow-y: scroll;
-
-    > * {
-      // adding box-sizing: border-box; to .modal-body causes iOS dropdown issues
-      box-sizing: border-box;
-    }
   }
 }
 
@@ -98,29 +81,5 @@ html:not(.keyboard-visible.mobile-view) {
 @media only screen and (max-device-width: 568px) {
   .flag-modal-body .flag-message {
     height: 3em;
-  }
-}
-
-/* fix for tall modals */
-
-.fixed-modal {
-  .modal-middle-container {
-    margin-bottom: 0;
-  }
-  .modal-inner-container {
-    max-height: 90vh;
-    overflow: auto;
-  }
-
-  &.insert-hyperlink-modal .modal-inner-container {
-    overflow: visible;
-  }
-
-  html.keyboard-visible:not(.ios-device) & {
-    height: calc(100% - env(keyboard-inset-height));
-
-    .modal-inner-container {
-      margin: auto;
-    }
   }
 }

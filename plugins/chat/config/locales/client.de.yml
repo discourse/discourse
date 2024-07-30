@@ -56,7 +56,7 @@ de:
       cancel_reply: "Antwort verwerfen"
       chat_channels: "Kanäle"
       browse_all_channels: "Alle Kanäle durchsuchen"
-      see_in: "Siehe in"
+      see_in: "Ansehen in"
       move_to_channel:
         title: "Nachrichten in Kanal verschieben"
         instructions:
@@ -224,7 +224,7 @@ de:
         header: "Chat-Kopfzeile"
         composer: "Chat-Composer"
         channels_list: "Liste der Chat-Kanäle"
-      no_direct_message_channels: "Du bist noch keiner Direktnachricht beigetreten!"
+      no_direct_message_channels: "Du bist noch keiner Unterhaltung per Direktnachricht beigetreten!"
       no_direct_message_channels_cta: "Eine Unterhaltung starten"
       no_public_channels: "Du bist noch keinem Kanal beigetreten!"
       no_public_channels_cta: "Kanäle durchsuchen"
@@ -487,7 +487,7 @@ de:
         title: Meine Threads
         aria_label: "Zu meiner Thread-Liste wechseln"
       direct_messages:
-        title: "DMs"
+        title: "DN"
         aria_label: "Zu Direktnachrichten wechseln"
         new: "Persönlichen Chat erstellen"
         create: "Los"
@@ -527,7 +527,7 @@ de:
         cancel: "Abbrechen"
         quote_selection: "In Thema zitieren"
         copy: "Kopieren"
-        delete: "Lösche (%{selectionCount}/%{totalCount})"
+        delete: "Löschen (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "In Kanal verschieben"
         error: "Beim Verschieben der Chat-Nachrichten ist ein Fehler aufgetreten"
         title: "Chat in Thema verschieben"
@@ -566,7 +566,7 @@ de:
       flags:
         off_topic: "Diese Nachricht ist für die aktuelle Diskussion im Sinne des Kanaltitels nicht relevant und sollte wahrscheinlich an eine andere Stelle verschoben werden."
         inappropriate: "Diese Nachricht enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder als Verstoß gegen <a href=\"%{basePath}/guidelines\">unsere Community-Richtlinien</a> ansehen würde."
-        illegal: "Dieser Beitrag erfordert die Aufmerksamkeit des Teams, da er meiner Meinung nach illegale Inhalte enthält."
+        illegal: "Dieser Beitrag erfordert die Aufmerksamkeit des Teams, da er meiner Meinung nach rechtswidrige Inhalte enthält."
         spam: "Diese Nachricht ist Werbung oder Vandalismus. Sie ist nicht nützlich oder relevant für den aktuellen Kanal."
         notify_user: "Ich möchte mit dieser Person direkt und persönlich über ihre Nachricht sprechen."
         notify_moderators: "Diese Nachricht erfordert die Aufmerksamkeit des Teams aus einem anderen, oben nicht aufgeführten Grund."
@@ -614,9 +614,9 @@ de:
         primary_action: "Titel festlegen"
       thread_title_modal:
         title: "Thread-Titel festlegen"
-        input_placeholder: "Sag anderen, worum es in dieser Unterhaltung geht..."
+        input_placeholder: "Sag anderen, worum es in dieser Unterhaltung geht …"
         discourse_ai:
-          title: "Generiere Thread-Titel automatisch"
+          title: "Thread-Titel automatisch generieren"
           description: "Unter %{url} erfährst du mehr über diese und andere Verbesserungen für dein Discourse-Erlebnis."
       threads:
         open: "Thread öffnen"
@@ -667,9 +667,9 @@ de:
         view: "Transkript früherer Nachrichten anzeigen"
       types:
         chat_reviewable_message:
-          title: "Markierte Chat-Nachricht"
+          title: "Gemeldete Chat-Nachricht"
         reviewable_chat_message:
-          title: "Markierte Chat-Nachricht"
+          title: "Gemeldete Chat-Nachricht"
           noun: "Chat-Nachricht"
     keyboard_shortcuts_help:
       chat:

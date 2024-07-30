@@ -1,6 +1,6 @@
-import { setOwner } from "@ember/application";
 import { registerDestructor } from "@ember/destroyable";
 import EmberObject from "@ember/object";
+import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import TextareaTextManipulation from "discourse/mixins/textarea-text-manipulation";

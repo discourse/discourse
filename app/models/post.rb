@@ -325,6 +325,7 @@ class Post < ActiveRecord::Base
     # is referencing.
     options[:user_id] = self.last_editor_id
     options[:omit_nofollow] = true if omit_nofollow?
+    options[:post_id] = self.id
 
     if self.should_secure_uploads?
       each_upload_url do |url|

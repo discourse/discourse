@@ -4256,17 +4256,18 @@ sv:
           default_locale:
             label: "Språk"
       privacy:
-        title: "Medlemserfarenhet"
         fields:
           login_required:
-            placeholder: "Privat"
-            extra_description: "Endast inloggade användare kan komma åt det här forumet"
+            label: "Synlighet"
+            choices:
+              public:
+                label: "Offentligt"
+              private:
+                label: "Privat"
           invite_only:
-            placeholder: "Endast med inbjudan"
-            extra_description: "Användare måste bjudas in av betrodda användare eller personal, men därefter kan användare registrera sig på egen hand"
-          must_approve_users:
-            placeholder: "Kräv godkännande"
-            extra_description: "Användare måste godkännas av personalen"
+            choices:
+              invite_only:
+                label: "Endast med inbjudan"
           chat_enabled:
             placeholder: "Aktivera chatt"
             extra_description: "Engagera dina medlemmar i realtid"

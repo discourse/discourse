@@ -564,6 +564,8 @@ hy:
         email:
           title: "Էլ. հասցե"
           last_updated_by: "կողմից"
+          ssl_modes:
+            none: "Ոչ մի"
           credentials:
             username: "Օգտանուն"
             password: "Գաղտնաբառ"
@@ -1309,6 +1311,8 @@ hy:
       hide_forever: "ոչ, շնորհակալություն"
       intro: "Ողջույն! Կարծես թե Դուք վայելում եք քննարկումը, սակայն դեռևս հաշիվ չեք գրանցել:"
     summary:
+      buttons:
+        regenerate: "Վերագեներացնել"
       disable: "Ցուցադրել Բոլոր Գրառումները"
     deleted_filter:
       enabled_description: "Այս թեման պարունակում է հեռացված գրառումներ, որոնք թաքցվել են:"
@@ -2464,6 +2468,9 @@ hy:
       clicks:
         one: "%{count} սեղմում"
         other: "%{count} սեղմում"
+      views: "Դիտում"
+      read: կարդացած
+      minutes: նվազագույնը
     post_links:
       about: "Ցուցադրել ավելի շատ հղումներ այս գրառման համար"
       title:
@@ -3203,6 +3210,7 @@ hy:
           spam: "Սպամ"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(ընտրովի)"
           saved: "պահված է!"
         flags:

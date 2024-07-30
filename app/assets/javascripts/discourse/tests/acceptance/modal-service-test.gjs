@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "@ember/application";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { click, settled, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import DModal, {

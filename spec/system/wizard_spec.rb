@@ -9,6 +9,34 @@ describe "Wizard", type: :system do
 
   before { sign_in(admin) }
 
+  it "lets user configure member access" do
+    visit("/wizard/steps/privacy")
+
+    expect(page).to have_css(
+      ".wizard-container__radio-choice.--selected",
+      text: I18n.t("wizard.step.privacy.fields.login_required.choices.public.label"),
+    )
+
+    wizard_page.select_access_option("Private")
+
+    expect(page).to have_css(
+      ".wizard-container__radio-choice.--selected",
+      text: I18n.t("wizard.step.privacy.fields.login_required.choices.private.label"),
+    )
+
+    wizard_page.go_to_next_step
+
+    expect(page).to have_current_path("/wizard/steps/ready")
+    expect(SiteSetting.login_required).to eq(true)
+
+    visit("/wizard/steps/privacy")
+
+    expect(page).to have_css(
+      ".wizard-container__radio-choice.--selected",
+      text: I18n.t("wizard.step.privacy.fields.login_required.choices.private.label"),
+    )
+  end
+
   it "redirects to latest when wizard is completed" do
     visit("/wizard/steps/ready")
     wizard_page.click_jump_in

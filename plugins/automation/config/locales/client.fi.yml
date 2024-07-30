@@ -24,7 +24,7 @@ fi:
         fields_section:
           title: Skriptiasetukset
       destroy_automation:
-        confirm: "Haluatko varmasti poistaa kohteen \"%{name}\"?"
+        confirm: "Haluatko varmasti poistaa automaation \"%{name}\"?"
       fields:
         key_value:
           label_without_count: "Määritä"
@@ -112,7 +112,7 @@ fi:
               label: Triggerin viive
               description: Määrittää viiveen viimeisimmän wiki-muokkauksen ja automaation triggerin välillä
             retriggered_after:
-              label: Käynnistä viive uudelleen
+              label: Uudelleenkäynnistyken viive
               description: Määrittää viiveen ensimmäisen ja seuraavan triggerin välillä, jos wikiä ei ole vieläkään muokattu ensimmäisen triggerin jälkeen
         user_added_to_group:
           fields:
@@ -151,7 +151,7 @@ fi:
               label: Kelvolliset luottamustasot
               description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä; oletusarvo on mikä tahansa luottamustaso
             restricted_category:
-              label: Kategoria
+              label: Alue
               description: Valinnainen, käynnistyy vain, jos viestin ketju on tällä alueella
             restricted_group:
               label: Ryhmä
@@ -170,6 +170,20 @@ fi:
               description: Käynnistyy vain, jos ketju on ensimmäinen käyttäjän luoma ketju
           created: Luotu
           edited: Muokattu
+        user_updated:
+          fields:
+            user_profile:
+              label: Käyttäjäprofiilin kentät
+              description: Laukaistaan vain, jos käyttäjä on täyttänyt kaikki nämä kentät
+            custom_fields:
+              label: Käyttäjän mukautetut kentät
+              description: Laukaistaan vain, jos käyttäjä on täyttänyt kaikki nämä kentät
+            once_per_user:
+              label: Kerran käyttäjää kohden
+              description: Laukaistaan vain kerran käyttäjää kohden
+            new_users_only:
+              label: Vain uudet käyttäjät
+              description: Laukaistaan vain uusille käyttäjille, jotka liittyvät tämän automaation käyttöönoton jälkeen
         category_created_edited:
           fields:
             restricted_category:
@@ -201,7 +215,7 @@ fi:
               label: Kelvolliset luottamustasot
               description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä; oletusarvo on mikä tahansa luottamustaso
             restricted_category:
-              label: Kategoria
+              label: Alue
               description: Valinnainen, käynnistyy vain, jos viestin ketju on tällä alueella
             restricted_tags:
               label: Tunnisteet
@@ -220,6 +234,7 @@ fi:
               description: Vastaa vain kerran ketjua kohden
             word_answer_list:
               label: Sana ja vastaus -parien luettelo
+              description: "Määrittää luettelon avain-/arvoryhmistä, joissa avain on haettu termi ja arvo vastauksen teksti. Avain voidaan jättää tyhjäksi, jolloin kaikkiin triggereihin reagoidaan sisällöstä riippumatta. Huomaa, että arvo hyväksyy merkin \"{{key}}\" paikkamerkkinä, joka korvataan vastauksessa avaimen arvolla. Avain arvioidaan säännöllisenä lausekkeena, ja erikoismerkkien, kuten pisteen, kanssa täytyy käyttää koodinvaihtomerkkejä, jos tarkoitat pistettä, esim.: \"\\.\""
             answering_user:
               label: Vastaava käyttäjä
               description: Oletuksena järjestelmäkäyttäjä
@@ -232,10 +247,25 @@ fi:
           fields:
             creator:
               label: Luoja
+              post_creator_context: Viestin luoja
+              updated_user_context: Päivitetty käyttäjä
             topic:
               label: Ketjun tunnus
             post:
               label: Viestin sisältö
+        topic:
+          fields:
+            creator:
+              label: Luoja
+              updated_user_context: Päivitetty käyttäjä
+            body:
+              label: Ketjun teksti
+            title:
+              label: Ketjun otsikko
+            category:
+              label: Ketjun alue
+            tags:
+              label: Ketjutunnisteet
         group_category_notification_default:
           fields:
             group:
@@ -343,12 +373,12 @@ fi:
             label: Skripti
         trigger:
           name:
-            label: Laukaisija
+            label: Triggeri
         automation:
           name:
             label: Nimi
           trigger:
-            label: Laukaisija
+            label: Triggeri
           script:
             label: Skripti
           version:

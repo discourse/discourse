@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action, get } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse-common/helpers/d-icon";

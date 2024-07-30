@@ -12,8 +12,11 @@ pt_BR:
     poll_minimum_trust_level_to_create: "Defina o nível de confiança mínimo necessário para criar votações."
     poll_create_allowed_groups: "Os grupos com permissão para criar enquetes."
     poll_groupable_user_fields: "Um conjunto de nomes para o campo do(a) usuário(a) que podem ser usados para agrupar e filtrar os resultados da enquete."
-    poll_export_data_explorer_query_id: "ID da consulta do Data Explorer para usar para exportar resultados de enquetes (0 para desativar)."
+    poll_export_data_explorer_query_id: "ID de consulta do explorador de dados a ser usado para exportar resultados de enquetes (0 para desativar)."
+    poll_export_ranked_choice_data_explorer_query_id: "ID de consulta do explorador de dados a ser usado para exportar resultados de enquetes de votação instantânea de dois turnos."
     poll_default_public: "Ao criar uma nova enquete, ative a opção \"mostrar quem votou\" por padrão."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
   poll:
     poll: "enquete"
     invalid_argument: "Valor inválido \"%{value}' para o argumento \"%{argument}\"."
@@ -49,8 +52,13 @@ pt_BR:
     min_vote_per_user:
       one: No mínimo %{count} voto é permitido para esta enquete.
       other: No mínimo %{count} votos são permitidos para esta enquete.
+    ranked_choice:
+      vote_options_mismatch: "Para votações instantâneas de dois turnos, a quantidade de escolhas realizadas em um voto deve corresponder à de opções. A quantidade de opções é %{count}, e o número de escolhas realizadas foi %{provided}."
+      no_group_results_support: "Tipo de enquete inválido, ranked_choice não é compatível com resultados agrupados."
     topic_must_be_open_to_toggle_status: "O tópico precisar estar aberto para mudar seu status."
     only_staff_or_op_can_toggle_status: "Somente um membro da equipe ou o autor(a) original pode mudar o status da enquete."
+    errors:
+      poll_not_found: "Enquete não encontrada, confirme os parâmetros."
     insufficient_rights_to_create: "Você não tem permissão para criar enquetes."
     email:
       link_to_poll: "Clique para visualizar a enquete."

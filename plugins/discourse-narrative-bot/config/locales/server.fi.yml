@@ -296,6 +296,10 @@ fi:
         not_found: |-
           Oi voi, tuhmaa viestiäni ei ole vielä liputettu sopimattomaksi. :worried: Voitko liputtaa sen sopimattomaksi **flag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> -painikkeella? Älä unohda, että saat lisää toimintoja näkyviin <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> -painikkeen takaa.
       search:
+        instructions: |-
+          _psst_ … Olen piilottanut yllätyksen tähän ketjuun. Jos kaipaat haastetta, etsi sitä **valitsemalla hakukuvake** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> oikeasta yläkulmasta &#8599;, valitse "tässä ketjussa" ja hae sitä.
+
+          Kokeile etsiä termiä "kapy&#8203;bara" tästä ketjusta
         hidden_message: |-
           Miten sinulta jäi tämä kapybara huomaamatta? :wink:
 

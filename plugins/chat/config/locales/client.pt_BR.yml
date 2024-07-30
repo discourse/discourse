@@ -56,12 +56,17 @@ pt_BR:
       cancel_reply: "Cancelar resposta"
       chat_channels: "Canais"
       browse_all_channels: "Navegar por todos os canais"
+      see_in: "Veja em"
       move_to_channel:
         title: "Mover mensagens para o canal"
         instructions:
           one: "Você está movendo <strong>%{count}</strong> mensagem. Selecione o canal de destino. Uma mensagem de espaço reservado será criada no canal <strong>%{channelTitle}</strong> para indicar que esta mensagem foi movida. Note que as respostas não serão movidas junto para o novo canal, e mensagens no antigo canal não serão mais exibidas como respostas às mensagens movidas."
           other: "Você está movendo <strong>%{count}</strong> mensagens. Selecione o canal de destino. Uma mensagem de espaço reservado será criada no canal <strong>%{channelTitle}</strong> para indicar que estas mensagens foram movidas. Note que as respostas não serão movidas junto para o novo canal, e mensagens no antigo canal não serão mais exibidas como respostas às mensagens movidas."
         confirm_move: "Mover mensagens"
+      delete_messages:
+        confirm:
+          one: "Tem certeza de que deseja excluir esta mensagem?"
+          other: "Tem certeza de que deseja excluir estas %{count} mensagens?"
       channel_settings:
         title: "Configurações do canal"
         edit: "Editar"
@@ -116,7 +121,7 @@ pt_BR:
         direct_message_cta: "Inicie um chat pessoal"
         direct_message: "Você também pode iniciar um chat pessoal com um(as) ou mais usuários(as)."
         title: "Nenhum canal encontrado"
-        my_threads: "Você ainda não tem nenhum tópico. Tópicos em que você participa serão exibidos aqui."
+        my_threads: "Você ainda não tem nenhum tópico. Os tópicos de que você participa serão exibidos aqui."
       email_frequency:
         description: "Só enviaremos um e-mail mediante ausência nos últimos 15 minutos."
         never: "Nunca"
@@ -219,7 +224,10 @@ pt_BR:
         header: "Cabeçalho do chat"
         composer: "Compositor de chat"
         channels_list: "Lista de canais de chat"
-      no_public_channels_cta: "Navegar por canais"
+      no_direct_message_channels: "Você ainda não entrou em nenhum canal de mensagem direta!"
+      no_direct_message_channels_cta: "Iniciar uma conversa"
+      no_public_channels: "Você ainda não entrou em nenhum canal!"
+      no_public_channels_cta: "Explorar canais"
       kicked_from_channel: "Você não pode mais acessar este canal."
       only_chat_push_notifications:
         title: "Enviar apenas notificações por push"
@@ -227,6 +235,9 @@ pt_BR:
       ignore_channel_wide_mention:
         title: "Ignorar menções em todo o canal"
         description: "Não envie notificações para menções em todo o canal (@aqui e @todos)"
+      show_thread_title_prompts:
+        title: "Exibir prompts de título de linha de discussão"
+        description: "Exibir prompts para definir um título para novas linhas de discussão"
       open: "Abrir chat"
       open_full_page: "Abrir chat em tela cheia"
       close_full_page: "Fechar chat em tela cheia"
@@ -247,7 +258,7 @@ pt_BR:
       copy_link: "Copiar link"
       copy_text: "Copiar texto"
       rebake_message: "Reconstruir HTML"
-      message_too_long: "A mensagem é muito longa; as mensagens devem ter no máximo %{count} caracteres."
+      message_too_long: "A mensagem é muito longa. As mensagens devem ter no máximo %{count} caracteres."
       retry_staged_message:
         title: "Erro de rede"
         action: "Enviar novamente?"
@@ -337,7 +348,7 @@ pt_BR:
         filter: "Filtro"
         cant_add_more_members: "Número máximo de membros alcançado"
         create_new_group_chat: "Criar chat em grupo"
-        group_with_too_many_members: "tem membros demais (%{membersCount})"
+        group_with_too_many_members: "tem membros de mais (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Editar canal
         input_placeholder: Adicionar um nome
@@ -476,7 +487,7 @@ pt_BR:
         title: Meus tópicos
         aria_label: "Mudar para minha lista de tópicos"
       direct_messages:
-        title: "PV"
+        title: "MDs"
         aria_label: "Mudar para mensagens diretas"
         new: "Criar um chat pessoal"
         create: "Ir"
@@ -516,6 +527,7 @@ pt_BR:
         cancel: "Cancelar"
         quote_selection: "Citar no tópico"
         copy: "Copiar"
+        delete: "Excluir (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "Mover para o canal"
         error: "Houve um erro ao mover as mensagens de chat"
         title: "Mover chat para tópico"
@@ -554,6 +566,7 @@ pt_BR:
       flags:
         off_topic: "Esta mensagem não é relevante para a discussão atual, conforme definido pelo título do canal, e provavelmente deve ser movida para outro lugar."
         inappropriate: "Esta mensagem contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo ou uma violação de <a href=\"%{basePath}/guidelines\">nossas diretrizes da comunidade</a>."
+        illegal: "Esta postagem requer atenção da equipe porque acredito que tenha conteúdo ilegal."
         spam: "Esta mensagem é uma propaganda, ou vandalismo. Não é útil ou relevante para o canal atual."
         notify_user: "Quero falar com essa pessoa diretamente sobre sua mensagem."
         notify_moderators: "Esta mensagem requer atenção da equipe por outro motivo não listado acima."
@@ -594,6 +607,17 @@ pt_BR:
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
+      thread_title_toast:
+        title: "Definir título de uma linha de discussão"
+        message: "Ajude outras pessoas a descobrir esta conversa."
+        dismiss_action: "Não exibir novamente"
+        primary_action: "Definir título"
+      thread_title_modal:
+        title: "Definir título de linha de discussão"
+        input_placeholder: "Diga às outras pessoas qual é o assunto da conversa..."
+        discourse_ai:
+          title: "Gerar títulos de linhas de discussão automaticamente"
+          description: "Confira %{url} para saber mais sobre esta e outras melhorias para sua experiência no Discourse."
       threads:
         open: "Linha de discussão aberta"
         list: "Linhas de discussão"

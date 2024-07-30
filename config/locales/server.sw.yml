@@ -1991,7 +1991,12 @@ sw:
       privacy:
         fields:
           login_required:
-            placeholder: "Binafsi"
+            label: "Uonekanaji"
+            choices:
+              public:
+                label: "Umma"
+              private:
+                label: "Binafsi"
       styling:
         fields:
           styling_preview:

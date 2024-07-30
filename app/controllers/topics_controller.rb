@@ -1028,9 +1028,12 @@ class TopicsController < ApplicationController
         .symbolize_keys
 
     raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?
+
     operator = TopicsBulkAction.new(current_user, topic_ids, operation, group: operation[:group])
-    changed_topic_ids = operator.perform!
-    render_json_dump topic_ids: changed_topic_ids
+    hijack(info: "topics bulk action #{operation[:type]}") do
+      changed_topic_ids = operator.perform!
+      render_json_dump topic_ids: changed_topic_ids
+    end
   end
 
   def private_message_reset_new
@@ -1301,13 +1304,13 @@ class TopicsController < ApplicationController
   def self.defer_topic_view(topic_id, ip, user_id = nil)
     Scheduler::Defer.later "Topic View" do
       topic = Topic.find_by(id: topic_id)
-      return if topic.blank?
+      next if topic.blank?
 
       # We need to make sure that we aren't allowing recording
       # random topic views against topics the user cannot see.
       user = User.find_by(id: user_id) if user_id.present?
-      return if user_id.present? && user.blank?
-      return if !Guardian.new(user).can_see_topic?(topic)
+      next if user_id.present? && user.blank?
+      next if !Guardian.new(user).can_see_topic?(topic)
 
       TopicViewItem.add(topic_id, ip, user_id)
     end

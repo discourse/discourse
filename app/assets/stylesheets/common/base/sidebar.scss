@@ -144,13 +144,9 @@
     margin-right: auto;
     cursor: move;
     -webkit-user-drag: element;
-    user-drag: element;
   }
   .dragging {
     opacity: 0.4;
-  }
-  .modal-inner-container {
-    width: var(--modal-max-width);
   }
   form {
     margin-bottom: 0;
@@ -262,13 +258,6 @@
   }
   .select-kit.multi-select .multi-select-header .formatted-selection {
     display: none;
-  }
-  .modal-inner-container .select-kit {
-    width: 100%;
-    height: 100%;
-    .select-kit-header {
-      height: 100%;
-    }
   }
   .select-kit.is-expanded .select-kit-body {
     min-width: 220px;

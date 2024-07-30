@@ -1,6 +1,7 @@
-import { click, currentRouteName, fillIn, visit } from "@ember/test-helpers";
+import { click, currentRouteName, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { GROUP_SMTP_SSL_MODES } from "discourse/lib/constants";
+import formKit from "discourse/tests/helpers/form-kit-helper";
 import {
   acceptance,
   exists,
@@ -85,38 +86,38 @@ acceptance(
       assert.ok(exists(".group-smtp-email-settings"));
 
       await click("#prefill_smtp_gmail");
-      assert.strictEqual(
-        query(".group-smtp-form__smtp-server").value,
-        "smtp.gmail.com",
-        "prefills SMTP server settings for gmail"
-      );
-      assert.strictEqual(
-        query(".group-smtp-form__smtp-port").value,
-        "587",
-        "prefills SMTP port settings for gmail"
-      );
-      assert.strictEqual(
-        selectKit(".group-smtp-form__smtp-ssl-mode").header().value(),
-        GROUP_SMTP_SSL_MODES.starttls.toString(),
-        "prefills SSL mode to STARTTLS for gmail"
-      );
+      assert
+        .form()
+        .field("smtp_server")
+        .hasValue("smtp.gmail.com", "prefills SMTP server settings for gmail");
+      assert
+        .form()
+        .field("smtp_port")
+        .hasValue("587", "prefills SMTP port settings for gmail");
+      assert
+        .form()
+        .field("smtp_ssl_mode")
+        .hasValue(
+          GROUP_SMTP_SSL_MODES.starttls.toString(),
+          "prefills SSL mode to STARTTLS for gmail"
+        );
 
-      assert.ok(
-        exists(".group-smtp-form__test-smtp-settings:disabled"),
+      await formKit().submit();
+      assert.form().hasErrors(
+        {
+          [I18n.t("groups.manage.email.credentials.username")]: "Required",
+          [I18n.t("groups.manage.email.credentials.password")]: "Required",
+        },
         "does not allow testing settings if not all fields are filled"
       );
 
-      await fillIn('input[name="username"]', "myusername@gmail.com");
-      await fillIn('input[name="password"]', "password@gmail.com");
-      await fillIn("#from_alias", "akasomegroup@example.com");
+      await formKit().field("email_username").fillIn("myusername@gmail.com");
+      await formKit().field("email_password").fillIn("password");
+      await formKit()
+        .field("email_from_alias")
+        .fillIn("akasomegroup@example.com");
 
-      await click(".group-smtp-form__test-smtp-settings");
-
-      assert.ok(
-        exists(".group-smtp-form__smtp-settings-ok"),
-        "tested settings are ok"
-      );
-
+      await formKit().submit();
       await click(".group-manage-save");
 
       assert.strictEqual(
@@ -144,9 +145,9 @@ acceptance(
 
       await click("#enable_smtp");
       await click("#prefill_smtp_gmail");
-      await fillIn('input[name="username"]', "myusername@gmail.com");
-      await fillIn('input[name="password"]', "password@gmail.com");
-      await click(".group-smtp-form__test-smtp-settings");
+      await formKit().field("email_username").fillIn("myusername@gmail.com");
+      await formKit().field("email_password").fillIn("password");
+      await formKit().submit();
       await click(".group-manage-save");
 
       assert.notOk(
@@ -284,26 +285,29 @@ acceptance(
       assert.notOk(exists("#enable_smtp:disabled"), "SMTP is not disabled");
       assert.notOk(exists("#enable_imap:disabled"), "IMAP is not disabled");
 
-      assert.strictEqual(
-        query("[name='username']").value,
-        "test@test.com",
-        "email username is prefilled"
-      );
-      assert.strictEqual(
-        query("[name='password']").value,
-        "password",
-        "email password is prefilled"
-      );
-      assert.strictEqual(
-        query("[name='smtp_server']").value,
-        "smtp.gmail.com",
-        "smtp server is prefilled"
-      );
-      assert.strictEqual(
-        query("[name='smtp_port']").value,
-        "587",
-        "smtp port is prefilled"
-      );
+      assert
+        .form()
+        .field("email_username")
+        .hasValue("test@test.com", "email username is prefilled");
+      assert
+        .form()
+        .field("email_password")
+        .hasValue("password", "email password is prefilled");
+      assert
+        .form()
+        .field("smtp_server")
+        .hasValue("smtp.gmail.com", "SMTP server is prefilled");
+      assert
+        .form()
+        .field("smtp_port")
+        .hasValue("587", "SMTP port is prefilled");
+      assert
+        .form()
+        .field("smtp_ssl_mode")
+        .hasValue(
+          GROUP_SMTP_SSL_MODES.starttls.toString(),
+          "SMTP ssl mode is prefilled"
+        );
 
       assert.strictEqual(
         query("[name='imap_server']").value,
@@ -355,9 +359,9 @@ acceptance(
 
       await click("#enable_smtp");
       await click("#prefill_smtp_gmail");
-      await fillIn('input[name="username"]', "myusername@gmail.com");
-      await fillIn('input[name="password"]', "password@gmail.com");
-      await click(".group-smtp-form__test-smtp-settings");
+      await formKit().field("email_username").fillIn("myusername@gmail.com");
+      await formKit().field("email_password").fillIn("password");
+      await formKit().submit();
 
       assert.strictEqual(
         query(".dialog-body").innerText.trim(),

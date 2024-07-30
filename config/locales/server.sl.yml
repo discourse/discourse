@@ -1959,7 +1959,12 @@ sl:
       privacy:
         fields:
           login_required:
-            placeholder: "Zasebno"
+            label: "Vidljivost"
+            choices:
+              public:
+                label: "Javno"
+              private:
+                label: "Zasebno"
       styling:
         fields:
           styling_preview:

@@ -29,6 +29,8 @@ pl_PL:
           title: "Wyniki pojawią się po <strong>zamknięciu</strong> ankiety."
         staff:
           title: "Wyniki pokazywane są wyłącznie członkom <strong>zespołu</strong>."
+        tabs:
+          votes: "Głosy"
       multiple:
         help:
           at_least_min_options:
@@ -83,6 +85,8 @@ pl_PL:
         percentage: "Procent"
         count: "Liczba"
       ranked_choice:
+        title:
+          outcome: "Wynik"
         none: "Brak"
       options:
         label: "Opcje"

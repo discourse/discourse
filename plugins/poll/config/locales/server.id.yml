@@ -11,7 +11,6 @@ id:
     poll_edit_window_mins: "Jumlah menit setelah post dibuat dimana poll masih bisa diedit."
     poll_minimum_trust_level_to_create: "Tentukan trust level minimum yang diperlukan untuk membuat poll."
     poll_groupable_user_fields: "Kumpulan nama bidang pengguna yang dapat digunakan untuk mengelompokkan dan memfilter hasil poll."
-    poll_export_data_explorer_query_id: "ID dari Kueri Penjelajah Data yang akan digunakan untuk mengekspor hasil poll (0 untuk menonaktifkan)."
     poll_default_public: "Saat membuat poll baru, aktifkan opsi 'tampilkan siapa yang memilih' secara bawaan."
   poll:
     poll: "poll"

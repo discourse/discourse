@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { setOwner } from "@ember/application";
+import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {

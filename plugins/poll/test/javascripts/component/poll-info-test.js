@@ -3,7 +3,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const OPTIONS = [
   { id: "1ddc47be0d2315b9711ee8526ca9d83f", html: "This", votes: 2, rank: 0 },

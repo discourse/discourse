@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import MessageBus from "message-bus-client";
 import { module, test } from "qunit";

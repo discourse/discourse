@@ -1,5 +1,5 @@
-import { getOwner } from "@ember/application";
 import EmberObject from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
 import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";

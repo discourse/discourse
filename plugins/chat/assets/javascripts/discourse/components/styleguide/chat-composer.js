@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";

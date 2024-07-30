@@ -60,5 +60,28 @@ RSpec.describe DiscourseIpInfo do
 
       described_class.mmdb_download("GeoLite2-City")
     end
+
+    it "should not throw an error and instead log the exception when database file fails to download" do
+      original_logger = Rails.logger
+      Rails.logger = fake_logger = FakeLogger.new
+
+      global_setting :maxmind_license_key, "license_key"
+      global_setting :maxmind_account_id, "account_id"
+
+      stub_request(
+        :get,
+        "https://download.maxmind.com/geoip/databases/GeoLite2-City/download?suffix=tar.gz",
+      ).with(basic_auth: %w[account_id license_key]).to_return(status: 500, body: nil, headers: {})
+
+      expect do described_class.mmdb_download("GeoLite2-City") end.not_to raise_error
+
+      expect(fake_logger.warnings.length).to eq(1)
+
+      expect(fake_logger.warnings.first).to include(
+        "MaxMind database GeoLite2-City download failed. 500 Error",
+      )
+    ensure
+      Rails.logger = original_logger
+    end
   end
 end

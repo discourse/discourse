@@ -296,6 +296,10 @@ pt_BR:
         not_found: |-
           Ah não, minha postagem inapropriada ainda não foi sinalizada. :worried: Você pode sinalizá-la como inapropriada usando o **sinalizador** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Não se esqueça de usar o botão Mostrar mais <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para revelar mais ações para cada postagem.
       search:
+        instructions: |-
+          _xiiu_ … Escondi uma surpresa neste tópico. Se você está pronto(a) para o desafio, **selecione o ícone de pesquisa** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> no canto superior à direita &#8599; escolha "neste tópico" e faça a pesquisa.
+
+          Tente pesquisar o termo "capy&#8203;bara" (em inglês) neste tópico
         hidden_message: |-
           Como você perdeu esta capivara? :wink:
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>

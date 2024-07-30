@@ -284,6 +284,10 @@ ar:
         not_found: |-
           أوه لا، لم يتم الإبلاغ عن منشوري المزعج على أنه غير لائق بعد. :worried: هل يمكنك الإبلاغ عنه كغير لائق باستخدام **العلم** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">؟ لا تنسَ استخدام الزر "عرض المزيد" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> للكشف عن المزيد من الإجراءات لكل منشور.
       search:
+        instructions: |-
+          _مهلًا_... لقد أخفيت مفاجأة في هذا الموضوع. إذا كنت مستعدًا للتحدي، **فحدِّد رمز البحث** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> أعلى اليسار &#8599;، واختر "في هذا الموضوع"، ثم ابحث عنه.
+
+          جرِّب البحث عن المصطلح "كابي&#8203;بارا" في هذا الموضوع
         hidden_message: |-
           كيف فاتك هذا الكابيبارا؟ :wink:
 
@@ -306,7 +310,7 @@ ar:
 
           %{certificate}
 
-          هذا كل شيء في الوقت الحالي! اطَّلع على [**أحدث موضوعات المناقشة**](%{base_uri}/latest) or [**فئات المناقشة**](%{base_uri}/categories). :sunglasses:
+          هذا كل شيء في الوقت الحالي! راجع [**أحدث موضوعات المناقشة**](%{base_uri}/latest) or [**فئات المناقشة**](%{base_uri}/categories). :sunglasses:
 
           (إذا كنت ترغب في التحدُّث إليَّ مرة أخرى لمعرفة المزيد، فما عليك سوى إرسال رسالة أو الإشارة إلى "@%{discobot_username}" في أي وقت!)
       certificate:

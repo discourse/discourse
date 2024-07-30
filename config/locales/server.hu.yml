@@ -2167,7 +2167,12 @@ hu:
       privacy:
         fields:
           login_required:
-            placeholder: "Privát"
+            label: "Láthatóság"
+            choices:
+              public:
+                label: "Nyilvános"
+              private:
+                label: "Privát"
           chat_enabled:
             placeholder: "Csevegés engedélyezése"
       styling:

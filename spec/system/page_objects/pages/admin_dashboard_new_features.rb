@@ -27,6 +27,16 @@ module PageObjects
       def has_no_emoji?
         page.has_no_css?(".admin-new-feature-item__new-feature-emoji")
       end
+
+      def has_version?(version)
+        element = find(".admin-new-feature-item__new-feature-version")
+        element.has_text?(version)
+      end
+
+      def has_date?(date)
+        element = find(".admin-config-area-card__title")
+        element.has_text?(date)
+      end
     end
   end
 end

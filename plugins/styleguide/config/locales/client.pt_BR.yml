@@ -34,6 +34,8 @@ pt_BR:
         icons:
           title: "Ícones"
           full_list: "Exibir a lista completa de ícones incríveis de fonte"
+        forms:
+          title: "Formulários"
         buttons:
           title: "Botões"
         dropdowns:

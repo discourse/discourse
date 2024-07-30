@@ -517,6 +517,8 @@ th:
         email:
           title: "อีเมล"
           last_updated_by: "โดย"
+          ssl_modes:
+            none: "ไม่มี"
           credentials:
             username: "ชื่อผู้ใช้"
             password: "รหัสผ่าน"
@@ -2135,6 +2137,8 @@ th:
       links_title: "ลิงก์ยอดนิยม"
       clicks:
         other: "%{count} คลิก"
+      views: "ดู"
+      read: อ่าน
     post_links:
       title:
         other: "อีก %{count}"

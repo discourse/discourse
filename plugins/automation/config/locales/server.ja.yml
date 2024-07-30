@@ -14,9 +14,11 @@ ja:
         invalid_field: フィールドのコンポーネント `%{component}` は `%{target}:%{target_name}` では使用できません。
         invalid_metadata: '`%{field}` のデータが無効であるか、コンポーネント `%{component}` が不明です。'
     triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "少なくとも 'custom_fields' または 'user_profile' のいずれかを指定する必要があります。"
       user_badge_granted:
-        title: ユーザーバッチ付与
-        doc: ユーザーがバッチを付与されると、自動化がトリガーされます。
+        title: ユーザーバッジ付与
+        doc: ユーザーがバッジを付与されると、自動化がトリガーされます。
       user_first_logged_in:
         title: ユーザーの初回ログイン
         doc: ユーザーが初めてログインするときに自動化をトリガーします。
@@ -29,7 +31,7 @@ ja:
         doc: POST リクエストは、グローバル API キーを使用して `/automations/:id/trigger.json` に行う必要があります。
       category_created_edited:
         title: カテゴリの作成/編集
-        description: カテゴリが作成または先週差あれると、自動化がトリガーされます
+        description: カテゴリが作成または編集されると、自動化がトリガーされます
       recurring:
         title: 繰り返し
       point_in_time:
@@ -60,12 +62,16 @@ ja:
       after_post_cook:
         title: 投稿のクック処理後
         description: 投稿内容がクックされると、自動化がトリガーされます。
+      user_updated:
+        title: ユーザー更新後
+        description: ユーザーが情報を更新すると、自動化がトリガーされます
     scriptables:
       post:
         title: 投稿を作成する
         description: 指定されたトピックで投稿を作成します
       topic:
         title: トピックの作成
+        description: 特定のユーザーとしてトピックを作成します
       flag_post_on_words:
         title: 単語で投稿を通報する
         description: 投稿に指定された単語が含まれる場合に通報します
