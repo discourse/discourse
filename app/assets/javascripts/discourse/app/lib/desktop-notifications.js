@@ -61,8 +61,7 @@ function init(messageBus) {
   } catch (e) {
     // eslint-disable-next-line no-console
     console.warn(
-      "Unexpected error, Notification is defined on window but not a responding correctly " +
-        e
+      "Notification is defined on window but is not responding correctly " + e
     );
   }
 
@@ -136,7 +135,7 @@ function canUserReceiveNotifications(user) {
     return false;
   }
 
-  if (keyValueStore.getItem("notifications-disabled")) {
+  if (keyValueStore.getItem("notifications-disabled", "disabled")) {
     return false;
   }
 
@@ -150,6 +149,8 @@ async function onNotification(data, siteSettings, user, appEvents) {
   }
 
   if (!liveEnabled) {
+    // eslint-disable-next-line no-console
+    console.warn("Desktop notifications are not enabled");
     return false;
   }
 
@@ -168,7 +169,7 @@ async function onNotification(data, siteSettings, user, appEvents) {
     siteSettings.site_logo_small_url || siteSettings.site_logo_url;
 
   const notificationTag =
-    "discourse-notification-" + siteSettings.title + "-" + data.topic_id;
+    "discourse-notification-" + siteSettings.title + "-" + (data.topic_id || 0);
 
   await requestPermission();
 

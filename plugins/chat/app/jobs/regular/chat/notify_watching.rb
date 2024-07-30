@@ -97,9 +97,8 @@ module Jobs
           end
         end
 
-        if membership.mobile_notifications_always? && !membership.muted?
-          ::PostAlerter.push_notification(user, payload)
-        end
+        # if membership.mobile_notifications_always? && !membership.muted?
+        ::PostAlerter.push_notification(user, payload) if !membership.muted?
       end
     end
   end

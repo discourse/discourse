@@ -81,6 +81,7 @@ export default class DesktopNotificationsService extends Service {
     if (!user) {
       return false;
     }
+
     pushNotificationKeyValueStore.setItem(
       pushNotificationUserSubscriptionKey(user),
       value
@@ -116,27 +117,28 @@ export default class DesktopNotificationsService extends Service {
 
   @action
   async disable() {
-    if (this.isEnabledDesktop) {
+    if (this.isPushNotificationsPreferred) {
+      if (this.isEnabledPush === "subscribed") {
+        await unsubscribePushNotification(this.currentUser, () => {
+          this.setIsEnabledPush("");
+        });
+      }
+    } else if (this.isEnabledDesktop) {
       this.setNotificationsDisabled(DISABLED);
-    }
-    if (this.isEnabledPush) {
-      await unsubscribePushNotification(this.currentUser, () => {
-        this.setIsEnabledPush("");
-      });
     }
 
     return true;
   }
 
   @action
-  enable() {
+  async enable() {
     if (this.isPushNotificationsPreferred) {
-      return subscribePushNotification(() => {
+      await subscribePushNotification(() => {
         this.setIsEnabledPush("subscribed");
       }, this.siteSettings.vapid_public_key_bytes);
     } else {
       this.setNotificationsDisabled(ENABLED);
-      return Notification.requestPermission((permission) => {
+      await Notification.requestPermission((permission) => {
         confirmNotification(this.siteSettings);
         return permission === "granted";
       });
