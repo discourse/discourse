@@ -50,13 +50,11 @@ class TranslationOverride < ActiveRecord::Base
   enum status: { up_to_date: 0, outdated: 1, invalid_interpolation_keys: 2, deprecated: 3 }
 
   scope :mf_locales,
-        ->(locale) do
-          where(locale: locale).where.not(status: "deprecated").where("translation_key LIKE '%_MF'")
-        end
+        ->(locale) { not_deprecated.where(locale: locale).where("translation_key LIKE '%_MF'") }
   scope :client_locales,
         ->(locale) do
-          where(locale: locale)
-            .where.not(status: "deprecated")
+          not_deprecated
+            .where(locale: locale)
             .where("translation_key LIKE 'js.%' OR translation_key LIKE 'admin_js.%'")
             .where.not("translation_key LIKE '%_MF'")
         end
