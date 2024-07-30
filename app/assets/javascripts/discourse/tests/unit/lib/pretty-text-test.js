@@ -70,6 +70,18 @@ module("Unit | Utility | pretty-text", function (hooks) {
         .features.emoji,
       "emoji disabled"
     );
+    assert.deepEqual(
+      build({ siteSettings: { allowed_iframes: "https://example.com/" } })
+        .options.discourse.allowedIframes,
+      ["https://example.com/"],
+      "it doesn't filter out valid urls"
+    );
+    assert.deepEqual(
+      build({ siteSettings: { allowed_iframes: "https://example.com" } })
+        .options.discourse.allowedIframes,
+      [],
+      "it filters out invalid urls. Requires 3 slashes."
+    );
   });
 
   test("basic cooking", function (assert) {
