@@ -2529,17 +2529,17 @@ HTML
   end
 
   it "can properly allowlist iframes" do
-    SiteSetting.allowed_iframes = "https://bob.com/a|http://silly.com?EMBED="
+    SiteSetting.allowed_iframes = "https://bob.com/a|http://silly.com/?EMBED="
     raw = <<~HTML
       <iframe src='https://www.google.com/maps/Embed?testing'></iframe>
       <iframe src='https://bob.com/a?testing'></iframe>
-      <iframe src='HTTP://SILLY.COM?EMBED=111'></iframe>
+      <iframe src='HTTP://SILLY.COM/?EMBED=111'></iframe>
     HTML
 
     # we require explicit HTTPS here
     html = <<~HTML
       <iframe src="https://bob.com/a?testing"></iframe>
-      <iframe src="HTTP://SILLY.COM?EMBED=111"></iframe>
+      <iframe src="HTTP://SILLY.COM/?EMBED=111"></iframe>
     HTML
 
     cooked = PrettyText.cook(raw).strip
