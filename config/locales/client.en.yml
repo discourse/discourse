@@ -5659,10 +5659,12 @@ en:
 
       backups:
         title: "Backups"
+        files_title: "Backup files"
         description: "Discourse backups include the full site database, which contains everything on the site: topics, posts, users, groups, settings, themes, etc. Depending on how the backup file is created, it may or may not include uploads."
         learn_more_url: ""
         menu:
           backups: "Backups"
+          backup_files: "Backup files"
           logs: "Logs"
         none: "No backup available."
         read_only:

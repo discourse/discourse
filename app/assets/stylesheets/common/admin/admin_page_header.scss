@@ -1,11 +1,13 @@
-.admin-page-header {
-  .admin-page-header__title-row {
+.admin-page-header,
+.admin-page-subheader {
+  &__title-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1em;
 
-    h1 {
+    h1,
+    h3 {
       margin: 0;
     }
 

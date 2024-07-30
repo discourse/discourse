@@ -28,32 +28,9 @@ export default class AdminBackupsIndexController extends Controller {
   }
 
   @action
-  toggleReadOnlyMode() {
-    if (!this.site.get("isReadOnly")) {
-      this.dialog.yesNoConfirm({
-        message: I18n.t("admin.backups.read_only.enable.confirm"),
-        didConfirm: () => {
-          this.set("currentUser.hideReadOnlyAlert", true);
-          this._toggleReadOnlyMode(true);
-        },
-      });
-    } else {
-      this._toggleReadOnlyMode(false);
-    }
-  }
-
-  @action
   download(backup) {
-    const link = backup.get("filename");
-    ajax(`/admin/backups/${link}`, { type: "PUT" }).then(() =>
+    ajax(`/admin/backups/${backup.filename}`, { type: "PUT" }).then(() =>
       this.dialog.alert(I18n.t("admin.backups.operations.download.alert"))
     );
-  }
-
-  _toggleReadOnlyMode(enable) {
-    ajax("/admin/backups/readonly", {
-      type: "PUT",
-      data: { enable },
-    }).then(() => this.site.set("isReadOnly", enable));
   }
 }

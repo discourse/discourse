@@ -1,45 +1,25 @@
-<div class="backup-options">
-  {{#if this.localBackupStorage}}
-    <UppyBackupUploader
-      @done={{route-action "uploadSuccess"}}
-      @localBackupStorage={{this.localBackupStorage}}
-    />
-  {{else}}
-    <UppyBackupUploader @done={{route-action "remoteUploadSuccess"}} />
-  {{/if}}
-
-  {{#if this.site.isReadOnly}}
-    <DButton
-      @icon="far-eye"
-      @action={{this.toggleReadOnlyMode}}
-      @disabled={{this.status.isOperationRunning}}
-      @title="admin.backups.read_only.disable.title"
-      @label="admin.backups.read_only.disable.label"
-      class="btn-default"
-    />
-  {{else}}
-    <DButton
-      @icon="far-eye"
-      @action={{this.toggleReadOnlyMode}}
-      @disabled={{this.status.isOperationRunning}}
-      @title="admin.backups.read_only.enable.title"
-      @label="admin.backups.read_only.enable.label"
-      class="btn-default"
-    />
-  {{/if}}
-  <LinkTo @route="adminSiteSettingsCategory" @model="backups">
-    {{i18n "admin.backups.settings"}}
-  </LinkTo>
-
-  <div class="backup-message">
-    {{#if this.status.restoreDisabled}}
-      <a href="site_settings/category/all_results?filter=allow_restore">{{d-icon
-          "info-circle"
-        }}
-        {{i18n "admin.backups.operations.restore.is_disabled"}}</a>
+<AdminPageSubheader @titleLabel="admin.backups.files_title">
+  <:actions as |actions|>
+    {{#if this.localBackupStorage}}
+      <UppyBackupUploader
+        @done={{route-action "uploadSuccess"}}
+        @localBackupStorage={{this.localBackupStorage}}
+      />
+    {{else}}
+      <UppyBackupUploader @done={{route-action "remoteUploadSuccess"}} />
     {{/if}}
+  </:actions>
+</AdminPageSubheader>
+
+{{#if this.status.restoreDisabled}}
+  <div class="backup-message alert alert-info">
+    <a href="site_settings/category/all_results?filter=allow_restore">{{d-icon
+        "info-circle"
+      }}
+      {{i18n "admin.backups.operations.restore.is_disabled"}}</a>
   </div>
-</div>
+{{/if}}
+
 <table class="grid">
   <thead>
     <th width="55%">{{i18n "admin.backups.columns.filename"}}</th>
