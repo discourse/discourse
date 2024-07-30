@@ -120,7 +120,7 @@ export default class DesktopNotificationsService extends Service {
     if (this.isPushNotificationsPreferred) {
       if (this.isEnabledPush === "subscribed") {
         await unsubscribePushNotification(this.currentUser, () => {
-          this.setIsEnabledPush("");
+          this.setIsEnabledPush(false);
         });
       }
     } else if (this.isEnabledDesktop) {
