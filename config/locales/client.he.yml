@@ -1495,70 +1495,6 @@ he:
         warnings: "אזהרות רשמיות"
         read_more_in_group: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב־%{groupLink}."
         read_more: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב<a href='%{basePath}/u/%{username}/messages'>הודעות הפרטיות</a>."
-        read_more_group_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {נותרה <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'>הודעה אחת</a> שלא נקראה}
-                   two {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> שלא נקראו}
-                other {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> שלא נקראו}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { ועוד <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>אחת</a> חדשה, או שניתן לעיין בהודעות אחרות תחת {groupLink}}
-                   two { ועוד <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>#</a> חדשות, או שניתן לעיין בהודעות אחרות תחת {groupLink}}
-                other { ועוד <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>#</a> חדשות, או שניתן לעיין בהודעות אחרות תחת {groupLink}}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {נותרה <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'>הודעה אחת</a> שלא נקראה, או שניתן לעיין בהודעות אחרות תחת {groupLink}}
-                   two {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> שלא נקראו, או שניתן לעיין בהודעות חדשות תחת {groupLink}}
-                other {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> שלא נקראו, או שניתן לעיין בהודעות חדשות תחת {groupLink}}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {נותרה <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'>הודעה אחת</a> חדשה, או שניתן לעיין בהודעות אחרות תחת {groupLink}}
-                   two {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> חדשות, או שניתן לעיין בהודעות חדשות תחת {groupLink}}
-                other {נותרו <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># הודעות</a> חדשות, או שניתן לעיין בהודעות חדשות תחת {groupLink}}
-              }
-            }
-            other {}
-          }
-        read_more_personal_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {נותרה <a href='{basePath}/u/{username}/messages/unread'>הודעה אחת</a> שלא נקראה}
-                   two {נותרו <a href='{basePath}/u/{username}/messages/unread'># הודעות</a> שלא נקראו}
-                other {נותרו <a href='{basePath}/u/{username}/messages/unread'># הודעות</a> שלא נקראו}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { ועוד <a href='{basePath}/u/{username}/messages/new'>אחת חדשה</a>, או שאפשר לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
-                   two { ועוד <a href='{basePath}/u/{username}/messages/new'># חדשות</a> , או שאפשר לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
-                other { ועוד <a href='{basePath}/u/{username}/messages/new'># חדשות</a> , או שאפשר לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {נותרה <a href='{basePath}/u/{username}/messages/unread'>הודעה אחת</a> שלא נקראה, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
-                   two {נותרו <a href='{basePath}/u/{username}/messages/unread'># הודעות</a> שלא נקראו, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
-                other {נותרו <a href='{basePath}/u/{username}/messages/unread'># הודעות</a> שלא נקראו, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {נותרה <a href='{basePath}/u/{username}/messages/new'>הודעה אחת</a> חדשה, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
-                   two {נותרו <a href='{basePath}/u/{username}/messages/new'># הודעות</a> חדשות, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
-                other {נותרו <a href='{basePath}/u/{username}/messages/new'># הודעות</a> חדשות, או שניתן לעיין ב<a href='{basePath}/u/{username}/messages'>הודעות אישיות</a> אחרות}
-              }
-            }
-            other {}
-          }
       preferences_nav:
         account: "חשבון"
         security: "אבטחה"
@@ -2162,12 +2098,12 @@ he:
         too_high: "חייב להיות %{count} לכל היותר"
         too_low: "חייב להיות %{count} לכל הפחות"
         too_long:
-          one: "חייב להיות תו אחד לכל היותר"
+          one: "חייב להיות תו לכל היותר"
           two: "חייבים להיות שני תווים לכל היותר"
           many: "חייבים להיות %{count} תווים לכל היותר"
           other: "חייבים להיות %{count} תווים לכל היותר"
         too_short:
-          one: "חייב להיות תו אחד לפחות"
+          one: "חייב להיות תו לפחות"
           two: "חייבים להיות שני תווים לפחות"
           many: "חייבים להיות %{count} תווים לפחות"
           other: "חייבים להיות %{count} תווים לפחות"
@@ -2182,15 +2118,6 @@ he:
       logout_disabled: "היציאה מושבתת בזמן שהאתר במצב של קריאה בלבד."
     staff_writes_only_mode:
       enabled: "אתר זה נמצא במצב סגל בלבד. אפשר להמשיך לשוטט, אך תגובות, לייקים, ופעולות נוספות כרגע מוגבלות לחברי הסגל בלבד."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בשעה הגיעה} other {# שגיאות בשעה הגיעו}}</a> למגבלת האתר שהיא {limit, plural, one {שגיאה אחת בשעה} other {# שגיאות בשעה}}.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בדקה הגיעה} other {# שגיאות בדקה הגיעו}}</a> למגבלת האתר שהיא {limit, plural, one {שגיאה אחת בדקה} other {# שגיאות בדקה}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בשעה חרגה} other {# שגיאות בשעה חרגו}}</a> ממגבלת האתר שהיא {limit, plural, one {שגיאה אחת בשעה} other {# שגיאות בשעה}}.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בדקה חרגה} other {# שגיאות בדקה חרגו}}</a> ממגבלת האתר שהיא {limit, plural, one {שגיאה אחת בדקה} other {# שגיאות בדקה}}.
     learn_more: "מידע נוסף…"
     mute: השתק
     unmute: ביטול השתקה
@@ -2337,7 +2264,7 @@ he:
       password_expired: "תוקף הסיסמה שלך פג. נא <a href='%{reset_url}'>לאפס את הסיסמה שלך</a>."
       blank_username: "נא למלא כתובת דוא״ל או שם משתמש."
       blank_username_or_password: "נא למלא את כתובת הדוא״ל או את שם המשתמש שלך וסיסמה."
-      reset_password: "אפס סיסמה"
+      reset_password: "איפוס סיסמה"
       logging_in: "מתבצעת כניסה…"
       previous_sign_up: "כבר יש לך חשבון?"
       or: "או"
@@ -3506,7 +3433,7 @@ he:
         help: "פתיחת גרסה ידידותית להדפסה של נושא זה"
       flag_topic:
         title: "דגל"
-        help: "דגלו נושא זה באופן פרטי לתשומת לב או שלחו התראה פרטית בנוגע אליו"
+        help: "סימון הנושא הזה להגברת תשומת הלב או לשלוח התראה פרטית לגביו"
         success_message: "דיגלתם נושא זה בהצלחה."
       make_public:
         title: "המרה לנושא ציבורי"
@@ -3722,7 +3649,7 @@ he:
         two: "לפוסט הזה יש %{count} תגובות"
         many: "לפוסט הזה יש %{count} תגובות"
         other: "לפוסט הזה יש %{count} תגובות"
-      expand_collapse: "הרחב/צמצם"
+      expand_collapse: "הרחבה/צמצום"
       sr_below_embedded_posts_description: "תגובות לפוסט מס׳ %{post_number}"
       sr_embedded_reply_description: "תגובה מאת ‎@%{username} לפוסט %{post_number}"
       locked: "חבר סגל נעל את האפשרות לערוך את הפוסט הזה"
@@ -3816,7 +3743,7 @@ he:
         edit: "עירכו פוסט זה"
         edit_action: "עריכה"
         edit_anonymous: "עליך להיכנס כדי לערוך פוסט זה, עמך הסליחה."
-        flag: "דגלו פוסט זה באופן פרטי לתשומת לב או שלחו התראה פרטית עליו"
+        flag: "סימון הנושא הזה להגברת תשומת הלב או לשלוח התראה פרטית לגביו"
         delete: "מחק פוסט זה"
         undelete: "שחזר פוסט זה"
         share: "שיתוף קישור לפוסט זה"
@@ -4137,7 +4064,7 @@ he:
       colors_disabled: "אי אפשר לבחור צבעים כיוון שסגנון הקטגוריה הוא כלום."
     flagging:
       title: "תודה על עזרתך לשמירה על תרבות הקהילה שלנו!"
-      action: "דגלו פוסט"
+      action: "סימון פוסט"
       take_action: "נקיטת פעולה…"
       take_action_options:
         default:
@@ -4191,7 +4118,7 @@ he:
           other: "%{count} נותרו"
     flagging_topic:
       title: "תודה על עזרתך לשמירה על תרבות הקהילה שלנו!"
-      action: "דגלו נושא"
+      action: "סימון נושא"
       notify_action: "הודעה"
     topic_map:
       title: "סיכום נושא"
@@ -4247,7 +4174,7 @@ he:
         title: "הנושא הזה הוא הודעה אישית"
         help: "הנושא הזה הוא הודעה אישית"
       visibility_reasons:
-        op_flag_threshold_reached: "נושא זה הוסר באופן אוטומטי מכיוון שהגיע לסף דיגולים (דיווחי תוכן)"
+        op_flag_threshold_reached: "הנושא הזה הוסר אוטומטית כיוון שעבר סף סימונים בדגל"
         op_unhidden: "נושא זה הועלה מחדש על ידי המחבר/ת"
         embedded_topic: "נושא זה הוחזר מכיוון שהוא נושא מוטבע"
         manually_unlisted: "נושא זה הוסר ידנית על ידי מנהל או מפקח"
@@ -4261,14 +4188,15 @@ he:
     posts_likes_MF: |
       { count, plural,
           one {תגובה,}
-          two {תגובותיים,}
+          two {שתי תגובות,}
+          many {# תגובות,}
         other {# תגובות,}
       }{ ratio, select,
-          low { יחס גבוה}
-          med { יחס גבוה מאוד}
-         high { יחס גבוה במיוחד}
+          low { יחס גבוה בין פוסטים ללייקים,}
+          med { יחס גבוה מאוד בין פוסטים ללייקים,}
+         high { יחס גבוה במיוחד בין פוסטים ללייקים,}
         other {}
-      } של לייקים לפוסטים, קפיצה לפוסט הראשון או האחרון…
+      } קפיצה לפוסט הראשון או האחרון…
     posters: "מפרסמים"
     latest_poster_link: "הפרופיל של %{username}, פרסום אחרון"
     original_post: "פוסט מקורי"
@@ -4507,7 +4435,7 @@ he:
         reply_post: "%{shortcut} תגובה לפוסט"
         quote_post: "%{shortcut} ציטוט פוסט"
         like: "%{shortcut} אהבו פוסט"
-        flag: "%{shortcut} דגלו פוסט"
+        flag: "%{shortcut} סימון פוסט"
         bookmark: "%{shortcut} סימון פוסט"
         edit: "%{shortcut} עריכת פוסט"
         delete: "%{shortcut} מחיקת פוסט"
@@ -4708,7 +4636,6 @@ he:
         everyone_can_use: "ניתן להשתמש בתגיות בכל מקום"
         usable_only_by_groups: "התגיות גלויות לכולם אך רק הקבוצות הבאות יכולות להשתמש בהן"
         visible_only_to_groups: "התגיות גלויות לקבוצות הבאות בלבד"
-        cannot_save: "לא ניתן לשמור את קבוצת התגיות. נא לוודא שיש לפחות תגית אחד, ששם קבוצת התגיות אינו ריק ושנבחרה קבוצה לצורך הרשאת תגיות."
         tags_placeholder: "חיפוש או יצירת תגיות"
         parent_tag_placeholder: "רשות"
         select_groups_placeholder: "בחירת קבוצות…"
@@ -5105,6 +5032,7 @@ he:
         problems_found: "עצה שמבוססת על הגדרות האתר הנוכחיות שלך"
         new_features:
           title: "מה חדש"
+          subtitle: "לפרטים נוספים על יכולות חדשות השיפורים שאנו מוסיפים כל הזמן, כדאי לגשת אל <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>הערות ההוצאה לאור</a>."
           previous_announcements: "אפשר לצפות בהכרזות הקודמות על יכולות ב־<a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "מידע נוסף…"
         last_checked: "נבדק לאחרונה"
@@ -6026,8 +5954,8 @@ he:
                   other: "צריך לפחות %{count} קבוצות"
               categories:
                 at_least:
-                  one: "דרושה לפחות קטגוריה אחד"
-                  two: "דרושות לפחות שני קטגוריות"
+                  one: "דרושה לפחות קטגוריה"
+                  two: "דרושות לפחות שתי קטגוריות"
                   many: "דרושות לפחות %{count} קטגוריות"
                   other: "דרושות לפחות %{count} קטגוריות"
               tags:

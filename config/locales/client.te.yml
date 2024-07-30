@@ -1296,62 +1296,6 @@ te:
         warnings: "అధికారిక హెచ్చరికలు"
         read_more_in_group: "మరింత చదవాలనుకుంటున్నారా? %{groupLink}లో ఇతర సందేశాలను బ్రౌజ్ చేయండి."
         read_more: "మరింత చదవాలనుకుంటున్నారా? <a href='%{basePath}/u/%{username}/messages'>వ్యక్తిగత సందేశాలలో ఇతర సందేశాలను</a> బ్రౌజ్ చేయండి."
-        read_more_group_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># చదవనిది</a> ఉంది}
-                other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># చదవనివి</a> ఉన్నాయి}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { మరియు <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># కొత్త</a> సందేశం మిగిలి ఉంది లేదా {groupLink} లో ఇతర సందేశాలను బ్రౌజ్ చేయండి}
-                other { మరియు <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># కొత్త</a> సందేశాలు మిగిలి ఉన్నాయి లేదా {groupLink} లో ఇతర సందేశాలను బ్రౌజ్ చేయండి}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># చదవనిది</a>సందేశం మిగిలి ఉంది లేదా {groupLink} లో ఇతర సందేశాలను బ్రౌజ్ చేయండి}
-                other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># చదవనివి</a> సందేశాలు మిగిలి ఉన్నాయి లేదా {groupLink} లో ఇతర సందేశాలను బ్రౌజ్ చేయండి}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/group/{groupName}/new'># కొత్త</a> సందేశం మిగిలి ఉంది లేదా {groupLink} లో ఇతర సందేశాలను బ్రౌజ్ చేయండి}
-                other {<a href='{basePath}/u/{username}/messages/group/{groupName}/new'># కొత్త</a> సందేశాలు మిగిలి ఉన్నాయి లేదా {groupLink} లో ఇతర సందేశాలను బ్రౌజ్ చేయండి}
-              }
-            }
-            other {}
-          }
-        read_more_personal_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/unread'># చదవనిది</a> ఉంది}
-                other {<a href='{basePath}/u/{username}/messages/unread'># చదవనివి</a> ఉన్నాయి}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { మరియు <a href='{basePath}/u/{username}/messages/new'># కొత్త</a> సందేశం మిగిలి ఉంది లేదా ఇతర <a href='{basePath}/u/{username}/messages'>వ్యక్తిగత సందేశాలను</a> బ్రౌజ్ చేయండి}
-                other { మరియు <a href='{basePath}/u/{username}/messages/new'># కొత్త</a> సందేశాలు మిగిలి ఉన్నాయి లేదా ఇతర <a href='{basePath}/u/{username}/messages'>వ్యక్తిగత సందేశాలను</a> బ్రౌజ్ చేయండి}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/unread'># చదవనిది</a> సందేశం మిగిలి ఉంది లేదా ఇతర <a href='{basePath}/u/{username}/messages'>వ్యక్తిగత సందేశాలను</a> బ్రౌజ్ చేయండి}
-                other {There are <a href='{basePath}/u/{username}/messages/unread'># చదవనివి</a> సందేశాలు మిగిలి ఉన్నాయి లేదా ఇతర <a href='{basePath}/u/{username}/messages'>వ్యక్తిగత సందేశాలను</a> బ్రౌజ్ చేయండి}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/new'># కొత్త</a> సందేశం మిగిలి ఉంది లేదా ఇతర <a href='{basePath}/u/{username}/messages'>వ్యక్తిగత సందేశాలను</a> బ్రౌజ్ చేయండి}
-                other {There are <a href='{basePath}/u/{username}/messages/new'># కొత్త</a> సందేశాలు మిగిలి ఉన్నాయి లేదా ఇతర <a href='{basePath}/u/{username}/messages'>వ్యక్తిగత సందేశాలను</a> బ్రౌజ్ చేయండి}
-              }
-            }
-            other {}
-          }
       preferences_nav:
         account: "ఖాతా"
         security: "సెక్యూరిటీ"
@@ -1915,39 +1859,6 @@ te:
       logout_disabled: "సైట్ చదవడానికి మాత్రమే ఉన్నప్పుడు లాగ్అవుట్ నిలిపివేయబడుతుంది."
     staff_writes_only_mode:
       enabled: "ఈ సైట్ సిబ్బంది మాత్రమే మోడ్‌లో ఉంది. దయచేసి బ్రౌజ్ చేయడాన్ని కొనసాగించండి, కానీ ప్రత్యుత్తరం ఇవ్వడం, ఇష్టాలు మరియు ఇతర చర్యలు సిబ్బందికి మాత్రమే పరిమితం చేయబడ్డాయి."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
-            one {# లోపం/గంట}
-          other {# లోపాలు/గంట}
-        }</a> {limit, plural,
-            one {# లోపం/గంట}
-          other {# లోపాలు/గంట}
-        }సైట్ సెట్టింగ్ పరిమితిని చేరుకుంది.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
-            one {# లోపం/నిమిషం}
-          other {# లోపాలు/నిమిషం}
-        }</a> { limit, plural,
-            one {# లోపం/నిమిషం}
-          other {# లోపాలు/నిమిషం}
-        }సైట్ సెట్టింగ్ పరిమితిని చేరుకుంది.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
-            one {# లోపం/గంట}
-          other {# లోపాలు/గంట}
-        }</a> { limit, plural,
-            one {# లోపం/గంట}
-          other {# లోపాలు/గంట}
-        }సైట్ సెట్టింగ్ పరిమితిని చేరుకుంది.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
-            one {# లోపం/నిమిషం}
-          other {# లోపాలు/నిమిషం}
-        }</a> { limit, plural,
-            one {# లోపం/నిమిషం}
-          other {# లోపాలు/నిమిషం}
-        }సైట్ సెట్టింగ్ పరిమితిని మించిపోయింది .
     learn_more: "మరింత తెలుసుకోండి…"
     mute: నిశ్శబ్దం
     unmute: వినిశ్శబ్దం
@@ -4162,7 +4073,6 @@ te:
         everyone_can_use: "ట్యాగ్‌లను అందరూ ఉపయోగించవచ్చు"
         usable_only_by_groups: "ట్యాగ్‌లు అందరికీ కనిపిస్తాయి, కానీ కింది సమూహాలు మాత్రమే వాటిని ఉపయోగించగలవు"
         visible_only_to_groups: "ట్యాగ్‌లు క్రింది సమూహాలకు మాత్రమే కనిపిస్తాయి"
-        cannot_save: "ట్యాగ్ సమూహాన్ని సేవ్ చేయడం సాధ్యపడదు. కనీసం ఒక ట్యాగ్ ఉందని, ట్యాగ్ గ్రూప్ పేరు ఖాళీగా లేదని మరియు ట్యాగ్‌ల అనుమతి కోసం సమూహం ఎంచుకోబడిందని నిర్ధారించుకోండి."
         tags_placeholder: "ట్యాగ్‌లను శోధించండి లేదా సృష్టించండి"
         parent_tag_placeholder: "ఐచ్ఛికం"
         select_groups_placeholder: "సమూహాలను ఎంచుకోండి…"
