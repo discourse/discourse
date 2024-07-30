@@ -10,6 +10,7 @@ import cookie from "discourse/lib/cookie";
 import logout from "discourse/lib/logout";
 import mobile from "discourse/lib/mobile";
 import identifySource, { consolePrefix } from "discourse/lib/source-identifier";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
@@ -48,6 +49,14 @@ const ApplicationRoute = DiscourseRoute.extend({
   site: service(),
   siteSettings: service(),
   restrictedRouting: service(),
+
+  activate(transition) {
+    applyBehaviorTransformer(
+      "route-application-activate",
+      () => super.activate?.(transition),
+      { transition }
+    );
+  },
 
   get isOnlyOneExternalLoginMethod() {
     return (

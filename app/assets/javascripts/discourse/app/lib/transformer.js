@@ -213,8 +213,8 @@ export function applyBehaviorTransformer(
 
   if (!transformerNameExists(normalizedTransformerName)) {
     throw new Error(
-      `applyBehaviorTransformer: transformer name "${transformerName}" does not exist.` +
-        "Was the transformer name properly added? Is the transformer name correct? Is the type equals BEHAVIOR?" +
+      `applyBehaviorTransformer: transformer name "${transformerName}" does not exist. ` +
+        "Was the transformer name properly added? Is the transformer name correct? Is the type equals BEHAVIOR? " +
         "applyBehaviorTransformer can only be used with BEHAVIOR transformers."
     );
   }
@@ -274,8 +274,8 @@ export function applyValueTransformer(transformerName, defaultValue, context) {
 
   if (!transformerNameExists(normalizedTransformerName)) {
     throw new Error(
-      `applyValueTransformer: transformer name "${transformerName}" does not exist.` +
-        "Was the transformer name properly added? Is the transformer name correct? Is the type equals VALUE?" +
+      `applyValueTransformer: transformer name "${transformerName}" does not exist. ` +
+        "Was the transformer name properly added? Is the transformer name correct? Is the type equals VALUE? " +
         "applyValueTransformer can only be used with VALUE transformers."
     );
   }
