@@ -1378,15 +1378,6 @@ ca:
       enabled: "El lloc web és en mode només de lectura. Continueu navegant, però de moment estan desactivades les accions de respondre, 'm'agrada' i altres."
       login_disabled: "S'ha desactivat l'inici de sessió mentre aquest lloc web es trobi en mode només de lectura."
       logout_disabled: "S'ha desactivat el tancament de sessió mentre aquest lloc web es trobi en mode només de lectura."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errors/hora}}</a> s'ha arribat al límit de configuració del lloc web de {limit, plural, one {# error/hora} other {# errors/hora}}.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# error/minut} other {# errors/minut}}</a> s'ha arribat al límit de configuració del lloc web de {limit, plural, one {# error/minut} other {# errors/minut}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errors/hora}}</a> s'ha superat el límit de la configuració del lloc web de {limit, plural, one {# error/hora} other {# errors/hora}}.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minut} other {# errors/minut}}</a> s'ha superat el límit de la configuració del lloc web de {limit, plural, one {# error/minut} other {# errors/minut}}.
     mute: Silencia
     unmute: Desfés el silenciament
     last_post: Publicat

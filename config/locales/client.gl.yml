@@ -1531,15 +1531,6 @@ gl:
       enabled: "Este sitio está en modo só-lectura. Continúe navegando pero responder, gustar e outras accións estarán desactivadas polo de agora."
       login_disabled: "Cando o sitio está no modo de só-lectura, desactívase o inicio de sesión."
       logout_disabled: "O peche de sesión desactívase mentres o sitio está en modo de só lectura."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> acadou o límite configurado no sitio de {limit, plural, one {# erro/hora} other {# erros/hora}}.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> acadou o límite configurado no sitio de {limit, plural, one {# erro/minuto} other {# erros/minuto}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/hora} other {# erros/hora}}</a> excedeu o límite configurado do sitio de {limit, plural, one {# erro/hora} other {# erros/hora}}.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> excedeu o límite configurado do sitio de {limit, plural, one {# erro/minuto} other {# erros/minuto}}.
     mute: Silenciar
     unmute: Non silenciar
     last_post: Publicado

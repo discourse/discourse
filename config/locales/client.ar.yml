@@ -286,7 +286,7 @@ ar:
         enabled: "تم تثبيته في %{when}"
         disabled: "تم إلغاء تثبيته في %{when}"
       pinned_globally:
-        enabled: "تم تثبيته بشكلٍ عام في %{when}"
+        enabled: "تم تثبيته بشكلٍٍ عام في %{when}"
         disabled: "تم إلغاء تثبيته في %{when}"
       visible:
         enabled: "تم إدراجه في %{when}"
@@ -298,7 +298,7 @@ ar:
     topic_admin_menu: "إجراءات الموضوع"
     skip_to_main_content: "تخطي إلى المحتوى الرئيسي"
     skip_user_nav: "التخطي إلى محتوى الملف الشخصي"
-    emails_are_disabled: "أوقف أحد المسؤولين البريد الصادر بشكلٍ عام. ولن يتم إرسال إشعارات عبر البريد الإلكتروني أيًا كان نوعها."
+    emails_are_disabled: "أوقف أحد المسؤولين البريد الصادر بشكلٍٍ عام. ولن يتم إرسال إشعارات عبر البريد الإلكتروني أيًا كان نوعها."
     emails_are_disabled_non_staff: "تم إيقاف البريد الإلكتروني الصادر للمستخدمين من خارج فريق العمل."
     software_update_prompt:
       message: "لقد أجرينا تحديثًا على هذا الموقع، <span>يُرجى تحديث الصفحة</span> للحفاظ على سير الأمور بسلاسة."
@@ -310,13 +310,13 @@ ar:
       broken_theme_alert: "قد لا يعمل موقعك كما ينبغي بسبب وجود أخطاء في السمة/المكوِّن."
       error_caused_by: "بسبب '%{name}'. <a target='blank' href='%{path}'>انقر هنا</a> للتحديث أو إعادة الإعداد أو الإيقاف"
       only_admins: "(تظهر هذه الرسالة لمسؤولي الموقع فقط)"
-    broken_decorator_alert: "قد لا يتم عرض المنشورات بشكلٍ صحيح لأن أحد مصمِّمي محتوى المنشورات على موقعك أشار إلى خطأ."
+    broken_decorator_alert: "قد لا يتم عرض المنشورات بشكلٍٍ صحيح لأن أحد مصمِّمي محتوى المنشورات على موقعك أشار إلى خطأ."
     broken_page_change_alert: "أظهر معالج onPageChange خطأً. تحقَّق من أدوات مطوِّر المتصفح للمزيد من المعلومات."
     broken_plugin_alert: "بسبب المكوِّن الإضافي '%{name}'"
     critical_deprecation:
       notice: "‎<b>[إشعار المسؤول]</b> يحتاج أحد السمات أو المكوِّنات الإضافية لديك إلى التحديث للتوافق مع التغييرات الأساسية القادمة في Discourse."
-      id: "‎(المعرِّف:<em>%{id})"
-      linked_id: "‎(المعرِّف:<a href='%{url}' target='_blank'><em>%{id}></a>)"
+      id: "‎(المعرِّف:<em>%{id}</em>)"
+      linked_id: "‎(المعرِّف:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
       theme_source: "السمة المحدَّدة: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "المكوِّن الإضافي المحدَّد: '%{name}'"
     s3:
@@ -508,7 +508,7 @@ ar:
       bulk:
         delete_completed: "تم حذف الإشارات المرجعية بنجاح."
         reminders_cleared: "تم مسح تذكيرات الإشارات المرجعية بنجاح."
-        toggle: "تبديل التحديد المجمع للإشارات المرجعية"
+        toggle: "تشغيل التحديد المجَّمع للإشارات المرجعية"
         select_all: "تحديد الكل"
         clear_all: "مسح الكل"
         selected_count:
@@ -654,7 +654,7 @@ ar:
           title: "عندما يقرر أحد أعضاء فريق العمل اتخاذ إجراء، يتم منح مكافأة على البلاغ."
         user_accuracy_bonus:
           name: "دقة المستخدم"
-          title: "يحصل المستخدمون الذين تم التحقُّق من صحة بلاغاتهم بشكلٍ متكرر على مكافأة."
+          title: "يحصل المستخدمون الذين تم التحقُّق من صحة بلاغاتهم بشكلٍٍ متكرر على مكافأة."
         trust_level_bonus:
           name: "مستوى الثقة"
           title: "تحظى العناصر القابلة للمراجعة التي أنشأها مستخدمون من مستوى ثقة أعلى بنقاط أعلى."
@@ -1037,7 +1037,7 @@ ar:
           imap_title: "IMAP"
           imap_additional_settings: "إعدادات إضافية"
           imap_instructions: 'عند تفعيل IMAP للمجموعة، تتم مزامنة الرسائل الإلكترونية بين صندوق الوارد للمجموعة وخادم IMAP وصندوق البريد المقدَّمين. يجب تفعيل SMTP باستخدام بيانات اعتماد صالحة ومُختبَرة قبل تفعيل IMAP. سيتم استخدام اسم مستخدم البريد الإلكتروني وكلمة المرور المستخدمين لخادم SMTP في خادم IMAP. لمزيد من المعلومات، راجع <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">إعلان الميزة في Discourse Meta</a>.'
-          imap_alpha_warning: "تحذير: هذه الميزة في مرحلة الإصدار الأولي. ويتم دعم Gmail فقط بشكلٍ رسمي. استخدمها على مسؤوليتك الخاصة!"
+          imap_alpha_warning: "تحذير: هذه الميزة في مرحلة الإصدار الأولي. ويتم دعم Gmail فقط بشكلٍٍ رسمي. استخدمها على مسؤوليتك الخاصة!"
           imap_settings_valid: "إعدادات IMAP صالحة."
           smtp_disable_confirm: "إذا أوقفت SMTP، فستتم إعادة تعيين جميع إعدادات SMTP وIMAP وإيقاف الوظائف المرتبطة. هل تريد بالتأكيد الاستمرار؟"
           imap_disable_confirm: "إذا أوقفت IMAP، فستتم إعادة تعيين جميع إعدادات IMAP وإيقاف الوظائف المرتبطة. هل تريد بالتأكيد الاستمرار؟"
@@ -1647,86 +1647,6 @@ ar:
         warnings: "تحذيرات رسمية"
         read_more_in_group: "هل ترغب في قراءة المزيد؟ تصفح الرسائل الأخرى في %{groupLink}."
         read_more: "هل ترغب في قراءة المزيد؟ تصفح الرسائل الأخرى في <a href='%{basePath}/u/%{username}/messages'>الرسائل الشخصية</a>."
-        read_more_group_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   zero {}=0 {}
-                  one {هناك <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'>رسالة غير مقروءة</a>}
-                   two {هناك <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'>رسالتان غير مقروءتين</a>}
-                   few {هناك <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># رسائل غير مقروءة</a>}
-                   many {هناك <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># رسالة غير مقروءة</a>}
-                other {هناك <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># رسالة غير مقروءة</a>}
-              }
-              { NEW, plural,
-                   zero {}=0 {}
-                  one { و<a href='{basePath}/u/{username}/messages/group/{groupName}/new'>رسالة جديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
-                   two { و<a href='{basePath}/u/{username}/messages/group/{groupName}/new'>رسالتان جديدتان</a> متبقيتان، أو استعرض الرسائل الأخرى في {groupLink}}
-                   few { و<a href='{basePath}/u/{username}/messages/group/{groupName}/new'># رسائل جديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
-                   many { و<a href='{basePath}/u/{username}/messages/group/{groupName}/new'># رسالة جديدة</a> متبقية، أو استعرض الرسائل الجديدة في {groupLink}}
-                other { و<a href='{basePath}/u/{username}/messages/group/{groupName}/new'># رسالة جديدة</a> متبقية، أو استعرض الرسائل الجديدة في {groupLink}}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   zero {}=0 {}
-                  one {هناك <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'>رسالة غير مقروءة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
-                   two {هناك <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'>رسالتان غير مقروءتين</a> متبقيتان، أو استعرض الرسائل الأخرى في {groupLink}}
-                   few {هناك <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># رسائل غير مقروءة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
-                   many {هناك <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># رسالة غير مقروءة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
-                other {هناك <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># رسالة غير مقروءة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
-              }
-              { NEW, plural,
-                   zero {}=0 {}
-                  one {هناك <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>رسالة جديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
-                   two {هناك <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>رسالتان جديدتان</a> متبقيتان، أو استعرض الرسائل الأخرى في {groupLink}}
-                   few {هناك <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># رسائل جديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
-                   many {هناك <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># رسالة جديدة</a> متبقية، أو استعرض الرسائل الجديدة في {groupLink}}
-                other {هناك <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># رسالة جديدة</a> متبقية، أو استعرض الرسائل الجديدة في {groupLink}}
-              }
-            }
-            other {}
-          }
-        read_more_personal_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   zero {}=0 {}
-                  one {هناك <a href='{basePath}/u/{username}/messages/unread'>رسالة غير مقروءة</a>}
-                   two {هناك <a href='{basePath}/u/{username}/messages/unread'>رسالتان غير مقروءتين</a>}
-                   few {هناك <a href='{basePath}/u/{username}/messages/unread'># رسائل غير مقروءة</a>}
-                   many {هناك <a href='{basePath}/u/{username}/messages/unread'># رسالة غير مقروءة</a>}
-                other {هناك <a href='{basePath}/u/{username}/messages/unread'># رسالة غير مقروءة</a>}
-              }
-              { NEW, plural,
-                   zero {}=0 {}
-                  one { و<a href='{basePath}/u/{username}/messages/new'>رسالة جديدة</a> متبقية، أو استعرض <a href='{basePath}/u/{username}/messages'>الرسائل الشخصية</a> الأخرى}
-                   two { و<a href='{basePath}/u/{username}/messages/new'>رسالتان جديدتان</a> متبقيتان، أو استعرض <a href='{basePath}/u/{username}/messages'>الرسائل الشخصية</a> الأخرى}
-                   few { و<a href='{basePath}/u/{username}/messages/new'># رسائل جديدة</a> متبقية، أو استعرض <a href='{basePath}/u/{username}/messages'>الرسائل الشخصية</a> الأخرى}
-                   many { و<a href='{basePath}/u/{username}/messages/new'># رسالة جديدة</a> متبقية، أو استعرض <a href='{basePath}/u/{username}/messages'>الرسائل الشخصية</a> الأخرى}
-                   other { و<a href='{basePath}/u/{username}/messages/new'># رسالة جديدة</a> متبقية، أو استعرض <a href='{basePath}/u/{username}/messages'>الرسائل الشخصية</a> الأخرى}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   zero {}=0 {}
-                  one {هناك <a href='{basePath}/u/{username}/messages/unread'>رسالة غير مقروءة</a> متبقية، أو استعرض <a href='{basePath}/u/{username}/messages'>الرسائل الشخصية</a> الأخرى}
-                   two {هناك <a href='{basePath}/u/{username}/messages/unread'>رسالتان غير مقروءتين</a> متبقيتان، أو استعرض browse other <a href='{basePath}/u/{username}/messages'>الرسائل الشخصية</a> الأخرى}
-                   few {هناك <a href='{basePath}/u/{username}/messages/unread'># رسائل غير مقروءة</a> متبقية، أو استعرض <a href='{basePath}/u/{username}/messages'>الرسائل الشخصية</a> الأخرى}
-                   many {هناك <a href='{basePath}/u/{username}/messages/unread'># رسالة غير مقروءة</a> متبقية، أو استعرض <a href='{basePath}/u/{username}/messages'>الرسائل الشخصية</a> الأخرى}
-                other {هناك <a href='{basePath}/u/{username}/messages/unread'># رسالة غير مقروءة</a> متبقية، أو استعرض <a href='{basePath}/u/{username}/messages'>الرسائل الشخصية</a> الأخرى}
-              }
-              { NEW, plural,
-                   zero {}=0 {}
-                  one {هناك <a href='{basePath}/u/{username}/messages/new'>رسالة جديدة</a> متبقية، أو استعرض <a href='{basePath}/u/{username}/messages'>الرسائل الشخصية</a> الأخرى}
-                   two {هناك <a href='{basePath}/u/{username}/messages/new'>رسالتان جديدتان</a> متبقيتان، أو استعرض <a href='{basePath}/u/{username}/messages'>الرسائل الشخصية</a> الأخرى}
-                   few {هناك <a href='{basePath}/u/{username}/messages/new'># رسائل جديدة</a> متبقية، أو استعرض <a href='{basePath}/u/{username}/messages'>الرسائل الشخصية</a> الأخرى}
-                   many {هناك <a href='{basePath}/u/{username}/messages/new'># رسالة جديدة</a> متبقية، أو استعرض <a href='{basePath}/u/{username}/messages'>الرسائل الشخصية</a> الأخرى}
-                   other {هناك <a href='{basePath}/u/{username}/messages/new'># رسالة جديدة</a> متبقية، أو استعرض <a href='{basePath}/u/{username}/messages'>الرسائل الشخصية</a> الأخرى}
-              }
-            }
-            other {}
-          }
       preferences_nav:
         account: "الحساب"
         security: "الأمان"
@@ -1891,7 +1811,7 @@ ar:
         uploaded_avatar_empty: "إضافة صورة مخصَّصة"
         upload_title: "تحميل صورتك"
         image_is_not_a_square: "تحذير: لقد قصصنا صورتك؛ لأن عرضها وارتفاعها لم يكونا متساويين."
-        logo_small: "شعار الموقع الصغير. يتم استخدامه بشكلٍ افتراضي."
+        logo_small: "شعار الموقع الصغير. يتم استخدامه بشكلٍٍ افتراضي."
         use_custom: "أو حمِّل صورة رمزية مخصَّصة:"
       change_profile_background:
         title: "رأس الملف الشخصي"
@@ -2380,15 +2300,6 @@ ar:
       logout_disabled: "يتم إيقاف تسجيل الخروج عندما يكون الموقع في وضع القراءة فقط."
     staff_writes_only_mode:
       enabled: "هذا الموقع في وضع القراءة فقط. يُرجى المتابعة للتصفح، لكن سيقتصر التصفح والرد وتسجيل الإعجاب والإجراءات الأخرى على الأعضاء في فريق العمل فقط."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – لقد بلغ معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – لقد بلغ معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – لقد تجاوز معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – لقد تجاوز معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}.
     learn_more: "معرفة المزيد…"
     mute: كتم
     unmute: إلغاء الكتم
@@ -3125,7 +3036,7 @@ ar:
       too_short: "عبارة البحث قصيرة جدًا."
       open_advanced: "فتح بحث متقدم"
       clear_search: "مسح البحث"
-      sort_or_bulk_actions: "ترتيب النتائج أو تحديدها بشكلٍ جماعي"
+      sort_or_bulk_actions: "ترتيب النتائج أو تحديدها بشكلٍٍ جماعي"
       result_count:
         zero: "<span>%{count}%{plus} نتيجة بحث عن العبارة <span class='term'>%{term}</span>"
         one: "<span>نتيجة بحث واحدة (%{count}) عن العبارة <span class='term'>%{term}</span>"
@@ -3408,12 +3319,12 @@ ar:
           many: "لقد حدَّدت <b>%{count}</b> موضوعًا."
           other: "لقد حدَّدت <b>%{count}</b> موضوع."
         selected_sole_category:
-          zero: "لقد حدَّدت <b>%{count} موضوع من الفئة:"
-          one: "لقد حدَّدت موضوعًا واحدًا (<b>%{count}) من الفئة:"
-          two: "لقد حدَّدت موضوعَين (<b>%{count}) من الفئة:"
-          few: "لقد حدَّدت <b>%{count} موضوعات من الفئة:"
-          many: "لقد حدَّدت <b>%{count} موضوعًا من الفئة:"
-          other: "لقد حدَّدت <b>%{count} موضوع من الفئة:"
+          zero: "لقد حدَّدت <b>%{count}</b> موضوع من الفئة:"
+          one: "لقد حدَّدت موضوعًا واحدًا (<b>%{count}</b>) من الفئة:"
+          two: "لقد حدَّدت موضوعَين (<b>%{count}</b> من الفئة:"
+          few: "لقد حدَّدت <b>%{count}</b>موضوعات من الفئة:"
+          many: "لقد حدَّدت <b>%{count}</b>موضوعًا من الفئة:"
+          other: "لقد حدَّدت <b>%{count}</b> موضوع من الفئة:"
         selected_count:
           zero: "المحدَّدة: %{count}"
           one: "المحدَّدة: %{count}"
@@ -3457,9 +3368,9 @@ ar:
         hot: "لا توجد موضوعات ساخنة."
         filter: "لا توجد موضوعات."
         educate:
-          new: '<p>ستظهر موضوعاتك الجديدة هنا. تُعتبَر الموضوعات جديدة بشكلٍ افتراضي وستعرض مؤشر <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> إذا كان قد تم إنشاؤها في آخر يومين.</p><p>يمكنك الانتقال إلى <a href="%{userPrefsUrl}">تفضيلاتك</a> لتغيير ذلك.</p>'
-          unread: "<p>ستظهر موضوعاتك غير المقروءة هنا.</p><p>تُعتبَر الموضوعات غير مقروءة بشكلٍ افتراضي وستعرض أعداد الموضوعات غير المقروءة <span class=\"badge unread-posts badge-notification\">1</span> إذا كنت قد:</p><ul><li>أنشأت الموضوع</li><li>رددت على الموضوع</li><li>قرأت الموضوع لأكثر من 5 دقائق</li></ul><p>أو إذا وضعت الموضوع صراحةً تحت \"المراقبة\" أو \"التتبُّع\" عبر \U0001F514 في كل موضوع.</p><p>يمكنك الانتقال إلى <a href=\"%{userPrefsUrl}\">التفضيلات</a> لتغيير ذلك.</p>"
-          new_new: "<p>ستظهر موضوعاتك الجديدة هنا، وسيتم أيضًا عرض موضوعاتك غير المقروءة. تُعتبَر الموضوعات جديدة بشكلٍ افتراضي، وستعرض <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> مؤشرًا إذا تم إنشاؤها في آخر يومين. ستعرض الموضوعات غير المقروءة الأعداد غير المقروءة <span class=\"badge unread-posts badge-notification\">1</span> إذا كنت قد: أنشأت الموضوع، أو قرأت الموضوع لأكثر من 5 دقائق، أو إذا وضعت الموضوع صراحةً تحت \"المراقبة\" أو \"التتبُّع\" عبر \U0001F514 في كل موضوع.</p><p>انتقل إلى <a href=\"%{userPrefsUrl}\">التفضيلات</a> لتغيير ذلك.</p>"
+          new: '<p>ستظهر موضوعاتك الجديدة هنا. تُعتبَر الموضوعات جديدة بشكلٍٍ افتراضي وستعرض مؤشر <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> إذا كان قد تم إنشاؤها في آخر يومين.</p><p>يمكنك الانتقال إلى <a href="%{userPrefsUrl}">تفضيلاتك</a> لتغيير ذلك.</p>'
+          unread: "<p>ستظهر موضوعاتك غير المقروءة هنا.</p><p>تُعتبَر الموضوعات غير مقروءة بشكلٍٍ افتراضي وستعرض أعداد الموضوعات غير المقروءة <span class=\"badge unread-posts badge-notification\">1</span> إذا كنت قد:</p><ul><li>أنشأت الموضوع</li><li>رددت على الموضوع</li><li>قرأت الموضوع لأكثر من 5 دقائق</li></ul><p>أو إذا وضعت الموضوع صراحةً تحت \"المراقبة\" أو \"التتبُّع\" عبر \U0001F514 في كل موضوع.</p><p>يمكنك الانتقال إلى <a href=\"%{userPrefsUrl}\">التفضيلات</a> لتغيير ذلك.</p>"
+          new_new: "<p>ستظهر موضوعاتك الجديدة هنا، وسيتم أيضًا عرض موضوعاتك غير المقروءة. تُعتبَر الموضوعات جديدة بشكلٍٍ افتراضي، وستعرض <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> مؤشرًا إذا تم إنشاؤها في آخر يومين. ستعرض الموضوعات غير المقروءة الأعداد غير المقروءة <span class=\"badge unread-posts badge-notification\">1</span> إذا كنت قد: أنشأت الموضوع، أو قرأت الموضوع لأكثر من 5 دقائق، أو إذا وضعت الموضوع صراحةً تحت \"المراقبة\" أو \"التتبُّع\" عبر \U0001F514 في كل موضوع.</p><p>انتقل إلى <a href=\"%{userPrefsUrl}\">التفضيلات</a> لتغيير ذلك.</p>"
       bottom:
         latest: "لا يوجد المزيد من الموضوعات الحديثة."
         posted: "لا يوجد المزيد من الموضوعات المنشورة."
@@ -3805,7 +3716,7 @@ ar:
       feature:
         pin: "تثبيت الموضوع"
         unpin: "إلغاء تثبيت الموضوع"
-        pin_globally: "تثبيت الموضوع بشكلٍ عام"
+        pin_globally: "تثبيت الموضوع بشكلٍٍ عام"
         make_banner: "تحويل الموضوع إلى بانر"
         remove_banner: "إزالة الموضوع البانر"
       reply:
@@ -3830,7 +3741,7 @@ ar:
         help: "فتح نسخة ملائمة للطباعة من هذا الموضوع"
       flag_topic:
         title: "إبلاغ"
-        help: "الإبلاغ عن هذا الموضوع بشكلٍ خاص للفت الانتباه إليه، أو إرسال إشعار خاص بشأنه."
+        help: "الإبلاغ عن هذا الموضوع بشكلٍٍ خاص للفت الانتباه إليه، أو إرسال إشعار خاص بشأنه."
         success_message: "لقد أبلغت عن هذا الموضوع بنجاح."
       make_public:
         title: "التحويل إلى موضوع عام"
@@ -3840,7 +3751,7 @@ ar:
         pin: "جعل هذا الموضوع يظهر أعلى الفئة %{categoryLink} حتى"
         unpin: "إزالة هذا الموضوع من أعلى الفئة \"%{categoryLink}\""
         unpin_until: "إزالة هذا الموضوع من أعلى الفئة \"%{categoryLink}\" أو الانتظار حتى <strong>%{until}</strong>"
-        pin_note: "يمكن للمستخدمين إلغاء تثبيت الموضوع بشكلٍ فردي لأنفسهم."
+        pin_note: "يمكن للمستخدمين إلغاء تثبيت الموضوع بشكلٍٍ فردي لأنفسهم."
         pin_validation: "يلزم إدخال تاريخ لتثبيت هذا الموضوع."
         not_pinned: "لا توجد موضوعات مثبَّتة في %{categoryLink}."
         already_pinned:
@@ -3852,23 +3763,23 @@ ar:
           other: "الموضوعات المثبَّتة حاليًا في %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "جعل هذا الموضوع يظهر أعلى قوائم الموضوعات حتى"
         confirm_pin_globally:
-          zero: "لديك بالفعل %{count} موضوع مثبَّت بشكلٍ عام. قد تصبح كثرة الموضوعات المثبَّتة مصدر إزعاج للمستخدمين الجُدد والمجهولين. هل تريد بالتأكيد تثبيت موضوع آخر بشكلٍ عام؟"
-          one: "لديك بالفعل موضوع واحد (%{count}) مثبَّت بشكلٍ عام. قد تصبح كثرة الموضوعات المثبَّتة مصدر إزعاج للمستخدمين الجُدد والمجهولين. هل تريد بالتأكيد تثبيت موضوع آخر بشكلٍ عام؟"
-          two: "لديك بالفعل موضوعان (%{count}) مثبَّتان بشكلٍ عام. قد تصبح كثرة الموضوعات المثبَّتة مصدر إزعاج للمستخدمين الجُدد والمجهولين. هل تريد بالتأكيد تثبيت موضوع آخر بشكلٍ عام؟"
-          few: "لديك بالفعل %{count} موضوعات مثبَّتة بشكلٍ عام. قد تصبح كثرة الموضوعات المثبَّتة مصدر إزعاج للمستخدمين الجُدد والمجهولين. هل تريد بالتأكيد تثبيت موضوع آخر بشكلٍ عام؟"
-          many: "لديك بالفعل %{count} موضوعًا مثبَّتًا بشكلٍ عام. قد تصبح كثرة الموضوعات المثبَّتة مصدر إزعاج للمستخدمين الجُدد والمجهولين. هل تريد بالتأكيد تثبيت موضوع آخر بشكلٍ عام؟"
-          other: "لديك بالفعل %{count} موضوع مثبَّت بشكلٍ عام. قد تصبح كثرة الموضوعات المثبَّتة مصدر إزعاج للمستخدمين الجُدد والمجهولين. هل تريد بالتأكيد تثبيت موضوع آخر بشكلٍ عام؟"
+          zero: "لديك بالفعل %{count} موضوع مثبَّت بشكلٍٍ عام. قد تصبح كثرة الموضوعات المثبَّتة مصدر إزعاج للمستخدمين الجُدد والمجهولين. هل تريد بالتأكيد تثبيت موضوع آخر بشكلٍٍ عام؟"
+          one: "لديك بالفعل موضوع واحد (%{count}) مثبَّت بشكلٍٍ عام. قد تصبح كثرة الموضوعات المثبَّتة مصدر إزعاج للمستخدمين الجُدد والمجهولين. هل تريد بالتأكيد تثبيت موضوع آخر بشكلٍٍ عام؟"
+          two: "لديك بالفعل موضوعان (%{count}) مثبَّتان بشكلٍٍ عام. قد تصبح كثرة الموضوعات المثبَّتة مصدر إزعاج للمستخدمين الجُدد والمجهولين. هل تريد بالتأكيد تثبيت موضوع آخر بشكلٍٍ عام؟"
+          few: "لديك بالفعل %{count} موضوعات مثبَّتة بشكلٍٍ عام. قد تصبح كثرة الموضوعات المثبَّتة مصدر إزعاج للمستخدمين الجُدد والمجهولين. هل تريد بالتأكيد تثبيت موضوع آخر بشكلٍٍ عام؟"
+          many: "لديك بالفعل %{count} موضوعًا مثبَّتًا بشكلٍٍ عام. قد تصبح كثرة الموضوعات المثبَّتة مصدر إزعاج للمستخدمين الجُدد والمجهولين. هل تريد بالتأكيد تثبيت موضوع آخر بشكلٍٍ عام؟"
+          other: "لديك بالفعل %{count} موضوع مثبَّت بشكلٍٍ عام. قد تصبح كثرة الموضوعات المثبَّتة مصدر إزعاج للمستخدمين الجُدد والمجهولين. هل تريد بالتأكيد تثبيت موضوع آخر بشكلٍٍ عام؟"
         unpin_globally: "إزالة هذا الموضوع من أعلى جميع قوائم الموضوعات"
         unpin_globally_until: "إزالة هذا الموضوع من أعلى جميع قوائم الموضوعات أو الانتظار حتى <strong>%{until}</strong>."
-        global_pin_note: "يمكن للمستخدمين إلغاء تثبيت الموضوع بشكلٍ فردي لأنفسهم."
-        not_pinned_globally: "لا توجد موضوعات مثبَّتة بشكلٍ عام."
+        global_pin_note: "يمكن للمستخدمين إلغاء تثبيت الموضوع بشكلٍٍ فردي لأنفسهم."
+        not_pinned_globally: "لا توجد موضوعات مثبَّتة بشكلٍٍ عام."
         already_pinned_globally:
-          zero: "الموضوعات المثبَّتة حاليًا بشكلٍ عام: <strong class='badge badge-notification unread'>%{count}</strong>"
-          one: "الموضوعات المثبَّتة حاليًا بشكلٍ عام: <strong class='badge badge-notification unread'>%{count}</strong>"
-          two: "الموضوعات المثبَّتة حاليًا بشكلٍ عام: <strong class='badge badge-notification unread'>%{count}</strong>"
-          few: "الموضوعات المثبَّتة حاليًا بشكلٍ عام: <strong class='badge badge-notification unread'>%{count}</strong>"
-          many: "الموضوعات المثبَّتة حاليًا بشكلٍ عام: <strong class='badge badge-notification unread'>%{count}</strong>"
-          other: "الموضوعات المثبَّتة حاليًا بشكلٍ عام: <strong class='badge badge-notification unread'>%{count}</strong>"
+          zero: "الموضوعات المثبَّتة حاليًا بشكلٍٍ عام: <strong class='badge badge-notification unread'>%{count}</strong>"
+          one: "الموضوعات المثبَّتة حاليًا بشكلٍٍ عام: <strong class='badge badge-notification unread'>%{count}</strong>"
+          two: "الموضوعات المثبَّتة حاليًا بشكلٍٍ عام: <strong class='badge badge-notification unread'>%{count}</strong>"
+          few: "الموضوعات المثبَّتة حاليًا بشكلٍٍ عام: <strong class='badge badge-notification unread'>%{count}</strong>"
+          many: "الموضوعات المثبَّتة حاليًا بشكلٍٍ عام: <strong class='badge badge-notification unread'>%{count}</strong>"
+          other: "الموضوعات المثبَّتة حاليًا بشكلٍٍ عام: <strong class='badge badge-notification unread'>%{count}</strong>"
         make_banner: "تحويل هذا الموضوع إلى إعلان يظهر في أعلى جميع الصفحات."
         remove_banner: "إزالة البانر الذي يظهر في أعلى جميع الصفحات"
         banner_note: "يمكن للمستخدمين تجاهل البانر بإغلاقه. ولا يمكن تحويل أكثر من موضوع واحد إلى بانر في الوقت نفسه."
@@ -4182,7 +4093,7 @@ ar:
         edit: "تعديل هذا المنشور"
         edit_action: "تعديل"
         edit_anonymous: "عذرًا، لكنك بحاجة إلى تسجيل الدخول لتعديل هذا المنشور."
-        flag: "الإبلاغ عن هذا المنشور بشكلٍ خاص للفت الانتباه إليه، أو إرسال إشعار خاص بشأنه."
+        flag: "الإبلاغ عن هذا المنشور بشكلٍٍ خاص للفت الانتباه إليه، أو إرسال إشعار خاص بشأنه."
         delete: "حذف هذا المنشور"
         undelete: "إلغاء حذف هذا المنشور"
         share: "شارِك رابطًا إلى هذا المنشور"
@@ -4207,8 +4118,8 @@ ar:
             other: "نعم، و%{count} رد"
           just_the_post: "لا، هذا المنشور فقط"
         admin: "إجراءات المسؤول على المنشور"
-        permanently_delete: "الحذف بشكلٍ دائم"
-        permanently_delete_confirmation: "هل تريد بالتأكيد حذف هذا المنشور بشكلٍ دائم؟ لن تتمكن من استعادته."
+        permanently_delete: "الحذف بشكلٍٍ دائم"
+        permanently_delete_confirmation: "هل تريد بالتأكيد حذف هذا المنشور بشكلٍٍ دائم؟ لن تتمكن من استعادته."
         wiki: "التحويل إلى Wiki"
         unwiki: "إزالة Wiki"
         convert_to_moderator: "لون إضافة فريق العمل"
@@ -4444,7 +4355,7 @@ ar:
       read_only_banner: "نص البانر عندما لا يستطيع المستخدم إنشاء موضوع في هذه الفئة:"
       num_featured_topics: "عدد الموضوعات المعروضة في صفحة الفئات:"
       subcategory_num_featured_topics: "عدد الموضوعات المميَّزة في صفحة الفئة الرئيسية."
-      all_topics_wiki: "تحويل الموضوعات الجديدة إلى Wiki بشكلٍ افتراضي"
+      all_topics_wiki: "تحويل الموضوعات الجديدة إلى Wiki بشكلٍٍ افتراضي"
       allow_unlimited_owner_edits_on_first_post: "السماح للمالك بعدد غير محدود من التعديلات على أول منشور"
       subcategory_list_style: "نمط قائمة الفئات الفرعية:"
       sort_order: "ترتيب قائمة الموضوعات حسب:"
@@ -4464,7 +4375,7 @@ ar:
       minimum_required_tags: "الحد الأدنى من عدد الوسوم المطلوبة في الموضوع:"
       default_slow_mode: 'تفعيل "الوضع البطيء" للموضوعات الجديدة في هذه الفئة.'
       parent: "الفئة الرئيسية"
-      num_auto_bump_daily: "عدد الموضوعات المفتوحة التي سيتم رفعها تلقائيًا بشكل يومي:"
+      num_auto_bump_daily: "عدد الموضوعات المفتوحة التي سيتم رفعها تلقائيًا بشكلٍ يومي:"
       auto_bump_cooldown_days: "الحد الأدنى لعدد الأيام قبل رفع الموضوع نفسه مرة أخرى:"
       navigate_to_first_post_after_read: "الانتقال إلى أول منشور بعد قراءة الموضوعات"
       notifications:
@@ -4545,7 +4456,7 @@ ar:
       submit_tooltip: "إرسال البلاغ الخاص"
       take_action_tooltip: "بلوغ حد البلاغات على الفور، وإخفاء المنشور، والموافقة على جميع البلاغات قيد الانتظار"
       cant: "عذرًا، لا يمكنك الإبلاغ عن هذا المنشور في الوقت الحالي."
-      notify_staff: "إرسال إشعار إلى فريق العمل بشكلٍ خاص"
+      notify_staff: "إرسال إشعار إلى فريق العمل بشكلٍٍ خاص"
       formatted_name:
         off_topic: "خارج عن الموضوع"
         inappropriate: "غير لائق"
@@ -4630,8 +4541,8 @@ ar:
         title: "غير مثبَّت"
         help: "هذا الموضوع غير مثبّت لك، وسيتم عرضه بالترتيب العادي"
       pinned_globally:
-        title: "مثبَّت بشكلٍ عام"
-        help: "هذا الموضوع مثبَّت بشكلٍ عام؛ لذا فإنه سيظهر في أعلى صفحة أحدث الموضوعات وفي أعلى فئته."
+        title: "مثبَّت بشكلٍٍ عام"
+        help: "هذا الموضوع مثبَّت بشكلٍٍ عام؛ لذا فإنه سيظهر في أعلى صفحة أحدث الموضوعات وفي أعلى فئته."
       pinned:
         title: "مثبَّت"
         help: "هذا الموضوع مثبَّت لك وسيتم عرضه في أعلى فئته"
@@ -4890,9 +4801,9 @@ ar:
         search: "%{shortcut} البحث"
         filter_sidebar: "%{shortcut} شريط تصفية جانبي"
         help: "%{shortcut} فتح مساعدة لوحة المفاتيح"
-        toggle_bulk_select: "%{shortcut} تبديل التحديد الجماعي"
+        toggle_bulk_select: "%{shortcut} تشغيل التحديد الجماعي"
         dismiss: "%{shortcut} تجاهل الموضوعات المحددة"
-        x: "%{shortcut} تبديل التحديد (في وضع التحديد المجمع)"
+        x: "%{shortcut} تشغيل التحديد (في وضع التحديد المجمَّع)"
         log_out: "%{shortcut} تسجيل الخروج"
       composing:
         title: "الإنشاء"
@@ -5089,8 +5000,8 @@ ar:
       manage_groups: "إدارة مجموعات الوسوم"
       manage_groups_description: "تحديد المجموعات لتنظيم الوسوم"
       upload: "تحميل الوسوم"
-      upload_description: "تحميل ملف CSV لإنشاء الوسوم بشكلٍ جماعي"
-      upload_instructions: "واحد في كل سطر، مع مجموعة وسوم بالتنسيق 'tag_name,tag_group' بشكلٍ اختياري."
+      upload_description: "تحميل ملف CSV لإنشاء الوسوم بشكلٍٍ جماعي"
+      upload_instructions: "واحد في كل سطر، مع مجموعة وسوم بالتنسيق 'tag_name,tag_group' بشكلٍٍ اختياري."
       upload_successful: "تم تحميل الوسوم بنجاح"
       delete_unused_confirmation:
         zero: "سيتم حذف %{count} وسم: %{tags}"
@@ -5152,7 +5063,6 @@ ar:
         everyone_can_use: "يمكن للجميع استخدام الوسوم"
         usable_only_by_groups: "تكون الوسوم مرئية للجميع، ولكن يمكن للمجموعات التالية فقط استخدامها"
         visible_only_to_groups: "تكون الوسوم مرئية للمجموعات التالية فقط"
-        cannot_save: "لا يمكن حفظ مجموعة الوسوم. تأكَّد من وجود وسم واحد على الأقل، وأن اسم مجموعة الوسوم ليس فارغًا، وأن هناك مجموعة محدَّدة لمنحها إذن الوسوم."
         tags_placeholder: "البحث أو إنشاء الوسوم"
         parent_tag_placeholder: "اختياري"
         select_groups_placeholder: "تحديد المجموعات…"
@@ -5779,7 +5689,7 @@ ar:
         save: حفظ
         new_key: مفتاح API جديد
         revoked: تم الإلغاء
-        delete: الحذف بشكلٍ دائم
+        delete: الحذف بشكلٍٍ دائم
         not_shown_again: لن يتم عرض هذا المفتاح مرة أخرى. تأكَّد من أخذ نسخة قبل المتابعة.
         continue: متابعة
         scopes:
@@ -6124,7 +6034,7 @@ ar:
           saved: "تم الحفظ!"
         flags:
           header: "بلاغات الإشراف"
-          subheader: "يساعدك نظام البلاغات في Discourse وفريق المشرفين لديك على إدارة المحتوى وسلوك المستخدم، والحفاظ على مجتمعك محترمًا وصحيًا. الإعدادات الافتراضية مناسبة لمعظم المجتمعات ولا يتعين عليك تغييرها. ومع ذلك، إذا كان موقعك يحتوي على متطلبات معينة، فيمكنك إيقاف البلاغات التي لا تحتاج إليها وإضافة بلاغاتك المخصَّصة."
+          subheader: "يساعدك نظام البلاغات في Discourse وفريق المشرفين لديك على إدارة المحتوى وسلوك المستخدم، والحفاظ على مجتمعك محترمًا وصحيًا. الإعدادات الافتراضية مناسبة لمعظم المجتمعات ولا يتعين عليك تغييرها. ومع ذلك، إذا كان موقعك يحتوي على متطلبات معيَّنة، يمكنك إيقاف البلاغات التي لا تحتاج إليها وإضافة بلاغاتك المخصَّصة."
           description: "الوصف"
           enabled: "مفعَّلة؟"
           add: "إضافة بلاغ"
@@ -6343,7 +6253,7 @@ ar:
           show_advanced: "إظهار الحقول المتقدمة"
           hide_advanced: "إخفاء الحقول المتقدمة"
           hide_unused_fields: "إخفاء الحقول غير المستخدمة"
-          is_default: "السمة مفعَّلة بشكلٍ افتراضي"
+          is_default: "السمة مفعَّلة بشكلٍٍ افتراضي"
           user_selectable: "يمكن للمستخدمين تحديد السمة"
           color_scheme_user_selectable: "يمكن تحديد نظام الألوان بواسطة المستخدمين"
           auto_update: "التحديث التلقائي عند تحديث Discourse"
@@ -6452,13 +6362,13 @@ ar:
           theme_translations: "ترجمات السمة"
           empty: "لا توجد عناصر"
           commits_behind:
-            zero: "السمة متأخرة بعدد %{count} مساهمة!"
-            one: "السمة متأخرة بمساهمة واحدة (%{count})!"
-            two: "السمة متأخرة بمساهمتَين (%{count})!"
-            few: "السمة متأخرة بعدد %{count} مساهمات!"
-            many: "السمة متأخرة بعدد %{count} مساهمة!"
-            other: "السمة متأخرة بعدد %{count} مساهمة!"
-          compare_commits: "(عرض المساهمات الجديدة)"
+            zero: "السمة متأخرة بعدد %{count} إصدار!"
+            one: "السمة متأخرة بإصدار واحد (%{count})!"
+            two: "السمة متأخرة بإصدارَين (%{count})!"
+            few: "السمة متأخرة بعدد %{count} إصدارات!"
+            many: "السمة متأخرة بعدد %{count} إصدارًا!"
+            other: "السمة متأخرة بعدد %{count} إصدار!"
+          compare_commits: "(عرض الإصدارات الجديدة)"
           remote_theme_edits: "إذا كنت ترغب في تعديل هذه السمة0، يجب عليك <a href='%{repoURL}' target='_blank'>طلب تغيير في مستودعها</a>"
           repo_unreachable: "تعذَّر الاتصال بمستودع Git لهذه السمة. رسالة الخطأ:"
           imported_from_archive: "تم استيراد هذه السمة من ملف ‎.zip"
@@ -6610,7 +6520,7 @@ ar:
             description: "لون الخلفية لعناصر مثل عناصر القائمة عند التمرير فوقها أو تحديد التركيز على لوحة المفاتيح لها."
         robots:
           title: "تجاوز ملف robots.txt لموقعك:"
-          warning: "سيؤدي ذلك إلى تجاوز أي إعدادات ذات صلة بالموقع بشكلٍ دائم."
+          warning: "سيؤدي ذلك إلى تجاوز أي إعدادات ذات صلة بالموقع بشكلٍٍ دائم."
           overridden: تم تجاوز ملف robots.txt الافتراضي لموقعك.
         email_style:
           title: "نمط الرسالة الإلكترونية"
@@ -6629,7 +6539,7 @@ ar:
         preview_digest: "معاينة الملخص"
         advanced_test:
           title: "الاختبار المتقدم"
-          desc: "استعرض كيف استقبلت عمليات Discourse الرسائل الإلكترونية. لتتمكن من معالجة الرسالة الإلكترونية بشكلٍ صحيح، يُرجى لصق الرسالة الإلكترونية الأصلية بالكامل أدناه."
+          desc: "استعرض كيف استقبلت عمليات Discourse الرسائل الإلكترونية. لتتمكن من معالجة الرسالة الإلكترونية بشكلٍٍ صحيح، يُرجى لصق الرسالة الإلكترونية الأصلية بالكامل أدناه."
           email: "الرسالة الأصلية"
           run: "تشغيل الاختبار"
           text: "نص الرسالة المحدَّد"
@@ -6839,10 +6749,10 @@ ar:
             update_public_sidebar_section: "تحديث قسم الشريط الجانبي العام"
             destroy_public_sidebar_section: "إزالة قسم الشريط الجانبي العام"
             reset_bounce_score: "إعادة تعيين نقاط الارتداد"
-            create_watched_word_group: "إنشاء مجموعة كلمات مراقبة"
-            update_watched_word_group: "تحديث مجموعة كلمات مراقبة"
-            delete_watched_word_group: "حذف مجموعة كلمات مراقبة"
-            toggle_flag: "تشغيل البلاغ"
+            create_watched_word_group: "إنشاء مجموعة الكلمات المُراقَبة"
+            update_watched_word_group: "تحديث مجموعة الكلمات المُراقَبة"
+            delete_watched_word_group: "حذف مجموعة الكلمات المُراقَبة"
+            toggle_flag: "تبديل البلاغ"
             move_flag: "نقل البلاغ"
             create_flag: "إنشاء بلاغ"
             update_flag: "تحديث البلاغ"
@@ -6851,8 +6761,8 @@ ar:
             topic_slow_mode_removed: "إزالة وضع إبطاء الموضوع"
             custom_emoji_create: "إنشاء رمز تعبيري مخصَّص"
             custom_emoji_destroy: "حذف رمز تعبيري مخصَّص"
-            delete_post_permanently: "حذف المنشور بشكلٍ دائم"
-            delete_topic_permanently: "حذف الموضوع بشكلٍ دائم"
+            delete_post_permanently: "حذف المنشور بشكلٍٍ دائم"
+            delete_topic_permanently: "حذف الموضوع بشكلٍٍ دائم"
         screened_emails:
           title: "عناوين البريد الإلكتروني الخاضعة للمراقبة"
           description: "عندما يحاول شخص ما إنشاء حساب جديد، سيتم التحقُّق من عناوين البريد الإلكتروني التالية وحظر التسجيل، أو اتخاذ إجراء آخر."
@@ -7098,7 +7008,7 @@ ar:
           no_constructive_purpose: "لا يوجد غرض بنَّاء لأفعاله بخلاف خلق المعارضة داخل المجتمع"
           custom: "مخصَّصة…"
         suspend_message: "رسالة إلكترونية"
-        suspend_message_placeholder: "قدِّم المزيد من المعلومات عن التعليق بشكلٍ اختياري وسيتم إرسالها عبر البريد الالكتروني إلى المستخدم."
+        suspend_message_placeholder: "قدِّم المزيد من المعلومات عن التعليق بشكلٍٍ اختياري وسيتم إرسالها عبر البريد الالكتروني إلى المستخدم."
         suspended_by: "تم التعليق بواسطة"
         silence_reason: "السبب"
         silenced_by: "كتمه"

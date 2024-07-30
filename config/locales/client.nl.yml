@@ -1343,62 +1343,6 @@ nl:
         warnings: "Officiële waarschuwingen"
         read_more_in_group: "Wil je meer lezen? Bekijk andere berichten in %{groupLink}."
         read_more: "Wil je meer lezen? Bekijk andere berichten in <a href='%{basePath}/u/%{username}/messages'>persoonlijke berichten</a>."
-        read_more_group_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Er is <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ongelezen</a>}
-                other {Er zijn <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ongelezen</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { en <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nieuw</a> bericht resterend, of bekijk andere berichten in {groupLink}}
-                other { en <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nieuwe</a> berichten resterend, of bekijk andere berichten in {groupLink}}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Er is <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ongelezen</a> bericht resterend, of bekijk andere berichten in {groupLink}}
-                other {Er zijn <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ongelezen</a> berichten resterend, of bekijk andere berichten in {groupLink}}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {Er is <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nieuw</a> bericht resterend, of bekijk andere berichten in {groupLink}}
-                other {Er zijn <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nieuwe</a> berichten resterend, of bekijk andere berichten in {groupLink}}
-              }
-            }
-            other {}
-          }
-        read_more_personal_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Er is <a href='{basePath}/u/{username}/messages/unread'># ongelezen</a>}
-                other {Er zijn <a href='{basePath}/u/{username}/messages/unread'># ongelezen</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { en <a href='{basePath}/u/{username}/messages/new'># nieuw</a> bericht resterend, of bekijk andere <a href='{basePath}/u/{username}/messages'>persoonlijke berichten</a>}
-                other { en <a href='{basePath}/u/{username}/messages/new'># nieuwe</a> berichten resterend, of bekijk andere <a href='{basePath}/u/{username}/messages'>persoonlijke berichten</a>}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Er is <a href='{basePath}/u/{username}/messages/unread'># ongelezen</a> bericht resterend, of bekijk andere <a href='{basePath}/u/{username}/messages'>persoonlijke berichten</a>}
-                other {Er zijn <a href='{basePath}/u/{username}/messages/unread'># unread</a> berichten resterend, of bekijk andere <a href='{basePath}/u/{username}/messages'>persoonlijke berichten</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {Er is <a href='{basePath}/u/{username}/messages/new'># new</a> bericht resterend, of bekijk andere <a href='{basePath}/u/{username}/messages'>persoonlijke berichten</a>}
-                other {Er zijn <a href='{basePath}/u/{username}/messages/new'># new</a> berichten resterend, of bekijk andere <a href='{basePath}/u/{username}/messages'>persoonlijke berichten</a>}
-              }
-            }
-            other {}
-          }
       preferences_nav:
         account: "Account"
         security: "Beveiliging"
@@ -1988,15 +1932,6 @@ nl:
       logout_disabled: "Afmelden is uitgeschakeld zolang de website zich in de alleen-lezenmodus bevindt."
     staff_writes_only_mode:
       enabled: "Deze site is in de medewerkermodus. Ga door met bekijken, maar antwoorden, liken en andere acties zijn beperkt tot medewerkers."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/uur} other {# fouten/uur}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/uur} other {# fouten/uur}} bereikt.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/minuut} other {# fouten/minuut}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/minuut} other {# fouten/minuut}} bereikt.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/uur} other {# fouten/uur}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/uur} other {# fouten/uur}} bereikt.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/minuut} other {# fouten/minuut}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/minuut} other {# fouten/minuut}} bereikt.
     learn_more: "Meer informatie…"
     mute: Dempen
     unmute: Dempen opheffen
@@ -4273,7 +4208,6 @@ nl:
         everyone_can_use: "Tags kunnen door iedereen worden gebruikt"
         usable_only_by_groups: "Tags zijn zichtbaar voor iedereen, maar alleen de volgende groepen kunnen ze gebruiken"
         visible_only_to_groups: "Tags zijn alleen zichtbaar voor de volgende groepen"
-        cannot_save: "Kan taggroep niet opslaan. Zorg dat er minimaal één tag aanwezig is, dat de naam van de taggroep niet leeg is en dat er een groep is geselecteerd voor tagstoestemming."
         tags_placeholder: "Zoek of maak tags"
         parent_tag_placeholder: "Optioneel"
         select_groups_placeholder: "Selecteer groepen…"

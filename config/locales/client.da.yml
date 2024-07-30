@@ -1697,15 +1697,6 @@ da:
       enabled: "Dette websted er i skrivebeskyttet tilstand lige nu. Fortsæt endelig med at kigge, men der kan ikke svares, sendes 'Synes godt om' eller andet indtil videre."
       login_disabled: "Login er deaktiveret, mens webstedet er i skrivebeskyttet tilstand."
       logout_disabled: "Log ud er deaktiveret mens webstedet er i skrivebeskyttet tilstand."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> har overskredet webstedsindstillingsgrænsen på {limit, plural, one {# fejl / minut} other {# fejl/minut}}.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> har nået webstedets indstillingsgrænse på {limit, plural, one {# fejl/minut} other {# fejl/minut}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fejl/time} other {# fejl/time}}</a> har overskredet webstedets indstillingsgrænse på {limit, plural, one {# fejl/time} other {# fejl/time}}.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> overskredet webstedsindstillingsgrænsen på {limit, plural, one {# fejl / minut} other {# fejl/minut}}.
     learn_more: "Lær mere…"
     mute: Ignorer
     unmute: Unmute
@@ -3613,7 +3604,6 @@ da:
         everyone_can_use: "Mærker kan bruges af alle"
         usable_only_by_groups: "Mærker er synlige for alle, men kun følgende grupper kan bruge dem"
         visible_only_to_groups: "Mærker er kun synlige for følgende grupper"
-        cannot_save: "Kan ikke gemme mærkegruppe. Sørg for, at der er mindst et mærke til stede, mærkegruppe navnet ikke er tomt, og en gruppe er valgt for mærke tilladelse."
         tags_placeholder: "Søg eller opret tags"
         parent_tag_placeholder: "Valgfri"
         select_groups_placeholder: "Vælg grupper…"

@@ -1359,78 +1359,6 @@ cs:
         warnings: "Oficiální varování"
         read_more_in_group: "Chcete si přečíst více? Procházet další zprávy v %{groupLink}."
         read_more: "Chcete si přečíst více? Procházet další <a href='%{basePath}/u/%{username}/messages'>osobní zprávy</a>."
-        read_more_group_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Existuje <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepřečtená</a>}
-                   few {Existuje <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepřečtené</a>}
-                   many {Existuje <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepřečtených</a>}
-                other {Existuje <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepřečtených</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { a <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># zbývající nová</a> zpráva, nebo procházet další zprávy v {groupLink}}
-                   few { a <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># zbývající nové</a> zprávy, nebo procházet další zprávy v {groupLink}}
-                   many { a <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># zbývajících nových</a> zpráv, nebo procházet další zprávy v {groupLink}}
-                other { a <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># zbývajících nových</a> zpráv, nebo procházet další zprávy v {groupLink}}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Zbývá <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepřečtená</a> zpráva nebo procházet další zprávy v {groupLink}}
-                   few {Zbývají <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepřečtené</a> zprávy nebo procházejte další zprávy v {groupLink}}
-                   many {Zbývá <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepřečtených</a> zprávy nebo procházejte další zprávy v {groupLink}}
-                other {Zbývá <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepřečtených</a> zpráv nebo procházejte další zprávy v {groupLink}}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {Zbývá <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nová</a> zpráva, nebo procházejte další zprávy v {groupLink}}
-                   few {Zbývají <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nové</a> zprávy nebo procházejte další zprávy v {groupLink}}
-                   many {Zbývá <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nových</a> zpráv nebo procházejte další zprávy v {groupLink}}
-                other {Zbývá <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nových</a> zpráv nebo procházejte další zprávy v {groupLink}}
-              }
-            }
-            other {}
-          }
-        read_more_personal_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Existuje <a href='{basePath}/u/{username}/messages/unread'># nepřečtená</a>}
-                   few {Existují <a href='{basePath}/u/{username}/messages/unread'># nepřečtené</a>}
-                   many {Existuje <a href='{basePath}/u/{username}/messages/unread'># nepřečtených</a>}
-                other {Existuje <a href='{basePath}/u/{username}/messages/unread'># nepřečtených</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { a <a href='{basePath}/u/{username}/messages/new'># zbývající nová</a> zpráva nebo procházet další <a href='{basePath}/u/{username}/messages'>osobní zprávy</a>}
-                   few { a <a href='{basePath}/u/{username}/messages/new'># zbývající nové</a> zprávy nebo procházet další <a href='{basePath}/u/{username}/messages'>osobní zprávy</a>}
-                   many { a <a href='{basePath}/u/{username}/messages/new'># zbývajících nových</a> zpráva nebo procházet další <a href='{basePath}/u/{username}/messages'>osobních zpráv</a>}
-                other { a <a href='{basePath}/u/{username}/messages/new'># zbývajících nových</a> zpráv nebo procházet další <a href='{basePath}/u/{username}/messages'>osobní zprávy</a>}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Zbývá <a href='{basePath}/u/{username}/messages/unread'># nepřečtená</a> zpráva nebo procházet další <a href='{basePath}/u/{username}/messages'>osobní zprávy</a>}
-                   few {Zbývají <a href='{basePath}/u/{username}/messages/unread'># nepřečtené</a> zprávy nebo procházet další <a href='{basePath}/u/{username}/messages'>osobní zprávy</a>}
-                   many {Zbývá <a href='{basePath}/u/{username}/messages/unread'># nepřečtených</a> zpráv nebo procházet další <a href='{basePath}/u/{username}/messages'>osobní zprávy</a>}
-                other {Zbývá <a href='{basePath}/u/{username}/messages/unread'># nepřečtených</a> zpráv nebo procházet další <a href='{basePath}/u/{username}/messages'>osobní zprávy</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {Zbývá <a href='{basePath}/u/{username}/messages/new'># nová</a> zpráva nebo procházet další <a href='{basePath}/u/{username}/messages'>osobní zprávy</a>}
-                   few {Zbývají <a href='{basePath}/u/{username}/messages/new'># nové</a> zprávy nebo procházet další <a href='{basePath}/u/{username}/messages'>osobní zprávy</a>}
-                   many {Zbývá <a href='{basePath}/u/{username}/messages/new'># nových</a> zpráv nebo procházet další <a href='{basePath}/u/{username}/messages'>osobní zprávy</a>}
-                other {Zbývá <a href='{basePath}/u/{username}/messages/new'># nových</a> zpráv nebo procházet další <a href='{basePath}/u/{username}/messages'>osobní zprávy</a>}
-              }
-            }
-            other {}
-          }
       preferences_nav:
         account: "Účet"
         security: "Zabezpečení"
@@ -2010,55 +1938,6 @@ cs:
       logout_disabled: "Odhlášení je zakázáno zatímco je stránka v režimu jen pro čtení."
     staff_writes_only_mode:
       enabled: "Tato stránka je v režimu pouze pro redaktory. Pokračujte v prohlížení, ale odpovídání, hodnocení Líbí se a další akce jsou omezeny pouze pro členy redakce."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
-            one {# chyba/hodinu}
-            few {# chyby/hodinu}
-            many {# chyb/hodinu}
-          other {# chyb/hodinu}
-        }</a> dosáhlo limitu nastavení webu {limit, plural,
-            one {# chyba/hodinu}
-            few {# chyby/hodinu}
-            many {# chyb/hodinu}
-          other {# chyb/hodinu}
-        }.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
-            one {# chyba/minutu}
-            few {# chyby/minutu}
-            many {# chyb/minutu}
-          other {# chyb/minutu}
-        }</a> dosáhlo limitu nastavení webu {limit, plural,
-            one {# chyba/minutu}
-            few {# chyby/minutu}
-            many {# chyb/minutu}
-          other {# chyb/minutu}
-        }.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
-            one {# chyba/hodinu}
-            few {# chyby/hodinu}
-            many {# chyb/hodinu}
-          other {# chyb/hodinu}
-        }</a> překročilo limitu nastavení webu { limit, plural,
-            one {# chyba/hodinu}
-            few {# chyby/hodinu}
-            many {# chyb/hodinu}
-          other {# chyb/hodinu}
-        }.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
-            one {# chyba/minutu}
-            few {# chyby/minutu}
-            many {# chyb/minutu}
-          other {# chyb/minutu}
-        }</a> překročilo limitu nastavení webu {limit, plural,
-            one {# chyba/minutu}
-            few {# chyby/minutu}
-            many {# chyb/minutu}
-          other {# chyb/minutu}
-        }.
     learn_more: "Zjistit více…"
     mute: Ignorovat
     unmute: Zrušit ignorování
@@ -4444,7 +4323,6 @@ cs:
         everyone_can_use: "Všichni mohou používat štítky"
         usable_only_by_groups: "Štítky jsou viditelné pro všechny, ale mohou je používat pouze následující skupiny"
         visible_only_to_groups: "Štítky jsou viditelné pouze pro následující skupiny"
-        cannot_save: "Nelze uložit skupinu štítků. Ujistěte se, že existuje alespoň jeden štítek, název skupiny štítků není prázdný a skupina je vybrána pro oprávnění štítků."
         tags_placeholder: "Vyhledat nebo vytvořit štítky"
         parent_tag_placeholder: "Volitelné"
         select_groups_placeholder: "Vyberte skupiny…"

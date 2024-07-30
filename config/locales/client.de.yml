@@ -1348,25 +1348,25 @@ de:
             true {
               { UNREAD, plural,
                    =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ungelesene Nachricht</a>}
-                other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ungelesene Nachrichten</a>}
+                  one {<a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># ungelesene Nachricht</a>}
+                other {<a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># ungelesene Nachrichten</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one { und <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># neue</a> Nachricht verbleibend. Oder durchstöbere andere Nachrichten in {groupLink}}
-                other { und <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># neue</a> Nachrichten verbleibend. Oder durchstöbere andere Nachrichten in {groupLink}}
+                  one { und <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># neue</a> Nachricht verbleibend. Oder durchstöbere andere Nachrichten in {groupLink}}
+                other { und <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># neue</a> Nachrichten verbleibend. Oder durchstöbere andere Nachrichten in {groupLink}}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ungelesene</a> Nachricht verbleibend. Oder durchstöbere andere Nachrichten in {groupLink}}
-                other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ungelesene</a> Nachrichten verbleibend. Oder durchstöbere andere Nachrichten in {groupLink}}
+                  one {<a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># ungelesene</a> Nachricht verbleibend. Oder durchstöbere andere Nachrichten in {groupLink}}
+                other {<a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># ungelesene</a> Nachrichten verbleibend. Oder durchstöbere andere Nachrichten in {groupLink}}
               }
               { NEW, plural,
                    =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/group/{groupName}/new'># neue</a> Nachricht verbleibend. Oder durchstöbere andere Nachrichten in {groupLink}}
-                other {<a href='{basePath}/u/{username}/messages/group/{groupName}/new'># neue</a> Nachrichten verbleibend. Oder durchstöbere andere Nachrichten in {groupLink}}
+                  one {<a href="{basePath}/u/{username}/messages/group/{groupName}/new"># neue</a> Nachricht verbleibend. Oder durchstöbere andere Nachrichten in {groupLink}}
+                other {<a href="{basePath}/u/{username}/messages/group/{groupName}/new"># neue</a> Nachrichten verbleibend. Oder durchstöbere andere Nachrichten in {groupLink}}
               }
             }
             other {}
@@ -1376,25 +1376,25 @@ de:
             true {
               { UNREAD, plural,
                    =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/unread'># ungelesene Nachricht</a>}
-                other {<a href='{basePath}/u/{username}/messages/unread'># ungelesene Nachricht</a>}
+                  one {<a href="{basePath}/u/{username}/messages/unread"># ungelesene Nachricht</a>}
+                other {<a href="{basePath}/u/{username}/messages/unread"># ungelesene Nachrichten</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one { und <a href='{basePath}/u/{username}/messages/new'># neue</a> Nachricht verbleibend. Oder durchstöbere andere <a href='{basePath}/u/{username}/messages'>persönliche Nachrichten</a>}
-                other { und <a href='{basePath}/u/{username}/messages/new'># neue</a> Nachrichten verbleibend. Oder durchstöbere andere <a href='{basePath}/u/{username}/messages'>persönliche Nachrichten</a>}
+                  one { und <a href="{basePath}/u/{username}/messages/new"># neue</a> Nachricht verbleibend. Oder durchstöbere andere <a href="{basePath}/u/{username}/messages">persönliche Nachrichten</a>}
+                other { und <a href="{basePath}/u/{username}/messages/new"># neue</a> Nachrichten verbleibend. Oder durchstöbere andere <a href="{basePath}/u/{username}/messages">persönliche Nachrichten</a>}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/unread'># ungelesene</a> Nachricht verbleibend. Oder durchstöbere andere <a href='{basePath}/u/{username}/messages'>persönliche Nachrichten</a>}
-                other {<a href='{basePath}/u/{username}/messages/unread'># ungelesene</a> Nachrichten verbleibend. Oder durchstöbere andere <a href='{basePath}/u/{username}/messages'>persönliche Nachrichten</a>}
+                  one {<a href="{basePath}/u/{username}/messages/unread"># ungelesene</a> Nachricht verbleibend. Oder durchstöbere andere <a href="{basePath}/u/{username}/messages">persönliche Nachrichten</a>}
+                other {<a href="{basePath}/u/{username}/messages/unread"># ungelesene</a> Nachricht verbleibend. Oder durchstöbere andere <a href="{basePath}/u/{username}/messages">persönliche Nachrichten</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/new'># neue</a> Nachricht verbleibend. Oder durchstöbere andere <a href='{basePath}/u/{username}/messages'>persönliche Nachrichten</a>}
-                other {<a href='{basePath}/u/{username}/messages/new'># neue</a> Nachrichten verbleibend. Oder durchstöbere andere <a href='{basePath}/u/{username}/messages'>persönliche Nachrichten</a>}
+                  one {<a href="{basePath}/u/{username}/messages/new"># neue</a> Nachricht verbleibend. Oder durchstöbere andere <a href="{basePath}/u/{username}/messages">persönliche Nachrichten</a>}
+                other {<a href="{basePath}/u/{username}/messages/new"># neue</a> Nachrichten verbleibend. Oder durchstöbere andere <a href="{basePath}/u/{username}/messages">persönliche Nachrichten</a>}
               }
             }
             other {}
@@ -1990,13 +1990,37 @@ de:
       enabled: "Diese Website befindet sich im Nur-Team-Modus. Du kannst weiterhin Inhalte lesen, aber das Antworten, Vergeben von „Gefällt mir“ und Durchführen einiger weiterer Aktionen ist derzeit nur für Team-Mitglieder möglich."
     logs_error_rate_notice:
       reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehlern/Stunde}} erreicht.
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# Fehler/Stunde}
+          other {# Fehler/Stunde}
+        }</a> hat die Grenze der Website-Einstellung von { limit, plural,
+            one {# Fehler/Stunde}
+          other {# Fehlern/Stunde}
+        } erreicht.
       reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehlern/Minute}} erreicht.
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# Fehler/Minute}
+          other {# Fehler/Minute}
+        }</a> hat die Grenze der Website-Einstellung von { limit, plural,
+            one {# Fehler/Minute}
+          other {# Fehlern/Minute}
+        } erreicht.
       exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehlern/Stunde}} überschritten.
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# Fehler/Stunde}
+          other {# Fehler/Stunde}
+        }</a> hat die Grenze der Website-Einstellung von { limit, plural,
+            one {# Fehler/Stunde}
+          other {# Fehlern/Stunde}
+        } überschritten.
       exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehlern/Minute}} überschritten.
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# Fehler/Minute}
+          other {# Fehler/Minute}
+        }</a> hat die Grenze der Website-Einstellung von { limit, plural,
+            one {# Fehler/Minute}
+          other {# Fehlern/Minute}
+        } überschritten.
     learn_more: "Mehr erfahren …"
     mute: Stummschalten
     unmute: Stummschaltung aufheben
@@ -4273,7 +4297,7 @@ de:
         everyone_can_use: "Schlagwörter können von jedem verwendet werden"
         usable_only_by_groups: "Schlagwörter sind für jeden sichtbar, aber nur die folgenden Gruppen können sie benutzen"
         visible_only_to_groups: "Schlagwörter sind nur für folgende Gruppen sichtbar"
-        cannot_save: "Schlagwortgruppe kann nicht gespeichert werden. Stelle sicher, dass mindestens ein Schlagwort vorhanden ist, der Name der Schlagwortgruppe nicht leer ist und eine Gruppe für die Schlagwort-Berechtigung ausgewählt ist."
+        cannot_save: "Schlagwortgruppe kann nicht gespeichert werden. Stelle sicher, dass mindestens ein Schlagwort vorhanden ist, der Name der Schlagwortgruppe nicht leer und kürzer als 100 Zeichen ist und eine Gruppe für die Schlagwort-Berechtigung ausgewählt ist."
         tags_placeholder: "Schlagwörter suchen oder erstellen"
         parent_tag_placeholder: "Optional"
         select_groups_placeholder: "Gruppen auswählen …"
