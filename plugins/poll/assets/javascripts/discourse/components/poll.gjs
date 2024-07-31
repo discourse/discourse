@@ -152,10 +152,6 @@ export default class PollComponent extends Component {
     return this.args.attrs.poll.type === NUMBER;
   }
 
-  get post() {
-    return this.args.attrs.post;
-  }
-
   get isMe() {
     return (
       this.currentUser && this.args.attrs.post.user_id === this.currentUser.id
