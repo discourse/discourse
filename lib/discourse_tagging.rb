@@ -4,6 +4,8 @@ module DiscourseTagging
   TAGS_FIELD_NAME ||= "tags"
   TAGS_FILTER_REGEXP ||= /[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/ # /?#[]@!$&'()*+,;=.%\`^|{}"<>
   TAGS_STAFF_CACHE_KEY ||= "staff_tag_names"
+  TAGS_GROUPS_MAP_CACHE_KEY ||= "tags_groups_name_map"
+  VISIBLE_TAGGROUPS_CACHE_KEY ||= "visible_taggroups_names"
 
   TAG_GROUP_TAG_IDS_SQL ||= <<-SQL
       SELECT tag_id
@@ -716,6 +718,8 @@ module DiscourseTagging
 
   def self.clear_cache!
     Discourse.cache.delete(TAGS_STAFF_CACHE_KEY)
+    Discourse.cache.delete(VISIBLE_TAGGROUPS_CACHE_KEY)
+    Discourse.cache.delete(TAGS_GROUPS_MAP_CACHE_KEY)
   end
 
   def self.clean_tag(tag)
@@ -793,5 +797,46 @@ module DiscourseTagging
   def self.muted_tags(user)
     return [] unless user
     TagUser.lookup(user, :muted).joins(:tag).pluck("tags.name")
+  end
+
+  def self.visible_tag_groups_for(guardian)
+    valid, uid, visible_tag_groups_names = Discourse.cache.read(VISIBLE_TAGGROUPS_CACHE_KEY)
+    if valid != true || uid != guardian.user&.id
+      # update cache
+      uid = guardian.user&.id
+      visible_tag_groups_names = TagGroup.visible(guardian).pluck(:name)
+      Discourse.cache.write(
+        VISIBLE_TAGGROUPS_CACHE_KEY,
+        [true, guardian.user&.id, visible_tag_groups_names],
+        expires_in: 1.minute,
+      )
+    end
+
+    visible_tag_groups_names
+  end
+
+  def self.tag_groups_for(tag)
+    # Record<String, Array<String> | [nil]>
+    tag_groups_map = Discourse.cache.read(TAGS_GROUPS_MAP_CACHE_KEY)
+    if !tag_groups_map
+      tag_groups_map =
+        Tag
+          .left_outer_joins(:tag_groups)
+          .select("tags.*, array_agg(tag_groups.name) as tag_group_names")
+          .group("tags.id")
+          .all
+          .each
+          .with_object({}) do |tag, hash|
+            hash[tag.name] = tag.tag_group_names
+            hash[tag.id] = tag.tag_group_names
+          end
+      Discourse.cache.write(TAGS_GROUPS_MAP_CACHE_KEY, tag_groups_map, expires_in: 1.day)
+    end
+
+    if tag.is_a?(Tag)
+      tag_groups_map[tag.id] || [nil]
+    else
+      tag_groups_map[tag] || [nil]
+    end
   end
 end

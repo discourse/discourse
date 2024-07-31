@@ -10,11 +10,28 @@ export function replaceTagRenderer(fn) {
   _renderer = fn;
 }
 
-export function defaultRenderTag(tag, params) {
+function buildTagHTML(tagName, attrs, innerHTML) {
+  let val = `<${tagName}`;
+  for (const [k, v] of Object.entries(attrs)) {
+    val += v ? ` ${k}="${escape(v)}"` : "";
+  }
+  val += `>${innerHTML}</${tagName}>`;
+  return val;
+}
+
+/**
+ * @param {Object} extra Reserved for theme components and plugins so they don't have to rewrite the entire renderer
+ * @param {Record<string, string>?} extra.attrs Add or override tag attributes
+ * @param {((content: string)=>string)?} extra.contentFn Override the innerHTML of a tag
+ * @param {string?} extra.extraClass Adding additional classes to tags
+ */
+export function defaultRenderTag(tag, params, extra) {
   // This file is in lib but it's used as a helper
   let siteSettings = helperContext().siteSettings;
 
   params = params || {};
+  extra = extra || {};
+
   const visibleName = escapeExpression(tag);
   tag = visibleName.toLowerCase();
   const classes = ["discourse-tag"];
@@ -30,7 +47,6 @@ export function defaultRenderTag(tag, params) {
       path = `/tag/${tag}`;
     }
   }
-  const href = path ? ` href='${getURL(path)}' ` : "";
 
   if (siteSettings.tag_style || params.style) {
     classes.push(params.style || siteSettings.tag_style);
@@ -38,32 +54,30 @@ export function defaultRenderTag(tag, params) {
   if (params.extraClass) {
     classes.push(params.extraClass);
   }
+  if (extra.extraClass) {
+    classes.push(extra.extraClass);
+  }
   if (params.size) {
     classes.push(params.size);
   }
 
   // remove all html tags from hover text
-  const hoverDescription =
-    params.description && params.description.replace(/<.+?>/g, "");
+  const hoverDescription = params.description?.replace(/<.+?>/g, "");
 
-  let val =
-    "<" +
-    tagName +
-    href +
-    " data-tag-name=" +
-    tag +
-    (params.description ? ' title="' + escape(hoverDescription) + '" ' : "") +
-    " class='" +
-    classes.join(" ") +
-    "'>" +
-    (params.displayName ? escape(params.displayName) : visibleName) +
-    "</" +
-    tagName +
-    ">";
+  const content = params.displayName ? escape(params.displayName) : visibleName;
 
-  if (params.count) {
-    val += " <span class='discourse-tag-count'>x" + params.count + "</span>";
-  }
+  let val = buildTagHTML(
+    tagName,
+    {
+      href: path && getURL(path),
+      "data-tag-name": tag,
+      "data-tag-groups": params.tagGroups?.join(", "),
+      title: hoverDescription,
+      class: classes.join(" "),
+      ...(extra.attrs ?? {}),
+    },
+    extra.contentFn?.(content) ?? content
+  );
 
   return val;
 }

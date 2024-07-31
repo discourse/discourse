@@ -6,6 +6,7 @@ module TopicTagsMixin
   def self.included(klass)
     klass.attributes :tags
     klass.attributes :tags_descriptions
+    klass.attributes :tags_groups
   end
 
   def include_tags?
@@ -20,6 +21,16 @@ module TopicTagsMixin
     all_tags
       .each
       .with_object({}) { |tag, acc| acc[tag.name] = tag.description&.truncate(DESCRIPTION_LIMIT) }
+      .compact
+  end
+
+  def tags_groups
+    all_tags
+      .each
+      .with_object({}) do |tag, acc|
+        acc[tag.name] = DiscourseTagging.tag_groups_for(tag) &
+          DiscourseTagging.visible_tag_groups_for(scope)
+      end
       .compact
   end
 

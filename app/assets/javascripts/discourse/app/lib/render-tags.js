@@ -68,6 +68,7 @@ export default function (topic, params) {
             isPrivateMessage,
             tagsForUser,
             tagName,
+            tagGroups: topic.tags_groups?.[tags[i]],
           }) + "";
       }
     }
