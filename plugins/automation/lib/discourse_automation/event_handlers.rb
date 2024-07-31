@@ -214,15 +214,9 @@ module DiscourseAutomation
             end
           end
 
-          watching_user = automation.trigger_field("watching_user")
-          if watching_user["value"]
-            next if watching_user["value"] != topic.user_id
-          end
-
           automation.trigger!(
             "kind" => name,
             "topic" => topic,
-            "user" => topic.user_id,
             "removed_tags" => removed_tags,
             "added_tags" => added_tags,
           )

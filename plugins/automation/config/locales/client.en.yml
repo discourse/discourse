@@ -211,9 +211,6 @@ en:
             watching_tags:
               label: Watching tags
               description: Will trigger only if the topic has any of these tags
-            watching_user:
-              label: Watching user
-              description: Will trigger only if the user is the topic creator
         after_post_cook:
           fields:
             valid_trust_levels:
