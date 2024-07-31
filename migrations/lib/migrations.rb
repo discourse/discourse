@@ -60,4 +60,16 @@ module Migrations
 
     loader.setup
   end
+
+  def self.enable_i18n
+    require "i18n"
+
+    locale_glob = File.join(Migrations.root_path, "config", "locales", "**", "migrations.*.yml")
+    I18n.load_path += Dir[locale_glob]
+    I18n.backend.load_translations
+
+    # always use English for now
+    I18n.default_locale = :en
+    I18n.locale = :en
+  end
 end
