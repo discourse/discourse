@@ -574,7 +574,7 @@ GEM
       nokogiri (~> 1.8)
     yaml-lint (0.1.2)
     yard (0.9.36)
-    zeitwerk (2.6.16)
+    zeitwerk (2.6.17)
 
 PLATFORMS
   aarch64-linux
