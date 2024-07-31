@@ -11,7 +11,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import AdminSiteSettingsFilterControls from "admin/components/admin-site-settings-filter-controls";
 import SiteSetting from "admin/components/site-setting";
 
-export default class AdminPluginFilteredSiteSettings extends Component {
+export default class AdminFilteredSiteSettings extends Component {
   @service currentUser;
   @tracked visibleSettings;
   @tracked loading = true;
