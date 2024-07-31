@@ -1,7 +1,7 @@
+import { computed } from "@ember/object";
 import Mixin from "@ember/object/mixin";
 import DiscourseURL from "discourse/lib/url";
 import deprecated from "discourse-common/lib/deprecated";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default Mixin.create({
   queryParams: ["period"],
@@ -20,9 +20,9 @@ export default Mixin.create({
     this.availablePeriods = ["yearly", "quarterly", "monthly", "weekly"];
   },
 
-  @discourseComputed("period")
-  startDate: {
-    get(period) {
+  startDate: computed("period", {
+    get() {
+      const period = this.period;
       const fullDay = moment().locale("en").utc().endOf("day");
 
       switch (period) {
@@ -42,31 +42,24 @@ export default Mixin.create({
     set(period) {
       return period;
     },
-  },
+  }),
 
-  @discourseComputed()
-  lastWeek() {
+  get lastWeek() {
     return moment().locale("en").utc().endOf("day").subtract(1, "week");
   },
 
-  @discourseComputed()
-  lastMonth() {
+  get lastMonth() {
     return moment().locale("en").utc().startOf("day").subtract(1, "month");
   },
 
-  @discourseComputed()
-  endDate: {
-    get() {
-      return moment().locale("en").utc().endOf("day");
-    },
-
-    set(endDate) {
-      return endDate;
-    },
+  get endDate() {
+    return moment().locale("en").utc().endOf("day");
+  },
+  set endDate(value) {
+    /* noop */
   },
 
-  @discourseComputed()
-  today() {
+  get today() {
     return moment().locale("en").utc().endOf("day");
   },
 
