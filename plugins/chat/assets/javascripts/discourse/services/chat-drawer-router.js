@@ -179,14 +179,6 @@ export default class ChatDrawerRouter extends Service {
       return this.stateFor(this.#routeFromURL("/chat/direct-messages"));
     }
 
-    if (this.siteSettings.chat_default_channel_id) {
-      return this.chatChannelsManager
-        .find(this.siteSettings.chat_default_channel_id)
-        .then((c) => {
-          return this.router.replaceWith("chat.channel", ...c.routeModels);
-        });
-    }
-
     if (!this.siteSettings.enable_public_channels) {
       return this.stateFor(this.#routeFromURL("/chat/direct-messages"));
     }

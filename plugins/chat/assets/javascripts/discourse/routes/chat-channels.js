@@ -28,15 +28,6 @@ export default class ChatChannelsRoute extends DiscourseRoute {
           this.router.replaceWith("chat.browse.open");
         }
       }
-    } else {
-      if (
-        defaultChannelId &&
-        this.router.currentRoute?.parent?.params?.channelId !== defaultChannelId
-      ) {
-        this.chatChannelsManager.find(defaultChannelId).then((c) => {
-          return this.router.replaceWith("chat.channel", ...c.routeModels);
-        });
-      }
     }
   }
 
