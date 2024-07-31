@@ -122,14 +122,16 @@ RSpec.describe Cache do
       end
     end
 
-    it "isn't prone to a race condition due to key expiring between GET calls" do
-      key = cache.normalize_key("my_key")
+    context "when there is a race condition due to key expiring between GET calls" do
+      before do
+        allow(Discourse.redis).to receive(:get).and_wrap_original do |original_method, *args|
+          original_method.call(*args).tap { Discourse.redis.del(*args) }
+        end
+      end
 
-      # while this is not technically testing the race condition, it's
-      # ensuring we're only calling redis.get once, which is a good enough proxy
-      Discourse.redis.stubs(:get).with(key).returns(Marshal.dump("bob")).once
-
-      expect(fetch_value).to eq("bob")
+      it "isn't prone to that race condition" do
+        expect(fetch_value).to eq("bob")
+      end
     end
   end
 end
