@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
-import { getCollapsedSidebarSectionKey } from "discourse/lib/sidebar/helpers";
 
 export default class ToggleAllSections extends Component {
   @service sidebarState;
@@ -16,9 +15,7 @@ export default class ToggleAllSections extends Component {
 
   get allSectionsExpanded() {
     return this.collapsableSections.every((section) => {
-      return !this.sidebarState.collapsedSections.has(
-        getCollapsedSidebarSectionKey(section.name)
-      );
+      return !this.sidebarState.collapsedSections.has(section.name);
     });
   }
 

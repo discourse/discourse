@@ -1,4 +1,4 @@
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import Service, { service } from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
@@ -17,6 +17,7 @@ import escapeRegExp from "discourse-common/utils/escape-regexp";
 
 @disableImplicitInjections
 export default class SidebarState extends Service {
+  @service appEvents;
   @service keyValueStore;
   @service currentUser;
   @service siteSettings;
@@ -52,6 +53,7 @@ export default class SidebarState extends Service {
     this.restorePreviousState();
   }
 
+  @cached
   get currentPanel() {
     return this.panels.find((panel) => panel.key === this.currentPanelKey);
   }
@@ -86,14 +88,22 @@ export default class SidebarState extends Service {
     const collapsedSidebarSectionKey =
       getCollapsedSidebarSectionKey(sectionKey);
     this.keyValueStore.setItem(collapsedSidebarSectionKey, true);
-    this.collapsedSections.add(collapsedSidebarSectionKey);
+    this.collapsedSections.add(sectionKey);
+    this.appEvents.trigger("sidebar-state:collapse-section", {
+      sectionKey,
+      currentPanel: this.currentPanel,
+    });
   }
 
   expandSection(sectionKey) {
     const collapsedSidebarSectionKey =
       getCollapsedSidebarSectionKey(sectionKey);
     this.keyValueStore.setItem(collapsedSidebarSectionKey, false);
-    this.collapsedSections.delete(collapsedSidebarSectionKey);
+    this.collapsedSections.delete(sectionKey);
+    this.appEvents.trigger("sidebar-state:expand-section", {
+      sectionKey,
+      currentPanel: this.currentPanel,
+    });
   }
 
   isCurrentPanel(panel) {

@@ -15,6 +15,7 @@ import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 import DTooltip from "float-kit/components/d-tooltip";
+import { applyBehaviorTransformer } from "../../lib/transformer";
 import SectionHeader from "./section-header";
 
 export default class SidebarSection extends Component {
@@ -53,11 +54,21 @@ export default class SidebarSection extends Component {
       return;
     }
 
-    if (this.isCollapsed) {
-      this.sidebarState.collapseSection(this.args.sectionName);
-    } else {
-      this.sidebarState.expandSection(this.args.sectionName);
-    }
+    applyBehaviorTransformer(
+      "sidebar-section-set-expanded-state",
+      () => {
+        if (this.isCollapsed) {
+          this.sidebarState.collapseSection(this.args.sectionName);
+        } else {
+          this.sidebarState.expandSection(this.args.sectionName);
+        }
+      },
+      {
+        sectionName: this.args.sectionName,
+        collapsable: this.args.collapsable,
+        isCollapsed: this.isCollapsed,
+      }
+    );
   }
 
   get displaySectionContent() {
@@ -65,9 +76,7 @@ export default class SidebarSection extends Component {
       return true;
     }
 
-    return !this.sidebarState.collapsedSections.has(
-      this.collapsedSidebarSectionKey
-    );
+    return !this.sidebarState.collapsedSections.has(this.args.sectionName);
   }
 
   @action
