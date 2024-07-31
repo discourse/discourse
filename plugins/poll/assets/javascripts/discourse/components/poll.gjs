@@ -46,30 +46,6 @@ export default class PollComponent extends Component {
     (this.topicArchived && !this.staffOnly) ||
     (this.closed && !this.staffOnly);
 
-  defaultPreloadedVoters() {
-    let preloadedVoters = {};
-
-    if (this.args.attrs.poll.public && this.args.preloadedVoters) {
-      Object.keys(this.args.preloadedVoters).forEach((key) => {
-        preloadedVoters[key] = {
-          voters: this.args.preloadedVoters[key],
-          loading: false,
-        };
-      });
-    }
-
-    this.options.forEach((option) => {
-      if (!preloadedVoters[option.id]) {
-        preloadedVoters[option.id] = {
-          voters: [],
-          loading: false,
-        };
-      }
-    });
-
-    return preloadedVoters;
-  }
-
   checkUserGroups = (user, poll) => {
     const pollGroups =
       poll && poll.groups && poll.groups.split(",").map((g) => g.toLowerCase());
@@ -83,7 +59,7 @@ export default class PollComponent extends Component {
 
     return userGroups && pollGroups.some((g) => userGroups.includes(g));
   };
-  areRanksValid = (arr) => {
+areRanksValid = (arr) => {
     let ranks = new Set(); // Using a Set to keep track of unique ranks
     let hasNonZeroDuplicate = false;
 
@@ -101,7 +77,7 @@ export default class PollComponent extends Component {
 
     return !hasNonZeroDuplicate;
   };
-  _toggleOption = (option, rank = 0) => {
+_toggleOption = (option, rank = 0) => {
     let vote = this.vote;
 
     if (this.isMultiple) {
@@ -135,6 +111,33 @@ export default class PollComponent extends Component {
 
     this.vote = [...vote];
   };
+defaultPreloadedVoters() {
+    let preloadedVoters = {};
+
+    if (this.args.attrs.poll.public && this.args.preloadedVoters) {
+      Object.keys(this.args.preloadedVoters).forEach((key) => {
+        preloadedVoters[key] = {
+          voters: this.args.preloadedVoters[key],
+          loading: false,
+        };
+      });
+    }
+
+    this.options.forEach((option) => {
+      if (!preloadedVoters[option.id]) {
+        preloadedVoters[option.id] = {
+          voters: [],
+          loading: false,
+        };
+      }
+    });
+
+    return preloadedVoters;
+  }
+
+
+
+
 
   get id() {
     return this.args.attrs.id;
@@ -503,9 +506,10 @@ export default class PollComponent extends Component {
           if (this.poll.type === REGULAR) {
             Object.keys(this.preloadedVoters).forEach((otherOptionId) => {
               if (optionId !== otherOptionId) {
-                this.preloadedVoters[otherOptionId].voters = this.preloadedVoters[
-                  otherOptionId
-                ].voters.filter((voter) => !votersSet.has(voter.username));
+                this.preloadedVoters[otherOptionId].voters =
+                  this.preloadedVoters[otherOptionId].voters.filter(
+                    (voter) => !votersSet.has(voter.username)
+                  );
               }
             });
           }
