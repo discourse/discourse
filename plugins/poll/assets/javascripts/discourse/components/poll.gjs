@@ -45,13 +45,11 @@ export default class PollComponent extends Component {
   @tracked staffOnly = this.poll.results === STAFF_ONLY;
   @tracked isMultiple = this.poll.type === MULTIPLE;
   @tracked isNumber = this.poll.type === NUMBER;
-  @tracked showingResults = false;
   @tracked hasSavedVote = this.args.attrs.hasSavedVote;
   @tracked status = this.poll.status;
   @tracked
   showResults =
     this.hasSavedVote ||
-    this.showingResults ||
     (this.topicArchived && !this.staffOnly) ||
     (this.closed && !this.staffOnly);
   post = this.args.attrs.post;
@@ -303,7 +301,7 @@ export default class PollComponent extends Component {
   }
 
   get canCastVotes() {
-    if (this.closed || this.showingResults || !this.currentUser) {
+    if (this.closed || !this.currentUser) {
       return false;
     }
 
