@@ -3216,6 +3216,8 @@ en:
         filter: "There are no more topics."
 
     topic_bulk_actions:
+      dismiss:
+        name: "Dismiss"
       close_topics:
         name: "Close"
         note: "Note"
