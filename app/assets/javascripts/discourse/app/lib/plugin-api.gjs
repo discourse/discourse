@@ -2129,11 +2129,7 @@ class PluginApi {
 
     this.headerIcons.add(
       icon,
-      [
-        __GLIMMER_TEMPLATE(`<MountWidget @widget={{icon}} />`, {
-          strictMode: true,
-        }),
-      ],
+      <template><MountWidget @widget={{icon}} /></template>,
       { before: "search" }
     );
   }
