@@ -46,44 +46,6 @@ export default class PollComponent extends Component {
     (this.topicArchived && !this.staffOnly) ||
     (this.closed && !this.staffOnly);
 
-  get isStaff() {
-    return this.currentUser && this.currentUser.staff;
-  }
-
-  get titleHTML() {
-    return htmlSafe(this.args.attrs.titleHTML);
-  }
-
-  get topicArchived() {
-    return this.args.attrs.post.get("topic.archived");
-  }
-
-  get isRankedChoice() {
-    return this.args.attrs.poll.type === RANKED_CHOICE;
-  }
-
-  get staffOnly() {
-    return this.args.attrs.poll.results === STAFF_ONLY;
-  }
-
-  get isMultiple() {
-    return this.args.attrs.poll.type === MULTIPLE;
-  }
-
-  get isNumber() {
-    return this.args.attrs.poll.type === NUMBER;
-  }
-
-  get post() {
-    return this.args.attrs.post;
-  }
-
-  get isMe() {
-    return (
-      this.currentUser && this.args.attrs.post.user_id === this.currentUser.id
-    );
-  }
-
   checkUserGroups = (user, poll) => {
     const pollGroups =
       poll && poll.groups && poll.groups.split(",").map((g) => g.toLowerCase());
@@ -155,8 +117,47 @@ export default class PollComponent extends Component {
     this.post = this.args.attrs.post;
     this.groupableUserFields = this.args.attrs.groupableUserFields;
   }
+
+  get isStaff() {
+    return this.currentUser && this.currentUser.staff;
+  }
+
+  get titleHTML() {
+    return htmlSafe(this.args.attrs.titleHTML);
+  }
+
+  get topicArchived() {
+    return this.args.attrs.post.get("topic.archived");
+  }
+
+  get isRankedChoice() {
+    return this.args.attrs.poll.type === RANKED_CHOICE;
+  }
+
+  get staffOnly() {
+    return this.args.attrs.poll.results === STAFF_ONLY;
+  }
+
+  get isMultiple() {
+    return this.args.attrs.poll.type === MULTIPLE;
+  }
+
+  get isNumber() {
+    return this.args.attrs.poll.type === NUMBER;
+  }
+
+  get post() {
+    return this.args.attrs.post;
+  }
+
+  get isMe() {
+    return (
+      this.currentUser && this.args.attrs.post.user_id === this.currentUser.id
+    );
+  }
+
   @action
-  castVotes() {
+  castVotes(option) {
     if (!this.canCastVotes) {
       return;
     }
@@ -318,7 +319,7 @@ export default class PollComponent extends Component {
     this._toggleOption(option, rank);
 
     if (!this.isMultiple && !this.isRankedChoice) {
-      this.castVotes();
+      this.castVotes(option);
     }
   }
 
