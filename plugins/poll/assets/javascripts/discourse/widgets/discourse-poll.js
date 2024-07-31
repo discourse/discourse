@@ -29,7 +29,6 @@ export default createWidget("discourse-poll", {
         {
           attrs,
           preloadedVoters: attrs.poll.preloaded_voters,
-          options: attrs.poll.options,
         }
       ),
     ];
