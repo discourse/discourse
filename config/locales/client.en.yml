@@ -6931,7 +6931,6 @@ en:
             confirm: "Yes, update password policy"
 
       badges:
-        disable_system: This badge is a system badge and cannot be disabled and/or deleted.
         status: Status
         title: Badges
         new_badge: New Badge
