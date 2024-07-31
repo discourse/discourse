@@ -83,7 +83,7 @@ describe "Uploading files in chat messages", type: :system do
     end
 
     it "allows uploading multiple files" do
-      skip("This test is flaky on CI") if ENV["CI"]
+      skip_on_ci!
 
       chat.visit_channel(channel_1)
 
@@ -108,7 +108,7 @@ describe "Uploading files in chat messages", type: :system do
     end
 
     it "allows uploading a huge image file with preprocessing" do
-      skip("This test is flaky on CI") if ENV["CI"]
+      skip_on_ci!
 
       SiteSetting.composer_media_optimization_image_bytes_optimization_threshold = 200.kilobytes
       chat.visit_channel(channel_1)
