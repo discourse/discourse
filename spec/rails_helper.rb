@@ -239,7 +239,22 @@ RSpec.configure do |config|
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = true
 
-  config.full_cause_backtrace = true
+  # Shows more than one line of backtrace in case of an error or spec failure.
+  config.full_cause_backtrace = false
+
+  # Sometimes the backtrace is quite big for failing specs, this will
+  # remove rspec/gem paths from the backtrace so it's easier to see the
+  # actual application code that caused the failure.
+  if ENV["RSPEC_EXCLUDE_NOISE_IN_BACKTRACE"]
+    config.backtrace_exclusion_patterns = [
+      %r{/lib\d*/ruby/},
+      %r{bin/},
+      /gems/,
+      %r{spec/spec_helper\.rb},
+      %r{spec/rails_helper\.rb},
+      %r{lib/rspec/(core|expectations|matchers|mocks)},
+    ]
+  end
 
   config.before(:suite) do
     CachedCounting.disable
