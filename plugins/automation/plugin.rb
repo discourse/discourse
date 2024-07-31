@@ -181,6 +181,10 @@ after_initialize do
     DiscourseAutomation::EventHandlers.handle_pm_created(topic) if topic.private_message?
   end
 
+  on(:topic_tags_changed) do |args|
+    DiscourseAutomation::EventHandlers.handle_topic_tags_changed(args)
+  end
+
   on(:post_created) do |post|
     DiscourseAutomation::EventHandlers.handle_post_created_edited(post, :create)
   end

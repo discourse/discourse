@@ -50,6 +50,9 @@ en:
       pm_created:
         title: Personal message created
         description: When a valid PM is created the automation will be triggered
+      topic_tags_changed:
+        title: Topic tags changed
+        description: When the tags of a topic are changed the automation will be triggered
       topic:
         title: Topic
         description: The associated script will only be used on the specified topic, this is usefull for scripts doing validation for example
