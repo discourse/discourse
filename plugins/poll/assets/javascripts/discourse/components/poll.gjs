@@ -34,17 +34,10 @@ export default class PollComponent extends Component {
   @service appEvents;
   @service dialog;
   @service modal;
-  @tracked isStaff = this.currentUser && this.currentUser.staff;
+
   @tracked vote = this.args.attrs.vote || [];
-  @tracked titleHTML = htmlSafe(this.args.attrs.titleHTML);
-  @tracked topicArchived = this.args.attrs.post.get("topic.archived");
   @tracked poll = this.args.attrs.poll;
   @tracked preloadedVoters = this.args.preloadedVoters || [];
-  @tracked isRankedChoice = this.poll.type === RANKED_CHOICE;
-  @tracked isMultiVoteType = this.isRankedChoice || this.isMultiple;
-  @tracked staffOnly = this.poll.results === STAFF_ONLY;
-  @tracked isMultiple = this.poll.type === MULTIPLE;
-  @tracked isNumber = this.poll.type === NUMBER;
   @tracked hasSavedVote = this.args.attrs.hasSavedVote;
   @tracked status = this.poll.status;
   @tracked
@@ -52,9 +45,44 @@ export default class PollComponent extends Component {
     this.hasSavedVote ||
     (this.topicArchived && !this.staffOnly) ||
     (this.closed && !this.staffOnly);
-  post = this.args.attrs.post;
-  isMe =
-    this.currentUser && this.args.attrs.post.user_id === this.currentUser.id;
+
+  get isStaff() {
+    return this.currentUser && this.currentUser.staff;
+  }
+
+  get titleHTML() {
+    return htmlSafe(this.args.attrs.titleHTML);
+  }
+
+  get topicArchived() {
+    return this.args.attrs.post.get("topic.archived");
+  }
+
+  get isRankedChoice() {
+    return this.args.attrs.poll.type === RANKED_CHOICE;
+  }
+
+  get staffOnly() {
+    return this.args.attrs.poll.results === STAFF_ONLY;
+  }
+
+  get isMultiple() {
+    return this.args.attrs.poll.type === MULTIPLE;
+  }
+
+  get isNumber() {
+    return this.args.attrs.poll.type === NUMBER;
+  }
+
+  get post() {
+    return this.args.attrs.post;
+  }
+
+  get isMe() {
+    return (
+      this.currentUser && this.args.attrs.post.user_id === this.currentUser.id
+    );
+  }
 
   checkUserGroups = (user, poll) => {
     const pollGroups =
