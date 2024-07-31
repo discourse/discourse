@@ -33,4 +33,13 @@ export default class AdminBackupsIndexController extends Controller {
       this.dialog.alert(I18n.t("admin.backups.operations.download.alert"))
     );
   }
+
+  @discourseComputed("status.isOperationRunning")
+  deleteTitle() {
+    if (this.status.isOperationRunning) {
+      return "admin.backups.operations.is_running";
+    }
+
+    return "admin.backups.operations.destroy.title";
+  }
 }
