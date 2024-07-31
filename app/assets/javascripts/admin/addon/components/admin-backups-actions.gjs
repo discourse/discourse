@@ -52,7 +52,7 @@ export default class AdminBackupsActions extends Component {
         @title="admin.backups.operations.rollback.title"
         @icon="ambulance"
         @disabled={{this.rollbackDisabled}}
-        @defaultClass="btn-rollback admin-backups__rollback"
+        @additionalClasses="btn-rollback admin-backups__rollback"
       />
     {{/if}}
     {{#if @backups.isOperationRunning}}
@@ -61,7 +61,7 @@ export default class AdminBackupsActions extends Component {
         @title="admin.backups.operations.cancel.title"
         @label="admin.backups.operations.cancel.label"
         @icon="times"
-        @dangerClass="admin-backups__cancel"
+        @additionalClasses="admin-backups__cancel"
       />
     {{else}}
       <@actions.Primary
@@ -69,28 +69,25 @@ export default class AdminBackupsActions extends Component {
         @title="admin.backups.operations.backup.title"
         @label="admin.backups.operations.backup.label"
         @icon="rocket"
-        @primaryClass="admin-backups__start"
+        @additionalClasses="admin-backups__start"
       />
     {{/if}}
 
-    {{#if this.site.isReadOnly}}
-      <@actions.Default
-        @icon="far-eye"
-        @action={{this.toggleReadOnlyMode}}
-        @disabled={{@backups.isOperationRunning}}
-        @title="admin.backups.read_only.disable.title"
-        @label="admin.backups.read_only.disable.label"
-        class="btn-default"
-      />
-    {{else}}
-      <@actions.Default
-        @icon="far-eye"
-        @action={{this.toggleReadOnlyMode}}
-        @disabled={{@backups.isOperationRunning}}
-        @title="admin.backups.read_only.enable.title"
-        @label="admin.backups.read_only.enable.label"
-        class="btn-default"
-      />
-    {{/if}}
+    <@actions.Default
+      @icon={{if this.site.isReadOnly "far-eye-slash" "far-eye"}}
+      @action={{this.toggleReadOnlyMode}}
+      @disabled={{@backups.isOperationRunning}}
+      @title={{if
+        this.site.isReadOnly
+        "admin.backups.read_only.disable.title"
+        "admin.backups.read_only.enable.title"
+      }}
+      @label={{if
+        this.site.isReadOnly
+        "admin.backups.read_only.disable.label"
+        "admin.backups.read_only.enable.label"
+      }}
+      @additionalClasses="admin-backups__toggle-read-only"
+    />
   </template>
 }

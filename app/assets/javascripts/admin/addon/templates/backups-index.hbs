@@ -37,13 +37,14 @@
             @icon="download"
             @title="admin.backups.operations.download.title"
             @label="admin.backups.operations.download.label"
-            class="btn-default backup-item-row__download"
+            class="btn-default btn-small backup-item-row__download"
           />
 
           <DMenu
             @identifier="backup-item-menu"
             @title={{i18n "more_options"}}
             @icon="ellipsis-v"
+            class="btn-small"
           >
             <:content>
               <DropdownMenu as |dropdown|>
