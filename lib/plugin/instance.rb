@@ -580,6 +580,7 @@ class Plugin::Instance
   # `enabled_site_setting` value is changed, including when the plugin is turned off.
   #
   # It is useful when the plugin needs to perform tasks like properly clearing caches when enabled/disabled
+  # note it will not be triggered when a plugin is installed/uninstalled by adding/removing its code
   def on_enabled_change(&block)
     event_proc =
       Proc.new do |setting_name, old_value, new_value|
