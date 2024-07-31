@@ -1691,4 +1691,107 @@ RSpec.describe DiscourseTagging do
       expect(tag2.staff_topic_count).to eq(0)
     end
   end
+
+  describe "#tag_groups_for" do
+    fab!(:tag1) { Fabricate(:tag) }
+    fab!(:tag2) { Fabricate(:tag) }
+    fab!(:tag3) { Fabricate(:tag) }
+    fab!(:tag4) { Fabricate(:tag) }
+    fab!(:tag_group1) { Fabricate(:tag_group, tags: [tag1, tag3]) }
+    fab!(:tag_group2) { Fabricate(:tag_group, tags: [tag1, tag2]) }
+
+    before { _preload = [tag1, tag2, tag3, tag4, tag_group1, tag_group2] }
+
+    it "caches tag groups relationships" do
+      queries =
+        track_sql_queries do
+          expect(DiscourseTagging.tag_groups_for(tag1)).to contain_exactly(
+            tag_group1.name,
+            tag_group2.name,
+          )
+          expect(DiscourseTagging.tag_groups_for(tag2)).to contain_exactly(tag_group2.name)
+          expect(DiscourseTagging.tag_groups_for(tag3)).to contain_exactly(tag_group1.name)
+          expect(DiscourseTagging.tag_groups_for(tag4)).to contain_exactly(nil)
+        end
+
+      expect(queries.length).to eq 1
+    end
+
+    it "updates when tag groups updated" do
+      tag_group3 = Fabricate(:tag_group, tags: [tag3])
+
+      queries =
+        track_sql_queries do
+          expect(DiscourseTagging.tag_groups_for(tag1)).to contain_exactly(
+            tag_group1.name,
+            tag_group2.name,
+          )
+          expect(DiscourseTagging.tag_groups_for(tag2)).to contain_exactly(tag_group2.name)
+          expect(DiscourseTagging.tag_groups_for(tag3)).to contain_exactly(
+            tag_group1.name,
+            tag_group3.name,
+          )
+          expect(DiscourseTagging.tag_groups_for(tag4)).to contain_exactly(nil)
+        end
+
+      expect(queries.length).to eq 1
+
+      tag_group3.destroy!
+    end
+  end
+
+  describe "#visible_tag_groups_for" do
+    fab!(:admin)
+    fab!(:user)
+    fab!(:tag)
+
+    def tag_group_with_permission(auto_group, permission_type, name: nil)
+      options = { tags: [tag] }
+      options.merge!({ name: name }) if name
+
+      Fabricate(:tag_group, options).tap do |tag_group|
+        tag_group.permissions = [[auto_group, permission_type]]
+        tag_group.save!
+      end
+    end
+
+    let(:everyone) { Group::AUTO_GROUPS[:everyone] }
+    let(:staff) { Group::AUTO_GROUPS[:staff] }
+    let(:full) { TagGroupPermission.permission_types[:full] }
+
+    it "returns the result of visible tag group names for a user" do
+      expect(DiscourseTagging.visible_tag_groups_for(Guardian.new(admin))).to eq([])
+
+      tag_group1 = tag_group_with_permission(everyone, full)
+      tag_group2 = tag_group_with_permission(staff, full)
+
+      guardian_admin = Guardian.new(admin)
+      guardian_user = Guardian.new(user)
+      guardian_anonymous = Guardian.new
+
+      expect(DiscourseTagging.visible_tag_groups_for(guardian_admin)).to contain_exactly(
+        tag_group1.name,
+        tag_group2.name,
+      )
+
+      queries =
+        track_sql_queries do
+          10.times do
+            expect(DiscourseTagging.visible_tag_groups_for(guardian_admin)).to contain_exactly(
+              tag_group1.name,
+              tag_group2.name,
+            )
+          end
+        end
+
+      expect(queries.length).to eq 0
+
+      expect(DiscourseTagging.visible_tag_groups_for(guardian_user)).to contain_exactly(
+        tag_group1.name,
+      )
+      expect(DiscourseTagging.visible_tag_groups_for(guardian_anonymous)).to contain_exactly(
+        tag_group1.name,
+      )
+    end
+  end
 end
