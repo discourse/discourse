@@ -168,7 +168,7 @@ export default class PollComponent extends Component {
       .catch((error) => {
         if (error) {
           if (!this.isMultiple && !this.isRankedChoice) {
-            this.vote = [...this.vote];
+            this._toggleOption(option);
           }
           popupAjaxError(error);
         } else {
@@ -290,7 +290,7 @@ export default class PollComponent extends Component {
     this._toggleOption(option, rank);
 
     if (!this.isMultiple && !this.isRankedChoice) {
-      this.castVotes(option);
+      this.castVotes();
     }
   }
 
