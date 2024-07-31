@@ -333,10 +333,86 @@ class PluginApi {
     return klass;
   }
 
+  /**
+   * Add a new valid behavior transformer name.
+   *
+   * Use this API to add a new behavior transformer name that can be used in the `registerValueTransformer` API.
+   *
+   * Notice that this API must be used in a pre-initializer, executed before `freeze-valid-transformers`, otherwise it will throw an error:
+   *
+   * Example:
+   *
+   * // pre-initializers/my-transformers.js
+   *
+   * export default {
+   *   before: "freeze-valid-transformers",
+   *
+   *   initialize() {
+   *     withPluginApi("1.33.0", (api) => {
+   *       api.addBehaviorTransformerName("my-unique-transformer-name");
+   *     }),
+   *   },
+   * };
+   *
+   * @param name the name of the new transformer
+   *
+   */
   addBehaviorTransformerName(name) {
     _addTransformerName(name, transformerTypes.BEHAVIOR);
   }
 
+  /**
+   * Register a transformer to override behavior defined in Discourse.
+   *
+   * Example: to perform an action before the expected behavior
+   * ```
+   * api.registerBehaviorTransformer("example-transformer", ({next, context}) => {
+   *   exampleNewAction(); // action performed before the expected behavior
+   *
+   *   next(); //iterates over the transformer queue processing the behaviors
+   * });
+   * ```
+   *
+   * Example: to perform an action after the expected behavior
+   * ```
+   * api.registerBehaviorTransformer("example-transformer", ({next, context}) => {
+   *   next(); //iterates over the transformer queue processing the behaviors
+   *
+   *   exampleNewAction(); // action performed after the expected behavior
+   * });
+   * ```
+   *
+   * Example: to use a value returned by the expected behavior to decide if an action must be performed
+   * ```
+   * api.registerBehaviorTransformer("example-transformer", ({next, context}) => {
+   *   const expected = next(); //iterates over the transformer queue processing the behaviors
+   *
+   *   if (expected === "EXPECTED") {
+   *     exampleNewAction(); // action performed after the expected behavior
+   *   }
+   * });
+   * ```
+   *
+   * Example: to abort the expected behavior based on a condition
+   * ```
+   * api.registerValueTransformer("example-transformer", ({next, context}) => {
+   *   if (context.property) {
+   *     // not calling next() on a behavior transformer aborts executing the expected behavior
+   *
+   *     return;
+   *   }
+   *
+   *   next();
+   * });
+   * ```
+   *
+   * @param {string} transformerName the name of the transformer
+   * @param {function({next, context})} behaviorCallback callback to be used to transform or override the behavior.
+   * @param {*} behaviorCallback.next callback that executes the remaining transformer queue producing the expected
+   * behavior. Notice that this includes the default behavior and if next() is not called in your transformer's callback
+   * the default behavior will be completely overridden
+   * @param {*} [behaviorCallback.context] the optional context in which the behavior is being transformed
+   */
   registerBehaviorTransformer(transformerName, behaviorCallback) {
     _registerTransformer(
       transformerName,
@@ -346,9 +422,9 @@ class PluginApi {
   }
 
   /**
-   * Add a new valid transformer name.
+   * Add a new valid value transformer name.
    *
-   * Use this API to add a new transformer name that can be used in the `registerValueTransformer` API.
+   * Use this API to add a new value transformer name that can be used in the `registerValueTransformer` API.
    *
    * Notice that this API must be used in a pre-initializer, executed before `freeze-valid-transformers`, otherwise it will throw an error:
    *
@@ -2053,7 +2129,11 @@ class PluginApi {
 
     this.headerIcons.add(
       icon,
-      <template><MountWidget @widget={{icon}} /></template>,
+      [
+        __GLIMMER_TEMPLATE(`<MountWidget @widget={{icon}} />`, {
+          strictMode: true,
+        }),
+      ],
       { before: "search" }
     );
   }

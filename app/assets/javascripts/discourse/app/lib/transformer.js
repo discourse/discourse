@@ -1,9 +1,10 @@
+import { DEBUG } from "@glimmer/env";
 import { capitalize } from "@ember/string";
 import {
   BEHAVIOR_TRANSFORMERS,
   VALUE_TRANSFORMERS,
 } from "discourse/lib/transformer/registry";
-import { isProduction, isTesting } from "discourse-common/config/environment";
+import { isTesting } from "discourse-common/config/environment";
 
 const CORE_TRANSFORMER = "CORE";
 const PLUGIN_TRANSFORMER = "PLUGIN";
@@ -21,47 +22,39 @@ export const transformerTypes = Object.freeze({
  *
  * The list can be edited in `discourse/lib/transformer/registry`
  */
-let validTransformerNames;
+let validTransformerNames = new Map();
 
-// Initialize the valid transformer names, notice that this is a self-invoking function that performs some checks
-// to ensure the transformer names are correctly defined, i.e., lowercase and unique.
-// We're not assigning the result directly to `validTransformerNames` because we're using the function
-// `findTransformerInfoByName` which relies on `validTransformerNames` being initialized.
-(() => {
-  const coreTransformers = new Map();
-
-  [
-    [BEHAVIOR_TRANSFORMERS, transformerTypes.BEHAVIOR],
-    [VALUE_TRANSFORMERS, transformerTypes.VALUE],
-  ].forEach(([list, transformerType]) => {
-    list.forEach((name) => {
+// Initialize the valid transformer names, notice that we perform some checks to ensure the transformer names are
+// correctly defined, i.e., lowercase and unique.
+[
+  [BEHAVIOR_TRANSFORMERS, transformerTypes.BEHAVIOR],
+  [VALUE_TRANSFORMERS, transformerTypes.VALUE],
+].forEach(([list, transformerType]) => {
+  list.forEach((name) => {
+    if (DEBUG) {
       if (name !== name.toLowerCase()) {
         throw new Error(
           `Transformer name "${name}" must be lowercase. Found in ${transformerType} transformers.`
         );
       }
 
-      if (!isProduction()) {
-        const existingInfo = findTransformerInfoByName(name);
+      const existingInfo = findTransformerInfoByName(name);
 
-        if (existingInfo) {
-          const candidateName = `${name}/${transformerType.toLowerCase()}`;
+      if (existingInfo) {
+        const candidateName = `${name}/${transformerType.toLowerCase()}`;
 
-          throw new Error(
-            `Transformer name "${candidateName}" can't be added. The transformer ${existingInfo.name} already exists.`
-          );
-        }
+        throw new Error(
+          `Transformer name "${candidateName}" can't be added. The transformer ${existingInfo.name} already exists.`
+        );
       }
+    }
 
-      coreTransformers.set(
-        _normalizeTransformerName(name, transformerType),
-        CORE_TRANSFORMER
-      );
-    });
+    validTransformerNames.set(
+      _normalizeTransformerName(name, transformerType),
+      CORE_TRANSFORMER
+    );
   });
-
-  validTransformerNames = coreTransformers;
-})();
+});
 
 const transformersRegistry = new Map();
 
