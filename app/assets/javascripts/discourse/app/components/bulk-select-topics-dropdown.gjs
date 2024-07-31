@@ -7,6 +7,7 @@ import DropdownMenu from "discourse/components/dropdown-menu";
 import BulkTopicActions, {
   addBulkDropdownAction,
 } from "discourse/components/modal/bulk-topic-actions";
+import DismissReadModal from "discourse/components/modal/dismiss-read";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
@@ -41,6 +42,11 @@ export default class BulkSelectTopicsDropdown extends Component {
 
   get buttons() {
     let options = [
+      {
+        id: "dismiss",
+        icon: "check",
+        name: "Dismiss",
+      },
       {
         id: "update-category",
         icon: "pencil-alt",
@@ -186,6 +192,16 @@ export default class BulkSelectTopicsDropdown extends Component {
     await this.dMenu.close();
 
     switch (actionId) {
+      case "dismiss":
+        this.modal.show(DismissReadModal, {
+          model: {
+            title: "topics.bulk.dismiss_read_with_selected",
+            count: this.args.bulkSelectHelper.selected.length,
+            showStopTracking: this.args.bulkSelectHelper.showStopTracking,
+            dismissRead: (dismissTopics) => this.dismissRead(dismissTopics),
+          },
+        });
+        break;
       case "update-category":
         this.showBulkTopicActionsModal(actionId, "change_category", {
           description: i18n(`topic_bulk_actions.update_category.description`),
@@ -255,6 +271,10 @@ export default class BulkSelectTopicsDropdown extends Component {
           );
         }
     }
+  }
+
+  dismissRead(stopTracking) {
+    this.args.bulkSelectHelper.dismissRead(stopTracking ? "topics" : "posts");
   }
 
   @action
