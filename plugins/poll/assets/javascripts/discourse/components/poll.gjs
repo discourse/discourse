@@ -37,7 +37,7 @@ export default class PollComponent extends Component {
 
   @tracked vote = this.args.attrs.vote || [];
   @tracked poll = this.args.attrs.poll;
-  @tracked preloadedVoters = this.args.preloadedVoters || [];
+  @tracked preloadedVoters = this.defaultPreloadedVoters();
   @tracked hasSavedVote = this.args.attrs.hasSavedVote;
   @tracked status = this.poll.status;
   @tracked
@@ -45,6 +45,30 @@ export default class PollComponent extends Component {
     this.hasSavedVote ||
     (this.topicArchived && !this.staffOnly) ||
     (this.closed && !this.staffOnly);
+
+  defaultPreloadedVoters() {
+    let preloadedVoters = {};
+
+    if (this.args.attrs.poll.public && this.args.preloadedVoters) {
+      Object.keys(this.args.preloadedVoters).forEach((key) => {
+        preloadedVoters[key] = {
+          voters: this.args.preloadedVoters[key],
+          loading: false,
+        };
+      });
+    }
+
+    this.options.forEach((option) => {
+      if (!preloadedVoters[option.id]) {
+        preloadedVoters[option.id] = {
+          voters: [],
+          loading: false,
+        };
+      }
+    });
+
+    return preloadedVoters;
+  }
 
   checkUserGroups = (user, poll) => {
     const pollGroups =
@@ -433,16 +457,21 @@ export default class PollComponent extends Component {
 
   @action
   updatedVoters() {
-    this.preloadedVoters = this.args.preloadedVoters;
+    this.preloadedVoters = this.defaultPreloadedVoters();
   }
 
   @action
   fetchVoters(optionId) {
     let votersCount;
-    this.loading = true;
-    let options = this.options;
-    options.find((option) => option.id === optionId).loading = true;
-    this.options = [...options];
+    let preloadedVoters = this.preloadedVoters;
+
+    Object.keys(preloadedVoters).forEach((key) => {
+      if (key === optionId) {
+        preloadedVoters[key].loading = true;
+      }
+    });
+
+    this.preloadedVoters = Object.assign(preloadedVoters);
 
     votersCount = this.options.find((option) => option.id === optionId).votes;
 
@@ -457,7 +486,7 @@ export default class PollComponent extends Component {
     })
       .then((result) => {
         const voters = optionId
-          ? this.preloadedVoters[optionId]
+          ? this.preloadedVoters[optionId].voters
           : this.preloadedVoters;
         const newVoters = optionId ? result.voters[optionId] : result.voters;
         if (this.isRankedChoice) {
@@ -474,16 +503,13 @@ export default class PollComponent extends Component {
           if (this.poll.type === REGULAR) {
             Object.keys(this.preloadedVoters).forEach((otherOptionId) => {
               if (optionId !== otherOptionId) {
-                this.preloadedVoters[otherOptionId] = this.preloadedVoters[
+                this.preloadedVoters[otherOptionId].voters = this.preloadedVoters[
                   otherOptionId
-                ].filter((voter) => !votersSet.has(voter.username));
+                ].voters.filter((voter) => !votersSet.has(voter.username));
               }
             });
           }
         }
-        this.preloadedVoters[optionId] = [
-          ...new Set([...this.preloadedVoters[optionId], ...newVoters]),
-        ];
       })
       .catch((error) => {
         if (error) {
@@ -493,8 +519,9 @@ export default class PollComponent extends Component {
         }
       })
       .finally(() => {
-        options.find((option) => option.id === optionId).loading = false;
-        this.options = [...options];
+        preloadedVoters = this.preloadedVoters;
+        preloadedVoters[optionId].loading = false;
+        this.preloadedVoters = Object.assign(preloadedVoters);
       });
   }
 
