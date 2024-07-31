@@ -365,6 +365,7 @@ Discourse::Application.routes.draw do
                :format => :json
 
           get "logs" => "backups#logs"
+          get "settings" => "backups#index"
           get "status" => "backups#status"
           delete "cancel" => "backups#cancel"
           post "rollback" => "backups#rollback"

@@ -1,4 +1,4 @@
-<div class="admin-backups">
+<div class="admin-backups admin-config-page">
 
   <AdminPageHeader
     @titleLabel="admin.backups.title"
@@ -15,6 +15,7 @@
       <AdminBackupsActions @actions={{actions}} @backups={{@model}} />
     </:actions>
     <:tabs>
+      <NavItem @route="admin.backups.settings" @label="settings" />
       <NavItem
         @route="admin.backups.index"
         @label="admin.backups.menu.backup_files"
@@ -26,7 +27,7 @@
 
   <PluginOutlet @name="before-backup-list" @connectorTagName="div" />
 
-  <div class="admin-container">
+  <div class="admin-container admin-config-page__main-area">
     {{outlet}}
   </div>
 </div>

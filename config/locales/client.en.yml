@@ -5014,6 +5014,7 @@ en:
   admin_js:
     # This is a text input placeholder, keep the translation short
     type_to_filter: "type to filter…"
+    settings: "Settings"
 
     admin:
       title: "Discourse Admin"
