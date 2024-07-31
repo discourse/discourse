@@ -34,7 +34,6 @@ export default class PollComponent extends Component {
   @service appEvents;
   @service dialog;
   @service modal;
-
   @tracked vote = this.args.attrs.vote || [];
   @tracked poll = this.args.attrs.poll;
   @tracked preloadedVoters = this.defaultPreloadedVoters();
@@ -59,7 +58,7 @@ export default class PollComponent extends Component {
 
     return userGroups && pollGroups.some((g) => userGroups.includes(g));
   };
-areRanksValid = (arr) => {
+  areRanksValid = (arr) => {
     let ranks = new Set(); // Using a Set to keep track of unique ranks
     let hasNonZeroDuplicate = false;
 
@@ -77,7 +76,7 @@ areRanksValid = (arr) => {
 
     return !hasNonZeroDuplicate;
   };
-_toggleOption = (option, rank = 0) => {
+  _toggleOption = (option, rank = 0) => {
     let vote = this.vote;
 
     if (this.isMultiple) {
@@ -111,7 +110,7 @@ _toggleOption = (option, rank = 0) => {
 
     this.vote = [...vote];
   };
-defaultPreloadedVoters() {
+  defaultPreloadedVoters() {
     let preloadedVoters = {};
 
     if (this.args.attrs.poll.public && this.args.preloadedVoters) {
@@ -134,10 +133,6 @@ defaultPreloadedVoters() {
 
     return preloadedVoters;
   }
-
-
-
-
 
   get id() {
     return this.args.attrs.id;
