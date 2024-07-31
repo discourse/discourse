@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "etc"
+require "colored2"
 
 module Migrations::Converters::Base
   class ProgressStepExecutor
@@ -14,6 +15,9 @@ module Migrations::Converters::Base
 
     def execute
       @max_progress = calculate_max_progress
+
+      puts @step.class.title
+      @step.execute
 
       if execute_in_parallel?
         execute_parallel
@@ -29,6 +33,14 @@ module Migrations::Converters::Base
     end
 
     def execute_serially
+      item_handler = ItemHandler.new(@step)
+
+      with_progressbar do |progressbar|
+        @step.items.each do |item|
+          stats = item_handler.handle(item)
+          progressbar.update(stats)
+        end
+      end
     end
 
     def execute_parallel
@@ -44,6 +56,16 @@ module Migrations::Converters::Base
       end
 
       max_progress
+    end
+
+    def with_progressbar
+      ::Migrations::ExtendedProgressBar
+        .new(
+          max_progress: @max_progress,
+          report_progress_in_percent: @step.class.report_progress_in_percent?,
+          use_custom_progress_increment: @step.class.use_custom_progress_increment?,
+        )
+        .run { |progressbar| yield progressbar }
     end
   end
 end

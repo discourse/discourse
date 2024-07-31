@@ -48,17 +48,6 @@ def execute_parallel
   merge_output_dbs(worker_output_db_paths)
 end
 
-def execute_serially
-  item_handler = ItemHandler.new(@step)
-
-  with_progressbar do |progressbar|
-    @step.items.each do |item|
-      stats = item_handler.handle(item)
-      update_progressbar(progressbar, stats)
-    end
-  end
-end
-
 def merge_output_dbs(worker_output_db_paths)
   print "    Merging output databases...\r"
   start_time = Time.now
