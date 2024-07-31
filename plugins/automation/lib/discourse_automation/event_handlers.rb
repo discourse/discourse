@@ -195,11 +195,8 @@ module DiscourseAutomation
         end
     end
 
-    def self.handle_topic_tags_changed(args)
+    def self.handle_topic_tags_changed(topic, removed_tags, added_tags)
       name = DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED
-
-      user, topic, removed_tags, added_tags =
-        args.values_at(:user, :topic, :removed_tags, :added_tags)
 
       DiscourseAutomation::Automation
         .where(trigger: name, enabled: true)
@@ -219,13 +216,13 @@ module DiscourseAutomation
 
           watching_user = automation.trigger_field("watching_user")
           if watching_user["value"]
-            next if watching_user["value"] != user
+            next if watching_user["value"] != topic.user_id
           end
 
           automation.trigger!(
             "kind" => name,
             "topic" => topic,
-            "user" => user,
+            "user" => topic.user_id,
             "removed_tags" => removed_tags,
             "added_tags" => added_tags,
           )

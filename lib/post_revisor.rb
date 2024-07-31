@@ -132,14 +132,6 @@ class PostRevisor
             )
           end
 
-          DiscourseEvent.trigger(
-            :topic_tags_changed,
-            topic: tc.topic,
-            user: tc.user,
-            added_tags: added_tags,
-            removed_tags: removed_tags,
-          )
-
           create_small_action_for_tag_changes(
             topic: tc.topic,
             user: tc.user,
