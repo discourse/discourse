@@ -157,4 +157,8 @@ module SystemHelpers
       )
     end
   end
+
+  def skip_on_ci!(message = "Flaky on CI")
+    skip(message) if ENV["CI"]
+  end
 end

@@ -39,11 +39,9 @@ describe "Topic Map - Private Message", type: :system do
   end
 
   it "updates the various topic stats, avatars" do
-    if ENV["CI"]
-      skip(
-        "This is flaky because it relies a lot on messagebus events and the counts don't always update in time",
-      )
-    end
+    skip_on_ci!(
+      "This is flaky because it relies a lot on messagebus events and the counts don't always update in time",
+    )
 
     freeze_time
     sign_in(user)
