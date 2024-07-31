@@ -72,6 +72,7 @@ after_initialize do
     lib/discourse_automation/triggers/recurring
     lib/discourse_automation/triggers/stalled_topic
     lib/discourse_automation/triggers/stalled_wiki
+    lib/discourse_automation/triggers/topic_tags_changed
     lib/discourse_automation/triggers/topic
     lib/discourse_automation/triggers/user_added_to_group
     lib/discourse_automation/triggers/user_badge_granted
