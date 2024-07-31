@@ -17,7 +17,6 @@ export default Component.extend(LoadMore, {
     this.stateChangeCallbackId = this.topicTrackingState.onStateChange(() =>
       this._updateTrackingTopics()
     );
-    this.appEvents.on("discovery-topics-list:loadMore", this, this.loadMore);
   },
 
   @on("willDestroyElement")
@@ -25,7 +24,6 @@ export default Component.extend(LoadMore, {
     if (this.stateChangeCallbackId) {
       this.topicTrackingState.offStateChange(this.stateChangeCallbackId);
     }
-    this.appEvents.off("discovery-topics-list:loadMore", this, this.loadMore);
   },
 
   _updateTrackingTopics() {
