@@ -1,7 +1,6 @@
 import { hash } from "@ember/helper";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import i18n from "discourse-common/helpers/i18n";
+import AdminPageActionButton from "admin/components/admin-page-action-button";
 
 const AdminPageSubheader = <template>
   <div class="admin-page-subheader">
@@ -11,13 +10,13 @@ const AdminPageSubheader = <template>
         {{yield
           (hash
             Primary=(component
-              DButton class=(concatClass "btn-primary btn-small" @primaryClass)
+              AdminPageActionButton buttonClasses="btn-primary btn-small"
             )
             Danger=(component
-              DButton class=(concatClass "btn-danger btn-small" @dangerClass)
+              AdminPageActionButton buttonClasses="btn-danger btn-small"
             )
             Default=(component
-              DButton class=(concatClass "btn-default btn-small" @defaultClass)
+              AdminPageActionButton buttonClasses="btn-default btn-small"
             )
           )
           to="actions"
