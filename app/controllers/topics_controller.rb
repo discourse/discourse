@@ -1308,6 +1308,7 @@ class TopicsController < ApplicationController
     Scheduler::Defer.later "Topic View" do
       topic = Topic.find_by(id: topic_id)
       next if topic.blank?
+      next if topic.shared_draft?
 
       # We need to make sure that we aren't allowing recording
       # random topic views against topics the user cannot see.
