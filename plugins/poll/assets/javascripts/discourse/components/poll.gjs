@@ -111,11 +111,17 @@ export default class PollComponent extends Component {
 
     this.vote = [...vote];
   };
-  constructor() {
-    super(...arguments);
-    this.id = this.args.attrs.id;
-    this.post = this.args.attrs.post;
-    this.groupableUserFields = this.args.attrs.groupableUserFields;
+
+  get id() {
+    return this.args.attrs.id;
+  }
+
+  get post() {
+    return this.args.attrs.post;
+  }
+
+  get groupableUserFields() {
+    return this.args.attrs.groupableUserFields;
   }
 
   get isStaff() {
