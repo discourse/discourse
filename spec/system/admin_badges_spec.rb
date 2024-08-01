@@ -63,6 +63,39 @@ describe "Admin Badges Page", type: :system do
     end
   end
 
+  context "when updating a badge" do
+    it "can upload an image for the badge" do
+      badges_page.visit_page(Badge::Autobiographer)
+      form.choose_conditional("upload-image")
+
+      attach_file(File.absolute_path(file_from_fixtures("logo.jpg"))) do
+        form.field("image_url").find(".image-upload-controls .btn").click
+      end
+
+      expect(form.field("image_url")).to have_css(".btn-danger")
+      form.submit
+
+      expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.saved"))
+      badge = Badge.find(Badge::Autobiographer)
+      expect(badge.image_upload_id).to be_present
+      expect(badge.icon).to be_blank
+    end
+
+    it "can change to an icon for the badge" do
+      badge = Badge.find(Badge::Autobiographer)
+      badge.update!(image_upload_id: Fabricate(:image_upload).id)
+      badges_page.visit_page(Badge::Autobiographer)
+      form.field("image_url").find(".btn-danger").click
+      form.choose_conditional("choose-icon")
+      form.field("icon").select("ambulance")
+      form.submit
+
+      expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.saved"))
+      expect(badge.reload.image_upload_id).to be_blank
+      expect(badge.icon).to eq("ambulance")
+    end
+  end
+
   context "with enable_badge_sql" do
     before { SiteSetting.enable_badge_sql = true }
 

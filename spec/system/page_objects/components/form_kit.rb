@@ -166,6 +166,10 @@ module PageObjects
           FormKitField.new(find(".form-kit__field[data-name='#{name}']"))
         end
       end
+
+      def choose_conditional(name)
+        find(".form-kit__conditional-display .form-kit__control-radio[value='#{name}']").click
+      end
     end
   end
 end
