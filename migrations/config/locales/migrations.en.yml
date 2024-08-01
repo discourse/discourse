@@ -12,3 +12,8 @@ en:
       percentage: "Processed: %{percentage}"
       progress: "Processed: %{current}"
       progress_with_max: "Processed: %{current} / %{max}"
+
+  converter:
+    default_step_title: "Converting %{type}"
+    max_progress_calculation: "Calculating items took %{duration}"
+

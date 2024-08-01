@@ -22,7 +22,11 @@ module Migrations::Converters::Base
         )
       )
         @title = value unless getter
-        @title.presence || "Converting #{name&.demodulize&.underscore&.humanize(capitalize: false)}"
+        @title.presence ||
+          I18n.t(
+            "converter.default_step_title",
+            type: name&.demodulize&.underscore&.humanize(capitalize: false),
+          )
       end
     end
   end
