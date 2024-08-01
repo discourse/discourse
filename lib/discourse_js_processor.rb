@@ -80,7 +80,28 @@ class DiscourseJsProcessor
       @mutex
     end
 
+    def self.prune_old_transpilers!
+      return if Rails.env.production?
+
+      # in development/test, we have one-file-per-process, named by PID
+      # Clean up the oldest ones to stop the tmp directory from growing indefinitely
+      Dir["tmp/theme-transpiler/*.js"]
+        .sort_by do |f|
+          File.mtime(f)
+        rescue Errno::ENOENT
+          0 # Deleted by another process
+        end
+        .reverse
+        .drop(50)
+        .each do |f|
+          File.delete(f)
+        rescue Errno::ENOENT
+          # Deleted by another process
+        end
+    end
+
     def self.build_theme_transpiler
+      prune_old_transpilers!
       Discourse::Utils.execute_command(
         "node",
         "app/assets/javascripts/theme-transpiler/build.js",
