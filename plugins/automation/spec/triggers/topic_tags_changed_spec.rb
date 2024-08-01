@@ -30,7 +30,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       automation.reload
     end
 
-    it "fires the trigger" do
+    it "should fire the trigger if the tag is added" do
       topic_0 = Fabricate(:topic, user: user, tags: [], category: category)
 
       list =
@@ -40,6 +40,27 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
 
       expect(list.length).to eq(1)
       expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
+    end
+
+    it "should fire the trigger if the tag is removed" do
+      topic_0 = Fabricate(:topic, user: user, tags: [cool_tag], category: category)
+
+      list =
+        capture_contexts { DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), []) }
+
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
+    end
+
+    it "should not fire if the tag is not present" do
+      topic_0 = Fabricate(:topic, user: user, tags: [], category: category)
+
+      list =
+        capture_contexts do
+          DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), [bad_tag.name])
+        end
+
+      expect(list.length).to eq(0)
     end
   end
 
@@ -54,14 +75,59 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       automation.reload
     end
 
-    it "fires the trigger" do
+    it "should fire the trigger if the tag is added" do
       topic_0 = Fabricate(:topic, user: user, tags: [], category: category)
       topic_1 = Fabricate(:topic, user: user, tags: [], category: Fabricate(:category))
+
       list =
         capture_contexts do
           DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), [bad_tag.name])
           DiscourseTagging.tag_topic_by_names(topic_1, Guardian.new(user), [bad_tag.name])
         end
+
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
+    end
+
+    it "should fire the trigger if the tag is removed" do
+      topic_0 = Fabricate(:topic, user: user, tags: [cool_tag.name], category: category)
+
+      list =
+        capture_contexts { DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), []) }
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
+    end
+
+    it "should not fire if not the watching category" do
+      topic_0 = Fabricate(:topic, user: user, tags: [], category: Fabricate(:category))
+
+      list =
+        capture_contexts do
+          DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), [cool_tag.name])
+        end
+
+      expect(list.length).to eq(0)
+    end
+  end
+
+  context "when without any watching tags or categories" do
+    it "should fire the trigger if the tag is added" do
+      topic_0 = Fabricate(:topic, user: user, tags: [], category: category)
+
+      list =
+        capture_contexts do
+          DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), [cool_tag.name])
+        end
+
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
+    end
+
+    it "should fire the trigger if the tag is removed" do
+      topic_0 = Fabricate(:topic, user: user, tags: [cool_tag], category: category)
+
+      list =
+        capture_contexts { DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), []) }
 
       expect(list.length).to eq(1)
       expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
