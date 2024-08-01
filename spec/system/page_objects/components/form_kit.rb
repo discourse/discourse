@@ -2,6 +2,22 @@
 
 module PageObjects
   module Components
+    class FormKitContainer < PageObjects::Components::Base
+      attr_reader :component
+
+      def initialize(input)
+        if input.is_a?(Capybara::Node::Element)
+          @component = input
+        else
+          @component = find(input)
+        end
+      end
+
+      def has_content?(content)
+        component.has_content?(content)
+      end
+    end
+
     class FormKitField < PageObjects::Components::Base
       attr_reader :component
 
@@ -164,6 +180,12 @@ module PageObjects
       def field(name)
         within component do
           FormKitField.new(find(".form-kit__field[data-name='#{name}']"))
+        end
+      end
+
+      def container(name)
+        within component do
+          FormKitContainer.new(find(".form-kit__container[data-name='#{name}']"))
         end
       end
 
