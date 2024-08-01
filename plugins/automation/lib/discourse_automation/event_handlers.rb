@@ -211,9 +211,13 @@ module DiscourseAutomation
             added_tags = [] if added_tags.nil?
             should_skip = false
             watching_tags["value"].each do |tag|
-              removed_tags && should_skip = true if !removed_tags[:old_tag_names].include?(tag)
-              removed_tags && should_skip = true if !removed_tags[:new_tag_names].include?(tag)
-              added_tags && should_skip = true if !added_tags.include?(tag)
+              if !removed_tags[:old_tag_names].empty? && !removed_tags[:old_tag_names].include?(tag)
+                should_skip = true
+              end
+              if !removed_tags[:new_tag_names].empty? && !removed_tags[:new_tag_names].include?(tag)
+                should_skip = true
+              end
+              should_skip = true if !added_tags.empty? && !added_tags.include?(tag)
             end
             next if should_skip
           end
