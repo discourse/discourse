@@ -63,14 +63,7 @@ class DiscourseJsProcessor
   end
 
   class Transpiler
-    TRANSPILER_PATH =
-      (
-        if Rails.env.production?
-          "tmp/theme-transpiler.js"
-        else
-          "tmp/theme-transpiler/#{Process.pid}.js"
-        end
-      )
+    TRANSPILER_PATH = "tmp/theme-transpiler.js"
 
     @mutex = Mutex.new
     @ctx_init = Mutex.new
@@ -81,11 +74,12 @@ class DiscourseJsProcessor
     end
 
     def self.build_theme_transpiler
-      Discourse::Utils.execute_command(
-        "node",
-        "app/assets/javascripts/theme-transpiler/build.js",
-        TRANSPILER_PATH,
-      )
+      FileUtils.rm_rf("tmp/theme-transpiler") # cleanup old files - remove after Jan 2025
+      Discourse::Utils.execute_command("node", "app/assets/javascripts/theme-transpiler/build.js")
+    end
+
+    def self.build_production_theme_transpiler
+      File.write(TRANSPILER_PATH, build_theme_transpiler)
       TRANSPILER_PATH
     end
 
@@ -98,10 +92,14 @@ class DiscourseJsProcessor
       ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(err.to_s) })
       ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
 
-      # Theme template AST transformation plugins
-      @processor_mutex.synchronize { build_theme_transpiler } if !Rails.env.production?
+      source =
+        if Rails.env.production?
+          File.read(TRANSPILER_PATH)
+        else
+          @processor_mutex.synchronize { build_theme_transpiler }
+        end
 
-      ctx.eval(File.read(TRANSPILER_PATH), filename: "theme-transpiler.js")
+      ctx.eval(source, filename: "theme-transpiler.js")
 
       ctx
     end
