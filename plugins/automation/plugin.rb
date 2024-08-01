@@ -182,8 +182,12 @@ after_initialize do
     DiscourseAutomation::EventHandlers.handle_pm_created(topic) if topic.private_message?
   end
 
-  on(:topic_tags_changed) do |topic, old_tags, new_tags|
-    DiscourseAutomation::EventHandlers.handle_topic_tags_changed(topic, old_tags, new_tags)
+  on(:topic_tags_changed) do |topic, tags|
+    DiscourseAutomation::EventHandlers.handle_topic_tags_changed(
+      topic,
+      tags[:old_tag_names],
+      tags[:new_tag_names],
+    )
   end
 
   on(:post_created) do |post|

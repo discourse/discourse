@@ -195,7 +195,7 @@ module DiscourseAutomation
         end
     end
 
-    def self.handle_topic_tags_changed(topic, removed_tags, added_tags)
+    def self.handle_topic_tags_changed(topic, old_tag_names, new_tag_names)
       name = DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED
 
       DiscourseAutomation::Automation
@@ -208,16 +208,10 @@ module DiscourseAutomation
 
           watching_tags = automation.trigger_field("watching_tags")
           if watching_tags["value"]
-            added_tags = [] if added_tags.nil?
             should_skip = false
             watching_tags["value"].each do |tag|
-              if !removed_tags[:old_tag_names].empty? && !removed_tags[:old_tag_names].include?(tag)
-                should_skip = true
-              end
-              if !removed_tags[:new_tag_names].empty? && !removed_tags[:new_tag_names].include?(tag)
-                should_skip = true
-              end
-              should_skip = true if !added_tags.empty? && !added_tags.include?(tag)
+              should_skip = true if !old_tag_names.empty? && !old_tag_names.include?(tag)
+              should_skip = true if !new_tag_names.empty? && !new_tag_names.include?(tag)
             end
             next if should_skip
           end
@@ -225,8 +219,8 @@ module DiscourseAutomation
           automation.trigger!(
             "kind" => name,
             "topic" => topic,
-            "removed_tags" => removed_tags,
-            "added_tags" => added_tags,
+            "removed_tags" => old_tag_names,
+            "added_tags" => new_tag_names,
           )
         end
     end
