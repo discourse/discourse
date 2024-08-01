@@ -27,6 +27,8 @@ const REGULAR = "regular";
 const RANKED_CHOICE = "ranked_choice";
 const ON_VOTE = "on_vote";
 const ON_CLOSE = "on_close";
+const CLOSED_STATUS = "closed";
+const OPEN_STATUS = "open";
 
 export default class PollComponent extends Component {
   @service currentUser;
@@ -34,11 +36,12 @@ export default class PollComponent extends Component {
   @service appEvents;
   @service dialog;
   @service modal;
+
   @tracked vote = this.args.attrs.vote || [];
   @tracked poll = this.args.attrs.poll;
   @tracked preloadedVoters = this.defaultPreloadedVoters();
   @tracked hasSavedVote = this.args.attrs.hasSavedVote;
-  @tracked status = this.poll.status;
+
   @tracked
   showResults =
     this.hasSavedVote ||
@@ -58,6 +61,7 @@ export default class PollComponent extends Component {
 
     return userGroups && pollGroups.some((g) => userGroups.includes(g));
   };
+
   areRanksValid = (arr) => {
     let ranks = new Set(); // Using a Set to keep track of unique ranks
     let hasNonZeroDuplicate = false;
@@ -76,6 +80,7 @@ export default class PollComponent extends Component {
 
     return !hasNonZeroDuplicate;
   };
+
   _toggleOption = (option, rank = 0) => {
     let vote = this.vote;
 
@@ -110,10 +115,11 @@ export default class PollComponent extends Component {
 
     this.vote = [...vote];
   };
+
   defaultPreloadedVoters() {
     let preloadedVoters = {};
 
-    if (this.args.attrs.poll.public && this.args.preloadedVoters) {
+    if (this.poll.public && this.args.preloadedVoters) {
       Object.keys(this.args.preloadedVoters).forEach((key) => {
         preloadedVoters[key] = {
           voters: this.args.preloadedVoters[key],
@@ -147,7 +153,7 @@ export default class PollComponent extends Component {
   }
 
   get isStaff() {
-    return this.currentUser && this.currentUser.staff;
+    return this.currentUser?.staff;
   }
 
   get titleHTML() {
@@ -155,83 +161,82 @@ export default class PollComponent extends Component {
   }
 
   get topicArchived() {
-    return this.args.attrs.post.get("topic.archived");
+    return this.post.get("topic.archived");
   }
 
   get isRankedChoice() {
-    return this.args.attrs.poll.type === RANKED_CHOICE;
+    return this.poll.type === RANKED_CHOICE;
   }
 
   get staffOnly() {
-    return this.args.attrs.poll.results === STAFF_ONLY;
+    return this.poll.results === STAFF_ONLY;
   }
 
   get isMultiple() {
-    return this.args.attrs.poll.type === MULTIPLE;
+    return this.poll.type === MULTIPLE;
   }
 
   get isNumber() {
-    return this.args.attrs.poll.type === NUMBER;
+    return this.poll.type === NUMBER;
   }
 
   get isMe() {
-    return (
-      this.currentUser && this.args.attrs.post.user_id === this.currentUser.id
-    );
+    return this.currentUser && this.post.user_id === this.currentUser.id;
+  }
+
+  get status() {
+    return this.poll.get("status");
   }
 
   @action
-  castVotes(option) {
+  async castVotes(option) {
     if (!this.canCastVotes) {
       return;
     }
+
     if (!this.currentUser) {
       return;
     }
 
-    return ajax("/polls/vote", {
-      type: "PUT",
-      data: {
-        post_id: this.args.attrs.post.id,
-        poll_name: this.poll.name,
-        options: this.vote,
-      },
-    })
-      .then(({ poll }) => {
-        this.hasSavedVote = true;
-        this.poll.setProperties(poll);
-        this.appEvents.trigger(
-          "poll:voted",
-          poll,
-          this.args.attrs.post,
-          this.args.attrs.vote
-        );
-
-        if (this.poll.results !== "on_close") {
-          this.showResults = true;
-        }
-        if (this.poll.results === "staff_only") {
-          if (this.currentUser && this.currentUser.staff) {
-            this.showResults = true;
-          } else {
-            this.showResults = false;
-          }
-        }
-      })
-      .catch((error) => {
-        if (error) {
-          if (!this.isMultiple && !this.isRankedChoice) {
-            this._toggleOption(option);
-          }
-          popupAjaxError(error);
-        } else {
-          this.dialog.alert(I18n.t("poll.error_while_casting_votes"));
-        }
+    try {
+      const poll = await ajax("/polls/vote", {
+        type: "PUT",
+        data: {
+          post_id: this.post.id,
+          poll_name: this.poll.name,
+          options: this.vote,
+        },
       });
+
+      this.hasSavedVote = true;
+      this.poll.setProperties(poll);
+      this.appEvents.trigger("poll:voted", poll, this.post, this.vote);
+
+      if (this.poll.results !== "on_close") {
+        this.showResults = true;
+      }
+
+      if (this.poll.results === "staff_only") {
+        if (this.currentUser && this.currentUser.staff) {
+          this.showResults = true;
+        } else {
+          this.showResults = false;
+        }
+      }
+    } catch (error) {
+      if (error) {
+        if (!this.isMultiple && !this.isRankedChoice) {
+          this._toggleOption(option);
+        }
+        popupAjaxError(error);
+      } else {
+        this.dialog.alert(I18n.t("poll.error_while_casting_votes"));
+      }
+    }
   }
 
   get options() {
-    let enrichedOptions = this.args.attrs.poll.options;
+    let enrichedOptions = this.poll.get("options");
 
     if (this.isRankedChoice) {
       enrichedOptions.forEach((candidate) => {
@@ -250,15 +255,15 @@ export default class PollComponent extends Component {
   }
 
   get voters() {
-    return this.args.attrs.poll.voters;
+    return this.poll.voters;
   }
 
   get rankedChoiceOutcome() {
-    return this.args.attrs.poll.ranked_choice_outcome || [];
+    return this.poll.ranked_choice_outcome || [];
   }
 
   get min() {
-    let min = parseInt(this.args.attrs.poll.min, 10);
+    let min = parseInt(this.poll.min, 10);
     if (isNaN(min) || min < 0) {
       min = 1;
     }
@@ -267,8 +272,8 @@ export default class PollComponent extends Component {
   }
 
   get max() {
-    let max = parseInt(this.args.attrs.poll.max, 10);
-    const numOptions = this.args.attrs.poll.options.length;
+    let max = parseInt(this.poll.max, 10);
+    const numOptions = this.poll.options.length;
     if (isNaN(max) || max > numOptions) {
       max = numOptions;
     }
@@ -276,7 +281,7 @@ export default class PollComponent extends Component {
   }
 
   get closed() {
-    return this.status === "closed" || this.isAutomaticallyClosed;
+    return this.status === CLOSED_STATUS || this.isAutomaticallyClosed;
   }
 
   get rankedChoiceDropdownContent() {
@@ -287,7 +292,7 @@ export default class PollComponent extends Component {
       name: I18n.t("poll.options.ranked_choice.abstain"),
     });
 
-    this.args.attrs.poll.options.forEach((option, i) => {
+    this.poll.options.forEach((option, i) => {
       option.rank = 0;
       rankedChoiceDropdownContent.push({
         id: i + 1,
@@ -299,15 +304,14 @@ export default class PollComponent extends Component {
   }
 
   get isAutomaticallyClosed() {
-    const poll = this.poll;
     return (
-      (poll.close ?? false) &&
-      moment.utc(poll.close, "YYYY-MM-DD HH:mm:ss Z") <= moment()
+      (this.poll.close ?? false) &&
+      moment.utc(this.poll.close, "YYYY-MM-DD HH:mm:ss Z") <= moment()
     );
   }
 
   get hasVoted() {
-    return this.vote && this.vote.length > 0;
+    return this.vote?.length > 0;
   }
 
   get hideResultsDisabled() {
@@ -319,10 +323,12 @@ export default class PollComponent extends Component {
     if (this.closed) {
       return;
     }
+
     if (!this.currentUser) {
       // unlikely, handled by template logic
       return;
     }
+
     if (!this.checkUserGroups(this.currentUser, this.poll)) {
       return;
     }
@@ -349,8 +355,7 @@ export default class PollComponent extends Component {
 
   @action
   toggleResults() {
-    const showResults = !this.showResults;
-    this.showResults = showResults;
+    this.showResults = !this.showResults;
   }
 
   get canCastVotes() {
@@ -366,7 +371,7 @@ export default class PollComponent extends Component {
 
     if (this.isRankedChoice) {
       return (
-        this.options.length === this.vote.length &&
+        this.options.length === this.vote?.length &&
         this.areRanksValid(this.vote)
       );
     }
@@ -561,7 +566,7 @@ export default class PollComponent extends Component {
     this.dialog.yesNoConfirm({
       message: I18n.t(this.closed ? "poll.open.confirm" : "poll.close.confirm"),
       didConfirm: () => {
-        const status = this.closed ? "open" : "closed";
+        const status = this.closed ? OPEN_STATUS : CLOSED_STATUS;
         ajax("/polls/toggle_status", {
           type: "PUT",
           data: {
@@ -571,13 +576,13 @@ export default class PollComponent extends Component {
           },
         })
           .then(() => {
-            this.poll.status = status;
-            this.status = status;
+            this.poll.set("status", status);
+
             if (
               this.poll.results === "on_close" ||
               this.poll.results === "always"
             ) {
-              this.showResults = this.status === "closed";
+              this.showResults = this.status === CLOSED_STATUS;
             }
           })
           .catch((error) => {
