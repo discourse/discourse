@@ -713,7 +713,7 @@ RSpec.describe Oneboxer do
       body: allowlisted_oembed.to_json,
     )
 
-    SiteSetting.allowed_iframes = "discourse.org|https://ifram.es"
+    SiteSetting.allowed_iframes = "https://discourse.org/|https://ifram.es/"
 
     expect(Oneboxer.onebox("https://blocklist.ed/iframes", invalidate_oneboxes: true)).to be_empty
     expect(Oneboxer.onebox("https://allowlist.ed/iframes", invalidate_oneboxes: true)).to match(
