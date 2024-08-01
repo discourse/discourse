@@ -1,0 +1,49 @@
+{{hide-application-sidebar}}
+{{hide-application-header-buttons "search" "login" "signup"}}
+<div id="simple-container">
+  {{#if this.errorMessage}}
+    <div class="alert alert-error">
+      {{this.errorMessage}}
+    </div>
+  {{else}}
+    <div class="activate-account">
+      <h1 class="activate-title">{{i18n
+          "user.activate_account.welcome_to"
+          site_name=this.siteName
+        }}
+        <img src={{this.wavingHandURL}} alt="" class="waving-hand" />
+      </h1>
+      <br />
+      {{#if this.accountActivated}}
+        <div class="perform-activation">
+          <div class="image">
+            <img
+              src="/images/wizard/tada.svg"
+              class="waving-hand"
+              alt="tada emoji"
+            />
+          </div>
+          {{#if this.needsApproval}}
+            <p>{{i18n "user.activate_account.approval_required"}}</p>
+          {{else}}
+            <p>{{i18n "user.activate_account.please_continue"}}</p>
+            <p>
+              <DButton
+                @translatedLabel={{this.translatedButtonLabel}}
+                @href="/"
+              />
+            </p>
+          {{/if}}
+        </div>
+      {{else}}
+        <DButton
+          id="activate-account-button"
+          class="btn-primary"
+          @action={{this.activate}}
+          @label="user.activate_account.action"
+          @disabled={{this.buttonDisabled}}
+        />
+      {{/if}}
+    </div>
+  {{/if}}
+</div>

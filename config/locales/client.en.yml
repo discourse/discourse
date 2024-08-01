@@ -1713,6 +1713,14 @@ en:
           account_specific: "Your %{provider} account '%{account_description}' will be used for authentication."
           generic: "Your %{provider} account will be used for authentication."
 
+      activate_account:
+        action: "Click here to activate your account"
+        already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
+        please_continue: "Your new account is confirmed; you will be redirected to the home page."
+        continue_button: "Continue to %{site_name}"
+        welcome_to: "Welcome to %{site_name}!"
+        approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
+
       name:
         title: "Name"
         instructions: "Your full name (optional)."
@@ -2355,6 +2363,7 @@ en:
       resend_activation_email: "Click here to send the activation email again."
       omniauth_disallow_totp: "Your account has two-factor authentication enabled. Please log in with your password."
 
+      activate_account: "Activate Account"
       resend_title: "Resend Activation Email"
       change_email: "Change Email Address"
       provide_new_email: "Provide a new address and we'll resend your confirmation email."
