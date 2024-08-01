@@ -222,7 +222,7 @@ class PostCreator
       auto_close
     end
 
-    if !opts[:import_mode]
+    if !opts[:import_mode] && !opts[:reviewed_queued_post]
       handle_spam if (@spam || @post)
 
       ReviewablePost.queue_for_review_if_possible(@post, @user) if !@spam && @post && errors.blank?

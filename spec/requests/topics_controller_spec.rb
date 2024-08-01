@@ -5779,6 +5779,15 @@ RSpec.describe TopicsController do
       }.not_to change { TopicViewItem.count }
     end
 
+    it "does nothing if the topic is a shared draft" do
+      topic.shared_draft = Fabricate(:shared_draft)
+
+      expect {
+        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        Scheduler::Defer.do_all_work
+      }.not_to change { TopicViewItem.count }
+    end
+
     it "does nothing if user cannot see topic" do
       topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
 

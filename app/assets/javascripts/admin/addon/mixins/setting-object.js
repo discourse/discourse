@@ -3,12 +3,13 @@ import { readOnly } from "@ember/object/computed";
 import Mixin from "@ember/object/mixin";
 import { isPresent } from "@ember/utils";
 import { deepEqual } from "discourse-common/lib/object";
-import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 export default Mixin.create({
-  @discourseComputed("value", "default")
-  overridden(val, defaultVal) {
+  overridden: computed("value", "default", function () {
+    let val = this.value;
+    let defaultVal = this.default;
+
     if (val === null) {
       val = "";
     }
@@ -17,7 +18,7 @@ export default Mixin.create({
     }
 
     return !deepEqual(val, defaultVal);
-  },
+  }),
 
   computedValueProperty: computed(
     "valueProperty",
@@ -47,8 +48,9 @@ export default Mixin.create({
     }
   }),
 
-  @discourseComputed("valid_values")
-  validValues(validValues) {
+  validValues: computed("valid_values", function () {
+    const validValues = this.valid_values;
+
     const values = [];
     const translateNames = this.translate_names;
 
@@ -60,14 +62,13 @@ export default Mixin.create({
       }
     });
     return values;
-  },
+  }),
 
-  @discourseComputed("valid_values")
-  allowsNone(validValues) {
-    if (validValues?.includes("")) {
+  allowsNone: computed("valid_values", function () {
+    if (this.valid_values?.includes("")) {
       return "admin.settings.none";
     }
-  },
+  }),
 
   anyValue: readOnly("allow_any"),
 });

@@ -12,6 +12,7 @@ export default class ChatRoutesChannels extends Component {
       <Navbar as |navbar|>
         <navbar.Title @title={{i18n "chat.chat_channels"}} />
         <navbar.Actions as |action|>
+          <action.OpenDrawerButton />
           <action.BrowseChannelsButton />
         </navbar.Actions>
       </Navbar>

@@ -1343,62 +1343,6 @@ fi:
         warnings: "Viralliset varoitukset"
         read_more_in_group: "Haluatko lukea lisää? Selaile muita ryhmän %{groupLink} viestejä."
         read_more: "Haluatko lukea lisää? Selaa muita viestejä <a href='%{basePath}/u/%{username}/messages'>yksityisviesteissä</a>."
-        read_more_group_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># lukematon</a>}
-                other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># lukematonta</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { ja <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># uusi</a> viesti jäljellä, tai selaa muista viestejä ryhmässä {groupLink}}
-                other { ja <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># uutta</a> viestiä jäljellä, tai selaa muista viestejä ryhmässä {groupLink}}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># lukematon</a> viesti jäljellä, tai selaa muista viestejä ryhmässä {groupLink}}
-                other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># lukematonta</a> viestiä jäljellä, tai selaa muista viestejä ryhmässä {groupLink}}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/group/{groupName}/new'># uusi</a> viesti jäljellä, tai selaa muista viestejä ryhmässä {groupLink}}
-                other {<a href='{basePath}/u/{username}/messages/group/{groupName}/new'># uutta</a> viestiä jäljellä, tai selaa muista viestejä ryhmässä {groupLink}}
-              }
-            }
-            other {}
-          }
-        read_more_personal_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/unread'># lukematon</a>}
-                other {<a href='{basePath}/u/{username}/messages/unread'># lukematonta</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { ja <a href='{basePath}/u/{username}/messages/new'># uusi</a> viesti jäljellä, tai selaa muita <a href='{basePath}/u/{username}/messages'>yksityisviestejä</a>}
-                other { ja <a href='{basePath}/u/{username}/messages/new'># uutta</a> viestiä jäljellä, tai selaa muita <a href='{basePath}/u/{username}/messages'>yksityisviestejä</a>}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/unread'># lukematon</a> viesti jäljellä, tai selaa muita <a href='{basePath}/u/{username}/messages'>yksityisviestejä</a>}
-                other {There are <a href='{basePath}/u/{username}/messages/unread'># lukematonta</a> viestiä jäljellä, tai selaa muita <a href='{basePath}/u/{username}/messages'>yksityisviestejä</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/new'># uusi</a> viesti jäljellä, tai selaa muita <a href='{basePath}/u/{username}/messages'>yksityisviestejä</a>}
-                other {There are <a href='{basePath}/u/{username}/messages/new'># uutta</a> viestiä jäljellä, tai selaa muita <a href='{basePath}/u/{username}/messages'>yksityisviestejä</a>}
-              }
-            }
-            other {}
-          }
       preferences_nav:
         account: "Tili"
         security: "Tietoturva"
@@ -1988,15 +1932,6 @@ fi:
       logout_disabled: "Et voi kirjautua ulos, kun sivusto on vain luku -tilassa."
     staff_writes_only_mode:
       enabled: "Sivusto on vain henkilökunta -tilassa. Voit jatkaa selailua, mutta vastaaminen, tykkääminen ja muita toimintoja on rajoitettu vain henkilökunnan jäsenille."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/tunti} other {# virhettä/tunti}}</a> saavutti sivustoasetusrajan {limit, plural, one {# virhe/tunti} other {# virhettä/tunti}}.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/minuutti} other {# virhettä/minuutti}}</a> saavutti sivustoasetusrajan {limit, plural, one {# virhe/minuutti} other {# virhettä/minuutti}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/tunti} other {# virhettä/tunti}}</a> ylitti sivustoasetusrajan {limit, plural, one {# virhe/tunti} other {# virhettä/tunti}}.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/minuutti} other {# virhettä/minuutti}}</a> ylitti sivustoasetusrajan {limit, plural, one {# virhe/minuutti} other {# virhettä/minuutti}}.
     learn_more: "Lue lisää…"
     mute: Vaimenna
     unmute: Poista vaimennus
@@ -4273,7 +4208,6 @@ fi:
         everyone_can_use: "Kuka vain voi käyttää tunnisteita"
         usable_only_by_groups: "Tunnisteet näkyvät kaikille, mutta vain nämä ryhmät voivat käyttää niitä"
         visible_only_to_groups: "Tunnisteet näkyvät vain näille ryhmille"
-        cannot_save: "Tunnisteryhmää ei voida tallentaa. Varmista, että ryhmässä on vähintään yksi tunniste, ryhmän nimi ei ole tyhjä ja että ryhmä on valittuna tunnisteiden käyttöoikeuksiin."
         tags_placeholder: "Hae tai luo tunnisteita"
         parent_tag_placeholder: "Valinnainen"
         select_groups_placeholder: "Valitse ryhmät…"

@@ -325,14 +325,11 @@ task "assets:precompile:theme_transpiler": "environment" do
 end
 
 # Run these tasks **before** Rails' "assets:precompile" task
-task "assets:precompile": %w[
-       assets:precompile:before
-       maxminddb:refresh
-       assets:precompile:theme_transpiler
-     ]
+task "assets:precompile": %w[assets:precompile:before assets:precompile:theme_transpiler]
 
 # Run these tasks **after** Rails' "assets:precompile" task
 Rake::Task["assets:precompile"].enhance do
   Rake::Task["assets:precompile:compress_js"].invoke
   Rake::Task["assets:precompile:css"].invoke
+  Rake::Task["maxminddb:refresh"].invoke
 end

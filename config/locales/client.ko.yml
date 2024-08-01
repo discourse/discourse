@@ -1613,15 +1613,6 @@ ko:
       enabled: "이 사이트는 현재 읽기 전용 모드입니다. 탐색은 가능하지만 댓글, 좋아요 및 기타 작업은 일시적으로 비활성화되었습니다."
       login_disabled: "사이트가 읽기 전용 모드인 동안에는 로그인이 비활성화됩니다."
       logout_disabled: "사이트가 읽기 전용 모드인 동안에는 로그아웃이 비활성화됩니다."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/시간}}에 도달했습니다.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/분}}에 도달했습니다.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/시간}}을 초과했습니다.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/분}}을 초과했습니다.
     mute: 뮤트
     unmute: 뮤트 해제
     last_post: 게시됨
@@ -3427,7 +3418,6 @@ ko:
         everyone_can_use: "모든 사람이 태그를 사용할 수 있습니다"
         usable_only_by_groups: "모든 사람에게 태그가 보이지만 다음 그룹만 태그를 사용할 수 있습니다"
         visible_only_to_groups: "태그는 다음 그룹에만 표시됩니다"
-        cannot_save: "태그 그룹을 저장할 수 없습니다. 태그가 하나 이상 있고 태그 그룹 이름이 비어 있지 않으며 태그 권한에 그룹이 선택되어 있는지 확인하세요."
         tags_placeholder: "태그 검색 또는 생성"
         parent_tag_placeholder: "선택 사항"
         disabled: "태그 지정이 비활성화되었습니다. "

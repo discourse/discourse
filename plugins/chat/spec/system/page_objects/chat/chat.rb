@@ -130,6 +130,10 @@ module PageObjects
         has_no_css?(NEW_CHANNEL_BUTTON_SELECTOR)
       end
 
+      def has_no_messages?
+        have_selector(".channel-list-empty-message")
+      end
+
       private
 
       def drawer?(expectation:, channel_id: nil, expanded: true)

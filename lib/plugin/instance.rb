@@ -576,6 +576,22 @@ class Plugin::Instance
     DiscourseEvent.on(event_name) { |*args, **kwargs| block.call(*args, **kwargs) if enabled? }
   end
 
+  # A proxy to `DiscourseEvent.on(:site_setting_changed)` triggered when the plugin enabled setting specified by
+  # `enabled_site_setting` value is changed, including when the plugin is turned off.
+  #
+  # It is useful when the plugin needs to perform tasks like properly clearing caches when enabled/disabled
+  # note it will not be triggered when a plugin is installed/uninstalled by adding/removing its code
+  def on_enabled_change(&block)
+    event_proc =
+      Proc.new do |setting_name, old_value, new_value|
+        block.call(old_value, new_value) if setting_name == @enabled_site_setting
+      end
+    DiscourseEvent.on(:site_setting_changed, &event_proc)
+
+    # returns the block to be used for DiscourseEvent.off(:site_setting_changed, &block) for testing purposes
+    event_proc
+  end
+
   def notify_after_initialize
     color_schemes.each do |c|
       unless ColorScheme.where(name: c[:name]).exists?

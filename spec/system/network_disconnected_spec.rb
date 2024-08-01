@@ -4,7 +4,7 @@ RSpec.describe "Network Disconnected", type: :system do
   let(:cdp) { PageObjects::CDP.new }
 
   it "NetworkConnectivity service adds class to DOM and displays offline indicator" do
-    skip(<<~TEXT) if ENV["CI"]
+    skip_on_ci!(<<~TEXT)
       In CI this test will randomly flake - timing issue with the offline indicator
       not being rendered soon enough after network conditions change
     TEXT

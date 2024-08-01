@@ -1,12 +1,15 @@
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import $ from "jquery";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import LoadMore from "discourse/mixins/load-more";
 import { observes, on } from "discourse-common/utils/decorators";
 
 export default Component.extend(LoadMore, {
   classNames: ["contents"],
   eyelineSelector: ".topic-list-item",
+  appEvents: service(),
   documentTitle: service(),
 
   @on("didInsertElement")
@@ -32,21 +35,28 @@ export default Component.extend(LoadMore, {
     this.documentTitle.updateContextCount(this.incomingCount);
   },
 
-  actions: {
-    loadMore() {
-      this.documentTitle.updateContextCount(0);
-      this.model.loadMore().then(({ moreTopicsUrl, newTopics } = {}) => {
-        if (
-          newTopics &&
-          newTopics.length &&
-          this.bulkSelectHelper?.bulkSelectEnabled
-        ) {
-          this.bulkSelectHelper.addTopics(newTopics);
-        }
-        if (moreTopicsUrl && $(window).height() >= $(document).height()) {
-          this.send("loadMore");
-        }
-      });
-    },
+  @action
+  loadMore() {
+    applyBehaviorTransformer(
+      "discovery-topic-list-load-more",
+      () => {
+        this.documentTitle.updateContextCount(0);
+        return this.model
+          .loadMore()
+          .then(({ moreTopicsUrl, newTopics } = {}) => {
+            if (
+              newTopics &&
+              newTopics.length &&
+              this.bulkSelectHelper?.bulkSelectEnabled
+            ) {
+              this.bulkSelectHelper.addTopics(newTopics);
+            }
+            if (moreTopicsUrl && $(window).height() >= $(document).height()) {
+              this.send("loadMore");
+            }
+          });
+      },
+      { model: this.model }
+    );
   },
 });

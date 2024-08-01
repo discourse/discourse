@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { tagName } from "@ember-decorators/component";
 import { Promise } from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n, propertyEqual } from "discourse/lib/computed";
@@ -11,39 +12,41 @@ import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import UserField from "admin/models/user-field";
 
-export default Component.extend(bufferedProperty("userField"), {
-  adminCustomUserFields: service(),
-  dialog: service(),
+@tagName("")
+export default class AdminUserFieldItem extends Component.extend(
+  bufferedProperty("userField")
+) {
+  @service adminCustomUserFields;
+  @service dialog;
 
-  tagName: "",
-  isEditing: false,
+  isEditing = false;
 
-  cantMoveUp: propertyEqual("userField", "firstField"),
-  cantMoveDown: propertyEqual("userField", "lastField"),
+  @propertyEqual("userField", "firstField") cantMoveUp;
+  @propertyEqual("userField", "lastField") cantMoveDown;
 
-  userFieldsDescription: i18n("admin.user_fields.description"),
+  @i18n("admin.user_fields.description") userFieldsDescription;
 
   @discourseComputed("buffered.field_type")
   bufferedFieldType(fieldType) {
     return UserField.fieldTypeById(fieldType);
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     this._focusName();
-  },
+  }
 
   _focusName() {
     schedule("afterRender", () => {
       document.querySelector(".user-field-name")?.focus();
     });
-  },
+  }
 
   @discourseComputed("userField.field_type")
   fieldName(fieldType) {
     return UserField.fieldTypeById(fieldType)?.name;
-  },
+  }
 
   @discourseComputed(
     "userField.{editable,show_on_profile,show_on_user_card,searchable}"
@@ -64,18 +67,18 @@ export default Component.extend(bufferedProperty("userField"), {
     }
 
     return ret.join(", ");
-  },
+  }
 
   @discourseComputed("buffered.requirement")
   editableDisabled(requirement) {
     return requirement === "for_all_users";
-  },
+  }
 
   @action
   changeRequirementType(requirement) {
     this.buffered.set("requirement", requirement);
     this.buffered.set("editable", requirement === "for_all_users");
-  },
+  }
 
   async _confirmChanges() {
     return new Promise((resolve) => {
@@ -85,7 +88,7 @@ export default Component.extend(bufferedProperty("userField"), {
         didConfirm: () => resolve(true),
       });
     });
-  },
+  }
 
   @action
   async save() {
@@ -123,13 +126,13 @@ export default Component.extend(bufferedProperty("userField"), {
         this.commitBuffer();
       })
       .catch(popupAjaxError);
-  },
+  }
 
   @action
   edit() {
     this.set("isEditing", true);
     this._focusName();
-  },
+  }
 
   @action
   cancel() {
@@ -139,5 +142,5 @@ export default Component.extend(bufferedProperty("userField"), {
       this.rollbackBuffer();
       this.set("isEditing", false);
     }
-  },
-});
+  }
+}

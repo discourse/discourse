@@ -1344,70 +1344,6 @@ hr:
         warnings: "Službena upozorenja"
         read_more_in_group: "Želite li pročitati više? Pregledajte ostale poruke u %{groupLink}."
         read_more: "Želite li pročitati više? Pregledajte ostale poruke u <a href='%{basePath}/u/%{username}/messages'>osobnim porukama</a>."
-        read_more_group_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Postoji <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepročitano</a>}
-                   few {Ima ih <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepročitanih</a>}
-                other {Ima ih <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepročitanih</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { i <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nova</a> preostala poruka ili pregledajte ostale poruke u {groupLink}}
-                   few { i <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># novih</a> preostalih poruka ili pregledajte ostale poruke u {groupLink}}
-                other { i <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># novih</a> preostalih poruka ili pregledajte ostale poruke u {groupLink}}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Preostale su <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepročitane</a> poruke ili pregledajte ostale poruke u {groupLink}}
-                   few {Preostalo je <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepročitanih</a> poruka ili pregledajte ostale poruke u {groupLink}}
-                other {Preostalo je <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepročitanih</a> poruka ili pregledajte ostale poruke u {groupLink}}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {Preostalo je <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># novih</a> poruka ili pregledajte ostale poruke u {groupLink}}
-                   few {Preostalo je <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># novih</a> poruka ili pregledajte ostale poruke u {groupLink}}
-                other {Preostalo je <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># novih</a> poruka ili pregledajte ostale poruke u {groupLink}}
-              }
-            }
-            other {}
-          }
-        read_more_personal_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Postoji <a href='{basePath}/u/{username}/messages/unread'># nepročitanih</a>}
-                   few {Postoji <a href='{basePath}/u/{username}/messages/unread'># nepročitano</a>}
-                other {Postoji <a href='{basePath}/u/{username}/messages/unread'># nepročitano</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { i <a href='{basePath}/u/{username}/messages/new'># nova</a> preostala poruka ili pregledajte ostale <a href='{basePath}/u/{username}/messages'>osobne poruke</a>}
-                   few { i <a href='{basePath}/u/{username}/messages/new'># novih</a> preostalih poruka ili pregledajte ostalih <a href='{basePath}/u/{username}/messages'>osobnih poruka</a>}
-                other { i <a href='{basePath}/u/{username}/messages/new'># novih</a> preostalih poruka ili pregledajte ostalih <a href='{basePath}/u/{username}/messages'>osobnih poruka</a>}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Preostalo je <a href='{basePath}/u/{username}/messages/unread'># nepročitanih</a> poruka ili pregledajte ostalih <a href='{basePath}/u/{username}/messages'>osobnih poruka</a>}
-                   few {Preostalo je <a href='{basePath}/u/{username}/messages/unread'># nepročitanih</a> poruka ili pregledajte ostalih <a href='{basePath}/u/{username}/messages'>osobnih poruka</a>}
-                other {Preostalo je <a href='{basePath}/u/{username}/messages/unread'># nepročitanih</a> poruka ili pregledajte ostalih <a href='{basePath}/u/{username}/messages'>osobnih poruka</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {Preostalo je <a href='{basePath}/u/{username}/messages/new'># novih</a> poruka ili pregledajte ostalih <a href='{basePath}/u/{username}/messages'>osobnih poruka</a>}
-                   few {Preostalo je <a href='{basePath}/u/{username}/messages/new'># novih</a> poruka ili pregledajte ostalih <a href='{basePath}/u/{username}/messages'>osobnih poruka</a>}
-                other {Preostalo je <a href='{basePath}/u/{username}/messages/new'># novih</a> poruka ili pregledajte ostalih <a href='{basePath}/u/{username}/messages'>osobnih poruka</a>}
-              }
-            }
-            other {}
-          }
       preferences_nav:
         account: "Račun"
         security: "Sigurnost"
@@ -1985,15 +1921,6 @@ hr:
       logout_disabled: "Odjava je onemogućena dok je forum u načinu rada samo za čitanje."
     staff_writes_only_mode:
       enabled: "Ova stranica je u načinu rada samo za osoblje. Nastavite s pregledavanjem, ali odgovaranje, sviđanje i druge radnje ograničeni su samo na članove osoblja."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}</a> premašio ograničenje za postavljanje stranice {limit, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}.
     learn_more: "Saznajte više…"
     mute: Utišaj
     unmute: Poništi utišanje
@@ -4219,7 +4146,6 @@ hr:
         everyone_can_use: "Oznake mogu koristiti svi"
         usable_only_by_groups: "Oznake su vidljive svima, ali samo ih sljedeće grupe mogu koristiti"
         visible_only_to_groups: "Oznake su vidljive samo sljedećim grupama"
-        cannot_save: "Nije moguće spremiti grupu oznaka. Provjerite je li prisutna barem jedna oznaka, naziv grupe oznaka nije prazan i grupa je odabrana za dopuštenje oznaka."
         tags_placeholder: "Pretražite ili izradite oznake"
         parent_tag_placeholder: "Neobvezno"
         disabled: "Označavanje je onemogućeno. "

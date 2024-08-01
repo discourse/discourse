@@ -56,6 +56,10 @@ class Topic < ActiveRecord::Base
       )
   end
 
+  def shared_draft?
+    SharedDraft.exists?(topic_id: id)
+  end
+
   def thumbnail_job_redis_key(sizes)
     "generate_topic_thumbnail_enqueue_#{id}_#{sizes.inspect}"
   end

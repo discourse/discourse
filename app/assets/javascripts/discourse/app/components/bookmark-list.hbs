@@ -81,6 +81,11 @@
               </td>
             {{/if}}
             <td class="main-link topic-list-data">
+              <PluginOutlet
+                @name="bookmark-list-before-link"
+                @outletArgs={{hash bookmark=bookmark}}
+              />
+
               <span class="link-top-line">
                 <div class="bookmark-metadata">
                   {{#if bookmark.reminder_at}}

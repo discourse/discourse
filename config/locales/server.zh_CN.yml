@@ -4755,18 +4755,31 @@ zh_CN:
           default_locale:
             label: "语言"
       privacy:
+        title: "成员访问权限"
         fields:
           login_required:
             label: "公开范围"
+            description: "您的社区是公开的还是私人的？"
             choices:
               public:
                 label: "公开"
               private:
                 label: "不公开"
           invite_only:
+            label: "注册"
+            description: "成员如何加入这个社区？"
             choices:
+              sign_up:
+                label: "注册"
               invite_only:
                 label: "仅限邀请"
+          must_approve_users:
+            description: "你想手动批准成员账户吗？"
+            choices:
+              "no":
+                label: "否，新成员可以立即加入"
+              "yes":
+                label: "是，新成员必须经过版主批准"
           chat_enabled:
             placeholder: "启用聊天"
             extra_description: "与您的成员实时互动"

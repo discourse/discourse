@@ -1112,7 +1112,7 @@ ru:
       flair_preview_icon: "Предпросмотр значка"
       flair_preview_image: "Предпросмотр изображения"
       flair_type:
-        icon: "Выбрать иконку"
+        icon: "Выбрать значок"
         image: "Загрузить изображение"
       default_notifications:
         modal_title: "Стандартные уведомления пользователя"
@@ -1330,13 +1330,13 @@ ru:
       no_bookmarks_search: "По заданному поисковому запросу закладок не обнаружено."
       no_notifications_title: "У вас пока нет уведомлений"
       no_notifications_body: >
-        На этой панели будут отображаться уведомления об активности на форуме, имеющей прямое отношение к вам, включая ответы на ваши темы и сообщения, <b>@упоминание</b> и цитирование вас, ответы на темы, которые вы отслеживаете. Уведомления также будут отправлены на вашу электронную почту, если вы отсутствовали на форуме в течение некоторого времени. <br><br> Иконка %{icon} позволяет выбрать, о каких темах, категориях и тегах вы хотите получать уведомления. Для получения дополнительной информации см. <a href='%{preferencesUrl}'>настройки уведомлений</a>.
+        На этой панели будут отображаться уведомления об активности на форуме, имеющей прямое отношение к вам, включая ответы на ваши темы и публикации, <b>@упоминание</b> и цитирование вас, ответы на темы, которые вы отслеживаете. Уведомления также будут отправлены на вашу электронную почту, если вы отсутствовали на форуме в течение некоторого времени. <br><br> Значок %{icon} позволяет выбрать, о каких темах, категориях и тегах вы хотите получать уведомления. Для получения дополнительной информации см. <a href='%{preferencesUrl}'>настройки уведомлений</a>.
       no_other_notifications_title: "У вас пока нет других уведомлений"
       no_other_notifications_body: >
         На этой панели будут уведомления о других видах активности, которые могут иметь отношение к вам, например, когда кто-то ссылается на одно из ваших сообщений или редактирует его.
       no_notifications_page_title: "У вас пока нет уведомлений"
       no_notifications_page_body: >
-        Вы будете получать уведомления об активности на форуме, имеющей прямое отношение к вам, включая ответы на ваши темы и сообщения, <b>@упоминание</b> и цитирование вас, ответы на темы, которые вы отслеживаете. Уведомления также будут отправлены на вашу электронную почту, если вы отсутствовали на форуме в течение некоторого времени. <br><br> Иконка %{icon} позволяет выбрать, о каких темах, категориях и тегах вы хотите получать уведомления. Для получения дополнительной информации см. <a href='%{preferencesUrl}'>настройки уведомлений</a>.
+        Вы будете получать уведомления об активности на форуме, имеющей прямое отношение к вам, включая ответы на ваши темы и публикации, <b>@упоминание</b> и цитирование вас, ответы на темы, которые вы отслеживаете. Уведомления также будут отправлены на вашу электронную почту, если вы отсутствовали на форуме в течение некоторого времени. <br><br> Значок %{icon} позволяет выбрать, о каких темах, категориях и тегах вы хотите получать уведомления. Для получения дополнительной информации см. <a href='%{preferencesUrl}'>настройки уведомлений</a>.
       dynamic_favicon: "Показывать количество на значке браузера"
       skip_new_user_tips:
         description: "Не выдавать награды и не показывать советы новым пользователям"
@@ -1495,78 +1495,6 @@ ru:
         warnings: "Официальные предупреждения"
         read_more_in_group: "Хотите почитать ещё? Просмотрите другие сообщения в группе %{groupLink}."
         read_more: "Хотите почитать ещё? Просмотрите другие сообщения в разделе «<a href='%{basePath}/u/%{username}/messages'>Личные сообщения</a>»."
-        read_more_group_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанное</a>}
-                   few {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанных</a>}
-                   many {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанных</a>}
-                other {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанного</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { и <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новое</a> сообщение, вы также можете посмотреть другие сообщения в группе {groupLink}}
-                   few { и <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новых</a> сообщения, вы также можете посмотреть другие сообщения в группе {groupLink}}
-                   many { и <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новых</a> сообщений, вы также можете посмотреть другие сообщения в группе {groupLink}}
-                other { и <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нового</a> сообщения, вы также можете посмотреть другие сообщения в группе {groupLink}}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанное</a> сообщение, вы также можете посмотреть другие сообщения в группе {groupLink}}
-                   few {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанных</a> сообщения, вы также можете посмотреть другие сообщения в группе {groupLink}}
-                   many {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанных</a> сообщений, вы также можете посмотреть другие сообщения в группе {groupLink}}
-                other {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанного</a> сообщения, вы также можете посмотреть другие сообщения в группе {groupLink}}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новое</a> сообщение, вы также можете посмотреть другие сообщения в группе {groupLink}}
-                   few {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новых</a> сообщения, вы также можете посмотреть другие сообщения в группе {groupLink}}
-                   many {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новых</a> сообщений, вы также можете посмотреть другие сообщения в группе {groupLink}}
-                other {Осталось <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нового</a> сообщения, вы также можете посмотреть другие сообщения в группе {groupLink}}
-              }
-            }
-            other {}
-          }
-        read_more_personal_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Осталось <a href='{basePath}/u/{username}/messages/unread'># непрочитанное</a>}
-                   few {Осталось <a href='{basePath}/u/{username}/messages/unread'># непрочитанных</a>}
-                   many {Осталось <a href='{basePath}/u/{username}/messages/unread'># непрочитанных</a>}
-                other {Осталось <a href='{basePath}/u/{username}/messages/unread'># непрочитанного</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { и <a href='{basePath}/u/{username}/messages/new'># новое</a> сообщение, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
-                   few { и <a href='{basePath}/u/{username}/messages/new'># новых</a> сообщения, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
-                   many { и <a href='{basePath}/u/{username}/messages/new'># новых</a> сообщений, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
-                other { и <a href='{basePath}/u/{username}/messages/new'># нового</a> сообщения, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Осталось <a href='{basePath}/u/{username}/messages/unread'># непрочитанное</a> сообщение, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
-                   few {Осталось <a href='{basePath}/u/{username}/messages/unread'># непрочитанных</a> сообщения, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
-                   many {Осталось <a href='{basePath}/u/{username}/messages/unread'># непрочитанных</a> сообщений, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
-                other {Осталось <a href='{basePath}/u/{username}/messages/unread'># непрочитанного</a> сообщения, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {Осталось <a href='{basePath}/u/{username}/messages/new'># новое</a> сообщение, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
-                   few {Осталось <a href='{basePath}/u/{username}/messages/new'># новых</a> сообщения, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
-                   many {Осталось <a href='{basePath}/u/{username}/messages/new'># новых</a> сообщений, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
-                other {Осталось <a href='{basePath}/u/{username}/messages/new'># нового</a> сообщения, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>}
-              }
-            }
-            other {}
-          }
       preferences_nav:
         account: "Аккаунт"
         security: "Безопасность"
@@ -2188,15 +2116,6 @@ ru:
       logout_disabled: "Выход отключён, пока сайт находится в режиме «только для чтения»"
     staff_writes_only_mode:
       enabled: "Сайт находится в режиме «только для персонала». Продолжайте просмотр, но отвечать, ставить лайки и выполнять другие действия, влияющие на контент, могут только сотрудники."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# ошибка в час} few {# ошибки в час} many {# ошибок в час} other {# ошибки в час}}</a>: достигнут предел для настроек сайта — {limit, plural, one {# ошибка в час} few {# ошибки в час} many {# ошибок в час} other {# ошибки в час}}.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# ошибка в минуту} few {# ошибки в минуту} many {# ошибок в минуту} other {# ошибки в минуту}}</a>: достигнут предел для настроек сайта — {limit, plural, one {# ошибка в минуту} few {# ошибки в минуту} many {# ошибок в минуту} other {# ошибки в минуту}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# ошибка в час} few {# ошибки в час} many {# ошибок в час} other {# ошибки в час}}</a>: превышен предел для настроек сайта — {limit, plural, one {# ошибка в час} few {# ошибки в час} many {# ошибок в час} other {# ошибки в час}}.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# ошибка в минуту} few {# ошибки в минуту} many {# ошибок в минуту} other {# ошибки в минуту}}</a>: превышен предел для настроек сайта — {limit, plural, one {# ошибка в минуту} few {# ошибки в минуту} many {# ошибок в минуту} other {# ошибки в минуту}}.
     learn_more: "Подробнее…"
     mute: Отключить
     unmute: Включить
@@ -4719,7 +4638,6 @@ ru:
         everyone_can_use: "Все могут использовать теги"
         usable_only_by_groups: "Теги видны всем, но использовать их могут только указанные группы"
         visible_only_to_groups: "Теги видны только указанным группам"
-        cannot_save: "Невозможно сохранить группу тегов. Убедитесь, что выбран хотя бы один тег, указано название группы тегов, и указаны соответствующие группы, если выбрано ограничение по использованию тегов."
         tags_placeholder: "Найти или создать тег"
         parent_tag_placeholder: "Необязательно"
         select_groups_placeholder: "Выберите группы…"
@@ -4789,8 +4707,8 @@ ru:
     topic_entrance:
       sr_jump_top_button: "Перейти к первой публикации — %{date}"
       sr_jump_bottom_button: "Перейти к последней публикации — %{date}"
-      jump_top_button_title: "Перейти к первому сообщению"
-      jump_bottom_button_title: "Перейти к последнему сообщению"
+      jump_top_button_title: "Перейти к первой публикации"
+      jump_bottom_button_title: "Перейти к последней публикации"
     fullscreen_table:
       expand_btn: "Развернуть таблицу"
       view_table: "Просмотреть таблицу"
@@ -5711,7 +5629,7 @@ ru:
           rate_limits: "Ограничения"
           user_api: "Пользовательский API"
           web_hooks: "Вебхуки"
-          onebox: "Умная вставка"
+          onebox: "OneBox"
           files: "Файлы"
           other_options: "Разное"
           search: "Поиск"
@@ -6970,7 +6888,7 @@ ru:
           files: "Файлы"
           trust: "Уровни доверия"
           security: "Безопасность"
-          onebox: "Умная вставка"
+          onebox: "OneBox"
           seo: "Поисковая оптимизация (SEO)"
           spam: "Спам"
           rate_limits: "Ограничения"
@@ -7070,7 +6988,7 @@ ru:
         graphic: Иконка награды
         icon_or_image: Для награды требуется значок или изображение
         icon_help: "Введите имя иконки из коллекции Font Awesome (используйте префикс «far-» для обычных значков и «fab-» для значков брендов)"
-        select_an_icon: "Выбрать иконку"
+        select_an_icon: "Выбрать значок"
         upload_an_image: "Загрузить изображение"
         read_only_setting_help: "Настроить текст"
         query: Выборка награды (SQL)

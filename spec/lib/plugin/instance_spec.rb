@@ -183,6 +183,7 @@ TEXT
 
       class TroutPlugin < Plugin::Instance
         attr_accessor :enabled
+
         def enabled?
           @enabled
         end
@@ -277,6 +278,42 @@ TEXT
         expect(DiscoursePluginRegistry.build_html("test:html", ctx)).to eq("")
         @plugin.enabled = true
         expect(DiscoursePluginRegistry.build_html("test:html", ctx)).to eq("<div>hello</div>")
+      end
+
+      it "can act when the plugin is enabled/disabled" do
+        plugin = Plugin::Instance.new
+        plugin.enabled_site_setting(:discourse_sample_plugin_enabled)
+
+        SiteSetting.discourse_sample_plugin_enabled = false
+        expect(plugin.enabled?).to eq(false)
+
+        begin
+          expected_old_value = expected_new_value = nil
+
+          event_handler =
+            plugin.on_enabled_change do |old_value, new_value|
+              expected_old_value = old_value
+              expected_new_value = new_value
+            end
+
+          SiteSetting.discourse_sample_plugin_enabled = true
+          expect(expected_old_value).to eq(false)
+          expect(expected_new_value).to eq(true)
+
+          SiteSetting.discourse_sample_plugin_enabled = false
+          expect(expected_old_value).to eq(true)
+          expect(expected_new_value).to eq(false)
+
+          # ensures only the setting specified in `enabled_site_setting` is tracked
+          expected_old_value = expected_new_value = nil
+          plugin.enabled_site_setting(:discourse_sample_plugin_enabled_alternative)
+          SiteSetting.discourse_sample_plugin_enabled = true
+          expect(expected_old_value).to be_nil
+          expect(expected_new_value).to be_nil
+        ensure
+          # clear the underlying DiscourseEvent
+          DiscourseEvent.off(:site_setting_changed, &event_handler)
+        end
       end
     end
   end

@@ -6,20 +6,23 @@ import { bufferedProperty } from "discourse/mixins/buffered-content";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Controller.extend(bufferedProperty("siteText"), {
-  dialog: service(),
-  saved: false,
-  queryParams: ["locale"],
+export default class AdminSiteTextEdit extends Controller.extend(
+  bufferedProperty("siteText")
+) {
+  @service dialog;
+
+  saved = false;
+  queryParams = ["locale"];
 
   @discourseComputed("buffered.value")
   saveDisabled(value) {
     return this.siteText.value === value;
-  },
+  }
 
   @discourseComputed("siteText.status")
   isOutdated(status) {
     return status === "outdated";
-  },
+  }
 
   @action
   saveChanges() {
@@ -33,7 +36,7 @@ export default Controller.extend(bufferedProperty("siteText"), {
         this.set("saved", true);
       })
       .catch(popupAjaxError);
-  },
+  }
 
   @action
   revertChanges() {
@@ -52,7 +55,7 @@ export default Controller.extend(bufferedProperty("siteText"), {
           .catch(popupAjaxError);
       },
     });
-  },
+  }
 
   @action
   dismissOutdated() {
@@ -62,9 +65,9 @@ export default Controller.extend(bufferedProperty("siteText"), {
         this.siteText.set("status", "up_to_date");
       })
       .catch(popupAjaxError);
-  },
+  }
 
   get interpolationKeys() {
     return this.siteText.interpolation_keys.join(", ");
-  },
-});
+  }
+}

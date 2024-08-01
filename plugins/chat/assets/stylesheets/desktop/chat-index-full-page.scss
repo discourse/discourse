@@ -54,5 +54,8 @@
     .channels-list-container {
       height: auto;
     }
+    .channels-list-container.center-empty-channels-list {
+      height: 90%;
+    }
   }
 }

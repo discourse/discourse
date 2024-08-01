@@ -11,24 +11,17 @@
     <span class="badge-display-name">{{data.name}}</span>
   </h1>
 
-  {{#if this.readOnly}}
-    <form.Alert @icon="info-circle">
-      {{i18n "admin.badges.disable_system"}}
-    </form.Alert>
-  {{else}}
-    <form.Field
-      @name="enabled"
-      @disabled={{this.readOnly}}
-      @validation="required"
-      @title={{i18n "admin.badges.status"}}
-      as |field|
-    >
-      <field.Question
-        @yesLabel={{i18n "admin.badges.enabled"}}
-        @noLabel={{i18n "admin.badges.disabled"}}
-      />
-    </form.Field>
-  {{/if}}
+  <form.Field
+    @name="enabled"
+    @validation="required"
+    @title={{i18n "admin.badges.status"}}
+    as |field|
+  >
+    <field.Question
+      @yesLabel={{i18n "admin.badges.enabled"}}
+      @noLabel={{i18n "admin.badges.disabled"}}
+    />
+  </form.Field>
 
   {{#if this.readOnly}}
     <form.Container data-name="name" @title={{i18n "admin.badges.name"}}>

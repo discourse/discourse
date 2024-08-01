@@ -1597,15 +1597,6 @@ vi:
       enabled: "Website đang ở chế độ chỉ đọc, bạn có thể duyệt xem nhưng không thể trả lời, likes, hay thực hiện các hành động khác."
       login_disabled: "Chức năng Đăng nhập đã bị tắt khi website trong trạng thái chỉ đọc"
       logout_disabled: "Chức năng đăng xuất đã bị tắt khi website đang trong trạng thái chỉ đọc."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / giờ}}</a> trang web đạt đến giới hạn thiết lập của {limit, plural, other {# lỗi / giờ}}.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / phút}}</a> trang web đạt đến giới hạn thiết lập của {limit, plural, other {# lỗi / phút}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / giờ}}</a> vượt quá giới hạn thiết lập trang web của {limit, plural, other {# lỗi / giờ}}.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / phút}}</a> vượt quá giới hạn thiết lập trang web của {limit, plural, other {# lỗi / phút}}.
     learn_more: "Tìm hiểu thêm…"
     mute: Im lặng
     unmute: Bỏ im lặng
@@ -3478,7 +3469,6 @@ vi:
         everyone_can_use: "Mọi người đều có thể sử dụng thẻ"
         usable_only_by_groups: "Tất cả mọi người đều có thể nhìn thấy thẻ, nhưng chỉ những nhóm sau mới có thể sử dụng chúng"
         visible_only_to_groups: "Thẻ chỉ hiển thị cho các nhóm sau"
-        cannot_save: "Không thể lưu nhóm thẻ. Đảm bảo rằng có ít nhất một thẻ hiện diện, tên nhóm thẻ không trống và một nhóm được chọn cho quyền đối với thẻ."
         tags_placeholder: "Tìm kiếm hoặc tạo thẻ"
         parent_tag_placeholder: "Tùy chọn"
         select_groups_placeholder: "Chọn nhóm…"

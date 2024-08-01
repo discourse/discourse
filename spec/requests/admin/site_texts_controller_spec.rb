@@ -211,8 +211,8 @@ RSpec.describe Admin::SiteTextsController do
         get "/admin/customize/site_texts.json", params: params
         expect(response.status).to eq(200)
         expect(response.parsed_body["site_texts"].size).to eq(0)
-
-        I18n.config.available_locales = available_locales
+      ensure
+        I18n.config.available_locales = nil
       end
 
       context "with plural keys" do

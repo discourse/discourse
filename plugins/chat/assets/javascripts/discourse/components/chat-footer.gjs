@@ -15,6 +15,7 @@ export default class ChatFooter extends Component {
   @service chat;
   @service chatHistory;
   @service siteSettings;
+  @service site;
   @service currentUser;
   @service chatChannelsManager;
   @service chatStateManager;
@@ -35,10 +36,18 @@ export default class ChatFooter extends Component {
     return routeName === "chat" ? "chat.channels" : routeName;
   }
 
+  get enabledRouteCount() {
+    return [
+      this.includeThreads,
+      this.directMessagesEnabled,
+      this.siteSettings.enable_public_channels,
+    ].filter(Boolean).length;
+  }
   get shouldRenderFooter() {
     return (
+      (this.site.mobileView || this.chatStateManager.isDrawerExpanded) &&
       this.chatStateManager.hasPreloadedChannels &&
-      (this.includeThreads || this.directMessagesEnabled)
+      this.enabledRouteCount > 1
     );
   }
 

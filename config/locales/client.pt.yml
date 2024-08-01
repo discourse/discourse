@@ -3442,7 +3442,6 @@ pt:
         everyone_can_use: "Tags podem ser usadas por todos"
         usable_only_by_groups: "As tags são visíveis para todos, mas apenas os grupos a seguir podem usá-las"
         visible_only_to_groups: "As tags são visíveis apenas para os seguintes grupos"
-        cannot_save: "Não é possível salvar o grupo de tags. Verifique se há pelo menos uma tag presente, o nome do grupo de tags não está vazio e um grupo está selecionado para permissão de tags."
         tags_placeholder: "Pesquisar ou criar etiquetas"
         parent_tag_placeholder: "Opcional"
         disabled: "A etiquetagem está desativada. "

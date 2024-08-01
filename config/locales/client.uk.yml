@@ -1499,34 +1499,34 @@ uk:
           { HAS_UNREAD_AND_NEW, select,
             true {
               { UNREAD, plural,
-                   =0 {}
-                  one {Є <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитане</a>}
-                   few {Є <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитані</a>}
-                   many {Є <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитані</a>}
-                other {Є <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитані</a>}
+                =0 {}
+                one {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитано</a>}
+                few {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитано</a>}
+                many {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитано</a>}
+                other {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитано</a>}
               }
               { NEW, plural,
-                   =0 {}
-                  one { і <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># залишилося нове</a> повідомлення або перегляньте інші повідомлення в {groupLink}}
-                   few { і <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень залишилися, або перегляньте інші повідомлення в {groupLink}}
-                   many { і <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень залишилися, або перегляньте інші повідомлення в {groupLink}}
-                other { і <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень залишилося, або перегляньте інші повідомлення в {groupLink}}
+                =0 {}
+                one { та <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># нове</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
+                few { та <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># нових</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
+                many { та <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># нових</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
+                other { та <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># нових</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
               }
             }
             false {
               { UNREAD, plural,
-                   =0 {}
-                  one {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитане</a> повідомлення або перегляньте інші повідомлення в {groupLink}}
-                   few {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитаних</a> повідомлень або перегляньте інші повідомлення в {groupLink}}
-                   many {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитаних</a> повідомлень або перегляньте інші повідомлення в {groupLink}}
-                other {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитаних</a> повідомлень або перегляньте інші повідомлення в {groupLink}}
+                =0 {}
+                one {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитано</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
+                few {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитано</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
+                many {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитано</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
+                other {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитано</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
               }
               { NEW, plural,
-                   =0 {}
-                  one {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нове</a> повідомлення або перегляньте інші повідомлення в {groupLink}}
-                   few {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлення або перегляньте інші повідомлення в {groupLink}}
-                   many {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень або перегляньте інші повідомлення в {groupLink}}
-                other {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень або перегляньте інші повідомлення в {groupLink}}
+                =0 {}
+                one {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># нове</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
+                few {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># нових</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
+                many {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># нових</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
+                other {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># нових</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
               }
             }
             other {}
@@ -1535,34 +1535,34 @@ uk:
           { HAS_UNREAD_AND_NEW, select,
             true {
               { UNREAD, plural,
-                   =0 {}
-                  one {Є <a href='{basePath}/u/{username}/messages/unread'># непрочитане</a>}
-                   few {Є <a href='{basePath}/u/{username}/messages/unread'># непрочитані</a>}
-                   many {Є <a href='{basePath}/u/{username}/messages/unread'># непрочитані</a>}
-                other {Є <a href='{basePath}/u/{username}/messages/unread'># непрочитані</a>}
+                =0 {}
+                one {Є <a href="{basePath}/u/{username}/messages/unread"># непрочитано</a>}
+                few {Є <a href="{basePath}/u/{username}/messages/unread"># непрочитано</a>}
+                many {Є <a href="{basePath}/u/{username}/messages/unread"># непрочитано</a>}
+                other {Є <a href="{basePath}/u/{username}/messages/unread"># непрочитано</a>}
               }
               { NEW, plural,
-                   =0 {}
-                  one { і <a href='{basePath}/u/{username}/messages/new'># нове</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
-                   few { і <a href='{basePath}/u/{username}/messages/new'># нові</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
-                   many { і <a href='{basePath}/u/{username}/messages/new'># нові</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
-                other { і <a href='{basePath}/u/{username}/messages/new'># нові</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                =0 {}
+                one { та <a href="{basePath}/u/{username}/messages/new"># нове</a> повідомлення, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
+                few { та <a href="{basePath}/u/{username}/messages/new"># нових</a> повідомлень, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
+                many { та <a href="{basePath}/u/{username}/messages/new"># нових</a> повідомлень, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
+                other { та <a href="{basePath}/u/{username}/messages/new"># нових</a> повідомлень, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
               }
             }
             false {
               { UNREAD, plural,
-                   =0 {}
-                  one {У вас залишилося <a href='{basePath}/u/{username}/messages/unread'># непрочитане</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
-                   few {У вас залишилося <a href='{basePath}/u/{username}/messages/unread'># непрочитаних</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
-                   many {У вас залишилося <a href='{basePath}/u/{username}/messages/unread'># непрочитаних</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
-                other {У вас залишилося <a href='{basePath}/u/{username}/messages/unread'># непрочитаних</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                =0 {}
+                one {Є <a href="{basePath}/u/{username}/messages/unread"># непрочитано</a> повідомлення, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
+                few {Є <a href="{basePath}/u/{username}/messages/unread"># непрочитано</a> повідомлень, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
+                many {Є <a href="{basePath}/u/{username}/messages/unread"># непрочитано</a> повідомлень, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
+                other {Є <a href="{basePath}/u/{username}/messages/unread"># непрочитано</a> повідомлень, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
               }
               { NEW, plural,
-                   =0 {}
-                  one {У вас залишилося <a href='{basePath}/u/{username}/messages/new'># нове</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
-                   few {Залишилося <a href='{basePath}/u/{username}/messages/new'># нових</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
-                   many {Залишилося <a href='{basePath}/u/{username}/messages/new'># нових</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
-                other {Залишилося <a href='{basePath}/u/{username}/messages/new'># нових</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                =0 {}
+                one {Є <a href="{basePath}/u/{username}/messages/new"># нове</a> повідомлення, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
+                few {Є <a href="{basePath}/u/{username}/messages/new"># нових</a> повідомлень, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
+                many {Є <a href="{basePath}/u/{username}/messages/new"># нових</a> повідомлень, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
+                other {Є <a href="{basePath}/u/{username}/messages/new"># нових</a> повідомлень, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
               }
             }
             other {}
@@ -2190,13 +2190,53 @@ uk:
       enabled: "Сайт працює в режимі \"тільки для команди обслуговування\". Зараз ви можете продовжувати переглядати сайт, але інші дії доступні лише членам команди обслуговування."
     logs_error_rate_notice:
       reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/година} other {# помилок/година}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/година} other {# помилок/година}}.
+        <b>{relativeAge}</b> — <a href="{url}" target="_blank">{ rate, plural,
+          one {# помилка/годину}
+          few {# помилки/годину}
+          many {# помилок/годину}
+          other {# помилок/годину}
+        }</a> досягнуто обмеження налаштування сайту {limit, plural,
+          one {# помилка/годину}
+          few {# помилки/годину}
+          many {# помилок/годину}
+          other {# помилок/годину}
+        }.
       reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/хвилина} other {# помилок/хвилина}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/хвилина} other {# помилок/хвилина}}.
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+          one {# помилка/хвилину}
+          few {# помилки/хвилину}
+          many {# помилок/хвилину}
+          other {# помилок/хвилину}
+        }</a> досягнуто обмеження налаштування сайту { limit, plural,
+          one {# помилка/хвилину}
+          few {# помилки/хвилину}
+          many {# помилок/хвилину}
+          other {# помилок/хвилину}
+        }.
       exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/година} few {# помилки/година} many {# помилок/година} other {# помилок/година}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/година} few {# помилки/година} many {# помилок/година} other {# помилок/година}}.
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+          one {# помилка/годину}
+          few {# помилки/годину}
+          many {# помилок/годину}
+          other {# помилок/годину}
+        }</a> досягнуто обмеження налаштування сайту { limit, plural,
+          one {# помилка/годину}
+          few {# помилки/годину}
+          many {# помилок/годину}
+          other {# помилок/годину}
+        }.
       exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/хвилина} few {# помилки/хвилина} many {# помилок/хвилина} other {# помилок/хвилина}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/хвилина} few {# помилки/хвилина} many {# помилок/хвилина} other {# помилок/хвилина}}.
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+          one {# помилка/хвилину}
+          few {# помилки/хвилину}
+          many {# помилок/хвилину}
+          other {# помилок/хвилину}
+        }</a> досягнуто обмеження налаштування сайту { limit, plural,
+          one {# помилка/хвилину}
+          few {# помилки/хвилину}
+          many {# помилок/хвилину}
+          other {# помилок/хвилину}
+        }.
     learn_more: "Дізнатися більше…"
     mute: Приглушити
     unmute: Розблокувати
@@ -4719,7 +4759,7 @@ uk:
         everyone_can_use: "Теґи можуть використовуватися всіма"
         usable_only_by_groups: "Теґи видимі для всіх, але використовувати їх можуть лише такі групи"
         visible_only_to_groups: "Теґи видимі лише для наступних груп"
-        cannot_save: "Неможливо зберегти групу теґів. Переконайтеся, що присутній принаймні один теґ, назва групи теґів не порожня, а групу вибрано для встановлення дозволів теґам."
+        cannot_save: "Не вдається зберегти групу тегів. Переконайтеся, що присутній принаймні один тег, назва групи тегів не порожня і менше 100 символів, а група вибрана з дозволом на теги."
         tags_placeholder: "Знайти або створити теґи"
         parent_tag_placeholder: "Опціонально"
         select_groups_placeholder: "Виберіть групи…"
@@ -5116,6 +5156,7 @@ uk:
         problems_found: "Кілька порад по вашим поточним налаштуванням сайту"
         new_features:
           title: "Що нового"
+          subtitle: "Щоб дізнатися більше про нові функції та вдосконалення, які ми постійно додаємо, див. <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Примітки до випуску</a>."
           previous_announcements: "Ви можете побачити анонси про нові функції на <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Дізнатися більше…"
         last_checked: "Остання перевірка"
@@ -5519,6 +5560,11 @@ uk:
           request: "Запит"
           response: "відповідь"
           redeliver_confirm: "Ви впевнені, що хочете повторно надіслати ті ж самі дані?"
+          redeliver_failed_confirm:
+            one: "Ви впевнені, що хочете повторно надіслати %{count} подію вебхуку?"
+            few: "Ви впевнені, що хочете повторно надіслати%{count} події вебхуку?"
+            many: "Ви впевнені, що хочете повторно надіслати %{count} події вебхуку?"
+            other: "Ви впевнені, що хочете повторно надіслати %{count} події вебхуку?"
           no_events_to_redeliver: "Немає подій для повторної доставки."
           headers: "Заголовки"
           payload: "Корисне навантаження"
@@ -6361,6 +6407,8 @@ uk:
             topic_slow_mode_removed: "видалити повільний режим теми"
             custom_emoji_create: "створити власні емодзі"
             custom_emoji_destroy: "видалити власні емодзі"
+            delete_post_permanently: "остаточно видалити повідомлення"
+            delete_topic_permanently: "остаточно видалити тему"
         screened_emails:
           title: "Screened Emails"
           description: "Коли хтось намагатиметься створити новий обліковий запис, наступні електронні скриньки буде перевірено, і реєстрацію заблоковано, або вжито якихось інших дій."
@@ -7105,6 +7153,11 @@ uk:
             many: "Ваш CSV-файл отримано, і %{count} користувачів незабаром отримають свою нагороду."
             other: "Ваш CSV-файл отримано, і %{count} користувачів незабаром отримають свою нагороду."
           csv_has_unmatched_users: "Наступні записи є у файлі CSV, але вони не можуть бути співставлені з існуючими користувачами, і тому вони не отримають значок:"
+          csv_has_unmatched_users_truncated_list:
+            one: "У файлі CSV був %{count} запис, який не вдалося зіставити з існуючими користувачами, і тому не отримає значок."
+            few: "У файлі CSV було %{count} записів, які не могли бути співставлені з наявними користувачами, і тому вони не отримають значок. Через велику кількість записів показуються тільки перші 100:"
+            many: "У файлі CSV було %{count} записів, які не могли бути співставлені з наявними користувачами, і тому вони не отримають значок. Через велику кількість записів показуються тільки перші 100:"
+            other: "У файлі CSV було %{count} записів, які не могли бути співставлені з наявними користувачами, і тому вони не отримають значок. Через велику кількість записів показуються тільки перші 100:"
           replace_owners: Видаліть відзнаку в попередніх власників
           grant_existing_holders: Надати додаткові нагороди існуючим власникам нагород
       emoji:

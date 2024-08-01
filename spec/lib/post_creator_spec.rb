@@ -2167,4 +2167,28 @@ RSpec.describe PostCreator do
       expect { post_creator.create }.not_to change(ReviewablePost, :count)
     end
   end
+
+  context "when the review_every_post setting is enabled and category requires topic approval" do
+    fab!(:category)
+
+    before do
+      category.require_topic_approval = true
+      category.save!
+    end
+
+    before { SiteSetting.review_every_post = true }
+
+    it "creates single reviewable item" do
+      manager =
+        NewPostManager.new(
+          user,
+          title: "this is a new title",
+          raw: "this is a new post",
+          category: category.id,
+        )
+      reviewable = manager.perform.reviewable
+
+      expect { reviewable.perform(admin, :approve_post) }.not_to change(ReviewablePost, :count)
+    end
+  end
 end

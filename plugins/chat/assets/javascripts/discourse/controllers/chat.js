@@ -5,6 +5,8 @@ import { FOOTER_NAV_ROUTES } from "discourse/plugins/chat/discourse/lib/chat-con
 export default class ChatController extends Controller {
   @service chat;
   @service chatStateManager;
+  @service chatChannelsManager;
+  @service siteSettings;
   @service router;
 
   get shouldUseChatSidebar() {
@@ -15,18 +17,38 @@ export default class ChatController extends Controller {
     if (this.shouldUseCoreSidebar) {
       return false;
     }
-
+    if (
+      this.publicMessageChannelsEmpty &&
+      this.enabledRouteCount === 1 &&
+      this.chat.userCanAccessDirectMessages
+    ) {
+      return false;
+    }
     return true;
   }
 
+  get publicMessageChannelsEmpty() {
+    return (
+      this.chatChannelsManager.publicMessageChannels?.length === 0 &&
+      this.chatStateManager.hasPreloadedChannels
+    );
+  }
   get shouldUseCoreSidebar() {
     return this.siteSettings.navigation_menu === "sidebar";
   }
 
+  get enabledRouteCount() {
+    return [
+      this.siteSettings.chat_threads_enabled,
+      this.chat.userCanAccessDirectMessages,
+      this.siteSettings.enable_public_channels,
+    ].filter(Boolean).length;
+  }
+
   get shouldUseChatFooter() {
     return (
-      this.site.mobileView &&
-      FOOTER_NAV_ROUTES.includes(this.router.currentRouteName)
+      FOOTER_NAV_ROUTES.includes(this.router.currentRouteName) &&
+      this.enabledRouteCount > 1
     );
   }
 

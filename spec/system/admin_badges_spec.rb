@@ -16,7 +16,7 @@ describe "Admin Badges Page", type: :system do
 
       badge = Badge.find(Badge::Autobiographer)
 
-      expect(form).to have_an_alert(I18n.t("admin_js.admin.badges.disable_system"))
+      expect(form.field("enabled")).to be_enabled
       expect(form.field("badge_type_id")).to be_disabled
       expect(form.field("badge_type_id")).to have_value(BadgeType::Bronze.to_s)
       expect(form.field("badge_grouping_id")).to be_disabled

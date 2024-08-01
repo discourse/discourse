@@ -63,10 +63,6 @@ chat:
       - archived
       - open
       - closed
-  chat_default_channel_id:
-    default: ""
-    client: true
-    validator: "Chat::DefaultChannelValidator"
   chat_duplicate_message_sensitivity:
     type: float
     default: 0.5
@@ -139,7 +135,7 @@ chat:
     type: integer
     default: 40
     min: 0
-  chat_preferred_mobile_index:
+  chat_preferred_index:
     client: true
     type: enum
     default: channels

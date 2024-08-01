@@ -1343,62 +1343,6 @@ es:
         warnings: "Advertencias oficiales"
         read_more_in_group: "¿Quieres leer más? Consulta otros mensajes de %{groupLink}."
         read_more: "¿Quieres seguir leyendo? Echa un vistazo a otros mensajes en tus <a href='%{basePath}/u/%{username}/messages'>mensajes personales</a>."
-        read_more_group_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Hay <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># sin leer</a>}
-                other {Hay <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># sin leer</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { y <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># mensaje nuevo</a> restante, o explora otros mensajes en {groupLink}}
-                other { y <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># mensajes nuevos</a> restantes, o explora otros mensajes en {groupLink}}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Hay <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># mensaje sin leer</a> restante, o explora otros mensajes en {groupLink}}
-                other {Hay <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># mensajes sin leer</a> restantes, o explora otros mensajes en {groupLink}}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {Hay <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># mensaje nuevo</a> restante, o explora otros mensajes en {groupLink}}
-                other {Hay <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># mensajes nuevos</a> restante, o explora otros mensajes en {groupLink}}
-              }
-            }
-            other {}
-          }
-        read_more_personal_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Hay <a href='{basePath}/u/{username}/messages/unread'># sin leer</a>}
-                other {Hay <a href='{basePath}/u/{username}/messages/unread'># sin leer</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { y <a href='{basePath}/u/{username}/messages/new'># mensaje nuevo</a> restante, o explora otros <a href='{basePath}/u/{username}/messages'>mensajes personales</a>}
-                other { y <a href='{basePath}/u/{username}/messages/new'># mensajes nuevos</a> restantes, o explora otros <a href='{basePath}/u/{username}/messages'>mensajes personales</a>}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Hay <a href='{basePath}/u/{username}/messages/unread'># mensaje sin leer</a> restante, o explora otros <a href='{basePath}/u/{username}/messages'>mensajes personales</a>}
-                other {Hay <a href='{basePath}/u/{username}/messages/unread'># mensajes sin leer</a> restantes, o explora otros <a href='{basePath}/u/{username}/messages'>mensajes personales</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {Hay <a href='{basePath}/u/{username}/messages/new'># mensaje nuevo</a> restante, o explora otros <a href='{basePath}/u/{username}/messages'>mensajes personales</a>}
-                other {Hay <a href='{basePath}/u/{username}/messages/new'># mensajes nuevos</a> restantes, o explora otros <a href='{basePath}/u/{username}/messages'>mensajes personales</a>}
-              }
-            }
-            other {}
-          }
       preferences_nav:
         account: "Cuenta"
         security: "Seguridad"
@@ -1988,15 +1932,6 @@ es:
       logout_disabled: "No se puede cerrar sesión mientras el sitio se encuentre en modo de solo lectura."
     staff_writes_only_mode:
       enabled: "Este sitio está en modo solo para el personal. Sigue navegando, pero las respuestas, los «me gusta» y otras acciones están limitadas solo a los miembros del personal."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errores/hora}}</a> alcanzó el límite de la configuración del sitio de {limit, plural, one {# error/hora} other {# errores/hora}}.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minuto} other {# errores/minuto}}</a> alcanzó el límite de la configuración del sitio de {limit, plural, one {# error/minuto} other {# errores/minuto}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errores/hora}}</a> excedió el límite de la configuración del sitio del {limit, plural, one {# error/hora} other {# errores/hora}}.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minuto} other {# errores/minuto}}</a> excedió el límite de la configuración del sitio de {limit, plural, one {# error/minuto} other {# errores/minuto}}.
     learn_more: "Más información…"
     mute: Silenciar
     unmute: No silenciar
@@ -4273,7 +4208,6 @@ es:
         everyone_can_use: "Todos pueden utilizar las etiquetas"
         usable_only_by_groups: "Las etiquetas son visibles para todo el mundo, pero solo los siguientes grupos las pueden usar"
         visible_only_to_groups: "Las etiquetas solo son visibles para los siguientes grupos"
-        cannot_save: "No se ha podido guardar el grupo de etiquetas. Asegúrate de que tenga al menos una etiqueta, el nombre no esté vacío y hayas seleccionado un grupo para los permisos."
         tags_placeholder: "Buscar o crear etiquetas"
         parent_tag_placeholder: "Opcional"
         select_groups_placeholder: "Seleccionar grupos…"

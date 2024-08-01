@@ -661,7 +661,7 @@ ar:
       flagging:
         action: "الإبلاغ عن الرسالة"
       emoji_picker:
-        favorites: "المستخدمة بشكلٍ متكرر"
+        favorites: "المستخدمة بشكلٍٍ متكرر"
         smileys_&_emotion: "الرموز التعبيرية"
         objects: "الأشياء"
         people_&_body: "الأشخاص والجسم"

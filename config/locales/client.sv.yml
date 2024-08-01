@@ -1294,62 +1294,6 @@ sv:
         warnings: "Officiella varningar"
         read_more_in_group: "Vill du läsa mer? Bläddra bland andra meddelanden i %{groupLink}."
         read_more: "Vill du läsa mer? Bläddra bland andra meddelanden i <a href='%{basePath}/u/%{username}/messages'>personliga meddelanden</a>."
-        read_more_group_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Det finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># oläst</a>}
-                other {Det finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olästa</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { och <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nytt</a> meddelande kvar, eller bläddra bland andra meddelanden i {groupLink}}
-                other { och <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nya</a> meddelanden kvar, eller bläddra bland andra meddelanden i {groupLink}}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Det finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># oläst</a> meddelande kvar, eller bläddra bland andra meddelanden i {groupLink}}
-                other {Det finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olästa</a> meddelanden kvar, eller bläddra bland andra meddelanden i {groupLink}}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {Det finns <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nytt</a> meddelande kvar, eller bläddra bland andra meddelanden i {groupLink}}
-                other {Det finns <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nya</a> meddelanden kvar, eller bläddra bland andra meddelanden i {groupLink}}
-              }
-            }
-            other {}
-          }
-        read_more_personal_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Det finns <a href='{basePath}/u/{username}/messages/unread'># oläst</a>}
-                other {Det finns <a href='{basePath}/u/{username}/messages/unread'># olästa</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { och <a href='{basePath}/u/{username}/messages/new'># new</a> meddelande kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden</a>}
-                other { och <a href='{basePath}/u/{username}/messages/new'># new</a> meddelanden kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden</a>}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Det finns <a href='{basePath}/u/{username}/messages/unread'># oläst</a> meddelande kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden <a href='{basePath}/u/{username}/messages'>personal messages</a>}
-                other {Det finns <a href='{basePath}/u/{username}/messages/unread'># olästa</a> meddelanden kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden <a href='{basePath}/u/{username}/messages'>personal messages</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {Det finns <a href='{basePath}/u/{username}/messages/new'># new</a> meddelande kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden</a>}
-                other {Det finns <a href='{basePath}/u/{username}/messages/new'># new</a> meddelanden kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden</a>}
-              }
-            }
-            other {}
-          }
       preferences_nav:
         account: "Konto"
         security: "Säkerhet"
@@ -1914,15 +1858,6 @@ sv:
       logout_disabled: "Det går inte att logga ut medan webbplatsen är i skrivskyddat läge."
     staff_writes_only_mode:
       enabled: "Webbplatsen är i läget endast för personal. Du kan fortsätta bläddra på sidan, men att skriva inlägg, gilla och andra åtgärder är begränsat till personal."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fel/timma} other  {# fel/timma}}</a> har uppnått webbplatsinställningarnas gräns som är {limit, plural, one {# fel/timma} other {# fel/timma}}.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fel/minut} other {# fel/minut}}</a> har uppnått webbplatsinställningarnas gräns som är {limit, plural, one {# fel/minut} other {# fel/minut}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fel/timma} other {# fel/timma}}</a> har överskridit webbplatsinställningarnas gräns som är {limit, plural, one {# fel/timma} other {# fel/timma}}.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fel/minut} other {# fel/minut}}</a> har överskridit webbplatsinställningarnas gräns som är {limit, plural, one {# fel/minut} other {# fel/minut}}.
     learn_more: "Lär dig mer…"
     mute: Tysta
     unmute: Avtysta
@@ -4118,7 +4053,6 @@ sv:
         everyone_can_use: "Taggar kan användas av alla"
         usable_only_by_groups: "Taggar är synliga för alla, men endast följande grupper kan använda dem"
         visible_only_to_groups: "Taggar är endast synliga för följande grupper"
-        cannot_save: "Kan inte spara taggrupp. Kontrollera att det finns minst en tagg tillgänglig, att taggruppsnamnet inte är tomt och att en grupp är markerad för taggbehörighet."
         tags_placeholder: "Sök eller skapa taggar"
         parent_tag_placeholder: "Valfritt"
         select_groups_placeholder: "Välj grupper…"
