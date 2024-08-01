@@ -115,7 +115,7 @@ class DiscoursePoll::RankedChoice
   def self.majority_check(tally, max_votes)
     total_votes = tally.values.sum
 
-    max_votes > total_votes / 2
+    max_votes && max_votes > total_votes / 2
   end
 
   def self.identify_losers(tally)
