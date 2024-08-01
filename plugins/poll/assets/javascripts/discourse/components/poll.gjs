@@ -210,11 +210,11 @@ export default class PollComponent extends Component {
       this.poll.setProperties(poll);
       this.appEvents.trigger("poll:voted", poll, this.post, this.vote);
 
-      if (this.poll.results !== "on_close") {
+      if (this.poll.results !== ON_CLOSE) {
         this.showResults = true;
       }
 
-      if (this.poll.results === "staff_only") {
+      if (this.poll.results === STAFF_ONLY) {
         if (this.currentUser && this.currentUser.staff) {
           this.showResults = true;
         } else {
@@ -257,7 +257,7 @@ export default class PollComponent extends Component {
   }
 
   get rankedChoiceOutcome() {
-    return this.poll.ranked_choice_outcome || [];
+    return this.poll.get("ranked_choice_outcome") || [];
   }
 
   get min() {
@@ -428,11 +428,7 @@ export default class PollComponent extends Component {
   }
 
   get isCheckbox() {
-    if (this.isMultiple) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.isMultiple;
   }
 
   get resultsWidgetTypeClass() {
@@ -577,7 +573,7 @@ export default class PollComponent extends Component {
             this.poll.set("status", status);
 
             if (
-              this.poll.results === "on_close" ||
+              this.poll.results === ON_CLOSE ||
               this.poll.results === "always"
             ) {
               this.showResults = this.status === CLOSED_STATUS;
