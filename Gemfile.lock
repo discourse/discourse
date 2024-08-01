@@ -400,7 +400,7 @@ GEM
       io-console (~> 0.5)
     request_store (1.7.0)
       rack (>= 1.4)
-    rexml (3.3.2)
+    rexml (3.3.4)
       strscan
     rinku (2.0.6)
     rotp (6.3.0)
@@ -444,7 +444,7 @@ GEM
       rspec-core (>= 2.14)
     rtlcss (0.2.1)
       mini_racer (>= 0.6.3)
-    rubocop (1.65.0)
+    rubocop (1.65.1)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
