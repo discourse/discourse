@@ -253,7 +253,7 @@ export default class PollComponent extends Component {
   }
 
   get voters() {
-    return this.poll.voters;
+    return this.poll.get("voters");
   }
 
   get rankedChoiceOutcome() {
