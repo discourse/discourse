@@ -3,13 +3,14 @@ import { htmlSafe } from "@ember/template";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 
-
 export default class PollResultsRankedChoiceComponent extends Component {
   get rankedChoiceWinnerText() {
-    return htmlSafe(I18n.t("poll.ranked_choice.winner", {
-      count: this.args.rankedChoiceOutcome.round_activity.length,
-      winner: this.args.rankedChoiceOutcome.winning_candidate.html,
-    }));
+    return htmlSafe(
+      I18n.t("poll.ranked_choice.winner", {
+        count: this.args.rankedChoiceOutcome.round_activity.length,
+        winner: this.args.rankedChoiceOutcome.winning_candidate.html,
+      })
+    );
   }
 
   get rankedChoiceTiedText() {
@@ -61,9 +62,9 @@ export default class PollResultsRankedChoiceComponent extends Component {
       >{{this.rankedChoiceTiedText}}</span>
       <ul class="poll-results-ranked-choice-tied-candidates">
         {{#each @rankedChoiceOutcome.tied_candidates as |tied_candidate|}}
-          <li
-            class="poll-results-ranked-choice-tied-candidate"
-          >{{htmlSafe tied_candidate.html}}</li>
+          <li class="poll-results-ranked-choice-tied-candidate">{{htmlSafe
+              tied_candidate.html
+            }}</li>
         {{/each}}
       </ul>
     {{else}}
