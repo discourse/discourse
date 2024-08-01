@@ -3728,7 +3728,9 @@ en:
       show_hidden: "View ignored content."
       deleted_by_author_simple: "(post deleted by author)"
       collapse: "collapse"
+      load_more_replies: "load more replies"
       sr_collapse_replies: "Collapse embedded replies"
+      sr_load_more_replies: "Load more embedded replies"
       sr_date: "Post date"
       sr_expand_replies:
         one: "This post has %{count} reply"

@@ -875,6 +875,29 @@ class TopicView
     Topic.with_deleted.includes(:category).find_by(id: topic_or_topic_id)
   end
 
+  def find_post_replies_ids(post_id)
+    DB.query_single(<<~SQL, post_id: post_id)
+        WITH RECURSIVE breadcrumb(id, reply_to_post_number, topic_id, level) AS (
+          SELECT id, reply_to_post_number, topic_id, 0
+            FROM posts
+          WHERE id = :post_id
+
+          UNION
+
+          SELECT p.id, p.reply_to_post_number, p.topic_id, b.level + 1
+            FROM posts AS p
+              , breadcrumb AS b
+          WHERE b.reply_to_post_number = p.post_number
+            AND b.topic_id = p.topic_id
+            AND b.level < #{SiteSetting.max_reply_history}
+        )
+        SELECT id
+          FROM breadcrumb
+        WHERE id <> :post_id
+      ORDER BY id
+    SQL
+  end
+
   def unfiltered_posts
     result = filter_post_types(@topic.posts)
     result = result.with_deleted if @guardian.can_see_deleted_posts?(@topic.category)
@@ -974,33 +997,23 @@ class TopicView
         )
     end
 
+    # Reply history
+    if @reply_history_for.present?
+      post_ids = find_post_replies_ids(@reply_history_for)
+
+      @filtered_posts = @filtered_posts.where("posts.id IN (:post_ids)", post_ids:)
+      @contains_gaps = true
+    end
+
     # Filtering upwards
     if @filter_upwards_post_id.present?
-      post = Post.find(@filter_upwards_post_id)
-      post_ids = DB.query_single(<<~SQL, post_id: post.id, topic_id: post.topic_id)
-      WITH RECURSIVE breadcrumb(id, reply_to_post_number) AS (
-            SELECT p.id, p.reply_to_post_number FROM posts AS p
-              WHERE p.id = :post_id
-            UNION
-              SELECT p.id, p.reply_to_post_number FROM posts AS p, breadcrumb
-                WHERE breadcrumb.reply_to_post_number = p.post_number
-                  AND p.topic_id = :topic_id
-          )
-      SELECT id from breadcrumb
-      WHERE id <> :post_id
-      ORDER by id
-      SQL
-
-      post_ids = (post_ids[(0 - SiteSetting.max_reply_history)..-1] || post_ids)
-      post_ids.push(post.id)
+      post_ids = find_post_replies_ids(@filter_upwards_post_id) | [@filter_upwards_post_id.to_i]
 
       @filtered_posts =
         @filtered_posts.where(
-          "
-        posts.post_number = 1
-        OR posts.id IN (:post_ids)
-        OR posts.id > :max_post_id",
-          { post_ids: post_ids, max_post_id: post_ids.max },
+          "posts.post_number = 1 OR posts.id IN (:post_ids) OR posts.id > :max_post_id",
+          post_ids:,
+          max_post_id: post_ids.max,
         )
 
       @contains_gaps = true
