@@ -82,42 +82,40 @@ export default class PollComponent extends Component {
   };
 
   _toggleOption = (option, rank = 0) => {
-    let vote = this.vote;
-
     if (this.isMultiple) {
-      const chosenIdx = vote.indexOf(option.id);
+      const chosenIdx = this.vote.indexOf(option.id);
 
       if (chosenIdx !== -1) {
-        vote.splice(chosenIdx, 1);
+        this.vote.splice(chosenIdx, 1);
       } else {
-        vote.push(option.id);
+        this.vote.push(option.id);
       }
     } else if (this.isRankedChoice) {
       this.options.forEach((candidate) => {
-        const chosenIdx = vote.findIndex(
+        const chosenIdx = this.vote.findIndex(
           (object) => object.digest === candidate.id
         );
 
         if (chosenIdx === -1) {
-          vote.push({
+          this.vote.push({
             digest: candidate.id,
             rank: candidate.id === option ? rank : 0,
           });
         } else {
           if (candidate.id === option) {
-            vote[chosenIdx].rank = rank;
+            this.vote[chosenIdx].rank = rank;
           }
         }
       });
     } else {
-      vote = [option.id];
+      this.vote = [option.id];
     }
 
-    this.vote = [...vote];
+    this.vote = [...this.vote];
   };
 
   defaultPreloadedVoters() {
-    let preloadedVoters = {};
+    const preloadedVoters = {};
 
     if (this.poll.public && this.args.preloadedVoters) {
       Object.keys(this.args.preloadedVoters).forEach((key) => {
