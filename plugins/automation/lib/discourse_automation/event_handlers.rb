@@ -203,15 +203,19 @@ module DiscourseAutomation
         .find_each do |automation|
           watching_categories = automation.trigger_field("watching_categories")
           if watching_categories["value"]
-            next if watching_categories["value"].include?(topic.category_id)
+            next if !watching_categories["value"].include?(topic.category_id)
           end
 
           watching_tags = automation.trigger_field("watching_tags")
           if watching_tags["value"]
+            added_tags = [] if added_tags.nil?
+            should_skip = false
             watching_tags["value"].each do |tag|
-              removed_tags && next if !removed_tags.include?(tag)
-              added_tags && next if !added_tags.include?(tag)
+              removed_tags && should_skip = true if !removed_tags[:old_tag_names].include?(tag)
+              removed_tags && should_skip = true if !removed_tags[:new_tag_names].include?(tag)
+              added_tags && should_skip = true if !added_tags.include?(tag)
             end
+            next if should_skip
           end
 
           automation.trigger!(

@@ -90,7 +90,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
     end
 
     it "should fire the trigger if the tag is removed" do
-      topic_0 = Fabricate(:topic, user: user, tags: [cool_tag.name], category: category)
+      topic_0 = Fabricate(:topic, user: user, tags: [cool_tag], category: category)
 
       list =
         capture_contexts { DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), []) }
