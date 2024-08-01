@@ -69,8 +69,6 @@ describe "Admin Flags Page", type: :system do
 
     admin_flags_page.click_add_flag
 
-    expect(admin_flag_form_page).to have_disabled_save_button
-
     admin_flag_form_page.fill_in_name("Vulgar")
     admin_flag_form_page.fill_in_description("New flag description")
     admin_flag_form_page.fill_in_applies_to("Topic")
