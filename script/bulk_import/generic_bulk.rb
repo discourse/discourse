@@ -403,7 +403,8 @@ class BulkImport::Generic < BulkImport::Base
     existing_group_user_ids = GroupUser.pluck(:group_id, :user_id).to_set
 
     create_group_users(group_members) do |row|
-      group_id = group_id_from_imported_id(row["group_id"])
+      group_id =
+        row["existing_id"].nil? ? group_id_from_imported_id(row["group_id"]) : row["existing_id"]
       user_id = user_id_from_imported_id(row["user_id"])
       next if existing_group_user_ids.include?([group_id, user_id])
 
