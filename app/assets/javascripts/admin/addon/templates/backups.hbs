@@ -15,12 +15,21 @@
       <AdminBackupsActions @actions={{actions}} @backups={{@model}} />
     </:actions>
     <:tabs>
-      <NavItem @route="admin.backups.settings" @label="settings" />
+      <NavItem
+        @route="admin.backups.settings"
+        @label="settings"
+        class="admin-backups-tabs__settings"
+      />
       <NavItem
         @route="admin.backups.index"
         @label="admin.backups.menu.backup_files"
+        class="admin-backups-tabs__files"
       />
-      <NavItem @route="admin.backups.logs" @label="admin.backups.menu.logs" />
+      <NavItem
+        @route="admin.backups.logs"
+        @label="admin.backups.menu.logs"
+        class="admin-backups-tabs__logs"
+      />
       <PluginOutlet @name="downloader" @connectorTagName="div" />
     </:tabs>
   </AdminPageHeader>

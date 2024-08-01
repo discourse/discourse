@@ -20,7 +20,7 @@
   </div>
 {{/if}}
 
-<table class="grid">
+<table class="grid admin-backups-list">
   <thead>
     <th width="55%">{{i18n "admin.backups.columns.filename"}}</th>
     <th width="10%">{{i18n "admin.backups.columns.size"}}</th>
@@ -28,7 +28,7 @@
   </thead>
   <tbody>
     {{#each this.model as |backup|}}
-      <tr class="backup-item-row" data-backup-id={{backup.id}}>
+      <tr class="backup-item-row" data-backup-filename={{backup.filename}}>
         <td class="backup-filename">{{backup.filename}}</td>
         <td class="backup-size">{{human-size backup.size}}</td>
         <td class="backup-controls">
