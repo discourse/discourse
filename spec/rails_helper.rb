@@ -401,6 +401,7 @@ RSpec.configure do |config|
         .new(logging_prefs: { "browser" => browser_log_level, "driver" => "ALL" })
         .tap do |options|
           apply_base_chrome_options(options)
+          options.add_argument("--disable-search-engine-choice-screen")
           options.add_argument("--window-size=1400,1400")
           options.add_preference("download.default_directory", Downloads::FOLDER)
         end
@@ -427,6 +428,7 @@ RSpec.configure do |config|
       Selenium::WebDriver::Chrome::Options
         .new(logging_prefs: { "browser" => browser_log_level, "driver" => "ALL" })
         .tap do |options|
+          options.add_argument("--disable-search-engine-choice-screen")
           options.add_emulation(device_name: "iPhone 12 Pro")
           options.add_argument(
             '--user-agent="--user-agent="Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/36.0  Mobile/15E148 Safari/605.1.15"',
