@@ -76,9 +76,12 @@ describe "Admin Badges Page", type: :system do
       form.submit
 
       expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.saved"))
+
       badge = Badge.find(Badge::Autobiographer)
-      expect(badge.image_upload_id).to be_present
-      expect(badge.icon).to be_blank
+      try_until_success do
+        expect(badge.image_upload_id).to be_present
+        expect(badge.icon).to be_blank
+      end
     end
 
     it "can change to an icon for the badge" do
