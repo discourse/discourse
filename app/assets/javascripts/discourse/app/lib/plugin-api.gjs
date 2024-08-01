@@ -1,3 +1,10 @@
+// If you add any methods to the API ensure you bump up the version number
+// based on Semantic Versioning 2.0.0. Please update the changelog at
+// docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
+// using the format described at https://keepachangelog.com/en/1.0.0/.
+
+export const PLUGIN_API_VERSION = "1.35.0";
+
 import $ from "jquery";
 import { h } from "virtual-dom";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
@@ -150,13 +157,6 @@ import {
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
-
-// If you add any methods to the API ensure you bump up the version number
-// based on Semantic Versioning 2.0.0. Please update the changelog at
-// docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
-// using the format described at https://keepachangelog.com/en/1.0.0/.
-
-export const PLUGIN_API_VERSION = "1.35.0";
 
 const DEPRECATED_HEADER_WIDGETS = [
   "header",
