@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
@@ -39,7 +38,6 @@ export default class PollComponent extends Component {
 
   @tracked vote = this.args.attrs.vote || [];
   @tracked poll = this.args.attrs.poll;
-  @tracked preloadedVoters = this.defaultPreloadedVoters();
   @tracked hasSavedVote = this.args.attrs.hasSavedVote;
 
   @tracked
@@ -114,10 +112,10 @@ export default class PollComponent extends Component {
     this.vote = [...this.vote];
   };
 
-  defaultPreloadedVoters() {
+  get preloadedVoters() {
     const preloadedVoters = {};
 
-    if (this.poll.public && this.args.preloadedVoters) {
+    if (this.poll.get("public") && this.args.preloadedVoters) {
       Object.keys(this.args.preloadedVoters).forEach((key) => {
         preloadedVoters[key] = {
           voters: this.args.preloadedVoters[key],
@@ -453,11 +451,6 @@ export default class PollComponent extends Component {
   }
 
   @action
-  updatedVoters() {
-    this.preloadedVoters = this.defaultPreloadedVoters();
-  }
-
-  @action
   fetchVoters(optionId) {
     let votersCount;
     let preloadedVoters = this.preloadedVoters;
@@ -641,10 +634,7 @@ export default class PollComponent extends Component {
       });
   }
   <template>
-    <div
-      {{didUpdate this.updatedVoters @preloadedVoters}}
-      class="poll-container"
-    >
+    <div class="poll-container">
       {{this.titleHTML}}
       {{#if this.notInVotingGroup}}
         <div class="alert alert-danger">{{this.pollGroups}}</div>
