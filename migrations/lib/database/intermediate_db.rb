@@ -15,5 +15,9 @@ module Migrations::Database
     def self.close
       @db.close if @db
     end
+
+    def self.path
+      @db&.path
+    end
   end
 end
