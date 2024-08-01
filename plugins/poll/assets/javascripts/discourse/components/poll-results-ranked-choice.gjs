@@ -1,13 +1,15 @@
 import Component from "@glimmer/component";
+import { htmlSafe } from "@ember/template";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 
+
 export default class PollResultsRankedChoiceComponent extends Component {
   get rankedChoiceWinnerText() {
-    return I18n.t("poll.ranked_choice.winner", {
+    return htmlSafe(I18n.t("poll.ranked_choice.winner", {
       count: this.args.rankedChoiceOutcome.round_activity.length,
       winner: this.args.rankedChoiceOutcome.winning_candidate.html,
-    });
+    }));
   }
 
   get rankedChoiceTiedText() {
@@ -33,7 +35,7 @@ export default class PollResultsRankedChoiceComponent extends Component {
           {{#if round.majority}}
             <tr>
               <td>{{round.round}}</td>
-              <td>{{round.majority.html}}</td>
+              <td>{{htmlSafe round.majority.html}}</td>
               <td>{{i18n "poll.ranked_choice.none"}}</td>
             </tr>
           {{else}}
@@ -42,7 +44,7 @@ export default class PollResultsRankedChoiceComponent extends Component {
               <td>{{i18n "poll.ranked_choice.none"}}</td>
               <td>
                 {{#each round.eliminated as |eliminated|}}
-                  {{eliminated.html}}
+                  {{htmlSafe eliminated.html}}
                 {{/each}}
               </td>
             </tr>
@@ -61,7 +63,7 @@ export default class PollResultsRankedChoiceComponent extends Component {
         {{#each @rankedChoiceOutcome.tied_candidates as |tied_candidate|}}
           <li
             class="poll-results-ranked-choice-tied-candidate"
-          >{{tied_candidate.html}}</li>
+          >{{htmlSafe tied_candidate.html}}</li>
         {{/each}}
       </ul>
     {{else}}
