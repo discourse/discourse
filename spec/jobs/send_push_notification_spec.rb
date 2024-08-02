@@ -11,16 +11,16 @@ RSpec.describe Jobs::SendPushNotification do
   end
 
   context "with valid user" do
-    it "sends push notification when user is online" do
+    it "does not send push notification when user is online" do
       user.update!(last_seen_at: 2.minutes.ago)
 
-      PushNotificationPusher.expects(:push).with(user, payload)
+      PushNotificationPusher.expects(:push).with(user, payload).never
 
       Jobs::SendPushNotification.new.execute(user_id: user, payload: payload)
     end
 
     it "sends push notification when user is offline" do
-      user.update!(last_seen_at: 30.minutes.ago)
+      user.update!(last_seen_at: 20.minutes.ago)
 
       PushNotificationPusher.expects(:push).with(user, payload)
 
