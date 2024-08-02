@@ -26,26 +26,20 @@ export default class DesktopNotificationsService extends Service {
   @service site;
   @service siteSettings;
 
-  @tracked isEnabledBrowser;
-  @tracked isEnabledPush;
+  @tracked isEnabledBrowser = false;
+  @tracked isEnabledPush = false;
 
   constructor() {
     super(...arguments);
 
-    if (!this.currentUser) {
-      this.isEnabledPush = false;
-      this.isEnabledBrowser = false;
-
-      return;
-    }
-
     this.isEnabledBrowser = this.isGrantedPermission
       ? keyValueStore.getItem("notifications-disabled") === ENABLED
       : false;
-    this.isEnabledPush =
-      pushNotificationKeyValueStore.getItem(
-        pushNotificationUserSubscriptionKey(this.currentUser)
-      ) === SUBSCRIBED;
+    this.isEnabledPush = this.currentUser
+      ? pushNotificationKeyValueStore.getItem(
+          pushNotificationUserSubscriptionKey(this.currentUser)
+        ) === SUBSCRIBED
+      : false;
   }
 
   get isNotSupported() {
