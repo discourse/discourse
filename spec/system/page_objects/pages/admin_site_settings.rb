@@ -22,9 +22,17 @@ module PageObjects
         self
       end
 
+      def setting_row_selector(setting_name)
+        ".row.setting[data-setting='#{setting_name}']"
+      end
+
+      def has_setting?(setting_name)
+        has_css?(".row.setting[data-setting=\"#{setting_name}\"]")
+      end
+
       def find_setting(setting_name, overridden: false)
         find(
-          ".admin-detail .row.setting[data-setting='#{setting_name}']#{overridden ? ".overridden" : ""}",
+          ".admin-detail #{setting_row_selector(setting_name)}#{overridden ? ".overridden" : ""}",
         )
       end
 

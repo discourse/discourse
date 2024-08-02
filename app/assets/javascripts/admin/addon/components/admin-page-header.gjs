@@ -15,7 +15,9 @@ const AdminPageHeader = <template>
     </div>
 
     <div class="admin-page-header__title-row">
-      <h1 class="admin-page-header__title">{{i18n @titleLabel}}</h1>
+      {{#if @titleLabel}}
+        <h1 class="admin-page-header__title">{{i18n @titleLabel}}</h1>
+      {{/if}}
       <div class="admin-page-header__actions">
         {{yield
           (hash

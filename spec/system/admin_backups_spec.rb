@@ -3,8 +3,8 @@
 describe "Admin Backups Page", type: :system do
   fab!(:current_user) { Fabricate(:admin) }
   let(:backups_page) { PageObjects::Pages::AdminBackups.new }
-  let(:form) { PageObjects::Components::FormKit.new("form") }
   let(:dialog) { PageObjects::Components::Dialog.new }
+  let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
 
   let(:root_directory) { setup_local_backups }
 
@@ -71,6 +71,7 @@ describe "Admin Backups Page", type: :system do
 
   it "can see backup site settings" do
     backups_page.visit_page
-    expect(page).to have_css(".row.setting[data-setting=\"enable_backups\"]")
+    backups_page.click_tab("settings")
+    expect(settings_page).to have_setting("enable_backups")
   end
 end
