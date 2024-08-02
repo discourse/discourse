@@ -8,6 +8,17 @@ module PageObjects
         self
       end
 
+      def click_tab(tab_name)
+        case tab_name
+        when "settings"
+          find(".admin-backups-tabs__settings").click
+        when "files"
+          find(".admin-backups-tabs__files").click
+        when "logs"
+          find(".admin-backups-tabs__logs").click
+        end
+      end
+
       def has_backup_listed?(filename)
         page.has_css?(backup_row_selector(filename))
       end
