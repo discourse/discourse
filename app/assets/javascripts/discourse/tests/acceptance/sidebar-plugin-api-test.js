@@ -1032,3 +1032,84 @@ acceptance("Sidebar - Plugin API", function (needs) {
       .doesNotExist();
   });
 });
+
+acceptance("Sidebar - Transformers", function (needs) {
+  needs.user();
+
+  needs.settings({
+    navigation_menu: "sidebar",
+  });
+
+  test("sidebar-section-set-expanded-state transformer", async function (assert) {
+    const transformed = [];
+
+    withPluginApi("1.34.0", (api) => {
+      api.registerBehaviorTransformer(
+        "sidebar-section-set-expanded-state",
+        ({ context, next }) => {
+          transformed.push(context.sectionName);
+          next();
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert.ok(transformed.length > 0, "sections were transformed");
+  });
+});
+
+acceptance("Sidebar - Events", function (needs) {
+  needs.user();
+
+  needs.settings({
+    navigation_menu: "sidebar",
+  });
+
+  test("sidebar-state:collapse-section / sidebar-state:expand-section", async function (assert) {
+    await visit("/");
+
+    let collapsedData, expandedData;
+
+    withPluginApi("1.34.0", (api) => {
+      api.onAppEvent(
+        "sidebar-state:collapse-section",
+        (eventData) => (collapsedData = eventData)
+      );
+      api.onAppEvent(
+        "sidebar-state:expand-section",
+        (eventData) => (expandedData = eventData)
+      );
+    });
+
+    await click(
+      ".sidebar-section[data-section-name='categories'] button.sidebar-section-header-collapsable"
+    );
+
+    assert.strictEqual(
+      collapsedData.sectionKey,
+      "categories",
+      "collapsed section key was received"
+    );
+    assert.strictEqual(
+      collapsedData.currentPanel.key,
+      "main",
+      "collapsed section current panel was received "
+    );
+
+    await click(
+      ".sidebar-section[data-section-name='categories'] button.sidebar-section-header-collapsable"
+    );
+
+    assert.strictEqual(
+      expandedData.sectionKey,
+      "categories",
+      "expanded section key was received"
+    );
+    assert.strictEqual(
+      expandedData.currentPanel.key,
+      "main",
+      "expanded section current panel was received"
+    );
+  });
+});
