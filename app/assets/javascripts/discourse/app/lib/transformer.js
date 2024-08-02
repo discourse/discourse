@@ -17,6 +17,13 @@ export const transformerTypes = Object.freeze({
 });
 
 /**
+ * Test flag - disables throwing an exception if applying a transformer fails on tests
+ *
+ * @type {boolean}
+ */
+let skipApplyExceptionOnTests = false;
+
+/**
  * Valid core transformer names initialization.
  *
  * Some checks are performed to ensure there are no repeated names between the multiple transformer types.
@@ -258,7 +265,7 @@ export function applyBehaviorTransformer(
         })
       );
 
-      if (isTesting()) {
+      if (isTesting() && !skipApplyExceptionOnTests) {
         throw error;
       }
 
@@ -329,7 +336,7 @@ export function applyValueTransformer(transformerName, defaultValue, context) {
         })
       );
 
-      if (isTesting()) {
+      if (isTesting() && !skipApplyExceptionOnTests) {
         throw error;
       }
     }
@@ -446,6 +453,7 @@ export function resetTransformers() {
 
   clearPluginTransformers();
   transformersRegistry.clear();
+  skipApplyExceptionOnTests = false;
 }
 
 /**
@@ -455,4 +463,15 @@ function clearPluginTransformers() {
   validTransformerNames = new Map(
     [...validTransformerNames].filter(([, type]) => type === CORE_TRANSFORMER)
   );
+}
+
+/**
+ * Disables throwing the exception when applying the transformers in a test environment
+ *
+ * It's only to test if the exception in handled properly
+ *
+ * USE ONLY FOR TESTING PURPOSES.
+ */
+export function disableThrowingApplyExceptionOnTests() {
+  skipApplyExceptionOnTests = true;
 }
