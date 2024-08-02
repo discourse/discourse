@@ -14,6 +14,7 @@ import FKErrorsSummary from "discourse/form-kit/components/fk/errors-summary";
 import FKField from "discourse/form-kit/components/fk/field";
 import Row from "discourse/form-kit/components/fk/row";
 import FKSection from "discourse/form-kit/components/fk/section";
+import FKSubmit from "discourse/form-kit/components/fk/submit";
 import { VALIDATION_TYPES } from "discourse/form-kit/lib/constants";
 import FKFieldData from "discourse/form-kit/lib/fk-field-data";
 import FKFormData from "discourse/form-kit/lib/fk-form-data";
@@ -243,11 +244,10 @@ class FKForm extends Component {
           Button=(component DButton class="form-kit__button")
           Alert=FKAlert
           Submit=(component
-            DButton
+            FKSubmit
             action=this.onSubmit
             forwardEvent=true
             class="btn-primary form-kit__button"
-            label="submit"
             type="submit"
             isLoading=this.isSubmitting
           )
