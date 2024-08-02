@@ -42,9 +42,9 @@ class PostActionType < ActiveRecord::Base
 
     def reload_types
       @flag_settings = FlagSettings.new
-      ReviewableScore.reload_types
       PostActionType.new.expire_cache
       PostActionType.expire_cache
+      ReviewableScore.reload_types
     end
 
     def overridden_by_plugin_or_skipped_db?
@@ -52,31 +52,29 @@ class PostActionType < ActiveRecord::Base
     end
 
     def all_flags
-      cached_all_flags = Discourse.redis.get(POST_ACTION_TYPE_ALL_FLAGS_KEY)
+      cached_all_flags = Discourse.redis.get(PostActionType::POST_ACTION_TYPE_ALL_FLAGS_KEY)
       return JSON.parse(cached_all_flags).map { |flag| Flag.new(flag) } if cached_all_flags
 
-      begin
-        flags = Flag.unscoped.order(:position).all
-        Discourse.redis.set(
-          POST_ACTION_TYPE_ALL_FLAGS_KEY,
-          flags.as_json(
-            only: %i[
-              id
-              name
-              name_key
-              description
-              notify_type
-              auto_action_type
-              require_message
-              applies_to
-              position
-              enabled
-              score_type
-            ],
-          ).to_json,
-        )
-        flags
-      end
+      flags = Flag.unscoped.order(:position).all
+      Discourse.redis.set(
+        PostActionType::POST_ACTION_TYPE_ALL_FLAGS_KEY,
+        flags.as_json(
+          only: %i[
+            id
+            name
+            name_key
+            description
+            notify_type
+            auto_action_type
+            require_message
+            applies_to
+            position
+            enabled
+            score_type
+          ],
+        ).to_json,
+      )
+      flags
     end
 
     def auto_action_flag_types
@@ -89,14 +87,16 @@ class PostActionType < ActiveRecord::Base
     end
 
     def public_type_ids
-      cached_public_type_ids = Discourse.redis.get(POST_ACTION_TYPE_PUBLIC_TYPE_ID_KEY)
+      cached_public_type_ids =
+        Discourse.redis.get(PostActionType::POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY)
       return JSON.parse(cached_public_type_ids) if cached_public_type_ids
 
-      begin
-        public_type_id_values = public_types.values
-        Discourse.redis.set(POST_ACTION_TYPE_PUBLIC_TYPE_ID_KEY, public_type_id_values.to_json)
-        public_type_id_values
-      end
+      public_type_id_values = public_types.values
+      Discourse.redis.set(
+        PostActionType::POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY,
+        public_type_id_values.to_json,
+      )
+      public_type_id_values
     end
 
     def flag_types_without_additional_message
