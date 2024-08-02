@@ -22,6 +22,7 @@ class AboutSerializer < ApplicationSerializer
              :description,
              :extended_site_description,
              :banner_image,
+             :site_creation_date,
              :title,
              :locale,
              :version,
@@ -59,6 +60,10 @@ class AboutSerializer < ApplicationSerializer
   end
 
   def include_banner_image?
+    render_redesigned_about_page?
+  end
+
+  def include_site_creation_date?
     render_redesigned_about_page?
   end
 

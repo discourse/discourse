@@ -23,6 +23,20 @@
     min-height: 300px;
     max-height: 300px;
   }
+
+  &__activities-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5em;
+  }
+
+  &__activities-item-icon {
+    margin-right: 1em;
+  }
+
+  &__activities-item-period {
+    font-size: var(--font-down-2);
+  }
 }
 
 section.about {
