@@ -20,6 +20,11 @@ class PostActionType < ActiveRecord::Base
   class << self
     attr_reader :flag_settings
 
+    def clear_cache!
+      @all_flags_ordered = nil
+      @public_type_ids = nil
+    end
+
     def initialize_flag_settings
       @flag_settings = FlagSettings.new
     end
@@ -52,7 +57,11 @@ class PostActionType < ActiveRecord::Base
     end
 
     def all_flags
-      Flag.unscoped.order(:position).all
+      current_db = RailsMultisite::ConnectionManagement.current_db
+      @all_flags_ordered ||= {}
+      @all_flags_ordered[current_db] ||= begin
+        Flag.unscoped.order(:position).all
+      end
     end
 
     def auto_action_flag_types
@@ -65,7 +74,11 @@ class PostActionType < ActiveRecord::Base
     end
 
     def public_type_ids
-      @public_type_ids ||= public_types.values
+      current_db = RailsMultisite::ConnectionManagement.current_db
+      @public_type_ids ||= {}
+      @public_type_ids[current_db] ||= begin
+        public_types.values
+      end
     end
 
     def flag_types_without_additional_message
