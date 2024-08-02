@@ -11,7 +11,28 @@ import ChatDrawerRoutesDirectMessages from "discourse/plugins/chat/discourse/com
 import ChatDrawerRoutesThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/threads";
 
 const ROUTES = {
-  chat: { name: ChatDrawerRoutesChannels },
+  chat: {
+    name: ChatDrawerRoutesChannels,
+    redirect: (context) => {
+      if (
+        context.siteSettings.chat_preferred_index === "my_threads" &&
+        context.hasThreads
+      ) {
+        return "/chat/threads";
+      }
+
+      if (
+        context.siteSettings.chat_preferred_index === "direct_messages" &&
+        context.hasDirectMessages
+      ) {
+        return "/chat/direct-messages";
+      }
+
+      if (!context.siteSettings.enable_public_channels) {
+        return "/chat/direct-messages";
+      }
+    },
+  },
   "chat.index": { name: ChatDrawerRoutesChannels },
   // order matters, non index before index
   "chat.browse": {
@@ -154,6 +175,22 @@ export default class ChatDrawerRouter extends Service {
     return this.chat.userCanAccessDirectMessages;
   }
 
+  stateFor(route) {
+    this.drawerRoute?.deactivate?.(this.chatHistory.currentRoute);
+
+    this.chatHistory.visit(route);
+    this.drawerRoute = ROUTES[route.name];
+    this.params = this.drawerRoute?.extractParams?.(route) || route.params;
+    this.component = this.drawerRoute?.name || ChatDrawerRoutesChannels;
+    this.currentRouteName = route.name;
+    this.drawerRoute.activate?.(route);
+
+    const redirectedRoute = this.drawerRoute.redirect?.(this);
+    if (redirectedRoute) {
+      this.stateFor(this.#routeFromURL(redirectedRoute));
+    }
+  }
+
   #routeFromURL(url) {
     let route = this.router.recognize(url);
 
@@ -163,43 +200,5 @@ export default class ChatDrawerRouter extends Service {
     }
 
     return route;
-  }
-
-  #redirect() {
-    if (
-      this.siteSettings.chat_preferred_index === "my_threads" &&
-      this.hasThreads
-    ) {
-      return this.stateFor(this.#routeFromURL("/chat/threads"));
-    }
-    if (
-      this.siteSettings.chat_preferred_index === "direct_messages" &&
-      this.hasDirectMessages
-    ) {
-      return this.stateFor(this.#routeFromURL("/chat/direct-messages"));
-    }
-
-    if (!this.siteSettings.enable_public_channels) {
-      return this.stateFor(this.#routeFromURL("/chat/direct-messages"));
-    }
-  }
-
-  stateFor(route) {
-    this.drawerRoute?.deactivate?.(this.chatHistory.currentRoute);
-
-    this.chatHistory.visit(route);
-    this.drawerRoute = ROUTES[route.name];
-    this.params = this.drawerRoute?.extractParams?.(route) || route.params;
-    this.component = this.drawerRoute?.name || ChatDrawerRoutesChannels;
-
-    if (
-      !this.chatStateManager.isDrawerActive && // only when opening the drawer
-      this.component.name === "ChatDrawerRoutesChannels" // we should check if redirect to channels
-    ) {
-      this.#redirect();
-    }
-
-    this.currentRouteName = route.name;
-    this.drawerRoute.activate?.(route);
   }
 }
