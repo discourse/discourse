@@ -1,5 +1,6 @@
 import { DEBUG } from "@glimmer/env";
 import { capitalize } from "@ember/string";
+import { consolePrefix } from "discourse/lib/source-identifier";
 import {
   BEHAVIOR_TRANSFORMERS,
   VALUE_TRANSFORMERS,
@@ -14,6 +15,13 @@ export const transformerTypes = Object.freeze({
   BEHAVIOR: "BEHAVIOR",
   VALUE: "VALUE",
 });
+
+/**
+ * Test flag - disables throwing an exception if applying a transformer fails on tests
+ *
+ * @type {boolean}
+ */
+let skipApplyExceptionOnTests = false;
 
 /**
  * Valid core transformer names initialization.
@@ -87,7 +95,7 @@ function _normalizeTransformerName(name, type) {
 /**
  * Adds a new valid transformer name.
  *
- * INTERNAL API: use pluginApi.addValueTransformerName instead.
+ * INTERNAL API: use pluginApi.addValueTransformerName or pluginApi.addBehaviorTransformerName instead.
  *
  * DO NOT USE THIS FUNCTION TO ADD CORE TRANSFORMER NAMES. Instead register them directly in the
  * validTransformerNames set above.
@@ -96,19 +104,17 @@ function _normalizeTransformerName(name, type) {
  * @param {string} transformerType the type of the transformer being added
  */
 export function _addTransformerName(name, transformerType) {
-  const apiName = `api.add${capitalize(
+  const prefix = `${consolePrefix()} api.add${capitalize(
     transformerType.toLowerCase()
-  )}TransformerName`;
+  )}TransformerName`.trim();
 
   if (name !== name.toLowerCase()) {
-    throw new Error(
-      `${apiName}: transformer name "${name}" must be lowercase.`
-    );
+    throw new Error(`${prefix}: transformer name "${name}" must be lowercase.`);
   }
 
   if (registryOpened) {
     throw new Error(
-      `${apiName} was called when the system is no longer accepting new names to be added.` +
+      `${prefix} was called when the system is no longer accepting new names to be added. ` +
         `Move your code to a pre-initializer that runs before "freeze-valid-transformers" to avoid this error.`
     );
   }
@@ -127,14 +133,14 @@ export function _addTransformerName(name, transformerType) {
   if (existingInfo.source === CORE_TRANSFORMER) {
     // eslint-disable-next-line no-console
     console.warn(
-      `${apiName}: transformer "${name}" matches existing core transformer "${existingInfo.name}" and shouldn't be re-registered using the the API.`
+      `${prefix}: transformer "${name}" matches existing core transformer "${existingInfo.name}" and shouldn't be re-registered using the the API.`
     );
     return;
   }
 
   // eslint-disable-next-line no-console
   console.warn(
-    `${apiName}: transformer "${existingInfo.name}" is already registered`
+    `${prefix}: transformer "${existingInfo.name}" is already registered`
   );
 }
 
@@ -155,14 +161,13 @@ export function _registerTransformer(
   if (!transformerTypes[transformerType]) {
     throw new Error(`Invalid transformer type: ${transformerType}`);
   }
-
-  const apiName = `api.register${capitalize(
+  const prefix = `${consolePrefix()} api.register${capitalize(
     transformerType.toLowerCase()
-  )}Transformer`;
+  )}Transformer`.trim();
 
   if (!registryOpened) {
     throw new Error(
-      `${apiName} was called while the system was still accepting new transformer names to be added.\n` +
+      `${prefix} was called while the system was still accepting new transformer names to be added.\n` +
         `Move your code to an initializer or a pre-initializer that runs after "freeze-valid-transformers" to avoid this error.`
     );
   }
@@ -175,14 +180,14 @@ export function _registerTransformer(
   if (!transformerNameExists(normalizedTransformerName)) {
     // eslint-disable-next-line no-console
     console.warn(
-      `${apiName}: transformer "${transformerName}" is unknown and will be ignored. ` +
+      `${prefix}: transformer "${transformerName}" is unknown and will be ignored. ` +
         "Is the name correct? Are you using the correct API for the transformer type?"
     );
   }
 
   if (typeof callback !== "function") {
     throw new Error(
-      `${apiName} requires the callback argument to be a function`
+      `${prefix} requires the callback argument to be a function`
     );
   }
 
@@ -204,9 +209,11 @@ export function applyBehaviorTransformer(
     transformerTypes.BEHAVIOR
   );
 
+  const prefix = `${consolePrefix()} applyBehaviorTransformer`.trim();
+
   if (!transformerNameExists(normalizedTransformerName)) {
     throw new Error(
-      `applyBehaviorTransformer: transformer name "${transformerName}" does not exist. ` +
+      `${prefix}: transformer name "${transformerName}" does not exist. ` +
         "Was the transformer name properly added? Is the transformer name correct? Is the type equals BEHAVIOR? " +
         "applyBehaviorTransformer can only be used with BEHAVIOR transformers."
     );
@@ -214,7 +221,7 @@ export function applyBehaviorTransformer(
 
   if (typeof defaultCallback !== "function") {
     throw new Error(
-      `applyBehaviorTransformer requires the callback argument to be a function`
+      `${prefix} requires the callback argument to be a function`
     );
   }
 
@@ -222,7 +229,7 @@ export function applyBehaviorTransformer(
     typeof (context ?? undefined) !== "undefined" &&
     !(typeof context === "object" && context.constructor === Object)
   ) {
-    throw `applyBehaviorTransformer("${transformerName}", ...): context must be a simple JS object or nullish.`;
+    throw `${prefix}("${transformerName}", ...): context must be a simple JS object or nullish.`;
   }
 
   const transformers = transformersRegistry.get(normalizedTransformerName);
@@ -244,7 +251,28 @@ export function applyBehaviorTransformer(
       return;
     }
 
-    return currentCallback({ context: appliedContext, next: nextCallback });
+    // do not surround the default implementation in the try ... catch block
+    if (currentCallback === defaultCallback) {
+      return currentCallback({ context: appliedContext });
+    }
+
+    try {
+      return currentCallback({ context: appliedContext, next: nextCallback });
+    } catch (error) {
+      document.dispatchEvent(
+        new CustomEvent("discourse-error", {
+          detail: { messageKey: "broken_transformer_alert", error },
+        })
+      );
+
+      if (isTesting() && !skipApplyExceptionOnTests) {
+        throw error;
+      }
+
+      // if the current callback failed keep processing the callback queue
+      // hopefully the application won't be left in a broken state
+      return nextCallback();
+    }
   }
 
   return nextCallback();
@@ -265,9 +293,11 @@ export function applyValueTransformer(transformerName, defaultValue, context) {
     transformerTypes.VALUE
   );
 
+  const prefix = `${consolePrefix()} applyValueTransformer`.trim();
+
   if (!transformerNameExists(normalizedTransformerName)) {
     throw new Error(
-      `applyValueTransformer: transformer name "${transformerName}" does not exist. ` +
+      `${prefix}: transformer name "${transformerName}" does not exist. ` +
         "Was the transformer name properly added? Is the transformer name correct? Is the type equals VALUE? " +
         "applyValueTransformer can only be used with VALUE transformers."
     );
@@ -278,7 +308,7 @@ export function applyValueTransformer(transformerName, defaultValue, context) {
     !(typeof context === "object" && context.constructor === Object)
   ) {
     throw (
-      `applyValueTransformer("${transformerName}", ...): context must be a simple JS object or nullish.\n` +
+      `${prefix}("${transformerName}", ...): context must be a simple JS object or nullish.\n` +
       "Avoid passing complex objects in the context, like for example, component instances or objects that carry " +
       "mutable state directly. This can induce users to registry transformers with callbacks causing side effects " +
       "and mutating the context directly. Inevitably, this leads to fragile integrations."
@@ -296,7 +326,20 @@ export function applyValueTransformer(transformerName, defaultValue, context) {
   const transformerPoolSize = transformers.length;
   for (let i = 0; i < transformerPoolSize; i++) {
     const valueCallback = transformers[i];
-    newValue = valueCallback({ value: newValue, context });
+
+    try {
+      newValue = valueCallback({ value: newValue, context });
+    } catch (error) {
+      document.dispatchEvent(
+        new CustomEvent("discourse-error", {
+          detail: { messageKey: "broken_transformer_alert", error },
+        })
+      );
+
+      if (isTesting() && !skipApplyExceptionOnTests) {
+        throw error;
+      }
+    }
   }
 
   return newValue;
@@ -410,6 +453,7 @@ export function resetTransformers() {
 
   clearPluginTransformers();
   transformersRegistry.clear();
+  skipApplyExceptionOnTests = false;
 }
 
 /**
@@ -419,4 +463,15 @@ function clearPluginTransformers() {
   validTransformerNames = new Map(
     [...validTransformerNames].filter(([, type]) => type === CORE_TRANSFORMER)
   );
+}
+
+/**
+ * Disables throwing the exception when applying the transformers in a test environment
+ *
+ * It's only to test if the exception in handled properly
+ *
+ * USE ONLY FOR TESTING PURPOSES.
+ */
+export function disableThrowingApplyExceptionOnTests() {
+  skipApplyExceptionOnTests = true;
 }
