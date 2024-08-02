@@ -2664,6 +2664,8 @@ en:
     use_email_for_username_and_name_suggestions: "Use the first part of email addresses for username and name suggestions. Note that this makes it easier for the public to guess full user email addresses (because a large proportion of people share common services like `gmail.com`)."
     use_name_for_username_suggestions: "Use a user's full name when suggesting usernames."
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
+    show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
+    show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
 
     splash_screen: "Displays a temporary loading screen while site assets load"
     navigation_menu: "Specify sidebar or header dropdown as the main navigation menu for your site. Sidebar is recommended."

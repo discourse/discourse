@@ -1,6 +1,7 @@
 import { isEmpty } from "@ember/utils";
 import { userPath } from "discourse/lib/url";
 import getURL from "discourse-common/lib/get-url";
+import { helperContext } from "discourse-common/lib/helpers";
 import I18n from "discourse-i18n";
 
 const _additionalAttributes = [];
@@ -180,12 +181,15 @@ export default function transformPost(
     postAtts.canInvite = details.can_invite_to;
   }
 
+  const showWithoutReplies =
+    helperContext().siteSettings.show_topic_map_in_topics_without_replies;
+
   const showTopicMap =
     (_additionalAttributes.includes("topicMap") && post.post_number === 1) ||
     showPMMap ||
     (post.post_number === 1 &&
       topic.archetype === "regular" &&
-      topic.posts_count > 1);
+      (topic.posts_count > 1 || showWithoutReplies));
   if (showTopicMap) {
     postAtts.showTopicMap = true;
     postAtts.topicCreatedAt = topic.created_at;
