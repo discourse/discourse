@@ -194,7 +194,7 @@ export default class ChatDrawerRouter extends Service {
 
     if (
       !this.chatStateManager.isDrawerActive && // only when opening the drawer
-      this.component.name === "ChatDrawerRoutesChannels" // we should check if redirect to channels
+      this.component.name === ChatDrawerRoutesChannels.name // we should check if redirect to channels
     ) {
       this.#redirect();
     }
