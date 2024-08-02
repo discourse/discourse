@@ -18,6 +18,7 @@ import {
 const keyValueStore = new KeyValueStore(context);
 const DISABLED = "disabled";
 const ENABLED = "enabled";
+const SUBSCRIBED = "subscribed";
 
 @disableImplicitInjections
 export default class DesktopNotificationsService extends Service {
@@ -25,18 +26,26 @@ export default class DesktopNotificationsService extends Service {
   @service site;
   @service siteSettings;
 
-  @tracked notificationsDisabled;
+  @tracked isEnabledBrowser;
   @tracked isEnabledPush;
 
   constructor() {
     super(...arguments);
-    this.notificationsDisabled =
-      keyValueStore.getItem("notifications-disabled") === DISABLED;
-    this.isEnabledPush = this.currentUser
-      ? pushNotificationKeyValueStore.getItem(
-          pushNotificationUserSubscriptionKey(this.currentUser)
-        )
+
+    if (!this.currentUser) {
+      this.isEnabledPush = false;
+      this.isEnabledBrowser = false;
+
+      return;
+    }
+
+    this.isEnabledBrowser = this.isGrantedPermission
+      ? keyValueStore.getItem("notifications-disabled") === ENABLED
       : false;
+    this.isEnabledPush =
+      pushNotificationKeyValueStore.getItem(
+        pushNotificationUserSubscriptionKey(this.currentUser)
+      ) === SUBSCRIBED;
   }
 
   get isNotSupported() {
@@ -45,11 +54,6 @@ export default class DesktopNotificationsService extends Service {
 
   get notificationsPermission() {
     return this.isNotSupported ? "" : Notification.permission;
-  }
-
-  setNotificationsDisabled(value) {
-    keyValueStore.setItem("notifications-disabled", value);
-    this.notificationsDisabled = value === DISABLED;
   }
 
   get isDeniedPermission() {
@@ -68,31 +72,8 @@ export default class DesktopNotificationsService extends Service {
     return this.notificationsPermission === "granted";
   }
 
-  get isEnabledDesktop() {
-    if (this.isGrantedPermission) {
-      return !this.notificationsDisabled;
-    }
-
-    return false;
-  }
-
-  setIsEnabledPush(value) {
-    const user = this.currentUser;
-    if (!user) {
-      return false;
-    }
-
-    pushNotificationKeyValueStore.setItem(
-      pushNotificationUserSubscriptionKey(user),
-      value
-    );
-    this.isEnabledPush = pushNotificationKeyValueStore.getItem(
-      pushNotificationUserSubscriptionKey(user)
-    );
-  }
-
   get isEnabled() {
-    return this.isEnabledDesktop || this.isEnabledPush;
+    return this.isEnabledPush || this.isEnabledBrowser;
   }
 
   get isSubscribed() {
@@ -100,11 +81,9 @@ export default class DesktopNotificationsService extends Service {
       return false;
     }
 
-    if (this.isPushNotificationsPreferred) {
-      return this.isEnabledPush === "subscribed";
-    } else {
-      return !this.notificationsDisabled;
-    }
+    return this.isPushNotificationsPreferred
+      ? this.isEnabledPush
+      : this.isEnabledBrowser;
   }
 
   get isPushNotificationsPreferred() {
@@ -115,16 +94,37 @@ export default class DesktopNotificationsService extends Service {
     );
   }
 
+  setIsEnabledBrowser(value) {
+    const status = value ? ENABLED : DISABLED;
+    keyValueStore.setItem("notifications-disabled", status);
+    this.isEnabledBrowser = value;
+  }
+
+  setIsEnabledPush(value) {
+    const user = this.currentUser;
+    const status = value ? SUBSCRIBED : value;
+
+    if (!user) {
+      return false;
+    }
+
+    pushNotificationKeyValueStore.setItem(
+      pushNotificationUserSubscriptionKey(user),
+      status
+    );
+
+    this.isEnabledPush = value;
+  }
+
   @action
   async disable() {
-    if (this.isPushNotificationsPreferred) {
-      if (this.isEnabledPush === "subscribed") {
-        await unsubscribePushNotification(this.currentUser, () => {
-          this.setIsEnabledPush(false);
-        });
-      }
-    } else if (this.isEnabledDesktop) {
-      this.setNotificationsDisabled(DISABLED);
+    if (this.isEnabledBrowser) {
+      this.setIsEnabledBrowser(false);
+    }
+    if (this.isEnabledPush) {
+      await unsubscribePushNotification(this.currentUser, () => {
+        this.setIsEnabledPush(false);
+      });
     }
 
     return true;
@@ -134,10 +134,12 @@ export default class DesktopNotificationsService extends Service {
   async enable() {
     if (this.isPushNotificationsPreferred) {
       await subscribePushNotification(() => {
-        this.setIsEnabledPush("subscribed");
+        this.setIsEnabledPush(true);
       }, this.siteSettings.vapid_public_key_bytes);
+
+      return true;
     } else {
-      this.setNotificationsDisabled(ENABLED);
+      this.setIsEnabledBrowser(true);
       await Notification.requestPermission((permission) => {
         confirmNotification(this.siteSettings);
         return permission === "granted";
