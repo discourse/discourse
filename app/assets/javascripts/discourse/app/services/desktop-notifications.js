@@ -139,10 +139,14 @@ export default class DesktopNotificationsService extends Service {
 
       return true;
     } else {
-      this.setIsEnabledBrowser(true);
       await Notification.requestPermission((permission) => {
         confirmNotification(this.siteSettings);
-        return permission === "granted";
+        if (permission === "granted") {
+          this.setIsEnabledBrowser(true);
+          return true;
+        } else {
+          return false;
+        }
       });
     }
   }
