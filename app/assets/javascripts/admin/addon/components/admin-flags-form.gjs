@@ -80,37 +80,31 @@ export default class AdminFlagsForm extends Component {
   }
 
   @bind
-  create(data) {
-    return ajax(`/admin/config/flags`, {
-      type: "POST",
-      data,
-    })
-      .then((response) => {
-        this.site.flagTypes.push(response.flag);
-        this.router.transitionTo("adminConfig.flags");
-      })
-      .catch((error) => {
-        return popupAjaxError(error);
+  async create(data) {
+    try {
+      const response = await ajax(`/admin/config/flags`, {
+        type: "POST",
+        data,
       });
   }
 
   @bind
-  update(data) {
-    return ajax(`/admin/config/flags/${this.args.flag.id}`, {
-      type: "PUT",
-      data,
-    })
-      .then((response) => {
-        this.args.flag.name = response.flag.name;
-        this.args.flag.description = response.flag.description;
-        this.args.flag.applies_to = response.flag.applies_to;
-        this.args.flag.require_message = response.flag.require_message;
-        this.args.flag.enabled = response.flag.enabled;
-        this.router.transitionTo("adminConfig.flags");
-      })
-      .catch((error) => {
-        return popupAjaxError(error);
+  async update(data) {
+    try {
+      const response = await ajax(`/admin/config/flags/${this.args.flag.id}`, {
+        type: "PUT",
+        data,
       });
+
+      this.args.flag.name = response.flag.name;
+      this.args.flag.description = response.flag.description;
+      this.args.flag.applies_to = response.flag.applies_to;
+      this.args.flag.require_message = response.flag.require_message;
+      this.args.flag.enabled = response.flag.enabled;
+      this.router.transitionTo("adminConfig.flags");
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   <template>
