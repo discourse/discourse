@@ -6,9 +6,9 @@ const FKFieldset = <template>
       <legend class="form-kit__fieldset-title">{{@title}}</legend>
     {{/if}}
 
-    {{#if @subtitle}}
-      <FKText class="form-kit__fieldset-subtitle">
-        {{@subtitle}}
+    {{#if @description}}
+      <FKText class="form-kit__fieldset-description">
+        {{@description}}
       </FKText>
     {{/if}}
 

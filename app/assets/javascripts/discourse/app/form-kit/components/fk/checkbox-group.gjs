@@ -6,7 +6,7 @@ const FKCheckboxGroup = <template>
   <FKFieldset
     class="form-kit__checkbox-group"
     @title={{@title}}
-    @subtitle={{@subtitle}}
+    @description={{@description}}
   >
     {{yield
       (hash
