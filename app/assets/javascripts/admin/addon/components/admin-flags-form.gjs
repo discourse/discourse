@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import dIcon from "discourse-common/helpers/d-icon";
+import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
@@ -119,7 +119,7 @@ export default class AdminFlagsForm extends Component {
         @route="adminConfig.flags"
         class="btn-default btn btn-icon-text btn-back"
       >
-        {{dIcon "chevron-left"}}
+        {{icon "chevron-left"}}
         {{i18n "admin.config_areas.flags.back"}}
       </LinkTo>
       <div class="admin-config-area__primary-content admin-flag-form">
