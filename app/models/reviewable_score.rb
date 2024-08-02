@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewableScore < ActiveRecord::Base
+  REVIEWABLE_SCORE_TYPES_KEY = "reviewable_score_types"
+
   belongs_to :reviewable
   belongs_to :user
   belongs_to :reviewed_by, class_name: "User"
@@ -11,13 +13,18 @@ class ReviewableScore < ActiveRecord::Base
   # To keep things simple the types correspond to `PostActionType` for backwards
   # compatibility, but we can add extra reasons for scores.
   def self.types
-    @types ||= PostActionType.flag_types.merge(PostActionType.score_types)
+    cached_score_types = Discourse.redis.get(REVIEWABLE_SCORE_TYPES_KEY)
+    return JSON.parse(cached_score_types).symbolize_keys if cached_score_types
+
+    score_types = PostActionType.flag_types.merge(PostActionType.score_types)
+    Discourse.redis.set(REVIEWABLE_SCORE_TYPES_KEY, score_types.to_json)
+    score_types
   end
 
   # When extending post action flags, we need to call this method in order to
   # get the latests flags.
   def self.reload_types
-    @types = nil
+    Discourse.redis.del(REVIEWABLE_SCORE_TYPES_KEY)
     types
   end
 
