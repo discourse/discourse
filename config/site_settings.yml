@@ -2020,6 +2020,7 @@ security:
     type: list
     list_type: simple
     client: true
+    validator: "AllowedIframesValidator"
   allowed_crawler_user_agents:
     type: list
     default: ""

@@ -3,7 +3,6 @@
 const esbuild = require("esbuild");
 const path = require("node:path");
 const fs = require("node:fs");
-const { argv } = require("node:process");
 
 let wasmPlugin = {
   name: "wasm",
@@ -57,7 +56,6 @@ esbuild
     },
     external: ["fs", "path"],
     entryPoints: ["./app/assets/javascripts/theme-transpiler/transpiler.js"],
-    outfile: argv[2],
     plugins: [wasmPlugin],
   })
   .then(() => {});

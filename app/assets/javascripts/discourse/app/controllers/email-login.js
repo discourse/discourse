@@ -8,17 +8,18 @@ import { getWebauthnCredential } from "discourse/lib/webauthn";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Controller.extend({
-  router: service(),
+export default class EmailLoginController extends Controller {
+  @service router;
 
-  secondFactorMethod: null,
-  secondFactorToken: null,
-  lockImageUrl: getURL("/images/lock.svg"),
+  secondFactorMethod;
+  secondFactorToken;
+
+  lockImageUrl = getURL("/images/lock.svg");
 
   @discourseComputed("model")
   secondFactorRequired(model) {
     return model.security_key_required || model.second_factor_required;
-  },
+  }
 
   @action
   async finishLogin() {
@@ -62,7 +63,7 @@ export default Controller.extend({
     } catch (e) {
       popupAjaxError(e);
     }
-  },
+  }
 
   @action
   authenticateSecurityKey() {
@@ -77,5 +78,5 @@ export default Controller.extend({
         this.set("model.error", errorMessage);
       }
     );
-  },
-});
+  }
+}

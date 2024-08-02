@@ -65,7 +65,7 @@
     </form.Field>
 
     <form.ConditionalContent
-      @activeName={{if data.image "upload-image" "choose-icon"}}
+      @activeName={{if data.image_url "upload-image" "choose-icon"}}
       as |cc|
     >
       <cc.Conditions as |Condition|>
@@ -90,14 +90,14 @@
         </Content>
         <Content @name="upload-image">
           <form.Field
-            @name="image"
+            @name="image_url"
             @showTitle={{false}}
             @title={{i18n "admin.badges.image"}}
             @onSet={{this.onSetImage}}
             @onUnset={{this.onUnsetImage}}
             as |field|
           >
-            <field.Image />
+            <field.Image @type="badge_image" />
           </form.Field>
         </Content>
       </cc.Contents>

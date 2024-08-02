@@ -5,21 +5,21 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { changeEmail } from "discourse/lib/user-activation";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Controller.extend({
-  router: service(),
+export default class AccountCreatedEditEmailController extends Controller {
+  @service router;
 
-  accountCreated: null,
-  newEmail: null,
+  accountCreated;
+  newEmail;
 
   @discourseComputed("newEmail", "accountCreated.email")
   submitDisabled(newEmail, currentEmail) {
     return newEmail === currentEmail;
-  },
+  }
 
   @action
   updateNewEmail(email) {
     this.set("newEmail", email);
-  },
+  }
 
   @action
   async changeEmail() {
@@ -31,10 +31,10 @@ export default Controller.extend({
     } catch (e) {
       popupAjaxError(e);
     }
-  },
+  }
 
   @action
   cancel() {
     this.router.transitionTo("account-created.index");
-  },
-});
+  }
+}

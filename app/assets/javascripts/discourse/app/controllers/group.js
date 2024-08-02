@@ -5,28 +5,28 @@ import GroupDeleteDialog from "discourse/components/dialog-messages/group-delete
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-const Tab = EmberObject.extend({
+class Tab extends EmberObject {
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     this.setProperties({
       route: this.route || `group.${this.name}`,
       message: I18n.t(`groups.${this.i18nKey || this.name}`),
     });
-  },
-});
+  }
+}
 
-export default Controller.extend({
-  application: controller(),
-  dialog: service(),
-  currentUser: service(),
-  router: service(),
-  composer: service(),
+export default class GroupController extends Controller {
+  @service dialog;
+  @service currentUser;
+  @service router;
+  @service composer;
+  @controller application;
 
-  counts: null,
-  showing: "members",
-  destroying: null,
-  showTooltip: false,
+  counts = null;
+  showing = "members";
+  destroying = null;
+  showTooltip = false;
 
   @discourseComputed(
     "showMessages",
@@ -90,7 +90,7 @@ export default Controller.extend({
     );
 
     return defaultTabs;
-  },
+  }
 
   @discourseComputed(
     "model.has_messages",
@@ -107,12 +107,12 @@ export default Controller.extend({
     }
 
     return isGroupUser || (this.currentUser && this.currentUser.admin);
-  },
+  }
 
   @discourseComputed("model.messageable")
   displayGroupMessageButton(messageable) {
     return this.currentUser && messageable;
-  },
+  }
 
   @discourseComputed("model", "model.automatic")
   canManageGroup(model, automatic) {
@@ -121,7 +121,7 @@ export default Controller.extend({
       (this.currentUser.canManageGroup(model) ||
         (model.can_admin_group && automatic))
     );
-  },
+  }
 
   @action
   messageGroup() {
@@ -129,7 +129,7 @@ export default Controller.extend({
       recipients: this.get("model.name"),
       hasGroups: true,
     });
-  },
+  }
 
   @action
   destroyGroup() {
@@ -158,10 +158,10 @@ export default Controller.extend({
       },
       didCancel: () => this.set("destroying", false),
     });
-  },
+  }
 
   @action
   toggleDeleteTooltip() {
     this.toggleProperty("showTooltip");
-  },
-});
+  }
+}

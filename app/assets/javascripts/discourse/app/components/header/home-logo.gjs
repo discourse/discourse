@@ -55,23 +55,27 @@ export default class HomeLogo extends Component {
   }
 
   logoResolver(name, opts = {}) {
-    // get alternative logos for browser dark dark mode switching
-    if (opts.dark) {
-      return this.siteSettings[`site_${name}_dark_url`];
-    }
+    let url;
 
-    // try dark logos first when color scheme is dark
-    // this is independent of browser dark mode
-    // hence the fallback to normal logos
-    if (this.session.defaultColorSchemeIsDark) {
-      return (
+    if (opts.dark) {
+      // get alternative logos for browser dark dark mode switching
+      url = this.siteSettings[`site_${name}_dark_url`];
+    } else if (this.session.defaultColorSchemeIsDark) {
+      // try dark logos first when color scheme is dark
+      // this is independent of browser dark mode
+      // hence the fallback to normal logos
+      url =
         this.siteSettings[`site_${name}_dark_url`] ||
         this.siteSettings[`site_${name}_url`] ||
-        ""
-      );
+        "";
+    } else {
+      url = this.siteSettings[`site_${name}_url`] || "";
     }
 
-    return this.siteSettings[`site_${name}_url`] || "";
+    return applyValueTransformer("home-logo-image-url", url, {
+      name,
+      dark: opts.dark,
+    });
   }
 
   @action

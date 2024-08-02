@@ -9,27 +9,23 @@ import discourseComputed from "discourse-common/utils/decorators";
 
 const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
-export default Controller.extend({
-  queryParams: [{ navigationMenuQueryParamOverride: "navigation_menu" }],
+export default class ApplicationController extends Controller {
+  @service router;
+  @service footer;
+  @service header;
+  @service sidebarState;
 
-  showTop: true,
-  router: service(),
-  footer: service(),
-  header: service(),
-  sidebarState: service(),
-  showSidebar: false,
-  sidebarDisabledRouteOverride: false,
-  navigationMenuQueryParamOverride: null,
-  showSiteHeader: true,
+  queryParams = [{ navigationMenuQueryParamOverride: "navigation_menu" }];
+  showTop = true;
 
-  init() {
-    this._super(...arguments);
-    this.showSidebar = this.calculateShowSidebar();
-  },
+  showSidebar = this.calculateShowSidebar();
+  sidebarDisabledRouteOverride = false;
+  navigationMenuQueryParamOverride = null;
+  showSiteHeader = true;
 
   get showFooter() {
     return this.footer.showFooter;
-  },
+  }
 
   set showFooter(value) {
     deprecated(
@@ -37,11 +33,11 @@ export default Controller.extend({
       { id: "discourse.application-show-footer" }
     );
     this.footer.showFooter = value;
-  },
+  }
 
   get showPoweredBy() {
     return this.showFooter && this.siteSettings.enable_powered_by_discourse;
-  },
+  }
 
   @discourseComputed
   canSignUp() {
@@ -50,26 +46,26 @@ export default Controller.extend({
       this.siteSettings.allow_new_registrations &&
       !this.siteSettings.enable_discourse_connect
     );
-  },
+  }
 
   @discourseComputed
   canDisplaySidebar() {
     return this.currentUser || !this.siteSettings.login_required;
-  },
+  }
 
   @discourseComputed
   loginRequired() {
     return this.siteSettings.login_required && !this.currentUser;
-  },
+  }
 
   @discourseComputed
   showFooterNav() {
     return this.capabilities.isAppWebview || this.capabilities.isiOSPWA;
-  },
+  }
 
   _mainOutletAnimate() {
     document.body.classList.remove("sidebar-animate");
-  },
+  }
 
   get sidebarEnabled() {
     if (!this.canDisplaySidebar) {
@@ -106,7 +102,7 @@ export default Controller.extend({
     }
 
     return this.siteSettings.navigation_menu === "sidebar";
-  },
+  }
 
   calculateShowSidebar() {
     return (
@@ -114,7 +110,7 @@ export default Controller.extend({
       !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY) &&
       !this.site.narrowDesktopView
     );
-  },
+  }
 
   @action
   toggleSidebar() {
@@ -132,7 +128,7 @@ export default Controller.extend({
         this.keyValueStore.setItem(HIDE_SIDEBAR_KEY, "true");
       }
     }
-  },
+  }
 
   @action
   trackDiscoursePainted() {
@@ -152,5 +148,5 @@ export default Controller.extend({
         console.warn("Failed to measure init-to-paint", e);
       }
     });
-  },
-});
+  }
+}

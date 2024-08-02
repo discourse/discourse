@@ -83,6 +83,12 @@
                 "null"
               ]
             },
+            "image_upload_id": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
             "badge_type_id": {
               "type": "integer"
             }
@@ -108,7 +114,8 @@
             "target_posts",
             "auto_revoke",
             "show_posts",
-            "badge_type_id"
+            "badge_type_id",
+            "image_upload_id"
           ]
         }
     },

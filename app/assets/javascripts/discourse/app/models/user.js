@@ -394,12 +394,12 @@ export default class User extends RestModel.extend(Evented) {
 
   @discourseComputed("silenced_till")
   silencedForever(silencedTill) {
-    isForever(silencedTill);
+    return isForever(silencedTill);
   }
 
   @discourseComputed("suspended_till")
-  suspendedTillDate(silencedTill) {
-    return longDate(silencedTill);
+  suspendedTillDate(suspendedTill) {
+    return longDate(suspendedTill);
   }
 
   @discourseComputed("silenced_till")
