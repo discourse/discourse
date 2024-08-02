@@ -260,17 +260,14 @@ RSpec.describe ThemeJavascriptCompiler do
   describe "safari <16 class field bugfix" do
     it "is applied" do
       compiler.append_tree({ "discourse/components/my-component.js" => <<~JS })
-        const someValueInParentScope = "testing";
         export default class MyComponent extends Component {
           value = "foo";
-          complexValue = someValueInParentScope + "bar";
+          complexValue = this.value + "bar";
         }
       JS
 
       expect(compiler.raw_content).to include('value = "foo";')
-      expect(compiler.raw_content).to include(
-        'complexValue = (() => someValueInParentScope + "bar")();',
-      )
+      expect(compiler.raw_content).to include('complexValue = (() => this.value + "bar")();')
     end
   end
 end
