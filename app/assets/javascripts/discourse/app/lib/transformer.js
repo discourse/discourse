@@ -244,7 +244,28 @@ export function applyBehaviorTransformer(
       return;
     }
 
-    return currentCallback({ context: appliedContext, next: nextCallback });
+    // do not surround the default implementation in the try ... catch block
+    if (currentCallback === defaultCallback) {
+      return currentCallback({ context: appliedContext });
+    }
+
+    try {
+      return currentCallback({ context: appliedContext, next: nextCallback });
+    } catch (error) {
+      document.dispatchEvent(
+        new CustomEvent("discourse-error", {
+          detail: { messageKey: "broken_transformer_alert", error },
+        })
+      );
+
+      if (isTesting()) {
+        throw error;
+      }
+
+      // if the current callback failed keep processing the callback queue
+      // hopefully the application won't be left in a broken state
+      return nextCallback();
+    }
   }
 
   return nextCallback();
@@ -296,7 +317,20 @@ export function applyValueTransformer(transformerName, defaultValue, context) {
   const transformerPoolSize = transformers.length;
   for (let i = 0; i < transformerPoolSize; i++) {
     const valueCallback = transformers[i];
-    newValue = valueCallback({ value: newValue, context });
+
+    try {
+      newValue = valueCallback({ value: newValue, context });
+    } catch (error) {
+      document.dispatchEvent(
+        new CustomEvent("discourse-error", {
+          detail: { messageKey: "broken_transformer_alert", error },
+        })
+      );
+
+      if (isTesting()) {
+        throw error;
+      }
+    }
   }
 
   return newValue;
