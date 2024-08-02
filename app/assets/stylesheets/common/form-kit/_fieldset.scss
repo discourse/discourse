@@ -1,0 +1,21 @@
+.form-kit__fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  &-title {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-high);
+  }
+
+  &-subtitle {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-high);
+  }
+}

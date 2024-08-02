@@ -164,24 +164,27 @@ export default class AdminFlagsForm extends Component {
               </field.Custom>
             </form.Field>
 
-            <form.Field
-              @name="requireMessage"
-              @title={{i18n "admin.config_areas.flags.form.require_message"}}
-              @subtitle={{i18n
-                "admin.config_areas.flags.form.require_message_description"
-              }}
-              as |field|
-            >
-              <field.Checkbox />
-            </form.Field>
+            <form.CheckboxGroup as |checkbCheckboxGroup|>
+              <checkbCheckboxGroup.Field
+                @name="requireMessage"
+                @title={{i18n "admin.config_areas.flags.form.require_message"}}
+                as |field|
+              >
+                <field.Checkbox>
+                  {{i18n
+                    "admin.config_areas.flags.form.require_message_description"
+                  }}
+                </field.Checkbox>
+              </checkbCheckboxGroup.Field>
 
-            <form.Field
-              @name="enabled"
-              @title={{i18n "admin.config_areas.flags.form.enabled"}}
-              as |field|
-            >
-              <field.Checkbox />
-            </form.Field>
+              <checkbCheckboxGroup.Field
+                @name="enabled"
+                @title={{i18n "admin.config_areas.flags.form.enabled"}}
+                as |field|
+              >
+                <field.Checkbox />
+              </checkbCheckboxGroup.Field>
+            </form.CheckboxGroup>
 
             <form.Alert @icon="info-circle">
               {{i18n "admin.config_areas.flags.form.alert"}}

@@ -18,8 +18,12 @@
   }
 }
 
-.form-kit__field-checkbox {
-  + .form-kit__field-checkbox {
-    margin-top: calc(-1 * var(--form-kit-gutter-y));
-  }
+.form-kit__control-checkbox-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.form-kit__control-checkbox-description {
+  color: var(--primary-medium);
 }

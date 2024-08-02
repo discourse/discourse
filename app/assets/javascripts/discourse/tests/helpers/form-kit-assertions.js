@@ -82,6 +82,22 @@ class FieldHelper {
     return this.element.dataset.disabled === "";
   }
 
+  hasTitle(title, message) {
+    switch (this.element.dataset.controlType) {
+      case "checkbox": {
+        this.context
+          .dom(this.element.querySelector(".form-kit__control-checkbox-title"))
+          .hasText(title, message);
+        break;
+      }
+      default: {
+        this.context
+          .dom(this.element.querySelector(".form-kit__container-title"))
+          .hasText(title, message);
+      }
+    }
+  }
+
   hasSubtitle(subtitle, message) {
     this.context
       .dom(this.element.querySelector(".form-kit__container-subtitle"))
@@ -89,9 +105,23 @@ class FieldHelper {
   }
 
   hasDescription(description, message) {
-    this.context
-      .dom(this.element.querySelector(".form-kit__meta-description"))
-      .hasText(description, message);
+    switch (this.element.dataset.controlType) {
+      case "checkbox": {
+        this.context
+          .dom(
+            this.element.querySelector(
+              ".form-kit__control-checkbox-description"
+            )
+          )
+          .hasText(description, message);
+        break;
+      }
+      default: {
+        this.context
+          .dom(this.element.querySelector(".form-kit__meta-description"))
+          .hasText(description, message);
+      }
+    }
   }
 
   hasCharCounter(current, max, message) {
@@ -172,6 +202,9 @@ export function setupFormKitAssertions() {
         return {
           doesNotExist: (message) => {
             field.doesNotExist(message);
+          },
+          hasTitle: (value, message) => {
+            field.hasTitle(value, message);
           },
           hasSubtitle: (value, message) => {
             field.hasSubtitle(value, message);

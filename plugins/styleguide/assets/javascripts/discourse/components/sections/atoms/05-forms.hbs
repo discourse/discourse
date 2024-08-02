@@ -79,11 +79,17 @@
   </Form>
 </StyleguideExample>
 
-<StyleguideExample @title="Checkbox">
+<StyleguideExample @title="CheckboxGroup">
   <Form as |form|>
-    <form.Field @title="Contract" @name="contract" as |field|>
-      <field.Checkbox>Accept the contract</field.Checkbox>
-    </form.Field>
+    <form.CheckboxGroup
+      @title="Last step"
+      @subtitle="Please read the document"
+      as |checkboxGroup|
+    >
+      <checkboxGroup.Field @title="Contract" @name="contract" as |field|>
+        <field.Checkbox>Accept the contract</field.Checkbox>
+      </checkboxGroup.Field>
+    </form.CheckboxGroup>
   </Form>
 </StyleguideExample>
 

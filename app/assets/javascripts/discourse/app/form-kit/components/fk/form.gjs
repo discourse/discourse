@@ -6,12 +6,14 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import FKAlert from "discourse/form-kit/components/fk/alert";
+import FKCheckboxGroup from "discourse/form-kit/components/fk/checkbox-group";
 import FKCollection from "discourse/form-kit/components/fk/collection";
 import FKContainer from "discourse/form-kit/components/fk/container";
 import FKControlConditionalContent from "discourse/form-kit/components/fk/control/conditional-content";
-import FKControlInputGroup from "discourse/form-kit/components/fk/control/input-group";
 import FKErrorsSummary from "discourse/form-kit/components/fk/errors-summary";
 import FKField from "discourse/form-kit/components/fk/field";
+import FKFieldset from "discourse/form-kit/components/fk/fieldset";
+import FKInputGroup from "discourse/form-kit/components/fk/input-group";
 import Row from "discourse/form-kit/components/fk/row";
 import FKSection from "discourse/form-kit/components/fk/section";
 import FKSubmit from "discourse/form-kit/components/fk/submit";
@@ -238,6 +240,7 @@ class FKForm extends Component {
         (hash
           Row=Row
           Section=FKSection
+          Fieldset=FKFieldset
           ConditionalContent=(component FKControlConditionalContent)
           Container=FKContainer
           Actions=(component FKSection class="form-kit__actions")
@@ -280,7 +283,18 @@ class FKForm extends Component {
             triggerRevalidationFor=this.triggerRevalidationFor
           )
           InputGroup=(component
-            FKControlInputGroup
+            FKInputGroup
+            errors=this.formData.errors
+            addError=this.addError
+            data=this.formData
+            set=this.set
+            remove=this.remove
+            registerField=this.registerField
+            unregisterField=this.unregisterField
+            triggerRevalidationFor=this.triggerRevalidationFor
+          )
+          CheckboxGroup=(component
+            FKCheckboxGroup
             errors=this.formData.errors
             addError=this.addError
             data=this.formData

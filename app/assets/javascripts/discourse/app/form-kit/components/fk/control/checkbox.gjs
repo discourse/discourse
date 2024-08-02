@@ -22,7 +22,12 @@ export default class FKControlCheckbox extends Component {
         ...attributes
         {{on "change" this.handleInput}}
       />
-      <span>{{yield}}</span>
+      <span class="form-kit__control-checkbox-content">
+        <span class="form-kit__control-checkbox-title">{{@field.title}}</span>
+        {{#if (has-block)}}
+          <span class="form-kit__control-checkbox-description">{{yield}}</span>
+        {{/if}}
+      </span>
     </FKLabel>
   </template>
 }
