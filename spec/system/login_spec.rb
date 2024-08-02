@@ -44,9 +44,24 @@ shared_examples "login scenarios" do
       visit activation_link
 
       find("#activate-account-button").click
+      find(".perform-activation .continue-button").click
 
       expect(page).to have_current_path("/")
       expect(page).to have_css(".header-dropdown-toggle.current-user")
+    end
+
+    it "shows error when when activation link is invalid" do
+      login_modal.open
+      login_modal.fill(username: "john", password: "supersecurepassword")
+      login_modal.click_login
+      expect(page).to have_css(".not-activated-modal")
+
+      visit "/u/activate-account/invalid"
+
+      find("#activate-account-button").click
+
+      expect(page).to have_css("#simple-container .alert-error")
+      expect(page).to have_content(I18n.t("js.user.activate_account.already_done"))
     end
 
     it "displays the right message when user's email has been marked as expired" do

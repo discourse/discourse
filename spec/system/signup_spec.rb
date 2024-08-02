@@ -5,9 +5,9 @@ shared_examples "signup scenarios" do
   let(:signup_modal) { PageObjects::Modals::Signup.new }
 
   context "when anyone can create an account" do
-    it "can signup" do
-      Jobs.run_immediately!
+    before { Jobs.run_immediately! }
 
+    it "can signup" do
       signup_modal.open
       signup_modal.fill_email("johndoe@example.com")
       signup_modal.fill_username("john")
@@ -16,6 +16,29 @@ shared_examples "signup scenarios" do
 
       signup_modal.click_create_account
       expect(page).to have_css(".account-created")
+    end
+
+    it "can signup and activate account" do
+      signup_modal.open
+      signup_modal.fill_email("johndoe@example.com")
+      signup_modal.fill_username("john")
+      signup_modal.fill_password("supersecurepassword")
+      expect(signup_modal).to have_valid_fields
+
+      signup_modal.click_create_account
+      expect(page).to have_css(".account-created")
+
+      mail = ActionMailer::Base.deliveries.first
+      expect(mail.to).to contain_exactly("johndoe@example.com")
+      activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
+
+      visit activation_link
+
+      find("#activate-account-button").click
+      find(".perform-activation .continue-button").click
+
+      expect(page).to have_current_path("/")
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
 
     context "with invite code" do
