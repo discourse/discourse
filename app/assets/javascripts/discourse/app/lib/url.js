@@ -214,7 +214,7 @@ class DiscourseURL extends EmberObject {
       return this.redirectTo(path);
     }
 
-    const pathname = path.replace(/(https?\:)?\/\/[^\/]+/, "");
+    const pathname = path.replace(/^(https?\:)?\/\/[^\/]+/, "");
 
     if (!this.isInternal(path)) {
       return this.redirectTo(path);
