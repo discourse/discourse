@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class PostActionType < ActiveRecord::Base
+  POST_ACTION_TYPE_ALL_FLAGS_KEY = "post_action_type_all_flags"
+  POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY = "post_action_public_type_ids"
+
   after_save :expire_cache
   after_destroy :expire_cache
 
@@ -13,11 +16,6 @@ class PostActionType < ActiveRecord::Base
 
   class << self
     attr_reader :flag_settings
-
-    def clear_cache!
-      @all_flags_ordered = nil
-      @public_type_ids = nil
-    end
 
     def initialize_flag_settings
       @flag_settings = FlagSettings.new
@@ -38,12 +36,15 @@ class PostActionType < ActiveRecord::Base
     def expire_cache
       Discourse.redis.keys("post_action_types_*").each { |key| Discourse.redis.del(key) }
       Discourse.redis.keys("post_action_flag_types_*").each { |key| Discourse.redis.del(key) }
+      Discourse.redis.del(POST_ACTION_TYPE_ALL_FLAGS_KEY)
+      Discourse.redis.del(POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY)
     end
 
     def reload_types
       @flag_settings = FlagSettings.new
       ReviewableScore.reload_types
       PostActionType.new.expire_cache
+      PostActionType.expire_cache
     end
 
     def overridden_by_plugin_or_skipped_db?
@@ -51,10 +52,30 @@ class PostActionType < ActiveRecord::Base
     end
 
     def all_flags
-      current_db = RailsMultisite::ConnectionManagement.current_db
-      @all_flags_ordered ||= {}
-      @all_flags_ordered[current_db] ||= begin
-        Flag.unscoped.order(:position).all
+      cached_all_flags = Discourse.redis.get(POST_ACTION_TYPE_ALL_FLAGS_KEY)
+      return JSON.parse(cached_all_flags).map { |flag| Flag.new(flag) } if cached_all_flags
+
+      begin
+        flags = Flag.unscoped.order(:position).all
+        Discourse.redis.set(
+          POST_ACTION_TYPE_ALL_FLAGS_KEY,
+          flags.as_json(
+            only: %i[
+              id
+              name
+              name_key
+              description
+              notify_type
+              auto_action_type
+              require_message
+              applies_to
+              position
+              enabled
+              score_type
+            ],
+          ).to_json,
+        )
+        flags
       end
     end
 
@@ -68,10 +89,13 @@ class PostActionType < ActiveRecord::Base
     end
 
     def public_type_ids
-      current_db = RailsMultisite::ConnectionManagement.current_db
-      @public_type_ids ||= {}
-      @public_type_ids[current_db] ||= begin
-        public_types.values
+      cached_public_type_ids = Discourse.redis.get(POST_ACTION_TYPE_PUBLIC_TYPE_ID_KEY)
+      return JSON.parse(cached_public_type_ids) if cached_public_type_ids
+
+      begin
+        public_type_id_values = public_types.values
+        Discourse.redis.set(POST_ACTION_TYPE_PUBLIC_TYPE_ID_KEY, public_type_id_values.to_json)
+        public_type_id_values
       end
     end
 
@@ -128,15 +152,15 @@ class PostActionType < ActiveRecord::Base
     end
 
     def names
-      all_flags.pluck(:id, :name).to_h
+      all_flags.map { |f| [f.id, f.name] }.to_h
     end
 
     def descriptions
-      all_flags.pluck(:id, :description).to_h
+      all_flags.map { |f| [f.id, f.description] }.to_h
     end
 
     def applies_to
-      all_flags.pluck(:id, :applies_to).to_h
+      all_flags.map { |f| [f.id, f.applies_to] }.to_h
     end
 
     def is_flag?(sym)
