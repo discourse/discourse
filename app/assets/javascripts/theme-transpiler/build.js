@@ -52,7 +52,7 @@ esbuild
       util: "./node_modules/@zxing/text-encoding",
     },
     define: {
-      process: `{ "env": {} }`,
+      process: `{ "env": { "EMBER_ENV": "production" } }`,
     },
     external: ["fs", "path"],
     entryPoints: ["./app/assets/javascripts/theme-transpiler/transpiler.js"],
