@@ -147,6 +147,7 @@ shared_examples "signup scenarios" do
         user = User.find_by(username: "john")
         EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
+        visit "/"
         login_modal.open
         login_modal.fill_username("john")
         login_modal.fill_password("supersecurepassword")
