@@ -62,17 +62,14 @@ export default class ActivateAccountController extends Controller {
       if (response.success) {
         this.accountActivated = true;
         this.needsApproval = response.needs_approval;
-      } else {
-        this.errorMessage = I18n.t("user.activate_account.already_done");
+        if (!response.needs_approval) {
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 2000);
+        }
       }
     } catch (error) {
-      popupAjaxError(error);
-    } finally {
-      if (!this.needsApproval) {
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 2000);
-      }
+      this.errorMessage = I18n.t("user.activate_account.already_done");
     }
   }
 }

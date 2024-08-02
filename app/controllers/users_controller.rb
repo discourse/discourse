@@ -1144,10 +1144,11 @@ class UsersController < ApplicationController
       else
         @needs_approval = true
       end
-      render json: success_json.merge(needs_approval: @needs_approval)
     else
-      render_json_error(I18n.t("activation.already_done"))
+      return render_json_error(I18n.t("activation.already_done"))
     end
+
+    render json: success_json.merge(needs_approval: @needs_approval)
   end
 
   def update_activation_email
