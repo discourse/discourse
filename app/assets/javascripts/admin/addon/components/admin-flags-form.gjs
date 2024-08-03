@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
@@ -21,7 +22,8 @@ export default class AdminFlagsForm extends Component {
     return this.args.flag;
   }
 
-  get initData() {
+  @cached
+  get formData() {
     if (this.isUpdate) {
       return {
         name: this.args.flag.name,
@@ -82,7 +84,7 @@ export default class AdminFlagsForm extends Component {
   @bind
   async create(data) {
     try {
-      const response = await ajax(`/admin/config/flags`, {
+      const response = await ajax("/admin/config/flags", {
         type: "POST",
         data,
       });
@@ -124,7 +126,7 @@ export default class AdminFlagsForm extends Component {
       </LinkTo>
       <div class="admin-config-area__primary-content admin-flag-form">
         <AdminConfigAreaCard @heading={{this.header}}>
-          <Form @onSubmit={{this.save}} @data={{this.initData}} as |form|>
+          <Form @onSubmit={{this.save}} @data={{this.formData}} as |form|>
             <form.Field
               @name="name"
               @title={{i18n "admin.config_areas.flags.form.name"}}
@@ -147,7 +149,6 @@ export default class AdminFlagsForm extends Component {
             <form.Field
               @name="appliesTo"
               @title={{i18n "admin.config_areas.flags.form.applies_to"}}
-              @showTitle={{true}}
               @validation="required"
               @validate={{this.validateAppliesTo}}
               as |field|
