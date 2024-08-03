@@ -14,7 +14,7 @@ module(
           <form.Fieldset
             @title="Title"
             @description="Description"
-            name="a-fieldset"
+            @name="a-fieldset"
           >
             Yielded content
           </form.Fieldset>
