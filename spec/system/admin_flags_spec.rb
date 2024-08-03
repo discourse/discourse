@@ -7,7 +7,6 @@ describe "Admin Flags Page", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:admin_flags_page) { PageObjects::Pages::AdminFlags.new }
   let(:admin_flag_form_page) { PageObjects::Pages::AdminFlagForm.new }
-  let(:admin_flag_form_page) { PageObjects::Pages::AdminFlagForm.new }
   let(:flag_modal) { PageObjects::Modals::Flag.new }
 
   before { sign_in(admin) }
