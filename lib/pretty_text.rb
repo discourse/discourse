@@ -452,6 +452,7 @@ module PrettyText
       .css(".video-placeholder-container")
       .each do |video|
         video_src = video["data-video-src"]
+        next if video_src == "/404" || video_src.nil?
         video_sha1 = File.basename(video_src, File.extname(video_src))
         thumbnail = Upload.where("original_filename LIKE ?", "#{video_sha1}.%").last
         if thumbnail

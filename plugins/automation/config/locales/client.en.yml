@@ -203,6 +203,14 @@ en:
             valid_trust_levels:
               label: Valid trust levels
               description: Will trigger only if post is created by user in these trust levels, defaults to any trust level
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: Watching categories
+              description: Will trigger only if the topic is in one of these categories
+            watching_tags:
+              label: Watching tags
+              description: Will trigger only if the topic has any of these tags
         after_post_cook:
           fields:
             valid_trust_levels:

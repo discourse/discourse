@@ -35,20 +35,21 @@ export function popupAutomaticMembershipAlert(group_id, email_domains) {
   });
 }
 
-export default Controller.extend({
-  dialog: service(),
-  router: service(),
-  saving: null,
+export default class GroupsNewController extends Controller {
+  @service dialog;
+  @service router;
+
+  saving = null;
 
   @discourseComputed("model.ownerUsernames")
   splitOwnerUsernames(owners) {
     return owners && owners.length ? owners.split(",") : [];
-  },
+  }
 
   @discourseComputed("model.usernames")
   splitUsernames(usernames) {
     return usernames && usernames.length ? usernames.split(",") : [];
-  },
+  }
 
   @action
   save() {
@@ -67,15 +68,15 @@ export default Controller.extend({
       })
       .catch(popupAjaxError)
       .finally(() => this.set("saving", false));
-  },
+  }
 
   @action
   updateOwnerUsernames(selected) {
     this.set("model.ownerUsernames", selected.join(","));
-  },
+  }
 
   @action
   updateUsernames(selected) {
     this.set("model.usernames", selected.join(","));
-  },
-});
+  }
+}

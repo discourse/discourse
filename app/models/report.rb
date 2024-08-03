@@ -428,6 +428,7 @@ class Report
       purple: "#721D8D",
       magenta: "#E84A5F",
       brown: "#8A6916",
+      yellow: "#FFCD56",
     }
   end
 

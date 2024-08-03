@@ -6,15 +6,16 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Controller.extend({
-  router: service(),
-  queryParams: ["order", "asc", "filter", "type"],
-  order: null,
-  asc: null,
-  filter: "",
-  type: null,
-  groups: null,
-  isLoading: false,
+export default class GroupsIndexController extends Controller {
+  @service router;
+
+  queryParams = ["order", "asc", "filter", "type"];
+  order = null;
+  asc = null;
+  filter = "";
+  type = null;
+  groups = null;
+  isLoading = false;
 
   @discourseComputed("groups.extras.type_filters")
   types(typeFilters) {
@@ -27,7 +28,7 @@ export default Controller.extend({
     }
 
     return types;
-  },
+  }
 
   loadGroups(params) {
     this.set("isLoading", true);
@@ -38,24 +39,24 @@ export default Controller.extend({
         this.set("groups", groups);
       })
       .finally(() => this.set("isLoading", false));
-  },
+  }
 
   @action
   onFilterChanged(filter) {
     discourseDebounce(this, this._debouncedFilter, filter, INPUT_DELAY);
-  },
+  }
 
   @action
   loadMore() {
     this.groups && this.groups.loadMore();
-  },
+  }
 
   @action
   new() {
     this.router.transitionTo("groups.new");
-  },
+  }
 
   _debouncedFilter(filter) {
     this.set("filter", filter);
-  },
-});
+  }
+}

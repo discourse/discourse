@@ -1,5 +1,5 @@
 import { warn } from "@ember/debug";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { alias, oneWay } from "@ember/object/computed";
 import Mixin from "@ember/object/mixin";
 import { service } from "@ember/service";
@@ -12,7 +12,6 @@ import { fmt, propertyNotEqual } from "discourse/lib/computed";
 import { SITE_SETTING_REQUIRES_CONFIRMATION_TYPES } from "discourse/lib/constants";
 import { splitString } from "discourse/lib/utilities";
 import { deepEqual } from "discourse-common/lib/object";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories";
 
@@ -105,8 +104,10 @@ export default Mixin.create({
     this.element.removeEventListener("keydown", this._handleKeydown);
   },
 
-  @discourseComputed("buffered.value", "setting.value")
-  dirty(bufferVal, settingVal) {
+  dirty: computed("buffered.value", "setting.value", function () {
+    let bufferVal = this.get("buffered.value");
+    let settingVal = this.setting?.value;
+
     if (isNone(bufferVal)) {
       bufferVal = "";
     }
@@ -116,66 +117,69 @@ export default Mixin.create({
     }
 
     return !deepEqual(bufferVal, settingVal);
-  },
+  }),
 
-  @discourseComputed("setting", "buffered.value")
-  preview(setting, value) {
+  preview: computed("setting", "buffered.value", function () {
+    const setting = this.setting;
+    const value = this.get("buffered.value");
     const preview = setting.preview;
     if (preview) {
       const escapedValue = preview.replace(/\{\{value\}\}/g, value);
       return htmlSafe(`<div class='preview'>${escapedValue}</div>`);
     }
-  },
+  }),
 
-  @discourseComputed("componentType")
-  typeClass(componentType) {
+  typeClass: computed("componentType", function () {
+    const componentType = this.componentType;
     return componentType.replace(/\_/g, "-");
-  },
+  }),
 
-  @discourseComputed("setting.setting", "setting.label")
-  settingName(setting, label) {
+  settingName: computed("setting.setting", "setting.label", function () {
+    const setting = this.setting?.setting;
+    const label = this.setting?.label;
     return label || setting.replace(/\_/g, " ");
-  },
+  }),
 
-  @discourseComputed("type")
-  componentType(type) {
+  componentType: computed("type", function () {
+    const type = this.type;
     return CUSTOM_TYPES.includes(type) ? type : "string";
-  },
+  }),
 
-  @discourseComputed("setting")
-  type(setting) {
+  type: computed("setting", function () {
+    const setting = this.setting;
     if (setting.type === "list" && setting.list_type) {
       return `${setting.list_type}_list`;
     }
 
     return setting.type;
-  },
+  }),
 
-  @discourseComputed("setting.anyValue")
-  allowAny(anyValue) {
+  allowAny: computed("setting.anyValue", function () {
+    const anyValue = this.setting?.anyValue;
     return anyValue !== false;
-  },
+  }),
 
-  @discourseComputed("buffered.value")
-  bufferedValues(value) {
+  bufferedValues: computed("buffered.value", function () {
+    const value = this.get("buffered.value");
     return splitString(value, "|");
-  },
+  }),
 
-  @discourseComputed("setting.defaultValues")
-  defaultValues(value) {
+  defaultValues: computed("setting.defaultValues", function () {
+    const value = this.setting?.defaultValues;
     return splitString(value, "|");
-  },
+  }),
 
-  @discourseComputed("defaultValues", "bufferedValues")
-  defaultIsAvailable(defaultValues, bufferedValues) {
+  defaultIsAvailable: computed("defaultValues", "bufferedValues", function () {
+    const defaultValues = this.defaultValues;
+    const bufferedValues = this.bufferedValues;
     return (
       defaultValues.length > 0 &&
       !defaultValues.every((value) => bufferedValues.includes(value))
     );
-  },
+  }),
 
-  @discourseComputed("setting")
-  settingEditButton(setting) {
+  settingEditButton: computed("setting", function () {
+    const setting = this.setting;
     if (setting.json_schema) {
       return {
         action: () => {
@@ -205,7 +209,7 @@ export default Mixin.create({
         icon: "pencil-alt",
       };
     }
-  },
+  }),
 
   confirmChanges(settingKey) {
     return new Promise((resolve) => {
@@ -243,8 +247,7 @@ export default Mixin.create({
     });
   },
 
-  @action
-  async update() {
+  update: action(async function () {
     const key = this.buffered.get("setting");
 
     let confirm = true;
@@ -286,15 +289,13 @@ export default Mixin.create({
     } else {
       await this.save();
     }
-  },
+  }),
 
-  @action
-  setUpdateExistingUsers(value) {
+  setUpdateExistingUsers: action(function (value) {
     this.updateExistingUsers = value;
-  },
+  }),
 
-  @action
-  async save() {
+  save: action(async function () {
     try {
       await this._save();
 
@@ -317,46 +318,40 @@ export default Mixin.create({
         this.set("validationMessage", I18n.t("generic_error"));
       }
     }
-  },
+  }),
 
-  @action
-  changeValueCallback(value) {
+  changeValueCallback: action(function (value) {
     this.set("buffered.value", value);
-  },
+  }),
 
-  @action
-  cancel() {
+  cancel: action(function () {
     this.rollbackBuffer();
-  },
+  }),
 
-  @action
-  resetDefault() {
+  resetDefault: action(function () {
     this.set("buffered.value", this.setting.default);
-  },
+  }),
 
-  @action
-  toggleSecret() {
+  toggleSecret: action(function () {
     this.toggleProperty("isSecret");
-  },
+  }),
 
-  @action
-  setDefaultValues() {
+  setDefaultValues: action(function () {
     this.set(
       "buffered.value",
       this.bufferedValues.concat(this.defaultValues).uniq().join("|")
     );
     return false;
-  },
+  }),
 
-  @bind
-  _handleKeydown(event) {
+  _handleKeydown: action(function (event) {
     if (
       event.key === "Enter" &&
       event.target.classList.contains("input-setting-string")
     ) {
       this.save();
     }
-  },
+  }),
 
   async _save() {
     warn("You should define a `_save` method", {

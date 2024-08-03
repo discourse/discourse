@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Controller.extend({
+export default class GroupManageCategoriesController extends Controller {
   @discourseComputed(
     "model.watchingCategories.[]",
     "model.watchingFirstPostCategories.[]",
@@ -13,5 +13,5 @@ export default Controller.extend({
     return []
       .concat(watching, watchingFirst, tracking, regular, muted)
       .filter(Boolean);
-  },
-});
+  }
+}
