@@ -138,26 +138,26 @@ describe "Admin Flags Page", type: :system do
 
   it "does not allow to move notify user flag" do
     admin_flags_page.visit
-    expect(page).not_to have_css(".notify_user .flag-menu-trigger")
+    expect(admin_flags_page).to have_no_action_for_flag("notify_user")
   end
 
   it "does not allow bottom flag to move down" do
     admin_flags_page.visit.open_flag_menu("notify_moderators")
-    expect(page).not_to have_css(".dropdown-menu__item .move-down")
+    expect(admin_flags_page).to have_no_item_action("move-down")
   end
 
   it "does not allow to system flag to be edited" do
     admin_flags_page.visit
-    expect(page).to have_css(".off_topic .admin-flag-item__edit[disabled]")
+    expect(admin_flags_page).to have_disabled_edit_for_flag("off_topic")
   end
 
   it "does not allow to system flag to be deleted" do
     admin_flags_page.visit.open_flag_menu("notify_moderators")
-    expect(page).to have_css(".admin-flag-item__delete[disabled]")
+    expect(admin_flags_page).to have_disabled_item_action("delete")
   end
 
   it "does not allow top flag to move up" do
     admin_flags_page.visit.open_flag_menu("off_topic")
-    expect(page).not_to have_css(".dropdown-menu__item .move-up")
+    expect(admin_flags_page).to have_no_item_action("move-up")
   end
 end

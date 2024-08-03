@@ -19,6 +19,30 @@ module PageObjects
         self
       end
 
+      def has_action_for_flag?(flag)
+        has_selector?(".#{flag} .flag-menu-trigger")
+      end
+
+      def has_no_action_for_flag?(flag)
+        has_no_selector?(".#{flag} .flag-menu-trigger")
+      end
+
+      def has_disabled_edit_for_flag?(flag)
+        has_selector?(".#{flag} .admin-flag-item__edit[disabled]")
+      end
+
+      def has_disabled_item_action?(action)
+        has_selector?(".admin-flag-item__#{action}[disabled]")
+      end
+
+      def has_item_action?(action)
+        has_selector?(".admin-flag-item__#{action}")
+      end
+
+      def has_no_item_action?(action)
+        has_no_selector?(".admin-flag-item__#{action}")
+      end
+
       def has_flags?(*flags)
         all(".admin-flag-item__name").map(&:text) == flags
       end
