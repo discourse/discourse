@@ -124,7 +124,7 @@ describe "Admin Flags Page", type: :system do
     # delete
     admin_flags_page.visit.click_delete_flag("tasteless").confirm_delete
 
-    expect(admin_flags_page).to have_saved_flag("tasteless")
+    expect(admin_flags_page).to have_no_flag("tasteless")
 
     topic_page.visit_topic(post.topic).open_flag_topic_modal
 

@@ -20,7 +20,15 @@ module PageObjects
       end
 
       def has_flags?(*flags)
-        page.all(".admin-flag-item__name").map(&:text) == flags
+        all(".admin-flag-item__name").map(&:text) == flags
+      end
+
+      def has_flag?(flag)
+        has_css?(".admin-flag-item.#{flag}")
+      end
+
+      def has_no_flag?(flag)
+        has_no_css?(".admin-flag-item.#{flag}")
       end
 
       def has_saved_flag?(key)
