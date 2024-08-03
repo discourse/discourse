@@ -5,17 +5,20 @@ module PageObjects
     class AdminFlagForm < PageObjects::Pages::Base
       def fill_in_name(name)
         form.field("name").fill_in(name)
+        self
       end
 
       def fill_in_description(description)
         form.field("description").fill_in(description)
+        self
       end
 
-      def fill_in_applies_to(applies_to)
+      def select_applies_to(applies_to)
         dropdown = PageObjects::Components::SelectKit.new(".admin-flag-form__applies-to")
         dropdown.expand
         dropdown.select_row_by_value(applies_to)
         dropdown.collapse
+        self
       end
 
       def click_save
@@ -23,7 +26,7 @@ module PageObjects
       end
 
       def form
-        PageObjects::Components::FormKit.new(".admin-flag-form .form-kit")
+        @form ||= PageObjects::Components::FormKit.new(".admin-flag-form .form-kit")
       end
     end
   end
