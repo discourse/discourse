@@ -1012,6 +1012,8 @@ posting:
     refresh: true
   title_max_word_length:
     default: 30
+    min: 1
+    max: 255
     locale_default:
       ja: 50
       ko: 50
