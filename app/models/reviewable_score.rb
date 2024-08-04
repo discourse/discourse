@@ -17,8 +17,9 @@ class ReviewableScore < ActiveRecord::Base
     return JSON.parse(cached_score_types).symbolize_keys if cached_score_types
 
     score_types = PostActionType.flag_types.merge(PostActionType.score_types)
+    score_types.merge!(@plugin_types) if @plugin_types
+
     Discourse.redis.set(REVIEWABLE_SCORE_TYPES_KEY, score_types.to_json)
-    score_types
   end
 
   # When extending post action flags, we need to call this method in order to
@@ -30,8 +31,10 @@ class ReviewableScore < ActiveRecord::Base
 
   def self.add_new_types(type_names)
     next_id = types.values.max + 1
+    @plugin_types ||= {}
 
-    type_names.each_with_index { |name, idx| @types[name] = next_id + idx }
+    type_names.each_with_index { |name, idx| @plugin_types[name] = next_id + idx }
+    reload_types
   end
 
   def self.score_transitions
