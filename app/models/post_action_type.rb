@@ -144,7 +144,7 @@ class PostActionType < ActiveRecord::Base
     end
 
     def names
-      all_flags.map { |f| [f[:id], f[:name]] }.to_h
+      all_flags.reduce({}) { |acc, f| acc[f[:id]] = f[:name]; acc }
     end
 
     def descriptions
