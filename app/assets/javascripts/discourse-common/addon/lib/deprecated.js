@@ -52,7 +52,7 @@ export default function deprecated(msg, options = {}) {
   if (
     raiseError ||
     matchedWorkflow?.handler === "throw" ||
-    (!matchedWorkflow && window.EmberENV.RAISE_ON_DEPRECATION)
+    (!matchedWorkflow && globalThis.EmberENV?.RAISE_ON_DEPRECATION)
   ) {
     throw msg;
   }
