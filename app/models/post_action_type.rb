@@ -160,7 +160,12 @@ class PostActionType < ActiveRecord::Base
     private
 
     def flag_enum(scope)
-      Enum.new(scope.map { |flag| [flag[:name_key].to_sym, flag[:id]] }.to_h)
+      Enum.new(
+        scope.reduce({}) do |acc, f|
+          acc[f[:name_key].to_sym] = f[:id]
+          acc
+        end,
+      )
     end
   end
 
