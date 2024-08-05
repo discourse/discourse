@@ -435,7 +435,7 @@ GEM
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
     rspec-support (3.13.1)
-    rss (0.3.0)
+    rss (0.3.1)
       rexml
     rswag-specs (2.13.0)
       activesupport (>= 3.1, < 7.2)
