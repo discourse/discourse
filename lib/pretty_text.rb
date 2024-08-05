@@ -86,6 +86,7 @@ module PrettyText
     )
 
     %w[
+      discourse-common/addon/deprecation-workflow
       discourse-common/addon/lib/get-url
       discourse-common/addon/lib/object
       discourse-common/addon/lib/deprecated
