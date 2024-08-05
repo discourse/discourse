@@ -64,6 +64,10 @@ export default class SidebarSection extends Component {
         }
       },
       {
+        collapseSection: (sectionName) =>
+          this.sidebarState.collapseSection(sectionName),
+        expandSection: (sectionName) =>
+          this.sidebarState.expandSection(sectionName),
         sectionName: this.args.sectionName,
         collapsable: this.args.collapsable,
         isCollapsed: this.isCollapsed,

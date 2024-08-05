@@ -1040,22 +1040,66 @@ acceptance("Sidebar - Transformers", function (needs) {
     navigation_menu: "sidebar",
   });
 
-  test("sidebar-section-set-expanded-state transformer", async function (assert) {
-    const transformed = [];
+  test("sidebar-section-set-expanded-state transformer - collapse all sections", async function (assert) {
+    let shouldCollapse = true;
 
-    withPluginApi("1.34.0", (api) => {
+    withPluginApi("1.35.0", (api) => {
       api.registerBehaviorTransformer(
         "sidebar-section-set-expanded-state",
-        ({ context, next }) => {
-          transformed.push(context.sectionName);
-          next();
+        ({ context }) => {
+          if (shouldCollapse) {
+            context.collapseSection(context.sectionName);
+          } else {
+            context.expandSection(context.sectionName);
+          }
         }
       );
     });
 
     await visit("/");
 
-    assert.ok(transformed.length > 0, "sections were transformed");
+    // the tests target .sidebar-section-header-collapsable because sections without a header are not collapsable
+    assert
+      .dom(
+        ".sidebar-section.sidebar-section--collapsed .sidebar-section-header-collapsable"
+      )
+      .exists();
+    assert
+      .dom(
+        ".sidebar-section.sidebar-section--expanded .sidebar-section-header-collapsable"
+      )
+      .doesNotExist();
+  });
+
+  test("sidebar-section-set-expanded-state transformer - expand all sections", async function (assert) {
+    const shouldCollapse = false;
+
+    withPluginApi("1.35.0", (api) => {
+      api.registerBehaviorTransformer(
+        "sidebar-section-set-expanded-state",
+        ({ context }) => {
+          if (shouldCollapse) {
+            context.collapseSection(context.sectionName);
+          } else {
+            context.expandSection(context.sectionName);
+          }
+        }
+      );
+    });
+
+    await visit("/");
+
+    // the tests target .sidebar-section-header-collapsable because sections without a header are not collapsable
+    assert
+      .dom(
+        ".sidebar-section.sidebar-section--collapsed .sidebar-section-header-collapsable"
+      )
+      .doesNotExist();
+    assert
+      .dom(
+        ".sidebar-section.sidebar-section--expanded .sidebar-section-header-collapsable"
+      )
+      .exists();
   });
 });
 

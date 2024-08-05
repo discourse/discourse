@@ -1,4 +1,4 @@
-import { cached, tracked } from "@glimmer/tracking";
+import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import Service, { service } from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
@@ -53,7 +53,6 @@ export default class SidebarState extends Service {
     this.restorePreviousState();
   }
 
-  @cached
   get currentPanel() {
     return this.panels.find((panel) => panel.key === this.currentPanelKey);
   }
