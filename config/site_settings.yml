@@ -2434,6 +2434,10 @@ developer:
     type: group_list
     hidden: true
     allow_any: false
+  custom_flags_limit:
+    default: 50
+    hidden: true
+    client: true
 
 navigation:
   navigation_menu:

@@ -20,6 +20,7 @@ export default class AdminFlagItem extends Component {
             "btn-icon-text"
             @primaryActionCssClass
           }}
+          @disabled={{@primaryActionDisabled}}
         >
           {{dIcon @primaryActionIcon}}
           {{i18n @primaryActionLabel}}
