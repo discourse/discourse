@@ -1,5 +1,6 @@
-globalThis.deprecationWorkflow = globalThis.deprecationWorkflow || {};
-globalThis.deprecationWorkflow.config = {
+import setupDeprecationWorkflow from "ember-cli-deprecation-workflow";
+
+setupDeprecationWorkflow({
   // We're using RAISE_ON_DEPRECATION in environment.js instead of
   // `throwOnUnhandled` here since it is easier to toggle.
   workflow: [
@@ -14,4 +15,4 @@ globalThis.deprecationWorkflow.config = {
       matchId: "discourse.decorate-widget.hamburger-widget-links",
     },
   ],
-};
+});
