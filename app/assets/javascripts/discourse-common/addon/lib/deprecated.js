@@ -1,4 +1,4 @@
-import DEPRECATION_WORKFLOW from "discourse/deprecation-workflow";
+import DEPRECATION_WORKFLOW from "../deprecation-workflow";
 
 const handlers = [];
 const disabledDeprecations = new Set();

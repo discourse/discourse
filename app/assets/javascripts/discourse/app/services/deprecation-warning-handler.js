@@ -1,9 +1,9 @@
 import { registerDeprecationHandler } from "@ember/debug";
 import Service, { service } from "@ember/service";
 import { addGlobalNotice } from "discourse/components/global-notice";
-import DEPRECATION_WORKFLOW from "discourse/deprecation-workflow";
 import identifySource from "discourse/lib/source-identifier";
 import { escapeExpression } from "discourse/lib/utilities";
+import DEPRECATION_WORKFLOW from "discourse-common/deprecation-workflow";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse-common/lib/deprecated";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";

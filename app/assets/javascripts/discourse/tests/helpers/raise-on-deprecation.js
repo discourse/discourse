@@ -1,6 +1,6 @@
 import { registerDeprecationHandler } from "@ember/debug";
 import QUnit from "qunit";
-import DEPRECATION_WORKFLOW from "discourse/deprecation-workflow";
+import DEPRECATION_WORKFLOW from "discourse-common/deprecation-workflow";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse-common/lib/deprecated";
 
 let disabled = false;

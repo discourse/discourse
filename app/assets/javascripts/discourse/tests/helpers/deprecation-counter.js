@@ -1,5 +1,5 @@
 import { registerDeprecationHandler } from "@ember/debug";
-import DEPRECATION_WORKFLOW from "discourse/deprecation-workflow";
+import DEPRECATION_WORKFLOW from "discourse-common/deprecation-workflow";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse-common/lib/deprecated";
 import { bind } from "discourse-common/utils/decorators";
 
