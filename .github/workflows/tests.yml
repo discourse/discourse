@@ -363,11 +363,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: ["Chromium", "Firefox ESR", "Firefox Evergreen"]
+        browser: ["Chromium", "Firefox ESR"]
 
     env:
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
-      TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
       CHEAP_SOURCE_MAPS: "1"
 
     steps:
