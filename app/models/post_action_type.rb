@@ -151,11 +151,17 @@ class PostActionType < ActiveRecord::Base
     end
 
     def descriptions
-      all_flags.map { |f| [f[:id], f[:description]] }.to_h
+      all_flags.reduce({}) do |acc, f|
+        acc[f[:id]] = f[:description]
+        acc
+      end
     end
 
     def applies_to
-      all_flags.map { |f| [f[:id], f[:applies_to]] }.to_h
+      all_flags.reduce({}) do |acc, f|
+        acc[f[:id]] = f[:applies_to]
+        acc
+      end
     end
 
     def is_flag?(sym)
