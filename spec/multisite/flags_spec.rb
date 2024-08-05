@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Custom flags in multisite", type: :multisite do
-  describe "#all_flags" do
+  describe "PostACtionType#all_flags" do
     use_redis_snapshotting
 
     it "does not share flag definitions between sites" do
