@@ -33,6 +33,10 @@ export class I18n {
     return this.locale || this.defaultLocale;
   }
 
+  get currentBcp47Locale() {
+    return this.currentLocale().replace("_", "-");
+  }
+
   get pluralizationNormalizedLocale() {
     if (this.currentLocale() === "pt") {
       return "pt_PT";
