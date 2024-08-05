@@ -3,18 +3,11 @@
 class PostActionType < ActiveRecord::Base
   POST_ACTION_TYPE_ALL_FLAGS_KEY = "post_action_type_all_flags"
   POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY = "post_action_public_type_ids"
-<<<<<<< HEAD
-  LIKE_POST_ACTION_ID = 2
 
   after_save { expire_cache if !skip_expire_cache_callback }
   after_destroy { expire_cache if !skip_expire_cache_callback }
 
   attr_accessor :skip_expire_cache_callback
-=======
-
-  after_save :expire_cache
-  after_destroy :expire_cache
->>>>>>> 8f6a543278 (DEV: Use redis for flag cache)
 
   include AnonCacheInvalidator
 
@@ -62,33 +55,24 @@ class PostActionType < ActiveRecord::Base
 
     def all_flags
       cached_all_flags = Discourse.redis.get(PostActionType::POST_ACTION_TYPE_ALL_FLAGS_KEY)
-      return JSON.parse(cached_all_flags).map { |flag| Flag.new(flag) } if cached_all_flags
+      if cached_all_flags
+        return JSON.parse(cached_all_flags).map { |flag| flag.transform_keys(&:to_sym) }
+      end
 
-      flags = Flag.unscoped.order(:position).all
-      Discourse.redis.set(
-        PostActionType::POST_ACTION_TYPE_ALL_FLAGS_KEY,
-        flags.as_json(
-          only: %i[
-            id
-            name
-            name_key
-            description
-            notify_type
-            auto_action_type
-            require_message
-            applies_to
-            position
-            enabled
-            score_type
-          ],
-        ).to_json,
-      )
+      flags =
+        Flag
+          .unscoped
+          .order(:position)
+          .pluck(ATTRIBUTE_NAMES)
+          .map { |attributes| ATTRIBUTE_NAMES.zip(attributes).to_h }
+
+      Discourse.redis.set(PostActionType::POST_ACTION_TYPE_ALL_FLAGS_KEY, flags.to_json)
       flags
     end
 
     def auto_action_flag_types
       return flag_settings.auto_action_types if overridden_by_plugin_or_skipped_db?
-      flag_enum(all_flags.select(&:auto_action_type))
+      flag_enum(all_flags.select { |flag| flag[:auto_action_type] })
     end
 
     def public_types
@@ -110,7 +94,7 @@ class PostActionType < ActiveRecord::Base
 
     def flag_types_without_additional_message
       return flag_settings.without_additional_message_types if overridden_by_plugin_or_skipped_db?
-      flag_enum(all_flags.reject(&:require_message))
+      flag_enum(all_flags.reject { |flag| flag[:require_message] })
     end
 
     def flag_types
@@ -118,7 +102,7 @@ class PostActionType < ActiveRecord::Base
 
       # Once replace_flag API is fully deprecated, then we can drop respond_to. It is needed right now for migration to be evaluated.
       # TODO (krisk)
-      flag_enum(all_flags.reject { |flag| flag.respond_to?(:score_type) && flag.score_type })
+      flag_enum(all_flags.reject { |flag| flag[:score_type] })
     end
 
     def score_types
@@ -126,7 +110,7 @@ class PostActionType < ActiveRecord::Base
 
       # Once replace_flag API is fully deprecated, then we can drop respond_to. It is needed right now for migration to be evaluated.
       # TODO (krisk)
-      flag_enum(all_flags.filter { |flag| flag.respond_to?(:score_type) && flag.score_type })
+      flag_enum(all_flags.filter { |flag| flag[:score_type] })
     end
 
     # flags resulting in mod notifications
@@ -136,40 +120,40 @@ class PostActionType < ActiveRecord::Base
 
     def notify_flag_types
       return flag_settings.notify_types if overridden_by_plugin_or_skipped_db?
-      flag_enum(all_flags.select(&:notify_type))
+      flag_enum(all_flags.select { |flag| flag[:notify_type] })
     end
 
     def topic_flag_types
       if overridden_by_plugin_or_skipped_db?
         flag_settings.topic_flag_types
       else
-        flag_enum(all_flags.select { |flag| flag.applies_to?("Topic") })
+        flag_enum(all_flags.select { |flag| flag[:applies_to].include?("Topic") })
       end
     end
 
     def disabled_flag_types
-      flag_enum(all_flags.reject(&:enabled))
+      flag_enum(all_flags.reject { |flag| flag[:enabled] })
     end
 
     def enabled_flag_types
-      flag_enum(all_flags.filter(&:enabled))
+      flag_enum(all_flags.filter { |flag| flag[:enabled] })
     end
 
     def additional_message_types
       return flag_settings.additional_message_types if overridden_by_plugin_or_skipped_db?
-      flag_enum(all_flags.select(&:require_message))
+      flag_enum(all_flags.select { |flag| flag[:require_message] })
     end
 
     def names
-      all_flags.map { |f| [f.id, f.name] }.to_h
+      all_flags.map { |f| [f[:id], f[:name]] }.to_h
     end
 
     def descriptions
-      all_flags.map { |f| [f.id, f.description] }.to_h
+      all_flags.map { |f| [f[:id], f[:description]] }.to_h
     end
 
     def applies_to
-      all_flags.map { |f| [f.id, f.applies_to] }.to_h
+      all_flags.map { |f| [f[:id], f[:applies_to]] }.to_h
     end
 
     def is_flag?(sym)
@@ -179,7 +163,7 @@ class PostActionType < ActiveRecord::Base
     private
 
     def flag_enum(scope)
-      Enum.new(scope.map { |flag| [flag.name_key.to_sym, flag.id] }.to_h)
+      Enum.new(scope.map { |flag| [flag[:name_key].to_sym, flag[:id]] }.to_h)
     end
   end
 
