@@ -65,18 +65,15 @@ class PostActionType < ActiveRecord::Base
     end
 
     def all_flags
-      cached_all_flags = Discourse.cache.read(PostActionType::POST_ACTION_TYPE_ALL_FLAGS_KEY)
-      return cached_all_flags if cached_all_flags
-
-      flags =
-        Flag
-          .unscoped
-          .order(:position)
-          .pluck(ATTRIBUTE_NAMES)
-          .map { |attributes| ATTRIBUTE_NAMES.zip(attributes).to_h }
-
-      Discourse.cache.write(PostActionType::POST_ACTION_TYPE_ALL_FLAGS_KEY, flags)
-      flags
+      Discourse
+        .cache
+        .fetch(PostActionType::POST_ACTION_TYPE_ALL_FLAGS_KEY) do
+          Flag
+            .unscoped
+            .order(:position)
+            .pluck(ATTRIBUTE_NAMES)
+            .map { |attributes| ATTRIBUTE_NAMES.zip(attributes).to_h }
+        end
     end
 
     def auto_action_flag_types
@@ -89,16 +86,9 @@ class PostActionType < ActiveRecord::Base
     end
 
     def public_type_ids
-      cached_public_type_ids =
-        Discourse.cache.read(PostActionType::POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY)
-      return cached_public_type_ids if cached_public_type_ids
-
-      public_type_id_values = public_types.values
-      Discourse.cache.write(
-        PostActionType::POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY,
-        public_type_id_values,
-      )
-      public_type_id_values
+      Discourse
+        .cache
+        .fetch(PostActionType::POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY) { public_types.values }
     end
 
     def flag_types_without_additional_message
