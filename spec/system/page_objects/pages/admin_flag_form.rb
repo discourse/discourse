@@ -3,27 +3,30 @@
 module PageObjects
   module Pages
     class AdminFlagForm < PageObjects::Pages::Base
-      def has_disabled_save_button?
-        find_button("Save", disabled: true)
-      end
-
       def fill_in_name(name)
-        find(".admin-flag-form__name").fill_in(with: name)
+        form.field("name").fill_in(name)
+        self
       end
 
       def fill_in_description(description)
-        find(".admin-flag-form__description").fill_in(with: description)
+        form.field("description").fill_in(description)
+        self
       end
 
-      def fill_in_applies_to(applies_to)
+      def select_applies_to(applies_to)
         dropdown = PageObjects::Components::SelectKit.new(".admin-flag-form__applies-to")
         dropdown.expand
         dropdown.select_row_by_value(applies_to)
         dropdown.collapse
+        self
       end
 
       def click_save
-        find(".admin-flag-form__save").click
+        form.submit
+      end
+
+      def form
+        @form ||= PageObjects::Components::FormKit.new(".admin-flag-form .form-kit")
       end
     end
   end

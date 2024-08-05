@@ -5560,6 +5560,7 @@ en:
             name: "Name"
             description: "Description"
             applies_to: "Display this flag on"
+            invalid_applies_to: "Required"
             topic: "topics"
             post: "posts"
             chat_message: "chat messages"
