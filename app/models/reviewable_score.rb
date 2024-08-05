@@ -13,14 +13,13 @@ class ReviewableScore < ActiveRecord::Base
   # To keep things simple the types correspond to `PostActionType` for backwards
   # compatibility, but we can add extra reasons for scores.
   def self.types
-    cached_score_types = Discourse.cache.read(REVIEWABLE_SCORE_TYPES_KEY)
-    return cached_score_types if cached_score_types
-
-    score_types = PostActionType.flag_types.merge(PostActionType.score_types)
-    score_types.merge!(@plugin_types) if @plugin_types
-
-    Discourse.cache.write(REVIEWABLE_SCORE_TYPES_KEY, score_types)
-    score_types
+    Discourse
+      .cache
+      .fetch(REVIEWABLE_SCORE_TYPES_KEY) do
+        score_types = PostActionType.flag_types.merge(PostActionType.score_types)
+        score_types.merge!(@plugin_types) if @plugin_types
+        score_types
+      end
   end
 
   # When extending post action flags, we need to call this method in order to
