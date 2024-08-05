@@ -49,8 +49,8 @@ class PostActionType < ActiveRecord::Base
     def expire_cache
       Discourse.redis.keys("post_action_types_*").each { |key| Discourse.redis.del(key) }
       Discourse.redis.keys("post_action_flag_types_*").each { |key| Discourse.redis.del(key) }
-      Discourse.redis.del(POST_ACTION_TYPE_ALL_FLAGS_KEY)
-      Discourse.redis.del(POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY)
+      Discourse.cache.delete(POST_ACTION_TYPE_ALL_FLAGS_KEY)
+      Discourse.cache.delete(POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY)
     end
 
     def reload_types
@@ -65,10 +65,8 @@ class PostActionType < ActiveRecord::Base
     end
 
     def all_flags
-      cached_all_flags = Discourse.redis.get(PostActionType::POST_ACTION_TYPE_ALL_FLAGS_KEY)
-      if cached_all_flags
-        return JSON.parse(cached_all_flags).map { |flag| flag.transform_keys(&:to_sym) }
-      end
+      cached_all_flags = Discourse.cache.read(PostActionType::POST_ACTION_TYPE_ALL_FLAGS_KEY)
+      return cached_all_flags if cached_all_flags
 
       flags =
         Flag
@@ -77,7 +75,7 @@ class PostActionType < ActiveRecord::Base
           .pluck(ATTRIBUTE_NAMES)
           .map { |attributes| ATTRIBUTE_NAMES.zip(attributes).to_h }
 
-      Discourse.redis.set(PostActionType::POST_ACTION_TYPE_ALL_FLAGS_KEY, flags.to_json)
+      Discourse.cache.write(PostActionType::POST_ACTION_TYPE_ALL_FLAGS_KEY, flags)
       flags
     end
 
@@ -92,13 +90,13 @@ class PostActionType < ActiveRecord::Base
 
     def public_type_ids
       cached_public_type_ids =
-        Discourse.redis.get(PostActionType::POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY)
-      return JSON.parse(cached_public_type_ids) if cached_public_type_ids
+        Discourse.cache.read(PostActionType::POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY)
+      return cached_public_type_ids if cached_public_type_ids
 
       public_type_id_values = public_types.values
-      Discourse.redis.set(
+      Discourse.cache.write(
         PostActionType::POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY,
-        public_type_id_values.to_json,
+        public_type_id_values,
       )
       public_type_id_values
     end
