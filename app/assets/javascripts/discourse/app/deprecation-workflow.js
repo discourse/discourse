@@ -13,10 +13,8 @@ const DEPRECATION_WORKFLOW = [
   },
 ];
 
-setupDeprecationWorkflow({
-  // We're using RAISE_ON_DEPRECATION in environment.js instead of
-  // `throwOnUnhandled` here since it is easier to toggle.
-  workflow: DEPRECATION_WORKFLOW,
-});
+// We're using RAISE_ON_DEPRECATION in environment.js instead of
+// `throwOnUnhandled` here since it is easier to toggle.
+setupDeprecationWorkflow({ workflow: DEPRECATION_WORKFLOW });
 
 export default DEPRECATION_WORKFLOW;

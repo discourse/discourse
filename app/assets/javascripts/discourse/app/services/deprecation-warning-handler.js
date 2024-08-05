@@ -1,6 +1,7 @@
 import { registerDeprecationHandler } from "@ember/debug";
 import Service, { service } from "@ember/service";
 import { addGlobalNotice } from "discourse/components/global-notice";
+import DEPRECATION_WORKFLOW from "discourse/deprecation-workflow";
 import identifySource from "discourse/lib/source-identifier";
 import { escapeExpression } from "discourse/lib/utilities";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse-common/lib/deprecated";
@@ -49,12 +50,11 @@ export default class DeprecationWarningHandler extends Service {
 
   @bind
   handle(message, opts) {
-    const workflowConfigs = window.deprecationWorkflow?.config?.workflow;
-    const matchingConfig = workflowConfigs.find(
+    const matchingConfig = DEPRECATION_WORKFLOW.find(
       (config) => config.matchId === opts.id
     );
 
-    if (matchingConfig && matchingConfig.handler === "silence") {
+    if (matchingConfig?.handler === "silence") {
       return;
     }
 
