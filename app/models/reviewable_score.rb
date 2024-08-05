@@ -14,7 +14,7 @@ class ReviewableScore < ActiveRecord::Base
   # compatibility, but we can add extra reasons for scores.
   def self.types
     cached_score_types = Discourse.cache.read(REVIEWABLE_SCORE_TYPES_KEY)
-    return JSON.parse(cached_score_types).symbolize_keys if cached_score_types
+    return cached_score_types if cached_score_types
 
     score_types = PostActionType.flag_types.merge(PostActionType.score_types)
     score_types.merge!(@plugin_types) if @plugin_types
