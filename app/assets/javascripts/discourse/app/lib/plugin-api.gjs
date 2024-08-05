@@ -3211,7 +3211,7 @@ class PluginApi {
         {
           since: "v3.3.0.beta1-dev",
           id: "discourse.header-widget-overrides",
-          url: "https://meta.discourse.org/t/296544",
+          url: "https://meta.discourse.org/t/316549",
         }
       );
     }
