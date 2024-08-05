@@ -6,15 +6,6 @@ class DiscourseJsProcessor
   class TranspileError < StandardError
   end
 
-  # To generate a list of babel plugins used by ember-cli, set
-  # babel: { debug: true } in ember-cli-build.js, then run `yarn ember build -prod`
-  DISCOURSE_COMMON_BABEL_PLUGINS = [
-    ["decorator-transforms", { runEarly: true }],
-    "proposal-class-static-block",
-    "transform-parameters",
-    "proposal-export-namespace-from",
-  ]
-
   def self.ember_cli?(filename)
     filename.include?("/app/assets/javascripts/discourse/dist/")
   end
@@ -161,7 +152,6 @@ class DiscourseJsProcessor
           filename: logical_path || "unknown",
           extension: extension,
           themeId: theme_id,
-          commonPlugins: DISCOURSE_COMMON_BABEL_PLUGINS,
         },
       )
     end
