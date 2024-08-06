@@ -20,6 +20,15 @@ import I18n from "discourse-i18n";
 const translateResultsCallbacks = [];
 const MAX_RECENT_SEARCHES = 5; // should match backend constant with the same name
 
+const logSearchLinkClickedCallbacks = [];
+
+export function addLogSearchLinkClickedCallbacks(fn) {
+  logSearchLinkClickedCallbacks.push(fn);
+}
+export function resetLogSearchLinkClickedCallbacks() {
+  logSearchLinkClickedCallbacks.clear();
+}
+
 export function addSearchResultsCallback(callback) {
   translateResultsCallbacks.push(callback);
 }
@@ -259,6 +268,14 @@ export function updateRecentSearches(currentUser, term) {
 }
 
 export function logSearchLinkClick(params) {
+  if (
+    logSearchLinkClickedCallbacks.length &&
+    !logSearchLinkClickedCallbacks.some((fn) => fn(params))
+  ) {
+    // Return early if any callbacks return false
+    return;
+  }
+
   ajax("/search/click", {
     type: "POST",
     data: {
