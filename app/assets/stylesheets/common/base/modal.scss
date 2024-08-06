@@ -380,6 +380,9 @@
     width: 100%;
     // max-width: 500px;
     line-height: var(--line-height-large);
+    a {
+      margin: 0;
+    }
   }
   .flag-confirmation {
     margin-top: 0.5em;

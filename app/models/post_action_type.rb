@@ -110,7 +110,7 @@ class PostActionType < ActiveRecord::Base
     end
 
     def additional_message_types
-      return flag_settings.with_additional_message if overridden_by_plugin_or_skipped_db?
+      return flag_settings.additional_message_types if overridden_by_plugin_or_skipped_db?
       flag_enum(all_flags.select(&:require_message))
     end
 
