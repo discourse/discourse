@@ -26,4 +26,16 @@ module("Integration | Component | FormKit | Layout | Submit", function (hooks) {
     assert.dom(".form-kit__button.btn-primary").hasText(I18n.t("submit"));
     assert.deepEqual(value, 1);
   });
+
+  test("@label", async function (assert) {
+    await render(<template>
+      <Form as |form|>
+        <form.Submit @label="cancel" />
+      </Form>
+    </template>);
+
+    assert
+      .dom(".form-kit__button")
+      .hasText(I18n.t("cancel"), "it allows to override the label");
+  });
 });

@@ -1342,35 +1342,6 @@ ug:
         warnings: "رەسمىي ئاگاھلاندۇرۇش"
         read_more_in_group: "تېخىمۇ كۆپ ئوقۇماقچىمۇ؟ %{groupLink} دىكى باشقا ئۇچۇرلارغا كۆز يۈگۈرتۈڭ."
         read_more: "تېخىمۇ كۆپ ئوقۇماقچىمۇ؟ <a href='%{basePath}/u/%{username}/messages'>شەخسىي ئۇچۇر</a>دىكى باشقا ئۇچۇرلارغا كۆز يۈگۈرتۈڭ."
-        read_more_group_pm_MF: "{ HAS_UNREAD_AND_NEW, select,\n  true {\n    { UNREAD, plural,\n         =0 {}\n        one {ئوقۇلمىغان <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># </a>ئۇچۇر بار} \n      other {ئوقۇلمىغان <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># </a>ئۇچۇر بار}\n    }\n    { NEW, plural,\n         =0 {}\n        one { ۋە <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># يېڭى</a> ئۇچۇر قالدى ياكى  {groupLink} دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}\n      other { ۋە <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># يېڭى</a> ئۇچۇر قالدى ياكى  {groupLink} دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}\n    }\n  }\n  false {\n    { UNREAD, plural,\n         =0 {}\n        one {ئوقۇلمىغان <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># </a> ئۇچۇر قالدى ياكى  {groupLink} دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}\n      other {ئوقۇلمىغان <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># </a> ئۇچۇر قالدى ياكى  {groupLink} دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}\n    }\n    { NEW, plural,\n         =0 {}\n        one {يېڭى <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># </a> ئۇچۇر قالدى ياكى  {groupLink} دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}\n      other {يېڭى <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># </a> ئۇچۇر قالدى ياكى  {groupLink} دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}\n    }\n  }\n  other {}\n}\n"
-        read_more_personal_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {ئوقۇلمىغان <a href='{basePath}/u/{username}/messages/unread'># </a>}
-                other {ئوقۇلمىغان <a href='{basePath}/u/{username}/messages/unread'># </a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { ۋە يېڭى <a href='{basePath}/u/{username}/messages/new'># </a> ئۇچۇر قالدى ياكى باشقا <a href='{basePath}/u/{username}/messages'>شەخسىي ئۇچۇر</a>غا كۆز يۈگۈرتۈڭ}
-                other { ۋە يېڭى <a href='{basePath}/u/{username}/messages/new'># </a> ئۇچۇر قالدى ياكى باشقا <a href='{basePath}/u/{username}/messages'>شەخسىي ئۇچۇر</a>غا كۆز يۈگۈرتۈڭ}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {ئوقۇلمىغان <a href='{basePath}/u/{username}/messages/unread'># </a> ئۇچۇر قالدى ياكى باشقا <a href='{basePath}/u/{username}/messages'>شەخسىي ئۇچۇر</a>غا كۆز يۈگۈرتۈڭ}
-                other {ئوقۇلمىغان <a href='{basePath}/u/{username}/messages/unread'># </a> ئۇچۇر قالدى ياكى باشقا <a href='{basePath}/u/{username}/messages'>شەخشىي ئۇچۇر</a>غا كۆز يۈگۈرتۈڭ}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {يېڭى <a href='{basePath}/u/{username}/messages/new'># </a> ئۇچۇر قالدى ياكى باشقا <a href='{basePath}/u/{username}/messages'>personal messages</a>}
-                other {يېڭى <a href='{basePath}/u/{username}/messages/new'># </a> ئۇچۇر قالدى ياكى باشقا <a href='{basePath}/u/{username}/messages'>شەخسىي ئۇچۇر</a>غا كۆز يۈگۈرتۈڭ}
-              }
-            }
-            other {}
-          }
       preferences_nav:
         account: "ھېسابات"
         security: "بىخەتەرلىك"
@@ -1959,39 +1930,6 @@ ug:
       logout_disabled: "تور بېكەت پەقەت ئوقۇشقىلا بولىدىغان ھالىتىدە تىزىمدىن چىقىش چەكلەنگەن."
     staff_writes_only_mode:
       enabled: "بۇ تور بېكەت پەقەت باشقۇرغۇچىلار ئىشلىتىدىغان ھالەتتە. زىيارەتنى داۋاملاشتۇرۇڭ، ئەمما جاۋاب، ياقتۇرۇش ۋە باشقا مەشغۇلاتلارنى باشقۇرغۇچى ئەزالارلا ئېلىپ بارالايدۇ."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
-            one {# خاتالىق/سائەت}
-          other {# خاتالىق/سائەت}
-        }</a> بېكەت تەڭشىكىدىكى {limit, plural,
-            one {# خاتالىق/سائەت}
-          other {# خاتالىق/سائەت}
-        } چېكىگە يەتتى.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
-            one {# خاتالىق/مىنۇت}
-          other {# خاتالىق/مىنۇت}
-        }</a> تور بېكەت تەڭشىكىدىكى { limit, plural,
-            one {# خاتالىق/مىنۇت}
-          other {# خاتالىق/مىنۇت}
-        } چېكىگە يەتتى.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
-            one {# خاتالىق/سائەت}
-          other {# خاتالىق/سائەت}
-        }</a> بېكەت تەڭشىكىدىكى { limit, plural,
-            one {# خاتالىق/سائەت}
-          other {# خاتالىق/سائەت}
-        } چېكىدىن ئېشىپ كەتتى.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
-            one {# خاتالىق/مىنۇت}
-          other {# خاتالىق/مىنۇت}
-        }</a> تور بېكەت تەڭشىكىدىكى { limit, plural,
-            one {# خاتالىق/مىنۇت}
-          other {# خاتالىق/مىنۇت}
-        } چېكىدىن ئېشىپ كەتتى.
     learn_more: "تېخىمۇ كۆپ بىلدۈرگۈ…"
     mute: ئۈنسىز
     unmute: ئۈنلۈك
@@ -4194,7 +4132,6 @@ ug:
         everyone_can_use: "بەلگىنى ھەممەيلەن ئىشلىتەلەيدۇ"
         usable_only_by_groups: "بەلگە ھەممەيلەنگە كۆرۈنىدۇ ئەمما تۆۋەندىكى گۇرۇپپىدىكىلەرلا ئۇلارنى ئىشلىتەلەيدۇ"
         visible_only_to_groups: "بەلگە تۆۋەندىكى گۇرۇپپىلارغىلا كۆرۈنىدۇ"
-        cannot_save: "بەلگە گۇرۇپپىسىنى ساقلىغىلى بولمايدۇ. كەم دېگەندە بىر خەتكۈچنىڭ بارلىقى، بەلگە گۇرۇپپىسىنىڭ ئىسمى بوش بولماسلىقى ۋە بەلگە ئىجازەتنامىسىغا بىر گۇرۇپپا تاللانغانلىقىغا كاپالەتلىك قىلىڭ."
         tags_placeholder: "بەلگە ئىزدە ياكى قۇر"
         parent_tag_placeholder: "تاللاشچان"
         select_groups_placeholder: "گۇرۇپپا تاللا…"

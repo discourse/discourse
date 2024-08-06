@@ -31,16 +31,14 @@ class PostActionTypeSerializer < ApplicationSerializer
   def description
     i18n(
       "description",
-      vars: {
-        tos_url:,
-        base_path: Discourse.base_path,
-      },
+      tos_url:,
+      base_path: Discourse.base_path,
       default: object.class.descriptions[object.id],
     )
   end
 
   def short_description
-    i18n("short_description", vars: { tos_url: tos_url, base_path: Discourse.base_path })
+    i18n("short_description", tos_url:, base_path: Discourse.base_path, default: "")
   end
 
   def name_key
@@ -60,10 +58,14 @@ class PostActionTypeSerializer < ApplicationSerializer
       ReviewableScore.exists?(reviewable_score_type: object.id)
   end
 
-  protected
+  private
 
-  def i18n(field, default: nil, vars: nil)
-    key = "post_action_types.#{name_key}.#{field}"
-    vars ? I18n.t(key, vars, default: default) : I18n.t(key, default: default)
+  def i18n(field, **args)
+    key = "#{i18n_prefix}.#{name_key}.#{field}"
+    I18n.t(key, **args)
+  end
+
+  def i18n_prefix
+    "post_action_types"
   end
 end

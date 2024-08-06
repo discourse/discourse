@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Controller.extend({
+export default class GroupManageController extends Controller {
   @discourseComputed("model.automatic")
   tabs(automatic) {
     const defaultTabs = [
@@ -43,5 +43,5 @@ export default Controller.extend({
     }
 
     return defaultTabs;
-  },
-});
+  }
+}

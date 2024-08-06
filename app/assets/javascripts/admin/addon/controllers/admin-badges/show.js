@@ -21,6 +21,7 @@ const FORM_FIELDS = [
   "long_description",
   "icon",
   "image_upload_id",
+  "image_url",
   "query",
   "badge_grouping_id",
   "trigger",

@@ -373,4 +373,22 @@ module("Unit | Utility | i18n", function (hooks) {
       "Degrades gracefully if MF definitions are not available."
     );
   });
+
+  test("currentBcp47Locale", function (assert) {
+    Object.entries({
+      pt_BR: "pt-BR",
+      en_GB: "en-GB",
+      bs_BA: "bs-BA",
+      en: "en",
+      it: "it",
+      es: "es",
+    }).forEach(([input, output]) => {
+      I18n.locale = input;
+      assert.strictEqual(
+        I18n.currentBcp47Locale,
+        output,
+        `returns '${output}' for '${input}'`
+      );
+    });
+  });
 });

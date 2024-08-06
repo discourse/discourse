@@ -141,7 +141,10 @@ export default class Report extends EmberObject {
         .locale("en")
         .format("YYYY-MM-DD");
 
-      if (report.modes[0] === "stacked_chart") {
+      if (
+        report.modes[0] === "stacked_chart" ||
+        report.modes[0] === "stacked_line_chart"
+      ) {
         report[filledField] = report[dataField].map((rep) => {
           return {
             req: rep.req,

@@ -114,6 +114,46 @@ module("Unit | Utility | url", function (hooks) {
     );
   });
 
+  test("routeTo protocol/domain stripping", async function (assert) {
+    sinon.stub(DiscourseURL, "origin").get(() => "http://example.com");
+    sinon.stub(DiscourseURL, "handleURL");
+    sinon.stub(DiscourseURL, "router").get(() => {
+      return {
+        currentURL: "/bar",
+      };
+    });
+
+    DiscourseURL.routeTo("http://example.com/foo1");
+    assert.ok(
+      DiscourseURL.handleURL.calledWith(`/foo1`),
+      "it strips the protocol and domain when http"
+    );
+
+    DiscourseURL.routeTo("https://example.com/foo2");
+    assert.ok(
+      DiscourseURL.handleURL.calledWith(`/foo2`),
+      "it strips the protocol and domain when https"
+    );
+
+    DiscourseURL.routeTo("//example.com/foo3");
+    assert.ok(
+      DiscourseURL.handleURL.calledWith(`/foo3`),
+      "it strips the protocol and domain when protocol-less"
+    );
+
+    DiscourseURL.routeTo("https://example.com/t//1");
+    assert.ok(
+      DiscourseURL.handleURL.calledWith(`/t//1`),
+      "it does not strip double-slash in the middle of urls"
+    );
+
+    DiscourseURL.routeTo("/t//2");
+    assert.ok(
+      DiscourseURL.handleURL.calledWith(`/t//2`),
+      "it does not strip double-slash in the middle of urls, even without a domain"
+    );
+  });
+
   test("routeTo does not rewrite routes started with /my", async function (assert) {
     logIn();
     sinon.stub(DiscourseURL, "router").get(() => {

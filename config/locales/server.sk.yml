@@ -2122,6 +2122,7 @@ sk:
     min_trust_to_edit_post: "Minimálna úroveň dôveryhodnosti potrebná na úpravu príspevkov."
     edit_post_allowed_groups: "Skupiny, ktoré majú povolené upravovať príspevky. Administrátori a moderátori môžu upravovať príspevky vždy."
     min_trust_to_allow_self_wiki: "MInimálna úroveň dôvery k tomu aby mohol používateľ svoje témy meniť na wiki."
+    self_wiki_allowed_groups: "Povoliť používateľom v týchto skupinách vytvárať vlastné príspevky na wiki. Správcovia a moderátori môžu vždy vytvárať svoje vlastné príspevky na wiki."
     min_trust_to_send_messages: "ODSTRÁNENÉ, namiesto toho použite nastavenie \"skupiny povolené pre osobné správy\". Minimálna úroveň dôveryhodnosti potrebná na vytvorenie nových osobných správ."
     min_trust_to_send_email_messages: "Minimálna úroveň dôveryhodnosti potrebná na odosielanie osobných správ prostredníctvom e-mailu."
     send_email_messages_allowed_groups: "Skupiny, ktoré majú povolené posielať osobné správy prostredníctvom e-mailu. Správcovia a moderátori môžu vždy posielať osobné správy prostredníctvom e-mailu."
@@ -5112,18 +5113,31 @@ sk:
           default_locale:
             label: "Jazyk"
       privacy:
+        title: "Členský prístup"
         fields:
           login_required:
             label: "Viditeľnosť"
+            description: "Je vaša komunita verejná alebo súkromná?"
             choices:
               public:
                 label: "Verejné"
               private:
                 label: "Súkromné"
           invite_only:
+            label: "Registrácia"
+            description: "Ako sa môžu členovia pripojiť k tejto komunite?"
             choices:
+              sign_up:
+                label: "Zaregistrujte sa"
               invite_only:
                 label: "Len na pozvánky"
+          must_approve_users:
+            description: "Chcete schvaľovať členské účty?"
+            choices:
+              "no":
+                label: "Nie, noví členovia sa môžu pripojiť okamžite"
+              "yes":
+                label: "Áno, noví členovia musia byť schválení moderátormi"
           chat_enabled:
             placeholder: "Povoliť chat"
             extra_description: "Spojte sa so svojimi členmi v reálnom čase"

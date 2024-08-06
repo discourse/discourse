@@ -226,6 +226,7 @@ en:
     broken_page_change_alert: "An onPageChange handler raised an error. Check the browser developer tools for more information."
 
     broken_plugin_alert: "Caused by plugin '%{name}'"
+    broken_transformer_alert: "There was an error. Your site may not work properly."
 
     critical_deprecation:
       notice: "<b>[Admin Notice]</b> One of your themes or plugins needs updating for compatibility with upcoming Discourse core changes."
@@ -5559,6 +5560,7 @@ en:
             name: "Name"
             description: "Description"
             applies_to: "Display this flag on"
+            invalid_applies_to: "Required"
             topic: "topics"
             post: "posts"
             chat_message: "chat messages"
@@ -6931,7 +6933,6 @@ en:
             confirm: "Yes, update password policy"
 
       badges:
-        disable_system: This badge is a system badge and cannot be disabled and/or deleted.
         status: Status
         title: Badges
         new_badge: New Badge

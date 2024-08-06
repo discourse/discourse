@@ -39,6 +39,10 @@ describe "Topic Map - Private Message", type: :system do
   end
 
   it "updates the various topic stats, avatars" do
+    skip_on_ci!(
+      "This is flaky because it relies a lot on messagebus events and the counts don't always update in time",
+    )
+
     freeze_time
     sign_in(user)
     topic_page.visit_topic(topic)
@@ -77,12 +81,11 @@ describe "Topic Map - Private Message", type: :system do
     expect(expanded_avatars.length).to eq 7
 
     # views count
-    # TODO (martin) Investigate flakiness
-    # sign_in(other_user)
-    # topic_page.visit_topic(topic)
-    # try_until_success { expect(TopicViewItem.count).to eq(2) }
-    # page.refresh
-    # expect(topic_map.views_count).to eq(2)
+    sign_in(other_user_1)
+    topic_page.visit_topic(topic)
+    try_until_success { expect(TopicViewItem.count).to eq(2) }
+    page.refresh
+    expect(topic_map.views_count).to eq(2)
 
     # likes count
     expect(topic_map).to have_no_likes

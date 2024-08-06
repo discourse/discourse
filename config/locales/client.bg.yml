@@ -1253,62 +1253,6 @@ bg:
         warnings: "Официални предупреждения"
         read_more_in_group: "Искате ли да прочетете повече? Разгледайте други съобщения в %{groupLink}."
         read_more: "Искате ли да прочетете повече? Разгледайте други съобщения в <a href='%{basePath}/u/%{username}/messages'>лични съобщения</a>."
-        read_more_group_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Има <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочетени</a>}
-                other {Има <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочетени</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { и <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># остават нови</a> съобщения или прегледайте другите съобщения в {groupLink}}
-                other { и <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># остават нови</a> съобщения или прегледайте другите съобщения в {groupLink}}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Остават <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочетени</a> съобщения или прегледайте другите съобщения в {groupLink}}
-                other {Остават <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочетени</a> съобщения или прегледайте другите съобщения в {groupLink}}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {Остава <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># ново</a> съобщение или прегледайте другите съобщения в {groupLink}}
-                other {Остават <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нови</a> съобщения или прегледайте другите съобщения в {groupLink}}
-              }
-            }
-            other {}
-          }
-        read_more_personal_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Има <a href='{basePath}/u/{username}/messages/unread'># непрочетени</a>}
-                other {Има <a href='{basePath}/u/{username}/messages/unread'># непрочетени</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { и <a href='{basePath}/u/{username}/messages/new'># остават нови</a> съобщения или прегледайте други <a href='{basePath}/u/{username}/messages'>лични съобщения</a>}
-                other { и <a href='{basePath}/u/{username}/messages/new'># нови</a> оставащи съобщения или прегледайте други <a href='{basePath}/u/{username}/messages'>лични съобщения</a>}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Има <a href='{basePath}/u/{username}/messages/unread'># непрочетени</a> оставащи съобщения или прегледайте други <a href='{basePath}/u/{username}/messages'>лични съобщения</a>}
-                other {Има <a href='{basePath}/u/{username}/messages/unread'># непрочетени</a> оставащи съобщения или прегледайте други <a href='{basePath}/u/{username}/messages'>лични съобщения</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {Остават <a href='{basePath}/u/{username}/messages/new'># нови</a> съобщения или прегледайте други <a href='{basePath}/u/{username}/messages'>лични съобщения</a>}
-                other {Остават <a href='{basePath}/u/{username}/messages/new'># нови</a> съобщения или прегледайте други <a href='{basePath}/u/{username}/messages'>лични съобщения</a>}
-              }
-            }
-            other {}
-          }
       preferences_nav:
         account: "Профил"
         security: "Сигурност"
@@ -1828,21 +1772,6 @@ bg:
       logout_disabled: "Излизане от сайта е временно спряно, докато е пуснат режим \"само за четене\"."
     staff_writes_only_mode:
       enabled: "Този сайт е в режим само за персонал. Моля, продължете да сърфирате, но отговарянето, харесванията и други действия са ограничени само до членове на персонала."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
-            one {# грешка/час}
-          other {# грешки/час}
-        }</a> достигнаха ограничението в настройката на сайта от {limit, plural,
-            one {# грешка/час}
-          other {# грешки/час}
-        }.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# грешка/минута} other {# грешки/минута}}</a> достигна ограничението за настройка на сайта от {limit, plural, one {# грешка/минута} other {# грешки/минута}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# грешка/час} other {# грешки/час}}</a> превиши лимита за настройка на сайта от {limit, plural, one {# грешка/час} other {# грешки/час}}.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# грешка/минута} other {# грешки/минута}}</a> превиши лимита за настройка на сайта от {limit, plural, one {# грешка/минута} other {# грешки/минута}}.
     mute: Заглушаване
     unmute: Премахване на заглушаване
     last_post: Публикувано

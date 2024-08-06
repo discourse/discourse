@@ -3,11 +3,11 @@ import { alias, gt } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Controller.extend({
-  faqOverridden: gt("siteSettings.faq_url.length", 0),
-  renameFaqToGuidelines: alias(
-    "siteSettings.experimental_rename_faq_to_guidelines"
-  ),
+export default class AboutController extends Controller {
+  @gt("siteSettings.faq_url.length", 0) faqOverridden;
+
+  @alias("siteSettings.experimental_rename_faq_to_guidelines")
+  renameFaqToGuidelines;
 
   @discourseComputed("model.contact_url", "model.contact_email")
   contactInfo(url, email) {
@@ -22,5 +22,5 @@ export default Controller.extend({
     } else {
       return null;
     }
-  },
-});
+  }
+}

@@ -1343,62 +1343,6 @@ pt_BR:
         warnings: "Avisos oficiais"
         read_more_in_group: "Quer ler mais? Veja outras mensagens em %{groupLink}."
         read_more: "Quer ler mais? Veja outras mensagens em <a href='%{basePath}/u/%{username}/messages'>mensagens pessoais</a>."
-        read_more_group_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Há <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># não lidas</a>}
-                other {Há <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># não lidas</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { e <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># uma nova</a> message restante, ou navegue por outras messages em {groupLink}}
-                other { e <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># novas</a> messages restantes, ou navegue por outras mensagens em {groupLink}}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Há <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a> message restante, ou navegue por outras messages em {groupLink}}
-                other {Há <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a> messages restantes, ou navegue por outras mensagens em {groupLink}}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {Há <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># uma nova</a> message restante, ou navegue por outras messages em {groupLink}}
-                other {Há <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># novas</a> messages restantes, ou navegue por outras mensagens em {groupLink}}
-              }
-            }
-            other {}
-          }
-        read_more_personal_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Há <a href='{basePath}/u/{username}/messages/unread'># mensagem não lida</a>}
-                other {Há <a href='{basePath}/u/{username}/messages/unread'># mensagens não lidas</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { e <a href='{basePath}/u/{username}/messages/new'># nova</a> mensagem restante, ou navegue por outras <a href='{basePath}/u/{username}/messages'>mensagens pessoais</a>}
-                other { e <a href='{basePath}/u/{username}/messages/new'># novas</a> mensagens restantes, ou navegue por outras <a href='{basePath}/u/{username}/messages'>mensagens pessoais</a>}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Resta <a href='{basePath}/u/{username}/messages/unread'>#</a> mensagem não lida, ou navegue por outras <a href='{basePath}/u/{username}/messages'>mensagens pessoais</a>}
-                other {Restam <a href='{basePath}/u/{username}/messages/unread'>#</a> mensagens não lidas, ou navegue por outras <a href='{basePath}/u/{username}/messages'>mensagens pessoais</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {Resta <a href='{basePath}/u/{username}/messages/new'># nova</a> mensagem, ou navegue por outras <a href='{basePath}/u/{username}/messages'>mensagens pessoais</a>}
-                other {Restam <a href='{basePath}/u/{username}/messages/new'># novas</a> mensagens, ou navegue por outras <a href='{basePath}/u/{username}/messages'>mensagens pessoais</a>}
-              }
-            }
-            other {}
-          }
       preferences_nav:
         account: "Conta"
         security: "Segurança"
@@ -1988,15 +1932,6 @@ pt_BR:
       logout_disabled: "Não é possível sair enquanto o site estiver em modo somente leitura. Esse recurso está desativado."
     staff_writes_only_mode:
       enabled: "Este site está no modo apenas para funcionários. Continue navegando, mas as respostas, curtidas e outras ações são limitadas apenas aos membros da equipe."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/hora} other {# erros/hora}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/minuto} other {# erros/minuto}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/hora} other {# erros/hora}}</a> ultrapassou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minutos}}</a> ultrapassou o limite de configuração do site de {limit, plural, one {# erro/minuto} other {# erro/minutos}}.
     learn_more: "Saiba mais…"
     mute: Silenciar
     unmute: Remover silêncio
@@ -4273,7 +4208,6 @@ pt_BR:
         everyone_can_use: "Etiquetas podem ser usadas por todos(as)"
         usable_only_by_groups: "Etiquetas são visíveis para todos(as), mas somente os seguintes grupos podem usá-las"
         visible_only_to_groups: "As etiquetas são visíveis somente para os seguintes grupos"
-        cannot_save: "Não é possível salvar grupo de etiquetas. Verifique se há pelo menos uma etiqueta presente, o nome do grupo de etiquetas não está vazio e um grupo foi selecionado para permissão de etiquetas."
         tags_placeholder: "Pesquisar ou criar etiquetas"
         parent_tag_placeholder: "Opcional"
         select_groups_placeholder: "Selecionar grupos…"
