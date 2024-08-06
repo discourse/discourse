@@ -3407,6 +3407,7 @@ bs_BA:
             save: "Save"
             name: "Ime"
             description: "Opis"
+            invalid_applies_to: "Required"
             topic: "topics"
             post: "objave"
       plugins:

@@ -6,9 +6,9 @@
 
 zh_CN:
   dates:
-    short_date_no_year: "M 月 D 日"
-    short_date: "YYYY 年 M 月 D 日"
-    long_date: "MMMM 年 YY 月 DD 日 h:mma"
+    short_date_no_year: "MMM D 日"
+    short_date: "YYYY 年 MMM D 日"
+    long_date: "YYYY 年 MMMM D 日 h:mma"
   datetime_formats: &datetime_formats
     formats:
       short: "%Y-%m-%d"
@@ -2327,7 +2327,7 @@ zh_CN:
     experimental_topics_filter: "实验性：在 /filter 下启用实验性话题筛选路由"
     enable_experimental_lightbox: "实验性：将默认图片灯箱替换为全新设计。"
     enable_experimental_bookmark_redesign_groups: "实验性：显示帖子书签的快速访问菜单和重新设计的新模式"
-    glimmer_header_mode: "控制是否使用新的 'glimmer' 头实现。默认为 'auto'，一旦所有主题和插件准备就绪，就会自动启用。https://meta.discourse.org/t/296544"
+    glimmer_header_mode: "控制是否使用新的“glimmer”标头实现。所有主题和插件准备就绪后，“auto”将自动启用。https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "实验性：启用新的 'glimmer' 话题列表实现。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
     experimental_form_templates: "实验性：启用表单模板功能。<b>启用后</b>，可以在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
     admin_sidebar_enabled_groups: "为指定群组的管理 UI 启用边栏导航，取代顶层管理导航按钮。"
@@ -2358,6 +2358,7 @@ zh_CN:
       invalid_reply_by_email_address: "值必须包含 '%{reply_key}' 并且与通知电子邮件不同。"
       invalid_alternative_reply_by_email_addresses: "所有值必须包含 '%{reply_key}' 并且与通知电子邮件不同。"
       invalid_domain_hostname: "不得包括 * 或 ? 字符。"
+      invalid_allowed_iframes_url: "iframe 网址必须以 http:// 或 https:// 开头，并且至少有一个额外的“/”"
       invalid_csp_script_src: "值必须是 'unsafe-eval' 或 'wasm-unsafe-eval'，或者是 '<hash algorithm>-<base64 value>' 形式，其中支持的哈希算法为 sha256、sha384 或 sha512。确保使用单引号将输入内容括起来。"
       pop3_polling_host_is_empty: "在启用 POP3 轮询前，您必须先设置 'pop3 polling host'。"
       pop3_polling_username_is_empty: "在启用 POP3 轮询前，您必须先设置 'pop3 polling username'。"

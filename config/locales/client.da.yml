@@ -4163,6 +4163,7 @@ da:
             save: "Gem"
             name: "Navn"
             description: "Beskrivelse"
+            invalid_applies_to: "Obligatoriske"
             topic: "emner"
             post: "indlæg"
       plugins:

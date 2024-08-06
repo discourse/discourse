@@ -3223,6 +3223,7 @@ hy:
             save: "Պահպանել"
             name: "Անուն"
             description: "Նկարագրությունը"
+            invalid_applies_to: "Պարտադիր"
             topic: "թեմաներ"
             post: "գրառումներ"
       plugins:

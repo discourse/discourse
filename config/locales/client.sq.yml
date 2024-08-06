@@ -2165,6 +2165,7 @@ sq:
             save: "Ruaj"
             name: "Emri"
             description: "Përshkrimi"
+            invalid_applies_to: "E nevojshme"
             topic: "topics"
             post: "postime"
       plugins:

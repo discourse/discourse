@@ -3247,6 +3247,7 @@ ca:
             save: "Desa"
             name: "Nom"
             description: "Descripció"
+            invalid_applies_to: "Necessari"
             topic: "temes"
             post: "publicacions"
       plugins:

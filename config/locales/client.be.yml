@@ -1643,6 +1643,7 @@ be:
             save: "захаваць"
             name: "імя"
             description: "Апісанне"
+            invalid_applies_to: "абавязковыя"
             topic: "тэмы"
             post: "паведамленняў"
       plugins:

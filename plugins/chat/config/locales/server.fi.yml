@@ -17,7 +17,6 @@ fi:
     chat_allowed_messages_for_other_trust_levels: "Viestien määrä, jonka luottamustasojen 1–4 käyttäjät voivat lähettää 30 sekunnin aikana. Voit poistaa rajan käytöstä asettamalla arvoksi 0."
     chat_silence_user_sensitivity: "Todennäköisyys, että chatissa liputettu käyttäjä hiljennetään automaattisesti."
     chat_auto_silence_from_flags_duration: "Määrä minuutteina, jonka ajaksi käyttäjät hiljennetään, kun heidät hiljennetään automaattisesti liputettujen chat-viestien takia."
-    chat_default_channel_id: "Chat-kanava, joka avataan oletuksena, kun käyttäjällä ei ole lukemattomia viestejä tai mainintoja muilla kanavilla."
     chat_duplicate_message_sensitivity: "Todennäköisyys, että saman lähettäjän kaksoiskappaleviesti estetään lyhyen ajan sisällä. Desimaaliluku välillä 0–1,0, ja 1,0 on korkein asetus (estää viestit useammin lyhyemmässä ajassa). Voit sallia kaksoiskappaleviestit asettamalla arvoksi 0."
     chat_minimum_message_length: "Chat-viestin merkkien vähimmäismäärä."
     chat_allow_uploads: "Salli lataukset julkisilla chat-kanavilla ja yksityisviestikanavilla."
@@ -31,7 +30,6 @@ fi:
     chat_editing_grace_period: "(n) sekunnin ajan chatin lähettämisen jälkeen muokkaaminen ei näytä (muokattu)-tunnistetta chat-viestissä."
     chat_editing_grace_period_max_diff_low_trust: "Kuinka monen merkin muutos sallitaan chatin muokkauksen katumusaikana. Jos muutos on isompi, chat-viestin yhteydessä näytetään (muokattu)-tunniste (luottamustasot 0 ja 1)."
     chat_editing_grace_period_max_diff_high_trust: "Kuinka monen merkin muutos sallitaan chatin muokkauksen katumusaikana. Jos muutos on isompi, chat-viestin yhteydessä näytetään (muokattu)-tunniste (luottamustasosta 2 ylöspäin)."
-    chat_preferred_mobile_index: "Ensisijainen välilehti ladattaessa /chat mobiililaitteella."
     errors:
       chat_default_channel: "Oletus-chat-kanavan täytyy olla julkinen kanava."
       direct_message_enabled_groups_invalid: "Sinun täytyy määrittää vähintään yksi ryhmä tälle asetukselle. Jos et halua muiden kuin henkilökunnan lähettävän yksityisviestejä, valitse henkilökunnan ryhmä."

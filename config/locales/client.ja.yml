@@ -4884,6 +4884,7 @@ ja:
             name: "名前"
             description: "説明"
             applies_to: "この通報を表示する:"
+            invalid_applies_to: "必須"
             topic: "トピック"
             post: "投稿"
             chat_message: "チャットメッセージ"
@@ -6190,7 +6191,6 @@ ja:
             prompt: "パスワードポリシーを変更しようとしています。これは、今後すべてのユーザーのパスワード変更に影響します。続行してもよろしいですか？"
             confirm: "はい。パスワードポリシーを更新します"
       badges:
-        disable_system: このバッジはシステムバッジであるため、無効または削除できません。
         status: ステータス
         title: バッジ
         new_badge: 新しいバッジ

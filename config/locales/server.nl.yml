@@ -2400,7 +2400,6 @@ nl:
     experimental_topics_filter: "EXPERIMENTEEL: schakelt de filterroute voor experimentele topics in op /filter"
     enable_experimental_lightbox: "EXPERIMENTEEL: vervangt de standaard afbeeldingslightbox door het vernieuwde ontwerp."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTEEL: geef een snelmenu voor bladwijzers weer bij berichten en een herontworpen venster"
-    glimmer_header_mode: "Bepaal of de nieuwe 'glimmer'-headerimplementatie wordt gebruikt. Dit is standaard ingesteld op 'automatisch', waardoor de implementatie automatisch wordt ingeschakeld zodra al je thema's en plug-ins gereed zijn. https://meta.discourse.org/t/296544"
     experimental_glimmer_topic_list_groups: "EXPERIMENTEEL: schakel de nieuwe 'glimmer'-implementatie voor topiclijsten in. Deze implementatie wordt momenteel ontwikkeld en is niet bedoeld voor productiegebruik. Ontwikkel er geen thema's/plug-ins mee totdat de implementatie is afgerond en aangekondigd."
     experimental_form_templates: "EXPERIMENTEEL: schakel de functie Formuliersjablonen in. <b>Nadat je deze functie hebt ingeschakeld,</b> kun je de sjablonen beheren via <a href='%{base_path}/admin/customize/form-templates'>Aanpassen / Sjablonen</a>."
     admin_sidebar_enabled_groups: "Schakel zijbalknavigatie in voor de beheerinterface voor de opgegeven groepen, die de beheernavigatieknoppen op het hoogste niveau vervangt."

@@ -2032,6 +2032,7 @@ sr:
             save: "Sačuvaj"
             name: "Ime foruma"
             description: "Opis"
+            invalid_applies_to: "Potrebno"
             topic: "teme"
             post: "poruke"
       plugins:

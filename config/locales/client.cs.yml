@@ -5120,6 +5120,7 @@ cs:
             save: "Uložit"
             name: "Jméno"
             description: "Popis"
+            invalid_applies_to: "Nezbytnosti"
             topic: "témata"
             post: "příspěvky"
             chat_message: "zprávy v chatu"

@@ -4042,6 +4042,7 @@ vi:
             save: "Lưu lại"
             name: "Tên"
             description: "Mô tả"
+            invalid_applies_to: "Bắt buộc"
             topic: "các chủ đề"
             post: "bài viết"
       plugins:

@@ -2326,7 +2326,6 @@ ja:
     experimental_topics_filter: "実験的: /filter で実験的なトピックフィルターのルートを有効にします"
     enable_experimental_lightbox: "実験的: デフォルトの画像ライトボックスを改良されたデザインに置き換えます。"
     enable_experimental_bookmark_redesign_groups: "実験的: 投稿のブックマークのクイックアクセスメニューと新たに改良されたモーダルを表示します"
-    glimmer_header_mode: "新しい 'glimmer' ヘッダーの実装が使用されるかどうかを制御します。デフォルトは 'auto' で、すべてのテーマとプラグインの準備が整うと自動的に有効になります。https://meta.discourse.org/t/296544"
     experimental_glimmer_topic_list_groups: "実験的: 新しい 'glimmer' トピックリストの実装を有効にします。この実装は開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
     experimental_form_templates: "実験的: フォームのテンプレート機能を有効にします。<b>有効にした後</b>は、<a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a> でテンプレートを管理します。"
     admin_sidebar_enabled_groups: "指定したグループの管理者 UI のサイドバーナビゲーションを有効にします。これは、トップレベル管理者ナビゲーションボタンを置き換えます。"

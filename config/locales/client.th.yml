@@ -2695,6 +2695,7 @@ th:
             save: "บันทึก"
             name: "ชื่อ"
             description: "รายละเอียด"
+            invalid_applies_to: "ต้องการ"
             topic: "หัวข้อ"
             post: "โพสต์"
       plugins:

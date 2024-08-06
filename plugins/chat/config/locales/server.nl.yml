@@ -17,7 +17,6 @@ nl:
     chat_allowed_messages_for_other_trust_levels: "Aantal berichten dat gebruikers met vertrouwensniveau 1-4 binnen 30 seconden mogen sturen. Stel dit in op '0' om de limiet uit te schakelen."
     chat_silence_user_sensitivity: "De waarschijnlijkheid dat een in een chat gemarkeerde gebruiker automatisch wordt gedempt."
     chat_auto_silence_from_flags_duration: "Het aantal minuten dat gebruikers worden gedempt wanneer ze automatisch worden gedempt vanwege gemarkeerde chatberichten."
-    chat_default_channel_id: "Het chatkanaal dat standaard wordt geopend wanneer een gebruiker geen ongelezen berichten of vermeldingen in andere kanalen heeft."
     chat_duplicate_message_sensitivity: "De waarschijnlijkheid dat een dubbel bericht van dezelfde afzender in korte tijd wordt geblokkeerd. Decimaal getal tussen 0 en 1,0, waarbij 1,0 de hoogste instelling is (blokkeert vaker berichten in een kortere tijd). Stel in op '0' om dubbele berichten toe te staan."
     chat_minimum_message_length: "Minimumaantal tekens voor een chatbericht."
     chat_allow_uploads: "Sta uploads toe in openbare chatkanalen en kanalen voor directe berichten."
@@ -31,7 +30,6 @@ nl:
     chat_editing_grace_period: "Gedurende (n) seconden na het verzenden van een chat wordt bij bewerking de tag (bewerkte) niet weergegeven bij het chatbericht."
     chat_editing_grace_period_max_diff_low_trust: "Maximale aantal toegestane tekenwijzigingen in wachtperiode voor chatbewerking; bij meer wijzigingen wordt de tag (bewerkt) weergegeven naast het chatbericht (vertrouwensniveau 0 en 1)"
     chat_editing_grace_period_max_diff_high_trust: "Maximale aantal toegestane tekenwijzigingen in wachtperiode voor chatbewerking; bij meer wijzigingen wordt de tag (bewerkt) weergegeven naast het chatbericht (vertrouwensniveau 2 en hoger)"
-    chat_preferred_mobile_index: "Voorkeurstabblad bij het laden van /chat op mobiel."
     errors:
       chat_default_channel: "Het standaard chatkanaal moet een openbaar kanaal zijn."
       direct_message_enabled_groups_invalid: "Je moet ten minste één groep opgeven voor deze instelling. Als je niet wilt dat iemand behalve medewerkers directe berichten stuurt, kies dan de medewerkersgroep."

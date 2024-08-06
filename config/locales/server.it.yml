@@ -2400,7 +2400,6 @@ it:
     experimental_topics_filter: "SPERIMENTALE: abilita il percorso del filtro degli argomenti sperimentali in /filter"
     enable_experimental_lightbox: "SPERIMENTALE: sostituisci la lightbox dell'immagine predefinita con il design rinnovato."
     enable_experimental_bookmark_redesign_groups: "SPERIMENTALE: mostra un menu di accesso rapido per i segnalibri sui messaggi e una nuova finestra di dialogo riprogettata"
-    glimmer_header_mode: "Controlla se è in uso la nuova implementazione dell'intestazione \"glimmer\". L'impostazione predefinita è \"auto\" e verrà abilitata automaticamente una volta che tutti i tuoi temi e plugin saranno pronti. https://meta.discourse.org/t/296544"
     experimental_glimmer_topic_list_groups: "SPERIMENTALE: Abilita l'implementazione del nuovo elenco argomenti \"glimmer\". Questa implementazione è ancora in corso di sviluppo e non è destinata alla fase di produzione. Non sviluppare temi o plugin per questa implementazione fino a quando non sarà finalizzata e annunciata."
     experimental_form_templates: "SPERIMENTALE: abilita la funzionalità dei modelli di modulo. <b>Dopo l'abilitazione,</b> gestisci i modelli in <a href='%{base_path}/admin/customize/form-templates'>Personalizza / Modelli</a>."
     admin_sidebar_enabled_groups: "Abilita la navigazione della barra laterale dell'interfaccia di amministrazione per i gruppi specificati. Sostituisce i pulsanti di navigazione degli amministratori di livello superiore."

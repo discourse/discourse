@@ -5485,6 +5485,7 @@ pl_PL:
             save: "Zapisz"
             name: "Nazwa"
             description: "Opis"
+            invalid_applies_to: "Wymagane"
             topic: "tematy"
             post: "wpisy"
             chat_message: "wiadomości czatu"

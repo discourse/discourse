@@ -17,7 +17,6 @@ it:
     chat_allowed_messages_for_other_trust_levels: "Numero di messaggi che gli utenti con livello di attendibilità 1-4 possono inviare in 30 secondi. Imposta su '0' per disabilitare il limite."
     chat_silence_user_sensitivity: "La probabilità che un utente segnalato in chat venga automaticamente silenziato."
     chat_auto_silence_from_flags_duration: "Numero di minuti per i quali gli utenti verranno silenziati automaticamente a causa di messaggi di chat segnalati."
-    chat_default_channel_id: "Il canale di chat che verrà aperto per impostazione predefinita quando un utente non ha messaggi non letti o menzioni in altri canali."
     chat_duplicate_message_sensitivity: "La probabilità che un messaggio duplicato dello stesso mittente venga bloccato in breve tempo. Numero decimale compreso tra 0 e 1,0, dove 1,0 è l'impostazione più alta (blocca i messaggi più frequentemente in un lasso di tempo più breve). Imposta su `0` per consentire messaggi duplicati."
     chat_minimum_message_length: "Numero minimo di caratteri per un messaggio di chat."
     chat_allow_uploads: "Consenti caricamenti nei canali di chat pubblici e nei canali di messaggistica diretta."
@@ -31,7 +30,6 @@ it:
     chat_editing_grace_period: "Per (n) secondi dopo l'invio di una chat, la modifica non visualizzerà l'etichetta (modificato) accanto al messaggio di chat."
     chat_editing_grace_period_max_diff_low_trust: "Numero massimo di modifiche ai caratteri consentite nel periodo di grazia per la modifica della chat, se ne vengono modificate di più, visualizza l'etichetta (modificato) accanto al messaggio di chat (livello di attendibilità 0 e 1)."
     chat_editing_grace_period_max_diff_high_trust: "Numero massimo di modifiche ai caratteri consentite nel periodo di grazia per la modifica della chat, se ne vengono modificate di più, visualizza l'etichetta (modificato) accanto al messaggio di chat (livello di attendibilità 2 e superiori)."
-    chat_preferred_mobile_index: "Scheda preferita per il caricamento di /chat su dispositivo mobile."
     errors:
       chat_default_channel: "Il canale di chat predefinito deve essere un canale pubblico."
       direct_message_enabled_groups_invalid: "Devi specificare almeno un gruppo per questa impostazione. Se non vuoi che nessuno al di fuori dello staff possa inviare messaggi diretti, scegli il gruppo dello staff."

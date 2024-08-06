@@ -16,7 +16,6 @@ sv:
     chat_allowed_messages_for_other_trust_levels: "Antal meddelanden som användare med förtroendenivå 1-4 får skicka inom 30 sekunder. Ange '0' för att inaktivera gränsen."
     chat_silence_user_sensitivity: "Sannolikheten för att en användare som flaggas i chatten automatiskt tystas."
     chat_auto_silence_from_flags_duration: "Antal minuter som användarna tystas i när de automatiskt tystas på grund av markerade chattmeddelanden."
-    chat_default_channel_id: "Chattkanalen som öppnas som standard när en användare inte har olästa meddelanden eller omnämnanden i andra kanaler."
     chat_duplicate_message_sensitivity: "Sannolikheten att ett duplicerat meddelande från samma avsändare blockeras inom en kort tidsperiod. Decimaltal mellan 0 och 1,0, där 1,0 är den högsta inställningen (blockerar meddelanden oftare på kortare tid). Ställ in `0` för att tillåta dubbletter av meddelanden."
     chat_minimum_message_length: "Minsta antal tecken för ett chattmeddelande."
     chat_allow_uploads: "Tillåt uppladdningar i offentliga chattkanaler och direktmeddelandekanaler."

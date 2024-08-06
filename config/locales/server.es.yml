@@ -2400,7 +2400,6 @@ es:
     experimental_topics_filter: "EXPERIMENTAL: Activa la ruta del filtro de temas experimentales en /filter"
     enable_experimental_lightbox: "EXPERIMENTAL: Sustituye el lightbox de imágenes por defecto por el diseño renovado."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Mostrar un menú de acceso rápido a marcadores en las entradas y un nuevo modal rediseñado"
-    glimmer_header_mode: "Controla si se utiliza la nueva implementación del encabezado «glimmer». Por defecto, es «auto», que se activará automáticamente cuando todos tus temas y plugins estén listos. https://meta.discourse.org/t/296544"
     experimental_glimmer_topic_list_groups: "EXPERIMENTAL: Activa la nueva implementación de la lista de temas «glimmer». Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
     experimental_form_templates: "EXPERIMENTAL: Activa la función de plantillas de formulario. <b>Una vez activada,</b> gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
     admin_sidebar_enabled_groups: "Activa la navegación por la barra lateral de la interfaz del administrador para los grupos especificados, que sustituye a los botones de navegación del administrador de nivel superior."
@@ -4879,6 +4878,7 @@ es:
               private:
                 label: "Privada"
           invite_only:
+            label: "Registro"
             choices:
               invite_only:
                 label: "Solo por invitación"

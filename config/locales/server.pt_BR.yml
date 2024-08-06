@@ -2401,7 +2401,6 @@ pt_BR:
     experimental_topics_filter: "EXPERIMENTAL: ative a rota do filtro de tópicos experimentais em /filter"
     enable_experimental_lightbox: "EXPERIMENTAL: substitua a lightbox da imagem padrão pelo design renovado."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Exibir um menu de acesso rápido para os favoritos em postagens e um novo modal reprojetado"
-    glimmer_header_mode: "Controle se a nova implementação de cabeçalho \"glimmer\" será usada. O padrão é \"auto\", que será habilitado automaticamente quando seus plugins e temas estiverem prontos. https://meta.discourse.org/t/296544"
     experimental_glimmer_topic_list_groups: "EXPERIMENTAL: Ative a implementação da nova lista de tópicos \"glimme\". Esta implementação ainda está em desenvolvimento e não se destina a uso para fins de produção. Não a use para desenvolver temas/plugins até que seja finalizada e anunciada."
     experimental_form_templates: "EXPERIMENTAL: ative o recurso de modelo de formulário. <b>Quando ativado,</b> gerencie os modelos em <a href='%{base_path}/admin/customize/form-templates'>Personalizar/Modelos</a>."
     admin_sidebar_enabled_groups: "Ative a navegação pela barra lateral da IU da administração para grupos específicos, o que substitui os botões de navegação da administração superiores."

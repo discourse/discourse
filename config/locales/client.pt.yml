@@ -3909,6 +3909,7 @@ pt:
             save: "Guardar"
             name: "Nome"
             description: "Descrição"
+            invalid_applies_to: "Necessário"
             topic: "tópicos"
             post: "mensagens"
       plugins:

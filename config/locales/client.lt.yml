@@ -3952,6 +3952,7 @@ lt:
             save: "Išsaugoti"
             name: "Vardas"
             description: "Aprašymas"
+            invalid_applies_to: "Privalomi"
             topic: "temos"
             post: "žinutės"
       plugins:
