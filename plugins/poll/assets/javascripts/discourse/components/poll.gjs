@@ -12,7 +12,11 @@ import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import PollBreakdownModal from "../components/modal/poll-breakdown";
-import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
+import {
+  MULTIPLE_POLL_TYPE,
+  PIE_CHART_TYPE,
+  REGULAR_POLL_TYPE,
+} from "../components/modal/poll-ui-builder";
 import PollButtonsDropdown from "../components/poll-buttons-dropdown";
 import PollInfo from "../components/poll-info";
 import PollOptions from "../components/poll-options";
@@ -58,6 +62,7 @@ export default class PollComponent extends Component {
     this.showingResults ||
     (this.topicArchived && !this.staffOnly) ||
     (this.closed && !this.staffOnly);
+  @tracked showAbsolute = false;
   post = this.args.attrs.post;
   isMe =
     this.currentUser && this.args.attrs.post.user_id === this.currentUser.id;
@@ -391,6 +396,18 @@ export default class PollComponent extends Component {
     return htmlSafe(I18n.t("poll.average_rating", { average }));
   }
 
+  get canDisplayResultAs() {
+    console.log(this.poll);
+    if (
+      !this.showResults ||
+      this.poll.chart_type === PIE_CHART_TYPE ||
+      ![REGULAR_POLL_TYPE, MULTIPLE_POLL_TYPE].includes(this.poll.type)
+    ) {
+      return [];
+    }
+    return this.showAbsolute ? ["showPercentage"] : ["showAbsolute"];
+  }
+
   @action
   updatedVoters() {
     this.preloadedVoters = this.args.preloadedVoters;
@@ -588,6 +605,11 @@ export default class PollComponent extends Component {
         }
       });
   }
+
+  @action
+  toggleAbsolute() {
+    this.showAbsolute = !this.showAbsolute;
+  }
   <template>
     <div
       {{didUpdate this.updatedVoters @preloadedVoters}}
@@ -617,6 +639,7 @@ export default class PollComponent extends Component {
                 @votersCount={{this.poll.voters}}
                 @fetchVoters={{this.fetchVoters}}
                 @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
+                @showAbsolute={{this.showAbsolute}}
               />
             {{/if}}
           {{/if}}
@@ -702,6 +725,7 @@ export default class PollComponent extends Component {
         @groupableUserFields={{this.groupableUserFields}}
         @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
         @dropDownClick={{this.dropDownClick}}
+        @canDisplayResultAs={{this.canDisplayResultAs}}
       />
     </div>
   </template>

@@ -35,6 +35,20 @@ const buttonOptionsMap = {
     icon: "lock",
     action: "toggleStatus",
   },
+  showAbsolute: {
+    className: "btn-default toggle-absolute",
+    label: "poll.show-absolute.label",
+    title: "poll.show-absolute.title",
+    icon: "info",
+    action: "toggleAbsolute",
+  },
+  showPercentage: {
+    className: "btn-default toggle-absolute",
+    label: "poll.show-percentage.label",
+    title: "poll.show-percentage.title",
+    icon: "info",
+    action: "toggleAbsolute",
+  },
 };
 
 export default class PollButtonsDropdownComponent extends Component {
@@ -68,7 +82,16 @@ export default class PollButtonsDropdownComponent extends Component {
       topicArchived,
       groupableUserFields,
       isAutomaticallyClosed,
+      canDisplayResultAs,
     } = this.args;
+
+    if (canDisplayResultAs) {
+      for (const method of canDisplayResultAs) {
+        const option = { ...buttonOptionsMap[method] };
+        option.id = option.action;
+        contents.push(option);
+      }
+    }
 
     if (groupableUserFields.length && voters > 0) {
       const option = { ...buttonOptionsMap.showBreakdown };
