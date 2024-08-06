@@ -2,13 +2,21 @@ import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import Sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
+import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
+import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Software update refresh", function (needs) {
   needs.user();
+
+  needs.pretender((server, helper) => {
+    server.get("/hot.json", () => {
+      return helper.response(cloneJSON(discoveryFixtures["/latest.json"]));
+    });
+  });
 
   test("Refreshes page on next navigation", async function (assert) {
     const redirectStub = Sinon.stub(DiscourseURL, "redirectTo");
