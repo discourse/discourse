@@ -61,11 +61,15 @@ export default class ActivateAccountController extends Controller {
       );
       if (response.success) {
         this.accountActivated = true;
-        this.needsApproval = response.needs_approval;
-        if (!response.needs_approval) {
-          setTimeout(() => {
-            window.location.href = "/";
-          }, 2000);
+        if (response.redirect_to) {
+          window.location.href = response.redirect_to;
+        } else {
+          this.needsApproval = response.needs_approval;
+          if (!response.needs_approval) {
+            setTimeout(() => {
+              window.location.href = "/";
+            }, 2000);
+          }
         }
       }
     } catch (error) {

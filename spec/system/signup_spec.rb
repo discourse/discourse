@@ -3,6 +3,8 @@
 shared_examples "signup scenarios" do
   let(:login_modal) { PageObjects::Modals::Login.new }
   let(:signup_modal) { PageObjects::Modals::Signup.new }
+  let(:invite) { Fabricate(:invite, email: "johndoe@example.com") }
+  let(:topic) { Fabricate(:topic, title: "Super cool topic") }
 
   context "when anyone can create an account" do
     before { Jobs.run_immediately! }
@@ -38,6 +40,32 @@ shared_examples "signup scenarios" do
       find(".perform-activation .continue-button").click
 
       expect(page).to have_current_path("/")
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+    end
+
+    it "redirects to the topic the user was invited to after activating account" do
+      TopicInvite.create!(invite: invite, topic: topic)
+
+      visit "/invites/#{invite.invite_key}"
+
+      find("#new-account-username").fill_in(with: "john")
+      find("#new-account-password").fill_in(with: "supersecurepassword")
+
+      find(".username-input").has_css?("#username-validation.good")
+      find(".password-input").has_css?("#password-validation.good")
+
+      find(".invitation-cta__accept.btn-primary").click
+      expect(page).to have_css(".invite-success")
+
+      mail = ActionMailer::Base.deliveries.first
+      expect(mail.to).to contain_exactly("johndoe@example.com")
+      activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
+
+      visit activation_link
+
+      find("#activate-account-button").click
+
+      expect(page).to have_current_path("/t/#{topic.slug}/#{topic.id}")
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
 

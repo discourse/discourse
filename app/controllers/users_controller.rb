@@ -1134,12 +1134,12 @@ class UsersController < ApplicationController
         end
 
         if Wizard.user_requires_completion?(@user)
-          return redirect_to(wizard_path)
+          @redirect_to = wizard_path
         elsif destination_url.present?
-          return redirect_to(destination_url, allow_other_host: true)
+          @redirect_to = destination_url
         elsif SiteSetting.enable_discourse_connect_provider &&
               payload = cookies.delete(:sso_payload)
-          return redirect_to(session_sso_provider_url + "?" + payload)
+          @redirect_to = session_sso_provider_url + "?" + payload
         end
       else
         @needs_approval = true
@@ -1148,7 +1148,8 @@ class UsersController < ApplicationController
       return render_json_error(I18n.t("activation.already_done"))
     end
 
-    render json: success_json.merge(needs_approval: @needs_approval || false)
+    render json:
+             success_json.merge(redirect_to: @redirect_to, needs_approval: @needs_approval || false)
   end
 
   def update_activation_email
