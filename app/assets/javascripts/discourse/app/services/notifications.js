@@ -20,7 +20,8 @@ export default class NotificationsService extends Service {
     clearTimeout(this.#dndTimer);
 
     if (this.currentUser?.do_not_disturb_until) {
-      const remainingMs = this.currentUser.do_not_disturb_until - Date.now();
+      const remainingMs =
+        new Date(this.currentUser.do_not_disturb_until) - Date.now();
 
       if (remainingMs <= 0) {
         this.isInDoNotDisturb = false;
