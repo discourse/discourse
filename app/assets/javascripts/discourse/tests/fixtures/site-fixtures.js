@@ -41,6 +41,7 @@ export default {
         "posted",
         "search",
         "bookmarks",
+        "hot",
       ],
       periods: ["all", "yearly", "quarterly", "monthly", "weekly", "daily"],
       top_menu_items: [
