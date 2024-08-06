@@ -29,9 +29,8 @@
         {{this.model.name}}
       </span>
       <LinkTo
-        @route="adminSiteText.edit"
-        @models={{array (concat this.textCustomizationPrefix "name")}}
-        @query={{hash locale="en"}}
+        @route="adminSiteText"
+        @query={{hash q=(concat this.textCustomizationPrefix "name")}}
       >
         {{d-icon "pencil-alt"}}
       </LinkTo>
@@ -113,9 +112,8 @@
           {{this.model.description}}
         </span>
         <LinkTo
-          @route="adminSiteText.edit"
-          @models={{array (concat this.textCustomizationPrefix "description")}}
-          @query={{hash locale="en"}}
+          @route="adminSiteText"
+          @query={{hash q=(concat this.textCustomizationPrefix "description")}}
         >
           {{d-icon "pencil-alt"}}
         </LinkTo>
@@ -141,11 +139,10 @@
         </span>
 
         <LinkTo
-          @route="adminSiteText.edit"
-          @models={{array
-            (concat this.textCustomizationPrefix "long_description")
+          @route="adminSiteText"
+          @query={{hash
+            q=(concat this.textCustomizationPrefix "long_description")
           }}
-          @query={{hash locale="en"}}
         >
           {{d-icon "pencil-alt"}}
         </LinkTo>
