@@ -23,8 +23,6 @@ export default class SidebarSection extends Component {
   @service router;
   @service sidebarState;
 
-  @tracked activeExpanded = false;
-
   sidebarSectionContentId = getSidebarSectionContentId(this.args.sectionName);
   collapsedSidebarSectionKey = getCollapsedSidebarSectionKey(
     this.args.sectionName
@@ -64,32 +62,42 @@ export default class SidebarSection extends Component {
     return !!this.args.activeLink;
   }
 
+  get activeExpanded() {
+    return this.sidebarState.activeExpandedSections.has(this.args.sectionName);
+  }
+
+  set activeExpanded(value) {
+    if (value) {
+      this.sidebarState.activeExpandedSections.add(this.args.sectionName);
+    } else {
+      this.sidebarState.activeExpandedSections.delete(this.args.sectionName);
+    }
+  }
+
   @bind
   setExpandedState() {
     if (!isEmpty(this.sidebarState.filter)) {
       return;
     }
 
-    if (this.expandIfActive()) {
-      return;
-    }
-
+    // initialize the collapsed/expanded state of the section
     if (this.isCollapsed) {
       this.sidebarState.collapseSection(this.args.sectionName);
     } else {
       this.sidebarState.expandSection(this.args.sectionName);
     }
+
+    // override the expanded state if the section is active
+    this.expandIfActive();
   }
 
   @bind
   expandIfActive(transition) {
     if (transition?.isAborted) {
-      return this.activeExpanded;
+      return;
     }
 
     this.activeExpanded = this.args.expandWhenActive && this.isActive;
-
-    return this.activeExpanded;
   }
 
   get displaySectionContent() {

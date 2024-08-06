@@ -99,7 +99,7 @@ function prepareSidebarSectionClass(Section, routerService) {
 
           // TODO detect active links using the href field
 
-          const queryParams = link.queryParams || {};
+          const queryParams = link.query || {};
           let models;
 
           if (link.model) {
