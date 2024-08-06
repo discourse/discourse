@@ -15,6 +15,7 @@ import { cloneJSON } from "discourse-common/lib/object";
 acceptance("Topic Discovery", function (needs) {
   needs.settings({
     show_pinned_excerpt_desktop: true,
+    top_menu: "latest|top|categories",
   });
 
   test("Visit Discovery Pages", async function (assert) {
