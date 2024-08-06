@@ -83,6 +83,7 @@
             @showTitle={{false}}
             @name="icon"
             @onSet={{this.onSetIcon}}
+            @format="small"
             as |field|
           >
             <field.Icon />
@@ -248,44 +249,46 @@
       </field.Menu>
     </form.Field>
 
-    <form.Field
-      @title={{i18n "admin.badges.allow_title_label"}}
-      @showTitle={{false}}
-      @name="allow_title"
-      as |field|
-    >
-      <field.Checkbox>{{i18n "admin.badges.allow_title"}}</field.Checkbox>
-    </form.Field>
+    <form.CheckboxGroup as |group|>
+      <group.Field
+        @title={{i18n "admin.badges.allow_title"}}
+        @showTitle={{false}}
+        @name="allow_title"
+        as |field|
+      >
+        <field.Checkbox />
+      </group.Field>
 
-    <form.Field
-      @title={{i18n "admin.badges.multiple_grant_label"}}
-      @showTitle={{false}}
-      @name="multiple_grant"
-      @disabled={{this.readOnly}}
-      as |field|
-    >
-      <field.Checkbox>{{i18n "admin.badges.multiple_grant"}}</field.Checkbox>
-    </form.Field>
+      <group.Field
+        @title={{i18n "admin.badges.multiple_grant"}}
+        @showTitle={{false}}
+        @name="multiple_grant"
+        @disabled={{this.readOnly}}
+        as |field|
+      >
+        <field.Checkbox />
+      </group.Field>
 
-    <form.Field
-      @title={{i18n "admin.badges.listable_label"}}
-      @showTitle={{false}}
-      @name="listable"
-      @disabled={{this.readOnly}}
-      as |field|
-    >
-      <field.Checkbox>{{i18n "admin.badges.listable"}}</field.Checkbox>
-    </form.Field>
+      <group.Field
+        @title={{i18n "admin.badges.listable"}}
+        @showTitle={{false}}
+        @name="listable"
+        @disabled={{this.readOnly}}
+        as |field|
+      >
+        <field.Checkbox />
+      </group.Field>
 
-    <form.Field
-      @title={{i18n "admin.badges.show_posts_label"}}
-      @showTitle={{false}}
-      @name="show_posts"
-      @disabled={{this.readOnly}}
-      as |field|
-    >
-      <field.Checkbox>{{i18n "admin.badges.show_posts"}}</field.Checkbox>
-    </form.Field>
+      <group.Field
+        @title={{i18n "admin.badges.show_posts"}}
+        @showTitle={{false}}
+        @name="show_posts"
+        @disabled={{this.readOnly}}
+        as |field|
+      >
+        <field.Checkbox />
+      </group.Field>
+    </form.CheckboxGroup>
   </form.Section>
 
   <PluginOutlet
