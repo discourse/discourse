@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class PostActionType < ActiveRecord::Base
-  POST_ACTION_TYPE_ALL_FLAGS_KEY = "post_action_type_all_flags"
-  POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY = "post_action_public_type_ids"
   ATTRIBUTE_NAMES = %i[
     id
     name
@@ -49,14 +47,14 @@ class PostActionType < ActiveRecord::Base
     def expire_cache
       Discourse.redis.keys("post_action_types_*").each { |key| Discourse.redis.del(key) }
       Discourse.redis.keys("post_action_flag_types_*").each { |key| Discourse.redis.del(key) }
-      Discourse.cache.delete(POST_ACTION_TYPE_ALL_FLAGS_KEY)
-      Discourse.cache.delete(POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY)
     end
 
     def reload_types
       @flag_settings = FlagSettings.new
       PostActionType.new.expire_cache
       PostActionType.expire_cache
+      @all_flags && @all_flags[RailsMultisite::ConnectionManagement.current_db] = nil
+      @public_type_ids && @public_type_ids[RailsMultisite::ConnectionManagement.current_db] = nil
       ReviewableScore.reload_types
     end
 
@@ -65,15 +63,14 @@ class PostActionType < ActiveRecord::Base
     end
 
     def all_flags
-      Discourse
-        .cache
-        .fetch(PostActionType::POST_ACTION_TYPE_ALL_FLAGS_KEY) do
-          Flag
-            .unscoped
-            .order(:position)
-            .pluck(ATTRIBUTE_NAMES)
-            .map { |attributes| ATTRIBUTE_NAMES.zip(attributes).to_h }
-        end
+      @all_flags ||= {}
+      @all_flags[RailsMultisite::ConnectionManagement.current_db] ||= begin
+        Flag
+          .unscoped
+          .order(:position)
+          .pluck(ATTRIBUTE_NAMES)
+          .map { |attributes| ATTRIBUTE_NAMES.zip(attributes).to_h }
+      end
     end
 
     def auto_action_flag_types
@@ -86,9 +83,8 @@ class PostActionType < ActiveRecord::Base
     end
 
     def public_type_ids
-      Discourse
-        .cache
-        .fetch(PostActionType::POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY) { public_types.values }
+      @public_type_ids ||= {}
+      @public_type_ids[RailsMultisite::ConnectionManagement.current_db] ||= public_types.values
     end
 
     def flag_types_without_additional_message
