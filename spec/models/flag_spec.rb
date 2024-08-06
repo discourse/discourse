@@ -3,8 +3,6 @@
 RSpec.describe Flag, type: :model do
   after(:each) { Flag.reset_flag_settings! }
 
-  use_redis_snapshotting
-
   it "has id lower than 1000 for system flags" do
     flag = Fabricate(:flag, id: 1)
     expect(flag.system?).to be true
