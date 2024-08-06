@@ -47,6 +47,14 @@ module PageObjects
         all(".admin-flag-item__name").map(&:text) == flags
       end
 
+      def has_add_flag_button_enabled?
+        has_css?(".admin-flags__header-add-flag:not([disabled])")
+      end
+
+      def has_add_flag_button_disabled?
+        has_no_css?(".admin-flags__header-add-flag[disabled]")
+      end
+
       def has_flag?(flag)
         has_css?(".admin-flag-item.#{flag}")
       end

@@ -9,7 +9,10 @@ describe "Admin Flags Page", type: :system do
   let(:admin_flag_form_page) { PageObjects::Pages::AdminFlagForm.new }
   let(:flag_modal) { PageObjects::Modals::Flag.new }
 
-  before { sign_in(admin) }
+  before do
+    sign_in(admin)
+    SiteSetting.custom_flags_limit = 1
+  end
 
   it "allows admin to disable, change order, create, update and delete flags" do
     # disable
@@ -69,7 +72,11 @@ describe "Admin Flags Page", type: :system do
       "Something Else",
     )
 
-    admin_flags_page.visit.click_add_flag
+    admin_flags_page.visit
+
+    expect(admin_flags_page).to have_add_flag_button_enabled
+
+    admin_flags_page.click_add_flag
     admin_flag_form_page
       .fill_in_name("Vulgar")
       .fill_in_description("New flag description")
@@ -86,6 +93,8 @@ describe "Admin Flags Page", type: :system do
       "Something Else",
       "Vulgar",
     )
+
+    expect(admin_flags_page).to have_add_flag_button_disabled
 
     topic_page.visit_topic(post.topic).open_flag_topic_modal
 
@@ -125,6 +134,8 @@ describe "Admin Flags Page", type: :system do
     admin_flags_page.visit.click_delete_flag("tasteless").confirm_delete
 
     expect(admin_flags_page).to have_no_flag("tasteless")
+
+    expect(admin_flags_page).to have_add_flag_button_enabled
 
     topic_page.visit_topic(post.topic).open_flag_topic_modal
 

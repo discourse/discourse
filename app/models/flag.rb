@@ -10,6 +10,7 @@ class Flag < ActiveRecord::Base
   MAX_DESCRIPTION_LENGTH = 1000
   scope :enabled, -> { where(enabled: true) }
   scope :system, -> { where("id < 1000") }
+  scope :custom, -> { where("id >= 1000") }
 
   before_save :set_position
   before_save :set_name_key
