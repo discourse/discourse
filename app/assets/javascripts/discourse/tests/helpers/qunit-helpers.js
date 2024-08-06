@@ -53,6 +53,7 @@ import PreloadStore from "discourse/lib/preload-store";
 import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
+import { resetLogSearchLinkClickedCallbacks } from "discourse/lib/search";
 import { clearAdditionalAdminSidebarSectionLinks } from "discourse/lib/sidebar/admin-sidebar";
 import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
@@ -236,6 +237,7 @@ export function testCleanup(container, app) {
   clearExtraHeaderIcons();
   clearExtraHeaderButtons();
   resetOnKeyUpCallbacks();
+  resetLogSearchLinkClickedCallbacks();
   resetItemSelectCallbacks();
   resetUserMenuTabs();
   resetLinkLookup();

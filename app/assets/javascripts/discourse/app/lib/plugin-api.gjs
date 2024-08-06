@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.35.0";
+export const PLUGIN_API_VERSION = "1.36.0";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -83,7 +83,10 @@ import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
-import { addSearchResultsCallback } from "discourse/lib/search";
+import {
+  addLogSearchLinkClickedCallbacks,
+  addSearchResultsCallback,
+} from "discourse/lib/search";
 import Sharing from "discourse/lib/sharing";
 import { addAdminSidebarSectionLink } from "discourse/lib/sidebar/admin-sidebar";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
@@ -2311,6 +2314,22 @@ class PluginApi {
    */
   addSearchResultsCallback(callback) {
     addSearchResultsCallback(callback);
+  }
+
+  /**
+   * Add a callback to search before logging the search record. Return false to prevent logging.
+   *
+   * ```
+   * api.addLogSearchLinkClickedCallbacks((params) => {
+   *  if (params.searchResultId === "foo") {
+   *   return false;
+   *  }
+   * });
+   * ```
+   *
+   */
+  addLogSearchLinkClickedCallbacks(callback) {
+    addLogSearchLinkClickedCallbacks(callback);
   }
 
   /**
