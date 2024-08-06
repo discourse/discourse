@@ -459,7 +459,6 @@ export default class PollComponent extends Component {
   }
 
   get canDisplayResultAs() {
-    console.log(this.poll);
     if (
       !this.showResults ||
       this.poll.chart_type === PIE_CHART_TYPE ||

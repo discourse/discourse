@@ -3,6 +3,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 const TWO_OPTIONS = [
   { id: "1ddc47be0d2315b9711ee8526ca9d83f", html: "This", votes: 5, rank: 0 },
@@ -155,6 +156,63 @@ module("Poll | Component | poll-results-standard", function (hooks) {
       "a"
     );
     assert.strictEqual(percentages[4].innerText, "8%");
+    assert.strictEqual(
+      queryAll(".option")[4].querySelectorAll("span")[1].innerText,
+      "b"
+    );
+  });
+
+  test("options in ascending order, showing absolute vote number", async function (assert) {
+    this.setProperties({
+      options: FIVE_OPTIONS,
+      pollName: "Five Multi Option Poll",
+      pollType: "multiple",
+      postId: 123,
+      vote: ["1ddc47be0d2315b9711ee8526ca9d83f"],
+      voters: PRELOADEDVOTERS,
+      votersCount: 12,
+      fetchVoters: () => {},
+      showAbsolute: true,
+    });
+
+    await render(hbs`<PollResultsStandard
+      @options={{this.options}}
+      @pollName={{this.pollName}}
+      @pollType={{this.pollType}}
+      @postId={{this.postId}}
+      @vote={{this.vote}}
+      @voters={{this.voters}}
+      @votersCount={{this.votersCount}}
+      @fetchVoters={{this.fetchVoters}}
+      @showAbsolute={{this.showAbsolute}}
+    />`);
+
+    let percentages = queryAll(".option .absolute");
+    assert.strictEqual(
+      percentages[0].innerText,
+      I18n.t("poll.votes", { count: 5 })
+    );
+    assert.strictEqual(
+      percentages[1].innerText,
+      I18n.t("poll.votes", { count: 4 })
+    );
+    assert.strictEqual(
+      percentages[2].innerText,
+      I18n.t("poll.votes", { count: 2 })
+    );
+    assert.strictEqual(
+      percentages[3].innerText,
+      I18n.t("poll.votes", { count: 1 })
+    );
+
+    assert.strictEqual(
+      queryAll(".option")[3].querySelectorAll("span")[1].innerText,
+      "a"
+    );
+    assert.strictEqual(
+      percentages[4].innerText,
+      I18n.t("poll.votes", { count: 1 })
+    );
     assert.strictEqual(
       queryAll(".option")[4].querySelectorAll("span")[1].innerText,
       "b"

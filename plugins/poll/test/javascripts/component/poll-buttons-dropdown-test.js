@@ -46,6 +46,42 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
     );
   });
 
+  test("Renders a show-absolute button when poll is a bar chart", async function (assert) {
+    this.setProperties({
+      closed: false,
+      voters: 2,
+      isStaff: false,
+      isMe: false,
+      topicArchived: false,
+      groupableUserFields: ["stuff"],
+      isAutomaticallyClosed: false,
+      dropDownClick: () => {},
+      canDisplayResultAs: ["showAbsolute"],
+    });
+
+    await render(hbs`<PollButtonsDropdown
+      @closed={{this.closed}}
+      @voters={{this.voters}}
+      @isStaff={{this.isStaff}}
+      @isMe={{this.isMe}}
+      @topicArchived={{this.topicArchived}}
+      @groupableUserFields={{this.groupableUserFields}}
+      @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
+      @dropDownClick={{this.dropDownClick}}
+      @canDisplayResultAs={{this.canDisplayResultAs}}
+    />`);
+
+    await click(".widget-dropdown-header");
+
+    assert.strictEqual(count("li.dropdown-menu__item"), 2);
+
+    assert.strictEqual(
+      query("li.dropdown-menu__item span").textContent.trim(),
+      I18n.t("poll.show-absolute.label"),
+      "displays the show absolute button"
+    );
+  });
+
   test("Renders a single button when there is only one authorised action", async function (assert) {
     this.setProperties({
       closed: false,

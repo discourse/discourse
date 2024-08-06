@@ -367,7 +367,8 @@ div.poll-outer {
         }
       }
 
-      .percentage, .absolute {
+      .percentage,
+      .absolute {
         float: right;
         color: var(--primary-medium);
         margin-left: 0.25em;
