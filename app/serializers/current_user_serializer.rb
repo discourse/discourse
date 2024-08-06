@@ -12,6 +12,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :read_first_notification?,
              :admin?,
              :notification_channel_position,
+             :do_not_disturb_channel_position,
              :moderator?,
              :staff?,
              :whisperer?,
@@ -319,5 +320,9 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def use_glimmer_topic_list?
     scope.user.in_any_groups?(SiteSetting.experimental_glimmer_topic_list_groups_map)
+  end
+
+  def do_not_disturb_channel_position
+    MessageBus.last_id("/do-not-disturb/#{object.id}")
   end
 end
