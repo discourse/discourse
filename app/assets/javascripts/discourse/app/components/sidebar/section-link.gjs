@@ -114,7 +114,7 @@ export default class SectionLink extends Component {
   }
 
   @bind
-  scrollIntoView(element) {
+  maybeScrollIntoView(element) {
     if (this.args.scrollIntoView) {
       schedule("afterRender", () => {
         element.scrollIntoView({
@@ -127,8 +127,8 @@ export default class SectionLink extends Component {
   <template>
     {{#if this.shouldDisplay}}
       <li
-        {{didInsert this.scrollIntoView}}
-        {{didUpdate this.scrollIntoView @scrollIntoView}}
+        {{didInsert this.maybeScrollIntoView}}
+        {{didUpdate this.maybeScrollIntoView @scrollIntoView}}
         data-list-item-name={{@linkName}}
         class="sidebar-section-link-wrapper"
         ...attributes
