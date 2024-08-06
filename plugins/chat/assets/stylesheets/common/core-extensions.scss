@@ -13,7 +13,6 @@
 
 .user-summary-page .details .controls ul,
 .user-main .details .controls ul {
-  display: flex;
   flex-direction: column;
 
   li:first-child {
@@ -22,6 +21,9 @@
 
   li.user-profile-controls-outlet.chat-button {
     order: -1;
+    &:empty {
+      display: none;
+    }
   }
 }
 
