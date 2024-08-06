@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -19,15 +20,27 @@ import SectionHeader from "./section-header";
 
 export default class SidebarSection extends Component {
   @service keyValueStore;
+  @service router;
   @service sidebarState;
+
+  @tracked activeExpanded = false;
 
   sidebarSectionContentId = getSidebarSectionContentId(this.args.sectionName);
   collapsedSidebarSectionKey = getCollapsedSidebarSectionKey(
     this.args.sectionName
   );
 
+  constructor() {
+    super(...arguments);
+
+    this.router.on("routeDidChange", this, this.expandIfActive);
+  }
+
   willDestroy() {
     super.willDestroy(...arguments);
+
+    this.router.off("routeDidChange", this, this.expandIfActive);
+
     this.args.willDestroy?.();
   }
 
@@ -47,9 +60,17 @@ export default class SidebarSection extends Component {
     );
   }
 
+  get isActive() {
+    return !!this.args.activeLink;
+  }
+
   @bind
   setExpandedState() {
     if (!isEmpty(this.sidebarState.filter)) {
+      return;
+    }
+
+    if (this.expandIfActive()) {
       return;
     }
 
@@ -60,8 +81,23 @@ export default class SidebarSection extends Component {
     }
   }
 
+  @bind
+  expandIfActive(transition) {
+    if (transition?.isAborted) {
+      return this.activeExpanded;
+    }
+
+    this.activeExpanded = this.args.expandWhenActive && this.isActive;
+
+    return this.activeExpanded;
+  }
+
   get displaySectionContent() {
     if (this.args.hideSectionHeader || !isEmpty(this.sidebarState.filter)) {
+      return true;
+    }
+
+    if (this.activeExpanded) {
       return true;
     }
 
@@ -72,6 +108,8 @@ export default class SidebarSection extends Component {
 
   @action
   toggleSectionDisplay(_, event) {
+    this.activeExpanded = false;
+
     if (this.displaySectionContent) {
       this.sidebarState.collapseSection(this.args.sectionName);
     } else {
@@ -134,6 +172,7 @@ export default class SidebarSection extends Component {
               @sidebarSectionContentId={{this.sidebarSectionContentId}}
               @toggleSectionDisplay={{this.toggleSectionDisplay}}
               @isExpanded={{this.displaySectionContent}}
+              @isActive={{this.isActive}}
             >
               {{#if @collapsable}}
                 <span class="sidebar-section-header-caret">
