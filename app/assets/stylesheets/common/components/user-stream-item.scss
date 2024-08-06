@@ -35,6 +35,10 @@
     flex-grow: 1;
   }
 
+  .stream-topic-title {
+    overflow-wrap: anywhere;
+  }
+
   .user-stream-item__metadata {
     align-items: end;
     display: flex;
