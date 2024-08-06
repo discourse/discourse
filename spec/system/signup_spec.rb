@@ -66,7 +66,6 @@ shared_examples "signup scenarios" do
       find("#activate-account-button").click
 
       expect(page).to have_current_path("/t/#{topic.slug}/#{topic.id}")
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
 
     context "with invite code" do

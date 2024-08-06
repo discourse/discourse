@@ -137,7 +137,8 @@ RSpec.describe UsersController do
 
         put "/u/activate-account/#{email_token.token}"
 
-        expect(response).to redirect_to(destination_url)
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["redirect_to"]).to eq(destination_url)
       end
     end
 
@@ -154,7 +155,8 @@ RSpec.describe UsersController do
       it "should redirect to the topic" do
         put "/u/activate-account/#{email_token.token}"
 
-        expect(response).to redirect_to(topic.relative_url)
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["redirect_to"]).to eq(topic.relative_url)
       end
     end
   end
