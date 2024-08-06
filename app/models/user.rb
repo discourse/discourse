@@ -77,7 +77,7 @@ class User < ActiveRecord::Base
           dependent: :destroy
   has_one :invited_user, dependent: :destroy
   has_one :user_notification_schedule, dependent: :destroy
-  has_many :passwords, class_name: "UserPassword", dependent: :destroy
+  has_many :passwords, class_name: "UserPassword", dependent: :destroy, autosave: true
 
   # delete all is faster but bypasses callbacks
   has_many :bookmarks, dependent: :delete_all
@@ -401,7 +401,7 @@ class User < ActiveRecord::Base
   end
 
   def self.max_password_length
-    200
+    UserPassword::MAX_PASSWORD_LENGTH
   end
 
   def self.username_length
@@ -916,7 +916,16 @@ class User < ActiveRecord::Base
 
   def password=(password)
     # special case for passwordless accounts
-    @raw_password = password if password.present?
+    # @raw_password = password if password.present?
+    return if password.blank?
+
+    if (unexpired_password = passwords.find { |p| p.password_expired_at.nil? })
+      unexpired_password.password_expired_at = Time.now.zone
+    end
+
+    # TODO: deprecate passing through salt once User.salt is dropped
+    @salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
+    @raw_password = passwords.build(password:, salt:).password
   end
 
   def password
@@ -959,7 +968,8 @@ class User < ActiveRecord::Base
 
     if confirmed && persisted? && password_algorithm != TARGET_PASSWORD_ALGORITHM
       # Regenerate password_hash with new algorithm and persist
-      salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
+      @salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
+      salt = @salt
       update_columns(
         password_algorithm: TARGET_PASSWORD_ALGORITHM,
         salt: salt,
