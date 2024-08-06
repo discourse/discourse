@@ -28,4 +28,30 @@ RSpec.describe PostActionType do
       end
     end
   end
+
+  describe ".additional_message_types" do
+    before { described_class.stubs(:overridden_by_plugin_or_skipped_db?).returns(overriden) }
+
+    context "when overridden by plugin or skipped DB" do
+      let(:overriden) { true }
+
+      it "returns additional types from flag settings" do
+        expect(described_class.additional_message_types).to eq(
+          described_class.flag_settings.additional_message_types,
+        )
+      end
+    end
+
+    context "when not overriden by plugin or skipped DB" do
+      let(:overriden) { false }
+
+      it "returns all flags" do
+        expect(described_class.additional_message_types).to eq(
+          illegal: 10,
+          notify_moderators: 7,
+          notify_user: 6,
+        )
+      end
+    end
+  end
 end
