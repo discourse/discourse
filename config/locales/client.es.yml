@@ -5053,6 +5053,7 @@ es:
           header: "Acerca de tu sitio"
           general_settings: "Ajustes generales"
           community_name: "Nombre de la comunidad"
+          community_name_placeholder: "Comunidad de ejemplo"
           community_summary: "Resumen comunitario"
           community_description: "Descripción de la comunidad"
           banner_image: "Imagen del banner"
@@ -5060,9 +5061,11 @@ es:
             Se utilizará en tu página Acerca de. Tamaño recomendado: 800x300px. Tipos aceptados: JPG, PNG y SVG hasta 10 MB.
           contact_information: "Información de contacto"
           community_owner: "Propietario de la comunidad"
+          community_owner_placeholder: "Pepe Luis"
           community_owner_help: |
             Nombre del contacto clave responsable de este sitio. Utilizado para notificaciones críticas, y también se muestra en /about. Visible para usuarios anónimos en sitios públicos.
           contact_email: "Correo electrónico de contacto"
+          contact_email_placeholder: "contacto@pepe-luis.com"
           contact_email_help: |
             Dirección de correo electrónico del contacto clave responsable de este sitio. Se utiliza para notificaciones críticas y también se muestra en /about. Visible para usuarios anónimos en sitios públicos.
           contact_url: "URL de contacto"
@@ -5077,14 +5080,17 @@ es:
             Un nombre válido de un grupo al que se invita a todos los mensajes privados enviados automáticamente.
           your_organization: "Tu organización"
           company_name: "Nombre de la empresa"
+          company_name_placeholder: "Empresa de ejemplo S.A."
           company_name_help: |
             Nombre de tu empresa u organización.
           company_name_warning: |
             Si se deja en blanco, no se proporcionará ningún tipo de Términos del servicio o Aviso de privacidad.
           governing_law: "Ley que rige"
+          governing_law_placeholder: "Estado de Nueva York"
           governing_law_help: |
             Especifica la jurisdicción que rige los aspectos legales del sitio, incluidos los Términos del servicio y el Aviso de privacidad. Normalmente, se trata del país o estado en el que la empresa que gestiona el sitio está registrada o lleva a cabo sus actividades.
           city_for_disputes: "Ciudad para disputas"
+          city_for_disputes_placeholder: "Ciudad de Nueva York"
           city_for_disputes_help: |
             Especifica la ciudad que se utilizará como jurisdicción para resolver cualquier disputa relacionada con el uso de este foro. Esta información suele incluirse en documentos legales como los Términos del servicio del foro.
           optional: "(opcional)"
@@ -6432,7 +6438,6 @@ es:
             prompt: "Estás a punto de cambiar tu política de contraseñas. Esto afectará a todos los usuarios que cambien sus contraseñas a partir de ahora. ¿Seguro que quieres proceder?"
             confirm: "Sí, actualizar la política de contraseñas"
       badges:
-        disable_system: Esta medalla es una medalla del sistema y no se puede desactivar ni eliminar.
         status: Estado
         title: Medallas
         new_badge: Nueva medalla

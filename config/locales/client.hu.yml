@@ -1344,6 +1344,62 @@ hu:
         warnings: "Hivatalos figyelmeztetések"
         read_more_in_group: "Szeretne többet olvasni? Nézzen meg más témákat itt: %{groupLink}."
         read_more: "Szeretne többet olvasni? Böngésszen a többi üzenet között a <a href='%{basePath}/u/%{username}/messages'>személyes üzenetekben</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Van <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># olvasatlan</a>}
+                other {Van <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># olvasatlan</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { és <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># új</a> üzenet maradt, vagy böngésszen más üzeneteket {groupLink}}
+                other { és <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># új</a> üzenet maradt, vagy böngésszen más üzeneteket {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one { <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># olvasatlan</a> üzenet maradt, vagy böngésszen más üzenetekben {groupLink}}
+                other { <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># olvasatlan</a> üzenet maradt, vagy böngésszen más üzenetben {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># új</a> üzenet maradt, vagy böngésszen más üzenetekben {groupLink}}
+                other { <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># új</a> üzenet maradt, vagy böngésszen más üzenetben {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Van <a href="{basePath}/u/{username}/messages/unread"># olvasatlan</a>}
+                other {Van <a href="{basePath}/u/{username}/messages/unread"># olvasatlan</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { és <a href="{basePath}/u/{username}/messages/new"># új</a> üzenet maradt, vagy böngésszen más <a href="{basePath}/u/{username}/messages">személyes üzenetek között</a>}
+                other { és <a href="{basePath}/u/{username}/messages/new"># új</a> üzenet maradt, vagy böngésszen más <a href="{basePath}/u/{username}/messages">személyes üzenetek között</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one { <a href="{basePath}/u/{username}/messages/unread"># olvasatlan</a> üzenet maradt, vagy böngésszen más <a href="{basePath}/u/{username}/messages">személyes üzenetek között</a>}
+                other { <a href="{basePath}/u/{username}/messages/unread"># olvasatlan</a> üzenet maradt, vagy böngésszen más <a href="{basePath}/u/{username}/messages">személyes üzenetek között</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { <a href="{basePath}/u/{username}/messages/new"># új</a> üzenet maradt, vagy böngésszen más <a href="{basePath}/u/{username}/messages">személyes üzenetek között</a>}
+                other { <a href="{basePath}/u/{username}/messages/new"># új</a> üzenet maradt, vagy böngésszen más <a href="{basePath}/u/{username}/messages">személyes üzenetek között</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Fiók"
         security: "Biztonság"
@@ -3797,6 +3853,7 @@ hu:
       menu_titles:
         replies: Legkedveltebb válaszok
         views: Legutóbbi megtekintések
+      view_explainer: Egy látogatói megtekintés 8 óránként.
       no_views: Még nincs megtekintési statisztika, nézzen vissza később.
       chart_error: Hiba történt a diagram megjelenítése során. Kérjük, próbálja újra.
       views: "Megtekintések"
@@ -4247,6 +4304,7 @@ hu:
         everyone_can_use: "A címkéket mindenki használhatja"
         usable_only_by_groups: "A címkék mindenki számára láthatóak, de csak a következő csoportok használhatják őket"
         visible_only_to_groups: "A címkék csak a következő csoportok számára láthatók"
+        cannot_save: "Nem lehet elmenteni a címkecsoportot. Győződjön meg róla, hogy legalább egy címke van jelen, a címkecsoport neve nem üres és 100 karakternél rövidebb, valamint egy csoport ki van választva a címkék engedélyezéséhez."
         tags_placeholder: "Címkék keresése vagy létrehozása"
         parent_tag_placeholder: "Nem kötelező"
         select_groups_placeholder: "Csoportok kiválasztása…"
@@ -4481,6 +4539,7 @@ hu:
       clear_filter: "Szűrő kiürítése"
       no_results:
         title: "Nincs eredmény"
+        description: 'Nem találtunk semmit ami ennek megfelelne: ''%{filter}''.<br><br>Szeretné <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}"> felkeresni a webhely beállításaiban</a> vagy <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}"> az adminisztátori listában?</a>'
     welcome_topic_banner:
       title: "Hozzon létre üdvözlő témát"
       description: "Az üdvözlő téma az első dolog, amit az új tagok elolvasnak. Gondoljon rá úgy, mint egy \"lendületbe hozó beszéd\"-re vagy \"küldetésnyilatkozat\"-ra. Tudassa mindenkivel, kiknek szól ez a közösség, mire számíthatnak itt, és mit szeretne, mit csináljanak először."
@@ -5114,7 +5173,7 @@ hu:
             A webhely elérhetőségi URL-címe. Ha meg van adva, helyettesíti az e-mail címet az /about oldalon, és a nyilvános oldalakon az anonim felhasználók számára látható.
           site_contact_name: "A webhely kapcsolattartójának neve"
           site_contact_name_help: |
-            Staff felhasználónév, amelyről minden automatikus levél küldésre kerül. Ha üresen hagyja, akkor az alapértelmezett rendszerfiók kerül felhasználásra.
+            Stábtag felhasználónév, amelyről minden automatikus levél küldésre kerül. Ha üresen hagyja, akkor az alapértelmezett rendszerfiók kerül felhasználásra.
           site_contact_group: "Webhely kapcsolattartó csoportja"
           site_contact_group_help: |
             Egy olyan csoport neve, amely meghívást kap minden automatikusan elküldött privát üzenetre.
@@ -6484,7 +6543,6 @@ hu:
             prompt: "Megváltoztatja a jelszóhasználati szabályzatát. Ez mostantól minden felhasználóra hatással lesz, aki megváltoztatja a jelszavát. Biztos, hogy folytatni akarja?"
             confirm: "Igen, frissítem a jelszószabályzatot"
       badges:
-        disable_system: Ez a jelvény egy rendszerjelvény, és nem lehet letiltani és/vagy törölni.
         status: Állapot
         title: Jelvények
         new_badge: Új jelvény

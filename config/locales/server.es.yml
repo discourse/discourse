@@ -4879,6 +4879,7 @@ es:
               private:
                 label: "Privada"
           invite_only:
+            label: "Registro"
             choices:
               invite_only:
                 label: "Solo por invitación"

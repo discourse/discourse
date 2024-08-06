@@ -6433,7 +6433,6 @@ nl:
             prompt: "Je staat op het punt om je wachtwoordbeleid te wijzigen. Dit heeft gevolgen voor alle gebruikers die vanaf nu hun wachtwoord wijzigen. Weet je zeker dat je door wilt gaan?"
             confirm: "Ja, wachtwoordbeleid bijwerken"
       badges:
-        disable_system: Deze badge is een systeembadge en kan niet worden uitgeschakeld of verwijderd.
         status: Status
         title: Badges
         new_badge: Nieuwe badge

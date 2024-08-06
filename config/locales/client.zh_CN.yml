@@ -28,18 +28,18 @@ zh_CN:
       time: "HH:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
-      timeline_date: "YYYY 年 M 月"
-      long_no_year: "M 月 D 日 HH:mm"
-      long_no_year_no_time: "M 月 D 日"
-      full_no_year_no_time: "M 月 D 日"
-      long_with_year: "YYYY 年 M 月 D 日 HH:mm"
-      long_with_year_no_time: "YYYY 年 M 月 D 日"
-      full_with_year_no_time: "YYYY 年 M 月 D 日"
-      long_date_with_year: "YYYY 年 MMM 月 D 日 LT"
-      long_date_without_year: "M 月 D 日 LT"
-      long_date_with_year_without_time: "YYYY 年 MMM 月 D 日"
-      long_date_without_year_with_linebreak: "M 月 D 日<br/>LT"
-      long_date_with_year_with_linebreak: "YYYY 年 MMM 月 D 日<br/>LT"
+      timeline_date: "YYYY 年 MMM"
+      long_no_year: "MMM D 日 HH:mm"
+      long_no_year_no_time: "MMM D 日"
+      full_no_year_no_time: "MMMM Do 日"
+      long_with_year: "YYYY 年 MMM D 日 HH:mm"
+      long_with_year_no_time: "YYYY 年 MMM D 日"
+      full_with_year_no_time: "YYYY 年 MMMM Do 日"
+      long_date_with_year: "YYYY 年 MMM D 日 LT"
+      long_date_without_year: "MMM D 日 LT"
+      long_date_with_year_without_time: "YYYY 年 MMM D 日"
+      long_date_without_year_with_linebreak: "MMM D 日<br/>LT"
+      long_date_with_year_with_linebreak: "YYYY 年 MMM D 日<br/>LT"
       wrap_ago: "%{date} 前"
       wrap_on: "%{date}"
       tiny:
@@ -64,8 +64,8 @@ zh_CN:
           other: "> %{count} 年"
         almost_x_years:
           other: "%{count} 年"
-        date_month: "M 月 D 日"
-        date_year: "YYYY 年 M 月"
+        date_month: "MMM D 日"
+        date_year: "YYYY 年 MMM"
       medium:
         less_than_x_minutes:
           other: "小于 %{count} 分钟"
@@ -85,7 +85,7 @@ zh_CN:
           other: "超过 %{count} 年"
         almost_x_years:
           other: "将近 %{count} 年"
-        date_year: "YYYY 年 M 月 D 日"
+        date_year: "YYYY 年 MMM D 日"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分钟前"
@@ -6227,7 +6227,6 @@ zh_CN:
             prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的用户。确定要继续吗？"
             confirm: "是，更新密码策略"
       badges:
-        disable_system: 此徽章为系统徽章，不能禁用和/或删除。
         status: 状态
         title: 徽章
         new_badge: 新徽章

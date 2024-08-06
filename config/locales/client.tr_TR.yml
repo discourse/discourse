@@ -6433,7 +6433,6 @@ tr_TR:
             prompt: "Şifre politikanızı değiştirmek üzeresiniz. Bu durum bundan sonra şifrelerini değiştiren tüm kullanıcıları etkiler. Devam etmek istediğinizden emin misiniz?"
             confirm: "Evet, şifre politikasını güncelle"
       badges:
-        disable_system: Bu rozet, bir sistem rozetidir ve devre dışı bırakılamaz ve/veya silinemez.
         status: Durum
         title: Rozetler
         new_badge: Yeni Rozet
