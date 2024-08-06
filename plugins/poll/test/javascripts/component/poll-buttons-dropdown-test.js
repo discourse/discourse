@@ -56,7 +56,7 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
       groupableUserFields: ["stuff"],
       isAutomaticallyClosed: false,
       dropDownClick: () => {},
-      canDisplayResultAs: ["showAbsolute"],
+      availableDisplayMode: ["showAbsolute"],
     });
 
     await render(hbs`<PollButtonsDropdown
@@ -68,7 +68,7 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
       @groupableUserFields={{this.groupableUserFields}}
       @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
       @dropDownClick={{this.dropDownClick}}
-      @canDisplayResultAs={{this.canDisplayResultAs}}
+      @availableDisplayMode={{this.availableDisplayMode}}
     />`);
 
     await click(".widget-dropdown-header");

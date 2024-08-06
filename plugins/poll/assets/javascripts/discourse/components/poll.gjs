@@ -458,7 +458,7 @@ export default class PollComponent extends Component {
     return htmlSafe(I18n.t("poll.average_rating", { average }));
   }
 
-  get canDisplayResultAs() {
+  get availableDisplayMode() {
     if (
       !this.showResults ||
       this.poll.chart_type === PIE_CHART_TYPE ||
@@ -659,7 +659,7 @@ export default class PollComponent extends Component {
   }
 
   @action
-  toggleAbsolute() {
+  toggleDisplayMode() {
     this.showAbsolute = !this.showAbsolute;
   }
   <template>
@@ -777,7 +777,7 @@ export default class PollComponent extends Component {
         @groupableUserFields={{this.groupableUserFields}}
         @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
         @dropDownClick={{this.dropDownClick}}
-        @canDisplayResultAs={{this.canDisplayResultAs}}
+        @availableDisplayMode={{this.availableDisplayMode}}
       />
     </div>
   </template>

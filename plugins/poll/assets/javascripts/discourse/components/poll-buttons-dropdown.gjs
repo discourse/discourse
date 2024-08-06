@@ -36,18 +36,18 @@ const buttonOptionsMap = {
     action: "toggleStatus",
   },
   showAbsolute: {
-    className: "btn-default toggle-absolute",
+    className: "btn-default show-absolute",
     label: "poll.show-absolute.label",
     title: "poll.show-absolute.title",
     icon: "info",
-    action: "toggleAbsolute",
+    action: "toggleDisplayMode",
   },
   showPercentage: {
-    className: "btn-default toggle-absolute",
+    className: "btn-default show-percentage",
     label: "poll.show-percentage.label",
     title: "poll.show-percentage.title",
     icon: "info",
-    action: "toggleAbsolute",
+    action: "toggleDisplayMode",
   },
 };
 
@@ -82,11 +82,11 @@ export default class PollButtonsDropdownComponent extends Component {
       topicArchived,
       groupableUserFields,
       isAutomaticallyClosed,
-      canDisplayResultAs,
+      availableDisplayMode,
     } = this.args;
 
-    if (canDisplayResultAs) {
-      for (const method of canDisplayResultAs) {
+    if (availableDisplayMode) {
+      for (const method of availableDisplayMode) {
         const option = { ...buttonOptionsMap[method] };
         option.id = option.action;
         contents.push(option);
