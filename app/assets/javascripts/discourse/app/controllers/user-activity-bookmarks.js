@@ -11,34 +11,31 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Controller.extend({
-  queryParams: ["q"],
-  q: null,
+export default class UserActivityBookmarksController extends Controller {
+  @service router;
+  @controller application;
+  @controller user;
 
-  router: service(),
-  application: controller(),
-  user: controller(),
-  loading: false,
-  loadingMore: false,
-  permissionDenied: false,
-  inSearchMode: notEmpty("q"),
-  noContent: equal("model.bookmarks.length", 0),
+  queryParams = ["q"];
 
-  bulkSelectHelper: null,
+  q = null;
+  loading = false;
+  loadingMore = false;
+  permissionDenied = false;
 
-  init() {
-    this._super(...arguments);
-    this.bulkSelectHelper = new BulkSelectHelper(this);
-  },
+  bulkSelectHelper = new BulkSelectHelper(this);
 
-  searchTerm: computed("q", {
-    get() {
-      return this.q;
-    },
-    set(key, value) {
-      return value;
-    },
-  }),
+  @notEmpty("q") inSearchMode;
+  @equal("model.bookmarks.length", 0) noContent;
+
+  @computed("q")
+  get searchTerm() {
+    return this.q;
+  }
+
+  set searchTerm(value) {
+    /* noop */
+  }
 
   @discourseComputed()
   emptyStateBody() {
@@ -47,29 +44,29 @@ export default Controller.extend({
         icon: iconHTML("bookmark"),
       })
     );
-  },
+  }
 
   @discourseComputed("inSearchMode", "noContent")
   userDoesNotHaveBookmarks(inSearchMode, noContent) {
     return !inSearchMode && noContent;
-  },
+  }
 
   @discourseComputed("inSearchMode", "noContent")
   nothingFound(inSearchMode, noContent) {
     return inSearchMode && noContent;
-  },
+  }
 
   @action
   search() {
     this.router.transitionTo({
       queryParams: { q: this.searchTerm },
     });
-  },
+  }
 
   @action
   reload() {
     this.send("triggerRefresh");
-  },
+  }
 
   @action
   loadMore() {
@@ -83,12 +80,12 @@ export default Controller.extend({
       .then((response) => this._processLoadResponse(this.q, response))
       .catch(() => this._bookmarksListDenied())
       .finally(() => this.set("loadingMore", false));
-  },
+  }
 
   @action
   updateAutoAddBookmarksToBulkSelect(value) {
     this.bulkSelectHelper.autoAddBookmarksToBulkSelect = value;
-  },
+  }
 
   _loadMoreBookmarks(searchQuery) {
     if (!this.model.loadMoreUrl) {
@@ -103,11 +100,11 @@ export default Controller.extend({
     }
 
     return ajax({ url: moreUrl });
-  },
+  }
 
   _bookmarksListDenied() {
     this.set("permissionDenied", true);
-  },
+  }
 
   async _processLoadResponse(searchTerm, response) {
     if (!response || !response.user_bookmark_list) {
@@ -125,7 +122,7 @@ export default Controller.extend({
       this.model.bookmarks.pushObjects(bookmarkModels);
       this.session.set("bookmarksModel", this.model);
     }
-  },
+  }
 
   transform(bookmark) {
     const bookmarkModel = Bookmark.create(bookmark);
@@ -138,5 +135,5 @@ export default Controller.extend({
       invisible: bookmark.invisible,
     });
     return bookmarkModel;
-  },
-});
+  }
+}

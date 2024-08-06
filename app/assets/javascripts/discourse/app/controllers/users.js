@@ -7,9 +7,10 @@ import { longDate } from "discourse/lib/formatter";
 import Group from "discourse/models/group";
 import discourseDebounce from "discourse-common/lib/debounce";
 
-export default Controller.extend({
-  modal: service(),
-  queryParams: [
+export default class UsersController extends Controller {
+  @service modal;
+
+  queryParams = [
     "period",
     "order",
     "asc",
@@ -17,22 +18,23 @@ export default Controller.extend({
     "group",
     "exclude_usernames",
     "exclude_groups",
-  ],
-  period: "weekly",
-  order: "",
-  asc: null,
-  name: "",
-  group: null,
-  nameInput: null,
-  exclude_usernames: null,
-  exclude_groups: null,
-  isLoading: false,
-  columns: null,
-  groupOptions: null,
-  params: null,
-  showGroupFilter: and("currentUser", "groupOptions"),
+  ];
 
-  showTimeRead: equal("period", "all"),
+  period = "weekly";
+  order = "";
+  asc = null;
+  name = "";
+  group = null;
+  nameInput = null;
+  exclude_usernames = null;
+  exclude_groups = null;
+  isLoading = false;
+  columns = null;
+  groupOptions = null;
+  params = null;
+
+  @and("currentUser", "groupOptions") showGroupFilter;
+  @equal("period", "all") showTimeRead;
 
   loadUsers(params = null) {
     if (params) {
@@ -73,7 +75,7 @@ export default Controller.extend({
       .finally(() => {
         this.set("isLoading", false);
       });
-  },
+  }
 
   loadGroups() {
     if (this.currentUser) {
@@ -89,23 +91,23 @@ export default Controller.extend({
         this.set("groupOptions", groupOptions);
       });
     }
-  },
+  }
 
   @action
   groupChanged(_, groupAttrs) {
     // First param is the group name, which include none or 'all groups'. Ignore this and look at second param.
     this.set("group", groupAttrs?.id);
-  },
+  }
 
   @action
   showEditColumnsModal() {
     this.modal.show(EditUserDirectoryColumnsModal);
-  },
+  }
 
   @action
   onUsernameFilterChanged(filter) {
     discourseDebounce(this, this._setUsernameFilter, filter, 500);
-  },
+  }
 
   _setUsernameFilter(username) {
     this.setProperties({
@@ -113,10 +115,10 @@ export default Controller.extend({
       "params.name": username,
     });
     this.loadUsers();
-  },
+  }
 
   @action
   loadMore() {
     this.model.loadMore();
-  },
-});
+  }
+}
