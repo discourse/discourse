@@ -24,7 +24,10 @@ export default class SearchTerm extends Component {
   @service appEvents;
 
   @tracked lastEnterTimestamp = null;
-  @tracked searchCleared = !this.search.activeGlobalSearchTerm;
+
+  @tracked
+  searchCleared =
+    !this.search.activeGlobalSearchTerm && !this.search.searchContext;
 
   // make constant available in template
   get inputId() {
@@ -38,7 +41,8 @@ export default class SearchTerm extends Component {
       input.target.value
     );
 
-    this.searchCleared = this.search.activeGlobalSearchTerm ? false : true;
+    this.searchCleared =
+      !this.search.activeGlobalSearchTerm && !this.search.searchContext;
   }
 
   @action
@@ -60,10 +64,7 @@ export default class SearchTerm extends Component {
 
   @action
   onKeyup(e) {
-    if (
-      onKeyUpCallbacks.length &&
-      !onKeyUpCallbacks.some((fn) => fn(this, e))
-    ) {
+    if (onKeyUpCallbacks.any((fn) => fn(this, e))) {
       // Return early if any callbacks return false
       return;
     }
@@ -90,20 +91,18 @@ export default class SearchTerm extends Component {
         this.args.triggerSearch();
       }
       this.lastEnterTimestamp = Date.now();
-    }
-
-    if (e.key === "Backspace") {
+    } else if (e.key === "Backspace") {
       if (!e.target.value) {
         // only clear context if we're not in the middle of a search
         if (this.searchCleared) {
           this.args.clearTopicContext();
           this.args.clearPMInboxContext();
           this.focus(e.target);
+        } else {
+          this.searchCleared = true;
         }
-        this.searchCleared = true;
       }
     }
-
     e.preventDefault();
   }
 
