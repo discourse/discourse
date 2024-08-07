@@ -75,11 +75,12 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
 
     assert.strictEqual(count("li.dropdown-menu__item"), 2);
 
-    assert.strictEqual(
-      query("li.dropdown-menu__item span").textContent.trim(),
-      I18n.t("poll.show-tally.label"),
-      "displays the show absolute button"
-    );
+    assert
+      .dom(query("li.dropdown-menu__item span"))
+      .hasText(
+        I18n.t("poll.show-tally.label"),
+        "displays the show absolute button"
+      );
   });
 
   test("Renders a single button when there is only one authorised action", async function (assert) {
