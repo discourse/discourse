@@ -6,6 +6,7 @@ import ApiSection from "./api-section";
 import PanelHeader from "./panel-header";
 
 export default class SidebarApiSections extends Component {
+  @service router;
   @service sidebarState;
 
   get sections() {
@@ -20,7 +21,7 @@ export default class SidebarApiSections extends Component {
     }
 
     return sectionConfigs.map((Section) => {
-      const SidebarSection = prepareSidebarSectionClass(Section);
+      const SidebarSection = prepareSidebarSectionClass(Section, this.router);
 
       const sectionInstance = new SidebarSection({
         filterable:
@@ -43,14 +44,19 @@ export default class SidebarApiSections extends Component {
     <PanelHeader @sections={{this.filteredSections}} />
 
     {{#each this.filteredSections as |section|}}
-      <ApiSection @section={{section}} @collapsable={{@collapsable}} />
+      <ApiSection
+        @section={{section}}
+        @collapsable={{@collapsable}}
+        @expandWhenActive={{@expandActiveSection}}
+        @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
+      />
     {{/each}}
   </template>
 }
 
 // extends the class provided for the section to add functionality we don't want to be overridable when defining custom
 // sections using the plugin API, like for example the filtering capabilities
-function prepareSidebarSectionClass(Section) {
+function prepareSidebarSectionClass(Section, routerService) {
   return class extends Section {
     constructor({ filterable, sidebarState }) {
       super();
@@ -79,6 +85,46 @@ function prepareSidebarSectionClass(Section) {
             keyword.match(this.sidebarState.sanitizedFilter)
           )
         );
+      });
+    }
+
+    get activeLink() {
+      return this.filteredLinks.find((link) => {
+        try {
+          const currentWhen = link.currentWhen;
+
+          if (typeof currentWhen === "boolean") {
+            return currentWhen;
+          }
+
+          // TODO detect active links using the href field
+
+          const queryParams = link.query || {};
+          let models;
+
+          if (link.model) {
+            models = [link.model];
+          } else if (link.models) {
+            models = link.models;
+          } else {
+            models = [];
+          }
+
+          if (typeof currentWhen === "string") {
+            return currentWhen.split(" ").some((route) =>
+              routerService.isActive(route, ...models, {
+                queryParams,
+              })
+            );
+          }
+
+          return routerService.isActive(link.route, ...models, {
+            queryParams,
+          });
+        } catch (e) {
+          // false if ember throws an exception while checking the routes
+          return false;
+        }
       });
     }
 

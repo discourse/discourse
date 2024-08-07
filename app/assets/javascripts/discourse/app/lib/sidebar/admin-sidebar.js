@@ -81,8 +81,6 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
         return this.router.currentRoute.name;
       }
     }
-
-    return this.adminSidebarNavLink.route;
   }
 
   get keywords() {
@@ -264,6 +262,8 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   key = ADMIN_PANEL;
   hidden = true;
   displayHeader = true;
+  expandActiveSection = true;
+  scrollActiveLinkIntoView = true;
 
   @cached
   get sections() {
