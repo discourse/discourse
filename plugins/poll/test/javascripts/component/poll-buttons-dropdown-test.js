@@ -37,7 +37,7 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
 
     await click(".widget-dropdown-header");
 
-    assert.strictEqual(count("li.dropdown-menu__item"), 2);
+    assert.dom("li.dropdown-menu__item").exists({ count: 2 });
 
     assert.strictEqual(
       query("li.dropdown-menu__item span").textContent.trim(),
