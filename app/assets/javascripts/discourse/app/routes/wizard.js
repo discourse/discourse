@@ -1,9 +1,10 @@
+import { getOwner } from "@ember/application";
 import Route from "@ember/routing/route";
 import Wizard from "discourse/static/wizard/models/wizard";
 
 export default class WizardRoute extends Route {
   model() {
-    return Wizard.load();
+    return Wizard.load(getOwner(this));
   }
 
   activate() {
