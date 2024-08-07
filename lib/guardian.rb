@@ -11,6 +11,7 @@ require "guardian/sidebar_guardian"
 require "guardian/tag_guardian"
 require "guardian/topic_guardian"
 require "guardian/user_guardian"
+require "guardian/plugin_checks"
 
 # The guardian is responsible for confirming access to various site resources and operations
 class Guardian
@@ -25,6 +26,7 @@ class Guardian
   include TagGuardian
   include TopicGuardian
   include UserGuardian
+  include PluginChecks
 
   class AnonymousUser
     def blank?
