@@ -38,4 +38,8 @@ export default class UserMenuBookmarkItem extends UserMenuBaseItem {
   get avatarTemplate() {
     return this.bookmark.user.avatar_template;
   }
+
+  get note() {
+    return this.bookmark.name;
+  }
 }

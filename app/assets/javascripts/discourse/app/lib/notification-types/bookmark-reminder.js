@@ -20,6 +20,10 @@ export default class extends NotificationTypeBase {
     return null;
   }
 
+  get note() {
+    return this.notification.data.bookmark_name;
+  }
+
   get linkHref() {
     let linkHref = super.linkHref;
     if (linkHref) {

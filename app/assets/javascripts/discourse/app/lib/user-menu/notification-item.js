@@ -50,6 +50,10 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
     return this.renderDirector.label;
   }
 
+  get note() {
+    return this.renderDirector.note;
+  }
+
   get labelClass() {
     return this.renderDirector.labelClasses?.join(" ") || "";
   }

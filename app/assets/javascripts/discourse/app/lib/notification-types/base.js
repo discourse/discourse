@@ -88,6 +88,10 @@ export default class NotificationTypeBase {
     }
   }
 
+  get note() {
+    return null;
+  }
+
   /**
    * @returns {string[]} Include additional classes to the label.
    */

@@ -27,6 +27,8 @@ export default class UserMenuBaseItem {
 
   get labelClass() {}
 
+  get note() {}
+
   get description() {
     throw new Error("not implemented");
   }
