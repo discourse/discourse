@@ -33,7 +33,6 @@ class Flag < ActiveRecord::Base
     # Flags are cached in Redis for better performance. After the update,
     # we need to reload them in all processes.
     PostActionType.reload_types
-    MessageBus.publish("/reload_post_action_types", {})
   end
 
   def system?

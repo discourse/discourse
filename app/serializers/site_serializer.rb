@@ -110,17 +110,49 @@ class SiteSerializer < ApplicationSerializer
     end
   end
 
+  def like_action_type
+    # Like is very special post action type which cannot be disabled or edited in admin panel
+    Flag.new(
+      id: PostActionType::LIKE_POST_ACTION_ID,
+      name: "like",
+      name_key: "like",
+      description: "",
+      position: 0,
+    )
+  end
+
   def post_action_types
     cache_fragment("post_action_types_#{I18n.locale}") do
-      types = ordered_flags(PostActionType.types.values)
-      ActiveModel::ArraySerializer.new(types).as_json
+      if PostActionType.overridden_by_plugin_or_skipped_db?
+        types = ordered_flags(PostActionType.types.values)
+        ActiveModel::ArraySerializer.new(types).as_json
+      else
+        ActiveModel::ArraySerializer.new(
+          Flag.unscoped.order(:position).where(score_type: false).all.to_a << like_action_type,
+          each_serializer: FlagSerializer,
+          target: :post_action,
+        ).as_json
+      end
     end
   end
 
   def topic_flag_types
     cache_fragment("post_action_flag_types_#{I18n.locale}") do
-      types = ordered_flags(PostActionType.topic_flag_types.values)
-      ActiveModel::ArraySerializer.new(types, each_serializer: TopicFlagTypeSerializer).as_json
+      if PostActionType.overridden_by_plugin_or_skipped_db?
+        types = ordered_flags(PostActionType.topic_flag_types.values)
+        ActiveModel::ArraySerializer.new(types, each_serializer: TopicFlagTypeSerializer).as_json
+      else
+        ActiveModel::ArraySerializer.new(
+          Flag
+            .unscoped
+            .where("'Topic' = ANY(applies_to)")
+            .where(score_type: false)
+            .order(:position)
+            .all,
+          each_serializer: FlagSerializer,
+          target: :topic_flag,
+        ).as_json
+      end
     end
   end
 

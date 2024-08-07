@@ -30,9 +30,9 @@ class PostActionType < ActiveRecord::Base
 
     def types
       if overridden_by_plugin_or_skipped_db?
-        return Enum.new(like: 2).merge!(flag_settings.flag_types)
+        return Enum.new(like: LIKE_POST_ACTION_ID).merge!(flag_settings.flag_types)
       end
-      Enum.new(like: 2).merge(flag_types)
+      Enum.new(like: LIKE_POST_ACTION_ID).merge(flag_types)
     end
 
     def expire_cache
@@ -87,17 +87,11 @@ class PostActionType < ActiveRecord::Base
 
     def flag_types
       return flag_settings.flag_types if overridden_by_plugin_or_skipped_db?
-
-      # Once replace_flag API is fully deprecated, then we can drop respond_to. It is needed right now for migration to be evaluated.
-      # TODO (krisk)
       flag_enum(all_flags.reject { |flag| flag[:score_type] })
     end
 
     def score_types
       return flag_settings.flag_types if overridden_by_plugin_or_skipped_db?
-
-      # Once replace_flag API is fully deprecated, then we can drop respond_to. It is needed right now for migration to be evaluated.
-      # TODO (krisk)
       flag_enum(all_flags.filter { |flag| flag[:score_type] })
     end
 
@@ -121,10 +115,6 @@ class PostActionType < ActiveRecord::Base
 
     def disabled_flag_types
       flag_enum(all_flags.reject { |flag| flag[:enabled] })
-    end
-
-    def enabled_flag_types
-      flag_enum(all_flags.filter { |flag| flag[:enabled] })
     end
 
     def additional_message_types
