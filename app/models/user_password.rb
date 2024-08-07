@@ -1,30 +1,22 @@
 # frozen_string_literal: true
 
 class UserPassword < ActiveRecord::Base
-  attr_reader :password # required to build an instance of this model with password attribute without backing column
-  attr_accessor :salt # TODO: Deprecate once we drop User.salt, this is only for passing through the randomized salt from User
-
   TARGET_PASSWORD_ALGORITHM =
     "$pbkdf2-#{Rails.configuration.pbkdf2_algorithm}$i=#{Rails.configuration.pbkdf2_iterations},l=32$"
   PASSWORD_SALT_LENGTH = 16
   MAX_PASSWORD_LENGTH = 200
 
-  validates :user, presence: true # different from user_id, we need to allow for blank user_id at the point of validation since a newly built user needs to be saved before user_id is generated
+  attr_reader :password # required to build an instance of this model with password attribute without backing column
+  attr_accessor :salt # TODO: Deprecate once we drop User.salt, this is only for passing through the randomized salt from User
 
-  # validates :user_id,
-  #           uniqueness: {
-  #             scope: :password_expired_at,
-  #           },
-  #           if: -> { password_expired_at.nil? }
-  #
+  belongs_to :user, required: true # different from user_id, we need to allow for blank user_id at the point of validation since a newly built user needs to be saved before user_id is generated
+
   validates :password_hash, presence: true, length: { is: 64 }, uniqueness: { scope: :user_id }
   validates :password_salt, presence: true, length: { is: 32 }
   validates :password_algorithm, presence: true, length: { maximum: 64 }
 
   validate :password_validator
   validate :ensure_single_unexpired_password_for_user
-
-  belongs_to :user
 
   def password=(pw)
     @password = pw
@@ -44,18 +36,16 @@ class UserPassword < ActiveRecord::Base
   private
 
   def ensure_single_unexpired_password_for_user
-    # TODO: what to do if only user_id passed in?
-    # has_user = user || user_id
-    #
-    # Scenario 1: passwords are loaded already and updated! ->  code for scenario 2 only reloads, and loses state of changed records
-    # Scenario 2: passwords are not loaded for the user, and need loading
-    # !self.class.where(user:, password_expired_at: nil).where.not(id: self.id).exists?
-    if user.nil? || password_expired_at.present? ||
-         user.passwords.filter { |p| p.password_expired_at.nil? }.size <= 1
-      return
-    end # only handles scenario 1
-    # TODO: probably need to concat the 2 types of loaded records, so check for changed state and merge
-    errors.add(:user_id, "has already been taken")
+    return if user.nil? || password_expired_at.present?
+
+    loaded_passwords = user.passwords.to_a
+    db_passwords = user.passwords.where(password_expired_at: nil).to_a
+    # prioritise in-memory passwords that may have been expired
+    all_passwords = ([self] + loaded_passwords + db_passwords).uniq(&:id)
+
+    if all_passwords.filter { |p| p.password_expired_at.nil? }.size > 1
+      errors.add(:user_id, "has already been taken")
+    end
   end
 
   def ensure_password_is_hashed
