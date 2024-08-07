@@ -50,7 +50,7 @@ class ListController < ApplicationController
                 ].flatten
 
   rescue_from ActionController::Redirecting::UnsafeRedirectError do
-    raise Discourse::NotFound
+    rescue_discourse_actions(:not_found, 404)
   end
 
   # Create our filters
