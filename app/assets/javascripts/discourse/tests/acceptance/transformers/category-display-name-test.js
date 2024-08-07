@@ -8,7 +8,8 @@ acceptance("category-display-name transformer", function () {
     withPluginApi("1.34.0", (api) => {
       api.registerValueTransformer(
         "category-display-name",
-        ({ value }) => value + "-transformed"
+        ({ value, context }) =>
+          value + "-" + context.category.id + "-transformed"
       );
     });
 
@@ -17,7 +18,7 @@ acceptance("category-display-name transformer", function () {
     assert
       .dom("[data-topic-id='11997'] .badge-category__name")
       .hasText(
-        "feature-transformed",
+        "feature-2-transformed",
         "it transforms the category display name"
       );
   });

@@ -479,12 +479,17 @@ export default class Category extends RestModel {
   get descriptionText() {
     return applyValueTransformer(
       "category-description-text",
-      this.get("description_text")
+      this.get("description_text"),
+      {
+        category: this,
+      }
     );
   }
 
   get displayName() {
-    return applyValueTransformer("category-display-name", this.get("name"));
+    return applyValueTransformer("category-display-name", this.get("name"), {
+      category: this,
+    });
   }
 
   @computed("parent_category_id", "site.categories.[]")

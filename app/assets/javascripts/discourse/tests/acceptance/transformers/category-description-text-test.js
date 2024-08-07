@@ -8,7 +8,8 @@ acceptance("category-description-text transformer", function () {
     withPluginApi("1.34.0", (api) => {
       api.registerValueTransformer(
         "category-description-text",
-        ({ value }) => value[0] + "-transformed"
+        ({ value, context }) =>
+          value[0] + "-" + context.category.id + "-transformed"
       );
     });
 
@@ -18,7 +19,7 @@ acceptance("category-description-text transformer", function () {
       .dom("[data-topic-id='11994'] .badge-category")
       .hasAttribute(
         "title",
-        "A-transformed",
+        "A-1-transformed",
         "it transforms the category description text"
       );
   });
