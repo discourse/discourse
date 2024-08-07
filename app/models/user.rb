@@ -925,7 +925,7 @@ class User < ActiveRecord::Base
 
     # TODO: deprecate passing through salt once User.salt is dropped
     @salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
-    @raw_password = passwords.build(password:, salt:).password
+    @raw_password = passwords.build(salt:, password:).password
   end
 
   def password
