@@ -188,34 +188,13 @@ module("Poll | Component | poll-results-standard", function (hooks) {
     />`);
 
     let percentages = queryAll(".option .absolute");
-    assert.strictEqual(
-      percentages[0].innerText,
-      I18n.t("poll.votes", { count: 5 })
-    );
-    assert.strictEqual(
-      percentages[1].innerText,
-      I18n.t("poll.votes", { count: 4 })
-    );
-    assert.strictEqual(
-      percentages[2].innerText,
-      I18n.t("poll.votes", { count: 2 })
-    );
-    assert.strictEqual(
-      percentages[3].innerText,
-      I18n.t("poll.votes", { count: 1 })
-    );
+    assert.dom(percentages[0]).hasText(I18n.t("poll.votes", { count: 5 }));
+    assert.dom(percentages[1]).hasText(I18n.t("poll.votes", { count: 4 }));
+    assert.dom(percentages[2]).hasText(I18n.t("poll.votes", { count: 2 }));
+    assert.dom(percentages[3]).hasText(I18n.t("poll.votes", { count: 1 }));
 
-    assert.strictEqual(
-      queryAll(".option")[3].querySelectorAll("span")[1].innerText,
-      "a"
-    );
-    assert.strictEqual(
-      percentages[4].innerText,
-      I18n.t("poll.votes", { count: 1 })
-    );
-    assert.strictEqual(
-      queryAll(".option")[4].querySelectorAll("span")[1].innerText,
-      "b"
-    );
+    assert.dom(queryAll(".option")[3].querySelectorAll("span")[1]).hasText("a");
+    assert.dom(percentages[4]).hasText(I18n.t("poll.votes", { count: 1 }));
+    assert.dom(queryAll(".option")[4].querySelectorAll("span")[1]).hasText("b");
   });
 });
