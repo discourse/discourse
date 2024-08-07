@@ -35,6 +35,20 @@ const buttonOptionsMap = {
     icon: "lock",
     action: "toggleStatus",
   },
+  showTally: {
+    className: "btn-default show-tally",
+    label: "poll.show-tally.label",
+    title: "poll.show-tally.title",
+    icon: "info",
+    action: "toggleDisplayMode",
+  },
+  showPercentage: {
+    className: "btn-default show-percentage",
+    label: "poll.show-percentage.label",
+    title: "poll.show-percentage.title",
+    icon: "info",
+    action: "toggleDisplayMode",
+  },
 };
 
 export default class PollButtonsDropdownComponent extends Component {
@@ -68,7 +82,14 @@ export default class PollButtonsDropdownComponent extends Component {
       topicArchived,
       groupableUserFields,
       isAutomaticallyClosed,
+      availableDisplayMode,
     } = this.args;
+
+    if (availableDisplayMode) {
+      const option = { ...buttonOptionsMap[availableDisplayMode] };
+      option.id = option.action;
+      contents.push(option);
+    }
 
     if (groupableUserFields.length && voters > 0) {
       const option = { ...buttonOptionsMap.showBreakdown };

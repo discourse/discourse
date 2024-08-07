@@ -65,6 +65,7 @@ export default class TabsComponent extends Component {
             @voters={{@voters}}
             @votersCount={{@votersCount}}
             @fetchVoters={{@fetchVoters}}
+            @showTally={{@showTally}}
           />
         {{/if}}
 
