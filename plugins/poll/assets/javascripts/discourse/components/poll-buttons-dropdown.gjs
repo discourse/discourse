@@ -86,11 +86,9 @@ export default class PollButtonsDropdownComponent extends Component {
     } = this.args;
 
     if (availableDisplayMode) {
-      for (const method of availableDisplayMode) {
-        const option = { ...buttonOptionsMap[method] };
-        option.id = option.action;
-        contents.push(option);
-      }
+      const option = { ...buttonOptionsMap[availableDisplayMode] };
+      option.id = option.action;
+      contents.push(option);
     }
 
     if (groupableUserFields.length && voters > 0) {

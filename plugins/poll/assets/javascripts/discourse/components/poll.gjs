@@ -464,9 +464,9 @@ export default class PollComponent extends Component {
       this.poll.chart_type === PIE_CHART_TYPE ||
       ![REGULAR_POLL_TYPE, MULTIPLE_POLL_TYPE].includes(this.poll.type)
     ) {
-      return [];
+      return null;
     }
-    return this.showAbsolute ? ["showPercentage"] : ["showAbsolute"];
+    return this.showAbsolute ? "showPercentage" : "showAbsolute";
   }
 
   @action
