@@ -52,7 +52,7 @@ export default class PollComponent extends Component {
     (this.topicArchived && !this.staffOnly) ||
     (this.closed && !this.staffOnly);
 
-  @tracked showAbsolute = false;
+  @tracked showTally = false;
 
   checkUserGroups = (user, poll) => {
     const pollGroups =
@@ -466,7 +466,7 @@ export default class PollComponent extends Component {
     ) {
       return null;
     }
-    return this.showAbsolute ? "showPercentage" : "showAbsolute";
+    return this.showTally ? "showPercentage" : "showTally";
   }
 
   @action
@@ -660,7 +660,7 @@ export default class PollComponent extends Component {
 
   @action
   toggleDisplayMode() {
-    this.showAbsolute = !this.showAbsolute;
+    this.showTally = !this.showTally;
   }
 
   <template>
@@ -692,7 +692,7 @@ export default class PollComponent extends Component {
                 @votersCount={{this.poll.voters}}
                 @fetchVoters={{this.fetchVoters}}
                 @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
-                @showAbsolute={{this.showAbsolute}}
+                @showTally={{this.showTally}}
               />
             {{/if}}
           {{/if}}

@@ -35,10 +35,10 @@ const buttonOptionsMap = {
     icon: "lock",
     action: "toggleStatus",
   },
-  showAbsolute: {
-    className: "btn-default show-absolute",
-    label: "poll.show-absolute.label",
-    title: "poll.show-absolute.title",
+  showTally: {
+    className: "btn-default show-tally",
+    label: "poll.show-tally.label",
+    title: "poll.show-tally.title",
     icon: "info",
     action: "toggleDisplayMode",
   },

@@ -76,7 +76,7 @@ export default class PollResultsStandardComponent extends Component {
           <div class="option">
             <p>
               {{#unless @isRankedChoice}}
-                {{#if @showAbsolute}}
+                {{#if @showTally}}
                   <span class="absolute">{{i18n
                       "poll.votes"
                       count=option.votes

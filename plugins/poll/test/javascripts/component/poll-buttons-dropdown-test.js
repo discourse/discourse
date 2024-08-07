@@ -46,7 +46,7 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
     );
   });
 
-  test("Renders a show-absolute button when poll is a bar chart", async function (assert) {
+  test("Renders a show-tally button when poll is a bar chart", async function (assert) {
     this.setProperties({
       closed: false,
       voters: 2,
@@ -56,7 +56,7 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
       groupableUserFields: ["stuff"],
       isAutomaticallyClosed: false,
       dropDownClick: () => {},
-      availableDisplayMode: "showAbsolute",
+      availableDisplayMode: "showTally",
     });
 
     await render(hbs`<PollButtonsDropdown
@@ -77,7 +77,7 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
 
     assert.strictEqual(
       query("li.dropdown-menu__item span").textContent.trim(),
-      I18n.t("poll.show-absolute.label"),
+      I18n.t("poll.show-tally.label"),
       "displays the show absolute button"
     );
   });

@@ -172,7 +172,7 @@ module("Poll | Component | poll-results-standard", function (hooks) {
       voters: PRELOADEDVOTERS,
       votersCount: 12,
       fetchVoters: () => {},
-      showAbsolute: true,
+      showTally: true,
     });
 
     await render(hbs`<PollResultsStandard
@@ -184,7 +184,7 @@ module("Poll | Component | poll-results-standard", function (hooks) {
       @voters={{this.voters}}
       @votersCount={{this.votersCount}}
       @fetchVoters={{this.fetchVoters}}
-      @showAbsolute={{this.showAbsolute}}
+      @showTally={{this.showTally}}
     />`);
 
     let percentages = queryAll(".option .absolute");

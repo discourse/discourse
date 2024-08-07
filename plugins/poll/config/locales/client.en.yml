@@ -49,13 +49,13 @@ en:
         title: "Display the poll results"
         label: "Results"
 
-      show-absolute:
-        title: "Display absolute vote count"
-        label: "Show absolute votes"
+      show-tally:
+        title: "Show voting results by number of votes"
+        label: "Display tally"
 
       show-percentage:
-        title: "Display vote as percentage"
-        label: "Show vote percentage"
+        title: "Show voting results as percentage"
+        label: "Display as percentage"
 
       remove-vote:
         title: "Remove your vote"
