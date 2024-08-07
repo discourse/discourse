@@ -1,6 +1,6 @@
-import Component from "@ember/component";
-import { schedule } from "@ember/runloop";
-import { classNames } from "@ember-decorators/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { modifier } from "ember-modifier";
 import { number } from "discourse/lib/formatter";
 import loadScript from "discourse/lib/load-script";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -8,80 +8,58 @@ import { makeArray } from "discourse-common/lib/helpers";
 import { bind } from "discourse-common/utils/decorators";
 import Report from "admin/models/report";
 
-@classNames("admin-report-chart", "admin-report-stacked-chart")
 export default class AdminReportStackedChart extends Component {
-  didInsertElement() {
-    super.didInsertElement(...arguments);
+  @tracked rerenderTrigger;
 
-    window.addEventListener("resize", this._resizeHandler);
+  renderChart = modifier((element) => {
+    // consume the prop to re-run the modifier when the prop changes
+    this.rerenderTrigger;
+
+    loadScript("/javascripts/Chart.min.js").then(() => {
+      this.chart = new window.Chart(element.getContext("2d"), this.chartConfig);
+    });
+
+    return () => this.chart?.destroy();
+  });
+
+  constructor() {
+    super(...arguments);
+    window.addEventListener("resize", this.resizeHandler);
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    window.removeEventListener("resize", this._resizeHandler);
-    this._resetChart();
-  }
-
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    discourseDebounce(this, this._scheduleChartRendering, 100);
+  willDestroy() {
+    super.willDestroy(...arguments);
+    window.removeEventListener("resize", this.resizeHandler);
   }
 
   @bind
-  _resizeHandler() {
-    discourseDebounce(this, this._scheduleChartRendering, 500);
+  resizeHandler() {
+    discourseDebounce(this, this.rerenderChart, 500);
   }
 
-  _scheduleChartRendering() {
-    schedule("afterRender", () => {
-      if (!this.element) {
-        return;
-      }
-
-      this._renderChart(
-        this.model,
-        this.element.querySelector(".chart-canvas")
-      );
-    });
+  rerenderChart() {
+    this.rerenderTrigger = true;
   }
 
-  _renderChart(model, chartCanvas) {
-    if (!chartCanvas) {
-      return;
-    }
+  get chartConfig() {
+    const { model } = this.args;
 
-    const context = chartCanvas.getContext("2d");
-
-    const chartData = makeArray(model.chartData || model.data).map((cd) => {
-      return {
-        label: cd.label,
-        color: cd.color,
-        data: Report.collapse(model, cd.data),
-      };
-    });
+    const chartData = makeArray(model.chartData || model.data).map((cd) => ({
+      label: cd.label,
+      color: cd.color,
+      data: Report.collapse(model, cd.data),
+    }));
 
     const data = {
       labels: chartData[0].data.mapBy("x"),
-      datasets: chartData.map((cd) => {
-        return {
-          label: cd.label,
-          stack: "pageviews-stack",
-          data: cd.data,
-          backgroundColor: cd.color,
-        };
-      }),
+      datasets: chartData.map((cd) => ({
+        label: cd.label,
+        stack: "pageviews-stack",
+        data: cd.data,
+        backgroundColor: cd.color,
+      })),
     };
 
-    loadScript("/javascripts/Chart.min.js").then(() => {
-      this._resetChart();
-
-      this._chart = new window.Chart(context, this._buildChartConfig(data));
-    });
-  }
-
-  _buildChartConfig(data) {
     return {
       type: "bar",
       data,
@@ -99,9 +77,8 @@ export default class AdminReportStackedChart extends Component {
             intersect: false,
             callbacks: {
               beforeFooter: (tooltipItem) => {
-                let total = 0;
-                tooltipItem.forEach(
-                  (item) => (total += parseInt(item.parsed.y || 0, 10))
+                const total = tooltipItem.reduce(
+                  (sum, item) => sum + parseInt(item.parsed.y || 0, 10)
                 );
                 return `= ${total}`;
               },
@@ -152,8 +129,11 @@ export default class AdminReportStackedChart extends Component {
     };
   }
 
-  _resetChart() {
-    this._chart?.destroy();
-    this._chart = null;
-  }
+  <template>
+    <div class="admin-report-chart admin-report-stacked-chart">
+      <div class="chart-canvas-container">
+        <canvas {{this.renderChart}} class="chart-canvas"></canvas>
+      </div>
+    </div>
+  </template>
 }

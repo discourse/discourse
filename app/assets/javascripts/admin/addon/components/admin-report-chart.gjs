@@ -1,6 +1,6 @@
-import Component from "@ember/component";
-import { schedule } from "@ember/runloop";
-import { classNames } from "@ember-decorators/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { modifier } from "ember-modifier";
 import { number } from "discourse/lib/formatter";
 import loadScript from "discourse/lib/load-script";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -8,56 +8,48 @@ import { makeArray } from "discourse-common/lib/helpers";
 import { bind } from "discourse-common/utils/decorators";
 import Report from "admin/models/report";
 
-@classNames("admin-report-chart")
 export default class AdminReportChart extends Component {
-  limit = 8;
-  total = 0;
-  options = null;
+  @tracked rerenderTrigger;
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
+  renderChart = modifier((element) => {
+    // consume the prop to re-run the modifier when the prop changes
+    this.rerenderTrigger;
 
-    window.addEventListener("resize", this._resizeHandler);
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    window.removeEventListener("resize", this._resizeHandler);
-
-    this._resetChart();
-  }
-
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    discourseDebounce(this, this._scheduleChartRendering, 100);
-  }
-
-  _scheduleChartRendering() {
-    schedule("afterRender", () => {
-      this._renderChart(
-        this.model,
-        this.element && this.element.querySelector(".chart-canvas")
-      );
+    loadScript("/javascripts/Chart.min.js").then(() => {
+      this.chart = new window.Chart(element.getContext("2d"), this.chartConfig);
     });
+
+    return () => this.chart?.destroy();
+  });
+
+  constructor() {
+    super(...arguments);
+    window.addEventListener("resize", this.resizeHandler);
   }
 
-  _renderChart(model, chartCanvas) {
-    if (!chartCanvas) {
-      return;
-    }
+  willDestroy() {
+    super.willDestroy(...arguments);
+    window.removeEventListener("resize", this.resizeHandler);
+  }
 
-    const context = chartCanvas.getContext("2d");
-    const chartData = this._applyChartGrouping(
+  @bind
+  resizeHandler() {
+    discourseDebounce(this, this.rerenderChart, 500);
+  }
+
+  rerenderChart() {
+    this.rerenderTrigger = true;
+  }
+
+  get chartConfig() {
+    const { model, options } = this.args;
+
+    const chartData = Report.collapse(
       model,
-      makeArray(model.get("chartData") || model.get("data"), "weekly"),
-      this.options
+      makeArray(model.chartData || model.data, "weekly"),
+      options.chartGrouping
     );
-    const prevChartData = makeArray(
-      model.get("prevChartData") || model.get("prev_data")
-    );
-
+    const prevChartData = makeArray(model.prevChartData || model.prev_data);
     const labels = chartData.map((d) => d.x);
 
     const data = {
@@ -88,21 +80,6 @@ export default class AdminReportChart extends Component {
       });
     }
 
-    loadScript("/javascripts/Chart.min.js").then(() => {
-      this._resetChart();
-
-      if (!this.element) {
-        return;
-      }
-
-      this._chart = new window.Chart(
-        context,
-        this._buildChartConfig(data, this.options)
-      );
-    });
-  }
-
-  _buildChartConfig(data, options) {
     return {
       type: "line",
       data,
@@ -164,19 +141,11 @@ export default class AdminReportChart extends Component {
     };
   }
 
-  _resetChart() {
-    if (this._chart) {
-      this._chart.destroy();
-      this._chart = null;
-    }
-  }
-
-  _applyChartGrouping(model, data, options) {
-    return Report.collapse(model, data, options.chartGrouping);
-  }
-
-  @bind
-  _resizeHandler() {
-    discourseDebounce(this, this._scheduleChartRendering, 500);
-  }
+  <template>
+    <div class="admin-report-chart">
+      <div class="chart-canvas-container">
+        <canvas {{this.renderChart}} class="chart-canvas"></canvas>
+      </div>
+    </div>
+  </template>
 }
