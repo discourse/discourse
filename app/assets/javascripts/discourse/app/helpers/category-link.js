@@ -156,7 +156,7 @@ export function defaultCategoryLinkRenderer(category, opts) {
     ${descriptionText ? 'title="' + descriptionText + '" ' : ""}
   >`;
 
-  let categoryName = escapeExpression(get(category, "name"));
+  let categoryName = escapeExpression(get(category, "displayName"));
 
   if (siteSettings.support_mixed_text_direction) {
     categoryDir = 'dir="auto"';

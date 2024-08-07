@@ -8,4 +8,6 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "header-notifications-avatar-size",
   "home-logo-href",
   "home-logo-image-url",
+  "category-description-text",
+  "category-display-name",
 ]);
