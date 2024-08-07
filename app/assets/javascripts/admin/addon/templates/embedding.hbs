@@ -32,6 +32,11 @@
     @icon="plus"
     class="btn-primary add-host"
   />
+
+  <PluginOutlet
+    @name="after-embeddable-hosts-table"
+    @outletArgs={{hash embedding=this.embedding}}
+  />
 </div>
 
 {{#if this.showSecondary}}
