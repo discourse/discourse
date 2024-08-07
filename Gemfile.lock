@@ -242,7 +242,7 @@ GEM
     mini_mime (1.1.5)
     mini_racer (0.9.0)
       libv8-node (~> 18.19.0.0)
-    mini_scheduler (0.16.0)
+    mini_scheduler (0.17.0)
       sidekiq (>= 4.2.3, < 7.0)
     mini_sql (1.5.0)
     mini_suffix (0.3.3)
