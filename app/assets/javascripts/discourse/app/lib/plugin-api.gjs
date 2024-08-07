@@ -61,7 +61,9 @@ import {
   PLUGIN_NAV_MODE_TOP,
   registerAdminPluginConfigNav,
 } from "discourse/lib/admin-plugin-config-nav";
-import classPrepend from "discourse/lib/class-prepend";
+import classPrepend, {
+  withPrependsRolledBack,
+} from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -175,9 +177,15 @@ const DEPRECATED_HEADER_WIDGETS = [
   "user-dropdown",
 ];
 
+const appliedModificationIds = new WeakMap();
+
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
-  if (typeof changes !== "function" && !changes.pluginId) {
+  if (typeof changes === "function") {
+    return true;
+  }
+
+  if (!changes.pluginId) {
     // eslint-disable-next-line no-console
     console.warn(
       consolePrefix(),
@@ -187,10 +195,13 @@ function canModify(klass, type, resolverName, changes) {
   }
 
   let key = "_" + type + "/" + changes.pluginId + "/" + resolverName;
-  if (klass.class[key]) {
+
+  if (appliedModificationIds.get(klass.class)?.includes(key)) {
     return false;
   } else {
-    klass.class[key] = 1;
+    const modificationIds = appliedModificationIds.get(klass.class) || [];
+    modificationIds.push(key);
+    appliedModificationIds.set(klass.class, modificationIds);
     return true;
   }
 }
@@ -299,7 +310,9 @@ class PluginApi {
       if (typeof changes === "function") {
         classPrepend(klass.class, changes);
       } else if (klass.class.reopen) {
-        klass.class.reopen(changes);
+        withPrependsRolledBack(klass.class, () => {
+          klass.class.reopen(changes);
+        });
       } else {
         Object.defineProperties(
           klass.class.prototype || klass.class,
@@ -330,7 +343,9 @@ class PluginApi {
 
     if (canModify(klass, "static", resolverName, changes)) {
       delete changes.pluginId;
-      klass.class.reopenClass(changes);
+      withPrependsRolledBack(klass.class, () => {
+        klass.class.reopenClass(changes);
+      });
     }
 
     return klass;

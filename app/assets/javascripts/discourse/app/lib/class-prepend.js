@@ -1,8 +1,18 @@
-import { DEBUG } from "@glimmer/env";
-import { isTesting } from "discourse-common/config/environment";
+import CoreObject from "@ember/object/core";
 
 const RESERVED_CLASS_PROPS = ["prototype", "name", "length"];
 const RESERVED_PROTOTYPE_PROPS = ["constructor"];
+
+function hasAncestor(klass, ancestor) {
+  let current = klass;
+  while (current) {
+    if (current === ancestor) {
+      return true;
+    }
+    current = Object.getPrototypeOf(current);
+  }
+  return false;
+}
 
 /**
  * This function provides a way to add/modify instance and static properties on an existing JS class, including
@@ -13,9 +23,14 @@ const RESERVED_PROTOTYPE_PROPS = ["constructor"];
  *
  */
 export default function classPrepend(klass, callback) {
+  if (hasAncestor(klass, CoreObject)) {
+    // Ensure any prior reopen() calls have been applied
+    klass.proto();
+  }
+
   const originalKlassDescs = Object.getOwnPropertyDescriptors(klass);
   const originalProtoDescs = Object.getOwnPropertyDescriptors(klass.prototype);
-  logDescriptorInfoForRollback(klass, originalKlassDescs, originalProtoDescs);
+  logInfo(klass, originalKlassDescs, originalProtoDescs, callback);
 
   for (const key of RESERVED_CLASS_PROPS) {
     delete originalKlassDescs[key];
@@ -64,36 +79,73 @@ export default function classPrepend(klass, callback) {
   }
 }
 
-let originalDescriptorInfo;
+const prependInfo = new Map();
 
-if (DEBUG && isTesting()) {
-  originalDescriptorInfo = new Map();
+/**
+ * Log the previous state of a class so that it can be rolled back later.
+ */
+function logInfo(klass, klassDescs, protoDescs, modifyCallback) {
+  const info = prependInfo.get(klass) || {
+    klassDescs,
+    protoDescs,
+    modifyCallbacks: [],
+  };
+  info.modifyCallbacks.push(modifyCallback);
+  prependInfo.set(klass, info);
 }
 
-function logDescriptorInfoForRollback(klass, klassDescs, protoDescs) {
-  if (DEBUG && isTesting() && !originalDescriptorInfo.has(klass)) {
-    originalDescriptorInfo.set(klass, {
-      klassDescs,
-      protoDescs,
-    });
+/**
+ * Rollback a specific class to its state before any prepends were applied.
+ */
+function rollbackPrepends(klass) {
+  const { klassDescs, protoDescs } = prependInfo.get(klass);
+
+  for (const [key, descriptor] of Object.entries(klassDescs)) {
+    Object.defineProperty(klass, key, descriptor);
+  }
+
+  for (const key of Object.getOwnPropertyNames(klass)) {
+    if (!RESERVED_CLASS_PROPS.includes(key) && !klassDescs[key]) {
+      delete klass[key];
+    }
+  }
+
+  for (const [key, descriptor] of Object.entries(protoDescs)) {
+    Object.defineProperty(klass.prototype, key, descriptor);
+  }
+
+  for (const key of Object.getOwnPropertyNames(klass.prototype)) {
+    if (!RESERVED_PROTOTYPE_PROPS.includes(key) && !protoDescs[key]) {
+      delete klass.prototype[key];
+    }
+  }
+
+  prependInfo.delete(klass);
+}
+
+/**
+ * Rollback all prepends on a class, run a callback, then re-apply the prepends.
+ */
+export function withPrependsRolledBack(klass, callback) {
+  const info = prependInfo.get(klass);
+  if (!info) {
+    callback();
+    return;
+  }
+
+  rollbackPrepends(klass);
+  try {
+    callback();
+  } finally {
+    info.modifyCallbacks.forEach((cb) => classPrepend(klass, cb));
   }
 }
 
 /**
  * Rollback all descriptors to their original values. This should only be used in tests
  */
-export function rollbackAllModifications() {
-  if (DEBUG && isTesting()) {
-    for (const [klass, { klassDescs, protoDescs }] of originalDescriptorInfo) {
-      for (const [key, descriptor] of Object.entries(klassDescs)) {
-        Object.defineProperty(klass, key, descriptor);
-      }
-
-      for (const [key, descriptor] of Object.entries(protoDescs)) {
-        Object.defineProperty(klass.prototype, key, descriptor);
-      }
-    }
-
-    originalDescriptorInfo.clear();
+export function rollbackAllPrepends() {
+  for (const klass of prependInfo.keys()) {
+    rollbackPrepends(klass);
   }
 }
