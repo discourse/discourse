@@ -475,6 +475,14 @@ export default class Category extends RestModel {
     }
   }
 
+  get descriptionText() {
+    return this.get("description_text");
+  }
+
+  get displayName() {
+    return this.get("name");
+  }
+
   @computed("parent_category_id", "site.categories.[]")
   get parentCategory() {
     if (this.parent_category_id) {

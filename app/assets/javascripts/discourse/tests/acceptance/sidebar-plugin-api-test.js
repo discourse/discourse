@@ -543,9 +543,9 @@ acceptance("Sidebar - Plugin API", function (needs) {
           route: "discovery.latestCategory",
           routeQuery: { status: "open" },
           shouldRegister: ({ category }) => {
-            if (category.name === category1.name) {
+            if (category.displayName === category1.displayName) {
               return true;
-            } else if (category.name === category2.name) {
+            } else if (category.displayName === category2.displayName) {
               return false;
             }
           },

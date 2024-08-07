@@ -15,7 +15,7 @@ module("Integration | Helper | category-badge", function (hooks) {
 
     assert.strictEqual(
       query(".badge-category__name").innerText.trim(),
-      this.category.name
+      this.category.displayName
     );
   });
 

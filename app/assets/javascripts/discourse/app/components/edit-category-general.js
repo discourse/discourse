@@ -77,7 +77,7 @@ export default buildCategoryPanel("general", {
 
   @discourseComputed(
     "category.parent_category_id",
-    "category.name",
+    "category.displayName",
     "category.color",
     "category.text_color"
   )

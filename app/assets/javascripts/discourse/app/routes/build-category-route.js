@@ -117,11 +117,11 @@ class AbstractCategoryRoute extends DiscourseRoute {
       "filters." + this.filter(category).replace("/", ".") + ".title"
     );
 
-    let categoryName = category.name;
+    let categoryName = category.displayName;
     if (category.parent_category_id) {
       const list = Category.list();
       const parentCategory = list.findBy("id", category.parent_category_id);
-      categoryName = `${parentCategory.name}/${categoryName}`;
+      categoryName = `${parentCategory.displayName}/${categoryName}`;
     }
 
     return I18n.t("filters.with_category", {
