@@ -65,6 +65,10 @@ class DiscourseIpInfo
         extra_headers:,
       )
 
+    if gz_file.nil?
+      Rails.logger.warn("MaxMindDB could not be downloaded")
+      return
+    end
     filename = File.basename(gz_file.path)
 
     dir = "#{Dir.tmpdir}/#{SecureRandom.hex}"
