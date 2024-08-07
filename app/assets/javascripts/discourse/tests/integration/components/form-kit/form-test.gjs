@@ -1,4 +1,7 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { array, fn, hash } from "@ember/helper";
+import { action } from "@ember/object";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
@@ -230,5 +233,34 @@ module("Integration | Component | FormKit | Form", function (hooks) {
 
     assert.dom(".foo").hasText("2");
     assert.dom(".bar").hasText("2");
+  });
+
+  test("@onRegisterApi - isDirty", async function (assert) {
+    class TrackedComponent extends Component {
+      @tracked formApi;
+
+      @action
+      registerApi(api) {
+        this.formApi = api;
+      }
+
+      <template>
+        <Form @onRegisterApi={{this.registerApi}} as |form|>
+          <form.Field @title="Foo" @name="foo" as |field|>
+            <field.Input />
+          </form.Field>
+        </Form>
+
+        <div class="is-dirty">{{this.formApi.isDirty}}</div>
+      </template>
+    }
+
+    await render(<template><TrackedComponent /></template>);
+
+    assert.dom(".is-dirty").hasText("false");
+
+    await formKit().field("foo").fillIn("bar");
+
+    assert.dom(".is-dirty").hasText("true");
   });
 });

@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { array, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import FKAlert from "discourse/form-kit/components/fk/alert";
@@ -37,11 +38,17 @@ class FKForm extends Component {
   constructor() {
     super(...arguments);
 
-    this.args.onRegisterApi?.({
-      set: this.set,
-      setProperties: this.setProperties,
-      submit: this.onSubmit,
-      reset: this.onReset,
+    const isDirtyCheck = () => this.formData.isDirty;
+    next(() => {
+      this.args.onRegisterApi?.({
+        set: this.set,
+        setProperties: this.setProperties,
+        submit: this.onSubmit,
+        reset: this.onReset,
+        get isDirty() {
+          return isDirtyCheck();
+        },
+      });
     });
 
     this.router.on("routeWillChange", this.checkIsDirty);
