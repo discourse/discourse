@@ -201,6 +201,7 @@ module SvgSprite
         reply
         robot
         rocket
+        scroll
         search
         search-plus
         search-minus
