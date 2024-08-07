@@ -1,7 +1,7 @@
+import DEPRECATION_WORKFLOW from "../deprecation-workflow";
+
 const handlers = [];
 const disabledDeprecations = new Set();
-const deprecationWorkflow = window.deprecationWorkflow;
-const workflows = deprecationWorkflow?.config?.workflow;
 
 let emberDeprecationSilencer;
 
@@ -47,12 +47,12 @@ export default function deprecated(msg, options = {}) {
 
   handlers.forEach((h) => h(msg, options));
 
-  const matchedWorkflow = workflows?.find((w) => w.matchId === id);
+  const matchedWorkflow = DEPRECATION_WORKFLOW.find((w) => w.matchId === id);
 
   if (
     raiseError ||
     matchedWorkflow?.handler === "throw" ||
-    (!matchedWorkflow && deprecationWorkflow?.throwOnUnhandled)
+    (!matchedWorkflow && globalThis.EmberENV?.RAISE_ON_DEPRECATION)
   ) {
     throw msg;
   }

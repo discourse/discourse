@@ -1,4 +1,5 @@
 import { registerDeprecationHandler } from "@ember/debug";
+import DEPRECATION_WORKFLOW from "discourse-common/deprecation-workflow";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse-common/lib/deprecated";
 import { bind } from "discourse-common/utils/decorators";
 
@@ -79,8 +80,7 @@ function reportToTestem(id) {
 }
 
 export function setupDeprecationCounter(qunit) {
-  const config = window.deprecationWorkflow?.config?.workflow || {};
-  const deprecationCounter = new DeprecationCounter(config);
+  const deprecationCounter = new DeprecationCounter(DEPRECATION_WORKFLOW);
 
   qunit.begin(() => deprecationCounter.start());
 
