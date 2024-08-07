@@ -662,6 +662,7 @@ export default class PollComponent extends Component {
   toggleDisplayMode() {
     this.showAbsolute = !this.showAbsolute;
   }
+
   <template>
     <div
       {{didUpdate this.updatedVoters @preloadedVoters}}
