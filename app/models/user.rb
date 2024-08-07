@@ -916,13 +916,12 @@ class User < ActiveRecord::Base
 
   def password=(password)
     # special case for passwordless accounts
-    # @raw_password = password if password.present?
     return if password.blank?
 
+    # We intentionally want to prepare expiry of the previous unexpired password at the User level since calling this method indicates intention to have a new unexpired password
     if (unexpired_password = passwords.find { |p| p.password_expired_at.nil? })
       unexpired_password.password_expired_at = Time.now.zone
     end
-
     # TODO: deprecate passing through salt once User.salt is dropped
     @salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
     @raw_password = passwords.build(salt:, password:).password
