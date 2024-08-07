@@ -3711,6 +3711,7 @@ gl:
             save: "Gardar"
             name: "Nome"
             description: "Descrición"
+            invalid_applies_to: "Obrigatorio"
             topic: "temas"
             post: "publicacións"
       plugins:

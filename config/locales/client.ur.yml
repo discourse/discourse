@@ -3999,6 +3999,7 @@ ur:
             save: "محفوظ کریں"
             name: "نام"
             description: "تفصیل"
+            invalid_applies_to: "درکار"
             topic: "ٹاپک"
             post: "پوسٹ`"
       plugins:

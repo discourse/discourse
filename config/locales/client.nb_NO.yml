@@ -3696,6 +3696,7 @@ nb_NO:
             save: "Lagre"
             name: "Navn"
             description: "Beskrivelse"
+            invalid_applies_to: "Påkrevd"
             topic: "emner"
             post: "innlegg"
       plugins:

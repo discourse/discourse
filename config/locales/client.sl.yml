@@ -3941,6 +3941,7 @@ sl:
             save: "Shrani"
             name: "Ime"
             description: "Opis"
+            invalid_applies_to: "Zahtevano"
             topic: "tem"
             post: "prispevkov"
             chat_message: "sporočila klepeta"

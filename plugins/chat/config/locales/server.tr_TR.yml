@@ -17,7 +17,6 @@ tr_TR:
     chat_allowed_messages_for_other_trust_levels: "1-4. güven seviyesindeki kullanıcıların 30 saniye içinde göndermesine izin verilen mesaj sayısı. Limiti devre dışı bırakmak için \"0\" olarak ayarlayın."
     chat_silence_user_sensitivity: "Sohbette işaretlenen bir kullanıcının otomatik olarak susturulma olasılığı."
     chat_auto_silence_from_flags_duration: "Kullanıcıların, işaretli sohbet mesajları nedeniyle otomatik olarak susturulduğunda, susturulacakları dakika sayısı."
-    chat_default_channel_id: "Bir kullanıcının diğer kanallarda okunmamış mesajı veya bahsetmesi olmadığında varsayılan olarak açılacak sohbet kanalı."
     chat_duplicate_message_sensitivity: "Aynı gönderen tarafından eş kopya bir mesajın kısa bir süre içinde engellenme olasılığı. 0 ila 1,0 arasında ondalık sayı, 1,0 en yüksek ayardır (mesajları daha kısa sürede daha sık engeller). Eş kopya mesajlara izin vermek için \"0\" olarak ayarlayın."
     chat_minimum_message_length: "Bir sohbet mesajı için minimum karakter sayısı."
     chat_allow_uploads: "Genel sohbet kanallarında ve doğrudan mesaj kanallarında yüklemelere izin verin."
@@ -31,7 +30,6 @@ tr_TR:
     chat_editing_grace_period: "Sohbet gönderdikten sonra (n) saniye boyunca düzenleme, sohbet mesajının yanında (düzenlenmiş) etiketi göstermeyecek."
     chat_editing_grace_period_max_diff_low_trust: "Sohbet düzenleme ödemesiz döneminde izin verilen maksimum karakter değişikliği sayısı, daha fazla değiştirilirse sohbet mesajıyla (düzenlenmiş) etiketi görüntüler (güven seviyesi 0 ve 1)."
     chat_editing_grace_period_max_diff_high_trust: "Sohbet düzenleme ödemesiz döneminde izin verilen maksimum karakter değişikliği sayısı, daha fazla değiştirilirse sohbet mesajıyla (düzenlenmiş) etiketi görüntüler (güven seviyesi 2 ve üstü)."
-    chat_preferred_mobile_index: "Mobil cihazlarda /chat yüklenirken tercih edilen sekme."
     errors:
       chat_default_channel: "Varsayılan sohbet kanalı genel bir kanal olmalıdır."
       direct_message_enabled_groups_invalid: "Bu ayar için en az bir grup belirtmelisiniz. Personel dışında kimsenin doğrudan mesaj göndermesini istemiyorsanız personel grubunu seçin."

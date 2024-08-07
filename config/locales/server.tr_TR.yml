@@ -2393,7 +2393,6 @@ tr_TR:
     experimental_topics_filter: "DENEYSEL: /filter konumunda deneysel konu filtrelemeyi etkinleştiririn"
     enable_experimental_lightbox: "DENEYSEL: Varsayılan görüntü lightbox'ını yenilenen tasarımla değiştirin."
     enable_experimental_bookmark_redesign_groups: "DENEYSEL: Gönderilerdeki yer imleri için hızlı erişim menüsü ve yeniden tasarlanmış yeni bir modal göster"
-    glimmer_header_mode: "Yeni 'glimmer' başlık uygulamasının kullanılıp kullanılmadığını kontrol edin. Varsayılan olarak 'otomatik'tir; bu, tüm temalarınız ve eklentileriniz hazır olduğunda otomatik olarak etkinleştirilecektir. https://meta.discourse.org/t/296544"
     experimental_glimmer_topic_list_groups: "DENEYSEL: Yeni 'glimmer' konu listesi uygulamasını etkinleştirin. Bu uygulama aktif olarak geliştirilme aşamasındadır ve üretimde kullanıma yönelik değildir. Uygulama kesinleşip duyurulana kadar buna karşı tema/eklenti geliştirmeyin."
     experimental_form_templates: "DENEYSEL: Form şablonları özelliğini etkinleştirin. <b>Etkinleştirildikten sonra,</b> bu şablonları <a href='%{base_path}/admin/customize/form-templates'>Özelleştir / Şablonlar</a> altında yönetin."
     admin_sidebar_enabled_groups: "Belirtilen gruplar için yönetici kullanıcı arayüzünde üst düzey yönetici gezinme düğmelerinin yerini alan kenar çubuğu gezinmesini etkinleştirin."

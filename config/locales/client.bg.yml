@@ -3589,6 +3589,7 @@ bg:
             save: "Запази "
             name: "Име"
             description: "Описание"
+            invalid_applies_to: "Задъжителни"
             topic: "теми"
             post: "публикации"
       plugins:

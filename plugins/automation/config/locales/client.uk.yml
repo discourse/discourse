@@ -211,6 +211,14 @@ uk:
             valid_trust_levels:
               label: Доступні рівні довіри
               description: Спрацьовує лише якщо допис створено користувачем із зазначеним рівнем довіри, за замовчуванням - будь-який рівень довіри
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: Перегляд категорій
+              description: Спрацюватиме лише в тому випадку, якщо тема належить до однієї з цих категорій
+            watching_tags:
+              label: Перегляд тегів
+              description: Запускатиметься лише в тому випадку, якщо тема містить будь-який з цих тегів
         after_post_cook:
           fields:
             valid_trust_levels:

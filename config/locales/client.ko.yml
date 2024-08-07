@@ -3949,6 +3949,7 @@ ko:
             save: "저장"
             name: "그룹명"
             description: "내용"
+            invalid_applies_to: "필수"
             topic: "글"
             post: "포스트"
       plugins:

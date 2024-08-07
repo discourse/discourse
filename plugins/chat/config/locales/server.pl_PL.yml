@@ -16,7 +16,6 @@ pl_PL:
     chat_allowed_messages_for_other_trust_levels: "Liczba wiadomości, które użytkownicy z poziomami zaufania 1-4 mogą wysłać w ciągu 30 sekund. Ustaw na '0', aby wyłączyć limit."
     chat_silence_user_sensitivity: "Prawdopodobieństwo, że użytkownik oflagowany na czacie zostanie automatycznie wyciszony."
     chat_auto_silence_from_flags_duration: "Liczba minut, przez które użytkownicy będą wyciszeni, gdy zostaną automatycznie wyciszeni z powodu oflagowanych wiadomości na czacie."
-    chat_default_channel_id: "Kanał czatu, który zostanie domyślnie otwarty, gdy użytkownik nie ma nieprzeczytanych wiadomości ani wzmianek na innych kanałach."
     chat_duplicate_message_sensitivity: "Prawdopodobieństwo, że zduplikowana wiadomość od tego samego nadawcy zostanie zablokowana w krótkim czasie. Liczba dziesiętna z zakresu od 0 do 1,0, gdzie 1,0 jest najwyższym ustawieniem (blokuje wiadomości częściej w krótszym czasie). Ustaw na „0”, aby zezwolić na duplikaty wiadomości."
     chat_minimum_message_length: "Minimalna liczba znaków wiadomości na czacie."
     chat_allow_uploads: "Zezwalaj na przesyłanie plików w publicznych kanałach czatu i kanałach wiadomości bezpośrednich."
@@ -29,7 +28,6 @@ pl_PL:
     chat_editing_grace_period: "Przez (n) sekund po wysłaniu wiadomości jej edycja nie będzie pokazywać znacznika „edytowana”."
     chat_editing_grace_period_max_diff_low_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 0 i 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 2 i wyższy)."
-    chat_preferred_mobile_index: "Preferowana karta podczas ładowania /chat na urządzeniach mobilnych."
     errors:
       chat_default_channel: "Domyślny kanał czatu musi być kanałem publicznym."
       direct_message_enabled_groups_invalid: "Musisz określić co najmniej jedną grupę dla tego ustawienia. Jeśli nie chcesz, aby ktokolwiek poza personelem wysyłał bezpośrednie wiadomości, wybierz grupę pracowników."

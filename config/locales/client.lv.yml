@@ -3034,6 +3034,7 @@ lv:
             save: "Saglabāt"
             name: "Vārds"
             description: "Apraksts"
+            invalid_applies_to: "Nepieciešams"
             topic: "tēmas"
             post: "raksti"
       plugins:

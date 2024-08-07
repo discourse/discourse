@@ -2548,6 +2548,7 @@ sw:
             save: "Hifadhi"
             name: "Jina"
             description: "Elezo"
+            invalid_applies_to: "Muhimu na Inahitajika"
             topic: "mada"
             post: "machapisho"
       plugins:

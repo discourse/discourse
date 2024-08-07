@@ -201,6 +201,7 @@ ug:
     broken_decorator_alert: "يازما توغرا كۆرۈنمەسلىكى مۇمكىن چۈنكى تور بېكىتىڭىزدىكى بىر يازمىنىڭ مەزمۇن بېزىكى مەسىلە چىقاردى."
     broken_page_change_alert: "onPageChange بىر تەرەپ قىلغۇچ خاتالىققا يولۇقتى. تەپسىلاتى ئۈچۈن توركۆرگۈ ئىجادىيەت قورالىنى تەكشۈرۈڭ."
     broken_plugin_alert: "قىستۇرما «%{name}» كەلتۈرۈپ چىقارغان"
+    broken_transformer_alert: "خاتالىق كۆرۈلدى. تور بېكىتىڭىز نورمال ئىشلىمەسلىكى مۇمكىن."
     critical_deprecation:
       notice: "<b>[باشقۇرغۇچى ئۇقتۇرۇشى]</b> يېقىندا Discourse يادروسىنىڭ ئۆزگىرىشىگە ماسلىشىش ئۈچۈن ئاز دېگەندە بىر ئۆرنەك ياكى قىستۇرمىڭىزنى يېڭىلىشىڭىز كېرەك."
       id: "(id:<em>%{id}</em>)"
@@ -322,6 +323,7 @@ ug:
       moderator_count:
         one: "%{formatted_number} رىياسەتچى"
         other: "%{formatted_number} رىياسەتچى"
+      report_inappropriate_content: "نامۇۋاپىق مەزمۇنلارغا يولۇقسىڭىز، رىياسەتچى ۋە باشقۇرغۇچىلىرىمىز بىلەن سۆھبەتلىشىشتىن تارتىنماڭ. ئالاقىلىشىشتىن بۇرۇن تىزىمغا كىرىشنى ئۇنتۇپ قالماڭ."
     bookmarked:
       title: "خەتكۈچ"
       edit_bookmark: "خەتكۈچ تەھرىر"
@@ -1909,6 +1911,7 @@ ug:
       errors:
         required: "زۆرۈر"
         invalid_url: "چوقۇم ئۈنۈملۈك تور ئادرېسى بولۇشى كېرەك"
+        not_an_integer: "چوقۇم پۈتۈن سان بولۇشى كېرەك"
         not_accepted: "چوقۇم قوبۇل قىلىنىشى كېرەك"
         not_a_number: "چوقۇم سان بولۇشى كېرەك"
         too_high: "ئەڭ كۆپ بولغاندا %{count} بولۇشى كېرەك"
@@ -1930,6 +1933,39 @@ ug:
       logout_disabled: "تور بېكەت پەقەت ئوقۇشقىلا بولىدىغان ھالىتىدە تىزىمدىن چىقىش چەكلەنگەن."
     staff_writes_only_mode:
       enabled: "بۇ تور بېكەت پەقەت باشقۇرغۇچىلار ئىشلىتىدىغان ھالەتتە. زىيارەتنى داۋاملاشتۇرۇڭ، ئەمما جاۋاب، ياقتۇرۇش ۋە باشقا مەشغۇلاتلارنى باشقۇرغۇچى ئەزالارلا ئېلىپ بارالايدۇ."
+    logs_error_rate_notice:
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# خاتالىق/سائەت}
+          other {# خاتالىق/سائەت}
+        }</a> بېكەت تەڭشىكىدىكى {limit, plural,
+            one {# خاتالىق/سائەت}
+          other {# خاتالىق/سائەت}
+        } چېكىگە يەتتى.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# خاتالىق/مىنۇت}
+          other {# خاتالىق/مىنۇت}
+        }</a> بېكەت تەڭشىكىدىكى { limit, plural,
+            one {# خاتالىق/مىنۇت}
+          other {# خاتالىق/مىنۇت}
+        } چېكىگە يەتتى.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# خاتالىق/سائەت}
+          other {# خاتالىق/سائەت}
+        }</a> بېكەت تەڭشىكىدىكى { limit, plural,
+            one {# error/hour}
+          other {# errors/hour}
+        } چېكىدىن ئېشىپ كەتتى.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# خاتالىق/مىنۇت}
+          other {# خاتالىق/مىنۇت}
+        }</a> تور بېكەت تەڭشىكىدىكى { limit, plural,
+            one {# خاتالىق/مىنۇت}
+          other {# خاتالىق/مىنۇت}
+        } چېكىدىن ئېشىپ كەتتى.
     learn_more: "تېخىمۇ كۆپ بىلدۈرگۈ…"
     mute: ئۈنسىز
     unmute: ئۈنلۈك
@@ -3136,6 +3172,8 @@ ug:
         username_placeholder: "ئىشلەتكۈچى ئاتى"
         action: "تەكلىپ يوللا"
         help: "باشقىلارنى ئېلخەت ياكى ئۇقتۇرۇش ئارقىلىق بۇ تېمىغا تەكلىپ قىلىدۇ"
+        to_forum: "دوستىڭىز ئۇلانمىنى چېكىپلا قوشۇلالايدىغان قىسقا ئېلخەت ئەۋەتىمىز."
+        discourse_connect_enabled: "بۇ تېمىغا تەكلىپ قىلماقچى بولغان كىشىنىڭ ئىشلەتكۈچى ئاتىنى كىرگۈزۈڭ."
         email_placeholder: "name@example.com"
         success_email: "بىز <b>%{invitee}</b> غا تەكلىپ ئەۋەتتۇق. تەكلىپ قوبۇل قىلىنغاندا سىزگە ئۇقتۇرىمىز. ئىشلەتكۈچى بېتىڭىزدىكى تەكلىپنامە بەتكۈچنى تەكشۈرۈپ تەكلىپ جەريانىنى ئىزلاڭ."
         success_username: "بىز بۇ ئىشلەتكۈچىنى مەزكۇر تېمىغا قاتنىشىشقا تەكلىپ قىلدۇق."
@@ -3706,7 +3744,10 @@ ug:
         replies: كۆپ ياقتۇرۇلغان جاۋاب
         views: يېقىنقى كۆرۈلۈشى
       views: "كۆرۈلۈشى"
+      predicted_views: "ئالدىن پەرەز قىلىنغان كۆرۈلۈشى"
+      so_far: (ھازىرغىچە)
       read: ئوقۇ
+      minutes: مىنۇت
     post_links:
       about: "بۇ يازمىنىڭ تېخىمۇ كۆپ ئۇلانمىسىنى يايىدۇ"
       title:
@@ -5022,6 +5063,7 @@ ug:
             name: "ئىسمى"
             description: "چۈشەندۈرۈش"
             applies_to: "بۇ پاش قىلىشنى كۆرسىتىدۇ"
+            invalid_applies_to: "زۆرۈر"
             topic: "تېما"
             post: "يازما"
             chat_message: "سۆھبەت ئۇچۇرى"
@@ -6186,6 +6228,8 @@ ug:
           title: "بۆلەك تەلىپى"
           optional:
             title: "تاللاشچان"
+          for_all_users:
+            title: "بارلىق ئىشلەتكۈچىلەر ئۈچۈن"
           on_signup:
             title: "تىزىملاتقاندا"
             description: "يېڭى ئىشلەتكۈچىلەر تىزىملاتقاندا، ئۇلار چوقۇم بۇ بۆلەكنى تولدۇرۇشى كېرەك. مەۋجۇت ئىشلەتكۈچىلەر تەسىرگە ئۇچرىمايدۇ."
@@ -6221,6 +6265,7 @@ ug:
         recommended: "ئېھتىياجىڭىزغا ماسلاشتۇرۇش ئۈچۈن تېكىستنى خاسلاشتۇرۇشنى تەۋسىيە قىلىمىز:"
         show_overriden: "قاپلىۋەتكەننىلا كۆرسىتىدۇ"
         show_outdated: "پەقەت ۋاقتى ئۆتكەن/ئىناۋەتسىزنىلا كۆرسىتىدۇ"
+        show_untranslated: "پەقەت تەرجىمە قىلىنمىغاننىلا كۆرسىتىدۇ"
         locale: "تىل:"
         more_than_50_results: "50 دىن ئارتۇق نەتىجە بار. ئىزدىشىڭىزنى ياخشىلاڭ."
         no_results: "ماس كېلىدىغان تور بېكەت تېكىستى تېپىلمىدى"
@@ -6309,6 +6354,10 @@ ug:
           add_types_title: "%{types} كېڭەيتىلمىگە يول قويىدۇ"
           add_types_toast: "%{types} ھۆججەت تىپى قوشۇلدى"
         mandatory_group: "گۇرۇپپا مەجبۇرى"
+        requires_confirmation_messages:
+          default:
+            prompt: "بۇ تەڭشەكنى ئۆزگەرتىش تور بېتىڭىزگە ئېغىر ياكى ئويلىمىغان ئاقىۋەتلەرنى ئېلىپ كېلىشى مۇمكىن. راستتىنلا داۋاملاشتۇرامسىز؟"
+            confirm: "ھەئە، شۇنداق"
       badges:
         status: ھالەت
         title: تارتۇق
@@ -6318,6 +6367,8 @@ ug:
         badge: تارتۇق
         display_name: كۆرسىتىش ئىسمى
         description: چۈشەندۈرۈش
+        long_description: تەپسىلىي چۈشەندۈرۈش
+        badge_type: تارتۇق تۈرى
         badge_grouping: گۇرۇپپا
         badge_groupings:
           modal_title: تارتۇق گۇرۇپپىسى

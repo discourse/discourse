@@ -3553,6 +3553,7 @@ ro:
             save: "Salvare"
             name: "Nume"
             description: "Descriere"
+            invalid_applies_to: "Necesare"
             topic: "discuții"
             post: "Postări"
       plugins:

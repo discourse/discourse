@@ -4765,6 +4765,7 @@ hr:
             save: "Spremi"
             name: "Ime"
             description: "Opis"
+            invalid_applies_to: "Potrebno"
             topic: "tema"
             post: "objave"
       plugins:

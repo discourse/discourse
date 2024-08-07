@@ -2399,7 +2399,6 @@ fi:
     experimental_topics_filter: "KOKEELLINEN: ottaa käyttöön kokeellisen aiheiden suodatuspolun osoitteella /filter"
     enable_experimental_lightbox: "KOKEELLINEN: Korvaa kuvien oletusarvoinen lightbox-tehoste uudistetulla tyylillä."
     enable_experimental_bookmark_redesign_groups: "KOKEELLINEN: näytä kirjanmerkkien pikavalikko viesteissä ja uusi uudistettu modaali"
-    glimmer_header_mode: "Hallitse, käytetäänkö uutta glimmer-yläpalkkiuudistus. Oletusarvo on \"auto\", joka otetaan käyttöön automaattisesti, kun kaikki teemasi ja lisäosasi ovat valmiita. https://meta.discourse.org/t/296544"
     experimental_glimmer_topic_list_groups: "KOKEELLINEN: Ota käyttöön uusi glimmer-ketjuluettelouudistus. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
     experimental_form_templates: "KOKEELLINEN: Ota lomakemalliominaisuus käyttöön. <b>Kun ominaisuus on otettu käyttöön,</b> voit hallinnoida malleja kohdassa <a href='%{base_path}/admin/customize/form-templates'>Mukauta / Mallit</a>."
     admin_sidebar_enabled_groups: "Ota käyttöön sivupalkkinavigointi ylläpitäjän käyttöliittymässä määritetyille ryhmille, mikä korvaa ylätason ylläpitäjän navigointipainikkeet."

@@ -3325,6 +3325,7 @@ zh_TW:
             save: "保存"
             name: "名字"
             description: "簡述"
+            invalid_applies_to: "必要設定"
             topic: "話題"
             post: "貼文"
             chat_message: "聊天訊息"

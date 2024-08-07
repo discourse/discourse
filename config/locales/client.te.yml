@@ -4882,6 +4882,7 @@ te:
             save: "సేవ్ చేయండి"
             name: "పేరు"
             description: "వివరణ"
+            invalid_applies_to: "అవసరం"
             topic: "విషయాలు"
             post: "టపాలు"
       plugins:

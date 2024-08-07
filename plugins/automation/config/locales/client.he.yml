@@ -211,6 +211,14 @@ he:
             valid_trust_levels:
               label: דרגות אמון תקפות
               description: יוקפץ רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: קטגוריות במעקב
+              description: יוזנק רק אם הנושא הוא באחת מהקטגוריות הבאות
+            watching_tags:
+              label: תגיות במעקב
+              description: יוזנק רק אם לנושא יש את אחת מהתגיות האלה
         after_post_cook:
           fields:
             valid_trust_levels:

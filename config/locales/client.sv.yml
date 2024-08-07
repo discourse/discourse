@@ -4856,6 +4856,7 @@ sv:
             save: "Spara"
             name: "Namn"
             description: "Beskrivning"
+            invalid_applies_to: "Krävs"
             topic: "ämnen"
             post: "inlägg"
             chat_message: "chattmeddelanden"

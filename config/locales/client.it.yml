@@ -5112,6 +5112,7 @@ it:
             name: "Nome"
             description: "Descrizione"
             applies_to: "Mostra segnalazione su"
+            invalid_applies_to: "Obbligatorio"
             topic: "argomenti"
             post: "messaggi"
             chat_message: "messaggi di chat"
@@ -6433,7 +6434,6 @@ it:
             prompt: "Stai per modificare i criteri della password. La modifica interesserà ogni utente che modificherà la password da ora in avanti. Intendi procedere?"
             confirm: "Sì, aggiorna i criteri della password"
       badges:
-        disable_system: 'Questo è un distintivo di sistema: non può essere disabilitato e/o eliminato.'
         status: Stato
         title: Distintivi
         new_badge: Nuovo Distintivo

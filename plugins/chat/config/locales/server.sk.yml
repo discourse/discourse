@@ -17,7 +17,6 @@ sk:
     chat_allowed_messages_for_other_trust_levels: "Počet správ, ktoré môžu používatelia s úrovňou dôveryhodnosti 1 až 4 odoslať za 30 sekúnd. Ak chcete limit deaktivovať, nastavte na „0“."
     chat_silence_user_sensitivity: "Pravdepodobnosť, že používateľ označený v čete bude automaticky stlmený."
     chat_auto_silence_from_flags_duration: "Počet minút, na ktoré budú používatelia stíšení, keď budú automaticky stíšení z dôvodu označených četových správ."
-    chat_default_channel_id: "Chatový kanál, ktorý sa predvolene otvorí, keď používateľ nemá žiadne neprečítané správy ani zmienky v iných kanáloch."
     chat_duplicate_message_sensitivity: "Pravdepodobnosť, že duplicitná správa od rovnakého odosielateľa bude v krátkom čase zablokovaná. Desatinné číslo medzi 0 a 1,0, pričom 1,0 je najvyššie nastavenie (blokuje správy častejšie za kratší čas). Ak chcete povoliť duplicitné správy, nastavte na 0."
     chat_minimum_message_length: "Minimálny počet znakov pre chatovú správu."
     chat_allow_uploads: "Povoľte nahrávanie vo verejných kanáloch chatu a kanáloch priamych správ."
@@ -31,7 +30,7 @@ sk:
     chat_editing_grace_period: "Počas (n) sekúnd po odoslaní chatu sa pri editácii nezobrazí (upravená) značka pri správe chatu."
     chat_editing_grace_period_max_diff_low_trust: "Maximálny počet zmien znakov povolených v ochrannej lehote na úpravu chatu, ak sa ich zmení viac, pri chatovej správe sa zobrazí značka (upravená) (úroveň dôveryhodnosti 0 a 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maximálny počet zmien znakov povolený v ochrannej lehote na úpravu chatu, ak sa ich zmení viac, pri chatovej správe (úroveň dôveryhodnosti 2 a vyššie) sa zobrazí značka (upravená)."
-    chat_preferred_mobile_index: "Preferovaná karta pri načítaní / chate na mobile."
+    chat_preferred_index: "Preferovaná karta pri načítaní /chat."
     errors:
       chat_default_channel: "Predvolený chatovací kanál musí byť verejný kanál."
       direct_message_enabled_groups_invalid: "Pre toto nastavenie musíte zadať aspoň jednu skupinu. Ak nechcete, aby niekto okrem personálu posielal priame správy, vyberte skupinu zamestnancov."

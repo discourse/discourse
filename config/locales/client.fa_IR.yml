@@ -3832,6 +3832,7 @@ fa_IR:
             save: "ذخیره"
             name: "نام"
             description: "توضیح"
+            invalid_applies_to: "مورد نیاز"
             topic: "موضوعات"
             post: "فرسته‌ها"
       plugins:

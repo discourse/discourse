@@ -16,6 +16,7 @@ el:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
       no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     -
@@ -51,10 +52,18 @@ el:
   remove_posts_deleted_by_author: "Διαγράφηκε από τον συγγραφέα"
   redirect_warning: "Δε μπορέσαμε να επαληθεύσουμε ότι ο σύνδεσμος που επιλέξατε ήταν πράγματι αναρτημένος στο forum. Αν θέλετε να προχωρήσετε ούτως ή άλλως, επιλέξτε τον παρακάτω σύνδεσμο."
   on_another_topic: "Σε άλλο θέμα"
+  topic_category_changed: "Από %{from} σε %{to}"
+  topic_tag_changed:
+    added_and_removed: "Προστέθηκε %{added} και αφαιρέθηκε %{removed}"
+    added: "Προστέθηκε %{added}"
+    removed: "Αφαιρέθηκε %{removed}"
   inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} από %{username}"
   components:
+    enabled_filter: "Ενεργοποιημένα"
     disabled_filter: "Απενεργοποιημένο"
+    updates_available_filter: "Διαθέσιμες Ενημερώσεις"
   themes:
     bad_color_scheme: "Δεν είναι δυνατή η ενημέρωση του θέματος, μη έγκυρη παλέτα χρωμάτων"
     other_error: "Κάτι πήγε στραβά κατά την ενημέρωση του θέματος"
@@ -406,6 +415,10 @@ el:
           attributes:
             word:
               too_many: "Πάρα πολλές λέξεις για την ενέργεια"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "δεν είναι έγκυρο"
       <<: *errors
   general_category_name: "Γενικά"
   meta_category_name: "Σχολιασμός Ιστοσελίδας"
