@@ -1239,6 +1239,14 @@ RSpec.describe ListController do
         expect(response).to have_http_status :not_found
       end
     end
+
+    context "when provided slug is gibberish" do
+      it "redirects to the proper category" do
+        get "/c/summit'%22()&%25%3Czzz%3E%3CScRiPt%20%3EqlJ2(9585)%3C%2FScRiPt%3E/#{category.id}"
+        expect(response).to have_http_status :moved_permanently
+        expect(response).to redirect_to("/c/#{category.slug}/#{category.id}")
+      end
+    end
   end
 
   describe "shared drafts" do
