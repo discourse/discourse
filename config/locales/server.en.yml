@@ -2486,7 +2486,7 @@ en:
     notify_about_reviewable_item_after: "If there are reviewable items that haven’t been handled after this many hours, send a personal message to moderators. Set to 0 to disable."
 
     delete_drafts_older_than_n_days: "Delete drafts that have not been changed in more than (n) days."
-    delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to 0 to never delete stub topics."
+    delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to -1 to never delete. Set to 0 to immediately delete."
 
     bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode and remove Getting Started button (set to 0 to disable, can take up to 24 hours)"
 
@@ -2910,6 +2910,7 @@ en:
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_disabled_lastpost: "This topic is now opened. New replies are allowed."
     auto_deleted_by_timer: "Automatically deleted by timer."
+    auto_deleted_by_merge: "Automatically deleted by merge."
 
   login:
     invalid_second_factor_method: "The selected two-factor method is invalid."

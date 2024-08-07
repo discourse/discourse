@@ -701,7 +701,19 @@ class PostMover
     @original_topic.update_status("closed", true, @user)
 
     days_to_deleting = SiteSetting.delete_merged_stub_topics_after_days
-    if days_to_deleting > 0
+    if days_to_deleting == 0
+      if Guardian.new(@user).can_delete?(@original_topic)
+        first_post = @original_topic.ordered_posts.first
+
+        PostDestroyer.new(
+          @user,
+          first_post,
+          context: I18n.t("topic_statuses.auto_deleted_by_merge"),
+        ).destroy
+
+        @original_topic.trash!(Discourse.system_user)
+      end
+    elsif days_to_deleting > 0
       @original_topic.set_or_create_timer(
         TopicTimer.types[:delete],
         days_to_deleting * 24,

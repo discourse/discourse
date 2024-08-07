@@ -733,8 +733,8 @@ RSpec.describe PostMover do
             expect(timer).to be_nil
           end
 
-          it "doesn't schedule topic deleting when all posts were moved if it's disabled in settings" do
-            SiteSetting.delete_merged_stub_topics_after_days = 0
+          it "doesn't schedule topic deleting when all posts were moved if it's disabled (-1)" do
+            SiteSetting.delete_merged_stub_topics_after_days = -1
 
             topic.expects(:add_moderator_post).twice
             posts_to_move = [p1.id, p2.id, p3.id, p4.id]
@@ -742,8 +742,23 @@ RSpec.describe PostMover do
               topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
             expect(moved_to).to be_present
 
+            expect(Topic.with_deleted.find(topic.id).deleted_at).to be_nil
+
             timer = topic.topic_timers.find_by(status_type: TopicTimer.types[:delete])
             expect(timer).to be_nil
+          end
+
+          it "immediately deletes topic when delete_merged_stub_topics_after_days is 0" do
+            SiteSetting.delete_merged_stub_topics_after_days = 0
+            freeze_time
+
+            topic.expects(:add_moderator_post).twice
+            posts_to_move = [p1.id, p2.id, p3.id, p4.id]
+            moved_to =
+              topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+            expect(moved_to).to be_present
+
+            expect(Topic.with_deleted.find(topic.id).deleted_at).to be_present
           end
 
           it "ignores moderator posts and closes the topic if all regular posts were moved" do

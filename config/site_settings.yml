@@ -2828,7 +2828,7 @@ uncategorized:
 
   delete_merged_stub_topics_after_days:
     default: 7
-    min: 0
+    min: -1
 
   backup_drafts_to_pm_length:
     default: 0
