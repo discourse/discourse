@@ -1,46 +1,10 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { modifier } from "ember-modifier";
 import { number } from "discourse/lib/formatter";
-import loadScript from "discourse/lib/load-script";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { makeArray } from "discourse-common/lib/helpers";
-import { bind } from "discourse-common/utils/decorators";
 import Report from "admin/models/report";
+import Chart from "./chart";
 
 export default class AdminReportStackedChart extends Component {
-  @tracked rerenderTrigger;
-
-  renderChart = modifier((element) => {
-    // consume the prop to re-run the modifier when the prop changes
-    this.rerenderTrigger;
-
-    loadScript("/javascripts/Chart.min.js").then(() => {
-      this.chart = new window.Chart(element.getContext("2d"), this.chartConfig);
-    });
-
-    return () => this.chart?.destroy();
-  });
-
-  constructor() {
-    super(...arguments);
-    window.addEventListener("resize", this.resizeHandler);
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    window.removeEventListener("resize", this.resizeHandler);
-  }
-
-  @bind
-  resizeHandler() {
-    discourseDebounce(this, this.rerenderChart, 500);
-  }
-
-  rerenderChart() {
-    this.rerenderTrigger = true;
-  }
-
   get chartConfig() {
     const { model } = this.args;
 
@@ -130,10 +94,9 @@ export default class AdminReportStackedChart extends Component {
   }
 
   <template>
-    <div class="admin-report-chart admin-report-stacked-chart">
-      <div class="chart-canvas-container">
-        <canvas {{this.renderChart}} class="chart-canvas"></canvas>
-      </div>
-    </div>
+    <Chart
+      @chartConfig={{this.chartConfig}}
+      class="admin-report-chart admin-report-stacked-chart"
+    />
   </template>
 }
