@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
-# TODO: Re-enable once ready to bring back validations
-RSpec.describe UserPassword, :skip do
+RSpec.describe UserPassword do
   context "for validations" do
-    it "should validate presence of user_id" do
-      user_password = Fabricate.build(:user_password, user_id: nil)
+    it "should validate presence of user" do
+      user_password = Fabricate.build(:user_password, user: nil)
 
       expect(user_password).not_to be_valid
-      expect(user_password.errors[:user_id]).to include("can't be blank")
+      expect(user_password.errors[:user]).to include("can't be blank")
     end
 
     it "should validate presence of password_hash" do
@@ -48,7 +47,7 @@ RSpec.describe UserPassword, :skip do
     end
 
     it "should validate uniqueness of user_id scoped to password_expired_at" do
-      user = Fabricate(:user)
+      user = Fabricate(:user, password: nil)
       user_password_1 = Fabricate.create(:user_password, user:, password_expired_at: nil)
 
       user_password_2 =
