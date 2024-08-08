@@ -32,7 +32,7 @@ class FlagSerializer < ApplicationSerializer
   end
 
   def is_flag
-    !object.score_type && object.id != 2
+    !object.score_type && object.id != PostActionType::LIKE_POST_ACTION_ID
   end
 
   def is_used
