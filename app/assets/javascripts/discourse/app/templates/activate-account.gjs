@@ -17,7 +17,7 @@ export default RouteTemplate(
     @service siteSettings;
 
     @tracked accountActivated = false;
-    @tracked buttonDisabled = false;
+    @tracked isLoading = false;
     @tracked needsApproval = false;
     @tracked errorMessage = null;
 
@@ -37,7 +37,7 @@ export default RouteTemplate(
 
     @action
     async activate() {
-      this.buttonDisabled = true;
+      this.isLoading = true;
 
       let hp;
       try {
@@ -48,7 +48,7 @@ export default RouteTemplate(
         });
         hp = await response.json();
       } catch (error) {
-        this.buttonDisabled = false;
+        this.isLoading = false;
         popupAjaxError(error);
         return;
       }
@@ -129,7 +129,7 @@ export default RouteTemplate(
                 class="btn-primary"
                 @action={{this.activate}}
                 @label="user.activate_account.action"
-                @disabled={{this.buttonDisabled}}
+                @disabled={{this.isLoading}}
               />
             {{/if}}
           </div>
