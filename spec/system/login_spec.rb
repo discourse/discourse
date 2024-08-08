@@ -59,7 +59,7 @@ shared_examples "login scenarios" do
       login_modal.click(".activation-controls button.resend")
 
       activation_link = wait_for_email_link(admin, :activation)
-      visit activation_link
+      visit(activation_link)
 
       find("#activate-account-button").click
       expect(page).to have_current_path("/wizard")
