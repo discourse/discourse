@@ -527,17 +527,25 @@ acceptance("Poll results", function (needs) {
 
     server.get("/polls/voters.json", (request) => {
       if (
-        request.queryParams.option_id === "d8c22ff912e03740d9bc19e133e581e0"
+        request.queryParams.option_id === "db753fe0bc4e72869ac1ad8765341764"
       ) {
         return helper.response({
           voters: {
-            d8c22ff912e03740d9bc19e133e581e0: [
+            db753fe0bc4e72869ac1ad8765341764: [
               {
                 id: 1,
                 username: "bianca",
                 name: null,
                 avatar_template:
                   "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
+                title: null,
+              },
+              {
+                id: 7,
+                username: "foo",
+                name: null,
+                avatar_template:
+                  "/letter_avatar_proxy/v4/letter/f/b19c9b/{size}.png",
                 title: null,
               },
             ],
@@ -576,14 +584,15 @@ acceptance("Poll results", function (needs) {
 
   test("can load more voters", async function (assert) {
     await visit("/t/load-more-poll-voters/134");
-
     assert.strictEqual(
       count(".poll-container .results li:nth-child(1) .poll-voters li"),
-      1
+      1,
+      "Initially, one voter shown on first option"
     );
     assert.strictEqual(
       count(".poll-container .results li:nth-child(2) .poll-voters li"),
-      0
+      0,
+      "Initially, no voter shown on second option"
     );
 
     await publishToMessageBus("/polls/134", {
@@ -599,15 +608,15 @@ acceptance("Poll results", function (needs) {
             {
               id: "db753fe0bc4e72869ac1ad8765341764",
               html: 'Option <span class="hashtag">#1</span>',
-              votes: 1,
+              votes: 2,
             },
             {
               id: "d8c22ff912e03740d9bc19e133e581e0",
               html: 'Option <span class="hashtag">#2</span>',
-              votes: 2,
+              votes: 0,
             },
           ],
-          voters: 3,
+          voters: 2,
           preloaded_voters: {
             db753fe0bc4e72869ac1ad8765341764: [
               {
@@ -616,16 +625,6 @@ acceptance("Poll results", function (needs) {
                 name: null,
                 avatar_template:
                   "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
-              },
-            ],
-            d8c22ff912e03740d9bc19e133e581e0: [
-              {
-                id: 7,
-                username: "foo",
-                name: null,
-                avatar_template:
-                  "/letter_avatar_proxy/v4/letter/f/b19c9b/{size}.png",
-                title: null,
               },
             ],
           },
@@ -637,24 +636,27 @@ acceptance("Poll results", function (needs) {
 
     assert.strictEqual(
       count(".poll-container .results li:nth-child(1) .poll-voters li"),
-      1
+      1,
+      "after incoming message, one voter shown on first option"
     );
 
     assert.strictEqual(
       count(".poll-container .results li:nth-child(2) .poll-voters li"),
-      1
+      0,
+      "after incoming message, no voter shown on second option"
     );
 
     await click(".poll-voters-toggle-expand");
-    await visit("/t/load-more-poll-voters/134");
 
     assert.strictEqual(
       count(".poll-container .results li:nth-child(1) .poll-voters li"),
-      2
+      2,
+      "after clicking fetch voters button, two voters shown on first option"
     );
     assert.strictEqual(
       count(".poll-container .results li:nth-child(2) .poll-voters li"),
-      0
+      0,
+      "after clicking fetch voters button, no voters shown on second option"
     );
   });
 

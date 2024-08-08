@@ -10,13 +10,13 @@ zh_CN:
     poll_maximum_options: "投票允许的最大选项数。"
     poll_edit_window_mins: "创建帖子后可以编辑投票的分钟数。"
     poll_minimum_trust_level_to_create: "定义创建投票所需的最低信任级别。"
-    poll_create_allowed_groups: "允许创建投票的群组。"
+    poll_create_allowed_groups: "能够创建投票的群组。"
     poll_groupable_user_fields: "一组可用于对投票结果进行分组和筛选的用户字段名称。"
-    poll_export_data_explorer_query_id: "用于导出投票结果的数据资源管理器查询的 ID（0 将禁用）。"
-    poll_export_ranked_choice_data_explorer_query_id: "用于导出即时决胜投票结果的数据浏览器查询的 ID。"
+    poll_export_data_explorer_query_id: "用于导出轮询结果的数据资源管理器查询的 ID (0 将禁用)。"
+    poll_export_ranked_choice_data_explorer_query_id: "用于导出即时决胜投票结果的数据资源管理器查询的 ID。"
     poll_default_public: "创建新投票时，默认启用“显示投票人”选项。"
   keywords:
-    poll_create_allowed_groups: "允许创建群组的最低信任等级"
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
   poll:
     poll: "投票"
     invalid_argument: "参数 '%{argument}' 的值 '%{value}' 无效。"
@@ -49,12 +49,11 @@ zh_CN:
     min_vote_per_user:
       other: 本投票至少需要 %{count} 票。
     ranked_choice:
-      vote_options_mismatch: "对于即时决胜局，投票中提供的选项数量必须与选项数量相匹配。选项数量为 %{count} ，提供的数量为 %{provided}。"
       no_group_results_support: "投票类型无效，ranked_choice 不支持分组结果。"
     topic_must_be_open_to_toggle_status: "话题必须处于开放状态才能切换状态。"
     only_staff_or_op_can_toggle_status: "只有管理人员或者发布投票的人才能切换投票状态。"
     errors:
-      poll_not_found: "未找到投票，请确认参数。"
+      poll_not_found: "找不到投票，请确认参数。"
     insufficient_rights_to_create: "您无权创建投票。"
     email:
       link_to_poll: "点击以查看投票。"

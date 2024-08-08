@@ -6,14 +6,17 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import FKAlert from "discourse/form-kit/components/fk/alert";
+import FKCheckboxGroup from "discourse/form-kit/components/fk/checkbox-group";
 import FKCollection from "discourse/form-kit/components/fk/collection";
 import FKContainer from "discourse/form-kit/components/fk/container";
 import FKControlConditionalContent from "discourse/form-kit/components/fk/control/conditional-content";
-import FKControlInputGroup from "discourse/form-kit/components/fk/control/input-group";
 import FKErrorsSummary from "discourse/form-kit/components/fk/errors-summary";
 import FKField from "discourse/form-kit/components/fk/field";
+import FKFieldset from "discourse/form-kit/components/fk/fieldset";
+import FKInputGroup from "discourse/form-kit/components/fk/input-group";
 import Row from "discourse/form-kit/components/fk/row";
 import FKSection from "discourse/form-kit/components/fk/section";
+import FKSubmit from "discourse/form-kit/components/fk/submit";
 import { VALIDATION_TYPES } from "discourse/form-kit/lib/constants";
 import FKFieldData from "discourse/form-kit/lib/fk-field-data";
 import FKFormData from "discourse/form-kit/lib/fk-form-data";
@@ -237,17 +240,17 @@ class FKForm extends Component {
         (hash
           Row=Row
           Section=FKSection
+          Fieldset=FKFieldset
           ConditionalContent=(component FKControlConditionalContent)
           Container=FKContainer
           Actions=(component FKSection class="form-kit__actions")
           Button=(component DButton class="form-kit__button")
           Alert=FKAlert
           Submit=(component
-            DButton
+            FKSubmit
             action=this.onSubmit
             forwardEvent=true
             class="btn-primary form-kit__button"
-            label="submit"
             type="submit"
             isLoading=this.isSubmitting
           )
@@ -280,7 +283,18 @@ class FKForm extends Component {
             triggerRevalidationFor=this.triggerRevalidationFor
           )
           InputGroup=(component
-            FKControlInputGroup
+            FKInputGroup
+            errors=this.formData.errors
+            addError=this.addError
+            data=this.formData
+            set=this.set
+            remove=this.remove
+            registerField=this.registerField
+            unregisterField=this.unregisterField
+            triggerRevalidationFor=this.triggerRevalidationFor
+          )
+          CheckboxGroup=(component
+            FKCheckboxGroup
             errors=this.formData.errors
             addError=this.addError
             data=this.formData

@@ -11,23 +11,26 @@ import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Controller.extend(PasswordValidation, {
-  isDeveloper: alias("model.is_developer"),
-  admin: alias("model.admin"),
-  secondFactorRequired: alias("model.second_factor_required"),
-  securityKeyRequired: alias("model.security_key_required"),
-  backupEnabled: alias("model.backup_enabled"),
-  securityKeyOrSecondFactorRequired: or(
-    "model.second_factor_required",
-    "model.security_key_required"
-  ),
-  otherMethodAllowed: readOnly("model.multiple_second_factor_methods"),
-  passwordRequired: true,
-  errorMessage: null,
-  successMessage: null,
-  requiresApproval: false,
-  redirected: false,
-  maskPassword: true,
+export default class PasswordResetController extends Controller.extend(
+  PasswordValidation
+) {
+  @alias("model.is_developer") isDeveloper;
+  @alias("model.admin") admin;
+  @alias("model.second_factor_required") secondFactorRequired;
+  @alias("model.security_key_required") securityKeyRequired;
+  @alias("model.backup_enabled") backupEnabled;
+  @or("model.second_factor_required", "model.security_key_required")
+  securityKeyOrSecondFactorRequired;
+  @readOnly("model.multiple_second_factor_methods") otherMethodAllowed;
+
+  passwordRequired = true;
+  errorMessage = null;
+  successMessage = null;
+  requiresApproval = false;
+  redirected = false;
+  maskPassword = true;
+
+  lockImageUrl = getURL("/images/lock.svg");
 
   @discourseComputed("securityKeyRequired", "selectedSecondFactorMethod")
   displaySecurityKeyForm(securityKeyRequired, selectedSecondFactorMethod) {
@@ -35,7 +38,7 @@ export default Controller.extend(PasswordValidation, {
       securityKeyRequired &&
       selectedSecondFactorMethod === SECOND_FACTOR_METHODS.SECURITY_KEY
     );
-  },
+  }
 
   initSelectedSecondFactorMethod() {
     if (this.model.security_key_required) {
@@ -48,21 +51,19 @@ export default Controller.extend(PasswordValidation, {
     } else if (this.model.backup_enabled) {
       this.set("selectedSecondFactorMethod", SECOND_FACTOR_METHODS.BACKUP_CODE);
     }
-  },
+  }
 
   @discourseComputed()
   continueButtonText() {
     return I18n.t("password_reset.continue", {
       site_name: this.siteSettings.title,
     });
-  },
+  }
 
   @discourseComputed("redirectTo")
   redirectHref(redirectTo) {
     return getURL(redirectTo || "/");
-  },
-
-  lockImageUrl: getURL("/images/lock.svg"),
+  }
 
   @action
   done(event) {
@@ -73,12 +74,12 @@ export default Controller.extend(PasswordValidation, {
     event.preventDefault();
     this.set("redirected", true);
     DiscourseURL.redirectTo(this.redirectTo || "/");
-  },
+  }
 
   @action
   togglePasswordMask() {
     this.toggleProperty("maskPassword");
-  },
+  }
 
   @action
   async submit() {
@@ -138,7 +139,7 @@ export default Controller.extend(PasswordValidation, {
         throw new Error(e);
       }
     }
-  },
+  }
 
   @action
   authenticateSecurityKey() {
@@ -159,5 +160,5 @@ export default Controller.extend(PasswordValidation, {
         });
       }
     );
-  },
-});
+  }
+}

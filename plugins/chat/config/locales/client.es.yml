@@ -49,7 +49,7 @@ es:
         time_tiny: "h:mm"
       all_loaded: "Mostrando todos los mensajes"
       already_enabled: "El chat ya está activado en este tema. Actualiza."
-      disabled_for_topic: "El chat está deshabilitado en este tema."
+      disabled_for_topic: "El chat está desactivado en este tema."
       bot: "bot"
       create: "Crear"
       cancel: "Cancelar"
@@ -135,7 +135,7 @@ es:
         never: "Nunca"
       separate_sidebar_mode:
         title: "Mostrar modos separados en la barra lateral para el foro y el chat"
-      enable: "Habilitar chat"
+      enable: "Activar chat"
       flag: "Denunciar"
       emoji: "Insertar emoji"
       flagged: "Este mensaje ha sido denunciado y se someterá a revisión"

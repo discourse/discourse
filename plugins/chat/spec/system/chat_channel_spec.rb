@@ -372,7 +372,7 @@ RSpec.describe "Chat channel", type: :system do
         ".chat-message-actions-container .secondary-actions .select-kit-body",
       )
 
-      find("#site-logo").hover
+      PageObjects::Components::Logo.hover
       expect(page).to have_css(
         ".chat-message-actions-container .secondary-actions .select-kit-body",
       )

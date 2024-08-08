@@ -2772,7 +2772,12 @@ hy:
       privacy:
         fields:
           login_required:
-            placeholder: "Մասնավոր"
+            label: "Տեսանելիություն"
+            choices:
+              public:
+                label: "Հանրային"
+              private:
+                label: "Մասնավոր"
       styling:
         fields:
           styling_preview:

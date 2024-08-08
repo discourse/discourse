@@ -1689,6 +1689,9 @@ lt:
     offline_indicator:
       refresh_page: "Atnaujinti puslapį"
     summary:
+      buttons:
+        generate: "Apibendrinti"
+        regenerate: "Pergeneruoti"
       disable: "Peržiūrėti visus Įrašus"
       short_label: "Populiariausi Atsakymai"
       show_all_label: "Rodyti viską"
@@ -3458,7 +3461,6 @@ lt:
         everyone_can_use: "Žymas gali naudoti visi"
         usable_only_by_groups: "Žymos matomos visiems, tačiau jas gali naudoti tik šios grupės"
         visible_only_to_groups: "Žymės matomos tik šioms grupėms"
-        cannot_save: "Nepavyko išsaugoti žymų grupės. Įsitikinkite, kad yra bent viena žyma, žymų grupės pavadinimas nėra tuščias, o žymų leidimui pasirinkta grupė."
         tags_placeholder: "Ieškokite arba sukurkite žymas"
         parent_tag_placeholder: "Pasirinktinai"
         disabled: "Žymėjimas yra išjungtas. "
@@ -3934,6 +3936,7 @@ lt:
           spam: "Šlamštas"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           site_contact_group_help: |
             Galiojantis grupės pavadinimas, kuris yra pakviestas į visas automatiškai siunčiamas privačias žinutes.
           optional: "(pasoronktinai)"

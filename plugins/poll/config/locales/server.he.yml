@@ -12,8 +12,6 @@ he:
     poll_minimum_trust_level_to_create: "הגדרת רמת המהימנות המזערית הנדרשת ליצירת סקרים."
     poll_create_allowed_groups: "הקבוצות שמורשות ליצור סקרים."
     poll_groupable_user_fields: "רשימה של שמות משדה המשתמש שניתן להשתמש בהם לקיבוץ ולסינון תוצאות סקרים."
-    poll_export_data_explorer_query_id: "מזהה שאילתת חוקר הנתונים לשימוש לטובת ייצוא תוצאות הסקר (0 כדי להשבית)."
-    poll_export_ranked_choice_data_explorer_query_id: "המזהה של שאילתת סייר הנתונים לשימוש לייצוא תוצאות משאל ההצבעה בהפעלה מיידית."
     poll_default_public: "בעת יצירת סקר חדש, יש להפעיל את האפשרות ‚להציג מי הצביע’ כברירת מחדל."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create (דרגת אמון מזערית ליצירת סקרים)"
@@ -61,7 +59,6 @@ he:
       many: כמות מזערית של %{count} הצבעות מותרות לסקר זה.
       other: כמות מזערית של %{count} הצבעות מותרות לסקר זה.
     ranked_choice:
-      vote_options_mismatch: "עבור ריצה מיידית, מספר האפשרויות המסופקות בהצבעה חייב להתאים למספר האפשרויות. מספר האפשרויות הוא %{count} והמספר שסופק היה %{provided}."
       no_group_results_support: "סוג הסקר שגוי, ל־ranked_choice (בחירה לפי דירוג) אין תמיכה בתוצאות קיבוציות."
     topic_must_be_open_to_toggle_status: "הנושא חייב להיות פתוח לשינויי מצב."
     only_staff_or_op_can_toggle_status: "רק חבר צוות או המפרסם המקורי יכולים לשנות מצב של סקר."

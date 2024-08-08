@@ -202,49 +202,19 @@
     .controls {
       flex: 1 1 25%;
 
-      .btn {
-        margin-bottom: 0.5rem;
-      }
-
       ul {
-        margin: 0;
-        display: flex;
-        flex: 1 1 auto;
-        flex-wrap: wrap;
         li,
         > span {
           display: flex;
           flex: 1 1 45%;
-          margin-left: 1em;
           button,
           a {
             width: 100%;
           }
           .select-kit.dropdown-select-box.user-notifications-dropdown {
             width: 100%;
-            align-self: flex-start;
-            li {
-              flex: 1 1 100%;
-              margin-left: 0;
-            }
           }
         }
-      }
-
-      > ul {
-        margin-left: -1em; // negates left button margin, for alignment
-      }
-
-      .user-profile-controls-outlet {
-        margin: 0 0 0 1em;
-        li {
-          margin: 0;
-        }
-      }
-
-      a {
-        flex: 1 1 auto;
-        min-width: 120px;
       }
     }
   }

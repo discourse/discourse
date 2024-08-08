@@ -126,6 +126,16 @@ pl_PL:
       number_value_not_valid_min: "Wartość musi być większa lub równa %{min}."
       number_value_not_valid_max: "Wartość musi być mniejsza lub równa %{max}."
       string_value_not_valid_min_max: "Wartość musi mieć długość od %{min} do %{max} znaków."
+      string_value_not_valid_min:
+        one: "Wartość musi mieć co najmniej %{count} znak."
+        few: "Wartość musi mieć co najmniej %{count} znaków."
+        many: "Wartość musi mieć co najmniej %{count} znaków."
+        other: "Wartość musi mieć co najmniej %{count} znaków."
+      string_value_not_valid_max:
+        one: "Wartość musi mieć maksymalnie %{count} znak."
+        few: "Wartość musi mieć maksymalnie %{count} znaki."
+        many: "Wartość musi mieć maksymalnie %{count} znaków."
+        other: "Wartość musi mieć maksymalnie %{count} znaków."
       objects:
         humanize_required: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być obecny."
         required: "musi zostać podana"
@@ -1179,6 +1189,9 @@ pl_PL:
   flags:
     errors:
       already_handled: "Flaga została już obsłużona"
+      wrong_move: "Flaga nie może być przeniesiona"
+      system: "Flaga systemu nie może być zaktualizowana lub usunięta."
+      used: "Flaga nie może być zaktualizowana lub usunięta, ponieważ została już użyta."
   reports:
     default:
       labels:
@@ -1487,7 +1500,9 @@ pl_PL:
         page_views: "Wyświetlenia strony"
       description: "Lista agentów użytkownika przeszukiwacza sieci, posortowana według odsłon."
     web_hook_events_daily_aggregate:
+      title: "Zdarzenia webhooka"
       xaxis: "Dzień"
+      yaxis: "Liczba zdarzeń"
     suspicious_logins:
       title: "Podejrzane logowanie"
       labels:
@@ -1541,6 +1556,7 @@ pl_PL:
         qtt_like: Polubienia otrzymane
       description: "Top 10 użytkowników, którzy otrzymali polubienia od szerokiego grona osób."
     topic_view_stats:
+      title: "Statystyki wyświetleń tematu"
       labels:
         topic: Temat
         logged_in_views: Zalogowany
@@ -1554,9 +1570,16 @@ pl_PL:
       queue_size: "Liczba oczekujących zadań wynosi %{queue_size}, to dużo. Może to wskazywać na problem z procesem (procesami) Sidekiq, lub możesz potrzebować więcej pracowników Sidekiq."
       ram: "Twój serwer działa z mniej niż 1 GB pamięci całkowitej. Przynajmniej 1 GB pamięci jest zalecany."
       subfolder_ends_in_slash: "Twoje ustawienie podfolderu jest niepoprawne; DISCOURSE_RELATIVE_URL_ROOT kończy się slashem."
+      translation_overrides: "Niektóre z Twoich nadpisanych tłumaczeń są nieaktualne. Sprawdź swoje <a href='%{base_path}/admin/customize/site_texts?outdated=true'>teksty witryny</a>."
       missing_mailgun_api_key: "Serwer jest skonfigurowany do wysyłania wiadomości e-mail za pośrednictwem Mailgun, ale nie podałeś/łaś klucza API używanego do weryfikacji wiadomości z webhooka."
+      bad_favicon_url: "Nie można załadować favicony. Sprawdź ustawienia favicony w <a href='%{base_path}/admin/site_settings'>ustawieniach witryny</a>."
+      force_https: "Twoja strona używa SSL. Ale `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` nie jest jeszcze włączone w ustawieniach witryny."
+      out_of_date_themes: "Aktualizacje są dostępne dla następujących motywów:%{themes_list}"
+      unreachable_themes: "Nie mogliśmy sprawdzić aktualizacji w następujących motywach:%{themes_list}"
       watched_words: "Wyrażenie regularne dla %{action} obserwowanych słów jest nieprawidłowe. Sprawdź ustawienia <a href='%{base_path}/admin/customize/watched_words'>obserwowanych słów</a>lub wyłącz ustawienie witryny 'watched words regular expressions'."
       google_analytics_version: "Twój Discourse używa obecnie Google Analytics 3, które nie będzie już wspierane po lipcu 2023 roku. <a href='https://meta.discourse.org/t/260498'>Uaktualnij do Google Analytics 4</a> teraz, aby nadal otrzymywać cenne informacje i analizy dotyczące wydajności twojej strony."
+      category_style_deprecated: "Twój Discourse obecnie używa przestarzałego stylu kategorii, który zostanie usunięty przed finalnym wydaniem beta Discourse 3.2. Zapoznaj się z instrukcjami dotyczącymi zachowania wybranego stylu kategorii na stronie <a href='https://meta.discourse.org/t/282441'>Przejście na pojedynczy styl kategorii ustawień witryny</a>."
+      maxmind_db_configuration: 'Serwer został skonfigurowany do używania baz danych MaxMind do odwrotnej translacji adresów IP, ale nie skonfigurowano prawidłowego identyfikatora konta MaxMind, co może spowodować niepowodzenie pobierania baz danych MaxMind w przyszłości. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Zapoznaj się z tym przewodnikiem, aby dowiedzieć się więcej</a>.'
     back_from_logster_text: "Powrót do strony"
   site_settings:
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
@@ -2626,6 +2649,7 @@ pl_PL:
     email_too_long: "Podałeś/łaś zbyt długi adres email. Nazwa skrzynki pocztowej nie może być dłuższa niż 254 znaki, a nazwa domeny nie może zawierać więcej niż 253 znaki."
     wrong_invite_code: "Wprowadzony kod zaproszenia był nieprawidłowy."
     reserved_username: "Niedozwolona nazwa użytkownika."
+    missing_user_field: "Nie wypełniłeś wszystkich wymaganych pól użytkownika"
     auth_complete: "Uwierzytelnianie zostało zakończone."
     click_to_continue: "Kliknij tutaj aby kontynuować."
     already_logged_in: "Przepraszamy! To zaproszenie jest przeznaczone dla nowych użytkowników, którzy nie mają jeszcze istniejącego konta."
@@ -4723,17 +4747,18 @@ pl_PL:
           default_locale:
             label: "Język"
       privacy:
-        title: "Doświadczenie użytkownika"
         fields:
           login_required:
-            placeholder: "Prywatne"
-            extra_description: "Tylko zalogowani użytkownicy mają dostęp do społeczności"
+            label: "Widoczność"
+            choices:
+              public:
+                label: "Publiczne"
+              private:
+                label: "Prywatne"
           invite_only:
-            placeholder: "Tylko zaproszenie"
-            extra_description: "Użytkownicy muszą zostać zaproszeni przez zaufanych użytkowników lub personel, w przeciwnym razie użytkownicy mogą zarejestrować się samodzielnie"
-          must_approve_users:
-            placeholder: "Wymaga zatwierdzenia"
-            extra_description: "Użytkownicy muszą być zatwierdzeni przez personel"
+            choices:
+              invite_only:
+                label: "Tylko zaproszenie"
           chat_enabled:
             placeholder: "Włącz czat"
             extra_description: "Współpracuj ze swoimi członkami w czasie rzeczywistym"

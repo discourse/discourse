@@ -132,6 +132,7 @@ table.user-invite-list {
       }
 
       .primary-textual {
+        flex: 0 1 auto;
         padding: 0 0 0.5em;
       }
 
@@ -154,14 +155,10 @@ table.user-invite-list {
 
     .controls {
       max-width: 13.5em;
+      margin-left: 0.5em;
 
-      li {
-        margin-bottom: 0.5em;
-      }
-
-      li > .select-kit-header, // select-kit
       .btn {
-        min-width: 9.5em;
+        min-width: 9em;
         width: 100%;
       }
     }
@@ -171,19 +168,14 @@ table.user-invite-list {
         display: none;
       }
       .controls {
-        width: auto;
+        display: flex;
         max-width: unset;
+        flex: 1 2 min-content;
 
         > ul {
-          display: inline-flex;
-          > li {
-            display: inline-flex;
-            margin-left: 0.75em;
-          }
-
-          a {
-            width: auto;
-          }
+          flex-wrap: wrap;
+          margin-left: auto;
+          justify-content: end;
         }
       }
 

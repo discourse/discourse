@@ -1,17 +1,15 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { observes } from "@ember-decorators/object";
+import discourseComputed from "discourse-common/utils/decorators";
 
-export default Controller.extend({
-  group: controller(),
-  application: controller(),
-  loading: false,
-  offset: 0,
+export default class GroupManageLogsController extends Controller {
+  @controller group;
+  @controller application;
 
-  init() {
-    this._super(...arguments);
-    this.set("filters", EmberObject.create());
-  },
+  loading = false;
+  offset = 0;
+  filters = EmberObject.create();
 
   @discourseComputed(
     "filters.action",
@@ -21,7 +19,7 @@ export default Controller.extend({
   )
   filterParams(filtersAction, acting_user, target_user, subject) {
     return { action: filtersAction, acting_user, target_user, subject };
-  },
+  }
 
   @observes(
     "filters.action",
@@ -40,14 +38,14 @@ export default Controller.extend({
           all_loaded: results.all_loaded,
         });
       });
-  },
+  }
 
   reset() {
     this.setProperties({
       offset: 0,
       filters: EmberObject.create(),
     });
-  },
+  }
 
   @action
   loadMore() {
@@ -67,10 +65,10 @@ export default Controller.extend({
         this.set("model.all_loaded", results.all_loaded);
       })
       .finally(() => this.set("loading", false));
-  },
+  }
 
   @action
   clearFilter(key) {
     this.set(`filters.${key}`, "");
-  },
-});
+  }
+}

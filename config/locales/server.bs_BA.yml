@@ -1026,7 +1026,12 @@ bs_BA:
       privacy:
         fields:
           login_required:
-            placeholder: "Privatno"
+            label: "Vidljivost"
+            choices:
+              public:
+                label: "Javno"
+              private:
+                label: "Privatno"
       styling:
         fields:
           styling_preview:

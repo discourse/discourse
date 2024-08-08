@@ -55,21 +55,27 @@ export default class CommunitySection {
       });
     });
 
-    this.apiLinks = customSectionLinks
-      .concat(secondaryCustomSectionLinks)
-      .map((link) => this.#initializeSectionLink(link, { inMoreDrawer: true }));
+    this.apiPrimaryLinks = customSectionLinks.map((link) =>
+      this.#initializeSectionLink(link, { inMoreDrawer: false })
+    );
 
-    this.links = this.section.links.reduce((filtered, link) => {
-      if (link.segment === "primary") {
-        const generatedLink = this.#generateLink(link);
+    this.apiSecondaryLinks = secondaryCustomSectionLinks.map((link) =>
+      this.#initializeSectionLink(link, { inMoreDrawer: true })
+    );
 
-        if (generatedLink) {
-          filtered.push(generatedLink);
+    this.links = this.section.links
+      .reduce((filtered, link) => {
+        if (link.segment === "primary") {
+          const generatedLink = this.#generateLink(link);
+
+          if (generatedLink) {
+            filtered.push(generatedLink);
+          }
         }
-      }
 
-      return filtered;
-    }, []);
+        return filtered;
+      }, [])
+      .concat(this.apiPrimaryLinks);
 
     this.moreLinks = this.section.links
       .reduce((filtered, link) => {
@@ -83,7 +89,7 @@ export default class CommunitySection {
 
         return filtered;
       }, [])
-      .concat(this.apiLinks);
+      .concat(this.apiSecondaryLinks);
   }
 
   teardown() {

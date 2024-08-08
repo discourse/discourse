@@ -23,45 +23,45 @@ zh_CN:
         title: 用户首次登录
         doc: 当用户首次登录时触发自动化。
       stalled_topic:
-        title: 停止话题
-        doc: 当话题在指定时间段内未收到话题所有者的新回复时会触发自动化。建议将此触发器的范围限定为标签/类别，因为受影响的话题数量可能会非常多。作为一项安全措施，受影响话题的数量上限为 250 个。
+        title: 停滞的话题
+        doc: 当话题在指定时间段内未收到话题所有者的新回复时触发自动化。建议将此触发器的范围限定为标签/类别，因为受影响的话题数量可能会非常多。作为一项安全措施，受影响话题的数量上限为 250 个。
       api_call:
         title: API 调用
         description: 发出 POST 请求来触发自动化
         doc: 应使用全局 API 密钥将 POST 请求发送到 `/automations/:id/trigger.json`。
       category_created_edited:
         title: 创建/编辑类别
-        description: 创建或编辑类别时将触发自动化
+        description: 创建或编辑类别时，将触发自动化
       recurring:
         title: 重复
       point_in_time:
         title: 时间点
-        description: 当达到某个日期时，触发自动化
+        description: 当达到某个日期时，将触发自动化
       user_added_to_group:
         title: 用户被添加到群组
-        description: 当用户被添加到指定群组时，触发自动化
+        description: 当用户被添加到指定群组时，将触发自动化
       user_removed_from_group:
         title: 用户被从群组中移除
-        description: 当用户被从指定群组中移除时，触发自动化
+        description: 当用户被从指定群组中移除时，将触发自动化
       user_promoted:
-        title: 用户被提升
+        title: 用户信任级别被提升
         description: 当用户被从一个信任级别提升到另一个信任级别时
         transition_placeholder: "从 %{from_level_name} 到 %{to_level_name}"
       stalled_wiki:
-        title: 停止 Wiki
-        description: 当 Wiki 未被编辑的时间超过定义的时间时，触发自动化
+        title: 停滞的 Wiki
+        description: 当 Wiki 未被编辑的时间超过定义的时间时，将触发自动化
       post_created_edited:
         title: 帖子被创建/编辑
-        description: 当有效的帖子被编辑或创建时，触发自动化
+        description: 当有效的帖子被编辑或创建时，将触发自动化
       pm_created:
         title: 个人消息被创建
-        description: 当有效的 PM 被创建时，触发自动化
+        description: 当有效的个人消息被创建时，将触发自动化
       topic:
         title: 话题
         description: 关联的脚本将仅用于指定的话题，这对于执行验证的脚本十分有用
       after_post_cook:
         title: 处理帖子后
-        description: 当帖子内容被处理时，触发自动化
+        description: 当帖子内容被处理时，将触发自动化
       user_updated:
         title: 用户更新后
         description: 当用户更新任何信息时，将触发自动操作
@@ -76,7 +76,7 @@ zh_CN:
         title: 基于字词举报帖子
         description: 如果帖子包含指定字词，则举报它
         flag_message: "帖子包含不允许的字词：%{words}"
-        doc: 同时包含所有给定字词的帖子将被举报和隐藏。请注意，定义由逗号分隔的多个字词将用作复合词（每个字词都必须存在）。
+        doc: 同时包含所有给定字词的帖子将被举报和隐藏。请注意，定义由逗号分隔的多个字词将被用作复合词（每个字词都必须存在）。
       zapier_webhook:
         title: Zapier 网络钩子
         description: 以触发器的上下文为正文调用 zap
@@ -106,19 +106,19 @@ zh_CN:
         title: 用户全局通知
         description: 允许为用户显示全局通知
       user_group_membership_through_badge:
-        title: 通过徽章获得用户群组成员资格
-        description: 根据徽章修改用户群组成员关系
+        title: 通过徽章修改用户群组成员资格
+        description: 根据徽章修改用户群组成员资格
       suspend_user_by_email_with_api_call:
-        doc: 当使用 API 调用触发 `suspend_user_by_email` 时，端点期望发送的参数中存在有效的 `email`。`reasons` 和 `suspend_until (ISO 8601 format)` 也可以用于重写默认字段值。
+        doc: 使用 API 调用触发 `suspend_user_by_email` 时，端点期望发送的参数中存在有效的 `email`。`reasons` 和 `suspend_until (ISO 8601 format)` 也可以用于替换默认字段值。
       user_global_notice_with_stalled_topic:
-        doc: 当通过停止的话题触发时，话题所有者将收到全局通知。
+        doc: 通过停滞的话题触发时，话题所有者将收到全局通知。
       user_global_notice_with_first_accepted_solution:
         doc: 通过第一个接受的解决方案触发时，解决方案作者将收到全局通知。
       send_pms_with_api_call:
         doc: 将 `send pms` 脚本与 `api call` 触发器结合使用时，您的请求的 `usernames` 参数将用于填充接收者列表。
       topic_required_words:
         title: 话题必选字词
-        description: 允许定义话题所需的字词列表，每个帖子中至少应使用一个字词。
+        description: 允许定义话题必选字词列表，每个帖子中至少应使用一个字词。
         doc: 话题必选字词需要一个话题。编辑/创建帖子时，将根据字词列表验证帖子，至少必须存在一个字词。
         errors:
           must_include_word: "帖子必须至少包含以下字词之一：%{words}"
@@ -127,11 +127,11 @@ zh_CN:
         description: 使用可选的关闭消息关闭话题
       append_last_edited_by:
         title: 追加最后编辑者
-        description: 将帖子的“最后编辑者”详细信息添加到已处理内容的底部。
+        description: 将帖子的 'last edited by' 详细信息添加到已处理内容的底部。
         text: "最后由 @%{username} 在 %{date_time} 编辑"
       append_last_checked_by:
         title: 追加最后检查者
-        description: 将帖子的“最后检查者”详细信息添加到已处理内容的底部。
+        description: 将帖子的 'last checked by' 详细信息添加到已处理内容的底部。
         text: "最后由 @%{username} 在 %{date_time} 检查"
         summary: 检查文档
         details: "对文档执行检查："

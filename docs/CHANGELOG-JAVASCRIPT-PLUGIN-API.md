@@ -7,6 +7,15 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.36.0] - 2024-08-06
+
+- Added `addLogSearchLinkClickedCallbacks` which allows plugins/TCs to register a callback when a search link is clicked and before a search log is created 
+
+## [1.35.0] - 2024-07-30
+
+- Added `registerBehaviorTransformer` which allows registering a transformer callback to override behavior defined in Discourse modules
+- Added `addBehaviorTransformerName` which allows plugins/TCs to register a new transformer to override behavior defined in their modules
+
 ## [1.34.0] - 2024-06-06
 
 - Added `registerValueTransformer` which allows registering a transformer callback to override values defined in Discourse modules

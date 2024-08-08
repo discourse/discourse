@@ -34,6 +34,8 @@ ru:
         icons:
           title: "Значки"
           full_list: "См. полный список значков Font Awesome"
+        forms:
+          title: "Формы"
         buttons:
           title: "Кнопки"
         dropdowns:

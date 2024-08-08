@@ -28,6 +28,7 @@ export default class SidebarState extends Service {
   @tracked isForcingAdminSidebar = false;
 
   panels = panels;
+  activeExpandedSections = new TrackedSet();
   collapsedSections = new TrackedSet();
   previousState = {};
   #hiders = new TrackedSet();
@@ -87,6 +88,8 @@ export default class SidebarState extends Service {
       getCollapsedSidebarSectionKey(sectionKey);
     this.keyValueStore.setItem(collapsedSidebarSectionKey, true);
     this.collapsedSections.add(collapsedSidebarSectionKey);
+    // remove the section from the active expanded list if collapsed later
+    this.activeExpandedSections.delete(sectionKey);
   }
 
   expandSection(sectionKey) {
@@ -94,6 +97,8 @@ export default class SidebarState extends Service {
       getCollapsedSidebarSectionKey(sectionKey);
     this.keyValueStore.setItem(collapsedSidebarSectionKey, false);
     this.collapsedSections.delete(collapsedSidebarSectionKey);
+    // remove the section from the active expanded list if expanded later
+    this.activeExpandedSections.delete(sectionKey);
   }
 
   isCurrentPanel(panel) {

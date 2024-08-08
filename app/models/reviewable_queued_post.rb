@@ -108,6 +108,7 @@ class ReviewableQueuedPost < Reviewable
         skip_jobs: true,
         skip_events: true,
         skip_guardian: true,
+        reviewed_queued_post: true,
       )
     opts.merge!(guardian: Guardian.new(performed_by)) if performed_by.staff?
 

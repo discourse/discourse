@@ -28,6 +28,10 @@ module PageObjects
       def check_confirmation
         body.check("confirmation")
       end
+
+      def has_choices?(*choices)
+        body.all(".flag-action-type-details strong").map(&:text) == choices
+      end
     end
   end
 end

@@ -11,16 +11,37 @@ import ChatDrawerRoutesDirectMessages from "discourse/plugins/chat/discourse/com
 import ChatDrawerRoutesThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/threads";
 
 const ROUTES = {
-  chat: { name: ChatDrawerRoutesChannels },
+  chat: {
+    name: ChatDrawerRoutesChannels,
+    redirect: (context) => {
+      if (
+        context.siteSettings.chat_preferred_index === "my_threads" &&
+        context.hasThreads
+      ) {
+        return "/chat/threads";
+      }
+
+      if (
+        context.siteSettings.chat_preferred_index === "direct_messages" &&
+        context.hasDirectMessages
+      ) {
+        return "/chat/direct-messages";
+      }
+
+      if (!context.siteSettings.enable_public_channels) {
+        return "/chat/direct-messages";
+      }
+    },
+  },
   "chat.index": { name: ChatDrawerRoutesChannels },
   // order matters, non index before index
   "chat.browse": {
     name: ChatDrawerRoutesBrowse,
-    extractParams: () => ({ currentTab: "all" }),
+    extractParams: () => ({ currentTab: "open" }),
   },
   "chat.browse.index": {
     name: ChatDrawerRoutesBrowse,
-    extractParams: () => ({ currentTab: "all" }),
+    extractParams: () => ({ currentTab: "open" }),
   },
   "chat.browse.open": {
     name: ChatDrawerRoutesBrowse,
@@ -131,6 +152,10 @@ const ROUTES = {
 export default class ChatDrawerRouter extends Service {
   @service router;
   @service chatHistory;
+  @service chat;
+  @service siteSettings;
+  @service chatStateManager;
+  @service chatChannelsManager;
 
   @tracked component = null;
   @tracked drawerRoute = null;
@@ -138,16 +163,42 @@ export default class ChatDrawerRouter extends Service {
 
   routeNames = Object.keys(ROUTES);
 
+  get hasThreads() {
+    if (!this.siteSettings.chat_threads_enabled) {
+      return false;
+    }
+
+    return this.chatChannelsManager.hasThreadedChannels;
+  }
+
+  get hasDirectMessages() {
+    return this.chat.userCanAccessDirectMessages;
+  }
+
   stateFor(route) {
     this.drawerRoute?.deactivate?.(this.chatHistory.currentRoute);
 
     this.chatHistory.visit(route);
-
     this.drawerRoute = ROUTES[route.name];
     this.params = this.drawerRoute?.extractParams?.(route) || route.params;
     this.component = this.drawerRoute?.name || ChatDrawerRoutesChannels;
     this.currentRouteName = route.name;
-
     this.drawerRoute.activate?.(route);
+
+    const redirectedRoute = this.drawerRoute.redirect?.(this);
+    if (redirectedRoute) {
+      this.stateFor(this.#routeFromURL(redirectedRoute));
+    }
+  }
+
+  #routeFromURL(url) {
+    let route = this.router.recognize(url);
+
+    // ember might recognize the index subroute
+    if (route.localName === "index") {
+      route = route.parent;
+    }
+
+    return route;
   }
 }

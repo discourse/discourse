@@ -118,4 +118,36 @@ RSpec.describe Onebox::Preview do
       expect(result).to include ' src="https://thirdparty.example.com"'
     end
   end
+
+  describe "svg sanitization" do
+    it "does not allow unexpected elements inside svg" do
+      preview = described_class.new(preview_url)
+      preview.stubs(:engine_html).returns <<~HTML.strip
+        <svg><style>/*Text*/</style></svg>
+      HTML
+
+      result = preview.to_s
+      expect(result).to eq("<svg></svg>")
+    end
+
+    it "does not allow text inside svg" do
+      preview = described_class.new(preview_url)
+      preview.stubs(:engine_html).returns <<~HTML.strip
+        <svg>Hello world</svg>
+      HTML
+
+      result = preview.to_s
+      expect(result).to eq("<svg></svg>")
+    end
+
+    it "allows simple svg" do
+      simple_svg =
+        '<svg height="210" width="400"><path d="M150 5 L75 200 L225 200 Z" style="fill:none;stroke:green;stroke-width:3"></path></svg>'
+      preview = described_class.new(preview_url)
+      preview.stubs(:engine_html).returns simple_svg
+
+      result = preview.to_s
+      expect(result).to eq(simple_svg)
+    end
+  end
 end

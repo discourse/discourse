@@ -3,6 +3,7 @@ import Service, { service } from "@ember/service";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import identifySource from "discourse/lib/source-identifier";
 import { escapeExpression } from "discourse/lib/utilities";
+import DEPRECATION_WORKFLOW from "discourse-common/deprecation-workflow";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse-common/lib/deprecated";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
@@ -21,7 +22,7 @@ export const CRITICAL_DEPRECATIONS = [
   /^(?!discourse\.)/, // All unsilenced ember deprecations
 ];
 
-// Deprecation handling APIs don't have any way to unregister handlers, so we set up permenant
+// Deprecation handling APIs don't have any way to unregister handlers, so we set up permanent
 // handlers and link them up to the application lifecycle using module-local state.
 let handler;
 registerDeprecationHandler((message, opts, next) => {
@@ -49,12 +50,11 @@ export default class DeprecationWarningHandler extends Service {
 
   @bind
   handle(message, opts) {
-    const workflowConfigs = window.deprecationWorkflow?.config?.workflow;
-    const matchingConfig = workflowConfigs.find(
+    const matchingConfig = DEPRECATION_WORKFLOW.find(
       (config) => config.matchId === opts.id
     );
 
-    if (matchingConfig && matchingConfig.handler === "silence") {
+    if (matchingConfig?.handler === "silence") {
       return;
     }
 

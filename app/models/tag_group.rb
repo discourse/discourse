@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class TagGroup < ActiveRecord::Base
+  validates :name, length: { maximum: 100 }
   validates_uniqueness_of :name, case_sensitive: false
 
   has_many :tag_group_memberships, dependent: :destroy
@@ -118,7 +119,7 @@ end
 # Table name: tag_groups
 #
 #  id            :integer          not null, primary key
-#  name          :string           not null
+#  name          :string(100)      not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  parent_tag_id :integer

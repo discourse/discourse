@@ -12,7 +12,6 @@ cs:
     poll_minimum_trust_level_to_create: "Nastav minimální úroveň důvěry pro vytvoření hlasování."
     poll_create_allowed_groups: "Skupiny, které mají povoleno vytvářet hlasování."
     poll_groupable_user_fields: "Sada názvů uživatelských polí, které lze použít k seskupování a filtrování výsledků hlasování."
-    poll_export_data_explorer_query_id: "ID dotazu Data Exploreru, který se má použít pro export výsledků hlasování (0 pro vypnutí)."
     poll_default_public: "Při vytváření nového hlasování povolit ve výchozím nastavení možnost \"zobrazit, kdo hlasoval\"."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"

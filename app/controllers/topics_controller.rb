@@ -855,8 +855,11 @@ class TopicsController < ApplicationController
         params[:archetype] == "private_message"
     end
 
-    destination_topic = topic.move_posts(current_user, topic.posts.pluck(:id), args)
-    render_topic_changes(destination_topic)
+    acting_user = current_user
+    hijack(info: "merging topic #{topic_id.inspect} into #{destination_topic_id.inspect}") do
+      destination_topic = topic.move_posts(acting_user, topic.posts.pluck(:id), args)
+      render_topic_changes(destination_topic)
+    end
   end
 
   def move_posts
@@ -1305,6 +1308,7 @@ class TopicsController < ApplicationController
     Scheduler::Defer.later "Topic View" do
       topic = Topic.find_by(id: topic_id)
       next if topic.blank?
+      next if topic.shared_draft?
 
       # We need to make sure that we aren't allowing recording
       # random topic views against topics the user cannot see.

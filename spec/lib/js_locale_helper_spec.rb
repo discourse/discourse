@@ -144,6 +144,10 @@ RSpec.describe JsLocaleHelper do
         expect(content).to_not eq("")
       end
     end
+
+    it "generates valid MF locales for the '#{locale[:value]}' locale" do
+      expect(described_class.output_MF(locale[:value])).not_to match(/Failed to compile/)
+    end
   end
 
   describe ".output_MF" do
@@ -210,7 +214,7 @@ RSpec.describe JsLocaleHelper do
       it "translates messages properly" do
         expect(
           translated_message,
-        ).to eq "3 réponses, avec un taux très élevé de « J'aime » par message, aller au premier ou dernier message...\n"
+        ).to eq "3 réponses, avec un taux très élevé de « J'aime » par publication, accéder à la première ou dernière publication...\n"
       end
 
       context "when a translation is missing" do
@@ -254,6 +258,31 @@ RSpec.describe JsLocaleHelper do
       it "raises an error" do
         expect(output).to match(/Failed to compile message formats/)
       end
+    end
+  end
+
+  describe ".output_client_overrides" do
+    subject(:client_overrides) { described_class.output_client_overrides("en") }
+
+    before do
+      Fabricate(
+        :translation_override,
+        locale: "en",
+        translation_key: "js.user.preferences.title",
+        value: "SHOULD_SHOW",
+      )
+      Fabricate(
+        :translation_override,
+        locale: "en",
+        translation_key: "js.user.preferences",
+        value: "SHOULD_NOT_SHOW",
+        status: "deprecated",
+      )
+    end
+
+    it "does not output deprecated translation overrides" do
+      expect(client_overrides).to include("SHOULD_SHOW")
+      expect(client_overrides).not_to include("SHOULD_NOT_SHOW")
     end
   end
 end

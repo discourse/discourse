@@ -239,7 +239,7 @@ const SiteHeaderComponent = MountWidget.extend(
 
       const headerService = getOwner(this).lookup("service:header");
       headerService.addObserver("topicInfoVisible", this, "setTopic");
-      headerService.topicInfoVisible; // Access property to set up observer
+      this.setTopic();
 
       this.appEvents.on("user-menu:rendered", this, "_animateMenu");
 

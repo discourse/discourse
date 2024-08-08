@@ -56,6 +56,14 @@ describe DiscourseAutomation::StalledTopicFinder do
         described_class.call(2.hours.from_now, tags: [tag_1.name]).map(&:id),
       ).to contain_exactly(topic_1.id)
     end
+
+    it "still finds topics if tags is empty" do
+      create_post(topic: topic_4, user: user)
+
+      expect(described_class.call(2.hours.from_now, tags: []).map(&:id)).to contain_exactly(
+        topic_4.id,
+      )
+    end
   end
 
   describe "filter by categories" do
@@ -79,6 +87,14 @@ describe DiscourseAutomation::StalledTopicFinder do
       expect(
         described_class.call(2.hours.from_now, categories: [category_1.id]).map(&:id),
       ).to contain_exactly(topic_1.id)
+    end
+
+    it "still finds topics if categories is empty" do
+      create_post(topic: topic_1, user: user)
+
+      expect(described_class.call(2.hours.from_now, categories: []).map(&:id)).to contain_exactly(
+        topic_1.id,
+      )
     end
   end
 

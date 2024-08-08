@@ -161,6 +161,20 @@ RSpec.describe Topic do
 
   it { is_expected.to rate_limit }
 
+  describe "#shared_draft?" do
+    fab!(:topic)
+
+    context "when topic does not have a shared draft record" do
+      it { expect(topic).not_to be_shared_draft }
+    end
+
+    context "when topic has a shared draft record" do
+      before { Fabricate(:shared_draft, topic: topic) }
+
+      it { expect(topic).to be_shared_draft }
+    end
+  end
+
   describe "#visible_post_types" do
     let(:types) { Post.types }
 

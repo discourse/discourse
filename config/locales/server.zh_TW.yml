@@ -2859,12 +2859,16 @@ zh_TW:
       privacy:
         fields:
           login_required:
-            placeholder: "私密"
-            extra_description: "使用者必須登入後才能訪問此社群"
+            label: "能見度"
+            choices:
+              public:
+                label: "公開"
+              private:
+                label: "私密"
           invite_only:
-            placeholder: "僅限邀請"
-          must_approve_users:
-            extra_description: "使用者必須經過工作人員的批准"
+            choices:
+              invite_only:
+                label: "僅限邀請"
       styling:
         fields:
           styling_preview:

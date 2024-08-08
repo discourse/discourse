@@ -1036,7 +1036,12 @@ et:
       privacy:
         fields:
           login_required:
-            placeholder: "Privaatne"
+            label: "Nähtavus"
+            choices:
+              public:
+                label: "Avalik"
+              private:
+                label: "Privaatne"
       styling:
         fields:
           styling_preview:

@@ -1300,7 +1300,12 @@ nb_NO:
       privacy:
         fields:
           login_required:
-            placeholder: "Privat"
+            label: "Synlighet"
+            choices:
+              public:
+                label: "Offentlig"
+              private:
+                label: "Privat"
       styling:
         fields:
           styling_preview:

@@ -1,28 +1,30 @@
 import { registerDeprecationHandler } from "@ember/debug";
 import QUnit from "qunit";
+import DEPRECATION_WORKFLOW from "discourse-common/deprecation-workflow";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse-common/lib/deprecated";
 
 let disabled = false;
 
 export function configureRaiseOnDeprecation() {
-  const workflows = window.deprecationWorkflow?.config?.workflow;
-  if (!workflows) {
-    return;
-  }
-
   if (window.EmberENV.RAISE_ON_DEPRECATION !== undefined) {
     return;
   }
 
   registerDeprecationHandler((message, options, next) => {
-    if (disabled || workflows.find((w) => w.matchId === options.id)) {
+    if (
+      disabled ||
+      DEPRECATION_WORKFLOW.find((w) => w.matchId === options.id)
+    ) {
       return next(message, options);
     }
     raiseDeprecationError(message, options);
   });
 
   registerDiscourseDeprecationHandler((message, options) => {
-    if (disabled || workflows.find((w) => w.matchId === options?.id)) {
+    if (
+      disabled ||
+      DEPRECATION_WORKFLOW.find((w) => w.matchId === options?.id)
+    ) {
       return;
     }
     raiseDeprecationError(message, options);

@@ -18,7 +18,7 @@ es:
         custom_fields_or_user_profile_required: "Debe proporcionarse al menos uno de los campos «custom_fields» o «user_profile»."
       user_badge_granted:
         title: Credencial de usuario concedida
-        doc: Activa una automatización cuando un usuario recibe una insignia.
+        doc: Activa una automatización cuando un usuario recibe una medalla.
       user_first_logged_in:
         title: Usuario que inició sesión por primera vez
         doc: Activa una automatización cuando un usuario se conecta por primera vez.
@@ -27,8 +27,8 @@ es:
         doc: Activa una automatización cuando el autor del tema no responde tras un periodo de tiempo especificado. Recomendamos limitarlo por etiqueta o categoría, ya que si no el número de temas impactados puede ser muy elevado. Como medida de seguridad, no podrá impactar a más de 250 temas.
       api_call:
         title: Llamada a la API
-        description: Hacer una petición POST para activar una automatización
-        doc: La petición POST debe hacerse a «/automations/:id/trigger.json» con una clave de API global.
+        description: Hacer una solicitud POST para activar una automatización
+        doc: La solicitud POST debe hacerse a «/automations/:id/trigger.json» con una clave de API global.
       category_created_edited:
         title: Categoría creada/editada
         description: Cuando se cree o edite una categoría se activará la automatización
@@ -82,7 +82,7 @@ es:
         description: Llama a un zap con el contexto de un activador como cuerpo
       auto_responder:
         title: Respuesta automática
-        description: Responde a un mensaje que incluya las palabras clave especificadas
+        description: Publica una respuesta a una publicación que incluye las palabras clave especificadas
       auto_tag_topic:
         title: Etiquetar automáticamente tema
         description: Añadir etiquetas automáticamente a un tema
@@ -90,8 +90,8 @@ es:
         title: Anclar tema
         description: Fija un tema específico en una fecha determinada
       banner_topic:
-        title: Hacer tema de encabezado
-        description: Convertir un tema en un encabezado
+        title: Convertir el tema en banner
+        description: Convertir un tema en un banner
       gift_exchange:
         title: Amigo invisible
         description: Permite emparejar de forma anónima a los usuarios de un grupo para que se envíen un regalo entre ellos.
@@ -106,8 +106,8 @@ es:
         title: Aviso global para un usuario
         description: Permite mostrarle un aviso global a un usuario
       user_group_membership_through_badge:
-        title: Pertenencia a grupos de usuarios mediante una insignia
-        description: Modificar la pertenencia a un grupo de usuarios en función de una insignia
+        title: Pertenencia a grupos de usuarios mediante una medalla
+        description: Modificar la pertenencia a un grupo de usuarios en función de una medalla
       suspend_user_by_email_with_api_call:
         doc: Al activar «suspend_user_by_email» con una llamada API, se espera que haya un «email» válido en los parámetros enviados. También se pueden utilizar «reasons» y «suspend_until (formato ISO 8601)» para reemplazar los valores de los campos por defecto.
       user_global_notice_with_stalled_topic:

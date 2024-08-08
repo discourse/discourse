@@ -76,13 +76,20 @@ export default class Header extends Service {
     if (this.siteSettings.glimmer_header_mode === "disabled") {
       return false;
     } else if (this.siteSettings.glimmer_header_mode === "enabled") {
+      if (this.anyWidgetHeaderOverrides) {
+        // eslint-disable-next-line no-console
+        console.error(
+          "Using modern 'glimmer' header, even though there are themes and/or plugins using deprecated APIs. Deprecated header customizations will be broken. (glimmer_header_mode: enabled) https://meta.discourse.org/t/316549"
+        );
+      }
+
       return true;
     } else {
       // Auto
       if (this.anyWidgetHeaderOverrides) {
         // eslint-disable-next-line no-console
         console.warn(
-          "Using legacy 'widget' header because themes and/or plugins are using deprecated APIs. https://meta.discourse.org/t/296544"
+          "Using legacy 'widget' header because themes and/or plugins are using deprecated APIs. (glimmer_header_mode: auto) https://meta.discourse.org/t/316549"
         );
         return false;
       } else {
@@ -133,9 +140,9 @@ export default class Header extends Service {
    * and makes a guess about whether the main topic title is likely to be visible
    * on initial load. The IntersectionObserver will correct this later if needed.
    */
-  enterTopic(topic, postNumber) {
+  enterTopic(topic, isLoadingFirstPost) {
     this.topicInfo = topic;
-    this.mainTopicTitleVisible = !postNumber || postNumber === 1;
+    this.mainTopicTitleVisible = isLoadingFirstPost;
   }
 
   clearTopic() {

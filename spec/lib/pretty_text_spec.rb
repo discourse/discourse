@@ -2529,17 +2529,17 @@ HTML
   end
 
   it "can properly allowlist iframes" do
-    SiteSetting.allowed_iframes = "https://bob.com/a|http://silly.com?EMBED="
+    SiteSetting.allowed_iframes = "https://bob.com/a|http://silly.com/?EMBED="
     raw = <<~HTML
       <iframe src='https://www.google.com/maps/Embed?testing'></iframe>
       <iframe src='https://bob.com/a?testing'></iframe>
-      <iframe src='HTTP://SILLY.COM?EMBED=111'></iframe>
+      <iframe src='HTTP://SILLY.COM/?EMBED=111'></iframe>
     HTML
 
     # we require explicit HTTPS here
     html = <<~HTML
       <iframe src="https://bob.com/a?testing"></iframe>
-      <iframe src="HTTP://SILLY.COM?EMBED=111"></iframe>
+      <iframe src="HTTP://SILLY.COM/?EMBED=111"></iframe>
     HTML
 
     cooked = PrettyText.cook(raw).strip
@@ -2793,5 +2793,43 @@ HTML
     PrettyText.v8.eval <<~JS
       require("discourse-common/lib/deprecated").default("Some deprecation message");
     JS
+  end
+
+  describe "video thumbnails" do
+    before do
+      SiteSetting.authorized_extensions = "mp4|png"
+      @video_upload = Fabricate(:upload, original_filename: "video.mp4", extension: "mp4")
+    end
+
+    after { Upload.where(original_filename: ["404.png", "#{@video_upload.sha1}.png"]).destroy_all }
+
+    it "does not link to a thumbnail image if the video source is missing" do
+      Fabricate(:upload, original_filename: "404.png", extension: "png")
+
+      html = <<~HTML
+          <p></p><div class="video-placeholder-container" data-video-src="/404"></div><p></p>
+        HTML
+      doc = Nokogiri::HTML5.fragment(html)
+      described_class.add_video_placeholder_image(doc)
+
+      expect(doc.to_html).to eq(html)
+    end
+
+    it "links to a thumbnail image if the video source is valid" do
+      thumbnail =
+        Fabricate(:upload, original_filename: "#{@video_upload.sha1}.png", extension: "png")
+
+      html = <<~HTML
+        <p></p><div class="video-placeholder-container" data-video-src="#{@video_upload.url}"></div><p></p>
+      HTML
+      doc = Nokogiri::HTML5.fragment(html)
+      described_class.add_video_placeholder_image(doc)
+
+      html_with_thumbnail = <<~HTML
+        <p></p><div class="video-placeholder-container" data-video-src="#{@video_upload.url}" data-thumbnail-src="http://test.localhost#{thumbnail.url}"></div><p></p>
+      HTML
+
+      expect(doc.to_html).to eq(html_with_thumbnail)
+    end
   end
 end
