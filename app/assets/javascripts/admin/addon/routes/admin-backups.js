@@ -20,6 +20,10 @@ export default class AdminBackupsRoute extends DiscourseRoute {
   @service messageBus;
   @service modal;
 
+  titleToken() {
+    return I18n.t("admin.backups.title");
+  }
+
   activate() {
     this.messageBus.subscribe(LOG_CHANNEL, this.onMessage);
   }

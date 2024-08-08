@@ -1,49 +1,42 @@
-<div class="admin-backups">
-  <div class="admin-controls">
-    <nav>
-      <ul class="nav nav-pills">
-        <NavItem
-          @route="admin.backups.index"
-          @label="admin.backups.menu.backups"
-        />
-        <NavItem @route="admin.backups.logs" @label="admin.backups.menu.logs" />
-        <PluginOutlet @name="downloader" @connectorTagName="div" />
-        <div class="admin-actions">
-          {{#if this.model.canRollback}}
-            <DButton
-              @action={{route-action "rollback"}}
-              @label="admin.backups.operations.rollback.label"
-              @title="admin.backups.operations.rollback.title"
-              @icon="ambulance"
-              @disabled={{this.rollbackDisabled}}
-              class="btn-default btn-rollback"
-            />
-          {{/if}}
-          {{#if this.model.isOperationRunning}}
-            <DButton
-              @action={{route-action "cancelOperation"}}
-              @title="admin.backups.operations.cancel.title"
-              @label="admin.backups.operations.cancel.label"
-              @icon="times"
-              class="btn-danger"
-            />
-          {{else}}
-            <DButton
-              @action={{route-action "showStartBackupModal"}}
-              @title="admin.backups.operations.backup.title"
-              @label="admin.backups.operations.backup.label"
-              @icon="rocket"
-              class="btn-primary"
-            />
-          {{/if}}
-        </div>
-      </ul>
-    </nav>
-  </div>
+<div class="admin-backups admin-config-page">
+
+  <AdminPageHeader
+    @titleLabel="admin.backups.title"
+    @descriptionLabel="admin.backups.description"
+    @learnMoreUrl="https://meta.discourse.org/t/create-download-and-restore-a-backup-of-your-discourse-database/122710"
+  >
+    <:breadcrumbs>
+      <DBreadcrumbsItem
+        @path="/admin/backups"
+        @label={{i18n "admin.backups.title"}}
+      />
+    </:breadcrumbs>
+    <:actions as |actions|>
+      <AdminBackupsActions @actions={{actions}} @backups={{@model}} />
+    </:actions>
+    <:tabs>
+      <NavItem
+        @route="admin.backups.settings"
+        @label="settings"
+        class="admin-backups-tabs__settings"
+      />
+      <NavItem
+        @route="admin.backups.index"
+        @label="admin.backups.menu.backup_files"
+        class="admin-backups-tabs__files"
+      />
+      <NavItem
+        @route="admin.backups.logs"
+        @label="admin.backups.menu.logs"
+        class="admin-backups-tabs__logs"
+      />
+      <PluginOutlet @name="downloader" @connectorTagName="div" />
+    </:tabs>
+  </AdminPageHeader>
 
   <PluginOutlet @name="before-backup-list" @connectorTagName="div" />
 
-  <div class="admin-container">
+  <div class="admin-container admin-config-page__main-area">
     {{outlet}}
   </div>
 </div>

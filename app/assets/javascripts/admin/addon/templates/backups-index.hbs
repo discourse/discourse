@@ -1,46 +1,26 @@
-<div class="backup-options">
-  {{#if this.localBackupStorage}}
-    <UppyBackupUploader
-      @done={{route-action "uploadSuccess"}}
-      @localBackupStorage={{this.localBackupStorage}}
-    />
-  {{else}}
-    <UppyBackupUploader @done={{route-action "remoteUploadSuccess"}} />
-  {{/if}}
-
-  {{#if this.site.isReadOnly}}
-    <DButton
-      @icon="far-eye"
-      @action={{this.toggleReadOnlyMode}}
-      @disabled={{this.status.isOperationRunning}}
-      @title="admin.backups.read_only.disable.title"
-      @label="admin.backups.read_only.disable.label"
-      class="btn-default"
-    />
-  {{else}}
-    <DButton
-      @icon="far-eye"
-      @action={{this.toggleReadOnlyMode}}
-      @disabled={{this.status.isOperationRunning}}
-      @title="admin.backups.read_only.enable.title"
-      @label="admin.backups.read_only.enable.label"
-      class="btn-default"
-    />
-  {{/if}}
-  <LinkTo @route="adminSiteSettingsCategory" @model="backups">
-    {{i18n "admin.backups.settings"}}
-  </LinkTo>
-
-  <div class="backup-message">
-    {{#if this.status.restoreDisabled}}
-      <a href="site_settings/category/all_results?filter=allow_restore">{{d-icon
-          "info-circle"
-        }}
-        {{i18n "admin.backups.operations.restore.is_disabled"}}</a>
+<AdminPageSubheader @titleLabel="admin.backups.files_title">
+  <:actions>
+    {{#if this.localBackupStorage}}
+      <UppyBackupUploader
+        @done={{route-action "uploadSuccess"}}
+        @localBackupStorage={{this.localBackupStorage}}
+      />
+    {{else}}
+      <UppyBackupUploader @done={{route-action "remoteUploadSuccess"}} />
     {{/if}}
+  </:actions>
+</AdminPageSubheader>
+
+{{#if this.status.restoreDisabled}}
+  <div class="backup-message alert alert-info">
+    <a href="site_settings/category/all_results?filter=allow_restore">{{d-icon
+        "info-circle"
+      }}
+      {{i18n "admin.backups.operations.restore.is_disabled"}}</a>
   </div>
-</div>
-<table class="grid">
+{{/if}}
+
+<table class="grid admin-backups-list">
   <thead>
     <th width="55%">{{i18n "admin.backups.columns.filename"}}</th>
     <th width="10%">{{i18n "admin.backups.columns.size"}}</th>
@@ -48,51 +28,49 @@
   </thead>
   <tbody>
     {{#each this.model as |backup|}}
-      <tr>
+      <tr class="backup-item-row" data-backup-filename={{backup.filename}}>
         <td class="backup-filename">{{backup.filename}}</td>
         <td class="backup-size">{{human-size backup.size}}</td>
         <td class="backup-controls">
-          <div>
-            <DButton
-              @action={{fn this.download backup}}
-              @icon="download"
-              @title="admin.backups.operations.download.title"
-              @label="admin.backups.operations.download.label"
-              class="btn-default download"
-            />
-            {{#if this.status.isOperationRunning}}
-              <DButton
-                @icon="far-trash-alt"
-                @action={{fn (route-action "destroyBackup") backup}}
-                @disabled="true"
-                @title="admin.backups.operations.is_running"
-                class="btn-danger"
-              />
-              <DButton
-                @icon="play"
-                @action={{fn (route-action "startRestore") backup}}
-                @disabled={{this.status.restoreDisabled}}
-                @title={{this.restoreTitle}}
-                @label="admin.backups.operations.restore.label"
-                class="btn-default"
-              />
-            {{else}}
-              <DButton
-                @icon="far-trash-alt"
-                @action={{fn (route-action "destroyBackup") backup}}
-                @title="admin.backups.operations.destroy.title"
-                class="btn-danger"
-              />
-              <DButton
-                @icon="play"
-                @action={{fn (route-action "startRestore") backup}}
-                @disabled={{this.status.restoreDisabled}}
-                @title={{this.restoreTitle}}
-                @label="admin.backups.operations.restore.label"
-                class="btn-default btn-restore"
-              />
-            {{/if}}
-          </div>
+          <DButton
+            @action={{fn this.download backup}}
+            @icon="download"
+            @title="admin.backups.operations.download.title"
+            @label="admin.backups.operations.download.label"
+            class="btn-default btn-small backup-item-row__download"
+          />
+
+          <DMenu
+            @identifier="backup-item-menu"
+            @title={{i18n "more_options"}}
+            @icon="ellipsis-v"
+            class="btn-small"
+          >
+            <:content>
+              <DropdownMenu as |dropdown|>
+                <dropdown.item>
+                  <DButton
+                    @icon="far-trash-alt"
+                    @action={{fn (route-action "destroyBackup") backup}}
+                    @disabled={{this.status.isOperationRunning}}
+                    @title={{this.deleteTitle}}
+                    @label="admin.backups.operations.destroy.title"
+                    class="btn-transparent btn-danger backup-item-row__delete"
+                  />
+                </dropdown.item>
+                <dropdown.item>
+                  <DButton
+                    @icon="play"
+                    @action={{fn (route-action "startRestore") backup}}
+                    @disabled={{this.status.restoreDisabled}}
+                    @title={{this.restoreTitle}}
+                    @label="admin.backups.operations.restore.label"
+                    class="btn-transparent backup-item-row__restore"
+                  />
+                </dropdown.item>
+              </DropdownMenu>
+            </:content>
+          </DMenu>
         </td>
       </tr>
     {{else}}

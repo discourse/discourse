@@ -297,6 +297,7 @@ en:
     now: "just now"
     read_more: "read more"
     more: "More"
+    more_options: "More options"
     x_more:
       one: "%{count} More"
       other: "%{count} More"
@@ -2211,6 +2212,7 @@ en:
         }.
 
     learn_more: "Learn more…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>Learn more…</a>"
 
     mute: Mute
     unmute: Unmute
@@ -5002,6 +5004,7 @@ en:
   admin_js:
     # This is a text input placeholder, keep the translation short
     type_to_filter: "type to filter…"
+    settings: "Settings"
 
     admin:
       title: "Discourse Admin"
@@ -5648,8 +5651,12 @@ en:
 
       backups:
         title: "Backups"
+        files_title: "Backup files"
+        description: "Discourse backups include the full site database, which contains everything on the site: topics, posts, users, groups, settings, themes, etc. Depending on how the backup file is created, it may or may not include uploads."
+        learn_more_url: ""
         menu:
           backups: "Backups"
+          backup_files: "Backup files"
           logs: "Logs"
         none: "No backup available."
         read_only:
