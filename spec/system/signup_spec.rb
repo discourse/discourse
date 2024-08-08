@@ -34,7 +34,7 @@ shared_examples "signup scenarios" do
       expect(mail.to).to contain_exactly("johndoe@example.com")
       activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
 
-      visit activation_link
+      visit(activation_link)
 
       find("#activate-account-button").click
       find(".perform-activation .continue-button").click
