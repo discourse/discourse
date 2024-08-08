@@ -178,11 +178,11 @@ export default class CategorySectionLink {
   }
 
   get title() {
-    return this.category.description_text;
+    return this.category.descriptionText;
   }
 
   get text() {
-    return this.category.name;
+    return this.category.displayName;
   }
 
   get prefixType() {

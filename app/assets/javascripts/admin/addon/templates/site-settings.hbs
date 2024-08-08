@@ -18,9 +18,9 @@
           @route="adminSiteSettingsCategory"
           @model={{category.nameKey}}
           class={{category.nameKey}}
-          title={{category.name}}
+          title={{category.displayName}}
         >
-          {{category.name}}
+          {{category.displayName}}
           {{#if category.count}}
             <span class="count">({{category.count}})</span>
           {{/if}}
