@@ -1881,7 +1881,7 @@ en:
     max_reply_history: "Maximum number of replies to expand when expanding in-reply-to"
     topics_per_period_in_top_summary: "Number of top topics shown in the default top topics summary."
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
-    redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
+    redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page. Only applies when 'top' is present in the 'top menu' site setting."
     top_page_default_timeframe: "Default top page time period for anonymous users (automatically adjusts for logged in users based on their last visit)."
     moderators_view_emails: "Allow moderators to view user email addresses."
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"

@@ -16,6 +16,7 @@ import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
+// same as UserOption::HOMEPAGES
 const USER_HOMES = {
   1: "latest",
   2: "categories",
@@ -24,6 +25,7 @@ const USER_HOMES = {
   5: "top",
   6: "bookmarks",
   7: "unseen",
+  8: "hot",
 };
 
 const TEXT_SIZES = ["smallest", "smaller", "normal", "larger", "largest"];
@@ -44,10 +46,6 @@ export default Controller.extend({
     this._super(...arguments);
 
     this.set("selectedDarkColorSchemeId", this.session.userDarkSchemeId);
-
-    if (this.siteSettings.top_menu.split("|").includes("hot")) {
-      USER_HOMES[8] = "hot";
-    }
   },
 
   @discourseComputed("makeThemeDefault")
@@ -213,12 +211,20 @@ export default Controller.extend({
       });
     }
 
-    this.siteSettings.top_menu.split("|").forEach((m) => {
+    const availableIds = this.siteSettings.top_menu.split("|");
+    const userHome = USER_HOMES[this.get("model.user_option.homepage_id")];
+
+    if (userHome && !availableIds.includes(userHome)) {
+      availableIds.push(USER_HOMES[this.homepageId]);
+    }
+
+    availableIds.forEach((m) => {
       let id = homeValues[m];
       if (id) {
         result.push({ name: I18n.t(`filters.${m}.title`), value: Number(id) });
       }
     });
+
     return result;
   },
 
