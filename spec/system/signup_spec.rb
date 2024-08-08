@@ -3,6 +3,8 @@
 shared_examples "signup scenarios" do
   let(:login_modal) { PageObjects::Modals::Login.new }
   let(:signup_modal) { PageObjects::Modals::Signup.new }
+  let(:invite_form) { PageObjects::Pages::InviteForm.new }
+  let(:activate_account) { PageObjects::Pages::ActivateAccount.new }
   let(:invite) { Fabricate(:invite, email: "johndoe@example.com") }
   let(:topic) { Fabricate(:topic, title: "Super cool topic") }
 
@@ -34,10 +36,10 @@ shared_examples "signup scenarios" do
       expect(mail.to).to contain_exactly("johndoe@example.com")
       activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
 
-      visit(activation_link)
+      visit activation_link
 
-      find("#activate-account-button").click
-      find(".perform-activation .continue-button").click
+      activate_account.click_activate_account
+      activate_account.click_continue
 
       expect(page).to have_current_path("/")
       expect(page).to have_css(".header-dropdown-toggle.current-user")
@@ -46,24 +48,23 @@ shared_examples "signup scenarios" do
     it "redirects to the topic the user was invited to after activating account" do
       TopicInvite.create!(invite: invite, topic: topic)
 
-      visit("/invites/#{invite.invite_key}")
+      invite_form.open(invite.invite_key)
 
-      find("#new-account-username").fill_in(with: "john")
-      find("#new-account-password").fill_in(with: "supersecurepassword")
+      invite_form.fill_username("john")
+      invite_form.fill_password("supersecurepassword")
 
-      find(".username-input").has_css?("#username-validation.good")
-      find(".password-input").has_css?("#password-validation.good")
+      expect(invite_form).to have_valid_fields
 
-      find(".invitation-cta__accept.btn-primary").click
-      expect(page).to have_css(".invite-success")
+      invite_form.click_create_account
+      expect(invite_form).to have_successful_message
 
       mail = ActionMailer::Base.deliveries.first
       expect(mail.to).to contain_exactly("johndoe@example.com")
       activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
 
-      visit(activation_link)
+      visit activation_link
 
-      find("#activate-account-button").click
+      activate_account.click_activate_account
 
       expect(page).to have_current_path("/t/#{topic.slug}/#{topic.id}")
     end
@@ -174,7 +175,7 @@ shared_examples "signup scenarios" do
         user = User.find_by(username: "john")
         EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
-        visit("/")
+        visit "/"
         login_modal.open
         login_modal.fill_username("john")
         login_modal.fill_password("supersecurepassword")
