@@ -21,7 +21,7 @@
     font-size: var(--font-up-1);
     white-space: nowrap;
     flex-wrap: nowrap;
-    overflow-x: scroll;
+    overflow-x: auto;
 
     // Fade-out for horizontal scroll nav
     &:before {
