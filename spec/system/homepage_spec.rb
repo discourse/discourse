@@ -93,7 +93,7 @@ describe "Homepage", type: :system do
       expect(user.user_option.homepage_id).to eq(UserOption::HOMEPAGES.key("hot"))
 
       click_logo
-      expect(page).to have_css(".navigation-container .top.active", text: "Top")
+      expect(page).to have_css(".navigation-container .hot.active", text: "Hot")
 
       visit "/u/#{user.username}/preferences/interface"
 
