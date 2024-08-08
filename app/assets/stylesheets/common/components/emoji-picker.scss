@@ -1,16 +1,16 @@
-.chat-emoji-picker {
-  border-top: 1px solid var(--primary-low);
-  transition: height 125ms ease;
+.fk-d-menu[data-content][data-identifier="emoji-picker"] {
+  z-index: z("composer", "popover");
+}
+
+.emoji-picker {
   display: flex;
   flex-direction: column;
   height: 300px;
-  overflow: hidden;
-  background: var(--secondary);
 
   .emoji {
     padding: 6px;
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     image-rendering: -webkit-optimize-contrast;
     cursor: pointer;
 
@@ -54,7 +54,7 @@
     height: 100%;
     overflow-y: scroll;
     text-transform: capitalize;
-    @include chat-scrollbar();
+    // @include chat-scrollbar();
     margin: 1px;
   }
 
@@ -199,17 +199,17 @@
   }
 }
 
-.chat-channel-message-emoji-picker-connector {
-  position: relative;
+// .chat-channel-message-emoji-picker-connector {
+//   position: relative;
 
-  .chat-emoji-picker {
-    border: 1px solid var(--primary-low);
-    width: 320px;
-    z-index: z("header") + 1;
+//   .chat-emoji-picker {
+//     border: 1px solid var(--primary-low);
+//     width: 320px;
+//     z-index: z("header") + 1;
 
-    .emoji {
-      width: 22px;
-      height: 22px;
-    }
-  }
-}
+//     .emoji {
+//       width: 22px;
+//       height: 22px;
+//     }
+//   }
+// }

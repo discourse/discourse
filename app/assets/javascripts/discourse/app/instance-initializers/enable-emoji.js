@@ -1,4 +1,5 @@
 import { registerEmoji } from "pretty-text/emoji";
+import ComposerEmojiPicker from "discourse/components/composer-emoji-picker";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PreloadStore from "discourse/lib/preload-store";
 
@@ -14,10 +15,10 @@ export default {
         toolbar.addButton({
           id: "emoji",
           group: "extras",
-          icon: "far-smile",
-          action: () => toolbar.context.send("emoji"),
+          action: (emoji) => toolbar.context.send("emojiSelected", emoji),
           title: "composer.emoji",
           className: "emoji insert-emoji",
+          component: ComposerEmojiPicker,
         });
       });
     });

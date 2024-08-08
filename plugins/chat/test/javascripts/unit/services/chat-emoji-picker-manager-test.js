@@ -9,7 +9,7 @@ function emojisResponse() {
 }
 
 module(
-  "Discourse Chat | Unit | Service | chat-emoji-picker-manager",
+  "Discourse Chat | Unit | Service | emoji-picker-manager",
   function (hooks) {
     setupTest(hooks);
 
@@ -18,7 +18,7 @@ module(
         return [200, {}, emojisResponse()];
       });
 
-      this.manager = getOwner(this).lookup("service:chat-emoji-picker-manager");
+      this.manager = getOwner(this).lookup("service:emoji-picker-manager");
     });
 
     hooks.afterEach(function () {

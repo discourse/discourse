@@ -1,3 +1,4 @@
+import EmojiPicker from "discourse/components/emoji-picker";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { replaceIcon } from "discourse-common/lib/icon-library";
@@ -66,36 +67,6 @@ export default {
           },
         });
       }
-
-      api.registerChatComposerButton({
-        label: "chat.emoji",
-        id: "emoji",
-        class: "chat-emoji-btn",
-        icon: "far-smile",
-        position: this.site.desktopView ? "inline" : "dropdown",
-        context: "channel",
-        action() {
-          const chatEmojiPickerManager = container.lookup(
-            "service:chat-emoji-picker-manager"
-          );
-          chatEmojiPickerManager.open({ context: "channel" });
-        },
-      });
-
-      api.registerChatComposerButton({
-        label: "chat.emoji",
-        id: "channel-emoji",
-        class: "chat-emoji-btn",
-        icon: "discourse-emojis",
-        position: "dropdown",
-        context: "thread",
-        action() {
-          const chatEmojiPickerManager = container.lookup(
-            "service:chat-emoji-picker-manager"
-          );
-          chatEmojiPickerManager.open({ context: "thread" });
-        },
-      });
 
       // we want to decorate the chat quote dates regardless
       // of whether the current user has chat enabled

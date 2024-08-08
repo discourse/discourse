@@ -2,7 +2,6 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { later } from "@ember/runloop";
 import Service, { service } from "@ember/service";
-import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse-common/config/environment";
@@ -13,20 +12,14 @@ const TRANSITION_TIME = isTesting() ? 0 : 125; // CSS transition time
 const DEFAULT_VISIBLE_SECTIONS = ["favorites", "smileys_&_emotion"];
 const DEFAULT_LAST_SECTION = "favorites";
 
-export default class ChatEmojiPickerManager extends Service {
+export default class EmojiPickerManager extends Service {
   @service appEvents;
 
   @tracked closing = false;
   @tracked loading = false;
   @tracked picker = null;
-  @tracked emojis = null;
-  @tracked visibleSections = DEFAULT_VISIBLE_SECTIONS;
-  @tracked lastVisibleSection = DEFAULT_LAST_SECTION;
-  @tracked element = null;
 
-  get sections() {
-    return !this.loading && this.emojis ? Object.keys(this.emojis) : [];
-  }
+  @tracked element = null;
 
   @bind
   closeExisting() {
@@ -51,15 +44,7 @@ export default class ChatEmojiPickerManager extends Service {
     }, TRANSITION_TIME);
   }
 
-  addVisibleSections(sections) {
-    this.visibleSections = makeArray(this.visibleSections)
-      .concat(makeArray(sections))
-      .uniq();
-  }
-
   open(picker) {
-    this.loadEmojis();
-
     if (this.picker) {
       if (this.picker.trigger === picker.trigger) {
         this.closeExisting();
@@ -70,23 +55,5 @@ export default class ChatEmojiPickerManager extends Service {
     } else {
       this.picker = picker;
     }
-  }
-
-  @action
-  loadEmojis() {
-    if (this.emojis) {
-      return Promise.resolve();
-    }
-
-    this.loading = true;
-
-    return ajax("/chat/emojis.json")
-      .then((emojis) => {
-        this.emojis = emojis;
-      })
-      .catch(popupAjaxError)
-      .finally(() => {
-        this.loading = false;
-      });
   }
 }
