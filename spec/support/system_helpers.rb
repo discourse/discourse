@@ -161,4 +161,8 @@ module SystemHelpers
   def skip_on_ci!(message = "Flaky on CI")
     skip(message) if ENV["CI"]
   end
+
+  def click_logo
+    PageObjects::Components::Logo.click
+  end
 end
