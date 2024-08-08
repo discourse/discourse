@@ -187,7 +187,7 @@ class Auth::DefaultCurrentUserProvider
           .active
           .joins(:user)
           .where(key_hash: @hashed_user_api_key)
-          .includes(:user, :scopes)
+          .includes(:user, :scopes, :client)
           .first
 
       raise Discourse::InvalidAccess unless user_api_key_obj
