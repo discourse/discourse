@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import EmojiPickerVirtual from "discourse/components/emoji-picker/virtual";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import FlagModal from "discourse/components/modal/flag";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -32,8 +33,7 @@ export default class ChatMessageInteractor {
   @service appEvents;
   @service dialog;
   @service chat;
-  @service chatEmojiReactionStore;
-  @service chatEmojiPickerManager;
+  @service emojiReactionStore;
   @service chatChannelComposer;
   @service chatThreadComposer;
   @service chatChannelPane;
@@ -44,6 +44,7 @@ export default class ChatMessageInteractor {
   @service router;
   @service modal;
   @service capabilities;
+  @service menu;
   @service toasts;
 
   @tracked message = null;
@@ -56,7 +57,7 @@ export default class ChatMessageInteractor {
 
     this.message = message;
     this.context = context;
-    this.cachedFavoritesReactions = this.chatEmojiReactionStore.favorites;
+    this.cachedFavoritesReactions = this.emojiReactionStore.favorites;
   }
 
   get pane() {
@@ -292,7 +293,7 @@ export default class ChatMessageInteractor {
     }
 
     if (reactAction === REACTIONS.add) {
-      this.chatEmojiReactionStore.track(`:${emoji}:`);
+      this.emojiReactionStore.track(`:${emoji}:`);
     }
 
     this.pane.reacting = true;
@@ -399,13 +400,19 @@ export default class ChatMessageInteractor {
   }
 
   @action
-  openEmojiPicker(_, { target }) {
-    const pickerState = {
-      didSelectEmoji: this.selectReaction,
-      trigger: target,
-      context: "chat-channel-message",
+  openEmojiPicker(trigger) {
+    const menuOptions = {
+      identifier: "emoji-picker",
+      groupIdentifier: "emoji-picker",
+      component: EmojiPickerVirtual,
+      data: {
+        didSelectEmoji: (emoji) => {
+          this.selectReaction(emoji);
+        },
+      },
     };
-    this.chatEmojiPickerManager.open(pickerState);
+
+    this.menu.show(trigger, menuOptions);
   }
 
   @bind

@@ -38,6 +38,8 @@
                     @options={{hash icon=b.icon focusAfterOnChange=false}}
                     class={{b.className}}
                   />
+                {{else if b.component}}
+                  <b.component @button={{b}} />
                 {{else}}
                   <DButton
                     @action={{fn (action b.action) b}}
@@ -96,11 +98,3 @@
     </span>
   </div>
 </div>
-
-<EmojiPicker
-  @isActive={{this.emojiPickerIsActive}}
-  @isEditorFocused={{this.isEditorFocused}}
-  @initialFilter={{this.emojiFilter}}
-  @emojiSelected={{action "emojiSelected"}}
-  @onEmojiPickerClose={{this.onEmojiPickerClose}}
-/>

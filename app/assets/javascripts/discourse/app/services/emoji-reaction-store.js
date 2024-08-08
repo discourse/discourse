@@ -4,8 +4,8 @@
 import Service from "@ember/service";
 import KeyValueStore from "discourse/lib/key-value-store";
 
-export default class ChatEmojiReactionStore extends Service {
-  STORE_NAMESPACE = "discourse_chat_emoji_reaction_";
+export default class EmojiReactionStore extends Service {
+  STORE_NAMESPACE = "discourse_emoji_reaction_";
   MAX_DISPLAYED_EMOJIS = 20;
   MAX_TRACKED_EMOJIS = this.MAX_DISPLAYED_EMOJIS * 2;
   SKIN_TONE_STORE_KEY = "emojiSelectedDiversity";

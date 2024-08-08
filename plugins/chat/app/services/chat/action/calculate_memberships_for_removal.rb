@@ -64,7 +64,6 @@ module Chat
 
         memberships_to_remove = []
         scoped_memberships.find_each do |membership|
-          scoped_user = scoped_users.find { |su| su.id == membership.user_id }
           channel_permission =
             channel_permissions_map.find { |cpm| cpm.channel_id == membership.chat_channel_id }
 
@@ -91,6 +90,7 @@ module Chat
           # At least one of the groups on the channel can create_post or
           # has full permission, remove the membership if the user is in none
           # of these groups.
+          scoped_user = scoped_users.find { |su| su.id == membership.user_id }
           if group_ids_with_write_permission.any? &&
                !scoped_user.in_any_groups?(group_ids_with_write_permission)
             memberships_to_remove << membership.id

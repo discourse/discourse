@@ -55,8 +55,6 @@ export default class ChatMessage extends Component {
   @service capabilities;
   @service chat;
   @service chatApi;
-  @service chatEmojiReactionStore;
-  @service chatEmojiPickerManager;
   @service chatChannelPane;
   @service chatThreadPane;
   @service chatChannelsManager;
@@ -625,7 +623,10 @@ export default class ChatMessage extends Component {
 
                       {{#if this.shouldRenderOpenEmojiPickerButton}}
                         <DButton
-                          @action={{this.messageInteractor.openEmojiPicker}}
+                          @action={{fn
+                            this.messageInteractor.openEmojiPicker
+                            this.messageContainer
+                          }}
                           @icon="discourse-emojis"
                           @title="chat.react"
                           @forwardEvent={{true}}
