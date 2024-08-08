@@ -38,7 +38,8 @@ class SearchLog < ActiveRecord::Base
   def self.log(term:, search_type:, ip_address:, user_agent: nil, user_id: nil)
     return [:error] if term.blank?
 
-    can_log_search = DiscoursePluginRegistry.apply_modifier(:search_log_can_log, term, user_id)
+    can_log_search =
+      DiscoursePluginRegistry.apply_modifier(:search_log_can_log, term: term, user_id: user_id)
     return if !can_log_search
 
     search_type = search_types[search_type]
