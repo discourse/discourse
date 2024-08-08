@@ -110,17 +110,6 @@ class SiteSerializer < ApplicationSerializer
     end
   end
 
-  def like_action_type
-    # Like is very special post action type which cannot be disabled or edited in admin panel
-    Flag.new(
-      id: PostActionType::LIKE_POST_ACTION_ID,
-      name: "like",
-      name_key: "like",
-      description: "",
-      position: 0,
-    )
-  end
-
   def post_action_types
     Discourse
       .cache
@@ -130,7 +119,7 @@ class SiteSerializer < ApplicationSerializer
           ActiveModel::ArraySerializer.new(types).as_json
         else
           ActiveModel::ArraySerializer.new(
-            Flag.unscoped.order(:position).where(score_type: false).all.to_a << like_action_type,
+            Flag.unscoped.order(:position).where(score_type: false).all,
             each_serializer: FlagSerializer,
             target: :post_action,
             used_flag_ids: Flag.used_flag_ids,

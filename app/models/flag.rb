@@ -18,7 +18,9 @@ class Flag < ActiveRecord::Base
 
   attr_accessor :skip_reset_flag_callback
 
-  default_scope { order(:position).where(score_type: false) }
+  default_scope do
+    order(:position).where(score_type: false).where.not(id: PostActionType::LIKE_POST_ACTION_ID)
+  end
 
   def used?
     PostAction.exists?(post_action_type_id: self.id) ||
