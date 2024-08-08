@@ -4096,7 +4096,7 @@ en:
       colors_disabled: "You can’t select colors because you have a category style of none."
 
     flagging:
-      title: "Thanks for helping to keep our community civil!"
+      title: "Thanks for keeping our community civil!"
       action: "Flag Post"
       take_action: "Take Action…"
       take_action_options:
@@ -4154,7 +4154,7 @@ en:
           other: "%{count} remaining"
 
     flagging_topic:
-      title: "Thanks for helping to keep our community civil!"
+      title: "Thanks for keeping our community civil!"
       action: "Flag Topic"
       notify_action: "Message"
 
