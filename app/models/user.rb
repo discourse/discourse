@@ -1039,7 +1039,7 @@ class User < ActiveRecord::Base
 
   def self.update_ip_address!(user_id, new_ip:, old_ip:)
     can_update_ip_address =
-      DiscoursePluginRegistry.apply_modifier(:user_can_update_ip_address, user_id)
+      DiscoursePluginRegistry.apply_modifier(:user_can_update_ip_address, user_id: user_id)
     return if !can_update_ip_address
 
     unless old_ip == new_ip || new_ip.blank?
