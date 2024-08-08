@@ -33,7 +33,7 @@
     "pikaday": "1.8.2",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.8.8",
-    "puppeteer-core": "^22.15.0",
+    "puppeteer-core": "^23.0.1",
     "squoosh": "discourse/squoosh#dc9649d",
     "typescript": "^5.5.4"
   },
