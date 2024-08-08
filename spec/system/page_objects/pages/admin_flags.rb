@@ -64,8 +64,7 @@ module PageObjects
       end
 
       def has_saved_flag?(key)
-        has_css?(".admin-flag-item.#{key}.saving")
-        has_no_css?(".admin-flag-item.#{key}.saving")
+        has_css?(".admin-flag-item.#{key}.saved")
       end
 
       def has_closed_flag_menu?
