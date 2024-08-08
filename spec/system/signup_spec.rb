@@ -46,7 +46,7 @@ shared_examples "signup scenarios" do
     it "redirects to the topic the user was invited to after activating account" do
       TopicInvite.create!(invite: invite, topic: topic)
 
-      visit "/invites/#{invite.invite_key}"
+      visit("/invites/#{invite.invite_key}")
 
       find("#new-account-username").fill_in(with: "john")
       find("#new-account-password").fill_in(with: "supersecurepassword")
