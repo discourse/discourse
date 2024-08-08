@@ -1,63 +1,19 @@
-import Component from "@ember/component";
-import { schedule } from "@ember/runloop";
-import { classNames } from "@ember-decorators/component";
+import Component from "@glimmer/component";
 import { number } from "discourse/lib/formatter";
-import loadScript from "discourse/lib/load-script";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { makeArray } from "discourse-common/lib/helpers";
-import { bind } from "discourse-common/utils/decorators";
 import Report from "admin/models/report";
+import Chart from "./chart";
 
-@classNames("admin-report-chart")
 export default class AdminReportChart extends Component {
-  limit = 8;
-  total = 0;
-  options = null;
+  get chartConfig() {
+    const { model, options } = this.args;
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-
-    window.addEventListener("resize", this._resizeHandler);
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    window.removeEventListener("resize", this._resizeHandler);
-
-    this._resetChart();
-  }
-
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    discourseDebounce(this, this._scheduleChartRendering, 100);
-  }
-
-  _scheduleChartRendering() {
-    schedule("afterRender", () => {
-      this._renderChart(
-        this.model,
-        this.element && this.element.querySelector(".chart-canvas")
-      );
-    });
-  }
-
-  _renderChart(model, chartCanvas) {
-    if (!chartCanvas) {
-      return;
-    }
-
-    const context = chartCanvas.getContext("2d");
-    const chartData = this._applyChartGrouping(
+    const chartData = Report.collapse(
       model,
-      makeArray(model.get("chartData") || model.get("data"), "weekly"),
-      this.options
+      makeArray(model.chartData || model.data, "weekly"),
+      options.chartGrouping
     );
-    const prevChartData = makeArray(
-      model.get("prevChartData") || model.get("prev_data")
-    );
-
+    const prevChartData = makeArray(model.prevChartData || model.prev_data);
     const labels = chartData.map((d) => d.x);
 
     const data = {
@@ -88,21 +44,6 @@ export default class AdminReportChart extends Component {
       });
     }
 
-    loadScript("/javascripts/Chart.min.js").then(() => {
-      this._resetChart();
-
-      if (!this.element) {
-        return;
-      }
-
-      this._chart = new window.Chart(
-        context,
-        this._buildChartConfig(data, this.options)
-      );
-    });
-  }
-
-  _buildChartConfig(data, options) {
     return {
       type: "line",
       data,
@@ -164,19 +105,7 @@ export default class AdminReportChart extends Component {
     };
   }
 
-  _resetChart() {
-    if (this._chart) {
-      this._chart.destroy();
-      this._chart = null;
-    }
-  }
-
-  _applyChartGrouping(model, data, options) {
-    return Report.collapse(model, data, options.chartGrouping);
-  }
-
-  @bind
-  _resizeHandler() {
-    discourseDebounce(this, this._scheduleChartRendering, 500);
-  }
+  <template>
+    <Chart @chartConfig={{this.chartConfig}} class="admin-report-chart" />
+  </template>
 }

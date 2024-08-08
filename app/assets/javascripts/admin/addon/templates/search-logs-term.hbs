@@ -16,7 +16,7 @@
 </h2>
 
 <ConditionalLoadingSpinner @condition={{this.refreshing}}>
-  <AdminGraph @model={{this.model}} @type="bar" />
+  <Chart @chartConfig={{this.chartConfig}} />
 
   <br /><br />
   <h2> {{i18n "admin.logs.search_logs.header_search_results"}} </h2>
