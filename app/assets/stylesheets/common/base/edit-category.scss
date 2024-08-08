@@ -192,26 +192,26 @@ div.edit-category {
 }
 
 .category-permissions-table {
-  max-width: 450px;
+  min-width: 600px;
+  max-width: 800px;
   margin-bottom: 2em;
 
   .permission-row {
-    border-bottom: 1px solid var(--primary-low);
-    display: flex;
-    &.row-header {
+    border-bottom: 2px solid var(--primary-low);
+    &.row-header th {
       font-weight: bold;
-      border-bottom: 2px solid var(--primary-low);
+      color: var(--primary);
+      text-align: center;
     }
     .group-name,
     .options {
-      display: flex;
       box-sizing: border-box;
       text-align: center;
-      width: 50%;
       margin: 0px;
       align-items: center;
     }
-    .group-name {
+    th.group-name,
+    td.group-name {
       text-align: left;
       padding: 0.5em;
       padding-left: 0;
@@ -219,9 +219,13 @@ div.edit-category {
         @include ellipsis;
       }
     }
+    td,
     .cell,
     .btn-flat {
-      width: 33%;
+      text-align: center;
+      padding: 0.5em;
+    }
+    .separator {
       padding: 0.5em;
     }
     .btn-flat:hover {
@@ -234,7 +238,6 @@ div.edit-category {
   }
 
   .remove-permission {
-    margin-left: 0.5em;
     padding: 0.15em;
     color: var(--danger);
     &:hover {

@@ -31,12 +31,12 @@ class CategorySerializer < SiteCategorySerializer
 
   has_one :category_setting, serializer: CategorySettingSerializer, embed: :objects
 
-  def reviewable_by_group_name
-    object.reviewable_by_group.name
+  def reviewable_by_group_names
+    object.reviewable_by_groups.pluck(:name)
   end
 
-  def include_reviewable_by_group_name?
-    SiteSetting.enable_category_group_moderation? && object.reviewable_by_group_id.present?
+  def include_reviewable_by_group_names?
+    SiteSetting.enable_category_group_moderation? && object.reviewable_by_groups.exists?
   end
 
   def include_category_setting?

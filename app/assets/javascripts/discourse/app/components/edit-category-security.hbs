@@ -8,46 +8,64 @@
   {{/if}}
 
   {{#unless this.category.is_special}}
-    <div class="category-permissions-table">
-      <div class="permission-row row-header">
-        <span class="group-name">{{i18n "category.permissions.group"}}</span>
-        <span class="options">
-          <span class="cell">{{i18n "category.permissions.see"}}</span>
-          <span class="cell">{{i18n "category.permissions.reply"}}</span>
-          <span class="cell">{{i18n "category.permissions.create"}}</span>
-        </span>
-      </div>
-      {{#each this.category.permissions as |p|}}
-        <CategoryPermissionRow
-          @group_name={{p.group_name}}
-          @type={{p.permission_type}}
-          @category={{this.category}}
-          @everyonePermission={{this.everyonePermission}}
-        />
-      {{/each}}
+    <table class="category-permissions-table">
+      <thead>
+        <tr class="permission-row row-header">
+          <th class="group-name">{{i18n "category.permissions.group"}}</th>
+            <th class="cell">{{i18n "category.permissions.see"}}</th>
+            <th class="cell">{{i18n "category.permissions.reply"}}</th>
+            <th class="cell">{{i18n "category.permissions.create"}}</th>
+            <th class="separator"></th>
+            {{#if this.siteSettings.enable_category_group_moderation}}
+              <th class="cell">{{i18n "category.permissions.moderate"}}</th>
+              <th class="separator"></th>
+            {{/if}}
+            <th class="cell"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each this.category.permissions as |p|}}
+          <CategoryPermissionRow
+            @group_name={{p.group_name}}
+            @type={{p.permission_type}}
+            @category={{this.category}}
+            @everyonePermission={{this.everyonePermission}}
+          />
+        {{/each}}
+      </tbody>
 
-      {{#unless this.category.permissions}}
-        <div class="permission-row row-empty">
-          {{i18n "category.permissions.no_groups_selected"}}
-        </div>
-      {{/unless}}
+      <tfoot>
+        {{#unless this.category.permissions}}
+          <tr>
+            <td colspan="8" class="permission-row row-empty">
+              {{i18n "category.permissions.no_groups_selected"}}
+            </td>
+          </tr>
+        {{/unless}}
 
-      {{#if this.category.availableGroups}}
-        <div class="add-group">
-          <span class="group-name">
-            <ComboBox
-              @content={{this.category.availableGroups}}
-              @onChange={{action "onSelectGroup"}}
-              @value={{null}}
-              @valueProperty={{null}}
-              @nameProperty={{null}}
-              @options={{hash none="category.security_add_group"}}
-              class="available-groups"
-            />
-          </span>
-        </div>
-      {{/if}}
-    </div>
+        {{#if this.category.availableGroups}}
+        <tr>
+          <td class="add-group">
+            <span class="group-name">
+              <ComboBox
+                @content={{this.category.availableGroups}}
+                @onChange={{action "onSelectGroup"}}
+                @value={{null}}
+                @valueProperty={{null}}
+                @nameProperty={{null}}
+                @options={{hash none="category.security_add_group"}}
+                class="available-groups"
+              />
+            </span>
+          </td>
+        </tr>
+        {{/if}}
+      </tfoot>
+    </table>
+
+    {{#if this.siteSettings.enable_category_group_moderation}}
+      <p class="warning">{{i18n "category.reviewable_by_group"}}</p>
+    {{/if}}
 
     {{#if this.everyoneGrantedFull}}
       <p class="warning">{{i18n "category.permissions.everyone_has_access"}}</p>

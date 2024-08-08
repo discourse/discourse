@@ -8,6 +8,7 @@ import I18n from "discourse-i18n";
 const EVERYONE = "everyone";
 
 export default Component.extend({
+  tagName: "tr",
   classNames: ["permission-row", "row-body"],
   canCreate: equal("type", PermissionType.FULL),
   everyonePermissionType: alias("everyonePermission.permission_type"),
@@ -22,6 +23,21 @@ export default Component.extend({
   @discourseComputed("type")
   canReplyIcon() {
     return this.canReply ? "check-square" : "far-square";
+  },
+
+  @discourseComputed("category.can_moderate")
+  canModerateIcon() {
+    return this.category.can_moderate ? "check-square" : "far-square";
+  },
+
+  @discourseComputed("category.can_moderate")
+  moderateGranted() {
+    return this.category.can_moderate ? "moderate-granted" : "";
+  },
+
+  @discourseComputed("group_name")
+  moderateDisabled() {
+    return this.group_name === EVERYONE;
   },
 
   @discourseComputed("type")
@@ -121,6 +137,21 @@ export default Component.extend({
       } else {
         this.updatePermission(PermissionType.FULL);
       }
+    },
+
+    setPermissionModerate() {
+      let reviewableByGroupNames =
+        this.category.reviewable_by_group_names || [];
+
+      if (reviewableByGroupNames.includes(this.group_name)) {
+        reviewableByGroupNames = reviewableByGroupNames.filter(
+          (name) => name !== this.group_name
+        );
+      } else {
+        reviewableByGroupNames.push(this.group_name);
+      }
+
+      this.category.set("reviewable_by_group_names", reviewableByGroupNames);
     },
   },
 });
