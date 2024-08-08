@@ -34,7 +34,6 @@ export default class ChatMessageInteractor {
   @service dialog;
   @service chat;
   @service emojiReactionStore;
-  @service emojiPickerManager;
   @service chatChannelComposer;
   @service chatThreadComposer;
   @service chatChannelPane;

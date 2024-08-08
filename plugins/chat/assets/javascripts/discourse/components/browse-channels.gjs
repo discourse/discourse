@@ -8,13 +8,13 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
-import DcFilterInput from "discourse/components/dc-filter-input";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import List from "discourse/plugins/chat/discourse/components/chat/list";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import ChatChannelCard from "discourse/plugins/chat/discourse/components/chat-channel-card";
+import DcFilterInput from "discourse/plugins/chat/discourse/components/dc-filter-input";
 
 const ARCHIVED = "archived";
 const ALL = "all";
