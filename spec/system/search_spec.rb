@@ -103,7 +103,6 @@ describe "Search", type: :system do
       search_page.type_in_search_menu("test")
       search_page.click_search_menu_link
       expect(search_page).to have_topic_title_for_first_search_result(topic.title)
-      pause_test
       search_page.click_first_topic
       search_page.click_search_icon
       expect(search_page).to have_topic_title_for_first_search_result(topic.title)
