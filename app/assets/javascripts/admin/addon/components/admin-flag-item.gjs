@@ -74,18 +74,18 @@ export default class AdminFlagItem extends Component {
   @action
   moveUp() {
     this.isSaving = true;
-    this.dMenu.close();
     this.args.moveFlagCallback(this.args.flag, "up").finally(() => {
       this.isSaving = false;
+      this.dMenu.close();
     });
   }
 
   @action
   moveDown() {
     this.isSaving = true;
-    this.dMenu.close();
     this.args.moveFlagCallback(this.args.flag, "down").finally(() => {
       this.isSaving = false;
+      this.dMenu.close();
     });
   }
   @action
