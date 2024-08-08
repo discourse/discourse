@@ -11,6 +11,7 @@ import { htmlSafe } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
 import { eq, gt, includes, notEq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import DcFilterInput from "discourse/components/dc-filter-input";
 import concatClass from "discourse/helpers/concat-class";
 import noop from "discourse/helpers/noop";
 import replaceEmoji from "discourse/helpers/replace-emoji";
@@ -24,7 +25,6 @@ import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { makeArray } from "discourse-common/lib/helpers";
 import { bind } from "discourse-common/utils/decorators";
-import DcFilterInput from "discourse/plugins/chat/discourse/components/dc-filter-input";
 
 export const FITZPATRICK_MODIFIERS = [
   { scale: 1, modifier: null },

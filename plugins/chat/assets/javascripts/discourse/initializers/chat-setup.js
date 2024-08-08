@@ -1,4 +1,3 @@
-import EmojiPicker from "discourse/components/emoji-picker";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { replaceIcon } from "discourse-common/lib/icon-library";

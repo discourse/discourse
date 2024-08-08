@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import DcFilterInput from "discourse/components/dc-filter-input";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import autoFocus from "discourse/modifiers/auto-focus";
@@ -17,7 +18,6 @@ import I18n from "discourse-i18n";
 import MessageCreator from "discourse/plugins/chat/discourse/components/chat/message-creator";
 import { MODES } from "discourse/plugins/chat/discourse/components/chat/message-creator/constants";
 import ChatUserInfo from "discourse/plugins/chat/discourse/components/chat-user-info";
-import DcFilterInput from "discourse/plugins/chat/discourse/components/dc-filter-input";
 
 export default class ChatRouteChannelInfoMembers extends Component {
   @service appEvents;
