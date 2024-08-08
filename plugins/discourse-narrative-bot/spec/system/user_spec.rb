@@ -22,7 +22,7 @@ describe "Narrative Bot PM", type: :system do
       tooltip = PageObjects::Components::Tooltips.new("user-tip")
       tooltip.find(".btn", text: "Skip tips").click
 
-      expect(page).to have_no_css(".fk-d-tooltip__content .user-tip__title")
+      expect(tooltip).to be_not_present
       expect(page).to have_css(".badge-notification.new-pms")
 
       find("#toggle-current-user").click
