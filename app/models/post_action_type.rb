@@ -88,12 +88,14 @@ class PostActionType < ActiveRecord::Base
 
     def flag_types_without_additional_message
       return flag_settings.without_additional_message_types if overridden_by_plugin_or_skipped_db?
-      flag_enum(all_flags.reject { |flag| flag[:require_message] })
+      flag_enum(
+        all_flags.reject { |flag| flag[:require_message] || flag[:id] == LIKE_POST_ACTION_ID },
+      )
     end
 
     def flag_types
       return flag_settings.flag_types if overridden_by_plugin_or_skipped_db?
-      flag_enum(all_flags.reject { |flag| flag[:score_type] })
+      flag_enum(all_flags.reject { |flag| flag[:score_type] || flag[:id] == LIKE_POST_ACTION_ID })
     end
 
     def score_types

@@ -57,3 +57,12 @@ Flag.unscoped.seed do |s|
   s.score_type = true
   s.applies_to = %w[]
 end
+Flag.unscoped.seed do |s|
+  s.id = 2
+  s.name = "like"
+  s.notify_type = false
+  s.auto_action_type = false
+  s.require_message = false
+  s.score_type = false
+  s.applies_to = %w[Post]
+end
