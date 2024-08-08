@@ -12,8 +12,10 @@ class PostActionType < ActiveRecord::Base
   include AnonCacheInvalidator
 
   def expire_cache
-    ApplicationSerializer.expire_cache_fragment!(/\Apost_action_types_/)
-    ApplicationSerializer.expire_cache_fragment!(/\Apost_action_flag_types_/)
+    Discourse.cache.keys("post_action_types_*").each { |key| Discourse.redis.del(key) }
+    Discourse.cache.keys("post_action_flag_types_*").each { |key| Discourse.redis.del(key) }
+    Discourse.cache.delete(POST_ACTION_TYPE_ALL_FLAGS_KEY)
+    Discourse.cache.delete(POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY)
   end
 
   class << self
@@ -35,17 +37,9 @@ class PostActionType < ActiveRecord::Base
       Enum.new(like: LIKE_POST_ACTION_ID).merge(flag_types)
     end
 
-    def expire_cache
-      Discourse.redis.keys("post_action_types_*").each { |key| Discourse.redis.del(key) }
-      Discourse.redis.keys("post_action_flag_types_*").each { |key| Discourse.redis.del(key) }
-      Discourse.cache.delete(POST_ACTION_TYPE_ALL_FLAGS_KEY)
-      Discourse.cache.delete(POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY)
-    end
-
     def reload_types
       @flag_settings = FlagSettings.new
       PostActionType.new.expire_cache
-      PostActionType.expire_cache
       ReviewableScore.reload_types
     end
 

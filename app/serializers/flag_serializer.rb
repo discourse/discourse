@@ -36,8 +36,7 @@ class FlagSerializer < ApplicationSerializer
   end
 
   def is_used
-    PostAction.exists?(post_action_type_id: object.id) ||
-      ReviewableScore.exists?(reviewable_score_type: object.id)
+    @options[:used_flag_ids].include?(object.id)
   end
 
   def applies_to

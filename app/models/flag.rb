@@ -35,6 +35,11 @@ class Flag < ActiveRecord::Base
     PostActionType.reload_types
   end
 
+  def self.used_flag_ids
+    PostAction.distinct(:post_action_type_id).pluck(:post_action_type_id) |
+      ReviewableScore.distinct(:reviewable_score_type).pluck(:reviewable_score_type)
+  end
+
   def system?
     self.id < MAX_SYSTEM_FLAG_ID
   end
