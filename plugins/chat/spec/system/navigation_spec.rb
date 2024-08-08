@@ -351,7 +351,7 @@ RSpec.describe "Navigation", type: :system do
         chat_page.open_from_header
         chat_drawer_page.maximize
         sidebar_page.open_channel(category_channel_2)
-        find("#site-logo").click
+        click_logo
 
         expect(chat_page).to have_header_href(chat_channel_path)
 
@@ -395,7 +395,7 @@ RSpec.describe "Navigation", type: :system do
     context "when clicking logo from a channel in full page" do
       it "deactivates the channel in the sidebar" do
         visit("/chat/c/#{category_channel.slug}/#{category_channel.id}")
-        find("#site-logo").click
+        click_logo
 
         expect(sidebar_component).to have_no_section_link(category_channel.name, active: true)
       end
@@ -440,7 +440,7 @@ RSpec.describe "Navigation", type: :system do
 
         expect(side_panel_page).to have_open_thread(thread)
 
-        find("#site-logo").click
+        click_logo
         sidebar_component.switch_to_chat
 
         expect(side_panel_page).to have_open_thread(thread)

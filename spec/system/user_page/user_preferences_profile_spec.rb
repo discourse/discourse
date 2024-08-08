@@ -47,7 +47,7 @@ describe "User preferences | Profile", type: :system do
 
       expect(page).to have_current_path("/faq")
 
-      find("#site-logo").click
+      click_logo
 
       expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
 
@@ -60,7 +60,7 @@ describe "User preferences | Profile", type: :system do
     it "disables client-side routing while missing required fields" do
       user_preferences_profile_page.visit(user)
 
-      find("#site-logo").click
+      click_logo
 
       expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
     end

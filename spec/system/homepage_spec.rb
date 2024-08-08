@@ -63,7 +63,7 @@ describe "Homepage", type: :system do
       find("#sidebar-section-content-community li:first-child").click
       expect(page).to have_css(".list-container")
 
-      find("#site-logo").click
+      click_logo
 
       expect(page).to have_no_css(".list-container")
       # ensure clicking on logo brings user back to the custom homepage
@@ -93,7 +93,7 @@ describe "Homepage", type: :system do
       find(".btn-primary.save-changes:not([disabled])", wait: 5)
       expect(user.user_option.homepage_id).to eq(UserOption::HOMEPAGES.key("top"))
 
-      find("#site-logo").click
+      click_logo
       expect(page).to have_css(".navigation-container .top.active", text: "Top")
       expect(page).to have_css(".top-lists")
 
@@ -109,7 +109,7 @@ describe "Homepage", type: :system do
       find(".btn-primary.save-changes:not([disabled])", wait: 5)
       expect(user.reload.user_option.homepage_id).to_not eq(UserOption::HOMEPAGES.key("top"))
 
-      find("#site-logo").click
+      click_logo
 
       expect(page).to have_current_path("/")
       expect(page).to have_css(".new-home", text: "Hi friends!")
