@@ -11,6 +11,14 @@
   >
     <div class="chat-drawer-container">
       <div class="chat-drawer-resizer"></div>
+
+      <PluginOutlet
+        @name="chat-drawer-before-content"
+        @outletArgs={{hash
+          currentRouteName=this.chatDrawerRouter.currentRouteName
+        }}
+      />
+
       <this.chatDrawerRouter.component
         @params={{this.chatDrawerRouter.params}}
         @openURL={{this.openURL}}
