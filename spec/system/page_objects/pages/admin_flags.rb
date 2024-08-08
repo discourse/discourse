@@ -68,17 +68,21 @@ module PageObjects
         has_no_css?(".admin-flag-item.#{key}.saving")
       end
 
+      def has_closed_flag_menu?
+        has_no_css?(".flag-menu-content")
+      end
+
       def move_down(key)
         open_flag_menu(key)
         find(".admin-flag-item__move-down").click
-        has_saved_flag?(key)
+        has_closed_flag_menu?
         self
       end
 
       def move_up(key)
         open_flag_menu(key)
         find(".admin-flag-item__move-up").click
-        has_saved_flag?(key)
+        has_closed_flag_menu?
         self
       end
 
