@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module PageObjects
-  module Pages
-    class Components < PageObjects::Pages::Base
+  module Components
+    class Logo < PageObjects::Pages::Base
       SELECTOR = "#site-logo"
 
       def self.click
