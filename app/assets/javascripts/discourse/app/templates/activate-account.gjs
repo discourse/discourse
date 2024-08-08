@@ -15,7 +15,6 @@ import I18n from "discourse-i18n";
 export default RouteTemplate(
   class extends Component {
     @service siteSettings;
-    @service router;
 
     @tracked accountActivated = false;
     @tracked buttonDisabled = false;
