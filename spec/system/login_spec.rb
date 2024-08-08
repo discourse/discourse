@@ -75,7 +75,6 @@ shared_examples "login scenarios" do
       visit "/u/activate-account/invalid"
 
       activate_account.click_activate_account
-
       expect(activate_account).to have_error
     end
 
