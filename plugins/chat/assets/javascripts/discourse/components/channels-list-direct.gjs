@@ -57,11 +57,6 @@ export default class ChannelsListDirect extends Component {
   }
 
   <template>
-    <PluginOutlet
-      @name="below-direct-chat-channels"
-      @tagName=""
-      @outletArgs={{hash inSidebar=this.inSidebar}}
-    />
     {{#if
       (and
         this.showDirectMessageChannels
@@ -127,5 +122,11 @@ export default class ChannelsListDirect extends Component {
         {{/each}}
       {{/if}}
     </div>
+
+    <PluginOutlet
+      @name="below-direct-chat-channels"
+      @tagName=""
+      @outletArgs={{hash inSidebar=this.inSidebar}}
+    />
   </template>
 }
