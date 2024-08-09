@@ -7,6 +7,9 @@ import PollVoters from "./poll-voters";
 
 export default class PollResultsStandardComponent extends Component {
   orderOptions = (options) => {
+    options.forEach((option) => {
+      option.votes = option.votes ?? 0;
+    });
     return options.sort((a, b) => {
       if (a.votes < b.votes) {
         return 1;
