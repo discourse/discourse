@@ -67,11 +67,6 @@ jobs:
       - name: Set working directory owner
         run: chown root:root .
 
-      - name: Remove Chromium
-        continue-on-error: true
-        if: matrix.build_type == 'system'
-        run: apt remove -y chromium-driver chromium
-
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
@@ -150,7 +145,7 @@ jobs:
         if: matrix.target == 'themes'
         run: bin/rake themes:clone_all_official themes:pull_compatible_all
 
-      - name: Add hosts to /etc/hosts, otherwise Chromium cannot reach minio
+      - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
         if: matrix.build_type == 'system' && matrix.target == 'core'
         run: |
           echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
@@ -363,7 +358,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: ["Chromium", "Firefox ESR", "Firefox Evergreen"]
+        browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
 
     env:
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
