@@ -96,6 +96,7 @@ module("Poll | Component | poll", function (hooks) {
           },
           user_id: 29,
         }),
+        hasSavedVote: true,
         poll: EmberObject.create({
           name: "poll",
           type: "regular",
