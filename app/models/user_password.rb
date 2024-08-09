@@ -8,6 +8,7 @@ class UserPassword < ActiveRecord::Base
 
   attr_reader :password # required to build an instance of this model with password attribute without backing column
   attr_accessor :salt # TODO: Deprecate once we drop User.salt, this is only for passing through the randomized salt from User
+  attr_accessor :should_expire_previous_password
 
   belongs_to :user, required: true # different from user_id, we need to allow for blank user_id at the point of validation since a newly built user needs to be saved before user_id is generated
 
@@ -43,8 +44,11 @@ class UserPassword < ActiveRecord::Base
     # prioritise in-memory passwords that may have been expired
     all_passwords = ([self] + loaded_passwords + db_passwords).uniq(&:id)
 
-    if all_passwords.filter { |p| p.password_expired_at.nil? }.size > 1
-      errors.add(:user_id, "has already been taken")
+    if (unexpired_count = all_passwords.filter { |p| p.password_expired_at.nil? }.size) > 1
+      errors.add(
+        :user_id,
+        "id(#{user.id}) username(#{user.username}) already has #{unexpired_count} unexpired passwords with the breakdown ids: self id: #{self.id} in-mem ids:#{loaded_passwords&.reject(&:password_expired_at)&.map(&:id)} db ids:#{db_passwords&.reject(&:password_expired_at)&.map(&:id)}",
+      )
     end
   end
 
