@@ -30,7 +30,7 @@ jobs:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }} # Update fetch-job-id step if changing this
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
-    container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}
+    container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}-bookworm
     timeout-minutes: 20
 
     env:
@@ -43,6 +43,7 @@ jobs:
       MINIO_RUNNER_LOG_LEVEL: DEBUG
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && github.ref == 'refs/main/head' }}
       CHEAP_SOURCE_MAPS: "1"
+      TESTEM_DEFAULT_BROWSER: Chrome
 
     strategy:
       fail-fast: false
@@ -150,7 +151,7 @@ jobs:
         if: matrix.target == 'themes'
         run: bin/rake themes:clone_all_official themes:pull_compatible_all
 
-      - name: Add hosts to /etc/hosts, otherwise Chromium cannot reach minio
+      - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
         if: matrix.build_type == 'system' && matrix.target == 'core'
         run: |
           echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
@@ -355,7 +356,7 @@ jobs:
     name: core frontend (${{ matrix.browser }})
     runs-on: ubuntu-20.04-8core
     container:
-      image: discourse/discourse_test:slim-browsers
+      image: discourse/discourse_test:slim-browsers-bookworm
       options: --user discourse
 
     timeout-minutes: 35
@@ -363,7 +364,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: ["Chromium", "Firefox ESR", "Firefox Evergreen"]
+        browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
 
     env:
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
