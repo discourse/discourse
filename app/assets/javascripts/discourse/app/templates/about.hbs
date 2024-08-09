@@ -53,7 +53,7 @@
           <section class="about admins">
             <h3>{{d-icon "users"}} {{i18n "about.our_admins"}}</h3>
             <div class="users">
-              <AboutPageUsers @users={{this.model.admins}} />
+              <LegacyAboutPageUsers @users={{this.model.admins}} />
             </div>
           </section>
         {{/if}}
@@ -70,7 +70,7 @@
           <section class="about moderators">
             <h3>{{d-icon "users"}} {{i18n "about.our_moderators"}}</h3>
             <div class="users">
-              <AboutPageUsers @users={{this.model.moderators}} />
+              <LegacyAboutPageUsers @users={{this.model.moderators}} />
             </div>
           </section>
         {{/if}}
@@ -90,7 +90,7 @@
             >
               <h3>{{category-link cm.category}}{{i18n "about.moderators"}}</h3>
               <div class="users">
-                <AboutPageUsers @users={{cm.moderators}} />
+                <LegacyAboutPageUsers @users={{cm.moderators}} />
               </div>
               <div class="clearfix"></div>
             </section>

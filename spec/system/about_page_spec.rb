@@ -171,5 +171,187 @@ describe "About page", type: :system do
         end
       end
     end
+
+    describe "our admins section" do
+      before { User.update_all(last_seen_at: 1.month.ago) }
+
+      fab!(:admins) { Fabricate.times(12, :admin) }
+
+      it "displays only the 10 most recently seen admins when there are more than 10 admins" do
+        admins[0].update!(last_seen_at: 4.minutes.ago)
+        admins[1].update!(last_seen_at: 1.minutes.ago)
+        admins[2].update!(last_seen_at: 10.minutes.ago)
+
+        about_page.visit
+        expect(about_page.admins_list).to have_expand_button
+
+        displayed_admins = about_page.admins_list.users
+        expect(displayed_admins.size).to eq(10)
+        expect(displayed_admins.map { |u| u[:username] }.first(3)).to eq(
+          [admins[1].username, admins[0].username, admins[2].username],
+        )
+      end
+
+      it "allows expanding and collapsing the list of admins" do
+        about_page.visit
+
+        displayed_admins = about_page.admins_list.users
+        expect(displayed_admins.size).to eq(10)
+
+        expect(about_page.admins_list).to be_expandable
+
+        about_page.admins_list.expand
+
+        expect(about_page.admins_list).to be_collapsible
+
+        displayed_admins = about_page.admins_list.users
+        expect(displayed_admins.size).to eq(13) # 12 fabricated for this spec group and 1 global
+
+        about_page.admins_list.collapse
+
+        expect(about_page.admins_list).to be_expandable
+
+        displayed_admins = about_page.admins_list.users
+        expect(displayed_admins.size).to eq(10)
+      end
+
+      it "doesn't show an expand/collapse button when there are fewer than 10 admins" do
+        User.where(id: admins.first(7).map(&:id)).destroy_all
+
+        about_page.visit
+
+        displayed_admins = about_page.admins_list.users
+        expect(displayed_admins.size).to eq(6)
+        expect(about_page.admins_list).to have_no_expand_button
+      end
+
+      it "prioritizes names when prioritize_username_in_ux is false" do
+        SiteSetting.prioritize_username_in_ux = false
+
+        about_page.visit
+
+        displayed_admins = about_page.admins_list.users
+        admins = User.where(username: displayed_admins.map { |u| u[:username] })
+        expect(displayed_admins.map { |u| u[:displayed_username] }).to contain_exactly(
+          *admins.pluck(:name),
+        )
+        expect(displayed_admins.map { |u| u[:displayed_name] }).to contain_exactly(
+          *admins.pluck(:username),
+        )
+      end
+
+      it "prioritizes usernames when prioritize_username_in_ux is true" do
+        SiteSetting.prioritize_username_in_ux = true
+
+        about_page.visit
+
+        displayed_admins = about_page.admins_list.users
+        admins = User.where(username: displayed_admins.map { |u| u[:username] })
+        expect(displayed_admins.map { |u| u[:displayed_username] }).to contain_exactly(
+          *admins.pluck(:username),
+        )
+        expect(displayed_admins.map { |u| u[:displayed_name] }).to contain_exactly(
+          *admins.pluck(:name),
+        )
+      end
+
+      it "opens the user card when a user is clicked" do
+        about_page.visit
+
+        about_page.admins_list.users.first[:node].click
+        expect(about_page).to have_css("#user-card")
+      end
+    end
+
+    describe "our moderators section" do
+      before { User.update_all(last_seen_at: 1.month.ago) }
+
+      fab!(:moderators) { Fabricate.times(13, :moderator) }
+
+      it "displays only the 10 most recently seen moderators when there are more than 10 moderators" do
+        moderators[10].update!(last_seen_at: 5.hours.ago)
+        moderators[3].update!(last_seen_at: 2.hours.ago)
+        moderators[5].update!(last_seen_at: 13.hours.ago)
+
+        about_page.visit
+        expect(about_page.moderators_list).to have_expand_button
+
+        displayed_mods = about_page.moderators_list.users
+        expect(displayed_mods.size).to eq(10)
+        expect(displayed_mods.map { |u| u[:username] }.first(3)).to eq(
+          [moderators[3].username, moderators[10].username, moderators[5].username],
+        )
+      end
+
+      it "allows expanding and collapsing the list of moderators" do
+        about_page.visit
+
+        displayed_mods = about_page.moderators_list.users
+        expect(displayed_mods.size).to eq(10)
+
+        expect(about_page.moderators_list).to be_expandable
+
+        about_page.moderators_list.expand
+
+        expect(about_page.moderators_list).to be_collapsible
+
+        displayed_mods = about_page.moderators_list.users
+        expect(displayed_mods.size).to eq(14) # 13 fabricated for this spec group and 1 global
+
+        about_page.moderators_list.collapse
+
+        expect(about_page.moderators_list).to be_expandable
+
+        displayed_mods = about_page.moderators_list.users
+        expect(displayed_mods.size).to eq(10)
+      end
+
+      it "doesn't show an expand/collapse button when there are fewer than 10 moderators" do
+        User.where(id: moderators.first(10).map(&:id)).destroy_all
+
+        about_page.visit
+
+        displayed_mods = about_page.moderators_list.users
+        expect(displayed_mods.size).to eq(4)
+        expect(about_page.moderators_list).to have_no_expand_button
+      end
+
+      it "prioritizes names when prioritize_username_in_ux is false" do
+        SiteSetting.prioritize_username_in_ux = false
+
+        about_page.visit
+
+        displayed_mods = about_page.moderators_list.users
+        moderators = User.where(username: displayed_mods.map { |u| u[:username] })
+        expect(displayed_mods.map { |u| u[:displayed_username] }).to contain_exactly(
+          *moderators.pluck(:name),
+        )
+        expect(displayed_mods.map { |u| u[:displayed_name] }).to contain_exactly(
+          *moderators.pluck(:username),
+        )
+      end
+
+      it "prioritizes usernames when prioritize_username_in_ux is true" do
+        SiteSetting.prioritize_username_in_ux = true
+
+        about_page.visit
+
+        displayed_mods = about_page.moderators_list.users
+        moderators = User.where(username: displayed_mods.map { |u| u[:username] })
+        expect(displayed_mods.map { |u| u[:displayed_username] }).to contain_exactly(
+          *moderators.pluck(:username),
+        )
+        expect(displayed_mods.map { |u| u[:displayed_name] }).to contain_exactly(
+          *moderators.pluck(:name),
+        )
+      end
+
+      it "opens the user card when a user is clicked" do
+        about_page.visit
+
+        about_page.moderators_list.users.last[:node].click
+        expect(about_page).to have_css("#user-card")
+      end
+    end
   end
 end

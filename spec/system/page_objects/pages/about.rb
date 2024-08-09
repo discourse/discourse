@@ -50,6 +50,14 @@ module PageObjects
         PageObjects::Components::AboutPageSiteActivity.new(find(".about__activities"))
       end
 
+      def admins_list
+        PageObjects::Components::AboutPageUsersList.new(find(".about__admins"))
+      end
+
+      def moderators_list
+        PageObjects::Components::AboutPageUsersList.new(find(".about__moderators"))
+      end
+
       private
 
       def site_age_stat_element
