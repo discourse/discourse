@@ -16,7 +16,9 @@ class Flag < ActiveRecord::Base
   before_save :set_name_key
   after_commit :reset_flag_settings!
 
-  default_scope { order(:position).where(score_type: false) }
+  default_scope do
+    order(:position).where(score_type: false).where.not(id: PostActionType::LIKE_POST_ACTION_ID)
+  end
 
   def used?
     PostAction.exists?(post_action_type_id: self.id) ||
@@ -28,9 +30,14 @@ class Flag < ActiveRecord::Base
   end
 
   def self.reset_flag_settings!
-    # Flags are memoized for better performance. After the update, we need to reload them in all processes.
+    # Flags are cached in Redis for better performance. After the update,
+    # we need to reload them in all processes.
     PostActionType.reload_types
-    MessageBus.publish("/reload_post_action_types", {})
+  end
+
+  def self.used_flag_ids
+    PostAction.distinct(:post_action_type_id).pluck(:post_action_type_id) |
+      ReviewableScore.distinct(:reviewable_score_type).pluck(:reviewable_score_type)
   end
 
   def system?

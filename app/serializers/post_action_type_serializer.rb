@@ -46,11 +46,12 @@ class PostActionTypeSerializer < ApplicationSerializer
   end
 
   def enabled
-    !!PostActionType.enabled_flag_types[object.id]
+    # flags added by API are always enabled
+    true
   end
 
   def applies_to
-    Array.wrap(PostActionType.applies_to[object.id])
+    Flag.valid_applies_to_types
   end
 
   def is_used
