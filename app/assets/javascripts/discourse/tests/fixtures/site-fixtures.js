@@ -42,6 +42,7 @@ export default {
         "search",
         "bookmarks",
         "hot",
+        "unseen"
       ],
       periods: ["all", "yearly", "quarterly", "monthly", "weekly", "daily"],
       top_menu_items: [
@@ -54,6 +55,7 @@ export default {
         "categories",
         "hot",
         "bookmarks",
+        "unseen",
       ],
       anonymous_top_menu_items: ["latest", "hot", "categories"],
       uncategorized_category_id: 17,
