@@ -143,6 +143,7 @@ Fabricator(:bot, from: :user) do
     min_id = User.minimum(:id)
     [(min_id || 0) - 1, -10].min
   end
+  password nil
 end
 
 Fabricator(:east_coast_user, from: :user) do

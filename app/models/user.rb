@@ -918,6 +918,7 @@ class User < ActiveRecord::Base
     # special case for passwordless accounts
     return if password.blank?
 
+    # TODO: we don't want to allow for this logic to expire identical passwords; add a unit test on 2 saves of User with the same password
     # We intentionally want to prepare expiry of the previous unexpired password at the User level since calling this method indicates intention to have a new unexpired password
     if (unexpired_password = passwords.find { |p| p.password_expired_at.nil? })
       unexpired_password.password_expired_at = Time.now.zone
