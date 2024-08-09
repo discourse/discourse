@@ -4,7 +4,13 @@
   @outletArgs={{hash topic=this.topic}}
 />
 <div class="topic-poster">
-  <UserLink @user={{this.topic.lastPosterUser}}>
+  <UserLink
+    @user={{this.topic.lastPosterUser}}
+    aria-label={{if
+      this.topic.lastPosterUser.username
+      (i18n "latest_poster_link" username=this.topic.lastPosterUser.username)
+    }}
+  >
     {{avatar this.topic.lastPosterUser imageSize="large"}}
   </UserLink>
   <UserAvatarFlair @user={{this.topic.lastPosterUser}} />
