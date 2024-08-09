@@ -3,9 +3,9 @@
 Fabricator(:user_password) do
   transient password: "myawesomefakepassword"
 
-  user { Fabricate(:user) }
-  password_salt { SecureRandom.hex(User::PASSWORD_SALT_LENGTH) }
-  password_algorithm { User::TARGET_PASSWORD_ALGORITHM }
+  user { Fabricate(:user, password: nil) }
+  password_salt { SecureRandom.hex(UserPassword::PASSWORD_SALT_LENGTH) }
+  password_algorithm { UserPassword::TARGET_PASSWORD_ALGORITHM }
 
   after_build do |user_password, transients|
     user_password.password_hash =

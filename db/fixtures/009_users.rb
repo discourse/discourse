@@ -20,7 +20,7 @@ User.seed do |u|
   u.name = "system"
   u.username = "system"
   u.username_lower = "system"
-  u.password = SecureRandom.hex
+  # u.password = SecureRandom.hex
   u.active = true
   u.admin = true
   u.moderator = true
