@@ -115,10 +115,6 @@ const DEPRECATED_MODULES = new Map(
   })
 );
 
-export function normalizeDeprecatedModule(name) {
-  return DEPRECATED_MODULES.get(name)?.newName || name;
-}
-
 export function setResolverOption(name, value) {
   _options[name] = value;
 }
