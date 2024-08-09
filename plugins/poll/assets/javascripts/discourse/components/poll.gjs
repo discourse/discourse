@@ -591,7 +591,10 @@ export default class PollComponent extends Component {
           .then(() => {
             this.poll.set("status", status);
 
-            if (this.poll.results === "always") {
+            if (
+              this.poll.results === ON_CLOSE ||
+              this.poll.results === "always"
+            ) {
               this.showResults = this.status === CLOSED_STATUS;
             }
 
