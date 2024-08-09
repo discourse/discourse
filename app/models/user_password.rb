@@ -43,8 +43,11 @@ class UserPassword < ActiveRecord::Base
     # prioritise in-memory passwords that may have been expired
     all_passwords = ([self] + loaded_passwords + db_passwords).uniq(&:id)
 
-    if all_passwords.filter { |p| p.password_expired_at.nil? }.size > 1
-      errors.add(:user_id, "has already been taken")
+    if (unexpired_count = all_passwords.filter { |p| p.password_expired_at.nil? }.size) > 1
+      errors.add(
+        :user_id,
+        "already has #{unexpired_count} unexpired passwords with the breakdown ids: self id: #{self.id} in-mem ids:#{loaded_passwords&.reject(&:password_expired_at)&.map(&:id)} db ids:#{db_passwords&.reject(&:password_expired_at)&.map(&:id)}",
+      )
     end
   end
 
