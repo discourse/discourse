@@ -17,13 +17,7 @@ export default class ChatController extends Controller {
     if (this.shouldUseCoreSidebar) {
       return false;
     }
-    if (
-      this.publicMessageChannelsEmpty &&
-      this.enabledRouteCount === 1 &&
-      this.chat.userCanAccessDirectMessages
-    ) {
-      return false;
-    }
+
     return true;
   }
 
