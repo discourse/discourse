@@ -6,9 +6,9 @@
 <div class="topic-poster">
   <UserLink
     @user={{this.topic.lastPosterUser}}
-    aria-label={{i18n
-      "latest_poster_link"
-      username=this.topic.lastPosterUser.username
+    aria-label={{if
+      this.topic.lastPosterUser.username
+      (i18n "latest_poster_link" username=this.topic.lastPosterUser.username)
     }}
   >
     {{avatar this.topic.lastPosterUser imageSize="large"}}
