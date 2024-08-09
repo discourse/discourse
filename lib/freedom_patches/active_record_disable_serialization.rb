@@ -9,7 +9,7 @@ module ActiveRecordSerializationSafety
       message =
         "Serializing ActiveRecord models (#{self.class.name}) without specifying fields is not allowed. Use a Serializer, or pass the :only option to #serializable_hash. More info: https://meta.discourse.org/t/-/314495"
 
-      if Rails.env == "production"
+      if Rails.env.production?
         Rails.logger.info(message)
       else
         raise BlockedSerializationError.new(message)
