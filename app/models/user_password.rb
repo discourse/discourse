@@ -8,7 +8,7 @@ class UserPassword < ActiveRecord::Base
 
   attr_reader :password # required to build an instance of this model with password attribute without backing column
   attr_accessor :salt # TODO: Deprecate once we drop User.salt, this is only for passing through the randomized salt from User
-  attr_accessor :should_expire_previous_password
+  # attr_accessor :should_expire_previous_password
 
   belongs_to :user, required: true # different from user_id, we need to allow for blank user_id at the point of validation since a newly built user needs to be saved before user_id is generated
 
@@ -20,13 +20,12 @@ class UserPassword < ActiveRecord::Base
   validate :ensure_single_unexpired_password_for_user
 
   def password=(pw)
+    return if pw.blank?
     @password = pw
     # ensure password is hashed before validations, this should not be in a before_validation hook as that's skipped during .save(validate: false) (e.g. Seedfu)
-    if password
-      self.password_salt = @salt || SecureRandom.hex(PASSWORD_SALT_LENGTH)
-      self.password_algorithm = TARGET_PASSWORD_ALGORITHM
-      self.password_hash = hash_password(password, password_salt, password_algorithm)
-    end
+    self.password_salt = @salt || SecureRandom.hex(PASSWORD_SALT_LENGTH)
+    self.password_algorithm = TARGET_PASSWORD_ALGORITHM
+    self.password_hash = hash_password(password, password_salt, password_algorithm)
   end
 
   def password_validation_required?
