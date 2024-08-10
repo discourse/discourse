@@ -2,7 +2,7 @@
 
 class DiskSpace
   def self.uploads_used_bytes
-    if Discourse.store.external?
+    if Discourse.store.external? || !SiteSetting.enable_precise_upload_used_bytes?
       Upload.sum(:filesize).to_i + OptimizedImage.sum(:filesize).to_i
     else
       used(uploads_path)
