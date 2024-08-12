@@ -206,12 +206,14 @@ module DiscourseAutomation
             next if !watching_categories["value"].include?(topic.category_id)
           end
 
+          missing_tags = old_tag_names - new_tag_names
+          added_tags = new_tag_names - old_tag_names
           watching_tags = automation.trigger_field("watching_tags")
           if watching_tags["value"]
             should_skip = false
             watching_tags["value"].each do |tag|
-              should_skip = true if !old_tag_names.empty? && !old_tag_names.include?(tag)
-              should_skip = true if !new_tag_names.empty? && !new_tag_names.include?(tag)
+              should_skip = true if !missing_tags.empty? && !missing_tags.include?(tag)
+              should_skip = true if !added_tags.empty? && !added_tags.include?(tag)
             end
             next if should_skip
           end
@@ -219,8 +221,8 @@ module DiscourseAutomation
           automation.trigger!(
             "kind" => name,
             "topic" => topic,
-            "removed_tags" => old_tag_names,
-            "added_tags" => new_tag_names,
+            "removed_tags" => missing_tags,
+            "added_tags" => added_tags,
           )
         end
     end

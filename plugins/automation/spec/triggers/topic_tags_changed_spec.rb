@@ -5,6 +5,8 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
 
   fab!(:cool_tag) { Fabricate(:tag) }
   fab!(:bad_tag) { Fabricate(:tag) }
+  fab!(:another_tag) { Fabricate(:tag) }
+
   fab!(:category)
 
   fab!(:user)
@@ -131,6 +133,42 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
 
       expect(list.length).to eq(1)
       expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
+    end
+
+    it "should send the correct removed tags in context" do
+      topic_0 = Fabricate(:topic, user: user, tags: [cool_tag], category: category)
+
+      list =
+        capture_contexts do
+          DiscourseTagging.tag_topic_by_names(
+            topic_0,
+            Guardian.new(user),
+            [bad_tag.name, another_tag.name],
+          )
+        end
+
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
+      expect(list[0]["added_tags"]).to eq([bad_tag.name, another_tag.name])
+      expect(list[0]["removed_tags"]).to eq([cool_tag.name])
+    end
+
+    it "should send the correct added tags in context" do
+      topic_0 = Fabricate(:topic, user: user, tags: [cool_tag], category: category)
+
+      list =
+        capture_contexts do
+          DiscourseTagging.tag_topic_by_names(
+            topic_0,
+            Guardian.new(user),
+            [cool_tag.name, another_tag.name],
+          )
+        end
+
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
+      expect(list[0]["added_tags"]).to eq([another_tag.name])
+      expect(list[0]["removed_tags"]).to eq([])
     end
   end
 end
