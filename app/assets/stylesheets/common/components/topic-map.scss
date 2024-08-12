@@ -48,8 +48,11 @@ body:not(.archetype-private_message) {
     font-size: var(--font-down-1);
   }
 
-  @media screen and (max-width: 500px) {
-    padding-left: 0 !important;
+  &.--op,
+  &.--bottom {
+    @media screen and (max-width: 500px) {
+      padding-left: 0;
+    }
   }
 
   .--users-summary {
@@ -311,10 +314,10 @@ body:not(.archetype-private_message) {
 
 // DMenu popups
 
-.topic-map__likes-content {
+.topic-map__likes-content.fk-d-menu__content {
   .fk-d-menu__inner-content,
   .d-modal__body {
-    padding-bottom: 0.5em !important;
+    padding-bottom: 0.5em;
     ul {
       margin: 0;
       padding: 0;
