@@ -1173,7 +1173,7 @@ acceptance("Poll results", function (needs) {
 
     assert.strictEqual(
       count(
-        ".poll-container .discourse-poll-ranked_choice-results .poll-voters li"
+        ".poll-container .discourse-poll-ranked_choice-results .results li:nth-child(1) .poll-voters li"
       ),
       2,
       "after clicking fetch voters button, two voters shown on first option"
