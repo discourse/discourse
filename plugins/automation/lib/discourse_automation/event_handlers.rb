@@ -208,7 +208,9 @@ module DiscourseAutomation
 
           removed_tags = old_tag_names - new_tag_names
           added_tags = new_tag_names - old_tag_names
+
           watching_tags = automation.trigger_field("watching_tags")
+
           if watching_tags["value"]
             should_skip = false
             watching_tags["value"].each do |tag|
