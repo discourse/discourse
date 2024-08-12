@@ -19,7 +19,7 @@ export default class FKControlCode extends Component {
       return;
     }
 
-    return `height: ${htmlSafe(escapeExpression(this.args.height) + "px")}`;
+    return htmlSafe(`height: ${escapeExpression(this.args.height)}px`);
   }
 
   <template>
