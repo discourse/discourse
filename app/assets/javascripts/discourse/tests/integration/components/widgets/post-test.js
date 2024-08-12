@@ -16,7 +16,13 @@ module("Integration | Component | Widget | post", function (hooks) {
   setupRenderingTest(hooks);
 
   test("basic elements", async function (assert) {
-    this.set("args", { shareUrl: "/example", post_number: 1 });
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", {
+      id: 123,
+      archetype: "regular",
+    });
+
+    this.set("args", { shareUrl: "/example", post_number: 1, topic });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
@@ -771,12 +777,29 @@ module("Integration | Component | Widget | post", function (hooks) {
     assert.strictEqual(count("section.embedded-posts .d-icon-arrow-down"), 1);
   });
 
-  test("topic map not shown", async function (assert) {
-    this.set("args", { showTopicMap: false });
+  test("shows the topic map when setting the 'topicMap' attribute", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 123 });
+    this.set("args", { topic, post_number: 1, topicMap: true });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.dom(".topic-map").doesNotExist();
+    assert.dom(".topic-map").exists();
+  });
+
+  test("shows the topic map when no replies", async function (assert) {
+    this.siteSettings.show_topic_map_in_topics_without_replies = true;
+
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", {
+      id: 123,
+      archetype: "regular",
+    });
+    this.set("args", { topic, post_number: 1 });
+
+    await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
+
+    assert.dom(".topic-map").exists();
   });
 
   test("topic map - few participants", async function (assert) {
@@ -785,6 +808,7 @@ module("Integration | Component | Widget | post", function (hooks) {
       id: 123,
       posts_count: 10,
       participant_count: 2,
+      archetype: "regular",
     });
     topic.details.set("participants", [
       { username: "eviltrout" },
@@ -792,7 +816,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     ]);
     this.set("args", {
       topic,
-      showTopicMap: true,
+      post_number: 1,
     });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
@@ -806,6 +830,7 @@ module("Integration | Component | Widget | post", function (hooks) {
       id: 123,
       posts_count: 10,
       participant_count: 6,
+      archetype: "regular",
     });
     topic.postStream.setProperties({ userFilters: ["sam", "codinghorror"] });
     topic.details.set("participants", [
@@ -819,7 +844,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     this.set("args", {
       topic,
-      showTopicMap: true,
+      post_number: 1,
     });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
@@ -833,7 +858,11 @@ module("Integration | Component | Widget | post", function (hooks) {
 
   test("topic map - links", async function (assert) {
     const store = getOwner(this).lookup("service:store");
-    const topic = store.createRecord("topic", { id: 123 });
+    const topic = store.createRecord("topic", {
+      id: 123,
+      posts_count: 2,
+      archetype: "regular",
+    });
     topic.details.set("links", [
       { url: "http://link1.example.com", clicks: 0 },
       { url: "http://link2.example.com", clicks: 0 },
@@ -842,7 +871,7 @@ module("Integration | Component | Widget | post", function (hooks) {
       { url: "http://link5.example.com", clicks: 0 },
       { url: "http://link6.example.com", clicks: 0 },
     ]);
-    this.set("args", { topic, showTopicMap: true });
+    this.set("args", { topic, post_number: 1 });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
@@ -857,18 +886,28 @@ module("Integration | Component | Widget | post", function (hooks) {
 
   test("topic map - no top reply summary", async function (assert) {
     const store = getOwner(this).lookup("service:store");
-    const topic = store.createRecord("topic", { id: 123 });
-    this.set("args", { topic, showTopicMap: true });
+    const topic = store.createRecord("topic", {
+      id: 123,
+      archetype: "regular",
+      posts_count: 2,
+    });
+    this.set("args", { topic, post_number: 1 });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
+    assert.dom(".topic-map").exists();
     assert.dom(".summarization-button .top-replies").doesNotExist();
   });
 
   test("topic map - has top replies summary", async function (assert) {
     const store = getOwner(this).lookup("service:store");
-    const topic = store.createRecord("topic", { id: 123, has_summary: true });
-    this.set("args", { topic, showTopicMap: true });
+    const topic = store.createRecord("topic", {
+      id: 123,
+      archetype: "regular",
+      posts_count: 2,
+      has_summary: true,
+    });
+    this.set("args", { topic, post_number: 1 });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
@@ -877,14 +916,16 @@ module("Integration | Component | Widget | post", function (hooks) {
 
   test("pm map", async function (assert) {
     const store = getOwner(this).lookup("service:store");
-    const topic = store.createRecord("topic", { id: 123 });
+    const topic = store.createRecord("topic", {
+      id: 123,
+      archetype: "private_message",
+    });
     topic.details.set("allowed_users", [
       EmberObject.create({ username: "eviltrout" }),
     ]);
     this.set("args", {
       topic,
-      showTopicMap: true,
-      showPMMap: true,
+      post_number: 1,
     });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
