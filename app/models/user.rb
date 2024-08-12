@@ -919,15 +919,14 @@ class User < ActiveRecord::Base
     return if password.blank?
 
     # TODO: we don't want to allow for this logic to expire identical passwords; add a unit test on 2 saves of User with the same password
-    # We intentionally want to prepare expiry of the previous unexpired password at the User level since calling this method indicates intention to have a new unexpired password ; this also removes all in-mem passwords since it loads from db
-    # Calling passwords.reload removes all previous in-mem only passwords
+    # We intentionally want to prepare expiry of the previous unexpired password at the User level since calling this method indicates intention to have a new unexpired password
     if (unexpired_password = passwords.reload.find { |p| p.password_expired_at.nil? })
       unexpired_password.password_expired_at = Time.now.zone
     end
     # TODO: deprecate passing through salt once User.salt is dropped
     @salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
-    @raw_password =
-      passwords.build(salt:, password:, should_expire_previous_passwords: true).password
+    # @raw_password = passwords.build(salt:, password:, should_expire_previous_password: true).password
+    @raw_password = passwords.build(salt:, password:).password
   end
 
   def password
