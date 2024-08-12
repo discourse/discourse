@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import { number } from "discourse/lib/formatter";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import escape from "discourse-common/lib/escape";
@@ -46,6 +47,61 @@ export default class AboutPage extends Component {
           }),
         }),
       },
+      {
+        class: "site-creation-date",
+        icon: "calendar-alt",
+        text: this.siteAgeString,
+      },
+    ];
+  }
+
+  get siteActivities() {
+    return [
+      {
+        icon: "scroll",
+        class: "topics",
+        activityText: I18n.t("about.activities.topics", {
+          count: this.args.model.stats.topics_7_days,
+          formatted_number: number(this.args.model.stats.topics_7_days),
+        }),
+        period: I18n.t("about.activities.periods.last_7_days"),
+      },
+      {
+        icon: "pencil-alt",
+        class: "posts",
+        activityText: I18n.t("about.activities.posts", {
+          count: this.args.model.stats.posts_last_day,
+          formatted_number: number(this.args.model.stats.posts_last_day),
+        }),
+        period: I18n.t("about.activities.periods.today"),
+      },
+      {
+        icon: "user-friends",
+        class: "active-users",
+        activityText: I18n.t("about.activities.active_users", {
+          count: this.args.model.stats.active_users_7_days,
+          formatted_number: number(this.args.model.stats.active_users_7_days),
+        }),
+        period: I18n.t("about.activities.periods.last_7_days"),
+      },
+      {
+        icon: "user-plus",
+        class: "sign-ups",
+        activityText: I18n.t("about.activities.sign_ups", {
+          count: this.args.model.stats.users_7_days,
+          formatted_number: number(this.args.model.stats.users_7_days),
+        }),
+        period: I18n.t("about.activities.periods.last_7_days"),
+      },
+      {
+        icon: "heart",
+        class: "likes",
+        activityText: I18n.t("about.activities.likes", {
+          count: this.args.model.stats.likes_count,
+          formatted_number: number(this.args.model.stats.likes_count),
+        }),
+        period: I18n.t("about.activities.periods.all_time"),
+      },
     ];
   }
 
@@ -63,6 +119,22 @@ export default class AboutPage extends Component {
       });
     } else {
       return null;
+    }
+  }
+
+  get siteAgeString() {
+    const creationDate = new Date(this.args.model.site_creation_date);
+
+    let diff = new Date() - creationDate;
+    diff /= 1000 * 3600 * 24 * 30;
+
+    if (diff < 1) {
+      return I18n.t("about.site_age.less_than_one_month");
+    } else if (diff < 12) {
+      return I18n.t("about.site_age.month", { count: Math.round(diff) });
+    } else {
+      diff /= 12;
+      return I18n.t("about.site_age.year", { count: Math.round(diff) });
     }
   }
 
@@ -91,11 +163,29 @@ export default class AboutPage extends Component {
         <div>{{htmlSafe @model.extended_site_description}}</div>
       </section>
       <section class="about__right-side">
-        <h4>{{i18n "about.contact"}}</h4>
+        <h3>{{i18n "about.contact"}}</h3>
         {{#if this.contactInfo}}
           <p>{{htmlSafe this.contactInfo}}</p>
         {{/if}}
         <p>{{i18n "about.report_inappropriate_content"}}</p>
+        <h3>{{i18n "about.site_activity"}}</h3>
+        <div class="about__activities">
+          {{#each this.siteActivities as |activity|}}
+            <div class="about__activities-item {{activity.class}}">
+              <span class="about__activities-item-icon">{{dIcon
+                  activity.icon
+                }}</span>
+              <span class="about__activities-item-type">
+                <div
+                  class="about__activities-item-count"
+                >{{activity.activityText}}</div>
+                <div
+                  class="about__activities-item-period"
+                >{{activity.period}}</div>
+              </span>
+            </div>
+          {{/each}}
+        </div>
       </section>
     </div>
   </template>

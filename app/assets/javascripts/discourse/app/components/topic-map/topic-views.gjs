@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import I18n from "I18n";
 
 export default class TopicViews extends Component {
   adjustAggregatedData(stats) {
@@ -6,11 +7,14 @@ export default class TopicViews extends Component {
 
     stats.forEach((stat) => {
       const localDate = new Date(`${stat.viewed_at}T00:00:00Z`);
-      const localDateStr = localDate.toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      });
+      const localDateStr = localDate.toLocaleDateString(
+        I18n.currentBcp47Locale,
+        {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }
+      );
 
       const existingStat = adjustedStats.find(
         (s) => s.dateStr === localDateStr
@@ -34,7 +38,7 @@ export default class TopicViews extends Component {
   }
 
   formatDate(date) {
-    return date.toLocaleDateString(undefined, {
+    return date.toLocaleDateString(I18n.currentBcp47Locale, {
       month: "2-digit",
       day: "2-digit",
     });

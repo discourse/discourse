@@ -3,6 +3,7 @@ import { computed, get } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
@@ -473,6 +474,22 @@ export default class Category extends RestModel {
         })
       );
     }
+  }
+
+  get descriptionText() {
+    return applyValueTransformer(
+      "category-description-text",
+      this.get("description_text"),
+      {
+        category: this,
+      }
+    );
+  }
+
+  get displayName() {
+    return applyValueTransformer("category-display-name", this.get("name"), {
+      category: this,
+    });
   }
 
   @computed("parent_category_id", "site.categories.[]")

@@ -190,7 +190,7 @@ basic:
     refresh: true
     type: list
     list_type: simple
-    default: "latest|new|unread|top|categories"
+    default: "latest|new|unread|hot|categories"
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
     validator: RegexPresenceValidator
@@ -2410,7 +2410,7 @@ developer:
       - disabled
       - auto
       - enabled
-    default: auto
+    default: enabled
   admin_sidebar_enabled_groups:
     type: group_list
     list_type: compact
@@ -2434,6 +2434,10 @@ developer:
     type: group_list
     hidden: true
     allow_any: false
+  custom_flags_limit:
+    default: 50
+    hidden: true
+    client: true
 
 navigation:
   navigation_menu:
@@ -2824,7 +2828,7 @@ uncategorized:
 
   delete_merged_stub_topics_after_days:
     default: 7
-    min: 0
+    min: -1
 
   backup_drafts_to_pm_length:
     default: 0

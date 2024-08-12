@@ -1034,6 +1034,24 @@ module Discourse
     [SiteSetting.tos_topic_id, SiteSetting.guidelines_topic_id, SiteSetting.privacy_topic_id]
   end
 
+  def self.site_creation_date
+    @creation_dates ||= {}
+    current_db = RailsMultisite::ConnectionManagement.current_db
+    @creation_dates[current_db] ||= begin
+      result = DB.query_single <<~SQL
+          SELECT created_at
+          FROM schema_migration_details
+          ORDER BY created_at
+          LIMIT 1
+        SQL
+      result.first
+    end
+  end
+
+  def self.clear_site_creation_date_cache
+    @creation_dates = {}
+  end
+
   cattr_accessor :last_ar_cache_reset
 
   def self.reset_active_record_cache_if_needed(e)

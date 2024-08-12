@@ -38,9 +38,8 @@ export default class BookmarkMenu extends Component {
       this.timeShortcuts.threeDays(),
     ];
 
-    // So the label is a simple 'Custom...'
     const custom = this.timeShortcuts.custom();
-    custom.label = "time_shortcut.custom_short";
+    custom.label = "time_shortcut.more_options";
     this.reminderAtOptions.push(custom);
   }
 

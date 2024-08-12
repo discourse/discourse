@@ -1,8 +1,13 @@
 import { hash } from "@ember/helper";
 import FKField from "discourse/form-kit/components/fk/field";
+import FKFieldset from "discourse/form-kit/components/fk/fieldset";
 
-const FKControlInputGroup = <template>
-  <div class="form-kit__input-group">
+const FKCheckboxGroup = <template>
+  <FKFieldset
+    class="form-kit__checkbox-group"
+    @title={{@title}}
+    @description={{@description}}
+  >
     {{yield
       (hash
         Field=(component
@@ -16,10 +21,11 @@ const FKControlInputGroup = <template>
           unregisterField=@unregisterField
           triggerRevalidationFor=@triggerRevalidationFor
           showMeta=false
+          showTitle=false
         )
       )
     }}
-  </div>
+  </FKFieldset>
 </template>;
 
-export default FKControlInputGroup;
+export default FKCheckboxGroup;

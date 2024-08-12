@@ -57,6 +57,14 @@ export default class BaseCustomSidebarPanel {
     return false;
   }
 
+  get expandActiveSection() {
+    return false;
+  }
+
+  get scrollActiveLinkIntoView() {
+    return false;
+  }
+
   /**
    * @param {string} filter filter applied
    *

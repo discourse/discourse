@@ -51,7 +51,7 @@ export default class EverythingSectionLink extends BaseSectionLink {
   }
 
   get currentWhen() {
-    return "discovery.latest discovery.new discovery.unread discovery.top";
+    return "discovery.latest discovery.new discovery.unread discovery.top discovery.hot discovery.unseen discovery.posted";
   }
 
   get badgeText() {

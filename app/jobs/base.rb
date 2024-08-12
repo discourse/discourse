@@ -69,6 +69,7 @@ module Jobs
 
           MethodProfiler.ensure_discourse_instrumentation!
           MethodProfiler.start
+          @data["live_slots_start"] = GC.stat[:heap_live_slots]
         end
       end
 
@@ -86,6 +87,7 @@ module Jobs
           @data["redis_calls"] = profile.dig(:redis, :calls) || 0 # Redis commands
           @data["net_duration"] = profile.dig(:net, :duration) || 0 # Redis Duration (s)
           @data["net_calls"] = profile.dig(:net, :calls) || 0 # Redis commands
+          @data["live_slots_finish"] = GC.stat[:heap_live_slots]
 
           if exception.present?
             @data["exception"] = exception # Exception - if job fails a json encoded exception

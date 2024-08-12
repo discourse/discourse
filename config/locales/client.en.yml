@@ -226,6 +226,7 @@ en:
     broken_page_change_alert: "An onPageChange handler raised an error. Check the browser developer tools for more information."
 
     broken_plugin_alert: "Caused by plugin '%{name}'"
+    broken_transformer_alert: "There was an error. Your site may not work properly."
 
     critical_deprecation:
       notice: "<b>[Admin Notice]</b> One of your themes or plugins needs updating for compatibility with upcoming Discourse core changes."
@@ -344,6 +345,27 @@ en:
       active_user_count: "Active users"
       contact: "Contact us"
       contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_info}."
+      site_activity: "Site activity"
+      activities:
+        topics:
+          one: "%{formatted_number} topic"
+          other: "%{formatted_number} topics"
+        posts:
+          one: "%{formatted_number} post"
+          other: "%{formatted_number} posts"
+        active_users:
+          one: "%{formatted_number} active user"
+          other: "%{formatted_number} active users"
+        sign_ups:
+          one: "%{formatted_number} sign-up"
+          other: "%{formatted_number} sign-ups"
+        likes:
+          one: "%{formatted_number} like"
+          other: "%{formatted_number} likes"
+        periods:
+          last_7_days: "in the last 7 days"
+          today: "today"
+          all_time: "all time"
       member_count:
         one: "%{formatted_number} Member"
         other: "%{formatted_number} Members"
@@ -354,6 +376,14 @@ en:
         one: "%{formatted_number} Moderator"
         other: "%{formatted_number} Moderators"
       report_inappropriate_content: "If you come across any inappropriate content, don't hesitate to start a conversation with our moderators and admins. Remember to log in before reaching out."
+      site_age:
+        less_than_one_month: "Created < 1 month ago"
+        month:
+          one: "Created %{count} month ago"
+          other: "Created %{count} months ago"
+        year:
+          one: "Created %{count} year ago"
+          other: "Created %{count} years ago"
 
     bookmarked:
       title: "Bookmark"
@@ -764,7 +794,7 @@ en:
       never: "Never"
       last_custom: "Last custom datetime"
       custom: "Custom date and time"
-      custom_short: "Custom..."
+      more_options: "More options…"
       select_timeframe: "Select a timeframe"
 
     user_action:
@@ -4066,7 +4096,7 @@ en:
       colors_disabled: "You can’t select colors because you have a category style of none."
 
     flagging:
-      title: "Thanks for helping to keep our community civil!"
+      title: "Thanks for keeping our community civil!"
       action: "Flag Post"
       take_action: "Take Action…"
       take_action_options:
@@ -4124,7 +4154,7 @@ en:
           other: "%{count} remaining"
 
     flagging_topic:
-      title: "Thanks for helping to keep our community civil!"
+      title: "Thanks for keeping our community civil!"
       action: "Flag Topic"
       notify_action: "Message"
 
@@ -5559,6 +5589,7 @@ en:
             name: "Name"
             description: "Description"
             applies_to: "Display this flag on"
+            invalid_applies_to: "Required"
             topic: "topics"
             post: "posts"
             chat_message: "chat messages"

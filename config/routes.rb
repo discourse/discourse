@@ -1649,5 +1649,10 @@ Discourse::Application.routes.draw do
 
     get "/form-templates/:id" => "form_templates#show"
     get "/form-templates" => "form_templates#index"
+
+    if Rails.env.test?
+      # Routes that are only used for testing
+      get "/test_net_http_timeouts" => "test_requests#test_net_http_timeouts"
+    end
   end
 end

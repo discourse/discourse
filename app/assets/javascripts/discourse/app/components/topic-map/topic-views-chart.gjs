@@ -161,7 +161,7 @@ export default class TopicViewsChart extends Component {
               maxTicksLimit: 15,
               callback: function (value) {
                 const date = new Date(value + oneDay);
-                return date.toLocaleDateString(undefined, {
+                return date.toLocaleDateString(I18n.currentBcp47Locale, {
                   month: "2-digit",
                   day: "2-digit",
                 });
@@ -189,7 +189,7 @@ export default class TopicViewsChart extends Component {
                   const today = new Date();
                   date = today.getUTCDate();
                 }
-                return date.toLocaleDateString(undefined, {
+                return date.toLocaleDateString(I18n.currentBcp47Locale, {
                   month: "2-digit",
                   day: "2-digit",
                   year: "numeric",

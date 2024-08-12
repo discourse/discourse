@@ -12,7 +12,11 @@ import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import PollBreakdownModal from "../components/modal/poll-breakdown";
-import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
+import {
+  MULTIPLE_POLL_TYPE,
+  PIE_CHART_TYPE,
+  REGULAR_POLL_TYPE,
+} from "../components/modal/poll-ui-builder";
 import PollButtonsDropdown from "../components/poll-buttons-dropdown";
 import PollInfo from "../components/poll-info";
 import PollOptions from "../components/poll-options";
@@ -47,6 +51,8 @@ export default class PollComponent extends Component {
     this.hasSavedVote ||
     (this.topicArchived && !this.staffOnly) ||
     (this.closed && !this.staffOnly);
+
+  @tracked showTally = false;
 
   checkUserGroups = (user, poll) => {
     const pollGroups =
@@ -452,6 +458,17 @@ export default class PollComponent extends Component {
     return htmlSafe(I18n.t("poll.average_rating", { average }));
   }
 
+  get availableDisplayMode() {
+    if (
+      !this.showResults ||
+      this.poll.chart_type === PIE_CHART_TYPE ||
+      ![REGULAR_POLL_TYPE, MULTIPLE_POLL_TYPE].includes(this.poll.type)
+    ) {
+      return null;
+    }
+    return this.showTally ? "showPercentage" : "showTally";
+  }
+
   @action
   updatedVoters() {
     this.preloadedVoters = this.defaultPreloadedVoters();
@@ -640,6 +657,12 @@ export default class PollComponent extends Component {
         }
       });
   }
+
+  @action
+  toggleDisplayMode() {
+    this.showTally = !this.showTally;
+  }
+
   <template>
     <div
       {{didUpdate this.updatedVoters @preloadedVoters}}
@@ -669,6 +692,7 @@ export default class PollComponent extends Component {
                 @votersCount={{this.poll.voters}}
                 @fetchVoters={{this.fetchVoters}}
                 @rankedChoiceOutcome={{this.rankedChoiceOutcome}}
+                @showTally={{this.showTally}}
               />
             {{/if}}
           {{/if}}
@@ -754,6 +778,7 @@ export default class PollComponent extends Component {
         @groupableUserFields={{this.groupableUserFields}}
         @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
         @dropDownClick={{this.dropDownClick}}
+        @availableDisplayMode={{this.availableDisplayMode}}
       />
     </div>
   </template>

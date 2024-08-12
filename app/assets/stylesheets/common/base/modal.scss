@@ -40,6 +40,7 @@
 
     .modal-close {
       margin-left: auto;
+      align-self: start;
       .d-icon {
         font-size: var(--font-up-2);
         color: var(--primary-high);
@@ -52,6 +53,11 @@
     .btn {
       text-transform: capitalize;
     }
+  }
+
+  &__title-text {
+    font-size: var(--font-up-3);
+    line-height: var(--line-height-medium);
   }
 
   &__title-text,
@@ -380,6 +386,9 @@
     width: 100%;
     // max-width: 500px;
     line-height: var(--line-height-large);
+    a {
+      margin: 0;
+    }
   }
   .flag-confirmation {
     margin-top: 0.5em;

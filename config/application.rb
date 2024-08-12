@@ -90,7 +90,7 @@ module Discourse
     # tiny file needed by site settings
     require "highlight_js"
 
-    config.load_defaults 7.0
+    config.load_defaults 7.1
     config.active_record.cache_versioning = false # our custom cache class doesn’t support this
     config.action_controller.forgery_protection_origin_check = false
     config.active_record.belongs_to_required_by_default = false
@@ -103,6 +103,7 @@ module Discourse
     config.active_support.key_generator_hash_digest_class = OpenSSL::Digest::SHA1
     config.action_dispatch.cookies_serializer = :hybrid
     config.action_controller.wrap_parameters_by_default = false
+    config.active_support.cache_format_version = 7.1
 
     # we skip it cause we configure it in the initializer
     # the railtie for message_bus would insert it in the

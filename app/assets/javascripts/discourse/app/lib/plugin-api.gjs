@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.35.0";
+export const PLUGIN_API_VERSION = "1.36.0";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -61,7 +61,9 @@ import {
   PLUGIN_NAV_MODE_TOP,
   registerAdminPluginConfigNav,
 } from "discourse/lib/admin-plugin-config-nav";
-import classPrepend from "discourse/lib/class-prepend";
+import classPrepend, {
+  withPrependsRolledBack,
+} from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -83,7 +85,10 @@ import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
-import { addSearchResultsCallback } from "discourse/lib/search";
+import {
+  addLogSearchLinkClickedCallbacks,
+  addSearchResultsCallback,
+} from "discourse/lib/search";
 import Sharing from "discourse/lib/sharing";
 import { addAdminSidebarSectionLink } from "discourse/lib/sidebar/admin-sidebar";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
@@ -172,9 +177,15 @@ const DEPRECATED_HEADER_WIDGETS = [
   "user-dropdown",
 ];
 
+const appliedModificationIds = new WeakMap();
+
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
-  if (typeof changes !== "function" && !changes.pluginId) {
+  if (typeof changes === "function") {
+    return true;
+  }
+
+  if (!changes.pluginId) {
     // eslint-disable-next-line no-console
     console.warn(
       consolePrefix(),
@@ -184,10 +195,13 @@ function canModify(klass, type, resolverName, changes) {
   }
 
   let key = "_" + type + "/" + changes.pluginId + "/" + resolverName;
-  if (klass.class[key]) {
+
+  if (appliedModificationIds.get(klass.class)?.includes(key)) {
     return false;
   } else {
-    klass.class[key] = 1;
+    const modificationIds = appliedModificationIds.get(klass.class) || [];
+    modificationIds.push(key);
+    appliedModificationIds.set(klass.class, modificationIds);
     return true;
   }
 }
@@ -239,26 +253,27 @@ class PluginApi {
 
   _resolveClass(resolverName, opts) {
     opts = opts || {};
-
+    const normalized = this.container.registry.normalize(resolverName);
     if (
-      this.container.cache[resolverName] ||
-      (resolverName === "model:user" &&
+      this.container.cache[normalized] ||
+      (normalized === "model:user" &&
         this.container.lookup("service:current-user"))
     ) {
       // eslint-disable-next-line no-console
-      console.warn(
+      console.error(
         consolePrefix(),
-        `"${resolverName}" has already been initialized and registered as a singleton. Move the modifyClass call earlier in the boot process for changes to take effect. https://meta.discourse.org/t/262064`
+        `Attempted to modify "${resolverName}", but it was already initialized earlier in the boot process (e.g. via a lookup()). Remove that lookup, or move the modifyClass call earlier in the boot process for changes to take effect. https://meta.discourse.org/t/262064`
       );
+      return;
     }
 
-    const klass = this.container.factoryFor(resolverName);
+    const klass = this.container.factoryFor(normalized);
     if (!klass) {
       if (!opts.ignoreMissing) {
         // eslint-disable-next-line no-console
         console.warn(
           consolePrefix(),
-          `"${resolverName}" was not found by modifyClass`
+          `"${normalized}" was not found by modifyClass`
         );
       }
       return;
@@ -296,7 +311,9 @@ class PluginApi {
       if (typeof changes === "function") {
         classPrepend(klass.class, changes);
       } else if (klass.class.reopen) {
-        klass.class.reopen(changes);
+        withPrependsRolledBack(klass.class, () => {
+          klass.class.reopen(changes);
+        });
       } else {
         Object.defineProperties(
           klass.class.prototype || klass.class,
@@ -327,7 +344,9 @@ class PluginApi {
 
     if (canModify(klass, "static", resolverName, changes)) {
       delete changes.pluginId;
-      klass.class.reopenClass(changes);
+      withPrependsRolledBack(klass.class, () => {
+        klass.class.reopenClass(changes);
+      });
     }
 
     return klass;
@@ -1519,8 +1538,8 @@ class PluginApi {
    *   displayName: "bugs"
    *   href: "/c/bugs",
    *   init: (navItem, category) => { if (category) { navItem.set("category", category)  } }
-   *   customFilter: (category, args, router) => { return category && category.name !== 'bug' }
-   *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') return "/a-feature"; },
+   *   customFilter: (category, args, router) => { return category && category.displayName !== 'bug' }
+   *   customHref: (category, args, router) => {  if (category && category.displayName) === 'not-a-bug') return "/a-feature"; },
    *   before: "top",
    *   forceActive: (category, args, router) => router.currentURL === "/a/b/c/d",
    * })
@@ -2311,6 +2330,22 @@ class PluginApi {
    */
   addSearchResultsCallback(callback) {
     addSearchResultsCallback(callback);
+  }
+
+  /**
+   * Add a callback to search before logging the search record. Return false to prevent logging.
+   *
+   * ```
+   * api.addLogSearchLinkClickedCallbacks((params) => {
+   *  if (params.searchResultId === "foo") {
+   *   return false;
+   *  }
+   * });
+   * ```
+   *
+   */
+  addLogSearchLinkClickedCallbacks(callback) {
+    addLogSearchLinkClickedCallbacks(callback);
   }
 
   /**
@@ -3211,7 +3246,7 @@ class PluginApi {
         {
           since: "v3.3.0.beta1-dev",
           id: "discourse.header-widget-overrides",
-          url: "https://meta.discourse.org/t/296544",
+          url: "https://meta.discourse.org/t/316549",
         }
       );
     }

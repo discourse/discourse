@@ -1881,7 +1881,7 @@ en:
     max_reply_history: "Maximum number of replies to expand when expanding in-reply-to"
     topics_per_period_in_top_summary: "Number of top topics shown in the default top topics summary."
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
-    redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
+    redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page. Only applies when 'top' is present in the 'top menu' site setting."
     top_page_default_timeframe: "Default top page time period for anonymous users (automatically adjusts for logged in users based on their last visit)."
     moderators_view_emails: "Allow moderators to view user email addresses."
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
@@ -2486,7 +2486,7 @@ en:
     notify_about_reviewable_item_after: "If there are reviewable items that haven’t been handled after this many hours, send a personal message to moderators. Set to 0 to disable."
 
     delete_drafts_older_than_n_days: "Delete drafts that have not been changed in more than (n) days."
-    delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to 0 to never delete stub topics."
+    delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to -1 to never delete. Set to 0 to immediately delete."
 
     bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode and remove Getting Started button (set to 0 to disable, can take up to 24 hours)"
 
@@ -2676,7 +2676,7 @@ en:
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
     enable_experimental_lightbox: "EXPERIMENTAL: Replace the default image lightbox with the revamped design."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Show a quick access menu for bookmarks on posts and a new redesigned modal"
-    glimmer_header_mode: "Control whether the new 'glimmer' header implementation is used. Defaults to 'auto', which will enable automatically once all your themes and plugins are ready. https://meta.discourse.org/t/296544"
+    glimmer_header_mode: "Control whether the new 'glimmer' header implementation is used. 'auto' will enable automatically once all your themes and plugins are ready. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "EXPERIMENTAL: Enable the new 'glimmer' topic list implementation. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
     experimental_form_templates: "EXPERIMENTAL: Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     admin_sidebar_enabled_groups: "Enable sidebar navigation for the admin UI for the specified groups, which replaces the top-level admin navigation buttons."
@@ -2912,6 +2912,7 @@ en:
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_disabled_lastpost: "This topic is now opened. New replies are allowed."
     auto_deleted_by_timer: "Automatically deleted by timer."
+    auto_deleted_by_merge: "Automatically deleted by merge."
 
   login:
     invalid_second_factor_method: "The selected two-factor method is invalid."

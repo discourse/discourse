@@ -85,7 +85,11 @@ export default PreviewBaseComponent.extend({
       ctx.font = `Bold ${bodyFontSize * 1.3}em '${font}'`;
       ctx.fillStyle = colors.primary;
       ctx.textAlign = "center";
-      ctx.fillText(category.name, boxStartX + boxWidth / 2, boxStartY + 25);
+      ctx.fillText(
+        category.displayName,
+        boxStartX + boxWidth / 2,
+        boxStartY + 25
+      );
       ctx.textAlign = "left";
 
       if (opts.topics) {
@@ -167,7 +171,7 @@ export default PreviewBaseComponent.extend({
       const textPos = y + categoryHeight * 0.35;
       ctx.font = `Bold ${bodyFontSize * 1.1}em '${font}'`;
       ctx.fillStyle = colors.primary;
-      ctx.fillText(category.name, cols[0], textPos);
+      ctx.fillText(category.displayName, cols[0], textPos);
 
       ctx.font = `${bodyFontSize * 0.8}em '${font}'`;
       ctx.fillStyle = textColor;
@@ -263,7 +267,7 @@ export default PreviewBaseComponent.extend({
       const textPos = y + categoryHeight * 0.35;
       ctx.font = `Bold ${bodyFontSize * 1.1}em '${font}'`;
       ctx.fillStyle = colors.primary;
-      ctx.fillText(category.name, cols[0], textPos);
+      ctx.fillText(category.displayName, cols[0], textPos);
 
       ctx.font = `${bodyFontSize * 0.8}em '${font}'`;
       ctx.fillStyle = textColor;
@@ -328,7 +332,7 @@ export default PreviewBaseComponent.extend({
 
       ctx.fillStyle = colors.primary;
       ctx.fillText(
-        category.name,
+        category.displayName,
         cols[3] + badgeSize * 3,
         y + topicHeight * 0.76
       );
@@ -409,7 +413,7 @@ export default PreviewBaseComponent.extend({
 
       ctx.fillStyle = colors.primary;
       ctx.fillText(
-        category.name,
+        category.displayName,
         cols[0] + badgeSize * 2,
         y + rowHeight * 0.73
       );

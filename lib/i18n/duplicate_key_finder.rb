@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "locale_file_walker"
-
 class DuplicateKeyFinder < LocaleFileWalker
   def find_duplicates(path)
     @keys_with_count = Hash.new { 0 }

@@ -52,7 +52,8 @@ export default {
 
     this.messageBus.subscribe(
       `/do-not-disturb/${this.currentUser.id}`,
-      this.onDoNotDisturb
+      this.onDoNotDisturb,
+      this.currentUser.do_not_disturb_channel_position
     );
 
     this.messageBus.subscribe(

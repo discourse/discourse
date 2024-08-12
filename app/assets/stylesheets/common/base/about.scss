@@ -1,7 +1,7 @@
 .about {
   &__main-content {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 2.5fr 1fr;
     column-gap: 4em;
   }
 
@@ -22,6 +22,20 @@
     margin-bottom: 1em;
     min-height: 300px;
     max-height: 300px;
+  }
+
+  &__activities-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5em;
+  }
+
+  &__activities-item-icon {
+    margin-right: 1em;
+  }
+
+  &__activities-item-period {
+    font-size: var(--font-down-2);
   }
 }
 

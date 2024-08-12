@@ -2,7 +2,7 @@ import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Controller.extend({
+export default class UserInvitedController extends Controller {
   @discourseComputed("invitesCount.total", "invitesCount.pending")
   pendingLabel(invitesCountTotal, invitesCountPending) {
     if (invitesCountTotal > 0) {
@@ -12,7 +12,7 @@ export default Controller.extend({
     } else {
       return I18n.t("user.invited.pending_tab");
     }
-  },
+  }
 
   @discourseComputed("invitesCount.total", "invitesCount.expired")
   expiredLabel(invitesCountTotal, invitesCountExpired) {
@@ -23,7 +23,7 @@ export default Controller.extend({
     } else {
       return I18n.t("user.invited.expired_tab");
     }
-  },
+  }
 
   @discourseComputed("invitesCount.total", "invitesCount.redeemed")
   redeemedLabel(invitesCountTotal, invitesCountRedeemed) {
@@ -34,5 +34,5 @@ export default Controller.extend({
     } else {
       return I18n.t("user.invited.redeemed_tab");
     }
-  },
-});
+  }
+}

@@ -33,6 +33,28 @@ module PageObjects
         element = find(".about__stats-item.moderators span")
         element.has_text?(I18n.t("js.about.moderator_count", count:, formatted_number:))
       end
+
+      def has_site_created_less_than_1_month_ago?
+        site_age_stat_element.has_text?(I18n.t("js.about.site_age.less_than_one_month"))
+      end
+
+      def has_site_created_in_months_ago?(months)
+        site_age_stat_element.has_text?(I18n.t("js.about.site_age.month", count: months))
+      end
+
+      def has_site_created_in_years_ago?(years)
+        site_age_stat_element.has_text?(I18n.t("js.about.site_age.year", count: years))
+      end
+
+      def site_activities
+        PageObjects::Components::AboutPageSiteActivity.new(find(".about__activities"))
+      end
+
+      private
+
+      def site_age_stat_element
+        find(".about__stats-item.site-creation-date span")
+      end
     end
   end
 end
