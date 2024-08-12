@@ -8,15 +8,15 @@
     <div class="wrap">
       <div class="update-prompt-main-content" aria-live="polite">
         <span
+          {{on "click" this.refreshPage}}
           role="button"
-          onclick={{action "refreshPage"}}
           class="update-prompt-message"
         >{{d-icon "redo"}}
           {{html-safe (i18n "software_update_prompt.message")}}</span>
         <span class="update-prompt-dismiss"><span
             aria-label={{i18n "software_update_prompt.dismiss"}}
             role="button"
-            onclick={{action "dismiss"}}
+            {{on "click" this.dismiss}}
           >{{d-icon "times"}}</span></span>
       </div>
     </div>

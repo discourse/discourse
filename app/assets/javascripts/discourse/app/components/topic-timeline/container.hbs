@@ -2,9 +2,9 @@
   <div class="title">
     <h2>
       <a
-        class="fancy-title"
-        href
         {{on "click" @jumpTop}}
+        href
+        class="fancy-title"
       >{{this.topicTitle}}</a>
     </h2>
     {{#if (or this.siteSettings.topic_featured_link_enabled this.showTags)}}
@@ -72,9 +72,10 @@
   <div class="timeline-scrollarea-wrapper">
     <div class="timeline-date-wrapper">
       <a
-        class="start-date"
-        onClick={{this.updatePercentage}}
+        {{on "click" this.updatePercentage}}
+        href
         title={{i18n "topic_entrance.jump_top_button_title"}}
+        class="start-date"
       >
         <span>
           {{this.startDate}}
@@ -87,9 +88,10 @@
       {{did-insert this.registerScrollarea}}
     >
       <div
-        class="timeline-padding"
+        {{! template-lint-disable no-invalid-interactive }}
+        {{on "click" this.updatePercentage}}
         style={{this.beforePadding}}
-        onClick={{this.updatePercentage}}
+        class="timeline-padding"
       ></div>
       <TopicTimeline::Scroller
         @current={{this.current}}
@@ -104,9 +106,10 @@
         {{did-insert this.registerScroller}}
       />
       <div
-        class="timeline-padding"
+        {{! template-lint-disable no-invalid-interactive }}
+        {{on "click" this.updatePercentage}}
         style={{this.afterPadding}}
-        onClick={{this.updatePercentage}}
+        class="timeline-padding"
       ></div>
 
       {{#if (and this.hasBackPosition this.showButton)}}
@@ -118,7 +121,7 @@
     </div>
 
     <div class="timeline-date-wrapper">
-      <a class="now-date" onClick={{this.updatePercentage}}>
+      <a {{on "click" this.updatePercentage}} href class="now-date">
         <span>
           {{age-with-tooltip this.nowDate this.nowDateOptions}}
         </span>
@@ -129,10 +132,11 @@
   <div class="timeline-footer-controls">
     {{#if this.displaySummary}}
       <button
-        type="button"
-        class="show-summary btn btn-small"
-        title={{i18n "summary.short_title"}}
+        {{! template-lint-disable no-invalid-interactive }}
         {{on "click" @showTopReplies}}
+        type="button"
+        title={{i18n "summary.short_title"}}
+        class="show-summary btn btn-small"
       >
         {{d-icon "layer-group"}}
         {{i18n "summary.short_label"}}
@@ -142,10 +146,10 @@
     {{#if (and this.currentUser (not @fullscreen))}}
       {{#if this.canCreatePost}}
         <button
-          type="button"
-          class="btn btn-default create reply-to-post no-text btn-icon"
-          title={{i18n "topic.reply.help"}}
           {{on "click" (fn @replyToPost null)}}
+          type="button"
+          title={{i18n "topic.reply.help"}}
+          class="btn btn-default create reply-to-post no-text btn-icon"
         >
           {{d-icon "reply"}}
         </button>
@@ -154,10 +158,10 @@
 
     {{#if @fullscreen}}
       <button
-        type="button"
-        class="timeline-open-jump-to-post-prompt-btn btn btn-text jump-to-post"
-        title={{i18n "topic.progress.jump_prompt_long"}}
         {{on "click" @jumpToPostPrompt}}
+        type="button"
+        title={{i18n "topic.progress.jump_prompt_long"}}
+        class="timeline-open-jump-to-post-prompt-btn btn btn-text jump-to-post"
       >
         <span class="d-button-label">
           {{i18n "topic.progress.jump_prompt"}}
