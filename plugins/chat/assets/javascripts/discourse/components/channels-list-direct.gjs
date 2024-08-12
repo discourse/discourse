@@ -3,7 +3,7 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { and } from "truth-helpers";
+import { and, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
@@ -17,7 +17,9 @@ export default class ChannelsListDirect extends Component {
   @service chat;
   @service chatChannelsManager;
   @service chatStateManager;
+  @service currentUser;
   @service site;
+  @service siteSettings;
   @service modal;
 
   get inSidebar() {
@@ -60,8 +62,10 @@ export default class ChannelsListDirect extends Component {
     {{#if
       (and
         this.showDirectMessageChannels
-        this.site.desktopView
-        this.chatStateManager.isDrawerActive
+        (or
+          this.site.desktopView
+          (not this.chatChannelsManager.displayPublicChannels)
+        )
       )
     }}
       <div class="chat-channel-divider direct-message-channels-section">

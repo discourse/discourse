@@ -145,6 +145,10 @@ module PageObjects
         has_no_css?("#{thread_list_button_selector}.has-unreads")
       end
 
+      def has_direct_message_channels_section?
+        has_css?(".direct-message-channels-section")
+      end
+
       private
 
       def mouseout
