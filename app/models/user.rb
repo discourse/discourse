@@ -1225,10 +1225,14 @@ class User < ActiveRecord::Base
     stat.increment!(:post_edits_count)
   end
 
+  def post_action_type_view
+    @post_action_type_view ||= PostActionTypeView.new
+  end
+
   def flags_given_count
     PostAction.where(
       user_id: id,
-      post_action_type_id: PostActionType.flag_types_without_additional_message.values,
+      post_action_type_id: post_action_type_view.flag_types_without_additional_message.values,
     ).count
   end
 
@@ -1241,7 +1245,7 @@ class User < ActiveRecord::Base
       .includes(:post_actions)
       .where(
         "post_actions.post_action_type_id" =>
-          PostActionType.flag_types_without_additional_message.values,
+          post_action_type_view.flag_types_without_additional_message.values,
       )
       .count
   end
@@ -1455,7 +1459,7 @@ class User < ActiveRecord::Base
 
     disagreed_flag_post_ids =
       PostAction
-        .where(post_action_type_id: PostActionType.types[:spam])
+        .where(post_action_type_id: post_action_type_view.types[:spam])
         .where.not(disagreed_at: nil)
         .pluck(:post_id)
 
@@ -1583,7 +1587,7 @@ class User < ActiveRecord::Base
     PostAction
       .where(user_id: self.id)
       .where(disagreed_at: nil)
-      .where(post_action_type_id: PostActionType.notify_flag_type_ids)
+      .where(post_action_type_id: post_action_type_view.notify_flag_type_ids)
       .count
   end
 
