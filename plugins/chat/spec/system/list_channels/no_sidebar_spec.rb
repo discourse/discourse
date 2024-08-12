@@ -133,11 +133,15 @@ RSpec.describe "List channels | no sidebar", type: :system do
       expect(chat).to have_direct_message_channels_section
     end
 
-    it "shows the create direct message button in the drawer" do
-      visit("/")
-      chat.open_from_header
+    context "with drawer prefered" do
+      before { chat.prefers_drawer }
 
-      expect(PageObjects::Pages::ChatDrawer.new).to have_direct_message_channels_section
+      it "shows the create direct message button in the drawer" do
+        visit("/")
+        chat.open_from_header
+
+        expect(PageObjects::Pages::ChatDrawer.new).to have_direct_message_channels_section
+      end
     end
   end
 end

@@ -15,11 +15,13 @@ const DIRECT_MESSAGE_CHANNELS_LIMIT = 20;
 */
 
 export default class ChatChannelsManager extends Service {
-  @service chatSubscriptionsManager;
   @service chatApi;
+  @service chatSubscriptionsManager;
+  @service chatStateManager;
   @service currentUser;
   @service router;
   @service site;
+  @service siteSettings;
   @tracked _cached = new TrackedObject();
 
   async find(id, options = { fetchIfNotFound: true }) {
@@ -156,6 +158,32 @@ export default class ChatChannelsManager extends Service {
     } catch (error) {
       popupAjaxError(error);
     }
+  }
+
+  get publicMessageChannelsEmpty() {
+    return (
+      this.publicMessageChannels?.length === 0 &&
+      this.chatStateManager.hasPreloadedChannels
+    );
+  }
+
+  get displayPublicChannels() {
+    if (!this.siteSettings.enable_public_channels) {
+      return false;
+    }
+
+    if (!this.chatStateManager.hasPreloadedChannels) {
+      return false;
+    }
+
+    if (this.publicMessageChannelsEmpty) {
+      return (
+        this.currentUser?.staff ||
+        this.currentUser?.has_joinable_public_channels
+      );
+    }
+
+    return true;
   }
 
   #cache(channel) {
