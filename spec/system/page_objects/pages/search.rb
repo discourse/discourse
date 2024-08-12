@@ -30,10 +30,6 @@ module PageObjects
         find(".search-cta").click
       end
 
-      def click_home_logo
-        find(".d-header .logo-mobile").click
-      end
-
       def click_search_icon
         find(".d-header #search-button").click
       end

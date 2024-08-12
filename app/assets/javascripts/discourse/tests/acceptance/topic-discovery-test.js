@@ -3,6 +3,7 @@ import { skip, test } from "qunit";
 import { configureEyeline } from "discourse/lib/eyeline";
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
 import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
+import topFixtures from "discourse/tests/fixtures/top-fixtures";
 import {
   acceptance,
   exists,
@@ -15,6 +16,12 @@ import { cloneJSON } from "discourse-common/lib/object";
 acceptance("Topic Discovery", function (needs) {
   needs.settings({
     show_pinned_excerpt_desktop: true,
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/hot.json", () => {
+      return helper.response(cloneJSON(topFixtures["/top.json"]));
+    });
   });
 
   test("Visit Discovery Pages", async function (assert) {
@@ -143,13 +150,13 @@ acceptance("Topic Discovery", function (needs) {
       "shows the correct latest topics"
     );
 
-    await click(".navigation-container a[href='/top']");
-    assert.strictEqual(currentURL(), "/top", "switches to top");
+    await click(".navigation-container a[href='/hot']");
+    assert.strictEqual(currentURL(), "/hot", "switches to hot");
 
     assert.deepEqual(
       query(".topic-list-body .topic-list-item:first-of-type").dataset.topicId,
       "13088",
-      "shows the correct top topics"
+      "shows the correct hot topics"
     );
 
     await click(".navigation-container a[href='/categories']");

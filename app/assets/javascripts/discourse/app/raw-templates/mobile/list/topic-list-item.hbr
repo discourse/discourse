@@ -18,14 +18,17 @@
       at the end of the link, preventing it from line wrapping onto its own line.
     --}}
     {{~raw-plugin-outlet name="topic-list-before-link"}}
+    {{~plugin-outlet name="topic-list-before-link" outletArgs=(raw-hash topic=topic)}}
     <div class='main-link'>
       {{~raw-plugin-outlet name="topic-list-before-status"}}
+      {{~plugin-outlet name="topic-list-before-status" outletArgs=(raw-hash topic=topic)}}
       {{~raw "topic-status" topic=topic~}}
       {{~topic-link topic class="raw-link raw-topic-link"}}
       {{~#if topic.featured_link~}}
       &nbsp;{{~topic-featured-link topic~}}
       {{~/if~}}
       {{~raw-plugin-outlet name="topic-list-after-title"}}
+      {{~plugin-outlet name="topic-list-after-title" outletArgs=(raw-hash topic=topic)}}
       {{~#if topic.unseen~}}
         <span class="topic-post-badges">&nbsp;<span class="badge-notification new-topic"></span></span>
       {{~/if~}}
@@ -33,8 +36,10 @@
       {{~raw "list/topic-excerpt" topic=topic~}}
       {{~/if~}}
        {{~raw-plugin-outlet name="topic-list-main-link-bottom"}}
+      {{~plugin-outlet name="topic-list-main-link-bottom" outletArgs=(raw-hash topic=topic)}}
     </div>
     {{~raw-plugin-outlet name="topic-list-after-main-link"}}
+    {{~plugin-outlet name="topic-list-after-main-link" outletArgs=(raw-hash topic=topic)}}
     <div class='pull-right'>  
       {{raw "list/post-count-or-badges" topic=topic postBadgesEnabled=showTopicPostBadges}}
     </div>
@@ -42,6 +47,7 @@
       <span class="topic-item-stats__category-tags">
         {{#unless hideCategory}}
           {{~raw-plugin-outlet name="topic-list-before-category"}}
+          {{~plugin-outlet name="topic-list-before-category" outletArgs=(raw-hash topic=topic)}}
           {{category-link topic.category~}}
         {{~/unless}}
         {{~discourse-tags topic mode="list"}}

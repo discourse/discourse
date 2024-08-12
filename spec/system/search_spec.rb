@@ -27,14 +27,14 @@ describe "Search", type: :system do
       expect(search_page).to have_search_result
       expect(search_page.heading_text).not_to eq("Search")
 
-      search_page.click_home_logo
+      click_logo
       expect(search_page).to be_not_active
 
       page.go_back
       # ensure results are still there when using browser's history
       expect(search_page).to have_search_result
 
-      search_page.click_home_logo
+      click_logo
       search_page.click_search_icon
 
       expect(search_page).to have_no_search_result
@@ -103,7 +103,6 @@ describe "Search", type: :system do
       search_page.type_in_search_menu("test")
       search_page.click_search_menu_link
       expect(search_page).to have_topic_title_for_first_search_result(topic.title)
-
       search_page.click_first_topic
       search_page.click_search_icon
       expect(search_page).to have_topic_title_for_first_search_result(topic.title)

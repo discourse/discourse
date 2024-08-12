@@ -505,6 +505,14 @@ class Guardian
     # Must be a valid target
     return false if !(target_is_group || target_is_user)
 
+    can_send_private_message =
+      DiscoursePluginRegistry.apply_modifier(
+        :guardian_can_send_private_message,
+        target: target,
+        user: @user,
+      )
+    return false if !can_send_private_message
+
     # Users can send messages to certain groups with the `everyone` messageable_level
     # even if they are not in personal_message_enabled_groups
     group_is_messageable = target_is_group && Group.messageable(@user).where(id: target.id).exists?

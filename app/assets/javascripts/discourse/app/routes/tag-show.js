@@ -179,7 +179,7 @@ export default class TagShowRoute extends DiscourseRoute {
         return I18n.t("tagging.filters.with_category", {
           filter: filterText,
           tag: model.tag.id,
-          category: model.category.name,
+          category: model.category.displayName,
         });
       } else {
         return I18n.t("tagging.filters.without_category", {
@@ -191,7 +191,7 @@ export default class TagShowRoute extends DiscourseRoute {
       if (model.category) {
         return I18n.t("tagging.filters.untagged_with_category", {
           filter: filterText,
-          category: model.category.name,
+          category: model.category.displayName,
         });
       } else {
         return I18n.t("tagging.filters.untagged_without_category", {

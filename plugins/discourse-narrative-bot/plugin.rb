@@ -63,10 +63,6 @@ after_initialize do
 
   self.on(:user_unstaged) { |user| user.enqueue_bot_welcome_post }
 
-  self.add_model_callback(UserOption, :after_save) do
-    user.delete_bot_welcome_post if saved_change_to_skip_new_user_tips? && self.skip_new_user_tips
-  end
-
   self.add_to_class(:user, :enqueue_bot_welcome_post) do
     return if SiteSetting.disable_discourse_narrative_bot_welcome_post
 
@@ -96,30 +92,6 @@ after_initialize do
         .discourse_narrative_bot_ignored_usernames
         .split("|".freeze)
         .include?(self.username)
-  end
-
-  self.add_to_class(:user, :delete_bot_welcome_post) do
-    data = DiscourseNarrativeBot::Store.get(self.id) || {}
-    topic_id = data[:topic_id]
-    return if topic_id.blank? || data[:track] != DiscourseNarrativeBot::NewUserNarrative.to_s
-
-    topic_user = topic_users.find_by(topic_id: topic_id)
-    return if topic_user.present? && topic_user.last_read_post_number.present?
-
-    topic = Topic.find_by(id: topic_id)
-    return if topic.blank?
-
-    first_post = topic.ordered_posts.first
-
-    notification = Notification.where(topic_id: topic.id, post_number: first_post.post_number).first
-    if notification.present?
-      Notification.read(self, notification.id)
-      self.reload
-      self.publish_notifications_state
-    end
-
-    PostDestroyer.new(Discourse.system_user, first_post, skip_staff_log: true).destroy
-    DiscourseNarrativeBot::Store.remove(self.id)
   end
 
   self.on(:post_created) do |post, options|

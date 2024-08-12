@@ -1227,16 +1227,26 @@ RSpec.describe ListController do
     end
 
     context "when redirect raises an unsafe redirect error" do
+      let(:fake_logger) { FakeLogger.new }
+
       before do
         ListController
           .any_instance
           .stubs(:redirect_to)
           .raises(ActionController::Redirecting::UnsafeRedirectError)
+        Rails.logger.broadcast_to(fake_logger)
       end
+
+      after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
       it "renders a 404" do
         get "/c/hello/world/bye/#{subsubcategory.id}"
         expect(response).to have_http_status :not_found
+      end
+
+      it "doesn’t log an error" do
+        get "/c/hello/world/bye/#{subsubcategory.id}"
+        expect(fake_logger.fatals).to be_empty
       end
     end
 

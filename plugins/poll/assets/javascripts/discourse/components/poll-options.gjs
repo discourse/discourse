@@ -35,7 +35,7 @@ export default class PollOptionsComponent extends Component {
             @sendRank={{this.sendRank}}
           />
         {{else}}
-          <li tabindex="0" data-poll-option-id={{option.id}}>
+          <li data-poll-option-id={{option.id}}>
             {{#if this.currentUser}}
               <button {{on "click" (fn this.sendClick option)}}>
                 {{#if (this.isChosen option)}}

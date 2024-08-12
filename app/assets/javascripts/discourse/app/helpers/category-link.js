@@ -112,7 +112,7 @@ function buildTopicCount(count) {
 }
 
 export function defaultCategoryLinkRenderer(category, opts) {
-  let descriptionText = escapeExpression(get(category, "description_text"));
+  let descriptionText = escapeExpression(get(category, "descriptionText"));
   let restricted = get(category, "read_restricted");
   let url = opts.url
     ? opts.url
@@ -156,7 +156,7 @@ export function defaultCategoryLinkRenderer(category, opts) {
     ${descriptionText ? 'title="' + descriptionText + '" ' : ""}
   >`;
 
-  let categoryName = escapeExpression(get(category, "name"));
+  let categoryName = escapeExpression(get(category, "displayName"));
 
   if (siteSettings.support_mixed_text_direction) {
     categoryDir = 'dir="auto"';

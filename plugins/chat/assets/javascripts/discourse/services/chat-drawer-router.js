@@ -160,6 +160,7 @@ export default class ChatDrawerRouter extends Service {
   @tracked component = null;
   @tracked drawerRoute = null;
   @tracked params = null;
+  @tracked currentRouteName = null;
 
   routeNames = Object.keys(ROUTES);
 

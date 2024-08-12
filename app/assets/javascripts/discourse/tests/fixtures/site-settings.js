@@ -52,6 +52,7 @@ export default {
           "read",
           "posted",
           "bookmarks",
+          "unseen",
         ],
         list_type: "compact",
       },

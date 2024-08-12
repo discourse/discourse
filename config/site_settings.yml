@@ -190,7 +190,7 @@ basic:
     refresh: true
     type: list
     list_type: simple
-    default: "latest|new|unread|top|categories"
+    default: "latest|new|unread|hot|categories"
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
     validator: RegexPresenceValidator
@@ -2975,6 +2975,14 @@ uncategorized:
   suggest_weekends_in_date_pickers:
     client: true
     default: true
+
+  show_bottom_topic_map:
+    client: true
+    default: true
+
+  show_topic_map_in_topics_without_replies:
+    client: true
+    default: false
 
 user_preferences:
   default_email_digest_frequency:

@@ -253,26 +253,27 @@ class PluginApi {
 
   _resolveClass(resolverName, opts) {
     opts = opts || {};
-
+    const normalized = this.container.registry.normalize(resolverName);
     if (
-      this.container.cache[resolverName] ||
-      (resolverName === "model:user" &&
+      this.container.cache[normalized] ||
+      (normalized === "model:user" &&
         this.container.lookup("service:current-user"))
     ) {
       // eslint-disable-next-line no-console
-      console.warn(
+      console.error(
         consolePrefix(),
-        `"${resolverName}" has already been initialized and registered as a singleton. Move the modifyClass call earlier in the boot process for changes to take effect. https://meta.discourse.org/t/262064`
+        `Attempted to modify "${resolverName}", but it was already initialized earlier in the boot process (e.g. via a lookup()). Remove that lookup, or move the modifyClass call earlier in the boot process for changes to take effect. https://meta.discourse.org/t/262064`
       );
+      return;
     }
 
-    const klass = this.container.factoryFor(resolverName);
+    const klass = this.container.factoryFor(normalized);
     if (!klass) {
       if (!opts.ignoreMissing) {
         // eslint-disable-next-line no-console
         console.warn(
           consolePrefix(),
-          `"${resolverName}" was not found by modifyClass`
+          `"${normalized}" was not found by modifyClass`
         );
       }
       return;
@@ -1537,8 +1538,8 @@ class PluginApi {
    *   displayName: "bugs"
    *   href: "/c/bugs",
    *   init: (navItem, category) => { if (category) { navItem.set("category", category)  } }
-   *   customFilter: (category, args, router) => { return category && category.name !== 'bug' }
-   *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') return "/a-feature"; },
+   *   customFilter: (category, args, router) => { return category && category.displayName !== 'bug' }
+   *   customHref: (category, args, router) => {  if (category && category.displayName) === 'not-a-bug') return "/a-feature"; },
    *   before: "top",
    *   forceActive: (category, args, router) => router.currentURL === "/a/b/c/d",
    * })

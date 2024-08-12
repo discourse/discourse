@@ -73,7 +73,7 @@ export default PreviewBaseComponent.extend({
     ctx.font = `Bold ${badgeSize * 1.2}px '${font}'`;
     ctx.fillStyle = colors.primary;
     ctx.fillText(
-      category.name,
+      category.displayName,
       afterLogo + badgeSize * 1.5,
       headerHeight * 0.7 + badgeSize * 0.9
     );
