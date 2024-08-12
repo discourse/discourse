@@ -27,6 +27,7 @@ ignored:
     - net-http # Ruby (default gem)
     - net-protocol # Ruby (default gem)
     - openssl # Ruby (default gem)
+    - ostruct # Ruby (default gem)
     - racc # Ruby (default gem)
     - rchardet # LGPL
     - rdoc # Ruby (default gem)
