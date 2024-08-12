@@ -8,7 +8,7 @@ class UserPassword < ActiveRecord::Base
 
   attr_reader :password # required to build an instance of this model with password attribute without backing column
   attr_accessor :salt # TODO: Deprecate once we drop User.salt, this is only for passing through the randomized salt from User
-  # attr_accessor :should_expire_previous_password
+  attr_accessor :should_expire_previous_passwords
 
   belongs_to :user, required: true # different from user_id, we need to allow for blank user_id at the point of validation since a newly built user needs to be saved before user_id is generated
 
@@ -17,7 +17,8 @@ class UserPassword < ActiveRecord::Base
   validates :password_algorithm, presence: true, length: { maximum: 64 }
 
   validate :password_validator
-  validate :ensure_single_unexpired_password_for_user
+  # validate :ensure_single_unexpired_password_for_user
+  before_save :expire_all_previous_passwords_for_user
 
   def password=(pw)
     return if pw.blank?
@@ -67,6 +68,12 @@ class UserPassword < ActiveRecord::Base
   def hash_password(password, salt, algorithm)
     raise StandardError.new("password is too long") if password.size > MAX_PASSWORD_LENGTH
     PasswordHasher.hash_password(password: password, salt: salt, algorithm: algorithm)
+  end
+
+  def expire_all_previous_passwords_for_user
+    return unless self.should_expire_previous_passwords
+
+    user.passwords.where(password_expired_at: nil).update_all(password_expired_at: Time.now.zone)
   end
 end
 
