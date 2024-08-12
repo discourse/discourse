@@ -24,10 +24,6 @@ export default RouteTemplate(
       return this.siteSettings.title;
     }
 
-    get wavingHandURL() {
-      return wavingHandURL();
-    }
-
     get translatedButtonLabel() {
       return i18n("user.activate_account.continue_button", {
         site_name: this.siteName,
@@ -97,7 +93,7 @@ export default RouteTemplate(
                 "user.activate_account.welcome_to"
                 site_name=this.siteName
               }}
-              <img src={{this.wavingHandURL}} alt="" class="waving-hand" />
+              <img src={{(wavingHandURL)}} alt="" class="waving-hand" />
             </h1>
             <br />
             {{#if this.accountActivated}}
