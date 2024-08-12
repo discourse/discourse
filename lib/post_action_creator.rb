@@ -57,7 +57,8 @@ class PostActionCreator
 
     @post = post
     @post_action_type_id = post_action_type_id
-    @post_action_name = PostActionType.types[@post_action_type_id]
+    @post_action_type_view = PostActionTypeView.new
+    @post_action_name = @post_action_type_view.types[@post_action_type_id]
 
     @is_warning = is_warning
     @take_action = take_action && guardian.is_staff?
@@ -96,7 +97,7 @@ class PostActionCreator
     if !post_can_act? || (@queue_for_review && !guardian.is_staff?)
       result.forbidden = true
 
-      if taken_actions&.keys&.include?(PostActionType.types[@post_action_name])
+      if taken_actions&.keys&.include?(@post_action_type_view.types[@post_action_name])
         result.add_error(I18n.t("action_already_performed"))
       else
         result.add_error(I18n.t("invalid_access"))
@@ -115,7 +116,7 @@ class PostActionCreator
 
     # create meta topic / post if needed
     if @message.present? &&
-         (PostActionType.additional_message_types.keys | %i[spam illegal]).include?(
+         (@post_action_type_view.additional_message_types.keys | %i[spam illegal]).include?(
            @post_action_name,
          )
       creator = create_message_creator
@@ -170,11 +171,11 @@ class PostActionCreator
   private
 
   def flagging_post?
-    PostActionType.notify_flag_type_ids.include?(@post_action_type_id)
+    @post_action_type_view.notify_flag_type_ids.include?(@post_action_type_id)
   end
 
   def cannot_flag_again?(reviewable)
-    return false if @post_action_type_id == PostActionType.types[:notify_moderators]
+    return false if @post_action_type_id == @post_action_type_view.types[:notify_moderators]
     flag_type_already_used =
       reviewable.reviewable_scores.any? do |rs|
         rs.reviewable_score_type == @post_action_type_id && !rs.pending?
@@ -233,7 +234,8 @@ class PostActionCreator
     return if @post.hidden?
     return if !@created_by.staff? && @post.user&.staff?
 
-    not_auto_action_flag_type = !PostActionType.auto_action_flag_types.include?(@post_action_name)
+    not_auto_action_flag_type =
+      !@post_action_type_view.auto_action_flag_types.include?(@post_action_name)
     return if not_auto_action_flag_type && !@queue_for_review
 
     if @queue_for_review
@@ -304,14 +306,14 @@ class PostActionCreator
 
     if post_action
       case @post_action_type_id
-      when *PostActionType.notify_flag_type_ids
+      when *@post_action_type_view.notify_flag_type_ids
         DiscourseEvent.trigger(:flag_created, post_action, self)
-      when PostActionType.types[:like]
+      when @post_action_type_view.types[:like]
         DiscourseEvent.trigger(:like_created, post_action, self)
       end
     end
 
-    if @post_action_type_id == PostActionType.types[:like]
+    if @post_action_type_id == @post_action_type_view.types[:like]
       GivenDailyLike.increment_for(@created_by.id)
     end
 
@@ -381,7 +383,7 @@ class PostActionCreator
         target: @post,
         topic: @post.topic,
         reviewable_by_moderator: true,
-        potential_spam: @post_action_type_id == PostActionType.types[:spam],
+        potential_spam: @post_action_type_id == @post_action_type_view.types[:spam],
         payload: {
           targets_topic: @targets_topic,
         },

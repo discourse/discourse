@@ -16,12 +16,16 @@ class PostActionTypeSerializer < ApplicationSerializer
 
   include ConfigurableUrls
 
+  def post_action_type_view
+    @post_action_type_view ||= PostActionTypeView.new
+  end
+
   def require_message
-    !!PostActionType.additional_message_types[object.id]
+    !!post_action_type_view.additional_message_types[object.id]
   end
 
   def is_flag
-    !!PostActionType.flag_types[object.id]
+    !!post_action_type_view.flag_types[object.id]
   end
 
   def name
@@ -42,7 +46,7 @@ class PostActionTypeSerializer < ApplicationSerializer
   end
 
   def name_key
-    PostActionType.types[object.id].to_s
+    post_action_type_view.types[object.id].to_s
   end
 
   def enabled

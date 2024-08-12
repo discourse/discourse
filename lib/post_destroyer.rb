@@ -348,6 +348,10 @@ class PostDestroyer
     Jobs.enqueue(:feature_topic_users, topic_id: @post.topic_id)
   end
 
+  def post_action_type_view
+    @post_action_type_view ||= PostActionTypeView.new
+  end
+
   def trash_public_post_actions
     if public_post_actions = PostAction.publics.where(post_id: @post.id)
       public_post_actions.each { |pa| permanent? ? pa.destroy! : pa.trash!(@user) }
@@ -357,7 +361,7 @@ class PostDestroyer
       @post.custom_fields["deleted_public_actions"] = public_post_actions.ids
       @post.save_custom_fields
 
-      f = PostActionType.public_types.map { |k, _| ["#{k}_count", 0] }
+      f = post_action_type_view.public_types.map { |k, _| ["#{k}_count", 0] }
       Post.with_deleted.where(id: @post.id).update_all(Hash[*f.flatten])
     end
   end
@@ -387,7 +391,7 @@ class PostDestroyer
     # ReviewableScore#types is a superset of PostActionType#flag_types.
     # If the reviewable score type is not on the latter, it means it's not a flag by a user and
     #  must be an automated flag like `needs_approval`. There's no flag reason for these kind of types.
-    flag_type = PostActionType.flag_types[rs.reviewable_score_type]
+    flag_type = post_action_type_view.flag_types[rs.reviewable_score_type]
     return unless flag_type
 
     notify_responders = options[:notify_responders]

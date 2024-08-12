@@ -28,7 +28,9 @@ RSpec.describe PostActionType do
   end
 
   describe ".additional_message_types" do
-    before { described_class.stubs(:overridden_by_plugin_or_skipped_db?).returns(overriden) }
+    before do
+      PostActionTypeView.any_instance.stubs(:overridden_by_plugin_or_skipped_db?).returns(overriden)
+    end
 
     context "when overridden by plugin or skipped DB" do
       let(:overriden) { true }
