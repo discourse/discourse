@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import NavigationItem from "discourse/components/navigation-item";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concat from "discourse/helpers/concat-class";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import icon from "discourse-common/helpers/d-icon";
 import DMenu from "float-kit/components/d-menu";
@@ -18,17 +18,13 @@ export default class NavigationBarComponent extends Component {
   @tracked expanded = false;
   @tracked filterMode;
 
-  constructor() {
-    super(...arguments);
-  }
-
   @dependentKeyCompat
   get filterType() {
     return filterTypeForMode(this.filterMode);
   }
 
   get selectedNavItem() {
-    let { filterType, navItems, connectors, category } = this.args;
+    const { filterType, navItems, connectors, category } = this.args;
     let item = navItems.find((i) => i.active === true);
 
     item = item || navItems.find((i) => i.filterType === filterType);
@@ -56,10 +52,6 @@ export default class NavigationBarComponent extends Component {
     return ["nav", "nav-pills"];
   }
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-  }
-
   @action
   onRegisterApi(api) {
     this.dMenu = api;
@@ -83,10 +75,11 @@ export default class NavigationBarComponent extends Component {
             </:trigger>
 
             <:content>
-              <DropdownMenu as |dropdown|>
-                {{#each this.args.navItems as |navItem|}}
+              <DropdownMenu {{on "click" this.dMenu.close}} as |dropdown|>
+                {{#each @navItems as |navItem|}}
                   <dropdown.item>
                     <NavigationItem
+                      @tagName="div"
                       @content={{navItem}}
                       @filterMode={{this.filterMode}}
                       @category={{this.category}}
@@ -119,9 +112,9 @@ export default class NavigationBarComponent extends Component {
             }}
           />
         </li>
-
       {{else}}
-        {{#each this.args.navItems as |navItem|}}
+        {{#each @navItems as |navItem|}}
+
           <NavigationItem
             @content={{navItem}}
             @filterMode={{this.filterMode}}
