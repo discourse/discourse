@@ -398,7 +398,7 @@ export default class TopicMapSummary extends Component {
           <:content>
             <TopicParticipants
               @title={{i18n "topic_map.participants_title"}}
-              @userFilters={{@userFilters}}
+              @userFilters={{@postStream.userFilters}}
               @participants={{@topicDetails.participants}}
             />
           </:content>
@@ -408,7 +408,7 @@ export default class TopicMapSummary extends Component {
       {{#if this.shouldShowParticipants}}
         <TopicParticipants
           @participants={{this.first5Participants}}
-          @userFilters={{@userFilters}}
+          @userFilters={{@postStream.userFilters}}
         />
       {{/if}}
       <div class="topic-map__buttons">
