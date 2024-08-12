@@ -504,7 +504,7 @@ export default class PollComponent extends Component {
           : this.preloadedVoters;
         const newVoters = optionId ? result.voters[optionId] : result.voters;
         if (this.isRankedChoice) {
-          this.preloadedVoters[optionId] = [...new Set([...newVoters])];
+          this.preloadedVoters[optionId].voters = [...new Set([...newVoters])];
         } else {
           const votersSet = new Set(voters.map((voter) => voter.username));
           newVoters.forEach((voter) => {
