@@ -10,7 +10,6 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
 import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
 
 export default RouteTemplate(
   class extends Component {
@@ -30,7 +29,7 @@ export default RouteTemplate(
     }
 
     get translatedButtonLabel() {
-      return I18n.t("user.activate_account.continue_button", {
+      return i18n("user.activate_account.continue_button", {
         site_name: this.siteName,
       });
     }
@@ -66,7 +65,7 @@ export default RouteTemplate(
         );
 
         if (!response.success) {
-          this.errorMessage = I18n.t("user.activate_account.already_done");
+          this.errorMessage = i18n("user.activate_account.already_done");
           return;
         }
 
@@ -80,7 +79,7 @@ export default RouteTemplate(
           setTimeout(() => (window.location.href = "/"), 2000);
         }
       } catch (error) {
-        this.errorMessage = I18n.t("user.activate_account.already_done");
+        this.errorMessage = i18n("user.activate_account.already_done");
       }
     }
 
