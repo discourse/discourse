@@ -91,18 +91,11 @@ export default class TopicMapSummary extends Component {
     if (this.args.topic.has_summary) {
       return false;
     }
-
-    return (
-      [this.hasViews, this.hasLikes, this.hasUsers, this.hasLinks].filter(
-        Boolean
-      ).length === 1
-    );
+    return [this.hasLikes, this.hasUsers, this.hasLinks].every((stat) => !stat);
   }
 
   get manyStats() {
-    return [this.hasViews, this.hasLikes, this.hasUsers, this.hasLinks].every(
-      Boolean
-    );
+    return [this.hasLikes, this.hasUsers, this.hasLinks].every(Boolean);
   }
 
   get shouldShowViewsChart() {
@@ -125,10 +118,6 @@ export default class TopicMapSummary extends Component {
 
   get hasMoreLinks() {
     return !this.allLinksShown && this.linksCount > TRUNCATED_LINKS_LIMIT;
-  }
-
-  get hasViews() {
-    return this.args.topic.views > 1;
   }
 
   get hasLikes() {
@@ -409,7 +398,7 @@ export default class TopicMapSummary extends Component {
           <:content>
             <TopicParticipants
               @title={{i18n "topic_map.participants_title"}}
-              @userFilters={{@userFilters}}
+              @userFilters={{@postStream.userFilters}}
               @participants={{@topicDetails.participants}}
             />
           </:content>
@@ -419,7 +408,7 @@ export default class TopicMapSummary extends Component {
       {{#if this.shouldShowParticipants}}
         <TopicParticipants
           @participants={{this.first5Participants}}
-          @userFilters={{@userFilters}}
+          @userFilters={{@postStream.userFilters}}
         />
       {{/if}}
       <div class="topic-map__buttons">

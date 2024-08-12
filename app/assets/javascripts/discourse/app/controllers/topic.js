@@ -236,7 +236,11 @@ export default class TopicController extends Controller.extend(
 
   @discourseComputed("model.posts_count", "model.postStream.loadingFilter")
   showBottomTopicMap(postsCount, loading) {
-    return !loading && postsCount > MIN_POSTS_COUNT;
+    return (
+      this.siteSettings.show_bottom_topic_map &&
+      !loading &&
+      postsCount > MIN_POSTS_COUNT
+    );
   }
 
   _removeDeleteOnOwnerReplyBookmarks() {

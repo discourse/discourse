@@ -831,7 +831,7 @@ createWidget("post-article", {
       ])
     );
 
-    if (attrs.showTopicMap) {
+    if (this.shouldShowTopicMap(attrs)) {
       rows.push(this.buildTopicMap(attrs));
     }
 
@@ -900,6 +900,22 @@ createWidget("post-article", {
     }
   },
 
+  shouldShowTopicMap(attrs) {
+    if (attrs.post_number !== 1) {
+      return false;
+    }
+    const isPM = attrs.topic.archetype === "private_message";
+    const isRegular = attrs.topic.archetype === "regular";
+    const showWithoutReplies =
+      this.siteSettings.show_topic_map_in_topics_without_replies;
+
+    return (
+      attrs.topicMap ||
+      isPM ||
+      (isRegular && (attrs.topic.posts_count > 1 || showWithoutReplies))
+    );
+  },
+
   buildTopicMap(attrs) {
     return new RenderGlimmer(
       this,
@@ -917,7 +933,7 @@ createWidget("post-article", {
         model: attrs.topic,
         topicDetails: attrs.topic.get("details"),
         postStream: attrs.topic.postStream,
-        showPMMap: attrs.showPMMap,
+        showPMMap: attrs.topic.archetype === "private_message",
         showInvite: () => this.sendWidgetAction("showInvite"),
         removeAllowedGroup: (group) =>
           this.sendWidgetAction("removeAllowedGroup", group),
