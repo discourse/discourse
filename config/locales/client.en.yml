@@ -346,6 +346,8 @@ en:
       contact: "Contact us"
       contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_info}."
       site_activity: "Site activity"
+      view_more: "View more"
+      view_less: "View less"
       activities:
         topics:
           one: "%{formatted_number} topic"

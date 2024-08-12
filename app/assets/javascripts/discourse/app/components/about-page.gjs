@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
+import AboutPageUsers from "discourse/components/about-page-users";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { number } from "discourse/lib/formatter";
 import dIcon from "discourse-common/helpers/d-icon";
@@ -161,6 +162,20 @@ export default class AboutPage extends Component {
         </div>
         <h3>{{i18n "about.simple_title"}}</h3>
         <div>{{htmlSafe @model.extended_site_description}}</div>
+
+        {{#if @model.admins.length}}
+          <section class="about__admins">
+            <h3>{{dIcon "users"}} {{i18n "about.our_admins"}}</h3>
+            <AboutPageUsers @users={{@model.admins}} @truncateAt={{10}} />
+          </section>
+        {{/if}}
+
+        {{#if @model.moderators.length}}
+          <section class="about__moderators">
+            <h3>{{dIcon "users"}} {{i18n "about.our_moderators"}}</h3>
+            <AboutPageUsers @users={{@model.moderators}} @truncateAt={{10}} />
+          </section>
+        {{/if}}
       </section>
       <section class="about__right-side">
         <h3>{{i18n "about.contact"}}</h3>
