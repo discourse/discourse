@@ -2085,8 +2085,6 @@ en:
 
     simultaneous_uploads: "Maximum number of files that can be dragged & dropped in the composer"
 
-    enable_precise_upload_used_bytes: "Calculates the precise disk usage of uploads by using the 'du' command (which is slower) instead of relying on the metadata stored in a database."
-
     default_invitee_trust_level: "Default trust level (0-4) for invited users."
     default_trust_level: "Default trust level (0-4) for all new users. WARNING! Changing this will put you at serious risk for spam."
 
