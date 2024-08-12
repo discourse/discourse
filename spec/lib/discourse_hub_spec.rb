@@ -62,6 +62,8 @@ RSpec.describe DiscourseHub do
         expect(json["likes_count"]).to be_present
         expect(json["likes_7_days"]).to be_present
         expect(json["likes_30_days"]).to be_present
+        expect(json["participating_users_7_days"]).to be_present
+        expect(json["participating_users_30_days"]).to be_present
         expect(json["installed_version"]).to be_present
         expect(json["branch"]).to be_present
       end

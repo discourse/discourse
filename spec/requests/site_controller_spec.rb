@@ -68,6 +68,8 @@ RSpec.describe SiteController do
       expect(json["likes_count"]).to be_present
       expect(json["likes_7_days"]).to be_present
       expect(json["likes_30_days"]).to be_present
+      expect(json["participating_users_7_days"]).to be_present
+      expect(json["participating_users_30_days"]).to be_present
     end
 
     it "is not visible if site setting share_anonymized_statistics is disabled" do
