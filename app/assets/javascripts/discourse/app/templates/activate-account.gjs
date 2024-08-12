@@ -20,16 +20,6 @@ export default RouteTemplate(
     @tracked needsApproval = false;
     @tracked errorMessage = null;
 
-    get siteName() {
-      return this.siteSettings.title;
-    }
-
-    get translatedButtonLabel() {
-      return i18n("user.activate_account.continue_button", {
-        site_name: this.siteName,
-      });
-    }
-
     @action
     async activate() {
       this.isLoading = true;
@@ -91,7 +81,7 @@ export default RouteTemplate(
           <div class="activate-account">
             <h1 class="activate-title">{{i18n
                 "user.activate_account.welcome_to"
-                site_name=this.siteName
+                site_name=this.siteSettings.title
               }}
               <img src={{(wavingHandURL)}} alt="" class="waving-hand" />
             </h1>
@@ -112,7 +102,10 @@ export default RouteTemplate(
                   <p>
                     <DButton
                       class="continue-button"
-                      @translatedLabel={{this.translatedButtonLabel}}
+                      @translatedLabel={{i18n
+                        "user.activate_account.continue_button"
+                        site_name=this.siteSettings.title
+                      }}
                       @href="/"
                     />
                   </p>
