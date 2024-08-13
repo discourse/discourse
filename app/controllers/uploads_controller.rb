@@ -26,6 +26,12 @@ class UploadsController < ApplicationController
     # capture current user for block later on
     me = current_user
 
+    if me.id == Discourse::SYSTEM_USER_ID
+      SiteSetting.system_user_max_attachment_size_kb = 4.gigabytes
+    else
+      SiteSetting.system_user_max_attachment_size_kb = 0
+    end
+
     RateLimiter.new(
       current_user,
       "uploads-per-minute",
@@ -227,9 +233,7 @@ class UploadsController < ApplicationController
               I18n.t(
                 "upload.attachments.too_large_humanized",
                 max_size:
-                  ActiveSupport::NumberHelper.number_to_human_size(
-                    SiteSetting.max_attachment_size_kb.kilobytes,
-                  ),
+                  ActiveSupport::NumberHelper.number_to_human_size(max_attachment_size.kilobytes),
               ),
             )
     end
@@ -275,10 +279,7 @@ class UploadsController < ApplicationController
   )
     if file.nil?
       if url.present? && is_api
-        maximum_upload_size = [
-          SiteSetting.max_image_size_kb,
-          SiteSetting.max_attachment_size_kb,
-        ].max.kilobytes
+        maximum_upload_size = [SiteSetting.max_image_size_kb, max_attachment_size].max.kilobytes
         tempfile =
           begin
             FileHelper.download(
@@ -323,8 +324,7 @@ class UploadsController < ApplicationController
   # as they may be further reduced in size by UploadCreator (at this point
   # they may have already been reduced in size by preprocessors)
   def attachment_too_big?(file_name, file_size)
-    !FileHelper.is_supported_image?(file_name) &&
-      file_size >= SiteSetting.max_attachment_size_kb.kilobytes
+    !FileHelper.is_supported_image?(file_name) && file_size >= max_attachment_size.kilobytes
   end
 
   # Gifs are not resized on the client and not reduced in size by UploadCreator
@@ -361,6 +361,14 @@ class UploadsController < ApplicationController
           I18n.t("upload.create_multipart_failure", additional_detail: err.message),
         )
       raise ExternalUploadHelpers::ExternalUploadValidationError.new(message)
+    end
+  end
+
+  def max_attachment_size
+    if SiteSetting.system_user_max_attachment_size_kb > 0
+      SiteSetting.system_user_max_attachment_size_kb
+    else
+      SiteSetting.max_attachment_size_kb
     end
   end
 end
