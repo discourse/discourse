@@ -209,6 +209,14 @@ ug:
             valid_trust_levels:
               label: ئىناۋەتلىك ئىشەنچ دەرىجىسى
               description: يازمىنى بۇ ئىشەنچ دەرىجىسىدىكى ئىشلەتكۈچى قۇرغاندىلا ئاندىن قوزغىتىلىدۇ، كۆڭۈلدىكى ئەھۋالدا خالىغان ئىشەنچ دەرىجىسى
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: كۆزەتتىكى سەھىپە
+              description: ئەگەر تېما مۇشۇ تۈرلەرنىڭ بىرى بولغاندىلا قوزغىتىلىدۇ
+            watching_tags:
+              label: كۆزەتتىكى بەلگە
+              description: ئەگەر تېمىدا مۇشۇبەلگىنىڭ بىرى بولغاندىلا قوزغىتىلىدۇ
         after_post_cook:
           fields:
             valid_trust_levels:

@@ -17,7 +17,6 @@ pt_BR:
     chat_allowed_messages_for_other_trust_levels: "Número de mensagens que usuários(as) de nível 1-4 de confiança podem enviar em 30 segundos. Defina como '0' para desativar o limite."
     chat_silence_user_sensitivity: "A probabilidade de um(a) usuário(a) sinalizado(a) no chat ser silenciado automaticamente."
     chat_auto_silence_from_flags_duration: "Número de minutos pelos quais os(as) usuários(as) serão silenciados(as) quando forem silenciados(as) automaticamente devido a mensagens de chat sinalizadas."
-    chat_default_channel_id: "O canal de chat que será aberto por padrão quando um(a) usuário(a) não tiver mensagens não lidas ou menções em outros canais."
     chat_duplicate_message_sensitivity: "A probabilidade de que uma mensagem duplicada do mesmo remetente seja bloqueada em um curto período. Número decimal entre 0 e 1.0, sendo 1.0 a configuração mais alta (bloqueia as mensagens com mais frequência em menos tempo). Defina como '0' para permitir mensagens duplicadas."
     chat_minimum_message_length: "Número mínimo de caracteres para uma mensagem de chat."
     chat_allow_uploads: "Permitir envios em canais de chat públicos e canais de mensagens diretas."
@@ -31,7 +30,6 @@ pt_BR:
     chat_editing_grace_period: "Durante (n) segundos depois de enviar um chat, não será mostrada a etiqueta (editada) na edição, na mensagem do chat."
     chat_editing_grace_period_max_diff_low_trust: "Quantidade máxima de alterações de caracteres permitidas no período de carência da edição do chat. Se houver mais alterações, a etiqueta (editada) será mostrada na mensagem do chat (nível de confiança 0 e 1)."
     chat_editing_grace_period_max_diff_high_trust: "Quantidade máxima de alterações de caracteres permitidas no período de carência da edição do chat. Se houver mais alterações, a etiqueta (editada) será mostrada na mensagem do chat (nível de confiança 2 e acima)."
-    chat_preferred_mobile_index: "Aba preferencial ao carregar chat em um dispositivo móvel."
     errors:
       chat_default_channel: "O canal de chat padrão deve ser um canal público."
       direct_message_enabled_groups_invalid: "Você deve especificar pelo menos um grupo para esta configuração. Se você não quiser que ninguém, exceto a equipe, envie mensagens diretas, escolha o grupo da equipe."

@@ -11,6 +11,8 @@ ja:
         other: "投票者数"
       total_votes:
         other: "合計得票数"
+      votes:
+        other: "%{count} 票"
       average_rating: "平均評価: <strong>%{average}</strong>。"
       public:
         title: "投票は<strong>公開</strong>されています。"

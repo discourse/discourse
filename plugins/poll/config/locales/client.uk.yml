@@ -17,6 +17,11 @@ uk:
         few: "голосів"
         many: "голоси"
         other: "голоси"
+      votes:
+        one: "%{count} голос"
+        few: "%{count} голоси"
+        many: "%{count} голосів"
+        other: "%{count} голосів"
       average_rating: "Середній рейтинг: <strong>%{average}</strong>."
       public:
         title: "Голоси <strong>публічні</strong> ."
@@ -56,6 +61,12 @@ uk:
       show-results:
         title: "Показати результати опитування"
         label: "Результати"
+      show-tally:
+        title: "Показати результати голосування за кількістю голосів"
+        label: "Показати підрахунок"
+      show-percentage:
+        title: "Показати результати голосування у відсотках"
+        label: "Показувати у відсотках"
       remove-vote:
         title: "Видалити свій голос"
         label: "Скасувати голосування"

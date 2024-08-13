@@ -441,6 +441,25 @@ ar:
       active_user_count: "المستخدمون النشطون"
       contact: "تواصل معنا"
       contact_info: "في حال حدوث مشكلة خطيرة أو أمر عاجل يؤثر على الموقع، يُرجى مراسلتنا على %{contact_info}."
+      activities:
+        posts:
+          zero: "%{formatted_number} منشورًا"
+          one: "منشور واحد (%{formatted_number})"
+          two: "منشوران (%{formatted_number})"
+          few: "%{formatted_number} منشورات"
+          many: "%{formatted_number} منشورًا"
+          other: "%{formatted_number} منشورًا"
+        likes:
+          zero: "%{formatted_number} إعجابات"
+          one: "إعجاب واحد (%{formatted_number})"
+          two: "إعجابَين (%{formatted_number})"
+          few: "%{formatted_number} إعجابًا"
+          many: "%{formatted_number} إعجابات"
+          other: "%{formatted_number} إعجابات"
+        periods:
+          last_7_days: "في آخر 7 يوم"
+          today: "اليوم"
+          all_time: "طوال الوقت"
       member_count:
         zero: "%{formatted_number} عضو"
         one: "عضو واحد ‎(%{formatted_number})"
@@ -457,7 +476,7 @@ ar:
         other: "‎%{formatted_number}‎ مسؤول"
       moderator_count:
         zero: "‎ %{formatted_number}‎مشرف"
-        one: "مشرف واحد (%{formatted_number}"
+        one: "مشرف واحد (%{formatted_number})"
         two: "مشرفان (%{formatted_number})"
         few: "‎ %{formatted_number}‎مشرفين"
         many: "‎ %{formatted_number}‎مشرفًا"
@@ -928,7 +947,6 @@ ar:
       never: "أبدًا"
       last_custom: "آخر تاريخ ووقت مخصَّصين"
       custom: "تاريخ ووقت مخصَّصان"
-      custom_short: "مخصَّص..."
       select_timeframe: "تحديد إطار زمني"
     user_action:
       user_posted_topic: "نشر <a href='%{userUrl}'>%{user}</a> ‏<a href='%{topicUrl}'>الموضوع</a>"
@@ -1863,6 +1881,13 @@ ar:
           disconnect: "سيتم إلغاء ربط حسابك الحالي %{provider} '%{account_description}'."
           account_specific: "سيتم استخدام حسابك على %{provider} \"%{account_description}\" للمصادقة."
           generic: "سيتم استخدام حسابك على %{provider} للمصادقة."
+      activate_account:
+        action: "انقر هنا لتفعيل حسابك."
+        already_done: "عذرًا، لم يعُد رابط تأكيد الحساب صالحًا. ربما يكون الحساب نشطًا بالفعل."
+        please_continue: "تم تأكيد حسابك الجديد؛ ستتم إعادة توجيهك إلى الصفحة الرئيسية."
+        continue_button: "المتابعة إلى %{site_name}"
+        welcome_to: "مرحبًا بك في %{site_name}!"
+        approval_required: "يجب على المشرف الموافقة على حسابك الجديد يدويًا للوصول إلى هذا المنتدى. ستتلقى رسالة إلكترونية عندما يتم قبول حسابك."
       name:
         title: "الاسم"
         instructions: "اسمك بالكامل (اختياري)."
@@ -2465,6 +2490,7 @@ ar:
       admin_not_allowed_from_ip_address: "لا يمكنك تسجيل الدخول كمسؤول من عنوان IP هذا."
       resend_activation_email: "انقر هنا لإرسال الرسالة الإلكترونية للتفعيل مرة أخرى."
       omniauth_disallow_totp: "لقد فعَّلت المصادقة الثنائية على حسابك. يُرجى تسجيل الدخول بكلمة المرور."
+      activate_account: "تفعيل الحساب"
       resend_title: "إعادة إرسال الرسالة الإلكترونية للتفعيل"
       change_email: "تغيير عنوان البريد الإلكتروني"
       provide_new_email: "أدخِل عنوانًا جديدًا وسنعيد إرسال الرسالة الإلكترونية للتأكيد إليك."
@@ -3321,7 +3347,7 @@ ar:
         selected_sole_category:
           zero: "لقد حدَّدت <b>%{count}</b> موضوع من الفئة:"
           one: "لقد حدَّدت موضوعًا واحدًا (<b>%{count}</b>) من الفئة:"
-          two: "لقد حدَّدت موضوعَين (<b>%{count}</b> من الفئة:"
+          two: "لقد حدَّدت موضوعَين (<b>%{count}</b>) من الفئة:"
           few: "لقد حدَّدت <b>%{count}</b>موضوعات من الفئة:"
           many: "لقد حدَّدت <b>%{count}</b>موضوعًا من الفئة:"
           other: "لقد حدَّدت <b>%{count}</b> موضوع من الفئة:"
@@ -4431,7 +4457,6 @@ ar:
         none: "لا توجد فئات فرعية"
       colors_disabled: "لا يمكنك تحديد الألوان لأنه ليس لديك نمط فئة."
     flagging:
-      title: "نشكرك على مساعدتك في الحفاظ على مجتمعنا متحضرًا."
       action: "الإبلاغ عن المنشور"
       take_action: "اتخاذ إجراء…"
       take_action_options:
@@ -4491,7 +4516,6 @@ ar:
           many: "بقي %{count}..."
           other: "بقي %{count}..."
     flagging_topic:
-      title: "نشكرك على مساعدتك في الحفاظ على مجتمعنا متحضرًا."
       action: "الإبلاغ عن الموضوع"
       notify_action: "رسالة"
     topic_map:
@@ -6049,6 +6073,7 @@ ar:
             name: "الاسم"
             description: "الوصف"
             applies_to: "عرض هذا البلاغ على"
+            invalid_applies_to: "مطلوب"
             topic: "الموضوعات"
             post: "المنشورات"
             chat_message: "رسائل الدردشة"
@@ -7430,7 +7455,6 @@ ar:
             prompt: "أنت على وشك تغيير سياسة كلمة المرور الخاصة بك. سيؤثر هذا على جميع المستخدمين الذين يغيرون كلمات المرور الخاصة بهم من الآن فصاعدًا. هل تريد بالتأكيد المتابعة؟"
             confirm: "نعم، تحديث سياسة كلمة المرور"
       badges:
-        disable_system: هذه الشارة هي شارة نظام ولا يمكن إيقافها و/أو حذفها.
         status: الحالة
         title: الشارات
         new_badge: شارة جديدة

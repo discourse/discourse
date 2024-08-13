@@ -255,6 +255,16 @@ nb_NO:
       topic_count: "Emner"
       post_count: "Innlegg"
       contact_info: "I tilfelle en kritisk hendelse skulle inntreffe eller det er en hastesak som påvirker siden, ta kontakt på %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} emne"
+          other: "%{formatted_number} emner"
+        posts:
+          one: "%{formatted_number} innlegg"
+          other: "%{formatted_number} innlegg"
+        periods:
+          last_7_days: "de siste 7 dagene"
+          today: "i dag"
     bookmarked:
       title: "Bokmerke"
       edit_bookmark: "Rediger bokmerke"
@@ -1246,6 +1256,13 @@ nb_NO:
         confirm_description:
           account_specific: "Din %{provider} konto '%{account_description}' vil bli brukt til autentisering."
           generic: "Kontoen din på %{provider} vil bli brukt i autentisering."
+      activate_account:
+        action: "Klikk her for å aktivere din konto"
+        already_done: "Beklager, denne bekreftelseslenken er ikke lenger gyldig. Kanskje er kontoen din allerede aktivert?"
+        please_continue: "Din nye konto er registrert; du vil bli videresendt til hjemmesiden. "
+        continue_button: "Fortsett til %{site_name}"
+        welcome_to: "Velkommen til %{site_name}!"
+        approval_required: "En moderator må manuelt godkjenne kontoen din før du får tilgang til forumet. Du vil motta en e-post når kontoen din er godkjent!"
       name:
         title: "Navn"
         instructions: "Ditt fulle navn (valgfritt)."
@@ -1663,6 +1680,7 @@ nb_NO:
       admin_not_allowed_from_ip_address: "Du kan ikke logge inn som administrator fra den IP-adressen."
       resend_activation_email: "Klikk her for å sende e-posten for aktivering igjen."
       omniauth_disallow_totp: "Kontoen din har to-faktor autentisering aktivert. Vennligst logg inn med passordet ditt."
+      activate_account: "Aktiver konto"
       resend_title: "Send aktivterings-e-post på nytt"
       change_email: "Endre e-postadresse"
       provide_new_email: "Oppgi en ny adresse og vi vil sende din aktiverings-e-post på nytt."
@@ -2862,7 +2880,6 @@ nb_NO:
         none: "ingen underkategorier"
       colors_disabled: "Du kan ikke velge farger fordi du har en kategori stil fra ingen."
     flagging:
-      title: "Takk for at du hjelper å holde forumet ryddig!"
       action: "Rapporter innlegg"
       take_action_options:
         default:
@@ -2899,7 +2916,6 @@ nb_NO:
           one: "ett gjenstående"
           other: "%{count} gjenstående"
     flagging_topic:
-      title: "Takk for at du hjelper med å vedlikeholde god skikk i samfundet vårt!"
       action: "Rapporter mne"
       notify_action: "Melding"
     topic_map:
@@ -3696,6 +3712,7 @@ nb_NO:
             save: "Lagre"
             name: "Navn"
             description: "Beskrivelse"
+            invalid_applies_to: "Påkrevd"
             topic: "emner"
             post: "innlegg"
       plugins:

@@ -313,6 +313,20 @@ fr:
       active_user_count: "Utilisateurs actifs"
       contact: "Nous contacter"
       contact_info: "En cas de problème critique ou de sujet urgent concernant ce site, veuillez nous contacter à : %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} sujet"
+          other: "Sujets %{formatted_number}"
+        posts:
+          one: "%{formatted_number} message"
+          other: "%{formatted_number} messages"
+        likes:
+          one: "%{formatted_number} « j'aime »"
+          other: "%{formatted_number} « j'aime »"
+        periods:
+          last_7_days: "au cours des 7 derniers jours"
+          today: "aujourd'hui"
+          all_time: "depuis toujours"
       member_count:
         one: "%{formatted_number} membre"
         other: "%{formatted_number} membres"
@@ -700,7 +714,6 @@ fr:
       never: "Jamais"
       last_custom: "Date et heure personnalisées précédentes"
       custom: "Date et heure personnalisées"
-      custom_short: "Personnalisé…"
       select_timeframe: "Sélectionner un intervalle de temps"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> a démarré <a href='%{topicUrl}'>le sujet</a>"
@@ -1547,6 +1560,13 @@ fr:
           disconnect: "Votre compte %{provider} existant « %{account_description} » sera déconnecté."
           account_specific: "Votre compte %{provider} « %{account_description} » sera utilisé pour l'authentification."
           generic: "Votre compte %{provider} sera utilisé pour l'authentification."
+      activate_account:
+        action: "Cliquez ici pour activer votre compte"
+        already_done: "Nous sommes désolés, ce lien de confirmation n'est plus valide. Votre compte est peut-être déjà activé ?"
+        please_continue: "Votre nouveau compte est confirmé ; vous allez être redirigé(e) vers la page d'accueil."
+        continue_button: "Continuer vers %{site_name}"
+        welcome_to: "Bienvenue sur %{site_name} !"
+        approval_required: "Un modérateur doit approuver manuellement votre nouveau compte avant que vous puissiez accéder au forum. Vous recevrez un e-mail lorsque que votre compte sera approuvé !"
       name:
         title: "Nom"
         instructions: "Votre nom complet (facultatif)."
@@ -2085,6 +2105,7 @@ fr:
       admin_not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter en tant qu'administrateur à partir de cette adresse IP."
       resend_activation_email: "Cliquez ici pour renvoyer l'e-mail d'activation."
       omniauth_disallow_totp: "L'authentification à deux facteurs est activée sur votre compte. Veuillez vous connecter avec votre mot de passe."
+      activate_account: "Activer le compte"
       resend_title: "Renvoyer l'e-mail d'activation"
       change_email: "Changer l'adresse e-mail"
       provide_new_email: "Fournissez une nouvelle adresse et nous renverrons votre e-mail de confirmation."
@@ -3695,7 +3716,6 @@ fr:
         none: "aucune sous-catégorie"
       colors_disabled: "Vous ne pouvez pas sélectionner de couleurs, car vous n'avez pas choisi de style de catégorie."
     flagging:
-      title: "Merci pour votre participation au maintien de la civilité !"
       action: "Signaler ce message"
       take_action: "Intervenir…"
       take_action_options:
@@ -3743,7 +3763,6 @@ fr:
           one: "%{count} restant"
           other: "%{count} restants"
     flagging_topic:
-      title: "Merci pour votre participation au maintien de la civilité !"
       action: "Signaler le sujet"
       notify_action: "Message"
     topic_map:
@@ -5112,6 +5131,7 @@ fr:
             name: "Nom"
             description: "Description"
             applies_to: "Afficher ce signalement sur"
+            invalid_applies_to: "Requis"
             topic: "sujets"
             post: "publications"
             chat_message: "messages de discussion"
@@ -6433,7 +6453,6 @@ fr:
             prompt: "Vous êtes sur le point de modifier votre politique en matière de mots de passe. Cela affectera désormais tous les utilisateurs qui modifieront leur mot de passe. Voulez-vous vraiment continuer ?"
             confirm: "Oui, mettre à jour la politique relative aux mots de passe"
       badges:
-        disable_system: Ce badge est un badge système et ne peut pas être désactivé et/ou supprimé.
         status: Statut
         title: Badges
         new_badge: Nouveau badge

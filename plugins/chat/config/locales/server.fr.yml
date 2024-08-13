@@ -17,7 +17,6 @@ fr:
     chat_allowed_messages_for_other_trust_levels: "Nombre de messages que les utilisateurs avec des niveaux de confiance de 1 à 4 sont autorisés à envoyer en 30 secondes. Réglez cette valeur sur « 0 » pour désactiver la limite."
     chat_silence_user_sensitivity: "La probabilité qu'un utilisateur signalé dans la discussion soit automatiquement mis en sourdine."
     chat_auto_silence_from_flags_duration: "Nombre de minutes pendant lesquelles les utilisateurs sont mis en sourdine lorsqu'ils sont automatiquement mis en sourdine en raison de signalements de messages de discussion."
-    chat_default_channel_id: "Le canal de discussion qui est ouvert par défaut lorsqu'un utilisateur n'a aucun message ou mention non lue dans d'autres canaux."
     chat_duplicate_message_sensitivity: "Probabilité qu'un message dupliqué du même expéditeur soit bloqué dans un court laps de temps. Nombre décimal compris entre 0 et 1,0, 1,0 étant le paramètre le plus élevé (bloque les messages plus fréquemment dans un laps de temps plus court). Réglez cette valeur sur « 0 » pour autoriser les messages dupliqués."
     chat_minimum_message_length: "Nombre minimal de caractères pour un message de discussion."
     chat_allow_uploads: "Autoriser les téléversements dans les canaux de discussion publics et les canaux de messagerie directe."
@@ -31,7 +30,6 @@ fr:
     chat_editing_grace_period: "Pendant (n) secondes après l'envoi d'une discussion, la modification n'affichera pas l'étiquette (modifiée) à côté du message de discussion."
     chat_editing_grace_period_max_diff_low_trust: "Nombre maximal de modifications de caractères autorisées pendant la période de grâce de modification de la discussion. Si d'autres modifications sont apportées, l'étiquette (modifiée) est affichée à côté du message de discussion (niveaux de confiance 0 et 1)."
     chat_editing_grace_period_max_diff_high_trust: "Nombre maximal de modifications de caractères autorisées pendant la période de grâce de modification de la discussion. Si d'autres modifications sont apportées, l'étiquette (modifiée) est affichée à côté du message de discussion (niveaux de confiance 2 et supérieurs)."
-    chat_preferred_mobile_index: "Onglet préféré lors du chargement de /chat sur mobile."
     errors:
       chat_default_channel: "Le canal de discussion par défaut doit être un canal public."
       direct_message_enabled_groups_invalid: "Vous devez spécifier au moins un groupe pour ce paramètre. Si vous ne souhaitez pas que quiconque, à l'exception des responsables, envoie des messages privés, choisissez le groupe des responsables."

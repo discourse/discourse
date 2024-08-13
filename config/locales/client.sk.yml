@@ -257,6 +257,7 @@ sk:
     broken_decorator_alert: "Príspevky sa nemusia zobrazovať správne, pretože jeden z dekoratérov obsahu príspevku na vašom webe vyvolal chybu."
     broken_page_change_alert: "Obslužný program onPageChange vyvolal chybu. Ďalšie informácie nájdete v nástrojoch pre vývojárov prehliadača."
     broken_plugin_alert: "Spôsobené rozšírením „%{name}“"
+    broken_transformer_alert: "Vyskytla sa chyba. Vaša stránka nemusí fungovať správne."
     critical_deprecation:
       notice: "<b>[Upozornenie pre administrátorov]</b> Jedna z vašich tém alebo pluginov potrebuje aktualizáciu pre kompatibilitu s nadchádzajúcimi zmenami v jadre Discourse."
       id: "(id:<em>%{id}</em>)"
@@ -377,6 +378,37 @@ sk:
       active_user_count: "Aktívni používatelia"
       contact: "Kontaktujte nás"
       contact_info: "V prípade kritickej chyby alebo naliehavej záležitosti nás prosím konaktujte na %{contact_info}."
+      site_activity: "Aktivita na webe"
+      activities:
+        topics:
+          one: "%{formatted_number} téma"
+          few: "%{formatted_number} témy"
+          many: "%{formatted_number} témy"
+          other: "%{formatted_number} témy"
+        posts:
+          one: "%{formatted_number} príspevok"
+          few: "%{formatted_number} príspevky"
+          many: "%{formatted_number} príspevkov"
+          other: "%{formatted_number} príspevkov"
+        active_users:
+          one: "%{formatted_number} aktívny používateľ"
+          few: "%{formatted_number} aktívnych používateľov"
+          many: "%{formatted_number} aktívnych používateľov"
+          other: "%{formatted_number} aktívni užívatelia"
+        sign_ups:
+          one: "%{formatted_number} registrácia"
+          few: "%{formatted_number} registrácia"
+          many: "%{formatted_number} registrácií"
+          other: "%{formatted_number} registrácie"
+        likes:
+          one: "%{formatted_number} lajk"
+          few: "%{formatted_number} lajkov"
+          many: "%{formatted_number} lajky"
+          other: "%{formatted_number} lajky"
+        periods:
+          last_7_days: "za posledných 7 dní"
+          today: "dnes"
+          all_time: "za celú dobu"
       member_count:
         one: "%{formatted_number}/ Člen"
         few: "%{formatted_number} Členovia"
@@ -393,6 +425,18 @@ sk:
         many: "%{formatted_number} Moderátorov"
         other: "%{formatted_number} Moderátori"
       report_inappropriate_content: "Ak narazíte na nevhodný obsah, neváhajte začať konverzáciu s našimi moderátormi a administrátormi. Pred oslovením sa nezabudnite prihlásiť."
+      site_age:
+        less_than_one_month: "Vytvorené pred < 1 mesiacom"
+        month:
+          one: "Vytvorené pred %{count} mesiacom"
+          few: "Vytvorené pred %{count} mesiacmi"
+          many: "Vytvorené pred %{count} mesiacmi"
+          other: "Vytvorené pred %{count} mesiacmi"
+        year:
+          one: "Vytvorené pred %{count} rokom"
+          few: "Vytvorené pred %{count} rokmi"
+          many: "Vytvorené pred %{count} rokmi"
+          other: "Vytvorené pred %{count} rokmi"
     bookmarked:
       title: "Záložka"
       edit_bookmark: "Upraviť záložku"
@@ -814,7 +858,7 @@ sk:
       never: "Nikdy"
       last_custom: "Posledný vlastný dátum"
       custom: "Vyberte dátum a čas"
-      custom_short: "Vlastné..."
+      more_options: "Viac možností…"
       select_timeframe: "Vyberte časový rámec"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> založil <a href='%{topicUrl}'>tému</a>"
@@ -1779,6 +1823,13 @@ sk:
           disconnect: "Váš existujúci %{provider} účet '%{account_description}' bude odpojený."
           account_specific: "Na autentifikáciu sa použije váš účet %{provider} '%{account_description}'."
           generic: "Na autentifikáciu sa použije váš účet %{provider} ."
+      activate_account:
+        action: "Pre aktiváciu účtu kliknite sem"
+        already_done: "Ľutujeme, tento podvrdzovací odkaz je už neplatný. Nie je Váš účet už aktivny?"
+        please_continue: "Váš nový účet je potvrdený. Budete presmerovaní na domovskú stránku."
+        continue_button: "Pokračujte na %{site_name}"
+        welcome_to: "Vitajte na %{site_name}!"
+        approval_required: "Moderátor musí manuálne povoliť Váš prístup na toto fórum. O schválení prístupu budete upovedomení emailom."
       name:
         title: "Meno"
         instructions: "Vaše celé meno (nepovinné)."
@@ -2404,6 +2455,7 @@ sk:
       admin_not_allowed_from_ip_address: "Nie je možné prihlásenie ako admin z tejto IP adresy."
       resend_activation_email: "Kliknite sem pre opätovné odoslanie aktivačného emailu."
       omniauth_disallow_totp: "Vaše konto má povolené dvojfaktorové overovanie. Prihláste sa pomocou svojho hesla."
+      activate_account: "Aktivovať účet"
       resend_title: "Znova poslať aktivačný email."
       change_email: "Zmeniť emailovú adresu"
       provide_new_email: "Zadajte novú adresu a my vám opätovne zašleme potvrdzujúci e-mail."
@@ -4186,7 +4238,7 @@ sk:
         none: "žiadne podkategórie"
       colors_disabled: "Nemôžete vybrať farby, pretože máte štýl kategórie žiadny."
     flagging:
-      title: "Ďakujeme, že pomáhate udržiavať slušnosť v našej komunite!"
+      title: "Ďakujeme, že udržiavate našu komunitu civilnou!"
       action: "Označ príspevok"
       take_action: "Akcia…"
       take_action_options:
@@ -4246,7 +4298,7 @@ sk:
           many: "%{count} zostáva"
           other: "%{count} zostáva"
     flagging_topic:
-      title: "Ďakujeme, že pomáhate udržiavať slušnosť v našej komunite!"
+      title: "Ďakujeme, že udržiavate našu komunitu civilnou!"
       action: "Označ príspevok"
       notify_action: "Správa"
     topic_map:
@@ -4765,6 +4817,7 @@ sk:
         everyone_can_use: "Značky môže používať každý"
         usable_only_by_groups: "Značky sú viditeľné pre všetkých, ale používať ich môžu len tieto skupiny"
         visible_only_to_groups: "Značky sú viditeľné len pre tieto skupiny"
+        cannot_save: "Skupinu značiek nie je možné uložiť. Uistite sa, že je prítomný aspoň jedna značka, názov skupiny značiek nie je prázdny a má menej ako 100 znakov a že je vybratá skupina pre povolenie značiek."
         tags_placeholder: "Vyhľadajte alebo vytvorte značky"
         parent_tag_placeholder: "Nepovinné"
         select_groups_placeholder: "Vyberte skupiny…"
@@ -5714,6 +5767,7 @@ sk:
             name: "Meno"
             description: "Popis"
             applies_to: "Zobrazte tento príznak zapnutý"
+            invalid_applies_to: "Povinné"
             topic: "témy"
             post: "príspevky"
             chat_message: "chat správy"
@@ -7071,7 +7125,6 @@ sk:
             prompt: "Chystáte sa zmeniť zásady používania hesiel. Odteraz sa to bude týkať všetkých používateľov, ktorí si menia svoje heslá. Ste si istí, že chcete pokračovať?"
             confirm: "Áno, aktualizujte zásady používania hesiel"
       badges:
-        disable_system: Tento odznak je systémový odznak a nie je možné ho vypnúť a/alebo odstrániť.
         status: Stav
         title: Odznaky
         new_badge: Nový odznak

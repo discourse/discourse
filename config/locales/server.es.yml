@@ -962,11 +962,7 @@ es:
     revoke_failed: "No pudo revocar tu cuenta con %{provider_name}."
     connected: "(conectados)"
   activation:
-    action: "Haz clic aquí para activar tu cuenta"
     already_done: "Lo sentimos, este link de confirmación de cuenta ya no es válido. ¿Quizás tu cuenta ya está activa?"
-    please_continue: "Tu nueva cuenta está confirmada; se te redirigirá a la página de inicio."
-    continue_button: "Continuar a %{site_name}"
-    welcome_to: "¡Te damos la bienvenida a %{site_name}!"
     approval_required: "Un moderador debe aprobar manualmente tu nueva cuenta antes de que puedas acceder a este foro. ¡Recibirás un correo electrónico cuando tu cuenta sea aprobada!"
     missing_session: "No hemos podido detectar si tu cuenta fue creada. Asegúrate de tener activadas las cookies en tu navegador."
     activated: "Disculpa, esta cuenta ya fue activada."
@@ -1771,7 +1767,7 @@ es:
     max_reply_history: "Número máximo de respuestas que se muestran al expandir en-respuesta-a"
     topics_per_period_in_top_summary: "Número de temas destacados que se muestran en el resumen de temas destacados."
     topics_per_period_in_top_page: "Número de temas destacados que se muestran en la vista expandida al hacer clic en «ver más»."
-    redirect_users_to_top_page: "Redirigir automáticamente a la página de destacados a los usuarios nuevos y a los que se ausenten durante largo tiempo."
+    redirect_users_to_top_page: "Redirige automáticamente a los usuarios nuevos y ausentes durante mucho tiempo a la página principal. Solo se aplica cuando la opción «top» aparece en la configuración del «menú principal» del sitio."
     top_page_default_timeframe: "Periodo de tiempo predeterminado de la página principal para usuarios anónimos (se ajusta automáticamente para usuarios conectados en función de su última visita)."
     moderators_view_emails: "Permitir a los moderadores ver las direcciones de correo electrónico de los usuarios."
     prioritize_username_in_ux: "Mostrar el nombre de usuario primero en la página de usuario, tarjeta de usuario y publicaciones (cuando está desactivado, el nombre se muestra primero)"
@@ -1973,6 +1969,7 @@ es:
     min_trust_to_edit_post: "El nivel mínimo de confianza requerido para editar publicaciones."
     edit_post_allowed_groups: "Grupos que pueden editar mensajes. Los administradores y moderadores siempre pueden editar los mensajes."
     min_trust_to_allow_self_wiki: "El nivel mínimo de confianza requerido para que un usuario convierta sus propias publicaciones a wiki."
+    self_wiki_allowed_groups: "Permita que los usuarios de estos grupos creen sus propias publicaciones en la wiki. Los administradores y moderadores siempre pueden crear sus propias publicaciones en la wiki."
     min_trust_to_send_messages: "DEPRECIADO, utiliza en su lugar el ajuste «grupos habilitados para mensajes personales». El nivel de confianza mínimo requerido para crear nuevos mensajes personales."
     min_trust_to_send_email_messages: "Nivel de confianza mínimo para mandar mensajes personales a través de correo electrónico."
     send_email_messages_allowed_groups: "Grupos a los que se permite enviar mensajes personales por correo electrónico. Los administradores y moderadores siempre pueden enviar mensajes personales por correo electrónico."
@@ -2246,7 +2243,7 @@ es:
     embed_username_required: "Se requiere el nombre de usuario para la creación de temas."
     notify_about_reviewable_item_after: "Si hay elementos revisables que no se han tratado después de estas horas, envía un mensaje personal a los moderadores. Ponlo a 0 para desactivarlo."
     delete_drafts_older_than_n_days: "Elimina los borradores que no se hayan modificado en más de (n) días."
-    delete_merged_stub_topics_after_days: "Número de días que hay que esperar antes de eliminar automáticamente los temas pendientes totalmente fusionados. Poner a 0 para no eliminar nunca los temas pendientes."
+    delete_merged_stub_topics_after_days: "Número de días que se deben esperar antes de eliminar automáticamente los temas de código fuente fusionados por completo. Establezca en -1 para no eliminar nunca. Establezca en 0 para eliminar inmediatamente."
     bootstrap_mode_min_users: "Número mínimo de usuarios necesarios para desactivar el modo de arranque y eliminar el botón de inicio (ponlo a 0 para desactivarlo, puede tardar hasta 24 horas)"
     prevent_anons_from_downloading_files: "Impedir que usuarios anónimos descarguen archivos adjuntos."
     secure_uploads: 'Limita el acceso a TODAS las subidas (imágenes, vídeo, audio, texto, pdfs, zips y otros). Si se activa la opción de «inicio de sesión obligatorio», solo los usuarios que hayan iniciado sesión podrán acceder a las subidas. De lo contrario, el acceso se limitará solo a las subidas de medios en los mensajes privados y en las categorías privadas. ADVERTENCIA: Esta configuración es compleja y requiere un profundo conocimiento administrativo. Consulta <a target="_blank" href="https://meta.discourse.org/t/-/140017">el tema de subidas seguras en Meta</a> para más detalles.'
@@ -2400,7 +2397,7 @@ es:
     experimental_topics_filter: "EXPERIMENTAL: Activa la ruta del filtro de temas experimentales en /filter"
     enable_experimental_lightbox: "EXPERIMENTAL: Sustituye el lightbox de imágenes por defecto por el diseño renovado."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Mostrar un menú de acceso rápido a marcadores en las entradas y un nuevo modal rediseñado"
-    glimmer_header_mode: "Controla si se utiliza la nueva implementación del encabezado «glimmer». Por defecto, es «auto», que se activará automáticamente cuando todos tus temas y plugins estén listos. https://meta.discourse.org/t/296544"
+    glimmer_header_mode: "Controla si se utiliza la nueva implementación del encabezado 'glimmer'. 'auto' se habilitará automáticamente una vez que todos tus temas y complementos estén listos. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "EXPERIMENTAL: Activa la nueva implementación de la lista de temas «glimmer». Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
     experimental_form_templates: "EXPERIMENTAL: Activa la función de plantillas de formulario. <b>Una vez activada,</b> gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
     admin_sidebar_enabled_groups: "Activa la navegación por la barra lateral de la interfaz del administrador para los grupos especificados, que sustituye a los botones de navegación del administrador de nivel superior."
@@ -2433,6 +2430,7 @@ es:
       invalid_reply_by_email_address: "El valor debe contener «%{reply_key}» y debe ser diferente al correo electrónico de notificación."
       invalid_alternative_reply_by_email_addresses: "Todas los valores deben contener «%{reply_key}» y deben ser diferentes al correo electrónico de notificación"
       invalid_domain_hostname: "No debe incluir los caracteres * ni ?"
+      invalid_allowed_iframes_url: "Las URL de iframe deben empezar por http://o https://y tener al menos un '/' adicional"
       invalid_csp_script_src: "El valor debe ser «unsafe-eval» o «wasm-unsafe-eval», o de la forma «<hash algorithm>-<base64 value>», donde los algoritmos hash admitidos son sha256, sha384 o sha512. Asegúrate de que la entrada va entre comillas simples."
       pop3_polling_host_is_empty: "Debes establecer un host de «pop3 polling» antes de activar el polling POP3."
       pop3_polling_username_is_empty: "Debes establecer un nombre de usuario de «pop3 polling» antes de activar el polling POP3."
@@ -2619,6 +2617,7 @@ es:
     autoclosed_disabled: "Este tema ahora está abierto. Se permiten nuevas respuestas."
     autoclosed_disabled_lastpost: "Este tema ahora está abierto. Se permiten nuevas respuestas."
     auto_deleted_by_timer: "Eliminado automáticamente por el temporizador."
+    auto_deleted_by_merge: "Eliminado automáticamente por fusión."
   login:
     invalid_second_factor_method: "El método de verificación de dos factores seleccionado no es válido."
     not_enabled_second_factor_method: "El método de dos factores seleccionado no está activado en tu cuenta."
@@ -4870,18 +4869,31 @@ es:
           default_locale:
             label: "Idioma"
       privacy:
+        title: "Acceso de miembros"
         fields:
           login_required:
             label: "Visibilidad"
+            description: "¿Su comunidad es pública o privada?"
             choices:
               public:
                 label: "Pública"
               private:
                 label: "Privada"
           invite_only:
+            label: "Registro"
+            description: "¿Cómo pueden los miembros unirse a esta comunidad?"
             choices:
+              sign_up:
+                label: "Registrarse"
               invite_only:
                 label: "Solo por invitación"
+          must_approve_users:
+            description: "¿Quieres aprobar cuentas de miembros?"
+            choices:
+              "no":
+                label: "No, los nuevos miembros pueden unirse inmediatamente"
+              "yes":
+                label: "Sí, los nuevos miembros deben ser aprobados por los moderadores."
           chat_enabled:
             placeholder: "Activar chat"
             extra_description: "Interactúa con tus miembros en tiempo real"

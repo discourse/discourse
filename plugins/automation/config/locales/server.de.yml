@@ -56,6 +56,9 @@ de:
       pm_created:
         title: Persönliche Nachricht erstellt
         description: Wenn eine gültige PN erstellt wird, wird die Automatisierung ausgelöst
+      topic_tags_changed:
+        title: Schlagwörter eines Themas geändert
+        description: Wenn die Schlagwörter eines Themas geändert werden, wird die Automatisierung ausgelöst
       topic:
         title: Thema
         description: Das zugehörige Skript wird nur für das angegebene Thema verwendet. Dies ist beispielsweise für Skripts nützlich, die eine Validierung durchführen

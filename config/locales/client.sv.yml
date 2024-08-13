@@ -310,6 +310,20 @@ sv:
       active_user_count: "Aktiva användare"
       contact: "Kontakta oss"
       contact_info: "Vid brådskande ärenden rörande webbplatsen, kontakta oss på %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} ämne"
+          other: "%{formatted_number} ämnen"
+        posts:
+          one: "%{formatted_number} inlägg"
+          other: "%{formatted_number} inlägg"
+        likes:
+          one: "%{formatted_number} gillning"
+          other: "%{formatted_number} gillningar"
+        periods:
+          last_7_days: "de senaste 7 dagarna"
+          today: "idag"
+          all_time: "alltid"
     bookmarked:
       title: "Bokmärke"
       edit_bookmark: "Redigera bokmärke"
@@ -670,7 +684,6 @@ sv:
       never: "Aldrig"
       last_custom: "Senaste anpassade datumtid"
       custom: "Anpassa datum och tid"
-      custom_short: "Anpassad..."
       select_timeframe: "Välj en tidsram"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> skrev <a href='%{topicUrl}'>ämnet</a>"
@@ -1496,6 +1509,13 @@ sv:
           disconnect: "Ditt befintliga %{provider} -konto '%{account_description}' kommer att kopplas bort."
           account_specific: "Ditt %{provider}-konto '%{account_description}' kommer att användas för autentisering."
           generic: "Ditt %{provider}-konto kommer att användas för autentisering."
+      activate_account:
+        action: "Klicka här för att aktivera ditt konto"
+        already_done: "Tyvärr är denna kontoaktiveringslänk inte längre giltig. Kanske har ditt konto redan aktiverats?"
+        please_continue: "Ditt nya konto har bekräftats; du kommer att skickas till startsidan."
+        continue_button: "Fortsätt till %{site_name}"
+        welcome_to: "Välkommen till %{site_name}!"
+        approval_required: "En moderator måste manuellt godkänna ditt nya konto innan du kan komma åt detta forum. Du kommer få e-post när ditt konto har godkänts!"
       name:
         title: "Namn"
         instructions: "Ditt fullständiga namn (valfritt)."
@@ -2010,6 +2030,7 @@ sv:
       admin_not_allowed_from_ip_address: "Du kan inte logga in som administratör från den IP-adressen."
       resend_activation_email: "Klicka här för att skicka aktiveringsbrevet igen."
       omniauth_disallow_totp: "Ditt konto har tvåfaktorsautentisering aktiverad. Logga in med ditt lösenord."
+      activate_account: "Aktivera konto"
       resend_title: "Skicka aktiveringsmail igen"
       change_email: "Ändra e-postadress"
       provide_new_email: "Ange en ny adress så skickar vi ett nytt bekräftelsemail."
@@ -3576,7 +3597,6 @@ sv:
         none: "inga underkategorier"
       colors_disabled: "Du kan inte välja färger eftersom du inte har någon kategoristil."
     flagging:
-      title: "Tack för att du hjälper till att hålla forumet civiliserat!"
       action: "Flagga inlägg"
       take_action: "Vidta åtgärd…"
       take_action_options:
@@ -3623,7 +3643,6 @@ sv:
           one: "%{count} kvar"
           other: "%{count} kvar"
     flagging_topic:
-      title: "Tack för att du hjälper oss hålla forumet civiliserat!"
       action: "Flagga ämne"
       notify_action: "Meddelande"
     topic_map:
@@ -4856,6 +4875,7 @@ sv:
             save: "Spara"
             name: "Namn"
             description: "Beskrivning"
+            invalid_applies_to: "Krävs"
             topic: "ämnen"
             post: "inlägg"
             chat_message: "chattmeddelanden"

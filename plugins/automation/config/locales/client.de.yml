@@ -209,6 +209,14 @@ de:
             valid_trust_levels:
               label: Gültige Vertrauensstufen
               description: Wird nur ausgelöst, wenn ein Beitrag von einem Benutzer mit diesen Vertrauensstufen erstellt wird. Standardmäßig eine beliebige Vertrauensstufe
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: Überwachte Kategorien
+              description: Wird nur bei Themen aus einer dieser Kategorien ausgelöst
+            watching_tags:
+              label: Überwachte Schlagwörter
+              description: Wird nur bei Themen mit einem dieser Schlagwörter ausgelöst
         after_post_cook:
           fields:
             valid_trust_levels:

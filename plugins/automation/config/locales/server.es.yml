@@ -56,6 +56,9 @@ es:
       pm_created:
         title: Mensaje personal creado
         description: Cuando se cree un MP válido se activará la automatización
+      topic_tags_changed:
+        title: Se han modificado las etiquetas de tema
+        description: Cuando se cambien las etiquetas de un tema, se activará la automatización.
       topic:
         title: Tema
         description: El script asociado solo se utilizará en el tema especificado. Por ejemplo, esto es útil para los scripts que hacen validaciones

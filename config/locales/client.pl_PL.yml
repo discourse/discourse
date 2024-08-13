@@ -377,6 +377,26 @@ pl_PL:
       active_user_count: "Aktywni użytkownicy"
       contact: "Skontaktuj się z nami"
       contact_info: "W sprawach wymagających szybkiej reakcji lub związanych z poprawnym funkcjonowaniem serwisu, prosimy o kontakt: %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} temat"
+          few: "%{formatted_number} tematy"
+          many: "%{formatted_number} tematy"
+          other: "%{formatted_number} tematy"
+        posts:
+          one: "%{formatted_number} post"
+          few: "%{formatted_number} posty"
+          many: "%{formatted_number} postów"
+          other: "%{formatted_number} wpisów"
+        likes:
+          one: "%{formatted_number} polubienie"
+          few: "%{formatted_number} polubień"
+          many: "%{formatted_number} polubienia"
+          other: "%{formatted_number} polubienia"
+        periods:
+          last_7_days: "w ostatnich 7 dniach"
+          today: "dzisiaj"
+          all_time: "cały czas"
       member_count:
         one: "%{formatted_number} Członek"
         few: "%{formatted_number} Członków"
@@ -804,7 +824,6 @@ pl_PL:
       never: "Nigdy"
       last_custom: "Ostatnia niestandardowa data i godzina"
       custom: "Niestandardowa data i godzina"
-      custom_short: "Niestandardowy..."
       select_timeframe: "Wybierz przedział czasowy"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> tworzy <a href='%{topicUrl}'>temat</a>"
@@ -1683,6 +1702,13 @@ pl_PL:
           disconnect: "Twoje istniejące konto %{provider} '%{account_description}' zostanie odłączone."
           account_specific: "Twoje konto %{provider} „%{account_description}” zostanie użyte do uwierzytelnienia."
           generic: "Twoje konto %{provider} zostanie wykorzystane do uwierzytelnienia."
+      activate_account:
+        action: "Kliknij, by aktywować swoje konto."
+        already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twoje konto jest już aktywne?"
+        please_continue: "Twoje nowe konto zostało aktywowane, zostaniesz przekierowany na stronę główną."
+        continue_button: "Przejdź do %{site_name}"
+        welcome_to: "Witaj na %{site_name}!"
+        approval_required: "Moderator musi zaakceptować Twoje nowe konto zanim uzyskasz dostęp do forum. O aktywacji zostaniesz poinformowanym mailem."
       name:
         title: "Pełna nazwa"
         instructions: "Twoja pełna nazwa (opcjonalnie)."
@@ -2241,6 +2267,7 @@ pl_PL:
       admin_not_allowed_from_ip_address: "Nie możesz się zalogować jako admin z tego adresu IP."
       resend_activation_email: "Kliknij tutaj, aby ponownie wysłać email z aktywacją konta."
       omniauth_disallow_totp: "Twoje konto ma włączone uwierzytelnianie dwuskładnikowe. Zaloguj się za pomocą swojego hasła."
+      activate_account: "Aktywuj Konto"
       resend_title: "Wyślij ponownie e-mail aktywacyjny"
       change_email: "Zmień adres e-mail"
       provide_new_email: "Wprowadź nowy adres e-mail. Wyślemy na niego e-mail potwierdzający."
@@ -4030,7 +4057,6 @@ pl_PL:
         none: "brak podkategorii"
       colors_disabled: "Nie możesz wybrać kolorów, ponieważ nie masz stylu kategorii."
     flagging:
-      title: "Dziękujemy za pomoc w utrzymaniu porządku w naszej społeczności!"
       action: "Oflaguj wpis"
       take_action: "Podejmij działanie…"
       take_action_options:
@@ -4084,7 +4110,6 @@ pl_PL:
           many: "%{count} pozostało"
           other: "%{count} pozostało"
     flagging_topic:
-      title: "Dziękujemy za pomoc w utrzymaniu porządku w naszej społeczności!"
       action: "Zgłoś temat"
       notify_action: "Wiadomość"
     topic_map:
@@ -5485,6 +5510,7 @@ pl_PL:
             save: "Zapisz"
             name: "Nazwa"
             description: "Opis"
+            invalid_applies_to: "Wymagane"
             topic: "tematy"
             post: "wpisy"
             chat_message: "wiadomości czatu"

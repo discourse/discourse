@@ -290,6 +290,16 @@ bg:
       topic_count: "Теми"
       post_count: "Публикации"
       contact_info: "В случай на критичен или спешен въпрос засягащ този сайт, моля свържете се с нас на адрес %{contact_email}."
+      activities:
+        topics:
+          one: "%{formatted_number} тема"
+          other: "%{formatted_number} теми"
+        posts:
+          one: "%{formatted_number} публикация"
+          other: "%{formatted_number} публикации"
+        periods:
+          last_7_days: "В последните 7 дни "
+          today: "днес"
     bookmarked:
       title: "Отметка"
       edit_bookmark: "Редактиране на отметка"
@@ -636,7 +646,6 @@ bg:
       never: "Никога"
       last_custom: "Последна персонализирана дата и час"
       custom: "Друга дата и час"
-      custom_short: "Ръчно задаване..."
       select_timeframe: "Избери времева рамка"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> публикува <a href='%{topicUrl}'>тази тема</a>"
@@ -1427,6 +1436,13 @@ bg:
           disconnect: "Вашият съществуващ %{provider} акаунт „%{account_description}“ ще бъде прекъснат."
           account_specific: "Вашият %{provider} акаунт '%{account_description}' ще се използва за удостоверяване."
           generic: "Вашият %{provider} акаунт ще се използва за удостоверяване."
+      activate_account:
+        action: "Кликнете тук, за да активирате вашия профил"
+        already_done: "Съжаляваме, този линк за потвърждаване на акаунта вече е невалиден. Може би вашият акаунт е вече активен?"
+        please_continue: "Вашият нов акаунт е вече потвърден; ще бъдете пренасочени към началната страница."
+        continue_button: "Продължете към %{site_name}"
+        welcome_to: "Добре дошли в %{site_name}!"
+        approval_required: "Акаунтът Ви трябва да бъде одобрен от модератор преди да получите достъп до този форум. Ще получите имейл когато акаунтът Ви е одобрен!"
       name:
         title: "Име"
         instructions: "Вашето пълно име (опционално)."
@@ -1906,6 +1922,7 @@ bg:
       admin_not_allowed_from_ip_address: "Не може да влезете като админ от този IP адрес."
       resend_activation_email: "Натиснете тук, за да изпратите повторен имейл за активация."
       omniauth_disallow_totp: "Вашият акаунт има активирана двуфакторна автентификация. Моля, влезте с вашата парола."
+      activate_account: "Активирай профила"
       resend_title: "Изпрати отново активационен имейл "
       change_email: "Смени имейл адреса"
       provide_new_email: "Посочете нов адрес и ние ще изпратим отново имейла ви за потвърждение."
@@ -2996,7 +3013,6 @@ bg:
         general: "Основни"
         email: "Имейл"
     flagging:
-      title: "Благодарим ви, че помагате да поддържаме дискусията цивилизована!"
       action: "Сигнализирай публикацията "
       take_action_options:
         suspend:
@@ -3019,7 +3035,6 @@ bg:
       custom_placeholder_notify_moderators: "Споделете ни какви точно са Вашите притеснения и ако е възможно ни дайте съответните връзки или примери, които имат отношение по темата."
       notify_moderators_textarea_label: "Съобщение за модераторите"
     flagging_topic:
-      title: "Благодарим ви, че помагате да поддържаме дискусията цивилизована."
       action: "Сигнализирай темата"
       notify_action: "Съобщение"
     topic_map:
@@ -3589,6 +3604,7 @@ bg:
             save: "Запази "
             name: "Име"
             description: "Описание"
+            invalid_applies_to: "Задъжителни"
             topic: "теми"
             post: "публикации"
       plugins:
