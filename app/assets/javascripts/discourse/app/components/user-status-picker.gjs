@@ -4,7 +4,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
-import { not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import EmojiPicker from "discourse/components/emoji-picker";
 import concatClass from "discourse/helpers/concat-class";
@@ -71,7 +70,7 @@ export default class UserStatusPicker extends Component {
           {{on "focus" this.focus}}
           {{on "blur" this.blur}}
           @action={{this.toggleEmojiPicker}}
-          @icon={{if (not @status.emoji) "discourse-emojis"}}
+          @icon={{unless @status.emoji "discourse-emojis"}}
           @translatedLabel={{if @status.emoji (htmlSafe this.emojiHtml)}}
           class="btn-emoji btn-transparent"
         />
