@@ -80,18 +80,16 @@ class PostRevisor
   end
 
   track_topic_field(:category_id) do |tc, category_id, fields|
-    if category_id == 0 && tc.topic.private_message?
-      tc.record_change("category_id", tc.topic.category_id, nil)
+    current_category = tc.topic.category
+    new_category = (category_id.nil? || category_id.zero?) ? nil : Category.find(category_id)
+
+    if new_category.nil? && tc.topic.private_message?
+      tc.record_change("category_id", current_category.id, nil)
       tc.topic.category_id = nil
-    elsif category_id == 0 || tc.guardian.can_move_topic_to_category?(category_id)
+    elsif new_category.nil? || tc.guardian.can_move_topic_to_category?(category_id)
       tags = fields[:tags] || tc.topic.tags.map(&:name)
-      if category_id != 0 &&
-           !DiscourseTagging.validate_min_required_tags_for_category(
-             tc.guardian,
-             tc.topic,
-             Category.find(category_id),
-             tags,
-           )
+      if new_category &&
+           !DiscourseTagging.validate_category_tags(tc.guardian, tc.topic, new_category, tags)
         tc.check_result(false)
         next
       end
