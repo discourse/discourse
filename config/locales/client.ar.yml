@@ -457,7 +457,7 @@ ar:
         other: "‎%{formatted_number}‎ مسؤول"
       moderator_count:
         zero: "‎ %{formatted_number}‎مشرف"
-        one: "مشرف واحد (%{formatted_number}"
+        one: "مشرف واحد (%{formatted_number})"
         two: "مشرفان (%{formatted_number})"
         few: "‎ %{formatted_number}‎مشرفين"
         many: "‎ %{formatted_number}‎مشرفًا"
@@ -3321,7 +3321,7 @@ ar:
         selected_sole_category:
           zero: "لقد حدَّدت <b>%{count}</b> موضوع من الفئة:"
           one: "لقد حدَّدت موضوعًا واحدًا (<b>%{count}</b>) من الفئة:"
-          two: "لقد حدَّدت موضوعَين (<b>%{count}</b> من الفئة:"
+          two: "لقد حدَّدت موضوعَين (<b>%{count}</b>) من الفئة:"
           few: "لقد حدَّدت <b>%{count}</b>موضوعات من الفئة:"
           many: "لقد حدَّدت <b>%{count}</b>موضوعًا من الفئة:"
           other: "لقد حدَّدت <b>%{count}</b> موضوع من الفئة:"
@@ -7430,7 +7430,6 @@ ar:
             prompt: "أنت على وشك تغيير سياسة كلمة المرور الخاصة بك. سيؤثر هذا على جميع المستخدمين الذين يغيرون كلمات المرور الخاصة بهم من الآن فصاعدًا. هل تريد بالتأكيد المتابعة؟"
             confirm: "نعم، تحديث سياسة كلمة المرور"
       badges:
-        disable_system: هذه الشارة هي شارة نظام ولا يمكن إيقافها و/أو حذفها.
         status: الحالة
         title: الشارات
         new_badge: شارة جديدة

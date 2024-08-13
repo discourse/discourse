@@ -6,9 +6,9 @@
 
 zh_CN:
   dates:
-    short_date_no_year: "M 月 D 日"
-    short_date: "YYYY 年 M 月 D 日"
-    long_date: "MMMM 年 YY 月 DD 日 h:mma"
+    short_date_no_year: "MMM D 日"
+    short_date: "YYYY 年 MMM D 日"
+    long_date: "YYYY 年 MMMM D 日 h:mma"
   datetime_formats: &datetime_formats
     formats:
       short: "%Y-%m-%d"

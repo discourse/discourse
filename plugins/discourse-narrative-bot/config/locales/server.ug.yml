@@ -15,7 +15,15 @@ ug:
       reset_trigger: "دەرسلىك"
       hello:
         title: "سالام!"
+      likes:
+        reply: |-
+          يازمامنى ياقتۇرغانلىقىڭىزغا رەھمەت!
+        not_found: |-
+          [يازما]منى :heart: ياقتۇرۇشنىئۇنتۇپ قالدىڭىزمۇ؟(%{url}) :crying_cat_face:
+      certificate:
+        alt: "مۇۋەپپەقىيەت گۇۋاھنامىسى"
     advanced_user_narrative:
+      reset_trigger: "ئالىي دەرسلىك"
       category_hashtag:
         instructions: |-
           يازمىڭىزدا سەھىپە ۋە بەلگىلەرنى نەقىل ئالالايدىغانلىقىڭىزنى بىلەمسىز؟ مەسىلەن، %{category} سەھىپەنى كۆردىڭىزمۇ؟

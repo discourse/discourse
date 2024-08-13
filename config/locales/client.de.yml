@@ -1389,7 +1389,7 @@ de:
               { UNREAD, plural,
                    =0 {}
                   one {<a href="{basePath}/u/{username}/messages/unread"># ungelesene</a> Nachricht verbleibend. Oder durchstöbere andere <a href="{basePath}/u/{username}/messages">persönliche Nachrichten</a>}
-                other {<a href="{basePath}/u/{username}/messages/unread"># ungelesene</a> Nachricht verbleibend. Oder durchstöbere andere <a href="{basePath}/u/{username}/messages">persönliche Nachrichten</a>}
+                other {<a href="{basePath}/u/{username}/messages/unread"># ungelesene</a> Nachrichten verbleibend. Oder durchstöbere andere <a href="{basePath}/u/{username}/messages">persönliche Nachrichten</a>}
               }
               { NEW, plural,
                    =0 {}
@@ -6530,7 +6530,6 @@ de:
             prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Benutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
             confirm: "Ja, Passwortrichtlinie aktualisieren"
       badges:
-        disable_system: Dieses Abzeichen ist ein Systemabzeichen und kann nicht deaktiviert und/oder gelöscht werden.
         status: Status
         title: Abzeichen
         new_badge: Neues Abzeichen

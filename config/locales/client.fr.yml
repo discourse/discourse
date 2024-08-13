@@ -6433,7 +6433,6 @@ fr:
             prompt: "Vous êtes sur le point de modifier votre politique en matière de mots de passe. Cela affectera désormais tous les utilisateurs qui modifieront leur mot de passe. Voulez-vous vraiment continuer ?"
             confirm: "Oui, mettre à jour la politique relative aux mots de passe"
       badges:
-        disable_system: Ce badge est un badge système et ne peut pas être désactivé et/ou supprimé.
         status: Statut
         title: Badges
         new_badge: Nouveau badge
