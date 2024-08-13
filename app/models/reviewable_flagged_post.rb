@@ -137,16 +137,12 @@ class ReviewableFlaggedPost < Reviewable
     perform_ignore_and_do_nothing(performed_by, args)
   end
 
-  def post_action_type_view
-    @post_action_type_view ||= PostActionTypeView.new
-  end
-
   def perform_ignore_and_do_nothing(performed_by, args)
     actions =
       PostAction
         .active
         .where(post_id: target_id)
-        .where(post_action_type_id: post_action_type_view.notify_flag_type_ids)
+        .where(post_action_type_id: PostActionType.notify_flag_type_ids)
 
     actions.each do |action|
       action.deferred_at = Time.zone.now
@@ -203,9 +199,9 @@ class ReviewableFlaggedPost < Reviewable
     # -1 is the automatic system clear
     action_type_ids =
       if performed_by.id == Discourse::SYSTEM_USER_ID
-        post_action_type_view.auto_action_flag_types.values
+        PostActionType.auto_action_flag_types.values
       else
-        post_action_type_view.notify_flag_type_ids
+        PostActionType.notify_flag_type_ids
       end
 
     actions =
@@ -222,7 +218,7 @@ class ReviewableFlaggedPost < Reviewable
     # reset all cached counters
     cached = {}
     action_type_ids.each do |atid|
-      column = "#{post_action_type_view.types[atid]}_count"
+      column = "#{PostActionType.types[atid]}_count"
       cached[column] = 0 if ActiveRecord::Base.connection.column_exists?(:posts, column)
     end
 
@@ -278,7 +274,7 @@ class ReviewableFlaggedPost < Reviewable
       PostAction
         .active
         .where(post_id: target_id)
-        .where(post_action_type_id: post_action_type_view.notify_flag_types.values)
+        .where(post_action_type_id: PostActionType.notify_flag_types.values)
 
     trigger_spam = false
     actions.each do |action|
@@ -289,7 +285,7 @@ class ReviewableFlaggedPost < Reviewable
         action.save
         DB.after_commit do
           action.add_moderator_post_if_needed(performed_by, :agreed, args[:post_was_deleted])
-          trigger_spam = true if action.post_action_type_id == post_action_type_view.types[:spam]
+          trigger_spam = true if action.post_action_type_id == PostActionType.types[:spam]
         end
       end
     end

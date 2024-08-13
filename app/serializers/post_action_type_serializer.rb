@@ -16,16 +16,12 @@ class PostActionTypeSerializer < ApplicationSerializer
 
   include ConfigurableUrls
 
-  def post_action_type_view
-    @post_action_type_view ||= PostActionTypeView.new
-  end
-
   def require_message
-    !!post_action_type_view.additional_message_types[object.id]
+    !!PostActionType.additional_message_types[object.id]
   end
 
   def is_flag
-    !!post_action_type_view.flag_types[object.id]
+    !!PostActionType.flag_types[object.id]
   end
 
   def name
@@ -46,16 +42,15 @@ class PostActionTypeSerializer < ApplicationSerializer
   end
 
   def name_key
-    post_action_type_view.types[object.id].to_s
+    PostActionType.types[object.id].to_s
   end
 
   def enabled
-    # flags added by API are always enabled
-    true
+    !!PostActionType.enabled_flag_types[object.id]
   end
 
   def applies_to
-    Flag.valid_applies_to_types
+    Array.wrap(PostActionType.applies_to[object.id])
   end
 
   def is_used

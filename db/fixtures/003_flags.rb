@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Flag.seed do |s|
   s.id = 6
   s.name = "notify_user"
@@ -61,15 +62,5 @@ Flag.unscoped.seed do |s|
   s.require_message = false
   s.score_type = true
   s.applies_to = %w[]
-  s.skip_reset_flag_callback = true
-end
-Flag.unscoped.seed do |s|
-  s.id = 2
-  s.name = "like"
-  s.notify_type = false
-  s.auto_action_type = false
-  s.require_message = false
-  s.score_type = false
-  s.applies_to = %w[Post]
   s.skip_reset_flag_callback = true
 end
