@@ -26,7 +26,12 @@ export default class PollOptionsComponent extends Component {
     this.args.sendOptionSelect(option, rank);
   }
   <template>
-    <ul class={{concatClass (if @isRankedChoice "ranked-choice-poll-options")}}>
+    <ul
+      class={{concatClass
+        (if @isRankedChoice "ranked-choice-poll-options")
+        "options"
+      }}
+    >
       {{#each @options key="rank" as |option|}}
         {{#if @isRankedChoice}}
           <PollOptionRankedChoice

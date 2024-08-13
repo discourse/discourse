@@ -37,6 +37,7 @@ const OPEN_STATUS = "open";
 export default class PollComponent extends Component {
   @service currentUser;
   @service siteSettings;
+  @service router;
   @service appEvents;
   @service dialog;
   @service modal;
@@ -48,9 +49,10 @@ export default class PollComponent extends Component {
 
   @tracked
   showResults =
-    this.hasSavedVote ||
-    (this.topicArchived && !this.staffOnly) ||
-    (this.closed && !this.staffOnly);
+    !(this.poll.results === ON_CLOSE && !this.closed) &&
+    (this.hasSavedVote ||
+      (this.topicArchived && !this.staffOnly) ||
+      (this.closed && !this.staffOnly));
 
   @tracked showTally = false;
 
@@ -594,6 +596,15 @@ export default class PollComponent extends Component {
               this.poll.results === "always"
             ) {
               this.showResults = this.status === CLOSED_STATUS;
+            }
+
+            // Votes are only included in serialized results for results=ON_CLOSE when
+            // the poll is closed, so we must refresh the page to pick these up.
+            if (
+              this.poll.results === ON_CLOSE &&
+              this.status === CLOSED_STATUS
+            ) {
+              this.router.refresh();
             }
           })
           .catch((error) => {
