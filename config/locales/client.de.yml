@@ -201,6 +201,7 @@ de:
     broken_decorator_alert: "Beiträge werden möglicherweise nicht richtig angezeigt, weil einer der Beitragsausstatter auf deiner Website einen Fehler ausgelöst hat."
     broken_page_change_alert: "Ein onPageChange-Handler hat einen Fehler ausgelöst. Überprüfe die Entwicklerwerkzeuge des Browsers für weitere Informationen."
     broken_plugin_alert: "Verursacht durch das Plug-in „%{name}“"
+    broken_transformer_alert: "Es ist ein Fehler aufgetreten. Deine Website funktioniert möglicherweise nicht richtig."
     critical_deprecation:
       notice: "<b>[Hinweis für Administratoren]</b> Eines deiner Themes oder Plug-ins muss aktualisiert werden, um die Kompatibilität mit den bevorstehenden Discourse-Kernänderungen zu gewährleisten."
       id: "(id:<em>%{id}</em>)"
@@ -313,6 +314,29 @@ de:
       active_user_count: "Aktive Benutzer"
       contact: "Kontaktiere uns"
       contact_info: "Im Falle eines kritischen Problems oder einer dringenden Angelegenheit, die diese Website betrifft, kontaktiere uns bitte unter %{contact_info}."
+      site_activity: "Aktivität auf der Website"
+      view_more: "Mehr anzeigen"
+      view_less: "Weniger anzeigen"
+      activities:
+        topics:
+          one: "%{formatted_number} Thema"
+          other: "%{formatted_number} Themen"
+        posts:
+          one: "%{formatted_number} Beitrag"
+          other: "%{formatted_number} Beiträge"
+        active_users:
+          one: "%{formatted_number} aktiver Benutzer"
+          other: "%{formatted_number} aktive Benutzer"
+        sign_ups:
+          one: "%{formatted_number} Registrierung"
+          other: "%{formatted_number} Registrierungen"
+        likes:
+          one: "%{formatted_number} „Gefällt mir“"
+          other: "%{formatted_number} „Gefällt mir“"
+        periods:
+          last_7_days: "in den letzten 7 Tagen"
+          today: "heute"
+          all_time: "gesamt"
       member_count:
         one: "%{formatted_number} Mitglied"
         other: "%{formatted_number} Mitglieder"
@@ -323,6 +347,14 @@ de:
         one: "%{formatted_number} Moderator"
         other: "%{formatted_number} Moderatoren"
       report_inappropriate_content: "Wenn du auf unangemessene Inhalte stößt, zögere nicht, eine Unterhaltung mit unseren Moderatoren und Administratoren zu beginnen. Denke daran, dich anzumelden, bevor du Kontakt aufnimmst."
+      site_age:
+        less_than_one_month: "Erstellt vor < 1 Monat"
+        month:
+          one: "Vor %{count} Monat erstellt"
+          other: "Vor %{count} Monaten erstellt"
+        year:
+          one: "Vor %{count} Jahr erstellt"
+          other: "Vor %{count} Jahren erstellt"
     bookmarked:
       title: "Lesezeichen setzen"
       edit_bookmark: "Lesezeichen bearbeiten"
@@ -700,7 +732,7 @@ de:
       never: "Nie"
       last_custom: "Letztes benutzerdefiniertes Datum"
       custom: "Datum und Uhrzeit auswählen"
-      custom_short: "Benutzerdefiniert …"
+      more_options: "Mehr Optionen…"
       select_timeframe: "Wähle einen Zeitrahmen aus"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> hat <a href='%{topicUrl}'>das Thema</a> verfasst"
@@ -1389,7 +1421,7 @@ de:
               { UNREAD, plural,
                    =0 {}
                   one {<a href="{basePath}/u/{username}/messages/unread"># ungelesene</a> Nachricht verbleibend. Oder durchstöbere andere <a href="{basePath}/u/{username}/messages">persönliche Nachrichten</a>}
-                other {<a href="{basePath}/u/{username}/messages/unread"># ungelesene</a> Nachricht verbleibend. Oder durchstöbere andere <a href="{basePath}/u/{username}/messages">persönliche Nachrichten</a>}
+                other {<a href="{basePath}/u/{username}/messages/unread"># ungelesene</a> Nachrichten verbleibend. Oder durchstöbere andere <a href="{basePath}/u/{username}/messages">persönliche Nachrichten</a>}
               }
               { NEW, plural,
                    =0 {}
@@ -1603,6 +1635,13 @@ de:
           disconnect: "Dein bestehendes %{provider}-Konto „%{account_description}“ wird getrennt."
           account_specific: "Dein „%{provider}“-Konto „%{account_description}“ wird für die Authentifizierung genutzt."
           generic: "Dein „%{provider}“-Konto wird für die Authentifizierung genutzt."
+      activate_account:
+        action: "Klicke hier, um dein Konto zu aktivieren"
+        already_done: "Entschuldige, dieser Link zur Aktivierung des Benutzerkontos ist nicht mehr gültig. Ist dein Konto schon aktiviert?"
+        please_continue: "Dein neues Konto ist jetzt bestätigt; du wirst auf die Startseite weitergeleitet."
+        continue_button: "Weiter zu %{site_name}"
+        welcome_to: "Willkommen bei %{site_name}!"
+        approval_required: "Bevor du auf das Forum zugreifen kannst, muss dein neues Konto noch von einem Moderator genehmigt werden. Du erhältst eine E-Mail, sobald dies geschehen ist!"
       name:
         title: "Name"
         instructions: "Dein vollständiger Name (optional)."
@@ -2174,6 +2213,7 @@ de:
       admin_not_allowed_from_ip_address: "Von dieser IP-Adresse aus darfst du dich nicht als Administrator anmelden."
       resend_activation_email: "Klicke hier, um eine neue Aktivierungsmail zu schicken."
       omniauth_disallow_totp: "Für dein Benutzerkonto ist die Zwei-Faktor-Authentifizierung aktiviert. Bitte melde dich mit deinem Passwort an."
+      activate_account: "Benutzer aktivieren"
       resend_title: "Aktivierungs-E-Mail erneut senden"
       change_email: "E-Mail-Adresse ändern"
       provide_new_email: "Gib eine neue Adresse an und wir senden deine Bestätigungsmail erneut."
@@ -5209,6 +5249,7 @@ de:
             name: "Name"
             description: "Beschreibung"
             applies_to: "Zeige diesen Meldungsgrund bei"
+            invalid_applies_to: "Erforderlich"
             topic: "Themen"
             post: "Beiträgen"
             chat_message: "Chat-Nachrichten"
@@ -6530,7 +6571,6 @@ de:
             prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Benutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
             confirm: "Ja, Passwortrichtlinie aktualisieren"
       badges:
-        disable_system: Dieses Abzeichen ist ein Systemabzeichen und kann nicht deaktiviert und/oder gelöscht werden.
         status: Status
         title: Abzeichen
         new_badge: Neues Abzeichen

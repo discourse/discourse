@@ -281,6 +281,17 @@ ja:
       active_user_count: "アクティブユーザー数"
       contact: "お問い合わせ"
       contact_info: "このサイトに影響を与える重要な問題や緊急の問題が発生した場合は、%{contact_info} までご連絡ください。"
+      activities:
+        topics:
+          other: "%{formatted_number}トピック"
+        posts:
+          other: "投稿 %{formatted_number} 件"
+        likes:
+          other: "「いいね！」 %{formatted_number}"
+        periods:
+          last_7_days: "過去 7 日間"
+          today: "今日"
+          all_time: "全期間"
       member_count:
         other: "%{formatted_number} メンバー"
       admin_count:
@@ -643,7 +654,6 @@ ja:
       never: "なし"
       last_custom: "最後のカスタム日時"
       custom: "カスタムの日付と時刻"
-      custom_short: "カスタム..."
       select_timeframe: "時間枠を選択してください"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> が<a href='%{topicUrl}'>トピック</a>を作成しました"
@@ -1468,6 +1478,13 @@ ja:
           disconnect: "既存の %{provider} アカウント '%{account_description}' は切断されます。"
           account_specific: "あなたの %{provider} アカウント '%{account_description}' が認証に使用されます。"
           generic: "あなたの %{provider} アカウントが認証に使用されます。"
+      activate_account:
+        action: "クリックしてアカウントを確認する"
+        already_done: "このアカウントの確認リンクは無効です。すでにアカウントがアクティブになっている可能性があります。"
+        please_continue: "あなたのアカウントは確認されました。ホームページにリダイレクトされます。"
+        continue_button: "%{site_name} に進む"
+        welcome_to: "%{site_name} へようこそ！"
+        approval_required: "このフォーラムにアクセスするにはモデレーターによる承認が必要です。承認されるとメールで通知されます！"
       name:
         title: "名前"
         instructions: "あなたの氏名 (オプション) です。"
@@ -1990,6 +2007,7 @@ ja:
       admin_not_allowed_from_ip_address: "その IP アドレスからは管理者としてログインできません。"
       resend_activation_email: "ここをクリックすると、再度アクティベーションメールを送信します。"
       omniauth_disallow_totp: "あなたのアカウントは二要素認証が有効になっています。ログインにはパスワードが必要です。"
+      activate_account: "アカウントを有効化"
       resend_title: "アクティベーションメールの再送"
       change_email: "メールアドレスを変更"
       provide_new_email: "新しいメールアドレスを入力すると、確認メールを再送します。"
@@ -3510,7 +3528,6 @@ ja:
         none: "サブカテゴリなし"
       colors_disabled: "category style が none であるため色を選択できません。"
     flagging:
-      title: "報告していただきありがとうございます。"
       action: "投稿を通報"
       take_action: "対応する…"
       take_action_options:
@@ -3555,7 +3572,6 @@ ja:
         left:
           other: "残り %{count}"
     flagging_topic:
-      title: "報告していただきありがとうございます。"
       action: "トピックを通報"
       notify_action: "メッセージ"
     topic_map:
@@ -4884,6 +4900,7 @@ ja:
             name: "名前"
             description: "説明"
             applies_to: "この通報を表示する:"
+            invalid_applies_to: "必須"
             topic: "トピック"
             post: "投稿"
             chat_message: "チャットメッセージ"
@@ -6190,7 +6207,6 @@ ja:
             prompt: "パスワードポリシーを変更しようとしています。これは、今後すべてのユーザーのパスワード変更に影響します。続行してもよろしいですか？"
             confirm: "はい。パスワードポリシーを更新します"
       badges:
-        disable_system: このバッジはシステムバッジであるため、無効または削除できません。
         status: ステータス
         title: バッジ
         new_badge: 新しいバッジ

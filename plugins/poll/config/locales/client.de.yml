@@ -13,6 +13,9 @@ de:
       total_votes:
         one: "abgegebene Stimme"
         other: "abgegebene Stimmen"
+      votes:
+        one: "%{count} Stimme"
+        other: "%{count} Stimmen"
       average_rating: "Durchschnittliche Bewertung: <strong>%{average}</strong>"
       public:
         title: "Stimmen sind <strong>öffentlich</strong>."
@@ -46,6 +49,12 @@ de:
       show-results:
         title: "Das Ergebnis der Umfrage anzeigen"
         label: "Ergebnisse"
+      show-tally:
+        title: "Abstimmungsergebnisse als absolute Zahlen anzeigen"
+        label: "Anzahl anzeigen"
+      show-percentage:
+        title: "Abstimmungsergebnisse als Prozentsätze anzeigen"
+        label: "Prozentsätze anzeigen"
       remove-vote:
         title: "Entferne deine Stimme"
         label: "Abstimmung zurücknehmen"

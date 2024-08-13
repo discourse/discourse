@@ -15,7 +15,6 @@ id:
     chat_allowed_messages_for_other_trust_levels: "Jumlah pesan yang boleh dikirim oleh pengguna dengan trust level 1-4 dalam 30 detik. Setel ke '0' untuk menonaktifkan batas."
     chat_silence_user_sensitivity: "Kemungkinan pengguna yang ditandai dalam obrolan akan disenyapkan secara otomatis."
     chat_auto_silence_from_flags_duration: "Jumlah menit pengguna akan disenyapkan ketika mereka disenyapkan secara otomatis karena pesan chat yang ditandai."
-    chat_default_channel_id: "Kanal obrolan yang akan dibuka secara bawaan saat pengguna tidak memiliki pesan yang belum dibaca atau sebutan di saluran lain."
     chat_duplicate_message_sensitivity: "Kemungkinan pesan duplikat oleh pengirim yang sama akan diblokir dalam waktu singkat. Angka desimal antara 0 dan 1.0, dengan 1.0 sebagai setelan tertinggi (memblokir pesan lebih sering dalam waktu yang lebih singkat). Setel ke `0` untuk mengizinkan pesan duplikat."
     chat_minimum_message_length: "Jumlah minimum karakter untuk pesan obrolan."
     chat_allow_uploads: "Izinkan unggahan di kanal obrolan publik dan kanal pesan langsung."

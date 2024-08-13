@@ -211,6 +211,14 @@ sk:
             valid_trust_levels:
               label: Platné úrovne dôvery
               description: Spustí sa iba vtedy, ak používateľ vytvorí príspevok na týchto úrovniach dôveryhodnosti, predvolene na ľubovoľnú úroveň dôveryhodnosti
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: Sledovanie kategórií
+              description: Spustí sa iba vtedy, ak je téma v jednej z týchto kategórií
+            watching_tags:
+              label: Sledovanie značiek
+              description: Spustí sa iba vtedy, ak téma obsahuje niektorú z týchto značiek
         after_post_cook:
           fields:
             valid_trust_levels:

@@ -49,6 +49,7 @@ zh_CN:
     min_vote_per_user:
       other: 本投票至少需要 %{count} 票。
     ranked_choice:
+      vote_options_mismatch: "对于即时决胜，投票中做出的选择数必须与选项数相匹配。选项数为 %{count} ，做出的选择数为 %{provided}。"
       no_group_results_support: "投票类型无效，ranked_choice 不支持分组结果。"
     topic_must_be_open_to_toggle_status: "话题必须处于开放状态才能切换状态。"
     only_staff_or_op_can_toggle_status: "只有管理人员或者发布投票的人才能切换投票状态。"

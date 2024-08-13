@@ -209,6 +209,14 @@ es:
             valid_trust_levels:
               label: Niveles de confianza válidos
               description: Se activará solo si la publicación es creada por un usuario en estos niveles de confianza. Por defecto, cualquier nivel de confianza
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: Observando categorías
+              description: Se activará solo si el tema está en una de estas categorías.
+            watching_tags:
+              label: Observando etiquetas
+              description: Se activará solo si el tema tiene alguna de estas etiquetas.
         after_post_cook:
           fields:
             valid_trust_levels:

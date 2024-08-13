@@ -148,7 +148,7 @@ cs:
         second_response: |-
           Eh, promiň. Pořád to nechápu. :anguished:
 
-          Jsem jen robot, ale pokud chceš oslovit skutečnou osobu, podívej se na [naši kontaktní stránku] (%{base_path}/about).
+          Jsem jen robot, ale pokud chceš oslovit skutečnou osobu, podívej se na [naši kontaktní stránku](%{base_path}/about).
 
           Mezitím se ti budu klidit z cesty.
     new_user_narrative:

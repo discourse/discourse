@@ -256,6 +256,16 @@ ko:
       topic_count: "글"
       post_count: "게시물"
       contact_info: "이 사이트에 영향을 미치는 중대하거나 긴급한 문제가 발생한 경우 %{contact_info}으로 문의하세요."
+      activities:
+        topics:
+          other: "%{formatted_number}개의 글"
+        posts:
+          other: "글 %{formatted_number}개"
+        likes:
+          other: "좋아요 %{formatted_number}"
+        periods:
+          last_7_days: "지난 7일간"
+          today: "오늘"
       member_count:
         other: "회원 %{formatted_number}명"
     bookmarked:
@@ -555,7 +565,6 @@ ko:
       never: "절대"
       last_custom: "마지막 사용자 지정 시간"
       custom: "사용자 지정 날짜 및 시간"
-      custom_short: "사용자 지정..."
       select_timeframe: "기간 선택"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> 님이 <a href='%{topicUrl}'>주제</a>를 게시함"
@@ -1300,6 +1309,13 @@ ko:
           disconnect: "기존 %{provider} 계정 '%{account_description}' 연결이 해제됩니다."
           account_specific: "%{provider} 계정 '%{account_description}'|hpp(이,가) 인증에 사용됩니다."
           generic: "%{provider} 계정이 인증에 사용됩니다."
+      activate_account:
+        action: "여기를 눌러 계정을 활성화하세요."
+        already_done: "죄송합니다. 이 계정 확인 링크는 더 이상 유효하지 않습니다."
+        please_continue: "계정이 활성화 되었습니다; 홈페이지로 이동합니다."
+        continue_button: "%{site_name}으로 가기"
+        welcome_to: "%{site_name}에 오신 것을 환영합니다!"
+        approval_required: "이 포럼을 사용하기 위해선 운영자가 수동으로 당신의 새로운 계정을 수락해야 합니다. 계정이 수락이 되면 자동으로 이메일이 발송됩니다."
       name:
         title: "이름"
         instructions: "전체 이름 (선택 사항)."
@@ -1727,6 +1743,7 @@ ko:
       admin_not_allowed_from_ip_address: "이 IP 주소로는 관리자로 로그인할 수 없습니다."
       resend_activation_email: "활성화 이메일을 다시 보내려면 여기를 클릭하세요."
       omniauth_disallow_totp: "계정에 2단계 인증이 활성화되어 있습니다. 비밀번호로 로그인하세요."
+      activate_account: "계정 활성화"
       resend_title: "활성화 이메일 재전송"
       change_email: "이메일 주소 변경"
       provide_new_email: "새 주소를 입력하면 확인 이메일이 다시 전송됩니다."
@@ -3013,7 +3030,6 @@ ko:
         none: "서브카테고리 없음"
       colors_disabled: "카테고리 스타일이 없음이므로 색상을 선택할 수 없습니다."
     flagging:
-      title: "커뮤니티 질서를 지키는 데 도와주셔서 감사합니다!"
       action: "게시물 신고"
       take_action_options:
         default:
@@ -3048,7 +3064,6 @@ ko:
         left:
           other: "%{count} 남음"
     flagging_topic:
-      title: "커뮤니티 질서를 지키는 데 도와주셔서 감사합니다!"
       action: "주제 신고"
       notify_action: "메시지 보내기"
     topic_map:
@@ -3949,6 +3964,7 @@ ko:
             save: "저장"
             name: "그룹명"
             description: "내용"
+            invalid_applies_to: "필수"
             topic: "글"
             post: "포스트"
       plugins:

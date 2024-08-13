@@ -241,6 +241,14 @@ th:
       topic_count: "กระทู้"
       post_count: "โพสต์"
       contact_info: "ในกรณีที่เกิดเหตุฉุกเฉินหรือประเด็นสำคัญที่ส่งผลต่อเว็บไซต์นี้ กรุณาติดต่อเราที่ %{contact_info}"
+      activities:
+        topics:
+          other: "%{formatted_number} กระทู้"
+        posts:
+          other: "%{formatted_number} โพส"
+        periods:
+          last_7_days: "ใน 7 วันที่ผ่านมา"
+          today: "วันนี้"
     bookmarked:
       title: "บุ๊กมาร์ก"
       edit_bookmark: "แก้ไขบุ๊กมาร์ก"
@@ -929,6 +937,9 @@ th:
         cancel: "ยกเลิก"
         not_connected: "(ไม่เชื่อมต่อ)"
         confirm_modal_title: "เชื่อมต่อ%{provider}บัญชี"
+      activate_account:
+        continue_button: "ดำเนินการต่อไปยัง %{site_name}"
+        welcome_to: "ยินดีต้อนรับสู่ %{site_name}!"
       name:
         title: "ชื่อ"
         instructions: "ชื่อเต็มของคุณ (ไม่บังคับ)."
@@ -2695,6 +2706,7 @@ th:
             save: "บันทึก"
             name: "ชื่อ"
             description: "รายละเอียด"
+            invalid_applies_to: "ต้องการ"
             topic: "หัวข้อ"
             post: "โพสต์"
       plugins:

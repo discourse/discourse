@@ -28,18 +28,18 @@ zh_CN:
       time: "HH:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
-      timeline_date: "YYYY 年 M 月"
-      long_no_year: "M 月 D 日 HH:mm"
-      long_no_year_no_time: "M 月 D 日"
-      full_no_year_no_time: "M 月 D 日"
-      long_with_year: "YYYY 年 M 月 D 日 HH:mm"
-      long_with_year_no_time: "YYYY 年 M 月 D 日"
-      full_with_year_no_time: "YYYY 年 M 月 D 日"
-      long_date_with_year: "YYYY 年 MMM 月 D 日 LT"
-      long_date_without_year: "M 月 D 日 LT"
-      long_date_with_year_without_time: "YYYY 年 MMM 月 D 日"
-      long_date_without_year_with_linebreak: "M 月 D 日<br/>LT"
-      long_date_with_year_with_linebreak: "YYYY 年 MMM 月 D 日<br/>LT"
+      timeline_date: "YYYY 年 MMM"
+      long_no_year: "MMM D 日 HH:mm"
+      long_no_year_no_time: "MMM D 日"
+      full_no_year_no_time: "MMMM Do 日"
+      long_with_year: "YYYY 年 MMM D 日 HH:mm"
+      long_with_year_no_time: "YYYY 年 MMM D 日"
+      full_with_year_no_time: "YYYY 年 MMMM Do 日"
+      long_date_with_year: "YYYY 年 MMM D 日 LT"
+      long_date_without_year: "MMM D 日 LT"
+      long_date_with_year_without_time: "YYYY 年 MMM D 日"
+      long_date_without_year_with_linebreak: "MMM D 日<br/>LT"
+      long_date_with_year_with_linebreak: "YYYY 年 MMM D 日<br/>LT"
       wrap_ago: "%{date} 前"
       wrap_on: "%{date}"
       tiny:
@@ -64,8 +64,8 @@ zh_CN:
           other: "> %{count} 年"
         almost_x_years:
           other: "%{count} 年"
-        date_month: "M 月 D 日"
-        date_year: "YYYY 年 M 月"
+        date_month: "MMM D 日"
+        date_year: "YYYY 年 MMM"
       medium:
         less_than_x_minutes:
           other: "小于 %{count} 分钟"
@@ -85,7 +85,7 @@ zh_CN:
           other: "超过 %{count} 年"
         almost_x_years:
           other: "将近 %{count} 年"
-        date_year: "YYYY 年 M 月 D 日"
+        date_year: "YYYY 年 MMM D 日"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分钟前"
@@ -173,6 +173,7 @@ zh_CN:
     broken_decorator_alert: "帖子可能无法正确显示，因为您的网站上的其中一个帖子内容装饰器引发错误。"
     broken_page_change_alert: "onPageChange 处理程序出错。请查看浏览器开发者工具了解更多信息。"
     broken_plugin_alert: "由插件 '%{name}' 引起"
+    broken_transformer_alert: "出现了一个错误。你的网站可能无法正常运行。"
     critical_deprecation:
       notice: "<b>[管理员通知]</b> 您的一个主题或插件需要更新，以便与即将发布的 Discourse 核心更改兼容。"
       id: "(id:<em>%{id}</em>)"
@@ -281,6 +282,22 @@ zh_CN:
       active_user_count: "活跃用户"
       contact: "联系我们"
       contact_info: "如果出现影响此网站的关键问题或紧急事项，请联系我们：%{contact_info}。"
+      site_activity: "站点活动"
+      activities:
+        topics:
+          other: "%{formatted_number}话题"
+        posts:
+          other: "%{formatted_number} 个帖子"
+        active_users:
+          other: "%{formatted_number} 位活跃用户"
+        sign_ups:
+          other: "%{formatted_number} 位注册"
+        likes:
+          other: "%{formatted_number} 个赞"
+        periods:
+          last_7_days: "在最近 7 天"
+          today: "今天"
+          all_time: "所有时间"
       member_count:
         other: "%{formatted_number} 位成员"
       admin_count:
@@ -288,6 +305,12 @@ zh_CN:
       moderator_count:
         other: "%{formatted_number} 位版主"
       report_inappropriate_content: "如果您发现任何不当内容，请立即与我们的版主和管理员进行对话。请记住，联系前请先登录。"
+      site_age:
+        less_than_one_month: "创建于 < 1 个月前"
+        month:
+          other: "创建于 %{count} 个月前"
+        year:
+          other: "创建于 %{count} 年前"
     bookmarked:
       title: "加入书签"
       edit_bookmark: "编辑书签"
@@ -643,7 +666,7 @@ zh_CN:
       never: "从不"
       last_custom: "上次自定义日期时间"
       custom: "自定义日期和时间"
-      custom_short: "自定义…"
+      more_options: "更多选项…"
       select_timeframe: "选择时间范围"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> 发布了<a href='%{topicUrl}'>该话题</a>"
@@ -1492,6 +1515,13 @@ zh_CN:
           disconnect: "您现有的 %{provider} 帐户 '%{account_description}' 将被断开连接。"
           account_specific: "您的 %{provider} 帐户 '%{account_description}' 将被用于身份验证。"
           generic: "您的 %{provider} 帐户将被用于身份验证。"
+      activate_account:
+        action: "点击此处激活您的帐户"
+        already_done: "抱歉，此帐户确认链接不再有效。也许您的帐户已经处于有效状态？"
+        please_continue: "您的新帐户已确认；您将被重定向到首页。"
+        continue_button: "继续访问 %{site_name}"
+        welcome_to: "欢迎来到 %{site_name}！"
+        approval_required: "版主必须手动批准您的新帐户，然后您才可以访问此论坛。当您的帐户获得批准时，您会收到一封电子邮件！"
       name:
         title: "姓名"
         instructions: "您的全名（可选）"
@@ -2025,6 +2055,7 @@ zh_CN:
       admin_not_allowed_from_ip_address: "您无法从该 IP 地址以管理员身份登录。"
       resend_activation_email: "点击此处重新发送激活电子邮件。"
       omniauth_disallow_totp: "您的帐户已启用双重身份验证。请使用您的密码登录。"
+      activate_account: "激活帐户"
       resend_title: "重新发送激活电子邮件"
       change_email: "更改电子邮件地址"
       provide_new_email: "提供一个新地址，我们将重新发送您的确认电子邮件。"
@@ -3545,7 +3576,7 @@ zh_CN:
         none: "无子类别"
       colors_disabled: "您无法选择颜色，因为您的“category style”为“none”。"
     flagging:
-      title: "感谢您帮助我们建设文明社区！"
+      title: "感谢你维护社区的文明！"
       action: "举报帖子"
       take_action: "采取行动…"
       take_action_options:
@@ -3590,7 +3621,7 @@ zh_CN:
         left:
           other: "剩余 %{count} 个字符"
     flagging_topic:
-      title: "感谢您帮助我们建设文明社区！"
+      title: "感谢你维护社区的文明！"
       action: "举报话题"
       notify_action: "消息"
     topic_map:
@@ -4921,6 +4952,7 @@ zh_CN:
             name: "名称"
             description: "描述"
             applies_to: "将此举报显示于"
+            invalid_applies_to: "必选"
             topic: "话题"
             post: "帖子"
             chat_message: "聊天消息"
@@ -6227,7 +6259,6 @@ zh_CN:
             prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的用户。确定要继续吗？"
             confirm: "是，更新密码策略"
       badges:
-        disable_system: 此徽章为系统徽章，不能禁用和/或删除。
         status: 状态
         title: 徽章
         new_badge: 新徽章
