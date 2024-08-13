@@ -16,10 +16,9 @@ import i18n from "discourse-common/helpers/i18n";
 export default class UserStatusPicker extends Component {
   @tracked isFocused = false;
   @tracked emojiPickerIsActive = false;
-  status = this.args.status || {};
 
   get emojiHtml() {
-    return emojiUnescape(escapeExpression(`:${this.status.emoji}:`));
+    return emojiUnescape(escapeExpression(`:${this.args.status.emoji}:`));
   }
 
   focusEmojiButton() {
@@ -33,7 +32,7 @@ export default class UserStatusPicker extends Component {
 
   @action
   emojiSelected(emoji) {
-    this.status.emoji = emoji;
+    this.args.status.emoji = emoji;
     this.emojiPickerIsActive = false;
 
     scheduleOnce("afterRender", this, this.focusEmojiButton);
@@ -51,8 +50,8 @@ export default class UserStatusPicker extends Component {
 
   @action
   updateDescription(event) {
-    this.status.description = event.target.value;
-    this.status.emoji ||= "speech_balloon";
+    this.args.status.description = event.target.value;
+    this.args.status.emoji ||= "speech_balloon";
   }
 
   @action
@@ -72,8 +71,8 @@ export default class UserStatusPicker extends Component {
           {{on "focus" this.focus}}
           {{on "blur" this.blur}}
           @action={{this.toggleEmojiPicker}}
-          @icon={{if (not this.status.emoji) "discourse-emojis"}}
-          @translatedLabel={{if this.status.emoji (htmlSafe this.emojiHtml)}}
+          @icon={{if (not @status.emoji) "discourse-emojis"}}
+          @translatedLabel={{if @status.emoji (htmlSafe this.emojiHtml)}}
           class="btn-emoji btn-transparent"
         />
 
@@ -82,7 +81,7 @@ export default class UserStatusPicker extends Component {
           {{on "focus" this.focus}}
           {{on "blur" this.blur}}
           {{autoFocus}}
-          value={{this.status.description}}
+          value={{@status.description}}
           type="text"
           placeholder={{i18n "user_status.what_are_you_doing"}}
           maxlength="100"
