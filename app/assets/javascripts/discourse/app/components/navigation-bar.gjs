@@ -23,22 +23,6 @@ export default class NavigationBarComponent extends Component {
 
     item = item || navItems.find((i) => i.filterType === this.filterType);
 
-    if (!item && connectors && category) {
-      connectors.forEach((c) => {
-        if (
-          c.connectorClass &&
-          typeof c.connectorClass.path === "function" &&
-          typeof c.connectorClass.displayName === "function"
-        ) {
-          let path = c.connectorClass.path(category);
-          if (path.includes(this.filterType)) {
-            item = {
-              displayName: c.connectorClass.displayName(),
-            };
-          }
-        }
-      });
-    }
     return item || navItems[0];
   }
 
