@@ -6,12 +6,12 @@ import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 
 export default class ExpandPost extends Component {
-  @tracked expanded;
-  _loading = false;
+  @tracked expanded = false;
+  loading = false;
 
   @action
   async toggleItem() {
-    if (this._loading) {
+    if (this.loading) {
       return;
     }
 
@@ -21,7 +21,7 @@ export default class ExpandPost extends Component {
       return;
     }
 
-    this._loading = true;
+    this.loading = true;
     try {
       const result = await ajax(
         `/posts/by_number/${this.args.item.topic_id}/${this.args.item.post_number}.json`
@@ -30,7 +30,7 @@ export default class ExpandPost extends Component {
       this.expanded = true;
       this.args.item.set("expandedExcerpt", result.cooked);
     } finally {
-      this._loading = false;
+      this.loading = false;
     }
   }
 
