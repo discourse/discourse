@@ -441,10 +441,10 @@ GEM
     rspec-support (3.13.1)
     rss (0.3.1)
       rexml
-    rswag-specs (2.13.0)
-      activesupport (>= 3.1, < 7.2)
+    rswag-specs (2.14.0)
+      activesupport (>= 5.2, < 8.0)
       json-schema (>= 2.2, < 5.0)
-      railties (>= 3.1, < 7.2)
+      railties (>= 5.2, < 8.0)
       rspec-core (>= 2.14)
     rtlcss (0.2.1)
       mini_racer (>= 0.6.3)
