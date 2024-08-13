@@ -18,7 +18,7 @@ export default class NavigationBarComponent extends Component {
   }
 
   get selectedNavItem() {
-    const { navItems, connectors, category } = this.args;
+    const { navItems, category } = this.args;
     let item = navItems.find((i) => i.active === true);
 
     item = item || navItems.find((i) => i.filterType === this.filterType);
