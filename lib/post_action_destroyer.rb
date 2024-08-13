@@ -17,10 +17,6 @@ class PostActionDestroyer
     new(destroyed_by, post, PostActionType.types[action_key], opts).perform
   end
 
-  def post_action_type_view
-    @post_action_type_view ||= PostActionTypeView.new
-  end
-
   def perform
     result = DestroyResult.new
 
@@ -54,14 +50,14 @@ class PostActionDestroyer
 
     post_action.remove_act!(@destroyed_by)
     post_action.post.unhide! if post_action.staff_took_action
-    if @post_action_type_id == post_action_type_view.types[:like]
+    if @post_action_type_id == PostActionType.types[:like]
       GivenDailyLike.decrement_for(@destroyed_by.id)
     end
 
     case @post_action_type_id
-    when *post_action_type_view.notify_flag_type_ids
+    when *PostActionType.notify_flag_type_ids
       DiscourseEvent.trigger(:flag_destroyed, post_action, self)
-    when post_action_type_view.types[:like]
+    when PostActionType.types[:like]
       DiscourseEvent.trigger(:like_destroyed, post_action, self)
     end
 
@@ -82,7 +78,7 @@ class PostActionDestroyer
   end
 
   def notify_subscribers
-    name = post_action_type_view.types[@post_action_type_id]
+    name = PostActionType.types[@post_action_type_id]
     if name == :like
       @post.publish_change_to_clients!(
         :unliked,
