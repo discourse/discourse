@@ -31,7 +31,7 @@ function isUpload(token) {
 }
 
 function hasMetadata(token) {
-  return token.content.match(/(\d{1,4}x\d{1,4})/);
+  return token.content.split("|")[1]?.match(/\d{1,4}x\d{1,4}/) || null;
 }
 
 function appendMetaData(index, token) {
