@@ -294,13 +294,8 @@ table.screened-ip-addresses {
   display: inline-block;
   cursor: pointer;
 
-  .d-icon {
-    margin-right: 0.25em;
-    color: var(--primary-medium);
-
-    &:hover {
-      color: var(--danger);
-    }
+  .delete-word-record:hover {
+    color: var(--danger);
   }
 }
 
