@@ -719,11 +719,6 @@ export default Mixin.create({
   },
 
   isInsideCodeFence(text, offset) {
-    const beforeLines = text.substring(0, offset - 1).split("\n");
-    const fencesCount = beforeLines.reduce(
-      (acc, item) => acc + (item.startsWith("```") ? 1 : 0),
-      0
-    );
-    return fencesCount % 2 !== 0;
+    return this.isInside(text.substring(0, offset - 1), /(^|\n)```/g);
   },
 });
