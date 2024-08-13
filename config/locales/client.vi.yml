@@ -35,8 +35,11 @@ vi:
       long_with_year: "D MMM YYYY HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
+      long_date_with_year: "DD/MM/YYYY LT"
       long_date_without_year: "D MMM LT"
+      long_date_with_year_without_time: "DD/MM/YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
+      long_date_with_year_with_linebreak: "DD/MM/YYYY <br/>LT"
       wrap_ago: "%{date} trước"
       wrap_on: "lúc %{date}"
       tiny:
@@ -82,6 +85,7 @@ vi:
           other: "hơn %{count} năm"
         almost_x_years:
           other: "gần %{count} năm"
+        date_year: "DD/MM/YYYY"
       medium_with_ago:
         x_minutes:
           other: " %{count} phút trước"
@@ -115,6 +119,7 @@ vi:
       url: "Sao chép và chia sẻ URL"
     word_connector:
       comma: ", "
+      last_item: "và"
     action_codes:
       public_topic: "Hiển thị chủ đề công khai lúc %{when}"
       open_topic: "Đã chuyển đổi chủ đề này thành một chủ đề %{when}"
@@ -153,6 +158,7 @@ vi:
     emails_are_disabled_non_staff: "Email gửi đi đã bị vô hiệu hóa đối với người dùng không phải là nhân viên."
     software_update_prompt:
       dismiss: "Hủy bỏ"
+    bootstrap_mode: "Bắt đầu"
     back_button: "Quay lại"
     themes:
       default_description: "Mặc định"
@@ -160,6 +166,7 @@ vi:
       error_caused_by: "Gây ra bởi '%{name}'. <a target='blank' href='%{path}'>Nhấp vào đây</a> để cập nhật, cấu hình lại hoặc tắt."
       only_admins: "(thông báo này chỉ được hiển thị cho quản trị viên trang web)"
     broken_decorator_alert: "Bài đăng có thể không hiển thị chính xác vì một trong những người trang trí nội dung bài đăng trên trang web của bạn đã mắc lỗi."
+    broken_plugin_alert: "Do plugin '%{name}' gây ra"
     s3:
       regions:
         ap_northeast_1: "Châu Á (Tokyo)"
@@ -239,6 +246,7 @@ vi:
       pill: "Tin nhắn liên quan"
       see_all: 'Xem <a href="%{path}">toàn bộ thông điệp</a> từ %{username}…'
     suggested_topics:
+      pill: "Đề xuất"
       pm_title: "Tin nhắn gợi ý"
     about:
       simple_title: "Giới thiệu"
@@ -255,6 +263,8 @@ vi:
       like_count: "Lượt thích"
       topic_count: "Các chủ đề"
       post_count: "Các bài viết"
+      user_count: "Đăng ký"
+      active_user_count: "Thành viên đang hoạt động"
       contact: "Liên lạc"
       contact_info: "Trong trường hợp có bất kỳ sự cố nào ảnh hưởng tới trang này, xin vui lòng liên hệ với chúng tôi theo địa chỉ %{contact_info}."
     bookmarked:

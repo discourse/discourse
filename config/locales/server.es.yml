@@ -1973,6 +1973,7 @@ es:
     min_trust_to_edit_post: "El nivel mínimo de confianza requerido para editar publicaciones."
     edit_post_allowed_groups: "Grupos que pueden editar mensajes. Los administradores y moderadores siempre pueden editar los mensajes."
     min_trust_to_allow_self_wiki: "El nivel mínimo de confianza requerido para que un usuario convierta sus propias publicaciones a wiki."
+    self_wiki_allowed_groups: "Permita que los usuarios de estos grupos creen sus propias publicaciones en la wiki. Los administradores y moderadores siempre pueden crear sus propias publicaciones en la wiki."
     min_trust_to_send_messages: "DEPRECIADO, utiliza en su lugar el ajuste «grupos habilitados para mensajes personales». El nivel de confianza mínimo requerido para crear nuevos mensajes personales."
     min_trust_to_send_email_messages: "Nivel de confianza mínimo para mandar mensajes personales a través de correo electrónico."
     send_email_messages_allowed_groups: "Grupos a los que se permite enviar mensajes personales por correo electrónico. Los administradores y moderadores siempre pueden enviar mensajes personales por correo electrónico."
@@ -4870,18 +4871,31 @@ es:
           default_locale:
             label: "Idioma"
       privacy:
+        title: "Acceso de miembros"
         fields:
           login_required:
             label: "Visibilidad"
+            description: "¿Su comunidad es pública o privada?"
             choices:
               public:
                 label: "Pública"
               private:
                 label: "Privada"
           invite_only:
+            label: "Registro"
+            description: "¿Cómo pueden los miembros unirse a esta comunidad?"
             choices:
+              sign_up:
+                label: "Registrarse"
               invite_only:
                 label: "Solo por invitación"
+          must_approve_users:
+            description: "¿Quieres aprobar cuentas de miembros?"
+            choices:
+              "no":
+                label: "No, los nuevos miembros pueden unirse inmediatamente"
+              "yes":
+                label: "Sí, los nuevos miembros deben ser aprobados por los moderadores."
           chat_enabled:
             placeholder: "Activar chat"
             extra_description: "Interactúa con tus miembros en tiempo real"

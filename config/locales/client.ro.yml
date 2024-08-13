@@ -455,8 +455,8 @@ ro:
         search: "Căutați un mesaj"
         placeholder: "scrie aici titlul mesajului, URL-ul sau ID-ul"
     review:
-      show_more: "Arată mai mult"
-      show_less: "Arată mai puțin"
+      show_more: "Arată mai multe"
+      show_less: "Arată mai puține"
       order_by: "Ordonează după"
       date_filter: "Publicat între"
       in_reply_to: "ca răspuns la"

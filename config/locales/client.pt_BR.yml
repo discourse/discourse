@@ -76,7 +76,7 @@ pt_BR:
           one: "%{count} a"
           other: "%{count} a"
         date_month: "D MMM"
-        date_year: "MM YYYY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "menos de %{count} min"
@@ -105,7 +105,7 @@ pt_BR:
         almost_x_years:
           one: "há quase %{count} ano"
           other: "há quase %{count} anos"
-        date_year: "DD MM YYYY"
+        date_year: "D MMM, YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} minuto atrás"
@@ -6440,7 +6440,6 @@ pt_BR:
             prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) usuários(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
       badges:
-        disable_system: Este emblema é um emblema de sistema e não pode ser desativado e/ou excluído.
         status: Status
         title: Emblemas
         new_badge: Novo emblema

@@ -2210,7 +2210,7 @@ lt:
         Sveiki atvykę į %{site_name}!
 
         Spustelėkite šią nuorodą, kad patvirtintumėte ir suaktyvintumėte naują paskyrą:
-        %{base_url}/u/activ-account/%{email_token}
+        %{base_url}/u/activate-account/%{email_token}
 
         Jei aukščiau pateiktos nuorodos negalima spustelėti, pabandykite ją nukopijuoti ir įklijuoti į savo žiniatinklio naršyklės adreso juostą.
     activation_reminder:

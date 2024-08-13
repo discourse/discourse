@@ -1343,6 +1343,62 @@ es:
         warnings: "Advertencias oficiales"
         read_more_in_group: "¿Quieres leer más? Consulta otros mensajes de %{groupLink}."
         read_more: "¿Quieres seguir leyendo? Echa un vistazo a otros mensajes en tus <a href='%{basePath}/u/%{username}/messages'>mensajes personales</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># no leída</a>}
+                other {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># no leídas</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { y <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nueva</a> mensaje restante, o explora otros mensajes en {groupLink}}
+                other { y <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nuevas</a> mensajes restantes, o explora otros mensajes en {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># no leída</a> mensaje restante, o explora otros mensajes en {groupLink}}
+                other {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># no leídas</a> mensajes restantes, o explora otros mensajes en {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nueva</a> mensaje restante, o explora otros mensajes en {groupLink}}
+                other {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nuevas</a> mensajes restantes, o explora otros mensajes en {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Hay <a href="{basePath}/u/{username}/messages/unread"># no leída</a>}
+                other {Hay <a href="{basePath}/u/{username}/messages/unread"># no leídas</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { y <a href="{basePath}/u/{username}/messages/new"># nueva</a> mensaje restante, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+                other { y <a href="{basePath}/u/{username}/messages/new"># nuevas</a> mensajes restantes, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Hay <a href="{basePath}/u/{username}/messages/unread"># no leída</a> mensaje restante, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+                other {Hay <a href="{basePath}/u/{username}/messages/unread"># no leídas</a> mensajes restantes, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Hay <a href="{basePath}/u/{username}/messages/new"># nueva</a> mensaje restante, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+                other {Hay <a href="{basePath}/u/{username}/messages/new"># nuevas</a> mensajes restantes, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Cuenta"
         security: "Seguridad"
@@ -1932,6 +1988,39 @@ es:
       logout_disabled: "No se puede cerrar sesión mientras el sitio se encuentre en modo de solo lectura."
     staff_writes_only_mode:
       enabled: "Este sitio está en modo solo para el personal. Sigue navegando, pero las respuestas, los «me gusta» y otras acciones están limitadas solo a los miembros del personal."
+    logs_error_rate_notice:
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# error/hora}
+          other {# errores/hora}
+        }</a> alcanzó el límite de configuración del sitio de {limit, plural,
+            one {# error/hora}
+          other {# errores/hora}
+        }.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# error/minuto}
+          other {# errores/minuto}
+        }</a> alcanzó el límite de configuración del sitio de { limit, plural,
+            one {# error/minuto}
+          other {# errores/minuto}
+        }.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# error/hora}
+          other {# errores/hora}
+        }</a> superó el límite de configuración del sitio de { limit, plural,
+            one {# error/hora}
+          other {# errores/hora}
+        }.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# error/minuto}
+          other {# errores/minuto}
+        }</a> superó el límite de configuración del sitio de { limit, plural,
+            one {# error/minuto}
+          other {# errores/minuto}
+        }.
     learn_more: "Más información…"
     mute: Silenciar
     unmute: No silenciar
@@ -1970,7 +2059,7 @@ es:
       buttons:
         hide: "Ocultar resumen"
         generate: "Resumir"
-        regenerate: "Generar nuevos"
+        regenerate: "Regenerar"
       description_time_MF: |
         Hay {replyCount, plural, one {Hay <b>#</b> respuesta} other {Hay <b>#</b> respuestas}} con un tiempo estimado de lectura de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
       enable: "Mostrar las respuestas principales"
@@ -4208,6 +4297,7 @@ es:
         everyone_can_use: "Todos pueden utilizar las etiquetas"
         usable_only_by_groups: "Las etiquetas son visibles para todo el mundo, pero solo los siguientes grupos las pueden usar"
         visible_only_to_groups: "Las etiquetas solo son visibles para los siguientes grupos"
+        cannot_save: "No se puede guardar el grupo de etiquetas. Asegúrese de que haya al menos una etiqueta presente, que el nombre del grupo de etiquetas no esté vacío y tenga menos de 100 caracteres, y que esté seleccionado un grupo para el permiso de etiquetas."
         tags_placeholder: "Buscar o crear etiquetas"
         parent_tag_placeholder: "Opcional"
         select_groups_placeholder: "Seleccionar grupos…"
@@ -4580,6 +4670,7 @@ es:
         problems_found: "Algunos consejos con base en tus ajustes actuales"
         new_features:
           title: "Novedades"
+          subtitle: "Para obtener más información sobre las nuevas funciones y mejoras que añadimos constantemente, consulta <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Notas de versión</a>."
           previous_announcements: "Puedes ver anuncios anteriores de nuevas funciones en <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Más información..."
         last_checked: "Ultima comprobación"
@@ -5053,6 +5144,7 @@ es:
           header: "Acerca de tu sitio"
           general_settings: "Ajustes generales"
           community_name: "Nombre de la comunidad"
+          community_name_placeholder: "Comunidad de ejemplo"
           community_summary: "Resumen comunitario"
           community_description: "Descripción de la comunidad"
           banner_image: "Imagen del banner"
@@ -5060,9 +5152,11 @@ es:
             Se utilizará en tu página Acerca de. Tamaño recomendado: 800x300px. Tipos aceptados: JPG, PNG y SVG hasta 10 MB.
           contact_information: "Información de contacto"
           community_owner: "Propietario de la comunidad"
+          community_owner_placeholder: "Johnny Smith"
           community_owner_help: |
             Nombre del contacto clave responsable de este sitio. Utilizado para notificaciones críticas, y también se muestra en /about. Visible para usuarios anónimos en sitios públicos.
           contact_email: "Correo electrónico de contacto"
+          contact_email_placeholder: "contact@johnny-smith.com"
           contact_email_help: |
             Dirección de correo electrónico del contacto clave responsable de este sitio. Se utiliza para notificaciones críticas y también se muestra en /about. Visible para usuarios anónimos en sitios públicos.
           contact_url: "URL de contacto"
@@ -5077,14 +5171,17 @@ es:
             Un nombre válido de un grupo al que se invita a todos los mensajes privados enviados automáticamente.
           your_organization: "Tu organización"
           company_name: "Nombre de la empresa"
+          company_name_placeholder: "Empresa de ejemplo Inc."
           company_name_help: |
             Nombre de tu empresa u organización.
           company_name_warning: |
             Si se deja en blanco, no se proporcionará ningún tipo de Términos del servicio o Aviso de privacidad.
           governing_law: "Ley que rige"
+          governing_law_placeholder: "Estado de Nueva York"
           governing_law_help: |
             Especifica la jurisdicción que rige los aspectos legales del sitio, incluidos los Términos del servicio y el Aviso de privacidad. Normalmente, se trata del país o estado en el que la empresa que gestiona el sitio está registrada o lleva a cabo sus actividades.
           city_for_disputes: "Ciudad para disputas"
+          city_for_disputes_placeholder: "Ciudad de Nueva York"
           city_for_disputes_help: |
             Especifica la ciudad que se utilizará como jurisdicción para resolver cualquier disputa relacionada con el uso de este foro. Esta información suele incluirse en documentos legales como los Términos del servicio del foro.
           optional: "(opcional)"
@@ -6432,7 +6529,6 @@ es:
             prompt: "Estás a punto de cambiar tu política de contraseñas. Esto afectará a todos los usuarios que cambien sus contraseñas a partir de ahora. ¿Seguro que quieres proceder?"
             confirm: "Sí, actualizar la política de contraseñas"
       badges:
-        disable_system: Esta medalla es una medalla del sistema y no se puede desactivar ni eliminar.
         status: Estado
         title: Medallas
         new_badge: Nueva medalla
@@ -6521,6 +6617,9 @@ es:
             one: "Se ha recibido tu CSV y %{count} usuario recibirá su medalla en breve."
             other: "Se ha recibido tu CSV y %{count} usuarios recibirán su medalla en breve."
           csv_has_unmatched_users: "Las siguientes filas del CSV no se han podido enlazar con usuarios existentes, por lo que no se les distribuirá ninguna medalla:"
+          csv_has_unmatched_users_truncated_list:
+            one: "Había %{count} entrada en el archivo CSV que no pudo coincidir con los usuarios existentes y, por lo tanto, no recibirá la insignia."
+            other: "Había %{count} entradas en el archivo CSV que no coincidieron con los usuarios existentes y, por lo tanto, no recibirán la insignia."
           replace_owners: Eliminar medalla de los anteriores propietarios
           grant_existing_holders: Conceder una vez más la medalla a las cuentas que ya la tengan
       emoji:

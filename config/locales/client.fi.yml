@@ -6432,7 +6432,6 @@ fi:
             prompt: "Olet muuttamassa salasanakäytäntöäsi. Tämä vaikuttaa kaikkiin käyttäjiin, jotka muuttavat salasanansa tästä lähtien. Haluatko varmasti jatkaa?"
             confirm: "Kyllä, päivitä salasanakäytäntö"
       badges:
-        disable_system: Tämä kunniamerkki on järjestelmän kunniamerkki, eikä sitä voi poistaa käytöstä tai poistaa.
         status: Tila
         title: Kunniamerkit
         new_badge: Uusi kunniamerkki

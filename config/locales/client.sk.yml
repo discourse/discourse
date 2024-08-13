@@ -4765,6 +4765,7 @@ sk:
         everyone_can_use: "Značky môže používať každý"
         usable_only_by_groups: "Značky sú viditeľné pre všetkých, ale používať ich môžu len tieto skupiny"
         visible_only_to_groups: "Značky sú viditeľné len pre tieto skupiny"
+        cannot_save: "Skupinu značiek nie je možné uložiť. Uistite sa, že je prítomný aspoň jedna značka, názov skupiny značiek nie je prázdny a má menej ako 100 znakov a že je vybratá skupina pre povolenie značiek."
         tags_placeholder: "Vyhľadajte alebo vytvorte značky"
         parent_tag_placeholder: "Nepovinné"
         select_groups_placeholder: "Vyberte skupiny…"
@@ -7071,7 +7072,6 @@ sk:
             prompt: "Chystáte sa zmeniť zásady používania hesiel. Odteraz sa to bude týkať všetkých používateľov, ktorí si menia svoje heslá. Ste si istí, že chcete pokračovať?"
             confirm: "Áno, aktualizujte zásady používania hesiel"
       badges:
-        disable_system: Tento odznak je systémový odznak a nie je možné ho vypnúť a/alebo odstrániť.
         status: Stav
         title: Odznaky
         new_badge: Nový odznak
