@@ -526,6 +526,10 @@ export default Mixin.create({
       return;
     }
 
+    if (this.isInsideCodeFence(text, offset)) {
+      return;
+    }
+
     const listPrefix = match[0];
     const indentationLevel = match[1];
     const bullet = match[2];
@@ -712,5 +716,14 @@ export default Mixin.create({
         `${code}:`
       );
     }
+  },
+
+  isInsideCodeFence(text, offset) {
+    const beforeLines = text.substring(0, offset - 1).split("\n");
+    const fencesCount = beforeLines.reduce(
+      (acc, item) => acc + (item.startsWith("```") ? 1 : 0),
+      0
+    );
+    return fencesCount % 2 !== 0;
   },
 });
