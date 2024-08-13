@@ -59,12 +59,14 @@ module Chat
         scoped_memberships =
           Chat::UserChatChannelMembership
             .joins(:chat_channel)
-            .where(user: scoped_users)
+            .where(user_id: scoped_users.select(:id))
             .where(chat_channel_id: channel_permissions_map.map(&:channel_id))
 
         memberships_to_remove = []
+
         scoped_memberships.find_each do |membership|
-          scoped_user = scoped_users.find { |su| su.id == membership.user_id }
+          scoped_user = scoped_users.where(id: membership.user_id).first
+
           channel_permission =
             channel_permissions_map.find { |cpm| cpm.channel_id == membership.chat_channel_id }
 
