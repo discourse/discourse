@@ -1,9 +1,7 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import NavigationItem from "discourse/components/navigation-item";
@@ -14,18 +12,16 @@ import DMenu from "float-kit/components/d-menu";
 
 export default class NavigationBarComponent extends Component {
   @service site;
-  @tracked filterMode;
 
-  @dependentKeyCompat
   get filterType() {
-    return filterTypeForMode(this.filterMode);
+    return filterTypeForMode(this.args.filterMode);
   }
 
   get selectedNavItem() {
-    const { filterType, navItems, connectors, category } = this.args;
+    const { navItems, connectors, category } = this.args;
     let item = navItems.find((i) => i.active === true);
 
-    item = item || navItems.find((i) => i.filterType === filterType);
+    item = item || navItems.find((i) => i.filterType === this.filterType);
 
     if (!item && connectors && category) {
       connectors.forEach((c) => {
@@ -35,7 +31,7 @@ export default class NavigationBarComponent extends Component {
           typeof c.connectorClass.displayName === "function"
         ) {
           let path = c.connectorClass.path(category);
-          if (path.includes(filterType)) {
+          if (path.includes(this.filterType)) {
             item = {
               displayName: c.connectorClass.displayName(),
             };
@@ -75,8 +71,8 @@ export default class NavigationBarComponent extends Component {
                     <NavigationItem
                       @tagName="div"
                       @content={{navItem}}
-                      @filterMode={{this.filterMode}}
-                      @category={{this.category}}
+                      @filterMode={{@filterMode}}
+                      @category={{@category}}
                       class={{concat "nav-item_" navItem.name}}
                     />
                   </dropdown.item>
@@ -86,9 +82,9 @@ export default class NavigationBarComponent extends Component {
                     @name="extra-nav-item"
                     @connectorTagName="span"
                     @outletArgs={{hash
-                      category=this.category
-                      tag=this.tag
-                      filterMode=this.filterMode
+                      category=@category
+                      tag=@tag
+                      filterMode=@filterMode
                     }}
                   />
                 </dropdown.item>
@@ -100,19 +96,15 @@ export default class NavigationBarComponent extends Component {
           <PluginOutlet
             @name="inline-extra-nav-item"
             @connectorTagName="span"
-            @outletArgs={{hash
-              category=this.category
-              filterMode=this.filterMode
-            }}
+            @outletArgs={{hash category=@category filterMode=@filterMode}}
           />
         </li>
       {{else}}
         {{#each @navItems as |navItem|}}
-
           <NavigationItem
             @content={{navItem}}
-            @filterMode={{this.filterMode}}
-            @category={{this.category}}
+            @filterMode={{@filterMode}}
+            @category={{@category}}
             class={{concat "nav-item_" navItem.name}}
           />
         {{/each}}
@@ -120,9 +112,9 @@ export default class NavigationBarComponent extends Component {
           @name="extra-nav-item"
           @connectorTagName="li"
           @outletArgs={{hash
-            category=this.category
-            tag=this.tag
-            filterMode=this.filterMode
+            category=@category
+            tag=@tag
+            filterMode=@filterMode
           }}
         />
 
