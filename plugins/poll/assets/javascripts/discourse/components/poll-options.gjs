@@ -59,7 +59,7 @@ export default class PollOptionsComponent extends Component {
                 <span class="option-text">{{htmlSafe option.html}}</span>
               </button>
             {{else}}
-              <button {{on "click" (routeAction "showLogin")}}>
+              <button onclick={{routeAction "showLogin"}}>
                 {{#if (this.isChosen option)}}
                   {{#if @isCheckbox}}
                     {{icon "far-check-square"}}

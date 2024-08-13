@@ -4,11 +4,11 @@
       {{if this.isFocused 'focused'}}"
   >
     <button
-      {{on "click" this.toggleEmojiPicker}}
-      {{on "focus" this.focus}}
-      {{on "blur" this.blur}}
       type="button"
       class="btn-emoji btn-transparent"
+      onclick={{this.toggleEmojiPicker}}
+      {{on "focus" this.focus}}
+      {{on "blur" this.blur}}
     >
       {{#if @status.emoji}}
         {{html-safe this.emojiHtml}}
