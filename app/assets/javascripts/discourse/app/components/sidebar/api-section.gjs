@@ -18,43 +18,53 @@ const SidebarApiSection = <template>
       @activeLink={{@section.activeLink}}
       @expandWhenActive={{@expandWhenActive}}
       @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
+      @level={{@section.level}}
     >
-      {{#each @section.filteredLinks key="name" as |link|}}
-        <SectionLink
-          @linkName={{link.name}}
-          @linkClass={{link.classNames}}
-          @route={{link.route}}
-          @model={{link.model}}
-          @query={{link.query}}
-          @models={{link.models}}
-          @currentWhen={{link.currentWhen}}
-          @href={{link.href}}
-          @title={{link.title}}
-          @contentCSSClass={{link.contentCSSClass}}
-          @prefixColor={{link.prefixColor}}
-          @prefixBadge={{link.prefixBadge}}
-          @prefixType={{link.prefixType}}
-          @prefixValue={{link.prefixValue}}
-          @prefixCSSClass={{link.prefixCSSClass}}
-          @suffixType={{link.suffixType}}
-          @suffixValue={{link.suffixValue}}
-          @suffixCSSClass={{link.suffixCSSClass}}
-          @hoverType={{link.hoverType}}
-          @hoverValue={{link.hoverValue}}
-          @hoverAction={{link.hoverAction}}
-          @hoverTitle={{link.hoverTitle}}
-          @didInsert={{link.didInsert}}
-          @willDestroy={{link.willDestroy}}
-          @content={{link.text}}
-          @contentComponent={{component
-            link.contentComponent
-            status=link.contentComponentArgs
-          }}
-          @scrollIntoView={{and
-            @scrollActiveLinkIntoView
-            (eq link.name @section.activeLink.name)
-          }}
-        />
+      {{#each @section.filteredLinks key="name" as |item|}}
+        {{#if item.links}}
+          <SidebarApiSection
+            @section={{item}}
+            @collapsable={{@collapsable}}
+            @expandWhenActive={{@expandActiveSection}}
+            @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
+          />
+        {{else}}
+          <SectionLink
+            @linkName={{item.name}}
+            @linkClass={{item.classNames}}
+            @route={{item.route}}
+            @model={{item.model}}
+            @query={{item.query}}
+            @models={{item.models}}
+            @currentWhen={{item.currentWhen}}
+            @href={{item.href}}
+            @title={{item.title}}
+            @contentCSSClass={{item.contentCSSClass}}
+            @prefixColor={{item.prefixColor}}
+            @prefixBadge={{item.prefixBadge}}
+            @prefixType={{item.prefixType}}
+            @prefixValue={{item.prefixValue}}
+            @prefixCSSClass={{item.prefixCSSClass}}
+            @suffixType={{item.suffixType}}
+            @suffixValue={{item.suffixValue}}
+            @suffixCSSClass={{item.suffixCSSClass}}
+            @hoverType={{item.hoverType}}
+            @hoverValue={{item.hoverValue}}
+            @hoverAction={{item.hoverAction}}
+            @hoverTitle={{item.hoverTitle}}
+            @didInsert={{item.didInsert}}
+            @willDestroy={{item.willDestroy}}
+            @content={{item.text}}
+            @contentComponent={{component
+              item.contentComponent
+              status=item.contentComponentArgs
+            }}
+            @scrollIntoView={{and
+              @scrollActiveLinkIntoView
+              (eq item.name @section.activeLink.name)
+            }}
+          />
+        {{/if}}
       {{/each}}
     </Section>
   {{/if}}

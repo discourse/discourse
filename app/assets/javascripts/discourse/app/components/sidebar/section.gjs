@@ -1,11 +1,13 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { gt } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
+import element from "discourse/helpers/element";
 import {
   getCollapsedSidebarSectionKey,
   getSidebarSectionContentId,
@@ -39,6 +41,11 @@ export default class SidebarSection extends Component {
     this.router.off("routeDidChange", this, this.expandIfActive);
 
     this.args.willDestroy?.();
+  }
+
+  get dynamicElement() {
+    const tagName = this.args.level > 0 ? "li" : "div";
+    return element(tagName);
   }
 
   get isCollapsed() {
@@ -158,17 +165,19 @@ export default class SidebarSection extends Component {
 
   <template>
     {{#if this.displaySection}}
-      <div
+      <this.dynamicElement
         {{didInsert this.setExpandedState}}
         data-section-name={{@sectionName}}
         class={{concatClass
           "sidebar-section"
           "sidebar-section-wrapper"
+          (if (gt @level 0) "sidebar-subsection")
           (if
             this.displaySectionContent
             "sidebar-section--expanded"
             "sidebar-section--collapsed"
           )
+          (concat "sidebar-section--level-" @level)
         }}
         ...attributes
       >
@@ -241,7 +250,7 @@ export default class SidebarSection extends Component {
             {{yield}}
           </ul>
         {{/if}}
-      </div>
+      </this.dynamicElement>
     {{/if}}
   </template>
 }
