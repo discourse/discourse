@@ -70,6 +70,8 @@ acceptance("Composer - Image Preview", function (needs) {
       "[img]/images/avatar.png[/img]",
       // 12 Image with data attributes
       "![test|foo=bar|690x313,50%|bar=baz](upload://test.png)",
+      // 13 Video with dimensions - should not work
+      "![SampleVideo_1280x720|video](upload://test.mp4)",
     ];
 
     await fillIn(".d-editor-input", uploads.join("\n"));
