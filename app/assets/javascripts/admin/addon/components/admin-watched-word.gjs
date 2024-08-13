@@ -34,7 +34,7 @@ export default class AdminWatchedWord extends Component {
         class="btn-transparent delete-word-record"
       />
 
-      {{@word.word}}
+      <span>{{@word.word}}</span>
 
       {{#if (or (eq @actionKey "replace") (eq @actionKey "link"))}}
         &rarr;
