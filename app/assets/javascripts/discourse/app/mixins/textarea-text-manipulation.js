@@ -718,7 +718,7 @@ export default Mixin.create({
     }
   },
 
-  isInsideCodeFence(previousText) {
-    return this.isInside(previousText, /(^|\n)```/g);
+  isInsideCodeFence(beforeText) {
+    return this.isInside(beforeText, /(^|\n)```/g);
   },
 });
