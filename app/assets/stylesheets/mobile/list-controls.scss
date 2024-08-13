@@ -76,19 +76,24 @@
 .fk-d-menu-modal.list-control-toggle-link-content {
   .d-modal {
     &__body {
-      padding: 0.75rem 1rem;
+      padding-block: 0.75rem;
     }
   }
 
   .dropdown-menu {
     display: flex;
     flex-direction: column;
-    gap: 1em;
 
     &__item {
       a {
+        display: block;
         color: var(--primary);
-        font-size: var(--font-up-1-rem);
+        padding: 0.5em 1rem;
+        width: 100%;
+
+        &.active {
+          background: var(--d-selected);
+        }
       }
     }
   }

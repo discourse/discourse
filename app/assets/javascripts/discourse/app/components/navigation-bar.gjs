@@ -14,8 +14,6 @@ import DMenu from "float-kit/components/d-menu";
 
 export default class NavigationBarComponent extends Component {
   @service site;
-
-  @tracked expanded = false;
   @tracked filterMode;
 
   @dependentKeyCompat
@@ -46,10 +44,6 @@ export default class NavigationBarComponent extends Component {
       });
     }
     return item || navItems[0];
-  }
-
-  get classNames() {
-    return ["nav", "nav-pills"];
   }
 
   @action
