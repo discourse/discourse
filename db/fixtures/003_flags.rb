@@ -72,4 +72,5 @@ Flag.unscoped.seed do |s|
   s.require_message = false
   s.score_type = false
   s.applies_to = %w[Post]
+  s.skip_reset_flag_callback = true
 end

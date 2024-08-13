@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-post_action_type_view = PostActionTypeView.new
 
 PostActionType.seed do |s|
   s.id = 2

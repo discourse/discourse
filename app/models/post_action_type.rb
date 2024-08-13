@@ -12,6 +12,7 @@ class PostActionType < ActiveRecord::Base
   include AnonCacheInvalidator
 
   def expire_cache
+    puts "expire!"
     Discourse.cache.keys("post_action_types_*").each { |key| Discourse.redis.del(key) }
     Discourse.cache.keys("post_action_flag_types_*").each { |key| Discourse.redis.del(key) }
     Discourse.cache.delete(POST_ACTION_TYPE_ALL_FLAGS_KEY)
