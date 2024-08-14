@@ -275,8 +275,10 @@ class UploadsController < ApplicationController
   )
     if file.nil?
       if url.present? && is_api
-        maximum_upload_size = max_upload_size_for_user(current_user)
-
+        maximum_upload_size = [
+          SiteSetting.max_image_size_kb,
+          max_attachment_size_for_user(current_user),
+        ].max.kilobytes
         tempfile =
           begin
             FileHelper.download(
@@ -359,14 +361,6 @@ class UploadsController < ApplicationController
           I18n.t("upload.create_multipart_failure", additional_detail: err.message),
         )
       raise ExternalUploadHelpers::ExternalUploadValidationError.new(message)
-    end
-  end
-
-  def max_upload_size_for_user(user)
-    if current_user.id == Discourse::SYSTEM_USER_ID
-      [SiteSetting.max_image_size_kb.max, max_attachment_size_for_user(user)].kilobytes
-    else
-      [SiteSetting.max_image_size_kb, max_attachment_size_for_user(user)].max.kilobytes
     end
   end
 
