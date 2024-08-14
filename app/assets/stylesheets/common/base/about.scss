@@ -2,7 +2,7 @@
   &__main-content {
     display: grid;
     grid-template-columns: 2.5fr 1fr;
-    column-gap: 4em;
+    column-gap: 2em;
   }
 
   &__stats {
@@ -51,7 +51,7 @@
 .about-page-users-list {
   display: grid;
   gap: 1em;
-  grid-template-columns: repeat(auto-fit, minmax(20em, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(14em, 1fr));
 
   &__expand-button {
     width: 100%;

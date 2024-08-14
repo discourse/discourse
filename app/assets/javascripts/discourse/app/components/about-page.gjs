@@ -153,7 +153,7 @@ export default class AboutPage extends Component {
       />
     </section>
     <div class="about__main-content">
-      <section class="about__left-side">
+      <div class="about__left-side">
         <div class="about__stats">
           {{#each this.stats as |stat|}}
             <span class="about__stats-item {{stat.class}}">
@@ -168,18 +168,18 @@ export default class AboutPage extends Component {
         {{#if @model.admins.length}}
           <section class="about__admins">
             <h3>{{dIcon "users"}} {{i18n "about.our_admins"}}</h3>
-            <AboutPageUsers @users={{@model.admins}} @truncateAt={{10}} />
+            <AboutPageUsers @users={{@model.admins}} @truncateAt={{12}} />
           </section>
         {{/if}}
 
         {{#if @model.moderators.length}}
           <section class="about__moderators">
             <h3>{{dIcon "users"}} {{i18n "about.our_moderators"}}</h3>
-            <AboutPageUsers @users={{@model.moderators}} @truncateAt={{10}} />
+            <AboutPageUsers @users={{@model.moderators}} @truncateAt={{12}} />
           </section>
         {{/if}}
-      </section>
-      <section class="about__right-side">
+      </div>
+      <div class="about__right-side">
         <h3>{{i18n "about.contact"}}</h3>
         {{#if this.contactInfo}}
           <p>{{htmlSafe this.contactInfo}}</p>
@@ -203,7 +203,7 @@ export default class AboutPage extends Component {
             </div>
           {{/each}}
         </div>
-      </section>
+      </div>
     </div>
   </template>
 }
