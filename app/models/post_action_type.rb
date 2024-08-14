@@ -3,6 +3,7 @@
 class PostActionType < ActiveRecord::Base
   POST_ACTION_TYPE_ALL_FLAGS_KEY = "post_action_type_all_flags"
   POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY = "post_action_public_type_ids"
+  LIKE_POST_ACTION_ID = 2
 
   after_save { expire_cache if !skip_expire_cache_callback }
   after_destroy { expire_cache if !skip_expire_cache_callback }
@@ -12,9 +13,16 @@ class PostActionType < ActiveRecord::Base
   include AnonCacheInvalidator
 
   def expire_cache
-    puts "expire!"
-    Discourse.cache.keys("post_action_types_*").each { |key| Discourse.redis.del(key) }
-    Discourse.cache.keys("post_action_flag_types_*").each { |key| Discourse.redis.del(key) }
+    Discourse.cache.redis.del(
+      *I18n.available_locales.map do |locale|
+        Discourse.cache.normalize_key("post_action_types_#{locale}")
+      end,
+    )
+    Discourse.cache.redis.del(
+      *I18n.available_locales.map do |locale|
+        Discourse.cache.normalize_key("post_action_flag_types_#{locale}")
+      end,
+    )
     Discourse.cache.delete(POST_ACTION_TYPE_ALL_FLAGS_KEY)
     Discourse.cache.delete(POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY)
   end
