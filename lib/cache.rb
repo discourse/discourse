@@ -59,43 +59,64 @@ class Cache
   end
 
   # this removes a bunch of stuff we do not need like instrumentation and versioning
-  def read(name)
+  def read(name, hash_field: nil)
     key = normalize_key(name)
-    read_entry(key).tap { |entry| break if entry == :__corrupt_cache__ }
+    read_entry(key, hash_field: hash_field).tap { |entry| break if entry == :__corrupt_cache__ }
   end
 
-  def write(name, value, expires_in: nil)
-    write_entry(normalize_key(name), value, expires_in: expires_in)
+  def write(name, value, expires_in: nil, hash_field: nil)
+    write_entry(normalize_key(name), value, expires_in: expires_in, hash_field: hash_field)
   end
 
-  def delete(name)
-    redis.del(normalize_key(name))
+  def delete(name, hash_field: nil)
+    if hash_field
+      redis.hdel(normalize_key(name), hash_field)
+    else
+      redis.del(normalize_key(name))
+    end
   end
 
-  def fetch(name, expires_in: nil, force: nil, &blk)
+  def fetch(name, expires_in: nil, force: nil, hash_field: nil, &blk)
     if !block_given?
       if force
         raise ArgumentError,
               "Missing block: Calling `Cache#fetch` with `force: true` requires a block."
       end
-      return read(name)
+      return read(name, hash_field: hash_field)
     end
 
     key = normalize_key(name)
 
     if !force
-      if raw = redis.get(key)
+      if raw = redis_get(key, hash_field: hash_field)
         entry = decode_entry(raw, key)
         return entry if entry != :__corrupt_cache__
       end
     end
 
     val = blk.call
-    write_entry(key, val, expires_in: expires_in)
+    write_entry(key, val, expires_in: expires_in, hash_field: hash_field)
     val
   end
 
   protected
+
+  def redis_get(name, hash_field: nil)
+    if hash_field
+      redis.hget(name, hash_field)
+    else
+      redis.get(name)
+    end
+  end
+
+  def redis_set(name, expiry, dumped, hash_field: nil)
+    if hash_field
+      redis.hset(name, hash_field, dumped)
+      redis.expire(name, expiry)
+    else
+      redis.setex(name, expiry, dumped)
+    end
+  end
 
   def log_first_exception(e, key)
     return if defined?(@logged_a_warning)
@@ -114,16 +135,16 @@ class Cache
     :__corrupt_cache__
   end
 
-  def read_entry(key)
-    if data = redis.get(key)
+  def read_entry(key, hash_field: nil)
+    if data = redis_get(key, hash_field: hash_field)
       decode_entry(data, key)
     end
   end
 
-  def write_entry(key, value, expires_in: nil)
+  def write_entry(key, value, expires_in: nil, hash_field: nil)
     dumped = Marshal.dump(value)
     expiry = expires_in || MAX_CACHE_AGE
-    redis.setex(key, expiry, dumped)
+    redis_set(key, expiry, dumped, hash_field: hash_field)
     true
   end
 end

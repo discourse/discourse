@@ -27,6 +27,13 @@ RSpec.describe Cache do
     expect(cache.read("hash")).to eq(hash)
   end
 
+  it "supports redis hash" do
+    cache.write("redis_hash", 1, hash_field: "a")
+    cache.write("redis_hash", 2, hash_field: "b")
+    expect(cache.read("redis_hash", hash_field: "a")).to eq(1)
+    expect(cache.read("redis_hash", hash_field: "b")).to eq(2)
+  end
+
   it "can be cleared" do
     Discourse.redis.set("boo", "boo")
     cache.write("hello0", "world")
@@ -46,6 +53,13 @@ RSpec.describe Cache do
 
     cache.delete("key")
     expect(cache.fetch("key")).to eq(nil)
+
+    cache.fetch("redis_hash", hash_field: "hash_field") { "test" }
+
+    expect(cache.fetch("redis_hash", hash_field: "hash_field")).to eq("test")
+
+    cache.delete("redis_hash", hash_field: "hash_field")
+    expect(cache.fetch("redis_hash", hash_field: "hash_field")).to eq(nil)
   end
 
   it "calls setex in redis" do
@@ -63,6 +77,16 @@ RSpec.describe Cache do
 
     key = cache.normalize_key("bla")
     expect(Discourse.redis.ttl(key)).to be_within(2.seconds).of(1.day)
+  end
+
+  it "set expiry for redis hash" do
+    cache.delete("redis_hash")
+
+    key = cache.normalize_key("redis_hash")
+
+    cache.fetch("redis_hash", hash_field: "a", expires_in: 1.minute) { "bob" }
+
+    expect(Discourse.redis.ttl(key)).to be_within(2.seconds).of(1.minute)
   end
 
   it "can store and fetch correctly" do
@@ -131,6 +155,24 @@ RSpec.describe Cache do
 
       it "isn't prone to that race condition" do
         expect(fetch_value).to eq("bob")
+      end
+    end
+
+    context "when value is Redis hash and cache is corrupted" do
+      subject(:fetch_value) { cache.fetch("redis_hash", hash_field: "hash_field") { "bob" } }
+
+      before do
+        cache.delete("redis_hash")
+        Discourse.redis.hset(cache.normalize_key("redis_hash"), "hash_field", "")
+      end
+
+      it "runs and return the provided block" do
+        expect(fetch_value).to eq("bob")
+      end
+
+      it "generates a new cache entry" do
+        fetch_value
+        expect(cache.read("redis_hash", hash_field: "hash_field")).to eq("bob")
       end
     end
   end
