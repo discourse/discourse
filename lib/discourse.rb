@@ -897,6 +897,20 @@ module Discourse
   end
 
   # all forking servers must call this
+  # before forking, otherwise the forked process might
+  # be in a bad state
+  def self.before_fork
+    # V8 does not support forking, make sure all contexts are disposed
+    ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
+
+    # get rid of rubbish so we don't share it
+    # longer term we will use compact! here
+    GC.start
+    GC.start
+    GC.start
+  end
+
+  # all forking servers must call this
   # after fork, otherwise Discourse will be
   # in a bad state
   def self.after_fork
