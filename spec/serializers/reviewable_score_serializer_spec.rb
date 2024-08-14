@@ -54,6 +54,15 @@ RSpec.describe ReviewableScoreSerializer do
         end
       end
     end
+
+    context "with custom reasons" do
+      it "serializes it without doing any translation" do
+        custom = "completely custom flag reason"
+        serialized = serialized_score(custom)
+
+        expect(serialized.reason).to eq(custom)
+      end
+    end
   end
 
   describe "#setting_name_for_reason" do
