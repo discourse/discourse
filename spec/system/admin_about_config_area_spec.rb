@@ -95,6 +95,20 @@ describe "Admin About Config Area Page", type: :system do
       )
       expect(SiteSetting.about_banner_image.sha1).to eq(Upload.generate_digest(image_file))
     end
+
+    describe "the banner image field" do
+      it "can remove the uploaded image" do
+        SiteSetting.about_banner_image = image_upload
+
+        config_area.visit
+
+        config_area.general_settings_section.banner_image_uploader.remove_image
+
+        config_area.general_settings_section.submit
+        expect(config_area.general_settings_section).to have_saved_successfully
+        expect(SiteSetting.about_banner_image).to eq(nil)
+      end
+    end
   end
 
   describe "the contact information card" do

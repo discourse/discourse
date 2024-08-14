@@ -64,6 +64,13 @@ describe "About page", type: :system do
       expect(about_page).to have_moderators_count(1, "1")
     end
 
+    it "doesn't render banner image when it's not set" do
+      SiteSetting.about_banner_image = nil
+
+      about_page.visit
+      expect(about_page).to have_no_banner_image
+    end
+
     describe "displayed site age" do
       it "says less than 1 month if the site is less than 1 month old" do
         Discourse.stubs(:site_creation_date).returns(1.week.ago)

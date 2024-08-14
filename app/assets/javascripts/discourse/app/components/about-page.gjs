@@ -141,7 +141,9 @@ export default class AboutPage extends Component {
 
   <template>
     <section class="about__header">
-      <img class="about__banner" src={{@model.banner_image}} />
+      {{#if @model.banner_image}}
+        <img class="about__banner" src={{@model.banner_image}} />
+      {{/if}}
       <h3>{{@model.title}}</h3>
       <p class="short-description">{{@model.description}}</p>
       <PluginOutlet

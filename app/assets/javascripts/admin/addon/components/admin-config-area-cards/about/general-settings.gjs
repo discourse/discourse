@@ -59,7 +59,7 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
 
   @action
   setImage(upload, { set }) {
-    set("aboutBannerImage", upload.url);
+    set("aboutBannerImage", upload?.url);
   }
 
   <template>
