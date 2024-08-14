@@ -18,6 +18,10 @@ module PageObjects
         # called immediately after selecting an image.
         @element.has_css?(".btn-danger", wait: 10)
       end
+
+      def remove_image
+        @element.find(".btn-danger").click
+      end
     end
   end
 end
