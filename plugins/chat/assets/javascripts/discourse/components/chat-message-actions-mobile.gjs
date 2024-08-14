@@ -106,6 +106,7 @@ export default class ChatMessageActionsMobile extends Component {
                 <DButton
                   @translatedLabel={{button.name}}
                   @icon={{button.icon}}
+                  @triggerImmediately={{true}}
                   @action={{fn this.actAndCloseMenu button.id}}
                   class="chat-message-action"
                 />
