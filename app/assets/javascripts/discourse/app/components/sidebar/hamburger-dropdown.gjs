@@ -5,6 +5,7 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { or } from "truth-helpers";
 import DeferredRender from "discourse/components/deferred-render";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import ApiPanels from "./api-panels";
 import Footer from "./footer";
 import Sections from "./sections";
@@ -56,6 +57,7 @@ export default class SidebarHamburgerDropdown extends Component {
                 class="sidebar-hamburger-dropdown"
                 {{didInsert this.focusFirstLink}}
               >
+                <PluginOutlet @name="before-sidebar-sections" />
                 {{#if
                   (or this.sidebarState.showMainPanel @forceMainSidebarPanel)
                 }}
