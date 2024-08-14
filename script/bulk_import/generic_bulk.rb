@@ -404,8 +404,15 @@ class BulkImport::Generic < BulkImport::Base
 
     create_group_users(group_members) do |row|
       group_id =
-        row["existing_id"].nil? ? group_id_from_imported_id(row["group_id"]) : row["existing_id"]
+        (
+          if row["existing_id"].nil?
+            group_id_from_imported_id(row["group_id"])
+          else
+            row["existing_id"].to_i
+          end
+        )
       user_id = user_id_from_imported_id(row["user_id"])
+      next if user_id.nil?
       next if existing_group_user_ids.include?([group_id, user_id])
 
       { group_id: group_id, user_id: user_id }
@@ -457,6 +464,7 @@ class BulkImport::Generic < BulkImport::Base
         suspended_till: suspended_till,
         registration_ip_address: row["registration_ip_address"],
         date_of_birth: to_date(row["date_of_birth"]),
+        trust_level: row["trust_level"],
       }
     end
 
