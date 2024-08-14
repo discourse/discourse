@@ -154,6 +154,8 @@ class Demon::Base
   end
 
   def run
+    Discourse.before_fork if defined?(Discourse)
+
     @pid =
       fork do
         Process.setproctitle("discourse #{self.class.prefix}")
@@ -161,6 +163,7 @@ class Demon::Base
         establish_app
         after_fork
       end
+
     write_pid_file
   end
 
