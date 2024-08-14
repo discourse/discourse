@@ -295,14 +295,17 @@ desc "create a new plugin based on template"
 task "plugin:create", [:name] do |t, args|
   class StringHelpers
     def self.to_snake_case(string)
+      return string if string.match?(/\A[a-z0-9_]+\z/)
       string.dup.gsub!("-", "_")
     end
 
     def self.to_pascal_case(string)
+      return string if string.match?(/\A[A-Z][a-z0-9]+([A-Z][a-z0-9]+)*\z/)
       string.dup.split("-").map(&:capitalize).join
     end
 
     def self.to_pascal_spaced_case(string)
+      return string if string.match?(/\A[A-Z][a-z0-9]+([A-Z][a-z0-9]+)*\z/)
       string.dup.split("-").map(&:capitalize).join(" ")
     end
 
@@ -320,10 +323,9 @@ task "plugin:create", [:name] do |t, args|
 
   abort("Plugin directory, " + plugin_path + ", already exists.") if File.directory?(plugin_path)
 
-  promises = []
   failures = []
   repo = "https://github.com/discourse/discourse-plugin-skeleton"
-  promises << Concurrent::Promise.execute do
+  begin
     attempts ||= 1
     STDOUT.puts("Cloning '#{repo}' to '#{plugin_path}'...")
     system("git clone --quiet #{repo} #{plugin_path}", exception: true)
@@ -337,7 +339,6 @@ task "plugin:create", [:name] do |t, args|
     attempts += 1
     retry
   end
-  Concurrent::Promise.zip(*promises).value!
   failures.each { |repo| STDOUT.puts "Failed to clone #{repo}" } if failures.present?
 
   Dir.chdir(plugin_path) do # rubocop:disable Discourse/NoChdir
@@ -355,11 +356,15 @@ task "plugin:create", [:name] do |t, args|
 
   puts "🚂 Renaming directories..."
 
-  File.rename "plugins/#{plugin_name}/lib/my_plugin_module",
-              "plugins/#{plugin_name}/lib/#{StringHelpers.to_snake_case(plugin_name)}"
+  File.rename File.expand_path("plugins/#{plugin_name}/lib/my_plugin_module"),
+              File.expand_path(
+                "plugins/#{plugin_name}/lib/#{StringHelpers.to_snake_case(plugin_name)}",
+              )
 
-  File.rename "plugins/#{plugin_name}/app/controllers/my_plugin_module",
-              "plugins/#{plugin_name}/app/controllers/#{StringHelpers.to_snake_case(plugin_name)}"
+  File.rename File.expand_path("plugins/#{plugin_name}/app/controllers/my_plugin_module"),
+              File.expand_path(
+                "plugins/#{plugin_name}/app/controllers/#{StringHelpers.to_snake_case(plugin_name)}",
+              )
 
   to_update_files = # assume all start with ./#{plugin_name}/
     [
