@@ -520,13 +520,10 @@ class Upload < ActiveRecord::Base
 
     DistributedMutex.synchronize("migrate_upload_to_new_scheme") do
       if SiteSetting.migrate_to_new_scheme
-        if SiteSetting.system_user_max_attachment_size_kb > 0
-          max_attachment_size = SiteSetting.system_user_max_attachment_size_kb
-        else
-          max_attachment_size = SiteSetting.max_attachment_size_kb
-        end
-
-        max_file_size_kb = [SiteSetting.max_image_size_kb, max_attachment_size].max.kilobytes
+        max_file_size_kb = [
+          SiteSetting.max_image_size_kb,
+          SiteSetting.max_attachment_size_kb,
+        ].max.kilobytes
 
         local_store = FileStore::LocalStore.new
         db = RailsMultisite::ConnectionManagement.current_db
