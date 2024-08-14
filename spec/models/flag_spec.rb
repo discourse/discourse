@@ -70,4 +70,30 @@ RSpec.describe Flag, type: :model do
       %i[notify_user off_topic inappropriate spam illegal notify_moderators needs_approval],
     )
   end
+
+  describe ".used_flag_ids" do
+    fab!(:post_action) { Fabricate(:post_action, post_action_type_id: PostActionType.types[:like]) }
+    fab!(:post_action_2) do
+      Fabricate(:post_action, post_action_type_id: PostActionType.types[:like])
+    end
+    fab!(:post_action_3) do
+      Fabricate(:post_action, post_action_type_id: PostActionType.types[:off_topic])
+    end
+    fab!(:reviewable_score) do
+      Fabricate(:reviewable_score, reviewable_score_type: PostActionType.types[:off_topic])
+    end
+    fab!(:reviewable_score_2) do
+      Fabricate(:reviewable_score, reviewable_score_type: PostActionType.types[:illegal])
+    end
+
+    it "returns an array of unique flag ids" do
+      expect(Flag.used_flag_ids).to eq(
+        [
+          PostActionType.types[:like],
+          PostActionType.types[:off_topic],
+          PostActionType.types[:illegal],
+        ],
+      )
+    end
+  end
 end

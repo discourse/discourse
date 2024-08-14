@@ -107,10 +107,8 @@ class TranslationOverride < ActiveRecord::Base
   end
 
   def self.expire_cache(locale, key)
-    if key.starts_with?("post_action_types.")
-      ApplicationSerializer.expire_cache_fragment!("post_action_types_#{locale}")
-    elsif key.starts_with?("topic_flag_types.")
-      ApplicationSerializer.expire_cache_fragment!("post_action_flag_types_#{locale}")
+    if key.starts_with?("post_action_types.") || key.starts_with?("topic_flag_types.")
+      PostActionType.new.expire_cache
     else
       return false
     end
