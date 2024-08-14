@@ -77,6 +77,11 @@ class User < ActiveRecord::Base
           dependent: :destroy
   has_one :invited_user, dependent: :destroy
   has_one :user_notification_schedule, dependent: :destroy
+  has_one :unexpired_password,
+          -> { where(password_expired_at: nil) },
+          class_name: "UserPassword",
+          dependent: :destroy,
+          autosave: true
   has_many :passwords, class_name: "UserPassword", dependent: :destroy, autosave: true
 
   # delete all is faster but bypasses callbacks
@@ -914,19 +919,21 @@ class User < ActiveRecord::Base
     )
   end
 
-  def password=(password)
+  def password=(pw)
     # special case for passwordless accounts
-    return if password.blank?
+    return if pw.blank?
 
-    # TODO: we don't want to allow for this logic to expire identical passwords; add a unit test on 2 saves of User with the same password
-    # We intentionally want to prepare expiry of the previous unexpired password at the User level since calling this method indicates intention to have a new unexpired password
-    if (unexpired_password = passwords.reload.find { |p| p.password_expired_at.nil? })
-      unexpired_password.password_expired_at = Time.now.zone
-    end
     # TODO: deprecate passing through salt once User.salt is dropped
     @salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
-    # @raw_password = passwords.build(salt:, password:, should_expire_previous_password: true).password
-    @raw_password = passwords.build(salt:, password:).password
+
+    if unexpired_password
+      unexpired_password.salt = salt
+      unexpired_password.password = pw
+    else
+      build_unexpired_password(salt: salt, password: pw)
+    end
+
+    @raw_password = pw
   end
 
   def password
