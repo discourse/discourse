@@ -37,7 +37,9 @@ nb_NO:
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D. MMMM YYYY"
       long_date_without_year: "D MMM, LT"
+      long_date_with_year_without_time: "D. MMM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
+      long_date_with_year_with_linebreak: "D. MMM YYYY <br/>LT"
       wrap_ago: "%{date} siden"
       wrap_on: "på %{date}"
       tiny:
@@ -75,15 +77,34 @@ nb_NO:
         date_month: "D MMM"
         date_year: "MMM YYYY"
       medium:
+        less_than_x_minutes:
+          one: "mindre enn %{count} min"
+          other: "mindre enn %{count} min"
         x_minutes:
           one: "%{count} minutt"
           other: "%{count} minutter"
         x_hours:
           one: "%{count} time"
           other: "%{count} timer"
+        about_x_hours:
+          one: "ca %{count} time"
+          other: "ca %{count} timer"
         x_days:
           one: "%{count} dag"
           other: "%{count} dager"
+        x_months:
+          one: "%{count} måned"
+          other: "%{count} måneder"
+        about_x_years:
+          one: "ca %{count} år"
+          other: "ca %{count} år"
+        over_x_years:
+          one: "over %{count} år"
+          other: "over %{count} år"
+        almost_x_years:
+          one: "nesten %{count} år"
+          other: "nesten %{count} år"
+        date_year: "D. MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} minutt siden"
@@ -117,11 +138,15 @@ nb_NO:
       to_placeholder: "til dato"
     share:
       topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
+      post: "innlegg #%{postNumber} av @%{username}"
       close: "lukk"
       twitter: "Del på Twitter"
       facebook: "Del på Facebook"
       email: "Send via e-post"
       url: "Kopier og del URL"
+    word_connector:
+      comma: ", "
+      last_item: "og"
     action_codes:
       public_topic: "Gjorde dette emnet offentlig %{when}"
       open_topic: "Konverterte dette til et emne %{when}"
@@ -133,6 +158,8 @@ nb_NO:
       removed_user: "Fjernet %{who} %{when}"
       removed_group: "Fjernet %{who} %{when}"
       autobumped: "Automatisk flyttet øverst %{when}"
+      tags_changed: "Taggene oppdatert %{when}"
+      category_changed: "Kategorien oppdatert %{when}"
       autoclosed:
         enabled: "Lukket %{when}"
         disabled: "Åpnet %{when}"
@@ -154,31 +181,50 @@ nb_NO:
       banner:
         enabled: "Gjorde dette til et banner %{when}. Det vil vises på toppen av hver side inntil brukeren lukker det."
         disabled: "Fjernet dette banneret %{when}. Det vil ikke lenger vises på toppen av hver side."
-    topic_admin_menu: "handlinger for tråd"
+      forwarded: "Videresendte e-posten ovenfor"
+    topic_admin_menu: "emnehandlinger"
     skip_to_main_content: "Gå til hovedinnhold"
+    skip_user_nav: "Gå til profilinnhold"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
+    emails_are_disabled_non_staff: "Utgående e-post er deaktivert for brukere som ikke er blant staben."
     software_update_prompt:
+      message: "Vi har oppdatert denne siden, <span>vennligst oppdater siden</span> for å sikre at alt fungerer som det skal."
       dismiss: "Avslå"
+    bootstrap_mode: "Kom godt i gang"
     back_button: "Forrige"
     themes:
       default_description: "Forvalg"
+      broken_theme_alert: "Det kan hende at nettstedet ditt ikke fungerer fordi et tema/en komponent har feil."
+      error_caused_by: "Forårsaket av '%{name}'. <a target='blank' href='%{path}'>Klikk her</a> for å oppdatere, rekonfigurere eller deaktivere."
+      only_admins: "(denne meldingen vises bare til nettstedets administratorer)"
+    broken_decorator_alert: "Innlegg vises kanskje ikke riktig fordi en av dekoratorene for innleggsinnhold på nettstedet ditt har gitt en feil."
+    broken_page_change_alert: "En onPageChange-hendelsesbehandler utløste en feil. Sjekk nettleserens utviklerverktøy for mer informasjon."
+    broken_plugin_alert: "Forårsaket av utvidinga '%{name}'"
+    broken_transformer_alert: "Det oppstod en feil. Det kan hende at nettstedet ditt ikke fungerer som det skal."
+    critical_deprecation:
+      notice: "<b>[Adminsvarsel]</b> Et av temaene eller utvidingene dine må oppdateres for kompatibilitet med kommende endringer i Discourse-kjernen."
+      id: "(id:<em>%{id}</em>)"
+      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
+      theme_source: "Identifisert tema: <a target='_blank' href='%{path}'>'%{name}'</a>."
+      plugin_source: "Identifisert utviding: '%{name}'"
     s3:
       regions:
-        ap_northeast_1: "Asia/Stillehavsregionen (Tokyo)"
-        ap_northeast_2: "Asia/Stillehavsregionen (Seoul)"
+        ap_northeast_1: "Asia Stillehavet (Tokyo)"
+        ap_northeast_2: "Asia Stillehavet (Seoul)"
         ap_east_1: "Asia Stillehavet (Hong Kong)"
-        ap_south_1: "Asia/Stillehavsregionen (Mumbai)"
-        ap_southeast_1: "Asia/Stillehavsregionen (Singapore)"
-        ap_southeast_2: "Asia/Stillehavsregionen (Sydney)"
+        ap_south_1: "Asia Stillehavet (Mumbai)"
+        ap_southeast_1: "Asia Stillehavet (Singapore)"
+        ap_southeast_2: "Asia Stillehavet (Sydney)"
         ca_central_1: "Kanada (sentralregion)"
         cn_north_1: "Kina (Beijing)"
         cn_northwest_1: "Kina (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_north_1: "EU (Stockholm)"
+        eu_south_1: "EU (Milan)"
         eu_west_1: "EU (Irland)"
         eu_west_2: "EU (London)"
         eu_west_3: "EU (Paris)"
-        sa_east_1: "Sør-Amerika (søndag Paulo)"
+        sa_east_1: "Sør-Amerika (São Paulo)"
         us_east_1: "USA øst (N. Virginia)"
         us_east_2: "USA øst (Ohio)"
         us_gov_east_1: "AWS GovCloud (US-øst)"
@@ -198,6 +244,7 @@ nb_NO:
     delete: "Slett"
     generic_error: "Beklager, det har oppstått en feil."
     generic_error_with_reason: "Det oppstod et problem: %{error}"
+    multiple_errors: "Det oppsto flere feil: %{errors}"
     sign_up: "Registrer deg"
     log_in: "Logg inn"
     age: "Alder"
