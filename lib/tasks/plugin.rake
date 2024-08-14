@@ -290,3 +290,129 @@ task "plugin:versions" do |t, args|
 
   puts JSON.pretty_generate(versions)
 end
+
+desc "create a new plugin based on template"
+task "plugin:create", [:name] do |t, args|
+  class StringHelpers
+    def self.to_snake_case(string)
+      return string if string.match?(/\A[a-z0-9_]+\z/)
+      string.dup.gsub!("-", "_")
+    end
+
+    def self.to_pascal_case(string)
+      return string if string.match?(/\A[A-Z][a-z0-9]+([A-Z][a-z0-9]+)*\z/)
+      string.dup.split("-").map(&:capitalize).join
+    end
+
+    def self.to_pascal_spaced_case(string)
+      return string if string.match?(/\A[A-Z][a-z0-9]+([A-Z][a-z0-9]+)*\z/)
+      string.dup.split("-").map(&:capitalize).join(" ")
+    end
+
+    def self.is_in_kebab_case?(string)
+      string.match?(/\A[a-z0-9]+(-[a-z0-9]+)*\z/)
+    end
+  end
+
+  plugin_name = args[:name]
+
+  abort("Supply a name for the plugin") if plugin_name.blank?
+  abort("Name must be in kebab-case") unless StringHelpers.is_in_kebab_case?(plugin_name)
+
+  plugin_path = File.expand_path("plugins/" + plugin_name)
+
+  abort("Plugin directory, " + plugin_path + ", already exists.") if File.directory?(plugin_path)
+
+  failures = []
+  repo = "https://github.com/discourse/discourse-plugin-skeleton"
+  begin
+    attempts ||= 1
+    STDOUT.puts("Cloning '#{repo}' to '#{plugin_path}'...")
+    system("git clone --quiet #{repo} #{plugin_path}", exception: true)
+  rescue StandardError
+    if attempts == 3
+      failures << repo
+      abort
+    end
+
+    STDOUT.puts "Failed to clone #{repo}... trying again..."
+    attempts += 1
+    retry
+  end
+  failures.each { |repo| STDOUT.puts "Failed to clone #{repo}" } if failures.present?
+
+  Dir.chdir(plugin_path) do # rubocop:disable Discourse/NoChdir
+    puts "Initializing git repository..."
+
+    FileUtils.rm_rf("#{plugin_path}/.git")
+    FileUtils.rm_rf(Dir.glob("#{plugin_path}/**/.gitkeep"))
+    system "git", "init", exception: true
+    system "git", "symbolic-ref", "HEAD", "refs/heads/main", exception: true
+    root_files = Dir.glob("*").select { |f| File.file?(f) }
+    system "git", "add", *root_files, exception: true
+    system "git", "add", ".", exception: true
+    system "git", "commit", "-m", "Initial commit", "--quiet", exception: true
+  end
+
+  puts "🚂 Renaming directories..."
+
+  File.rename File.expand_path("plugins/#{plugin_name}/lib/my_plugin_module"),
+              File.expand_path(
+                "plugins/#{plugin_name}/lib/#{StringHelpers.to_snake_case(plugin_name)}",
+              )
+
+  File.rename File.expand_path("plugins/#{plugin_name}/app/controllers/my_plugin_module"),
+              File.expand_path(
+                "plugins/#{plugin_name}/app/controllers/#{StringHelpers.to_snake_case(plugin_name)}",
+              )
+
+  to_update_files = # assume all start with ./#{plugin_name}/
+    [
+      "app/controllers/#{StringHelpers.to_snake_case(plugin_name)}/examples_controller.rb",
+      "config/locales/client.en.yml",
+      "config/routes.rb",
+      "config/settings.yml",
+      "lib/#{StringHelpers.to_snake_case(plugin_name)}/engine.rb",
+      "plugin.rb",
+      "README.md",
+    ]
+
+  to_update_files.each do |file|
+    puts "🚂 Updating #{file}..."
+
+    updated_file = []
+    File.foreach("plugins/#{plugin_name}/#{file}") do |line|
+      updated_file << line
+        .gsub("MyPluginModule", StringHelpers.to_pascal_case(plugin_name))
+        .gsub("my_plugin_module", StringHelpers.to_snake_case(plugin_name))
+        .gsub("my-plugin", plugin_name)
+        .gsub("discourse-plugin-name", plugin_name)
+        .gsub("TODO_plugin_name", StringHelpers.to_snake_case(plugin_name))
+        .gsub("plugin_name_enabled", "#{StringHelpers.to_snake_case(plugin_name)}_enabled")
+        .gsub("discourse_plugin_name", StringHelpers.to_snake_case(plugin_name))
+        .gsub("Plugin Name", StringHelpers.to_pascal_spaced_case(plugin_name))
+        .gsub(
+          "lib/my_plugin_module/engine",
+          "lib/#{StringHelpers.to_snake_case(plugin_name)}/engine",
+        )
+    end
+
+    File.open("plugins/#{plugin_name}/#{file}", "w") { |f| f.write(updated_file.join("")) }
+  end
+
+  Dir.chdir(plugin_path) do # rubocop:disable Discourse/NoChdir
+    puts "Committing changes..."
+    system "git", "add", ".", exception: true
+    system "git",
+           "commit",
+           "-m",
+           "Update plugin skeleton with plugin name",
+           "--quiet",
+           exception: true
+  end
+
+  puts "Done! 🎉"
+
+  puts "Do not forget to update the README.md and plugin.rb file with the plugin description and the url of the plugin."
+  puts "You are ready to start developing your plugin! 🚀"
+end
