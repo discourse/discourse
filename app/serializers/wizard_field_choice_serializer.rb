@@ -10,7 +10,7 @@ class WizardFieldChoiceSerializer < ApplicationSerializer
   def i18nkey
     field = object.field
     step = field.step
-    "wizard.step.#{step.id}.fields.#{field.id}.choices.#{id}"
+    "wizard.step.#{step.id}.fields.#{field.id}.choices.#{id}".underscore
   end
 
   def label
