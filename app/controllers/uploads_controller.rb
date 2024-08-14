@@ -275,10 +275,8 @@ class UploadsController < ApplicationController
   )
     if file.nil?
       if url.present? && is_api
-        maximum_upload_size = [
-          SiteSetting.max_image_size_kb,
-          max_attachment_size_for_user(current_user),
-        ].max.kilobytes
+        maximum_upload_size = max_upload_size_for_user(current_user)
+
         tempfile =
           begin
             FileHelper.download(
@@ -364,12 +362,18 @@ class UploadsController < ApplicationController
     end
   end
 
+  def max_upload_size_for_user(user)
+    if current_user.id == Discourse::SYSTEM_USER_ID
+      [SiteSetting.max_image_size_kb.max, max_attachment_size_for_user(user)].kilobytes
+    else
+      [SiteSetting.max_image_size_kb, max_attachment_size_for_user(user)].max.kilobytes
+    end
+  end
+
   def max_attachment_size_for_user(user)
-    puts "Why do I never see this?"
     if user.id == Discourse::SYSTEM_USER_ID && SiteSetting.system_user_max_attachment_size_kb
       SiteSetting.system_user_max_attachment_size_kb
     else
-      puts "Am I here?"
       SiteSetting.max_attachment_size_kb
     end
   end
