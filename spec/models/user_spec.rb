@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe User do
-  subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
+  subject(:user) { Fabricate(:user, password: "myawesomepassword", last_seen_at: 1.day.ago) }
 
   fab!(:group)
 

@@ -3,10 +3,12 @@
 require "rotp"
 
 RSpec.describe SessionController do
-  let(:user) { Fabricate(:user) }
+  USER_PASSWORD = SecureRandom.hex
+  ADMIN_PASSWORD = SecureRandom.hex
+  fab!(:user) { Fabricate(:user, password: USER_PASSWORD) }
   let(:email_token) { Fabricate(:email_token, user: user) }
 
-  fab!(:admin)
+  fab!(:admin) { Fabricate(:admin, password: ADMIN_PASSWORD) }
   let(:admin_email_token) { Fabricate(:email_token, user: admin) }
 
   shared_examples "failed to continue local login" do
@@ -229,6 +231,7 @@ RSpec.describe SessionController do
 
       it "doesn't log in the user when not approved" do
         SiteSetting.must_approve_users = true
+        user.update!(approved: false)
 
         post "/session/email-login/#{email_token.token}.json"
 
@@ -451,7 +454,7 @@ RSpec.describe SessionController do
             post "/session/email-login/#{email_token.token}.json",
                  params: {
                    login: user.username,
-                   password: "myawesomepassword",
+                   password: USER_PASSWORD,
                    second_factor_token: valid_security_key_auth_post_data,
                    second_factor_method: UserSecondFactor.methods[:security_key],
                  }
@@ -1849,12 +1852,12 @@ RSpec.describe SessionController do
       end
 
       it "prevents login by regular users" do
-        post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+        post "/session.json", params: { login: user.username, password: USER_PASSWORD }
         expect(response.status).not_to eq(200)
       end
 
       it "prevents login by admins" do
-        post "/session.json", params: { login: admin.username, password: "myawesomepassword" }
+        post "/session.json", params: { login: admin.username, password: USER_PASSWORD }
         expect(response.status).not_to eq(200)
       end
     end
@@ -1869,13 +1872,13 @@ RSpec.describe SessionController do
       end
 
       it "allows admin login" do
-        post "/session.json", params: { login: admin.username, password: "myawesomepassword" }
+        post "/session.json", params: { login: admin.username, password: ADMIN_PASSWORD }
         expect(response.status).to eq(200)
         expect(response.parsed_body["error"]).not_to be_present
       end
 
       it "prevents login by regular users" do
-        post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+        post "/session.json", params: { login: user.username, password: USER_PASSWORD }
         expect(response.status).not_to eq(200)
       end
     end
@@ -1884,7 +1887,7 @@ RSpec.describe SessionController do
       before do
         SiteSetting.enable_local_logins = false
 
-        post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+        post "/session.json", params: { login: user.username, password: USER_PASSWORD }
       end
       it_behaves_like "failed to continue local login"
     end
@@ -1894,7 +1897,7 @@ RSpec.describe SessionController do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
         SiteSetting.enable_discourse_connect = true
 
-        post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+        post "/session.json", params: { login: user.username, password: USER_PASSWORD }
       end
       it_behaves_like "failed to continue local login"
     end
@@ -1905,7 +1908,7 @@ RSpec.describe SessionController do
         EmailToken.confirm(email_token.token)
       end
       it "doesnt matter, logs in correctly" do
-        post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+        post "/session.json", params: { login: user.username, password: USER_PASSWORD }
         expect(response.status).to eq(200)
         expect(response.parsed_body["error"]).not_to be_present
       end
@@ -1951,7 +1954,7 @@ RSpec.describe SessionController do
           user.save!
           StaffActionLogger.new(user).log_user_suspend(user, "<strike>banned</strike>")
 
-          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+          post "/session.json", params: { login: user.username, password: USER_PASSWORD }
 
           expected_message =
             I18n.t(
@@ -1969,7 +1972,7 @@ RSpec.describe SessionController do
           user.save!
           StaffActionLogger.new(user).log_user_suspend(user, "<strike>banned</strike>")
 
-          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+          post "/session.json", params: { login: user.username, password: USER_PASSWORD }
 
           expected_message =
             I18n.t(
@@ -1985,7 +1988,7 @@ RSpec.describe SessionController do
           user.active = false
           user.save!
 
-          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+          post "/session.json", params: { login: user.username, password: USER_PASSWORD }
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).to eq(I18n.t("login.not_activated"))
@@ -1996,7 +1999,7 @@ RSpec.describe SessionController do
         it "logs in correctly" do
           events =
             DiscourseEvent.track_events do
-              post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+              post "/session.json", params: { login: user.username, password: USER_PASSWORD }
             end
 
           expect(response.status).to eq(200)
@@ -2022,7 +2025,7 @@ RSpec.describe SessionController do
             post "/session.json",
                  params: {
                    login: user.username,
-                   password: "myawesomepassword",
+                   password: USER_PASSWORD,
                    timezone: "Australia/Melbourne",
                  }
             expect(response.status).to eq(200)
@@ -2037,7 +2040,7 @@ RSpec.describe SessionController do
           Fabricate(
             :expired_user_password,
             user:,
-            password: "myawesomepassword",
+            password: USER_PASSWORD,
             password_salt: user.salt,
             password_algorithm: user.password_algorithm,
           )
@@ -2048,7 +2051,7 @@ RSpec.describe SessionController do
         use_redis_snapshotting
 
         it "should return an error response code with the right error message" do
-          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+          post "/session.json", params: { login: user.username, password: USER_PASSWORD }
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).to eq("expired")
@@ -2072,7 +2075,7 @@ RSpec.describe SessionController do
           DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
 
           # store challenge in secure session by failing login once
-          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+          post "/session.json", params: { login: user.username, password: USER_PASSWORD }
         end
 
         context "when the security key params are blank and a random second factor token is provided" do
@@ -2080,7 +2083,7 @@ RSpec.describe SessionController do
             post "/session.json",
                  params: {
                    login: user.username,
-                   password: "myawesomepassword",
+                   password: USER_PASSWORD,
                    second_factor_token: "99999999",
                    second_factor_method: UserSecondFactor.methods[:security_key],
                  }
@@ -2100,7 +2103,7 @@ RSpec.describe SessionController do
             post "/session.json",
                  params: {
                    login: user.username,
-                   password: "myawesomepassword",
+                   password: USER_PASSWORD,
                    second_factor_token: {
                      signature: "bad_sig",
                      clientData: "bad_clientData",
@@ -2123,7 +2126,7 @@ RSpec.describe SessionController do
             post "/session.json",
                  params: {
                    login: user.username,
-                   password: "myawesomepassword",
+                   password: USER_PASSWORD,
                    second_factor_token: valid_security_key_auth_post_data,
                    second_factor_method: UserSecondFactor.methods[:security_key],
                  }
@@ -2147,7 +2150,7 @@ RSpec.describe SessionController do
             post "/session.json",
                  params: {
                    login: user.username,
-                   password: "myawesomepassword",
+                   password: USER_PASSWORD,
                    second_factor_token: valid_security_key_auth_post_data,
                    second_factor_method: UserSecondFactor.methods[:security_key],
                  }
@@ -2169,7 +2172,7 @@ RSpec.describe SessionController do
 
         describe "when second factor token is missing" do
           it "should return the right response" do
-            post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+            post "/session.json", params: { login: user.username, password: USER_PASSWORD }
 
             expect(response.status).to eq(200)
             expect(response.parsed_body["error"]).to eq(
@@ -2184,7 +2187,7 @@ RSpec.describe SessionController do
               post "/session.json",
                    params: {
                      login: user.username,
-                     password: "myawesomepassword",
+                     password: USER_PASSWORD,
                      second_factor_token: "00000000",
                      second_factor_method: UserSecondFactor.methods[:totp],
                    }
@@ -2201,7 +2204,7 @@ RSpec.describe SessionController do
               post "/session.json",
                    params: {
                      login: user.username,
-                     password: "myawesomepassword",
+                     password: USER_PASSWORD,
                      second_factor_token: "00000000",
                      second_factor_method: UserSecondFactor.methods[:backup_codes],
                    }
@@ -2220,7 +2223,7 @@ RSpec.describe SessionController do
               post "/session.json",
                    params: {
                      login: user.username,
-                     password: "myawesomepassword",
+                     password: USER_PASSWORD,
                      second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
                      second_factor_method: UserSecondFactor.methods[:totp],
                    }
@@ -2243,7 +2246,7 @@ RSpec.describe SessionController do
               post "/session.json",
                    params: {
                      login: user.username,
-                     password: "myawesomepassword",
+                     password: USER_PASSWORD,
                      second_factor_token: "iAmValidBackupCode",
                      second_factor_method: UserSecondFactor.methods[:backup_codes],
                    }
@@ -2268,11 +2271,7 @@ RSpec.describe SessionController do
           ScreenedIpAddress.all.destroy_all
           get "/"
           _screened_ip = Fabricate(:screened_ip_address, ip_address: request.remote_ip)
-          post "/session.json",
-               params: {
-                 login: "@" + user.username,
-                 password: "myawesomepassword",
-               }
+          post "/session.json", params: { login: "@" + user.username, password: USER_PASSWORD }
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).to be_present
           user.reload
@@ -2283,11 +2282,7 @@ RSpec.describe SessionController do
 
       describe "strips leading @ symbol" do
         it "sets a session id" do
-          post "/session.json",
-               params: {
-                 login: "@" + user.username,
-                 password: "myawesomepassword",
-               }
+          post "/session.json", params: { login: "@" + user.username, password: USER_PASSWORD }
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).not_to be_present
           user.reload
@@ -2298,7 +2293,7 @@ RSpec.describe SessionController do
 
       describe "also allow login by email" do
         it "sets a session id" do
-          post "/session.json", params: { login: user.email, password: "myawesomepassword" }
+          post "/session.json", params: { login: user.email, password: USER_PASSWORD }
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).not_to be_present
           expect(session[:current_user_id]).to eq(user.id)
@@ -2310,13 +2305,13 @@ RSpec.describe SessionController do
         let(:email) { " #{user.email} " }
 
         it "strips spaces from the username" do
-          post "/session.json", params: { login: username, password: "myawesomepassword" }
+          post "/session.json", params: { login: username, password: USER_PASSWORD }
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).not_to be_present
         end
 
         it "strips spaces from the email" do
-          post "/session.json", params: { login: email, password: "myawesomepassword" }
+          post "/session.json", params: { login: email, password: USER_PASSWORD }
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).not_to be_present
         end
@@ -2328,7 +2323,7 @@ RSpec.describe SessionController do
         context "with an unapproved user" do
           before do
             user.update_columns(approved: false)
-            post "/session.json", params: { login: user.email, password: "myawesomepassword" }
+            post "/session.json", params: { login: user.email, password: USER_PASSWORD }
           end
 
           it "doesn't log in the user" do
@@ -2348,7 +2343,7 @@ RSpec.describe SessionController do
             user.admin = true
             user.save!
 
-            post "/session.json", params: { login: user.email, password: "myawesomepassword" }
+            post "/session.json", params: { login: user.email, password: USER_PASSWORD }
             expect(response.status).to eq(200)
             expect(response.parsed_body["error"]).not_to be_present
             expect(session[:current_user_id]).to eq(user.id)
@@ -2373,7 +2368,7 @@ RSpec.describe SessionController do
           user.admin = true
           user.save!
 
-          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+          post "/session.json", params: { login: user.username, password: USER_PASSWORD }
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).not_to be_present
           expect(session[:current_user_id]).to eq(user.id)
@@ -2388,7 +2383,7 @@ RSpec.describe SessionController do
           user.admin = true
           user.save!
 
-          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+          post "/session.json", params: { login: user.username, password: USER_PASSWORD }
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).to be_present
@@ -2404,7 +2399,7 @@ RSpec.describe SessionController do
           user.admin = false
           user.save!
 
-          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+          post "/session.json", params: { login: user.username, password: USER_PASSWORD }
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).not_to be_present
@@ -2415,7 +2410,7 @@ RSpec.describe SessionController do
 
     context "when email has not been confirmed" do
       def post_login
-        post "/session.json", params: { login: user.email, password: "myawesomepassword" }
+        post "/session.json", params: { login: user.email, password: USER_PASSWORD }
       end
 
       it "doesn't log in the user" do
@@ -2435,6 +2430,7 @@ RSpec.describe SessionController do
         before { SiteSetting.must_approve_users = true }
 
         it "shows the 'not approved' error message" do
+          user.update!(approved: false)
           post_login
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).to eq(I18n.t "login.not_approved")
@@ -2452,13 +2448,13 @@ RSpec.describe SessionController do
         EmailToken.confirm(email_token.token)
 
         2.times do
-          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+          post "/session.json", params: { login: user.username, password: USER_PASSWORD }
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).not_to be_present
         end
 
-        post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+        post "/session.json", params: { login: user.username, password: USER_PASSWORD }
 
         expect(response.status).to eq(429)
         json = response.parsed_body
@@ -2470,7 +2466,7 @@ RSpec.describe SessionController do
           post "/session.json",
                params: {
                  login: "#{user.username}#{x}",
-                 password: "myawesomepassword",
+                 password: USER_PASSWORD,
                  second_factor_token: "000000",
                  second_factor_method: UserSecondFactor.methods[:totp],
                }
@@ -2481,7 +2477,7 @@ RSpec.describe SessionController do
         post "/session.json",
              params: {
                login: user.username,
-               password: "myawesomepassword",
+               password: USER_PASSWORD,
                second_factor_token: "000000",
                second_factor_method: UserSecondFactor.methods[:totp],
              }
@@ -2498,7 +2494,7 @@ RSpec.describe SessionController do
           post "/session.json",
                params: {
                  login: user.username,
-                 password: "myawesomepassword",
+                 password: USER_PASSWORD,
                  second_factor_token: "000000",
                  second_factor_method: UserSecondFactor.methods[:totp],
                },
@@ -2518,7 +2514,7 @@ RSpec.describe SessionController do
           post "/session.json",
                params: {
                  login: username,
-                 password: "myawesomepassword",
+                 password: USER_PASSWORD,
                  second_factor_token: "000000",
                  second_factor_method: UserSecondFactor.methods[:totp],
                },
@@ -2802,7 +2798,7 @@ RSpec.describe SessionController do
           SiteSetting.discourse_connect_url = "https://www.example.com/sso"
           SiteSetting.enable_discourse_connect = true
 
-          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+          post "/session.json", params: { login: user.username, password: USER_PASSWORD }
         end
         it_behaves_like "failed to continue local login"
       end
@@ -2811,7 +2807,7 @@ RSpec.describe SessionController do
         before do
           SiteSetting.enable_local_logins = false
 
-          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+          post "/session.json", params: { login: user.username, password: USER_PASSWORD }
         end
         it_behaves_like "failed to continue local login"
       end
