@@ -70,8 +70,6 @@ acceptance("Composer - Image Preview", function (needs) {
       "[img]/images/avatar.png[/img]",
       // 12 Image with data attributes
       "![test|foo=bar|690x313,50%|bar=baz](upload://test.png)",
-      // 13 Video with dimensions - should not work
-      "![SampleVideo_1280x720|video](upload://test.mp4)",
     ];
 
     await fillIn(".d-editor-input", uploads.join("\n"));
@@ -142,6 +140,13 @@ acceptance("Composer - Image Preview", function (needs) {
 \`<script>alert("xss")</script>\`
     `
     );
+
+    // don't add controls to video uploads with dimensions in name
+    await fillIn(
+      ".d-editor-input",
+      "![SampleVideo_1280x720|video](upload://test.mp4)"
+    );
+    assert.dom(".button-wrapper").doesNotExist();
 
     assert.ok(
       !exists("script"),
