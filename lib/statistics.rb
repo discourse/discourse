@@ -91,13 +91,14 @@ class Statistics
 
     periods
       .map do |(period, key)|
-        anon_page_views = ApplicationRequest.request_type_count_for_period(:page_view_anon, period)
+        anon_page_views =
+          ApplicationRequest.request_type_count_for_period(:page_view_anon_browser, period)
 
         logged_in_visitors = logged_in_visitors_count(period)
         next key, anon_page_views if logged_in_visitors == 0
 
         logged_in_page_views =
-          ApplicationRequest.request_type_count_for_period(:page_view_logged_in, period)
+          ApplicationRequest.request_type_count_for_period(:page_view_logged_in_browser, period)
         next key, anon_page_views + logged_in_visitors if logged_in_page_views == 0
 
         total_visitors = logged_in_visitors
@@ -115,8 +116,9 @@ class Statistics
     periods
       .map do |(period, key)|
         logged_in_page_views =
-          ApplicationRequest.request_type_count_for_period(:page_view_logged_in, period)
-        anon_page_views = ApplicationRequest.request_type_count_for_period(:page_view_anon, period)
+          ApplicationRequest.request_type_count_for_period(:page_view_logged_in_browser, period)
+        anon_page_views =
+          ApplicationRequest.request_type_count_for_period(:page_view_anon_browser, period)
 
         all_logged_in_visitors = logged_in_visitors_count(period)
         eu_logged_in_visitors = eu_logged_in_visitors_count(period)

@@ -3,33 +3,33 @@
 RSpec.describe Statistics do
   def create_page_views_and_user_visit_records(date, users)
     freeze_time(date - 50.minutes) do
-      2.times { ApplicationRequest.increment!(:page_view_anon) }
-      ApplicationRequest.increment!(:page_view_logged_in)
+      2.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+      ApplicationRequest.increment!(:page_view_logged_in_browser)
     end
 
     freeze_time(date - 3.days) do
-      ApplicationRequest.increment!(:page_view_anon)
-      5.times { ApplicationRequest.increment!(:page_view_logged_in) }
+      ApplicationRequest.increment!(:page_view_anon_browser)
+      5.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
     end
 
     freeze_time(date - 6.days) do
-      3.times { ApplicationRequest.increment!(:page_view_anon) }
-      4.times { ApplicationRequest.increment!(:page_view_logged_in) }
+      3.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+      4.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
     end
 
     freeze_time(date - 8.days) do
-      ApplicationRequest.increment!(:page_view_anon)
-      ApplicationRequest.increment!(:page_view_logged_in)
+      ApplicationRequest.increment!(:page_view_anon_browser)
+      ApplicationRequest.increment!(:page_view_logged_in_browser)
     end
 
     freeze_time(date - 15.days) do
-      4.times { ApplicationRequest.increment!(:page_view_anon) }
-      3.times { ApplicationRequest.increment!(:page_view_logged_in) }
+      4.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+      3.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
     end
 
     freeze_time(date - 31.days) do
-      ApplicationRequest.increment!(:page_view_anon)
-      ApplicationRequest.increment!(:page_view_logged_in)
+      ApplicationRequest.increment!(:page_view_anon_browser)
+      ApplicationRequest.increment!(:page_view_logged_in_browser)
     end
 
     UserVisit.create!(user_id: users[0].id, visited_at: date - 50.minute)
