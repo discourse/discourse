@@ -130,20 +130,6 @@ acceptance("Dashboard", function (needs) {
       "its set the value of the filter from the query params"
     );
   });
-
-  test("new features", async function (assert) {
-    await visit("/admin");
-
-    await click(".dashboard .navigation-item.new-features .navigation-link");
-
-    assert.ok(
-      exists(
-        ".dashboard .navigation-item.new-features .navigation-link .emoji[title='gift']"
-      )
-    );
-    assert.ok(exists(".dashboard-new-features"));
-    assert.ok(exists("img.admin-new-feature-item__screenshot"));
-  });
 });
 
 acceptance("Dashboard: dashboard_visible_tabs", function (needs) {

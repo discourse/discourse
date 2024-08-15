@@ -2,9 +2,9 @@
 
 module PageObjects
   module Pages
-    class AdminDashboardNewFeatures < PageObjects::Pages::Base
+    class AdminNewFeatures < PageObjects::Pages::Base
       def visit
-        page.visit("/admin/dashboard/whats-new")
+        page.visit("/admin/whats-new")
         self
       end
 
