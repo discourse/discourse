@@ -940,6 +940,18 @@ class User < ActiveRecord::Base
     "" # so that validator doesn't complain that a password attribute doesn't exist
   end
 
+  def password_hash
+    latest_password&.password_hash
+  end
+
+  def password_algorithm
+    latest_password&.password_algorithm
+  end
+
+  def salt
+    latest_password&.password_salt
+  end
+
   # Indicate that this is NOT a passwordless account for the purposes of validation
   def password_required!
     @password_required = true
@@ -954,7 +966,7 @@ class User < ActiveRecord::Base
   end
 
   def has_password?
-    password_hash.present?
+    latest_password ? true : false
   end
 
   def password_validator
@@ -971,21 +983,8 @@ class User < ActiveRecord::Base
   end
 
   def confirm_password?(password)
-    return false unless password_hash && salt && password_algorithm
-    confirmed = self.password_hash == hash_password(password, salt, password_algorithm)
-
-    if confirmed && persisted? && password_algorithm != TARGET_PASSWORD_ALGORITHM
-      # Regenerate password_hash with new algorithm and persist
-      @salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
-      salt = @salt
-      update_columns(
-        password_algorithm: TARGET_PASSWORD_ALGORITHM,
-        salt: salt,
-        password_hash: hash_password(password, salt, TARGET_PASSWORD_ALGORITHM),
-      )
-    end
-
-    confirmed
+    return false if !(pw = latest_password)
+    pw.confirm_password?(password)
   end
 
   def new_user_posting_on_first_day?
@@ -1908,6 +1907,7 @@ class User < ActiveRecord::Base
     BadgeGranter.queue_badge_grant(Badge::Trigger::UserChange, user: self)
   end
 
+  # TODO: refactor to reference user password instead; see if can use saved_changes - saved_change_to_<attribute> won't work here
   def expire_old_email_tokens
     if saved_change_to_password_hash? && !saved_change_to_id?
       email_tokens.where("not expired").update_all(expired: true)
@@ -2215,6 +2215,10 @@ class User < ActiveRecord::Base
          self.username == SiteSetting.site_contact_username && !staff?
       SiteSetting.set_and_log(:site_contact_username, SiteSetting.defaults[:site_contact_username])
     end
+  end
+
+  def latest_password
+    unexpired_password || passwords.order(created_at: :desc).first
   end
 
   def self.ensure_consistency!
