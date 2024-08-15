@@ -2361,7 +2361,7 @@ class PluginApi {
   }
 
   /**
-   * Force a given menu panel (search-menu, user-menu) to be displayed as dropdown if ANY ofthe passed `classNames` are included in the `classList` of a menu panel.
+   * Force a given menu panel (search-menu, user-menu) to be displayed as dropdown if ANY of the passed `classNames` are included in the `classList` of a menu panel.
    * This can be useful for plugins as the default behavior is to add a 'slide-in' behavior to a menu panel if you are viewing on a small screen. eg. mobile.
    * Sometimes when we are rendering the menu panel in a non-standard way we don't want this behavior and want to force the menu panel to be displayed as a dropdown.
    *
