@@ -9,7 +9,7 @@ const navItems = [
   EmberObject.create({ name: "unread", displayName: "Unread" }),
 ];
 
-module("Integration | Component | d-navigation-bar", function (hooks) {
+module("Integration | Component | navigation-bar", function (hooks) {
   setupRenderingTest(hooks);
 
   test("display navigation bar items", async function (assert) {
