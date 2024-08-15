@@ -77,7 +77,9 @@ module Chat
 
       def remove_from_private_channels(user:)
         memberships_to_remove =
-          Chat::Action::CalculateMembershipsForRemoval.call(scoped_users: [user])
+          Chat::Action::CalculateMembershipsForRemoval.call(
+            scoped_users_query: User.where(id: user.id),
+          )
 
         return if memberships_to_remove.empty?
 
