@@ -8,6 +8,7 @@ RSpec.describe UserPasswordExpirer do
     it "should create a new UserPassword record with the user's current password information" do
       freeze_time
 
+      user.unexpired_password.destroy!
       expect { described_class.expire_user_password(user) }.to change(UserPassword, :count).by 1
 
       user_password = user.passwords.last

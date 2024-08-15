@@ -2039,7 +2039,6 @@ RSpec.describe SessionController do
         let!(:expired_user_password) do
           Fabricate(
             :expired_user_password,
-            user:,
             password: USER_PASSWORD,
             password_salt: user.salt,
             password_algorithm: user.password_algorithm,
@@ -2051,7 +2050,11 @@ RSpec.describe SessionController do
         use_redis_snapshotting
 
         it "should return an error response code with the right error message" do
-          post "/session.json", params: { login: user.username, password: USER_PASSWORD }
+          post "/session.json",
+               params: {
+                 login: expired_user_password.user.username,
+                 password: USER_PASSWORD,
+               }
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).to eq("expired")
