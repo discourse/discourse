@@ -1,8 +1,8 @@
+import EmberObject from "@ember/object";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import NavigationBar from "discourse/components/navigation-bar";
-import EmberObject from "@ember/object";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 const navItems = [
   EmberObject.create({ name: "new", displayName: "New" }),
