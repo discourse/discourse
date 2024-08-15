@@ -1491,7 +1491,7 @@ files:
     max: 1024000
     type: file_size_restriction
   system_user_max_attachment_size_kb:
-    default: 0
+    default: 4096
     max: 4096000
     type: file_size_restriction
     hidden: true

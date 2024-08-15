@@ -244,12 +244,28 @@ RSpec.describe UploadsController do
       before { sign_in(system_user) }
 
       let(:text_file) { Rack::Test::UploadedFile.new(File.new("#{Rails.root}/LICENSE.txt")) }
+      let(:large_filename) { "large_and_unoptimized.png" }
+      let(:large_file) { file_from_fixtures(large_filename) }
 
       it "properly returns errors" do
         SiteSetting.authorized_extensions = "*"
+        SiteSetting.max_attachment_size_kb = 1
         SiteSetting.system_user_max_attachment_size_kb = 1
 
-        post "/uploads.json", params: { file: text_file, type: "avatar" }
+        post "/uploads.json", params: { file: text_file, type: "composer" }
+
+        expect(response.status).to eq(422)
+        errors = response.parsed_body["errors"]
+        expect(errors.first).to eq(
+          I18n.t("upload.attachments.too_large_humanized", max_size: "1 KB"),
+        )
+      end
+
+      it "properly should work if system user" do
+        SiteSetting.authorized_extensions = "*"
+        SiteSetting.max_attachment_size_kb = 1
+
+        post "/uploads.json", params: { file: text_file, type: "composer" }
 
         expect(response.status).to eq(422)
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
@@ -257,6 +273,19 @@ RSpec.describe UploadsController do
         expect(errors.first).to eq(
           I18n.t("upload.attachments.too_large_humanized", max_size: "1 KB"),
         )
+      end
+
+      it "should accept large files if system user" do
+        SiteSetting.authorized_extensions = "*"
+        SiteSetting.system_user_max_attachment_size_kb = 421_730 # size of large_and_unoptimized.png
+
+        post "/uploads.json",
+             params: {
+               file: Rack::Test::UploadedFile.new(large_file),
+               type: "composer",
+             }
+
+        expect(response.status).to eq(200)
       end
     end
   end
