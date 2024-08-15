@@ -227,7 +227,7 @@ class UploadsController < ApplicationController
                 "upload.attachments.too_large_humanized",
                 max_size:
                   ActiveSupport::NumberHelper.number_to_human_size(
-                    UploadsController.max_attachment_size_for_user(current_user).kilobytes,
+                    max_attachment_size_for_user(current_user).kilobytes,
                   ),
               ),
             )
@@ -276,7 +276,7 @@ class UploadsController < ApplicationController
       if url.present? && is_api
         maximum_upload_size = [
           SiteSetting.max_image_size_kb,
-          UploadsController.max_attachment_size_for_user(current_user),
+          max_attachment_size_for_user(current_user),
         ].max.kilobytes
         tempfile =
           begin
@@ -316,7 +316,9 @@ class UploadsController < ApplicationController
     tempfile&.close!
   end
 
-  def self.max_attachment_size_for_user(user)
+  private
+
+  def max_attachment_size_for_user(user)
     if user.id == Discourse::SYSTEM_USER_ID && !SiteSetting.system_user_max_attachment_size_kb.zero?
       SiteSetting.system_user_max_attachment_size_kb
     else
@@ -324,14 +326,12 @@ class UploadsController < ApplicationController
     end
   end
 
-  private
-
   # We can preemptively check size for attachments, but not for (most) images
   # as they may be further reduced in size by UploadCreator (at this point
   # they may have already been reduced in size by preprocessors)
   def attachment_too_big?(file_name, file_size)
     !FileHelper.is_supported_image?(file_name) &&
-      file_size >= UploadsController.max_attachment_size_for_user(current_user).kilobytes
+      file_size >= max_attachment_size_for_user(current_user).kilobytes
   end
 
   # Gifs are not resized on the client and not reduced in size by UploadCreator
