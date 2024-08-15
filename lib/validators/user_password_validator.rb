@@ -2,11 +2,6 @@
 
 class UserPasswordValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    # TODO: fix the following translation key error, it's under the user model atmError encountered while proccessing /u.json  I18n::MissingTranslationData: Translation missing. Options considered were:
-    # - en.activerecord.errors.models.user_password.attributes.password.same_as_current
-    # - en.activerecord.errors.models.user_password.same_as_current
-    # - en.activerecord.errors.messages.same_as_current
-    # - en.errors.attributes.password.same_as_current
     return unless record.password_validation_required?
     user = record.user
 
@@ -23,7 +18,7 @@ class UserPasswordValidator < ActiveModel::EachValidator
       record.errors.add(attribute, :same_as_name)
     elsif user.email.present? && value == user.email
       record.errors.add(attribute, :same_as_email)
-    elsif user.confirm_password?(value)
+    elsif record.confirm_password?(value)
       record.errors.add(attribute, :same_as_current)
     elsif user.password_expired?(value)
       record.errors.add(attribute, :same_as_previous)

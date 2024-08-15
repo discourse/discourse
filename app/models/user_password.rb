@@ -38,15 +38,22 @@ class UserPassword < ActiveRecord::Base
   end
 
   def confirm_password?(pw)
-    return false if self.password_hash != hash_password(pw, password_salt, password_algorithm)
-    return true if !persisted? || password_algorithm == TARGET_PASSWORD_ALGORITHM
+    # nothing to confirm if this record has not been persisted yet
+    return false if !persisted?
+
+    # check latest persisted password_hash against passed-in password
+    if (password_hash_was || password_hash) != hash_password(pw, password_salt, password_algorithm)
+      return false
+    end
+
+    return true if password_algorithm == TARGET_PASSWORD_ALGORITHM
 
     # Regenerate password_hash with new algorithm and persist, we skip validation here since it has already run once when the hash was persisted the first time
     salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
     update_columns(
       password_algorithm: TARGET_PASSWORD_ALGORITHM,
       password_salt: salt,
-      password_hash: hash_password(password, salt, TARGET_PASSWORD_ALGORITHM),
+      password_hash: hash_password(pw, salt, TARGET_PASSWORD_ALGORITHM),
     )
   end
 
