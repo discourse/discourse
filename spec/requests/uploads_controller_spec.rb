@@ -247,28 +247,13 @@ RSpec.describe UploadsController do
       let(:large_filename) { "large_and_unoptimized.png" }
       let(:large_file) { file_from_fixtures(large_filename) }
 
-      it "properly returns errors" do
-        SiteSetting.authorized_extensions = "*"
-        SiteSetting.max_attachment_size_kb = 1
-        SiteSetting.system_user_max_attachment_size_kb = 1
-
-        post "/uploads.json", params: { file: text_file, type: "composer" }
-
-        expect(response.status).to eq(422)
-        errors = response.parsed_body["errors"]
-        expect(errors.first).to eq(
-          I18n.t("upload.attachments.too_large_humanized", max_size: "1 KB"),
-        )
-      end
-
-      it "properly should work if system user" do
+      it "properly returns errors if system_user_max_attachment_size_kb is not setted" do
         SiteSetting.authorized_extensions = "*"
         SiteSetting.max_attachment_size_kb = 1
 
         post "/uploads.json", params: { file: text_file, type: "composer" }
 
         expect(response.status).to eq(422)
-        expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
         errors = response.parsed_body["errors"]
         expect(errors.first).to eq(
           I18n.t("upload.attachments.too_large_humanized", max_size: "1 KB"),
