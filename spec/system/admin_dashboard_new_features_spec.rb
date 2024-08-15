@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-describe "Admin Dashboard New Features Page", type: :system do
-  let(:new_features_page) { PageObjects::Pages::AdminDashboardNewFeatures.new }
+describe "Admin New Features Page", type: :system do
+  let(:new_features_page) { PageObjects::Pages::AdminNewFeatures.new }
   fab!(:admin)
 
   before { sign_in(admin) }
