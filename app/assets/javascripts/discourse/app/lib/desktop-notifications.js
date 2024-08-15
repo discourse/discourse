@@ -135,7 +135,7 @@ function canUserReceiveNotifications(user) {
     return false;
   }
 
-  if (keyValueStore.getItem("notifications-disabled", "disabled")) {
+  if (keyValueStore.getItem("notifications-disabled") === "disabled") {
     return false;
   }
 
@@ -156,7 +156,6 @@ async function onNotification(data, siteSettings, user, appEvents) {
         group_name: data.group_name,
       });
 
-    const notificationBody = data.excerpt;
     const notificationIcon =
       siteSettings.site_logo_small_url || siteSettings.site_logo_url;
     const notificationTag =
@@ -167,17 +166,23 @@ async function onNotification(data, siteSettings, user, appEvents) {
 
     await requestPermission();
 
-    // create new notification using Notifications API
     const notification = new Notification(notificationTitle, {
-      body: notificationBody,
+      body: data.excerpt,
       icon: notificationIcon,
       tag: notificationTag,
     });
-    notification.onclick = () => {
-      DiscourseURL.routeTo(data.post_url);
-      appEvents.trigger("desktop-notification-opened", { url: data.post_url });
-      notification.close();
-    };
+
+    notification.addEventListener(
+      "click",
+      () => {
+        DiscourseURL.routeTo(data.post_url);
+        appEvents.trigger("desktop-notification-opened", {
+          url: data.post_url,
+        });
+        notification.close();
+      },
+      { once: true }
+    );
   }
 
   desktopNotificationHandlers.forEach((handler) =>
