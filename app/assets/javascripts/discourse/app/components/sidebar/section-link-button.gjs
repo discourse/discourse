@@ -7,6 +7,7 @@ const SidebarSectionLinkButton = <template>
       {{on "click" @action}}
       type="button"
       class="sidebar-section-link sidebar-row --link-button"
+      data-list-item-name={{@text}}
     >
       <span class="sidebar-section-link-prefix icon">
         {{icon @icon}}
