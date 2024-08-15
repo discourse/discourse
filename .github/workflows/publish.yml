@@ -1,0 +1,35 @@
+name: Publish Docs
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+env:
+  DOCS_CATEGORY_ID: 56
+  DOCS_DATA_EXPLORER_QUERY_ID: 2111
+  DOCS_TARGET: https://meta.discourse.org
+  DOCS_API_KEY: ${{ secrets.DISCOURSE_API_KEY }}
+
+jobs:
+  dry_run:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.3'
+        bundler-cache: true
+    - run: bundle exec ./sync_docs --dry-run
+
+  publish:
+    if: github.ref == 'refs/heads/main'
+    needs: dry_run
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.3'
+        bundler-cache: true
+    - run: bundle exec ./sync_docs

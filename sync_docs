@@ -1,0 +1,211 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "yaml"
+require "faraday"
+require "faraday/retry"
+require "faraday/multipart"
+require "listen"
+
+PRODUCTION_HOST = "https://meta.discourse.org"
+CATEGORY_ID = ENV["DOCS_CATEGORY_ID"].to_i
+DATA_EXPLORER_QUERY_ID = ENV["DOCS_DATA_EXPLORER_QUERY_ID"].to_i
+DOCS_TARGET = ENV["DOCS_TARGET"]
+DOCS_API_KEY = ENV["DOCS_API_KEY"]
+
+VERBOSE = ARGV.include?("-v")
+WATCH = ARGV.include?("--watch")
+DRY_RUN = ARGV.include?("--dry-run")
+
+require_relative "lib/local_doc"
+require_relative "lib/api"
+require_relative "lib/util"
+
+docs = []
+
+puts "Reading local docs..."
+BASE = "#{__dir__}/docs/"
+Dir
+  .glob("**/*.md", base: BASE)
+  .each do |path|
+    next if path.end_with?("index.md")
+
+    content = File.read(File.join(BASE, path))
+
+    frontmatter, content = Util.parse_md(content)
+
+    if frontmatter["id"].nil? || frontmatter["title"].nil?
+      puts "Skipping '#{path}' because it has no id or title in frontmatter"
+      next
+    end
+
+    docs.push(LocalDoc.new(frontmatter:, path:, content:))
+  end
+
+puts "Validating local docs..."
+docs
+  .group_by { |doc| doc.external_id }
+  .each do |id, docs|
+    if docs.size > 1
+      puts "- duplicate external_id '#{id}' found in:"
+      docs.each { |doc| puts "- #{doc.path}" }
+      exit 1
+    end
+  end
+
+puts "Fetching remote info via data-explorer..."
+remote_topics = API.fetch_current_state
+
+puts "Mapping to existing topics..."
+map_to_remote =
+  lambda do
+    docs.each do |doc|
+      puts "- checking '#{doc.external_id}'..." if VERBOSE
+      if topic_info = remote_topics.find { |t| t[:external_id] == doc.external_id }
+        doc.topic_id = topic_info[:topic_id]
+        doc.first_post_id = topic_info[:first_post_id]
+        doc.remote_title = topic_info[:title]
+        doc.remote_content = topic_info[:raw]
+        doc.remote_deleted = topic_info[:deleted_at]
+        puts "  found topic_id: #{doc.topic_id}" if VERBOSE
+      else
+        puts " not found" if VERBOSE
+      end
+    end
+  end
+map_to_remote.call
+
+puts "Deleting topics if necessary..."
+
+cat_desc_topic_id = remote_topics.find { |t| t[:is_index_topic] }[:topic_id]
+remote_topics
+  .reject { |remote_doc| remote_doc[:deleted_at] }
+  .reject { |remote_doc| docs.any? { |doc| doc.topic_id == remote_doc[:topic_id] } }
+  .reject { |remote_doc| remote_doc[:topic_id] == cat_desc_topic_id }
+  .each do |remote_doc|
+    id = remote_doc[:topic_id]
+    puts "- deleting topic #{id}..."
+    API.trash_topic(topic_id: id)
+  end
+
+puts "Restoring topics if necessary..."
+docs
+  .filter(&:remote_deleted)
+  .each do |doc|
+    puts "- restoring '#{doc.external_id}'..."
+    API.restore_topic(topic_id: doc.topic_id)
+  end
+
+puts "Creating missing topics..."
+created_any = false
+docs.each do |doc|
+  next if doc.topic_id
+
+  created_any = true
+  puts "- creating '#{doc.external_id}'"
+  API.create_topic(
+    external_id: doc.external_id,
+    raw: doc.content_with_uploads,
+    category: CATEGORY_ID,
+    title: doc.frontmatter["title"]
+  )
+rescue Faraday::UnprocessableEntityError => e
+  puts " 422 error: #{e.response[:body]}"
+  raise e
+end
+
+if created_any
+  puts "Re-fetching remote info..."
+  remote_topics = API.fetch_current_state
+  map_to_remote.call
+end
+
+puts "Updating content..."
+docs.each do |doc|
+  if doc.topic_id.nil?
+    next if DRY_RUN
+    raise "Topic ID not found for '#{doc.external_id}'. Something went wrong with creating it?"
+  end
+
+  if doc.content_with_uploads.strip == doc.remote_content.strip &&
+       doc.frontmatter["title"] == doc.remote_title
+    puts "- no changes required for '#{doc.external_id}' (topic_id: #{doc.topic_id})" if VERBOSE
+    next
+  end
+
+  puts "- updating '#{doc.external_id}' (topic_id: #{doc.topic_id})..."
+  API.edit_post(
+    post_id: doc.first_post_id,
+    raw: doc.content_with_uploads,
+    title: doc.frontmatter["title"],
+    category: CATEGORY_ID
+  )
+rescue Faraday::UnprocessableEntityError => e
+  puts " 422 error: #{e.response[:body]}"
+  raise e
+end
+
+puts "Building index..."
+_, index_content = Util.parse_md(File.read("#{BASE}index.md"))
+index_content += "\n\n"
+docs
+  .group_by { |doc| doc.section }
+  .each do |section, section_docs|
+    if section
+      section_frontmatter, _ = Util.parse_md(File.read("#{BASE}#{section}/index.md"))
+      index_content += "## #{section_frontmatter["title"]}\n\n"
+    end
+
+    section_docs.each do |doc|
+      index_content +=
+        "- #{doc.frontmatter["short_title"]}: [#{doc.frontmatter["title"]}](/t/-/#{doc.topic_id}?silent=true)\n"
+    end
+    index_content += "\n"
+  end
+
+index_post_info = remote_topics.find { |t| t[:topic_id] == cat_desc_topic_id }
+
+if index_post_info[:raw].strip == index_content.strip
+  puts "- no changes required for index"
+else
+  puts "- updating index..."
+  API.edit_post(post_id: index_post_info[:first_post_id], raw: index_content)
+end
+
+if WATCH
+  puts "Watching for changes to files..."
+
+  Listen
+    .to("#{__dir__}/docs") do |modified, added, removed|
+      if added.size > 0 || removed.size > 0
+        puts "Files added/removed. Restarting sync..."
+        exec("ruby", "#{__dir__}/sync_docs", *ARGV)
+      end
+
+      modified.each do |path|
+        relative = path.sub(BASE, "")
+        doc = docs.find { |d| d.path == relative }
+        raise "Modified file not recognized: #{relative}" if doc.nil?
+
+        print "- updating '#{doc.external_id}' (topic_id: #{doc.topic_id})..."
+        new_frontmatter, new_content = Util.parse_md(File.read(path))
+        if %w[id short_title].any? { |key| doc.frontmatter[key] != new_frontmatter[key] }
+          puts "Frontmatter changed. Restarting sync..."
+          exec("ruby", "#{__dir__}/sync_docs", *ARGV)
+        end
+        doc.content, doc.frontmatter = new_content, new_frontmatter
+
+        API.edit_post(
+          post_id: doc.first_post_id,
+          raw: doc.content_with_uploads,
+          title: doc.frontmatter["title"]
+        )
+        puts " done"
+      end
+    end
+    .start
+
+  sleep
+else
+  puts "Done."
+end
