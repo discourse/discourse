@@ -16,6 +16,10 @@ module PageObjects
         )
       end
 
+      def has_text?(text)
+        container.find(".about__activities-item-count").has_text?(text)
+      end
+
       def has_1_day_period?
         period_element.has_text?(I18n.t("js.about.activities.periods.today"))
       end

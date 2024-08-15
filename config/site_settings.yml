@@ -2503,6 +2503,10 @@ legal:
     default: false
     hidden: true
     client: true
+  display_eu_visitor_stats:
+    default: false
+    client: true
+    hidden: true
 
 backups:
   enable_backups:
