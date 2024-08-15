@@ -12,32 +12,17 @@
   />
 
   {{#if this.showSiteHeader}}
-    {{#if this.header.useGlimmerHeader}}
-      <GlimmerSiteHeader
-        @canSignUp={{this.canSignUp}}
-        @showCreateAccount={{route-action "showCreateAccount"}}
-        @showLogin={{route-action "showLogin"}}
-        @showKeyboard={{route-action "showKeyboardShortcutsHelp"}}
-        @toggleMobileView={{route-action "toggleMobileView"}}
-        @logout={{route-action "logout"}}
-        @sidebarEnabled={{this.sidebarEnabled}}
-        @showSidebar={{this.showSidebar}}
-        @toggleSidebar={{this.toggleSidebar}}
-      />
-    {{else}}
-      <SiteHeader
-        @canSignUp={{this.canSignUp}}
-        @showCreateAccount={{route-action "showCreateAccount"}}
-        @showLogin={{route-action "showLogin"}}
-        @showKeyboard={{route-action "showKeyboardShortcutsHelp"}}
-        @toggleMobileView={{route-action "toggleMobileView"}}
-        @logout={{route-action "logout"}}
-        @sidebarEnabled={{this.sidebarEnabled}}
-        @navigationMenuQueryParamOverride={{this.navigationMenuQueryParamOverride}}
-        @showSidebar={{this.showSidebar}}
-        @toggleSidebar={{action "toggleSidebar"}}
-      />
-    {{/if}}
+    <GlimmerSiteHeader
+      @canSignUp={{this.canSignUp}}
+      @showCreateAccount={{route-action "showCreateAccount"}}
+      @showLogin={{route-action "showLogin"}}
+      @showKeyboard={{route-action "showKeyboardShortcutsHelp"}}
+      @toggleMobileView={{route-action "toggleMobileView"}}
+      @logout={{route-action "logout"}}
+      @sidebarEnabled={{this.sidebarEnabled}}
+      @showSidebar={{this.showSidebar}}
+      @toggleSidebar={{this.toggleSidebar}}
+    />
   {{/if}}
 
   <SoftwareUpdatePrompt />
