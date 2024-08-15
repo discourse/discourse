@@ -100,7 +100,7 @@ body:not(.archetype-private_message) {
       overflow: auto;
       align-items: start;
       overscroll-behavior: contain;
-      padding: 1.5em;
+      padding: 1rem 1.5rem;
       width: 100%;
       flex-direction: column;
       .desktop-view & {
