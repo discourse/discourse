@@ -42,11 +42,11 @@ export default async function highlightSyntax(elem, siteSettings, session) {
       }
     }
 
-    const canHighlight = lang && (lang === "auto" || hljs.getLanguage(lang));
-
     if (lang === "auto" && e.innerHTML.length > 1000) {
       return;
     }
+
+    const canHighlight = lang && (lang === "auto" || hljs.getLanguage(lang));
 
     if (canHighlight) {
       e.classList.remove("lang-auto"); // This isn't a real hljs language. HLJS will warn if it's present, so we remove it.
