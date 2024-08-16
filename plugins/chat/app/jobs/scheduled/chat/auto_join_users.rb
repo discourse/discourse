@@ -5,7 +5,6 @@ module Jobs
     class AutoJoinUsers < ::Jobs::Scheduled
       every 1.hour
 
-      MAX_USERS = 10_000
       LAST_SEEN_DAYS = 30
 
       def execute(_args)
@@ -60,7 +59,7 @@ module Jobs
           last_seen_at: LAST_SEEN_DAYS.days.ago,
           allowed_group_permissions: allowed_group_permissions,
           join_mode: join_mode,
-          max_users: MAX_USERS,
+          max_users: SiteSetting.max_chat_auto_joined_users,
         )
       end
     end
