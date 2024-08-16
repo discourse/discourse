@@ -14,8 +14,8 @@ import { modifier } from "ember-modifier";
 import { eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import { mentionsDecorators } from "discourse/lib/mentions-decorators";
 import optionalService from "discourse/lib/optional-service";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
 import isZoomed from "discourse/lib/zoom-check";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -255,8 +255,12 @@ export default class ChatMessage extends Component {
           return node.textContent.trim() === `@${keyword}`;
         });
 
-        mentionsDecorators().forEach((decorator) => {
-          decorator(mentions, { username: keyword });
+        const classes = applyValueTransformer("mentions-class", [], {
+          user: { username: keyword },
+        });
+
+        mentions.forEach((mention) => {
+          mention.classList.add(...classes);
         });
       });
     }
@@ -264,8 +268,12 @@ export default class ChatMessage extends Component {
     this.args.message.mentionedUsers.forEach((user) => {
       const href = getURL(`/u/${user.username.toLowerCase()}`);
       const mentions = cooked.querySelectorAll(`a.mention[href="${href}"]`);
-      mentionsDecorators().forEach((decorator) => {
-        decorator(mentions, user);
+      const classes = applyValueTransformer("mentions-class", [], {
+        user,
+      });
+
+      mentions.forEach((mention) => {
+        mention.classList.add(...classes);
       });
     });
   }

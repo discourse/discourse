@@ -3,20 +3,18 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 export default {
   initialize() {
     withPluginApi("1.37.0", (api) => {
-      api.decorateMentions((mentions, user) => {
-        const addClass = (selector) => {
-          mentions.forEach((mention) => {
-            mention.classList.add(selector);
-          });
-        };
+      api.registerValueTransformer("mentions-class", ({ value, context }) => {
+        const { user } = context;
 
         if (user.id < 0) {
-          addClass("--bot");
+          value.push("--bot");
         } else if (user.id === api.getCurrentUser()?.id) {
-          addClass("--current");
+          value.push("--current");
         } else if (user.username === "here" || user.username === "all") {
-          addClass("--wide");
+          value.push("--wide");
         }
+
+        return value;
       });
     });
   },

@@ -4,7 +4,7 @@ import { isValidLink } from "discourse/lib/click-track";
 import { number } from "discourse/lib/formatter";
 import highlightHTML, { unhighlightHTML } from "discourse/lib/highlight-html";
 import highlightSearch from "discourse/lib/highlight-search";
-import { mentionsDecorators } from "discourse/lib/mentions-decorators";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   destroyUserStatusOnMentions,
   updateUserStatusOnMention,
@@ -390,8 +390,12 @@ export default class PostCooked {
         this._rerenderUserStatusOnMention(mentions, user);
       }
 
-      mentionsDecorators().forEach((decorator) => {
-        decorator(mentions, user);
+      const classes = applyValueTransformer("mentions-class", [], {
+        user,
+      });
+
+      mentions.forEach((mention) => {
+        mention.classList.add(...classes);
       });
     });
   }
