@@ -73,7 +73,6 @@ import {
   registerHighlightJSPlugin,
 } from "discourse/lib/highlight-syntax";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
-import { registerMentionsDecorator } from "discourse/lib/mentions-decorators";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
