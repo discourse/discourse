@@ -11,6 +11,10 @@ describe Jobs::Chat::AutoJoinUsers do
     user.user_option.update!(chat_enabled: false)
     user
   end
+  fab!(:stage_user) { Fabricate(:user, staged: true) }
+  fab!(:suspended_user) { Fabricate(:user, suspended_till: 1.day.from_now) }
+  fab!(:inactive_user) { Fabricate(:user, active: false) }
+  fab!(:anonymous_user) { Fabricate(:anonymous) }
 
   before { Jobs.run_immediately! }
 
@@ -33,11 +37,6 @@ describe Jobs::Chat::AutoJoinUsers do
   end
 
   it "works for simple workflows" do
-    _staged_user = Fabricate(:user, staged: true)
-    _suspended_user = Fabricate(:user, suspended_till: 1.day.from_now)
-    _inactive_user = Fabricate(:user, active: false)
-    _anonymous_user = Fabricate(:anonymous)
-
     # this is just to avoid test fragility, we should always have negative users
     bot_id = (User.minimum(:id) - 1)
     bot_id = -1 if bot_id > 0
