@@ -6,9 +6,8 @@ $progress-bar-icon-size: 0.8rem;
   width: 100%;
   display: flex;
   color: var(--primary-medium);
-  margin-bottom: 1.2rem;
-  padding-inline: 0.6rem;
   box-sizing: border-box;
+  margin-bottom: 1.2em;
 
   .step {
     display: flex;
@@ -18,6 +17,14 @@ $progress-bar-icon-size: 0.8rem;
     white-space: nowrap;
     width: $progress-bar-circle-size;
     gap: 0.5rem;
+
+    &:first-child span {
+      align-self: flex-start;
+    }
+
+    &:last-child span {
+      align-self: flex-end;
+    }
   }
   .line {
     transform: translateY(

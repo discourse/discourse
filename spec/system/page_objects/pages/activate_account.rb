@@ -4,11 +4,11 @@ module PageObjects
   module Pages
     class ActivateAccount < PageObjects::Pages::Base
       def click_activate_account
-        find("#activate-account-button").click
+        find(".activate-account-button").click
       end
 
       def click_continue
-        find(".perform-activation .continue-button").click
+        find(".account-activated .continue-button").click
       end
 
       def has_error?

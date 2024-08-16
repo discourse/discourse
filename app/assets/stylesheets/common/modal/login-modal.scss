@@ -10,7 +10,7 @@
   .d-modal {
     &__container {
       position: relative;
-      width: max-content;
+      width: 100%;
     }
     &__header {
       border-bottom: none;
@@ -36,35 +36,11 @@
     }
   }
 
-  .login-subheader {
-    font-size: var(--font-up-1);
-    margin: 0;
-  }
-
   .login-left-side {
     box-sizing: border-box;
     width: 100%;
     padding: 3rem;
     overflow: auto;
-  }
-
-  .login-welcome-header {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto 1fr;
-  }
-
-  .login-title {
-    font-size: var(--font-up-6);
-    margin: 0;
-    line-height: var(--line-height-medium);
-  }
-
-  .waving-hand {
-    width: 35px;
-    height: 35px;
-    margin-left: 0.5em;
-    align-self: center;
   }
 
   .login-right-side {
@@ -143,9 +119,8 @@
     @media screen and (max-width: 767px) {
       // important to maintain narrow desktop widths
       // for auth modals in Discourse Hub on iPad
-      .d-modal__header {
-        right: 0;
-        top: 0;
+      &:has(.has-alt-auth) .d-modal__header {
+        display: none;
       }
       .has-alt-auth {
         flex-direction: column;
@@ -157,7 +132,7 @@
         }
         .login-left-side {
           overflow: unset;
-          padding: 1em 2.75em 1em 1em;
+          padding: 1em;
         }
         .login-right-side {
           padding: 1em;
@@ -205,16 +180,15 @@
     justify-content: space-between;
   }
 
-  // .signup-progress-bar {
-  //   padding-top: 4rem;
-  //   padding-inline: 2rem;
-  //   margin-bottom: 0.6rem;
-  // }
+  .mobile-view & {
+    .d-modal__header {
+      display: none;
+    }
 
-  .signup-progress-bar {
-    padding-top: 0;
-    padding-inline: 0.6rem;
-    margin-bottom: 1.2rem;
+    .signup-progress-bar {
+      padding: 1.6em 1em 0 1em;
+      margin-bottom: 0.6em;
+    }
   }
 }
 
