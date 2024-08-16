@@ -2336,7 +2336,7 @@ en:
       already_have_account: "Already have an account?"
       progress_bar:
         signup: "Sign Up"
-        verify: "Verify"
+        activate: "Activate"
         approve: "Approve"
         login: "Log In"
 

@@ -14,9 +14,9 @@ export default class SignupProgressBar extends Component {
   constructor() {
     super(...arguments);
     if (this.siteSettings.must_approve_users) {
-      this.steps = ["signup", "verify", "approve", "login"];
+      this.steps = ["signup", "activate", "approve", "login"];
     } else {
-      this.steps = ["signup", "verify", "login"];
+      this.steps = ["signup", "activate", "login"];
     }
   }
 
@@ -53,7 +53,9 @@ export default class SignupProgressBar extends Component {
                 {{dIcon "check"}}
               {{/if}}
             </div>
-            {{this.stepText step}}
+            <span>
+              {{this.stepText step}}
+            </span>
           </div>
           {{#unless (eq index this.lastStepIndex)}}
             <span class={{concatClass "line" (this.getStepState index)}}></span>
