@@ -245,7 +245,7 @@ RSpec.describe UploadsController do
 
       let(:text_file) { Rack::Test::UploadedFile.new(File.new("#{Rails.root}/LICENSE.txt")) }
 
-      it "properly returns errors if system_user_max_attachment_size_kb is not setted" do
+      it "properly returns errors if system_user_max_attachment_size_kb is not set" do
         SiteSetting.authorized_extensions = "*"
         SiteSetting.max_attachment_size_kb = 1
 
