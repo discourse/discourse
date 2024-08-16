@@ -19,9 +19,15 @@ export function clearAdditionalAdminSidebarSectionLinks() {
 }
 
 class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
-  constructor({ adminSidebarNavLink, adminSidebarStateManager, router }) {
+  constructor({
+    adminSidebarNavLink,
+    adminSidebarStateManager,
+    router,
+    currentUser,
+  }) {
     super(...arguments);
     this.router = router;
+    this.currentUser = currentUser;
     this.adminSidebarNavLink = adminSidebarNavLink;
     this.adminSidebarStateManager = adminSidebarStateManager;
   }
@@ -90,12 +96,38 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
       }
     );
   }
+
+  get suffixType() {
+    if (this.#hasUnseenFeatures) {
+      return "icon";
+    }
+  }
+
+  get suffixValue() {
+    if (this.#hasUnseenFeatures) {
+      return "circle";
+    }
+  }
+
+  get suffixCSSClass() {
+    if (this.#hasUnseenFeatures) {
+      return "admin-sidebar-nav-link__dot";
+    }
+  }
+
+  get #hasUnseenFeatures() {
+    return (
+      this.adminSidebarNavLink.name === "admin_whats_new" &&
+      this.currentUser.hasUnseenFeatures
+    );
+  }
 }
 
 function defineAdminSection(
   adminNavSectionData,
   adminSidebarStateManager,
-  router
+  router,
+  currentUser
 ) {
   const AdminNavSection = class extends BaseCustomSidebarSection {
     constructor() {
@@ -130,6 +162,7 @@ function defineAdminSection(
             adminSidebarNavLink: sectionLinkData,
             adminSidebarStateManager: this.adminSidebarStateManager,
             router,
+            currentUser,
           })
       );
     }
@@ -349,7 +382,8 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       return defineAdminSection(
         adminNavSectionData,
         this.adminSidebarStateManager,
-        router
+        router,
+        currentUser
       );
     });
   }
