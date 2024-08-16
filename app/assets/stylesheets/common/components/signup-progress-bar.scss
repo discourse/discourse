@@ -9,44 +9,58 @@ $progress-bar-icon-size: 0.8rem;
   box-sizing: border-box;
   margin-bottom: 1.2em;
 
-  .step {
+  .segment {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    white-space: nowrap;
-    width: $progress-bar-circle-size;
     gap: 0.5rem;
 
-    &:first-child span {
-      align-self: flex-start;
+    &:last-child {
+      width: $progress-bar-circle-size;
     }
 
-    &:last-child span {
-      align-self: flex-end;
+    .step-text {
+      white-space: nowrap;
+      width: fit-content;
+      transform: translateX(-25%);
+    }
+
+    &:first-child {
+      .step-text {
+        transform: translateX(0%);
+      }
+    }
+    &:last-child {
+      .step-text {
+        transform: translateX(-50%);
+      }
     }
   }
-  .line {
-    transform: translateY(
-      calc(calc($progress-bar-circle-size + $progress-bar-line-width) / 2)
-    );
-    height: $progress-bar-line-width;
-    width: 100%;
-    background-color: var(--primary-medium);
-  }
-  .circle {
-    z-index: z("modal", "content");
-    font-size: $progress-bar-icon-size;
-    color: var(--secondary);
+
+  .step {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: $progress-bar-circle-size;
-    width: $progress-bar-circle-size;
-    border-radius: 50%;
-    border: $progress-bar-line-width solid var(--primary-medium);
-  }
 
+    .line {
+      transform: translateY(
+        calc(calc($progress-bar-circle-size + $progress-bar-line-width) / 2)
+      );
+      height: $progress-bar-line-width;
+      width: 100%;
+      background-color: var(--primary-medium);
+    }
+    .circle {
+      flex-shrink: 0;
+      font-size: $progress-bar-icon-size;
+      color: var(--secondary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: $progress-bar-circle-size;
+      width: $progress-bar-circle-size;
+      border-radius: 50%;
+      border: $progress-bar-line-width solid var(--primary-medium);
+    }
+  }
   .completed {
     color: var(--primary);
     .circle {

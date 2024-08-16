@@ -47,19 +47,23 @@ export default class SignupProgressBar extends Component {
     {{#if @step}}
       <div class="signup-progress-bar">
         {{#each this.steps as |step index|}}
-          <div class={{concatClass "step" (this.getStepState index)}}>
-            <div class="circle">
-              {{#if (eq (this.getStepState index) "completed")}}
-                {{dIcon "check"}}
-              {{/if}}
+          <div class="segment">
+            <div class={{concatClass "step" (this.getStepState index)}}>
+              <div class="circle">
+                {{#if (eq (this.getStepState index) "completed")}}
+                  {{dIcon "check"}}
+                {{/if}}
+              </div>
+              {{#unless (eq index this.lastStepIndex)}}
+                <span
+                  class={{concatClass "line" (this.getStepState index)}}
+                ></span>
+              {{/unless}}
             </div>
-            <span>
+            <span class="step-text">
               {{this.stepText step}}
             </span>
           </div>
-          {{#unless (eq index this.lastStepIndex)}}
-            <span class={{concatClass "line" (this.getStepState index)}}></span>
-          {{/unless}}
         {{/each}}
       </div>
     {{/if}}
