@@ -38,6 +38,8 @@ export default {
           node[segs[segs.length - 1]] = value;
         }
       }
+
+      delete I18n._overrides;
     }
   },
 };
