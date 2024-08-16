@@ -72,7 +72,7 @@ export default class PostCooked {
     this._insertQuoteControls(this.cookedDiv);
     this._showLinkCounts(this.cookedDiv);
     this._applySearchHighlight(this.cookedDiv);
-    this._decorateMentions(this.cookedDiv);
+    this._decorateMentions();
     this._decorateAndAdopt(this.cookedDiv);
 
     return this.cookedDiv;
@@ -376,18 +376,15 @@ export default class PostCooked {
     return cookedDiv;
   }
 
-  _decorateMentions(cooked) {
+  _decorateMentions() {
     if (!this._isInComposerPreview) {
       destroyUserStatusOnMentions();
     }
 
-    this._post()?.mentioned_users?.forEach((user) => {
-      const href = getURL(`/u/${user.username.toLowerCase()}`);
-      const mentions = cooked.querySelectorAll(`a.mention[href="${href}"]`);
-
+    this._extractMentions().forEach(({ mentions, user }) => {
       if (!this._isInComposerPreview) {
         this._trackMentionedUserStatus(user);
-        this._rerenderUserStatusOnMention(mentions, user);
+        this._rerenderUserStatusOnMentions(mentions, user);
       }
 
       const classes = applyValueTransformer("mentions-class", [], {
@@ -400,7 +397,7 @@ export default class PostCooked {
     });
   }
 
-  _rerenderUserStatusOnMention(mentions, user) {
+  _rerenderUserStatusOnMentions(mentions, user) {
     mentions.forEach((mention) => {
       updateUserStatusOnMention(
         getOwnerWithFallback(this),
@@ -410,15 +407,32 @@ export default class PostCooked {
     });
   }
 
+  _rerenderUsersStatusOnMentions() {
+    this._extractMentions().forEach(({ mentions, user }) => {
+      this._rerenderUserStatusOnMentions(mentions, user);
+    });
+  }
+
+  _extractMentions() {
+    return this._post()?.mentioned_users?.map((user) => {
+      const href = getURL(`/u/${user.username.toLowerCase()}`);
+      const mentions = this.cookedDiv.querySelectorAll(
+        `a.mention[href="${href}"]`
+      );
+
+      return { user, mentions };
+    });
+  }
+
   _trackMentionedUserStatus(user) {
     user.statusManager?.trackStatus?.();
-    user.on?.("status-changed", this, "_rerenderUserStatusOnMentions");
+    user.on?.("status-changed", this, "_rerenderUsersStatusOnMentions");
   }
 
   _stopTrackingMentionedUsersStatus() {
     this._post()?.mentioned_users?.forEach((user) => {
       user.statusManager?.stopTrackingStatus?.();
-      user.off?.("status-changed", this, "_rerenderUserStatusOnMentions");
+      user.off?.("status-changed", this, "_rerenderUsersStatusOnMentions");
     });
   }
 
