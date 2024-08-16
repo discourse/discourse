@@ -42,6 +42,10 @@ export default async function highlightSyntax(elem, siteSettings, session) {
       }
     }
 
+    if (lang === "auto" && e.innerHTML.length > 1000) {
+      return;
+    }
+
     const canHighlight = lang && (lang === "auto" || hljs.getLanguage(lang));
 
     if (canHighlight) {
