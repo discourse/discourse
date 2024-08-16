@@ -2,6 +2,7 @@
 
 RSpec.describe UploadsController do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:system_user) { Discourse.system_user }
 
   describe "#create" do
     it "requires you to be logged in" do
@@ -236,6 +237,75 @@ RSpec.describe UploadsController do
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
         message = response.parsed_body["errors"]
         expect(message).to contain_exactly(I18n.t("upload.images.size_not_found"))
+      end
+    end
+
+    context "when system user is logged in" do
+      before { sign_in(system_user) }
+
+      let(:text_file) { Rack::Test::UploadedFile.new(File.new("#{Rails.root}/LICENSE.txt")) }
+
+      it "properly returns errors if system_user_max_attachment_size_kb is not set" do
+        SiteSetting.authorized_extensions = "*"
+        SiteSetting.max_attachment_size_kb = 1
+
+        post "/uploads.json", params: { file: text_file, type: "composer" }
+
+        expect(response.status).to eq(422)
+        errors = response.parsed_body["errors"]
+        expect(errors.first).to eq(
+          I18n.t("upload.attachments.too_large_humanized", max_size: "1 KB"),
+        )
+      end
+
+      it "should accept large files if system user" do
+        SiteSetting.authorized_extensions = "*"
+        SiteSetting.system_user_max_attachment_size_kb = 421_730
+
+        post "/uploads.json", params: { file: text_file, type: "composer" }
+        expect(response.status).to eq(200)
+      end
+
+      it "should fail to accept large files if system user system_user_max_attachment_size_kb setting is low" do
+        SiteSetting.authorized_extensions = "*"
+        SiteSetting.max_attachment_size_kb = 1
+        SiteSetting.system_user_max_attachment_size_kb = 1
+
+        post "/uploads.json", params: { file: text_file, type: "composer" }
+
+        expect(response.status).to eq(422)
+        errors = response.parsed_body["errors"]
+        expect(errors.first).to eq(
+          I18n.t("upload.attachments.too_large_humanized", max_size: "1 KB"),
+        )
+      end
+
+      it "should fail to accept large files if system user system_user_max_attachment_size_kb setting is low and general setting is low" do
+        SiteSetting.authorized_extensions = "*"
+        SiteSetting.max_attachment_size_kb = 10
+        SiteSetting.system_user_max_attachment_size_kb = 5
+
+        post "/uploads.json", params: { file: text_file, type: "composer" }
+
+        expect(response.status).to eq(422)
+        errors = response.parsed_body["errors"]
+        expect(errors.first).to eq(
+          I18n.t("upload.attachments.too_large_humanized", max_size: "10 KB"),
+        )
+      end
+
+      it "should fail to accept large files if attachment_size settings are low" do
+        SiteSetting.authorized_extensions = "*"
+        SiteSetting.max_attachment_size_kb = 1
+        SiteSetting.system_user_max_attachment_size_kb = 10
+
+        post "/uploads.json", params: { file: text_file, type: "composer" }
+
+        expect(response.status).to eq(422)
+        errors = response.parsed_body["errors"]
+        expect(errors.first).to eq(
+          I18n.t("upload.attachments.too_large_humanized", max_size: "10 KB"),
+        )
       end
     end
   end
