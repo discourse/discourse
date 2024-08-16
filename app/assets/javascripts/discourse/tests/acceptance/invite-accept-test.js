@@ -80,6 +80,7 @@ acceptance("Invite accept", function (needs) {
   });
 
   test("invite link", async function (assert) {
+    this.siteSettings.login_required = true;
     PreloadStore.store("invite_info", {
       invited_by: {
         id: 123,

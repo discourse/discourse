@@ -12,7 +12,7 @@ module PageObjects
       end
 
       def has_error?
-        has_css?("#simple-container .alert-error")
+        has_css?(".alert-error")
         has_content?(I18n.t("js.user.activate_account.already_done"))
       end
     end
