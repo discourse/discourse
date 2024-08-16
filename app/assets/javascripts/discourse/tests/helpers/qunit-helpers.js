@@ -12,6 +12,7 @@ import MessageBus from "message-bus-client";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, skip, test } from "qunit";
 import sinon from "sinon";
+import { clearAboutPageActivities } from "discourse/components/about-page";
 import {
   cleanUpComposerUploadHandler,
   cleanUpComposerUploadMarkdownResolver,
@@ -251,6 +252,7 @@ export function testCleanup(container, app) {
   resetAdminPluginConfigNav();
   resetTransformers();
   rollbackAllPrepends();
+  clearAboutPageActivities();
 }
 
 function cleanupCssGeneratorTags() {

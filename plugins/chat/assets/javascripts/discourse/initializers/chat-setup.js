@@ -1,3 +1,4 @@
+import { number } from "discourse/lib/formatter";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { replaceIcon } from "discourse-common/lib/icon-library";
@@ -161,6 +162,21 @@ export default {
           document.body.classList.add("chat-drawer-active");
         } else {
           document.body.classList.remove("chat-drawer-active");
+        }
+      });
+
+      api.addAboutPageActivity("chat_messages", (periods) => {
+        const count = periods["7_days"];
+        if (count) {
+          return {
+            icon: "comment-dots",
+            class: "chat-messages",
+            activityText: I18n.t("about.activities.chat_messages", {
+              count,
+              formatted_number: number(count),
+            }),
+            period: I18n.t("about.activities.periods.last_7_days"),
+          };
         }
       });
     });

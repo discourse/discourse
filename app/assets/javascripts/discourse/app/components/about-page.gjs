@@ -9,6 +9,16 @@ import i18n from "discourse-common/helpers/i18n";
 import escape from "discourse-common/lib/escape";
 import I18n from "discourse-i18n";
 
+const pluginActivitiesFuncs = [];
+
+export function addAboutPageActivity(name, func) {
+  pluginActivitiesFuncs.push({ name, func });
+}
+
+export function clearAboutPageActivities() {
+  pluginActivitiesFuncs.clear();
+}
+
 export default class AboutPage extends Component {
   get moderatorsCount() {
     return this.args.model.moderators.length;
@@ -57,7 +67,7 @@ export default class AboutPage extends Component {
   }
 
   get siteActivities() {
-    return [
+    const list = [
       {
         icon: "scroll",
         class: "topics",
@@ -104,6 +114,8 @@ export default class AboutPage extends Component {
         period: I18n.t("about.activities.periods.all_time"),
       },
     ];
+
+    return list.concat(this.siteActivitiesFromPlugins());
   }
 
   get contactInfo() {
@@ -137,6 +149,32 @@ export default class AboutPage extends Component {
       diff /= 12;
       return I18n.t("about.site_age.year", { count: Math.round(diff) });
     }
+  }
+
+  siteActivitiesFromPlugins() {
+    const stats = this.args.model.stats;
+    const keys = Object.keys(stats);
+
+    const configs = [];
+    for (const { name, func } of pluginActivitiesFuncs) {
+      let present = false;
+      const periods = {};
+      for (const key of keys) {
+        if (key.startsWith(`${name}_`)) {
+          present = true;
+          const period = key.replace(`${name}_`, "");
+          periods[period] = stats[key];
+        }
+      }
+      if (!present) {
+        continue;
+      }
+      const config = func(periods);
+      if (config) {
+        configs.push(config);
+      }
+    }
+    return configs;
   }
 
   <template>
