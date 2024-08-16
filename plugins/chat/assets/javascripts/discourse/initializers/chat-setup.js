@@ -164,24 +164,6 @@ export default {
           document.body.classList.remove("chat-drawer-active");
         }
       });
-
-      api.decorateChatMessage(function (chatMessage, chatChannel) {
-        if (!this.currentUser) {
-          return;
-        }
-
-        const highlightable = [`@${this.currentUser.username}`];
-        if (chatChannel.allowChannelWideMentions) {
-          highlightable.push(...MENTION_KEYWORDS.map((k) => `@${k}`));
-        }
-
-        chatMessage.querySelectorAll(".mention").forEach((node) => {
-          const mention = node.textContent.trim();
-          if (highlightable.includes(mention)) {
-            node.classList.add("highlighted", "valid-mention");
-          }
-        });
-      });
     });
   },
 

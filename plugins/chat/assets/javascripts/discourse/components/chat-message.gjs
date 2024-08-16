@@ -14,10 +14,12 @@ import { modifier } from "ember-modifier";
 import { eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import { mentionsDecorators } from "discourse/lib/mentions-decorators";
 import optionalService from "discourse/lib/optional-service";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
 import isZoomed from "discourse/lib/zoom-check";
 import discourseDebounce from "discourse-common/lib/debounce";
+import getURL from "discourse-common/lib/get-url";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
@@ -94,11 +96,6 @@ export default class ChatMessage extends Component {
       }
     };
   });
-
-  constructor() {
-    super(...arguments);
-    this.initMentionedUsers();
-  }
 
   get pane() {
     return this.threadContext ? this.chatThreadPane : this.chatChannelPane;
@@ -214,6 +211,8 @@ export default class ChatMessage extends Component {
   @action
   didInsertMessage(element) {
     this.messageContainer = element;
+    this.initMentionedUsers();
+    this.decorateMentions(element);
     this.debounceDecorateCookedMessage();
     this.refreshStatusOnMentions();
   }
@@ -239,24 +238,44 @@ export default class ChatMessage extends Component {
     );
   }
 
+  initMentionedUsers() {
+    this.args.message.mentionedUsers.forEach((user) => {
+      if (!user.statusManager.isTrackingStatus()) {
+        user.statusManager.trackStatus();
+        user.on("status-changed", this, "refreshStatusOnMentions");
+      }
+    });
+  }
+
+  decorateMentions(cooked) {
+    if (this.args.message.channel.allowChannelWideMentions) {
+      const wideMentions = [...cooked.querySelectorAll("span.mention")];
+      MENTION_KEYWORDS.forEach((keyword) => {
+        const mentions = wideMentions.filter((node) => {
+          return node.textContent.trim() === `@${keyword}`;
+        });
+
+        mentionsDecorators().forEach((decorator) => {
+          decorator(mentions, { username: keyword });
+        });
+      });
+    }
+
+    this.args.message.mentionedUsers.forEach((user) => {
+      const href = getURL(`/u/${user.username.toLowerCase()}`);
+      const mentions = cooked.querySelectorAll(`a.mention[href="${href}"]`);
+      mentionsDecorators().forEach((decorator) => {
+        decorator(mentions, user);
+      });
+    });
+  }
+
   @action
   decorateCookedMessage(message) {
     schedule("afterRender", () => {
       _chatMessageDecorators.forEach((decorator) => {
         decorator.call(this, this.messageContainer, message.channel);
       });
-    });
-  }
-
-  @action
-  initMentionedUsers() {
-    this.args.message.mentionedUsers.forEach((user) => {
-      if (user.statusManager.isTrackingStatus()) {
-        return;
-      }
-
-      user.statusManager.trackStatus();
-      user.on("status-changed", this, "refreshStatusOnMentions");
     });
   }
 
