@@ -41,4 +41,17 @@
     color: var(--primary-medium);
     margin-top: 0.5em;
   }
+
+  .invite-form form {
+    display: flex;
+    flex-direction: column;
+
+    .input-group {
+      &.email-input,
+      &.username-input,
+      &.name-input.name-required {
+        order: -1;
+      }
+    }
+  }
 }

@@ -39,6 +39,10 @@
     margin-top: 1em;
   }
 
+  .edit-cancel {
+    text-transform: capitalize;
+  }
+
   .success-info p:last-child {
     margin-bottom: 0;
   }
@@ -52,6 +56,12 @@
     display: block;
     width: fit-content;
   }
+
+  .login-welcome-header {
+    margin-inline: auto;
+    width: fit-content;
+  }
+
   .tada-image {
     width: 150px;
     margin: auto;

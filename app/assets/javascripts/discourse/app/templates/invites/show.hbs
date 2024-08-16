@@ -77,15 +77,16 @@
                   />
                   <label class="alt-placeholder" for="new-account-email">
                     {{i18n "user.email.title"}}
-                    <span class="required">*</span>
                   </label>
                   <InputTip
                     @validation={{this.emailValidation}}
                     id="account-email-validation"
                   />
-                  <div class="instructions">{{i18n
-                      "user.email.instructions"
-                    }}</div>
+                  {{#unless this.emailValidation.reason}}
+                    <div class="instructions">{{i18n
+                        "user.email.instructions"
+                      }}</div>
+                  {{/unless}}
                 </div>
               {{/if}}
 
@@ -100,34 +101,17 @@
                 />
                 <label class="alt-placeholder" for="new-account-username">
                   {{i18n "user.username.title"}}
-                  <span class="required">*</span>
                 </label>
                 <InputTip
                   @validation={{this.usernameValidation}}
                   id="username-validation"
                 />
-                <div class="instructions">{{i18n
-                    "user.username.instructions"
-                  }}</div>
+                {{#unless this.usernameValidation.reason}}
+                  <div class="instructions">{{i18n
+                      "user.username.instructions"
+                    }}</div>
+                {{/unless}}
               </div>
-
-              {{#if this.fullnameRequired}}
-                <div class="input name-input input-group">
-                  <Input
-                    @value={{this.accountName}}
-                    class={{value-entered this.accountName}}
-                    id="new-account-name"
-                    name="name"
-                  />
-                  <label class="alt-placeholder" for="new-account-name">
-                    {{i18n "invites.name_label"}}
-                    {{#if this.siteSettings.full_name_required}}
-                      <span class="required">*</span>
-                    {{/if}}
-                  </label>
-                  <div class="instructions">{{this.nameInstructions}}</div>
-                </div>
-              {{/if}}
 
               {{#unless this.externalAuthsOnly}}
                 <div class="input password-input input-group">
@@ -141,7 +125,6 @@
                   />
                   <label class="alt-placeholder" for="new-account-password">
                     {{i18n "invites.password_label"}}
-                    <span class="required">*</span>
                   </label>
                   <div class="create-account__password-info">
                     <div class="create-account__password-tip-validation">
@@ -149,9 +132,11 @@
                         @validation={{this.passwordValidation}}
                         id="password-validation"
                       />
-                      <span
-                        class="more-info"
-                      >{{this.passwordInstructions}}</span>
+                      {{#unless this.passwordValidation.reason}}
+                        <span
+                          class="more-info"
+                        >{{this.passwordInstructions}}</span>
+                      {{/unless}}
                       <div
                         class="caps-lock-warning
                           {{unless this.capsLockOn 'hidden'}}"
@@ -168,6 +153,28 @@
                   </div>
                 </div>
               {{/unless}}
+
+              {{#if this.fullnameRequired}}
+                <div
+                  class={{concat-class
+                    "input"
+                    "name-input"
+                    "input-group"
+                    (if this.siteSettings.full_name_required "name-required")
+                  }}
+                >
+                  <Input
+                    @value={{this.accountName}}
+                    class={{value-entered this.accountName}}
+                    id="new-account-name"
+                    name="name"
+                  />
+                  <label class="alt-placeholder" for="new-account-name">
+                    {{i18n "invites.name_label"}}
+                  </label>
+                  <div class="instructions">{{this.nameInstructions}}</div>
+                </div>
+              {{/if}}
 
               {{#if this.userFields}}
                 <div class="user-fields">
