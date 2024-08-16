@@ -10,7 +10,7 @@
   .d-modal {
     &__container {
       position: relative;
-      width: 100%;
+      width: max-content;
     }
     &__header {
       border-bottom: none;
@@ -148,7 +148,14 @@
 /* end shared styles */
 
 .d-modal.create-account {
+  &:not(:has(.has-alt-auth)) .d-modal__container {
+    max-width: 500px;
+  }
+
   .d-modal {
+    &__container {
+      width: 100%;
+    }
     &__footer {
       flex-direction: column;
       align-items: flex-start;
