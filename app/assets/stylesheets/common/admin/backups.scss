@@ -3,27 +3,12 @@
 $rollback: #3d9970;
 $rollback-dark: darken($rollback, 10%) !default;
 $rollback-darker: darken($rollback, 20%) !default;
-.btn-rollback {
-  color: var(--secondary);
-  background: $rollback;
-  .d-icon {
-    color: var(--secondary);
-  }
-  &:hover {
-    background: $rollback-dark;
-    .d-icon {
-      color: currentColor;
-    }
-  }
-  &:active {
-    @include linear-gradient($rollback-darker, $rollback-dark);
-  }
-  &[disabled] {
-    background: $rollback;
-  }
-}
 
 .admin-backups {
+  .before-backup-list-outlet {
+    margin-top: 1em;
+  }
+
   table {
     @media screen and (min-width: 550px) {
       td.backup-filename {
@@ -64,28 +49,31 @@ $rollback-darker: darken($rollback, 20%) !default;
       }
     }
   }
+
+  &__rollback {
+    color: var(--secondary);
+    background: $rollback;
+    .d-icon {
+      color: var(--secondary);
+    }
+    &:hover {
+      background: $rollback-dark;
+      .d-icon {
+        color: currentColor;
+      }
+    }
+    &:active {
+      @include linear-gradient($rollback-darker, $rollback-dark);
+    }
+    &[disabled] {
+      background: $rollback;
+    }
+  }
 }
 
 .admin-backups-logs {
   max-height: 65vh;
   overflow: auto;
-}
-
-button.ru {
-  position: relative;
-  min-width: 110px;
-}
-
-.ru-progress {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background: rgba(0, 175, 0, 0.3);
-}
-
-.is-uploading:hover .ru-progress {
-  background: rgba(200, 0, 0, 0.3);
 }
 
 .start-backup-modal {

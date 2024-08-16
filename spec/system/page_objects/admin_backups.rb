@@ -27,13 +27,26 @@ module PageObjects
         page.has_no_css?(backup_row_selector(filename))
       end
 
+      def open_upload_backup_modal
+        find(".admin-backups__start").click
+      end
+
       def download_backup(filename)
-        find_backup_row(filename).find(".backup-item-row__download").click
+        find_backup_row(filename).find(row_button_selector("download")).click
+      end
+
+      def expand_backup_row_menu(filename)
+        find_backup_row(filename).find(".backup-item-menu-trigger").click
       end
 
       def delete_backup(filename)
-        find_backup_row(filename).find(".backup-item-menu-trigger").click
-        find(".backup-item-menu-content").find(".backup-item-row__delete").click
+        expand_backup_row_menu(filename)
+        find_backup_row(filename).find(row_button_selector("delete")).click
+      end
+
+      def restore_backup(filename)
+        expand_backup_row_menu(filename)
+        find_backup_row(filename).find(row_button_selector("restore")).click
       end
 
       def find_backup_row(filename)
@@ -42,6 +55,10 @@ module PageObjects
 
       def backup_row_selector(filename)
         ".admin-backups-list .backup-item-row[data-backup-filename='#{filename}']"
+      end
+
+      def row_button_selector(button_name)
+        ".backup-item-row__#{button_name}"
       end
 
       def toggle_read_only

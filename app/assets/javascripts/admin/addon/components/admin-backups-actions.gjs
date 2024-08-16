@@ -52,7 +52,7 @@ export default class AdminBackupsActions extends Component {
         @title="admin.backups.operations.rollback.title"
         @icon="ambulance"
         @disabled={{this.rollbackDisabled}}
-        @additionalClasses="btn-rollback admin-backups__rollback"
+        @additionalClasses="admin-backups__rollback"
       />
     {{/if}}
     {{#if @backups.isOperationRunning}}
