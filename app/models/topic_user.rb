@@ -299,8 +299,10 @@ class TopicUser < ActiveRecord::Base
     def track_visit!(topic_id, user_id)
       now = DateTime.now
       rows = TopicUser.where(topic_id: topic_id, user_id: user_id).update_all(last_visited_at: now)
-
-      change(user_id, topic_id, last_visited_at: now, first_visited_at: now) if rows == 0
+      if rows == 0
+        change(user_id, topic_id, last_visited_at: now, first_visited_at: now)
+        DiscourseEvent.trigger(:user_first_visit_to_topic, user_id: user_id, topic_id: topic_id)
+      end
     end
 
     # Update the last read and the last seen post count, but only if it doesn't exist.

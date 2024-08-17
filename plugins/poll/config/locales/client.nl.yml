@@ -25,6 +25,9 @@ nl:
           title: "Resultaten worden weergegeven zodra <strong>gesloten</strong>."
         staff:
           title: "Resultaten worden alleen aan <strong>medewerkers</strong> weergegeven."
+        tabs:
+          votes: "Stemmen"
+          outcome: "Resultaat"
       multiple:
         help:
           at_least_min_options:
@@ -73,9 +76,24 @@ nl:
         percentage: "Percentage"
         count: "Aantal"
       ranked_choice:
+        title:
+          rounds: "Rondes"
+          outcome: "Resultaat"
         none: "Geen"
+        majority: "Meerderheid"
+        eliminated: "Uitgeschakeld"
+        round: "Ronde"
+        winner:
+          one: "De winnaar is %{winner} na één ronde."
+          other: "De winnaar is %{winner} na %{count} rondes."
+        tied:
+          one: "Na één ronde gelijk tussen de volgende kandidaten:"
+          other: "Na %{count} rondes gelijk tussen de volgende kandidaten:"
       options:
         label: "Opties"
+        ranked_choice:
+          abstain: "Onthouden"
+          login: "Meld je aan om te stemmen!"
       error_while_toggling_status: "Sorry, er is een fout opgetreden bij het omschakelen van de status van deze poll."
       error_while_casting_votes: "Sorry, er is een fout opgetreden bij het uitbrengen van je stemmen."
       error_while_fetching_voters: "Sorry, er is een fout opgetreden bij het weergeven van de stemmers."
@@ -94,6 +112,7 @@ nl:
           label: Type
           regular: Eén keuze
           multiple: Meerkeuze
+          ranked_choice: Gerangschikte keuze
           number: Numerieke beoordeling
         poll_result:
           label: Resultaten weergeven...

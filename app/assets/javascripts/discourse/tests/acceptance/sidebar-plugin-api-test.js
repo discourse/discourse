@@ -543,9 +543,9 @@ acceptance("Sidebar - Plugin API", function (needs) {
           route: "discovery.latestCategory",
           routeQuery: { status: "open" },
           shouldRegister: ({ category }) => {
-            if (category.name === category1.name) {
+            if (category.displayName === category1.displayName) {
               return true;
-            } else if (category.name === category2.name) {
+            } else if (category.displayName === category2.displayName) {
               return false;
             }
           },
@@ -1030,5 +1030,194 @@ acceptance("Sidebar - Plugin API", function (needs) {
     assert
       .dom(".sidebar-section[data-section-name='test-admin-section']")
       .doesNotExist();
+  });
+
+  test("Auto expand active sections", async function (assert) {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSidebarPanel((BaseCustomSidebarPanel) => {
+        return class extends BaseCustomSidebarPanel {
+          key = "new-panel";
+          expandActiveSection = true;
+        };
+      });
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-section-1";
+            text = "The First Section";
+            collapsedByDefault = true;
+
+            get links() {
+              return [
+                new (class extends BaseCustomSidebarSectionLink {
+                  get name() {
+                    return `test-link-1`;
+                  }
+
+                  get href() {
+                    return `/test1`;
+                  }
+
+                  get title() {
+                    return `Test Link Title 1`;
+                  }
+
+                  get text() {
+                    return `Test Link Text 1`;
+                  }
+                })(),
+              ];
+            }
+          };
+        },
+        "new-panel"
+      );
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-section-2";
+            text = "The Second Section";
+            collapsedByDefault = true;
+
+            get links() {
+              return [
+                new (class extends BaseCustomSidebarSectionLink {
+                  get name() {
+                    return `search`;
+                  }
+
+                  get route() {
+                    return `full-page-search`;
+                  }
+
+                  get title() {
+                    return `Search`;
+                  }
+
+                  get text() {
+                    return `Search`;
+                  }
+                })(),
+              ];
+            }
+          };
+        },
+        "new-panel"
+      );
+      api.setSeparatedSidebarMode();
+      api.setSidebarPanel("new-panel");
+    });
+
+    await visit("/");
+    assert.dom(".sidebar-section.sidebar-section--expanded").doesNotExist();
+
+    await visit("/search");
+    assert
+      .dom(
+        "div[data-section-name='test-section-2'].sidebar-section.sidebar-section--expanded"
+      )
+      .exists({ count: 1 });
+  });
+
+  test("Scroll active link into view", async function (assert) {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSidebarPanel((BaseCustomSidebarPanel) => {
+        return class extends BaseCustomSidebarPanel {
+          key = "new-panel";
+          expandActiveSection = true;
+          scrollActiveLinkIntoView = true;
+        };
+      });
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = `test-section-1`;
+            text = "The Section";
+            collapsedByDefault = false;
+
+            get links() {
+              const values = [...Array(100)].map(
+                (_, i) =>
+                  new (class extends BaseCustomSidebarSectionLink {
+                    get name() {
+                      return `test-link-${i}`;
+                    }
+
+                    get href() {
+                      return `/test${i}`;
+                    }
+
+                    get title() {
+                      return `Test Link Title ${i}`;
+                    }
+
+                    get text() {
+                      return `Test Link Text ${i}`;
+                    }
+                  })()
+              );
+
+              values.push(
+                new (class extends BaseCustomSidebarSectionLink {
+                  get name() {
+                    return `search`;
+                  }
+
+                  get route() {
+                    return `full-page-search`;
+                  }
+
+                  get title() {
+                    return `Search`;
+                  }
+
+                  get text() {
+                    return `Search`;
+                  }
+                })()
+              );
+
+              return values;
+            }
+          };
+        },
+        "new-panel"
+      );
+      api.setSeparatedSidebarMode();
+      api.setSidebarPanel("new-panel");
+    });
+
+    await visit("/");
+    const sidebarHeight = query(".sidebar-wrapper").clientHeight;
+    const searchLinkOffsetTop = query(
+      ".sidebar-section-link-wrapper[data-list-item-name='search']"
+    ).offsetTop;
+
+    assert.ok(
+      searchLinkOffsetTop > sidebarHeight,
+      "the link offsetTop is greater than the sidebar height"
+    );
+    assert.strictEqual(
+      query(".sidebar-sections").scrollTop,
+      0,
+      "the sidebar is not scrolled initially"
+    );
+
+    await visit("/search");
+    assert
+      .dom(
+        ".sidebar-section-link-wrapper[data-list-item-name='search'] > a.active"
+      )
+      .exists();
+
+    const sidebarScrollTop = query(".sidebar-sections").scrollTop;
+    assert.ok(
+      sidebarScrollTop > 0,
+      "the sidebar was scrolled to position the active element into view"
+    );
+    assert.ok(
+      searchLinkOffsetTop < sidebarScrollTop + sidebarHeight,
+      "the link is into view"
+    );
   });
 });

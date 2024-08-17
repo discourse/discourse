@@ -7,6 +7,9 @@ en:
       total_votes:
         one: "total vote"
         other: "total votes"
+      votes:
+        one: "%{count} vote"
+        other: "%{count} votes"
 
       average_rating: "Average rating: <strong>%{average}</strong>."
 
@@ -45,6 +48,14 @@ en:
       show-results:
         title: "Display the poll results"
         label: "Results"
+
+      show-tally:
+        title: "Show voting results by number of votes"
+        label: "Display tally"
+
+      show-percentage:
+        title: "Show voting results as percentage"
+        label: "Display as percentage"
 
       remove-vote:
         title: "Remove your vote"

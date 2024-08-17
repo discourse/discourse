@@ -1,12 +1,16 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { eq, or } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import deprecated from "discourse-common/lib/deprecated";
+import { bind } from "discourse-common/utils/decorators";
 import SectionLinkPrefix from "./section-link-prefix";
 
 /**
@@ -61,6 +65,14 @@ export default class SectionLink extends Component {
       classNames.push(this.args.class);
     }
 
+    if (
+      this.args.href &&
+      typeof this.args.currentWhen === "boolean" &&
+      this.args.currentWhen
+    ) {
+      classNames.push("active");
+    }
+
     return classNames.join(" ");
   }
 
@@ -101,9 +113,30 @@ export default class SectionLink extends Component {
     }
   }
 
+  @bind
+  maybeScrollIntoView(element) {
+    if (!this.args.scrollIntoView) {
+      return;
+    }
+
+    schedule("afterRender", () => {
+      const rect = element.getBoundingClientRect();
+      const alreadyVisible = rect.top <= window.innerHeight && rect.bottom >= 0;
+      if (alreadyVisible) {
+        return;
+      }
+
+      element.scrollIntoView({
+        block: "center",
+      });
+    });
+  }
+
   <template>
     {{#if this.shouldDisplay}}
       <li
+        {{didInsert this.maybeScrollIntoView}}
+        {{didUpdate this.maybeScrollIntoView @scrollIntoView}}
         data-list-item-name={{@linkName}}
         class="sidebar-section-link-wrapper"
         ...attributes

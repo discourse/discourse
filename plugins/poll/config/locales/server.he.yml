@@ -12,7 +12,8 @@ he:
     poll_minimum_trust_level_to_create: "הגדרת רמת המהימנות המזערית הנדרשת ליצירת סקרים."
     poll_create_allowed_groups: "הקבוצות שמורשות ליצור סקרים."
     poll_groupable_user_fields: "רשימה של שמות משדה המשתמש שניתן להשתמש בהם לקיבוץ ולסינון תוצאות סקרים."
-    poll_export_data_explorer_query_id: "מזהה שאילתת חוקר הנתונים לשימוש לטובת ייצוא תוצאות הסקר (0 כדי להשבית)."
+    poll_export_data_explorer_query_id: "מזהה שאילתת חוקר הנתונים לשימוש לטובת ייצוא תוצאות סקר (0 להשבתה)."
+    poll_export_ranked_choice_data_explorer_query_id: "מזהה שאילתת חוקר הנתונים לשימוש לייצוא תוצאות סקר מדורג."
     poll_default_public: "בעת יצירת סקר חדש, יש להפעיל את האפשרות ‚להציג מי הצביע’ כברירת מחדל."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create (דרגת אמון מזערית ליצירת סקרים)"
@@ -44,7 +45,7 @@ he:
       cannot_edit_default_poll_with_votes: "אין לך אפשרות לשנות סקר לאחר %{minutes} הדקות הראשונות."
       cannot_edit_named_poll_with_votes: "לא ניתן לשנות את שם הסקר <strong>${name}</strong> לאחר %{minutes} הדקות הראשונות."
     no_poll_with_this_name: "אין סקר בשם <strong>%{name}</strong> שמקושר לפוסט הזה."
-    post_is_deleted: "לא ניתן לפעול על הודעה שנמחקה."
+    post_is_deleted: "לא ניתן לפעול על פוסט שנמחק."
     user_cant_post_in_topic: "אין לך אפשרות להצביע כיוון שאין לך אפשרות לפרסם בנושא זה."
     topic_must_be_open_to_vote: "הנושא חייב להיות פתוח להצבעות."
     poll_must_be_open_to_vote: "הסקר חייב להיות פתוח להצבעות."
@@ -59,8 +60,13 @@ he:
       two: כמות מזערית של %{count} הצבעות מותרות לסקר זה.
       many: כמות מזערית של %{count} הצבעות מותרות לסקר זה.
       other: כמות מזערית של %{count} הצבעות מותרות לסקר זה.
+    ranked_choice:
+      vote_options_mismatch: "לסקר מדורג, מספר הבחירות שנעשו בהצבעה חייבות להיות תואמות למספר האפשרויות. מספר האפשרויות הוא %{count} ומספר הבחירות שנעשו היה %{provided}."
+      no_group_results_support: "סוג הסקר שגוי, ל־ranked_choice (בחירה לפי דירוג) אין תמיכה בתוצאות קיבוציות."
     topic_must_be_open_to_toggle_status: "הנושא חייב להיות פתוח לשינויי מצב."
     only_staff_or_op_can_toggle_status: "רק חבר צוות או המפרסם המקורי יכולים לשנות מצב של סקר."
+    errors:
+      poll_not_found: "לא נמצא סקר, נא לאשר את המשתנים."
     insufficient_rights_to_create: "אין לך הרשאה ליצור סקרים."
     email:
       link_to_poll: "יש ללחוץ כדי לצפות בסקר."

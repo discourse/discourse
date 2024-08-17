@@ -325,6 +325,7 @@ class Post < ActiveRecord::Base
     # is referencing.
     options[:user_id] = self.last_editor_id
     options[:omit_nofollow] = true if omit_nofollow?
+    options[:post_id] = self.id
 
     if self.should_secure_uploads?
       each_upload_url do |url|
@@ -554,9 +555,13 @@ class Post < ActiveRecord::Base
     flags.count != 0
   end
 
+  def post_action_type_view
+    @post_action_type_view ||= PostActionTypeView.new
+  end
+
   def flags
     post_actions.where(
-      post_action_type_id: PostActionType.flag_types_without_custom.values,
+      post_action_type_id: post_action_type_view.flag_types_without_additional_message.values,
       deleted_at: nil,
     )
   end
@@ -641,7 +646,7 @@ class Post < ActiveRecord::Base
         edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
         flag_reason:
           I18n.t(
-            "flag_reasons.#{PostActionType.types[post_action_type_id]}",
+            "flag_reasons.#{post_action_type_view.types[post_action_type_id]}",
             locale: SiteSetting.default_locale,
             base_path: Discourse.base_path,
           ),

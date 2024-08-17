@@ -12,6 +12,7 @@ module("Unit | Utility | i18n", function (hooks) {
     this._translations = I18n.translations;
     this._extras = I18n.extras;
     this._pluralizationRules = { ...I18n.pluralizationRules };
+    this._mfMessages = I18n._mfMessages;
 
     I18n.locale = "fr";
 
@@ -109,6 +110,7 @@ module("Unit | Utility | i18n", function (hooks) {
     I18n.translations = this._translations;
     I18n.extras = this._extras;
     I18n.pluralizationRules = this._pluralizationRules;
+    I18n._mfMessages = this._mfMessages;
   });
 
   test("defaults", function (assert) {
@@ -353,6 +355,39 @@ module("Unit | Utility | i18n", function (hooks) {
         I18n.pluralizationNormalizedLocale,
         normalized,
         `returns '${normalized}' for '${raw}'`
+      );
+    });
+  });
+
+  test("messageFormat", function (assert) {
+    assert.ok(
+      I18n.messageFormat("posts_likes_MF", { count: 2, ratio: "high" }).match(
+        /2 replies/
+      ),
+      "It works properly"
+    );
+    I18n._mfMessages = null;
+    assert.strictEqual(
+      I18n.messageFormat("posts_likes_MF", { count: 2, ratio: "high" }),
+      "Missing Key: posts_likes_MF",
+      "Degrades gracefully if MF definitions are not available."
+    );
+  });
+
+  test("currentBcp47Locale", function (assert) {
+    Object.entries({
+      pt_BR: "pt-BR",
+      en_GB: "en-GB",
+      bs_BA: "bs-BA",
+      en: "en",
+      it: "it",
+      es: "es",
+    }).forEach(([input, output]) => {
+      I18n.locale = input;
+      assert.strictEqual(
+        I18n.currentBcp47Locale,
+        output,
+        `returns '${output}' for '${input}'`
       );
     });
   });

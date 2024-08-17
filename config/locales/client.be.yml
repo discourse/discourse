@@ -158,6 +158,15 @@ be:
       topic_count: "Тэмы"
       post_count: "Паведамленні"
       contact_info: "У выпадку сур'ёзных праблем з гэтым сайтам, калі ласка, звяжыцеся з намі праз %{contact_info}."
+      activities:
+        posts:
+          one: "%{formatted_number} запіс"
+          few: "%{formatted_number}запісаў"
+          many: "%{formatted_number}запісаў"
+          other: "%{formatted_number}запісаў"
+        periods:
+          last_7_days: "за апошнія 7 дзён"
+          today: "сёння"
     bookmarked:
       title: "Абранае"
       clear_bookmarks: "Выдаліць з абранага"
@@ -585,6 +594,13 @@ be:
         title: "Асацыяваныя аккаўнты"
         revoke: "ануляваць"
         cancel: "адмяніць"
+      activate_account:
+        action: "Націсніце тут, каб актываваць свой рахунак"
+        already_done: "ня На жаль, гэтая спасылка для пацверджання акаўнта больш не дзейнічае. Магчыма, ваш уліковы запіс ўжо актываваная?"
+        please_continue: "Ваш новы рахунак пацвярджаецца; Вы будзеце перанакіраваны на галоўную старонку."
+        continue_button: "Працягнуць да %{site_name}"
+        welcome_to: "Сардэчна запрашаем да сайта %{site_name}!"
+        approval_required: "Мадэратар павінен ўручную зацвердзіць новы ўліковы запіс, перш чым гэты форум. Вы атрымаеце па электроннай пошце, калі ваш рахунак будзе ўхвалены!"
       name:
         title: "Імя"
         instructions_required: "Ваша поўнае імя."
@@ -755,6 +771,8 @@ be:
       sign_up: "рэгістрацыя"
       hide_forever: "няма дзякуй"
     summary:
+      buttons:
+        regenerate: "Перагенераваць"
       disable: "Усе паведамленні"
     deleted_filter:
       enabled_description: "Гэтая тэма ўтрымлівае выдаленыя паведамленні, якія былі схаваныя."
@@ -797,6 +815,7 @@ be:
       not_activated: "Вы яшчэ не можаце ўвайсці ў сістэму. Мы ўжо накіравалі Вам ліст для актывацыі на скрыню <b> %{sentTo}"
       admin_not_allowed_from_ip_address: "Вы не можаце ўвайсці як адміністратар з гэтага IP-адрасу."
       resend_activation_email: "Націсніце тут, каб атрымаць яшчэ адзін ліст з актывацыяй."
+      activate_account: "Актываваць уліковы запіс"
       resend_title: "Актываваць зноў"
       sent_activation_email_again: "Мы накіравалі ў паштовую скрыню <b> %{currentEmail}"
       to_continue: "Калі ласка Увайдзіце"
@@ -1222,6 +1241,8 @@ be:
       notify_action: "паведамленне"
     topic_map:
       title: "Рэзюмэ запісу"
+      views: "прагляды"
+      read: счытванне
     topic_statuses:
       pinned:
         title: "замацаваныя"
@@ -1639,6 +1660,7 @@ be:
             save: "захаваць"
             name: "імя"
             description: "Апісанне"
+            invalid_applies_to: "абавязковыя"
             topic: "тэмы"
             post: "паведамленняў"
       plugins:

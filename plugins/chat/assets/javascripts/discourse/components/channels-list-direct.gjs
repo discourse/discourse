@@ -3,9 +3,10 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { and } from "truth-helpers";
+import { and, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import concatClass from "discourse/helpers/concat-class";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
@@ -15,7 +16,10 @@ import ChatChannelRow from "./chat-channel-row";
 export default class ChannelsListDirect extends Component {
   @service chat;
   @service chatChannelsManager;
+  @service chatStateManager;
+  @service currentUser;
   @service site;
+  @service siteSettings;
   @service modal;
 
   get inSidebar() {
@@ -40,12 +44,6 @@ export default class ChannelsListDirect extends Component {
     return this.chat.userCanDirectMessage;
   }
 
-  get directMessageChannelClasses() {
-    return `channels-list-container direct-message-channels ${
-      this.inSidebar ? "collapsible-sidebar-section" : ""
-    }`;
-  }
-
   get directMessageChannelsEmpty() {
     return this.chatChannelsManager.directMessageChannels?.length === 0;
   }
@@ -61,13 +59,15 @@ export default class ChannelsListDirect extends Component {
   }
 
   <template>
-    <PluginOutlet
-      @name="below-direct-chat-channels"
-      @tagName=""
-      @outletArgs={{hash inSidebar=this.inSidebar}}
-    />
-
-    {{#if (and this.showDirectMessageChannels this.site.desktopView)}}
+    {{#if
+      (and
+        this.showDirectMessageChannels
+        (or
+          this.site.desktopView
+          (not this.chatChannelsManager.displayPublicChannels)
+        )
+      )
+    }}
       <div class="chat-channel-divider direct-message-channels-section">
         {{#if this.inSidebar}}
           <span
@@ -100,7 +100,12 @@ export default class ChannelsListDirect extends Component {
 
     <div
       id="direct-message-channels"
-      class={{this.directMessageChannelClasses}}
+      class={{concatClass
+        "channels-list-container"
+        "direct-message-channels"
+        (if this.inSidebar "collapsible-sidebar-section")
+        (if this.directMessageChannelsEmpty "center-empty-channels-list")
+      }}
     >
       {{#if this.directMessageChannelsEmpty}}
         <EmptyChannelsList
@@ -121,5 +126,11 @@ export default class ChannelsListDirect extends Component {
         {{/each}}
       {{/if}}
     </div>
+
+    <PluginOutlet
+      @name="below-direct-chat-channels"
+      @tagName=""
+      @outletArgs={{hash inSidebar=this.inSidebar}}
+    />
   </template>
 }

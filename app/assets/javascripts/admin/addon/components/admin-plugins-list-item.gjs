@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
@@ -77,6 +78,12 @@ export default class AdminPluginsListItem extends Component {
               </span>
             {{/if}}
           </div>
+
+          <PluginOutlet
+            @name="admin-plugin-list-name-badge-after"
+            @connectorTagName="span"
+            @outletArgs={{hash plugin=@plugin}}
+          />
         </div>
         <div class="admin-plugins-list__author">
           {{@plugin.author}}
@@ -96,48 +103,63 @@ export default class AdminPluginsListItem extends Component {
         </div>
       </td>
       <td class="admin-plugins-list__version">
-        <div class="label">{{i18n "admin.plugins.version"}}</div>
-        {{@plugin.version}}<br />
-        <PluginCommitHash @plugin={{@plugin}} />
+        <PluginOutlet
+          @name="admin-plugin-list-item-version"
+          @outletArgs={{hash plugin=@plugin}}
+        >
+          <div class="label">{{i18n "admin.plugins.version"}}</div>
+          {{@plugin.version}}<br />
+          <PluginCommitHash @plugin={{@plugin}} />
+        </PluginOutlet>
       </td>
       <td class="admin-plugins-list__enabled">
-        <div class="label">{{i18n "admin.plugins.enabled"}}</div>
-        {{#if @plugin.enabledSetting}}
-          <DToggleSwitch
-            @state={{@plugin.enabled}}
-            {{on "click" (fn this.togglePluginEnabled @plugin)}}
-          />
-        {{else}}
-          <DToggleSwitch @state={{@plugin.enabled}} disabled={{true}} />
-        {{/if}}
+        <PluginOutlet
+          @name="admin-plugin-list-item-enabled"
+          @outletArgs={{hash plugin=@plugin}}
+        >
+          <div class="label">{{i18n "admin.plugins.enabled"}}</div>
+          {{#if @plugin.enabledSetting}}
+            <DToggleSwitch
+              @state={{@plugin.enabled}}
+              {{on "click" (fn this.togglePluginEnabled @plugin)}}
+            />
+          {{else}}
+            <DToggleSwitch @state={{@plugin.enabled}} disabled={{true}} />
+          {{/if}}
+        </PluginOutlet>
       </td>
       <td class="admin-plugins-list__settings">
-        {{#if this.showPluginSettingsButton}}
-          {{#if @plugin.useNewShowRoute}}
-            <LinkTo
-              class="btn btn-text btn-small"
-              @route="adminPlugins.show"
-              @model={{@plugin}}
-              @disabled={{this.disablePluginSettingsButton}}
-              title={{this.settingsButtonTitle}}
-              data-plugin-setting-button={{@plugin.name}}
-            >
-              {{i18n "admin.plugins.change_settings_short"}}
-            </LinkTo>
-          {{else}}
-            <LinkTo
-              class="btn btn-text btn-small"
-              @route="adminSiteSettingsCategory"
-              @model={{@plugin.settingCategoryName}}
-              @query={{hash filter=(concat "plugin:" @plugin.name)}}
-              @disabled={{this.disablePluginSettingsButton}}
-              title={{this.settingsButtonTitle}}
-              data-plugin-setting-button={{@plugin.name}}
-            >
-              {{i18n "admin.plugins.change_settings_short"}}
-            </LinkTo>
+        <PluginOutlet
+          @name="admin-plugin-list-item-settings"
+          @outletArgs={{hash plugin=@plugin}}
+        >
+          {{#if this.showPluginSettingsButton}}
+            {{#if @plugin.useNewShowRoute}}
+              <LinkTo
+                class="btn btn-text btn-small"
+                @route="adminPlugins.show"
+                @model={{@plugin}}
+                @disabled={{this.disablePluginSettingsButton}}
+                title={{this.settingsButtonTitle}}
+                data-plugin-setting-button={{@plugin.name}}
+              >
+                {{i18n "admin.plugins.change_settings_short"}}
+              </LinkTo>
+            {{else}}
+              <LinkTo
+                class="btn btn-text btn-small"
+                @route="adminSiteSettingsCategory"
+                @model={{@plugin.settingCategoryName}}
+                @query={{hash filter=(concat "plugin:" @plugin.name)}}
+                @disabled={{this.disablePluginSettingsButton}}
+                title={{this.settingsButtonTitle}}
+                data-plugin-setting-button={{@plugin.name}}
+              >
+                {{i18n "admin.plugins.change_settings_short"}}
+              </LinkTo>
+            {{/if}}
           {{/if}}
-        {{/if}}
+        </PluginOutlet>
       </td>
     </tr>
   </template>

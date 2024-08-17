@@ -1,7 +1,7 @@
-import { getOwner } from "@ember/application";
 import { warn } from "@ember/debug";
 import EmberObject from "@ember/object";
 import Mixin from "@ember/object/mixin";
+import { getOwner } from "@ember/owner";
 import { run } from "@ember/runloop";
 import { service } from "@ember/service";
 import Uppy from "@uppy/core";

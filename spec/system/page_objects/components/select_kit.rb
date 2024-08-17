@@ -27,7 +27,7 @@ module PageObjects
 
       def expanded_component
         expand_if_needed
-        find(@context + ".is-expanded")
+        find(@context + ".is-expanded", wait: 5)
       end
 
       def collapsed_component
@@ -68,6 +68,10 @@ module PageObjects
 
       def has_option_value?(value)
         component.find(".select-kit-collection li[data-value='#{value}']")
+      end
+
+      def has_no_option_value?(value)
+        component.has_no_css?(".select-kit-collection li[data-value='#{value}']")
       end
 
       def expand

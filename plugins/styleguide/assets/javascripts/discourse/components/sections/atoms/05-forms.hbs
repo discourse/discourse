@@ -16,7 +16,13 @@
     <form.Field @title="Before" @name="before" as |field|>
       <field.Input @before="https://" />
     </form.Field>
-    <form.Field @title="Secret" @name="secret" as |field|>
+    <form.Field
+      @title="Secret"
+      @subtitle="Another secret"
+      @name="secret"
+      @description="An important password"
+      as |field|
+    >
       <field.Password />
     </form.Field>
   </Form>
@@ -73,11 +79,25 @@
   </Form>
 </StyleguideExample>
 
-<StyleguideExample @title="Checkbox">
+<StyleguideExample @title="CheckboxGroup">
   <Form as |form|>
-    <form.Field @title="Contract" @name="contract" as |field|>
-      <field.Checkbox>Accept the contract</field.Checkbox>
-    </form.Field>
+    <form.CheckboxGroup @title="I give explicit permission" as |checkboxGroup|>
+      <checkboxGroup.Field
+        @title="Use my email for any purpose."
+        @name="contract"
+        as |field|
+      >
+        <field.Checkbox>Including signing up for services I can't unsubscribe
+          to.</field.Checkbox>
+      </checkboxGroup.Field>
+      <checkboxGroup.Field
+        @title="Sign my soul away."
+        @name="contract2"
+        as |field|
+      >
+        <field.Checkbox>Will severly impact the afterlife experience.</field.Checkbox>
+      </checkboxGroup.Field>
+    </form.CheckboxGroup>
   </Form>
 </StyleguideExample>
 
@@ -111,10 +131,15 @@
 
 <StyleguideExample @title="RadioGroup">
   <Form as |form|>
-    <form.Field @title="Enabled" @name="enabled" as |field|>
+    <form.Field @title="Enabled" @name="enabled" @format="full" as |field|>
       <field.RadioGroup as |radioGroup|>
         <radioGroup.Radio @value="true">Yes</radioGroup.Radio>
-        <radioGroup.Radio @value="false">No</radioGroup.Radio>
+        <radioGroup.Radio @value="false" as |radio|>
+          <radio.Title>No</radio.Title>
+          <radio.Description>
+            Choosing no, will make you inelligible for the contest.
+          </radio.Description>
+        </radioGroup.Radio>
       </field.RadioGroup>
     </form.Field>
   </Form>

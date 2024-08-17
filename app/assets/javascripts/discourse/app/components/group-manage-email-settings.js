@@ -66,6 +66,11 @@ export default Component.extend({
   },
 
   @action
+  onChangeSmtpSettingsValid(valid) {
+    this.set("smtpSettingsValid", valid);
+  },
+
+  @action
   smtpEnabledChange(event) {
     if (
       !event.target.checked &&

@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import ModalJsonSchemaEditor from "discourse/components/modal/json-schema-editor";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
 import DAFieldLabel from "./da-field-label";

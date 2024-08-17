@@ -286,6 +286,14 @@ sr:
       topic_count: "Teme"
       post_count: "Poruka"
       contact_info: "U trenutku kritičnog problema ili hitnog slučaja koji utiče na sajt, molimo vas kontaktirajte nas na %{contact_info}."
+      activities:
+        posts:
+          one: "%{formatted_number} poruka"
+          few: "%{formatted_number} poruka"
+          other: "%{formatted_number} poruka"
+        periods:
+          last_7_days: "U zadnjih 7 dana"
+          today: "danas"
     bookmarked:
       title: "Markiraj"
       edit_bookmark: "Uredi marker"
@@ -544,6 +552,8 @@ sr:
         email:
           title: "E-mail"
           last_updated_by: "od"
+          ssl_modes:
+            none: "Ništa"
           credentials:
             username: "Korisničko ime"
             password: "Šifra"
@@ -799,6 +809,8 @@ sr:
       associated_accounts:
         revoke: "Povuci"
         cancel: "Odustani"
+      activate_account:
+        welcome_to: "Добро дошли на пројекат %{site_name}!"
       name:
         title: "Ime"
         instructions: "Vaše ime (opciono)."
@@ -1015,6 +1027,8 @@ sr:
     signup_cta:
       sign_up: "Registrujte se"
     summary:
+      buttons:
+        regenerate: "Regeneriši"
       disable: "Prikaži Sve Poruke"
     deleted_filter:
       enabled_description: "Ova tema sadrži brisane poruke, koji su skriveni."
@@ -1063,6 +1077,7 @@ sr:
       not_activated: "Ne možete se još prijaviti. Ranije smo vam poslali e-mail na <b>%{sentTo}</b>. Molimo sledite uputstva da aktivirate nalog."
       admin_not_allowed_from_ip_address: "Ne možete se prijaviti kao admin sa te IP adrese."
       resend_activation_email: "Pritisnite ovde da ponovno pošaljemo aktivacijski e-mail."
+      activate_account: "Aktiviraj Nalog"
       sent_activation_email_again: "Poslali smo vam drugi aktivacijski e-mail na: <b>%{currentEmail}</b>. Možda zatreba par minuta da stigne; svakako proverite nepoželjnu poštu."
       google_oauth2:
         name: "Google"
@@ -1547,7 +1562,6 @@ sr:
         general: "Opšti"
         email: "E-mail"
     flagging:
-      title: "Hvala što pomažete u održavanju naše zajednice pristojnom."
       action: "Označi Poruku Zastavom"
       take_action_options:
         suspend:
@@ -1566,7 +1580,6 @@ sr:
       custom_placeholder_notify_user: "Budite specifični, konstruktivni i uvek ljubazni."
       custom_placeholder_notify_moderators: "Recite nam tačno šta vas brine, i gde je moguće dajte relevantne linkove i primere ako je moguće."
     flagging_topic:
-      title: "Hvala što pomažete u održavanju i našu zajednicu pristojnom."
       action: "Označi Temu Zastavom"
       notify_action: "Privatna poruka"
     topic_map:
@@ -1575,6 +1588,9 @@ sr:
         one: "%{count} klik"
         few: "%{count} klikova"
         other: "%{count} klikova"
+      views: "Pregledi"
+      read: pročitano
+      minutes: minimalno
     post_links:
       title:
         one: "još %{count} član"
@@ -2025,6 +2041,7 @@ sr:
             save: "Sačuvaj"
             name: "Ime foruma"
             description: "Opis"
+            invalid_applies_to: "Potrebno"
             topic: "teme"
             post: "poruke"
       plugins:

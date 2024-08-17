@@ -163,9 +163,6 @@ th:
         other: "%{count}เดือนที่แล้ว"
   password_reset:
     title: "รีเซ็ทรหัสผ่าน"
-  activation:
-    continue_button: "ดำเนินการต่อไปยัง %{site_name}"
-    welcome_to: "ยินดีต้อนรับสู่ %{site_name}!"
   reviewable_score_types:
     needs_approval:
       title: "ต้องการอนุมัติ"
@@ -507,7 +504,11 @@ th:
       privacy:
         fields:
           login_required:
-            placeholder: "ส่วนตัว"
+            choices:
+              public:
+                label: "สาธารณะ"
+              private:
+                label: "ส่วนตัว"
       styling:
         fields:
           styling_preview:

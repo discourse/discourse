@@ -44,6 +44,7 @@ PreloadStore.store("site", {
     "read",
     "posted",
     "bookmarks",
+    "unseen",
   ],
   periods: ["all", "yearly", "monthly", "weekly", "daily"],
   top_menu_items: [
@@ -54,9 +55,10 @@ PreloadStore.store("site", {
     "read",
     "posted",
     "categories",
-    "top",
+    "hot",
+    "unseen",
   ],
-  anonymous_top_menu_items: ["latest", "categories", "top"],
+  anonymous_top_menu_items: ["latest", "categories", "hot"],
   uncategorized_category_id: 17,
   categories: [
     {
@@ -278,7 +280,7 @@ PreloadStore.store("site", {
       is_flag: false,
       icon: null,
       id: 1,
-      is_custom_flag: false,
+      require_message: false,
     },
     {
       name_key: "like",
@@ -288,7 +290,7 @@ PreloadStore.store("site", {
       is_flag: false,
       icon: "heart",
       id: 2,
-      is_custom_flag: false,
+      require_message: false,
     },
     {
       name_key: "off_topic",
@@ -299,7 +301,7 @@ PreloadStore.store("site", {
       is_flag: true,
       icon: null,
       id: 3,
-      is_custom_flag: false,
+      require_message: false,
     },
     {
       name_key: "inappropriate",
@@ -310,7 +312,7 @@ PreloadStore.store("site", {
       is_flag: true,
       icon: null,
       id: 4,
-      is_custom_flag: false,
+      require_message: false,
     },
     {
       name_key: "vote",
@@ -320,7 +322,7 @@ PreloadStore.store("site", {
       is_flag: false,
       icon: null,
       id: 5,
-      is_custom_flag: false,
+      require_message: false,
     },
     {
       name_key: "spam",
@@ -331,7 +333,7 @@ PreloadStore.store("site", {
       is_flag: true,
       icon: null,
       id: 8,
-      is_custom_flag: false,
+      require_message: false,
     },
     {
       name_key: "notify_user",
@@ -342,7 +344,7 @@ PreloadStore.store("site", {
       is_flag: true,
       icon: null,
       id: 6,
-      is_custom_flag: true,
+      require_message: true,
     },
     {
       name_key: "notify_moderators",
@@ -353,7 +355,7 @@ PreloadStore.store("site", {
       is_flag: true,
       icon: null,
       id: 7,
-      is_custom_flag: true,
+      require_message: true,
     },
   ],
   archetypes: [{ id: "regular", name: "Regular Topic", options: [] }],

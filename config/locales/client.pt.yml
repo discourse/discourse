@@ -296,6 +296,20 @@ pt:
       active_user_count: "Utilizadores ativos"
       contact: "Contactar-nos"
       contact_info: "No caso de um problema crítico ou de algum assunto urgente que afecte este sítio, por favor contacte-nos em %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} tópico"
+          other: "%{formatted_number} tópicos"
+        posts:
+          one: "%{formatted_number} mensagem"
+          other: "%{formatted_number} mensagens"
+        likes:
+          one: "%{formatted_number} curtiu"
+          other: "%{formatted_number} curtiram"
+        periods:
+          last_7_days: "nos últimos 7 dias"
+          today: "hoje"
+          all_time: "desde sempre"
     bookmarked:
       title: "Adicionar Marcador"
       edit_bookmark: "Editar Favorito"
@@ -628,7 +642,6 @@ pt:
       never: "Nunca"
       last_custom: "Data e hora do último personalizado"
       custom: "Data e hora personalizadas"
-      custom_short: "Personalizar..."
       select_timeframe: "Selecione um intervalo de tempo"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicou <a href='%{topicUrl}'>o tópico</a>"
@@ -737,11 +750,12 @@ pt:
           imap_mailbox_not_selected: "Tem de selecionar uma caixa de correio para esta configuração IMAP ou nenhuma caixa de correio será sincronizada!"
           prefill:
             title: "Preencher com configurações para:"
+          ssl_modes:
+            none: "Nenhuma"
           credentials:
             title: "Credenciais"
             smtp_server: "Servidor SMTP"
             smtp_port: "Porta SMTP"
-            smtp_ssl: "Utilizar SSL para SMTP"
             imap_server: "Servidor IMAP"
             imap_port: "Porta IMAP"
             imap_ssl: "Utilizar SSL para IMAP"
@@ -1356,6 +1370,13 @@ pt:
         confirm_description:
           account_specific: "Sua conta de %{provider} '%{account_description}' será usada para autenticação."
           generic: "Sua conta de %{provider} '' será usada para autenticação."
+      activate_account:
+        action: "Clique aqui para ativar a sua conta"
+        already_done: "Pedimos desculpa, esta hiperligação de confirmação já não está válida. Talvez a sua conta já esteja ativa?"
+        please_continue: "A sua nova conta foi confirmada; será redirecionado para a página principal."
+        continue_button: "Continuar para %{site_name}"
+        welcome_to: "Bem-vindo a %{site_name}!"
+        approval_required: "Um moderador tem que aprovar a sua conta antes de poder aceder a este fórum. Irá receber um email quando a sua conta for aprovada!"
       name:
         title: "Nome"
         instructions: "O seu nOme cOmpletO (OpciOnal)."
@@ -1702,7 +1723,11 @@ pt:
       hidden_for_session: "OK, perguntaremos a você amanhã. Você sempre pode usar 'Efetuar Login' para criar uma conta, também."
       intro: "Olá! Parece que está a gostar da conversa, mas ainda não tem uma conta."
     summary:
+      buttons:
+        generate: "Resumir"
+        regenerate: "Regenerar"
       disable: "Mostrar Todas As Publicações"
+      show_all_label: "Mostrar tudo"
     deleted_filter:
       enabled_description: "Este tópico contém respostas eliminadas, que foram ocultadas."
       disabled_description: "As publicações eliminadas no tópico são exibidas."
@@ -1791,6 +1816,7 @@ pt:
       admin_not_allowed_from_ip_address: "Não pode iniciar a sessão como administrador a partir desse endereço de IP."
       resend_activation_email: "Clique aqui para enviar novamente a mensagem de ativação."
       omniauth_disallow_totp: "A sua conta tem a autenticação em dois passos ativa. Por favor entre com a sua senha."
+      activate_account: "Ativar Conta"
       resend_title: "Reenviar Mensagem de Ativação"
       change_email: "Alterar Endereço de E-mail"
       provide_new_email: "Forneça um novo endereço e nós iremos reenviar a sua mensagem de confirmação."
@@ -3048,7 +3074,6 @@ pt:
         all: "todos os tópicos"
         none: "sem subcategorias"
     flagging:
-      title: "Obrigado por ajudar a manter a nossa comunidade cívica!"
       action: "Denunciar Publicação"
       take_action_options:
         suspend:
@@ -3083,7 +3108,6 @@ pt:
           one: "%{count} restante"
           other: "%{count} restantes"
     flagging_topic:
-      title: "Obrigado por ajudar a manter a nossa comunidade cívica!"
       action: "Denunciar Tópico"
       notify_action: "Mensagem"
     topic_map:
@@ -3093,6 +3117,9 @@ pt:
       clicks:
         one: "%{count} clique"
         other: "%{count} cliques"
+      views: "Vistas"
+      read: ler
+      minutes: mínimo
     post_links:
       about: "expandir mais ligações para esta publicação"
       title:
@@ -3434,7 +3461,6 @@ pt:
         everyone_can_use: "Tags podem ser usadas por todos"
         usable_only_by_groups: "As tags são visíveis para todos, mas apenas os grupos a seguir podem usá-las"
         visible_only_to_groups: "As tags são visíveis apenas para os seguintes grupos"
-        cannot_save: "Não é possível salvar o grupo de tags. Verifique se há pelo menos uma tag presente, o nome do grupo de tags não está vazio e um grupo está selecionado para permissão de tags."
         tags_placeholder: "Pesquisar ou criar etiquetas"
         parent_tag_placeholder: "Opcional"
         disabled: "A etiquetagem está desativada. "
@@ -3888,6 +3914,7 @@ pt:
           spam: "Spam"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(opcional)"
           update: "Atualização"
           saved: "guardado!"
@@ -3901,6 +3928,7 @@ pt:
             save: "Guardar"
             name: "Nome"
             description: "Descrição"
+            invalid_applies_to: "Necessário"
             topic: "tópicos"
             post: "mensagens"
       plugins:

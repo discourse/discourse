@@ -1359,6 +1359,15 @@ RSpec.describe PostAlerter do
       )
     end
 
+    it "delays push notification for active online user" do
+      evil_trout.update!(last_seen_at: 5.minutes.ago)
+
+      expect { mention_post }.to change { Jobs::PushNotification.jobs.count }
+      expect(Jobs::PushNotification.jobs[0]["at"]).to be_within(30.second).of(
+        5.minutes.from_now.to_f,
+      )
+    end
+
     context "with push subscriptions" do
       before do
         Fabricate(:push_subscription, user: evil_trout)
@@ -2408,7 +2417,7 @@ RSpec.describe PostAlerter do
         :group,
         smtp_server: "smtp.gmail.com",
         smtp_port: 587,
-        smtp_ssl: true,
+        smtp_ssl_mode: Group.smtp_ssl_modes[:starttls],
         imap_server: "imap.gmail.com",
         imap_port: 993,
         imap_ssl: true,

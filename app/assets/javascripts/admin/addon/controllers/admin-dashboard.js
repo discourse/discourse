@@ -50,11 +50,6 @@ export default class AdminDashboardController extends Controller {
     return this.visibleTabs.includes("reports");
   }
 
-  @computed("visibleTabs")
-  get isNewFeaturesTabVisible() {
-    return this.visibleTabs.includes("features");
-  }
-
   fetchProblems() {
     if (this.isLoadingProblems) {
       return;
@@ -91,7 +86,6 @@ export default class AdminDashboardController extends Controller {
           if (versionChecks) {
             properties.versionCheck = VersionCheck.create(model.version_check);
           }
-          properties.hasUnseenFeatures = model.hasUnseenFeatures;
 
           this.setProperties(properties);
         })

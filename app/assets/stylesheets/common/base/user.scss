@@ -197,10 +197,12 @@
     }
 
     .controls {
-      margin-left: auto;
       ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5em;
         list-style-type: none;
-        margin-top: 0;
+        margin: 0 0 0.5em 0;
       }
     }
 
@@ -820,12 +822,6 @@
   }
 }
 
-.d-modal[class*="second-factor-"] {
-  .modal-inner-container {
-    max-width: 24em;
-  }
-}
-
 .backup-codes {
   margin: 1em 0;
 
@@ -866,6 +862,7 @@
 .primary-textual {
   flex: 1 1 auto;
   min-width: 0;
+  margin-right: auto;
 }
 
 .primary-textual .staged,

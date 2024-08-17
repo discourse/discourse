@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { SYSTEM_FLAG_IDS } from "discourse/lib/constants";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
 import AdminConfigHeader from "admin/components/admin-config-header";
@@ -11,7 +12,16 @@ import AdminFlagItem from "admin/components/admin-flag-item";
 
 export default class AdminConfigAreasFlags extends Component {
   @service site;
+  @service siteSettings;
   @tracked flags = this.site.flagTypes;
+
+  get addFlagButtonDisabled() {
+    return (
+      this.flags.filter(
+        (flag) => !Object.values(SYSTEM_FLAG_IDS).includes(flag.id)
+      ).length >= this.siteSettings.custom_flags_limit
+    );
+  }
 
   @bind
   isFirstFlag(flag) {
@@ -68,6 +78,7 @@ export default class AdminConfigAreasFlags extends Component {
         @primaryActionCssClass="admin-flags__header-add-flag"
         @primaryActionIcon="plus"
         @primaryActionLabel="admin.config_areas.flags.add"
+        @primaryActionDisabled={{this.addFlagButtonDisabled}}
       />
       <table class="admin-flags__items grid">
         <thead>

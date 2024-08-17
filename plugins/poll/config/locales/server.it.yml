@@ -10,9 +10,11 @@ it:
     poll_maximum_options: "Numero massimo di opzioni permesse in un sondaggio."
     poll_edit_window_mins: "Numero di minuti dopo la creazione di un messaggio durante i quali i sondaggi possono ancora essere modificati."
     poll_minimum_trust_level_to_create: "Definisce il minimo livello di attendibilità necessario per poter creare sondaggi."
+    poll_create_allowed_groups: "Gruppi a cui è consentito creare sondaggi."
     poll_groupable_user_fields: "Un insieme di nomi di campi utente che possono essere utilizzati per raggruppare e filtrare i risultati del sondaggio."
-    poll_export_data_explorer_query_id: "ID della query Data Explorer da utilizzare per l'esportazione dei risultati del sondaggio (0 per disabilitare)."
     poll_default_public: "Quando si crea un nuovo sondaggio, abilita l'opzione \"mostra chi ha votato\" per impostazione predefinita."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
   poll:
     poll: "sondaggio"
     invalid_argument: "Valore '%{value}' non valido per l'argomento '%{argument}'."
@@ -48,8 +50,12 @@ it:
     min_vote_per_user:
       one: Almeno %{count} voto è richiesto per questo sondaggio.
       other: Almeno %{count} voti sono richiesti per questo sondaggio.
+    ranked_choice:
+      no_group_results_support: "Tipo di sondaggio non valido, ranking_choice non supporta risultati raggruppati."
     topic_must_be_open_to_toggle_status: "L'argomento deve essere aperto per commutare lo stato."
     only_staff_or_op_can_toggle_status: "Solo un membro dello staff o l'autore originale possono commutare lo stato di un sondaggio."
+    errors:
+      poll_not_found: "Sondaggio non trovato, conferma i parametri."
     insufficient_rights_to_create: "Non sei autorizzato a creare sondaggi."
     email:
       link_to_poll: "Clicca per vedere il sondaggio."

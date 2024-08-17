@@ -296,6 +296,10 @@ nl:
         not_found: |-
           Oh nee, mijn nare bericht is nog niet gemarkeerd als ongepast. :worried: Kun je het als ongepast markeren met behulp van de **markering** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Vergeet niet om de knop Meer weergeven <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> te gebruiken om meer acties te onthullen voor elk bericht.
       search:
+        instructions: |-
+          _Psst_… Ik heb een verrassing verstopt in dit topic. Als je klaar bent voor de uitdaging, **selecteer dan het zoekpictogram** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> rechtsboven &#8599;, kies 'in dit topic' en zoek vervolgens.
+
+          Probeer in dit topic te zoeken naar de term "capy&#8203;bara".
         hidden_message: |-
           Hoe kon je deze capibara missen? :wink:
 

@@ -27,6 +27,12 @@ export default class Validator {
     return errors;
   }
 
+  integerValidator(value) {
+    if (!Number.isInteger(Number(value))) {
+      return I18n.t("form_kit.errors.not_an_integer");
+    }
+  }
+
   lengthValidator(value, rule) {
     if (rule.max) {
       if (value?.length > rule.max) {
@@ -98,7 +104,7 @@ export default class Validator {
         }
         break;
       case "input-number":
-        if (typeof value === "undefined" || isNaN(Number(value))) {
+        if ((!value && value !== 0) || isNaN(Number(value))) {
           error = true;
         }
         break;

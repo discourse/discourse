@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
 import i18n from "discourse-common/helpers/i18n";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const IS_PINNED_CLASS = "is-pinned";
 

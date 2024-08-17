@@ -705,11 +705,7 @@ gl:
     revoke_failed: "Erro ao revogar a súa conta con %{provider_name}."
     connected: "(conectadas)"
   activation:
-    action: "Prema aquí para activar a súa conta"
     already_done: "Sentímolo, esta ligazón de confirmación da conta xa non está dispoñible. Estará xa a súa conta activada?"
-    please_continue: "A súa nova conta está confirmada; redirixirémolo á páxina de inicio."
-    continue_button: "Continuar a %{site_name}"
-    welcome_to: "Dámoslle a benvida a %{site_name}!"
     approval_required: "Un moderador debe aprobar manualmente a súa nova conta antes de que poida acceder a este foro. Recibirá un correo electrónico cando a súa conta sexa aprobada!"
     missing_session: "Non podemos detectar se se creou a súa conta; asegúrese de ter os rastros activados."
     activated: "Sentímolo, esta conta xa foi activada."
@@ -1362,7 +1358,6 @@ gl:
     max_reply_history: "Número máximo de respostas que se mostran ao expandir en-resposta-a"
     topics_per_period_in_top_summary: "Número de temas destacados que se mostran no resumo de temas destacados."
     topics_per_period_in_top_page: "Número de temas destacados que se mostran na vista expandida ao premer en «Mostrar máis»."
-    redirect_users_to_top_page: "Redirixir automaticamente á páxina de destacados aos usuarios novos e aos que estiveron ausentes durante moito tempo."
     prioritize_username_in_ux: "Mostrar o nome de usuario primeiro na páxina de usuario, a tarxeta de usuario e nas publicacións (cando está desactivado, o nome móstrase primeiro)"
     enable_rich_text_paste: "Activar conversión automática de HTML a Markdown ao pegar texto no editor. (Experimental)"
     send_old_credential_reminder_days: "Lembrar as credenciais antigas despois de días"
@@ -3522,8 +3517,12 @@ gl:
       privacy:
         fields:
           login_required:
-            placeholder: "Privada"
-            extra_description: "Só os usuarios rexistrados poden acceder á comunidade"
+            label: "Visibilidade"
+            choices:
+              public:
+                label: "Pública"
+              private:
+                label: "Privada"
       styling:
         fields:
           body_font:

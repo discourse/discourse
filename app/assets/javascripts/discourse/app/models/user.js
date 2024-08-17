@@ -1,10 +1,10 @@
 import { tracked } from "@glimmer/tracking";
-import { getOwner, setOwner } from "@ember/application";
 import { A } from "@ember/array";
 import EmberObject, { computed, get, getProperties } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
 import Evented from "@ember/object/evented";
+import { getOwner, setOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
@@ -394,12 +394,12 @@ export default class User extends RestModel.extend(Evented) {
 
   @discourseComputed("silenced_till")
   silencedForever(silencedTill) {
-    isForever(silencedTill);
+    return isForever(silencedTill);
   }
 
   @discourseComputed("suspended_till")
-  suspendedTillDate(silencedTill) {
-    return longDate(silencedTill);
+  suspendedTillDate(suspendedTill) {
+    return longDate(suspendedTill);
   }
 
   @discourseComputed("silenced_till")
@@ -1215,6 +1215,7 @@ export default class User extends RestModel.extend(Evented) {
   updateDoNotDisturbStatus(ends_at) {
     this.set("do_not_disturb_until", ends_at);
     this.appEvents.trigger("do-not-disturb:changed", this.do_not_disturb_until);
+    getOwner(this).lookup("service:notifications")._checkDoNotDisturb();
   }
 
   updateDraftProperties(properties) {
@@ -1228,10 +1229,11 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   isInDoNotDisturb() {
-    return (
-      this.do_not_disturb_until &&
-      new Date(this.do_not_disturb_until) >= new Date()
-    );
+    if (this !== getOwner(this).lookup("service:current-user")) {
+      throw "isInDoNotDisturb is only supported for currentUser";
+    }
+
+    return getOwner(this).lookup("service:notifications").isInDoNotDisturb;
   }
 
   @discourseComputed(

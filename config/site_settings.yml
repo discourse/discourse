@@ -190,7 +190,7 @@ basic:
     refresh: true
     type: list
     list_type: simple
-    default: "latest|new|unread|top|categories"
+    default: "latest|new|unread|hot|categories"
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
     validator: RegexPresenceValidator
@@ -1335,10 +1335,13 @@ email:
   enable_imap:
     default: false
     client: true
+    hidden: true
   enable_imap_write:
     default: false
+    hidden: true
   enable_imap_idle:
     default: false
+    hidden: true
   enable_smtp:
     default: false
     client: true
@@ -1487,6 +1490,11 @@ files:
     default: 4096
     max: 1024000
     type: file_size_restriction
+  system_user_max_attachment_size_kb:
+    default: 0
+    max: 4096000
+    type: file_size_restriction
+    hidden: true
   max_image_megapixels:
     default: 40
     min: 5
@@ -2013,10 +2021,11 @@ security:
     allow_any: false
     choices: "['*'] + Onebox::Engine.all_iframe_origins"
   allowed_iframes:
-    default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/|https://www.instagram.com|https://open.spotify.com"
+    default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/|https://www.instagram.com/|https://open.spotify.com/"
     type: list
     list_type: simple
     client: true
+    validator: "AllowedIframesValidator"
   allowed_crawler_user_agents:
     type: list
     default: ""
@@ -2103,6 +2112,9 @@ onebox:
     list_type: compact
   enable_inline_onebox_on_all_domains:
     default: true
+  onebox_user_agent:
+    default: ""
+    hidden: true
   force_custom_user_agent_hosts:
     default: "http://codepen.io"
     type: list
@@ -2403,7 +2415,7 @@ developer:
       - disabled
       - auto
       - enabled
-    default: auto
+    default: enabled
   admin_sidebar_enabled_groups:
     type: group_list
     list_type: compact
@@ -2422,18 +2434,15 @@ developer:
     default: ""
     client: true
     hidden: true
-  experimental_topic_bulk_actions_enabled_groups:
+  experimental_redesigned_about_page_groups:
     default: ""
     type: group_list
-    list_type: compact
+    hidden: true
     allow_any: false
-    refresh: true
-  experimental_flags_admin_page_enabled_groups:
-    default: ""
-    type: group_list
-    list_type: compact
-    allow_any: false
-    refresh: true
+  custom_flags_limit:
+    default: 50
+    hidden: true
+    client: true
 
 navigation:
   navigation_menu:
@@ -2824,7 +2833,7 @@ uncategorized:
 
   delete_merged_stub_topics_after_days:
     default: 7
-    min: 0
+    min: -1
 
   backup_drafts_to_pm_length:
     default: 0
@@ -2971,6 +2980,14 @@ uncategorized:
   suggest_weekends_in_date_pickers:
     client: true
     default: true
+
+  show_bottom_topic_map:
+    client: true
+    default: true
+
+  show_topic_map_in_topics_without_replies:
+    client: true
+    default: false
 
 user_preferences:
   default_email_digest_frequency:
@@ -3211,8 +3228,6 @@ tags:
   force_lowercase_tags:
     default: true
     client: true
-  create_post_for_category_and_tag_changes:
-    default: false
   automatically_clean_unused_tags:
     default: false
 

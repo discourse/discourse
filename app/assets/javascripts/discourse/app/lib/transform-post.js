@@ -169,64 +169,6 @@ export default function transformPost(
     postAtts.requestedGroupName = topic.requested_group_name;
   }
 
-  const showPMMap =
-    topic.archetype === "private_message" && post.post_number === 1;
-  if (showPMMap) {
-    postAtts.showPMMap = true;
-    postAtts.allowedGroups = details.allowed_groups;
-    postAtts.allowedUsers = details.allowed_users;
-    postAtts.canRemoveAllowedUsers = details.can_remove_allowed_users;
-    postAtts.canRemoveSelfId = details.can_remove_self_id;
-    postAtts.canInvite = details.can_invite_to;
-  }
-
-  const showTopicMap =
-    (_additionalAttributes.includes("topicMap") && post.post_number === 1) ||
-    showPMMap ||
-    (post.post_number === 1 &&
-      topic.archetype === "regular" &&
-      topic.posts_count > 1);
-  if (showTopicMap) {
-    postAtts.showTopicMap = true;
-    postAtts.topicCreatedAt = topic.created_at;
-    postAtts.createdByUsername = createdBy.username;
-    postAtts.createdByAvatarTemplate = createdBy.avatar_template;
-    postAtts.createdByName = createdBy.name;
-
-    postAtts.lastPostUrl = topic.get("lastPostUrl");
-    if (details.last_poster) {
-      postAtts.lastPostUsername = details.last_poster.username;
-      postAtts.lastPostAvatarTemplate = details.last_poster.avatar_template;
-      postAtts.lastPostName = details.last_poster.name;
-    }
-    postAtts.lastPostAt = topic.last_posted_at;
-
-    postAtts.topicReplyCount = topic.get("replyCount");
-    postAtts.topicViews = topic.views;
-    postAtts.topicViewsHeat = topic.get("viewsHeat");
-
-    postAtts.participantCount = topic.participant_count;
-    postAtts.topicLikeCount = topic.like_count;
-    postAtts.topicLinks = details.links;
-    if (postAtts.topicLinks) {
-      postAtts.topicLinkLength = details.links.length;
-    }
-    postAtts.topicPostsCount = topic.posts_count;
-
-    postAtts.participants = details.participants;
-
-    const postStream = topic.get("postStream");
-    postAtts.userFilters = postStream.userFilters;
-    postAtts.topicSummaryEnabled = postStream.summary;
-    postAtts.topicWordCount = topic.word_count;
-    postAtts.hasTopRepliesSummary = topic.has_summary;
-    postAtts.summarizable = topic.summarizable;
-
-    if (post.post_number === 1) {
-      postAtts.summary = postStream.topicSummary;
-    }
-  }
-
   if (postAtts.isDeleted) {
     postAtts.deletedByAvatarTemplate = post.get(
       "postDeletedBy.avatar_template"

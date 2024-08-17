@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-private-routing-service */
-import { setOwner } from "@ember/application";
 import EmberObject from "@ember/object";
+import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
 import $ from "jquery";
@@ -214,7 +214,7 @@ class DiscourseURL extends EmberObject {
       return this.redirectTo(path);
     }
 
-    const pathname = path.replace(/(https?\:)?\/\/[^\/]+/, "");
+    const pathname = path.replace(/^(https?\:)?\/\/[^\/]+/, "");
 
     if (!this.isInternal(path)) {
       return this.redirectTo(path);
@@ -235,7 +235,7 @@ class DiscourseURL extends EmberObject {
 
     const oldPath = this.routerService.currentURL;
 
-    path = path.replace(/(https?\:)?\/\/[^\/]+/, "");
+    path = path.replace(/^(https?\:)?\/\/[^\/]+/, "");
 
     // handle prefixes
     if (path.startsWith("/")) {
@@ -436,6 +436,10 @@ class DiscourseURL extends EmberObject {
       path = split[0];
       elementId = split[1];
     }
+
+    // Remove multiple consecutive slashes from path. Same as Ember does on initial page load:
+    // https://github.com/emberjs/ember.js/blob/8abcd000ee/packages/%40ember/routing/history-location.ts#L146
+    path = path.replaceAll(/\/\/+/g, "/");
 
     const transition = this.routerService.transitionTo(path);
 

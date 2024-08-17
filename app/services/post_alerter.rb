@@ -83,10 +83,13 @@ class PostAlerter
       return
     end
 
+    push_window = SiteSetting.push_notification_time_window_mins
+    if push_window > 0 && user.seen_since?(push_window.minutes.ago)
+      delay = (push_window - (Time.now - user.last_seen_at) / 60)
+    end
+
     if user.push_subscriptions.exists?
-      if user.seen_since?(SiteSetting.push_notification_time_window_mins.minutes.ago)
-        delay =
-          (SiteSetting.push_notification_time_window_mins - (Time.now - user.last_seen_at) / 60)
+      if delay.present?
         Jobs.enqueue_in(delay.minutes, :send_push_notification, user_id: user.id, payload: payload)
       else
         Jobs.enqueue(:send_push_notification, user_id: user.id, payload: payload)
@@ -106,7 +109,17 @@ class PostAlerter
           .order(client_id: :asc)
           .pluck(:client_id, :push_url)
 
-      if clients.length > 0
+      return if clients.length == 0
+
+      if delay.present?
+        Jobs.enqueue_in(
+          delay.minutes,
+          :push_notification,
+          clients: clients,
+          payload: payload,
+          user_id: user.id,
+        )
+      else
         Jobs.enqueue(:push_notification, clients: clients, payload: payload, user_id: user.id)
       end
     end

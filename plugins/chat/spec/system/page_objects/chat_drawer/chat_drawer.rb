@@ -145,6 +145,10 @@ module PageObjects
         has_no_css?("#{thread_list_button_selector}.has-unreads")
       end
 
+      def has_direct_message_channels_section?
+        has_css?(".direct-message-channels-section")
+      end
+
       private
 
       def mouseout
@@ -152,7 +156,7 @@ module PageObjects
         # and that the message actions menu is closed.
         # This check is essential because the message actions menu might partially
         # overlap with the header, making certain buttons inaccessible.
-        find("#site-logo").hover
+        PageObjects::Components::Logo.hover
       end
     end
   end

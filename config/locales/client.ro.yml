@@ -334,6 +334,12 @@ ro:
       topic_count: "Subiecte"
       post_count: "Articole"
       contact_info: "În cazul în care o problemă critică sau alt aspect urgent afectează site-ul, te rugăm să ne contactezi la %{contact_info}."
+      view_more: "Vezi mai multe"
+      view_less: "Vedeți mai puține"
+      activities:
+        periods:
+          last_7_days: "în ultimele 7 zile"
+          today: "astăzi"
     bookmarked:
       title: "Semn de carte"
       edit_bookmark: "Editează marcaj"
@@ -455,8 +461,8 @@ ro:
         search: "Căutați un mesaj"
         placeholder: "scrie aici titlul mesajului, URL-ul sau ID-ul"
     review:
-      show_more: "Arată mai mult"
-      show_less: "Arată mai puțin"
+      show_more: "Arată mai multe"
+      show_less: "Arată mai puține"
       order_by: "Ordonează după"
       date_filter: "Publicat între"
       in_reply_to: "ca răspuns la"
@@ -701,7 +707,7 @@ ro:
       never: "Niciodată"
       last_custom: "Ultima dată personalizată"
       custom: "Data și ora personalizată"
-      custom_short: "Personalizat..."
+      more_options: "Mai multe opțiuni…"
       select_timeframe: "Alege un interval de timp"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> a publicat <a href='%{topicUrl}'>articolul</a>"
@@ -811,11 +817,12 @@ ro:
           imap_mailbox_not_selected: "Trebuie să selectezi o cutie poștală pentru această configurație IMAP, altfel nicio cutie poștală nu va fi sincronizată!"
           prefill:
             title: "Pre-completare cu setări pentru:"
+          ssl_modes:
+            none: "Nimeni"
           credentials:
             title: "Date de conectare"
             smtp_server: "Server SMTP"
             smtp_port: "Port SMTP"
-            smtp_ssl: "Folosește SSL pentru SMTP"
             imap_server: "Server IMAP"
             imap_port: "Port IMAP"
             imap_ssl: "Folosește SSL pentru IMAP"
@@ -1357,6 +1364,13 @@ ro:
         confirm_description:
           account_specific: "Contul tău %{provider} '%{account_description}' va fi folosit pentru autentificare."
           generic: "Contul tău %{provider} va fi folosit pentru autentificare."
+      activate_account:
+        action: "Clic aici pentru a-ți activa contul"
+        already_done: "Ne pare rău, această adresă pentru confirmarea contului nu mai este valabilă. Poate contul tău este deja activ?"
+        please_continue: "Contul este confirmat. Vei fi redirecționat spre pagina principală."
+        continue_button: "Continuă la %{site_name}"
+        welcome_to: "Bine ai venit pe %{site_name}!"
+        approval_required: "Un moderator trebuie să aprobe manual contul înainte să poți accesa forumul. Vei primi un email imediat ce contul ți-a fost aprobat!"
       name:
         title: "Nume"
         instructions: "Numele tău complet (opțional)."
@@ -1647,6 +1661,9 @@ ro:
       hide_forever: "Nu, mulțumesc"
       intro: "Salut! Se pare că îți place discuția, dar încă nu te-ai înscris pentru un cont."
     summary:
+      buttons:
+        generate: "Rezumat"
+        regenerate: "Regenerare"
       disable: "Arată toate postările"
     deleted_filter:
       enabled_description: "Acest subiect conține postări șterse, care au fost ascunse. "
@@ -1729,6 +1746,7 @@ ro:
       admin_not_allowed_from_ip_address: "Nu te poți conecta ca administrator cu această adresă IP."
       resend_activation_email: "Click aici pentru a retrimite emailul de activare."
       omniauth_disallow_totp: "Contul tău are autentificarea în doi pași (2FA) activată. Te rog să te autentifici cu parola"
+      activate_account: "Activare cont"
       resend_title: "Retrimite emailul de activare"
       change_email: "Schimbă adresa de email"
       provide_new_email: "Furnizează o nouă adresă de email și îți vom retrimite linkul de confirmare."
@@ -2728,7 +2746,7 @@ ro:
         general: "General"
         email: "Email"
     flagging:
-      title: "Îți mulțumim că ne ajuți să ne păstrăm comunitatea civilizată!"
+      title: "Îți mulțumim că ne menții comunitatea civilă!"
       action: "Semnalează articol"
       take_action_options:
         default:
@@ -2779,7 +2797,7 @@ ro:
           few: "au mai rămas %{count}"
           other: "au mai rămas %{count}"
     flagging_topic:
-      title: "Îți mulțumim că ne ajuți să ne păstrăm comunitatea civilizată!"
+      title: "Îți mulțumim că ne menții comunitatea civilă!"
       action: "Semnalează subiect"
       notify_action: "Mesaj"
     topic_map:
@@ -2790,6 +2808,9 @@ ro:
         one: "%{count} click"
         few: "%{count} click-uri"
         other: "%{count} de click-uri"
+      views: "Afișări"
+      read: citire
+      minutes: minim
     post_links:
       about: "afișează mai multe link-uri din această postare"
       title:
@@ -3534,6 +3555,7 @@ ro:
           staff_action_logs: "Jurnal de acțiuni ale personalului"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(opțional)"
           saved: "salvat!"
         flags:
@@ -3545,6 +3567,7 @@ ro:
             save: "Salvare"
             name: "Nume"
             description: "Descriere"
+            invalid_applies_to: "Necesare"
             topic: "discuții"
             post: "Postări"
       plugins:

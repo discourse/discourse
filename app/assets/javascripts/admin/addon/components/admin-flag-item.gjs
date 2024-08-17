@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
@@ -21,7 +21,7 @@ export default class AdminFlagItem extends Component {
   @service router;
 
   @tracked enabled = this.args.flag.enabled;
-  @tracked isSaving = false;
+  @tracked isSaved = true;
 
   get canMove() {
     return this.args.flag.id !== SYSTEM_FLAG_IDS.notify_user;
@@ -49,7 +49,7 @@ export default class AdminFlagItem extends Component {
   @action
   toggleFlagEnabled(flag) {
     this.enabled = !this.enabled;
-    this.isSaving = true;
+    this.isSaved = false;
 
     return ajax(`/admin/config/flags/${flag.id}/toggle`, {
       type: "PUT",
@@ -62,7 +62,7 @@ export default class AdminFlagItem extends Component {
         return popupAjaxError(error);
       })
       .finally(() => {
-        this.isSaving = false;
+        this.isSaved = true;
       });
   }
 
@@ -73,19 +73,19 @@ export default class AdminFlagItem extends Component {
 
   @action
   moveUp() {
-    this.isSaving = true;
-    this.dMenu.close();
+    this.isSaved = false;
     this.args.moveFlagCallback(this.args.flag, "up").finally(() => {
-      this.isSaving = false;
+      this.isSaved = true;
+      this.dMenu.close();
     });
   }
 
   @action
   moveDown() {
-    this.isSaving = true;
-    this.dMenu.close();
+    this.isSaved = false;
     this.args.moveFlagCallback(this.args.flag, "down").finally(() => {
-      this.isSaving = false;
+      this.isSaved = true;
+      this.dMenu.close();
     });
   }
   @action
@@ -95,18 +95,18 @@ export default class AdminFlagItem extends Component {
 
   @action
   delete() {
-    this.isSaving = true;
+    this.isSaved = false;
     this.dialog.yesNoConfirm({
       message: i18n("admin.config_areas.flags.delete_confirm", {
         name: this.args.flag.name,
       }),
       didConfirm: () => {
         this.args.deleteFlagCallback(this.args.flag).finally(() => {
-          this.isSaving = false;
+          this.isSaved = true;
         });
       },
       didCancel: () => {
-        this.isSaving = false;
+        this.isSaved = true;
       },
     });
     this.dMenu.close();
@@ -117,7 +117,7 @@ export default class AdminFlagItem extends Component {
       class={{concatClass
         "admin-flag-item"
         @flag.name_key
-        (if this.isSaving "saving")
+        (if this.isSaved "saved")
       }}
     >
       <td>

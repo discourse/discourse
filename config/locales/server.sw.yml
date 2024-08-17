@@ -420,11 +420,7 @@ sw:
     error_staged: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Barua pepe inatumika na mtumiaji aliyekuwa staged."
     already_done: "Samahani, kiungo cha uthibitisho cha akaunti ni batili. Labda barua pepe yako imeshabadilishwa??"
   activation:
-    action: "Bonyeza hapa kuanzisha akkaunti yako"
     already_done: "Samahani, kiungo cha uthibitisho cha akaunti ni batili. Labda akaunti yako tayari ipo hewani?"
-    please_continue: "Akaunti yako imethibitishwa; utapelekwa kwenye ukurasa wa nyumbani."
-    continue_button: "Endelea kwenye %{site_name}"
-    welcome_to: "Karibu kwenye %{site_name}"
     approval_required: "Msimamizi lazima aipe kibali akaunti yako mpya kabla haujaanza kutumia jukwaa. Utatumiwa barua pepe akaunti yako ikipata kibali!"
     missing_session: "Tumeshindwa kuona kama akaunti yako ilitengenezwa, tafadhali akikisha cookies zimeruhusiwa."
     activated: "Samahani, akaunti hii imeshaanzishwa."
@@ -810,7 +806,6 @@ sw:
     send_welcome_message: "Watumie watumiaji wapya ujumbe wa kuwakaribisha na muongozo mfupi wa kuanzia."
     topics_per_period_in_top_summary: "Namba ya mada za juu zitakazo onyeshwa kama chaguo-msingi la muhtasari wa mada za juu."
     topics_per_period_in_top_page: "Idadi ya mada za juu zitakazo onyeshwa kwenye upande wa 'Onyesha Zaidi' mada za juu."
-    redirect_users_to_top_page: "Otomatikali watumiaji wapya na wale ambao hawapo watapelekwa juu ya ukurasa."
     email_token_valid_hours: "Nimesahau nywila / tokens za kuanzisha akaunti zina kibali cha masaa (n)"
     new_version_emails: "Tuma barua pepe kwa barua pepe_mawasiliano toleo jipya la Discourse likitolewa."
     invite_expiry_days: "Funguo za mualiko ni sahihi, kwa siku ngapi"
@@ -1991,7 +1986,12 @@ sw:
       privacy:
         fields:
           login_required:
-            placeholder: "Binafsi"
+            label: "Uonekanaji"
+            choices:
+              public:
+                label: "Umma"
+              private:
+                label: "Binafsi"
       styling:
         fields:
           styling_preview:

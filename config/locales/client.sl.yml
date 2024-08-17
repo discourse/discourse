@@ -314,6 +314,26 @@ sl:
       user_count: "Registracije"
       active_user_count: "Aktivni uporabniki"
       contact_info: "V primeru kritične napake na strani ali nujne zadeve nam pišite na %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} tema"
+          two: "%{formatted_number} teme"
+          few: "%{formatted_number} teme"
+          other: "%{formatted_number} teme"
+        posts:
+          one: "%{formatted_number} prispevek"
+          two: "%{formatted_number} prispevka"
+          few: "%{formatted_number} prispevki"
+          other: "%{formatted_number} prispevkov"
+        likes:
+          one: "%{formatted_number} všeček"
+          two: "%{formatted_number} všečka"
+          few: "%{formatted_number} všečke"
+          other: "%{formatted_number} všečkov"
+        periods:
+          last_7_days: "v zadnjih 7 dnevih"
+          today: "danes"
+          all_time: "ves čas"
     bookmarked:
       title: "Zaznamek"
       edit_bookmark: "Uredi zaznamek"
@@ -635,7 +655,6 @@ sl:
       none: "Brez opomnika"
       never: "Nikoli"
       custom: "Izberi datum in čas"
-      custom_short: "Po meri..."
       select_timeframe: "Izberi časovni okvir"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> je objavil <a href='%{topicUrl}'>temo</a>"
@@ -732,11 +751,12 @@ sl:
           imap_settings_valid: "Nastavitve IMAP so veljavne."
           prefill:
             gmail: "Gmail"
+          ssl_modes:
+            none: "Brez"
           credentials:
             title: "Poverilnice"
             smtp_server: "Strežnik SMTP"
             smtp_port: "Vrata SMTP"
-            smtp_ssl: "Uporabi SSL za SMTP"
             imap_server: "Strežnik IMAP"
             imap_port: "Vrata IMAP"
             imap_ssl: "Uporabi SSL za IMAP"
@@ -1351,6 +1371,11 @@ sl:
         confirm_description:
           account_specific: "Vaš %{provider} račun '%{account_description}' bo uporabljen za preverjanje pristnosti."
           generic: "Vaš %{provider} račun bo uporabljen za preverjanje pristnosti."
+      activate_account:
+        please_continue: "Vaš nov uporabniški račun je potrjen - preusmerjeni boste na začetno stran."
+        continue_button: "Nadaljujte na %{site_name}"
+        welcome_to: "Dobrodošli na %{site_name}!"
+        approval_required: "Moderator mora ročno potrditi vaš nov uporabniški račun da boste lahko dostopali do foruma. Ko bo račun potrjen boste prejeli e-sporočilo."
       name:
         title: "Polno ime"
         instructions: "Vaše polno ime (neobvezno)."
@@ -1714,9 +1739,9 @@ sl:
         other: "Obstaja <b>%{count}</b> odgovorov."
       buttons:
         hide: "Skrij povzetek"
-        generate: "Povzemi z AI"
-        regenerate: "Ponovno ustvari povzetek"
+        regenerate: "Ponovno ustvari"
       disable: "Prikaži vse prispevke"
+      show_all_label: "Pokaži vse"
     deleted_filter:
       enabled_description: "Ta tema vsebuje izbrisane prispevke, ki so skriti."
       disabled_description: "Izbrisani prispevki so prikazani."
@@ -1819,6 +1844,7 @@ sl:
       admin_not_allowed_from_ip_address: "Ne morete se prijaviti kot administrator iz tega IP naslova."
       resend_activation_email: "Kliknite tukaj za ponovno pošiljanje aktivacijskega e-sporočila."
       omniauth_disallow_totp: "Vaš račun ima vklopljeno preverjanje v dveh korakih. Prijavite se z vašim geslom."
+      activate_account: "Aktiviraj račun"
       resend_title: "Ponovno pošlji aktivacijsko e-sporočilo"
       change_email: "Spremeni e-naslov"
       provide_new_email: "Vpišite nov e-naslov in ponovno vam bomo poslali potrditveno e-sporočilo."
@@ -3055,7 +3081,6 @@ sl:
         email: "E-sporočila"
       colors_disabled: "Barv ne morete izbrati, ker slog kategorije ni izbran."
     flagging:
-      title: "Hvala, da pomagate ohraniti prijazno skupnost!"
       action: "Prijavi prispevek"
       take_action: "Ukrepaj…"
       take_action_options:
@@ -3097,7 +3122,6 @@ sl:
           few: "%{count} preostali"
           other: "%{count} preostalih"
     flagging_topic:
-      title: "Hvala, da pomagate ohraniti prijazno skupnost!"
       action: "Prijavi temo"
       notify_action: "Opozorilo"
     topic_map:
@@ -3110,6 +3134,9 @@ sl:
         two: "%{count} klika"
         few: "%{count} kliki"
         other: "%{count} klikov"
+      views: "Ogledov"
+      read: prebrano
+      minutes: najmanj
     post_links:
       about: "razširi več povezav za to temo"
       title:
@@ -3937,6 +3964,7 @@ sl:
             save: "Shrani"
             name: "Ime"
             description: "Opis"
+            invalid_applies_to: "Zahtevano"
             topic: "tem"
             post: "prispevkov"
             chat_message: "sporočila klepeta"

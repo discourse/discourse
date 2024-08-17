@@ -37,7 +37,9 @@ nb_NO:
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D. MMMM YYYY"
       long_date_without_year: "D MMM, LT"
+      long_date_with_year_without_time: "D. MMM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
+      long_date_with_year_with_linebreak: "D. MMM YYYY <br/>LT"
       wrap_ago: "%{date} siden"
       wrap_on: "på %{date}"
       tiny:
@@ -75,15 +77,34 @@ nb_NO:
         date_month: "D MMM"
         date_year: "MMM YYYY"
       medium:
+        less_than_x_minutes:
+          one: "mindre enn %{count} min"
+          other: "mindre enn %{count} min"
         x_minutes:
           one: "%{count} minutt"
           other: "%{count} minutter"
         x_hours:
           one: "%{count} time"
           other: "%{count} timer"
+        about_x_hours:
+          one: "ca %{count} time"
+          other: "ca %{count} timer"
         x_days:
           one: "%{count} dag"
           other: "%{count} dager"
+        x_months:
+          one: "%{count} måned"
+          other: "%{count} måneder"
+        about_x_years:
+          one: "ca %{count} år"
+          other: "ca %{count} år"
+        over_x_years:
+          one: "over %{count} år"
+          other: "over %{count} år"
+        almost_x_years:
+          one: "nesten %{count} år"
+          other: "nesten %{count} år"
+        date_year: "D. MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} minutt siden"
@@ -117,11 +138,15 @@ nb_NO:
       to_placeholder: "til dato"
     share:
       topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
+      post: "innlegg #%{postNumber} av @%{username}"
       close: "lukk"
       twitter: "Del på Twitter"
       facebook: "Del på Facebook"
       email: "Send via e-post"
       url: "Kopier og del URL"
+    word_connector:
+      comma: ", "
+      last_item: "og"
     action_codes:
       public_topic: "Gjorde dette emnet offentlig %{when}"
       open_topic: "Konverterte dette til et emne %{when}"
@@ -133,6 +158,8 @@ nb_NO:
       removed_user: "Fjernet %{who} %{when}"
       removed_group: "Fjernet %{who} %{when}"
       autobumped: "Automatisk flyttet øverst %{when}"
+      tags_changed: "Taggene oppdatert %{when}"
+      category_changed: "Kategorien oppdatert %{when}"
       autoclosed:
         enabled: "Lukket %{when}"
         disabled: "Åpnet %{when}"
@@ -154,31 +181,50 @@ nb_NO:
       banner:
         enabled: "Gjorde dette til et banner %{when}. Det vil vises på toppen av hver side inntil brukeren lukker det."
         disabled: "Fjernet dette banneret %{when}. Det vil ikke lenger vises på toppen av hver side."
-    topic_admin_menu: "handlinger for tråd"
+      forwarded: "Videresendte e-posten ovenfor"
+    topic_admin_menu: "emnehandlinger"
     skip_to_main_content: "Gå til hovedinnhold"
+    skip_user_nav: "Gå til profilinnhold"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
+    emails_are_disabled_non_staff: "Utgående e-post er deaktivert for brukere som ikke er blant staben."
     software_update_prompt:
+      message: "Vi har oppdatert denne siden, <span>vennligst oppdater siden</span> for å sikre at alt fungerer som det skal."
       dismiss: "Avslå"
+    bootstrap_mode: "Kom godt i gang"
     back_button: "Forrige"
     themes:
       default_description: "Forvalg"
+      broken_theme_alert: "Det kan hende at nettstedet ditt ikke fungerer fordi et tema/en komponent har feil."
+      error_caused_by: "Forårsaket av '%{name}'. <a target='blank' href='%{path}'>Klikk her</a> for å oppdatere, rekonfigurere eller deaktivere."
+      only_admins: "(denne meldingen vises bare til nettstedets administratorer)"
+    broken_decorator_alert: "Innlegg vises kanskje ikke riktig fordi en av dekoratorene for innleggsinnhold på nettstedet ditt har gitt en feil."
+    broken_page_change_alert: "En onPageChange-hendelsesbehandler utløste en feil. Sjekk nettleserens utviklerverktøy for mer informasjon."
+    broken_plugin_alert: "Forårsaket av utvidinga '%{name}'"
+    broken_transformer_alert: "Det oppstod en feil. Det kan hende at nettstedet ditt ikke fungerer som det skal."
+    critical_deprecation:
+      notice: "<b>[Adminsvarsel]</b> Et av temaene eller utvidingene dine må oppdateres for kompatibilitet med kommende endringer i Discourse-kjernen."
+      id: "(id:<em>%{id}</em>)"
+      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
+      theme_source: "Identifisert tema: <a target='_blank' href='%{path}'>'%{name}'</a>."
+      plugin_source: "Identifisert utviding: '%{name}'"
     s3:
       regions:
-        ap_northeast_1: "Asia/Stillehavsregionen (Tokyo)"
-        ap_northeast_2: "Asia/Stillehavsregionen (Seoul)"
+        ap_northeast_1: "Asia Stillehavet (Tokyo)"
+        ap_northeast_2: "Asia Stillehavet (Seoul)"
         ap_east_1: "Asia Stillehavet (Hong Kong)"
-        ap_south_1: "Asia/Stillehavsregionen (Mumbai)"
-        ap_southeast_1: "Asia/Stillehavsregionen (Singapore)"
-        ap_southeast_2: "Asia/Stillehavsregionen (Sydney)"
+        ap_south_1: "Asia Stillehavet (Mumbai)"
+        ap_southeast_1: "Asia Stillehavet (Singapore)"
+        ap_southeast_2: "Asia Stillehavet (Sydney)"
         ca_central_1: "Kanada (sentralregion)"
         cn_north_1: "Kina (Beijing)"
         cn_northwest_1: "Kina (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_north_1: "EU (Stockholm)"
+        eu_south_1: "EU (Milan)"
         eu_west_1: "EU (Irland)"
         eu_west_2: "EU (London)"
         eu_west_3: "EU (Paris)"
-        sa_east_1: "Sør-Amerika (søndag Paulo)"
+        sa_east_1: "Sør-Amerika (São Paulo)"
         us_east_1: "USA øst (N. Virginia)"
         us_east_2: "USA øst (Ohio)"
         us_gov_east_1: "AWS GovCloud (US-øst)"
@@ -198,6 +244,7 @@ nb_NO:
     delete: "Slett"
     generic_error: "Beklager, det har oppstått en feil."
     generic_error_with_reason: "Det oppstod et problem: %{error}"
+    multiple_errors: "Det oppsto flere feil: %{errors}"
     sign_up: "Registrer deg"
     log_in: "Logg inn"
     age: "Alder"
@@ -255,6 +302,16 @@ nb_NO:
       topic_count: "Emner"
       post_count: "Innlegg"
       contact_info: "I tilfelle en kritisk hendelse skulle inntreffe eller det er en hastesak som påvirker siden, ta kontakt på %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} emne"
+          other: "%{formatted_number} emner"
+        posts:
+          one: "%{formatted_number} innlegg"
+          other: "%{formatted_number} innlegg"
+        periods:
+          last_7_days: "de siste 7 dagene"
+          today: "i dag"
     bookmarked:
       title: "Bokmerke"
       edit_bookmark: "Rediger bokmerke"
@@ -664,11 +721,12 @@ nb_NO:
           imap_mailbox_not_selected: "Du må velge en Mailbox for denne IMAP-konfigurasjonen, eller ingen e-postbokser vil bli synkronisert!"
           prefill:
             title: "Forhåndsfyll med innstillinger for:"
+          ssl_modes:
+            none: "Ingen"
           credentials:
             title: "Legitimasjon"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP port"
-            smtp_ssl: "Bruk SSL for SMTP"
             imap_server: "IMAP Server"
             imap_port: "IMAP port"
             imap_ssl: "Bruk SSL for IMAP"
@@ -1245,6 +1303,13 @@ nb_NO:
         confirm_description:
           account_specific: "Din %{provider} konto '%{account_description}' vil bli brukt til autentisering."
           generic: "Kontoen din på %{provider} vil bli brukt i autentisering."
+      activate_account:
+        action: "Klikk her for å aktivere din konto"
+        already_done: "Beklager, denne bekreftelseslenken er ikke lenger gyldig. Kanskje er kontoen din allerede aktivert?"
+        please_continue: "Din nye konto er registrert; du vil bli videresendt til hjemmesiden. "
+        continue_button: "Fortsett til %{site_name}"
+        welcome_to: "Velkommen til %{site_name}!"
+        approval_required: "En moderator må manuelt godkjenne kontoen din før du får tilgang til forumet. Du vil motta en e-post når kontoen din er godkjent!"
       name:
         title: "Navn"
         instructions: "Ditt fulle navn (valgfritt)."
@@ -1551,15 +1616,6 @@ nb_NO:
       enabled: "Dette nettstedet er i lesemodus. Fortsett gjerne å lese, men du kan ikke svare, gi likes eller utføre andre handlinger som er slått av."
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
       logout_disabled: "Du kan ikke logge ut når nettstedet er i lese-modus."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# feil/time} other {# feil/time}}</a> nådd området innstillingen grense for {limit, plural, one {# feil/time} other {# feil/time}}.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# feil/minutt} other {# feil/minutt}}</a> nådd området innstillingen grense for {limit, plural, one {# feil/minutt} other {# feil/minutt}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# feil/time} other {# feil/time}}</a> overskrider sideinnstillingsgrensen på {limit, plural, one {# error/time} other {# errors/hour}}
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# feil / minutt} other {# feil / minutt}}</a> overskredet nettstedsinnstillingsgrensen på {limit, plural, one {# feil / minutt} other {# feil / minutt}}.
     mute: Ignorer
     unmute: Fjern ignorering
     last_post: Postet
@@ -1578,9 +1634,12 @@ nb_NO:
       hidden_for_session: "OK, vi vil spørre deg i morgen. Du kan alltid bruke \"Logg Inn\" for å opprette en konto."
       intro: "Hei! Ser ut som du liker diskusjonen, men du har ikke registrert deg for en konto ennå."
     summary:
+      buttons:
+        regenerate: "Regenerer"
       description_time_MF: |
         Det {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svarer}} med en estimert lesetid på <b>{readingTime, plural, one {# minutt} other {# minutter}}</b>.
       disable: "Vis alle innlegg"
+      show_all_label: "Vis alle"
     deleted_filter:
       enabled_description: "Dette emnet inneholder slettede innlegg, som er blitt skjult."
       disabled_description: "Slettede innlegg i emnet vises."
@@ -1668,6 +1727,7 @@ nb_NO:
       admin_not_allowed_from_ip_address: "Du kan ikke logge inn som administrator fra den IP-adressen."
       resend_activation_email: "Klikk her for å sende e-posten for aktivering igjen."
       omniauth_disallow_totp: "Kontoen din har to-faktor autentisering aktivert. Vennligst logg inn med passordet ditt."
+      activate_account: "Aktiver konto"
       resend_title: "Send aktivterings-e-post på nytt"
       change_email: "Endre e-postadresse"
       provide_new_email: "Oppgi en ny adresse og vi vil sende din aktiverings-e-post på nytt."
@@ -2867,7 +2927,6 @@ nb_NO:
         none: "ingen underkategorier"
       colors_disabled: "Du kan ikke velge farger fordi du har en kategori stil fra ingen."
     flagging:
-      title: "Takk for at du hjelper å holde forumet ryddig!"
       action: "Rapporter innlegg"
       take_action_options:
         default:
@@ -2904,7 +2963,6 @@ nb_NO:
           one: "ett gjenstående"
           other: "%{count} gjenstående"
     flagging_topic:
-      title: "Takk for at du hjelper med å vedlikeholde god skikk i samfundet vårt!"
       action: "Rapporter mne"
       notify_action: "Melding"
     topic_map:
@@ -2914,6 +2972,9 @@ nb_NO:
       clicks:
         one: "%{count} klikk"
         other: "%{count} klikk"
+      views: "Visninger"
+      read: les
+      minutes: minimum
     post_links:
       about: "utvid flere lenker for dette innlegget"
       title:
@@ -3269,7 +3330,6 @@ nb_NO:
         everyone_can_use: "Stikkord kan benyttes av alle"
         usable_only_by_groups: "Stikkord er synlige for alle, men kun staben kan bruke dem"
         visible_only_to_groups: "Etiketter er kun synlig for følgende grupper"
-        cannot_save: "Kan ikke lagre taggruppe. Forsikre deg om at det er minst én tag tilstede, at tagggruppenavnet ikke er tomt, og at en gruppe er valgt for taggetillatelse."
         tags_placeholder: "Søk eller opprett..."
         parent_tag_placeholder: "Valgfritt"
         disabled: "Merking er deaktivert. "
@@ -3699,6 +3759,7 @@ nb_NO:
             save: "Lagre"
             name: "Navn"
             description: "Beskrivelse"
+            invalid_applies_to: "Påkrevd"
             topic: "emner"
             post: "innlegg"
       plugins:

@@ -492,9 +492,6 @@ sl:
   associated_accounts:
     revoke_failed: "Nismo uspeli razveljaviti vaš račun pri %{provider_name}."
   activation:
-    please_continue: "Vaš nov uporabniški račun je potrjen - preusmerjeni boste na začetno stran."
-    continue_button: "Nadaljujte na %{site_name}"
-    welcome_to: "Dobrodošli na %{site_name}!"
     approval_required: "Moderator mora ročno potrditi vaš nov uporabniški račun da boste lahko dostopali do foruma. Ko bo račun potrjen boste prejeli e-sporočilo."
   reviewable_score_types:
     needs_approval:
@@ -1959,7 +1956,12 @@ sl:
       privacy:
         fields:
           login_required:
-            placeholder: "Zasebno"
+            label: "Vidljivost"
+            choices:
+              public:
+                label: "Javno"
+              private:
+                label: "Zasebno"
       styling:
         fields:
           styling_preview:

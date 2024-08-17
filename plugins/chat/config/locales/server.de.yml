@@ -17,7 +17,6 @@ de:
     chat_allowed_messages_for_other_trust_levels: "Anzahl der Nachrichten, die Benutzer mit den Vertrauensstufen 1–4 in 30 Sekunden senden dürfen. Auf „0“ setzen, um das Limit zu deaktivieren."
     chat_silence_user_sensitivity: "Die Wahrscheinlichkeit, dass ein im Chat markierter Benutzer automatisch stummgeschaltet wird."
     chat_auto_silence_from_flags_duration: "Anzahl der Minuten, für die Benutzer stummgeschaltet werden, wenn sie aufgrund markierter Chat-Nachrichten automatisch stummgeschaltet werden."
-    chat_default_channel_id: "Der Chat-Kanal, der standardmäßig geöffnet wird, wenn ein Benutzer keine ungelesenen Nachrichten oder Erwähnungen in anderen Kanälen hat."
     chat_duplicate_message_sensitivity: "Die Wahrscheinlichkeit, dass eine doppelte Nachricht desselben Absenders innerhalb eines kurzen Zeitraums blockiert wird. Dezimalzahl zwischen 0 und 1,0, wobei 1,0 die höchste Einstellung ist (Nachrichten werden häufiger in kürzerer Zeit blockiert). Auf `0` setzen, um doppelte Nachrichten zuzulassen."
     chat_minimum_message_length: "Mindestanzahl von Zeichen für eine Chat-Nachricht."
     chat_allow_uploads: "Uploads in öffentlichen Chat-Kanälen und Direktnachrichtenkanälen zulassen."
@@ -31,7 +30,7 @@ de:
     chat_editing_grace_period: "Für (n) Sekunden nach dem Senden eines Chats wird das Schlagwort „(bearbeitet)“ nicht in der Chat-Nachricht angezeigt."
     chat_editing_grace_period_max_diff_low_trust: "Maximale Anzahl von Zeichenänderungen, die innerhalb der Chat-Bearbeitungsfrist erlaubt sind. Wenn mehr geändert werden, wird das Schlagwort „(bearbeitet)“ in der Chat-Nachricht angezeigt (Vertrauensstufe 0 und 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maximale Anzahl von Zeichenänderungen, die innerhalb der Chat-Bearbeitungsfrist erlaubt sind. Wenn mehr geändert werden, wird das Schlagwort „(bearbeitet)“ in der Chat-Nachricht angezeigt (Vertrauensstufe 2 und höher)."
-    chat_preferred_mobile_index: "Bevorzugter Tab beim Laden von /chat auf dem Handy."
+    chat_preferred_index: "Bevorzugte Registerkarte beim Laden von /chat."
     errors:
       chat_default_channel: "Der Standard-Chat-Kanal muss ein öffentlicher Kanal sein."
       direct_message_enabled_groups_invalid: "Du musst mindestens eine Gruppe für diese Einstellung angeben. Wenn du nicht möchtest, dass andere Personen als Teammitglieder Direktnachrichten senden, wähle die Gruppe für Teammitglieder aus."

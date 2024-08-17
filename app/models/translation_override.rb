@@ -44,14 +44,17 @@ class TranslationOverride < ActiveRecord::Base
   validates_presence_of :locale, :translation_key, :value
 
   validate :check_interpolation_keys
+  validate :check_MF_string, if: :message_format?
 
   attribute :status, :integer
   enum status: { up_to_date: 0, outdated: 1, invalid_interpolation_keys: 2, deprecated: 3 }
 
-  scope :mf_locales, ->(locale) { where(locale: locale).where("translation_key LIKE '%_MF'") }
+  scope :mf_locales,
+        ->(locale) { not_deprecated.where(locale: locale).where("translation_key LIKE '%_MF'") }
   scope :client_locales,
         ->(locale) do
-          where(locale: locale)
+          not_deprecated
+            .where(locale: locale)
             .where("translation_key LIKE 'js.%' OR translation_key LIKE 'admin_js.%'")
             .where.not("translation_key LIKE '%_MF'")
         end
@@ -104,10 +107,8 @@ class TranslationOverride < ActiveRecord::Base
   end
 
   def self.expire_cache(locale, key)
-    if key.starts_with?("post_action_types.")
-      ApplicationSerializer.expire_cache_fragment!("post_action_types_#{locale}")
-    elsif key.starts_with?("topic_flag_types.")
-      ApplicationSerializer.expire_cache_fragment!("post_action_flag_types_#{locale}")
+    if key.starts_with?("post_action_types.") || key.starts_with?("topic_flag_types.")
+      PostActionType.new.expire_cache
     else
       return false
     end
@@ -165,6 +166,16 @@ class TranslationOverride < ActiveRecord::Base
     I18n.overrides_disabled { I18n.t(transformed_key, locale: :en) }
   end
 
+  def message_format?
+    translation_key.to_s.end_with?("_MF")
+  end
+
+  def make_up_to_date!
+    return unless outdated?
+    self.original_translation = current_default
+    update_attribute!(:status, :up_to_date)
+  end
+
   private
 
   def transformed_key
@@ -184,6 +195,14 @@ class TranslationOverride < ActiveRecord::Base
         count: invalid_keys.size,
       ),
     )
+  end
+
+  def check_MF_string
+    require "messageformat"
+
+    MessageFormat.compile(locale, { key: value }, strict: true)
+  rescue MessageFormat::Compiler::CompileError => e
+    errors.add(:base, e.cause.message)
   end
 end
 

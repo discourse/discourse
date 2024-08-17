@@ -6,8 +6,8 @@ en:
     poll_minimum_trust_level_to_create: "Define the minimum trust level needed to create polls."
     poll_create_allowed_groups: "The groups that are allowed to create polls."
     poll_groupable_user_fields: "A set of user field names that can be used to group and filter poll results."
-    poll_export_data_explorer_query_id: "ID of the Data Explorer Query to use for exporting poll results (0 to disable)."
-    poll_export_ranked_choice_data_explorer_query_id: "ID of the Data Explorer Query to use for exporting Instant Run-off Voting poll results."
+    poll_export_data_explorer_query_id: "ID of the data explorer query to use for exporting poll results (0 to disable)."
+    poll_export_ranked_choice_data_explorer_query_id: "ID of the data explorer query to use for exporting instant-runoff voting poll results."
     poll_default_public: "When creating a new poll, enable the 'show who voted' option by default."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
@@ -60,7 +60,7 @@ en:
       one: A minimum of %{count} vote is required for this poll.
       other: A minimum of %{count} votes is required for this poll.
     ranked_choice:
-      vote_options_mismatch: "For Instant Run-off, the number of options supplied in a vote must match the number of options.  The number of options is %{count} and the number provided was %{provided}."
+      vote_options_mismatch: "For instant-runoff, the number of choices made in a vote must match the number of options.  The number of options is %{count} and the number of choices made was %{provided}."
       no_group_results_support: "Invalid poll type, ranked_choice does not support grouped results."
     topic_must_be_open_to_toggle_status: "The topic must be open to toggle status."
     only_staff_or_op_can_toggle_status: "Only a staff member or the original poster can toggle a poll status."

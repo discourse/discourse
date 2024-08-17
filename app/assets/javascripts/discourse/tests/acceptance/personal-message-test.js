@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
@@ -91,7 +91,9 @@ acceptance("Personal Message - invite", function (needs) {
   test("can open invite modal", async function (assert) {
     await visit("/t/pm-for-testing/12");
     await click(".add-remove-participant-btn");
-    await click(".private-message-map .controls .add-participant-btn");
+    await click(
+      ".topic-map__private-message-map .controls .add-participant-btn"
+    );
 
     assert
       .dom(".d-modal.add-pm-participants .invite-user-control")
@@ -101,7 +103,9 @@ acceptance("Personal Message - invite", function (needs) {
   test("shows errors correctly", async function (assert) {
     await visit("/t/pm-for-testing/12");
     await click(".add-remove-participant-btn");
-    await click(".private-message-map .controls .add-participant-btn");
+    await click(
+      ".topic-map__private-message-map .controls .add-participant-btn"
+    );
 
     assert
       .dom(".d-modal.add-pm-participants .invite-user-control")

@@ -62,6 +62,7 @@ module Onebox
             deletions: result["deletions"],
           },
         )
+        result["is_private"] = result.dig("base", "repo", "private")
 
         result
       end
@@ -100,7 +101,9 @@ module Onebox
       end
 
       def load_json(url)
-        ::MultiJson.load(URI.parse(url).open(read_timeout: timeout))
+        ::MultiJson.load(
+          URI.parse(url).open({ read_timeout: timeout }.merge(github_auth_header(match[:org]))),
+        )
       end
     end
   end

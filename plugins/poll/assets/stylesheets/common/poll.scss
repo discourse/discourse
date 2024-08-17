@@ -23,7 +23,7 @@ div.poll-outer {
       padding: 0.5em 0;
       word-break: break-word;
       button {
-        background-color: var(--secondary);
+        background-color: transparent;
         border: none;
         text-align: left;
         padding-left: 23px;
@@ -347,7 +347,9 @@ div.poll-outer {
     .poll-buttons-dropdown,
     .export-results,
     .toggle-status,
-    .show-breakdown {
+    .show-breakdown,
+    .show-tally,
+    .show-percentage {
       // we want these controls to be separated
       // from voting controls
       margin-left: auto;
@@ -367,7 +369,8 @@ div.poll-outer {
         }
       }
 
-      .percentage {
+      .percentage,
+      .absolute {
         float: right;
         color: var(--primary-medium);
         margin-left: 0.25em;

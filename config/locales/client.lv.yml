@@ -262,6 +262,18 @@ lv:
       topic_count: "Tēmas"
       post_count: "Ieraksti"
       contact_info: "Ar šo vietni saistītu kritisku problēmu gadījumā lūdzu sazinieties ar mums %{contact_info}."
+      activities:
+        topics:
+          zero: "%{formatted_number} tēmas"
+          one: "%{formatted_number} tēma"
+          other: "%{formatted_number} tēmas"
+        posts:
+          zero: "%{formatted_number} raksti"
+          one: "%{formatted_number} raksts"
+          other: "%{formatted_number} raksti"
+        periods:
+          last_7_days: "Pēdējās 7 dienās"
+          today: "šodien"
     bookmarked:
       title: "Grāmatzīmes"
       edit_bookmark: "Rediģēt grāmatzīmi"
@@ -615,11 +627,12 @@ lv:
           imap_mailbox_not_selected: "Šai IMAP konfigurācijai ir jāizvēlas pastkaste, pretējā gadījumā neviena pastkaste netiks sinhronizēta!"
           prefill:
             title: "Iepriekš aizpildiet ar iestatījumiem:"
+          ssl_modes:
+            none: "Nav"
           credentials:
             title: "Atsauksme uz"
             smtp_server: "SMTP serveris"
             smtp_port: "SMTP ports"
-            smtp_ssl: "Lieto SSO priekš SMTP"
             imap_server: "IMAP serveris"
             imap_port: "IMAP ports"
             imap_ssl: "IMAP izmanto SSL"
@@ -1187,6 +1200,9 @@ lv:
       associated_accounts:
         revoke: "Atsaukt"
         cancel: "Atcelt"
+      activate_account:
+        continue_button: "Turpināt %{site_name}"
+        welcome_to: "Laipni lūdzam %{site_name}!"
       name:
         title: "Vārds"
         instructions: "Jūsu pilnais vārds (neobligāti)."
@@ -1483,6 +1499,8 @@ lv:
       hide_forever: "nē, paldies"
       hidden_for_session: "Labi, mēs jums jautāsim rīt. Jūs vienmēr varat izmantot arī “Pieteikties”, lai izveidotu kontu."
     summary:
+      buttons:
+        regenerate: "Atkārtoti radīt"
       disable: "Parādīt visus ierakstus"
     deleted_filter:
       enabled_description: "Šī tēma satur dzēstus ierakstus, kuri ir paslēpti."
@@ -1572,6 +1590,7 @@ lv:
       admin_not_allowed_from_ip_address: "Jūs nevarat ieiet kā administrators no šīs IP adreses."
       resend_activation_email: "Klikšķiniet šeit, lai saņemtu aktivācijas e-pastu atkārtoti."
       omniauth_disallow_totp: "Jūsu kontā ir iespējota divu faktoru autentifikācija. Lūdzu, piesakieties, izmantojot savu paroli."
+      activate_account: "Aktīvs konts"
       resend_title: "Atkārtoti nosūtīt aktivācijas e-pastu"
       change_email: "Mainīt e-pasta adresi"
       provide_new_email: "Norādiet jaunu adresi, un mēs atkārtoti nosūtīsim jūsu apstiprinājuma e-pastu."
@@ -2399,7 +2418,6 @@ lv:
         general: "Vispārīgi"
         email: "E-pasts"
     flagging:
-      title: "Paldies, ka palīdzat uzturēt mūsu forumu civilizētu!"
       action: "Ziņot par ierakstu"
       take_action_options:
         suspend:
@@ -2429,7 +2447,6 @@ lv:
           one: "palicis %{count}"
           other: "palikuši %{count}"
     flagging_topic:
-      title: "Paldies, ka palīdzat uzturēt mūsu forumu civilizētu!"
       action: "Ziņot par tēmu"
       notify_action: "Ziņa"
     topic_map:
@@ -2440,6 +2457,8 @@ lv:
         zero: "%{count} klikšķi"
         one: "%{count} klikšķis"
         other: "%{count} klikšķi"
+      views: "Skatījumi"
+      read: izlasīts
     post_links:
       title:
         zero: "vēl %{count}"
@@ -3029,6 +3048,7 @@ lv:
             save: "Saglabāt"
             name: "Vārds"
             description: "Apraksts"
+            invalid_applies_to: "Nepieciešams"
             topic: "tēmas"
             post: "raksti"
       plugins:

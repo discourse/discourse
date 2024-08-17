@@ -123,4 +123,25 @@ RSpec.describe "List channels | no sidebar", type: :system do
       expect(page).to have_no_css(".direct-message-channels-section")
     end
   end
+
+  context "when public channels are disabled" do
+    before { SiteSetting.enable_public_channels = false }
+
+    it "shows the create direct message button" do
+      visit("/chat")
+
+      expect(chat).to have_direct_message_channels_section
+    end
+
+    context "with drawer prefered" do
+      before { chat.prefers_drawer }
+
+      it "shows the create direct message button in the drawer" do
+        visit("/")
+        chat.open_from_header
+
+        expect(PageObjects::Pages::ChatDrawer.new).to have_direct_message_channels_section
+      end
+    end
+  end
 end

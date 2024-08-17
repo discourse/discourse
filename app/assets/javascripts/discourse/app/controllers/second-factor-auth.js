@@ -10,45 +10,42 @@ import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
-export default Controller.extend({
-  TOTP,
-  BACKUP_CODE,
-  SECURITY_KEY,
+export default class SecondFactorAuthController extends Controller {
+  TOTP = TOTP;
+  BACKUP_CODE = BACKUP_CODE;
+  SECURITY_KEY = SECURITY_KEY;
+  queryParams = ["nonce"];
+  message = null;
+  loadError = false;
+  messageIsError = false;
+  secondFactorToken = null;
+  userSelectedMethod = null;
 
-  queryParams: ["nonce"],
-
-  message: null,
-  loadError: false,
-  messageIsError: false,
-  secondFactorToken: null,
-  userSelectedMethod: null,
-
-  totpEnabled: readOnly("model.totp_enabled"),
-  backupCodesEnabled: readOnly("model.backup_enabled"),
-  securityKeysEnabled: readOnly("model.security_keys_enabled"),
-  allowedMethods: readOnly("model.allowed_methods"),
-  customDescription: readOnly("model.description"),
-
-  showTotpForm: equal("shownSecondFactorMethod", TOTP),
-  showSecurityKeyForm: equal("shownSecondFactorMethod", SECURITY_KEY),
-  showBackupCodesForm: equal("shownSecondFactorMethod", BACKUP_CODE),
+  @readOnly("model.totp_enabled") totpEnabled;
+  @readOnly("model.backup_enabled") backupCodesEnabled;
+  @readOnly("model.security_keys_enabled") securityKeysEnabled;
+  @readOnly("model.allowed_methods") allowedMethods;
+  @readOnly("model.description") customDescription;
+  @equal("shownSecondFactorMethod", TOTP) showTotpForm;
+  @equal("shownSecondFactorMethod", SECURITY_KEY) showSecurityKeyForm;
+  @equal("shownSecondFactorMethod", BACKUP_CODE) showBackupCodesForm;
 
   @discourseComputed("allowedMethods.[]", "totpEnabled")
   totpAvailable() {
     return this.totpEnabled && this.allowedMethods.includes(TOTP);
-  },
+  }
 
   @discourseComputed("allowedMethods.[]", "backupCodesEnabled")
   backupCodesAvailable() {
     return this.backupCodesEnabled && this.allowedMethods.includes(BACKUP_CODE);
-  },
+  }
 
   @discourseComputed("allowedMethods.[]", "securityKeysEnabled")
   securityKeysAvailable() {
     return (
       this.securityKeysEnabled && this.allowedMethods.includes(SECURITY_KEY)
     );
-  },
+  }
 
   @discourseComputed(
     "userSelectedMethod",
@@ -75,7 +72,7 @@ export default Controller.extend({
         throw new Error("unexpected state of user 2fa settings!");
       }
     }
-  },
+  }
 
   @discourseComputed(
     "shownSecondFactorMethod",
@@ -115,7 +112,7 @@ export default Controller.extend({
     }
 
     return alts;
-  },
+  }
 
   @discourseComputed("shownSecondFactorMethod")
   secondFactorTitle(shownSecondFactorMethod) {
@@ -127,7 +124,7 @@ export default Controller.extend({
       case BACKUP_CODE:
         return I18n.t("login.second_factor_backup_title");
     }
-  },
+  }
 
   @discourseComputed("shownSecondFactorMethod")
   secondFactorDescription(shownSecondFactorMethod) {
@@ -139,7 +136,7 @@ export default Controller.extend({
       case BACKUP_CODE:
         return I18n.t("login.second_factor_backup_description");
     }
-  },
+  }
 
   @discourseComputed("messageIsError")
   alertClass(messageIsError) {
@@ -148,7 +145,7 @@ export default Controller.extend({
     } else {
       return "alert-success";
     }
-  },
+  }
 
   @discourseComputed("showTotpForm", "showBackupCodesForm")
   inputFormClass(showTotpForm, showBackupCodesForm) {
@@ -157,7 +154,7 @@ export default Controller.extend({
     } else if (showBackupCodesForm) {
       return "backup-code-token";
     }
-  },
+  }
 
   resetState() {
     this.set("message", null);
@@ -165,17 +162,17 @@ export default Controller.extend({
     this.set("secondFactorToken", null);
     this.set("userSelectedMethod", null);
     this.set("loadError", false);
-  },
+  }
 
   displayError(message) {
     this.set("message", message);
     this.set("messageIsError", true);
-  },
+  }
 
   displaySuccess(message) {
     this.set("message", message);
     this.set("messageIsError", false);
-  },
+  }
 
   verifySecondFactor(data) {
     return ajax("/session/2fa", {
@@ -207,13 +204,13 @@ export default Controller.extend({
       .catch((error) => {
         this.displayError(extractError(error));
       });
-  },
+  }
 
   @action
   useAnotherMethod(newMethod, event) {
     event?.preventDefault();
     this.set("userSelectedMethod", newMethod);
-  },
+  }
 
   @action
   authenticateSecurityKey() {
@@ -227,10 +224,10 @@ export default Controller.extend({
         this.displayError(errorMessage);
       }
     );
-  },
+  }
 
   @action
   authenticateToken() {
     this.verifySecondFactor({ second_factor_token: this.secondFactorToken });
-  },
-});
+  }
+}

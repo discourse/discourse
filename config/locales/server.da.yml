@@ -716,11 +716,7 @@ da:
     revoke_failed: "Det lykkedes ikke at tilbagekalde din konto med %{provider_name}."
     connected: "(tilsluttet)"
   activation:
-    action: "Klik her for at aktivere din konto"
     already_done: "Beklager, dette bekræftelses-link er ikke længere gyldigt. Måske er din konto allerede aktiv?"
-    please_continue: "Din nye konto er bekræftet; du bliver nu omdirigeret til forsiden."
-    continue_button: "Fortsæt til %{site_name}"
-    welcome_to: "Velkommen til %{site_name}!"
     approval_required: "En moderator skal manuelt godkende din nye konto før du kan tilgå forummet. Du får en e-mail, når din konto er godkendt!"
     missing_session: "Vi kan ikke se om din konto blev oprettet, venligst tjek at cookies er accepteret."
     activated: "Beklager, denne konto er allerede blevet aktiveret."
@@ -1338,7 +1334,6 @@ da:
     send_tl2_promotion_message: "Send nye brugere af tillidsniveau 2 en besked om forfremmelse."
     topics_per_period_in_top_summary: "Antallet af top emner der vises som standard i top emner"
     topics_per_period_in_top_page: "Antallet af top emner der vises når 'Vis Mere' er aktiveret."
-    redirect_users_to_top_page: "Automatisk omdirigere af nye og længere tids fraværende brugere til top siden."
     prioritize_username_in_ux: "Vis brugernavn først på brugersiden, brugerkort og indlæg (når deaktiveret vises navnet først)"
     enable_rich_text_paste: "Aktivér automatisk HTML til Markdown-konvertering, når du indsætter tekst i editoren. (Eksperimentel)"
     send_old_credential_reminder_days: "Påmind om gamle legitimationsoplysninger efter dage"
@@ -1532,7 +1527,6 @@ da:
     allowed_embed_selectors: "En kommasepareret liste over CSS-elementer, der er tilladt i embeds."
     embed_post_limit: "Maksimum antal indlæg, der skal indlejres."
     embed_username_required: "Brugernavnet til oprettelse af emne er påkrævet."
-    delete_merged_stub_topics_after_days: "Antal dage, der skal ventes, før automatisk sletning af fuldt sammenflettede stub emner. Sæt til 0 for aldrig at slette stub emner."
     enable_emoji_shortcuts: "Almindelig smiley-tekst såsom :) :p :( vil blive konverteret til humørikoner"
     emoji_autocomplete_min_chars: "Minimum antal tegn krævet for at aktivere autofuldførelses humørikoner-popup"
     enable_inline_emoji_translation: "Aktiverer oversættelse for inline humørikoner (uden mellemrum eller tegnsætning før)"
@@ -3149,8 +3143,12 @@ da:
       privacy:
         fields:
           login_required:
-            placeholder: "Privat"
-            extra_description: "Kun brugere, der er logget ind, har adgang til dette fællesskab"
+            label: "Synlighed"
+            choices:
+              public:
+                label: "Offentlig"
+              private:
+                label: "Privat"
           chat_enabled:
             placeholder: "Aktiver chat"
       styling:

@@ -351,7 +351,7 @@
             "is_flag": {
               "type": "boolean"
             },
-            "is_custom_flag": {
+            "require_message": {
               "type": "boolean"
             },
             "enabled": {
@@ -362,6 +362,9 @@
             },
             "is_used": {
               "type": "boolean"
+            },
+            "position": {
+              "type": "integer"
             }
           },
           "required": [
@@ -371,7 +374,7 @@
             "description",
             "short_description",
             "is_flag",
-            "is_custom_flag",
+            "require_message",
             "enabled",
             "applies_to",
             "is_used"
@@ -403,7 +406,7 @@
             "is_flag": {
               "type": "boolean"
             },
-            "is_custom_flag": {
+            "require_message": {
               "type": "boolean"
             },
             "enabled": {
@@ -414,6 +417,9 @@
             },
             "is_used": {
               "type": "boolean"
+            },
+            "position": {
+              "type": "integer"
             }
           },
           "required": [
@@ -423,7 +429,7 @@
             "description",
             "short_description",
             "is_flag",
-            "is_custom_flag",
+            "require_message",
             "enabled",
             "applies_to",
             "is_used"

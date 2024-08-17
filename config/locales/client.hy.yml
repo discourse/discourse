@@ -244,6 +244,16 @@ hy:
       topic_count: "Թեմաներ"
       post_count: "Գրառում"
       contact_info: "Այս կայքի հետ կապված կրիտիկական խնդիրների կամ հրատապ հարցերի դեպքում խնդրում ենք կապվել մեզ հետ %{contact_info} էլ. հասցեով:"
+      activities:
+        topics:
+          one: "%{formatted_number} թեմա"
+          other: "%{formatted_number} թեմա"
+        posts:
+          one: "%{formatted_number} գրառում"
+          other: "%{formatted_number} գրառում"
+        periods:
+          last_7_days: "վերջին 7 օրվա ընթացքում"
+          today: "այսօրվա"
     bookmarked:
       title: "Էջանշել"
       clear_bookmarks: "Ջնջել Էջանշանները"
@@ -564,6 +574,8 @@ hy:
         email:
           title: "Էլ. հասցե"
           last_updated_by: "կողմից"
+          ssl_modes:
+            none: "Ոչ մի"
           credentials:
             username: "Օգտանուն"
             password: "Գաղտնաբառ"
@@ -1039,6 +1051,13 @@ hy:
         confirm_description:
           account_specific: "Ձեր %{provider} հաշիվը '%{account_description}' կօգտագործվի վավերացման համար:"
           generic: "Ձեր %{provider} հաշիվը կօգտագործվի վավերացման համար:"
+      activate_account:
+        action: "Սեղմեք այստեղ՝ Ձեր հաշիվը ակտիվացնելու համար"
+        already_done: "Ներողություն, հաշվի հաստատման այս հղումը այլևս վավեր չէ: Միգուցե Ձեր հաշիվն արդեն ակտի՞վ է:"
+        please_continue: "Ձեր նոր հաշիվը հաստատված է; Դուք կվերաուղարկվեք դեպի գլխավոր էջ:"
+        continue_button: "Շարունակել դեպի %{site_name}"
+        welcome_to: "Բարի գալուստ %{site_name}!"
+        approval_required: "Մոդերատորը պետք է ձեռքով հաստատի Ձեր նոր հաշիվը, մինչև Դուք հասանելիություն կունենաք այս ֆորումից: Դուք էլ. նամակ կստանաք, երբ Ձեր հաշիվը հաստատվի!"
       name:
         title: "Անուն"
         instructions: "Ձեր անուն ազգանունը (ընտրովի)."
@@ -1309,6 +1328,8 @@ hy:
       hide_forever: "ոչ, շնորհակալություն"
       intro: "Ողջույն! Կարծես թե Դուք վայելում եք քննարկումը, սակայն դեռևս հաշիվ չեք գրանցել:"
     summary:
+      buttons:
+        regenerate: "Վերագեներացնել"
       disable: "Ցուցադրել Բոլոր Գրառումները"
     deleted_filter:
       enabled_description: "Այս թեման պարունակում է հեռացված գրառումներ, որոնք թաքցվել են:"
@@ -1387,6 +1408,7 @@ hy:
       not_activated: "Դուք դեռևս չեք կարող մուտք գործել: Մենք որոշ ժամանակ առաջ Ձեզ ուղարկել ենք ակտիվացման նամակ <b>%{sentTo}</b> էլ. հասցեին: Խնդրում ենք հետևել այդ նամակի հրահանգներին՝ Ձեր հաշիվը ակտիվացնելու համար:"
       admin_not_allowed_from_ip_address: "Դուք չեք կարող մուտք գործել որպես ադմին այդ IP հասցեից:"
       resend_activation_email: "Սեղմեք այստեղ՝ ակտիվացման նամակը կրկին ուղարկելու համար: "
+      activate_account: "Ակտիվացնել Հաշիվը"
       resend_title: "Կրկին Ուղարկել Ակտիվացման Նամակը"
       change_email: "Փոփոխել Էլ. Հասցեն"
       provide_new_email: "Տրամադրեք նոր էլ. հասցե, և մենք կրկին կուղարկենք հաստատման էլ. նամակը:"
@@ -2422,7 +2444,6 @@ hy:
         appearance: "Արտաքին տեսք"
         email: "Էլ. հասցե"
     flagging:
-      title: "Շնորհակալ ենք, որ օգնում եք պահել մեր համայնքը քաղաքակիրթ:"
       action: "Դրոշակավորել Գրառումը"
       take_action_options:
         default:
@@ -2454,7 +2475,6 @@ hy:
           one: "%{count}-ը մնում է"
           other: "%{count} հատ է մնացել"
     flagging_topic:
-      title: "Շնորհակալ ենք, որ օգնում եք պահել մեր համայնքը քաղաքակիրթ:"
       action: "Դրոշակավորել Թեման"
       notify_action: "Հաղորդագրություն"
     topic_map:
@@ -2464,6 +2484,9 @@ hy:
       clicks:
         one: "%{count} սեղմում"
         other: "%{count} սեղմում"
+      views: "Դիտում"
+      read: կարդացած
+      minutes: նվազագույնը
     post_links:
       about: "Ցուցադրել ավելի շատ հղումներ այս գրառման համար"
       title:
@@ -3203,6 +3226,7 @@ hy:
           spam: "Սպամ"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(ընտրովի)"
           saved: "պահված է!"
         flags:
@@ -3215,6 +3239,7 @@ hy:
             save: "Պահպանել"
             name: "Անուն"
             description: "Նկարագրությունը"
+            invalid_applies_to: "Պարտադիր"
             topic: "թեմաներ"
             post: "գրառումներ"
       plugins:

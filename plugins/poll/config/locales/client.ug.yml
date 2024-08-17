@@ -25,6 +25,9 @@ ug:
           title: "نەتىجە <strong>تاقالغان</strong>دا كۆرسىتىلىدۇ."
         staff:
           title: "نەتىجە پەقەت <strong>خىزمەتچى</strong> ئەزاغا كۆرسىتىلىدۇ."
+        tabs:
+          votes: "بېلەت"
+          outcome: "نەتىجە"
       multiple:
         help:
           at_least_min_options:
@@ -73,9 +76,23 @@ ug:
         percentage: "پىرسەنت"
         count: "ساناق"
       ranked_choice:
+        title:
+          rounds: "قېتىم"
+          outcome: "نەتىجە"
         none: "يوق"
+        majority: "كۆپ سانلىق"
+        round: "قېتىم"
+        winner:
+          one: "بىر قېتىملىق مۇسابىقىدىن كېيىن ئۇتقۇچى %{winner}"
+          other: "%{count} قېتىملىق مۇسابىقىدىن كېيىن ئۇتقۇچى %{winner}"
+        tied:
+          one: "تۆۋەندىكى نامزات 1 قېتىملىق مۇسابىقىدىن كېيىن تەڭلىشىپ قالدى:"
+          other: "تۆۋەندىكى نامزات %{count} قېتىملىق مۇسابىقىدىن كېيىن تەڭلىشىپ قالدى:"
       options:
         label: "تاللانما"
+        ranked_choice:
+          abstain: "ھوقۇقتىن ۋاز كېچىش"
+          login: "تىزىمغا كىرىپ بېلەت تاشلاڭ!"
       error_while_toggling_status: "كەچۈرۈڭ ، بۇ راي سىناشنىڭ ھالىتىنى ئالماشتۇرۇۋاتقاندا خاتالىق كۆرۈلدى."
       error_while_casting_votes: "كەچۈرۈڭ، بېلەت تاشلىسىڭىز خاتالىق كۆرۈلدى."
       error_while_fetching_voters: "كەچۈرۈڭ، سايلىغۇچىلارنى كۆرسىتىۋاتقاندا خاتالىق كۆرۈلدى."
@@ -94,6 +111,7 @@ ug:
           label: تىپى
           regular: يەككە تاللاش
           multiple: كۆپ تاللاش
+          ranked_choice: رەت تەرتىپى
           number: نومۇر دەرىجىسى
         poll_result:
           label: نەتىجىنى كۆرسەت…

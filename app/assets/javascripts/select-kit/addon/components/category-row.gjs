@@ -83,11 +83,11 @@ export default class CategoryRow extends Component {
   }
 
   get categoryName() {
-    return this.category.name;
+    return this.category.displayName;
   }
 
   get categoryDescriptionText() {
-    return this.category.description_text;
+    return this.category.descriptionText;
   }
 
   @cached

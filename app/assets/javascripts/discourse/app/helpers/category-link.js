@@ -1,6 +1,7 @@
 import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import categoryVariables from "discourse/helpers/category-variables";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import getURL from "discourse-common/lib/get-url";
@@ -112,7 +113,13 @@ function buildTopicCount(count) {
 }
 
 export function defaultCategoryLinkRenderer(category, opts) {
-  let descriptionText = escapeExpression(get(category, "description_text"));
+  // not ideal as we have to call it manually and we pass a fake category object
+  // but there's not way around it for now
+  let descriptionText = applyValueTransformer(
+    "category-description-text",
+    escapeExpression(get(category, "description_text")),
+    { category }
+  );
   let restricted = get(category, "read_restricted");
   let url = opts.url
     ? opts.url
@@ -156,7 +163,13 @@ export function defaultCategoryLinkRenderer(category, opts) {
     ${descriptionText ? 'title="' + descriptionText + '" ' : ""}
   >`;
 
-  let categoryName = escapeExpression(get(category, "name"));
+  // not ideal as we have to call it manually and we pass a fake category object
+  // but there's not way around it for now
+  let categoryName = applyValueTransformer(
+    "category-display-name",
+    escapeExpression(get(category, "name")),
+    { category }
+  );
 
   if (siteSettings.support_mixed_text_direction) {
     categoryDir = 'dir="auto"';

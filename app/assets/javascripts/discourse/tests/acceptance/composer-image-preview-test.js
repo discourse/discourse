@@ -141,6 +141,13 @@ acceptance("Composer - Image Preview", function (needs) {
     `
     );
 
+    // don't add controls to video uploads with dimensions in name
+    await fillIn(
+      ".d-editor-input",
+      "![SampleVideo_1280x720|video](upload://test.mp4)"
+    );
+    assert.dom(".button-wrapper").doesNotExist();
+
     assert.ok(
       !exists("script"),
       "it does not unescape script tags in code blocks"

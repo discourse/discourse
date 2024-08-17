@@ -3,8 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import Category from "discourse/models/category";
-import SettingValidationMessage from "admin/components/setting-validation-message";
-import SiteSettingsDescription from "admin/components/site-settings/description";
 import CategorySelector from "select-kit/components/category-selector";
 
 export default class CategoryList extends Component {
@@ -50,9 +48,6 @@ export default class CategoryList extends Component {
         @categories={{this.selectedCategories}}
         @onChange={{this.onChangeSelectedCategories}}
       />
-
-      <SiteSettingsDescription @description={{@setting.description}} />
-      <SettingValidationMessage @message={{@validationMessage}} />
     </div>
   </template>
 }

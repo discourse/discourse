@@ -9,6 +9,7 @@ it:
     chat_separate_sidebar_mode: "Mostra modalità separate della barra laterale per forum e chat."
     chat_enabled: "Abilita chat."
     enable_public_channels: "Abilita i canali pubblici in base alle categorie."
+    chat_allowed_groups: "Gli utenti in questi gruppi possono chattare. N.B. Amministratori e moderatori possono sempre accedere alla chat."
     chat_channel_retention_days: "I messaggi di chat nei canali normali saranno conservati per i giorni indicati. Impostare il parametro a '0' per conservare i messaggi per sempre."
     chat_dm_retention_days: "I messaggi di chat nei canali di chat personali saranno conservati per i giorni indicati. Impostare il parametro a '0' per conservare i messaggi per sempre."
     chat_auto_silence_duration: "Numero di minuti per i quali gli utenti verranno silenziati quando superano il limite di velocità di creazione dei messaggi di chat. Imposta il valore su '0' per disabilitare il silenziamento automatico."
@@ -16,13 +17,13 @@ it:
     chat_allowed_messages_for_other_trust_levels: "Numero di messaggi che gli utenti con livello di attendibilità 1-4 possono inviare in 30 secondi. Imposta su '0' per disabilitare il limite."
     chat_silence_user_sensitivity: "La probabilità che un utente segnalato in chat venga automaticamente silenziato."
     chat_auto_silence_from_flags_duration: "Numero di minuti per i quali gli utenti verranno silenziati automaticamente a causa di messaggi di chat segnalati."
-    chat_default_channel_id: "Il canale di chat che verrà aperto per impostazione predefinita quando un utente non ha messaggi non letti o menzioni in altri canali."
     chat_duplicate_message_sensitivity: "La probabilità che un messaggio duplicato dello stesso mittente venga bloccato in breve tempo. Numero decimale compreso tra 0 e 1,0, dove 1,0 è l'impostazione più alta (blocca i messaggi più frequentemente in un lasso di tempo più breve). Imposta su `0` per consentire messaggi duplicati."
     chat_minimum_message_length: "Numero minimo di caratteri per un messaggio di chat."
     chat_allow_uploads: "Consenti caricamenti nei canali di chat pubblici e nei canali di messaggistica diretta."
     chat_archive_destination_topic_status: "Lo stato che dovrebbe avere l'argomento di destinazione una volta completata l'archiviazione di un canale. Questa opzione si applica solo quando l'argomento di destinazione è nuovo, non già esistente."
     default_emoji_reactions: "Reazioni emoji predefinite per i messaggi di chat. Aggiungi fino a 5 emoji per una reazione rapida."
     direct_message_enabled_groups: "Consenti agli utenti all'interno di questi gruppi di creare chat personali da utente a utente. Nota: lo staff può sempre creare chat personali e gli utenti potranno rispondere alle chat personali avviate da utenti che dispongono dell'autorizzazione per crearle."
+    chat_message_flag_allowed_groups: "Agli utenti di questi gruppi è consentito segnalare i messaggi in chat. N.B. Ad amministratori e moderatori è sempre consentito segnalare i messaggi in chat."
     max_mentions_per_chat_message: "Numero massimo di notifiche @name che un utente può utilizzare in un messaggio di chat."
     chat_max_direct_message_users: "Gli utenti non possono aggiungere più utenti di quelli indicati da questa opzione durante la creazione di un nuovo messaggio diretto. Impostare l'opzione a 0 per consentire solo i messaggi a se stessi. Questa impostazione non si applica allo staff."
     chat_allow_archiving_channels: "Consenti allo staff di archiviare i messaggi in un argomento alla chiusura di un canale."
@@ -97,6 +98,7 @@ it:
       original_message_not_found: "L'antenato del messaggio a cui stai rispondendo non è stato trovato o è stato eliminato."
       thread_invalid_for_channel: "Il thread non fa parte del canale fornito."
       thread_does_not_match_parent: "Il thread non corrisponde al messaggio principale."
+      invalid_direct_message: "Non hai i permessi per creare questo messaggio diretto."
     reviewables:
       message_already_handled: "Grazie, ma abbiamo già esaminato questo messaggio e stabilito che non è necessario contrassegnarlo di nuovo."
       actions:
@@ -227,8 +229,20 @@ it:
         other: "Hai nuovi messaggi di chat"
       from: "%{site_name}"
       subject:
+        private_email:
+          one: "[%{site_name}] Nuovo messaggio"
+          other: "[%{site_name}] Nuovi messaggi"
+        chat_dm_1:
+          one: "[%{site_name}] Nuovo messaggio da %{name}"
+          other: "[%{site_name}] Nuovi messaggi da %{name}"
         chat_dm_2: "[%{site_name}] Nuovi messaggi da %{name_1} e %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] Nuovi messaggi da %{name} e altri %{count}"
+        chat_channel_1:
+          one: "[%{site_name}] Nuovo messaggio in %{channel}"
+          other: "[%{site_name}] Nuovi messaggi in %{channel}"
         chat_channel_2: "[%{site_name}] Nuovi messaggi in %{channel_1} e %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] Nuovi messaggi in %{channel} e altri %{count}"
+        chat_channel_and_dm: "[%{site_name}] Nuovi messaggi in %{channel} e da %{name}"
       unsubscribe: "Questo riepilogo della chat viene inviato da %{site_link} quando non ci sei. Modifica %{email_preferences_link} o %{unsubscribe_link} per annullare l'iscrizione."
       unsubscribe_no_link: "Questo riepilogo della chat viene inviato da %{site_link} quando non ci sei. Modifica %{email_preferences_link}."
       view_messages:

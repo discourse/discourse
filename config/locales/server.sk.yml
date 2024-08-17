@@ -1109,11 +1109,7 @@ sk:
     revoke_failed: "Nepodarilo sa zrušiť váš účet pomocou %{provider_name}."
     connected: "(pripojené)"
   activation:
-    action: "Pre aktiváciu účtu kliknite sem"
     already_done: "Ľutujeme, tento podvrdzovací odkaz je už neplatný. Nie je Váš účet už aktivny?"
-    please_continue: "Váš nový účet je potvrdený. Budete presmerovaní na domovskú stránku."
-    continue_button: "Pokračujte na %{site_name}"
-    welcome_to: "Vitajte na %{site_name}!"
     approval_required: "Moderátor musí manuálne povoliť Váš prístup na toto fórum. O schválení prístupu budete upovedomení emailom."
     missing_session: "Nemôžeme zistiť, či bolo vaše konto vytvorené, uistite sa, že máte povolené súbory cookie."
     activated: "Je nám ľúto, toto konto už bolo aktivované."
@@ -1183,6 +1179,7 @@ sk:
     pop3_authentication_error: "Vyskytol sa problém so zadanými povereniami POP3, skontrolujte používateľské meno a heslo a skúste to znova."
     imap_authentication_error: "Vyskytol sa problém so zadanými povereniami IMAP, skontrolujte používateľské meno a heslo a skúste to znova."
     imap_no_response_error: "Pri komunikácii so serverom IMAP došlo k chybe. %{message}"
+    smtp_authentication_error: "Vyskytol sa problém so zadanými povereniami SMTP, skontrolujte používateľské meno a heslo a skúste to znova. %{message}"
     smtp_server_busy_error: "Server SMTP je momentálne zaneprázdnený, skúste to znova neskôr."
     smtp_unhandled_error: "Pri komunikácii so serverom SMTP sa vyskytla neošetrená chyba. %{message}"
     imap_unhandled_error: "Pri komunikácii so serverom IMAP sa vyskytla neošetrená chyba. %{message}"
@@ -1919,7 +1916,7 @@ sk:
     max_reply_history: "Maximálny počet odpovedí ktoré sa zobrazia po rozbalení v-odpovedi-na"
     topics_per_period_in_top_summary: "Zobrazovaný počet najlepších tém vo východzom zozname najlepších tém."
     topics_per_period_in_top_page: "Zobrazovaný počet najlepších tém vzozname po rozbalení 'Ukáž viac' najlepších tém."
-    redirect_users_to_top_page: "Automaticky presmeruj nových a dlho neprihlásených používateľov na hlavnú stránku. "
+    redirect_users_to_top_page: "Automaticky presmerovať nových a dlho neprítomných používateľov na hlavnú stránku. Platí len vtedy, keď je v nastavení stránky v hornej ponuke uvedené „top“."
     top_page_default_timeframe: "Predvolené časové obdobie hornej stránky pre anonymných používateľov (automaticky sa upraví pre prihlásených používateľov na základe ich poslednej návštevy)."
     moderators_view_emails: "Povoliť moderátorom zobraziť e-mailové adresy používateľov."
     prioritize_username_in_ux: "Zobrazenie používateľského mena ako prvého na stránke používateľa, na karte používateľa a v príspevkoch (ak je meno zakázané, zobrazuje sa ako prvé)"
@@ -2121,7 +2118,7 @@ sk:
     min_trust_to_edit_post: "Minimálna úroveň dôveryhodnosti potrebná na úpravu príspevkov."
     edit_post_allowed_groups: "Skupiny, ktoré majú povolené upravovať príspevky. Administrátori a moderátori môžu upravovať príspevky vždy."
     min_trust_to_allow_self_wiki: "MInimálna úroveň dôvery k tomu aby mohol používateľ svoje témy meniť na wiki."
-    self_wiki_allowed_groups: "Skupiny, v ktorých môžu používatelia vytvárať vlastné príspevky wiki. Administrátori a moderátori si môžu vždy vytvoriť vlastnú príspevkovú wiki."
+    self_wiki_allowed_groups: "Povoliť používateľom v týchto skupinách vytvárať vlastné príspevky na wiki. Správcovia a moderátori môžu vždy vytvárať svoje vlastné príspevky na wiki."
     min_trust_to_send_messages: "ODSTRÁNENÉ, namiesto toho použite nastavenie \"skupiny povolené pre osobné správy\". Minimálna úroveň dôveryhodnosti potrebná na vytvorenie nových osobných správ."
     min_trust_to_send_email_messages: "Minimálna úroveň dôveryhodnosti potrebná na odosielanie osobných správ prostredníctvom e-mailu."
     send_email_messages_allowed_groups: "Skupiny, ktoré majú povolené posielať osobné správy prostredníctvom e-mailu. Správcovia a moderátori môžu vždy posielať osobné správy prostredníctvom e-mailu."
@@ -2395,7 +2392,7 @@ sk:
     embed_username_required: "Na vytvorenie téme je vyžadované používateľské meno."
     notify_about_reviewable_item_after: "Ak sú položky, ktoré sa dajú preskúmať a ktoré neboli spracované ani po toľkých hodinách, pošlite osobnú správu moderátorom. Nastavte na 0, aby ste to zakázali."
     delete_drafts_older_than_n_days: "Odstránenie návrhov, ktoré neboli zmenené viac ako (n) dní."
-    delete_merged_stub_topics_after_days: "Počet dní, ktoré sa majú počkať pred automatickým odstránením úplne zlúčených tém. Nastavte na 0, ak chcete, aby sa stub témy nikdy neodstraňovali."
+    delete_merged_stub_topics_after_days: "Počet dní, ktoré treba čakať pred automatickým odstránením úplne zlúčených tém. Nastavte na hodnotu -1, aby ste nikdy neodstránili. Nastavte na 0 na okamžité odstránenie."
     bootstrap_mode_min_users: "Minimálny počet používateľov potrebný na vypnutie režimu bootstrap a odstránenie tlačidla Začíname (pre vypnutie nastavte hodnotu 0, môže trvať až 24 hodín)"
     prevent_anons_from_downloading_files: "Zabrániť anonymným používateľom v preberaní príloh."
     secure_uploads: "### Preklad\n\n**Obmedzuje prístup ku VŠETKÝM nahratým súborom** (obrázky, videá, audio, texty, PDF, ZIP a ďalšie). Ak je povolené \"vyžaduje sa prihlásenie\", nahraté súbory môžu byť prístupné iba prihláseným používateľom. Inak bude prístup obmedzený iba pre médiá nahraté v súkromných správach a súkromných kategóriách. UPOZORNENIE: Toto nastavenie je zložité a vyžaduje hlboké administratívne porozumenie. Podrobnosti nájdete v téme <a target=\"_blank\" href=\"https://meta.discourse.org/t/-/140017\">zabezpečené nahrávanie na Meta</a>."
@@ -2549,12 +2546,11 @@ sk:
     experimental_topics_filter: "EXPERIMENTÁLNE: Povolí trasu filtrovania experimentálnych tém na /filter"
     enable_experimental_lightbox: "EXPERIMENTÁLNE: Nahraďte predvolený lightbox s obrázkami prepracovaným dizajnom."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTÁLNE: Zobrazenie ponuky rýchleho prístupu k záložkám na príspevkoch a nového prepracovaného modálneho okna"
-    glimmer_header_mode: "Kontrola, či sa použije nová implementácia hlavičky \"glimmer\". Predvolené nastavenie je 'auto', ktoré sa zapne automaticky, keď budú všetky vaše témy a doplnky pripravené. https://meta.discourse.org/t/296544"
+    glimmer_header_mode: "Kontrolujte, či sa použije nová implementácia hlavičky „glimmer“. „auto“ sa aktivuje automaticky, keď sú pripravené všetky vaše témy a pluginy. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "EXPERIMENTÁLNE: Povoľte novú implementáciu zoznamu tém \"glimmer\". Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     experimental_form_templates: "EXPERIMENTÁLNE: Povoľte funkciu šablón formulárov. <b>Po povolení</b> spravujte šablóny na <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
     admin_sidebar_enabled_groups: "Povolenie navigácie v bočnom paneli pre používateľské rozhranie správcu pre zadané skupiny, ktorá nahradí navigačné tlačidlá správcu na najvyššej úrovni."
     lazy_load_categories_groups: "EXPERIMENTÁLNE: Informácie o kategórii pomalého načítania len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
-    experimental_topic_bulk_actions_enabled_groups: "EXPERIMENTÁLNE: Povoľte nové rozbaľovacie okno hromadných akcií."
     page_loading_indicator: "Nakonfigurujte indikátor načítania, ktorý sa zobrazí počas navigácie po stránkach v rámci Discourse. „Spinner“ je indikátor celej strany. „Posuvník“ zobrazuje úzky pruh v hornej časti obrazovky."
     show_user_menu_avatars: "Zobraziť používateľské avatary v používateľskej ponuke"
     view_raw_email_allowed_groups: "Skupiny, ktoré môžu zobraziť nespracovaný obsah e-mailu, ak bol príspevok vytvorený pomocou prichádzajúceho e-mailu. To zahŕňa hlavičky e-mailov a ďalšie technické informácie."
@@ -2587,6 +2583,7 @@ sk:
       invalid_reply_by_email_address: "Hodnota musí obsahovať '%{reply_key}' a byť odlišná od notifikačného emailu."
       invalid_alternative_reply_by_email_addresses: "Všetky hodnoty musia obsahovať '%{reply_key}' a musia sa líšiť od notifikačného e-mailu."
       invalid_domain_hostname: "Nesmie obsahovať znaky * alebo ?."
+      invalid_allowed_iframes_url: "Webové adresy prvkov iframe musia začínať reťazcom http:// alebo https:// a musia obsahovať aspoň jeden ďalší znak „/“"
       invalid_csp_script_src: "Hodnota musí byť buď 'unsafe-eval' alebo 'wasm-unsafe-eval', alebo v tvare '<hash algorithm>-<base64 value>', kde podporované hash algoritmy sú sha256, sha384 alebo sha512. Uistite sa, že váš vstup je zabalený do jednoduchých úvodzoviek."
       pop3_polling_host_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 adresu'."
       pop3_polling_username_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 používateľské meno'."
@@ -2813,6 +2810,7 @@ sk:
     autoclosed_disabled: "Táto téma je teraz otvorená. Nové odpovede sú povolené."
     autoclosed_disabled_lastpost: "Táto téma je teraz otvorená. Nové odpovede sú povolené."
     auto_deleted_by_timer: "Automaticky odstránené časovačom."
+    auto_deleted_by_merge: "Automaticky odstránené zlúčením."
   login:
     invalid_second_factor_method: "Vybraná dvojfaktorová metóda je neplatná."
     not_enabled_second_factor_method: "Vybraná dvojfaktorová metóda nie je pre vaše konto povolená."
@@ -5113,17 +5111,31 @@ sk:
           default_locale:
             label: "Jazyk"
       privacy:
-        title: "Skúsenosti členov"
+        title: "Členský prístup"
         fields:
           login_required:
-            placeholder: "Súkromné"
-            extra_description: "Prístup do tejto komunity majú len prihlásení používatelia"
+            label: "Viditeľnosť"
+            description: "Je vaša komunita verejná alebo súkromná?"
+            choices:
+              public:
+                label: "Verejné"
+              private:
+                label: "Súkromné"
           invite_only:
-            placeholder: "Len na pozvánky"
-            extra_description: "Používateľov musia pozvať dôveryhodní používatelia alebo personál, inak sa môžu zaregistrovať sami."
+            label: "Registrácia"
+            description: "Ako sa môžu členovia pripojiť k tejto komunite?"
+            choices:
+              sign_up:
+                label: "Zaregistrujte sa"
+              invite_only:
+                label: "Len na pozvánky"
           must_approve_users:
-            placeholder: "Vyžadovať schválenie"
-            extra_description: "Používatelia musia byť schválení personálom"
+            description: "Chcete schvaľovať členské účty?"
+            choices:
+              "no":
+                label: "Nie, noví členovia sa môžu pripojiť okamžite"
+              "yes":
+                label: "Áno, noví členovia musia byť schválení moderátormi"
           chat_enabled:
             placeholder: "Povoliť chat"
             extra_description: "Spojte sa so svojimi členmi v reálnom čase"
@@ -5225,6 +5237,7 @@ sk:
       comment_by: "Komentár od"
       review_by: "Recenzia od"
       pr_summary: "%{commits} revízie zmenili súbory %{changed_files} s pridaním %{additions} a odstránením %{deletions}"
+      no_description: "Prispejte k vývoju %{repo} vytvorením účtu na GitHub."
   discourse_push_notifications:
     popup:
       mentioned: '%{username} Vás zmienil v "%{topic}" - %{site_title}'

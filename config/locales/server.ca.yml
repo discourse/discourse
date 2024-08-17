@@ -601,11 +601,7 @@ ca:
     revoke_failed: "No s'ha pogut revocar el vostre compte amb %{provider_name}."
     connected: "(connectat)"
   activation:
-    action: "Feu clic aquí per a activar el vostre compte"
     already_done: "Aquest enllaç ja no és vàlid per a confirmar el compte. Potser el vostre compte ja és actiu?"
-    please_continue: "El vostre nou compte està confirmat; us redirigirem a la pàgina principal."
-    continue_button: "Continua a %{site_name} "
-    welcome_to: "Benvingut a %{site_name}!"
     approval_required: "Cal que un moderador aprovi manualment el vostre nou compte abans no pugueu accedir al fòrum. Rebreu un correu quan el compte hagi estat aprovat!"
     missing_session: "No podem detectar si el vostre compte ha estat creat. Assegureu-vos que teniu les galetes activades."
     activated: "Aquest compte ja ha estat activat."
@@ -1222,7 +1218,6 @@ ca:
     max_reply_history: "Nombre màxim de respostes que cal expandir quan s'expandeix \"en resposta a\""
     topics_per_period_in_top_summary: "Nombre de temes principals en el resum per defecte de temes principals."
     topics_per_period_in_top_page: "Nombre de temes principals que es mostren en els temes principals expandits amb \"mostra'n més\"."
-    redirect_users_to_top_page: "Redirigeix automàticament els usuaris nous i absents durant molt de temps al capdamunt de la pàgina."
     prioritize_username_in_ux: "Mostra el nom d'usuari primer en la pàgina d'usuari, targeta d'usuari i publicacions (si està desactivat, el nom es mostra primer)"
     enable_rich_text_paste: "Habilita la conversió automàtica d'HTML a Markdown quan s'enganxa text en el tauler de redacció (experimental)"
     email_token_valid_hours: "Els testimonis (tokens) de contrasenya oblidada i activació de compte són vàlids durant (n) hores."
@@ -2812,8 +2807,12 @@ ca:
       privacy:
         fields:
           login_required:
-            placeholder: "Privat"
-            extra_description: "Sols els usuaris que han iniciat la sessió poden accedir a aquesta comunitat"
+            label: "Visibilitat"
+            choices:
+              public:
+                label: "Públic"
+              private:
+                label: "Privat"
       styling:
         fields:
           styling_preview:

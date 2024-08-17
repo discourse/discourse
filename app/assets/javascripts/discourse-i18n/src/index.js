@@ -33,6 +33,10 @@ export class I18n {
     return this.locale || this.defaultLocale;
   }
 
+  get currentBcp47Locale() {
+    return this.currentLocale().replace("_", "-");
+  }
+
   get pluralizationNormalizedLocale() {
     if (this.currentLocale() === "pt") {
       return "pt_PT";
@@ -379,7 +383,7 @@ export class I18n {
   }
 
   messageFormat(key, options) {
-    const message = this._mfMessages.hasMessage(
+    const message = this._mfMessages?.hasMessage(
       key,
       this._mfMessages.locale,
       this._mfMessages.defaultLocale

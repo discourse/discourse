@@ -1,11 +1,7 @@
 import { visit } from "@ember/test-helpers";
 import { compile } from "handlebars";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import {
   addRawTemplate,
   removeRawTemplate,
@@ -15,23 +11,20 @@ const CONNECTOR =
   "javascripts/raw-test/connectors/topic-list-before-status/lala";
 
 acceptance("Raw Plugin Outlet", function (needs) {
-  needs.hooks.beforeEach(() => {
+  needs.hooks.beforeEach(function () {
     addRawTemplate(
       CONNECTOR,
       compile(`<span class='topic-lala'>{{context.topic.id}}</span>`)
     );
   });
 
-  needs.hooks.afterEach(() => {
+  needs.hooks.afterEach(function () {
     removeRawTemplate(CONNECTOR);
   });
+
   test("Renders the raw plugin outlet", async function (assert) {
     await visit("/");
-    assert.ok(exists(".topic-lala"), "it renders the outlet");
-    assert.strictEqual(
-      query(".topic-lala:nth-of-type(1)").innerText,
-      "11557",
-      "it has the topic id"
-    );
+    assert.dom(".topic-lala").exists("renders the outlet");
+    assert.dom(".topic-lala").hasText("11557", "has the topic id");
   });
 });

@@ -56,11 +56,15 @@ ja:
       cancel_reply: "返信をキャンセルする"
       chat_channels: "チャンネル"
       browse_all_channels: "すべてのチャンネルを閲覧する"
+      see_in: "表示:"
       move_to_channel:
         title: "メッセージをチャンネルに移動する"
         instructions:
           other: "<strong>%{count}</strong> のメッセージを移動しようとしています。移動先のチャンネルを選択してください。これらのメッセージが移動されたことを示すために、プレースホルダーメッセージは、<strong>%{channelTitle}</strong> チャンネルに作成されます。新しいチャンネルでは返信チェーンが保持されないため、古いチャンネルのメッセージは移動されたメッセージへの返信としては表示されなくなることに注意してください。"
         confirm_move: "メッセージを移動"
+      delete_messages:
+        confirm:
+          other: "これら %{count} 件のメッセージを削除してもよろしいですか？"
       channel_settings:
         title: "チャンネルの設定"
         edit: "編集"
@@ -114,6 +118,7 @@ ja:
         direct_message_cta: "パーソナルチャットを開始"
         direct_message: "1 人または複数のユーザーとパーソナルチャットを開始することもできます。"
         title: "チャンネルが見つかりません"
+        my_threads: "まだスレッドがありません。ここに、参加しているスレッドが表示されます。"
       email_frequency:
         description: "15 分以上アクセスがない場合にのみメールで通知します。"
         never: "なし"
@@ -206,6 +211,9 @@ ja:
         header: "チャットヘッダー"
         composer: "チャット作成ツール"
         channels_list: "チャットのチャンネルリスト"
+      no_direct_message_channels: "まだダイレクトメッセージに参加していません！"
+      no_direct_message_channels_cta: "会話を始める"
+      no_public_channels: "まだチャンネルに参加していません！"
       no_public_channels_cta: "チャンネルを閲覧する"
       kicked_from_channel: "このチャンネルにアクセスできなくなりました。"
       only_chat_push_notifications:
@@ -214,6 +222,9 @@ ja:
       ignore_channel_wide_mention:
         title: "チャンネル全体のメンションを無視する"
         description: "チャット全体のメンション（@here および @all）の通知を送信しません"
+      show_thread_title_prompts:
+        title: "スレッドタイトルのプロンプトの表示"
+        description: "新しいスレッドのタイトルを設定するプロンプトを表示します"
       open: "チャットを開く"
       open_full_page: "全画面チャットを開く"
       close_full_page: "全画面チャットを閉じる"
@@ -322,6 +333,7 @@ ja:
         filter: "フィルタ"
         cant_add_more_members: "メンバーの最大数に達しました"
         create_new_group_chat: "グループチャットを作成"
+        group_with_too_many_members: "にはメンバーが多すぎます (%{membersCount} 人)"
       channel_edit_name_slug_modal:
         title: チャンネルを編集する
         input_placeholder: 名前を追加してください
@@ -442,7 +454,12 @@ ja:
           description: "これによりすべてのチャンネルのすべてのメッセージがエクスポートされます。"
           create_export: "エクスポートを作成"
           export_has_started: "エクスポートが開始されました。準備ができたら PM が届きます。"
+      my_threads:
+        title: 自分のスレッド
+        aria_label: "スレッドリストに切り替える"
       direct_messages:
+        title: "DM"
+        aria_label: "ダイレクトメッセージに切り替える"
         new: "パーソナルチャットを作成"
         create: "開始"
         leave: "このパーソナルチャットから退出する"
@@ -450,6 +467,7 @@ ja:
         cannot_create: "ダイレクトメッセージを送信できません。"
       channel_list:
         title: "チャンネル"
+        aria_label: "チャンネルリストに切り替える"
       incoming_webhooks:
         back: "戻る"
         channel_placeholder: "チャンネルを選択する"
@@ -480,6 +498,7 @@ ja:
         cancel: "キャンセル"
         quote_selection: "トピックで引用"
         copy: "コピー"
+        delete: "削除 (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "チャンネルに移動"
         error: "チャットメッセージを移動中にエラーが発生しました"
         title: "チャットをトピックに移動"
@@ -512,6 +531,7 @@ ja:
       flags:
         off_topic: "このメッセージは、チャンネルのタイトルで定義された現在のディスカッションとは関係がないため、おそらく別の場所に移動する必要があります。"
         inappropriate: "このメッセージには、合理的な人が攻撃的、虐待的、または<a href=\"%{basePath}/guidelines\">コミュニティーガイドライン</a>に違反すると見なすコンテンツが含まれます。"
+        illegal: "この投稿には違法なコンテンツが含まれていると思われるため、スタッフの注意が必要です。"
         spam: "このメッセージは広告または荒らし行為です。現在のチャンネルに有益な内容でなく、関連性もありません。"
         notify_user: "この人のメッセージについて、この人に直接個人的に話を聞きたいと思います。"
         notify_moderators: "このメッセージには、上記以外の理由でスタッフの注意が必要です。"
@@ -550,6 +570,17 @@ ja:
             description: "スレッドリストとチャンネルに、このスレッドの新しい返信数が表示されます。スレッドで誰かが @name であなたをメンションすると、通知されます。"
         participants_other_count:
           other: "+%{count} 件"
+      thread_title_toast:
+        title: "スレッドタイトルの設定"
+        message: "他の人がこの会話を見つけられるようにします。"
+        dismiss_action: "再度表示しない"
+        primary_action: "タイトルを設定"
+      thread_title_modal:
+        title: "スレッドタイトルの設定"
+        input_placeholder: "他の人にこの会話の内容について伝えましょう..."
+        discourse_ai:
+          title: "スレッドタイトルの自動生成"
+          description: "この機能や Discourse エクスペリエンスの他の強化の詳細については、%{url} をご覧ください。"
       threads:
         open: "スレッドを開く"
         list: "スレッド"

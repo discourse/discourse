@@ -1,4 +1,4 @@
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 
 export default class RestrictedRouting extends Service {
   @service currentUser;
@@ -36,6 +36,16 @@ export default class RestrictedRouting extends Service {
     }
 
     return true;
+  }
+
+  get redirectRoute() {
+    if (this._needs2fa) {
+      return "preferences.second-factor";
+    }
+
+    if (this._needsRequiredFields) {
+      return "preferences.profile";
+    }
   }
 
   get _needs2fa() {

@@ -6,7 +6,7 @@
 
 de:
   site_settings:
-    lazy_videos_enabled: "Aktiviere das Lazy Videos Plug-in"
-    lazy_youtube_enabled: "Träges Laden für YouTube-Einbettungen aktivieren"
-    lazy_vimeo_enabled: "Träges Laden für Vimeo-Einbettungen aktivieren"
-    lazy_tiktok_enabled: "Träges Laden für TikTok-Einbettungen aktivieren (experimentell)"
+    lazy_videos_enabled: "Aktiviere das Lazy-Videos-Plug-in"
+    lazy_youtube_enabled: "Lazy Loading für YouTube-Einbettungen aktivieren"
+    lazy_vimeo_enabled: "Lazy Loading für Vimeo-Einbettungen aktivieren"
+    lazy_tiktok_enabled: "Lazy Loading für TikTok-Einbettungen aktivieren (experimentell)"

@@ -33,7 +33,7 @@ export default class AdminBackupsRoute extends DiscourseRoute {
       ajax("/admin/backups/status.json")
     );
 
-    BackupStatus.create({
+    return BackupStatus.create({
       isOperationRunning: status.is_operation_running,
       canRollback: status.can_rollback,
       allowRestore: status.allow_restore,

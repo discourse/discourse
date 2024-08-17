@@ -718,11 +718,7 @@ id:
     revoke_failed: "Gagal mencabut akun Anda di %{provider_name}."
     connected: "(terhubung)"
   activation:
-    action: "Klik disini untuk mengaktifkan akun anda"
     already_done: "Maaf, tautan konfirmasi ini sudah tidak valid. Apakah akun anda sudah aktif?"
-    please_continue: "Akun baru Anda telah dikonfirmasi. Anda akan diarahkan ke halaman utama."
-    continue_button: "Lanjut ke %{site_name}"
-    welcome_to: "Selamat datang ke %{site_name}!"
     approval_required: "Seorang moderator harus menyetujui akun baru anda sebelum anda bisa mengakses forum ini. Anda akan menerima surel saat akun anda telah disetujui!"
     missing_session: "Kami tidak dapat mendeteksi apakah akun anda telah dibuat, mohon pastikan cookies anda aktif."
     activated: "Maaf, akun ini sudah diaktifkan."
@@ -1827,7 +1823,11 @@ id:
       privacy:
         fields:
           login_required:
-            placeholder: "Pribadi"
+            choices:
+              public:
+                label: "Umum"
+              private:
+                label: "Pribadi"
           chat_enabled:
             placeholder: "Aktifkan obrolan"
       styling:

@@ -3165,12 +3165,30 @@ RSpec.describe User do
   end
 
   describe "#update_ip_address!" do
+    let!(:plugin) { Plugin::Instance.new }
+    let!(:modifier) { :user_can_update_ip_address }
+    let!(:deny_block) { Proc.new { false } }
+    let!(:allow_block) { Proc.new { true } }
+
     it "updates ip_address correctly" do
       expect do user.update_ip_address!("127.0.0.1") end.to change {
         user.reload.ip_address.to_s
       }.to("127.0.0.1")
 
       expect do user.update_ip_address!("127.0.0.1") end.to_not change { user.reload.ip_address }
+    end
+
+    it "allows plugins to control updating ip_address" do
+      DiscoursePluginRegistry.register_modifier(plugin, modifier, &deny_block)
+      expect do user.update_ip_address!("127.0.0.1") end.to_not change { user.reload.ip_address }
+
+      DiscoursePluginRegistry.register_modifier(plugin, modifier, &allow_block)
+      expect do user.update_ip_address!("127.0.0.1") end.to change {
+        user.reload.ip_address.to_s
+      }.to("127.0.0.1")
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &deny_block)
+      DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &allow_block)
     end
 
     describe "keeping old ip address" do

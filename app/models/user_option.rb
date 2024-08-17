@@ -10,7 +10,7 @@ class UserOption < ActiveRecord::Base
     5 => "top",
     6 => "bookmarks",
     7 => "unseen",
-    # 8 => reserved for "hot"
+    8 => "hot",
   }
 
   self.ignored_columns = [

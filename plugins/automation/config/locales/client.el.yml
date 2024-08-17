@@ -82,6 +82,16 @@ el:
             restricted_tags:
               label: Ετικέτες
       scriptables:
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: Webhook URL
+              description: "Αναμένει ένα έγκυρο URL του Zapier webhook, π.χ.: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: Μια φορά
+              description: Απαντά μόνο μία φορά ανά θέμα
         auto_tag_topic:
           fields:
             tags:
@@ -95,7 +105,13 @@ el:
             group:
               label: Ομάδα
         user_global_notice:
+          fields:
+            level:
+              label: Επίπεδο
+            notice:
+              label: Σημείωση
           levels:
+            warning: Προειδοποίηση
             info: Πληροφορίες
             success: Επιτυχία
             error: Σφάλμα
@@ -119,10 +135,22 @@ el:
               label: ID Θέματος
             user:
               label: Χρήστης
+        send_pms:
+          add_a_pm_btn:
+            label: Προσθήκη ενός ΠΜ
+          fields:
+            receiver:
+              label: Παραλήπτης ΠΜ
+            sendable_pms:
+              label: ΠΜ
+            sender:
+              label: Αποστολέας ΠΜ
         close_topic:
           fields:
             topic:
               label: ID Θέματος
+            message:
+              label: Κλείσιμο μηνύματος
             user:
               label: Χρήστης
       models:
@@ -136,5 +164,11 @@ el:
             label: Έναυσμα
           version:
             label: Έκδοση
+          enabled:
+            label: Ενεργοποιημένο
           disabled:
             label: Απενεργοποιημένο
+          last_updated_at:
+            label: Τελευταία ενημέρωση
+          last_updated_by:
+            label: Ενημερώθηκε από

@@ -94,7 +94,7 @@ export default class FKControlWrapper extends Component {
         </@component>
 
         <FKMeta
-          @description={{@description}}
+          @description={{@field.description}}
           @value={{@value}}
           @field={{@field}}
           @error={{this.error}}

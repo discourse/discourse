@@ -521,11 +521,7 @@ ro:
     error_staged: "A apărut o eroare la schimbarea adresei tale de email. Adresa este deja folosită de un utilizator în așteptare."
     already_done: "Ne pare rău, dar acest link de confirmare nu mai este valid. Poate că emailul tău a fost deja schimbat?"
   activation:
-    action: "Click aici pentru a-ți activa contul"
     already_done: "Ne pare rău, această adresă pentru confirmarea contului nu mai este valabilă. Poate contul tău este deja activ?"
-    please_continue: "Contul este confirmat. Vei fi redirecționat spre pagina principală."
-    continue_button: "Continuă pe %{site_name}"
-    welcome_to: "Bine ai venit pe %{site_name}!"
     approval_required: "Un moderator trebuie să aprobe manual contul înainte să poți accesa forumul. Vei primi un email imediat ce contul ți-a fost aprobat!"
     missing_session: "Nu putem detecta dacă contul tău a fost deja creat. Te rugăm să verifici că ai cookie-urile activate. "
     activated: "Acest cont a fost deja activat."
@@ -947,7 +943,6 @@ ro:
     max_reply_history: "Număr maxim de răspunsuri care să fie expandate atunci când se expandează un \"răspuns la\""
     topics_per_period_in_top_summary: "Numărul celor mai bune subiecte afișate în rezumatul implicit al celor mai bune subiecte."
     topics_per_period_in_top_page: "Numărul celor mai bune subiecte afișat când se selectează 'Afișează mai multe' cele mai bune subiecte."
-    redirect_users_to_top_page: "Redirecționează automat noii utilizatorii noi și cei absenți de multă vreme, către vârful paginii."
     top_page_default_timeframe: "Perioada de timp implicită din prima pagină pentru utilizatorii anonimi (se ajustează automat pentru utilizatorii conectați pe baza ultimei lor vizite)."
     prioritize_username_in_ux: "Afișează întâi nume utilizator pe pagina utilizator, pe cardul utilizator și în postări (dacă e dezactivat, se afișează întâi numele)"
     email_token_valid_hours: "Tokenul uitat parolă / activează cont sunt valabili pentru (n) ore."
@@ -1189,9 +1184,9 @@ ro:
     min_trust_level_to_tag_topics: "Nivelul minim de încredere necesar pentru a pune etichete pe subiecte."
     suppress_overlapping_tags_in_list: "Dacă etichetele corespund exact cu cuvintele din titlul subiectelor, nu mai afișa aceste etichete."
     shared_drafts_allowed_groups: "Permit utilizatorilor din aceste grupuri să vadă și să editeze ciorne comune."
+    show_bottom_topic_map: "Arată harta subiectului în partea de jos a subiectului atunci când are 10 răspunsuri sau mai multe."
+    show_topic_map_in_topics_without_replies: "Arată harta subiectului chiar dacă subiectul nu are răspunsuri."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Afișează un meniu de acces rapid pentru semne de carte în articole și un nou modal reproiectat"
-    glimmer_header_mode: "Controlează dacă se utilizează noua implementare a antetului cu efect de „licărire”. Valoarea implicită este „auto”, care va fi activată automat odată ce toate temele și modulele sunt gata. https://meta.discourse.org/t/296544"
-    experimental_topic_bulk_actions_enabled_groups: "EXPERIMENTAL: Activează noua listă derulantă de acțiuni în masă."
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
     errors:
       invalid_email: "Adresă de email invalidă."
@@ -2032,7 +2027,11 @@ ro:
       privacy:
         fields:
           login_required:
-            placeholder: "Privat"
+            choices:
+              public:
+                label: "Public"
+              private:
+                label: "Privat"
       styling:
         fields:
           styling_preview:

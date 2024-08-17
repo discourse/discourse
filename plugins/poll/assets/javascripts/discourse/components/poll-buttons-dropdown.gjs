@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action, get } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse-common/helpers/d-icon";
@@ -34,6 +34,20 @@ const buttonOptionsMap = {
     title: "poll.close.title",
     icon: "lock",
     action: "toggleStatus",
+  },
+  showTally: {
+    className: "btn-default show-tally",
+    label: "poll.show-tally.label",
+    title: "poll.show-tally.title",
+    icon: "info",
+    action: "toggleDisplayMode",
+  },
+  showPercentage: {
+    className: "btn-default show-percentage",
+    label: "poll.show-percentage.label",
+    title: "poll.show-percentage.title",
+    icon: "info",
+    action: "toggleDisplayMode",
   },
 };
 
@@ -68,7 +82,14 @@ export default class PollButtonsDropdownComponent extends Component {
       topicArchived,
       groupableUserFields,
       isAutomaticallyClosed,
+      availableDisplayMode,
     } = this.args;
+
+    if (availableDisplayMode) {
+      const option = { ...buttonOptionsMap[availableDisplayMode] };
+      option.id = option.action;
+      contents.push(option);
+    }
 
     if (groupableUserFields.length && voters > 0) {
       const option = { ...buttonOptionsMap.showBreakdown };

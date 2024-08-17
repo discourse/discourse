@@ -11,7 +11,11 @@ if enable_logstash_logger
   require_relative "../lib/discourse_logstash_logger"
   require_relative "../lib/unicorn_logstash_patch"
   FileUtils.touch(unicorn_stderr_path) if !File.exist?(unicorn_stderr_path)
-  logger DiscourseLogstashLogger.logger(logdev: unicorn_stderr_path, type: :unicorn)
+  logger DiscourseLogstashLogger.logger(
+           logdev: unicorn_stderr_path,
+           type: :unicorn,
+           customize_event: lambda { |event| event["@timestamp"] = ::Time.now.utc },
+         )
 else
   logger Logger.new(STDOUT)
 end
@@ -60,15 +64,7 @@ initialized = false
 before_fork do |server, worker|
   unless initialized
     Discourse.preload_rails!
-
-    # V8 does not support forking, make sure all contexts are disposed
-    ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
-
-    # get rid of rubbish so we don't share it
-    # longer term we will use compact! here
-    GC.start
-    GC.start
-    GC.start
+    Discourse.before_fork
 
     initialized = true
 

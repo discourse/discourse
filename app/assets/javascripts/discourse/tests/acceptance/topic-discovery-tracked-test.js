@@ -94,8 +94,8 @@ acceptance("Topic Discovery Tracked", function (needs) {
     );
 
     assert.ok(
-      query("#navigation-bar li.top a").href.endsWith("/top?f=tracked"),
-      "top link has tracked filter"
+      query("#navigation-bar li.hot a").href.endsWith("/hot?f=tracked"),
+      "hot link has tracked filter"
     );
 
     assert.ok(

@@ -35,8 +35,11 @@ vi:
       long_with_year: "D MMM YYYY HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
+      long_date_with_year: "DD/MM/YYYY LT"
       long_date_without_year: "D MMM LT"
+      long_date_with_year_without_time: "DD/MM/YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
+      long_date_with_year_with_linebreak: "DD/MM/YYYY <br/>LT"
       wrap_ago: "%{date} trước"
       wrap_on: "lúc %{date}"
       tiny:
@@ -82,6 +85,7 @@ vi:
           other: "hơn %{count} năm"
         almost_x_years:
           other: "gần %{count} năm"
+        date_year: "DD/MM/YYYY"
       medium_with_ago:
         x_minutes:
           other: " %{count} phút trước"
@@ -115,6 +119,7 @@ vi:
       url: "Sao chép và chia sẻ URL"
     word_connector:
       comma: ", "
+      last_item: "và"
     action_codes:
       public_topic: "Hiển thị chủ đề công khai lúc %{when}"
       open_topic: "Đã chuyển đổi chủ đề này thành một chủ đề %{when}"
@@ -153,6 +158,7 @@ vi:
     emails_are_disabled_non_staff: "Email gửi đi đã bị vô hiệu hóa đối với người dùng không phải là nhân viên."
     software_update_prompt:
       dismiss: "Hủy bỏ"
+    bootstrap_mode: "Bắt đầu"
     back_button: "Quay lại"
     themes:
       default_description: "Mặc định"
@@ -160,6 +166,8 @@ vi:
       error_caused_by: "Gây ra bởi '%{name}'. <a target='blank' href='%{path}'>Nhấp vào đây</a> để cập nhật, cấu hình lại hoặc tắt."
       only_admins: "(thông báo này chỉ được hiển thị cho quản trị viên trang web)"
     broken_decorator_alert: "Bài đăng có thể không hiển thị chính xác vì một trong những người trang trí nội dung bài đăng trên trang web của bạn đã mắc lỗi."
+    broken_plugin_alert: "Do plugin '%{name}' gây ra"
+    broken_transformer_alert: "Đã xảy ra lỗi. Trang web của bạn có thể không hoạt động bình thường."
     s3:
       regions:
         ap_northeast_1: "Châu Á (Tokyo)"
@@ -239,6 +247,7 @@ vi:
       pill: "Tin nhắn liên quan"
       see_all: 'Xem <a href="%{path}">toàn bộ thông điệp</a> từ %{username}…'
     suggested_topics:
+      pill: "Đề xuất"
       pm_title: "Tin nhắn gợi ý"
     about:
       simple_title: "Giới thiệu"
@@ -255,8 +264,24 @@ vi:
       like_count: "Lượt thích"
       topic_count: "Các chủ đề"
       post_count: "Các bài viết"
+      user_count: "Đăng ký"
+      active_user_count: "Thành viên đang hoạt động"
       contact: "Liên lạc"
       contact_info: "Trong trường hợp có bất kỳ sự cố nào ảnh hưởng tới trang này, xin vui lòng liên hệ với chúng tôi theo địa chỉ %{contact_info}."
+      site_activity: "Hoạt động trang web"
+      activities:
+        topics:
+          other: "%{formatted_number} chủ đề"
+        posts:
+          other: "%{formatted_number} bài đăng"
+        likes:
+          other: "%{formatted_number} lượt thích"
+        periods:
+          last_7_days: "trong 7 ngày gần đây"
+          today: "hôm nay"
+          all_time: "từ trước tới nay"
+      site_age:
+        less_than_one_month: "Được tạo < 1 tháng trước"
     bookmarked:
       title: "Dấu trang"
       edit_bookmark: "Chỉnh sửa Dấu trang"
@@ -566,7 +591,6 @@ vi:
       never: "Không bao giờ"
       last_custom: "Ngày giờ tùy chỉnh cuối cùng"
       custom: "Ngày giờ tùy chỉnh"
-      custom_short: "Tùy chỉnh..."
       select_timeframe: "Chọn khung thời gian"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> đã đăng <a href='%{topicUrl}'>chủ đề</a>"
@@ -672,11 +696,12 @@ vi:
           imap_mailbox_not_selected: "Bạn phải chọn Hộp thư cho cấu hình IMAP này nếu không sẽ không có hộp thư nào được đồng bộ hóa!"
           prefill:
             title: "Điền sẵn các cài đặt cho:"
+          ssl_modes:
+            none: "Không có gì"
           credentials:
             title: "Thông tin đăng nhập"
             smtp_server: "Máy chủ SMTP"
             smtp_port: "Cổng SMTP"
-            smtp_ssl: "Sử dụng SSL cho SMTP"
             imap_server: "Máy chủ IMAP"
             imap_port: "Cổng IMAP"
             imap_ssl: "Sử dụng SSL cho IMAP"
@@ -1279,6 +1304,13 @@ vi:
           disconnect: "Tài khoản %{provider} hiện tại của bạn '%{account_description}' sẽ bị ngắt kết nối."
           account_specific: "%{provider} tài khoản '%{account_description}' của bạn sẽ được sử dụng để xác thực."
           generic: "Tài khoản %{provider} của bạn sẽ được sử dụng để xác thực."
+      activate_account:
+        action: "Nhấn vào đây để kích hoạt tài khoản của bạn"
+        already_done: "Xin lỗi, liên kết để xác nhận tài khoản này không còn hợp lệ. Có thể tài khoản của bạn được kích hoạt?"
+        please_continue: "Tài khoản của bạn đã được xác nhận; bạn sẽ được chuyển đến trang chủ."
+        continue_button: "Tiếp tục đến %{site_name}"
+        welcome_to: "Chào mừng đến với %{site_name}!"
+        approval_required: "Một điều hành viên phải duyệt tài khoản của bạn trước khi bạn có thể đăng nhập diễn đàn này. Bạn sẽ nhận được email khi tài khoản của bạn được duyệt!"
       name:
         title: "Tên"
         instructions: "Tên đầy đủ của bạn (tuỳ chọn)."
@@ -1596,15 +1628,6 @@ vi:
       enabled: "Website đang ở chế độ chỉ đọc, bạn có thể duyệt xem nhưng không thể trả lời, likes, hay thực hiện các hành động khác."
       login_disabled: "Chức năng Đăng nhập đã bị tắt khi website trong trạng thái chỉ đọc"
       logout_disabled: "Chức năng đăng xuất đã bị tắt khi website đang trong trạng thái chỉ đọc."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / giờ}}</a> trang web đạt đến giới hạn thiết lập của {limit, plural, other {# lỗi / giờ}}.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / phút}}</a> trang web đạt đến giới hạn thiết lập của {limit, plural, other {# lỗi / phút}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / giờ}}</a> vượt quá giới hạn thiết lập trang web của {limit, plural, other {# lỗi / giờ}}.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / phút}}</a> vượt quá giới hạn thiết lập trang web của {limit, plural, other {# lỗi / phút}}.
     learn_more: "Tìm hiểu thêm…"
     mute: Im lặng
     unmute: Bỏ im lặng
@@ -1627,7 +1650,11 @@ vi:
     summary:
       description:
         other: "Có <b>%{count}</b> trả lời."
+      buttons:
+        generate: "Tóm tắt"
+        regenerate: "Khởi tạo lại"
       disable: "HIển thị tất cả các bài viết"
+      show_all_label: "Hiển thị tất cả"
     deleted_filter:
       enabled_description: "Chủ để này có chứa các bài viết bị xoá, chúng đã bị ẩn đi"
       disabled_description: "Xoá các bài viết trong các chủ để được hiển thị"
@@ -1722,6 +1749,7 @@ vi:
       admin_not_allowed_from_ip_address: "Bạn không thể đăng nhập với quyền quản trị từ địa chỉ IP đó."
       resend_activation_email: "Bấm đây để gửi lại email kích hoạt"
       omniauth_disallow_totp: "Tài khoản của bạn đã bật xác thực hai yếu tố. Vui lòng đăng nhập bằng mật khẩu của bạn."
+      activate_account: "Kích hoạt tài khoản"
       resend_title: "Gửi lại email kích hoạt"
       change_email: "Đổi địa chỉ email"
       provide_new_email: "Cung cấp địa chỉ mới của bạn và chúng tôi sẽ gửi lại email xác nhận."
@@ -3059,7 +3087,6 @@ vi:
         none: "không có danh mục phụ"
       colors_disabled: "Bạn không thể chọn màu vì bạn không có kiểu danh mục nào."
     flagging:
-      title: "Cám ơn bạn đã giúp phát triển cộng đồng!"
       action: "Đánh dấu Bài viết"
       take_action: "Thực hiện Tác vụ…"
       take_action_options:
@@ -3093,7 +3120,6 @@ vi:
         left:
           other: "%{count} còn lại"
     flagging_topic:
-      title: "Cám ơn bạn đã giúp phát triển cộng đồng!"
       action: "Gắn cờ Chủ đề"
       notify_action: "Tin nhắn"
     topic_map:
@@ -3103,6 +3129,9 @@ vi:
       links_shown: "hiện thêm liên kết…"
       clicks:
         other: "%{count} nhấp chuột"
+      views: "Lượt xem"
+      read: đọc
+      minutes: tối thiểu
     post_links:
       about: "mở rộng nhiều liên kết hơn cho bài đăng này"
       title:
@@ -3470,7 +3499,6 @@ vi:
         everyone_can_use: "Mọi người đều có thể sử dụng thẻ"
         usable_only_by_groups: "Tất cả mọi người đều có thể nhìn thấy thẻ, nhưng chỉ những nhóm sau mới có thể sử dụng chúng"
         visible_only_to_groups: "Thẻ chỉ hiển thị cho các nhóm sau"
-        cannot_save: "Không thể lưu nhóm thẻ. Đảm bảo rằng có ít nhất một thẻ hiện diện, tên nhóm thẻ không trống và một nhóm được chọn cho quyền đối với thẻ."
         tags_placeholder: "Tìm kiếm hoặc tạo thẻ"
         parent_tag_placeholder: "Tùy chọn"
         select_groups_placeholder: "Chọn nhóm…"
@@ -4030,6 +4058,7 @@ vi:
           spam: "Rác"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(tùy chọn)"
           update: "Cập nhật"
           saved: "đã lưu"
@@ -4043,6 +4072,7 @@ vi:
             save: "Lưu lại"
             name: "Tên"
             description: "Mô tả"
+            invalid_applies_to: "Bắt buộc"
             topic: "các chủ đề"
             post: "bài viết"
       plugins:

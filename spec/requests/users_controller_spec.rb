@@ -60,9 +60,8 @@ RSpec.describe UsersController do
 
     context "with invalid token" do
       it "return success" do
-        put "/u/activate-account/invalid-tooken"
-        expect(response.status).to eq(200)
-        expect(flash[:error]).to be_present
+        put "/u/activate-account/invalid-token"
+        expect(response.status).to eq(422)
       end
     end
 
@@ -108,12 +107,11 @@ RSpec.describe UsersController do
           )
 
           expect(response.status).to eq(200)
-          expect(flash[:error]).to be_blank
-          expect(session[:current_user_id]).to be_present
 
-          expect(CGI.unescapeHTML(response.body)).to_not include(
-            I18n.t("activation.approval_required"),
-          )
+          data = JSON.parse(response.body)
+          expect(data["needs_approval"]).to eq(false)
+
+          expect(session[:current_user_id]).to be_present
         end
       end
 
@@ -124,11 +122,9 @@ RSpec.describe UsersController do
           put "/u/activate-account/#{email_token.token}"
           expect(response.status).to eq(200)
 
-          expect(CGI.unescapeHTML(response.body)).to include(I18n.t("activation.approval_required"))
+          data = JSON.parse(response.body)
+          expect(data["needs_approval"]).to eq(true)
 
-          expect(response.body).to_not have_tag(:script, with: { src: "/assets/application.js" })
-
-          expect(flash[:error]).to be_blank
           expect(session[:current_user_id]).to be_blank
         end
       end
@@ -141,7 +137,8 @@ RSpec.describe UsersController do
 
         put "/u/activate-account/#{email_token.token}"
 
-        expect(response).to redirect_to(destination_url)
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["redirect_to"]).to eq(destination_url)
       end
     end
 
@@ -158,7 +155,8 @@ RSpec.describe UsersController do
       it "should redirect to the topic" do
         put "/u/activate-account/#{email_token.token}"
 
-        expect(response).to redirect_to(topic.relative_url)
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["redirect_to"]).to eq(topic.relative_url)
       end
     end
   end

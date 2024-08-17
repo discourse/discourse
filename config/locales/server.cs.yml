@@ -560,21 +560,39 @@ cs:
     image_placeholder:
       broken: "Tento obrázek je rozbitý"
   rate_limiter:
+    slow_down: "Tuto akci jste provedli příliš mnohokrát, zkuste to prosím znovu později."
+    too_many_requests: "Tuto akci jste provedli příliš mnohokrát. Počkejte prosím %{time_left} , než to zkusíte znovu."
+    by_type:
+      first_day_replies_per_day: "Vážíme si vašeho nadšení, jen tak dál! Toto znamená, že v rámci zabezpečení naší komunity jste dosáhli maximálního počtu odpovědí, které může nový uživatel vytvořit během prvního dne. Počkejte prosím %{time_left} a budete moci vytvářet další odpovědi."
+      first_day_topics_per_day: "Vážíme si vašeho nadšení! Toto znamená, že v rámci zabezpečení naší komunity jste dosáhli maximálního počtu témat, která může nový uživatel vytvořit první den. Počkejte prosím %{time_left} a budete moci vytvářet další nová témata."
+      create_topic: "Vytváříte témata příliš rychle. Před dalším pokusem prosím počkejte %{time_left} ."
+      create_post: "Odpovídáte trochu rychle. Prosím, počkejte %{time_left} než to zkusíte znovu."
+      delete_post: "Příliš rychle mažete příspěvky. Před dalším pokusem prosím počkejte %{time_left} ."
+      public_group_membership: "Připojujete/opouštíte skupiny příliš často. Počkejte prosím %{time_left} před dalším pokusem."
+      topics_per_day: "Dosáhli jste maximálního povoleného počtu nových témat za den. Další nová témata můžete vytvořit za %{time_left}."
+      pms_per_day: "Dosáhli jste maximálního počtu povolených zpráv denně. Další nové zprávy můžete vytvořit za %{time_left}."
+      create_like: "Páni! Sdílíte spoustu lásky! Dosáhli jste maximálního počtu lajků během 24 hodin, ale jakmile získáte nové úrovně důvěry, budete mít k dispozici více lajků denně. Další příspěvky budete moci lajkovat za %{time_left}."
+      create_bookmark: "Dosáhli jste maximálního počtu záložek. Více záložek můžete vytvořit za %{time_left}."
+      edit_post: "Dosáhli jste maximálního počtu denních úprav. Další úpravy můžete odeslat za %{time_left}."
+      live_post_counts: "Požadujete počty živých příspěvků příliš rychle. Počkejte prosím %{time_left} , než to zkusíte znovu."
+      unsubscribe_via_email: "Dosáhli jste maximálního počtu odhlášení prostřednictvím e-mailu. Počkejte prosím %{time_left} před dalším pokusem."
+      topic_invitations_per_day: "Dosáhli jste maximálního počtu pozvánek do tématu. Další pozvánky můžete poslat za %{time_left}."
     hours:
-      one: "%{count} hodina"
+      one: "%{count} hodinu"
       few: "%{count} hodiny"
       many: "%{count} hodin"
       other: "%{count} hodin"
     minutes:
-      one: "%{count} minuta"
+      one: "%{count} minutu"
       few: "%{count} minuty"
       many: "%{count} minut"
       other: "%{count} minut"
     seconds:
-      one: "%{count} sekunda"
-      few: "%{count} sekundy"
-      many: "%{count} sekund"
-      other: "%{count} sekund"
+      one: "%{count} vteřinu"
+      few: "%{count} vteřiny"
+      many: "%{count} vteřin"
+      other: "%{count} vteřin"
+    short_time: "pár vteřin"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
@@ -703,11 +721,7 @@ cs:
     error: "Nastala chyba běhěm změny emailové adresy. Není nová adresa již někým používána?"
     confirm: "Potvrdit"
   activation:
-    action: "Klikni sem pro aktivaci svého účtu"
     already_done: "Bohužel, tento odkaz pro aktivaci účtu již není platný. Není váš účet jíž aktivní?"
-    please_continue: "Váš účet je aktivovaný; budete přesměrování na výchozí stránku."
-    continue_button: "Pokračovat na %{site_name}"
-    welcome_to: "Vítejte v %{site_name}!"
     approval_required: "Váš nový účet musí být schválen moderátorem, než budete moci používat fórum. Jakmile se tak stane, budete informováni emailem."
   reviewable_score_types:
     needs_approval:
@@ -1790,7 +1804,12 @@ cs:
       privacy:
         fields:
           login_required:
-            placeholder: "Soukromé"
+            label: "Viditelnost"
+            choices:
+              public:
+                label: "Veřejné"
+              private:
+                label: "Soukromé"
       ready:
         description: "A je to! Provedli jste základní nastavení komunity. Nyní se na to můžete vrhnout a porozhlédnout se, napsat uvítací téma a posílat pozvánky!<br><br>Bavte se!"
       styling:

@@ -253,6 +253,19 @@ gl:
       topic_count: "Temas"
       post_count: "Publicacións"
       contact_info: "No caso dunha incidencia crítica ou asunto urxente que afecte este sitio, contacte connosco en %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} tema"
+          other: "%{formatted_number} temas"
+        posts:
+          one: "%{formatted_number} publicación"
+          other: "%{formatted_number} publicacións"
+        likes:
+          one: "%{formatted_number} gústame"
+          other: "%{formatted_number} gústame"
+        periods:
+          last_7_days: "nos últimos 7 días"
+          today: "hoxe"
     bookmarked:
       title: "Marcador"
       clear_bookmarks: "Limpar marcadores"
@@ -550,7 +563,6 @@ gl:
       none: "Non se necesita"
       never: "Nunca"
       custom: "Personalizar data e hora"
-      custom_short: "Personalizar..."
       select_timeframe: "Seleccione un marco temporal"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicou <a href='%{topicUrl}'>o tema</a>"
@@ -633,11 +645,12 @@ gl:
           title: "Correo electrónico"
           status: "Sincronizados os correos %{old_emails} / %{total_emails} vía IMAP."
           last_updated_by: "por"
+          ssl_modes:
+            none: "Ningunha"
           credentials:
             title: "Acreditacións"
             smtp_server: "Servidor SMTP"
             smtp_port: "Porto SMTP"
-            smtp_ssl: "Use SSL para SMTP"
             imap_server: "Servidor SMTP"
             imap_port: "Porto IMAP"
             imap_ssl: "Use SSL para IMAP"
@@ -1229,6 +1242,13 @@ gl:
         confirm_description:
           account_specific: "Usarase a súa conta «%{account_description}» de %{provider} para a autenticación."
           generic: "Usarase a súa conta de %{provider} para a autenticación."
+      activate_account:
+        action: "Prema aquí para activar a súa conta"
+        already_done: "Sentímolo, esta ligazón de confirmación da conta xa non está dispoñible. Estará xa a súa conta activada?"
+        please_continue: "A súa nova conta está confirmada; redirixirémolo á páxina de inicio."
+        continue_button: "Continuar en %{site_name}"
+        welcome_to: "Dámoslle a benvida a %{site_name}!"
+        approval_required: "Un moderador debe aprobar manualmente a súa nova conta antes de que poida acceder a este foro. Recibirá un correo electrónico cando a súa conta sexa aprobada!"
       name:
         title: "Nome"
         instructions: "O seu nOme cOmpletO (OpciOnal)."
@@ -1530,15 +1550,6 @@ gl:
       enabled: "Este sitio está en modo só-lectura. Continúe navegando pero responder, gustar e outras accións estarán desactivadas polo de agora."
       login_disabled: "Cando o sitio está no modo de só-lectura, desactívase o inicio de sesión."
       logout_disabled: "O peche de sesión desactívase mentres o sitio está en modo de só lectura."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> acadou o límite configurado no sitio de {limit, plural, one {# erro/hora} other {# erros/hora}}.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> acadou o límite configurado no sitio de {limit, plural, one {# erro/minuto} other {# erros/minuto}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/hora} other {# erros/hora}}</a> excedeu o límite configurado do sitio de {limit, plural, one {# erro/hora} other {# erros/hora}}.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> excedeu o límite configurado do sitio de {limit, plural, one {# erro/minuto} other {# erros/minuto}}.
     mute: Silenciar
     unmute: Non silenciar
     last_post: Publicado
@@ -1559,9 +1570,12 @@ gl:
       description:
         one: "Hai <b>%{count}</b> resposta."
         other: "Hai <b>%{count}</b> respostas."
+      buttons:
+        regenerate: "Rexenerar"
       description_time_MF: |
         Hai {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} que supoñen un tempo estimado de lectura de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
       disable: "Amosar todas as publicacións"
+      show_all_label: "Amosar todas"
     deleted_filter:
       enabled_description: "Este tema contén publicacións eliminadas, que se ocultaron."
       disabled_description: "Amósanse as publicacións eliminadas do tema."
@@ -1647,6 +1661,7 @@ gl:
       admin_not_allowed_from_ip_address: "Non pode acceder como administrador desde ese enderezo IP."
       resend_activation_email: "Prema aquí para enviar outro correo de activación."
       omniauth_disallow_totp: "A súa conta ten activada a autenticación de dobre paso. Inicie sesión co seu contrasinal."
+      activate_account: "Activar conta"
       resend_title: "Reenviar correo electrónico de activación"
       change_email: "Cambiar enderezo de correo"
       provide_new_email: "Escriba un enderezo novo e reenviarémoslle o correo de confirmación."
@@ -2851,7 +2866,6 @@ gl:
         none: "sen subcategorías"
       colors_disabled: "Non pode seleccionar cores porque ten un estilo de categoría con ningún."
     flagging:
-      title: "Grazas por axudar a manter cívica a nosa comunidade!"
       action: "Sinalar a publicación"
       take_action_options:
         default:
@@ -2888,7 +2902,6 @@ gl:
           one: "Queda %{count}"
           other: "Quedan %{count}"
     flagging_topic:
-      title: "Grazas por axudar a manter cívica a nosa comunidade!"
       action: "Sinalar o tema"
       notify_action: "Mensaxe"
     topic_map:
@@ -2898,6 +2911,9 @@ gl:
       clicks:
         one: "%{count} clic"
         other: "%{count} clics"
+      views: "Visualizacións"
+      read: lectura
+      minutes: mín
     post_links:
       about: "despregar máis ligazóns para esta publicación"
       title:
@@ -3699,6 +3715,7 @@ gl:
           spam: "Lixo"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(opcional)"
           update: "Actualizar"
           saved: "gardado!"
@@ -3712,6 +3729,7 @@ gl:
             save: "Gardar"
             name: "Nome"
             description: "Descrición"
+            invalid_applies_to: "Obrigatorio"
             topic: "temas"
             post: "publicacións"
       plugins:

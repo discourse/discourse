@@ -1,4 +1,7 @@
 <ConditionalLoadingSpinner @condition={{this.isLoading}}>
-  <h2>{{i18n "admin.dashboard.new_features.title"}}</h2>
-  <DashboardNewFeatures />
+  <div class="admin-config-area">
+    <h2>{{i18n "admin.dashboard.new_features.title"}}</h2>
+    <p>{{html-safe (i18n "admin.dashboard.new_features.subtitle")}}</p>
+    <DashboardNewFeatures />
+  </div>
 </ConditionalLoadingSpinner>

@@ -177,8 +177,6 @@ en:
       removed_user: "Removed %{who} %{when}"
       removed_group: "Removed %{who} %{when}"
       autobumped: "Automatically bumped %{when}"
-      tags_changed: "Tags updated %{when}"
-      category_changed: "Category updated %{when}"
       autoclosed:
         enabled: "Closed %{when}"
         disabled: "Opened %{when}"
@@ -226,6 +224,7 @@ en:
     broken_page_change_alert: "An onPageChange handler raised an error. Check the browser developer tools for more information."
 
     broken_plugin_alert: "Caused by plugin '%{name}'"
+    broken_transformer_alert: "There was an error. Your site may not work properly."
 
     critical_deprecation:
       notice: "<b>[Admin Notice]</b> One of your themes or plugins needs updating for compatibility with upcoming Discourse core changes."
@@ -344,6 +343,47 @@ en:
       active_user_count: "Active users"
       contact: "Contact us"
       contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_info}."
+      site_activity: "Site activity"
+      view_more: "View more"
+      view_less: "View less"
+      activities:
+        topics:
+          one: "%{formatted_number} topic"
+          other: "%{formatted_number} topics"
+        posts:
+          one: "%{formatted_number} post"
+          other: "%{formatted_number} posts"
+        active_users:
+          one: "%{formatted_number} active user"
+          other: "%{formatted_number} active users"
+        sign_ups:
+          one: "%{formatted_number} sign-up"
+          other: "%{formatted_number} sign-ups"
+        likes:
+          one: "%{formatted_number} like"
+          other: "%{formatted_number} likes"
+        periods:
+          last_7_days: "in the last 7 days"
+          today: "today"
+          all_time: "all time"
+      member_count:
+        one: "%{formatted_number} Member"
+        other: "%{formatted_number} Members"
+      admin_count:
+        one: "%{formatted_number} Admin"
+        other: "%{formatted_number} Admins"
+      moderator_count:
+        one: "%{formatted_number} Moderator"
+        other: "%{formatted_number} Moderators"
+      report_inappropriate_content: "If you come across any inappropriate content, don't hesitate to start a conversation with our moderators and admins. Remember to log in before reaching out."
+      site_age:
+        less_than_one_month: "Created < 1 month ago"
+        month:
+          one: "Created %{count} month ago"
+          other: "Created %{count} months ago"
+        year:
+          one: "Created %{count} year ago"
+          other: "Created %{count} years ago"
 
     bookmarked:
       title: "Bookmark"
@@ -408,12 +448,12 @@ en:
         name: "Clear Reminders"
         description:
           one: "Are you sure you want to clear the reminder for this bookmark?"
-          other: "Are you sure you want to clear the reminder for these <b>%{count}</b> bookmarks."
+          other: "Are you sure you want to clear the reminder for these <b>%{count}</b> bookmarks?"
       delete_bookmarks:
         name: "Delete Bookmark"
         description:
           one: "Are you sure you want to delete this bookmark?"
-          other: "Are you sure you want to delete these <b>%{count}</b> bookmarks."
+          other: "Are you sure you want to delete these <b>%{count}</b> bookmarks?"
 
     copy_codeblock:
       copied: "copied!"
@@ -754,7 +794,7 @@ en:
       never: "Never"
       last_custom: "Last custom datetime"
       custom: "Custom date and time"
-      custom_short: "Custom..."
+      more_options: "More options…"
       select_timeframe: "Select a timeframe"
 
     user_action:
@@ -868,16 +908,22 @@ en:
           imap_alpha_warning: "Warning: This is an alpha-stage feature. Only Gmail is officially supported. Use at your own risk!"
           imap_settings_valid: "IMAP settings valid."
           smtp_disable_confirm: "If you disable SMTP, all SMTP and IMAP settings will be reset and the associated functionality will be disabled. Are you sure you want to continue?"
-          imap_disable_confirm: "If you disable IMAP all IMAP settings will be reset and the associated functionality will be disabled. Are you sure you want to continue?"
+          imap_disable_confirm: "If you disable IMAP, all IMAP settings will be reset and the associated functionality will be disabled. Are you sure you want to continue?"
           imap_mailbox_not_selected: "You must select a Mailbox for this IMAP configuration or no mailboxes will be synced!"
           prefill:
             title: "Prefill with settings for:"
             gmail: "Gmail"
+            outlook: "Outlook.com"
+            office365: "Microsoft 365"
+          ssl_modes:
+            none: "None"
+            ssl_tls: "SSL/TLS"
+            starttls: "STARTTLS"
           credentials:
             title: "Credentials"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
-            smtp_ssl: "Use SSL for SMTP"
+            smtp_ssl_mode: "SSL Mode"
             imap_server: "IMAP Server"
             imap_port: "IMAP Port"
             imap_ssl: "Use SSL for IMAP"
@@ -1422,25 +1468,25 @@ en:
             true {
               { UNREAD, plural,
                    =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a>}
-                other {There are <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a>}
+                  one {There is <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># unread</a>}
+                other {There are <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># unread</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one { and <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> message remaining, or browse other messages in {groupLink}}
-                other { and <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> messages remaining, or browse other messages in {groupLink}}
+                  one { and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># new</a> message remaining, or browse other messages in {groupLink}}
+                other { and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># new</a> messages remaining, or browse other messages in {groupLink}}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a> message remaining, or browse other messages in {groupLink}}
-                other {There are <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a> messages remaining, or browse other messages in {groupLink}}
+                  one {There is <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># unread</a> message remaining, or browse other messages in {groupLink}}
+                other {There are <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># unread</a> messages remaining, or browse other messages in {groupLink}}
               }
               { NEW, plural,
                    =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> message remaining, or browse other messages in {groupLink}}
-                other {There are <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> messages remaining, or browse other messages in {groupLink}}
+                  one {There is <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># new</a> message remaining, or browse other messages in {groupLink}}
+                other {There are <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># new</a> messages remaining, or browse other messages in {groupLink}}
               }
             }
             other {}
@@ -1455,25 +1501,25 @@ en:
             true {
               { UNREAD, plural,
                    =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/unread'># unread</a>}
-                other {There are <a href='{basePath}/u/{username}/messages/unread'># unread</a>}
+                  one {There is <a href="{basePath}/u/{username}/messages/unread"># unread</a>}
+                other {There are <a href="{basePath}/u/{username}/messages/unread"># unread</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one { and <a href='{basePath}/u/{username}/messages/new'># new</a> message remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
-                other { and <a href='{basePath}/u/{username}/messages/new'># new</a> messages remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+                  one { and <a href="{basePath}/u/{username}/messages/new"># new</a> message remaining, or browse other <a href="{basePath}/u/{username}/messages">personal messages</a>}
+                other { and <a href="{basePath}/u/{username}/messages/new"># new</a> messages remaining, or browse other <a href="{basePath}/u/{username}/messages">personal messages</a>}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/unread'># unread</a> message remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
-                other {There are <a href='{basePath}/u/{username}/messages/unread'># unread</a> messages remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+                  one {There is <a href="{basePath}/u/{username}/messages/unread"># unread</a> message remaining, or browse other <a href="{basePath}/u/{username}/messages">personal messages</a>}
+                other {There are <a href="{basePath}/u/{username}/messages/unread"># unread</a> messages remaining, or browse other <a href="{basePath}/u/{username}/messages">personal messages</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/new'># new</a> message remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
-                other {There are <a href='{basePath}/u/{username}/messages/new'># new</a> messages remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+                  one {There is <a href="{basePath}/u/{username}/messages/new"># new</a> message remaining, or browse other <a href="{basePath}/u/{username}/messages">personal messages</a>}
+                other {There are <a href="{basePath}/u/{username}/messages/new"># new</a> messages remaining, or browse other <a href="{basePath}/u/{username}/messages">personal messages</a>}
               }
             }
             other {}
@@ -1696,6 +1742,14 @@ en:
           disconnect: "Your existing %{provider} account '%{account_description}' will be disconnected."
           account_specific: "Your %{provider} account '%{account_description}' will be used for authentication."
           generic: "Your %{provider} account will be used for authentication."
+
+      activate_account:
+        action: "Click here to activate your account"
+        already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
+        please_continue: "Your new account is confirmed; you will be redirected to the home page."
+        continue_button: "Continue to %{site_name}"
+        welcome_to: "Welcome to %{site_name}!"
+        approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
 
       name:
         title: "Name"
@@ -2099,6 +2153,7 @@ en:
       errors:
         required: "Required"
         invalid_url: "Must be a valid URL"
+        not_an_integer: "Must be a whole number"
         not_accepted: "Must be accepted"
         not_a_number: "Must be a number"
         too_high: "Must be at most %{count}"
@@ -2125,7 +2180,7 @@ en:
     logs_error_rate_notice:
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/hour}
           other {# errors/hour}
         }</a> reached site setting limit of {limit, plural,
@@ -2135,7 +2190,7 @@ en:
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/minute}
           other {# errors/minute}
         }</a> reached site setting limit of { limit, plural,
@@ -2145,7 +2200,7 @@ en:
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/hour}
           other {# errors/hour}
         }</a> exceeded site setting limit of { limit, plural,
@@ -2155,7 +2210,7 @@ en:
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/minute}
           other {# errors/minute}
         }</a> exceeded site setting limit of { limit, plural,
@@ -2204,8 +2259,8 @@ en:
         other: "There are <b>%{count}</b> replies."
       buttons:
         hide: "Hide summary"
-        generate: "Summarize with AI"
-        regenerate: "Regenerate summary"
+        generate: "Summarize"
+        regenerate: "Regenerate"
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       description_time_MF: |
@@ -2220,6 +2275,7 @@ en:
       enable: "Show top replies"
       disable: "Show All Posts"
       short_label: "Top replies"
+      show_all_label: "Show all"
       short_title: "Show this topic top replies: the most interesting posts as determined by the community"
 
     deleted_filter:
@@ -2337,6 +2393,7 @@ en:
       resend_activation_email: "Click here to send the activation email again."
       omniauth_disallow_totp: "Your account has two-factor authentication enabled. Please log in with your password."
 
+      activate_account: "Activate Account"
       resend_title: "Resend Activation Email"
       change_email: "Change Email Address"
       provide_new_email: "Provide a new address and we'll resend your confirmation email."
@@ -2468,6 +2525,7 @@ en:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} is greater than the max allowed %{max_file_size}"
+        size_too_small: "%{provided_file_size} is smaller than the min allowed %{min_file_size}"
 
     emoji_picker:
       filter_placeholder: Search for emoji
@@ -4049,7 +4107,7 @@ en:
       colors_disabled: "You can’t select colors because you have a category style of none."
 
     flagging:
-      title: "Thanks for helping to keep our community civil!"
+      title: "Thanks for keeping our community civil!"
       action: "Flag Post"
       take_action: "Take Action…"
       take_action_options:
@@ -4107,7 +4165,7 @@ en:
           other: "%{count} remaining"
 
     flagging_topic:
-      title: "Thanks for helping to keep our community civil!"
+      title: "Thanks for keeping our community civil!"
       action: "Flag Topic"
       notify_action: "Message"
 
@@ -4119,6 +4177,17 @@ en:
       clicks:
         one: "%{count} click"
         other: "%{count} clicks"
+      menu_titles:
+        replies: Most liked replies
+        views: Recent views
+      view_explainer: One view per unique visitor every 8 hours.
+      no_views: No view stats yet, check back later.
+      chart_error: Error rendering chart, please try again.
+      views: "Views"
+      predicted_views: "Predicted Views"
+      so_far: (so far)
+      read: read
+      minutes: min
     post_links:
       about: "expand more links for this post"
       title:
@@ -4582,7 +4651,7 @@ en:
         everyone_can_use: "Tags can be used by everyone"
         usable_only_by_groups: "Tags are visible to everyone, but only the following groups can use them"
         visible_only_to_groups: "Tags are visible only to the following groups"
-        cannot_save: "Cannot save tag group. Make sure that there is at least one tag present, tag group name is not empty, and a group is selected for tags permission."
+        cannot_save: "Cannot save tag group. Make sure that there is at least one tag present, tag group name is not empty and less than 100 characters, and a group is selected for tags permission."
         tags_placeholder: "Search or create tags"
         parent_tag_placeholder: "Optional"
         select_groups_placeholder: "Select groups…"
@@ -4982,6 +5051,7 @@ en:
         problems_found: "Some advice based on your current site settings"
         new_features:
           title: "What's new"
+          subtitle: "For even more detail about new features and improvements we are adding all the time, see <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Release notes</a>."
           previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Learn more..."
         last_checked: "Last checked"
@@ -5466,6 +5536,7 @@ en:
           header: "About your site"
           general_settings: "General settings"
           community_name: "Community name"
+          community_name_placeholder: "Example Community"
           community_summary: "Community summary"
           community_description: "Community description"
           banner_image: "Banner image"
@@ -5473,12 +5544,15 @@ en:
             This will be used on your About page. Recommended size: 800x300px. Accepted types: JPG, PNG, and SVG up to 10MB.
           contact_information: "Contact information"
           community_owner: "Community owner"
+          community_owner_placeholder: "Johnny Smith"
           community_owner_help: |
             Name of key contact responsible for this site. Used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
           contact_email: "Contact email"
+          contact_email_placeholder: "contact@johnny-smith.com"
           contact_email_help: |
             Email address of key contact responsible for this site. Used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
           contact_url: "Contact URL"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
             Contact URL for this site. When present, replaces contact email address on /about and visible to anonymous users on public sites.
           site_contact_name: "Site contact name"
@@ -5489,14 +5563,17 @@ en:
             A valid name of a group that gets invited to all automatically sent private messages.
           your_organization: "Your organization"
           company_name: "Company name"
+          company_name_placeholder: "Sample Company Inc."
           company_name_help: |
             Name of your company or organization.
           company_name_warning: |
             If left blank, no boilerplate Terms of Service or Privacy Notice will be provided.
           governing_law: "Governing law"
+          governing_law_placeholder: "State of New York"
           governing_law_help: |
             Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Notice. This is typically the country or state where the company operating the site is registered or conducts business.
           city_for_disputes: "City for disputes"
+          city_for_disputes_placeholder: "New York City"
           city_for_disputes_help: |
             Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service.
           optional: "(optional)"
@@ -5523,6 +5600,7 @@ en:
             name: "Name"
             description: "Description"
             applies_to: "Display this flag on"
+            invalid_applies_to: "Required"
             topic: "topics"
             post: "posts"
             chat_message: "chat messages"
@@ -5532,6 +5610,8 @@ en:
             non_editable: "You cannot edit this flag because it is a system flag or has already been used in the review system, however you can still disable it."
             delete_flag: "Delete flag"
             non_deletable: "You cannot delete this flag because it is a system flag or has already been used in the review system, however you can still disable it."
+            require_message: "Prompt users to provide additional reasons"
+            require_message_description: "When this flag is selected, a text field will be displayed for the user to provide additional detail about why they are flagging the content"
           more_options:
             title: "More options"
             move_up: "Move up"
@@ -6218,6 +6298,10 @@ en:
             delete_flag: "delete flag"
             topic_slow_mode_set: "set topic slow mode"
             topic_slow_mode_removed: "remove topic slow mode"
+            custom_emoji_create: "create custom emoji"
+            custom_emoji_destroy: "delete custom emoji"
+            delete_post_permanently: "permanently delete post"
+            delete_topic_permanently: "permanently delete topic"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -6889,7 +6973,6 @@ en:
             confirm: "Yes, update password policy"
 
       badges:
-        disable_system: This badge is a system badge and cannot be disabled and/or deleted.
         status: Status
         title: Badges
         new_badge: New Badge
@@ -6979,7 +7062,7 @@ en:
             other: "Your CSV was received and %{count} users will receive their badge shortly."
           csv_has_unmatched_users: "The following entries are in the CSV file but they couldn't be matched to existing users, and therefore won't receive the badge:"
           csv_has_unmatched_users_truncated_list:
-            one: "There was %{count} entry in the CSV file that couldn't be matched to existing users, and therefore won't receive the badge. Due to the large number of unmatched entries, only the first 100 are shown:"
+            one: "There was %{count} entry in the CSV file that couldn't be matched to existing users, and therefore won't receive the badge."
             other: "There were %{count} entries in the CSV file that couldn't be matched to existing users, and therefore won't receive the badge. Due to the large number of unmatched entries, only the first 100 are shown:"
           replace_owners: Remove the badge from previous owners
           grant_existing_holders: Grant additional badges to existing badge holders

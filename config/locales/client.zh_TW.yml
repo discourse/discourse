@@ -253,6 +253,18 @@ zh_TW:
       topic_count: "話題"
       post_count: "貼文"
       contact_info: "若有重大問題或關係到網站的緊急時間，請透過 %{contact_info} 聯絡我們"
+      activities:
+        topics:
+          other: "%{formatted_number} 話題"
+        posts:
+          other: "%{formatted_number} 篇貼文"
+        likes:
+          other: "%{formatted_number}個讚"
+        periods:
+          last_7_days: "在過去 7 天內"
+          today: "今天"
+      member_count:
+        other: "%{formatted_number} 位成員"
     bookmarked:
       title: "書籤"
       edit_bookmark: "編輯書籤"
@@ -539,7 +551,6 @@ zh_TW:
       never: "永不"
       last_custom: "上次自訂日期時間"
       custom: "自定義日期和時間"
-      custom_short: "自訂..."
       select_timeframe: "選擇有效時間範圍"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> 張貼了 <a href='%{topicUrl}'>此主題</a>"
@@ -633,10 +644,11 @@ zh_TW:
           imap_title: "IMAP"
           imap_additional_settings: "其他設定"
           imap_settings_valid: "IMAP 設定有效。"
+          ssl_modes:
+            none: "無"
           credentials:
             smtp_server: "SMTP 伺服器"
             smtp_port: "SMTP 通訊埠"
-            smtp_ssl: "在 SMTP 上使用 SSL"
             imap_server: "IMAP 伺服器"
             imap_port: "IMAP 連接埠"
             imap_ssl: "在 IMAP 上使用 SSL"
@@ -1145,6 +1157,13 @@ zh_TW:
         revoke: "撤銷"
         cancel: "取消"
         not_connected: "（無任何連結）"
+      activate_account:
+        action: "點擊此處啟用你的帳戶"
+        already_done: "抱歉，此帳號啟用連結已經失效。可能你的帳號已經啟用了。"
+        please_continue: "你的新帳號已啟用；即將轉到主頁。"
+        continue_button: "繼續連接至 %{site_name}"
+        welcome_to: "歡迎來到 %{site_name}！"
+        approval_required: "你的論壇帳號需要由板主手動審核後才可使用。當你的帳號獲得批准，你將收到電子郵件通知。"
       name:
         title: "名稱"
         instructions: "您的全名 (選填)."
@@ -1434,7 +1453,11 @@ zh_TW:
     summary:
       description:
         other: "有 <b>%{count}</b> 個回覆。"
+      buttons:
+        generate: "總結"
+        regenerate: "重新產生"
       disable: "顯示所有貼文"
+      show_all_label: "顯示全部"
     deleted_filter:
       enabled_description: "這個話題含有被刪除的回覆，這些回覆已被隱藏。"
       disabled_description: "話題內刪除的回復已被顯示。"
@@ -1505,6 +1528,7 @@ zh_TW:
       not_activated: "你還無法登入，我們之前曾將啟用帳號的電子郵件寄至 <b>%{sentTo}</b>，請從該電子郵件啟用你的帳號。"
       admin_not_allowed_from_ip_address: "你無法透過此 IP 登入成為管理員。"
       resend_activation_email: "按這裡重新寄出啟用帳號的電子郵件。"
+      activate_account: "啟用帳號"
       resend_title: "重新寄出認證信"
       change_email: "更換電子郵件"
       provide_new_email: "提供新的電子郵件，我們將把認證信重新寄給您。"
@@ -2546,7 +2570,6 @@ zh_TW:
       list_filters:
         all: "所有話題"
     flagging:
-      title: "感謝幫助社群遠離邪惡！"
       action: "檢舉貼文"
       take_action_options:
         default:
@@ -2576,7 +2599,6 @@ zh_TW:
         left:
           other: "剩餘 %{count}"
     flagging_topic:
-      title: "感謝幫助社群遠離邪惡！"
       action: "檢舉話題"
       notify_action: "訊息"
     topic_map:
@@ -2585,6 +2607,9 @@ zh_TW:
       links_title: "熱門連結"
       clicks:
         other: "%{count} 點擊"
+      views: "觀看"
+      read: 閲讀
+      minutes: 最小
     post_links:
       about: "為本帖展開更多連結"
       title:
@@ -3301,6 +3326,7 @@ zh_TW:
           spam: "垃圾內容"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(選擇性)"
           update: "更新"
           saved: "儲存完畢!"
@@ -3314,6 +3340,7 @@ zh_TW:
             save: "保存"
             name: "名字"
             description: "簡述"
+            invalid_applies_to: "必要設定"
             topic: "話題"
             post: "貼文"
             chat_message: "聊天訊息"

@@ -40,7 +40,7 @@ RSpec.describe "Separate sidebar mode", type: :system do
       expect(sidebar_component).to have_section("chat-channels")
       expect(sidebar_component).to have_no_section("Categories")
 
-      find("#site-logo").click
+      click_logo
 
       expect(sidebar_component).to have_switch_button("chat")
       expect(header_component).to have_open_chat_button
@@ -101,7 +101,7 @@ RSpec.describe "Separate sidebar mode", type: :system do
         expect(sidebar_component).to have_section("Categories")
         expect(sidebar_component).to have_section("chat-channels")
 
-        find("#site-logo").click
+        click_logo
 
         expect(sidebar_component).to have_no_switch_button
         expect(header_component).to have_open_chat_button
@@ -177,7 +177,7 @@ RSpec.describe "Separate sidebar mode", type: :system do
         expect(sidebar_component).to have_section("chat-channels")
         expect(sidebar_component).to have_no_section("Categories")
 
-        find("#site-logo").click
+        click_logo
 
         expect(sidebar_component).to have_switch_button("chat")
         expect(header_component).to have_open_chat_button
@@ -292,7 +292,7 @@ RSpec.describe "Separate sidebar mode", type: :system do
         expect(sidebar_component).to have_section("chat-channels")
         expect(sidebar_component).to have_no_section("Categories")
 
-        find("#site-logo").click
+        click_logo
 
         expect(sidebar_component).to have_switch_button("chat")
         expect(header_component).to have_open_chat_button

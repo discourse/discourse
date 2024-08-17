@@ -37,10 +37,18 @@ module PostGuardian
     end
 
     taken = opts[:taken_actions].try(:keys).to_a
+    post_action_type_view = opts[:post_action_type_view] || PostActionTypeView.new
     is_flag =
-      PostActionType.notify_flag_types[action_key] || PostActionType.custom_types[action_key]
-    already_taken_this_action = taken.any? && taken.include?(PostActionType.types[action_key])
-    already_did_flagging = taken.any? && (taken & PostActionType.notify_flag_types.values).any?
+      if (opts[:notify_flag_types] && opts[:additional_message_types])
+        opts[:notify_flag_types][action_key] || opts[:additional_message_types][action_key]
+      else
+        post_action_type_view.notify_flag_types[action_key] ||
+          post_action_type_view.additional_message_types[action_key]
+      end
+    already_taken_this_action =
+      taken.any? && taken.include?(post_action_type_view.types[action_key])
+    already_did_flagging =
+      taken.any? && (taken & post_action_type_view.notify_flag_types.values).any?
 
     result =
       if authenticated? && post
@@ -56,7 +64,9 @@ module PostGuardian
         # post made by staff, but we don't allow staff flags
         return false if is_flag && (!SiteSetting.allow_flagging_staff?) && post&.user&.staff?
 
-        return false if is_flag && PostActionType.disabled_flag_types.keys.include?(action_key)
+        if is_flag && post_action_type_view.disabled_flag_types.keys.include?(action_key)
+          return false
+        end
 
         if action_key == :notify_user &&
              !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
@@ -106,12 +116,13 @@ module PostGuardian
     return true if is_admin?
     return false unless topic
 
-    type_symbol = PostActionType.types[post_action_type_id]
+    post_action_type_view = PostActionTypeView.new
+    type_symbol = post_action_type_view.types[post_action_type_id]
 
     return false if type_symbol == :bookmark
     return false if type_symbol == :notify_user && !is_moderator?
 
-    return can_see_flags?(topic) if PostActionType.is_flag?(type_symbol)
+    return can_see_flags?(topic) if post_action_type_view.is_flag?(type_symbol)
 
     true
   end

@@ -43,7 +43,8 @@
 .shortcut-category {
   border: 1px solid var(--primary-low);
 
-  h4 {
+  h2 {
+    font-size: var(--font-0);
     background-color: var(--primary-very-low);
     padding: 0.5rem 1rem;
   }

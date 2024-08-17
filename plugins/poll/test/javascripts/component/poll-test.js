@@ -46,6 +46,83 @@ module("Poll | Component | poll", function (hooks) {
     });
   });
 
+  test("shows vote", async function (assert) {
+    this.setProperties({
+      attributes: EmberObject.create({
+        post: EmberObject.create({
+          id: 42,
+          topic: {
+            archived: false,
+          },
+          user_id: 29,
+        }),
+        poll: EmberObject.create({
+          name: "poll",
+          type: "regular",
+          status: "closed",
+          results: "always",
+          options: [
+            { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
+            { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+          ],
+          voters: 1,
+          chart_type: "bar",
+        }),
+        vote: [],
+        groupableUserFields: [],
+      }),
+      preloadedVoters: [],
+    });
+
+    await render(
+      hbs`<Poll @attrs={{this.attributes}} @preloadedVoters={{this.preloadedVoters}} />`
+    );
+
+    assert.deepEqual(
+      Array.from(queryAll(".results li .option p")).map(
+        (span) => span.innerText
+      ),
+      ["100% yes", "0% no"]
+    );
+  });
+
+  test("does not show results after voting when results are to be shown only on closed", async function (assert) {
+    this.setProperties({
+      attributes: EmberObject.create({
+        post: EmberObject.create({
+          id: 42,
+          topic: {
+            archived: false,
+          },
+          user_id: 29,
+        }),
+        hasSavedVote: true,
+        poll: EmberObject.create({
+          name: "poll",
+          type: "regular",
+          status: "open",
+          results: "on_close",
+          options: [
+            { id: "1f972d1df351de3ce35a787c89faad29", html: "yes" },
+            { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no" },
+          ],
+          voters: 1,
+          chart_type: "bar",
+        }),
+        vote: ["1f972d1df351de3ce35a787c89faad29"],
+        groupableUserFields: [],
+      }),
+      preloadedVoters: [],
+    });
+
+    await render(
+      hbs`<Poll @attrs={{this.attributes}} @preloadedVoters={{this.preloadedVoters}} />`
+    );
+
+    assert.ok(exists("ul.options"), "options are shown");
+    assert.ok(!exists("ul.results"), "results are not shown");
+  });
+
   test("can vote", async function (assert) {
     this.setProperties({
       attributes: EmberObject.create({
@@ -72,14 +149,10 @@ module("Poll | Component | poll", function (hooks) {
         groupableUserFields: [],
       }),
       preloadedVoters: [],
-      options: [
-        { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
-        { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-      ],
     });
 
     await render(
-      hbs`<Poll @attrs={{this.attributes}} @preloadedVoters={{this.preloadedVoters}} @options={{this.options}} />`
+      hbs`<Poll @attrs={{this.attributes}} @preloadedVoters={{this.preloadedVoters}} />`
     );
 
     requests = 0;
@@ -89,10 +162,6 @@ module("Poll | Component | poll", function (hooks) {
     );
     assert.strictEqual(requests, 1);
     assert.strictEqual(count(".chosen"), 1);
-    assert.deepEqual(
-      Array.from(queryAll(".chosen span")).map((span) => span.innerText),
-      ["100%", "yes"]
-    );
 
     await click(".toggle-results");
     assert.strictEqual(
@@ -128,14 +197,10 @@ module("Poll | Component | poll", function (hooks) {
         groupableUserFields: [],
       }),
       preloadedVoters: [],
-      options: [
-        { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
-        { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-      ],
     });
 
     await render(
-      hbs`<Poll @attrs={{this.attributes}} @preloadedVoters={{this.preloadedVoters}} @options={{this.options}} />`
+      hbs`<Poll @attrs={{this.attributes}} @preloadedVoters={{this.preloadedVoters}} />`
     );
 
     requests = 0;
@@ -178,13 +243,9 @@ module("Poll | Component | poll", function (hooks) {
         groupableUserFields: [],
       }),
       preloadedVoters: [],
-      options: [
-        { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
-        { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-      ],
     });
     await render(
-      hbs`<Poll @attrs={{this.attributes}} @preloadedVoters={{this.preloadedVoters}} @options={{this.options}} />`
+      hbs`<Poll @attrs={{this.attributes}} @preloadedVoters={{this.preloadedVoters}} />`
     );
 
     assert.ok(exists(".poll-buttons .cast-votes:disabled"));

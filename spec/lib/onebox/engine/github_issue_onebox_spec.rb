@@ -2,12 +2,15 @@
 
 RSpec.describe Onebox::Engine::GithubIssueOnebox do
   let(:issue_uri) { "https://api.github.com/repos/discourse/discourse/issues/1" }
+  let(:repo_uri) { "https://api.github.com/repos/discourse/discourse" }
+  let(:repo_response) { onebox_response("githubrepo") }
 
   before do
     stub_request(:get, issue_uri).to_return(
       status: 200,
       body: onebox_response("github_issue_onebox"),
     )
+    stub_request(:get, repo_uri).to_return(status: 200, body: repo_response)
   end
 
   include_context "with engines" do
@@ -21,6 +24,22 @@ RSpec.describe Onebox::Engine::GithubIssueOnebox do
         'Test <img src="/images/emoji/twitter/+1.png?v=12" title="+1" class="emoji" alt="+1" loading="lazy" width="20" height="20">'
 
       expect(html).to include(sanitized_label)
+    end
+
+    it "sets the data-github-private-repo attr to false" do
+      expect(html).to include("data-github-private-repo=\"false\"")
+    end
+
+    context "when the PR is in a private repo" do
+      let(:repo_response) do
+        resp = MultiJson.load(onebox_response("githubrepo"))
+        resp["private"] = true
+        MultiJson.dump(resp)
+      end
+
+      it "sets the data-github-private-repo attr to true" do
+        expect(html).to include("data-github-private-repo=\"true\"")
+      end
     end
 
     context "when github_onebox_access_token is configured" do

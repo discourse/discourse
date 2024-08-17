@@ -712,11 +712,7 @@ ko:
     revoke_failed: "%{provider_name}의 계정을 해지하지 못했습니다."
     connected: "(연결됨)"
   activation:
-    action: "여기를 눌러 계정을 활성화하세요"
     already_done: "이 계정 확인 링크는 더 이상 유효하지 않습니다. 계정이 이미 활성화되지는 않았나요?"
-    please_continue: "새 계정이 확인되었습니다. 홈페이지로 리디렉션됩니다."
-    continue_button: "%{site_name}에서 계속하기"
-    welcome_to: "%{site_name}에 오신것을 환영합니다."
     approval_required: "이 포럼에 액세스하려면 운영자가 직접 나의 신규 계정을 승인해야 합니다. 계정이 승인되면 자동으로 이메일이 발송됩니다."
     missing_session: "계정이 생성되었는지 탐지할 수 없습니다. 쿠키를 활성화했는지 확인하세요."
     activated: "이 계정은 이미 활성화되었습니다."
@@ -1397,7 +1393,6 @@ ko:
     max_reply_history: "사용자에게 댓글 달기를 펼칠 때 표시되는 최대 댓글 수"
     topics_per_period_in_top_summary: "디폴트 주요 주제 요약에 표시할 주요 주제 수입니다."
     topics_per_period_in_top_page: "주요 주제에서 '더 보기'를 펼칠 때 표시할 주요 주제 수입니다."
-    redirect_users_to_top_page: "신규 사용자와 오랜만에 방문한 사용자를 주요 페이지로 자동 리디렉션합니다."
     prioritize_username_in_ux: "아이디를 사용자 페이지, 사용자 카드 및 게시물에 가장 먼저 표시(비활성화 시 이름이 가장 먼저 표시됨)"
     enable_rich_text_paste: "작성기에 텍스트를 붙여 넣을 때 HTML에서 Markdown으로의 자동 변환을 활성화합니다. (실험단계)"
     send_old_credential_reminder_days: "며칠 후 이전 크리덴셜에 대해 알림"
@@ -1758,7 +1753,6 @@ ko:
     allowed_href_schemes: "http 및 https 외에도 링크에 허용되는 스키마입니다."
     embed_post_limit: "임베드할 최대 게시물 수입니다."
     embed_username_required: "주제 생성을 위해 아이디가 필요합니다."
-    delete_merged_stub_topics_after_days: "완전히 병합된 스텁 주제를 자동으로 삭제하기 전에 대기할 일 수입니다. 스텁 주제를 삭제하지 않으려면 0으로 설정하세요."
     prevent_anons_from_downloading_files: "익명 사용자가 첨부 파일을 다운로드하지 못하도록 합니다."
     slug_generation_method: "슬러그 생성 방법을 선택합니다. 'encoded'는 퍼센트 인코딩 스트링을 생성합니다. 'none'은 슬러그를 완전히 비활성화합니다."
     enable_emoji_shortcuts: ":) : p :( 같은 일반적인 스마일 텍스트는 이모티콘으로 변환됩니다."
@@ -3648,8 +3642,12 @@ ko:
       privacy:
         fields:
           login_required:
-            placeholder: "비공개"
-            extra_description: "로그인 한 사용자 만이 커뮤니티에 액세스 할 수 있습니다"
+            label: "시계"
+            choices:
+              public:
+                label: "공개"
+              private:
+                label: "비공개"
           chat_enabled:
             placeholder: "채팅 활성화"
       styling:

@@ -257,6 +257,7 @@ uk:
     broken_decorator_alert: "Повідомлення можуть показуватись неправильно, оскільки один з декораторів вмісту дописів на вашому сайті викликав помилку."
     broken_page_change_alert: "Обробник onPageChange викликав помилку. Зверніться до інструментів розробника браузера для отримання додаткової інформації."
     broken_plugin_alert: "Викликано плагіном '%{name}'"
+    broken_transformer_alert: "Сталася помилка. Ваш сайт може працювати неправильно."
     critical_deprecation:
       notice: "<b>[Повідомлення адміністратора]</b> Одну з ваших тем або плагінів потрібно оновити для сумісності з майбутніми основними змінами Discourse."
       id: "(id:<em>%{id}</em>)"
@@ -377,6 +378,62 @@ uk:
       active_user_count: "Активні користувачі"
       contact: "Зв'язатися з нами"
       contact_info: "У випадку серйозних проблем з цим сайтом, будь ласка, звʼяжіться з нами через %{contact_info}."
+      site_activity: "Активність сайту"
+      view_more: "Переглянути більше"
+      view_less: "Показати менше"
+      activities:
+        topics:
+          one: "%{formatted_number} тема"
+          few: "%{formatted_number} тем"
+          many: "%{formatted_number} теми"
+          other: "%{formatted_number} теми"
+        posts:
+          one: "%{formatted_number} повідомлення"
+          few: "%{formatted_number} дописів"
+          many: "%{formatted_number} дописи"
+          other: "%{formatted_number} дописи"
+        sign_ups:
+          one: "%{formatted_number} реєстрація"
+          few: "%{formatted_number} реєстрації"
+          many: "%{formatted_number} реєстрацій"
+          other: "%{formatted_number} реєстрацій"
+        likes:
+          one: "%{formatted_number} вподобання"
+          few: "%{formatted_number} вподобань"
+          many: "%{formatted_number} вподобання"
+          other: "%{formatted_number} вподобання"
+        periods:
+          last_7_days: "протягом останніх 7 днів"
+          today: "сьогодні"
+          all_time: "за весь час"
+      member_count:
+        one: "%{formatted_number} Учасник"
+        few: "%{formatted_number} Учасники"
+        many: "%{formatted_number} Учасників"
+        other: "%{formatted_number} Учасників"
+      admin_count:
+        one: "%{formatted_number} Адміністратор"
+        few: "%{formatted_number} Адміністратори"
+        many: "%{formatted_number} Адміністраторів"
+        other: "%{formatted_number} Адміністраторів"
+      moderator_count:
+        one: "%{formatted_number} Модератор"
+        few: "%{formatted_number} Модератори"
+        many: "%{formatted_number} Модераторів"
+        other: "%{formatted_number} Модераторів"
+      report_inappropriate_content: "Якщо ви натрапите на будь-який неприйнятний вміст, не соромтеся почати розмову з нашими модераторами та адміністраторами. Не забудьте увійти, перш ніж звертатися."
+      site_age:
+        less_than_one_month: "Створено < 1 місяць тому"
+        month:
+          one: "Створено %{count} місяць тому"
+          few: "Створено %{count} місяці тому"
+          many: "Створено %{count} місяців тому"
+          other: "Створено %{count} місяців тому"
+        year:
+          one: "Створено %{count} рік тому"
+          few: "Створено %{count} роки тому"
+          many: "Створено %{count} років тому"
+          other: "Створено %{count} років тому"
     bookmarked:
       title: "Закладки"
       edit_bookmark: "Редагувати закладку"
@@ -798,7 +855,7 @@ uk:
       never: "Ніколи"
       last_custom: "Використовувати раніше встановлені дату та час"
       custom: "Вибрати дату та час"
-      custom_short: "Власний…"
+      more_options: "Більше опцій…"
       select_timeframe: "Виберіть часовий проміжок"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> створив(ла) <a href='%{topicUrl}'>тему</a>"
@@ -913,11 +970,17 @@ uk:
           prefill:
             title: "Заповніть початкові налаштування для:"
             gmail: "Gmail"
+            outlook: "Outlook.com"
+            office365: "Microsoft 365"
+          ssl_modes:
+            none: "Немає"
+            ssl_tls: "SSL/TLS"
+            starttls: "STARTTLS"
           credentials:
             title: "Дані доступу"
             smtp_server: "SMTP-сервер"
             smtp_port: "Порт SMTP"
-            smtp_ssl: "Використовувати SSL для SMTP"
+            smtp_ssl_mode: "Режим SSL"
             imap_server: "Сервер IMAP"
             imap_port: "Порт IMAP"
             imap_ssl: "Використовувати SSL для IMAP"
@@ -1477,34 +1540,34 @@ uk:
           { HAS_UNREAD_AND_NEW, select,
             true {
               { UNREAD, plural,
-                   =0 {}
-                  one {Є <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитане</a>}
-                   few {Є <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитані</a>}
-                   many {Є <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитані</a>}
-                other {Є <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитані</a>}
+                =0 {}
+                one {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитано</a>}
+                few {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитано</a>}
+                many {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитано</a>}
+                other {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитано</a>}
               }
               { NEW, plural,
-                   =0 {}
-                  one { і <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># залишилося нове</a> повідомлення або перегляньте інші повідомлення в {groupLink}}
-                   few { і <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень залишилися, або перегляньте інші повідомлення в {groupLink}}
-                   many { і <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень залишилися, або перегляньте інші повідомлення в {groupLink}}
-                other { і <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень залишилося, або перегляньте інші повідомлення в {groupLink}}
+                =0 {}
+                one { та <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># нове</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
+                few { та <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># нових</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
+                many { та <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># нових</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
+                other { та <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># нових</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
               }
             }
             false {
               { UNREAD, plural,
-                   =0 {}
-                  one {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитане</a> повідомлення або перегляньте інші повідомлення в {groupLink}}
-                   few {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитаних</a> повідомлень або перегляньте інші повідомлення в {groupLink}}
-                   many {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитаних</a> повідомлень або перегляньте інші повідомлення в {groupLink}}
-                other {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитаних</a> повідомлень або перегляньте інші повідомлення в {groupLink}}
+                =0 {}
+                one {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитано</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
+                few {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитано</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
+                many {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитано</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
+                other {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитано</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
               }
               { NEW, plural,
-                   =0 {}
-                  one {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нове</a> повідомлення або перегляньте інші повідомлення в {groupLink}}
-                   few {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлення або перегляньте інші повідомлення в {groupLink}}
-                   many {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень або перегляньте інші повідомлення в {groupLink}}
-                other {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень або перегляньте інші повідомлення в {groupLink}}
+                =0 {}
+                one {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># нове</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
+                few {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># нових</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
+                many {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># нових</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
+                other {Є <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># нових</a> повідомлення, або перегляньте інші повідомлення в {groupLink}}
               }
             }
             other {}
@@ -1513,34 +1576,34 @@ uk:
           { HAS_UNREAD_AND_NEW, select,
             true {
               { UNREAD, plural,
-                   =0 {}
-                  one {Є <a href='{basePath}/u/{username}/messages/unread'># непрочитане</a>}
-                   few {Є <a href='{basePath}/u/{username}/messages/unread'># непрочитані</a>}
-                   many {Є <a href='{basePath}/u/{username}/messages/unread'># непрочитані</a>}
-                other {Є <a href='{basePath}/u/{username}/messages/unread'># непрочитані</a>}
+                =0 {}
+                one {Є <a href="{basePath}/u/{username}/messages/unread"># непрочитано</a>}
+                few {Є <a href="{basePath}/u/{username}/messages/unread"># непрочитано</a>}
+                many {Є <a href="{basePath}/u/{username}/messages/unread"># непрочитано</a>}
+                other {Є <a href="{basePath}/u/{username}/messages/unread"># непрочитано</a>}
               }
               { NEW, plural,
-                   =0 {}
-                  one { і <a href='{basePath}/u/{username}/messages/new'># нове</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
-                   few { і <a href='{basePath}/u/{username}/messages/new'># нові</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
-                   many { і <a href='{basePath}/u/{username}/messages/new'># нові</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
-                other { і <a href='{basePath}/u/{username}/messages/new'># нові</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                =0 {}
+                one { та <a href="{basePath}/u/{username}/messages/new"># нове</a> повідомлення, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
+                few { та <a href="{basePath}/u/{username}/messages/new"># нових</a> повідомлень, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
+                many { та <a href="{basePath}/u/{username}/messages/new"># нових</a> повідомлень, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
+                other { та <a href="{basePath}/u/{username}/messages/new"># нових</a> повідомлень, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
               }
             }
             false {
               { UNREAD, plural,
-                   =0 {}
-                  one {У вас залишилося <a href='{basePath}/u/{username}/messages/unread'># непрочитане</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
-                   few {У вас залишилося <a href='{basePath}/u/{username}/messages/unread'># непрочитаних</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
-                   many {У вас залишилося <a href='{basePath}/u/{username}/messages/unread'># непрочитаних</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
-                other {У вас залишилося <a href='{basePath}/u/{username}/messages/unread'># непрочитаних</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                =0 {}
+                one {Є <a href="{basePath}/u/{username}/messages/unread"># непрочитано</a> повідомлення, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
+                few {Є <a href="{basePath}/u/{username}/messages/unread"># непрочитано</a> повідомлень, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
+                many {Є <a href="{basePath}/u/{username}/messages/unread"># непрочитано</a> повідомлень, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
+                other {Є <a href="{basePath}/u/{username}/messages/unread"># непрочитано</a> повідомлень, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
               }
               { NEW, plural,
-                   =0 {}
-                  one {У вас залишилося <a href='{basePath}/u/{username}/messages/new'># нове</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
-                   few {Залишилося <a href='{basePath}/u/{username}/messages/new'># нових</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
-                   many {Залишилося <a href='{basePath}/u/{username}/messages/new'># нових</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
-                other {Залишилося <a href='{basePath}/u/{username}/messages/new'># нових</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                =0 {}
+                one {Є <a href="{basePath}/u/{username}/messages/new"># нове</a> повідомлення, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
+                few {Є <a href="{basePath}/u/{username}/messages/new"># нових</a> повідомлень, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
+                many {Є <a href="{basePath}/u/{username}/messages/new"># нових</a> повідомлень, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
+                other {Є <a href="{basePath}/u/{username}/messages/new"># нових</a> повідомлень, або перегляньте інші повідомлення в <a href="{basePath}/u/{username}/messages">приватних повідомленнях</a>}
               }
             }
             other {}
@@ -1755,6 +1818,13 @@ uk:
           disconnect: "Ваш наявний обліковий запис %{provider} «%{account_description}» буде відключено."
           account_specific: "Ваш обліковий запис %{provider} '%{account_description}' буде використовуватися для автентифікації."
           generic: "Ваш обліковий запис %{provider} буде використано для автентифікації."
+      activate_account:
+        action: "Натисніть тут, щоб активувати свій обліковий запис"
+        already_done: "Вибачте, посилання на активацію облікового запису застаріло. Можливо, ваш обліковий запис вже активовано?"
+        please_continue: "Ваш новий обліковий запис підтверджено; ви будете перенаправлені на головну сторінку."
+        continue_button: "Продовжити у %{site_name}"
+        welcome_to: "Ласкаво просимо до сайту %{site_name}!"
+        approval_required: "Модератор повинен вручну затвердити ваш новий обліковий запис, перш ніж ви зможете отримати доступ до цього форуму. Ви отримаєте електронний лист, коли ваш обліковий запис буде ухвалено!"
       name:
         title: "Імʼя"
         instructions: "Ваше повне імʼя (опціонально)."
@@ -2135,9 +2205,21 @@ uk:
     form_kit:
       reset: Скинути
       optional: опціонально
+      errors_summary_title: "Ця форма містить помилки:"
+      dirty_form: "Ви не надсилали свої зміни! Ви впевнені, що хочете піти?"
       errors:
         required: "Обов'язкові"
         invalid_url: "Має бути дійсною URL-адресою"
+        not_an_integer: "Має бути цілим числом"
+        not_accepted: "Повинна бути прийнята"
+        not_a_number: "Має бути числом"
+        too_high: "Має бути не більше %{count}"
+        too_low: "Має бути не менше %{count}"
+        too_long:
+          one: "Має бути не більше ніж %{count} символ"
+          few: "Має бути не більше %{count} символів"
+          many: "Має бути не більше %{count} символів"
+          other: "Має бути не більше %{count} символів"
         too_short:
           one: "Має бути не менше ніж %{count} символ"
           few: "Має бути не менше %{count} символи"
@@ -2156,13 +2238,53 @@ uk:
       enabled: "Сайт працює в режимі \"тільки для команди обслуговування\". Зараз ви можете продовжувати переглядати сайт, але інші дії доступні лише членам команди обслуговування."
     logs_error_rate_notice:
       reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/година} other {# помилок/година}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/година} other {# помилок/година}}.
+        <b>{relativeAge}</b> — <a href="{url}" target="_blank">{ rate, plural,
+          one {# помилка/годину}
+          few {# помилки/годину}
+          many {# помилок/годину}
+          other {# помилок/годину}
+        }</a> досягнуто обмеження налаштування сайту {limit, plural,
+          one {# помилка/годину}
+          few {# помилки/годину}
+          many {# помилок/годину}
+          other {# помилок/годину}
+        }.
       reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/хвилина} other {# помилок/хвилина}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/хвилина} other {# помилок/хвилина}}.
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+          one {# помилка/хвилину}
+          few {# помилки/хвилину}
+          many {# помилок/хвилину}
+          other {# помилок/хвилину}
+        }</a> досягнуто обмеження налаштування сайту { limit, plural,
+          one {# помилка/хвилину}
+          few {# помилки/хвилину}
+          many {# помилок/хвилину}
+          other {# помилок/хвилину}
+        }.
       exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/година} few {# помилки/година} many {# помилок/година} other {# помилок/година}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/година} few {# помилки/година} many {# помилок/година} other {# помилок/година}}.
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+          one {# помилка/годину}
+          few {# помилки/годину}
+          many {# помилок/годину}
+          other {# помилок/годину}
+        }</a> досягнуто обмеження налаштування сайту { limit, plural,
+          one {# помилка/годину}
+          few {# помилки/годину}
+          many {# помилок/годину}
+          other {# помилок/годину}
+        }.
       exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/хвилина} few {# помилки/хвилина} many {# помилок/хвилина} other {# помилок/хвилина}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/хвилина} few {# помилки/хвилина} many {# помилок/хвилина} other {# помилок/хвилина}}.
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+          one {# помилка/хвилину}
+          few {# помилки/хвилину}
+          many {# помилок/хвилину}
+          other {# помилок/хвилину}
+        }</a> досягнуто обмеження налаштування сайту { limit, plural,
+          one {# помилка/хвилину}
+          few {# помилки/хвилину}
+          many {# помилок/хвилину}
+          other {# помилок/хвилину}
+        }.
     learn_more: "Дізнатися більше…"
     mute: Приглушити
     unmute: Розблокувати
@@ -2206,13 +2328,14 @@ uk:
         other: "Тут <b>%{count}</b> відповідей."
       buttons:
         hide: "Приховати підсумок"
-        generate: "Підведіть підсумки за допомогою ШІ"
-        regenerate: "Регенерувати підсумок"
+        generate: "Підсумок"
+        regenerate: "Перегенерувати"
       description_time_MF: |
         Тут є {replyCount, plural, one {<b>#</b> відповідь} few {<b>#</b> відповіді} many {<b>#</b> відповідей} other {<b>#</b> відповідей}} з розрахунковим часом читання <b>{readingTime, plural, one {# хвилина} few {# хвилини} many {# хвилин} other {# хвилин}}</b>.
       enable: "Показати найкращі відповіді"
       disable: "Показати всі дописи"
       short_label: "Найпопулярніші відповіді"
+      show_all_label: "Показати всі"
       short_title: "Показати в цій темі найпопулярніші відповіді: найцікавіші публікації, визначені спільнотою"
     deleted_filter:
       enabled_description: "Ця тема містить видалені дописи, які були сховані."
@@ -2321,6 +2444,7 @@ uk:
       admin_not_allowed_from_ip_address: "З цієї IP адреси вхід адміністраторів заборонений."
       resend_activation_email: "Натисніть тут, щоб знову надіслати електронний лист для активації."
       omniauth_disallow_totp: "У вашому обліковому записі ввімкнено двофакторну автентифікацію. Будь ласка, увійдіть під своїм паролем."
+      activate_account: "Активувати обліковий запис"
       resend_title: "Повторно надіслати електронний лист для активації"
       change_email: "Змінити адресу електронної пошти"
       provide_new_email: "Вкажіть нову адресу, і ми повторно надішлемо вам електронний лист з підтвердженням."
@@ -4111,7 +4235,7 @@ uk:
         none: "немає підрозділів"
       colors_disabled: "Ви не можете вибрати кольори, оскільки у вас немає стилю розділу."
     flagging:
-      title: "Дякуємо за допомогу у підтримці нашої спільноти!"
+      title: "Дякуємо за підтримку нашої спільноти!"
       action: "Поскаржитись на допис"
       take_action: "Вжити заходів…"
       take_action_options:
@@ -4165,7 +4289,7 @@ uk:
           many: "Залишилося не більше %{count} символів"
           other: "Залишилося не більше %{count} символів"
     flagging_topic:
-      title: "Дякуємо за допомогу у підтримці нашої спільноти!"
+      title: "Дякуємо за підтримку нашої спільноти!"
       action: "Поскаржитись на тему"
       notify_action: "Повідомлення"
     topic_map:
@@ -4178,6 +4302,17 @@ uk:
         few: "%{count} кліка"
         many: "%{count} кліків"
         other: "%{count} кліків"
+      menu_titles:
+        replies: Найбільш вподобані відповіді
+        views: Останні перегляди
+      view_explainer: Один перегляд на одного унікального відвідувача кожні 8 годин.
+      no_views: Статистики переглядів ще немає, перевірте пізніше.
+      chart_error: Помилка відображення діаграми, будь ласка, спробуйте ще раз.
+      views: "Перегляди"
+      predicted_views: "Прогнозовані перегляди"
+      so_far: (поки що)
+      read: читання
+      minutes: мін
     post_links:
       about: "розгорнути додаткові посилання для цього допису"
       title:
@@ -4673,7 +4808,7 @@ uk:
         everyone_can_use: "Теґи можуть використовуватися всіма"
         usable_only_by_groups: "Теґи видимі для всіх, але використовувати їх можуть лише такі групи"
         visible_only_to_groups: "Теґи видимі лише для наступних груп"
-        cannot_save: "Неможливо зберегти групу теґів. Переконайтеся, що присутній принаймні один теґ, назва групи теґів не порожня, а групу вибрано для встановлення дозволів теґам."
+        cannot_save: "Не вдається зберегти групу тегів. Переконайтеся, що присутній принаймні один тег, назва групи тегів не порожня і менше 100 символів, а група вибрана з дозволом на теги."
         tags_placeholder: "Знайти або створити теґи"
         parent_tag_placeholder: "Опціонально"
         select_groups_placeholder: "Виберіть групи…"
@@ -5070,6 +5205,7 @@ uk:
         problems_found: "Кілька порад по вашим поточним налаштуванням сайту"
         new_features:
           title: "Що нового"
+          subtitle: "Щоб дізнатися більше про нові функції та вдосконалення, які ми постійно додаємо, див. <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Примітки до випуску</a>."
           previous_announcements: "Ви можете побачити анонси про нові функції на <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Дізнатися більше…"
         last_checked: "Остання перевірка"
@@ -5473,6 +5609,11 @@ uk:
           request: "Запит"
           response: "відповідь"
           redeliver_confirm: "Ви впевнені, що хочете повторно надіслати ті ж самі дані?"
+          redeliver_failed_confirm:
+            one: "Ви впевнені, що хочете повторно надіслати %{count} подію вебхуку?"
+            few: "Ви впевнені, що хочете повторно надіслати%{count} події вебхуку?"
+            many: "Ви впевнені, що хочете повторно надіслати %{count} події вебхуку?"
+            other: "Ви впевнені, що хочете повторно надіслати %{count} події вебхуку?"
           no_events_to_redeliver: "Немає подій для повторної доставки."
           headers: "Заголовки"
           payload: "Корисне навантаження"
@@ -5553,6 +5694,7 @@ uk:
           header: "Про ваш сайт"
           general_settings: "Загальні налаштування"
           community_name: "Назва спільноти"
+          community_name_placeholder: "Приклад спільноти"
           community_summary: "Підсумок спільноти"
           community_description: "Опис спільноти"
           banner_image: "Зображення банера"
@@ -5560,12 +5702,15 @@ uk:
             Він буде використаний на вашій сторінці "Про нас". Рекомендований розмір: 800x300px. Прийнятні типи: JPG, PNG та SVG розміром до 10 МБ.
           contact_information: "Контактна інформація"
           community_owner: "Власник спільноти"
+          community_owner_placeholder: "Джонні Сміт"
           community_owner_help: |
             Ім'я ключового контакту, відповідального за цей сайт. Використовується для критичних сповіщень, а також відображається на /about. Видно анонімним користувачам на загальнодоступних сайтах.
           contact_email: "Контактний email"
+          contact_email_placeholder: "contact@johnny-smith.com"
           contact_email_help: |
             Адреса електронної пошти ключового контакту, відповідального за цей сайт. Використовується для повідомлень про критичні сигнали, а також відображається на /about. Видно анонімним користувачам на публічних сайтах.
           contact_url: "Контактна URL-адреса"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
             Контактна URL-адреса для цього сайту. Якщо він присутній, замінює контактну адресу електронної пошти на /about і видимий анонімним користувачам на загальнодоступних сайтах.
           site_contact_name: "Ім’я контактної особи на сайті"
@@ -5576,14 +5721,17 @@ uk:
             Правильна назва групи для запрошення всіх автоматичним повідомленням.
           your_organization: "Ваша організація"
           company_name: "Назва компанії"
+          company_name_placeholder: "Зразок компанії Inc."
           company_name_help: |
             Назва вашої компанії або організації.
           company_name_warning: |
             Якщо залишити порожнім, жодні Умови надання послуг чи Повідомлення про конфіденційність не надаватимуться.
           governing_law: "Регулювальне право"
+          governing_law_placeholder: "Штат Нью-Йорк"
           governing_law_help: |
             Укажіть юрисдикцію, яка регулює юридичні аспекти сайту, включаючи Умови обслуговування та Повідомлення про конфіденційність. Зазвичай це країна або штат, де зареєстрована або веде бізнес компанія, що керує сайтом.
           city_for_disputes: "Місто для судових спорів"
+          city_for_disputes_placeholder: "Нью-Йорк"
           city_for_disputes_help: |
             Вкажіть місто, яке буде використовуватися як юрисдикція для вирішення будь-яких суперечок, пов’язаних з використанням цього форуму. Ця інформація зазвичай міститься в юридичних документах, таких як Умови обслуговування форуму.
           optional: "(опціонально)"
@@ -5610,6 +5758,7 @@ uk:
             name: "Імʼя"
             description: "Опис"
             applies_to: "Відобразити цей прапор на"
+            invalid_applies_to: "Обов'язкові"
             topic: "теми"
             post: "дописи"
             chat_message: "повідомлення чату"
@@ -5619,6 +5768,8 @@ uk:
             non_editable: "Ви не можете редагувати цей прапор, оскільки він є системним прапором або вже використовувався в системі перегляду, однак ви все одно можете вимкнути його."
             delete_flag: "Видалити прапор"
             non_deletable: "Ви не можете видалити цей прапорець, оскільки він є системним або вже використовувався в системі перегляду, однак ви все одно можете вимкнути його."
+            require_message: "Запропонувати користувачам вказати додаткові причини"
+            require_message_description: "Коли вибрано цей прапор, користувачеві буде показано текстове поле для надання додаткової інформації про те, чому він позначає вміст"
           more_options:
             title: "Більше опцій"
             move_up: "Посунути вгору"
@@ -6302,6 +6453,12 @@ uk:
             create_flag: "створити прапор"
             update_flag: "оновити прапор"
             delete_flag: "видалити прапор"
+            topic_slow_mode_set: "встановити повільний режим теми"
+            topic_slow_mode_removed: "видалити повільний режим теми"
+            custom_emoji_create: "створити власні емодзі"
+            custom_emoji_destroy: "видалити власні емодзі"
+            delete_post_permanently: "остаточно видалити повідомлення"
+            delete_topic_permanently: "остаточно видалити тему"
         screened_emails:
           title: "Screened Emails"
           description: "Коли хтось намагатиметься створити новий обліковий запис, наступні електронні скриньки буде перевірено, і реєстрацію заблоковано, або вжито якихось інших дій."
@@ -6961,6 +7118,8 @@ uk:
         badge: Нагорода
         display_name: Ім'я, що відображається
         description: Опис
+        long_description: Докладний опис
+        badge_type: Тип значка
         badge_grouping: Група
         badge_groupings:
           modal_title: Типи Нагороди
@@ -6989,6 +7148,7 @@ uk:
         icon: Іконка
         image: Зображення
         graphic: Іконка бейджа
+        icon_or_image: Значок вимагає піктограми або зображення
         icon_help: "Введіть назву значка Font Awesome (використовуйте префікс 'far-' для звичайних значків та 'fab-' для значків брендів)"
         select_an_icon: "Виберіть піктограму"
         upload_an_image: "Завантажити зображення"
@@ -7043,7 +7203,7 @@ uk:
             other: "Ваш CSV-файл отримано, і %{count} користувачів незабаром отримають свою нагороду."
           csv_has_unmatched_users: "Наступні записи є у файлі CSV, але вони не можуть бути співставлені з існуючими користувачами, і тому вони не отримають значок:"
           csv_has_unmatched_users_truncated_list:
-            one: "У файлі CSV знайдено %{count} запис, який не може бути співставлений з наявними користувачами, і тому він не отримає бейдж. Через велику кількість записів, що не збіглися, показано лише перші 100:"
+            one: "У файлі CSV був %{count} запис, який не вдалося зіставити з існуючими користувачами, і тому не отримає значок."
             few: "У файлі CSV було %{count} записів, які не могли бути співставлені з наявними користувачами, і тому вони не отримають значок. Через велику кількість записів показуються тільки перші 100:"
             many: "У файлі CSV було %{count} записів, які не могли бути співставлені з наявними користувачами, і тому вони не отримають значок. Через велику кількість записів показуються тільки перші 100:"
             other: "У файлі CSV було %{count} записів, які не могли бути співставлені з наявними користувачами, і тому вони не отримають значок. Через велику кількість записів показуються тільки перші 100:"

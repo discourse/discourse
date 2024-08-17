@@ -27,14 +27,14 @@ describe "Search", type: :system do
       expect(search_page).to have_search_result
       expect(search_page.heading_text).not_to eq("Search")
 
-      search_page.click_home_logo
+      click_logo
       expect(search_page).to be_not_active
 
       page.go_back
       # ensure results are still there when using browser's history
       expect(search_page).to have_search_result
 
-      search_page.click_home_logo
+      click_logo
       search_page.click_search_icon
 
       expect(search_page).to have_no_search_result
@@ -103,7 +103,6 @@ describe "Search", type: :system do
       search_page.type_in_search_menu("test")
       search_page.click_search_menu_link
       expect(search_page).to have_topic_title_for_first_search_result(topic.title)
-
       search_page.click_first_topic
       search_page.click_search_icon
       expect(search_page).to have_topic_title_for_first_search_result(topic.title)
@@ -143,51 +142,22 @@ describe "Search", type: :system do
 
     after { SearchIndexer.disable }
 
-    context "when experimental_topic_bulk_actions_enabled_groups is enabled" do
-      before do
-        SiteSetting.experimental_topic_bulk_actions_enabled_groups =
-          Group::AUTO_GROUPS[:trust_level_1]
-      end
-
-      it "allows the user to perform bulk actions on the topic search results" do
-        visit("/search?q=test")
-        expect(page).to have_content(topic.title)
-        find(".search-info .bulk-select").click
-        find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .bulk-select input").click
-        find(".search-info .bulk-select-topics-dropdown-trigger").click
-        find(".bulk-select-topics-dropdown-content .append-tags").click
-        expect(topic_bulk_actions_modal).to be_open
-        tag_selector = PageObjects::Components::SelectKit.new(".tag-chooser")
-        tag_selector.search(tag1.name)
-        tag_selector.select_row_by_value(tag1.name)
-        tag_selector.collapse
-        topic_bulk_actions_modal.click_bulk_topics_confirm
-        expect(
-          find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .discourse-tags"),
-        ).to have_content(tag1.name)
-      end
-    end
-
-    context "when experimental_topic_bulk_actions_enabled_groups is not enabled" do
-      before { SiteSetting.experimental_topic_bulk_actions_enabled_groups = "" }
-
-      it "allows the user to perform bulk actions on the topic search results" do
-        visit("/search?q=test")
-        expect(page).to have_content(topic.title)
-        find(".search-info .bulk-select").click
-        find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .bulk-select input").click
-        find(".search-info .bulk-select-btn").click
-        expect(topic_bulk_actions_modal).to be_open
-        find(".bulk-buttons .bulk-actions__append-tags").click
-        tag_selector = PageObjects::Components::SelectKit.new(".tag-chooser")
-        tag_selector.search(tag1.name)
-        tag_selector.select_row_by_value(tag1.name)
-        tag_selector.collapse
-        find(".topic-bulk-actions__append-tags").click
-        expect(
-          find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .discourse-tags"),
-        ).to have_content(tag1.name)
-      end
+    it "allows the user to perform bulk actions on the topic search results" do
+      visit("/search?q=test")
+      expect(page).to have_content(topic.title)
+      find(".search-info .bulk-select").click
+      find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .bulk-select input").click
+      find(".search-info .bulk-select-topics-dropdown-trigger").click
+      find(".bulk-select-topics-dropdown-content .append-tags").click
+      expect(topic_bulk_actions_modal).to be_open
+      tag_selector = PageObjects::Components::SelectKit.new(".tag-chooser")
+      tag_selector.search(tag1.name)
+      tag_selector.select_row_by_value(tag1.name)
+      tag_selector.collapse
+      topic_bulk_actions_modal.click_bulk_topics_confirm
+      expect(
+        find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .discourse-tags"),
+      ).to have_content(tag1.name)
     end
   end
 end

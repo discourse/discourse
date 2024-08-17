@@ -1,3 +1,10 @@
+// If you add any methods to the API ensure you bump up the version number
+// based on Semantic Versioning 2.0.0. Please update the changelog at
+// docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
+// using the format described at https://keepachangelog.com/en/1.0.0/.
+
+export const PLUGIN_API_VERSION = "1.36.0";
+
 import $ from "jquery";
 import { h } from "virtual-dom";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
@@ -14,7 +21,6 @@ import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from 
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
 import { headerIconsDAG } from "discourse/components/header/icons";
-import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 import MountWidget, {
   addWidgetCleanCallback,
 } from "discourse/components/mount-widget";
@@ -55,7 +61,9 @@ import {
   PLUGIN_NAV_MODE_TOP,
   registerAdminPluginConfigNav,
 } from "discourse/lib/admin-plugin-config-nav";
-import classPrepend from "discourse/lib/class-prepend";
+import classPrepend, {
+  withPrependsRolledBack,
+} from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -77,7 +85,10 @@ import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
-import { addSearchResultsCallback } from "discourse/lib/search";
+import {
+  addLogSearchLinkClickedCallbacks,
+  addSearchResultsCallback,
+} from "discourse/lib/search";
 import Sharing from "discourse/lib/sharing";
 import { addAdminSidebarSectionLink } from "discourse/lib/sidebar/admin-sidebar";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
@@ -96,6 +107,7 @@ import { includeAttributes } from "discourse/lib/transform-post";
 import {
   _addTransformerName,
   _registerTransformer,
+  transformerTypes,
 } from "discourse/lib/transformer";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
@@ -151,13 +163,6 @@ import { addImageWrapperButton } from "discourse-markdown-it/features/image-cont
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
-// If you add any methods to the API ensure you bump up the version number
-// based on Semantic Versioning 2.0.0. Please update the changelog at
-// docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
-// using the format described at https://keepachangelog.com/en/1.0.0/.
-
-export const PLUGIN_API_VERSION = "1.34.0";
-
 const DEPRECATED_HEADER_WIDGETS = [
   "header",
   "site-header",
@@ -172,9 +177,15 @@ const DEPRECATED_HEADER_WIDGETS = [
   "user-dropdown",
 ];
 
+const appliedModificationIds = new WeakMap();
+
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
-  if (typeof changes !== "function" && !changes.pluginId) {
+  if (typeof changes === "function") {
+    return true;
+  }
+
+  if (!changes.pluginId) {
     // eslint-disable-next-line no-console
     console.warn(
       consolePrefix(),
@@ -184,10 +195,13 @@ function canModify(klass, type, resolverName, changes) {
   }
 
   let key = "_" + type + "/" + changes.pluginId + "/" + resolverName;
-  if (klass.class[key]) {
+
+  if (appliedModificationIds.get(klass.class)?.includes(key)) {
     return false;
   } else {
-    klass.class[key] = 1;
+    const modificationIds = appliedModificationIds.get(klass.class) || [];
+    modificationIds.push(key);
+    appliedModificationIds.set(klass.class, modificationIds);
     return true;
   }
 }
@@ -239,26 +253,27 @@ class PluginApi {
 
   _resolveClass(resolverName, opts) {
     opts = opts || {};
-
+    const normalized = this.container.registry.normalize(resolverName);
     if (
-      this.container.cache[resolverName] ||
-      (resolverName === "model:user" &&
+      this.container.cache[normalized] ||
+      (normalized === "model:user" &&
         this.container.lookup("service:current-user"))
     ) {
       // eslint-disable-next-line no-console
-      console.warn(
+      console.error(
         consolePrefix(),
-        `"${resolverName}" has already been initialized and registered as a singleton. Move the modifyClass call earlier in the boot process for changes to take effect. https://meta.discourse.org/t/262064`
+        `Attempted to modify "${resolverName}", but it was already initialized earlier in the boot process (e.g. via a lookup()). Remove that lookup, or move the modifyClass call earlier in the boot process for changes to take effect. https://meta.discourse.org/t/262064`
       );
+      return;
     }
 
-    const klass = this.container.factoryFor(resolverName);
+    const klass = this.container.factoryFor(normalized);
     if (!klass) {
       if (!opts.ignoreMissing) {
         // eslint-disable-next-line no-console
         console.warn(
           consolePrefix(),
-          `"${resolverName}" was not found by modifyClass`
+          `"${normalized}" was not found by modifyClass`
         );
       }
       return;
@@ -296,7 +311,9 @@ class PluginApi {
       if (typeof changes === "function") {
         classPrepend(klass.class, changes);
       } else if (klass.class.reopen) {
-        klass.class.reopen(changes);
+        withPrependsRolledBack(klass.class, () => {
+          klass.class.reopen(changes);
+        });
       } else {
         Object.defineProperties(
           klass.class.prototype || klass.class,
@@ -327,16 +344,106 @@ class PluginApi {
 
     if (canModify(klass, "static", resolverName, changes)) {
       delete changes.pluginId;
-      klass.class.reopenClass(changes);
+      withPrependsRolledBack(klass.class, () => {
+        klass.class.reopenClass(changes);
+      });
     }
 
     return klass;
   }
 
   /**
-   * Add a new valid transformer name.
+   * Add a new valid behavior transformer name.
    *
-   * Use this API to add a new transformer name that can be used in the `registerValueTransformer` API.
+   * Use this API to add a new behavior transformer name that can be used in the `registerValueTransformer` API.
+   *
+   * Notice that this API must be used in a pre-initializer, executed before `freeze-valid-transformers`, otherwise it will throw an error:
+   *
+   * Example:
+   *
+   * // pre-initializers/my-transformers.js
+   *
+   * export default {
+   *   before: "freeze-valid-transformers",
+   *
+   *   initialize() {
+   *     withPluginApi("1.33.0", (api) => {
+   *       api.addBehaviorTransformerName("my-unique-transformer-name");
+   *     }),
+   *   },
+   * };
+   *
+   * @param name the name of the new transformer
+   *
+   */
+  addBehaviorTransformerName(name) {
+    _addTransformerName(name, transformerTypes.BEHAVIOR);
+  }
+
+  /**
+   * Register a transformer to override behavior defined in Discourse.
+   *
+   * Example: to perform an action before the expected behavior
+   * ```
+   * api.registerBehaviorTransformer("example-transformer", ({next, context}) => {
+   *   exampleNewAction(); // action performed before the expected behavior
+   *
+   *   next(); //iterates over the transformer queue processing the behaviors
+   * });
+   * ```
+   *
+   * Example: to perform an action after the expected behavior
+   * ```
+   * api.registerBehaviorTransformer("example-transformer", ({next, context}) => {
+   *   next(); //iterates over the transformer queue processing the behaviors
+   *
+   *   exampleNewAction(); // action performed after the expected behavior
+   * });
+   * ```
+   *
+   * Example: to use a value returned by the expected behavior to decide if an action must be performed
+   * ```
+   * api.registerBehaviorTransformer("example-transformer", ({next, context}) => {
+   *   const expected = next(); //iterates over the transformer queue processing the behaviors
+   *
+   *   if (expected === "EXPECTED") {
+   *     exampleNewAction(); // action performed after the expected behavior
+   *   }
+   * });
+   * ```
+   *
+   * Example: to abort the expected behavior based on a condition
+   * ```
+   * api.registerValueTransformer("example-transformer", ({next, context}) => {
+   *   if (context.property) {
+   *     // not calling next() on a behavior transformer aborts executing the expected behavior
+   *
+   *     return;
+   *   }
+   *
+   *   next();
+   * });
+   * ```
+   *
+   * @param {string} transformerName the name of the transformer
+   * @param {function({next, context})} behaviorCallback callback to be used to transform or override the behavior.
+   * @param {*} behaviorCallback.next callback that executes the remaining transformer queue producing the expected
+   * behavior. Notice that this includes the default behavior and if next() is not called in your transformer's callback
+   * the default behavior will be completely overridden
+   * @param {*} [behaviorCallback.context] the optional context in which the behavior is being transformed
+   */
+  registerBehaviorTransformer(transformerName, behaviorCallback) {
+    _registerTransformer(
+      transformerName,
+      transformerTypes.BEHAVIOR,
+      behaviorCallback
+    );
+  }
+
+  /**
+   * Add a new valid value transformer name.
+   *
+   * Use this API to add a new value transformer name that can be used in the `registerValueTransformer` API.
    *
    * Notice that this API must be used in a pre-initializer, executed before `freeze-valid-transformers`, otherwise it will throw an error:
    *
@@ -358,7 +465,7 @@ class PluginApi {
    *
    */
   addValueTransformerName(name) {
-    _addTransformerName(name);
+    _addTransformerName(name, transformerTypes.VALUE);
   }
 
   /**
@@ -393,7 +500,11 @@ class PluginApi {
    * @param {*} [valueCallback.context] the optional context in which the value is being transformed
    */
   registerValueTransformer(transformerName, valueCallback) {
-    _registerTransformer(transformerName, valueCallback);
+    _registerTransformer(
+      transformerName,
+      transformerTypes.VALUE,
+      valueCallback
+    );
   }
 
   /**
@@ -1427,8 +1538,8 @@ class PluginApi {
    *   displayName: "bugs"
    *   href: "/c/bugs",
    *   init: (navItem, category) => { if (category) { navItem.set("category", category)  } }
-   *   customFilter: (category, args, router) => { return category && category.name !== 'bug' }
-   *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') return "/a-feature"; },
+   *   customFilter: (category, args, router) => { return category && category.displayName !== 'bug' }
+   *   customHref: (category, args, router) => {  if (category && category.displayName) === 'not-a-bug') return "/a-feature"; },
    *   before: "top",
    *   forceActive: (category, args, router) => router.currentURL === "/a/b/c/d",
    * })
@@ -1935,7 +2046,7 @@ class PluginApi {
   /**
    * Allows for manipulation of the header icons. This includes, adding, removing, or modifying the order of icons.
    *
-   * Only the passing of components is supported, and by default the icons are added to the left of exisiting icons.
+   * Only the passing of components is supported, and by default the icons are added to the left of existing icons.
    *
    * Example: Add the chat icon to the header icons after the search icon
    * ```
@@ -1985,7 +2096,7 @@ class PluginApi {
   /**
    * Allows for manipulation of the header buttons. This includes, adding, removing, or modifying the order of buttons.
    *
-   * Only the passing of components is supported, and by default the buttons are added to the left of exisiting buttons.
+   * Only the passing of components is supported, and by default the buttons are added to the left of existing buttons.
    *
    * Example: Add a `foo` button to the header buttons after the auth buttons
    * ```
@@ -2083,7 +2194,11 @@ class PluginApi {
    *
    */
   registerHomeLogoHrefCallback(callback) {
-    _registerTransformer("home-logo-href", ({ value }) => callback(value));
+    _registerTransformer(
+      "home-logo-href",
+      transformerTypes.VALUE,
+      ({ value }) => callback(value)
+    );
   }
 
   /**
@@ -2215,6 +2330,22 @@ class PluginApi {
    */
   addSearchResultsCallback(callback) {
     addSearchResultsCallback(callback);
+  }
+
+  /**
+   * Add a callback to search before logging the search record. Return false to prevent logging.
+   *
+   * ```
+   * api.addLogSearchLinkClickedCallbacks((params) => {
+   *  if (params.searchResultId === "foo") {
+   *   return false;
+   *  }
+   * });
+   * ```
+   *
+   */
+  addLogSearchLinkClickedCallbacks(callback) {
+    addLogSearchLinkClickedCallbacks(callback);
   }
 
   /**
@@ -3033,10 +3164,9 @@ class PluginApi {
    * @param {string} opts.class
    * @param {buttonVisibilityCallback} opts.visible
    * @param {buttonAction} opts.action
-   * @param {string} opts.actionType - type of the action, either performanAndRefresh or setComponent
+   * @param {string} opts.actionType - type of the action, either performAndRefresh or setComponent
    */
   addBulkActionButton(opts) {
-    _addBulkButton(opts);
     addBulkDropdownButton(opts);
   }
 
@@ -3116,7 +3246,7 @@ class PluginApi {
         {
           since: "v3.3.0.beta1-dev",
           id: "discourse.header-widget-overrides",
-          url: "https://meta.discourse.org/t/296544",
+          url: "https://meta.discourse.org/t/316549",
         }
       );
     }

@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { hbs } from "ember-cli-htmlbars";
 import { Promise } from "rsvp";
 import { h } from "virtual-dom";
@@ -743,42 +743,8 @@ createWidget("post-body", {
     result.push(postContents);
     result.push(this.attach("actions-summary", attrs));
     result.push(this.attach("post-links", attrs));
-    if (attrs.showTopicMap) {
-      result.push(this.buildTopicMap(attrs));
-    }
 
     return result;
-  },
-
-  buildTopicMap(attrs) {
-    return new RenderGlimmer(
-      this,
-      "div.topic-map",
-      hbs`<TopicMap
-        @model={{@data.model}}
-        @topicDetails={{@data.topicDetails}}
-        @postStream={{@data.postStream}}
-        @showPMMap={{@data.showPMMap}}
-        @cancelFilter={{@data.cancelFilter}}
-        @showTopReplies={{@data.showTopReplies}}
-        @showInvite={{@data.showInvite}}
-        @removeAllowedGroup={{@data.removeAllowedGroup}}
-        @removeAllowedUser={{@data.removeAllowedUser}}
-      />`,
-      {
-        model: attrs.topic,
-        topicDetails: attrs.topic.get("details"),
-        postStream: attrs.topic.postStream,
-        showPMMap: attrs.showPMMap,
-        cancelFilter: () => this.sendWidgetAction("cancelFilter"),
-        showTopReplies: () => this.sendWidgetAction("showTopReplies"),
-        showInvite: () => this.sendWidgetAction("showInvite"),
-        removeAllowedGroup: (group) =>
-          this.sendWidgetAction("removeAllowedGroup", group),
-        removeAllowedUser: (user) =>
-          this.sendWidgetAction("removeAllowedUser", user),
-      }
-    );
   },
 });
 
@@ -864,6 +830,11 @@ createWidget("post-article", {
         }),
       ])
     );
+
+    if (this.shouldShowTopicMap(attrs)) {
+      rows.push(this.buildTopicMap(attrs));
+    }
+
     return rows;
   },
 
@@ -927,6 +898,49 @@ createWidget("post-article", {
           });
         });
     }
+  },
+
+  shouldShowTopicMap(attrs) {
+    if (attrs.post_number !== 1) {
+      return false;
+    }
+    const isPM = attrs.topic.archetype === "private_message";
+    const isRegular = attrs.topic.archetype === "regular";
+    const showWithoutReplies =
+      this.siteSettings.show_topic_map_in_topics_without_replies;
+
+    return (
+      attrs.topicMap ||
+      isPM ||
+      (isRegular && (attrs.topic.posts_count > 1 || showWithoutReplies))
+    );
+  },
+
+  buildTopicMap(attrs) {
+    return new RenderGlimmer(
+      this,
+      "div.topic-map.--op",
+      hbs`<TopicMap
+        @model={{@data.model}}
+        @topicDetails={{@data.topicDetails}}
+        @postStream={{@data.postStream}}
+        @showPMMap={{@data.showPMMap}}
+        @showInvite={{@data.showInvite}}
+        @removeAllowedGroup={{@data.removeAllowedGroup}}
+        @removeAllowedUser={{@data.removeAllowedUser}}
+      />`,
+      {
+        model: attrs.topic,
+        topicDetails: attrs.topic.get("details"),
+        postStream: attrs.topic.postStream,
+        showPMMap: attrs.topic.archetype === "private_message",
+        showInvite: () => this.sendWidgetAction("showInvite"),
+        removeAllowedGroup: (group) =>
+          this.sendWidgetAction("removeAllowedGroup", group),
+        removeAllowedUser: (user) =>
+          this.sendWidgetAction("removeAllowedUser", user),
+      }
+    );
   },
 });
 

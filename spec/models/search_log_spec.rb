@@ -78,6 +78,10 @@ RSpec.describe SearchLog, type: :model do
 
     context "when logged in" do
       fab!(:user)
+      let!(:plugin) { Plugin::Instance.new }
+      let!(:modifier) { :search_log_can_log }
+      let!(:deny_block) { Proc.new { false } }
+      let!(:allow_block) { Proc.new { true } }
 
       it "logs and updates the search" do
         freeze_time
@@ -154,6 +158,31 @@ RSpec.describe SearchLog, type: :model do
             user_id: Fabricate(:user).id,
           )
         expect(action).to eq(:created)
+      end
+
+      it "allows plugins to control logging" do
+        DiscoursePluginRegistry.register_modifier(plugin, modifier, &deny_block)
+        action, _ =
+          SearchLog.log(
+            term: "hello dolly",
+            search_type: :full_page,
+            ip_address: "192.168.0.1",
+            user_id: Fabricate(:user).id,
+          )
+        expect(action).to_not eq(:created)
+
+        DiscoursePluginRegistry.register_modifier(plugin, modifier, &allow_block)
+        action, _ =
+          SearchLog.log(
+            term: "hello dolly",
+            search_type: :full_page,
+            ip_address: "192.168.0.1",
+            user_id: Fabricate(:user).id,
+          )
+        expect(action).to eq(:created)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &deny_block)
+        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &allow_block)
       end
     end
   end

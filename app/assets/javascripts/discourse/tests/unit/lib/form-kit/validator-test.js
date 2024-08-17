@@ -1,7 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import Validator from "discourse/form-kit/lib/validator";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 module("Unit | Lib | FormKit | Validator", function (hooks) {
   setupTest(hooks);
@@ -89,6 +89,25 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
       errors,
       [],
       "it returns no errors when the value is valid"
+    );
+  });
+
+  test("integer", async function (assert) {
+    let errors = await new Validator(1.2, {
+      integer: {},
+    }).validate();
+
+    assert.deepEqual(
+      errors,
+      [I18n.t("form_kit.errors.not_an_integer")],
+      "it returns an error when the value is not an integer"
+    );
+
+    errors = await new Validator(1, { integer: {} }).validate();
+    assert.deepEqual(
+      errors,
+      [],
+      "it returns no errors when the value is an integer"
     );
   });
 

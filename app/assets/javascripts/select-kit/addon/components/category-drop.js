@@ -152,7 +152,7 @@ export default ComboBoxComponent.extend({
     return content;
   },
 
-  parentCategoryName: readOnly("selectKit.options.parentCategory.name"),
+  parentCategoryName: readOnly("selectKit.options.parentCategory.displayName"),
 
   allCategoriesLabel: computed(
     "parentCategoryName",

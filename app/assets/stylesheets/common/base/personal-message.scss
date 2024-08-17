@@ -82,18 +82,23 @@
   }
 
   .topic-map {
-    margin-left: calc(var(--pm-padding) * -1);
     border: none;
-    border-radius: var(--pm-border-radius);
-    padding: var(--pm-padding);
-
+    padding-block: var(--pm-padding);
+    padding-left: calc(
+      48px - var(--pm-padding)
+    ); // 48px is the width of the avatar
     section {
       border: none;
+      background: var(--primary-very-low);
+      padding-inline: var(--pm-padding);
     }
-    .map:not(.map-collapsed) {
-      .avatars {
-        margin: 0.5em 0;
-      }
+
+    .map {
+      padding-top: var(--pm-padding);
+    }
+
+    &__private-message-map {
+      padding-bottom: var(--pm-padding);
     }
 
     .participants {

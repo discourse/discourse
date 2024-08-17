@@ -32,10 +32,6 @@ export default class TopicList extends Component {
     return !this.bulkSelectEnabled && this.args.canBulkSelect;
   }
 
-  get experimentalTopicBulkActionsEnabled() {
-    return this.currentUser?.use_experimental_topic_bulk_actions;
-  }
-
   get sortable() {
     return !!this.args.changeSort;
   }
@@ -118,7 +114,6 @@ export default class TopicList extends Component {
           @listTitle={{or @listTitle "topic.title"}}
           @bulkSelectEnabled={{this.bulkSelectEnabled}}
           @bulkSelectHelper={{@bulkSelectHelper}}
-          @experimentalTopicBulkActionsEnabled={{this.experimentalTopicBulkActionsEnabled}}
           @canDoBulkActions={{this.canDoBulkActions}}
           @showTopicsAndRepliesToggle={{@showTopicsAndRepliesToggle}}
           @newListSubset={{@newListSubset}}

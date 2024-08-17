@@ -515,11 +515,7 @@ nb_NO:
   associated_accounts:
     revoke_failed: "Klarte ikke å oppheve kontotilknytningen til %{provider_name}."
   activation:
-    action: "Klikk her for å aktivere din konto"
     already_done: "Beklager, denne bekreftelseslenken er ikke lenger gyldig. Kanskje er kontoen din allerede aktivert?"
-    please_continue: "Din nye konto er registrert; du vil bli videresendt til hjemmesiden. "
-    continue_button: "Fortsett til %{site_name}"
-    welcome_to: "Velkommen til %{site_name}!"
     approval_required: "En moderator må manuelt godkjenne kontoen din før du får tilgang til forumet. Du vil motta en e-post når kontoen din er godkjent!"
     missing_session: "Vi klarer ikke å se om kontoen din ble laget, vennligst sjekk om cookies/kapsler er aktivert i nettleseren."
     activated: "Beklager, denne kontoen er allerede aktivert."
@@ -1300,7 +1296,12 @@ nb_NO:
       privacy:
         fields:
           login_required:
-            placeholder: "Privat"
+            label: "Synlighet"
+            choices:
+              public:
+                label: "Offentlig"
+              private:
+                label: "Privat"
       styling:
         fields:
           styling_preview:

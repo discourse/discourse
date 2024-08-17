@@ -592,11 +592,7 @@ pt:
     error_staged: "Ocorreu um erro ao alterar o seu endereço de email. O endereço de email já está a ser utilizado por um utilizador temporário."
     already_done: "Pedimos desculpa, mas esta hiperligação de confirmação já não é valida. Talvez o seu email já tenha sido alterado?"
   activation:
-    action: "Clique aqui para ativar a sua conta"
     already_done: "Pedimos desculpa, esta hiperligação de confirmação já não está válida. Talvez a sua conta já esteja ativa?"
-    please_continue: "A sua nova conta foi confirmada; será redirecionado para a página principal."
-    continue_button: "Continuar para %{site_name}"
-    welcome_to: "Bem-vindo a %{site_name}!"
     approval_required: "Um moderador tem que aprovar a sua conta antes de poder aceder a este fórum. Irá receber um email quando a sua conta for aprovada!"
     missing_session: "Não conseguimos detectar se a sua conta foi criada, pelo que pedimos que confirme que tem os cookies permitidos."
     activated: "Desculpe, esta conta já foi ativada."
@@ -1023,7 +1019,6 @@ pt:
     max_reply_history: "Número máximo de respostas a serem expandidas quando se expande em-resposta-a"
     topics_per_period_in_top_summary: "Número de tópicos principais mostrados no resumo padrão de tópicos principais."
     topics_per_period_in_top_page: "Número de tópicos principais mostrados em 'Mostrar Mais' tópicos principais expandido."
-    redirect_users_to_top_page: "Redirecionar automaticamente os utilizadores novos e ausentes por períodos longos para o topo da página."
     prioritize_username_in_ux: "Mostrar o nome de utilizador primeiro na página de utilizador, cartão de utilizador e publicações (quando o nome desactivado é mostrado primeiro)"
     email_token_valid_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por (n) horas."
     blocked_email_domains: "Uma lista delimitada de domínios de correio electrónico com os quais os utilizadores não estão autorizados a registar contas. Os subdomínios são automaticamente tratados para os domínios especificados. Os símbolos wildcard * e ? não são suportados. Exemplo: mailinator.com|trashmail.net"
@@ -2052,7 +2047,12 @@ pt:
       privacy:
         fields:
           login_required:
-            placeholder: "Privado"
+            label: "Visibilidade"
+            choices:
+              public:
+                label: "Público"
+              private:
+                label: "Privado"
       styling:
         fields:
           styling_preview:

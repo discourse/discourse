@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
 
 let counter = 0;
@@ -12,7 +12,7 @@ let counter = 0;
  *
  *   ```hbs
  *   {{! raw-templates/something-cool.hbr }}
- *   {{{view.html}}}
+ *   {{html-safe view.html}}
  *   ```
  *
  *   ```gjs
@@ -21,7 +21,7 @@ let counter = 0;
  *   import rawRenderGlimmer from "discourse/lib/raw-render-glimmer";
  *
  *   export default class SomethingCool extends EmberObject {
- *     get html(){
+ *     get html() {
  *       return rawRenderGlimmer(this, "div", <template>Hello {{@data.name}}</template>, { name: this.name });
  *     }
  *   ```

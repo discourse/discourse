@@ -81,8 +81,6 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
         return this.router.currentRoute.name;
       }
     }
-
-    return this.adminSidebarNavLink.route;
   }
 
   get keywords() {
@@ -264,6 +262,8 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   key = ADMIN_PANEL;
   hidden = true;
   displayHeader = true;
+  expandActiveSection = true;
+  scrollActiveLinkIntoView = true;
 
   @cached
   get sections() {
@@ -322,17 +322,6 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
           route: "adminCustomizeFormTemplates",
           label: "admin.form_templates.nav_title",
           icon: "list",
-        });
-    }
-
-    if (currentUser.show_experimental_flags_admin_page) {
-      navMap
-        .find((section) => section.name === "community")
-        .links.push({
-          name: "admin_moderation_flags",
-          route: "adminConfig.flags",
-          label: "admin.community.sidebar_link.moderation_flags",
-          icon: "flag",
         });
     }
 

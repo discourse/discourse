@@ -256,6 +256,18 @@ ko:
       topic_count: "글"
       post_count: "게시물"
       contact_info: "이 사이트에 영향을 미치는 중대하거나 긴급한 문제가 발생한 경우 %{contact_info}으로 문의하세요."
+      activities:
+        topics:
+          other: "%{formatted_number}개의 글"
+        posts:
+          other: "글 %{formatted_number}개"
+        likes:
+          other: "좋아요 %{formatted_number}"
+        periods:
+          last_7_days: "지난 7일간"
+          today: "오늘"
+      member_count:
+        other: "회원 %{formatted_number}명"
     bookmarked:
       title: "북마크"
       edit_bookmark: "북마크 편집"
@@ -553,7 +565,6 @@ ko:
       never: "절대"
       last_custom: "마지막 사용자 지정 시간"
       custom: "사용자 지정 날짜 및 시간"
-      custom_short: "사용자 지정..."
       select_timeframe: "기간 선택"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> 님이 <a href='%{topicUrl}'>주제</a>를 게시함"
@@ -661,11 +672,12 @@ ko:
           imap_mailbox_not_selected: "이 IMAP 구성에 대해 메일함을 선택해야합니다. 그렇지 않으면 메일함이 동기화되지 않습니다!"
           prefill:
             title: "다음 설정으로 미리 채우기:"
+          ssl_modes:
+            none: "없음"
           credentials:
             title: "크리덴셜"
             smtp_server: "SMTP 서버"
             smtp_port: "SMTP 포트"
-            smtp_ssl: "SMTP에 SSL 사용"
             imap_server: "IMAP 서버"
             imap_port: "IMAP 포트"
             imap_ssl: "IMAP에 SSL 사용"
@@ -1297,6 +1309,13 @@ ko:
           disconnect: "기존 %{provider} 계정 '%{account_description}' 연결이 해제됩니다."
           account_specific: "%{provider} 계정 '%{account_description}'|hpp(이,가) 인증에 사용됩니다."
           generic: "%{provider} 계정이 인증에 사용됩니다."
+      activate_account:
+        action: "여기를 눌러 계정을 활성화하세요."
+        already_done: "죄송합니다. 이 계정 확인 링크는 더 이상 유효하지 않습니다."
+        please_continue: "계정이 활성화 되었습니다; 홈페이지로 이동합니다."
+        continue_button: "%{site_name}으로 가기"
+        welcome_to: "%{site_name}에 오신 것을 환영합니다!"
+        approval_required: "이 포럼을 사용하기 위해선 운영자가 수동으로 당신의 새로운 계정을 수락해야 합니다. 계정이 수락이 되면 자동으로 이메일이 발송됩니다."
       name:
         title: "이름"
         instructions: "전체 이름 (선택 사항)."
@@ -1610,15 +1629,6 @@ ko:
       enabled: "이 사이트는 현재 읽기 전용 모드입니다. 탐색은 가능하지만 댓글, 좋아요 및 기타 작업은 일시적으로 비활성화되었습니다."
       login_disabled: "사이트가 읽기 전용 모드인 동안에는 로그인이 비활성화됩니다."
       logout_disabled: "사이트가 읽기 전용 모드인 동안에는 로그아웃이 비활성화됩니다."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/시간}}에 도달했습니다.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/분}}에 도달했습니다.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/시간}}을 초과했습니다.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, other {#개의 오류/분}}을 초과했습니다.
     mute: 뮤트
     unmute: 뮤트 해제
     last_post: 게시됨
@@ -1639,7 +1649,11 @@ ko:
     summary:
       description:
         other: "<b>%{count}</b>개의 댓글이 있습니다."
+      buttons:
+        generate: "요약하기"
+        regenerate: "재생성"
       disable: "모든 게시물 표시"
+      show_all_label: "모두 보기"
     deleted_filter:
       enabled_description: "이 주제에는 숨김 처리된 삭제된 게시물이 있습니다."
       disabled_description: "주제에 삭제된 게시물이 표시됩니다."
@@ -1729,6 +1743,7 @@ ko:
       admin_not_allowed_from_ip_address: "이 IP 주소로는 관리자로 로그인할 수 없습니다."
       resend_activation_email: "활성화 이메일을 다시 보내려면 여기를 클릭하세요."
       omniauth_disallow_totp: "계정에 2단계 인증이 활성화되어 있습니다. 비밀번호로 로그인하세요."
+      activate_account: "계정 활성화"
       resend_title: "활성화 이메일 재전송"
       change_email: "이메일 주소 변경"
       provide_new_email: "새 주소를 입력하면 확인 이메일이 다시 전송됩니다."
@@ -3015,7 +3030,6 @@ ko:
         none: "서브카테고리 없음"
       colors_disabled: "카테고리 스타일이 없음이므로 색상을 선택할 수 없습니다."
     flagging:
-      title: "커뮤니티 질서를 지키는 데 도와주셔서 감사합니다!"
       action: "게시물 신고"
       take_action_options:
         default:
@@ -3050,7 +3064,6 @@ ko:
         left:
           other: "%{count} 남음"
     flagging_topic:
-      title: "커뮤니티 질서를 지키는 데 도와주셔서 감사합니다!"
       action: "주제 신고"
       notify_action: "메시지 보내기"
     topic_map:
@@ -3059,6 +3072,9 @@ ko:
       links_title: "인기 링크"
       clicks:
         other: "클릭 수 %{count}회"
+      views: "조회"
+      read: 읽기
+      minutes: 최소
     post_links:
       about: "이 게시물의 링크 더 보기"
       title:
@@ -3417,7 +3433,6 @@ ko:
         everyone_can_use: "모든 사람이 태그를 사용할 수 있습니다"
         usable_only_by_groups: "모든 사람에게 태그가 보이지만 다음 그룹만 태그를 사용할 수 있습니다"
         visible_only_to_groups: "태그는 다음 그룹에만 표시됩니다"
-        cannot_save: "태그 그룹을 저장할 수 없습니다. 태그가 하나 이상 있고 태그 그룹 이름이 비어 있지 않으며 태그 권한에 그룹이 선택되어 있는지 확인하세요."
         tags_placeholder: "태그 검색 또는 생성"
         parent_tag_placeholder: "선택 사항"
         disabled: "태그 지정이 비활성화되었습니다. "
@@ -3933,6 +3948,7 @@ ko:
       config_areas:
         about:
           community_name: "커뮤니티 이름"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           site_contact_group_help: |
             모든 자동 메시지에 초대 할 유효한 그룹 이름입니다.
           optional: "(선택 사항)"
@@ -3948,6 +3964,7 @@ ko:
             save: "저장"
             name: "그룹명"
             description: "내용"
+            invalid_applies_to: "필수"
             topic: "글"
             post: "포스트"
       plugins:

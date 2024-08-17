@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import routeAction from "discourse/helpers/route-action";
@@ -26,8 +26,13 @@ export default class PollOptionsComponent extends Component {
     this.args.sendOptionSelect(option, rank);
   }
   <template>
-    <ul class={{concatClass (if @isRankedChoice "ranked-choice-poll-options")}}>
-      {{#each @options as |option|}}
+    <ul
+      class={{concatClass
+        (if @isRankedChoice "ranked-choice-poll-options")
+        "options"
+      }}
+    >
+      {{#each @options key="rank" as |option|}}
         {{#if @isRankedChoice}}
           <PollOptionRankedChoice
             @option={{option}}
@@ -35,7 +40,7 @@ export default class PollOptionsComponent extends Component {
             @sendRank={{this.sendRank}}
           />
         {{else}}
-          <li tabindex="0" data-poll-option-id={{option.id}}>
+          <li data-poll-option-id={{option.id}}>
             {{#if this.currentUser}}
               <button {{on "click" (fn this.sendClick option)}}>
                 {{#if (this.isChosen option)}}

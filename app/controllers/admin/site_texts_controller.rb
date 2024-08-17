@@ -135,14 +135,7 @@ class Admin::SiteTextsController < Admin::AdminController
 
     raise Discourse::NotFound if override.blank?
 
-    if override.outdated?
-      override.update!(
-        status: "up_to_date",
-        original_translation:
-          I18n.overrides_disabled do
-            I18n.t(TranslationOverride.transform_pluralized_key(params[:id]), locale: :en)
-          end,
-      )
+    if override.make_up_to_date!
       render json: success_json
     else
       render json: failed_json.merge(message: "Can only dismiss outdated translations"), status: 422

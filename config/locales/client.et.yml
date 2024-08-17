@@ -261,6 +261,17 @@ et:
       active_user_count: "Aktiivsed kasutajad"
       contact: "Võta meiega ühendust"
       contact_info: "Kriitilise vea või edasilükkamatu probleemi korral võta palun meiega ühendust aadressil %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} teema"
+          other: "%{formatted_number} teemat"
+        posts:
+          one: "%{formatted_number} postitus"
+          other: "%{formatted_number} postitust"
+        periods:
+          last_7_days: "viimase 7 päeva jooksul"
+          today: "täna"
+          all_time: "kogu aeg"
     bookmarked:
       title: "Järjehoidja"
       clear_bookmarks: "Kustuta järjehoidjad"
@@ -543,6 +554,8 @@ et:
           last_updated_by: "autor"
           prefill:
             gmail: "Gmail"
+          ssl_modes:
+            none: "Pole"
           credentials:
             username: "Kasutajanimi"
             password: "Parool"
@@ -1011,6 +1024,13 @@ et:
         revoke: "Tühista"
         cancel: "Tühista"
         not_connected: "(pole ühendatud)"
+      activate_account:
+        action: "Oma konto aktiveerimiseks kliki siia"
+        already_done: "Vabandust, see konto kinnitamise link ei kehti enam. Äkki on Teie konto juba aktiveeritud?"
+        please_continue: "Teie uus konto on kinnitatud; Teid suunatakse nüüd avalehele."
+        continue_button: "Edasi saidile %{site_name}"
+        welcome_to: "Tere tulemast lehele %{site_name}!"
+        approval_required: "Enne, kui saate foorumit kasutada, peab moderaator Teie uue konto käsitsi kinnitama. Konto kinnitamise kohta tuleb teade meilile."
       name:
         title: "Nimi"
         instructions: "Sinu täisnimi (mittekohustuslik)."
@@ -1255,7 +1275,10 @@ et:
       sign_up: "Liitu"
       hide_forever: "tänan, ei"
     summary:
+      buttons:
+        regenerate: "Genereeri uus"
       disable: "Näita kõiki postitusi"
+      show_all_label: "Näita kõiki"
     deleted_filter:
       enabled_description: "See teema sisaldab kustutatud postitusi, mis on peidetud."
       disabled_description: "Selle teema kustutatud postitused on nähtaval."
@@ -1314,6 +1337,7 @@ et:
       not_activated: "Sa ei saa veel sisse logida. Saatsime sulle aktiveerimise meili aadressile <b>%{sentTo}</b>. Järgi palun selles meilis olevaid juhiseid oma konto aktiveerimiseks."
       admin_not_allowed_from_ip_address: "Sellelt IP-aadressilt ei saa adminina sisse logida."
       resend_activation_email: "Selleks, et aktiveerimise meili uuesti saata, klikka siia."
+      activate_account: "Aktiveeri konto"
       resend_title: "Saada aktiveerimismeil uuesti"
       change_email: "Muuda e-posti aadressi"
       submit_new_email: "Uuenda e-posti aadressi"
@@ -2226,7 +2250,6 @@ et:
         moderation: "Modereerimine"
         email: "E-post"
     flagging:
-      title: "Täname, et aitad meie kogukonna viisakust säilitada!"
       action: "Tähista postitus"
       take_action_options:
         default:
@@ -2258,7 +2281,6 @@ et:
           one: "%{count} jäänud"
           other: "%{count} jäänud"
     flagging_topic:
-      title: "Täname, et aitad meie kogukonna viisakust säilitada!"
       action: "Tähista teema"
       notify_action: "Sõnum"
     topic_map:
@@ -2268,6 +2290,9 @@ et:
       clicks:
         one: "%{count} klikk"
         other: "%{count} klikki"
+      views: "Vaatamisi"
+      read: lugemine
+      minutes: miinumum
     post_links:
       about: "laienda veel selles postuses olevaid viiteid"
       title:
@@ -2873,6 +2898,7 @@ et:
           spam: "Spämm"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(valikuline)"
           saved: "salvestatud!"
         flags:
@@ -2884,6 +2910,7 @@ et:
             save: "Salvesta"
             name: "Nimi"
             description: "Kirjeldus"
+            invalid_applies_to: "Nõutud"
             topic: "teemasid"
             post: "postitused"
       plugins:

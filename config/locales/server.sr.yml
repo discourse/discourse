@@ -223,8 +223,6 @@ sr:
     title: "Resetujte Šifru"
   change_email:
     max_secondary_emails_error: "Dosegli ste maksimalni dozvoljeni broj sekundarne e-pošte."
-  activation:
-    welcome_to: "Добро дошли на пројекат %{site_name}!"
   reviewable_score_types:
     needs_approval:
       title: "Potrebno odobrenje"

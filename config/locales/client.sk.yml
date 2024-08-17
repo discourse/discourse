@@ -257,6 +257,7 @@ sk:
     broken_decorator_alert: "Príspevky sa nemusia zobrazovať správne, pretože jeden z dekoratérov obsahu príspevku na vašom webe vyvolal chybu."
     broken_page_change_alert: "Obslužný program onPageChange vyvolal chybu. Ďalšie informácie nájdete v nástrojoch pre vývojárov prehliadača."
     broken_plugin_alert: "Spôsobené rozšírením „%{name}“"
+    broken_transformer_alert: "Vyskytla sa chyba. Vaša stránka nemusí fungovať správne."
     critical_deprecation:
       notice: "<b>[Upozornenie pre administrátorov]</b> Jedna z vašich tém alebo pluginov potrebuje aktualizáciu pre kompatibilitu s nadchádzajúcimi zmenami v jadre Discourse."
       id: "(id:<em>%{id}</em>)"
@@ -377,6 +378,65 @@ sk:
       active_user_count: "Aktívni používatelia"
       contact: "Kontaktujte nás"
       contact_info: "V prípade kritickej chyby alebo naliehavej záležitosti nás prosím konaktujte na %{contact_info}."
+      site_activity: "Aktivita na webe"
+      activities:
+        topics:
+          one: "%{formatted_number} téma"
+          few: "%{formatted_number} témy"
+          many: "%{formatted_number} témy"
+          other: "%{formatted_number} témy"
+        posts:
+          one: "%{formatted_number} príspevok"
+          few: "%{formatted_number} príspevky"
+          many: "%{formatted_number} príspevkov"
+          other: "%{formatted_number} príspevkov"
+        active_users:
+          one: "%{formatted_number} aktívny používateľ"
+          few: "%{formatted_number} aktívnych používateľov"
+          many: "%{formatted_number} aktívnych používateľov"
+          other: "%{formatted_number} aktívni užívatelia"
+        sign_ups:
+          one: "%{formatted_number} registrácia"
+          few: "%{formatted_number} registrácia"
+          many: "%{formatted_number} registrácií"
+          other: "%{formatted_number} registrácie"
+        likes:
+          one: "%{formatted_number} lajk"
+          few: "%{formatted_number} lajkov"
+          many: "%{formatted_number} lajky"
+          other: "%{formatted_number} lajky"
+        periods:
+          last_7_days: "za posledných 7 dní"
+          today: "dnes"
+          all_time: "za celú dobu"
+      member_count:
+        one: "%{formatted_number}/ Člen"
+        few: "%{formatted_number} Členovia"
+        many: "%{formatted_number} Členov"
+        other: "%{formatted_number}/ Členov"
+      admin_count:
+        one: "%{formatted_number} Administrátor"
+        few: "%{formatted_number} Administrátorov"
+        many: "%{formatted_number} Administrátorov"
+        other: "%{formatted_number} Administrátori"
+      moderator_count:
+        one: "%{formatted_number} Moderátor"
+        few: "%{formatted_number} Moderátorov"
+        many: "%{formatted_number} Moderátorov"
+        other: "%{formatted_number} Moderátori"
+      report_inappropriate_content: "Ak narazíte na nevhodný obsah, neváhajte začať konverzáciu s našimi moderátormi a administrátormi. Pred oslovením sa nezabudnite prihlásiť."
+      site_age:
+        less_than_one_month: "Vytvorené pred < 1 mesiacom"
+        month:
+          one: "Vytvorené pred %{count} mesiacom"
+          few: "Vytvorené pred %{count} mesiacmi"
+          many: "Vytvorené pred %{count} mesiacmi"
+          other: "Vytvorené pred %{count} mesiacmi"
+        year:
+          one: "Vytvorené pred %{count} rokom"
+          few: "Vytvorené pred %{count} rokmi"
+          many: "Vytvorené pred %{count} rokmi"
+          other: "Vytvorené pred %{count} rokmi"
     bookmarked:
       title: "Záložka"
       edit_bookmark: "Upraviť záložku"
@@ -798,7 +858,7 @@ sk:
       never: "Nikdy"
       last_custom: "Posledný vlastný dátum"
       custom: "Vyberte dátum a čas"
-      custom_short: "Vlastné..."
+      more_options: "Viac možností…"
       select_timeframe: "Vyberte časový rámec"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> založil <a href='%{topicUrl}'>tému</a>"
@@ -913,11 +973,17 @@ sk:
           prefill:
             title: "Predplňte nastavenia pre:"
             gmail: "Gmail"
+            outlook: "Outlook.com"
+            office365: "Microsoft 365"
+          ssl_modes:
+            none: "Žiadny"
+            ssl_tls: "SSL/TLS"
+            starttls: "STARTTLS"
           credentials:
             title: "Poverenia"
             smtp_server: "Server SMTP"
             smtp_port: "Port SMTP"
-            smtp_ssl: "Použite SSL pre SMTP"
+            smtp_ssl_mode: "Režim SSL"
             imap_server: "Server IMAP"
             imap_port: "Port IMAP"
             imap_ssl: "Pre IMAP použite SSL"
@@ -1480,25 +1546,33 @@ sk:
             true {
               { UNREAD, plural,
                    =0 {}
-                  one {Je <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># neprečítaná</a>}
-                other {Sú <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># neprečítané</a>}
+                  one {Existuje <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># neprečítané</a>}
+                   few {Sú <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># neprečítané</a>}
+                   many {Sú <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># neprečítané</a>}
+                other {Sú <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># neprečítané</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one { a <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nová</a> správa zostávajúca, alebo prehliadajte ďalšie správy v {groupLink}}
-                other { a <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nové</a> správy zostávajúce, alebo prehliadajte ďalšie správy v {groupLink}}
+                  one { a Zostáva <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nová správa</a> , alebo prezerajte ďalšie správy v {groupLink}}
+                   few { a <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nových</a> zostávajúcich správach, alebo prehľadajte ďalšie správy v {groupLink}}
+                   many { a <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nových</a> zostávajúcich správach, alebo prehľadajte ďalšie správy v {groupLink}}
+                other { a <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nových</a> zostávajúcich správach, alebo prehľadajte ďalšie správy v {groupLink}}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one {Je <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># neprečítaná</a> správa zostávajúca, alebo prehliadajte ďalšie správy v {groupLink}}
-                other {Sú <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># neprečítané</a> správy zostávajúce, alebo prehliadajte ďalšie správy v {groupLink}}
+                  one {Zostáva <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># neprečítaná správa</a> , alebo prehliadajte ďalšie správy v {groupLink}}
+                   few {Zostávajú <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># neprečítané správy</a> , alebo prehliadajte ďalšie správy v {groupLink}~}
+                   many {Zostávajú <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># neprečítané správy</a> , alebo prehliadajte ďalšie správy v {groupLink}~}
+                other {Zostávajú <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># neprečítané správy</a> , alebo prehliadajte ďalšie správy v {groupLink}~}
               }
               { NEW, plural,
                    =0 {}
-                  one {Je <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nová</a> správa zostávajúca, alebo prehliadajte ďalšie správy v {groupLink}}
-                other {Sú <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nové</a> správy zostávajúce, alebo prehliadajte ďalšie správy v {groupLink}}
+                  one {Zostáva <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nová správa</a> , alebo prehliadajte ďalšie správy v {groupLink}}
+                   few {Zostávajú <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nové správy</a> , alebo prehliadajte ďalšie správy v {groupLink}~}
+                   many {Zostávajú <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nové správy</a> , alebo prehliadajte ďalšie správy v {groupLink}~}
+                other {Zostávajú <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nové správy</a> , alebo prehliadajte ďalšie správy v {groupLink}~}
               }
             }
             other {}
@@ -1508,25 +1582,33 @@ sk:
             true {
               { UNREAD, plural,
                    =0 {}
-                  one {Je <a href='{basePath}/u/{username}/messages/unread'># neprečítaná</a>}
-                other {Sú <a href='{basePath}/u/{username}/messages/unread'># neprečítané</a>}
+                  one {Existuje <a href="{basePath}/u/{username}/messages/unread"># neprečítané</a>}
+                   few {Sú <a href="{basePath}/u/{username}/messages/unread"># neprečítané</a>}
+                   many {Sú <a href="{basePath}/u/{username}/messages/unread"># neprečítané</a>}
+                other {Sú <a href="{basePath}/u/{username}/messages/unread"># neprečítané</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one { a <a href='{basePath}/u/{username}/messages/new'># nová</a> správa zostávajúca, alebo prehliadajte ďalšie <a href='{basePath}/u/{username}/messages'>osobné správy</a>}
-                other { a <a href='{basePath}/u/{username}/messages/new'># nové</a> správy zostávajúce, alebo prehliadajte ďalšie <a href='{basePath}/u/{username}/messages'>osobné správy</a>}
+                  one { a <a href="{basePath}/u/{username}/messages/new"># zostáva nová správa</a> alebo prezerajte ďalšie <a href="{basePath}/u/{username}/messages">osobné správy</a>}
+                   few { a <a href="{basePath}/u/{username}/messages/new"># nové</a> správy zostávajúce, alebo prezerajte ďalšie <a href="{basePath}/u/{username}/messages">osobné správy</a>}
+                   many { a <a href="{basePath}/u/{username}/messages/new"># nové</a> správy zostávajúce, alebo prezerajte ďalšie <a href="{basePath}/u/{username}/messages">osobné správy</a>}
+                other { a <a href="{basePath}/u/{username}/messages/new"># nové</a> správy zostávajúce, alebo prezerajte ďalšie <a href="{basePath}/u/{username}/messages">osobné správy</a>}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one {Je <a href='{basePath}/u/{username}/messages/unread'># neprečítaná</a> správa zostávajúca, alebo prehliadajte ďalšie <a href='{basePath}/u/{username}/messages'>osobné správy</a>}
-                other {Sú <a href='{basePath}/u/{username}/messages/unread'># neprečítané</a> správy zostávajúce, alebo prehliadajte ďalšie <a href='{basePath}/u/{username}/messages'>osobné správy</a>}
+                  one {Zostáva <a href="{basePath}/u/{username}/messages/unread"># neprečítaná správa</a> , alebo si prezerajte ďalšie <a href="{basePath}/u/{username}/messages">osobné správy</a>}
+                   few {Zostávajú <a href="{basePath}/u/{username}/messages/unread"># neprečítané správy</a> , alebo prehliadajte iné <a href="{basePath}/u/{username}/messages">osobné správy</a>}
+                   many {Zostávajú <a href="{basePath}/u/{username}/messages/unread"># neprečítané správy</a> , alebo prehliadajte iné <a href="{basePath}/u/{username}/messages">osobné správy</a>}
+                other {Zostávajú <a href="{basePath}/u/{username}/messages/unread"># neprečítané správy</a> , alebo prehliadajte iné <a href="{basePath}/u/{username}/messages">osobné správy</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one {Je <a href='{basePath}/u/{username}/messages/new'># nová</a> správa zostávajúca, alebo prehliadajte ďalšie <a href='{basePath}/u/{username}/messages'>osobné správy</a>}
-                other {Sú <a href='{basePath}/u/{username}/messages/new'># nové</a> správy zostávajúce, alebo prehliadajte ďalšie <a href='{basePath}/u/{username}/messages'>osobné správy</a>}
+                  one {Zostáva <a href="{basePath}/u/{username}/messages/new"># nová správa</a> , alebo prezerajte ďalšie <a href="{basePath}/u/{username}/messages">osobné správy</a>}
+                   few {Sú <a href="{basePath}/u/{username}/messages/new"># nové Zostávajúce správy</a> alebo prehliadajte ďalšie <a href="{basePath}/u/{username}/messages">osobné správy</a>}
+                   many {Sú <a href="{basePath}/u/{username}/messages/new"># nové Zostávajúce správy</a> alebo prehliadajte ďalšie <a href="{basePath}/u/{username}/messages">osobné správy</a>}
+                other {Sú <a href="{basePath}/u/{username}/messages/new"># nové Zostávajúce správy</a> alebo prehliadajte ďalšie <a href="{basePath}/u/{username}/messages">osobné správy</a>}
               }
             }
             other {}
@@ -1741,6 +1823,13 @@ sk:
           disconnect: "Váš existujúci %{provider} účet '%{account_description}' bude odpojený."
           account_specific: "Na autentifikáciu sa použije váš účet %{provider} '%{account_description}'."
           generic: "Na autentifikáciu sa použije váš účet %{provider} ."
+      activate_account:
+        action: "Pre aktiváciu účtu kliknite sem"
+        already_done: "Ľutujeme, tento podvrdzovací odkaz je už neplatný. Nie je Váš účet už aktivny?"
+        please_continue: "Váš nový účet je potvrdený. Budete presmerovaní na domovskú stránku."
+        continue_button: "Pokračujte na %{site_name}"
+        welcome_to: "Vitajte na %{site_name}!"
+        approval_required: "Moderátor musí manuálne povoliť Váš prístup na toto fórum. O schválení prístupu budete upovedomení emailom."
       name:
         title: "Meno"
         instructions: "Vaše celé meno (nepovinné)."
@@ -2121,9 +2210,21 @@ sk:
     form_kit:
       reset: Resetovať
       optional: nepovinné
+      errors_summary_title: "Tento formulár obsahuje chyby:"
+      dirty_form: "Neodoslali ste svoje zmeny! Naozaj chcete odísť?"
       errors:
         required: "Povinné"
         invalid_url: "Musí byť platná adresa URL"
+        not_an_integer: "Musí to byť celé číslo"
+        not_accepted: "Musí byť prijaté"
+        not_a_number: "Musí to byť číslo"
+        too_high: "Musí byť maximálne %{count}"
+        too_low: "Musí mať aspoň %{count}"
+        too_long:
+          one: "Musí mať maximálne %{count} znak"
+          few: "Musí mať maximálne %{count} znakov"
+          many: "Musí mať maximálne %{count} znakov"
+          other: "Musí obsahovať najviac %{count} znaky"
         too_short:
           one: "Musí mať aspoň %{count} znak"
           few: "Musí mať minimálne %{count} znaky"
@@ -2142,35 +2243,51 @@ sk:
       enabled: "Táto stránka je v režime len pre personál. Pokračujte v prehliadaní, ale odpovedanie, označovanie páči sa mi a iné akcie sú obmedzené len na personál."
     logs_error_rate_notice:
       reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# chyba/hodina}
+            few {# chýb/hodina}
+            many {# chýb/hodina}
           other {# chýb/hodina}
-        }</a> dosiahla limit nastavenia stránky {limit, plural,
-            one {# chyba/hodina}
-          other {# chýb/hodina}
+        }</a> dosiahlo limit nastavenia lokality {limit, plural,
+            one {# chyba/hodinu}
+            few {# chýb/hodinu}
+            many {# chýb/hodinu}
+          other {# chýb/hodinu}
         }.
       reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+        <b>{relativeAge}</b> — <a href="{url}" target="_blank">{ rate, plural,
             one {# chyba/minúta}
+            few {# chyby/minúta}
+            many {# chyby/minúta}
           other {# chyby/minúta}
-        }</a> dosiahla limit nastavenia stránky { limit, plural,
+        }</a> dosiahnutý limit nastavenia stránky { limit, plural,
             one {# chyba/minúta}
+            few {# chyby/minúta}
+            many {# chyby/minúta}
           other {# chyby/minúta}
         }.
       exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+        <b>{relativeAge}</b> — <a href="{url}" target="_blank">{ rate, plural,
             one {# chyba/hodina}
-          other {# chýb/hodina}
-        }</a> dosiahla limit nastavenia stránky { limit, plural,
-            one {# chyba/hodina}
-          other {# chýb/hodina}
+            few {# chyby/hodina}
+            many {# chyby/hodina}
+          other {# chyby/hodina}
+        }</a> prekročil limit nastavenia stránky { limit, plural,
+            one {# chybo/hodina}
+            few {# chyby/hodina}
+            many {# chyby/hodina}
+          other {# chyby/hodina}
         }.
       exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+        <b>{relativeAge}</b> — <a href="{url}" target="_blank">{ rate, plural,
             one {# chyba/minúta}
+            few {# chyby/minúta}
+            many {# chyby/minúta}
           other {# chyby/minúta}
-        }</a> dosiahla limit nastavenia stránky { limit, plural,
+        }</a> prekročil limit nastavenia stránky { limit, plural,
             one {# chyba/minúta}
+            few {# chyby/minúta}
+            many {# chyby/minúta}
           other {# chyby/minúta}
         }.
     learn_more: "Zistite viac…"
@@ -2216,8 +2333,8 @@ sk:
         other: "<b>%{count}</b> odpovedí."
       buttons:
         hide: "Skryť súhrn"
-        generate: "Zhrňte pomocou AI"
-        regenerate: "Regenerovať zhrnutie"
+        generate: "Zhrnúť"
+        regenerate: "Znovu vygenerovať"
       description_time_MF: |
         Je { replyCount, plural,
             one {<b>#</b> odpoveď}
@@ -2229,6 +2346,7 @@ sk:
       enable: "Zobraziť najlepšie odpovede"
       disable: "Zobraziť všetky príspevky"
       short_label: "Najlepšie odpovede"
+      show_all_label: "Zobraziť všetko"
       short_title: "Zobrazujte odpovede na túto tému: najzaujímavejšie príspevky určené komunitou"
     deleted_filter:
       enabled_description: "Táto téma obsahuje zmazané príspevky, ktoré boli skryté."
@@ -2337,6 +2455,7 @@ sk:
       admin_not_allowed_from_ip_address: "Nie je možné prihlásenie ako admin z tejto IP adresy."
       resend_activation_email: "Kliknite sem pre opätovné odoslanie aktivačného emailu."
       omniauth_disallow_totp: "Vaše konto má povolené dvojfaktorové overovanie. Prihláste sa pomocou svojho hesla."
+      activate_account: "Aktivovať účet"
       resend_title: "Znova poslať aktivačný email."
       change_email: "Zmeniť emailovú adresu"
       provide_new_email: "Zadajte novú adresu a my vám opätovne zašleme potvrdzujúci e-mail."
@@ -4119,7 +4238,7 @@ sk:
         none: "žiadne podkategórie"
       colors_disabled: "Nemôžete vybrať farby, pretože máte štýl kategórie žiadny."
     flagging:
-      title: "Ďakujeme, že pomáhate udržiavať slušnosť v našej komunite!"
+      title: "Ďakujeme, že udržiavate našu komunitu civilnou!"
       action: "Označ príspevok"
       take_action: "Akcia…"
       take_action_options:
@@ -4179,7 +4298,7 @@ sk:
           many: "%{count} zostáva"
           other: "%{count} zostáva"
     flagging_topic:
-      title: "Ďakujeme, že pomáhate udržiavať slušnosť v našej komunite!"
+      title: "Ďakujeme, že udržiavate našu komunitu civilnou!"
       action: "Označ príspevok"
       notify_action: "Správa"
     topic_map:
@@ -4192,6 +4311,17 @@ sk:
         few: "%{count} kliky"
         many: "%{count} klikov"
         other: "%{count} klikov"
+      menu_titles:
+        replies: Najobľúbenejšie odpovede
+        views: Nedávne zobrazenia
+      view_explainer: Jedno zobrazenie na jedinečného návštevníka každých 8 hodín.
+      no_views: Zatiaľ nie sú k dispozícii žiadne štatistiky, skúste to neskôr.
+      chart_error: Chyba pri vykresľovaní grafu, skúste to znova.
+      views: "Zobrazenia"
+      predicted_views: "Predpokladané zobrazenia"
+      so_far: (zatiaľ)
+      read: čítať
+      minutes: min
     post_links:
       about: "rozbaliť ďalšie odkazy na tento príspevok"
       title:
@@ -4687,7 +4817,7 @@ sk:
         everyone_can_use: "Značky môže používať každý"
         usable_only_by_groups: "Značky sú viditeľné pre všetkých, ale používať ich môžu len tieto skupiny"
         visible_only_to_groups: "Značky sú viditeľné len pre tieto skupiny"
-        cannot_save: "Nie je možné uložiť skupinu značiek. Uistite sa, že je prítomná aspoň jedna značka, názov skupiny značiek nie je prázdny a skupina je vybraná pre oprávnenie značiek."
+        cannot_save: "Skupinu značiek nie je možné uložiť. Uistite sa, že je prítomný aspoň jedna značka, názov skupiny značiek nie je prázdny a má menej ako 100 znakov a že je vybratá skupina pre povolenie značiek."
         tags_placeholder: "Vyhľadajte alebo vytvorte značky"
         parent_tag_placeholder: "Nepovinné"
         select_groups_placeholder: "Vyberte skupiny…"
@@ -5084,6 +5214,7 @@ sk:
         problems_found: "Niekoľko rád na základe aktuálnych nastavení vášho webu"
         new_features:
           title: "Čo je nové"
+          subtitle: "Ďalšie podrobnosti o nových funkciách a vylepšeniach, ktoré neustále pridávame, nájdete v časti <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Poznámky k vydaniu</a>."
           previous_announcements: "Oznámenia o nových funkciách si môžete pozrieť na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Zistiť viac..."
         last_checked: "Naposledy overené"
@@ -5572,6 +5703,7 @@ sk:
           header: "O vašej stránke"
           general_settings: "Všeobecné nastavenia"
           community_name: "Názov komunity"
+          community_name_placeholder: "Príklad Spoločenstva"
           community_summary: "Súhrn komunity"
           community_description: "Popis komunity"
           banner_image: "Obrázok bannera"
@@ -5579,12 +5711,15 @@ sk:
             Táto informácia sa použije na stránke o vás. Odporúčaná veľkosť: 800x300px. Akceptované typy: JPG, PNG a SVG do veľkosti 10 MB.
           contact_information: "Kontaktné informácie"
           community_owner: "Vlastník komunity"
+          community_owner_placeholder: "Johnny Smith"
           community_owner_help: |
             Meno kľúčového kontaktu zodpovedného za túto stránku. Používa sa pre kritické oznámenia a zobrazuje sa aj v /about. Viditeľné pre anonymných používateľov na verejných stránkach.
           contact_email: "Kontaktný e-mail"
+          contact_email_placeholder: "contact@johnny-smith.com"
           contact_email_help: |
             E-mailová adresa kľúčového kontaktu zodpovedného za túto stránku. Používa sa na kritické oznámenia a zobrazuje sa aj na /about. Viditeľná pre anonymných používateľov na verejných stránkach.
           contact_url: "Adresa URL kontaktu"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
             Kontaktná adresa URL pre túto stránku. Ak je prítomná, nahrádza kontaktnú e-mailovú adresu na /about a je viditeľná pre anonymných používateľov na verejných stránkach.
           site_contact_name: "Kontaktné meno stránky"
@@ -5595,14 +5730,17 @@ sk:
             Platný názov skupiny, ktorá je pozývaná do všetkých automaticky odosielaných súkromných správ.
           your_organization: "Vaša organizácia"
           company_name: "Názov spoločnosti"
+          company_name_placeholder: "Vzorová spoločnosť Inc."
           company_name_help: |
             Názov vašej spoločnosti alebo organizácie.
           company_name_warning: |
             Ak zostane prázdne, nebudú poskytnuté žiadne všeobecné podmienky služby ani oznámenie o ochrane osobných údajov.
           governing_law: "Platné právo"
+          governing_law_placeholder: "Štát New York"
           governing_law_help: |
             Uveďte jurisdikciu, ktorá upravuje právne aspekty stránky vrátane podmienok používania služby a oznámenia o ochrane osobných údajov. Zvyčajne ide o krajinu alebo štát, v ktorom je spoločnosť prevádzkujúca lokalitu registrovaná alebo v ktorom podniká.
           city_for_disputes: "Mesto pre spory"
+          city_for_disputes_placeholder: "Mesto New York"
           city_for_disputes_help: |
             Uveďte mesto, ktoré sa použije ako súdna právomoc na riešenie akýchkoľvek sporov súvisiacich s používaním tohto fóra. Táto informácia sa zvyčajne uvádza v právnych dokumentoch, ako sú napríklad podmienky používania fóra.
           optional: "(nepovinné)"
@@ -5629,6 +5767,7 @@ sk:
             name: "Meno"
             description: "Popis"
             applies_to: "Zobrazte tento príznak zapnutý"
+            invalid_applies_to: "Povinné"
             topic: "témy"
             post: "príspevky"
             chat_message: "chat správy"
@@ -5638,6 +5777,8 @@ sk:
             non_editable: "Tento príznak nemôžete upraviť, pretože je to systémový príznak alebo už bol použitý v systéme hodnotenia, môžete ho však vypnúť."
             delete_flag: "Odstrániť príznak"
             non_deletable: "Tento príznak nemôžete odstrániť, pretože je to systémový príznak alebo už bol použitý v systéme hodnotenia, môžete ho však vypnúť."
+            require_message: "Vyzvať používateľov, aby uviedli ďalšie dôvody"
+            require_message_description: "Po výbere tohto príznaku sa zobrazí textové pole, v ktorom môže používateľ uviesť ďalšie podrobnosti o dôvode označenia obsahu."
           more_options:
             title: "Ďalšie možnosti"
             move_up: "Posunúť sa nahor"
@@ -6321,6 +6462,12 @@ sk:
             create_flag: "vytvoriť príznak"
             update_flag: "aktualizovať príznak"
             delete_flag: "odstrániť príznak"
+            topic_slow_mode_set: "nastaviť pomalý režim témy"
+            topic_slow_mode_removed: "odstránenie pomalého režimu témy"
+            custom_emoji_create: "vytvoriť vlastné emoji"
+            custom_emoji_destroy: "odstrániť vlastné emotikony"
+            delete_post_permanently: "natrvalo odstrániť príspevok"
+            delete_topic_permanently: "natrvalo odstrániť tému"
         screened_emails:
           title: "Kontrolované emaily"
           description: "Keď niekto skúsi vytvoriť nový účet, nasledujúce emailove adresy budú preverené a registrácia bude zablokovaná, alebo bude vykonaná nejaka iná akcia. "
@@ -6986,6 +7133,8 @@ sk:
         badge: Odznak
         display_name: Zobrazované meno
         description: Popis
+        long_description: Dlhý popis
+        badge_type: Typ odznaku
         badge_grouping: Skupina
         badge_groupings:
           modal_title: Zoskupovanie odznakov
@@ -7014,6 +7163,7 @@ sk:
         icon: Ikona
         image: Obrázok
         graphic: Grafika
+        icon_or_image: Odznak vyžaduje ikonu alebo obrázok
         icon_help: "Zadajte názov ikony Font Awesome (pre bežné ikony použite prefix \"far-\" a pre ikony značky \"fab-\")"
         select_an_icon: "Vyberte ikonu"
         upload_an_image: "Nahrajte obrázok"
@@ -7068,9 +7218,9 @@ sk:
             other: "Váš CSV bol prijatý a %{count} používatelia čoskoro obdržia svoj odznak."
           csv_has_unmatched_users: "V súbore CSV sa nachádzajú nasledujúce položky, ale nebolo možné ich priradiť k existujúcim používateľom, a preto nedostanú odznak:"
           csv_has_unmatched_users_truncated_list:
-            one: "V súbore CSV bol %{count} záznam, ktorý nebolo možné priradiť k existujúcim používateľom, a preto nedostane odznak. Kvôli veľkému počtu nezhodných záznamov sa zobrazuje iba prvých 100:"
-            few: "V súbore CSV sa nachádzalo %{count} záznamov, ktoré nebolo možné priradiť k existujúcim používateľom, a preto nezískajú odznak. Kvôli veľkému počtu nezhodných záznamov sa zobrazuje iba prvých 100:"
-            many: "V súbore CSV sa nachádzalo %{count} záznamov, ktoré nebolo možné priradiť k existujúcim používateľom, a preto nezískajú odznak. Kvôli veľkému počtu nezhodných záznamov sa zobrazuje iba prvých 100:"
+            one: "V súbore CSV bol %{count} záznam, ktorý sa nepodarilo priradiť k existujúcim používateľom, a preto neobdržia odznak. Kvôli veľkému počtu nezhodných záznamov je zobrazených iba prvých 100:"
+            few: "V súbore CSV sa nachádzajú %{count} záznamy, ktoré nebolo možné priradiť k existujúcim používateľom, a preto nezískajú odznak. Kvôli veľkému počtu nezhodných záznamov sa zobrazuje iba prvých 100:"
+            many: "V súbore CSV sa nachádzajú %{count} záznamy, ktoré nebolo možné priradiť k existujúcim používateľom, a preto nezískajú odznak. Kvôli veľkému počtu nezhodných záznamov sa zobrazuje iba prvých 100:"
             other: "V súbore CSV sa nachádzajú %{count} záznamy, ktoré nebolo možné priradiť k existujúcim používateľom, a preto nezískajú odznak. Kvôli veľkému počtu nezhodných záznamov sa zobrazuje iba prvých 100:"
           replace_owners: Odstránenie odznaku po predchádzajúcich majiteľoch
           grant_existing_holders: Udeliť ďalšie odznaky existujúcim držiteľom odznakov

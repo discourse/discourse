@@ -272,6 +272,18 @@ bs_BA:
       topic_count: "Tema"
       post_count: "Objave"
       contact_info: "U slučaju da forum ne radi, molimo kontaktirajte nas na %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} tema"
+          few: "%{formatted_number} teme"
+          other: "%{formatted_number} teme"
+        posts:
+          one: "%{formatted_number} objava"
+          few: "%{formatted_number} objave"
+          other: "%{formatted_number} objava"
+        periods:
+          last_7_days: "in the last 7 days"
+          today: "today"
     bookmarked:
       title: "Zabilješka"
       clear_bookmarks: "Odstrani zabilješku"
@@ -632,11 +644,12 @@ bs_BA:
           title: "Email"
           status: "Sinkronizirano %{old_emails} / %{total_emails} e-pošte putem IMAP-a."
           last_updated_by: "by"
+          ssl_modes:
+            none: "Ništa"
           credentials:
             title: "Identifikacija"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
-            smtp_ssl: "Koristi SSL za SMTP"
             imap_server: "IMAP Server"
             imap_port: "IMAP Port"
             imap_ssl: "Koristi SSL za IMAP"
@@ -1163,6 +1176,13 @@ bs_BA:
         confirm_description:
           account_specific: "Vaš %{provider} račun %{account_description} će biti korišten za autentifikaciju."
           generic: "Vaš %{provider} račun će biti korišten za prijavu."
+      activate_account:
+        action: "Kliknite ovdje kako bi aktivirali vaš korisnički račun"
+        already_done: "Link za konfirmaciju nije validan. Možda ste već aktivirani?"
+        please_continue: "Vaš novi nalog je verifikovan, i možete se ulogovati."
+        continue_button: "Nastavi ka %{site_name}"
+        welcome_to: "Dobrodošli na %{site_name}!"
+        approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
       name:
         title: "Ime"
         instructions: "Vaše puno ime (opciono)."
@@ -1452,6 +1472,8 @@ bs_BA:
       hide_forever: "ne hvala"
       intro: "Zdravo! Čini se da uživate u raspravi, ali još se niste prijavili za račun."
     summary:
+      buttons:
+        regenerate: "Regenerate"
       disable: "Prikaži sve objave"
     deleted_filter:
       enabled_description: "Ova tema sadrži obrisane objave, vidljive za administratore dok su za ostale korisnike skrivene."
@@ -1530,6 +1552,7 @@ bs_BA:
       not_activated: "Još uvijek se ne možete ulogovati. Prethodno smo vam poslali email za aktivaciju korisničkog računa na email <b>%{sentTo}</b>. Molimo da tamo pratite instrukcije za aktivaciju vašeg računa."
       admin_not_allowed_from_ip_address: "Ne možete se logirati kao admin sa te IP adrese."
       resend_activation_email: "Kliknite ovdje kako bi poslali ponovo email za aktivaciju korisničkog računa."
+      activate_account: "Activate Account"
       resend_title: "Pošalji ponovo email aktivacije"
       change_email: "Promijeni email adresu"
       provide_new_email: "Unesite novu adresu i mi ćemo vam ponovo poslati email potvrde"
@@ -2567,7 +2590,6 @@ bs_BA:
         appearance: "Izgled"
         email: "Email"
     flagging:
-      title: "Zašto prijavljujete ovaj post?"
       action: "Prijavi objavu"
       take_action_options:
         suspend:
@@ -2599,7 +2621,6 @@ bs_BA:
           few: "%{count} preostalo"
           other: "%{count} preostalo"
     flagging_topic:
-      title: "Hvala što pomažete održavati našu zajednicu pristojnom."
       action: "Prijavi temu"
       notify_action: "Privatna poruka"
     topic_map:
@@ -2610,6 +2631,9 @@ bs_BA:
         one: "%{count} click"
         few: "%{count} klika"
         other: "%{count} klika"
+      views: "Pregledi"
+      read: čitao
+      minutes: minimalno
     post_links:
       about: "prikaži više poveznica za ovu objavu"
       title:
@@ -3388,6 +3412,7 @@ bs_BA:
           spam: "Spam"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(opciono)"
           saved: "sačuvano!"
         flags:
@@ -3400,6 +3425,7 @@ bs_BA:
             save: "Save"
             name: "Ime"
             description: "Opis"
+            invalid_applies_to: "Required"
             topic: "topics"
             post: "objave"
       plugins:

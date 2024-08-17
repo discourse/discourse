@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  site_settings:
+    lazy_videos_enabled: "Ativar plugin do Lazy Videos"
+    lazy_youtube_enabled: "Ativar carregamento ocioso para conteúdo incorporado do YouTube"
+    lazy_vimeo_enabled: "Ativar carregamento ocioso para conteúdo incorporado do Vimeo"
+    lazy_tiktok_enabled: "Ativar carregamento ocioso para conteúdo incorporado do TikTok (experimental)"

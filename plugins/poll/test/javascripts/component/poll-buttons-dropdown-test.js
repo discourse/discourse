@@ -3,7 +3,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { count, query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 module("Poll | Component | poll-buttons-dropdown", function (hooks) {
   setupRenderingTest(hooks);
@@ -37,13 +37,50 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
 
     await click(".widget-dropdown-header");
 
-    assert.strictEqual(count("li.dropdown-menu__item"), 2);
+    assert.dom("li.dropdown-menu__item").exists({ count: 2 });
 
     assert.strictEqual(
       query("li.dropdown-menu__item span").textContent.trim(),
       I18n.t("poll.export-results.label"),
       "displays the poll Export action"
     );
+  });
+
+  test("Renders a show-tally button when poll is a bar chart", async function (assert) {
+    this.setProperties({
+      closed: false,
+      voters: 2,
+      isStaff: false,
+      isMe: false,
+      topicArchived: false,
+      groupableUserFields: ["stuff"],
+      isAutomaticallyClosed: false,
+      dropDownClick: () => {},
+      availableDisplayMode: "showTally",
+    });
+
+    await render(hbs`<PollButtonsDropdown
+      @closed={{this.closed}}
+      @voters={{this.voters}}
+      @isStaff={{this.isStaff}}
+      @isMe={{this.isMe}}
+      @topicArchived={{this.topicArchived}}
+      @groupableUserFields={{this.groupableUserFields}}
+      @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
+      @dropDownClick={{this.dropDownClick}}
+      @availableDisplayMode={{this.availableDisplayMode}}
+    />`);
+
+    await click(".widget-dropdown-header");
+
+    assert.strictEqual(count("li.dropdown-menu__item"), 2);
+
+    assert
+      .dom(query("li.dropdown-menu__item span"))
+      .hasText(
+        I18n.t("poll.show-tally.label"),
+        "displays the show absolute button"
+      );
   });
 
   test("Renders a single button when there is only one authorised action", async function (assert) {

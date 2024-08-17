@@ -195,6 +195,40 @@ module DiscourseAutomation
         end
     end
 
+    def self.handle_topic_tags_changed(topic, old_tag_names, new_tag_names)
+      name = DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED
+
+      DiscourseAutomation::Automation
+        .where(trigger: name, enabled: true)
+        .find_each do |automation|
+          watching_categories = automation.trigger_field("watching_categories")
+          if watching_categories["value"]
+            next if !watching_categories["value"].include?(topic.category_id)
+          end
+
+          removed_tags = old_tag_names - new_tag_names
+          added_tags = new_tag_names - old_tag_names
+
+          watching_tags = automation.trigger_field("watching_tags")
+
+          if watching_tags["value"]
+            should_skip = false
+            watching_tags["value"].each do |tag|
+              should_skip = true if !removed_tags.empty? && !removed_tags.include?(tag)
+              should_skip = true if !added_tags.empty? && !added_tags.include?(tag)
+            end
+            next if should_skip
+          end
+
+          automation.trigger!(
+            "kind" => name,
+            "topic" => topic,
+            "removed_tags" => removed_tags,
+            "added_tags" => added_tags,
+          )
+        end
+    end
+
     def self.handle_after_post_cook(post, cooked)
       return cooked if post.post_type != Post.types[:regular] || post.post_number > 1
 

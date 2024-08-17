@@ -25,32 +25,6 @@ export default class ChannelsListPublic extends Component {
     return this.args.inSidebar ?? false;
   }
 
-  get publicMessageChannelsEmpty() {
-    return (
-      this.chatChannelsManager.publicMessageChannels?.length === 0 &&
-      this.chatStateManager.hasPreloadedChannels
-    );
-  }
-
-  get displayPublicChannels() {
-    if (!this.siteSettings.enable_public_channels) {
-      return false;
-    }
-
-    if (!this.chatStateManager.hasPreloadedChannels) {
-      return false;
-    }
-
-    if (this.publicMessageChannelsEmpty) {
-      return (
-        this.currentUser?.staff ||
-        this.currentUser?.has_joinable_public_channels
-      );
-    }
-
-    return true;
-  }
-
   get hasUnreadThreads() {
     return this.chatTrackingStateManager.hasUnreadThreads;
   }
@@ -84,7 +58,9 @@ export default class ChannelsListPublic extends Component {
       </LinkTo>
     {{/if}}
 
-    {{#if (and this.displayPublicChannels this.site.desktopView)}}
+    {{#if
+      (and this.chatChannelsManager.displayPublicChannels this.site.desktopView)
+    }}
       <div class="chat-channel-divider public-channels-section">
         {{#if this.inSidebar}}
           <span
@@ -119,12 +95,12 @@ export default class ChannelsListPublic extends Component {
         (if this.inSidebar "collapsible-sidebar-section")
       }}
     >
-      {{#if this.publicMessageChannelsEmpty}}
+      {{#if this.chatChannelsManager.publicMessageChannelsEmpty}}
         <EmptyChannelsList
           @title={{i18n "chat.no_public_channels"}}
           @ctaTitle={{i18n "chat.no_public_channels_cta"}}
           @ctaAction={{this.openBrowseChannels}}
-          @showCTA={{this.displayPublicChannels}}
+          @showCTA={{this.chatChannelsManager.displayPublicChannels}}
         />
       {{else}}
         {{#each this.chatChannelsManager.publicMessageChannels as |channel|}}

@@ -21,23 +21,14 @@ RSpec.describe Admin::SiteSettingsController do
         expect(locale.length).to eq(1)
       end
 
-      describe "the filter_names param" do
-        it "only returns settings that are specified in the filter_names param" do
-          get "/admin/site_settings.json",
-              params: {
-                filter_names: %w[title site_description notification_email],
-              }
-
-          expect(response.status).to eq(200)
-
-          json = response.parsed_body
-          expect(json["site_settings"].size).to eq(3)
-          expect(json["site_settings"].map { |s| s["setting"] }).to contain_exactly(
-            "title",
-            "site_description",
-            "notification_email",
-          )
-        end
+      it "does not return hidden site settings" do
+        get "/admin/site_settings.json"
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body["site_settings"].find do |s|
+            s["setting"] == "set_locale_from_cookie"
+          end,
+        ).to be_nil
       end
     end
 

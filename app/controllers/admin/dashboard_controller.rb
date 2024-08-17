@@ -7,7 +7,6 @@ class Admin::DashboardController < Admin::StaffController
     if SiteSetting.version_checks?
       data.merge!(version_check: DiscourseUpdates.check_version.as_json)
     end
-    data.merge!(has_unseen_features: DiscourseUpdates.has_unseen_features?(current_user.id))
 
     render json: data
   end

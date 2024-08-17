@@ -60,13 +60,6 @@ en:
   remove_posts_deleted_by_author: "Deleted by author"
   redirect_warning: "We were unable to verify that the link you selected was actually posted to the forum. If you wish to proceed anyway, select the link below."
   on_another_topic: "On another topic"
-
-  topic_category_changed: "From %{from} to %{to}"
-  topic_tag_changed:
-    added_and_removed: "Added %{added} and removed %{removed}"
-    added: "Added %{added}"
-    removed: "Removed %{removed}"
-
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
@@ -1046,11 +1039,7 @@ en:
     connected: "(connected)"
 
   activation:
-    action: "Click here to activate your account"
     already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
-    please_continue: "Your new account is confirmed; you will be redirected to the home page."
-    continue_button: "Continue to %{site_name}"
-    welcome_to: "Welcome to %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
     missing_session: "We cannot detect if your account was created, please ensure you have cookies enabled."
     activated: "Sorry, this account has already been activated."
@@ -1881,7 +1870,7 @@ en:
     max_reply_history: "Maximum number of replies to expand when expanding in-reply-to"
     topics_per_period_in_top_summary: "Number of top topics shown in the default top topics summary."
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
-    redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
+    redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page. Only applies when 'top' is present in the 'top menu' site setting."
     top_page_default_timeframe: "Default top page time period for anonymous users (automatically adjusts for logged in users based on their last visit)."
     moderators_view_emails: "Allow moderators to view user email addresses."
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
@@ -2130,7 +2119,7 @@ en:
     edit_post_allowed_groups: "Groups that are allowed to edit posts. Admins and moderators can always edit posts."
 
     min_trust_to_allow_self_wiki: "The minimum trust level required to make user's own post wiki."
-    self_wiki_allowed_groups: "Groups where users can make their own post wiki. Admins and moderators can always make their own post wiki."
+    self_wiki_allowed_groups: "Allow users in these groups to make their own posts wiki. Admins and moderators can always make their own posts wiki."
 
     min_trust_to_send_messages: "DEPRECATED, use the 'personal message enabled groups' setting instead. The minimum trust level required to create new personal messages."
     min_trust_to_send_email_messages: "The minimum trust level required to send personal messages via email."
@@ -2486,7 +2475,7 @@ en:
     notify_about_reviewable_item_after: "If there are reviewable items that haven’t been handled after this many hours, send a personal message to moderators. Set to 0 to disable."
 
     delete_drafts_older_than_n_days: "Delete drafts that have not been changed in more than (n) days."
-    delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to 0 to never delete stub topics."
+    delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to -1 to never delete. Set to 0 to immediately delete."
 
     bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode and remove Getting Started button (set to 0 to disable, can take up to 24 hours)"
 
@@ -2619,7 +2608,6 @@ en:
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
-    create_post_for_category_and_tag_changes: "Create a small action post when a topic's category or tags change"
     automatically_clean_unused_tags: "Automatically delete tags that are not being used on any topics or private messages on a daily basis."
     watched_precedence_over_muted: "Notify me about topics in categories or tags I’m watching that also belong to one I have muted"
 
@@ -2664,6 +2652,8 @@ en:
     use_email_for_username_and_name_suggestions: "Use the first part of email addresses for username and name suggestions. Note that this makes it easier for the public to guess full user email addresses (because a large proportion of people share common services like `gmail.com`)."
     use_name_for_username_suggestions: "Use a user's full name when suggesting usernames."
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
+    show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
+    show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
 
     splash_screen: "Displays a temporary loading screen while site assets load"
     navigation_menu: "Specify sidebar or header dropdown as the main navigation menu for your site. Sidebar is recommended."
@@ -2674,12 +2664,11 @@ en:
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
     enable_experimental_lightbox: "EXPERIMENTAL: Replace the default image lightbox with the revamped design."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Show a quick access menu for bookmarks on posts and a new redesigned modal"
-    glimmer_header_mode: "Control whether the new 'glimmer' header implementation is used. Defaults to 'auto', which will enable automatically once all your themes and plugins are ready. https://meta.discourse.org/t/296544"
+    glimmer_header_mode: "Control whether the new 'glimmer' header implementation is used. 'auto' will enable automatically once all your themes and plugins are ready. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "EXPERIMENTAL: Enable the new 'glimmer' topic list implementation. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
     experimental_form_templates: "EXPERIMENTAL: Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     admin_sidebar_enabled_groups: "Enable sidebar navigation for the admin UI for the specified groups, which replaces the top-level admin navigation buttons."
     lazy_load_categories_groups: "EXPERIMENTAL: Lazy load category information only for users of these groups. This improves performance on sites with many categories."
-    experimental_topic_bulk_actions_enabled_groups: "EXPERIMENTAL: Enable the new bulk actions dropdown."
 
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
@@ -2710,6 +2699,7 @@ en:
       invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
       invalid_alternative_reply_by_email_addresses: "All values must contain '%{reply_key}' and be different from the notification email."
       invalid_domain_hostname: "Must not include * or ? characters."
+      invalid_allowed_iframes_url: "Iframe urls must start with http:// or https:// and have at least one more additional '/'"
       invalid_csp_script_src: "Value must be either 'unsafe-eval' or 'wasm-unsafe-eval', or in the form '<hash algorithm>-<base64 value>' where supported hash algorithms are sha256, sha384 or sha512. Ensure that your input is wrapped in single quotation marks."
       pop3_polling_host_is_empty: "You must set a 'pop3 polling host' before enabling POP3 polling."
       pop3_polling_username_is_empty: "You must set a 'pop3 polling username' before enabling POP3 polling."
@@ -2910,6 +2900,7 @@ en:
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_disabled_lastpost: "This topic is now opened. New replies are allowed."
     auto_deleted_by_timer: "Automatically deleted by timer."
+    auto_deleted_by_merge: "Automatically deleted by merge."
 
   login:
     invalid_second_factor_method: "The selected two-factor method is invalid."
@@ -5346,18 +5337,32 @@ en:
             label: "Language"
 
       privacy:
-        title: "Member experience"
+        title: "Member access"
 
         fields:
           login_required:
-            placeholder: "Private"
-            extra_description: "Only logged in users can access this community"
+            label: "Visibility"
+            description: "Is your community public or private?"
+            choices:
+              public:
+                label: "Public"
+              private:
+                label: "Private"
           invite_only:
-            placeholder: "Invite only"
-            extra_description: "Users must be invited by trusted users or staff, otherwise users can sign up on their own"
+            label: "Registration"
+            description: "How can members join this community?"
+            choices:
+              sign_up:
+                label: "Sign up"
+              invite_only:
+                label: "Invite only"
           must_approve_users:
-            placeholder: "Require approval"
-            extra_description: "Users must be approved by staff"
+            description: "Do you want to approve member accounts?"
+            choices:
+              "no":
+                label: "No, new members can join immediately"
+              "yes":
+                label: "Yes, new members must be approved by moderators"
           chat_enabled:
             placeholder: "Enable chat"
             extra_description: "Engage with your members in real time"
@@ -5468,6 +5473,7 @@ en:
       comment_by: "Comment by"
       review_by: "Review by"
       pr_summary: "%{commits} commits changed %{changed_files} files with %{additions} additions and %{deletions} deletions"
+      no_description: "Contribute to %{repo} development by creating an account on GitHub."
 
   discourse_push_notifications:
     popup:

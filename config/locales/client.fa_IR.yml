@@ -278,6 +278,20 @@ fa_IR:
       active_user_count: "کاربران فعال"
       contact: "ارتباط با ما"
       contact_info: "در شرایط حساس و مسائل اضطراری مربوط به سایت٬‌ لطفا از طریق %{contact_info} با تماس بگیرید."
+      activities:
+        topics:
+          one: "%{formatted_number} موضوع"
+          other: "%{formatted_number} موضوعات"
+        posts:
+          one: "%{formatted_number} فرسته"
+          other: "%{formatted_number} نوشته"
+        likes:
+          one: "%{formatted_number} پسندیده"
+          other: "%{formatted_number} پسندیده"
+        periods:
+          last_7_days: "در 7 روز گذشته"
+          today: "امروز"
+          all_time: "همیشه"
     bookmarked:
       title: "نشانک"
       edit_bookmark: "ویرایش نشانک"
@@ -624,7 +638,6 @@ fa_IR:
       never: "هرگز"
       last_custom: "آخرین تاریخ سفارشی"
       custom: "تاریخ و زمان سفارشی"
-      custom_short: "سفارشی..."
       select_timeframe: "انتخاب یک دوره‌زمانی"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> <a href='%{topicUrl}'>یک موضوع</a> ایجاد کرد"
@@ -734,11 +747,12 @@ fa_IR:
           prefill:
             title: "از قبل پر کردن با تنظیمات برای:"
             gmail: "جی‌میل"
+          ssl_modes:
+            none: "هیچ کدام"
           credentials:
             title: "اطلاعات ورود"
             smtp_server: "سرور SMTP"
             smtp_port: "درگاه SMTP"
-            smtp_ssl: "از SSL برای SMTP استفاده کنید"
             imap_server: "سرور IMAP"
             imap_port: "درگاه IMAP"
             imap_ssl: "از SSL برای IMAP استفاده کنید"
@@ -1311,6 +1325,13 @@ fa_IR:
         confirm_description:
           account_specific: "حساب%{provider} شما. %{account_description}برای احراز هویت استفاده خواهد شد."
           generic: "حساب کاربری%{provider} شما برای احراز‌هویت استفاده خواهد‌شد."
+      activate_account:
+        action: "برای فعال کردن حساب‌کاربری خود اینجا کلیک کنید"
+        already_done: "متاسفیم، این پیوند تاییدیه حساب کاربری دیگر معتبر نیست. شاید حساب‌کاربری شما در حال حاضر فعال است."
+        please_continue: "حساب‌کاربری جدید شما تایید شد؛ شما به صفحه اصلی هدایت می‌شوید. "
+        continue_button: "برو به %{site_name}"
+        welcome_to: "به %{site_name} خوش آمدید!"
+        approval_required: "یکی از مدیران باید حساب کاربری را برای دسترسی به این انجمن به‌صورت دستی تایید کند. شما ایمیلی مبنی به تایید حساب کاربریتان دریافت می کنید. "
       name:
         title: "نام"
         instructions: "نام و نام‌خانوادگی شما (اختیاری)."
@@ -1649,15 +1670,6 @@ fa_IR:
       logout_disabled: "سایت در حال فقط خواندنی است و امکان خروج در این حالت وجود ندارد."
     staff_writes_only_mode:
       enabled: "این سایت در حالت فقط کارکنان است. می‌توانید موضوعات را مشاهده کنید، ولی امکان پاسخ دادن، پسندیدن و سایر اقدامات فقط برای اعضای کارکنان محدود شده است."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> به حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} رسیده است.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> به حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} رسیده است.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> از حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} عبور کرده است.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> از حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} عبور کرده است.
     learn_more: "بیشتر بدانید…"
     mute: خاموش
     unmute: صدادار
@@ -1682,6 +1694,7 @@ fa_IR:
         other: "<b>%{count}</b> پاسخ داده شده."
       buttons:
         hide: "پنهان کردن خلاصه"
+        regenerate: "ایجاد مجدد"
       disable: "نمایش همه‌ی نوشته‌ها"
     deleted_filter:
       enabled_description: "این موضوع شامل نوشته‌های حذف شده‌ای است، که مخفی شده‌اند."
@@ -1782,6 +1795,7 @@ fa_IR:
       admin_not_allowed_from_ip_address: "شما نمی تواند با این آدرس آیپی وارد بخش مدیریت شوید."
       resend_activation_email: "برای ارسال مجدد ایمیل فعالسازی، اینجا را کلیک کنید."
       omniauth_disallow_totp: "حساب کاربری شما برای ورود دو مرحله ای تنظیم شده است. لطفا با رمز عبور وارد شوید."
+      activate_account: "فعال‌سازی حساب کاربری"
       resend_title: "ارسال مجدد ایمیل فعالسازی"
       change_email: "تغییر ایمیل"
       provide_new_email: "یک ایمیل جدید وارد کنید و ما ایمیل فعالسازی را برایتان ارسال می‌کنیم."
@@ -2990,7 +3004,6 @@ fa_IR:
       list_filters:
         all: "همه موضوعات"
     flagging:
-      title: "تشکر برای کمک به نگه داشتن جامعه ما بصورت مدنی !"
       action: "پرچم‌گذاری نوشته"
       take_action_options:
         default:
@@ -3020,7 +3033,6 @@ fa_IR:
           one: "%{count} باقی مانده"
           other: "%{count} باقی مانده"
     flagging_topic:
-      title: "تشکر برای کمک به جامعه مدنی انجمن ما!"
       action: "پرچم‌گذاری موضوع"
       notify_action: "پیام"
     topic_map:
@@ -3030,6 +3042,9 @@ fa_IR:
       clicks:
         one: "%{count} کلیک"
         other: "%{count} کلیک"
+      views: "بازدید"
+      read: خواندن
+      minutes: کمترین
     post_links:
       about: "توسعه پیوند‌های بیشتر برای این نوشته"
       title:
@@ -3545,7 +3560,7 @@ fa_IR:
         stale_data: "بررسی برای بروزرسانی اخیراً انجام نگرفته است. از اجرای sidekiq اطمینان حاصل کنید."
         installed_version: "نصب"
         latest_version: "آخرین"
-        problems_found: "چند توصیه براثاث تنظیمات فعلی سایت شما"
+        problems_found: "چند توصیه بر اساس تنظیمات فعلی سایت شما"
         new_features:
           learn_more: "بیشتر بدانید..."
         last_checked: " آخرین بررسی"
@@ -3820,6 +3835,7 @@ fa_IR:
         about:
           header: "درباره سایت شما"
           community_name: "نام انجمن"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "سازمان شما"
           company_name: "نام شرکت"
           optional: "(اختیاری)"
@@ -3835,6 +3851,7 @@ fa_IR:
             save: "ذخیره"
             name: "نام"
             description: "توضیح"
+            invalid_applies_to: "مورد نیاز"
             topic: "موضوعات"
             post: "فرسته‌ها"
       plugins:

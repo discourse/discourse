@@ -377,6 +377,32 @@ pl_PL:
       active_user_count: "Aktywni użytkownicy"
       contact: "Skontaktuj się z nami"
       contact_info: "W sprawach wymagających szybkiej reakcji lub związanych z poprawnym funkcjonowaniem serwisu, prosimy o kontakt: %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} temat"
+          few: "%{formatted_number} tematy"
+          many: "%{formatted_number} tematy"
+          other: "%{formatted_number} tematy"
+        posts:
+          one: "%{formatted_number} post"
+          few: "%{formatted_number} posty"
+          many: "%{formatted_number} postów"
+          other: "%{formatted_number} wpisów"
+        likes:
+          one: "%{formatted_number} polubienie"
+          few: "%{formatted_number} polubień"
+          many: "%{formatted_number} polubienia"
+          other: "%{formatted_number} polubienia"
+        periods:
+          last_7_days: "w ostatnich 7 dniach"
+          today: "dzisiaj"
+          all_time: "cały czas"
+      member_count:
+        one: "%{formatted_number} Członek"
+        few: "%{formatted_number} Członków"
+        many: "%{formatted_number} Członków"
+        other: "%{formatted_number} Członków"
+      report_inappropriate_content: "Jeśli natkniesz się na nieodpowiednie treści, nie wahaj się i rozpocznij rozmowę z naszymi moderatorami i administratorami. Pamiętaj, aby zalogować się przed kontaktem."
     bookmarked:
       title: "Zakładka"
       edit_bookmark: "Edytuj zakładkę"
@@ -438,6 +464,11 @@ pl_PL:
     bookmark_bulk_actions:
       clear_reminders:
         name: "Wyczyść przypomnienia"
+        description:
+          one: "Czy na pewno chcesz wyczyścić przypomnienie dla tej zakładki?"
+          few: "Czy na pewno chcesz wyczyścić przypomnienie dla tych <b>%{count}</b> zakładek?"
+          many: "Czy na pewno chcesz wyczyścić przypomnienie dla tych <b>%{count}</b> zakładek?"
+          other: "Czy na pewno chcesz wyczyścić przypomnienie dla tych <b>%{count}</b> zakładek?"
       delete_bookmarks:
         name: "Usuń zakładkę"
         description:
@@ -793,7 +824,6 @@ pl_PL:
       never: "Nigdy"
       last_custom: "Ostatnia niestandardowa data i godzina"
       custom: "Niestandardowa data i godzina"
-      custom_short: "Niestandardowy..."
       select_timeframe: "Wybierz przedział czasowy"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> tworzy <a href='%{topicUrl}'>temat</a>"
@@ -908,11 +938,12 @@ pl_PL:
           prefill:
             title: "Wstępne wypełnienie ustawieniami dla:"
             gmail: "Gmail"
+          ssl_modes:
+            none: "Brak"
           credentials:
             title: "Poświadczenia"
             smtp_server: "Serwer SMTP"
             smtp_port: "Port SMTP"
-            smtp_ssl: "Użyj SSL dla SMTP"
             imap_server: "Serwer IMAP"
             imap_port: "Port IMAP"
             imap_ssl: "Użyj SSL dla IMAP"
@@ -1461,78 +1492,6 @@ pl_PL:
         warnings: "Oficjalne ostrzeżenia"
         read_more_in_group: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w %{groupLink}."
         read_more: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w <a href='%{basePath}/u/%{username}/messages'>wiadomościach osobistych</a>."
-        read_more_group_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Pozostała <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytana</a>}
-                   few {Pozostały <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytane</a>}
-                   many {Pozostało <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytanych</a>}
-                other {Pozostało <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytanych</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { i <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nowa</a> wiadomość lub przejrzyj inne wiadomości w {groupLink}}
-                   few { i <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nowe</a> wiadomości lub przejrzyj inne wiadomości w {groupLink}}
-                   many { i <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nowych</a> wiadomości lub przejrzyj inne wiadomości w {groupLink}}
-                other { i <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nowych</a> wiadomości lub przejrzyj inne wiadomości w {groupLink}}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Pozostała <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytana</a> wiadomość lub przejrzyj inne wiadomości w {groupLink}}
-                   few {Pozostały <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytane</a> wiadomości lub przejrzyj inne wiadomości w {groupLink}}
-                   many {Pozostało <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytanych</a> wiadomości lub przejrzyj inne wiadomości w {groupLink}}
-                other {Pozostało <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytanych</a> wiadomości lub przejrzyj inne wiadomości w {groupLink}}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {Pozostała <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nowa</a> wiadomość lub przejrzyj inne wiadomości w {groupLink}}
-                   few {Pozostały <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nowe</a> wiadomości lub przejrzyj inne wiadomości w {groupLink}}
-                   many {Pozostały <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nowych</a> wiadomości lub przejrzyj inne wiadomości w {groupLink}}
-                other {Pozostały <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nowych</a> wiadomości lub przejrzyj inne wiadomości w {groupLink}}
-              }
-            }
-            other {}
-          }
-        read_more_personal_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Pozostała <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytana</a>}
-                   few {Pozostały <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytane</a>}
-                   many {Pozostało <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytanych</a>}
-                other {Pozostało <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytanych</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { i <a href='{basePath}/u/{username}/messages/new'># nowa</a> wiadomość lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
-                   few { i <a href='{basePath}/u/{username}/messages/new'># nowe</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
-                   many { i <a href='{basePath}/u/{username}/messages/new'># nowych</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
-                other { i <a href='{basePath}/u/{username}/messages/new'># nowych</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {Pozostała <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytana</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
-                   few {Pozostały <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytane</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
-                   many {Pozostało <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytanych</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
-                other {Pozostało <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytanych</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {Pozostała <a href='{basePath}/u/{username}/messages/new'># nowa</a> wiadomość lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
-                   few {Pozostały <a href='{basePath}/u/{username}/messages/new'># nowe</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
-                   many {Pozostało <a href='{basePath}/u/{username}/messages/new'># nowych</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
-                other {Pozostało <a href='{basePath}/u/{username}/messages/new'># nowych</a> wiadomości lub przejrzyj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>}
-              }
-            }
-            other {}
-          }
       preferences_nav:
         account: "Konto"
         security: "Bezpieczeństwo"
@@ -1743,6 +1702,13 @@ pl_PL:
           disconnect: "Twoje istniejące konto %{provider} '%{account_description}' zostanie odłączone."
           account_specific: "Twoje konto %{provider} „%{account_description}” zostanie użyte do uwierzytelnienia."
           generic: "Twoje konto %{provider} zostanie wykorzystane do uwierzytelnienia."
+      activate_account:
+        action: "Kliknij, by aktywować swoje konto."
+        already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twoje konto jest już aktywne?"
+        please_continue: "Twoje nowe konto zostało aktywowane, zostaniesz przekierowany na stronę główną."
+        continue_button: "Przejdź do %{site_name}"
+        welcome_to: "Witaj na %{site_name}!"
+        approval_required: "Moderator musi zaakceptować Twoje nowe konto zanim uzyskasz dostęp do forum. O aktywacji zostaniesz poinformowanym mailem."
       name:
         title: "Pełna nazwa"
         instructions: "Twoja pełna nazwa (opcjonalnie)."
@@ -2123,9 +2089,14 @@ pl_PL:
     form_kit:
       reset: Przywróć
       optional: opcjonalnie
+      errors_summary_title: "Ten formularz zawiera błędy:"
+      dirty_form: "Nie przesłano zmian. Czy na pewno chcesz wyjść?"
       errors:
         required: "Wymagane"
         invalid_url: "Musi być prawidłowym adresem URL"
+        not_an_integer: "Musi być liczbą całkowitą"
+        not_accepted: "Musi zostać zaakceptowane"
+        not_a_number: "Musi być liczbą"
     close: "Zamknij"
     assets_changed_confirm: "Ta strona właśnie otrzymała aktualizację oprogramowania. Pobrać najnowszą wersję teraz?"
     logout: "Nastąpiło wylogowanie."
@@ -2137,15 +2108,6 @@ pl_PL:
       logout_disabled: "Wylogowanie jest zablokowane gdy strona jest w trybie tylko do odczytu."
     staff_writes_only_mode:
       enabled: "Ta strona jest w trybie tylko dla personelu. Kontynuuj przeglądanie, ale odpowiadanie, polubienia i inne działania są ograniczone tylko do członków personelu."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}</a> osiągnięto limit ustawień witryny wynoszący {limit, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}</a> osiągnięto limit ustawień witryny wynoszący {limit, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}</a> osiągnięto limit ustawień witryny wynoszący {limit, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}</a> osiągnięto limit ustawień witryny wynoszący {limit, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}.
     learn_more: "Dowiedz się więcej…"
     mute: Wycisz
     unmute: Wyłącz wyciszenie
@@ -2189,13 +2151,14 @@ pl_PL:
         other: "Jest <b>%{count}</b> odpowiedzi."
       buttons:
         hide: "Ukryj podsumowanie"
-        generate: "Podsumuj z AI"
-        regenerate: "Wygeneruj ponownie podsumowanie"
+        generate: "Podsumuj"
+        regenerate: "Odnów"
       description_time_MF: |
         Istnieje {replyCount, plural, one {<b>#</b> odpowiedź} few {<b>#</b> odpowiedzi} many {<b>#</b> odpowiedzi} other {<b>#</b> odpowiedzi}} z szacowanym czasem czytania <b>{readingTime, plural, one {# minuty} few {# minut} many {# minut} other {# minut}}</b>.
       enable: "Pokaż najlepsze odpowiedzi"
       disable: "Pokaż wszystkie posty"
       short_label: "Najlepsze odpowiedzi"
+      show_all_label: "Pokaż wszystkie"
       short_title: "Pokaż najlepsze odpowiedzi w tym temacie: najciekawsze posty określone przez społeczność"
     deleted_filter:
       enabled_description: "Ten temat posiada usunięte wpisy, które zostały ukryte."
@@ -2304,6 +2267,7 @@ pl_PL:
       admin_not_allowed_from_ip_address: "Nie możesz się zalogować jako admin z tego adresu IP."
       resend_activation_email: "Kliknij tutaj, aby ponownie wysłać email z aktywacją konta."
       omniauth_disallow_totp: "Twoje konto ma włączone uwierzytelnianie dwuskładnikowe. Zaloguj się za pomocą swojego hasła."
+      activate_account: "Aktywuj Konto"
       resend_title: "Wyślij ponownie e-mail aktywacyjny"
       change_email: "Zmień adres e-mail"
       provide_new_email: "Wprowadź nowy adres e-mail. Wyślemy na niego e-mail potwierdzający."
@@ -4093,7 +4057,6 @@ pl_PL:
         none: "brak podkategorii"
       colors_disabled: "Nie możesz wybrać kolorów, ponieważ nie masz stylu kategorii."
     flagging:
-      title: "Dziękujemy za pomoc w utrzymaniu porządku w naszej społeczności!"
       action: "Oflaguj wpis"
       take_action: "Podejmij działanie…"
       take_action_options:
@@ -4147,7 +4110,6 @@ pl_PL:
           many: "%{count} pozostało"
           other: "%{count} pozostało"
     flagging_topic:
-      title: "Dziękujemy za pomoc w utrzymaniu porządku w naszej społeczności!"
       action: "Zgłoś temat"
       notify_action: "Wiadomość"
     topic_map:
@@ -4160,6 +4122,12 @@ pl_PL:
         few: "%{count} kliknięć"
         many: "%{count} kliknięć"
         other: "%{count} kliknięć"
+      menu_titles:
+        replies: Najbardziej lubiane odpowiedzi
+        views: Ostatnie wyświetlenia
+      views: "Odsłony"
+      read: odczyt
+      minutes: min
     post_links:
       about: "rozwiń więcej linków dla tego wpisu"
       title:
@@ -4638,7 +4606,6 @@ pl_PL:
         everyone_can_use: "Tagi mogą być wykorzystywane przez wszystkich"
         usable_only_by_groups: "Tagi są widoczne dla wszystkich, ale tylko następujące grupy mogą ich używać"
         visible_only_to_groups: "Tagi są widoczne tylko dla następujących grup"
-        cannot_save: "Nie można zapisać grupy tagów. Upewnij się, że istnieje co najmniej jeden tag, nazwa grupy tagów nie jest pusta, a grupa jest wybrana do uprawnień tagów."
         tags_placeholder: "Wyszukaj lub utwórz tagi"
         parent_tag_placeholder: "Opcjonalnie"
         select_groups_placeholder: "Wybierz grupy…"
@@ -5101,6 +5068,8 @@ pl_PL:
               label: Kategoria
             include_subcategories:
               label: "Uwzględnij podkategorie"
+            type_of_web_hook_event:
+              label: "Rodzaj zdarzenia"
       flags:
         title: "Flagi moderacji"
         description: "Opis"
@@ -5499,15 +5468,22 @@ pl_PL:
           header: "O Twojej witrynie"
           general_settings: "Ustawienia główne"
           community_name: "Nazwa społeczności"
+          community_name_placeholder: "Przykładowa społeczność"
           community_summary: "Podsumowanie społeczności"
           community_description: "Opis społeczności"
           banner_image: "Obraz banera"
+          banner_image_help: |
+            To zdjęcie zostanie wykorzystane na Twojej stronie "O nas". Zalecany rozmiar: 800x300 pikseli. Akceptowane formaty: JPG, PNG i SVG, do 10 MB.
           contact_information: "Informacje kontaktowe"
           community_owner: "Właściciel społeczności"
+          community_owner_help: |
+            Nazwa kluczowego kontaktu odpowiedzialnego za tę witrynę. Używana do krytycznych powiadomień, a także wyświetlana na /about. Widoczna dla anonimowych użytkowników w publicznych witrynach.
           contact_email: "E-mail kontaktowy"
           contact_url: "URL kontaktowy"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "Twoja organizacja"
           company_name: "Nazwa firmy"
+          company_name_placeholder: "Przykładowa firma Inc."
           governing_law: "Obowiązujące prawo"
           city_for_disputes: "Miasto do sporów"
           city_for_disputes_help: |
@@ -5534,6 +5510,7 @@ pl_PL:
             save: "Zapisz"
             name: "Nazwa"
             description: "Opis"
+            invalid_applies_to: "Wymagane"
             topic: "tematy"
             post: "wpisy"
             chat_message: "wiadomości czatu"
@@ -6199,6 +6176,16 @@ pl_PL:
             update_watched_word_group: "Zaktualizuj grupę obserwowanych słów"
             delete_watched_word_group: "Usuń grupę obserwowanych słów"
             toggle_flag: "przełącz flagę"
+            move_flag: "przenieś flagę"
+            create_flag: "utwórz flagę"
+            update_flag: "zaktualizuj flagę"
+            delete_flag: "usuń flagę"
+            topic_slow_mode_set: "ustaw tryb spowolnienia tematu"
+            topic_slow_mode_removed: "usuń tryb spowolnienia tematu"
+            custom_emoji_create: "utwórz niestandardowe emoji"
+            custom_emoji_destroy: "usuń niestandardowe emoji"
+            delete_post_permanently: "trwale usuń post"
+            delete_topic_permanently: "trwale usuń temat"
         screened_emails:
           title: "Ekranowane emaile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -6289,6 +6276,7 @@ pl_PL:
           case_sensitivity_label: "Rozróżniana jest wielkość liter"
           case_sensitivity_description: "Tylko słowa z dopasowaną wielkością liter"
           html_label: "HTML"
+          html_description: "Wyświetla HTML w zastępstwie"
           words_or_phrases: "słowa lub frazy"
         test:
           button_label: "Sprawdź"
@@ -6699,6 +6687,8 @@ pl_PL:
           title: "Pole obowiązkowe"
           optional:
             title: "Opcjonalnie"
+          for_all_users:
+            title: "Dla wszystkich użytkowników"
           on_signup:
             title: "Podczas rejestracji"
         editable:
@@ -6824,6 +6814,14 @@ pl_PL:
         requires_confirmation_messages:
           default:
             confirm: "Tak, jestem pewny/a"
+          min_password_length:
+            confirm: "Tak, zaktualizuj politykę haseł"
+          min_admin_password_length:
+            confirm: "Tak, zaktualizuj politykę haseł"
+          password_unique_charactes:
+            confirm: "Tak, zaktualizuj politykę haseł"
+          block_common_passwords:
+            confirm: "Tak, zaktualizuj politykę haseł"
       badges:
         status: Status
         title: Odznaki
@@ -6833,6 +6831,8 @@ pl_PL:
         badge: Odznaka
         display_name: Wyświetlana nazwa
         description: Opis
+        long_description: Długi opis
+        badge_type: Typ odznaki
         badge_grouping: Grupa
         badge_groupings:
           modal_title: Grupy odznak
@@ -6861,6 +6861,7 @@ pl_PL:
         icon: Ikona
         image: Grafika
         graphic: Grafika
+        icon_or_image: Odznaka wymaga ikony lub obrazu
         icon_help: "Wprowadź nazwę ikony Font Awesome (użyj prefiksu \"far-\" dla zwykłych ikon i \"fab-\" dla ikon marek)"
         select_an_icon: "Wybierz ikonę"
         upload_an_image: "Prześlij obraz"

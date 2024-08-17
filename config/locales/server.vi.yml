@@ -486,6 +486,10 @@ vi:
   meta_category_description: "Thảo luận về site này, tổ chức của nó, làm sao nó hoạt động, và làm sao chúng tôi có thể cải tiến nó tốt hơn."
   staff_category_name: "Nhân viên"
   staff_category_description: "Chuyên mục riêng dành cho nhân viên. Các chủ đề chỉ hiển thị với quản trị viên và điều hành viên."
+  discourse_welcome_topic:
+    title: "Chào mừng đến với %{site_title}! :wave:"
+  topic_view_stats:
+    invalid_date: "Ngày không đúng định dạng, hãy sử dụng YYYY-MM-DD"
   category:
     topic_prefix: "Giới thiệu chuyên mục %{category}"
     replace_paragraph: "(Thay thế đoạn đầu tiên này bằng một mô tả ngắn gọn về danh mục mới của bạn. Hướng dẫn này sẽ xuất hiện trong vùng chọn danh mục, vì vậy hãy cố gắng giữ cho nó dưới 200 ký tự.)"
@@ -591,11 +595,7 @@ vi:
     already_done: "Xin lỗi, liên kết xác nhận này không còn giá trị. Có lẽ email của bạn đã được thay đổi?"
     confirm: "Xác nhận"
   activation:
-    action: "Nhấn vào đây để kích hoạt tài khoản của bạn"
     already_done: "Xin lỗi, liên kết để xác nhận tài khoản này không còn hợp lệ. Có thể tài khoản của bạn được kích hoạt?"
-    please_continue: "Tài khoản của bạn đã được xác nhận; bạn sẽ được chuyển đến trang chủ."
-    continue_button: "Tiếp tục tới %{site_name}"
-    welcome_to: "Chào mừng bạn đến với %{site_name}!"
     approval_required: "Một điều hành viên phải duyệt tài khoản của bạn trước khi bạn có thể đăng nhập diễn đàn này. Bạn sẽ nhận được email khi tài khoản của bạn được duyệt!"
     admin_confirm:
       back_to: "Trở về %{title}"
@@ -1061,7 +1061,6 @@ vi:
     max_reply_history: "Số tối đa trả lời được mở rộng khi trả lời mở rộng"
     topics_per_period_in_top_summary: "Số lượng chủ đề top hiển thị trong tóm tắt các chủ đề top theo mặc định."
     topics_per_period_in_top_page: "Số lượng chủ đề top hiển thị khi click 'Xem thêm'."
-    redirect_users_to_top_page: "Tự động chuyển thành viên mới và vắng mặt lâu ngày lên trên cùng trang."
     prioritize_username_in_ux: "Hiển thị tên người dùng đầu tiên trên trang người dùng, thẻ người dùng và bài đăng (khi tên bị vô hiệu được hiển thị trước)"
     enable_rich_text_paste: "Bật chuyển đổi HTML sang Markdown tự động khi dán văn bản vào trình soạn thảo. (Thực nghiệm)"
     email_token_valid_hours: "Token quyên mật khẩu / kích hoạt tài khoản có giá trị trong (n) giờ."
@@ -1892,6 +1891,8 @@ vi:
     see_more: "Thêm"
     search_title: "Tìm trang này"
     search_button: "Tìm kiếm"
+  login_required:
+    welcome_message: "# [Chào mừng đến với %{title}] (#welcome)"
   upload:
     edit_reason: "tải về một bản sao của hình ảnh."
     unauthorized: "Xin lỗi, tập tin của bạn tải lên không được cho phép (định dạng cho phép: %{authorized_extensions})."
@@ -2122,7 +2123,12 @@ vi:
       privacy:
         fields:
           login_required:
-            placeholder: "Riêng tư"
+            label: "Khả năng hiển thị"
+            choices:
+              public:
+                label: "Công khai"
+              private:
+                label: "Riêng tư"
       styling:
         fields:
           styling_preview:

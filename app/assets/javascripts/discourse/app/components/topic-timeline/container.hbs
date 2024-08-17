@@ -2,9 +2,9 @@
   <div class="title">
     <h2>
       <a
-        class="fancy-title"
-        href
         {{on "click" @jumpTop}}
+        href={{@model.firstPostUrl}}
+        class="fancy-title"
       >{{this.topicTitle}}</a>
     </h2>
     {{#if (or this.siteSettings.topic_featured_link_enabled this.showTags)}}
@@ -72,9 +72,10 @@
   <div class="timeline-scrollarea-wrapper">
     <div class="timeline-date-wrapper">
       <a
-        class="start-date"
-        onClick={{this.updatePercentage}}
+        {{on "click" this.updatePercentage}}
+        href={{@model.firstPostUrl}}
         title={{i18n "topic_entrance.jump_top_button_title"}}
+        class="start-date"
       >
         <span>
           {{this.startDate}}
@@ -87,9 +88,10 @@
       {{did-insert this.registerScrollarea}}
     >
       <div
-        class="timeline-padding"
+        {{! template-lint-disable no-invalid-interactive }}
+        {{on "click" this.updatePercentage}}
         style={{this.beforePadding}}
-        onClick={{this.updatePercentage}}
+        class="timeline-padding"
       ></div>
       <TopicTimeline::Scroller
         @current={{this.current}}
@@ -104,9 +106,10 @@
         {{did-insert this.registerScroller}}
       />
       <div
-        class="timeline-padding"
+        {{! template-lint-disable no-invalid-interactive }}
+        {{on "click" this.updatePercentage}}
         style={{this.afterPadding}}
-        onClick={{this.updatePercentage}}
+        class="timeline-padding"
       ></div>
 
       {{#if (and this.hasBackPosition this.showButton)}}
@@ -118,7 +121,11 @@
     </div>
 
     <div class="timeline-date-wrapper">
-      <a class="now-date" onClick={{this.updatePercentage}}>
+      <a
+        {{on "click" this.updatePercentage}}
+        href={{@model.lastPostUrl}}
+        class="now-date"
+      >
         <span>
           {{age-with-tooltip this.nowDate this.nowDateOptions}}
         </span>

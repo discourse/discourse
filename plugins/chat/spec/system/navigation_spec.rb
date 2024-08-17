@@ -95,14 +95,6 @@ RSpec.describe "Navigation", type: :system do
         chat.channel_path(category_channel.slug, category_channel.id),
       )
     end
-
-    it "redirects /chat/direct-messages to browse" do
-      visit("/chat/direct-messages")
-
-      expect(page).to have_current_path(
-        chat.channel_path(category_channel.slug, category_channel.id),
-      )
-    end
   end
 
   context "when opening chat" do
@@ -179,7 +171,7 @@ RSpec.describe "Navigation", type: :system do
 
     context "when opening a thread from the thread list" do
       xit "goes back to the thread list when clicking the back button" do
-        skip("Flaky on CI") if ENV["CI"]
+        skip_on_ci!
 
         visit("/chat")
         chat_page.visit_channel(category_channel)
@@ -195,7 +187,7 @@ RSpec.describe "Navigation", type: :system do
 
       context "for mobile" do
         it "goes back to the thread list when clicking the back button", mobile: true do
-          skip("Flaky on CI") if ENV["CI"]
+          skip_on_ci!
 
           visit("/chat")
           chat_page.visit_channel(category_channel)
@@ -215,7 +207,7 @@ RSpec.describe "Navigation", type: :system do
           before { Fabricate(:chat_message, thread: thread_2, use_service: true) }
 
           it "goes back to the thread list when clicking the back button", mobile: true do
-            skip("Flaky on CI") if ENV["CI"]
+            skip_on_ci!
 
             chat_page.visit_channel(category_channel)
             channel_page.message_thread_indicator(thread.original_message).click
@@ -235,7 +227,7 @@ RSpec.describe "Navigation", type: :system do
 
     context "when opening a thread from indicator" do
       it "goes back to the thread list when clicking the back button" do
-        skip("Flaky on CI") if ENV["CI"]
+        skip_on_ci!
 
         visit("/chat")
         chat_page.visit_channel(category_channel)
@@ -250,7 +242,7 @@ RSpec.describe "Navigation", type: :system do
       context "for mobile" do
         it "closes the thread and goes back to the channel when clicking the back button",
            mobile: true do
-          skip("Flaky on CI") if ENV["CI"]
+          skip_on_ci!
 
           visit("/chat")
           chat_page.visit_channel(category_channel)
@@ -262,6 +254,27 @@ RSpec.describe "Navigation", type: :system do
           expect(side_panel_page).to be_closed
         end
       end
+    end
+  end
+
+  context "when public channels are disabled" do
+    before { SiteSetting.enable_public_channels = false }
+
+    it "only show dms in drawer" do
+      visit("/")
+      chat_page.open_from_header
+
+      expect(page).to have_css(".direct-message-channels.center-empty-channels-list")
+      expect(chat_page).to have_no_messages
+    end
+
+    it "only show dms in desktop" do
+      visit("/")
+      chat_page.prefers_full_page
+      chat_page.open_from_header
+
+      expect(chat_page).to have_no_messages
+      expect(page).to have_css(".c-routes.--direct-messages")
     end
   end
 
@@ -338,7 +351,7 @@ RSpec.describe "Navigation", type: :system do
         chat_page.open_from_header
         chat_drawer_page.maximize
         sidebar_page.open_channel(category_channel_2)
-        find("#site-logo").click
+        click_logo
 
         expect(chat_page).to have_header_href(chat_channel_path)
 
@@ -382,7 +395,7 @@ RSpec.describe "Navigation", type: :system do
     context "when clicking logo from a channel in full page" do
       it "deactivates the channel in the sidebar" do
         visit("/chat/c/#{category_channel.slug}/#{category_channel.id}")
-        find("#site-logo").click
+        click_logo
 
         expect(sidebar_component).to have_no_section_link(category_channel.name, active: true)
       end
@@ -427,7 +440,7 @@ RSpec.describe "Navigation", type: :system do
 
         expect(side_panel_page).to have_open_thread(thread)
 
-        find("#site-logo").click
+        click_logo
         sidebar_component.switch_to_chat
 
         expect(side_panel_page).to have_open_thread(thread)

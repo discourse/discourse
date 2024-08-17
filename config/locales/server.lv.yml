@@ -199,9 +199,6 @@ lv:
         other: "pirms %{count} dienām"
   password_reset:
     title: "Atjaunot paroli"
-  activation:
-    continue_button: "Turpināt %{site_name}"
-    welcome_to: "Laipni lūdzam %{site_name}!"
   reviewable_score_types:
     needs_approval:
       title: "Nepieciešama apstiprināšana"
@@ -505,7 +502,11 @@ lv:
       privacy:
         fields:
           login_required:
-            placeholder: "Privāts"
+            choices:
+              public:
+                label: "Publisks"
+              private:
+                label: "Privāts"
       styling:
         fields:
           styling_preview:

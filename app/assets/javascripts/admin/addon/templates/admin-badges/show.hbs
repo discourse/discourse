@@ -11,24 +11,17 @@
     <span class="badge-display-name">{{data.name}}</span>
   </h1>
 
-  {{#if this.readOnly}}
-    <form.Alert @icon="info-circle">
-      {{i18n "admin.badges.disable_system"}}
-    </form.Alert>
-  {{else}}
-    <form.Field
-      @name="enabled"
-      @disabled={{this.readOnly}}
-      @validation="required"
-      @title={{i18n "admin.badges.status"}}
-      as |field|
-    >
-      <field.Question
-        @yesLabel={{i18n "admin.badges.enabled"}}
-        @noLabel={{i18n "admin.badges.disabled"}}
-      />
-    </form.Field>
-  {{/if}}
+  <form.Field
+    @name="enabled"
+    @validation="required"
+    @title={{i18n "admin.badges.status"}}
+    as |field|
+  >
+    <field.Question
+      @yesLabel={{i18n "admin.badges.enabled"}}
+      @noLabel={{i18n "admin.badges.disabled"}}
+    />
+  </form.Field>
 
   {{#if this.readOnly}}
     <form.Container data-name="name" @title={{i18n "admin.badges.name"}}>
@@ -36,9 +29,8 @@
         {{this.model.name}}
       </span>
       <LinkTo
-        @route="adminSiteText.edit"
-        @models={{array (concat this.textCustomizationPrefix "name")}}
-        @query={{hash locale="en"}}
+        @route="adminSiteText"
+        @query={{hash q=(concat this.textCustomizationPrefix "name")}}
       >
         {{d-icon "pencil-alt"}}
       </LinkTo>
@@ -72,7 +64,7 @@
     </form.Field>
 
     <form.ConditionalContent
-      @activeName={{if data.image "upload-image" "choose-icon"}}
+      @activeName={{if data.image_url "upload-image" "choose-icon"}}
       as |cc|
     >
       <cc.Conditions as |Condition|>
@@ -90,6 +82,7 @@
             @showTitle={{false}}
             @name="icon"
             @onSet={{this.onSetIcon}}
+            @format="small"
             as |field|
           >
             <field.Icon />
@@ -97,14 +90,14 @@
         </Content>
         <Content @name="upload-image">
           <form.Field
-            @name="image"
+            @name="image_url"
             @showTitle={{false}}
             @title={{i18n "admin.badges.image"}}
             @onSet={{this.onSetImage}}
             @onUnset={{this.onUnsetImage}}
             as |field|
           >
-            <field.Image />
+            <field.Image @type="badge_image" />
           </form.Field>
         </Content>
       </cc.Contents>
@@ -119,9 +112,8 @@
           {{this.model.description}}
         </span>
         <LinkTo
-          @route="adminSiteText.edit"
-          @models={{array (concat this.textCustomizationPrefix "description")}}
-          @query={{hash locale="en"}}
+          @route="adminSiteText"
+          @query={{hash q=(concat this.textCustomizationPrefix "description")}}
         >
           {{d-icon "pencil-alt"}}
         </LinkTo>
@@ -147,11 +139,10 @@
         </span>
 
         <LinkTo
-          @route="adminSiteText.edit"
-          @models={{array
-            (concat this.textCustomizationPrefix "long_description")
+          @route="adminSiteText"
+          @query={{hash
+            q=(concat this.textCustomizationPrefix "long_description")
           }}
-          @query={{hash locale="en"}}
         >
           {{d-icon "pencil-alt"}}
         </LinkTo>
@@ -195,29 +186,27 @@
           />
         </form.Container>
 
-        <form.Field
-          @name="auto_revoke"
-          @disabled={{this.readOnly}}
-          @showTitle={{false}}
-          @title={{i18n "admin.badges.auto_revoke_label"}}
-          as |field|
-        >
-          <field.Checkbox>
-            {{i18n "admin.badges.auto_revoke"}}
-          </field.Checkbox>
-        </form.Field>
+        <form.CheckboxGroup as |group|>
+          <group.Field
+            @name="auto_revoke"
+            @disabled={{this.readOnly}}
+            @showTitle={{false}}
+            @title={{i18n "admin.badges.auto_revoke"}}
+            as |field|
+          >
+            <field.Checkbox />
+          </group.Field>
 
-        <form.Field
-          @name="target_posts"
-          @disabled={{this.readOnly}}
-          @title={{i18n "admin.badges.target_posts_label"}}
-          @showTitle={{false}}
-          as |field|
-        >
-          <field.Checkbox>
-            {{i18n "admin.badges.target_posts"}}
-          </field.Checkbox>
-        </form.Field>
+          <group.Field
+            @name="target_posts"
+            @disabled={{this.readOnly}}
+            @title={{i18n "admin.badges.target_posts"}}
+            @showTitle={{false}}
+            as |field|
+          >
+            <field.Checkbox />
+          </group.Field>
+        </form.CheckboxGroup>
 
         <form.Field
           @name="trigger"
@@ -255,44 +244,46 @@
       </field.Menu>
     </form.Field>
 
-    <form.Field
-      @title={{i18n "admin.badges.allow_title_label"}}
-      @showTitle={{false}}
-      @name="allow_title"
-      as |field|
-    >
-      <field.Checkbox>{{i18n "admin.badges.allow_title"}}</field.Checkbox>
-    </form.Field>
+    <form.CheckboxGroup as |group|>
+      <group.Field
+        @title={{i18n "admin.badges.allow_title"}}
+        @showTitle={{false}}
+        @name="allow_title"
+        as |field|
+      >
+        <field.Checkbox />
+      </group.Field>
 
-    <form.Field
-      @title={{i18n "admin.badges.multiple_grant_label"}}
-      @showTitle={{false}}
-      @name="multiple_grant"
-      @disabled={{this.readOnly}}
-      as |field|
-    >
-      <field.Checkbox>{{i18n "admin.badges.multiple_grant"}}</field.Checkbox>
-    </form.Field>
+      <group.Field
+        @title={{i18n "admin.badges.multiple_grant"}}
+        @showTitle={{false}}
+        @name="multiple_grant"
+        @disabled={{this.readOnly}}
+        as |field|
+      >
+        <field.Checkbox />
+      </group.Field>
 
-    <form.Field
-      @title={{i18n "admin.badges.listable_label"}}
-      @showTitle={{false}}
-      @name="listable"
-      @disabled={{this.readOnly}}
-      as |field|
-    >
-      <field.Checkbox>{{i18n "admin.badges.listable"}}</field.Checkbox>
-    </form.Field>
+      <group.Field
+        @title={{i18n "admin.badges.listable"}}
+        @showTitle={{false}}
+        @name="listable"
+        @disabled={{this.readOnly}}
+        as |field|
+      >
+        <field.Checkbox />
+      </group.Field>
 
-    <form.Field
-      @title={{i18n "admin.badges.show_posts_label"}}
-      @showTitle={{false}}
-      @name="show_posts"
-      @disabled={{this.readOnly}}
-      as |field|
-    >
-      <field.Checkbox>{{i18n "admin.badges.show_posts"}}</field.Checkbox>
-    </form.Field>
+      <group.Field
+        @title={{i18n "admin.badges.show_posts"}}
+        @showTitle={{false}}
+        @name="show_posts"
+        @disabled={{this.readOnly}}
+        as |field|
+      >
+        <field.Checkbox />
+      </group.Field>
+    </form.CheckboxGroup>
   </form.Section>
 
   <PluginOutlet

@@ -265,6 +265,19 @@ ca:
       topic_count: "Temes"
       post_count: "Publicacions"
       contact_info: "En cas d'una qüestió urgent o greu que afecti aquest lloc web, contacteu amb nosaltres en: %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} tema"
+          other: "%{formatted_number} temes"
+        posts:
+          one: "%{formatted_number} publicació"
+          other: "%{formatted_number} publicacions"
+        likes:
+          one: "%{formatted_number} 'm'agrada'"
+          other: "%{formatted_number} 'm'agrada'"
+        periods:
+          last_7_days: "durant els darrers 7 dies"
+          today: "avui"
     bookmarked:
       title: "Preferit"
       edit_bookmark: "Edita el marcador"
@@ -638,11 +651,12 @@ ca:
           last_updated: "Darrera actualització:"
           last_updated_by: "per"
           settings_required: "Tots els paràmetres són obligatoris, si us plau ompli tots els camps abans de la validació."
+          ssl_modes:
+            none: "Cap"
           credentials:
             title: "Credencials"
             smtp_server: "Servidor SMTP"
             smtp_port: "Port SMTP"
-            smtp_ssl: "Utilitza SSL per a SMTP"
             imap_server: "Servidor IMAP"
             imap_port: "Port IMAP"
             imap_ssl: "Utilitza SSL per a SMTP"
@@ -1127,6 +1141,13 @@ ca:
         confirm_description:
           account_specific: "El vostre compte %{provider} '%{account_description}' es farà servir per a autenticació."
           generic: "El vostre compte %{provider} es farà servir per a l'autenticació."
+      activate_account:
+        action: "Feu clic aquí per a activar el vostre compte"
+        already_done: "Aquest enllaç ja no és vàlid per a confirmar el compte. Potser el vostre compte ja és actiu?"
+        please_continue: "El vostre nou compte està confirmat; us redirigirem a la pàgina principal."
+        continue_button: "Continua a %{site_name}"
+        welcome_to: "Benvingut a %{site_name}!"
+        approval_required: "Cal que un moderador aprovi manualment el vostre nou compte abans no pugueu accedir al fòrum. Rebreu un correu quan el compte hagi estat aprovat!"
       name:
         title: "Nom"
         instructions: "El vostre nom complet (opcional)."
@@ -1377,15 +1398,6 @@ ca:
       enabled: "El lloc web és en mode només de lectura. Continueu navegant, però de moment estan desactivades les accions de respondre, 'm'agrada' i altres."
       login_disabled: "S'ha desactivat l'inici de sessió mentre aquest lloc web es trobi en mode només de lectura."
       logout_disabled: "S'ha desactivat el tancament de sessió mentre aquest lloc web es trobi en mode només de lectura."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errors/hora}}</a> s'ha arribat al límit de configuració del lloc web de {limit, plural, one {# error/hora} other {# errors/hora}}.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# error/minut} other {# errors/minut}}</a> s'ha arribat al límit de configuració del lloc web de {limit, plural, one {# error/minut} other {# errors/minut}}.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errors/hora}}</a> s'ha superat el límit de la configuració del lloc web de {limit, plural, one {# error/hora} other {# errors/hora}}.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minut} other {# errors/minut}}</a> s'ha superat el límit de la configuració del lloc web de {limit, plural, one {# error/minut} other {# errors/minut}}.
     mute: Silencia
     unmute: Desfés el silenciament
     last_post: Publicat
@@ -1402,6 +1414,8 @@ ca:
       hide_forever: "no, gràcies"
       intro: "Bon dia! Sembla que gaudiu de la discussió, però no heu registrat un compte."
     summary:
+      buttons:
+        regenerate: "Regenera"
       disable: "Mostra totes les publicacions"
     deleted_filter:
       enabled_description: "Aquest tema conté publicacions suprimides, que han estat amagades."
@@ -1480,6 +1494,7 @@ ca:
       not_activated: "Encara no podeu iniciar sessió. Abans us hem enviat un correu d'activació a <b>%{sentTo}</b>. Seguiu les instruccions del correu per a activar el compte."
       admin_not_allowed_from_ip_address: "No podeu iniciar la sessió com a administrador des d'aquesta adreça IP."
       resend_activation_email: "Feu clic aquí per a enviar de nou el correu d'activació."
+      activate_account: "Activa compte"
       resend_title: "Reenvia el correu d'activació"
       change_email: "Canvi d'adreça de correu"
       provide_new_email: "Proporcioneu una adreça nova i us reenviarem el correu de confirmació."
@@ -2488,7 +2503,6 @@ ca:
         appearance: "Aparença"
         email: "Correu electrònic"
     flagging:
-      title: "Gràcies per ajudar a mantenir endreçada la comunitat!"
       action: "Marca la publicació amb bandera "
       take_action_options:
         default:
@@ -2520,7 +2534,6 @@ ca:
           one: "%{count} restant"
           other: "%{count} restants"
     flagging_topic:
-      title: "Gràcies per ajudar a mantenir endreçada la comunitat!"
       action: "Marca el tema amb bandera "
       notify_action: "Missatge"
     topic_map:
@@ -2530,6 +2543,9 @@ ca:
       clicks:
         one: "%{count} clic"
         other: "%{count} clics"
+      views: "Vistes"
+      read: llegeix
+      minutes: mínim
     post_links:
       about: "expandeix més enllaços per a aquesta publicació"
       title:
@@ -3237,6 +3253,7 @@ ca:
           spam: "Brossa"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(opcional)"
           saved: "desat!"
         flags:
@@ -3249,6 +3266,7 @@ ca:
             save: "Desa"
             name: "Nom"
             description: "Descripció"
+            invalid_applies_to: "Necessari"
             topic: "temes"
             post: "publicacions"
       plugins:

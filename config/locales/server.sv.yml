@@ -846,11 +846,7 @@ sv:
     revoke_failed: "Misslyckades att återkalla ditt konto hos %{provider_name}."
     connected: "(kopplad)"
   activation:
-    action: "Klicka här för att aktivera ditt konto"
     already_done: "Tyvärr är denna kontoaktiveringslänk inte längre giltig. Kanske har ditt konto redan aktiverats?"
-    please_continue: "Ditt nya konto har bekräftats; du kommer att skickas till startsidan."
-    continue_button: "Fortsätt till %{site_name}"
-    welcome_to: "Välkommen till %{site_name}!"
     approval_required: "En moderator måste manuellt godkänna ditt nya konto innan du kan komma åt detta forum. Du kommer få e-post när ditt konto har godkänts!"
     missing_session: "Vi kan inte se om ditt konto har skapats, se till att du har aktiverat cookies."
     activated: "Detta konto har redan aktiverats."
@@ -1594,7 +1590,6 @@ sv:
     max_reply_history: "Högsta antal svar för att utvidga vid utvidgning av som-svar-till"
     topics_per_period_in_top_summary: "Standardinställning för antal toppämnen som visas i toppämnessammanfattningen."
     topics_per_period_in_top_page: "Antal toppämnen som visas i den utvidgade 'Visa mer'-toppämnen."
-    redirect_users_to_top_page: "Omdirigera automatiskt nya och långtidsfrånvarande användare till början av sidan."
     top_page_default_timeframe: "Standardtidsperiod i början av sidan för anonyma användare (justeras automatiskt för inloggade användare baserat på deras senaste besök)."
     prioritize_username_in_ux: "Använd användarnamn först på användarsidan, användarkortet och inlägg (om detta inaktiverats så visas namnet först)"
     enable_rich_text_paste: "Aktivera automatisk HTML vid Markdown-konvertering när du klistrar in text i redigeraren. (Experimentell)"
@@ -2020,7 +2015,6 @@ sv:
     embed_post_limit: "Högsta antal inlägg att bädda in."
     embed_username_required: "Användarnamn krävs för skapade av ämne."
     notify_about_reviewable_item_after: "Om det finns granskningsbara objekt som inte har hanterats efter så många timmar, skicka ett personligt meddelande till moderatorer. Ställ in på 0 för att inaktivera."
-    delete_merged_stub_topics_after_days: "Antal dagar att vänta innan helt sammanslagna stub-ämnen raderas automatiskt. Ställ in till 0 för att aldrig radera stub-ämnen."
     prevent_anons_from_downloading_files: "Förhindra att anonyma användare hämtar bilagor."
     secure_uploads: 'Begränsar åtkomst för ALLA uppladdningar (bilder, video, ljud, text, pdf, zip med flera). Om "login required" har aktiverats kan endast inloggade användare komma åt uppladdningar. Annars begränsas åtkomst endast till uppladdning av media i privata meddelanden samt privata kategorier. VARNING: Den här inställningen är komplex och kräver djupa administrativa kunskaper. Se detaljer i <a target="_blank" href="https://meta.discourse.org/t/-/140017">ämnet för säkra uppladdningar i Meta</a>.'
     secure_uploads_allow_embed_images_in_emails: "Gör det möjligt att bädda in säkra bilder som normalt skulle begränsas i e-postmeddelanden, under förutsättning att deras storlek är mindre än inställningen för säkra medias maxstorlek för inbäddning av bild, 'secure uploads max email embed image size kb'."
@@ -4256,17 +4250,18 @@ sv:
           default_locale:
             label: "Språk"
       privacy:
-        title: "Medlemserfarenhet"
         fields:
           login_required:
-            placeholder: "Privat"
-            extra_description: "Endast inloggade användare kan komma åt det här forumet"
+            label: "Synlighet"
+            choices:
+              public:
+                label: "Offentligt"
+              private:
+                label: "Privat"
           invite_only:
-            placeholder: "Endast med inbjudan"
-            extra_description: "Användare måste bjudas in av betrodda användare eller personal, men därefter kan användare registrera sig på egen hand"
-          must_approve_users:
-            placeholder: "Kräv godkännande"
-            extra_description: "Användare måste godkännas av personalen"
+            choices:
+              invite_only:
+                label: "Endast med inbjudan"
           chat_enabled:
             placeholder: "Aktivera chatt"
             extra_description: "Engagera dina medlemmar i realtid"

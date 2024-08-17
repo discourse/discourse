@@ -19,7 +19,7 @@ module Chat
     # out which of the users provided should have their [Chat::UserChatChannelMembership]
     # records removed based on those security cases.
     class CalculateMembershipsForRemoval
-      def self.call(scoped_users:, channel_ids: nil)
+      def self.call(scoped_users_query:, channel_ids: nil)
         channel_permissions_map =
           DB.query(<<~SQL, readonly: CategoryGroup.permission_types[:readonly])
           WITH category_group_channel_map AS (
@@ -59,12 +59,12 @@ module Chat
         scoped_memberships =
           Chat::UserChatChannelMembership
             .joins(:chat_channel)
-            .where(user: scoped_users)
+            .where(user_id: scoped_users_query.select(:id))
             .where(chat_channel_id: channel_permissions_map.map(&:channel_id))
 
         memberships_to_remove = []
+
         scoped_memberships.find_each do |membership|
-          scoped_user = scoped_users.find { |su| su.id == membership.user_id }
           channel_permission =
             channel_permissions_map.find { |cpm| cpm.channel_id == membership.chat_channel_id }
 
@@ -91,9 +91,12 @@ module Chat
           # At least one of the groups on the channel can create_post or
           # has full permission, remove the membership if the user is in none
           # of these groups.
-          if group_ids_with_write_permission.any? &&
-               !scoped_user.in_any_groups?(group_ids_with_write_permission)
-            memberships_to_remove << membership.id
+          if group_ids_with_write_permission.any?
+            scoped_user = scoped_users_query.where(id: membership.user_id).first
+
+            if !scoped_user&.in_any_groups?(group_ids_with_write_permission)
+              memberships_to_remove << membership.id
+            end
           end
         end
 

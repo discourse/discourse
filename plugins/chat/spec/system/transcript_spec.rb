@@ -23,9 +23,8 @@ RSpec.describe "Quoting chat message transcripts", type: :system do
     expect(PageObjects::Components::Toasts.new).to have_success(
       I18n.t("js.chat.quote.copy_success"),
     )
-    clip_text = cdp.read_clipboard
-    expect(clip_text.chomp).to eq(generate_transcript(messages, current_user))
-    clip_text
+    cdp.clipboard_has_text?(generate_transcript(messages, current_user), chomp: true)
+    cdp.read_clipboard
   end
 
   def generate_transcript(messages, acting_user)

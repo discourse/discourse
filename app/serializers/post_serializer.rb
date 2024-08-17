@@ -290,7 +290,12 @@ class PostSerializer < BasicPostSerializer
     result = []
     can_see_post = scope.can_see_post?(object)
 
-    PostActionType.types.each do |sym, id|
+    @post_action_type_view =
+      @topic_view ? @topic_view.post_action_type_view : PostActionTypeView.new
+
+    public_flag_types = @post_action_type_view.public_types
+
+    @post_action_type_view.types.each do |sym, id|
       count_col = "#{sym}_count".to_sym
 
       count = object.public_send(count_col) if object.respond_to?(count_col)
@@ -301,6 +306,9 @@ class PostSerializer < BasicPostSerializer
            sym,
            opts: {
              taken_actions: actions,
+             notify_flag_types: @post_action_type_view.notify_flag_types,
+             additional_message_types: @post_action_type_view.additional_message_types,
+             post_action_type_view: @post_action_type_view,
            },
            can_see_post: can_see_post,
          )
@@ -327,7 +335,7 @@ class PostSerializer < BasicPostSerializer
       end
 
       # only show public data
-      unless scope.is_staff? || PostActionType.public_types.values.include?(id)
+      unless scope.is_staff? || public_flag_types.values.include?(id)
         summary[:count] = summary[:acted] ? 1 : 0
       end
 

@@ -710,11 +710,7 @@ lt:
     revoke_failed: "Nepavyko anuliuoti paskyros naudojant %{provider_name}."
     connected: "(prijungtas)"
   activation:
-    action: "Spustelėkite čia, kad suaktyvintumėte savo paskyrą"
     already_done: "Deja, ši paskyros patvirtinimo nuoroda nebegalioja. Galbūt jūsų paskyra jau aktyvi?"
-    please_continue: "Jūsų nauja paskyra patvirtinta; būsite nukreipti į pagrindinį puslapį."
-    continue_button: "Tęsti į %{site_name}"
-    welcome_to: "Sveiki atvykę į %{site_name}!"
     approval_required: "Moderatorius turi rankiniu būdu patvirtinti jūsų naują paskyrą, kad galėtumėte prisijungti prie šio forumo. Gausite el. laišką, kai jūsų paskyra bus patvirtinta!"
     missing_session: "Negalime aptikti, ar jūsų paskyra buvo sukurta, įsitikinkite, kad įjungėte slapukus."
     activated: "Atsiprašome, ši paskyra jau aktyvuota."
@@ -1276,7 +1272,6 @@ lt:
     suppress_reply_when_quoting: "Nerodykite išplečiamojo atsakymo į įrašą, kai atsakoma į citatas."
     topics_per_period_in_top_summary: "Populiariausių temų skaičius, rodomas numatytojoje populiariausių temų suvestinėje."
     topics_per_period_in_top_page: "Populiariausių temų, rodomų išplėstinėse „Rodyti daugiau“ populiariausiose temose, skaičius."
-    redirect_users_to_top_page: "Automatiškai nukreipti naujus ir ilgai nedalyvaujančius vartotojus į viršutinį puslapį."
     prioritize_username_in_ux: "Pirmiausia rodyti vartotojo vardą vartotojo puslapyje, vartotojo kortelėje ir įrašuose (kai pirmas rodomas išjungtas vardas)"
     max_favorite_badges: "Maksimalus ženklelių skaičius, kurį vartotojas gali pasirinkti"
     invite_expiry_days: "Kiek laiko galioja vartotojo kvietimo raktai, dienomis"
@@ -2210,7 +2205,7 @@ lt:
         Sveiki atvykę į %{site_name}!
 
         Spustelėkite šią nuorodą, kad patvirtintumėte ir suaktyvintumėte naują paskyrą:
-        %{base_url}/u/activ-account/%{email_token}
+        %{base_url}/u/activate-account/%{email_token}
 
         Jei aukščiau pateiktos nuorodos negalima spustelėti, pabandykite ją nukopijuoti ir įklijuoti į savo žiniatinklio naršyklės adreso juostą.
     activation_reminder:
@@ -2600,8 +2595,12 @@ lt:
       privacy:
         fields:
           login_required:
-            placeholder: "Privatu"
-            extra_description: "Tik prisijungę vartotojai gali pasiekti šią bendruomenę"
+            label: "Matomumas"
+            choices:
+              public:
+                label: "Vieša"
+              private:
+                label: "Privatu"
       styling:
         fields:
           color_scheme:

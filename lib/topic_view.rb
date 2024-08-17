@@ -598,17 +598,28 @@ class TopicView
       ReviewableQueuedPost.pending.where(target_created_by: @user, topic: @topic).order(:created_at)
   end
 
+  def post_action_type_view
+    @post_action_type_view ||= PostActionTypeView.new
+  end
+
   def actions_summary
     return @actions_summary unless @actions_summary.nil?
 
     @actions_summary = []
     return @actions_summary unless post = posts&.first
-    PostActionType.topic_flag_types.each do |sym, id|
+    post_action_type_view.topic_flag_types.each do |sym, id|
       @actions_summary << {
         id: id,
         count: 0,
         hidden: false,
-        can_act: @guardian.post_can_act?(post, sym),
+        can_act:
+          @guardian.post_can_act?(
+            post,
+            sym,
+            opts: {
+              post_action_type_view: post_action_type_view,
+            },
+          ),
       }
     end
 

@@ -298,6 +298,10 @@ ru:
         not_found: |-
           О нет, моё провоцирующее сообщение ещё не получило по заслугам. :worried: Можете **пометить** это сообщение как неуместное, используя кнопку <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Она становится доступна, если нажать «Показать больше» <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">.
       search:
+        instructions: |-
+          _Пс-с-ст_… В этой теме спрятан сюрприз. Если вы готовы принять вызов, **нажмите значок поиска** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> в верхнем правом углу &#8599;, затем выберите «в этой теме», чтобы найти сюрприз.
+
+          Попробуйте найти слово «capy&#8203;bara» в этой теме.
         hidden_message: |-
           Как же вы пропустили этого чудного зверька по имени капибара? :wink:
 

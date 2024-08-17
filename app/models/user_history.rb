@@ -148,6 +148,10 @@ class UserHistory < ActiveRecord::Base
         filled_in_required_fields: 109,
         topic_slow_mode_set: 110,
         topic_slow_mode_removed: 111,
+        custom_emoji_create: 112,
+        custom_emoji_destroy: 113,
+        delete_post_permanently: 114,
+        delete_topic_permanently: 115,
       )
   end
 
@@ -258,6 +262,10 @@ class UserHistory < ActiveRecord::Base
       delete_watched_word_group
       topic_slow_mode_set
       topic_slow_mode_removed
+      custom_emoji_create
+      custom_emoji_destroy
+      delete_post_permanently
+      delete_topic_permanently
     ]
   end
 
@@ -360,6 +368,7 @@ end
 #  index_user_histories_on_acting_user_id_and_action_and_id        (acting_user_id,action,id)
 #  index_user_histories_on_action_and_id                           (action,id)
 #  index_user_histories_on_category_id                             (category_id)
+#  index_user_histories_on_post_id                                 (post_id)
 #  index_user_histories_on_subject_and_id                          (subject,id)
 #  index_user_histories_on_target_user_id_and_id                   (target_user_id,id)
 #  index_user_histories_on_topic_id_and_target_user_id_and_action  (topic_id,target_user_id,action)

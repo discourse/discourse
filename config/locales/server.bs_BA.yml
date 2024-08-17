@@ -311,11 +311,7 @@ bs_BA:
   change_email:
     error: "There was an error changing your email address. Perhaps the address is already in use?"
   activation:
-    action: "Kliknite ovdje kako bi aktivirali vaš korisnički račun"
     already_done: "Link za konfirmaciju nije validan. Možda ste već aktivirani?"
-    please_continue: "Vaš novi nalog je verifikovan, i možete se ulogovati."
-    continue_button: "Nastavi na %{site_name}"
-    welcome_to: "Dobrodošli na %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
   reviewable_score_types:
     needs_approval:
@@ -651,7 +647,6 @@ bs_BA:
     suppress_reply_when_quoting: "Don't show the expandable in-reply-to on a post when post quotes reply."
     topics_per_period_in_top_summary: "Number of top topics shown in the default top topics summary."
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
-    redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
@@ -1026,7 +1021,12 @@ bs_BA:
       privacy:
         fields:
           login_required:
-            placeholder: "Privatno"
+            label: "Vidljivost"
+            choices:
+              public:
+                label: "Javno"
+              private:
+                label: "Privatno"
       styling:
         fields:
           styling_preview:

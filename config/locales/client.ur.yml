@@ -265,6 +265,19 @@ ur:
       topic_count: "ٹاپک"
       post_count: "پوسٹ"
       contact_info: "اس سائٹ کے بارے میں کسی اہم مسئلہ یا فوری معاملہ کی صورت میں، براہ مہربانی %{contact_info} پر رابطہ کریں۔"
+      activities:
+        topics:
+          one: "%{formatted_number} ٹاپک"
+          other: "%{formatted_number} ٹاپک"
+        posts:
+          one: "%{formatted_number} پوسٹ"
+          other: "%{formatted_number} پوسٹس"
+        likes:
+          one: "%{formatted_number} لائیک"
+          other: "%{formatted_number} لائیکس"
+        periods:
+          last_7_days: "پچھلے 7 دنوں میں"
+          today: "آج"
     bookmarked:
       title: "بُک مارک"
       edit_bookmark: "بک مارک میں ترمیم کریں"
@@ -576,7 +589,6 @@ ur:
       never: "کبھی نہیں"
       last_custom: "آخری نظامی تاریخ وقت"
       custom: "حسب ضرورت تاریخ اور وقت"
-      custom_short: "ترمیم..."
       select_timeframe: "ایک ٹائم فریم منتخب کریں"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> نے <a href='%{topicUrl}'>ٹاپک</a> پوسٹ کیا"
@@ -683,11 +695,12 @@ ur:
           imap_mailbox_not_selected: "آپ کو اس IMAP کنفیگریشن کے لیے ایک میل باکس کا انتخاب کرنا چاہیے ورنہ کوئی میل باکس مطابقت پذیر نہیں ہوگا!"
           prefill:
             title: "ترتیبات کے ساتھ پہلے سے بھریں:"
+          ssl_modes:
+            none: "کوئی نہیں"
           credentials:
             title: "شہادت"
             smtp_server: "SMTP سرور"
             smtp_port: "SMTP پورٹ"
-            smtp_ssl: "SMTP کے لیے SSL استعمال کریں"
             imap_server: "IMAP سرور"
             imap_port: "IMAP پورٹ"
             imap_ssl: "IMAP کے لیے SSL استعمال کریں"
@@ -1308,6 +1321,13 @@ ur:
           disconnect: "آپ کا موجودہ %{provider} اکاؤنٹ '%{account_description}' منقطع ہو جائے گا۔"
           account_specific: "آپ کا %{provider} اکاؤنٹ '%{account_description}' تصدیق کیلئے استعمال کیا جائے گا۔"
           generic: "آپ کا %{provider} اکاؤنٹ تصدیق کیلئے استعمال کیا جائے گا۔"
+      activate_account:
+        action: "اپنا اکاؤنٹ فعال کرنے کیلئے یہاں کلک کریں"
+        already_done: "معذرت، یہ اکاؤنٹ تصدیق لنک اب درست نہیں ہے۔ شاید آپ کا اکاؤنٹ پہلے ہی سے فعال ہے؟"
+        please_continue: "آپ کا نیا اکاؤنٹ تصدیق کر لیا گیا ہے؛ آپ کو ہَوم پیج پر ری ڈائرَیکٹ کیا جائے گا۔"
+        continue_button: "%{site_name} پر جاری رکھیں"
+        welcome_to: "%{site_name} پر خوش آمدید!"
+        approval_required: "اِس فورم تک رسائی حاصل کرنے سے پہلے ایک ماڈریٹر کو آپ کا نیا اکاؤنٹ دستی طور پر منظور کرنا ضروری ہے۔ جب آپ کا اکاؤنٹ منظور ہوجائے گا تو آپ کو ایک اِی میل مل جائے گی!"
       name:
         title: "نام"
         instructions: "آپ کا پورا نام (اختیاری)."
@@ -1644,9 +1664,13 @@ ur:
       description:
         one: "یہاں<b>%{count}</b> جواب ہے۔"
         other: "یہاں<b>%{count}</b> جوابات ہیں۔"
+      buttons:
+        generate: "خلاصہ"
+        regenerate: "دوبارہ تخلیق کریں"
       description_time_MF: |
         وہاں {replyCount, plural, one { <b>#</b> جواب ہے} other { <b>#</b> جوابات ہیں}} ایک متوقع مطالعہ <b>{readingTime, plural, one {# منٹ} other {# منٹ}}</b>۔
       disable: "تمام پوسٹیں دکھائیں"
+      show_all_label: "تمام دکھائیں"
     deleted_filter:
       enabled_description: "اِس ٹاپک میں حذف شدہ پوسٹ شامل ہیں، جو چھپا دی گئی ہیں۔"
       disabled_description: "ٹاپک کی حذف شدہ پوسٹ دکھائی گئی ہیں۔"
@@ -1736,6 +1760,7 @@ ur:
       admin_not_allowed_from_ip_address: "آپ ایڈمن کے طور پر اِس آئی پی ایڈریس سے لاگ اِن نہیں ہو سکتے۔"
       resend_activation_email: "دوبارہ ایکٹیویشن ای میل بھیجنے کے لئے یہاں کلک کریں۔"
       omniauth_disallow_totp: "آپ کے اکاؤنٹ میں دو عنصر کی توثیق کاری فعال ہے۔ براہ کرم اپنے پاس ورڈ کے ساتھ لاگ ان کریں۔"
+      activate_account: "اکاؤنٹ فعال کریں"
       resend_title: "ایکٹیویشن اِیمیل دوبارہ بھیجییں"
       change_email: "اِیمیل ایڈریس تبدیل کریں"
       provide_new_email: "ایک نیا ایڈریس فراہم کریں اور ہم آپ کی تصدیقی ای میل دوبارہ بھیجیں گے۔"
@@ -3043,7 +3068,6 @@ ur:
         none: "کوئی ذیلی زمرہ جات نہیں"
       colors_disabled: "آپ رنگوں کا انتخاب نہیں کر سکتے کیونکہ آپ کے پاس کوئی بھی انداز نہیں ہے۔"
     flagging:
-      title: "ہماری کمیونٹی کو مہذب رکھنے کے لئے مدد کا شکریہ!"
       action: "پوسٹ فلَیگ کریں"
       take_action_options:
         default:
@@ -3080,7 +3104,6 @@ ur:
           one: "%{count} باقی رہتا ہے..."
           other: "%{count} باقی رہتے ہیں..."
     flagging_topic:
-      title: "ہماری کمیونٹی کو مہذب رکھنے کے لئے مدد کا شکریہ!"
       action: "ٹاپک فلَیگ کریں"
       notify_action: "پیغام"
     topic_map:
@@ -3090,6 +3113,9 @@ ur:
       clicks:
         one: "%{count} کلک"
         other: "%{count} کلکس"
+      views: "وِیوز"
+      read: رِیڈ
+      minutes: کم از کم
     post_links:
       about: "اِس پوسٹ کے لئے مزید لنکس دکھائیں"
       title:
@@ -3467,7 +3493,6 @@ ur:
         everyone_can_use: "ٹیگز ہر کوئی استعمال کر سکتا ہے"
         usable_only_by_groups: "ٹیگز ہر کسی کو نظر آتے ہیں، لیکن صرف درج ذیل گروپ ہی انہیں استعمال کر سکتے ہیں۔"
         visible_only_to_groups: "ٹیگز صرف مندرجہ ذیل گروپوں کو نظر آتے ہیں"
-        cannot_save: "ٹیگ گروپ کو محفوظ نہیں کیا جا سکتا۔ یقینی بنائیں کہ کم از کم ایک ٹیگ موجود ہے، ٹیگ گروپ کا نام خالی نہیں ہے، اور ٹیگز کی اجازت کے لیے ایک گروپ کا انتخاب کیا گیا ہے۔"
         tags_placeholder: "ٹیگز تلاش کریں یا بنائیں"
         parent_tag_placeholder: "اختیاری"
         disabled: "ٹیگنگ غیر فعال ہے۔ "
@@ -3978,6 +4003,7 @@ ur:
           spam: "سپَیم"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(اختیاری)"
           update: "اپ ڈیٹ"
           saved: "محفوظ کر لیا گیا!"
@@ -3991,6 +4017,7 @@ ur:
             save: "محفوظ کریں"
             name: "نام"
             description: "تفصیل"
+            invalid_applies_to: "درکار"
             topic: "ٹاپک"
             post: "پوسٹ`"
       plugins:

@@ -313,6 +313,19 @@ te:
       active_user_count: "క్రియాశీల సభ్యులు"
       contact: "మమ్మల్ని సంప్రదించండి"
       contact_info: "ఈ సంధర్భంలో క్లిష్టమైన సమస్య లేదా అత్యవసర విషయం సైట్ ను ప్రభావితం చేస్తుంది, దయచేసి మమ్మల్ని సంప్రదించండి %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} విషయం"
+          other: "%{formatted_number} విషయాలు"
+        posts:
+          one: "%{formatted_number} పోస్ట్"
+          other: "%{formatted_number} పోస్ట్‌లు"
+        likes:
+          one: "%{formatted_number} ఇష్టం"
+          other: "%{formatted_number} ఇష్టాలు"
+        periods:
+          today: "ఈరోజు"
+          all_time: "ఎప్పటికీ"
     bookmarked:
       title: "బుక్‌మార్క్"
       edit_bookmark: "బుక్‌మార్క్‌ని సవరించండి"
@@ -781,11 +794,12 @@ te:
           prefill:
             title: "సెట్టింగ్‌లతో ముందుగా పూరించండి:"
             gmail: "జి మెయిల్"
+          ssl_modes:
+            none: "ఏదీ లేదు"
           credentials:
             title: "ఆధారాలు"
             smtp_server: "SMTP సర్వర్"
             smtp_port: "SMTP పోర్ట్"
-            smtp_ssl: "SMTP కోసం SSLని ఉపయోగించండి"
             imap_server: "IMAP సర్వర్"
             imap_port: "IMAP పోర్ట్"
             imap_ssl: "IMAP కోసం SSLని ఉపయోగించండి"
@@ -1295,62 +1309,6 @@ te:
         warnings: "అధికారిక హెచ్చరికలు"
         read_more_in_group: "మరింత చదవాలనుకుంటున్నారా? %{groupLink}లో ఇతర సందేశాలను బ్రౌజ్ చేయండి."
         read_more: "మరింత చదవాలనుకుంటున్నారా? <a href='%{basePath}/u/%{username}/messages'>వ్యక్తిగత సందేశాలలో ఇతర సందేశాలను</a> బ్రౌజ్ చేయండి."
-        read_more_group_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># చదవనిది</a> ఉంది}
-                other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># చదవనివి</a> ఉన్నాయి}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { మరియు <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># కొత్త</a> సందేశం మిగిలి ఉంది లేదా {groupLink} లో ఇతర సందేశాలను బ్రౌజ్ చేయండి}
-                other { మరియు <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># కొత్త</a> సందేశాలు మిగిలి ఉన్నాయి లేదా {groupLink} లో ఇతర సందేశాలను బ్రౌజ్ చేయండి}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># చదవనిది</a>సందేశం మిగిలి ఉంది లేదా {groupLink} లో ఇతర సందేశాలను బ్రౌజ్ చేయండి}
-                other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># చదవనివి</a> సందేశాలు మిగిలి ఉన్నాయి లేదా {groupLink} లో ఇతర సందేశాలను బ్రౌజ్ చేయండి}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/group/{groupName}/new'># కొత్త</a> సందేశం మిగిలి ఉంది లేదా {groupLink} లో ఇతర సందేశాలను బ్రౌజ్ చేయండి}
-                other {<a href='{basePath}/u/{username}/messages/group/{groupName}/new'># కొత్త</a> సందేశాలు మిగిలి ఉన్నాయి లేదా {groupLink} లో ఇతర సందేశాలను బ్రౌజ్ చేయండి}
-              }
-            }
-            other {}
-          }
-        read_more_personal_pm_MF: |
-          { HAS_UNREAD_AND_NEW, select,
-            true {
-              { UNREAD, plural,
-                   =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/unread'># చదవనిది</a> ఉంది}
-                other {<a href='{basePath}/u/{username}/messages/unread'># చదవనివి</a> ఉన్నాయి}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one { మరియు <a href='{basePath}/u/{username}/messages/new'># కొత్త</a> సందేశం మిగిలి ఉంది లేదా ఇతర <a href='{basePath}/u/{username}/messages'>వ్యక్తిగత సందేశాలను</a> బ్రౌజ్ చేయండి}
-                other { మరియు <a href='{basePath}/u/{username}/messages/new'># కొత్త</a> సందేశాలు మిగిలి ఉన్నాయి లేదా ఇతర <a href='{basePath}/u/{username}/messages'>వ్యక్తిగత సందేశాలను</a> బ్రౌజ్ చేయండి}
-              }
-            }
-            false {
-              { UNREAD, plural,
-                   =0 {}
-                  one {<a href='{basePath}/u/{username}/messages/unread'># చదవనిది</a> సందేశం మిగిలి ఉంది లేదా ఇతర <a href='{basePath}/u/{username}/messages'>వ్యక్తిగత సందేశాలను</a> బ్రౌజ్ చేయండి}
-                other {There are <a href='{basePath}/u/{username}/messages/unread'># చదవనివి</a> సందేశాలు మిగిలి ఉన్నాయి లేదా ఇతర <a href='{basePath}/u/{username}/messages'>వ్యక్తిగత సందేశాలను</a> బ్రౌజ్ చేయండి}
-              }
-              { NEW, plural,
-                   =0 {}
-                  one {There is <a href='{basePath}/u/{username}/messages/new'># కొత్త</a> సందేశం మిగిలి ఉంది లేదా ఇతర <a href='{basePath}/u/{username}/messages'>వ్యక్తిగత సందేశాలను</a> బ్రౌజ్ చేయండి}
-                other {There are <a href='{basePath}/u/{username}/messages/new'># కొత్త</a> సందేశాలు మిగిలి ఉన్నాయి లేదా ఇతర <a href='{basePath}/u/{username}/messages'>వ్యక్తిగత సందేశాలను</a> బ్రౌజ్ చేయండి}
-              }
-            }
-            other {}
-          }
       preferences_nav:
         account: "ఖాతా"
         security: "సెక్యూరిటీ"
@@ -1552,6 +1510,13 @@ te:
           disconnect: "మీ ప్రస్తుత %{provider} ఖాతా '%{account_description}' డిస్‌కనెక్ట్ చేయబడుతుంది."
           account_specific: "మీ %{provider} ఖాతా '%{account_description}' ప్రమాణీకరణ కోసం ఉపయోగించబడుతుంది."
           generic: "మీ %{provider} ఖాతా ప్రమాణీకరణ కోసం ఉపయోగించబడుతుంది."
+      activate_account:
+        action: "మీ ఖాతాను సక్రియం చేయడానికి ఇక్కడ క్లిక్ చేయండి"
+        already_done: "క్షమించాలి. ఖాతా ధృవపరుచు లంకె కాలాతీతమైంది. బహుశా మీ ఖాతా ఇప్పటికే చేతనమై ఉందేమో?"
+        please_continue: "మీ ఖాతా ధృవపర్చబడింది. మీరిప్పుడు తొలిపుటకు మళ్లించబడతారు."
+        continue_button: "%{site_name} కు కొనసాగండి"
+        welcome_to: "%{site_name} కు సుస్వాగతం!"
+        approval_required: "ఈ ఫోరమ్ మీరు వాడేముందు ఒక నిర్వాహకుడు మీ ఖాతాను అంగీకరించాలి. మీ ఖాతా అంగీకరించగానే మీకు ఒక ఈమెయిల్ వస్తుంది."
       name:
         title: "పేరు"
         instructions: "మీ పూర్తి పేరు (ఐచ్ఛికం)."
@@ -1914,39 +1879,6 @@ te:
       logout_disabled: "సైట్ చదవడానికి మాత్రమే ఉన్నప్పుడు లాగ్అవుట్ నిలిపివేయబడుతుంది."
     staff_writes_only_mode:
       enabled: "ఈ సైట్ సిబ్బంది మాత్రమే మోడ్‌లో ఉంది. దయచేసి బ్రౌజ్ చేయడాన్ని కొనసాగించండి, కానీ ప్రత్యుత్తరం ఇవ్వడం, ఇష్టాలు మరియు ఇతర చర్యలు సిబ్బందికి మాత్రమే పరిమితం చేయబడ్డాయి."
-    logs_error_rate_notice:
-      reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
-            one {# లోపం/గంట}
-          other {# లోపాలు/గంట}
-        }</a> {limit, plural,
-            one {# లోపం/గంట}
-          other {# లోపాలు/గంట}
-        }సైట్ సెట్టింగ్ పరిమితిని చేరుకుంది.
-      reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
-            one {# లోపం/నిమిషం}
-          other {# లోపాలు/నిమిషం}
-        }</a> { limit, plural,
-            one {# లోపం/నిమిషం}
-          other {# లోపాలు/నిమిషం}
-        }సైట్ సెట్టింగ్ పరిమితిని చేరుకుంది.
-      exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
-            one {# లోపం/గంట}
-          other {# లోపాలు/గంట}
-        }</a> { limit, plural,
-            one {# లోపం/గంట}
-          other {# లోపాలు/గంట}
-        }సైట్ సెట్టింగ్ పరిమితిని చేరుకుంది.
-      exceeded_minute_MF: |
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
-            one {# లోపం/నిమిషం}
-          other {# లోపాలు/నిమిషం}
-        }</a> { limit, plural,
-            one {# లోపం/నిమిషం}
-          other {# లోపాలు/నిమిషం}
-        }సైట్ సెట్టింగ్ పరిమితిని మించిపోయింది .
     learn_more: "మరింత తెలుసుకోండి…"
     mute: నిశ్శబ్దం
     unmute: వినిశ్శబ్దం
@@ -1984,8 +1916,7 @@ te:
         other: "<b>%{count}</b> ప్రత్యుత్తరాలు ఉన్నాయి."
       buttons:
         hide: "సారాంశాన్ని దాచండి"
-        generate: "AI తో సంగ్రహించండి"
-        regenerate: "సారాంశాన్ని పునరుద్ధరించండి"
+        regenerate: "పునరుత్పత్తించు"
       description_time_MF: |
         ఇక్కడ{ replyCount, plural,
             one { <b>#</b> ప్రత్యుత్తరం}
@@ -1997,6 +1928,7 @@ te:
       enable: "అగ్ర ప్రత్యుత్తరాలను చూపించండి"
       disable: "అన్ని పోస్ట్‌లను చూపించండి"
       short_label: "అగ్ర ప్రత్యుత్తరాలు"
+      show_all_label: "అన్నీ చూపండి"
       short_title: "ఈ విషయానికి అగ్ర ప్రత్యుత్తరాలను చూపండి: సంఘం నిర్ణయించిన అత్యంత ఆసక్తికరమైన పోస్ట్‌లు"
     deleted_filter:
       enabled_description: "ఈ విషయం తొలగించిన పోస్టులను కలిగి ఉంది. అవి దాయబడ్డాయి."
@@ -2104,6 +2036,7 @@ te:
       admin_not_allowed_from_ip_address: "మీరు ఆ IP చిరునామా నుండి నిర్వాహకుని వలె లాగిన్ కాలేరు."
       resend_activation_email: "యాక్టివేషన్ ఇమెయిల్‌ను మళ్లీ పంపడానికి ఇక్కడ క్లిక్ చేయండి."
       omniauth_disallow_totp: "మీ ఖాతా రెండు-కారకాల ప్రమాణీకరణ ప్రారంభించబడింది. దయచేసి మీ పాస్‌వర్డ్‌తో లాగిన్ అవ్వండి."
+      activate_account: "ఖాతాను సక్రియం చేయండి"
       resend_title: "యాక్టివేషన్ ఇమెయిల్‌ను మళ్లీ పంపండి"
       change_email: "ఇమెయిల్ చిరునామా మార్చండి"
       provide_new_email: "కొత్త చిరునామాను అందించండి మరియు మేము మీ నిర్ధారణ ఇమెయిల్‌ను మళ్లీ పంపుతాము."
@@ -3677,7 +3610,6 @@ te:
         none: "ఉపవర్గాలు లేవు"
       colors_disabled: "మీరు ఏదీ లేని వర్గ శైలిని కలిగి ఉన్నందున మీరు రంగులను ఎంచుకోలేరు."
     flagging:
-      title: "మా సంఘాన్ని నాగరికంగా ఉంచుటలో సహాయానికి ధన్యవాదములు"
       action: "ఈ పోస్ట్‌పై ఫిర్యాదు చేయండి"
       take_action: "చర్య తీసుకోండి…"
       take_action_options:
@@ -3731,7 +3663,6 @@ te:
           one: "%{count} మిగిలి ఉంది"
           other: "%{count} మిగిలి ఉన్నాయి"
     flagging_topic:
-      title: "మా సంఘాన్ని నాగరికంగా ఉంచుటలో సహాయానికి ధన్యవాదములు!"
       action: "విషయాన్ని ఫిర్యాదు చెయ్యండి"
       notify_action: "సందేశం పంపించండి"
     topic_map:
@@ -3742,6 +3673,8 @@ te:
       clicks:
         one: "%{count} క్లిక్"
         other: "%{count} క్లిక్‌లు"
+      views: "వీక్షణలు"
+      read: చదివిన
     post_links:
       about: "ఈ పోస్ట్ కోసం మరిన్ని లింక్‌లను విస్తరించండి"
       title:
@@ -4159,7 +4092,6 @@ te:
         everyone_can_use: "ట్యాగ్‌లను అందరూ ఉపయోగించవచ్చు"
         usable_only_by_groups: "ట్యాగ్‌లు అందరికీ కనిపిస్తాయి, కానీ కింది సమూహాలు మాత్రమే వాటిని ఉపయోగించగలవు"
         visible_only_to_groups: "ట్యాగ్‌లు క్రింది సమూహాలకు మాత్రమే కనిపిస్తాయి"
-        cannot_save: "ట్యాగ్ సమూహాన్ని సేవ్ చేయడం సాధ్యపడదు. కనీసం ఒక ట్యాగ్ ఉందని, ట్యాగ్ గ్రూప్ పేరు ఖాళీగా లేదని మరియు ట్యాగ్‌ల అనుమతి కోసం సమూహం ఎంచుకోబడిందని నిర్ధారించుకోండి."
         tags_placeholder: "ట్యాగ్‌లను శోధించండి లేదా సృష్టించండి"
         parent_tag_placeholder: "ఐచ్ఛికం"
         select_groups_placeholder: "సమూహాలను ఎంచుకోండి…"
@@ -4949,6 +4881,7 @@ te:
         about:
           header: "మీ సైట్ గురించి"
           community_name: "సంఘం పేరు"
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           site_contact_group_help: |
             స్వయంచాలకంగా పంపబడిన అన్ని ప్రైవేట్ సందేశాలకు ఆహ్వానించబడిన సమూహం యొక్క చెల్లుబాటు అయ్యే పేరు.
           your_organization: "మీ సంస్థ"
@@ -4968,6 +4901,7 @@ te:
             save: "సేవ్ చేయండి"
             name: "పేరు"
             description: "వివరణ"
+            invalid_applies_to: "అవసరం"
             topic: "విషయాలు"
             post: "టపాలు"
       plugins:

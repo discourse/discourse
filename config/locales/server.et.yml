@@ -424,11 +424,7 @@ et:
     error_staged: "Sinu meiliaadressi muutmisel esines tõrge. Ettevalmistamisel olev kasutaja juba kasutab seda."
     already_done: "Vabandust, see kinnitamise link ei kehti enam. Äkki on teie meiliaadress juba muudetud?"
   activation:
-    action: "Oma konto aktiveerimiseks kliki siia"
     already_done: "Vabandust, see konto kinnitamise link ei kehti enam. Äkki on Teie konto juba aktiveeritud?"
-    please_continue: "Teie uus konto on kinnitatud; Teid suunatakse nüüd avalehele."
-    continue_button: "Edasi saidile %{site_name}"
-    welcome_to: "Tere tulemast %{site_name}!"
     approval_required: "Enne, kui saate foorumit kasutada, peab moderaator Teie uue konto käsitsi kinnitama. Konto kinnitamise kohta tuleb teade meilile."
     missing_session: "Me ei saa kontrollida kas Teie konto on loodud, palun kontrolli et brauseris oleks küpsised lubatud."
   reviewable_score_types:
@@ -1036,7 +1032,12 @@ et:
       privacy:
         fields:
           login_required:
-            placeholder: "Privaatne"
+            label: "Nähtavus"
+            choices:
+              public:
+                label: "Avalik"
+              private:
+                label: "Privaatne"
       styling:
         fields:
           styling_preview:

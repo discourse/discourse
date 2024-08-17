@@ -213,6 +213,16 @@ sw:
       topic_count: "Mada"
       post_count: "Machapisho"
       contact_info: "Iwapo kuna suala la muhimu au haraka linalohusiana na mtandao huu, tafadhali wasiliana nasi kupitia %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} topiki"
+          other: "mada %{formatted_number}"
+        posts:
+          one: "%{formatted_number} chapisho"
+          other: "%{formatted_number} machapisho"
+        periods:
+          last_7_days: "ndani ya siku 7 zilizopita"
+          today: "leo"
     bookmarked:
       title: "Alamisho"
       clear_bookmarks: "Futa Maalamisho"
@@ -413,6 +423,8 @@ sw:
         email:
           title: "Barua Pepe"
           last_updated_by: "na"
+          ssl_modes:
+            none: "Hakuna"
           credentials:
             username: "Jina la mtumiaji"
             password: "Nywila"
@@ -806,6 +818,13 @@ sw:
         revoke: "Nyang'anya"
         cancel: "Ghairi"
         not_connected: "(haijaunganishwa)"
+      activate_account:
+        action: "Bonyeza hapa kuanzisha akkaunti yako"
+        already_done: "Samahani, kiungo cha uthibitisho cha akaunti ni batili. Labda akaunti yako tayari ipo hewani?"
+        please_continue: "Akaunti yako imethibitishwa; utapelekwa kwenye ukurasa wa nyumbani."
+        continue_button: "Endelea kwenye %{site_name}"
+        welcome_to: "Karibu kwenye %{site_name}!"
+        approval_required: "Msimamizi lazima aipe kibali akaunti yako mpya kabla haujaanza kutumia jukwaa. Utatumiwa barua pepe akaunti yako ikipata kibali!"
       name:
         title: "Jina"
         instructions: "Jina lako lote (sio lazima)."
@@ -1044,6 +1063,8 @@ sw:
       sign_up: "Jiunge"
       hide_forever: "hapana asante"
     summary:
+      buttons:
+        regenerate: "Tengeneza Upya"
       disable: "Onyesha Machapisho Yote"
     deleted_filter:
       enabled_description: "Mada hii ina machapisho yaliyofutwa, ambayo yamefichwa."
@@ -1109,6 +1130,7 @@ sw:
       not_activated: "Bado hauwezi kuingia. Tumekutumia barua pepe ya uanzisho kwenye <b>%{sentTo}. Tafadhali fuatilia maelezo kwenye barua pepe kuanzisha akaunti yako."
       admin_not_allowed_from_ip_address: "Hauwezi kuingia kama kiongozi kupitia anwani hiyo ya mtandao."
       resend_activation_email: "Bofya hapa kutuma barua pepe ya uanzishaji tena."
+      activate_account: "Anzisha akaunti ya mtumiaji"
       resend_title: "Tuma Tena Barua Pepe ya Uanzisho"
       change_email: "Badilisha Barua Pepe"
       provide_new_email: "Andika anwani mpya na tutakutumia tena barua pepe ya uthibitisho."
@@ -1938,7 +1960,6 @@ sw:
         general: "Jumla"
         email: "Barua Pepe"
     flagging:
-      title: "Asante kwa kuendeleza ustaarabu kwenye jumuiya yetu!"
       action: "Ripoti Chapisho"
       take_action_options:
         default:
@@ -1961,13 +1982,15 @@ sw:
         inappropriate: "Ni isiyofaa"
         spam: "Ni barua taka"
     flagging_topic:
-      title: "Asante kwa kuendeleza ustaarabu kwenye jumuiya yetu!"
       action: "Ripoti Mada"
       notify_action: "Ujumbe"
     topic_map:
       title: "Muhtasari wa Mada"
       participants_title: "Wachapishaji wa Mara kwa Mara"
       links_title: "Viungo Maarufu"
+      views: "Imeonwa"
+      read: soma
+      minutes: kiwango cha chini
     topic_statuses:
       warning:
         help: "Hii ni onyo rasmi."
@@ -2529,6 +2552,7 @@ sw:
           spam: "Barua Taka"
       config_areas:
         about:
+          contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(sio muhimu)"
           saved: "imehifadhiwa!"
         flags:
@@ -2540,6 +2564,7 @@ sw:
             save: "Hifadhi"
             name: "Jina"
             description: "Elezo"
+            invalid_applies_to: "Muhimu na Inahitajika"
             topic: "mada"
             post: "machapisho"
       plugins:

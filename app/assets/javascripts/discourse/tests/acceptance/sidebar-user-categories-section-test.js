@@ -177,7 +177,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
         exists(
           `.sidebar-section-link-wrapper[data-category-id=${category.id}]`
         ),
-        `${category.name} section link is shown`
+        `${category.displayName} section link is shown`
       );
     });
   });
@@ -677,7 +677,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       query(
         `.sidebar-section-link-wrapper[data-category-id="${category.id}"] a`
       ).title,
-      category.description_text,
+      category.descriptionText,
       "category description without HTML entity is used as the link's title"
     );
   });

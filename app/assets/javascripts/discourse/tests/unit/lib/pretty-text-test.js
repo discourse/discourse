@@ -70,6 +70,18 @@ module("Unit | Utility | pretty-text", function (hooks) {
         .features.emoji,
       "emoji disabled"
     );
+    assert.deepEqual(
+      build({ siteSettings: { allowed_iframes: "https://example.com/" } })
+        .options.discourse.allowedIframes,
+      ["https://example.com/"],
+      "it doesn't filter out valid urls"
+    );
+    assert.deepEqual(
+      build({ siteSettings: { allowed_iframes: "https://example.com" } })
+        .options.discourse.allowedIframes,
+      [],
+      "it filters out invalid urls. Requires 3 slashes."
+    );
   });
 
   test("basic cooking", function (assert) {
@@ -663,6 +675,15 @@ eviltrout</p>
         '<h1><a name="h-1-2" class="anchor" href="#h-1-2"></a>1</h1>\n' +
         '<h1><a name="h-3" class="anchor" href="#h-3"></a>$$</h1>',
       "It will bold the heading"
+    );
+  });
+
+  test("Heading anchors with post id", function (assert) {
+    assert.cookedOptions(
+      "# 1\n\n# one",
+      { postId: 1234 },
+      '<h1><a name="p-1234-h-1-1" class="anchor" href="#p-1234-h-1-1"></a>1</h1>\n' +
+        '<h1><a name="p-1234-one-2" class="anchor" href="#p-1234-one-2"></a>one</h1>'
     );
   });
 

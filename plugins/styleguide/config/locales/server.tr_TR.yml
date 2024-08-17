@@ -8,4 +8,4 @@ tr_TR:
   site_settings:
     styleguide_enabled: 'Discourse''un şekillendirilmesine yardımcı olmak için bir "/styleguide" yolunu etkinleştirin'
     styleguide_admin_only: "Stil rehberinin görünürlüğünü yöneticilerle sınırlar"
-    styleguide_allowed_groups: "Stil kılavuzunun görünürlüğünü sağlanan grupların üyeleriyle sınırlar"
+    styleguide_allowed_groups: "Stil rehberinin görünürlüğünü sağlanan grupların üyeleriyle sınırlar"

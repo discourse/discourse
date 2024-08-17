@@ -11,6 +11,8 @@ id:
         other: "pemilih"
       total_votes:
         other: "jumlah suara"
+      votes:
+        other: "%{count} suara"
       average_rating: "Rata-rata rating: <strong>%{average}</strong>."
       results:
         groups:

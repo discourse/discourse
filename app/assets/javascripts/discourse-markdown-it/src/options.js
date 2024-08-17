@@ -10,6 +10,7 @@ export default function buildOptions(state) {
     lookupPrimaryUserGroup,
     getTopicInfo,
     topicId,
+    postId,
     forceQuoteLink,
     userId,
     getCurrentUser,
@@ -48,6 +49,7 @@ export default function buildOptions(state) {
     lookupPrimaryUserGroup,
     getTopicInfo,
     topicId,
+    postId,
     forceQuoteLink,
     userId,
     getCurrentUser,
@@ -63,8 +65,10 @@ export default function buildOptions(state) {
       ? siteSettings.allowed_href_schemes.split("|")
       : null,
     allowedIframes: siteSettings.allowed_iframes
-      ? siteSettings.allowed_iframes.split("|")
-      : [],
+      ? siteSettings.allowed_iframes
+          .split("|")
+          .filter((str) => (str.match(/\//g) || []).length >= 3)
+      : [], // Only allow urls with at least 3 slashes. Ex: 'https://example.com/'.
     markdownIt: true,
     previewing,
     disableEmojis,

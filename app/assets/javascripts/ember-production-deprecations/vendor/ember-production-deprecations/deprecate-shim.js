@@ -29,7 +29,8 @@ define("discourse/lib/deprecate-shim", ["exports"], function (exports) {
 
     require("@ember/debug").registerDeprecationHandler(
       function shimLogDeprecationToConsole(message, options) {
-        var updatedMessage = formatMessage(message, options);
+        const updatedMessage = formatMessage(message, options);
+        // eslint-disable-next-line no-console
         console.warn(`DEPRECATION: ${updatedMessage}`);
       }
     );

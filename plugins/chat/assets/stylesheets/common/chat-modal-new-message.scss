@@ -4,30 +4,6 @@
     background: transparent;
   }
 
-  .modal-body {
-    padding: 0;
-  }
-
-  .modal-inner-container {
-    width: var(--modal-max-width);
-    box-shadow: var(--shadow-dropdown);
-    overflow: hidden;
-  }
-
-  .mobile-device & {
-    .modal-inner-container {
-      border-radius: 0;
-      margin: 0 auto auto auto;
-      box-shadow: var(--shadow-modal);
-    }
-  }
-
-  .not-mobile-device & {
-    .modal-inner-container {
-      margin: 10px auto auto auto;
-    }
-  }
-
   .chat-message-creator__search,
   .chat-message-creator__new-group {
     display: flex;

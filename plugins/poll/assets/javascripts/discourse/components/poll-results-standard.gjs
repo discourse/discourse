@@ -7,6 +7,9 @@ import PollVoters from "./poll-voters";
 
 export default class PollResultsStandardComponent extends Component {
   orderOptions = (options) => {
+    options.forEach((option) => {
+      option.votes = option.votes ?? 0;
+    });
     return options.sort((a, b) => {
       if (a.votes < b.votes) {
         return 1;
@@ -40,8 +43,13 @@ export default class PollResultsStandardComponent extends Component {
       const chosen = (this.args.vote || []).includes(option.id);
       option.percentage = per;
       option.chosen = chosen;
-      let voters = this.args.isPublic ? this.args.voters[option.id] || [] : [];
+      let voters = this.args.isPublic
+        ? this.args.voters?.[option.id]?.voters ?? []
+        : [];
       option.voters = [...voters];
+      option.loading = this.args.isPublic
+        ? this.args.voters?.[option.id]?.loading ?? false
+        : false;
     });
 
     return ordered;
@@ -71,10 +79,17 @@ export default class PollResultsStandardComponent extends Component {
           <div class="option">
             <p>
               {{#unless @isRankedChoice}}
-                <span class="percentage">{{i18n
-                    "number.percent"
-                    count=option.percentage
-                  }}</span>
+                {{#if @showTally}}
+                  <span class="absolute">{{i18n
+                      "poll.votes"
+                      count=option.votes
+                    }}</span>
+                {{else}}
+                  <span class="percentage">{{i18n
+                      "number.percent"
+                      count=option.percentage
+                    }}</span>
+                {{/if}}
               {{/unless}}
               <span class="option-text">{{htmlSafe option.html}}</span>
             </p>

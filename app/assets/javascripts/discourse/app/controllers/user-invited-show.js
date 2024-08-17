@@ -2,57 +2,53 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { equal, reads } from "@ember/object/computed";
 import { service } from "@ember/service";
+import { observes } from "@ember-decorators/object";
 import CreateInvite from "discourse/components/modal/create-invite";
 import CreateInviteBulk from "discourse/components/modal/create-invite-bulk";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Invite from "discourse/models/invite";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseComputed, {
-  debounce,
-  observes,
-} from "discourse-common/utils/decorators";
+import discourseComputed, { debounce } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Controller.extend({
-  dialog: service(),
-  modal: service(),
-  user: null,
-  model: null,
-  filter: null,
-  invitesCount: null,
-  canLoadMore: true,
-  invitesLoading: false,
-  reinvitedAll: false,
-  removedAll: false,
-  searchTerm: null,
+export default class UserInvitedShowController extends Controller {
+  @service dialog;
+  @service modal;
 
-  init() {
-    this._super(...arguments);
-    this.set("searchTerm", "");
-  },
+  user = null;
+  model = null;
+  filter = null;
+  invitesCount = null;
+  canLoadMore = true;
+  invitesLoading = false;
+  reinvitedAll = false;
+  removedAll = false;
+  searchTerm = "";
+
+  @equal("filter", "redeemed") inviteRedeemed;
+  @equal("filter", "expired") inviteExpired;
+  @equal("filter", "pending") invitePending;
+  @reads("currentUser.can_invite_to_forum") canInviteToForum;
+  @reads("currentUser.admin") canBulkInvite;
 
   @observes("searchTerm")
   searchTermChanged() {
     this._searchTermChanged();
-  },
+  }
 
   @debounce(INPUT_DELAY)
   _searchTermChanged() {
     Invite.findInvitedBy(this.user, this.filter, this.searchTerm).then(
       (invites) => this.set("model", invites)
     );
-  },
-
-  inviteRedeemed: equal("filter", "redeemed"),
-  inviteExpired: equal("filter", "expired"),
-  invitePending: equal("filter", "pending"),
+  }
 
   @discourseComputed("model")
   hasEmailInvites(model) {
     return model.invites.some((invite) => {
       return invite.email;
     });
-  },
+  }
 
   @discourseComputed("filter")
   showBulkActionButtons(filter) {
@@ -61,36 +57,33 @@ export default Controller.extend({
       this.model.invites.length > 0 &&
       this.currentUser.staff
     );
-  },
-
-  canInviteToForum: reads("currentUser.can_invite_to_forum"),
-  canBulkInvite: reads("currentUser.admin"),
+  }
 
   @discourseComputed("invitesCount", "filter")
   showSearch(invitesCount, filter) {
     return invitesCount[filter] > 5;
-  },
+  }
 
   @action
   createInvite() {
     this.modal.show(CreateInvite, { model: { invites: this.model.invites } });
-  },
+  }
 
   @action
   createInviteCsv() {
     this.modal.show(CreateInviteBulk);
-  },
+  }
 
   @action
   editInvite(invite) {
     this.modal.show(CreateInvite, { model: { editing: true, invite } });
-  },
+  }
 
   @action
   destroyInvite(invite) {
     invite.destroy();
     this.model.invites.removeObject(invite);
-  },
+  }
 
   @action
   destroyAllExpired() {
@@ -105,13 +98,13 @@ export default Controller.extend({
           .catch(popupAjaxError);
       },
     });
-  },
+  }
 
   @action
   reinvite(invite) {
     invite.reinvite();
     return false;
-  },
+  }
 
   @action
   reinviteAll() {
@@ -123,7 +116,7 @@ export default Controller.extend({
           .catch(popupAjaxError);
       },
     });
-  },
+  }
 
   @action
   loadMore() {
@@ -147,5 +140,5 @@ export default Controller.extend({
         }
       });
     }
-  },
-});
+  }
+}

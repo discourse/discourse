@@ -297,7 +297,7 @@ tr_TR:
           Olamaz, kötü gönderime henüz uygunsuz bayrağı eklenmemiş. :worried: <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">**Bayrağı** kullanarak uygunsuz bayrağı ekleyebilir misiniz? Her gönderi için daha fazla eylem göstermek için daha fazla göster düğmesini <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> kullanmayı unutmayın.
       search:
         instructions: |-
-          _psst_ … Bu konuya bir sürpriz gizledim. Eğer meydan okumaya hazırsanız, <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">sağ üstteki &#8599;, **arama simgesini seçin**, 'bu konuda' seçeneğini seçin ve ardından arayın.
+          _psst_ … Bu konuya bir sürpriz gizledim. Meydan okumaya hazırsanız <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">sağ üstteki &#8599; **arama simgesini seçin**, "bu konuda" seçeneğini belirleyin ve ardından arayın.
 
           Bu başlıkta "capy&#8203;bara" terimini aramayı deneyin
         hidden_message: |-

@@ -52,4 +52,30 @@ describe "JS Deprecation Handling", type: :system do
     )
     expect(message).to have_text(SiteSetting.warn_critical_js_deprecations_message)
   end
+
+  it "can show warnings triggered during initial render" do
+    sign_in Fabricate(:admin)
+
+    t = Fabricate(:theme, name: "Theme With Tests")
+    t.set_field(
+      target: :extra_js,
+      type: :js,
+      name: "discourse/connectors/below-footer/my-connector.gjs",
+      value: <<~JS,
+        import deprecated from "discourse-common/lib/deprecated";
+        function triggerDeprecation(){
+          deprecated("Fake deprecation message", { id: "fake-deprecation" })
+        }
+        export default <template>
+          {{triggerDeprecation}}
+        </template>
+      JS
+    )
+    t.save!
+    SiteSetting.default_theme_id = t.id
+
+    visit "/latest"
+
+    expect(page).to have_css("#global-notice-critical-deprecation")
+  end
 end

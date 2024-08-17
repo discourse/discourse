@@ -285,7 +285,7 @@ acceptance("Tag info", function (needs) {
     [
       "/tags/c/faq/4/planters/l/latest.json",
       "/tags/c/feature/2/planters/l/latest.json",
-      "/tags/c/feature/2/planters/l/top.json",
+      "/tags/c/feature/2/planters/l/hot.json",
       "/tags/c/feature/2/none/planters/l/latest.json",
     ].forEach((url) => {
       server.get(url, () => {
@@ -565,8 +565,8 @@ acceptance("Tag info", function (needs) {
     await click(".nav-item_latest a[href]");
     assert.strictEqual(currentURL(), "/tags/c/feature/2/planters/l/latest");
 
-    await click(".nav-item_top a[href]");
-    assert.strictEqual(currentURL(), "/tags/c/feature/2/planters/l/top");
+    await click(".nav-item_hot a[href]");
+    assert.strictEqual(currentURL(), "/tags/c/feature/2/planters/l/hot");
   });
 
   test("admin can manage tags", async function (assert) {

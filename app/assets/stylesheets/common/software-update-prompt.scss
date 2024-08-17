@@ -5,7 +5,6 @@
   left: 0;
   top: var(--header-offset, 60px);
   background-color: var(--tertiary-low);
-  color: var(--tertiary);
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s;
@@ -20,15 +19,15 @@
   }
 
   .update-prompt-message {
-    cursor: pointer;
+    color: var(--tertiary);
     padding: 0.75em 0;
 
     .d-icon {
-      margin-right: 0.33em;
+      color: var(--tertiary);
       font-size: 0.9em;
     }
 
-    span {
+    .d-button-label > span {
       text-decoration: underline;
     }
   }
@@ -39,16 +38,8 @@
     height: 44px;
     flex: 1;
 
-    span {
-      cursor: pointer;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      padding-left: 20px;
-
-      &:hover {
-        color: var(--tertiary-hover);
-      }
+    .d-icon {
+      color: var(--tertiary);
     }
   }
 

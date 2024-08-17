@@ -253,6 +253,9 @@ class User < ActiveRecord::Base
   # Cache for user custom fields. Currently it is used to display quick search results
   attr_accessor :custom_data
 
+  # Information if user was authenticated with OAuth
+  attr_accessor :authenticated_with_oauth
+
   scope :with_email,
         ->(email) { joins(:user_emails).where("lower(user_emails.email) IN (?)", email) }
 
@@ -1035,6 +1038,10 @@ class User < ActiveRecord::Base
   end
 
   def self.update_ip_address!(user_id, new_ip:, old_ip:)
+    can_update_ip_address =
+      DiscoursePluginRegistry.apply_modifier(:user_can_update_ip_address, user_id: user_id)
+    return if !can_update_ip_address
+
     unless old_ip == new_ip || new_ip.blank?
       DB.exec(<<~SQL, user_id: user_id, ip_address: new_ip)
         UPDATE users
@@ -1222,10 +1229,14 @@ class User < ActiveRecord::Base
     stat.increment!(:post_edits_count)
   end
 
+  def post_action_type_view
+    @post_action_type_view ||= PostActionTypeView.new
+  end
+
   def flags_given_count
     PostAction.where(
       user_id: id,
-      post_action_type_id: PostActionType.flag_types_without_custom.values,
+      post_action_type_id: post_action_type_view.flag_types_without_additional_message.values,
     ).count
   end
 
@@ -1236,7 +1247,10 @@ class User < ActiveRecord::Base
   def flags_received_count
     posts
       .includes(:post_actions)
-      .where("post_actions.post_action_type_id" => PostActionType.flag_types_without_custom.values)
+      .where(
+        "post_actions.post_action_type_id" =>
+          post_action_type_view.flag_types_without_additional_message.values,
+      )
       .count
   end
 
@@ -1449,7 +1463,7 @@ class User < ActiveRecord::Base
 
     disagreed_flag_post_ids =
       PostAction
-        .where(post_action_type_id: PostActionType.types[:spam])
+        .where(post_action_type_id: post_action_type_view.types[:spam])
         .where.not(disagreed_at: nil)
         .pluck(:post_id)
 
@@ -1577,7 +1591,7 @@ class User < ActiveRecord::Base
     PostAction
       .where(user_id: self.id)
       .where(disagreed_at: nil)
-      .where(post_action_type_id: PostActionType.notify_flag_type_ids)
+      .where(post_action_type_id: post_action_type_view.notify_flag_type_ids)
       .count
   end
 

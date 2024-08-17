@@ -64,6 +64,7 @@ export default class Filter extends Component {
             value={{this.sidebarState.filter}}
             placeholder={{i18n "sidebar.filter"}}
             type="text"
+            enterkeyhint="done"
             class="sidebar-filter__input"
           />
           {{#if this.showShortcutCombo}}

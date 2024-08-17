@@ -1,5 +1,5 @@
 @mixin default-input {
-  width: auto !important;
+  width: 100% !important;
   height: 2em;
   background: var(--secondary);
   border: 1px solid var(--primary-low-mid);
