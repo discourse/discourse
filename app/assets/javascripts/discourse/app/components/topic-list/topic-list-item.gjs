@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -26,15 +27,13 @@ import number from "discourse/helpers/number";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import DAG from "discourse/lib/dag";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 
-let columns;
-resetColumns();
-
-function resetColumns() {
-  columns = new DAG();
+function createColumns() {
+  const columns = new DAG();
   columns.add("topic-list-before-columns");
   columns.add("bulk-select", undefined, { after: "topic-list-before-columns" });
   columns.add("topic", undefined, { after: "bulk-select" });
@@ -46,14 +45,7 @@ function resetColumns() {
   columns.add("views", undefined, { after: "op-likes" });
   columns.add("activity", undefined, { after: "views" });
   columns.add("topic-list-after-columns", undefined, { after: "activity" });
-}
-
-export function columnsDAG() {
   return columns;
-}
-
-export function clearExtraColumns() {
-  resetColumns();
 }
 
 export default class TopicListItem extends Component {
@@ -105,6 +97,11 @@ export default class TopicListItem extends Component {
 
   get shouldFocusLastVisited() {
     return this.site.desktopView && this.args.focusLastVisitedTopic;
+  }
+
+  @cached
+  get columns() {
+    return applyValueTransformer("topic-list-item-columns", createColumns());
   }
 
   navigateToTopic(topic, href) {
@@ -242,7 +239,7 @@ export default class TopicListItem extends Component {
         @outletArgs={{hash topic=@topic}}
       />
       {{#if this.site.desktopView}}
-        {{#each (columns.resolve) as |entry|}}
+        {{#each (this.columns.resolve) as |entry|}}
           {{#if entry.value}}
             <entry.value @topic={{@topic}} />
           {{else if (eq entry.key "bulk-select")}}

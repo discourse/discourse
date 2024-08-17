@@ -10,4 +10,6 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "header-notifications-avatar-size",
   "home-logo-href",
   "home-logo-image-url",
+  "topic-list-header-columns",
+  "topic-list-item-columns",
 ]);
