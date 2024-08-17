@@ -31,7 +31,7 @@ function getRouteWithAction(router, actionName) {
 function routeAction(actionName, router, ...params) {
   assert("[ember-route-action-helper] Unable to lookup router", router);
 
-  if (!isTesting() || (isTesting() && router.currentRoute)) {
+  if (!isTesting() || router.currentRoute) {
     runInDebug(() => {
       let { handler } = getRouteWithAction(router, actionName);
       assert(
