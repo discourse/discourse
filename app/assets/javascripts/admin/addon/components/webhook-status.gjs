@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import icon from "discourse-common/helpers/d-icon";
 import I18n from "discourse-i18n";
 
