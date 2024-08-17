@@ -37,7 +37,7 @@ export default class SidebarFooter extends Component {
   }
 
   @action
-  showKeyboardShorcuts() {
+  showKeyboardShortcuts() {
     this.modal.show(KeyboardShortcutsHelp);
   }
 
