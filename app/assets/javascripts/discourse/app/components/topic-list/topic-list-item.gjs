@@ -35,16 +35,16 @@ import i18n from "discourse-common/helpers/i18n";
 function createColumns() {
   const columns = new DAG();
   columns.add("topic-list-before-columns");
-  columns.add("bulk-select", undefined, { after: "topic-list-before-columns" });
-  columns.add("topic", undefined, { after: "bulk-select" });
-  columns.add("topic-list-after-main-link", undefined, { after: "topic" });
-  columns.add("posters", undefined, { after: "topic-list-after-main-link" });
-  columns.add("replies", undefined, { after: "posters" });
-  columns.add("likes", undefined, { after: "replies" });
-  columns.add("op-likes", undefined, { after: "likes" });
-  columns.add("views", undefined, { after: "op-likes" });
-  columns.add("activity", undefined, { after: "views" });
-  columns.add("topic-list-after-columns", undefined, { after: "activity" });
+  columns.add("bulk-select");
+  columns.add("topic");
+  columns.add("topic-list-after-main-link");
+  columns.add("posters");
+  columns.add("replies");
+  columns.add("likes");
+  columns.add("op-likes");
+  columns.add("views");
+  columns.add("activity");
+  columns.add("topic-list-after-columns");
   return columns;
 }
 
