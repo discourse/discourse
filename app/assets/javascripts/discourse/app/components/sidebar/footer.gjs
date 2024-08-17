@@ -2,9 +2,10 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import routeAction from "discourse/helpers/route-action";
+import mobile from "discourse/lib/mobile";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 
 export default class SidebarFooter extends Component {
@@ -35,6 +36,16 @@ export default class SidebarFooter extends Component {
     this.modal.show(SidebarSectionForm);
   }
 
+  @action
+  showKeyboardShorcuts() {
+    this.modal.show(KeyboardShortcutsHelp);
+  }
+
+  @action
+  toggleMobileView() {
+    mobile.toggleMobileView();
+  }
+
   <template>
     <div class="sidebar-footer-wrapper">
       <div class="sidebar-footer-container">
@@ -52,7 +63,7 @@ export default class SidebarFooter extends Component {
 
           {{#if this.showToggleMobileButton}}
             <DButton
-              @action={{routeAction "toggleMobileView"}}
+              @action={{this.toggleMobileView}}
               @title={{if this.site.mobileView "desktop_view" "mobile_view"}}
               @icon={{if this.site.mobileView "desktop" "mobile-alt"}}
               class="btn-flat sidebar-footer-actions-button sidebar-footer-actions-toggle-mobile-view"
@@ -61,7 +72,7 @@ export default class SidebarFooter extends Component {
 
           {{#if this.showKeyboardShortcutsButton}}
             <DButton
-              @action={{routeAction "showKeyboardShortcutsHelp"}}
+              @action={{this.showKeyboardShorcuts}}
               @title="keyboard_shortcuts_help.title"
               @icon="keyboard"
               class="btn-flat sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts"
