@@ -25,7 +25,7 @@ export default class WebhookStatus extends Component {
   }
 
   <template>
-    {{icon this.iconName (hash class=this.iconClass)}}
+    {{icon this.iconName class=this.iconClass}}
     {{this.deliveryStatus}}
   </template>
 }
