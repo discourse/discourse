@@ -39,6 +39,8 @@ import {
 import { addOnKeyUpCallback } from "discourse/components/search-menu/search-term";
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import { forceDropdownForMenuPanels } from "discourse/components/site-header";
+import { columnsDAG as topicListHeaderColumnsDAG } from "discourse/components/topic-list/topic-list-header";
+import { columnsDAG as topicListItemColumnsDAG } from "discourse/components/topic-list/topic-list-item";
 import { addTopicParticipantClassesCallback } from "discourse/components/topic-map/topic-participant";
 import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/container";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
@@ -2125,6 +2127,14 @@ class PluginApi {
    **/
   get headerButtons() {
     return headerButtonsDAG();
+  }
+
+  get topicListItemColumns() {
+    return topicListItemColumnsDAG();
+  }
+
+  get topicListHeaderColumns() {
+    return topicListHeaderColumnsDAG();
   }
 
   /**

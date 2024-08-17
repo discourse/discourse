@@ -27,12 +27,39 @@ import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
 import number from "discourse/helpers/number";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
+import DAG from "discourse/lib/dag";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL, { groupPath } from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
+
+let columns;
+resetColumns();
+
+function resetColumns() {
+  columns = new DAG();
+  columns.add("topic-list-before-columns");
+  columns.add("bulk-select", undefined, { after: "topic-list-before-columns" });
+  columns.add("topic", undefined, { after: "bulk-select" });
+  columns.add("topic-list-after-main-link", undefined, { after: "topic" });
+  columns.add("posters", undefined, { after: "topic-list-after-main-link" });
+  columns.add("replies", undefined, { after: "posters" });
+  columns.add("likes", undefined, { after: "replies" });
+  columns.add("op-likes", undefined, { after: "likes" });
+  columns.add("views", undefined, { after: "op-likes" });
+  columns.add("activity", undefined, { after: "views" });
+  columns.add("topic-list-after-columns", undefined, { after: "activity" });
+}
+
+export function columnsDAG() {
+  return columns;
+}
+
+export function clearExtraColumns() {
+  resetColumns();
+}
 
 export default class TopicListItem extends Component {
   @service appEvents;
@@ -284,150 +311,147 @@ export default class TopicListItem extends Component {
         @outletArgs={{hash topic=@topic}}
       />
       {{#if this.site.desktopView}}
-        {{! TODO: column DAG "topic-list-before-columns" }}
-
-        {{#if @bulkSelectEnabled}}
-          <td class="bulk-select topic-list-data">
-            <label for="bulk-select-{{@topic.id}}">
-              <input
-                {{on "click" this.onBulkSelectToggle}}
-                checked={{this.isSelected}}
-                type="checkbox"
-                id="bulk-select-{{@topic.id}}"
-                class="bulk-select"
+        {{#each (columns.resolve) as |entry|}}
+          {{#if entry.value}}
+            <entry.value @topic={{@topic}} />
+          {{else if (eq entry.key "bulk-select")}}
+            {{#if @bulkSelectEnabled}}
+              <td class="bulk-select topic-list-data">
+                <label for="bulk-select-{{@topic.id}}">
+                  <input
+                    {{on "click" this.onBulkSelectToggle}}
+                    checked={{this.isSelected}}
+                    type="checkbox"
+                    id="bulk-select-{{@topic.id}}"
+                    class="bulk-select"
+                  />
+                </label>
+              </td>
+            {{/if}}
+          {{else if (eq entry.key "topic")}}
+            <td class="main-link clearfix topic-list-data" colspan="1">
+              <PluginOutlet
+                @name="topic-list-before-link"
+                @outletArgs={{hash topic=@topic}}
               />
-            </label>
-          </td>
-        {{/if}}
 
-        <td class="main-link clearfix topic-list-data" colspan="1">
-          <PluginOutlet
-            @name="topic-list-before-link"
-            @outletArgs={{hash topic=@topic}}
-          />
-
-          <span class="link-top-line">
-            {{~! no whitespace ~}}
-            <PluginOutlet
-              @name="topic-list-before-status"
-              @outletArgs={{hash topic=@topic}}
-            />
-            {{~! no whitespace ~}}
-            <TopicStatus @topic={{@topic}} />
-            {{~! no whitespace ~}}
-            <TopicLink
-              {{on "focus" this.onTitleFocus}}
-              {{on "blur" this.onTitleBlur}}
-              @topic={{@topic}}
-              class="raw-link raw-topic-link"
-            />
-            {{~#if @topic.featured_link~}}
-              &nbsp;
-              {{~topicFeaturedLink @topic}}
-            {{~/if~}}
-            <PluginOutlet
-              @name="topic-list-after-title"
-              @outletArgs={{hash topic=@topic}}
-            />
-            {{~! no whitespace ~}}
-            <UnreadIndicator
-              @includeUnreadIndicator={{this.includeUnreadIndicator}}
-              @topicId={{@topic.id}}
-              class={{this.unreadClass}}
-            />
-            {{~#if @showTopicPostBadges~}}
-              <TopicPostBadges
-                @unreadPosts={{@topic.unread_posts}}
-                @unseen={{@topic.unseen}}
-                @newDotText={{this.newDotText}}
-                @url={{@topic.lastUnreadUrl}}
-              />
-            {{~/if~}}
-          </span>
-
-          <div class="link-bottom-line">
-            {{#unless @hideCategory}}
-              {{#unless @topic.isPinnedUncategorized}}
+              <span class="link-top-line">
+                {{~! no whitespace ~}}
                 <PluginOutlet
-                  @name="topic-list-before-category"
+                  @name="topic-list-before-status"
                   @outletArgs={{hash topic=@topic}}
                 />
-                {{categoryLink @topic.category}}
-              {{/unless}}
-            {{/unless}}
+                {{~! no whitespace ~}}
+                <TopicStatus @topic={{@topic}} />
+                {{~! no whitespace ~}}
+                <TopicLink
+                  {{on "focus" this.onTitleFocus}}
+                  {{on "blur" this.onTitleBlur}}
+                  @topic={{@topic}}
+                  class="raw-link raw-topic-link"
+                />
+                {{~#if @topic.featured_link~}}
+                  &nbsp;
+                  {{~topicFeaturedLink @topic}}
+                {{~/if~}}
+                <PluginOutlet
+                  @name="topic-list-after-title"
+                  @outletArgs={{hash topic=@topic}}
+                />
+                {{~! no whitespace ~}}
+                <UnreadIndicator
+                  @includeUnreadIndicator={{this.includeUnreadIndicator}}
+                  @topicId={{@topic.id}}
+                  class={{this.unreadClass}}
+                />
+                {{~#if @showTopicPostBadges~}}
+                  <TopicPostBadges
+                    @unreadPosts={{@topic.unread_posts}}
+                    @unseen={{@topic.unseen}}
+                    @newDotText={{this.newDotText}}
+                    @url={{@topic.lastUnreadUrl}}
+                  />
+                {{~/if~}}
+              </span>
 
-            {{discourseTags @topic mode="list" tagsForUser=@tagsForUser}}
+              <div class="link-bottom-line">
+                {{#unless @hideCategory}}
+                  {{#unless @topic.isPinnedUncategorized}}
+                    <PluginOutlet
+                      @name="topic-list-before-category"
+                      @outletArgs={{hash topic=@topic}}
+                    />
+                    {{categoryLink @topic.category}}
+                  {{/unless}}
+                {{/unless}}
 
-            {{#if this.participantGroups}}
-              <ParticipantGroups @groups={{this.participantGroups}} />
+                {{discourseTags @topic mode="list" tagsForUser=@tagsForUser}}
+
+                {{#if this.participantGroups}}
+                  <ParticipantGroups @groups={{this.participantGroups}} />
+                {{/if}}
+
+                <ActionList
+                  @topic={{@topic}}
+                  @postNumbers={{@topic.liked_post_numbers}}
+                  @icon="heart"
+                  class="likes"
+                />
+              </div>
+
+              {{#if this.expandPinned}}
+                <TopicExcerpt @topic={{@topic}} />
+              {{/if}}
+
+              <PluginOutlet
+                @name="topic-list-main-link-bottom"
+                @outletArgs={{hash topic=@topic}}
+              />
+            </td>
+          {{else if (eq entry.key "posters")}}
+            {{#if @showPosters}}
+              <PostersColumn @posters={{@topic.featuredUsers}} />
             {{/if}}
-
-            <ActionList
-              @topic={{@topic}}
-              @postNumbers={{@topic.liked_post_numbers}}
-              @icon="heart"
-              class="likes"
-            />
-          </div>
-
-          {{#if this.expandPinned}}
-            <TopicExcerpt @topic={{@topic}} />
+          {{else if (eq entry.key "replies")}}
+            <PostsCountColumn @topic={{@topic}} />
+          {{else if (eq entry.key "likes")}}
+            {{#if @showLikes}}
+              <td class="num likes topic-list-data">
+                {{#if (gt @topic.like_count 0)}}
+                  <a href={{@topic.summaryUrl}}>
+                    {{number @topic.like_count}}
+                    {{icon "heart"}}
+                  </a>
+                {{/if}}
+              </td>
+            {{/if}}
+          {{else if (eq entry.key "op-likes")}}
+            {{#if @showOpLikes}}
+              <td class="num likes">
+                {{#if (gt @topic.op_like_count 0)}}
+                  <a href={{@topic.summaryUrl}}>
+                    {{number @topic.op_like_count}}
+                    {{icon "heart"}}
+                  </a>
+                {{/if}}
+              </td>
+            {{/if}}
+          {{else if (eq entry.key "views")}}
+            <td
+              class={{concatClass "num views topic-list-data" @topic.viewsHeat}}
+            >
+              <PluginOutlet
+                @name="topic-list-before-view-count"
+                @outletArgs={{hash topic=@topic}}
+              />
+              {{number @topic.views numberKey="views_long"}}
+            </td>
+          {{else if (eq entry.key "activity")}}
+            <ActivityColumn @topic={{@topic}} class="num topic-list-data" />
           {{/if}}
-
-          <PluginOutlet
-            @name="topic-list-main-link-bottom"
-            @outletArgs={{hash topic=@topic}}
-          />
-        </td>
-
-        <PluginOutlet
-          @name="topic-list-after-main-link"
-          @outletArgs={{hash topic=@topic}}
-        />
-
-        {{#if @showPosters}}
-          <PostersColumn @posters={{@topic.featuredUsers}} />
-        {{/if}}
-
-        <PostsCountColumn @topic={{@topic}} />
-
-        {{#if @showLikes}}
-          <td class="num likes topic-list-data">
-            {{#if (gt @topic.like_count 0)}}
-              <a href={{@topic.summaryUrl}}>
-                {{number @topic.like_count}}
-                {{icon "heart"}}
-              </a>
-            {{/if}}
-          </td>
-        {{/if}}
-
-        {{#if @showOpLikes}}
-          <td class="num likes">
-            {{#if (gt @topic.op_like_count 0)}}
-              <a href={{@topic.summaryUrl}}>
-                {{number @topic.op_like_count}}
-                {{icon "heart"}}
-              </a>
-            {{/if}}
-          </td>
-        {{/if}}
-
-        <td class={{concatClass "num views topic-list-data" @topic.viewsHeat}}>
-          <PluginOutlet
-            @name="topic-list-before-view-count"
-            @outletArgs={{hash topic=@topic}}
-          />
-          {{number @topic.views numberKey="views_long"}}
-        </td>
-
-        <ActivityColumn @topic={{@topic}} class="num topic-list-data" />
-
-        {{! TODO: column DAG "topic-list-after-columns" }}
+        {{/each}}
       {{else}}
         <td class="topic-list-data">
-          {{! TODO: column DAG "topic-list-before-columns" }}
-
           <div class="pull-left">
             {{#if @bulkSelectEnabled}}
               <label for="bulk-select-{{@topic.id}}">

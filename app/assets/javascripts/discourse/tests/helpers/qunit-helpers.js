@@ -25,6 +25,8 @@ import { resetDecorators as resetPluginOutletDecorators } from "discourse/compon
 import { resetItemSelectCallbacks } from "discourse/components/search-menu/results/assistant-item";
 import { resetQuickSearchRandomTips } from "discourse/components/search-menu/results/random-quick-tip";
 import { resetOnKeyUpCallbacks } from "discourse/components/search-menu/search-term";
+import { clearExtraColumns as clearExtraHeaderColumns } from "discourse/components/topic-list/topic-list-header";
+import { clearExtraColumns as clearExtraItemColumns } from "discourse/components/topic-list/topic-list-item";
 import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
@@ -236,6 +238,8 @@ export function testCleanup(container, app) {
   clearExtraGlimmerHeaderButtons();
   clearExtraHeaderIcons();
   clearExtraHeaderButtons();
+  clearExtraItemColumns();
+  clearExtraHeaderColumns();
   resetOnKeyUpCallbacks();
   resetLogSearchLinkClickedCallbacks();
   resetItemSelectCallbacks();
