@@ -27,10 +27,6 @@ export default class SidebarFooter extends Component {
     );
   }
 
-  get showKeyboardShortcutsButton() {
-    return this.site.desktopView;
-  }
-
   @action
   manageSections() {
     this.modal.show(SidebarSectionForm);
@@ -70,9 +66,9 @@ export default class SidebarFooter extends Component {
             />
           {{/if}}
 
-          {{#if this.showKeyboardShortcutsButton}}
+          {{#if this.site.desktopView}}
             <DButton
-              @action={{this.showKeyboardShorcuts}}
+              @action={{this.showKeyboardShortcuts}}
               @title="keyboard_shortcuts_help.title"
               @icon="keyboard"
               class="btn-flat sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts"
