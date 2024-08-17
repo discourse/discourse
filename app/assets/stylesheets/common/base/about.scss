@@ -19,7 +19,8 @@
     border-bottom: 1px solid var(--primary-low);
     padding: 1em 1em;
     margin-bottom: 1em;
-    @media screen and (max-width: 750px) {
+
+    @include breakpoint(tablet) {
       flex-direction: column;
     }
 
@@ -30,7 +31,8 @@
 
   &__stats-item {
     flex: 1 0 fit-content;
-    @media screen and (max-width: 750px) {
+
+    @include breakpoint(tablet) {
       margin-bottom: 1em;
       &:last-child {
         margin-bottom: 0;
