@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
+import icon from "discourse-common/helpers/d-icon";
 import I18n from "discourse-i18n";
 
 export default class WebhookStatus extends Component {
@@ -6,7 +8,7 @@ export default class WebhookStatus extends Component {
   iconClasses = ["text-muted", "text-danger", "text-successful", "text-muted"];
 
   get status() {
-    const lastStatus = this.args.webhook.last_delivery_status;
+    const lastStatus = this.args.webhook.get("last_delivery_status");
     return this.args.deliveryStatuses.find((s) => s.id === lastStatus);
   }
 
@@ -21,4 +23,9 @@ export default class WebhookStatus extends Component {
   get iconClass() {
     return this.iconClasses[this.status.id - 1];
   }
+
+  <template>
+    {{icon this.iconName (hash class=this.iconClass)}}
+    {{this.deliveryStatus}}
+  </template>
 }
