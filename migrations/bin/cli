@@ -9,8 +9,6 @@ module Migrations
   enable_i18n
 
   class CommandLineInterface < Thor
-    # extend Migrations::CLI::ThorExt
-
     include Migrations::CLI::ConvertCommand
     include Migrations::CLI::ImportCommand
     include Migrations::CLI::UploadCommand
