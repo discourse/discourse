@@ -1,18 +1,13 @@
 # frozen_string_literal: true
 
 module Migrations::Converters::Base
-  class ItemHandler
-    def initialize(step, db_path = nil)
+  class SerialJob
+    def initialize(step)
       @step = step
       @stats = ProgressStats.new
-      @db_path = db_path
     end
 
-    def after_fork
-      # @step.output_db = @step.output_db.class.new(path: @db_path, journal_mode: "off")
-    end
-
-    def handle(item)
+    def run(item)
       @stats.reset!
 
       begin

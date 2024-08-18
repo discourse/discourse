@@ -2,16 +2,20 @@
 
 module Migrations::Converters::Pepper
   class Step3 < Migrations::Converters::Base::ProgressStep
+    run_in_parallel true
+
     def max_progress
-      10
+      1000
     end
 
     def items
-      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      (1..1000).map { |i| { counter: i } }
     end
 
     def process_item(item, stats)
-      sleep(1)
+      sleep(0.5)
+
+      IntermediateDB::LogEntry.create!(type: "info", message: "Step3 - #{item[:counter]}")
     end
   end
 end

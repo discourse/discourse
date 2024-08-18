@@ -12,10 +12,10 @@ module Migrations::CLI::ConvertCommand
 
         settings = load_settings(converter_type)
 
+        Migrations::Database.reset!(settings[:intermediate_db][:path]) if options[:reset]
+
         converter = "migrations/converters/#{converter_type}/converter".camelize.constantize
         converter.new(settings).run
-
-        Migrations::Database.reset!(settings[:intermediate_db][:path]) if options[:reset]
       end
 
       private

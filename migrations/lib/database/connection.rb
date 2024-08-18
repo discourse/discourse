@@ -8,8 +8,6 @@ module Migrations::Database
     TRANSACTION_BATCH_SIZE = 1000
     PREPARED_STATEMENT_CACHE_SIZE = 5
 
-    DEFAULT_INSERT_ACTIONS = { "config" => "OR REPLACE", "uploads" => "OR IGNORE" }
-
     def self.open_database(path:)
       FileUtils.mkdir_p(File.dirname(path))
 
@@ -49,27 +47,9 @@ module Migrations::Database
       @statement_counter = 0
     end
 
-    def reconnect
-      close
+    def reopen
+      raise "error" if @db
       @db = self.class.open_database(path: @path)
-    end
-
-    def copy_from(source_db_paths, insert_actions: DEFAULT_INSERT_ACTIONS)
-      commit_transaction
-      @statement_counter = 0
-
-      table_names = @db.tables.excluding("schema_migrations")
-
-      source_db_paths.each do |source_db_path|
-        @db.execute("ATTACH DATABASE ? AS source", source_db_path)
-
-        table_names.each do |table_name|
-          or_action = insert_actions[table_name] || ""
-          @db.execute("INSERT #{or_action} INTO #{table_name} SELECT * FROM source.#{table_name}")
-        end
-
-        @db.execute("DETACH DATABASE source")
-      end
     end
 
     def insert(sql, *parameters)

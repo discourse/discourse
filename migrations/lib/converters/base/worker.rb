@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "oj"
+
 module Migrations::Converters::Base
   class Worker
     def initialize(index, input_queue, output_queue, job)
@@ -9,6 +11,8 @@ module Migrations::Converters::Base
       @job = job
 
       @threads = []
+      @mutex = Mutex.new
+      @data_processed = ConditionVariable.new
     end
 
     def start
@@ -34,7 +38,7 @@ module Migrations::Converters::Base
     private
 
     def start_fork(parent_input_stream, parent_output_stream, fork_input_stream, fork_output_stream)
-      Migrations::ForkManager.fork do
+      Migrations::ForkManager.instance.fork do
         begin
           Process.setproctitle("worker_process#{@index}")
 
@@ -42,11 +46,14 @@ module Migrations::Converters::Base
           fork_input_stream.close
 
           Oj.load(parent_input_stream) do |data|
-            @job.run(data)
-            fork_output_stream.write(Oj.dump(stats))
+            result = @job.run(data)
+            # result = @job.run(data[:data])
+            Oj.to_stream(fork_output_stream, result)
           end
         rescue SignalException
           exit(1)
+        ensure
+          @job.cleanup
         end
       end
     end
@@ -57,7 +64,9 @@ module Migrations::Converters::Base
 
         begin
           while (data = @input_queue.pop)
-            output_stream.write(Oj.dump(data))
+            Oj.to_stream(output_stream, data)
+            # Oj.to_stream(output_stream, { data: })
+            @mutex.synchronize { @data_processed.wait(@mutex) }
           end
         ensure
           output_stream.close
@@ -71,7 +80,10 @@ module Migrations::Converters::Base
         Thread.current.name = "worker_#{@index}_output"
 
         begin
-          Oj.load(input_stream) { |data| @output_queue.push(data) }
+          Oj.load(input_stream) do |data|
+            @output_queue.push(data)
+            @mutex.synchronize { @data_processed.signal }
+          end
         ensure
           input_stream.close
         end

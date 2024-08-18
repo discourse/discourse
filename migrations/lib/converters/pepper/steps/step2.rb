@@ -13,6 +13,8 @@ module Migrations::Converters::Pepper
 
       stats.warning_count += 1 if item.in?([3, 7, 9])
       stats.error_count += 1 if item.in?([6, 10])
+
+      IntermediateDB::LogEntry.create!(type: "info", message: "Step2 - #{item}")
     end
   end
 end

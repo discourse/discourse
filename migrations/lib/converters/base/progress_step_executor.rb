@@ -5,7 +5,7 @@ require "colored2"
 
 module Migrations::Converters::Base
   class ProgressStepExecutor
-    WORKER_COUNT = Etc.nprocessors
+    WORKER_COUNT = Etc.nprocessors - 1 # leave 1 CPU free to do other work
     MIN_PARALLEL_ITEMS = WORKER_COUNT * 10
     MAX_QUEUE_SIZE = WORKER_COUNT * 100
     PRINT_RUNTIME_AFTER_SECONDS = 5
@@ -34,59 +34,27 @@ module Migrations::Converters::Base
     end
 
     def execute_serially
-      item_handler = ItemHandler.new(@step)
+      job = SerialJob.new(@step)
 
       with_progressbar do |progressbar|
         @step.items.each do |item|
-          stats = item_handler.handle(item)
+          stats = job.run(item)
           progressbar.update(stats)
         end
       end
     end
 
     def execute_parallel
-      progress_queue = Queue.new
-      progress_thread =
-        Thread.new do
-          Thread.current.name = "progress_thread"
-          with_progressbar do |progressbar|
-            while (stats = progress_queue.pop)
-              progressbar.update(stats)
-            end
-          end
-        end
-
-      Process.warmup
-
+      worker_output_queue = SizedQueue.new(MAX_QUEUE_SIZE)
       work_queue = SizedQueue.new(MAX_QUEUE_SIZE)
-      workers_threads = []
-      worker_output_db_paths = []
 
-      db_root_path = File.join(File.dirname(::Migrations::Database::IntermediateDB.path), "temp")
+      workers = start_workers(work_queue, worker_output_queue)
+      writer_thread = start_db_writer(worker_output_queue)
+      push_work(work_queue)
 
-      WORKER_COUNT.times do |index|
-        db_path = File.join(db_root_path, "worker_#{index}.db")
-        ::Migrations::Database.migrate(
-          db_path,
-          migrations_path: Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
-        )
-
-        item_handler = ItemHandler.new(@step, db_path)
-        worker_output_db_paths << db_path
-
-        workers_threads << Worker.new(index, work_queue, progress_queue, item_handler).start
-      end
-
-      @step.items.each { |item| work_queue.push(item) }
-      work_queue.close
-
-      @step.output_db.reconnect
-
-      workers_threads.each(&:join)
-      progress_queue.close
-      progress_thread.join
-
-      merge_output_dbs(worker_output_db_paths)
+      workers.each(&:wait)
+      worker_output_queue.close
+      writer_thread.join
     end
 
     def calculate_max_progress
@@ -116,14 +84,41 @@ module Migrations::Converters::Base
         .run { |progressbar| yield progressbar }
     end
 
-    def merge_output_dbs(worker_output_db_paths)
-      print "    Merging output databases...\r"
-      start_time = Time.now
+    def start_db_writer(worker_output_queue)
+      Thread.new do
+        Thread.current.name = "writer_thread"
 
-      @step.output_db.copy_from(worker_output_db_paths)
-      worker_output_db_paths.each { |path| OutputDatabase.reset!(path: path) }
+        with_progressbar do |progressbar|
+          while (parametrized_insert_statements, stats = worker_output_queue.pop)
+            parametrized_insert_statements.each do |sql, parameters|
+              ::Migrations::Database::IntermediateDB.insert(sql, *parameters)
+            end
 
-      puts "    Merging output databases: #{DateHelper.human_readable_time(Time.now - start_time)}"
+            progressbar.update(stats)
+          end
+        end
+      end
+    end
+
+    def start_workers(work_queue, worker_output_queue)
+      ::Migrations::Database::IntermediateDB.close
+      Process.warmup
+
+      workers = []
+
+      WORKER_COUNT.times do |index|
+        job = ParallelJob.new(@step)
+        workers << Worker.new(index, work_queue, worker_output_queue, job).start
+      end
+
+      ::Migrations::Database::IntermediateDB.reopen
+
+      workers
+    end
+
+    def push_work(work_queue)
+      @step.items.each { |item| work_queue.push(item) }
+      work_queue.close
     end
   end
 end
