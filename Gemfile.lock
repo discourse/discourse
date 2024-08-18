@@ -319,7 +319,7 @@ GEM
       openssl (> 2.0)
     optimist (3.1.0)
     ostruct (0.6.0)
-    parallel (1.26.2)
+    parallel (1.26.3)
     parallel_tests (4.7.1)
       parallel
     parser (3.3.4.2)
