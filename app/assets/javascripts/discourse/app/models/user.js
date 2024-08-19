@@ -250,6 +250,11 @@ export default class User extends RestModel.extend(Evented) {
   // prevents staff property to be overridden
   set staff(value) {}
 
+  @computed("has_unseen_features")
+  get hasUnseenFeatures() {
+    return this.staff && this.get("has_unseen_features");
+  }
+
   destroySession() {
     return ajax(`/session/${this.username}`, { type: "DELETE" });
   }

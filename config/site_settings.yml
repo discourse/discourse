@@ -1490,6 +1490,11 @@ files:
     default: 4096
     max: 1024000
     type: file_size_restriction
+  system_user_max_attachment_size_kb:
+    default: 0
+    max: 4096000
+    type: file_size_restriction
+    hidden: true
   max_image_megapixels:
     default: 40
     min: 5
