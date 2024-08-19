@@ -54,6 +54,7 @@ export default class TopicListItem extends Component {
   @service messageBus;
   @service site;
   @service siteSettings;
+  @service topicTrackingState;
 
   highlightIfNeeded = modifier((element) => {
     if (this.args.topic.id === this.historyStore.get("lastTopicIdViewed")) {
@@ -105,6 +106,10 @@ export default class TopicListItem extends Component {
     const context = {
       get category() {
         return self.args.category;
+      },
+
+      get filter() {
+        return self.topicTrackingState.get("filter");
       },
     };
 

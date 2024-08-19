@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
+import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import TopicListHeaderColumn from "discourse/components/topic-list/topic-list-header-column";
 import DAG from "discourse/lib/dag";
@@ -25,12 +26,18 @@ function createColumns() {
 }
 
 export default class TopicListHeader extends Component {
+  @service topicTrackingState;
+
   @cached
   get columns() {
     const self = this;
     const context = {
       get category() {
         return self.args.category;
+      },
+
+      get filter() {
+        return self.topicTrackingState.filter;
       },
     };
 
