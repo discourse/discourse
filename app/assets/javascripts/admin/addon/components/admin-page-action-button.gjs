@@ -1,13 +1,9 @@
 import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 
-const AdminPageActionButton = <template>
+export const AdminPageActionButton = <template>
   <DButton
-    class={{concatClass
-      "admin-page-action-button"
-      @buttonClasses
-      @additionalClasses
-    }}
+    class="admin-page-action-button btn-small"
+    ...attributes
     @action={{@action}}
     @label={{@label}}
     @title={{@title}}
@@ -15,5 +11,36 @@ const AdminPageActionButton = <template>
     @isLoading={{@isLoading}}
   />
 </template>;
-
-export default AdminPageActionButton;
+export const PrimaryButton = <template>
+  <AdminPageActionButton
+    class="btn-primary"
+    ...attributes
+    @action={{@action}}
+    @label={{@label}}
+    @title={{@title}}
+    @icon={{@icon}}
+    @isLoading={{@isLoading}}
+  />
+</template>;
+export const DangerButton = <template>
+  <AdminPageActionButton
+    class="btn-danger"
+    ...attributes
+    @action={{@action}}
+    @label={{@label}}
+    @title={{@title}}
+    @icon={{@icon}}
+    @isLoading={{@isLoading}}
+  />
+</template>;
+export const DefaultButton = <template>
+  <AdminPageActionButton
+    class="btn-default"
+    ...attributes
+    @action={{@action}}
+    @label={{@label}}
+    @title={{@title}}
+    @icon={{@icon}}
+    @isLoading={{@isLoading}}
+  />
+</template>;

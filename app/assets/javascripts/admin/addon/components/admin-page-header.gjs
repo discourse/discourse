@@ -4,7 +4,11 @@ import DBreadcrumbsContainer from "discourse/components/d-breadcrumbs-container"
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import i18n from "discourse-common/helpers/i18n";
-import AdminPageActionButton from "admin/components/admin-page-action-button";
+import {
+  DangerButton,
+  DefaultButton,
+  PrimaryButton,
+} from "admin/components/admin-page-action-button";
 
 const AdminPageHeader = <template>
   <div class="admin-page-header">
@@ -20,17 +24,7 @@ const AdminPageHeader = <template>
       {{/if}}
       <div class="admin-page-header__actions">
         {{yield
-          (hash
-            Primary=(component
-              AdminPageActionButton buttonClasses="btn-primary btn-small"
-            )
-            Danger=(component
-              AdminPageActionButton buttonClasses="btn-danger btn-small"
-            )
-            Default=(component
-              AdminPageActionButton buttonClasses="btn-default btn-small"
-            )
-          )
+          (hash Primary=PrimaryButton Default=DefaultButton Danger=DangerButton)
           to="actions"
         }}
       </div>
