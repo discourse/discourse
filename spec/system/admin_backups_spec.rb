@@ -60,6 +60,12 @@ describe "Admin Backups Page", type: :system do
     expect(backups_page).to have_no_backup_listed("b.tar.gz")
   end
 
+  it "can restore a backup" do
+    backups_page.visit_page
+    backups_page.expand_backup_row_menu("b.tar.gz")
+    expect(backups_page).to have_css(backups_page.row_button_selector("restore"))
+  end
+
   it "can toggle read-only mode" do
     backups_page.visit_page
     backups_page.toggle_read_only

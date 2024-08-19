@@ -41,12 +41,12 @@ module PageObjects
 
       def delete_backup(filename)
         expand_backup_row_menu(filename)
-        find_backup_row(filename).find(row_button_selector("delete")).click
+        find(".backup-item-menu-content").find(row_button_selector("delete")).click
       end
 
       def restore_backup(filename)
         expand_backup_row_menu(filename)
-        find_backup_row(filename).find(row_button_selector("restore")).click
+        find(".backup-item-menu-content").find(row_button_selector("restore")).click
       end
 
       def find_backup_row(filename)
