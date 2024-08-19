@@ -744,7 +744,8 @@ class TopicView
         usernames.flatten!
         usernames.uniq!
 
-        users = User.where(username: usernames).includes(:user_status).index_by(&:username)
+        users =
+          User.where(username_lower: usernames).includes(:user_status).index_by(&:username_lower)
 
         mentions.reduce({}) do |hash, (post_id, post_mentioned_usernames)|
           hash[post_id] = post_mentioned_usernames.map { |username| users[username] }.compact
