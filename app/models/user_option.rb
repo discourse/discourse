@@ -26,7 +26,7 @@ class UserOption < ActiveRecord::Base
 
   scope :human_users, -> { where("user_id > 0") }
 
-  enum default_calendar: { none_selected: 0, ics: 1, google: 2 }, _scopes: false
+  enum :default_calendar, { none_selected: 0, ics: 1, google: 2 }, scopes: false
 
   def self.ensure_consistency!
     sql = <<~SQL
