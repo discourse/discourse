@@ -51,16 +51,6 @@ export default class AdminBackupsActions extends Component {
   }
 
   <template>
-    {{#if @backups.canRollback}}
-      <@actions.Default
-        @action={{routeAction "rollback"}}
-        @label="admin.backups.operations.rollback.label"
-        @title="admin.backups.operations.rollback.title"
-        @icon="ambulance"
-        @disabled={{this.rollbackDisabled}}
-        class="admin-backups__rollback"
-      />
-    {{/if}}
     {{#if @backups.isOperationRunning}}
       <@actions.Danger
         @action={{routeAction "cancelOperation"}}
@@ -76,6 +66,17 @@ export default class AdminBackupsActions extends Component {
         @label="admin.backups.operations.backup.label"
         @icon="rocket"
         class="admin-backups__start"
+      />
+    {{/if}}
+
+    {{#if @backups.canRollback}}
+      <@actions.Default
+        @action={{routeAction "rollback"}}
+        @label="admin.backups.operations.rollback.label"
+        @title="admin.backups.operations.rollback.title"
+        @icon="ambulance"
+        @disabled={{this.rollbackDisabled}}
+        class="admin-backups__rollback"
       />
     {{/if}}
 

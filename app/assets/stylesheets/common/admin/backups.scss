@@ -1,9 +1,5 @@
 // Styles for /admin/backups
 
-$rollback: #3d9970;
-$rollback-dark: darken($rollback, 10%) !default;
-$rollback-darker: darken($rollback, 20%) !default;
-
 .admin-backups {
   .before-backup-list-outlet {
     margin-top: 1em;
@@ -47,26 +43,6 @@ $rollback-darker: darken($rollback, 20%) !default;
       td.backup-controls {
         text-align: left;
       }
-    }
-  }
-
-  &__rollback {
-    color: var(--secondary);
-    background: $rollback;
-    .d-icon {
-      color: var(--secondary);
-    }
-    &:hover {
-      background: $rollback-dark;
-      .d-icon {
-        color: currentColor;
-      }
-    }
-    &:active {
-      @include linear-gradient($rollback-darker, $rollback-dark);
-    }
-    &[disabled] {
-      background: $rollback;
     }
   }
 }
