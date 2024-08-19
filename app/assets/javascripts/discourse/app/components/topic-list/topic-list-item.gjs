@@ -101,7 +101,18 @@ export default class TopicListItem extends Component {
 
   @cached
   get columns() {
-    return applyValueTransformer("topic-list-item-columns", createColumns());
+    const self = this;
+    const context = {
+      get category() {
+        return self.args.category;
+      },
+    };
+
+    return applyValueTransformer(
+      "topic-list-item-columns",
+      createColumns(),
+      context
+    );
   }
 
   navigateToTopic(topic, href) {
