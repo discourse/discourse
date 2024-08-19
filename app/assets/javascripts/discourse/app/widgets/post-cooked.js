@@ -414,14 +414,16 @@ export default class PostCooked {
   }
 
   _extractMentions() {
-    return this._post()?.mentioned_users?.map((user) => {
-      const href = getURL(`/u/${user.username.toLowerCase()}`);
-      const mentions = this.cookedDiv.querySelectorAll(
-        `a.mention[href="${href}"]`
-      );
+    return (
+      this._post()?.mentioned_users?.map((user) => {
+        const href = getURL(`/u/${user.username.toLowerCase()}`);
+        const mentions = this.cookedDiv.querySelectorAll(
+          `a.mention[href="${href}"]`
+        );
 
-      return { user, mentions };
-    });
+        return { user, mentions };
+      }) || []
+    );
   }
 
   _trackMentionedUserStatus(user) {
