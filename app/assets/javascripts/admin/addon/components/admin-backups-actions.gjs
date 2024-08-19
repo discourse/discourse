@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import routeAction from "discourse/helpers/route-action";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
 
 export default class AdminBackupsActions extends Component {
@@ -37,11 +38,16 @@ export default class AdminBackupsActions extends Component {
     );
   }
 
-  #toggleReadOnlyMode(enable) {
-    ajax("/admin/backups/readonly", {
-      type: "PUT",
-      data: { enable },
-    }).then(() => this.site.set("isReadOnly", enable));
+  async #toggleReadOnlyMode(enable) {
+    try {
+      await ajax("/admin/backups/readonly", {
+        type: "PUT",
+        data: { enable },
+      });
+      this.site.set("isReadOnly", enable);
+    } catch (err) {
+      popupAjaxError(err);
+    }
   }
 
   <template>

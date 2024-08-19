@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { alias, equal } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n, setting } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
@@ -28,10 +29,13 @@ export default class AdminBackupsIndexController extends Controller {
   }
 
   @action
-  download(backup) {
-    ajax(`/admin/backups/${backup.filename}`, { type: "PUT" }).then(() =>
-      this.dialog.alert(I18n.t("admin.backups.operations.download.alert"))
-    );
+  async download(backup) {
+    try {
+      await ajax(`/admin/backups/${backup.filename}`, { type: "PUT" });
+      this.dialog.alert(I18n.t("admin.backups.operations.download.alert"));
+    } catch (err) {
+      popupAjaxError(err);
+    }
   }
 
   @discourseComputed("status.isOperationRunning")
