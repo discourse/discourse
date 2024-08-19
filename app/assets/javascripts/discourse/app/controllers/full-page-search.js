@@ -26,14 +26,6 @@ import Composer from "discourse/models/composer";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-const SortOrders = [
-  { name: I18n.t("search.relevance"), id: 0 },
-  { name: I18n.t("search.latest_post"), id: 1, term: "order:latest" },
-  { name: I18n.t("search.most_liked"), id: 2, term: "order:likes" },
-  { name: I18n.t("search.most_viewed"), id: 3, term: "order:views" },
-  { name: I18n.t("search.latest_topic"), id: 4, term: "order:latest_topic" },
-];
-
 export const SEARCH_TYPE_DEFAULT = "topics_posts";
 export const SEARCH_TYPE_CATS_TAGS = "categories_tags";
 export const SEARCH_TYPE_USERS = "users";
@@ -77,7 +69,7 @@ export default class FullPageSearchController extends Controller {
   context = null;
   searching = false;
   sortOrder = 0;
-  sortOrders = SortOrders;
+  sortOrders = null;
   invalidSearch = false;
   page = 1;
   resultCount = null;
@@ -116,6 +108,18 @@ export default class FullPageSearchController extends Controller {
     });
 
     this.set("searchTypes", searchTypes);
+
+    this.sortOrders = [
+      { name: I18n.t("search.relevance"), id: 0 },
+      { name: I18n.t("search.latest_post"), id: 1, term: "order:latest" },
+      { name: I18n.t("search.most_liked"), id: 2, term: "order:likes" },
+      { name: I18n.t("search.most_viewed"), id: 3, term: "order:views" },
+      {
+        name: I18n.t("search.latest_topic"),
+        id: 4,
+        term: "order:latest_topic",
+      },
+    ];
 
     this.bulkSelectHelper = new BulkSelectHelper(this);
   }
@@ -196,7 +200,7 @@ export default class FullPageSearchController extends Controller {
 
   cleanTerm(term) {
     if (term) {
-      SortOrders.forEach((order) => {
+      this.sortOrders.forEach((order) => {
         if (order.term) {
           let matches = term.match(new RegExp(`${order.term}\\b`));
           if (matches) {
@@ -361,8 +365,8 @@ export default class FullPageSearchController extends Controller {
     }
 
     const sortOrder = this.sortOrder;
-    if (sortOrder && SortOrders[sortOrder].term) {
-      args.q += " " + SortOrders[sortOrder].term;
+    if (sortOrder && this.sortOrders[sortOrder].term) {
+      args.q += " " + this.sortOrders[sortOrder].term;
     }
 
     this.set("q", args.q);
