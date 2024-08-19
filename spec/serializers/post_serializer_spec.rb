@@ -370,27 +370,27 @@ RSpec.describe PostSerializer do
     let(:user1) { Fabricate(:user, user_status: user_status, username: username) }
     let(:post) { Fabricate(:post, user: user, raw: "Hey @#{user1.username}") }
     let(:serializer) { described_class.new(post, scope: Guardian.new(user), root: false) }
-    let(:subject) { serializer.as_json }
 
     context "when user status is enabled" do
       before { SiteSetting.enable_user_status = true }
 
       it "returns mentioned users with user status" do
-        expect(subject[:mentioned_users]).to be_present
-        expect(subject[:mentioned_users].length).to be(1)
-        expect(subject[:mentioned_users][0]).to_not be_nil
-        expect(subject[:mentioned_users][0][:id]).to eq(user1.id)
-        expect(subject[:mentioned_users][0][:username]).to eq(user1.username)
-        expect(subject[:mentioned_users][0][:name]).to eq(user1.name)
-        expect(subject[:mentioned_users][0][:status][:description]).to eq(user_status.description)
-        expect(subject[:mentioned_users][0][:status][:emoji]).to eq(user_status.emoji)
+        json = serializer.as_json
+        expect(json[:mentioned_users]).to be_present
+        expect(json[:mentioned_users].length).to be(1)
+        expect(json[:mentioned_users][0]).to_not be_nil
+        expect(json[:mentioned_users][0][:id]).to eq(user1.id)
+        expect(json[:mentioned_users][0][:username]).to eq(user1.username)
+        expect(json[:mentioned_users][0][:name]).to eq(user1.name)
+        expect(json[:mentioned_users][0][:status][:description]).to eq(user_status.description)
+        expect(json[:mentioned_users][0][:status][:emoji]).to eq(user_status.emoji)
       end
 
       context "when username has a capital letter" do
         let(:username) { "JoJo" }
 
         it "returns mentioned users with user status" do
-          expect(subject[:mentioned_users][0][:username]).to eq(user1.username)
+          expect(serializer.as_json[:mentioned_users][0][:username]).to eq(user1.username)
         end
       end
     end
@@ -399,7 +399,7 @@ RSpec.describe PostSerializer do
       before { SiteSetting.enable_user_status = false }
 
       it "doesn't return mentioned users" do
-        expect(subject[:mentioned_users]).to be_nil
+        expect(serializer.as_json[:mentioned_users]).to be_nil
       end
     end
   end
