@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { eq } from "truth-helpers";
@@ -47,20 +48,28 @@ export default class SignupProgressBar extends Component {
     {{#if @step}}
       <div class="signup-progress-bar">
         {{#each this.steps as |step index|}}
-          <div class="segment">
-            <div class={{concatClass "step" (this.getStepState index)}}>
-              <div class="circle">
+          <div class="signup-progress-bar__segment">
+            <div
+              class={{concatClass
+                "signup-progress-bar__step"
+                (concat "--" (this.getStepState index))
+              }}
+            >
+              <div class="signup-progress-bar__circle">
                 {{#if (eq (this.getStepState index) "completed")}}
                   {{dIcon "check"}}
                 {{/if}}
               </div>
               {{#unless (eq index this.lastStepIndex)}}
                 <span
-                  class={{concatClass "line" (this.getStepState index)}}
+                  class={{concatClass
+                    "signup-progress-bar__line"
+                    (concat "--" (this.getStepState index))
+                  }}
                 ></span>
               {{/unless}}
             </div>
-            <span class="step-text">
+            <span class="signup-progress-bar__step-text">
               {{this.stepText step}}
             </span>
           </div>

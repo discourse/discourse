@@ -5,11 +5,11 @@ $progress-bar-icon-size: 0.8rem;
 .signup-progress-bar {
   width: 100%;
   display: flex;
-  color: var(--primary-medium);
+  color: var(--primary-low-mid);
   box-sizing: border-box;
   margin-bottom: 1.2em;
 
-  .segment {
+  &__segment {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -18,62 +18,63 @@ $progress-bar-icon-size: 0.8rem;
     &:last-child {
       width: $progress-bar-circle-size;
     }
+  }
 
-    .step-text {
-      white-space: nowrap;
-      width: fit-content;
-      transform: translateX(-25%);
+  &__step-text {
+    white-space: nowrap;
+    width: fit-content;
+    transform: translateX(-25%);
+
+    .signup-progress-bar__segment:first-child & {
+      transform: translateX(0%);
     }
 
-    &:first-child {
-      .step-text {
-        transform: translateX(0%);
-      }
-    }
-    &:last-child {
-      .step-text {
-        transform: translateX(-50%);
-      }
+    .signup-progress-bar__segment:last-child & {
+      transform: translateX(-50%);
     }
   }
 
-  .step {
+  &__step {
     display: flex;
-
-    .line {
-      transform: translateY(
-        calc(calc($progress-bar-circle-size + $progress-bar-line-width) / 2)
-      );
-      height: $progress-bar-line-width;
-      width: 100%;
-      background-color: var(--primary-medium);
-    }
-    .circle {
-      flex-shrink: 0;
-      font-size: $progress-bar-icon-size;
-      color: var(--secondary);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: $progress-bar-circle-size;
-      width: $progress-bar-circle-size;
-      border-radius: 50%;
-      border: $progress-bar-line-width solid var(--primary-medium);
-    }
   }
-  .completed {
+
+  &__line {
+    transform: translateY(
+      calc(calc($progress-bar-circle-size + $progress-bar-line-width) / 2)
+    );
+    height: $progress-bar-line-width;
+    width: 100%;
+    background-color: var(--primary-low-mid);
+  }
+
+  &__circle {
+    flex-shrink: 0;
+    font-size: $progress-bar-icon-size;
+    color: var(--secondary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: $progress-bar-circle-size;
+    width: $progress-bar-circle-size;
+    border-radius: 50%;
+    border: $progress-bar-line-width solid var(--primary-low-mid);
+  }
+
+  &__step.--completed {
     color: var(--primary);
-    .circle {
+
+    .signup-progress-bar__circle {
       background-color: var(--success);
       border: $progress-bar-line-width solid var(--success);
     }
-    &.line {
-      background-color: var(--success);
-    }
   }
 
-  .active {
-    .circle {
+  &__line.--completed {
+    background-color: var(--success);
+  }
+
+  &__step.--active {
+    .signup-progress-bar__circle {
       border: $progress-bar-line-width solid var(--success);
     }
   }
