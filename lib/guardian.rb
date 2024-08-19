@@ -155,9 +155,9 @@ class Guardian
   end
 
   def is_developer?
-    @user && is_admin? &&
+    @user &&
       (
-        Rails.env.development? || Developer.user_ids.include?(@user.id) ||
+        Rails.env.development? || (is_admin? && Developer.user_ids.include?(@user.id)) ||
           (
             Rails.configuration.respond_to?(:developer_emails) &&
               Rails.configuration.developer_emails.include?(@user.email)
