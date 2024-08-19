@@ -481,7 +481,6 @@ export default class PollComponent extends Component {
 
   @action
   fetchVoters(optionId) {
-    let votersCount;
     let preloadedVoters = this.preloadedVoters;
 
     Object.keys(preloadedVoters).forEach((key) => {
@@ -491,8 +490,10 @@ export default class PollComponent extends Component {
     });
 
     this.preloadedVoters = Object.assign(preloadedVoters);
-
-    votersCount = this.options.find((option) => option.id === optionId).votes;
+    let voters = optionId
+          ? this.preloadedVoters[optionId].voters
+          : this.preloadedVoters;
+    const votersCount = voters.length;
 
     return ajax("/polls/voters.json", {
       data: {
@@ -505,14 +506,19 @@ export default class PollComponent extends Component {
     })
       .then((result) => {
         this.voterListExpanded = true;
-        const voters = optionId
-          ? this.preloadedVoters[optionId].voters
-          : this.preloadedVoters;
         const newVoters = optionId ? result.voters[optionId] : result.voters;
+        let votersSet = new Set([]);
+
         if (this.isRankedChoice) {
-          this.preloadedVoters[optionId].voters = [...new Set([...newVoters])];
+          votersSet = new Set(voters.map((voter) => voter.user.username));
+          newVoters.forEach((voter) => {
+            if (!votersSet.has(voter.user.username)) {
+              votersSet.add(voter.user.username);
+              voters.push(voter);
+            }
+          });
         } else {
-          const votersSet = new Set(voters.map((voter) => voter.username));
+          votersSet = new Set(voters.map((voter) => voter.username));
           newVoters.forEach((voter) => {
             if (!votersSet.has(voter.username)) {
               votersSet.add(voter.username);
