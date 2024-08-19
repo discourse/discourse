@@ -45,6 +45,7 @@ export default class PollComponent extends Component {
   @tracked vote = this.args.attrs.vote || [];
   @tracked poll = this.args.attrs.poll;
   @tracked preloadedVoters = this.defaultPreloadedVoters();
+  @tracked voterListExpanded = false;
   @tracked hasSavedVote = this.args.attrs.hasSavedVote;
 
   @tracked
@@ -473,7 +474,9 @@ export default class PollComponent extends Component {
 
   @action
   updatedVoters() {
-    this.preloadedVoters = this.defaultPreloadedVoters();
+    if (!this.voterListExpanded) {
+      this.preloadedVoters = this.defaultPreloadedVoters();
+    }
   }
 
   @action
@@ -501,6 +504,7 @@ export default class PollComponent extends Component {
       },
     })
       .then((result) => {
+        this.voterListExpanded = true;
         const voters = optionId
           ? this.preloadedVoters[optionId].voters
           : this.preloadedVoters;
