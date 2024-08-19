@@ -4484,7 +4484,7 @@ RSpec.describe Guardian do
     end
 
     it "returns true if user's email has been configured as part of `Rails.configuration.developer_emails`" do
-      Rails.configuration.expects(:developer_emails).at_least_once.returns([user.email])
+      Rails.configuration.stubs(:developer_emails).returns([user.email])
 
       expect(Guardian.new(user).is_developer?).to eq(true)
     end
