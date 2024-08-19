@@ -77,7 +77,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_view_raw_email,
              :use_glimmer_topic_list?,
              :login_method,
-             :render_experimental_about_page
+             :render_experimental_about_page,
+             :has_unseen_features
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -139,6 +140,14 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_use_admin_sidebar?
+    object.staff?
+  end
+
+  def has_unseen_features
+    DiscourseUpdates.has_unseen_features?(object.id)
+  end
+
+  def include_has_unseen_features?
     object.staff?
   end
 

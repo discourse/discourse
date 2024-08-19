@@ -2,9 +2,17 @@
 
 describe "Admin New Features Page", type: :system do
   let(:new_features_page) { PageObjects::Pages::AdminNewFeatures.new }
+  let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
   fab!(:admin)
 
-  before { sign_in(admin) }
+  before do
+    SiteSetting.navigation_menu = "sidebar"
+    SiteSetting.admin_sidebar_enabled_groups = [
+      Group::AUTO_GROUPS[:admins],
+      Group::AUTO_GROUPS[:moderators],
+    ]
+    sign_in(admin)
+  end
 
   it "displays new features with screenshot taking precedence over emoji" do
     DiscourseUpdates.stubs(:new_features).returns(
@@ -80,5 +88,18 @@ describe "Admin New Features Page", type: :system do
     new_features_page.visit
     expect(new_features_page).to have_emoji
     expect(new_features_page).to have_no_screenshot
+  end
+
+  it "displays a new feature indicator on the sidebar and clears it when navigating to what's new" do
+    DiscourseUpdates.stubs(:has_unseen_features?).returns(true)
+    visit "/admin"
+    sidebar.toggle_all_sections
+    expect(sidebar.find_section_link("admin_whats_new")).to have_css(
+      ".sidebar-section-link-suffix.admin-sidebar-nav-link__dot",
+    )
+    sidebar.find_section_link("admin_whats_new").click
+    expect(sidebar.find_section_link("admin_whats_new")).to have_no_css(
+      ".sidebar-section-link-suffix.admin-sidebar-nav-link__dot",
+    )
   end
 end
