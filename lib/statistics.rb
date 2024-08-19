@@ -175,11 +175,9 @@ class Statistics
       WHERE visited_at >= :since AND ip_address IS NOT NULL
     SQL
 
-    count = 0
-    results.each do |hash|
+    results.reduce(0) do |sum, hash|
       ip_info = DiscourseIpInfo.get(hash["ip_address"].to_s)
-      count += 1 if ip_info && EU_COUNTRIES.include?(ip_info[:country_code])
+      sum + (EU_COUNTRIES.include?(ip_info[:country_code]) ? 1 : 0)
     end
-    count
   end
 end
