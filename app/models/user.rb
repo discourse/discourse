@@ -1884,6 +1884,13 @@ class User < ActiveRecord::Base
     update(required_fields_version: UserRequiredFieldsVersion.current)
   end
 
+  def similar_users
+    User
+      .real
+      .where.not(id: self.id)
+      .where(ip_address: self.ip_address, admin: false, moderator: false)
+  end
+
   protected
 
   def badge_grant
