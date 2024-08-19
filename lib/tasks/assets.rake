@@ -57,7 +57,7 @@ task "assets:precompile:before": %w[
   # is recompiled
   Emoji.clear_cache
 
-  $node_compress = `which terser`.present? && !ENV["SKIP_NODE_UGLIFY"]
+  $node_compress = !ENV["SKIP_NODE_UGLIFY"]
 
   unless ENV["USE_SPROCKETS_UGLIFY"]
     $bypass_sprockets_uglify = true
@@ -158,7 +158,7 @@ def compress_node(from, to)
   base_source_map = assets_path + assets_additional_path
 
   cmd = <<~SH
-    terser '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "base='#{base_source_map}',root='#{source_map_root}',url='#{source_map_url}',includeSources=true"
+    yarn terser '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "base='#{base_source_map}',root='#{source_map_root}',url='#{source_map_url}',includeSources=true"
   SH
 
   STDERR.puts cmd
