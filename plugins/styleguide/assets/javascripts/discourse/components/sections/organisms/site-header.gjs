@@ -10,23 +10,15 @@ export default class SiteHeaderStyleguideExample extends Component {
     return this.application.sidebarEnabled;
   }
 
-  get canSignUp() {
-    return this.application.canSignUp;
-  }
-
   <template>
     <StyleguideExample @title="site header">
       <div inert class="d-header-wrap">
-        <Header
-          @canSignUp={{this.canSignUp}}
-          @sidebarEnabled={{this.sidebarEnabled}}
-        />
+        <Header @sidebarEnabled={{this.sidebarEnabled}} />
       </div>
     </StyleguideExample>
     <StyleguideExample @title="site header - in topic - scrolled">
       <div inert class="d-header-wrap">
         <Header
-          @canSignUp={{this.canSignUp}}
           @sidebarEnabled={{this.sidebarEnabled}}
           @topicInfo={{@dummy.topic}}
           @topicInfoVisible={{true}}
