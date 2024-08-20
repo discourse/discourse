@@ -42,7 +42,7 @@ export function clearExtraHeaderButtons() {
 export default class GlimmerHeader extends Component {
   @service router;
   @service search;
-  @service currentUser;
+  @service("current-user") currentUserService;
   @service siteSettings;
   @service site;
   @service appEvents;
@@ -111,6 +111,23 @@ export default class GlimmerHeader extends Component {
       panelBody.removeEventListener("focusout", focusOutHandler);
     };
   });
+
+  // needed for the styleguide. for normal use, receiving this parameter is not necessary
+  get currentUser() {
+    return this.args.currentUser === undefined
+      ? this.currentUserService
+      : this.args.currentUser;
+  }
+
+  // needed for the styleguide. for normal use, receiving this parameter is not necessary
+  get topicInfo() {
+    return this.args.topicInfo ?? this.header.topicInfo;
+  }
+
+  // needed for the styleguide. for normal use, receiving this parameter is not necessary
+  get topicInfoVisible() {
+    return this.args.topicInfoVisible ?? this.header.topicInfoVisible;
+  }
 
   @action
   closeCurrentMenu() {
@@ -255,11 +272,14 @@ export default class GlimmerHeader extends Component {
           @sidebarEnabled={{@sidebarEnabled}}
           @toggleNavigationMenu={{this.toggleNavigationMenu}}
           @showSidebar={{@showSidebar}}
+          @topicInfo={{this.topicInfo}}
+          @topicInfoVisible={{this.topicInfoVisible}}
         >
           <span class="header-buttons">
             {{#each (headerButtons.resolve) as |entry|}}
               {{#if (and (eq entry.key "auth") (not this.currentUser))}}
                 <AuthButtons
+                  @topicInfoVisible={{this.topicInfoVisible}}
                   @showCreateAccount={{@showCreateAccount}}
                   @showLogin={{@showLogin}}
                   @canSignUp={{@canSignUp}}
@@ -312,7 +332,7 @@ export default class GlimmerHeader extends Component {
       </div>
       <PluginOutlet
         @name="after-header"
-        @outletArgs={{hash minimized=(this.header.topicInfoVisible)}}
+        @outletArgs={{hash minimized=(this.topicInfoVisible)}}
       />
     </header>
   </template>
