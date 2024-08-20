@@ -1,6 +1,7 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { empty, equal, notEmpty } from "@ember/object/computed";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { or } from "truth-helpers";
@@ -118,17 +119,19 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
             );
           }
         } else if (typeof actionVal === "object" && actionVal.value) {
-          if (forwardEvent) {
-            actionVal.value(actionParam, event);
-          } else {
-            actionVal.value(actionParam);
-          }
+          // Using `next()` to optimise INP
+          next(() =>
+            forwardEvent
+              ? actionVal.value(actionParam, event)
+              : actionVal.value(actionParam)
+          );
         } else if (typeof actionVal === "function") {
-          if (forwardEvent) {
-            actionVal(actionParam, event);
-          } else {
-            actionVal(actionParam);
-          }
+          // Using `next()` to optimise INP
+          next(() =>
+            forwardEvent
+              ? actionVal(actionParam, event)
+              : actionVal(actionParam)
+          );
         }
       } else if (route) {
         this.router.transitionTo(route);
