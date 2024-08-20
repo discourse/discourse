@@ -23,7 +23,7 @@ module Migrations::Database
       db
     end
 
-    attr_reader :db
+    attr_reader :db, :path
 
     def initialize(path:, transaction_batch_size: TRANSACTION_BATCH_SIZE)
       @path = path

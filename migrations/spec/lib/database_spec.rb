@@ -7,10 +7,9 @@ RSpec.describe Migrations::Database do
     let(:migrator_instance) { instance_double(Migrations::Database::Migrator) }
 
     before do
-      allow(Migrations::Database::Migrator).to receive(:new).with(
-        db_path,
-        migrations_path,
-      ).and_return(migrator_instance)
+      allow(Migrations::Database::Migrator).to receive(:new).with(db_path).and_return(
+        migrator_instance,
+      )
 
       allow(Migrations::Database::Migrator).to receive(:new).with(db_path).and_return(
         migrator_instance,
