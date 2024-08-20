@@ -147,9 +147,7 @@ export default class ChatNotificationManager extends Service {
 
   @action
   async fetchChannel(channelId) {
-    const channel = await this.chatChannelsManager.find(channelId);
-
-    return channel;
+    return await this.chatChannelsManager.find(channelId);
   }
 
   @bind

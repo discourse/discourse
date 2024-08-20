@@ -18,6 +18,7 @@ export default {
       api.registerDesktopNotificationHandler((data, siteSettings, user) => {
         const indicatorType = user.user_option.chat_header_indicator_preference;
         const isDirectMessage = data.isDirectMessageChannel ?? false;
+        const isMention = data.notification_type === MENTION;
 
         if (user.isInDoNotDisturb()) {
           return;
@@ -27,17 +28,14 @@ export default {
           return;
         }
 
-        if (
-          indicatorType === "only_mentions" &&
-          data.notification_type !== MENTION
-        ) {
+        if (indicatorType === "only_mentions" && !isMention) {
           return;
         }
 
         if (
           indicatorType === "dm_and_mentions" &&
           !isDirectMessage &&
-          data.notification_type !== MENTION
+          !isMention
         ) {
           return;
         }
