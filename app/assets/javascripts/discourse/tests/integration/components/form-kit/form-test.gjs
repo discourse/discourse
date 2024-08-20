@@ -137,6 +137,12 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await formApi.submit();
 
     assert.dom(".bar").hasText("2");
+
+    formApi.addError("bar", { title: "Bar", message: "error_foo" });
+    // assert on the next tick
+    setTimeout(() => {
+      assert.form().hasErrors({ bar: "error_foo" });
+    }, 0);
   });
 
   test("@data", async function (assert) {
