@@ -42,7 +42,7 @@ export function clearExtraHeaderButtons() {
 export default class GlimmerHeader extends Component {
   @service router;
   @service search;
-  @service("current-user") currentUserService;
+  @service currentUser;
   @service siteSettings;
   @service site;
   @service appEvents;
@@ -111,23 +111,6 @@ export default class GlimmerHeader extends Component {
       panelBody.removeEventListener("focusout", focusOutHandler);
     };
   });
-
-  // needed for the styleguide. for normal use, receiving this parameter is not necessary
-  get currentUser() {
-    return this.args.currentUser === undefined
-      ? this.currentUserService
-      : this.args.currentUser;
-  }
-
-  // needed for the styleguide. for normal use, receiving this parameter is not necessary
-  get topicInfo() {
-    return this.args.topicInfo ?? this.header.topicInfo;
-  }
-
-  // needed for the styleguide. for normal use, receiving this parameter is not necessary
-  get topicInfoVisible() {
-    return this.args.topicInfoVisible ?? this.header.topicInfoVisible;
-  }
 
   @action
   closeCurrentMenu() {
@@ -272,14 +255,14 @@ export default class GlimmerHeader extends Component {
           @sidebarEnabled={{@sidebarEnabled}}
           @toggleNavigationMenu={{this.toggleNavigationMenu}}
           @showSidebar={{@showSidebar}}
-          @topicInfo={{this.topicInfo}}
-          @topicInfoVisible={{this.topicInfoVisible}}
+          @topicInfo={{@topicInfo}}
+          @topicInfoVisible={{@topicInfoVisible}}
         >
           <span class="header-buttons">
             {{#each (headerButtons.resolve) as |entry|}}
               {{#if (and (eq entry.key "auth") (not this.currentUser))}}
                 <AuthButtons
-                  @topicInfoVisible={{this.topicInfoVisible}}
+                  @topicInfoVisible={{@topicInfoVisible}}
                   @showCreateAccount={{@showCreateAccount}}
                   @showLogin={{@showLogin}}
                   @canSignUp={{@canSignUp}}
@@ -332,7 +315,7 @@ export default class GlimmerHeader extends Component {
       </div>
       <PluginOutlet
         @name="after-header"
-        @outletArgs={{hash minimized=(this.topicInfoVisible)}}
+        @outletArgs={{hash minimized=(@topicInfoVisible)}}
       />
     </header>
   </template>

@@ -23,31 +23,11 @@ export default class SiteHeaderStyleguideExample extends Component {
         />
       </div>
     </StyleguideExample>
-    <StyleguideExample @title="site header - not logged">
-      <div inert class="d-header-wrap">
-        <Header
-          @canSignUp={{this.canSignUp}}
-          @sidebarEnabled={{this.sidebarEnabled}}
-          @currentUser={{null}}
-        />
-      </div>
-    </StyleguideExample>
     <StyleguideExample @title="site header - in topic - scrolled">
       <div inert class="d-header-wrap">
         <Header
           @canSignUp={{this.canSignUp}}
           @sidebarEnabled={{this.sidebarEnabled}}
-          @topicInfo={{@dummy.topic}}
-          @topicInfoVisible={{true}}
-        />
-      </div>
-    </StyleguideExample>
-    <StyleguideExample @title="site header - in topic - scrolled - not logged">
-      <div inert class="d-header-wrap">
-        <Header
-          @canSignUp={{this.canSignUp}}
-          @sidebarEnabled={{this.sidebarEnabled}}
-          @currentUser={{null}}
           @topicInfo={{@dummy.topic}}
           @topicInfoVisible={{true}}
         />
