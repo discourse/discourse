@@ -38,7 +38,7 @@ module Migrations::Converters::Base
     private
 
     def start_fork(parent_input_stream, parent_output_stream, fork_input_stream, fork_output_stream)
-      Migrations::ForkManager.instance.fork do
+      ::Migrations::ForkManager.fork do
         begin
           Process.setproctitle("worker_process#{@index}")
 

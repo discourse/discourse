@@ -105,7 +105,7 @@ module Migrations::Converters::Base
 
       Process.warmup
 
-      ::Migrations::ForkManager.instance.batch_forks do
+      ::Migrations::ForkManager.batch_forks do
         WORKER_COUNT.times do |index|
           job = ParallelJob.new(@step)
           workers << Worker.new(index, work_queue, worker_output_queue, job).start

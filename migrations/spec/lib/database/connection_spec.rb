@@ -66,6 +66,16 @@ RSpec.describe Migrations::Database::Connection do
     end
   end
 
+  describe "#closed?" do
+    it "correctly reports if connection is closed" do
+      create_connection do |connection|
+        expect(connection.closed?).to eq(false)
+        connection.close
+        expect(connection.closed?).to eq(true)
+      end
+    end
+  end
+
   describe "#insert" do
     it "commits inserted rows when reaching `batch_size`" do
       transaction_batch_size = 3
@@ -82,6 +92,55 @@ RSpec.describe Migrations::Database::Connection do
         end
 
         db.close
+      end
+    end
+  end
+
+  context "when `Migrations::ForkManager.fork` is used" do
+    it "temporarily closes the connection while a process fork is created" do
+      create_connection do |connection|
+        expect(connection.closed?).to eq(false)
+
+        connection.db.execute("CREATE TABLE foo (id INTEGER)")
+        connection.insert("INSERT INTO foo (id) VALUES (?)", 1)
+        expect(connection.db.query_splat("SELECT id FROM foo")).to contain_exactly(1)
+
+        db_before_fork = connection.db
+
+        ::Migrations::ForkManager.fork do
+          expect(connection.closed?).to eq(true)
+          expect(connection.db).to be_nil
+        end
+
+        expect(connection.closed?).to eq(false)
+        expect(connection.db).to_not eq(db_before_fork)
+
+        connection.insert("INSERT INTO foo (id) VALUES (?)", 2)
+        expect(connection.db.query_splat("SELECT id FROM foo")).to contain_exactly(1, 2)
+      end
+    end
+
+    it "works with multiple forks" do
+      create_connection do |connection|
+        expect(connection.closed?).to eq(false)
+
+        ::Migrations::ForkManager.fork { expect(connection.closed?).to eq(true) }
+
+        expect(connection.closed?).to eq(false)
+
+        ::Migrations::ForkManager.fork { expect(connection.closed?).to eq(true) }
+
+        expect(connection.closed?).to eq(false)
+      end
+    end
+
+    it "cleans up fork hooks when connection gets closed" do
+      expect(::Migrations::ForkManager.size).to eq(0)
+
+      create_connection do |connection|
+        expect(::Migrations::ForkManager.size).to eq(2)
+        connection.close
+        expect(::Migrations::ForkManager.size).to eq(0)
       end
     end
   end

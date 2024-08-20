@@ -40,8 +40,13 @@ module Migrations::Database
     def close
       close_connection(keep_path: false)
 
-      Migrations::ForkManager.instance.remove_before_fork_hook(@fork_hooks[0])
-      Migrations::ForkManager.instance.remove_after_fork_parent_hook(@fork_hooks[1])
+      before_hook, after_hook = @fork_hooks
+      ::Migrations::ForkManager.remove_before_fork_hook(before_hook)
+      ::Migrations::ForkManager.remove_after_fork_parent_hook(after_hook)
+    end
+
+    def closed?
+      !@db || @db.closed?
     end
 
     def insert(sql, *parameters)
@@ -83,11 +88,10 @@ module Migrations::Database
     end
 
     def setup_fork_handling
-      before_hook =
-        Migrations::ForkManager.instance.before_fork { close_connection(keep_path: true) }
+      before_hook = ::Migrations::ForkManager.before_fork { close_connection(keep_path: true) }
 
       after_hook =
-        Migrations::ForkManager.instance.after_fork_parent do
+        ::Migrations::ForkManager.after_fork_parent do
           @db = self.class.open_database(path: @path) if @path
         end
 
