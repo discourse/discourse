@@ -42,6 +42,7 @@ class FKForm extends Component {
       setProperties: this.setProperties,
       submit: this.onSubmit,
       reset: this.onReset,
+      addError: this.addError,
     });
 
     this.router.on("routeWillChange", this.checkIsDirty);
