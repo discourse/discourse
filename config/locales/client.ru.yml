@@ -215,8 +215,6 @@ ru:
       removed_user: "Удалил(а) %{who} %{when}"
       removed_group: "Удалил(а) %{who} %{when}"
       autobumped: "Автоматически поднято %{when}"
-      tags_changed: "Теги обновлены %{when}"
-      category_changed: "Категория обновлена %{when}"
       autoclosed:
         enabled: "Закрыл(а) тему %{when}"
         disabled: "Открыл(а) тему %{when}"
@@ -326,6 +324,7 @@ ru:
     now: "только что"
     read_more: "читать дальше"
     more: "Ещё"
+    more_options: "Другие варианты"
     x_more:
       one: "Ещё %{count}"
       few: "Ещё %{count}"
@@ -5025,6 +5024,7 @@ ru:
     powered_by_discourse: "На платформе Discourse"
   admin_js:
     type_to_filter: "Фильтрация настроек…"
+    settings: "Настройки"
     admin:
       title: "Администратор Discourse"
       moderator: "Модератор"

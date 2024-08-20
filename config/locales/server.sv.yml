@@ -52,11 +52,6 @@ sv:
   remove_posts_deleted_by_author: "Borttaget av författaren"
   redirect_warning: "Vi kunde inte verifiera att länken som du valt faktiskt har lagts upp i forumet. Välj länken nedan om du vill fortsätta ändå."
   on_another_topic: "I ett annat ämne"
-  topic_category_changed: "Från %{from} till %{to}"
-  topic_tag_changed:
-    added_and_removed: "Lade till %{added} och tog bort %{removed}"
-    added: "Lade till %{added}"
-    removed: "Tog bort %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "Nr %{post_number}"
     topic_page_title_post_number_by_user: "Nr %{post_number} av %{username}"
@@ -2104,7 +2099,6 @@ sv:
     suppress_overlapping_tags_in_list: "Om taggen matchar orden i ämnets titel exakt visas inte taggen"
     remove_muted_tags_from_latest: "Visa inte ämnen som taggats med tystade taggar i listan med senaste ämnen."
     force_lowercase_tags: "Tvinga alla nya taggar att vara helt i små bokstäver."
-    create_post_for_category_and_tag_changes: "Skapa ett litet åtgärdsinlägg när ett ämnes kategori eller taggar ändras"
     automatically_clean_unused_tags: "Ta dagligen och automatiskt bort taggar som inte används i några ämnen eller privata meddelanden."
     watched_precedence_over_muted: "Avisera mig om ämnen i kategorier eller taggar som jag bevakar och också tillhör ett som jag har tystat"
     company_name: "Namn på ditt företag eller organisation. Om det lämnas tomt tillhandahålls inte användarvillkor eller integritetsmeddelande."

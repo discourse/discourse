@@ -175,8 +175,6 @@ lt:
       removed_user: "Pašalino %{who} %{when}"
       removed_group: "Pašalino %{who} %{when}"
       autobumped: "Automatiškai pakelti %{when}"
-      tags_changed: "Žymos atnaujintos %{when}"
-      category_changed: "Kategorija atnaujinta %{when}"
       autoclosed:
         enabled: "Uždaryta %{when}"
         disabled: "Atidaryta %{when}"
@@ -3644,6 +3642,7 @@ lt:
         about: "Apie"
   admin_js:
     type_to_filter: "Įveskite filtrą…"
+    settings: "Nustatymai"
     admin:
       title: "Forumo administratorius"
       moderator: "Moderatorius"

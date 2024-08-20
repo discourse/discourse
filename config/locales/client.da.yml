@@ -137,8 +137,6 @@ da:
       removed_user: "Fjernede %{who} %{when}"
       removed_group: "Fjernede %{who} %{when}"
       autobumped: "Automatisk 'bumpet' %{when}"
-      tags_changed: "Mærker opdateret %{when}"
-      category_changed: "Kategori opdateret %{when}"
       autoclosed:
         enabled: "Lukket %{when}"
         disabled: "Åbnet %{when}"
@@ -3811,6 +3809,7 @@ da:
     powered_by_discourse: "Drevet af Discourse"
   admin_js:
     type_to_filter: "skriv for at filtrere…"
+    settings: "Indstillinger"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"

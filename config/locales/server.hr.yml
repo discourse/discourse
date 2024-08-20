@@ -52,11 +52,6 @@ hr:
   remove_posts_deleted_by_author: "Izbrisao autor"
   redirect_warning: "Nismo mogli potvrditi da je poveznica koju ste odabrali stvarno bila objavljena na forumu. Želite li svejedno nastaviti, odaberite poveznicu u nastavku."
   on_another_topic: "Na drugoj temi"
-  topic_category_changed: "Od %{from} do %{to}"
-  topic_tag_changed:
-    added_and_removed: "Dodano %{added} i uklonjeno %{removed}"
-    added: "Dodano %{added}"
-    removed: "je uklonio %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"

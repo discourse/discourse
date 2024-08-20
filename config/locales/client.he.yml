@@ -215,8 +215,6 @@ he:
       removed_user: "הוסר ע״י %{who} ב־%{when}"
       removed_group: "הוסר ע״י %{who} ב־%{when}"
       autobumped: "הוקפץ אוטומטית ב־%{when}"
-      tags_changed: "התגיות עודכנו ב־%{when}"
-      category_changed: "הקטגוריה עודכנה ב־%{when}"
       autoclosed:
         enabled: "נסגר ב־%{when}"
         disabled: "נפתח ב־%{when}"
@@ -327,6 +325,7 @@ he:
     now: "ממש עכשיו"
     read_more: "מידע נוסף"
     more: "עוד"
+    more_options: "אפשרויות נוספות"
     x_more:
       one: "עוד %{count}"
       two: "עוד %{count}"
@@ -2221,6 +2220,7 @@ he:
           other {# שגיאות בדקה}
         }.
     learn_more: "מידע נוסף…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>מידע נוסף…</a>"
     mute: השתק
     unmute: ביטול השתקה
     last_post: פורסמו
@@ -2511,6 +2511,7 @@ he:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} גדול מהגודל המרבי המותר %{max_file_size}"
+        size_too_small: "%{provided_file_size} קטן מהגודל המזערי המותר %{min_file_size}"
     emoji_picker:
       filter_placeholder: חיפוש אחר אמוג׳י
       smileys_&_emotion: חייכנים ורגש
@@ -5102,6 +5103,7 @@ he:
     powered_by_discourse: "מופעל על גבי Discourse"
   admin_js:
     type_to_filter: "יש להקליד לסינון…"
+    settings: "הגדרות"
     admin:
       title: "ניהול Discourse"
       moderator: "מפקח"
@@ -5745,8 +5747,11 @@ he:
         legacy: "מיושן"
       backups:
         title: "גיבויים"
+        files_title: "גיבוי קבצים"
+        description: "הגיבויים של Discourse כולל את מסד הנתונים המלא של האתר שמכיל את כל תוכן האתר: נושאים, פוסטים, משתמשים, קבוצות, הגדרות, ערכות עיצוב ועוד, הוא עשוי להכיל את הקבצים שהועלו כתלות באופן יצירת קובץ הגיבוי."
         menu:
           backups: "גיבויים"
+          backup_files: "גיבוי קבצים"
           logs: "יומנים"
         none: "אין גיבוי זמין."
         read_only:

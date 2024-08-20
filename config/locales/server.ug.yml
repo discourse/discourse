@@ -52,11 +52,6 @@ ug:
   remove_posts_deleted_by_author: "يازغۇچى ئۆچۈردى"
   redirect_warning: "سىز تاللىغان ئۇلانمىنىڭ مۇنبەرگە يوللانغانلىقىنى دەلىللىيەلمىگەن ئىدۇق. ئەگەر داۋاملاشتۇرۇۋېرىمەن دېسىڭىز، تۆۋەندىكى ئۇلانمىنى تاللاڭ."
   on_another_topic: "باشقا بىر تېمىدا"
-  topic_category_changed: "%{from} دىن %{to} غا"
-  topic_tag_changed:
-    added_and_removed: "%{added} قوشۇلدى ۋە %{removed} چىقىرىۋېتىلدى"
-    added: "%{added} قوشۇلدى"
-    removed: "%{removed} چىقىرىۋېتىلدى"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} / %{username}"
@@ -1030,6 +1025,7 @@ ug:
     pop3_authentication_error: "تەمىنلىگەن POP3 سالاھىيىتىدە مەسىلە بار، ئىشلەتكۈچى ئاتى ۋە ئىمنى تەكشۈرۈپ ئاندىن قايتا سىناڭ."
     imap_authentication_error: "تەمىنلىگەن IMAP سالاھىيىتىدە مەسىلە بار، ئىشلەتكۈچى ئاتى ۋە ئىمنى تەكشۈرۈپ ئاندىن قايتا سىناڭ."
     imap_no_response_error: "IMAP مۇلازىمېتىر بىلەن ئالاقە قىلغاندا خاتالىق كۆرۈلدى. %{message}"
+    smtp_authentication_error: "تەمىنلىگەن SMTP سالاھىيىتىدە مەسىلە بار، ئىشلەتكۈچى ئاتى ۋە ئىمنى تەكشۈرۈپ ئاندىن قايتا سىناڭ. %{message}"
     smtp_server_busy_error: "SMTP مۇلازىمېتىرى ھازىر ئالدىراش، سەل تۇرۇپ قايتا سىناڭ."
     smtp_unhandled_error: "SMTP مۇلازىمېتىر بىلەن ئالاقە قىلىۋاتقاندا بىر تەرەپ قىلىنمىغان خاتالىق كۆرۈلدى. %{message}"
     imap_unhandled_error: "IMAP مۇلازىمېتىر بىلەن ئالاقە قىلىۋاتقاندا بىر تەرەپ قىلىنمىغان خاتالىق كۆرۈلدى. %{message}"
@@ -1557,9 +1553,17 @@ ug:
       email_polling_errored_recently:
         one: "ئېلخەت راي سىناش ئۆتكەن 24 سائەتتە بىر خاتالىق كۆرۈلدى. <a href='%{base_path}/logs' target='_blank'>خاتىرە</a>دىن تېخىمۇ كۆپ تەپسىلاتنى كۆرۈڭ."
         other: "ئېلخەت راي سىناش ئۆتكەن 24 سائەتتە %{count} خاتالىق كۆرۈلدى. <a href='%{base_path}/logs' target='_blank'>خاتىرە</a>دىن تېخىمۇ كۆپ تەپسىلاتنى كۆرۈڭ."
+      missing_mailgun_api_key: "مۇلازىمېتىر Mailgun ئارقىلىق ئېلخەت يوللاشقا سەپلەندى، ئەمما سىز تېخى تور ئىلمەك ئۇچۇرىنى دەلىللەيدىغان API ئاچقۇچىنى تەمىنلىمىدىڭىز."
+      bad_favicon_url: "تور بېكەتتىكى سىنبەلگىنى يۈكلىيەلمىدى. <a href='%{base_path}/admin/site_settings'>تور بېكەت تەڭشىكى</a>دىكى تور بېكەت سىنبەلگە تەڭشىكىنى تەكشۈرىدۇ."
+      poll_pop3_timeout: "POP3 مۇلازىمېتىرغا باغلىنىش ۋاقتى ئۆتتى. تاپشۇرۇۋالغان ئېلخەتنى تەكشۈرەلمەيدۇ. <a href='%{base_path}/admin/site_settings/category/email'>POP3 تەڭشىكى</a>ڭىز ۋە مۇلازىمەت تەمىنلىگۈچىنى تەكشۈرۈڭ."
+      poll_pop3_auth_error: "POP3 مۇلازىمېتىرىغا باغلىنالمىدى، سالاھىيەت دەلىللەش خاتالىقى كۆرۈلدى. <a href='%{base_path}/admin/site_settings/category/email'>POP3 تەڭشىكى</a>ڭىزنى تەكشۈرۈڭ."
+      force_https: "تور بېكىتىڭىز SSL ئىشلىتىۋاتىدۇ. ئەمما «<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>» تور بېكەت تەڭشىكىڭىزدە تېخى قوزغىتىلمىغان."
+      out_of_date_themes: "تۆۋەندىكى ئۆرنەكنىڭ يېڭىلانمىسى بار:%{themes_list}"
+      unreachable_themes: "تۆۋەندىكى ئۆرنەكنىڭ يېڭىلانمىلىرىنى تەكشۈرەلمىدۇق:%{themes_list}"
       watched_words: "%{action} كۆزەتتىكى سۆزنىڭ مۇنتىزىم ئىپادىسى ئىناۋەتسىز. سىز <a href='%{base_path}/admin/customize/watched_words'>كۆزەتتىكى سۆز تەڭشىكى</a>نى تەكشۈرۈڭ ياكى «كۆزەتتىكى سۆزنىڭ مۇنتىزىم ئىپادىسى» تور بېكەت تەڭشىكىنى چەكلەڭ."
       google_analytics_version: "ھازىر Discourse تا Google Analytics 3 نى ئىشلىتىۋاتىسىز، 2023-يىلى 7-ئاينىڭ 1-كۈنىدىن كېيىن ئەمدى ئۇنى قوللىمايدۇ.<a href='https://meta.discourse.org/t/260498'>Google Analytics 4 كە يۈكسەلتىڭ</a>تور بېكىتىڭىزنىڭ ئۈنۈمى ھەققىدىكى قىممىتى بار تەكلىپ ۋە تەھلىلگە ئېرىشىڭ."
       category_style_deprecated: "ھازىر Discourse تا ئىشلىتىش توختىغان سەھىپە ئۇسلۇبىنى ئىشلىتىۋاتىسىز، مەزكۇر ئۇسلۇب Discourse 3.2 نىڭ ئاخىرقى سىناق نەشرى ئېلان قىلىنىشتىن ئىلگىرى چىقىرىۋېتىلىدۇ. <a href='https://meta.discourse.org/t/282441'>يەككە سەھىپە ئۇسلۇبىدىكى تور بېكەت تەڭشىكىگە كۆچۈش</a>تىن پايدىلىنىپ، تاللىغان سەھىپە ئۇسلۇبىنى قانداق ساقلاپ قېلىش كۆرسەتمىسىنى چۈشىنىڭ."
+      maxmind_db_configuration: 'مۇلازىمېتىر MaxMind ساندان ئىشلىتىپ ئەكسى IP تەكشۈرۈشكە تەڭشەلدى، ئەمما ئىناۋەتلىك MaxMind ھېسابات كىملىكى سەپلەنمىدى، بۇ بەلكىم MaxMind ساندانىنى كەلگۈسىدە چۈشۈرگىلى بولماسلىقنى كەلتۈرۈپ چىقىرىشى مۇمكىن. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">مەزكۇر يېتەكچىدىن تەپسىلاتىنى كۆرۈڭ</a>.'
     back_from_logster_text: "بېكەتكە قايت"
   site_settings:
     allow_bulk_invite: "بىر CSV ھۆججەتنى يۈكلەش ئارقىلىق توپ تەكلىپكە يول قويىدۇ"

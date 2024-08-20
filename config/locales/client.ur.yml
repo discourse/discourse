@@ -3646,6 +3646,7 @@ ur:
         about: "بارے میں"
   admin_js:
     type_to_filter: "کو فلٹر کرنے کے لیے ٹائپ کریں…"
+    settings: "ترتیبات"
     admin:
       title: "ڈِسکورس ایڈمن"
       moderator: "ماڈریٹر"

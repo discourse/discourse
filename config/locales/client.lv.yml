@@ -2838,6 +2838,7 @@ lv:
         show: "Parādīt"
         about: "Par"
   admin_js:
+    settings: "Iestatījumi"
     admin:
       title: "Discourse administrators"
       moderator: "Moderators"

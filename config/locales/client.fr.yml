@@ -159,8 +159,6 @@ fr:
       removed_user: "A retiré %{who} (%{when})"
       removed_group: "A retiré %{who} (%{when})"
       autobumped: "Remonté automatiquement dans la liste (%{when})"
-      tags_changed: "Étiquettes mises à jour %{when}"
-      category_changed: "Catégorie mise à jour %{when}"
       autoclosed:
         enabled: "A fermé ce sujet (%{when})"
         disabled: "A ouvert ce sujet (%{when})"
@@ -268,6 +266,7 @@ fr:
     now: "à l'instant"
     read_more: "lire la suite"
     more: "Plus"
+    more_options: "Plus d'options"
     x_more:
       one: "%{count} autre"
       other: "%{count} autres"
@@ -4565,6 +4564,7 @@ fr:
     powered_by_discourse: "Alimenté par Discourse"
   admin_js:
     type_to_filter: "commencez votre saisie pour filtrer…"
+    settings: "Paramètres"
     admin:
       title: "Administrateur Discourse"
       moderator: "Modérateur"

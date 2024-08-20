@@ -52,11 +52,6 @@ tr_TR:
   remove_posts_deleted_by_author: "Yazar tarafından silindi"
   redirect_warning: "Seçtiğiniz bağlantının gerçekten foruma gönderildiğini doğrulayamadık. Yine de devam etmek istiyorsanız aşağıdaki bağlantıyı seçin."
   on_another_topic: "Başka bir konuda"
-  topic_category_changed: "%{from} iken %{to} oldu"
-  topic_tag_changed:
-    added_and_removed: "%{added} eklendi ve %{removed} kaldırıldı"
-    added: "%{added} eklendi"
-    removed: "%{removed} kaldırıldı"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} tarafından #%{post_number}"
@@ -2345,7 +2340,6 @@ tr_TR:
     suppress_overlapping_tags_in_list: "Etiketler konu başlıklarındaki kelimelerle tam olarak eşleşiyorsa etiketi gösterme"
     remove_muted_tags_from_latest: "En son konu listesinde yalnızca sessize alınmış etiketlerle etiketlenmiş konuları göstermeyin."
     force_lowercase_tags: "Tüm yeni etiketleri tamamen küçük harf olmaya zorlayın."
-    create_post_for_category_and_tag_changes: "Bir konunun kategorisi veya etiketleri değiştiğinde küçük bir bilgi gönderisi oluşturun"
     automatically_clean_unused_tags: "Herhangi bir konuda veya özel mesajda kullanılmayan etiketleri günlük olarak otomatik olarak sil."
     watched_precedence_over_muted: "Sessize aldıklarım dahil, izlediğim kategorilerdeki veya etiketlerdeki konular hakkında beni bilgilendirin"
     company_name: "Şirketinizin veya kuruluşunuzun adı. Boş bırakılırsa Hizmet Şartları veya Gizlilik Bildirimine ilişkin ortak metin sağlanmaz."

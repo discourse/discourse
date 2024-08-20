@@ -3113,6 +3113,7 @@ bs_BA:
         show: "Show"
         about: "O nama"
   admin_js:
+    settings: "Postavke"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"

@@ -52,11 +52,6 @@ el:
   remove_posts_deleted_by_author: "Διαγράφηκε από τον συγγραφέα"
   redirect_warning: "Δε μπορέσαμε να επαληθεύσουμε ότι ο σύνδεσμος που επιλέξατε ήταν πράγματι αναρτημένος στο forum. Αν θέλετε να προχωρήσετε ούτως ή άλλως, επιλέξτε τον παρακάτω σύνδεσμο."
   on_another_topic: "Σε άλλο θέμα"
-  topic_category_changed: "Από %{from} σε %{to}"
-  topic_tag_changed:
-    added_and_removed: "Προστέθηκε %{added} και αφαιρέθηκε %{removed}"
-    added: "Προστέθηκε %{added}"
-    removed: "Αφαιρέθηκε %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} από %{username}"

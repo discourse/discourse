@@ -190,8 +190,6 @@ cs:
       removed_user: "%{who} Smazána %{when}"
       removed_group: "%{who} Smazána %{when}"
       autobumped: "Automaticky pošťouchnuto %{when}"
-      tags_changed: "Štítky aktualizovány %{when}"
-      category_changed: "Kategorie aktualizována %{when}"
       autoclosed:
         enabled: "Uzavřeno %{when}"
         disabled: "Otevřeno %{when}"
@@ -302,6 +300,7 @@ cs:
     now: "právě teď"
     read_more: "číst dále"
     more: "Více"
+    more_options: "Další možnosti"
     x_more:
       one: "%{count} Více"
       few: "%{count} další"
@@ -354,6 +353,8 @@ cs:
       contact: "Kontaktujte nás"
       contact_info: "V případě kritické chyby nebo urgentní záležitosti ovlivňující tuto stránku nás prosím kontaktujte na %{contact_info}."
       site_activity: "Aktivita webu"
+      view_more: "Zobrazit více"
+      view_less: "Zobrazit méně"
       activities:
         topics:
           one: "%{formatted_number} téma"
@@ -399,6 +400,18 @@ cs:
         few: "%{formatted_number} Moderátoři"
         many: "%{formatted_number} Moderátorů"
         other: "%{formatted_number} Moderátorů"
+      site_age:
+        less_than_one_month: "Založeno před méně než 1 měsícem"
+        month:
+          one: "Založeno před %{count} měsícem"
+          few: "Založeno před %{count} měsíci"
+          many: "Založeno před %{count} měsíci"
+          other: "Založeno před %{count} měsíci"
+        year:
+          one: "Založeno před %{count} rokem"
+          few: "Založeno před %{count} lety"
+          many: "Založeno před %{count} lety"
+          other: "Založeno před %{count} lety"
     bookmarked:
       title: "Záložka"
       edit_bookmark: "Upravit záložku"
@@ -460,8 +473,18 @@ cs:
     bookmark_bulk_actions:
       clear_reminders:
         name: "Vymazat připomínky"
+        description:
+          one: "Opravdu chcete vymazat připomenutí pro tuto záložku?"
+          few: "Opravdu chcete vymazat připomenutí pro tyto <b>%{count}</b> záložky?"
+          many: "Opravdu chcete vymazat připomenutí pro těchto <b>%{count}</b> záložek?"
+          other: "Opravdu chcete vymazat připomenutí pro těchto <b>%{count}</b> záložek?"
       delete_bookmarks:
         name: "Smazat záložku"
+        description:
+          one: "Opravdu chcete smazat tuto záložku?"
+          few: "Opravdu chcete smazat tyto <b>%{count}</b> záložky?"
+          many: "Opravdu chcete smazat těchto <b>%{count}</b> záložek?"
+          other: "Opravdu chcete smazat těchto <b>%{count}</b> záložek?"
     copy_codeblock:
       copied: "zkopírováno!"
       copy: "zkopírovat kód do schránky"
@@ -600,6 +623,11 @@ cs:
       grouped_by_topic: "Seskupeno podle tématu"
       none: "Nebyly nalezeny žádné další položky k revizi."
       view_pending: "zobrazit čekající"
+      topic_has_pending:
+        one: "Toto téma čeká na schválení <b>%{count}</b> příspěvku"
+        few: "Toto téma čeká na schválení <b>%{count}</b> příspěvků"
+        many: "Toto téma čeká na schválení <b>%{count}</b> příspěvků"
+        other: "Toto téma čeká na schválení <b>%{count}</b> příspěvků"
       title: "Revize"
       topic: "Téma:"
       filtered_topic: "V jednom tématu jste filtrovali revidovatelný obsah."
@@ -2064,8 +2092,14 @@ cs:
         many: "(%{count} chybějících příspěvků)"
         other: "(%{count} chybějících příspěvků)"
       enabled_description: "Prohlížíte si nejlepší odpovědi na toto téma: nejzajímavější příspěvky jsou stanovené komunitou."
+      description:
+        one: "Je tu <b>%{count}</b> odpověď."
+        few: "Jsou tu <b>%{count}</b> odpovědi."
+        many: "Je tu <b>%{count}</b> odpovědí."
+        other: "Je tu <b>%{count}</b> odpovědí."
       buttons:
         hide: "Skrýt shrnutí"
+        generate: "Shrnout"
         regenerate: "Vytvořit znovu"
       description_time_MF: |
         Zde { replyCount, plural,
@@ -2175,6 +2209,7 @@ cs:
       error: "Neznámá chyba"
       cookies_error: "Zdá se, že váš prohlížeč má zakázané soubory cookie. Možná se nebudete moci přihlásit, aniž byste je nejdříve povolili."
       rate_limit: "Počkejte před dalším pokusem se přihlásit."
+      password_expired: "Platnost hesla vypršela. Prosím <a href='%{reset_url}'>resetujte své heslo</a>."
       blank_username: "Zadejte vaši emailovou adresu a uživatelské jméno."
       blank_username_or_password: "Vyplňte prosím email nebo uživatelské jméno, a heslo."
       reset_password: "Resetovat heslo"
@@ -2322,6 +2357,7 @@ cs:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} je větší než maximální povolená %{max_file_size}"
+        size_too_small: "%{provided_file_size} je menší než minimální povolená hodnota %{min_file_size}"
     emoji_picker:
       filter_placeholder: Hledat emoji
       smileys_&_emotion: Smajlíky a emoce
@@ -2376,6 +2412,11 @@ cs:
         few: "Zmíněním %{group} upozorníte <a href='%{group_link}'>%{count} osoby</a>."
         many: "Zmíněním %{group} upozorníte <a href='%{group_link}'>%{count} osob</a>."
         other: "Zmíněním %{group} upozorníte <a href='%{group_link}'>%{count} osob</a>."
+      larger_group_mentioned:
+        one: "Zmíněním %{group} upozorníte <a href='%{group_link}'>%{count} osobu</a>. Jste si jisti?"
+        few: "Zmíněním %{group} upozorníte <a href='%{group_link}'>%{count} osoby</a>. Jste si jisti?"
+        many: "Zmíněním %{group} upozorníte <a href='%{group_link}'>%{count} osob</a>. Jste si jisti?"
+        other: "Zmíněním %{group} upozorníte <a href='%{group_link}'>%{count} osob</a>. Jste si jisti?"
       cannot_see_mention:
         category: "Zmínili jste uživatele @%{username}, ale upozornění se mu nepošle, protože do této kategorie nemá přístup. Budete jej muset přidat do skupiny, která má přístup do této kategorie."
         private: "Zmínili jste uživatele @%{username}, ale oznámení se mu nepošle, protože tuto osobní zprávu nevidí. Musíte ho pozvat do této osobní konverzace."
@@ -2483,6 +2524,7 @@ cs:
       hide_toolbar: "skrýt panel nástrojů editoru"
       modal_ok: "OK"
       cant_send_pm: "Bohužel, nemůžete poslat zprávu uživateli %{username}."
+      create_message_error: "Omlouváme se, při vytváření této zprávy došlo k chybě. Zkuste to prosím znovu."
       yourself_confirm:
         title: "Zapomněl/a jste přidat přijemce?"
         body: "Nyní tuto zprávu posíláte pouze sám/sama sobě!"
@@ -2584,6 +2626,11 @@ cs:
         few: "%{username} a %{count} další"
         many: "%{username} a %{count} dalších"
         other: "%{username} a %{count} dalších"
+      liked_consolidated_description:
+        one: "se líbí %{count} váš příspěvek"
+        few: "se líbí %{count} vaše příspěvky"
+        many: "se líbí %{count} vašich příspěvků"
+        other: "se líbí %{count} vašich příspěvků"
       liked_consolidated: "<span>%{username}</span> %{description}"
       linked_consolidated_description:
         one: "odkaz na %{count} váš příspěvek"
@@ -2602,6 +2649,11 @@ cs:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Nové téma</span> %{description}"
       membership_request_accepted: "Členství přijato v '%{group_name}'"
+      membership_request_consolidated:
+        one: "%{count} otevřená žádost o členství v '%{group_name}'"
+        few: "%{count} otevřené žádosti o členství v '%{group_name}'"
+        many: "%{count} otevřených žádostí o členství v '%{group_name}'"
+        other: "%{count} otevřených žádostí o členství v '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - dokončeno"
@@ -2609,6 +2661,16 @@ cs:
       admin_problems: "Na administrační nástěnce vašeho webu jsou nová doporučení"
       dismiss_confirmation:
         body:
+          default:
+            one: "Jste si jisti? Máte %{count} důležité oznámení."
+            few: "Jste si jisti? Máte %{count} důležitá oznámení."
+            many: "Jste si jisti? Máte %{count} důležitých oznámení."
+            other: "Jste si jisti? Máte %{count} důležitých oznámení."
+          bookmarks:
+            one: "Jste si jisti? Máte %{count} nepřečtené připomenutí záložek."
+            few: "Jste si jisti? Máte %{count} nepřečtená připomenutí záložek."
+            many: "Jste si jisti? Máte %{count} nepřečtených připomenutí záložek."
+            other: "Jste si jisti? Máte %{count} nepřečtených připomenutí záložek."
           messages:
             one: "Jste si jisti? Máte %{count} nepřečtenou osobní zprávu."
             few: "Jste si jisti? Máte %{count} nepřečtené osobní zprávy."
@@ -2812,6 +2874,11 @@ cs:
       tabs:
         all_notifications: "Všechna upozornění"
         replies: "Odpovědi"
+        replies_with_unread:
+          one: "Odpovědi – %{count} nepřečtená odpověď"
+          few: "Odpovědi – %{count} nepřečtené odpovědi"
+          many: "Odpovědi – %{count} nepřečtených odpovědí"
+          other: "Odpovědi – %{count} nepřečtených odpovědí"
         mentions: "Zmínění"
         mentions_with_unread:
           one: "Zmínky - %{count} nepřečtená zmínka"
@@ -3089,7 +3156,7 @@ cs:
                 one { a <a href="{basePath}/new"># nové</a> téma,}
                  few { a <a href="{basePath}/new"># nová</a> témata,}
                  many { a <a href="{basePath}/new"># nových</a> témat,}
-              other { and <a href="{basePath}/new"># nových</a> témat,}
+              other { a <a href="{basePath}/new"># nových</a> témat,}
             }
           }
           false {
@@ -3212,6 +3279,11 @@ cs:
       progress:
         title: pozice v tématu
         jump_prompt: "přejít na..."
+        jump_prompt_of:
+          one: "z %{count} příspěvku"
+          few: "z %{count} příspěvků"
+          many: "z %{count} příspěvků"
+          other: "z %{count} příspěvků"
         jump_prompt_long: "Přejít na..."
         jump_prompt_to_date: "do data"
         jump_prompt_or: "nebo"
@@ -3295,6 +3367,11 @@ cs:
         help: "sdílet odkaz na toto téma"
         instructions: "Sdílet odkaz na toto téma:"
         copied: "Odkaz na téma byl zkopírován."
+        restricted_groups:
+          one: "Viditelné pouze pro členy skupiny: %{groupNames}"
+          few: "Viditelné pouze pro členy skupin: %{groupNames}"
+          many: "Viditelné pouze pro členy skupin: %{groupNames}"
+          other: "Viditelné pouze pro členy skupin: %{groupNames}"
         invite_users: "Pozvat"
       print:
         title: "Tisk"
@@ -3554,6 +3631,11 @@ cs:
         few: "%{count} lidem se tento příspěvek líbil. Klikněte pro zobrazení"
         many: "%{count} lidem se tento příspěvek líbil. Klikněte pro zobrazení"
         other: "%{count} lidem se tento příspěvek líbil. Klikněte pro zobrazení"
+      filtered_replies_hint:
+        one: "Zobrazit tento příspěvek a jeho odpověď"
+        few: "Zobrazit tento příspěvek a jeho %{count} odpovědi"
+        many: "Zobrazit tento příspěvek a jeho %{count} odpovědí"
+        other: "Zobrazit tento příspěvek a jeho %{count} odpovědí"
       filtered_replies_viewing:
         one: "Zobrazuje se %{count} odpověď na"
         few: "Zobrazují se %{count} odpovědi na"
@@ -3570,6 +3652,11 @@ cs:
         file_size_zero: "Je nám líto, zdá se, že se něco pokazilo. Soubor, který se pokoušíte nahrát, má 0 bajtů. Prosím zkuste to znovu."
         file_too_large_humanized: "Omlouváme se, ale tento soubor je příliš velký (maximální velikost je %{max_size}). Můžete nahrát velký soubor do služby sdílení v cloudu a pak vložit odkaz."
         too_many_uploads: "Bohužel, najednou smíte nahrát jen jeden soubor."
+        too_many_dragged_and_dropped_files:
+          one: "Omlouváme se, ale můžete nahrávat pouze %{count} soubor najednou."
+          few: "Omlouváme se, ale můžete nahrávat pouze %{count} soubory najednou."
+          many: "Omlouváme se, ale můžete nahrávat pouze %{count} souborů najednou."
+          other: "Omlouváme se, ale můžete nahrávat pouze %{count} souborů najednou."
         upload_not_authorized: "Bohužel, soubor, který se snažíš nahrát, není povolený (povolená rozšíření: %{authorized_extensions}). "
         no_uploads_authorized: "Omlouváme se, k nahrání nejsou žádné soubory oprávněny."
         image_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat obrázky."
@@ -3660,6 +3747,11 @@ cs:
             few: "a %{count} dalším se to líbí"
             many: "a %{count} dalším se to líbí"
             other: "a %{count} dalším se to líbí"
+          read_capped:
+            one: "a %{count} další přečetl/a"
+            few: "a %{count} další přečetli"
+            many: "a %{count} dalších přečetlo"
+            other: "a %{count} dalších přečetlo"
           sr_post_likers_list_description: "uživatelé, kterým se líbil tento příspěvek"
           sr_post_readers_list_description: "uživatelé, kteří si přečetli tento příspěvek"
         by_you:
@@ -3669,12 +3761,19 @@ cs:
           illegal: "Toto jste označili jako nezákonné"
           notify_moderators: "Nahlásili jste tento příspěvek"
           notify_user: "Tomuto uživateli jste zaslali zprávu"
+          custom: "Toto téma jste označili jako %{custom}"
       delete:
         confirm:
           one: "Opravdu chcete odstranit tento příspěvek?"
           few: "Opravdu chcete odstranit tyto %{count} příspěvky?"
           many: "Opravdu chcete odstranit těchto %{count} příspěvků?"
           other: "Opravdu chcete odstranit těchto %{count} příspěvků?"
+      merge:
+        confirm:
+          one: "Opravdu chcete sloučit tyto příspěvky?"
+          few: "Opravdu chcete sloučit tyto %{count} příspěvky?"
+          many: "Opravdu chcete sloučit těchto %{count} příspěvků?"
+          other: "Opravdu chcete sloučit těchto %{count} příspěvků?"
       revisions:
         controls:
           first: "První revize"
@@ -4021,6 +4120,18 @@ cs:
     pending_posts:
       label: "Čeká na schválení"
       label_with_count: "Nevyřízeno (%{count})"
+    posts_likes_MF: |
+      { count, plural,
+          one {# odpověď,}
+          few {# odpovědi,}
+          many {# odpovědí,}
+        other {# odpovědí,}
+      }{ ratio, select,
+          low { vysoký poměr lajků k příspěvkům,}
+          med { velmi vysoký poměr lajků k příspěvkům,}
+         high { extrémně vysoký poměr lajků k příspěvkům,}
+        other {}
+      } přejít na první nebo poslední příspěvek…
     posters: "Přispěvatelé"
     latest_poster_link: "Profil uživatele %{username}, nejnovější přispěvatel"
     original_post: "Původní příspěvek"
@@ -4360,6 +4471,11 @@ cs:
       synonyms: "Synonyma"
       synonyms_description: "Pokud jsou použity následující štítky, budou nahrazeny <b>%{base_tag_name}</b>."
       save: "Uložit název a popis značky"
+      tag_groups_info:
+        one: 'Tento štítek patří do skupiny "%{tag_groups}".'
+        few: "Tento štítek patří do těchto skupin: %{tag_groups}."
+        many: "Tento štítek patří do těchto skupin: %{tag_groups}."
+        other: "Tento štítek patří do těchto skupin: %{tag_groups}."
       edit_synonyms: "Upravit synonyma"
       add_synonyms_label: "Přidat synonyma:"
       add_synonyms: "Přidat"
@@ -4389,6 +4505,11 @@ cs:
       upload_description: "Nahrajte soubor csv a vytvořte štítky hromadně"
       upload_instructions: "Jeden na řádek, případně se skupinou štítků ve formátu 'název_štítku,skupina_štítků'."
       upload_successful: "Štítky byly úspěšně nahrány"
+      delete_unused_confirmation:
+        one: "Bude vymazán %{count} štítek: %{tags}"
+        few: "Budou vymazány %{count} štítky: %{tags}"
+        many: "Bude vymazáno %{count} štítků: %{tags}"
+        other: "Bude vymazáno %{count} štítků: %{tags}"
       delete_unused_confirmation_more_tags:
         one: "%{tags} a %{count} další"
         few: "%{tags} a %{count} další"
@@ -4485,6 +4606,8 @@ cs:
         regular: "pravidelný uživatel"
         leader: "leader"
       detailed_name: "%{level}: %{name}"
+    pick_files_button:
+      unsupported_file_picked: "Vybrali jste nepodporovaný soubor. Podporované typy souborů – %{types}."
     user_activity:
       no_activity_title: "Zatím žádná aktivita"
       no_activity_body: "Vítejte v naší komunitě! Jste zde úplně nový a ještě jste nepřispěli do diskuzí. Jako první krok navštivte <a href='%{topUrl}'>Top</a> nebo <a href='%{categoriesUrl}'>Kategorie</a> a začněte číst! Vyberte %{heartIcon} u příspěvků, které se vám líbí nebo se o nich chcete dozvědět více. Jakmile se zapojíte, bude zde uvedena vaše aktivita."
@@ -4503,6 +4626,8 @@ cs:
       no_read_topics_body: "Jakmile začnete číst diskuse, uvidíte zde seznam. Pro začátek čtení, hledejte témata, která vás zajímají v <a href='%{topUrl}'>Top</a> nebo <a href='%{categoriesUrl}'>Kategorie</a> nebo hledejte podle klíčového slova %{searchIcon}"
     no_group_messages_title: "Nenalezeny žádné skupinové zprávy"
     topic_entrance:
+      sr_jump_top_button: "Přejít na první příspěvek – %{date}"
+      sr_jump_bottom_button: "Přejít na poslední příspěvek – %{date}"
       jump_top_button_title: "Přejít na první příspěvek"
       jump_bottom_button_title: "Přeskočit na poslední příspěvek"
     fullscreen_table:
@@ -4776,6 +4901,7 @@ cs:
     powered_by_discourse: "Powered by Discourse"
   admin_js:
     type_to_filter: "text pro filtrování..."
+    settings: "Nastavení"
     admin:
       title: "Administrátor"
       moderator: "Moderátor"
@@ -4810,6 +4936,7 @@ cs:
         problems_found: "Několik rad na základě vašeho aktuálního nastavení webu"
         new_features:
           title: "Co je nového"
+          subtitle: "Pro ještě více detailů o nových funkcích a vylepšeních, které neustále přidáváme, viz <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Poznámky k vydání</a>."
           previous_announcements: "Předchozí oznámení o nových funkcích můžete vidět na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Více informací..."
         last_checked: "Naposledy zkontrolováno"
@@ -4826,6 +4953,11 @@ cs:
         space_used_and_free: "%{usedSize} (%{freeSize} volných)"
         uploads: "Nahrané soubory"
         backups: "Zálohy"
+        backup_count:
+          one: "%{count} záloha na %{location}"
+          few: "%{count} zálohy na %{location}"
+          many: "%{count} záloh na %{location}"
+          other: "%{count} záloh na %{location}"
         lastest_backup: "Poslední: %{date}"
         traffic_short: "Provoz"
         traffic: "Webové požadavky na aplikaci"
@@ -6158,6 +6290,15 @@ cs:
           add_document_types: "Dokumenty"
           add_types_title: "Povolit koncovky %{types}"
           add_types_toast: "Přidány typy souborů %{types}"
+        requires_confirmation_messages:
+          min_password_length:
+            prompt: "Chystáte se změnit zásady pro hesla. To ovlivní všechny uživatele, kteří od této chvíle změní svá hesla. Opravdu chcete pokračovat?"
+          min_admin_password_length:
+            prompt: "Chystáte se změnit zásady pro hesla. To bude mít vliv na všechny administrátory, kteří si od nynějška změní svá hesla. Opravdu chcete pokračovat?"
+          password_unique_charactes:
+            prompt: "Chystáte se změnit zásady pro hesla. To ovlivní všechny uživatele, kteří od této chvíle změní svá hesla. Opravdu chcete pokračovat?"
+          block_common_passwords:
+            prompt: "Chystáte se změnit zásady pro hesla. To ovlivní všechny uživatele, kteří od této chvíle změní svá hesla. Opravdu chcete pokračovat?"
       badges:
         status: Stav
         title: Odznaky

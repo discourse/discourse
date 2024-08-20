@@ -159,8 +159,6 @@ hu:
       removed_user: "Törölve: %{who} %{when}"
       removed_group: "Törölve: %{who} %{when}"
       autobumped: "Automatikusan előrehozva: %{when}"
-      tags_changed: "A címkék frissítve %{when}"
-      category_changed: "Kategória frissítve %{when}"
       autoclosed:
         enabled: "Lezárva: %{when}"
         disabled: "Megnyitva: %{when}"
@@ -269,6 +267,7 @@ hu:
     now: "épp most"
     read_more: "olvasás tovább"
     more: "Több"
+    more_options: "További lehetőségek"
     x_more:
       one: "Még %{count}"
       other: "Még %{count}"
@@ -4681,6 +4680,7 @@ hu:
     powered_by_discourse: "Meghajtja a Discourse"
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
+    settings: "Beállítások"
     admin:
       title: "Discourse Adminisztrátor"
       moderator: "Moderátor"

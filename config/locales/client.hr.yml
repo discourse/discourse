@@ -187,8 +187,6 @@ hr:
       removed_user: "Je uklonio %{who} %{when}"
       removed_group: "Je uklonio %{who} %{when}"
       autobumped: "Automatski bumpirano %{when}"
-      tags_changed: "Oznake ažurirane %{when}"
-      category_changed: "Kategorija ažurirana %{when}"
       autoclosed:
         enabled: "Zatvoren %{when}"
         disabled: "Otvoren %{when}"
@@ -4394,6 +4392,7 @@ hr:
         about: "O nama"
   admin_js:
     type_to_filter: "upišite za filtriranje…"
+    settings: "Postavke"
     admin:
       title: "Administrator"
       moderator: "Moderator"
