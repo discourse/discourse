@@ -24,32 +24,24 @@ module Migrations::Database
     end
 
     attr_reader :db
-    attr_reader :path
 
     def initialize(path:, transaction_batch_size: TRANSACTION_BATCH_SIZE)
       @path = path
       @transaction_batch_size = transaction_batch_size
-      @db = self.class.open_database(path: path)
+      @db = self.class.open_database(path:)
       @statement_counter = 0
 
       # don't cache too many prepared statements
       @statement_cache = PreparedStatementCache.new(PREPARED_STATEMENT_CACHE_SIZE)
+
+      @fork_hooks = setup_fork_handling
     end
 
     def close
-      if @db
-        commit_transaction
-        @statement_cache.clear
-        @db.close
-      end
+      close_connection(keep_path: false)
 
-      @db = nil
-      @statement_counter = 0
-    end
-
-    def reopen
-      raise "error" if @db
-      @db = self.class.open_database(path: @path)
+      Migrations::ForkManager.instance.remove_before_fork_hook(@fork_hooks[0])
+      Migrations::ForkManager.instance.remove_after_fork_parent_hook(@fork_hooks[1])
     end
 
     def insert(sql, *parameters)
@@ -76,6 +68,30 @@ module Migrations::Database
       return unless @db.transaction_active?
 
       @db.execute("COMMIT")
+    end
+
+    def close_connection(keep_path:)
+      return if !@db
+
+      commit_transaction
+      @statement_cache.clear
+      @db.close
+
+      @path = nil unless keep_path
+      @db = nil
+      @statement_counter = 0
+    end
+
+    def setup_fork_handling
+      before_hook =
+        Migrations::ForkManager.instance.before_fork { close_connection(keep_path: true) }
+
+      after_hook =
+        Migrations::ForkManager.instance.after_fork_parent do
+          @db = self.class.open_database(path: @path) if @path
+        end
+
+      [before_hook, after_hook]
     end
   end
 end

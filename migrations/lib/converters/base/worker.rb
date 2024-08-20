@@ -47,7 +47,6 @@ module Migrations::Converters::Base
 
           Oj.load(parent_input_stream) do |data|
             result = @job.run(data)
-            # result = @job.run(data[:data])
             Oj.to_stream(fork_output_stream, result)
           end
         rescue SignalException
@@ -65,7 +64,6 @@ module Migrations::Converters::Base
         begin
           while (data = @input_queue.pop)
             Oj.to_stream(output_stream, data)
-            # Oj.to_stream(output_stream, { data: })
             @mutex.synchronize { @data_processed.wait(@mutex) }
           end
         ensure

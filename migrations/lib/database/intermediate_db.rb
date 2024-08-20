@@ -16,9 +16,5 @@ module Migrations::Database
     def self.close
       @db.close if @db
     end
-
-    def self.reopen
-      @db.reopen if @db
-    end
   end
 end

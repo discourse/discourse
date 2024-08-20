@@ -10,9 +10,9 @@ module Migrations::Converters::Base
 
       @offline_connection = ::Migrations::Database::OfflineConnection.new
 
-      ::Migrations::ForkManager
-        .instance
-        .after_fork(run_once: true) { IntermediateDB.setup(@offline_connection) }
+      ::Migrations::ForkManager.instance.after_fork_child do
+        IntermediateDB.setup(@offline_connection)
+      end
     end
 
     def run(item)

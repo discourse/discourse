@@ -101,17 +101,16 @@ module Migrations::Converters::Base
     end
 
     def start_workers(work_queue, worker_output_queue)
-      ::Migrations::Database::IntermediateDB.close
-      Process.warmup
-
       workers = []
 
-      WORKER_COUNT.times do |index|
-        job = ParallelJob.new(@step)
-        workers << Worker.new(index, work_queue, worker_output_queue, job).start
-      end
+      Process.warmup
 
-      ::Migrations::Database::IntermediateDB.reopen
+      ::Migrations::ForkManager.instance.batch_forks do
+        WORKER_COUNT.times do |index|
+          job = ParallelJob.new(@step)
+          workers << Worker.new(index, work_queue, worker_output_queue, job).start
+        end
+      end
 
       workers
     end
