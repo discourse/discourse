@@ -1,4 +1,5 @@
 import { hash } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
 import i18n from "discourse-common/helpers/i18n";
 import {
   DangerButton,
@@ -16,6 +17,15 @@ const AdminPageSubheader = <template>
           to="actions"
         }}
       </div>
+
+      {{#if @descriptionLabel}}
+        <p class="admin-page-header__description">
+          {{i18n @descriptionLabel}}
+          {{#if @learnMoreUrl}}
+            {{htmlSafe (i18n "learn_more_with_link" url=@learnMoreUrl)}}
+          {{/if}}
+        </p>
+      {{/if}}
     </div>
   </div>
 </template>;
