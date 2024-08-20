@@ -543,13 +543,15 @@
           />
           {{i18n "admin.user.silence_explanation"}}
         {{else}}
-          <DButton
-            @action={{this.showSilenceModal}}
-            @icon="microphone-slash"
-            @label="admin.user.silence"
-            class="btn-danger silence-user"
-          />
-          {{i18n "admin.user.silence_explanation"}}
+          {{#if this.model.canSilence}}
+            <DButton
+              @action={{this.showSilenceModal}}
+              @icon="microphone-slash"
+              @label="admin.user.silence"
+              class="btn-danger silence-user"
+            />
+            {{i18n "admin.user.silence_explanation"}}
+          {{/if}}
         {{/if}}
       </ConditionalLoadingSpinner>
     </div>

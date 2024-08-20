@@ -46,18 +46,28 @@ class Admin::UsersController < Admin::StaffController
     @user = User.find_by(id: params[:id])
     raise Discourse::NotFound unless @user
 
-    similar_users =
-      User
-        .real
-        .where.not(id: @user.id)
-        .where(ip_address: @user.ip_address, admin: false, moderator: false)
-
     render_serialized(
       @user,
       AdminDetailedUserSerializer,
       root: false,
-      similar_users: similar_users.limit(MAX_SIMILAR_USERS),
-      similar_users_count: similar_users.count,
+      similar_users_count: @user.similar_users.count,
+    )
+  end
+
+  def similar_users
+    @user = User.find_by(id: params[:user_id])
+    raise Discourse::NotFound if !@user
+
+    render_json_dump(
+      {
+        users:
+          ActiveModel::ArraySerializer.new(
+            @user.similar_users.limit(MAX_SIMILAR_USERS),
+            each_serializer: SimilarAdminUserSerializer,
+            scope: guardian,
+            root: false,
+          ),
+      },
     )
   end
 
