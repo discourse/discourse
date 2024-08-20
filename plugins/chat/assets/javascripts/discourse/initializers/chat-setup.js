@@ -3,7 +3,6 @@ import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { replaceIcon } from "discourse-common/lib/icon-library";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
-import { MENTION_KEYWORDS } from "discourse/plugins/chat/discourse/components/chat-message";
 import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
 import ChatHeaderIcon from "../components/chat/header/icon";
@@ -163,24 +162,6 @@ export default {
         } else {
           document.body.classList.remove("chat-drawer-active");
         }
-      });
-
-      api.decorateChatMessage(function (chatMessage, chatChannel) {
-        if (!this.currentUser) {
-          return;
-        }
-
-        const highlightable = [`@${this.currentUser.username}`];
-        if (chatChannel.allowChannelWideMentions) {
-          highlightable.push(...MENTION_KEYWORDS.map((k) => `@${k}`));
-        }
-
-        chatMessage.querySelectorAll(".mention").forEach((node) => {
-          const mention = node.textContent.trim();
-          if (highlightable.includes(mention)) {
-            node.classList.add("highlighted", "valid-mention");
-          }
-        });
       });
     });
   },
