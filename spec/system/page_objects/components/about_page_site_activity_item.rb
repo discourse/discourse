@@ -28,6 +28,16 @@ module PageObjects
         period_element.has_text?(I18n.t("js.about.activities.periods.all_time"))
       end
 
+      # used by plugins
+      def has_custom_count?(text)
+        container.find(".about__activities-item-count").has_text?(text)
+      end
+
+      # used by plugins
+      def has_custom_period?(text)
+        period_element.has_text?(text)
+      end
+
       private
 
       def period_element

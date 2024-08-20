@@ -1121,6 +1121,9 @@ class Plugin::Instance
   # group of stats is shown on the site About page in the Site Statistics
   # table. Some stats may be needed purely for reporting purposes and thus
   # do not need to be shown in the UI to admins/users.
+  #
+  # TODO(osama): deprecate show_in_ui when experimental_redesigned_about_page_groups
+  # is removed
   def register_stat(name, show_in_ui: false, expose_via_api: false, &block)
     # We do not want to register and display the same group multiple times.
     return if DiscoursePluginRegistry.stats.any? { |stat| stat.name == name }
