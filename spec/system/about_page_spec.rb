@@ -127,6 +127,31 @@ describe "About page", type: :system do
         end
       end
 
+      describe "visitors" do
+        context "when the display_eu_visitor_stats setting is disabled" do
+          before { SiteSetting.display_eu_visitor_stats = false }
+
+          it "doesn't show the row" do
+            about_page.visit
+
+            expect(about_page.site_activities).to have_no_activity_item("visitors")
+          end
+        end
+
+        context "when the display_eu_visitor_stats setting is enabled" do
+          before { SiteSetting.display_eu_visitor_stats = true }
+
+          it "shows the row" do
+            about_page.visit
+
+            expect(about_page.site_activities).to have_activity_item("visitors")
+            expect(about_page.site_activities.visitors).to have_text(
+              "1 visitor, about 0 from the EU",
+            )
+          end
+        end
+      end
+
       describe "active users" do
         before do
           User.update_all(last_seen_at: 1.month.ago)
