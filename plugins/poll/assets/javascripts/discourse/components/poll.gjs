@@ -481,16 +481,18 @@ export default class PollComponent extends Component {
 
   @action
   fetchVoters(optionId) {
+    let voters;
     let preloadedVoters = this.preloadedVoters;
 
-    Object.keys(preloadedVoters).forEach((key) => {
-      if (key === optionId) {
-        preloadedVoters[key].loading = true;
-      }
-    });
+    if (optionId) {
+      preloadedVoters[optionId].loading = true;
+      voters = preloadedVoters[optionId]?.voters;
+    } else {
+      voters = preloadedVoters;
+    }
 
-    let voters = optionId ? preloadedVoters[optionId].voters : preloadedVoters;
-    const votersCount = voters.length;
+    this.preloadedVoters = Object.assign({}, preloadedVoters);
+    const votersCount = voters?.length;
 
     return ajax("/polls/voters.json", {
       data: {
@@ -542,7 +544,9 @@ export default class PollComponent extends Component {
         }
       })
       .finally(() => {
-        preloadedVoters[optionId].loading = false;
+        if (optionId) {
+          preloadedVoters[optionId].loading = false;
+        }
         this.preloadedVoters = Object.assign({}, preloadedVoters);
       });
   }
