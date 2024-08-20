@@ -40,7 +40,7 @@ class Stat
   end
 
   def self.core_stats
-    [
+    list = [
       Stat.new("topics", show_in_ui: true, expose_via_api: true) { Statistics.topics },
       Stat.new("posts", show_in_ui: true, expose_via_api: true) { Statistics.posts },
       Stat.new("users", show_in_ui: true, expose_via_api: true) { Statistics.users },
@@ -50,6 +50,19 @@ class Stat
         Statistics.participating_users
       end,
     ]
+
+    if SiteSetting.display_eu_visitor_stats
+      list.concat(
+        [
+          Stat.new("visitors", show_in_ui: true, expose_via_api: true) { Statistics.visitors },
+          Stat.new("eu_visitors", show_in_ui: true, expose_via_api: true) do
+            Statistics.eu_visitors
+          end,
+        ],
+      )
+    end
+
+    list
   end
 
   def self._api_stats

@@ -342,6 +342,16 @@ en:
       post_count: "Posts"
       user_count: "Sign-ups"
       active_user_count: "Active users"
+      visitor_count: "Visitors"
+      eu_visitor_count: "Visitors from European Union"
+      traffic_info_footer_MF: |
+        In the last 6 months, this site has served content to an average of approximately { total_visitors, plural,
+            one {# people}
+          other {# people}
+        } each month, with an average of approximately { eu_visitors, plural,
+            one {# people}
+          other {# people}
+        } from the European Union.
       contact: "Contact us"
       contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact %{contact_info}."
       site_activity: "Site activity"
@@ -363,6 +373,14 @@ en:
         likes:
           one: "%{formatted_number} like"
           other: "%{formatted_number} likes"
+        visitors_MF: |
+          { total_count, plural,
+              one {{total_formatted_number} visitor}
+            other {{total_formatted_number} visitors}
+          }, about { eu_count, plural,
+              one {{eu_formatted_number}}
+            other {{eu_formatted_number}}
+          } from the EU
         periods:
           last_7_days: "in the last 7 days"
           today: "today"
