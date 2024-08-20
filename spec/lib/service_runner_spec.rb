@@ -136,6 +136,18 @@ RSpec.describe ServiceRunner do
     end
   end
 
+  class RelationModelService
+    include Service::Base
+
+    model :fake_model
+
+    private
+
+    def fetch_fake_model
+      User.where(admin: false)
+    end
+  end
+
   describe ".call(service, &block)" do
     subject(:runner) { described_class.call(service, object, &actions_block) }
 
@@ -145,7 +157,9 @@ RSpec.describe ServiceRunner do
     let(:actions) { "proc {}" }
     let(:object) do
       Class
-        .new(Chat::ApiController) do
+        .new(ApplicationController) do
+          include WithServiceHelper
+
           def request
             OpenStruct.new
           end
@@ -349,6 +363,34 @@ RSpec.describe ServiceRunner do
 
           it "does not run the provided block" do
             expect(runner).not_to eq :no_model
+          end
+        end
+      end
+
+      context "when fetching an ActiveRecord relation" do
+        let(:service) { RelationModelService }
+
+        context "when the service does not fail" do
+          before { Fabricate(:user) }
+
+          it "does not run the provided block" do
+            expect(runner).not_to eq :no_model
+          end
+
+          it "does not fetch records from the relation" do
+            runner
+            expect(result[:fake_model]).not_to be_loaded
+          end
+        end
+
+        context "when the service fails" do
+          it "runs the provided block" do
+            expect(runner).to eq :no_model
+          end
+
+          it "does not fetch records from the relation" do
+            runner
+            expect(result[:fake_model]).not_to be_loaded
           end
         end
       end
