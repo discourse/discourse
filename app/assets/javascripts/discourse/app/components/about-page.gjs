@@ -153,17 +153,18 @@ export default class AboutPage extends Component {
 
   siteActivitiesFromPlugins() {
     const stats = this.args.model.stats;
-    const keys = Object.keys(stats);
+    const statKeys = Object.keys(stats);
 
     const configs = [];
     for (const { name, func } of pluginActivitiesFuncs) {
       let present = false;
       const periods = {};
-      for (const key of keys) {
-        if (key.startsWith(`${name}_`)) {
+      for (const stat of statKeys) {
+        const prefix = `${name}_`;
+        if (stat.startsWith(prefix)) {
           present = true;
-          const period = key.replace(`${name}_`, "");
-          periods[period] = stats[key];
+          const period = stat.replace(prefix, "");
+          periods[period] = stats[stat];
         }
       }
       if (!present) {
