@@ -343,7 +343,7 @@ en:
       user_count: "Sign-ups"
       active_user_count: "Active users"
       contact: "Contact us"
-      contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_info}."
+      contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact %{contact_info}."
       site_activity: "Site activity"
       view_more: "View more"
       view_less: "View less"
