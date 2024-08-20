@@ -1360,6 +1360,7 @@ RSpec.describe PostAlerter do
     end
 
     it "delays push notification for active online user" do
+      SiteSetting.push_notification_time_window_mins = 10
       evil_trout.update!(last_seen_at: 5.minutes.ago)
 
       expect { mention_post }.to change { Jobs::PushNotification.jobs.count }
