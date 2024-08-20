@@ -98,6 +98,10 @@ export default class TopicMapSummary extends Component {
     return [this.hasLikes, this.hasUsers, this.hasLinks].every(Boolean);
   }
 
+  get minViewsCount() {
+    return Math.max(this.args.topic.views, 1);
+  }
+
   get shouldShowViewsChart() {
     return this.views.stats.length > 2;
   }
@@ -249,9 +253,9 @@ export default class TopicMapSummary extends Component {
         @onShow={{this.fetchViews}}
       >
         <:trigger>
-          {{number @topic.views noTitle="true"}}
+          {{number this.minViewsCount noTitle="true"}}
           <span class="topic-map__stat-label">
-            {{i18n "views_lowercase" count=@topic.views}}
+            {{i18n "views_lowercase" count=this.minViewsCount}}
           </span>
         </:trigger>
         <:content>
