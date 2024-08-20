@@ -52,11 +52,6 @@ pt_BR:
   remove_posts_deleted_by_author: "Excluído(a) pelo autor(a)"
   redirect_warning: "Não foi possível confirmar se o link selecionado foi postado no fórum. Se deseja continuar mesmo assim, selecione o link abaixo."
   on_another_topic: "Em outro tópico"
-  topic_category_changed: "De %{from} para %{to}"
-  topic_tag_changed:
-    added_and_removed: "Adicionou %{added} e removeu %{removed}"
-    added: "Adicionou %{added}"
-    removed: "Removeu %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} de %{username}"
@@ -2353,7 +2348,6 @@ pt_BR:
     suppress_overlapping_tags_in_list: "Se as etiquetas corresponderem a palavras exatas em títulos de tópicos, não mostrar a etiqueta"
     remove_muted_tags_from_latest: "Não mostrar tópicos etiquetados apenas com etiquetas silenciadas na lista de tópicos mais recentes."
     force_lowercase_tags: "Obrigar todas as novas etiquetas a ficar totalmente em minúsculas."
-    create_post_for_category_and_tag_changes: "Criar uma pequena postagem de ação quando mudar a categoria ou etiquetas de um tópico"
     automatically_clean_unused_tags: "Exclua automaticamente etiquetas que não estão sendo utilizadas em tópicos ou mensagens privadas todos os dias."
     watched_precedence_over_muted: "Quero receber notificações sobre tópicos em categorias ou etiquetas que estou acompanhando que também pertencem a alguém que eu silenciei"
     company_name: "O nome da sua empresa ou organização. Se ficar vazio, não serão fornecidos Termos de Serviço nem Aviso de Privacidade clichês."

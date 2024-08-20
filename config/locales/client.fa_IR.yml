@@ -3535,6 +3535,7 @@ fa_IR:
         show: "نشان دادن"
         about: "درباره"
   admin_js:
+    settings: "تنظیمات"
     admin:
       title: "مدیر ارشد دیسکورس"
       moderator: "مدیر"

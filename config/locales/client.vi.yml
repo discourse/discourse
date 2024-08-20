@@ -3664,6 +3664,7 @@ vi:
         about: "Giới thiệu"
   admin_js:
     type_to_filter: "gõ vào bộ lọc…"
+    settings: "Cài đặt"
     admin:
       title: "Quản trị Diễn đàn"
       moderator: "Điều hành"

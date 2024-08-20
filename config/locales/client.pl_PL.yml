@@ -215,8 +215,6 @@ pl_PL:
       removed_user: "%{who} Został usunięty %{when}"
       removed_group: "%{who} Został usunięty %{when}"
       autobumped: "Automatycznie podbity %{when}"
-      tags_changed: "Tagi zaktualizowane %{when}"
-      category_changed: "Kategoria zaktualizowana %{when}"
       autoclosed:
         enabled: "Zamknięcie %{when}"
         disabled: "Otworzenie %{when}"
@@ -326,6 +324,7 @@ pl_PL:
     now: "teraz"
     read_more: "więcej"
     more: "Więcej"
+    more_options: "Więcej opcji"
     x_more:
       one: "%{count} Więcej"
       few: "%{count} Więcej"
@@ -4955,6 +4954,7 @@ pl_PL:
     powered_by_discourse: "Obsługiwane przez Discourse"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
+    settings: "Ustawienia"
     admin:
       title: "Administrator Discourse"
       moderator: "Moderator"

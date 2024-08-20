@@ -127,8 +127,6 @@ id:
       removed_user: "%{who}Dikeluarkan %{when}"
       removed_group: "%{who}Dikeluarkan %{when}"
       autobumped: "Otomatis dibenturkan %{when}"
-      tags_changed: "Tag diperbarui %{when}"
-      category_changed: "Kategori diperbarui %{when}"
       autoclosed:
         enabled: "Ditutup %{when}"
         disabled: "Dibuka %{when}"
@@ -2258,6 +2256,7 @@ id:
         show: "Tunjukkan"
         about: "Tentang"
   admin_js:
+    settings: "Pengaturan"
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
