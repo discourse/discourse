@@ -363,7 +363,7 @@ basic:
     default: true
     client: true
   push_notification_time_window_mins:
-    default: 10
+    default: 1
     min: 0
   short_title:
     default: ""
