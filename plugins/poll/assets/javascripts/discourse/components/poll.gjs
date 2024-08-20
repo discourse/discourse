@@ -489,10 +489,7 @@ export default class PollComponent extends Component {
       }
     });
 
-    this.preloadedVoters = Object.assign(preloadedVoters);
-    let voters = optionId
-          ? this.preloadedVoters[optionId].voters
-          : this.preloadedVoters;
+    let voters = optionId ? preloadedVoters[optionId].voters : preloadedVoters;
     const votersCount = voters.length;
 
     return ajax("/polls/voters.json", {
@@ -527,12 +524,11 @@ export default class PollComponent extends Component {
           });
           // remove users who changed their vote
           if (this.poll.type === REGULAR) {
-            Object.keys(this.preloadedVoters).forEach((otherOptionId) => {
+            Object.keys(preloadedVoters).forEach((otherOptionId) => {
               if (optionId !== otherOptionId) {
-                this.preloadedVoters[otherOptionId].voters =
-                  this.preloadedVoters[otherOptionId].voters.filter(
-                    (voter) => !votersSet.has(voter.username)
-                  );
+                preloadedVoters[otherOptionId].voters = preloadedVoters[
+                  otherOptionId
+                ].voters.filter((voter) => !votersSet.has(voter.username));
               }
             });
           }
@@ -546,9 +542,8 @@ export default class PollComponent extends Component {
         }
       })
       .finally(() => {
-        preloadedVoters = this.preloadedVoters;
         preloadedVoters[optionId].loading = false;
-        this.preloadedVoters = Object.assign(preloadedVoters);
+        this.preloadedVoters = Object.assign({}, preloadedVoters);
       });
   }
 
