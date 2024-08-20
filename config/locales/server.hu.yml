@@ -52,11 +52,6 @@ hu:
   remove_posts_deleted_by_author: "Szerző által törölve"
   redirect_warning: "Nem tudtuk megerősíteni, hogy a kiválasztott hivatkozás tényleg közzé lett-e téve a fórumban. Ha mindenképp folytatni szeretné, akkor kattintson a lenti hivatkozásra."
   on_another_topic: "Egy másik témában"
-  topic_category_changed: "%{from} -től %{to}-ig"
-  topic_tag_changed:
-    added_and_removed: "Hozzáadva %{added} és eltávolítva %{removed}"
-    added: "Hozzáadva %{added}"
-    removed: "Eltávolítva %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} általa: %{username}"

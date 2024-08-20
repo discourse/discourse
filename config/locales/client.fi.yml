@@ -159,8 +159,6 @@ fi:
       removed_user: "Poistettu käyttäjä %{who} %{when}"
       removed_group: "Poistettu käyttäjä %{who} %{when}"
       autobumped: "Nostettu automaattisesti %{when}"
-      tags_changed: "Tunnisteet on päivitetty %{when}"
-      category_changed: "Alue on päivitetty %{when}"
       autoclosed:
         enabled: "Suljettu %{when}"
         disabled: "Avattu %{when}"
@@ -268,6 +266,7 @@ fi:
     now: "hetki sitten"
     read_more: "lue lisää"
     more: "Lisää"
+    more_options: "Lisää vaihtoehtoja"
     x_more:
       one: "%{count} muu"
       other: "%{count} muuta"
@@ -4565,6 +4564,7 @@ fi:
     powered_by_discourse: "Voimanlähteenä Discourse"
   admin_js:
     type_to_filter: "kirjoita suodattaaksesi…"
+    settings: "Asetukset"
     admin:
       title: "Discoursen ylläpitäjä"
       moderator: "Valvoja"

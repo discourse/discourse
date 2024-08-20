@@ -52,11 +52,6 @@ uk:
   remove_posts_deleted_by_author: "Видалено автором"
   redirect_warning: "Нам не вдалося підтвердити, що вибране вами посилання справді було розміщено на форумі. Якщо ви все одно хочете продовжити, виберіть посилання нижче."
   on_another_topic: "На іншу тему"
-  topic_category_changed: "Від %{from} до %{to}"
-  topic_tag_changed:
-    added_and_removed: "Додано %{added} і видалено %{removed}"
-    added: "Додано %{added}"
-    removed: "Видалено %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} від %{username}"
@@ -2503,7 +2498,6 @@ uk:
     suppress_overlapping_tags_in_list: "Якщо теґи відповідають точним словам у заголовках тем, не показувати теґ"
     remove_muted_tags_from_latest: "Не показуйте теми, позначені лише відключеними теґами, в списку останніх тем."
     force_lowercase_tags: "Примусово використовувати всі нові теґи лише в нижньому регістрі."
-    create_post_for_category_and_tag_changes: "Створюйте невеличке повідомлення під час зміни категорії або тегів"
     automatically_clean_unused_tags: "Щодня автоматично видаляйте теги, які не використовуються в жодних темах або особистих повідомленнях."
     watched_precedence_over_muted: "Сповіщати мене про теми в категоріях або тегах, які я переглядаю і які також належать до тих, які я вимкнув"
     company_name: "Назва вашої компанії або організації. Якщо залишити порожнім, шаблонні Умови надання послуг або Повідомлення про конфіденційність надаватися не будуть."

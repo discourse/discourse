@@ -271,8 +271,6 @@ ar:
       removed_user: "أزال %{who} ‏في %{when}"
       removed_group: "أزال %{who} ‏في %{when}"
       autobumped: "تم رفعه تلقائيًا في %{when}"
-      tags_changed: "تم تحديث الوسوم في %{when}"
-      category_changed: "تم تحديث الفئة في %{when}"
       autoclosed:
         enabled: "تم إغلاقه في %{when}"
         disabled: "تم فتحه في %{when}"
@@ -384,6 +382,7 @@ ar:
     now: "الآن"
     read_more: "قراءة المزيد"
     more: "المزيد"
+    more_options: "خيارات إضافية"
     x_more:
       zero: "%{count} أكثر"
       one: "%{count} أكثر"
@@ -5473,6 +5472,7 @@ ar:
     powered_by_discourse: "بدعم من Discourse"
   admin_js:
     type_to_filter: "الكتابة للتصفية…"
+    settings: "الإعدادات"
     admin:
       title: "مسؤول Discourse"
       moderator: "مشرف"

@@ -52,11 +52,6 @@ nl:
   remove_posts_deleted_by_author: "Verwijderd door gebruiker"
   redirect_warning: "We konden niet verifiëren of de link die je hebt geselecteerd echt op het forum is geplaatst. Als je toch wilt doorgaan, selecteer dan de onderstaande link."
   on_another_topic: "In een ander topic"
-  topic_category_changed: "Van %{from} tot %{to}"
-  topic_tag_changed:
-    added_and_removed: "%{added} toegevoegd en %{removed} verwijderd"
-    added: "%{added} toegevoegd"
-    removed: "%{removed} verwijderd"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{post_number} van %{username}"
@@ -2352,7 +2347,6 @@ nl:
     suppress_overlapping_tags_in_list: "Als tags exacte overeenkomsten met woorden in topictitels hebben, de tag niet weergeven"
     remove_muted_tags_from_latest: "Topics met alleen gedempte tags niet weergeven in de lijst van nieuwste topics."
     force_lowercase_tags: "Gebruik van kleine letters voor alle nieuwe tags afdwingen."
-    create_post_for_category_and_tag_changes: "Maak een klein actiebericht wanneer de categorie of tags van een topic veranderen"
     automatically_clean_unused_tags: "Verwijder dagelijks automatisch tags die niet worden gebruikt in topics of privéberichten."
     watched_precedence_over_muted: "Houd me op de hoogte van topic in categorieën of tags die ik in observeer en die ook horen bij een topic dat ik heb gedempt"
     company_name: "Naam van je bedrijf of organisatie. Als je dit veld leeg laat, worden er geen standaard Gebruiksvoorwaarden of Privacyverklaring verstrekt."

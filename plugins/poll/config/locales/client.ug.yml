@@ -13,6 +13,9 @@ ug:
       total_votes:
         one: "ئومۇمىي بېلەت"
         other: "ئومۇمىي بېلەت"
+      votes:
+        one: "%{count} بېلەت"
+        other: "%{count} بېلەت"
       average_rating: "ئوتتۇرىچە باھالاش: <strong>%{average}</strong>."
       public:
         title: "بېلەت تاشلاش <strong>ئاشكارا</strong>."
@@ -46,6 +49,12 @@ ug:
       show-results:
         title: "راي سىناش نەتىجىسىنى كۆرسىتىدۇ"
         label: "نەتىجە"
+      show-tally:
+        title: "بېلەت سانى بويىچە بېلەت تاشلاش نەتىجىسىنى كۆرسىتىدۇ"
+        label: "ساناقنى كۆرسەت"
+      show-percentage:
+        title: "بېلەت تاشلاش نەتىجىسىنى پىرسەنت بويىچە كۆرسىتىدۇ"
+        label: "پىرسەنت بويىچە كۆرسەت"
       remove-vote:
         title: "بېلىتىڭىزنى چىقىرىۋېتىدۇ"
         label: "بېلەت تاشلاشتىن يېنىۋال"
@@ -81,6 +90,7 @@ ug:
           outcome: "نەتىجە"
         none: "يوق"
         majority: "كۆپ سانلىق"
+        eliminated: "چىقىرىۋېتىلدى"
         round: "قېتىم"
         winner:
           one: "بىر قېتىملىق مۇسابىقىدىن كېيىن ئۇتقۇچى %{winner}"

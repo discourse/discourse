@@ -52,11 +52,6 @@ es:
   remove_posts_deleted_by_author: "Eliminado por el autor"
   redirect_warning: "No pudimos verificar que el enlace que seleccionaste realmente se haya publicado en el foro. Si deseas continuar de todos modos, selecciona el siguiente enlace."
   on_another_topic: "En otro tema"
-  topic_category_changed: "De %{from} a %{to}"
-  topic_tag_changed:
-    added_and_removed: "Añadido %{added} y eliminado %{removed}"
-    added: "Añadido %{added}"
-    removed: "Eliminado %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "nº %{post_number}"
     topic_page_title_post_number_by_user: "nº %{post_number} por %{username}"
@@ -2355,7 +2350,6 @@ es:
     suppress_overlapping_tags_in_list: "Si alguna etiqueta coincide con palabras en el título de los temas, ocultarla."
     remove_muted_tags_from_latest: "No muestre temas etiquetados unicamente con etiquetas silenciadas en la lista de temas más reciente."
     force_lowercase_tags: "Forzar que todas las etiquetas estén completamente en minúscula"
-    create_post_for_category_and_tag_changes: "Crear una pequeña publicación de acción cuando cambie la categoría o las etiquetas de un tema"
     automatically_clean_unused_tags: "Elimina automáticamente las etiquetas que no se estén utilizando en ningún tema o mensaje privado diariamente."
     watched_precedence_over_muted: "Notificarme sobre temas en categorías o etiquetas que estoy observando y que también pertenezcan a una que haya silenciado"
     company_name: "Nombre de tu empresa u organización. Si se deja en blanco, no se proporcionará ningún tipo de Términos del servicio o Aviso de privacidad."

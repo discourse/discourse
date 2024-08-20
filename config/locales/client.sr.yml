@@ -1890,6 +1890,7 @@ sr:
         show: "Pokaži"
         about: "O nama"
   admin_js:
+    settings: "Podešavanja"
     admin:
       title: "Administrator"
       moderator: "Moderator"

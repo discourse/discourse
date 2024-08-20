@@ -52,11 +52,6 @@ it:
   remove_posts_deleted_by_author: "Cancellato dall'autore"
   redirect_warning: "Non è stato possibile verificare che il collegamento che hai selezionato sia stato effettivamente pubblicato sul forum. Se desideri procedere comunque, seleziona il collegamento qui sotto."
   on_another_topic: "Su un altro argomento"
-  topic_category_changed: "Da %{from} a %{to}"
-  topic_tag_changed:
-    added_and_removed: "Aggiunto %{added} e rimosso %{removed}"
-    added: "Aggiunto %{added}"
-    removed: "Ha rimosso %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "n°%{post_number} da %{username}"
@@ -2352,7 +2347,6 @@ it:
     suppress_overlapping_tags_in_list: "Se le etichette corrispondono alle esatte parole nei titoli degli argomenti, non mostrare l'etichetta"
     remove_muted_tags_from_latest: "Non mostrare argomenti etichettati solo con etichette silenziate nell'elenco degli argomenti più recenti."
     force_lowercase_tags: "Forza tutte le nuove Etichette interamente in minuscolo."
-    create_post_for_category_and_tag_changes: "Crea un piccolo post di azione quando la categoria o i tag di un argomento cambiano"
     automatically_clean_unused_tags: "Elimina automaticamente quotidianamente le etichette che non vengono utilizzate su argomenti o messaggi privati."
     watched_precedence_over_muted: "Inviami notifiche sugli argomenti nelle categorie o nei tag che sto osservando anche se appartengono a un oggetto silenziato"
     company_name: "Nome della tua azienda o organizzazione. Se lasciato vuoto, non verranno forniti Termini di servizio o Informativa sulla privacy."

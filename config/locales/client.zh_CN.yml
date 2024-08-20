@@ -131,8 +131,6 @@ zh_CN:
       removed_user: "%{when}移除了 %{who}"
       removed_group: "%{when}移除了 %{who}"
       autobumped: "%{when}自动顶帖"
-      tags_changed: "标签 %{when}更新"
-      category_changed: "类别 %{when}更新"
       autoclosed:
         enabled: "%{when}关闭"
         disabled: "%{when}打开"
@@ -240,6 +238,7 @@ zh_CN:
     now: "刚刚"
     read_more: "阅读更多"
     more: "更多"
+    more_options: "更多选项"
     x_more:
       other: "其他 %{count} 人"
     never: "从不"
@@ -283,6 +282,8 @@ zh_CN:
       contact: "联系我们"
       contact_info: "如果出现影响此网站的关键问题或紧急事项，请联系我们：%{contact_info}。"
       site_activity: "站点活动"
+      view_more: "查看更多"
+      view_less: "查看更少"
       activities:
         topics:
           other: "%{formatted_number}话题"
@@ -2172,6 +2173,7 @@ zh_CN:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} 大于允许的最大值 %{max_file_size}"
+        size_too_small: "%{provided_file_size} 小于允许的最小值 %{min_file_size}"
     emoji_picker:
       filter_placeholder: 搜索表情符号
       smileys_&_emotion: 笑脸与情感
@@ -4386,6 +4388,7 @@ zh_CN:
     powered_by_discourse: "由 Discourse 提供技术支持"
   admin_js:
     type_to_filter: "输入以筛选…"
+    settings: "设置"
     admin:
       title: "Discourse 管理员"
       moderator: "版主"

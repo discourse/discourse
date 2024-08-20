@@ -2010,6 +2010,7 @@ sq:
         show: "Shfaq"
         about: "Rreth"
   admin_js:
+    settings: "Rregullimet"
     admin:
       title: "Administrator"
       moderator: "Moderator"

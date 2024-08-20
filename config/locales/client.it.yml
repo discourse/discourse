@@ -159,8 +159,6 @@ it:
       removed_user: "Ha rimosso %{who} %{when}"
       removed_group: "Ha rimosso %{who} %{when}"
       autobumped: "Riproposto automaticamente %{when}"
-      tags_changed: "Etichette aggiornate il giorno %{when}"
-      category_changed: "Categoria aggiornata il giorno %{when}"
       autoclosed:
         enabled: "Chiuso %{when}"
         disabled: "Aperto %{when}"
@@ -268,6 +266,7 @@ it:
     now: "proprio ora"
     read_more: "altre informazioni"
     more: "Altro"
+    more_options: "Altre opzioni"
     x_more:
       one: "%{count} altro"
       other: "%{count} altri"
@@ -4565,6 +4564,7 @@ it:
     powered_by_discourse: "Con tecnologia Discourse"
   admin_js:
     type_to_filter: "digita per filtrare…"
+    settings: "Impostazioni"
     admin:
       title: "Amministratore Discourse"
       moderator: "Moderatore"

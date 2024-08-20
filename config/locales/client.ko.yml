@@ -3595,6 +3595,7 @@ ko:
         about: "소개"
   admin_js:
     type_to_filter: "필터 입력..."
+    settings: "설정"
     admin:
       title: "Discourse 관리자"
       moderator: "운영자"
