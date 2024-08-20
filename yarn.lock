@@ -2938,10 +2938,10 @@
   resolved "https://registry.yarnpkg.com/@zxing/text-encoding/-/text-encoding-0.9.0.tgz#fb50ffabc6c7c66a0c96b4c03e3d9be74864b70b"
   integrity sha512-U/4aVJ2mxI0aDNI8Uq0wEhMgY+u4CNtEb0om3+y3+niDAsoTCOB33UF0sxpzqzdqXLqmvc+vZyAt4O8pPdfkwA==
 
-a11y-dialog@8.0.4:
-  version "8.0.4"
-  resolved "https://registry.yarnpkg.com/a11y-dialog/-/a11y-dialog-8.0.4.tgz#731a983d38d059665ff7e62daccedf5214131be8"
-  integrity sha512-MQrLxqLPx4E8+ynGwulBs6OjtxQT/XemgnlNPb+cR8K/qdwHBQv1WZQZpBuTVhlWGpAwWmSYffUZ/78anhcD3w==
+a11y-dialog@8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/a11y-dialog/-/a11y-dialog-8.1.0.tgz#0ad9c74fa7035c9809803f23c3dcb7c2291a1b52"
+  integrity sha512-1sAxP3CXOgdfQPG0N33sg1jNYwJ0WS48V1rlqsoyb7Ih9GmMEimlCmU74tVePJv2Oihdpk9NqeB6OAt0IaGyLw==
   dependencies:
     focusable-selectors "^0.8.0"
 
