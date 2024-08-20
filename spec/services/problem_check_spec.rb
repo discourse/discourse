@@ -5,6 +5,7 @@ RSpec.describe ProblemCheck do
     ScheduledCheck = Class.new(described_class) { self.perform_every = 30.minutes }
     RealtimeCheck = Class.new(described_class)
     PluginCheck = Class.new(described_class)
+    DisabledCheck = Class.new(described_class) { self.enabled = false }
     FailingCheck =
       Class.new(described_class) do
         def call
@@ -29,12 +30,13 @@ RSpec.describe ProblemCheck do
     stub_const(
       described_class,
       "CORE_PROBLEM_CHECKS",
-      [ScheduledCheck, RealtimeCheck, FailingCheck, PassingCheck],
+      [ScheduledCheck, RealtimeCheck, FailingCheck, DisabledCheck, PassingCheck],
       &example
     )
 
     Object.send(:remove_const, ScheduledCheck.name)
     Object.send(:remove_const, RealtimeCheck.name)
+    Object.send(:remove_const, DisabledCheck.name)
     Object.send(:remove_const, PluginCheck.name)
     Object.send(:remove_const, FailingCheck.name)
     Object.send(:remove_const, PassingCheck.name)
@@ -42,6 +44,8 @@ RSpec.describe ProblemCheck do
 
   let(:scheduled_check) { ScheduledCheck }
   let(:realtime_check) { RealtimeCheck }
+  let(:enabled_check) { RealtimeCheck }
+  let(:disabled_check) { DisabledCheck }
   let(:plugin_check) { PluginCheck }
   let(:failing_check) { FailingCheck }
   let(:passing_check) { PassingCheck }
@@ -77,6 +81,11 @@ RSpec.describe ProblemCheck do
   describe ".realtime?" do
     it { expect(realtime_check).to be_realtime }
     it { expect(scheduled_check).to_not be_realtime }
+  end
+
+  describe ".enabled?" do
+    it { expect(enabled_check).to be_enabled }
+    it { expect(disabled_check).not_to be_enabled }
   end
 
   describe "plugin problem check registration" do
