@@ -81,6 +81,7 @@ ug:
           outcome: "نەتىجە"
         none: "يوق"
         majority: "كۆپ سانلىق"
+        eliminated: "چىقىرىۋېتىلدى"
         round: "قېتىم"
         winner:
           one: "بىر قېتىملىق مۇسابىقىدىن كېيىن ئۇتقۇچى %{winner}"
