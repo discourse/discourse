@@ -51,6 +51,8 @@ da:
   remove_posts_deleted_by_author: "Slettet af forfatteren"
   redirect_warning: "Vi kunne ikke bekræfte, at det link, du valgte, faktisk blev sendt til forummet. Hvis du alligevel ønsker at fortsætte, så benyt nedenstående link."
   on_another_topic: "På et andet emne"
+  topic_tag_changed:
+    added: "Tilføjet %{added}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} af %{username}"
