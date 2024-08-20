@@ -126,7 +126,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
       <form.Field
         @name="contactUsername"
         @title={{i18n "admin.config_areas.about.site_contact_name"}}
-        @subtitle={{i18n "admin.config_areas.about.site_contact_group_help"}}
+        @subtitle={{i18n "admin.config_areas.about.site_contact_name_help"}}
         @onSet={{this.setContactUsername}}
         @format="large"
         as |field|
