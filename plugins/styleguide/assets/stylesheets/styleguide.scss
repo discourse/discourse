@@ -268,3 +268,10 @@
     }
   }
 }
+
+.styleguide-example {
+  .d-header-wrap {
+    position: relative;
+    z-index: 0;
+  }
+}

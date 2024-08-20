@@ -439,6 +439,8 @@ export default class GlimmerSiteHeader extends Component {
         @showCreateAccount={{@showCreateAccount}}
         @showLogin={{@showLogin}}
         @animateMenu={{this.animateMenu}}
+        @topicInfo={{this.header.topicInfo}}
+        @topicInfoVisible={{this.header.topicInfoVisible}}
       />
     </div>
   </template>

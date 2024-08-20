@@ -29,8 +29,8 @@ export default class Contents extends Component {
       <PluginOutlet
         @name="header-contents__before"
         @outletArgs={{hash
-          topicInfo=this.header.topicInfo
-          topicInfoVisible=this.header.topicInfoVisible
+          topicInfo=@topicInfo
+          topicInfoVisible=@topicInfoVisible
         }}
         @deprecatedArgs={{hash
           topic=(deprecatedOutletArgument
@@ -55,12 +55,12 @@ export default class Contents extends Component {
 
       <div class="home-logo-wrapper-outlet">
         <PluginOutlet @name="home-logo-wrapper">
-          <HomeLogo @minimized={{this.header.topicInfoVisible}} />
+          <HomeLogo @minimized={{@topicInfoVisible}} />
         </PluginOutlet>
       </div>
 
-      {{#if this.header.topicInfoVisible}}
-        <TopicInfo @topic={{this.header.topicInfo}} />
+      {{#if @topicInfoVisible}}
+        <TopicInfo @topicInfo={{@topicInfo}} />
       {{else if
         (and
           this.siteSettings.bootstrap_mode_enabled
@@ -77,8 +77,8 @@ export default class Contents extends Component {
         <PluginOutlet
           @name="before-header-panel"
           @outletArgs={{hash
-            topicInfo=this.header.topicInfo
-            topicInfoVisible=this.header.topicInfoVisible
+            topicInfo=@topicInfo
+            topicInfoVisible=@topicInfoVisible
           }}
           @deprecatedArgs={{hash
             topic=(deprecatedOutletArgument
@@ -97,8 +97,8 @@ export default class Contents extends Component {
         <PluginOutlet
           @name="after-header-panel"
           @outletArgs={{hash
-            topicInfo=this.header.topicInfo
-            topicInfoVisible=this.header.topicInfoVisible
+            topicInfo=@topicInfo
+            topicInfoVisible=@topicInfoVisible
           }}
           @deprecatedArgs={{hash
             topic=(deprecatedOutletArgument
@@ -115,8 +115,8 @@ export default class Contents extends Component {
       <PluginOutlet
         @name="header-contents__after"
         @outletArgs={{hash
-          topicInfo=this.header.topicInfo
-          topicInfoVisible=this.header.topicInfoVisible
+          topicInfo=@topicInfo
+          topicInfoVisible=@topicInfoVisible
         }}
         @deprecatedArgs={{hash
           topic=(deprecatedOutletArgument
