@@ -1151,7 +1151,13 @@ class PluginApi {
    * and returns a hash of values to pass to attach
    *
    **/
-  addHeaderPanel() {} // TODO removing this API will actually break people code
+  addHeaderPanel() {
+    // eslint-disable-next-line no-console
+    console.error(
+      consolePrefix(),
+      `api.addHeaderPanel: This API was decommissioned. Use api.headerIcons instead.`
+    );
+  }
 
   /**
    * Adds a pluralization to the store
@@ -2114,7 +2120,13 @@ class PluginApi {
    *
    **/
   // eslint-disable-next-line no-unused-vars
-  addToHeaderIcons(icon) {} // TODO removing this API will actually break people code
+  addToHeaderIcons(icon) {
+    // eslint-disable-next-line no-console
+    console.error(
+      consolePrefix(),
+      `api.addToHeaderIcons: This API was decommissioned. Use api.headerIcons instead.`
+    );
+  }
 
   /**
    * Set a callback function to specify the URL used in the home logo.
