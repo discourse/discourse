@@ -43,6 +43,14 @@ module PageObjects
           translation_key: "about.activities.likes",
         )
       end
+
+      # used by plugins
+      def custom(name, translation_key: nil)
+        AboutPageSiteActivityItem.new(
+          container.find(".about__activities-item.#{name}"),
+          translation_key:,
+        )
+      end
     end
   end
 end
