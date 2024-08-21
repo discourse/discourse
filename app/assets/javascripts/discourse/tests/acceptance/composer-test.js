@@ -1413,6 +1413,8 @@ acceptance("composer buttons API", function (needs) {
         },
         shortcut: "alt+b",
         icon: "far-bold",
+        name: "bold",
+        title: "some_title",
         label: "some_label",
 
         condition: () => {
@@ -1423,8 +1425,6 @@ acceptance("composer buttons API", function (needs) {
 
     await visit("/t/internationalization-localization/280");
     await click(".post-controls button.reply");
-    assert.dom(".d-editor-input").exists("the composer input is visible");
-
     await fillIn(".d-editor-input", "hello the world");
 
     const editor = document.querySelector(".d-editor-input");
@@ -1442,12 +1442,12 @@ acceptance("composer buttons API", function (needs) {
     const dropdown = selectKit(".toolbar-popup-menu-options");
     await dropdown.expand();
 
-    const row = dropdown.rowByName(I18n.t("some_label")).el();
+    const row = dropdown.rowByName("bold").el();
     assert
       .dom(row)
       .hasAttribute(
         "title",
-        I18n.t("some_label"),
+        I18n.t("some_title"),
         "it shows the title without shortcut"
       );
     assert

@@ -12,22 +12,27 @@ export default DropdownSelectBoxComponent.extend({
     autoFilterable: false,
     preventHeaderFocus: true,
     customStyle: true,
+    titleProperty: "title",
+    labelProperty: "label",
   },
 
   modifyContent(contents) {
     return contents
       .map((content) => {
         if (content.condition) {
-          let label = I18n.t(content.label);
-
-          if (content.shortcut) {
-            label += ` <kbd class="shortcut">${PLATFORM_KEY_MODIFIER}+${content.shortcut}</kbd>`;
+          let label;
+          if (content.label) {
+            label = I18n.t(content.label);
+            if (content.shortcut) {
+              label += ` <kbd class="shortcut">${PLATFORM_KEY_MODIFIER}+${content.shortcut}</kbd>`;
+            }
           }
 
           return {
             icon: content.icon,
             label,
-            name: I18n.t(content.label),
+            title: content.title ? I18n.t(content.title) : null,
+            name: content.name,
             id: { name: content.name, action: content.action },
           };
         }
