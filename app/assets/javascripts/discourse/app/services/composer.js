@@ -665,7 +665,7 @@ export default class ComposerService extends Service {
   }
 
   @action
-  onPopupMenuAction(menuItem) {
+  onPopupMenuAction(menuItem, toolbarEvent) {
     // menuItem is an object with keys name & action like so: { name: "toggle-invisible, action: "toggleInvisible" }
     // `action` value can either be a string (to lookup action by) or a function to call
     this.appEvents.trigger(
@@ -673,7 +673,7 @@ export default class ComposerService extends Service {
       menuItem
     );
     if (typeof menuItem.action === "function") {
-      return menuItem.action(this.toolbarEvent);
+      return menuItem.action(toolbarEvent || this.toolbarEvent);
     } else {
       return (
         this.actions?.[menuItem.action]?.bind(this) || // Legacy-style contributions from themes/plugins
