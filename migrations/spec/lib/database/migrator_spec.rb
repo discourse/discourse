@@ -10,7 +10,14 @@ RSpec.describe Migrations::Database::Migrator do
   )
     if migrations_directory
       migrations_path =
-        File.join(Migrations.root_path, "spec", "fixtures", "schema", migrations_directory)
+        File.join(
+          Migrations.root_path,
+          "spec",
+          "support",
+          "fixtures",
+          "schema",
+          migrations_directory,
+        )
     end
 
     temp_path = storage_path = Dir.mktmpdir if storage_path.nil?
