@@ -1404,6 +1404,39 @@ acceptance("composer buttons API", function (needs) {
     allow_uncategorized_topics: true,
   });
 
+  test("buttons can support a shortcut", async function (assert) {
+    withPluginApi("0", (api) => {
+      api.addComposerToolbarPopupMenuOption({
+        action: (toolbarEvent) => {
+          toolbarEvent.applySurround("**", "**");
+        },
+        shortcut: "alt+b",
+        icon: "far-bold",
+        label: "some_label",
+
+        condition: () => {
+          return true;
+        },
+      });
+    });
+
+    await visit("/t/internationalization-localization/280");
+    await click(".post-controls button.reply");
+    assert.dom(".d-editor-input").exists("the composer input is visible");
+
+    await fillIn(".d-editor-input", "hello the world");
+
+    const editor = document.querySelector(".d-editor-input");
+    editor.setSelectionRange(6, 9); // select the text input in the composer
+
+    await triggerKeyEvent(".d-editor-input", "keydown", "B", {
+      altKey: true,
+      ctrlKey: true,
+    });
+
+    assert.strictEqual(editor.value, "hello **the** world", "it adds the bold");
+  });
+
   test("buttons can be added conditionally", async function (assert) {
     withPluginApi("0", (api) => {
       api.addComposerToolbarPopupMenuOption({

@@ -960,6 +960,7 @@ class PluginApi {
    * @param {Object} opts - An Object.
    * @param {string} opts.icon - The name of the FontAwesome icon to display for the button.
    * @param {string} opts.label - The I18n translation key for the button's label.
+   * @param {string} opts.shortcut - The keyboard shortcut to apply, NOTE: this will unconditionally add CTRL/META key (eg: m means CTRL+m).
    * @param {action} opts.action - The action to perform when the button is clicked.
    * @param {condition} opts.condition - A condition that must be met for the button to be displayed.
    *
@@ -970,6 +971,7 @@ class PluginApi {
    *   },
    *   icon: 'far-bold',
    *   label: 'composer.bold_some_text',
+   *   shortcut: 'm',
    *   condition: (composer) => {
    *     return composer.editingPost;
    *   }
