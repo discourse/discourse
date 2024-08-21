@@ -159,8 +159,6 @@ te:
       removed_user: "%{who} %{when} న తొలగించబడ్డారు"
       removed_group: "%{who} %{when} న తొలగించబడ్డారు"
       autobumped: "%{when} స్వయంచాలకంగా ముందుకి దూసుకెళ్లింది"
-      tags_changed: "%{when} ట్యాగ్‌లు నవీకరించబడ్డాయి"
-      category_changed: "%{when} వర్గం నవీకరించబడింది"
       autoclosed:
         enabled: "%{when} మూసివేయబడింది"
         disabled: "%{when} తెరవబడింది"
@@ -4408,6 +4406,7 @@ te:
           save: "ఇలా సేవ్ చేయండి..."
   admin_js:
     type_to_filter: "ఫిల్టర్ చేయడానికి టైప్ చేయండి…"
+    settings: "అమరికలు"
     admin:
       title: "డిస్కోర్స్ అడ్మిన్"
       moderator: "నిర్వాహకుడు"

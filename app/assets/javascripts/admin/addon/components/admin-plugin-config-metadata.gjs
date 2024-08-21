@@ -3,9 +3,9 @@ import i18n from "discourse-common/helpers/i18n";
 const AdminPluginConfigMetadata = <template>
   <div class="admin-plugin-config-page__metadata">
     <div class="admin-plugin-config-area__metadata-title">
-      <h2>
+      <h1>
         {{@plugin.nameTitleized}}
-      </h2>
+      </h1>
       <p>
         {{@plugin.about}}
         {{#if @plugin.linkUrl}}

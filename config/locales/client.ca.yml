@@ -140,8 +140,6 @@ ca:
       removed_user: "Ha suprimit %{who} %{when}"
       removed_group: "Ha suprimit %{who} %{when}"
       autobumped: "Elevat automàticament %{when}"
-      tags_changed: "Etiquetes actualitzades el %{when}"
-      category_changed: "Categoria actualitzada el %{when}"
       autoclosed:
         enabled: "Tancat %{when}"
         disabled: "Obert %{when}"
@@ -2960,6 +2958,7 @@ ca:
         show: "Mostra"
         about: "Quant a"
   admin_js:
+    settings: "Configuració"
     admin:
       title: "Administració de Discourse"
       moderator: "Moderador"

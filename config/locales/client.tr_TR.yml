@@ -159,8 +159,6 @@ tr_TR:
       removed_user: "%{who} adlı kullanıcıyı çıkardı, %{when}"
       removed_group: "%{who} adlı kullanıcıyı çıkardı, %{when}"
       autobumped: "Otomatik olarak üste sıçradı, %{when}"
-      tags_changed: "Etiketler güncellendi (%{when})"
-      category_changed: "Kategori güncellendi (%{when})"
       autoclosed:
         enabled: "Kapattı, %{when}"
         disabled: "Açtı, %{when}"
@@ -201,6 +199,7 @@ tr_TR:
     broken_decorator_alert: "Sitenizdeki içerik dekoratörlerinden biri bir hataya neden olduğundan gönderiler doğru görüntülenmeyebilir."
     broken_page_change_alert: "Bir onPageChange işleyicisi hata verdi. Daha fazla bilgi için tarayıcı geliştirici araçlarını kontrol edin."
     broken_plugin_alert: "'%{name}' eklentisinden kaynaklanıyor"
+    broken_transformer_alert: "Bir hata oluştu. Siteniz düzgün çalışmayabilir."
     critical_deprecation:
       notice: "<b>[Yönetici Bildirisi]</b> Temalarınızdan veya eklentilerinizden birinin, yaklaşan Discourse temel değişiklikleriyle uyumluluk için güncellenmesi gerekiyor."
       id: "(kimlik:<em>%{id}</em>)"
@@ -268,6 +267,7 @@ tr_TR:
     now: "az önce"
     read_more: "devamını oku"
     more: "Daha fazla"
+    more_options: "Daha fazla seçenek"
     x_more:
       one: "%{count} Daha"
       other: "%{count} Daha"
@@ -4565,6 +4565,7 @@ tr_TR:
     powered_by_discourse: "Discourse tarafından desteklenmektedir"
   admin_js:
     type_to_filter: "filtrelemek için yazın…"
+    settings: "Ayarlar"
     admin:
       title: "Discourse Yöneticisi"
       moderator: "Moderatör"

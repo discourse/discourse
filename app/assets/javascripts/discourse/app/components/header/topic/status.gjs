@@ -17,7 +17,7 @@ export default class Status extends Component {
 
   get topicStatuses() {
     let topicStatuses = [];
-    TopicStatusIcons.render(this.args.topic, (name, key) => {
+    TopicStatusIcons.render(this.args.topicInfo, (name, key) => {
       const iconArgs = { class: key === "unpinned" ? "unpinned" : null };
       const statusIcon = { name, iconArgs };
 
@@ -42,7 +42,7 @@ export default class Status extends Component {
     }
     const parent = e.target.closest(".topic-statuses");
     if (parent?.querySelector(".pin-toggle-button")?.contains(e.target)) {
-      this.args.topic.togglePinnedForUser();
+      this.args.topicInfo.togglePinnedForUser();
     }
   }
 

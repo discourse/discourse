@@ -142,6 +142,7 @@ export default function () {
       { path: "/backups", resetNamespace: true },
       function () {
         this.route("logs");
+        this.route("settings");
       }
     );
 

@@ -1,29 +1,10 @@
 // Styles for /admin/backups
 
-$rollback: #3d9970;
-$rollback-dark: darken($rollback, 10%) !default;
-$rollback-darker: darken($rollback, 20%) !default;
-.btn-rollback {
-  color: var(--secondary);
-  background: $rollback;
-  .d-icon {
-    color: var(--secondary);
-  }
-  &:hover {
-    background: $rollback-dark;
-    .d-icon {
-      color: currentColor;
-    }
-  }
-  &:active {
-    @include linear-gradient($rollback-darker, $rollback-dark);
-  }
-  &[disabled] {
-    background: $rollback;
-  }
-}
-
 .admin-backups {
+  .before-backup-list-outlet {
+    margin-top: 1em;
+  }
+
   table {
     @media screen and (min-width: 550px) {
       td.backup-filename {
@@ -71,43 +52,20 @@ $rollback-darker: darken($rollback, 20%) !default;
   overflow: auto;
 }
 
-button.ru {
-  position: relative;
-  min-width: 110px;
-}
-
-.ru-progress {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background: rgba(0, 175, 0, 0.3);
-}
-
-.is-uploading:hover .ru-progress {
-  background: rgba(200, 0, 0, 0.3);
-}
-
 .start-backup-modal {
   .alert {
     margin-bottom: 0;
   }
 }
 
-.backup-options {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  .btn {
-    margin-right: 0.5em;
+.backup-message {
+  margin-left: auto;
+  margin-top: 1em;
+  @include breakpoint(mobile-extra-large) {
+    margin: 1.25em 0 0;
   }
-  .backup-message {
-    margin-left: auto;
-    @include breakpoint(mobile-extra-large) {
-      margin: 1.25em 0 0;
-    }
-  }
-  label {
-    font-weight: normal;
-  }
+}
+
+label.admin-backups-upload {
+  font-weight: 400;
 }

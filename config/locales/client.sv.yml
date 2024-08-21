@@ -159,8 +159,6 @@ sv:
       removed_user: "Tog bort %{who} %{when}"
       removed_group: "Tog bort %{who} %{when}"
       autobumped: "Automatiskt positionerad %{when}"
-      tags_changed: "Taggar uppdaterade %{when}"
-      category_changed: "Kategori uppdaterad %{when}"
       autoclosed:
         enabled: "Stängdes %{when}"
         disabled: "Öppnades %{when}"
@@ -4386,6 +4384,7 @@ sv:
           save: "Spara som..."
   admin_js:
     type_to_filter: "skriv för att filtrera…"
+    settings: "Inställningar"
     admin:
       title: "Discourse-administratör"
       moderator: "Moderator"

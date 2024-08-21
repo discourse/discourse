@@ -157,8 +157,6 @@ bg:
       removed_user: "Изтри %{who} на %{when}"
       removed_group: "Изтри %{who} на %{when}"
       autobumped: "Автоматично вдигната %{when}"
-      tags_changed: "Етикетите са актуализирани %{when}"
-      category_changed: "Категорията е актуализирана %{when}"
       autoclosed:
         enabled: "Затворена %{when}"
         disabled: "Отворена %{when}"
@@ -3422,6 +3420,7 @@ bg:
         show: "Покажи"
         about: "Относно"
   admin_js:
+    settings: "Настройки"
     admin:
       title: "Discourse Админ"
       moderator: "Модератор"

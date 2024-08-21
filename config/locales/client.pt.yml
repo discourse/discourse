@@ -154,8 +154,6 @@ pt:
       removed_user: "Removeu %{who} %{when}"
       removed_group: "Removeu %{who} %{when}"
       autobumped: "Automaticamente colidido %{when}"
-      tags_changed: "Etiquetas atualizadas %{when}"
-      category_changed: "Categoria atualizada %{when}"
       autoclosed:
         enabled: "Fechado %{when}"
         disabled: "Aberto %{when}"
@@ -3594,6 +3592,7 @@ pt:
         about: "Sobre"
     powered_by_discourse: "Alimentado pelo Discourse"
   admin_js:
+    settings: "Configurações"
     admin:
       title: "Administração Discourse"
       moderator: "Moderador"

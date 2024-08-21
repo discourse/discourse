@@ -363,7 +363,7 @@ basic:
     default: true
     client: true
   push_notification_time_window_mins:
-    default: 10
+    default: 1
     min: 0
   short_title:
     default: ""
@@ -2503,6 +2503,10 @@ legal:
     default: false
     hidden: true
     client: true
+  display_eu_visitor_stats:
+    default: false
+    client: true
+    hidden: true
 
 backups:
   enable_backups:

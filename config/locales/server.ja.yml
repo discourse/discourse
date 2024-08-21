@@ -52,11 +52,6 @@ ja:
   remove_posts_deleted_by_author: "作成者によって削除"
   redirect_warning: "選択されたリンクがこのフォーラムに実際に投稿されていることを確認できませんでした。このまま進むには、下のリンクを選択してください。"
   on_another_topic: "別のトピック"
-  topic_category_changed: "%{from} から %{to}"
-  topic_tag_changed:
-    added_and_removed: "%{added} を追加して %{removed} を削除しました"
-    added: "%{added} を追加しました"
-    removed: "%{removed} を削除しました"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} の #%{post_number}"
@@ -2278,7 +2273,6 @@ ja:
     suppress_overlapping_tags_in_list: "タグがトピックタイトルの語に完全に一致する場合、タグを表示しない"
     remove_muted_tags_from_latest: "ミュートされたタグのみがタグ付けされたトピックを最新のトピックリストに表示しない。"
     force_lowercase_tags: "すべての新しいタグが完全に小文字になるように強制する。"
-    create_post_for_category_and_tag_changes: "トピックのカテゴリまたはタグが変更されたときに、小さなアクション投稿を作成する"
     automatically_clean_unused_tags: "どのトピックやプライベートメッセージにも使用されていないタグを毎日自動的に削除します。"
     watched_precedence_over_muted: "ミュートしているものも含むウォッチ中のカテゴリまたはタグ内のトピックについて通知する"
     company_name: "会社または組織の名前。空白のままにすると、定型の利用規約またはプライバシーに関する通知は提供されません。"

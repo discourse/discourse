@@ -159,8 +159,6 @@ de:
       removed_user: "Hat %{who} entfernt, %{when}"
       removed_group: "Hat %{who} entfernt, %{when}"
       autobumped: "Thema wurde automatisch nach oben geschoben, %{when}"
-      tags_changed: "Schlagwörter aktualisiert %{when}"
-      category_changed: "Kategorie aktualisiert %{when}"
       autoclosed:
         enabled: "Geschlossen, %{when}"
         disabled: "Geöffnet, %{when}"
@@ -269,6 +267,7 @@ de:
     now: "gerade eben"
     read_more: "weiterlesen"
     more: "Mehr"
+    more_options: "Mehr Optionen"
     x_more:
       one: "%{count} weiterer"
       other: "%{count} weitere"
@@ -2061,6 +2060,7 @@ de:
           other {# Fehlern/Minute}
         } überschritten.
     learn_more: "Mehr erfahren …"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>Mehr erfahren…</a>"
     mute: Stummschalten
     unmute: Stummschaltung aufheben
     last_post: Geschrieben
@@ -2335,6 +2335,7 @@ de:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} ist größer als das zulässige Maximum %{max_file_size}"
+        size_too_small: "%{provided_file_size} ist kleiner  als Minimum %{min_file_size}"
     emoji_picker:
       filter_placeholder: Emoji suchen
       smileys_&_emotion: Smileys und Emotion
@@ -4676,6 +4677,7 @@ de:
     powered_by_discourse: "Bereitgestellt von Discourse"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben …"
+    settings: "Einstellungen"
     admin:
       title: "Discourse-Administrator"
       moderator: "Moderator"
@@ -5305,8 +5307,11 @@ de:
         legacy: "Legacy"
       backups:
         title: "Backups"
+        files_title: "Dateien sichern"
+        description: "Discourse-Backups beinhalten die vollständige Datenbank der Website, die alles auf der Website enthält: Themen, Beiträge, Benutzer, Gruppen, Einstellungen, Themen usw. Je nachdem, wie die Backup-Datei erstellt wird, kann sie Uploads enthalten oder nicht."
         menu:
           backups: "Backups"
+          backup_files: "Dateien sichern"
           logs: "Protokolle"
         none: "Kein Backup verfügbar."
         read_only:

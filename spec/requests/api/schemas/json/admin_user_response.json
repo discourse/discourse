@@ -170,6 +170,9 @@
     "api_key_count": {
       "type": "integer"
     },
+    "similar_users_count": {
+      "type": "integer"
+    },
     "single_sign_on_record": {
       "type": ["string", "null"]
     },

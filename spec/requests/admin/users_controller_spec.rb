@@ -109,7 +109,7 @@ RSpec.describe Admin::UsersController do
         expect(response.parsed_body["id"]).to eq(user.id)
       end
 
-      it "includes similar users who aren't admin or mods" do
+      it "includes count of similiar users" do
         Fabricate(:user, ip_address: "88.88.88.88")
         Fabricate(:admin, ip_address: user.ip_address)
         Fabricate(:moderator, ip_address: user.ip_address)
@@ -118,11 +118,7 @@ RSpec.describe Admin::UsersController do
         get "/admin/users/#{user.id}.json"
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["id"]).to eq(user.id)
         expect(response.parsed_body["similar_users_count"]).to eq(1)
-        expect(response.parsed_body["similar_users"].map { |u| u["id"] }).to contain_exactly(
-          similar_user.id,
-        )
       end
     end
 
@@ -135,6 +131,22 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
       end
+    end
+  end
+
+  describe "#similar_users" do
+    before { sign_in(admin) }
+
+    it "includes similar users who aren't admin or mods" do
+      Fabricate(:user, ip_address: "88.88.88.88")
+      Fabricate(:admin, ip_address: user.ip_address)
+      Fabricate(:moderator, ip_address: user.ip_address)
+      similar_user = Fabricate(:user, ip_address: user.ip_address)
+
+      get "/admin/users/#{user.id}/similar-users.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |u| u["id"] }).to contain_exactly(similar_user.id)
     end
   end
 

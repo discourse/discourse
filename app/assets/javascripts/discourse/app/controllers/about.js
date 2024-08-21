@@ -23,4 +23,15 @@ export default class AboutController extends Controller {
       return null;
     }
   }
+
+  @discourseComputed(
+    "model.stats.visitors_30_days",
+    "model.stats.eu_visitors_30_days"
+  )
+  statsTableFooter(all, eu) {
+    return I18n.messageFormat("about.traffic_info_footer_MF", {
+      total_visitors: all,
+      eu_visitors: eu,
+    });
+  }
 }

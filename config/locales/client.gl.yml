@@ -3386,6 +3386,7 @@ gl:
         show: "Amosar"
         about: "Verbo de"
   admin_js:
+    settings: "Configuración"
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
