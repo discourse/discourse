@@ -2,12 +2,11 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
@@ -116,14 +115,10 @@ export default class AdminFlagsForm extends Component {
 
   <template>
     <div class="admin-config-area">
-      <h2>{{i18n "admin.config_areas.flags.header"}}</h2>
-      <LinkTo
+      <BackButton
         @route="adminConfig.flags"
-        class="btn-default btn btn-icon-text btn-back"
-      >
-        {{icon "chevron-left"}}
-        {{i18n "admin.config_areas.flags.back"}}
-      </LinkTo>
+        @label="admin.config_areas.flags.back"
+      />
       <div class="admin-config-area__primary-content admin-flag-form">
         <AdminConfigAreaCard @heading={{this.header}}>
           <Form @onSubmit={{this.save}} @data={{this.formData}} as |form|>

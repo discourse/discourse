@@ -5,6 +5,7 @@ export const AdminPageActionButton = <template>
     class="admin-page-action-button btn-small"
     ...attributes
     @action={{@action}}
+    @route={{@route}}
     @label={{@label}}
     @title={{@title}}
     @icon={{@icon}}
@@ -16,6 +17,7 @@ export const PrimaryButton = <template>
     class="btn-primary"
     ...attributes
     @action={{@action}}
+    @route={{@route}}
     @label={{@label}}
     @title={{@title}}
     @icon={{@icon}}
@@ -27,6 +29,7 @@ export const DangerButton = <template>
     class="btn-danger"
     ...attributes
     @action={{@action}}
+    @route={{@route}}
     @label={{@label}}
     @title={{@title}}
     @icon={{@icon}}
@@ -38,6 +41,7 @@ export const DefaultButton = <template>
     class="btn-default"
     ...attributes
     @action={{@action}}
+    @route={{@route}}
     @label={{@label}}
     @title={{@title}}
     @icon={{@icon}}
