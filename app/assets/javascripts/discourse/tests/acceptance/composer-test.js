@@ -10,6 +10,7 @@ import {
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import LinkLookup from "discourse/lib/link-lookup";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Composer, {
@@ -1437,6 +1438,24 @@ acceptance("composer buttons API", function (needs) {
     );
 
     assert.strictEqual(editor.value, "hello **the** world", "it adds the bold");
+
+    const dropdown = selectKit(".toolbar-popup-menu-options");
+    await dropdown.expand();
+
+    const row = dropdown.rowByName(I18n.t("some_label")).el();
+    assert
+      .dom(row)
+      .hasAttribute(
+        "title",
+        I18n.t("some_label"),
+        "it shows the title without shortcut"
+      );
+    assert
+      .dom(row)
+      .hasText(
+        I18n.t("some_label") + ` ${PLATFORM_KEY_MODIFIER}+alt+b`,
+        "it shows the label with shortcut"
+      );
   });
 
   test("buttons can be added conditionally", async function (assert) {
