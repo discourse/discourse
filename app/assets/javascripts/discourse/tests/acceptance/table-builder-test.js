@@ -14,7 +14,7 @@ acceptance("Table Builder", function (needs) {
     await selectKit(".toolbar-popup-menu-options").expand();
 
     assert
-      .dom(`.select-kit-row[data-name='${I18n.t("composer.insert_table")}']`)
+      .dom(`.select-kit-row[data-name='toggle-spreadsheet']`)
       .exists("it shows the builder button");
   });
 
@@ -27,7 +27,7 @@ acceptance("Table Builder", function (needs) {
     await selectKit(".toolbar-popup-menu-options").expand();
 
     assert
-      .dom(`.select-kit-row[data-name='${I18n.t("composer.insert_table")}']`)
+      .dom(`.select-kit-row[data-name='toggle-spreadsheet']`)
       .exists("it shows the builder button");
   });
 });

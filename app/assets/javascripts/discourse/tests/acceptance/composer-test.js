@@ -620,7 +620,7 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:nth-of-type(1) button.reply");
 
     await menu.expand();
-    await menu.selectRowByName(I18n.t("composer.toggle_whisper"));
+    await menu.selectRowByName("toggle-whisper");
 
     assert.strictEqual(
       count(".composer-actions svg.d-icon-far-eye-slash"),
@@ -629,7 +629,7 @@ acceptance("Composer", function (needs) {
     );
 
     await menu.expand();
-    await menu.selectRowByName(I18n.t("composer.toggle_whisper"));
+    await menu.selectRowByName("toggle-whisper");
 
     assert.ok(
       !exists(".composer-actions svg.d-icon-far-eye-slash"),
@@ -637,14 +637,14 @@ acceptance("Composer", function (needs) {
     );
 
     await menu.expand();
-    await menu.selectRowByName(I18n.t("composer.toggle_whisper"));
+    await menu.selectRowByName("toggle-whisper");
 
     await click(".toggle-fullscreen");
 
     await menu.expand();
 
     assert.ok(
-      menu.rowByName(I18n.t("composer.toggle_whisper")).exists(),
+      menu.rowByName("toggle-whisper").exists(),
       "whisper toggling is still present when going fullscreen"
     );
   });
@@ -734,7 +734,7 @@ acceptance("Composer", function (needs) {
     await selectKit(".toolbar-popup-menu-options").expand();
 
     await selectKit(".toolbar-popup-menu-options").selectRowByName(
-      I18n.t("composer.toggle_whisper")
+      "toggle-whisper"
     );
 
     assert.strictEqual(
@@ -754,7 +754,7 @@ acceptance("Composer", function (needs) {
 
     await selectKit(".toolbar-popup-menu-options").expand();
     await selectKit(".toolbar-popup-menu-options").selectRowByName(
-      I18n.t("composer.toggle_unlisted")
+      "toggle-invisible"
     );
 
     assert.ok(
@@ -1450,7 +1450,7 @@ acceptance("composer buttons API", function (needs) {
         "title",
         I18n.t("some_title") +
           ` (${translateModKey(`${PLATFORM_KEY_MODIFIER}+alt+b`)})`,
-        "it shows the title without shortcut"
+        "it shows the title with shortcut"
       );
     assert
       .dom(row)
