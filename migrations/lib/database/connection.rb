@@ -49,11 +49,11 @@ module Migrations::Database
       !@db || @db.closed?
     end
 
-    def insert(sql, *parameters)
+    def insert(sql, parameters = [])
       begin_transaction if @statement_counter == 0
 
       stmt = @statement_cache.getset(sql) { @db.prepare(sql) }
-      stmt.execute(*parameters)
+      stmt.execute(parameters)
 
       if (@statement_counter += 1) >= @transaction_batch_size
         commit_transaction

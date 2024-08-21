@@ -9,3 +9,5 @@ Migrations.configure_zeitwerk
 require "rspec-multi-mock"
 
 RSpec.configure { |config| config.mock_with MultiMock::Adapter.for(:rspec, :mocha) }
+
+Dir[File.expand_path("./support/**/*.rb", __dir__)].each { |f| require f }
