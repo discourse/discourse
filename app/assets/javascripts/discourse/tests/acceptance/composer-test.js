@@ -1449,14 +1449,14 @@ acceptance("composer buttons API", function (needs) {
       .hasAttribute(
         "title",
         I18n.t("some_title") +
-          ` (${translateModKey(`${PLATFORM_KEY_MODIFIER}+alt+b`)})`,
+          ` (${translateModKey(PLATFORM_KEY_MODIFIER + "+alt+b")})`,
         "it shows the title with shortcut"
       );
     assert
       .dom(row)
       .hasText(
         I18n.t("some_label") +
-          ` ${translateModKey(PLATFORM_KEY_MODIFIER + "alt+b")}`,
+          ` ${translateModKey(PLATFORM_KEY_MODIFIER + "+alt+b")}`,
         "it shows the label with shortcut"
       );
   });
