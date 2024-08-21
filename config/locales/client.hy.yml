@@ -2928,6 +2928,7 @@ hy:
         show: "Ցուցադրել"
         about: "Մասին"
   admin_js:
+    settings: "Կարգավորումներ"
     admin:
       title: "Discourse Ադմին"
       moderator: "Մոդերատոր"

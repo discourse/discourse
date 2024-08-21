@@ -159,8 +159,6 @@ nl:
       removed_user: "Heeft %{who} %{when} verwijderd"
       removed_group: "Heeft %{who} %{when} verwijderd"
       autobumped: "Heeft %{when} automatisch gebumpt"
-      tags_changed: "Tags bijgewerkt %{when}"
-      category_changed: "Categorie bijgewerkt %{when}"
       autoclosed:
         enabled: "%{when} gesloten"
         disabled: "%{when} geopend"
@@ -268,6 +266,7 @@ nl:
     now: "zojuist"
     read_more: "meer lezen"
     more: "Meer"
+    more_options: "Meer opties"
     x_more:
       one: "Nog %{count}"
       other: "Nog %{count}"
@@ -4565,6 +4564,7 @@ nl:
     powered_by_discourse: "Mogelijk gemaakt door Discourse"
   admin_js:
     type_to_filter: "typ om te filteren…"
+    settings: "Instellingen"
     admin:
       title: "Discourse-beheerder"
       moderator: "Moderator"

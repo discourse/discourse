@@ -186,8 +186,6 @@ ro:
       removed_user: "A eliminat pe %{who} %{when}"
       removed_group: "A eliminat pe %{who} %{when}"
       autobumped: "Impuls automat %{when}"
-      tags_changed: "Etichete actualizate %{when}"
-      category_changed: "Categorie actualizată %{when}"
       autoclosed:
         enabled: "Închis %{when}"
         disabled: "Deschis %{when}"
@@ -295,6 +293,7 @@ ro:
     now: "chiar acum"
     read_more: "citește mai mult"
     more: "Mai mult"
+    more_options: "Mai multe opțiuni"
     x_more:
       one: "Încă %{count}"
       few: "Încă %{count}"
@@ -1825,6 +1824,7 @@ ro:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} este mai mare decât valoarea maximă permisă %{max_file_size}"
+        size_too_small: "%{provided_file_size} este mai mică decât valoarea minimă permisă %{min_file_size}"
     emoji_picker:
       filter_placeholder: Caută emoji
       objects: Obiecte
@@ -3300,6 +3300,7 @@ ro:
           save: "Salvează ca..."
     powered_by_discourse: "Propulsat de Discourse"
   admin_js:
+    settings: "Opțiuni"
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"

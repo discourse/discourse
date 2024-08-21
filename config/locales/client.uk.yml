@@ -215,8 +215,6 @@ uk:
       removed_user: "Вилучив %{who} %{when}"
       removed_group: "Вилучив %{who} %{when}"
       autobumped: "Автоматично піднято %{when}"
-      tags_changed: "Теги оновлено %{when}"
-      category_changed: "Категорія оновлена %{when}"
       autoclosed:
         enabled: "Закрито %{when}"
         disabled: "Відкрито %{when}"
@@ -327,6 +325,7 @@ uk:
     now: "щойно"
     read_more: "читати далі"
     more: "Більше"
+    more_options: "Більше опцій"
     x_more:
       one: "Ще %{count}"
       few: "Ще %{count}"
@@ -5171,6 +5170,7 @@ uk:
     powered_by_discourse: "Працює на Discourse"
   admin_js:
     type_to_filter: "текст для пошуку…"
+    settings: "Налаштування"
     admin:
       title: "Адміністратор Discourse"
       moderator: "Модератор"

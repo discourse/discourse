@@ -2336,6 +2336,7 @@ sw:
         show: "Onyesha"
         about: "Kuhusu"
   admin_js:
+    settings: "Mipangilio"
     admin:
       title: "Kiongozi wa Discourse"
       moderator: "Msimamizi"

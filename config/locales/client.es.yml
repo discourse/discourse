@@ -159,8 +159,6 @@ es:
       removed_user: "Eliminó a %{who} %{when}"
       removed_group: "Eliminó a %{who} %{when}"
       autobumped: "Reflotado automáticamente %{when}"
-      tags_changed: "Etiquetas actualizadas %{when}"
-      category_changed: "Categoría actualizada %{when}"
       autoclosed:
         enabled: "Cerrado %{when}"
         disabled: "Abierto %{when}"
@@ -269,6 +267,7 @@ es:
     now: "justo ahora"
     read_more: "leer más"
     more: "Más"
+    more_options: "Más opciones"
     x_more:
       one: "%{count} más"
       other: "%{count} más"
@@ -4674,6 +4673,7 @@ es:
     powered_by_discourse: "Desarrollado por Discourse"
   admin_js:
     type_to_filter: "escribe para filtrar…"
+    settings: "Ajustes"
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"

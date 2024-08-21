@@ -3054,6 +3054,7 @@ zh_TW:
           copy: "複製..."
           paste: "貼上..."
   admin_js:
+    settings: "設定"
     admin:
       title: "論壇管理員"
       moderator: "板主"

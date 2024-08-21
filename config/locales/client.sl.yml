@@ -3695,6 +3695,7 @@ sl:
         show: "Prikaži"
         about: "O nas"
   admin_js:
+    settings: "Nastavitve"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"

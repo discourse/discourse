@@ -59,6 +59,17 @@ class ApplicationRequest < ActiveRecord::Base
 
     s
   end
+
+  def self.request_type_count_for_period(type, since)
+    id = self.req_types[type]
+    if !id
+      raise ArgumentError.new(
+              "unknown request type #{type.inspect} in ApplicationRequest.req_types",
+            )
+    end
+
+    self.where(req_type: id).where("date >= ?", since).sum(:count)
+  end
 end
 
 # == Schema Information

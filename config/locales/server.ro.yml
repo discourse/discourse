@@ -48,8 +48,6 @@ ro:
   disable_remote_images_download_reason: "Descărcarea de imagini la distanță a fost dezactivată deoarece nu mai era spațiu suficient pe disc."
   anonymous: "Anonime"
   remove_posts_deleted_by_author: "Șters de către autor"
-  topic_tag_changed:
-    removed: "A eliminat pe %{removed}"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} de %{username}"
   components:

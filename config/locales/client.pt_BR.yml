@@ -159,8 +159,6 @@ pt_BR:
       removed_user: "Removeu %{who} %{when}"
       removed_group: "Removeu %{who} %{when}"
       autobumped: "Automaticamente promovido %{when}"
-      tags_changed: "Etiquetas atualizadas em %{when}"
-      category_changed: "Categoria atualizada em %{when}"
       autoclosed:
         enabled: "Fechado %{when}"
         disabled: "Aberto %{when}"
@@ -268,6 +266,7 @@ pt_BR:
     now: "agora"
     read_more: "leia mais"
     more: "Mais"
+    more_options: "Mais opções"
     x_more:
       one: "Mais %{count}"
       other: "Mais %{count}"
@@ -2445,7 +2444,7 @@ pt_BR:
       post_approved: "Sua postagem foi aprovada"
       reviewable_items: "itens que exigem revisão"
       watching_first_post_label: "Novo tópico"
-      user_moved_post: "%{username} se moveu"
+      user_moved_post: "%{username} moveu"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -4565,6 +4564,7 @@ pt_BR:
     powered_by_discourse: "Com tecnologia Discourse"
   admin_js:
     type_to_filter: "Digite para filtrar..."
+    settings: "Configurações"
     admin:
       title: "Administrador(a) do Discourse"
       moderator: "Moderador(a)"

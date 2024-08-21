@@ -3808,6 +3808,7 @@ el:
         about: "Σχετικά"
     powered_by_discourse: "Με την υποστήριξη του Discourse"
   admin_js:
+    settings: "Ρυθμίσεις"
     admin:
       title: "Διαχειριστής"
       moderator: "Συντονιστής"

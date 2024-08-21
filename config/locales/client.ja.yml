@@ -131,8 +131,6 @@ ja:
       removed_user: "%{who} を削除しました: %{when}"
       removed_group: "%{who} を削除しました: %{when}"
       autobumped: "自動的にバンプされました: %{when}"
-      tags_changed: "タグが更新されました: %{when}"
-      category_changed: "カテゴリが更新されました: %{when}"
       autoclosed:
         enabled: "クローズされました: %{when}"
         disabled: "オープンされました: %{when}"
@@ -239,6 +237,7 @@ ja:
     now: "たった今"
     read_more: "もっと読む"
     more: "もっと"
+    more_options: "その他のオプション"
     x_more:
       other: "他 %{count}"
     never: "なし"
@@ -4335,6 +4334,7 @@ ja:
     powered_by_discourse: "Discourse 提供"
   admin_js:
     type_to_filter: "入力してフィルタ..."
+    settings: "設定"
     admin:
       title: "Discourse の管理者"
       moderator: "モデレーター"
