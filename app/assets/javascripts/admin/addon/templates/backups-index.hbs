@@ -13,10 +13,13 @@
 
 {{#if this.status.restoreDisabled}}
   <div class="backup-message alert alert-info">
-    <a href="site_settings/category/all_results?filter=allow_restore">{{d-icon
-        "info-circle"
-      }}
-      {{i18n "admin.backups.operations.restore.is_disabled"}}</a>
+    {{dIcon "info-circle"}}
+    {{html-safe
+      (i18n
+        "admin.backups.operations.restore.is_disabled"
+        url=this.restoreSettingsUrl
+      )
+    }}
   </div>
 {{/if}}
 
