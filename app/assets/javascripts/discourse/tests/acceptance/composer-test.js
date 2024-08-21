@@ -1429,10 +1429,12 @@ acceptance("composer buttons API", function (needs) {
     const editor = document.querySelector(".d-editor-input");
     editor.setSelectionRange(6, 9); // select the text input in the composer
 
-    await triggerKeyEvent(".d-editor-input", "keydown", "B", {
-      altKey: true,
-      ctrlKey: true,
-    });
+    await triggerKeyEvent(
+      ".d-editor-input",
+      "keydown",
+      "B",
+      Object.assign({ altKey: true }, metaModifier)
+    );
 
     assert.strictEqual(editor.value, "hello **the** world", "it adds the bold");
   });
