@@ -39,11 +39,16 @@ export default DropdownSelectBoxComponent.extend({
             }
           }
 
+          let name = content.name;
+          if (!name && content.label) {
+            name = I18n.t(content.label);
+          }
+
           return {
             icon: content.icon,
             label,
             title,
-            name: content.name,
+            name,
             id: { name: content.name, action: content.action },
           };
         }
