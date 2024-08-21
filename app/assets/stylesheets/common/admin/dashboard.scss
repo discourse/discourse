@@ -1,8 +1,6 @@
 .admin-reports,
 .dashboard-next {
   &.admin-contents {
-    margin: 10px 0 0 0;
-
     nav {
       position: relative;
       width: calc(100% + 10px);
@@ -21,7 +19,7 @@
     font-size: var(--font-up-1);
     white-space: nowrap;
     flex-wrap: nowrap;
-    overflow-x: scroll;
+    overflow-x: auto;
 
     // Fade-out for horizontal scroll nav
     &:before {

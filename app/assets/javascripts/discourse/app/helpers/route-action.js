@@ -5,6 +5,7 @@ import { assert, runInDebug } from "@ember/debug";
 import { computed, get } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { join } from "@ember/runloop";
+import { isTesting } from "discourse-common/config/environment";
 
 function getCurrentRouteInfos(router) {
   let routerLib = router._routerMicrolib || router.router;
@@ -30,13 +31,15 @@ function getRouteWithAction(router, actionName) {
 function routeAction(actionName, router, ...params) {
   assert("[ember-route-action-helper] Unable to lookup router", router);
 
-  runInDebug(() => {
-    let { handler } = getRouteWithAction(router, actionName);
-    assert(
-      `[ember-route-action-helper] Unable to find action ${actionName}`,
-      handler
-    );
-  });
+  if (!isTesting() || router.currentRoute) {
+    runInDebug(() => {
+      let { handler } = getRouteWithAction(router, actionName);
+      assert(
+        `[ember-route-action-helper] Unable to find action ${actionName}`,
+        handler
+      );
+    });
+  }
 
   return function (...invocationArgs) {
     let { action, handler } = getRouteWithAction(router, actionName);

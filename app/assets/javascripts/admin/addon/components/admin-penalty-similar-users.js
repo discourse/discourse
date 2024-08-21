@@ -1,12 +1,21 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import { ajax } from "discourse/lib/ajax";
 
-@tagName("")
 export default class AdminPenaltySimilarUsers extends Component {
-  @discourseComputed("penaltyType")
-  penaltyField(penaltyType) {
+  @tracked isLoading;
+  @tracked similarUsers = [];
+  selectedUserIds = [];
+
+  constructor() {
+    super(...arguments);
+
+    this.loadSimilarUsers();
+  }
+
+  get penaltyField() {
+    const penaltyType = this.args.penaltyType;
     if (penaltyType === "suspend") {
       return "can_be_suspended";
     } else if (penaltyType === "silence") {
@@ -14,16 +23,26 @@ export default class AdminPenaltySimilarUsers extends Component {
     }
   }
 
+  async loadSimilarUsers() {
+    this.isLoading = true;
+    try {
+      const data = await ajax(
+        `/admin/users/${this.args.user.id}/similar-users.json`
+      );
+      this.similarUsers = data.users;
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
   @action
   selectUserId(userId, event) {
-    if (!this.selectedUserIds) {
-      return;
+    if (event.target.checked) {
+      this.selectedUserIds.push(userId);
+    } else {
+      this.selectedUserIds = this.selectedUserIds.filter((id) => id !== userId);
     }
 
-    if (event.target.checked) {
-      this.selectedUserIds.pushObject(userId);
-    } else {
-      this.selectedUserIds.removeObject(userId);
-    }
+    this.args.onUsersChanged(this.selectedUserIds);
   }
 }

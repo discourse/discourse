@@ -308,8 +308,10 @@ export default class TopicTimelineScrollArea extends Component {
     });
   }
 
-  @bind
+  @action
   updatePercentage(e) {
+    e.preventDefault();
+
     const currentCursorY = e.pageY || e.touches[0].pageY;
 
     const desiredScrollerCentre = currentCursorY - this.dragOffset;

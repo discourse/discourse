@@ -77,6 +77,10 @@ export default class CoreFabricators {
     });
   }
 
+  webhook(args = {}) {
+    return this.store.createRecord("web-hook", args);
+  }
+
   upload() {
     return {
       extension: "jpeg",

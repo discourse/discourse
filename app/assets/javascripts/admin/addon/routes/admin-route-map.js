@@ -14,10 +14,6 @@ export default function () {
         path: "/dashboard/reports",
         resetNamespace: true,
       });
-      this.route("admin.dashboardNewFeatures", {
-        path: "/dashboard/whats-new",
-        resetNamespace: true,
-      });
     });
 
     this.route(
@@ -146,6 +142,7 @@ export default function () {
       { path: "/backups", resetNamespace: true },
       function () {
         this.route("logs");
+        this.route("settings");
       }
     );
 

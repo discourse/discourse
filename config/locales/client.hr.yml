@@ -187,8 +187,6 @@ hr:
       removed_user: "Je uklonio %{who} %{when}"
       removed_group: "Je uklonio %{who} %{when}"
       autobumped: "Automatski bumpirano %{when}"
-      tags_changed: "Oznake ažurirane %{when}"
-      category_changed: "Kategorija ažurirana %{when}"
       autoclosed:
         enabled: "Zatvoren %{when}"
         disabled: "Otvoren %{when}"
@@ -345,6 +343,23 @@ hr:
       active_user_count: "Aktivni korisnici"
       contact: "Kontaktirajte nas"
       contact_info: "U slučaju kritičnog problema ili hitnosti koje utječu na rad stranice, kontaktirajte nas na %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} tema"
+          few: "%{formatted_number} teme"
+          other: "%{formatted_number} teme"
+        posts:
+          one: "%{formatted_number} objava"
+          few: "%{formatted_number} objava"
+          other: "%{formatted_number} objava"
+        likes:
+          one: "%{formatted_number} like"
+          few: "%{formatted_number} likeova"
+          other: "%{formatted_number} likeova"
+        periods:
+          last_7_days: "U zadnjih 7 dana"
+          today: "danas"
+          all_time: "oduvijek"
     bookmarked:
       title: "Zabilješka"
       edit_bookmark: "Uredi oznaku"
@@ -725,7 +740,6 @@ hr:
       never: "Nikad"
       last_custom: "Posljednji prilagođeni datum"
       custom: "Prilagođeni datum i vrijeme"
-      custom_short: "Prilagođeno..."
       select_timeframe: "Odabir vremenskog okvira"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> je objavio <a href='%{topicUrl}'> temu</a>"
@@ -1549,6 +1563,13 @@ hr:
           disconnect: "Vaš postojeći %{provider} račun '%{account_description}' bit će prekinut."
           account_specific: "Vaš %{provider} račun '%{account_description}' koristit će se za provjeru autentičnosti."
           generic: "Vaš %{provider} račun koristit će se za provjeru autentičnosti."
+      activate_account:
+        action: "Kliknite ovdje kako bi aktivirali vaš korisnički račun"
+        already_done: "Žao nam je, poveznica za aktivaciju računa više nije važeća. Možda vam je račun već aktivan?"
+        please_continue: "Vaš novi račun je potvrđen, biti će te preusmjereni na glavnu stranicu."
+        continue_button: "Nastavite na %{site_name}"
+        welcome_to: "Dobrodošli na %{site_name}"
+        approval_required: "Moderator vam mora ručno odobriti račun da bi mogli pristupiti ovom forumu. Dobiti će te email kad vam račun bude odobren!"
       name:
         title: "Ime"
         instructions: "Vaše ime i prezime (neobavezno)."
@@ -2072,6 +2093,7 @@ hr:
       admin_not_allowed_from_ip_address: "Ne možete se prijaviti kao administrator s te IP adrese."
       resend_activation_email: "Pritisnite ovjde da ponovno pošaljemo aktivacijski e-mail."
       omniauth_disallow_totp: "Na vašem je računu omogućena dvofaktorska provjera autentičnosti. Molimo prijavite se zaporkom."
+      activate_account: "Aktiviraj račun"
       resend_title: "Ponovno pošaljite e-poštu za aktivaciju"
       change_email: "Promijeni e-mail adresu"
       provide_new_email: "Nanesite novu adresu i ponovno ćemo vam poslati e-poštu s potvrdom."
@@ -3690,7 +3712,6 @@ hr:
         none: "nema podkategorija"
       colors_disabled: "Ne možete odabrati boje jer imate stil kategorije nijedna."
     flagging:
-      title: "Hvala što pomažete održavati našu zajednicu pristojnom."
       action: "Označi objavu zastavicom"
       take_action_options:
         suspend:
@@ -3729,7 +3750,6 @@ hr:
           few: "%{count} preostalih"
           other: "%{count} preostalih"
     flagging_topic:
-      title: "Hvala što pomažete održavati našu zajednicu pristojnom."
       action: "Označi temu zastavicom"
       notify_action: "Poruka"
     topic_map:
@@ -4372,6 +4392,7 @@ hr:
         about: "O nama"
   admin_js:
     type_to_filter: "upišite za filtriranje…"
+    settings: "Postavke"
     admin:
       title: "Administrator"
       moderator: "Moderator"
@@ -4765,6 +4786,7 @@ hr:
             save: "Spremi"
             name: "Ime"
             description: "Opis"
+            invalid_applies_to: "Potrebno"
             topic: "tema"
             post: "objave"
       plugins:

@@ -52,11 +52,6 @@ sv:
   remove_posts_deleted_by_author: "Borttaget av författaren"
   redirect_warning: "Vi kunde inte verifiera att länken som du valt faktiskt har lagts upp i forumet. Välj länken nedan om du vill fortsätta ändå."
   on_another_topic: "I ett annat ämne"
-  topic_category_changed: "Från %{from} till %{to}"
-  topic_tag_changed:
-    added_and_removed: "Lade till %{added} och tog bort %{removed}"
-    added: "Lade till %{added}"
-    removed: "Tog bort %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "Nr %{post_number}"
     topic_page_title_post_number_by_user: "Nr %{post_number} av %{username}"
@@ -846,11 +841,7 @@ sv:
     revoke_failed: "Misslyckades att återkalla ditt konto hos %{provider_name}."
     connected: "(kopplad)"
   activation:
-    action: "Klicka här för att aktivera ditt konto"
     already_done: "Tyvärr är denna kontoaktiveringslänk inte längre giltig. Kanske har ditt konto redan aktiverats?"
-    please_continue: "Ditt nya konto har bekräftats; du kommer att skickas till startsidan."
-    continue_button: "Fortsätt till %{site_name}"
-    welcome_to: "Välkommen till %{site_name}!"
     approval_required: "En moderator måste manuellt godkänna ditt nya konto innan du kan komma åt detta forum. Du kommer få e-post när ditt konto har godkänts!"
     missing_session: "Vi kan inte se om ditt konto har skapats, se till att du har aktiverat cookies."
     activated: "Detta konto har redan aktiverats."
@@ -1594,7 +1585,6 @@ sv:
     max_reply_history: "Högsta antal svar för att utvidga vid utvidgning av som-svar-till"
     topics_per_period_in_top_summary: "Standardinställning för antal toppämnen som visas i toppämnessammanfattningen."
     topics_per_period_in_top_page: "Antal toppämnen som visas i den utvidgade 'Visa mer'-toppämnen."
-    redirect_users_to_top_page: "Omdirigera automatiskt nya och långtidsfrånvarande användare till början av sidan."
     top_page_default_timeframe: "Standardtidsperiod i början av sidan för anonyma användare (justeras automatiskt för inloggade användare baserat på deras senaste besök)."
     prioritize_username_in_ux: "Använd användarnamn först på användarsidan, användarkortet och inlägg (om detta inaktiverats så visas namnet först)"
     enable_rich_text_paste: "Aktivera automatisk HTML vid Markdown-konvertering när du klistrar in text i redigeraren. (Experimentell)"
@@ -2020,7 +2010,6 @@ sv:
     embed_post_limit: "Högsta antal inlägg att bädda in."
     embed_username_required: "Användarnamn krävs för skapade av ämne."
     notify_about_reviewable_item_after: "Om det finns granskningsbara objekt som inte har hanterats efter så många timmar, skicka ett personligt meddelande till moderatorer. Ställ in på 0 för att inaktivera."
-    delete_merged_stub_topics_after_days: "Antal dagar att vänta innan helt sammanslagna stub-ämnen raderas automatiskt. Ställ in till 0 för att aldrig radera stub-ämnen."
     prevent_anons_from_downloading_files: "Förhindra att anonyma användare hämtar bilagor."
     secure_uploads: 'Begränsar åtkomst för ALLA uppladdningar (bilder, video, ljud, text, pdf, zip med flera). Om "login required" har aktiverats kan endast inloggade användare komma åt uppladdningar. Annars begränsas åtkomst endast till uppladdning av media i privata meddelanden samt privata kategorier. VARNING: Den här inställningen är komplex och kräver djupa administrativa kunskaper. Se detaljer i <a target="_blank" href="https://meta.discourse.org/t/-/140017">ämnet för säkra uppladdningar i Meta</a>.'
     secure_uploads_allow_embed_images_in_emails: "Gör det möjligt att bädda in säkra bilder som normalt skulle begränsas i e-postmeddelanden, under förutsättning att deras storlek är mindre än inställningen för säkra medias maxstorlek för inbäddning av bild, 'secure uploads max email embed image size kb'."
@@ -2110,7 +2099,6 @@ sv:
     suppress_overlapping_tags_in_list: "Om taggen matchar orden i ämnets titel exakt visas inte taggen"
     remove_muted_tags_from_latest: "Visa inte ämnen som taggats med tystade taggar i listan med senaste ämnen."
     force_lowercase_tags: "Tvinga alla nya taggar att vara helt i små bokstäver."
-    create_post_for_category_and_tag_changes: "Skapa ett litet åtgärdsinlägg när ett ämnes kategori eller taggar ändras"
     automatically_clean_unused_tags: "Ta dagligen och automatiskt bort taggar som inte används i några ämnen eller privata meddelanden."
     watched_precedence_over_muted: "Avisera mig om ämnen i kategorier eller taggar som jag bevakar och också tillhör ett som jag har tystat"
     company_name: "Namn på ditt företag eller organisation. Om det lämnas tomt tillhandahålls inte användarvillkor eller integritetsmeddelande."

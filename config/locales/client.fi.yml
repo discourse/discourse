@@ -159,8 +159,6 @@ fi:
       removed_user: "Poistettu käyttäjä %{who} %{when}"
       removed_group: "Poistettu käyttäjä %{who} %{when}"
       autobumped: "Nostettu automaattisesti %{when}"
-      tags_changed: "Tunnisteet on päivitetty %{when}"
-      category_changed: "Alue on päivitetty %{when}"
       autoclosed:
         enabled: "Suljettu %{when}"
         disabled: "Avattu %{when}"
@@ -268,6 +266,7 @@ fi:
     now: "hetki sitten"
     read_more: "lue lisää"
     more: "Lisää"
+    more_options: "Lisää vaihtoehtoja"
     x_more:
       one: "%{count} muu"
       other: "%{count} muuta"
@@ -313,6 +312,20 @@ fi:
       active_user_count: "Aktiivisia käyttäjiä"
       contact: "Ota yhteyttä"
       contact_info: "Sivustoon liittyvissä kiireellisissä asioissa, ota yhteyttä osoitteeseen %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} ketju"
+          other: "%{formatted_number} ketjut"
+        posts:
+          one: "ensimmäisen %{formatted_number} viestin"
+          other: "ensimmäisen %{formatted_number} viestin"
+        likes:
+          one: "%{formatted_number} tykkäys"
+          other: "%{formatted_number} tykkäystä"
+        periods:
+          last_7_days: "edellisen 7 päivän aikana"
+          today: "tänään"
+          all_time: "kaikilta ajoilta"
       member_count:
         one: "%{formatted_number} Jäsen"
         other: "%{formatted_number} Jäsentä"
@@ -700,7 +713,6 @@ fi:
       never: "Ei koskaan"
       last_custom: "Viimeisin mukautettu päivämäärä"
       custom: "Mukautettu päivämäärä ja aika"
-      custom_short: "Mukautettu..."
       select_timeframe: "Valitse ajanjakso"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> kirjoitti <a href='%{topicUrl}'>ketjuun</a>"
@@ -1547,6 +1559,13 @@ fi:
           disconnect: "Yhteys nykyiseen %{provider}-tiliisi '%{account_description}' katkaistaan."
           account_specific: "Palvelun %{provider} tiliäsi \"%{account_description}\" käytetään todentamiseen."
           generic: "Palvelun %{provider} tiliäsi käytetään todentamiseen."
+      activate_account:
+        action: "Aktivoi tilisi klikkaamalla tästä"
+        already_done: "Tämä tilin varmennuslinkki ei ole enää voimassa. Ehkäpä tili on jo varmennettu?"
+        please_continue: "Tilisi on nyt varmennettu; sinut ohjataan aloitussivulle."
+        continue_button: "Jatka sivustolle %{site_name}"
+        welcome_to: "Tervetuloa sivustolle %{site_name}!"
+        approval_required: "Valvojan täytyy hyväksyä uusi tilisi, jotta pääset palstalle. Saat sähköpostin, kun tilisi on hyväksytty."
       name:
         title: "Nimi"
         instructions: "Koko nimesi (valinnainen)."
@@ -2085,6 +2104,7 @@ fi:
       admin_not_allowed_from_ip_address: "Et voi kirjautua ylläpitäjänä tästä IP-osoitteesta."
       resend_activation_email: "Klikkaa tästä lähettääksesi aktivointiviestin uudelleen."
       omniauth_disallow_totp: "Käyttäjätilisi käyttää kaksivaiheista tunnistusta. Kirjaudu salasanasi avulla."
+      activate_account: "Aktivoi tili"
       resend_title: "Lähetä aktivointisähköposti uudelleen"
       change_email: "Vaihda sähköpostiosoitetta"
       provide_new_email: "Anna uusi osoite, niin lähetämme sinulle vahvistamissähköpostin uudelleen."
@@ -3695,7 +3715,6 @@ fi:
         none: "ei ala-alueita"
       colors_disabled: "Et voi valita värejä, koska alueen tyyliksi on asetettu 'ei mikään'"
     flagging:
-      title: "Kiitos avustasi yhteisön hyväksi!"
       action: "Liputa viesti"
       take_action: "Ryhdy toimiin…"
       take_action_options:
@@ -3743,7 +3762,6 @@ fi:
           one: "%{count} jäljellä"
           other: "%{count} jäljellä"
     flagging_topic:
-      title: "Kiitos avustasi yhteisön hyväksi!"
       action: "Liputa ketju"
       notify_action: "Viesti"
     topic_map:
@@ -4546,6 +4564,7 @@ fi:
     powered_by_discourse: "Voimanlähteenä Discourse"
   admin_js:
     type_to_filter: "kirjoita suodattaaksesi…"
+    settings: "Asetukset"
     admin:
       title: "Discoursen ylläpitäjä"
       moderator: "Valvoja"
@@ -5111,6 +5130,7 @@ fi:
             name: "Nimi"
             description: "Kuvaus"
             applies_to: "Näytä tämä lippu"
+            invalid_applies_to: "Pakollinen"
             topic: "aiheet"
             post: "viestit"
             chat_message: "chat-viestit"
@@ -6432,7 +6452,6 @@ fi:
             prompt: "Olet muuttamassa salasanakäytäntöäsi. Tämä vaikuttaa kaikkiin käyttäjiin, jotka muuttavat salasanansa tästä lähtien. Haluatko varmasti jatkaa?"
             confirm: "Kyllä, päivitä salasanakäytäntö"
       badges:
-        disable_system: Tämä kunniamerkki on järjestelmän kunniamerkki, eikä sitä voi poistaa käytöstä tai poistaa.
         status: Tila
         title: Kunniamerkit
         new_badge: Uusi kunniamerkki

@@ -363,7 +363,7 @@ basic:
     default: true
     client: true
   push_notification_time_window_mins:
-    default: 10
+    default: 1
     min: 0
   short_title:
     default: ""
@@ -1490,6 +1490,11 @@ files:
     default: 4096
     max: 1024000
     type: file_size_restriction
+  system_user_max_attachment_size_kb:
+    default: 0
+    max: 4096000
+    type: file_size_restriction
+    hidden: true
   max_image_megapixels:
     default: 40
     min: 5
@@ -2498,6 +2503,10 @@ legal:
     default: false
     hidden: true
     client: true
+  display_eu_visitor_stats:
+    default: false
+    client: true
+    hidden: true
 
 backups:
   enable_backups:
@@ -3223,8 +3232,6 @@ tags:
   force_lowercase_tags:
     default: true
     client: true
-  create_post_for_category_and_tag_changes:
-    default: false
   automatically_clean_unused_tags:
     default: false
 

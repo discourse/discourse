@@ -159,8 +159,6 @@ te:
       removed_user: "%{who} %{when} న తొలగించబడ్డారు"
       removed_group: "%{who} %{when} న తొలగించబడ్డారు"
       autobumped: "%{when} స్వయంచాలకంగా ముందుకి దూసుకెళ్లింది"
-      tags_changed: "%{when} ట్యాగ్‌లు నవీకరించబడ్డాయి"
-      category_changed: "%{when} వర్గం నవీకరించబడింది"
       autoclosed:
         enabled: "%{when} మూసివేయబడింది"
         disabled: "%{when} తెరవబడింది"
@@ -313,6 +311,19 @@ te:
       active_user_count: "క్రియాశీల సభ్యులు"
       contact: "మమ్మల్ని సంప్రదించండి"
       contact_info: "ఈ సంధర్భంలో క్లిష్టమైన సమస్య లేదా అత్యవసర విషయం సైట్ ను ప్రభావితం చేస్తుంది, దయచేసి మమ్మల్ని సంప్రదించండి %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} విషయం"
+          other: "%{formatted_number} విషయాలు"
+        posts:
+          one: "%{formatted_number} పోస్ట్"
+          other: "%{formatted_number} పోస్ట్‌లు"
+        likes:
+          one: "%{formatted_number} ఇష్టం"
+          other: "%{formatted_number} ఇష్టాలు"
+        periods:
+          today: "ఈరోజు"
+          all_time: "ఎప్పటికీ"
     bookmarked:
       title: "బుక్‌మార్క్"
       edit_bookmark: "బుక్‌మార్క్‌ని సవరించండి"
@@ -1497,6 +1508,13 @@ te:
           disconnect: "మీ ప్రస్తుత %{provider} ఖాతా '%{account_description}' డిస్‌కనెక్ట్ చేయబడుతుంది."
           account_specific: "మీ %{provider} ఖాతా '%{account_description}' ప్రమాణీకరణ కోసం ఉపయోగించబడుతుంది."
           generic: "మీ %{provider} ఖాతా ప్రమాణీకరణ కోసం ఉపయోగించబడుతుంది."
+      activate_account:
+        action: "మీ ఖాతాను సక్రియం చేయడానికి ఇక్కడ క్లిక్ చేయండి"
+        already_done: "క్షమించాలి. ఖాతా ధృవపరుచు లంకె కాలాతీతమైంది. బహుశా మీ ఖాతా ఇప్పటికే చేతనమై ఉందేమో?"
+        please_continue: "మీ ఖాతా ధృవపర్చబడింది. మీరిప్పుడు తొలిపుటకు మళ్లించబడతారు."
+        continue_button: "%{site_name} కు కొనసాగండి"
+        welcome_to: "%{site_name} కు సుస్వాగతం!"
+        approval_required: "ఈ ఫోరమ్ మీరు వాడేముందు ఒక నిర్వాహకుడు మీ ఖాతాను అంగీకరించాలి. మీ ఖాతా అంగీకరించగానే మీకు ఒక ఈమెయిల్ వస్తుంది."
       name:
         title: "పేరు"
         instructions: "మీ పూర్తి పేరు (ఐచ్ఛికం)."
@@ -2016,6 +2034,7 @@ te:
       admin_not_allowed_from_ip_address: "మీరు ఆ IP చిరునామా నుండి నిర్వాహకుని వలె లాగిన్ కాలేరు."
       resend_activation_email: "యాక్టివేషన్ ఇమెయిల్‌ను మళ్లీ పంపడానికి ఇక్కడ క్లిక్ చేయండి."
       omniauth_disallow_totp: "మీ ఖాతా రెండు-కారకాల ప్రమాణీకరణ ప్రారంభించబడింది. దయచేసి మీ పాస్‌వర్డ్‌తో లాగిన్ అవ్వండి."
+      activate_account: "ఖాతాను సక్రియం చేయండి"
       resend_title: "యాక్టివేషన్ ఇమెయిల్‌ను మళ్లీ పంపండి"
       change_email: "ఇమెయిల్ చిరునామా మార్చండి"
       provide_new_email: "కొత్త చిరునామాను అందించండి మరియు మేము మీ నిర్ధారణ ఇమెయిల్‌ను మళ్లీ పంపుతాము."
@@ -3589,7 +3608,6 @@ te:
         none: "ఉపవర్గాలు లేవు"
       colors_disabled: "మీరు ఏదీ లేని వర్గ శైలిని కలిగి ఉన్నందున మీరు రంగులను ఎంచుకోలేరు."
     flagging:
-      title: "మా సంఘాన్ని నాగరికంగా ఉంచుటలో సహాయానికి ధన్యవాదములు"
       action: "ఈ పోస్ట్‌పై ఫిర్యాదు చేయండి"
       take_action: "చర్య తీసుకోండి…"
       take_action_options:
@@ -3643,7 +3661,6 @@ te:
           one: "%{count} మిగిలి ఉంది"
           other: "%{count} మిగిలి ఉన్నాయి"
     flagging_topic:
-      title: "మా సంఘాన్ని నాగరికంగా ఉంచుటలో సహాయానికి ధన్యవాదములు!"
       action: "విషయాన్ని ఫిర్యాదు చెయ్యండి"
       notify_action: "సందేశం పంపించండి"
     topic_map:
@@ -4389,6 +4406,7 @@ te:
           save: "ఇలా సేవ్ చేయండి..."
   admin_js:
     type_to_filter: "ఫిల్టర్ చేయడానికి టైప్ చేయండి…"
+    settings: "అమరికలు"
     admin:
       title: "డిస్కోర్స్ అడ్మిన్"
       moderator: "నిర్వాహకుడు"
@@ -4882,6 +4900,7 @@ te:
             save: "సేవ్ చేయండి"
             name: "పేరు"
             description: "వివరణ"
+            invalid_applies_to: "అవసరం"
             topic: "విషయాలు"
             post: "టపాలు"
       plugins:

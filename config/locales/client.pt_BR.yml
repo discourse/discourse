@@ -76,7 +76,7 @@ pt_BR:
           one: "%{count} a"
           other: "%{count} a"
         date_month: "D MMM"
-        date_year: "MM YYYY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "menos de %{count} min"
@@ -105,7 +105,7 @@ pt_BR:
         almost_x_years:
           one: "há quase %{count} ano"
           other: "há quase %{count} anos"
-        date_year: "DD MM YYYY"
+        date_year: "D MMM, YYYY"
       medium_with_ago:
         x_minutes:
           one: "%{count} minuto atrás"
@@ -159,8 +159,6 @@ pt_BR:
       removed_user: "Removeu %{who} %{when}"
       removed_group: "Removeu %{who} %{when}"
       autobumped: "Automaticamente promovido %{when}"
-      tags_changed: "Etiquetas atualizadas em %{when}"
-      category_changed: "Categoria atualizada em %{when}"
       autoclosed:
         enabled: "Fechado %{when}"
         disabled: "Aberto %{when}"
@@ -268,6 +266,7 @@ pt_BR:
     now: "agora"
     read_more: "leia mais"
     more: "Mais"
+    more_options: "Mais opções"
     x_more:
       one: "Mais %{count}"
       other: "Mais %{count}"
@@ -313,6 +312,20 @@ pt_BR:
       active_user_count: "Usuários(as) ativos(as)"
       contact: "Fale conosco"
       contact_info: "Em caso de algum problema crítico ou assunto urgente relacionado a este site, fale conosco em %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} tópico"
+          other: "%{formatted_number} tópicos"
+        posts:
+          one: "%{formatted_number} postagem"
+          other: "%{formatted_number} postagens"
+        likes:
+          one: "%{formatted_number} curtida"
+          other: "%{formatted_number} curtidas"
+        periods:
+          last_7_days: "nos últimos 7 dias"
+          today: "hoje"
+          all_time: "desde o início"
       member_count:
         one: "%{formatted_number} Membro"
         other: "%{formatted_number} Membros"
@@ -700,7 +713,6 @@ pt_BR:
       never: "Nunca"
       last_custom: "Última data personalizada"
       custom: "Data e hora personalizadas"
-      custom_short: "Personalizado..."
       select_timeframe: "Selecione um intervalo de tempo"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> postou <a href='%{topicUrl}'>o tópico</a>"
@@ -1547,6 +1559,13 @@ pt_BR:
           disconnect: "Sua conta do %{provider}, \"%{account_description}\", será desconectada."
           account_specific: "Sua conta %{provider} \"%{account_description}\" será usada para autenticação."
           generic: "Sua conta %{provider} será usada para autenticação."
+      activate_account:
+        action: "Clique aqui para ativar sua conta"
+        already_done: "Desculpe, este link de confirmação não é mais válido. Talvez a sua conta já esteja ativa?"
+        please_continue: "Sua conta já foi confirmada. Você vai ser redirecionado(a) para a página inicial."
+        continue_button: "Continuar para %{site_name}"
+        welcome_to: "Boas-vindas ao %{site_name}!"
+        approval_required: "Um(a) moderador(a) precisa aprovar a sua conta para que você possa acessar este fórum. Você receberá um e-mail quando for aprovada!"
       name:
         title: "Nome"
         instructions: "Seu nome completo (opcional)."
@@ -2085,6 +2104,7 @@ pt_BR:
       admin_not_allowed_from_ip_address: "Você não pode entrar como administrador(a) com este endereço IP."
       resend_activation_email: "Clique aqui para enviar o e-mail de ativação novamente."
       omniauth_disallow_totp: "Sua conta tem autenticação dois fatores ativada. Entre com sua senha."
+      activate_account: "Ativar conta"
       resend_title: "Enviar novamente e-mail de ativação"
       change_email: "Alterar endereço de e-mail"
       provide_new_email: "Informe um novo endereço de e-mail e enviaremos novamente o seu e-mail de confirmação."
@@ -2424,7 +2444,7 @@ pt_BR:
       post_approved: "Sua postagem foi aprovada"
       reviewable_items: "itens que exigem revisão"
       watching_first_post_label: "Novo tópico"
-      user_moved_post: "%{username} se moveu"
+      user_moved_post: "%{username} moveu"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -3695,7 +3715,6 @@ pt_BR:
         none: "nenhuma subcategoria"
       colors_disabled: "Não é possível selecionar cores porque você tem um, ou não tem nenhum, estilo de categoria."
     flagging:
-      title: "Obrigado por ajudar a tornar a nossa comunidade um ambiente saudável!"
       action: "Sinalizar resposta"
       take_action: "Tomar medida…"
       take_action_options:
@@ -3743,7 +3762,6 @@ pt_BR:
           one: "%{count} restante"
           other: "%{count} restantes"
     flagging_topic:
-      title: "Obrigado por ajudar a tornar a nossa comunidade um ambiente saudável!"
       action: "Sinalizar tópico"
       notify_action: "Mensagem"
     topic_map:
@@ -4546,6 +4564,7 @@ pt_BR:
     powered_by_discourse: "Com tecnologia Discourse"
   admin_js:
     type_to_filter: "Digite para filtrar..."
+    settings: "Configurações"
     admin:
       title: "Administrador(a) do Discourse"
       moderator: "Moderador(a)"
@@ -5119,6 +5138,7 @@ pt_BR:
             name: "Nome"
             description: "Descrição"
             applies_to: "Exibir este sinalizador em"
+            invalid_applies_to: "Necessário(a)"
             topic: "tópicos"
             post: "postagens"
             chat_message: "mensagens de chat"
@@ -6440,7 +6460,6 @@ pt_BR:
             prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) usuários(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
       badges:
-        disable_system: Este emblema é um emblema de sistema e não pode ser desativado e/ou excluído.
         status: Status
         title: Emblemas
         new_badge: Novo emblema

@@ -290,10 +290,12 @@ class PostSerializer < BasicPostSerializer
     result = []
     can_see_post = scope.can_see_post?(object)
 
-    public_flag_types =
-      (@topic_view.present? ? @topic_view.public_flag_types : PostActionType.public_types)
+    @post_action_type_view =
+      @topic_view ? @topic_view.post_action_type_view : PostActionTypeView.new
 
-    (@topic_view.present? ? @topic_view.flag_types : PostActionType.types).each do |sym, id|
+    public_flag_types = @post_action_type_view.public_types
+
+    @post_action_type_view.types.each do |sym, id|
       count_col = "#{sym}_count".to_sym
 
       count = object.public_send(count_col) if object.respond_to?(count_col)
@@ -304,22 +306,9 @@ class PostSerializer < BasicPostSerializer
            sym,
            opts: {
              taken_actions: actions,
-             notify_flag_types:
-               (
-                 if @topic_view.present?
-                   @topic_view.notify_flag_types
-                 else
-                   PostActionType.notify_flag_types
-                 end
-               ),
-             additional_message_types:
-               (
-                 if @topic_view.present?
-                   @topic_view.additional_message_types
-                 else
-                   PostActionType.additional_message_types
-                 end
-               ),
+             notify_flag_types: @post_action_type_view.notify_flag_types,
+             additional_message_types: @post_action_type_view.additional_message_types,
+             post_action_type_view: @post_action_type_view,
            },
            can_see_post: can_see_post,
          )
@@ -602,7 +591,7 @@ class PostSerializer < BasicPostSerializer
       else
         query = User.includes(:user_option)
         query = query.includes(:user_status) if SiteSetting.enable_user_status
-        query = query.where(username: object.mentions)
+        query = query.where(username_lower: object.mentions)
       end
 
     users.map { |user| BasicUserSerializer.new(user, root: false, include_status: true).as_json }

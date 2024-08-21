@@ -60,13 +60,6 @@ en:
   remove_posts_deleted_by_author: "Deleted by author"
   redirect_warning: "We were unable to verify that the link you selected was actually posted to the forum. If you wish to proceed anyway, select the link below."
   on_another_topic: "On another topic"
-
-  topic_category_changed: "From %{from} to %{to}"
-  topic_tag_changed:
-    added_and_removed: "Added %{added} and removed %{removed}"
-    added: "Added %{added}"
-    removed: "Removed %{removed}"
-
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
@@ -1046,11 +1039,7 @@ en:
     connected: "(connected)"
 
   activation:
-    action: "Click here to activate your account"
     already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
-    please_continue: "Your new account is confirmed; you will be redirected to the home page."
-    continue_button: "Continue to %{site_name}"
-    welcome_to: "Welcome to %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
     missing_session: "We cannot detect if your account was created, please ensure you have cookies enabled."
     activated: "Sorry, this account has already been activated."
@@ -2220,6 +2209,7 @@ en:
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
     log_anonymizer_details: "Whether to keep a user's details in the log after being anonymized."
+    display_eu_visitor_stats: "Show number of global and EU visitors on the /about page."
 
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_threshold` posts before being considered spam."
 
@@ -2619,7 +2609,6 @@ en:
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
-    create_post_for_category_and_tag_changes: "Create a small action post when a topic's category or tags change"
     automatically_clean_unused_tags: "Automatically delete tags that are not being used on any topics or private messages on a daily basis."
     watched_precedence_over_muted: "Notify me about topics in categories or tags I’m watching that also belong to one I have muted"
 

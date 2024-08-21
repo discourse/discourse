@@ -122,4 +122,9 @@ export default class PenalizeUser extends Component {
 
     this.args.closeModal();
   }
+
+  @action
+  similarUsersChanged(userIds) {
+    this.otherUserIds = userIds;
+  }
 }

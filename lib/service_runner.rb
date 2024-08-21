@@ -80,7 +80,9 @@ class ServiceRunner
       default_name: "default",
     },
     on_model_not_found: {
-      condition: ->(name = "model") { failure_for?("result.model.#{name}") && result[name].blank? },
+      condition: ->(name = "model") do
+        failure_for?("result.model.#{name}") && result["result.model.#{name}"].not_found
+      end,
       key: %w[result model],
       default_name: "model",
     },

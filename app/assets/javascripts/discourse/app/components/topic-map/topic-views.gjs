@@ -58,6 +58,11 @@ export default class TopicViews extends Component {
       };
     });
 
+    // today should always have at least 1 view
+    // because it's being viewed right now
+    const lastStat = stats[stats.length - 1];
+    lastStat.views = Math.max(lastStat.views, 1);
+
     return stats;
   }
 

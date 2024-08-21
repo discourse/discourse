@@ -115,13 +115,21 @@ export default class SectionLink extends Component {
 
   @bind
   maybeScrollIntoView(element) {
-    if (this.args.scrollIntoView) {
-      schedule("afterRender", () => {
-        element.scrollIntoView({
-          block: "center",
-        });
-      });
+    if (!this.args.scrollIntoView) {
+      return;
     }
+
+    schedule("afterRender", () => {
+      const rect = element.getBoundingClientRect();
+      const alreadyVisible = rect.top <= window.innerHeight && rect.bottom >= 0;
+      if (alreadyVisible) {
+        return;
+      }
+
+      element.scrollIntoView({
+        block: "center",
+      });
+    });
   }
 
   <template>

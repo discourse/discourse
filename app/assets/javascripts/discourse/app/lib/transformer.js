@@ -452,6 +452,7 @@ export function resetTransformers() {
   }
 
   clearPluginTransformers();
+  acceptNewTransformerNames();
   transformersRegistry.clear();
   skipApplyExceptionOnTests = false;
 }

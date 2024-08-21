@@ -17,7 +17,6 @@ ja:
     chat_allowed_messages_for_other_trust_levels: "信頼レベル 1～4 のユーザーが 30 秒間に送信できるメッセージの件数。'0' に設定すると、制限が無効になります。"
     chat_silence_user_sensitivity: "チャットで通報されたユーザーが自動的に投稿禁止にされる可能性。"
     chat_auto_silence_from_flags_duration: "チャットメッセージの通報によって自動的に投稿禁止にされる場合に、ユーザーが投稿禁止になる分数。"
-    chat_default_channel_id: "ユーザーに、他のチャンネルの未読のメッセージまたはメンションがない場合に、デフォルトでオープンになるチャットチャンネル。"
     chat_duplicate_message_sensitivity: "同じ送信者による重複したメッセージが短期間でブロックされる可能性。0～1.0 の 10 進数で、1.0 が最高の設定です (より短期間でより頻繁にメッセージをブロックします)。'0' に設定すると、重複メッセージが許可されます。"
     chat_minimum_message_length: "チャットメッセージの最低文字数。"
     chat_allow_uploads: "公開チャットチャンネルとダイレクトメッセージチャンネルでアップロードを許可します。"
@@ -31,7 +30,6 @@ ja:
     chat_editing_grace_period: "チャットを送信してから (n) 秒間は、チャットメッセージを編集しても (編集済み) タグは表示されません。"
     chat_editing_grace_period_max_diff_low_trust: "チャットの編集猶予期間で変更が許可される最大文字数。これを超える変更が行われた場合は、チャットメッセージに (編集済み) タグが表示されます (信頼レベル 0 と 1)。"
     chat_editing_grace_period_max_diff_high_trust: "チャットの編集猶予期間で変更が許可される最大文字数。これを超える変更が行われた場合は、チャットメッセージに (編集済み) タグが表示されます (信頼レベル 2 以上)。"
-    chat_preferred_mobile_index: "モバイルで /chat を読み込む際の優先タブ。"
     errors:
       chat_default_channel: "デフォルトのチャットチャンネルは公開チャンネルである必要があります。"
       direct_message_enabled_groups_invalid: "この設定には、少なくとも 1 つのグループを指定する必要があります。スタッフ以外がダイレクトメッセージを送れないようにするには、スタッフグループを選択します。"

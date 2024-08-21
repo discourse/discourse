@@ -215,8 +215,6 @@ ru:
       removed_user: "Удалил(а) %{who} %{when}"
       removed_group: "Удалил(а) %{who} %{when}"
       autobumped: "Автоматически поднято %{when}"
-      tags_changed: "Теги обновлены %{when}"
-      category_changed: "Категория обновлена %{when}"
       autoclosed:
         enabled: "Закрыл(а) тему %{when}"
         disabled: "Открыл(а) тему %{when}"
@@ -326,6 +324,7 @@ ru:
     now: "только что"
     read_more: "читать дальше"
     more: "Ещё"
+    more_options: "Другие варианты"
     x_more:
       one: "Ещё %{count}"
       few: "Ещё %{count}"
@@ -377,6 +376,26 @@ ru:
       active_user_count: "Активные пользователи"
       contact: "Связаться с нами"
       contact_info: "В случае возникновения критической ошибки или срочного вопроса, касающегося этого сайта, свяжитесь с нами по адресу %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} тема"
+          few: "%{formatted_number} тем"
+          many: "%{formatted_number} темы"
+          other: "%{formatted_number} темы"
+        posts:
+          one: "%{formatted_number} запись"
+          few: "%{formatted_number} записи"
+          many: "%{formatted_number} записей"
+          other: "%{formatted_number} записей"
+        likes:
+          one: "%{formatted_number} лайк"
+          few: "%{formatted_number} лайков"
+          many: "%{formatted_number} лайка"
+          other: "%{formatted_number} лайка"
+        periods:
+          last_7_days: "за последние 7 дней"
+          today: "сегодня"
+          all_time: "за всё время"
       member_count:
         one: "%{formatted_number} участник"
         few: "%{formatted_number} участника"
@@ -814,7 +833,6 @@ ru:
       never: "Никогда"
       last_custom: "Использовать ранее установленные дату и время"
       custom: "Установить дату и время"
-      custom_short: "Другое…"
       select_timeframe: "Выбор периода"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> создал(а) <a href='%{topicUrl}'>тему</a>"
@@ -1705,6 +1723,13 @@ ru:
           disconnect: "Существующий аккаунт %{provider} «%{account_description}» будет отключен."
           account_specific: "Аккаунт %{provider} «%{account_description}» будет использоваться для аутентификации."
           generic: "Аккаунт %{provider} будет использоваться для аутентификации."
+      activate_account:
+        action: "Нажмите сюда, чтобы активировать аккаунт"
+        already_done: "Ссылка на подтверждение аккаунта устарела. Возможно, аккаунт уже активирован?"
+        please_continue: "Новый аккаунт подтвержден; вы будете перенаправлены на главную страницу."
+        continue_button: "Перейти на сайт %{site_name}"
+        welcome_to: "Добро пожаловать на сайт %{site_name}!"
+        approval_required: "Чтобы вы смогли зайти на форум, ваш аккаунт должен быть вручную подтвержден модератором. Когда аккаунт будет одобрен, вы получите письмо!"
       name:
         title: "Имя"
         instructions: "Ваше полное имя (необязательно)."
@@ -2275,6 +2300,7 @@ ru:
       admin_not_allowed_from_ip_address: "Вход с этого IP-адреса в качестве администратора запрещён."
       resend_activation_email: "Щёлкните здесь, чтобы повторно выслать письмо для активации."
       omniauth_disallow_totp: "В аккаунте включена двухфакторная аутентификация. Войдите под своим паролем."
+      activate_account: "Активировать аккаунт"
       resend_title: "Отправить повторно письмо для активации"
       change_email: "Изменить электронную почту"
       provide_new_email: "Укажите новый адрес электронной почты, и мы повторно вышлем на него активационное письмо."
@@ -4065,7 +4091,6 @@ ru:
         none: "без подкатегорий"
       colors_disabled: "Вы не можете выбирать цвета, поскольку не указан стиль категории (category style = none)."
     flagging:
-      title: "Спасибо за помощь в поддержании порядка!"
       action: "Пожаловаться на сообщение"
       take_action: "Принять меры…"
       take_action_options:
@@ -4119,7 +4144,6 @@ ru:
           many: "Осталось %{count} символов"
           other: "Остались %{count} символа"
     flagging_topic:
-      title: "Спасибо за помощь в поддержании порядка!"
       action: "Пожаловаться на тему"
       notify_action: "Сообщение"
     topic_map:
@@ -5000,6 +5024,7 @@ ru:
     powered_by_discourse: "На платформе Discourse"
   admin_js:
     type_to_filter: "Фильтрация настроек…"
+    settings: "Настройки"
     admin:
       title: "Администратор Discourse"
       moderator: "Модератор"
@@ -5586,6 +5611,7 @@ ru:
             name: "Название"
             description: "Описание"
             applies_to: "Где показывать метку"
+            invalid_applies_to: "Обязательное"
             topic: "темы"
             post: "публикации"
             chat_message: "сообщения чата"
@@ -6947,7 +6973,6 @@ ru:
             prompt: "Будет изменена политика паролей. С этого момента изменение будет влиять на всех пользователей, меняющих пароли. Действительно продолжить?"
             confirm: "Да, изменить политику паролей"
       badges:
-        disable_system: Это системная награда — ее нельзя отключить и (или) удалить.
         status: Статус
         title: Награды
         new_badge: Новая награда

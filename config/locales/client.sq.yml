@@ -210,6 +210,16 @@ sq:
       topic_count: "Tema"
       post_count: "Postime"
       contact_info: "Në rast të një problemi madhor ose të një çështjeje urgjente që prek faqen, ju lutemi të kontaktoni %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} temë"
+          other: "Temat nga %{formatted_number}"
+        posts:
+          one: "%{formatted_number} postim"
+          other: "%{formatted_number} postime"
+        periods:
+          last_7_days: "në 7 ditët e fundit"
+          today: "sot"
     bookmarked:
       title: "Të preferuarat"
       clear_bookmarks: "Pastro të preferuarat"
@@ -696,6 +706,13 @@ sq:
       associated_accounts:
         revoke: "Revoko"
         cancel: "Anulo"
+      activate_account:
+        action: "Klikoni këtu për të aktivizuar llogarinë tuaj"
+        already_done: "Na vjen keq, ky link nuk vlen më. Mbase llogaria është që tani e aktivizuar?"
+        please_continue: "Llogaria juaj e re u konfirumua; ju po ridrejtoheni për tek faqja kryesore."
+        continue_button: "Vazhdo tek %{site_name}"
+        welcome_to: "Mirë se vini tek %{site_name}!"
+        approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
       name:
         title: "Emri juaj"
         instructions: "Emri i plotë (opsional)."
@@ -972,6 +989,7 @@ sq:
       not_activated: "Nuk mund të identifikoheni akoma. Ju kemi dërguar një email aktivizimi tek <b>%{sentTo}</b>. Ndiqni udhëzimet në atë email për të aktivizuar llogarinë tuaj. "
       admin_not_allowed_from_ip_address: "Nuk futesh dot si admin nga kjo adresë IP."
       resend_activation_email: "Klikoni këtu për të dërguar sërish email-in e aktivizimit."
+      activate_account: "Aktivizoni llogarinë"
       resend_title: "Dërgo përsëri emailin e aktivizimit"
       change_email: "Ndrysho adresën email"
       provide_new_email: "Vendosni një adresë të re email dhe do t'ju dërgojmë përsëri mesazhin e konfirmimit."
@@ -1606,7 +1624,6 @@ sq:
         general: "Karakteristika të përgjithshme"
         email: "Email"
     flagging:
-      title: "Faleminderit për ndihmën që i jepni këtij komuniteti!"
       action: "Sinjalizo postimin"
       take_action_options:
         suspend:
@@ -1634,7 +1651,6 @@ sq:
           one: "edhe %{count} gërmë"
           other: "edhe %{count} gërma"
     flagging_topic:
-      title: "Faleminderit për ndihmën që i jepni këtij komuniteti!"
       action: "Raporto Temën"
       notify_action: "Message"
     topic_map:
@@ -1994,6 +2010,7 @@ sq:
         show: "Shfaq"
         about: "Rreth"
   admin_js:
+    settings: "Rregullimet"
     admin:
       title: "Administrator"
       moderator: "Moderator"
@@ -2165,6 +2182,7 @@ sq:
             save: "Ruaj"
             name: "Emri"
             description: "Përshkrimi"
+            invalid_applies_to: "E nevojshme"
             topic: "topics"
             post: "postime"
       plugins:

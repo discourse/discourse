@@ -90,6 +90,15 @@ export default class WizardFieldComponent extends Component {
           }}
         />
       {{/if}}
+
+      <PluginOutlet
+        @name="below-wizard-field"
+        @outletArgs={{hash
+          id=@field.id
+          disabled=@field.disabled
+          value=@field.value
+        }}
+      />
     </div>
   </template>
 }

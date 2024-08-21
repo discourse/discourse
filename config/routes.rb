@@ -161,6 +161,7 @@ Discourse::Application.routes.draw do
         post "reset-bounce-score"
         put "disable_second_factor"
         delete "sso_record"
+        get "similar-users.json" => "users#similar_users"
       end
       get "users/:id.json" => "users#show", :defaults => { format: "json" }
       get "users/:id/:username" => "users#show",
@@ -365,6 +366,7 @@ Discourse::Application.routes.draw do
                :format => :json
 
           get "logs" => "backups#logs"
+          get "settings" => "backups#index"
           get "status" => "backups#status"
           delete "cancel" => "backups#cancel"
           post "rollback" => "backups#rollback"

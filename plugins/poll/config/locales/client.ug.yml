@@ -13,6 +13,9 @@ ug:
       total_votes:
         one: "ئومۇمىي بېلەت"
         other: "ئومۇمىي بېلەت"
+      votes:
+        one: "%{count} بېلەت"
+        other: "%{count} بېلەت"
       average_rating: "ئوتتۇرىچە باھالاش: <strong>%{average}</strong>."
       public:
         title: "بېلەت تاشلاش <strong>ئاشكارا</strong>."
@@ -25,6 +28,9 @@ ug:
           title: "نەتىجە <strong>تاقالغان</strong>دا كۆرسىتىلىدۇ."
         staff:
           title: "نەتىجە پەقەت <strong>خىزمەتچى</strong> ئەزاغا كۆرسىتىلىدۇ."
+        tabs:
+          votes: "بېلەت"
+          outcome: "نەتىجە"
       multiple:
         help:
           at_least_min_options:
@@ -43,6 +49,12 @@ ug:
       show-results:
         title: "راي سىناش نەتىجىسىنى كۆرسىتىدۇ"
         label: "نەتىجە"
+      show-tally:
+        title: "بېلەت سانى بويىچە بېلەت تاشلاش نەتىجىسىنى كۆرسىتىدۇ"
+        label: "ساناقنى كۆرسەت"
+      show-percentage:
+        title: "بېلەت تاشلاش نەتىجىسىنى پىرسەنت بويىچە كۆرسىتىدۇ"
+        label: "پىرسەنت بويىچە كۆرسەت"
       remove-vote:
         title: "بېلىتىڭىزنى چىقىرىۋېتىدۇ"
         label: "بېلەت تاشلاشتىن يېنىۋال"
@@ -73,7 +85,12 @@ ug:
         percentage: "پىرسەنت"
         count: "ساناق"
       ranked_choice:
+        title:
+          rounds: "قېتىم"
+          outcome: "نەتىجە"
         none: "يوق"
+        majority: "كۆپ سانلىق"
+        eliminated: "چىقىرىۋېتىلدى"
         round: "قېتىم"
         winner:
           one: "بىر قېتىملىق مۇسابىقىدىن كېيىن ئۇتقۇچى %{winner}"
@@ -104,6 +121,7 @@ ug:
           label: تىپى
           regular: يەككە تاللاش
           multiple: كۆپ تاللاش
+          ranked_choice: رەت تەرتىپى
           number: نومۇر دەرىجىسى
         poll_result:
           label: نەتىجىنى كۆرسەت…

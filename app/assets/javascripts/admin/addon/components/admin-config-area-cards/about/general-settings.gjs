@@ -59,7 +59,7 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
 
   @action
   setImage(upload, { set }) {
-    set("aboutBannerImage", upload.url);
+    set("aboutBannerImage", upload?.url);
   }
 
   <template>
@@ -102,7 +102,7 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         @onSet={{this.setImage}}
         as |field|
       >
-        <field.Image />
+        <field.Image @type="site_setting" />
       </form.Field>
 
       <form.Submit

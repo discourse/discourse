@@ -395,7 +395,7 @@ export default Mixin.create({
     const selected = this.getSelected(null, { lineVal: true });
     const { pre, value: selectedValue, lineVal } = selected;
     const isInlinePasting = pre.match(/[^\n]$/);
-    const isCodeBlock = this.isInside(pre, /(^|\n)```/g);
+    const isCodeBlock = this.isInsideCodeFence(pre);
 
     if (
       plainText &&
@@ -523,6 +523,10 @@ export default Mixin.create({
     const previousLine = lines[lines.length - 2];
     const match = previousLine?.match(LIST_REGEXP);
     if (!match) {
+      return;
+    }
+
+    if (this.isInsideCodeFence(text.substring(0, offset - 1))) {
       return;
     }
 
@@ -712,5 +716,9 @@ export default Mixin.create({
         `${code}:`
       );
     }
+  },
+
+  isInsideCodeFence(beforeText) {
+    return this.isInside(beforeText, /(^|\n)```/g);
   },
 });

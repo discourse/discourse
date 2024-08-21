@@ -1000,14 +1000,50 @@ third line`
   }
 
   testCase(
-    "smart lists - pressing enter on a line with a list item starting with * creates a list item on the next line",
+    "smart lists - pressing enter on a line with a list item starting with *",
     async function (assert, textarea) {
       const initialValue = "* first item in list\n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
       await triggerEnter(textarea);
 
-      assert.strictEqual(this.value, initialValue + "* ");
+      assert.strictEqual(
+        this.value,
+        initialValue + "* ",
+        "it creates a list item on the next line"
+      );
+    }
+  );
+
+  testCase(
+    "smart lists - pressing enter on a line with a list item inside a codefence",
+    async function (assert, textarea) {
+      const initialValue = "```\n* first item in list\n";
+      this.set("value", initialValue);
+      setCaretPosition(textarea, initialValue.length);
+      await triggerEnter(textarea);
+
+      assert.strictEqual(
+        this.value,
+        initialValue + "",
+        "it doesn’t continue the list"
+      );
+    }
+  );
+
+  testCase(
+    "smart lists - pressing enter on a line with a list item after a codefence",
+    async function (assert, textarea) {
+      const initialValue = "```\ndef test\n```\n* first item in list\n";
+      this.set("value", initialValue);
+      setCaretPosition(textarea, initialValue.length);
+      await triggerEnter(textarea);
+
+      assert.strictEqual(
+        this.value,
+        initialValue + "* ",
+        "it continues the list"
+      );
     }
   );
 
@@ -1023,18 +1059,22 @@ third line`
   );
 
   testCase(
-    "smart lists - pressing enter on a line with a list item starting with a number (e.g. 1.) in a list creates a list item on the next line with an auto-incremented number",
+    "smart lists - pressing enter on a line with a list item starting with a number (e.g. 1.) in a list",
     async function (assert, textarea) {
       const initialValue = "1. first item in list\n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
       await triggerEnter(textarea);
-      assert.strictEqual(this.value, initialValue + "2. ");
+      assert.strictEqual(
+        this.value,
+        initialValue + "2. ",
+        "it creates a list item on the next line with an auto-incremented number"
+      );
     }
   );
 
   testCase(
-    "smart lists - pressing enter inside a list inserts a new list item on the next line",
+    "smart lists - pressing enter inside a list",
     async function (assert, textarea) {
       const initialValue = "* first item in list\n\n* second item in list";
       this.set("value", initialValue);
@@ -1042,13 +1082,14 @@ third line`
       await triggerEnter(textarea);
       assert.strictEqual(
         this.value,
-        "* first item in list\n* \n* second item in list"
+        "* first item in list\n* \n* second item in list",
+        "it inserts a new list item on the next line"
       );
     }
   );
 
   testCase(
-    "smart lists - pressing enter inside a list with numbers inserts a new list item on the next line and renumbers the rest of the list",
+    "smart lists - pressing enter inside a list with numbers",
     async function (assert, textarea) {
       const initialValue = "1. first item in list\n\n2. second item in list";
       this.set("value", initialValue);
@@ -1056,19 +1097,24 @@ third line`
       await triggerEnter(textarea);
       assert.strictEqual(
         this.value,
-        "1. first item in list\n2. \n3. second item in list"
+        "1. first item in list\n2. \n3. second item in list",
+        "it inserts a new list item on the next line and renumbers the rest of the list"
       );
     }
   );
 
   testCase(
-    "smart lists - pressing enter again on an empty list item removes the list item",
+    "smart lists - pressing enter again on an empty list item",
     async function (assert, textarea) {
       const initialValue = "* first item in list with empty line\n* \n";
       this.set("value", initialValue);
       setCaretPosition(textarea, initialValue.length);
       await triggerEnter(textarea);
-      assert.strictEqual(this.value, "* first item in list with empty line\n");
+      assert.strictEqual(
+        this.value,
+        "* first item in list with empty line\n",
+        "it removes the list item"
+      );
     }
   );
 

@@ -362,6 +362,9 @@
             },
             "is_used": {
               "type": "boolean"
+            },
+            "position": {
+              "type": "integer"
             }
           },
           "required": [
@@ -414,6 +417,9 @@
             },
             "is_used": {
               "type": "boolean"
+            },
+            "position": {
+              "type": "integer"
             }
           },
           "required": [

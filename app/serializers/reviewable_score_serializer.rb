@@ -42,9 +42,9 @@ class ReviewableScoreSerializer < ApplicationSerializer
 
     if link_text
       link = build_link_for(object.reason, link_text)
-      text = I18n.t("reviewables.reasons.#{object.reason}", link: link, default: nil)
+      text = I18n.t("reviewables.reasons.#{object.reason}", link: link, default: object.reason)
     else
-      text = I18n.t("reviewables.reasons.#{object.reason}", default: nil)
+      text = I18n.t("reviewables.reasons.#{object.reason}", default: object.reason)
     end
 
     text

@@ -105,6 +105,9 @@ TEXT
         :likes_7_days,
         :likes_30_days,
         :likes_count,
+        :participating_users_last_day,
+        :participating_users_7_days,
+        :participating_users_30_days,
       )
     end
 

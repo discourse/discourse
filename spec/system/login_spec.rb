@@ -4,8 +4,10 @@ require "rotp"
 
 shared_examples "login scenarios" do
   let(:login_modal) { PageObjects::Modals::Login.new }
+  let(:activate_account) { PageObjects::Pages::ActivateAccount.new }
   let(:user_preferences_security_page) { PageObjects::Pages::UserPreferencesSecurity.new }
   fab!(:user) { Fabricate(:user, username: "john", password: "supersecurepassword") }
+  fab!(:admin) { Fabricate(:admin, username: "admin", password: "supersecurepassword") }
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
   before { Jobs.run_immediately! }
@@ -43,10 +45,37 @@ shared_examples "login scenarios" do
       activation_link = wait_for_email_link(user, :activation)
       visit activation_link
 
-      find("#activate-account-button").click
+      activate_account.click_activate_account
+      activate_account.click_continue
 
       expect(page).to have_current_path("/")
       expect(page).to have_css(".header-dropdown-toggle.current-user")
+    end
+
+    it "redirects to the wizard after activating account" do
+      login_modal.open
+      login_modal.fill(username: "admin", password: "supersecurepassword")
+      login_modal.click_login
+      expect(page).to have_css(".not-activated-modal")
+      login_modal.click(".activation-controls button.resend")
+
+      activation_link = wait_for_email_link(admin, :activation)
+      visit activation_link
+
+      activate_account.click_activate_account
+      expect(page).to have_current_path("/wizard")
+    end
+
+    it "shows error when when activation link is invalid" do
+      login_modal.open
+      login_modal.fill(username: "john", password: "supersecurepassword")
+      login_modal.click_login
+      expect(page).to have_css(".not-activated-modal")
+
+      visit "/u/activate-account/invalid"
+
+      activate_account.click_activate_account
+      expect(activate_account).to have_error
     end
 
     it "displays the right message when user's email has been marked as expired" do

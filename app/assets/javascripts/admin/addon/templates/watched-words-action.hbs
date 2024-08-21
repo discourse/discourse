@@ -63,11 +63,13 @@
 {{#if this.showWordsList}}
   <div class="watched-words-list watched-words-{{this.actionNameKey}}">
     {{#each this.currentAction.words as |word|}}
-      <div class="watched-word-box"><AdminWatchedWord
+      <div class="watched-word-box">
+        <AdminWatchedWord
           @actionKey={{this.actionNameKey}}
           @word={{word}}
           @action={{action "recordRemoved"}}
-        /></div>
+        />
+      </div>
     {{/each}}
   </div>
 {{/if}}

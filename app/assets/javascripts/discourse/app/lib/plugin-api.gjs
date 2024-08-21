@@ -3,10 +3,11 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.36.0";
+export const PLUGIN_API_VERSION = "1.37.0";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
+import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
 import {
   addApiImageWrapperButtonClickEvent,
@@ -3236,6 +3237,45 @@ class PluginApi {
     }
 
     registerAdminPluginConfigNav(pluginId, mode, links);
+  }
+
+  /**
+   * Adds a custom site activity item in the new /about page. Requires using
+   * the `register_stat` server-side API to serialize the needed data to the
+   * frontend.
+   *
+   * ```
+   * api.addAboutPageActivity("released_songs", (periods) => {
+   *   return {
+   *     icon: "guitar",
+   *     class: "released-songs",
+   *     activityText: `${periods["last_year"]} released songs`,
+   *     period: "in the last year",
+   *   };
+   * });
+   * ```
+   *
+   * The above example would require the `register_stat` server-side API to be
+   * used like this:
+   *
+   * ```ruby
+   * register_stat("released_songs", expose_via_api: true) do
+   *   {
+   *     last_year: Songs.where("released_at > ?", 1.year.ago).count,
+   *     last_month: Songs.where("released_at > ?", 1.month.ago).count,
+   *   }
+   * end
+   * ```
+   *
+   * @callback activityItemConfig
+   * @param {Object} periods - an object containing the periods that the block given to the `register_stat` server-side API returns.
+   * @returns {Object} - configuration object for the site activity item. The object must contain the following properties: `icon`, `class`, `activityText` and `period`.
+   *
+   * @param {string} name - a string that matches the string given to the `register_stat` server-side API.
+   * @param {activityItemConfig} func - a callback that returns an object containing properties for the custom site activity item.
+   */
+  addAboutPageActivity(name, func) {
+    addAboutPageActivity(name, func);
   }
 
   #deprecatedHeaderWidgetOverride(widgetName, override) {

@@ -59,7 +59,9 @@ end
 # Running yarn install in the root directory will also run it for YARN_DIR via a post-install hook
 exit 1 if !system "yarn", "-s", "install", "--cwd", RAILS_ROOT
 
-yarn_env = {}
+yarn_env = {
+  "TERM" => "dumb", # simple output from ember-cli, so we can parse/forward it more easily
+}
 if ARGV.include?("--forward-host")
   yarn_env["FORWARD_HOST"] = "true"
 end
@@ -78,7 +80,7 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
         if line.include?("\e[32m200\e") || line.include?("\e[36m304\e[0m") || line.include?("POST /message-bus")
           # skip 200s and 304s and message bus
         else
-          puts line
+          puts "[ember-cli] #{line}"
         end
       end
     end

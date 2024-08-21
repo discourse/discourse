@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import AboutPageUsers from "discourse/components/about-page-users";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -9,7 +10,19 @@ import i18n from "discourse-common/helpers/i18n";
 import escape from "discourse-common/lib/escape";
 import I18n from "discourse-i18n";
 
+const pluginActivitiesFuncs = [];
+
+export function addAboutPageActivity(name, func) {
+  pluginActivitiesFuncs.push({ name, func });
+}
+
+export function clearAboutPageActivities() {
+  pluginActivitiesFuncs.clear();
+}
+
 export default class AboutPage extends Component {
+  @service siteSettings;
+
   get moderatorsCount() {
     return this.args.model.moderators.length;
   }
@@ -57,7 +70,7 @@ export default class AboutPage extends Component {
   }
 
   get siteActivities() {
-    return [
+    const list = [
       {
         icon: "scroll",
         class: "topics",
@@ -104,6 +117,22 @@ export default class AboutPage extends Component {
         period: I18n.t("about.activities.periods.all_time"),
       },
     ];
+
+    if (this.siteSettings.display_eu_visitor_stats) {
+      list.splice(2, 0, {
+        icon: "user-secret",
+        class: "visitors",
+        activityText: I18n.messageFormat("about.activities.visitors_MF", {
+          total_count: this.args.model.stats.visitors_7_days,
+          eu_count: this.args.model.stats.eu_visitors_7_days,
+          total_formatted_number: number(this.args.model.stats.visitors_7_days),
+          eu_formatted_number: number(this.args.model.stats.eu_visitors_7_days),
+        }),
+        period: I18n.t("about.activities.periods.last_7_days"),
+      });
+    }
+
+    return list.concat(this.siteActivitiesFromPlugins());
   }
 
   get contactInfo() {
@@ -139,9 +168,38 @@ export default class AboutPage extends Component {
     }
   }
 
+  siteActivitiesFromPlugins() {
+    const stats = this.args.model.stats;
+    const statKeys = Object.keys(stats);
+
+    const configs = [];
+    for (const { name, func } of pluginActivitiesFuncs) {
+      let present = false;
+      const periods = {};
+      for (const stat of statKeys) {
+        const prefix = `${name}_`;
+        if (stat.startsWith(prefix)) {
+          present = true;
+          const period = stat.replace(prefix, "");
+          periods[period] = stats[stat];
+        }
+      }
+      if (!present) {
+        continue;
+      }
+      const config = func(periods);
+      if (config) {
+        configs.push(config);
+      }
+    }
+    return configs;
+  }
+
   <template>
     <section class="about__header">
-      <img class="about__banner" src={{@model.banner_image}} />
+      {{#if @model.banner_image}}
+        <img class="about__banner" src={{@model.banner_image}} />
+      {{/if}}
       <h3>{{@model.title}}</h3>
       <p class="short-description">{{@model.description}}</p>
       <PluginOutlet
@@ -151,7 +209,7 @@ export default class AboutPage extends Component {
       />
     </section>
     <div class="about__main-content">
-      <section class="about__left-side">
+      <div class="about__left-side">
         <div class="about__stats">
           {{#each this.stats as |stat|}}
             <span class="about__stats-item {{stat.class}}">
@@ -166,18 +224,18 @@ export default class AboutPage extends Component {
         {{#if @model.admins.length}}
           <section class="about__admins">
             <h3>{{dIcon "users"}} {{i18n "about.our_admins"}}</h3>
-            <AboutPageUsers @users={{@model.admins}} @truncateAt={{10}} />
+            <AboutPageUsers @users={{@model.admins}} @truncateAt={{12}} />
           </section>
         {{/if}}
 
         {{#if @model.moderators.length}}
           <section class="about__moderators">
             <h3>{{dIcon "users"}} {{i18n "about.our_moderators"}}</h3>
-            <AboutPageUsers @users={{@model.moderators}} @truncateAt={{10}} />
+            <AboutPageUsers @users={{@model.moderators}} @truncateAt={{12}} />
           </section>
         {{/if}}
-      </section>
-      <section class="about__right-side">
+      </div>
+      <div class="about__right-side">
         <h3>{{i18n "about.contact"}}</h3>
         {{#if this.contactInfo}}
           <p>{{htmlSafe this.contactInfo}}</p>
@@ -201,7 +259,7 @@ export default class AboutPage extends Component {
             </div>
           {{/each}}
         </div>
-      </section>
+      </div>
     </div>
   </template>
 }

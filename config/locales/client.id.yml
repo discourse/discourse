@@ -127,8 +127,6 @@ id:
       removed_user: "%{who}Dikeluarkan %{when}"
       removed_group: "%{who}Dikeluarkan %{when}"
       autobumped: "Otomatis dibenturkan %{when}"
-      tags_changed: "Tag diperbarui %{when}"
-      category_changed: "Kategori diperbarui %{when}"
       autoclosed:
         enabled: "Ditutup %{when}"
         disabled: "Dibuka %{when}"
@@ -268,6 +266,15 @@ id:
       active_user_count: "Pengguna Aktif"
       contact: "Hubungi kami"
       contact_info: "Pada kegiatan dari sebuah isu kritikal atau penting terjadi pada situs ini, silahkan kontak kami di %{contact_info}."
+      activities:
+        topics:
+          other: "%{formatted_number} topik"
+        posts:
+          other: "%{formatted_number} post"
+        likes:
+          other: "%{formatted_number} suka"
+        periods:
+          all_time: "sepanjang Masa"
       member_count:
         other: "%{formatted_number} Anggota"
     bookmarked:
@@ -1242,6 +1249,13 @@ id:
         cancel: "Batal"
         not_connected: "(tidak terhubung)"
         confirm_modal_title: "Hubungkan Akun %{provider}"
+      activate_account:
+        action: "Klik disini untuk mengaktifkan akun anda"
+        already_done: "Maaf, tautan konfirmasi ini sudah tidak valid. Apakah akun anda sudah aktif?"
+        please_continue: "Akun baru Anda telah dikonfirmasi. Anda akan diarahkan ke halaman utama."
+        continue_button: "Lanjut ke %{site_name}"
+        welcome_to: "Selamat datang ke %{site_name}!"
+        approval_required: "Seorang moderator harus menyetujui akun baru anda sebelum anda bisa mengakses forum ini. Anda akan menerima surel saat akun anda telah disetujui!"
       name:
         title: "Name"
         instructions: "Nama lengkap anda (opsional)."
@@ -2242,6 +2256,7 @@ id:
         show: "Tunjukkan"
         about: "Tentang"
   admin_js:
+    settings: "Pengaturan"
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"

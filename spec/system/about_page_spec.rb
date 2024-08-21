@@ -64,6 +64,13 @@ describe "About page", type: :system do
       expect(about_page).to have_moderators_count(1, "1")
     end
 
+    it "doesn't render banner image when it's not set" do
+      SiteSetting.about_banner_image = nil
+
+      about_page.visit
+      expect(about_page).to have_no_banner_image
+    end
+
     describe "displayed site age" do
       it "says less than 1 month if the site is less than 1 month old" do
         Discourse.stubs(:site_creation_date).returns(1.week.ago)
@@ -117,6 +124,31 @@ describe "About page", type: :system do
           about_page.visit
           expect(about_page.site_activities.posts).to have_count(3, "3")
           expect(about_page.site_activities.posts).to have_1_day_period
+        end
+      end
+
+      describe "visitors" do
+        context "when the display_eu_visitor_stats setting is disabled" do
+          before { SiteSetting.display_eu_visitor_stats = false }
+
+          it "doesn't show the row" do
+            about_page.visit
+
+            expect(about_page.site_activities).to have_no_activity_item("visitors")
+          end
+        end
+
+        context "when the display_eu_visitor_stats setting is enabled" do
+          before { SiteSetting.display_eu_visitor_stats = true }
+
+          it "shows the row" do
+            about_page.visit
+
+            expect(about_page.site_activities).to have_activity_item("visitors")
+            expect(about_page.site_activities.visitors).to have_text(
+              "1 visitor, about 0 from the EU",
+            )
+          end
         end
       end
 
@@ -175,9 +207,9 @@ describe "About page", type: :system do
     describe "our admins section" do
       before { User.update_all(last_seen_at: 1.month.ago) }
 
-      fab!(:admins) { Fabricate.times(12, :admin) }
+      fab!(:admins) { Fabricate.times(14, :admin) }
 
-      it "displays only the 10 most recently seen admins when there are more than 10 admins" do
+      it "displays only the 12 most recently seen admins when there are more than 12 admins" do
         admins[0].update!(last_seen_at: 4.minutes.ago)
         admins[1].update!(last_seen_at: 1.minutes.ago)
         admins[2].update!(last_seen_at: 10.minutes.ago)
@@ -186,7 +218,7 @@ describe "About page", type: :system do
         expect(about_page.admins_list).to have_expand_button
 
         displayed_admins = about_page.admins_list.users
-        expect(displayed_admins.size).to eq(10)
+        expect(displayed_admins.size).to eq(12)
         expect(displayed_admins.map { |u| u[:username] }.first(3)).to eq(
           [admins[1].username, admins[0].username, admins[2].username],
         )
@@ -196,7 +228,7 @@ describe "About page", type: :system do
         about_page.visit
 
         displayed_admins = about_page.admins_list.users
-        expect(displayed_admins.size).to eq(10)
+        expect(displayed_admins.size).to eq(12)
 
         expect(about_page.admins_list).to be_expandable
 
@@ -205,23 +237,23 @@ describe "About page", type: :system do
         expect(about_page.admins_list).to be_collapsible
 
         displayed_admins = about_page.admins_list.users
-        expect(displayed_admins.size).to eq(13) # 12 fabricated for this spec group and 1 global
+        expect(displayed_admins.size).to eq(15) # 14 fabricated for this spec group and 1 global
 
         about_page.admins_list.collapse
 
         expect(about_page.admins_list).to be_expandable
 
         displayed_admins = about_page.admins_list.users
-        expect(displayed_admins.size).to eq(10)
+        expect(displayed_admins.size).to eq(12)
       end
 
-      it "doesn't show an expand/collapse button when there are fewer than 10 admins" do
+      it "doesn't show an expand/collapse button when there are fewer than 12 admins" do
         User.where(id: admins.first(7).map(&:id)).destroy_all
 
         about_page.visit
 
         displayed_admins = about_page.admins_list.users
-        expect(displayed_admins.size).to eq(6)
+        expect(displayed_admins.size).to eq(8)
         expect(about_page.admins_list).to have_no_expand_button
       end
 
@@ -266,9 +298,9 @@ describe "About page", type: :system do
     describe "our moderators section" do
       before { User.update_all(last_seen_at: 1.month.ago) }
 
-      fab!(:moderators) { Fabricate.times(13, :moderator) }
+      fab!(:moderators) { Fabricate.times(15, :moderator) }
 
-      it "displays only the 10 most recently seen moderators when there are more than 10 moderators" do
+      it "displays only the 12 most recently seen moderators when there are more than 12 moderators" do
         moderators[10].update!(last_seen_at: 5.hours.ago)
         moderators[3].update!(last_seen_at: 2.hours.ago)
         moderators[5].update!(last_seen_at: 13.hours.ago)
@@ -277,7 +309,7 @@ describe "About page", type: :system do
         expect(about_page.moderators_list).to have_expand_button
 
         displayed_mods = about_page.moderators_list.users
-        expect(displayed_mods.size).to eq(10)
+        expect(displayed_mods.size).to eq(12)
         expect(displayed_mods.map { |u| u[:username] }.first(3)).to eq(
           [moderators[3].username, moderators[10].username, moderators[5].username],
         )
@@ -287,7 +319,7 @@ describe "About page", type: :system do
         about_page.visit
 
         displayed_mods = about_page.moderators_list.users
-        expect(displayed_mods.size).to eq(10)
+        expect(displayed_mods.size).to eq(12)
 
         expect(about_page.moderators_list).to be_expandable
 
@@ -296,23 +328,23 @@ describe "About page", type: :system do
         expect(about_page.moderators_list).to be_collapsible
 
         displayed_mods = about_page.moderators_list.users
-        expect(displayed_mods.size).to eq(14) # 13 fabricated for this spec group and 1 global
+        expect(displayed_mods.size).to eq(16) # 15 fabricated for this spec group and 1 global
 
         about_page.moderators_list.collapse
 
         expect(about_page.moderators_list).to be_expandable
 
         displayed_mods = about_page.moderators_list.users
-        expect(displayed_mods.size).to eq(10)
+        expect(displayed_mods.size).to eq(12)
       end
 
-      it "doesn't show an expand/collapse button when there are fewer than 10 moderators" do
+      it "doesn't show an expand/collapse button when there are fewer than 12 moderators" do
         User.where(id: moderators.first(10).map(&:id)).destroy_all
 
         about_page.visit
 
         displayed_mods = about_page.moderators_list.users
-        expect(displayed_mods.size).to eq(4)
+        expect(displayed_mods.size).to eq(6)
         expect(about_page.moderators_list).to have_no_expand_button
       end
 

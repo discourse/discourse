@@ -19,6 +19,10 @@ module PageObjects
         has_css?("img.about__banner[src=\"#{GlobalPath.full_cdn_url(upload.url)}\"]")
       end
 
+      def has_no_banner_image?
+        has_no_css?("img.about__banner")
+      end
+
       def has_members_count?(count, formatted_number)
         element = find(".about__stats-item.members span")
         element.has_text?(I18n.t("js.about.member_count", count:, formatted_number:))

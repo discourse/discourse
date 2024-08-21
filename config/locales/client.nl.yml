@@ -159,8 +159,6 @@ nl:
       removed_user: "Heeft %{who} %{when} verwijderd"
       removed_group: "Heeft %{who} %{when} verwijderd"
       autobumped: "Heeft %{when} automatisch gebumpt"
-      tags_changed: "Tags bijgewerkt %{when}"
-      category_changed: "Categorie bijgewerkt %{when}"
       autoclosed:
         enabled: "%{when} gesloten"
         disabled: "%{when} geopend"
@@ -268,6 +266,7 @@ nl:
     now: "zojuist"
     read_more: "meer lezen"
     more: "Meer"
+    more_options: "Meer opties"
     x_more:
       one: "Nog %{count}"
       other: "Nog %{count}"
@@ -313,6 +312,20 @@ nl:
       active_user_count: "Actieve gebruikers"
       contact: "Contact"
       contact_info: "Neem in het geval van een kritieke kwestie of dringende vraagstukken in verband met deze website contact met ons op via %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} topic"
+          other: "%{formatted_number} topics"
+        posts:
+          one: "%{formatted_number} bericht"
+          other: "%{formatted_number} berichten"
+        likes:
+          one: "%{formatted_number} like"
+          other: "%{formatted_number} likes"
+        periods:
+          last_7_days: "de afgelopen 7 dagen"
+          today: "vandaag"
+          all_time: "altijd"
       member_count:
         one: "%{formatted_number} lid"
         other: "%{formatted_number} leden"
@@ -700,7 +713,6 @@ nl:
       never: "Nooit"
       last_custom: "Laatste aangepaste datumtijd"
       custom: "Aangepaste datum en tijd"
-      custom_short: "Aangepast..."
       select_timeframe: "Selecteer een tijdsbestek"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> heeft <a href='%{topicUrl}'>het topic</a> geplaatst"
@@ -1547,6 +1559,13 @@ nl:
           disconnect: "Je bestaande %{provider}-account '%{account_description}' wordt ontkoppeld."
           account_specific: "Je %{provider}-account '%{account_description}' wordt gebruikt voor verificatie."
           generic: "Je %{provider}-account wordt gebruikt voor verificatie."
+      activate_account:
+        action: "Klik hier om je account te activeren"
+        already_done: "Sorry, deze link voor het bevestigen van je account is niet meer geldig. Misschien is je account al actief?"
+        please_continue: "Je account is bevestigd; je wordt nu doorgestuurd naar de startpagina."
+        continue_button: "Doorgaan naar %{site_name}"
+        welcome_to: "Welkom bij %{site_name}!"
+        approval_required: "Voordat je toegang hebt tot dit forum, moet een moderator je nieuwe account handmatig goedkeuren. Je ontvangt een e-mail zodra je account is goedgekeurd!"
       name:
         title: "Naam"
         instructions: "Je volledige naam (optioneel)."
@@ -2085,6 +2104,7 @@ nl:
       admin_not_allowed_from_ip_address: "Je kunt je niet aanmelden als beheerder vanaf dat IP-adres."
       resend_activation_email: "Klik hier om de activerings-e-mail opnieuw te sturen."
       omniauth_disallow_totp: "Tweeledige verificatie is ingeschakeld voor je account. Meld je aan met je wachtwoord."
+      activate_account: "Account activeren"
       resend_title: "Activerings-e-mail opnieuw sturen"
       change_email: "E-mailadres wijzigen"
       provide_new_email: "Geef een nieuw adres op, dan sturen we je bevestigings-e-mail opnieuw."
@@ -3695,7 +3715,6 @@ nl:
         none: "geen subcategorieën"
       colors_disabled: "Je kunt geen kleuren selecteren omdat je categoriestijl 'none' is."
     flagging:
-      title: "Bedankt voor het beschaafd houden van onze community!"
       action: "Bericht markeren"
       take_action: "Actie ondernemen…"
       take_action_options:
@@ -3743,7 +3762,6 @@ nl:
           one: "%{count} resterend"
           other: "%{count} resterend"
     flagging_topic:
-      title: "Bedankt voor het beschaafd houden van onze community!"
       action: "Topic markeren"
       notify_action: "Bericht"
     topic_map:
@@ -4546,6 +4564,7 @@ nl:
     powered_by_discourse: "Mogelijk gemaakt door Discourse"
   admin_js:
     type_to_filter: "typ om te filteren…"
+    settings: "Instellingen"
     admin:
       title: "Discourse-beheerder"
       moderator: "Moderator"
@@ -5112,6 +5131,7 @@ nl:
             name: "Naam"
             description: "Beschrijving"
             applies_to: "Deze markering weergeven op"
+            invalid_applies_to: "Vereist"
             topic: "topics"
             post: "berichten"
             chat_message: "chatberichten"
@@ -6433,7 +6453,6 @@ nl:
             prompt: "Je staat op het punt om je wachtwoordbeleid te wijzigen. Dit heeft gevolgen voor alle gebruikers die vanaf nu hun wachtwoord wijzigen. Weet je zeker dat je door wilt gaan?"
             confirm: "Ja, wachtwoordbeleid bijwerken"
       badges:
-        disable_system: Deze badge is een systeembadge en kan niet worden uitgeschakeld of verwijderd.
         status: Status
         title: Badges
         new_badge: Nieuwe badge

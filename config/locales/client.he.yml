@@ -215,8 +215,6 @@ he:
       removed_user: "הוסר ע״י %{who} ב־%{when}"
       removed_group: "הוסר ע״י %{who} ב־%{when}"
       autobumped: "הוקפץ אוטומטית ב־%{when}"
-      tags_changed: "התגיות עודכנו ב־%{when}"
-      category_changed: "הקטגוריה עודכנה ב־%{when}"
       autoclosed:
         enabled: "נסגר ב־%{when}"
         disabled: "נפתח ב־%{when}"
@@ -257,6 +255,7 @@ he:
     broken_decorator_alert: "פוסטים עלולים שלא להופיע כראוי כיוון שאחד ממעצבי התוכן באתר שלך העלה שגיאה."
     broken_page_change_alert: "מטפל ב־onPageChange הרים שגיאה. כלי המפתחים יציגו לך פרטים נוספים על כך."
     broken_plugin_alert: "קרה בגלל התוסף ‚%{name}’"
+    broken_transformer_alert: "אירעה שגיאה. יכול להיות שהאתר שלך לא יפעל כראוי."
     critical_deprecation:
       notice: "<b>[הודעת הנהלה]</b> אחת מערכות העיצוב או התוספים שלך זקוקים לעדכון לצורך תאימות לשינויים שיתרחשו בקרוב בליבה של Discourse."
       id: "(מזהה:<em>%{id}</em>)"
@@ -326,6 +325,7 @@ he:
     now: "ממש עכשיו"
     read_more: "מידע נוסף"
     more: "עוד"
+    more_options: "אפשרויות נוספות"
     x_more:
       one: "עוד %{count}"
       two: "עוד %{count}"
@@ -377,6 +377,39 @@ he:
       active_user_count: "משתמשים פעילים"
       contact: "יצירת קשר אתנו"
       contact_info: "במקרה של בעיה קריטית או דחופה המשפיעה על אתר זה, נא ליצור אתנו קשר דרך: %{contact_info}."
+      site_activity: "פעילות באתר"
+      view_more: "להציג עוד"
+      view_less: "להציג פחות"
+      activities:
+        topics:
+          one: "נושא"
+          two: "שני נושאים"
+          many: "%{formatted_number} נושאים"
+          other: "%{formatted_number} נושאים"
+        posts:
+          one: "פוסט"
+          two: "שני פוסטים"
+          many: "%{formatted_number} פוסטים"
+          other: "%{formatted_number} פוסטים"
+        active_users:
+          one: "משתמש פעיל"
+          two: "שני משתמשים פעילים"
+          many: "%{formatted_number} משתמשים פעילים"
+          other: "%{formatted_number} משתמשים פעילים"
+        sign_ups:
+          one: "הרשמה"
+          two: "שתי הרשמות"
+          many: "%{formatted_number} הרשמות"
+          other: "%{formatted_number} הרשמות"
+        likes:
+          one: "לייק"
+          two: "שני לייקים"
+          many: "%{formatted_number} לייקים"
+          other: "%{formatted_number} לייקים"
+        periods:
+          last_7_days: "ב־7 הימים האחרונים"
+          today: "היום"
+          all_time: "מאז ומעולם"
       member_count:
         one: "חבר"
         two: "שני חברים"
@@ -393,6 +426,18 @@ he:
         many: "%{formatted_number} מפקחים"
         other: "%{formatted_number} מפקחים"
       report_inappropriate_content: "אם נתקלת בחומר לא הולם, אפשר לפנות למפקחים או למנהלים ללא היסוס. נא לזכור להיכנס למערכת לפני הגשת פנייה."
+      site_age:
+        less_than_one_month: "נוצר לפני פחות מחודש"
+        month:
+          one: "נוצר לפני חודש"
+          two: "נוצר לפני חודשיים"
+          many: "נוצר לפני %{count} חודשים"
+          other: "נוצר לפני %{count} חודשים"
+        year:
+          one: "נוצר לפני שנה"
+          two: "נוצר לפני שנתיים"
+          many: "נוצר לפני %{count} שנה"
+          other: "נוצר לפני %{count} שנים"
     bookmarked:
       title: "סימנייה"
       edit_bookmark: "עריכת סימנייה"
@@ -814,7 +859,7 @@ he:
       never: "לעולם לא"
       last_custom: "התאריך והשעה האחרונים שהותאמו אישית"
       custom: "תאריך ושעה מותאמים אישית"
-      custom_short: "התאמה אישית…"
+      more_options: "אפשרויות נוספות…"
       select_timeframe: "נא לבחור טווח זמן"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> פרסם <a href='%{topicUrl}'>את הנושא</a>"
@@ -1705,6 +1750,13 @@ he:
           disconnect: "חשבון %{provider} הקיים שלך ‚%{account_description}’ ינותק."
           account_specific: "החשבון שלך ‚%{account_description}’ ב־%{provider} ישמש לאימות."
           generic: "החשבון של אצל %{provider} ישמש לאימות."
+      activate_account:
+        action: "יש ללחוץ כאן להפעלת החשבון שלך"
+        already_done: "כתובת אישור החשבון הזו אינה זמינה יותר, עמך הסליחה. אולי החשבון שלך כבר פעיל?"
+        please_continue: "חשבונך החדש אושר, כעת תתבצע הפנייה לעמוד הבית."
+        continue_button: "להמשיך אל %{site_name}"
+        welcome_to: "ברוך בואך אל %{site_name}!"
+        approval_required: "על מפקח לאשר את החשבון החדש שלך ידנית בטרם תתאפשר גישתך לפורום. כאשר חשבונך יאושר תישלח אליך הודעה בדוא״ל!"
       name:
         title: "שם"
         instructions: "שמך המלא (רשות)."
@@ -2118,7 +2170,57 @@ he:
       logout_disabled: "היציאה מושבתת בזמן שהאתר במצב של קריאה בלבד."
     staff_writes_only_mode:
       enabled: "אתר זה נמצא במצב סגל בלבד. אפשר להמשיך לשוטט, אך תגובות, לייקים, ופעולות נוספות כרגע מוגבלות לחברי הסגל בלבד."
+    logs_error_rate_notice:
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {שגיאה בשעה}
+            two {שתי שגיאות בשעה}
+            many {# שגיאות בשעה}
+          other {# שגיאות בשעה}
+        }</a> הגיע למגבלת האתר על סך {limit, plural,
+            one {שגיאה בשעה}
+            two {שתי שגיאות בשעה}
+            many {# שגיאות בשעה}
+          other {# שגיאות בשעה}
+        }.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {שגיאה בדקה}
+            two {שתי שגיאות בדקה}
+            many {# שגיאות בדקה}
+          other {# שגיאות בדקה}
+        }</a> הגיע למגבלת האתר על סך {limit, plural,
+            one {שגיאה בדקה}
+            two {שתי שגיאות בדקה}
+            many {# שגיאות בדקה}
+          other {# שגיאות בדקה}
+        }.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {שגיאה בשעה}
+            two {שתי שגיאות בשעה}
+            many {# שגיאות בשעה}
+          other {# שגיאות בשעה}
+        }</a> חרג ממגבלת האתר על סך {limit, plural,
+            one {שגיאה בשעה}
+            two {שתי שגיאות בשעה}
+            many {# שגיאות בשעה}
+          other {# שגיאות בשעה}
+        }.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {שגיאה בדקה}
+            two {שתי שגיאות בדקה}
+            many {# שגיאות בדקה}
+          other {# שגיאות בדקה}
+        }</a> חרג ממגבלת האתר על סך {limit, plural,
+            one {שגיאה בדקה}
+            two {שתי שגיאות בדקה}
+            many {# שגיאות בדקה}
+          other {# שגיאות בדקה}
+        }.
     learn_more: "מידע נוסף…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>מידע נוסף…</a>"
     mute: השתק
     unmute: ביטול השתקה
     last_post: פורסמו
@@ -2277,6 +2379,7 @@ he:
       admin_not_allowed_from_ip_address: "הכניסה לניהול מכתובת IP זו אסורה."
       resend_activation_email: "יש ללחוץ כאן לשליחת דואר אלקטרוני חוזר להפעלת החשבון."
       omniauth_disallow_totp: "בחשבון שלך מופעל אימות דו־שלבי. נא להיכנס עם הססמה שלך."
+      activate_account: "הפעלת חשבון"
       resend_title: "שליחה מחדש של הודעת הפעלה בדוא״ל"
       change_email: "שינוי כתובת דוא״ל"
       provide_new_email: "נא לספק כתובת חדשה ואנו נשלח מחדש בדוא״ל את הודעת האישור שלך."
@@ -2408,6 +2511,7 @@ he:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} גדול מהגודל המרבי המותר %{max_file_size}"
+        size_too_small: "%{provided_file_size} קטן מהגודל המזערי המותר %{min_file_size}"
     emoji_picker:
       filter_placeholder: חיפוש אחר אמוג׳י
       smileys_&_emotion: חייכנים ורגש
@@ -2463,7 +2567,7 @@ he:
         many: "אזכור %{group} יודיע ל־<a href='%{group_link}'>%{count} אנשים</a>."
         other: "אזכור %{group} יודיע ל־<a href='%{group_link}'>%{count} אנשים</a>."
       larger_group_mentioned:
-        one: "אזכור %{group} יודיע ל־<a href='%{group_link}'>אדם אחד</a>. להמשיך?"
+        one: "אזכור %{group} יודיע ל<a href='%{group_link}'>מישהו או מישהי</a>. להמשיך?"
         two: "אזכור %{group} יודיע ל־<a href='%{group_link}'>שני אנשים</a>. להמשיך?"
         many: "אזכור %{group} יודיע ל־<a href='%{group_link}'>%{count} אנשים</a>. להמשיך?"
         other: "אזכור %{group} יודיע ל־<a href='%{group_link}'>%{count} אנשים</a>. להמשיך?"
@@ -4063,7 +4167,7 @@ he:
         none: "אין תת־קטגוריות"
       colors_disabled: "אי אפשר לבחור צבעים כיוון שסגנון הקטגוריה הוא כלום."
     flagging:
-      title: "תודה על עזרתך לשמירה על תרבות הקהילה שלנו!"
+      title: "תודה על שמירת התרבות בקהילה שלנו!"
       action: "סימון פוסט"
       take_action: "נקיטת פעולה…"
       take_action_options:
@@ -4117,7 +4221,7 @@ he:
           many: "%{count} נותרו"
           other: "%{count} נותרו"
     flagging_topic:
-      title: "תודה על עזרתך לשמירה על תרבות הקהילה שלנו!"
+      title: "תודה על שמירת התרבות בקהילה שלנו!"
       action: "סימון נושא"
       notify_action: "הודעה"
     topic_map:
@@ -4169,7 +4273,7 @@ he:
         title: "נעוץ"
         help: "נושא זה ננעץ עבורכם, הוא יופיע בראש הקטגוריה"
       unlisted:
-        help: "נושא זה מוסתר; הוא לא יוצג ברשימות הנושאים, וזמין רק באמצעות קישור ישיר. %{unlistedReason}"
+        help: "נושא זה מוסתר; הוא לא יוצג ברשימות הנושאים, וזמין רק דרך קישור ישיר. %{unlistedReason}"
       personal_message:
         title: "הנושא הזה הוא הודעה אישית"
         help: "הנושא הזה הוא הודעה אישית"
@@ -4636,6 +4740,7 @@ he:
         everyone_can_use: "ניתן להשתמש בתגיות בכל מקום"
         usable_only_by_groups: "התגיות גלויות לכולם אך רק הקבוצות הבאות יכולות להשתמש בהן"
         visible_only_to_groups: "התגיות גלויות לקבוצות הבאות בלבד"
+        cannot_save: "לא ניתן לשמור את קבוצת התגיות. נא לוודא שיש לפחות תגית אחד, ששם קבוצת התגיות אינו ריק, הוא באורך של פחות מ־100 תווים וושנבחרה קבוצה לצורך הרשאת תגיות."
         tags_placeholder: "חיפוש או יצירת תגיות"
         parent_tag_placeholder: "רשות"
         select_groups_placeholder: "בחירת קבוצות…"
@@ -4998,6 +5103,7 @@ he:
     powered_by_discourse: "מופעל על גבי Discourse"
   admin_js:
     type_to_filter: "יש להקליד לסינון…"
+    settings: "הגדרות"
     admin:
       title: "ניהול Discourse"
       moderator: "מפקח"
@@ -5521,16 +5627,19 @@ he:
           header: "על האתר שלך"
           general_settings: "הגדרות כלליות"
           community_name: "שם הקהילה"
+          community_name_placeholder: "קהילה לדוגמה"
           community_summary: "תקציר קהילה"
           community_description: "תיאור קהילה"
           banner_image: "תמונת כרזה"
           banner_image_help: |
-            זה ישמש בדף המידע שלך. גודל מומלץ: 800x300 פיקסלים. סוגים מקובלים: JPG, PNG ו-SVG עד 10MB.
+            ייעשה בזה שימוש בעמוד העל אודות שלך. הגודל המומלץ: ‎800×300 פיקסלים. סוגים מורשים: JPG,‏ PNG ו־SVG עד 10 מ״ב
           contact_information: "פרטי קשר"
           community_owner: "בעלות על הקהילה"
+          community_owner_placeholder: "יוסי כהן"
           community_owner_help: |
             שם איש או אשת הקשר הראשיים האחראיים לאתר הזה. משמש להתראות משמעותיות, ומוצג גם ב־‎/about. גלוי למשתמשים אלמוניים באתרים ציבוריים.
           contact_email: "דוא״ל ליצירת קשר"
+          contact_email_placeholder: "contact@yossi-cohen.com"
           contact_email_help: |
             כתובת דוא״ל של איש או אשת קשר מובילים שאחראיים על האתר הזה. משמש להתראות משמעותיות, וגם יוצג ב־‎/about. חשוף בפני משתמשים אלמוניים באתרים ציבוריים.
           contact_url: "כתובת ליצירת קשר"
@@ -5545,14 +5654,17 @@ he:
             שם תקף של קבוצה שתוזמן לכל ההודעות הפרטיות שנשלחות.
           your_organization: "הארגון שלך"
           company_name: "שם החברה"
+          company_name_placeholder: "חברה לדוגמה בע״מ"
           company_name_help: |
             שם החברה או הארגון שלך.
           company_name_warning: |
             אם השדה יישאר ריק, לא יסופקו תנאי שירות או הצהרת פרטיות ראשוניים.
           governing_law: "החוק המחייב"
+          governing_law_placeholder: "אזור הצפון"
           governing_law_help: |
             ציון תחום השיפוט שאחראי על ההיבטים המשפטיים של האתר, לרבות תנאי השירות והצהרת הפרטיות. בדרך כלל מדובר במדינה או המחוז שבהם רשומה החברה שמפעילה את האתר או המקום העיקרי ממנו היא עושה עסקים.
           city_for_disputes: "עיר המחלוקת"
+          city_for_disputes_placeholder: "כרמיאל"
           city_for_disputes_help: |
             ציון העיר שתשמש כתחום השיפוט ליישוב מחלוקות שקשורות בשימוש בפורום הזה. המידע הזה בדרך כלל מופיע במסמכים הרשמיים כגון תנאי השירות של הפורום.
           optional: "(רשות)"
@@ -5564,7 +5676,7 @@ he:
           saved: "נשמר!"
         flags:
           header: "סימוני פיקוח"
-          subheader: "מערכת הדיגול ב-Discourse עוזרת לך ולצוות המנחה שלך לנהל תוכן והתנהגות משתמשים, ולשמור על הקהילה שלך מכבדת ובריאה. ברירות המחדל מתאימות לרוב הקהילות ואין צורך לשנות אותן. עם זאת, אם לאתר שלך יש דרישות מסוימות, תוכל להשבית דגלים שאינך צריך ולהוסיף דגלים מותאמים אישית משלך."
+          subheader: "מערכת הסימון ב־Discourse מסייעת לך ולצוות הפיקוח שלך לנהל את התוכן ואת התנהגות המשתמשים ומעניקה לך כלים לשמור על קהילה מכבדת ובריאה. ברירות המחדל מתאימות לרוב הקהילות ואין צורך לשנות אותן. עם זאת, אם לאתר שלך יש דרישות מסוימות אפשר לבטל סוגי סימון שאינם נחוצים ולהוסיף סוגי סימון משלך."
           description: "תיאור"
           enabled: "מאופשר?"
           add: "הוספת סימון"
@@ -5579,6 +5691,7 @@ he:
             name: "שם"
             description: "תיאור"
             applies_to: "הצגת הסימון הזה על"
+            invalid_applies_to: "נדרש"
             topic: "נושאים"
             post: "פוסטים"
             chat_message: "הודעות צ׳אט"
@@ -5634,8 +5747,11 @@ he:
         legacy: "מיושן"
       backups:
         title: "גיבויים"
+        files_title: "גיבוי קבצים"
+        description: "הגיבויים של Discourse כולל את מסד הנתונים המלא של האתר שמכיל את כל תוכן האתר: נושאים, פוסטים, משתמשים, קבוצות, הגדרות, ערכות עיצוב ועוד, הוא עשוי להכיל את הקבצים שהועלו כתלות באופן יצירת קובץ הגיבוי."
         menu:
           backups: "גיבויים"
+          backup_files: "גיבוי קבצים"
           logs: "יומנים"
         none: "אין גיבוי זמין."
         read_only:
@@ -6930,7 +7046,6 @@ he:
             prompt: "פעולה זו תשנה את מדיניות הסיסמאות שלך. היא תשפיע על כל המשתמשים שישנו את הסיסמה שלהם מעתה ואילך. להמשיך?"
             confirm: "כן, לעדכן את מדיניות הסיסמאות"
       badges:
-        disable_system: העיטור זה הוא עיטור מערכת ולא ניתן להשבית ו/או למחוק אותו.
         status: מצב
         title: עיטורים
         new_badge: עיטור חדש
@@ -7023,6 +7138,11 @@ he:
             many: "ה־CSV שלך התקבל ו־%{count} משתמשים יקבלו את העיטור שלהם בעוד רגע קט."
             other: "ה־CSV שלך התקבל ו־%{count} משתמשים יקבלו את העיטור שלהם בעוד רגע קט."
           csv_has_unmatched_users: "הערכים הבאים נמצאים בקובץ ה־CSV אך לא ניתן היה להתאים אותם למשתמשים קיימים ולכן לא יקבלו את העיטור:"
+          csv_has_unmatched_users_truncated_list:
+            one: "הייתה רשומה בקובץ ה־CSV שלא תאמה למשתמשים קיימים ולכן לא תקבל עיטור."
+            two: "בקובץ ה־CSV היו שתי רשומות שלא ניתן היה להתאים למשתמשים קיימים ולכן לא יקבלו את העיטור. בשל מספר הרשומות הרב ללא התאמה, רק 100 הראשונות מוצגות:"
+            many: "בקובץ ה־CSV היו %{count} רשומות שלא ניתן היה להתאים למשתמשים קיימים ולכן לא יקבלו את העיטור. בשל מספר הרשומות הרב ללא התאמה, רק 100 הראשונות מוצגות:"
+            other: "בקובץ ה־CSV היו %{count} רשומות שלא ניתן היה להתאים למשתמשים קיימים ולכן לא יקבלו את העיטור. בשל מספר הרשומות הרב ללא התאמה, רק 100 הראשונות מוצגות:"
           replace_owners: הסרת העיטור מהבעלים הקודמים
           grant_existing_holders: הענקת עיטורים נוספים למחזיקים בעיטורים קיימים
       emoji:

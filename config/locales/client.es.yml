@@ -159,8 +159,6 @@ es:
       removed_user: "Eliminó a %{who} %{when}"
       removed_group: "Eliminó a %{who} %{when}"
       autobumped: "Reflotado automáticamente %{when}"
-      tags_changed: "Etiquetas actualizadas %{when}"
-      category_changed: "Categoría actualizada %{when}"
       autoclosed:
         enabled: "Cerrado %{when}"
         disabled: "Abierto %{when}"
@@ -201,6 +199,7 @@ es:
     broken_decorator_alert: "Puede que las publicaciones no se muestren correctamente porque uno de los decoradores de publicaciones de tu sitio está causando errores."
     broken_page_change_alert: "Un controlador onPageChange ha generado un error. Comprueba las herramientas de desarrollo del navegador para obtener más información."
     broken_plugin_alert: "Causado por el plugin «%{name}»"
+    broken_transformer_alert: "Hubo un error. Es posible que su sitio no funcione correctamente."
     critical_deprecation:
       notice: "<b>[Aviso al administrador]</b> Uno de tus temas o plugins necesita actualizarse para ser compatible con los próximos cambios en el núcleo de Discourse."
       id: "(id:<em>%{id}</em>)"
@@ -268,6 +267,7 @@ es:
     now: "justo ahora"
     read_more: "leer más"
     more: "Más"
+    more_options: "Más opciones"
     x_more:
       one: "%{count} más"
       other: "%{count} más"
@@ -313,6 +313,27 @@ es:
       active_user_count: "Usuarios activos"
       contact: "Contáctanos"
       contact_info: "En caso de un problema crítico o urgente que esté afectando este sitio, contáctanos a través de %{contact_info}."
+      site_activity: "Actividad del sitio"
+      activities:
+        topics:
+          one: "%{formatted_number} tema"
+          other: "%{formatted_number} Temas"
+        posts:
+          one: "%{formatted_number} publicación"
+          other: "%{formatted_number} Publicaciones"
+        active_users:
+          one: "%{formatted_number} suario activo"
+          other: "%{formatted_number} administrador activo"
+        sign_ups:
+          one: "%{formatted_number} Registro"
+          other: "%{formatted_number} Acceder"
+        likes:
+          one: "%{formatted_number} me gusta"
+          other: "%{formatted_number} Me gusta"
+        periods:
+          last_7_days: "en los últimos 7 días"
+          today: "hoy"
+          all_time: "todo el tiempo"
       member_count:
         one: "%{formatted_number} Miembro"
         other: "%{formatted_number} Miembros"
@@ -323,6 +344,14 @@ es:
         one: "%{formatted_number} Moderador"
         other: "%{formatted_number} Moderadores"
       report_inappropriate_content: "Si encuentras algún contenido inapropiado, no dudes en iniciar una conversación con nuestros moderadores y administradores. Recuerda iniciar sesión antes de comunicarte."
+      site_age:
+        less_than_one_month: "Creado hace < 1 mes"
+        month:
+          one: "Creado hace %{count} mes"
+          other: "Creado hace %{count} meses"
+        year:
+          one: "Creado hace %{count} año"
+          other: "Creado hace %{count} años"
     bookmarked:
       title: "Marcador"
       edit_bookmark: "Editar marcador"
@@ -700,7 +729,7 @@ es:
       never: "Nunca"
       last_custom: "Última fecha y hora personalizada"
       custom: "Fecha y hora personalizadas"
-      custom_short: "Personalizado..."
+      more_options: "Más opciones"
       select_timeframe: "Selecciona el plazo"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicó <a href='%{topicUrl}'>el tema</a>"
@@ -1343,6 +1372,62 @@ es:
         warnings: "Advertencias oficiales"
         read_more_in_group: "¿Quieres leer más? Consulta otros mensajes de %{groupLink}."
         read_more: "¿Quieres seguir leyendo? Echa un vistazo a otros mensajes en tus <a href='%{basePath}/u/%{username}/messages'>mensajes personales</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># no leída</a>}
+                other {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># no leídas</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { y <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nueva</a> mensaje restante, o explora otros mensajes en {groupLink}}
+                other { y <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nuevas</a> mensajes restantes, o explora otros mensajes en {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># no leída</a> mensaje restante, o explora otros mensajes en {groupLink}}
+                other {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># no leídas</a> mensajes restantes, o explora otros mensajes en {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nueva</a> mensaje restante, o explora otros mensajes en {groupLink}}
+                other {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nuevas</a> mensajes restantes, o explora otros mensajes en {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Hay <a href="{basePath}/u/{username}/messages/unread"># no leída</a>}
+                other {Hay <a href="{basePath}/u/{username}/messages/unread"># no leídas</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { y <a href="{basePath}/u/{username}/messages/new"># nueva</a> mensaje restante, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+                other { y <a href="{basePath}/u/{username}/messages/new"># nuevas</a> mensajes restantes, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Hay <a href="{basePath}/u/{username}/messages/unread"># no leída</a> mensaje restante, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+                other {Hay <a href="{basePath}/u/{username}/messages/unread"># no leídas</a> mensajes restantes, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Hay <a href="{basePath}/u/{username}/messages/new"># nueva</a> mensaje restante, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+                other {Hay <a href="{basePath}/u/{username}/messages/new"># nuevas</a> mensajes restantes, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Cuenta"
         security: "Seguridad"
@@ -1547,6 +1632,13 @@ es:
           disconnect: "Tu cuenta de %{provider} «%{account_description}» será desenlazada"
           account_specific: "Tu cuenta de %{provider} «%{account_description}» se utilizará para la autenticación."
           generic: "Tu cuenta de %{provider} se utilizará para la autenticación."
+      activate_account:
+        action: "Haz clic aquí para activar tu cuenta"
+        already_done: "Lo sentimos, este link de confirmación de cuenta ya no es válido. ¿Quizás tu cuenta ya está activa?"
+        please_continue: "Tu nueva cuenta está confirmada; se te redirigirá a la página de inicio."
+        continue_button: "Continuar a %{site_name}"
+        welcome_to: "¡Te damos la bienvenida a %{site_name}!"
+        approval_required: "Un moderador debe aprobar manualmente tu nueva cuenta antes de que puedas acceder a este foro. ¡Recibirás un correo electrónico cuando tu cuenta sea aprobada!"
       name:
         title: "Nombre"
         instructions: "Tu nombre completo (opcional)."
@@ -1932,6 +2024,39 @@ es:
       logout_disabled: "No se puede cerrar sesión mientras el sitio se encuentre en modo de solo lectura."
     staff_writes_only_mode:
       enabled: "Este sitio está en modo solo para el personal. Sigue navegando, pero las respuestas, los «me gusta» y otras acciones están limitadas solo a los miembros del personal."
+    logs_error_rate_notice:
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# error/hora}
+          other {# errores/hora}
+        }</a> alcanzó el límite de configuración del sitio de {limit, plural,
+            one {# error/hora}
+          other {# errores/hora}
+        }.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# error/minuto}
+          other {# errores/minuto}
+        }</a> alcanzó el límite de configuración del sitio de { limit, plural,
+            one {# error/minuto}
+          other {# errores/minuto}
+        }.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# error/hora}
+          other {# errores/hora}
+        }</a> superó el límite de configuración del sitio de { limit, plural,
+            one {# error/hora}
+          other {# errores/hora}
+        }.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# error/minuto}
+          other {# errores/minuto}
+        }</a> superó el límite de configuración del sitio de { limit, plural,
+            one {# error/minuto}
+          other {# errores/minuto}
+        }.
     learn_more: "Más información…"
     mute: Silenciar
     unmute: No silenciar
@@ -1970,7 +2095,7 @@ es:
       buttons:
         hide: "Ocultar resumen"
         generate: "Resumir"
-        regenerate: "Generar nuevos"
+        regenerate: "Regenerar"
       description_time_MF: |
         Hay {replyCount, plural, one {Hay <b>#</b> respuesta} other {Hay <b>#</b> respuestas}} con un tiempo estimado de lectura de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
       enable: "Mostrar las respuestas principales"
@@ -2085,6 +2210,7 @@ es:
       admin_not_allowed_from_ip_address: "No puedes iniciar sesión como administrador desde esta dirección IP."
       resend_activation_email: "Haz clic aquí para enviar el correo electrónico de activación de nuevo."
       omniauth_disallow_totp: "Tu cuenta tiene la autenticación de dos factores activada. Inicia sesión con tu contraseña."
+      activate_account: "Activar cuenta"
       resend_title: "Volver a enviar el correo electrónico de activación"
       change_email: "Cambiar dirección de correo electrónico"
       provide_new_email: "Introduce una dirección de correo electrónico nueva y te reenviaremos el correo electrónico de confirmación."
@@ -4208,6 +4334,7 @@ es:
         everyone_can_use: "Todos pueden utilizar las etiquetas"
         usable_only_by_groups: "Las etiquetas son visibles para todo el mundo, pero solo los siguientes grupos las pueden usar"
         visible_only_to_groups: "Las etiquetas solo son visibles para los siguientes grupos"
+        cannot_save: "No se puede guardar el grupo de etiquetas. Asegúrese de que haya al menos una etiqueta presente, que el nombre del grupo de etiquetas no esté vacío y tenga menos de 100 caracteres, y que esté seleccionado un grupo para el permiso de etiquetas."
         tags_placeholder: "Buscar o crear etiquetas"
         parent_tag_placeholder: "Opcional"
         select_groups_placeholder: "Seleccionar grupos…"
@@ -4546,6 +4673,7 @@ es:
     powered_by_discourse: "Desarrollado por Discourse"
   admin_js:
     type_to_filter: "escribe para filtrar…"
+    settings: "Ajustes"
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
@@ -4580,6 +4708,7 @@ es:
         problems_found: "Algunos consejos con base en tus ajustes actuales"
         new_features:
           title: "Novedades"
+          subtitle: "Para obtener más información sobre las nuevas funciones y mejoras que añadimos constantemente, consulta <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Notas de versión</a>."
           previous_announcements: "Puedes ver anuncios anteriores de nuevas funciones en <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Más información..."
         last_checked: "Ultima comprobación"
@@ -5053,6 +5182,7 @@ es:
           header: "Acerca de tu sitio"
           general_settings: "Ajustes generales"
           community_name: "Nombre de la comunidad"
+          community_name_placeholder: "Comunidad de ejemplo"
           community_summary: "Resumen comunitario"
           community_description: "Descripción de la comunidad"
           banner_image: "Imagen del banner"
@@ -5060,9 +5190,11 @@ es:
             Se utilizará en tu página Acerca de. Tamaño recomendado: 800x300px. Tipos aceptados: JPG, PNG y SVG hasta 10 MB.
           contact_information: "Información de contacto"
           community_owner: "Propietario de la comunidad"
+          community_owner_placeholder: "Johnny Smith"
           community_owner_help: |
             Nombre del contacto clave responsable de este sitio. Utilizado para notificaciones críticas, y también se muestra en /about. Visible para usuarios anónimos en sitios públicos.
           contact_email: "Correo electrónico de contacto"
+          contact_email_placeholder: "contact@johnny-smith.com"
           contact_email_help: |
             Dirección de correo electrónico del contacto clave responsable de este sitio. Se utiliza para notificaciones críticas y también se muestra en /about. Visible para usuarios anónimos en sitios públicos.
           contact_url: "URL de contacto"
@@ -5077,14 +5209,17 @@ es:
             Un nombre válido de un grupo al que se invita a todos los mensajes privados enviados automáticamente.
           your_organization: "Tu organización"
           company_name: "Nombre de la empresa"
+          company_name_placeholder: "Empresa de ejemplo Inc."
           company_name_help: |
             Nombre de tu empresa u organización.
           company_name_warning: |
             Si se deja en blanco, no se proporcionará ningún tipo de Términos del servicio o Aviso de privacidad.
           governing_law: "Ley que rige"
+          governing_law_placeholder: "Estado de Nueva York"
           governing_law_help: |
             Especifica la jurisdicción que rige los aspectos legales del sitio, incluidos los Términos del servicio y el Aviso de privacidad. Normalmente, se trata del país o estado en el que la empresa que gestiona el sitio está registrada o lleva a cabo sus actividades.
           city_for_disputes: "Ciudad para disputas"
+          city_for_disputes_placeholder: "Ciudad de Nueva York"
           city_for_disputes_help: |
             Especifica la ciudad que se utilizará como jurisdicción para resolver cualquier disputa relacionada con el uso de este foro. Esta información suele incluirse en documentos legales como los Términos del servicio del foro.
           optional: "(opcional)"
@@ -5111,6 +5246,7 @@ es:
             name: "Nombre"
             description: "Descripción"
             applies_to: "Mostrar esta bandera en"
+            invalid_applies_to: "Obligatorio"
             topic: "temas"
             post: "publicaciones"
             chat_message: "mensajes de chat"
@@ -6432,7 +6568,6 @@ es:
             prompt: "Estás a punto de cambiar tu política de contraseñas. Esto afectará a todos los usuarios que cambien sus contraseñas a partir de ahora. ¿Seguro que quieres proceder?"
             confirm: "Sí, actualizar la política de contraseñas"
       badges:
-        disable_system: Esta medalla es una medalla del sistema y no se puede desactivar ni eliminar.
         status: Estado
         title: Medallas
         new_badge: Nueva medalla
@@ -6521,6 +6656,9 @@ es:
             one: "Se ha recibido tu CSV y %{count} usuario recibirá su medalla en breve."
             other: "Se ha recibido tu CSV y %{count} usuarios recibirán su medalla en breve."
           csv_has_unmatched_users: "Las siguientes filas del CSV no se han podido enlazar con usuarios existentes, por lo que no se les distribuirá ninguna medalla:"
+          csv_has_unmatched_users_truncated_list:
+            one: "Había %{count} entrada en el archivo CSV que no pudo coincidir con los usuarios existentes y, por lo tanto, no recibirá la insignia."
+            other: "Había %{count} entradas en el archivo CSV que no coincidieron con los usuarios existentes y, por lo tanto, no recibirán la insignia."
           replace_owners: Eliminar medalla de los anteriores propietarios
           grant_existing_holders: Conceder una vez más la medalla a las cuentas que ya la tengan
       emoji:

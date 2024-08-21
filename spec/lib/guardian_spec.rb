@@ -4469,4 +4469,24 @@ RSpec.describe Guardian do
       end
     end
   end
+
+  describe "#is_developer?" do
+    after { Developer.rebuild_cache }
+
+    it "returns true if user is an admin and has an associated `Developer` object" do
+      Developer.create!(user: admin)
+
+      expect(Guardian.new(admin).is_developer?).to eq(true)
+    end
+
+    it "returns false if user is an admin but does not have an associated `Developer` object" do
+      expect(Guardian.new(admin).is_developer?).to eq(false)
+    end
+
+    it "returns true if user's email has been configured as part of `Rails.configuration.developer_emails`" do
+      Rails.configuration.stubs(:developer_emails).returns([user.email])
+
+      expect(Guardian.new(user).is_developer?).to eq(true)
+    end
+  end
 end

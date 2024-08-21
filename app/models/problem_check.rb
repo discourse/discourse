@@ -13,7 +13,7 @@ class ProblemCheck
     end
 
     def run_all
-      each(&:run)
+      select(&:enabled?).each(&:run)
     end
 
     private
@@ -23,6 +23,7 @@ class ProblemCheck
 
   include ActiveSupport::Configurable
 
+  config_accessor :enabled, default: true, instance_writer: false
   config_accessor :priority, default: "low", instance_writer: false
 
   # Determines if the check should be performed at a regular interval, and if
@@ -111,6 +112,11 @@ class ProblemCheck
     name.demodulize.underscore.to_sym
   end
   delegate :identifier, to: :class
+
+  def self.enabled?
+    enabled
+  end
+  delegate :enabled?, to: :class
 
   def self.scheduled?
     perform_every.present?

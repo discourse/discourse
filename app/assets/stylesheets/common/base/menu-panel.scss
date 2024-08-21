@@ -581,6 +581,7 @@
 .user-notifications-list.show-avatars {
   li.notification,
   li.bookmark,
+  li.reviewable,
   li.message {
     a {
       color: var(--primary);

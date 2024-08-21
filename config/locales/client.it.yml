@@ -159,8 +159,6 @@ it:
       removed_user: "Ha rimosso %{who} %{when}"
       removed_group: "Ha rimosso %{who} %{when}"
       autobumped: "Riproposto automaticamente %{when}"
-      tags_changed: "Etichette aggiornate il giorno %{when}"
-      category_changed: "Categoria aggiornata il giorno %{when}"
       autoclosed:
         enabled: "Chiuso %{when}"
         disabled: "Aperto %{when}"
@@ -268,6 +266,7 @@ it:
     now: "proprio ora"
     read_more: "altre informazioni"
     more: "Altro"
+    more_options: "Altre opzioni"
     x_more:
       one: "%{count} altro"
       other: "%{count} altri"
@@ -313,6 +312,20 @@ it:
       active_user_count: "Utenti attivi"
       contact: "Contattaci"
       contact_info: "Nel caso di un problema grave o urgente riguardante il sito, per favore contattaci all'indirizzo %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} argomento"
+          other: "%{formatted_number} argomenti"
+        posts:
+          one: "%{formatted_number} messaggio"
+          other: "%{formatted_number} messaggi"
+        likes:
+          one: "%{formatted_number} mi Piace"
+          other: "%{formatted_number} mi Piace"
+        periods:
+          last_7_days: "negli ultimi 7 giorni"
+          today: "oggi"
+          all_time: "sempre"
       member_count:
         one: "%{formatted_number} membro"
         other: "%{formatted_number} membri"
@@ -700,7 +713,6 @@ it:
       never: "Mai"
       last_custom: "Ultima data e ora personalizzata"
       custom: "Data e ora personalizzate"
-      custom_short: "Personalizza..."
       select_timeframe: "Seleziona un intervallo di tempo"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> ha pubblicato <a href='%{topicUrl}'>l'argomento</a>"
@@ -1547,6 +1559,13 @@ it:
           disconnect: "Il tuo attuale account %{provider} '%{account_description}' sarà disconnesso."
           account_specific: "Il tuo account %{provider} '%{account_description}' verrà utilizzato per l'autenticazione."
           generic: "Il tuo account %{provider} verrà utilizzato per l'autenticazione."
+      activate_account:
+        action: "Clicca qui per attivare il tuo account"
+        already_done: "Spiacenti, questo collegamento di attivazione non è più valido. Forse il tuo account è già attivo?"
+        please_continue: "Il tuo nuovo account è confermato; verrai ora rediretto alla pagina iniziale."
+        continue_button: "Procedi su %{site_name}."
+        welcome_to: "Benvenuto su %{site_name}!"
+        approval_required: "Un moderatore deve approvare manualmente il tuo account prima che tu possa accedere al forum. Riceverai un'email quando il tuo account sarà approvato!"
       name:
         title: "Nome"
         instructions: "Il tuo nome e cognome (facoltativo)."
@@ -2085,6 +2104,7 @@ it:
       admin_not_allowed_from_ip_address: "Non puoi accedere come amministratore da quell'indirizzo IP."
       resend_activation_email: "Clicca qui per inviare nuovamente l'email di attivazione."
       omniauth_disallow_totp: "Il tuo account ha l'autenticazione a due fattori abilitata. Accedi con la tua password."
+      activate_account: "Attiva Account"
       resend_title: "Invia Nuovamente Email Attivazione"
       change_email: "Cambia Indirizzo Email"
       provide_new_email: "Fornisci un nuovo indirizzo e invieremo nuovamente la tua email di conferma."
@@ -3695,7 +3715,6 @@ it:
         none: "nessuna sottocategoria"
       colors_disabled: "Non puoi selezionare i colori perché lo stile della categoria è impostato su 'none'."
     flagging:
-      title: "Grazie per aver contribuito a favorire la civile convivenza della nostra comunità!"
       action: "Segnala Messaggio"
       take_action: "Esegui azione…"
       take_action_options:
@@ -3743,7 +3762,6 @@ it:
           one: "%{count} rimanente"
           other: "%{count} rimanenti..."
     flagging_topic:
-      title: "Grazie per aver contribuito a favorire la civile convivenza della nostra comunità!"
       action: "Segnala Argomento"
       notify_action: "Messaggio"
     topic_map:
@@ -4546,6 +4564,7 @@ it:
     powered_by_discourse: "Con tecnologia Discourse"
   admin_js:
     type_to_filter: "digita per filtrare…"
+    settings: "Impostazioni"
     admin:
       title: "Amministratore Discourse"
       moderator: "Moderatore"
@@ -5112,6 +5131,7 @@ it:
             name: "Nome"
             description: "Descrizione"
             applies_to: "Mostra segnalazione su"
+            invalid_applies_to: "Obbligatorio"
             topic: "argomenti"
             post: "messaggi"
             chat_message: "messaggi di chat"
@@ -6433,7 +6453,6 @@ it:
             prompt: "Stai per modificare i criteri della password. La modifica interesserà ogni utente che modificherà la password da ora in avanti. Intendi procedere?"
             confirm: "Sì, aggiorna i criteri della password"
       badges:
-        disable_system: 'Questo è un distintivo di sistema: non può essere disabilitato e/o eliminato.'
         status: Stato
         title: Distintivi
         new_badge: Nuovo Distintivo
