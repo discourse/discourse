@@ -183,6 +183,33 @@ shared_examples "signup scenarios" do
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
+
+    context "when site has subfolder install" do
+      before { set_subfolder "/discuss" }
+
+      it "can signup and activate account" do
+        visit("/discuss/signup")
+        signup_modal.fill_email("johndoe@example.com")
+        signup_modal.fill_username("john")
+        signup_modal.fill_password("supersecurepassword")
+        expect(signup_modal).to have_valid_fields
+
+        signup_modal.click_create_account
+        expect(page).to have_css(".account-created")
+
+        mail = ActionMailer::Base.deliveries.first
+        expect(mail.to).to contain_exactly("johndoe@example.com")
+        activation_link = mail.body.to_s[%r{\S+/u/activate-account/\S+}]
+
+        visit activation_link
+
+        activate_account.click_activate_account
+        activate_account.click_continue
+
+        expect(page).to have_current_path("/discuss/")
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
+    end
   end
 
   context "when the email domain is blocked" do
