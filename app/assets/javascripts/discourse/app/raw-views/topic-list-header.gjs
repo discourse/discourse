@@ -1,6 +1,6 @@
 import { cached } from "@glimmer/tracking";
 import { inject as controller } from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
+import EmberObject from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { createColumns } from "discourse/components/topic-list/topic-list-header";
@@ -60,7 +60,7 @@ export default class TopicListHeader extends EmberObject {
                 component: entry.value,
                 sortable: this.sortable,
                 order: this.order,
-                // {{!-- changeSort: this.changeSort --}},
+                changeSort: this.discoveryListController.changeSort,
                 ascending: this.ascending,
                 category: this.topicTrackingState.filterCategory,
                 listTitle: this.listTitle,
@@ -73,7 +73,8 @@ export default class TopicListHeader extends EmberObject {
                 newRepliesCount: this.newRepliesCount,
                 newTopicsCount: this.newTopicsCount,
                 bulkSelectHelper: this.bulkSelectHelper,
-                changeNewListSubset: this.changeNewListSubset,
+                changeNewListSubset:
+                  this.discoveryListController.changeNewListSubset,
               }
             )
           );
@@ -81,15 +82,5 @@ export default class TopicListHeader extends EmberObject {
 
         return entry;
       });
-  }
-
-  @cached
-  get resolvedColumns() {
-    return this.columns.resolve();
-  }
-
-  @action
-  changeNewListSubset() {
-    return this.discoveryListController.changeNewListSubset(...arguments);
   }
 }
