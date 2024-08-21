@@ -180,10 +180,6 @@ export default class NavItem extends EmberObject {
         item.init(item, category, args);
       }
 
-      if (item.href) {
-        item.href = getURL(item.href);
-      }
-
       const before = item.before;
       if (before) {
         let i = 0;
@@ -198,7 +194,9 @@ export default class NavItem extends EmberObject {
       }
 
       if (item.customHref) {
-        item.set("href", item.customHref(category, args));
+        item.href = item.customHref(category, args);
+      } else if (item.href) {
+        item.href = getURL(item.href);
       }
 
       if (item.forceActive && item.forceActive(category, args)) {
