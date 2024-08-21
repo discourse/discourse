@@ -244,7 +244,7 @@ GEM
       libv8-node (~> 18.19.0.0)
     mini_scheduler (0.17.0)
       sidekiq (>= 4.2.3, < 7.0)
-    mini_sql (1.5.0)
+    mini_sql (1.6.0)
     mini_suffix (0.3.3)
       ffi (~> 1.9)
     minio_runner (0.1.2)
