@@ -296,14 +296,13 @@ body:not(.archetype-private_message) {
 
 .mobile-view {
   .d-modal[class*="topic-map__"] {
-    .d-modal__body {
-      padding: 1em 1em 2em 1em;
+    h3 {
+      font-size: var(--font-up-2);
+      padding-inline: 1rem;
+    }
 
-      h3 {
-        width: 100%;
-        font-weight: bold;
-        font-size: var(--font-up-2);
-      }
+    p {
+      overflow-wrap: break-word;
     }
   }
 
@@ -314,7 +313,7 @@ body:not(.archetype-private_message) {
 
 // DMenu popups
 
-.topic-map__likes-content.fk-d-menu__content {
+.topic-map__likes-content {
   .fk-d-menu__inner-content,
   .d-modal__body {
     padding-bottom: 0.5em;
@@ -328,7 +327,6 @@ body:not(.archetype-private_message) {
         grid-template-areas: "user likes" "post post";
         grid-template-columns: auto 1fr;
         border-top: 1px solid var(--primary-low);
-        padding: 1em 0;
         gap: 0.25em;
 
         .discourse-no-touch & {
@@ -391,6 +389,7 @@ body:not(.archetype-private_message) {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5em;
+      padding-inline: 1rem;
     }
     .poster {
       display: block;
@@ -506,10 +505,6 @@ body:not(.archetype-private_message) {
 
     &:has(.topic-views) {
       min-width: unset;
-
-      h3 {
-        text-align: center;
-      }
     }
   }
 }
