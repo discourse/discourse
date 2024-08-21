@@ -2991,7 +2991,7 @@ uncategorized:
 
   show_topic_map_in_topics_without_replies:
     client: true
-    default: false
+    default: true
 
 user_preferences:
   default_email_digest_frequency:
