@@ -1,4 +1,5 @@
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
+import { translateModKey } from "discourse/lib/utilities";
 import I18n from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 
@@ -22,14 +23,26 @@ export default DropdownSelectBoxComponent.extend({
           if (content.label) {
             label = I18n.t(content.label);
             if (content.shortcut) {
-              label += ` <kbd class="shortcut">${PLATFORM_KEY_MODIFIER}+${content.shortcut}</kbd>`;
+              label += ` <kbd class="shortcut">${translateModKey(
+                PLATFORM_KEY_MODIFIER
+              )}${translateModKey(content.shortcut)}</kbd>`;
+            }
+          }
+
+          let title;
+          if (content.title) {
+            title = I18n.t(content.title);
+            if (content.shortcut) {
+              title += ` (${translateModKey(
+                PLATFORM_KEY_MODIFIER
+              )}${translateModKey(content.shortcut)})`;
             }
           }
 
           return {
             icon: content.icon,
             label,
-            title: content.title ? I18n.t(content.title) : null,
+            title,
             name: content.name,
             id: { name: content.name, action: content.action },
           };

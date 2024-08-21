@@ -13,6 +13,7 @@ import sinon from "sinon";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import LinkLookup from "discourse/lib/link-lookup";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { translateModKey } from "discourse/lib/utilities";
 import Composer, {
   CREATE_TOPIC,
   NEW_TOPIC_KEY,
@@ -1447,13 +1448,15 @@ acceptance("composer buttons API", function (needs) {
       .dom(row)
       .hasAttribute(
         "title",
-        I18n.t("some_title"),
+        I18n.t("some_title") +
+          ` (${translateModKey(`${PLATFORM_KEY_MODIFIER}+alt+b`)})`,
         "it shows the title without shortcut"
       );
     assert
       .dom(row)
       .hasText(
-        I18n.t("some_label") + ` ${PLATFORM_KEY_MODIFIER}+alt+b`,
+        I18n.t("some_label") +
+          ` ${translateModKey(PLATFORM_KEY_MODIFIER + "alt+b")}`,
         "it shows the label with shortcut"
       );
   });
