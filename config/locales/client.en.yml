@@ -5686,7 +5686,7 @@ en:
           backups: "Backups"
           backup_files: "Backup files"
           logs: "Logs"
-        none: "No backup available."
+        none: "No backup available"
         read_only:
           enable:
             title: "Enable read-only mode"
@@ -5724,12 +5724,12 @@ en:
           download:
             label: "Download"
             title: "Send email with download link"
-            alert: "A link to download this backup has been emailed to you."
+            alert: "A link to download this backup has been emailed to you"
           destroy:
             title: "Remove the backup"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
-            is_disabled: "Restore is disabled in the site settings."
+            is_disabled: "Restore is currently disabled. To enable it, visit the <a href='%{url}'>site settings</a>."
             label: "Restore"
             title: "Restore the backup"
             confirm: "Are you sure you want to restore this backup?"
@@ -5738,7 +5738,7 @@ en:
             title: "Rollback the database to previous working state"
             confirm: "Are you sure you want to rollback the database to the previous working state?"
         location:
-          local: "Local Storage"
+          local: "Local storage"
           s3: "S3"
         backup_storage_error: "Failed to access backup storage: %{error_message}"
 

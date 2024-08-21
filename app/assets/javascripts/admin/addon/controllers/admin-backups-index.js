@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n, setting } from "discourse/lib/computed";
+import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
@@ -16,6 +17,10 @@ export default class AdminBackupsIndexController extends Controller {
   @i18n("admin.backups.upload.label") uploadLabel;
   @setting("backup_location") backupLocation;
   @equal("backupLocation", "local") localBackupStorage;
+
+  get restoreSettingsUrl() {
+    return getURL("/admin/backups/settings?filter=allow_restore");
+  }
 
   @discourseComputed("status.allowRestore", "status.isOperationRunning")
   restoreTitle(allowRestore, isOperationRunning) {
