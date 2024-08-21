@@ -12,8 +12,6 @@ export default DropdownSelectBoxComponent.extend({
     autoFilterable: false,
     preventHeaderFocus: true,
     customStyle: true,
-    titleProperty: "title",
-    labelProperty: "label",
   },
 
   modifyContent(contents) {
