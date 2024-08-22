@@ -2,7 +2,6 @@
 
 class SuspendUser
   include Service::Base
-  include SuspendSilencePostAction
 
   contract
 
@@ -63,5 +62,9 @@ class SuspendUser
       suspender.suspend
       context.user_history = suspender.user_history
     end
+  end
+
+  def perform_post_action(guardian:)
+    Action::SuspendSilencePostAction.call(guardian:, context: context)
   end
 end
