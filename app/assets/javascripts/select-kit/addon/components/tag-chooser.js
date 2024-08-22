@@ -1,19 +1,27 @@
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
+import { attributeBindings, classNames } from "@ember-decorators/component";
 import { makeArray } from "discourse-common/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
+import {
+  pluginApiIdentifiers,
+  selectKitOptions,
+} from "select-kit/components/select-kit";
 import TagsMixin from "select-kit/mixins/tags";
 
-export default MultiSelectComponent.extend(TagsMixin, {
-  pluginApiIdentifiers: ["tag-chooser"],
-  classNames: ["tag-chooser"],
-
-  selectKitOptions: {
-    filterable: true,
-    filterPlaceholder: "tagging.choose_for_topic",
-    limit: null,
-    allowAny: "canCreateTag",
-    maximum: "maximumTagCount",
-  },
+@classNames("tag-chooser")
+@attributeBindings("categoryId")
+@selectKitOptions({
+  filterable: true,
+  filterPlaceholder: "tagging.choose_for_topic",
+  limit: null,
+  allowAny: "canCreateTag",
+  maximum: "maximumTagCount",
+})
+@pluginApiIdentifiers("tag-chooser")
+export default class TagChooser extends MultiSelectComponent.extend(TagsMixin) {
+  blockedTags = null;
+  excludeSynonyms = false;
+  excludeHasSynonyms = false;
 
   modifyComponentForRow(collection, item) {
     if (this.getValue(item) === this.selectKit.filter && !item.count) {
@@ -21,63 +29,57 @@ export default MultiSelectComponent.extend(TagsMixin, {
     }
 
     return "tag-chooser-row";
-  },
+  }
 
-  blockedTags: null,
-  attributeBindings: ["categoryId"],
-  excludeSynonyms: false,
-  excludeHasSynonyms: false,
-
-  canCreateTag: computed("site.can_create_tag", "allowCreate", function () {
+  @computed("site.can_create_tag", "allowCreate")
+  get canCreateTag() {
     return this.allowCreate && this.site.can_create_tag;
-  }),
+  }
 
-  maximumTagCount: computed(
-    "siteSettings.max_tags_per_topic",
-    "unlimitedTagCount",
-    function () {
-      if (!this.unlimitedTagCount) {
-        return parseInt(
-          this.options.limit ||
-            this.options.maximum ||
-            this.siteSettings.max_tags_per_topic,
-          10
-        );
-      }
-
-      return null;
+  @computed("siteSettings.max_tags_per_topic", "unlimitedTagCount")
+  get maximumTagCount() {
+    if (!this.unlimitedTagCount) {
+      return parseInt(
+        this.options.limit ||
+          this.options.maximum ||
+          this.siteSettings.max_tags_per_topic,
+        10
+      );
     }
-  ),
+
+    return null;
+  }
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     this.setProperties({
       blockedTags: this.blockedTags || [],
       termMatchesForbidden: false,
       termMatchErrorMessage: null,
     });
-  },
+  }
 
-  value: computed("tags.[]", function () {
+  @computed("tags.[]")
+  get value() {
     return makeArray(this.tags).uniq();
-  }),
+  }
 
-  content: computed("tags.[]", function () {
+  @computed("tags.[]")
+  get content() {
     return makeArray(this.tags)
       .uniq()
       .map((t) => this.defaultItem(t, t));
-  }),
+  }
 
-  actions: {
-    onChange(value, items) {
-      if (this.onChange) {
-        this.onChange(value, items);
-      } else {
-        this.set("tags", value);
-      }
-    },
-  },
+  @action
+  _onChange(value, items) {
+    if (this.onChange) {
+      this.onChange(value, items);
+    } else {
+      this.set("tags", value);
+    }
+  }
 
   search(query) {
     const selectedTags = makeArray(this.tags).filter(Boolean);
@@ -106,7 +108,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
     }
 
     return this.searchTags("/tags/filter/search", data, this._transformJson);
-  },
+  }
 
   _transformJson(context, json) {
     if (context.isDestroyed || context.isDestroying) {
@@ -131,5 +133,5 @@ export default MultiSelectComponent.extend(TagsMixin, {
     }
 
     return results.uniqBy("id");
-  },
-});
+  }
+}

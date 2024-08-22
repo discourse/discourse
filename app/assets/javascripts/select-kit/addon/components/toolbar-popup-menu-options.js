@@ -1,18 +1,21 @@
+import { classNames } from "@ember-decorators/component";
 import I18n from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import {
+  pluginApiIdentifiers,
+  selectKitOptions,
+} from "select-kit/components/select-kit";
 
-export default DropdownSelectBoxComponent.extend({
-  pluginApiIdentifiers: ["toolbar-popup-menu-options"],
-  classNames: ["toolbar-popup-menu-options"],
-
-  selectKitOptions: {
-    showFullTitle: false,
-    filterable: false,
-    autoFilterable: false,
-    preventHeaderFocus: true,
-    customStyle: true,
-  },
-
+@classNames("toolbar-popup-menu-options")
+@selectKitOptions({
+  showFullTitle: false,
+  filterable: false,
+  autoFilterable: false,
+  preventHeaderFocus: true,
+  customStyle: true,
+})
+@pluginApiIdentifiers("toolbar-popup-menu-options")
+export default class ToolbarPopupMenuOptions extends DropdownSelectBoxComponent {
   modifyContent(contents) {
     return contents
       .map((content) => {
@@ -25,5 +28,5 @@ export default DropdownSelectBoxComponent.extend({
         }
       })
       .filter(Boolean);
-  },
-});
+  }
+}

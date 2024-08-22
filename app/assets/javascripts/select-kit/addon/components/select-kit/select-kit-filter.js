@@ -2,29 +2,33 @@ import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { not } from "@ember/object/computed";
 import { isPresent } from "@ember/utils";
+import {
+  attributeBindings,
+  classNameBindings,
+  classNames,
+} from "@ember-decorators/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import UtilsMixin from "select-kit/mixins/utils";
 
-export default Component.extend(UtilsMixin, {
-  classNames: ["select-kit-filter"],
-  classNameBindings: ["isExpanded:is-expanded"],
-  attributeBindings: ["role"],
-  tabIndex: -1,
+@classNames("select-kit-filter")
+@classNameBindings("isExpanded:is-expanded")
+@attributeBindings("role")
+export default class SelectKitFilter extends Component.extend(UtilsMixin) {
+  tabIndex = -1;
 
-  isHidden: computed(
+  @not("isHidden") isExpanded;
+  @computed(
     "selectKit.options.{filterable,allowAny,autoFilterable}",
-    "content.[]",
-    function () {
-      return (
-        !this.selectKit.options.filterable &&
-        !this.selectKit.options.allowAny &&
-        !this.selectKit.options.autoFilterable
-      );
-    }
-  ),
-
-  isExpanded: not("isHidden"),
+    "content.[]"
+  )
+  get isHidden() {
+    return (
+      !this.selectKit.options.filterable &&
+      !this.selectKit.options.allowAny &&
+      !this.selectKit.options.autoFilterable
+    );
+  }
 
   @discourseComputed(
     "selectKit.options.filterPlaceholder",
@@ -45,23 +49,23 @@ export default Component.extend(UtilsMixin, {
         ? "select_kit.filter_placeholder_with_any"
         : "select_kit.filter_placeholder"
     );
-  },
+  }
 
   @action
-  onPaste() {},
+  onPaste() {}
 
   @action
   onInput(event) {
     this.selectKit.onInput(event);
     return true;
-  },
+  }
 
   @action
   onKeyup(event) {
     event.preventDefault();
     event.stopImmediatePropagation();
     return true;
-  },
+  }
 
   @action
   onKeydown(event) {
@@ -131,5 +135,5 @@ export default Component.extend(UtilsMixin, {
     }
 
     this.selectKit.set("highlighted", null);
-  },
-});
+  }
+}
