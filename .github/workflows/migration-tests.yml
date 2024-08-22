@@ -24,7 +24,7 @@ jobs:
   tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: Tests with Ruby ${{ matrix.ruby }}
-    runs-on: 'ubuntu-latest'
+    runs-on: debian-12
     container: discourse/discourse_test:slim
     timeout-minutes: 20
 
