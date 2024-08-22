@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import loadAce from "discourse/lib/load-ace-editor";
 import { bind } from "discourse-common/utils/decorators";
@@ -58,6 +59,17 @@ export default class AceEditor extends Component {
   @tracked isLoading = true;
   editor = null;
   ace = null;
+  skipChangePropagation = false;
+
+  setContent = modifier(() => {
+    if (this.args.content === this.editor.getSession().getValue()) {
+      return;
+    }
+
+    this.skipChangePropagation = true;
+    this.editor.getSession().setValue(this.args.content || "");
+    this.skipChangePropagation = false;
+  });
 
   constructor() {
     super(...arguments);
@@ -104,8 +116,12 @@ export default class AceEditor extends Component {
 
     const session = this.editor.getSession();
     session.setMode(`ace/mode/${this.mode}`);
-    session.setValue(this.args.content || "");
-    this.editor.on("change", () => this.args.onChange(session.getValue()));
+
+    this.editor.on("change", () => {
+      if (!this.skipChangePropagation) {
+        this.args.onChange(session.getValue());
+      }
+    });
 
     if (this.args.save) {
       this.editor.commands.addCommand({
@@ -233,6 +249,7 @@ export default class AceEditor extends Component {
       <ConditionalLoadingSpinner @condition={{this.isLoading}} @size="small">
         <div
           {{didInsert this.setupAce}}
+          {{this.setContent}}
           {{didUpdate this.editorIdChanged @editorId}}
           {{didUpdate this.modeChanged @mode}}
           {{didUpdate this.placeholderChanged @placeholder}}
