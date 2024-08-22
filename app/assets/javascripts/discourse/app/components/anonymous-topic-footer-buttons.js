@@ -1,15 +1,14 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
+import { attributeBindings } from "@ember-decorators/component";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 
-export default Component.extend({
-  elementId: "topic-footer-buttons",
+@attributeBindings("role")
+export default class AnonymousTopicFooterButtons extends Component {
+  elementId = "topic-footer-buttons";
+  role = "region";
 
-  attributeBindings: ["role"],
-
-  role: "region",
-
-  allButtons: getTopicFooterButtons(),
+  @getTopicFooterButtons() allButtons;
 
   @computed("allButtons.[]")
   get buttons() {
@@ -17,5 +16,5 @@ export default Component.extend({
       .filterBy("anonymousOnly", true)
       .sortBy("priority")
       .reverse();
-  },
-});
+  }
+}
