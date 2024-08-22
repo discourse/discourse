@@ -673,7 +673,12 @@ export default class ComposerService extends Service {
       menuItem
     );
     if (typeof menuItem.action === "function") {
-      return menuItem.action(toolbarEvent || this.toolbarEvent);
+      // note due to the way args are passed to actions we need
+      // to treate the explicity toolbarEvent as a fallback for no
+      // event
+      // Long term we want to avoid needing this awkwardness and pass
+      // the event explicitly
+      return menuItem.action(this.toolbarEvent || toolbarEvent);
     } else {
       return (
         this.actions?.[menuItem.action]?.bind(this) || // Legacy-style contributions from themes/plugins
