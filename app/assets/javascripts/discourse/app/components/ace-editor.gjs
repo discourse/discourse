@@ -119,7 +119,7 @@ export default class AceEditor extends Component {
 
     this.editor.on("change", () => {
       if (!this.skipChangePropagation) {
-        this.args.onChange(session.getValue());
+        this.args.onChange?.(session.getValue());
       }
     });
 
