@@ -13,7 +13,6 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
 
 acceptance("Discourse Presence Plugin", function (needs) {
   needs.user({ whisperer: true });
