@@ -71,6 +71,8 @@ class SilenceUser
         )
         context.user_history = user_history
       end
+    rescue => err
+      Discourse.warn_exception(err, message: "failed to silence user with ID #{user.id}")
     end
   end
 

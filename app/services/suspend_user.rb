@@ -61,6 +61,8 @@ class SuspendUser
         )
       suspender.suspend
       context.user_history = suspender.user_history
+    rescue => err
+      Discourse.warn_exception(err, message: "failed to suspend user with ID #{user.id}")
     end
   end
 
