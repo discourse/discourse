@@ -148,6 +148,7 @@ export default class Info extends Component {
                   }}
                     {{categoryLink
                       @topicInfo.category.parentCategory.parentCategory
+                      (hash hideParent="true")
                     }}
                   {{/if}}
 
