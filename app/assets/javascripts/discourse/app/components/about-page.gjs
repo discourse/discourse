@@ -218,8 +218,11 @@ export default class AboutPage extends Component {
             </span>
           {{/each}}
         </div>
-        <h3>{{i18n "about.simple_title"}}</h3>
-        <div>{{htmlSafe @model.extended_site_description}}</div>
+
+        {{#if @model.extended_site_description}}
+          <h3>{{i18n "about.simple_title"}}</h3>
+          <div>{{htmlSafe @model.extended_site_description}}</div>
+        {{/if}}
 
         {{#if @model.admins.length}}
           <section class="about__admins">
