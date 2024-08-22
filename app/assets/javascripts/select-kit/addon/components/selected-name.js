@@ -4,7 +4,6 @@ import { reads } from "@ember/object/computed";
 import { guidFor } from "@ember/object/internals";
 import { tagName } from "@ember-decorators/component";
 import { makeArray } from "discourse-common/lib/helpers";
-import {} from "select-kit/components/select-kit";
 import UtilsMixin from "select-kit/mixins/utils";
 
 @tagName("")
