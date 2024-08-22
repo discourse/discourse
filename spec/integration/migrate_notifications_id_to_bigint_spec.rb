@@ -12,10 +12,14 @@ RSpec.describe "Migrate `Notifications#id` to bigint" do
     @original_verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false
 
-    DB.exec("ALTER TABLE notifications ALTER COLUMN id TYPE INT")
-    DB.exec("ALTER SEQUENCE notifications_id_seq AS INT")
-
-    Migration::ColumnDropper.execute_drop(:notifications, [:old_id])
+    # Revert what migrations already did
+    Migration::ColumnDropper.drop_readonly(:notifications, :old_id)
+    DB.exec "ALTER SEQUENCE notifications_id_seq AS INT OWNED BY notifications.old_id"
+    Migration::ColumnDropper.execute_drop(:notifications, [:id])
+    DB.exec "ALTER TABLE notifications RENAME COLUMN old_id TO id"
+    DB.exec "ALTER TABLE notifications ALTER COLUMN id SET DEFAULT nextval('notifications_id_seq'::regclass)"
+    DB.exec "CREATE UNIQUE INDEX notifications_pkey ON public.notifications USING btree (id)"
+    DB.exec "ALTER TABLE notifications ADD CONSTRAINT notifications_pkey PRIMARY KEY USING INDEX notifications_pkey"
   end
 
   after do
@@ -61,7 +65,7 @@ RSpec.describe "Migrate `Notifications#id` to bigint" do
 
     SwapBigIntNotificationsId.new.up
 
-    # Check that column was correctly renamed
+    # Check that columns were correctly swapped (id -> old_id, new_id -> id)
     expect(
       DB.query(
         "SELECT data_type FROM information_schema.columns WHERE table_name = 'notifications' AND column_name = 'id' LIMIT 1",
@@ -69,6 +73,9 @@ RSpec.describe "Migrate `Notifications#id` to bigint" do
         0
       ].data_type,
     ).to eq("bigint")
+
+    # Check that the old values are still present
+    expect(notification_1.reload.old_id).to eq(notification_1.id)
 
     # Check that the indexes were correctly recreated
     existing_indexes =
@@ -79,8 +86,11 @@ RSpec.describe "Migrate `Notifications#id` to bigint" do
           acc
         end
 
-    expect(existing_indexes.keys).to contain_exactly(*starting_indexes.keys)
-    expect(existing_indexes.values).to contain_exactly(*starting_indexes.values)
+    expect(existing_indexes.keys).to contain_exactly(
+      *starting_indexes.keys,
+      "index_notifications_read_or_not_high_priority_bigint",
+      "index_notifications_unique_unread_high_priority_bigint",
+    )
 
     # Final smoke test to ensure that we can create a new notification
     DB.exec("SELECT setval('notifications_id_seq', 2147483647)") # Set to bigint

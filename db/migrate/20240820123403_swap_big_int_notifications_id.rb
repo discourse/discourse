@@ -20,22 +20,14 @@ class SwapBigIntNotificationsId < ActiveRecord::Migration[7.0]
     execute "ALTER TABLE notifications ALTER COLUMN new_id SET DEFAULT nextval('notifications_id_seq'::regclass)"
     execute "ALTER SEQUENCE notifications_id_seq OWNED BY notifications.new_id"
 
-    execute "ALTER TABLE notifications DROP COLUMN id"
+    execute "ALTER TABLE notifications RENAME COLUMN id TO old_id"
     execute "ALTER TABLE notifications RENAME COLUMN new_id TO id"
 
+    execute "ALTER TABLE notifications DROP CONSTRAINT notifications_pkey"
     execute "ALTER TABLE notifications ADD CONSTRAINT notifications_pkey PRIMARY KEY USING INDEX notifications_pkey_bigint"
 
-    # Remove `_bigint` suffix from indexes
-    results =
-      execute(
-        "SELECT indexname, indexdef FROM pg_indexes WHERE tablename = 'notifications' AND indexdef SIMILAR TO '%\\mid\\M%'",
-      )
-    results.each do |res|
-      indexname, indexdef = res["indexname"], res["indexdef"]
-      if indexname.include?("_bigint")
-        execute "ALTER INDEX #{indexname} RENAME TO #{indexname.gsub(/_bigint$/, "")}"
-      end
-    end
+    execute "ALTER TABLE notifications ALTER COLUMN old_id DROP NOT NULL"
+    Migration::ColumnDropper.mark_readonly(:notifications, :old_id)
   ensure
     Migration::SafeMigrate.enable!
   end
