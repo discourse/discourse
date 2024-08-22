@@ -4,9 +4,9 @@ module Migrations::Converters::Base
   class Step
     IntermediateDB = Migrations::Database::IntermediateDB
 
-    attr_accessor :settings, :output_db
+    attr_accessor :settings
 
-    def initialize(args)
+    def initialize(args = {})
       args.each { |arg, value| instance_variable_set("@#{arg}", value) if respond_to?(arg, true) }
     end
 
