@@ -25,7 +25,7 @@ export default DropdownSelectBoxComponent.extend({
             if (content.shortcut) {
               label += ` <kbd class="shortcut">${translateModKey(
                 PLATFORM_KEY_MODIFIER
-              )}${translateModKey(content.shortcut)}</kbd>`;
+              )}+${translateModKey(content.shortcut)}</kbd>`;
             }
           }
 
