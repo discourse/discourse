@@ -736,6 +736,11 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
   end
 
   describe "#log_off_user" do
+    event_triggered_user = nil
+    let(:event_handler) { Proc.new { |user| event_triggered_user = user.id } }
+    before { DiscourseEvent.on(:user_logged_out, &event_handler) }
+    after { DiscourseEvent.off(:user_logged_out, &event_handler) }
+
     it "should work when the current user was cached by a different provider instance" do
       user_provider = provider("/")
       user_provider.log_on_user(user, {}, user_provider.cookie_jar)
@@ -750,6 +755,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       user_provider = TestProvider.new(env)
       user_provider.log_off_user({}, user_provider.cookie_jar)
       expect(UserAuthToken.find_by(user_id: user.id)).to be_nil
+      expect(event_triggered_user).to eq(user.id)
     end
   end
 

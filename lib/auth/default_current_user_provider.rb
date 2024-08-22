@@ -338,6 +338,7 @@ class Auth::DefaultCurrentUserProvider
       user.logged_out
     elsif user && @user_token
       @user_token.destroy
+      DiscourseEvent.trigger(:user_logged_out, user)
     end
 
     cookie_jar.delete("authentication_data")
