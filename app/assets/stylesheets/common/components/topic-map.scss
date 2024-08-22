@@ -90,28 +90,6 @@ body:not(.archetype-private_message) {
     overflow-wrap: anywhere;
   }
 
-  .fk-d-menu__content {
-    box-sizing: border-box;
-    max-height: 80dvh;
-    min-width: 20em;
-    width: 100%;
-    overflow: auto;
-    overscroll-behavior: contain;
-    padding: 1rem 1.5rem;
-    width: 100%;
-    flex-direction: column;
-    .desktop-view & {
-      @include breakpoint(mobile-large) {
-        min-width: unset;
-        max-width: 90dvw;
-      }
-    }
-
-    .loading-container {
-      width: 100%;
-    }
-  }
-
   &__contents {
     padding-block: 0.5em;
     flex-grow: 1;
@@ -282,12 +260,6 @@ body:not(.archetype-private_message) {
   }
 }
 
-h3 {
-  font-size: var(--font-up-1);
-  padding-bottom: 0.5em;
-  border-bottom: 1px solid var(--primary-low);
-}
-
 .mobile-view {
   .d-modal[class*="topic-map__"] {
     h3 {
@@ -320,6 +292,9 @@ h3 {
 
     h3 {
       padding-inline: 1rem;
+      padding-bottom: 0.5em;
+      font-size: var(--font-up-1);
+      border-bottom: 1px solid var(--primary-low);
     }
   }
 
