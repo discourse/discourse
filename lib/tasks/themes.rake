@@ -56,7 +56,7 @@ end
 desc "Install themes & theme components from an archive"
 task "themes:install:archive" => :environment do |task, args|
   filename = ENV["THEME_ARCHIVE"]
-  update_components = ENV["UPDATE_COMPONENTS"] == "0" ? false : true
+  update_components = ENV["UPDATE_COMPONENTS"] == "0" ? "none" : nil
   RemoteTheme.update_zipped_theme(filename, File.basename(filename), update_components:)
 end
 
