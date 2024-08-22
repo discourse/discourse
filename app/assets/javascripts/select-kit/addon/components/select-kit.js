@@ -61,7 +61,7 @@ export function selectKitOptions(options) {
  */
 export function pluginApiIdentifiers(identifiers) {
   return function (target) {
-    concatProtoProperty(target, "pluginIdIdentifiers", identifiers);
+    concatProtoProperty(target, "pluginApiIdentifiers", identifiers);
   };
 }
 
