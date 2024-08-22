@@ -59,14 +59,6 @@ export default class Chat extends Service {
     this._activeChannel = channel;
   }
 
-  get isDrawerExpanded() {
-    return this.chatStateManager.isDrawerExpanded;
-  }
-
-  get isFullPage() {
-    return this.chatStateManager.isFullPageActive;
-  }
-
   @computed("currentUser.staff", "currentUser.groups.[]")
   get userCanDirectMessage() {
     if (!this.currentUser) {

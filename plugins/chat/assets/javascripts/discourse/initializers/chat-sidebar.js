@@ -51,6 +51,7 @@ export default {
       const chatChannelsManager = container.lookup(
         "service:chat-channels-manager"
       );
+      const chatStateManager = container.lookup("service:chat-state-manager");
 
       api.addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
@@ -119,6 +120,7 @@ export default {
                 super(...arguments);
                 this.channel = channel;
                 this.chatService = chatService;
+                this.chatStateManager = chatStateManager;
               }
 
               get name() {
@@ -134,8 +136,8 @@ export default {
 
                 if (
                   this.channel.id === this.chatService.activeChannel?.id &&
-                  (this.chatService.isDrawerExpanded ||
-                    this.chatService.isFullPage)
+                  (this.chatStateManager.isDrawerExpanded ||
+                    this.chatStateManager.isFullPageActive)
                 ) {
                   classes.push("sidebar-section-link--active");
                 }
@@ -293,6 +295,7 @@ export default {
               this.channel = channel;
               this.chatService = chatService;
               this.currentUser = currentUser;
+              this.chatStateManager = chatStateManager;
 
               if (this.oneOnOneMessage) {
                 const user = this.channel.chatable.users[0];
@@ -336,8 +339,8 @@ export default {
 
               if (
                 this.channel.id === this.chatService.activeChannel?.id &&
-                (this.chatService.isDrawerExpanded ||
-                  this.chatService.isFullPage)
+                (this.chatStateManager.isDrawerExpanded ||
+                  this.chatStateManager.isFullPageActive)
               ) {
                 classes.push("sidebar-section-link--active");
               }
