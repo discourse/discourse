@@ -37,7 +37,7 @@ class CopyNotificationsIdValues < ActiveRecord::Migration[7.0]
         ) if !Rails.env.test?
       indexdef = indexdef.gsub(/\bid\b/, "new_id")
 
-      execute "DROP INDEX IF EXISTS #{indexname}_bigint"
+      execute "DROP INDEX #{Rails.env.test? ? "" : "CONCURRENTLY"} IF EXISTS #{indexname}_bigint"
       execute(indexdef)
     end
   end
