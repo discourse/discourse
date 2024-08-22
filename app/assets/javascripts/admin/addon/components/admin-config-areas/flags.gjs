@@ -2,14 +2,13 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { SYSTEM_FLAG_IDS } from "discourse/lib/constants";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
 import AdminFlagItem from "admin/components/admin-flag-item";
-import AdminPageHeader from "admin/components/admin-page-header";
+import AdminPageSubheader from "admin/components/admin-page-subheader";
 
 export default class AdminConfigAreasFlags extends Component {
   @service site;
@@ -70,28 +69,19 @@ export default class AdminConfigAreasFlags extends Component {
   }
 
   <template>
+    <AdminPageSubheader @titleLabel="admin.config_areas.flags.flags_tab">
+      <:actions as |actions|>
+        <actions.Primary
+          @route="adminConfig.flags.new"
+          @title="admin.config_areas.flags.add"
+          @label="admin.config_areas.flags.add"
+          @icon="plus"
+          @disabled={{this.addFlagButtonDisabled}}
+          class="admin-flags__header-add-flag"
+        />
+      </:actions>
+    </AdminPageSubheader>
     <div class="container admin-flags">
-      <AdminPageHeader
-        @titleLabel="admin.config_areas.flags.header"
-        @descriptionLabel="admin.config_areas.flags.subheader"
-      >
-        <:breadcrumbs>
-          <DBreadcrumbsItem
-            @path="/admin/config/flags"
-            @label={{i18n "admin.config_areas.flags.header"}}
-          />
-        </:breadcrumbs>
-        <:actions as |actions|>
-          <actions.Primary
-            @route="adminConfig.flags.new"
-            @title="admin.config_areas.flags.add"
-            @label="admin.config_areas.flags.add"
-            @icon="plus"
-            @disabled={{this.addFlagButtonDisabled}}
-            class="admin-flags__header-add-flag"
-          />
-        </:actions>
-      </AdminPageHeader>
       <table class="admin-flags__items grid">
         <thead>
           <th>{{i18n "admin.config_areas.flags.description"}}</th>

@@ -147,6 +147,27 @@ describe "Admin Flags Page", type: :system do
     )
   end
 
+  it "has settings tab" do
+    admin_flags_page.visit
+    expect(page.all(".admin-nav-submenu__tabs a").map(&:text)).to eq(%w[Settings Flags])
+
+    admin_flags_page.click_settings_tab
+    expect(page.all(".setting-label h3").map(&:text)).to eq(
+      [
+        "silence new user sensitivity",
+        "num users to silence new user",
+        "max flags per day",
+        "tl2 additional flags per day multiplier",
+        "tl3 additional flags per day multiplier",
+        "tl4 additional flags per day multiplier",
+        "flag sockpuppets",
+        "auto respond to flag actions",
+        "num flaggers to close topic",
+        "high trust flaggers auto hide posts",
+      ],
+    )
+  end
+
   it "does not allow to move notify user flag" do
     admin_flags_page.visit
     expect(admin_flags_page).to have_no_action_for_flag("notify_user")
