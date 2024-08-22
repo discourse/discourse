@@ -132,7 +132,11 @@ export default {
                   classes.push("sidebar-section-link--muted");
                 }
 
-                if (this.channel.id === this.chatService.activeChannel?.id) {
+                if (
+                  this.channel.id === this.chatService.activeChannel?.id &&
+                  (this.chatService.isDrawerExpanded ||
+                    this.chatService.isFullPage)
+                ) {
                   classes.push("sidebar-section-link--active");
                 }
 
@@ -330,7 +334,11 @@ export default {
                 classes.push("sidebar-section-link--muted");
               }
 
-              if (this.channel.id === this.chatService.activeChannel?.id) {
+              if (
+                this.channel.id === this.chatService.activeChannel?.id &&
+                (this.chatService.isDrawerExpanded ||
+                  this.chatService.isFullPage)
+              ) {
                 classes.push("sidebar-section-link--active");
               }
 
