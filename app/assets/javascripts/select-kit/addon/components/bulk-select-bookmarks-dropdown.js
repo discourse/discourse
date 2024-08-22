@@ -26,7 +26,6 @@ export default class BulkSelectBookmarksDropdown extends DropdownSelectBoxCompon
   @service dialog;
 
   headerIcon = null;
-  showFullTitle = true;
 
   get content() {
     let options = [];
