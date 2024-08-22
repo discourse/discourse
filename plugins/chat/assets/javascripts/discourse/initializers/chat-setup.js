@@ -157,14 +157,6 @@ export default {
         id: "chat",
       });
 
-      api.addChatDrawerStateCallback(({ isDrawerActive }) => {
-        if (isDrawerActive) {
-          document.body.classList.add("chat-drawer-active");
-        } else {
-          document.body.classList.remove("chat-drawer-active");
-        }
-      });
-
       api.addAboutPageActivity("chat_messages", (periods) => {
         const count = periods["7_days"];
         if (count) {
