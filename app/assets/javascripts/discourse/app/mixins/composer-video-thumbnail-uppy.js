@@ -77,9 +77,10 @@ export default class ComposerVideoThumbnailUppy extends EmberObject.extend(
         if (video.videoWidth === 0) {
           return callback();
         }
-        ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
 
         // Detect Empty Thumbnail
         const imageData = ctx.getImageData(
