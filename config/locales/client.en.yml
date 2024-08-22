@@ -5648,6 +5648,7 @@ en:
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"
+        description: "Any Discourse plugins that you have installed, or plugins that come preinstalled with Discourse hosting, will appear in this list."
         name: "Name"
         none_installed: "You don't have any plugins installed."
         version: "Version"

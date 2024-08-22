@@ -453,6 +453,10 @@ $mobile-breakpoint: 700px;
     margin-bottom: 1em;
   }
 
+  &.-no-header {
+    margin-top: 1em;
+  }
+
   .username {
     input {
       min-width: 15em;

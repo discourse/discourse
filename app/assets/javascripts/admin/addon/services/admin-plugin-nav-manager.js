@@ -9,6 +9,7 @@ import {
 export default class AdminPluginNavManager extends Service {
   @service currentUser;
   @tracked currentPlugin;
+  @tracked viewingPluginsList = false;
 
   get currentUserUsingAdminSidebar() {
     return this.currentUser?.use_admin_sidebar;
