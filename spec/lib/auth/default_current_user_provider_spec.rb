@@ -753,7 +753,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       expect(UserAuthToken.find_by(user_id: user.id)).to be_nil
     end
 
-    it "should triggers user_logged_out event" do
+    it "should trigger user_logged_out event" do
       event_triggered_user = nil
       event_handler = Proc.new { |user| event_triggered_user = user.id }
       DiscourseEvent.on(:user_logged_out, &event_handler)
