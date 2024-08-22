@@ -5551,6 +5551,13 @@ en:
           spam: "Spam"
           staff_action_logs: "Staff Action Logs"
 
+      section_landing_pages:
+        test:
+          title: "Test"
+          item_1:
+            title: "Badges"
+            description: "Something about badges"
+
       config_areas:
         about:
           header: "About your site"

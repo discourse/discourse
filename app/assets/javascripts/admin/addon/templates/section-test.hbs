@@ -1,0 +1,21 @@
+<AdminPageHeader @titleLabel="admin.section_landing_pages.test.title">
+  <:breadcrumbs>
+    <DBreadcrumbsItem
+      @path="/admin/section/test"
+      @label={{i18n "admin.section_landing_pages.test.title"}}
+    />
+  </:breadcrumbs>
+</AdminPageHeader>
+
+<AdminSectionLandingWrapper>
+  <AdminSectionLandingItem
+    @icon="cog"
+    @imageUrl="/images/emoji/twitter/heart.png?v=12"
+    @titleLabel="admin.section_landing_pages.test.item_1.title"
+    @descriptionLabel="admin.section_landing_pages.test.item_1.description"
+  >
+    <:buttons>
+      <DButton @label="groups.add" @route="adminPlugins" />
+    </:buttons>
+  </AdminSectionLandingItem>
+</AdminSectionLandingWrapper>

@@ -401,6 +401,8 @@ Discourse::Application.routes.draw do
           collection { put "/" => "about#update" }
         end
       end
+
+      get "section/:section_id" => "section#show"
     end # admin namespace
 
     get "email/unsubscribe/:key" => "email#unsubscribe", :as => "email_unsubscribe"
