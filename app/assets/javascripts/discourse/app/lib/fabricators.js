@@ -40,6 +40,7 @@ export default class CoreFabricators {
     return this.store.createRecord("tag", {
       id: args.id || incrementSequence(),
       name: args.name || getLoadedFaker().faker.word.noun(),
+      description: args.description || getLoadedFaker().faker.lorem.sentence(),
       count: args.count ?? 0,
       pm_count: args.count ?? 0,
     });
