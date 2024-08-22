@@ -118,6 +118,7 @@ RSpec.describe "Drawer", type: :system do
       page.find(".c-navbar").click
 
       expect(page).to have_selector(".chat-drawer:not(.is-expanded)")
+      expect(page).to have_selector(".body:not(.chat-drawer-expanded)")
     end
   end
 
