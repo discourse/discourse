@@ -19,8 +19,7 @@ import UtilsMixin from "select-kit/mixins/utils";
   "selectKit.options.autofocus:autofocus"
 )
 export default class SelectKitHeader extends Component.extend(UtilsMixin) {
-  selectKit;
-
+  selectKit = null;
   role = "listbox";
   tabindex = 0;
 
