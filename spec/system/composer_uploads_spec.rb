@@ -88,7 +88,7 @@ describe "Uploading files in the composer", type: :system do
       end
     end
 
-    it "handles a video where demensions can't be read gracefully" do
+    it "handles a video where dimensions can't be read gracefully" do
       visit "/new-topic"
       expect(composer).to be_opened
       topic.fill_in_composer_title("Zero Width Video Test")

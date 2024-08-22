@@ -73,7 +73,7 @@ export default class ComposerVideoThumbnailUppy extends EmberObject.extend(
 
       // A timeout is needed on mobile.
       setTimeout(() => {
-        // If demensions can't be read, abort.
+        // If dimensions can't be read, abort.
         if (video.videoWidth === 0) {
           return callback();
         }
