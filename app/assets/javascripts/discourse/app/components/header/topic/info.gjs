@@ -156,7 +156,7 @@ export default class Info extends Component {
                     (hash hideParent="true")
                   }}
                 {{/if}}
-                {{categoryLink @topicInfo.category}}
+                {{categoryLink @topicInfo.category (hash hideParent="true")}}
               </div>
             {{/if}}
 
