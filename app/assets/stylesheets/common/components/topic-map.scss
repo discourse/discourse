@@ -289,13 +289,17 @@ body:not(.archetype-private_message) {
       flex-direction: column;
       padding-block: 0.75em;
     }
+  }
 
-    h3 {
-      padding-inline: 1rem;
-      padding-bottom: 0.5em;
-      font-size: var(--font-up-1);
-      border-bottom: 1px solid var(--primary-low);
-    }
+  h3 {
+    padding-inline: 1rem;
+    padding-bottom: 0.5em;
+    font-size: var(--font-up-1);
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  .loading-container {
+    width: 100%;
   }
 
   &.topic-map__likes-content,
