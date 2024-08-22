@@ -35,7 +35,7 @@ export default DropdownSelectBoxComponent.extend({
             if (content.shortcut) {
               title += ` (${translateModKey(
                 PLATFORM_KEY_MODIFIER
-              )}${translateModKey(content.shortcut)})`;
+              )}+${translateModKey(content.shortcut)})`;
             }
           }
 
