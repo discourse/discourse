@@ -1,16 +1,17 @@
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
 import I18n from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import { selectKitOptions } from "select-kit/components/select-kit";
 
-export default DropdownSelectBoxComponent.extend({
-  classNames: ["token-based-auth-dropdown"],
-
-  selectKitOptions: {
-    icon: "wrench",
-    showFullTitle: false,
-  },
-
-  content: computed(function () {
+@classNames("token-based-auth-dropdown")
+@selectKitOptions({
+  icon: "wrench",
+  showFullTitle: false,
+})
+export default class TokenBasedAuthDropdown extends DropdownSelectBoxComponent {
+  @computed
+  get content() {
     return [
       {
         id: "edit",
@@ -23,18 +24,17 @@ export default DropdownSelectBoxComponent.extend({
         name: I18n.t("user.second_factor.disable"),
       },
     ];
-  }),
+  }
 
-  actions: {
-    onChange(id) {
-      switch (id) {
-        case "edit":
-          this.editSecondFactor(this.totp);
-          break;
-        case "disable":
-          this.disableSingleSecondFactor(this.totp);
-          break;
-      }
-    },
-  },
-});
+  @action
+  onChange(id) {
+    switch (id) {
+      case "edit":
+        this.editSecondFactor(this.totp);
+        break;
+      case "disable":
+        this.disableSingleSecondFactor(this.totp);
+        break;
+    }
+  }
+}

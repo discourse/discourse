@@ -22,4 +22,42 @@ export default class AdminSearchLogsTermController extends Controller {
       name: I18n.t("admin.logs.search_logs.types.click_through_only"),
     },
   ];
+
+  get chartConfig() {
+    return {
+      type: "bar",
+      data: {
+        labels: this.model.data.map((r) => r.x),
+        datasets: [
+          {
+            data: this.model.data.map((r) => r.y),
+            label: this.model.title,
+            backgroundColor: "rgba(200,220,240,1)",
+            borderColor: "#08C",
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              title: (context) =>
+                moment(context[0].label, "YYYY-MM-DD").format("LL"),
+            },
+          },
+        },
+        scales: {
+          y: [
+            {
+              display: true,
+              ticks: {
+                stepSize: 1,
+              },
+            },
+          ],
+        },
+      },
+    };
+  }
 }

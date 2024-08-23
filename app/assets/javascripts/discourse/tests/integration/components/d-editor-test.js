@@ -646,6 +646,29 @@ third line`
     assert.strictEqual(textarea.getAttribute("dir"), "rtl");
   });
 
+  test("toolbar event supports replaceText", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.onToolbarCreate((toolbar) => {
+        toolbar.addButton({
+          id: "replace-text",
+          icon: "times",
+          group: "extras",
+          action: () => {
+            toolbar.context.newToolbarEvent().replaceText("hello", "goodbye");
+          },
+          condition: () => true,
+        });
+      });
+    });
+
+    this.value = "hello";
+
+    await render(hbs`<DEditor @value={{this.value}} />`);
+    await click("button.replace-text");
+
+    assert.strictEqual(this.value, "goodbye");
+  });
+
   testCase(
     `doesn't jump to bottom with long text`,
     async function (assert, textarea) {

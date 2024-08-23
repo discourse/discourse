@@ -10,8 +10,10 @@ import {
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import LinkLookup from "discourse/lib/link-lookup";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { translateModKey } from "discourse/lib/utilities";
 import Composer, {
   CREATE_TOPIC,
   NEW_TOPIC_KEY,
@@ -618,7 +620,7 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:nth-of-type(1) button.reply");
 
     await menu.expand();
-    await menu.selectRowByName(I18n.t("composer.toggle_whisper"));
+    await menu.selectRowByName("toggle-whisper");
 
     assert.strictEqual(
       count(".composer-actions svg.d-icon-far-eye-slash"),
@@ -627,7 +629,7 @@ acceptance("Composer", function (needs) {
     );
 
     await menu.expand();
-    await menu.selectRowByName(I18n.t("composer.toggle_whisper"));
+    await menu.selectRowByName("toggle-whisper");
 
     assert.ok(
       !exists(".composer-actions svg.d-icon-far-eye-slash"),
@@ -635,14 +637,14 @@ acceptance("Composer", function (needs) {
     );
 
     await menu.expand();
-    await menu.selectRowByName(I18n.t("composer.toggle_whisper"));
+    await menu.selectRowByName("toggle-whisper");
 
     await click(".toggle-fullscreen");
 
     await menu.expand();
 
     assert.ok(
-      menu.rowByName(I18n.t("composer.toggle_whisper")).exists(),
+      menu.rowByName("toggle-whisper").exists(),
       "whisper toggling is still present when going fullscreen"
     );
   });
@@ -732,7 +734,7 @@ acceptance("Composer", function (needs) {
     await selectKit(".toolbar-popup-menu-options").expand();
 
     await selectKit(".toolbar-popup-menu-options").selectRowByName(
-      I18n.t("composer.toggle_whisper")
+      "toggle-whisper"
     );
 
     assert.strictEqual(
@@ -752,7 +754,7 @@ acceptance("Composer", function (needs) {
 
     await selectKit(".toolbar-popup-menu-options").expand();
     await selectKit(".toolbar-popup-menu-options").selectRowByName(
-      I18n.t("composer.toggle_unlisted")
+      "toggle-invisible"
     );
 
     assert.ok(
@@ -1402,6 +1404,61 @@ acceptance("composer buttons API", function (needs) {
   needs.user();
   needs.settings({
     allow_uncategorized_topics: true,
+  });
+
+  test("buttons can support a shortcut", async function (assert) {
+    withPluginApi("0", (api) => {
+      api.addComposerToolbarPopupMenuOption({
+        action: (toolbarEvent) => {
+          toolbarEvent.applySurround("**", "**");
+        },
+        shortcut: "alt+b",
+        icon: "far-bold",
+        name: "bold",
+        title: "some_title",
+        label: "some_label",
+
+        condition: () => {
+          return true;
+        },
+      });
+    });
+
+    await visit("/t/internationalization-localization/280");
+    await click(".post-controls button.reply");
+    await fillIn(".d-editor-input", "hello the world");
+
+    const editor = document.querySelector(".d-editor-input");
+    editor.setSelectionRange(6, 9); // select the text input in the composer
+
+    await triggerKeyEvent(
+      ".d-editor-input",
+      "keydown",
+      "B",
+      Object.assign({ altKey: true }, metaModifier)
+    );
+
+    assert.strictEqual(editor.value, "hello **the** world", "it adds the bold");
+
+    const dropdown = selectKit(".toolbar-popup-menu-options");
+    await dropdown.expand();
+
+    const row = dropdown.rowByName("bold").el();
+    assert
+      .dom(row)
+      .hasAttribute(
+        "title",
+        I18n.t("some_title") +
+          ` (${translateModKey(PLATFORM_KEY_MODIFIER + "+alt+b")})`,
+        "it shows the title with shortcut"
+      );
+    assert
+      .dom(row)
+      .hasText(
+        I18n.t("some_label") +
+          ` ${translateModKey(PLATFORM_KEY_MODIFIER + "+alt+b")}`,
+        "it shows the label with shortcut"
+      );
   });
 
   test("buttons can be added conditionally", async function (assert) {

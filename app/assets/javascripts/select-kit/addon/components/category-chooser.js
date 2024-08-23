@@ -1,6 +1,7 @@
 import { computed, set } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { isNone } from "@ember/utils";
+import { classNames } from "@ember-decorators/component";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { setting } from "discourse/lib/computed";
 import Category from "discourse/models/category";
@@ -8,26 +9,26 @@ import PermissionType from "discourse/models/permission-type";
 import I18n from "discourse-i18n";
 import CategoryRow from "select-kit/components/category-row";
 import ComboBoxComponent from "select-kit/components/combo-box";
+import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 
-export default ComboBoxComponent.extend({
-  pluginApiIdentifiers: ["category-chooser"],
-  classNames: ["category-chooser"],
-  allowUncategorized: setting("allow_uncategorized_topics"),
-  fixedCategoryPositionsOnCreate: setting("fixed_category_positions_on_create"),
-
-  selectKitOptions: {
-    filterable: true,
-    allowUncategorized: "allowUncategorized",
-    autoInsertNoneItem: false,
-    allowSubCategories: true,
-    permissionType: PermissionType.FULL,
-    excludeCategoryId: null,
-    scopedCategoryId: null,
-    prioritizedCategoryId: null,
-  },
+@classNames("category-chooser")
+@selectKitOptions({
+  filterable: true,
+  allowUncategorized: "allowUncategorized",
+  autoInsertNoneItem: false,
+  allowSubCategories: true,
+  permissionType: PermissionType.FULL,
+  excludeCategoryId: null,
+  scopedCategoryId: null,
+  prioritizedCategoryId: null,
+})
+@pluginApiIdentifiers(["category-chooser"])
+export default class CategoryChooser extends ComboBoxComponent {
+  @setting("allow_uncategorized_topics") allowUncategorized;
+  @setting("fixed_category_positions_on_create") fixedCategoryPositionsOnCreate;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     if (
       this.site.lazy_load_categories &&
@@ -40,11 +41,11 @@ export default ComboBoxComponent.extend({
         this.notifyPropertyChange("value");
       });
     }
-  },
+  }
 
   modifyComponentForRow() {
     return CategoryRow;
-  },
+  }
 
   modifyNoSelection() {
     if (!isNone(this.selectKit.options.none)) {
@@ -67,7 +68,7 @@ export default ComboBoxComponent.extend({
         return this.defaultItem(null, htmlSafe(I18n.t("category.choose")));
       }
     }
-  },
+  }
 
   modifySelection(content) {
     if (this.selectKit.hasSelection) {
@@ -88,7 +89,7 @@ export default ComboBoxComponent.extend({
     }
 
     return content;
-  },
+  }
 
   search(filter) {
     if (this.site.lazy_load_categories) {
@@ -119,29 +120,28 @@ export default ComboBoxComponent.extend({
     } else {
       return this.content;
     }
-  },
+  }
 
-  content: computed(
+  @computed(
     "selectKit.filter",
     "selectKit.options.scopedCategoryId",
-    "selectKit.options.prioritizedCategoryId",
-    function () {
-      if (!this.selectKit.filter) {
-        let { scopedCategoryId, prioritizedCategoryId } =
-          this.selectKit.options;
+    "selectKit.options.prioritizedCategoryId"
+  )
+  get content() {
+    if (!this.selectKit.filter) {
+      let { scopedCategoryId, prioritizedCategoryId } = this.selectKit.options;
 
-        if (scopedCategoryId) {
-          return this.categoriesByScope({ scopedCategoryId });
-        }
-
-        if (prioritizedCategoryId) {
-          return this.categoriesByScope({ prioritizedCategoryId });
-        }
+      if (scopedCategoryId) {
+        return this.categoriesByScope({ scopedCategoryId });
       }
 
-      return this.categoriesByScope();
+      if (prioritizedCategoryId) {
+        return this.categoriesByScope({ prioritizedCategoryId });
+      }
     }
-  ),
+
+    return this.categoriesByScope();
+  }
 
   categoriesByScope({
     scopedCategoryId = null,
@@ -218,14 +218,14 @@ export default ComboBoxComponent.extend({
     } else {
       return scopedCategories;
     }
-  },
+  }
 
   _matchCategory(filter, categoryName) {
     return this._normalize(categoryName).includes(filter);
-  },
+  }
 
   _onChange(value) {
     this._boundaryActionHandler("onChangeCategory", Category.findById(value));
     return true;
-  },
-});
+  }
+}

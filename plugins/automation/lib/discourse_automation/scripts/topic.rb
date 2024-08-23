@@ -60,14 +60,19 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::TOPIC) do
     end
 
     tags = fields.dig("tags", "value") || []
-    new_post =
-      PostCreator.new(
-        creator,
-        raw: topic_raw,
-        title: title,
-        category: category.id,
-        tags: tags,
-      ).create!
+    begin
+      new_post =
+        PostCreator.new(
+          creator,
+          raw: topic_raw,
+          title: title,
+          category: category.id,
+          tags: tags,
+        ).create!
+    rescue StandardError => e
+      Rails.logger.warn "[discourse-automation] couldn't create post: #{e.message}"
+      next
+    end
 
     if context["kind"] == DiscourseAutomation::Triggers::USER_UPDATED && new_post.persisted?
       user.user_custom_fields.create(name: automation.name, value: "true")

@@ -51,10 +51,13 @@ task "themes:install" => :environment do |task, args|
   exit 1 if counts[:errors] > 0
 end
 
+# env THEME_ARCHIVE - path to the archive
+# env UPDATE_COMPONENTS - 0 to skip updating components
 desc "Install themes & theme components from an archive"
 task "themes:install:archive" => :environment do |task, args|
   filename = ENV["THEME_ARCHIVE"]
-  RemoteTheme.update_zipped_theme(filename, File.basename(filename))
+  update_components = ENV["UPDATE_COMPONENTS"] == "0" ? "none" : nil
+  RemoteTheme.update_zipped_theme(filename, File.basename(filename), update_components:)
 end
 
 def update_themes

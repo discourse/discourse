@@ -9,6 +9,7 @@ import ApplicationInstance from "@ember/application/instance";
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { getLoadedFaker } from "discourse/lib/load-faker";
+import { excerpt } from "./text";
 
 let sequence = 1;
 
@@ -47,9 +48,18 @@ export default class CoreFabricators {
   }
 
   topic(args = {}) {
+    const id = args.id || incrementSequence();
     return this.store.createRecord("topic", {
-      id: args.id || incrementSequence(),
+      id,
+      created_at: args.created_at || moment().subtract(2, "day"),
+      updated_at: args.updated_at || moment().subtract(1, "day"),
+      slug: args.slug || getLoadedFaker().faker.lorem.slug(),
       title: args.title || getLoadedFaker().faker.commerce.productName(),
+      tags: args.tags || [],
+      category: args.category,
+      image_url: args.image_url ?? "/images/bubbles-bg.png",
+      excerpt:
+        args.excerpt ?? excerpt(getLoadedFaker().faker.lorem.sentences(5), 100),
     });
   }
 
