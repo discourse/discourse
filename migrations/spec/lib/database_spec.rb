@@ -74,4 +74,70 @@ RSpec.describe Migrations::Database do
       end
     end
   end
+
+  describe ".format_datetime" do
+    it "formats a DateTime object to ISO 8601 string" do
+      datetime = DateTime.new(2023, 10, 5, 17, 30, 0)
+      expect(described_class.format_datetime(datetime)).to eq("2023-10-05T17:30:00Z")
+    end
+
+    it "returns nil for nil input" do
+      expect(described_class.format_datetime(nil)).to be_nil
+    end
+  end
+
+  describe ".format_date" do
+    it "formats a Date object to ISO 8601 string" do
+      date = Date.new(2023, 10, 5)
+      expect(described_class.format_date(date)).to eq("2023-10-05")
+    end
+
+    it "returns nil for nil input" do
+      expect(described_class.format_date(nil)).to be_nil
+    end
+  end
+
+  describe ".format_boolean" do
+    it "returns 1 for true" do
+      expect(described_class.format_boolean(true)).to eq(1)
+    end
+
+    it "returns 0 for false" do
+      expect(described_class.format_boolean(false)).to eq(0)
+    end
+
+    it "returns nil for nil input" do
+      expect(described_class.format_boolean(nil)).to be_nil
+    end
+  end
+
+  describe ".format_ip_address" do
+    it "formats a valid IPv4 address" do
+      expect(described_class.format_ip_address("192.168.1.1")).to eq("192.168.1.1")
+    end
+
+    it "formats a valid IPv6 address" do
+      expect(described_class.format_ip_address("2001:0db8:85a3:0000:0000:8a2e:0370:7334")).to eq(
+        "2001:db8:85a3::8a2e:370:7334",
+      )
+    end
+
+    it "returns nil for an invalid IP address" do
+      expect(described_class.format_ip_address("invalid_ip")).to be_nil
+    end
+
+    it "returns nil for nil input" do
+      expect(described_class.format_ip_address(nil)).to be_nil
+    end
+  end
+
+  describe ".to_blob" do
+    it "converts a string to a `Extralite::Blob`" do
+      expect(described_class.to_blob("Hello, 世界!")).to be_a(Extralite::Blob)
+    end
+
+    it "returns nil for nil input" do
+      expect(described_class.to_blob(nil)).to be_nil
+    end
+  end
 end
