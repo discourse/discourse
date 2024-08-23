@@ -94,5 +94,4 @@ describe "Topic page", type: :system do
     send_keys(:end)
     expect(find("#post_#{topic.highest_post_number}")).to be_visible
   end
-
 end
