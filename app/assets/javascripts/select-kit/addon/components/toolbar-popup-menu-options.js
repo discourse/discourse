@@ -27,7 +27,7 @@ export default class ToolbarPopupMenuOptions extends DropdownSelectBoxComponent 
             label = I18n.t(content.label);
             if (content.shortcut) {
               label += ` <kbd class="shortcut">${translateModKey(
-                PLATFORM_KEY_MODIFIER + content.shortcut
+                PLATFORM_KEY_MODIFIER + "+" + content.shortcut
               )}</kbd>`;
             }
           }
@@ -37,7 +37,7 @@ export default class ToolbarPopupMenuOptions extends DropdownSelectBoxComponent 
             title = I18n.t(content.title);
             if (content.shortcut) {
               title += ` (${translateModKey(
-                PLATFORM_KEY_MODIFIER + content.shortcut
+                PLATFORM_KEY_MODIFIER + "+" + content.shortcut
               )})`;
             }
           }
