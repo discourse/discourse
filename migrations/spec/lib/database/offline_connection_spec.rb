@@ -28,8 +28,8 @@ RSpec.describe Migrations::Database::OfflineConnection do
   end
 
   describe "#insert" do
-    it "works" do
-      connection.insert(sql, [1, "Alice"])
+    it "can be called without errors" do
+      expect { connection.insert(sql, [1, "Alice"]) }.not_to raise_error
     end
   end
 
