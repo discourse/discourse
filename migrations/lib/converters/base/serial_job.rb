@@ -13,13 +13,7 @@ module Migrations::Converters::Base
       begin
         @step.process_item(item, @stats)
       rescue StandardError => e
-        Migrations::Database::IntermediateDB::LogEntry.create!(
-          type: "error",
-          message: "Failed to process item",
-          exception: e,
-          details: item,
-        )
-        @stats.error_count += 1
+        @stats.log_error("Failed to process item", exception: e, details: item)
       end
 
       @stats
