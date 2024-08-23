@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 %w[
-  20240820123401_add_big_int_notifications_id
-  20240820123402_alter_notifications_id_sequence_to_bigint
+  20240820123401_alter_notifications_id_sequence_to_bigint
+  20240820123402_add_big_int_notifications_id
   20240820123403_copy_notifications_id_values
   20240820123404_copy_notifications_id_indexes
   20240820123405_swap_big_int_notifications_id
