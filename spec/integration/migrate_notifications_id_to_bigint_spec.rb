@@ -2,9 +2,11 @@
 
 %w[
   20240820123401_add_big_int_notifications_id
-  20240820123402_copy_notifications_id_values
-  20240820123403_swap_big_int_notifications_id
-  20240820123404_alter_notifications_id_sequence_to_bigint
+  20240820123402_alter_notifications_id_sequence_to_bigint
+  20240820123403_copy_notifications_id_values
+  20240820123404_copy_notifications_id_indexes
+  20240820123405_swap_big_int_notifications_id
+  20240820123406_drop_old_notification_id_indexes
 ].each { |file| require Rails.root.join("db/migrate/#{file}.rb") }
 
 RSpec.describe "Migrate `Notifications#id` to bigint" do
@@ -15,10 +17,14 @@ RSpec.describe "Migrate `Notifications#id` to bigint" do
     # Revert what migrations already did
     Migration::ColumnDropper.drop_readonly(:notifications, :old_id)
     DB.exec "ALTER SEQUENCE notifications_id_seq AS INT OWNED BY notifications.old_id"
+    indexes =
+      DB.query(
+        "SELECT indexdef FROM pg_indexes WHERE tablename = 'notifications' AND indexdef SIMILAR TO '%\\mid\\M%'",
+      ).map(&:indexdef)
     Migration::ColumnDropper.execute_drop(:notifications, [:id])
     DB.exec "ALTER TABLE notifications RENAME COLUMN old_id TO id"
     DB.exec "ALTER TABLE notifications ALTER COLUMN id SET DEFAULT nextval('notifications_id_seq'::regclass)"
-    DB.exec "CREATE UNIQUE INDEX notifications_pkey ON public.notifications USING btree (id)"
+    indexes.each { |index| DB.exec(index) }
     DB.exec "ALTER TABLE notifications ADD CONSTRAINT notifications_pkey PRIMARY KEY USING INDEX notifications_pkey"
   end
 
@@ -39,8 +45,8 @@ RSpec.describe "Migrate `Notifications#id` to bigint" do
     notification_1 = Fabricate(:notification)
     notification_2 = Fabricate(:notification)
 
-    AddBigIntNotificationsId.new.up
     AlterNotificationsIdSequenceToBigint.new.up
+    AddBigIntNotificationsId.new.up
 
     expect(
       DB.query(
@@ -57,6 +63,7 @@ RSpec.describe "Migrate `Notifications#id` to bigint" do
     expect(notification_3.new_id).to eq(notification_3.id)
 
     CopyNotificationsIdValues.new.up
+    CopyNotificationsIdIndexes.new.up
 
     # Check that the rows were correctly copied
     expect(notification_1.reload.new_id).to eq(notification_1.id)
@@ -77,6 +84,8 @@ RSpec.describe "Migrate `Notifications#id` to bigint" do
     # Check that the old values are still present
     expect(notification_1.reload.old_id).to eq(notification_1.id)
 
+    DropOldNotificationIdIndexes.new.up
+
     # Check that the indexes were correctly recreated
     existing_indexes =
       DB
@@ -86,11 +95,8 @@ RSpec.describe "Migrate `Notifications#id` to bigint" do
           acc
         end
 
-    expect(existing_indexes.keys).to contain_exactly(
-      *starting_indexes.keys,
-      "index_notifications_read_or_not_high_priority_bigint",
-      "index_notifications_unique_unread_high_priority_bigint",
-    )
+    expect(existing_indexes.keys).to contain_exactly(*starting_indexes.keys)
+    expect(existing_indexes.values).to contain_exactly(*starting_indexes.values)
 
     # Final smoke test to ensure that we can create a new notification
     DB.exec("SELECT setval('notifications_id_seq', 2147483647)") # Set to bigint

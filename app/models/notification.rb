@@ -427,10 +427,8 @@ end
 #  index_notifications_on_topic_id_and_post_number              (topic_id,post_number)
 #  index_notifications_on_user_id_and_created_at                (user_id,created_at)
 #  index_notifications_on_user_id_and_topic_id_and_post_number  (user_id,topic_id,post_number)
-#  index_notifications_read_or_not_high_priority                (user_id,old_id DESC,read,topic_id) WHERE (read OR (high_priority = false))
-#  index_notifications_read_or_not_high_priority_bigint         (user_id,id DESC,read,topic_id) WHERE (read OR (high_priority = false))
-#  index_notifications_unique_unread_high_priority              (user_id,old_id) UNIQUE WHERE ((NOT read) AND (high_priority = true))
-#  index_notifications_unique_unread_high_priority_bigint       (user_id,id) UNIQUE WHERE ((NOT read) AND (high_priority = true))
+#  index_notifications_read_or_not_high_priority                (user_id,id DESC,read,topic_id) WHERE (read OR (high_priority = false))
+#  index_notifications_unique_unread_high_priority              (user_id,id) UNIQUE WHERE ((NOT read) AND (high_priority = true))
 #  index_notifications_user_menu_ordering                       (user_id, ((high_priority AND (NOT read))) DESC, ((NOT read)) DESC, created_at DESC)
 #  index_notifications_user_menu_ordering_deprioritized_likes   (user_id, ((high_priority AND (NOT read))) DESC, (((NOT read) AND (notification_type <> ALL (ARRAY[5, 19, 25])))) DESC, created_at DESC)
 #

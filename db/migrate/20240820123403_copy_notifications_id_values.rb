@@ -20,26 +20,6 @@ class CopyNotificationsIdValues < ActiveRecord::Migration[7.0]
         SET new_id = id
         WHERE id >= #{start_id} AND id < #{start_id + batch_size} AND new_id != id
       SQL
-
-    # Copy existing indexes and suffix them with `_bigint`
-    results =
-      execute(
-        "SELECT indexname, indexdef FROM pg_indexes WHERE tablename = 'notifications' AND indexdef SIMILAR TO '%\\mid\\M%'",
-      )
-    results.each do |res|
-      indexname, indexdef = res["indexname"], res["indexdef"]
-
-      indexdef = indexdef.gsub(/\b#{indexname}\b/, "#{indexname}_bigint")
-      indexdef =
-        indexdef.gsub(
-          /\bCREATE (UNIQUE )?INDEX\b/,
-          "CREATE \\1INDEX CONCURRENTLY",
-        ) if !Rails.env.test?
-      indexdef = indexdef.gsub(/\bid\b/, "new_id")
-
-      execute "DROP INDEX #{Rails.env.test? ? "" : "CONCURRENTLY"} IF EXISTS #{indexname}_bigint"
-      execute(indexdef)
-    end
   end
 
   def down
