@@ -322,6 +322,19 @@ export default Component.extend(TextareaTextManipulation, {
       });
     });
 
+    if (this.popupMenuOptions && this.onPopupMenuAction) {
+      this.popupMenuOptions.forEach((popupButton) => {
+        if (popupButton.shortcut && popupButton.condition) {
+          const shortcut =
+            `${PLATFORM_KEY_MODIFIER}+${popupButton.shortcut}`.toLowerCase();
+          this._itsatrap.bind(shortcut, () => {
+            this.onPopupMenuAction(popupButton, this.newToolbarEvent());
+            return false;
+          });
+        }
+      });
+    }
+
     this._itsatrap.bind("tab", () => this.indentSelection("right"));
     this._itsatrap.bind("shift+tab", () => this.indentSelection("left"));
     this._itsatrap.bind(`${PLATFORM_KEY_MODIFIER}+shift+.`, () =>
@@ -785,6 +798,25 @@ export default Component.extend(TextareaTextManipulation, {
     }
   },
 
+  newToolbarEvent(trimLeading) {
+    const selected = this.getSelected(trimLeading);
+    return {
+      selected,
+      selectText: (from, length) =>
+        this.selectText(from, length, { scroll: false }),
+      applySurround: (head, tail, exampleKey, opts) =>
+        this.applySurround(selected, head, tail, exampleKey, opts),
+      applyList: (head, exampleKey, opts) =>
+        this._applyList(selected, head, exampleKey, opts),
+      formatCode: (...args) => this.send("formatCode", args),
+      addText: (text) => this.addText(selected, text),
+      getText: () => this.value,
+      toggleDirection: () => this._toggleDirection(),
+      replaceText: (oldVal, newVal, opts) =>
+        this.replaceText(oldVal, newVal, opts),
+    };
+  },
+
   actions: {
     emoji() {
       if (this.disabled) {
@@ -799,21 +831,7 @@ export default Component.extend(TextareaTextManipulation, {
         return;
       }
 
-      const selected = this.getSelected(button.trimLeading);
-      const toolbarEvent = {
-        selected,
-        selectText: (from, length) =>
-          this.selectText(from, length, { scroll: false }),
-        applySurround: (head, tail, exampleKey, opts) =>
-          this.applySurround(selected, head, tail, exampleKey, opts),
-        applyList: (head, exampleKey, opts) =>
-          this._applyList(selected, head, exampleKey, opts),
-        formatCode: (...args) => this.send("formatCode", args),
-        addText: (text) => this.addText(selected, text),
-        getText: () => this.value,
-        toggleDirection: () => this._toggleDirection(),
-      };
-
+      const toolbarEvent = this.newToolbarEvent(button.trimLeading);
       if (button.sendAction) {
         return button.sendAction(toolbarEvent);
       } else {
