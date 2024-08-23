@@ -3,8 +3,9 @@ import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { classNames } from "@ember-decorators/component";
+import { on } from "@ember-decorators/object";
 import loadScript from "discourse/lib/load-script";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 const DATE_FORMAT = "YYYY-MM-DD";

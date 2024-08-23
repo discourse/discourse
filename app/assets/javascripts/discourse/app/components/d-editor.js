@@ -4,7 +4,7 @@ import { schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import ItsATrap from "@discourse/itsatrap";
 import { classNames } from "@ember-decorators/component";
-import { observes } from "@ember-decorators/object";
+import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
@@ -34,7 +34,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import deprecated from "discourse-common/lib/deprecated";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import discourseComputed, { bind, on } from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 function getButtonLabel(labelKey, defaultLabel) {

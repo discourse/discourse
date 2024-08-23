@@ -2,11 +2,10 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
-import { observes } from "@ember-decorators/object";
+import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import LoadMore from "discourse/mixins/load-more";
-import { on } from "discourse-common/utils/decorators";
 
 @classNames("contents")
 export default class DiscoveryTopicsList extends Component.extend(LoadMore) {
