@@ -341,42 +341,35 @@ export default class TopicMapSummary extends Component {
           </:trigger>
           <:content>
             <h3>{{i18n "topic_map.links_title"}}</h3>
-            <table class="topic-links">
-              <tbody>
-                {{#each this.linksToShow as |link|}}
-                  <tr>
-                    <td>
-                      <span
-                        class="badge badge-notification clicks"
-                        title={{i18n "topic_map.clicks" count=link.clicks}}
-                      >
-                        {{link.clicks}}
-                      </span>
-                    </td>
-                    <td>
-                      <TopicMapLink
-                        @attachment={{link.attachment}}
-                        @title={{link.title}}
-                        @rootDomain={{link.root_domain}}
-                        @url={{link.url}}
-                        @userId={{link.user_id}}
-                      />
-                    </td>
-                  </tr>
-                {{/each}}
-              </tbody>
-            </table>
-            {{#if this.hasMoreLinks}}
-              <div class="link-summary">
-                <span>
-                  <DButton
-                    @action={{this.showAllLinks}}
-                    @title="topic_map.links_shown"
-                    @icon="chevron-down"
-                    class="btn-flat"
+            <ul class="topic-links">
+              {{#each this.linksToShow as |link|}}
+                <li>
+                  <span
+                    class="badge badge-notification clicks"
+                    title={{i18n "topic_map.clicks" count=link.clicks}}
+                  >
+                    {{link.clicks}}
+                  </span>
+
+                  <TopicMapLink
+                    @attachment={{link.attachment}}
+                    @title={{link.title}}
+                    @rootDomain={{link.root_domain}}
+                    @url={{link.url}}
+                    @userId={{link.user_id}}
                   />
-                </span>
-              </div>
+                </li>
+              {{/each}}
+
+            </ul>
+            {{#if this.hasMoreLinks}}
+              <DButton
+                @action={{this.showAllLinks}}
+                @title="topic_map.links_shown"
+                @icon="chevron-down"
+                class="link-summary btn-flat"
+              />
+
             {{/if}}
           </:content>
         </DMenu>

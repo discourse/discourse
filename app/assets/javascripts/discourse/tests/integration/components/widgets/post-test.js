@@ -880,7 +880,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     await click(".topic-map__links-trigger");
     assert.dom(".topic-map__links-content").exists({ count: 1 });
     assert.dom(".topic-map__links-content .topic-link").exists({ count: 5 });
-    await click(".link-summary button");
+    await click(".link-summary");
     assert.dom(".topic-map__links-content .topic-link").exists({ count: 6 });
   });
 

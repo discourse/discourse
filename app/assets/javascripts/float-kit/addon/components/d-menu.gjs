@@ -110,7 +110,6 @@ export default class DMenu extends Component {
           @trapTab={{this.options.trapTab}}
           @mainClass={{concatClass
             "fk-d-menu"
-            "fk-d-menu__content"
             (concat this.options.identifier "-content")
             @class
             @contentClass
