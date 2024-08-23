@@ -178,9 +178,9 @@ describe "Topic" do
         expect { UserUpdater.new(user, user).update(location: "Japan") }.to change {
           Topic.count
         }.by(1)
-        expect { UserUpdater.new(user, user).update(location: "Japan") }.to change {
+        expect { UserUpdater.new(user, user).update(location: "Japan") }.not_to change {
           Topic.count
-        }.by(0)
+        }
 
         expect(Rails.logger.warnings.first).to match(/Title has already been used/)
       end
