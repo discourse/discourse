@@ -2,6 +2,10 @@
 
 module Migrations::Database::IntermediateDB
   module LogEntry
+    INFO = "info"
+    WARNING = "warning"
+    ERROR = "error"
+
     SQL = <<~SQL
       INSERT INTO log_entries (created_at, type, message, exception, details)
       VALUES (?, ?, ?, ?, ?)
