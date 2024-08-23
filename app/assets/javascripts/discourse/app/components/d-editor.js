@@ -812,6 +812,8 @@ export default Component.extend(TextareaTextManipulation, {
       addText: (text) => this.addText(selected, text),
       getText: () => this.value,
       toggleDirection: () => this._toggleDirection(),
+      replaceText: (oldVal, newVal, opts) =>
+        this.replaceText(oldVal, newVal, opts),
     };
   },
 
