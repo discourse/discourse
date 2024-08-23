@@ -1,7 +1,8 @@
 /* global Pikaday:true */
 import Component from "@ember/component";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
+import { classNames } from "@ember-decorators/component";
 import { Promise } from "rsvp";
 import loadScript from "discourse/lib/load-script";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
@@ -15,24 +16,23 @@ function isInputDateSupported() {
   return input.value !== value;
 }
 
-export default Component.extend({
-  classNames: ["d-date-input"],
-  date: null,
-  _picker: null,
+@classNames("d-date-input")
+export default class DateInput extends Component {
+  date = null;
+  useNativePicker = isInputDateSupported();
+  _picker = null;
 
   @discourseComputed("site.mobileView")
   inputType() {
     return this.useNativePicker ? "date" : "text";
-  },
-
-  useNativePicker: isInputDateSupported(),
+  }
 
   click(event) {
     event.stopPropagation();
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     schedule("afterRender", () => {
       if (!this.element || this.isDestroying || this.isDestroying) {
@@ -58,10 +58,10 @@ export default Component.extend({
         }
       });
     });
-  },
+  }
 
   didUpdateAttrs() {
-    this._super(...arguments);
+    super.didUpdateAttrs(...arguments);
 
     if (this._picker && this.date) {
       const parsedDate =
@@ -81,7 +81,7 @@ export default Component.extend({
     if (this._picker && !this.date) {
       this._picker.setDate(null);
     }
-  },
+  }
 
   _loadPikadayPicker(container) {
     return loadScript("/javascripts/pikaday.js").then(() => {
@@ -107,7 +107,7 @@ export default Component.extend({
 
       return new Pikaday({ ...defaultOptions, ...this._opts() });
     });
-  },
+  }
 
   _loadNativePicker(container) {
     const wrapper = container || this.element;
@@ -131,7 +131,7 @@ export default Component.extend({
     }
 
     return Promise.resolve(picker);
-  },
+  }
 
   _handleSelection(value) {
     if (!this.element || this.isDestroying || this.isDestroyed) {
@@ -141,7 +141,7 @@ export default Component.extend({
     if (this.onChange) {
       this.onChange(value ? moment(value) : null);
     }
-  },
+  }
 
   @on("willDestroyElement")
   _destroy() {
@@ -149,26 +149,23 @@ export default Component.extend({
       this._picker.destroy();
       this._picker = null;
     }
-  },
+  }
 
-  @discourseComputed("_placeholder")
-  placeholder: {
-    get(_placeholder) {
-      return _placeholder || I18n.t("dates.placeholder");
-    },
+  @computed("_placeholder")
+  get placeholder() {
+    return this._placeholder || I18n.t("dates.placeholder");
+  }
 
-    set(value) {
-      this.set("_placeholder", value);
-      return value;
-    },
-  },
+  set placeholder(value) {
+    this.set("_placeholder", value);
+  }
 
   _opts() {
     return null;
-  },
+  }
 
   @action
   onChangeDate(event) {
     this._handleSelection(event.target.value);
-  },
-});
+  }
+}
