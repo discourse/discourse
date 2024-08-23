@@ -162,5 +162,13 @@ export default class ComposerVideoThumbnailUppy extends EmberObject.extend(
         }
       }, 100);
     };
+
+    video.onerror = () => {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "Video could not be loaded or decoded for thumbnail generation"
+      );
+      callback();
+    };
   }
 }
