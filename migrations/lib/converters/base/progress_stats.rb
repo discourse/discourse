@@ -15,7 +15,7 @@ module Migrations::Converters::Base
     end
 
     def log_info(message, details: nil)
-      log(::Migrations::Database::IntermediateDB::LogEntry::INFO, message, exception:, details:)
+      log(::Migrations::Database::IntermediateDB::LogEntry::INFO, message, details:)
     end
 
     def log_warning(message, exception: nil, details: nil)
