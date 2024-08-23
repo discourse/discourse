@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
+import escapeRegExp from "discourse-common/utils/escape-regexp";
 import I18n from "discourse-i18n";
 
 const REGEXP_BLOCKS = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
@@ -88,6 +89,13 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
+    const allInOptions = this.currentUser
+      ? inOptionsForUsers().concat(inOptionsForAll())
+      : inOptionsForAll();
+
+    const inOptions = allInOptions.filter((option) => !option.special);
+    const inSpecialOptions = allInOptions.filter((option) => option.special);
+
     this.setProperties({
       searchedTerms: {
         username: null,
@@ -113,9 +121,8 @@ export default Component.extend({
           days: null,
         },
       },
-      inOptions: this.currentUser
-        ? inOptionsForUsers().concat(inOptionsForAll())
-        : inOptionsForAll(),
+      inOptions,
+      inSpecialOptions,
       statusOptions: statusOptions(),
       postTimeOptions: postTimeOptions(),
       showAllTagsCheckbox: false,
@@ -156,6 +163,13 @@ export default Component.extend({
     this.setSearchedTermSpecialInValue(
       "searchedTerms.special.in.seen",
       REGEXP_SPECIAL_IN_SEEN_MATCH
+    );
+
+    this.inSpecialOptions.forEach((option) =>
+      this.setSearchedTermSpecialInValue(
+        `searchedTerms.special.in.${option.value}`,
+        new RegExp(`^in:${escapeRegExp(option.value)}$`, "gi")
+      )
     );
 
     let regExpStatusMatch = this.statusOptions
@@ -475,6 +489,12 @@ export default Component.extend({
   onChangeSearchTermForSpecialInTitle(checked) {
     this.set("searchedTerms.special.in.title", checked);
     this.updateInRegex(REGEXP_SPECIAL_IN_TITLE_MATCH, "title");
+  },
+
+  @action
+  onChangeSearchTermForSpecialIn(name, evt) {
+    this.set("searchedTerms.special.in." + name, evt.target.checked);
+    this.updateInRegex(new RegExp(`^in:${escapeRegExp(name)}$`, "gi"), name);
   },
 
   @action
