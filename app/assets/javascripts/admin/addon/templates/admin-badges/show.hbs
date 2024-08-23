@@ -2,6 +2,7 @@
   @data={{this.formData}}
   @onSubmit={{this.handleSubmit}}
   @validate={{this.validateForm}}
+  @onRegisterApi={{this.registerApi}}
   class="badge-form current-badge content-body"
   as |form data|
 >
@@ -295,7 +296,10 @@
     <form.Submit />
 
     {{#unless this.readOnly}}
-      <form.Button @action={{this.handleDelete}} class="btn-danger">
+      <form.Button
+        @action={{this.handleDelete}}
+        class="badge-form__delete-badge-btn btn-danger"
+      >
         {{i18n "admin.badges.delete"}}
       </form.Button>
     {{/unless}}
