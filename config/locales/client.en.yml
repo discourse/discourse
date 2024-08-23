@@ -345,10 +345,10 @@ en:
       visitor_count: "Visitors"
       eu_visitor_count: "Visitors from European Union"
       traffic_info_footer_MF: |
-        In the last 6 months, this site has served content to an average of approximately { total_visitors, plural,
+        In the last 6 months, this site has served content to an estimated { total_visitors, plural,
             one {# people}
           other {# people}
-        } each month, with an average of approximately { eu_visitors, plural,
+        } each month, with an estimated { eu_visitors, plural,
             one {# people}
           other {# people}
         } from the European Union.
