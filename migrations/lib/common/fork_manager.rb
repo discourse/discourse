@@ -71,6 +71,12 @@ module Migrations
         @before_fork_hooks.size + @after_fork_parent_hooks.size + @after_fork_child_hooks.size
       end
 
+      def clear!
+        @before_fork_hooks.clear
+        @after_fork_parent_hooks.clear
+        @after_fork_child_hooks.clear
+      end
+
       private
 
       def run_before_fork_hooks
