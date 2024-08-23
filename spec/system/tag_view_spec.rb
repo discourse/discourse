@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 describe "Tag view", type: :system do
-  let(:tags_page) { PageObjects::Pages::Tag.new }
   fab!(:tag_1) { Fabricate(:tag, name: "design") }
   fab!(:tag_2) { Fabricate(:tag, name: "art") }
+  fab!(:topic) { Fabricate(:topic, tags: [tag_2]) }
   fab!(:current_user) { Fabricate(:admin) }
+
+  let(:tags_page) { PageObjects::Pages::Tag.new }
+  let(:topic_list) { PageObjects::Components::TopicList.new }
 
   before { sign_in(current_user) }
 
@@ -18,9 +21,9 @@ describe "Tag view", type: :system do
 
         tags_page.tags_dropdown.expand
         tags_page.tags_dropdown.search(tag_2.name)
-
         tags_page.tags_dropdown.select_row_by_value(tag_2.name)
-        expect(tags_page).to have_tag_info_section_loading
+
+        expect(topic_list).to have_topic(topic)
         expect(tags_page.tag_name_within_tag_info).to eq(tag_2.name)
       end
     end

@@ -53,10 +53,6 @@ module PageObjects
       def tags_dropdown
         PageObjects::Components::SelectKit.new(".select-kit.tag-drop")
       end
-
-      def has_tag_info_section_loading?
-        find(".tag-info").has_text?(I18n.t("js.loading"))
-      end
     end
   end
 end
