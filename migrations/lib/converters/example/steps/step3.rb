@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Migrations::Converters::Pepper
+module Migrations::Converters::Example
   class Step3 < Migrations::Converters::Base::ProgressStep
     run_in_parallel true
 

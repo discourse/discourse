@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Migrations::Converters::Pepper
+module Migrations::Converters::Example
   class Step1 < Migrations::Converters::Base::Step
     title "Hello world"
 
