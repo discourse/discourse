@@ -4,8 +4,7 @@ require "oj"
 
 module Migrations::Converters::Base
   class Worker
-    # reset to defaults and set our own defaults
-    Oj.default_options = {
+    OJ_SETTINGS = {
       mode: :custom,
       create_id: "^o",
       create_additions: true,
@@ -55,9 +54,9 @@ module Migrations::Converters::Base
           parent_output_stream.close
           fork_input_stream.close
 
-          Oj.load(parent_input_stream, symbol_keys: true) do |data|
+          Oj.load(parent_input_stream, OJ_SETTINGS) do |data|
             result = @job.run(data)
-            Oj.to_stream(fork_output_stream, result)
+            Oj.to_stream(fork_output_stream, result, OJ_SETTINGS)
           end
         rescue JSON::ParserError => e
           raise unless ignorable_json_error?(e, parent_input_stream)
@@ -75,7 +74,7 @@ module Migrations::Converters::Base
 
         begin
           while (data = @input_queue.pop)
-            Oj.to_stream(output_stream, data)
+            Oj.to_stream(output_stream, data, OJ_SETTINGS)
             @mutex.synchronize { @data_processed.wait(@mutex) }
           end
         ensure
@@ -90,7 +89,7 @@ module Migrations::Converters::Base
         Thread.current.name = "worker_#{@index}_output"
 
         begin
-          Oj.load(input_stream) do |data|
+          Oj.load(input_stream, OJ_SETTINGS) do |data|
             @output_queue.push(data)
             @mutex.synchronize { @data_processed.signal }
           end
@@ -105,6 +104,9 @@ module Migrations::Converters::Base
 
     def ignorable_json_error?(e, input_stream)
       !!(input_stream.eof? && e.message[/empty input/i])
+    end
+
+    def oj_settings
     end
   end
 end
