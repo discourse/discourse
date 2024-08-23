@@ -86,4 +86,13 @@ describe "Topic page", type: :system do
 
     expect(page).to have_no_css(".topic-admin-menu-content")
   end
+
+  it "loads last post when pressing using the End keyboard shortcut" do
+    fab!(:posts) { Fabricate.times(25, :post, topic: topic) }
+    visit "/t/#{topic.slug}/#{topic.id}/1"
+
+    send_keys(:end)
+    expect(find("#post_#{topic.highest_post_number}")).to be_visible
+  end
+
 end
