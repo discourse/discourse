@@ -45,6 +45,14 @@ module PageObjects
       def tag_box(tag)
         find(".tag-box div[data-tag-name='#{tag}']")
       end
+
+      def tag_name_within_tag_info
+        find(".tag-info .tag-name-wrapper .discourse-tag").text
+      end
+
+      def tags_dropdown
+        PageObjects::Components::SelectKit.new(".select-kit.tag-drop")
+      end
     end
   end
 end
