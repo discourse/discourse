@@ -14,6 +14,8 @@ class User < ActiveRecord::Base
   TARGET_PASSWORD_ALGORITHM =
     "$pbkdf2-#{Rails.configuration.pbkdf2_algorithm}$i=#{Rails.configuration.pbkdf2_iterations},l=32$"
 
+  MAX_SIMILAR_USERS = 10
+
   deprecate_column :flag_level, drop_from: "3.2"
 
   # not deleted on user delete

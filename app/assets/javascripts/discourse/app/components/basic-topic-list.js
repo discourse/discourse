@@ -1,14 +1,13 @@
 import Component from "@ember/component";
 import { alias, not } from "@ember/object/computed";
+import { observes } from "@ember-decorators/object";
 import $ from "jquery";
-import discourseComputed, {
-  bind,
-  observes,
-} from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  loadingMore: alias("topicList.loadingMore"),
-  loading: not("loaded"),
+export default class BasicTopicList extends Component {
+  @alias("topicList.loadingMore") loadingMore;
+
+  @not("loaded") loading;
 
   @discourseComputed("topicList.loaded")
   loaded() {
@@ -18,30 +17,30 @@ export default Component.extend({
     } else {
       return true;
     }
-  },
+  }
 
   @observes("topicList.[]")
   _topicListChanged() {
     this._initFromTopicList(this.topicList);
-  },
+  }
 
   _initFromTopicList(topicList) {
     if (topicList !== null) {
       this.set("topics", topicList.get("topics"));
       this.rerender();
     }
-  },
+  }
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     const topicList = this.topicList;
     if (topicList) {
       this._initFromTopicList(topicList);
     }
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     this.topics.forEach((topic) => {
       if (typeof topic.unread_by_group_member !== "undefined") {
@@ -51,16 +50,16 @@ export default Component.extend({
         );
       }
     });
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     this.messageBus.unsubscribe(
       "/private-messages/unread-indicator/*",
       this.onMessage
     );
-  },
+  }
 
   @bind
   onMessage(data) {
@@ -69,14 +68,14 @@ export default Component.extend({
     ).classList;
 
     nodeClassList.toggle("read", !data.show_indicator);
-  },
+  }
 
   @discourseComputed("topics")
   showUnreadIndicator(topics) {
     return topics.some(
       (topic) => typeof topic.unread_by_group_member !== "undefined"
     );
-  },
+  }
 
   click(e) {
     // Mobile basic-topic-list doesn't use the `topic-list-item` view so
@@ -111,5 +110,5 @@ export default Component.extend({
       }
       return false;
     }
-  },
-});
+  }
+}

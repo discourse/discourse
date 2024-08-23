@@ -264,15 +264,15 @@ $hpad: 0.65em;
   text-wrap: nowrap;
 
   &.--bot {
-    background: var(--highlight-low-or-medium);
+    background: var(--success-low);
   }
 
   &.--wide {
-    background: var(--highlight);
+    background: var(--highlight-low-or-medium);
   }
 
   &.--current {
-    background: var(--tertiary-low);
+    background: var(--tertiary-400);
   }
 }
 

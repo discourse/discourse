@@ -10,6 +10,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
 import i18n from "discourse-common/helpers/i18n";
+import getURL from "discourse-common/lib/get-url";
 
 export default RouteTemplate(
   class extends Component {
@@ -26,12 +27,7 @@ export default RouteTemplate(
 
       let hp;
       try {
-        const response = await fetch("/session/hp", {
-          headers: {
-            Accept: "application/json",
-          },
-        });
-        hp = await response.json();
+        hp = await ajax("/session/hp");
       } catch (error) {
         this.isLoading = false;
         popupAjaxError(error);
@@ -62,11 +58,16 @@ export default RouteTemplate(
         } else if (response.needs_approval) {
           this.needsApproval = true;
         } else {
-          setTimeout(() => (window.location.href = "/"), 2000);
+          setTimeout(this.loadHomepage, 2000);
         }
       } catch (error) {
         this.errorMessage = i18n("user.activate_account.already_done");
       }
+    }
+
+    @action
+    loadHomepage() {
+      window.location.href = getURL("/");
     }
 
     <template>
@@ -106,7 +107,7 @@ export default RouteTemplate(
                         "user.activate_account.continue_button"
                         site_name=this.siteSettings.title
                       }}
-                      @href="/"
+                      @action={{this.loadHomepage}}
                     />
                   </p>
                 {{/if}}

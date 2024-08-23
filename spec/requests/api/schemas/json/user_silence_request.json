@@ -16,5 +16,9 @@
       "type": "string",
       "example": "delete"
     }
-  }
+  },
+  "required": [
+    "silenced_till",
+    "reason"
+  ]
 }

@@ -13,32 +13,32 @@ import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 
-export default Component.extend(bufferedProperty("invite"), {
-  allGroups: null,
-  topics: null,
+export default class CreateInvite extends Component.extend(
+  bufferedProperty("invite")
+) {
+  allGroups = null;
+  topics = null;
+  flashText = null;
+  flashClass = null;
+  flashLink = false;
+  inviteToTopic = false;
+  limitToEmail = false;
 
-  flashText: null,
-  flashClass: null,
-  flashLink: false,
-
-  editing: readOnly("model.editing"),
-  inviteToTopic: false,
-  limitToEmail: false,
+  @readOnly("model.editing") editing;
+  @not("isEmail") isLink;
 
   @discourseComputed("buffered.emailOrDomain")
   isEmail(emailOrDomain) {
     return emailValid(emailOrDomain?.trim());
-  },
+  }
 
   @discourseComputed("buffered.emailOrDomain")
   isDomain(emailOrDomain) {
     return hostnameValid(emailOrDomain?.trim());
-  },
-
-  isLink: not("isEmail"),
+  }
 
   init() {
-    this._super();
+    super.init();
 
     Group.findAll().then((groups) => {
       this.set("allGroups", groups.filterBy("automatic", false));
@@ -58,7 +58,7 @@ export default Component.extend(bufferedProperty("invite"), {
       topicId: this.model.invite?.topicId,
       topicTitle: this.model.invite?.topicTitle,
     });
-  },
+  }
 
   save(opts) {
     const data = { ...this.buffered.buffer };
@@ -129,7 +129,7 @@ export default Component.extend(bufferedProperty("invite"), {
           flashLink: false,
         })
       );
-  },
+  }
 
   @discourseComputed(
     "currentUser.staff",
@@ -138,7 +138,7 @@ export default Component.extend(bufferedProperty("invite"), {
   )
   maxRedemptionsAllowedLimit(staff, staffLimit, usersLimit) {
     return staff ? staffLimit : usersLimit;
-  },
+  }
 
   @discourseComputed("buffered.expires_at")
   expiresAtLabel(expires_at) {
@@ -151,12 +151,12 @@ export default Component.extend(bufferedProperty("invite"), {
       : I18n.t("user.invited.invite.expires_in_time", {
           time: moment.duration(expiresAt - moment()).humanize(),
         });
-  },
+  }
 
   @discourseComputed("currentUser.staff", "currentUser.groups")
   canInviteToGroup(staff, groups) {
     return staff || groups.any((g) => g.owner);
-  },
+  }
 
   @discourseComputed("currentUser.staff")
   canArriveAtTopic(staff) {
@@ -164,7 +164,7 @@ export default Component.extend(bufferedProperty("invite"), {
       return true;
     }
     return false;
-  },
+  }
 
   @discourseComputed
   timeShortcuts() {
@@ -182,28 +182,28 @@ export default Component.extend(bufferedProperty("invite"), {
       shortcuts.fourMonths(),
       shortcuts.sixMonths(),
     ];
-  },
+  }
 
   @action
   copied() {
     this.save({ sendEmail: false, copy: true });
-  },
+  }
 
   @action
   saveInvite(sendEmail) {
     this.save({ sendEmail });
-  },
+  }
 
   @action
   searchContact() {
     getNativeContact(this.capabilities, ["email"], false).then((result) => {
       this.set("buffered.email", result[0].email[0]);
     });
-  },
+  }
 
   @action
   onChangeTopic(topicId, topic) {
     this.set("topics", [topic]);
     this.set("buffered.topicId", topicId);
-  },
-});
+  }
+}
