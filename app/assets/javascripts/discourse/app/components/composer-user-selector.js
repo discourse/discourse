@@ -1,19 +1,17 @@
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  init() {
-    this._super(...arguments);
-    this.set("_groups", []);
-  },
+export default class ComposerUserSelector extends Component {
+  _groups = [];
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     if (this.focusTarget === "usernames") {
       this.element.querySelector(".select-kit .select-kit-header").focus();
     }
-  },
+  }
 
   @discourseComputed("recipients")
   splitRecipients(recipients) {
@@ -21,7 +19,7 @@ export default Component.extend({
       return recipients;
     }
     return recipients ? recipients.split(",").filter(Boolean) : [];
-  },
+  }
 
   _updateGroups(selected, newGroups) {
     const groups = [];
@@ -39,13 +37,12 @@ export default Component.extend({
       _groups: groups,
       hasGroups: groups.length > 0,
     });
-  },
+  }
 
-  actions: {
-    updateRecipients(selected, content) {
-      const newGroups = content.filterBy("isGroup").mapBy("id");
-      this._updateGroups(selected, newGroups);
-      this.set("recipients", selected.join(","));
-    },
-  },
-});
+  @action
+  updateRecipients(selected, content) {
+    const newGroups = content.filterBy("isGroup").mapBy("id");
+    this._updateGroups(selected, newGroups);
+    this.set("recipients", selected.join(","));
+  }
+}

@@ -2,14 +2,15 @@ import Component from "@ember/component";
 import { action, get } from "@ember/object";
 import { next } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
+import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import { searchForTerm } from "discourse/lib/search";
-import { debounce, observes } from "discourse-common/utils/decorators";
+import { debounce } from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  loading: null,
-  noResults: null,
-  messages: null,
+export default class ChooseMessage extends Component {
+  loading = null;
+  noResults = null;
+  messages = null;
 
   @observes("messageTitle")
   messageTitleChanged() {
@@ -19,7 +20,7 @@ export default Component.extend({
       selectedTopicId: null,
     });
     this.search(this.messageTitle);
-  },
+  }
 
   @observes("messages")
   messagesChanged() {
@@ -28,7 +29,7 @@ export default Component.extend({
       this.set("noResults", messages.length === 0);
     }
     this.set("loading", false);
-  },
+  }
 
   @debounce(300)
   search(title) {
@@ -53,7 +54,7 @@ export default Component.extend({
         this.setProperties({ messages: null, loading: false });
       }
     });
-  },
+  }
 
   @action
   chooseMessage(message, event) {
@@ -61,5 +62,5 @@ export default Component.extend({
     const messageId = get(message, "id");
     this.set("selectedTopicId", messageId);
     next(() => $(`#choose-message-${messageId}`).prop("checked", "true"));
-  },
-});
+  }
+}
