@@ -238,7 +238,6 @@ body:not(.archetype-private_message) {
   .view-explainer {
     color: var(--primary-700);
     font-size: var(--font-down-1);
-    margin-top: 1em;
   }
 
   .estimated-read-time {
@@ -472,6 +471,14 @@ body:not(.archetype-private_message) {
         font-size: var(--font-down-1);
         color: var(--primary-medium);
       }
+    }
+
+    canvas {
+      padding: 0.75em 1rem;
+    }
+
+    .view-explainer {
+      padding: 0 1rem;
     }
 
     &:has(.topic-views) {
