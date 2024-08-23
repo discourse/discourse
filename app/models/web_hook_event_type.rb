@@ -119,9 +119,9 @@ class WebHookEventType < ActiveRecord::Base
         ],
       )
     end
-    # unless defined?(SiteSetting.enable_category_experts) && SiteSetting.enable_category_experts
-    #   ids_to_exclude.concat([TYPES[:category_expert_approved]])
-    # end
+    unless defined?(SiteSetting.enable_category_experts) && SiteSetting.enable_category_experts
+      ids_to_exclude.concat([TYPES[:category_expert_approved]])
+    end
     self.where.not(id: ids_to_exclude)
   end
 end
