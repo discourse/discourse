@@ -1459,6 +1459,8 @@ acceptance("composer buttons API", function (needs) {
           ` ${translateModKey(PLATFORM_KEY_MODIFIER + "+alt+b")}`,
         "it shows the label with shortcut"
       );
+
+    await this.pauseTest();
   });
 
   test("buttons can be added conditionally", async function (assert) {
