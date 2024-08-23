@@ -45,6 +45,14 @@
           color: var(--primary-medium);
         }
 
+        .shortcut {
+          border: none;
+          background: var(--primary-200);
+          font-size: var(--font-down-2);
+          color: var(--primary-high);
+          margin-left: 1.8rem;
+        }
+
         &.is-highlighted,
         &.is-selected,
         &:hover {
