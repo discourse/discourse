@@ -25,8 +25,7 @@ module Migrations::Converters::Base
       @stats
     end
 
-    def close
-      # @step.output_db.close
+    def cleanup
     end
   end
 end

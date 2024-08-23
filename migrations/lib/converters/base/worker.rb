@@ -4,6 +4,16 @@ require "oj"
 
 module Migrations::Converters::Base
   class Worker
+    # reset to defaults and set our own defaults
+    Oj.default_options = {
+      mode: :custom,
+      create_id: "^o",
+      create_additions: true,
+      cache_keys: true,
+      class_cache: true,
+      symbol_keys: true,
+    }
+
     def initialize(index, input_queue, output_queue, job)
       @index = index
       @input_queue = input_queue
@@ -45,10 +55,12 @@ module Migrations::Converters::Base
           parent_output_stream.close
           fork_input_stream.close
 
-          Oj.load(parent_input_stream) do |data|
+          Oj.load(parent_input_stream, symbol_keys: true) do |data|
             result = @job.run(data)
             Oj.to_stream(fork_output_stream, result)
           end
+        rescue JSON::ParserError => e
+          raise unless ignorable_json_error?(e, parent_input_stream)
         rescue SignalException
           exit(1)
         ensure
@@ -82,10 +94,17 @@ module Migrations::Converters::Base
             @output_queue.push(data)
             @mutex.synchronize { @data_processed.signal }
           end
+        rescue JSON::ParserError => e
+          raise unless ignorable_json_error?(e, input_stream)
         ensure
           input_stream.close
+          @mutex.synchronize { @data_processed.signal }
         end
       end
+    end
+
+    def ignorable_json_error?(e, input_stream)
+      !!(input_stream.eof? && e.message[/empty input/i])
     end
   end
 end
