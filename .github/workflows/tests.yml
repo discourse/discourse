@@ -163,7 +163,7 @@ jobs:
         with:
           path: tmp/app-cache
           key: >-
-            ${{ runner.os }}-
+            ${{ runner.name }}-
             ${{ hashFiles('.github/workflows/tests.yml') }}-
             ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
             ${{ hashFiles('config/environments/test.rb') }}-
