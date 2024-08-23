@@ -1,33 +1,45 @@
 import { computed } from "@ember/object";
 import { empty, or } from "@ember/object/computed";
+import {
+  attributeBindings,
+  classNameBindings,
+  classNames,
+} from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
 import { makeArray } from "discourse-common/lib/helpers";
 import I18n from "discourse-i18n";
 import MultiSelectComponent from "select-kit/components/multi-select";
+import {
+  pluginApiIdentifiers,
+  selectKitOptions,
+} from "select-kit/components/select-kit";
 import TagsMixin from "select-kit/mixins/tags";
 
-export default MultiSelectComponent.extend(TagsMixin, {
-  pluginApiIdentifiers: ["mini-tag-chooser"],
-  attributeBindings: ["selectKit.options.categoryId:category-id"],
-  classNames: ["mini-tag-chooser"],
-  classNameBindings: ["noTags"],
-  noTags: empty("value"),
-  maxTagSearchResults: setting("max_tag_search_results"),
-  maxTagsPerTopic: setting("max_tags_per_topic"),
+@attributeBindings("selectKit.options.categoryId:category-id")
+@classNames("mini-tag-chooser")
+@classNameBindings("noTags")
+@selectKitOptions({
+  fullWidthOnMobile: true,
+  filterable: true,
+  caretDownIcon: "caretIcon",
+  caretUpIcon: "caretIcon",
+  termMatchesForbidden: false,
+  categoryId: null,
+  everyTag: false,
+  closeOnChange: false,
+  maximum: "maxTagsPerTopic",
+  autoInsertNoneItem: false,
+  useHeaderFilter: false,
+})
+@pluginApiIdentifiers(["mini-tag-chooser"])
+export default class MiniTagChooser extends MultiSelectComponent.extend(
+  TagsMixin
+) {
+  @empty("value") noTags;
+  @or("allowCreate", "site.can_create_tag") allowAnyTag;
 
-  selectKitOptions: {
-    fullWidthOnMobile: true,
-    filterable: true,
-    caretDownIcon: "caretIcon",
-    caretUpIcon: "caretIcon",
-    termMatchesForbidden: false,
-    categoryId: null,
-    everyTag: false,
-    closeOnChange: false,
-    maximum: "maxTagsPerTopic",
-    autoInsertNoneItem: false,
-    useHeaderFilter: false,
-  },
+  @setting("max_tag_search_results") maxTagSearchResults;
+  @setting("max_tags_per_topic") maxTagsPerTopic;
 
   modifyComponentForRow(collection, item) {
     if (this.getValue(item) === this.selectKit.filter && !item.count) {
@@ -35,7 +47,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
     }
 
     return "tag-row";
-  },
+  }
 
   modifyNoSelection() {
     if (this.selectKit.options.minimum > 0) {
@@ -48,18 +60,18 @@ export default MultiSelectComponent.extend(TagsMixin, {
     } else {
       return this.defaultItem(null, I18n.t("tagging.choose_for_topic"));
     }
-  },
+  }
 
-  allowAnyTag: or("allowCreate", "site.can_create_tag"),
-
-  caretIcon: computed("value.[]", "content.[]", function () {
+  @computed("value.[]", "content.[]")
+  get caretIcon() {
     const maximum = this.selectKit.options.maximum;
     return maximum && makeArray(this.value).length >= parseInt(maximum, 10)
       ? null
       : "plus";
-  }),
+  }
 
-  content: computed("value.[]", function () {
+  @computed("value.[]")
+  get content() {
     let values = makeArray(this.value);
     if (this.selectKit.options.hiddenValues) {
       values = values.filter(
@@ -67,7 +79,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
       );
     }
     return values.map((x) => this.defaultItem(x, x));
-  }),
+  }
 
   search(filter) {
     const maximum = this.selectKit.options.maximum;
@@ -92,7 +104,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
     }
 
     return this.searchTags("/tags/filter/search", data, this._transformJson);
-  },
+  }
 
   _transformJson(context, json) {
     if (context.isDestroyed || context.isDestroying) {
@@ -123,5 +135,5 @@ export default MultiSelectComponent.extend(TagsMixin, {
     }
 
     return results.filter((r) => !makeArray(context.tags).includes(r.id));
-  },
-});
+  }
+}

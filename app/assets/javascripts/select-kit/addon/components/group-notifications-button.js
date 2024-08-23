@@ -1,10 +1,13 @@
+import { classNames } from "@ember-decorators/component";
 import NotificationOptionsComponent from "select-kit/components/notifications-button";
+import {
+  pluginApiIdentifiers,
+  selectKitOptions,
+} from "select-kit/components/select-kit";
 
-export default NotificationOptionsComponent.extend({
-  pluginApiIdentifiers: ["group-notifications-button"],
-  classNames: ["group-notifications-button"],
-
-  selectKitOptions: {
-    i18nPrefix: "groups.notifications",
-  },
-});
+@classNames("group-notifications-button")
+@selectKitOptions({
+  i18nPrefix: "groups.notifications",
+})
+@pluginApiIdentifiers("group-notifications-button")
+export default class GroupNotificationsButton extends NotificationOptionsComponent {}

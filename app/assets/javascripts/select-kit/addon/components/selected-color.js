@@ -1,12 +1,12 @@
 import { schedule } from "@ember/runloop";
+import { classNames } from "@ember-decorators/component";
 import { escapeExpression } from "discourse/lib/utilities";
 import SelectedNameComponent from "select-kit/components/selected-name";
 
-export default SelectedNameComponent.extend({
-  classNames: ["select-kit-selected-color"],
-
+@classNames("select-kit-selected-color")
+export default class SelectedColor extends SelectedNameComponent {
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     schedule("afterRender", () => {
       const element = document.querySelector(
@@ -21,5 +21,5 @@ export default SelectedNameComponent.extend({
       const color = escapeExpression(this.name);
       element.style.borderBottomColor = `#${color}`;
     });
-  },
-});
+  }
+}
