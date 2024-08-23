@@ -20,6 +20,7 @@ describe "Tag view", type: :system do
         tags_page.tags_dropdown.search(tag_2.name)
 
         tags_page.tags_dropdown.select_row_by_value(tag_2.name)
+        expect(tags_page).to have_tag_info_section_loading
         expect(tags_page.tag_name_within_tag_info).to eq(tag_2.name)
       end
     end
