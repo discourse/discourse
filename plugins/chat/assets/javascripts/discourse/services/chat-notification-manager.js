@@ -157,9 +157,7 @@ export default class ChatNotificationManager extends Service {
     }
 
     const channel = await this.fetchChannel(data.channel_id);
-    if (channel) {
-      data.isDirectMessageChannel = channel.isDirectMessageChannel;
-    }
+    data.isDirectMessageChannel = channel.isDirectMessageChannel ?? false;
 
     return onNotification(
       data,
