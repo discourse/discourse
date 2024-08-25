@@ -5,7 +5,8 @@ RSpec.describe UserPasswordExpirer do
   fab!(:user) { Fabricate(:user, password:) }
 
   describe ".expire_user_password" do
-    it "should create a new UserPassword record with the user's current password information" do
+    it "should create a new UserPassword record with the user's current password information if user does not have a UserPassword" do
+      user.user_password.destroy!
       freeze_time
 
       expect { described_class.expire_user_password(user) }.to change(UserPassword, :count).by 1

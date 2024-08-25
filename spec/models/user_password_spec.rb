@@ -46,17 +46,6 @@ RSpec.describe UserPassword do
       expect(user_password_2.errors[:password_hash]).to include("has already been taken")
     end
 
-    it "should validate uniqueness of user_id scoped to password_expired_at" do
-      user = Fabricate(:user)
-      user_password_1 = Fabricate.create(:user_password, user:, password_expired_at: nil)
-
-      user_password_2 =
-        Fabricate.build(:user_password, user: user_password_1.user, password_expired_at: nil)
-
-      expect(user_password_2).not_to be_valid
-      expect(user_password_2.errors[:user_id]).to include("has already been taken")
-    end
-
     it "should validate presence of password_salt" do
       user_password = Fabricate.build(:user_password)
       user_password.password_salt = nil

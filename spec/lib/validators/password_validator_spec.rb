@@ -145,6 +145,7 @@ RSpec.describe PasswordValidator do
       @password = "thisisaoldpassword"
       record.save!
       record.reload
+      record.user_password.destroy!
 
       new_password = "thisisanewpassword"
 

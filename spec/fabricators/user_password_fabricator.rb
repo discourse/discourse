@@ -3,7 +3,7 @@
 Fabricator(:user_password) do
   transient password: "myawesomefakepassword"
 
-  user { Fabricate(:user) }
+  user { Fabricate(:user, password: nil) }
   password_salt { SecureRandom.hex(User::PASSWORD_SALT_LENGTH) }
   password_algorithm { User::TARGET_PASSWORD_ALGORITHM }
 
