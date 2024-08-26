@@ -54,4 +54,15 @@ RSpec.describe FlagSerializer do
     serialized = described_class.new(flag, used_flag_ids: []).as_json
     expect(serialized[:flag][:applies_to]).to eq(%w[Post Topic Chat::Message])
   end
+
+  describe "#description" do
+    let(:serializer) { described_class.new(flag, scope: Guardian.new, root: false) }
+    let(:flag) { Flag.find_by(name_key: :inappropriate) }
+
+    before { allow(Discourse).to receive(:base_path).and_return("discourse.org") }
+
+    it "returns properly interpolated translation" do
+      expect(serializer.description).to match(%r{discourse\.org/guidelines})
+    end
+  end
 end
