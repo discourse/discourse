@@ -3569,7 +3569,10 @@ RSpec.describe User do
   end
 
   describe "#populated_required_fields?" do
-    let!(:required_field) { Fabricate(:user_field, name: "hairstyle") }
+    let!(:required_field) do
+      Fabricate(:user_field, name: "hairstyle", requirement: "for_all_users")
+    end
+    let!(:signup_field) { Fabricate(:user_field, name: "haircolor", requirement: "on_signup") }
     let!(:optional_field) { Fabricate(:user_field, name: "haircolor", requirement: "optional") }
 
     context "when all required fields are populated" do
