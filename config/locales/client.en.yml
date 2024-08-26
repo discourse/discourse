@@ -5614,6 +5614,7 @@ en:
           delete: "Delete"
           delete_confirm: 'Are you sure you want to delete "%{name}"?'
           flags_tab: "Flags"
+          settings: "Flags Settings"
           form:
             add_header: "Add flag"
             edit_header: "Edit flag"
