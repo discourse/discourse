@@ -407,7 +407,7 @@ end
 #
 # Table name: notifications
 #
-#  id                :integer          not null, primary key
+#  old_id            :integer
 #  notification_type :integer          not null
 #  user_id           :integer          not null
 #  data              :string(1000)     not null
@@ -418,6 +418,7 @@ end
 #  post_number       :integer
 #  post_action_id    :integer
 #  high_priority     :boolean          default(FALSE), not null
+#  id                :bigint           not null, primary key
 #
 # Indexes
 #
