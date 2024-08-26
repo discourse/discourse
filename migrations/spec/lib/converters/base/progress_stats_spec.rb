@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Converters::Base::ProgressStats do
+RSpec.describe ::Migrations::Converters::Base::ProgressStats do
   subject(:stats) { described_class.new }
 
   describe "#initialize" do
@@ -50,13 +50,13 @@ RSpec.describe Migrations::Converters::Base::ProgressStats do
   end
 
   describe "#log_info" do
-    before { allow(Migrations::Database::IntermediateDB::LogEntry).to receive(:create!) }
+    before { allow(::Migrations::Database::IntermediateDB::LogEntry).to receive(:create!) }
 
     it "logs an info message" do
       stats.log_info("Info message")
 
-      expect(Migrations::Database::IntermediateDB::LogEntry).to have_received(:create!).with(
-        type: Migrations::Database::IntermediateDB::LogEntry::INFO,
+      expect(::Migrations::Database::IntermediateDB::LogEntry).to have_received(:create!).with(
+        type: ::Migrations::Database::IntermediateDB::LogEntry::INFO,
         message: "Info message",
         exception: nil,
         details: nil,
@@ -66,8 +66,8 @@ RSpec.describe Migrations::Converters::Base::ProgressStats do
     it "logs an info message with details" do
       stats.log_info("Info message", details: { key: "value" })
 
-      expect(Migrations::Database::IntermediateDB::LogEntry).to have_received(:create!).with(
-        type: Migrations::Database::IntermediateDB::LogEntry::INFO,
+      expect(::Migrations::Database::IntermediateDB::LogEntry).to have_received(:create!).with(
+        type: ::Migrations::Database::IntermediateDB::LogEntry::INFO,
         message: "Info message",
         exception: nil,
         details: {
@@ -78,13 +78,13 @@ RSpec.describe Migrations::Converters::Base::ProgressStats do
   end
 
   describe "#log_warning" do
-    before { allow(Migrations::Database::IntermediateDB::LogEntry).to receive(:create!) }
+    before { allow(::Migrations::Database::IntermediateDB::LogEntry).to receive(:create!) }
 
     it "logs a warning message and increments warning_count" do
       expect { stats.log_warning("Warning message") }.to change { stats.warning_count }.by(1)
 
-      expect(Migrations::Database::IntermediateDB::LogEntry).to have_received(:create!).with(
-        type: Migrations::Database::IntermediateDB::LogEntry::WARNING,
+      expect(::Migrations::Database::IntermediateDB::LogEntry).to have_received(:create!).with(
+        type: ::Migrations::Database::IntermediateDB::LogEntry::WARNING,
         message: "Warning message",
         exception: nil,
         details: nil,
@@ -98,8 +98,8 @@ RSpec.describe Migrations::Converters::Base::ProgressStats do
         stats.log_warning("Warning message", exception: exception, details: { key: "value" })
       }.to change { stats.warning_count }.by(1)
 
-      expect(Migrations::Database::IntermediateDB::LogEntry).to have_received(:create!).with(
-        type: Migrations::Database::IntermediateDB::LogEntry::WARNING,
+      expect(::Migrations::Database::IntermediateDB::LogEntry).to have_received(:create!).with(
+        type: ::Migrations::Database::IntermediateDB::LogEntry::WARNING,
         message: "Warning message",
         exception: exception,
         details: {
@@ -110,13 +110,13 @@ RSpec.describe Migrations::Converters::Base::ProgressStats do
   end
 
   describe "#log_error" do
-    before { allow(Migrations::Database::IntermediateDB::LogEntry).to receive(:create!) }
+    before { allow(::Migrations::Database::IntermediateDB::LogEntry).to receive(:create!) }
 
     it "logs an error message and increments error_count" do
       expect { stats.log_error("Error message") }.to change { stats.error_count }.by(1)
 
-      expect(Migrations::Database::IntermediateDB::LogEntry).to have_received(:create!).with(
-        type: Migrations::Database::IntermediateDB::LogEntry::ERROR,
+      expect(::Migrations::Database::IntermediateDB::LogEntry).to have_received(:create!).with(
+        type: ::Migrations::Database::IntermediateDB::LogEntry::ERROR,
         message: "Error message",
         exception: nil,
         details: nil,
@@ -130,8 +130,8 @@ RSpec.describe Migrations::Converters::Base::ProgressStats do
         stats.log_error("Error message", exception: exception, details: { key: "value" })
       }.to change { stats.error_count }.by(1)
 
-      expect(Migrations::Database::IntermediateDB::LogEntry).to have_received(:create!).with(
-        type: Migrations::Database::IntermediateDB::LogEntry::ERROR,
+      expect(::Migrations::Database::IntermediateDB::LogEntry).to have_received(:create!).with(
+        type: ::Migrations::Database::IntermediateDB::LogEntry::ERROR,
         message: "Error message",
         exception: exception,
         details: {

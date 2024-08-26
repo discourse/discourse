@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Converters::Base::Worker do
+RSpec.describe ::Migrations::Converters::Base::Worker do
   subject(:worker) { described_class.new(index, input_queue, output_queue, job) }
 
   let(:index) { 1 }
   let(:input_queue) { Queue.new }
   let(:output_queue) { Queue.new }
   let(:job) do
-    instance_double(Migrations::Converters::Base::ParallelJob, run: "result", cleanup: nil)
+    instance_double(::Migrations::Converters::Base::ParallelJob, run: "result", cleanup: nil)
   end
 
   after do
@@ -24,14 +24,14 @@ RSpec.describe Migrations::Converters::Base::Worker do
     end
 
     it "uses `ForkManager.fork`" do
-      allow(Migrations::ForkManager).to receive(:fork).and_call_original
+      allow(::Migrations::ForkManager).to receive(:fork).and_call_original
 
       worker.start
       input_queue.close
       worker.wait
       output_queue.close
 
-      expect(Migrations::ForkManager).to have_received(:fork)
+      expect(::Migrations::ForkManager).to have_received(:fork)
     end
 
     it "writes the output of `job.run` into `output_queue`" do
@@ -47,7 +47,7 @@ RSpec.describe Migrations::Converters::Base::Worker do
     end
 
     def create_progress_stats(progress: 1, warning_count: 0, error_count: 0)
-      stats = Migrations::Converters::Base::ProgressStats.new
+      stats = ::Migrations::Converters::Base::ProgressStats.new
       stats.progress = progress
       stats.warning_count = warning_count
       stats.error_count = error_count

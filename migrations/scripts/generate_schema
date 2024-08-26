@@ -304,4 +304,4 @@ module Migrations
   end
 end
 
-Migrations::SchemaGenerator.new(output_file_path: ARGV.first).run
+::Migrations::SchemaGenerator.new(output_file_path: ARGV.first).run

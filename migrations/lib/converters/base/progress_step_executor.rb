@@ -66,7 +66,7 @@ module Migrations::Converters::Base
         message =
           I18n.t(
             "converter.max_progress_calculation",
-            duration: Migrations::DateHelper.human_readable_time(duration),
+            duration: ::Migrations::DateHelper.human_readable_time(duration),
           )
         puts "    #{message}"
       end

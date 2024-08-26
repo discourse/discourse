@@ -6,8 +6,8 @@ require "ipaddr"
 
 module Migrations
   module Database
-    INTERMEDIATE_DB_SCHEMA_PATH = File.join(Migrations.root_path, "db", "intermediate_db_schema")
-    UPLOADS_DB_SCHEMA_PATH = File.join(Migrations.root_path, "db", "uploads_db_schema")
+    INTERMEDIATE_DB_SCHEMA_PATH = File.join(::Migrations.root_path, "db", "intermediate_db_schema")
+    UPLOADS_DB_SCHEMA_PATH = File.join(::Migrations.root_path, "db", "uploads_db_schema")
 
     module_function
 

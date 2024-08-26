@@ -2,7 +2,7 @@
 
 module Migrations::Converters::Base
   class Step
-    IntermediateDB = Migrations::Database::IntermediateDB
+    IntermediateDB = ::Migrations::Database::IntermediateDB
 
     attr_accessor :settings
 

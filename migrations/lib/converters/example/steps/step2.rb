@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Converters::Example
-  class Step2 < Migrations::Converters::Base::ProgressStep
+  class Step2 < ::Migrations::Converters::Base::ProgressStep
     run_in_parallel false
 
     def items

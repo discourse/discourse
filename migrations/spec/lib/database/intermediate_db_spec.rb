@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Database::IntermediateDB do
+RSpec.describe ::Migrations::Database::IntermediateDB do
   before(:each) do
     if described_class.instance_variable_defined?(:@db)
       described_class.remove_instance_variable(:@db)
@@ -8,17 +8,17 @@ RSpec.describe Migrations::Database::IntermediateDB do
   end
 
   def create_connection_double
-    connection = instance_double(Migrations::Database::Connection)
+    connection = instance_double(::Migrations::Database::Connection)
     allow(connection).to receive(:insert)
     allow(connection).to receive(:close)
     connection
   end
 
   describe ".setup" do
-    it "works with `Migrations::Database::Connection`" do
+    it "works with `::Migrations::Database::Connection`" do
       Dir.mktmpdir do |storage_path|
         db_path = File.join(storage_path, "test.db")
-        connection = Migrations::Database::Connection.new(path: db_path)
+        connection = ::Migrations::Database::Connection.new(path: db_path)
 
         connection.db.execute("CREATE TABLE foo (id INTEGER)")
 
@@ -32,8 +32,8 @@ RSpec.describe Migrations::Database::IntermediateDB do
       end
     end
 
-    it "works with `Migrations::Database::OfflineConnection`" do
-      connection = Migrations::Database::OfflineConnection.new
+    it "works with `::Migrations::Database::OfflineConnection`" do
+      connection = ::Migrations::Database::OfflineConnection.new
 
       described_class.setup(connection)
       described_class.insert("INSERT INTO foo (id, name) VALUES (?, ?)", 1, "Alice")

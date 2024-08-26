@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Database::Connection do
+RSpec.describe ::Migrations::Database::Connection do
   def create_connection(**params)
     Dir.mktmpdir do |storage_path|
       db_path = File.join(storage_path, "test.db")
@@ -49,7 +49,7 @@ RSpec.describe Migrations::Database::Connection do
     end
 
     it "closes cached prepared statements" do
-      cache_class = Migrations::Database::PreparedStatementCache
+      cache_class = ::Migrations::Database::PreparedStatementCache
       cache_double = instance_spy(cache_class)
       allow(cache_class).to receive(:new).and_return(cache_double)
 
@@ -125,7 +125,7 @@ RSpec.describe Migrations::Database::Connection do
     end
   end
 
-  context "when `Migrations::ForkManager.fork` is used" do
+  context "when `::Migrations::ForkManager.fork` is used" do
     it "temporarily closes the connection while a process fork is created" do
       create_connection do |connection|
         expect(connection.closed?).to be false

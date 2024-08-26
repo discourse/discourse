@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Converters do
+RSpec.describe ::Migrations::Converters do
   let(:root_path) { Dir.mktmpdir }
   let(:core_path) { File.join(root_path, "lib", "converters") }
   let(:private_path) { File.join(root_path, "private", "converters") }
 
-  before { allow(Migrations).to receive(:root_path).and_return(root_path) }
+  before { allow(::Migrations).to receive(:root_path).and_return(root_path) }
   after { FileUtils.remove_dir(root_path, force: true) }
 
   def create_converters(core_names: [], private_names: [])

@@ -26,7 +26,7 @@ module Migrations::Converters::Base
       STDERR.puts "\nAborted"
       exit(1)
     ensure
-      Migrations::Database::IntermediateDB.close
+      ::Migrations::Database::IntermediateDB.close
     end
 
     def steps
@@ -60,13 +60,13 @@ module Migrations::Converters::Base
 
     def create_database
       db_path = settings[:intermediate_db][:path]
-      Migrations::Database.migrate(
+      ::Migrations::Database.migrate(
         db_path,
-        migrations_path: Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
+        migrations_path: ::Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
       )
 
-      db = Migrations::Database.connect(db_path)
-      Migrations::Database::IntermediateDB.setup(db)
+      db = ::Migrations::Database.connect(db_path)
+      ::Migrations::Database::IntermediateDB.setup(db)
     end
 
     def create_step(step_class)

@@ -12,7 +12,7 @@ module Migrations::CLI::ConvertCommand
 
         settings = load_settings(converter_type)
 
-        Migrations::Database.reset!(settings[:intermediate_db][:path]) if options[:reset]
+        ::Migrations::Database.reset!(settings[:intermediate_db][:path]) if options[:reset]
 
         converter = "migrations/converters/#{converter_type}/converter".camelize.constantize
         converter.new(settings).run
@@ -21,7 +21,7 @@ module Migrations::CLI::ConvertCommand
       private
 
       def validate_converter_type!(type)
-        converter_names = Migrations::Converters.names
+        converter_names = ::Migrations::Converters.names
 
         raise Thor::Error, <<~MSG if !converter_names.include?(type)
             Unknown converter name: #{type}
@@ -44,7 +44,7 @@ module Migrations::CLI::ConvertCommand
 
       def calculate_settings_path(converter_type)
         settings_path =
-          options[:settings] || Migrations::Converters.default_settings_path(converter_type)
+          options[:settings] || ::Migrations::Converters.default_settings_path(converter_type)
         File.expand_path(settings_path, Dir.pwd)
       end
     end

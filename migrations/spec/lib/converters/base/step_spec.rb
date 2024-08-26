@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Converters::Base::Step do
+RSpec.describe ::Migrations::Converters::Base::Step do
   before do
     Object.const_set(
       "TemporaryModule",

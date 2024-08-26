@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Database::OfflineConnection do
+RSpec.describe ::Migrations::Database::OfflineConnection do
   subject(:connection) { described_class.new }
 
   let!(:sql) { "INSERT INTO foo (id, name) VALUES (?, ?)" }

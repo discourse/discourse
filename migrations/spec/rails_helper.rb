@@ -5,8 +5,8 @@ require_relative "../../spec/rails_helper"
 
 require_relative "../lib/migrations"
 
-Migrations.configure_zeitwerk
-Migrations.enable_i18n
+::Migrations.configure_zeitwerk
+::Migrations.enable_i18n
 
 require "rspec-multi-mock"
 

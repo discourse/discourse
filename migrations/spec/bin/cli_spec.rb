@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Migrations::Import" do
+RSpec.describe "::Migrations::Import" do
   def run_command(command = "")
     workdir = Rails.root.join("migrations")
     system("bin/cli #{command}", exception: true, chdir: workdir)
