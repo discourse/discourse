@@ -43,14 +43,14 @@ module Migrations
       { "cli" => "CLI", "intermediate_db" => "IntermediateDB", "uploads_db" => "UploadsDB" },
     )
 
-    loader.push_dir(File.join(Migrations.root_path, "lib"), namespace: Migrations)
-    loader.push_dir(File.join(Migrations.root_path, "lib", "common"), namespace: Migrations)
+    loader.push_dir(File.join(::Migrations.root_path, "lib"), namespace: ::Migrations)
+    loader.push_dir(File.join(::Migrations.root_path, "lib", "common"), namespace: ::Migrations)
 
     # All sub-directories of a converter should have the same namespace.
     # Unfortunately `loader.collapse` doesn't work recursively.
     Converters.all.each do |name, converter_path|
       module_name = name.camelize.to_sym
-      namespace = Migrations::Converters.const_set(module_name, Module.new)
+      namespace = ::Migrations::Converters.const_set(module_name, Module.new)
 
       Dir[File.join(converter_path, "**", "*")].each do |subdirectory|
         next unless File.directory?(subdirectory)
@@ -64,7 +64,7 @@ module Migrations
   def self.enable_i18n
     require "i18n"
 
-    locale_glob = File.join(Migrations.root_path, "config", "locales", "**", "migrations.*.yml")
+    locale_glob = File.join(::Migrations.root_path, "config", "locales", "**", "migrations.*.yml")
     I18n.load_path += Dir[locale_glob]
     I18n.backend.load_translations
 

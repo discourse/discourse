@@ -5,8 +5,6 @@ module Migrations::CLI::UploadCommand
     thor.class_eval do
       desc "upload", "Upload a file"
       def upload
-        Migrations.load_rails_environment
-
         puts "Uploading..."
       end
     end

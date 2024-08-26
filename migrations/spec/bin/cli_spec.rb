@@ -2,9 +2,8 @@
 
 RSpec.describe "Migrations::Import" do
   def run_command(command = "")
-    # rubocop:disable Discourse/NoChdir
-    Dir.chdir("migrations") { system("bin/cli #{command}", exception: true) }
-    # rubocop:enable Discourse/NoChdir
+    workdir = Rails.root.join("migrations")
+    system("bin/cli #{command}", exception: true, chdir: workdir)
   end
 
   it "works" do

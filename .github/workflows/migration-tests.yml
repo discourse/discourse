@@ -37,7 +37,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        ruby: ["3.2"]
+        ruby: ["3.3"]
 
     steps:
       - name: Set working directory owner

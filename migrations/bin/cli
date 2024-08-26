@@ -5,6 +5,7 @@ require "thor"
 require_relative "../lib/migrations"
 
 module Migrations
+  load_rails_environment
   configure_zeitwerk
   enable_i18n
 
