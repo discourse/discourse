@@ -1873,7 +1873,7 @@ class User < ActiveRecord::Base
 
   def populated_required_custom_fields?
     UserField
-      .required
+      .for_all_users
       .pluck(:id)
       .all? { |field_id| custom_fields["#{User::USER_FIELD_PREFIX}#{field_id}"].present? }
   end
