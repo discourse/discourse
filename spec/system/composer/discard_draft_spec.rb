@@ -68,4 +68,31 @@ describe "Composer - discard draft modal", type: :system do
       expect(composer).to be_opened
     end
   end
+
+  context "when clicking abandon draft" do
+    let(:dialog) { PageObjects::Components::Dialog.new }
+
+    before { Jobs.run_immediately! }
+
+    it "destroys draft" do
+      visit "/new-topic"
+
+      composer.fill_content("a b c d e f g")
+      composer.close
+
+      expect(discard_draft_modal).to be_open
+      discard_draft_modal.click_save
+
+      wait_for(timeout: 5) { Draft.last != nil }
+      draft_key = Draft.last.draft_key
+
+      visit "/new-topic"
+
+      expect(dialog).to be_open
+      expect(page).to have_content(I18n.t("js.drafts.abandon.confirm"))
+      dialog.click_danger
+
+      wait_for(timeout: 5) { Draft.find_by(draft_key: draft_key) == nil }
+    end
+  end
 end
