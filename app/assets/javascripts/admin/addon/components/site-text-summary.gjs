@@ -1,10 +1,11 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import highlightHTML from "discourse/lib/highlight-html";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class SiteTextSummary extends Component {
   @action
@@ -27,6 +28,7 @@ export default class SiteTextSummary extends Component {
     this.args.editAction(this.siteText);
   }
 
+  @bind
   #searchTerm() {
     const regex = this.args.searchRegex;
     const siteText = this.args.siteText;
@@ -44,7 +46,7 @@ export default class SiteTextSummary extends Component {
   <template>
     <div
       class={{concatClass "site-text" (if @siteText.overridden "overridden")}}
-      {{didInsert this.highlightHTML}}
+      {{didInsert this.highlightSearchTerm}}
       data-site-text-id={{@siteText.id}}
     >
       <DButton
