@@ -938,12 +938,9 @@ export default class TopicController extends Controller.extend(
       return;
     }
 
-    // When a topic only has one lengthy post
-    const jumpEnd = highestPostNumber === 1 ? true : false;
-
     DiscourseURL.routeTo(this.get("model.lastPostUrl"), {
       skipIfOnScreen: false,
-      jumpEnd,
+      jumpEnd: false,
       keepFilter: true,
     });
   }
