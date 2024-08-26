@@ -159,7 +159,7 @@ class DirectoryItem < ActiveRecord::Base
               SELECT
                   :period_type,
                   u.id,
-                  #{Array.new(column_names.count) { |_| 0 }.join(", ")}
+                  #{Array.new(column_names.count, 0).join(", ")}
               FROM users u
               LEFT JOIN directory_items di ON di.user_id = u.id AND di.period_type = :period_type
               WHERE di.id IS NULL AND u.id > 0 AND u.silenced_till IS NULL AND u.active
