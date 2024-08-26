@@ -704,6 +704,28 @@ RSpec.describe UsersController do
       end
     end
 
+    context "when using an encoded email that decodes to an invalid email" do
+      it "blocks the registration" do
+        post_user(email: "=?x?q?hacker=40hackerdomain.com=3e=00?=osama@discourseemail.com")
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(false)
+        expect(response.parsed_body["message"]).to eq("Primary email is invalid.")
+        expect(response.parsed_body["user_id"]).to be_blank
+      end
+    end
+
+    context "when using an encoded email that decodes to a valid email" do
+      it "accepts the registration" do
+        post_user(
+          email:
+            "=?utf-8?q?=6f=73=61=6d=61=2d=69=6e=2d=71=2d=65=6e=63=6f=64=69=6e=67?=@discourse.org",
+        )
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(true)
+        expect(User.find_by(id: response.parsed_body["user_id"])).to be_present
+      end
+    end
+
     context "when creating a user" do
       it "sets the user locale to I18n.locale" do
         SiteSetting.default_locale = "en"
