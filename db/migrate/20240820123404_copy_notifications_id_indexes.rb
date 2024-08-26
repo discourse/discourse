@@ -15,7 +15,7 @@ class CopyNotificationsIdIndexes < ActiveRecord::Migration[7.0]
     # Copy existing indexes and suffix them with `_bigint`
     results =
       execute(
-        "SELECT indexname, indexdef FROM pg_indexes WHERE tablename = 'notifications' AND indexdef SIMILAR TO '%\\mid\\M%'",
+        "SELECT indexname, indexdef FROM pg_indexes WHERE tablename = 'notifications' AND indexdef SIMILAR TO '%\\mid\\M%' AND schemaname = 'public'",
       )
     results.each do |res|
       indexname, indexdef = res["indexname"], res["indexdef"]
