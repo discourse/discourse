@@ -131,7 +131,7 @@ export default class AdminBadgesShowController extends Controller {
   }
 
   @action
-  validateForm(data, { addError }) {
+  validateForm(data, { addError, removeError }) {
     if (!data.icon && !data.image_url) {
       addError("icon", {
         title: "Icon",
@@ -141,6 +141,9 @@ export default class AdminBadgesShowController extends Controller {
         title: "Image",
         message: I18n.t("admin.badges.icon_or_image"),
       });
+    } else {
+      removeError("image_url");
+      removeError("icon");
     }
   }
 

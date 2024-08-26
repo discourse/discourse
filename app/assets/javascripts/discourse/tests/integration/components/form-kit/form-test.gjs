@@ -240,11 +240,13 @@ module("Integration | Component | FormKit | Form", function (hooks) {
 
   test("reset virtual errors", async function (assert) {
     let validatedOnce = false;
-    const validate = async (data, { addError }) => {
+    const validate = async (data, { removeError, addError }) => {
       if (!validatedOnce) {
         addError("foo", { title: "Foo", message: "error" });
 
         validatedOnce = true;
+      } else {
+        removeError("foo");
       }
     };
 
