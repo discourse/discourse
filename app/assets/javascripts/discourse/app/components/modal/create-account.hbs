@@ -307,9 +307,11 @@
 
   <:footer>
     {{#if (and this.showCreateForm this.site.mobileView)}}
-      <div class="disclaimer">
-        {{html-safe this.disclaimerHtml}}
-      </div>
+      {{#if this.disclaimerHtml}}
+        <div class="disclaimer">
+          {{html-safe this.disclaimerHtml}}
+        </div>
+      {{/if}}
       <div class="d-modal__footer-buttons">
         <DButton
           @action={{this.createAccount}}

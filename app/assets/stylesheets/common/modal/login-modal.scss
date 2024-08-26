@@ -119,14 +119,14 @@
     @media screen and (max-width: 767px) {
       // important to maintain narrow desktop widths
       // for auth modals in Discourse Hub on iPad
-      &:has(.has-alt-auth) .d-modal__header {
-        display: none;
+      .d-modal__header {
+        right: 0;
+        top: 0;
       }
       .has-alt-auth {
         flex-direction: column;
         overflow: auto;
         gap: 1em;
-        .login-welcome-header,
         .d-modal__footer {
           font-size: var(--font-down-1);
         }
@@ -140,6 +140,9 @@
         }
         #login-form {
           margin: 1.5em 0;
+        }
+        .signup-progress-bar {
+          display: none;
         }
       }
     }
@@ -188,13 +191,21 @@
   }
 
   .mobile-view & {
-    .d-modal__header {
-      display: none;
+    .d-modal__footer-buttons {
+      // display: none;
+      flex-direction: row;
+      gap: 8px;
+      button {
+        width: auto;
+      }
+    }
+
+    .login-welcome-header {
+      padding-bottom: 0.25rem;
     }
 
     .signup-progress-bar {
-      padding: 1.6em 1em 0 1em;
-      margin-bottom: 0.6em;
+      display: none;
     }
   }
 }
