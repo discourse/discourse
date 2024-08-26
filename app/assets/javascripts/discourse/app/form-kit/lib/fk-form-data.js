@@ -204,4 +204,11 @@ export default class FKFormData {
     this.patches = [];
     this.inversePatches = [];
   }
+
+  /**
+   * Resets the errors.
+   */
+  resetErrors() {
+    this.errors = {};
+  }
 }

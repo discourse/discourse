@@ -207,11 +207,10 @@ class FKForm extends Component {
     }
 
     this.isValidating = true;
+    this.formData.resetErrors();
 
     try {
       for (const field of fields) {
-        this.formData.removeError(field.name);
-
         await field.validate?.(
           field.name,
           this.formData.get(field.name),

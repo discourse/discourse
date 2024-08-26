@@ -237,4 +237,29 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     assert.dom(".foo").hasText("2");
     assert.dom(".bar").hasText("2");
   });
+
+  test("reset virtual errors", async function (assert) {
+    let validatedOnce = false;
+    const validate = async (data, { addError }) => {
+      if (!validatedOnce) {
+        addError("foo", { title: "Foo", message: "error" });
+
+        validatedOnce = true;
+      }
+    };
+
+    await render(<template>
+      <Form @validate={{validate}} as |form|>
+        <form.Submit />
+      </Form>
+    </template>);
+
+    await formKit().submit();
+
+    assert.form().hasErrors({ foo: "error" });
+
+    await formKit().submit();
+
+    assert.form().hasNoErrors();
+  });
 });
