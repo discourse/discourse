@@ -88,7 +88,7 @@
     "ember-cli": "~5.11.0",
     "ember-cli-app-version": "^7.0.0",
     "ember-cli-babel": "^8.2.0",
-    "ember-cli-deprecation-workflow": "^3.0.1",
+    "ember-cli-deprecation-workflow": "^3.0.2",
     "ember-cli-htmlbars": "^6.3.0",
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-progress-ci": "1.0.0",
