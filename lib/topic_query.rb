@@ -1281,7 +1281,9 @@ class TopicQuery
 
     if tags_arg && tags_arg.size > 0
       tags_arg = tags_arg.split if String === tags_arg
-      tags_query = tags_arg[0].is_a?(String) ? Tag.where_name(tags_arg) : Tag.where(id: tags_arg)
+      tags_query = DiscourseTagging.visible_tags(@guardian)
+      tags_query =
+        tags_arg[0].is_a?(String) ? tags_query.where_name(tags_arg) : tags_query.where(id: tags_arg)
       tags = tags_query.select(:id, :target_tag_id).map { |t| t.target_tag_id || t.id }.uniq
 
       if ActiveModel::Type::Boolean.new.cast(@options[:match_all_tags])
