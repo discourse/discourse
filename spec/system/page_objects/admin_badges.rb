@@ -25,6 +25,12 @@ module PageObjects
 
       def submit_form
         form.submit
+        self
+      end
+
+      def delete_badge
+        page.find(".badge-form__delete-badge-btn").click
+        self
       end
 
       def choose_icon(name)

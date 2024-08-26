@@ -59,6 +59,12 @@ export default Component.extend({
     this.loadTagInfo();
   },
 
+  didUpdateAttrs() {
+    this._super(...arguments);
+    this.set("tagInfo", null);
+    this.loadTagInfo();
+  },
+
   loadTagInfo() {
     if (this.loading) {
       return;

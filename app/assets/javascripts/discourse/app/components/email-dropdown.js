@@ -1,19 +1,20 @@
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
+import { classNames } from "@ember-decorators/component";
 import I18n from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import { selectKitOptions } from "select-kit/components/select-kit";
 
-export default DropdownSelectBoxComponent.extend({
-  router: service(),
+@classNames("email-dropdown")
+@selectKitOptions({
+  icon: "wrench",
+  showFullTitle: false,
+})
+export default class EmailDropdown extends DropdownSelectBoxComponent {
+  @service router;
 
-  classNames: ["email-dropdown"],
-
-  selectKitOptions: {
-    icon: "wrench",
-    showFullTitle: false,
-  },
-
-  content: computed("email", function () {
+  @computed("email")
+  get content() {
     const content = [];
 
     if (this.email.primary) {
@@ -44,7 +45,7 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     return content;
-  }),
+  }
 
   @action
   onChange(id) {
@@ -59,5 +60,5 @@ export default DropdownSelectBoxComponent.extend({
         this.destroyEmail(this.email.email);
         break;
     }
-  },
-});
+  }
+}

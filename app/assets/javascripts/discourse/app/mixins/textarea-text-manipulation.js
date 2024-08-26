@@ -152,10 +152,11 @@ export default Mixin.create({
         i++;
         return i === opts.index ? newVal : match;
       });
-      this.set("value", newValue);
+
+      this._insertAt(0, val.length, newValue);
     } else {
-      // Replace value (side effect: cursor at the end).
-      this.set("value", val.replace(oldVal, newVal));
+      const replacedValue = val.replace(oldVal, newVal);
+      this._insertAt(0, val.length, replacedValue);
     }
 
     if (

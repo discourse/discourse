@@ -1,32 +1,39 @@
 import { computed } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
 import { makeArray } from "discourse-common/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
+import {
+  pluginApiIdentifiers,
+  selectKitOptions,
+} from "select-kit/components/select-kit";
 import TagsMixin from "select-kit/mixins/tags";
 
-export default MultiSelectComponent.extend(TagsMixin, {
-  pluginApiIdentifiers: ["tag-group-chooser"],
-  classNames: ["tag-group-chooser", "tag-chooser"],
-
-  selectKitOptions: {
-    allowAny: false,
-    filterable: true,
-    filterPlaceholder: "category.tag_groups_placeholder",
-    limit: null,
-  },
-
+@classNames("tag-group-chooser", "tag-chooser")
+@selectKitOptions({
+  allowAny: false,
+  filterable: true,
+  filterPlaceholder: "category.tag_groups_placeholder",
+  limit: null,
+})
+@pluginApiIdentifiers("tag-group-chooser")
+export default class TagGroupChooser extends MultiSelectComponent.extend(
+  TagsMixin
+) {
   modifyComponentForRow() {
     return "tag-chooser-row";
-  },
+  }
 
-  value: computed("tagGroups.[]", function () {
+  @computed("tagGroups.[]")
+  get value() {
     return makeArray(this.tagGroups).uniq();
-  }),
+  }
 
-  content: computed("tagGroups.[]", function () {
+  @computed("tagGroups.[]")
+  get content() {
     return makeArray(this.tagGroups)
       .uniq()
       .map((t) => this.defaultItem(t, t));
-  }),
+  }
 
   search(query) {
     const data = {
@@ -45,7 +52,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
         });
       }
     });
-  },
+  }
 
   _transformJson(context, json) {
     return json.results
@@ -53,5 +60,5 @@ export default MultiSelectComponent.extend(TagsMixin, {
       .map((result) => {
         return { id: result.name, name: result.name, count: result.count };
       });
-  },
-});
+  }
+}

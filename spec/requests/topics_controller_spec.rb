@@ -2236,9 +2236,6 @@ RSpec.describe TopicsController do
     fab!(:private_topic) { pm }
     fab!(:topic) { Fabricate(:post, user: post_author1).topic }
 
-    fab!(:p1) { Fabricate(:post, user: topic.user) }
-    fab!(:p2) { Fabricate(:post, user: topic.user) }
-
     describe "when topic is not allowed" do
       it "should return the right response" do
         SiteSetting.detailed_404 = true
@@ -3277,18 +3274,50 @@ RSpec.describe TopicsController do
       end
     end
 
-    it "returns a list of categories" do
+    it "returns suggested topics only when loading the last chunk of posts in a topic" do
+      topic_post_2 = Fabricate(:post, topic: topic)
+      topic_post_3 = Fabricate(:post, topic: topic)
+      topic_post_4 = Fabricate(:post, topic: topic)
+
+      stub_const(TopicView, "CHUNK_SIZE", 2) do
+        get "/t/#{topic.slug}/#{topic.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.has_key?("suggested_topics")).to eq(false)
+
+        get "/t/#{topic.slug}/#{topic.id}/4.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.has_key?("suggested_topics")).to eq(true)
+      end
+    end
+
+    it "returns a list of categories when `lazy_load_categories_group` site setting is enabled for the current user" do
       SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
-      topic.update!(category: Fabricate(:category))
+
+      topic_post_2 = Fabricate(:post, topic: topic)
+      topic_post_3 = Fabricate(:post, topic: topic)
+      topic_post_4 = Fabricate(:post, topic: topic)
       dest_topic.update!(category: Fabricate(:category))
 
-      get "/t/#{topic.slug}/#{topic.id}.json"
+      stub_const(TopicView, "CHUNK_SIZE", 2) do
+        get "/t/#{topic.slug}/#{topic.id}.json"
 
-      expect(response.parsed_body["categories"].map { |c| c["id"] }).to contain_exactly(
-        SiteSetting.uncategorized_category_id,
-        topic.category_id,
-        dest_topic.category_id,
-      )
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.has_key?("suggested_topics")).to eq(false)
+        expect(response.parsed_body["categories"].map { _1["id"] }).to contain_exactly(
+          topic.category_id,
+        )
+
+        get "/t/#{topic.slug}/#{topic.id}/4.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.has_key?("suggested_topics")).to eq(true)
+        expect(response.parsed_body["categories"].map { _1["id"] }).to contain_exactly(
+          topic.category_id,
+          dest_topic.category_id,
+        )
+      end
     end
   end
 

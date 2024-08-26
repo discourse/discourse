@@ -1,46 +1,45 @@
 import { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
-import SelectKitComponent from "select-kit/components/select-kit";
+import { classNames } from "@ember-decorators/component";
+import SelectKitComponent, {
+  pluginApiIdentifiers,
+  selectKitOptions,
+} from "select-kit/components/select-kit";
 
-export default SelectKitComponent.extend({
-  pluginApiIdentifiers: ["single-select"],
-  classNames: ["single-select"],
-  singleSelect: true,
+@classNames("single-select")
+@selectKitOptions({
+  headerComponent: "select-kit/single-select-header",
+})
+@pluginApiIdentifiers(["single-select"])
+export default class SingleSelect extends SelectKitComponent {
+  singleSelect = true;
 
-  selectKitOptions: {
-    headerComponent: "select-kit/single-select-header",
-  },
+  @computed("value", "content.[]", "selectKit.noneItem")
+  get selectedContent() {
+    if (!isEmpty(this.value)) {
+      let content;
 
-  selectedContent: computed(
-    "value",
-    "content.[]",
-    "selectKit.noneItem",
-    function () {
-      if (!isEmpty(this.value)) {
-        let content;
+      const value =
+        this.selectKit.options.castInteger && this._isNumeric(this.value)
+          ? Number(this.value)
+          : this.value;
 
-        const value =
-          this.selectKit.options.castInteger && this._isNumeric(this.value)
-            ? Number(this.value)
-            : this.value;
+      if (this.selectKit.valueProperty) {
+        content = (this.content || []).findBy(
+          this.selectKit.valueProperty,
+          value
+        );
 
-        if (this.selectKit.valueProperty) {
-          content = (this.content || []).findBy(
-            this.selectKit.valueProperty,
-            value
-          );
-
-          return this.selectKit.modifySelection(
-            content || this.defaultItem(value, value)
-          );
-        } else {
-          return this.selectKit.modifySelection(
-            (this.content || []).filter((c) => c === value)
-          );
-        }
+        return this.selectKit.modifySelection(
+          content || this.defaultItem(value, value)
+        );
       } else {
-        return this.selectKit.noneItem;
+        return this.selectKit.modifySelection(
+          (this.content || []).filter((c) => c === value)
+        );
       }
+    } else {
+      return this.selectKit.noneItem;
     }
-  ),
-});
+  }
+}

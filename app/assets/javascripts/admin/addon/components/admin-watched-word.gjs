@@ -9,7 +9,7 @@ export default class AdminWatchedWord extends Component {
   @service dialog;
 
   get tags() {
-    return this.args.word.replacement.replacement.split(",");
+    return this.args.word.replacement.split(",");
   }
 
   @action

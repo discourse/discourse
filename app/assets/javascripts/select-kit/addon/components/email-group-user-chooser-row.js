@@ -1,5 +1,5 @@
+import { classNames } from "@ember-decorators/component";
 import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
 
-export default SelectKitRowComponent.extend({
-  classNames: ["email-group-user-chooser-row"],
-});
+@classNames("email-group-user-chooser-row")
+export default class EmailGroupUserChooserRow extends SelectKitRowComponent {}
