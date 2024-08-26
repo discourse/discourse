@@ -8,6 +8,12 @@
   }
 }
 
+.fk-d-menu:has(.user-card) {
+  .fk-d-menu__inner-content {
+    overflow: visible;
+  }
+}
+
 .user-card,
 .group-card {
   --card-width: 39em;
