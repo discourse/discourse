@@ -98,6 +98,7 @@ Discourse::Application.configure do
     end
   end
 
+  config.logger = Logger.new(STDOUT)
   config.hosts << /\A(([a-z0-9-]+)\.)*localhost(\:\d+)?\Z/
 
   config.generators.after_generate do |files|

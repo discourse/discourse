@@ -1,0 +1,19 @@
+{{outlet}}
+<div id="entity-page" class="artist-page" role="main">
+  <div class="entity-page-header flex">
+    <div class="cover-art" title="Album art for {{this.model.artist.name}}">
+      {{this.model.coverArt}}
+    </div>
+    <div class="artist-info">
+      <h1>{{this.model.artist.name}}</h1>
+      <div class="details">
+        <small class="help-block">
+          {{this.model.artist.begin_year}}
+          {{#if this.model.artist.end_year}} — {{this.model.artist.end_year}}{{/if}}
+          <br>
+          {{this.model.artist.area}}
+        </small>
+      </div>
+    </div>
+  </div>
+</div>

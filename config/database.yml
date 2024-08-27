@@ -1,7 +1,7 @@
 development:
   prepared_statements: false
   adapter: postgresql
-  database: <%= ENV['DISCOURSE_DEV_DB'] || 'discourse_development' %>
+  database: <%= ENV['DISCOURSE_DEV_DB'] || 'music_maniacs_discourse_development' %>
   min_messages: warning
   pool: 5
   checkout_timeout: <%= ENV['CHECKOUT_TIMEOUT'] || 5 %>

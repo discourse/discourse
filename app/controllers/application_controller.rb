@@ -221,6 +221,9 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::NotFound do |e|
+    puts "Discourse::NotFound: #{e.message}"
+    ::Rails.logger.debug("Discourse::NotFound: #{e.message}")
+    ::Rails.logger.debug("wtf")
     rescue_discourse_actions(
       :not_found,
       e.status,

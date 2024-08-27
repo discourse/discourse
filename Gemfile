@@ -278,3 +278,7 @@ gem "drb"
 # dependencies for the automation plugin
 gem "iso8601"
 gem "rrule"
+
+
+# MusicManiacs gems
+gem 'musicbrainz'

@@ -2,6 +2,8 @@ import { capitalize } from "@ember/string";
 import Site from "discourse/models/site";
 
 export default function () {
+  this.route("artists", { path: "/artists/:id" });
+
   // Error page
   this.route("exception");
   this.route("exception-unknown", { path: "/404" });
