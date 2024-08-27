@@ -15,8 +15,17 @@ $progress-bar-icon-size: 0.8rem;
     flex-direction: column;
     gap: 0.5rem;
 
+    &:first-child .signup-progress-bar__circle {
+      transform: translateX(50%);
+      z-index: 1;
+    }
+
     &:last-child {
       width: $progress-bar-circle-size;
+      .signup-progress-bar__circle {
+        transform: translateX(-50%);
+        z-index: 1;
+      }
     }
   }
 
@@ -60,6 +69,7 @@ $progress-bar-icon-size: 0.8rem;
     width: $progress-bar-circle-size;
     border-radius: 50%;
     border: $progress-bar-line-width solid var(--primary-low-mid);
+    background-color: var(--secondary);
   }
 
   &__step.--completed {
@@ -78,6 +88,9 @@ $progress-bar-icon-size: 0.8rem;
   &__step.--active {
     .signup-progress-bar__circle {
       border: $progress-bar-line-width solid var(--success);
+    }
+    + .signup-progress-bar__step-text {
+      font-weight: bold;
     }
   }
 }
