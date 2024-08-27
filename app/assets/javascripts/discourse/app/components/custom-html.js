@@ -4,11 +4,11 @@ import { hbs } from "ember-cli-htmlbars";
 import { getCustomHTML } from "discourse/helpers/custom-html";
 import deprecated from "discourse-common/lib/deprecated";
 
-export default Component.extend({
-  triggerAppEvent: null,
+export default class CustomHtml extends Component {
+  triggerAppEvent = null;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     const name = this.name;
     const html = getCustomHTML(name);
 
@@ -25,19 +25,19 @@ export default Component.extend({
         this.set("layout", template);
       }
     }
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     if (this.triggerAppEvent === "true") {
       this.appEvents.trigger(`inserted-custom-html:${this.name}`);
     }
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
     if (this.triggerAppEvent === "true") {
       this.appEvents.trigger(`destroyed-custom-html:${this.name}`);
     }
-  },
-});
+  }
+}
