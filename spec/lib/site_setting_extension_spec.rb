@@ -490,6 +490,25 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "a setting with an area" do
+    before do
+      settings.setting(:test_setting, 88, area: "flags|backup")
+      settings.setting(:test_setting2, 89, area: "flags")
+      settings.setting(:test_setting3, 90)
+      settings.refresh!
+    end
+
+    it "should allow to filter by area" do
+      expect(settings.all_settings(filter_area: "flags").map { |s| s[:setting].to_sym }).to eq(
+        %i[default_locale test_setting test_setting2],
+      )
+
+      expect(settings.all_settings(filter_area: "backup").map { |s| s[:setting].to_sym }).to eq(
+        %i[default_locale test_setting],
+      )
+    end
+  end
+
   describe "setting with a validator" do
     before do
       settings.setting(:validated_setting, "info@example.com", type: "email")
