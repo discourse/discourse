@@ -264,6 +264,9 @@ module Chat
       directs = tracking_state(direct_message_channels.map(&:id), guardian)
       directs.channel_tracking.each_value { |channel_info| result += channel_info[:unread_count] }
 
+      # add tracking for watched thread unreads
+      # publics.thread_tracking.each_value { |thread_info| result += thread_info[:watched_threads_unread_count] }
+
       result
     end
 

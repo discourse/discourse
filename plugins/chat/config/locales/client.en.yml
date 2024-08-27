@@ -132,7 +132,7 @@ en:
       header_indicator_preference:
         title: "Show activity indicator in header"
         all_new: "All New Messages"
-        dm_and_mentions: "Direct Messages and Mentions"
+        dm_and_mentions: "Direct Messages, Mentions and Watched Threads"
         only_mentions: "Only Mentions"
         never: "Never"
       separate_sidebar_mode:
@@ -634,10 +634,13 @@ en:
         notifications:
           regular:
             title: "Normal"
-            description: "You will be notified if someone mentions your @name in this thread."
+            description: "Get notified when someone mentions you in this thread."
           tracking:
             title: "Tracking"
-            description: "A count of new replies for this thread will be shown in the thread list and the channel. You will be notified if someone mentions your @name in this thread."
+            description: "Get notified when someone mentions you in this thread and see a count of new replies in the thread list."
+          watching:
+            title: "Watching"
+            description: "Get notified about all replies in this thread and see a count of new replies in the thread list."
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
@@ -680,11 +683,13 @@ en:
           other_html: "<span>%{username}</span> <span>mentioned %{identifier} in personal chat</span>"
         chat_message: "New chat message"
         chat_quoted: "%{username} quoted your chat message"
+        chat_watched_thread: "replied in a watched thread"
 
       titles:
         chat_mention: "Chat mention"
         chat_invitation: "Chat invitation"
         chat_quoted: "Chat quoted"
+        chat_watched_thread: "Chat watched thread"
     action_codes:
       chat:
         enabled: '%{who} enabled <button class="btn-link open-chat">chat</button> %{when}'

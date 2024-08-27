@@ -11,7 +11,9 @@ export default class Channel extends Component {
     return (
       this.args.item.model.isDirectMessageChannel ||
       (this.args.item.model.isCategoryChannel &&
-        this.args.item.model.tracking.mentionCount > 0)
+        this.args.item.model.tracking.mentionCount > 0) ||
+      (this.args.item.model.isCategoryChannel && 
+        this.args.item.model.tracking.watchedThreadsUnreadCount > 0)
     );
   }
 

@@ -103,6 +103,27 @@ export default {
             };
           }
         );
+
+        api.registerNotificationTypeRenderer(
+          "chat_watched_thread",
+          (NotificationItemBase) => {
+            return class extends NotificationItemBase {
+              icon = "d-chat";
+              linkTitle = I18n.t("notifications.titles.chat_watched_thread");
+              description = I18n.t("notifications.popup.chat_watched_thread");
+              label = formatUsername(
+                this.notification.data.message_by_username
+              );
+
+              get linkHref() {
+                const data = this.notification.data;
+                return getURL(
+                  `/chat/c/-/${data.chat_channel_id}/t/${data.chat_thread_id}/${data.chat_message_id}`
+                );
+              }
+            };
+          }
+        );
       }
 
       if (api.registerUserMenuTab) {
@@ -123,7 +144,8 @@ export default {
             get count() {
               return (
                 this.getUnreadCountForType("chat_mention") +
-                this.getUnreadCountForType("chat_invitation")
+                this.getUnreadCountForType("chat_invitation") +
+                this.getUnreadCountForType("chat_watched_thread")
               );
             }
 
@@ -133,6 +155,7 @@ export default {
                 "chat_mention",
                 "chat_message",
                 "chat_quoted",
+                "chat_watched_thread",
               ];
             }
           };
