@@ -114,11 +114,13 @@ export default Mixin.create({
       if (!this.element) {
         return;
       }
-
       this._textarea.selectionStart = from;
       this._textarea.selectionEnd = from + length;
-      if (opts.scroll) {
-        const oldScrollPos = this._textarea.scrollTop;
+      if (opts.scroll === true || typeof opts.scroll === "number") {
+        const oldScrollPos =
+          typeof opts.scroll === "number"
+            ? opts.scroll
+            : this._textarea.scrollTop;
         if (!this.capabilities.isIOS) {
           this._textarea.focus();
         }
@@ -578,6 +580,7 @@ export default Mixin.create({
       let autocompletePrefix = `${indentationLevel}${newPrefix}`;
       let autocompletePostfix = text.substring(offset);
       const autocompletePrefixLength = autocompletePrefix.length;
+      let scrollPosition;
 
       /*
         For numeric items, we have to also replace the rest of the
@@ -598,6 +601,7 @@ export default Mixin.create({
           numericBullet + 1
         );
         autocompletePrefix += autocompletePostfix;
+        scrollPosition = this._textarea.scrollTop;
 
         this.replaceText(
           text.substring(offset, offset + autocompletePrefix.length),
@@ -610,7 +614,9 @@ export default Mixin.create({
         this._insertAt(offset, offset, autocompletePrefix);
       }
 
-      this.selectText(offset + autocompletePrefixLength, 0);
+      this.selectText(offset + autocompletePrefixLength, 0, {
+        scroll: scrollPosition,
+      });
     } else {
       // Clear the new autocompleted list item if there is no other text.
       const offsetWithoutPrefix = offset - `\n${listPrefix}`.length;

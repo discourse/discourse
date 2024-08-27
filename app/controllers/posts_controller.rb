@@ -469,6 +469,8 @@ class PostsController < ApplicationController
     post.public_version -= 1
     post.save
 
+    post.publish_change_to_clients!(:revised)
+
     render body: nil
   end
 
@@ -508,6 +510,8 @@ class PostsController < ApplicationController
     post = find_post_from_params
     post.public_version += 1
     post.save
+
+    post.publish_change_to_clients!(:revised)
 
     render body: nil
   end

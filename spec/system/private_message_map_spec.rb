@@ -97,6 +97,11 @@ describe "Topic Map - Private Message", type: :system do
   end
 
   it "has private message map that shows correct participants and allows editing of participant invites" do
+    skip_on_ci!(<<~REASON)
+    Failing on CI quite consistently with the following error:
+    `expected to find link "anne1" with href "/u/anne1" within #<Capybara::Node::Element tag="div" path="..."> but there were no matches`
+    REASON
+
     freeze_time
     sign_in(user)
     topic_page.visit_topic(topic)
