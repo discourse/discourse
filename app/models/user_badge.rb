@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class UserBadge < ActiveRecord::Base
+  self.ignored_columns = [
+    :old_notification_id, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been writted.
+  ]
+
   belongs_to :badge
   belongs_to :user
   belongs_to :granted_by, class_name: "User"

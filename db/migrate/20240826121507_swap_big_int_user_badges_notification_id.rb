@@ -2,14 +2,6 @@
 
 class SwapBigIntUserBadgesNotificationId < ActiveRecord::Migration[7.0]
   def up
-    # Short-circuit if the table has been migrated already
-    result =
-      execute(
-        "SELECT data_type FROM information_schema.columns WHERE table_name = 'user_badges' AND column_name = 'notification_id' LIMIT 1",
-      )
-    data_type = result[0]["data_type"]
-    return if data_type.downcase == "bigint"
-
     # Necessary to rename and drop columns
     Migration::SafeMigrate.disable!
 
