@@ -2,15 +2,7 @@
 
 class SwapBigIntShelvedNotificationsNotificationId < ActiveRecord::Migration[7.0]
   def up
-    # Short-circuit if the table has been migrated already
-    result =
-      execute(
-        "SELECT data_type FROM information_schema.columns WHERE table_name = 'shelved_notifications' AND column_name = 'notification_id' LIMIT 1",
-      )
-    data_type = result[0]["data_type"]
-    return if data_type.downcase == "bigint"
-
-    # Necessary to rename and drop columns
+    # Necessary to rename columns and drop triggers/functions
     Migration::SafeMigrate.disable!
 
     # Drop trigger and function used to replicate new values
@@ -26,6 +18,10 @@ class SwapBigIntShelvedNotificationsNotificationId < ActiveRecord::Migration[7.0
     # Keep old column and mark it as read only
     execute "ALTER TABLE shelved_notifications ALTER COLUMN old_notification_id DROP NOT NULL"
     Migration::ColumnDropper.mark_readonly(:shelved_notifications, :old_notification_id)
+
+    # Rename indexes
+    execute "DROP INDEX IF EXISTS index_shelved_notifications_on_notification_id"
+    execute "ALTER INDEX index_shelved_notifications_on_new_notification_id RENAME TO index_shelved_notifications_on_notification_id"
   ensure
     Migration::SafeMigrate.enable!
   end

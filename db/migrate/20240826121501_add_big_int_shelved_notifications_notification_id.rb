@@ -2,14 +2,6 @@
 
 class AddBigIntShelvedNotificationsNotificationId < ActiveRecord::Migration[7.0]
   def up
-    # Short-circuit if the table has been migrated already
-    result =
-      execute(
-        "SELECT data_type FROM information_schema.columns WHERE table_name = 'shelved_notifications' AND column_name = 'notification_id' LIMIT 1",
-      )
-    data_type = result[0]["data_type"]
-    return if data_type.downcase == "bigint"
-
     # Create new column
     execute "ALTER TABLE shelved_notifications ADD COLUMN new_notification_id BIGINT NOT NULL DEFAULT 0"
 
