@@ -23,14 +23,16 @@ $progress-bar-icon-size: 0.8rem;
   &__step-text {
     white-space: nowrap;
     width: fit-content;
-    transform: translateX(-25%);
+    transform: translateX(calc(calc($progress-bar-circle-size / 2) - 50%));
 
     .signup-progress-bar__segment:first-child & {
       transform: translateX(0%);
     }
 
     .signup-progress-bar__segment:last-child & {
-      transform: translateX(-50%);
+      transform: translateX(
+        calc(calc($progress-bar-circle-size + $progress-bar-line-width) - 100%)
+      );
     }
   }
 
