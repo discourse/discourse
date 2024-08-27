@@ -143,6 +143,9 @@ export default class AceEditor extends Component {
     this.editor.$blockScrolling = Infinity;
     this.editor.renderer.setScrollMargin(10, 10);
 
+    // For testing purposes
+    element.aceEditor = this.editor;
+
     this.changeDisabledState();
     this.warnSCSSDeprecations();
 
