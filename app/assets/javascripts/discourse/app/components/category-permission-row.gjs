@@ -130,10 +130,7 @@ export default class CategoryPermissionRow extends Component {
         {{#if this.isEveryoneGroup}}
           <span class="group-name-label">{{@groupName}}</span>
         {{else}}
-          <a
-            class="group-name-link"
-            href="{{this.groupLink}}"
-          >{{@groupName}}</a>
+          <a class="group-name-link" href={{this.groupLink}}>{{@groupName}}</a>
         {{/if}}
       </span>
       <span class="options actionable">
