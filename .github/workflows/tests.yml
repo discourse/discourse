@@ -73,10 +73,15 @@ jobs:
         if: matrix.build_type == 'system'
         run: apt remove -y chromium-driver chromium
 
-      - name: Halve PARALLEL_TEST_PROCESSORS
+      - name: Set PARALLEL_TEST_PROCESSORS for system tests
         if: matrix.build_type == 'system'
         run: |
           echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2))" >> $GITHUB_ENV
+
+      - name: Set QUNIT_PARALLEL for QUnit tests
+        if: matrix.build_type == 'frontend'
+        run: |
+          echo "QUNIT_PARALLEL=$(($(nproc) / 2))" >> $GITHUB_ENV
 
       - uses: actions/checkout@v4
         with:
@@ -230,15 +235,15 @@ jobs:
 
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: bin/turbo_rspec --use-runtime-info --verbose --format documentation
+        run: bin/turbo_rspec --use-runtime-info --verbose --format=documentation --profile=50
 
       - name: Plugin RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-        run: bin/rake plugin:turbo_spec['*','--verbose --format documentation --use-runtime-info']
+        run: bin/rake plugin:turbo_spec['*','--verbose --format=documentation --use-runtime-info --profile=50']
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: QUNIT_WRITE_EXECUTION_FILE=1 QUNIT_PARALLEL=3 bin/rake plugin:qunit['*','1200000']
+        run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake plugin:qunit['*','1200000']
         timeout-minutes: 30
 
       - name: Theme QUnit
@@ -408,7 +413,8 @@ jobs:
 
       - name: Core QUnit
         working-directory: ./app/assets/javascripts/discourse
-        run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5 --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
+        run: |
+          yarn ember exam --path /tmp/emberbuild --load-balance --parallel=$(($(nproc) / 2 + 1)) --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
         timeout-minutes: 15
 
       - uses: actions/upload-artifact@v4

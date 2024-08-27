@@ -117,6 +117,27 @@ describe "Uploading files in the composer", type: :system do
       end
     end
 
+    it "handles a video load error gracefully" do
+      visit "/new-topic"
+      expect(composer).to be_opened
+      topic.fill_in_composer_title("Video Load Error Test")
+
+      # Inject JavaScript to simulate an invalid video file that triggers onerror
+      page.execute_script <<-JS
+        const originalCreateObjectURL = URL.createObjectURL;
+        URL.createObjectURL = function(blob) {
+          // Simulate an invalid video source by returning a fake object URL
+          return 'invalid_video_source.mp4';
+        };
+      JS
+
+      file_path_1 = file_from_fixtures("small.mp4", "media").path
+      attach_file(file_path_1) { composer.click_toolbar_button("upload") }
+
+      expect(composer).to have_no_in_progress_uploads
+      expect(composer.preview).to have_css(".onebox-placeholder-container")
+    end
+
     it "shows video player in composer" do
       SiteSetting.enable_diffhtml_preview = true
 

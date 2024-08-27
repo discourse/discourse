@@ -16,7 +16,9 @@ export default class GroupRequestsController extends Controller {
   loading = false;
 
   get canLoadMore() {
-    return this.get("model.requesters")?.length < this.get("model.user_count");
+    return (
+      this.get("model.requesters")?.length < this.get("model.request_count")
+    );
   }
 
   @observes("filterInput")
