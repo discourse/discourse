@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class User < ActiveRecord::Base
+  self.ignored_columns = [
+    :old_seen_notification_id, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been written.
+  ]
+
   include Searchable
   include Roleable
   include HasCustomFields
@@ -2223,7 +2227,6 @@ end
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
 #  name                      :string
-#  seen_notification_id      :integer          default(0), not null
 #  last_posted_at            :datetime
 #  password_hash             :string(64)
 #  salt                      :string(32)
@@ -2259,6 +2262,7 @@ end
 #  last_seen_reviewable_id   :integer
 #  password_algorithm        :string(64)
 #  required_fields_version   :integer
+#  seen_notification_id      :bigint           default(0), not null
 #
 # Indexes
 #
