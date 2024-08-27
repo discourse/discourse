@@ -24,7 +24,11 @@ class FlagSerializer < ApplicationSerializer
   end
 
   def description
-    I18n.t("#{i18n_prefix}.description", default: object.description)
+    I18n.t(
+      "#{i18n_prefix}.description",
+      default: object.description.to_s,
+      base_path: Discourse.base_path,
+    )
   end
 
   def short_description

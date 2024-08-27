@@ -1405,6 +1405,8 @@ export default class ComposerService extends Service {
         composerModel.setProperties({ unlistTopic: false, whisper: false });
       }
 
+      await this._setModel(composerModel, opts);
+
       // we need a draft sequence for the composer to work
       if (opts.draftSequence === undefined) {
         let data = await Draft.get(opts.draftKey);
@@ -1417,8 +1419,6 @@ export default class ComposerService extends Service {
 
         opts.draft ||= data.draft;
         opts.draftSequence = data.draft_sequence;
-
-        await this._setModel(composerModel, opts);
         return;
       }
 
@@ -1433,8 +1433,6 @@ export default class ComposerService extends Service {
           await this.open(opts);
         }
       }
-
-      await this._setModel(composerModel, opts);
     } finally {
       this.skipAutoSave = false;
       this.appEvents.trigger("composer:open", { model: this.model });
