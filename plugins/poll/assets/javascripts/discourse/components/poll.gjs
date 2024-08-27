@@ -291,25 +291,6 @@ export default class PollComponent extends Component {
     return this.status === CLOSED_STATUS || this.isAutomaticallyClosed;
   }
 
-  get rankedChoiceDropdownContent() {
-    let rankedChoiceDropdownContent = [];
-
-    rankedChoiceDropdownContent.push({
-      id: 0,
-      name: I18n.t("poll.options.ranked_choice.abstain"),
-    });
-
-    this.poll.options.forEach((option, i) => {
-      option.rank = 0;
-      rankedChoiceDropdownContent.push({
-        id: i + 1,
-        name: (i + 1).toString(),
-      });
-    });
-
-    return rankedChoiceDropdownContent;
-  }
-
   get isAutomaticallyClosed() {
     return (
       (this.poll.close ?? false) &&
@@ -716,7 +697,6 @@ export default class PollComponent extends Component {
         <PollOptions
           @isCheckbox={{this.isCheckbox}}
           @isRankedChoice={{this.isRankedChoice}}
-          @rankedChoiceDropdownContent={{this.rankedChoiceDropdownContent}}
           @options={{this.options}}
           @votes={{this.vote}}
           @sendOptionSelect={{this.toggleOption}}
