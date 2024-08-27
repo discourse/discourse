@@ -99,7 +99,7 @@ module ServiceMatchers
     end
 
     def step_failed?
-      super && result[name].blank?
+      super && result[step].not_found
     end
   end
 
