@@ -3,31 +3,17 @@ class CopyChatMentionNotificationsNotificationIdValues < ActiveRecord::Migration
   disable_ddl_transaction!
 
   def up
-    execute("DROP INDEX IF EXISTS chat_mention_notifications_tmp_migration_index")
+    min_id, max_id =
+      execute("SELECT MIN(notification_id), MAX(notification_id) FROM chat_mention_notifications")[
+        0
+      ].values
+    batch_size = 10_000
 
-    execute(<<~SQL)
-      CREATE INDEX #{Rails.env.test? ? "" : "CONCURRENTLY"} chat_mention_notifications_tmp_migration_index ON chat_mention_notifications (notification_id)
-      WHERE notification_id != new_notification_id
-    SQL
-
-    sql = <<~SQL
-      UPDATE chat_mention_notifications
-      SET new_notification_id = notification_id
-      WHERE notification_id IN (
-        SELECT
-          notification_id
-        FROM chat_mention_notifications
-        WHERE notification_id != new_notification_id
-        LIMIT 100000
-      )
-    SQL
-
-    loop do
-      count = execute(sql).cmd_tuples
-      break if count == 0
-    end
-
-    execute("DROP INDEX IF EXISTS chat_mention_notifications_tmp_migration_index")
+    (min_id..max_id).step(batch_size) { |start_id| execute <<~SQL.squish } if min_id && max_id
+        UPDATE chat_mention_notifications
+        SET new_notification_id = notification_id
+        WHERE notification_id >= #{start_id} AND notification_id < #{start_id + batch_size} AND new_notification_id != notification_id
+      SQL
   end
 
   def down
