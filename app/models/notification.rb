@@ -411,7 +411,6 @@ end
 #
 # Table name: notifications
 #
-#  old_id            :integer
 #  notification_type :integer          not null
 #  user_id           :integer          not null
 #  data              :string(1000)     not null
