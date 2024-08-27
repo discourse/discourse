@@ -67,7 +67,6 @@ module("Integration | Component | ace-editor", function (hooks) {
       />
     </template>);
 
-    // await pauseTest();
     assert.dom(".ace_editor").exists("it renders the ace editor");
     assert
       .dom(".ace-wrapper")
