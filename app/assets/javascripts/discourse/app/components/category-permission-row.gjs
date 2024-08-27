@@ -1,11 +1,9 @@
 import Component from "@glimmer/component";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import PermissionType from "discourse/models/permission-type";
-import dIcon from "discourse-common/helpers/d-icon";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
 
@@ -15,7 +13,7 @@ export default class CategoryPermissionRow extends Component {
   @service currentUser;
 
   get everyonePermissionType() {
-    return this.args.everyonePermission.permission_type;
+    return this.args.everyonePermission?.permission_type;
   }
 
   get canReply() {
@@ -37,11 +35,11 @@ export default class CategoryPermissionRow extends Component {
     return this.canReply ? "check-square" : "far-square";
   }
 
-  get replyGranted() {
+  get replyGrantedClass() {
     return this.args.type <= PermissionType.CREATE_POST ? "reply-granted" : "";
   }
 
-  get createGranted() {
+  get createGrantedClass() {
     return this.args.type === PermissionType.FULL ? "create-granted" : "";
   }
 
@@ -50,6 +48,8 @@ export default class CategoryPermissionRow extends Component {
   }
 
   get replyDisabled() {
+    // If everyone has create permission then it doesn't make sense to
+    // be able to remove reply for other groups
     if (
       !this.isEveryoneGroup &&
       this.everyonePermissionType &&
@@ -67,6 +67,8 @@ export default class CategoryPermissionRow extends Component {
   }
 
   get createDisabled() {
+    // If everyone has full permission then it doesn't make sense to
+    // be able to remove create for other groups
     if (
       !this.isEveryoneGroup &&
       this.everyonePermissionType &&
@@ -128,7 +130,10 @@ export default class CategoryPermissionRow extends Component {
         {{#if this.isEveryoneGroup}}
           <span class="group-name-label">{{@groupName}}</span>
         {{else}}
-          <a href="{{this.groupLink}}">{{@groupName}}</a>
+          <a
+            class="group-name-link"
+            href="{{this.groupLink}}"
+          >{{@groupName}}</a>
         {{/if}}
       </span>
       <span class="options actionable">
@@ -139,7 +144,10 @@ export default class CategoryPermissionRow extends Component {
           @action={{this.setPermissionReply}}
           @translatedTitle={{this.replyTooltip}}
           @disabled={{this.replyDisabled}}
-          class={{concatClass "btn btn-flat reply-toggle" this.replyGranted}}
+          class={{concatClass
+            "btn btn-flat reply-toggle"
+            this.replyGrantedClass
+          }}
         />
 
         <DButton
@@ -147,12 +155,14 @@ export default class CategoryPermissionRow extends Component {
           @action={{this.setPermissionFull}}
           @translatedTitle={{this.createTooltip}}
           @disabled={{this.createDisabled}}
-          class={{concatClass "btn-flat create-toggle" this.createGranted}}
+          class={{concatClass "btn-flat create-toggle" this.createGrantedClass}}
         />
 
-        <a class="remove-permission" href {{on "click" this.removeRow}}>
-          {{dIcon "far-trash-alt"}}
-        </a>
+        <DButton
+          class="remove-permission btn-flat"
+          @action={{this.removeRow}}
+          @icon={{"far-trash-alt"}}
+        />
       </span>
     </div>
   </template>
