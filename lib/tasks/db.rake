@@ -259,7 +259,12 @@ task "db:migrate" => %w[
     ActiveRecord::Tasks::DatabaseTasks.migrate
 
     SeedFu.quiet = true
-    SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
+
+    begin
+      SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
+    rescue => error
+      error.backtrace.each { |l| puts l }
+    end
 
     Rake::Task["db:schema:cache:dump"].invoke if Rails.env.development? && !ENV["RAILS_DB"]
 
