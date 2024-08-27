@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import loadAce from "discourse/lib/load-ace-editor";
+import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
@@ -142,6 +143,10 @@ export default class AceEditor extends Component {
 
     this.editor.$blockScrolling = Infinity;
     this.editor.renderer.setScrollMargin(10, 10);
+
+    if (isTesting()) {
+      element.aceEditor = this.editor;
+    }
 
     this.changeDisabledState();
     this.warnSCSSDeprecations();

@@ -1,14 +1,8 @@
-import { render } from "@ember/test-helpers";
+import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import ThemeSettingsEditor from "admin/components/theme-settings-editor";
-
-function glimmerComponent(owner, componentClass, args = {}) {
-  const componentManager = owner.lookup("component-manager:glimmer");
-  return componentManager.createComponent(componentClass, {
-    named: args,
-  });
-}
 
 module(
   "Integration | Component | admin-theme-settings-editor",
@@ -33,81 +27,104 @@ module(
     });
 
     test("input is valid json", async function (assert) {
-      const component = glimmerComponent(this.owner, ThemeSettingsEditor, {
-        model: [],
-      });
+      const model = [];
 
-      component.editedContent = "foo";
-      component.save();
-      assert.strictEqual(component.errors[0].setting, "Syntax Error");
+      await render(<template>
+        <ThemeSettingsEditor @model={{model}} />
+      </template>);
+
+      await fillIn(".ace textarea", "foo");
+      await click("button#save");
+
+      assert.dom(".validation-error").hasText(/Syntax Error/);
     });
 
     test("'setting' key is present for each setting", async function (assert) {
-      const component = glimmerComponent(this.owner, ThemeSettingsEditor, {
-        model: [],
-      });
+      const model = [];
 
-      component.editedContent = JSON.stringify([{ value: "value1" }]);
-      component.save();
-      assert.strictEqual(component.errors[0].setting, "Syntax Error");
+      await render(<template>
+        <ThemeSettingsEditor @model={{model}} />
+      </template>);
+
+      await fillIn(".ace textarea", `[{ "value": "value1" }]`);
+      await click("button#save");
+
+      assert.dom(".validation-error").hasText(/Syntax Error/);
     });
 
     test("'value' key is present for each setting", async function (assert) {
-      const component = glimmerComponent(this.owner, ThemeSettingsEditor, {
-        model: [],
-      });
+      const model = [];
 
-      component.editedContent = JSON.stringify([{ setting: "setting1" }]);
-      component.save();
-      assert.strictEqual(component.errors[0].setting, "Syntax Error");
+      await render(<template>
+        <ThemeSettingsEditor @model={{model}} />
+      </template>);
+
+      await fillIn(".ace textarea", `[{ "setting": "setting1" }]`);
+      await click("button#save");
+
+      assert.dom(".validation-error").hasText(/Syntax Error/);
     });
 
     test("only 'setting' and 'value' keys are present, no others", async function (assert) {
-      const component = glimmerComponent(this.owner, ThemeSettingsEditor, {
-        model: [],
-      });
+      const model = [];
 
-      component.editedContent = JSON.stringify([{ other_key: "other-key-1" }]);
-      component.save();
-      assert.strictEqual(component.errors[0].setting, "Syntax Error");
+      await render(<template>
+        <ThemeSettingsEditor @model={{model}} />
+      </template>);
+
+      await fillIn(".ace textarea", `[{ "other_key": "other-key-1" }]`);
+      await click("button#save");
+
+      assert.dom(".validation-error").hasText(/Syntax Error/);
     });
 
     test("no settings are deleted", async function (assert) {
-      const component = glimmerComponent(this.owner, ThemeSettingsEditor, {
+      const model = {
         model: {
-          model: {
-            settings: [
-              { setting: "foo", value: "foo" },
-              { setting: "bar", value: "bar" },
-            ],
-          },
+          settings: [{ setting: "foo", value: "foo" }],
         },
-      });
+      };
 
-      component.editedContent = JSON.stringify([
-        { setting: "bar", value: "bar" },
-      ]);
-      component.save();
+      await render(<template>
+        <ThemeSettingsEditor @model={{model}} />
+      </template>);
 
-      assert.strictEqual(component.errors[0].setting, "foo");
+      query(".ace").aceEditor.session.doc.setValue(
+        JSON.stringify([{ setting: "bar", value: "bar" }])
+      );
+      await click("button#save");
+
+      assert
+        .dom(".validation-error")
+        .hasText(
+          "foo: These settings were deleted. Please restore them and try again."
+        );
     });
 
     test("no settings are added", async function (assert) {
-      const component = glimmerComponent(this.owner, ThemeSettingsEditor, {
+      const model = {
         model: {
-          model: {
-            settings: [{ setting: "bar", value: "bar" }],
-          },
+          settings: [{ setting: "bar", value: "bar" }],
         },
-      });
+      };
 
-      component.editedContent = JSON.stringify([
-        { setting: "foo", value: "foo" },
-        { setting: "bar", value: "bar" },
-      ]);
-      component.save();
+      await render(<template>
+        <ThemeSettingsEditor @model={{model}} />
+      </template>);
 
-      assert.strictEqual(component.errors[0].setting, "foo");
+      query(".ace").aceEditor.session.doc.setValue(
+        JSON.stringify([
+          { setting: "foo", value: "foo" },
+          { setting: "bar", value: "bar" },
+        ])
+      );
+      await click("button#save");
+
+      assert
+        .dom(".validation-error")
+        .hasText(
+          "foo: These settings were added. Please remove them and try again."
+        );
     });
   }
 );
