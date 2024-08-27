@@ -7,34 +7,52 @@ module("Integration | Component | ace-editor", function (hooks) {
   setupRenderingTest(hooks);
 
   test("css editor", async function (assert) {
-    await render(<template><AceEditor @mode="css" /></template>);
+    await render(<template>
+      <AceEditor @mode="css" style="width: 300px; height: 200px" />
+    </template>);
     assert.dom(".ace_editor").exists("it renders the ace editor");
   });
 
   test("html editor", async function (assert) {
     await render(<template>
-      <AceEditor @mode="html" @content="<b>wat</b>" />
+      <AceEditor
+        @mode="html"
+        @content="<b>wat</b>"
+        style="width: 300px; height: 200px"
+      />
     </template>);
     assert.dom(".ace_editor").exists("it renders the ace editor");
   });
 
   test("sql editor", async function (assert) {
     await render(<template>
-      <AceEditor @mode="sql" @content="SELECT * FROM users" />
+      <AceEditor
+        @mode="sql"
+        @content="SELECT * FROM users"
+        style="width: 300px; height: 200px"
+      />
     </template>);
     assert.dom(".ace_editor").exists("it renders the ace editor");
   });
 
   test("yaml editor", async function (assert) {
     await render(<template>
-      <AceEditor @mode="yaml" @content="test: true" />
+      <AceEditor
+        @mode="yaml"
+        @content="test: true"
+        style="width: 300px; height: 200px"
+      />
     </template>);
     assert.dom(".ace_editor").exists("it renders the ace editor");
   });
 
   test("javascript editor", async function (assert) {
     await render(<template>
-      <AceEditor @mode="javascript" @content="test: true" />
+      <AceEditor
+        @mode="javascript"
+        @content="test: true"
+        style="width: 300px; height: 200px"
+      />
     </template>);
     assert.dom(".ace_editor").exists("it renders the ace editor");
   });
@@ -45,9 +63,11 @@ module("Integration | Component | ace-editor", function (hooks) {
         @mode="sql"
         @content="SELECT * FROM users"
         @disabled={{true}}
+        style="width: 300px; height: 200px"
       />
     </template>);
 
+    // await pauseTest();
     assert.dom(".ace_editor").exists("it renders the ace editor");
     assert
       .dom(".ace-wrapper")
