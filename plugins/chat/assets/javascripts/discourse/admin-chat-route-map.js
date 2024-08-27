@@ -1,7 +1,14 @@
 export default {
-  resource: "admin.adminPlugins",
+  resource: "admin.adminPlugins.show",
   path: "/plugins",
   map() {
-    this.route("chat");
+    this.route(
+      "discourse-chat-incoming-webhooks",
+      { path: "hooks" },
+      function () {
+        this.route("new");
+        this.route("edit", { path: "/:id" });
+      }
+    );
   },
 };

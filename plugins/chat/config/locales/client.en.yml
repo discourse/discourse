@@ -527,6 +527,7 @@ en:
       incoming_webhooks:
         back: "Back"
         channel_placeholder: "Select a channel"
+        channel: "Channel"
         confirm_destroy: "Are you sure you want to delete this incoming webhook? This cannot be un-done."
         current_emoji: "Current Emoji"
         description: "Description"

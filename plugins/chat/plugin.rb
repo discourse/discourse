@@ -27,7 +27,7 @@ register_svg_icon "file-image"
 register_svg_icon "stop-circle"
 
 # route: /admin/plugins/chat
-add_admin_route "chat.admin.title", "chat"
+add_admin_route "chat.admin.title", "chat", use_new_show_route: true
 
 GlobalSetting.add_default(:allow_unsecure_chat_uploads, false)
 

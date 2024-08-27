@@ -1,0 +1,52 @@
+<div class="discourse-chat-incoming-webhooks admin-detail">
+  <AdminPageSubheader @titleLabel="chat.incoming_webhooks.title">
+    <:actions as |actions|>
+      <actions.Primary
+        @label="chat.incoming_webhooks.new"
+        @title="chat.incoming_webhooks.new"
+        @action={{fn (mut this.creatingNew) true}}
+        class="btn-primary"
+      />
+    </:actions>
+  </AdminPageSubheader>
+
+  {{#if this.creatingNew}}
+    <div class="new-incoming-webhook-container">
+      <Input
+        @type="text"
+        @value={{this.newWebhookName}}
+        placeholder={{i18n "chat.incoming_webhooks.name_placeholder"}}
+      />
+      <ChatChannelChooser
+        @content={{this.model.chat_channels}}
+        @value={{this.newWebhookChannelId}}
+        @onChange={{fn (mut this.newWebhookChannelId)}}
+      />
+      <DButton
+        @label="chat.create"
+        @title="chat.create"
+        @disabled={{not this.nameAndChannelValid}}
+        @action={{this.createNewWebhook}}
+        class="btn-primary create-new-incoming-webhook-btn"
+      />
+      <DButton
+        @label="chat.cancel"
+        @title="chat.cancel"
+        @action={{this.resetNewWebhook}}
+      />
+    </div>
+  {{else}}
+  {{/if}}
+
+  <p>{{html-safe (i18n "chat.incoming_webhooks.instructions")}}</p>
+
+  <div class="incoming-chat-webhooks">
+    {{#if this.model.incoming_chat_webhooks}}
+      <AdminChatIncomingWebhooksList
+        @webhooks={{this.model.incoming_chat_webhooks}}
+      />
+    {{else}}
+      {{i18n "chat.incoming_webhooks.none"}}
+    {{/if}}
+  </div>
+</div>
