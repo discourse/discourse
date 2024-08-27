@@ -160,7 +160,10 @@
             />
           </h1>
 
-          <PluginOutlet @name="topic-category" @outletArgs={{hash topic=this.model}}>
+          <PluginOutlet
+            @name="topic-category"
+            @outletArgs={{hash topic=this.model}}
+          >
             <TopicCategory @topic={{this.model}} class="topic-category" />
           </PluginOutlet>
 
