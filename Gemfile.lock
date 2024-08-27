@@ -305,9 +305,10 @@ GEM
       oauth2 (~> 1.1)
       omniauth (~> 1.1)
       omniauth-oauth2 (>= 1.6)
-    omniauth-oauth (1.2.0)
+    omniauth-oauth (1.2.1)
       oauth
       omniauth (>= 1.0, < 3)
+      rack (>= 1.6.2, < 4)
     omniauth-oauth2 (1.7.3)
       oauth2 (>= 1.4, < 3)
       omniauth (>= 1.9, < 3)
