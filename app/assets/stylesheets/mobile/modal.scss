@@ -40,6 +40,9 @@ html:not(.keyboard-visible.mobile-view) {
     padding: 0.5rem;
   }
 
+  &__footer {
+    margin-top: auto;
+  }
   .ios-device & {
     &__footer {
       margin-top: auto;

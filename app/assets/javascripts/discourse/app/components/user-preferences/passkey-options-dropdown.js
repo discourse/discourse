@@ -1,16 +1,17 @@
 import { action, computed } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
 import I18n from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import { selectKitOptions } from "select-kit/components/select-kit";
 
-export default DropdownSelectBoxComponent.extend({
-  classNames: ["passkey-options-dropdown"],
-
-  selectKitOptions: {
-    icon: "wrench",
-    showFullTitle: false,
-  },
-
-  content: computed(function () {
+@classNames("passkey-options-dropdown")
+@selectKitOptions({
+  icon: "wrench",
+  showFullTitle: false,
+})
+export default class PasskeyOptionsDropdown extends DropdownSelectBoxComponent {
+  @computed
+  get content() {
     return [
       {
         id: "edit",
@@ -23,7 +24,7 @@ export default DropdownSelectBoxComponent.extend({
         name: I18n.t("user.second_factor.delete"),
       },
     ];
-  }),
+  }
 
   @action
   onChange(id) {
@@ -35,5 +36,5 @@ export default DropdownSelectBoxComponent.extend({
         this.deletePasskey();
         break;
     }
-  },
-});
+  }
+}

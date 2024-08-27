@@ -237,6 +237,14 @@ module PageObjects
         JS
       end
 
+      def select_range(start_index, length)
+        execute_script(<<~JS, text)
+          const composer = document.querySelector("#{COMPOSER_ID} .d-editor-input");
+          composer.focus();
+          composer.setSelectionRange(#{start_index}, #{length});
+        JS
+      end
+
       def submit
         find("#{COMPOSER_ID} .save-or-cancel .create").click
       end

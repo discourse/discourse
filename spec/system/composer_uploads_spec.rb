@@ -88,6 +88,56 @@ describe "Uploading files in the composer", type: :system do
       end
     end
 
+    it "handles a video where dimensions can't be read gracefully" do
+      visit "/new-topic"
+      expect(composer).to be_opened
+      topic.fill_in_composer_title("Zero Width Video Test")
+
+      # Inject JavaScript to mock video dimensions
+      page.execute_script <<-JS
+        HTMLVideoElement.prototype.__defineGetter__('videoWidth', function() { return 0; });
+        HTMLVideoElement.prototype.__defineGetter__('videoHeight', function() { return 0; });
+      JS
+
+      file_path_1 = file_from_fixtures("small.mp4", "media").path
+      attach_file(file_path_1) { composer.click_toolbar_button("upload") }
+
+      expect(composer).to have_no_in_progress_uploads
+      expect(composer.preview).to have_css(".onebox-placeholder-container")
+
+      composer.submit
+
+      expect(find("#topic-title")).to have_content("Zero Width Video Test")
+
+      selector = topic.post_by_number_selector(1)
+
+      expect(page).to have_css(selector)
+      within(selector) do
+        expect(page).to have_no_css(".video-placeholder-container[data-thumbnail-src]")
+      end
+    end
+
+    it "handles a video load error gracefully" do
+      visit "/new-topic"
+      expect(composer).to be_opened
+      topic.fill_in_composer_title("Video Load Error Test")
+
+      # Inject JavaScript to simulate an invalid video file that triggers onerror
+      page.execute_script <<-JS
+        const originalCreateObjectURL = URL.createObjectURL;
+        URL.createObjectURL = function(blob) {
+          // Simulate an invalid video source by returning a fake object URL
+          return 'invalid_video_source.mp4';
+        };
+      JS
+
+      file_path_1 = file_from_fixtures("small.mp4", "media").path
+      attach_file(file_path_1) { composer.click_toolbar_button("upload") }
+
+      expect(composer).to have_no_in_progress_uploads
+      expect(composer.preview).to have_css(".onebox-placeholder-container")
+    end
+
     it "shows video player in composer" do
       SiteSetting.enable_diffhtml_preview = true
 

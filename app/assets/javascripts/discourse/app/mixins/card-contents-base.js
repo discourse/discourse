@@ -199,7 +199,7 @@ export default Mixin.create({
         this._menuInstance = await this.menu.show(target, {
           content: this.element,
           autoUpdate: false,
-          identifier: "card",
+          identifier: "usercard",
           padding: {
             top: 10 + AVATAR_OVERFLOW_SIZE + headerOffset(),
             right: 10,
@@ -212,7 +212,7 @@ export default Mixin.create({
         this._menuInstance = await this.menu.show(target, {
           content: this.element,
           strategy: "fixed",
-          identifier: "card",
+          identifier: "usercard",
           computePosition: (content) => {
             content.style.left = "10px";
             content.style.right = "10px";

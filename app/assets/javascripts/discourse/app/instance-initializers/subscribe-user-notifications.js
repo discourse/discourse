@@ -3,7 +3,7 @@ import {
   alertChannel,
   disable as disableDesktopNotifications,
   init as initDesktopNotifications,
-  onNotification,
+  onNotification as onDesktopNotification,
 } from "discourse/lib/desktop-notifications";
 import {
   isPushNotificationsEnabled,
@@ -260,11 +260,13 @@ export default {
 
   @bind
   onAlert(data) {
-    return onNotification(
-      data,
-      this.siteSettings,
-      this.currentUser,
-      this.appEvents
-    );
+    if (this.site.desktopView) {
+      return onDesktopNotification(
+        data,
+        this.siteSettings,
+        this.currentUser,
+        this.appEvents
+      );
+    }
   },
 };

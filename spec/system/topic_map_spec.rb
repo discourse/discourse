@@ -20,8 +20,7 @@ describe "Topic Map", type: :system do
     sign_in(user)
     topic_page.visit_topic(topic)
 
-    # topic map only appears after at least 1 reply
-    expect(topic_page).to have_no_topic_map
+    expect(topic_page).to have_topic_map
     Fabricate(:post, topic: topic, created_at: 2.day.ago)
     Fabricate(:post, topic: topic, created_at: 1.day.ago, like_count: 3)
     2.times { Fabricate(:post, topic: topic, created_at: 1.day.ago, like_count: 1) }

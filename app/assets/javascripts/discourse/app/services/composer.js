@@ -665,7 +665,7 @@ export default class ComposerService extends Service {
   }
 
   @action
-  onPopupMenuAction(menuItem) {
+  onPopupMenuAction(menuItem, toolbarEvent) {
     // menuItem is an object with keys name & action like so: { name: "toggle-invisible, action: "toggleInvisible" }
     // `action` value can either be a string (to lookup action by) or a function to call
     this.appEvents.trigger(
@@ -673,7 +673,12 @@ export default class ComposerService extends Service {
       menuItem
     );
     if (typeof menuItem.action === "function") {
-      return menuItem.action(this.toolbarEvent);
+      // note due to the way args are passed to actions we need
+      // to treate the explicity toolbarEvent as a fallback for no
+      // event
+      // Long term we want to avoid needing this awkwardness and pass
+      // the event explicitly
+      return menuItem.action(this.toolbarEvent || toolbarEvent);
     } else {
       return (
         this.actions?.[menuItem.action]?.bind(this) || // Legacy-style contributions from themes/plugins
@@ -1400,6 +1405,8 @@ export default class ComposerService extends Service {
         composerModel.setProperties({ unlistTopic: false, whisper: false });
       }
 
+      await this._setModel(composerModel, opts);
+
       // we need a draft sequence for the composer to work
       if (opts.draftSequence === undefined) {
         let data = await Draft.get(opts.draftKey);
@@ -1412,8 +1419,6 @@ export default class ComposerService extends Service {
 
         opts.draft ||= data.draft;
         opts.draftSequence = data.draft_sequence;
-
-        await this._setModel(composerModel, opts);
         return;
       }
 
@@ -1428,8 +1433,6 @@ export default class ComposerService extends Service {
           await this.open(opts);
         }
       }
-
-      await this._setModel(composerModel, opts);
     } finally {
       this.skipAutoSave = false;
       this.appEvents.trigger("composer:open", { model: this.model });

@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class ShelvedNotification < ActiveRecord::Base
+  self.ignored_columns = [
+    :old_notification_id, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been writted.
+  ]
+
   belongs_to :notification
 
   def process
@@ -13,7 +17,7 @@ end
 # Table name: shelved_notifications
 #
 #  id              :bigint           not null, primary key
-#  notification_id :integer          not null
+#  notification_id :bigint           not null
 #
 # Indexes
 #

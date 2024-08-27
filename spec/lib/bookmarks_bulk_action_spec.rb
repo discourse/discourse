@@ -12,8 +12,8 @@ RSpec.describe BookmarksBulkAction do
         bba = BookmarksBulkAction.new(user_2, [bookmark_1.id, bookmark_2.id], type: "delete")
         expect { bba.perform! }.to raise_error Discourse::InvalidAccess
 
-        expect(Bookmark.where(id: bookmark_1.id)).to_not be_empty
-        expect(Bookmark.where(id: bookmark_2.id)).to_not be_empty
+        expect(Bookmark.exists?(bookmark_1.id)).to eq(true)
+        expect(Bookmark.exists?(bookmark_2.id)).to eq(true)
       end
     end
 
@@ -22,8 +22,8 @@ RSpec.describe BookmarksBulkAction do
         bba = BookmarksBulkAction.new(user, [bookmark_1.id, bookmark_2.id], type: "delete")
         bba.perform!
 
-        expect(Bookmark.where(id: bookmark_1.id)).to be_empty
-        expect(Bookmark.where(id: bookmark_2.id)).to be_empty
+        expect(Bookmark.exists?(bookmark_1.id)).to eq(false)
+        expect(Bookmark.exists?(bookmark_2.id)).to eq(false)
       end
     end
   end
@@ -32,7 +32,7 @@ RSpec.describe BookmarksBulkAction do
     fab!(:bookmark_with_reminder) { Fabricate(:bookmark_next_business_day_reminder, user: user) }
 
     describe "when user is not the bookmark owner" do
-      it "does NOT clear the reminder" do
+      it "does not clear the reminder" do
         bba = BookmarksBulkAction.new(user_2, [bookmark_with_reminder], type: "clear_reminder")
         expect { bba.perform! }.to raise_error Discourse::InvalidAccess
         expect(Bookmark.find_by_id(bookmark_with_reminder).reminder_set_at).to_not be_nil
@@ -40,13 +40,13 @@ RSpec.describe BookmarksBulkAction do
     end
 
     describe "when user is the bookmark owner" do
-      it "deletes the bookmarks" do
+      it "clears the bookmark reminders, including expired reminders" do
         expect do
           bba = BookmarksBulkAction.new(user, [bookmark_with_reminder.id], type: "clear_reminder")
           bba.perform!
-        end.to change { Bookmark.find_by_id(bookmark_with_reminder.id).reminder_set_at }.to(
-          nil,
-        ).and change { Bookmark.find_by_id(bookmark_with_reminder.id).reminder_at }.to(nil)
+        end.to change { bookmark_with_reminder.reload.reminder_set_at }.to(nil).and change {
+                bookmark_with_reminder.reload.reminder_at
+              }.to(nil)
       end
     end
   end

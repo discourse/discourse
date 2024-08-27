@@ -71,6 +71,8 @@ describe "User preferences | Profile", type: :system do
       find(".user-field-favourite-pokemon input").fill_in(with: "Mudkip")
       find(".save-button .btn-primary").click
 
+      expect(page).to have_selector(".pref-bio")
+
       visit("/")
 
       expect(page).to have_current_path("/")

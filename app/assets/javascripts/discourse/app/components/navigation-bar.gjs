@@ -53,7 +53,6 @@ export default class NavigationBarComponent extends Component {
                 {{#each @navItems as |navItem|}}
                   <dropdown.item>
                     <NavigationItem
-                      @tagName="div"
                       @content={{navItem}}
                       @filterMode={{@filterMode}}
                       @category={{@category}}

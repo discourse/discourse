@@ -1,24 +1,25 @@
 import { action } from "@ember/object";
+import { attributeBindings, classNames } from "@ember-decorators/component";
 import DiscourseURL from "discourse/lib/url";
 import { makeArray } from "discourse-common/lib/helpers";
 import MiniTagChooser from "select-kit/components/mini-tag-chooser";
+import { pluginApiIdentifiers } from "select-kit/components/select-kit";
 
-export default MiniTagChooser.extend({
-  pluginApiIdentifiers: ["tags-intersection-chooser"],
-  attributeBindings: ["selectKit.options.categoryId:category-id"],
-  classNames: ["tags-intersection-chooser"],
-
-  mainTag: null,
-  additionalTags: null,
+@attributeBindings("selectKit.options.categoryId:category-id")
+@classNames("tags-intersection-chooser")
+@pluginApiIdentifiers("tags-intersection-chooser")
+export default class TagsIntersectionChooser extends MiniTagChooser {
+  mainTag = null;
+  additionalTags = null;
 
   didReceiveAttrs() {
-    this._super(...arguments);
+    super.didReceiveAttrs(...arguments);
 
     this.set(
       "value",
       makeArray(this.mainTag).concat(makeArray(this.additionalTags))
     );
-  },
+  }
 
   @action
   onChange(tags) {
@@ -39,5 +40,5 @@ export default MiniTagChooser.extend({
         DiscourseURL.routeTo("/tags");
       }
     }
-  },
-});
+  }
+}

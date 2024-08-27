@@ -19,7 +19,7 @@ acceptance("Group Requests", function (needs) {
           id: 42,
           automatic: false,
           name: "Macdonald",
-          user_count: 1,
+          user_count: 10,
           mentionable_level: 0,
           messageable_level: 0,
           visibility_level: 0,

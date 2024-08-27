@@ -120,6 +120,7 @@
 
 <AceEditor
   @content={{this.activeSection}}
+  @onChange={{fn (mut this.activeSection)}}
   @editorId={{this.editorId}}
   @mode={{this.activeSectionMode}}
   @autofocus="true"

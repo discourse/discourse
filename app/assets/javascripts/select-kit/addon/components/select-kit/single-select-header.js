@@ -1,14 +1,18 @@
 import { computed } from "@ember/object";
 import { or } from "@ember/object/computed";
+import {
+  attributeBindings,
+  classNames,
+  tagName,
+} from "@ember-decorators/component";
 import I18n from "discourse-i18n";
 import SelectKitHeaderComponent from "select-kit/components/select-kit/select-kit-header";
-import UtilsMixin from "select-kit/mixins/utils";
 
-export default SelectKitHeaderComponent.extend(UtilsMixin, {
-  tagName: "summary",
-  classNames: ["single-select-header"],
-  attributeBindings: ["name", "ariaLabel:aria-label"],
-  ariaLabel: or("selectKit.options.headerAriaLabel", "name"),
+@tagName("summary")
+@classNames("single-select-header")
+@attributeBindings("name", "ariaLabel:aria-label")
+export default class SingleSelectHeader extends SelectKitHeaderComponent {
+  @or("selectKit.options.headerAriaLabel", "name") ariaLabel;
 
   focusIn(event) {
     event.stopImmediatePropagation();
@@ -18,9 +22,10 @@ export default SelectKitHeaderComponent.extend(UtilsMixin, {
         header.parentNode.open = false;
       }
     });
-  },
+  }
 
-  name: computed("selectedContent.name", function () {
+  @computed("selectedContent.name")
+  get name() {
     if (this.selectedContent) {
       return I18n.t("select_kit.filter_by", {
         name: this.getName(this.selectedContent),
@@ -28,5 +33,5 @@ export default SelectKitHeaderComponent.extend(UtilsMixin, {
     } else {
       return I18n.t("select_kit.select_to_filter");
     }
-  }),
-});
+  }
+}

@@ -53,6 +53,8 @@
     background-color: var(--secondary);
     border: 1px solid var(--primary-low);
     box-shadow: var(--shadow-menu-panel);
+    overscroll-behavior: contain;
+    overflow: auto;
   }
 
   .arrow {

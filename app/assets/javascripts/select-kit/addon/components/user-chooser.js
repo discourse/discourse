@@ -1,58 +1,61 @@
 import { computed } from "@ember/object";
 import { isPresent } from "@ember/utils";
+import { classNames } from "@ember-decorators/component";
 import userSearch, {
   eagerCompleteSearch,
   skipSearch,
 } from "discourse/lib/user-search";
 import { makeArray } from "discourse-common/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
+import {
+  pluginApiIdentifiers,
+  selectKitOptions,
+} from "select-kit/components/select-kit";
 
 export const CUSTOM_USER_SEARCH_OPTIONS = [];
 
-export default MultiSelectComponent.extend({
-  pluginApiIdentifiers: ["user-chooser"],
-  classNames: ["user-chooser"],
-  valueProperty: "username",
+@classNames("user-chooser")
+@selectKitOptions({
+  topicId: undefined,
+  categoryId: undefined,
+  includeGroups: false,
+  allowedUsers: false,
+  includeMentionableGroups: false,
+  includeMessageableGroups: false,
+  allowEmails: false,
+  groupMembersOf: undefined,
+  excludeCurrentUser: false,
+  customSearchOptions: undefined,
+  excludedUsernames: undefined,
+})
+@pluginApiIdentifiers("user-chooser")
+export default class UserChooser extends MultiSelectComponent {
+  valueProperty = "username";
 
   modifyComponentForRow() {
     return "user-chooser/user-row";
-  },
+  }
 
-  selectKitOptions: {
-    topicId: undefined,
-    categoryId: undefined,
-    includeGroups: false,
-    allowedUsers: false,
-    includeMentionableGroups: false,
-    includeMessageableGroups: false,
-    allowEmails: false,
-    groupMembersOf: undefined,
-    excludeCurrentUser: false,
-    customSearchOptions: undefined,
-    excludedUsernames: undefined,
-  },
-
-  content: computed("value.[]", function () {
+  @computed("value.[]")
+  get content() {
     return makeArray(this.value).map((x) => this.defaultItem(x, x));
-  }),
+  }
 
-  excludedUsers: computed(
+  @computed(
     "value",
     "currentUser",
-    "selectKit.options.{excludeCurrentUser,excludedUsernames}",
-    {
-      get() {
-        const options = this.selectKit.options;
-        let usernames = makeArray(this.value);
+    "selectKit.options.{excludeCurrentUser,excludedUsernames}"
+  )
+  get excludedUsers() {
+    const options = this.selectKit.options;
+    let usernames = makeArray(this.value);
 
-        if (this.currentUser && options.excludeCurrentUser) {
-          usernames = usernames.concat([this.currentUser.username]);
-        }
-
-        return usernames.concat(options.excludedUsernames || []);
-      },
+    if (this.currentUser && options.excludeCurrentUser) {
+      usernames = usernames.concat([this.currentUser.username]);
     }
-  ),
+
+    return usernames.concat(options.excludedUsernames || []);
+  }
 
   search(filter = "") {
     filter = filter || "";
@@ -105,5 +108,5 @@ export default MultiSelectComponent.extend({
         return result;
       }
     });
-  },
-});
+  }
+}

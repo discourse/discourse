@@ -41,6 +41,8 @@ class TopicView
     :user_custom_fields,
     :post_custom_fields,
     :post_number,
+    :include_suggested,
+    :include_related,
   )
 
   delegate :category, to: :topic, allow_nil: true, private: true
@@ -50,8 +52,10 @@ class TopicView
     1000
   end
 
+  CHUNK_SIZE = 20
+
   def self.chunk_size
-    20
+    CHUNK_SIZE
   end
 
   def self.default_post_custom_fields
@@ -644,6 +648,7 @@ class TopicView
               { include_random: true, pm_params: pm_params },
               self,
             )
+
           TopicQuery.new(@user).list_suggested_for(topic, **kwargs)
         end
     else

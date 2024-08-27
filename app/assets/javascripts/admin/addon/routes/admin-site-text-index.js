@@ -22,6 +22,7 @@ export default class AdminSiteTextIndexRoute extends Route {
       outdated: params.outdated ?? false,
       untranslated: params.untranslated ?? false,
       locale: params.locale ?? this.siteSettings.default_locale,
+      only_selected_locale: params.onlySelectedLocale ?? false,
     });
   }
 }
