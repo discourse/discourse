@@ -16,9 +16,8 @@ end
 #
 # Table name: shelved_notifications
 #
-#  id                  :bigint           not null, primary key
-#  old_notification_id :integer
-#  notification_id     :bigint           not null
+#  id              :bigint           not null, primary key
+#  notification_id :bigint           not null
 #
 # Indexes
 #
