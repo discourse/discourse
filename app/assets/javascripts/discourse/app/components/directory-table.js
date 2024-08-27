@@ -1,11 +1,11 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 
-export default Component.extend({
-  _table: null,
+export default class DirectoryTable extends Component {
+  _table = null;
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     this.setProperties({
       _table: this.element.querySelector(".directory-table"),
       _columnCount: this.showTimeRead
@@ -14,7 +14,7 @@ export default Component.extend({
     });
 
     this._table.style.gridTemplateColumns = `minmax(15em, 3fr) repeat(${this._columnCount}, minmax(max-content, 1fr))`;
-  },
+  }
 
   @action
   setActiveHeader(header) {
@@ -28,5 +28,5 @@ export default Component.extend({
     if (scrollPixels > 0) {
       this._table.scrollLeft = scrollPixels;
     }
-  },
-});
+  }
+}

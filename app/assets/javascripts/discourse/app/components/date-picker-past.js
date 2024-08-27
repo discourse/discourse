@@ -1,6 +1,6 @@
 import DatePicker from "discourse/components/date-picker";
 
-export default DatePicker.extend({
+export default class DatePickerPast extends DatePicker {
   _opts() {
     return {
       defaultDate:
@@ -8,5 +8,5 @@ export default DatePicker.extend({
       setDefaultDate: !!this.defaultDate,
       maxDate: new Date(),
     };
-  },
-});
+  }
+}

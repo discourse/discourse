@@ -4,23 +4,26 @@ import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { tagName } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import NavItem from "discourse/models/nav-item";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  router: service(),
-  dialog: service(),
-  tagName: "",
-  filterMode: tracked(),
-  fixedCategoryPositions: setting("fixed_category_positions"),
+@tagName("")
+export default class DNavigation extends Component {
+  @service router;
+  @service dialog;
+
+  @tracked filterMode;
+
+  @setting("fixed_category_positions") fixedCategoryPositions;
 
   @dependentKeyCompat
   get filterType() {
     return filterTypeForMode(this.filterMode);
-  },
+  }
 
   // Should be a `readOnly` instead but some themes/plugins still pass
   // the `categories` property into this component
@@ -42,12 +45,12 @@ export default Component.extend({
     }
 
     return categories;
-  },
+  }
 
   @discourseComputed("category")
   showCategoryNotifications(category) {
     return category && this.currentUser;
-  },
+  }
 
   @discourseComputed("category.notification_level")
   categoryNotificationLevel(notificationLevel) {
@@ -60,20 +63,20 @@ export default Component.extend({
     } else {
       return notificationLevel;
     }
-  },
+  }
 
   // don't show tag notification menu on tag intersections
   @discourseComputed("tagNotification", "additionalTags")
   showTagNotifications(tagNotification, additionalTags) {
     return tagNotification && !additionalTags;
-  },
+  }
 
   @discourseComputed("category", "createTopicDisabled")
   categoryReadOnlyBanner(category, createTopicDisabled) {
     if (category && this.currentUser && createTopicDisabled) {
       return category.read_only_banner;
     }
-  },
+  }
 
   @discourseComputed(
     "createTopicDisabled",
@@ -95,7 +98,7 @@ export default Component.extend({
       return false;
     }
     return createTopicDisabled;
-  },
+  }
 
   @discourseComputed("categoryReadOnlyBanner", "hasDraft")
   createTopicClass(categoryReadOnlyBanner, hasDraft) {
@@ -106,20 +109,22 @@ export default Component.extend({
       classNames.push("disabled");
     }
     return classNames.join(" ");
-  },
+  }
 
   @discourseComputed("hasDraft")
   createTopicLabel(hasDraft) {
     return hasDraft ? "topic.open_draft" : "topic.create";
-  },
+  }
 
   @discourseComputed("category.can_edit")
-  showCategoryEdit: (canEdit) => canEdit,
+  showCategoryEdit(canEdit) {
+    return canEdit;
+  }
 
   @discourseComputed("additionalTags", "category", "tag.id")
   showToggleInfo(additionalTags, category, tagId) {
     return !additionalTags && !category && tagId !== "none";
-  },
+  }
 
   @discourseComputed(
     "filterType",
@@ -145,12 +150,12 @@ export default Component.extend({
       siteSettings: this.siteSettings,
       skipCategoriesNavItem,
     });
-  },
+  }
 
   @discourseComputed("filterType")
   notCategoriesRoute(filterType) {
     return filterType !== "categories";
-  },
+  }
 
   @action
   async changeTagNotificationLevel(notificationLevel) {
@@ -169,30 +174,31 @@ export default Component.extend({
       muted_tags: payload.muted_tags,
       regular_tags: payload.regular_tags,
     });
-  },
+  }
 
-  actions: {
-    changeCategoryNotificationLevel(notificationLevel) {
-      this.category.setNotification(notificationLevel);
-    },
+  @action
+  changeCategoryNotificationLevel(notificationLevel) {
+    this.category.setNotification(notificationLevel);
+  }
 
-    selectCategoryAdminDropdownAction(actionId) {
-      switch (actionId) {
-        case "create":
-          this.createCategory();
-          break;
-        case "reorder":
-          this.reorderCategories();
-          break;
-      }
-    },
+  @action
+  selectCategoryAdminDropdownAction(actionId) {
+    switch (actionId) {
+      case "create":
+        this.createCategory();
+        break;
+      case "reorder":
+        this.reorderCategories();
+        break;
+    }
+  }
 
-    clickCreateTopicButton() {
-      if (this.categoryReadOnlyBanner && !this.hasDraft) {
-        this.dialog.alert({ message: htmlSafe(this.categoryReadOnlyBanner) });
-      } else {
-        this.createTopic();
-      }
-    },
-  },
-});
+  @action
+  clickCreateTopicButton() {
+    if (this.categoryReadOnlyBanner && !this.hasDraft) {
+      this.dialog.alert({ message: htmlSafe(this.categoryReadOnlyBanner) });
+    } else {
+      this.createTopic();
+    }
+  }
+}
