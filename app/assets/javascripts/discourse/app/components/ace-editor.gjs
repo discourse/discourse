@@ -143,7 +143,6 @@ export default class AceEditor extends Component {
     this.editor.$blockScrolling = Infinity;
     this.editor.renderer.setScrollMargin(10, 10);
 
-    element.setAttribute("data-editor", this.editor);
     this.changeDisabledState();
     this.warnSCSSDeprecations();
 
@@ -185,7 +184,7 @@ export default class AceEditor extends Component {
 
     this.editor?.container.parentNode.parentNode.setAttribute(
       "data-disabled",
-      this.args.disabled
+      !!this.args.disabled
     );
   }
 
