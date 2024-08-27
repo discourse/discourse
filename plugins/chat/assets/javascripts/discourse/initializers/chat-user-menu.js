@@ -108,9 +108,10 @@ export default {
           "chat_watched_thread",
           (NotificationItemBase) => {
             return class extends NotificationItemBase {
-              icon = "d-chat";
+              icon = "discourse-threads";
               linkTitle = I18n.t("notifications.titles.chat_watched_thread");
-              description = I18n.t("notifications.popup.chat_watched_thread");
+              description = this.notification.data.description;
+
               label = formatUsername(
                 this.notification.data.message_by_username
               );

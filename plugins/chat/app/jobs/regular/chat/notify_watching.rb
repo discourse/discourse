@@ -46,20 +46,7 @@ module Jobs
       def send_notifications(membership)
         user = membership.user
         return unless user.guardian.can_join_chat_channel?(@chat_channel)
-        seen_message = ::Chat::Notifier.user_has_seen_message?(membership, @chat_message.id)
-        puts "----" * 10
-        puts "#{user.username} has seen message? #{seen_message}"
-        return if seen_message
-
-        # # build data for new notification
-        # data = {
-        #   chat_message_id: @chat_message.id,
-        #   chat_channel_id: @chat_message.channel_id,
-        #   mentioned_by_username: @creator.username,
-        #   is_direct_message_channel: @chat_channel.direct_message_channel?,
-        # }
-
-        # data[:chat_thread_id] = @chat_message.thread_id if @chat_message.in_thread?
+        return if ::Chat::Notifier.user_has_seen_message?(membership, @chat_message.id)
 
         translation_key =
           (
@@ -96,37 +83,9 @@ module Jobs
           channel_id: @chat_channel.id,
         }
 
-        if @chat_message.in_thread?
-          puts "Message is in a thread (thread_id: #{@chat_message.thread_id})"
-          thread_membership =
-            ::Chat::UserChatThreadMembership.find_by(
-              user_id: user.id,
-              thread_id: @chat_message.thread_id,
-            )
-          if thread_membership&.notification_level == "watching"
-            is_read = ::Chat::Notifier.user_has_seen_message?(thread_membership, @chat_message.id)
+        create_watched_thread_notification(user) if @chat_message.in_thread?
 
-            notification =
-              ::Notification.create!(
-                notification_type: ::Notification.types[:chat_watched_thread],
-                user_id: thread_membership.user_id,
-                high_priority: true,
-                data: {
-                  chat_message_id: @chat_message.id,
-                  chat_channel_id: @chat_channel.id,
-                  chat_thread_id: @chat_message.thread_id,
-                  message_by_username: @creator.username,
-                }.to_json,
-                read: is_read,
-              )
-
-            payload[:thread_id] = @chat_message.thread_id
-          end
-        end
-
-        if (membership.desktop_notifications_always? && !membership.muted?) ||
-             payload[:thread_id].present?
-          puts "Sending notification to #{user.username}"
+        if membership.desktop_notifications_always? && !membership.muted?
           send_notification =
             DiscoursePluginRegistry.push_notification_filters.all? do |filter|
               filter.call(user, payload)
@@ -138,13 +97,39 @@ module Jobs
               user_ids: [user.id],
             )
           end
-        else
-          puts "Not sending notification to #{user.username}"
         end
 
         if membership.mobile_notifications_always? && !membership.muted?
           ::PostAlerter.push_notification(user, payload)
         end
+      end
+
+      def create_watched_thread_notification(user)
+        thread_membership =
+          ::Chat::UserChatThreadMembership.find_by(
+            user_id: user.id,
+            thread_id: @chat_message.thread_id,
+          )
+
+        return if thread_membership&.notification_level != "watching"
+
+        is_read = ::Chat::Notifier.user_has_seen_message?(thread_membership, @chat_message.id)
+        notification_description =
+          @chat_message.thread.title.presence || @chat_message.thread.original_message.excerpt
+
+        ::Notification.create!(
+          notification_type: ::Notification.types[:chat_watched_thread],
+          user_id: thread_membership.user_id,
+          high_priority: true,
+          data: {
+            chat_message_id: @chat_message.id,
+            chat_channel_id: @chat_channel.id,
+            chat_thread_id: @chat_message.thread_id,
+            description: notification_description,
+            message_by_username: @creator.username,
+          }.to_json,
+          read: is_read,
+        )
       end
     end
   end
