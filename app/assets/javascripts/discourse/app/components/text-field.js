@@ -1,37 +1,33 @@
 import { TextField } from "@ember/legacy-built-in-components";
+import { computed } from "@ember/object";
 import { cancel, next } from "@ember/runloop";
+import { attributeBindings } from "@ember-decorators/component";
 import discourseDebounce from "discourse-common/lib/debounce";
-import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 const DEBOUNCE_MS = 500;
 
-export default TextField.extend({
-  attributeBindings: [
-    "autocorrect",
-    "autocapitalize",
-    "autofocus",
-    "maxLength",
-    "dir",
-    "aria-label",
-    "aria-controls",
-  ],
-
-  init() {
-    this._super(...arguments);
-
-    this._prevValue = null;
-    this._timer = null;
-  },
+@attributeBindings(
+  "autocorrect",
+  "autocapitalize",
+  "autofocus",
+  "maxLength",
+  "dir",
+  "aria-label",
+  "aria-controls"
+)
+export default class DiscourseTextField extends TextField {
+  _prevValue = null;
+  _timer = null;
 
   didReceiveAttrs() {
-    this._super(...arguments);
+    super.didReceiveAttrs(...arguments);
 
     this._prevValue = this.value;
-  },
+  }
 
   didUpdateAttrs() {
-    this._super(...arguments);
+    super.didUpdateAttrs(...arguments);
 
     if (this._prevValue !== this.value) {
       if (this.onChangeImmediate) {
@@ -46,33 +42,32 @@ export default TextField.extend({
         );
       }
     }
-  },
+  }
 
   _debouncedChange() {
     next(() => this.onChange(this.value));
-  },
+  }
 
   get dir() {
     if (this.siteSettings.support_mixed_text_direction) {
       return "auto";
     }
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
     cancel(this._timer);
-  },
+  }
 
-  @discourseComputed("placeholderKey")
-  placeholder: {
-    get() {
-      if (this._placeholder) {
-        return this._placeholder;
-      }
-      return this.placeholderKey ? I18n.t(this.placeholderKey) : "";
-    },
-    set(value) {
-      return (this._placeholder = value);
-    },
-  },
-});
+  @computed("placeholderKey", "_placeholder")
+  get placeholder() {
+    if (this._placeholder) {
+      return this._placeholder;
+    }
+    return this.placeholderKey ? I18n.t(this.placeholderKey) : "";
+  }
+
+  set placeholder(value) {
+    this.set("_placeholder", value);
+  }
+}

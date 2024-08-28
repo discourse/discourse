@@ -1,6 +1,8 @@
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
+import { classNameBindings } from "@ember-decorators/component";
 import $ from "jquery";
 import DiscourseURL from "discourse/lib/url";
 import CleansUp from "discourse/mixins/cleans-up";
@@ -30,41 +32,50 @@ function entranceDate(dt, showTime) {
   );
 }
 
-export default Component.extend(CleansUp, {
-  router: service(),
-  session: service(),
-  historyStore: service(),
-  elementId: "topic-entrance",
-  classNameBindings: ["visible::hidden"],
-  topic: null,
-  visible: null,
-  _position: null,
-  _originalActiveElement: null,
-  _activeButton: null,
+@classNameBindings("visible::hidden")
+export default class TopicEntrance extends Component.extend(CleansUp) {
+  @service router;
+  @service session;
+  @service historyStore;
+
+  elementId = "topic-entrance";
+  topic = null;
+  visible = null;
+  _position = null;
+  _originalActiveElement = null;
+  _activeButton = null;
 
   @discourseComputed("topic.created_at")
-  createdDate: (createdAt) => new Date(createdAt),
+  createdDate(createdAt) {
+    return new Date(createdAt);
+  }
 
   @discourseComputed("topic.bumped_at")
-  bumpedDate: (bumpedAt) => new Date(bumpedAt),
+  bumpedDate(bumpedAt) {
+    return new Date(bumpedAt);
+  }
 
   @discourseComputed("createdDate", "bumpedDate")
   showTime(createdDate, bumpedDate) {
     return (
       bumpedDate.getTime() - createdDate.getTime() < 1000 * 60 * 60 * 24 * 2
     );
-  },
+  }
 
   @discourseComputed("createdDate", "showTime")
-  topDate: (createdDate, showTime) => entranceDate(createdDate, showTime),
+  topDate(createdDate, showTime) {
+    return entranceDate(createdDate, showTime);
+  }
 
   @discourseComputed("bumpedDate", "showTime")
-  bottomDate: (bumpedDate, showTime) => entranceDate(bumpedDate, showTime),
+  bottomDate(bumpedDate, showTime) {
+    return entranceDate(bumpedDate, showTime);
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     this.appEvents.on("topic-entrance:show", this, "_show");
-  },
+  }
 
   _setCSS() {
     const pos = this._position;
@@ -79,7 +90,7 @@ export default Component.extend(CleansUp, {
       pos.left = windowWidth - width - 15;
     }
     $self.css(pos);
-  },
+  }
 
   @bind
   _escListener(e) {
@@ -96,42 +107,42 @@ export default Component.extend(CleansUp, {
         e.preventDefault();
       }
     }
-  },
+  }
 
   _jumpTopButton() {
     return this.element.querySelector(".jump-top");
-  },
+  }
 
   _jumpBottomButton() {
     return this.element.querySelector(".jump-bottom");
-  },
+  }
 
   _setupEscListener() {
     document.body.addEventListener("keydown", this._escListener);
-  },
+  }
 
   _removeEscListener() {
     document.body.removeEventListener("keydown", this._escListener);
-  },
+  }
 
   _trapFocus() {
     this._originalActiveElement = document.activeElement;
     this._jumpTopButton().focus();
     this._activeButton = "top";
-  },
+  }
 
   _releaseFocus() {
     if (this._originalActiveElement) {
       this._originalActiveElement.focus();
       this._originalActiveElement = null;
     }
-  },
+  }
 
   _applyDomChanges() {
     this._setCSS();
     this._setupEscListener();
     this._trapFocus();
-  },
+  }
 
   _show(data) {
     this._position = data.position;
@@ -152,34 +163,34 @@ export default Component.extend(CleansUp, {
         }
         this.cleanUp();
       });
-  },
+  }
 
   cleanUp() {
     this.setProperties({ topic: null, visible: false });
     $("html").off("mousedown.topic-entrance");
     this._removeEscListener();
     this._releaseFocus();
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
     this.appEvents.off("topic-entrance:show", this, "_show");
-  },
+  }
 
   _jumpTo(destination) {
     this.historyStore.set("lastTopicIdViewed", this.topic.id);
 
     this.cleanUp();
     DiscourseURL.routeTo(destination);
-  },
+  }
 
-  actions: {
-    enterTop() {
-      this._jumpTo(this.get("topic.url"));
-    },
+  @action
+  enterTop() {
+    this._jumpTo(this.get("topic.url"));
+  }
 
-    enterBottom() {
-      this._jumpTo(this.get("topic.lastPostUrl"));
-    },
-  },
-});
+  @action
+  enterBottom() {
+    this._jumpTo(this.get("topic.lastPostUrl"));
+  }
+}

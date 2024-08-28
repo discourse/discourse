@@ -4,24 +4,28 @@ import { and, reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import { tagName } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Component.extend({
-  dialog: service(),
-  tagName: "",
-  loading: false,
-  tagInfo: null,
-  newSynonyms: null,
-  showEditControls: false,
-  canAdminTag: reads("currentUser.staff"),
-  editSynonymsMode: and("canAdminTag", "showEditControls"),
-  editing: false,
-  newTagName: null,
-  newTagDescription: null,
-  router: service(),
+@tagName("")
+export default class TagInfo extends Component {
+  @service dialog;
+  @service router;
+
+  loading = false;
+  tagInfo = null;
+  newSynonyms = null;
+  showEditControls = false;
+
+  @reads("currentUser.staff") canAdminTag;
+  @and("canAdminTag", "showEditControls") editSynonymsMode;
+
+  editing = false;
+  newTagName = null;
+  newTagDescription = null;
 
   @discourseComputed("tagInfo.tag_group_names")
   tagGroupsInfo(tagGroupNames) {
@@ -29,14 +33,14 @@ export default Component.extend({
       count: tagGroupNames.length,
       tag_groups: tagGroupNames.join(", "),
     });
-  },
+  }
 
   @discourseComputed("tagInfo.categories")
   categoriesInfo(categories) {
     return I18n.t("tagging.category_restrictions", {
       count: categories.length,
     });
-  },
+  }
 
   @discourseComputed(
     "tagInfo.tag_group_names",
@@ -45,25 +49,25 @@ export default Component.extend({
   )
   nothingToShow(tagGroupNames, categories, synonyms) {
     return isEmpty(tagGroupNames) && isEmpty(categories) && isEmpty(synonyms);
-  },
+  }
 
   @discourseComputed("newTagName")
   updateDisabled(newTagName) {
     const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
     newTagName = newTagName ? newTagName.replace(filterRegexp, "").trim() : "";
     return newTagName.length === 0;
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     this.loadTagInfo();
-  },
+  }
 
   didUpdateAttrs() {
-    this._super(...arguments);
+    super.didUpdateAttrs(...arguments);
     this.set("tagInfo", null);
     this.loadTagInfo();
-  },
+  }
 
   loadTagInfo() {
     if (this.loading) {
@@ -81,7 +85,7 @@ export default Component.extend({
       })
       .finally(() => this.set("loading", false))
       .catch(popupAjaxError);
-  },
+  }
 
   @action
   edit(event) {
@@ -95,7 +99,7 @@ export default Component.extend({
       newTagName: this.tag.id,
       newTagDescription: this.tagInfo.description,
     });
-  },
+  }
 
   @action
   unlinkSynonym(tag, event) {
@@ -105,7 +109,7 @@ export default Component.extend({
     })
       .then(() => this.tagInfo.synonyms.removeObject(tag))
       .catch(popupAjaxError);
-  },
+  }
 
   @action
   deleteSynonym(tag, event) {
@@ -122,17 +126,17 @@ export default Component.extend({
           .catch(popupAjaxError);
       },
     });
-  },
+  }
 
   @action
   toggleEditControls() {
     this.toggleProperty("showEditControls");
-  },
+  }
 
   @action
   cancelEditing() {
     this.set("editing", false);
-  },
+  }
 
   @action
   finishedEditing() {
@@ -151,7 +155,7 @@ export default Component.extend({
         }
       })
       .catch(popupAjaxError);
-  },
+  }
 
   @action
   deleteTag() {
@@ -182,7 +186,7 @@ export default Component.extend({
         }
       },
     });
-  },
+  }
 
   @action
   addSynonyms() {
@@ -217,5 +221,5 @@ export default Component.extend({
           .catch(popupAjaxError);
       },
     });
-  },
-});
+  }
+}

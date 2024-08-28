@@ -2,20 +2,23 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
+import { classNameBindings } from "@ember-decorators/component";
 import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 
 const CSS_TRANSITION_DELAY = isTesting() ? 0 : 500;
 
-export default Component.extend({
-  elementId: "topic-progress-wrapper",
-  classNameBindings: ["docked", "withTransitions"],
-  docked: false,
-  withTransitions: null,
-  progressPosition: null,
-  postStream: alias("topic.postStream"),
-  _streamPercentage: null,
+@classNameBindings("docked", "withTransitions")
+export default class TopicProgress extends Component {
+  elementId = "topic-progress-wrapper";
+  docked = false;
+  withTransitions = null;
+  progressPosition = null;
+
+  @alias("topic.postStream") postStream;
+
+  _streamPercentage = null;
 
   @discourseComputed(
     "postStream.loaded",
@@ -25,14 +28,14 @@ export default Component.extend({
   hideProgress(loaded, currentPost, filteredPostsCount) {
     const hideOnShortStream = this.site.desktopView && filteredPostsCount < 2;
     return !loaded || !currentPost || hideOnShortStream;
-  },
+  }
 
   @discourseComputed("postStream.filteredPostsCount")
   hugeNumberOfPosts(filteredPostsCount) {
     return (
       filteredPostsCount >= this.siteSettings.short_progress_text_threshold
     );
-  },
+  }
 
   @discourseComputed("progressPosition", "topic.last_read_post_id")
   showBackButton(position, lastReadId) {
@@ -43,7 +46,7 @@ export default Component.extend({
     const stream = this.get("postStream.stream");
     const readPos = stream.indexOf(lastReadId) || 0;
     return readPos < stream.length - 1 && readPos > position;
-  },
+  }
 
   _topicScrolled(event) {
     if (this.docked) {
@@ -57,15 +60,15 @@ export default Component.extend({
         _streamPercentage: (event.percent * 100).toFixed(2),
       });
     }
-  },
+  }
 
   @discourseComputed("_streamPercentage")
   progressStyle(_streamPercentage) {
     return `--progress-bg-width: ${_streamPercentage || 0}%`;
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     this.appEvents
       .on("composer:resized", this, this._composerEvent)
@@ -79,15 +82,15 @@ export default Component.extend({
     // start CSS transitions a tiny bit later
     // to avoid jumpiness on initial topic load
     discourseLater(this._addCssTransitions, CSS_TRANSITION_DELAY);
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
     this._topicBottomObserver?.disconnect();
     this.appEvents
       .off("composer:resized", this, this._composerEvent)
       .off("topic:current-post-scrolled", this, this._topicScrolled);
-  },
+  }
 
   @bind
   _addCssTransitions() {
@@ -95,7 +98,7 @@ export default Component.extend({
       return;
     }
     this.set("withTransitions", true);
-  },
+  }
 
   _startObserver() {
     if ("IntersectionObserver" in window) {
@@ -104,7 +107,7 @@ export default Component.extend({
         document.querySelector("#topic-bottom")
       );
     }
-  },
+  }
 
   _setupObserver() {
     // minimum 50px here ensures element is not docked when
@@ -117,7 +120,7 @@ export default Component.extend({
       threshold: 1,
       rootMargin: `0px 0px -${bottomIntersectionMargin}px 0px`,
     });
-  },
+  }
 
   _composerEvent() {
     // reinitializing needed to account for composer height
@@ -127,7 +130,7 @@ export default Component.extend({
       this._topicBottomObserver?.disconnect();
       this._startObserver();
     }
-  },
+  }
 
   @bind
   _intersectionHandler(entries) {
@@ -167,16 +170,16 @@ export default Component.extend({
         }
       }
     }
-  },
+  }
 
   click(e) {
     if (e.target.closest("#topic-progress")) {
       this.toggleProperty("expanded");
     }
-  },
+  }
 
   @action
   goBack() {
     this.jumpToPost(this.get("topic.last_read_post_number"));
-  },
-});
+  }
+}
