@@ -29,6 +29,11 @@ RSpec.describe Admin::SiteSettingsController do
         expect(response.status).to eq(400)
       end
 
+      it "returns 400 when no filter_area is invalid" do
+        get "/admin/config/site_settings.json", params: { filter_area: "invalid area" }
+        expect(response.status).to eq(400)
+      end
+
       it "includes only certain allowed hidden settings" do
         get "/admin/config/site_settings.json",
             params: {
