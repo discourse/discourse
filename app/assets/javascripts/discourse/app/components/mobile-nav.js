@@ -2,10 +2,16 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { classNames, tagName } from "@ember-decorators/component";
+import { on } from "@ember-decorators/object";
 import $ from "jquery";
-import { on } from "discourse-common/utils/decorators";
 
-export default Component.extend({
+@tagName("ul")
+@classNames("mobile-nav")
+export default class MobileNav extends Component {
+  @service router;
+  selectedHtml = null;
+
   @on("init")
   _init() {
     if (this.site.desktopView) {
@@ -15,19 +21,12 @@ export default Component.extend({
         this.set("classNames", classes);
       }
     }
-  },
-
-  tagName: "ul",
-  selectedHtml: null,
-
-  classNames: ["mobile-nav"],
-
-  router: service(),
+  }
 
   currentRouteChanged() {
     this.set("expanded", false);
     next(() => this._updateSelectedHtml());
-  },
+  }
 
   _updateSelectedHtml() {
     if (!this.element || this.isDestroying || this.isDestroyed) {
@@ -38,19 +37,19 @@ export default Component.extend({
     if (active && active.innerHTML) {
       this.set("selectedHtml", active.innerHTML);
     }
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     this._updateSelectedHtml();
     this.router.on("routeDidChange", this, this.currentRouteChanged);
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
     this.router.off("routeDidChange", this, this.currentRouteChanged);
-  },
+  }
 
   @action
   toggleExpanded(event) {
@@ -74,5 +73,5 @@ export default Component.extend({
           });
       }
     });
-  },
-});
+  }
+}
