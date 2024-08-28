@@ -15,14 +15,16 @@
           <span class="cell">{{i18n "category.permissions.see"}}</span>
           <span class="cell">{{i18n "category.permissions.reply"}}</span>
           <span class="cell">{{i18n "category.permissions.create"}}</span>
+          <span class="cell"></span>
         </span>
       </div>
       {{#each this.category.permissions as |p|}}
         <CategoryPermissionRow
-          @group_name={{p.group_name}}
+          @groupName={{p.group_name}}
           @type={{p.permission_type}}
           @category={{this.category}}
           @everyonePermission={{this.everyonePermission}}
+          @onChangeEveryonePermission={{action "onChangeEveryonePermission"}}
         />
       {{/each}}
 

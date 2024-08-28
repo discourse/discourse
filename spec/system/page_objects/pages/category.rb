@@ -30,6 +30,11 @@ module PageObjects
         self
       end
 
+      def visit_security(category)
+        page.visit("/c/#{category.slug}/edit/security")
+        self
+      end
+
       def back_to_category
         find(".edit-category-title-bar span", text: "Back to category").click
         self
@@ -91,6 +96,14 @@ module PageObjects
 
       def click_new
         page.find(CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR).click
+      end
+
+      def has_public_access_message?
+        page.has_content?(I18n.t("js.category.permissions.everyone_has_access"))
+      end
+
+      def has_no_public_access_message?
+        page.has_no_content?(I18n.t("js.category.permissions.everyone_has_access"))
       end
     end
   end
