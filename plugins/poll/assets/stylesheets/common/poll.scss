@@ -446,9 +446,18 @@ div.poll-outer {
       content: "";
     }
 
-    &[data-poll-type="multiple"] {
+    &[data-poll-type="multiple"],
+    &[data-poll-type="ranked_choice"] {
       li[data-poll-option-id]:before {
         border-radius: 3px;
+      }
+    }
+
+    &[data-poll-type="ranked_choice"] {
+      li[data-poll-option-id]:before {
+        padding: 0 0.2em 0.7em 0.2em;
+        content: "\2228";
+        margin: 0.1em 0.5em 0.2em 0.2em;
       }
     }
   }
