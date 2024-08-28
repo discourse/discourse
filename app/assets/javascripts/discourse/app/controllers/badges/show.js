@@ -5,17 +5,18 @@ import UserBadge from "discourse/models/user-badge";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Controller.extend({
-  application: controller(),
-  queryParams: ["username"],
-  noMoreBadges: false,
-  userBadges: null,
-  hiddenSetTitle: true,
+export default class ShowController extends Controller {
+  @controller application;
+
+  queryParams = ["username"];
+  noMoreBadges = false;
+  userBadges = null;
+  hiddenSetTitle = true;
 
   @discourseComputed("userBadgesAll")
   filteredList(userBadgesAll) {
     return userBadgesAll.filterBy("badge.allow_title", true);
-  },
+  }
 
   @discourseComputed("filteredList")
   selectableUserBadges(filteredList) {
@@ -26,29 +27,29 @@ export default Controller.extend({
       }),
       ...filteredList.uniqBy("badge.name"),
     ];
-  },
+  }
 
   @discourseComputed("username")
   user(username) {
     if (username) {
       return this.userBadges[0].get("user");
     }
-  },
+  }
 
   @discourseComputed("username", "model.grant_count", "userBadges.grant_count")
   grantCount(username, modelCount, userCount) {
     return username ? userCount : modelCount;
-  },
+  }
 
   @discourseComputed("model.grant_count", "userBadges.grant_count")
   othersCount(modelCount, userCount) {
     return modelCount - userCount;
-  },
+  }
 
   @discourseComputed("model.allow_title", "model.has_badge", "model")
   canSelectTitle(hasTitleBadges, hasBadge) {
     return this.siteSettings.enable_badges && hasTitleBadges && hasBadge;
-  },
+  }
 
   @discourseComputed("noMoreBadges", "grantCount", "userBadges.length")
   canLoadMore(noMoreBadges, grantCount, userBadgeLength) {
@@ -56,12 +57,12 @@ export default Controller.extend({
       return false;
     }
     return grantCount > (userBadgeLength || 0);
-  },
+  }
 
   @discourseComputed("user", "model.grant_count")
   canShowOthers(user, grantCount) {
     return !!user && grantCount > 1;
-  },
+  }
 
   @action
   loadMore() {
@@ -89,10 +90,10 @@ export default Controller.extend({
       .finally(() => {
         this.set("loadingMore", false);
       });
-  },
+  }
 
   @action
   toggleSetUserTitle() {
     return this.toggleProperty("hiddenSetTitle");
-  },
-});
+  }
+}
