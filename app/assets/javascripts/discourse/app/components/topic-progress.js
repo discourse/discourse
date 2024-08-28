@@ -15,9 +15,10 @@ export default class TopicProgress extends Component {
   docked = false;
   withTransitions = null;
   progressPosition = null;
-  _streamPercentage = null;
 
   @alias("topic.postStream") postStream;
+
+  _streamPercentage = null;
 
   @discourseComputed(
     "postStream.loaded",
