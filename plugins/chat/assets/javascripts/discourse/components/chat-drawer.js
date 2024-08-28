@@ -4,10 +4,10 @@ import { cancel, next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
+import { observes } from "@ember-decorators/object";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 import getURL from "discourse-common/lib/get-url";
-import { observes } from "@ember-decorators/object";
 import { bind } from "discourse-common/utils/decorators";
 
 @tagName("")
