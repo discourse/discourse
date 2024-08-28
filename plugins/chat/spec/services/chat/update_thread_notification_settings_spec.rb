@@ -29,9 +29,7 @@ RSpec.describe Chat::UpdateThreadNotificationSettings do
     before { thread.update!(last_message: last_reply) }
 
     context "when all steps pass" do
-      it "sets the service result as successful" do
-        expect(result).to be_a_success
-      end
+      it { is_expected.to run_successfully }
 
       context "when the user is a member of the thread" do
         fab!(:membership) { thread.add(current_user) }

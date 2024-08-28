@@ -125,7 +125,7 @@ RSpec.describe ::Chat::LookupChannelThreads do
     describe "model - threads" do
       before { channel_1.add(current_user) }
 
-      it { is_expected.to be_a_success }
+      it { is_expected.to run_successfully }
 
       it "orders threads by the last reply created_at timestamp" do
         [

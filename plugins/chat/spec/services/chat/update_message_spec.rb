@@ -879,9 +879,7 @@ RSpec.describe Chat::UpdateMessage do
     end
 
     context "when all steps pass" do
-      it "sets the service result as successful" do
-        expect(result).to run_service_successfully
-      end
+      it { is_expected.to run_successfully }
 
       it "updates the message" do
         expect(result.message.message).to eq("new")

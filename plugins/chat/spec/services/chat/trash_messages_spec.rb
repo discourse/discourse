@@ -40,9 +40,7 @@ RSpec.describe Chat::TrashMessages do
       end
 
       context "when the user has permission to delete" do
-        it "sets the service result as successful" do
-          expect(result).to be_a_success
-        end
+        it { is_expected.to run_successfully }
 
         it "trashes the messages" do
           result

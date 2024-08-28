@@ -13,10 +13,12 @@ RSpec.describe FlagGuardian do
       expect(Guardian.new(admin).can_create_flag?).to eq(true)
       expect(Guardian.new(user).can_create_flag?).to eq(false)
 
-      Fabricate(:flag)
+      flag = Fabricate(:flag)
 
       expect(Guardian.new(admin).can_create_flag?).to eq(false)
       expect(Guardian.new(user).can_create_flag?).to eq(false)
+
+      flag.destroy!
     end
   end
 

@@ -1,16 +1,17 @@
+import { on } from "@ember-decorators/object";
 import $ from "jquery";
 import TextField from "discourse/components/text-field";
 import { applySearchAutocomplete } from "discourse/lib/search";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default TextField.extend({
-  autocomplete: "off",
+export default class SearchTextField extends TextField {
+  autocomplete = "off";
 
   @discourseComputed("searchService.searchContextEnabled")
   placeholder(searchContextEnabled) {
     return searchContextEnabled ? "" : I18n.t("search.full_page_title");
-  },
+  }
 
   @on("didInsertElement")
   becomeFocused() {
@@ -24,5 +25,5 @@ export default TextField.extend({
     // at the top of the page
     $(window).scrollTop(0);
     $searchInput.focus();
-  },
-});
+  }
+}

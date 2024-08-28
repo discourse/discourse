@@ -9,32 +9,29 @@ import getURL from "discourse-common/lib/get-url";
 import discourseLater from "discourse-common/lib/later";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default buildCategoryPanel("general", {
-  init() {
-    this._super(...arguments);
+export default class EditCategoryGeneral extends buildCategoryPanel("general") {
+  @not("category.isUncategorizedCategory") canSelectParentCategory;
 
-    this.foregroundColors = ["FFFFFF", "000000"];
-  },
+  uncategorizedSiteSettingLink = getURL(
+    "/admin/site_settings/category/all_results?filter=allow_uncategorized_topics"
+  );
+  customizeTextContentLink = getURL(
+    "/admin/customize/site_texts?q=uncategorized"
+  );
+
+  foregroundColors = ["FFFFFF", "000000"];
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     this._focusCategoryName();
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     this._laterFocus && cancel(this._laterFocus);
-  },
-
-  canSelectParentCategory: not("category.isUncategorizedCategory"),
-  uncategorizedSiteSettingLink: getURL(
-    "/admin/site_settings/category/all_results?filter=allow_uncategorized_topics"
-  ),
-  customizeTextContentLink: getURL(
-    "/admin/customize/site_texts?q=uncategorized"
-  ),
+  }
 
   // background colors are available as a pipe-separated string
   @discourseComputed
@@ -51,7 +48,7 @@ export default buildCategoryPanel("general", {
         })
       )
       .uniq();
-  },
+  }
 
   @discourseComputed("category.id", "category.color")
   usedBackgroundColors(categoryId, categoryColor) {
@@ -66,14 +63,14 @@ export default buildCategoryPanel("general", {
           : c.color.toUpperCase();
       }, this)
       .compact();
-  },
+  }
 
   @discourseComputed
   parentCategories() {
     return this.site
       .get("categoriesList")
       .filter((c) => c.level + 1 < this.siteSettings.max_category_nesting);
-  },
+  }
 
   @discourseComputed(
     "category.parent_category_id",
@@ -92,7 +89,7 @@ export default buildCategoryPanel("general", {
       read_restricted: category.get("read_restricted"),
     });
     return categoryBadgeHTML(c, { link: false, previewColor: true });
-  },
+  }
 
   // We can change the parent if there are no children
   @discourseComputed("category.id")
@@ -101,7 +98,7 @@ export default buildCategoryPanel("general", {
       return null;
     }
     return Category.list().filterBy("parent_category_id", categoryId);
-  },
+  }
 
   @discourseComputed(
     "category.isUncategorizedCategory",
@@ -110,18 +107,18 @@ export default buildCategoryPanel("general", {
   )
   showDescription(isUncategorizedCategory, categoryId, topicUrl) {
     return !isUncategorizedCategory && categoryId && topicUrl;
-  },
+  }
 
   @action
   showCategoryTopic() {
     window.open(this.get("category.topic_url"), "_blank").focus();
     return false;
-  },
+  }
 
   _focusCategoryName() {
     this._laterFocus = discourseLater(() => {
       const categoryName = this.element.querySelector(".category-name");
       categoryName && categoryName.focus();
     }, 25);
-  },
-});
+  }
+}

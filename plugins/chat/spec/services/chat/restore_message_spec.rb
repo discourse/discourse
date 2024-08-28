@@ -41,9 +41,7 @@ RSpec.describe Chat::RestoreMessage do
       end
 
       context "when the user has permission to restore" do
-        it "sets the service result as successful" do
-          expect(result).to be_a_success
-        end
+        it { is_expected.to run_successfully }
 
         it "restores the message" do
           result

@@ -2,8 +2,8 @@ import EmberObject from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default EmberObject.extend({
-  tagName: "td",
+export default class PostsCountColumn extends EmberObject {
+  tagName = "td";
 
   @discourseComputed("topic.like_count", "topic.posts_count")
   ratio(likeCount, postCount) {
@@ -15,7 +15,7 @@ export default EmberObject.extend({
     }
 
     return (likes || 0) / posts;
-  },
+  }
 
   @discourseComputed("topic.replyCount", "ratioText")
   title(count, ratio) {
@@ -23,7 +23,7 @@ export default EmberObject.extend({
       count,
       ratio,
     });
-  },
+  }
 
   @discourseComputed("ratio")
   ratioText(ratio) {
@@ -38,12 +38,12 @@ export default EmberObject.extend({
       return "low";
     }
     return "";
-  },
+  }
 
   @discourseComputed("ratioText")
   likesHeat(ratioText) {
     if (ratioText && ratioText.length) {
       return `heatmap-${ratioText}`;
     }
-  },
-});
+  }
+}

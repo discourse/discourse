@@ -17,34 +17,35 @@ import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Controller.extend(CanCheckEmails, {
-  dialog: service(),
-  modal: service(),
-  siteSettings: service(),
-  loading: false,
-  dirty: false,
-  errorMessage: null,
-  newUsername: null,
-  backupEnabled: alias("model.second_factor_backup_enabled"),
-  secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
-  totps: [],
-  security_keys: [],
+export default class SecondFactorController extends Controller.extend(
+  CanCheckEmails
+) {
+  @service dialog;
+  @service modal;
+  @service siteSettings;
 
-  init() {
-    this._super(...arguments);
-  },
+  loading = false;
+  dirty = false;
+  errorMessage = null;
+  newUsername = null;
+
+  @alias("model.second_factor_backup_enabled") backupEnabled;
+
+  secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
+  totps = [];
+  security_keys = [];
 
   @discourseComputed
   hasOAuth() {
     return findAll().length > 0;
-  },
+  }
 
   @discourseComputed
   displayOAuthWarning() {
     return (
       this.hasOAuth && this.siteSettings.enforce_second_factor_on_external_auth
     );
-  },
+  }
 
   @discourseComputed("currentUser")
   showEnforcedWithOAuthNotice(user) {
@@ -54,7 +55,7 @@ export default Controller.extend(CanCheckEmails, {
       this.hasOAuth &&
       !this.siteSettings.enforce_second_factor_on_external_auth
     );
-  },
+  }
 
   @discourseComputed("currentUser")
   showEnforcedNotice(user) {
@@ -63,12 +64,12 @@ export default Controller.extend(CanCheckEmails, {
       user.enforcedSecondFactor &&
       this.siteSettings.enforce_second_factor_on_external_auth
     );
-  },
+  }
 
   @discourseComputed("totps", "security_keys")
   hasSecondFactors(totps, security_keys) {
     return totps.length > 0 || security_keys.length > 0;
-  },
+  }
 
   async createToTpModal() {
     try {
@@ -84,7 +85,7 @@ export default Controller.extend(CanCheckEmails, {
     } catch (error) {
       popupAjaxError(error);
     }
-  },
+  }
 
   async createSecurityKeyModal() {
     try {
@@ -100,7 +101,7 @@ export default Controller.extend(CanCheckEmails, {
     } catch (error) {
       popupAjaxError(error);
     }
-  },
+  }
 
   @action
   handleError(error) {
@@ -116,17 +117,17 @@ export default Controller.extend(CanCheckEmails, {
     } else {
       popupAjaxError(error);
     }
-  },
+  }
 
   @action
   setBackupEnabled(value) {
     this.set("backupEnabled", value);
-  },
+  }
 
   @action
   setCodesRemaining(value) {
     this.model.set("second_factor_remaining_backup_codes", value);
-  },
+  }
 
   @action
   loadSecondFactors() {
@@ -152,12 +153,12 @@ export default Controller.extend(CanCheckEmails, {
       })
       .catch((e) => this.handleError(e))
       .finally(() => this.set("loading", false));
-  },
+  }
 
   @action
   markDirty() {
     this.set("dirty", true);
-  },
+  }
 
   @action
   async createTotp() {
@@ -177,7 +178,7 @@ export default Controller.extend(CanCheckEmails, {
     } catch (error) {
       popupAjaxError(error);
     }
-  },
+  }
 
   @action
   async createSecurityKey() {
@@ -197,175 +198,179 @@ export default Controller.extend(CanCheckEmails, {
     } catch (error) {
       popupAjaxError(error);
     }
-  },
+  }
 
-  actions: {
-    disableAllSecondFactors() {
-      if (this.loading) {
-        return;
-      }
+  @action
+  disableAllSecondFactors() {
+    if (this.loading) {
+      return;
+    }
 
-      this.dialog.deleteConfirm({
-        title: I18n.t("user.second_factor.disable_confirm"),
-        bodyComponent: SecondFactorConfirmPhrase,
-        bodyComponentModel: {
-          totps: this.totps,
-          security_keys: this.security_keys,
-        },
-        confirmButtonLabel: "user.second_factor.disable",
-        confirmButtonDisabled: true,
-        confirmButtonIcon: "ban",
-        cancelButtonClass: "btn-flat",
-        didConfirm: () => {
-          this.model
-            .disableAllSecondFactors()
-            .then(() => {
-              const usernameLower = this.model.username.toLowerCase();
-              DiscourseURL.redirectTo(userPath(`${usernameLower}/preferences`));
-            })
-            .catch((e) => this.handleError(e))
-            .finally(() => this.set("loading", false));
-        },
-      });
-    },
-    disableSingleSecondFactor(secondFactorMethod) {
-      if (this.totps.concat(this.security_keys).length === 1) {
-        this.send("disableAllSecondFactors");
-        return;
-      }
-      this.dialog.deleteConfirm({
-        title: I18n.t("user.second_factor.delete_single_confirm_title"),
-        message: I18n.t("user.second_factor.delete_single_confirm_message", {
-          name: secondFactorMethod.name,
-        }),
-        confirmButtonLabel: "user.second_factor.delete",
-        confirmButtonIcon: "ban",
-        cancelButtonClass: "btn-flat",
-        didConfirm: () => {
-          if (this.totps.includes(secondFactorMethod)) {
-            this.currentUser
-              .updateSecondFactor(
-                secondFactorMethod.id,
-                secondFactorMethod.name,
-                true,
-                secondFactorMethod.method
-              )
-              .then((response) => {
-                if (response.error) {
-                  return;
-                }
-                this.markDirty();
-                this.set(
-                  "totps",
-                  this.totps.filter(
-                    (totp) =>
-                      totp.id !== secondFactorMethod.id ||
-                      totp.method !== secondFactorMethod.method
-                  )
-                );
-              })
-              .catch((e) => this.handleError(e))
-              .finally(() => {
-                this.set("loading", false);
-              });
-          }
+    this.dialog.deleteConfirm({
+      title: I18n.t("user.second_factor.disable_confirm"),
+      bodyComponent: SecondFactorConfirmPhrase,
+      bodyComponentModel: {
+        totps: this.totps,
+        security_keys: this.security_keys,
+      },
+      confirmButtonLabel: "user.second_factor.disable",
+      confirmButtonDisabled: true,
+      confirmButtonIcon: "ban",
+      cancelButtonClass: "btn-flat",
+      didConfirm: () => {
+        this.model
+          .disableAllSecondFactors()
+          .then(() => {
+            const usernameLower = this.model.username.toLowerCase();
+            DiscourseURL.redirectTo(userPath(`${usernameLower}/preferences`));
+          })
+          .catch((e) => this.handleError(e))
+          .finally(() => this.set("loading", false));
+      },
+    });
+  }
 
-          if (this.security_keys.includes(secondFactorMethod)) {
-            this.currentUser
-              .updateSecurityKey(
-                secondFactorMethod.id,
-                secondFactorMethod.name,
-                true
-              )
-              .then((response) => {
-                if (response.error) {
-                  return;
-                }
-                this.markDirty();
-                this.set(
-                  "security_keys",
-                  this.security_keys.filter(
-                    (securityKey) => securityKey.id !== secondFactorMethod.id
-                  )
-                );
-              })
-              .catch((e) => this.handleError(e))
-              .finally(() => {
-                this.set("loading", false);
-              });
-          }
-        },
-      });
-    },
-    disableSecondFactorBackup() {
-      this.dialog.deleteConfirm({
-        title: I18n.t("user.second_factor.delete_backup_codes_confirm_title"),
-        message: I18n.t(
-          "user.second_factor.delete_backup_codes_confirm_message"
-        ),
-        confirmButtonLabel: "user.second_factor.delete",
-        confirmButtonIcon: "ban",
-        cancelButtonClass: "btn-flat",
-        didConfirm: () => {
-          this.set("backupCodes", []);
-          this.set("loading", true);
-
-          this.model
-            .updateSecondFactor(0, "", true, SECOND_FACTOR_METHODS.BACKUP_CODE)
+  @action
+  disableSingleSecondFactor(secondFactorMethod) {
+    if (this.totps.concat(this.security_keys).length === 1) {
+      this.send("disableAllSecondFactors");
+      return;
+    }
+    this.dialog.deleteConfirm({
+      title: I18n.t("user.second_factor.delete_single_confirm_title"),
+      message: I18n.t("user.second_factor.delete_single_confirm_message", {
+        name: secondFactorMethod.name,
+      }),
+      confirmButtonLabel: "user.second_factor.delete",
+      confirmButtonIcon: "ban",
+      cancelButtonClass: "btn-flat",
+      didConfirm: () => {
+        if (this.totps.includes(secondFactorMethod)) {
+          this.currentUser
+            .updateSecondFactor(
+              secondFactorMethod.id,
+              secondFactorMethod.name,
+              true,
+              secondFactorMethod.method
+            )
             .then((response) => {
               if (response.error) {
-                this.set("errorMessage", response.error);
                 return;
               }
-
-              this.set("errorMessage", null);
-              this.model.set("second_factor_backup_enabled", false);
               this.markDirty();
-              this.send("closeModal");
+              this.set(
+                "totps",
+                this.totps.filter(
+                  (totp) =>
+                    totp.id !== secondFactorMethod.id ||
+                    totp.method !== secondFactorMethod.method
+                )
+              );
             })
-            .catch((error) => {
-              this.send("closeModal");
-              this.onError(error);
+            .catch((e) => this.handleError(e))
+            .finally(() => {
+              this.set("loading", false);
+            });
+        }
+
+        if (this.security_keys.includes(secondFactorMethod)) {
+          this.currentUser
+            .updateSecurityKey(
+              secondFactorMethod.id,
+              secondFactorMethod.name,
+              true
+            )
+            .then((response) => {
+              if (response.error) {
+                return;
+              }
+              this.markDirty();
+              this.set(
+                "security_keys",
+                this.security_keys.filter(
+                  (securityKey) => securityKey.id !== secondFactorMethod.id
+                )
+              );
             })
-            .finally(() => this.set("loading", false));
-        },
-      });
-    },
+            .catch((e) => this.handleError(e))
+            .finally(() => {
+              this.set("loading", false);
+            });
+        }
+      },
+    });
+  }
 
-    async editSecurityKey(security_key) {
-      await this.modal.show(SecondFactorEditSecurityKey, {
-        model: {
-          securityKey: security_key,
-          user: this.model,
-          markDirty: () => this.markDirty(),
-          onError: (e) => this.handleError(e),
-        },
-      });
-      this.loadSecondFactors();
-    },
+  @action
+  disableSecondFactorBackup() {
+    this.dialog.deleteConfirm({
+      title: I18n.t("user.second_factor.delete_backup_codes_confirm_title"),
+      message: I18n.t("user.second_factor.delete_backup_codes_confirm_message"),
+      confirmButtonLabel: "user.second_factor.delete",
+      confirmButtonIcon: "ban",
+      cancelButtonClass: "btn-flat",
+      didConfirm: () => {
+        this.set("backupCodes", []);
+        this.set("loading", true);
 
-    async editSecondFactor(second_factor) {
-      await this.modal.show(SecondFactorEdit, {
-        model: {
-          secondFactor: second_factor,
-          user: this.model,
-          markDirty: () => this.markDirty(),
-          onError: (e) => this.handleError(e),
-        },
-      });
-      this.loadSecondFactors();
-    },
+        this.model
+          .updateSecondFactor(0, "", true, SECOND_FACTOR_METHODS.BACKUP_CODE)
+          .then((response) => {
+            if (response.error) {
+              this.set("errorMessage", response.error);
+              return;
+            }
 
-    async editSecondFactorBackup() {
-      await this.modal.show(SecondFactorBackupEdit, {
-        model: {
-          secondFactor: this.model,
-          markDirty: () => this.markDirty(),
-          onError: (e) => this.handleError(e),
-          setBackupEnabled: (e) => this.setBackupEnabled(e),
-          setCodesRemaining: (e) => this.setCodesRemaining(e),
-        },
-      });
-    },
-  },
-});
+            this.set("errorMessage", null);
+            this.model.set("second_factor_backup_enabled", false);
+            this.markDirty();
+            this.send("closeModal");
+          })
+          .catch((error) => {
+            this.send("closeModal");
+            this.onError(error);
+          })
+          .finally(() => this.set("loading", false));
+      },
+    });
+  }
+
+  @action
+  async editSecurityKey(security_key) {
+    await this.modal.show(SecondFactorEditSecurityKey, {
+      model: {
+        securityKey: security_key,
+        user: this.model,
+        markDirty: () => this.markDirty(),
+        onError: (e) => this.handleError(e),
+      },
+    });
+    this.loadSecondFactors();
+  }
+
+  @action
+  async editSecondFactor(second_factor) {
+    await this.modal.show(SecondFactorEdit, {
+      model: {
+        secondFactor: second_factor,
+        user: this.model,
+        markDirty: () => this.markDirty(),
+        onError: (e) => this.handleError(e),
+      },
+    });
+    this.loadSecondFactors();
+  }
+
+  @action
+  async editSecondFactorBackup() {
+    await this.modal.show(SecondFactorBackupEdit, {
+      model: {
+        secondFactor: this.model,
+        markDirty: () => this.markDirty(),
+        onError: (e) => this.handleError(e),
+        setBackupEnabled: (e) => this.setBackupEnabled(e),
+        setCodesRemaining: (e) => this.setCodesRemaining(e),
+      },
+    });
+  }
+}

@@ -4,7 +4,7 @@ import { alias } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { next, schedule, throttle } from "@ember/runloop";
 import { classNameBindings } from "@ember-decorators/component";
-import { observes } from "@ember-decorators/object";
+import { observes, on } from "@ember-decorators/object";
 import { BasePlugin } from "@uppy/core";
 import $ from "jquery";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
@@ -41,7 +41,6 @@ import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import discourseComputed, {
   bind,
   debounce,
-  on,
 } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 

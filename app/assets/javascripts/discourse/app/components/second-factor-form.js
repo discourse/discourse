@@ -4,7 +4,7 @@ import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Component.extend({
+export default class SecondFactorForm extends Component {
   @discourseComputed("secondFactorMethod")
   secondFactorTitle(secondFactorMethod) {
     switch (secondFactorMethod) {
@@ -15,7 +15,7 @@ export default Component.extend({
       case SECOND_FACTOR_METHODS.BACKUP_CODE:
         return I18n.t("login.second_factor_backup_title");
     }
-  },
+  }
 
   @discourseComputed("secondFactorMethod")
   secondFactorDescription(secondFactorMethod) {
@@ -27,7 +27,7 @@ export default Component.extend({
       case SECOND_FACTOR_METHODS.BACKUP_CODE:
         return I18n.t("login.second_factor_backup_description");
     }
-  },
+  }
 
   @discourseComputed("secondFactorMethod", "isLogin")
   linkText(secondFactorMethod, isLogin) {
@@ -40,7 +40,7 @@ export default Component.extend({
         ? "user.second_factor_backup.use"
         : "user.second_factor.use";
     }
-  },
+  }
 
   @discourseComputed("backupEnabled", "totpEnabled", "secondFactorMethod")
   showToggleMethodLink(backupEnabled, totpEnabled, secondFactorMethod) {
@@ -49,7 +49,7 @@ export default Component.extend({
       totpEnabled &&
       secondFactorMethod !== SECOND_FACTOR_METHODS.SECURITY_KEY
     );
-  },
+  }
 
   @action
   toggleSecondFactorMethod(event) {
@@ -61,5 +61,5 @@ export default Component.extend({
     } else {
       this.set("secondFactorMethod", SECOND_FACTOR_METHODS.TOTP);
     }
-  },
-});
+  }
+}

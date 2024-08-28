@@ -1,10 +1,10 @@
+<SignupProgressBar @step="activate" />
 <div class="ac-message">
   <ActivationEmailForm
     @email={{this.newEmail}}
     @updateNewEmail={{this.updateNewEmail}}
   />
 </div>
-
 <div class="activation-controls">
   <DButton
     @action={{this.changeEmail}}

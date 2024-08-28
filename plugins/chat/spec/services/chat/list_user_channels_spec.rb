@@ -11,6 +11,8 @@ RSpec.describe Chat::ListUserChannels do
 
   before { channel_1.add(current_user) }
 
+  it { is_expected.to run_successfully }
+
   it "returns the structured data" do
     expect(result.structured[:post_allowed_category_ids]).to eq(nil)
     expect(result.structured[:unread_thread_overview]).to eq({})

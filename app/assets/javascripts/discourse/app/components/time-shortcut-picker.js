@@ -1,6 +1,8 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { and, equal } from "@ember/object/computed";
+import { tagName } from "@ember-decorators/component";
+import { observes, on } from "@ember-decorators/object";
 import {
   defaultTimeShortcuts,
   formatTime,
@@ -9,10 +11,7 @@ import {
   TIME_SHORTCUT_TYPES,
 } from "discourse/lib/time-shortcut";
 import { laterToday, now, parseCustomDatetime } from "discourse/lib/time-utils";
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 const BINDINGS = {
@@ -40,30 +39,34 @@ const BINDINGS = {
   "n r": { handler: "selectShortcut", args: [TIME_SHORTCUT_TYPES.NONE] },
 };
 
-export default Component.extend({
-  tagName: "",
+@tagName("")
+export default class TimeShortcutPicker extends Component {
+  @equal("selectedShortcut", TIME_SHORTCUT_TYPES.CUSTOM) customDatetimeSelected;
+  @equal("selectedShortcut", TIME_SHORTCUT_TYPES.RELATIVE)
+  relativeTimeSelected;
+  @and("customDate", "customTime") customDatetimeFilled;
 
-  userTimezone: null,
+  userTimezone = null;
 
-  onTimeSelected: null,
+  onTimeSelected = null;
 
-  selectedShortcut: null,
-  selectedTime: null,
-  selectedDate: null,
-  selectedDatetime: null,
-  prefilledDatetime: null,
-  selectedDurationMins: null,
+  selectedShortcut = null;
+  selectedTime = null;
+  selectedDate = null;
+  selectedDatetime = null;
+  prefilledDatetime = null;
+  selectedDurationMins = null;
 
-  hiddenOptions: null,
-  customOptions: null,
+  hiddenOptions = null;
+  customOptions = null;
 
-  lastCustomDate: null,
-  lastCustomTime: null,
-  parsedLastCustomDatetime: null,
-  customDate: null,
-  customTime: null,
+  lastCustomDate = null;
+  lastCustomTime = null;
+  parsedLastCustomDatetime = null;
+  customDate = null;
+  customTime = null;
 
-  _itsatrap: null,
+  _itsatrap = null;
 
   @on("init")
   _setupPicker() {
@@ -79,7 +82,7 @@ export default Component.extend({
     }
 
     this._bindKeyboardShortcuts();
-  },
+  }
 
   @observes("prefilledDatetime")
   prefilledDatetimeChanged() {
@@ -92,13 +95,13 @@ export default Component.extend({
         selectedShortcut: null,
       });
     }
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     this._itsatrap.unbind(Object.keys(BINDINGS));
-  },
+  }
 
   parsePrefilledDatetime() {
     let parsedDatetime = parseCustomDatetime(
@@ -116,7 +119,7 @@ export default Component.extend({
       customTime: parsedDatetime.format("HH:mm"),
       selectedShortcut: TIME_SHORTCUT_TYPES.CUSTOM,
     });
-  },
+  }
 
   _loadLastUsedCustomDatetime() {
     const lastTime = this.keyValueStore.lastCustomTime;
@@ -135,7 +138,7 @@ export default Component.extend({
         parsedLastCustomDatetime: parsed,
       });
     }
-  },
+  }
 
   _bindKeyboardShortcuts() {
     Object.keys(BINDINGS).forEach((shortcut) => {
@@ -145,11 +148,7 @@ export default Component.extend({
         return false;
       });
     });
-  },
-
-  customDatetimeSelected: equal("selectedShortcut", TIME_SHORTCUT_TYPES.CUSTOM),
-  relativeTimeSelected: equal("selectedShortcut", TIME_SHORTCUT_TYPES.RELATIVE),
-  customDatetimeFilled: and("customDate", "customTime"),
+  }
 
   @observes("customDate", "customTime")
   customDatetimeChanged() {
@@ -157,7 +156,7 @@ export default Component.extend({
       return;
     }
     this.selectShortcut(TIME_SHORTCUT_TYPES.CUSTOM);
-  },
+  }
 
   @discourseComputed(
     "timeShortcuts",
@@ -203,7 +202,7 @@ export default Component.extend({
     this._applyCustomLabels(options, customLabels);
     options.forEach((o) => (o.timeFormatted = formatTime(o)));
     return options;
-  },
+  }
 
   @action
   relativeTimeChanged(relativeTimeMins) {
@@ -215,7 +214,7 @@ export default Component.extend({
     });
 
     this.onTimeSelected?.(TIME_SHORTCUT_TYPES.RELATIVE, dateTime);
-  },
+  }
 
   @action
   selectShortcut(type) {
@@ -259,7 +258,7 @@ export default Component.extend({
     if (this.onTimeSelected) {
       this.onTimeSelected(type, dateTime);
     }
-  },
+  }
 
   _applyCustomLabels(options, customLabels) {
     options.forEach((option) => {
@@ -267,7 +266,7 @@ export default Component.extend({
         option.label = customLabels[option.id];
       }
     });
-  },
+  }
 
   _formatTime(options) {
     options.forEach((option) => {
@@ -275,9 +274,9 @@ export default Component.extend({
         option.timeFormatted = option.time.format(I18n.t(option.timeFormatKey));
       }
     });
-  },
+  }
 
   _defaultCustomDateTime() {
     return moment.tz(this.userTimezone).add(1, "hour");
-  },
-});
+  }
+}

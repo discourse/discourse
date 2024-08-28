@@ -60,6 +60,8 @@ RSpec.describe Chat::CreateCategoryChannel do
       end
 
       context "when all steps pass" do
+        it { is_expected.to run_successfully }
+
         it "creates the channel" do
           expect { result }.to change { Chat::Channel.count }.by(1)
           expect(result.channel).to have_attributes(
