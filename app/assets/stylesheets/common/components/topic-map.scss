@@ -464,7 +464,7 @@ body:not(.archetype-private_message) {
 
       &__wrapper {
         display: flex;
-        justify-content: center;
+        justify-content: space-evenly;
         padding: 0 1rem;
       }
       &__count {

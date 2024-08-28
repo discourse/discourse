@@ -3,9 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import { registerWaiter } from "@ember/test";
 import { modifier } from "ember-modifier";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import loadAce from "discourse/lib/load-ace-editor";
+import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
@@ -69,6 +71,12 @@ export default class AceEditor extends Component {
     this.skipChangePropagation = true;
     this.editor.getSession().setValue(this.args.content || "");
     this.skipChangePropagation = false;
+
+    if (isTesting()) {
+      let finished = false;
+      registerWaiter(() => finished);
+      this.editor.renderer.once("afterRender", () => (finished = true));
+    }
   });
 
   constructor() {
@@ -143,7 +151,10 @@ export default class AceEditor extends Component {
     this.editor.$blockScrolling = Infinity;
     this.editor.renderer.setScrollMargin(10, 10);
 
-    element.setAttribute("data-editor", this.editor);
+    if (isTesting()) {
+      element.aceEditor = this.editor;
+    }
+
     this.changeDisabledState();
     this.warnSCSSDeprecations();
 
@@ -161,7 +172,7 @@ export default class AceEditor extends Component {
   @bind
   editorIdChanged() {
     if (this.autofocus) {
-      this.send("focus");
+      this.focus();
     }
   }
 
@@ -185,7 +196,7 @@ export default class AceEditor extends Component {
 
     this.editor?.container.parentNode.parentNode.setAttribute(
       "data-disabled",
-      this.args.disabled
+      !!this.args.disabled
     );
   }
 

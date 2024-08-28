@@ -19,9 +19,7 @@ RSpec.describe Chat::LookupThread do
     let(:params) { { guardian: guardian, thread_id: thread.id, channel_id: thread.channel_id } }
 
     context "when all steps pass" do
-      it "sets the service result as successful" do
-        expect(result).to be_a_success
-      end
+      it { is_expected.to run_successfully }
 
       it "fetches the thread" do
         expect(result.thread).to eq(thread)
@@ -60,7 +58,7 @@ RSpec.describe Chat::LookupThread do
       context "when thread is forced" do
         before { thread.update!(force: true) }
 
-        it { is_expected.to be_a_success }
+        it { is_expected.to run_successfully }
       end
     end
   end

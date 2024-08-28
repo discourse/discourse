@@ -29,9 +29,7 @@ RSpec.describe Chat::InviteUsersToChannel do
   end
 
   context "when all steps pass" do
-    it "sets the service result as successful" do
-      expect(result).to run_service_successfully
-    end
+    it { is_expected.to run_successfully }
 
     it "creates the notifications for allowed users" do
       result

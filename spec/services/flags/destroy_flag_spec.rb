@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe(Flags::DestroyFlag) do
-  fab!(:flag)
-
   subject(:result) { described_class.call(id: flag.id, guardian: current_user.guardian) }
+
+  fab!(:flag)
 
   after { flag.destroy }
 
@@ -15,6 +15,8 @@ RSpec.describe(Flags::DestroyFlag) do
 
   context "when user is allowed to perform the action" do
     fab!(:current_user) { Fabricate(:admin) }
+
+    it { is_expected.to run_successfully }
 
     it "sets the service result as successful" do
       expect(result).to be_a_success

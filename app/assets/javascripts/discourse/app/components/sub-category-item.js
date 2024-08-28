@@ -1,3 +1,3 @@
 import CategoryListItem from "discourse/components/category-list-item";
 
-export default CategoryListItem.extend({});
+export default class SubCategoryItem extends CategoryListItem {}

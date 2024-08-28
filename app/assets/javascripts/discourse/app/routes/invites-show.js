@@ -1,9 +1,12 @@
+import { service } from "@ember/service";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseRoute from "discourse/routes/discourse";
 import { deepMerge } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
 export default class InvitesShow extends DiscourseRoute {
+  @service siteSettings;
+
   titleToken() {
     return I18n.t("invites.accept_title");
   }
@@ -21,17 +24,21 @@ export default class InvitesShow extends DiscourseRoute {
   activate() {
     super.activate(...arguments);
 
-    this.controllerFor("application").setProperties({
-      showSiteHeader: false,
-    });
+    if (this.siteSettings.login_required) {
+      this.controllerFor("application").setProperties({
+        showSiteHeader: false,
+      });
+    }
   }
 
   deactivate() {
     super.deactivate(...arguments);
 
-    this.controllerFor("application").setProperties({
-      showSiteHeader: true,
-    });
+    if (this.siteSettings.login_required) {
+      this.controllerFor("application").setProperties({
+        showSiteHeader: true,
+      });
+    }
   }
 
   setupController(controller, model) {

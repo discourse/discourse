@@ -3,10 +3,10 @@ import { action } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  hide: false,
+export default class DiscourseBanner extends Component {
+  hide = false;
 
-  banner: readOnly("site.banner"),
+  @readOnly("site.banner") banner;
 
   @discourseComputed("banner.html")
   content(bannerHtml) {
@@ -16,7 +16,7 @@ export default Component.extend({
       el.removeAttribute("id");
     });
     return newDiv.innerHTML;
-  },
+  }
 
   @discourseComputed("currentUser.dismissed_banner_key", "banner.key", "hide")
   visible(dismissedBannerKey, bannerKey, hide) {
@@ -31,7 +31,7 @@ export default Component.extend({
     }
 
     return !hide && bannerKey && dismissedBannerKey !== bannerKey;
-  },
+  }
 
   @action
   dismiss() {
@@ -44,10 +44,10 @@ export default Component.extend({
         value: this.get("banner.key"),
       });
     }
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     this.appEvents.trigger("decorate-non-stream-cooked-element", this.element);
-  },
-});
+  }
+}

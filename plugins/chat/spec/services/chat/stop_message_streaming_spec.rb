@@ -19,7 +19,7 @@ RSpec.describe Chat::StopMessageStreaming do
     context "with valid params" do
       fab!(:current_user) { Fabricate(:admin) }
 
-      it { is_expected.to be_a_success }
+      it { is_expected.to run_successfully }
 
       it "updates the streaming attribute to false" do
         expect { result }.to change { message_1.reload.streaming }.to eq(false)
@@ -42,7 +42,7 @@ RSpec.describe Chat::StopMessageStreaming do
       context "when the user is a bot" do
         fab!(:current_user) { Discourse.system_user }
 
-        it { is_expected.to be_a_success }
+        it { is_expected.to run_successfully }
       end
     end
 
@@ -69,7 +69,7 @@ RSpec.describe Chat::StopMessageStreaming do
 
         before { params[:message_id] = reply.id }
 
-        it { is_expected.to be_a_success }
+        it { is_expected.to run_successfully }
       end
 
       context "when the OM is not from current user" do
@@ -89,13 +89,13 @@ RSpec.describe Chat::StopMessageStreaming do
         context "when current user is a bot" do
           fab!(:current_user) { Discourse.system_user }
 
-          it { is_expected.to be_a_success }
+          it { is_expected.to run_successfully }
         end
 
         context "when current user is an admin" do
           fab!(:current_user) { Fabricate(:admin) }
 
-          it { is_expected.to be_a_success }
+          it { is_expected.to run_successfully }
         end
       end
     end
@@ -112,13 +112,13 @@ RSpec.describe Chat::StopMessageStreaming do
       context "when current user is a bot" do
         fab!(:current_user) { Discourse.system_user }
 
-        it { is_expected.to be_a_success }
+        it { is_expected.to run_successfully }
       end
 
       context "when current user is an admin" do
         fab!(:current_user) { Fabricate(:admin) }
 
-        it { is_expected.to be_a_success }
+        it { is_expected.to run_successfully }
       end
     end
   end

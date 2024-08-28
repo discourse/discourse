@@ -5,7 +5,7 @@
       <label class="radio checkbox-label">
         <input
           id="radio_{{this.flag.name_key}}"
-          {{on "click" (action "changePostActionType" this.flag)}}
+          {{on "click" (fn this.changePostActionType this.flag)}}
           type="radio"
           name="post_action_type_index"
         />
@@ -41,7 +41,7 @@
       <label class="radio checkbox-label">
         <input
           id="radio_{{this.flag.name_key}}"
-          {{on "click" (action "changePostActionType" this.flag)}}
+          {{on "click" (fn this.changePostActionType this.flag)}}
           type="radio"
           name="post_action_type_index"
         />

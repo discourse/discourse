@@ -91,9 +91,7 @@ RSpec.describe Chat::UpdateUserChannelLastRead do
           )
         end
 
-        it "sets the service result as successful" do
-          expect(result).to be_a_success
-        end
+        it { is_expected.to run_successfully }
 
         it "updates the last_read message id" do
           expect { result }.to change { membership.reload.last_read_message_id }.to(message_1.id)

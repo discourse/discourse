@@ -1,16 +1,17 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
 
-export default Component.extend({
-  classNames: ["d-date-time-input-range"],
-  from: null,
-  to: null,
-  onChangeTo: null,
-  onChangeFrom: null,
-  toTimeFirst: false,
-  showToTime: true,
-  showFromTime: true,
-  clearable: false,
+@classNames("d-date-time-input-range")
+export default class DateTimeInputRange extends Component {
+  from = null;
+  to = null;
+  onChangeTo = null;
+  onChangeFrom = null;
+  toTimeFirst = false;
+  showToTime = true;
+  showFromTime = true;
+  clearable = false;
 
   @action
   onChangeRanges(options, value) {
@@ -42,5 +43,5 @@ export default Component.extend({
       const newState = { ...state, ...diff };
       this.onChange(newState);
     }
-  },
-});
+  }
+}
