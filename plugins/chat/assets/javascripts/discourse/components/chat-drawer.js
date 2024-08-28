@@ -7,7 +7,8 @@ import { tagName } from "@ember-decorators/component";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 import getURL from "discourse-common/lib/get-url";
-import { bind, observes } from "discourse-common/utils/decorators";
+import { observes } from "@ember-decorators/object";
+import { bind } from "discourse-common/utils/decorators";
 
 @tagName("")
 export default class ChatDrawer extends Component {
