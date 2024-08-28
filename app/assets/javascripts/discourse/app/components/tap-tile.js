@@ -1,10 +1,11 @@
 import Component from "@ember/component";
-import { equal, reads } from "@ember/object/computed";
+import { reads } from "@ember/object/computed";
 import {
   attributeBindings,
   classNameBindings,
   classNames,
 } from "@ember-decorators/component";
+import { propertyEqual } from "discourse/lib/computed";
 
 @classNames("tap-tile")
 @classNameBindings("active")
@@ -14,7 +15,7 @@ export default class TapTile extends Component {
   tabIndex = 0;
 
   @reads("active") ariaPressed;
-  @equal("activeTile", "tileId") active;
+  @propertyEqual("activeTile", "tileId") active;
 
   init() {
     super.init(...arguments);
