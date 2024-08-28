@@ -1,14 +1,20 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import {
+  attributeBindings,
+  classNameBindings,
+  classNames,
+  tagName,
+} from "@ember-decorators/component";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 
-export default Component.extend({
-  tagName: "div",
-  classNames: ["fps-result"],
-  classNameBindings: ["bulkSelectEnabled"],
-  attributeBindings: ["role"],
-  role: "listitem",
+@tagName("div")
+@classNames("fps-result")
+@classNameBindings("bulkSelectEnabled")
+@attributeBindings("role")
+export default class SearchResultEntry extends Component {
+  role = "listitem";
 
   @action
   logClick(topicId, event) {
@@ -24,5 +30,5 @@ export default Component.extend({
         searchResultType: "topic",
       });
     }
-  },
-});
+  }
+}
