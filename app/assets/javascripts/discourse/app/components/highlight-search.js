@@ -1,14 +1,14 @@
 import Component from "@ember/component";
+import { tagName } from "@ember-decorators/component";
+import { observes, on } from "@ember-decorators/object";
 import highlightSearch from "discourse/lib/highlight-search";
-import { observes, on } from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  tagName: "span",
-
+@tagName("span")
+export default class HighlightSearch extends Component {
   @on("didInsertElement")
   @observes("highlight")
   _highlightOnInsert() {
     const term = this.highlight;
     highlightSearch(this.element, term);
-  },
-});
+  }
+}
