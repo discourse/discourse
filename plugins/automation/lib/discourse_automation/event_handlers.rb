@@ -23,6 +23,11 @@ module DiscourseAutomation
             next if post.user.user_stat.topic_count != 1
           end
 
+          skip_via_email = automation.trigger_field("skip_via_email")
+          if skip_via_email["value"]
+            next if post.via_email?
+          end
+
           valid_trust_levels = automation.trigger_field("valid_trust_levels")
           if valid_trust_levels["value"]
             next if valid_trust_levels["value"].exclude?(post.user.trust_level)
