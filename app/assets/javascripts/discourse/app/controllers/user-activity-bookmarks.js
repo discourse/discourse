@@ -22,11 +22,10 @@ export default class UserActivityBookmarksController extends Controller {
   loading = false;
   loadingMore = false;
   permissionDenied = false;
-
   bulkSelectHelper = new BulkSelectHelper(this);
-
   @notEmpty("q") inSearchMode;
   @equal("model.bookmarks.length", 0) noContent;
+  _searchTerm = null;
 
   @computed("q")
   get searchTerm() {
@@ -34,7 +33,7 @@ export default class UserActivityBookmarksController extends Controller {
   }
 
   set searchTerm(value) {
-    /* noop */
+    this._searchTerm = value;
   }
 
   @discourseComputed()
@@ -59,7 +58,7 @@ export default class UserActivityBookmarksController extends Controller {
   @action
   search() {
     this.router.transitionTo({
-      queryParams: { q: this.searchTerm },
+      queryParams: { q: this._searchTerm },
     });
   }
 

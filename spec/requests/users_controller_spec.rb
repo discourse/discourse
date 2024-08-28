@@ -6834,6 +6834,16 @@ RSpec.describe UsersController do
       expect(response.parsed_body["bookmarks"]).to eq([])
     end
 
+    it "can filter bookmarks using a keyword" do
+      bookmark1.name = "Override bookmark name for filtering purposes"
+      bookmark1.save!
+      sign_in(user1)
+      get "/u/#{user1.username}/bookmarks.json", params: { q: "override" }
+      response_bookmarks = response.parsed_body["user_bookmark_list"]["bookmarks"]
+      expect(response.status).to eq(200)
+      expect(response_bookmarks.map { |b| b["id"] }).to match_array([bookmark1.id])
+    end
+
     it "shows a helpful message if no bookmarks are found for the search" do
       sign_in(user1)
       get "/u/#{user1.username}/bookmarks.json", params: { q: "badsearch" }

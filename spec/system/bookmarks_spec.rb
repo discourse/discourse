@@ -173,4 +173,35 @@ describe "Bookmarking posts and topics", type: :system do
       expect(bookmark.reload.name).to eq("test name")
     end
   end
+
+  describe "bookmark user profile page" do
+    fab!(:topic2) { Fabricate(:topic, title: "This topic is special") }
+    fab!(:post_topic2) { Fabricate(:post, topic: topic2, raw: "Topic 2 with a different keyword") }
+
+    before do
+      SearchIndexer.enable
+      SearchIndexer.index(topic, force: true)
+      SearchIndexer.index(topic2, force: true)
+    end
+
+    after { SearchIndexer.disable }
+
+    it "can filter bookmarks in the user activity page" do
+      visit_topic_and_open_bookmark_menu(post)
+
+      topic_page.visit_topic(topic2)
+      open_bookmark_menu(post_topic2)
+
+      visit("/u/#{current_user.username_lower}/activity/bookmarks")
+
+      expect(page).to have_css(".topic-list-item", count: 2)
+
+      find("#bookmark-search").fill_in(with: "special")
+      find("#bookmark-search").send_keys(:enter)
+
+      expect(page).to have_css(".topic-list-item", count: 1)
+      expect(page).to have_css(".topic-list-item a.title", text: "This topic is special")
+      # pause_test
+    end
+  end
 end
