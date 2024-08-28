@@ -1,15 +1,14 @@
 import Component from "@ember/component";
 import { cancel, schedule, throttle } from "@ember/runloop";
+import { classNameBindings } from "@ember-decorators/component";
+import { observes } from "@ember-decorators/object";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import positioningWorkaround from "discourse/lib/safari-hacks";
 import { isiPad } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseLater from "discourse-common/lib/later";
-import discourseComputed, {
-  bind,
-  observes,
-} from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 
 const START_DRAG_EVENTS = ["touchstart", "mousedown"];
 const DRAG_EVENTS = ["touchmove", "mousemove"];
@@ -21,37 +20,36 @@ function mouseYPos(e) {
   return e.clientY || (e.touches && e.touches[0] && e.touches[0].clientY);
 }
 
-export default Component.extend({
-  elementId: "reply-control",
-
-  classNameBindings: [
-    "composer.creatingPrivateMessage:private-message",
-    "composeState",
-    "composer.loading",
-    "prefixedComposerAction",
-    "composer.canEditTitle:edit-title",
-    "composer.createdPost:created-post",
-    "composer.creatingTopic:topic",
-    "composer.whisper:composing-whisper",
-    "composer.sharedDraft:composing-shared-draft",
-    "showPreview:show-preview:hide-preview",
-    "currentUserPrimaryGroupClass",
-  ],
+@classNameBindings(
+  "composer.creatingPrivateMessage:private-message",
+  "composeState",
+  "composer.loading",
+  "prefixedComposerAction",
+  "composer.canEditTitle:edit-title",
+  "composer.createdPost:created-post",
+  "composer.creatingTopic:topic",
+  "composer.whisper:composing-whisper",
+  "composer.sharedDraft:composing-shared-draft",
+  "showPreview:show-preview:hide-preview",
+  "currentUserPrimaryGroupClass"
+)
+export default class ComposerBody extends Component {
+  elementId = "reply-control";
 
   @discourseComputed("composer.action")
   prefixedComposerAction(action) {
     return action ? `composer-action-${action}` : "";
-  },
+  }
 
   @discourseComputed("currentUser.primary_group_name")
   currentUserPrimaryGroupClass(primaryGroupName) {
     return primaryGroupName && `group-${primaryGroupName}`;
-  },
+  }
 
   @discourseComputed("composer.composeState")
   composeState(composeState) {
     return composeState || Composer.CLOSED;
-  },
+  }
 
   keyUp() {
     this.typed();
@@ -68,14 +66,14 @@ export default Component.extend({
       }
       this.appEvents.trigger("composer:find-similar");
     }, 1000);
-  },
+  }
 
   @observes("composeState")
   disableFullscreen() {
     if (this.composeState !== Composer.OPEN && positioningWorkaround.blur) {
       positioningWorkaround.blur();
     }
-  },
+  }
 
   setupComposerResizeEvents() {
     this.origComposerSize = 0;
@@ -88,7 +86,7 @@ export default Component.extend({
           passive: false,
         });
     });
-  },
+  }
 
   @bind
   performDragHandler() {
@@ -112,14 +110,14 @@ export default Component.extend({
     );
 
     this._triggerComposerResized();
-  },
+  }
 
   @observes("composeState", "composer.{action,canEditTopicFeaturedLink}")
   _triggerComposerResized() {
     schedule("afterRender", () => {
       discourseDebounce(this, this.composerResized, 300);
     });
-  },
+  }
 
   composerResized() {
     if (!this.element || this.isDestroying || this.isDestroyed) {
@@ -127,7 +125,7 @@ export default Component.extend({
     }
 
     this.appEvents.trigger("composer:resized");
-  },
+  }
 
   @bind
   startDragHandler(event) {
@@ -145,7 +143,7 @@ export default Component.extend({
     });
 
     this.appEvents.trigger("composer:resize-started");
-  },
+  }
 
   @bind
   endDragHandler() {
@@ -161,16 +159,16 @@ export default Component.extend({
 
     this.element.classList.remove("clear-transitions");
     this.element.focus();
-  },
+  }
 
   @bind
   throttledPerformDrag(event) {
     event.preventDefault();
     throttle(this, this.performDragHandler, event, THROTTLE_RATE);
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     this.setupComposerResizeEvents();
 
@@ -188,10 +186,10 @@ export default Component.extend({
     });
 
     positioningWorkaround(this.element);
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     START_DRAG_EVENTS.forEach((startDragEvent) => {
       this.element
@@ -200,11 +198,11 @@ export default Component.extend({
     });
 
     cancel(this._lastKeyTimeout);
-  },
+  }
 
   click() {
     this.openIfDraft();
-  },
+  }
 
   keyDown(e) {
     if (e.key === "Escape") {
@@ -220,5 +218,5 @@ export default Component.extend({
       e.preventDefault();
       this.save(undefined, e);
     }
-  },
-});
+  }
+}

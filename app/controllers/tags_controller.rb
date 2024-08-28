@@ -585,6 +585,6 @@ class TagsController < ::ApplicationController
   end
 
   def tag_params
-    Array(params[:tags]).concat(Array(@additional_tags))
+    Array(params[:tags]).map(&:to_s).concat(Array(@additional_tags))
   end
 end

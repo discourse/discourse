@@ -518,6 +518,11 @@ RSpec.describe TagsController do
         expect(topic_ids).to_not include(topic_in_subcategory_without_tag.id)
       end
     end
+
+    it "should ignore invalid tag parameter" do
+      get "/tag/test.json?tags[0]=nada"
+      expect(response.status).to eq(200)
+    end
   end
 
   describe "#info" do

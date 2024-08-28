@@ -2105,6 +2105,41 @@ RSpec.describe PostsController do
       end
     end
 
+    context "when the history on a specific post is hidden" do
+      it "works when hiding a revision" do
+        sign_in(admin)
+
+        message =
+          MessageBus
+            .track_publish("/topic/#{post.topic.id}") do
+              put "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}/hide"
+            end
+            .first
+
+        expect(response.status).to eq(200)
+        expect(message.data[:type]).to eq(:revised)
+        expect(message.data[:version]).to eq(2)
+        expect(post_revision.reload[:hidden]).to eq(true)
+      end
+
+      it "works when showing a revision" do
+        post_revision.update!(hidden: true)
+        sign_in(admin)
+
+        message =
+          MessageBus
+            .track_publish("/topic/#{post.topic.id}") do
+              put "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}/show"
+            end
+            .first
+
+        expect(response.status).to eq(200)
+        expect(message.data[:type]).to eq(:revised)
+        expect(message.data[:version]).to eq(2)
+        expect(post_revision.reload[:hidden]).to eq(false)
+      end
+    end
+
     context "when post is hidden" do
       before do
         post.hidden = true
