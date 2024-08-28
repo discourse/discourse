@@ -1,6 +1,6 @@
 import Component from "@ember/component";
-import { equal } from "@ember/object/computed";
 import { classNameBindings } from "@ember-decorators/component";
+import { propertyEqual } from "discourse/lib/computed";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { userPath } from "discourse/lib/url";
 import getURL from "discourse-common/lib/get-url";
@@ -14,7 +14,7 @@ import I18n from "discourse-i18n";
   "primaryGroup"
 )
 export default class GroupPost extends Component {
-  @equal("post.post_type", "site.post_types.moderator_action")
+  @propertyEqual("post.post_type", "site.post_types.moderator_action")
   moderatorAction;
 
   @discourseComputed("post.url")

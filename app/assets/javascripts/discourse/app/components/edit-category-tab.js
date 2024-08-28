@@ -1,9 +1,10 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { empty, equal } from "@ember/object/computed";
+import { empty } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import { underscore } from "@ember/string";
 import { classNameBindings, tagName } from "@ember-decorators/component";
+import { propertyEqual } from "discourse/lib/computed";
 import DiscourseURL from "discourse/lib/url";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -13,7 +14,7 @@ import I18n from "discourse-i18n";
 @classNameBindings("active", "tabClassName")
 export default class EditCategoryTab extends Component {
   @empty("params.slug") newCategory;
-  @equal("selectedTab", "tab") active;
+  @propertyEqual("selectedTab", "tab") active;
 
   @discourseComputed("tab")
   tabClassName(tab) {
