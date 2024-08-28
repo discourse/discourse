@@ -41,7 +41,7 @@ const BINDINGS = {
 
 @tagName("")
 export default class TimeShortcutPicker extends Component {
-  @equal("selectedShortcut", TIME_SHORTCUT_TYPES.CUSTOM)
+  @equal("selectedShortcut", TIME_SHORTCUT_TYPES.CUSTOM) customDatetimeSelected;
   @equal("selectedShortcut", TIME_SHORTCUT_TYPES.RELATIVE)
   relativeTimeSelected;
   @and("customDate", "customTime") customDatetimeFilled;
@@ -66,7 +66,6 @@ export default class TimeShortcutPicker extends Component {
   customDate = null;
   customTime = null;
 
-  customDatetimeSelected;
   _itsatrap = null;
 
   @on("init")
