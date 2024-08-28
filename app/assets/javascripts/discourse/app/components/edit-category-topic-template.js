@@ -1,4 +1,5 @@
-import { action, computed } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { observes } from "@ember-decorators/object";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
@@ -7,13 +8,17 @@ import discourseComputed from "discourse-common/utils/decorators";
 export default class EditCategoryTopicTemplate extends buildCategoryPanel(
   "topic-template"
 ) {
-  @computed("category.form_template_ids")
+  @tracked _showFormTemplateOverride;
+
   get showFormTemplate() {
-    return Boolean(this.category.form_template_ids.length);
+    return (
+      this._showFormTemplateOverride ??
+      Boolean(this.category.get("form_template_ids.length"))
+    );
   }
 
   set showFormTemplate(value) {
-    // noop
+    this._showFormTemplateOverride = value;
   }
 
   @discourseComputed("showFormTemplate")
