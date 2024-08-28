@@ -14,7 +14,7 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
     await render(<template>
       <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
         <form.Field @name="foo" @title="Foo" as |field|>
-          <field.Code />
+          <field.Code @height={{100}} style="width: 200px" />
         </form.Field>
       </Form>
     </template>);
