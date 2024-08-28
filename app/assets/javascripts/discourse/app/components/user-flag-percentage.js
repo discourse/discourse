@@ -1,14 +1,14 @@
 import Component from "@ember/component";
+import { tagName } from "@ember-decorators/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Component.extend({
-  tagName: "",
-
+@tagName("")
+export default class UserFlagPercentage extends Component {
   @discourseComputed("percentage")
   showPercentage(percentage) {
     return percentage.total >= 3;
-  },
+  }
 
   // We do a little logic to choose which icon to display and which text
   @discourseComputed("agreed", "disagreed", "ignored")
@@ -51,5 +51,5 @@ export default Component.extend({
     });
 
     return result;
-  },
-});
+  }
+}
