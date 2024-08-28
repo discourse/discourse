@@ -13,41 +13,41 @@ const DAYS = [
   "sunday",
 ];
 
-const Day = EmberObject.extend({
-  id: null,
-  startTimeOptions: null,
-  model: null,
+class Day extends EmberObject {
+  id = null;
+  startTimeOptions = null;
+  model = null;
 
   @action
   onChangeStartTime(val) {
     this.startingTimeChangedForDay(val);
-  },
+  }
 
   @action
   onChangeEndTime(val) {
     this.set(`model.user_notification_schedule.day_${this.id}_end_time`, val);
-  },
+  }
 
   @discourseComputed(
     "model.user_notification_schedule.day_{0,1,2,3,4,5,6}_start_time"
   )
   startTimeValue(schedule) {
     return schedule[`day_${this.id}_start_time`];
-  },
+  }
 
   @discourseComputed(
     "model.user_notification_schedule.day_{0,1,2,3,4,5,6}_start_time"
   )
   endTimeOptions(schedule) {
     return this.buildEndTimeOptionsFor(schedule[`day_${this.id}_start_time`]);
-  },
+  }
 
   @discourseComputed(
     "model.user_notification_schedule.day_{0,1,2,3,4,5,6}_end_time"
   )
   endTimeValue(schedule) {
     return schedule[`day_${this.id}_end_time`];
-  },
+  }
 
   startingTimeChangedForDay(val) {
     val = parseInt(val, 10);
@@ -61,7 +61,7 @@ const Day = EmberObject.extend({
         val + 30
       );
     }
-  },
+  }
 
   buildEndTimeOptionsFor(startTime) {
     startTime = parseInt(startTime, 10);
@@ -72,14 +72,14 @@ const Day = EmberObject.extend({
       includeNone: false,
       showMidnight: true,
     });
-  },
-});
+  }
+}
 
-export default Component.extend({
-  days: null,
+export default class UserNotificationSchedule extends Component {
+  days = null;
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     this.set(
       "startTimeOptions",
       this.buildTimeOptions(0, {
@@ -101,7 +101,7 @@ export default Component.extend({
         })
       );
     });
-  },
+  }
 
   buildTimeOptions(startAt, opts = { includeNone: false, showMidnight: true }) {
     let timeOptions = [];
@@ -135,5 +135,5 @@ export default Component.extend({
       });
     }
     return timeOptions;
-  },
-});
+  }
+}
