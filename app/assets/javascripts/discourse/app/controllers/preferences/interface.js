@@ -54,6 +54,11 @@ export default class InterfaceController extends Controller {
   init() {
     super.init(...arguments);
     this.set("selectedDarkColorSchemeId", this.session.userDarkSchemeId);
+    this.set(
+      "enableDarkMode",
+      this.get("model.user_option.dark_scheme_id") === -1 ? false : true
+    );
+    this.set("selectedColorSchemeId", this.getSelectedColorSchemeId());
   }
 
   @discourseComputed("makeThemeDefault")
@@ -247,15 +252,7 @@ export default class InterfaceController extends Controller {
     return darkSchemes && darkSchemes.length > minToShow;
   }
 
-  get enableDarkMode() {
-    return this.get("model.user_option.dark_scheme_id") === -1 ? false : true;
-  }
-
-  set enableDarkMode(value) {
-    // no-op
-  }
-
-  get selectedColorSchemeId() {
+  getSelectedColorSchemeId() {
     if (!this.session.userColorSchemeId) {
       return;
     }
@@ -275,10 +272,6 @@ export default class InterfaceController extends Controller {
     } else {
       return this.session.userColorSchemeId;
     }
-  }
-
-  set selectedColorSchemeId(value) {
-    // noop
   }
 
   @action
