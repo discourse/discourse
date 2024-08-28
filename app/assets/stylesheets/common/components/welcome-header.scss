@@ -1,0 +1,24 @@
+.login-welcome-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+  overflow-wrap: anywhere;
+
+  .login-title {
+    font-size: var(--font-up-6);
+    margin: 0;
+    line-height: var(--line-height-medium);
+  }
+
+  .login-subheader {
+    font-size: var(--font-up-1);
+    margin: 0;
+  }
+
+  .waving-hand {
+    width: 35px;
+    height: 35px;
+    margin-left: 0.5em;
+    align-self: center;
+  }
+}

@@ -11,7 +11,6 @@ import { setting } from "discourse/lib/computed";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
-import { wavingHandURL } from "discourse/lib/waving-hand-url";
 import NameValidation from "discourse/mixins/name-validation";
 import PasswordValidation from "discourse/mixins/password-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
@@ -104,11 +103,6 @@ export default class CreateAccount extends Component.extend(
   @discourseComputed("formSubmitted")
   submitDisabled() {
     return this.formSubmitted;
-  }
-
-  @discourseComputed()
-  wavingHandURL() {
-    return wavingHandURL();
   }
 
   @discourseComputed("userFields", "hasAtLeastOneLoginButton", "hasAuthOptions")

@@ -3,7 +3,8 @@
   .has-full-page-chat &,
   .static-login &,
   .invite-page &,
-  .account-activation-page & {
+  .account-created-page &,
+  .activate-account-page & {
     display: none !important;
   }
   grid-area: below-content;

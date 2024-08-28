@@ -10,7 +10,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { areCookiesEnabled } from "discourse/lib/utilities";
-import { wavingHandURL } from "discourse/lib/waving-hand-url";
 import {
   getPasskeyCredential,
   isWebauthnSupported,
@@ -62,10 +61,6 @@ export default class Login extends Component {
 
   get loginDisabled() {
     return this.loggingIn || this.loggedIn;
-  }
-
-  get wavingHandURL() {
-    return wavingHandURL();
   }
 
   get modalBodyClasses() {

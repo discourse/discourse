@@ -80,6 +80,7 @@ acceptance("Invite accept", function (needs) {
   });
 
   test("invite link", async function (assert) {
+    this.siteSettings.login_required = true;
     PreloadStore.store("invite_info", {
       invited_by: {
         id: 123,
@@ -166,7 +167,9 @@ acceptance("Invite accept", function (needs) {
   test("invite name is required only if full name is required", async function (assert) {
     preloadInvite();
     await visit("/invites/my-valid-invite-token");
-    assert.dom(".name-input .required").exists("Full name is required");
+    assert
+      .dom(".name-input .required")
+      .doesNotExist("Full name is implicitly required");
   });
 });
 
