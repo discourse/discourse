@@ -8,8 +8,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 
 @tagName("li")
 @classNameBindings(
-  ":user-stream-item", // DEPRECATED: 'item' class
-  ":item",
+  ":user-stream-item",
+  ":item", // DEPRECATED: 'item' class
   "hidden",
   "item.deleted:deleted",
   "moderatorAction"

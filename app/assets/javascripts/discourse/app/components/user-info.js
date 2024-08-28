@@ -12,11 +12,10 @@ import discourseComputed from "discourse-common/utils/decorators";
 @attributeBindings("dataUsername:data-username")
 export default class UserInfo extends Component {
   size = "small";
-
-  @alias("user.username") dataUsername;
-
   includeLink = true;
   includeAvatar = true;
+
+  @alias("user.username") dataUsername;
 
   didInsertElement() {
     super.didInsertElement(...arguments);
