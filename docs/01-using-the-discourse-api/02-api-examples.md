@@ -371,8 +371,6 @@ Let me emphasize again the warning at the beginning of this guide :stuck_out_ton
 
 We can now trigger a test request from Ko-Fi, and see how it updates our topic, both the title and content. :slight_smile:
 
-![Topic update|video](upload://vJZ71G8dDAkO83vTo6a4P1Ilqey.mp4)
-
 That's all !
 You have a topic that will be updated and bumped each time someone makes a donation on Ko-Fi! :partying_face: 
 
