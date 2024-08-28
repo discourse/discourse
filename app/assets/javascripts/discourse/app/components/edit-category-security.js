@@ -34,5 +34,18 @@ export default buildCategoryPanel("security", {
         permission_type: this.minimumPermission,
       });
     },
+
+    onChangeEveryonePermission(everyonePermissionType) {
+      this.category.permissions.forEach((permission, idx) => {
+        if (permission.group_name === "everyone") {
+          return;
+        }
+
+        this.category.set(
+          `permissions.${idx}.permission_type`,
+          everyonePermissionType
+        );
+      });
+    },
   },
 });

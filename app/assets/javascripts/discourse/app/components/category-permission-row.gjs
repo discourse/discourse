@@ -122,6 +122,10 @@ export default class CategoryPermissionRow extends Component {
 
   #updatePermission(type) {
     this.args.category.updatePermission(this.args.groupName, type);
+
+    if (this.isEveryoneGroup) {
+      this.args.onChangeEveryonePermission(type);
+    }
   }
 
   <template>
