@@ -162,7 +162,7 @@ export default class CategoryPermissionRow extends Component {
         <DButton
           class="remove-permission btn-flat"
           @action={{this.removeRow}}
-          @icon={{"far-trash-alt"}}
+          @icon="far-trash-alt"
         />
       </span>
     </div>
