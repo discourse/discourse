@@ -19,13 +19,12 @@ export default class TagInfo extends Component {
   tagInfo = null;
   newSynonyms = null;
   showEditControls = false;
-
-  @reads("currentUser.staff") canAdminTag;
-  @and("canAdminTag", "showEditControls") editSynonymsMode;
-
   editing = false;
   newTagName = null;
   newTagDescription = null;
+
+  @reads("currentUser.staff") canAdminTag;
+  @and("canAdminTag", "showEditControls") editSynonymsMode;
 
   @discourseComputed("tagInfo.tag_group_names")
   tagGroupsInfo(tagGroupNames) {
