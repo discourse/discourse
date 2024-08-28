@@ -1,5 +1,6 @@
 import { action } from "@ember/object";
-import { bind, observes } from "discourse-common/utils/decorators";
+import { observes } from "@ember-decorators/object";
+import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import { chooseDarker, darkLightDiff } from "../../../lib/preview";
 import HomepagePreview from "./-homepage-preview";
