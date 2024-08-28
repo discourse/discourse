@@ -40,6 +40,9 @@ export default class NumberField extends TextField {
 
   @computed("number")
   get value() {
+    if (this.number === null) {
+      return "";
+    }
     return parseInt(this.number, 10);
   }
 
@@ -47,6 +50,7 @@ export default class NumberField extends TextField {
     const num = parseInt(value, 10);
     if (isNaN(num)) {
       this.set("invalid", true);
+      this.set("number", null);
     } else {
       this.set("invalid", false);
       this.set("number", num);
