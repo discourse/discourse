@@ -28,6 +28,8 @@ RSpec.describe Chat::LeaveChannel do
             Chat::Channel.ensure_consistency!
           end
 
+          it { is_expected.to run_successfully }
+
           it "unfollows the channel" do
             membership = channel_1.membership_for(current_user)
 
@@ -40,6 +42,8 @@ RSpec.describe Chat::LeaveChannel do
         end
 
         context "with no existing membership" do
+          it { is_expected.to run_successfully }
+
           it "does nothing" do
             expect { result }.to_not change { Chat::UserChatChannelMembership }
           end
@@ -53,6 +57,8 @@ RSpec.describe Chat::LeaveChannel do
           end
 
           before { Chat::Channel.ensure_consistency! }
+
+          it { is_expected.to run_successfully }
 
           it "leaves the channel" do
             membership = channel_1.membership_for(current_user)
@@ -71,6 +77,8 @@ RSpec.describe Chat::LeaveChannel do
         end
 
         context "with no existing membership" do
+          it { is_expected.to run_successfully }
+
           it "does nothing" do
             expect { result }.to_not change { Chat::UserChatChannelMembership }
           end
@@ -84,6 +92,8 @@ RSpec.describe Chat::LeaveChannel do
           end
 
           before { Chat::Channel.ensure_consistency! }
+
+          it { is_expected.to run_successfully }
 
           it "unfollows the channel" do
             membership = channel_1.membership_for(current_user)
@@ -100,6 +110,8 @@ RSpec.describe Chat::LeaveChannel do
         end
 
         context "with no existing membership" do
+          it { is_expected.to run_successfully }
+
           it "does nothing" do
             expect { result }.to_not change { Chat::UserChatChannelMembership }
           end

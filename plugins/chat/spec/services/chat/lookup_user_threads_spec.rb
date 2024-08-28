@@ -5,6 +5,7 @@ RSpec.describe ::Chat::LookupUserThreads do
 
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
+  fab!(:thread_1) { Fabricate(:chat_thread, channel: channel_1, with_replies: 1) }
 
   let(:guardian) { Guardian.new(current_user) }
   let(:channel_id) { channel_1.id }
@@ -12,15 +13,15 @@ RSpec.describe ::Chat::LookupUserThreads do
   let(:offset) { 0 }
   let(:params) { { guardian: guardian, limit: limit, offset: offset } }
 
-  before { channel_1.add(current_user) }
+  before do
+    channel_1.add(current_user)
+    thread_1.add(current_user)
+  end
 
   context "when all steps pass" do
-    it "returns threads" do
-      thread_1 =
-        Fabricate(:chat_thread, channel: channel_1, with_replies: 1).tap do |thread|
-          thread.add(current_user)
-        end
+    it { is_expected.to run_successfully }
 
+    it "returns threads" do
       expect(result.threads).to eq([thread_1])
     end
 
@@ -65,6 +66,7 @@ RSpec.describe ::Chat::LookupUserThreads do
     it "can offset" do
       params[:offset] = 1
 
+      Chat::Thread.destroy_all
       threads =
         Fabricate
           .times(2, :chat_thread, channel: channel_1, with_replies: 1)
@@ -77,21 +79,16 @@ RSpec.describe ::Chat::LookupUserThreads do
     it "has a min offset" do
       params[:offset] = -99
 
-      threads =
-        Fabricate
-          .times(2, :chat_thread, channel: channel_1, with_replies: 1)
-          .each { |thread| thread.add(current_user) }
+      Chat::Thread.destroy_all
+      Fabricate
+        .times(2, :chat_thread, channel: channel_1, with_replies: 1)
+        .each { |thread| thread.add(current_user) }
 
       # 0 because we sort by last_message.created_at, so the last created thread is the first one
       expect(result.threads.length).to eq(2)
     end
 
     it "fetches tracking" do
-      thread_1 =
-        Fabricate(:chat_thread, channel: channel_1, with_replies: 1).tap do |thread|
-          thread.add(current_user)
-        end
-
       expect(result.tracking).to eq(
         ::Chat::TrackingStateReportQuery.call(
           guardian: current_user.guardian,
@@ -102,58 +99,39 @@ RSpec.describe ::Chat::LookupUserThreads do
     end
 
     it "fetches memberships" do
-      thread_1 =
-        Fabricate(:chat_thread, channel: channel_1, with_replies: 1).tap do |thread|
-          thread.add(current_user)
-        end
-
       expect(result.memberships).to eq([thread_1.membership_for(current_user)])
     end
 
     it "fetches participants" do
-      thread_1 =
-        Fabricate(:chat_thread, channel: channel_1, with_replies: 1).tap do |thread|
-          thread.add(current_user)
-        end
-
       expect(result.participants).to eq(
         ::Chat::ThreadParticipantQuery.call(thread_ids: [thread_1.id]),
       )
     end
 
     it "builds a load_more_url" do
-      Fabricate(:chat_thread, channel: channel_1, with_replies: 1).tap do |thread|
-        thread.add(current_user)
-      end
-
       expect(result.load_more_url).to eq("/chat/api/me/threads?limit=10&offset=10")
     end
   end
 
   it "doesn't return threads with no replies" do
-    thread_1 = Fabricate(:chat_thread, channel: channel_1)
-    thread_1.add(current_user)
+    Fabricate(:chat_thread, channel: channel_1).tap { _1.add(current_user) }
 
-    expect(result.threads).to eq([])
+    expect(result.threads).to eq([thread_1])
   end
 
   it "doesn't return threads with no membership" do
-    thread_1 = Fabricate(:chat_thread, channel: channel_1, with_replies: 1)
+    Fabricate(:chat_thread, channel: channel_1, with_replies: 1)
 
-    expect(result.threads).to eq([])
+    expect(result.threads).to eq([thread_1])
   end
 
   it "doesn't return threads when the channel has not threading enabled" do
     channel_1.update!(threading_enabled: false)
-    thread_1 = Fabricate(:chat_thread, channel: channel_1, with_replies: 1)
-    thread_1.add(current_user)
 
     expect(result.threads).to eq([])
   end
 
   it "doesn't return muted threads" do
-    thread_1 = Fabricate(:chat_thread, channel: channel_1, with_replies: 1)
-    thread_1.add(current_user)
     thread_1.membership_for(current_user).update!(
       notification_level: ::Chat::UserChatThreadMembership.notification_levels[:muted],
     )
@@ -163,16 +141,11 @@ RSpec.describe ::Chat::LookupUserThreads do
 
   it "doesn't return threads when the channel it not open" do
     channel_1.update!(status: Chat::Channel.statuses[:closed])
-    thread_1 = Fabricate(:chat_thread, channel: channel_1, with_replies: 1)
-    thread_1.add(current_user)
 
     expect(result.threads).to eq([])
   end
 
   it "returns threads from muted channels" do
-    thread_1 = Fabricate(:chat_thread, channel: channel_1, with_replies: 1)
-    thread_1.add(current_user)
-
     channel_1.membership_for(current_user).update!(muted: true)
 
     expect(result.threads).to eq([thread_1])

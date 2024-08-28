@@ -35,9 +35,7 @@ RSpec.describe(Flags::ReorderFlag) do
       described_class.call(flag_id: flag.id, guardian: current_user.guardian, direction: "down")
     end
 
-    it "sets the service result as successful" do
-      expect(result).to be_a_success
-    end
+    it { is_expected.to run_successfully }
 
     it "moves the flag" do
       expect(Flag.order(:position).map(&:name)).to eq(
