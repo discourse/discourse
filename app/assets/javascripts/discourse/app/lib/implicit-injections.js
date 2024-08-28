@@ -46,6 +46,7 @@ function setInjections(target, injections) {
     extension[key] = implicitInjectionShim(lookupName, key);
   }
   EmberObject.reopen.call(target, extension);
+  target.proto();
 }
 
 let alreadyRegistered = false;
