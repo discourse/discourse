@@ -11,8 +11,17 @@ module PageObjects
       end
 
       def search_for(query)
+        fill_in_search(query).submit_button.click
+        self
+      end
+
+      def clear_query
+        fill_in_search("").submit_button.click
+        self
+      end
+
+      def fill_in_search(query)
         fill_in("bookmark-search", with: query)
-        page.find(".bookmark-search-form button").click
         self
       end
 
@@ -22,6 +31,10 @@ module PageObjects
 
       def has_no_topic?(topic)
         has_no_content?(topic.title)
+      end
+
+      def submit_button
+        @submit_button ||= page.find(".bookmark-search-form button")
       end
     end
   end

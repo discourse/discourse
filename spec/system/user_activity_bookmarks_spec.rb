@@ -46,4 +46,16 @@ describe "User activity bookmarks", type: :system do
     expect(user_activity_bookmarks).to have_no_topic(bookmark_1.bookmarkable.topic)
     expect(user_activity_bookmarks).to have_topic(bookmark_2.bookmarkable.topic)
   end
+
+  it "can clear the query" do
+    user_activity_bookmarks.visit(current_user).search_for(bookmark_2.bookmarkable.raw)
+
+    expect(user_activity_bookmarks).to have_no_topic(bookmark_1.bookmarkable.topic)
+    expect(user_activity_bookmarks).to have_topic(bookmark_2.bookmarkable.topic)
+
+    user_activity_bookmarks.clear_query
+
+    expect(user_activity_bookmarks).to have_topic(bookmark_1.bookmarkable.topic)
+    expect(user_activity_bookmarks).to have_topic(bookmark_2.bookmarkable.topic)
+  end
 end

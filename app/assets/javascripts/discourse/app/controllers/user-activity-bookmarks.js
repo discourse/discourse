@@ -59,7 +59,7 @@ export default class UserActivityBookmarksController extends Controller {
   @action
   search() {
     this.router.transitionTo({
-      queryParams: { q: this.searchTerm },
+      queryParams: { q: this._searchTerm },
     });
   }
 
