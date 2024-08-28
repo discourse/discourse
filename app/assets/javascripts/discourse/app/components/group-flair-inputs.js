@@ -1,33 +1,31 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
+import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
 import { convertIconClass } from "discourse-common/lib/icon-library";
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Component.extend({
-  classNames: ["group-flair-inputs"],
-
+@classNames("group-flair-inputs")
+export default class GroupFlairInputs extends Component {
   @discourseComputed
   demoAvatarUrl() {
     return getURL("/images/avatar.png");
-  },
+  }
 
   @discourseComputed("model.flair_type")
   flairPreviewIcon(flairType) {
     return flairType && flairType === "icon";
-  },
+  }
 
   @discourseComputed("model.flair_icon")
   flairPreviewIconUrl(flairIcon) {
     return flairIcon ? convertIconClass(flairIcon) : "";
-  },
+  }
 
   @on("didInsertElement")
   @observes("model.flair_icon")
@@ -35,7 +33,7 @@ export default Component.extend({
     if (flairIcon) {
       discourseDebounce(this, this._loadIcon, 1000);
     }
-  },
+  }
 
   _loadIcon() {
     if (!this.model.flair_icon) {
@@ -62,23 +60,23 @@ export default Component.extend({
         );
       });
     }
-  },
+  }
 
   @discourseComputed("model.flair_type")
   flairPreviewImage(flairType) {
     return flairType && flairType === "image";
-  },
+  }
 
   @discourseComputed("model.flair_url")
   flairImageUrl(flairUrl) {
     return flairUrl && flairUrl.includes("/") ? flairUrl : null;
-  },
+  }
 
   @discourseComputed("flairPreviewImage")
   flairPreviewLabel(flairPreviewImage) {
     const key = flairPreviewImage ? "image" : "icon";
     return I18n.t(`groups.flair_preview_${key}`);
-  },
+  }
 
   @action
   setFlairImage(upload) {
@@ -86,7 +84,7 @@ export default Component.extend({
       flair_url: getURL(upload.url),
       flair_upload_id: upload.id,
     });
-  },
+  }
 
   @action
   removeFlairImage() {
@@ -94,5 +92,5 @@ export default Component.extend({
       flair_url: null,
       flair_upload_id: null,
     });
-  },
-});
+  }
+}
