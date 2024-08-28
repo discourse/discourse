@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
-import { equal } from "@ember/object/computed";
 import { classNameBindings, tagName } from "@ember-decorators/component";
+import { propertyEqual } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
 import { actionDescription } from "discourse/widgets/post-small-action";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -15,7 +15,7 @@ import discourseComputed from "discourse-common/utils/decorators";
   "moderatorAction"
 )
 export default class UserStreamItem extends Component {
-  @equal("item.post_type", "site.post_types.moderator_action")
+  @propertyEqual("item.post_type", "site.post_types.moderator_action")
   moderatorAction;
 
   @actionDescription(
