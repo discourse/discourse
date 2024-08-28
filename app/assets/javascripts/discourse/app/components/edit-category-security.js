@@ -41,10 +41,12 @@ export default buildCategoryPanel("security", {
           return;
         }
 
-        this.category.set(
-          `permissions.${idx}.permission_type`,
-          everyonePermissionType
-        );
+        if (everyonePermissionType < permission.permission_type) {
+          this.category.set(
+            `permissions.${idx}.permission_type`,
+            everyonePermissionType
+          );
+        }
       });
     },
   },
