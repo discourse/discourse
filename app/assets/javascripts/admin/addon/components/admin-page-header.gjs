@@ -3,6 +3,7 @@ import { htmlSafe } from "@ember/template";
 import DBreadcrumbsContainer from "discourse/components/d-breadcrumbs-container";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
+import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import {
   DangerButton,
@@ -35,6 +36,8 @@ const AdminPageHeader = <template>
         {{i18n @descriptionLabel}}
         {{#if @learnMoreUrl}}
           {{htmlSafe (i18n "learn_more_with_link" url=@learnMoreUrl)}}
+          {{icon "external-link-alt"}}
+
         {{/if}}
       </p>
     {{/if}}
