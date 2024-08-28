@@ -1053,7 +1053,7 @@ Well as it turns out most Discourse templates have things like this in them
 
 This particular one comes from this template
 
-https://github.com/discourse/discourse/blob/master/app/assets/javascripts/discourse/app/templates/topic.hbs#L13
+https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/templates/topic.hbs#L13
 
 [quote="You,"]
 Sure, whatever you say... but what can I do with this information? 
@@ -1193,7 +1193,7 @@ While not obvious in the example above, this is actually the path of the file re
 
 For example
 
-https://github.com/discourse/discourse/blob/master/app/assets/javascripts/discourse/app/templates/list/topic-list-item.hbr
+https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/templates/list/topic-list-item.hbr
 
 is inside the `list` sub-folder in the `templates` folder, so to target it you need to write
 
@@ -1209,7 +1209,7 @@ So, we're going to take this:
 ```
 
 Copy / paste the contents of the core template inside it first 
- https://github.com/discourse/discourse/blob/master/app/assets/javascripts/discourse/app/templates/list/topic-list-item.hbr
+ https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/templates/list/topic-list-item.hbr
 
 And then make whatever modifications we need there. For example, we can remove all poster avatars using something like this
 
@@ -1302,7 +1302,7 @@ So, let's try to add a sidebar on desktops next to the latest topic list.
 For this we're going to need to override the `components/topic-list` template. Or this
 
  
- https://github.com/discourse/discourse/blob/master/app/assets/javascripts/discourse/app/templates/components/topic-list.hbs
+ https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/templates/components/topic-list.hbs
 
 Here's the html for the (basic) sidebar 
 
@@ -1455,7 +1455,7 @@ We're going to create a footer theme component and dynamically add the site logo
 {{plugin-outlet name="below-footer" args=(hash showFooter=showFooter)}}
 ``` 
 
-which you can find [here](https://github.com/discourse/discourse/blob/master/app/assets/javascripts/discourse/app/templates/application.hbs#L28)
+which you can find [here](https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/templates/application.hbs#L28)
 
 So, based on our previous discussion about plugin-outlets, we're going to need something like this
 
@@ -1739,9 +1739,9 @@ Let's pick a controller and play around and see what we can achieve. In the Disc
 
  https://github.com/discourse/discourse/tree/master/app/assets/javascripts/discourse/app/controllers
 
-I'm going to pick the [composer controller](https://github.com/discourse/discourse/blob/master/app/assets/javascripts/discourse/app/controllers/composer.js) and we're going to try to capture every keypress in the editor. First, let's take a look at what's available for us to use. 
+I'm going to pick the [composer controller](https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/controllers/composer.js) and we're going to try to capture every keypress in the editor. First, let's take a look at what's available for us to use. 
 
-https://github.com/discourse/discourse/blob/master/app/assets/javascripts/discourse/app/controllers/composer.js#L578
+https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/controllers/composer.js#L578
 
 This looks very close to what I want to achieve, so we start with this 
 
@@ -1802,7 +1802,7 @@ This time we will try to capture when the user enters / loads the categories pag
 
 and we can find the one we're after here
 
- https://github.com/discourse/discourse/blob/master/app/assets/javascripts/discourse/app/components/discovery-categories.js
+ https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/components/discovery-categories.js
 
 
 so we're going to need something like this
@@ -1881,7 +1881,7 @@ Let's start with the reopen widget method. This method is similar to what we did
 
 > This is a theme component that will allow you to add alternative logos for dark / light themes.
 
-At its heart, this theme only overwrites one of the functions of the [home-logo widget](https://github.com/discourse/discourse/blob/master/app/assets/javascripts/discourse/app/widgets/home-logo.js)
+At its heart, this theme only overwrites one of the functions of the [home-logo widget](https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/widgets/home-logo.js)
 
 So, we already know the name of the widget we want to reopen. it's `home-logo` and so we start with this
 
@@ -1895,7 +1895,7 @@ api.reopenWidget("home-logo", {
 
 then find the function that we want to overwrite in that widget. Here I want to change the logo image so this looks promising.
 
-https://github.com/discourse/discourse/blob/master/app/assets/javascripts/discourse/app/widgets/home-logo.js#L31
+https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/widgets/home-logo.js#L31
 
 So we copy that function as is first
 
@@ -2213,11 +2213,11 @@ Some widgets like the `home-logo` or the `post-avatar` widgets have settings. If
 
 For example, the `post-avatar` widget has these
 
-https://github.com/discourse/discourse/blob/master/app/assets/javascripts/discourse/app/widgets/post.js#L157
+https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/widgets/post.js#L157
 
 and the `home-logo` widget has this
 
-https://github.com/discourse/discourse/blob/master/app/assets/javascripts/discourse/app/widgets/home-logo.js#L10
+https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/widgets/home-logo.js#L10
 
 To, change a setting you can do something like this
 
