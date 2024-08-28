@@ -24,6 +24,8 @@ RSpec.describe Chat::UnfollowChannel do
       context "with existing membership" do
         before { channel_1.add(current_user) }
 
+        it { is_expected.to run_successfully }
+
         it "unfollows the channel" do
           membership = channel_1.membership_for(current_user)
 
@@ -32,6 +34,8 @@ RSpec.describe Chat::UnfollowChannel do
       end
 
       context "with no existing membership" do
+        it { is_expected.to run_successfully }
+
         it "does nothing" do
           expect { result }.to_not change { Chat::UserChatChannelMembership }
         end

@@ -4,14 +4,10 @@ class UpdateSiteSetting
   include Service::Base
 
   policy :current_user_is_admin
-
   contract
-
   step :convert_name_to_sym
-
   policy :setting_is_visible
   policy :setting_is_configurable
-
   step :cleanup_value
   step :save
 
