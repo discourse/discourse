@@ -1,5 +1,5 @@
-import { or } from "truth-helpers";
 import { hash } from "@ember/helper";
+import { or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 
 const GroupsInfo = <template>
