@@ -162,12 +162,14 @@ module ExternalUploadHelpers
         max_parts: 1,
       )
     rescue Aws::S3::Errors::NoSuchUpload => err
-      debug_upload_error(
-        err,
-        I18n.t(
-          "upload.external_upload_not_found",
-          additional_detail: "path: #{external_upload_stub.key}",
-        ),
+      return(
+        debug_upload_error(
+          err,
+          I18n.t(
+            "upload.external_upload_not_found",
+            additional_detail: "path: #{external_upload_stub.key}",
+          ),
+        )
       )
     end
 
@@ -357,7 +359,7 @@ module ExternalUploadHelpers
   end
 
   def debug_upload_error(err, friendly_message)
-    return if !SiteSetting.enable_upload_debug_mode
+    return I18n.t("upload.failed") if !SiteSetting.enable_upload_debug_mode
     Discourse.warn_exception(err, message: "[ExternalUploadError] #{friendly_message}")
 
     if Rails.env.local? || is_api?
