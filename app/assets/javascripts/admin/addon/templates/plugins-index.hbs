@@ -19,9 +19,16 @@
             @route={{route.full_location}}
             @label={{route.label}}
             @routeParam={{route.location}}
+            @class="admin-plugin-tab-nav-item"
+            data-plugin-nav-tab-id={{route.plugin_id}}
           />
         {{else}}
-          <NavItem @route={{route.full_location}} @label={{route.label}} />
+          <NavItem
+            @route={{route.full_location}}
+            @label={{route.label}}
+            @class="admin-plugin-tab-nav-item"
+            data-plugin-nav-tab-id={{route.plugin_id}}
+          />
         {{/if}}
       {{/each}}
     </:tabs>

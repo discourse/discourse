@@ -10,8 +10,12 @@ describe "Admin Plugins List", type: :system, js: true do
   end
 
   let(:spoiler_alert_plugin) do
-    path = File.join(Rails.root, "plugins", "spoiler-alert", "plugin.rb")
-    Plugin::Instance.parse_from_source(path)
+    parsed_plugin =
+      Plugin::Instance.parse_from_source(
+        File.join(Rails.root, "plugins", "spoiler-alert", "plugin.rb"),
+      )
+    parsed_plugin.enabled_site_setting(:spoiler_enabled)
+    parsed_plugin
   end
 
   it "shows the list of plugins" do
@@ -32,5 +36,23 @@ describe "Admin Plugins List", type: :system, js: true do
   end
 
   it "can toggle whether a plugin is enabled" do
+    admin_plugins_list_page.visit
+    toggle_switch =
+      PageObjects::Components::DToggleSwitch.new(
+        admin_plugins_list_page.plugin_row_selector("spoiler-alert") +
+          " .admin-plugins-list__enabled .d-toggle-switch",
+      )
+    toggle_switch.toggle
+    expect(toggle_switch).to be_unchecked
+    expect(SiteSetting.spoiler_enabled).to eq(false)
+    toggle_switch.toggle
+    expect(toggle_switch).to be_checked
+    expect(SiteSetting.spoiler_enabled).to eq(true)
+  end
+
+  it "shows a navigation tab for each plugin that needs it" do
+    spoiler_alert_plugin.add_admin_route("spoiler.title", "index")
+    admin_plugins_list_page.visit
+    expect(admin_plugins_list_page).to have_plugin_tab("spoiler-alert")
   end
 end

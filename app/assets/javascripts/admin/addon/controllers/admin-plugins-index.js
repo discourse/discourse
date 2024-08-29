@@ -24,17 +24,18 @@ export default class AdminPluginsIndexController extends Controller {
     }
   }
 
+  // NOTE: See also AdminPluginsController, there is some duplication here
+  // while we convert plugins to use_new_show_route
   get adminRoutes() {
     return this.allAdminRoutes.filter((route) => this.routeExists(route));
   }
 
   get allAdminRoutes() {
     return this.model
-      .filter((plugin) => plugin?.enabled)
+      .filter((plugin) => plugin?.enabled && plugin?.adminRoute)
       .map((plugin) => {
-        return plugin.adminRoute;
-      })
-      .filter(Boolean);
+        return Object.assign(plugin.adminRoute, { plugin_id: plugin.id });
+      });
   }
 
   routeExists(route) {
