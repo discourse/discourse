@@ -112,9 +112,24 @@ export default {
               linkTitle = I18n.t("notifications.titles.chat_watched_thread");
               description = this.notification.data.description;
 
-              label = formatUsername(
-                this.notification.data.message_by_username
-              );
+              get label() {
+                const data = this.notification.data;
+
+                if (data.user_ids.length > 2) {
+                  return I18n.t("notifications.chat_watched_thread_label", {
+                    username: formatUsername(data.username2),
+                    count: data.user_ids.length - 1,
+                  });
+                } else if (data.user_ids.length === 2) {
+                  return I18n.t("notifications.chat_watched_thread_label", {
+                    username: formatUsername(data.username2),
+                    username2: formatUsername(data.username),
+                    count: 1,
+                  });
+                } else {
+                  return formatUsername(data.username);
+                }
+              }
 
               get linkHref() {
                 const data = this.notification.data;

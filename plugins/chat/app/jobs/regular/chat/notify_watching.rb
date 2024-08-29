@@ -137,20 +137,21 @@ module Jobs
       def create_watched_thread_notification(thread_membership)
         thread = @chat_message.thread
         description = thread.title.presence || thread.original_message.message
-        is_read = ::Chat::Notifier.user_has_seen_message?(thread_membership, @chat_message.id)
 
-        ::Notification.create!(
+        data = {
+          username: @creator.username,
+          chat_message_id: @chat_message.id,
+          chat_channel_id: @chat_channel.id,
+          chat_thread_id: @chat_message.thread_id,
+          last_read_message_id: thread_membership&.last_read_message_id,
+          description: description,
+          user_ids: [@chat_message.user_id],
+        }
+
+        Notification.consolidate_or_create!(
           notification_type: ::Notification.types[:chat_watched_thread],
           user_id: thread_membership.user_id,
-          high_priority: true,
-          data: {
-            chat_message_id: @chat_message.id,
-            chat_channel_id: @chat_channel.id,
-            chat_thread_id: @chat_message.thread_id,
-            description: description,
-            message_by_username: @creator.username,
-          }.to_json,
-          read: is_read,
+          data: data.to_json,
         )
       end
     end

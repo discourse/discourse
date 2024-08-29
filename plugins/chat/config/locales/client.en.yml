@@ -667,6 +667,9 @@ en:
       chat_invitation: "invited you to join a chat channel"
       chat_invitation_html: "<span>%{username}</span> <span>invited you to join a chat channel</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} and %{username2}"
+        other: "%{username} and %{count} others"
 
       popup:
         chat_mention:
@@ -683,7 +686,6 @@ en:
           other_html: "<span>%{username}</span> <span>mentioned %{identifier} in personal chat</span>"
         chat_message: "New chat message"
         chat_quoted: "%{username} quoted your chat message"
-        chat_watched_thread: "replied in a watched thread"
 
       titles:
         chat_mention: "Chat mention"
