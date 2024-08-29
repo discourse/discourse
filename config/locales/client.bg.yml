@@ -157,6 +157,8 @@ bg:
       removed_user: "Изтри %{who} на %{when}"
       removed_group: "Изтри %{who} на %{when}"
       autobumped: "Автоматично вдигната %{when}"
+      tags_changed: "Етикетите са актуализирани %{when}"
+      category_changed: "Категорията е актуализирана %{when}"
       autoclosed:
         enabled: "Затворена %{when}"
         disabled: "Отворена %{when}"
@@ -287,7 +289,6 @@ bg:
       like_count: "Харесвания"
       topic_count: "Теми"
       post_count: "Публикации"
-      contact_info: "В случай на критичен или спешен въпрос засягащ този сайт, моля свържете се с нас на адрес %{contact_email}."
       activities:
         topics:
           one: "%{formatted_number} тема"
@@ -1851,6 +1852,10 @@ bg:
       failed: "Нещо се случи, вероятно вече има регистрация с този имейл адрес, опитайте с линка за забравена парола."
       associate: "Вече имате акаунт? <a href='%{associate_link}'>Влезте</a> да свържете вашите %{provider} акаунти."
       already_have_account: "Вече имате акаунт?"
+      progress_bar:
+        signup: "Регистрирай се"
+        approve: "Одобри"
+        login: "Вход"
     forgot_password:
       title: "Възстановяване на парола"
       action: "Забравих си паролата"
@@ -3599,6 +3604,7 @@ bg:
           enabled: "Да е включен?"
           edit: "Редактирай"
           delete: "Изтрий"
+          flags_tab: "Сигнали"
           form:
             save: "Запази "
             name: "Име"
@@ -3637,7 +3643,7 @@ bg:
         menu:
           backups: "Бекъпи"
           logs: "Логове"
-        none: "Не е наличен бекъп."
+        none: "Не е наличен бекъп"
         read_only:
           enable:
             title: "Включване на read-only режим"
@@ -3670,7 +3676,6 @@ bg:
             title: "Премахни бекъпа"
             confirm: "Сигурни ли сте, че искате да унищожите бекъпа?"
           restore:
-            is_disabled: "Възстановяването е забранено от настройките на сайта. "
             label: "Възстанови "
             title: "Възстанови бекъпа"
             confirm: "Вигурен ли си, че искаш да възтановиш този бекъп?"

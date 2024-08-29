@@ -56,6 +56,9 @@ nl:
       pm_created:
         title: Bericht gemaakt door medewerker
         description: Wanneer een geldige PB wordt gemaakt, wordt de automatisering getriggerd
+      topic_tags_changed:
+        title: Topictags gewijzigd
+        description: Wanneer de tags van een topic worden gewijzigd, wordt de automatisering getriggerd
       topic:
         title: Topic
         description: Het bijbehorende script wordt alleen gebruikt voor het opgegeven topic, dit is bijvoorbeeld handig voor scripts die validatie uitvoeren

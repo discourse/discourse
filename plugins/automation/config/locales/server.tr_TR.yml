@@ -56,6 +56,9 @@ tr_TR:
       pm_created:
         title: Kişisel mesaj oluşturuldu
         description: Geçerli bir kişisel mesaj oluşturulduğunda otomasyon tetiklenir
+      topic_tags_changed:
+        title: Konu etiketleri değişti
+        description: Bir konunun etiketleri değiştirildiğinde otomasyon tetiklenir
       topic:
         title: Konu
         description: İlişkili komut dosyası yalnızca belirtilen konuda kullanılır, bu, örneğin doğrulama yapan komut dosyaları için faydalıdır
