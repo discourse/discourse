@@ -1,8 +1,8 @@
 import EmberObject from "@ember/object";
+import { observes } from "@ember-decorators/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import WidgetGlue from "discourse/widgets/glue";
 import { getRegister } from "discourse-common/lib/get-owner";
-import { bind, observes } from "discourse-common/utils/decorators";
 
 const PLUGIN_ID = "discourse-poll";
 let _glued = [];
@@ -42,37 +42,36 @@ function initializePolls(api) {
       this._super(...arguments);
     },
 
-    @bind
-    _onPollMessage(msg) {
+    _onPollMessage: (msg) => {
       const post = this.get("model.postStream").findLoadedPost(msg.post_id);
       post?.set("polls", msg.polls);
     },
   });
 
-  api.modifyClass("model:post", {
-    pluginId: PLUGIN_ID,
-    _polls: null,
-    pollsObject: null,
-
-    // we need a proper ember object so it is bindable
-    @observes("polls")
-    pollsChanged() {
-      const polls = this.polls;
-      if (polls) {
-        this._polls = this._polls || {};
-        polls.forEach((p) => {
-          const existing = this._polls[p.name];
-          if (existing) {
-            this._polls[p.name].setProperties(p);
-          } else {
-            this._polls[p.name] = EmberObject.create(p);
+  api.modifyClass(
+    "model:post",
+    (Superclass) =>
+      class extends Superclass {
+        // we need a proper ember object so it is bindable
+        @observes("polls")
+        pollsChanged() {
+          const polls = this.polls;
+          if (polls) {
+            this._polls = this._polls || {};
+            polls.forEach((p) => {
+              const existing = this._polls[p.name];
+              if (existing) {
+                this._polls[p.name].setProperties(p);
+              } else {
+                this._polls[p.name] = EmberObject.create(p);
+              }
+            });
+            this.set("pollsObject", this._polls);
+            rerender();
           }
-        });
-        this.set("pollsObject", this._polls);
-        rerender();
+        }
       }
-    },
-  });
+  );
 
   function attachPolls(elem, helper) {
     let pollNodes = [...elem.querySelectorAll(".poll")];

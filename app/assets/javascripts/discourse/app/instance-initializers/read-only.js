@@ -1,5 +1,3 @@
-import { bind } from "discourse-common/utils/decorators";
-
 // Subscribe to "read-only" status change events via the Message Bus
 export default {
   after: "message-bus",
@@ -15,8 +13,7 @@ export default {
     this.messageBus.unsubscribe("/site/read-only", this.onMessage);
   },
 
-  @bind
-  onMessage(enabled) {
+  onMessage: (enabled) => {
     this.site.set("isReadOnly", enabled);
   },
 };

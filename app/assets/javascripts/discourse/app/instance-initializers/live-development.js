@@ -1,5 +1,4 @@
 import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
 
 //  Use the message bus for live reloading of components for faster development.
 export default {
@@ -40,8 +39,7 @@ export default {
     this.messageBus.unsubscribe("/file-change", this.onFileChange);
   },
 
-  @bind
-  onFileChange(data) {
+  onFileChange: (data) => {
     data.forEach((me) => {
       if (me === "refresh") {
         // Refresh if necessary

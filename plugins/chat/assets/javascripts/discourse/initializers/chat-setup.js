@@ -2,7 +2,6 @@ import { number } from "discourse/lib/formatter";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { replaceIcon } from "discourse-common/lib/icon-library";
-import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
@@ -174,8 +173,7 @@ export default {
     });
   },
 
-  @bind
-  documentTitleCountCallback() {
+  documentTitleCountCallback: () => {
     return this.chatService.getDocumentTitleCount();
   },
 
@@ -190,8 +188,7 @@ export default {
     clearChatComposerButtons();
   },
 
-  @bind
-  _handleFocusChanged(hasFocus) {
+  _handleFocusChanged: (hasFocus) => {
     if (!this.chatService.userCanChat) {
       return;
     }

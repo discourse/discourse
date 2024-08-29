@@ -12,7 +12,6 @@ import {
 } from "discourse/lib/push-notifications";
 import Notification from "discourse/models/notification";
 import { isTesting } from "discourse-common/config/environment";
-import { bind } from "discourse-common/utils/decorators";
 
 export default {
   after: "message-bus",
@@ -118,8 +117,7 @@ export default {
     this.messageBus.unsubscribe(alertChannel(this.currentUser), this.onAlert);
   },
 
-  @bind
-  onReviewableCounts(data) {
+  onReviewableCounts: (data) => {
     if (data.reviewable_count >= 0) {
       this.currentUser.updateReviewableCount(data.reviewable_count);
     }
@@ -130,8 +128,7 @@ export default {
     );
   },
 
-  @bind
-  onNotification(data) {
+  onNotification: (data) => {
     const oldUnread = this.currentUser.unread_notifications;
     const oldHighPriority = this.currentUser.unread_high_priority_notifications;
     const oldAllUnread = this.currentUser.all_unread_notifications_count;
@@ -212,23 +209,19 @@ export default {
     }
   },
 
-  @bind
-  onUserDrafts(data) {
+  onUserDrafts: (data) => {
     this.currentUser.updateDraftProperties(data);
   },
 
-  @bind
-  onDoNotDisturb(data) {
+  onDoNotDisturb: (data) => {
     this.currentUser.updateDoNotDisturbStatus(data.ends_at);
   },
 
-  @bind
-  onUserStatus(data) {
+  onUserStatus: (data) => {
     this.appEvents.trigger("user-status:changed", data);
   },
 
-  @bind
-  onCategories(data) {
+  onCategories: (data) => {
     (data.categories || []).forEach((c) => {
       const mutedCategoryIds = this.currentUser.muted_category_ids?.concat(
         this.currentUser.indirectly_muted_category_ids
@@ -253,13 +246,11 @@ export default {
     );
   },
 
-  @bind
-  onClientSettings(data) {
+  onClientSettings: (data) => {
     this.siteSettings[data.name] = data.value;
   },
 
-  @bind
-  onAlert(data) {
+  onAlert: (data) => {
     if (this.site.desktopView) {
       return onDesktopNotification(
         data,

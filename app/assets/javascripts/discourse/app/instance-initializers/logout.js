@@ -1,5 +1,4 @@
 import logout from "discourse/lib/logout";
-import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 let _showingLogout = false;
@@ -30,8 +29,7 @@ export default {
     }
   },
 
-  @bind
-  onMessage() {
+  onMessage: () => {
     if (_showingLogout) {
       return;
     }

@@ -1,6 +1,5 @@
 import EmberObject from "@ember/object";
 import PreloadStore from "discourse/lib/preload-store";
-import { bind } from "discourse-common/utils/decorators";
 
 export default {
   after: "message-bus",
@@ -19,8 +18,7 @@ export default {
     this.messageBus.unsubscribe("/site/banner", this.onMessage);
   },
 
-  @bind
-  onMessage(data) {
+  onMessage: (data) => {
     if (data) {
       this.site.set("banner", EmberObject.create(data));
     } else {
