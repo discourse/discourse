@@ -12,7 +12,10 @@ RSpec.describe About do
     )
   end
 
-  after { DiscoursePluginRegistry.reset! }
+  after do
+    About.clear_stats_cache
+    DiscoursePluginRegistry.reset!
+  end
 
   describe "#stats" do
     it "adds plugin stats to the output" do
@@ -26,6 +29,19 @@ RSpec.describe About do
           some_group_count: 1000,
         ),
       )
+    end
+
+    it "uses the cache" do
+      ActiveRecord::Base.connection.query_cache.clear
+      ActiveRecord::Base.connection.enable_query_cache!
+      described_class.new.stats
+      expect(ActiveRecord::Base.connection.query_cache.length).not_to eq(0)
+
+      ActiveRecord::Base.connection.query_cache.clear
+      described_class.new.stats
+      expect(ActiveRecord::Base.connection.query_cache.length).to eq(0)
+    ensure
+      ActiveRecord::Base.connection.disable_query_cache!
     end
 
     it "does not add plugin stats to the output if they are missing one of the required keys" do
