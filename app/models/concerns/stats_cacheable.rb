@@ -30,10 +30,6 @@ module StatsCacheable
       stats
     end
 
-    def clear_stats_cache
-      Discourse.redis.del(stats_cache_key)
-    end
-
     private
 
     def set_cache(stats)
