@@ -640,6 +640,7 @@ en:
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
     default_descriptions:
+      everyone: "Automatic group including all users"
       staff: "Automatic group including admins and moderators"
       admins: "Responsible for configuring and maintaining this site, with access to all member and activity data"
       moderators: "Responsible for responding to flags, moderating discussions, and helping members with their accounts"
