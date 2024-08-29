@@ -31,16 +31,10 @@ RSpec.describe About do
     end
 
     it "uses the cache" do
-      ActiveRecord::Base.connection.query_cache.clear
-      ActiveRecord::Base.connection.enable_query_cache!
-      described_class.new.stats
-      expect(ActiveRecord::Base.connection.query_cache.length).not_to eq(0)
+      cold_cache_count = track_sql_queries { described_class.new.stats }.count
+      hot_cache_count = track_sql_queries { described_class.new.stats }.count
 
-      ActiveRecord::Base.connection.query_cache.clear
-      described_class.new.stats
-      expect(ActiveRecord::Base.connection.query_cache.length).to eq(0)
-    ensure
-      ActiveRecord::Base.connection.disable_query_cache!
+      expect(cold_cache_count + hot_cache_count).to eq(cold_cache_count)
     end
 
     it "does not add plugin stats to the output if they are missing one of the required keys" do
