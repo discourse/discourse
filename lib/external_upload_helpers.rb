@@ -136,8 +136,8 @@ module ExternalUploadHelpers
       ExternalUploadStub.find_by(unique_identifier: unique_identifier, created_by: current_user)
     return render_404 if external_upload_stub.blank?
 
-    exists, message = multipart_upload_exists?(external_upload_stub)
-    return render_404(message) if !exists
+    message = check_multipart_upload_exists(external_upload_stub)
+    return render_404(message) if message.present?
 
     store = multipart_store(external_upload_stub.upload_type)
 
@@ -153,7 +153,7 @@ module ExternalUploadHelpers
     render json: { presigned_urls: presigned_urls }
   end
 
-  def multipart_upload_exists?(external_upload_stub)
+  def check_multipart_upload_exists(external_upload_stub)
     store = multipart_store(external_upload_stub.upload_type)
     begin
       store.list_multipart_parts(
@@ -162,17 +162,18 @@ module ExternalUploadHelpers
         max_parts: 1,
       )
     rescue Aws::S3::Errors::NoSuchUpload => err
-      message =
-        debug_upload_error(
-          err,
-          I18n.t(
-            "upload.external_upload_not_found",
-            additional_detail: "path: #{external_upload_stub.key}",
-          ),
-        )
-      return false, message
+      debug_upload_error(
+        err,
+        I18n.t(
+          "upload.external_upload_not_found",
+          additional_detail: "path: #{external_upload_stub.key}",
+        ),
+      )
     end
-    [true, nil]
+
+    # Intentional to indicate that there is no error, if there is a message
+    # then there is an error.
+    nil
   end
 
   def abort_multipart
@@ -228,8 +229,8 @@ module ExternalUploadHelpers
       ExternalUploadStub.find_by(unique_identifier: unique_identifier, created_by: current_user)
     return render_404 if external_upload_stub.blank?
 
-    exists, message = multipart_upload_exists?(external_upload_stub)
-    return render_404(message) if !exists
+    message = check_multipart_upload_exists(external_upload_stub)
+    return render_404(message) if message.present?
 
     store = multipart_store(external_upload_stub.upload_type)
     parts =
@@ -359,7 +360,7 @@ module ExternalUploadHelpers
     return if !SiteSetting.enable_upload_debug_mode
     Discourse.warn_exception(err, message: "[ExternalUploadError] #{friendly_message}")
 
-    if (Rails.env.development? || Rails.env.test? || is_api?)
+    if Rails.env.local? || is_api?
       friendly_message
     else
       I18n.t("upload.failed")
