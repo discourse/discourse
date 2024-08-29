@@ -137,11 +137,13 @@ module Jobs
         @data["duration"] = current_duration if @data["status"] == "pending"
         self.class.raw_log("#{@data.to_json}\n")
 
-        if @data["live_slots_start"].present? && @data["live_slots_finish"].present?
+        if live_slots_limit > 0 && @data["live_slots_start"].present? &&
+             @data["live_slots_finish"].present?
           live_slots = @data["live_slots_finish"] - @data["live_slots_start"]
-          if live_slots_limit > 0 && live_slots >= live_slots_limit
+
+          if live_slots >= live_slots_limit
             Rails.logger.warn(
-              "Sidekiq Job '#{@data["job_name"]}' used #{live_slots} slots: #{@data.inspect}",
+              "Sidekiq Job '#{@data["job_name"]}' allocated #{live_slots} objects in the heap: #{@data.inspect}",
             )
           end
         end
