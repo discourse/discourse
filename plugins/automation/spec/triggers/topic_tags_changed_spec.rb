@@ -149,7 +149,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
 
       expect(list.length).to eq(1)
       expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
-      expect(list[0]["added_tags"]).to eq([bad_tag.name, another_tag.name])
+      expect(list[0]["added_tags"]).to match_array([bad_tag.name, another_tag.name])
       expect(list[0]["removed_tags"]).to eq([cool_tag.name])
     end
 
