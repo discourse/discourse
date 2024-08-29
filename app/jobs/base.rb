@@ -136,10 +136,25 @@ module Jobs
         @data["@timestamp"] = Time.now
         @data["duration"] = current_duration if @data["status"] == "pending"
         self.class.raw_log("#{@data.to_json}\n")
+
+        if live_slots_limit > 0 && @data["live_slots_start"].present? &&
+             @data["live_slots_finish"].present?
+          live_slots = @data["live_slots_finish"] - @data["live_slots_start"]
+
+          if live_slots >= live_slots_limit
+            Rails.logger.warn(
+              "Sidekiq Job '#{@data["job_name"]}' allocated #{live_slots} objects in the heap: #{@data.inspect}",
+            )
+          end
+        end
       end
 
       def enabled?
         ENV["DISCOURSE_LOG_SIDEKIQ"] == "1"
+      end
+
+      def live_slots_limit
+        @live_slots_limit ||= ENV["DISCOURSE_LIVE_SLOTS_SIDEKIQ_LIMIT"].to_i
       end
 
       def self.mutex
