@@ -200,7 +200,7 @@ module DiscourseAutomation
         end
     end
 
-    def self.handle_topic_tags_changed(topic, old_tag_names, new_tag_names)
+    def self.handle_topic_tags_changed(topic, old_tag_names, new_tag_names, user)
       name = DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED
 
       DiscourseAutomation::Automation
@@ -230,6 +230,7 @@ module DiscourseAutomation
             "topic" => topic,
             "removed_tags" => removed_tags,
             "added_tags" => added_tags,
+            "user" => user,
           )
         end
     end
