@@ -39,6 +39,9 @@ ja:
       chat_messages_count: "チャットメッセージ"
       chat_channels_count: "チャットチャンネル"
       chat_users_count: "チャットユーザー"
+      activities:
+        chat_messages:
+          other: "%{formatted_number} チャットメッセージ"
     chat:
       text_copied: テキストをクリップボードにコピーしました
       link_copied: リンクをクリップボードにコピーしました

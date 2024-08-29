@@ -51,6 +51,11 @@ cs:
   remove_posts_deleted_by_author: "Smazáno autorem"
   redirect_warning: "Nepodařilo se nám ověřit, že vámi vybraný odkaz byl skutečně zveřejněn na fóru. Pokud přesto chcete pokračovat, vyberte odkaz níže."
   on_another_topic: "V jiném tématu"
+  topic_category_changed: "Z %{from} na %{to}"
+  topic_tag_changed:
+    added_and_removed: "Přidáno %{added} a odebráno %{removed}"
+    added: "Přidáno %{added}"
+    removed: "Odebráno %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"

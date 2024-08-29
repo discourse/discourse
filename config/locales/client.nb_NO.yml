@@ -158,6 +158,8 @@ nb_NO:
       removed_user: "Fjernet %{who} %{when}"
       removed_group: "Fjernet %{who} %{when}"
       autobumped: "Automatisk flyttet øverst %{when}"
+      tags_changed: "Taggene oppdatert %{when}"
+      category_changed: "Kategorien oppdatert %{when}"
       autoclosed:
         enabled: "Lukket %{when}"
         disabled: "Åpnet %{when}"
@@ -311,7 +313,6 @@ nb_NO:
       user_count: "Påmeldinger"
       active_user_count: "Aktive brukere"
       contact: "Kontakt oss"
-      contact_info: "I tilfelle en kritisk hendelse skulle inntreffe eller det er en hastesak som påvirker siden, ta kontakt på %{contact_info}."
       site_activity: "Aktivitet på nettstedet"
       view_more: "Vis mer"
       view_less: "Vis mindre"
@@ -2121,6 +2122,10 @@ nb_NO:
       associate: "Har du allerede en konto? <a href='%{associate_link}'>Logg inn</a> for å koble %{provider}-kontoen din."
       activation_title: "Aktiver kontoen din"
       already_have_account: "Har du allerede en konto?"
+      progress_bar:
+        signup: "Registrer deg"
+        approve: "Godkjenn"
+        login: "Logg inn"
     forgot_password:
       title: "Nullstill passord"
       action: "Jeg har glemt passordet mitt"
@@ -4651,6 +4656,7 @@ nb_NO:
           edit: "Endre"
           delete: "Slett"
           delete_confirm: 'Er du sikker på at du vil slette "%{name}?'
+          flags_tab: "Flagg"
           form:
             save: "Lagre"
             name: "Navn"
@@ -4689,7 +4695,7 @@ nb_NO:
         menu:
           backups: "Sikkerhetskopier"
           logs: "Logger"
-        none: "Ingen sikkerhetskopi er tilgjengelig."
+        none: "Ingen sikkerhetskopi er tilgjengelig"
         read_only:
           enable:
             title: "Aktiver skrivebeskyttet modus"
@@ -4720,12 +4726,11 @@ nb_NO:
           download:
             label: "Last ned"
             title: "Send e-post med nedlastingslenke"
-            alert: "En lenke for nedlasting av denne sikkerhetskopien er blitt sendt til deg på e-post."
+            alert: "En lenke for nedlasting av denne sikkerhetskopien er blitt sendt til deg på e-post"
           destroy:
             title: "Fjern sikkerhetskopien"
             confirm: "Er du sikker på at du vil slette denne sikkerhetskopien"
           restore:
-            is_disabled: "Gjenoppretting er deaktivert i nettstedsinnstillingene."
             label: "Gjenooprett"
             title: "Gjenopprett sikkerhetskopien"
             confirm: "Er du sikker på at du vil gjenopprette denne sikkerhetskopien?"
@@ -4734,7 +4739,6 @@ nb_NO:
             title: "Gjenopprett databasen til en tidligere fungerende tilstand"
             confirm: "Er du sikker på at du vil gjenopprette databasen til den tidligere fungerende tilstanden?"
         location:
-          local: "Lokalt lager"
           s3: "S3"
         backup_storage_error: "Fikk ikke tilgang til backup-lagring: %{error_message}"
       export_csv:

@@ -12,6 +12,8 @@ fr:
     poll_minimum_trust_level_to_create: "Définir le niveau de confiance minimal requis pour créer des sondages."
     poll_create_allowed_groups: "Les groupes autorisés à créer des sondages."
     poll_groupable_user_fields: "Un ensemble de noms de champs utilisateur qui peuvent être utilisés pour grouper et filtrer les résultats d'un sondage."
+    poll_export_data_explorer_query_id: "ID de la requête de l'explorateur de données à utiliser pour exporter les résultats du sondage (0 pour désactiver)."
+    poll_export_ranked_choice_data_explorer_query_id: "ID de la requête de l'explorateur de données à utiliser pour exporter les résultats du scrutin de second tour instantané."
     poll_default_public: "Lors de la création d'un nouveau sondage, activez l'option « Afficher qui a voté » par défaut."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
@@ -51,6 +53,7 @@ fr:
       one: Un minimum de %{count} vote est nécessaire pour ce sondage.
       other: Un minimum de %{count} votes est nécessaire pour ce sondage.
     ranked_choice:
+      vote_options_mismatch: "Pour le second tour instantané, le nombre de choix effectués lors d'un vote doit correspondre au nombre d'options. Le nombre d'options est de %{count} et le nombre de choix effectués était de %{provided}."
       no_group_results_support: "Type de sondage non valide, ranked_choice ne prend pas en charge les résultats groupés."
     topic_must_be_open_to_toggle_status: "Le sujet doit être ouvert pour modifier le statut."
     only_staff_or_op_can_toggle_status: "Seul(e) un(e) responsable ou le créateur ou la créatrice du sujet peuvent modifier le statut d'un sondage."

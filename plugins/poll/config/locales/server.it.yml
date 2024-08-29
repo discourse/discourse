@@ -12,6 +12,8 @@ it:
     poll_minimum_trust_level_to_create: "Definisce il minimo livello di attendibilità necessario per poter creare sondaggi."
     poll_create_allowed_groups: "Gruppi a cui è consentito creare sondaggi."
     poll_groupable_user_fields: "Un insieme di nomi di campi utente che possono essere utilizzati per raggruppare e filtrare i risultati del sondaggio."
+    poll_export_data_explorer_query_id: "ID della query Data Explorer da utilizzare per l'esportazione dei risultati del sondaggio (0 per disabilitare)."
+    poll_export_ranked_choice_data_explorer_query_id: "ID della query di Data Explorer da utilizzare per esportare i risultati del sondaggio sul ballottaggio immediato."
     poll_default_public: "Quando si crea un nuovo sondaggio, abilita l'opzione \"mostra chi ha votato\" per impostazione predefinita."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
@@ -51,6 +53,7 @@ it:
       one: Almeno %{count} voto è richiesto per questo sondaggio.
       other: Almeno %{count} voti sono richiesti per questo sondaggio.
     ranked_choice:
+      vote_options_mismatch: "Per il ballottaggio immediato, il numero di scelte fatte in una votazione deve corrispondere al numero di opzioni. Il numero di opzioni è %{count} e il numero di scelte fatte era %{provided}."
       no_group_results_support: "Tipo di sondaggio non valido, ranking_choice non supporta risultati raggruppati."
     topic_must_be_open_to_toggle_status: "L'argomento deve essere aperto per commutare lo stato."
     only_staff_or_op_can_toggle_status: "Solo un membro dello staff o l'autore originale possono commutare lo stato di un sondaggio."

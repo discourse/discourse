@@ -52,6 +52,9 @@ zh_TW:
   remove_posts_deleted_by_author: "已由作者刪除"
   redirect_warning: "我們無法確認您選擇的連結是否已被發送到論壇上，若您想繼續此動作，選擇以下的連結。"
   on_another_topic: "在另一個話題中"
+  topic_tag_changed:
+    added: "已新增 %{added}"
+    removed: "已移除 %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} %{username}"
@@ -2452,7 +2455,7 @@ zh_TW:
         歡迎來到 %{site_name}！
 
         請點擊以下連結，以確認和啟用你的新帳戶：
-        %{base_url}/users/activate-account/%{email_token}
+        %{base_url}/u/activate-account/%{email_token}
 
         如果上面的連結無法點擊，請複製該連結，並貼到瀏覽器的網址列中開啟。
     activation_reminder:

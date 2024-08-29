@@ -159,6 +159,8 @@ sv:
       removed_user: "Tog bort %{who} %{when}"
       removed_group: "Tog bort %{who} %{when}"
       autobumped: "Automatiskt positionerad %{when}"
+      tags_changed: "Taggar uppdaterade %{when}"
+      category_changed: "Kategori uppdaterad %{when}"
       autoclosed:
         enabled: "Stängdes %{when}"
         disabled: "Öppnades %{when}"
@@ -307,7 +309,6 @@ sv:
       user_count: "Registreringar"
       active_user_count: "Aktiva användare"
       contact: "Kontakta oss"
-      contact_info: "Vid brådskande ärenden rörande webbplatsen, kontakta oss på %{contact_info}."
       activities:
         topics:
           one: "%{formatted_number} ämne"
@@ -1955,6 +1956,10 @@ sv:
       associate: "Har du redan ett konto? <a href='%{associate_link}'>Logga in</a> för att länka ditt %{provider}-konto."
       activation_title: "Aktivera ditt konto"
       already_have_account: "Har du redan ett konto?"
+      progress_bar:
+        signup: "Registrera dig"
+        approve: "Godkänn"
+        login: "Logga in"
     forgot_password:
       title: "Beställ nytt lösenord"
       action: "Jag har glömt mitt lösenord"
@@ -4870,6 +4875,7 @@ sv:
           edit: "Redigera"
           delete: "Ta bort"
           delete_confirm: 'Är du säker på att du vill radera "%{name}"?'
+          flags_tab: "Flaggor"
           form:
             save: "Spara"
             name: "Namn"
@@ -4917,7 +4923,7 @@ sv:
         menu:
           backups: "Säkerhetskopior"
           logs: "Loggar"
-        none: "Ingen säkerhetskopia är tillgänglig."
+        none: "Ingen säkerhetskopia är tillgänglig"
         read_only:
           enable:
             title: "Aktivera skrivskyddat läge"
@@ -4955,12 +4961,11 @@ sv:
           download:
             label: "Ladda ner"
             title: "Skicka mail med nedladdningslänk"
-            alert: "En länk för nedladdning av denna säkerhetskopia har skickats till dig via e-post."
+            alert: "En länk för nedladdning av denna säkerhetskopia har skickats till dig via e-post"
           destroy:
             title: "Ta bort säkerhetskopian"
             confirm: "Är du säker på att du vill förstöra denna säkerhetskopia?"
           restore:
-            is_disabled: "Återställning är inaktiverat i webbplatsens inställningar."
             label: "Återställ"
             title: "Återställ säkerhetskopian"
             confirm: "Är du säker på att du vill återställa den här säkerhetskopian?"
@@ -4969,7 +4974,6 @@ sv:
             title: "Gör en tillbakarullning av databasen till ett tidigare fungerande tillstånd."
             confirm: "Är du säker på att du vill göra en tillbakarullning av databasen till det tidigare fungerande tillståndet?"
         location:
-          local: "Lokal lagring"
           s3: "S3"
         backup_storage_error: "Misslyckades med att få tillgång till återställningsdata: %{error_message}"
       export_csv:

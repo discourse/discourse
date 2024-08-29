@@ -56,6 +56,9 @@ it:
       pm_created:
         title: Messaggio personale creato
         description: Quando un messaggio personale valido viene creato, l'automazione verrà attivata
+      topic_tags_changed:
+        title: Etichette argomento modificate
+        description: Quando le etichette di un argomento vengono modificate, l'automazione verrà attivata
       topic:
         title: Argomento
         description: Lo script associato verrà utilizzato solo sull'argomento specificato, questo è utile per gli script che eseguono la convalida, ad esempio

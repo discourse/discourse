@@ -52,6 +52,11 @@ tr_TR:
   remove_posts_deleted_by_author: "Yazar tarafından silindi"
   redirect_warning: "Seçtiğiniz bağlantının gerçekten foruma gönderildiğini doğrulayamadık. Yine de devam etmek istiyorsanız aşağıdaki bağlantıyı seçin."
   on_another_topic: "Başka bir konuda"
+  topic_category_changed: "%{from} iken %{to} oldu"
+  topic_tag_changed:
+    added_and_removed: "%{added} eklendi ve %{removed} kaldırıldı"
+    added: "%{added} eklendi"
+    removed: "%{removed} kaldırıldı"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} tarafından #%{post_number}"
@@ -1755,6 +1760,7 @@ tr_TR:
     max_reply_history: "Yanıt içi genişletilirken genişletilecek maksimum yanıt sayısı"
     topics_per_period_in_top_summary: "Varsayılan popüler konular özetinde gösterilen popüler konuların sayısı."
     topics_per_period_in_top_page: "Genişletilmiş \"Daha Fazla Göster\" popüler konularında gösterilen popüler konuların sayısı."
+    redirect_users_to_top_page: "Yeni ve uzun süredir sitede olmayan kullanıcıları otomatik olarak en üst sayfaya yönlendirin. Sadece \"en üst menü\" site ayarında \"en üst\" mevcut olduğunda geçerlidir."
     top_page_default_timeframe: "Anonim kullanıcılar için varsayılan üst sayfa zaman aralığı (oturum açmış kullanıcılar için son ziyaretlerine göre otomatik olarak ayarlanır)."
     moderators_view_emails: "Moderatörlerin kullanıcı e-posta adreslerini görüntülemelerine izin verin."
     prioritize_username_in_ux: "Kullanıcı sayfasında, kullanıcı kartında ve gönderilerde önce kullanıcı adını göster (devre dışı bırakıldığında önce ad gösterilir)"
@@ -1956,6 +1962,7 @@ tr_TR:
     min_trust_to_edit_post: "Gönderileri düzenlemek için gereken minimum güven seviyesi."
     edit_post_allowed_groups: "Gönderileri düzenlemesine izin verilen gruplar. Yöneticiler ve moderatörler her zaman gönderileri düzenleyebilir."
     min_trust_to_allow_self_wiki: "Kullanıcının kendi gönderilerini viki yapmak için gereken minimum güven seviyesi."
+    self_wiki_allowed_groups: "Bu gruplardaki kullanıcıların kendi gönderilerini wiki'ye dönüştürmelerine izin verin. Yöneticiler ve moderatörler her zaman kendi gönderilerini wiki'ye dönüştürebilirler."
     min_trust_to_send_messages: "KALDIRILDI, bunun yerine \"kişisel mesaj etkin gruplar\" ayarını kullanın. Yeni kişisel mesajlar oluşturmak için gereken minimum güven seviyesi."
     min_trust_to_send_email_messages: "E-posta yoluyla kişisel mesaj göndermek için gereken minimum güven seviyesi."
     send_email_messages_allowed_groups: "E-posta yoluyla kişisel mesaj göndermesine izin verilen gruplar. Yöneticiler ve moderatörler her zaman e-posta yoluyla kişisel mesaj gönderebilirler."
@@ -2029,6 +2036,7 @@ tr_TR:
     tos_url: "Başka bir yerde sunucusu olan ve kullanmak istediğiniz bir Hizmet Şartları belgeniz varsa tam URL'yi burada belirtin."
     privacy_policy_url: "Başka bir yerde barındırılan ve kullanmak istediğiniz bir Gizlilik Politikası belgeniz varsa tam URL'yi burada belirtin."
     log_anonymizer_details: "Anonimleştirildikten sonra bir kullanıcının bilgilerinin günlükte tutulup tutulmayacağı."
+    display_eu_visitor_stats: "Global ve AB ziyaretçi sayılarını /about sayfasında göster."
     newuser_spam_host_threshold: "Yeni bir kullanıcının spam olarak değerlendirilmeden önce \"newuser_spam_host_threshold\" gönderileri içinde aynı sunucuya kaç kez bağlantı gönderebileceği."
     allowed_spam_host_domains: "Spam sunucusu testinden hariç tutulan alan adlarının bir listesi. Yeni kullanıcıların bu alan adlarına bağlantı içeren gönderiler oluşturması hiçbir zaman kısıtlanmaz."
     staff_like_weight: "Personel beğenilerine ne kadar ağırlık verileceği (personel dışı beğenilerin ağırlığı 1'dir.)"
@@ -2229,6 +2237,7 @@ tr_TR:
     embed_username_required: "Konu oluşturmak için kullanıcı adı gereklidir."
     notify_about_reviewable_item_after: "Bu kadar saat geçmesine rağmen hâlâ incelenmemiş öge varsa moderatörlere mesaj gönderin. Devre dışı bırakmak için 0 olarak ayarlayın."
     delete_drafts_older_than_n_days: "(n) günden daha uzun süredir değiştirilmemiş taslakları silin."
+    delete_merged_stub_topics_after_days: "Tamamen birleştirilmiş taslak konularını otomatik olarak silmeden önce beklenecek gün sayısı. Asla silmemek için -1 olarak ayarlayın. Hemen silmek için 0 olarak ayarlayın."
     bootstrap_mode_min_users: "Önyükleme modunu devre dışı bırakmak ve Başlarken düğmesini kaldırmak için gereken minimum kullanıcı sayısı (devre dışı bırakmak için 0'a ayarlayın, 24 saate kadar sürebilir)"
     prevent_anons_from_downloading_files: "Anonim kullanıcıların ekleri indirmesini önleyin."
     secure_uploads: 'TÜM yüklemelere (resimler, video, ses, metin, pdf''ler, zip''ler ve diğerleri) erişimi sınırlar. "Giriş gerekli" etkinleştirilmişse yüklemelere yalnızca giriş yapmış kullanıcılar erişebilir. Aksi takdirde, erişim yalnızca özel mesajlardaki ve özel kategorilerdeki medya yüklemeleri için sınırlı olacaktır. UYARI: Bu ayar karmaşıktır ve derin bir yönetim anlayışı gerektirir. Ayrıntılar için <a target="_blank" href="https://meta.discourse.org/t/-/140017">Meta''daki güvenli yüklemeler konusuna</a> bakın.'
@@ -2340,6 +2349,7 @@ tr_TR:
     suppress_overlapping_tags_in_list: "Etiketler konu başlıklarındaki kelimelerle tam olarak eşleşiyorsa etiketi gösterme"
     remove_muted_tags_from_latest: "En son konu listesinde yalnızca sessize alınmış etiketlerle etiketlenmiş konuları göstermeyin."
     force_lowercase_tags: "Tüm yeni etiketleri tamamen küçük harf olmaya zorlayın."
+    create_post_for_category_and_tag_changes: "Bir konunun kategorisi veya etiketleri değiştiğinde küçük bir bilgi gönderisi oluşturun"
     automatically_clean_unused_tags: "Herhangi bir konuda veya özel mesajda kullanılmayan etiketleri günlük olarak otomatik olarak sil."
     watched_precedence_over_muted: "Sessize aldıklarım dahil, izlediğim kategorilerdeki veya etiketlerdeki konular hakkında beni bilgilendirin"
     company_name: "Şirketinizin veya kuruluşunuzun adı. Boş bırakılırsa Hizmet Şartları veya Gizlilik Bildirimine ilişkin ortak metin sağlanmaz."
@@ -2372,6 +2382,8 @@ tr_TR:
     use_email_for_username_and_name_suggestions: "Kullanıcı adı ve isim önerileri için e-posta adreslerinin ilk kısmını kullanın. Bunun, herkesin tam kullanıcı e-posta adreslerini tahmin etmesini kolaylaştırdığını unutmayın (çünkü insanların büyük bir kısmı \"gmail.com\" gibi ortak hizmetleri paylaşır)."
     use_name_for_username_suggestions: "Kullanıcı adı önerirken kullanıcının tam adını kullanın."
     suggest_weekends_in_date_pickers: "Tarih seçici önerilerine hafta sonlarını (cumartesi ve pazar) dahil edin (Discourse'u yalnızca hafta içi, pazartesiden cumaya kadar kullanıyorsanız bunu devre dışı bırakın)."
+    show_bottom_topic_map: "Konuya 10 veya daha fazla yanıt geldiğinde konu haritasını konunun altında gösterir."
+    show_topic_map_in_topics_without_replies: "Konuya yanıt gelmese bile konu haritasını gösterir."
     splash_screen: "Site varlıkları yüklenirken geçici bir yükleme ekranı gösterir"
     navigation_menu: "Siteniz için ana gezinme menüsü olarak kenar çubuğunu veya başlık açılır menüsünü belirleyin. Kenar çubuğu önerilir."
     default_navigation_menu_categories: "Seçilen kategoriler, varsayılan olarak Navigasyon Menüsü'nün Kategoriler bölümünde gösterilir."
@@ -2381,6 +2393,7 @@ tr_TR:
     experimental_topics_filter: "DENEYSEL: /filter konumunda deneysel konu filtrelemeyi etkinleştiririn"
     enable_experimental_lightbox: "DENEYSEL: Varsayılan görüntü lightbox'ını yenilenen tasarımla değiştirin."
     enable_experimental_bookmark_redesign_groups: "DENEYSEL: Gönderilerdeki yer imleri için hızlı erişim menüsü ve yeniden tasarlanmış yeni bir modal göster"
+    glimmer_header_mode: "Yeni \"glimmer\" başlık uygulamasının kullanılıp kullanılmayacağını kontrol edin. \"auto\" tüm temalarınız ve eklentileriniz hazır olduğunda otomatik olarak etkinleşir. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "DENEYSEL: Yeni 'glimmer' konu listesi uygulamasını etkinleştirin. Bu uygulama aktif olarak geliştirilme aşamasındadır ve üretimde kullanıma yönelik değildir. Uygulama kesinleşip duyurulana kadar buna karşı tema/eklenti geliştirmeyin."
     experimental_form_templates: "DENEYSEL: Form şablonları özelliğini etkinleştirin. <b>Etkinleştirildikten sonra,</b> bu şablonları <a href='%{base_path}/admin/customize/form-templates'>Özelleştir / Şablonlar</a> altında yönetin."
     admin_sidebar_enabled_groups: "Belirtilen gruplar için yönetici kullanıcı arayüzünde üst düzey yönetici gezinme düğmelerinin yerini alan kenar çubuğu gezinmesini etkinleştirin."
@@ -2413,6 +2426,7 @@ tr_TR:
       invalid_reply_by_email_address: "Değer \"%{reply_key}\" içermeli ve bildirim e-postasından farklı olmalı."
       invalid_alternative_reply_by_email_addresses: "Tüm değerler \"%{reply_key}\" içermeli ve bildirim e-postasından farklı olmalı."
       invalid_domain_hostname: "* ya da ? karakterleri içermemeli."
+      invalid_allowed_iframes_url: "Iframe URL'leri http:// veya https:// ile başlamalı ve en az bir ek \"/\" içermelidir"
       invalid_csp_script_src: "Değer, 'unsafe-eval' veya 'wasm-unsafe-eval' olmalı ya da desteklenen karma algoritmaların sha256, sha384 veya sha512 olduğu '<hash algorithm>-<base64 value>' biçiminde olmalıdır. Girişinizin tek tırnak işaretleri içine alındığından emin olun."
       pop3_polling_host_is_empty: "POP3 yoklamasını etkinleştirmeden önce bir \"pop3 yoklama sunucusu\" ayarlamanız gerekiyor."
       pop3_polling_username_is_empty: "POP3 yoklamasını etkinleştirmeden önce bir \"pop3 yoklama kullanıcı adı\" ayarlamanız gerekiyor."
@@ -2599,6 +2613,7 @@ tr_TR:
     autoclosed_disabled: "Bu konu artık açık. Yeni yanıtlara izin veriliyor."
     autoclosed_disabled_lastpost: "Bu konu artık açık. Yeni yanıtlara izin veriliyor."
     auto_deleted_by_timer: "Zamanlayıcı tarafından otomatik olarak silinir."
+    auto_deleted_by_merge: "Birleştirme ile otomatik olarak silindi."
   login:
     invalid_second_factor_method: "Seçilen iki adımlı yöntem geçersiz."
     not_enabled_second_factor_method: "Seçilen iki adımlı yöntem hesabınız için etkinleştirilmemiş."
@@ -4812,18 +4827,31 @@ tr_TR:
           default_locale:
             label: "Dil"
       privacy:
+        title: "Üye erişimi"
         fields:
           login_required:
             label: "Görünürlük"
+            description: "Topluluğunuz herkese açık mı yoksa özel mi?"
             choices:
               public:
                 label: "Genel"
               private:
                 label: "Özel"
           invite_only:
+            label: "Kayıt"
+            description: "Üyeler bu topluluğa nasıl katılabilir?"
             choices:
+              sign_up:
+                label: "Kaydol"
               invite_only:
                 label: "Sadece davetliler"
+          must_approve_users:
+            description: "Üye hesaplarını onaylamak istiyor musunuz?"
+            choices:
+              "no":
+                label: "Hayır, yeni üyeler hemen katılabilir"
+              "yes":
+                label: "Evet, yeni üyelerin moderatörler tarafından onaylanması gerekiyor"
           chat_enabled:
             placeholder: "Sohbeti etkinleştir"
             extra_description: "Üyelerinizle gerçek zamanlı olarak etkileşim kurun"

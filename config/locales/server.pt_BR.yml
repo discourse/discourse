@@ -8,7 +8,7 @@ pt_BR:
   dates:
     short_date_no_year: "D de MMM"
     short_date: "D de MMM de YYYY"
-    long_date: "D de MMMM de YYYY, h:mma"
+    long_date: "D de MMMM de YYYY, HH:mm"
   datetime_formats: &datetime_formats
     formats:
       short: "%d/%m/%Y"
@@ -52,6 +52,11 @@ pt_BR:
   remove_posts_deleted_by_author: "Excluído(a) pelo autor(a)"
   redirect_warning: "Não foi possível confirmar se o link selecionado foi postado no fórum. Se deseja continuar mesmo assim, selecione o link abaixo."
   on_another_topic: "Em outro tópico"
+  topic_category_changed: "De %{from} para %{to}"
+  topic_tag_changed:
+    added_and_removed: "Adicionou %{added} e removeu %{removed}"
+    added: "Adicionou %{added}"
+    removed: "Removeu %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} de %{username}"
@@ -1762,6 +1767,7 @@ pt_BR:
     max_reply_history: "Quantidade máxima de respostas para expandir ao expandir \"em resposta a\""
     topics_per_period_in_top_summary: "Quantidade de melhores tópicos exibidos no resumo de melhores tópicos padrão."
     topics_per_period_in_top_page: "Quantidade de melhores tópicos exibidos nos melhores tópicos de \"Exibir mais\" expandido."
+    redirect_users_to_top_page: "Redirecione automaticamente usuários(as) novos(as) e ausentes por muito tempo para a página do topo. Aplica-se apenas quando \"top\" estiver presente na configuração \"top menu\" do site."
     top_page_default_timeframe: "O período padrão da página superior para usuários(as) anônimos(as) (ajustado automaticamente para usuários(as) que entraram com sua conta com base no último acesso)."
     moderators_view_emails: "Permitir que moderadores(as) visualizem endereços de e-mail."
     prioritize_username_in_ux: "Mostrar primeiro o nome de usuário(a) na página do(a) usuário(a), cartão de usuário(a) e postagens (ao desativar, o nome será mostrado primeiro)"
@@ -2037,6 +2043,7 @@ pt_BR:
     tos_url: "Se tiver um documento dos Termos de Serviço hospedado em algum outro local que você queira usar, informe a URL completa aqui."
     privacy_policy_url: "Se tiver um documento de Política de Privacidade hospedado em algum outro local que você queira usar, informe a URL completa aqui."
     log_anonymizer_details: "Se os dados de um(a) usuário(a) devem ser mantidos no log após serem anonimizados."
+    display_eu_visitor_stats: "Mostrar quantidade de visitantes da UE e do mundo todo na página /about."
     newuser_spam_host_threshold: "Quantidade de vezes que um(a) novo(a) usuário(a) pode postar um link para o mesmo host em suas postagens \"newuser_spam_host_threshold\" antes de ser considerado spam."
     allowed_spam_host_domains: "Uma lista de domínios excluídos do teste de spam. Usuários(as) novos(as) nunca serão restringidos(as) de criar postagens com links para esses domínios."
     staff_like_weight: "Peso dado às curtidas da equipe (curtidas de membros fora da equipe têm o peso de 1)."
@@ -2237,6 +2244,7 @@ pt_BR:
     embed_username_required: "O nome do(a) usuário(a) para criação do tópico é obrigatório."
     notify_about_reviewable_item_after: "Se houver itens revisáveis que não foram tratados depois de muitas horas, envie uma mensagem pessoal para os(as) moderadores(as). Defina como 0 para desativar."
     delete_drafts_older_than_n_days: "Exclua rascunhos que não foram alterardos em mais de (n) dias."
+    delete_merged_stub_topics_after_days: "Quantidade de dias para aguardar antes de excluir automaticamente tópicos de stub totalmente mesclados. Defina para 0 para excluir imediatamente."
     bootstrap_mode_min_users: "Quantidade mínima de usuários(as) necessários(as) para desativar o modo de inicialização e remover o botão Começar (defina como 0 para desativar, pode levar até 24 horas)"
     prevent_anons_from_downloading_files: "Impeça que usuários(as) anônimos(as) baixem anexos."
     secure_uploads: 'Limita acesso a TODOS os envios (imagens, vídeo, áudio, texto, pdfs, zips e muito mais). Se “É necessário entrar com a conta” estiver ativado, apenas usuários(as) que entraram com a conta podem acessar os envios. Caso contrário, o acesso será limitado apenas a envios de mídias em mensagens e categorias privadas. AVISO: esta configuração é complexa e requer conhecimento de administração. Para mais detalhes, consulte <a target="_blank" href="https://meta.discourse.org/t/-/140017">o tópico de envios seguros em Meta</a>.'
@@ -2348,6 +2356,7 @@ pt_BR:
     suppress_overlapping_tags_in_list: "Se as etiquetas corresponderem a palavras exatas em títulos de tópicos, não mostrar a etiqueta"
     remove_muted_tags_from_latest: "Não mostrar tópicos etiquetados apenas com etiquetas silenciadas na lista de tópicos mais recentes."
     force_lowercase_tags: "Obrigar todas as novas etiquetas a ficar totalmente em minúsculas."
+    create_post_for_category_and_tag_changes: "Criar uma pequena postagem de ação quando mudar a categoria ou etiquetas de um tópico"
     automatically_clean_unused_tags: "Exclua automaticamente etiquetas que não estão sendo utilizadas em tópicos ou mensagens privadas todos os dias."
     watched_precedence_over_muted: "Quero receber notificações sobre tópicos em categorias ou etiquetas que estou acompanhando que também pertencem a alguém que eu silenciei"
     company_name: "O nome da sua empresa ou organização. Se ficar vazio, não serão fornecidos Termos de Serviço nem Aviso de Privacidade clichês."
@@ -2380,6 +2389,8 @@ pt_BR:
     use_email_for_username_and_name_suggestions: "Use a primeira parte dos endereços de e-mail para sugestões de nome de usuário e nome. Observe que isso facilita que o público adivinhe os endereços de e-mail completos dos usuários (porque uma grande proporção de pessoas compartilha serviços comuns como `gmail.com`)."
     use_name_for_username_suggestions: "Use o nome completo de um usuário ao sugerir nomes de usuário."
     suggest_weekends_in_date_pickers: "Inclua fins de semana (sábado e domingo) nas sugestões do seletor de datas (desative isso se você usar o Discourse apenas durante a semana, de segunda a sexta)."
+    show_bottom_topic_map: "Mostra o mapa de tópico na parte inferior do tópico quando tiver pelo menos dez respostas."
+    show_topic_map_in_topics_without_replies: "Mostra o mapa de tópico mesmo se o tópico não tiver nenhuma resposta."
     splash_screen: "Exibe uma tela de carregamento temporária enquanto os ativos do site são carregados"
     navigation_menu: "Especifique a barra lateral ou menu suspenso do cabeçalho como o menu principal de navegação do seu site. É recomendável a barra lateral."
     default_navigation_menu_categories: "As categorias selecionadas serão exibidas abaixo da seção de Categorias do Menu de Navegação por padrão."
@@ -2389,6 +2400,7 @@ pt_BR:
     experimental_topics_filter: "EXPERIMENTAL: ative a rota do filtro de tópicos experimentais em /filter"
     enable_experimental_lightbox: "EXPERIMENTAL: substitua a lightbox da imagem padrão pelo design renovado."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Exibir um menu de acesso rápido para os favoritos em postagens e um novo modal reprojetado"
+    glimmer_header_mode: "Controle se a nova implementação de cabeçalho \"glimmer\" será usada. \"auto\" será ativado automaticamente quando seus plugins e temas estiverem prontos. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "EXPERIMENTAL: Ative a implementação da nova lista de tópicos \"glimme\". Esta implementação ainda está em desenvolvimento e não se destina a uso para fins de produção. Não a use para desenvolver temas/plugins até que seja finalizada e anunciada."
     experimental_form_templates: "EXPERIMENTAL: ative o recurso de modelo de formulário. <b>Quando ativado,</b> gerencie os modelos em <a href='%{base_path}/admin/customize/form-templates'>Personalizar/Modelos</a>."
     admin_sidebar_enabled_groups: "Ative a navegação pela barra lateral da IU da administração para grupos específicos, o que substitui os botões de navegação da administração superiores."
@@ -2421,6 +2433,7 @@ pt_BR:
       invalid_reply_by_email_address: "O valor deve conter \"%{reply_key}\" e ser diferente do e-mail de notificação."
       invalid_alternative_reply_by_email_addresses: "Todos os valores devem conter \"%{reply_key}\" e ser diferente do e-mail de notificação."
       invalid_domain_hostname: "Não deve incluir os caracteres * ou ?."
+      invalid_allowed_iframes_url: "As URLs do Iframe devem começar com http:// or https:// e ter pelo menos mais uma \"/\""
       invalid_csp_script_src: "O valor deve ser 'unsafe-eval' ou 'wasm-unsafe-eval', ou estar no formulário '<hash algorithm>-<base64 value>', no qual os algoritmos de hash incompatíveis são sha256, sha384 ou sha512. Utilize aspas únicas ao digitar os valores."
       pop3_polling_host_is_empty: "Você deve definir um \"host de pesquisa POP3\"' antes de ativar a consulta POP3."
       pop3_polling_username_is_empty: "Você deve definir um \"nome de usuário(as) de pesquisa POP3\" antes de ativar a sondagem POP3."
@@ -2607,6 +2620,7 @@ pt_BR:
     autoclosed_disabled: "Este tópico está aberto agora. Novas respostas são permitidas."
     autoclosed_disabled_lastpost: "Este tópico está aberto agora. Novas respostas são permitidas."
     auto_deleted_by_timer: "Excluído automaticamente pelo temporizador."
+    auto_deleted_by_merge: "Excluído(a) automaticamente por mesclagem"
   login:
     invalid_second_factor_method: "O método de autenticação de dois fatores selecionado é inválido."
     not_enabled_second_factor_method: "O método de autenticação de dois fatores selecionado não foi ativado para sua conta."
