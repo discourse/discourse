@@ -44,10 +44,16 @@ class BasicGroupSerializer < ApplicationSerializer
     end
   end
 
-  def bio_excerpt
-    if object.bio_cooked.present?
-      PrettyText.excerpt(object.bio_cooked, 110, keep_emoji_images: true)
+  def bio_cooked
+    if object.automatic
+      return I18n.t("groups.default_descriptions.#{Group::AUTO_GROUP_IDS[object.id]}")
     end
+
+    object.bio_cooked
+  end
+
+  def bio_excerpt
+    PrettyText.excerpt(bio_cooked, 110, keep_emoji_images: true) if bio_cooked.present?
   end
 
   def include_incoming_email?

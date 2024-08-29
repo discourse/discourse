@@ -639,6 +639,19 @@ en:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_descriptions:
+      staff: "Automatic group including admins and moderators"
+      admins: "Responsible for configuring and maintaining this site, with access to all member and activity data"
+      moderators: "Responsible for responding to flags, moderating discussions, and helping members with their accounts"
+      trust_level_0: "New User - New users with limited abilities who are learning community norms and functionality"
+
+      trust_level_1: "Basic - Users who have shown initial engagement by reading and can now use core Discourse functions"
+
+      trust_level_2: "Member - Active participants who have consistently contributed over time and gained full citizenship privileges"
+
+      trust_level_3: "Regular - Highly engaged, long-term contributors who form the backbone of the community and have additional moderation capabilities"
+
+      trust_level_4: "Leader - Veteran members manually promoted by staff, recognized for their exemplary contributions and granted extensive moderation powers"
     request_membership_pm:
       title: "Membership Request for @%{group_name}"
     request_accepted_pm:
