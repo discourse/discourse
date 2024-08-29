@@ -11,7 +11,9 @@ import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
-import RenderGlimmer from "discourse/widgets/render-glimmer";
+import RenderGlimmer, {
+  registerWidgetShim,
+} from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import discourseLater from "discourse-common/lib/later";
 import I18n from "discourse-i18n";
@@ -944,3 +946,10 @@ export default createWidget("post-menu", {
     }
   },
 });
+
+registerWidgetShim(
+  "glimmer-post-menu",
+  "section.post-menu-area.glimmer-post-menu-widget-shim.clearfix",
+  hbs`
+      <Post::Menu @transformedPost={{@data.transformedPost}} @toggleLike={{@data.toggleLike}}/>`
+);

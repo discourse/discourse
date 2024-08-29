@@ -1,40 +1,25 @@
 import { hbs } from "ember-cli-htmlbars";
-import RenderGlimmer, {
-  registerWidgetShim,
-} from "discourse/widgets/render-glimmer";
-import { createWidget } from "discourse/widgets/widget";
+import { registerWidgetShim } from "discourse/widgets/render-glimmer";
 
-createWidget("small-user-list", {
-  tagName: "div.clearfix.small-user-list",
-
-  buildClasses(atts) {
-    return atts.listClassName;
-  },
-
-  buildAttributes(attrs) {
-    const attributes = { role: "list" };
-    if (attrs.ariaLabel) {
-      attributes["aria-label"] = attrs.ariaLabel;
-    }
-    return attributes;
-  },
-
-  html(attrs) {
-    return [
-      new RenderGlimmer(
-        this,
-        "span.small-user-list-content",
-        hbs`<SmallUserList @data={{@data.attrs}}/>`,
-        {
-          attrs,
-        }
-      ),
-    ];
-  },
-});
+// TODO deprecate this widget
+// TODO check the rendering in the two voting plugins
+// This shim is nesting everything into a DIV and changing the HTML but only thw two voting plugins
+// are using this widget outside of core.
+registerWidgetShim(
+  "small-user-list",
+  "div",
+  hbs`
+    <SmallUserList class={{@data.listClassName}}
+                   aria-label={{@data.ariaLabel}}
+                   @users={{@data.users}}
+                   @addSelf={{@data.addSelf}}
+                   @count={{@data.count}}
+                   @description={{@data.description}}/>`
+);
 
 registerWidgetShim(
   "actions-summary",
   "section.post-actions",
-  hbs`<ActionsSummary @data={{@data}} /> `
+  hbs`
+    <ActionsSummary @data={{@data}} /> `
 );

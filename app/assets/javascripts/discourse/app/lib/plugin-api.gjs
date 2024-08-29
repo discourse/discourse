@@ -922,6 +922,7 @@ class PluginApi {
    * });
    **/
   replacePostMenuButton(name, widget) {
+    // TODO the widget version won't work properly, fortunately only 1 TC and 1 plugin is using this
     replaceButton(name, widget);
   }
 

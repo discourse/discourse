@@ -532,7 +532,15 @@ createWidget("post-contents", {
         filteredRepliesShown: state.filteredRepliesShown,
       },
     };
+
     result.push(this.attach("post-menu", attrs, extraState));
+    result.push(
+      this.attach("glimmer-post-menu", {
+        transformedPost: attrs,
+        toggleLike: () => this.sendWidgetAction("toggleLike"),
+        ...extraState,
+      })
+    );
 
     const repliesBelow = state.repliesBelow;
     if (repliesBelow.length) {
