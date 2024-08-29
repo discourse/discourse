@@ -10,7 +10,7 @@ class EnsureUniqueTagUserNotificationLevel < ActiveRecord::Migration[7.1]
       AND tag_users.tag_id = dupe.tag_id;
     SQL
 
-    add_index :tag_users, %i[user_id tag_id notification_level], unique: true
+    add_index :tag_users, %i[user_id tag_id], unique: true
   end
 
   def down

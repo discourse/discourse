@@ -38,4 +38,12 @@ RSpec.describe "EnsureUniqueTagUserNotificationLevel" do
     expect(user_with_duplicates1.tag_users.sole.notification_level).to eq(2)
     expect(user_with_duplicates2.tag_users.sole.notification_level).to eq(4)
   end
+
+  it "disallows creation of duplicates" do
+    EnsureUniqueTagUserNotificationLevel.new.up
+
+    expect {
+      Fabricate(:tag_user, user: user_with_duplicates1, tag: tag1, notification_level: 3)
+    }.to raise_error(ActiveRecord::RecordNotUnique)
+  end
 end
