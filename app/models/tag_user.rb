@@ -259,6 +259,7 @@ end
 #
 # Indexes
 #
-#  idx_tag_users_ix1  (user_id,tag_id,notification_level) UNIQUE
-#  idx_tag_users_ix2  (tag_id,user_id,notification_level) UNIQUE
+#  idx_tag_users_ix1                                             (user_id,tag_id,notification_level) UNIQUE
+#  idx_tag_users_ix2                                             (tag_id,user_id,notification_level) UNIQUE
+#  index_tag_users_on_user_id_and_tag_id_and_notification_level  (user_id,tag_id,notification_level) UNIQUE
 #
