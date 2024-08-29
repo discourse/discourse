@@ -5,7 +5,7 @@ $progress-bar-icon-size: 0.8rem;
 .signup-progress-bar {
   width: 100%;
   display: flex;
-  color: var(--primary-low-mid);
+
   box-sizing: border-box;
   margin-bottom: 1.2em;
 
@@ -14,6 +14,7 @@ $progress-bar-icon-size: 0.8rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    color: var(--primary-low-mid);
 
     &:first-child .signup-progress-bar__circle {
       transform: translateX(50%);
@@ -30,6 +31,7 @@ $progress-bar-icon-size: 0.8rem;
   }
 
   &__step-text {
+    color: var(--primary-high);
     white-space: nowrap;
     width: fit-content;
     transform: translateX(calc(calc($progress-bar-circle-size / 2) - 50%));

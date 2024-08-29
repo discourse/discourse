@@ -276,6 +276,7 @@ en:
     multiple_errors: "Multiple errors occurred: %{errors}"
     sign_up: "Sign Up"
     log_in: "Log In"
+    pivot_log_in: "Already have an account?"
     age: "Age"
     joined: "Joined"
     admin_title: "Admin"

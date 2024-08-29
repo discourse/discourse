@@ -36,8 +36,10 @@ body.static-login {
     padding: 2em;
     box-shadow: var(--shadow-card);
     border-radius: 5px;
-    display: grid;
-    place-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
     &__text {
       order: 4;
