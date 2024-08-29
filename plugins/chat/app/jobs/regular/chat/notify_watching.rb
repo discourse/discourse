@@ -24,12 +24,32 @@ module Jobs
             .where.not(user_id: args[:except_user_ids])
             .where(chat_channel_id: @chat_channel.id)
             .where(following: true)
-            .where(
+            .merge(User.not_suspended)
+
+        if @chat_message.in_thread?
+          thread_memberships =
+            ::Chat::UserChatThreadMembership.where(thread_id: @chat_message.thread_id).where(
+              notification_level: ::Chat::NotificationLevels.all[:watching],
+            )
+
+          # allow user notification for thread watchers regardless of desktop/mobile notification level
+          if thread_memberships.present?
+            members =
+              members.where(
+                "desktop_notification_level = ? OR mobile_notification_level = ? OR users.id IN (?)",
+                always_notification_level,
+                always_notification_level,
+                thread_memberships.map(&:user_id),
+              )
+          end
+        else
+          members =
+            members.where(
               "desktop_notification_level = ? OR mobile_notification_level = ?",
               always_notification_level,
               always_notification_level,
             )
-            .merge(User.not_suspended)
+        end
 
         if @is_direct_message_channel
           ::UserCommScreener
@@ -83,7 +103,17 @@ module Jobs
           channel_id: @chat_channel.id,
         }
 
-        create_watched_thread_notification(user) if @chat_message.in_thread?
+        if @chat_message.in_thread? && !membership.muted?
+          thread_membership =
+            ::Chat::UserChatThreadMembership.find_by(
+              user_id: user.id,
+              thread_id: @chat_message.thread_id,
+            )
+
+          if thread_membership&.notification_level == "watching"
+            create_watched_thread_notification(thread_membership)
+          end
+        end
 
         if membership.desktop_notifications_always? && !membership.muted?
           send_notification =
@@ -104,18 +134,10 @@ module Jobs
         end
       end
 
-      def create_watched_thread_notification(user)
-        thread_membership =
-          ::Chat::UserChatThreadMembership.find_by(
-            user_id: user.id,
-            thread_id: @chat_message.thread_id,
-          )
-
-        return if thread_membership&.notification_level != "watching"
-
+      def create_watched_thread_notification(thread_membership)
+        thread = @chat_message.thread
+        description = thread.title.presence || thread.original_message.message
         is_read = ::Chat::Notifier.user_has_seen_message?(thread_membership, @chat_message.id)
-        notification_description =
-          @chat_message.thread.title.presence || @chat_message.thread.original_message.excerpt
 
         ::Notification.create!(
           notification_type: ::Notification.types[:chat_watched_thread],
@@ -125,7 +147,7 @@ module Jobs
             chat_message_id: @chat_message.id,
             chat_channel_id: @chat_channel.id,
             chat_thread_id: @chat_message.thread_id,
-            description: notification_description,
+            description: description,
             message_by_username: @creator.username,
           }.to_json,
           read: is_read,
