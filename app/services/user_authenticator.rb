@@ -36,7 +36,10 @@ class UserAuthenticator
       authenticator.after_create_account(@user, @auth_result)
       confirm_email
     end
-    @session[:authentication] = @auth_result = nil if @session&.dig(:authentication)
+    if @session&.dig(:authentication)
+      @session[:authentication] = @auth_result = nil
+      @session[:authenticated_with_oauth] = true
+    end
   end
 
   def email_valid?

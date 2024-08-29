@@ -67,7 +67,7 @@ class LoginActivator < UserActivator
   include CurrentUser
 
   def activate
-    log_on_user(user)
+    log_on_user(user, { authenticated_with_oauth: @session["authenticated_with_oauth"] })
     user.enqueue_welcome_message("welcome_user")
     success_message
   end
