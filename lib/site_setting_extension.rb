@@ -694,13 +694,13 @@ module SiteSettingExtension
       categories[name] = opts[:category] || :uncategorized
 
       if opts[:area]
-        splitted_areas = opts[:area].split("|")
-        if splitted_areas.any? { |area| !SiteSetting::VALID_AREAS.include?(area) }
+        split_areas = opts[:area].split("|")
+        if split_areas.any? { |area| !SiteSetting::VALID_AREAS.include?(area) }
           raise Discourse::InvalidParameters.new(
                   "Area is incorrect. Valid areas: #{SiteSetting::VALID_AREAS.join(", ")}",
                 )
         end
-        areas[name] = splitted_areas
+        areas[name] = split_areas
       end
       hidden_settings_provider.add_hidden(name) if opts[:hidden]
 
