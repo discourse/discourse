@@ -1,3 +1,5 @@
+import { service } from "@ember/service";
+import ClassBasedInitializer from "discourse/lib/class-based-initializer";
 import { number } from "discourse/lib/formatter";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
@@ -14,18 +16,18 @@ const MIN_REFRESH_DURATION_MS = 180000; // 3 minutes
 
 replaceIcon("d-chat", "comment");
 
-export default {
-  name: "chat-setup",
-  before: "hashtag-css-generator",
+export default class extends ClassBasedInitializer {
+  static before = "hashtag-css-generator";
+
+  @service router;
+  @service("chat") chatService;
+  @service chatHistory;
+  @service site;
+  @service siteSettings;
+  @service currentUser;
+  @service appEvents;
 
   initialize(container) {
-    this.router = container.lookup("service:router");
-    this.chatService = container.lookup("service:chat");
-    this.chatHistory = container.lookup("service:chat-history");
-    this.site = container.lookup("service:site");
-    this.siteSettings = container.lookup("service:site-settings");
-    this.currentUser = container.lookup("service:current-user");
-    this.appEvents = container.lookup("service:app-events");
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
 
     if (!this.chatService.userCanChat) {
@@ -172,14 +174,14 @@ export default {
         }
       });
     });
-  },
+  }
 
   @bind
   documentTitleCountCallback() {
     return this.chatService.getDocumentTitleCount();
-  },
+  }
 
-  teardown() {
+  willDestroy() {
     this.appEvents.off("discourse:focus-changed", this, "_handleFocusChanged");
 
     if (!this.chatService.userCanChat) {
@@ -188,7 +190,7 @@ export default {
 
     _lastForcedRefreshAt = null;
     clearChatComposerButtons();
-  },
+  }
 
   @bind
   _handleFocusChanged(hasFocus) {
@@ -209,5 +211,5 @@ export default {
     }
 
     _lastForcedRefreshAt = Date.now();
-  },
-};
+  }
+}

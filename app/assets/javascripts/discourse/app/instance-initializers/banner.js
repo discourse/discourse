@@ -1,23 +1,25 @@
 import EmberObject from "@ember/object";
+import { service } from "@ember/service";
+import ClassBasedInitializer from "discourse/lib/class-based-initializer";
 import PreloadStore from "discourse/lib/preload-store";
 import { bind } from "discourse-common/utils/decorators";
 
-export default {
-  after: "message-bus",
+export default class extends ClassBasedInitializer {
+  static after = "message-bus";
 
-  initialize(owner) {
-    this.site = owner.lookup("service:site");
-    this.messageBus = owner.lookup("service:message-bus");
+  @service site;
+  @service messageBus;
 
+  initialize() {
     const banner = EmberObject.create(PreloadStore.get("banner") || {});
     this.site.set("banner", banner);
 
     this.messageBus.subscribe("/site/banner", this.onMessage);
-  },
+  }
 
-  teardown() {
+  willDestroy() {
     this.messageBus.unsubscribe("/site/banner", this.onMessage);
-  },
+  }
 
   @bind
   onMessage(data) {
@@ -26,5 +28,5 @@ export default {
     } else {
       this.site.set("banner", null);
     }
-  },
-};
+  }
+}

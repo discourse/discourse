@@ -175,10 +175,19 @@ function resolveInitializer(moduleName) {
     throw new Error(moduleName + " must export an initializer.");
   }
 
-  const initializer = module["default"];
+  let initializer = module["default"];
 
   if (!initializer) {
     throw new Error(moduleName + " must have a default export");
+  }
+
+  if (typeof initializer === "function") {
+    initializer = {
+      before: initializer.before,
+      after: initializer.after,
+      initialize: initializer.initialize.bind(initializer),
+      teardown: initializer.teardown.bind(initializer),
+    };
   }
 
   if (!initializer.name) {

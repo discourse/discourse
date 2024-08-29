@@ -1,5 +1,6 @@
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import ClassBasedInitializer from "discourse/lib/class-based-initializer";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
@@ -343,8 +344,8 @@ function _calculateDuration(element) {
   return element.dataset === startDataset ? duration : -duration;
 }
 
-export default {
-  name: "discourse-local-dates",
+export default class extends ClassBasedInitializer {
+  @service siteSettings;
 
   @bind
   showDatePopover(event) {
@@ -371,19 +372,17 @@ export default {
       identifier: "local-date",
       content: htmlSafe(buildHtmlPreview(event.target, siteSettings)),
     });
-  },
+  }
 
-  initialize(container) {
-    this.container = container;
+  initialize() {
     window.addEventListener("click", this.showDatePopover, { passive: true });
 
-    const siteSettings = container.lookup("service:site-settings");
-    if (siteSettings.discourse_local_dates_enabled) {
+    if (this.siteSettings.discourse_local_dates_enabled) {
       withPluginApi("0.8.8", initializeDiscourseLocalDates);
     }
-  },
+  }
 
-  teardown() {
+  willDestroy() {
     window.removeEventListener("click", this.showDatePopover);
-  },
-};
+  }
+}

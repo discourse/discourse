@@ -1,4 +1,6 @@
 // Subscribes to user events on the message bus
+import { service } from "@ember/service";
+import ClassBasedInitializer from "discourse/lib/class-based-initializer";
 import {
   alertChannel,
   disable as disableDesktopNotifications,
@@ -14,23 +16,20 @@ import Notification from "discourse/models/notification";
 import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
 
-export default {
-  after: "message-bus",
+export default class extends ClassBasedInitializer {
+  static after = "message-bus";
+  @service messageBus;
+  @service store;
+  @service appEvents;
+  @service siteSettings;
+  @service site;
+  @service router;
+  @service currentUser;
 
-  initialize(owner) {
-    this.currentUser = owner.lookup("service:current-user");
-
+  initialize() {
     if (!this.currentUser) {
       return;
     }
-
-    this.messageBus = owner.lookup("service:message-bus");
-    this.store = owner.lookup("service:store");
-    this.messageBus = owner.lookup("service:message-bus");
-    this.appEvents = owner.lookup("service:app-events");
-    this.siteSettings = owner.lookup("service:site-settings");
-    this.site = owner.lookup("service:site");
-    this.router = owner.lookup("service:router");
 
     this.reviewableCountsChannel = `/reviewable_counts/${this.currentUser.id}`;
 
@@ -82,9 +81,9 @@ export default {
         unsubscribePushNotifications(this.currentUser);
       }
     }
-  },
+  }
 
-  teardown() {
+  willDestroy() {
     if (!this.currentUser) {
       return;
     }
@@ -116,7 +115,7 @@ export default {
     this.messageBus.unsubscribe("/client_settings", this.onClientSettings);
 
     this.messageBus.unsubscribe(alertChannel(this.currentUser), this.onAlert);
-  },
+  }
 
   @bind
   onReviewableCounts(data) {
@@ -128,7 +127,7 @@ export default {
       "unseen_reviewable_count",
       data.unseen_reviewable_count
     );
-  },
+  }
 
   @bind
   onNotification(data) {
@@ -210,22 +209,22 @@ export default {
 
       stale.results.set("content", newNotifications);
     }
-  },
+  }
 
   @bind
   onUserDrafts(data) {
     this.currentUser.updateDraftProperties(data);
-  },
+  }
 
   @bind
   onDoNotDisturb(data) {
     this.currentUser.updateDoNotDisturbStatus(data.ends_at);
-  },
+  }
 
   @bind
   onUserStatus(data) {
     this.appEvents.trigger("user-status:changed", data);
-  },
+  }
 
   @bind
   onCategories(data) {
@@ -251,12 +250,12 @@ export default {
     (data.deleted_categories || []).forEach((id) =>
       this.site.removeCategory(id)
     );
-  },
+  }
 
   @bind
   onClientSettings(data) {
     this.siteSettings[data.name] = data.value;
-  },
+  }
 
   @bind
   onAlert(data) {
@@ -268,5 +267,5 @@ export default {
         this.appEvents
       );
     }
-  },
-};
+  }
+}

@@ -1,3 +1,5 @@
+import { service } from "@ember/service";
+import ClassBasedInitializer from "discourse/lib/class-based-initializer";
 import logout from "discourse/lib/logout";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
@@ -5,21 +7,21 @@ import I18n from "discourse-i18n";
 let _showingLogout = false;
 
 // Subscribe to "logout" change events via the Message Bus
-export default {
-  after: "message-bus",
+export default class extends ClassBasedInitializer {
+  static after = "message-bus";
 
-  initialize(owner) {
-    this.messageBus = owner.lookup("service:message-bus");
-    this.dialog = owner.lookup("service:dialog");
-    this.currentUser = owner.lookup("service:current-user");
+  @service messageBus;
+  @service dialog;
+  @service currentUser;
 
+  initialize() {
     if (this.currentUser) {
       this.messageBus.subscribe(
         `/logout/${this.currentUser.id}`,
         this.onMessage
       );
     }
-  },
+  }
 
   teardown() {
     if (this.currentUser) {
@@ -28,7 +30,7 @@ export default {
         this.onMessage
       );
     }
-  },
+  }
 
   @bind
   onMessage() {
@@ -45,5 +47,5 @@ export default {
       didCancel: logout,
       shouldDisplayCancel: false,
     });
-  },
-};
+  }
+}
