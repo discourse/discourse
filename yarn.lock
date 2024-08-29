@@ -2945,10 +2945,10 @@ accepts@~1.3.4, accepts@~1.3.5, accepts@~1.3.8:
     mime-types "~2.1.34"
     negotiator "0.6.3"
 
-ace-builds@^1.36.0:
-  version "1.36.0"
-  resolved "https://registry.yarnpkg.com/ace-builds/-/ace-builds-1.36.0.tgz#6f776eb162a1e98e865fdd0fdfc5dbd61c30d00c"
-  integrity sha512-7to4F86V5N13EY4M9LWaGo2Wmr9iWe5CrYpc28F+/OyYCf7yd+xBV5x9v/GB73EBGGoYd89m6JjeIUjkL6Yw+w==
+ace-builds@^1.36.1:
+  version "1.36.1"
+  resolved "https://registry.yarnpkg.com/ace-builds/-/ace-builds-1.36.1.tgz#f44e29293173b4e66e46a2827c75efe5fd36f734"
+  integrity sha512-/Rngkz+KgR7GFF16zO3itstku3wezjp4PTqrev3QvGfEix+Ilzsgp6X/VFSaprH9Cqd36rwT8c6eXwMKVgc+Kg==
 
 acorn-globals@^6.0.0:
   version "6.0.0"
