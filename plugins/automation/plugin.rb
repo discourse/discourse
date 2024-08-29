@@ -187,6 +187,7 @@ after_initialize do
       topic,
       tags[:old_tag_names],
       tags[:new_tag_names],
+      tags[:user],
     )
   end
 
