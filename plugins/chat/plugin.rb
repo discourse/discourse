@@ -348,9 +348,7 @@ after_initialize do
 
   register_push_notification_filter do |user, payload|
     if user.user_option.only_chat_push_notifications && user.user_option.chat_enabled
-      payload[:notification_type].in?(
-        ::Notification.types.values_at(:chat_mention, :chat_message, :chat_watched_thread),
-      )
+      payload[:notification_type].in?(::Notification.types.values_at(:chat_mention, :chat_message))
     else
       true
     end

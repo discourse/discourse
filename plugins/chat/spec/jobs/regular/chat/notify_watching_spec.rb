@@ -24,7 +24,6 @@ RSpec.describe Jobs::Chat::NotifyWatching do
 
   def track_core_notification(user:, message:, type: ::Notification.types[:chat_watched_thread])
     described_class.new.execute(chat_message_id: message.id)
-
     Notification.where(user: user, notification_type: type).last
   end
 
@@ -79,15 +78,15 @@ RSpec.describe Jobs::Chat::NotifyWatching do
 
       context "with channel notification_level is always" do
         before do
-          membership1.update!(
-            desktop_notification_level:
-              Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
-            mobile_notification_level:
-              Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
-          )
+          always = Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
+          membership1.update!(desktop_notification_level: always, mobile_notification_level: always)
         end
 
         it "creates a core notification when watching the thread" do
+          thread.membership_for(user1).update!(
+            notification_level: Chat::NotificationLevels.all[:watching],
+          )
+
           notification = track_core_notification(user: user1, message: thread_message)
 
           expect(notification).to be_present
@@ -95,9 +94,6 @@ RSpec.describe Jobs::Chat::NotifyWatching do
         end
 
         it "does not create a core notification when not watching the thread" do
-          thread.membership_for(user1).update!(
-            notification_level: Chat::NotificationLevels.all[:tracking],
-          )
           notification = track_core_notification(user: user1, message: thread_message)
 
           expect(notification).to be_nil
@@ -112,7 +108,13 @@ RSpec.describe Jobs::Chat::NotifyWatching do
       end
 
       context "without channel notifications" do
-        it "creates a core notification" do
+        before do
+          thread.membership_for(user1).update!(
+            notification_level: Chat::NotificationLevels.all[:watching],
+          )
+        end
+
+        it "creates a core notification for watched threads" do
           expect { run_job(thread_message) }.to change { Notification.count }
         end
 

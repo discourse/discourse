@@ -282,6 +282,9 @@ describe Chat::ChannelUnreadsQuery do
     before do
       channel_1.update(threading_enabled: true)
       channel_1.membership_for(current_user).mark_read!(message.id)
+      thread.membership_for(current_user).update!(
+        notification_level: ::Chat::NotificationLevels.all[:watching],
+      )
     end
 
     it "returns correct watched thread unread count" do
@@ -317,6 +320,9 @@ describe Chat::ChannelUnreadsQuery do
         channel_2.add(current_user)
         channel_2.update(threading_enabled: true)
         channel_2.membership_for(current_user).mark_read!(message_2.id)
+        thread_2.membership_for(current_user).update!(
+          notification_level: ::Chat::NotificationLevels.all[:watching],
+        )
 
         Fabricate(:chat_message, chat_channel: channel_2, thread: thread_2)
         Fabricate(:chat_message, chat_channel: channel_2, thread: thread_2)
