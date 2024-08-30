@@ -147,6 +147,7 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
             "membership_id" => membership_1.id,
             "mention_count" => 0,
             "unread_count" => 0,
+            "watched_threads_unread_count" => 0,
           },
           channel_2.id.to_s => {
             "last_read_message_id" => message_4.id,
@@ -154,6 +155,7 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
             "membership_id" => membership_2.id,
             "mention_count" => 0,
             "unread_count" => 0,
+            "watched_threads_unread_count" => 0,
           },
           channel_3.id.to_s => {
             "last_read_message_id" => message_6.id,
@@ -161,6 +163,7 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
             "membership_id" => membership_3.id,
             "mention_count" => 0,
             "unread_count" => 0,
+            "watched_threads_unread_count" => 0,
           },
         )
       end
