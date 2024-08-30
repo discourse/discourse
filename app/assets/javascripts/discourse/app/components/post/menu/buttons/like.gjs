@@ -17,7 +17,7 @@ export default class PostMenuLikeButton extends Component {
     return this.currentUser && !this.args.transformedPost.canToggleLike;
   }
 
-  get titleLabel() {
+  get title() {
     // If the user has already liked the post and doesn't have permission
     // to undo that operation, then indicate via the title that they've liked it
     // and disable the button. Otherwise, set the title even if the user
@@ -61,7 +61,7 @@ export default class PostMenuLikeButton extends Component {
           data-post-id={{@transformedPost.id}}
           disabled={{this.disabled}}
           @icon={{if @transformedPost.liked "d-liked" "d-unliked"}}
-          @title={{this.titleLabel}}
+          @title={{this.title}}
           @action={{fn @action (hash onBeforeToggle=this.animateToggle)}}
           {{didInsert this.setElement}}
         />

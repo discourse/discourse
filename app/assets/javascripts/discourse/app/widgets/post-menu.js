@@ -951,13 +951,16 @@ registerWidgetShim(
   "glimmer-post-menu",
   "section.post-menu-area.glimmer-post-menu-widget-shim.clearfix",
   hbs`
-    <Post::Menu
-      @model={{@data.model}}
-      @transformedPost={{@data.transformedPost}}
-      @copyLink={{@data.copyLink}}
-      @editPost={{@data.editPost}}
-      @replyToPost={{@data.replyToPost}}
-      @share={{@data.share}}
-      @toggleLike={{@data.toggleLike}}
-    />`
+      <Post::Menu
+              @filteredRepliesView={{@data.filteredRepliesView}}
+              @model={{@data.model}}
+              @repliesShown={{@data.repliesShown}}
+              @transformedPost={{@data.transformedPost}}
+              @copyLink={{@data.copyLink}}
+              @editPost={{@data.editPost}}
+              @replyToPost={{@data.replyToPost}}
+              @share={{@data.share}}
+              @toggleLike={{@data.toggleLike}}
+              @toggleReplies={{@data.toggleReplies}}
+      />`
 );

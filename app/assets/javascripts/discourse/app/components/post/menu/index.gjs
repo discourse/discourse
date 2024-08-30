@@ -14,6 +14,7 @@ import PostMenuBookmarkButton from "./buttons/bookmark";
 import PostMenuCopyLinkButton from "./buttons/copy-link";
 import EditButton from "./buttons/edit";
 import LikeButton from "./buttons/like";
+import PostMenuRepliesButton from "./buttons/replies";
 import ReplyButton from "./buttons/reply";
 import PostMenuShareButton from "./buttons/share";
 import ShowMoreButton from "./buttons/show-more";
@@ -56,9 +57,7 @@ function resetPostMenuButtons() {
   registeredButtonComponents.set(READ_BUTTON_ID, <template>
     <span>READ</span>
   </template>);
-  registeredButtonComponents.set(REPLIES_BUTTON_ID, <template>
-    <span>REPLIES</span>
-  </template>);
+  registeredButtonComponents.set(REPLIES_BUTTON_ID, PostMenuRepliesButton);
   registeredButtonComponents.set(REPLY_BUTTON_ID, ReplyButton);
   registeredButtonComponents.set(SHARE_BUTTON_ID, PostMenuShareButton);
   registeredButtonComponents.set(SHOW_MORE_BUTTON_ID, ShowMoreButton);
@@ -92,59 +91,70 @@ export default class PostMenu extends Component {
   @tracked readers = [];
   @tracked totalReaders;
 
-  REGISTERED_BUTTONS = new Map(
-    registeredButtonComponents.entries().map(([id, ButtonComponent]) => {
-      let alwaysShow = false;
-      let assignedAction;
-      let properties;
+  @cached
+  get availableButtons() {
+    return new Map(
+      registeredButtonComponents.entries().map(([id, ButtonComponent]) => {
+        let alwaysShow = false;
+        let assignedAction;
+        let properties;
 
-      switch (id) {
-        case COPY_LINK_BUTTON_ID:
-          assignedAction = this.args.copyLink;
-          break;
+        switch (id) {
+          case COPY_LINK_BUTTON_ID:
+            assignedAction = this.args.copyLink;
+            break;
 
-        case EDIT_BUTTON_ID:
-          assignedAction = this.args.editPost;
-          alwaysShow =
-            this.#isWikiMode ||
-            (this.args.transformedPost.canEdit &&
-              this.args.transformedPost.yours);
-          properties = {
-            showLabel: this.site.desktopView && this.#isWikiMode,
-          };
-          break;
+          case EDIT_BUTTON_ID:
+            assignedAction = this.args.editPost;
+            alwaysShow =
+              this.#isWikiMode ||
+              (this.args.transformedPost.canEdit &&
+                this.args.transformedPost.yours);
+            properties = {
+              showLabel: this.site.desktopView && this.#isWikiMode,
+            };
+            break;
 
-        case LIKE_BUTTON_ID:
-          assignedAction = this.like;
-          break;
+          case LIKE_BUTTON_ID:
+            assignedAction = this.like;
+            break;
 
-        case REPLY_BUTTON_ID:
-          assignedAction = this.args.replyToPost;
-          properties = {
-            showLabel: this.site.desktopView && !this.#isWikiMode,
-          };
-          break;
+          case REPLY_BUTTON_ID:
+            assignedAction = this.args.replyToPost;
+            properties = {
+              showLabel: this.site.desktopView && !this.#isWikiMode,
+            };
+            break;
 
-        case SHARE_BUTTON_ID:
-          assignedAction = this.args.share;
-          break;
+          case REPLIES_BUTTON_ID:
+            assignedAction = this.args.toggleReplies;
+            properties = {
+              filteredRepliesView: this.args.filteredRepliesView,
+              repliesShown: this.args.repliesShown,
+            };
+            break;
 
-        case SHOW_MORE_BUTTON_ID:
-          assignedAction = this.showMoreActions;
-          break;
-      }
+          case SHARE_BUTTON_ID:
+            assignedAction = this.args.share;
+            break;
 
-      const config = {
-        postMenuButtonId: id,
-        Component: ButtonComponent,
-        action: assignedAction,
-        alwaysShow,
-        properties,
-      };
+          case SHOW_MORE_BUTTON_ID:
+            assignedAction = this.showMoreActions;
+            break;
+        }
 
-      return [id, config];
-    })
-  );
+        const config = {
+          postMenuButtonId: id,
+          Component: ButtonComponent,
+          action: assignedAction,
+          alwaysShow,
+          properties,
+        };
+
+        return [id, config];
+      })
+    );
+  }
 
   get items() {
     return this.#configuredItems.map((i) => {
@@ -164,7 +174,7 @@ export default class PostMenu extends Component {
 
   get buttons() {
     return this.items
-      .map((itemId) => this.REGISTERED_BUTTONS.get(itemId))
+      .map((itemId) => this.availableButtons.get(itemId))
       .filter(isPresent);
   }
 
@@ -192,10 +202,23 @@ export default class PostMenu extends Component {
     });
   }
 
+  get repliesButton() {
+    return this.availableButtons.get(REPLIES_BUTTON_ID);
+  }
+
+  get shouldRenderRepliesButtonAutomatically() {
+    // TODO check if the position is overridden using the DAG
+    return this.repliesButton && !this.items.includes(REPLIES_BUTTON_ID);
+  }
+
   get hasShowMoreButton() {
     // Only show ellipsis if there is more than one button hidden
     // if there are no more buttons, we are not collapsed
     return this.collapsedButtons.length > 1;
+  }
+
+  get showMoreButton() {
+    return this.availableButtons.get(SHOW_MORE_BUTTON_ID);
   }
 
   get visibleButtons() {
@@ -207,7 +230,7 @@ export default class PostMenu extends Component {
       return !this.collapsedButtons.includes(button);
     });
 
-    buttons.push(this.REGISTERED_BUTTONS.get(SHOW_MORE_BUTTON_ID));
+    buttons.push(this.showMoreButton);
 
     return buttons;
   }
@@ -317,6 +340,15 @@ export default class PostMenu extends Component {
           )
         }}
       >
+        {{#if this.shouldRenderRepliesButtonAutomatically}}
+          <this.repliesButton.Component
+            class="btn-flat"
+            @model={{@model}}
+            @transformedPost={{@transformedPost}}
+            @properties={{this.repliesButton.properties}}
+            @action={{this.repliesButton.action}}
+          />
+        {{/if}}
         <div class="actions">
           {{#each this.visibleButtons as |button|}}
             <button.Component

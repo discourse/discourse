@@ -534,16 +534,24 @@ createWidget("post-contents", {
     };
 
     result.push(this.attach("post-menu", attrs, extraState));
+
+    const filteredRepliesView = this.siteSettings.enable_filtered_replies_view;
     result.push(
       this.attach("glimmer-post-menu", {
+        filteredRepliesView,
         model: this.findAncestorModel(),
+        repliesShown: filteredRepliesView
+          ? extraState.state.filteredRepliesShown
+          : extraState.state.repliesShown,
         transformedPost: attrs,
-        ...extraState,
         copyLink: () => this.sendWidgetAction("copyLink"),
         editPost: () => this.sendWidgetAction("editPost"), // this action comes from the post stream
         replyToPost: () => this.sendWidgetAction("replyToPost"), // this action comes from the post stream
         share: () => this.sendWidgetAction("share"),
         toggleLike: () => this.sendWidgetAction("toggleLike"),
+        toggleReplies: filteredRepliesView
+          ? () => this.sendWidgetAction("toggleFilteredRepliesView")
+          : () => this.sendWidgetAction("toggleRepliesBelow"),
       })
     );
 

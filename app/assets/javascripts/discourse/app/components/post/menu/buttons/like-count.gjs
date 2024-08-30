@@ -43,7 +43,7 @@ export default class PostMenuLikeCountButton extends Component {
           (if @transformedPost.yours "my-likes" "regular-likes")
         }}
         ...attributes
-        aria-pressed={{if @likedUsers "true" "false"}}
+        @ariaPressed={{@likedUsers}}
         @icon={{this.icon}}
         @translatedAriaLabel={{i18n
           "post.sr_post_like_count_button"

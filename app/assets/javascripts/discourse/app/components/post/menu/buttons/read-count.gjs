@@ -12,7 +12,7 @@ export default class PostMenuReadCountButton extends Component {
     {{#if this.shouldRender}}
       <DButton
         class="button-count read-indicator"
-        aria-pressed={{if (gt @state.readers.length 0) "true" "false"}}
+        @ariaPressed={{gt @state.readers.length 0}}
         @action={{@action}}
         @translatedAriaLabel={{i18n
           "post.sr_post_read_count_button"
