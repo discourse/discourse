@@ -233,6 +233,12 @@ module.exports = function (defaults) {
       {
         package: "sinon",
       },
+      {
+        package: "@json-editor/json-editor",
+      },
+      {
+        package: "ace-builds",
+      },
     ],
   });
 
