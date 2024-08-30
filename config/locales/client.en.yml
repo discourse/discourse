@@ -5648,7 +5648,8 @@ en:
             move_down: "Move down"
       plugins:
         title: "Plugins"
-        installed: "Installed Plugins"
+        installed: "Installed plugins"
+        description: "Any Discourse plugins that you have installed, or plugins that come preinstalled with Discourse hosting, will appear in this list."
         name: "Name"
         none_installed: "You don't have any plugins installed."
         version: "Version"

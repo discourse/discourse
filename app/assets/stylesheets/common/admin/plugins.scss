@@ -162,6 +162,10 @@
 
 .admin-plugins .admin-container {
   margin-top: 0;
+
+  &.-no-header {
+    margin-top: 1em;
+  }
 }
 
 .admin-plugin-filtered-site-settings {
