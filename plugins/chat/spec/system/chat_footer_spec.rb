@@ -162,7 +162,7 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
         visit("/")
         chat_page.open_from_header
 
-        expect(page).not_to have_css("#c-footer-threads .c-unread-indicator.-urgent")
+        expect(page).to have_css("#c-footer-threads .c-unread-indicator.-urgent")
       end
     end
   end
