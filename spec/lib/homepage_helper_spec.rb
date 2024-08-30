@@ -14,10 +14,10 @@ RSpec.describe HomepageHelper do
       expect(HomepageHelper.resolve).to eq("custom")
     end
 
-    it "returns custom when a plugin modifies the custom_homepage to true" do
+    it "returns custom when a plugin modifies the custom_homepage_enabled to true" do
       DiscoursePluginRegistry
         .expects(:apply_modifier)
-        .with(:custom_homepage, false, request: nil, current_user: nil)
+        .with(:custom_homepage_enabled, false, request: nil, current_user: nil)
         .returns(true)
 
       expect(HomepageHelper.resolve).to eq("custom")
