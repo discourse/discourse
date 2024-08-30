@@ -14,6 +14,15 @@ RSpec.describe HomepageHelper do
       expect(HomepageHelper.resolve).to eq("custom")
     end
 
+    it "returns custom when a plugin modifies the custom_homepage_enabled to true" do
+      DiscoursePluginRegistry
+        .expects(:apply_modifier)
+        .with(:custom_homepage_enabled, false, request: nil, current_user: nil)
+        .returns(true)
+
+      expect(HomepageHelper.resolve).to eq("custom")
+    end
+
     context "when first item in top menu is not valid for anons" do
       it "distinguishes between auth homepage and anon homepage" do
         SiteSetting.top_menu = "new|top|latest|unread"
