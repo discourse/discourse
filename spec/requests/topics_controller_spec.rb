@@ -2322,6 +2322,12 @@ RSpec.describe TopicsController do
       expect(response).to redirect_to(topic.relative_url)
     end
 
+    it "does not raise an unhandled exception when receiving an array of IDs" do
+      get "/t/#{topic.id}/summary?id[]=a,b"
+
+      expect(response.status).to eq(400)
+    end
+
     it "keeps the post_number parameter around when redirecting" do
       get "/t/#{topic.slug}", params: { post_number: 42 }
       expect(response).to redirect_to(topic.relative_url + "/42")

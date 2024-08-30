@@ -160,7 +160,13 @@
             />
           </h1>
 
-          <TopicCategory @topic={{this.model}} class="topic-category" />
+          <PluginOutlet
+            @name="topic-category-wrapper"
+            @outletArgs={{hash topic=this.model}}
+          >
+            <TopicCategory @topic={{this.model}} class="topic-category" />
+          </PluginOutlet>
+
         {{/if}}
       </TopicTitle>
 

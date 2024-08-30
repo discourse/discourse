@@ -15,6 +15,8 @@ RSpec.describe About do
   after { DiscoursePluginRegistry.reset! }
 
   describe "#stats" do
+    use_redis_snapshotting
+
     it "adds plugin stats to the output" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
       register_stat("some_group", Proc.new { stats })
@@ -26,6 +28,13 @@ RSpec.describe About do
           some_group_count: 1000,
         ),
       )
+    end
+
+    it "uses the cache" do
+      cold_cache_count = track_sql_queries { described_class.new.stats }.count
+      hot_cache_count = track_sql_queries { described_class.new.stats }.count
+
+      expect(cold_cache_count + hot_cache_count).to eq(cold_cache_count)
     end
 
     it "does not add plugin stats to the output if they are missing one of the required keys" do

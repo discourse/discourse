@@ -12,6 +12,8 @@ nl:
     poll_minimum_trust_level_to_create: "Het minimale vertrouwensniveau dat nodig is om polls te maken."
     poll_create_allowed_groups: "De groepen die polls mogen maken."
     poll_groupable_user_fields: "Een aantal gebruikersveldnamen die voor het groeperen en filteren van pollresultaten kunnen worden gebruikt."
+    poll_export_data_explorer_query_id: "ID van de te gebruiken gegevensverkennerquery voor het exporteren van pollresultaten (0 voor uitschakelen)."
+    poll_export_ranked_choice_data_explorer_query_id: "ID van de te gebruiken gegevensverkennerquery voor het exporteren van de resultaten van polls met gerangschikte keuze."
     poll_default_public: "Schakel bij het maken van een nieuwe poll standaard de optie 'Weergeven wie er heeft gestemd' in."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
@@ -51,6 +53,7 @@ nl:
       one: Er is minimaal %{count} stem vereist voor deze poll.
       other: Er zijn minimaal %{count} stemmen vereist voor deze poll.
     ranked_choice:
+      vote_options_mismatch: "Voor gerangschikte keuze moet het aantal gemaakte keuzes bij een stemming overeenkomen met het aantal opties. Het aantal opties is %{count} en het gemaakte aantal keuzes was %{provided}."
       no_group_results_support: "Ongeldig polltype, ranked_choice ondersteunt geen gegroepeerde resultaten."
     topic_must_be_open_to_toggle_status: "Het topic moet geopend zijn om de status te kunnen omschakelen."
     only_staff_or_op_can_toggle_status: "Alleen een medewerker of de oorspronkelijke plaatser van een bericht kan de status van een poll omschakelen."

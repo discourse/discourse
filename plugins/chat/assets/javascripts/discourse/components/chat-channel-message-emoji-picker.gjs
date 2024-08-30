@@ -13,10 +13,6 @@ export default class ChatChannelMessageEmojiPicker extends Component {
   context = "chat-channel-message";
 
   listenToBodyScroll = modifier(() => {
-    if (!this.site.mobileView) {
-      return;
-    }
-
     const handler = () => {
       this.chatEmojiPickerManager.close();
     };
@@ -47,6 +43,10 @@ export default class ChatChannelMessageEmojiPicker extends Component {
       {
         placement: "top",
         modifiers: [
+          {
+            name: "eventListeners",
+            options: { scroll: false, resize: false },
+          },
           {
             name: "flip",
             options: { padding: { top: headerOffset() } },

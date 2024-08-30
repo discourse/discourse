@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    lazy_videos_enabled: "Engedélyezze a Lazy Videos plugint"
+    lazy_youtube_enabled: "Lazy betöltés engedélyezése a YouTube-beágyazásokhoz"
+    lazy_vimeo_enabled: "Lazy betöltés engedélyezése a Vimeo beágyazásokhoz"
+    lazy_tiktok_enabled: "Lazy betöltés engedélyezése a TikTok beágyazásokhoz (kísérleti)"

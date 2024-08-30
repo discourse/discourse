@@ -159,6 +159,8 @@ hu:
       removed_user: "Törölve: %{who} %{when}"
       removed_group: "Törölve: %{who} %{when}"
       autobumped: "Automatikusan előrehozva: %{when}"
+      tags_changed: "A címkék frissítve %{when}"
+      category_changed: "Kategória frissítve %{when}"
       autoclosed:
         enabled: "Lezárva: %{when}"
         disabled: "Megnyitva: %{when}"
@@ -311,9 +313,21 @@ hu:
       post_count: "Bejegyzés"
       user_count: "Regisztrációk"
       active_user_count: "Aktív felhasználók"
+      visitor_count: "Látogatók"
+      eu_visitor_count: "Látogatók az Európai Unióból"
+      traffic_info_footer_MF: |
+        Az elmúlt 6 hónapban ez az oldal havonta mintegy { total_visitors, plural,
+            one {# embernek}
+          other {# embernek}
+        } szolgáltatott tartalmat, becslések szerint { eu_visitors, plural,
+            one {# ember}
+          other {# ember}
+        } az Európai Unióból valósi.
       contact: "Kapcsolatfelvétel"
       contact_info: "A webhellyel kapcsolatos sürgős vagy kritikus probléma esetén lépjen velünk kapcsolatba a következő elérhetőségen: %{contact_info}."
       site_activity: "Oldal tevékenység"
+      view_more: "Mutass többet"
+      view_less: "Mutass kevesebbet"
       activities:
         topics:
           one: "%{formatted_number} téma"
@@ -330,6 +344,14 @@ hu:
         likes:
           one: "%{formatted_number} kedvelés"
           other: "%{formatted_number} kedvelés"
+        visitors_MF: |
+          { total_count, plural,
+              one {{total_formatted_number} látogató}
+            other {{total_formatted_number} ~ látogató}
+          }, körülbelül { eu_count, plural,
+              one {{eu_formatted_number}}
+            other {{eu_formatted_number}}
+          } az EU-ból
         periods:
           last_7_days: "az elmúlt 7 napban"
           today: "ma"
@@ -1149,7 +1171,7 @@ hu:
         ignore_option_title: "Nem fog semmilyen értesítést kapni ezzel a felhasználóval kapcsolatban, és az összes tartalma el lesz rejtve."
         add_ignored_user: "Új..."
         mute_option: "Némított"
-        mute_option_title: "Nem fog semmilyen értesítést, személyes üzenetet vagy közvetlen üzenetet ettől a felhasználótól."
+        mute_option_title: "Nem fog semmilyen értesítést, személyes üzenetet vagy közvetlen üzenetet kapni ettől a felhasználótól."
         normal_option: "Normál"
         normal_option_title: "Értesítést fog kapni, ha a felhasználó válaszol, idézi vagy megemlíti."
       notification_schedule:
@@ -2059,6 +2081,7 @@ hu:
           other {# hiba/percenként}
         }.
     learn_more: "További információ…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>További információ…</a>"
     mute: Némítás
     unmute: Némítás feloldása
     last_post: Közzétett
@@ -2137,6 +2160,11 @@ hu:
       associate: "Már van fiókja? <a href='%{associate_link}'>Jelentkezzen be</a> hogy hozzákapcsolja a(z) %{provider}-fiókját."
       activation_title: "Fiók aktiválása"
       already_have_account: "Már van fiókja?"
+      progress_bar:
+        signup: "Regisztráció"
+        activate: "Aktiválás"
+        approve: "Jóváhagyás"
+        login: "Bejelentkezés"
     forgot_password:
       title: "Jelszó-visszaállítás"
       action: "Elfelejtettem a jelszavamat"
@@ -2333,6 +2361,7 @@ hu:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} nagyobb, mint a maximálisan megengedett %{max_file_size}"
+        size_too_small: "%{provided_file_size} kisebb, mint a minimálisan megengedett %{min_file_size}"
     emoji_picker:
       filter_placeholder: Emodzsi keresése
       smileys_&_emotion: Mosolyok és érzelmek
@@ -4715,7 +4744,7 @@ hu:
         problems_found: "Néhány tanács az aktuális webhelybeállítások alapján"
         new_features:
           title: "Újdonságok"
-          subtitle: "Még több részletet talál az új funkciókról és fejlesztésekről, amelyeket folyamatosan hozzáadunk, további részletekért lásd a <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Kiadási jegyzetet</a>."
+          subtitle: "Folyamatosan új funkciókat és fejlesztéseket adunk ki. Ez az oldal a legfontosabbakat tartalmazza, de a 'Tudjon meg többet' gombra kattintva részletes kiadási jegyzeteket is megtekinthet."
           previous_announcements: "A korábbi új funkciók bejelentéseit a <a href='%{url}' target='_blank'>Discourse Meta</a>oldalon tekintheted meg"
           learn_more: "Tudjon meg többet..."
         last_checked: "Utoljára ellenőrizve:"
@@ -5247,6 +5276,8 @@ hu:
           back: "Vissza a megjelölésekhez"
           delete: "Törlés"
           delete_confirm: 'Biztosan törli a "%{name}" elemet?'
+          flags_tab: "Zászlók"
+          settings: "Megjelölés beállítások"
           form:
             add_header: "Megjelölés hozzáadása"
             edit_header: "Megjelölés szerkesztése"
@@ -5310,10 +5341,13 @@ hu:
         legacy: "Hagyaték"
       backups:
         title: "Biztonsági mentések"
+        files_title: "Biztonsági mentés fájlok"
+        description: "A Discourse biztonsági mentések tartalmazzák a teljes webhely-adatbázist, amely mindent tartalmaz a webhelyen: témákat, hozzászólásokat, felhasználókat, csoportokat, beállításokat, témákat stb. Attól függően, hogy a mentési fájl hogyan készül, a feltöltéseket is tartalmazhatja, de nem feltétlenül."
         menu:
           backups: "Biztonsági mentések"
+          backup_files: "Biztonsági mentés fájlok"
           logs: "Naplók"
-        none: "Nincsenek elérhető biztonsági mentések."
+        none: "Nincsenek elérhető biztonsági mentések"
         read_only:
           enable:
             title: "Írásvédett mód bekapcsolása"
@@ -5351,12 +5385,12 @@ hu:
           download:
             label: "Letöltés"
             title: "Letöltési hivatkozás küldése e-mailben"
-            alert: "A biztonsági mentés letöltéséhez szükséges linket e-mailben küldtük el Önnek."
+            alert: "A biztonsági mentés letöltéséhez szükséges linket e-mailben küldtük el Önnek"
           destroy:
             title: "Biztonsági mentés törlése"
             confirm: "Biztosan törölni szeretnéd ezt a biztonsági mentést?"
           restore:
-            is_disabled: "A visszaállítás le van tiltva az oldal beállításaiban."
+            is_disabled: "A visszaállítás jelenleg le van tiltva. Engedélyezéséhez látogasson el a <a href='%{url}'>webhely beállításaihoz</a>."
             label: "Visszaállítás"
             title: "Biztonsági mentés visszaállítása"
             confirm: "Biztos vagy benne hogy vissza szeretnéd állítani a biztonsági mentést?"
@@ -6477,6 +6511,7 @@ hu:
         show_overriden: "Csak a felülírtak megjelenítése"
         show_outdated: "Csak az elavult/érvénytelent jelenítse meg"
         show_untranslated: "Csak a lefordítatlanok megjelenítése"
+        only_show_selected_locale: "Csak a kiválasztott nyelven jelenítse meg az eredményeket"
         locale: "Nyelv:"
         more_than_50_results: "Több mint 50 találat van. Kérlek finomíts a keresésen."
         no_results: "Nem található egyező szöveg"

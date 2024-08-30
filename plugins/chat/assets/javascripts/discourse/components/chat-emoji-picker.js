@@ -215,7 +215,7 @@ export default class ChatEmojiPicker extends Component {
   @action
   focusFilter(target) {
     schedule("afterRender", () => {
-      target?.focus();
+      target?.focus({ preventScroll: true });
     });
   }
 

@@ -39,6 +39,10 @@ tr_TR:
       chat_messages_count: "Sohbet mesajları"
       chat_channels_count: "Sohbet kanalları"
       chat_users_count: "Sohbet kullanıcıları"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} sohbet mesajı"
+          other: "%{formatted_number} sohbet mesajları"
     chat:
       text_copied: Metin panoya kopyalandı
       link_copied: Bağlantı panoya kopyalandı

@@ -51,6 +51,10 @@ class TopicsController < ApplicationController
   end
 
   def show
+    if params[:id].is_a?(Array)
+      raise Discourse::InvalidParameters.new("Show only accepts a single ID")
+    end
+
     flash["referer"] ||= request.referer[0..255] if request.referer
 
     # TODO: We'd like to migrate the wordpress feed to another url. This keeps up backwards

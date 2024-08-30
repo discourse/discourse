@@ -2,37 +2,38 @@ import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import { notEmpty } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
+import { observes } from "@ember-decorators/object";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { applyLocalDates } from "discourse/lib/local-dates";
 import { cook } from "discourse/lib/text";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import computed, {
-  debounce,
-  observes,
-} from "discourse-common/utils/decorators";
+import computed, { debounce } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 
-export default Component.extend({
-  timeFormat: "HH:mm:ss",
-  dateFormat: "YYYY-MM-DD",
-  dateTimeFormat: "YYYY-MM-DD HH:mm:ss",
-  date: null,
-  toDate: null,
-  time: null,
-  toTime: null,
-  format: null,
-  formats: null,
-  recurring: null,
-  advancedMode: false,
-  timezone: null,
-  fromSelected: null,
-  fromFilled: notEmpty("date"),
-  toSelected: null,
-  toFilled: notEmpty("toDate"),
+export default class LocalDatesCreate extends Component {
+  timeFormat = "HH:mm:ss";
+  dateFormat = "YYYY-MM-DD";
+  dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
+  date = null;
+  toDate = null;
+  time = null;
+  toTime = null;
+  format = null;
+  formats = null;
+  recurring = null;
+  advancedMode = false;
+  timezone = null;
+  fromSelected = null;
+  toSelected = null;
+
+  @notEmpty("date") fromFilled;
+  @notEmpty("toDate") toFilled;
+  @propertyNotEqual("currentUserTimezone", "options.timezone")
+  timezoneIsDifferentFromUserTimezone;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     this._picker = null;
 
@@ -44,17 +45,17 @@ export default Component.extend({
       timezone: this.currentUserTimezone,
       date: moment().format(this.dateFormat),
     });
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     this.send("focusFrom");
-  },
+  }
 
   @observes("computedConfig.{from,to,options}", "options", "isValid", "isRange")
   configChanged() {
     this._renderPreview();
-  },
+  }
 
   @debounce(INPUT_DELAY)
   async _renderPreview() {
@@ -69,12 +70,12 @@ export default Component.extend({
         );
       });
     }
-  },
+  }
 
   @computed("date", "toDate", "toTime")
   isRange(date, toDate, toTime) {
     return date && (toDate || toTime);
-  },
+  }
 
   @computed("computedConfig", "isRange")
   isValid(config, isRange) {
@@ -96,7 +97,7 @@ export default Component.extend({
     }
 
     return true;
-  },
+  }
 
   @computed("date", "time", "isRange", "options.{format,timezone}")
   fromConfig(date, time, isRange, options = {}) {
@@ -125,7 +126,7 @@ export default Component.extend({
       format,
       range: isRange ? "start" : false,
     });
-  },
+  }
 
   @computed("toDate", "toTime", "isRange", "options.{timezone,format}")
   toConfig(date, time, isRange, options = {}) {
@@ -158,7 +159,7 @@ export default Component.extend({
       format,
       range: isRange ? "end" : false,
     });
-  },
+  }
 
   @computed("recurring", "timezones", "timezone", "format")
   options(recurring, timezones, timezone, format) {
@@ -168,7 +169,7 @@ export default Component.extend({
       timezone,
       format,
     });
-  },
+  }
 
   @computed(
     "fromConfig.{date}",
@@ -181,27 +182,22 @@ export default Component.extend({
       to: toConfig,
       options,
     });
-  },
+  }
 
   @computed
   currentUserTimezone() {
     return this.currentUser.user_option.timezone || moment.tz.guess();
-  },
+  }
 
   @computed
   allTimezones() {
     return moment.tz.names();
-  },
-
-  timezoneIsDifferentFromUserTimezone: propertyNotEqual(
-    "currentUserTimezone",
-    "options.timezone"
-  ),
+  }
 
   @computed("currentUserTimezone")
   formattedCurrentUserTimezone(timezone) {
     return timezone.replace("_", " ").replace("Etc/", "").replace("/", ", ");
-  },
+  }
 
   @computed("formats")
   previewedFormats(formats) {
@@ -211,7 +207,7 @@ export default Component.extend({
         preview: moment().format(format),
       };
     });
-  },
+  }
 
   @computed
   recurringOptions() {
@@ -251,18 +247,18 @@ export default Component.extend({
         id: "1.years",
       },
     ];
-  },
+  }
 
   _generateDateMarkup(fromDateTime, options, isRange, toDateTime) {
     return generateDateMarkup(fromDateTime, options, isRange, toDateTime);
-  },
+  }
 
   @computed("advancedMode")
   toggleModeBtnLabel(advancedMode) {
     return advancedMode
       ? "discourse_local_dates.create.form.simple_mode"
       : "discourse_local_dates.create.form.advanced_mode";
-  },
+  }
 
   @computed("computedConfig.{from,to,options}", "options", "isValid", "isRange")
   markup(config, options, isValid, isRange) {
@@ -281,12 +277,12 @@ export default Component.extend({
       }
     }
     return text;
-  },
+  }
 
   @computed("fromConfig.dateTime")
   formattedFrom(dateTime) {
     return dateTime.format("LLLL");
-  },
+  }
 
   @computed("toConfig.dateTime", "toSelected")
   formattedTo(dateTime, toSelected) {
@@ -295,23 +291,23 @@ export default Component.extend({
       : I18n.t("discourse_local_dates.create.form.until");
 
     return dateTime.isValid() ? dateTime.format("LLLL") : emptyText;
-  },
+  }
 
   @action
   updateFormat(format, event) {
     event?.preventDefault();
     this.set("format", format);
-  },
+  }
 
   @computed("fromSelected", "toSelected")
   selectedDate(fromSelected) {
     return fromSelected ? this.date : this.toDate;
-  },
+  }
 
   @computed("fromSelected", "toSelected")
   selectedTime(fromSelected) {
     return fromSelected ? this.time : this.toTime;
-  },
+  }
 
   @action
   changeSelectedDate(date) {
@@ -320,7 +316,7 @@ export default Component.extend({
     } else {
       this.set("toDate", date);
     }
-  },
+  }
 
   @action
   changeSelectedTime(time) {
@@ -329,7 +325,7 @@ export default Component.extend({
     } else {
       this.set("toTime", time);
     }
-  },
+  }
 
   @action
   eraseToDateTime() {
@@ -338,7 +334,7 @@ export default Component.extend({
       toTime: null,
     });
     this.focusFrom();
-  },
+  }
 
   @action
   focusFrom() {
@@ -347,7 +343,7 @@ export default Component.extend({
       toSelected: false,
       minDate: null,
     });
-  },
+  }
 
   @action
   focusTo() {
@@ -356,12 +352,12 @@ export default Component.extend({
       fromSelected: false,
       minDate: this.get("fromConfig.date"),
     });
-  },
+  }
 
   @action
   toggleAdvancedMode() {
     this.toggleProperty("advancedMode");
-  },
+  }
 
   @action
   save() {
@@ -371,10 +367,10 @@ export default Component.extend({
       this.closeModal();
       this.model.insertDate(markup);
     }
-  },
+  }
 
   @action
   cancel() {
     this.closeModal();
-  },
-});
+  }
+}

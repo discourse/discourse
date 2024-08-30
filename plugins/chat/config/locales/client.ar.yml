@@ -39,6 +39,14 @@ ar:
       chat_messages_count: "رسائل الدردشة"
       chat_channels_count: "قنوات الدردشة"
       chat_users_count: "مستخدمو الدردشة"
+      activities:
+        chat_messages:
+          zero: "%{formatted_number} رسالة دردشة"
+          one: "%{formatted_number} رسالة دردشة"
+          two: "رسالة دردشة واحدة"
+          few: "رسالتا دردشة"
+          many: "رسالة دردشة"
+          other: "رسالة دردشة"
     chat:
       text_copied: تم نسخ النص إلى الحافظة
       link_copied: تم نسخ الرابط إلى الحافظة

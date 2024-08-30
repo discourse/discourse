@@ -39,6 +39,12 @@ sk:
       chat_messages_count: "Chat správy"
       chat_channels_count: "Chatové kanály"
       chat_users_count: "Používatelia chatu"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} správa v chate"
+          few: "%{formatted_number} správ v chate"
+          many: "%{formatted_number} správ v chate"
+          other: "%{formatted_number} správy v chate"
     chat:
       text_copied: Text bol skopírovaný do schránky
       link_copied: Odkaz bol skopírovaný do schránky

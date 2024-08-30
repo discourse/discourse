@@ -170,6 +170,9 @@ sk:
             first_topic_only:
               label: Len prvá téma
               description: Spustí sa iba vtedy, ak je téma prvou témou, ktorú používateľ vytvoril
+            skip_via_email:
+              label: "Preskočiť cez e-mail"
+              description: "Vynechať spúšťač, ak bol príspevok vytvorený prostredníctvom e-mailu"
           created: Vytvorené
           edited: Upravené
         user_updated:
