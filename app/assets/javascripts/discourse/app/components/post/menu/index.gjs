@@ -11,6 +11,7 @@ import { userPath } from "discourse/lib/url";
 import i18n from "discourse-common/helpers/i18n";
 import discourseLater from "discourse-common/lib/later";
 import PostMenuBookmarkButton from "./buttons/bookmark";
+import PostMenuCopyLinkButton from "./buttons/copy-link";
 import EditButton from "./buttons/edit";
 import LikeButton from "./buttons/like";
 import ReplyButton from "./buttons/reply";
@@ -19,13 +20,18 @@ import ShowMoreButton from "./buttons/show-more";
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
 
+const ADMIN_BUTTON_ID = "admin";
 const BOOKMARK_BUTTON_ID = "bookmark";
+const COPY_LINK_BUTTON_ID = "copyLink";
+const DELETE_BUTTON_ID = "delete";
 const EDIT_BUTTON_ID = "edit";
 const FLAG_BUTTON_ID = "flag";
 const LIKE_BUTTON_ID = "like";
 const READ_BUTTON_ID = "read";
+const REPLIES_BUTTON_ID = "replies";
 const REPLY_BUTTON_ID = "reply";
-const SHOW_MORE_BUTTON_ID = "show-more";
+const SHARE_BUTTON_ID = "share";
+const SHOW_MORE_BUTTON_ID = "showMore";
 
 let registeredButtonComponents;
 resetPostMenuButtons();
@@ -33,7 +39,14 @@ resetPostMenuButtons();
 function resetPostMenuButtons() {
   registeredButtonComponents = new Map();
 
+  registeredButtonComponents.set(ADMIN_BUTTON_ID, <template>
+    <span>ADMIN</span>
+  </template>);
   registeredButtonComponents.set(BOOKMARK_BUTTON_ID, PostMenuBookmarkButton);
+  registeredButtonComponents.set(COPY_LINK_BUTTON_ID, PostMenuCopyLinkButton);
+  registeredButtonComponents.set(DELETE_BUTTON_ID, <template>
+    <span>DELETE</span>
+  </template>);
   registeredButtonComponents.set(EDIT_BUTTON_ID, EditButton);
   registeredButtonComponents.set(FLAG_BUTTON_ID, <template>
     <span>FLAG</span>
@@ -42,7 +55,13 @@ function resetPostMenuButtons() {
   registeredButtonComponents.set(READ_BUTTON_ID, <template>
     <span>READ</span>
   </template>);
+  registeredButtonComponents.set(REPLIES_BUTTON_ID, <template>
+    <span>REPLIES</span>
+  </template>);
   registeredButtonComponents.set(REPLY_BUTTON_ID, ReplyButton);
+  registeredButtonComponents.set(SHARE_BUTTON_ID, <template>
+    <span>SHARE</span>
+  </template>);
   registeredButtonComponents.set(SHOW_MORE_BUTTON_ID, ShowMoreButton);
 }
 
@@ -81,6 +100,10 @@ export default class PostMenu extends Component {
       let properties;
 
       switch (id) {
+        case COPY_LINK_BUTTON_ID:
+          assignedAction = this.args.copyLink;
+          break;
+
         case EDIT_BUTTON_ID:
           assignedAction = this.args.editPost;
           alwaysShow =
@@ -151,13 +174,6 @@ export default class PostMenu extends Component {
     }
 
     return this.buttons.filter((button) => {
-      if (
-        this.args.transformedPost.wiki &&
-        button.postMenuButtonId === EDIT_BUTTON_ID
-      ) {
-        console.log({ button });
-      }
-
       if (button.alwaysShow) {
         return false;
       }
@@ -187,10 +203,6 @@ export default class PostMenu extends Component {
     const buttons = this.buttons.filter((button) => {
       return !this.collapsedButtons.includes(button);
     });
-
-    if (this.args.transformedPost.wiki) {
-      console.log({ buttons });
-    }
 
     buttons.push(this.REGISTERED_BUTTONS.get(SHOW_MORE_BUTTON_ID));
 
