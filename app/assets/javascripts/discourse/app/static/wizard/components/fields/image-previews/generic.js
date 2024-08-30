@@ -1,4 +1,5 @@
 import Component from "@ember/component";
-export default Component.extend({
-  classNameBindings: [":wizard-image-preview", "fieldClass"],
-});
+import { classNameBindings } from "@ember-decorators/component";
+
+@classNameBindings(":wizard-image-preview", "fieldClass")
+export default class Generic extends Component {}

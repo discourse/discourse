@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
+import { classNames } from "@ember-decorators/component";
 import {
   authorizedExtensions,
   authorizesAllExtensions,
@@ -17,39 +18,40 @@ import I18n from "discourse-i18n";
 // binding will still be added, and the file type will be validated here. This
 // is sometimes useful if you need to do something outside the uppy upload with
 // the file, such as directly using JSON or CSV data from a file in JS.
-export default Component.extend({
-  dialog: service(),
-  fileInputId: null,
-  fileInputClass: null,
-  fileInputDisabled: false,
-  classNames: ["pick-files-button"],
-  acceptedFormatsOverride: null,
-  allowMultiple: false,
-  showButton: false,
+@classNames("pick-files-button")
+export default class PickFilesButton extends Component {
+  @service dialog;
+
+  fileInputId = null;
+  fileInputClass = null;
+  fileInputDisabled = false;
+  acceptedFormatsOverride = null;
+  allowMultiple = false;
+  showButton = false;
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     if (this.onFilesPicked) {
       const fileInput = this.element.querySelector("input");
       this.set("fileInput", fileInput);
       fileInput.addEventListener("change", this.onChange, false);
     }
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     if (this.onFilesPicked) {
       this.fileInput.removeEventListener("change", this.onChange);
     }
-  },
+  }
 
   @bind
   onChange() {
     const files = this.fileInput.files;
     this._filesPicked(files);
-  },
+  }
 
   @discourseComputed()
   acceptsAllFormats() {
@@ -57,7 +59,7 @@ export default Component.extend({
       this.capabilities.isIOS ||
       authorizesAllExtensions(this.currentUser.staff, this.siteSettings)
     );
-  },
+  }
 
   @discourseComputed()
   acceptedFormats() {
@@ -72,12 +74,12 @@ export default Component.extend({
     );
 
     return extensions.map((ext) => `.${ext}`).join();
-  },
+  }
 
   @action
   openSystemFilePicker() {
     this.fileInput.click();
-  },
+  }
 
   _filesPicked(files) {
     if (!files || !files.length) {
@@ -95,7 +97,7 @@ export default Component.extend({
     if (typeof this.onFilesPicked === "function") {
       this.onFilesPicked(files);
     }
-  },
+  }
 
   _haveAcceptedTypes(files) {
     for (const file of files) {
@@ -104,7 +106,7 @@ export default Component.extend({
       }
     }
     return true;
-  },
+  }
 
   _hasAcceptedExtensionOrType(file) {
     const extension = this._fileExtension(file.name);
@@ -112,9 +114,9 @@ export default Component.extend({
       this.acceptedFormats.includes(`.${extension}`) ||
       this.acceptedFormats.includes(file.type)
     );
-  },
+  }
 
   _fileExtension(fileName) {
     return fileName.split(".").pop();
-  },
-});
+  }
+}

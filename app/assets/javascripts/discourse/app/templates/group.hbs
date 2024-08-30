@@ -40,6 +40,18 @@
             {{this.model.name}}
           </div>
         {{/if}}
+
+        {{#if this.model.automatic}}
+          <DTooltip class="admin-group-automatic-tooltip">
+            <:trigger>
+              {{d-icon "cog"}}
+              {{i18n "admin.groups.manage.membership.automatic"}}
+            </:trigger>
+            <:content>
+              {{i18n "admin.groups.manage.membership.automatic_tooltip"}}
+            </:content>
+          </DTooltip>
+        {{/if}}
       </div>
 
       <div class="group-details-button">
@@ -95,6 +107,7 @@
         <p>{{html-safe this.model.bio_cooked}}</p>
       </div>
     {{/if}}
+
   </div>
 
   <div class="user-content-wrapper">

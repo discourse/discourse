@@ -3,40 +3,40 @@ import { next } from "@ember/runloop";
 import $ from "jquery";
 import Scrolling from "discourse/mixins/scrolling";
 
-export default Component.extend(Scrolling, {
+export default class ScrollTracker extends Component.extend(Scrolling) {
   didReceiveAttrs() {
-    this._super(...arguments);
+    super.didReceiveAttrs(...arguments);
 
     this.set("trackerName", `scroll-tracker-${this.name}`);
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     this.bindScrolling();
-  },
+  }
 
   didRender() {
-    this._super(...arguments);
+    super.didRender(...arguments);
 
     const data = this.session.get(this.trackerName);
     if (data && data.position >= 0 && data.tag === this.tag) {
       next(() => $(window).scrollTop(data.position + 1));
     }
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     this.unbindScrolling();
-  },
+  }
 
   scrolled() {
-    this._super(...arguments);
+    super.scrolled(...arguments);
 
     this.session.set(this.trackerName, {
       position: $(window).scrollTop(),
       tag: this.tag,
     });
-  },
-});
+  }
+}

@@ -19,7 +19,7 @@ export function configureEyeline(opts) {
 configureEyeline();
 
 // Track visible elements on the screen.
-export default EmberObject.extend(Evented, {
+export default class Eyeline extends EmberObject.extend(Evented) {
   update() {
     if (_skipUpdate) {
       return;
@@ -81,5 +81,5 @@ export default EmberObject.extend(Evented, {
         return this.trigger("sawBottom", { detail: $elem });
       }
     });
-  },
-});
+  }
+}

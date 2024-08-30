@@ -30,7 +30,7 @@ describe "Account activation", type: :system do
 
     expect(user.reload.active).to eq(false)
 
-    find("#activate-account-button").click
+    find(".activate-account-button").click
 
     wait_for(timeout: 5) { user.reload.active }
   end

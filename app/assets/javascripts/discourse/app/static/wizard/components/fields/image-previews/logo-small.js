@@ -2,29 +2,29 @@ import { action } from "@ember/object";
 import { drawHeader, LOREM } from "../../../lib/preview";
 import PreviewBaseComponent from "../styling-preview/-preview-base";
 
-export default PreviewBaseComponent.extend({
-  width: 375,
-  height: 100,
-  image: null,
+export default class LogoSmall extends PreviewBaseComponent {
+  width = 375;
+  height = 100;
+  image = null;
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     this.field.addListener(this.imageChanged);
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
     this.field.removeListener(this.imageChanged);
-  },
+  }
 
   @action
   imageChanged() {
     this.reload();
-  },
+  }
 
   images() {
     return { image: this.field.value };
-  },
+  }
 
   paint(options) {
     const { ctx, colors, font, headingFont, width, height } = options;
@@ -85,5 +85,5 @@ export default PreviewBaseComponent.extend({
       const line = height * 0.55 + i * (LINE_HEIGHT * 1.5);
       ctx.fillText(lines[i], afterLogo, line);
     }
-  },
-});
+  }
+}

@@ -59,7 +59,7 @@ acceptance("Category Edit - Security", function (needs) {
     const addedRow = [...queryAll(".row-body")].at(-1);
 
     assert.strictEqual(
-      addedRow.querySelector(".group-name-label").innerText,
+      addedRow.querySelector(".group-name-link").innerText,
       "staff"
     );
     assert.strictEqual(

@@ -17,6 +17,11 @@ ru:
         few: "голоса"
         many: "голосов"
         other: "голосов"
+      votes:
+        one: "%{count} голос"
+        few: "%{count} голоса"
+        many: "%{count} голосов"
+        other: "%{count} голоса"
       average_rating: "Средний рейтинг: <strong>%{average}</strong>."
       public:
         title: "Голосов <strong>публичных</strong>."
@@ -56,6 +61,12 @@ ru:
       show-results:
         title: "Показать результаты опроса"
         label: "Результаты"
+      show-tally:
+        title: "Показать результаты голосования по количеству голосов"
+        label: "Показать подсчет"
+      show-percentage:
+        title: "Показать результаты голосования в процентах"
+        label: "Отображать в процентах"
       remove-vote:
         title: "Удалить свой голос"
         label: "Забрать голос"

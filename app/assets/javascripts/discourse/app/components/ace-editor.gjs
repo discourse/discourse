@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import { registerWaiter } from "@ember/test";
 import { modifier } from "ember-modifier";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import loadAce from "discourse/lib/load-ace-editor";
@@ -70,6 +71,12 @@ export default class AceEditor extends Component {
     this.skipChangePropagation = true;
     this.editor.getSession().setValue(this.args.content || "");
     this.skipChangePropagation = false;
+
+    if (isTesting()) {
+      let finished = false;
+      registerWaiter(() => finished);
+      this.editor.renderer.once("afterRender", () => (finished = true));
+    }
   });
 
   constructor() {
@@ -165,7 +172,7 @@ export default class AceEditor extends Component {
   @bind
   editorIdChanged() {
     if (this.autofocus) {
-      this.send("focus");
+      this.focus();
     }
   }
 

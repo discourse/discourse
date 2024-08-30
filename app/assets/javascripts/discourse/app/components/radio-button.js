@@ -1,17 +1,18 @@
 import Component from "@ember/component";
+import { attributeBindings, tagName } from "@ember-decorators/component";
 import $ from "jquery";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  tagName: "input",
-  type: "radio",
-  attributeBindings: [
-    "name",
-    "type",
-    "value",
-    "checked:checked",
-    "disabled:disabled",
-  ],
+@tagName("input")
+@attributeBindings(
+  "name",
+  "type",
+  "value",
+  "checked:checked",
+  "disabled:disabled"
+)
+export default class RadioButton extends Component {
+  type = "radio";
 
   click() {
     const value = $(this.element).val();
@@ -24,10 +25,10 @@ export default Component.extend({
       }
       this.set("selection", value);
     }
-  },
+  }
 
   @discourseComputed("value", "selection")
   checked(value, selection) {
     return value === selection;
-  },
-});
+  }
+}

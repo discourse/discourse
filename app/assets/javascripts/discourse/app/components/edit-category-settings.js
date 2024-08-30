@@ -12,18 +12,20 @@ export function addCategorySortCriteria(criteria) {
   categorySortCriteria.push(criteria);
 }
 
-export default buildCategoryPanel("settings", {
-  emailInEnabled: setting("email_in"),
-  showPositionInput: setting("fixed_category_positions"),
+export default class EditCategorySettings extends buildCategoryPanel(
+  "settings"
+) {
+  @setting("email_in") emailInEnabled;
+  @setting("fixed_category_positions") showPositionInput;
+
+  @and("category.show_subcategory_list", "isParentCategory")
+  showSubcategoryListStyle;
+  @empty("category.sort_order") isDefaultSortOrder;
+
   @discourseComputed("category.isParent", "category.parent_category_id")
   isParentCategory(isParent, parentCategoryId) {
     return isParent || !parentCategoryId;
-  },
-  showSubcategoryListStyle: and(
-    "category.show_subcategory_list",
-    "isParentCategory"
-  ),
-  isDefaultSortOrder: empty("category.sort_order"),
+  }
 
   @discourseComputed
   availableSubcategoryListStyles() {
@@ -46,11 +48,11 @@ export default buildCategoryPanel("settings", {
         value: "boxes_with_featured_topics",
       },
     ];
-  },
+  }
 
   groupFinder(term) {
     return Group.findAll({ term, ignore_automatic: true });
-  },
+  }
 
   @discourseComputed
   availableViews() {
@@ -58,7 +60,7 @@ export default buildCategoryPanel("settings", {
       { name: I18n.t("filters.latest.title"), value: "latest" },
       { name: I18n.t("filters.top.title"), value: "top" },
     ];
-  },
+  }
 
   @discourseComputed
   availableTopPeriods() {
@@ -67,14 +69,14 @@ export default buildCategoryPanel("settings", {
         return { name: I18n.t(`filters.top.${p}.title`), value: p };
       }
     );
-  },
+  }
 
   @discourseComputed
   availableListFilters() {
     return ["all", "none"].map((p) => {
       return { name: I18n.t(`category.list_filters.${p}`), value: p };
     });
-  },
+  }
 
   @discourseComputed
   searchPrioritiesOptions() {
@@ -90,7 +92,7 @@ export default buildCategoryPanel("settings", {
     });
 
     return options;
-  },
+  }
 
   @discourseComputed
   availableSorts() {
@@ -107,7 +109,7 @@ export default buildCategoryPanel("settings", {
       .concat(categorySortCriteria)
       .map((s) => ({ name: I18n.t("category.sort_options." + s), value: s }))
       .sort((a, b) => a.name.localeCompare(b.name));
-  },
+  }
 
   @discourseComputed("category.sort_ascending")
   sortAscendingOption(sortAscending) {
@@ -118,7 +120,7 @@ export default buildCategoryPanel("settings", {
       return true;
     }
     return sortAscending;
-  },
+  }
 
   @discourseComputed
   sortAscendingOptions() {
@@ -126,22 +128,22 @@ export default buildCategoryPanel("settings", {
       { name: I18n.t("category.sort_ascending"), value: true },
       { name: I18n.t("category.sort_descending"), value: false },
     ];
-  },
+  }
 
   @discourseComputed
   hiddenRelativeIntervals() {
     return ["mins"];
-  },
+  }
 
   @action
   onAutoCloseDurationChange(minutes) {
     let hours = minutes ? minutes / 60 : null;
     this.set("category.auto_close_hours", hours);
-  },
+  }
 
   @action
   onDefaultSlowModeDurationChange(minutes) {
     let seconds = minutes ? minutes * 60 : null;
     this.set("category.default_slow_mode_seconds", seconds);
-  },
-});
+  }
+}

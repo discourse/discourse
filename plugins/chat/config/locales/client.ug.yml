@@ -39,6 +39,10 @@ ug:
       chat_messages_count: "سۆھبەت ئۇچۇرى"
       chat_channels_count: "سۆھبەت قانىلى"
       chat_users_count: "سۆھبەت ئىشلەتكۈچى"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} سۆھبەت ئۇچۇرى"
+          other: "%{formatted_number} سۆھبەت ئۇچۇرى"
     chat:
       text_copied: تېكىست چاپلاش تاختىسىغا كۆچۈرۈلدى
       link_copied: ئۇلانما چاپلاش تاختىسىغا كۆچۈرۈلدى

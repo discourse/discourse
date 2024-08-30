@@ -1,5 +1,5 @@
+import { classNames } from "@ember-decorators/component";
 import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
 
-export default SelectKitRowComponent.extend({
-  classNames: ["chat-channel-chooser-row"],
-});
+@classNames("chat-channel-chooser-row")
+export default class ChatChannelChooserRow extends SelectKitRowComponent {}

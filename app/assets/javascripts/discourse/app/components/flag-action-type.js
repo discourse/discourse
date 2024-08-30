@@ -1,23 +1,28 @@
 import Component from "@ember/component";
 import { and, equal, not } from "@ember/object/computed";
+import { tagName } from "@ember-decorators/component";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Component.extend({
-  tagName: "",
+@tagName("")
+export default class FlagActionType extends Component {
+  @and("flag.require_message", "selected") showMessageInput;
+  @and("flag.isIllegal", "selected") showConfirmation;
+  @not("showMessageInput") showDescription;
+  @equal("flag.name_key", "notify_user") isNotifyUser;
 
   @discourseComputed("flag.name_key")
   wrapperClassNames(nameKey) {
     return `flag-action-type ${nameKey}`;
-  },
+  }
 
   @discourseComputed("flag.name_key")
   customPlaceholder(nameKey) {
     return I18n.t("flagging.custom_placeholder_" + nameKey, {
       defaultValue: I18n.t("flagging.custom_placeholder_notify_moderators"),
     });
-  },
+  }
 
   @discourseComputed("flag.name", "flag.name_key", "username")
   formattedName(name, nameKey, username) {
@@ -28,29 +33,24 @@ export default Component.extend({
         defaultValue: name,
       });
     }
-  },
+  }
 
   @discourseComputed("flag", "selectedFlag")
   selected(flag, selectedFlag) {
     return flag === selectedFlag;
-  },
-
-  showMessageInput: and("flag.require_message", "selected"),
-  showConfirmation: and("flag.isIllegal", "selected"),
-  showDescription: not("showMessageInput"),
-  isNotifyUser: equal("flag.name_key", "notify_user"),
+  }
 
   @discourseComputed("flag.description", "flag.short_description")
   description(long_description, short_description) {
     return this.site.mobileView ? short_description : long_description;
-  },
+  }
 
   @discourseComputed("message.length")
   customMessageLengthClasses(messageLength) {
     return messageLength < this.siteSettings.min_personal_message_post_length
       ? "too-short"
       : "ok";
-  },
+  }
 
   @discourseComputed("message.length")
   customMessageLength(messageLength) {
@@ -65,11 +65,5 @@ export default Component.extend({
         count: MAX_MESSAGE_LENGTH - len,
       });
     }
-  },
-
-  actions: {
-    changePostActionType(at) {
-      this.changePostActionType(at);
-    },
-  },
-});
+  }
+}

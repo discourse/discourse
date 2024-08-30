@@ -209,6 +209,14 @@ fi:
             valid_trust_levels:
               label: Kelvolliset luottamustasot
               description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä; oletusarvo on mikä tahansa luottamustaso
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: Tarkkailussa olevat alueet
+              description: Käynnistyy vain, jos ketju on joillakin näistä alueista
+            watching_tags:
+              label: Tarkkailussa olevat tunnisteet
+              description: Käynnistyy vain, jos ketjulla on jokin näistä tunnisteista
         after_post_cook:
           fields:
             valid_trust_levels:

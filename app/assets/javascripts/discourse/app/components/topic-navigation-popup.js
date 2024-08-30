@@ -1,14 +1,15 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { tagName } from "@ember-decorators/component";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  tagName: "",
-  popupId: null,
-  hidden: false,
+@tagName("")
+export default class TopicNavigationPopup extends Component {
+  popupId = null;
+  hidden = false;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     if (this.popupKey) {
       const value = this.keyValueStore.getItem(this.popupKey);
@@ -18,14 +19,14 @@ export default Component.extend({
         this.keyValueStore.removeItem(this.popupKey);
       }
     }
-  },
+  }
 
   @discourseComputed("popupId")
   popupKey(popupId) {
     if (popupId) {
       return `dismiss_topic_nav_popup_${popupId}`;
     }
-  },
+  }
 
   @action
   close() {
@@ -39,5 +40,5 @@ export default Component.extend({
         this.keyValueStore.setItem(this.popupKey, true);
       }
     }
-  },
-});
+  }
+}

@@ -168,6 +168,9 @@ de:
             first_topic_only:
               label: Nur erstes Thema
               description: Wird nur ausgelöst, wenn das Thema das erste Thema ist, das ein Benutzer erstellt hat
+            skip_via_email:
+              label: "Per E-Mail überspringen"
+              description: "Den Auslöser überspringen, wenn der Beitrag per E-Mail erstellt wurde"
           created: Erstellt
           edited: Bearbeitet
         user_updated:

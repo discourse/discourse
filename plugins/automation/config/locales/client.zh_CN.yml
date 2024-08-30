@@ -212,10 +212,10 @@ zh_CN:
           fields:
             watching_categories:
               label: 关注类别
-              description: 仅当主题属于以下类别之一时才会触发
+              description: 仅当话题属于以下类别之一时触发
             watching_tags:
               label: 关注标签
-              description: 仅当话题包含以下任何标签时才会触发
+              description: 仅当话题包含以下任意标签时触发
         after_post_cook:
           fields:
             valid_trust_levels:
