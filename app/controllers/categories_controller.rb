@@ -157,6 +157,7 @@ class CategoriesController < ApplicationController
   def create
     guardian.ensure_can_create!(Category)
     position = category_params.delete(:position)
+    moderating_group_ids = category_params.delete(:reviewable_by_group_ids).presence
 
     @category =
       begin
@@ -167,6 +168,7 @@ class CategoriesController < ApplicationController
 
     if @category.save
       @category.move_to(position.to_i) if position
+      @category.update_reviewable_by_groups(moderating_group_ids) if moderating_group_ids
 
       Scheduler::Defer.later "Log staff action create category" do
         @staff_action_logger.log_category_creation(@category)

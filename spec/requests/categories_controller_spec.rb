@@ -517,7 +517,7 @@ RSpec.describe CategoriesController do
                  slug: "hello-cat",
                  auto_close_hours: 72,
                  search_priority: Searchable::PRIORITIES[:ignore],
-                 reviewable_by_group_name: group.name,
+                 reviewable_by_group_ids: [group.id],
                  permissions: {
                    "everyone" => readonly,
                    "staff" => create_post,
@@ -527,7 +527,7 @@ RSpec.describe CategoriesController do
           expect(response.status).to eq(200)
           cat_json = response.parsed_body["category"]
           expect(cat_json).to be_present
-          expect(cat_json["reviewable_by_group_name"]).to eq(group.name)
+          expect(cat_json["reviewable_by_group_ids"]).to eq([group.id])
           expect(cat_json["name"]).to eq("hello")
           expect(cat_json["slug"]).to eq("hello-cat")
           expect(cat_json["color"]).to eq("ff0")

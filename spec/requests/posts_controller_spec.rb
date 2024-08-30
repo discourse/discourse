@@ -2905,8 +2905,7 @@ RSpec.describe PostsController do
       end
 
       it "prevents a group moderator from altering notes outside of their category" do
-        moderatable_group = Fabricate(:group)
-        Fabricate(:category_moderation_group, category: topic.category, group: moderatable_group)
+        topic.category.category_moderation_groups.where(group:).delete_all
 
         put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello" }
 
