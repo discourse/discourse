@@ -51,7 +51,11 @@ export default class PostMenuLikeButton extends Component {
   <template>
     {{#if @transformedPost.showLike}}
       <div class="double-button">
-        <LikeCount ...attributes @transformedPost={{@transformedPost}} />
+        <LikeCount
+          ...attributes
+          @transformedPost={{@transformedPost}}
+          @action={{@secondaryAction}}
+        />
         <DButton
           class={{concatClass
             "toggle-like"
@@ -68,7 +72,11 @@ export default class PostMenuLikeButton extends Component {
       </div>
     {{else if @transformedPost.likeCount}}
       <div class="double-button">
-        <LikeCount ...attributes @transformedPost={{@transformedPost}} />
+        <LikeCount
+          ...attributes
+          @transformedPost={{@transformedPost}}
+          @action={{@secondaryAction}}
+        />
       </div>
     {{/if}}
   </template>

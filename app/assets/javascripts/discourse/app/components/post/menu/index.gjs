@@ -25,6 +25,7 @@ import PostMenuDeleteButton, {
 import PostMenuEditButton from "./buttons/edit";
 import PostMenuFlagButton from "./buttons/flag";
 import PostMenuLikeButton from "./buttons/like";
+import PostMenuReadButton from "./buttons/read";
 import PostMenuRepliesButton from "./buttons/replies";
 import PostMenuReplyButton from "./buttons/reply";
 import PostMenuShareButton from "./buttons/share";
@@ -58,7 +59,7 @@ function resetPostMenuButtons() {
     [EDIT_BUTTON_ID, PostMenuEditButton],
     [FLAG_BUTTON_ID, PostMenuFlagButton],
     [LIKE_BUTTON_ID, PostMenuLikeButton],
-    [READ_BUTTON_ID, <template><span>READ</span></template>],
+    [READ_BUTTON_ID, PostMenuReadButton],
     [REPLIES_BUTTON_ID, PostMenuRepliesButton],
     [REPLY_BUTTON_ID, PostMenuReplyButton],
     [SHARE_BUTTON_ID, PostMenuShareButton],
@@ -102,39 +103,40 @@ export default class PostMenu extends Component {
       registeredButtonComponents.entries().map(([id, ButtonComponent]) => {
         let alwaysShow = false;
         let actionMode;
-        let assignedAction;
+        let primaryAction;
+        let secondaryAction;
         let properties;
 
         switch (id) {
           case ADMIN_BUTTON_ID:
-            assignedAction = this.openAdminMenu;
+            primaryAction = this.openAdminMenu;
             break;
 
           case COPY_LINK_BUTTON_ID:
-            assignedAction = this.args.copyLink;
+            primaryAction = this.args.copyLink;
             break;
 
           case DELETE_BUTTON_ID:
             if (this.args.transformedPost.canRecoverTopic) {
               actionMode = BUTTON_ACTION_MODE_RECOVER_TOPIC;
-              assignedAction = this.args.recoverPost;
+              primaryAction = this.args.recoverPost;
             } else if (this.args.transformedPost.canDeleteTopic) {
               actionMode = BUTTON_ACTION_MODE_DELETE_TOPIC;
-              assignedAction = this.args.deletePost;
+              primaryAction = this.args.deletePost;
             } else if (this.args.transformedPost.canRecover) {
               actionMode = BUTTON_ACTION_MODE_RECOVER;
-              assignedAction = this.args.recoverPost;
+              primaryAction = this.args.recoverPost;
             } else if (this.args.transformedPost.canDelete) {
               actionMode = BUTTON_ACTION_MODE_DELETE;
-              assignedAction = this.args.deletePost;
+              primaryAction = this.args.deletePost;
             } else if (this.args.transformedPost.showFlagDelete) {
               actionMode = BUTTON_ACTION_MODE_SHOW_FLAG_DELETE;
-              assignedAction = this.showDeleteTopicModal;
+              primaryAction = this.showDeleteTopicModal;
             }
             break;
 
           case EDIT_BUTTON_ID:
-            assignedAction = this.args.editPost;
+            primaryAction = this.args.editPost;
             alwaysShow =
               this.#isWikiMode ||
               (this.args.transformedPost.canEdit &&
@@ -145,22 +147,27 @@ export default class PostMenu extends Component {
             break;
 
           case FLAG_BUTTON_ID:
-            assignedAction = this.args.showFlags;
+            primaryAction = this.args.showFlags;
             break;
 
           case LIKE_BUTTON_ID:
-            assignedAction = this.like;
+            primaryAction = this.like;
+            secondaryAction = this.toggleWhoLiked;
+            break;
+
+          case READ_BUTTON_ID:
+            primaryAction = this.toggleWhoRead;
             break;
 
           case REPLY_BUTTON_ID:
-            assignedAction = this.args.replyToPost;
+            primaryAction = this.args.replyToPost;
             properties = {
               showLabel: this.site.desktopView && !this.#isWikiMode,
             };
             break;
 
           case REPLIES_BUTTON_ID:
-            assignedAction = this.args.toggleReplies;
+            primaryAction = this.args.toggleReplies;
             properties = {
               filteredRepliesView: this.args.filteredRepliesView,
               repliesShown: this.args.repliesShown,
@@ -168,18 +175,19 @@ export default class PostMenu extends Component {
             break;
 
           case SHARE_BUTTON_ID:
-            assignedAction = this.args.share;
+            primaryAction = this.args.share;
             break;
 
           case SHOW_MORE_BUTTON_ID:
-            assignedAction = this.showMoreActions;
+            primaryAction = this.showMoreActions;
             break;
         }
 
         const config = {
           postMenuButtonId: id,
           Component: ButtonComponent,
-          action: assignedAction,
+          action: primaryAction,
+          secondaryAction,
           actionMode,
           alwaysShow,
           properties,
@@ -350,6 +358,28 @@ export default class PostMenu extends Component {
     await Promise.all(fetchData);
   }
 
+  @action
+  toggleWhoLiked() {
+    if (this.likedUsers.length) {
+      this.likedUsers = [];
+      this.totalLikedUsers = null;
+      return;
+    }
+
+    this.#fetchWhoLiked();
+  }
+
+  @action
+  toggleWhoRead() {
+    if (this.readers.length) {
+      this.readers = [];
+      this.totalReaders = null;
+      return;
+    }
+
+    this.#fetchWhoRead();
+  }
+
   get #configuredItems() {
     return this.siteSettings.post_menu.split("|").filter(Boolean);
   }
@@ -412,6 +442,7 @@ export default class PostMenu extends Component {
             @properties={{this.repliesButton.properties}}
             @action={{this.repliesButton.action}}
             @actionMode={{this.repliesButton.actionMode}}
+            @secondaryAction={{this.repliesButton.secondaryAction}}
           />
         {{/if}}
         <div class="actions">
@@ -423,6 +454,7 @@ export default class PostMenu extends Component {
               @properties={{button.properties}}
               @action={{button.action}}
               @actionMode={{button.actionMode}}
+              @secondaryAction={{button.secondaryAction}}
             />
           {{/each}}
         </div>
