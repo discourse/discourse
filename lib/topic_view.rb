@@ -535,16 +535,15 @@ class TopicView
   def category_group_moderator_user_ids
     @category_group_moderator_user_ids ||=
       begin
-        if SiteSetting.enable_category_group_moderation? &&
-             @topic.category&.reviewable_by_group.present?
+        if SiteSetting.enable_category_group_moderation? && @topic.category.present?
           posts_user_ids = Set.new(@posts.map(&:user_id))
           Set.new(
-            @topic
-              .category
-              .reviewable_by_group
-              .group_users
+            GroupUser
+              .joins(group: :category_moderation_groups)
+              .where(category_moderation_groups: { category_id: @topic.category.id })
               .where(user_id: posts_user_ids)
-              .pluck("distinct user_id"),
+              .distinct
+              .pluck(:user_id),
           )
         else
           Set.new

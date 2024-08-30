@@ -337,9 +337,13 @@ class ReviewableFlaggedPost < Reviewable
 
     user_ids = User.staff.pluck(:id)
 
-    if SiteSetting.enable_category_group_moderation? &&
-         group_id = topic.category&.reviewable_by_group_id.presence
-      user_ids.concat(GroupUser.where(group_id: group_id).pluck(:user_id))
+    if SiteSetting.enable_category_group_moderation? && topic.category
+      user_ids.concat(
+        GroupUser
+          .joins(group: :category_moderation_groups)
+          .where(group: { category_moderation_groups: { category_id: topic.category.id } })
+          .pluck(:user_id),
+      )
       user_ids.uniq!
     end
 

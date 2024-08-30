@@ -171,8 +171,18 @@ module UserGuardian
       (
         SiteSetting.enable_category_group_moderation &&
           Reviewable
-            .where(reviewable_by_group_id: @user.group_users.pluck(:group_id))
-            .where("category_id IS NULL or category_id IN (?)", allowed_category_ids)
+            .joins(category: :category_moderation_groups)
+            .where(
+              categories: {
+                category_moderation_groups: {
+                  group_id: @user.group_users.pluck(:group_id),
+                },
+              },
+            )
+            .where(
+              "reviewables.category_id IS NULL OR reviewables.category_id IN (?)",
+              allowed_category_ids,
+            )
             .exists?
       )
   end

@@ -3,7 +3,6 @@ import { and, empty } from "@ember/object/computed";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { setting } from "discourse/lib/computed";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
-import Group from "discourse/models/group";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
@@ -48,10 +47,6 @@ export default class EditCategorySettings extends buildCategoryPanel(
         value: "boxes_with_featured_topics",
       },
     ];
-  }
-
-  groupFinder(term) {
-    return Group.findAll({ term, ignore_automatic: true });
   }
 
   @discourseComputed
@@ -145,5 +140,10 @@ export default class EditCategorySettings extends buildCategoryPanel(
   onDefaultSlowModeDurationChange(minutes) {
     let seconds = minutes ? minutes * 60 : null;
     this.set("category.default_slow_mode_seconds", seconds);
+  }
+
+  @action
+  onCategoryModeratingGroupsChange(groupIds) {
+    this.set("category.reviewable_by_group_ids", groupIds);
   }
 }

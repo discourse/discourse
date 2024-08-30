@@ -88,7 +88,7 @@ class About
     allowed_cats = Guardian.new(@user).allowed_category_ids
     return [] if allowed_cats.blank?
 
-    cats_with_mods = Category.where.not(reviewable_by_group_id: nil).pluck(:id)
+    cats_with_mods = Category.joins(:category_moderation_groups).distinct.pluck(:id)
 
     category_ids = cats_with_mods & allowed_cats
     return [] if category_ids.blank?
@@ -97,14 +97,24 @@ class About
     per_cat_limit = 1 if per_cat_limit < 1
 
     results = DB.query(<<~SQL, category_ids: category_ids)
-        SELECT c.id category_id
-             , (ARRAY_AGG(u.id ORDER BY u.last_seen_at DESC))[:#{per_cat_limit}] user_ids
-          FROM categories c
-          JOIN group_users gu ON gu.group_id = c.reviewable_by_group_id
-          JOIN users u ON u.id = gu.user_id
-         WHERE c.id IN (:category_ids)
-      GROUP BY c.id
-      ORDER BY c.position
+      WITH moderator_users AS (
+        SELECT
+          cmg.category_id,
+          u.id AS user_id,
+          u.last_seen_at,
+          ROW_NUMBER() OVER (PARTITION BY cmg.category_id, u.id ORDER BY u.last_seen_at DESC) as rn
+        FROM category_moderation_groups cmg
+        JOIN group_users gu
+          ON cmg.group_id = gu.group_id
+        JOIN users u
+          ON gu.user_id = u.id
+      )
+      SELECT
+        category_id,
+        array_agg(user_id ORDER BY last_seen_at DESC) AS user_ids
+      FROM moderator_users
+      WHERE rn = 1
+      GROUP BY category_id
     SQL
 
     cats = Category.where(id: results.map(&:category_id)).index_by(&:id)
