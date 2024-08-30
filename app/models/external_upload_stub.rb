@@ -21,7 +21,7 @@ class ExternalUploadStub < ActiveRecord::Base
           where(
             "status = ? AND created_at <= ?",
             ExternalUploadStub.statuses[:created],
-            CREATED_EXPIRY_HOURS.hours.ago,
+            (SiteSetting.enable_upload_debug_mode ? 48 : CREATED_EXPIRY_HOURS).hours.ago,
           )
         end
 
