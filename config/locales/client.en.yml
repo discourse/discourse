@@ -3853,6 +3853,7 @@ en:
         flag: "privately flag this post for attention or send a private notification about it"
         delete: "delete this post"
         undelete: "undelete this post"
+        share_action: "Share"
         share: "share a link to this post"
         copy_action: "Copy link"
         copy_title: "copy a link to this post to clipboard"

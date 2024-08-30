@@ -15,6 +15,7 @@ import PostMenuCopyLinkButton from "./buttons/copy-link";
 import EditButton from "./buttons/edit";
 import LikeButton from "./buttons/like";
 import ReplyButton from "./buttons/reply";
+import PostMenuShareButton from "./buttons/share";
 import ShowMoreButton from "./buttons/show-more";
 
 const LIKE_ACTION = 2;
@@ -59,9 +60,7 @@ function resetPostMenuButtons() {
     <span>REPLIES</span>
   </template>);
   registeredButtonComponents.set(REPLY_BUTTON_ID, ReplyButton);
-  registeredButtonComponents.set(SHARE_BUTTON_ID, <template>
-    <span>SHARE</span>
-  </template>);
+  registeredButtonComponents.set(SHARE_BUTTON_ID, PostMenuShareButton);
   registeredButtonComponents.set(SHOW_MORE_BUTTON_ID, ShowMoreButton);
 }
 
@@ -124,6 +123,10 @@ export default class PostMenu extends Component {
           properties = {
             showLabel: this.site.desktopView && !this.#isWikiMode,
           };
+          break;
+
+        case SHARE_BUTTON_ID:
+          assignedAction = this.args.share;
           break;
 
         case SHOW_MORE_BUTTON_ID:
