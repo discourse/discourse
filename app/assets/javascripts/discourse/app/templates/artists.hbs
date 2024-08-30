@@ -1,19 +1,28 @@
 {{outlet}}
 <div id="entity-page" class="artist-page" role="main">
   <div class="entity-page-header flex">
-    <div class="cover-art" title="Album art for {{this.model.artist.name}}">
-      {{this.model.coverArt}}
+    <div class="cover-art" title="Album art for {{this.model.artist.artist.name}}">
+      {{html-safe this.model.artist.coverArt}}
     </div>
     <div class="artist-info">
-      <h1>{{this.model.artist.name}}</h1>
+      <h1>{{this.model.artist.artist.name}}</h1>
       <div class="details">
         <small class="help-block">
-          {{this.model.artist.begin_year}}
-          {{#if this.model.artist.end_year}} — {{this.model.artist.end_year}}{{/if}}
+          {{this.model.artist.artist.begin_year}}
+          {{#if this.model.artist.artist.end_year}} — {{this.model.artist.artist.end_year}}{{/if}}
           <br>
-          {{this.model.artist.area}}
+          {{this.model.artist.artist.area}}
         </small>
       </div>
+      {{log this.model}}
+      {{#if this.model.wikipediaExtract}}
+        <div class="wikipedia-extract">
+          <div class="content">{{html-safe this.model.wikipediaExtract.content}}</div>
+          <a class="btn btn-link pull-right" href="{{this.model.wikipediaExtract.url}}" target="_blank" rel="noopener noreferrer">
+            Read on Wikipedia…
+          </a>
+        </div>
+      {{/if}}
     </div>
   </div>
 </div>
