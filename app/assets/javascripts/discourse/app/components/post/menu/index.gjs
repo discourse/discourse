@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
@@ -10,8 +10,9 @@ import concatClass from "discourse/helpers/concat-class";
 import { userPath } from "discourse/lib/url";
 import i18n from "discourse-common/helpers/i18n";
 import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
+import EditButton from "./buttons/edit";
 import LikeButton from "./buttons/like";
+import ReplyButton from "./buttons/reply";
 import ShowMoreButton from "./buttons/show-more";
 
 const LIKE_ACTION = 2;
@@ -23,39 +24,27 @@ const FLAG_BUTTON_ID = "flag";
 const LIKE_BUTTON_ID = "like";
 const READ_BUTTON_ID = "read";
 const REPLY_BUTTON_ID = "reply";
-const REPLY_SMALL_BUTTON_ID = "reply-small";
 const SHOW_MORE_BUTTON_ID = "show-more";
-const WIKI_EDIT_BUTTON_ID = "wiki-edit";
 
-let registeredPostMenuButtons;
+let registeredButtonComponents;
 resetPostMenuButtons();
 
 function resetPostMenuButtons() {
-  registeredPostMenuButtons = new Map();
+  registeredButtonComponents = new Map();
 
-  registeredPostMenuButtons.set(BOOKMARK_BUTTON_ID, <template>
+  registeredButtonComponents.set(BOOKMARK_BUTTON_ID, <template>
     <span>BOOKMARK</span>
   </template>);
-  registeredPostMenuButtons.set(EDIT_BUTTON_ID, <template>
-    <span>EDIT</span>
-  </template>);
-  registeredPostMenuButtons.set(FLAG_BUTTON_ID, <template>
+  registeredButtonComponents.set(EDIT_BUTTON_ID, EditButton);
+  registeredButtonComponents.set(FLAG_BUTTON_ID, <template>
     <span>FLAG</span>
   </template>);
-  registeredPostMenuButtons.set(LIKE_BUTTON_ID, LikeButton);
-  registeredPostMenuButtons.set(READ_BUTTON_ID, <template>
+  registeredButtonComponents.set(LIKE_BUTTON_ID, LikeButton);
+  registeredButtonComponents.set(READ_BUTTON_ID, <template>
     <span>READ</span>
   </template>);
-  registeredPostMenuButtons.set(REPLY_BUTTON_ID, <template>
-    <span>REPLY</span>
-  </template>);
-  registeredPostMenuButtons.set(REPLY_SMALL_BUTTON_ID, <template>
-    <span>REPLY_SMALL</span>
-  </template>);
-  registeredPostMenuButtons.set(WIKI_EDIT_BUTTON_ID, <template>
-    <span>WIKI_EDIT</span>
-  </template>);
-  registeredPostMenuButtons.set(SHOW_MORE_BUTTON_ID, ShowMoreButton);
+  registeredButtonComponents.set(REPLY_BUTTON_ID, ReplyButton);
+  registeredButtonComponents.set(SHOW_MORE_BUTTON_ID, ShowMoreButton);
 }
 
 export function clearExtraPostMenuButtons() {
@@ -76,6 +65,7 @@ export default class PostMenu extends Component {
   @service capabilities;
   @service currentUser;
   @service keyValueStore;
+  @service site;
   @service siteSettings;
   @service store;
 
@@ -85,15 +75,61 @@ export default class PostMenu extends Component {
   @tracked readers = [];
   @tracked totalReaders;
 
+  REGISTERED_BUTTONS = new Map(
+    registeredButtonComponents.entries().map(([id, ButtonComponent]) => {
+      let alwaysShow = false;
+      let assignedAction;
+      let properties;
+
+      switch (id) {
+        case EDIT_BUTTON_ID:
+          assignedAction = this.args.editPost;
+          alwaysShow =
+            this.#isWikiMode ||
+            (this.args.transformedPost.canEdit &&
+              this.args.transformedPost.yours);
+          properties = {
+            showLabel: this.site.desktopView && this.#isWikiMode,
+          };
+          break;
+
+        case LIKE_BUTTON_ID:
+          assignedAction = this.like;
+          break;
+
+        case REPLY_BUTTON_ID:
+          assignedAction = this.args.replyToPost;
+          properties = {
+            showLabel: this.site.desktopView && !this.#isWikiMode,
+          };
+          break;
+
+        case SHOW_MORE_BUTTON_ID:
+          assignedAction = this.showMoreActions;
+          break;
+      }
+
+      const config = {
+        postMenuButtonId: id,
+        Component: ButtonComponent,
+        action: assignedAction,
+        alwaysShow,
+        properties,
+      };
+
+      return [id, config];
+    })
+  );
+
   get items() {
     return this.#configuredItems.map((i) => {
       // if the post is a wiki, make Edit more prominent
-      if (this.args.transformedPost.wiki && this.args.transformedPost.canEdit) {
+      if (this.#isWikiMode) {
         switch (i) {
           case EDIT_BUTTON_ID:
-            return REPLY_SMALL_BUTTON_ID;
+            return REPLY_BUTTON_ID;
           case REPLY_BUTTON_ID:
-            return WIKI_EDIT_BUTTON_ID;
+            return EDIT_BUTTON_ID;
         }
       }
 
@@ -102,23 +138,12 @@ export default class PostMenu extends Component {
   }
 
   get buttons() {
-    const items = this.items
-      .map((itemId) => {
-        const button = registeredPostMenuButtons.get(itemId);
-
-        if (button) {
-          // assign the name as a property to the button so we can compare it against other configurations
-          // like the list of hidden items for example
-          button.postMenuButtonId = itemId;
-        }
-
-        return button;
-      })
+    return this.items
+      .map((itemId) => this.REGISTERED_BUTTONS.get(itemId))
       .filter(isPresent);
-
-    return items;
   }
 
+  @cached
   get collapsedButtons() {
     const hiddenItems = this.#hiddenItems;
 
@@ -127,7 +152,14 @@ export default class PostMenu extends Component {
     }
 
     return this.buttons.filter((button) => {
-      if (this.args.transformedPost.yours && button.alwaysShowYours) {
+      if (
+        this.args.transformedPost.wiki &&
+        button.postMenuButtonId === EDIT_BUTTON_ID
+      ) {
+        console.log({ button });
+      }
+
+      if (button.alwaysShow) {
         return false;
       }
 
@@ -157,9 +189,11 @@ export default class PostMenu extends Component {
       return !this.collapsedButtons.includes(button);
     });
 
-    const showMoreButton = registeredPostMenuButtons.get(SHOW_MORE_BUTTON_ID);
-    showMoreButton.postMenuButtonId = SHOW_MORE_BUTTON_ID;
-    buttons.push(showMoreButton);
+    if (this.args.transformedPost.wiki) {
+      console.log({ buttons });
+    }
+
+    buttons.push(this.REGISTERED_BUTTONS.get(SHOW_MORE_BUTTON_ID));
 
     return buttons;
   }
@@ -170,16 +204,6 @@ export default class PostMenu extends Component {
 
   get remainingReaders() {
     return this.totalReaders - this.readers.length;
-  }
-
-  @bind
-  actionFor(button) {
-    switch (button.postMenuButtonId) {
-      case LIKE_BUTTON_ID:
-        return this.like;
-      case SHOW_MORE_BUTTON_ID:
-        return this.showMoreActions;
-    }
   }
 
   @action
@@ -244,6 +268,10 @@ export default class PostMenu extends Component {
       );
   }
 
+  get #isWikiMode() {
+    return this.args.transformedPost.wiki && this.args.transformedPost.canEdit;
+  }
+
   async #fetchWhoLiked() {
     const users = await this.store.find("post-action-user", {
       id: this.args.transformedPost.id,
@@ -276,10 +304,11 @@ export default class PostMenu extends Component {
         }}
       >
         <div class="actions">
-          {{#each this.visibleButtons as |Button|}}
-            <Button
+          {{#each this.visibleButtons as |button|}}
+            <button.Component
               @transformedPost={{@transformedPost}}
-              @action={{this.actionFor Button}}
+              @properties={{button.properties}}
+              @action={{button.action}}
             />
           {{/each}}
         </div>

@@ -1,6 +1,6 @@
 import DButton from "discourse/components/d-button";
 
-const ShowMoreButton = <template>
+const PostMenuShowMoreButton = <template>
   <DButton
     class="show-more-actions"
     ...attributes
@@ -10,4 +10,4 @@ const ShowMoreButton = <template>
   />
 </template>;
 
-export default ShowMoreButton;
+export default PostMenuShowMoreButton;

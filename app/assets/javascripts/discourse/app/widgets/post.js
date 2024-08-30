@@ -537,8 +537,10 @@ createWidget("post-contents", {
     result.push(
       this.attach("glimmer-post-menu", {
         transformedPost: attrs,
-        toggleLike: () => this.sendWidgetAction("toggleLike"),
         ...extraState,
+        editPost: () => this.sendWidgetAction("editPost"), // this action comes from the post stream
+        replyToPost: () => this.sendWidgetAction("replyToPost"), // this action comes from the post stream
+        toggleLike: () => this.sendWidgetAction("toggleLike"),
       })
     );
 

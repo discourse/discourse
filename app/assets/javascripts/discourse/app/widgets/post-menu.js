@@ -951,5 +951,9 @@ registerWidgetShim(
   "glimmer-post-menu",
   "section.post-menu-area.glimmer-post-menu-widget-shim.clearfix",
   hbs`
-      <Post::Menu @transformedPost={{@data.transformedPost}} @toggleLike={{@data.toggleLike}}/>`
+    <Post::Menu @transformedPost={{@data.transformedPost}}
+                @editPost={{@data.editPost}}
+                @replyToPost={{@data.replyToPost}}
+                @toggleLike={{@data.toggleLike}}
+                />`
 );
