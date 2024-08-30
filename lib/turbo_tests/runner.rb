@@ -172,7 +172,7 @@ module TurboTests
 
     def start_subprocess(env, extra_args, tests, process_id, record_runtime:)
       if tests.empty?
-        @messages << { type: "exit", process_id: process_id }
+        @messages << { type: "exit", process_id: process_id, total_time: 0 }
       else
         tmp_filename = "tmp/test-pipes/subprocess-#{process_id}"
 
@@ -215,6 +215,7 @@ module TurboTests
           STDOUT.puts "::endgroup::" if ENV["GITHUB_ACTIONS"]
         end
 
+        start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
         stdin, stdout, stderr, wait_thr = Open3.popen3(env, *command)
         stdin.close
 
@@ -229,7 +230,11 @@ module TurboTests
             end
           end
 
-          @messages << { type: "exit", process_id: process_id }
+          @messages << {
+            type: "exit",
+            process_id: process_id,
+            total_time: Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time,
+          }
         end
 
         @threads << start_copy_thread(stdout, STDOUT)
@@ -304,7 +309,9 @@ module TurboTests
             exited += 1
 
             if @reporter.formatters.any? { |f| f.is_a?(DocumentationFormatter) }
-              @reporter.message("[#{message[:process_id]}] DONE (#{exited}/#{@num_processes + 1})")
+              @reporter.message(
+                "[#{message[:process_id]}] DONE (#{exited}/#{@num_processes + 1}) (total_time = #{message[:total_time].round(2)}s)",
+              )
             end
 
             break if exited == @num_processes + 1
