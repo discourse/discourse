@@ -53,7 +53,7 @@ class BasicGroupSerializer < ApplicationSerializer
   end
 
   def bio_excerpt
-    PrettyText.excerpt(bio_cooked, 110, keep_emoji_images: true) if bio_cooked.present?
+    PrettyText.excerpt(bio_cooked, 200, keep_emoji_images: true) if bio_cooked.present?
   end
 
   def include_incoming_email?
