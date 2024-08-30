@@ -1390,7 +1390,6 @@ end
 #  navigate_to_first_post_after_read         :boolean          default(FALSE), not null
 #  search_priority                           :integer          default(0)
 #  allow_global_tags                         :boolean          default(FALSE), not null
-#  reviewable_by_group_id                    :integer
 #  read_only_banner                          :string
 #  default_list_filter                       :string(20)       default("all")
 #  allow_unlimited_owner_edits_on_first_post :boolean          default(FALSE), not null
