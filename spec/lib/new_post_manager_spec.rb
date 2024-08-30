@@ -490,9 +490,12 @@ RSpec.describe NewPostManager do
   end
 
   context "when posting in the category requires approval" do
-    let!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-    let!(:review_group) { Fabricate(:group) }
-    let!(:category) { Fabricate(:category, reviewable_by_group_id: review_group.id) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:review_group) { Fabricate(:group) }
+    fab!(:category)
+    fab!(:category_moderation_group) do
+      Fabricate(:category_moderation_group, category:, group: review_group)
+    end
 
     context "when new topics require approval" do
       before do

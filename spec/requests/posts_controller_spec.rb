@@ -59,7 +59,8 @@ RSpec.shared_examples "finding and showing post" do
       end
 
       it "can find posts in the allowed category" do
-        post.topic.category.update!(reviewable_by_group_id: group.id, topic_id: topic.id)
+        post.topic.category.update!(topic_id: topic.id)
+        Fabricate(:category_moderation_group, category: post.topic.category, group:)
         get url
         expect(response.status).to eq(200)
       end
@@ -602,7 +603,8 @@ RSpec.describe PostsController do
 
       before do
         SiteSetting.enable_category_group_moderation = true
-        post.topic.category.update!(reviewable_by_group_id: group.id, topic_id: topic.id)
+        Fabricate(:category_moderation_group, category: post.topic.category, group:)
+        post.topic.category.update!(topic_id: topic.id)
         sign_in(user_gm)
       end
 
@@ -2880,7 +2882,7 @@ RSpec.describe PostsController do
 
       before do
         SiteSetting.enable_category_group_moderation = true
-        topic.category.update!(reviewable_by_group_id: group.id)
+        Fabricate(:category_moderation_group, category: topic.category, group:)
 
         sign_in(user)
       end
@@ -2904,7 +2906,7 @@ RSpec.describe PostsController do
 
       it "prevents a group moderator from altering notes outside of their category" do
         moderatable_group = Fabricate(:group)
-        topic.category.update!(reviewable_by_group_id: moderatable_group.id)
+        Fabricate(:category_moderation_group, category: topic.category, group: moderatable_group)
 
         put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello" }
 

@@ -400,7 +400,7 @@ class Reviewable < ActiveRecord::Base
       SiteSetting.enable_category_group_moderation? ? user.group_users.pluck(:group_id) : []
 
     result
-      .joins(category: :category_moderation_groups)
+      .left_joins(category: :category_moderation_groups)
       .where(
         "(reviewables.reviewable_by_moderator AND :moderator) OR (category_moderation_groups.group_id IN (:group_ids))",
         moderator: user.moderator?,
