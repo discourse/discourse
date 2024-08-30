@@ -536,6 +536,7 @@ createWidget("post-contents", {
     result.push(this.attach("post-menu", attrs, extraState));
     result.push(
       this.attach("glimmer-post-menu", {
+        model: this.findAncestorModel(),
         transformedPost: attrs,
         ...extraState,
         editPost: () => this.sendWidgetAction("editPost"), // this action comes from the post stream

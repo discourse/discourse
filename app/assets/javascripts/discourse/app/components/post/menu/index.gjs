@@ -10,6 +10,7 @@ import concatClass from "discourse/helpers/concat-class";
 import { userPath } from "discourse/lib/url";
 import i18n from "discourse-common/helpers/i18n";
 import discourseLater from "discourse-common/lib/later";
+import PostMenuBookmarkButton from "./buttons/bookmark";
 import EditButton from "./buttons/edit";
 import LikeButton from "./buttons/like";
 import ReplyButton from "./buttons/reply";
@@ -32,9 +33,7 @@ resetPostMenuButtons();
 function resetPostMenuButtons() {
   registeredButtonComponents = new Map();
 
-  registeredButtonComponents.set(BOOKMARK_BUTTON_ID, <template>
-    <span>BOOKMARK</span>
-  </template>);
+  registeredButtonComponents.set(BOOKMARK_BUTTON_ID, PostMenuBookmarkButton);
   registeredButtonComponents.set(EDIT_BUTTON_ID, EditButton);
   registeredButtonComponents.set(FLAG_BUTTON_ID, <template>
     <span>FLAG</span>
@@ -306,6 +305,8 @@ export default class PostMenu extends Component {
         <div class="actions">
           {{#each this.visibleButtons as |button|}}
             <button.Component
+              class="btn-flat"
+              @model={{@model}}
               @transformedPost={{@transformedPost}}
               @properties={{button.properties}}
               @action={{button.action}}
