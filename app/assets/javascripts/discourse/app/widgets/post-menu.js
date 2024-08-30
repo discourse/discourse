@@ -956,11 +956,22 @@ registerWidgetShim(
               @model={{@data.model}}
               @repliesShown={{@data.repliesShown}}
               @transformedPost={{@data.transformedPost}}
+              @changeNotice={{@data.changeNotice}}
+              @changePostOwner={{@data.changePostOwner}}
               @copyLink={{@data.copyLink}}
               @editPost={{@data.editPost}}
+              @grantBadge={{@data.grantBadge}}
+              @lockPost={{@data.lockPost}}
+              @permanentlyDeletePost={{@data.permanentlyDeletePost}}
+              @rebakePost={{@data.rebakePost}}
               @replyToPost={{@data.replyToPost}}
               @share={{@data.share}}
+              @showPagePublish={{@data.showPagePublish}}
               @toggleLike={{@data.toggleLike}}
+              @togglePostType={{@data.togglePostType}}
               @toggleReplies={{@data.toggleReplies}}
+              @toggleWiki={{@data.toggleWiki}}
+              @unhidePost={{@data.unhidePost}}
+              @unlockPost={{@data.unlockPost}}
       />`
 );

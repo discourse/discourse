@@ -4,12 +4,14 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import { and, eq } from "truth-helpers";
+import AdminPostMenu from "discourse/components/admin-post-menu";
 import SmallUserList from "discourse/components/small-user-list";
 import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
 import { userPath } from "discourse/lib/url";
 import i18n from "discourse-common/helpers/i18n";
 import discourseLater from "discourse-common/lib/later";
+import PostMenuAdminButton from "./buttons/admin";
 import PostMenuBookmarkButton from "./buttons/bookmark";
 import PostMenuCopyLinkButton from "./buttons/copy-link";
 import EditButton from "./buttons/edit";
@@ -41,9 +43,7 @@ resetPostMenuButtons();
 function resetPostMenuButtons() {
   registeredButtonComponents = new Map();
 
-  registeredButtonComponents.set(ADMIN_BUTTON_ID, <template>
-    <span>ADMIN</span>
-  </template>);
+  registeredButtonComponents.set(ADMIN_BUTTON_ID, PostMenuAdminButton);
   registeredButtonComponents.set(BOOKMARK_BUTTON_ID, PostMenuBookmarkButton);
   registeredButtonComponents.set(COPY_LINK_BUTTON_ID, PostMenuCopyLinkButton);
   registeredButtonComponents.set(DELETE_BUTTON_ID, <template>
@@ -81,6 +81,7 @@ export default class PostMenu extends Component {
   @service capabilities;
   @service currentUser;
   @service keyValueStore;
+  @service menu;
   @service site;
   @service siteSettings;
   @service store;
@@ -100,6 +101,10 @@ export default class PostMenu extends Component {
         let properties;
 
         switch (id) {
+          case ADMIN_BUTTON_ID:
+            assignedAction = this.openAdminMenu;
+            break;
+
           case COPY_LINK_BUTTON_ID:
             assignedAction = this.args.copyLink;
             break;
@@ -269,6 +274,31 @@ export default class PostMenu extends Component {
         await this.args.toggleLike();
         resolve();
       }, 400);
+    });
+  }
+
+  @action
+  openAdminMenu(_, event) {
+    this.menu.show(event.target, {
+      identifier: "admin-post-menu",
+      component: AdminPostMenu,
+      modalForMobile: true,
+      autofocus: true,
+      data: {
+        transformedPost: this.args.transformedPost,
+        post: this.args.model,
+        changeNotice: this.args.changeNotice,
+        changePostOwner: this.args.changePostOwner,
+        grantBadge: this.args.grantBadge,
+        lockPost: this.args.lockPost,
+        permanentlyDeletePost: this.args.permanentlyDeletePost,
+        rebakePost: this.args.rebakePost,
+        showPagePublish: this.args.showPagePublish,
+        togglePostType: this.args.togglePostType,
+        toggleWiki: this.args.toggleWiki,
+        unhidePost: this.args.unhidePost,
+        unlockPost: this.args.unlockPost,
+      },
     });
   }
 

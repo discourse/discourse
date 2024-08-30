@@ -36,14 +36,14 @@ export default class AdminPostMenu extends Component {
       console.error(`Unknown error while attempting \`${actionName}\`:`, error);
     }
 
-    await this.args.data.scheduleRerender();
+    await this.args.data.scheduleRerender?.();
   }
 
   @action
   async extraAction(button) {
     await this.args.close();
     await button.action(this.args.data.post);
-    await this.args.data.scheduleRerender();
+    await this.args.data.scheduleRerender?.();
   }
 
   <template>
