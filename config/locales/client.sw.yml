@@ -212,7 +212,6 @@ sw:
       like_count: "Upendo"
       topic_count: "Mada"
       post_count: "Machapisho"
-      contact_info: "Iwapo kuna suala la muhimu au haraka linalohusiana na mtandao huu, tafadhali wasiliana nasi kupitia %{contact_info}."
       activities:
         topics:
           one: "%{formatted_number} topiki"
@@ -1089,6 +1088,10 @@ sw:
       header_title: "Karibu!"
       title: "Jiunge"
       failed: "Tatizo limetokea, labda barua pepe imesajiliwa tayari, jaribu kiungo cha kusahau nywila."
+      progress_bar:
+        signup: "Jiunge"
+        approve: "Imethibitishwa"
+        login: "Ingia"
     forgot_password:
       title: "Weka upa nywila"
       action: "Nimesahau nywila yangu"
@@ -2561,6 +2564,7 @@ sw:
           enabled: "Imeruhusiwa?"
           edit: "Hariri"
           delete: "Futa"
+          flags_tab: "Bendera"
           form:
             save: "Hifadhi"
             name: "Jina"
@@ -2598,7 +2602,7 @@ sw:
         menu:
           backups: "Machelezo"
           logs: "Batli"
-        none: "Hakuna chelezo iliyopo."
+        none: "Hakuna chelezo iliyopo"
         read_only:
           enable:
             title: "Ruhusu hali-tumizi ya usomaji tu."
@@ -2629,12 +2633,11 @@ sw:
           download:
             label: "Pakua"
             title: "Tuma barua pepe yenye kiungo cha upakuaji"
-            alert: "Kiungo cha kupakua chelezo hii imetumwa kwenye barua pepe yako."
+            alert: "Kiungo cha kupakua chelezo hii imetumwa kwenye barua pepe yako"
           destroy:
             title: "Ondoa chelezo"
             confirm: "Una uhakika unataka kufuta chelezo hii?"
           restore:
-            is_disabled: "Rejesha imezuiliwa kwenye mipangilio ya tovuti."
             label: "Rejesha"
             title: "Rejesha chelezo"
             confirm: "Una uhakika unataka kurejesha chelezo hii?"

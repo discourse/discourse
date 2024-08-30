@@ -5200,6 +5200,7 @@ en:
 
           membership:
             automatic: Automatic
+            automatic_tooltip: "This group is automatic, you cannot delete it and members are added and removed automatically"
             trust_levels_title: "Trust level automatically granted to members when they're added:"
             effects: Effects
             trust_levels_none: "None"

@@ -5,11 +5,6 @@
   width: auto;
   .fk-d-menu__inner-content {
     min-width: 0;
-  }
-}
-
-.fk-d-menu:has(.user-card) {
-  .fk-d-menu__inner-content {
     overflow: visible;
   }
 }

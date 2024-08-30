@@ -12,6 +12,8 @@ tr_TR:
     poll_minimum_trust_level_to_create: "Anket oluşturmak için gereken minimum güven seviyesini tanımlayın."
     poll_create_allowed_groups: "Anket oluşturmasına izin verilen gruplar."
     poll_groupable_user_fields: "Anket sonuçlarını gruplamak ve filtrelemek için kullanılabilecek bir dizi kullanıcı alanı adı."
+    poll_export_data_explorer_query_id: "Anket sonuçlarını dışa aktarmak için kullanılacak veri gezgini sorgusunun kimliği (devre dışı bırakmak için 0)."
+    poll_export_ranked_choice_data_explorer_query_id: "Anlık ikinci tur oylama anket sonuçlarını dışa aktarmak için kullanılacak veri gezgini sorgusunun kimliği."
     poll_default_public: "Yeni bir anket oluştururken, varsayılan olarak \"kimin oy verdiğini göster\" seçeneğini etkinleştirin."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
@@ -51,6 +53,7 @@ tr_TR:
       one: Bu anket için en az %{count} oy gereklidir.
       other: Bu anket için en az %{count} oy gereklidir.
     ranked_choice:
+      vote_options_mismatch: "Anında seçim için, bir oylamada yapılan seçim sayısı seçenek sayısıyla eşleşmelidir. Seçenek sayısı %{count} ve yapılan seçim sayısı %{provided} idi."
       no_group_results_support: "Geçersiz anket türü, ranked_choice gruplanmış sonuçları desteklemiyor."
     topic_must_be_open_to_toggle_status: "Durumu açmak/kapatmak için konu açık olmalıdır."
     only_staff_or_op_can_toggle_status: "Yalnızca bir personel üyesi veya orijinal gönderi sahibi anket durumunu açabilir/kapatabilir."

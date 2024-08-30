@@ -211,6 +211,14 @@ ru:
             valid_trust_levels:
               label: Допустимые уровни доверия
               description: Сработает, только если публикация создана пользователем на указанных уровнях доверия. По умолчанию — любой уровень.
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: Отслеживаемые категории
+              description: Сработает только в том случае, если тема относится к одной из этих категорий
+            watching_tags:
+              label: Отслеживаемые теги
+              description: Сработает только в том случае, если тема содержит любой из этих тегов
         after_post_cook:
           fields:
             valid_trust_levels:

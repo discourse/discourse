@@ -215,6 +215,8 @@ uk:
       removed_user: "Вилучив %{who} %{when}"
       removed_group: "Вилучив %{who} %{when}"
       autobumped: "Автоматично піднято %{when}"
+      tags_changed: "Теги оновлено %{when}"
+      category_changed: "Категорія оновлена %{when}"
       autoclosed:
         enabled: "Закрито %{when}"
         disabled: "Відкрито %{when}"
@@ -375,8 +377,22 @@ uk:
       post_count: "Дописи"
       user_count: "Реєстрації"
       active_user_count: "Активні користувачі"
+      visitor_count: "Відвідувачі"
+      eu_visitor_count: "Відвідувачі з Європейського Союзу"
+      traffic_info_footer_MF: |
+        За останні 6 місяців цей сайт надавав вміст приблизно { total_visitors, plural,
+            one {# відвідувачу}
+            few {# відвідувачам}
+            many {# відвідувачам}
+          other {# відвідувачам}
+        } щомісяця, відвідувачам з Європейського Союзу приблизно { eu_visitors, plural,
+            one {# відвідувачу}
+            few {# відвідувачам}
+            many {# відвідувачам}
+          other {# відвідувачам}
+        }.
       contact: "Зв'язатися з нами"
-      contact_info: "У випадку серйозних проблем з цим сайтом, будь ласка, звʼяжіться з нами через %{contact_info}."
+      contact_info: "У разі критичної проблеми або термінової справи, що стосується цього сайту, зв’яжіться з %{contact_info}."
       site_activity: "Активність сайту"
       view_more: "Переглянути більше"
       view_less: "Показати менше"
@@ -401,6 +417,18 @@ uk:
           few: "%{formatted_number} вподобань"
           many: "%{formatted_number} вподобання"
           other: "%{formatted_number} вподобання"
+        visitors_MF: |
+          { total_count, plural,
+              one {{total_formatted_number} відвідувач}
+              few {{total_formatted_number} відвідувачі}
+              many {{total_formatted_number} відвідувачів}
+            other {{total_formatted_number} відвідувачів}
+          }, при цьому з ЄС { eu_count, plural,
+              one {{eu_formatted_number}}
+              few {{eu_formatted_number}}
+              many {{eu_formatted_number}}
+            other {{eu_formatted_number}}
+          }
         periods:
           last_7_days: "протягом останніх 7 днів"
           today: "сьогодні"
@@ -2285,6 +2313,7 @@ uk:
           other {# помилок/хвилину}
         }.
     learn_more: "Дізнатися більше…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>Дізнатися більше…</a>"
     mute: Приглушити
     unmute: Розблокувати
     last_post: Опубліковано
@@ -2369,6 +2398,10 @@ uk:
       associate: "Вже є обліковий запис? <a href='%{associate_link}'>Увійдіть</a>, щоб пов’язати свій обліковий запис та %{provider}."
       activation_title: "Активувати обліковий запис"
       already_have_account: "Вже маєте обліковий запис?"
+      progress_bar:
+        signup: "Зареєструватись"
+        approve: "Схвалити"
+        login: "Вхід"
     forgot_password:
       title: "Скидання пароля"
       action: "Я забув(ла) свій пароль"
@@ -2575,6 +2608,7 @@ uk:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} перевищує максимально допустимий %{max_file_size}"
+        size_too_small: "%{provided_file_size} є меншим за мінімальний дозволений %{min_file_size}"
     emoji_picker:
       filter_placeholder: Шукати emoji
       smileys_&_emotion: Смайли та емотикони
@@ -5205,7 +5239,7 @@ uk:
         problems_found: "Кілька порад по вашим поточним налаштуванням сайту"
         new_features:
           title: "Що нового"
-          subtitle: "Щоб дізнатися більше про нові функції та вдосконалення, які ми постійно додаємо, див. <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Примітки до випуску</a>."
+          subtitle: "Ми постійно випускаємо нові функції та вдосконалення. На цій сторінці ви знайдете найголовніші з них, але ви можете натиснути \"Дізнатися більше\", щоб переглянути докладнішу інформацію про випуск."
           previous_announcements: "Ви можете побачити анонси про нові функції на <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Дізнатися більше…"
         last_checked: "Остання перевірка"
@@ -5751,6 +5785,7 @@ uk:
           back: "Назад до прапорів"
           delete: "Видалити"
           delete_confirm: 'Ви впевнені, що хочете видалити "%{name}"?'
+          flags_tab: "Скарги"
           form:
             add_header: "Додати прапор"
             edit_header: "Редагувати прапор"
@@ -5814,10 +5849,13 @@ uk:
         legacy: "Стара версія"
       backups:
         title: "Backups"
+        files_title: "Резервні файли"
+        description: "Резервні копії включають в себе повну базу даних сайту, що містить все на сайті: теми, повідомлення, групи, налаштування, теми тощо. Залежно від того, як створений файл резервної копії, він може включати або не включати завантаження."
         menu:
           backups: "Backups"
+          backup_files: "Резервні файли"
           logs: "Logs"
-        none: "No backup available."
+        none: "Немає резервної копії"
         read_only:
           enable:
             title: "Включити режим Тільки для читання"
@@ -5855,12 +5893,12 @@ uk:
           download:
             label: "Завантажити"
             title: "Надіслати лист з посиланням для скачування"
-            alert: "Вам було відправлено посилання для скачування бекапа."
+            alert: "Посилання для завантаження цієї резервної копії було надіслано вам на email"
           destroy:
             title: "Видалити резервну копію"
             confirm: "Ви переконані, що хочете видалити резервну копію?"
           restore:
-            is_disabled: "Відновлення вимкнено в налаштуваннях сайту."
+            is_disabled: "Відновлення наразі вимкнено. Щоб увімкнути його, відвідайте <a href='%{url}'>налаштування сайту</a>."
             label: "Відновити"
             title: "Відновити резервну копію"
             confirm: "Ви впевнені, що хочете відновити цей бекап?"

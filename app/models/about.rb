@@ -81,7 +81,7 @@ class About
   end
 
   def stats
-    @stats ||= About.fetch_stats
+    @stats ||= About.fetch_cached_stats
   end
 
   def category_moderators

@@ -39,6 +39,12 @@ he:
       chat_messages_count: "הודעות צ׳אט"
       chat_channels_count: "ערוצי צ׳אט"
       chat_users_count: "משתמשי צ׳אט"
+      activities:
+        chat_messages:
+          one: "הודעת צ׳אט"
+          two: "שתי הודעות צ׳אט"
+          many: "%{formatted_number} הודעות צ׳אט"
+          other: "%{formatted_number} הודעות צ׳אט"
     chat:
       text_copied: טקסט הועתק ללוח הגזירים
       link_copied: קישור הועתק ללוח הגזירים

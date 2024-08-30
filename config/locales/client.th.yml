@@ -240,7 +240,6 @@ th:
       like_count: "ถูกใจ"
       topic_count: "กระทู้"
       post_count: "โพสต์"
-      contact_info: "ในกรณีที่เกิดเหตุฉุกเฉินหรือประเด็นสำคัญที่ส่งผลต่อเว็บไซต์นี้ กรุณาติดต่อเราที่ %{contact_info}"
       activities:
         topics:
           other: "%{formatted_number} กระทู้"
@@ -1225,6 +1224,10 @@ th:
       disclaimer: "เมื่อลงทะเบียน คุณได้ยอมรับ <a href='%{privacy_link}' target='blank'>นโยบายความเป็นส่วนตัว</a> และ <a href='%{tos_link}' target='blank'> เงื่อนไขการบริการ</a>"
       title: "สมัคร"
       failed: "มีบางอย่างผิดพลาด อีเมลนี้อาจถูกลงทะเบียนไว้แล้ว กดลิงก์หากลืมรหัสผ่าน"
+      progress_bar:
+        signup: "สมัคร"
+        approve: "อนุมัติ"
+        login: "เข้าสู่ระบบ"
     forgot_password:
       title: "รีเซ็ตรหัสผ่าน"
       action: "ฉันลืมรหัสผ่าน"
@@ -2703,6 +2706,7 @@ th:
           edit: "แก้ไข"
           delete: "ลบ"
           delete_confirm: 'คุณแน่ใจหรือว่าต้องการลบ "%{name}"'
+          flags_tab: "ธง"
           form:
             save: "บันทึก"
             name: "ชื่อ"

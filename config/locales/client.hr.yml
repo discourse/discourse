@@ -187,6 +187,8 @@ hr:
       removed_user: "Je uklonio %{who} %{when}"
       removed_group: "Je uklonio %{who} %{when}"
       autobumped: "Automatski bumpirano %{when}"
+      tags_changed: "Oznake ažurirane %{when}"
+      category_changed: "Kategorija ažurirana %{when}"
       autoclosed:
         enabled: "Zatvoren %{when}"
         disabled: "Otvoren %{when}"
@@ -342,7 +344,6 @@ hr:
       user_count: "Učlanjenja"
       active_user_count: "Aktivni korisnici"
       contact: "Kontaktirajte nas"
-      contact_info: "U slučaju kritičnog problema ili hitnosti koje utječu na rad stranice, kontaktirajte nas na %{contact_info}."
       activities:
         topics:
           one: "%{formatted_number} tema"
@@ -2020,6 +2021,10 @@ hr:
       associate: "Već imate račun? <a href='%{associate_link}'>Prijavite se</a> da biste povezali svoj %{provider} račun."
       activation_title: "Aktivirajte svoj račun"
       already_have_account: "Već imate račun?"
+      progress_bar:
+        signup: "Učlani se"
+        approve: "Odobri"
+        login: "Prijava"
     forgot_password:
       title: "Poništavanje lozinke"
       action: "Zaboravio/la sam zaporku"
@@ -4782,6 +4787,7 @@ hr:
           edit: "Uredi"
           delete: "Pobriši"
           delete_confirm: 'Jeste li sigurni da želite izbrisati "%{name}"?'
+          flags_tab: "Oznake zastavicom"
           form:
             save: "Spremi"
             name: "Ime"
@@ -4825,7 +4831,7 @@ hr:
         menu:
           backups: "Sigurnosne kopije"
           logs: "Zapisi"
-        none: "Nema dostupne kopije."
+        none: "Nema dostupne kopije"
         read_only:
           enable:
             title: "Omogući \"samo čitanje\" model."
@@ -4856,12 +4862,11 @@ hr:
           download:
             label: "Preuzmi"
             title: "Pošaljite e-poštu s vezom za preuzimanje"
-            alert: "Veza za preuzimanje ove sigurnosne kopije poslana vam je e-poštom."
+            alert: "Veza za preuzimanje ove sigurnosne kopije poslana vam je e-poštom"
           destroy:
             title: "Ukloni kopiju"
             confirm: "Jeste li sigurni da želite uništiti ovu sigurnosnu kopiju?"
           restore:
-            is_disabled: "Obnova je onemogućena u postavkama stranice."
             label: "Obnovi"
             title: "Obnovi sig. kopiju"
             confirm: "Jeste li sigurni da želite vratiti ovu sigurnosnu kopiju?"
@@ -4870,7 +4875,6 @@ hr:
             title: "Vrati bazu podataka na prethodno radno stanje"
             confirm: "Jeste li sigurni da želite vratiti bazu podataka na prethodno radno stanje?"
         location:
-          local: "Lokalna pohrana"
           s3: "S3"
         backup_storage_error: "Pristup sigurnosnoj pohrani nije uspio: %{error_message}"
       export_csv:

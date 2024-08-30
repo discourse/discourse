@@ -151,7 +151,7 @@
 /* end shared styles */
 
 .d-modal.create-account {
-  &:not(:has(.has-alt-auth)) .d-modal__container {
+  &:not(:has(.login-right-side)) .d-modal__container {
     max-width: 500px;
   }
 

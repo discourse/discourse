@@ -13,6 +13,9 @@ fi:
       total_votes:
         one: "ääni"
         other: "ääntä"
+      votes:
+        one: "%{count} ääni"
+        other: "%{count} ääntä"
       average_rating: "Keskiarvo: <strong>%{average}</strong>"
       public:
         title: "Äänet ovat <strong>julkisia</strong>."
@@ -46,6 +49,12 @@ fi:
       show-results:
         title: "Näytä kyselyn tulos"
         label: "Tulokset"
+      show-tally:
+        title: "Näytä äänestystulokset äänien määrän mukaan"
+        label: "Näytä lukumäärä"
+      show-percentage:
+        title: "Näytä äänestystulokset prosentteina"
+        label: "Näytä prosentteina"
       remove-vote:
         title: "Poista äänesi"
         label: "Kumoa äänestys"

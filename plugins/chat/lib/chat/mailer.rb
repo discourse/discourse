@@ -15,7 +15,7 @@ module Chat
           if DiscoursePluginRegistry.apply_modifier(:chat_mailer_send_summary_to_user, true, user)
             Jobs.enqueue(
               :user_email,
-              type: :chat_summary,
+              type: "chat_summary",
               user_id: user.id,
               force_respect_seen_recently: true,
             )

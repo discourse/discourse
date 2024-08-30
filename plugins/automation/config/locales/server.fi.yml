@@ -56,6 +56,9 @@ fi:
       pm_created:
         title: Yksityisviesti luotu
         description: Kun kelvollinen yksityisviesti luodaan, automaatio käynnistyy
+      topic_tags_changed:
+        title: Ketjun tunnisteita muutettu
+        description: Kun ketjun tunnisteet muuttuvat, automaatio käynnistyy
       topic:
         title: Ketju
         description: Tähän liittyvää skriptiä käytetään vain tietyssä ketjussa; tämä on hyödyllistä esimerkiksi validointia suorittavissa skripteissä

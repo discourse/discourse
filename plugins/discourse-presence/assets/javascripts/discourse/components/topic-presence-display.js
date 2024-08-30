@@ -1,40 +1,41 @@
 import Component from "@ember/component";
 import { gt, union } from "@ember/object/computed";
 import { service } from "@ember/service";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import { on } from "@ember-decorators/object";
+import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  topic: null,
-  presence: service(),
-  replyChannel: null,
-  whisperChannel: null,
+export default class TopicPresenceDisplay extends Component {
+  @service presence;
+
+  topic = null;
+  replyChannel = null;
+  whisperChannel = null;
+
+  @union("replyUsers", "whisperUsers") users;
+  @gt("users.length", 0) shouldDisplay;
 
   @discourseComputed("replyChannel.users.[]")
   replyUsers(users) {
     return users?.filter((u) => u.id !== this.currentUser.id);
-  },
+  }
 
   @discourseComputed("whisperChannel.users.[]")
   whisperUsers(users) {
     return users?.filter((u) => u.id !== this.currentUser.id);
-  },
-
-  users: union("replyUsers", "whisperUsers"),
+  }
 
   @discourseComputed("topic.id")
   replyChannelName(id) {
     return `/discourse-presence/reply/${id}`;
-  },
+  }
 
   @discourseComputed("topic.id")
   whisperChannelName(id) {
     return `/discourse-presence/whisper/${id}`;
-  },
-
-  shouldDisplay: gt("users.length", 0),
+  }
 
   didReceiveAttrs() {
-    this._super(...arguments);
+    super.didReceiveAttrs(...arguments);
 
     if (this.replyChannel?.name !== this.replyChannelName) {
       this.replyChannel?.unsubscribe();
@@ -53,11 +54,11 @@ export default Component.extend({
       );
       this.whisperChannel.subscribe();
     }
-  },
+  }
 
   @on("willDestroyElement")
   _destroyed() {
     this.replyChannel?.unsubscribe();
     this.whisperChannel?.unsubscribe();
-  },
-});
+  }
+}

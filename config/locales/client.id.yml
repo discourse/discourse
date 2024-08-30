@@ -127,6 +127,8 @@ id:
       removed_user: "%{who}Dikeluarkan %{when}"
       removed_group: "%{who}Dikeluarkan %{when}"
       autobumped: "Otomatis dibenturkan %{when}"
+      tags_changed: "Tag diperbarui %{when}"
+      category_changed: "Kategori diperbarui %{when}"
       autoclosed:
         enabled: "Ditutup %{when}"
         disabled: "Dibuka %{when}"
@@ -265,7 +267,6 @@ id:
       user_count: "Pendaftaran"
       active_user_count: "Pengguna Aktif"
       contact: "Hubungi kami"
-      contact_info: "Pada kegiatan dari sebuah isu kritikal atau penting terjadi pada situs ini, silahkan kontak kami di %{contact_info}."
       activities:
         topics:
           other: "%{formatted_number} topik"
@@ -1511,6 +1512,10 @@ id:
     create_account:
       title: "Mendaftar"
       already_have_account: "Sudah memiliki akun?"
+      progress_bar:
+        signup: "Mendaftar"
+        approve: "Terima"
+        login: "Log In"
     forgot_password:
       title: "Atur Ulang Kata Sandi"
       action: "Saya lupa password"
@@ -2396,6 +2401,7 @@ id:
           enabled: "Diaktifkan?"
           edit: "Ubah"
           delete: "Hapus"
+          flags_tab: "Flags"
           form:
             save: "Simpan"
             name: "Nama"

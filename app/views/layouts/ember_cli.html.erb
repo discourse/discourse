@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title><%= content_for?(:title) ? yield(:title) : SiteSetting.title %></title>
 
-  <%= stylesheet_link_tag(:ember_cli) %>
+  <%= discourse_stylesheet_link_tag(:ember_cli) %>
 
 </head>
 <body class="requires-ember-cli">

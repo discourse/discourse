@@ -209,6 +209,14 @@ tr_TR:
             valid_trust_levels:
               label: Geçerli güven seviyeleri
               description: Yalnızca gönderi bu güven seviyelerindeki bir kullanıcı tarafından oluşturulduğunda tetiklenir, varsayılan olarak herhangi bir güven seviyesidir
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: Kategori izleme
+              description: Yalnızca konu bu kategorilerden birindeyse tetiklenir
+            watching_tags:
+              label: Etiket izleme
+              description: Yalnızca konu bu etiketlerden herhangi birine sahipse tetiklenir
         after_post_cook:
           fields:
             valid_trust_levels:

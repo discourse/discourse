@@ -1,17 +1,18 @@
 import Component from "@ember/component";
+import { classNames, tagName } from "@ember-decorators/component";
 import { REPLACEMENTS } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
 import { afterRender } from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  tagName: "section",
-  classNames: ["styleguide-icons"],
-  iconIds: [],
+@tagName("section")
+@classNames("styleguide-icons")
+export default class StyleguideIcons extends Component {
+  iconIds = [];
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     this.setIconIds();
-  },
+  }
 
   @afterRender
   setIconIds() {
@@ -24,5 +25,5 @@ export default Component.extend({
       // Let's try again a short time later if there are no svgs loaded yet
       discourseLater(this, this.setIconIds, 1500);
     }
-  },
-});
+  }
+}

@@ -190,6 +190,8 @@ cs:
       removed_user: "%{who} Smazána %{when}"
       removed_group: "%{who} Smazána %{when}"
       autobumped: "Automaticky pošťouchnuto %{when}"
+      tags_changed: "Štítky aktualizovány %{when}"
+      category_changed: "Kategorie aktualizována %{when}"
       autoclosed:
         enabled: "Uzavřeno %{when}"
         disabled: "Otevřeno %{when}"
@@ -351,7 +353,6 @@ cs:
       user_count: "Registrace"
       active_user_count: "Aktivní uživatelé"
       contact: "Kontaktujte nás"
-      contact_info: "V případě kritické chyby nebo urgentní záležitosti ovlivňující tuto stránku nás prosím kontaktujte na %{contact_info}."
       site_activity: "Aktivita webu"
       view_more: "Zobrazit více"
       view_less: "Zobrazit méně"
@@ -2151,6 +2152,10 @@ cs:
       associate: "Máte již účet? <a href='%{associate_link}'>Přihlaste se</a> a propojte svůj účet %{provider}."
       activation_title: "Aktivujte svůj účet"
       already_have_account: "Máte již účet?"
+      progress_bar:
+        signup: "Registrovat se"
+        approve: "Schválit"
+        login: "Přihlásit se"
     forgot_password:
       title: "Obnovení hesla"
       action: "Zapomněl/a jsem své heslo"
@@ -2237,8 +2242,8 @@ cs:
       not_approved: "Váš účet zatím nebyl schválen. Až se tak stane, obdržíte oznámení emailem a budete se moci přihlásit."
       google_oauth2:
         name: "Google"
-        title: "Přihlásit se pomocí Google"
-        sr_title: "Přihlásit se pomocí Google"
+        title: "Přihlásit se přes Google"
+        sr_title: "Přihlásit se přes Google"
       twitter:
         name: "Twitter"
         title: "Přihlásit se přes Twitter"
@@ -2264,7 +2269,7 @@ cs:
         title: "Přihlásit se přes LinkedIn"
         sr_title: "Přihlásit se přes LinkedIn"
       passkey:
-        name: "Přihlásit pomocí přístupového klíče Passkey"
+        name: "Přihlásit se přes Passkey"
       second_factor_toggle:
         totp: "Místo toho použít autentizační aplikaci"
         backup_code: "Místo toho použít záložní kód"
@@ -4936,7 +4941,6 @@ cs:
         problems_found: "Několik rad na základě vašeho aktuálního nastavení webu"
         new_features:
           title: "Co je nového"
-          subtitle: "Pro ještě více detailů o nových funkcích a vylepšeních, které neustále přidáváme, viz <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Poznámky k vydání</a>."
           previous_announcements: "Předchozí oznámení o nových funkcích můžete vidět na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Více informací..."
         last_checked: "Naposledy zkontrolováno"
@@ -5364,6 +5368,7 @@ cs:
           edit: "Upravit"
           delete: "Smazat"
           delete_confirm: 'Opravdu chcete odstranit "%{name}"?'
+          flags_tab: "Nahlášení"
           form:
             save: "Uložit"
             name: "Jméno"
@@ -5414,7 +5419,7 @@ cs:
         menu:
           backups: "Zálohy"
           logs: "Logy"
-        none: "Žádné zálohy nejsou k dispozici."
+        none: "Žádné zálohy nejsou k dispozici"
         read_only:
           enable:
             title: "Zapnout režim jen pro čtení"
@@ -5452,12 +5457,11 @@ cs:
           download:
             label: "Stáhnout"
             title: "Poslat e-mail s odkazem ke stažení"
-            alert: "Odkaz ke stažení této zálohy vám byl zaslán e-mailem."
+            alert: "Odkaz ke stažení této zálohy vám byl zaslán e-mailem"
           destroy:
             title: "Odstranit zálohu"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
-            is_disabled: "Obnovení záloh je zakázáno v nastavení webu."
             label: "Obnovit"
             title: "Obnovit zálohu"
             confirm: "Opravdu chcete obnovit tuto zálohu?"
@@ -5466,7 +5470,6 @@ cs:
             title: "Vrátit databázi do předchozího funkčního stavu"
             confirm: "Opravdu chcete vrátit databázi zpět do předchozího funkčního stavu?"
         location:
-          local: "Místní úložiště"
           s3: "S3"
         backup_storage_error: "Nepodařilo se získat přístup k úložišti zálohy: %{error_message}"
       export_csv:
