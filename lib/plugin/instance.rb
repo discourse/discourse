@@ -140,18 +140,10 @@ class Plugin::Instance
   def add_to_serializer(
     serializer,
     attr,
-    deprecated_respect_plugin_enabled = nil,
     respect_plugin_enabled: true,
     include_condition: nil,
     &block
   )
-    if !deprecated_respect_plugin_enabled.nil?
-      Discourse.deprecate(
-        "add_to_serializer's respect_plugin_enabled argument should be passed as a keyword argument",
-      )
-      respect_plugin_enabled = deprecated_respect_plugin_enabled
-    end
-
     if attr.to_s.starts_with?("include_")
       Discourse.deprecate(
         "add_to_serializer should not be used to directly override include_*? methods. Use the include_condition keyword argument instead",
