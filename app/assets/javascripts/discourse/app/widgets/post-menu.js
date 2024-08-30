@@ -951,27 +951,29 @@ registerWidgetShim(
   "glimmer-post-menu",
   "section.post-menu-area.glimmer-post-menu-widget-shim.clearfix",
   hbs`
-      <Post::Menu
-              @filteredRepliesView={{@data.filteredRepliesView}}
-              @model={{@data.model}}
-              @repliesShown={{@data.repliesShown}}
-              @transformedPost={{@data.transformedPost}}
-              @changeNotice={{@data.changeNotice}}
-              @changePostOwner={{@data.changePostOwner}}
-              @copyLink={{@data.copyLink}}
-              @editPost={{@data.editPost}}
-              @grantBadge={{@data.grantBadge}}
-              @lockPost={{@data.lockPost}}
-              @permanentlyDeletePost={{@data.permanentlyDeletePost}}
-              @rebakePost={{@data.rebakePost}}
-              @replyToPost={{@data.replyToPost}}
-              @share={{@data.share}}
-              @showPagePublish={{@data.showPagePublish}}
-              @toggleLike={{@data.toggleLike}}
-              @togglePostType={{@data.togglePostType}}
-              @toggleReplies={{@data.toggleReplies}}
-              @toggleWiki={{@data.toggleWiki}}
-              @unhidePost={{@data.unhidePost}}
-              @unlockPost={{@data.unlockPost}}
-      />`
+    <Post::Menu
+      @filteredRepliesView={{@data.filteredRepliesView}}
+      @model={{@data.model}}
+      @repliesShown={{@data.repliesShown}}
+      @transformedPost={{@data.transformedPost}}
+      @changeNotice={{@data.changeNotice}}
+      @changePostOwner={{@data.changePostOwner}}
+      @copyLink={{@data.copyLink}}
+      @deletePost={{@data.deletePost}}
+      @editPost={{@data.editPost}}
+      @grantBadge={{@data.grantBadge}}
+      @lockPost={{@data.lockPost}}
+      @permanentlyDeletePost={{@data.permanentlyDeletePost}}
+      @rebakePost={{@data.rebakePost}}
+      @recoverPost={{@data.recoverPost}}
+      @replyToPost={{@data.replyToPost}}
+      @share={{@data.share}}
+      @showPagePublish={{@data.showPagePublish}}
+      @toggleLike={{@data.toggleLike}}
+      @togglePostType={{@data.togglePostType}}
+      @toggleReplies={{@data.toggleReplies}}
+      @toggleWiki={{@data.toggleWiki}}
+      @unhidePost={{@data.unhidePost}}
+      @unlockPost={{@data.unlockPost}}
+    />`
 );

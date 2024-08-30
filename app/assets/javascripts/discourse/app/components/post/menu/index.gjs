@@ -5,6 +5,7 @@ import { inject as service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import { and, eq } from "truth-helpers";
 import AdminPostMenu from "discourse/components/admin-post-menu";
+import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import SmallUserList from "discourse/components/small-user-list";
 import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
@@ -14,12 +15,19 @@ import discourseLater from "discourse-common/lib/later";
 import PostMenuAdminButton from "./buttons/admin";
 import PostMenuBookmarkButton from "./buttons/bookmark";
 import PostMenuCopyLinkButton from "./buttons/copy-link";
-import EditButton from "./buttons/edit";
-import LikeButton from "./buttons/like";
+import PostMenuDeleteButton, {
+  BUTTON_ACTION_MODE_DELETE,
+  BUTTON_ACTION_MODE_DELETE_TOPIC,
+  BUTTON_ACTION_MODE_RECOVER,
+  BUTTON_ACTION_MODE_RECOVER_TOPIC,
+  BUTTON_ACTION_MODE_SHOW_FLAG_DELETE,
+} from "./buttons/delete";
+import PostMenuEditButton from "./buttons/edit";
+import PostMenuLikeButton from "./buttons/like";
 import PostMenuRepliesButton from "./buttons/replies";
-import ReplyButton from "./buttons/reply";
+import PostMenuReplyButton from "./buttons/reply";
 import PostMenuShareButton from "./buttons/share";
-import ShowMoreButton from "./buttons/show-more";
+import PostMenuShowMoreButton from "./buttons/show-more";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
@@ -41,26 +49,20 @@ let registeredButtonComponents;
 resetPostMenuButtons();
 
 function resetPostMenuButtons() {
-  registeredButtonComponents = new Map();
-
-  registeredButtonComponents.set(ADMIN_BUTTON_ID, PostMenuAdminButton);
-  registeredButtonComponents.set(BOOKMARK_BUTTON_ID, PostMenuBookmarkButton);
-  registeredButtonComponents.set(COPY_LINK_BUTTON_ID, PostMenuCopyLinkButton);
-  registeredButtonComponents.set(DELETE_BUTTON_ID, <template>
-    <span>DELETE</span>
-  </template>);
-  registeredButtonComponents.set(EDIT_BUTTON_ID, EditButton);
-  registeredButtonComponents.set(FLAG_BUTTON_ID, <template>
-    <span>FLAG</span>
-  </template>);
-  registeredButtonComponents.set(LIKE_BUTTON_ID, LikeButton);
-  registeredButtonComponents.set(READ_BUTTON_ID, <template>
-    <span>READ</span>
-  </template>);
-  registeredButtonComponents.set(REPLIES_BUTTON_ID, PostMenuRepliesButton);
-  registeredButtonComponents.set(REPLY_BUTTON_ID, ReplyButton);
-  registeredButtonComponents.set(SHARE_BUTTON_ID, PostMenuShareButton);
-  registeredButtonComponents.set(SHOW_MORE_BUTTON_ID, ShowMoreButton);
+  registeredButtonComponents = new Map([
+    [ADMIN_BUTTON_ID, PostMenuAdminButton],
+    [BOOKMARK_BUTTON_ID, PostMenuBookmarkButton],
+    [COPY_LINK_BUTTON_ID, PostMenuCopyLinkButton],
+    [DELETE_BUTTON_ID, PostMenuDeleteButton],
+    [EDIT_BUTTON_ID, PostMenuEditButton],
+    [FLAG_BUTTON_ID, <template><span>FLAG</span></template>],
+    [LIKE_BUTTON_ID, PostMenuLikeButton],
+    [READ_BUTTON_ID, <template><span>READ</span></template>],
+    [REPLIES_BUTTON_ID, PostMenuRepliesButton],
+    [REPLY_BUTTON_ID, PostMenuReplyButton],
+    [SHARE_BUTTON_ID, PostMenuShareButton],
+    [SHOW_MORE_BUTTON_ID, PostMenuShowMoreButton],
+  ]);
 }
 
 export function clearExtraPostMenuButtons() {
@@ -81,6 +83,7 @@ export default class PostMenu extends Component {
   @service capabilities;
   @service currentUser;
   @service keyValueStore;
+  @service modal;
   @service menu;
   @service site;
   @service siteSettings;
@@ -97,6 +100,7 @@ export default class PostMenu extends Component {
     return new Map(
       registeredButtonComponents.entries().map(([id, ButtonComponent]) => {
         let alwaysShow = false;
+        let actionMode;
         let assignedAction;
         let properties;
 
@@ -107,6 +111,25 @@ export default class PostMenu extends Component {
 
           case COPY_LINK_BUTTON_ID:
             assignedAction = this.args.copyLink;
+            break;
+
+          case DELETE_BUTTON_ID:
+            if (this.args.transformedPost.canRecoverTopic) {
+              actionMode = BUTTON_ACTION_MODE_RECOVER_TOPIC;
+              assignedAction = this.args.recoverPost;
+            } else if (this.args.transformedPost.canDeleteTopic) {
+              actionMode = BUTTON_ACTION_MODE_DELETE_TOPIC;
+              assignedAction = this.args.deletePost;
+            } else if (this.args.transformedPost.canRecover) {
+              actionMode = BUTTON_ACTION_MODE_RECOVER;
+              assignedAction = this.args.recoverPost;
+            } else if (this.args.transformedPost.canDelete) {
+              actionMode = BUTTON_ACTION_MODE_DELETE;
+              assignedAction = this.args.deletePost;
+            } else if (this.args.transformedPost.showFlagDelete) {
+              actionMode = BUTTON_ACTION_MODE_SHOW_FLAG_DELETE;
+              assignedAction = this.showDeleteTopicModal;
+            }
             break;
 
           case EDIT_BUTTON_ID:
@@ -152,6 +175,7 @@ export default class PostMenu extends Component {
           postMenuButtonId: id,
           Component: ButtonComponent,
           action: assignedAction,
+          actionMode,
           alwaysShow,
           properties,
         };
@@ -303,6 +327,11 @@ export default class PostMenu extends Component {
   }
 
   @action
+  showDeleteTopicModal() {
+    this.modal.show(DeleteTopicDisallowedModal);
+  }
+
+  @action
   async showMoreActions() {
     this.collapsed = false;
 
@@ -377,6 +406,7 @@ export default class PostMenu extends Component {
             @transformedPost={{@transformedPost}}
             @properties={{this.repliesButton.properties}}
             @action={{this.repliesButton.action}}
+            @actionMode={{this.repliesButton.actionMode}}
           />
         {{/if}}
         <div class="actions">
@@ -387,6 +417,7 @@ export default class PostMenu extends Component {
               @transformedPost={{@transformedPost}}
               @properties={{button.properties}}
               @action={{button.action}}
+              @actionMode={{button.actionMode}}
             />
           {{/each}}
         </div>

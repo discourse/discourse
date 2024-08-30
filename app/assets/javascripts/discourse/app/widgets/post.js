@@ -547,12 +547,14 @@ createWidget("post-contents", {
         changeNotice: () => this.sendWidgetAction("changeNotice"), // this action comes from the post stream
         changePostOwner: () => this.sendWidgetAction("changePostOwner"), // this action comes from the post stream
         copyLink: () => this.sendWidgetAction("copyLink"),
+        deletePost: () => this.sendWidgetAction("deletePost"), // this action comes from the post stream
         editPost: () => this.sendWidgetAction("editPost"), // this action comes from the post stream
         grantBadge: () => this.sendWidgetAction("grantBadge"), // this action comes from the post stream
         lockPost: () => this.sendWidgetAction("lockPost"), // this action comes from the post stream
         permanentlyDeletePost: () =>
           this.sendWidgetAction("permanentlyDeletePost"),
         rebakePost: () => this.sendWidgetAction("rebakePost"), // this action comes from the post stream
+        recoverPost: () => this.sendWidgetAction("recoverPost"), // this action comes from the post stream
         replyToPost: () => this.sendWidgetAction("replyToPost"), // this action comes from the post stream
         share: () => this.sendWidgetAction("share"),
         showPagePublish: () => this.sendWidgetAction("showPagePublish"), // this action comes from the post stream
