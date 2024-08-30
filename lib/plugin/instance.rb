@@ -313,6 +313,11 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_topic_thumbnail_size(size, self)
   end
 
+  # Register a callback to enable/disable custom homepage
+  def register_custom_homepage(&blk)
+    register_modifier(:custom_homepage, &blk)
+  end
+
   # Register a callback to add custom payload to Site#categories
   # Example usage:
   #   register_site_categories_callback do |categories|
