@@ -99,22 +99,29 @@ class About
     results = DB.query(<<~SQL, category_ids: category_ids)
       WITH moderator_users AS (
         SELECT
-          cmg.category_id,
+          cmg.category_id AS category_id,
           u.id AS user_id,
           u.last_seen_at,
           ROW_NUMBER() OVER (PARTITION BY cmg.category_id, u.id ORDER BY u.last_seen_at DESC) as rn
         FROM category_moderation_groups cmg
-        JOIN group_users gu
+        INNER JOIN group_users gu
           ON cmg.group_id = gu.group_id
-        JOIN users u
+        INNER JOIN users u
           ON gu.user_id = u.id
+        WHERE cmg.category_id IN (:category_ids)
       )
-      SELECT
-        category_id,
-        array_agg(user_id ORDER BY last_seen_at DESC) AS user_ids
-      FROM moderator_users
-      WHERE rn = 1
-      GROUP BY category_id
+      SELECT id AS category_id, user_ids
+      FROM categories
+      INNER JOIN (
+        SELECT
+          category_id,
+          (ARRAY_AGG(user_id ORDER BY last_seen_at DESC))[:#{per_cat_limit}] AS user_ids
+        FROM moderator_users
+        WHERE rn = 1
+        GROUP BY category_id
+      ) X
+      ON X.category_id = id
+      ORDER BY position
     SQL
 
     cats = Category.where(id: results.map(&:category_id)).index_by(&:id)

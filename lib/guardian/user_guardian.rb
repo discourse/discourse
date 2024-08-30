@@ -179,10 +179,7 @@ module UserGuardian
                 },
               },
             )
-            .where(
-              "reviewables.category_id IS NULL OR reviewables.category_id IN (?)",
-              allowed_category_ids,
-            )
+            .where(category_id: allowed_category_ids)
             .exists?
       )
   end

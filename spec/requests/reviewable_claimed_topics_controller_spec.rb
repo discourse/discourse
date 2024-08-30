@@ -53,7 +53,7 @@ RSpec.describe ReviewableClaimedTopicsController do
         SiteSetting.reviewable_claiming = "optional"
 
         group = Fabricate(:group)
-        topic.category.update!(reviewable_by_group: group)
+        Fabricate(:category_moderation_group, category: topic.category, group:)
 
         messages =
           MessageBus.track_publish("/reviewable_claimed") do
@@ -106,8 +106,7 @@ RSpec.describe ReviewableClaimedTopicsController do
         not_notified = Fabricate(:user)
 
         group = Fabricate(:group)
-        topic.category.update!(reviewable_by_group: group)
-        reviewable.update!(reviewable_by_group: group)
+        Fabricate(:category_moderation_group, category: topic.category, group:)
 
         notified = Fabricate(:user)
         group.add(notified)
@@ -190,8 +189,7 @@ RSpec.describe ReviewableClaimedTopicsController do
       not_notified = Fabricate(:user)
 
       group = Fabricate(:group)
-      topic.category.update!(reviewable_by_group: group)
-      reviewable.update!(reviewable_by_group: group)
+      Fabricate(:category_moderation_group, category: topic.category, group:)
 
       notified = Fabricate(:user)
       group.add(notified)

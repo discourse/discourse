@@ -67,13 +67,13 @@ RSpec.describe About do
   end
 
   describe "#category_moderators" do
-    let(:user) { Fabricate(:user) }
-    let(:public_cat_moderator) { Fabricate(:user, last_seen_at: 1.month.ago) }
-    let(:private_cat_moderator) { Fabricate(:user, last_seen_at: 2.month.ago) }
-    let(:common_moderator) { Fabricate(:user, last_seen_at: 3.month.ago) }
-    let(:common_moderator_2) { Fabricate(:user, last_seen_at: 4.month.ago) }
+    fab!(:user)
+    fab!(:public_cat_moderator) { Fabricate(:user, last_seen_at: 1.month.ago) }
+    fab!(:private_cat_moderator) { Fabricate(:user, last_seen_at: 2.month.ago) }
+    fab!(:common_moderator) { Fabricate(:user, last_seen_at: 3.month.ago) }
+    fab!(:common_moderator_2) { Fabricate(:user, last_seen_at: 4.month.ago) }
 
-    let(:public_group) do
+    fab!(:public_group) do
       group = Fabricate(:public_group)
       group.add(public_cat_moderator)
       group.add(common_moderator)
@@ -81,7 +81,7 @@ RSpec.describe About do
       group
     end
 
-    let(:private_group) do
+    fab!(:private_group) do
       group = Fabricate(:group)
       group.add(private_cat_moderator)
       group.add(common_moderator)
@@ -89,9 +89,14 @@ RSpec.describe About do
       group
     end
 
-    let!(:public_cat) { Fabricate(:category, reviewable_by_group: public_group) }
-    let!(:private_cat) do
-      Fabricate(:private_category, group: private_group, reviewable_by_group: private_group)
+    fab!(:public_cat) { Fabricate(:category) }
+    fab!(:public_category_moderation_group) do
+      Fabricate(:category_moderation_group, category: public_cat, group: public_group)
+    end
+
+    fab!(:private_cat) { Fabricate(:private_category, group: private_group) }
+    fab!(:private_category_moderation_group) do
+      Fabricate(:category_moderation_group, category: private_cat, group: private_group)
     end
 
     it "lists moderators of the category that the current user can see" do
