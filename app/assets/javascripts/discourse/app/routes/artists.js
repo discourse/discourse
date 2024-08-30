@@ -1,6 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import RSVP from 'rsvp'; // Import RSVP
-
+import { isEmpty } from "@ember/utils";
 
 export default class Artists extends DiscourseRoute{
   async model(params) {

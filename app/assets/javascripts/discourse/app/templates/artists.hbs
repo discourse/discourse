@@ -14,7 +14,7 @@
           {{this.model.artist.artist.area}}
         </small>
       </div>
-      {{log this.model}}
+      {{log this.model.artist.artist.rels}}
       {{#if this.model.wikipediaExtract}}
         <div class="wikipedia-extract">
           <div class="content">{{html-safe this.model.wikipediaExtract.content}}</div>
@@ -24,5 +24,15 @@
         </div>
       {{/if}}
     </div>
+  </div>
+</div>
+<div class="right-side">
+  <div class="entity-rels">
+    {{#if this.model.artist.artist.rels}}
+      <h1>Relations</h1>
+      {{#each-in this.model.artist.artist.rels as |key value|}}
+        <p>{{key}} : {{value}}</p>
+      {{/each-in}}
+    {{/if}}
   </div>
 </div>
