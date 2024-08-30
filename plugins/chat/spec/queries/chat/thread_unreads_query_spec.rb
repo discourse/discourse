@@ -30,10 +30,10 @@ describe Chat::ThreadUnreadsQuery do
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
     channel_1.add(current_user)
     channel_2.add(current_user)
-    thread_1.add(current_user, notification_level: Chat::NotificationLevels.all[:tracking])
-    thread_2.add(current_user, notification_level: Chat::NotificationLevels.all[:tracking])
-    thread_3.add(current_user, notification_level: Chat::NotificationLevels.all[:tracking])
-    thread_4.add(current_user, notification_level: Chat::NotificationLevels.all[:tracking])
+    thread_1.add(current_user)
+    thread_2.add(current_user)
+    thread_3.add(current_user)
+    thread_4.add(current_user)
   end
 
   context "with unread messages across multiple threads" do
@@ -350,10 +350,9 @@ describe Chat::ThreadUnreadsQuery do
 
     before do
       [thread_1, thread_3].each do |thread|
-        thread
-          .user_chat_thread_memberships
-          .find_by(user: current_user)
-          .update!(notification_level: Chat::NotificationLevels.all[:watching])
+        thread.membership_for(current_user).update!(
+          notification_level: Chat::NotificationLevels.all[:watching],
+        )
       end
 
       3.times { Fabricate(:chat_message, chat_channel: channel_1, thread: thread_1) }
