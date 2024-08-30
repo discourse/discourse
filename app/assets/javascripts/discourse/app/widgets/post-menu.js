@@ -968,6 +968,7 @@ registerWidgetShim(
       @recoverPost={{@data.recoverPost}}
       @replyToPost={{@data.replyToPost}}
       @share={{@data.share}}
+      @showFlags={{@data.showFlags}}
       @showPagePublish={{@data.showPagePublish}}
       @toggleLike={{@data.toggleLike}}
       @togglePostType={{@data.togglePostType}}

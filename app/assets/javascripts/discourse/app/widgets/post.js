@@ -557,6 +557,7 @@ createWidget("post-contents", {
         recoverPost: () => this.sendWidgetAction("recoverPost"), // this action comes from the post stream
         replyToPost: () => this.sendWidgetAction("replyToPost"), // this action comes from the post stream
         share: () => this.sendWidgetAction("share"),
+        showFlags: () => this.sendWidgetAction("showFlags"), // this action comes from the post stream
         showPagePublish: () => this.sendWidgetAction("showPagePublish"), // this action comes from the post stream
         toggleLike: () => this.sendWidgetAction("toggleLike"),
         togglePostType: () => this.sendWidgetAction("togglePostType"), // this action comes from the post stream

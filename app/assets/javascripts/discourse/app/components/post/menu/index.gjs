@@ -23,6 +23,7 @@ import PostMenuDeleteButton, {
   BUTTON_ACTION_MODE_SHOW_FLAG_DELETE,
 } from "./buttons/delete";
 import PostMenuEditButton from "./buttons/edit";
+import PostMenuFlagButton from "./buttons/flag";
 import PostMenuLikeButton from "./buttons/like";
 import PostMenuRepliesButton from "./buttons/replies";
 import PostMenuReplyButton from "./buttons/reply";
@@ -55,7 +56,7 @@ function resetPostMenuButtons() {
     [COPY_LINK_BUTTON_ID, PostMenuCopyLinkButton],
     [DELETE_BUTTON_ID, PostMenuDeleteButton],
     [EDIT_BUTTON_ID, PostMenuEditButton],
-    [FLAG_BUTTON_ID, <template><span>FLAG</span></template>],
+    [FLAG_BUTTON_ID, PostMenuFlagButton],
     [LIKE_BUTTON_ID, PostMenuLikeButton],
     [READ_BUTTON_ID, <template><span>READ</span></template>],
     [REPLIES_BUTTON_ID, PostMenuRepliesButton],
@@ -141,6 +142,10 @@ export default class PostMenu extends Component {
             properties = {
               showLabel: this.site.desktopView && this.#isWikiMode,
             };
+            break;
+
+          case FLAG_BUTTON_ID:
+            assignedAction = this.args.showFlags;
             break;
 
           case LIKE_BUTTON_ID:
