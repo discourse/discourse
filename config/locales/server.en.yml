@@ -639,6 +639,20 @@ en:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_descriptions:
+      everyone: "Automatic group including all members"
+      staff: "Automatic group including admins and moderators"
+      admins: "Responsible for configuring and maintaining this site, with access to all member and activity data"
+      moderators: "Responsible for responding to flags, moderating discussions, and helping members with their accounts"
+      trust_level_0: "New members with limited abilities, who are learning community norms and functionality"
+
+      trust_level_1: "Members with more trust, who have shown initial engagement by reading hand can now access more functions. All members of this group are also members of the trust_level_0 group."
+
+      trust_level_2: "Active members who have consistently contributed overtime and gained full citizenship privileges. All members of this group are also members of the trust_level_1 and trust_level_0 groups."
+
+      trust_level_3: "Highly engaged, long-term contributors, who form the backbone of the community and have gained limited moderation privileges. All members of this group are also members of the trust_level_2, trust_level_1 and trust_level_0 groups."
+
+      trust_level_4: "Manually promoted members, recognized by their exemplary contributions and entrusted with additional moderation privileges. All members of this group are also members of the trust_level_3, trust_level_2, trust_level_1 and trust_level_0 groups."
     request_membership_pm:
       title: "Membership Request for @%{group_name}"
     request_accepted_pm:
