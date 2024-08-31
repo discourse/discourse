@@ -1117,11 +1117,11 @@ class Category < ActiveRecord::Base
     moderating_groups.pluck(:id)
   end
 
-  def update_reviewable_by_groups(new_group_ids)
+  def update_moderated_by_groups(group_ids)
     existing_ids = self.reviewable_by_group_ids
 
-    added_ids = new_group_ids - existing_ids
-    removed_ids = existing_ids - new_group_ids
+    added_ids = group_ids - existing_ids
+    removed_ids = existing_ids - group_ids
 
     if added_ids.present?
       CategoryModerationGroup.insert_all(
@@ -1130,6 +1130,10 @@ class Category < ActiveRecord::Base
     end
 
     self.category_moderation_groups.where(group_id: removed_ids).delete_all if removed_ids.present?
+  end
+
+  def add_moderated_by_groups(group_ids)
+    group_ids.uniq.each { |group_id| self.category_moderation_groups.build(group_id:) }
   end
 
   def self.find_by_slug_path(slug_path)

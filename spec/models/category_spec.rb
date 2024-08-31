@@ -98,6 +98,24 @@ RSpec.describe Category do
     end
   end
 
+  describe "#update_moderated_by_groups" do
+    fab!(:category)
+    fab!(:group1) { Fabricate(:group) }
+    fab!(:group2) { Fabricate(:group) }
+    fab!(:group3) { Fabricate(:group) }
+
+    it "can add and remove moderation groups to the category" do
+      category.update_moderated_by_groups([group1.id, group2.id])
+      expect(category.moderating_groups.pluck(:id)).to contain_exactly(group1.id, group2.id)
+
+      category.update_moderated_by_groups([group1.id, group3.id])
+      expect(category.moderating_groups.pluck(:id)).to contain_exactly(group1.id, group3.id)
+
+      category.update_moderated_by_groups([])
+      expect(category.moderating_groups.pluck(:id)).to be_blank
+    end
+  end
+
   describe "topic_create_allowed and post_create_allowed" do
     fab!(:group)
 

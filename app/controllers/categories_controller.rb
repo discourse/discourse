@@ -166,9 +166,10 @@ class CategoriesController < ApplicationController
         return render json: { errors: [e.message] }, status: 422
       end
 
+    @category.add_moderated_by_groups(moderating_group_ids) if moderating_group_ids
+
     if @category.save
       @category.move_to(position.to_i) if position
-      @category.update_reviewable_by_groups(moderating_group_ids) if moderating_group_ids
 
       Scheduler::Defer.later "Log staff action create category" do
         @staff_action_logger.log_category_creation(@category)
@@ -209,7 +210,7 @@ class CategoriesController < ApplicationController
       old_permissions = { "everyone" => 1 } if old_permissions.empty?
 
       if new_group_ids = category_params.delete(:reviewable_by_group_ids).presence
-        @category.update_reviewable_by_groups(new_group_ids)
+        @category.update_moderated_by_groups(new_group_ids)
       end
 
       if result = cat.update(category_params)
