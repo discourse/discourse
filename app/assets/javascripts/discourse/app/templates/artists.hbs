@@ -29,10 +29,14 @@
 <div class="right-side">
   <div class="entity-rels">
     {{#if this.model.artist.artist.rels}}
-      <h1>Relations</h1>
+      <h1>Links</h1>
       {{#each-in this.model.artist.artist.rels as |key value|}}
         <p>{{key}} : {{value}}</p>
       {{/each-in}}
     {{/if}}
+    <OpenInMusicBrainzButton
+      @entityType="artist"
+      @entityMBID={{this.model.artist.artist.mbid}}
+    />
   </div>
 </div>
