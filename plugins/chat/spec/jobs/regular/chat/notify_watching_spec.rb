@@ -100,6 +100,9 @@ RSpec.describe Jobs::Chat::NotifyWatching do
         end
 
         it "does not create a core notification when the channel is muted" do
+          thread.membership_for(user1).update!(
+            notification_level: Chat::NotificationLevels.all[:watching],
+          )
           membership1.update!(muted: true)
           notification = track_core_notification(user: user1, message: thread_message)
 

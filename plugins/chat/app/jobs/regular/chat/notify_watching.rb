@@ -15,6 +15,17 @@ module Jobs
         @is_direct_message_channel = @chat_channel.direct_message_channel?
 
         always_notification_level = ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
+        thread_watcher_ids = []
+
+        if @chat_message.in_thread?
+          thread_memberships =
+            ::Chat::UserChatThreadMembership.where(thread_id: @chat_message.thread_id).where(
+              notification_level: ::Chat::NotificationLevels.all[:watching],
+            )
+          if thread_memberships.present?
+            thread_watcher_ids.push(thread_memberships.pluck(:user_id)).flatten!
+          end
+        end
 
         members =
           ::Chat::UserChatChannelMembership
@@ -24,32 +35,13 @@ module Jobs
             .where.not(user_id: args[:except_user_ids])
             .where(chat_channel_id: @chat_channel.id)
             .where(following: true)
+            .where(
+              "desktop_notification_level = ? OR mobile_notification_level = ? OR users.id IN (?)",
+              always_notification_level,
+              always_notification_level,
+              thread_watcher_ids,
+            )
             .merge(User.not_suspended)
-
-        if @chat_message.in_thread?
-          thread_memberships =
-            ::Chat::UserChatThreadMembership.where(thread_id: @chat_message.thread_id).where(
-              notification_level: ::Chat::NotificationLevels.all[:watching],
-            )
-
-          # allow user notification for thread watchers regardless of desktop/mobile notification level
-          if thread_memberships.present?
-            members =
-              members.where(
-                "desktop_notification_level = ? OR mobile_notification_level = ? OR users.id IN (?)",
-                always_notification_level,
-                always_notification_level,
-                thread_memberships.map(&:user_id),
-              )
-          end
-        else
-          members =
-            members.where(
-              "desktop_notification_level = ? OR mobile_notification_level = ?",
-              always_notification_level,
-              always_notification_level,
-            )
-        end
 
         if @is_direct_message_channel
           ::UserCommScreener

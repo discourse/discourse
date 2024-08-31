@@ -122,10 +122,6 @@ module Chat
         limit: MAX_THREADS,
         tracking_level: ::Chat::UserChatThreadMembership.notification_levels[:tracking],
         watching_level: ::Chat::UserChatThreadMembership.notification_levels[:watching],
-        quiet_notification_levels: [
-          ::Chat::UserChatThreadMembership.notification_levels[:muted],
-          ::Chat::UserChatThreadMembership.notification_levels[:normal],
-        ],
       )
     end
   end

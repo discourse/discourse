@@ -2,7 +2,6 @@
 
 module Chat
   module NotificationConsolidationExtension
-    CONSOLIDATION_WINDOW = 72.hours
     CONSOLIDATION_THRESHOLD = 1
 
     def self.watched_thread_message_plan
@@ -10,7 +9,6 @@ module Chat
         from: Notification.types[:chat_watched_thread],
         to: Notification.types[:chat_watched_thread],
         threshold: CONSOLIDATION_THRESHOLD,
-        consolidation_window: CONSOLIDATION_WINDOW,
         unconsolidated_query_blk:
           Proc.new do |notifications, data|
             notifications.where("data::json ->> 'consolidated' IS NULL").where(
@@ -36,7 +34,6 @@ module Chat
                 .order("notifications.id DESC")
                 .where("data::json ->> 'chat_thread_id' = ?", data[:chat_thread_id].to_s)
                 .where(notification_type: Notification.types[:chat_watched_thread])
-                .where("created_at > ?", CONSOLIDATION_WINDOW.ago)
                 .first
 
             return data if !last_watched_thread_notification
