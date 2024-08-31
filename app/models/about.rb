@@ -96,7 +96,7 @@ class About
     per_cat_limit = category_mods_limit / category_ids.size
     per_cat_limit = 1 if per_cat_limit < 1
 
-    results = DB.query(<<~SQL, category_ids: category_ids)
+    results = DB.query(<<~SQL, category_ids:)
       WITH moderator_users AS (
         SELECT
           cmg.category_id AS category_id,

@@ -74,19 +74,11 @@ RSpec.describe About do
     fab!(:common_moderator_2) { Fabricate(:user, last_seen_at: 4.month.ago) }
 
     fab!(:public_group) do
-      group = Fabricate(:public_group)
-      group.add(public_cat_moderator)
-      group.add(common_moderator)
-      group.add(common_moderator_2)
-      group
+      Fabricate(:public_group, users: [public_cat_moderator, common_moderator, common_moderator_2])
     end
 
     fab!(:private_group) do
-      group = Fabricate(:group)
-      group.add(private_cat_moderator)
-      group.add(common_moderator)
-      group.add(common_moderator_2)
-      group
+      Fabricate(:group, users: [private_cat_moderator, common_moderator, common_moderator_2])
     end
 
     fab!(:public_cat) { Fabricate(:category) }
@@ -124,6 +116,19 @@ RSpec.describe About do
       results = about.category_moderators
       expect(results.size).to eq(2)
       results.each { |res| expect(res.moderators.size).to eq(2) }
+    end
+
+    it "doesn't list the same user twice as a category mod if the user is member of multiple groups" do
+      Fabricate(:category_moderation_group, category: public_cat, group: private_group)
+
+      results = About.new(nil).category_moderators
+      mods = results.find { |r| r.category.id == public_cat.id }.moderators
+      expect(mods.map(&:id)).to contain_exactly(
+        public_cat_moderator.id,
+        common_moderator.id,
+        common_moderator_2.id,
+        private_cat_moderator.id,
+      )
     end
   end
 
