@@ -73,7 +73,7 @@ RSpec.describe "discourse-presence" do
       expect(c.config.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
 
       SiteSetting.enable_category_group_moderation = true
-      category.update(reviewable_by_group_id: group.id)
+      Fabricate(:category_moderation_group, category:, group:)
 
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}", use_cache: false)
       expect(c.config.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff], group.id)
