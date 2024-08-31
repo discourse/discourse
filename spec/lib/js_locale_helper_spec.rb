@@ -4,17 +4,17 @@ require "mini_racer"
 
 RSpec.describe JsLocaleHelper do
   let(:v8_ctx) do
-    node_modules = "#{Rails.root}/node_modules/"
+    discourse_node_modules = "#{Rails.root}/app/assets/javascripts/discourse/node_modules"
+    mf_runtime = "#{discourse_node_modules}/@messageformat/runtime"
     transpiler = DiscourseJsProcessor::Transpiler.new
     ctx = MiniRacer::Context.new
-    ctx.load("#{node_modules}/loader.js/dist/loader/loader.js")
+    ctx.load("#{discourse_node_modules}/loader.js/dist/loader/loader.js")
     ctx.eval("var window = globalThis;")
     {
-      "@messageformat/runtime/messages": "#{node_modules}/@messageformat/runtime/esm/messages.js",
-      "@messageformat/runtime": "#{node_modules}/@messageformat/runtime/esm/runtime.js",
-      "@messageformat/runtime/lib/cardinals":
-        "#{node_modules}/@messageformat/runtime/esm/cardinals.js",
-      "make-plural/cardinals": "#{node_modules}/make-plural/cardinals.mjs",
+      "@messageformat/runtime/messages": "#{mf_runtime}/esm/messages.js",
+      "@messageformat/runtime": "#{mf_runtime}/esm/runtime.js",
+      "@messageformat/runtime/lib/cardinals": "#{mf_runtime}/esm/cardinals.js",
+      "make-plural/cardinals": "#{discourse_node_modules}/make-plural/cardinals.mjs",
       "discourse-i18n": "#{Rails.root}/app/assets/javascripts/discourse-i18n/src/index.js",
     }.each do |module_name, path|
       ctx.eval(transpiler.perform(File.read(path), "", module_name.to_s))

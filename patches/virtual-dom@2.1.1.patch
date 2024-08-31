@@ -1,7 +1,7 @@
-diff --git a/node_modules/virtual-dom/vtree/diff.js b/node_modules/virtual-dom/vtree/diff.js
+diff --git a/vtree/diff.js b/vtree/diff.js
 index b5bccbd..058d6b3 100644
---- a/node_modules/virtual-dom/vtree/diff.js
-+++ b/node_modules/virtual-dom/vtree/diff.js
+--- a/vtree/diff.js
++++ b/vtree/diff.js
 @@ -311,6 +311,38 @@ function reorder(aChildren, bChildren) {
      var inserts = []
      var simulateItem
