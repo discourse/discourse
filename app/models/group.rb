@@ -465,7 +465,7 @@ class Group < ActiveRecord::Base
   end
 
   def set_message_default_notification_levels!(topic, ignore_existing: false)
-    group_users.in_batches(of: 1000) do |batch|
+    group_users.in_batches do |batch|
       batch
         .pluck(:user_id, :notification_level)
         .each do |user_id, notification_level|
