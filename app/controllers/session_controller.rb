@@ -75,7 +75,7 @@ class SessionController < ApplicationController
       if request.xhr?
         # for the login modal
         cookies[:sso_destination_url] = data[:sso_redirect_url]
-        render json: success_json.merge(redirect_url: redirect_url)
+        render json: success_json.merge(redirect_url: data[:sso_redirect_url])
       else
         redirect_to data[:sso_redirect_url], allow_other_host: true
       end
