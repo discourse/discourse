@@ -370,7 +370,7 @@ class SessionController < ApplicationController
     return render(json: @second_factor_failure_payload) if !second_factor_auth_result.ok
 
     if user.active && user.email_confirmed?
-      login(user, second_factor_auth_result)
+      login(user, { second_factor_auth_result: second_factor_auth_result })
     else
       not_activated(user)
     end
@@ -396,7 +396,7 @@ class SessionController < ApplicationController
     user = User.where(id: security_key.user_id, active: true).first
 
     if user.email_confirmed?
-      login(user, false, true)
+      login(user, { passkey_login: true })
     else
       not_activated(user)
     end
@@ -798,17 +798,19 @@ class SessionController < ApplicationController
     { error: user.suspended_message, reason: "suspended" }
   end
 
-  def login(user, second_factor_auth_result, passkey_login = false)
+  def login(user, opts = {})
     session.delete(ACTIVATE_USER_KEY)
     user.update_timezone_if_missing(params[:timezone])
     log_on_user(user)
 
     if payload = cookies.delete(:sso_payload)
       confirmed_2fa_during_login =
-        passkey_login ||
+        opts[:passkey_login] ||
           (
-            second_factor_auth_result&.ok && second_factor_auth_result.used_2fa_method.present? &&
-              second_factor_auth_result.used_2fa_method != UserSecondFactor.methods[:backup_codes]
+            opts[:second_factor_auth_result]&.ok &&
+              opts[:second_factor_auth_result].used_2fa_method.present? &&
+              opts[:second_factor_auth_result].used_2fa_method !=
+                UserSecondFactor.methods[:backup_codes]
           )
       sso_provider(payload, confirmed_2fa_during_login)
     else
