@@ -465,29 +465,31 @@ class Group < ActiveRecord::Base
   end
 
   def set_message_default_notification_levels!(topic, ignore_existing: false)
-    group_users
-      .pluck(:user_id, :notification_level)
-      .each do |user_id, notification_level|
-        next if user_id == Discourse::SYSTEM_USER_ID
-        next if user_id == topic.user_id
-        next if ignore_existing && TopicUser.where(user_id: user_id, topic_id: topic.id).exists?
+    group_users.in_batches(of: 1000) do |batch|
+      batch
+        .pluck(:user_id, :notification_level)
+        .each do |user_id, notification_level|
+          next if user_id == Discourse::SYSTEM_USER_ID
+          next if user_id == topic.user_id
+          next if ignore_existing && TopicUser.where(user_id: user_id, topic_id: topic.id).exists?
 
-        action =
-          case notification_level
-          when TopicUser.notification_levels[:tracking]
-            "track!"
-          when TopicUser.notification_levels[:regular]
-            "regular!"
-          when TopicUser.notification_levels[:muted]
-            "mute!"
-          when TopicUser.notification_levels[:watching]
-            "watch!"
-          else
-            "track!"
-          end
+          action =
+            case notification_level
+            when TopicUser.notification_levels[:tracking]
+              "track!"
+            when TopicUser.notification_levels[:regular]
+              "regular!"
+            when TopicUser.notification_levels[:muted]
+              "mute!"
+            when TopicUser.notification_levels[:watching]
+              "watch!"
+            else
+              "track!"
+            end
 
-        topic.notifier.public_send(action, user_id)
-      end
+          topic.notifier.public_send(action, user_id)
+        end
+    end
   end
 
   def self.set_category_and_tag_default_notification_levels!(user, group_name)
