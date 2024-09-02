@@ -464,7 +464,19 @@ class Group < ActiveRecord::Base
     Group.auto_groups_between(:trust_level_0, :trust_level_4).to_a
   end
 
+  class GroupPmUserLimitExceededError < StandardError
+  end
+
   def set_message_default_notification_levels!(topic, ignore_existing: false)
+    if user_count >= SiteSetting.group_pm_user_limit
+      raise GroupPmUserLimitExceededError,
+            I18n.t(
+              "groups.errors.default_notification_level_users_limit",
+              count: SiteSetting.group_pm_user_limit,
+              group_name: name,
+            )
+    end
+
     group_users
       .pluck(:user_id, :notification_level)
       .each do |user_id, notification_level|

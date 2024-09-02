@@ -563,6 +563,29 @@ RSpec.describe TopicCreator do
         end
       end
 
+      context "with too many users in a group" do
+        fab!(:group) { Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]) }
+
+        before do
+          SiteSetting.group_pm_user_limit = 1
+          Fabricate.times(2, :user).each { |user| group.add(user) }
+          pm_valid_attrs[:target_group_names] = group.name
+        end
+
+        it "fails with an error" do
+          expect do
+            TopicCreator.create(user, Guardian.new(admin), pm_valid_attrs)
+          end.to raise_error(
+            ActiveRecord::Rollback,
+            I18n.t(
+              "groups.errors.default_notification_level_users_limit",
+              count: SiteSetting.group_pm_user_limit,
+              group_name: group.name,
+            ),
+          )
+        end
+      end
+
       context "with to emails" do
         it "works for staff" do
           SiteSetting.send_email_messages_allowed_groups = "1|3"
