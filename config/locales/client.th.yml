@@ -2716,7 +2716,6 @@ th:
             post: "โพสต์"
       plugins:
         title: "ปลั้กอิน"
-        installed: "ปลั้กอินที่ติดตั้งแล้ว"
         name: "ชื่อ"
         none_installed: "คุณยังไม่มีปลั้กอินใดๆติดตั้ง"
         version: "เวอร์ชัน"

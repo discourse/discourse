@@ -4988,8 +4988,8 @@ cs:
           trend_title: "%{percent} změna. Nyní %{current}, proti %{prev} v předchozím období."
           today: "Dnes"
           yesterday: "Včera"
-          last_7_days: "Posledních 7"
-          last_30_days: "Posledních 30"
+          last_7_days: "7 dnů"
+          last_30_days: "30 dnů"
           all_time: "Za celou dobu"
           7_days_ago: "Týden"
           30_days_ago: "Měsíc"
@@ -5379,7 +5379,6 @@ cs:
             chat_message: "zprávy v chatu"
       plugins:
         title: "Pluginy"
-        installed: "Nainstalované pluginy"
         name: "Název"
         none_installed: "Nemáte nainstalované žádné pluginy."
         version: "Verze"
@@ -5470,6 +5469,7 @@ cs:
             title: "Vrátit databázi do předchozího funkčního stavu"
             confirm: "Opravdu chcete vrátit databázi zpět do předchozího funkčního stavu?"
         location:
+          local: "Místní úložiště"
           s3: "S3"
         backup_storage_error: "Nepodařilo se získat přístup k úložišti zálohy: %{error_message}"
       export_csv:

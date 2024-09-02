@@ -94,5 +94,7 @@ te:
         notifications:
           tracking:
             title: "గమనిస్తున్నారు"
+          watching:
+            title: "అనుసరిస్తున్నారు"
       draft_channel_screen:
         cancel: "రద్దుచేయి"

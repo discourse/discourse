@@ -102,6 +102,8 @@ es:
         label: "Opciones"
         ranked_choice:
           abstain: "Abstenerse"
+          highest_priority: "(máxima prioridad)"
+          lowest_priority: "(prioridad más baja)"
           login: "Inicia sesión para votar"
       error_while_toggling_status: "Lo sentimos, se ha producido un error al cambiar el estado de esta encuesta."
       error_while_casting_votes: "Lo sentimos, se ha producido un error al emitir tus votos."

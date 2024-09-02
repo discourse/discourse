@@ -5824,7 +5824,6 @@ sk:
             move_down: "Posunúť sa nadol"
       plugins:
         title: "Pluginy"
-        installed: "Nainštalované pluginy"
         name: "Meno"
         none_installed: "Nemáte nainštalované žiadne pluginy."
         version: "Verzia"

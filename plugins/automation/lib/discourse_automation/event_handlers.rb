@@ -330,7 +330,7 @@ module DiscourseAutomation
           next if categories && !categories.include?(post.topic.category_id)
 
           tags = fields.dig("tags", "value")
-          next if tags && (tags & post.topic.tags.map(&:name)).empty?
+          next if tags&.any? && (tags & post.topic.tags.map(&:name)).empty?
 
           DiscourseAutomation::UserGlobalNotice
             .where(identifier: automation.id)

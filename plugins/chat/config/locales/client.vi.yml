@@ -144,6 +144,8 @@ vi:
             title: "Bình thường"
           tracking:
             title: "Đang theo dõi"
+          watching:
+            title: "Theo dõi"
         participants_other_count:
           other: "+%{count}"
       draft_channel_screen:
@@ -151,6 +153,8 @@ vi:
         cancel: "Huỷ"
     notifications:
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        other: "%{username} và %{count} người khác"
     discourse_automation:
       scriptables:
         send_chat_message:

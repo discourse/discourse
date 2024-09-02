@@ -210,6 +210,8 @@ pt:
             title: "Normal"
           tracking:
             title: "A Seguir"
+          watching:
+            title: "A vigiar"
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"

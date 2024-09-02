@@ -29,6 +29,11 @@ export default class AdminBadgesRoute extends DiscourseRoute {
     });
   }
 
+  @action
+  updateGroupings(groupings) {
+    this.controllerFor("admin-badges").set("badgeGroupings", groupings);
+  }
+
   setupController(controller, model) {
     const json = this._json;
     const badgeTriggers = [];
