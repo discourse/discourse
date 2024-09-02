@@ -15,18 +15,6 @@ module Jobs
         @is_direct_message_channel = @chat_channel.direct_message_channel?
 
         always_notification_level = ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
-        thread_watcher_ids = []
-
-        if @chat_message.in_thread?
-          thread_memberships =
-            ::Chat::UserChatThreadMembership.where(thread_id: @chat_message.thread_id).where(
-              notification_level: ::Chat::NotificationLevels.all[:watching],
-            )
-          if thread_memberships.present?
-            thread_watcher_ids.push(thread_memberships.pluck(:user_id)).flatten!
-          end
-        end
-
         members =
           ::Chat::UserChatChannelMembership
             .includes(user: :groups)
@@ -36,10 +24,19 @@ module Jobs
             .where(chat_channel_id: @chat_channel.id)
             .where(following: true)
             .where(
-              "desktop_notification_level = ? OR mobile_notification_level = ? OR users.id IN (?)",
+              "desktop_notification_level = ? OR mobile_notification_level = ? OR users.id IN (
+                WITH thread_watcher_ids AS (
+                  SELECT user_id
+                  FROM user_chat_thread_memberships
+                  WHERE thread_id = ? AND notification_level = ?
+                )
+                SELECT user_id
+                FROM thread_watcher_ids
+              )",
               always_notification_level,
               always_notification_level,
-              thread_watcher_ids,
+              @chat_message.thread_id,
+              ::Chat::NotificationLevels.all[:watching],
             )
             .merge(User.not_suspended)
 
@@ -100,11 +97,10 @@ module Jobs
             ::Chat::UserChatThreadMembership.find_by(
               user_id: user.id,
               thread_id: @chat_message.thread_id,
+              notification_level: "watching",
             )
 
-          if thread_membership&.notification_level == "watching"
-            create_watched_thread_notification(thread_membership)
-          end
+          thread_membership && create_watched_thread_notification(thread_membership)
         end
 
         if membership.desktop_notifications_always? && !membership.muted?
