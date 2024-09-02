@@ -24,19 +24,10 @@ module Jobs
             .where(chat_channel_id: @chat_channel.id)
             .where(following: true)
             .where(
-              "desktop_notification_level = ? OR mobile_notification_level = ? OR users.id IN (
-                WITH thread_watcher_ids AS (
-                  SELECT user_id
-                  FROM user_chat_thread_memberships
-                  WHERE thread_id = ? AND notification_level = ?
-                )
-                SELECT user_id
-                FROM thread_watcher_ids
-              )",
-              always_notification_level,
-              always_notification_level,
-              @chat_message.thread_id,
-              ::Chat::NotificationLevels.all[:watching],
+              "desktop_notification_level = :always OR mobile_notification_level = :always OR users.id IN (SELECT user_id FROM user_chat_thread_memberships WHERE thread_id = :thread_id AND notification_level = :watching)",
+              always: always_notification_level,
+              thread_id: @chat_message.thread_id,
+              watching: ::Chat::NotificationLevels.all[:watching],
             )
             .merge(User.not_suspended)
 
