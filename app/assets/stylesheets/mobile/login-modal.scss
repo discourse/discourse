@@ -114,11 +114,14 @@
     padding: 1rem 1rem 0;
 
     .input-group {
-      input {
+      input.ember-text-field {
+        //if not this class, checkboxes get the same treatment and there is no other identifier
         height: 2.5em;
         margin-bottom: 0;
       }
-      margin-bottom: 0.75em;
+      &:not(:last-child) {
+        margin-bottom: 0.75em;
+      }
       .user-field:not(.dropdown) label.alt-placeholder {
         top: 8px;
       }
@@ -140,6 +143,10 @@
       .tip:last-child {
         // margin-bottom: 1em;
       }
+    }
+
+    .user-fields {
+      display: contents;
     }
   }
   .caps-lock-warning {
