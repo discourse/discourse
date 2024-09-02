@@ -39,6 +39,12 @@ ru:
       chat_messages_count: "Сообщения чата"
       chat_channels_count: "Каналы чата"
       chat_users_count: "Пользователи чата"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} сообщение чата"
+          few: "%{formatted_number} сообщения чата"
+          many: "%{formatted_number} сообщений чата"
+          other: "%{formatted_number} сообщения чата"
     chat:
       text_copied: Текст скопирован в буфер обмена
       link_copied: Ссылка скопирована в буфер обмена

@@ -37,25 +37,25 @@ function canvasFor(image, w, h) {
 }
 
 const scale = window.devicePixelRatio;
-export default Component.extend({
+export default class PreviewBase extends Component {
+  ctx = null;
+  loaded = false;
+  loadingFontVariants = false;
+
   get elementWidth() {
     return this.width * scale;
-  },
+  }
 
   get elementHeight() {
     return this.height * scale;
-  },
+  }
 
   get canvasStyle() {
     return htmlSafe(`width:${this.width}px;height:${this.height}px`);
-  },
-
-  ctx: null,
-  loaded: false,
-  loadingFontVariants: false,
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     this.fontMap = PreloadStore.get("fontMap");
     this.loadedFonts = new Set();
     const c = this.element.querySelector("canvas");
@@ -72,10 +72,10 @@ export default Component.extend({
     }
 
     this.reload();
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     if (this.step) {
       this.step.findField("color_scheme")?.removeListener(this.themeChanged);
@@ -87,26 +87,26 @@ export default Component.extend({
         .findField("heading_font")
         ?.removeListener(this.themeHeadingFontChanged);
     }
-  },
+  }
 
   @action
   themeChanged() {
     this.triggerRepaint();
-  },
+  }
 
   @action
   themeBodyFontChanged() {
     if (!this.loadingFontVariants) {
       this.loadFontVariants(this.wizard.font);
     }
-  },
+  }
 
   @action
   themeHeadingFontChanged() {
     if (!this.loadingFontVariants) {
       this.loadFontVariants(this.wizard.headingFont);
     }
-  },
+  }
 
   loadFontVariants(font) {
     const fontVariantData = this.fontMap[font.id];
@@ -146,16 +146,16 @@ export default Component.extend({
     } else if (this.loadedFonts.has(font.id)) {
       this.triggerRepaint();
     }
-  },
+  }
 
-  images() {},
+  images() {}
 
   // NOTE: This works for fonts included in a style that is actually using the
   // @font-faces on load, but for fonts that we aren't using yet we need to
   // make sure they are loaded before rendering the canvas via loadFontVariants.
   loadFonts() {
     return document.fonts.ready;
-  },
+  }
 
   loadImages() {
     const images = this.images();
@@ -167,18 +167,18 @@ export default Component.extend({
       );
     }
     return Promise.resolve();
-  },
+  }
 
   reload() {
     Promise.all([this.loadFonts(), this.loadImages()]).then(() => {
       this.loaded = true;
       this.triggerRepaint();
     });
-  },
+  }
 
   triggerRepaint() {
     scheduleOnce("afterRender", this, "repaint");
-  },
+  }
 
   repaint() {
     if (!this.loaded) {
@@ -215,7 +215,7 @@ export default Component.extend({
       height: this.height,
     };
     this.paint(options);
-  },
+  }
 
   categories() {
     return [
@@ -223,7 +223,7 @@ export default Component.extend({
       { name: "ultrices", color: "#3AB54A" },
       { name: "placerat", color: "#25AAE2" },
     ];
-  },
+  }
 
   scaleImage(image, x, y, w, h) {
     w = Math.floor(w);
@@ -246,7 +246,7 @@ export default Component.extend({
     }
 
     ctx.drawImage(scaled[key], x, y, w, h);
-  },
+  }
 
   drawFullHeader(colors, font, logo) {
     const { ctx } = this;
@@ -311,7 +311,7 @@ export default Component.extend({
     ctx.scale(pathScale, pathScale);
     ctx.fill(hamburgerIcon);
     ctx.restore();
-  },
+  }
 
   drawPills(colors, font, headerHeight, opts) {
     opts = opts || {};
@@ -389,8 +389,8 @@ export default Component.extend({
 
     x += categoriesSize * 0.6;
     ctx.fillText("Top", x, headerHeight + headerMargin * 1.5 + fontSize);
-  },
-});
+  }
+}
 
 function loadImage(src) {
   if (!src) {

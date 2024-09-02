@@ -13,6 +13,9 @@ fr:
       total_votes:
         one: "vote au total"
         other: "votes au total"
+      votes:
+        one: "%{count} vote"
+        other: "%{count} votes"
       average_rating: "Notation moyenne : <strong>%{average}</strong>"
       public:
         title: "Les votes sont <strong>publics</strong>."
@@ -46,6 +49,12 @@ fr:
       show-results:
         title: "Afficher les résultats du sondage"
         label: "Résultats"
+      show-tally:
+        title: "Afficher les résultats du vote par nombre de votes"
+        label: "Afficher le décompte"
+      show-percentage:
+        title: "Afficher les résultats du vote sous forme de pourcentage"
+        label: "Afficher en pourcentage"
       remove-vote:
         title: "Supprimer votre vote"
         label: "Annuler le vote"

@@ -186,6 +186,8 @@ ro:
       removed_user: "A eliminat pe %{who} %{when}"
       removed_group: "A eliminat pe %{who} %{when}"
       autobumped: "Impuls automat %{when}"
+      tags_changed: "Etichete actualizate %{when}"
+      category_changed: "Categorie actualizată %{when}"
       autoclosed:
         enabled: "Închis %{when}"
         disabled: "Deschis %{when}"
@@ -332,7 +334,6 @@ ro:
       like_count: "Aprecieri"
       topic_count: "Subiecte"
       post_count: "Articole"
-      contact_info: "În cazul în care o problemă critică sau alt aspect urgent afectează site-ul, te rugăm să ne contactezi la %{contact_info}."
       view_more: "Vezi mai multe"
       view_less: "Vedeți mai puține"
       activities:
@@ -1642,6 +1643,7 @@ ro:
       login_disabled: "Autentificarea este dezactivată când siteul este în modul exclusiv-citire."
       logout_disabled: "Deautentificarea este dezactivată cât timp site-ul este în modul exclusiv-citire."
     learn_more: "Află mai multe…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>Află mai multe…</a>"
     mute: Blochează
     unmute: Deblochează
     last_post: Postat
@@ -1690,6 +1692,10 @@ ro:
       title: "Înregistrare"
       failed: "Ceva s-a întâmplat, poate că acest email este deja înregistrat, încearcă să-ți resetezi parola la link-ul respectiv."
       associate: "Ai deja un cont? <a href='%{associate_link}'>Loghează-te</a> pentru a conecta contul tău %{provider}."
+      progress_bar:
+        signup: "Înregistrare"
+        approve: "Aprobare"
+        login: "Autentificare"
     forgot_password:
       title: "Resetare parolă"
       action: "Mi-am uitat parola"
@@ -3328,6 +3334,7 @@ ro:
         latest_version: "Ultima"
         new_features:
           title: "Ce este nou"
+          subtitle: "Lansăm noi funcții și îmbunătățiri tot timpul. Această pagină le acoperă pe cele mai importante, dar poți da clic pe „Află mai multe” pentru a vedea notele extinse de lansare."
           previous_announcements: "Poți vedea anunțurile anterioare privind noile caracteristici pe <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Află mai multe..."
         last_checked: "Ultima verificare"
@@ -3564,6 +3571,7 @@ ro:
           enabled: "Activat?"
           edit: "Modifică"
           delete: "Șterge"
+          flags_tab: "Semnalări"
           form:
             save: "Salvare"
             name: "Nume"
@@ -3610,7 +3618,7 @@ ro:
         menu:
           backups: "Copii de siguranță"
           logs: "Rapoarte"
-        none: "Niciun backup disponibil."
+        none: "Niciun backup disponibil"
         read_only:
           enable:
             title: "Activează modul exclusiv-citire"
@@ -3640,12 +3648,11 @@ ro:
           download:
             label: "Descărcare"
             title: "Trimite email cu link de descărcare"
-            alert: "Un link pentru descărcarea acestei copii de rezervă ți-a fost trimis pe email."
+            alert: "Un link pentru descărcarea acestei copii de rezervă ți-a fost trimis pe email"
           destroy:
             title: "Șterge backup-ul"
             confirm: "Ești sigur că vrei să ștergi acest backup?"
           restore:
-            is_disabled: "Restabilirea este dezactivată din setările site-ului."
             label: "Restabilire"
             title: "Restabilire din backup"
             confirm: "Ești sigur că vrei să restaurezi acest backup?"

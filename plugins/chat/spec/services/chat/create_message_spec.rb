@@ -237,7 +237,7 @@ RSpec.describe Chat::CreateMessage do
           context "when user is a bot" do
             fab!(:user) { Discourse.system_user }
 
-            it { is_expected.to be_a_success }
+            it { is_expected.to run_successfully }
           end
 
           context "when membership is enforced" do
@@ -248,7 +248,7 @@ RSpec.describe Chat::CreateMessage do
               params[:enforce_membership] = true
             end
 
-            it { is_expected.to be_a_success }
+            it { is_expected.to run_successfully }
           end
 
           context "when user can join channel" do
@@ -291,6 +291,8 @@ RSpec.describe Chat::CreateMessage do
                       it_behaves_like "creating a new message"
                       it_behaves_like "a message in a thread"
 
+                      it { is_expected.to run_successfully }
+
                       it "assigns the thread to the new message" do
                         expect(message).to have_attributes(
                           in_reply_to: an_object_having_attributes(thread: thread),
@@ -311,6 +313,8 @@ RSpec.describe Chat::CreateMessage do
                       it_behaves_like "a message in a thread" do
                         let(:original_user) { reply_to.user }
                       end
+
+                      it { is_expected.to run_successfully }
 
                       it "creates a new thread" do
                         expect { result }.to change { Chat::Thread.count }.by(1)
@@ -389,6 +393,8 @@ RSpec.describe Chat::CreateMessage do
                         it_behaves_like "creating a new message"
                         it_behaves_like "a message in a thread"
 
+                        it { is_expected.to run_successfully }
+
                         it "does not publish the thread" do
                           Chat::Publisher.expects(:publish_thread_created!).never
                           result
@@ -399,6 +405,8 @@ RSpec.describe Chat::CreateMessage do
                     context "when not replying to an existing message" do
                       it_behaves_like "creating a new message"
                       it_behaves_like "a message in a thread"
+
+                      it { is_expected.to run_successfully }
 
                       it "does not publish the thread" do
                         Chat::Publisher.expects(:publish_thread_created!).never
@@ -417,6 +425,8 @@ RSpec.describe Chat::CreateMessage do
 
                   context "when message is valid" do
                     it_behaves_like "creating a new message"
+
+                    it { is_expected.to run_successfully }
 
                     it "updates membership last_read_message attribute" do
                       expect { result }.to change { membership.reload.last_read_message }

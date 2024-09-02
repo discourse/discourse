@@ -40,7 +40,11 @@
   </div>
 
   <div class="control-group">
-    <AceEditor @content={{this.templateContent}} @mode="yaml" />
+    <AceEditor
+      @content={{this.templateContent}}
+      @onChange={{fn (mut this.templateContent)}}
+      @mode="yaml"
+    />
   </div>
 
   <div class="footer-buttons">

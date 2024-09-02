@@ -212,10 +212,10 @@ es:
         topic_tags_changed:
           fields:
             watching_categories:
-              label: Observando categorías
+              label: Observar categorías
               description: Se activará solo si el tema está en una de estas categorías.
             watching_tags:
-              label: Observando etiquetas
+              label: Observar etiquetas
               description: Se activará solo si el tema tiene alguna de estas etiquetas.
         after_post_cook:
           fields:

@@ -8,6 +8,7 @@ describe "Admin Flags Page", type: :system do
   let(:admin_flags_page) { PageObjects::Pages::AdminFlags.new }
   let(:admin_flag_form_page) { PageObjects::Pages::AdminFlagForm.new }
   let(:flag_modal) { PageObjects::Modals::Flag.new }
+  let(:admin_header) { PageObjects::Components::AdminHeader.new }
 
   before do
     sign_in(admin)
@@ -144,6 +145,30 @@ describe "Admin Flags Page", type: :system do
       "It's Spam",
       "It's Illegal",
       "Something Else",
+    )
+  end
+
+  it "has settings tab" do
+    admin_flags_page.visit
+
+    expect(admin_header).to have_tabs(
+      [I18n.t("admin_js.settings"), I18n.t("admin_js.admin.config_areas.flags.flags_tab")],
+    )
+
+    admin_flags_page.click_settings_tab
+    expect(page.all(".setting-label h3").map(&:text)).to eq(
+      [
+        "silence new user sensitivity",
+        "num users to silence new user",
+        "max flags per day",
+        "tl2 additional flags per day multiplier",
+        "tl3 additional flags per day multiplier",
+        "tl4 additional flags per day multiplier",
+        "flag sockpuppets",
+        "auto respond to flag actions",
+        "num flaggers to close topic",
+        "high trust flaggers auto hide posts",
+      ],
     )
   end
 

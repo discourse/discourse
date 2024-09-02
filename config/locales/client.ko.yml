@@ -255,7 +255,6 @@ ko:
       like_count: "좋아요"
       topic_count: "글"
       post_count: "게시물"
-      contact_info: "이 사이트에 영향을 미치는 중대하거나 긴급한 문제가 발생한 경우 %{contact_info}으로 문의하세요."
       activities:
         topics:
           other: "%{formatted_number}개의 글"
@@ -1680,6 +1679,10 @@ ko:
       title: "회원가입"
       failed: "문제가 발생했습니다. 이 이메일이 이미 등록되어 있을 수 있습니다. 비밀번호 찾기 링크를 시도해 보세요."
       associate: "이미 계정이 있나요? <a href='%{associate_link}'>로그인</a>하여 %{provider} 계정을 연결하세요."
+      progress_bar:
+        signup: "회원가입"
+        approve: "승인"
+        login: "로그인"
     forgot_password:
       title: "비밀번호 리셋"
       action: "비밀번호가 기억나지 않습니다"
@@ -3961,6 +3964,7 @@ ko:
           edit: "편집"
           delete: "삭제하기"
           delete_confirm: '&quot;%{name}&quot;를 삭제 하시겠습니까?'
+          flags_tab: "신고"
           form:
             save: "저장"
             name: "그룹명"
@@ -4001,7 +4005,7 @@ ko:
         menu:
           backups: "백업"
           logs: "로그"
-        none: "사용 가능한 백업이 없습니다."
+        none: "가능한 백업이 없습니다"
         read_only:
           enable:
             title: "읽기 전용 모드 활성화"
@@ -4032,12 +4036,10 @@ ko:
           download:
             label: "다운로드"
             title: "다운로드 링크와 함께 이메일 전송"
-            alert: "이 백업의 다운로드 링크를 내 이메일로 보냈습니다."
           destroy:
             title: "백업 삭제"
             confirm: "이 백업을 제거할까요?"
           restore:
-            is_disabled: "사이트 설정에서 복원이 비활성화되어 있습니다."
             label: "복구"
             title: "백업을 이용하여 복구"
             confirm: "이 백업을 복원할까요?"
@@ -4046,7 +4048,6 @@ ko:
             title: "데이터베이스를 이전 workiong state로 되돌리기"
             confirm: "데이터베이스를 이전 작업 상태로 롤백할까요?"
         location:
-          local: "로컬 스토리지"
           s3: "S3"
         backup_storage_error: "백업 스토리지에 액세스하지 못했습니다. %{error_message}"
       export_csv:

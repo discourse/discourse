@@ -13,19 +13,21 @@ export default class AdminPluginsController extends Controller {
     return this.allAdminRoutes.filter((route) => !this.routeExists(route));
   }
 
+  // NOTE: See also AdminPluginsIndexController, there is some duplication here
+  // while we convert plugins to use_new_show_route
   get allAdminRoutes() {
     return this.model
-      .filter((plugin) => plugin?.enabled)
+      .filter((plugin) => plugin?.enabled && plugin?.adminRoute)
       .map((plugin) => {
-        return plugin.adminRoute;
-      })
-      .filter(Boolean);
+        return Object.assign(plugin.adminRoute, { plugin_id: plugin.id });
+      });
   }
 
   get showTopNav() {
     return (
-      !this.adminPluginNavManager.currentPlugin ||
-      this.adminPluginNavManager.isSidebarMode
+      !this.adminPluginNavManager.viewingPluginsList &&
+      (!this.adminPluginNavManager.currentPlugin ||
+        this.adminPluginNavManager.isSidebarMode)
     );
   }
 

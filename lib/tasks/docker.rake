@@ -82,6 +82,12 @@ def number_of_processors
   Etc.nprocessors
 end
 
+def qunit_concurrency
+  # qunit runs all browsers against a single ember-cli (express.js) server, so this will not scale infinitely
+  # therefore, cap at 8
+  [number_of_processors / 2, 8].min
+end
+
 def system_tests_parallel_tests_processors_env
   "PARALLEL_TEST_PROCESSORS=#{number_of_processors / 2}"
 end
@@ -298,7 +304,7 @@ task "docker:test" do
         unless ENV["SKIP_CORE"]
           @good &&=
             run_or_fail(
-              "cd app/assets/javascripts/discourse && CI=1 yarn ember exam --load-balance --parallel=#{number_of_processors / 2} --random",
+              "cd app/assets/javascripts/discourse && CI=1 yarn ember exam --load-balance --parallel=#{qunit_concurrency} --random",
             )
         end
 
@@ -311,7 +317,7 @@ task "docker:test" do
           else
             @good &&=
               run_or_fail(
-                "QUNIT_PARALLEL=#{number_of_processors / 2}  CI=1 bundle exec rake plugin:qunit['*','#{js_timeout}']",
+                "QUNIT_PARALLEL=#{qunit_concurrency}  CI=1 bundle exec rake plugin:qunit['*','#{js_timeout}']",
               )
           end
         end

@@ -24,6 +24,7 @@ export default class History extends Component {
   @service site;
   @service currentUser;
   @service siteSettings;
+  @service appEvents;
 
   @tracked loading;
   @tracked postRevision;
@@ -169,13 +170,29 @@ export default class History extends Component {
     }
   }
 
-  refresh(postId, postVersion) {
+  async refresh(postId, postVersion) {
     this.loading = true;
-    Post.loadRevision(postId, postVersion).then((result) => {
+    try {
+      const result = await Post.loadRevision(postId, postVersion);
       this.postRevision = result;
+    } catch (error) {
+      this.args.closeModal();
+      this.dialog.alert(error.jqXHR.responseJSON.errors[0]);
+
+      const postStream = this.args.model.post?.topic?.postStream;
+      if (!postStream) {
+        return;
+      }
+
+      postStream
+        .triggerChangedPost(postId, this.args.model)
+        .then(() =>
+          this.appEvents.trigger("post-stream:refresh", { id: postId })
+        );
+    } finally {
       this.loading = false;
       this.initialLoad = false;
-    });
+    }
   }
 
   hide(postId, postVersion) {

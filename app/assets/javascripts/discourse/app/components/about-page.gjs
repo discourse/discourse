@@ -227,14 +227,14 @@ export default class AboutPage extends Component {
         {{#if @model.admins.length}}
           <section class="about__admins">
             <h3>{{dIcon "users"}} {{i18n "about.our_admins"}}</h3>
-            <AboutPageUsers @users={{@model.admins}} @truncateAt={{12}} />
+            <AboutPageUsers @users={{@model.admins}} @truncateAt={{6}} />
           </section>
         {{/if}}
 
         {{#if @model.moderators.length}}
           <section class="about__moderators">
             <h3>{{dIcon "users"}} {{i18n "about.our_moderators"}}</h3>
-            <AboutPageUsers @users={{@model.moderators}} @truncateAt={{12}} />
+            <AboutPageUsers @users={{@model.moderators}} @truncateAt={{6}} />
           </section>
         {{/if}}
       </div>

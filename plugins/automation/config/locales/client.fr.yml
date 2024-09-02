@@ -209,6 +209,14 @@ fr:
             valid_trust_levels:
               label: Niveaux de confiance valides
               description: Se déclenchera uniquement si la publication est créée par un utilisateur repris dans ces niveaux de confiance. Cette valeur est fixée par défaut sur tous les niveaux de confiance
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: Catégories suivies
+              description: Se déclenche uniquement si le sujet fait partie de l'une de ces catégories.
+            watching_tags:
+              label: Balises suivies
+              description: Se déclenche uniquement si le sujet contient l'une de ces étiquettes
         after_post_cook:
           fields:
             valid_trust_levels:

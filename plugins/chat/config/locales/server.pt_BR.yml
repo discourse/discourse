@@ -30,6 +30,7 @@ pt_BR:
     chat_editing_grace_period: "Durante (n) segundos depois de enviar um chat, não será mostrada a etiqueta (editada) na edição, na mensagem do chat."
     chat_editing_grace_period_max_diff_low_trust: "Quantidade máxima de alterações de caracteres permitidas no período de carência da edição do chat. Se houver mais alterações, a etiqueta (editada) será mostrada na mensagem do chat (nível de confiança 0 e 1)."
     chat_editing_grace_period_max_diff_high_trust: "Quantidade máxima de alterações de caracteres permitidas no período de carência da edição do chat. Se houver mais alterações, a etiqueta (editada) será mostrada na mensagem do chat (nível de confiança 2 e acima)."
+    chat_preferred_index: "Aba preferencial ao carregar /chat."
     errors:
       chat_default_channel: "O canal de chat padrão deve ser um canal público."
       direct_message_enabled_groups_invalid: "Você deve especificar pelo menos um grupo para esta configuração. Se você não quiser que ninguém, exceto a equipe, envie mensagens diretas, escolha o grupo da equipe."

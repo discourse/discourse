@@ -7,6 +7,11 @@ describe "Admin Site Texts Page", type: :system do
 
   before { sign_in(admin) }
 
+  after do
+    TranslationOverride.delete_all
+    I18n.reload!
+  end
+
   it "can search for client text using the default locale" do
     site_texts_page.visit
     site_texts_page.search("skip to main content")

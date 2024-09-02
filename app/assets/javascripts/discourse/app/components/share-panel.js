@@ -8,11 +8,12 @@ import discourseLater from "discourse-common/lib/later";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Component.extend({
-  tagName: null,
-  type: alias("panel.model.type"),
-  topic: alias("panel.model.topic"),
-  privateCategory: alias("panel.model.topic.category.read_restricted"),
+export default class SharePanel extends Component {
+  tagName = null;
+
+  @alias("panel.model.type") type;
+  @alias("panel.model.topic") topic;
+  @alias("panel.model.topic.category.read_restricted") privateCategory;
 
   @discourseComputed("topic.{isPrivateMessage,invisible,category}")
   sources(topic) {
@@ -22,13 +23,13 @@ export default Component.extend({
       (topic && topic.invisible) ||
       this.privateCategory;
     return Sharing.activeSources(this.siteSettings.share_links, privateContext);
-  },
+  }
 
   @discourseComputed("type", "topic.title")
   shareTitle(type, topicTitle) {
     topicTitle = escapeExpression(topicTitle);
     return I18n.t("share.topic_html", { topicTitle });
-  },
+  }
 
   @discourseComputed("panel.model.shareUrl", "topic.shareUrl")
   shareUrl(forcedShareUrl, shareUrl) {
@@ -45,10 +46,10 @@ export default Component.extend({
     }
 
     return encodeURI(shareUrl);
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     discourseLater(() => {
       if (this.element) {
         const textArea = this.element.querySelector(".topic-share-url");
@@ -57,7 +58,7 @@ export default Component.extend({
         textArea.setSelectionRange(0, this.shareUrl.length);
       }
     }, 200);
-  },
+  }
 
   @action
   share(source) {
@@ -65,5 +66,5 @@ export default Component.extend({
       url: this.shareUrl,
       title: this.topic.get("title"),
     });
-  },
-});
+  }
+}

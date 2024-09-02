@@ -52,6 +52,11 @@ sk:
   remove_posts_deleted_by_author: "Zmazané autorom"
   redirect_warning: "Neboli sme schopní overiť, či vami vybraný link bol pridaný na fórum. Ak chcete aj tak pokračovať, vyberte link nižšie."
   on_another_topic: "Na inú tému"
+  topic_category_changed: "Od %{from} do %{to}"
+  topic_tag_changed:
+    added_and_removed: "Pridané %{added} a odstránené %{removed}"
+    added: "Pridané %{added}"
+    removed: "Odstránené %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} podľa %{username}"
@@ -2187,6 +2192,7 @@ sk:
     tos_url: "Ak máte stránku s Podmienkami uloženú na iných stránkach, napište sem plný odkaz na ne."
     privacy_policy_url: "Ak máte stránku s Podmienkami súkromia uloženú na iných stránkach, napište sem plný odkaz na ne."
     log_anonymizer_details: "Či sa majú údaje používateľa po anonymizácii ponechať v protokole."
+    display_eu_visitor_stats: "Zobrazenie počtu globálnych návštevníkov a návštevníkov z EÚ na stránke /o stránke."
     newuser_spam_host_threshold: "Koľkokrát môže nový používateľ uverejniť odkaz na rovnakého hostiteľa v rámci svojich príspevkov `newuser_spam_host_threshold` predtým, ako sa bude považovať za spam."
     allowed_spam_host_domains: "Zoznam domén vylúčených z testovania spamových zdrojov. Novým používateľom nebude nikdy zabránené vytvárať príspevky s odkazmi na tieto domény."
     staff_like_weight: "Akú váhu majú mať lajky personálu (lajky, ktoré sa netýkajú personálu, majú váhu 1.)"
@@ -2499,6 +2505,7 @@ sk:
     suppress_overlapping_tags_in_list: "Ak sa značky zhodujú s presnými slovami v názvoch tém, značku nezobrazujte"
     remove_muted_tags_from_latest: "V zozname najnovších tém nezobrazujte témy označené iba tlmenými značkami."
     force_lowercase_tags: "Vynútiť, aby všetky nové značky boli písané výhradne malými písmenami."
+    create_post_for_category_and_tag_changes: "Vytvorenie malého akčného príspevku pri zmene kategórie alebo značky témy"
     automatically_clean_unused_tags: "Automaticky denne odstraňovať značky, ktoré sa nepoužívajú pri žiadnych témach alebo súkromných správach."
     watched_precedence_over_muted: "Upozorniť ma na témy v kategóriách alebo značkách, ktoré sledujem a ktoré tiež patria do tých, ktoré som stlmil"
     company_name: "Názov vašej spoločnosti alebo organizácie. Ak pole ponecháte prázdne, neposkytnú sa žiadne všeobecné zmluvné podmienky ani oznámenie o ochrane osobných údajov."

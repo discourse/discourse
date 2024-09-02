@@ -252,7 +252,6 @@ zh_TW:
       like_count: "讚"
       topic_count: "話題"
       post_count: "貼文"
-      contact_info: "若有重大問題或關係到網站的緊急時間，請透過 %{contact_info} 聯絡我們"
       activities:
         topics:
           other: "%{formatted_number} 話題"
@@ -1482,6 +1481,10 @@ zh_TW:
       disclaimer: "註冊即表示您同意 <a href='%{privacy_link}' target='blank'>隱私政策</a> 和 <a href='%{tos_link}' target='blank'>服務條款</a>。"
       title: "註冊"
       failed: "發生了某些錯誤，可能此電子郵件地址已經註冊過，請試試看忘記密碼連結"
+      progress_bar:
+        signup: "註冊"
+        approve: "批准"
+        login: "登入"
     forgot_password:
       title: "寄出密碼"
       action: "我忘了我的密碼"
@@ -3337,6 +3340,7 @@ zh_TW:
           edit: "編輯"
           delete: "刪除"
           delete_confirm: '你確定要刪除%{name}嗎？'
+          flags_tab: "投訴"
           form:
             save: "保存"
             name: "名字"
@@ -3379,7 +3383,6 @@ zh_TW:
         menu:
           backups: "備份"
           logs: "紀錄"
-        none: "沒有可用的備份。"
         read_only:
           enable:
             title: "開啟只讀模式"
@@ -3410,12 +3413,10 @@ zh_TW:
           download:
             label: "下載"
             title: "傳送含有下載連結的 email"
-            alert: "含有下載備份連結的 email 已被傳送到您的信箱"
           destroy:
             title: "刪除備份"
             confirm: "你確定要刪除備份嗎?"
           restore:
-            is_disabled: "此站設定已關閉復原"
             label: "還原"
             title: "復原備份"
             confirm: "你確定要從該備份中恢復嗎？"
@@ -3424,7 +3425,6 @@ zh_TW:
             title: "回溯資料庫到以前的工作階段"
             confirm: "你確定要將資料庫回滾到之前的工作狀態嗎？"
         location:
-          local: "暫存空間"
           s3: "S3"
         backup_storage_error: "無法進入備份空間：%{error_message}"
       export_csv:

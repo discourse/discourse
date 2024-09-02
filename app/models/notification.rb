@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Notification < ActiveRecord::Base
+  self.ignored_columns = [
+    :old_id, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been writted.
+  ]
+
   attr_accessor :acting_user
   attr_accessor :acting_username
 
@@ -407,7 +411,6 @@ end
 #
 # Table name: notifications
 #
-#  old_id            :integer
 #  notification_type :integer          not null
 #  user_id           :integer          not null
 #  data              :string(1000)     not null

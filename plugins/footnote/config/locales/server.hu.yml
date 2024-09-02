@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    enable_markdown_footnotes: engedélyezze a lábjegyzetek jelölését ezen az oldalon
+    display_footnotes_inline: lehetővé teszi a lábjegyzetek soron belüli bővítését

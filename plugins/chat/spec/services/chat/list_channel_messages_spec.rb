@@ -29,6 +29,8 @@ RSpec.describe Chat::ListChannelMessages do
     end
 
     context "when channel exists" do
+      it { is_expected.to run_successfully }
+
       it "finds the correct channel" do
         expect(result.channel).to eq(channel)
       end
@@ -37,6 +39,8 @@ RSpec.describe Chat::ListChannelMessages do
 
   context "when fetch_eventual_membership" do
     context "when user has membership" do
+      it { is_expected.to run_successfully }
+
       it "finds the correct membership" do
         expect(result.membership).to eq(channel.membership_for(user))
       end
@@ -44,6 +48,8 @@ RSpec.describe Chat::ListChannelMessages do
 
     context "when user has no membership" do
       before { channel.membership_for(user).destroy! }
+
+      it { is_expected.to run_successfully }
 
       it "finds no membership" do
         expect(result.membership).to be_blank
@@ -86,7 +92,7 @@ RSpec.describe Chat::ListChannelMessages do
 
   context "when target_message_exists" do
     context "when no target_message_id is given" do
-      it { is_expected.to be_a_success }
+      it { is_expected.to run_successfully }
     end
 
     context "when target message is not found" do
@@ -99,7 +105,7 @@ RSpec.describe Chat::ListChannelMessages do
       fab!(:target_message) { Fabricate(:chat_message, chat_channel: channel) }
       let(:optional_params) { { target_message_id: target_message.id } }
 
-      it { is_expected.to be_a_success }
+      it { is_expected.to run_successfully }
     end
 
     context "when target message is trashed" do
@@ -117,13 +123,13 @@ RSpec.describe Chat::ListChannelMessages do
       context "when user is the message creator" do
         fab!(:target_message) { Fabricate(:chat_message, chat_channel: channel, user: user) }
 
-        it { is_expected.to be_a_success }
+        it { is_expected.to run_successfully }
       end
 
       context "when user is admin" do
         fab!(:user) { Fabricate(:admin) }
 
-        it { is_expected.to be_a_success }
+        it { is_expected.to run_successfully }
       end
     end
   end
@@ -131,6 +137,8 @@ RSpec.describe Chat::ListChannelMessages do
   context "when fetch_messages" do
     context "with no params" do
       fab!(:messages) { Fabricate.times(20, :chat_message, chat_channel: channel) }
+
+      it { is_expected.to be_a_success }
 
       it "returns messages" do
         expect(result.can_load_more_past).to eq(false)
@@ -149,6 +157,8 @@ RSpec.describe Chat::ListChannelMessages do
 
       let(:optional_params) { { target_date: 2.days.ago } }
 
+      it { is_expected.to be_a_success }
+
       it "includes past and future messages" do
         expect(result.messages).to eq([past_message, future_message])
       end
@@ -164,6 +174,8 @@ RSpec.describe Chat::ListChannelMessages do
         thread_1.add(user)
       end
 
+      it { is_expected.to be_a_success }
+
       it "returns tracking" do
         Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
 
@@ -174,6 +186,8 @@ RSpec.describe Chat::ListChannelMessages do
 
       context "when thread is forced" do
         before { thread_1.update!(force: true) }
+
+        it { is_expected.to be_a_success }
 
         it "returns tracking" do
           Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
@@ -192,6 +206,8 @@ RSpec.describe Chat::ListChannelMessages do
         channel.update!(threading_enabled: true)
         thread_1.add(user)
       end
+
+      it { is_expected.to be_a_success }
 
       it "returns tracking" do
         Fabricate(:chat_message, chat_channel: channel, thread: thread_1)

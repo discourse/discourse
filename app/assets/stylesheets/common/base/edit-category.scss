@@ -236,7 +236,11 @@ div.edit-category {
   .remove-permission {
     margin-left: 0.5em;
     padding: 0.15em;
-    color: var(--danger);
+
+    .d-icon {
+      color: var(--danger);
+    }
+
     &:hover {
       color: var(--danger-hover);
     }

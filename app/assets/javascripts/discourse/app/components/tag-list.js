@@ -1,34 +1,35 @@
 import Component from "@ember/component";
 import { sort } from "@ember/object/computed";
+import { classNameBindings } from "@ember-decorators/component";
 import Category from "discourse/models/category";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Component.extend({
-  classNameBindings: [
-    ":tags-list",
-    ":tag-list",
-    "categoryClass",
-    "tagGroupNameClass",
-  ],
+@classNameBindings(
+  ":tags-list",
+  ":tag-list",
+  "categoryClass",
+  "tagGroupNameClass"
+)
+export default class TagList extends Component {
+  isPrivateMessage = false;
 
-  isPrivateMessage: false,
-  sortedTags: sort("tags", "sortProperties"),
+  @sort("tags", "sortProperties") sortedTags;
 
   @discourseComputed("titleKey")
   title(titleKey) {
     return titleKey && I18n.t(titleKey);
-  },
+  }
 
   @discourseComputed("categoryId")
   category(categoryId) {
     return categoryId && Category.findById(categoryId);
-  },
+  }
 
   @discourseComputed("category.fullSlug")
   categoryClass(slug) {
     return slug && `tag-list-${slug}`;
-  },
+  }
 
   @discourseComputed("tagGroupName")
   tagGroupNameClass(groupName) {
@@ -39,5 +40,5 @@ export default Component.extend({
         .toLowerCase();
       return groupName && `tag-group-${groupName}`;
     }
-  },
-});
+  }
+}

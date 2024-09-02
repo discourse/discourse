@@ -27,10 +27,15 @@
       </div>
     {{else}}
       {{#if this.site.mobileView}}
-        <Modal::Login::WelcomeHeader
-          @wavingHandURL={{this.wavingHandURL}}
-          @createAccount={{this.createAccount}}
-        />
+        <WelcomeHeader
+          @header={{i18n "login.header_title"}}
+          @subheader={{i18n "login.subheader_title"}}
+        >
+          <PluginOutlet
+            @name="login-header-bottom"
+            @outletArgs={{hash createAccount=this.createAccount}}
+          />
+        </WelcomeHeader>
         {{#if this.showLoginButtons}}
           <LoginButtons
             @externalLogin={{this.externalLoginAction}}
@@ -43,10 +48,15 @@
       {{#if this.canLoginLocal}}
         <div class={{if this.site.desktopView "login-left-side"}}>
           {{#if this.site.desktopView}}
-            <Modal::Login::WelcomeHeader
-              @wavingHandURL={{this.wavingHandURL}}
-              @createAccount={{this.createAccount}}
-            />
+            <WelcomeHeader
+              @header={{i18n "login.header_title"}}
+              @subheader={{i18n "login.subheader_title"}}
+            >
+              <PluginOutlet
+                @name="login-header-bottom"
+                @outletArgs={{hash createAccount=this.createAccount}}
+              />
+            </WelcomeHeader>
           {{/if}}
           <Modal::Login::LocalLoginForm
             @loginName={{this.loginName}}
@@ -91,8 +101,9 @@
       {{#if (and this.showLoginButtons this.site.desktopView)}}
         {{#unless this.canLoginLocal}}
           <div class="login-left-side">
-            <Modal::Login::WelcomeHeader
-              @wavingHandURL={{this.wavingHandURL}}
+            <WelcomeHeader
+              @header={{i18n "login.header_title"}}
+              @subheader={{i18n "login.subheader_title"}}
             />
           </div>
         {{/unless}}

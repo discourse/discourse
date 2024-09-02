@@ -16,16 +16,12 @@ RSpec.describe FlagSerializer do
   end
 
   context "when custom flag" do
-    fab!(:flag) { Fabricate(:flag, name: "custom title", description: "custom description") }
-
-    it "returns translated name" do
+    it "returns translated name and description" do
+      flag = Fabricate(:flag, name: "custom title", description: "custom description")
       serialized = described_class.new(flag, used_flag_ids: []).as_json
       expect(serialized[:flag][:name]).to eq("custom title")
-    end
-
-    it "returns translated description" do
-      serialized = described_class.new(flag, used_flag_ids: []).as_json
       expect(serialized[:flag][:description]).to eq("custom description")
+      flag.destroy!
     end
   end
 
@@ -53,5 +49,16 @@ RSpec.describe FlagSerializer do
   it "returns applies_to" do
     serialized = described_class.new(flag, used_flag_ids: []).as_json
     expect(serialized[:flag][:applies_to]).to eq(%w[Post Topic Chat::Message])
+  end
+
+  describe "#description" do
+    let(:serializer) { described_class.new(flag, scope: Guardian.new, root: false) }
+    let(:flag) { Flag.find_by(name_key: :inappropriate) }
+
+    before { allow(Discourse).to receive(:base_path).and_return("discourse.org") }
+
+    it "returns properly interpolated translation" do
+      expect(serializer.description).to match(%r{discourse\.org/guidelines})
+    end
   end
 end

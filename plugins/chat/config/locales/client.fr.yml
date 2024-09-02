@@ -39,6 +39,10 @@ fr:
       chat_messages_count: "Messages de discussion"
       chat_channels_count: "Canaux de discussion"
       chat_users_count: "Utilisateurs de la discussion"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} message de discussion"
+          other: "%{formatted_number} messages de discussion"
     chat:
       text_copied: Texte copié dans le presse-papiers
       link_copied: Lien copié dans le presse-papiers

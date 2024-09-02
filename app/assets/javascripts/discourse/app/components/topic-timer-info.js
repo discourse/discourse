@@ -1,55 +1,58 @@
 import Component from "@ember/component";
 import { cancel, next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
+import { classNames } from "@ember-decorators/component";
+import { on } from "@ember-decorators/object";
 import { DELETE_REPLIES_TYPE } from "discourse/components/modal/edit-topic-timer";
 import Category from "discourse/models/category";
 import { isTesting } from "discourse-common/config/environment";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Component.extend({
-  classNames: ["topic-timer-info"],
-  _delayedRerender: null,
-  clockIcon: htmlSafe(`${iconHTML("far-clock")}`),
-  trashLabel: I18n.t("post.controls.remove_timer"),
-  title: null,
-  notice: null,
-  showTopicTimer: null,
-  showTopicTimerModal: null,
-  removeTopicTimer: null,
+@classNames("topic-timer-info")
+export default class TopicTimerInfo extends Component {
+  clockIcon = htmlSafe(`${iconHTML("far-clock")}`);
+  trashLabel = I18n.t("post.controls.remove_timer");
+
+  title = null;
+  notice = null;
+  showTopicTimer = null;
+  showTopicTimerModal = null;
+  removeTopicTimer = null;
+  _delayedRerender = null;
 
   @on("didReceiveAttrs")
   setupRenderer() {
     this.renderTopicTimer();
-  },
+  }
 
   @on("willDestroyElement")
   cancelDelayedRenderer() {
     if (this._delayedRerender) {
       cancel(this._delayedRerender);
     }
-  },
+  }
 
   @discourseComputed
   canModifyTimer() {
     return this.currentUser && this.currentUser.get("canManageTopic");
-  },
+  }
 
   @discourseComputed("canModifyTimer", "removeTopicTimer")
   showTrashCan(canModifyTimer, removeTopicTimer) {
     return canModifyTimer && removeTopicTimer;
-  },
+  }
 
   @discourseComputed("canModifyTimer", "showTopicTimerModal")
   showEdit(canModifyTimer, showTopicTimerModal) {
     return canModifyTimer && showTopicTimerModal;
-  },
+  }
 
   additionalOpts() {
     return {};
-  },
+  }
 
   renderTopicTimer() {
     const isDeleteRepliesType = this.statusType === DELETE_REPLIES_TYPE;
@@ -130,7 +133,7 @@ export default Component.extend({
     } else {
       this.set("showTopicTimer", null);
     }
-  },
+  }
 
   rerenderDelay(minutesLeft) {
     if (minutesLeft > 2160) {
@@ -144,7 +147,7 @@ export default Component.extend({
     }
 
     return 1000;
-  },
+  }
 
   _noticeKey() {
     let statusType = this.statusType;
@@ -156,5 +159,5 @@ export default Component.extend({
     }
 
     return `topic.status_update_notice.auto_${statusType}`;
-  },
-});
+  }
+}

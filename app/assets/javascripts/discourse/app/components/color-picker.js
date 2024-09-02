@@ -1,10 +1,11 @@
 import Component from "@ember/component";
-export default Component.extend({
-  classNames: "colors-container",
+import { action } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
 
-  actions: {
-    selectColor(color) {
-      this.set("value", color);
-    },
-  },
-});
+@classNames("colors-container")
+export default class ColorPicker extends Component {
+  @action
+  selectColor(color) {
+    this.set("value", color);
+  }
+}
