@@ -4887,7 +4887,7 @@ de:
             description: "Wie können Mitglieder dieser Community beitreten?"
             choices:
               sign_up:
-                label: "Registrierungen"
+                label: "Registrierung"
               invite_only:
                 label: "Nur auf Einladung"
           must_approve_users:

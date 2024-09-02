@@ -1647,6 +1647,84 @@ ar:
         warnings: "تحذيرات رسمية"
         read_more_in_group: "هل ترغب في قراءة المزيد؟ تصفح الرسائل الأخرى في %{groupLink}."
         read_more: "هل ترغب في قراءة المزيد؟ تصفح الرسائل الأخرى في <a href='%{basePath}/u/%{username}/messages'>الرسائل الشخصية</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   zero {}=0 {}
+                  one {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"></a>}
+                   two {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"></a>}
+                   few {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">#</a>}
+                   many {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">#</a>}
+                other {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">#</a>}
+              }
+              { NEW, plural,
+                   zero {}=0 {}
+                  one { <a href="{basePath}/u/{username}/messages/group/{groupName}/new">رسالة غير مقروءة وجديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+                   two { <a href="{basePath}/u/{username}/messages/group/{groupName}/new">رسالتان غير مقروءتين وجديدتان</a> متبقيتان، أو استعرض الرسائل الأخرى في {groupLink}}
+                   few { <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># رسائل غير مقروءة وجديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+                   many { <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># رسالة غير مقروءة وجديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+                other { <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># رسالة غير مقروءة وجديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   zero {}=0 {}
+                    one {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new">رسالة غير مقروءة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+                   two {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new">رسالتان غير مقروءتين</a> متبقيتان، أو استعرض الرسائل الأخرى في {groupLink}}
+                   few {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># رسائل غير مقروءة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+                   many {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># رسالة غير مقروءة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+                other {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># رسالة غير مقروءة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+              }
+              { NEW, plural,
+                   zero {}=0 {}
+          one {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new">رسالة جديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+                   two {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new">رسالتان جديدتان</a> متبقيتان، أو استعرض الرسائل الأخرى في {groupLink}}
+                   few {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># رسائل جديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+                   many {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># رسالة جديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+                other {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># رسالة جديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}    }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   zero {}=0 {}
+                  one {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"></a>}
+                   two {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"></a>}
+                   few {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">#</a>}
+                   many {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">#</a>}
+                other {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">#</a>}
+              }
+              { NEW, plural,
+                   zero {}=0 {}
+                  one { <a href="{basePath}/u/{username}/messages/new">رسالة غير مقروءة وجديدة</a> message متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                   two { <a href="{basePath}/u/{username}/messages/new">رسالتان غير مقروءتين وجديدتان</a> متبقيتان، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                   few { <a href="{basePath}/u/{username}/messages/new"># رسائل غير مقروءة وجديدة</a> messages متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                   many { <a href="{basePath}/u/{username}/messages/new"># رسالة غير مقروءة وجديدة</a> متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                other { <a href="{basePath}/u/{username}/messages/new"># رسالة غير مقروءة وجديدة</a> messages متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   zero {}=0 {}
+                  one {هناك <a href="{basePath}/u/{username}/messages/new">رسالة غير مقروءة</a> message متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                   two {هناك <a href="{basePath}/u/{username}/messages/new">رسالتان غير مقروءتين</a> متبقيتان، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                   few {هناك <a href="{basePath}/u/{username}/messages/new"># رسائل غير مقروءة</a> messages متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                   many {هناك <a href="{basePath}/u/{username}/messages/new"># رسالة غير مقروءة</a> متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                other {هناك <a href="{basePath}/u/{username}/messages/new"># رسالة غير مقروءة</a> messages متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}    }
+              { NEW, plural,
+                   zero {}=0 {}
+                  one { <a href="{basePath}/u/{username}/messages/new">رسالة جديدة</a> message متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                   two { <a href="{basePath}/u/{username}/messages/new">رسالتان جديدتان</a> متبقيتان، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                   few { <a href="{basePath}/u/{username}/messages/new"># رسائل جديدة</a> messages متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                   many { <a href="{basePath}/u/{username}/messages/new"># رسالة جديدة</a> متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                other { <a href="{basePath}/u/{username}/messages/new"># رسالة جديدة</a> messages متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "الحساب"
         security: "الأمان"
@@ -2300,6 +2378,63 @@ ar:
       logout_disabled: "يتم إيقاف تسجيل الخروج عندما يكون الموقع في وضع القراءة فقط."
     staff_writes_only_mode:
       enabled: "هذا الموقع في وضع القراءة فقط. يُرجى المتابعة للتصفح، لكن سيقتصر التصفح والرد وتسجيل الإعجاب والإجراءات الأخرى على الأعضاء في فريق العمل فقط."
+    logs_error_rate_notice:
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            zero {}one {خطأ/الساعة}
+            two {خطآن/الساعة}
+            few {# أخطاء/الساعة}
+            many {# خطأً/الساعة}
+          other {# خطأ/الساعة}
+        }</a> تم بلوغ حد إعداد الموقع البالغ {limit, plural,
+            zero {}one {خطأ/الساعة}
+            two {خطآن/الساعة}
+            few {# أخطاء/الساعة}
+            many {# خطأً/الساعة}
+          other {# خطأ/الساعة}
+        }.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            zero {}one {خطأ/الدقيقة}
+            two {خطآن/الدقيقة}
+            few {# أخطاء/الدقيقة}
+            many {# خطأً/الدقيقة}
+          other {# خطأ/الدقيقة}
+        }</a> تم بلوغ حد إعداد الموقع البالغ {limit, plural,
+            zero {}one {خطأ/الدقيقة}
+            two {خطآن/الدقيقة}
+            few {# أخطاء/الدقيقة}
+            many {# خطأً/الدقيقة}
+          other {# خطأ/الدقيقة}
+        }.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            zero {}one {خطأ/الساعة}
+            two {خطآن/الساعة}
+            few {# أخطاء/الساعة}
+            many {# خطأً/الساعة}
+          other {# خطأ/الساعة}
+        }</a> تم تجاوز حد إعداد الموقع البالغ { limit, plural,
+            zero {}one {خطأ/الساعة}
+            two {خطآن/الساعة}
+            few {# أخطاء/الساعة}
+            many {# خطأً/الساعة}
+          other {# خطأ/الساعة}
+        }.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            zero {}one {خطأ/الدقيقة}
+            two {خطآن/الدقيقة}
+            few {# أخطاء/الدقيقة}
+            many {# خطأً/الدقيقة}
+          other {# خطأ/الدقيقة}
+        }</a> تم تجاوز حد إعداد الموقع البالغ { limit, plural,
+            zero {}one {خطأ/الدقيقة}
+            two {خطآن/الدقيقة}
+            few {# أخطاء/الدقيقة}
+            many {# خطأً/الدقيقة}
+          other {# خطأ/الدقيقة}
+        }.
     learn_more: "معرفة المزيد…"
     mute: كتم
     unmute: إلغاء الكتم
@@ -5063,6 +5198,7 @@ ar:
         everyone_can_use: "يمكن للجميع استخدام الوسوم"
         usable_only_by_groups: "تكون الوسوم مرئية للجميع، ولكن يمكن للمجموعات التالية فقط استخدامها"
         visible_only_to_groups: "تكون الوسوم مرئية للمجموعات التالية فقط"
+        cannot_save: "لا يمكن حفظ مجموعة الوسوم. تأكَّد من وجود وسم واحد على الأقل، وأن اسم مجموعة الوسوم ليس فارغًا وأقل من 100 حرف، وأن هناك مجموعة محدَّدة لمنحها إذن الوسوم."
         tags_placeholder: "البحث أو إنشاء الوسوم"
         parent_tag_placeholder: "اختياري"
         select_groups_placeholder: "تحديد المجموعات…"
@@ -5483,6 +5619,7 @@ ar:
         problems_found: "بعض النصائح بناءً على إعدادات موقعك الحالية"
         new_features:
           title: "ما الجديد"
+          subtitle: "للمزيد من التفاصيل بشأن الميزات والتحسينات الجديدة التي نضيفها طوال الوقت، راجع <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>ملاحظات الإصدار</a>."
           previous_announcements: "يمكنك رؤية إعلانات الميزات الجديدة السابقة على <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "معرفة المزيد..."
         last_checked: "تاريخ آخر تحقُّق"

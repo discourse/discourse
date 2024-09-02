@@ -1343,6 +1343,62 @@ nl:
         warnings: "Officiële waarschuwingen"
         read_more_in_group: "Wil je meer lezen? Bekijk andere berichten in %{groupLink}."
         read_more: "Wil je meer lezen? Bekijk andere berichten in <a href='%{basePath}/u/%{username}/messages'>persoonlijke berichten</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Er is <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># ongelezen</a>}
+                other {Er zijn <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># ongelezen</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { en <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nieuw</a> bericht resterend, of bekijk andere berichten in {groupLink}}
+                other { en <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nieuwe</a> berichten resterend, of bekijk andere berichten in {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Er is <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># ongelezen</a> bericht resterend, of bekijk andere berichten in {groupLink}}
+                other {Er zijn <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># ongelezen</a> berichten resterend, of bekijk andere berichten in {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Er is <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nieuw</a> bericht resterend, of bekijk andere berichten in {groupLink}}
+                other {Er zijn <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nieuwe</a> berichten resterend, of bekijk andere berichten in {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Er is <a href="{basePath}/u/{username}/messages/unread"># ongelezen</a>}
+                other {Er zijn <a href="{basePath}/u/{username}/messages/unread"># ongelezen</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { en <a href="{basePath}/u/{username}/messages/new"># nieuw</a> bericht resterend, of bekijk andere <a href="{basePath}/u/{username}/messages">persoonlijke berichten</a>}
+                other { en <a href="{basePath}/u/{username}/messages/new"># nieuwe</a> bericht resterend, of bekijk andere <a href="{basePath}/u/{username}/messages">persoonlijke berichten</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Er is <a href="{basePath}/u/{username}/messages/unread"># ongelezen</a> bericht resterend, of bekijk andere <a href="{basePath}/u/{username}/messages">persoonlijke berichten</a>}
+                other {Er zijn <a href="{basePath}/u/{username}/messages/unread"># ongelezen</a> berichten resterend, of bekijk andere <a href="{basePath}/u/{username}/messages">persoonlijke berichten</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Er is <a href="{basePath}/u/{username}/messages/new"># nieuw</a> bericht resterend, of bekijk andere <a href="{basePath}/u/{username}/messages">persoonlijke berichten</a>}
+                other {Er zijn <a href="{basePath}/u/{username}/messages/new"># nieuw</a> berichten resterend, of bekijk andere <a href="{basePath}/u/{username}/messages">persoonlijke berichten</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Account"
         security: "Beveiliging"
@@ -1932,6 +1988,39 @@ nl:
       logout_disabled: "Afmelden is uitgeschakeld zolang de website zich in de alleen-lezenmodus bevindt."
     staff_writes_only_mode:
       enabled: "Deze site is in de medewerkermodus. Ga door met bekijken, maar antwoorden, liken en andere acties zijn beperkt tot medewerkers."
+    logs_error_rate_notice:
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# fout/uur}
+          other {# fouten/uur}
+        }</a> heeft de site-instellingslimiet bereikt van {limit, plural,
+            one {# fout/uur}
+          other {# fouten/uur}
+        }.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# fout/minuut}
+          other {# fouten/minuut}
+        }</a> heeft de site-instellingslimiet bereikt van { limit, plural,
+            one {# fout/minuut}
+          other {# fouten/minuut}
+        }.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# fout/uur}
+          other {# fouten/uur}
+        }</a> heeft de site-instellingslimiet overschreden van { limit, plural,
+            one {# fout/uur}
+          other {# fouten/uur}
+        }.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# fout/minuut}
+          other {# fouten/minuut}
+        }</a> heeft de site-instellingslimiet overschreden van { limit, plural,
+            one {# fout/minuut}
+          other {# fouten/minuut}
+        }.
     learn_more: "Meer informatie…"
     mute: Dempen
     unmute: Dempen opheffen
@@ -4208,6 +4297,7 @@ nl:
         everyone_can_use: "Tags kunnen door iedereen worden gebruikt"
         usable_only_by_groups: "Tags zijn zichtbaar voor iedereen, maar alleen de volgende groepen kunnen ze gebruiken"
         visible_only_to_groups: "Tags zijn alleen zichtbaar voor de volgende groepen"
+        cannot_save: "Kan taggroep niet opslaan. Zorg dat er minimaal één tag aanwezig is, dat de naam van de taggroep niet leeg en korter dan 100 tekens is en dat er een groep is geselecteerd voor tagstoestemming."
         tags_placeholder: "Zoek of maak tags"
         parent_tag_placeholder: "Optioneel"
         select_groups_placeholder: "Selecteer groepen…"
@@ -4580,6 +4670,7 @@ nl:
         problems_found: "Advies op basis van je huidige website-instellingen"
         new_features:
           title: "Wat is er nieuw"
+          subtitle: "Voor nog meer details over de nieuwe functies en verbeteringen die we voortdurend toevoegen, zie <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Releaseopmerkingen</a>."
           previous_announcements: "Je kunt eerdere aankondigingen van nieuwe functies bekijken op <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Meer informatie..."
         last_checked: "Laatst gecontroleerd"
@@ -5054,6 +5145,7 @@ nl:
           header: "Over je site"
           general_settings: "Algemene instellingen"
           community_name: "Communitynaam"
+          community_name_placeholder: "Voorbeeldcommunity"
           community_summary: "Samenvatting van de community"
           community_description: "Beschrijving van de community"
           banner_image: "Bannerafbeelding"
@@ -5061,9 +5153,11 @@ nl:
             Deze wordt gebruikt op je Over-pagina. Aanbevolen grootte: 800x300 pixels. Geaccepteerde bestandstypen: JPG, PNG en SVG tot 10 MB.
           contact_information: "Contactgegevens"
           community_owner: "Communityeigenaar"
+          community_owner_placeholder: "Piet Jansen"
           community_owner_help: |
             Naam van de belangrijkste contactpersoon die verantwoordelijk is voor deze website. Wordt gebruikt voor kritieke meldingen en wordt weergegeven op de /over-pagina. Zichtbaar voor anonieme gebruiker op openbare sites.
           contact_email: "E-mailadres contactpersoon"
+          contact_email_placeholder: "contact@piet-jansen.com"
           contact_email_help: |
             E-mailadres van de belangrijkste contactpersoon die verantwoordelijk is voor deze website. Wordt gebruikt voor kritieke meldingen en wordt weergegeven op de /over-pagina. Zichtbaar voor anonieme gebruiker op openbare sites.
           contact_url: "Contact-URL"
@@ -5078,14 +5172,17 @@ nl:
             Een geldige naam van een groep die wordt uitgenodigd voor alle automatisch gestuurde privéberichten.
           your_organization: "Je organisatie"
           company_name: "Bedrijfsnaam"
+          company_name_placeholder: "Voorbeeldbedrijf BV"
           company_name_help: |
             Naam van je bedrijf of organisatie.
           company_name_warning: |
             Als dit leeg wordt gelaten worden er geen standaard Gebruiksvoorwaarden of Privacyverklaring verstrekt.
           governing_law: "Toepasselijk recht"
+          governing_law_placeholder: "Nederland"
           governing_law_help: |
             Geef het rechtsgebied op dat de juridische aspecten van de site beheerst, inclusief de Gebruiksvoorwaarden en de Privacyverklaring. Dit is meestal het land of de staat waar het bedrijf dat de site beheert is geregistreerd of zaken doet.
           city_for_disputes: "Plaats voor geschillen"
+          city_for_disputes_placeholder: "Den Haag"
           city_for_disputes_help: |
             Geef de plaats op die wordt gebruikt als rechtsgebied voor het oplossen van geschillen met betrekking tot het gebruik van dit forum. Deze informatie wordt meestal opgenomen in juridische documenten zoals de Gebruiksvoorwaarden van het forum.
           optional: "(optioneel)"
@@ -6521,6 +6618,9 @@ nl:
             one: "Je CSV-bestand is ontvangen en %{count} gebruiker krijgt over enkele ogenblikken een badge."
             other: "Je CSV-bestand is ontvangen en %{count} gebruikers krijgen over enkele ogenblikken hun badge."
           csv_has_unmatched_users: "De volgende vermeldingen komen voor in het CSV-bestand, maar ze kunnen niet worden gekoppeld aan bestaande gebruikers en krijgen daarom de badge niet:"
+          csv_has_unmatched_users_truncated_list:
+            one: "Er was %{count} vermelding in het CSV-bestand die niet konden worden gekoppeld aan bestaande gebruikers en daarom de badge niet zal ontvangen."
+            other: "Er waren %{count} vermeldingen in het CSV-bestand die niet konden worden gekoppeld aan bestaande gebruikers en daarom de badge niet zullen ontvangen. Vanwege het grote aantal niet-overeenkomende vermeldingen worden alleen de eerste 100 weergegeven:"
           replace_owners: De badge van vorige eigenaren verwijderen
           grant_existing_holders: Extra badges toekennen aan bestaande badgehouders
       emoji:

@@ -2460,7 +2460,7 @@ zh_TW:
         歡迎來到 %{site_name}！
 
         請點擊以下連結，以確認和啟用你的新帳戶：
-        %{base_url}/users/activate-account/%{email_token}
+        %{base_url}/u/activate-account/%{email_token}
 
         如果上面的連結無法點擊，請複製該連結，並貼到瀏覽器的網址列中開啟。
     activation_reminder:

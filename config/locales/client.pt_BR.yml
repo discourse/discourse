@@ -26,14 +26,14 @@ pt_BR:
         thousands: "%{number}k"
         millions: "%{number}M"
     dates:
-      time: "h:mm a"
-      time_with_zone: "hh:mm a (z)"
-      time_short_day: "ddd, HH:mm a"
+      time: "HH:mm"
+      time_with_zone: "HH:mm (z)"
+      time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D [de] MMMM"
-      long_with_year: "D MMM, YYYY H:mm"
+      long_with_year: "D MMM, YYYY HH:mm"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "D [de] MMMM, YYYY"
       long_date_with_year: "DD MM YYYY LT"
@@ -1343,6 +1343,62 @@ pt_BR:
         warnings: "Avisos oficiais"
         read_more_in_group: "Quer ler mais? Veja outras mensagens em %{groupLink}."
         read_more: "Quer ler mais? Veja outras mensagens em <a href='%{basePath}/u/%{username}/messages'>mensagens pessoais</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Há <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># mensagem não lida</a>}
+                other {Há <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># mensagens não lidas</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { e <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nova</a> mensagem restante, ou procure outras mensagens em {groupLink}}
+                other { e <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># novas</a> mensagens restantes, ou procure outras mensagens em {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Há <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># mensagem restante</a> não lida, ou procure outras mensagens em {groupLink}}
+                other {Há <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># mensagens restantes</a> não lidas, ou procure outras mensagens em {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Há <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nova</a> mensagem restante, ou procure outras mensagens em {groupLink}}
+                other {Há <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># novas</a> mensagens restantes, ou procure outras mensagens em {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Há <a href="{basePath}/u/{username}/messages/unread"># mensagem não lida</a>}
+                other {há <a href="{basePath}/u/{username}/messages/unread"># mensagens não lidas</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { e <a href="{basePath}/u/{username}/messages/new"># nova</a> mensage restante, ou procure outras <a href="{basePath}/u/{username}/messages">mensagens pessoais</a>}
+                other { e <a href="{basePath}/u/{username}/messages/new"># novas</a> mensagens restantes, ou procure outras <a href="{basePath}/u/{username}/messages">mensagens pessoais</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Há <a href="{basePath}/u/{username}/messages/unread"># mensagem</a> não lida restante, ou procure outras <a href="{basePath}/u/{username}/messages">mensagens pessoais</a>}
+                other {Há <a href="{basePath}/u/{username}/messages/unread"># mensagens restantes</a> não lidas, ou procure outras <a href="{basePath}/u/{username}/messages">mensagens pessoais</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Há <a href="{basePath}/u/{username}/messages/new"># nova</a> mensagem restante, ou procure outras <a href="{basePath}/u/{username}/messages">mensagens pessoais</a>}
+                other {Há <a href="{basePath}/u/{username}/messages/new"># novas</a> mensagens restantes, ou procure outras <a href="{basePath}/u/{username}/messages">mensagens pessoais</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Conta"
         security: "Segurança"
@@ -1932,6 +1988,39 @@ pt_BR:
       logout_disabled: "Não é possível sair enquanto o site estiver em modo somente leitura. Esse recurso está desativado."
     staff_writes_only_mode:
       enabled: "Este site está no modo apenas para funcionários. Continue navegando, mas as respostas, curtidas e outras ações são limitadas apenas aos membros da equipe."
+    logs_error_rate_notice:
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# erro/hora}
+          other {# erros/hora}
+        }</a> atingiu o limite de configuração do site de {limit, plural,
+            one {# erro/hora}
+          other {# errors/hora}
+        }.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# erro/minuto}
+          other {# erros/minuto}
+        }</a> atingiu o limite de configuração do site de { limit, plural,
+            one {# erro/minuto}
+          other {# erros/minuto}
+        }.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# erro/hora}
+          other {# erros/hora}
+        }</a> excedeu o limite de configuração do site de { limit, plural,
+            one {# erro/hora}
+          other {# erros/hora}
+        }.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# erro/minuto}
+          other {# erros/minuto}
+        }</a> excedeu o limite de configuração do site de { limit, plural,
+            one {# erro/minuto}
+          other {# erros/minuto}
+        }.
     learn_more: "Saiba mais…"
     mute: Silenciar
     unmute: Remover silêncio
@@ -2424,7 +2513,7 @@ pt_BR:
       post_approved: "Sua postagem foi aprovada"
       reviewable_items: "itens que exigem revisão"
       watching_first_post_label: "Novo tópico"
-      user_moved_post: "%{username} moveu"
+      user_moved_post: "%{username} movido(a)"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -4208,6 +4297,7 @@ pt_BR:
         everyone_can_use: "Etiquetas podem ser usadas por todos(as)"
         usable_only_by_groups: "Etiquetas são visíveis para todos(as), mas somente os seguintes grupos podem usá-las"
         visible_only_to_groups: "As etiquetas são visíveis somente para os seguintes grupos"
+        cannot_save: "Não é possível salvar grupo de etiquetas. Verifique se há pelo menos uma etiqueta presente, o nome do grupo de etiquetas não está vazio, tem menos de 100 caracteres, e se um grupo foi selecionado para permissão de etiquetas."
         tags_placeholder: "Pesquisar ou criar etiquetas"
         parent_tag_placeholder: "Opcional"
         select_groups_placeholder: "Selecionar grupos…"

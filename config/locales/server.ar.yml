@@ -5294,15 +5294,19 @@ ar:
           default_locale:
             label: "اللغة"
       privacy:
+        title: "وصول الأعضاء"
         fields:
           login_required:
             label: "الرؤية"
+            description: "هل مجتمعك عام أم خاص؟"
             choices:
               public:
                 label: "عامة"
               private:
                 label: "خاصة"
           invite_only:
+            label: "التسجيل"
+            description: "كيف يمكن للأعضاء الانضمام إلى هذا المجتمع؟"
             choices:
               sign_up:
                 label: "الاشتراك"
@@ -5310,6 +5314,11 @@ ar:
                 label: "بدعوة فقط"
           must_approve_users:
             description: "هل تريد الموافقة على حسابات الأعضاء؟"
+            choices:
+              "no":
+                label: "لا، يمكن للأعضاء الجُدد الانضمام على الفور"
+              "yes":
+                label: "نعم، يجب موافقة المشرفين على الأعضاء الجُدد"
           chat_enabled:
             placeholder: "تفعيل الدردشة"
             extra_description: "تفاعل مع أعضائك في الوقت الفعلي"

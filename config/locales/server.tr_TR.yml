@@ -1966,6 +1966,7 @@ tr_TR:
     min_trust_to_edit_post: "Gönderileri düzenlemek için gereken minimum güven seviyesi."
     edit_post_allowed_groups: "Gönderileri düzenlemesine izin verilen gruplar. Yöneticiler ve moderatörler her zaman gönderileri düzenleyebilir."
     min_trust_to_allow_self_wiki: "Kullanıcının kendi gönderilerini viki yapmak için gereken minimum güven seviyesi."
+    self_wiki_allowed_groups: "Bu gruplardaki kullanıcıların kendi gönderilerini wiki'ye dönüştürmelerine izin verin. Yöneticiler ve moderatörler her zaman kendi gönderilerini wiki'ye dönüştürebilirler."
     min_trust_to_send_messages: "KALDIRILDI, bunun yerine \"kişisel mesaj etkin gruplar\" ayarını kullanın. Yeni kişisel mesajlar oluşturmak için gereken minimum güven seviyesi."
     min_trust_to_send_email_messages: "E-posta yoluyla kişisel mesaj göndermek için gereken minimum güven seviyesi."
     send_email_messages_allowed_groups: "E-posta yoluyla kişisel mesaj göndermesine izin verilen gruplar. Yöneticiler ve moderatörler her zaman e-posta yoluyla kişisel mesaj gönderebilirler."
@@ -4825,18 +4826,31 @@ tr_TR:
           default_locale:
             label: "Dil"
       privacy:
+        title: "Üye erişimi"
         fields:
           login_required:
             label: "Görünürlük"
+            description: "Topluluğunuz herkese açık mı yoksa özel mi?"
             choices:
               public:
                 label: "Genel"
               private:
                 label: "Özel"
           invite_only:
+            label: "Kayıt"
+            description: "Üyeler bu topluluğa nasıl katılabilir?"
             choices:
+              sign_up:
+                label: "Kaydol"
               invite_only:
                 label: "Sadece davetliler"
+          must_approve_users:
+            description: "Üye hesaplarını onaylamak istiyor musunuz?"
+            choices:
+              "no":
+                label: "Hayır, yeni üyeler hemen katılabilir"
+              "yes":
+                label: "Evet, yeni üyelerin moderatörler tarafından onaylanması gerekiyor"
           chat_enabled:
             placeholder: "Sohbeti etkinleştir"
             extra_description: "Üyelerinizle gerçek zamanlı olarak etkileşim kurun"

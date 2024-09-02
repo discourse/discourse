@@ -1899,7 +1899,7 @@ zh_CN:
     min_trust_to_edit_post: "编辑帖子所需的最低信任级别。"
     edit_post_allowed_groups: "能够编辑帖子的群组。管理员和版主始终可以编辑帖子。"
     min_trust_to_allow_self_wiki: "制作用户自己的帖子 Wiki 所需的最低信任级别。"
-    self_wiki_allowed_groups: "允许这些群组中的用户创建自己的 wiki 帖子。管理员和版主始终可以创建自己的 wiki 帖子。"
+    self_wiki_allowed_groups: "允许这些群组中的用户将他们自己的帖子设为 wiki。管理员和版主始终可以将他们自己的帖子设为 wiki。"
     min_trust_to_send_messages: "已弃用，请改用 'personal message enabled groups' 设置。创建新的个人消息所需的最低信任级别。"
     min_trust_to_send_email_messages: "通过电子邮件发送个人消息所需的最低信任级别。"
     send_email_messages_allowed_groups: "能够通过电子邮件发送个人消息的群组。管理员和版主始终可以通过电子邮件发送个人消息。"
@@ -4759,7 +4759,7 @@ zh_CN:
         fields:
           login_required:
             label: "公开范围"
-            description: "您的社区是公开的还是私人的？"
+            description: "您的社区是公开还是不公开？"
             choices:
               public:
                 label: "公开"
@@ -4767,14 +4767,14 @@ zh_CN:
                 label: "不公开"
           invite_only:
             label: "注册"
-            description: "成员如何加入这个社区？"
+            description: "成员如何加入此社区？"
             choices:
               sign_up:
                 label: "注册"
               invite_only:
                 label: "仅限邀请"
           must_approve_users:
-            description: "你想手动批准成员账户吗？"
+            description: "要手动批准成员帐户吗？"
             choices:
               "no":
                 label: "否，新成员可以立即加入"

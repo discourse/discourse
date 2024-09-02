@@ -2059,7 +2059,7 @@ de:
       buttons:
         hide: "Zusammenfassung ausblenden"
         generate: "Zusammenfassen"
-        regenerate: "Erneuern"
+        regenerate: "Erneut generieren"
       description_time_MF: |
         Es gibt {replyCount, plural, one {<b>#</b> Antwort} other {<b>#</b> Antworten}} mit einer geschätzten Lesezeit von <b>{readingTime, plural, one {# Minute} other {# Minuten}}</b>.
       enable: "Top-Antworten anzeigen"
@@ -6620,7 +6620,7 @@ de:
           csv_has_unmatched_users: "Die folgenden Einträge befinden sich in der CSV-Datei, konnten jedoch nicht mit vorhandenen Benutzern abgeglichen werden (entsprechend wird ihnen kein Abzeichen verliehen):"
           csv_has_unmatched_users_truncated_list:
             one: "Es befand sich %{count} Eintrag in der CSV-Datei, der keinem bestehenden Benutzer zugeordnet werden konnte, sodass er kein Abzeichen erhalten wird."
-            other: "Es befanden sich %{count} Einträge in der CSV-Datei, die keinem bestehenden Benutzer zugeordnet werden konnten und die daher das Abzeichen nicht erhalten. Aufgrund der großen Anzahl nicht übereinstimmender Einträge werden maximal die ersten 100 angezeigt:"
+            other: "Es befanden sich %{count} Einträge in der CSV-Datei, die keinen bestehenden Benutzern zugeordnet werden konnten und die daher das Abzeichen nicht erhalten. Aufgrund der großen Anzahl nicht übereinstimmender Einträge werden maximal die ersten 100 angezeigt:"
           replace_owners: Entferne das Abzeichen von vorherigen Eigentümern
           grant_existing_holders: Weitere Abzeichen an bestehende Abzeicheninhaber verleihen
       emoji:

@@ -1120,7 +1120,7 @@ hu:
         ignore_option_title: "Nem fog semmilyen értesítést kapni ezzel a felhasználóval kapcsolatban, és az összes tartalma el lesz rejtve."
         add_ignored_user: "Új..."
         mute_option: "Némított"
-        mute_option_title: "Nem fog semmilyen értesítést, személyes üzenetet vagy közvetlen üzenetet ettől a felhasználótól."
+        mute_option_title: "Nem fog semmilyen értesítést, személyes üzenetet vagy közvetlen üzenetet kapni ettől a felhasználótól."
         normal_option: "Normál"
         normal_option_title: "Értesítést fog kapni, ha a felhasználó válaszol, idézi vagy megemlíti."
       notification_schedule:

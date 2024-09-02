@@ -1973,6 +1973,7 @@ nl:
     min_trust_to_edit_post: "Het minimale vertrouwensniveau dat nodig is om berichten te bewerken."
     edit_post_allowed_groups: "Groepen die berichten kunnen bewerken. Beheerders en moderators kunnen berichten altijd bewerken."
     min_trust_to_allow_self_wiki: "Het minimale vertrouwensniveau dat nodig is om een gebruiker een eigen bericht naar een wiki te laten omzetten."
+    self_wiki_allowed_groups: "Sta gebruikers in deze groepen toe om hun eigen berichtenwiki te maken. Beheerders en moderators kunnen altijd hun eigen berichtenwiki maken."
     min_trust_to_send_messages: "VEROUDERD, gebruik in plaats daarvan de instelling 'groepen met persoonlijke berichten ingeschakeld'. Het minimale vertrouwensniveau dat vereist is om nieuwe persoonlijke berichten te maken."
     min_trust_to_send_email_messages: "Het minimale vertrouwensniveau dat vereist is om persoonlijke berichten te sturen via e-mail."
     send_email_messages_allowed_groups: "Groepen die persoonlijke berichten kunnen sturen via e-mail. Beheerders en moderators kunnen altijd persoonlijke berichten sturen via e-mail."
@@ -4873,18 +4874,31 @@ nl:
           default_locale:
             label: "Taal"
       privacy:
+        title: "Ledentoegang"
         fields:
           login_required:
             label: "Zichtbaarheid"
+            description: "Is je community openbaar of privé?"
             choices:
               public:
                 label: "Openbaar"
               private:
                 label: "Privé"
           invite_only:
+            label: "Registratie"
+            description: "Hoe kunnen mensen lid worden van deze community?"
             choices:
+              sign_up:
+                label: "Registreren"
               invite_only:
                 label: "Alleen op uitnodiging"
+          must_approve_users:
+            description: "Wil je accounts van leden goedkeuren?"
+            choices:
+              "no":
+                label: "Nee, nieuwe mensen kunnen direct lid worden"
+              "yes":
+                label: "Ja, nieuwe mensen moeten door moderators worden goedgekeurd"
           chat_enabled:
             placeholder: "Chat inschakelen"
             extra_description: "Ga in realtime in gesprek met je leden"

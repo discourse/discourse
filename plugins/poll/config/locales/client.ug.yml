@@ -37,7 +37,7 @@ ug:
             one: "كۆپ بولغاندا <strong>%{count} تاللانما</strong> تاللىنىدۇ."
             other: "كۆپ بولغاندا <strong>%{count} تاللانما</strong> تاللىنىدۇ."
           x_options:
-            one: "كۆپ بولغاندا <strong>%{count} تاللانما</strong> تاللىنىدۇ."
+            one: "<strong>%{count} تاللانما</strong> تاللىنىدۇ."
             other: "<strong>%{count} تاللانما</strong> تاللىنىدۇ."
           between_min_and_max_options: "<strong>%{min} بىلەن %{max} تاللانما</strong> ئارىسىدا تاللىنىدۇ."
       cast-votes:

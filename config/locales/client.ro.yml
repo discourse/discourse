@@ -1645,8 +1645,8 @@ ro:
     signup_cta:
       sign_up: "Înregistrare"
       hide_session: "Poate mai târziu"
-      hide_forever: "Nu, mulțumesc"
-      intro: "Salut! Se pare că îți place discuția, dar încă nu te-ai înscris pentru un cont."
+      hide_forever: "nu, mulțumesc"
+      intro: "Salut! Se pare că îți place discuția, dar încă nu te-ai înregistrat pentru un cont."
     summary:
       buttons:
         generate: "Rezumat"
@@ -2756,7 +2756,7 @@ ro:
             one {<b>#</b> subiect}
             few {<b>#</b> subiecte}
           other {<b>#</b> de subiecte}
-        } ale acestui utilizator, să-i elimini contul, să blochezi înregistrările de pe adresa lui IP <b>{ip_address}</b> și să-i adaugi adresa de e-mail <b>{email}</b> pe lista celor blocate permanent. Sigur crezi că acest utilizator este un spammer?
+        } ale acestui utilizator, să-i elimini contul, să blochezi înregistrările de pe adresa lui IP <b>{ip_address}</b> și să-i adaugi adresa de email <b>{email}</b> pe lista celor blocate permanent. Sigur crezi că acest utilizator este un spammer?
       yes_delete_spammer: "Da, șterge spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(ascuns)"
@@ -3547,7 +3547,7 @@ ro:
         flags:
           description: "Descriere"
           enabled: "Activat?"
-          edit: "Modifică"
+          edit: "Editează"
           delete: "Șterge"
           form:
             save: "Salvare"
@@ -3557,9 +3557,9 @@ ro:
             post: "Postări"
       plugins:
         title: "Plugin-uri"
-        installed: "Plugin-uri instalate"
+        installed: "Module instalate"
         name: "Nume"
-        none_installed: "Nu aveţi nici un plugin instalat."
+        none_installed: "Nu ai niciun modul instalat."
         version: "Versiune"
         enabled: "Activat?"
         is_enabled: "D"
@@ -4255,7 +4255,7 @@ ro:
         delete_confirm: "Ești sigur că vrei să ștergi acest câmp utilizator?"
         options: "Opțiuni"
         required:
-          title: "Necesar la înscriere"
+          title: "Necesar la înregistrare"
           enabled: "necesar"
           disabled: "opţional"
         requirement:
