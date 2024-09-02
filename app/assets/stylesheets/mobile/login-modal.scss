@@ -156,8 +156,56 @@
 
 .account-created,
 .activate-account {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
   max-width: unset;
   margin: 0;
   padding: 0.75em 1rem;
   box-shadow: none;
+
+  .activate-new-email {
+    width: 100%;
+    height: 2.5em;
+  }
+
+  .ac-message,
+  .success-info {
+    margin-bottom: auto;
+  }
+
+  .activation-controls {
+    flex-direction: column;
+    gap: 1em;
+  }
+
+  .login-welcome-header {
+    margin-top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .activate-account-button {
+    margin-top: auto;
+    margin-bottom: 0.75em;
+    width: 100%;
+    font-size: var(--font-up-1);
+  }
+
+  .account-activated {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: center;
+    .tada-image {
+      margin: 0;
+    }
+
+    .continue-button {
+      margin-top: auto;
+      margin-bottom: 0.75em;
+      width: 100%;
+      font-size: var(--font-up-1);
+    }
+  }
 }
