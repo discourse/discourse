@@ -28,6 +28,8 @@ export default class FooterUnreadIndicator extends Component {
       return this.chatTrackingStateManager.publicChannelMentionCount;
     } else if (this.badgeType === DMS_TAB) {
       return this.chatTrackingStateManager.directMessageUnreadCount;
+    } else if (this.badgeType === THREADS_TAB) {
+      return this.chatTrackingStateManager.watchedThreadsUnreadCount;
     } else {
       return 0;
     }

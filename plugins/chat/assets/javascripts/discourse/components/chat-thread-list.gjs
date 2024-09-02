@@ -84,6 +84,30 @@ export default class ChatThreadList extends Component {
           thread.originalMessage?.id !== thread.lastMessageId
       )
       .sort((threadA, threadB) => {
+        // if both threads have watched unread count, then show latest first
+        if (
+          threadA.tracking.watchedThreadsUnreadCount &&
+          threadB.tracking.watchedThreadsUnreadCount
+        ) {
+          if (
+            threadA.preview.lastReplyCreatedAt >
+            threadB.preview.lastReplyCreatedAt
+          ) {
+            return -1;
+          } else {
+            return 1;
+          }
+        }
+
+        // sort threads by watched unread count
+        if (threadA.tracking.watchedThreadsUnreadCount) {
+          return -1;
+        }
+
+        if (threadB.tracking.watchedThreadsUnreadCount) {
+          return 1;
+        }
+
         // If both are unread we just want to sort by last reply date + time descending.
         if (threadA.tracking.unreadCount && threadB.tracking.unreadCount) {
           if (

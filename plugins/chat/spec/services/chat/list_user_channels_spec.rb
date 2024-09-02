@@ -20,7 +20,7 @@ RSpec.describe Chat::ListUserChannels do
     expect(result.structured[:public_channels]).to eq([channel_1])
     expect(result.structured[:direct_message_channels]).to eq([])
     expect(result.structured[:tracking].channel_tracking[channel_1.id]).to eq(
-      { mention_count: 0, unread_count: 0 },
+      { mention_count: 0, unread_count: 0, watched_threads_unread_count: 0 },
     )
   end
 
