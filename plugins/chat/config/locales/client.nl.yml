@@ -39,6 +39,10 @@ nl:
       chat_messages_count: "Chatberichten"
       chat_channels_count: "Chatkanalen"
       chat_users_count: "Chatgebruikers"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} chatbericht"
+          other: "%{formatted_number} chatberichten"
     chat:
       text_copied: Tekst gekopieerd naar klembord
       link_copied: Link gekopieerd naar klembord

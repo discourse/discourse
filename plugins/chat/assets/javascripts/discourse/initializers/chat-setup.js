@@ -1,3 +1,5 @@
+import { setOwner } from "@ember/owner";
+import { service } from "@ember/service";
 import { number } from "discourse/lib/formatter";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
@@ -14,18 +16,17 @@ const MIN_REFRESH_DURATION_MS = 180000; // 3 minutes
 
 replaceIcon("d-chat", "comment");
 
-export default {
-  name: "chat-setup",
-  before: "hashtag-css-generator",
+class ChatSetupInit {
+  @service router;
+  @service("chat") chatService;
+  @service chatHistory;
+  @service site;
+  @service siteSettings;
+  @service currentUser;
+  @service appEvents;
 
-  initialize(container) {
-    this.router = container.lookup("service:router");
-    this.chatService = container.lookup("service:chat");
-    this.chatHistory = container.lookup("service:chat-history");
-    this.site = container.lookup("service:site");
-    this.siteSettings = container.lookup("service:site-settings");
-    this.currentUser = container.lookup("service:current-user");
-    this.appEvents = container.lookup("service:app-events");
+  constructor(owner) {
+    setOwner(this, owner);
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
 
     if (!this.chatService.userCanChat) {
@@ -40,7 +41,7 @@ export default {
         }
       });
 
-      api.registerHashtagType("channel", new ChannelHashtagType(container));
+      api.registerHashtagType("channel", new ChannelHashtagType(owner));
 
       api.registerChatComposerButton({
         id: "chat-upload-btn",
@@ -75,7 +76,7 @@ export default {
         position: this.site.desktopView ? "inline" : "dropdown",
         context: "channel",
         action() {
-          const chatEmojiPickerManager = container.lookup(
+          const chatEmojiPickerManager = owner.lookup(
             "service:chat-emoji-picker-manager"
           );
           chatEmojiPickerManager.open({ context: "channel" });
@@ -90,7 +91,7 @@ export default {
         position: "dropdown",
         context: "thread",
         action() {
-          const chatEmojiPickerManager = container.lookup(
+          const chatEmojiPickerManager = owner.lookup(
             "service:chat-emoji-picker-manager"
           );
           chatEmojiPickerManager.open({ context: "thread" });
@@ -135,7 +136,7 @@ export default {
 
       this.chatService.loadChannels();
 
-      const chatNotificationManager = container.lookup(
+      const chatNotificationManager = owner.lookup(
         "service:chat-notification-manager"
       );
       chatNotificationManager.start();
@@ -172,12 +173,12 @@ export default {
         }
       });
     });
-  },
+  }
 
   @bind
   documentTitleCountCallback() {
     return this.chatService.getDocumentTitleCount();
-  },
+  }
 
   teardown() {
     this.appEvents.off("discourse:focus-changed", this, "_handleFocusChanged");
@@ -188,7 +189,7 @@ export default {
 
     _lastForcedRefreshAt = null;
     clearChatComposerButtons();
-  },
+  }
 
   @bind
   _handleFocusChanged(hasFocus) {
@@ -209,5 +210,17 @@ export default {
     }
 
     _lastForcedRefreshAt = Date.now();
+  }
+}
+
+export default {
+  name: "chat-setup",
+  before: "hashtag-css-generator",
+  initialize(owner) {
+    this.instance = new ChatSetupInit(owner);
+  },
+  teardown() {
+    this.instance.teardown();
+    this.instance = null;
   },
 };

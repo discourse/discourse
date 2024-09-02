@@ -16,13 +16,19 @@ import I18n from "discourse-i18n";
 // Number of tokens shown by default.
 const DEFAULT_AUTH_TOKENS_COUNT = 2;
 
-export default Controller.extend(CanCheckEmails, {
-  modal: service(),
-  dialog: service(),
-  router: service(),
-  passwordProgress: null,
-  subpageTitle: I18n.t("user.preferences_nav.security"),
-  showAllAuthTokens: false,
+export default class SecurityController extends Controller.extend(
+  CanCheckEmails
+) {
+  @service modal;
+  @service dialog;
+  @service router;
+
+  passwordProgress = null;
+  subpageTitle = I18n.t("user.preferences_nav.security");
+  showAllAuthTokens = false;
+
+  @gt("model.user_auth_tokens.length", DEFAULT_AUTH_TOKENS_COUNT)
+  canShowAllAuthTokens;
 
   get canUsePasskeys() {
     return (
@@ -31,7 +37,7 @@ export default Controller.extend(CanCheckEmails, {
       this.siteSettings.enable_passkeys &&
       isWebauthnSupported()
     );
-  },
+  }
 
   @discourseComputed("model.is_anonymous")
   canChangePassword(isAnonymous) {
@@ -43,7 +49,7 @@ export default Controller.extend(CanCheckEmails, {
         this.siteSettings.enable_local_logins
       );
     }
-  },
+  }
 
   @discourseComputed("showAllAuthTokens", "model.user_auth_tokens")
   authTokens(showAllAuthTokens, tokens) {
@@ -60,12 +66,7 @@ export default Controller.extend(CanCheckEmails, {
     return showAllAuthTokens
       ? tokens
       : tokens.slice(0, DEFAULT_AUTH_TOKENS_COUNT);
-  },
-
-  canShowAllAuthTokens: gt(
-    "model.user_auth_tokens.length",
-    DEFAULT_AUTH_TOKENS_COUNT
-  ),
+  }
 
   @action
   changePassword(event) {
@@ -89,13 +90,13 @@ export default Controller.extend(CanCheckEmails, {
           });
         });
     }
-  },
+  }
 
   @action
   toggleShowAllAuthTokens(event) {
     event?.preventDefault();
     this.toggleProperty("showAllAuthTokens");
-  },
+  }
 
   @action
   revokeAuthToken(token, event) {
@@ -115,7 +116,7 @@ export default Controller.extend(CanCheckEmails, {
         } // All sessions revoked
       })
       .catch(popupAjaxError);
-  },
+  }
 
   @action
   async manage2FA() {
@@ -136,19 +137,17 @@ export default Controller.extend(CanCheckEmails, {
     } catch (error) {
       popupAjaxError(error);
     }
-  },
+  }
 
-  actions: {
-    save() {
-      this.set("saved", false);
+  @action
+  save() {
+    this.set("saved", false);
 
-      return this.model
-        .then(() => this.set("saved", true))
-        .catch(popupAjaxError);
-    },
+    return this.model.then(() => this.set("saved", true)).catch(popupAjaxError);
+  }
 
-    showToken(token) {
-      this.modal.show(AuthTokenModal, { model: token });
-    },
-  },
-});
+  @action
+  showToken(token) {
+    this.modal.show(AuthTokenModal, { model: token });
+  }
+}

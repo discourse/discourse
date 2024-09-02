@@ -42,7 +42,8 @@ export default class AdminReportStackedChart extends Component {
             callbacks: {
               beforeFooter: (tooltipItem) => {
                 const total = tooltipItem.reduce(
-                  (sum, item) => sum + parseInt(item.parsed.y || 0, 10)
+                  (sum, item) => sum + parseInt(item.parsed.y || 0, 10),
+                  0
                 );
                 return `= ${total}`;
               },

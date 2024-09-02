@@ -1,8 +1,9 @@
 import EmberObject from "@ember/object";
-import Route from "@ember/routing/route";
 import PreloadStore from "discourse/lib/preload-store";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "discourse-i18n";
 
-export default class AdminBackupsLogsRoute extends Route {
+export default class AdminBackupsLogsRoute extends DiscourseRoute {
   // since the logs are pushed via the message bus
   // we only want to preload them (hence the beforeModel hook)
   beforeModel() {
@@ -24,5 +25,9 @@ export default class AdminBackupsLogsRoute extends Route {
 
   setupController() {
     /* prevent default behavior */
+  }
+
+  titleToken() {
+    return I18n.t("admin.backups.menu.logs");
   }
 }

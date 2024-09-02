@@ -1,11 +1,12 @@
 import Component from "@ember/component";
+import { classNameBindings } from "@ember-decorators/component";
 import { isWebauthnSupported } from "discourse/lib/webauthn";
 import { findAll } from "discourse/models/login-method";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  elementId: "login-buttons",
-  classNameBindings: ["hidden"],
+@classNameBindings("hidden", "multiple")
+export default class LoginButtons extends Component {
+  elementId = "login-buttons";
 
   @discourseComputed(
     "buttons.length",
@@ -14,12 +15,17 @@ export default Component.extend({
   )
   hidden(buttonsCount, showLoginWithEmailLink, showPasskeysButton) {
     return buttonsCount === 0 && !showLoginWithEmailLink && !showPasskeysButton;
-  },
+  }
+
+  @discourseComputed("buttons.length")
+  multiple(buttonsCount) {
+    return buttonsCount > 1;
+  }
 
   @discourseComputed
   buttons() {
     return findAll();
-  },
+  }
 
   @discourseComputed
   showPasskeysButton() {
@@ -29,5 +35,5 @@ export default Component.extend({
       this.context === "login" &&
       isWebauthnSupported()
     );
-  },
-});
+  }
+}

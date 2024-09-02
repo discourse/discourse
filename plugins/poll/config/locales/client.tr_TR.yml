@@ -13,6 +13,9 @@ tr_TR:
       total_votes:
         one: "toplam oy"
         other: "toplam oy"
+      votes:
+        one: "%{count} oy"
+        other: "%{count} oy"
       average_rating: "Ortalama puan: <strong>%{average}</strong>."
       public:
         title: "Oylar <strong>herkese açıktır</strong>."
@@ -46,6 +49,12 @@ tr_TR:
       show-results:
         title: "Anket sonuçlarını göster"
         label: "Sonuçlar"
+      show-tally:
+        title: "Oylama sonuçlarını oy sayısına göre göster"
+        label: "Toplam sayıyı göster"
+      show-percentage:
+        title: "Oylama sonuçlarını yüzde olarak göster"
+        label: "Yüzde olarak göster"
       remove-vote:
         title: "Oyunuzu kaldırın"
         label: "Oyu geri al"

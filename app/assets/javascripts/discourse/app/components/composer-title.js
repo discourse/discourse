@@ -2,23 +2,26 @@ import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import { alias, or } from "@ember/object/computed";
 import { next, schedule } from "@ember/runloop";
+import { classNames } from "@ember-decorators/component";
+import { observes } from "@ember-decorators/object";
 import { load } from "pretty-text/oneboxer";
 import { lookupCache } from "pretty-text/oneboxer-cache";
 import { ajax } from "discourse/lib/ajax";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import { isTesting } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Component.extend({
-  classNames: ["title-input"],
-  watchForLink: alias("composer.canEditTopicFeaturedLink"),
-  disabled: or("composer.loading", "composer.disableTitleInput"),
-  isTitleFocused: false,
+@classNames("title-input")
+export default class ComposerTitle extends Component {
+  @alias("composer.canEditTopicFeaturedLink") watchForLink;
+  @or("composer.loading", "composer.disableTitleInput") disabled;
+
+  isTitleFocused = false;
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     const titleInput = this.element.querySelector("input");
 
     this._focusHandler = () => this.set("isTitleFocused", true);
@@ -34,17 +37,17 @@ export default Component.extend({
     if (this.get("composer.titleLength") > 0) {
       discourseDebounce(this, this._titleChanged, 10);
     }
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
     const titleInput = this.element.querySelector("input");
 
     if (titleInput) {
       titleInput.removeEventListener("focus", this._focusHandler);
       titleInput.removeEventListener("blur", this._blurHandler);
     }
-  },
+  }
 
   @discourseComputed(
     "composer.titleLength",
@@ -83,14 +86,14 @@ export default Component.extend({
         lastShownAt: lastValidatedAt,
       });
     }
-  },
+  }
 
   @discourseComputed("watchForLink")
   titleMaxLength(watchForLink) {
     // maxLength gets in the way of pasting long links, so don't use it if featured links are allowed.
     // Validation will display a message if titles are too long.
     return watchForLink ? null : this.siteSettings.max_topic_title_length;
-  },
+  }
 
   @observes("composer.titleLength", "watchForLink")
   _titleChanged() {
@@ -110,14 +113,14 @@ export default Component.extend({
     } else {
       discourseDebounce(this, this._checkForUrl, 500);
     }
-  },
+  }
 
   @observes("composer.replyLength")
   _clearFeaturedLink() {
     if (this.watchForLink && this.bodyIsDefault()) {
       this.set("composer.featuredLink", null);
     }
-  },
+  }
 
   _checkForUrl() {
     if (!this.element || this.isDestroying || this.isDestroyed) {
@@ -169,7 +172,7 @@ export default Component.extend({
         });
       }
     }
-  },
+  }
 
   _updatePost(html) {
     if (html) {
@@ -207,13 +210,13 @@ export default Component.extend({
         }
       }
     }
-  },
+  }
 
   changeTitle(val) {
     if (val && val.length > 0) {
       this.set("composer.title", val.trim());
     }
-  },
+  }
 
   @discourseComputed("composer.title", "composer.titleLength")
   isAbsoluteUrl(title, titleLength) {
@@ -222,7 +225,7 @@ export default Component.extend({
       /^(https?:)?\/\/[\w\.\-]+/i.test(title) &&
       !/\s/.test(title)
     );
-  },
+  }
 
   bodyIsDefault() {
     const reply = this.get("composer.reply") || "";
@@ -230,5 +233,5 @@ export default Component.extend({
       reply.length === 0 ||
       reply === (this.get("composer.category.topic_template") || "")
     );
-  },
-});
+  }
+}

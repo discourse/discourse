@@ -30,6 +30,7 @@ it:
     chat_editing_grace_period: "Per (n) secondi dopo l'invio di una chat, la modifica non visualizzerà l'etichetta (modificato) accanto al messaggio di chat."
     chat_editing_grace_period_max_diff_low_trust: "Numero massimo di modifiche ai caratteri consentite nel periodo di grazia per la modifica della chat, se ne vengono modificate di più, visualizza l'etichetta (modificato) accanto al messaggio di chat (livello di attendibilità 0 e 1)."
     chat_editing_grace_period_max_diff_high_trust: "Numero massimo di modifiche ai caratteri consentite nel periodo di grazia per la modifica della chat, se ne vengono modificate di più, visualizza l'etichetta (modificato) accanto al messaggio di chat (livello di attendibilità 2 e superiori)."
+    chat_preferred_index: "Scheda preferita per il caricamento di /chat."
     errors:
       chat_default_channel: "Il canale di chat predefinito deve essere un canale pubblico."
       direct_message_enabled_groups_invalid: "Devi specificare almeno un gruppo per questa impostazione. Se non vuoi che nessuno al di fuori dello staff possa inviare messaggi diretti, scegli il gruppo dello staff."

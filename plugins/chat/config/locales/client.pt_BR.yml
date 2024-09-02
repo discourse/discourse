@@ -39,6 +39,10 @@ pt_BR:
       chat_messages_count: "Mensagens de chat"
       chat_channels_count: "Canais de chat"
       chat_users_count: "Usuários(as) do chat"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} mensagem de chat"
+          other: "%{formatted_number} mensagens de chat"
     chat:
       text_copied: Texto copiado para área de transferência
       link_copied: Link copiado para área de transferência

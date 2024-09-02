@@ -209,6 +209,14 @@ pt_BR:
             valid_trust_levels:
               label: Níveis de confiança válidos
               description: Será acionado apenas se a postagem for criada pelo(a) usuário(a) nesses níveis de confiança, o padrão é qualquer nível de confiança
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: Categorias de acompanhamento
+              description: Ativa-se apenas se o tópico estiver numa dessas categorias
+            watching_tags:
+              label: Etiquetas de acompanhamento
+              description: Ativa-se apenas se o tópico tiver uma destas etiquetas
         after_post_cook:
           fields:
             valid_trust_levels:

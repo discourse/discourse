@@ -2,15 +2,17 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import { tagName } from "@ember-decorators/component";
+import { on } from "@ember-decorators/object";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Component.extend({
-  tagName: "",
-  dialog: service(),
+@tagName("")
+export default class GroupManageEmailSettings extends Component {
+  @service dialog;
 
-  imapSettingsValid: false,
-  smtpSettingsValid: false,
+  imapSettingsValid = false;
+  smtpSettingsValid = false;
 
   @on("init")
   _determineSettingsValid() {
@@ -22,7 +24,7 @@ export default Component.extend({
       "smtpSettingsValid",
       this.group.smtp_enabled && this.group.smtp_server
     );
-  },
+  }
 
   @discourseComputed(
     "emailSettingsValid",
@@ -31,7 +33,7 @@ export default Component.extend({
   )
   enableImapSettings(emailSettingsValid, smtpEnabled, imapEnabled) {
     return smtpEnabled && (emailSettingsValid || imapEnabled);
-  },
+  }
 
   @discourseComputed(
     "smtpSettingsValid",
@@ -48,7 +50,7 @@ export default Component.extend({
     return (
       (!smtpEnabled || smtpSettingsValid) && (!imapEnabled || imapSettingsValid)
     );
-  },
+  }
 
   _anySmtpFieldsFilled() {
     return [
@@ -57,18 +59,18 @@ export default Component.extend({
       this.group.email_username,
       this.group.email_password,
     ].some((value) => !isEmpty(value));
-  },
+  }
 
   _anyImapFieldsFilled() {
     return [this.group.imap_server, this.group.imap_port].some(
       (value) => !isEmpty(value)
     );
-  },
+  }
 
   @action
   onChangeSmtpSettingsValid(valid) {
     this.set("smtpSettingsValid", valid);
-  },
+  }
 
   @action
   smtpEnabledChange(event) {
@@ -85,7 +87,7 @@ export default Component.extend({
     }
 
     this.group.set("smtp_enabled", event.target.checked);
-  },
+  }
 
   @action
   imapEnabledChange(event) {
@@ -101,7 +103,7 @@ export default Component.extend({
     }
 
     this.group.set("imap_enabled", event.target.checked);
-  },
+  }
 
   @action
   afterSave() {
@@ -109,5 +111,5 @@ export default Component.extend({
     this.store.find("group", this.group.name).then(() => {
       this._determineSettingsValid();
     });
-  },
-});
+  }
+}

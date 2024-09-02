@@ -13,6 +13,9 @@ pt_BR:
       total_votes:
         one: "voto no total"
         other: "votos no total"
+      votes:
+        one: "%{count} voto"
+        other: "%{count} votos"
       average_rating: "Classificação média: <strong>%{average}</strong>."
       public:
         title: "Votos são <strong>públicos</strong>."
@@ -46,6 +49,12 @@ pt_BR:
       show-results:
         title: "Mostrar o resultado da enquete"
         label: "Resultados"
+      show-tally:
+        title: "Mostrar resultados da votação por número de votos"
+        label: "Exibir contagem"
+      show-percentage:
+        title: "Mostrar resultados da votação como porcentagem"
+        label: "Mostrar como porcentagem"
       remove-vote:
         title: "Remover seu voto"
         label: "Desfazer votação"

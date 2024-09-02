@@ -30,11 +30,11 @@ export default class UserActivityBookmarksController extends Controller {
 
   @computed("q")
   get searchTerm() {
-    return this.q;
+    return this._searchTerm || this.q;
   }
 
   set searchTerm(value) {
-    /* noop */
+    this._searchTerm = value;
   }
 
   @discourseComputed()
@@ -59,7 +59,7 @@ export default class UserActivityBookmarksController extends Controller {
   @action
   search() {
     this.router.transitionTo({
-      queryParams: { q: this.searchTerm },
+      queryParams: { q: this._searchTerm },
     });
   }
 

@@ -39,6 +39,12 @@ uk:
       chat_messages_count: "Повідомлення чату"
       chat_channels_count: "Чат-канали"
       chat_users_count: "Користувачі чату"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} повідомлення чату"
+          few: "%{formatted_number} повідомлення чату"
+          many: "%{formatted_number} повідомлень чату"
+          other: "%{formatted_number} повідомлень чату"
     chat:
       text_copied: Текст скопійовано в буфер обміну
       link_copied: Посилання скопійовано до буфера обміну

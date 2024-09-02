@@ -1,17 +1,25 @@
-import { action, computed } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
+import { observes } from "@ember-decorators/object";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
-export default buildCategoryPanel("topic-template", {
-  showFormTemplate: computed("category.form_template_ids", {
-    get() {
-      return Boolean(this.category.form_template_ids.length);
-    },
-    set(key, value) {
-      return value;
-    },
-  }),
+export default class EditCategoryTopicTemplate extends buildCategoryPanel(
+  "topic-template"
+) {
+  @tracked _showFormTemplateOverride;
+
+  get showFormTemplate() {
+    return (
+      this._showFormTemplateOverride ??
+      Boolean(this.category.get("form_template_ids.length"))
+    );
+  }
+
+  set showFormTemplate(value) {
+    this._showFormTemplateOverride = value;
+  }
 
   @discourseComputed("showFormTemplate")
   templateTypeToggleLabel(showFormTemplate) {
@@ -20,7 +28,7 @@ export default buildCategoryPanel("topic-template", {
     }
 
     return "admin.form_templates.edit_category.toggle_freeform";
-  },
+  }
 
   @action
   toggleTemplateType() {
@@ -30,7 +38,7 @@ export default buildCategoryPanel("topic-template", {
       // Clear associated form templates if switching to freeform
       this.set("category.form_template_ids", []);
     }
-  },
+  }
 
   @observes("activeTab", "showFormTemplate")
   _activeTabChanged() {
@@ -39,5 +47,5 @@ export default buildCategoryPanel("topic-template", {
         this.element.querySelector(".d-editor-input").focus()
       );
     }
-  },
-});
+  }
+}

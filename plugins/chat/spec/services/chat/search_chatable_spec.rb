@@ -43,9 +43,7 @@ RSpec.describe Chat::SearchChatable do
     end
 
     context "when all steps pass" do
-      it "sets the service result as successful" do
-        expect(result).to be_a_success
-      end
+      it { is_expected.to run_successfully }
 
       it "cleans the term" do
         params[:term] = "#bob"

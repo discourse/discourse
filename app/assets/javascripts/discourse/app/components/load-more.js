@@ -1,16 +1,16 @@
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import LoadMore from "discourse/mixins/load-more";
 
-export default Component.extend(LoadMore, {
+export default class LoadMoreComponent extends Component.extend(LoadMore) {
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     this.set("eyelineSelector", this.selector);
-  },
+  }
 
-  actions: {
-    loadMore() {
-      this.action();
-    },
-  },
-});
+  @action
+  loadMore() {
+    this.action();
+  }
+}

@@ -271,6 +271,8 @@ ar:
       removed_user: "أزال %{who} ‏في %{when}"
       removed_group: "أزال %{who} ‏في %{when}"
       autobumped: "تم رفعه تلقائيًا في %{when}"
+      tags_changed: "تم تحديث الوسوم في %{when}"
+      category_changed: "تم تحديث الفئة في %{when}"
       autoclosed:
         enabled: "تم إغلاقه في %{when}"
         disabled: "تم فتحه في %{when}"
@@ -311,6 +313,7 @@ ar:
     broken_decorator_alert: "قد لا يتم عرض المنشورات بشكلٍٍ صحيح لأن أحد مصمِّمي محتوى المنشورات على موقعك أشار إلى خطأ."
     broken_page_change_alert: "أظهر معالج onPageChange خطأً. تحقَّق من أدوات مطوِّر المتصفح للمزيد من المعلومات."
     broken_plugin_alert: "بسبب المكوِّن الإضافي '%{name}'"
+    broken_transformer_alert: "حدث خطأ. قد لا يعمل موقعك بشكلٍ صحيح."
     critical_deprecation:
       notice: "‎<b>[إشعار المسؤول]</b> يحتاج أحد السمات أو المكوِّنات الإضافية لديك إلى التحديث للتوافق مع التغييرات الأساسية القادمة في Discourse."
       id: "‎(المعرِّف:<em>%{id}</em>)"
@@ -438,9 +441,35 @@ ar:
       post_count: "المنشورات"
       user_count: "الاشتراكات"
       active_user_count: "المستخدمون النشطون"
+      visitor_count: "الزوار"
+      eu_visitor_count: "الزوار من الاتحاد الأوروبي"
+      traffic_info_footer_MF: |
+        في آخر 6 أشهر، قدَّم هذا الموقع المحتوى إلى عدد يُقدَّر بنحو { total_visitors, plural,
+            zero {}one {شخص واحد}
+            two {شخصين}
+            few {# أشخاص}
+            many {# شخصًا}
+          other {# شخص}
+        } كل شهر، يُقدَّر أن يكون منهم { eu_visitors, plural,
+            zero {}one {شخص واحد}
+            two {شخصان}
+            few {# أشخاص}
+            many {# شخصًا}
+          other {# شخص}
+        } من الاتحاد الأوروبي.
       contact: "تواصل معنا"
       contact_info: "في حال حدوث مشكلة خطيرة أو أمر عاجل يؤثر على الموقع، يُرجى مراسلتنا على %{contact_info}."
+      site_activity: "نشاط الموقع"
+      view_more: "عرض المزيد"
+      view_less: "عرض أقل"
       activities:
+        topics:
+          zero: "%{formatted_number} موضوع"
+          one: "موضوع واحد (%{formatted_number})"
+          two: "موضوعان (%{formatted_number})"
+          few: "%{formatted_number} موضوعات"
+          many: "%{formatted_number} موضوعًا"
+          other: "%{formatted_number} موضوع"
         posts:
           zero: "%{formatted_number} منشورًا"
           one: "منشور واحد (%{formatted_number})"
@@ -448,6 +477,20 @@ ar:
           few: "%{formatted_number} منشورات"
           many: "%{formatted_number} منشورًا"
           other: "%{formatted_number} منشورًا"
+        active_users:
+          zero: "%{formatted_number} مستخدم نشط"
+          one: "مستخدم واحد (%{formatted_number}) نشط"
+          two: "مستخدمان (%{formatted_number}) نشطان"
+          few: "%{formatted_number} مستخدمين نشطين"
+          many: "%{formatted_number} مستخدمًا نشطًا"
+          other: "%{formatted_number} مستخدم نشط"
+        sign_ups:
+          zero: "%{formatted_number} عملية تسجيل"
+          one: "عملية تسجيل واحدة (%{formatted_number})"
+          two: "عمليتا تسجيل (%{formatted_number})"
+          few: "%{formatted_number} عمليات تسجيل"
+          many: "%{formatted_number} عملية تسجيل"
+          other: "%{formatted_number} عملية تسجيل"
         likes:
           zero: "%{formatted_number} إعجابات"
           one: "إعجاب واحد (%{formatted_number})"
@@ -455,6 +498,20 @@ ar:
           few: "%{formatted_number} إعجابًا"
           many: "%{formatted_number} إعجابات"
           other: "%{formatted_number} إعجابات"
+        visitors_MF: |
+          { total_count, plural,
+              zero {}one {زائر واحد}
+              two {زائران}
+              few {{total_formatted_number} زوار}
+              many {{total_formatted_number} زائرًا}
+            other {{total_formatted_number} زائر}
+          }، نحو { eu_count, plural,
+              zero {}one {{eu_formatted_number}}
+              two {{eu_formatted_number}}
+              few {{eu_formatted_number}}
+              many {{eu_formatted_number}}
+            other {{eu_formatted_number}}
+          } منهم من الاتحاد الأوروبي
         periods:
           last_7_days: "في آخر 7 يوم"
           today: "اليوم"
@@ -481,6 +538,22 @@ ar:
         many: "‎ %{formatted_number}‎مشرفًا"
         other: "%{formatted_number} مشرف"
       report_inappropriate_content: "إذا صادفت أي محتوى غير لائق، فلا تتردد في بدء محادثة مع المشرفين والمسؤولين لدينا. تذكَّر تسجيل الدخول قبل التواصل معنا."
+      site_age:
+        less_than_one_month: "تم إنشاؤه منذ < شهر"
+        month:
+          zero: "تم إنشاؤه منذ %{count} شهر"
+          one: "تم إنشاؤه منذ شهر"
+          two: "تم إنشاؤه منذ شهرين"
+          few: "تم إنشاؤه منذ %{count} أشهر"
+          many: "تم إنشاؤه منذ %{count} شهرًا"
+          other: "تم إنشاؤه منذ %{count} شهر"
+        year:
+          zero: "تم إنشاؤه منذ %{count} عام"
+          one: "تم إنشاؤه منذ عام"
+          two: "تم إنشاؤه منذ عامين"
+          few: "تم إنشاؤه منذ %{count} أعوام"
+          many: "تم إنشاؤه منذ %{count} عامًا"
+          other: "تم إنشاؤه منذ %{count} عام"
     bookmarked:
       title: "وضع إشارة مرجعية"
       edit_bookmark: "تعديل الإشارة المرجعية"
@@ -946,6 +1019,7 @@ ar:
       never: "أبدًا"
       last_custom: "آخر تاريخ ووقت مخصَّصين"
       custom: "تاريخ ووقت مخصَّصان"
+      more_options: "خيارات إضافية…"
       select_timeframe: "تحديد إطار زمني"
     user_action:
       user_posted_topic: "نشر <a href='%{userUrl}'>%{user}</a> ‏<a href='%{topicUrl}'>الموضوع</a>"
@@ -1664,6 +1738,84 @@ ar:
         warnings: "تحذيرات رسمية"
         read_more_in_group: "هل ترغب في قراءة المزيد؟ تصفح الرسائل الأخرى في %{groupLink}."
         read_more: "هل ترغب في قراءة المزيد؟ تصفح الرسائل الأخرى في <a href='%{basePath}/u/%{username}/messages'>الرسائل الشخصية</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   zero {}=0 {}
+                  one {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"></a>}
+                   two {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"></a>}
+                   few {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">#</a>}
+                   many {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">#</a>}
+                other {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">#</a>}
+              }
+              { NEW, plural,
+                   zero {}=0 {}
+                  one { <a href="{basePath}/u/{username}/messages/group/{groupName}/new">رسالة غير مقروءة وجديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+                   two { <a href="{basePath}/u/{username}/messages/group/{groupName}/new">رسالتان غير مقروءتين وجديدتان</a> متبقيتان، أو استعرض الرسائل الأخرى في {groupLink}}
+                   few { <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># رسائل غير مقروءة وجديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+                   many { <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># رسالة غير مقروءة وجديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+                other { <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># رسالة غير مقروءة وجديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   zero {}=0 {}
+                    one {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new">رسالة غير مقروءة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+                   two {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new">رسالتان غير مقروءتين</a> متبقيتان، أو استعرض الرسائل الأخرى في {groupLink}}
+                   few {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># رسائل غير مقروءة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+                   many {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># رسالة غير مقروءة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+                other {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># رسالة غير مقروءة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+              }
+              { NEW, plural,
+                   zero {}=0 {}
+          one {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new">رسالة جديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+                   two {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new">رسالتان جديدتان</a> متبقيتان، أو استعرض الرسائل الأخرى في {groupLink}}
+                   few {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># رسائل جديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+                   many {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># رسالة جديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}
+                other {هناك and <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># رسالة جديدة</a> متبقية، أو استعرض الرسائل الأخرى في {groupLink}}    }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   zero {}=0 {}
+                  one {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"></a>}
+                   two {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"></a>}
+                   few {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">#</a>}
+                   many {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">#</a>}
+                other {هناك <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">#</a>}
+              }
+              { NEW, plural,
+                   zero {}=0 {}
+                  one { <a href="{basePath}/u/{username}/messages/new">رسالة غير مقروءة وجديدة</a> message متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                   two { <a href="{basePath}/u/{username}/messages/new">رسالتان غير مقروءتين وجديدتان</a> متبقيتان، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                   few { <a href="{basePath}/u/{username}/messages/new"># رسائل غير مقروءة وجديدة</a> messages متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                   many { <a href="{basePath}/u/{username}/messages/new"># رسالة غير مقروءة وجديدة</a> متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                other { <a href="{basePath}/u/{username}/messages/new"># رسالة غير مقروءة وجديدة</a> messages متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   zero {}=0 {}
+                  one {هناك <a href="{basePath}/u/{username}/messages/new">رسالة غير مقروءة</a> message متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                   two {هناك <a href="{basePath}/u/{username}/messages/new">رسالتان غير مقروءتين</a> متبقيتان، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                   few {هناك <a href="{basePath}/u/{username}/messages/new"># رسائل غير مقروءة</a> messages متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                   many {هناك <a href="{basePath}/u/{username}/messages/new"># رسالة غير مقروءة</a> متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                other {هناك <a href="{basePath}/u/{username}/messages/new"># رسالة غير مقروءة</a> messages متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}    }
+              { NEW, plural,
+                   zero {}=0 {}
+                  one { <a href="{basePath}/u/{username}/messages/new">رسالة جديدة</a> message متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                   two { <a href="{basePath}/u/{username}/messages/new">رسالتان جديدتان</a> متبقيتان، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                   few { <a href="{basePath}/u/{username}/messages/new"># رسائل جديدة</a> messages متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                   many { <a href="{basePath}/u/{username}/messages/new"># رسالة جديدة</a> متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+                other { <a href="{basePath}/u/{username}/messages/new"># رسالة جديدة</a> messages متبقية، أو استعرض <a href="{basePath}/u/{username}/messages">الرسائل الشخصية</a> الأخرى}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "الحساب"
         security: "الأمان"
@@ -2324,7 +2476,65 @@ ar:
       logout_disabled: "يتم إيقاف تسجيل الخروج عندما يكون الموقع في وضع القراءة فقط."
     staff_writes_only_mode:
       enabled: "هذا الموقع في وضع القراءة فقط. يُرجى المتابعة للتصفح، لكن سيقتصر التصفح والرد وتسجيل الإعجاب والإجراءات الأخرى على الأعضاء في فريق العمل فقط."
+    logs_error_rate_notice:
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            zero {}one {خطأ/الساعة}
+            two {خطآن/الساعة}
+            few {# أخطاء/الساعة}
+            many {# خطأً/الساعة}
+          other {# خطأ/الساعة}
+        }</a> تم بلوغ حد إعداد الموقع البالغ {limit, plural,
+            zero {}one {خطأ/الساعة}
+            two {خطآن/الساعة}
+            few {# أخطاء/الساعة}
+            many {# خطأً/الساعة}
+          other {# خطأ/الساعة}
+        }.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            zero {}one {خطأ/الدقيقة}
+            two {خطآن/الدقيقة}
+            few {# أخطاء/الدقيقة}
+            many {# خطأً/الدقيقة}
+          other {# خطأ/الدقيقة}
+        }</a> تم بلوغ حد إعداد الموقع البالغ {limit, plural,
+            zero {}one {خطأ/الدقيقة}
+            two {خطآن/الدقيقة}
+            few {# أخطاء/الدقيقة}
+            many {# خطأً/الدقيقة}
+          other {# خطأ/الدقيقة}
+        }.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            zero {}one {خطأ/الساعة}
+            two {خطآن/الساعة}
+            few {# أخطاء/الساعة}
+            many {# خطأً/الساعة}
+          other {# خطأ/الساعة}
+        }</a> تم تجاوز حد إعداد الموقع البالغ { limit, plural,
+            zero {}one {خطأ/الساعة}
+            two {خطآن/الساعة}
+            few {# أخطاء/الساعة}
+            many {# خطأً/الساعة}
+          other {# خطأ/الساعة}
+        }.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            zero {}one {خطأ/الدقيقة}
+            two {خطآن/الدقيقة}
+            few {# أخطاء/الدقيقة}
+            many {# خطأً/الدقيقة}
+          other {# خطأ/الدقيقة}
+        }</a> تم تجاوز حد إعداد الموقع البالغ { limit, plural,
+            zero {}one {خطأ/الدقيقة}
+            two {خطآن/الدقيقة}
+            few {# أخطاء/الدقيقة}
+            many {# خطأً/الدقيقة}
+          other {# خطأ/الدقيقة}
+        }.
     learn_more: "معرفة المزيد…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>اعرف المزيد…</a>"
     mute: كتم
     unmute: إلغاء الكتم
     last_post: آخر منشور
@@ -2415,6 +2625,10 @@ ar:
       associate: "لديك حساب بالفعل؟ <a href='%{associate_link}'>سجِّل الدخول</a> لربط حسابك من %{provider}."
       activation_title: "تفعيل حسابك"
       already_have_account: "هل لديك حساب بالفعل؟"
+      progress_bar:
+        signup: "الاشتراك"
+        approve: "الموافقة"
+        login: "تسجيل الدخول"
     forgot_password:
       title: "إعادة تعيين كلمة المرور"
       action: "نسيت كلمة مروري"
@@ -2631,6 +2845,7 @@ ar:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} أكبر من الحد الأقصى المسموح به وهو %{max_file_size}"
+        size_too_small: "%{provided_file_size} أصغر من الحد الأدنى المسموح به وهو %{min_file_size}"
     emoji_picker:
       filter_placeholder: البحث عن رمز تعبيري
       smileys_&_emotion: الوجوه المبتسمة ورموز المشاعر
@@ -4456,6 +4671,7 @@ ar:
         none: "لا توجد فئات فرعية"
       colors_disabled: "لا يمكنك تحديد الألوان لأنه ليس لديك نمط فئة."
     flagging:
+      title: "نشكرك على الحفاظ على مجتمعنا متحضرًا."
       action: "الإبلاغ عن المنشور"
       take_action: "اتخاذ إجراء…"
       take_action_options:
@@ -4515,6 +4731,7 @@ ar:
           many: "بقي %{count}..."
           other: "بقي %{count}..."
     flagging_topic:
+      title: "نشكرك على الحفاظ على مجتمعنا متحضرًا."
       action: "الإبلاغ عن الموضوع"
       notify_action: "رسالة"
     topic_map:
@@ -5086,6 +5303,7 @@ ar:
         everyone_can_use: "يمكن للجميع استخدام الوسوم"
         usable_only_by_groups: "تكون الوسوم مرئية للجميع، ولكن يمكن للمجموعات التالية فقط استخدامها"
         visible_only_to_groups: "تكون الوسوم مرئية للمجموعات التالية فقط"
+        cannot_save: "لا يمكن حفظ مجموعة الوسوم. تأكَّد من وجود وسم واحد على الأقل، وأن اسم مجموعة الوسوم ليس فارغًا وأقل من 100 حرف، وأن هناك مجموعة محدَّدة لمنحها إذن الوسوم."
         tags_placeholder: "البحث أو إنشاء الوسوم"
         parent_tag_placeholder: "اختياري"
         select_groups_placeholder: "تحديد المجموعات…"
@@ -5507,6 +5725,7 @@ ar:
         problems_found: "بعض النصائح بناءً على إعدادات موقعك الحالية"
         new_features:
           title: "ما الجديد"
+          subtitle: "نحن نصدر ميزات وتحسينات جديدة طوال الوقت. تغطي هذه الصفحة أبرز النقاط، ولكن يمكنك النقر على \"معرفة المزيد\" للاطلاع على ملاحظات الإصدار الشاملة."
           previous_announcements: "يمكنك رؤية إعلانات الميزات الجديدة السابقة على <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "معرفة المزيد..."
         last_checked: "تاريخ آخر تحقُّق"
@@ -6066,6 +6285,7 @@ ar:
           back: "العودة إلى البلاغات"
           delete: "حذف"
           delete_confirm: 'هل تريد بالتأكيد حذف "%{name}"؟'
+          flags_tab: "البلاغات"
           form:
             add_header: "إضافة بلاغ"
             edit_header: "تعديل البلاغ"
@@ -6129,10 +6349,13 @@ ar:
         legacy: "القائمة القديمة"
       backups:
         title: "النسخ الاحتياطية"
+        files_title: "ملفات النسخ الاحتياطي"
+        description: "تتضمن النسخ الاحتياطية لمنصة Discourse قاعدة بيانات الموقع الكاملة، والتي تحتوي على كل شيء على الموقع: الموضوعات والمنشورات والمستخدمين والمجموعات والإعدادات والسمات وما إلى ذلك. بناءً على كيفية إنشاء ملف النسخ الاحتياطي، فقد يتضمن أو لا يتضمن التحميلات."
         menu:
           backups: "النسخ الاحتياطية"
+          backup_files: "ملفات النسخ الاحتياطي"
           logs: "السجلات"
-        none: "لا تتوفَّر نسخة احتياطية."
+        none: "لا تتوفَّر نسخة احتياطية"
         read_only:
           enable:
             title: "تفعيل وضع القراءة فقط"
@@ -6170,12 +6393,12 @@ ar:
           download:
             label: "تنزيل"
             title: "مراسلتي عبر البريد الإلكتروني برابط التنزيل"
-            alert: "تم مراسلتك عبر البريد الإلكتروني برابط تنزيل هذه النسخة الاحتياطية."
+            alert: "تم مراسلتك عبر البريد الإلكتروني برابط تنزيل هذه النسخة الاحتياطية"
           destroy:
             title: "إزالة النسخة الاحتياطية"
             confirm: "هل تريد بالتأكيد مسح هذه النسخة الاحتياطية؟"
           restore:
-            is_disabled: "الاستعادة متوقفة في إعدادات الموقع."
+            is_disabled: "تم تعطيل الاستعادة حاليًا. لتفعيلها، انتقل إلى <a href='%{url}'>إعدادات الموقع</a>."
             label: "استعادة"
             title: "استعادة النسخة الاحتياطية"
             confirm: "هل تريد بالتأكيد استعادة هذه النسخة الاحتياطية؟"
@@ -7342,6 +7565,7 @@ ar:
         show_overriden: "إظهار النصوص المخصَّصة فقط"
         show_outdated: "عرض القديمة/غير الصالحة فقط"
         show_untranslated: "إظهار غير المترجمة فقط"
+        only_show_selected_locale: "إظهار النتائج باللغة المحدَّدة فقط"
         locale: "اللغة:"
         more_than_50_results: "هناك أكثر من 50 نتيجة. يُرجى تحسين البحث."
         no_results: "لم يتم العثور على نصوص مطابقة على الموقع"

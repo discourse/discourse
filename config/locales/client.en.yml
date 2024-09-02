@@ -177,6 +177,8 @@ en:
       removed_user: "Removed %{who} %{when}"
       removed_group: "Removed %{who} %{when}"
       autobumped: "Automatically bumped %{when}"
+      tags_changed: "Tags updated %{when}"
+      category_changed: "Category updated %{when}"
       autoclosed:
         enabled: "Closed %{when}"
         disabled: "Opened %{when}"
@@ -2334,6 +2336,11 @@ en:
       associate: "Already have an account? <a href='%{associate_link}'>Log In</a> to link your %{provider} account."
       activation_title: "Activate your account"
       already_have_account: "Already have an account?"
+      progress_bar:
+        signup: "Sign Up"
+        activate: "Activate"
+        approve: "Approve"
+        login: "Log In"
 
     forgot_password:
       title: "Password Reset"
@@ -5193,6 +5200,7 @@ en:
 
           membership:
             automatic: Automatic
+            automatic_tooltip: "This group is automatic, you cannot delete it and members are added and removed automatically"
             trust_levels_title: "Trust level automatically granted to members when they're added:"
             effects: Effects
             trust_levels_none: "None"
@@ -5640,7 +5648,8 @@ en:
             move_down: "Move down"
       plugins:
         title: "Plugins"
-        installed: "Installed Plugins"
+        installed: "Installed plugins"
+        description: "Any Discourse plugins that you have installed, or plugins that come preinstalled with Discourse hosting, will appear in this list."
         name: "Name"
         none_installed: "You don't have any plugins installed."
         version: "Version"

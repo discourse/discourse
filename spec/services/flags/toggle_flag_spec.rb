@@ -16,9 +16,7 @@ RSpec.describe(Flags::ToggleFlag) do
 
     after { flag.reload.update!(enabled: true) }
 
-    it "sets the service result as successful" do
-      expect(result).to be_a_success
-    end
+    it { is_expected.to run_successfully }
 
     it "toggles the flag" do
       expect(result[:flag].enabled).to be false

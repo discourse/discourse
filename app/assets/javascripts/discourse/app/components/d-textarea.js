@@ -1,5 +1,5 @@
 import { TextArea } from "@ember/legacy-built-in-components";
+import { attributeBindings } from "@ember-decorators/component";
 
-export default TextArea.extend({
-  attributeBindings: ["aria-label"],
-});
+@attributeBindings("aria-label")
+export default class DTextarea extends TextArea {}

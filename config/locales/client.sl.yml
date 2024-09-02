@@ -313,7 +313,6 @@ sl:
       post_count: "Prispevki"
       user_count: "Registracije"
       active_user_count: "Aktivni uporabniki"
-      contact_info: "V primeru kritične napake na strani ali nujne zadeve nam pišite na %{contact_info}."
       activities:
         topics:
           one: "%{formatted_number} tema"
@@ -1773,6 +1772,10 @@ sl:
       failed: "Nekaj je šlo narobe, morda je ta e-naslov že registriran, poskusite povezavo za pozabljeno geslo."
       activation_title: "Aktivirajte svoj račun"
       already_have_account: "Že imate račun?"
+      progress_bar:
+        signup: "Registracija"
+        approve: "Odobri"
+        login: "Vpis"
     forgot_password:
       title: "Zamenjava gesla"
       action: "Pozabil sem geslo"
@@ -3961,6 +3964,7 @@ sl:
           enabled: "Vključeno?"
           edit: "Uredi"
           delete: "Izbriši"
+          flags_tab: "Zastave"
           form:
             save: "Shrani"
             name: "Ime"

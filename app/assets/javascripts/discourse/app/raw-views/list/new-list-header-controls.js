@@ -2,21 +2,21 @@ import EmberObject from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default EmberObject.extend({
+export default class NewListHeaderControls extends EmberObject {
   @discourseComputed
   topicsActive() {
     return this.current === "topics";
-  },
+  }
 
   @discourseComputed
   repliesActive() {
     return this.current === "replies";
-  },
+  }
 
   @discourseComputed
   allActive() {
     return !this.topicsActive && !this.repliesActive;
-  },
+  }
 
   @discourseComputed
   repliesButtonLabel() {
@@ -27,7 +27,7 @@ export default EmberObject.extend({
     } else {
       return I18n.t("filters.new.replies");
     }
-  },
+  }
 
   @discourseComputed
   topicsButtonLabel() {
@@ -38,7 +38,7 @@ export default EmberObject.extend({
     } else {
       return I18n.t("filters.new.topics");
     }
-  },
+  }
 
   @discourseComputed
   staticLabel() {
@@ -53,5 +53,5 @@ export default EmberObject.extend({
     } else {
       return this.repliesButtonLabel;
     }
-  },
-});
+  }
+}

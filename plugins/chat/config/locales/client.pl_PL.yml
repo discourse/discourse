@@ -39,6 +39,12 @@ pl_PL:
       chat_messages_count: "Wiadomości czatu"
       chat_channels_count: "Kanały czatu"
       chat_users_count: "Użytkownicy czatu"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} wiadomość czatu"
+          few: "%{formatted_number} wiadomości czatu"
+          many: "%{formatted_number} wiadomości czatu"
+          other: "%{formatted_number} wiadomości czatu"
     chat:
       text_copied: Tekst skopiowany do schowka
       link_copied: Link skopiowany do schowka
