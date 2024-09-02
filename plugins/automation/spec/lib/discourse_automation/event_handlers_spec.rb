@@ -15,7 +15,7 @@ describe DiscourseAutomation::EventHandlers do
       end
 
       it "destroys notices" do
-        expect { subject.handle_stalled_topic(post) }.to change {
+        expect { DiscourseAutomation::EventHandlers.handle_stalled_topic(post) }.to change {
           DiscourseAutomation::UserGlobalNotice.count
         }.by(-1)
       end
