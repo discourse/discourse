@@ -2191,7 +2191,6 @@ sq:
             post: "postime"
       plugins:
         title: "Pluginet"
-        installed: "Pluginet e instaluar"
         name: "Emri"
         none_installed: "Nuk keni instaluar asnjë plugin. "
         version: "Versioni"

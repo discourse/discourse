@@ -4082,7 +4082,6 @@ vi:
             post: "bài viết"
       plugins:
         title: "Plugin"
-        installed: "Đã cài Plugin"
         name: "Tên"
         none_installed: "Bạn chưa cài plugin nào."
         version: "Phiên bản"

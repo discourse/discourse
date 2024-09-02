@@ -150,7 +150,6 @@ ar:
       header_indicator_preference:
         title: "إظهار مؤشر النشاط في الرأس"
         all_new: "كل الرسائل الجديدة"
-        dm_and_mentions: "الرسائل المباشرة والإشارات"
         only_mentions: "الإشارات فقط"
         never: "أبدًا"
       separate_sidebar_mode:
@@ -700,10 +699,10 @@ ar:
         notifications:
           regular:
             title: "طبيعية"
-            description: "سنُرسل إليك إشعارًا إذا أشار أحد إلى @اسمك في سلسلة الدردشة هذه."
           tracking:
             title: "التتبُّع"
-            description: "سيتم عرض عدد الردود الجديدة لهذا الموضوع في قائمة سلسلة الدردشة والقناة. سيتم إرسال إشعار إليك إذا أشار شخص ما إلى @اسمك في سلسلة الدردشة هذه."
+          watching:
+            title: "المراقبة"
         participants_other_count:
           zero: "+%{count}"
           one: "+%{count}"

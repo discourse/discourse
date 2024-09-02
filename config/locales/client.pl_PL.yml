@@ -5132,6 +5132,7 @@ pl_PL:
             publish_read_state: "Wyświetlaj status przeczytania w grupowych wiadomościach"
           membership:
             automatic: Automatyczne
+            automatic_tooltip: "Ta grupa jest automatyczna, nie można jej usunąć, a członkowie są dodawani i usuwani automatycznie"
             trust_levels_title: "Domyślny poziom zaufania przyznawany dodawanym użytkownikom:"
             effects: Efekty
             trust_levels_none: "Brak"
@@ -5545,7 +5546,6 @@ pl_PL:
             move_down: "Przenieś niżej"
       plugins:
         title: "Wtyczki"
-        installed: "Zainstalowane wtyczki"
         name: "Nazwa"
         none_installed: "Brak zainstalowanych wtyczek."
         version: "Wersja"

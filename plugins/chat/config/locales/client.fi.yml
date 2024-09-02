@@ -134,7 +134,6 @@ fi:
       header_indicator_preference:
         title: "Näytä aktiivisuusilmaisin yläpalkissa"
         all_new: "Kaikki uudet viestit"
-        dm_and_mentions: "Yksityisviestit ja maininnat"
         only_mentions: "Vain maininnat"
         never: "Ei koskaan"
       separate_sidebar_mode:
@@ -551,10 +550,10 @@ fi:
         notifications:
           regular:
             title: "Normaali"
-            description: "Saat ilmoituksen, jos joku mainitsee @nimesi tässä ketjussa."
           tracking:
             title: "Seuranta"
-            description: "Tämän ketjun uusien vastausten määrä näkyy ketjuluettelossa ja kanavassa. Saat ilmoituksen, jos joku mainitsee @nimesi tässä ketjussa."
+          watching:
+            title: "Tarkkailu"
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"

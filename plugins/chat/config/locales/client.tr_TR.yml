@@ -134,7 +134,6 @@ tr_TR:
       header_indicator_preference:
         title: "Etkinlik göstergesini başlıkta gösterin"
         all_new: "Tüm Yeni Mesajlar"
-        dm_and_mentions: "Doğrudan Mesajlar ve Bahsetmeler"
         only_mentions: "Yalnızca Bahsetmeler"
         never: "Asla"
       separate_sidebar_mode:
@@ -604,10 +603,10 @@ tr_TR:
         notifications:
           regular:
             title: "Normal"
-            description: "Biri bu başlıkta @adınızdan bahsederse bildirim alırsınız."
           tracking:
             title: "İzleniyor"
-            description: "Bu konu için yeni yanıtların sayısı konu listesinde ve kanalda gösterilir. Biri bu konuda @adınızdan bahsederse bildirim alırsınız."
+          watching:
+            title: "İzleniyor"
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"

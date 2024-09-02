@@ -3975,7 +3975,6 @@ sl:
             chat_message: "sporočila klepeta"
       plugins:
         title: "Vtičniki"
-        installed: "Nameščeni vtičniki"
         name: "Ime"
         version: "Verzija"
         enabled: "Vključeno?"

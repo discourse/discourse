@@ -130,7 +130,6 @@ ja:
       header_indicator_preference:
         title: "ヘッダーにアクティビティインジケーターを表示"
         all_new: "すべての新着メッセージ"
-        dm_and_mentions: "ダイレクトメッセージとメンション"
         only_mentions: "メンションのみ"
         never: "なし"
       separate_sidebar_mode:
@@ -567,10 +566,10 @@ ja:
         notifications:
           regular:
             title: "標準"
-            description: "このスレッドで誰かが @name であなたをメンションすると、通知されます。"
           tracking:
             title: "追跡中"
-            description: "スレッドリストとチャンネルに、このスレッドの新しい返信数が表示されます。スレッドで誰かが @name であなたをメンションすると、通知されます。"
+          watching:
+            title: "ウォッチ中"
         participants_other_count:
           other: "+%{count} 件"
       thread_title_toast:
@@ -595,6 +594,8 @@ ja:
       chat_invitation: "があなたをチャットチャンネルに招待しました"
       chat_invitation_html: "<span>%{username}</span> <span>があなたをチャットチャンネルに招待しました</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        other: "%{username} および他 %{count} 人"
       popup:
         chat_mention:
           direct: 'があなたを "%{channel}" でメンションしました'

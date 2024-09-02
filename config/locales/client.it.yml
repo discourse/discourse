@@ -5294,7 +5294,6 @@ it:
             move_down: "Sposta giù"
       plugins:
         title: "Plugin"
-        installed: "Plugin Installati"
         name: "Nome"
         none_installed: "Non hai installato nessun plugin."
         version: "Versione"

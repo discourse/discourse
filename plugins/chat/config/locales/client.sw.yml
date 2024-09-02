@@ -130,6 +130,8 @@ sw:
             title: "Kawaida"
           tracking:
             title: "Fuatilia"
+          watching:
+            title: "Angalia"
       draft_channel_screen:
         header: "Ujumbe Mpya"
         cancel: "Ghairi"

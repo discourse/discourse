@@ -4864,6 +4864,7 @@ hu:
             publish_read_state: "Csoportos üzeneteknél csoportos olvasási állapot közzététele"
           membership:
             automatic: Automatikus
+            automatic_tooltip: "Ez a csoport automatikus, nem törölheti, a tagok hozzáadása és eltávolítása automatikusan történik"
             trust_levels_title: "Új tagok hozzáadásakor automatikusan kapott bizalmi szint:"
             effects: Hatások
             trust_levels_none: "Egyik sem"
@@ -5304,6 +5305,7 @@ hu:
       plugins:
         title: "Bővítmények"
         installed: "Telepített bővítmények"
+        description: "Ebben a listában megjelenik minden olyan Discourse bővítmény, amelyet telepített, vagy amely a Discourse tárhelyen előre telepítve van."
         name: "Név"
         none_installed: "Egy bővítmény sincs telepítve."
         version: "Verzió"

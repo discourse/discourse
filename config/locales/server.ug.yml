@@ -586,6 +586,9 @@ ug:
       trust_level_2: "ئىشەنچ_دەرىجە_2"
       trust_level_3: "ئىشەنچ_دەرىجە_3"
       trust_level_4: "ئىشەنچ_دەرىجە_4"
+    default_descriptions:
+      everyone: "بارلىق ئەزالارنى ئۆز ئىچىگە ئالغان ئاپتوماتىك گۇرۇپپا"
+      staff: "باشقۇرغۇچى ۋە رىياسەتچىلەرنى ئۆز ئىچىگە ئالغان ئاپتوماتىك گۇرۇپپا"
     request_membership_pm:
       title: "@%{group_name} نىڭ ئەزالىق ئىلتىماسى"
     request_accepted_pm:

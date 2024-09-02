@@ -5811,7 +5811,6 @@ uk:
             move_down: "Посунути вниз"
       plugins:
         title: "Плагіни"
-        installed: "Встановлені плагіни"
         name: "Ім'я"
         none_installed: "Немає жодного встановленого плагіна."
         version: "Версія"

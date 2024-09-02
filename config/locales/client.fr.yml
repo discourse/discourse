@@ -5286,7 +5286,6 @@ fr:
             move_down: "Déplacer vers le bas"
       plugins:
         title: "Extensions"
-        installed: "Extensions installées"
         name: "Nom"
         none_installed: "Vous n'avez aucune extension installée."
         version: "Version"

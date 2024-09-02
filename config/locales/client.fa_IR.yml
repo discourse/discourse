@@ -3861,7 +3861,6 @@ fa_IR:
             post: "فرسته‌ها"
       plugins:
         title: "افزونه‌ها"
-        installed: "افزونه های نصب شده"
         name: "نام"
         none_installed: "افزونه‌ای نصب نشده است."
         version: "نسخه"

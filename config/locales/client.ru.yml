@@ -5816,7 +5816,6 @@ ru:
             move_down: "Вниз"
       plugins:
         title: "Плагины"
-        installed: "Установленные плагины"
         name: "Название"
         none_installed: "Нет ни одного установленного плагина."
         version: "Версия"
