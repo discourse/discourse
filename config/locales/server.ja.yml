@@ -1899,6 +1899,7 @@ ja:
     min_trust_to_edit_post: "投稿を編集するために必要な最低信頼レベル。"
     edit_post_allowed_groups: "投稿を編集できるグループ。管理者とモデレーターは投稿をいつでも編集できます。"
     min_trust_to_allow_self_wiki: "ユーザー自身の投稿をウィキにするために必要な最低信頼レベル。"
+    self_wiki_allowed_groups: "これらのグループのユーザーが自分の投稿を Wiki に設定できるようにします。管理者とモデレーターは自分の投稿をいつでも Wiki に設定できます。"
     min_trust_to_send_messages: "非推奨。代わりに '個人メッセージが有効なグループ' 設定を使用してください。新しい個人メッセージを作成するのに必要な最低限の信頼レベルです。"
     min_trust_to_send_email_messages: "メールで個人メッセージを送信するために必要な最低信頼レベル。"
     send_email_messages_allowed_groups: "メールで個人メッセージを送信できるグループ。管理者とモデレーターはいつでもメールで個人メッセージを送信できます。"
@@ -4741,18 +4742,31 @@ ja:
           default_locale:
             label: "言語"
       privacy:
+        title: "メンバーアクセス"
         fields:
           login_required:
             label: "表示状態"
+            description: "コミュニティーは公開ですか、非公開ですか？"
             choices:
               public:
                 label: "公開"
               private:
                 label: "非公開"
           invite_only:
+            label: "登録"
+            description: "メンバーはこのコミュニティーにどのように参加できますか？"
             choices:
+              sign_up:
+                label: "登録"
               invite_only:
                 label: "招待のみ"
+          must_approve_users:
+            description: "メンバーアカウントを承認しますか？"
+            choices:
+              "no":
+                label: "いいえ。新しいメンバーはすぐに参加できます"
+              "yes":
+                label: "はい。新しいメンバーはモデレーターの承認が必要です"
           chat_enabled:
             placeholder: "チャットを有効にする"
             extra_description: "メンバーとリアルタイムで交流"

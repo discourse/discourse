@@ -808,7 +808,7 @@ it:
           imap_alpha_warning: "Attenzione: questa è una funzionalità in fase alfa. Solo Gmail è ufficialmente supportato. Gli utenti che la usano se ne assumono il rischio!"
           imap_settings_valid: "Impostazioni IMAP valide."
           smtp_disable_confirm: "Se disabiliti SMTP, tutte le impostazioni SMTP e IMAP verranno reimpostate e le funzionalità associate verranno disabilitate. Sei sicuro di voler continuare?"
-          imap_disable_confirm: "Se disabiliti IMAP, tutte le impostazioni IMAP verranno reimpostate e le funzionalità associate verranno disabilitate. Sei sicuro di voler continuare?"
+          imap_disable_confirm: "Se disabiliti IMAP, tutte le impostazioni IMAP verranno reimpostate e le funzionalità associate verranno disabilitate. Continuare?"
           imap_mailbox_not_selected: "Devi selezionare una casella di posta per questa configurazione IMAP, altrimenti non verrà sincronizzata nessuna casella di posta!"
           prefill:
             title: "Precompila con impostazioni per:"
@@ -1343,6 +1343,62 @@ it:
         warnings: "Avvertimenti ufficiali"
         read_more_in_group: "Vuoi continuare a leggere? Sfoglia altri messaggi in %{groupLink}."
         read_more: "Vuoi continuare a leggere? Sfoglia altri messaggi in <a href='%{basePath}/u/%{username}/messages'>messaggi personali</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {C'è <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># messaggio non letto</a>}
+                other {Ci sono <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># messaggi non letti</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { e <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nuovo</a> messaggio rimanente o sfoglia altri messaggi in {groupLink}}
+                other { e <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nuovi </a> messaggi rimanenti o sfoglia altri messaggi in {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {C'è <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># messaggio rimanente non letto</a>, o sfoglia altri messaggi in {groupLink}}
+                other {Ci sono <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># messaggi rimanenti non letti</a>, o sfoglia altri messaggi in in {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {C'è <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nuovo messaggio rimanente</a>, o sfoglia altri messaggi in {groupLink}}
+                other {Ci sono <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nuovi messaggi rimanenti</a>, o sfoglia altri messaggi in {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {C'è <a href="{basePath}/u/{username}/messages/unread"># messaggio non letto</a>}
+                other {Ci sono <a href="{basePath}/u/{username}/messages/unread"># messaggi non letti</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { e <a href="{basePath}/u/{username}/messages/new"># nuovo messaggio rimanente</a>, o sfoglia altri <a href="{basePath}/u/{username}/messages">messaggi personali</a>}
+                other { e <a href="{basePath}/u/{username}/messages/new"># nuovi messaggi rimanenti</a>, o sfoglia altri <a href="{basePath}/u/{username}/messages">messaggi personali</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {C'è <a href="{basePath}/u/{username}/messages/unread"># messaggio non letto rimanente</a>, o sfoglia altri <a href="{basePath}/u/{username}/messages">messaggi personali</a>}
+                other {Ci sono <a href="{basePath}/u/{username}/messages/unread"># messaggi non letti rimanenti</a>, o sfoglia altri <a href="{basePath}/u/{username}/messages">messaggi personali</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {C'è <a href="{basePath}/u/{username}/messages/new"># nuovo messaggio rimanente</a>, o sfoglia altri <a href="{basePath}/u/{username}/messages">messaggi personali</a>}
+                other {Ci sono <a href="{basePath}/u/{username}/messages/new"># nuovi messaggi rimanenti</a>, o sfoglia altri <a href="{basePath}/u/{username}/messages">messaggi personali</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Account"
         security: "Sicurezza"
@@ -1932,6 +1988,39 @@ it:
       logout_disabled: "La disconnessione è disabilitata quando il sito è in modalità di sola lettura."
     staff_writes_only_mode:
       enabled: "Questo sito è in modalità di sola lettura per lo staff. Puoi continuare a navigare nel sito, ma le risposte, i \"Mi piace\" e altre azioni sono limitate ai soli membri dello staff."
+    logs_error_rate_notice:
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# errore/ora}
+          other {# errori/ora}
+        }</a> raggiunto il limite impostato del sito di {limit, plural,
+            one {# errore/ora}
+          other {# errori/ora}
+        }.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# errore/minuto}
+          other {# errori/minuto}
+        }</a> raggiunto il limite impostato del sito di {limit, plural,
+            one {# errore/minuto}
+          other {# errori/minuto}
+        }.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# errore/ora}
+          other {# errori/ora}
+        }</a> superato il limite impostato del sito di { limit, plural,
+            one {# errore/ora}
+          other {# errori/ora}
+        }.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# errore/minuto}
+          other {# errori/minuto}
+        }</a> superato il limite impostato del sito di {limit, plural,
+            one {# errore/minuto}
+          other {# errori/minuto}
+        }.
     learn_more: "Ulteriori informazioni…"
     mute: Silenzia
     unmute: Riattiva
@@ -4208,6 +4297,7 @@ it:
         everyone_can_use: "Le etichette possono essere usate da tutti"
         usable_only_by_groups: "Le etichette sono visibili a tutti, ma solo i gruppi seguenti possono usarle"
         visible_only_to_groups: "Le etichette sono visibili soltanto ai seguenti gruppi"
+        cannot_save: "Impossibile salvare il gruppo di etichette. Assicurati che ci sia almeno un'etichetta, che il nome del gruppo di etichette non sia vuoto e non abbia meno di 100 caratteri e che sia selezionato un gruppo etichette per i permessi."
         tags_placeholder: "Cerca o crea etichette"
         parent_tag_placeholder: "Facoltativo"
         select_groups_placeholder: "Seleziona gruppi…"
@@ -4580,6 +4670,7 @@ it:
         problems_found: "Alcuni consigli basati sulle attuali impostazioni del sito"
         new_features:
           title: "Cosa c'è di nuovo"
+          subtitle: "Per maggiori dettagli sulle nuove funzionalità e sui miglioramenti che aggiungiamo costantemente, consulta le Note di rilascio di <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'></a>."
           previous_announcements: "Puoi vedere i precedenti annunci di nuove funzionalità su <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Scopri di più..."
         last_checked: "Ultimo controllo"
@@ -5054,6 +5145,7 @@ it:
           header: "Informazioni sul tuo sito"
           general_settings: "Impostazioni generali"
           community_name: "Nome community"
+          community_name_placeholder: "Esempio di community"
           community_summary: "Riepilogo della comunità"
           community_description: "Descrizione della comunità"
           banner_image: "Immagine banner"
@@ -5061,9 +5153,11 @@ it:
             Verrà mostrato sulla tua pagina Informazioni. Dimensioni consigliate: 800x300px. Formati supportati: JPG, PNG e SVG fino a 10 MB.
           contact_information: "Informazioni di contatto"
           community_owner: "Proprietario della comunità"
+          community_owner_placeholder: "Mario Rossi"
           community_owner_help: |
             Nome del contatto responsabile del sito. Riceve le notifiche di importanza critica e compare su /about. Risulta visibile agli utenti anonimi sui siti pubblici.
           contact_email: "Email di contatto"
+          contact_email_placeholder: "contatto@mario-rossi.com"
           contact_email_help: |
             Indirizzo email del contatto responsabile del sito. Riceve le notifiche di importanza critica e compare su /about. Risulta visibile agli utenti anonimi sui siti pubblici.
           contact_url: "URL di contatto"
@@ -5078,14 +5172,17 @@ it:
             Nome di gruppo valido che riceve inviti per tutti i messaggi privati inviati automaticamente.
           your_organization: "La tua organizzazione"
           company_name: "Nome società"
+          company_name_placeholder: "Azienda esempio S.r.l."
           company_name_help: |
             Nome della tua azienda o organizzazione.
           company_name_warning: |
             Se non compilato, non avrai a disposizione Termini di servizio o Informativa sulla privacy standard.
           governing_law: "Diritto applicabile"
+          governing_law_placeholder: "Stato di New York"
           governing_law_help: |
             Specifica la giurisdizione competente che disciplina gli aspetti legali del sito, inclusi i Termini di servizio e l'Informativa sulla privacy. Solitamente essa corrisponde alla giurisdizione del paese o stato in cui la società che gestisce il sito è registrata o svolge le sue attività.
           city_for_disputes: "Sede per eventuali controversie"
+          city_for_disputes_placeholder: "New York City"
           city_for_disputes_help: |
             Specifica la città della giurisdizione a cui fare riferimento per la risoluzione di eventuali dispute in relazione all'uso del forum. Queste informazioni vengono solitamente incluse nella documentazione legale come i Termini di servizio del forum.
           optional: "(opzionale)"
@@ -6521,6 +6618,9 @@ it:
             one: "Il tuo CSV è stato ricevuto e %{count} utente riceverà il suo distintivo a breve."
             other: "Il tuo CSV è stato ricevuto e %{count} utenti riceveranno il loro distintivo a breve."
           csv_has_unmatched_users: "Le seguenti voci sono nel file CSV ma non possono essere abbinate agli utenti esistenti e quindi non riceveranno il distintivo:"
+          csv_has_unmatched_users_truncated_list:
+            one: "Nel file CSV era presente %{count} elemento che non poteva essere abbinato ad utenti esistenti e pertanto non riceverà il distintivo."
+            other: "Il file CSV conteneva %{count} elementi che non è stato possibile abbinare a utenti esistenti. Per essi, nessuno riceverà il distintivo. A causa dell'elevato numero di elementi privi di abbinamenti, sono mostrati solo i primi 100:"
           replace_owners: Rimuovi il distintivo dai precedenti proprietari
           grant_existing_holders: Assegna distintivi aggiuntivi ai titolari di distintivi già esistenti
       emoji:

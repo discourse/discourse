@@ -1348,25 +1348,25 @@ es:
             true {
               { UNREAD, plural,
                    =0 {}
-                  one {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># no leída</a>}
-                other {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># no leídas</a>}
+                  one {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># mensaje no leído</a>}
+                other {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># mensajes no leídos</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one { y <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nueva</a> mensaje restante, o explora otros mensajes en {groupLink}}
-                other { y <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nuevas</a> mensajes restantes, o explora otros mensajes en {groupLink}}
+                  one { y <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># mensaje nuevo</a> mensaje restante, o explora otros mensajes en {groupLink}}
+                other { y <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># mensajes nuevos</a> restante(s), o explora otros mensajes en {groupLink}}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># no leída</a> mensaje restante, o explora otros mensajes en {groupLink}}
-                other {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># no leídas</a> mensajes restantes, o explora otros mensajes en {groupLink}}
+                  one {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># mensaje no leído</a> restante, o explora otros mensajes en {groupLink}}
+                other {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># mensajes no leídos</a> restantes, o explora otros mensajes en {groupLink}}
               }
               { NEW, plural,
                    =0 {}
-                  one {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nueva</a> mensaje restante, o explora otros mensajes en {groupLink}}
-                other {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nuevas</a> mensajes restantes, o explora otros mensajes en {groupLink}}
+                  one {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># mensaje nuevo</a> restante, o explora otros mensajes en {groupLink}}
+                other {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># mensajes nuevos</a> restantes, o explora otros mensajes en {groupLink}}
               }
             }
             other {}
@@ -1376,25 +1376,25 @@ es:
             true {
               { UNREAD, plural,
                    =0 {}
-                  one {Hay <a href="{basePath}/u/{username}/messages/unread"># no leída</a>}
-                other {Hay <a href="{basePath}/u/{username}/messages/unread"># no leídas</a>}
+                  one {Hay <a href="{basePath}/u/{username}/messages/unread"># mensaje no leído</a>}
+                other {Hay <a href="{basePath}/u/{username}/messages/unread"># mensajes no leídos</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one { y <a href="{basePath}/u/{username}/messages/new"># nueva</a> mensaje restante, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
-                other { y <a href="{basePath}/u/{username}/messages/new"># nuevas</a> mensajes restantes, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+                  one { y <a href="{basePath}/u/{username}/messages/new"># mensaje nuevo</a> restante, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+                other { y <a href="{basePath}/u/{username}/messages/new"># mensajes nuevos</a> restantes, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one {Hay <a href="{basePath}/u/{username}/messages/unread"># no leída</a> mensaje restante, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
-                other {Hay <a href="{basePath}/u/{username}/messages/unread"># no leídas</a> mensajes restantes, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+                  one {Hay <a href="{basePath}/u/{username}/messages/unread"># mensaje no leído</a> restante, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+                other {Hay <a href="{basePath}/u/{username}/messages/unread"># mensajes no leídos</a> restantes, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one {Hay <a href="{basePath}/u/{username}/messages/new"># nueva</a> mensaje restante, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
-                other {Hay <a href="{basePath}/u/{username}/messages/new"># nuevas</a> mensajes restantes, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+                  one {Hay <a href="{basePath}/u/{username}/messages/new"># mensaje nuevo</a> restante, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+                other {Hay <a href="{basePath}/u/{username}/messages/new"># mensajes nuevos</a> restantes, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
               }
             }
             other {}
@@ -1993,7 +1993,7 @@ es:
         <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/hora}
           other {# errores/hora}
-        }</a> alcanzó el límite de configuración del sitio de {limit, plural,
+        }</a> alcanzó el límite del ajuste del sitio de {limit, plural,
             one {# error/hora}
           other {# errores/hora}
         }.
@@ -2001,7 +2001,7 @@ es:
         <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/minuto}
           other {# errores/minuto}
-        }</a> alcanzó el límite de configuración del sitio de { limit, plural,
+        }</a> alcanzó el límite del ajuste del sitio de { limit, plural,
             one {# error/minuto}
           other {# errores/minuto}
         }.
@@ -2009,7 +2009,7 @@ es:
         <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/hora}
           other {# errores/hora}
-        }</a> superó el límite de configuración del sitio de { limit, plural,
+        }</a> superó el límite del ajuste del sitio de { limit, plural,
             one {# error/hora}
           other {# errores/hora}
         }.
@@ -2017,7 +2017,7 @@ es:
         <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/minuto}
           other {# errores/minuto}
-        }</a> superó el límite de configuración del sitio de { limit, plural,
+        }</a> superó el límite del ajuste del sitio de { limit, plural,
             one {# error/minuto}
           other {# errores/minuto}
         }.
@@ -4670,7 +4670,7 @@ es:
         problems_found: "Algunos consejos con base en tus ajustes actuales"
         new_features:
           title: "Novedades"
-          subtitle: "Para obtener más información sobre las nuevas funciones y mejoras que añadimos constantemente, consulta <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Notas de versión</a>."
+          subtitle: "Para obtener más información sobre las nuevas funciones y mejoras que añadimos constantemente, consulta las <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Notas de la versión</a>."
           previous_announcements: "Puedes ver anuncios anteriores de nuevas funciones en <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Más información..."
         last_checked: "Ultima comprobación"
@@ -5152,15 +5152,15 @@ es:
             Se utilizará en tu página Acerca de. Tamaño recomendado: 800x300px. Tipos aceptados: JPG, PNG y SVG hasta 10 MB.
           contact_information: "Información de contacto"
           community_owner: "Propietario de la comunidad"
-          community_owner_placeholder: "Johnny Smith"
+          community_owner_placeholder: "Pepe Luis"
           community_owner_help: |
             Nombre del contacto clave responsable de este sitio. Utilizado para notificaciones críticas, y también se muestra en /about. Visible para usuarios anónimos en sitios públicos.
           contact_email: "Correo electrónico de contacto"
-          contact_email_placeholder: "contact@johnny-smith.com"
+          contact_email_placeholder: "contacto@pepe-luis.com"
           contact_email_help: |
             Dirección de correo electrónico del contacto clave responsable de este sitio. Se utiliza para notificaciones críticas y también se muestra en /about. Visible para usuarios anónimos en sitios públicos.
           contact_url: "URL de contacto"
-          contact_url_placeholder: "https://johnny-smith.com/contact"
+          contact_url_placeholder: "https://pepe-luis.com/contacto"
           contact_url_help: |
             URL de contacto para este sitio. Cuando está presente, sustituye a la dirección de correo electrónico de contacto en /about y es visible para los usuarios anónimos en los sitios públicos.
           site_contact_name: "Nombre del contacto del sitio"
@@ -5171,7 +5171,7 @@ es:
             Un nombre válido de un grupo al que se invita a todos los mensajes privados enviados automáticamente.
           your_organization: "Tu organización"
           company_name: "Nombre de la empresa"
-          company_name_placeholder: "Empresa de ejemplo Inc."
+          company_name_placeholder: "Empresa de ejemplo S.A."
           company_name_help: |
             Nombre de tu empresa u organización.
           company_name_warning: |
@@ -6618,8 +6618,8 @@ es:
             other: "Se ha recibido tu CSV y %{count} usuarios recibirán su medalla en breve."
           csv_has_unmatched_users: "Las siguientes filas del CSV no se han podido enlazar con usuarios existentes, por lo que no se les distribuirá ninguna medalla:"
           csv_has_unmatched_users_truncated_list:
-            one: "Había %{count} entrada en el archivo CSV que no pudo coincidir con los usuarios existentes y, por lo tanto, no recibirá la insignia."
-            other: "Había %{count} entradas en el archivo CSV que no coincidieron con los usuarios existentes y, por lo tanto, no recibirán la insignia."
+            one: "Hubo %{count} entradas en el archivo CSV que no se pudieron emparejar con los usuarios existentes y, por lo tanto, no recibirán la medalla."
+            other: "Hubo %{count} entradas en el archivo CSV que no se pudieron emparejar con usuarios existentes, y por lo tanto no recibirán la medalla. Debido al gran número de entradas que no se han podido emparejar, solo se muestran las 100 primeras:"
           replace_owners: Eliminar medalla de los anteriores propietarios
           grant_existing_holders: Conceder una vez más la medalla a las cuentas que ya la tengan
       emoji:

@@ -612,7 +612,7 @@ ro:
     digest_frequency:
       never: "niciodată"
       every_30_minutes: "La fiecare 30 de minute"
-      every_hour: "În fiecare oră"
+      every_hour: "în fiecare oră"
       daily: "Zilnic"
       weekly: "Săptămânal"
       every_month: "în fiecare lună"
@@ -704,9 +704,9 @@ ro:
       yaxis: "Număr de aprecieri noi"
       description: "Număr de aprecieri noi."
     flags:
-      title: "Marcaje de avertizare"
+      title: "Semnalări"
       xaxis: "Zi"
-      yaxis: "Număr de marcaje de avertizare"
+      yaxis: "Număr de semnalări"
     bookmarks:
       title: "Semne de carte"
       xaxis: "Zi"
@@ -960,7 +960,7 @@ ro:
     block_common_passwords: "Nu permite parole ce sunt printre cele 10,000 cele mai cunoscute parole."
     discourse_connect_overrides_bio: "Suprascrie biografia utilizatorului în profil utilizator și nu-i permite acestuia să o modifice"
     allow_new_registrations: "Permite înregistrarea noilor utilizatori. Debifați pentru a restricționa pe oricine să creeze un cont nou."
-    enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înscrie pentru a avea un cont pe site."
+    enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înregistreze pentru a avea un cont pe site."
     google_oauth2_client_secret: "Secret client al aplicației tale Google."
     remove_older_backups: "Elimină copii de siguranță mai vechi de numărul specificat de zile. Lasă necompletat pentru a dezactiva."
     automatic_backups_enabled: "Rulează automat operațiuni de backup după cum este definit la frecvența de backup"
@@ -1315,7 +1315,7 @@ ro:
     not_approved: "Contul tău nu a fost aprobat încă. Vei fi notificat prin email când ești gata să te autentifici."
     incorrect_username_email_or_password: "Nume de utilizator, email sau parolă incorecte"
     incorrect_password_or_passkey: "Parolă sau cheie de acces incorectă"
-    wait_approval: "Îți mulțumim pentru autentificare. Te vom anunța când contul dumneavoastră a fost aprobat."
+    wait_approval: "Îți mulțumim pentru înregistrare. Te vom anunța când contul tău a fost aprobat."
     active: "Contul tău a fost activat și e gata să fie folosit."
     activate_email: "<p>Ești aproape gata! Am trimis un e-mail de activare către <b>%{email}</b>. Te rugăm să urmezi instrucțiunile din e-mail pentru a-ți activa contul.</p><p>Dacă nu ajunge, verifică dosarul spam.</p>"
     not_activated: "Nu te poți încă autentifica. Ți-am trimis un email de autentificare. Te rugăm să urmezi instrucțiunile din email pentru a-ți activa contul."
@@ -1740,16 +1740,16 @@ ro:
 
         %{new_email}
     signup_after_approval:
-      subject_template: "Contul tă pe site-ul %{site_name} a fost aprobat!"
+      subject_template: "Contul tău pe site-ul %{site_name} a fost aprobat!"
     signup:
-      subject_template: "[%{email_prefix}] Confirmă noul cont"
+      subject_template: "[%{email_prefix}] Confirmă-ți noul cont"
       text_body_template: |
         Bine ai venit la %{site_name}!
 
-        Apasă pe următorul link pentru a confirma și a activa noul cont:
+        Dă clic pe următoarea legătură pentru a-ți confirma și activa noul cont:
         %{base_url}/u/activate-account/%{email_token}
 
-        Dacă nu poți apăsa pe link-ul de mai sus, încearcă să îl copiezi și să îl inserezi în bara de adrese a browser-ului tău.
+        Dacă nu poți da clic pe legătura de mai sus, încearcă să o copiezi și să o inserezi în bara de adrese a navigatorului tău.
     activation_reminder:
       text_body_template: |
         Bine ai venit la %{site_name}!

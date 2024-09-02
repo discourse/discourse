@@ -1343,6 +1343,62 @@ fi:
         warnings: "Viralliset varoitukset"
         read_more_in_group: "Haluatko lukea lisää? Selaile muita ryhmän %{groupLink} viestejä."
         read_more: "Haluatko lukea lisää? Selaa muita viestejä <a href='%{basePath}/u/%{username}/messages'>yksityisviesteissä</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Jäljellä on <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># lukematon</a>}
+                other {Jäljellä on <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># lukematonta</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { ja <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># uusi</a> viesti, tai selaa muita viestejä ryhmässä {groupLink}}
+                other { ja <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># uutta</a> viestiä, tai selaa muita viestejä ryhmässä {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Jäljellä on <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># lukematon</a> viesti, tai selaa muita viestejä ryhmässä {groupLink}}
+                other {Jäljellä on <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># lukematonta</a> viestiä, tai selaa muita viestejä ryhmässä {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Jäljellä on <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># uusi</a> viesti, tai selaa muita viestejä ryhmässä {groupLink}}
+                other {Jäljellä on <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># uutta</a> viestiä, tai selaa muita viestejä ryhmässä {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Jäljellä on <a href="{basePath}/u/{username}/messages/unread"># lukematon</a>}
+                other {Jäljellä on <a href="{basePath}/u/{username}/messages/unread"># lukematonta</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { ja <a href="{basePath}/u/{username}/messages/new"># uusi</a> viesti, tai selaa muita <a href="{basePath}/u/{username}/messages">yksityisviestejä</a>}
+                other { ja <a href="{basePath}/u/{username}/messages/new"># uutta</a> viestiä, tai selaa muita <a href="{basePath}/u/{username}/messages">yksityisviestejä</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Jäljellä on <a href="{basePath}/u/{username}/messages/unread"># lukematon</a> viesti, tai selaa muita <a href="{basePath}/u/{username}/messages">yksityisviestejä</a>}
+                other {Jäljellä on <a href="{basePath}/u/{username}/messages/unread"># lukematonta</a> viestiä, tai selaa muita <a href="{basePath}/u/{username}/messages">yksityisviestejä</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Jäljellä on <a href="{basePath}/u/{username}/messages/new"># uusi</a> viesti, tai selaa muita <a href="{basePath}/u/{username}/messages">yksityisviestejä</a>}
+                other {Jäljellä on <a href="{basePath}/u/{username}/messages/new"># uutta</a> viestiä, tai selaa muita <a href="{basePath}/u/{username}/messages">yksityisviestejä</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Tili"
         security: "Tietoturva"
@@ -1932,6 +1988,39 @@ fi:
       logout_disabled: "Et voi kirjautua ulos, kun sivusto on vain luku -tilassa."
     staff_writes_only_mode:
       enabled: "Sivusto on vain henkilökunta -tilassa. Voit jatkaa selailua, mutta vastaaminen, tykkääminen ja muita toimintoja on rajoitettu vain henkilökunnan jäsenille."
+    logs_error_rate_notice:
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# virhe/tunti}
+          other {# virhettä/tunti}
+        }</a> saavutti sivustoasetusrajan {limit, plural,
+            one {# virhe/tunti}
+          other {# virhettä/tunti}
+        }.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# virhe/minuutti}
+          other {# virhettä/minuutti}
+        }</a> saavutti sivustoasetusrajan { limit, plural,
+            one {# virhe/minuutti}
+          other {# virhettä/minuutti}
+        }.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# virhe/tunti}
+          other {# virhettä/tunti}
+        }</a> ylitti sivustoasetusrajan { limit, plural,
+            one {# virhe/tunti}
+          other {# virhettä/tunti}
+        }.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# virhe/minuutti}
+          other {# virhettä/minuutti}
+        }</a> ylitti sivustoasetusrajan { limit, plural,
+            one {# virhe/minuutti}
+          other {# virhettä/minuutti}
+        }.
     learn_more: "Lue lisää…"
     mute: Vaimenna
     unmute: Poista vaimennus
@@ -4208,6 +4297,7 @@ fi:
         everyone_can_use: "Kuka vain voi käyttää tunnisteita"
         usable_only_by_groups: "Tunnisteet näkyvät kaikille, mutta vain nämä ryhmät voivat käyttää niitä"
         visible_only_to_groups: "Tunnisteet näkyvät vain näille ryhmille"
+        cannot_save: "Tunnisteryhmää ei voida tallentaa. Varmista, että ryhmässä on vähintään yksi tunniste, ryhmän nimi ei ole tyhjä ja se on alle 100 merkin pituinen ja että ryhmä on valittuna tunnisteiden käyttöoikeuksiin."
         tags_placeholder: "Hae tai luo tunnisteita"
         parent_tag_placeholder: "Valinnainen"
         select_groups_placeholder: "Valitse ryhmät…"
@@ -4580,6 +4670,7 @@ fi:
         problems_found: "Joitakin suosituksia nykyisiin sivustoasetuksiisi pohjautuen"
         new_features:
           title: "Uutta"
+          subtitle: "Lisätietoja uusista ominaisuuksista ja parannuksista, joita lisäämme jatkuvasti, on <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>julkaisutiedoissa</a>."
           previous_announcements: "Voit nähdä aiemmat ilmoitukset uusista ominaisuuksista <a href='%{url}' target='_blank'>Discourse Metassa</a>"
           learn_more: "Lisätietoja..."
         last_checked: "Viimeksi tarkistettu"
@@ -5053,6 +5144,7 @@ fi:
           header: "Tietoa sivustostasi"
           general_settings: "Yleiset asetukset"
           community_name: "Yhteisön nimi"
+          community_name_placeholder: "Esimerkkiyhteisö"
           community_summary: "Yhteisön yhteenveto"
           community_description: "Yhteisön kuvaus"
           banner_image: "Bannerikuva"
@@ -5060,13 +5152,15 @@ fi:
             Tätä käytetään Tietoa-sivullasi. Suositeltu koko: 800x300px. Hyväksytyt tyypit: JPG, PNG ja SVG, enintään 10 Mt.
           contact_information: "Yhteystiedot"
           community_owner: "Yhteisön omistaja"
+          community_owner_placeholder: "Matti Meikäläinen"
           community_owner_help: |
             Sivustosta vastaavan henkilön nimi. Siihen lähetetään kriittiset ilmoitukset, ja se näkyy myös /about-sivulla. Näkyy anonyymeille käyttäjille julkisilla sivustoilla.
           contact_email: "Yhteyssähköposti"
+          contact_email_placeholder: "yhteys@matti-meikalainen.com"
           contact_email_help: |
             Sivustosta vastaavan henkilön sähköpostiosoite. Siihen lähetetään kriittiset ilmoitukset, ja se näkyy myös /about-sivulla. Näkyy anonyymeille käyttäjille julkisilla sivustoilla.
           contact_url: "Yhteydenotto-URL"
-          contact_url_placeholder: "https://johnny-smith.com/contact"
+          contact_url_placeholder: "https://matti-meikalainen.com/yhteydenotto"
           contact_url_help: |
             Tämän sivuston yhteydenotto-URL. Kun tämä on asetettu, se korvaa yhteyssähköpostiosoitteen /about-sivulla ja näkyy anonyymeille käyttäjille julkisilla sivustoilla.
           site_contact_name: "Sivuston yhteyshenkilön nimi"
@@ -5077,14 +5171,17 @@ fi:
             Kelvollinen ryhmän nimi, joka saa kutsun kaikkiin automaattisesti lähetettyihin yksityisviesteihin.
           your_organization: "Organisaatiosi"
           company_name: "Yrityksen nimi"
+          company_name_placeholder: "Esimerkkiyritys Oy"
           company_name_help: |
             Yrityksesi tai organisaatiosi nimi.
           company_name_warning: |
             Jos tämä jätetään tyhjäksi, käyttöehtojen tai tietosuojailmoituksen pohjaa ei tarjota.
           governing_law: "Sovellettava lainsäädäntö"
+          governing_law_placeholder: "Suomi"
           governing_law_help: |
             Määritä lainkäyttöalue, joka sääntelee sivuston oikeudellisia aspekteja, kuten käyttöehtoja ja tietosuojailmoitusta. Tämä on yleensä maa tai osavaltio, jossa sivustoa ylläpitävä yritys on rekisteröity tai jossa se harjoittaa liiketoimintaa.
           city_for_disputes: "Kaupunki, jonka oikeudessa riidat ratkotaan"
+          city_for_disputes_placeholder: "Helsinki"
           city_for_disputes_help: |
             Määritä kaupunki, jota käytetään lainkäyttöalueena tämän foorumin käyttöön liittyvien kiistojen ratkaisemiseen. Nämä tiedot sisältyvät yleensä oikeudellisiin asiakirjoihin, kuten foorumin käyttöehtoihin.
           optional: "(valinnainen)"
@@ -6520,6 +6617,9 @@ fi:
             one: "CSV tuli perille ja %{count} käyttäjä saa kunniamerkkinsä pian."
             other: "CSV tuli perille ja %{count} käyttäjää saavat kunniamerkkinsä pian."
           csv_has_unmatched_users: "Seuraavat merkinnät ovat CSV-tiedostossa, mutta niitä ei voitu yhdistää olemassa oleviin käyttäjiin, joten he eivät saa kunniamerkkiä:"
+          csv_has_unmatched_users_truncated_list:
+            one: "CSV-tiedostossa oli %{count} merkintä, jota ei voitu yhdistää olemassa oleviin käyttäjiin, joten hän ei saa kunniamerkkiä."
+            other: "CSV-tiedostossa oli %{count} merkintää, joita ei voitu yhdistää olemassa oleviin käyttäjiin, joten he eivät saa kunniamerkkiä. Koska yhdistämättömiä merkintöjä on paljon, vain 100 ensimmäistä näytetään:"
           replace_owners: Poista kunniamerkki aiemmilta omistajilta
           grant_existing_holders: Myönnä lisämerkkejä nykyisille kunniamerkkien haltijoille
       emoji:

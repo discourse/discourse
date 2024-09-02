@@ -8,7 +8,7 @@ pt_BR:
   dates:
     short_date_no_year: "D de MMM"
     short_date: "D de MMM de YYYY"
-    long_date: "D de MMMM de YYYY, h:mma"
+    long_date: "D de MMMM de YYYY, HH:mm"
   datetime_formats: &datetime_formats
     formats:
       short: "%d/%m/%Y"

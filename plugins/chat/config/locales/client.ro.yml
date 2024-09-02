@@ -184,7 +184,7 @@ ro:
           other: "%{count} de zile"
       emoji_picker:
         objects: "Obiecte"
-        flags: "Marcaje de avertizare"
+        flags: "Semnalări"
       thread:
         title: "Titlu"
         replies:

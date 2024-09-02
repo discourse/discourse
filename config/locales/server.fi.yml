@@ -1973,6 +1973,7 @@ fi:
     min_trust_to_edit_post: "Viestin muokkaamiseen vaadittava luottamustaso."
     edit_post_allowed_groups: "Ryhmät, jotka voivat muokata viestejä. Ylläpitäjät ja valvojat voivat aina muokata viestejä."
     min_trust_to_allow_self_wiki: "Minimiluottamustaso, jolla käyttäjä voi tehdä omasta viestistään wiki-viestin."
+    self_wiki_allowed_groups: "Salli näiden ryhmien käyttäjien luoda oma viestiwiki. Ylläpitäjät ja valvojat voivat aina luoda oman viestiwikin."
     min_trust_to_send_messages: "VANHENTUNUT, käytä tämän sijaan 'personal message enabled groups' -asetusta. Uusien yksityisviestin luomiseen vaadittava vähimmäisluottamustaso."
     min_trust_to_send_email_messages: "Vähimmäisluottamustaso, jolla voi lähettää yksityisviestejä sähköpostitse."
     send_email_messages_allowed_groups: "Ryhmät, jotka voivat lähettää yksityisviestejä sähköpostitse. Ylläpitäjät ja valvojat voivat aina lähettää yksityisviestejä sähköpostitse."
@@ -4776,18 +4777,31 @@ fi:
           default_locale:
             label: "Kieli"
       privacy:
+        title: "Jäsenten pääsy"
         fields:
           login_required:
             label: "Näkyvyys"
+            description: "Onko yhteisösi julkinen vai yksityinen?"
             choices:
               public:
                 label: "Julkinen"
               private:
                 label: "Yksityinen"
           invite_only:
+            label: "Rekisteröityminen"
+            description: "Kuinka jäsenet voivat liittyä tähän yhteisöön?"
             choices:
+              sign_up:
+                label: "Rekisteröityminen"
               invite_only:
                 label: "Vain kutsusta"
+          must_approve_users:
+            description: "Haluatko hyväksyä jäsenten tilit?"
+            choices:
+              "no":
+                label: "En, uudet jäsenet voivat liittyä heti"
+              "yes":
+                label: "Kyllä, valvojien täytyy hyväksyä uudet jäsenet"
           chat_enabled:
             placeholder: "Ota chat käyttöön"
             extra_description: "Pidä yhteyttä jäseniisi reaaliajassa"

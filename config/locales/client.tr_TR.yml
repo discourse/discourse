@@ -1343,6 +1343,62 @@ tr_TR:
         warnings: "Resmi Uyarılar"
         read_more_in_group: "Daha fazla okumak ister misiniz? %{groupLink} bağlantısındaki diğer mesajlara göz atın."
         read_more: "Daha fazla okumak isterseniz <a href='%{basePath}/u/%{username}/messages'>kişisel mesajlardaki</a> diğer mesajlara göz atın."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {<a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># okunmamış</a>}
+                other {<a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># okunmamış</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { ve <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># yeni</a> mesaj kaldı veya {groupLink} adlı gruptaki diğer mesajlara bakın}
+                other { ve <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># yeni</a> mesaj kaldı veya {groupLink} adlı gruptaki diğer mesajlara bakın}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {<a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># okunmamış</a> mesaj kaldı veya {groupLink} adlı gruptaki diğer mesajlara bakın}
+                other {<a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># okunmamış</a> mesaj kaldı veya {groupLink} adlı gruptaki diğer mesajlara bakın}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {<a href="{basePath}/u/{username}/messages/group/{groupName}/new"># yeni</a> mesaj kaldı veya {groupLink} adlı gruptaki diğer mesajlara bakın}
+                other {<a href="{basePath}/u/{username}/messages/group/{groupName}/new"># yeni</a> mesaj kaldı veya {groupLink} adlı gruptaki diğer mesajlara bakın}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {<a href="{basePath}/u/{username}/messages/unread"># okunmamış</a>}
+                other {<a href="{basePath}/u/{username}/messages/unread"># okunmamış</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { ve <a href="{basePath}/u/{username}/messages/new"># yeni</a> mesaj kaldı veya kalan diğer <a href="{basePath}/u/{username}/messages">kişisel mesajlara</a> bakın}
+                other { ve <a href="{basePath}/u/{username}/messages/new"># yeni</a> mesaj kaldı veya diğer  <a href="{basePath}/u/{username}/messages">kişisel mesajlara</a> bakın}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {<a href="{basePath}/u/{username}/messages/unread"># okunmamış</a> mesaj kaldı veya diğer <a href="{basePath}/u/{username}/messages">kişisel mesajlara</a> bakın}
+                other {<a href="{basePath}/u/{username}/messages/unread"># okunmamış</a> mesaj kaldı veya diğer <a href="{basePath}/u/{username}/messages">kişisel mesajlara</a> bakın}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {<a href="{basePath}/u/{username}/messages/new"># yeni</a> mesaj kaldı veya diğer <a href="{basePath}/u/{username}/messages">kişisel mesajlara</a> bakın}
+                other {<a href="{basePath}/u/{username}/messages/new"># yeni</a> messages remaining, or browse other <a href="{basePath}/u/{username}/messages">kişisel mesajlara</a> bakın}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Hesap"
         security: "Güvenlik"
@@ -1932,6 +1988,39 @@ tr_TR:
       logout_disabled: "Site salt okunur moddayken çıkış yapma devre dışı bırakılır."
     staff_writes_only_mode:
       enabled: "Bu site sadece personel modundadır. Lütfen göz atmaya devam edin, ancak yanıtlama, beğenme ve diğer işlemler yalnızca personel üyeleriyle sınırlıdır."
+    logs_error_rate_notice:
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# hata/saat}
+          other {# hata/saat}
+        }</a> {limit, plural,
+            one {# hata/saat}
+          other {# hata/saat}
+        } site ayar limitine ulaştı.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# hata/dakika}
+          other {# hata/dakika}
+        }</a> { limit, plural,
+            one {# hata/dakika}
+          other {# hata/dakika}
+        } site ayar limitine ulaştı.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# hata/saat}
+          other {# hata/saat}
+        }</a> { limit, plural,
+            one {# hata/saat}
+          other {# hata/saat}
+        } site ayar limitini aştı.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# hata/dakika}
+          other {# hata/dakika}
+        }</a> { limit, plural,
+            one {# hata/dakika}
+          other {# hata/dakika}
+        } site ayar limitini aştı.
     learn_more: "Daha fazla bilgi…"
     mute: Sessize al
     unmute: Sesi aç
@@ -4208,6 +4297,7 @@ tr_TR:
         everyone_can_use: "Etiketler herkes tarafından kullanılabilir"
         usable_only_by_groups: "Etiketler herkes tarafından görülebilir, ancak yalnızca aşağıdaki gruplar bunları kullanabilir"
         visible_only_to_groups: "Etiketler yalnızca aşağıdaki gruplar tarafından görülebilir"
+        cannot_save: "Etiket grubu kaydedilemiyor. En az bir etiket bulunduğundan, etiket grubu adının boş olmadığından ve 100 karakterden az olduğundan ve etiket izni için bir grubun seçildiğinden emin olun."
         tags_placeholder: "Etiket arayın veya oluşturun"
         parent_tag_placeholder: "İsteğe bağlı"
         select_groups_placeholder: "Grupları seç…"
@@ -4580,6 +4670,7 @@ tr_TR:
         problems_found: "Mevcut site ayarlarınıza dayalı bazı tavsiyeler"
         new_features:
           title: "Yenilikler"
+          subtitle: "Sürekli eklediğimiz yeni özellikler ve geliştirmeler hakkında daha fazla ayrıntı için <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Sürüm notlarına</a> bakın."
           previous_announcements: "Önceki yeni özellik duyurularını <a href='%{url}' target='_blank'>Discourse Meta'da</a> görebilirsiniz"
           learn_more: "Daha fazla bilgi edinin..."
         last_checked: "Son kontrol"
@@ -5054,6 +5145,7 @@ tr_TR:
           header: "Siteniz hakkında"
           general_settings: "Genel Ayarlar"
           community_name: "Topluluk adı"
+          community_name_placeholder: "Örnek Topluluk"
           community_summary: "Topluluk özeti"
           community_description: "Topluluk açıklaması"
           banner_image: "Banner görüntüsü"
@@ -5061,9 +5153,11 @@ tr_TR:
             Bu, Hakkında sayfanızda kullanılır. Önerilen boyut: 800x300 px. Kabul edilen türler: 10 MB'ye kadar JPG, PNG ve SVG.
           contact_information: "İletişim bilgileri"
           community_owner: "Topluluk sahibi"
+          community_owner_placeholder: "Johnny Smith"
           community_owner_help: |
             Bu siteden sorumlu kilit kişinin adı. Kritik bildirimler için kullanılır ve ayrıca acil konular için /about adresinde gösterilir. Herkese açık sitelerdeki anonim kullanıcılara görünür.
           contact_email: "İletişim e-postası"
+          contact_email_placeholder: "contact@johnny-smith.com"
           contact_email_help: |
             Bu siteden sorumlu kilit kişinin e-posta adresi. Kritik bildirimler için kullanılır ve ayrıca acil konular için /about adresinde gösterilir. Herkese açık sitelerdeki anonim kullanıcılara görünür.
           contact_url: "İletişim URL'si"
@@ -5078,14 +5172,17 @@ tr_TR:
             Otomatik olarak gönderilen tüm özel mesajlara davet edilen bir grubun geçerli adı.
           your_organization: "Organizasyonunuz"
           company_name: "Şirket adı"
+          company_name_placeholder: "Örnek Şirket A.Ş."
           company_name_help: |
             Şirketinizin veya kuruluşunuzun adı.
           company_name_warning: |
             Boş bırakılırsa Hizmet Şartları veya Gizlilik Bildirimine ilişkin ortak metin sağlanmaz
           governing_law: "Geçerli kanun"
+          governing_law_placeholder: "New York Eyaleti"
           governing_law_help: |
             Hizmet Şartları ve Gizlilik Bildirisi de dâhil olmak üzere sitenin hukuki yönlerini düzenleyen yargı bölgesini belirtin. Bu genellikle siteyi işleten şirketin kayıtlı olduğu veya iş yaptığı ülke veya eyalettir.
           city_for_disputes: "Anlaşmazlıklar için şehir"
+          city_for_disputes_placeholder: "New York City"
           city_for_disputes_help: |
             Bu forumun kullanımıyla ilgili herhangi bir anlaşmazlığın çözümünde yargı yetkisi olarak kullanılacak şehri belirtin. Bu bilgi genellikle forumun Hizmet Koşulları gibi yasal belgelerde yer alır.
           optional: "(isteğe bağlı)"
@@ -6521,6 +6618,9 @@ tr_TR:
             one: "CSV'niz alındı ve %{count} kullanıcı kısa süre içinde rozetlerini alacak."
             other: "CSV'niz alındı ve %{count} kullanıcı kısa süre içinde rozetlerini alacak."
           csv_has_unmatched_users: "Aşağıdakiler CSV dosyasında var ama mevcut kullanıcılarla eşleştirilemedi ve bu nedenle rozeti almayacaklar:"
+          csv_has_unmatched_users_truncated_list:
+            one: "CSV dosyasında mevcut kullanıcılarla eşleştirilemeyen %{count} girdi vardı ve bu nedenle rozeti alamayacak."
+            other: "CSV dosyasında mevcut kullanıcılarla eşleştirilemeyen %{count} girdi vardı ve bu nedenle rozeti alamayacak. Eşleştirilemeyen girdilerin sayısı çok olduğundan, yalnızca ilk 100 tanesi gösteriliyor:"
           replace_owners: Rozeti önceki sahiplerden kaldır
           grant_existing_holders: Mevcut rozet sahiplerine ek rozetler ver
       emoji:

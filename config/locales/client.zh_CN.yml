@@ -1267,26 +1267,50 @@ zh_CN:
         warnings: "官方警告"
         read_more_in_group: "想阅读更多？浏览 %{groupLink} 中的其他消息。"
         read_more: "想阅读更多？在<a href='%{basePath}/u/%{username}/messages'>个人消息</a>中浏览其他消息。"
-        read_more_personal_pm_MF: |
+        read_more_group_pm_MF: |
           { HAS_UNREAD_AND_NEW, select,
             true {
               { UNREAD, plural,
                    =0 {}
-                other {还有 <a href="{basePath}/u/{username}/messages/unread"># 个未读</a>话题}
+                other {还有 <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># 条未读</a>}
               }
               { NEW, plural,
                    =0 {}
-                other {和<a href="{basePath}/u/{username}/messages/new"># 个新</a>话题，或者浏览其他<a href="{basePath}/u/{username}/messages">个人消息</a>}
+                other {和 <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># 条新</a>消息，或浏览 {groupLink} 中的其他消息}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                other {还有 <a href="{basePath}/u/{username}/messages/unread"># 个未读</a>话题，或者浏览其他<a href="{basePath}/u/{username}/messages">个人消息</a>}
+                other {还有 <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># 条未读</a>消息，或浏览 {groupLink} 中的其他消息}
               }
               { NEW, plural,
                    =0 {}
-                other {还有 <a href="{basePath}/u/{username}/messages/new"># 个新</a>话题，或者浏览其他<a href="{basePath}/u/{username}/messages">个人消息</a>}
+                other {还有 <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># 条新</a>消息，或浏览 {groupLink} 中的其他消息}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                other {还有 <a href="{basePath}/u/{username}/messages/unread"># 条未读</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                other {和 <a href="{basePath}/u/{username}/messages/new"># 条新</a>消息，或者浏览其他<a href="{basePath}/u/{username}/messages">个人消息</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                other {还有 <a href="{basePath}/u/{username}/messages/unread"># 条未读</a>消息，或者浏览其他<a href="{basePath}/u/{username}/messages">个人消息</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                other {还有 <a href="{basePath}/u/{username}/messages/new"># 条新</a>消息，或者浏览其他<a href="{basePath}/u/{username}/messages">个人消息</a>}
               }
             }
             other {}
@@ -1866,15 +1890,15 @@ zh_CN:
       enabled: "此网站处于管理人员专用模式。请继续浏览，但回复、赞和其他操作仅限于管理人员。"
     logs_error_rate_notice:
       reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{rate, plural, other {# 个错误/小时}}</a>达到了网站设置中 {limit, plural, other {# 个错误/小时}}的限制。
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{rate, plural, other {# 个错误/小时}}</a>达到了 {limit, plural, other {# 个错误/小时}}的网站设置上限。
       reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{rate, plural, other {# 个错误/分钟}}</a>达到了网站设置中 {limit, plural, other {# 个错误/分钟}}的限制。
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{rate, plural, other {# 个错误/分钟}}</a>达到了 {limit, plural, other {# 个错误/分钟}}的网站设置上限。
       exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{rate, plural, other {# 个错误/小时}}</a>超过了网站设置中 {limit, plural, other {# 个错误/小时}}的限制。
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{rate, plural, other {# 个错误/小时}}</a>超过了 {limit, plural, other {# 个错误/小时}}的网站设置上限。
       exceeded_minute_MF: |
         <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
         other { # 个错误每分钟}
-        }</a>超出了站点设置中{ limit, plural,other { # 个错误每分钟}}的限制。
+        }</a>超过了 { limit, plural,other { # 个错误/分钟}}的网站设置上限。
     learn_more: "了解详情…"
     mute: 免打扰
     unmute: 取消免打扰
@@ -4028,7 +4052,7 @@ zh_CN:
         everyone_can_use: "每个人都可以使用标签"
         usable_only_by_groups: "标签对所有人可见，但只有以下群组可以使用它们"
         visible_only_to_groups: "标签仅对以下群组可见"
-        cannot_save: "无法保存标签组。确保至少存在一个标签，标签组名称不为空且少于100个字符，并为标签权限选择一个组。"
+        cannot_save: "无法保存标签群组。确保至少存在一个标签，标签群组名称不为空且少于 100 个字符，并为标签权限选择一个群组。"
         tags_placeholder: "搜索或创建标签"
         parent_tag_placeholder: "可选"
         select_groups_placeholder: "选择群组…"
@@ -4049,7 +4073,7 @@ zh_CN:
       approval_not_required: "一旦用户接受此邀请，他们将被自动批准。"
       custom_message_template_forum: "嘿，您应该加入此论坛！"
       custom_message_template_topic: "嘿，我想您可能会喜欢此话题！"
-    forced_anonymous: "由于负载过大，暂时向所有人显示退出登录的用户可以看到的内容。"
+    forced_anonymous: "由于服务器负载过大，暂时向所有人都显示未登录用户可以看到的内容。"
     forced_anonymous_login_required: "该网站正处于极端负载状态，当前无法加载，请在几分钟后再试。"
     footer_nav:
       back: "返回"
@@ -4389,7 +4413,7 @@ zh_CN:
         problems_found: "基于您当前网站设置的一些建议"
         new_features:
           title: "最新变化"
-          subtitle: "关于我们一直在添加的新功能和改进，详请参阅 <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>发行说明</a>。"
+          subtitle: "有关我们一直在添加的新功能和改进的更多详细信息，请参阅<a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>版本说明</a>。"
           previous_announcements: "您可以在 <a href='%{url}' target='_blank'>Discourse Meta</a> 上查看以前的新功能公告。"
           learn_more: "了解详情…"
         last_checked: "上次检查"

@@ -2184,8 +2184,8 @@ cs:
       not_approved: "Váš účet zatím nebyl schválen. Až se tak stane, obdržíte oznámení emailem a budete se moci přihlásit."
       google_oauth2:
         name: "Google"
-        title: "Přihlásit se pomocí Google"
-        sr_title: "Přihlásit se pomocí Google"
+        title: "Přihlásit se přes Google"
+        sr_title: "Přihlásit se přes Google"
       twitter:
         name: "Twitter"
         title: "Přihlásit se přes Twitter"
@@ -2211,7 +2211,7 @@ cs:
         title: "Přihlásit se přes LinkedIn"
         sr_title: "Přihlásit se přes LinkedIn"
       passkey:
-        name: "Přihlásit pomocí přístupového klíče Passkey"
+        name: "Přihlásit se přes Passkey"
       second_factor_toggle:
         totp: "Místo toho použít autentizační aplikaci"
         backup_code: "Místo toho použít záložní kód"
@@ -4929,8 +4929,8 @@ cs:
           trend_title: "%{percent} změna. Nyní %{current}, proti %{prev} v předchozím období."
           today: "Dnes"
           yesterday: "Včera"
-          last_7_days: "Posledních 7"
-          last_30_days: "Posledních 30"
+          last_7_days: "7 dnů"
+          last_30_days: "30 dnů"
           all_time: "Za celou dobu"
           7_days_ago: "Týden"
           30_days_ago: "Měsíc"
