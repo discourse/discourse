@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import SiteSettingFilter from "discourse/lib/site-setting-filter";
+import { ajax } from "discourse/lib/ajax";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
 import AdminFilteredSiteSettings from "admin/components/admin-filtered-site-settings";
@@ -15,13 +15,20 @@ export default class AdminConfigAreasFlagsSettings extends Component {
 
   @bind
   loadSettings() {
-    SiteSetting.findAll({
-      categories: ["spam", "rate_limits", "chat"],
-    }).then((settings) => {
-      this.settings = new SiteSettingFilter(settings).performSearch(
-        "flags",
-        {}
-      );
+    ajax("/admin/config/site_settings.json", {
+      data: {
+        filter_area: "flags",
+      },
+    }).then((result) => {
+      this.settings = [
+        {
+          name: "All",
+          nameKey: "all_results",
+          siteSettings: result.site_settings.map((setting) =>
+            SiteSetting.create(setting)
+          ),
+        },
+      ];
     });
   }
 

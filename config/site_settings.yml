@@ -2153,9 +2153,14 @@ spam:
     type: enum
     enum: "ReviewableSensitivitySetting"
     default: 3
-  num_users_to_silence_new_user: 3
+    area: "flags"
+  num_users_to_silence_new_user:
+    default: 3
+    area: "flags"
   notify_mods_when_user_silenced: false
-  flag_sockpuppets: false
+  flag_sockpuppets:
+    default: false
+    area: "flags"
   newuser_spam_host_threshold: 3
   allowed_spam_host_domains:
     default: ""
@@ -2168,7 +2173,9 @@ spam:
   min_ban_entries_for_roll_up: 5
   max_age_unmatched_emails: 365
   max_age_unmatched_ips: 365
-  num_flaggers_to_close_topic: 5
+  num_flaggers_to_close_topic:
+    default: 5
+    area: "flags"
   auto_close_topic_sensitivity:
     type: enum
     enum: "ReviewableSensitivitySetting"
@@ -2176,14 +2183,18 @@ spam:
   num_hours_to_close_topic:
     default: 4
     min: 1
-  auto_respond_to_flag_actions: true
+  auto_respond_to_flag_actions:
+    default: true
+    area: "flags"
   min_first_post_typing_time: 3000
   auto_silence_fast_typers_on_first_post: true
   auto_silence_fast_typers_max_trust_level:
     default: 0
     enum: "TrustLevelSetting"
   auto_silence_first_post_regex: ""
-  high_trust_flaggers_auto_hide_posts: true
+  high_trust_flaggers_auto_hide_posts:
+    default: true
+    area: "flags"
   cooldown_hours_until_reflag:
     default: 24
     min: 0
@@ -2238,7 +2249,9 @@ rate_limits:
   max_personal_messages_per_day: 20
   max_likes_per_day: 50
   max_bookmarks_per_day: 20
-  max_flags_per_day: 20
+  max_flags_per_day:
+    default: 20
+    area: "flags"
   max_edits_per_day: 30
   max_invites_per_day: 10
   max_topic_invitations_per_day: 30
@@ -2251,9 +2264,15 @@ rate_limits:
   tl2_additional_edits_per_day_multiplier: 1.5
   tl3_additional_edits_per_day_multiplier: 2
   tl4_additional_edits_per_day_multiplier: 3
-  tl2_additional_flags_per_day_multiplier: 1.5
-  tl3_additional_flags_per_day_multiplier: 2
-  tl4_additional_flags_per_day_multiplier: 3
+  tl2_additional_flags_per_day_multiplier:
+    default: 1.5
+    area: "flags"
+  tl3_additional_flags_per_day_multiplier:
+    default: 2
+    area: "flags"
+  tl4_additional_flags_per_day_multiplier:
+    default: 3
+    area: "flags"
   alert_admins_if_errors_per_minute:
     client: true
     default: 0
