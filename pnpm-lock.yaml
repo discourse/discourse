@@ -116,7 +116,7 @@ importers:
         specifier: ^2.8.8
         version: 2.8.8
       puppeteer-core:
-        specifier: ^23.2.0
+        specifier: ^23.2.1
         version: 23.2.1
       squoosh:
         specifier: discourse/squoosh#dc9649d
@@ -285,7 +285,7 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1
       ace-builds:
-        specifier: ^1.36.0
+        specifier: ^1.36.2
         version: 1.36.2
       decorator-transforms:
         specifier: ^2.0.0
@@ -358,10 +358,10 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       '@embroider/compat':
-        specifier: ^3.6.0
+        specifier: ^3.6.1
         version: 3.6.1(@embroider/core@3.4.15(@glint/template@1.4.1-unstable.ff9ea6c))(@glint/template@1.4.1-unstable.ff9ea6c)
       '@embroider/core':
-        specifier: ^3.4.14
+        specifier: ^3.4.15
         version: 3.4.15(@glint/template@1.4.1-unstable.ff9ea6c)
       '@embroider/macros':
         specifier: ^1.13.1
@@ -370,7 +370,7 @@ importers:
         specifier: ^2.1.8
         version: 2.1.8(@embroider/core@3.4.15(@glint/template@1.4.1-unstable.ff9ea6c))
       '@embroider/webpack':
-        specifier: ^4.0.4
+        specifier: ^4.0.5
         version: 4.0.5(@embroider/core@3.4.15(@glint/template@1.4.1-unstable.ff9ea6c))(webpack@5.94.0(@swc/core@1.7.22)(esbuild@0.23.1))
       '@floating-ui/dom':
         specifier: ^1.6.10
@@ -385,7 +385,7 @@ importers:
         specifier: ^2.11.8
         version: 2.11.8
       '@swc/core':
-        specifier: ^1.7.21
+        specifier: ^1.7.22
         version: 1.7.22
       '@types/jquery':
         specifier: ^3.5.30
