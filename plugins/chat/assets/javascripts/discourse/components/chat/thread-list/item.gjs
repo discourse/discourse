@@ -25,6 +25,7 @@ export default class ChatThreadListItem extends Component {
       class={{concatClass
         "chat-thread-list-item"
         (if (gt @thread.tracking.unreadCount 0) "-is-unread")
+        (if (gt @thread.tracking.watchedThreadsUnreadCount 0) "-is-urgent")
       }}
       data-thread-id={{@thread.id}}
       ...attributes

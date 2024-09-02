@@ -180,7 +180,14 @@ RSpec.describe Chat::ListChannelMessages do
         Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
 
         expect(result.tracking.thread_tracking).to eq(
-          { thread_1.id => { channel_id: channel.id, mention_count: 0, unread_count: 0 } },
+          {
+            thread_1.id => {
+              channel_id: channel.id,
+              mention_count: 0,
+              unread_count: 0,
+              watched_threads_unread_count: 0,
+            },
+          },
         )
       end
 
@@ -193,7 +200,14 @@ RSpec.describe Chat::ListChannelMessages do
           Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
 
           expect(result.tracking.thread_tracking).to eq(
-            { thread_1.id => { channel_id: channel.id, mention_count: 0, unread_count: 1 } },
+            {
+              thread_1.id => {
+                channel_id: channel.id,
+                mention_count: 0,
+                unread_count: 1,
+                watched_threads_unread_count: 0,
+              },
+            },
           )
         end
       end
@@ -214,7 +228,14 @@ RSpec.describe Chat::ListChannelMessages do
 
         expect(result.tracking.channel_tracking).to eq({})
         expect(result.tracking.thread_tracking).to eq(
-          { thread_1.id => { channel_id: channel.id, mention_count: 0, unread_count: 1 } },
+          {
+            thread_1.id => {
+              channel_id: channel.id,
+              mention_count: 0,
+              unread_count: 1,
+              watched_threads_unread_count: 0,
+            },
+          },
         )
       end
     end
