@@ -130,6 +130,8 @@ th:
             title: "ปกติ"
           tracking:
             title: "ติดตาม"
+          watching:
+            title: "กำลังดู"
       draft_channel_screen:
         header: "สร้างข้อความใหม่"
         cancel: "ยกเลิก"

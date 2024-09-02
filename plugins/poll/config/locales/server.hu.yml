@@ -10,10 +10,17 @@ hu:
     poll_maximum_options: "Szavazási lehetőségek legnagyobb száma a szavazásoknál."
     poll_edit_window_mins: "A bejegyzés létrehozása után hány percig lehet szerkeszteni a bejegyzést."
     poll_minimum_trust_level_to_create: "Adja meg a szavazások létrehozásához szükséges legkisebb bizalmi szintet."
+    poll_create_allowed_groups: "A szavazások létrehozására jogosult csoportok."
     poll_groupable_user_fields: "A szavazási eredmények csoportosítására és szűrésére használható felhasználói mezőnevek halmaza."
+    poll_export_data_explorer_query_id: "A szavazási eredmények exportálásához használandó adatkezelő lekérdezés azonosítója. (0 a letiltáshoz)."
+    poll_export_ranked_choice_data_explorer_query_id: "Azonnali szavazás eredményhirdetés exportálásához használandó adatkezelő lekérdezés azonosítója."
+    poll_default_public: "Új szavazás létrehozásakor alapértelmezés szerint engedélyezze a „mutassa meg, ki szavazott” opciót."
+  keywords:
+    poll_create_allowed_groups: "szavazáshoz_minimális_megbízhatósági_szint_létrehozása"
   poll:
     poll: "szavazás"
     invalid_argument: "Érvénytelen „%{value}” érték az „%{argument}” argumentumhoz."
+    multiple_polls_without_name: "Több szavazás létrehozásakor adjon meg egyedi neveket a <code>név=példa</code> hozzáadásával a <code>[poll]</code> címkéihez."
     multiple_polls_with_same_name: "Több szavazás is ugyanazt a nevet használja: <strong>%{name}</strong>. Használja a „<code>name</code>” attribútumot, hogy egyedileg azonosítsa a szavazásokat."
     default_poll_must_have_at_least_1_option: "A szavazásnak legalább 1 lehetőséget kell tartalmaznia."
     named_poll_must_have_at_least_1_option: "A(z) <strong>%{name}</strong> szavazásnak legalább 1 lehetőséget kell tartalmaznia."
@@ -45,8 +52,13 @@ hu:
     min_vote_per_user:
       one: Legalább %{count} szavazat szükséges ennél a szavazásnál.
       other: Legalább %{count} szavazat szükséges ennél a szavazásnál.
+    ranked_choice:
+      vote_options_mismatch: "Azonnali eredményhirdetés esetén a szavazás során meghozott választások számának meg kell egyeznie az opciók számával. Az opciók száma %{count} , a választások száma pedig %{provided}volt."
+      no_group_results_support: "Érvénytelen szavazástípus, a rangsorolt_választás nem támogatja a csoportosított eredményeket."
     topic_must_be_open_to_toggle_status: "A témának nyitottnak kell lennie ahhoz, hogy átváltsa az állapotát."
     only_staff_or_op_can_toggle_status: "Csak egy stábtag vagy az eredeti szerző tudja átváltani a szavazás állapotát."
+    errors:
+      poll_not_found: "A szavazás nem található, kérjük, erősítse meg a paramétereket."
     insufficient_rights_to_create: "Nem hozhat létre szavazásokat."
     email:
       link_to_poll: "Kattintson ide a szavazás megtekintéséhez."

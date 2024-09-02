@@ -136,7 +136,6 @@ pl_PL:
       header_indicator_preference:
         title: "Pokaż wskaźnik aktywności w nagłówku"
         all_new: "Wszystkie nowe wiadomości"
-        dm_and_mentions: "Bezpośrednie wiadomości i wzmianki"
         only_mentions: "Tylko wzmianki"
         never: "Nigdy"
       separate_sidebar_mode:
@@ -646,10 +645,10 @@ pl_PL:
         notifications:
           regular:
             title: "Normalny"
-            description: "Otrzymasz powiadomienie, jeśli ktoś wspomni Twoją @nazwę w tym wątku."
           tracking:
             title: "Śledzona"
-            description: "Liczba nowych odpowiedzi w tym wątku zostanie wyświetlona na liście wątków i na kanale. Otrzymasz powiadomienie, jeśli ktoś wspomni Twoją @nazwę w tym wątku."
+          watching:
+            title: "Obserwowane"
         participants_other_count:
           one: "+%{count}"
           few: "+%{count}"

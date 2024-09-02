@@ -3974,7 +3974,6 @@ ko:
             post: "포스트"
       plugins:
         title: "플러그인"
-        installed: "설치된 플러그인"
         name: "이름"
         none_installed: "설치된 플러그인이 없습니다."
         version: "버전"

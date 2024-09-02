@@ -134,7 +134,6 @@ ug:
       header_indicator_preference:
         title: "ماۋزۇدا پائالىيەت كۆرسەتكۈچىنى كۆرسەت"
         all_new: "بارلىق يېڭى ئۇچۇر"
-        dm_and_mentions: "بىۋاسىتە ئۇچۇر ۋە ئاتاش"
         only_mentions: "ئاتاشلا"
         never: "ھەرگىز"
       separate_sidebar_mode:
@@ -550,10 +549,10 @@ ug:
         notifications:
           regular:
             title: "ئادەتتىكى"
-            description: "ئەگەر بىرەرسى بۇ تېمىدا @ئىسمىڭىزنى تىلغا ئالسا ئۇقتۇرۇلىسىز."
           tracking:
             title: "ئىزلاش"
-            description: "بۇ تېمىنىڭ جاۋاب سانى تېما تىزىملىكى ۋە قانالدا كۆرسىتىلىدۇ. ئەگەر بىرەرسى بۇ تېمىدا @ئىسمىڭىزنى تىلغا ئالسا ئۇقتۇرۇلىسىز."
+          watching:
+            title: "كۆزىتىۋاتىدۇ"
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
@@ -579,6 +578,9 @@ ug:
       chat_invitation: "سۆھبەت قانىلىغا تەكلىپ قىلىندىڭىز"
       chat_invitation_html: "<span>%{username}</span> <span>سىزنى سۆھبەت قانىلىغا تەكلىپ قىلدى</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} ۋە %{username2}"
+        other: "%{username} ۋە باشقا %{count} كىشى"
       popup:
         chat_mention:
           direct: '«%{channel}» دا ئاتالدىڭىز'

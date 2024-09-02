@@ -130,7 +130,6 @@ de:
       header_indicator_preference:
         title: "Aktivitätsindikator in der Kopfzeile anzeigen"
         all_new: "bei allen neuen Nachrichten"
-        dm_and_mentions: "bei Direktnachrichten und Erwähnungen"
         only_mentions: "Nur Erwähnungen"
         never: "niemals"
       separate_sidebar_mode:
@@ -600,10 +599,10 @@ de:
         notifications:
           regular:
             title: "Normal"
-            description: "Du wirst benachrichtigt, wenn jemand deinen Namen mit @ in diesem Thread erwähnt."
           tracking:
             title: "Verfolgen"
-            description: "Die Anzahl der neuen Antworten auf diesen Thread wird in der Thread-Liste und im Kanal angezeigt. Du wirst benachrichtigt, wenn jemand deinen Namen mit @ in diesem Thread erwähnt."
+          watching:
+            title: "Beobachten"
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"

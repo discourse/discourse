@@ -115,6 +115,8 @@ sr:
             title: "Normalno"
           tracking:
             title: "Praćeno"
+          watching:
+            title: "Posmatram"
       draft_channel_screen:
         header: "Nova privatna poruka"
         cancel: "Odustani"

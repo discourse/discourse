@@ -5294,7 +5294,6 @@ tr_TR:
             move_down: "Aşağı taşı"
       plugins:
         title: "Eklentiler"
-        installed: "Yüklü Eklentiler"
         name: "Ad"
         none_installed: "Yüklü herhangi bir eklentiniz yok."
         version: "Sürüm"

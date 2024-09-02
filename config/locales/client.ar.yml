@@ -6311,7 +6311,6 @@ ar:
             move_down: "التحريك لأسفل"
       plugins:
         title: "الإضافات"
-        installed: "الإضافات المثبَّتة"
         name: "الاسم"
         none_installed: "ليس لديك أي إضافات مثبَّتة."
         version: "الإصدار"

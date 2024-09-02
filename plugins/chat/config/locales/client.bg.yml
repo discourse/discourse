@@ -68,7 +68,6 @@ bg:
       header_indicator_preference:
         title: "Показване на индикатора за активност в хедъра"
         all_new: "Всички нови съобщения"
-        dm_and_mentions: "Директни съобщения и споменавания"
         never: "Никога"
       flag: "Сигнализиране"
       heading: "Чат"
@@ -179,6 +178,8 @@ bg:
             title: "Нормален"
           tracking:
             title: "Следене"
+          watching:
+            title: "Наблюдавай"
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"

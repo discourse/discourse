@@ -5033,7 +5033,6 @@ ja:
             move_down: "下に移動"
       plugins:
         title: "プラグイン"
-        installed: "インストール済みプラグイン"
         name: "名前"
         none_installed: "インストール済みのプラグインはありません。"
         version: "バージョン"

@@ -259,6 +259,8 @@ da:
             title: "Normal"
           tracking:
             title: "Følger"
+          watching:
+            title: "Overvåger"
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"

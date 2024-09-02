@@ -126,7 +126,6 @@ sv:
       header_indicator_preference:
         title: "Visa aktivitetsindikator i sidhuvudet"
         all_new: "Alla nya meddelanden"
-        dm_and_mentions: "Direktmeddelanden och omnämnanden"
         only_mentions: "Bara omnämnanden"
         never: "Aldrig"
       separate_sidebar_mode:
@@ -588,10 +587,10 @@ sv:
         notifications:
           regular:
             title: "Normal"
-            description: "Du aviseras om någon nämner ditt @namn i den här tråden."
           tracking:
             title: "Följer"
-            description: "Ett antal nya svar för denna tråd kommer att visas i trådlistan och kanalen. Du aviseras om någon nämner ditt @namn i denna tråd."
+          watching:
+            title: "Bevakar"
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"

@@ -4191,7 +4191,6 @@ da:
             post: "indlæg"
       plugins:
         title: "Udvidelser"
-        installed: "Installerede Udvidelser"
         name: "Navn"
         none_installed: "Du har ikke nogen udvidelser installeret"
         version: "Version"

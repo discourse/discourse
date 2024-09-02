@@ -3614,7 +3614,6 @@ bg:
             post: "публикации"
       plugins:
         title: "Приставки"
-        installed: "Инсталирани приставки"
         name: "Име"
         none_installed: "Нямате инсталирани приставки."
         version: "Версия"
