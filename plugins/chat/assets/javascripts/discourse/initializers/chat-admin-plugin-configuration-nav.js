@@ -1,5 +1,6 @@
 import { PLUGIN_NAV_MODE_TOP } from "discourse/lib/admin-plugin-config-nav";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import ChatAdminPluginActions from "discourse/plugins/chat/admin/components/chat-admin-plugin-actions";
 
 export default {
   name: "discourse-chat-admin-plugin-configuration-nav",
@@ -17,6 +18,11 @@ export default {
           route: "adminPlugins.show.discourse-chat-incoming-webhooks",
         },
       ]);
+
+      api.renderInOutlet(
+        "admin-plugin-config-page-actions",
+        ChatAdminPluginActions
+      );
     });
   },
 };

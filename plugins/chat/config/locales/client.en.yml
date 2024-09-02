@@ -505,6 +505,7 @@ en:
           title: "Export chat messages"
           description: "This exports all messages from all channels."
           create_export: "Create export"
+          confirm_export: "This exports all messages from all channels and sends the result to you iin a private message. Are you sure you want to export?"
           export_has_started: "The export has started. You'll receive a PM when it's ready."
 
       my_threads:
