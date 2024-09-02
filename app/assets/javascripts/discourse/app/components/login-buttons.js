@@ -4,7 +4,7 @@ import { isWebauthnSupported } from "discourse/lib/webauthn";
 import { findAll } from "discourse/models/login-method";
 import discourseComputed from "discourse-common/utils/decorators";
 
-@classNameBindings("hidden")
+@classNameBindings("hidden", "multiple")
 export default class LoginButtons extends Component {
   elementId = "login-buttons";
 
@@ -15,6 +15,11 @@ export default class LoginButtons extends Component {
   )
   hidden(buttonsCount, showLoginWithEmailLink, showPasskeysButton) {
     return buttonsCount === 0 && !showLoginWithEmailLink && !showPasskeysButton;
+  }
+
+  @discourseComputed("buttons.length")
+  multiple(buttonsCount) {
+    return buttonsCount > 1;
   }
 
   @discourseComputed
