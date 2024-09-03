@@ -86,7 +86,7 @@ export default class UppyImageUploader extends Component.extend(
   }
 
   _uppyReady() {
-    this._onPreProcessComplete(() => {
+    this.uppyWrapper.onPreProcessComplete(() => {
       this.set("processing", false);
     });
   }

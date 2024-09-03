@@ -1,17 +1,16 @@
-import Mixin from "@ember/object/mixin";
-import { getOwner } from "@ember/owner";
-import UppyUploadDebugging from "discourse/lib/uppy/upload-debugging";
+import { getOwner, setOwner } from "@ember/owner";
+import UppyUploadDebugging from "./upload-debugging";
 
 /**
- * Use this mixin with any component that needs to upload files or images
- * with Uppy. This mixin makes it easier to tell Uppy to use certain uppy plugins
+ * Use this class whenever you need to upload files or images
+ * with Uppy. The class makes it easier to tell Uppy to use certain uppy plugins
  * as well as tracking all of the state of preprocessor plugins. For example,
  * you may have multiple preprocessors:
  *
  * - UppyMediaOptimization
  * - UppyChecksum
  *
- * Once installed with _useUploadPlugin(PluginClass, opts), we track the following
+ * Once installed with useUploadPlugin(PluginClass, opts), we track the following
  * status for every preprocessor plugin:
  *
  * - needProcessing - The total number of files that have been added to uppy that
@@ -22,33 +21,37 @@ import UppyUploadDebugging from "discourse/lib/uppy/upload-debugging";
  *                        which is determined by the preprocess-complete event.
  * - allComplete - Whether all files have completed the preprocessing for the plugin.
  *
- * There is a caveat - you must call _addNeedProcessing(data.fileIDs.length) when
+ * There is a caveat - you must call addNeedProcessing(data.fileIDs.length) when
  * handling the "upload" event with uppy, otherwise this mixin does not know how
  * many files need to be processed.
  *
  * If you need to do something else on progress or completion of preprocessors,
- * hook into the _onPreProcessProgress(callback) or _onPreProcessComplete(callback, allCompleteCallback)
- * functions. Note the _onPreProcessComplete function takes a second callback
+ * hook into the onPreProcessProgress(callback) or onPreProcessComplete(callback, allCompleteCallback)
+ * functions. Note the onPreProcessComplete function takes a second callback
  * that is fired only when _all_ of the files have been preprocessed for all
  * preprocessor plugins.
  *
  * A preprocessor is considered complete if the completeProcessing count is
  * equal to needProcessing, at which point the allComplete prop is set to true.
  * If all preprocessor plugins have allComplete set to true, then the allCompleteCallback
- * is called for _onPreProcessComplete.
+ * is called for onPreProcessComplete.
  *
- * To completely reset the preprocessor state for all plugins, call _resetPreProcessors.
+ * To completely reset the preprocessor state for all plugins, call resetPreProcessors.
  *
- * See ComposerUploadUppy for an example of a component using this mixin.
+ * See ComposerUploadUppy for an example of a component using this class.
  */
-export default Mixin.create({
-  init() {
-    this._uppyDebug = new UppyUploadDebugging(getOwner(this));
-    this._super();
-  },
+export default class UppyWrapper {
+  debug;
+  uppyInstance;
+  #preProcessorStatus = {};
 
-  _useUploadPlugin(pluginClass, opts = {}) {
-    if (!this._uppyInstance) {
+  constructor(owner) {
+    setOwner(this, owner);
+    this.debug = new UppyUploadDebugging(getOwner(this));
+  }
+
+  useUploadPlugin(pluginClass, opts = {}) {
+    if (!this.uppyInstance) {
       return;
     }
 
@@ -67,7 +70,7 @@ export default Mixin.create({
       );
     }
 
-    this._uppyInstance.use(
+    this.uppyInstance.use(
       pluginClass,
       Object.assign(opts, {
         id: pluginClass.pluginId,
@@ -76,9 +79,9 @@ export default Mixin.create({
     );
 
     if (pluginClass.pluginType === "preprocessor") {
-      this._trackPreProcessorStatus(pluginClass.pluginId);
+      this.#trackPreProcessorStatus(pluginClass.pluginId);
     }
-  },
+  }
 
   // NOTE: This and _onPreProcessComplete will need to be tweaked
   // if we ever add support for "determinate" preprocessors for uppy, which
@@ -86,21 +89,19 @@ export default Mixin.create({
   // state ("indeterminate").
   //
   // See: https://uppy.io/docs/writing-plugins/#Progress-events
-  _onPreProcessProgress(callback) {
-    this._uppyInstance.on("preprocess-progress", (file, progress, pluginId) => {
-      this._uppyDebug.log(
-        `[${pluginId}] processing file ${file.name} (${file.id})`
-      );
+  onPreProcessProgress(callback) {
+    this.uppyInstance.on("preprocess-progress", (file, progress, pluginId) => {
+      this.debug.log(`[${pluginId}] processing file ${file.name} (${file.id})`);
 
-      this._preProcessorStatus[pluginId].activeProcessing++;
+      this.#preProcessorStatus[pluginId].activeProcessing++;
 
       callback(file);
     });
-  },
+  }
 
-  _onPreProcessComplete(callback, allCompleteCallback = null) {
-    this._uppyInstance.on("preprocess-complete", (file, skipped, pluginId) => {
-      this._uppyDebug.log(
+  onPreProcessComplete(callback, allCompleteCallback = null) {
+    this.uppyInstance.on("preprocess-complete", (file, skipped, pluginId) => {
+      this.debug.log(
         `[${pluginId}] ${skipped ? "skipped" : "completed"} processing file ${
           file.name
         } (${file.id})`
@@ -108,63 +109,60 @@ export default Mixin.create({
 
       callback(file);
 
-      this._completePreProcessing(pluginId, (allComplete) => {
+      this.#completePreProcessing(pluginId, (allComplete) => {
         if (allComplete) {
-          this._uppyDebug.log("[uppy] All upload preprocessors complete!");
+          this.debug.log("[uppy] All upload preprocessors complete!");
           if (allCompleteCallback) {
             allCompleteCallback();
           }
         }
       });
     });
-  },
+  }
 
-  _resetPreProcessors() {
-    this._eachPreProcessor((pluginId) => {
-      this._preProcessorStatus[pluginId] = {
+  resetPreProcessors() {
+    this.#eachPreProcessor((pluginId) => {
+      this.#preProcessorStatus[pluginId] = {
         needProcessing: 0,
         activeProcessing: 0,
         completeProcessing: 0,
         allComplete: false,
       };
     });
-  },
+  }
 
-  _trackPreProcessorStatus(pluginId) {
-    if (!this._preProcessorStatus) {
-      this._preProcessorStatus = {};
-    }
-    this._preProcessorStatus[pluginId] = {
+  #trackPreProcessorStatus(pluginId) {
+    this.#preProcessorStatus[pluginId] = {
       needProcessing: 0,
       activeProcessing: 0,
       completeProcessing: 0,
       allComplete: false,
     };
-  },
+  }
 
-  _addNeedProcessing(fileCount) {
-    this._eachPreProcessor((pluginName, status) => {
+  addNeedProcessing(fileCount) {
+    this.#eachPreProcessor((pluginName, status) => {
       status.needProcessing += fileCount;
       status.allComplete = false;
     });
-  },
+  }
 
-  _eachPreProcessor(cb) {
-    for (const [pluginId, status] of Object.entries(this._preProcessorStatus)) {
+  #eachPreProcessor(cb) {
+    for (const [pluginId, status] of Object.entries(this.#preProcessorStatus)) {
       cb(pluginId, status);
     }
-  },
+  }
 
-  _allPreprocessorsComplete() {
+  #allPreprocessorsComplete() {
     let completed = [];
-    this._eachPreProcessor((pluginId, status) => {
+    this.#eachPreProcessor((pluginId, status) => {
       completed.push(status.allComplete);
     });
     return completed.every(Boolean);
-  },
+  }
 
-  _completePreProcessing(pluginId, callback) {
-    const preProcessorStatus = this._preProcessorStatus[pluginId];
+  #completePreProcessing(pluginId, callback) {
+    const preProcessorStatus = this.#preProcessorStatus[pluginId];
     preProcessorStatus.activeProcessing--;
     preProcessorStatus.completeProcessing++;
 
@@ -176,11 +174,11 @@ export default Mixin.create({
       preProcessorStatus.needProcessing = 0;
       preProcessorStatus.completeProcessing = 0;
 
-      if (this._allPreprocessorsComplete()) {
+      if (this.#allPreprocessorsComplete()) {
         callback(true);
       } else {
         callback(false);
       }
     }
-  },
-});
+  }
+}

@@ -2,6 +2,7 @@ import { warn } from "@ember/debug";
 import EmberObject from "@ember/object";
 import { or } from "@ember/object/computed";
 import Mixin from "@ember/object/mixin";
+import { getOwner } from "@ember/owner";
 import { run } from "@ember/runloop";
 import { service } from "@ember/service";
 import AwsS3 from "@uppy/aws-s3";
@@ -14,9 +15,9 @@ import {
   displayErrorForUpload,
   validateUploadedFile,
 } from "discourse/lib/uploads";
+import UppyWrapper from "discourse/lib/uppy/wrapper";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import UppyChunkedUploader from "discourse/lib/uppy-chunked-uploader-plugin";
-import ExtendableUploader from "discourse/mixins/extendable-uploader";
 import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
 import getUrl from "discourse-common/lib/get-url";
 import { deepMerge } from "discourse-common/lib/object";
@@ -25,11 +26,23 @@ import I18n from "discourse-i18n";
 
 export const HUGE_FILE_THRESHOLD_BYTES = 104_857_600; // 100MB
 
-export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
+export default Mixin.create(UppyS3Multipart, {
+  get _uppyInstance() {
+    return this.uppyWrapper.uppyInstance;
+  },
+
+  set _uppyInstance(value) {
+    this.uppyWrapper.uppyInstance = value;
+  },
+
+  init() {
+    this.uppyWrapper = new UppyWrapper(getOwner(this));
+    this._super();
+  },
+
   dialog: service(),
   uploading: false,
   uploadProgress: 0,
-  _uppyInstance: null,
   autoStartUploads: true,
   inProgressUploads: null,
   id: null,
@@ -181,7 +194,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
         return;
       }
 
-      this._addNeedProcessing(data.fileIDs.length);
+      this.uppyWrapper.addNeedProcessing(data.fileIDs.length);
       const files = data.fileIDs.map((fileId) =>
         this._uppyInstance.getFile(fileId)
       );
@@ -285,7 +298,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
     });
 
     if (this.siteSettings.enable_upload_debug_mode) {
-      this._uppyDebug.instrumentUploadTimings(this._uppyInstance);
+      this.uppyWrapper.debug.instrumentUploadTimings(this._uppyInstance);
     }
 
     // TODO (martin) preventDirectS3Uploads is necessary because some of
@@ -333,7 +346,9 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
     // be added; the preprocessors are run in order and since other preprocessors
     // may modify the file (e.g. the UppyMediaOptimization one), we need to
     // checksum once we are sure the file data has "settled".
-    this._useUploadPlugin(UppyChecksum, { capabilities: this.capabilities });
+    this.uppyWrapper.useUploadPlugin(UppyChecksum, {
+      capabilities: this.capabilities,
+    });
   },
 
   _triggerInProgressUploadsEvent() {

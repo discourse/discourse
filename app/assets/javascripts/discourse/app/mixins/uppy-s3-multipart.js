@@ -96,7 +96,7 @@ export default Mixin.create({
       .then((data) => {
         if (file.preparePartsRetryAttempts) {
           delete file.preparePartsRetryAttempts;
-          this._uppyDebug.log(
+          this.uppyWrapper.debug.log(
             `[uppy] Retrying batch fetch for ${file.id} was successful, continuing.`
           );
         }
@@ -118,12 +118,12 @@ export default Mixin.create({
           file.preparePartsRetryAttempts += 1;
           const attemptsLeft =
             RETRY_DELAYS.length - file.preparePartsRetryAttempts + 1;
-          this._uppyDebug.log(
+          this.uppyWrapper.debug.log(
             `[uppy] Fetching a batch of upload part URLs for ${file.id} failed with status ${status}, retrying ${attemptsLeft} more times...`
           );
           return Promise.reject({ source: { status } });
         } else {
-          this._uppyDebug.log(
+          this.uppyWrapper.debug.log(
             `[uppy] Fetching a batch of upload part URLs for ${file.id} failed too many times, throwing error.`
           );
           // uppy is inconsistent, an error here does not fire the upload-error event

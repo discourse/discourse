@@ -16,10 +16,10 @@ import {
   getUploadMarkdown,
   validateUploadedFile,
 } from "discourse/lib/uploads";
+import UppyWrapper from "discourse/lib/uppy/wrapper";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import { clipboardHelpers } from "discourse/lib/utilities";
 import ComposerVideoThumbnailUppy from "discourse/mixins/composer-video-thumbnail-uppy";
-import ExtendableUploader from "discourse/mixins/extendable-uploader";
 import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
 import getURL from "discourse-common/lib/get-url";
 import { deepMerge } from "discourse-common/lib/object";
@@ -39,7 +39,20 @@ import I18n from "discourse-i18n";
 // and the most important _bindUploadTarget which handles all the main upload
 // functionality and event binding.
 //
-export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
+export default Mixin.create(UppyS3Multipart, {
+  get _uppyInstance() {
+    return this.uppyWrapper.uppyInstance;
+  },
+
+  set _uppyInstance(value) {
+    this.uppyWrapper.uppyInstance = value;
+  },
+
+  init() {
+    this.uppyWrapper = new UppyWrapper(getOwner(this));
+    this._super();
+  },
+
   dialog: service(),
   session: service(),
 
@@ -208,7 +221,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     });
 
     if (this.siteSettings.enable_upload_debug_mode) {
-      this._uppyDebug.instrumentUploadTimings(this._uppyInstance);
+      this.uppyWrapper.debug.instrumentUploadTimings(this._uppyInstance);
     }
 
     if (this.siteSettings.enable_direct_s3_uploads) {
@@ -275,7 +288,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
     this._uppyInstance.on("upload", (data) => {
       run(() => {
-        this._addNeedProcessing(data.fileIDs.length);
+        this.uppyWrapper.addNeedProcessing(data.fileIDs.length);
 
         const files = data.fileIDs.map((fileId) =>
           this._uppyInstance.getFile(fileId)
@@ -457,7 +470,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     [this.uploadPreProcessors, checksumPreProcessor]
       .flat()
       .forEach(({ pluginClass, optionsResolverFn }) => {
-        this._useUploadPlugin(
+        this.uppyWrapper.useUploadPlugin(
           pluginClass,
           optionsResolverFn({
             composerModel: this.composerModel,
@@ -468,7 +481,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         );
       });
 
-    this._onPreProcessProgress((file) => {
+    this.uppyWrapper.onPreProcessProgress((file) => {
       let placeholderData = this.placeholders[file.id];
       placeholderData.processingPlaceholder = `[${I18n.t(
         "processing_filename",
@@ -493,7 +506,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       );
     });
 
-    this._onPreProcessComplete(
+    this.uppyWrapper.onPreProcessComplete(
       (file) => {
         run(() => {
           let placeholderData = this.placeholders[file.id];
@@ -584,7 +597,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       inProgressUploads: [],
       bufferedUploadErrors: [],
     });
-    this._resetPreProcessors();
+    this.uppyWrapper.resetPreProcessors();
     this.fileInputEl.value = "";
   },
 
