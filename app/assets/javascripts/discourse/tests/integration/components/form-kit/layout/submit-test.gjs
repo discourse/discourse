@@ -38,4 +38,14 @@ module("Integration | Component | FormKit | Layout | Submit", function (hooks) {
       .dom(".form-kit__button")
       .hasText(I18n.t("cancel"), "it allows to override the label");
   });
+
+  test("@isLoading", async function (assert) {
+    await render(<template>
+      <Form as |form|>
+        <form.Submit @label="cancel" @isLoading={{true}} />
+      </Form>
+    </template>);
+
+    assert.dom(".form-kit__button .d-icon-spinner").exists();
+  });
 });
