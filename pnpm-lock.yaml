@@ -574,8 +574,8 @@ importers:
         specifier: ^5.31.6
         version: 5.31.6
       testem:
-        specifier: ^3.10.1
-        version: 3.10.1(handlebars@4.7.8)(lodash@4.17.21)(underscore@1.13.6)
+        specifier: 3.12.0
+        version: 3.12.0(handlebars@4.7.8)(lodash@4.17.21)(underscore@1.13.6)
       truth-helpers:
         specifier: workspace:1.0.0
         version: link:../truth-helpers
@@ -6397,6 +6397,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  mkdirp@3.0.1:
+    resolution: {integrity: sha512-+NsyUUAZDmo6YVHzL/stxSu3t9YS1iljliy3BSDrXJ/dkn1KYdmtZODGGjLcc9XLgVVpH4KshHB8XmZgMhaBXg==}
+    engines: {node: '>=10'}
+    hasBin: true
+
   mktemp@0.4.0:
     resolution: {integrity: sha512-IXnMcJ6ZyTuhRmJSjzvHSRhlVPiN9Jwc6e59V0bEJ0ba6OBeX2L0E+mRN1QseeOF4mM+F1Rit6Nh7o+rl2Yn/A==}
     engines: {node: '>0.9'}
@@ -7827,6 +7832,11 @@ packages:
 
   testem@3.10.1:
     resolution: {integrity: sha512-42c4e7qlAelwMd8O3ogtVGRbgbr6fJnX6H51ACOIG1V1IjsKPlcQtxPyOwaL4iikH22Dfh+EyIuJnMG4yxieBQ==}
+    engines: {node: '>= 7.*'}
+    hasBin: true
+
+  testem@3.12.0:
+    resolution: {integrity: sha512-N4eSSZaBwWQNX2TmaXbEgsz7qs5Q/GWtq2B4j5rkcYt7OfwB6pWDyC1rmYn8HNth+rV9ekRCAqWw4skId1gg6w==}
     engines: {node: '>= 7.*'}
     hasBin: true
 
@@ -15350,6 +15360,8 @@ snapshots:
 
   mkdirp@1.0.4: {}
 
+  mkdirp@3.0.1: {}
+
   mktemp@0.4.0: {}
 
   moment-timezone@0.5.45:
@@ -16940,6 +16952,95 @@ snapshots:
       lodash.find: 4.6.0
       lodash.uniqby: 4.7.0
       mkdirp: 1.0.4
+      mustache: 4.2.0
+      node-notifier: 10.0.1
+      npmlog: 6.0.2
+      printf: 0.6.1
+      rimraf: 3.0.2
+      socket.io: 4.7.5
+      spawn-args: 0.2.0
+      styled_string: 0.0.1
+      tap-parser: 7.0.0
+      tmp: 0.0.33
+    transitivePeerDependencies:
+      - arc-templates
+      - atpl
+      - babel-core
+      - bracket-template
+      - bufferutil
+      - coffee-script
+      - debug
+      - dot
+      - dust
+      - dustjs-helpers
+      - dustjs-linkedin
+      - eco
+      - ect
+      - ejs
+      - haml-coffee
+      - hamlet
+      - hamljs
+      - handlebars
+      - hogan.js
+      - htmling
+      - jade
+      - jazz
+      - jqtpl
+      - just
+      - liquid-node
+      - liquor
+      - lodash
+      - marko
+      - mote
+      - nunjucks
+      - plates
+      - pug
+      - qejs
+      - ractive
+      - razor-tmpl
+      - react
+      - react-dom
+      - slm
+      - squirrelly
+      - supports-color
+      - swig
+      - swig-templates
+      - teacup
+      - templayed
+      - then-jade
+      - then-pug
+      - tinyliquid
+      - toffee
+      - twig
+      - twing
+      - underscore
+      - utf-8-validate
+      - vash
+      - velocityjs
+      - walrus
+      - whiskers
+
+  testem@3.12.0(handlebars@4.7.8)(lodash@4.17.21)(underscore@1.13.6):
+    dependencies:
+      '@xmldom/xmldom': 0.8.10
+      backbone: 1.6.0
+      bluebird: 3.7.2
+      charm: 1.0.2
+      commander: 2.20.3
+      compression: 1.7.4
+      consolidate: 0.16.0(handlebars@4.7.8)(lodash@4.17.21)(mustache@4.2.0)(underscore@1.13.6)
+      execa: 1.0.0
+      express: 4.19.2
+      fireworm: 0.7.2
+      glob: 7.2.3
+      http-proxy: 1.18.1
+      js-yaml: 3.14.1
+      lodash.assignin: 4.2.0
+      lodash.castarray: 4.4.0
+      lodash.clonedeep: 4.5.0
+      lodash.find: 4.6.0
+      lodash.uniqby: 4.7.0
+      mkdirp: 3.0.1
       mustache: 4.2.0
       node-notifier: 10.0.1
       npmlog: 6.0.2
