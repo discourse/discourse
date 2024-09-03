@@ -1,5 +1,5 @@
+import Component from "@ember/component";
 import { alias, match } from "@ember/object/computed";
-import Mixin from "@ember/object/mixin";
 import { next, schedule, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -23,27 +23,28 @@ export function resetCardClickListenerSelector() {
   _cardClickListenerSelectors = [DEFAULT_SELECTOR];
 }
 
-export default Mixin.create({
-  appEvents: service(),
-  currentUser: service(),
-  menu: service(),
-  router: service(),
-  site: service(),
-  siteSettings: service(),
+export default class CardContentsBase extends Component {
+  @service appEvents;
+  @service currentUser;
+  @service menu;
+  @service router;
+  @service site;
+  @service siteSettings;
 
-  elementId: null, //click detection added for data-{elementId}
-  _showCallback: null, //username - load up data for when show is called
+  elementId = null; //click detection added for data-{elementId}
 
-  visible: false,
-  username: null,
-  loading: null,
-  cardTarget: null,
-  post: null,
-  isDocked: false,
-  _menuInstance: null,
+  visible = false;
+  username = null;
+  loading = null;
+  cardTarget = null;
+  post = null;
+  isDocked = false;
 
-  postStream: alias("topic.postStream"),
-  viewingTopic: match("router.currentRouteName", /^topic\./),
+  @alias("topic.postStream") postStream;
+  @match("router.currentRouteName", /^topic\./) viewingTopic;
+
+  _showCallback = null; //username - load up data for when show is called
+  _menuInstance = null;
 
   _show(username, target, event) {
     // No user card for anon
@@ -100,10 +101,10 @@ export default Mixin.create({
     }
 
     return false;
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     document.addEventListener("mousedown", this._clickOutsideHandler);
     document.addEventListener("keyup", this._escListener);
@@ -127,7 +128,7 @@ export default Mixin.create({
     );
 
     this.appEvents.on("card:close", this, "_close");
-  },
+  }
 
   @bind
   _cardClickHandler(event) {
@@ -147,7 +148,7 @@ export default Mixin.create({
     this._showCardOnClick(event, this.mentionSelector, (el) =>
       el.innerText.replace(/^@/, "")
     );
-  },
+  }
 
   _showCardOnClick(event, selector, transformText) {
     const matchingEl = event.target.closest(selector);
@@ -169,29 +170,29 @@ export default Mixin.create({
     }
 
     return false;
-  },
+  }
 
   _topicHeaderTrigger(username, target, event) {
     this.set("isDocked", true);
     return this._show(username, target, event);
-  },
+  }
 
   @bind
   _onScroll() {
     throttle(this, this._close, 1000);
-  },
+  }
 
   _bindMobileScroll() {
     window.addEventListener(MOBILE_SCROLL_EVENT, this._onScroll);
-  },
+  }
 
   _unbindMobileScroll() {
     window.removeEventListener(MOBILE_SCROLL_EVENT, this._onScroll);
-  },
+  }
 
   _previewClick(target, event) {
     return this._show(target.innerText.replace(/^@/, ""), target, event);
-  },
+  }
 
   _positionCard(target, event) {
     schedule("afterRender", async () => {
@@ -234,7 +235,7 @@ export default Mixin.create({
         }, 350);
       }
     });
-  },
+  }
 
   @bind
   _hide() {
@@ -243,7 +244,7 @@ export default Mixin.create({
     }
 
     this._menuInstance?.destroy();
-  },
+  }
 
   _close() {
     this.setProperties({
@@ -262,10 +263,10 @@ export default Mixin.create({
 
     this._hide();
     this.appEvents.trigger("card:hide");
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     document.removeEventListener("mousedown", this._clickOutsideHandler);
     document.removeEventListener("keyup", this._escListener);
@@ -290,7 +291,7 @@ export default Mixin.create({
 
     this.appEvents.off("card:close", this, "_close");
     this._hide();
-  },
+  }
 
   @bind
   _clickOutsideHandler(event) {
@@ -306,7 +307,7 @@ export default Mixin.create({
     }
 
     this._close();
-  },
+  }
 
   @bind
   _escListener(event) {
@@ -314,5 +315,5 @@ export default Mixin.create({
       this.cardTarget?.focus();
       this._close();
     }
-  },
-});
+  }
+}
