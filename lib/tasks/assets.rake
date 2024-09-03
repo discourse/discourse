@@ -12,7 +12,7 @@ task "assets:precompile:build" do
 
     raise "Unknown ember version '#{ember_version}'" if !%w[5].include?(ember_version)
 
-    compile_command = "CI=1 pnpm --dir=app/assets/javascripts/discourse run ember build"
+    compile_command = "CI=1 pnpm --dir=app/assets/javascripts/discourse ember build"
 
     heap_size_limit = check_node_heap_size_limit
 
