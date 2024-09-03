@@ -574,8 +574,8 @@ importers:
         specifier: ^5.31.6
         version: 5.31.6
       testem:
-        specifier: 3.12.0
-        version: 3.12.0(handlebars@4.7.8)(lodash@4.17.21)(underscore@1.13.6)
+        specifier: 3.13.0
+        version: 3.13.0(handlebars@4.7.8)(lodash@4.17.21)(underscore@1.13.6)
       truth-helpers:
         specifier: workspace:1.0.0
         version: link:../truth-helpers
@@ -7835,8 +7835,8 @@ packages:
     engines: {node: '>= 7.*'}
     hasBin: true
 
-  testem@3.12.0:
-    resolution: {integrity: sha512-N4eSSZaBwWQNX2TmaXbEgsz7qs5Q/GWtq2B4j5rkcYt7OfwB6pWDyC1rmYn8HNth+rV9ekRCAqWw4skId1gg6w==}
+  testem@3.13.0:
+    resolution: {integrity: sha512-b4hdlkH2TR1TQJCOgBNbD7nz4TjeYF35MgUlzum3yfDaaR+lJDjmJNMgi72MKgg+SjkGZ1U3BCBOqLC85MsMmQ==}
     engines: {node: '>= 7.*'}
     hasBin: true
 
@@ -17020,7 +17020,7 @@ snapshots:
       - walrus
       - whiskers
 
-  testem@3.12.0(handlebars@4.7.8)(lodash@4.17.21)(underscore@1.13.6):
+  testem@3.13.0(handlebars@4.7.8)(lodash@4.17.21)(underscore@1.13.6):
     dependencies:
       '@xmldom/xmldom': 0.8.10
       backbone: 1.6.0
