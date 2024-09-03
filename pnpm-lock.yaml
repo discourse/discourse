@@ -119,7 +119,7 @@ importers:
         specifier: ^23.2.1
         version: 23.2.1
       squoosh:
-        specifier: discourse/squoosh#dc9649d
+        specifier: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
         version: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
       terser:
         specifier: ^5.31.6
