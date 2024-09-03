@@ -1802,7 +1802,7 @@ RSpec.describe SessionController do
                },
                xhr: true,
                headers: headers
-          expect(response.status).to eq(204)
+          expect(response.status).to eq(200)
           # the frontend will take care of actually redirecting the user
           redirect_url = response.cookies["sso_destination_url"]
           expect(redirect_url).to start_with("http://somewhere.over.rainbow/sso?sso=")
@@ -3251,6 +3251,43 @@ RSpec.describe SessionController do
           expect(response.parsed_body["error"]).not_to be_present
 
           expect(session[:current_user_id]).to eq(user.id)
+        end
+
+        context "with a valid discourse connect provider" do
+          before do
+            sso = DiscourseConnectBase.new
+            sso.nonce = "mynonce"
+            sso.sso_secret = "topsecret"
+            sso.return_sso_url = "http://somewhere.over.rainbow/sso"
+            cookies[:sso_payload] = sso.payload
+
+            provider_uid = 12_345
+            UserAssociatedAccount.create!(
+              provider_name: "google_oauth2",
+              provider_uid: provider_uid,
+              user: user,
+            )
+
+            SiteSetting.enable_discourse_connect_provider = true
+            SiteSetting.discourse_connect_secret = sso.sso_secret
+            SiteSetting.discourse_connect_provider_secrets =
+              "somewhere.over.rainbow|#{sso.sso_secret}"
+          end
+
+          it "logs the user in" do
+            simulate_localhost_passkey_challenge
+            user.activate
+            user.create_or_fetch_secure_identifier
+            post "/session/passkey/auth.json",
+                 params: {
+                   publicKeyCredential:
+                     valid_passkey_auth_data.merge(
+                       { userHandle: Base64.strict_encode64(user.secure_identifier) },
+                     ),
+                 }
+            expect(response.status).to eq(302)
+            expect(response.location).to start_with("http://somewhere.over.rainbow/sso")
+          end
         end
       end
     end
