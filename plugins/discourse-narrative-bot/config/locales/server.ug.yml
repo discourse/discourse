@@ -46,6 +46,28 @@ ug:
         "15": "دىققىتىڭىزنى يىغىپ قايتا سوراڭ"
         "16": "ئۇنىڭدىن ئۈمىد كۈتمەڭ"
         "17": "جاۋابىم ياق"
+        "18": "مەنبەلىرىم ياق دەيدۇ"
+        "19": "قارىماققا ئانچە ياخشى ئەمەس"
+        "20": "بەك گۇمانلىق"
+      result: |-
+        > :crystal_ball: %{result}
+    track_selector:
+      reset_trigger: "باشلا"
+      skip_trigger: "ئاتلا"
+      help_trigger: "ياردەمنى كۆرسەت"
+      random_mention:
+        reply: |-
+          ھەي! نېمە قىلالايدىغانلىقىمنى بىلمەكچى بولسىڭىز، «@%{discobot_username} %{help_trigger}» دەڭ.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: ئۇنىڭغا ئىشەنسىڭىز بولىدۇ
+        discobot_disabled: سىز مايىللىقتىن مېنى چەكلەپسىز. سىز يېڭى ئىشلەتكۈچى باشلاش كۆرسەتمىسىگە يول قويسىڭىز ئاندىن مەن بىلەن تەسىرلىشەلەيسىز.
     new_user_narrative:
       reset_trigger: "دەرسلىك"
       hello:
