@@ -579,7 +579,7 @@ RSpec.describe TopicCreator do
             ActiveRecord::Rollback,
             I18n.t(
               "activerecord.errors.models.topic.attributes.base.too_large_group",
-              count: SiteSetting.group_pm_user_limit,
+              limit: SiteSetting.group_pm_user_limit,
               group_name: group.name,
             ),
           )
