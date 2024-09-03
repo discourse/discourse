@@ -2,7 +2,7 @@
 
 class Chat::Api::ChannelThreadsController < Chat::ApiController
   def index
-    with_service(::Chat::LookupChannelThreads) do
+    ::Chat::LookupChannelThreads.call do
       on_success do
         render_serialized(
           ::Chat::ThreadsView.new(
@@ -30,7 +30,7 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
   end
 
   def show
-    with_service(::Chat::LookupThread) do
+    ::Chat::LookupThread.call do
       on_success do
         render_serialized(
           result.thread,
@@ -53,7 +53,7 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
   end
 
   def update
-    with_service(::Chat::UpdateThread) do
+    ::Chat::UpdateThread.call do
       on_failed_policy(:threading_enabled_for_channel) { raise Discourse::NotFound }
       on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
       on_failed_policy(:can_edit_thread) { raise Discourse::InvalidAccess }
@@ -70,7 +70,7 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
   end
 
   def create
-    with_service(::Chat::CreateThread) do
+    ::Chat::CreateThread.call do
       on_success do
         render_serialized(
           result.thread,

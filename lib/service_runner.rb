@@ -2,11 +2,11 @@
 #
 # = ServiceRunner
 #
-# This class is to be used via its helper +with_service+ in any class. Its
-# main purpose is to ease how actions can be run upon a service completion.
-# Since a service will likely return the same kind of things over and over,
-# this allows us to not have to repeat the same boilerplate code in every
-# object.
+# This class is automatically used when passing a block to the `.call` method
+# of a service. Its main purpose is to ease how actions can be run upon a
+# service completion. Since a service will likely return the same kind of
+# things over and over, this allows us to not have to repeat the same
+# boilerplate code in every object.
 #
 # There are several available actions and we can add new ones very easily:
 #
@@ -29,7 +29,7 @@
 #
 # @example In a controller
 #   def create
-#     with_service MyService do
+#     MyService.call do
 #       on_success do
 #         flash[:notice] = "Success!"
 #         redirect_to a_path
@@ -39,19 +39,18 @@
 #     end
 #   end
 #
-# @example In a job (inheriting from +ServiceJob+)
-#   def execute(args = {})
-#     with_service(MyService, **args) do
+# @example In a job
+#   def execute(*)
+#     MyService.call(*) do
 #       on_success { Rails.logger.info "SUCCESS" }
 #       on_failure { Rails.logger.error "FAILURE" }
 #     end
 #   end
 #
 # The actions will be evaluated in the order they appear. So even if the
-# service will ultimately fail with a failed policy, in this example only the
-# +on_failed_policy+ action will be executed and not the +on_failure+ one.
-# The only exception to this being +on_failure+ as it will always be executed
-# last.
+# service ultimately fails with a failed policy, in this example only the
+# +on_failed_policy+ action will be executed and not the +on_failure+ one. The
+# only exception to this being +on_failure+ as it will always be executed last.
 #
 
 class ServiceRunner
@@ -101,7 +100,7 @@ class ServiceRunner
   delegate :result, to: :object
 
   # @!visibility private
-  def initialize(service, object, **dependencies)
+  def initialize(service, object, dependencies)
     @service = service
     @object = object
     @dependencies = dependencies
@@ -109,16 +108,17 @@ class ServiceRunner
   end
 
   # @param service [Class] a class including {Service::Base}
+  # @param dependencies [Hash] dependencies to be provided to the service
   # @param block [Proc] a block containing the steps to match on
   # @return [void]
-  def self.call(service, object, **dependencies, &block)
-    new(service, object, **dependencies).call(&block)
+  def self.call(service, dependencies = {}, &block)
+    new(service, block.binding.eval("self"), dependencies).call(&block)
   end
 
   # @!visibility private
   def call(&block)
     instance_eval(&block)
-    object.run_service(service, dependencies)
+    setup_and_run_service
     # Always have `on_failure` as the last action
     (
       actions
@@ -132,8 +132,20 @@ class ServiceRunner
 
   attr_reader :actions
 
+  def setup_and_run_service
+    runner = self
+    params = object.try(:params) || ActionController::Parameters.new
+    object.instance_eval do
+      def result = @_result
+      @_result =
+        runner.service.call(
+          params.to_unsafe_h.merge(guardian: try(:guardian), **runner.dependencies),
+        )
+    end
+  end
+
   def failure_for?(key)
-    object.result[key]&.failure?
+    result[key]&.failure?
   end
 
   def add_action(name, *args, &block)
