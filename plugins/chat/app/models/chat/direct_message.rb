@@ -36,7 +36,7 @@ module Chat
       users =
         (direct_message_users.map(&:user) - [acting_user])
           .map { |user| user || Chat::NullUser.new }
-          .reject { |u| u.id < 0 }
+          .reject { |u| u.id && u.id < 0 }
 
       # direct message to self
       if users.empty?
