@@ -117,8 +117,8 @@ docker run -d \
 echo "Installing gems..."
 "${SCRIPTPATH}/bundle" install
 
-echo "Yarn install..."
-"${SCRIPTPATH}/exec" yarn install --cwd app/assets/javascripts/discourse
+echo "pnpm install..."
+"${SCRIPTPATH}/exec" pnpm install
 
 if [ "${initialize}" = "initialize" ]; then
     echo "Migrating database..."

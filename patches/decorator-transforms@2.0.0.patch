@@ -1,7 +1,7 @@
-diff --git a/node_modules/decorator-transforms/dist/index.js b/node_modules/decorator-transforms/dist/index.js
+diff --git a/dist/index.js b/dist/index.js
 index fce3aeb..c23d8e4 100644
---- a/node_modules/decorator-transforms/dist/index.js
-+++ b/node_modules/decorator-transforms/dist/index.js
+--- a/dist/index.js
++++ b/dist/index.js
 @@ -4,10 +4,13 @@ import {
  import "./chunk-CSAU5B4Q.js";
  

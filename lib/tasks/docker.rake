@@ -147,7 +147,7 @@ task "docker:test" do
   def run_or_fail_prettier(*patterns)
     if patterns.any? { |p| Dir[p].any? }
       patterns = patterns.map { |p| "'#{p}'" }.join(" ")
-      run_or_fail("yarn pprettier --list-different #{patterns}")
+      run_or_fail("pnpm pprettier --list-different #{patterns}")
     else
       puts "Skipping prettier. Pattern not found."
       true
@@ -156,12 +156,12 @@ task "docker:test" do
 
   begin
     @good = true
-    @good &&= run_or_fail("yarn install")
+    @good &&= run_or_fail("pnpm install")
 
     unless ENV["SKIP_LINT"]
       puts "Running linters/prettyfiers"
-      puts "eslint #{`yarn eslint -v`}"
-      puts "prettier #{`yarn prettier -v`}"
+      puts "eslint #{`pnpm eslint -v`}"
+      puts "prettier #{`pnpm prettier -v`}"
 
       if ENV["SINGLE_PLUGIN"]
         @good &&= run_or_fail("bundle exec rubocop --parallel plugins/#{ENV["SINGLE_PLUGIN"]}")
@@ -171,7 +171,7 @@ task "docker:test" do
           )
         @good &&=
           run_or_fail(
-            "yarn eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern plugins/#{ENV["SINGLE_PLUGIN"]}",
+            "pnpm eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern plugins/#{ENV["SINGLE_PLUGIN"]}",
           )
 
         puts "Listing prettier offenses in #{ENV["SINGLE_PLUGIN"]}:"
@@ -183,10 +183,10 @@ task "docker:test" do
       else
         @good &&= run_or_fail("bundle exec rake plugin:update_all") unless ENV["SKIP_PLUGINS"]
         @good &&= run_or_fail("bundle exec rubocop --parallel") unless ENV["SKIP_CORE"]
-        @good &&= run_or_fail("yarn eslint app/assets/javascripts") unless ENV["SKIP_CORE"]
+        @good &&= run_or_fail("pnpm eslint app/assets/javascripts") unless ENV["SKIP_CORE"]
         @good &&=
           run_or_fail(
-            "yarn eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern plugins",
+            "pnpm eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern plugins",
           ) unless ENV["SKIP_PLUGINS"]
 
         @good &&=
@@ -202,7 +202,7 @@ task "docker:test" do
           puts "Listing prettier offenses in core:"
           @good &&=
             run_or_fail(
-              'yarn pprettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.js"',
+              'pnpm pprettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.js"',
             )
         end
 
@@ -210,7 +210,7 @@ task "docker:test" do
           puts "Listing prettier offenses in plugins:"
           @good &&=
             run_or_fail(
-              'yarn pprettier --list-different "plugins/**/assets/stylesheets/**/*.scss" "plugins/**/assets/javascripts/**/*.{js,es6}"',
+              'pnpm pprettier --list-different "plugins/**/assets/stylesheets/**/*.scss" "plugins/**/assets/javascripts/**/*.{js,es6}"',
             )
         end
       end
@@ -304,7 +304,7 @@ task "docker:test" do
         unless ENV["SKIP_CORE"]
           @good &&=
             run_or_fail(
-              "cd app/assets/javascripts/discourse && CI=1 yarn ember exam --load-balance --parallel=#{qunit_concurrency} --random",
+              "cd app/assets/javascripts/discourse && CI=1 pnpm ember exam --load-balance --parallel=#{qunit_concurrency} --random",
             )
         end
 
