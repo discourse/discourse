@@ -468,7 +468,7 @@ class Group < ActiveRecord::Base
   end
 
   def set_message_default_notification_levels!(topic, ignore_existing: false)
-    if user_count >= SiteSetting.group_pm_user_limit
+    if user_count > SiteSetting.group_pm_user_limit
       raise GroupPmUserLimitExceededError,
             I18n.t(
               "groups.errors.default_notification_level_users_limit",
