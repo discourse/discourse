@@ -82,13 +82,7 @@ export default class ChatComposerChannel extends ChatComposer {
   #messageRecipients(channel) {
     if (channel.isDirectMessageChannel) {
       if (channel.chatable.group) {
-        if (!channel.name) {
-          return I18n.t("chat.placeholder_group");
-        }
-
-        return I18n.t("chat.placeholder_channel", {
-          channelName: `#${channel.title}`,
-        });
+        return I18n.t("chat.placeholder_group");
       } else {
         const directMessageRecipients = channel.chatable.users;
         if (
