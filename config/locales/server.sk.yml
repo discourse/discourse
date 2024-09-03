@@ -674,6 +674,16 @@ sk:
       trust_level_2: "stupen_dovery_2"
       trust_level_3: "stupen_dovery_3"
       trust_level_4: "stupen_dovery_4"
+    default_descriptions:
+      everyone: "Automatická skupina vrátane všetkých členov"
+      staff: "Automatická skupina vrátane administrátorov a moderátorov"
+      admins: "Zodpovednosť za konfiguráciu a údržbu tejto stránky s prístupom ku všetkým údajom o členoch a aktivitách"
+      moderators: "Zodpovedá za odpovede na príznaky, moderovanie diskusií a pomoc členom s ich účtami."
+      trust_level_0: "Noví členovia s obmedzenými schopnosťami, ktorí sa učia normám a funkčnosti komunity"
+      trust_level_1: "Členovia s väčšou dôverou, ktorí preukázali počiatočnú angažovanosť čítaním rukou, majú teraz prístup k viacerým funkciám. Všetci členovia tejto skupiny sú zároveň členmi skupiny trust_level_0."
+      trust_level_2: "Aktívni členovia, ktorí sústavne prispievali nadčasmi a získali plné občianske práva. Všetci členovia tejto skupiny sú zároveň členmi skupín trust_level_1 a trust_level_0."
+      trust_level_3: "Vysoko angažovaní, dlhodobí prispievatelia, ktorí tvoria základ komunity a získali obmedzené moderátorské práva. Všetci členovia tejto skupiny sú zároveň členmi skupín trust_level_2, trust_level_1 a trust_level_0."
+      trust_level_4: "Ručne povýšení členovia, ktorí boli ocenení svojimi príkladnými príspevkami a ktorým boli zverené ďalšie moderátorské práva. Všetci členovia tejto skupiny sú zároveň členmi skupín trust_level_3, trust_level_2, trust_level_1 a trust_level_0."
     request_membership_pm:
       title: "Žiadosť o členstvo pre @%{group_name}"
     request_accepted_pm:
@@ -2549,6 +2559,7 @@ sk:
     experimental_topics_filter: "EXPERIMENTÁLNE: Povolí trasu filtrovania experimentálnych tém na /filter"
     enable_experimental_lightbox: "EXPERIMENTÁLNE: Nahraďte predvolený lightbox s obrázkami prepracovaným dizajnom."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTÁLNE: Zobrazenie ponuky rýchleho prístupu k záložkám na príspevkoch a nového prepracovaného modálneho okna"
+    experimental_redesigned_about_page_groups: "EXPERIMENTÁLNE: Povoľte prepracovanú stránku /o konkrétnych skupinách."
     glimmer_header_mode: "Kontrolujte, či sa použije nová implementácia hlavičky „glimmer“. „auto“ sa aktivuje automaticky, keď sú pripravené všetky vaše témy a pluginy. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "EXPERIMENTÁLNE: Povoľte novú implementáciu zoznamu tém \"glimmer\". Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     experimental_form_templates: "EXPERIMENTÁLNE: Povoľte funkciu šablón formulárov. <b>Po povolení</b> spravujte šablóny na <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
