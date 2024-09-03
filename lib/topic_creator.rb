@@ -114,7 +114,12 @@ class TopicCreator
       begin
         group.set_message_default_notification_levels!(topic)
       rescue Group::GroupPmUserLimitExceededError => e
-        rollback_with!(topic, :too_large_group, group_name: group.name)
+        rollback_with!(
+          topic,
+          :too_large_group,
+          group_name: group.name,
+          limit: SiteSetting.group_pm_user_limit,
+        )
       end
     end
   end

@@ -612,7 +612,9 @@ en:
         one: "%{count} user has been added to the group."
         other: "%{count} users have been added to the group."
     errors:
-      default_notification_level_users_limit: "Default notification level can't be set on groups larger than %{count} users. Incorrect group: %{group_name}"
+      default_notification_level_users_limit:
+        one: "Default notification level can't be set on groups larger than %{count} user. Incorrect group: %{group_name}"
+        other: "Default notification level can't be set on groups larger than %{count} users. Incorrect group: %{group_name}"
       grant_trust_level_not_valid: "'%{trust_level}' is not a valid trust level."
       can_not_modify_automatic: "You cannot modify an automatic group"
       member_already_exist:
@@ -755,7 +757,7 @@ en:
               reply_by_email_disabled: "Reply by email has been disabled."
               send_to_email_disabled: "Sorry, you cannot send personal messages to email."
               target_user_not_found: "One of the users you are sending this message to could not be found."
-              too_large_group: "The group: %{group_name}, has too many users to receive a message."
+              too_large_group: "The group: %{group_name}, has too many users to receive a message. Limit is %{limit}."
               unable_to_update: "There was an error updating that topic."
               unable_to_tag: "There was an error tagging the topic."
               unable_to_unlist: "Sorry, you cannot create an unlisted topic."
