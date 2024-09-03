@@ -539,9 +539,13 @@ class TopicView
           posts_user_ids = Set.new(@posts.map(&:user_id))
           Set.new(
             GroupUser
-              .joins(group: :category_moderation_groups)
-              .where(category_moderation_groups: { category_id: @topic.category.id })
-              .where(user_id: posts_user_ids)
+              .joins(
+                "INNER JOIN category_moderation_groups ON category_moderation_groups.group_id = group_users.group_id",
+              )
+              .where(
+                "category_moderation_groups.category_id": @topic.category.id,
+                user_id: posts_user_ids,
+              )
               .distinct
               .pluck(:user_id),
           )

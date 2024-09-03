@@ -689,9 +689,9 @@ class Guardian
   end
 
   def category_group_moderator_scope
-    Category.joins(category_moderation_groups: { group: :group_users }).where(
-      "group_users.user_id = ?",
-      user.id,
-    )
+    Category
+      .joins(:category_moderation_groups)
+      .joins("INNER JOIN group_users ON group_users.group_id = category_moderation_groups.group_id")
+      .where("group_users.user_id": user.id)
   end
 end

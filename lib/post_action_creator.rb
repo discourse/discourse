@@ -368,7 +368,7 @@ class PostActionCreator
         create_args[:target_group_names].push(
           *Group
             .joins(:category_moderation_groups)
-            .where(category_moderation_groups: { category_id: @post.topic.category.id })
+            .where("category_moderation_groups.category_id": @post.topic.category.id)
             .pluck(:name),
         )
       end

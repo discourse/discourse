@@ -171,15 +171,13 @@ module UserGuardian
       (
         SiteSetting.enable_category_group_moderation &&
           Reviewable
-            .joins(category: :category_moderation_groups)
-            .where(
-              categories: {
-                category_moderation_groups: {
-                  group_id: @user.group_users.pluck(:group_id),
-                },
-              },
+            .joins(
+              "INNER JOIN category_moderation_groups ON category_moderation_groups.category_id = reviewables.category_id",
             )
-            .where(category_id: allowed_category_ids)
+            .where(
+              category_id: allowed_category_ids,
+              "category_moderation_groups.group_id": @user.group_users.pluck(:group_id),
+            )
             .exists?
       )
   end

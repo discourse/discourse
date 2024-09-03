@@ -340,8 +340,11 @@ class ReviewableFlaggedPost < Reviewable
     if SiteSetting.enable_category_group_moderation? && topic.category
       user_ids.concat(
         GroupUser
-          .joins(group: :category_moderation_groups)
-          .where(group: { category_moderation_groups: { category_id: topic.category.id } })
+          .joins(
+            "INNER JOIN category_moderation_groups ON category_moderation_groups.group_id = group_users.group_id",
+          )
+          .where("category_moderation_groups.category_id": topic.category.id)
+          .distinct
           .pluck(:user_id),
       )
       user_ids.uniq!
