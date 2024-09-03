@@ -88,7 +88,7 @@ bundle install
 Install the JS dependencies
 
 ```
-yarn install
+pnpm install
 ```
 
 Now that you have successfully installed gems, run these commands:

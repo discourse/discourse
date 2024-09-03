@@ -28,7 +28,7 @@ This script will install following new packages on your system:
 * [Redis][redis_link]
 * [Bundler][bundler_link]
 * Node
-* [Yarn][yarn_link]
+* [pnpm][pnpm_link]
 * [MailHog][mh]
 
 *In case you have any of this package pre-installed and don't want to run entire script, see the [script][mac_script] and pick the packages you don't have currently installed. The script is fine-tuned for Discourse, and includes all the packages required for Discourse installation.*
@@ -61,7 +61,7 @@ Install the needed gems
 
 Install the JS dependencies
 
-    yarn install
+    pnpm install
 
 Next, run these commands to set up your local Discourse instance:
 
@@ -124,7 +124,7 @@ Happy hacking! And to get started with that, see [Beginner’s Guide to Creating
   [phantom_link]: http://phantomjs.org/
   [redis_link]: http://redis.io/
   [bundler_link]: http://bundler.io/
-  [yarn_link]: https://yarnpkg.com/
+  [pnpm_link]: https://pnpm.io/
   [docker_guide]: https://meta.discourse.org/t/beginners-guide-to-deploy-discourse-on-digital-ocean-using-docker/12156
   [short_name]: http://forums.macrumors.com/showthread.php?t=898855
   [mh]: https://github.com/mailhog/MailHog

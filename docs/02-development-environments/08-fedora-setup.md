@@ -15,7 +15,7 @@ sudo dnf install -y "@development-tools" git rpm-build zlib-devel ruby-devel rea
 ```
 **Install required npm packages**
 ```
-sudo npm install -g svgo yarn
+sudo npm install -g svgo pnpm
 ```
 **Install and setup postgres**
 ```
@@ -59,7 +59,7 @@ cd ~/discourse
 **Install Discourse dependencies**
 ```
 bundle install
-yarn install
+pnpm install
 ```
 **Create the required databases and load the schema**
 ```

@@ -45,7 +45,7 @@ http://localhost:4200?flag=after
 If the change is too large for that, then you could clone Discourse into a second directory and launch a **second copy of ember-cli**. It can be proxied to the same Rails server using a command like
 
 ```bash
-EMBER_ENV=production bin/yarn-app ember serve --port 4201 --proxy http://localhost:3000
+EMBER_ENV=production pnpm ember serve --port 4201 --proxy http://localhost:3000
 ```
 
 And then your two URLs would be 

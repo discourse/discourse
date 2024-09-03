@@ -20,7 +20,7 @@ In general, when working on core tests you should enable "Skip Plugins", and whe
 ## Running tests on the CLI
 
 ### Core
-Navigate to the root of the Ember application (`app/assets/javascripts/discourse`) in the Discourse repository and make sure you have run `yarn install` since you last pulled in upstream changes.
+Navigate to the root of the Ember application (`app/assets/javascripts/discourse`) in the Discourse repository and make sure you have run `pnpm install` since you last pulled in upstream changes.
 
 From there, you can use standard Ember-CLI tooling to run the tests - check out the ["How to Run Tests" section of the Ember Guides](https://guides.emberjs.com/release/testing/#toc_how-to-run-tests). We also have [Ember Exam](https://ember-cli.github.io/ember-exam/) installed which provides some very useful randomization and parallelisation flags.
 
@@ -28,13 +28,13 @@ From there, you can use standard Ember-CLI tooling to run the tests - check out 
 Here are some useful examples:
 ```bash
 # Run entire core test suite across 5 'headless' instances of Chrome in parallel:
-yarn ember exam --parallel 5 --load-balance
+pnpm ember exam --parallel 5 --load-balance
 
 # Run all tests which contain a certain string in their module/test name:
-yarn ember exam --filter "Integration | Component | bookmark"
+pnpm ember exam --filter "Integration | Component | bookmark"
 
 # Run in "server" mode, which gives you a URL to load in a browser for easier debugging:
-yarn ember exam --filter "somefilter" --server
+pnpm ember exam --filter "somefilter" --server
 ```
 
 ### Plugins
