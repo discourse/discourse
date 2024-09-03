@@ -43,7 +43,6 @@ export default class CardContentsBase extends Component {
   @alias("topic.postStream") postStream;
   @match("router.currentRouteName", /^topic\./) viewingTopic;
 
-  _showCallback = null; //username - load up data for when show is called
   _menuInstance = null;
 
   _show(username, target, event) {
