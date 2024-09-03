@@ -230,13 +230,11 @@ export default class AboutPage extends Component {
             <AboutPageUsers @users={{@model.admins}} @truncateAt={{6}} />
           </section>
         {{/if}}
-        <span>
-          <PluginOutlet
-            @name="about-after-admins"
-            @connectorTagName="section"
-            @outletArgs={{hash model=@model}}
-          />
-        </span>
+        <PluginOutlet
+          @name="about-after-admins"
+          @connectorTagName="section"
+          @outletArgs={{hash model=@model}}
+        />
 
         {{#if @model.moderators.length}}
           <section class="about__moderators">
@@ -244,13 +242,11 @@ export default class AboutPage extends Component {
             <AboutPageUsers @users={{@model.moderators}} @truncateAt={{6}} />
           </section>
         {{/if}}
-        <span>
-          <PluginOutlet
-            @name="about-after-moderators"
-            @connectorTagName="section"
-            @outletArgs={{hash model=@model}}
-          />
-        </span>
+        <PluginOutlet
+          @name="about-after-moderators"
+          @connectorTagName="section"
+          @outletArgs={{hash model=@model}}
+        />
       </div>
 
       <div class="about__right-side">
