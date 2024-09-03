@@ -34,7 +34,9 @@ module Chat
       return chat_channel.name if group && chat_channel.name.present?
 
       users =
-        (direct_message_users.map(&:user) - [acting_user]).map { |user| user || Chat::NullUser.new }
+        (direct_message_users.map(&:user) - [acting_user])
+          .map { |user| user || Chat::NullUser.new }
+          .reject { |u| u.id < 0 }
 
       # direct message to self
       if users.empty?
@@ -45,13 +47,13 @@ module Chat
       return chat_channel.id if !users.first
 
       usernames_formatted = users.sort_by(&:username).map { |u| "@#{u.username}" }
-      if usernames_formatted.size > 5
+      if usernames_formatted.size > 7
         return(
           I18n.t(
             "chat.channel.dm_title.multi_user_truncated",
             comma_separated_usernames:
-              usernames_formatted[0..4].join(I18n.t("word_connector.comma")),
-            count: usernames_formatted.length - 5,
+              usernames_formatted[0..5].join(I18n.t("word_connector.comma")),
+            count: usernames_formatted.length - 6,
           )
         )
       end
