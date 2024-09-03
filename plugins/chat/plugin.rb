@@ -443,6 +443,9 @@ after_initialize do
     put "/admin/plugins/chat/hooks/:incoming_chat_webhook_id" =>
           "chat/admin/incoming_webhooks#update",
         :constraints => StaffConstraint.new
+    get "/admin/plugins/chat/hooks/:incoming_chat_webhook_id" =>
+          "chat/admin/incoming_webhooks#show",
+        :constraints => StaffConstraint.new
     delete "/admin/plugins/chat/hooks/:incoming_chat_webhook_id" =>
              "chat/admin/incoming_webhooks#destroy",
            :constraints => StaffConstraint.new

@@ -16,6 +16,16 @@ module Chat
         )
       end
 
+      def show
+        webhook =
+          Chat::IncomingWebhook.includes(:chat_channel).find(params[:incoming_chat_webhook_id])
+        render_serialized(
+          { chat_channels: Chat::Channel.public_channels, webhook: webhook },
+          Chat::AdminChatWebhookShowSerializer,
+          root: false,
+        )
+      end
+
       def create
         params.require(%i[name chat_channel_id])
 
