@@ -26,7 +26,5 @@ end
 #
 # Indexes
 #
-#  idx_user_passwords_on_user_id_and_expired_at_and_hash  (user_id,password_expired_at,password_hash)
-#  index_user_passwords_on_user_id                        (user_id) UNIQUE
-#  index_user_passwords_on_user_id_and_password_hash      (user_id,password_hash) UNIQUE
+#  index_user_passwords_on_user_id  (user_id) UNIQUE
 #
