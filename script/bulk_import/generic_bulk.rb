@@ -39,75 +39,98 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def execute
-    enable_required_plugins
-    import_site_settings
+    if false
+      enable_required_plugins
+      import_site_settings
 
-    import_uploads
+      import_uploads
 
-    # needs to happen before users, because keeping group names is more important than usernames
-    import_groups
+      # needs to happen before users, because keeping group names is more important than usernames
+      import_groups
 
-    import_users
-    import_user_emails
-    import_user_profiles
-    import_user_options
-    import_user_fields
-    import_user_field_values
-    import_single_sign_on_records
-    import_user_associated_accounts
-    import_muted_users
-    import_user_histories
-    import_user_notes
-    import_user_note_counts
-    import_user_followers
+      import_users
+      import_user_emails
+      import_user_profiles
+      import_user_options
+      import_user_fields
+      import_user_field_values
+      import_single_sign_on_records
+      import_user_associated_accounts
+      import_muted_users
+      import_user_histories
+      import_user_notes
+      import_user_note_counts
+      import_user_followers
 
-    import_user_avatars
-    update_uploaded_avatar_id
+      import_user_avatars
+      update_uploaded_avatar_id
 
-    import_group_members
+      import_group_members
 
-    import_tag_groups
-    import_tags
-    import_tag_users
+      import_tag_groups
+      import_tags
+      import_tag_users
 
-    import_categories
-    import_category_custom_fields
-    import_category_tag_groups
-    import_category_permissions
-    import_category_users
+      import_categories
+      import_category_custom_fields
+      import_category_tag_groups
+      import_category_permissions
+      import_category_users
 
-    import_topics
-    import_posts
-    import_post_custom_fields
+      import_topics
+      import_posts
+      import_post_custom_fields
 
-    import_polls
-    import_poll_options
-    import_poll_votes
+      import_polls
+      import_poll_options
+      import_poll_votes
 
-    import_topic_tags
-    import_topic_allowed_users
-    import_topic_allowed_groups
+      import_topic_tags
+      import_topic_allowed_users
+      import_topic_allowed_groups
 
-    import_likes
-    import_votes
-    import_answers
-    import_gamification_scores
-    import_post_events
+      import_likes
+      import_votes
+      import_answers
+      import_gamification_scores
+      import_post_events
 
-    import_badge_groupings
-    import_badges
-    import_user_badges
+      import_badge_groupings
+      import_badges
+      import_user_badges
 
-    import_upload_references
-    import_optimized_images
+      import_upload_references
+      import_optimized_images
 
-    import_topic_users
-    update_topic_users
+      import_topic_users
+      update_topic_users
 
-    import_user_stats
+      import_user_stats
 
-    import_permalink_normalizations
-    import_permalinks
+      import_permalink_normalizations
+      import_permalinks
+    end
+
+    # TODO: Test data. Remove
+    @categories[140] = 4
+    @users[100] = 1 # selase
+    @users[101] = 47 # foster
+    @users[102] = 23 # vance
+    @users[103] = 19 # cristopher.yundt
+
+    import_chat_direct_messages
+    import_chat_channels
+    import_user_chat_channel_memberships
+
+    import_chat_threads
+    import_chat_thread_users
+
+    import_chat_messages
+
+    import_chat_reactions
+    import_chat_mentions
+
+    update_chat_threads
   end
 
   def execute_after
@@ -2357,6 +2380,381 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     rows.close
+  end
+
+  def import_chat_direct_messages
+    unless defined?(::Chat)
+      puts "", "Skipping chat direct messages, because the chat plugin is not installed."
+      return
+    end
+
+    puts "", "Importing chat direct messages..."
+
+    direct_messages = query(<<~SQL)
+      SELECT *
+        FROM chat_channels
+      WHERE chatable_type = 'DirectMessage'
+        ORDER BY id
+    SQL
+
+    create_chat_direct_message(direct_messages) do |row|
+      next if chat_direct_message_channel_id_from_original_id(row["chatable_id"]).present?
+
+      {
+        original_id: row["chatable_id"],
+        created_at: to_datetime(row["created_at"]),
+        group: to_boolean(row["is_group"]),
+      }
+    end
+
+    direct_messages.close
+  end
+
+  def import_chat_channels
+    unless defined?(::Chat)
+      puts "", "Skipping chat channels, because the chat plugin is not installed."
+      return
+    end
+
+    puts "", "Importing chat channels..."
+
+    channels = query(<<~SQL)
+      SELECT *
+        FROM chat_channels
+       ORDER BY id
+    SQL
+
+    create_chat_channels(channels) do |row|
+      next if chat_channel_id_from_original_id(row["id"]).present?
+
+      case row["chatable_type"]
+      when "Category"
+        type = "CategoryChannel"
+        chatable_id = category_id_from_imported_id(row["chatable_id"])
+      when "DirectMessage"
+        chatable_id = chat_direct_message_channel_id_from_original_id(row["chatable_id"])
+        type = "DirectMessageChannel"
+      end
+
+      next if !chatable_id
+      # TODO: Add more uniqueness checks
+      #       Ensure no channel with same name and category exists?
+
+      {
+        original_id: row["id"],
+        name: row["name"],
+        description: row["description"],
+        slug: row["slug"],
+        status: row["status"],
+        chatable_id: chatable_id,
+        chatable_type: row["chatable_type"],
+        user_count: row["user_count"],
+        messages_count: row["messages_count"],
+        type: type,
+        created_at: to_datetime(row["created_at"]),
+        allow_channel_wide_mentions: to_boolean(row["allow_channel_wide_mentions"]),
+        auto_join_users: to_boolean(row["auto_join_users"]),
+        threading_enabled: to_boolean(row["threading_enabled"]),
+      }
+    end
+
+    channels.close
+  end
+
+  def import_user_chat_channel_memberships
+    unless defined?(::Chat)
+      puts "", "Skipping user chat channel memberships, because the chat plugin is not installed."
+      return
+    end
+
+    puts "", "Importing user chat channel memberships..."
+
+    channel_users = query(<<~SQL)
+      SELECT chat_channels.chatable_type, chat_channels.chatable_id, chat_channel_users.*
+        FROM chat_channel_users
+             JOIN chat_channels ON chat_channels.id = chat_channel_users.chat_channel_id
+       ORDER BY chat_channel_users.chat_channel_id
+    SQL
+
+    # TODO: Can we somehow do this via migration mappings???
+    existing_members =
+      Chat::UserChatChannelMembership.distinct.pluck(:user_id, :chat_channel_id).to_set
+
+    create_user_chat_channel_memberships(channel_users) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      channel_id = chat_channel_id_from_original_id(row["chat_channel_id"])
+
+      next if user_id.blank? || channel_id.blank?
+      next if existing_members.include?([user_id, channel_id])
+
+      {
+        user_id: user_id,
+        chat_channel_id: channel_id,
+        created_at: to_datetime(row["created_at"]),
+        following: to_boolean(row["following"]),
+        muted: to_boolean(row["muted"]),
+        desktop_notification_level: row["desktop_notification_level"],
+        mobile_notification_level: row["mobile_notification_level"],
+        last_read_message_id: row["last_read_message_id"],
+        join_mode: row["join_mode"],
+        last_viewed_at: to_datetime(row["last_viewed_at"]),
+      }
+    end
+
+    puts "", "Importing chat direct message users..."
+
+    channel_users.reset
+    existing_direct_message_users =
+      Chat::DirectMessageUser.distinct.pluck(:direct_message_channel_id, :user_id).to_set
+
+    create_direct_message_users(channel_users) do |row|
+      next if row["chatable_type"] != "DirectMessage"
+
+      user_id = user_id_from_imported_id(row["user_id"])
+      direct_message_channel_id =
+        chat_direct_message_channel_id_from_original_id(row["chatable_id"])
+
+      next if user_id.blank? || direct_message_channel_id.blank?
+      next if existing_direct_message_users.include?([direct_message_channel_id, user_id])
+
+      {
+        direct_message_channel_id: direct_message_channel_id,
+        user_id: user_id,
+        created_at: to_datetime(row["created_at"]),
+      }
+    end
+
+    channel_users.close
+  end
+
+  def import_chat_threads
+    unless defined?(::Chat)
+      puts "", "Skipping chat threads, because the chat plugin is not installed."
+      return
+    end
+
+    puts "", "Importing chat threads..."
+
+    threads = query(<<~SQL)
+      SELECT *
+      FROM chat_threads
+      ORDER BY chat_channel_id, id
+    SQL
+
+    create_chat_threads(threads) do |row|
+      channel_id = chat_channel_id_from_original_id(row["chat_channel_id"])
+      original_message_user_id = user_id_from_imported_id(row["original_message_user_id"])
+
+      next if channel_id.blank? || original_message_user_id.blank?
+
+      # Messages aren't imported yet. Use a placeholder original_message_id for now
+      # Actual original_message_ids will be set in later step after messages have been imported
+      placeholder_original_message_id = -1
+
+      {
+        original_id: row["id"],
+        channel_id: channel_id,
+        original_message_id: placeholder_original_message_id,
+        original_message_user_id: original_message_user_id,
+        status: row["status"],
+        title: row["title"],
+        created_at: to_datetime(row["created_at"]),
+        replies_count: row["replies_count"],
+      }
+    end
+
+    threads.close
+  end
+
+  def import_chat_thread_users
+    unless defined?(::Chat)
+      puts "", "Skipping chat thread users, because the chat plugin is not installed."
+      return
+    end
+
+    thread_users = query(<<~SQL)
+      SELECT *
+      FROM chat_thread_users
+      ORDER BY chat_thread_id, user_id
+    SQL
+
+    puts "", "Importing chat thread users..."
+
+    existing_members = Chat::UserChatThreadMembership.distinct.pluck(:user_id, :thread_id).to_set
+
+    create_thread_users(thread_users) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      thread_id = chat_thread_id_from_original_id(row["chat_thread_id"])
+
+      next if user_id.blank? || thread_id.blank?
+      next if existing_members.include?([user_id, thread_id])
+
+      {
+        user_id: user_id,
+        thread_id: thread_id,
+        notification_level: row["notification_level"],
+        created_at: to_datetime(row["created_at"]),
+      }
+    end
+
+    thread_users.close
+  end
+
+  def import_chat_messages
+    unless defined?(::Chat)
+      puts "", "Skipping chat messages, because the chat plugin is not installed."
+      return
+    end
+
+    puts "", "Importing chat messages..."
+
+    messages = query(<<~SQL)
+      SELECT *
+      FROM chat_messages
+      ORDER BY chat_channel_id, created_at, id
+    SQL
+
+    create_chat_messages(messages) do |row|
+      channel_id = chat_channel_id_from_original_id(row["chat_channel_id"])
+      user_id = user_id_from_imported_id(row["user_id"])
+
+      next if channel_id.blank? || user_id.blank?
+
+      last_editor_id = user_id_from_imported_id(row["last_editor_id"])
+      thread_id = chat_thread_id_from_original_id(row["thread_id"])
+      deleted_by_id = user_id_from_imported_id(row["deleted_by_id"])
+      in_reply_to_id = chat_message_id_from_original_id(row["in_reply_to_id"]) # TODO: this will only work if serial ids are used
+
+      {
+        original_id: row["id"],
+        chat_channel_id: channel_id,
+        user_id: user_id,
+        thread_id: thread_id,
+        last_editor_id: last_editor_id,
+        created_at: to_datetime(row["created_at"]),
+        deleted_at: to_datetime(row["deleted_at"]),
+        deleted_by_id: deleted_by_id,
+        in_reply_to_id: in_reply_to_id,
+        message: row["message"],
+      }
+    end
+
+    messages.close
+  end
+
+  def import_chat_reactions
+    unless defined?(::Chat)
+      puts "", "Skipping chat message reactions, because the chat plugin is not installed."
+      return
+    end
+
+    puts "", "Importing chat message reactions..."
+
+    reactions = query(<<~SQL)
+      SELECT *
+      FROM chat_reactions
+      ORDER BY chat_message_id
+    SQL
+
+    existing_reactions = Chat::MessageReaction.distinct.pluck(:chat_message_id, :user_id).to_set
+
+    create_chat_message_reactions(reactions) do |row|
+      next if row["emoji"].blank?
+
+      message_id = chat_message_id_from_original_id(row["chat_message_id"])
+      user_id = user_id_from_imported_id(row["user_id"])
+
+      next if message_id.blank? || user_id.blank?
+      next if existing_reactions.include?([message_id, user_id])
+
+      # TODO: Validate emoji
+
+      {
+        chat_message_id: message_id,
+        user_id: user_id,
+        emoji: row["emoji"],
+        created_at: to_datetime(row["created_at"]),
+      }
+    end
+
+    reactions.close
+  end
+
+  def import_chat_mentions
+    unless defined?(::Chat)
+      puts "", "Skipping chat mentions, because the chat plugin is not installed."
+      return
+    end
+
+    puts "", "Importing chat mentions..."
+
+    mentions = query(<<~SQL)
+      SELECT *
+      FROM chat_mentions
+      ORDER BY chat_message_id
+    SQL
+
+    create_chat_mentions(mentions) do |row|
+      chat_message_id = chat_message_id_from_original_id(row["chat_message_id"])
+      target_id =
+        case row["type"]
+        when "Chat::AllMention", "Chat::HereMention"
+          nil
+        when "Chat::UserMention"
+          user_id_from_imported_id(row["target_id"])
+        when "Chat::GroupMention"
+          group_id_from_imported_id(row["target_id"])
+        end
+
+      next if target_id.nil? && %w[Chat::AllMention Chat::HereMention].exclude?(row["type"])
+
+      {
+        chat_message_id: chat_message_id,
+        target_id: target_id,
+        type: row["type"],
+        created_at: to_datetime(row["created_at"]),
+      }
+    end
+
+    mentions.close
+  end
+
+  def update_chat_threads
+    unless defined?(::Chat)
+      puts "", "Skipping chat thread updates, because the chat plugin is not installed."
+      return
+    end
+
+    puts "", "Updating chat threads..."
+
+    start_time = Time.now
+
+    DB.exec(<<~SQL)
+      WITH thread_info AS (
+        SELECT
+          thread_id,
+          MIN(id) AS original_message_id,
+          COUNT(id) - 1 AS replies_count,
+          MAX(id) AS last_message_id
+        FROM
+          chat_messages
+        WHERE
+          thread_id IS NOT NULL
+        GROUP BY
+          thread_id
+      )
+      UPDATE chat_threads
+      SET
+        original_message_id = thread_info.original_message_id,
+        replies_count = thread_info.replies_count,
+        last_message_id = thread_info.last_message_id
+      FROM
+        thread_info
+      WHERE
+        chat_threads.id = thread_info.thread_id;
+    SQL
+
+    puts "  Update took #{(Time.now - start_time).to_i} seconds."
   end
 
   def calculate_external_url(row)
