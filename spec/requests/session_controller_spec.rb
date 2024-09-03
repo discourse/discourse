@@ -1802,7 +1802,7 @@ RSpec.describe SessionController do
                },
                xhr: true,
                headers: headers
-          expect(response.status).to eq(204)
+          expect(response.status).to eq(200)
           # the frontend will take care of actually redirecting the user
           redirect_url = response.cookies["sso_destination_url"]
           expect(redirect_url).to start_with("http://somewhere.over.rainbow/sso?sso=")
