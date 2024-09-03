@@ -205,7 +205,7 @@ export default class AboutPage extends Component {
       <PluginOutlet
         @name="about-after-description"
         @connectorTagName="section"
-        @outletArgs={{hash model=this.model}}
+        @outletArgs={{hash model=@model}}
       />
     </section>
     <div class="about__main-content">
@@ -230,6 +230,13 @@ export default class AboutPage extends Component {
             <AboutPageUsers @users={{@model.admins}} @truncateAt={{6}} />
           </section>
         {{/if}}
+        <span>
+          <PluginOutlet
+            @name="about-after-admins"
+            @connectorTagName="section"
+            @outletArgs={{hash model=@model}}
+          />
+        </span>
 
         {{#if @model.moderators.length}}
           <section class="about__moderators">
@@ -237,7 +244,15 @@ export default class AboutPage extends Component {
             <AboutPageUsers @users={{@model.moderators}} @truncateAt={{6}} />
           </section>
         {{/if}}
+        <span>
+          <PluginOutlet
+            @name="about-after-moderators"
+            @connectorTagName="section"
+            @outletArgs={{hash model=@model}}
+          />
+        </span>
       </div>
+
       <div class="about__right-side">
         <h3>{{i18n "about.contact"}}</h3>
         {{#if this.contactInfo}}
