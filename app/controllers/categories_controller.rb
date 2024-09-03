@@ -157,7 +157,6 @@ class CategoriesController < ApplicationController
   def create
     guardian.ensure_can_create!(Category)
     position = category_params.delete(:position)
-    moderating_group_ids = category_params.delete(:reviewable_by_group_ids).presence
 
     @category =
       begin
@@ -165,8 +164,6 @@ class CategoriesController < ApplicationController
       rescue ArgumentError => e
         return render json: { errors: [e.message] }, status: 422
       end
-
-    @category.add_moderated_by_groups(moderating_group_ids) if moderating_group_ids
 
     if @category.save
       @category.move_to(position.to_i) if position
@@ -208,10 +205,6 @@ class CategoriesController < ApplicationController
 
       old_permissions = cat.permissions_params
       old_permissions = { "everyone" => 1 } if old_permissions.empty?
-
-      if new_group_ids = category_params.delete(:reviewable_by_group_ids).presence
-        @category.update_moderated_by_groups(new_group_ids)
-      end
 
       if result = cat.update(category_params)
         Scheduler::Defer.later "Log staff action change category settings" do
@@ -587,7 +580,7 @@ class CategoriesController < ApplicationController
 
         conditional_param_keys = []
         if SiteSetting.enable_category_group_moderation?
-          conditional_param_keys << { reviewable_by_group_ids: [] }
+          conditional_param_keys << { moderating_group_ids: [] }
         end
 
         result =

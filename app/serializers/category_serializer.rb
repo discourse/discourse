@@ -26,12 +26,12 @@ class CategorySerializer < SiteCategorySerializer
              :custom_fields,
              :topic_featured_link_allowed,
              :search_priority,
-             :reviewable_by_group_ids,
+             :moderating_group_ids,
              :default_slow_mode_seconds
 
   has_one :category_setting, serializer: CategorySettingSerializer, embed: :objects
 
-  def include_reviewable_by_group_ids?
+  def include_moderating_group_ids?
     SiteSetting.enable_category_group_moderation?
   end
 

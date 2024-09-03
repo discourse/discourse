@@ -10,13 +10,13 @@ RSpec.describe CategorySerializer do
   it "includes the reviewable by group name if enabled" do
     SiteSetting.enable_category_group_moderation = true
     json = described_class.new(category, scope: Guardian.new, root: false).as_json
-    expect(json[:reviewable_by_group_ids]).to eq([group.id])
+    expect(json[:moderating_group_ids]).to eq([group.id])
   end
 
   it "doesn't include the reviewable by group name if disabled" do
     SiteSetting.enable_category_group_moderation = false
     json = described_class.new(category, scope: Guardian.new, root: false).as_json
-    expect(json[:reviewable_by_group_ids]).to be_blank
+    expect(json[:moderating_group_ids]).to be_blank
   end
 
   it "includes custom fields" do

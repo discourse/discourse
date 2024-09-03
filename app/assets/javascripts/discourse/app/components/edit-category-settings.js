@@ -144,6 +144,6 @@ export default class EditCategorySettings extends buildCategoryPanel(
 
   @action
   onCategoryModeratingGroupsChange(groupIds) {
-    this.set("category.reviewable_by_group_ids", groupIds);
+    this.set("category.moderating_group_ids", groupIds);
   }
 }

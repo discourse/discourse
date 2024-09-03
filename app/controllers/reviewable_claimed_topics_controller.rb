@@ -37,7 +37,7 @@ class ReviewableClaimedTopicsController < ApplicationController
     group_ids = Set.new([Group::AUTO_GROUPS[:staff]])
 
     if SiteSetting.enable_category_group_moderation? && topic.category
-      group_ids.merge(topic.category.reviewable_by_group_ids)
+      group_ids.merge(topic.category.moderating_group_ids)
     end
 
     if claimed_by.present?
