@@ -113,7 +113,7 @@ export default class ComposerVideoThumbnailUppy extends EmberObject.extend(
             });
 
             if (this.siteSettings.enable_upload_debug_mode) {
-              this._instrumentUploadTimings();
+              this._uppyDebug.instrumentUploadTimings(this._uppyInstance);
             }
 
             if (this.siteSettings.enable_direct_s3_uploads) {

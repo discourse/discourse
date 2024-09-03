@@ -285,7 +285,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
     });
 
     if (this.siteSettings.enable_upload_debug_mode) {
-      this._instrumentUploadTimings();
+      this._uppyDebug.instrumentUploadTimings(this._uppyInstance);
     }
 
     // TODO (martin) preventDirectS3Uploads is necessary because some of

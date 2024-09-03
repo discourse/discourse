@@ -1,5 +1,6 @@
 import Mixin from "@ember/object/mixin";
-import UploadDebugging from "discourse/mixins/upload-debugging";
+import { getOwner } from "@ember/owner";
+import UppyUploadDebugging from "discourse/lib/uppy/upload-debugging";
 
 /**
  * Use this mixin with any component that needs to upload files or images
@@ -40,7 +41,12 @@ import UploadDebugging from "discourse/mixins/upload-debugging";
  *
  * See ComposerUploadUppy for an example of a component using this mixin.
  */
-export default Mixin.create(UploadDebugging, {
+export default Mixin.create({
+  init() {
+    this._uppyDebug = new UppyUploadDebugging(getOwner(this));
+    this._super();
+  },
+
   _useUploadPlugin(pluginClass, opts = {}) {
     if (!this._uppyInstance) {
       return;
@@ -82,7 +88,7 @@ export default Mixin.create(UploadDebugging, {
   // See: https://uppy.io/docs/writing-plugins/#Progress-events
   _onPreProcessProgress(callback) {
     this._uppyInstance.on("preprocess-progress", (file, progress, pluginId) => {
-      this._consoleDebug(
+      this._uppyDebug.log(
         `[${pluginId}] processing file ${file.name} (${file.id})`
       );
 
@@ -94,7 +100,7 @@ export default Mixin.create(UploadDebugging, {
 
   _onPreProcessComplete(callback, allCompleteCallback = null) {
     this._uppyInstance.on("preprocess-complete", (file, skipped, pluginId) => {
-      this._consoleDebug(
+      this._uppyDebug.log(
         `[${pluginId}] ${skipped ? "skipped" : "completed"} processing file ${
           file.name
         } (${file.id})`
@@ -104,7 +110,7 @@ export default Mixin.create(UploadDebugging, {
 
       this._completePreProcessing(pluginId, (allComplete) => {
         if (allComplete) {
-          this._consoleDebug("[uppy] All upload preprocessors complete!");
+          this._uppyDebug.log("[uppy] All upload preprocessors complete!");
           if (allCompleteCallback) {
             allCompleteCallback();
           }
