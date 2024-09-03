@@ -261,7 +261,6 @@ lv:
       like_count: "Atzinības"
       topic_count: "Tēmas"
       post_count: "Ieraksti"
-      contact_info: "Ar šo vietni saistītu kritisku problēmu gadījumā lūdzu sazinieties ar mums %{contact_info}."
       activities:
         topics:
           zero: "%{formatted_number} tēmas"
@@ -1528,6 +1527,10 @@ lv:
       title: "Reģistrēties"
       failed: "Notika neparedzēta kļūda; varbūt šis e-pasts ir jau reģistrēts, pamēģiniet izmantot \"aizmirsu paroli\""
       associate: "Jau ir konts? <a href='%{associate_link}'>Piesakieties</a> lai saistītu savu %{provider} kontu."
+      progress_bar:
+        signup: "Reģistrēties"
+        approve: "Apstiprināt"
+        login: "Ienākt"
     forgot_password:
       title: "Paroles atjaunošana"
       action: "Es aizmirsu savu paroli "
@@ -3045,6 +3048,7 @@ lv:
           enabled: "Ieslēgts?"
           edit: "Rediģēt"
           delete: "Dzēst"
+          flags_tab: "Sūdzības"
           form:
             save: "Saglabāt"
             name: "Vārds"
@@ -3054,7 +3058,6 @@ lv:
             post: "raksti"
       plugins:
         title: "Spraudņi"
-        installed: "Uzinstalētie spraudņi"
         name: "Nosaukums"
         none_installed: "Jums nav instalētu spraudņu."
         version: "Versij"
@@ -3081,7 +3084,7 @@ lv:
         menu:
           backups: "Rezerves kopijas"
           logs: "Žurnāls"
-        none: "Nav pieejamas rezerves kopijas."
+        none: "Nav pieejamas rezerves kopijas"
         read_only:
           enable:
             title: "Ieslēgt tikai lasīšanas režīmu"
@@ -3111,12 +3114,11 @@ lv:
           download:
             label: "Lejuplādēt"
             title: "Nosūtīt e-pastu ar lejuplādes saiti"
-            alert: "Saite, kas ļauj lejuplādēt šo rezerves kopiju, ir nosūtīta uz jūsu e-pastu."
+            alert: "Saite, kas ļauj lejuplādēt šo rezerves kopiju, ir nosūtīta uz jūsu e-pastu"
           destroy:
             title: "Izdzēst rezerves kopiju"
             confirm: "Vai jūs esat drošs, ka vēlaties iznīcināt šo rezerves kopiju?"
           restore:
-            is_disabled: "Atjaunošana ir izslēgta vietnes iestatījumos."
             label: "Atjaunot"
             title: "Atjaunot no rezerves kopijas"
             confirm: "Vai jūs esat drošs, ka vēlaties atjaunot no rezerves kopijas?"

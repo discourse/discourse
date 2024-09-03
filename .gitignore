@@ -61,13 +61,16 @@
 .ruby-gemset
 .tool-versions
 
-# Likewise, there is a .vscode-sample for VSCode config
-.vscode
+# Likewise, there are sample files for VSCode config
+/.vscode/*
+!/.vscode/extensions.json
+!/.vscode/*.sample
 
 # Front-end
 dist
 node_modules
 yarn-error.log
+.pnpm-store
 
 # Linting artifacts
 .eslintcache

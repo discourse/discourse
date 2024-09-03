@@ -2,13 +2,13 @@ import EmberObject from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default EmberObject.extend({
-  showDefault: null,
+export default class TopicStatus extends EmberObject {
+  showDefault = null;
 
   @discourseComputed("defaultIcon")
   renderDiv(defaultIcon) {
     return (defaultIcon || this.statuses.length > 0) && !this.noDiv;
-  },
+  }
 
   @discourseComputed
   statuses() {
@@ -95,5 +95,5 @@ export default EmberObject.extend({
       this.set("showDefault", defaultIcon);
     }
     return results;
-  },
-});
+  }
+}

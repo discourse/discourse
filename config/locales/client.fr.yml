@@ -159,6 +159,8 @@ fr:
       removed_user: "A retiré %{who} (%{when})"
       removed_group: "A retiré %{who} (%{when})"
       autobumped: "Remonté automatiquement dans la liste (%{when})"
+      tags_changed: "Étiquettes mises à jour %{when}"
+      category_changed: "Catégorie mise à jour %{when}"
       autoclosed:
         enabled: "A fermé ce sujet (%{when})"
         disabled: "A ouvert ce sujet (%{when})"
@@ -199,6 +201,7 @@ fr:
     broken_decorator_alert: "Les publications risquent de ne pas s'afficher correctement, car l'un des décorateurs de contenu de publication de votre site a généré une erreur."
     broken_page_change_alert: "Un gestionnaire onPageChange a généré une erreur. Consultez les outils de développement du navigateur pour obtenir plus d'informations."
     broken_plugin_alert: "Causé par l'extension « %{name}»"
+    broken_transformer_alert: "Une erreur s'est produite. Votre site risque de ne pas fonctionner correctement."
     critical_deprecation:
       notice: "<b>[Avis d'administration]</b> L'un de vos thèmes ou l'une de vos extensions doit être mise à jour pour assurer la compatibilité avec les prochaines modifications principales de Discourse."
       id: "(id :<em>%{id}</em>)"
@@ -310,18 +313,37 @@ fr:
       post_count: "Nombre de messages"
       user_count: "Inscriptions"
       active_user_count: "Utilisateurs actifs"
+      visitor_count: "Visiteurs"
+      eu_visitor_count: "Visiteurs de l'Union européenne"
       contact: "Nous contacter"
-      contact_info: "En cas de problème critique ou de sujet urgent concernant ce site, veuillez nous contacter à : %{contact_info}."
+      contact_info: "En cas de problème critique ou de sujet urgent concernant ce site, veuillez contacter %{contact_info}."
+      site_activity: "Activité du site"
+      view_more: "Voir plus"
+      view_less: "Voir moins"
       activities:
         topics:
           one: "%{formatted_number} sujet"
-          other: "Sujets %{formatted_number}"
+          other: "%{formatted_number} sujets"
         posts:
           one: "%{formatted_number} message"
           other: "%{formatted_number} messages"
+        active_users:
+          one: "%{formatted_number} utilisateur actif"
+          other: "%{formatted_number} utilisateurs actifs"
+        sign_ups:
+          one: "%{formatted_number} inscription"
+          other: "%{formatted_number} inscriptions"
         likes:
           one: "%{formatted_number} « j'aime »"
           other: "%{formatted_number} « j'aime »"
+        visitors_MF: |
+          { total_count, plural,
+              one {{total_formatted_number} visiteur}
+            other {{total_formatted_number} visiteurs}
+          }, environ { eu_count, plural,
+              one {{eu_formatted_number}}
+            other {{eu_formatted_number}}
+          } de l'UE
         periods:
           last_7_days: "au cours des 7 derniers jours"
           today: "aujourd'hui"
@@ -336,6 +358,14 @@ fr:
         one: "%{formatted_number} modérateur"
         other: "%{formatted_number} modérateurs"
       report_inappropriate_content: "Si vous tombez sur du contenu inapproprié, n'hésitez pas à engager une conversation avec nos modérateurs et administrateurs. N'oubliez pas de vous connecter avant de nous contacter."
+      site_age:
+        less_than_one_month: "Créé il y a moins d'un mois"
+        month:
+          one: "Créé il y a %{count} mois"
+          other: "Créé il y a %{count} mois"
+        year:
+          one: "Créé il y a %{count} an"
+          other: "Créé il y a %{count} ans"
     bookmarked:
       title: "Mettre un signet"
       edit_bookmark: "Modifier le signet"
@@ -713,6 +743,7 @@ fr:
       never: "Jamais"
       last_custom: "Date et heure personnalisées précédentes"
       custom: "Date et heure personnalisées"
+      more_options: "Plus d'options…"
       select_timeframe: "Sélectionner un intervalle de temps"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> a démarré <a href='%{topicUrl}'>le sujet</a>"
@@ -1355,6 +1386,62 @@ fr:
         warnings: "Avertissements officiels"
         read_more_in_group: "Vous voulez en savoir plus ? Parcourez les autres messages dans %{groupLink}."
         read_more: "Vous voulez en savoir plus ? Parcourez les autres messages dans les <a href='%{basePath}/u/%{username}/messages'>messages personnels</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Il y a <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># message non lu</a>}
+                other {Il y a <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># messages non lus</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { et <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nouveau</a> message restant, ou parcourez les autres messages dans {groupLink}}
+                other { et <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nouveaux</a> messages restants, ou parcourez les autres messages dans {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Il y a <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># message non lu</a>, ou parcourez les autres messages dans {groupLink}}
+                other {Il y a <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># messages non lus</a>, ou parcourez les autres messages dans {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Il y a <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nouveau message</a>, ou parcourez les autres messages dans {groupLink}}
+                other {Il y a <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nouveaux messages</a>, ou parcourez les autres messages dans {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Il y a <a href="{basePath}/u/{username}/messages/unread"># message non lu</a>}
+                other {Il y a <a href="{basePath}/u/{username}/messages/unread"># messages non lus</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { et <a href="{basePath}/u/{username}/messages/new"># nouveau message</a> restant, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages personnels</a>}
+                other { et <a href="{basePath}/u/{username}/messages/new"># nouveaux messages</a> restants, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages personnels</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Il y a <a href="{basePath}/u/{username}/messages/unread"># message non lu</a> restant, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages personnels</a>}
+                other {Il y a <a href="{basePath}/u/{username}/messages/unread"># messages non lus</a> restants, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages personnels</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Il y a <a href="{basePath}/u/{username}/messages/new"># nouveau message</a> restant, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages personnels</a>}
+                other {Il y a <a href="{basePath}/u/{username}/messages/new"># nouveaux messages</a> restants, ou parcourez les autres <a href="{basePath}/u/{username}/messages">messages personnels</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Compte"
         security: "Sécurité"
@@ -1562,7 +1649,7 @@ fr:
       activate_account:
         action: "Cliquez ici pour activer votre compte"
         already_done: "Nous sommes désolés, ce lien de confirmation n'est plus valide. Votre compte est peut-être déjà activé ?"
-        please_continue: "Votre nouveau compte est confirmé ; vous allez être redirigé(e) vers la page d'accueil."
+        please_continue: "Votre nouveau compte est confirmé. Vous allez être redirigé(e) vers la page d'accueil."
         continue_button: "Continuer vers %{site_name}"
         welcome_to: "Bienvenue sur %{site_name} !"
         approval_required: "Un modérateur doit approuver manuellement votre nouveau compte avant que vous puissiez accéder au forum. Vous recevrez un e-mail lorsque que votre compte sera approuvé !"
@@ -1951,7 +2038,41 @@ fr:
       logout_disabled: "La déconnexion est désactivée quand le site est en lecture seule."
     staff_writes_only_mode:
       enabled: "Ce site est en mode réservé aux responsables. Vous pouvez continuer à naviguer, mais les réponses, les j'aime et les autres actions sont limitées aux responsables uniquement."
+    logs_error_rate_notice:
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# erreur/heure}
+          other {# erreurs/heure}
+        }</a> a atteint la limite fixée du site de {limit, plural,
+            one {# erreur/heure}
+          other {# erreurs/heure}
+        }.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# erreur/minute}
+          other {# erreurs/minute}
+        }</a> a atteint la limite fixée du site de {limit, plural,
+            one {# erreur/minute}
+          other {# erreurs/minute}
+        }.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# erreur/heure}
+          other {# erreurs/heure}
+        }</a> a dépassé la limite fixée du site de { limit, plural,
+            one {# erreur/heure}
+          other {# erreurs/heure}
+        }.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# erreur/minute}
+          other {# erreurs/minute}
+        }</a> a dépassé la limite fixée du site de {limit, plural,
+            one {# erreur/minute}
+          other {# erreurs/minute}
+        }.
     learn_more: "En savoir plus…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>En savoir plus…</a>"
     mute: Mettre en sourdine
     unmute: Rétablir
     last_post: Dernier message
@@ -1989,7 +2110,7 @@ fr:
       buttons:
         hide: "Masquer le résumé"
         generate: "Résumer"
-        regenerate: "Régénérer"
+        regenerate: "Générer à nouveau"
       description_time_MF: |
         Il y a {replyCount, plural, one {<b>#</b> réponse} other {<b>#</b> réponses}} avec un temps de lecture estimé à <b>{readingTime, plural, one {# minute} other {# minutes}}</b>.
       enable: "Afficher les meilleures réponses"
@@ -2030,6 +2151,10 @@ fr:
       associate: "Vous avez déjà un compte ? <a href='%{associate_link}'>Connectez-vous</a> pour lier votre compte %{provider}."
       activation_title: "Activez votre compte"
       already_have_account: "Vous avez déjà un compte ?"
+      progress_bar:
+        signup: "S'inscrire"
+        approve: "Approuver"
+        login: "Se connecter"
     forgot_password:
       title: "Réinitialisation du mot de passe"
       action: "J'ai oublié mon mot de passe"
@@ -2226,6 +2351,7 @@ fr:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} est supérieur au maximum autorisé %{max_file_size}"
+        size_too_small: "%{provided_file_size} est inférieur au minimum autorisé de %{min_file_size}"
     emoji_picker:
       filter_placeholder: Rechercher un émoji
       smileys_&_emotion: Frimousses et émotions
@@ -3715,6 +3841,7 @@ fr:
         none: "aucune sous-catégorie"
       colors_disabled: "Vous ne pouvez pas sélectionner de couleurs, car vous n'avez pas choisi de style de catégorie."
     flagging:
+      title: "Merci d'avoir fait preuve de civisme dans notre communauté !"
       action: "Signaler ce message"
       take_action: "Intervenir…"
       take_action_options:
@@ -3762,6 +3889,7 @@ fr:
           one: "%{count} restant"
           other: "%{count} restants"
     flagging_topic:
+      title: "Merci d'avoir fait preuve de civisme dans notre communauté !"
       action: "Signaler le sujet"
       notify_action: "Message"
     topic_map:
@@ -4226,6 +4354,7 @@ fr:
         everyone_can_use: "Les étiquettes peuvent être utilisées par tout le monde"
         usable_only_by_groups: "Les étiquettes sont visibles par tous, mais seuls les groupes suivants peuvent les utiliser"
         visible_only_to_groups: "Les étiquettes sont uniquement visibles pour les groupes suivants"
+        cannot_save: "Impossible d'enregistrer le groupe d'étiquettes. Assurez-vous qu'au moins une étiquette est présente, que le nom du groupe d'étiquettes n'est pas vide et contient moins de 100 caractères, et qu'un groupe est sélectionné pour l'autorisation des étiquettes."
         tags_placeholder: "Créez ou recherchez des étiquettes"
         parent_tag_placeholder: "Facultatif"
         select_groups_placeholder: "Sélectionnez des groupes…"
@@ -4599,6 +4728,7 @@ fr:
         problems_found: "Quelques conseils d'après vos paramètres actuels"
         new_features:
           title: "Nouveautés"
+          subtitle: "Nous publions de nouvelles fonctionnalités et améliorations en permanence. Cette page présente les grandes lignes, mais vous pouvez cliquer sur « En savoir plus » pour accéder à des notes de mise à jour détaillées."
           previous_announcements: "Vous pouvez voir les annonces précédentes de nouvelles fonctionnalités sur <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "En savoir plus…"
         last_checked: "Dernière vérification"
@@ -5073,6 +5203,7 @@ fr:
           header: "À propos de votre site"
           general_settings: "Paramètres généraux"
           community_name: "Nom de la communauté"
+          community_name_placeholder: "Exemple de communauté"
           community_summary: "Résumé de la communauté"
           community_description: "Description de la communauté"
           banner_image: "Image de bannière"
@@ -5080,9 +5211,11 @@ fr:
             Cela sera utilisé sur votre page À propos. Taille recommandée : 800 x 300 pixels. Types acceptés : JPG, PNG et SVG jusqu'à 10 Mo.
           contact_information: "Informations de contact"
           community_owner: "Propriétaire de la communauté"
+          community_owner_placeholder: "Johnny Smith"
           community_owner_help: |
             Nom du contact principal responsable de ce site. Utilisé pour les notifications critiques et également affiché sur /about. Visible pour les utilisateurs anonymes sur les sites publics.
           contact_email: "Adresse e-mail du contact"
+          contact_email_placeholder: "contact@johnny-smith.com"
           contact_email_help: |
             Adresse e-mail de la personne responsable de ce site. Elle est utilisée pour les notifications critiques et également affichée sur la page /about pour les questions urgentes. Visible par les utilisateurs anonymes sur les sites publics.
           contact_url: "URL de contact"
@@ -5097,14 +5230,17 @@ fr:
             Nom valide d'un groupe qui est invité à participer à tous les messages privés envoyés automatiquement.
           your_organization: "Votre organisation"
           company_name: "Nom de l'entreprise"
+          company_name_placeholder: "Entreprise d'exemple Inc."
           company_name_help: |
             Nom de votre entreprise ou organisation.
           company_name_warning: |
             Si ce champ est laissé vide, aucune condition d'utilisation ni aucun avis de confidentialité ne seront fournis.
           governing_law: "Droit applicable"
+          governing_law_placeholder: "État de New York"
           governing_law_help: |
             Précisez la juridiction qui régit les aspects juridiques du site, y compris les conditions d'utilisation et l'avis de confidentialité. Il s'agit généralement du pays ou de l'État dans lequel la société exploitant le site est enregistrée ou exerce ses activités.
           city_for_disputes: "Ville pour les litiges"
+          city_for_disputes_placeholder: "Ville de New York"
           city_for_disputes_help: |
             Précisez la ville qui sera utilisée comme juridiction pour résoudre tout litige lié à l'utilisation de ce forum. Ces informations sont généralement incluses dans des documents juridiques tels que les conditions d'utilisation du forum.
           optional: "(facultatif)"
@@ -5124,6 +5260,7 @@ fr:
           back: "Retour aux signalements"
           delete: "Supprimer"
           delete_confirm: 'Voulez-vous vraiment supprimer « %{name} » ?'
+          flags_tab: "Indicateurs"
           form:
             add_header: "Ajouter un signalement"
             edit_header: "Modifier le signalement"
@@ -5149,7 +5286,6 @@ fr:
             move_down: "Déplacer vers le bas"
       plugins:
         title: "Extensions"
-        installed: "Extensions installées"
         name: "Nom"
         none_installed: "Vous n'avez aucune extension installée."
         version: "Version"
@@ -5187,10 +5323,13 @@ fr:
         legacy: "Héritage"
       backups:
         title: "Sauvegardes"
+        files_title: "Fichiers de sauvegarde"
+        description: "Les sauvegardes de Discourse incluent la base de données complète du site, qui contient tout ce qui se trouve sur le site : sujets, publications, utilisateurs, groupes, paramètres, thèmes, etc. Selon la manière dont le fichier de sauvegarde est créé, il peut ou non inclure les fichiers envoyés."
         menu:
           backups: "Sauvegardes"
+          backup_files: "Fichiers de sauvegarde"
           logs: "Journaux"
-        none: "Aucune sauvegarde disponible."
+        none: "Aucune sauvegarde disponible"
         read_only:
           enable:
             title: "Activer le mode lecture seule"
@@ -5228,12 +5367,12 @@ fr:
           download:
             label: "Télécharger"
             title: "Envoyer un e-mail avec un lien de téléchargement"
-            alert: "Un lien pour télécharger la sauvegarde vous a été envoyé par e-mail."
+            alert: "Un lien pour télécharger la sauvegarde vous a été envoyé par e-mail"
           destroy:
             title: "Supprimer la sauvegarde"
             confirm: "Voulez-vous vraiment supprimer cette sauvegarde ?"
           restore:
-            is_disabled: "La restauration est désactivée dans les paramètres du site."
+            is_disabled: "La restauration est actuellement désactivée. Pour l'activer, consultez les <a href='%{url}'>paramètres du site</a>."
             label: "Restaurer"
             title: "Restaurer la sauvegarde"
             confirm: "Voulez-vous vraiment restaurer cette sauvegarde ?"
@@ -6541,6 +6680,9 @@ fr:
             one: "Votre fichier CSV a été envoyé et %{count} utilisateur obtiendra bientôt son badge."
             other: "Votre fichier CSV a été envoyé et %{count} utilisateurs obtiendront bientôt leurs badges."
           csv_has_unmatched_users: "Les entrées suivantes se trouvent dans le fichier CSV, mais elles n'ont pas pu être associées à des utilisateurs existants et ne recevront donc pas le badge :"
+          csv_has_unmatched_users_truncated_list:
+            one: "%{count} entrée dans le fichier CSV n'a pas pu être associée à des utilisateurs existants et ne recevra donc pas le badge."
+            other: "%{count} entrées dans le fichier CSV n'ont pas pu être associées à des utilisateurs existants et ne recevront donc pas le badge. En raison du grand nombre d'entrées sans correspondance, seules les 100 premières sont affichées :"
           replace_owners: Retirer le badge des propriétaires précédents
           grant_existing_holders: Accordez des badges supplémentaires aux détenteurs de badges existants
       emoji:

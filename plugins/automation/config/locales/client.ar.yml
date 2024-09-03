@@ -213,6 +213,14 @@ ar:
             valid_trust_levels:
               label: مستويات الثقة الصالحة
               description: سيتم التشغيل فقط إذا تم إنشاء المنشور بواسطة مستخدم في مستويات الثقة هذه، ويتم تعيينه افتراضيًا على أي مستوى ثقة
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: فئات المراقبة
+              description: سيتم تشغيل هذا الإعداد فقط إذا كان الموضوع ضمن إحدى هذه الفئات
+            watching_tags:
+              label: مراقبة الوسوم
+              description: سيتم تشغيل هذا الإعداد فقط إذا كان الموضوع يتضمَّن أيًا من هذه الوسوم
         after_post_cook:
           fields:
             valid_trust_levels:

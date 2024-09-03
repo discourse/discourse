@@ -168,6 +168,9 @@ es:
             first_topic_only:
               label: Solo el primer tema
               description: Se activará solo si el tema es el primer tema que creó un usuario
+            skip_via_email:
+              label: "Omitir por correo electrónico"
+              description: "Omitir el desencadenante si la publicación fue creada por correo electrónico"
           created: Creado
           edited: Editado
         user_updated:
@@ -212,10 +215,10 @@ es:
         topic_tags_changed:
           fields:
             watching_categories:
-              label: Observando categorías
+              label: Observar categorías
               description: Se activará solo si el tema está en una de estas categorías.
             watching_tags:
-              label: Observando etiquetas
+              label: Observar etiquetas
               description: Se activará solo si el tema tiene alguna de estas etiquetas.
         after_post_cook:
           fields:

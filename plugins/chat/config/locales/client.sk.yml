@@ -39,6 +39,12 @@ sk:
       chat_messages_count: "Chat správy"
       chat_channels_count: "Chatové kanály"
       chat_users_count: "Používatelia chatu"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} správa v chate"
+          few: "%{formatted_number} správ v chate"
+          many: "%{formatted_number} správ v chate"
+          other: "%{formatted_number} správy v chate"
     chat:
       text_copied: Text bol skopírovaný do schránky
       link_copied: Odkaz bol skopírovaný do schránky
@@ -136,7 +142,6 @@ sk:
       header_indicator_preference:
         title: "Zobrazenie indikátora aktivity v záhlaví"
         all_new: "Všetky nové správy"
-        dm_and_mentions: "Súkromné správy a zmienky"
         only_mentions: "Iba zmienky"
         never: "Nikdy"
       separate_sidebar_mode:
@@ -666,10 +671,10 @@ sk:
         notifications:
           regular:
             title: "Normálne"
-            description: "Budete upozornení, ak niekto v tomto vlákne uvedie vaše @meno."
           tracking:
             title: "Pozorovať"
-            description: "Počet nových odpovedí na toto vlákno sa zobrazí v zozname vlákien a v kanáli. Budete upozornení, ak niekto v tomto vlákne spomenie vaše @meno."
+          watching:
+            title: "Sledovať"
         participants_other_count:
           one: "+%{count}"
           few: "+%{count}"

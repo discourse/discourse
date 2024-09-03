@@ -1,24 +1,51 @@
-<DBreadcrumbsContainer />
-
-<DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
-<DBreadcrumbsItem
-  @path="/admin/plugins"
-  @label={{i18n "admin.plugins.title"}}
-/>
-
 <div class="admin-plugins-list-container">
+
+  <AdminPageHeader
+    @titleLabel="admin.plugins.installed"
+    @descriptionLabel="admin.plugins.description"
+    @learnMoreUrl="https://www.discourse.org/plugins"
+  >
+    <:breadcrumbs>
+      <DBreadcrumbsItem
+        @path="/admin/plugins"
+        @label={{i18n "admin.plugins.title"}}
+      />
+    </:breadcrumbs>
+    <:tabs>
+      <NavItem @route="adminPlugins.index" @label="admin.plugins.title" />
+      {{#each this.adminRoutes as |route|}}
+        {{#if route.use_new_show_route}}
+          <NavItem
+            @route={{route.full_location}}
+            @label={{route.label}}
+            @routeParam={{route.location}}
+            @class="admin-plugin-tab-nav-item"
+            data-plugin-nav-tab-id={{route.plugin_id}}
+          />
+        {{else}}
+          <NavItem
+            @route={{route.full_location}}
+            @label={{route.label}}
+            @class="admin-plugin-tab-nav-item"
+            data-plugin-nav-tab-id={{route.plugin_id}}
+          />
+        {{/if}}
+      {{/each}}
+    </:tabs>
+  </AdminPageHeader>
+
+  <div class="alert alert-info -top-margin admin-plugins-howto">
+    {{dIcon "info-circle"}}
+    <a href="https://meta.discourse.org/t/install-a-plugin/19157">
+      {{i18n "admin.plugins.howto"}}
+    </a>
+  </div>
+
   {{#if this.model.length}}
-    <h2>{{i18n "admin.plugins.installed"}}</h2>
     <AdminPluginsList @plugins={{this.model}} />
   {{else}}
     <p>{{i18n "admin.plugins.none_installed"}}</p>
   {{/if}}
-
-  <p class="admin-plugins-howto">
-    <a href="https://meta.discourse.org/t/install-a-plugin/19157">
-      {{i18n "admin.plugins.howto"}}
-    </a>
-  </p>
 
   <span>
     <PluginOutlet

@@ -159,6 +159,8 @@ es:
       removed_user: "Eliminó a %{who} %{when}"
       removed_group: "Eliminó a %{who} %{when}"
       autobumped: "Reflotado automáticamente %{when}"
+      tags_changed: "Etiquetas actualizadas %{when}"
+      category_changed: "Categoría actualizada %{when}"
       autoclosed:
         enabled: "Cerrado %{when}"
         disabled: "Abierto %{when}"
@@ -311,29 +313,49 @@ es:
       post_count: "Publicaciones"
       user_count: "Inscripciones"
       active_user_count: "Usuarios activos"
+      visitor_count: "Visitantes"
+      eu_visitor_count: "Visitantes de la Unión Europea"
+      traffic_info_footer_MF: |
+        En los últimos 6 meses, este sitio ha servido contenido a aproximadamente { total_visitors, plural,
+            one {# persona}
+          other {# personas}
+        } cada mes, de las cuales, se estima que { eu_visitors, plural,
+            one {# persona}
+          other {# personas}
+        } eran procedentes de la Unión Europea.
       contact: "Contáctanos"
       contact_info: "En caso de un problema crítico o urgente que esté afectando este sitio, contáctanos a través de %{contact_info}."
       site_activity: "Actividad del sitio"
+      view_more: "Ver más"
+      view_less: "Ver menos"
       activities:
         topics:
           one: "%{formatted_number} tema"
-          other: "%{formatted_number} Temas"
+          other: "%{formatted_number} temas"
         posts:
           one: "%{formatted_number} publicación"
-          other: "%{formatted_number} Publicaciones"
+          other: "%{formatted_number} publicaciones"
         active_users:
-          one: "%{formatted_number} suario activo"
-          other: "%{formatted_number} administrador activo"
+          one: "%{formatted_number} usuario activo"
+          other: "%{formatted_number} usuarios activos"
         sign_ups:
-          one: "%{formatted_number} Registro"
-          other: "%{formatted_number} Acceder"
+          one: "%{formatted_number} registro"
+          other: "%{formatted_number} registros"
         likes:
           one: "%{formatted_number} me gusta"
-          other: "%{formatted_number} Me gusta"
+          other: "%{formatted_number} me gusta"
+        visitors_MF: |
+          { total_count, plural,
+              one {{total_formatted_number} visitante}
+            other {{total_formatted_number} visitanes}
+          }, aproximadamente { eu_count, plural,
+              one {{eu_formatted_number}}
+            other {{eu_formatted_number}}
+          } de la Unión Europea
         periods:
           last_7_days: "en los últimos 7 días"
           today: "hoy"
-          all_time: "todo el tiempo"
+          all_time: "siempre"
       member_count:
         one: "%{formatted_number} Miembro"
         other: "%{formatted_number} Miembros"
@@ -729,7 +751,7 @@ es:
       never: "Nunca"
       last_custom: "Última fecha y hora personalizada"
       custom: "Fecha y hora personalizadas"
-      more_options: "Más opciones"
+      more_options: "Más opciones…"
       select_timeframe: "Selecciona el plazo"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicó <a href='%{topicUrl}'>el tema</a>"
@@ -1377,25 +1399,25 @@ es:
             true {
               { UNREAD, plural,
                    =0 {}
-                  one {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># no leída</a>}
-                other {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># no leídas</a>}
+                  one {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># mensaje no leído</a>}
+                other {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># mensajes no leídos</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one { y <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nueva</a> mensaje restante, o explora otros mensajes en {groupLink}}
-                other { y <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nuevas</a> mensajes restantes, o explora otros mensajes en {groupLink}}
+                  one { y <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># mensaje nuevo</a> mensaje restante, o explora otros mensajes en {groupLink}}
+                other { y <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># mensajes nuevos</a> restante(s), o explora otros mensajes en {groupLink}}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># no leída</a> mensaje restante, o explora otros mensajes en {groupLink}}
-                other {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># no leídas</a> mensajes restantes, o explora otros mensajes en {groupLink}}
+                  one {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># mensaje no leído</a> restante, o explora otros mensajes en {groupLink}}
+                other {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># mensajes no leídos</a> restantes, o explora otros mensajes en {groupLink}}
               }
               { NEW, plural,
                    =0 {}
-                  one {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nueva</a> mensaje restante, o explora otros mensajes en {groupLink}}
-                other {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nuevas</a> mensajes restantes, o explora otros mensajes en {groupLink}}
+                  one {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># mensaje nuevo</a> restante, o explora otros mensajes en {groupLink}}
+                other {Hay <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># mensajes nuevos</a> restantes, o explora otros mensajes en {groupLink}}
               }
             }
             other {}
@@ -1405,25 +1427,25 @@ es:
             true {
               { UNREAD, plural,
                    =0 {}
-                  one {Hay <a href="{basePath}/u/{username}/messages/unread"># no leída</a>}
-                other {Hay <a href="{basePath}/u/{username}/messages/unread"># no leídas</a>}
+                  one {Hay <a href="{basePath}/u/{username}/messages/unread"># mensaje no leído</a>}
+                other {Hay <a href="{basePath}/u/{username}/messages/unread"># mensajes no leídos</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one { y <a href="{basePath}/u/{username}/messages/new"># nueva</a> mensaje restante, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
-                other { y <a href="{basePath}/u/{username}/messages/new"># nuevas</a> mensajes restantes, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+                  one { y <a href="{basePath}/u/{username}/messages/new"># mensaje nuevo</a> restante, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+                other { y <a href="{basePath}/u/{username}/messages/new"># mensajes nuevos</a> restantes, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one {Hay <a href="{basePath}/u/{username}/messages/unread"># no leída</a> mensaje restante, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
-                other {Hay <a href="{basePath}/u/{username}/messages/unread"># no leídas</a> mensajes restantes, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+                  one {Hay <a href="{basePath}/u/{username}/messages/unread"># mensaje no leído</a> restante, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+                other {Hay <a href="{basePath}/u/{username}/messages/unread"># mensajes no leídos</a> restantes, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one {Hay <a href="{basePath}/u/{username}/messages/new"># nueva</a> mensaje restante, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
-                other {Hay <a href="{basePath}/u/{username}/messages/new"># nuevas</a> mensajes restantes, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+                  one {Hay <a href="{basePath}/u/{username}/messages/new"># mensaje nuevo</a> restante, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
+                other {Hay <a href="{basePath}/u/{username}/messages/new"># mensajes nuevos</a> restantes, o explora otros <a href="{basePath}/u/{username}/messages">mensajes personales</a>}
               }
             }
             other {}
@@ -1634,7 +1656,7 @@ es:
           generic: "Tu cuenta de %{provider} se utilizará para la autenticación."
       activate_account:
         action: "Haz clic aquí para activar tu cuenta"
-        already_done: "Lo sentimos, este link de confirmación de cuenta ya no es válido. ¿Quizás tu cuenta ya está activa?"
+        already_done: "Lo sentimos, este enlace de confirmación de cuenta ya no es válido. ¿Quizás tu cuenta ya está activa?"
         please_continue: "Tu nueva cuenta está confirmada; se te redirigirá a la página de inicio."
         continue_button: "Continuar a %{site_name}"
         welcome_to: "¡Te damos la bienvenida a %{site_name}!"
@@ -2029,7 +2051,7 @@ es:
         <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/hora}
           other {# errores/hora}
-        }</a> alcanzó el límite de configuración del sitio de {limit, plural,
+        }</a> alcanzó el límite del ajuste del sitio de {limit, plural,
             one {# error/hora}
           other {# errores/hora}
         }.
@@ -2037,7 +2059,7 @@ es:
         <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/minuto}
           other {# errores/minuto}
-        }</a> alcanzó el límite de configuración del sitio de { limit, plural,
+        }</a> alcanzó el límite del ajuste del sitio de { limit, plural,
             one {# error/minuto}
           other {# errores/minuto}
         }.
@@ -2045,7 +2067,7 @@ es:
         <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/hora}
           other {# errores/hora}
-        }</a> superó el límite de configuración del sitio de { limit, plural,
+        }</a> superó el límite del ajuste del sitio de { limit, plural,
             one {# error/hora}
           other {# errores/hora}
         }.
@@ -2053,11 +2075,12 @@ es:
         <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
             one {# error/minuto}
           other {# errores/minuto}
-        }</a> superó el límite de configuración del sitio de { limit, plural,
+        }</a> superó el límite del ajuste del sitio de { limit, plural,
             one {# error/minuto}
           other {# errores/minuto}
         }.
     learn_more: "Más información…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>Más información…</a>"
     mute: Silenciar
     unmute: No silenciar
     last_post: Fecha de publicación
@@ -2136,6 +2159,11 @@ es:
       associate: "¿Ya tienes una cuenta? <a href='%{associate_link}'>Inicia sesión</a> para enlazarla con tu cuenta de %{provider}."
       activation_title: "Activa tu cuenta"
       already_have_account: "¿Ya tienes una cuenta?"
+      progress_bar:
+        signup: "Registrarse"
+        activate: "Activo"
+        approve: "Aprobar"
+        login: "Iniciar sesión"
     forgot_password:
       title: "Restablecer contraseña"
       action: "Olvidé mi contraseña"
@@ -2332,6 +2360,7 @@ es:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} es mayor que el %{max_file_size} máximo permitido"
+        size_too_small: "%{provided_file_size} es más equeño que el %{min_file_size} mínimo permitido"
     emoji_picker:
       filter_placeholder: Buscar emoji
       smileys_&_emotion: Caras y emociones
@@ -4708,7 +4737,7 @@ es:
         problems_found: "Algunos consejos con base en tus ajustes actuales"
         new_features:
           title: "Novedades"
-          subtitle: "Para obtener más información sobre las nuevas funciones y mejoras que añadimos constantemente, consulta <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Notas de versión</a>."
+          subtitle: "Lanzamos nuevas funciones y mejoras continuamente. Esta página cubre los aspectos más destacados, pero puedes hacer clic en «Más información» para ver las notas de la versión completa."
           previous_announcements: "Puedes ver anuncios anteriores de nuevas funciones en <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Más información..."
         last_checked: "Ultima comprobación"
@@ -4828,6 +4857,7 @@ es:
             publish_read_state: "Publicar confirmaciones de lectura en los mensajes grupales"
           membership:
             automatic: Automático
+            automatic_tooltip: "Este grupo es automático, no puedes eliminarlo y los miembros se añaden y eliminan automáticamente"
             trust_levels_title: "Nivel de confianza concedido automáticamente a miembros cuando son añadidos:"
             effects: Efectos
             trust_levels_none: "Ninguno"
@@ -5190,15 +5220,15 @@ es:
             Se utilizará en tu página Acerca de. Tamaño recomendado: 800x300px. Tipos aceptados: JPG, PNG y SVG hasta 10 MB.
           contact_information: "Información de contacto"
           community_owner: "Propietario de la comunidad"
-          community_owner_placeholder: "Johnny Smith"
+          community_owner_placeholder: "Pepe Luis"
           community_owner_help: |
             Nombre del contacto clave responsable de este sitio. Utilizado para notificaciones críticas, y también se muestra en /about. Visible para usuarios anónimos en sitios públicos.
           contact_email: "Correo electrónico de contacto"
-          contact_email_placeholder: "contact@johnny-smith.com"
+          contact_email_placeholder: "contacto@pepe-luis.com"
           contact_email_help: |
             Dirección de correo electrónico del contacto clave responsable de este sitio. Se utiliza para notificaciones críticas y también se muestra en /about. Visible para usuarios anónimos en sitios públicos.
           contact_url: "URL de contacto"
-          contact_url_placeholder: "https://johnny-smith.com/contact"
+          contact_url_placeholder: "https://pepe-luis.com/contacto"
           contact_url_help: |
             URL de contacto para este sitio. Cuando está presente, sustituye a la dirección de correo electrónico de contacto en /about y es visible para los usuarios anónimos en los sitios públicos.
           site_contact_name: "Nombre del contacto del sitio"
@@ -5209,7 +5239,7 @@ es:
             Un nombre válido de un grupo al que se invita a todos los mensajes privados enviados automáticamente.
           your_organization: "Tu organización"
           company_name: "Nombre de la empresa"
-          company_name_placeholder: "Empresa de ejemplo Inc."
+          company_name_placeholder: "Empresa de ejemplo S.A."
           company_name_help: |
             Nombre de tu empresa u organización.
           company_name_warning: |
@@ -5239,6 +5269,8 @@ es:
           back: "Volver a las banderas"
           delete: "Eliminar"
           delete_confirm: '¿Seguro que quieres eliminar «%{name}»?'
+          flags_tab: "Banderas"
+          settings: "Ajustes de avisos"
           form:
             add_header: "Añadir bandera"
             edit_header: "Editar bandera"
@@ -5265,6 +5297,7 @@ es:
       plugins:
         title: "Plugins"
         installed: "Plugins instalados"
+        description: "Cualquier complemento de Discourse que haya instalado, o complementos que vengan preinstalados con el alojamiento de Discourse, aparecerán en esta lista."
         name: "Nombre"
         none_installed: "No tienes plugins instalados."
         version: "Versión"
@@ -5302,10 +5335,13 @@ es:
         legacy: "Heredado"
       backups:
         title: "Copias de seguridad"
+        files_title: "Archivos de copia de seguridad"
+        description: "Las copias de seguridad de Discourse incluyen la base de datos completa del sitio, que contiene todo lo que hay en él: temas, entradas, usuarios, grupos, ajustes, etc. Dependiendo de cómo se cree el archivo de copia de seguridad, puede incluir o no las cargas."
         menu:
           backups: "Copias de seguridad"
+          backup_files: "Archivos de copia de seguridad"
           logs: "Registros"
-        none: "Ninguna copia de seguridad disponible."
+        none: "Ninguna copia de seguridad disponible"
         read_only:
           enable:
             title: "Activar el modo de solo lectura"
@@ -5343,12 +5379,12 @@ es:
           download:
             label: "Descargar"
             title: "Enviar correo electrónico con enlace de descarga"
-            alert: "El enlace para descargar esta copia de seguridad se te envió por correo electrónico."
+            alert: "Se te ha enviado por correo electrónico un enlace para descargar esta copia de seguridad."
           destroy:
             title: "Eliminar la copia de seguridad"
             confirm: "¿Seguro que quieres destruir esta copia de seguridad?"
           restore:
-            is_disabled: "Restaurar está desactivado en la configuración del sitio."
+            is_disabled: "La restauración está desactivada actualmente. Para activarla, visita los <a href='%{url}'>ajustes del sitio</a>."
             label: "Restaurar"
             title: "Restaurar la copia de seguridad"
             confirm: "¿Seguro que quieres restaurar esta copia de seguridad?"
@@ -6463,6 +6499,7 @@ es:
         show_overriden: "Mostrar solo los sobrescritos"
         show_outdated: "Mostrar solo obsoletos/no válidos"
         show_untranslated: "Mostrar solo sin traducir"
+        only_show_selected_locale: "Mostrar resultados solo en la configuración regional seleccionada"
         locale: "Idioma:"
         more_than_50_results: "Hay más de 50 resultados. Por favor, afina tu búsqueda."
         no_results: "No se han encontrado textos de sitios coincidentes"
@@ -6657,8 +6694,8 @@ es:
             other: "Se ha recibido tu CSV y %{count} usuarios recibirán su medalla en breve."
           csv_has_unmatched_users: "Las siguientes filas del CSV no se han podido enlazar con usuarios existentes, por lo que no se les distribuirá ninguna medalla:"
           csv_has_unmatched_users_truncated_list:
-            one: "Había %{count} entrada en el archivo CSV que no pudo coincidir con los usuarios existentes y, por lo tanto, no recibirá la insignia."
-            other: "Había %{count} entradas en el archivo CSV que no coincidieron con los usuarios existentes y, por lo tanto, no recibirán la insignia."
+            one: "Hubo %{count} entradas en el archivo CSV que no se pudieron emparejar con los usuarios existentes y, por lo tanto, no recibirán la medalla."
+            other: "Hubo %{count} entradas en el archivo CSV que no se pudieron emparejar con usuarios existentes, y por lo tanto no recibirán la medalla. Debido al gran número de entradas que no se han podido emparejar, solo se muestran las 100 primeras:"
           replace_owners: Eliminar medalla de los anteriores propietarios
           grant_existing_holders: Conceder una vez más la medalla a las cuentas que ya la tengan
       emoji:

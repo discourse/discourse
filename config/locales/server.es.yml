@@ -52,6 +52,11 @@ es:
   remove_posts_deleted_by_author: "Eliminado por el autor"
   redirect_warning: "No pudimos verificar que el enlace que seleccionaste realmente se haya publicado en el foro. Si deseas continuar de todos modos, selecciona el siguiente enlace."
   on_another_topic: "En otro tema"
+  topic_category_changed: "De %{from} a %{to}"
+  topic_tag_changed:
+    added_and_removed: "Añadido %{added} y eliminado %{removed}"
+    added: "Añadido %{added}"
+    removed: "Eliminado %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "nº %{post_number}"
     topic_page_title_post_number_by_user: "nº %{post_number} por %{username}"
@@ -581,6 +586,16 @@ es:
       trust_level_2: "nivel_de_confianza_2"
       trust_level_3: "nivel_de_confianza_3"
       trust_level_4: "nivel_de_confianza_4"
+    default_descriptions:
+      everyone: "Grupo automático que incluye a todos los miembros"
+      staff: "Grupo automático que incluye administradores y moderadores"
+      admins: "Responsable de configurar y mantener este sitio, con acceso a todos los datos de miembros y actividades."
+      moderators: "Responsable de responder a los avisos, moderar los debates y ayudar a los miembros con sus cuentas"
+      trust_level_0: "Nuevos miembros con capacidades limitadas, que están aprendiendo las normas y la funcionalidad de la comunidad"
+      trust_level_1: "Los miembros con más confianza, que han demostrado un compromiso inicial al leer, ahora pueden acceder a más funciones. Todos los miembros de este grupo también son miembros del grupo trust_level_0."
+      trust_level_2: "Miembros activos que han contribuido consistentemente con el tiempo y han ganado privilegios completos de ciudadanía. Todos los miembros de este grupo también son miembros de los grupos trust_level_1 y trust_level_0."
+      trust_level_3: "Contribuyentes altamente comprometidos y de largo plazo, que forman la columna vertebral de la comunidad y han obtenido privilegios limitados de moderación. Todos los miembros de este grupo también son miembros de los grupos trust_level_2, trust_level_1 y trust_level_0."
+      trust_level_4: "Miembros promocionados manualmente, reconocidos por sus contribuciones ejemplares y a quienes se les han confiado privilegios adicionales de moderación. Todos los miembros de este grupo también son miembros de los grupos trust_level_3, trust_level_2, trust_level_1 y trust_level_0."
     request_membership_pm:
       title: "Solicitud de membresía para @%{group_name}"
     request_accepted_pm:
@@ -1762,7 +1777,7 @@ es:
     max_reply_history: "Número máximo de respuestas que se muestran al expandir en-respuesta-a"
     topics_per_period_in_top_summary: "Número de temas destacados que se muestran en el resumen de temas destacados."
     topics_per_period_in_top_page: "Número de temas destacados que se muestran en la vista expandida al hacer clic en «ver más»."
-    redirect_users_to_top_page: "Redirige automáticamente a los usuarios nuevos y ausentes durante mucho tiempo a la página principal. Solo se aplica cuando la opción «top» aparece en la configuración del «menú principal» del sitio."
+    redirect_users_to_top_page: "Redirigir automáticamente a los usuarios nuevos y ausentes durante mucho tiempo a la página superior. Solo se aplica cuando «arriba» está presente en el ajuste del sitio «menú superior»."
     top_page_default_timeframe: "Periodo de tiempo predeterminado de la página principal para usuarios anónimos (se ajusta automáticamente para usuarios conectados en función de su última visita)."
     moderators_view_emails: "Permitir a los moderadores ver las direcciones de correo electrónico de los usuarios."
     prioritize_username_in_ux: "Mostrar el nombre de usuario primero en la página de usuario, tarjeta de usuario y publicaciones (cuando está desactivado, el nombre se muestra primero)"
@@ -1964,7 +1979,7 @@ es:
     min_trust_to_edit_post: "El nivel mínimo de confianza requerido para editar publicaciones."
     edit_post_allowed_groups: "Grupos que pueden editar mensajes. Los administradores y moderadores siempre pueden editar los mensajes."
     min_trust_to_allow_self_wiki: "El nivel mínimo de confianza requerido para que un usuario convierta sus propias publicaciones a wiki."
-    self_wiki_allowed_groups: "Permita que los usuarios de estos grupos creen sus propias publicaciones en la wiki. Los administradores y moderadores siempre pueden crear sus propias publicaciones en la wiki."
+    self_wiki_allowed_groups: "Permitir a los usuarios de estos grupos crear su propia wiki de publicaciones. Los administradores y moderadores siempre pueden crear su propia wiki de publicaciones."
     min_trust_to_send_messages: "DEPRECIADO, utiliza en su lugar el ajuste «grupos habilitados para mensajes personales». El nivel de confianza mínimo requerido para crear nuevos mensajes personales."
     min_trust_to_send_email_messages: "Nivel de confianza mínimo para mandar mensajes personales a través de correo electrónico."
     send_email_messages_allowed_groups: "Grupos a los que se permite enviar mensajes personales por correo electrónico. Los administradores y moderadores siempre pueden enviar mensajes personales por correo electrónico."
@@ -2038,6 +2053,7 @@ es:
     tos_url: "Si tienes un documento de condiciones de servicio alojado en algún otro sitio y que quieras utilizar, introduce la URL completa aquí."
     privacy_policy_url: "Si tienes un documento de política de privacidad alojado en algún otro sitio y que quieras utilizar, introduce la URL completa aquí."
     log_anonymizer_details: "Ya sea para mantener los detalles de un usuario en el registro después de ser anonimizados."
+    display_eu_visitor_stats: "Mostrar el número de visitantes globales y de la UE en la página /about."
     newuser_spam_host_threshold: "Cantidad de veces que un usuario nuevo puede publicar un enlace al mismo host dentro del «newuser_spam_host_threshold» de sus publicaciones antes de ser considerado spam."
     allowed_spam_host_domains: "Una lista de dominios que se excluyen de las pruebas de spam. A los usuarios nuevos no se les restringirá nunca la posibilidad de crear publicaciones con enlaces a estos dominios."
     staff_like_weight: "Peso que dar a los me gusta del personal (los «Me gusta» de los demás pesan 1)."
@@ -2238,7 +2254,7 @@ es:
     embed_username_required: "Se requiere el nombre de usuario para la creación de temas."
     notify_about_reviewable_item_after: "Si hay elementos revisables que no se han tratado después de estas horas, envía un mensaje personal a los moderadores. Ponlo a 0 para desactivarlo."
     delete_drafts_older_than_n_days: "Elimina los borradores que no se hayan modificado en más de (n) días."
-    delete_merged_stub_topics_after_days: "Número de días que se deben esperar antes de eliminar automáticamente los temas de código fuente fusionados por completo. Establezca en -1 para no eliminar nunca. Establezca en 0 para eliminar inmediatamente."
+    delete_merged_stub_topics_after_days: "Número de días que hay que esperar antes de eliminar automáticamente los temas pendientes totalmente fusionados. Establece -1 para no eliminar nunca. Establece 0 para eliminar inmediatamente."
     bootstrap_mode_min_users: "Número mínimo de usuarios necesarios para desactivar el modo de arranque y eliminar el botón de inicio (ponlo a 0 para desactivarlo, puede tardar hasta 24 horas)"
     prevent_anons_from_downloading_files: "Impedir que usuarios anónimos descarguen archivos adjuntos."
     secure_uploads: 'Limita el acceso a TODAS las subidas (imágenes, vídeo, audio, texto, pdfs, zips y otros). Si se activa la opción de «inicio de sesión obligatorio», solo los usuarios que hayan iniciado sesión podrán acceder a las subidas. De lo contrario, el acceso se limitará solo a las subidas de medios en los mensajes privados y en las categorías privadas. ADVERTENCIA: Esta configuración es compleja y requiere un profundo conocimiento administrativo. Consulta <a target="_blank" href="https://meta.discourse.org/t/-/140017">el tema de subidas seguras en Meta</a> para más detalles.'
@@ -2350,6 +2366,7 @@ es:
     suppress_overlapping_tags_in_list: "Si alguna etiqueta coincide con palabras en el título de los temas, ocultarla."
     remove_muted_tags_from_latest: "No muestre temas etiquetados unicamente con etiquetas silenciadas en la lista de temas más reciente."
     force_lowercase_tags: "Forzar que todas las etiquetas estén completamente en minúscula"
+    create_post_for_category_and_tag_changes: "Crear una pequeña publicación de acción cuando cambie la categoría o las etiquetas de un tema"
     automatically_clean_unused_tags: "Elimina automáticamente las etiquetas que no se estén utilizando en ningún tema o mensaje privado diariamente."
     watched_precedence_over_muted: "Notificarme sobre temas en categorías o etiquetas que estoy observando y que también pertenezcan a una que haya silenciado"
     company_name: "Nombre de tu empresa u organización. Si se deja en blanco, no se proporcionará ningún tipo de Términos del servicio o Aviso de privacidad."
@@ -2382,6 +2399,8 @@ es:
     use_email_for_username_and_name_suggestions: "Usar la primera parte de las direcciones de correo electrónico para las sugerencias de nombre de usuario y nombre. Ten en cuenta que esto facilita que el público adivine las direcciones de correo electrónico completas de los usuarios (porque una gran proporción de personas usan servicios como «gmail.com»)."
     use_name_for_username_suggestions: "Usar el nombre completo para sugerir nombres de usuario"
     suggest_weekends_in_date_pickers: "Incluir fines de semana (sábados y domingos) en las sugerencias de los selectores de fecha (desactiva esto si solo usas Discourse de lunes a viernes)"
+    show_bottom_topic_map: "Muestra el mapa del tema en la parte inferior del mismo cuando tiene 10 respuestas o más."
+    show_topic_map_in_topics_without_replies: "Muestra el mapa del tema incluso aunque el tema no tenga respuestas."
     splash_screen: "Muestra una pantalla de carga temporal mientras los archivos de la página se cargan"
     navigation_menu: "Especifica la barra lateral o el encabezado desplegable como menú de navegación principal de tu sitio. Se recomienda la barra lateral."
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
@@ -2391,7 +2410,8 @@ es:
     experimental_topics_filter: "EXPERIMENTAL: Activa la ruta del filtro de temas experimentales en /filter"
     enable_experimental_lightbox: "EXPERIMENTAL: Sustituye el lightbox de imágenes por defecto por el diseño renovado."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Mostrar un menú de acceso rápido a marcadores en las entradas y un nuevo modal rediseñado"
-    glimmer_header_mode: "Controla si se utiliza la nueva implementación del encabezado 'glimmer'. 'auto' se habilitará automáticamente una vez que todos tus temas y complementos estén listos. https://meta.discourse.org/t/316549"
+    experimental_redesigned_about_page_groups: "EXPERIMENTAL: Habilita la página rediseñada /about para grupos específicos."
+    glimmer_header_mode: "Controlar si se utiliza la nueva implementación del encabezado 'glimmer'. auto' se activará automáticamente cuando todos tus temas y plugins estén listos. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "EXPERIMENTAL: Activa la nueva implementación de la lista de temas «glimmer». Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
     experimental_form_templates: "EXPERIMENTAL: Activa la función de plantillas de formulario. <b>Una vez activada,</b> gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
     admin_sidebar_enabled_groups: "Activa la navegación por la barra lateral de la interfaz del administrador para los grupos especificados, que sustituye a los botones de navegación del administrador de nivel superior."
@@ -4867,7 +4887,7 @@ es:
         fields:
           login_required:
             label: "Visibilidad"
-            description: "¿Su comunidad es pública o privada?"
+            description: "¿Tu comunidad es pública o privada?"
             choices:
               public:
                 label: "Pública"
@@ -4882,7 +4902,7 @@ es:
               invite_only:
                 label: "Solo por invitación"
           must_approve_users:
-            description: "¿Quieres aprobar cuentas de miembros?"
+            description: "¿Quieres aprobar las cuentas de los miembros?"
             choices:
               "no":
                 label: "No, los nuevos miembros pueden unirse inmediatamente"

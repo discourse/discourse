@@ -1614,6 +1614,7 @@ Discourse::Application.routes.draw do
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"
 
     get "/theme-qunit" => "qunit#theme"
+    get "/theme-tests", to: redirect("/theme-qunit")
 
     # This is a special route that is used when theme QUnit tests are run through testem which appends a testem_id to the
     # path. Unfortunately, testem's proxy support does not allow us to easily remove this from the path, so we have to

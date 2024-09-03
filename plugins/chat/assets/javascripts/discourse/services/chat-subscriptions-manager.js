@@ -1,4 +1,5 @@
 import Service, { service } from "@ember/service";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
@@ -267,7 +268,17 @@ export default class ChatSubscriptionsManager extends Service {
                   busData.thread_id,
                   busData.message.created_at
                 );
-                thread.tracking.unreadCount++;
+
+                if (
+                  thread.currentUserMembership.notificationLevel ===
+                  NotificationLevels.WATCHING
+                ) {
+                  thread.tracking.watchedThreadsUnreadCount++;
+                  channel.tracking.watchedThreadsUnreadCount++;
+                } else {
+                  thread.tracking.unreadCount++;
+                }
+
                 this._updateActiveLastViewedAt(channel);
               }
             }
@@ -339,6 +350,8 @@ export default class ChatSubscriptionsManager extends Service {
 
       channel.tracking.unreadCount = busData.unread_count;
       channel.tracking.mentionCount = busData.mention_count;
+      channel.tracking.watchedThreadsUnreadCount =
+        busData.watched_threads_unread_count;
 
       if (
         busData.hasOwnProperty("unread_thread_overview") &&
@@ -366,6 +379,8 @@ export default class ChatSubscriptionsManager extends Service {
                 busData.thread_tracking.unread_count;
               thread.tracking.mentionCount =
                 busData.thread_tracking.mention_count;
+              thread.tracking.watchedThreadsUnreadCount =
+                busData.thread_tracking.watched_threads_unread_count;
             }
           });
       }

@@ -109,6 +109,8 @@ be:
         notifications:
           tracking:
             title: "Сачыць"
+          watching:
+            title: "Сачыць"
       draft_channel_screen:
         header: "новае паведамленне"
         cancel: "адмяніць"

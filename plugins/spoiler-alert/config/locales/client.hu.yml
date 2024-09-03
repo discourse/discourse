@@ -7,5 +7,8 @@
 hu:
   js:
     spoiler:
+      title: Spoiler elhomályosítása
       label:
         show: "Rejtett tartalom megjelenítése"
+    composer:
+      spoiler_text: "Ez a szöveg elmosódott lesz"

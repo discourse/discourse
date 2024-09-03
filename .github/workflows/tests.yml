@@ -124,19 +124,8 @@ jobs:
           bundle install --jobs $(($(nproc) - 1))
           bundle clean
 
-      - name: Get yarn cache directory
-        id: yarn-cache-dir
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-
-      - name: Yarn cache
-        uses: actions/cache@v4
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
-
-      - name: Yarn install
-        run: yarn install --frozen-lockfile
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Checkout official plugins
         if: matrix.target == 'plugins'
@@ -167,17 +156,23 @@ jobs:
           echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
           echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
+      - name: Get CPU cores
+        id: cpu-info
+        run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
+
       - name: Fetch app state cache
         uses: actions/cache@v4
         id: app-cache
         with:
           path: tmp/app-cache
           key: >-
-            ${{ runner.name }}-
+            ${{ runner.os }}-
+            ${{ steps.cpu-info.outputs.cpu-cores }}-
             ${{ hashFiles('.github/workflows/tests.yml') }}-
             ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
             ${{ hashFiles('config/environments/test.rb') }}-
-            ${{ env.USES_PARALLEL_DATABASES }}
+            ${{ env.USES_PARALLEL_DATABASES }}-
+            ${{ env.PARALLEL_TEST_PROCESSORS }}-
 
       - name: Restore database from cache
         if: steps.app-cache.outputs.cache-hit == 'true'
@@ -391,30 +386,19 @@ jobs:
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
 
-      - name: Get yarn cache directory
-        id: yarn-cache-dir
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-
-      - name: Yarn cache
-        uses: actions/cache@v4
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
-
-      - name: Yarn install
-        run: yarn install --frozen-lockfile
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Ember Build
         working-directory: ./app/assets/javascripts/discourse
         run: |
           mkdir /tmp/emberbuild
-          yarn ember build --environment=test -o /tmp/emberbuild
+          pnpm ember build --environment=test -o /tmp/emberbuild
 
       - name: Core QUnit
         working-directory: ./app/assets/javascripts/discourse
         run: |
-          yarn ember exam --path /tmp/emberbuild --load-balance --parallel=$(($(nproc) / 2 + 1)) --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
+          pnpm ember exam --path /tmp/emberbuild --load-balance --parallel=$(($(nproc) / 2 + 1)) --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
         timeout-minutes: 15
 
       - uses: actions/upload-artifact@v4

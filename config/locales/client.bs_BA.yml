@@ -271,7 +271,6 @@ bs_BA:
       like_count: "Sviđanja"
       topic_count: "Tema"
       post_count: "Objave"
-      contact_info: "U slučaju da forum ne radi, molimo kontaktirajte nas na %{contact_info}."
       activities:
         topics:
           one: "%{formatted_number} tema"
@@ -1499,6 +1498,10 @@ bs_BA:
       disclaimer: "Registracijom pristajete na <a href='%{privacy_link}' target='blank'>politiku privatnosti</a> i <a href='%{tos_link}' target='blank'>uvjete pružanja usluge</a> ."
       title: "Učlani se"
       failed: "Nešto je krenulo pogrešno, možda je ovaj email već iskorišten za registraciju, pokušajte sa Zaboravio šifru linkom"
+      progress_bar:
+        signup: "Učlani se"
+        approve: "Odobri"
+        login: "Prijava"
     forgot_password:
       title: "Resetovanje lozinke"
       action: "Zaboravio/la šifru?"
@@ -3422,6 +3425,7 @@ bs_BA:
           edit: "Edit"
           delete: "Delete"
           delete_confirm: 'Jeste li sigurni da želite izbrisati "%{name}"?'
+          flags_tab: "Flags"
           form:
             save: "Save"
             name: "Ime"
@@ -3431,7 +3435,6 @@ bs_BA:
             post: "objave"
       plugins:
         title: "Pluginovi"
-        installed: "Instalirani pluginovi"
         name: "Ime"
         none_installed: "Nemate instaliran niti jedan plugin"
         version: "Verzija"
@@ -3460,7 +3463,7 @@ bs_BA:
         menu:
           backups: "Backups"
           logs: "Logs"
-        none: "No backup available."
+        none: "No backup available"
         read_only:
           enable:
             title: "Omogućite režim samo za čitanje"
@@ -3491,12 +3494,11 @@ bs_BA:
           download:
             label: "Skinuti"
             title: "Pošaljite e-poštu sa linkom za preuzimanje"
-            alert: "Veza za preuzimanje ove sigurnosne kopije vam je poslana e-mailom."
+            alert: "Veza za preuzimanje ove sigurnosne kopije vam je poslana e-mailom"
           destroy:
             title: "Remove the backup"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
-            is_disabled: "Restore is disabled in the site settings."
             label: "Restore"
             title: "Restore the backup"
             confirm: "Jeste li sigurni da želite vratiti ovu sigurnosnu kopiju?"
@@ -3505,7 +3507,6 @@ bs_BA:
             title: "Rollback the database to previous working state"
             confirm: "Jeste li sigurni da želite vratiti bazu podataka na prethodno stanje?"
         location:
-          local: "Lokalno Skladište"
           s3: "S3"
         backup_storage_error: "Pristupanje rezervnom spremištu nije uspjelo: %{error_message}"
       export_csv:

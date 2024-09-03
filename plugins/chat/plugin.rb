@@ -68,6 +68,7 @@ after_initialize do
 
     Guardian.prepend Chat::GuardianExtensions
     UserNotifications.prepend Chat::UserNotificationsExtension
+    Notifications::ConsolidationPlan.prepend Chat::NotificationConsolidationExtension
     UserOption.prepend Chat::UserOptionExtension
     Category.prepend Chat::CategoryExtension
     Reviewable.prepend Chat::ReviewableExtension
@@ -531,6 +532,10 @@ after_initialize do
 
   register_user_destroyer_on_content_deletion_callback(
     Proc.new { |user| Jobs.enqueue(Jobs::Chat::DeleteUserMessages, user_id: user.id) },
+  )
+
+  register_notification_consolidation_plan(
+    Chat::NotificationConsolidationExtension.watched_thread_message_plan,
   )
 
   register_bookmarkable(Chat::MessageBookmarkable)

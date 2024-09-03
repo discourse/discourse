@@ -52,6 +52,11 @@ zh_CN:
   remove_posts_deleted_by_author: "被作者删除"
   redirect_warning: "我们无法验证您选择的链接是否确实发布到了论坛。如果您仍想继续，请选择下面的链接。"
   on_another_topic: "在另一个话题中"
+  topic_category_changed: "从 %{from} 到 %{to}"
+  topic_tag_changed:
+    added_and_removed: "%{added}添加，%{removed}移除"
+    added: "%{added}添加"
+    removed: "%{removed}移除"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number}，来自 %{username}"
@@ -1688,7 +1693,7 @@ zh_CN:
     max_reply_history: "展开“回复给”字段时要展开的最大回复数"
     topics_per_period_in_top_summary: "默认热门话题总结中显示的热门话题数。"
     topics_per_period_in_top_page: "在展开的“显示更多”热门话题中显示的热门话题数。"
-    redirect_users_to_top_page: "自动将新用户和长期不在的用户重定向到热门页面。仅在 “顶部菜单” 站点设置中出现 “热门” 时适用。"
+    redirect_users_to_top_page: "自动将新用户和长期不在的用户重定向到热门页面。仅在 'top menu' 网站设置中出现 'top' 时适用。"
     top_page_default_timeframe: "匿名用户的默认顶部页面时间段（会基于登录用户最后一次访问自动为其调整）。"
     moderators_view_emails: "允许版主查看用户电子邮件地址。"
     prioritize_username_in_ux: "在用户页面、用户卡片和帖子上先显示用户名（先显示禁用名称时）"
@@ -1890,7 +1895,7 @@ zh_CN:
     min_trust_to_edit_post: "编辑帖子所需的最低信任级别。"
     edit_post_allowed_groups: "能够编辑帖子的群组。管理员和版主始终可以编辑帖子。"
     min_trust_to_allow_self_wiki: "制作用户自己的帖子 Wiki 所需的最低信任级别。"
-    self_wiki_allowed_groups: "允许这些群组中的用户创建自己的 wiki 帖子。管理员和版主始终可以创建自己的 wiki 帖子。"
+    self_wiki_allowed_groups: "允许这些群组中的用户将他们自己的帖子设为 wiki。管理员和版主始终可以将他们自己的帖子设为 wiki。"
     min_trust_to_send_messages: "已弃用，请改用 'personal message enabled groups' 设置。创建新的个人消息所需的最低信任级别。"
     min_trust_to_send_email_messages: "通过电子邮件发送个人消息所需的最低信任级别。"
     send_email_messages_allowed_groups: "能够通过电子邮件发送个人消息的群组。管理员和版主始终可以通过电子邮件发送个人消息。"
@@ -1964,6 +1969,7 @@ zh_CN:
     tos_url: "如果您想使用在别处托管的《服务条款》文档，请在此处提供完整 URL。"
     privacy_policy_url: "如果您想使用在别处托管的《隐私政策》文档，请在此处提供完整 URL。"
     log_anonymizer_details: "在匿名化后，是否在日志中保留用户的详细信息。"
+    display_eu_visitor_stats: "在 /about 页面上显示全球和欧盟访客人数。"
     newuser_spam_host_threshold: "在被视为垃圾信息之前，新用户可以在他们的 `newuser_spam_host_threshold` 帖子中发布指向同一主机的链接的次数。"
     allowed_spam_host_domains: "从垃圾信息主机测试中排除的网域列表。新用户永远不会被限制创建带有这些网域链接的帖子。"
     staff_like_weight: "管理人员赞的权重（非管理人员赞的权重为 1）。"
@@ -2164,7 +2170,7 @@ zh_CN:
     embed_username_required: "创建话题需要用户名。"
     notify_about_reviewable_item_after: "如果经过这么多小时数后仍有未处理的可审核条目，请向版主发送个人信息。设置为 0 将禁用。"
     delete_drafts_older_than_n_days: "删除超过 (n) 天未更改的草稿。"
-    delete_merged_stub_topics_after_days: "自动删除完全合并的主题之前等待的天数。设置为 -1 不会删除。设置为 0 立即删除。"
+    delete_merged_stub_topics_after_days: "自动删除完全合并的存根话题之前等待的天数。设置为 -1 不会删除。设置为 0 将立即删除。"
     bootstrap_mode_min_users: "禁用引导模式并移除“开始”按钮所需的最小用户数（设置为 0 将禁用，最多可能需要 24 小时）"
     prevent_anons_from_downloading_files: "阻止匿名用户下载附件。"
     secure_uploads: '限制对所有上传（图片、视频、音频、文本、pdf、zip 等）的访问。如果启用“需要登录”，则只有登录用户才能访问上传。否则，访问将仅限于私信和不公开类别中的媒体上传。警告：此设置比较复杂，需要深入理解管理操作。请参阅 <a target="_blank" href="https://meta.discourse.org/t/-/140017">Meta 安全上传话题</a>以了解详情。'
@@ -2276,6 +2282,7 @@ zh_CN:
     suppress_overlapping_tags_in_list: "如果标签与话题标题中的字词完全匹配，则不显示标签"
     remove_muted_tags_from_latest: "不在最新话题列表中显示仅使用已被设为免打扰的标签标记的话题。"
     force_lowercase_tags: "强制所有新标签完全小写。"
+    create_post_for_category_and_tag_changes: "当话题的类别或标签发生变化时创建一篇小的行动帖子"
     automatically_clean_unused_tags: "每天自动删除未在任何主题或私信中使用的标签。"
     watched_precedence_over_muted: "如果我正在关注的类别或标签中有我已设为免打扰的话题，请通知我。"
     company_name: "您的公司或组织的名称。如果留空，将不会提供样板《服务条款》或《隐私声明》。"
@@ -2308,7 +2315,7 @@ zh_CN:
     use_email_for_username_and_name_suggestions: "使用电子邮件地址的第一部分作为用户名和名称建议。请注意，这使公众更容易猜测完整的用户电子邮件地址（因为很大一部分人共享共同的服务，如 `gmail.com`）。"
     use_name_for_username_suggestions: "建议用户名时使用用户的全名。"
     suggest_weekends_in_date_pickers: "在日期选择器建议中包括周末（周六和周日）（如果您仅在工作日（周一至周五）使用 Discourse，请禁用此选项）。"
-    show_bottom_topic_map: "当话题有 10 条或更多回复时，在主题底部显示话题地图。"
+    show_bottom_topic_map: "当话题有 10 条或更多回复时，在话题底部显示话题地图。"
     show_topic_map_in_topics_without_replies: "即使话题没有回复也显示话题地图。"
     splash_screen: "在加载网站资源时显示临时加载屏幕"
     navigation_menu: "指定边栏或标题下拉菜单作为网站的主导航菜单。推荐使用边栏。"
@@ -2319,7 +2326,7 @@ zh_CN:
     experimental_topics_filter: "实验性：在 /filter 下启用实验性话题筛选路由"
     enable_experimental_lightbox: "实验性：将默认图片灯箱替换为全新设计。"
     enable_experimental_bookmark_redesign_groups: "实验性：显示帖子书签的快速访问菜单和重新设计的新模式"
-    glimmer_header_mode: "控制是否使用新的“glimmer”标头实现。所有主题和插件准备就绪后，“auto”将自动启用。https://meta.discourse.org/t/316549"
+    glimmer_header_mode: "控制是否使用新的 'glimmer' 标头实现。在所有主题和插件准备就绪后，'auto' 将自动启用。https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "实验性：启用新的 'glimmer' 话题列表实现。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
     experimental_form_templates: "实验性：启用表单模板功能。<b>启用后</b>，可以在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
     admin_sidebar_enabled_groups: "为指定群组的管理 UI 启用边栏导航，取代顶层管理导航按钮。"
@@ -2350,7 +2357,7 @@ zh_CN:
       invalid_reply_by_email_address: "值必须包含 '%{reply_key}' 并且与通知电子邮件不同。"
       invalid_alternative_reply_by_email_addresses: "所有值必须包含 '%{reply_key}' 并且与通知电子邮件不同。"
       invalid_domain_hostname: "不得包括 * 或 ? 字符。"
-      invalid_allowed_iframes_url: "iframe 网址必须以 http:// 或 https:// 开头，并且至少有一个额外的“/”"
+      invalid_allowed_iframes_url: "iframe url 必须以 http:// 或 https:// 开头，并且至少有一个额外的 '/'"
       invalid_csp_script_src: "值必须是 'unsafe-eval' 或 'wasm-unsafe-eval'，或者是 '<hash algorithm>-<base64 value>' 形式，其中支持的哈希算法为 sha256、sha384 或 sha512。确保使用单引号将输入内容括起来。"
       pop3_polling_host_is_empty: "在启用 POP3 轮询前，您必须先设置 'pop3 polling host'。"
       pop3_polling_username_is_empty: "在启用 POP3 轮询前，您必须先设置 'pop3 polling username'。"
@@ -4753,7 +4760,7 @@ zh_CN:
         fields:
           login_required:
             label: "公开范围"
-            description: "您的社区是公开的还是私人的？"
+            description: "您的社区是公开还是不公开？"
             choices:
               public:
                 label: "公开"
@@ -4761,14 +4768,14 @@ zh_CN:
                 label: "不公开"
           invite_only:
             label: "注册"
-            description: "成员如何加入这个社区？"
+            description: "成员如何加入此社区？"
             choices:
               sign_up:
                 label: "注册"
               invite_only:
                 label: "仅限邀请"
           must_approve_users:
-            description: "你想手动批准成员账户吗？"
+            description: "要手动批准成员帐户吗？"
             choices:
               "no":
                 label: "否，新成员可以立即加入"

@@ -13,6 +13,9 @@ it:
       total_votes:
         one: "voto totale"
         other: "voti totali"
+      votes:
+        one: "%{count} voto"
+        other: "%{count} voti"
       average_rating: "Voto medio: <strong>%{average}</strong>."
       public:
         title: "I voti sono <strong>pubblici</strong>."
@@ -46,6 +49,12 @@ it:
       show-results:
         title: "Visualizza i risultati del sondaggio"
         label: "Risultati"
+      show-tally:
+        title: "Mostra i risultati delle votazioni in base al numero di voti"
+        label: "Mostra conteggio"
+      show-percentage:
+        title: "Mostra i risultati del voto in percentuale"
+        label: "Visualizza come percentuale"
       remove-vote:
         title: "Annulla il tuo voto"
         label: "Annulla il voto"

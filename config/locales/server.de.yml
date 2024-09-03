@@ -52,6 +52,11 @@ de:
   remove_posts_deleted_by_author: "Gelöscht vom Verfasser"
   redirect_warning: "Wir konnten nicht überprüfen, dass der ausgewählte Link tatsächlich im Forum geteilt wurde. Wenn du trotzdem fortfahren möchtest, wähle den Link unten aus."
   on_another_topic: "Zu einem anderen Thema"
+  topic_category_changed: "Von %{from} bis %{to}"
+  topic_tag_changed:
+    added_and_removed: "%{added} hinzugefügt und %{removed} entfernt"
+    added: "%{added} hinzugefügt"
+    removed: "%{removed} entfernt"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} von %{username}"
@@ -581,6 +586,16 @@ de:
       trust_level_2: "Vertrauensstufe_2"
       trust_level_3: "Vertrauensstufe_3"
       trust_level_4: "Vertrauensstufe_4"
+    default_descriptions:
+      everyone: "Automatische Gruppe mit allen Mitgliedern"
+      staff: "Automatische Gruppe mit Admins und Moderatoren"
+      admins: "Verantwortlich für die Konfiguration und Pflege dieser Seite mit Zugriff auf alle Mitglieder- und Aktivitätsdaten"
+      moderators: "Verantwortlich für die Beantwortung von Markierungen, die Moderation von Diskussionen und die Unterstützung von Mitgliedern bei ihren Konten"
+      trust_level_0: "Neue Mitglieder mit eingeschränkten Fähigkeiten, die die Normen und Funktionen der Gemeinschaft erlernen"
+      trust_level_1: "Mitglieder mit mehr Vertrauen, die ein erstes Engagement durch Lesen gezeigt haben, können nun auf mehr Funktionen zugreifen. Alle Mitglieder dieser Gruppe sind auch Mitglieder der Gruppe trust_level_0."
+      trust_level_2: "Aktive Mitglieder, die regelmäßig Zeit investiert haben und volle Rechte erworben haben. Alle Mitglieder dieser Gruppe sind auch Mitglieder der Gruppen trust_level_1 und trust_level_0."
+      trust_level_3: "Über längere Zeit sehr engagierte Mitwirkende, die das Rückgrat der Gemeinschaft bilden und begrenzte Moderationsrechte erhalten haben. Alle Mitglieder dieser Gruppe sind auch Mitglieder der Gruppen trust_level_2, trust_level_1 und trust_level_0."
+      trust_level_4: "Manuell beförderte Mitglieder, die durch ihre vorbildlichen Beiträge anerkannt und mit zusätzlichen Moderationsprivilegien betraut wurden. Alle Mitglieder dieser Gruppe sind auch Mitglieder der Gruppen trust_level_3, trust_level_2, trust_level_1 und trust_level_0."
     request_membership_pm:
       title: "Mitgliedschaftsanfrage für @%{group_name}"
     request_accepted_pm:
@@ -2038,6 +2053,7 @@ de:
     tos_url: "Die vollständige URL zu deinen extern gehosteten Nutzungsbedingungen, sofern vorhanden."
     privacy_policy_url: "Die vollständige URL zu deiner extern gehosteten Datenschutzerklärung, sofern vorhanden."
     log_anonymizer_details: "Legt fest, ob die Daten eines Benutzers nach Anonymisierung im Log gespeichert werden sollen."
+    display_eu_visitor_stats: "Zeige die Anzahl der globalen und EU-Besucher auf der /about-Seite."
     newuser_spam_host_threshold: "Wie oft ein neuer Benutzer einen Link zum selben Host innerhalb seiner `newuser_spam_host_threshold` Beiträge veröffentlichen kann, bevor dies als Spam angesehen wird."
     allowed_spam_host_domains: "Liste von Domains, die keinem Spam-Host-Test unterzogen werden. Neue Benutzer werden niemals daran gehindert, Beiträge mit Links zu diesen Domains zu erstellen."
     staff_like_weight: "Wie viel Gewicht „Gefällt mir“-Angaben des Teams haben sollen („Gefällt mir“-Angaben von Nicht-Team-Mitgliedern haben ein Gewicht von 1.)"
@@ -2350,6 +2366,7 @@ de:
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genauso im Thementitel vorkommt"
     remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Tags versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
     force_lowercase_tags: "Kleinschreibung für alle neuen Schlagwörter erzwingen."
+    create_post_for_category_and_tag_changes: "Einen kleinen Aktionsbeitrag erstellen, wenn sich die Kategorie oder die Schlagwörter eines Themas ändern"
     automatically_clean_unused_tags: "Lösche täglich automatisch Schlagwörter, die nicht in Themen oder privaten Nachrichten verwendet werden."
     watched_precedence_over_muted: "Benachrichtige mich über Themen in Kategorien oder Schlagwörtern, die ich beobachte und die auch zu einem Thema gehören, das ich stummgeschaltet habe"
     company_name: "Name deines Unternehmens oder deiner Organisation. Wenn du nichts angibst, werden keine vorgefertigten allgemeinen Geschäftsbedingungen oder Datenschutzhinweise bereitgestellt."
@@ -2393,6 +2410,7 @@ de:
     experimental_topics_filter: "EXPERIMENTELL: Experimentelle Filterroute für Themen unter /filter aktivieren"
     enable_experimental_lightbox: "EXPERIMENTELL: Die Standard-Bild-Lightbox durch das überarbeitete Design ersetzen."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTELL: Zeige ein Schnellzugriffsmenü für Lesezeichen in Beiträgen und ein neu gestaltetes Modal"
+    experimental_redesigned_about_page_groups: "EXPERIMENTAL: Aktiviere die neu gestaltete /about Seite für bestimmte Gruppen."
     glimmer_header_mode: "Legt fest, ob die neue „glimmer“-Kopfzeilen-Implementierung verwendet wird. „auto“ wird die Implementierung automatisch aktivieren, sobald alle deine Themes und Plug-ins bereit sind. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "EXPERIMENTELL: Aktiviert die neue Implementierung der „glimmer“-Themenliste. Diese Implementierung befindet sich in der aktiven Entwicklung und ist nicht für den Einsatz in Produktionsumgebungen vorgesehen. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung abgeschlossen und angekündigt ist."
     experimental_form_templates: "EXPERIMENTELL: Aktiviere die Funktion „Formularvorlagen“. <b>Nachdem du sie aktiviert hast, verwalte</b> die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
@@ -2426,7 +2444,7 @@ de:
       invalid_reply_by_email_address: "Wert muss „%{reply_key}“ enthalten und sich von der Benachrichtigungs-E-Mail unterscheiden."
       invalid_alternative_reply_by_email_addresses: "Alle Werte müssen „%{reply_key}“ enthalten und sich von der Benachrichtigungs-E-Mail unterscheiden."
       invalid_domain_hostname: "Darf kein * oder ? enthalten."
-      invalid_allowed_iframes_url: "Iframe-URLs müssen mit http:// oder https:// beginnen und mindestens einen zusätzlichen '/' haben."
+      invalid_allowed_iframes_url: "Iframe-URLs müssen mit http:// oder https:// beginnen und mindestens einen zusätzlichen „/“ haben."
       invalid_csp_script_src: "Der Wert muss entweder „unsafe-eval“ oder „wasm-unsafe-eval“ oder in der Form „<hash algorithm>-<base64 value>“ sein, wobei die unterstützten Hash-Algorithmen sha256, sha384 oder sha512 sind. Achte darauf, dass deine Eingabe in einfache Anführungszeichen eingeschlossen ist."
       pop3_polling_host_is_empty: "Du musst „pop3 polling host“ definieren, um POP3-Abfragen zu aktivieren."
       pop3_polling_username_is_empty: "Du musst „pop3 polling username“ definieren, um POP3-Abfragen zu aktivieren."
@@ -4881,7 +4899,7 @@ de:
             description: "Wie können Mitglieder dieser Community beitreten?"
             choices:
               sign_up:
-                label: "Registrierungen"
+                label: "Registrierung"
               invite_only:
                 label: "Nur auf Einladung"
           must_approve_users:

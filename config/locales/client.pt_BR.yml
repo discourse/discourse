@@ -26,14 +26,14 @@ pt_BR:
         thousands: "%{number}k"
         millions: "%{number}M"
     dates:
-      time: "h:mm a"
-      time_with_zone: "hh:mm a (z)"
-      time_short_day: "ddd, HH:mm a"
+      time: "HH:mm"
+      time_with_zone: "HH:mm (z)"
+      time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D [de] MMMM"
-      long_with_year: "D MMM, YYYY H:mm"
+      long_with_year: "D MMM, YYYY HH:mm"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "D [de] MMMM, YYYY"
       long_date_with_year: "DD MM YYYY LT"
@@ -159,6 +159,8 @@ pt_BR:
       removed_user: "Removeu %{who} %{when}"
       removed_group: "Removeu %{who} %{when}"
       autobumped: "Automaticamente promovido %{when}"
+      tags_changed: "Etiquetas atualizadas em %{when}"
+      category_changed: "Categoria atualizada em %{when}"
       autoclosed:
         enabled: "Fechado %{when}"
         disabled: "Aberto %{when}"
@@ -199,6 +201,7 @@ pt_BR:
     broken_decorator_alert: "As postagens podem não ser exibidas corretamente porque um dos decoradores de conteúdo de postagem em seu site gerou um erro."
     broken_page_change_alert: "Houve um erro no identificador onPageChange. Confira as ferramentas de desenvolvedor do navegador para obter mais informações."
     broken_plugin_alert: "Causado(a) pelo plugin \"%{name}\""
+    broken_transformer_alert: "Ocorreu um erro. Seu site pode não funcionar corretamente."
     critical_deprecation:
       notice: "<b>[Aviso da administração]</b> Um dos seus temas ou plugins precisa ser atualizado para ser compatível com as próximas mudanças do Discourse."
       id: "(id:<em>%{id}</em>)"
@@ -310,8 +313,21 @@ pt_BR:
       post_count: "Postagens"
       user_count: "Cadastros"
       active_user_count: "Usuários(as) ativos(as)"
+      visitor_count: "Visitantes"
+      eu_visitor_count: "Visitantes da União Europeia"
+      traffic_info_footer_MF: |
+        Nos últimos seis meses, este site forneceu conteúdo para cerca de { total_visitors, plural,
+            one {# pessoa}
+          other {# pessoas}
+        } a cada mês, com cerca de { eu_visitors, plural,
+            one {# pessoa}
+          other {# pessoas}
+        } da União Europeia.
       contact: "Fale conosco"
-      contact_info: "Em caso de algum problema crítico ou assunto urgente relacionado a este site, fale conosco em %{contact_info}."
+      contact_info: "Em caso de algum problema crítico ou assunto urgente relacionado a este site, entre em contato em %{contact_info}."
+      site_activity: "Atividade do site"
+      view_more: "Ver mais"
+      view_less: "Ver menos"
       activities:
         topics:
           one: "%{formatted_number} tópico"
@@ -319,9 +335,23 @@ pt_BR:
         posts:
           one: "%{formatted_number} postagem"
           other: "%{formatted_number} postagens"
+        active_users:
+          one: "%{formatted_number} usuário(a) ativo(a)"
+          other: "%{formatted_number} usuários(as) ativos(as)"
+        sign_ups:
+          one: "%{formatted_number} cadastro"
+          other: "%{formatted_number} cadastros"
         likes:
           one: "%{formatted_number} curtida"
           other: "%{formatted_number} curtidas"
+        visitors_MF: |
+          { total_count, plural,
+              one {{total_formatted_number} visitante}
+            other {{total_formatted_number} visitantes}
+          }, about { eu_count, plural,
+              one {{eu_formatted_number}}
+            other {{eu_formatted_number}}
+          } da UE
         periods:
           last_7_days: "nos últimos 7 dias"
           today: "hoje"
@@ -336,6 +366,14 @@ pt_BR:
         one: "%{formatted_number} Moderador"
         other: "%{formatted_number} Moderadores(as)"
       report_inappropriate_content: "Se você encontrar conteúdo inapropriado, inicie uma conversa com nossos moderadores(as) e administradores(as). Não se esqueça de fazer login antes disso."
+      site_age:
+        less_than_one_month: "Criado(a) há menos de um mês"
+        month:
+          one: "Criado(a) há menos de %{count} mês"
+          other: "Criado(a) há menos de %{count} meses"
+        year:
+          one: "Criado(a) há menos de %{count} ano"
+          other: "Criado(a) há menos de %{count} anos"
     bookmarked:
       title: "Favorito"
       edit_bookmark: "Editar favorito"
@@ -713,6 +751,7 @@ pt_BR:
       never: "Nunca"
       last_custom: "Última data personalizada"
       custom: "Data e hora personalizadas"
+      more_options: "Mais opções…"
       select_timeframe: "Selecione um intervalo de tempo"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> postou <a href='%{topicUrl}'>o tópico</a>"
@@ -1355,6 +1394,62 @@ pt_BR:
         warnings: "Avisos oficiais"
         read_more_in_group: "Quer ler mais? Veja outras mensagens em %{groupLink}."
         read_more: "Quer ler mais? Veja outras mensagens em <a href='%{basePath}/u/%{username}/messages'>mensagens pessoais</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Há <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># mensagem não lida</a>}
+                other {Há <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># mensagens não lidas</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { e <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nova</a> mensagem restante, ou procure outras mensagens em {groupLink}}
+                other { e <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># novas</a> mensagens restantes, ou procure outras mensagens em {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Há <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># mensagem restante</a> não lida, ou procure outras mensagens em {groupLink}}
+                other {Há <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># mensagens restantes</a> não lidas, ou procure outras mensagens em {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Há <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nova</a> mensagem restante, ou procure outras mensagens em {groupLink}}
+                other {Há <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># novas</a> mensagens restantes, ou procure outras mensagens em {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Há <a href="{basePath}/u/{username}/messages/unread"># mensagem não lida</a>}
+                other {há <a href="{basePath}/u/{username}/messages/unread"># mensagens não lidas</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { e <a href="{basePath}/u/{username}/messages/new"># nova</a> mensage restante, ou procure outras <a href="{basePath}/u/{username}/messages">mensagens pessoais</a>}
+                other { e <a href="{basePath}/u/{username}/messages/new"># novas</a> mensagens restantes, ou procure outras <a href="{basePath}/u/{username}/messages">mensagens pessoais</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Há <a href="{basePath}/u/{username}/messages/unread"># mensagem</a> não lida restante, ou procure outras <a href="{basePath}/u/{username}/messages">mensagens pessoais</a>}
+                other {Há <a href="{basePath}/u/{username}/messages/unread"># mensagens restantes</a> não lidas, ou procure outras <a href="{basePath}/u/{username}/messages">mensagens pessoais</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Há <a href="{basePath}/u/{username}/messages/new"># nova</a> mensagem restante, ou procure outras <a href="{basePath}/u/{username}/messages">mensagens pessoais</a>}
+                other {Há <a href="{basePath}/u/{username}/messages/new"># novas</a> mensagens restantes, ou procure outras <a href="{basePath}/u/{username}/messages">mensagens pessoais</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Conta"
         security: "Segurança"
@@ -1951,7 +2046,41 @@ pt_BR:
       logout_disabled: "Não é possível sair enquanto o site estiver em modo somente leitura. Esse recurso está desativado."
     staff_writes_only_mode:
       enabled: "Este site está no modo apenas para funcionários. Continue navegando, mas as respostas, curtidas e outras ações são limitadas apenas aos membros da equipe."
+    logs_error_rate_notice:
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# erro/hora}
+          other {# erros/hora}
+        }</a> atingiu o limite de configuração do site de {limit, plural,
+            one {# erro/hora}
+          other {# errors/hora}
+        }.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# erro/minuto}
+          other {# erros/minuto}
+        }</a> atingiu o limite de configuração do site de { limit, plural,
+            one {# erro/minuto}
+          other {# erros/minuto}
+        }.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# erro/hora}
+          other {# erros/hora}
+        }</a> excedeu o limite de configuração do site de { limit, plural,
+            one {# erro/hora}
+          other {# erros/hora}
+        }.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# erro/minuto}
+          other {# erros/minuto}
+        }</a> excedeu o limite de configuração do site de { limit, plural,
+            one {# erro/minuto}
+          other {# erros/minuto}
+        }.
     learn_more: "Saiba mais…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>Saiba mais…</a>"
     mute: Silenciar
     unmute: Remover silêncio
     last_post: Postado
@@ -2030,6 +2159,10 @@ pt_BR:
       associate: "Já tem uma conta? <a href='%{associate_link}'>Entre</a> para vincular sua conta do %{provider}."
       activation_title: "Ativar sua conta"
       already_have_account: "Já tem uma conta?"
+      progress_bar:
+        signup: "Cadastrar-se"
+        approve: "Aprovar"
+        login: "Entrar"
     forgot_password:
       title: "Redefinição de senha"
       action: "Esqueci minha senha"
@@ -2226,6 +2359,7 @@ pt_BR:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} é maior do que o máximo permitido de %{max_file_size}"
+        size_too_small: "%{provided_file_size} é menor do que o mínimo permitido de %{min_file_size}"
     emoji_picker:
       filter_placeholder: Pesquisar por emoji
       smileys_&_emotion: Carinhas e emotion
@@ -2444,7 +2578,7 @@ pt_BR:
       post_approved: "Sua postagem foi aprovada"
       reviewable_items: "itens que exigem revisão"
       watching_first_post_label: "Novo tópico"
-      user_moved_post: "%{username} moveu"
+      user_moved_post: "%{username} movido(a)"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -3715,6 +3849,7 @@ pt_BR:
         none: "nenhuma subcategoria"
       colors_disabled: "Não é possível selecionar cores porque você tem um, ou não tem nenhum, estilo de categoria."
     flagging:
+      title: "Agradecemos por manter a nossa comunidade um ambiente saudável!"
       action: "Sinalizar resposta"
       take_action: "Tomar medida…"
       take_action_options:
@@ -3762,6 +3897,7 @@ pt_BR:
           one: "%{count} restante"
           other: "%{count} restantes"
     flagging_topic:
+      title: "Agradecemos por manter a nossa comunidade um ambiente saudável!"
       action: "Sinalizar tópico"
       notify_action: "Mensagem"
     topic_map:
@@ -4226,6 +4362,7 @@ pt_BR:
         everyone_can_use: "Etiquetas podem ser usadas por todos(as)"
         usable_only_by_groups: "Etiquetas são visíveis para todos(as), mas somente os seguintes grupos podem usá-las"
         visible_only_to_groups: "As etiquetas são visíveis somente para os seguintes grupos"
+        cannot_save: "Não é possível salvar grupo de etiquetas. Verifique se há pelo menos uma etiqueta presente, o nome do grupo de etiquetas não está vazio, tem menos de 100 caracteres, e se um grupo foi selecionado para permissão de etiquetas."
         tags_placeholder: "Pesquisar ou criar etiquetas"
         parent_tag_placeholder: "Opcional"
         select_groups_placeholder: "Selecionar grupos…"
@@ -4599,7 +4736,7 @@ pt_BR:
         problems_found: "Algumas dicas baseadas nas configurações atuais do seu site"
         new_features:
           title: "Novidades"
-          subtitle: "Para obter ainda mais informações sobre os recursos e melhorias novas que são adicionados o tempo todo, veja as <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>notas de versão</a>."
+          subtitle: "Estamos lançando recursos e melhorias inéditas o tempo todo. Esta página contém os principais. Clique em \"Saiba mais\" se quiser ver as notas da versão completas."
           previous_announcements: "Confira os anúncios de recursos novos no <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Saiba mais..."
         last_checked: "Última verificação"
@@ -5131,6 +5268,7 @@ pt_BR:
           back: "Voltar para sinalizadores"
           delete: "Excluir"
           delete_confirm: 'Você tem certeza de que deseja excluir "%{name}"?'
+          flags_tab: "Sinalizações"
           form:
             add_header: "Adicionar sinalizador"
             edit_header: "Editar sinalizador"
@@ -5156,7 +5294,6 @@ pt_BR:
             move_down: "Mover para baixo"
       plugins:
         title: "Plugins"
-        installed: "Plugins nstalados"
         name: "Nome"
         none_installed: "Você não tem nenhum plugin instalado."
         version: "Versão"
@@ -5194,10 +5331,13 @@ pt_BR:
         legacy: "Legado"
       backups:
         title: "Backups"
+        files_title: "Arquivos de cópia de segurança"
+        description: "Os arquivos de cópia de segurança do Discourse incluem todo o banco de dados do site. Nele, estão contidos todo o conteúdo do site: tópicos, postagens, usuários(as), grupos, configurações, temas etc. Dependendo de como o arquivo de cópia de segurança for criado, envios podem estar inclusos."
         menu:
           backups: "Backups"
+          backup_files: "Arquivos de cópia de segurança"
           logs: "Registros"
-        none: "Nenhum backup disponível."
+        none: "Nenhum backup disponível"
         read_only:
           enable:
             title: "Ativar modo somente leitura"
@@ -5235,12 +5375,12 @@ pt_BR:
           download:
             label: "Download"
             title: "Enviar e-mail com link para download"
-            alert: "Um link para fazer o download deste backup foi enviado por e-mail."
+            alert: "Um link para fazer o download deste backup foi enviado por e-mail"
           destroy:
             title: "Remover o backup"
             confirm: "Tem certeza de que quer desfazer este backup?"
           restore:
-            is_disabled: "A opção de restaurar está desativada nas configurações do site."
+            is_disabled: "Restauração desativada neste momento. Para ativar, acesse as <a href='%{url}'>configurações do site</a>."
             label: "Restaurar"
             title: "Restaurar o backup"
             confirm: "Tem certeza de que deseja restaurar este backup?"
@@ -6355,6 +6495,7 @@ pt_BR:
         show_overriden: "Exibir apenas substituídos"
         show_outdated: "Mostrar somente desatualizado/inválido"
         show_untranslated: "Mostrar apenas sem tradução"
+        only_show_selected_locale: "Mostrar resultados apenas no local selecionado"
         locale: "Idioma:"
         more_than_50_results: "Existem mais de 50 resultados. Refine sua pesquisa."
         no_results: "Nennhum texto de site correspondente encontrado"

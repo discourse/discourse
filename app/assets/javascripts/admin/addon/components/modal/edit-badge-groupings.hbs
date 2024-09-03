@@ -37,13 +37,17 @@
         {{/each}}
       </ul>
     </div>
-    <DButton @action={{this.add}} @label="admin.badges.new" />
+    <DButton
+      @action={{this.add}}
+      class="badge-groupings__add-grouping"
+      @label="admin.badges.new"
+    />
   </:body>
   <:footer>
     <DButton
       @action={{this.saveAll}}
       @label="admin.badges.save"
-      class="btn-primary"
+      class="btn-primary badge-groupings__save"
       @disabled={{this.submitDisabled}}
     />
     <DButton

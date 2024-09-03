@@ -19,4 +19,5 @@ DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggers::POST_CREATED
   field :valid_trust_levels, component: :"trust-levels"
   field :first_post_only, component: :boolean
   field :first_topic_only, component: :boolean
+  field :skip_via_email, component: :boolean
 end

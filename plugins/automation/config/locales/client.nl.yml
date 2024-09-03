@@ -209,6 +209,14 @@ nl:
             valid_trust_levels:
               label: Geldige vertrouwensniveaus
               description: Wordt alleen getriggerd als een bericht wordt gemaakt door een gebruiker met deze vertrouwensniveaus. Standaard ingesteld op elk vertrouwensniveau
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: Categorieën observeren
+              description: Wordt alleen getriggerd als het topic in een van deze categorieën valt
+            watching_tags:
+              label: Tags observeren
+              description: Wordt alleen getriggerd als het topic een van deze tags heeft
         after_post_cook:
           fields:
             valid_trust_levels:
