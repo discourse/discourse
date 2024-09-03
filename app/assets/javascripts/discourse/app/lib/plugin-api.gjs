@@ -9,6 +9,7 @@ import $ from "jquery";
 import { h } from "virtual-dom";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
+import { addCardClickListenerSelector } from "discourse/components/card-contents-base";
 import {
   addApiImageWrapperButtonClickEvent,
   addComposerUploadHandler,
@@ -112,7 +113,6 @@ import {
 } from "discourse/lib/transformer";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
-import { addCardClickListenerSelector } from "discourse/mixins/card-contents-base";
 import { addCustomUserFieldValidationCallback } from "discourse/mixins/user-fields-validation";
 import Composer, {
   registerCustomizationCallback,

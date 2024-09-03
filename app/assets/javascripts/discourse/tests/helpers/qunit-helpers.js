@@ -13,6 +13,7 @@ import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, skip, test } from "qunit";
 import sinon from "sinon";
 import { clearAboutPageActivities } from "discourse/components/about-page";
+import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
 import {
   cleanUpComposerUploadHandler,
   cleanUpComposerUploadMarkdownResolver,
@@ -75,7 +76,6 @@ import {
   setTestPresence,
 } from "discourse/lib/user-presence";
 import { resetUserSearchCache } from "discourse/lib/user-search";
-import { resetCardClickListenerSelector } from "discourse/mixins/card-contents-base";
 import { resetComposerCustomizations } from "discourse/models/composer";
 import { clearAuthMethods } from "discourse/models/login-method";
 import { clearNavItems } from "discourse/models/nav-item";
