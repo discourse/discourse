@@ -142,7 +142,6 @@ uk:
       header_indicator_preference:
         title: "Показувати індикатор активності в заголовку"
         all_new: "Усі нові повідомлення"
-        dm_and_mentions: "Прямі повідомлення та згадки"
         only_mentions: "Тільки згадки"
         never: "Ніколи"
       separate_sidebar_mode:
@@ -684,10 +683,10 @@ uk:
         notifications:
           regular:
             title: "Нормальний"
-            description: "Ви отримаєте сповіщення, якщо хтось згадає ваш @name у цій темі."
           tracking:
             title: "Стежити"
-            description: "Кількість нових відповідей для цього ланцюжка буде показано в списку ланцюжків і на каналі. Ви отримаєте сповіщення, якщо хтось згадає ваше @name у цій темі."
+          watching:
+            title: "Слідкувати"
         participants_other_count:
           one: "+%{count}"
           few: "+%{count}"

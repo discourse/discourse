@@ -51,7 +51,6 @@ ro:
       header_indicator_preference:
         title: "Afișați indicatorul de activitate în antet"
         all_new: "Toate mesajele noi"
-        dm_and_mentions: "Mesaje directe și mențiuni"
         never: "Niciodată"
       flag: "Marchează cu marcaj de avertizare"
       join: "Alătură-te"
@@ -184,7 +183,7 @@ ro:
           other: "%{count} de zile"
       emoji_picker:
         objects: "Obiecte"
-        flags: "Marcaje de avertizare"
+        flags: "Semnalări"
       thread:
         title: "Titlu"
         replies:
@@ -199,6 +198,8 @@ ro:
             title: "Normal"
           tracking:
             title: "Urmărire"
+          watching:
+            title: "Urmărind activ"
       threads:
         list: "Fire"
       draft_channel_screen:

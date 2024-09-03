@@ -1,11 +1,15 @@
+import { setOwner } from "@ember/owner";
+import { service } from "@ember/service";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
 
-//  Use the message bus for live reloading of components for faster development.
-export default {
-  initialize(owner) {
-    this.messageBus = owner.lookup("service:message-bus");
-    this.session = owner.lookup("service:session");
+// Use the message bus for live reloading of components for faster development.
+class LiveDevelopmentInit {
+  @service messageBus;
+  @service session;
+
+  constructor(owner) {
+    setOwner(this, owner);
 
     const PRESERVED_QUERY_PARAMS = ["preview_theme_id", "pp", "safe_mode"];
     const params = new URLSearchParams(window.location.search);
@@ -34,11 +38,11 @@ export default {
       this.onFileChange,
       this.session.mbLastFileChangeId
     );
-  },
+  }
 
   teardown() {
     this.messageBus.unsubscribe("/file-change", this.onFileChange);
-  },
+  }
 
   @bind
   onFileChange(data) {
@@ -75,12 +79,22 @@ export default {
         }
       }
     });
-  },
+  }
 
   refreshCSS(node, newHref) {
     const reloaded = node.cloneNode(true);
     reloaded.href = newHref;
     node.insertAdjacentElement("afterend", reloaded);
     discourseLater(() => node?.parentNode?.removeChild(node), 500);
+  }
+}
+
+export default {
+  initialize(owner) {
+    this.instance = new LiveDevelopmentInit(owner);
+  },
+  teardown() {
+    this.instance.teardown();
+    this.instance = null;
   },
 };

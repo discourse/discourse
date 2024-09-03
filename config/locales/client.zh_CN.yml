@@ -5019,7 +5019,6 @@ zh_CN:
             move_down: "下移"
       plugins:
         title: "插件"
-        installed: "安装的插件"
         name: "名称"
         none_installed: "您没有安装任何插件。"
         version: "版本"

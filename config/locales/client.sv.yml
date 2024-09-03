@@ -4886,7 +4886,6 @@ sv:
             chat_message: "chattmeddelanden"
       plugins:
         title: "Tillägg"
-        installed: "Installerade tillägg"
         name: "Namn"
         none_installed: "Du har inga tillägg installerade."
         version: "Version"

@@ -5286,7 +5286,6 @@ nl:
             move_down: "Omlaag verplaatsen"
       plugins:
         title: "Plug-ins"
-        installed: "Geïnstalleerde plug-ins"
         name: "Naam"
         none_installed: "Je hebt geen plug-ins geïnstalleerd."
         version: "Versie"

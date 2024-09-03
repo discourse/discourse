@@ -54,12 +54,33 @@ module Chat
           AND chat_messages.thread_id IS NOT NULL
           AND chat_messages.id != chat_threads.original_message_id
           AND (chat_channels.threading_enabled OR chat_threads.force = true)
-          AND user_chat_thread_memberships.notification_level NOT IN (:quiet_notification_levels)
+          AND user_chat_thread_memberships.notification_level = :tracking_level
           AND original_message.deleted_at IS NULL
           AND user_chat_channel_memberships.muted = false
           AND user_chat_channel_memberships.user_id = :user_id
         ) AS unread_count,
-        0 AS mention_count,
+        0 as mention_count,
+        (
+          SELECT COUNT(*) AS watched_threads_unread_count
+          FROM chat_messages
+          INNER JOIN chat_channels ON chat_channels.id = chat_messages.chat_channel_id
+          INNER JOIN chat_threads ON chat_threads.id = chat_messages.thread_id AND chat_threads.channel_id = chat_messages.chat_channel_id
+          INNER JOIN user_chat_thread_memberships ON user_chat_thread_memberships.thread_id = chat_threads.id
+          INNER JOIN user_chat_channel_memberships ON user_chat_channel_memberships.chat_channel_id = chat_messages.chat_channel_id
+          INNER JOIN chat_messages AS original_message ON original_message.id = chat_threads.original_message_id
+          WHERE chat_messages.thread_id = memberships.thread_id
+          AND chat_messages.user_id != :user_id
+          AND user_chat_thread_memberships.user_id = :user_id
+          AND chat_messages.id > COALESCE(user_chat_thread_memberships.last_read_message_id, 0)
+          AND chat_messages.deleted_at IS NULL
+          AND chat_messages.thread_id IS NOT NULL
+          AND chat_messages.id != chat_threads.original_message_id
+          AND (chat_channels.threading_enabled OR chat_threads.force = true)
+          AND user_chat_thread_memberships.notification_level = :watching_level
+          AND original_message.deleted_at IS NULL
+          AND user_chat_channel_memberships.user_id = :user_id
+          AND NOT user_chat_channel_memberships.muted
+        ) AS watched_threads_unread_count,
         chat_threads.channel_id,
         memberships.thread_id
         FROM user_chat_thread_memberships AS memberships
@@ -75,12 +96,12 @@ module Chat
           SELECT * FROM (
             #{sql}
           ) AS thread_tracking
-          WHERE (unread_count > 0 OR mention_count > 0)
+          WHERE (unread_count > 0 OR mention_count > 0 OR watched_threads_unread_count > 0)
         SQL
 
       sql += <<~SQL if include_missing_memberships && include_read
         UNION ALL
-        SELECT 0 AS unread_count, 0 AS mention_count, chat_threads.channel_id, chat_threads.id AS thread_id
+        SELECT 0 AS unread_count, 0 AS mention_count, 0 AS watched_threads_unread_count, chat_threads.channel_id, chat_threads.id AS thread_id
         FROM chat_channels
         INNER JOIN chat_threads ON chat_threads.channel_id = chat_channels.id
         LEFT JOIN user_chat_thread_memberships ON user_chat_thread_memberships.thread_id = chat_threads.id
@@ -99,10 +120,8 @@ module Chat
         user_id: user_id,
         notification_type: ::Notification.types[:chat_mention],
         limit: MAX_THREADS,
-        quiet_notification_levels: [
-          ::Chat::UserChatThreadMembership.notification_levels[:muted],
-          ::Chat::UserChatThreadMembership.notification_levels[:normal],
-        ],
+        tracking_level: ::Chat::UserChatThreadMembership.notification_levels[:tracking],
+        watching_level: ::Chat::UserChatThreadMembership.notification_levels[:watching],
       )
     end
   end

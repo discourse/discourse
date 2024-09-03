@@ -3986,7 +3986,6 @@ lt:
             post: "žinutės"
       plugins:
         title: "Plugins"
-        installed: "Installed Plugins"
         name: "Vardas"
         none_installed: "Neturi instaliavęs jokių plugins'ų"
         version: "Versija"

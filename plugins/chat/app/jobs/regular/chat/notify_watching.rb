@@ -15,7 +15,6 @@ module Jobs
         @is_direct_message_channel = @chat_channel.direct_message_channel?
 
         always_notification_level = ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
-
         members =
           ::Chat::UserChatChannelMembership
             .includes(user: :groups)
@@ -25,9 +24,10 @@ module Jobs
             .where(chat_channel_id: @chat_channel.id)
             .where(following: true)
             .where(
-              "desktop_notification_level = ? OR mobile_notification_level = ?",
-              always_notification_level,
-              always_notification_level,
+              "desktop_notification_level = :always OR mobile_notification_level = :always OR users.id IN (SELECT user_id FROM user_chat_thread_memberships WHERE thread_id = :thread_id AND notification_level = :watching)",
+              always: always_notification_level,
+              thread_id: @chat_message.thread_id,
+              watching: ::Chat::NotificationLevels.all[:watching],
             )
             .merge(User.not_suspended)
 
@@ -83,6 +83,17 @@ module Jobs
           channel_id: @chat_channel.id,
         }
 
+        if @chat_message.in_thread? && !membership.muted?
+          thread_membership =
+            ::Chat::UserChatThreadMembership.find_by(
+              user_id: user.id,
+              thread_id: @chat_message.thread_id,
+              notification_level: "watching",
+            )
+
+          thread_membership && create_watched_thread_notification(thread_membership)
+        end
+
         if membership.desktop_notifications_always? && !membership.muted?
           send_notification =
             DiscoursePluginRegistry.push_notification_filters.all? do |filter|
@@ -100,6 +111,27 @@ module Jobs
         if membership.mobile_notifications_always? && !membership.muted?
           ::PostAlerter.push_notification(user, payload)
         end
+      end
+
+      def create_watched_thread_notification(thread_membership)
+        thread = @chat_message.thread
+        description = thread.title.presence || thread.original_message.message
+
+        data = {
+          username: @creator.username,
+          chat_message_id: @chat_message.id,
+          chat_channel_id: @chat_channel.id,
+          chat_thread_id: @chat_message.thread_id,
+          last_read_message_id: thread_membership&.last_read_message_id,
+          description: description,
+          user_ids: [@chat_message.user_id],
+        }
+
+        Notification.consolidate_or_create!(
+          notification_type: ::Notification.types[:chat_watched_thread],
+          user_id: thread_membership.user_id,
+          data: data.to_json,
+        )
       end
     end
   end

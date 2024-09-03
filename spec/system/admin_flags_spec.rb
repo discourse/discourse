@@ -160,14 +160,14 @@ describe "Admin Flags Page", type: :system do
       [
         "silence new user sensitivity",
         "num users to silence new user",
+        "flag sockpuppets",
+        "num flaggers to close topic",
+        "auto respond to flag actions",
+        "high trust flaggers auto hide posts",
         "max flags per day",
         "tl2 additional flags per day multiplier",
         "tl3 additional flags per day multiplier",
         "tl4 additional flags per day multiplier",
-        "flag sockpuppets",
-        "auto respond to flag actions",
-        "num flaggers to close topic",
-        "high trust flaggers auto hide posts",
       ],
     )
   end

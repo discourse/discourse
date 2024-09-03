@@ -107,7 +107,6 @@ cs:
       header_indicator_preference:
         title: "Zobrazit indikátor aktivity v záhlaví"
         all_new: "Všechny nové zprávy"
-        dm_and_mentions: "Přímé zprávy a zmínky"
         only_mentions: "Pouze zmínky"
         never: "Nikdy"
       separate_sidebar_mode:
@@ -310,6 +309,8 @@ cs:
             title: "Normální"
           tracking:
             title: "Sledované"
+          watching:
+            title: "Hlídání"
       draft_channel_screen:
         header: "Nová zpráva"
         cancel: "Zrušit"

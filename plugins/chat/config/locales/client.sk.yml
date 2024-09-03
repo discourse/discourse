@@ -142,7 +142,6 @@ sk:
       header_indicator_preference:
         title: "Zobrazenie indikátora aktivity v záhlaví"
         all_new: "Všetky nové správy"
-        dm_and_mentions: "Súkromné správy a zmienky"
         only_mentions: "Iba zmienky"
         never: "Nikdy"
       separate_sidebar_mode:
@@ -672,10 +671,10 @@ sk:
         notifications:
           regular:
             title: "Normálne"
-            description: "Budete upozornení, ak niekto v tomto vlákne uvedie vaše @meno."
           tracking:
             title: "Pozorovať"
-            description: "Počet nových odpovedí na toto vlákno sa zobrazí v zozname vlákien a v kanáli. Budete upozornení, ak niekto v tomto vlákne spomenie vaše @meno."
+          watching:
+            title: "Sledovať"
         participants_other_count:
           one: "+%{count}"
           few: "+%{count}"

@@ -103,6 +103,43 @@ export default {
             };
           }
         );
+
+        api.registerNotificationTypeRenderer(
+          "chat_watched_thread",
+          (NotificationItemBase) => {
+            return class extends NotificationItemBase {
+              icon = "discourse-threads";
+              linkTitle = I18n.t("notifications.titles.chat_watched_thread");
+              description = this.notification.data.description;
+
+              get label() {
+                const data = this.notification.data;
+
+                if (data.user_ids.length > 2) {
+                  return I18n.t("notifications.chat_watched_thread_label", {
+                    username: formatUsername(data.username2),
+                    count: data.user_ids.length - 1,
+                  });
+                } else if (data.user_ids.length === 2) {
+                  return I18n.t("notifications.chat_watched_thread_label", {
+                    username: formatUsername(data.username2),
+                    username2: formatUsername(data.username),
+                    count: 1,
+                  });
+                } else {
+                  return formatUsername(data.username);
+                }
+              }
+
+              get linkHref() {
+                const data = this.notification.data;
+                return getURL(
+                  `/chat/c/-/${data.chat_channel_id}/t/${data.chat_thread_id}/${data.chat_message_id}`
+                );
+              }
+            };
+          }
+        );
       }
 
       if (api.registerUserMenuTab) {
@@ -123,7 +160,8 @@ export default {
             get count() {
               return (
                 this.getUnreadCountForType("chat_mention") +
-                this.getUnreadCountForType("chat_invitation")
+                this.getUnreadCountForType("chat_invitation") +
+                this.getUnreadCountForType("chat_watched_thread")
               );
             }
 
@@ -133,6 +171,7 @@ export default {
                 "chat_mention",
                 "chat_message",
                 "chat_quoted",
+                "chat_watched_thread",
               ];
             }
           };

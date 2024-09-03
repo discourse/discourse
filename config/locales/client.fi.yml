@@ -5293,7 +5293,6 @@ fi:
             move_down: "Siirrä alas"
       plugins:
         title: "Lisäosat"
-        installed: "Asennetut lisäosat"
         name: "Nimi"
         none_installed: "Sinulla ei ole yhtään asennettua lisäosaa."
         version: "Versio"

@@ -56,6 +56,11 @@ module PageObjects
         self
       end
 
+      def edit_groupings
+        page.find(".edit-groupings-btn").click
+        self
+      end
+
       def form
         @form ||= PageObjects::Components::FormKit.new("form")
       end
