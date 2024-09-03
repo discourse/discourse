@@ -68,11 +68,6 @@ jobs:
       - name: Set working directory owner
         run: chown root:root .
 
-      - name: Remove Chromium
-        continue-on-error: true
-        if: matrix.build_type == 'system'
-        run: apt remove -y chromium-driver chromium
-
       - name: Set PARALLEL_TEST_PROCESSORS for system tests
         if: matrix.build_type == 'system'
         run: |
