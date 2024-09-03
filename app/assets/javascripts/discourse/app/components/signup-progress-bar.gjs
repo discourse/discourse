@@ -50,10 +50,10 @@ export default class SignupProgressBar extends Component {
       <div class="signup-progress-bar">
         {{#each this.steps as |step index|}}
           <div
-            class="{{concatClass
-                'signup-progress-bar__segment'
-                (concat '--' (this.getStepState index))
-              }}"
+            class={{concatClass
+              "signup-progress-bar__segment"
+              (concat "--" (this.getStepState index))
+            }}
           >
             <div class="signup-progress-bar__step">
               <div class="signup-progress-bar__circle">
