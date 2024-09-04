@@ -781,8 +781,6 @@ class BulkImport::Generic < BulkImport::Base
       ORDER BY topic_id, post_number, id
     SQL
 
-    group_names = Group.pluck(:id, :name).to_h
-
     create_posts(posts) do |row|
       next if row["raw"].blank?
       next unless (topic_id = topic_id_from_imported_id(row["topic_id"]))
@@ -796,7 +794,7 @@ class BulkImport::Generic < BulkImport::Base
         topic_id: topic_id,
         user_id: user_id_from_imported_id(row["user_id"]),
         created_at: to_datetime(row["created_at"]),
-        raw: post_raw(row, group_names),
+        raw: raw_with_placeholders_interpolated(row["raw"], row),
         like_count: row["like_count"],
         reply_to_post_number:
           row["reply_to_post_id"] ? post_number_from_imported_id(row["reply_to_post_id"]) : nil,
@@ -806,8 +804,12 @@ class BulkImport::Generic < BulkImport::Base
     posts.close
   end
 
-  def post_raw(row, group_names)
-    raw = row["raw"].dup
+  def group_id_name_map
+    @group_id_name_map ||= Group.pluck(:id, :name).to_h
+  end
+
+  def raw_with_placeholders_interpolated(raw, row)
+    raw = raw.dup
     placeholders = row["placeholders"]&.then { |json| JSON.parse(json) }
 
     if (polls = placeholders&.fetch("polls", nil))
@@ -833,22 +835,7 @@ class BulkImport::Generic < BulkImport::Base
 
     if (mentions = placeholders&.fetch("mentions", nil))
       mentions.each do |mention|
-        name =
-          if mention["type"] == "user"
-            if mention["id"]
-              username_from_id(user_id_from_imported_id(mention["id"]))
-            elsif mention["name"]
-              user_id = user_id_from_original_username(mention["name"])
-              user_id ? username_from_id(user_id) : mention["name"]
-            end
-          elsif mention["type"] == "group"
-            if mention["id"]
-              group_id = group_id_from_imported_id(mention["id"])
-              group_id ? group_names[group_id] : mention["name"]
-            else
-              mention["name"]
-            end
-          end
+        name = resolve_mentioned_name(mention)
 
         puts "#{mention["type"]} not found -- #{mention["placeholder"]}" unless name
         raw.gsub!(mention["placeholder"], " @#{name} ")
@@ -955,6 +942,40 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     raw
+  end
+
+  def resolve_mentioned_name(mention)
+    # NOTE: original_id lookup order is important until post and chat mentions are unified
+    original_id = mention["target_id"] || mention["id"]
+    name = mention["name"]
+
+    case mention["type"]
+    when "user", "Chat::UserMention"
+      resolved_user_name(original_id, name)
+    when "group", "Chat::GroupMention"
+      resolved_group_name(original_id, name)
+    when "Chat::HereMention"
+      "here"
+    when "Chat::AllMention"
+      "all"
+    end
+  end
+
+  def resolved_user_name(original_id, name)
+    user_id =
+      if original_id
+        user_id_from_imported_id(original_id)
+      elsif name
+        user_id_from_original_username(name)
+      end
+
+    user_id ? username_from_id(user_id) : name
+  end
+
+  def resolved_group_name(original_id, name)
+    group_id = group_id_from_imported_id(original_id) if original_id
+
+    group_id ? group_id_name_map[group_id] : name
   end
 
   def process_raw(original_raw)
@@ -2635,7 +2656,7 @@ class BulkImport::Generic < BulkImport::Base
         deleted_at: to_datetime(row["deleted_at"]),
         deleted_by_id: deleted_by_id,
         in_reply_to_id: in_reply_to_id,
-        message: row["message"],
+        message: raw_with_placeholders_interpolated(row["message"], row),
       }
     end
 

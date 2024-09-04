@@ -1911,7 +1911,8 @@ class BulkImport::Base
     message[:last_editor_id] ||= message[:user_id]
     message[:message] = (message[:message] || "").scrub.strip.presence || "<Empty imported message>"
     message[:message] = normalize_text(message[:message])
-    message[:cooked] = pre_cook(message[:message])
+    message[:cooked] = ::Chat::Message.cook(message[:message], user_id: message[:last_editor_id])
+    message[:cooked_version] = ::Chat::Message::BAKED_VERSION
     message[:created_at] ||= NOW
     message[:updated_at] ||= NOW
 
