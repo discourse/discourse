@@ -403,8 +403,7 @@ GEM
       io-console (~> 0.5)
     request_store (1.7.0)
       rack (>= 1.4)
-    rexml (3.3.6)
-      strscan
+    rexml (3.3.7)
     rinku (2.0.6)
     rotp (6.3.0)
     rouge (4.3.0)
@@ -542,7 +541,6 @@ GEM
     sshkey (3.0.0)
     stackprof (0.2.26)
     stringio (3.1.1)
-    strscan (3.1.0)
     syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
     syntax_tree-disable_ternary (1.0.0)
