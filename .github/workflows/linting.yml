@@ -50,6 +50,17 @@ jobs:
           bundle install --jobs 4
           bundle clean
 
+      - name: Get pnpm cache directory
+        id: pnpm-cache-dir
+        run: echo "dir=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+
+      - name: pnpm cache
+        uses: actions/cache@v4
+        id: pnpm-cache
+        with:
+          path: ${{ steps.pnpm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+
       - name: pnpm install
         run: pnpm install --frozen-lockfile
 
