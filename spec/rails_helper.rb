@@ -154,6 +154,9 @@ module TestSetup
     Middleware::AnonymousCache.disable_anon_cache
     BlockRequestsMiddleware.allow_requests!
     BlockRequestsMiddleware.current_example_location = nil
+
+    # Warm up v8 context (used for cooking Markdown)
+    PrettyText.v8
   end
 end
 
