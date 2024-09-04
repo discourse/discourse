@@ -48,10 +48,10 @@ export default class AboutController extends Controller {
 
   @discourseComputed("site.displayed_about_plugin_stat_groups")
   statGroups() {
-    return Array.from(
-      new Set(customStats).union(
-        new Set(this.site.displayed_about_plugin_stat_groups || [])
-      )
-    );
+    const set = new Set(customStats);
+    for (const name of this.site.displayed_about_plugin_stat_groups || []) {
+      set.add(name);
+    }
+    return Array.from(set);
   }
 }
