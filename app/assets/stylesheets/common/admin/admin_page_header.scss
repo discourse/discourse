@@ -3,8 +3,12 @@
   &__title-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1em;
+    align-items: stretch;
+    margin-bottom: var(--space-2);
+
+    @media (max-width: $mobile-breakpoint) {
+      flex-direction: column;
+    }
 
     h1,
     h3 {
@@ -14,8 +18,20 @@
     .admin-page-header__actions {
       display: flex;
       align-items: center;
+      justify-content: flex-end;
+
+      @media (max-width: $mobile-breakpoint) {
+        flex-direction: column;
+      }
+
       button {
-        margin-left: 1em;
+        margin-left: var(--space-2);
+
+        @media (max-width: $mobile-breakpoint) {
+          width: 100%;
+          margin-bottom: var(--space-2);
+          margin-left: 0;
+        }
       }
     }
   }
