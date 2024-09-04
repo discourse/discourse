@@ -1,6 +1,27 @@
 <div class="badges">
   <div class="badges-header">
-    <h3 class="badges-heading">{{i18n "admin.badges.title"}}</h3>
+    <AdminPageHeader
+      @titleLabel="admin.badges.title"
+      @descriptionLabel="admin.badges.description"
+      @learnMoreUrl="https://meta.discourse.org/t/understanding-and-using-badges/32540"
+    >
+      <:breadcrumbs>
+        <DBreadcrumbsItem
+          @path="/admin/badges"
+          @label={{i18n "admin.badges.title"}}
+        />
+      </:breadcrumbs>
+      <:actions as |actions|>
+        <actions.Default
+          @action={{routeAction "editGroupings"}}
+          @title="admin.badges.group_settings"
+          @label="admin.badges.group_settings"
+          @icon="cog"
+          {{!-- class="admin-backups__start" --}}
+        />
+      </:actions>
+    </AdminPageHeader>
+
     <div class="create-new-badge">
 
       <LinkTo @route="adminBadges.award" @model="new" class="btn btn-default">
