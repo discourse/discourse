@@ -1392,6 +1392,51 @@ RSpec.describe Report do
 
         expect(total_consolidated).to eq(total_page_views)
       end
+
+      it "does not include any data before the first recorded browser page view (anon or logged in)" do
+        freeze_time DateTime.parse("2024-02-10")
+
+        3.times { ApplicationRequest.increment!(:page_view_logged_in) }
+        2.times { ApplicationRequest.increment!(:page_view_anon) }
+
+        CachedCounting.flush
+
+        freeze_time DateTime.parse("2024-03-10")
+
+        3.times { ApplicationRequest.increment!(:page_view_logged_in) }
+        2.times { ApplicationRequest.increment!(:page_view_anon) }
+
+        CachedCounting.flush
+
+        freeze_time DateTime.parse("2024-04-10")
+
+        3.times { ApplicationRequest.increment!(:page_view_crawler) }
+        8.times { ApplicationRequest.increment!(:page_view_logged_in) }
+        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+        2.times { ApplicationRequest.increment!(:page_view_anon) }
+        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+
+        CachedCounting.flush
+
+        report_in_range =
+          Report.find(
+            "consolidated_page_views_browser_detection",
+            start_date: DateTime.parse("2024-02-10").beginning_of_day,
+            end_date: DateTime.parse("2024-04-11").beginning_of_day,
+          )
+
+        page_view_crawler_report = report_in_range.data.find { |r| r[:req] == "page_view_crawler" }
+        page_view_logged_in_browser_report =
+          report_in_range.data.find { |r| r[:req] == "page_view_logged_in_browser" }
+        page_view_anon_browser_report =
+          report_in_range.data.find { |r| r[:req] == "page_view_anon_browser" }
+        page_view_other_report = report_in_range.data.find { |r| r[:req] == "page_view_other" }
+
+        expect(page_view_crawler_report[:data].sum { |d| d[:y] }).to eql(3)
+        expect(page_view_logged_in_browser_report[:data].sum { |d| d[:y] }).to eql(6)
+        expect(page_view_anon_browser_report[:data].sum { |d| d[:y] }).to eql(1)
+        expect(page_view_other_report[:data].sum { |d| d[:y] }).to eql(3)
+      end
     end
   end
 

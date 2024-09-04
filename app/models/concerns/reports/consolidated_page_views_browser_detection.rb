@@ -7,6 +7,16 @@ module Reports::ConsolidatedPageViewsBrowserDetection
     def report_consolidated_page_views_browser_detection(report)
       report.modes = [:stacked_chart]
 
+      first_browser_pageview_date =
+        DB.query_single(
+          <<~SQL,
+      SELECT date FROM application_requests
+      WHERE req_type = :page_view_logged_in_browser OR req_type = :page_view_anon_browser ORDER BY date LIMIT 1
+      SQL
+          page_view_logged_in_browser: ApplicationRequest.req_types[:page_view_logged_in_browser],
+          page_view_anon_browser: ApplicationRequest.req_types[:page_view_anon_browser],
+        ).first
+
       data =
         DB.query(
           <<~SQL,
@@ -24,7 +34,8 @@ module Reports::ConsolidatedPageViewsBrowserDetection
                 END
               ) AS page_view_other
             FROM application_requests
-            WHERE date >= :start_date AND date <= :end_date
+            WHERE date >= :start_date AND date <= :end_date AND date >= :first_browser_pageview_date
+
             GROUP BY date
             ORDER BY date ASC
           SQL
@@ -35,6 +46,7 @@ module Reports::ConsolidatedPageViewsBrowserDetection
           page_view_logged_in: ApplicationRequest.req_types[:page_view_logged_in],
           page_view_anon_browser: ApplicationRequest.req_types[:page_view_anon_browser],
           page_view_logged_in_browser: ApplicationRequest.req_types[:page_view_logged_in_browser],
+          first_browser_pageview_date: first_browser_pageview_date,
         )
 
       report.data = [
