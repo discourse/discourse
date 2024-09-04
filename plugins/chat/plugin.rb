@@ -500,9 +500,7 @@ after_initialize do
 
   register_email_unsubscriber("chat_summary", EmailControllerHelper::ChatSummaryUnsubscriber)
 
-  register_stat("chat_messages", show_in_ui: true, expose_via_api: true) do
-    Chat::Statistics.about_messages
-  end
+  register_stat("chat_messages", expose_via_api: true) { Chat::Statistics.about_messages }
   register_stat("chat_users", expose_via_api: true) { Chat::Statistics.about_users }
   register_stat("chat_channels", expose_via_api: true) { Chat::Statistics.about_channels }
 
