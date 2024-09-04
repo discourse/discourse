@@ -29,7 +29,7 @@ pre-commit:
     ember-template-lint:
       glob: "*.hbs"
       include: "app/assets/javascripts|plugins/.+?/assets/javascripts"
-      run: pnpm run ember-template-lint {staged_files}
+      run: pnpm ember-template-lint {staged_files}
     yaml-syntax:
       glob: "*.{yaml,yml}"
       # database.yml is an erb file not a yaml file
@@ -66,7 +66,7 @@ lints:
     eslint:
       run: pnpm eslint -f compact --quiet --ext .js .
     ember-template-lint:
-      run: pnpm run ember-template-lint .
+      run: pnpm ember-template-lint .
     yaml-syntax:
       glob: "*.{yaml,yml}"
       # database.yml is an erb file not a yaml file
