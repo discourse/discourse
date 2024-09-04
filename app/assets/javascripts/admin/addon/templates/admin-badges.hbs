@@ -1,41 +1,39 @@
 <div class="badges">
-  <div class="badges-header">
-    <AdminPageHeader
-      @titleLabel="admin.badges.title"
-      @descriptionLabel="admin.badges.description"
-      @learnMoreUrl="https://meta.discourse.org/t/understanding-and-using-badges/32540"
-    >
-      <:breadcrumbs>
-        <DBreadcrumbsItem
-          @path="/admin/badges"
-          @label={{i18n "admin.badges.title"}}
-        />
-      </:breadcrumbs>
-      <:actions as |actions|>
-        <actions.Default
-          @action={{routeAction "editGroupings"}}
-          @title="admin.badges.group_settings"
-          @label="admin.badges.group_settings"
-          @icon="cog"
-          class="edit-groupings-btn"
-        />
+  <AdminPageHeader
+    @titleLabel="admin.badges.title"
+    @descriptionLabel="admin.badges.description"
+    @learnMoreUrl="https://meta.discourse.org/t/understanding-and-using-badges/32540"
+  >
+    <:breadcrumbs>
+      <DBreadcrumbsItem
+        @path="/admin/badges"
+        @label={{i18n "admin.badges.title"}}
+      />
+    </:breadcrumbs>
+    <:actions as |actions|>
+      <actions.Primary
+        @route="adminBadges.show"
+        @routeModels="new"
+        @icon="plus"
+        @label="admin.badges.new"
+      />
 
-        <actions.Default
-          @route="adminBadges.award"
-          @routeModels="new"
-          @icon="upload"
-          @label="admin.badges.mass_award.title"
-        />
+      <actions.Default
+        @route="adminBadges.award"
+        @routeModels="new"
+        @icon="upload"
+        @label="admin.badges.mass_award.title"
+      />
 
-        <actions.Primary
-          @route="adminBadges.show"
-          @routeModels="new"
-          @icon="plus"
-          @label="admin.badges.new"
-        />
-      </:actions>
-    </AdminPageHeader>
-  </div>
+      <actions.Default
+        @action={{routeAction "editGroupings"}}
+        @title="admin.badges.group_settings"
+        @label="admin.badges.group_settings"
+        @icon="cog"
+        class="edit-groupings-btn"
+      />
+    </:actions>
+  </AdminPageHeader>
   <div class="content-list">
     <ul class="admin-badge-list">
       {{#each this.model as |badge|}}
