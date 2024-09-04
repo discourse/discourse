@@ -46,6 +46,7 @@ import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { setNotificationsLimit as setUserMenuNotificationsLimit } from "discourse/components/user-menu/notifications-list";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
+import { addLegacyStat as addLegacyAboutPageStat } from "discourse/controllers/about";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
@@ -3278,6 +3279,7 @@ class PluginApi {
    */
   addAboutPageActivity(name, func) {
     addAboutPageActivity(name, func);
+    addLegacyAboutPageStat(name);
   }
 
   #deprecatedHeaderWidgetOverride(widgetName, override) {

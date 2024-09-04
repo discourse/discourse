@@ -29,6 +29,7 @@ import { resetQuickSearchRandomTips } from "discourse/components/search-menu/res
 import { resetOnKeyUpCallbacks } from "discourse/components/search-menu/search-term";
 import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
+import { clearCustomStats as clearLegacyAboutPageStats } from "discourse/controllers/about";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
@@ -253,6 +254,7 @@ export function testCleanup(container, app) {
   resetTransformers();
   rollbackAllPrepends();
   clearAboutPageActivities();
+  clearLegacyAboutPageStats();
 }
 
 function cleanupCssGeneratorTags() {
