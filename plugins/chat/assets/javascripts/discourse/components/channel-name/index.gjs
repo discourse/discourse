@@ -53,9 +53,12 @@ export default class ChatChannelName extends Component {
             {{this.groupsDirectMessageTitle}}
           </span>
         {{else}}
-          <span class="chat-channel-name__label">
+          <div class="chat-channel-name__label">
             {{this.firstUser.username}}
-          </span>
+            {{#if this.unreadIndicator}}
+              <ChatChannelUnreadIndicator @channel={{@channel}} />
+            {{/if}}
+          </div>
           {{#if this.showUserStatus}}
             <UserStatusMessage
               @status={{get this.users "0.status"}}

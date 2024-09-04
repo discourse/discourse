@@ -10,7 +10,7 @@ const ChatChannelTitle = <template>
     }}
   >
     <ChannelIcon @channel={{@channel}} />
-    <ChannelName @channel={{@channel}} />
+    <ChannelName @channel={{@channel}} @unreadIndicator={{false}} />
 
     {{#if (has-block)}}
       {{yield}}
