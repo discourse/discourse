@@ -157,6 +157,11 @@ module TestSetup
 
     # Warm up v8 context (used for cooking Markdown)
     PrettyText.v8
+
+    # Warm up all available locales (used for `Email::Receiver`)
+    I18n.available_locales.each do |locale|
+      I18n.with_locale(locale) { I18n.t("user_notifications.reply_above_line") }
+    end
   end
 end
 
