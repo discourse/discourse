@@ -308,7 +308,8 @@ RSpec.describe TopicQuery do
       group_moderator = Fabricate(:user)
       group = Fabricate(:group)
       group.add(group_moderator)
-      category = Fabricate(:category, reviewable_by_group: group)
+      category = Fabricate(:category)
+      Fabricate(:category_moderation_group, category:, group:)
       _topic = Fabricate(:topic, category: category, deleted_at: 1.year.ago)
 
       expect(TopicQuery.new(admin, status: "deleted").list_latest.topics.size).to eq(1)

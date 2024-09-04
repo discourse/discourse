@@ -1091,8 +1091,9 @@ RSpec.describe PostRevisor do
 
     context "when logging group moderator edits" do
       fab!(:group_user)
-      fab!(:category) do
-        Fabricate(:category, reviewable_by_group_id: group_user.group.id, topic: topic)
+      fab!(:category) { Fabricate(:category, topic: topic) }
+      fab!(:category_moderation_group) do
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
       end
 
       before do

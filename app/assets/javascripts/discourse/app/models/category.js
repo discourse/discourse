@@ -761,7 +761,7 @@ export default class Category extends RestModel {
           "navigate_to_first_post_after_read"
         ),
         search_priority: this.search_priority,
-        reviewable_by_group_name: this.reviewable_by_group_name,
+        moderating_group_ids: this.moderating_group_ids,
         read_only_banner: this.read_only_banner,
         default_list_filter: this.default_list_filter,
       }),
