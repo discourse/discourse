@@ -2,13 +2,7 @@ import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 
 const PostMenuAdminButton = <template>
-  {{#if
-    (or
-      @transformedPost.canManage
-      @transformedPost.canWiki
-      @transformedPost.canEditStaffNotes
-    )
-  }}
+  {{#if (or @post.canManage @post.can_wiki @post.canEditStaffNotes)}}
     <DButton
       class="show-post-admin-menu"
       ...attributes

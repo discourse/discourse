@@ -71,7 +71,7 @@ export default class PostMenuDeleteButton extends Component {
   }
 
   <template>
-    {{#if @transformedPost.canEdit}}
+    {{#if @post.can_edit}}
       <DButton
         class={{this.className}}
         ...attributes

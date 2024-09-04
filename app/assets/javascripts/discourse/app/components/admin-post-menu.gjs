@@ -14,13 +14,13 @@ export default class AdminPostMenu extends Component {
   @service adminPostMenuButtons;
 
   get reviewUrl() {
-    return `/review?topic_id=${this.args.data.transformedPost.id}&status=all`;
+    return `/review?topic_id=${this.args.data.id}&status=all`;
   }
 
   get extraButtons() {
     return this.adminPostMenuButtons.callbacks
       .map((callback) => {
-        return callback(this.args.data.transformedPost);
+        return callback(this.args.data.post);
       })
       .filter(Boolean);
   }
@@ -59,45 +59,45 @@ export default class AdminPostMenu extends Component {
         </dropdown.item>
       {{/if}}
 
-      {{#if (and this.currentUser.staff (not @data.transformedPost.isWhisper))}}
+      {{#if (and this.currentUser.staff (not @data.post.isWhisper))}}
         <dropdown.item>
           <DButton
             @label={{if
-              @data.transformedPost.isModeratorAction
+              @data.post.isModeratorAction
               "post.controls.revert_to_regular"
               "post.controls.convert_to_moderator"
             }}
             @icon="shield-halved"
             class={{concatClass
               "btn btn-transparent toggle-post-type"
-              (if @data.transformedPost.isModeratorAction "btn-success")
+              (if @data.post.isModeratorAction "btn-success")
             }}
             @action={{fn this.topicAction "togglePostType"}}
           />
         </dropdown.item>
       {{/if}}
 
-      {{#if @data.transformedPost.canEditStaffNotes}}
+      {{#if @data.post.canEditStaffNotes}}
         <dropdown.item>
           <DButton
             @icon="user-shield"
             @label={{if
-              @data.transformedPost.notice
+              @data.post.notice
               "post.controls.change_post_notice"
               "post.controls.add_post_notice"
             }}
             @title="post.controls.unhide"
             class={{concatClass
               "btn btn-transparent"
-              (if @data.transformedPost.notice "change-notice" "add-notice")
-              (if @data.transformedPost.notice "btn-success")
+              (if @data.post.notice "change-notice" "add-notice")
+              (if @data.post.notice "btn-success")
             }}
             @action={{fn this.topicAction "changeNotice"}}
           />
         </dropdown.item>
       {{/if}}
 
-      {{#if (and this.currentUser.staff @data.transformedPost.hidden)}}
+      {{#if (and this.currentUser.staff @data.post.hidden)}}
         <dropdown.item>
           <DButton
             @label="post.controls.unhide"
@@ -128,7 +128,7 @@ export default class AdminPostMenu extends Component {
         </dropdown.item>
       {{/if}}
 
-      {{#if (and @data.transformedPost.user_id this.currentUser.staff)}}
+      {{#if (and @data.post.user_id this.currentUser.staff)}}
         {{#if this.siteSettings.enable_badges}}
           <dropdown.item>
             <DButton
@@ -140,7 +140,7 @@ export default class AdminPostMenu extends Component {
           </dropdown.item>
         {{/if}}
 
-        {{#if @data.transformedPost.locked}}
+        {{#if @data.post.locked}}
           <dropdown.item>
             <DButton
               @label="post.controls.unlock_post"
@@ -166,7 +166,7 @@ export default class AdminPostMenu extends Component {
         {{/if}}
       {{/if}}
 
-      {{#if @data.transformedPost.canPermanentlyDelete}}
+      {{#if @data.post.canPermanentlyDelete}}
         <dropdown.item>
           <DButton
             @label="post.controls.permanently_delete"
@@ -177,15 +177,15 @@ export default class AdminPostMenu extends Component {
         </dropdown.item>
       {{/if}}
 
-      {{#if (or @data.transformedPost.canManage @data.transformedPost.canWiki)}}
-        {{#if @data.transformedPost.wiki}}
+      {{#if (or @data.post.canManage @data.post.can_wiki)}}
+        {{#if @data.post.wiki}}
           <dropdown.item>
             <DButton
               @label="post.controls.unwiki"
               @icon="far-pen-to-square"
               class={{concatClass
                 "btn btn-transparent wiki wikied"
-                (if @data.transformedPost.wiki "btn-success")
+                (if @data.post.wiki "btn-success")
               }}
               @action={{fn this.topicAction "toggleWiki"}}
             />
@@ -202,7 +202,7 @@ export default class AdminPostMenu extends Component {
         {{/if}}
       {{/if}}
 
-      {{#if @data.transformedPost.canPublishPage}}
+      {{#if @data.post.canPublishPage}}
         <dropdown.item>
           <DButton
             @label="post.controls.publish_page"
@@ -213,7 +213,7 @@ export default class AdminPostMenu extends Component {
         </dropdown.item>
       {{/if}}
 
-      {{#if @data.transformedPost.canManage}}
+      {{#if @data.post.canManage}}
         <dropdown.item>
           <DButton
             @label="post.controls.rebake"

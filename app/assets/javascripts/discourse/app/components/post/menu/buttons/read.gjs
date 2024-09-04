@@ -3,9 +3,7 @@ import DButton from "discourse/components/d-button";
 import i18n from "discourse-common/helpers/i18n";
 
 const PostMenuReadButton = <template>
-  {{#if
-    (and @transformedPost.showReadIndicator (gt @transformedPost.readCount 0))
-  }}
+  {{#if (and @properties.showReadIndicator (gt @post.readers_count 0))}}
     <div class="double-button">
       <DButton
         class="button-count read-indicator"
@@ -14,11 +12,11 @@ const PostMenuReadButton = <template>
         @action={{@action}}
         @translatedAriaLabel={{i18n
           "post.sr_post_read_count_button"
-          count=@transformedPost.readCount
+          count=@post.readers_count
         }}
         @title="post.controls.read_indicator"
       >
-        {{@transformedPost.readCount}}
+        {{@post.readers_count}}
       </DButton>
       <DButton
         ...attributes

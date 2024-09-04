@@ -5,11 +5,11 @@ import i18n from "discourse-common/helpers/i18n";
 
 export default class PostMenuLikeCountButton extends Component {
   get icon() {
-    if (!this.args.transformedPost.showLike) {
-      return this.args.transformedPost.yours ? "d-liked" : "d-unliked";
+    if (!this.args.post.showLike) {
+      return this.args.post.yours ? "d-liked" : "d-unliked";
     }
 
-    if (this.args.transformedPost.yours) {
+    if (this.args.post.yours) {
       return "d-liked";
     }
   }
@@ -17,9 +17,9 @@ export default class PostMenuLikeCountButton extends Component {
   get translatedTitle() {
     let label;
 
-    if (this.args.transformedPost.liked) {
+    if (this.args.post.liked) {
       label =
-        this.args.transformedPost.likeCount === 1
+        this.args.post.likeCount === 1
           ? "post.has_likes_title_only_you"
           : "post.has_likes_title_you";
     } else {
@@ -27,32 +27,32 @@ export default class PostMenuLikeCountButton extends Component {
     }
 
     return i18n(label, {
-      count: this.args.transformedPost.liked
-        ? this.args.transformedPost.likeCount - 1
-        : this.args.transformedPost.likeCount,
+      count: this.args.post.liked
+        ? this.args.post.likeCount - 1
+        : this.args.post.likeCount,
     });
   }
 
   <template>
-    {{#if @transformedPost.likeCount}}
+    {{#if @post.likeCount}}
       <DButton
         class={{concatClass
           "button-count"
           "like-count"
           "highlight-action"
-          (if @transformedPost.yours "my-likes" "regular-likes")
+          (if @post.yours "my-likes" "regular-likes")
         }}
         ...attributes
         @ariaPressed={{@likedUsers}}
         @icon={{this.icon}}
         @translatedAriaLabel={{i18n
           "post.sr_post_like_count_button"
-          count=@transformedPost.likeCount
+          count=@post.likeCount
         }}
         @translatedTitle={{this.translatedTitle}}
         @action={{@action}}
       >
-        {{@transformedPost.likeCount}}
+        {{@post.likeCount}}
       </DButton>
     {{/if}}
   </template>

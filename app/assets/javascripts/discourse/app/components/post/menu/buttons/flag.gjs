@@ -7,31 +7,28 @@ import DiscourseURL from "discourse/lib/url";
 
 export default class PostMenuFlagButton extends Component {
   get shouldRender() {
-    const { reviewableId, canFlag, hidden } = this.args.transformedPost;
-    return reviewableId || (canFlag && !hidden);
+    const { reviewable_id, canFlag, hidden } = this.args.post;
+    return reviewable_id || (canFlag && !hidden);
   }
 
   @action
   navigateToReviewable() {
-    DiscourseURL.routeTo(`/review/${this.args.transformedPost.reviewableId}`);
+    DiscourseURL.routeTo(`/review/${this.args.post.reviewable_id}`);
   }
 
   <template>
     {{#if this.shouldRender}}
       <div class="double-button">
-        {{#if @transformedPost.reviewableId}}
+        {{#if @post.reviewable_id}}
           <DButton
             class={{concatClass
               "button-count"
-              (if
-                (gt @transformedPost.reviewableScorePendingCount 0)
-                "has-pending"
-              )
+              (if (gt @post.reviewable_score_pending_count 0) "has-pending")
             }}
             ...attributes
             @action={{this.navigateToReviewable}}
           >
-            <span>{{@transformedPost.reviewableScoreCount}}</span>
+            <span>{{@post.reviewable_score_count}}</span>
           </DButton>
         {{/if}}
         <DButton

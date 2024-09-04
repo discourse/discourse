@@ -952,10 +952,13 @@ registerWidgetShim(
   "section.post-menu-area.glimmer-post-menu-widget-shim.clearfix",
   hbs`
     <Post::Menu
+      @canCreatePost={{@data.canCreatePost}}
       @filteredRepliesView={{@data.filteredRepliesView}}
-      @model={{@data.model}}
+      @nextPost={{@data.nextPost}}
+      @post={{@data.post}}
+      @prevPost={{@data.prevPost}}
       @repliesShown={{@data.repliesShown}}
-      @transformedPost={{@data.transformedPost}}
+      @showReadIndicator={{@data.showReadIndicator}}
       @changeNotice={{@data.changeNotice}}
       @changePostOwner={{@data.changePostOwner}}
       @copyLink={{@data.copyLink}}

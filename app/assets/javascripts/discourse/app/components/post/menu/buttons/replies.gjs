@@ -12,7 +12,7 @@ export default class PostMenuRepliesButton extends Component {
   @service siteSettings;
 
   get shouldRender() {
-    const replyCount = this.args.transformedPost.replyCount;
+    const replyCount = this.args.post.reply_count;
 
     if (!replyCount) {
       return false;
@@ -20,13 +20,13 @@ export default class PostMenuRepliesButton extends Component {
 
     return !(
       replyCount === 1 &&
-      this.args.transformedPost.replyDirectlyBelow &&
+      this.args.properties.replyDirectlyBelow &&
       this.siteSettings.suppress_reply_directly_below
     );
   }
 
   get disabled() {
-    return !!this.args.transformedPost.deleted;
+    return !!this.args.post.deleted;
   }
 
   get translatedTitle() {
@@ -37,7 +37,7 @@ export default class PostMenuRepliesButton extends Component {
     return this.args.properties.repliesShown
       ? i18n("post.view_all_posts")
       : i18n("post.filtered_replies_hint", {
-          count: this.args.transformedPost.replyCount,
+          count: this.args.post.reply_count,
         });
   }
 
@@ -47,10 +47,7 @@ export default class PostMenuRepliesButton extends Component {
         class="show-replies btn-icon-text"
         ...attributes
         disabled={{this.disabled}}
-        @ariaControls={{concat
-          "embedded-posts__bottom--"
-          @transformedPost.post_number
-        }}
+        @ariaControls={{concat "embedded-posts__bottom--" @post.post_number}}
         @ariaExpanded={{and
           @properties.repliesShown
           (not @properties.filteredRepliesView)
@@ -65,7 +62,7 @@ export default class PostMenuRepliesButton extends Component {
         }}
         @translatedLabel={{i18n
           (if this.site.mobileView "post.has_replies_count" "post.has_replies")
-          count=@transformedPost.replyCount
+          count=@post.reply_count
         }}
         @translatedTitle={{this.translatedTitle}}
         @action={{@action}}

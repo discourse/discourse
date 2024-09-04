@@ -14,7 +14,7 @@ export default class PostMenuLikeButton extends Component {
   #element;
 
   get disabled() {
-    return this.currentUser && !this.args.transformedPost.canToggleLike;
+    return this.currentUser && !this.args.post.canToggleLike;
   }
 
   get title() {
@@ -24,14 +24,11 @@ export default class PostMenuLikeButton extends Component {
     // is anonymous (meaning they don't currently have permission to like);
     // this is important for accessibility.
 
-    if (
-      this.args.transformedPost.liked &&
-      !this.args.transformedPost.canToggleLike
-    ) {
+    if (this.args.post.liked && !this.args.post.canToggleLike) {
       return "post.controls.has_liked";
     }
 
-    return this.args.transformedPost.liked
+    return this.args.post.liked
       ? "post.controls.undo_like"
       : "post.controls.like";
   }
@@ -49,34 +46,26 @@ export default class PostMenuLikeButton extends Component {
   }
 
   <template>
-    {{#if @transformedPost.showLike}}
+    {{#if @post.showLike}}
       <div class="double-button">
-        <LikeCount
-          ...attributes
-          @transformedPost={{@transformedPost}}
-          @action={{@secondaryAction}}
-        />
+        <LikeCount ...attributes @post={{@post}} @action={{@secondaryAction}} />
         <DButton
           class={{concatClass
             "toggle-like"
-            (if @transformedPost.liked "has-like fade-out" "like")
+            (if @post.liked "has-like fade-out" "like")
           }}
           ...attributes
-          data-post-id={{@transformedPost.id}}
+          data-post-id={{@post.id}}
           disabled={{this.disabled}}
-          @icon={{if @transformedPost.liked "d-liked" "d-unliked"}}
+          @icon={{if @post.liked "d-liked" "d-unliked"}}
           @title={{this.title}}
           @action={{fn @action (hash onBeforeToggle=this.animateToggle)}}
           {{didInsert this.setElement}}
         />
       </div>
-    {{else if @transformedPost.likeCount}}
+    {{else if @post.likeCount}}
       <div class="double-button">
-        <LikeCount
-          ...attributes
-          @transformedPost={{@transformedPost}}
-          @action={{@secondaryAction}}
-        />
+        <LikeCount ...attributes @post={{@post}} @action={{@secondaryAction}} />
       </div>
     {{/if}}
   </template>

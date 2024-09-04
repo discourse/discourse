@@ -538,12 +538,15 @@ createWidget("post-contents", {
     const filteredRepliesView = this.siteSettings.enable_filtered_replies_view;
     result.push(
       this.attach("glimmer-post-menu", {
+        canCreatePost: attrs.canCreatePost,
         filteredRepliesView,
-        model: this.findAncestorModel(),
+        nextPost: attrs.nextPost,
+        post: this.findAncestorModel(),
+        prevPost: attrs.prevPost,
         repliesShown: filteredRepliesView
           ? extraState.state.filteredRepliesShown
           : extraState.state.repliesShown,
-        transformedPost: attrs,
+        showReadIndicator: attrs.showReadIndicator,
         changeNotice: () => this.sendWidgetAction("changeNotice"), // this action comes from the post stream
         changePostOwner: () => this.sendWidgetAction("changePostOwner"), // this action comes from the post stream
         copyLink: () => this.sendWidgetAction("copyLink"),

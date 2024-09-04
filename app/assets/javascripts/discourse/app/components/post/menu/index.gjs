@@ -117,19 +117,19 @@ export default class PostMenu extends Component {
             break;
 
           case DELETE_BUTTON_ID:
-            if (this.args.transformedPost.canRecoverTopic) {
+            if (this.args.post.canRecoverTopic) {
               actionMode = BUTTON_ACTION_MODE_RECOVER_TOPIC;
               primaryAction = this.args.recoverPost;
-            } else if (this.args.transformedPost.canDeleteTopic) {
+            } else if (this.args.post.canDeleteTopic) {
               actionMode = BUTTON_ACTION_MODE_DELETE_TOPIC;
               primaryAction = this.args.deletePost;
-            } else if (this.args.transformedPost.canRecover) {
+            } else if (this.args.post.canRecover) {
               actionMode = BUTTON_ACTION_MODE_RECOVER;
               primaryAction = this.args.recoverPost;
-            } else if (this.args.transformedPost.canDelete) {
+            } else if (this.args.post.canDelete) {
               actionMode = BUTTON_ACTION_MODE_DELETE;
               primaryAction = this.args.deletePost;
-            } else if (this.args.transformedPost.showFlagDelete) {
+            } else if (this.args.post.showFlagDelete) {
               actionMode = BUTTON_ACTION_MODE_SHOW_FLAG_DELETE;
               primaryAction = this.showDeleteTopicModal;
             }
@@ -139,8 +139,7 @@ export default class PostMenu extends Component {
             primaryAction = this.args.editPost;
             alwaysShow =
               this.#isWikiMode ||
-              (this.args.transformedPost.canEdit &&
-                this.args.transformedPost.yours);
+              (this.args.post.can_edit && this.args.post.yours);
             properties = {
               showLabel: this.site.desktopView && this.#isWikiMode,
             };
@@ -157,11 +156,13 @@ export default class PostMenu extends Component {
 
           case READ_BUTTON_ID:
             primaryAction = this.toggleWhoRead;
+            properties = { showReadIndicator: this.args.showReadIndicator };
             break;
 
           case REPLY_BUTTON_ID:
             primaryAction = this.args.replyToPost;
             properties = {
+              canCreatePost: this.args.canCreatePost,
               showLabel: this.site.desktopView && !this.#isWikiMode,
             };
             break;
@@ -170,7 +171,11 @@ export default class PostMenu extends Component {
             primaryAction = this.args.toggleReplies;
             properties = {
               filteredRepliesView: this.args.filteredRepliesView,
-              repliesShown: this.args.repliesShown,
+              replyDirectlyBelow:
+                this.args.nextPost?.reply_to_post_number ===
+                  this.args.post.post_number &&
+                this.args.post.post_number !==
+                  this.args.post.filteredRepliesPostNumber,
             };
             break;
 
@@ -234,7 +239,7 @@ export default class PostMenu extends Component {
       }
 
       if (
-        this.args.transformedPost.reviewableId &&
+        this.args.post.reviewable_id &&
         button.postMenuButtonId === FLAG_BUTTON_ID
       ) {
         return false;
@@ -291,7 +296,7 @@ export default class PostMenu extends Component {
       this.keyValueStore &&
         this.keyValueStore.set({
           key: "likedPostId",
-          value: this.args.transformedPost.id,
+          value: this.args.post.id,
         });
       return this.sendWidgetAction("showLogin");
     }
@@ -300,11 +305,11 @@ export default class PostMenu extends Component {
       navigator.vibrate(VIBRATE_DURATION);
     }
 
-    if (this.args.transformedPost.liked) {
+    if (this.args.post.liked) {
       return this.args.toggleLike();
     }
 
-    onBeforeToggle?.(this.args.transformedPost.liked);
+    onBeforeToggle?.(this.args.post.liked);
 
     return new Promise((resolve) => {
       discourseLater(async () => {
@@ -322,8 +327,7 @@ export default class PostMenu extends Component {
       modalForMobile: true,
       autofocus: true,
       data: {
-        transformedPost: this.args.transformedPost,
-        post: this.args.model,
+        post: this.args.post,
         changeNotice: this.args.changeNotice,
         changePostOwner: this.args.changePostOwner,
         grantBadge: this.args.grantBadge,
@@ -351,7 +355,7 @@ export default class PostMenu extends Component {
     const fetchData = [
       !this.likedUsers.length && this.#fetchWhoLiked(),
       !this.readers.length &&
-        this.args.transformedPost.showReadIndicator &&
+        this.args.showReadIndicator &&
         this.#fetchWhoRead(),
     ].filter(Boolean);
 
@@ -394,18 +398,17 @@ export default class PostMenu extends Component {
     return setting
       .split("|")
       .filter(
-        (itemId) =>
-          !this.args.transformedPost.bookmarked || itemId !== BOOKMARK_BUTTON_ID
+        (itemId) => !this.args.post.bookmarked || itemId !== BOOKMARK_BUTTON_ID
       );
   }
 
   get #isWikiMode() {
-    return this.args.transformedPost.wiki && this.args.transformedPost.canEdit;
+    return this.args.post.wiki && this.args.post.can_edit;
   }
 
   async #fetchWhoLiked() {
     const users = await this.store.find("post-action-user", {
-      id: this.args.transformedPost.id,
+      id: this.args.post.id,
       post_action_type_id: LIKE_ACTION,
     });
 
@@ -415,7 +418,7 @@ export default class PostMenu extends Component {
 
   async #fetchWhoRead() {
     const users = await this.store.find("post-reader", {
-      id: this.args.transformedPost.id,
+      id: this.args.post.id,
     });
 
     this.readers = users.map(smallUserAttributes);
@@ -437,8 +440,7 @@ export default class PostMenu extends Component {
         {{#if this.shouldRenderRepliesButtonAutomatically}}
           <this.repliesButton.Component
             class="btn-flat"
-            @model={{@model}}
-            @transformedPost={{@transformedPost}}
+            @post={{@post}}
             @properties={{this.repliesButton.properties}}
             @action={{this.repliesButton.action}}
             @actionMode={{this.repliesButton.actionMode}}
@@ -449,8 +451,7 @@ export default class PostMenu extends Component {
           {{#each this.visibleButtons as |button|}}
             <button.Component
               class="btn-flat"
-              @model={{@model}}
-              @transformedPost={{@transformedPost}}
+              @post={{@post}}
               @properties={{button.properties}}
               @action={{button.action}}
               @actionMode={{button.actionMode}}
@@ -486,10 +487,7 @@ export default class PostMenu extends Component {
             "post.actions.people.sr_post_likers_list_description"
           }}
           @users={{this.likedUsers}}
-          @addSelf={{and
-            @transformedPost.liked
-            (eq this.remainingLikedUsers 0)
-          }}
+          @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}
           @count={{if
             this.remainingLikedUsers
             this.remainingLikedUsers

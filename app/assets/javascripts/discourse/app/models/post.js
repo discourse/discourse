@@ -104,6 +104,7 @@ export default class Post extends RestModel {
   }
 
   @service currentUser;
+  @service site;
 
   customShare = null;
 
@@ -198,6 +199,101 @@ export default class Post extends RestModel {
   @discourseComputed("topic_title_headline")
   topicTitleHeadline(title) {
     return fancyTitle(title, this.siteSettings.support_mixed_text_direction);
+  }
+
+  get canEditStaffNotes() {
+    return !!this.topic.details.can_edit_staff_notes;
+  }
+
+  get canDelete() {
+    return (
+      this.can_delete &&
+      !this.deleted_at &&
+      this.currentUser &&
+      (this.currentUser.staff || !this.user_deleted)
+    );
+  }
+
+  get canDeleteTopic() {
+    return this.firstPost && !this.deleted && this.topic.details.can_delete;
+  }
+
+  get canFlag() {
+    return !this.get("topic.deleted") && !isEmpty(this.get("flagsAvailable"));
+  }
+
+  get canManage() {
+    return this.currentUser?.get("canManageTopic");
+  }
+
+  get canPermanentlyDelete() {
+    return (
+      this.deleted &&
+      (this.firstPost
+        ? this.topic.details.can_permanently_delete
+        : this.can_permanently_delete)
+    );
+  }
+
+  get canPublishPage() {
+    return this.firstPost && !!this.topic.details.can_publish_page;
+  }
+
+  get canRecover() {
+    return this.deleted && this.can_recover;
+  }
+
+  get canRecoverTopic() {
+    return this.firstPost && this.deleted && this.topic.details.can_recover;
+  }
+
+  get canToggleLike() {
+    return !!this.likeAction?.get("canToggle");
+  }
+
+  // get deleted() {
+  //   return this.deleted_at || this.user_deleted;
+  // }
+
+  get filteredRepliesPostNumber() {
+    return this.topic.get("postStream.filterRepliesToPostNumber");
+  }
+
+  get isWhisper() {
+    return this.post_type === this.site.post_types.whisper;
+  }
+
+  get isModeratorAction() {
+    return this.post_type === this.site.post_types.moderator_action;
+  }
+
+  get liked() {
+    return !!this.likeAction?.acted;
+  }
+
+  get likeCount() {
+    return this.likeAction?.count;
+  }
+
+  /**
+   * Show a "Flag to delete" message if not staff and you can't otherwise delete it.
+   */
+  get showFlagDelete() {
+    return (
+      !this.canDelete &&
+      this.yours &&
+      this.canFlag &&
+      this.currentUser &&
+      !this.currentUser.staff
+    );
+  }
+
+  get showLike() {
+    return this.liked || this.canToggleLike;
+  }
+
+  get topicNotificationLevel() {
+    return this.topic.details.notification_level;
   }
 
   afterUpdate(res) {
