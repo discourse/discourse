@@ -88,21 +88,21 @@ export default class ChatComposerUploads extends Component.extend(
 
   _uppyReady() {
     if (this.siteSettings.composer_media_optimization_image_enabled) {
-      this.uppyWrapper.useUploadPlugin(UppyMediaOptimization, {
+      this.uppyUpload.uppyWrapper.useUploadPlugin(UppyMediaOptimization, {
         optimizeFn: (data, opts) =>
           this.mediaOptimizationWorker.optimizeImage(data, opts),
         runParallel: !this.site.isMobileDevice,
       });
     }
 
-    this.uppyWrapper.onPreProcessProgress((file) => {
+    this.uppyUpload.uppyWrapper.onPreProcessProgress((file) => {
       const inProgressUpload = this.inProgressUploads.findBy("id", file.id);
       if (!inProgressUpload?.processing) {
         inProgressUpload?.set("processing", true);
       }
     });
 
-    this.uppyWrapper.onPreProcessComplete((file) => {
+    this.uppyUpload.uppyWrapper.onPreProcessComplete((file) => {
       const inProgressUpload = this.inProgressUploads.findBy("id", file.id);
       inProgressUpload?.set("processing", false);
     });
