@@ -233,5 +233,5 @@ end
 WebHookEventType.seed do |b|
   b.id = WebHookEventType::TYPES[:category_experts_approved]
   b.name = "category_experts_approved"
-  b.group = WebHookEventType.groups[:category_experts]
+  b.group = WebHookEventType.groups[:post]
 end
