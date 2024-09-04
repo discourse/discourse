@@ -465,7 +465,7 @@ class BulkImport::Generic < BulkImport::Base
         registration_ip_address: row["registration_ip_address"],
         date_of_birth: to_date(row["date_of_birth"]),
         trust_level: row["trust_level"],
-        flair_group_id: group_id_from_imported_id(row["flair_group_id"]),
+        flair_group_id: row["flair_group_id"],
       }
     end
 
