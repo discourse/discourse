@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { gt, not } from "truth-helpers";
-import concatClass from "discourse/helpers/concat-class";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 
 export default class Channel extends Component {
