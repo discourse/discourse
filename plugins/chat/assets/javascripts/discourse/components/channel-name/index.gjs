@@ -5,9 +5,14 @@ import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserStatusMessage from "discourse/components/user-status-message";
 import replaceEmoji from "discourse/helpers/replace-emoji";
+import ChatChannelUnreadIndicator from "../chat-channel-unread-indicator";
 
 export default class ChatChannelName extends Component {
   @service currentUser;
+
+  get unreadIndicator() {
+    return this.args.unreadIndicator ?? false;
+  }
 
   get firstUser() {
     return this.args.channel.chatable.users[0];
@@ -66,9 +71,13 @@ export default class ChatChannelName extends Component {
           />
         {{/if}}
       {{else if @channel.isCategoryChannel}}
-        <span class="chat-channel-name__label">
+        <div class="chat-channel-name__label">
           {{replaceEmoji @channel.title}}
-        </span>
+
+          {{#if this.unreadIndicator}}
+            <ChatChannelUnreadIndicator @channel={{@channel}} />
+          {{/if}}
+        </div>
 
         {{#if (has-block)}}
           {{yield}}
