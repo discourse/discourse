@@ -16,11 +16,11 @@ import {
   getUploadMarkdown,
   validateUploadedFile,
 } from "discourse/lib/uploads";
+import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
 import UppyWrapper from "discourse/lib/uppy/wrapper";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import { clipboardHelpers } from "discourse/lib/utilities";
 import ComposerVideoThumbnailUppy from "discourse/mixins/composer-video-thumbnail-uppy";
-import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
 import getURL from "discourse-common/lib/get-url";
 import { deepMerge } from "discourse-common/lib/object";
 import { bind, observes, on } from "discourse-common/utils/decorators";
@@ -39,7 +39,7 @@ import I18n from "discourse-i18n";
 // and the most important _bindUploadTarget which handles all the main upload
 // functionality and event binding.
 //
-export default Mixin.create(UppyS3Multipart, {
+export default Mixin.create({
   get _uppyInstance() {
     return this.uppyWrapper.uppyInstance;
   },
@@ -225,7 +225,11 @@ export default Mixin.create(UppyS3Multipart, {
     }
 
     if (this.siteSettings.enable_direct_s3_uploads) {
-      this._useS3MultipartUploads();
+      new UppyS3Multipart(getOwner(this), {
+        uploadRootPath: this.uploadRootPath,
+        uppyWrapper: this.uppyWrapper,
+        errorHandler: this._handleUploadError,
+      }).apply(this._uppyInstance);
     } else {
       this._useXHRUploads();
     }
