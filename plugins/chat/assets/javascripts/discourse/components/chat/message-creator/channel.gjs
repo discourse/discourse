@@ -22,14 +22,11 @@ export default class Channel extends Component {
       class="chat-message-creator__chatable -category-channel"
       data-disabled={{not @item.enabled}}
     >
-      <ChannelTitle @channel={{@item.model}} />
-
-      {{#if (gt @item.tracking.unreadCount 0)}}
-
-        <div
-          class={{concatClass "unread-indicator" (if this.isUrgent "-urgent")}}
-        ></div>
-      {{/if}}
+      <ChannelTitle
+        @channel={{@item.model}}
+        @isUnread={{gt @item.tracking.unreadCount 0}}
+        @isUrgent={{this.isUrgent}}
+      />
     </div>
   </template>
 }

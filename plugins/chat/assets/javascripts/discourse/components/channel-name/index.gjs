@@ -49,9 +49,12 @@ export default class ChatChannelName extends Component {
     <div class="chat-channel-name">
       {{#if @channel.isDirectMessageChannel}}
         {{#if this.groupDirectMessage}}
-          <span class="chat-channel-name__label">
+          <div class="chat-channel-name__label">
             {{this.groupsDirectMessageTitle}}
-          </span>
+            {{#if this.unreadIndicator}}
+              <ChatChannelUnreadIndicator @channel={{@channel}} />
+            {{/if}}
+          </div>
         {{else}}
           <div class="chat-channel-name__label">
             {{this.firstUser.username}}
