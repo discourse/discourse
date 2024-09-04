@@ -7085,7 +7085,8 @@ en:
             with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
         badge_intro:
-          title: "Select an existing badge or create a new one to get started"
+          title: "Choose a badge or create a new one"
+          description: "Start by selecting an existing badge to customize, or create a brand new badge"
         mass_award:
           title: Bulk Award
           description: Award the same badge to many users at once.
