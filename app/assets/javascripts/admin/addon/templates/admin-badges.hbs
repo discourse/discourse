@@ -17,32 +17,24 @@
           @title="admin.badges.group_settings"
           @label="admin.badges.group_settings"
           @icon="cog"
-          {{!-- class="admin-backups__start" --}}
+          class="edit-groupings-btn"
+        />
+
+        <actions.Default
+          @route="adminBadges.award"
+          @routeModels="new"
+          @icon="upload"
+          @label="admin.badges.mass_award.title"
+        />
+
+        <actions.Primary
+          @route="adminBadges.show"
+          @routeModels="new"
+          @icon="plus"
+          @label="admin.badges.new"
         />
       </:actions>
     </AdminPageHeader>
-
-    <div class="create-new-badge">
-
-      <LinkTo @route="adminBadges.award" @model="new" class="btn btn-default">
-        {{d-icon "upload"}}
-        <span class="d-button-label">{{i18n
-            "admin.badges.mass_award.title"
-          }}</span>
-      </LinkTo>
-
-      <DButton
-        @action={{route-action "editGroupings"}}
-        @translatedLabel="Group settings"
-        @icon="cog"
-        @class="btn-default edit-groupings-btn"
-      />
-
-      <LinkTo @route="adminBadges.show" @model="new" class="btn btn-primary">
-        {{d-icon "plus"}}
-        <span>{{i18n "admin.badges.new"}}</span>
-      </LinkTo>
-    </div>
   </div>
   <div class="content-list">
     <ul class="admin-badge-list">

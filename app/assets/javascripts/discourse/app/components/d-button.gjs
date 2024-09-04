@@ -103,7 +103,7 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
   }
 
   _triggerAction(event) {
-    const { action: actionVal, route } = this.args;
+    const { action: actionVal, route, routeModels } = this.args;
 
     if (actionVal || route) {
       if (actionVal) {
@@ -134,7 +134,14 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
           );
         }
       } else if (route) {
-        this.router.transitionTo(route);
+        if (routeModels) {
+          const routeModelsArray = Array.isArray(routeModels)
+            ? routeModels
+            : [routeModels];
+          this.router.transitionTo(route, ...routeModelsArray);
+        } else {
+          this.router.transitionTo(route);
+        }
       }
 
       event.preventDefault();
