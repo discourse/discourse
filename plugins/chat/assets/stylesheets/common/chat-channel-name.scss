@@ -10,6 +10,7 @@
     display: flex;
     align-items: center;
     white-space: nowrap;
+    gap: 0.5rem;
   }
 
   .emoji {
@@ -25,7 +26,6 @@
     justify-content: center;
     width: 8px;
     height: 8px;
-    margin-left: 0.75em;
 
     &.-urgent {
       width: auto;
