@@ -6,6 +6,7 @@ export const AdminPageActionButton = <template>
     ...attributes
     @action={{@action}}
     @route={{@route}}
+    @routeModels={{@routeModels}}
     @label={{@label}}
     @title={{@title}}
     @icon={{@icon}}
@@ -18,6 +19,7 @@ export const PrimaryButton = <template>
     ...attributes
     @action={{@action}}
     @route={{@route}}
+    @routeModels={{@routeModels}}
     @label={{@label}}
     @title={{@title}}
     @icon={{@icon}}
@@ -30,6 +32,7 @@ export const DangerButton = <template>
     ...attributes
     @action={{@action}}
     @route={{@route}}
+    @routeModels={{@routeModels}}
     @label={{@label}}
     @title={{@title}}
     @icon={{@icon}}
@@ -42,6 +45,7 @@ export const DefaultButton = <template>
     ...attributes
     @action={{@action}}
     @route={{@route}}
+    @routeModels={{@routeModels}}
     @label={{@label}}
     @title={{@title}}
     @icon={{@icon}}

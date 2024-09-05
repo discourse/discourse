@@ -578,10 +578,9 @@ class CategoriesController < ApplicationController
           ]
         end
 
+        conditional_param_keys = []
         if SiteSetting.enable_category_group_moderation?
-          params[:reviewable_by_group_id] = Group.where(
-            name: params[:reviewable_by_group_name],
-          ).pick(:id) if params[:reviewable_by_group_name]
+          conditional_param_keys << { moderating_group_ids: [] }
         end
 
         result =
@@ -621,7 +620,7 @@ class CategoriesController < ApplicationController
             :allow_global_tags,
             :read_only_banner,
             :default_list_filter,
-            :reviewable_by_group_id,
+            *conditional_param_keys,
             category_setting_attributes: %i[
               auto_bump_cooldown_days
               num_auto_bump_daily

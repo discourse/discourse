@@ -29,6 +29,11 @@ RSpec.describe Admin::SiteSettingsController do
         expect(response.status).to eq(400)
       end
 
+      it "returns 400 when no filter_area is invalid" do
+        get "/admin/config/site_settings.json", params: { filter_area: "invalid area" }
+        expect(response.status).to eq(400)
+      end
+
       it "includes only certain allowed hidden settings" do
         get "/admin/config/site_settings.json",
             params: {
@@ -58,6 +63,25 @@ RSpec.describe Admin::SiteSettingsController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["site_settings"].map { |s| s["setting"] }).to match_array(
           %w[site_description enforce_second_factor],
+        )
+      end
+
+      it "returns site settings by area" do
+        get "/admin/config/site_settings.json", params: { filter_area: "flags" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["site_settings"].map { |s| s["setting"] }).to match_array(
+          %w[
+            silence_new_user_sensitivity
+            num_users_to_silence_new_user
+            flag_sockpuppets
+            num_flaggers_to_close_topic
+            auto_respond_to_flag_actions
+            high_trust_flaggers_auto_hide_posts
+            max_flags_per_day
+            tl2_additional_flags_per_day_multiplier
+            tl3_additional_flags_per_day_multiplier
+            tl4_additional_flags_per_day_multiplier
+          ],
         )
       end
     end

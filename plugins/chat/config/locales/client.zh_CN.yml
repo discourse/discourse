@@ -130,6 +130,7 @@ zh_CN:
       header_indicator_preference:
         title: "在标题中显示活动指示器"
         all_new: "所有新消息"
+        dm_and_mentions: "直接消息、提及和关注的消息串"
         only_mentions: "仅限提及"
         never: "永不"
       separate_sidebar_mode:

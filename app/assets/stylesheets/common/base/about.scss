@@ -6,6 +6,10 @@
     max-width: 1100px;
   }
 
+  &__header {
+    max-width: 1100px;
+  }
+
   &__left-side {
     flex: 1 1 650px;
   }
@@ -42,8 +46,9 @@
 
   &__banner {
     margin-bottom: 1em;
-    min-height: 300px;
     max-height: 300px;
+    max-width: 100%;
+    object-fit: contain;
   }
 
   &__activities-item {

@@ -654,7 +654,7 @@ he:
           tracking:
             title: "מעקב"
           watching:
-            title: "צופים"
+            title: "במעקב"
         participants_other_count:
           one: "+%{count}"
           two: "+%{count}"

@@ -276,11 +276,7 @@ export default class DEditor extends Component.extend(
   @discourseComputed("formTemplateIds", "replyingToTopic", "editingPost")
   showFormTemplateForm(formTemplateIds, replyingToTopic, editingPost) {
     // TODO(@keegan): Remove !editingPost once we add edit/draft support for form templates
-    if (formTemplateIds?.length > 0 && !replyingToTopic && !editingPost) {
-      return true;
-    }
-
-    return false;
+    return formTemplateIds?.length > 0 && !replyingToTopic && !editingPost;
   }
 
   @discourseComputed("placeholder")

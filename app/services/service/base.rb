@@ -230,8 +230,9 @@ module Service
     class_methods do
       include StepsHelpers
 
-      def call(context = {})
-        new(context).tap(&:run).context
+      def call(context = {}, &actions)
+        return new(context).tap(&:run).context unless block_given?
+        ServiceRunner.call(self, context, &actions)
       end
 
       def call!(context = {})

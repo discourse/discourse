@@ -1072,7 +1072,8 @@ RSpec.describe Guardian do
 
         expect(Guardian.new(user_gm).can_see?(topic)).to be_falsey
 
-        topic.category.update!(reviewable_by_group_id: group.id, topic_id: post.topic.id)
+        topic.category.update!(topic_id: post.topic.id)
+        Fabricate(:category_moderation_group, category: topic.category, group:)
 
         expect(Guardian.new(user_gm).can_see?(topic)).to be_truthy
       end
@@ -1130,7 +1131,8 @@ RSpec.describe Guardian do
 
         expect(Guardian.new(user_gm).can_see?(post)).to be_falsey
 
-        post.topic.category.update!(reviewable_by_group_id: group.id, topic_id: post.topic.id)
+        post.topic.category.update!(topic_id: post.topic.id)
+        Fabricate(:category_moderation_group, category: post.topic.category, group:)
         expect(Guardian.new(user_gm).can_see?(post)).to be_truthy
       end
 
@@ -1504,7 +1506,7 @@ RSpec.describe Guardian do
       end
 
       it "returns true if user is a member of the appropriate group" do
-        topic.category.update!(reviewable_by_group_id: group_user.group.id)
+        Fabricate(:category_moderation_group, category: topic.category, group: group_user.group)
 
         expect(Guardian.new(group_user.user).can_recover_topic?(topic)).to be_truthy
       end
@@ -1787,7 +1789,7 @@ RSpec.describe Guardian do
         before do
           SiteSetting.enable_category_group_moderation = true
           GroupUser.create!(group_id: group.id, user_id: cat_mod_user.id)
-          post.topic.category.update!(reviewable_by_group_id: group.id)
+          Fabricate(:category_moderation_group, category: post.topic.category, group:)
         end
 
         it "returns true as a category group moderator user" do
@@ -2161,7 +2163,7 @@ RSpec.describe Guardian do
     it "returns true for a group member with reviewable status" do
       SiteSetting.enable_category_group_moderation = true
       GroupUser.create!(group_id: group.id, user_id: user.id)
-      topic.category.update!(reviewable_by_group_id: group.id)
+      Fabricate(:category_moderation_group, category: topic.category, group:)
       expect(Guardian.new(user).can_review_topic?(topic)).to eq(true)
     end
   end
@@ -2182,7 +2184,7 @@ RSpec.describe Guardian do
     it "returns true for a group member with reviewable status" do
       SiteSetting.enable_category_group_moderation = true
       GroupUser.create!(group_id: group.id, user_id: user.id)
-      topic.category.update!(reviewable_by_group_id: group.id)
+      Fabricate(:category_moderation_group, category: topic.category, group:)
       expect(Guardian.new(user).can_close_topic?(topic)).to eq(true)
     end
   end
@@ -2203,7 +2205,7 @@ RSpec.describe Guardian do
     it "returns true for a group member with reviewable status" do
       SiteSetting.enable_category_group_moderation = true
       GroupUser.create!(group_id: group.id, user_id: user.id)
-      topic.category.update!(reviewable_by_group_id: group.id)
+      Fabricate(:category_moderation_group, category: topic.category, group:)
       expect(Guardian.new(user).can_archive_topic?(topic)).to eq(true)
     end
   end
@@ -2224,7 +2226,7 @@ RSpec.describe Guardian do
     it "returns true for a group member with reviewable status" do
       SiteSetting.enable_category_group_moderation = true
       GroupUser.create!(group_id: group.id, user_id: user.id)
-      topic.category.update!(reviewable_by_group_id: group.id)
+      Fabricate(:category_moderation_group, category: topic.category, group:)
       expect(Guardian.new(user).can_edit_staff_notes?(topic)).to eq(true)
     end
   end
@@ -2348,7 +2350,7 @@ RSpec.describe Guardian do
         end
 
         it "returns true if user is a member of the appropriate group" do
-          topic.category.update!(reviewable_by_group_id: group_user.group.id)
+          Fabricate(:category_moderation_group, category: topic.category, group: group_user.group)
 
           expect(Guardian.new(group_user.user).can_delete?(topic)).to be_truthy
         end
@@ -2411,8 +2413,9 @@ RSpec.describe Guardian do
       it "returns true for category moderators" do
         SiteSetting.enable_category_group_moderation = true
         GroupUser.create(group: group, user: user)
-        category = Fabricate(:category, reviewable_by_group_id: group.id)
+        category = Fabricate(:category)
         post.topic.update!(category: category)
+        Fabricate(:category_moderation_group, category:, group:)
 
         expect(Guardian.new(user).can_delete?(post)).to eq(true)
       end
@@ -4399,7 +4402,7 @@ RSpec.describe Guardian do
 
     it "should correctly detect category moderation" do
       group.add(user)
-      category.update!(reviewable_by_group_id: group.id)
+      Fabricate(:category_moderation_group, category:, group:)
       guardian = Guardian.new(user)
 
       # implementation detail, ensure memoization is good (hence testing twice)

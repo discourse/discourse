@@ -284,11 +284,11 @@ RSpec.describe PostSerializer do
     fab!(:topic)
     fab!(:group_user)
     fab!(:post) { Fabricate(:post, topic: topic) }
-
-    before do
-      SiteSetting.enable_category_group_moderation = true
-      topic.category.update!(reviewable_by_group_id: group_user.group.id)
+    fab!(:category_moderation_group) do
+      Fabricate(:category_moderation_group, category: topic.category, group: group_user.group)
     end
+
+    before { SiteSetting.enable_category_group_moderation = true }
 
     it "does nothing for regular users" do
       expect(serialized_post_for_user(nil)[:group_moderator]).to eq(nil)

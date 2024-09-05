@@ -17,7 +17,6 @@ class WebHookEventType < ActiveRecord::Base
   USER_PROMOTED = 16
   TOPIC_VOTING = 17
   CHAT_MESSAGE = 18
-  CATEGORY_EXPERTS = 19
 
   enum group: {
          topic: 0,
@@ -36,7 +35,6 @@ class WebHookEventType < ActiveRecord::Base
          user_promoted: 13,
          voting: 14,
          chat: 15,
-         category_experts: 16,
        },
        _scopes: false
 

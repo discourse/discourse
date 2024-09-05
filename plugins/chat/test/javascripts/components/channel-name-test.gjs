@@ -66,4 +66,23 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
       users.mapBy("username").join(", ")
     );
   });
+
+  test("unreadIndicator", async function (assert) {
+    const channel = new ChatFabricators(getOwner(this)).directMessageChannel();
+    channel.tracking.unreadCount = 1;
+
+    let unreadIndicator = true;
+    await render(
+      <template><ChannelName @channel={{channel}} @unreadIndicator={{unreadIndicator}}/></template>
+    );
+
+    assert.true(exists(".chat-channel-unread-indicator"));
+
+    unreadIndicator = false;
+    await render(
+      <template><ChannelName @channel={{channel}} @unreadIndicator={{unreadIndicator}}/></template>
+    );
+
+    assert.false(exists(".chat-channel-unread-indicator"));
+  });
 });

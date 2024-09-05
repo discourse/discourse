@@ -119,7 +119,7 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def suspend
-    with_service(SuspendUser, user: @user) do
+    SuspendUser.call(user: @user) do
       on_success do
         render_json_dump(
           suspension: {
@@ -131,9 +131,7 @@ class Admin::UsersController < Admin::StaffController
           },
         )
       end
-
       on_failed_policy(:can_suspend) { raise Discourse::InvalidAccess.new }
-
       on_failed_policy(:not_suspended_already) do
         suspend_record = @user.suspend_record
         message =
@@ -149,7 +147,6 @@ class Admin::UsersController < Admin::StaffController
           )
         render json: failed_json.merge(message: message), status: 409
       end
-
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
       end
@@ -328,7 +325,7 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def silence
-    with_service(SilenceUser, user: @user) do
+    SilenceUser.call(user: @user) do
       on_success do
         render_json_dump(
           silence: {
@@ -340,9 +337,7 @@ class Admin::UsersController < Admin::StaffController
           },
         )
       end
-
       on_failed_policy(:can_silence) { raise Discourse::InvalidAccess.new }
-
       on_failed_policy(:not_silenced_already) do
         silenced_record = @user.silenced_record
         message =
@@ -358,7 +353,6 @@ class Admin::UsersController < Admin::StaffController
           )
         render json: failed_json.merge(message: message), status: 409
       end
-
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
       end

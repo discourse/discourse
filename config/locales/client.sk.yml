@@ -5373,6 +5373,7 @@ sk:
             publish_read_state: "Na skupinových správach zverejniť stav čítania skupiny"
           membership:
             automatic: Automaticky
+            automatic_tooltip: "Táto skupina je automatická, nemôžete ju vymazať a jej členovia sa pridávajú a odstraňujú automaticky."
             trust_levels_title: "Stupeň dôvery automaticky udelený členom po ich pridaní:"
             effects: Efekty
             trust_levels_none: "Žiadny"
@@ -5824,6 +5825,8 @@ sk:
             move_down: "Posunúť sa nadol"
       plugins:
         title: "Pluginy"
+        installed: "Nainštalované doplnky"
+        description: "V tomto zozname sa zobrazia všetky nainštalované zásuvné moduly Discourse alebo zásuvné moduly, ktoré sú predinštalované v rámci hostingu Discourse."
         name: "Meno"
         none_installed: "Nemáte nainštalované žiadne pluginy."
         version: "Verzia"

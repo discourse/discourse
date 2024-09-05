@@ -36,8 +36,8 @@ class Admin::Config::AboutController < Admin::AdminController
     end
 
     settings_map.each do |name, value|
-      with_service(
-        UpdateSiteSetting,
+      UpdateSiteSetting.call(
+        guardian: guardian,
         setting_name: name,
         new_value: value,
         allow_changing_hidden: %i[

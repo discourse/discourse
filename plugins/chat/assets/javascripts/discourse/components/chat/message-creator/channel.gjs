@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { gt, not } from "truth-helpers";
-import concatClass from "discourse/helpers/concat-class";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 
 export default class Channel extends Component {
@@ -22,14 +21,11 @@ export default class Channel extends Component {
       class="chat-message-creator__chatable -category-channel"
       data-disabled={{not @item.enabled}}
     >
-      <ChannelTitle @channel={{@item.model}} />
-
-      {{#if (gt @item.tracking.unreadCount 0)}}
-
-        <div
-          class={{concatClass "unread-indicator" (if this.isUrgent "-urgent")}}
-        ></div>
-      {{/if}}
+      <ChannelTitle
+        @channel={{@item.model}}
+        @isUnread={{gt @item.tracking.unreadCount 0}}
+        @isUrgent={{this.isUrgent}}
+      />
     </div>
   </template>
 }
