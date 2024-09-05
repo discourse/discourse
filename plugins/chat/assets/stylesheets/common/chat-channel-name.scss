@@ -7,6 +7,8 @@
   }
 
   &__label {
+    display: flex;
+    align-items: center;
     white-space: nowrap;
   }
 
@@ -14,5 +16,22 @@
     height: 1em;
     width: 1em;
     vertical-align: baseline;
+  }
+
+  .chat-channel-unread-indicator {
+    @include chat-unread-indicator;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 8px;
+    height: 8px;
+    margin-left: 0.75em;
+
+    &.-urgent {
+      width: auto;
+      height: auto;
+      min-width: 0.6em;
+      padding: 0.3em 0.5em;
+    }
   }
 }
