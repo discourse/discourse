@@ -26,6 +26,7 @@ import { headerIconsDAG } from "discourse/components/header/icons";
 import { registeredTabs } from "discourse/components/more-topics";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
+import { _postMenuPluginApi } from "discourse/components/post/menu";
 import {
   addPluginReviewableParam,
   registerReviewableActionModal,
@@ -783,6 +784,10 @@ class PluginApi {
    **/
   includePostAttributes(...attributes) {
     includeAttributes(...attributes);
+  }
+
+  get postMenuButtons() {
+    return _postMenuPluginApi;
   }
 
   /**

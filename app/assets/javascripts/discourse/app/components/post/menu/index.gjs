@@ -9,6 +9,7 @@ import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-
 import SmallUserList from "discourse/components/small-user-list";
 import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
+import DAG from "discourse/lib/dag";
 import { userPath } from "discourse/lib/url";
 import i18n from "discourse-common/helpers/i18n";
 import discourseLater from "discourse-common/lib/later";
@@ -51,24 +52,74 @@ let registeredButtonComponents;
 resetPostMenuButtons();
 
 function resetPostMenuButtons() {
-  registeredButtonComponents = new Map([
-    [ADMIN_BUTTON_ID, PostMenuAdminButton],
-    [BOOKMARK_BUTTON_ID, PostMenuBookmarkButton],
-    [COPY_LINK_BUTTON_ID, PostMenuCopyLinkButton],
-    [DELETE_BUTTON_ID, PostMenuDeleteButton],
-    [EDIT_BUTTON_ID, PostMenuEditButton],
-    [FLAG_BUTTON_ID, PostMenuFlagButton],
-    [LIKE_BUTTON_ID, PostMenuLikeButton],
-    [READ_BUTTON_ID, PostMenuReadButton],
-    [REPLIES_BUTTON_ID, PostMenuRepliesButton],
-    [REPLY_BUTTON_ID, PostMenuReplyButton],
-    [SHARE_BUTTON_ID, PostMenuShareButton],
-    [SHOW_MORE_BUTTON_ID, PostMenuShowMoreButton],
-  ]);
+  registeredButtonComponents = new Map(
+    [
+      [ADMIN_BUTTON_ID, PostMenuAdminButton],
+      [BOOKMARK_BUTTON_ID, PostMenuBookmarkButton],
+      [COPY_LINK_BUTTON_ID, PostMenuCopyLinkButton],
+      [DELETE_BUTTON_ID, PostMenuDeleteButton],
+      [EDIT_BUTTON_ID, PostMenuEditButton],
+      [FLAG_BUTTON_ID, PostMenuFlagButton],
+      [LIKE_BUTTON_ID, PostMenuLikeButton],
+      [READ_BUTTON_ID, PostMenuReadButton],
+      [REPLIES_BUTTON_ID, PostMenuRepliesButton],
+      [REPLY_BUTTON_ID, PostMenuReplyButton],
+      [SHARE_BUTTON_ID, PostMenuShareButton],
+      [SHOW_MORE_BUTTON_ID, PostMenuShowMoreButton],
+    ].map(([id, Button]) => [id, registeredAttributes(Button)])
+  );
 }
 
 export function clearExtraPostMenuButtons() {
   resetPostMenuButtons();
+}
+
+export const _postMenuPluginApi = Object.freeze({
+  add(id, component, position) {
+    if (registeredButtonComponents.has(id)) {
+      return false;
+    }
+
+    registeredButtonComponents.set(
+      id,
+      registeredAttributes(component, position)
+    );
+
+    return true;
+  },
+  delete(id) {
+    return registeredButtonComponents.delete(id);
+  },
+  replace(id, component) {
+    const existing = registeredButtonComponents.get(id);
+    if (!existing) {
+      return false;
+    }
+
+    registeredButtonComponents.set(id, { ...existing, component });
+
+    return true;
+  },
+  reposition(id, position) {
+    const existing = registeredButtonComponents.get(id);
+    if (!existing) {
+      return false;
+    }
+
+    registeredButtonComponents.set(id, { ...existing, position });
+
+    return true;
+  },
+  has(id) {
+    return registeredButtonComponents.has(id);
+  },
+});
+
+function registeredAttributes(ButtonComponent, position) {
+  return {
+    Component: ButtonComponent,
+    position,
+  };
 }
 
 function smallUserAttributes(user) {
@@ -98,10 +149,11 @@ export default class PostMenu extends Component {
   @tracked totalReaders;
 
   @cached
-  get availableButtons() {
+  get registeredButtons() {
     return new Map(
-      registeredButtonComponents.entries().map(([id, ButtonComponent]) => {
+      registeredButtonComponents.entries().map(([id, attributes]) => {
         let alwaysShow = false;
+        let extraControl = false;
         let actionMode;
         let primaryAction;
         let secondaryAction;
@@ -168,6 +220,7 @@ export default class PostMenu extends Component {
             break;
 
           case REPLIES_BUTTON_ID:
+            extraControl = true;
             primaryAction = this.args.toggleReplies;
             properties = {
               filteredRepliesView: this.args.filteredRepliesView,
@@ -189,13 +242,18 @@ export default class PostMenu extends Component {
         }
 
         const config = {
-          postMenuButtonId: id,
-          Component: ButtonComponent,
+          id,
+          Component: attributes.Component,
+          position: {
+            before: attributes.position?.before,
+            after: attributes.position?.after,
+          },
           action: primaryAction,
           secondaryAction,
           actionMode,
           alwaysShow,
           properties,
+          extraControl: attributes.position?.extraControl ?? extraControl,
         };
 
         return [id, config];
@@ -204,7 +262,7 @@ export default class PostMenu extends Component {
   }
 
   get items() {
-    return this.#configuredItems.map((i) => {
+    const list = this.#configuredItems.map((i) => {
       // if the post is a wiki, make Edit more prominent
       if (this.#isWikiMode) {
         switch (i) {
@@ -217,69 +275,80 @@ export default class PostMenu extends Component {
 
       return i;
     });
+
+    if (list.length > 0 && !list.includes(SHOW_MORE_BUTTON_ID)) {
+      list.splice(list.length - 1, 0, SHOW_MORE_BUTTON_ID);
+    }
+
+    return list;
   }
 
-  get buttons() {
+  @cached
+  get extraControls() {
+    const items = [REPLIES_BUTTON_ID];
+
+    return items
+      .map((itemId) => this.registeredButtons.get(itemId))
+      .filter((button) => isPresent(button) && button.extraControl);
+  }
+
+  get availableButtons() {
     return this.items
-      .map((itemId) => this.availableButtons.get(itemId))
-      .filter(isPresent);
+      .map((itemId) => this.registeredButtons.get(itemId))
+      .filter((button) => isPresent(button) && !button.extraControl);
   }
 
   @cached
   get collapsedButtons() {
     const hiddenItems = this.#hiddenItems;
 
-    if (isEmpty(hiddenItems) || !this.collapsed) {
+    if (
+      isEmpty(hiddenItems) ||
+      !this.collapsed ||
+      !this.availableButtons.some((button) => button.id === SHOW_MORE_BUTTON_ID)
+    ) {
       return [];
     }
 
-    return this.buttons.filter((button) => {
-      if (button.alwaysShow) {
+    return this.availableButtons.filter((button) => {
+      if (button.alwaysShow || button.id === SHOW_MORE_BUTTON_ID) {
         return false;
       }
 
-      if (
-        this.args.post.reviewable_id &&
-        button.postMenuButtonId === FLAG_BUTTON_ID
-      ) {
+      if (this.args.post.reviewable_id && button.id === FLAG_BUTTON_ID) {
         return false;
       }
 
-      return hiddenItems.includes(button.postMenuButtonId);
+      return hiddenItems.includes(button.id);
     });
   }
 
+  @cached
+  get visibleButtons() {
+    const nonCollapsed = this.availableButtons.filter((button) => {
+      return !this.collapsedButtons.includes(button);
+    });
+
+    const dag = new DAG();
+    new Set(nonCollapsed).forEach((button) =>
+      dag.add(button.id, button, button.position)
+    );
+
+    return dag.resolve().map(({ value }) => value);
+  }
+
   get repliesButton() {
-    return this.availableButtons.get(REPLIES_BUTTON_ID);
+    return this.registeredButtons.get(REPLIES_BUTTON_ID);
   }
 
-  get shouldRenderRepliesButtonAutomatically() {
-    // TODO check if the position is overridden using the DAG
-    return this.repliesButton && !this.items.includes(REPLIES_BUTTON_ID);
-  }
-
-  get hasShowMoreButton() {
+  get isShowMoreButtonVisible() {
     // Only show ellipsis if there is more than one button hidden
     // if there are no more buttons, we are not collapsed
     return this.collapsedButtons.length > 1;
   }
 
   get showMoreButton() {
-    return this.availableButtons.get(SHOW_MORE_BUTTON_ID);
-  }
-
-  get visibleButtons() {
-    if (!this.hasShowMoreButton) {
-      return this.buttons;
-    }
-
-    const buttons = this.buttons.filter((button) => {
-      return !this.collapsedButtons.includes(button);
-    });
-
-    buttons.push(this.showMoreButton);
-
-    return buttons;
+    return this.registeredButtons.get(SHOW_MORE_BUTTON_ID);
   }
 
   get remainingLikedUsers() {
@@ -430,23 +499,28 @@ export default class PostMenu extends Component {
       <nav
         class={{concatClass
           "post-controls"
-          (if this.hasShowMoreButton "collapsed" "expanded")
+          (if
+            (and this.isShowMoreButtonVisible this.collapsed)
+            "collapsed"
+            "expanded"
+          )
           (if
             this.siteSettings.enable_filtered_replies_view
             "replies-button-visible"
           )
         }}
       >
-        {{#if this.shouldRenderRepliesButtonAutomatically}}
-          <this.repliesButton.Component
+        {{! do not include PluginOutlets here, use the PostMenu DAG API instead }}
+        {{#each this.extraControls as |extraControl|}}
+          <extraControl.Component
             class="btn-flat"
             @post={{@post}}
-            @properties={{this.repliesButton.properties}}
-            @action={{this.repliesButton.action}}
-            @actionMode={{this.repliesButton.actionMode}}
-            @secondaryAction={{this.repliesButton.secondaryAction}}
+            @properties={{extraControl.properties}}
+            @action={{extraControl.action}}
+            @actionMode={{extraControl.actionMode}}
+            @secondaryAction={{extraControl.secondaryAction}}
           />
-        {{/if}}
+        {{/each}}
         <div class="actions">
           {{#each this.visibleButtons as |button|}}
             <button.Component
@@ -500,7 +574,7 @@ export default class PostMenu extends Component {
           }}
         />
       {{/if}}
-      {{#if this.hasShowMoreButton}}
+      {{#if this.isShowMoreButtonVisible}}
         <UserTip
           @id="post_menu"
           @triggerSelector=".post-controls .actions .show-more-actions"
