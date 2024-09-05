@@ -459,7 +459,7 @@ after_initialize do
 
     placeholder :channel_name
 
-    triggerables %i[recurring topic_tags_changed]
+    triggerables %i[recurring topic_tags_changed post_created_edited]
 
     script do |context, fields, automation|
       sender = User.find_by(username: fields.dig("sender", "value")) || Discourse.system_user
