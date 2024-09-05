@@ -20,7 +20,7 @@ class Auth::OauthFaradayFormatter < Faraday::Logging::Formatter
       From #{env.method.upcase} #{env.url}
 
       Headers:
-      #{env.request_headers}
+      #{env.response_headers}
 
       Body:
       #{env[:body]}
