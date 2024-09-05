@@ -1,4 +1,3 @@
-import Component from "@ember/component";
 import EmberObject, { action, computed, set } from "@ember/object";
 import { alias, and, gt, gte, not, or } from "@ember/object/computed";
 import { dasherize } from "@ember/string";
@@ -9,6 +8,7 @@ import {
   classNames,
 } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
+import CardContentsBase from "discourse/components/card-contents-base";
 import { setting } from "discourse/lib/computed";
 import { durationTiny } from "discourse/lib/formatter";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -16,7 +16,6 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
-import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
 import User from "discourse/models/user";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
@@ -33,8 +32,7 @@ import I18n from "discourse-i18n";
   "primaryGroup"
 )
 @attributeBindings("labelledBy:aria-labelledby")
-export default class UserCardContents extends Component.extend(
-  CardContentsBase,
+export default class UserCardContents extends CardContentsBase.extend(
   CanCheckEmails,
   CleansUp
 ) {

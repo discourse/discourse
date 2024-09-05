@@ -259,7 +259,7 @@ GEM
     mutex_m (0.2.0)
     net-http (0.4.1)
       uri
-    net-imap (0.4.15)
+    net-imap (0.4.16)
       date
       net-protocol
     net-pop (0.1.2)
@@ -323,7 +323,7 @@ GEM
     parallel (1.26.3)
     parallel_tests (4.7.1)
       parallel
-    parser (3.3.4.2)
+    parser (3.3.5.0)
       ast (~> 2.4.1)
       racc
     pg (1.5.4)
@@ -403,8 +403,7 @@ GEM
       io-console (~> 0.5)
     request_store (1.7.0)
       rack (>= 1.4)
-    rexml (3.3.6)
-      strscan
+    rexml (3.3.7)
     rinku (2.0.6)
     rotp (6.3.0)
     rouge (4.3.0)
@@ -418,7 +417,7 @@ GEM
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
       rspec-mocks (~> 3.13.0)
-    rspec-core (3.13.0)
+    rspec-core (3.13.1)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.2)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -431,7 +430,7 @@ GEM
       rspec-support (~> 3.13.0)
     rspec-multi-mock (0.3.1)
       rspec (>= 3.7.0)
-    rspec-rails (7.0.0)
+    rspec-rails (7.0.1)
       actionpack (>= 7.0)
       activesupport (>= 7.0)
       railties (>= 7.0)
@@ -449,17 +448,17 @@ GEM
       rspec-core (>= 2.14)
     rtlcss (0.2.1)
       mini_racer (>= 0.6.3)
-    rubocop (1.66.0)
+    rubocop (1.66.1)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 2.4, < 3.0)
-      rubocop-ast (>= 1.32.1, < 2.0)
+      rubocop-ast (>= 1.32.2, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.32.1)
+    rubocop-ast (1.32.3)
       parser (>= 3.3.1.0)
     rubocop-capybara (2.21.0)
       rubocop (~> 1.41)
@@ -542,7 +541,6 @@ GEM
     sshkey (3.0.0)
     stackprof (0.2.26)
     stringio (3.1.1)
-    strscan (3.1.0)
     syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
     syntax_tree-disable_ternary (1.0.0)
@@ -575,7 +573,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yaml-lint (0.1.2)
-    yard (0.9.36)
+    yard (0.9.37)
     zeitwerk (2.6.18)
 
 PLATFORMS

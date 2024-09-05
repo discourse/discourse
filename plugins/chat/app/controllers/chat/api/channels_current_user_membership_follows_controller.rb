@@ -2,7 +2,7 @@
 
 class Chat::Api::ChannelsCurrentUserMembershipFollowsController < Chat::Api::ChannelsController
   def destroy
-    with_service(Chat::UnfollowChannel) do
+    Chat::UnfollowChannel.call do
       on_success do
         render_serialized(
           result.membership,

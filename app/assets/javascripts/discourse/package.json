@@ -15,7 +15,7 @@
     "test": "ember test"
   },
   "dependencies": {
-    "@faker-js/faker": "^8.4.1",
+    "@faker-js/faker": "^9.0.0",
     "@glimmer/syntax": "^0.92.0",
     "@highlightjs/cdn-assets": "^11.10.0",
     "@json-editor/json-editor": "2.15.1",
@@ -45,7 +45,7 @@
     "@ember/optional-features": "^2.1.0",
     "@ember/render-modifiers": "^2.1.0",
     "@ember/string": "^4.0.0",
-    "@ember/test-helpers": "^4.0.2",
+    "@ember/test-helpers": "^4.0.4",
     "@ember/test-waiters": "^3.1.0",
     "@embroider/compat": "^3.6.1",
     "@embroider/core": "^3.4.15",
@@ -133,7 +133,7 @@
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
     "pnpm": ">= 9"
-},
+  },
   "ember": {
     "edition": "octane"
   }

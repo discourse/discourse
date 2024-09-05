@@ -364,9 +364,13 @@ class PostActionCreator
       create_args[:subtype] = TopicSubtype.notify_moderators
       create_args[:target_group_names] = [Group[:moderators].name]
 
-      if SiteSetting.enable_category_group_moderation? &&
-           @post.topic&.category&.reviewable_by_group_id?
-        create_args[:target_group_names] << @post.topic.category.reviewable_by_group.name
+      if SiteSetting.enable_category_group_moderation? && @post.topic&.category
+        create_args[:target_group_names].push(
+          *Group
+            .joins(:category_moderation_groups)
+            .where("category_moderation_groups.category_id": @post.topic.category.id)
+            .pluck(:name),
+        )
       end
     end
 
