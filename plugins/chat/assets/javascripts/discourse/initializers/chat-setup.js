@@ -29,11 +29,26 @@ class ChatSetupInit {
     setOwner(this, owner);
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
 
-    if (!this.chatService.userCanChat) {
-      return;
-    }
-
     withPluginApi("0.12.1", (api) => {
+      api.addAboutPageActivity("chat_messages", (periods) => {
+        const count = periods["7_days"];
+        if (count) {
+          return {
+            icon: "comment-dots",
+            class: "chat-messages",
+            activityText: I18n.t("about.activities.chat_messages", {
+              count,
+              formatted_number: number(count),
+            }),
+            period: I18n.t("about.activities.periods.last_7_days"),
+          };
+        }
+      });
+
+      if (!this.chatService.userCanChat) {
+        return;
+      }
+
       api.onPageChange((path) => {
         const route = this.router.recognize(path);
         if (route.name.startsWith("chat.")) {
@@ -156,21 +171,6 @@ class ChatSetupInit {
         component: chatStyleguide,
         category: "organisms",
         id: "chat",
-      });
-
-      api.addAboutPageActivity("chat_messages", (periods) => {
-        const count = periods["7_days"];
-        if (count) {
-          return {
-            icon: "comment-dots",
-            class: "chat-messages",
-            activityText: I18n.t("about.activities.chat_messages", {
-              count,
-              formatted_number: number(count),
-            }),
-            period: I18n.t("about.activities.periods.last_7_days"),
-          };
-        }
       });
     });
   }
