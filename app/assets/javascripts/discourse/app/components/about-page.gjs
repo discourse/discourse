@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import AboutPageUsers from "discourse/components/about-page-users";
@@ -22,6 +23,7 @@ export function clearAboutPageActivities() {
 
 export default class AboutPage extends Component {
   @service siteSettings;
+  @service currentUser;
 
   get moderatorsCount() {
     return this.args.model.moderators.length;
@@ -196,6 +198,14 @@ export default class AboutPage extends Component {
   }
 
   <template>
+    {{#if this.currentUser.admin}}
+      <p>
+        <LinkTo class="edit-about-page" @route="adminConfig.about">
+          {{dIcon "pencil-alt"}}
+          <span>{{i18n "about.edit"}}</span>
+        </LinkTo>
+      </p>
+    {{/if}}
     <section class="about__header">
       {{#if @model.banner_image}}
         <img class="about__banner" src={{@model.banner_image}} />

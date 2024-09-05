@@ -328,6 +328,7 @@ en:
       pm_title: "Suggested Messages"
 
     about:
+      edit: "Edit this page"
       simple_title: "About"
       title: "About %{title}"
       stats: "Site Statistics"
