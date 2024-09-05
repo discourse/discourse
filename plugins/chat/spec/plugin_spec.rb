@@ -387,4 +387,48 @@ describe Chat do
       end
     end
   end
+
+  describe "when using post_edited_created trigger automation" do
+    describe "with the send message script" do
+      fab!(:automation_1) do
+        Fabricate(
+          :automation,
+          trigger: DiscourseAutomation::Triggers::POST_CREATED_EDITED,
+          script: :send_chat_message,
+        )
+      end
+      fab!(:user_1) { Fabricate(:admin) }
+      fab!(:channel_1) { Fabricate(:chat_channel) }
+
+      before do
+        SiteSetting.discourse_automation_enabled = true
+
+        automation_1.upsert_field!(
+          "chat_channel_id",
+          "text",
+          { value: channel_1.id },
+          target: "script",
+        )
+        automation_1.upsert_field!(
+          "message",
+          "message",
+          { value: "[{{topic_title}}]({{topic_url}})" },
+          target: "script",
+        )
+      end
+
+      it "sends the message" do
+        PostCreator.create(
+          user_1,
+          { title: "hello world topic", raw: "my name is fred", archetype: Archetype.default },
+        )
+
+        topic_1 = Topic.last
+
+        expect(channel_1.chat_messages.last.message).to eq(
+          "[#{topic_1.title}](#{topic_1.relative_url})",
+        )
+      end
+    end
+  end
 end
