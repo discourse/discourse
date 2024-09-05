@@ -7017,9 +7017,10 @@ en:
         name: Name
         badge: Badge
         display_name: Display Name
-        description: Description
+        description: Badges reward users for their activities, contributions, and achievements to recognize, validate, and encourage positive behavior and engagement within the community.
         long_description: Long description
         badge_type: Badge type
+        group_settings: Group Settings
         badge_grouping: Group
         badge_groupings:
           modal_title: Badge Groupings
@@ -7084,9 +7085,8 @@ en:
             with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
         badge_intro:
-          title: "Select an existing badge or create a new one to get started"
-          what_are_badges_title: "What are badges?"
-          badge_query_examples_title: "Badge query examples"
+          title: "Choose a badge or create a new one"
+          description: "Start by selecting an existing badge to customize, or create a brand new badge"
         mass_award:
           title: Bulk Award
           description: Award the same badge to many users at once.
