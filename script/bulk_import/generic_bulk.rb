@@ -19,6 +19,7 @@ end
 class BulkImport::Generic < BulkImport::Base
   AVATAR_DIRECTORY = ENV["AVATAR_DIRECTORY"]
   UPLOAD_DIRECTORY = ENV["UPLOAD_DIRECTORY"]
+  CONTENT_UPLOAD_REFERENCE_TYPES = %w[posts chat_messages]
 
   def initialize(db_path, uploads_db_path = nil)
     super()
@@ -39,12 +40,12 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def execute
+    enable_required_plugins
+    import_site_settings
+
+    import_uploads
+
     if false
-      enable_required_plugins
-      import_site_settings
-
-      import_uploads
-
       # needs to happen before users, because keeping group names is more important than usernames
       import_groups
 
@@ -99,7 +100,6 @@ class BulkImport::Generic < BulkImport::Base
       import_badges
       import_user_badges
 
-      import_upload_references
       import_optimized_images
 
       import_topic_users
@@ -131,6 +131,8 @@ class BulkImport::Generic < BulkImport::Base
     import_chat_mentions
 
     update_chat_threads
+
+    import_upload_references
   end
 
   def execute_after
@@ -1797,28 +1799,50 @@ class BulkImport::Generic < BulkImport::Base
     SQL
     puts "  Import took #{(Time.now - start_time).to_i} seconds."
 
-    puts "", "Importing upload references for posts..."
-    post_uploads = query(<<~SQL)
-      SELECT p.id AS post_id, u.value AS upload_id
-        FROM posts p,
-             JSON_EACH(p.upload_ids) u
+    import_content_upload_references("posts")
+    import_content_upload_references("chat_messages")
+  end
+
+  def import_content_upload_references(type)
+    if CONTENT_UPLOAD_REFERENCE_TYPES.exclude?(type)
+      puts "  Skipping upload references import for #{type} because it's unsupported"
+
+      return
+    end
+
+    puts "", "Importing upload references for #{type}..."
+
+    content_uploads = query(<<~SQL)
+      SELECT t.id AS target_id, u.value AS upload_id
+        FROM #{type} t,
+             JSON_EACH(t.upload_ids) u
        WHERE upload_ids IS NOT NULL
     SQL
 
+    target_type = type.classify
     existing_upload_references =
-      UploadReference.where(target_type: "Post").pluck(:upload_id, :target_id).to_set
+      UploadReference.where(target_type: target_type).pluck(:upload_id, :target_id).to_set
 
-    create_upload_references(post_uploads) do |row|
+    create_upload_references(content_uploads) do |row|
       upload_id = upload_id_from_original_id(row["upload_id"])
-      post_id = post_id_from_imported_id(row["post_id"])
+      target_id = content_id_from_original_id(type, row["target_id"])
 
-      next unless upload_id && post_id
-      next unless existing_upload_references.add?([upload_id, post_id])
+      next unless upload_id && target_id
+      next unless existing_upload_references.add?([upload_id, target_id])
 
-      { upload_id: upload_id, target_type: "Post", target_id: post_id }
+      { upload_id: upload_id, target_type: target_type, target_id: target_id }
     end
 
-    post_uploads.close
+    content_uploads.close
+  end
+
+  def content_id_from_original_id(type, original_id)
+    case type
+    when "posts"
+      post_id_from_imported_id(original_id)
+    when "chat_messages"
+      chat_message_id_from_original_id(original_id)
+    end
   end
 
   def update_uploaded_avatar_id
