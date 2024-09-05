@@ -50,7 +50,6 @@ export default class AdminConfigAreasAbout extends Component {
 
   <template>
     <div class="admin-config-area">
-      <h2>{{i18n "admin.config_areas.about.header"}}</h2>
       <div class="admin-config-area__primary-content">
         <AdminConfigAreaCard
           @heading="admin.config_areas.about.general_settings"
