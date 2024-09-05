@@ -42,7 +42,7 @@ export default class ChatChannelName extends Component {
   }
 
   get showUserStatus() {
-    if(!this.args.channel.isDirectMessageChannel) {
+    if (!this.args.channel.isDirectMessageChannel) {
       return false;
     }
     return !!(this.users.length === 1 && this.users[0].status);
