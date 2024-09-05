@@ -426,6 +426,9 @@ basic:
     default: ""
     max: 300
     hidden: true
+  use_legacy_pageviews:
+    default: false
+    hidden: true
 login:
   invite_only:
     refresh: true
