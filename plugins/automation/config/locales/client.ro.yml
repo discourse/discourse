@@ -63,6 +63,9 @@ ro:
               label: Categorie
             restricted_group:
               label: Grup
+            skip_via_email:
+              label: "Omite prin email"
+              description: "Omite declanșatorul dacă articolul a fost creat prin email"
           created: Creat
         user_updated:
           fields:

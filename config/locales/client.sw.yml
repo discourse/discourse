@@ -2574,7 +2574,6 @@ sw:
             post: "machapisho"
       plugins:
         title: "Programu-jalizi"
-        installed: "Progamu-jalizi zilizowekwa"
         name: "Jina"
         none_installed: "Hauna programu-jalizi zilizowekwa."
         version: "Toleo"

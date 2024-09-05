@@ -2920,7 +2920,6 @@ et:
             post: "postitused"
       plugins:
         title: "Plugin"
-        installed: "Paigaldatud pluginad"
         name: "Nimi"
         none_installed: "Ühtegi pluginat ei ole paigaldatud."
         version: "Versioon"

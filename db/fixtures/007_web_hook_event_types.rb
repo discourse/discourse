@@ -230,3 +230,8 @@ WebHookEventType.seed do |b|
   b.name = "chat_message_restored"
   b.group = WebHookEventType.groups[:chat]
 end
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TYPES[:category_experts_approved]
+  b.name = "category_experts_approved"
+  b.group = WebHookEventType.groups[:category_experts]
+end

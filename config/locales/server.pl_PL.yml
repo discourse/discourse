@@ -583,6 +583,8 @@ pl_PL:
       trust_level_2: "poziom_zaufania_2"
       trust_level_3: "poziom_zaufania_3"
       trust_level_4: "poziom_zaufania_4"
+    default_descriptions:
+      everyone: "Automatyczna grupa obejmująca wszystkich członków"
     request_membership_pm:
       title: "Prośba o członkostwo w grupie @%{group_name}"
     request_accepted_pm:

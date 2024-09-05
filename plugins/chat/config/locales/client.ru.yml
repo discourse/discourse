@@ -142,7 +142,6 @@ ru:
       header_indicator_preference:
         title: "Показать индикатор активности в заголовке"
         all_new: "Все новые сообщения"
-        dm_and_mentions: "Прямые сообщения и упоминания"
         only_mentions: "Только упоминания"
         never: "Никогда"
       separate_sidebar_mode:
@@ -684,10 +683,10 @@ ru:
         notifications:
           regular:
             title: "Обычный"
-            description: "Вам придет уведомление, если кто-нибудь упомянет ваше @имя в этой цепочке."
           tracking:
             title: "В отслеживаемых"
-            description: "В списке тем и на канале будет отображаться количество новых ответов в этой цепочке. Вам придет уведомление, если кто-нибудь упомянет ваше @имя в ней."
+          watching:
+            title: "В наблюдаемых"
         participants_other_count:
           one: "+%{count}"
           few: "+%{count}"

@@ -4666,7 +4666,6 @@ nb_NO:
             post: "innlegg"
       plugins:
         title: "Utvidelser"
-        installed: "Installerte utvidelser"
         name: "Navn"
         none_installed: "Du har ikke installert noen utvidelser."
         version: "Versjon"

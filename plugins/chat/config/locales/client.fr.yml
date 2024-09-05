@@ -134,7 +134,6 @@ fr:
       header_indicator_preference:
         title: "Afficher l'indicateur d'activité dans l'en-tête"
         all_new: "Tous les nouveaux messages"
-        dm_and_mentions: "Messages directs et mentions"
         only_mentions: "Mentions uniquement"
         never: "Jamais"
       separate_sidebar_mode:
@@ -604,10 +603,10 @@ fr:
         notifications:
           regular:
             title: "Normal"
-            description: "Vous serez averti(e) si quelqu'un mentionne votre @name dans ce fil."
           tracking:
             title: "Suivi"
-            description: "Un nombre de nouvelles réponses pour ce fil sera affiché dans la liste des fils et dans le canal. Vous serez averti(e) si quelqu'un mentionne votre @nom dans ce fil."
+          watching:
+            title: "Surveiller"
         participants_other_count:
           one: "+ %{count}"
           other: "+ %{count}"

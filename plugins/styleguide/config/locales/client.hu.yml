@@ -10,16 +10,23 @@ hu:
       title: "Stílus útmutató"
       welcome: "A kezdéshez válasszon egy szakaszt a bal oldali menüből."
       categories:
+        syntax: Szintaxis
         atoms: Atomok
         molecules: Molekulák
         organisms: Szervezetek
       sections:
+        bem:
+          title: "BEM"
         typography:
           title: "Tipográfia"
           example: "Üdvözöljük a Discourse-ban"
           paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         date_time_inputs:
           title: "Dátum/idő bemenetek"
+        menus:
+          title: "Menük"
+        toasts:
+          title: "Köszöntők"
         font_scale:
           title: "Betűtípus rendszer"
         colors:
@@ -27,6 +34,8 @@ hu:
         icons:
           title: "Ikonok"
           full_list: "A Font Awesome ikonok teljes listájának megtekintése"
+        forms:
+          title: "Űrlapok"
         buttons:
           title: "Gombok"
         dropdowns:
@@ -86,6 +95,7 @@ hu:
         empty_state:
           title: "Üres állapot"
         tooltips:
+          title: "Eszköztárak"
           description: "Leírás"
           header: "Fejléc"
           hover_to_see: "Vigye az egérmutatót az eszköztipp megtekintéséhez"

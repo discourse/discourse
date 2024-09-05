@@ -134,7 +134,6 @@ pt_BR:
       header_indicator_preference:
         title: "Mostrar indicador de atividade no cabeçalho"
         all_new: "Todas as Novas Mensagens"
-        dm_and_mentions: "Mensagens Diretas e Menções"
         only_mentions: "Apenas menções"
         never: "Nunca"
       separate_sidebar_mode:
@@ -604,10 +603,10 @@ pt_BR:
         notifications:
           regular:
             title: "Normal"
-            description: "Você receberá notificação se alguém mencionar seu @nome nesta linha de discussão."
           tracking:
             title: "Monitorando"
-            description: "Uma contagem de novas respostas para esta linha de discussão será mostrada na lista de linhas de discussão e no canal. Você receberá uma notificação se algúem mencionar seu @nome aqui."
+          watching:
+            title: "Acompanhando"
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"

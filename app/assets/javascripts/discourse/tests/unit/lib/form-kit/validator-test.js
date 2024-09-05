@@ -267,5 +267,10 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
       [I18n.t("form_kit.errors.required")],
       "it returns an error when the value is undefined"
     );
+
+    errors = await new Validator(0, {
+      required: {},
+    }).validate("xxx");
+    assert.deepEqual(errors, [], "it returns no error when the value is 0");
   });
 });

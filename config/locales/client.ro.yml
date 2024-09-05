@@ -1659,8 +1659,8 @@ ro:
     signup_cta:
       sign_up: "Înregistrare"
       hide_session: "Poate mai târziu"
-      hide_forever: "Nu, mulțumesc"
-      intro: "Salut! Se pare că îți place discuția, dar încă nu te-ai înscris pentru un cont."
+      hide_forever: "nu, mulțumesc"
+      intro: "Salut! Se pare că îți place discuția, dar încă nu te-ai înregistrat pentru un cont."
     summary:
       buttons:
         generate: "Rezumat"
@@ -1694,6 +1694,7 @@ ro:
       associate: "Ai deja un cont? <a href='%{associate_link}'>Loghează-te</a> pentru a conecta contul tău %{provider}."
       progress_bar:
         signup: "Înregistrare"
+        activate: "Activează"
         approve: "Aprobare"
         login: "Autentificare"
     forgot_password:
@@ -2776,7 +2777,7 @@ ro:
             one {<b>#</b> subiect}
             few {<b>#</b> subiecte}
           other {<b>#</b> de subiecte}
-        } ale acestui utilizator, să-i elimini contul, să blochezi înregistrările de pe adresa lui IP <b>{ip_address}</b> și să-i adaugi adresa de e-mail <b>{email}</b> pe lista celor blocate permanent. Sigur crezi că acest utilizator este un spammer?
+        } ale acestui utilizator, să-i elimini contul, să blochezi înregistrările de pe adresa lui IP <b>{ip_address}</b> și să-i adaugi adresa de email <b>{email}</b> pe lista celor blocate permanent. Sigur crezi că acest utilizator este un spammer?
       yes_delete_spammer: "Da, șterge spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(ascuns)"
@@ -3395,6 +3396,7 @@ ro:
               public: "Toată lumea"
           membership:
             automatic: Automat
+            automatic_tooltip: "Acest grup este automat, nu îl poți șterge, iar membrii sunt adăugați și eliminați automat"
             trust_levels_title: "Nivel de încredere acordat automat membrilor atunci când sunt adăugați:"
             trust_levels_none: "Nimeni"
             automatic_membership_email_domains: "Utilizatorii care se înregistrează cu un domeniu de email identic cu unul din lista asta vor fi adăugați automat în acest grup:"
@@ -3569,9 +3571,10 @@ ro:
         flags:
           description: "Descriere"
           enabled: "Activat?"
-          edit: "Modifică"
+          edit: "Editează"
           delete: "Șterge"
           flags_tab: "Semnalări"
+          settings: "Setări semnalări"
           form:
             save: "Salvare"
             name: "Nume"
@@ -3581,9 +3584,10 @@ ro:
             post: "Postări"
       plugins:
         title: "Plugin-uri"
-        installed: "Plugin-uri instalate"
+        installed: "Module instalate"
+        description: "Toate modulele Discourse pe care le-ai instalat sau modulele care sunt preinstalate odată cu găzduirea Discourse vor apărea în această listă."
         name: "Nume"
-        none_installed: "Nu aveţi nici un plugin instalat."
+        none_installed: "Nu ai niciun modul instalat."
         version: "Versiune"
         enabled: "Activat?"
         is_enabled: "D"
@@ -4278,7 +4282,7 @@ ro:
         delete_confirm: "Ești sigur că vrei să ștergi acest câmp utilizator?"
         options: "Opțiuni"
         required:
-          title: "Necesar la înscriere"
+          title: "Necesar la înregistrare"
           enabled: "necesar"
           disabled: "opţional"
         requirement:
@@ -4310,6 +4314,7 @@ ro:
         go_back: "Înapoi la căutare"
         recommended: "Îți recomandăm să personalizezi următorul text pentru a se adapta nevoilor tale:"
         show_overriden: "Arată doar ignorate"
+        only_show_selected_locale: "Afișează rezultatele doar în locala selectată"
         outdated:
           dismiss: "Renunță"
       settings:

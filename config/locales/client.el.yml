@@ -4163,7 +4163,6 @@ el:
             post: "αναρτήσεις"
       plugins:
         title: "Plugins"
-        installed: "Εγκατεστημένα Plugins"
         name: "Όνομα"
         none_installed: "Δεν έχεις εγκαταστήσει πρόσθετα"
         version: "Έκδοση"
