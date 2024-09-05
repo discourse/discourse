@@ -20,6 +20,7 @@ export default class ChatChannelsManager extends Service {
   @service chatStateManager;
   @service currentUser;
   @service router;
+  @service site;
   @service siteSettings;
   @tracked _cached = new TrackedObject();
 
@@ -129,7 +130,11 @@ export default class ChatChannelsManager extends Service {
         channel.isCategoryChannel && channel.currentUserMembership.following
     );
 
-    return this.#sortChannelsByActivity(channels);
+    if (this.site.mobileView) {
+      return this.#sortChannelsByActivity(channels);
+    } else {
+      return channels.sort((a, b) => a?.slug?.localeCompare?.(b?.slug));
+    }
   }
 
   @cached
