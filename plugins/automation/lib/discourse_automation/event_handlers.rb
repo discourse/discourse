@@ -230,6 +230,10 @@ module DiscourseAutomation
             "topic" => topic,
             "removed_tags" => removed_tags,
             "added_tags" => added_tags,
+            "placeholders" => {
+              "topic_url" => topic.relative_url,
+              "topic_title" => topic.title,
+            },
           )
         end
     end
