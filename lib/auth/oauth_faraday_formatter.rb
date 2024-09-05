@@ -2,7 +2,6 @@
 
 class Auth::OauthFaradayFormatter < Faraday::Logging::Formatter
   def request(env)
-    Rails.logger.warn("DERPPPPP")
     warn <<~LOG
       OAuth Debugging: request #{env.method.upcase} #{env.url}
 
