@@ -5564,6 +5564,7 @@ en:
       config_areas:
         about:
           header: "About your site"
+          description: "Provide information here about this site and your team so that people can learn what your community is about, who is behind it, and how to reach you in case there is an issue. This will appear in the metadata, on the login page for private sites, and on the <a href='%{aboutUrl}'>/about</a> page."
           general_settings: "General settings"
           community_name: "Community name"
           community_name_placeholder: "Example Community"

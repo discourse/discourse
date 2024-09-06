@@ -1,5 +1,12 @@
 <AdminPageHeader
   @titleLabel="admin.config_areas.about.header"
+  @descriptionLabel=
+    {{html-safe
+      (i18n
+        "admin.config_areas.about.description"
+        aboutUrl=(get-url "/about")
+      )
+    }}
   @hideTabs={{true}}
 >
   <:breadcrumbs>
