@@ -1371,7 +1371,16 @@ en:
         page_view_crawler: "Known Crawler"
         page_view_other: "Other pageviews"
       yaxis: "Day"
-      description: "Pageviews for logged in users, anonymous users, known crawlers and other. This experimental report ensures logged-in/anon requests are coming from real browsers before counting them."
+      description: "Pageviews for logged in users, anonymous users, known crawlers and other. This experimental report ensures logged-in/anon requests are coming from real browsers before counting them. Historical data for this report is unavailable, for historical data see the ‘Consolidated Pageviews' report."
+    site_traffic:
+      title: "Site traffic"
+      xaxis:
+        page_view_anon_browser: "Pageviews (anonymous)"
+        page_view_logged_in_browser: "Pageviews (logged in)"
+        page_view_crawler: "Known crawlers"
+        page_view_other: "Other traffic"
+      yaxis: "Day"
+      description: "Pageviews for logged in users, anonymous users, known crawlers and other traffic. Read more at https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062."
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Day"

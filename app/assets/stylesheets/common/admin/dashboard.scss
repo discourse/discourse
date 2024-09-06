@@ -145,7 +145,8 @@
     .admin-report {
       grid-column: span 4;
 
-      &.consolidated-page-views {
+      &.consolidated-page-views,
+      &.site-traffic {
         grid-column: span 12;
       }
     }

@@ -3,14 +3,26 @@
 class Admin::ReportsController < Admin::StaffController
   REPORTS_LIMIT = 50
 
+  HIDDEN_PAGEVIEW_REPORTS = ["site_traffic"]
+
+  HIDDEN_LEGACY_PAGEVIEW_REPORTS = %w[
+    consolidated_page_views
+    consolidated_page_views_browser_detection
+    page_view_anon_reqs
+    page_view_logged_in_reqs
+  ]
+
   def index
-    reports_methods =
+    page_view_req_report_methods =
       ["page_view_total_reqs"] +
         ApplicationRequest
           .req_types
           .keys
           .select { |r| r =~ /\Apage_view_/ && r !~ /mobile/ }
-          .map { |r| r + "_reqs" } +
+          .map { |r| r + "_reqs" }
+
+    reports_methods =
+      page_view_req_report_methods +
         Report.singleton_methods.grep(/\Areport_(?!about|storage_stats)/)
 
     reports =
@@ -27,6 +39,15 @@ class Admin::ReportsController < Admin::StaffController
         }
       end
 
+    reports =
+      reports.reject do |report|
+        if SiteSetting.use_legacy_pageviews
+          HIDDEN_PAGEVIEW_REPORTS.include?(report[:type])
+        else
+          HIDDEN_LEGACY_PAGEVIEW_REPORTS.include?(report[:type])
+        end
+      end
+
     render_json_dump(reports: reports.sort_by { |report| report[:title] })
   end
 
@@ -39,6 +60,18 @@ class Admin::ReportsController < Admin::StaffController
 
         report = nil
         report = Report.find_cached(report_type, args) if (report_params[:cache])
+
+        if SiteSetting.use_legacy_pageviews
+          if HIDDEN_PAGEVIEW_REPORTS.include?(report_type)
+            report = Report._get(report_type, args)
+            report.error = :not_found
+          end
+        else
+          if HIDDEN_LEGACY_PAGEVIEW_REPORTS.include?(report_type)
+            report = Report._get(report_type, args)
+            report.error = :not_found
+          end
+        end
 
         if report
           reports << report
@@ -64,6 +97,12 @@ class Admin::ReportsController < Admin::StaffController
     report_type = params[:type]
 
     raise Discourse::NotFound unless report_type =~ /\A[a-z0-9\_]+\z/
+
+    if SiteSetting.use_legacy_pageviews
+      raise Discourse::NotFound if HIDDEN_PAGEVIEW_REPORTS.include?(report_type)
+    else
+      raise Discourse::NotFound if HIDDEN_LEGACY_PAGEVIEW_REPORTS.include?(report_type)
+    end
 
     args = parse_params(params)
 

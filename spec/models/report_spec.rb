@@ -339,18 +339,40 @@ RSpec.describe Report do
         CachedCounting.disable
       end
 
-      it "works and does not count browser or mobile pageviews" do
-        3.times { ApplicationRequest.increment!(:page_view_crawler) }
-        8.times { ApplicationRequest.increment!(:page_view_logged_in) }
-        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
-        2.times { ApplicationRequest.increment!(:page_view_logged_in_mobile) }
-        2.times { ApplicationRequest.increment!(:page_view_anon) }
-        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
-        4.times { ApplicationRequest.increment!(:page_view_anon_mobile) }
+      context "when use_legacy_pageviews is true" do
+        before { SiteSetting.use_legacy_pageviews = true }
 
-        CachedCounting.flush
+        it "works and does not count browser or mobile pageviews" do
+          3.times { ApplicationRequest.increment!(:page_view_crawler) }
+          8.times { ApplicationRequest.increment!(:page_view_logged_in) }
+          6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+          2.times { ApplicationRequest.increment!(:page_view_logged_in_mobile) }
+          2.times { ApplicationRequest.increment!(:page_view_anon) }
+          1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+          4.times { ApplicationRequest.increment!(:page_view_anon_mobile) }
 
-        expect(report.data.sum { |r| r[:y] }).to eq(13)
+          CachedCounting.flush
+
+          expect(report.data.sum { |r| r[:y] }).to eq(13)
+        end
+      end
+
+      context "when use_legacy_pageviews is false" do
+        before { SiteSetting.use_legacy_pageviews = false }
+
+        it "works and does not count mobile pageviews, and only counts browser pageviews" do
+          3.times { ApplicationRequest.increment!(:page_view_crawler) }
+          8.times { ApplicationRequest.increment!(:page_view_logged_in) }
+          6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+          2.times { ApplicationRequest.increment!(:page_view_logged_in_mobile) }
+          2.times { ApplicationRequest.increment!(:page_view_anon) }
+          1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+          4.times { ApplicationRequest.increment!(:page_view_anon_mobile) }
+
+          CachedCounting.flush
+
+          expect(report.data.sum { |r| r[:y] }).to eq(7)
+        end
       end
     end
   end
@@ -1348,6 +1370,7 @@ RSpec.describe Report do
         CachedCounting.reset
         CachedCounting.enable
         ApplicationRequest.enable
+        SiteSetting.use_legacy_pageviews = true
       end
 
       after do
