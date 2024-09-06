@@ -7,14 +7,6 @@ class ContentSecurityPolicy
       { script_src: SiteSetting.content_security_policy_script_src.split("|") }
     end
 
-    def path_specific_extension(path_info)
-      {}.tap do |obj|
-        if path_info == "/theme-qunit" || (Rails.env.local? && path_info == "/qunit")
-          obj[:script_src] = :unsafe_eval
-        end
-      end
-    end
-
     def plugin_extensions
       [].tap do |extensions|
         Discourse.plugins.each do |plugin|
