@@ -35,7 +35,7 @@ module PageObjects
 
       def choose_icon(name)
         form.choose_conditional("choose-icon")
-        form.field("icon").select("ambulance")
+        form.field("icon").select("truck-medical")
         self
       end
 

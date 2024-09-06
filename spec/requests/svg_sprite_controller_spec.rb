@@ -93,7 +93,7 @@ RSpec.describe SvgSpriteController do
 
       data = response.parsed_body
       expect(data.length).to eq(200)
-      expect(data[0]["id"]).to eq("ad")
+      expect(data[0]["id"]).to eq("0")
     end
 
     it "should filter" do
@@ -113,12 +113,12 @@ RSpec.describe SvgSpriteController do
 
       get "/svg-sprite/picker-search"
       data = response.parsed_body
-      beer_icon = response.parsed_body.find { |i| i["id"] == "beer" }
+      beer_icon = response.parsed_body.find { |i| i["id"] == "beer-mug-empty" }
       expect(beer_icon).to be_present
 
       get "/svg-sprite/picker-search", params: { only_available: "true" }
       data = response.parsed_body
-      beer_icon = response.parsed_body.find { |i| i["id"] == "beer" }
+      beer_icon = response.parsed_body.find { |i| i["id"] == "beer-mug-empty" }
       expect(beer_icon).to be nil
       expect(data.length).to eq(200)
     end

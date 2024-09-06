@@ -96,7 +96,7 @@ function buildImageShowAltTextControls(altText) {
     <span class="alt-text-edit-btn" 
       title="${I18n.t("composer.image_alt_text.title")}" 
     >
-      <svg aria-hidden="true" class="fa d-icon d-icon-pencil svg-icon svg-string"><use href="#pencil-alt"></use></svg>
+      <svg aria-hidden="true" class="fa d-icon d-icon-pencil svg-icon svg-string"><use href="#pencil"></use></svg>
     </span>
     <span class="alt-text" 
       aria-label="${I18n.t("composer.image_alt_text.aria_label")}"
@@ -113,7 +113,7 @@ function buildImageEditAltTextControls(altText) {
         <svg class="fa d-icon d-icon-check svg-icon svg-string"><use href="#check"></use></svg>
     </button>
     <button class="alt-text-edit-cancel btn btn-default">
-        <svg class="fa d-icon d-icon-times svg-icon svg-string"><use href="#times"></use></svg>
+        <svg class="fa d-icon d-icon-xmark svg-icon svg-string"><use href="#times"></use></svg>
     </button>
   </span>
   `;
@@ -125,8 +125,8 @@ function buildImageDeleteButton() {
     title="${I18n.t("composer.delete_image_button")}" 
     aria-label="${I18n.t("composer.delete_image_button")}"
   >
-    <svg class="fa d-icon d-icon-trash-alt svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">
-      <use href="#far-trash-alt"></use>
+    <svg class="fa d-icon d-icon-trash-can svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">
+      <use href="#trash-can"></use>
     </svg>
   </span>
   `;
@@ -212,8 +212,8 @@ export function setup(helper) {
       "span.alt-text-readonly-container.alt-text",
       "span.alt-text-readonly-container.alt-text-edit-btn",
       "svg[class=fa d-icon d-icon-pencil svg-icon svg-string]",
-      "use[href=#pencil-alt]",
-      "use[href=#far-trash-alt]",
+      "use[href=#pencil]",
+      "use[href=#trash-can]",
 
       "span.alt-text-edit-container",
       "span.delete-image-button",
@@ -224,8 +224,8 @@ export function setup(helper) {
       "svg[class=fa d-icon d-icon-check svg-icon svg-string]",
       "use[href=#check]",
       "button[class=alt-text-edit-cancel btn btn-default]",
-      "svg[class=fa d-icon d-icon-times svg-icon svg-string]",
-      "svg[class=fa d-icon d-icon-trash-alt svg-icon svg-string]",
+      "svg[class=fa d-icon d-icon-xmark svg-icon svg-string]",
+      "svg[class=fa d-icon d-icon-trash-can svg-icon svg-string]",
       "use[href=#times]",
 
       "span.wrap-image-grid-button",
