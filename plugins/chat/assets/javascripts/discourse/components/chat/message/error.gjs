@@ -10,7 +10,7 @@ const Error = <template>
         <DButton
           class="chat-message-error__retry-btn"
           @action={{fn @onRetry @message}}
-          @icon="exclamation-circle"
+          @icon="circle-exclamation"
         >
           <span class="chat-message-error__retry-btn-title">
             {{i18n "chat.retry_staged_message.title"}}

@@ -176,7 +176,7 @@ createWidget("filter-show-all", {
   },
 
   html() {
-    return [iconNode("arrows-alt-v"), I18n.t("post.filtered_replies.show_all")];
+    return [iconNode("up-down"), I18n.t("post.filtered_replies.show_all")];
   },
 
   click() {

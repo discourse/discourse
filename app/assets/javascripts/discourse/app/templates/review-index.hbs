@@ -113,7 +113,7 @@
           </label>
           <DButton
             @label="review.show_all_topics"
-            @icon="times"
+            @icon="xmark"
             @action={{action "resetTopic"}}
             class="btn-default"
           />
@@ -147,7 +147,7 @@
 
     <div class="reviewable-filters-actions">
       <DButton
-        @icon="sync"
+        @icon="arrows-rotate"
         @label="review.filters.refresh"
         @action={{action "refresh"}}
         class="btn-primary refresh"

@@ -5,6 +5,6 @@ import { renderIcon } from "discourse-common/lib/icon-library";
 registerRawHelper("check-icon", checkIcon);
 
 export default function checkIcon(value) {
-  let icon = value ? "check" : "times";
+  let icon = value ? "check" : "xmark";
   return htmlSafe(renderIcon("string", icon));
 }

@@ -158,7 +158,7 @@ export default class SectionFormLink extends Component {
       </div>
 
       <DButton
-        @icon="trash-alt"
+        @icon="trash-can"
         @action={{fn @deleteLink @link}}
         @title="sidebar.sections.custom.links.delete"
         role="cell"

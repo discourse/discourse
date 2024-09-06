@@ -12,7 +12,7 @@
                 <FlatButton
                   @action={{this.toggleBulkSelect}}
                   @class="bulk-select"
-                  @icon="tasks"
+                  @icon="list-check"
                   @title="bookmarks.bulk.toggle"
                 />
               </th>
@@ -50,7 +50,7 @@
                 <FlatButton
                   @action={{this.toggleBulkSelect}}
                   @class="bulk-select"
-                  @icon="tasks"
+                  @icon="list-check"
                   @title="bookmarks.bulk.toggle"
                 />
                 {{i18n "topic.title"}}
@@ -101,7 +101,7 @@
                   {{/if}}
                   {{#if bookmark.name}}
                     <span class="bookmark-metadata-item">
-                      {{d-icon "info-circle"}}<span>{{bookmark.name}}</span>
+                      {{d-icon "circle-info"}}<span>{{bookmark.name}}</span>
                     </span>
                   {{/if}}
                 </div>

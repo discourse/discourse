@@ -221,7 +221,7 @@ createWidget("post-avatar", {
     let hideFromAnonUser =
       this.siteSettings.hide_user_profiles_from_public && !this.currentUser;
     if (!attrs.user_id) {
-      body = iconNode("far-trash-alt", { class: "deleted-user-avatar" });
+      body = iconNode("trash-can", { class: "deleted-user-avatar" });
     } else {
       body = avatarFor.call(
         this,
@@ -707,7 +707,7 @@ createWidget("post-notice", {
 
     if (attrs.notice.type === "new_user") {
       return [
-        iconNode("hands-helping"),
+        iconNode("handshake-angle"),
         h("p", I18n.t("post.notice.new_user", { user })),
       ];
     }
@@ -716,7 +716,7 @@ createWidget("post-notice", {
       const timeAgo = (new Date() - new Date(attrs.notice.lastPostedAt)) / 1000;
       const time = relativeAgeMediumSpan(timeAgo, true);
       return [
-        iconNode("far-smile"),
+        iconNode("far-face-smile"),
         h("p", I18n.t("post.notice.returning_user", { user, time })),
       ];
     }

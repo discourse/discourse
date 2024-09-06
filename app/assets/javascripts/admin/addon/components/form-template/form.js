@@ -22,7 +22,7 @@ export default class FormTemplateForm extends Component {
   quickInsertFields = [
     {
       type: "checkbox",
-      icon: "check-square",
+      icon: "square-check",
     },
     {
       type: "input",
@@ -34,11 +34,11 @@ export default class FormTemplateForm extends Component {
     },
     {
       type: "dropdown",
-      icon: "chevron-circle-down",
+      icon: "circle-chevron-down",
     },
     {
       type: "upload",
-      icon: "cloud-upload-alt",
+      icon: "cloud-arrow-up",
     },
     {
       type: "multiselect",

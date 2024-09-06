@@ -37,7 +37,7 @@ export default class BulkSelectBookmarksDropdown extends DropdownSelectBoxCompon
       },
       {
         id: "delete-bookmarks",
-        icon: "trash-alt",
+        icon: "trash-can",
         name: i18n("bookmark_bulk_actions.delete_bookmarks.name"),
       },
     ]);

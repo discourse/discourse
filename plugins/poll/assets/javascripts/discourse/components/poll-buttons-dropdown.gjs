@@ -25,7 +25,7 @@ const buttonOptionsMap = {
     className: "btn-default toggle-status",
     label: "poll.open.label",
     title: "poll.open.title",
-    icon: "unlock-alt",
+    icon: "unlock-keyhole",
     action: "toggleStatus",
   },
   closePoll: {

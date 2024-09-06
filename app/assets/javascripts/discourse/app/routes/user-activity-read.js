@@ -31,7 +31,7 @@ export default class UserActivityRead extends UserTopicListRoute {
       I18n.t("user_activity.no_read_topics_body", {
         topUrl: getURL("/top"),
         categoriesUrl: getURL("/categories"),
-        searchIcon: iconHTML("search"),
+        searchIcon: iconHTML("magnifying-glass"),
       })
     );
     return { title, body };

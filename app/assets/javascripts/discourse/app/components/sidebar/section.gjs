@@ -199,7 +199,7 @@ export default class SidebarSection extends Component {
                   <span
                     class="sidebar-section-header-global-indicator__content"
                   >
-                    {{icon "shield-alt"}}
+                    {{icon "shield-halved"}}
                     {{i18n "sidebar.sections.global_section"}}
                   </span>
                 </DTooltip>

@@ -56,14 +56,14 @@ class ReviewableQueuedPost < Reviewable
           actions.add_bundle("#{id}-reject", label: "reviewables.actions.reject_post.title")
 
         actions.add(:reject_post, bundle: reject_bundle) do |a|
-          a.icon = "times"
+          a.icon = "xmark"
           a.label = "reviewables.actions.discard_post.title"
           a.button_class = "reject-post"
         end
         delete_user_actions(actions, reject_bundle)
       else
         actions.add(:reject_post) do |a|
-          a.icon = "times"
+          a.icon = "xmark"
           a.label = "reviewables.actions.reject_post.title"
         end
       end

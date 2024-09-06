@@ -108,7 +108,7 @@ export default class TopicAdminMenu extends Component {
                       class="btn-transparent"
                       @label="topic.actions.multi_select"
                       @action={{fn this.onButtonAction "toggleMultiSelect"}}
-                      @icon="tasks"
+                      @icon="list-check"
                     />
                   </dropdown.item>
                 {{/if}}
@@ -124,7 +124,7 @@ export default class TopicAdminMenu extends Component {
                       <DButton
                         @label="topic.actions.delete"
                         @action={{fn this.onButtonAction "deleteTopic"}}
-                        @icon="far-trash-alt"
+                        @icon="trash-can"
                         class="popup-menu-btn-danger btn-danger btn-transparent"
                       />
                     </dropdown.item>
@@ -134,7 +134,7 @@ export default class TopicAdminMenu extends Component {
                         class="btn-transparent"
                         @label="topic.actions.recover"
                         @action={{fn this.onButtonAction "recoverTopic"}}
-                        @icon="undo"
+                        @icon="arrow-rotate-left"
                       />
                     </dropdown.item>
                   {{/if}}
@@ -256,7 +256,7 @@ export default class TopicAdminMenu extends Component {
                         class="btn-transparent"
                         @label="topic.change_timestamp.title"
                         @action={{fn this.onButtonAction "showChangeTimestamp"}}
-                        @icon="calendar-alt"
+                        @icon="calendar-days"
                       />
                     </dropdown.item>
                   {{/if}}

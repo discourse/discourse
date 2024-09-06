@@ -15,7 +15,7 @@ export default class ChatNavbarCloseThreadButton extends Component {
         @models={{@thread.channel.routeModels}}
         title={{i18n "chat.thread.close"}}
       >
-        {{icon "times"}}
+        {{icon "xmark"}}
       </LinkTo>
     {{/if}}
   </template>

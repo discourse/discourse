@@ -75,7 +75,7 @@ class ChatSetupInit {
           label: "discourse_local_dates.title",
           id: "local-dates",
           class: "chat-local-dates-btn",
-          icon: "calendar-alt",
+          icon: "calendar-days",
           position: "dropdown",
           action() {
             this.insertDiscourseLocalDate();
@@ -87,7 +87,7 @@ class ChatSetupInit {
         label: "chat.emoji",
         id: "emoji",
         class: "chat-emoji-btn",
-        icon: "far-smile",
+        icon: "far-face-smile",
         position: this.site.desktopView ? "inline" : "dropdown",
         context: "channel",
         action() {

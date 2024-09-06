@@ -148,7 +148,7 @@ export default class UsernamePreference extends Component {
         {{#if @user.can_edit_username}}
           <DButton
             @action={{this.toggleEditing}}
-            @icon="pencil-alt"
+            @icon="pencil"
             @title="user.username.edit"
             class="btn-small username-preference__edit-username"
           />

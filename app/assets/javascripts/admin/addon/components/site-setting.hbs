@@ -9,7 +9,7 @@
         title={{i18n "admin.settings.history"}}
       >
         <span class="history-icon">
-          {{d-icon "history"}}
+          {{d-icon "clock-rotate-left"}}
         </span>
       </LinkTo>
     {{/if}}
@@ -62,7 +62,7 @@
     />
     <DButton
       @action={{this.cancel}}
-      @icon="times"
+      @icon="xmark"
       class="cancel setting-controls__cancel"
     />
   </div>
@@ -78,7 +78,7 @@
   <DButton
     class="btn-default undo setting-controls__undo"
     @action={{this.resetDefault}}
-    @icon="undo"
+    @icon="arrow-rotate-left"
     @label="admin.settings.reset"
   />
 {{/if}}

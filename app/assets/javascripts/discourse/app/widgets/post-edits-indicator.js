@@ -32,7 +32,7 @@ export default createWidget("post-edits-indicator", {
   tagName: "div.post-info.edits",
 
   html(attrs) {
-    let icon = "pencil-alt";
+    let icon = "pencil";
     const updatedAt = new Date(attrs.updated_at);
     let className = historyHeat(this.siteSettings, updatedAt);
     const date = longDate(updatedAt);

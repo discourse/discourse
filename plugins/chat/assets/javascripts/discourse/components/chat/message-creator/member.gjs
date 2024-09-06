@@ -24,14 +24,14 @@ const Member = <template>
       </span>
     {{else if (eq @member.type "group")}}
       <div class="chat-message-creator__group-icon">
-        {{icon "user-friends"}}
+        {{icon "user-group"}}
       </div>
       <span class="chat-message-creator__member-group">
         {{@member.model.name}}
       </span>
     {{/if}}
 
-    {{icon "times"}}
+    {{icon "xmark"}}
   </DButton>
 </template>;
 

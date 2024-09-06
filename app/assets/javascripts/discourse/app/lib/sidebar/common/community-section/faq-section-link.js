@@ -38,6 +38,6 @@ export default class FAQSectionLink extends BaseSectionLink {
   }
 
   get defaultPrefixValue() {
-    return "question-circle";
+    return "circle-question";
   }
 }

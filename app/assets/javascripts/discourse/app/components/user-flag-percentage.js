@@ -32,7 +32,7 @@ export default class UserFlagPercentage extends Component {
       result.className = "disagreed";
       result.label = `${result.disagreed}%`;
     } else {
-      result.icon = "external-link-alt";
+      result.icon = "up-right-from-square";
       result.className = "ignored";
       result.label = `${result.ignored}%`;
     }

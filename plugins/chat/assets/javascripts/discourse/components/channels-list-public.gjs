@@ -88,7 +88,7 @@ export default class ChannelsListPublic extends Component {
           class="btn no-text btn-flat open-browse-page-btn title-action"
           title={{i18n "chat.channels_list_popup.browse"}}
         >
-          {{dIcon "pencil-alt"}}
+          {{dIcon "pencil"}}
         </LinkTo>
       </div>
     {{/if}}

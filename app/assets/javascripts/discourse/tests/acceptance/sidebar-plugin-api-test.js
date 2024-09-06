@@ -48,7 +48,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
             }
 
             get actionsIcon() {
-              return "cog";
+              return "gear";
             }
 
             get actions() {
@@ -195,7 +195,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
                   }
 
                   get hoverValue() {
-                    return "times";
+                    return "xmark";
                   }
 
                   get hoverAction() {
@@ -423,7 +423,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
           }
 
           get actionsIcon() {
-            return "cog";
+            return "gear";
           }
 
           get actions() {
@@ -479,7 +479,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
           }
 
           get actionsIcon() {
-            return "cog";
+            return "gear";
           }
 
           get actions() {
@@ -779,7 +779,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
             }
 
             get actionsIcon() {
-              return "cog";
+              return "gear";
             }
 
             get links() {
@@ -942,7 +942,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
             }
 
             get actionsIcon() {
-              return "cog";
+              return "gear";
             }
 
             get links() {
@@ -977,7 +977,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
                   }
 
                   get prefixValue() {
-                    return "cog";
+                    return "gear";
                   }
 
                   get prefixColor() {

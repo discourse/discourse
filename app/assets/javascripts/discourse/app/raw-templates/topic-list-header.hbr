@@ -3,7 +3,7 @@
 {{#if bulkSelectEnabled}}
   <th class="bulk-select topic-list-data">
     {{#if canBulkSelect}}
-      {{raw "flat-button" class="bulk-select" icon="tasks" title="topics.bulk.toggle"}}
+      {{raw "flat-button" class="bulk-select" icon="list-check" title="topics.bulk.toggle"}}
     {{/if}}
   </th>
 {{/if}}

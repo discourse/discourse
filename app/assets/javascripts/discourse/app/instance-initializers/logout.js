@@ -42,7 +42,7 @@ class LogoutInit {
 
     this.dialog.alert({
       message: I18n.t("logout"),
-      confirmButtonLabel: "home",
+      confirmButtonLabel: "house",
       didConfirm: logout,
       didCancel: logout,
       shouldDisplayCancel: false,

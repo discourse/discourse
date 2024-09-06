@@ -66,8 +66,8 @@ module("Integration | Component | select-kit/combo-box", function (hooks) {
 
   test("options.{caretUpIcon,caretDownIcon}", async function (assert) {
     setDefaultState(this, {
-      caretUpIcon: "pencil-alt",
-      caretDownIcon: "trash-alt",
+      caretUpIcon: "pencil",
+      caretDownIcon: "trash-can",
     });
 
     await render(hbs`

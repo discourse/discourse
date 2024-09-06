@@ -55,7 +55,7 @@ const DDefaultToast = <template>
       {{/if}}
     </div>
     <div class="fk-d-default-toast__close-container">
-      <DButton class="btn-transparent" @icon="times" @action={{@close}} />
+      <DButton class="btn-transparent" @icon="xmark" @action={{@close}} />
     </div>
   </div>
 </template>;

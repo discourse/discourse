@@ -25,16 +25,16 @@ class SidebarUrl < ActiveRecord::Base
     {
       name: "About",
       path: "/about",
-      icon: "info-circle",
+      icon: "circle-info",
       segment: SidebarUrl.segments["secondary"],
     },
     {
       name: "FAQ",
       path: "/faq",
-      icon: "question-circle",
+      icon: "circle-question",
       segment: SidebarUrl.segments["secondary"],
     },
-    { name: "Groups", path: "/g", icon: "user-friends", segment: SidebarUrl.segments["secondary"] },
+    { name: "Groups", path: "/g", icon: "user-group", segment: SidebarUrl.segments["secondary"] },
     {
       name: "Badges",
       path: "/badges",

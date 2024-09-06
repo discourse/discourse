@@ -20,7 +20,7 @@ export default class FKErrorsSummary extends Component {
     {{#if this.hasErrors}}
       <div class="form-kit__errors-summary" aria-live="assertive" ...attributes>
         <h2 class="form-kit__errors-summary-title">
-          {{icon "exclamation-triangle"}}
+          {{icon "triangle-exclamation"}}
           {{i18n "form_kit.errors_summary_title"}}
         </h2>
 

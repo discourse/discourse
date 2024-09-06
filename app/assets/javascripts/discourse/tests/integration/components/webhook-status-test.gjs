@@ -48,7 +48,7 @@ module("Integration | Component | webhook-status", function (hooks) {
 
     await rerender();
 
-    assert.dom(".d-icon-times-circle").exists();
+    assert.dom(".d-icon-circle-xmark").exists();
   });
 
   test("iconClass", async function (assert) {

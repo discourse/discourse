@@ -114,7 +114,7 @@
       />
       <DButton
         @action={{this.cancel}}
-        @icon="times"
+        @icon="xmark"
         @label="admin.user_fields.cancel"
         class="btn-danger cancel"
       />
@@ -132,13 +132,13 @@
       <div class="form-element controls">
         <DButton
           @action={{this.edit}}
-          @icon="pencil-alt"
+          @icon="pencil"
           @label="admin.user_fields.edit"
           class="btn-default edit"
         />
         <DButton
           @action={{fn this.destroyAction this.userField}}
-          @icon="far-trash-alt"
+          @icon="trash-can"
           @label="admin.user_fields.delete"
           class="btn-danger cancel"
         />

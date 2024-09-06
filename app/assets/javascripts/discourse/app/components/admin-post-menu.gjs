@@ -67,7 +67,7 @@ export default class AdminPostMenu extends Component {
               "post.controls.revert_to_regular"
               "post.controls.convert_to_moderator"
             }}
-            @icon="shield-alt"
+            @icon="shield-halved"
             class={{concatClass
               "btn btn-transparent toggle-post-type"
               (if @data.transformedPost.isModeratorAction "btn-success")
@@ -170,7 +170,7 @@ export default class AdminPostMenu extends Component {
         <dropdown.item>
           <DButton
             @label="post.controls.permanently_delete"
-            @icon="trash-alt"
+            @icon="trash-can"
             class="btn btn-transparent permanently-delete"
             @action={{fn this.topicAction "permanentlyDeletePost"}}
           />
@@ -217,7 +217,7 @@ export default class AdminPostMenu extends Component {
         <dropdown.item>
           <DButton
             @label="post.controls.rebake"
-            @icon="sync-alt"
+            @icon="rotate"
             class="btn btn-transparent rebuild-html"
             @action={{fn this.topicAction "rebakePost"}}
           />

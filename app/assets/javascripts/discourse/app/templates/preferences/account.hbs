@@ -19,7 +19,7 @@
       {{bound-avatar this.model "huge"}}
       <DButton
         @action={{fn (route-action "showAvatarSelector") this.model}}
-        @icon="pencil-alt"
+        @icon="pencil"
         id="edit-avatar"
         class="btn-default pad-left"
       />
@@ -89,7 +89,7 @@
               @route="preferences.email"
               class="btn btn-default btn-small btn-icon pad-left no-text"
             >
-              {{d-icon "pencil-alt"}}
+              {{d-icon "pencil"}}
             </LinkTo>
           {{/if}}
         </div>
@@ -141,7 +141,7 @@
                         authProvider.account
                       }}
                       @title="user.associated_accounts.revoke"
-                      @icon="trash-alt"
+                      @icon="trash-can"
                       @disabled={{get this.revoking authProvider.method.name}}
                       class="btn-danger no-text"
                     />
@@ -253,7 +253,7 @@
       {{/if}}
       <DButton
         @action={{fn (action "showUserStatusModal") this.newStatus}}
-        @icon="pencil-alt"
+        @icon="pencil"
         class="btn-default btn-small pad-left"
       />
     </div>
@@ -329,7 +329,7 @@
       <DButton
         @action={{action "delete"}}
         @disabled={{this.deleteDisabled}}
-        @icon="far-trash-alt"
+        @icon="trash-can"
         @label="user.delete_account"
         class="btn-danger"
       />

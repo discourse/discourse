@@ -22,6 +22,6 @@ export default class AboutSectionLink extends BaseSectionLink {
   }
 
   get defaultPrefixValue() {
-    return "info-circle";
+    return "circle-info";
   }
 }

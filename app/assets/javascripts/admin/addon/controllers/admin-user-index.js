@@ -350,7 +350,7 @@ export default class AdminUserIndexController extends Controller.extend(
       class: "delete-user-modal",
       buttons: [
         {
-          icon: "exclamation-triangle",
+          icon: "triangle-exclamation",
           label: I18n.t("admin.user.anonymize_yes"),
           class: "btn-danger",
           action: () => performAnonymize(),
@@ -425,7 +425,7 @@ export default class AdminUserIndexController extends Controller.extend(
           },
         },
         {
-          icon: "exclamation-triangle",
+          icon: "triangle-exclamation",
           label: I18n.t("admin.user.delete_and_block"),
           class: "btn-danger",
           action: () => {

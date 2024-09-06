@@ -27,14 +27,14 @@ export default class BookmarkActionsDropdown extends DropdownSelectBoxComponent 
 
     actions.push({
       id: ACTION_REMOVE,
-      icon: "trash-alt",
+      icon: "trash-can",
       name: I18n.t("post.bookmarks.actions.delete_bookmark.name"),
       description: I18n.t("post.bookmarks.actions.delete_bookmark.description"),
     });
 
     actions.push({
       id: ACTION_EDIT,
-      icon: "pencil-alt",
+      icon: "pencil",
       name: I18n.t("post.bookmarks.actions.edit_bookmark.name"),
       description: I18n.t("post.bookmarks.actions.edit_bookmark.description"),
     });
@@ -42,7 +42,7 @@ export default class BookmarkActionsDropdown extends DropdownSelectBoxComponent 
     if (bookmark.reminder_at) {
       actions.push({
         id: ACTION_CLEAR_REMINDER,
-        icon: "history",
+        icon: "clock-rotate-left",
         name: I18n.t("post.bookmarks.actions.clear_bookmark_reminder.name"),
         description: I18n.t(
           "post.bookmarks.actions.clear_bookmark_reminder.description"

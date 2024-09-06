@@ -43,12 +43,12 @@ export default class CategoryDropMoreCollection extends Component {
         {{#if @selectKit.options.parentCategory}}
           <LinkTo @route="discovery.subcategories" @model={{this.slugPath}}>
             {{i18n "categories.view_all"}}
-            {{icon "external-link-alt"}}
+            {{icon "up-right-from-square"}}
           </LinkTo>
         {{else}}
           <LinkTo @route="discovery.categories">
             {{i18n "categories.view_all"}}
-            {{icon "external-link-alt"}}
+            {{icon "up-right-from-square"}}
           </LinkTo>
         {{/if}}
       </div>

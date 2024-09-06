@@ -27,7 +27,7 @@
       title={{i18n "review.explain.why"}}
       class="explain"
     >
-      {{d-icon "question-circle"}}
+      {{d-icon "circle-question"}}
     </a>
   </div>
 
@@ -82,7 +82,7 @@
           />
           <DButton
             @disabled={{this.disabled}}
-            @icon="times"
+            @icon="xmark"
             @action={{action "cancelEdit"}}
             @label="review.cancel"
             class="btn-danger reviewable-action cancel-edit"
@@ -99,7 +99,7 @@
           {{#if this.reviewable.can_edit}}
             <DButton
               @disabled={{this.disabled}}
-              @icon="pencil-alt"
+              @icon="pencil"
               @action={{action "edit"}}
               @label="review.edit"
               class="reviewable-action btn-default edit"

@@ -9,7 +9,11 @@
       <EmailGroupUserChooser
         @value={{this.username}}
         @onChange={{action "updateUsername"}}
-        @options={{hash maximum=1}}
+        @options={{hash
+          maximum=1
+          caretDownIcon="caret-down"
+          caretUpIcon="caret-up"
+        }}
       />
       <DButton
         @action={{this.refresh}}

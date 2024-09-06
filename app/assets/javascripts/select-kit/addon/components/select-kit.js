@@ -93,7 +93,7 @@ function protoProp(prototype, key, descriptor) {
   translatedNone: null,
   filterable: false,
   autoFilterable: "autoFilterable",
-  filterIcon: "search",
+  filterIcon: "magnifying-glass",
   filterPlaceholder: null,
   translatedFilterPlaceholder: null,
   icon: null,
