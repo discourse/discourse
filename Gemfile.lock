@@ -621,7 +621,6 @@ DEPENDENCIES
   discourse-fonts
   discourse-seed-fu
   discourse_dev_assets
-  drb
   email_reply_trimmer
   excon
   execjs
@@ -660,7 +659,6 @@ DEPENDENCIES
   mocha
   multi_json
   mustache
-  mutex_m
   net-http
   net-imap
   net-pop
