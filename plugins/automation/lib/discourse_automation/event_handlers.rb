@@ -54,15 +54,15 @@ module DiscourseAutomation
             next if (restricted_tags["value"] & topic.tags.map(&:name)).empty?
           end
 
-          restricted_group_id = automation.trigger_field("restricted_group")["value"]
-          if restricted_group_id.present?
+          restricted_group_ids = automation.trigger_field("restricted_groups")["value"]
+          if restricted_group_ids.present?
             next if !topic.private_message?
 
             target_group_ids = topic.allowed_groups.pluck(:id)
-            next if restricted_group_id != target_group_ids.first
+            next if (restricted_group_ids & target_group_ids).empty?
 
-            ignore_group_members = automation.trigger_field("ignore_group_members")
-            next if ignore_group_members["value"] && post.user.in_any_groups?([restricted_group_id])
+            ignore_group_members = automation.trigger_field("ignore_group_members")["value"]
+            next if ignore_group_members && post.user.in_any_groups?(restricted_group_ids)
           end
 
           ignore_automated = automation.trigger_field("ignore_automated")

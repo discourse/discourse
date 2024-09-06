@@ -164,30 +164,50 @@ describe "PostCreatedEdited" do
 
     context "when group is restricted" do
       fab!(:target_group) { Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]) }
+      fab!(:another_group) { Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]) }
 
       before do
         automation.upsert_field!(
-          "restricted_group",
-          "group",
-          { value: target_group.id },
+          "restricted_groups",
+          "groups",
+          { value: [target_group.id, another_group.id] },
           target: "trigger",
         )
       end
 
-      it "fires the trigger" do
-        list =
-          capture_contexts do
-            PostCreator.create(
-              user,
-              basic_topic_params.merge(
-                target_group_names: [target_group.name],
-                archetype: Archetype.private_message,
-              ),
-            )
-          end
+      context "when PM is not sent to the group" do
+        it "doesnt fire the trigger" do
+          list =
+            capture_contexts do
+              PostCreator.create(
+                user,
+                basic_topic_params.merge(
+                  target_group_names: [Fabricate(:group).name],
+                  archetype: Archetype.private_message,
+                ),
+              )
+            end
 
-        expect(list.length).to eq(1)
-        expect(list[0]["kind"]).to eq("post_created_edited")
+          expect(list.length).to eq(0)
+        end
+      end
+
+      context "when PM is sent to the group" do
+        it "fires the trigger" do
+          list =
+            capture_contexts do
+              PostCreator.create(
+                user,
+                basic_topic_params.merge(
+                  target_group_names: [target_group.name],
+                  archetype: Archetype.private_message,
+                ),
+              )
+            end
+
+          expect(list.length).to eq(1)
+          expect(list[0]["kind"]).to eq("post_created_edited")
+        end
       end
 
       context "when the topic is not a PM" do
