@@ -188,12 +188,6 @@ module DiscourseAutomation
           "type" => "integer",
         },
       },
-      "groups" => {
-        "value" => {
-          "type" => "array",
-          "items" => [{ type: "integer" }],
-        },
-      },
       "email_group_user" => {
         "value" => {
           "type" => "array",
