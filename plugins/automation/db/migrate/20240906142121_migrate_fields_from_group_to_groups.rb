@@ -8,7 +8,7 @@ class MigrateFieldsFromGroupToGroups < ActiveRecord::Migration[7.1]
       SET
         metadata = '{}'::jsonb
       WHERE
-        metadata @> '{"value": [null]}'::jsonb
+        metadata = '{"value": [null]}'::jsonb
         AND component = 'groups'
         AND name = 'restricted_groups';
     SQL
