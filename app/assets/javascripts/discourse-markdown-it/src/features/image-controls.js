@@ -137,8 +137,8 @@ function buildImageGalleryControl(imageCount) {
   <span class="wrap-image-grid-button" title="${I18n.t(
     "composer.toggle_image_grid"
   )}" data-image-count="${imageCount}">
-    <svg class="fa d-icon d-icon-th svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">
-    <use href="#th"></use>
+    <svg class="fa d-icon d-icon-table-cells svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">
+    <use href="#table-cells"></use>
     </svg>
   </span>
   `;
@@ -230,8 +230,8 @@ export function setup(helper) {
 
       "span.wrap-image-grid-button",
       "span.wrap-image-grid-button[data-image-count]",
-      "svg[class=fa d-icon d-icon-th svg-icon svg-string]",
-      "use[href=#th]",
+      "svg[class=fa d-icon d-icon-table-cells svg-icon svg-string]",
+      "use[href=#table-cells]",
 
       ...apiExtraButtonAllowList,
     ]);
