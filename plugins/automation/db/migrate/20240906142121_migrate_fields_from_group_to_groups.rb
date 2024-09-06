@@ -18,13 +18,15 @@ class MigrateFieldsFromGroupToGroups < ActiveRecord::Migration[7.1]
       SET
         component = 'groups',
         name = 'restricted_groups',
-        metadata = jsonb_set(metadata, '{value}', to_jsonb(ARRAY[(metadata->>'value')::int]))
+        metadata = CASE
+                    WHEN metadata != '{}'::jsonb THEN jsonb_set(metadata, '{value}', to_jsonb(ARRAY[(metadata->>'value')::int]))
+                    ELSE metadata
+                  END
       FROM discourse_automation_automations
       WHERE discourse_automation_fields.automation_id = discourse_automation_automations.id
         AND discourse_automation_automations.trigger = 'post_created_edited'
         AND discourse_automation_fields.name = 'restricted_group'
-        AND discourse_automation_fields.component = 'group'
-        AND metadata != '{}'::jsonb;  -- Exclude rows where metadata is an empty object
+        AND discourse_automation_fields.component = 'group';
     SQL
   end
 
