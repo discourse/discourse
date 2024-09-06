@@ -1380,7 +1380,8 @@ en:
         page_view_crawler: "Known crawlers"
         page_view_other: "Other traffic"
       yaxis: "Day"
-      description: "Pageviews for logged in users, anonymous users, known crawlers and other traffic. Read more at https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062."
+      description: "Pageviews for logged in users, anonymous users, known crawlers and other traffic."
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Day"
