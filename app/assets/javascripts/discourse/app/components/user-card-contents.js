@@ -1,4 +1,4 @@
-import EmberObject, { action, computed, set } from "@ember/object";
+import EmberObject, { action, computed, get, set } from "@ember/object";
 import { alias, and, gt, gte, not, or } from "@ember/object/computed";
 import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
@@ -18,11 +18,11 @@ import { escapeExpression } from "discourse/lib/utilities";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import CleansUp from "discourse/mixins/cleans-up";
 import User from "discourse/models/user";
-import { getURLWithCDN } from "discourse-common/lib/get-url";
+import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-@classNames("user-card")
+@classNames("d-user-card")
 @classNameBindings(
   "visible:show",
   "showBadges",
@@ -186,17 +186,25 @@ export default class UserCardContents extends CardContentsBase.extend(
 
   @observes("user.card_background_upload_url")
   addBackground() {
-    if (!this.allowBackgrounds) {
+    if (!this.allowBackgrounds || !this.element || !this.user) {
       return;
     }
 
-    if (!this.element) {
-      return;
-    }
+    const dominantColor = get(this.user, "avatar_dominant_color");
+    this.element.style.setProperty("--dominant-color", `#${dominantColor}`);
 
-    const url = this.get("user.card_background_upload_url");
-    const bg = isEmpty(url) ? "" : `url(${getURLWithCDN(url)})`;
-    this.element.style.backgroundImage = bg;
+    const backgroundUrl = this.get("user.card_background_upload_url");
+    if (isEmpty(backgroundUrl)) {
+      this.element.style.setProperty("--user-background", "");
+    } else {
+      const userBackground = `url(${getURLWithCDN(backgroundUrl)})`;
+      this.element.style.setProperty("--user-background", userBackground);
+    }
+  }
+
+  @discourseComputed("username")
+  editBackgroundUrl(username) {
+    return getURL(`/u/${username}/preferences/profile`);
   }
 
   @discourseComputed("user.primary_group_name")

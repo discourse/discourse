@@ -1213,6 +1213,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def avatar_dominant_color
+    user_avatar.dominant_color || user_avatar.update_dominant_color!(uploaded_avatar_id, username)
+  end
+
   # The following count methods are somewhat slow - definitely don't use them in a loop.
   # They might need to be denormalized
   def like_count

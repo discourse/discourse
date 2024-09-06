@@ -3,7 +3,7 @@
 class BasicUserSerializer < ApplicationSerializer
   include UserStatusMixin
 
-  attributes :id, :username, :name, :avatar_template
+  attributes :id, :username, :name, :avatar_template, :avatar_dominant_color
 
   def name
     Hash === user ? user[:name] : user.try(:name)
@@ -19,6 +19,10 @@ class BasicUserSerializer < ApplicationSerializer
     else
       user&.avatar_template
     end
+  end
+
+  def avatar_dominant_color
+    user&.avatar_dominant_color
   end
 
   def user
