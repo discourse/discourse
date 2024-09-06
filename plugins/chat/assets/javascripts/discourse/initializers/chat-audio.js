@@ -24,7 +24,10 @@ export default {
           return;
         }
 
-        if (!user.chat_sound || indicatorType === INDICATOR_PREFERENCES.never) {
+        if (
+          !user.user_option.chat_sound ||
+          indicatorType === INDICATOR_PREFERENCES.never
+        ) {
           return;
         }
 
