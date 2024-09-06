@@ -28,6 +28,11 @@ export default class GroupsField extends BaseField {
     return this.args.field.extra.maximum ?? 10;
   }
 
+  @action
+  setGroupField(groupIds) {
+    this.mutValue(groupIds);
+  }
+
   <template>
     <section class="field group-field">
       <div class="control-group">
@@ -47,9 +52,4 @@ export default class GroupsField extends BaseField {
       </div>
     </section>
   </template>
-
-  @action
-  setGroupField(groupIds) {
-    this.mutValue(groupIds);
-  }
 }
