@@ -19,17 +19,15 @@ module("Discourse Chat | Unit | chat-audio", function (hooks) {
     this.siteSettings = getOwner(this).lookup("service:site-settings");
     this.siteSettings.chat_enabled = true;
 
-    sinon.stub(this.currentUser, "user_option").value({
-      has_chat_enabled: true,
-      chat_sound: "ding",
-      chat_header_indicator_preference: "all_new",
-    });
+    this.currentUser.user_option.has_chat_enabled = true;
+    this.currentUser.user_option.chat_sound = "ding";
+    this.currentUser.user_option.chat_header_indicator_preference = "all_new";
 
     withPluginApi("0.12.1", async (api) => {
-      this.stub = sinon.stub(api, "registerDesktopNotificationHandler");
+      this.stub = sinon.spy(api, "registerDesktopNotificationHandler");
       chatAudioInitializer.initialize(getOwner(this));
 
-      this.notificationHandler = this.stub.getCall(0).args[0];
+      this.notificationHandler = this.stub.getCall(0).callback;
       this.playStub = sinon.stub(chatAudioManager, "play");
 
       this.handleNotification = (data = {}) => {
