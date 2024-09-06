@@ -34,25 +34,17 @@ class Admin::StaffActionLogsController < Admin::StaffController
     prev = JSON.parse(prev) if prev
     cur = JSON.parse(cur) if cur
 
-    diff_fields = {}
-
     output = +"<h2>#{CGI.escapeHTML(cur&.dig("name").to_s)}</h2><p></p>"
 
+    diff_fields = {}
     diff_fields["name"] = { prev: prev&.dig("name").to_s, cur: cur&.dig("name").to_s }
 
-    %w[default user_selectable].each do |f|
-      diff_fields[f] = { prev: (!!prev&.dig(f)).to_s, cur: (!!cur&.dig(f)).to_s }
+    case @history.action
+    when *%i[change_theme delete_theme].map { |i| UserHistory.actions[i] }
+      diff_theme(diff_fields, prev, cur)
+    when *%i[tag_group_create tag_group_destroy tag_group_change].map { |i| UserHistory.actions[i] }
+      diff_tag_group(diff_fields, prev, cur)
     end
-
-    diff_fields["color scheme"] = {
-      prev: prev&.dig("color_scheme", "name").to_s,
-      cur: cur&.dig("color_scheme", "name").to_s,
-    }
-
-    diff_fields["included themes"] = { prev: child_themes(prev), cur: child_themes(cur) }
-
-    load_diff(diff_fields, :cur, cur)
-    load_diff(diff_fields, :prev, prev)
 
     diff_fields.delete_if { |k, v| v[:cur] == v[:prev] }
 
@@ -88,5 +80,31 @@ class Admin::StaffActionLogsController < Admin::StaffController
     UserHistory.staff_actions.sort.map do |name|
       { id: name, action_id: UserHistory.actions[name] || UserHistory.actions[:custom_staff] }
     end
+  end
+
+  def diff_theme(diff_fields, prev, cur)
+    %w[default user_selectable].each do |f|
+      diff_fields[f] = { prev: (!!prev&.dig(f)).to_s, cur: (!!cur&.dig(f)).to_s }
+    end
+
+    diff_fields["color scheme"] = {
+      prev: prev&.dig("color_scheme", "name").to_s,
+      cur: cur&.dig("color_scheme", "name").to_s,
+    }
+
+    diff_fields["included themes"] = { prev: child_themes(prev), cur: child_themes(cur) }
+
+    load_diff(diff_fields, :cur, cur)
+    load_diff(diff_fields, :prev, prev)
+  end
+
+  def diff_tag_group(diff_fields, prev, cur)
+    %w[parent_tag_name one_per_topic permissions].each do |f|
+      diff_fields[f] = { prev: prev&.dig(f).to_s, cur: cur&.dig(f).to_s }
+    end
+    diff_fields["tag_names"] = {
+      prev: prev&.dig("tag_names")&.join("\n"),
+      cur: cur&.dig("tag_names")&.join("\n"),
+    }
   end
 end
