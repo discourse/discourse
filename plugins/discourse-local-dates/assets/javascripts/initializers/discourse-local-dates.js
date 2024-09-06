@@ -7,7 +7,7 @@ import {
   addTagDecorateCallback,
   addTextDecorateCallback,
 } from "discourse/lib/to-markdown";
-import { renderIcon } from "discourse-common/lib/icon-library";
+import { iconHTML, renderIcon } from "discourse-common/lib/icon-library";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
@@ -41,9 +41,7 @@ export function applyLocalDates(dates, siteSettings) {
     element.innerText = "";
     element.insertAdjacentHTML(
       "beforeend",
-      `<svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
-          <use href="#globe-americas"></use>
-        </svg>
+      `${iconHTML("globe-americas")}
         <span class="relative-time">${localDateBuilder.formatted}</span>`
     );
     element.setAttribute("aria-label", localDateBuilder.textPreview);
