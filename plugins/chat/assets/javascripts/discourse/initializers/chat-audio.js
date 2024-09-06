@@ -1,4 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { INDICATOR_PREFERENCES } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
 const MENTION = 29;
 const MESSAGE = 30;
@@ -23,16 +24,19 @@ export default {
           return;
         }
 
-        if (!user.chat_sound || indicatorType === "never") {
-          return;
-        }
-
-        if (indicatorType === "only_mentions" && !isMention) {
+        if (!user.chat_sound || indicatorType === INDICATOR_PREFERENCES.never) {
           return;
         }
 
         if (
-          indicatorType === "dm_and_mentions" &&
+          indicatorType === INDICATOR_PREFERENCES.only_mentions &&
+          !isMention
+        ) {
+          return;
+        }
+
+        if (
+          indicatorType === INDICATOR_PREFERENCES.dm_and_mentions &&
           !data.isDirectMessageChannel &&
           !isMention
         ) {
