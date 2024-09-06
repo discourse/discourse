@@ -295,6 +295,9 @@ class Report
     report
   end
 
+  # NOTE: Once use_legacy_pageviews is always false or no longer needed
+  # we will no longer support the page_view_anon and page_view_logged_in reports,
+  # they can be removed.
   def self.req_report(report, filter = nil)
     data =
       if filter == :page_view_total
