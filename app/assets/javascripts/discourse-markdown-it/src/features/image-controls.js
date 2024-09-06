@@ -113,7 +113,7 @@ function buildImageEditAltTextControls(altText) {
         <svg class="fa d-icon d-icon-check svg-icon svg-string"><use href="#check"></use></svg>
     </button>
     <button class="alt-text-edit-cancel btn btn-default">
-        <svg class="fa d-icon d-icon-xmark svg-icon svg-string"><use href="#times"></use></svg>
+        <svg class="fa d-icon d-icon-xmark svg-icon svg-string"><use href="#xmark"></use></svg>
     </button>
   </span>
   `;
@@ -226,7 +226,7 @@ export function setup(helper) {
       "button[class=alt-text-edit-cancel btn btn-default]",
       "svg[class=fa d-icon d-icon-xmark svg-icon svg-string]",
       "svg[class=fa d-icon d-icon-trash-can svg-icon svg-string]",
-      "use[href=#times]",
+      "use[href=#xmark]",
 
       "span.wrap-image-grid-button",
       "span.wrap-image-grid-button[data-image-count]",
