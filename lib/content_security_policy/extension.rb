@@ -9,9 +9,9 @@ class ContentSecurityPolicy
 
     def path_specific_extension(path_info)
       {}.tap do |obj|
-        for_qunit_route = !Rails.env.production? && %w[/qunit /wizard/qunit].include?(path_info)
-        for_qunit_route ||= "/theme-qunit" == path_info
-        obj[:script_src] = :unsafe_eval if for_qunit_route
+        if path_info == "/theme-qunit" || (Rails.env.local? && path_info == "/qunit")
+          obj[:script_src] = :unsafe_eval
+        end
       end
     end
 
