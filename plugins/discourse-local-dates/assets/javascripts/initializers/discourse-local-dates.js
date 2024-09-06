@@ -41,8 +41,8 @@ export function applyLocalDates(dates, siteSettings) {
     element.innerText = "";
     element.insertAdjacentHTML(
       "beforeend",
-      `<svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
-          <use href="#globe-americas"></use>
+      `<svg class="fa d-icon d-icon-earth-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
+          <use href="#earth-americas"></use>
         </svg>
         <span class="relative-time">${localDateBuilder.formatted}</span>`
     );
