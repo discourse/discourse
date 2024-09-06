@@ -170,6 +170,13 @@ export default class AboutPage extends Component {
     }
   }
 
+  get trafficInfoFooter() {
+    return I18n.messageFormat("about.traffic_info_footer_MF", {
+      total_visitors: this.args.model.stats.visitors_30_days,
+      eu_visitors: this.args.model.stats.eu_visitors_30_days,
+    });
+  }
+
   siteActivitiesFromPlugins() {
     const stats = this.args.model.stats;
     const statKeys = Object.keys(stats);
@@ -283,6 +290,10 @@ export default class AboutPage extends Component {
             </div>
           {{/each}}
         </div>
+        {{#if this.siteSettings.display_eu_visitor_stats}}
+          <p class="about traffic-info-footer"><small
+            >{{this.trafficInfoFooter}}</small></p>
+        {{/if}}
       </div>
     </div>
   </template>

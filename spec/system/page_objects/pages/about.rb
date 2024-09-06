@@ -62,6 +62,14 @@ module PageObjects
         has_no_css?(".edit-about-page")
       end
 
+      def has_traffic_info_footer?
+        has_css?(".traffic-info-footer")
+      end
+
+      def has_no_traffic_info_footer?
+        has_no_css?(".traffic-info-footer")
+      end
+
       def site_activities
         PageObjects::Components::AboutPageSiteActivity.new(find(".about__activities"))
       end

@@ -202,6 +202,24 @@ describe "About page", type: :system do
           expect(about_page.site_activities.likes).to have_all_time_period
         end
       end
+
+      describe "traffic info footer" do
+        it "is displayed when the display_eu_visitor_stats setting is true" do
+          SiteSetting.display_eu_visitor_stats = true
+
+          about_page.visit
+
+          expect(about_page).to have_traffic_info_footer
+        end
+
+        it "is not displayed when the display_eu_visitor_stats setting is false" do
+          SiteSetting.display_eu_visitor_stats = false
+
+          about_page.visit
+
+          expect(about_page).to have_no_traffic_info_footer
+        end
+      end
     end
 
     describe "our admins section" do
