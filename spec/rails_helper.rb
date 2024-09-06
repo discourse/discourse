@@ -211,9 +211,9 @@ RSpec.configure do |config|
   config.include SiteSettingsHelpers
   config.include SidekiqHelpers
   config.include UploadsHelpers
+  config.include BackupsHelpers
   config.include OneboxHelpers
   config.include FastImageHelpers
-  config.include WithServiceHelper
   config.include ServiceMatchers
   config.include I18nHelpers
 

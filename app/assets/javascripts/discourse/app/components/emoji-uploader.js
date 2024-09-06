@@ -8,21 +8,23 @@ import I18n from "discourse-i18n";
 
 const DEFAULT_GROUP = "default";
 
-export default Component.extend(UppyUploadMixin, {
-  type: "emoji",
-  uploadUrl: "/admin/customize/emojis",
-  hasName: notEmpty("name"),
-  hasGroup: notEmpty("group"),
-  group: "default",
-  emojiGroups: null,
-  newEmojiGroups: null,
-  tagName: null,
-  preventDirectS3Uploads: true,
+export default class EmojiUploader extends Component.extend(UppyUploadMixin) {
+  type = "emoji";
+  uploadUrl = "/admin/customize/emojis";
+
+  @notEmpty("name") hasName;
+  @notEmpty("group") hasGroup;
+
+  group = "default";
+  emojiGroups = null;
+  newEmojiGroups = null;
+  tagName = null;
+  preventDirectS3Uploads = true;
 
   didReceiveAttrs() {
-    this._super(...arguments);
+    super.didReceiveAttrs(...arguments);
     this.set("newEmojiGroups", this.emojiGroups);
-  },
+  }
 
   @action
   createEmojiGroup(group) {
@@ -34,7 +36,7 @@ export default Component.extend(UppyUploadMixin, {
       newEmojiGroups,
       group,
     });
-  },
+  }
 
   _perFileData() {
     const payload = {};
@@ -51,21 +53,21 @@ export default Component.extend(UppyUploadMixin, {
     }
 
     return payload;
-  },
+  }
 
   validateUploadedFilesOptions() {
     return { imagesOnly: true };
-  },
+  }
 
   uploadDone(upload) {
     this.done(upload, this.group);
     this.set("name", null);
-  },
+  }
 
   @action
   chooseFiles() {
     this.fileInputEl.click();
-  },
+  }
 
   @discourseComputed("uploading", "uploadProgress")
   buttonLabel(uploading, uploadProgress) {
@@ -74,7 +76,7 @@ export default Component.extend(UppyUploadMixin, {
     } else {
       return I18n.t("admin.emoji.add");
     }
-  },
+  }
 
   @discourseComputed("uploading")
   buttonIcon(uploading) {
@@ -83,5 +85,5 @@ export default Component.extend(UppyUploadMixin, {
     } else {
       return "plus";
     }
-  },
-});
+  }
+}

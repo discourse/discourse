@@ -260,6 +260,8 @@ zh_TW:
             title: "一般"
           tracking:
             title: "跟蹤"
+          watching:
+            title: "關注中"
         participants_other_count:
           other: "+%{count}"
       threads:

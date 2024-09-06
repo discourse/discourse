@@ -2,7 +2,7 @@
 
 class Chat::Api::CurrentUserThreadsController < Chat::ApiController
   def index
-    with_service(::Chat::LookupUserThreads) do
+    ::Chat::LookupUserThreads.call do
       on_success do
         render_serialized(
           ::Chat::ThreadsView.new(

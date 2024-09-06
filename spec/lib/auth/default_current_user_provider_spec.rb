@@ -736,13 +736,14 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
   end
 
   describe "#log_off_user" do
-    it "should work when the current user was cached by a different provider instance" do
+    let(:env) do
       user_provider = provider("/")
       user_provider.log_on_user(user, {}, user_provider.cookie_jar)
       cookie = CGI.escape(user_provider.cookie_jar["_t"])
-      env =
-        create_request_env(path: "/").merge({ :method => "GET", "HTTP_COOKIE" => "_t=#{cookie}" })
+      create_request_env(path: "/").merge({ :method => "GET", "HTTP_COOKIE" => "_t=#{cookie}" })
+    end
 
+    it "should work when the current user was cached by a different provider instance" do
       user_provider = TestProvider.new(env)
       expect(user_provider.current_user).to eq(user)
       expect(UserAuthToken.find_by(user_id: user.id)).to be_present
@@ -750,6 +751,18 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       user_provider = TestProvider.new(env)
       user_provider.log_off_user({}, user_provider.cookie_jar)
       expect(UserAuthToken.find_by(user_id: user.id)).to be_nil
+    end
+
+    it "should trigger user_logged_out event" do
+      event_triggered_user = nil
+      event_handler = Proc.new { |user| event_triggered_user = user.id }
+      DiscourseEvent.on(:user_logged_out, &event_handler)
+
+      user_provider = TestProvider.new(env)
+      user_provider.log_off_user({}, user_provider.cookie_jar)
+      expect(event_triggered_user).to eq(user.id)
+
+      DiscourseEvent.off(:user_logged_out, &event_handler)
     end
   end
 

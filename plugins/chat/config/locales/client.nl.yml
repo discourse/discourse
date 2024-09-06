@@ -39,6 +39,10 @@ nl:
       chat_messages_count: "Chatberichten"
       chat_channels_count: "Chatkanalen"
       chat_users_count: "Chatgebruikers"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} chatbericht"
+          other: "%{formatted_number} chatberichten"
     chat:
       text_copied: Tekst gekopieerd naar klembord
       link_copied: Link gekopieerd naar klembord
@@ -130,7 +134,6 @@ nl:
       header_indicator_preference:
         title: "Activiteitsindicator weergeven in kop"
         all_new: "Alle nieuwe berichten"
-        dm_and_mentions: "Directe berichten en vermeldingen"
         only_mentions: "Alleen vermeldingen"
         never: "Nooit"
       separate_sidebar_mode:
@@ -600,10 +603,10 @@ nl:
         notifications:
           regular:
             title: "Normaal"
-            description: "Je ontvangt een melding als iemand je @naam noemt in deze thread."
           tracking:
             title: "Tracking"
-            description: "Het aantal nieuwe antwoorden voor deze thread wordt weergegeven in de threadlijst en het kanaal. Je krijgt een melding als iemand je @naam noemt in deze thread."
+          watching:
+            title: "Geobserveerd"
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"

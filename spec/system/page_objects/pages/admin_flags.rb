@@ -105,6 +105,11 @@ module PageObjects
         find(".dialog-footer .btn-primary").click
         self
       end
+
+      def click_settings_tab
+        find(".admin-flags-tabs__settings a").click
+        self
+      end
     end
   end
 end

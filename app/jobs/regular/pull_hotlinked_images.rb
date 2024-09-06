@@ -4,9 +4,6 @@ module Jobs
   class PullHotlinkedImages < ::Jobs::Base
     sidekiq_options queue: "low"
 
-    def initialize
-    end
-
     def execute(args)
       disable_if_low_on_disk_space
 

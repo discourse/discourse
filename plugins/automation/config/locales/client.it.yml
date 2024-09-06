@@ -209,6 +209,14 @@ it:
             valid_trust_levels:
               label: Livelli di attendibilità validi
               description: L'attivazione avverrà solo se il messaggio viene creato da utenti in questi livelli di attendibilità, il valore predefinito è qualsiasi livello di attendibilità
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: Categorie osservate
+              description: Verrà attivato solo se l'argomento rientra in una di queste categorie
+            watching_tags:
+              label: Etichette osservate
+              description: Verrà attivato solo se l'argomento ha una di queste etichette
         after_post_cook:
           fields:
             valid_trust_levels:

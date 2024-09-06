@@ -70,13 +70,23 @@ export default class ChatTrackingStateManager extends Service {
   }
 
   get allChannelUrgentCount() {
-    return this.publicChannelMentionCount + this.directMessageUnreadCount;
+    return (
+      this.publicChannelMentionCount +
+      this.directMessageUnreadCount +
+      this.watchedThreadsUnreadCount
+    );
   }
 
   get hasUnreadThreads() {
     return this.#publicChannels.some(
       (channel) => channel.unreadThreadsCount > 0
     );
+  }
+
+  get watchedThreadsUnreadCount() {
+    return this.#publicChannels.reduce((unreadCount, channel) => {
+      return unreadCount + channel.tracking.watchedThreadsUnreadCount;
+    }, 0);
   }
 
   willDestroy() {
@@ -108,6 +118,8 @@ export default class ChatTrackingStateManager extends Service {
     }
     model.tracking.unreadCount = state.unread_count;
     model.tracking.mentionCount = state.mention_count;
+    model.tracking.watchedThreadsUnreadCount =
+      state.watched_threads_unread_count;
   }
 
   get #publicChannels() {

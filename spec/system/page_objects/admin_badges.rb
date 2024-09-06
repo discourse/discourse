@@ -25,6 +25,12 @@ module PageObjects
 
       def submit_form
         form.submit
+        self
+      end
+
+      def delete_badge
+        page.find(".badge-form__delete-badge-btn").click
+        self
       end
 
       def choose_icon(name)
@@ -47,6 +53,11 @@ module PageObjects
 
         expect(form.field("image_url")).to have_css(".btn-danger")
 
+        self
+      end
+
+      def edit_groupings
+        page.find(".edit-groupings-btn").click
         self
       end
 

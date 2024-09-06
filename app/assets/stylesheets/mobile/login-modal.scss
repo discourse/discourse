@@ -97,3 +97,21 @@
     display: none;
   }
 }
+
+.d-modal.create-account {
+  .d-modal__footer-buttons {
+    flex-direction: row;
+    gap: 8px;
+    button {
+      width: auto;
+    }
+  }
+
+  .login-welcome-header {
+    padding-bottom: 0.25rem;
+  }
+
+  .signup-progress-bar {
+    display: none;
+  }
+}

@@ -2,7 +2,7 @@ import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 import {
   alertChannel,
-  onNotification,
+  onNotification as onDesktopNotification,
 } from "discourse/lib/desktop-notifications";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { isTesting } from "discourse-common/config/environment";
@@ -15,6 +15,7 @@ export default class ChatNotificationManager extends Service {
   @service chatStateManager;
   @service currentUser;
   @service appEvents;
+  @service site;
 
   _subscribedToCore = true;
   _subscribedToChat = false;
@@ -156,15 +157,17 @@ export default class ChatNotificationManager extends Service {
       return;
     }
 
-    const channel = await this.fetchChannel(data.channel_id);
-    data.isDirectMessageChannel = channel.isDirectMessageChannel ?? false;
+    if (this.site.desktopView) {
+      const channel = await this.fetchChannel(data.channel_id);
+      data.isDirectMessageChannel = channel.isDirectMessageChannel ?? false;
 
-    return onNotification(
-      data,
-      this.siteSettings,
-      this.currentUser,
-      this.appEvents
-    );
+      return onDesktopNotification(
+        data,
+        this.siteSettings,
+        this.currentUser,
+        this.appEvents
+      );
+    }
   }
 
   _shouldRun() {

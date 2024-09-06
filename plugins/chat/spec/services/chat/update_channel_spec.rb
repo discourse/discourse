@@ -31,9 +31,7 @@ RSpec.describe Chat::UpdateChannel do
           .first
       end
 
-      it "sets the service result as successful" do
-        expect(result).to be_a_success
-      end
+      it { is_expected.to run_successfully }
 
       it "updates the channel accordingly" do
         result

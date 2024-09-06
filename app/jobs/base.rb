@@ -136,10 +136,25 @@ module Jobs
         @data["@timestamp"] = Time.now
         @data["duration"] = current_duration if @data["status"] == "pending"
         self.class.raw_log("#{@data.to_json}\n")
+
+        if live_slots_limit > 0 && @data["live_slots_start"].present? &&
+             @data["live_slots_finish"].present?
+          live_slots = @data["live_slots_finish"] - @data["live_slots_start"]
+
+          if live_slots >= live_slots_limit
+            Rails.logger.warn(
+              "Sidekiq Job '#{@data["job_name"]}' allocated #{live_slots} objects in the heap: #{@data.inspect}",
+            )
+          end
+        end
       end
 
       def enabled?
         ENV["DISCOURSE_LOG_SIDEKIQ"] == "1"
+      end
+
+      def live_slots_limit
+        @live_slots_limit ||= ENV["DISCOURSE_LIVE_SLOTS_SIDEKIQ_LIMIT"].to_i
       end
 
       def self.mutex
@@ -383,11 +398,13 @@ module Jobs
 
     # Simulate the args being dumped/parsed through JSON
     parsed_opts = JSON.parse(JSON.dump(opts))
-    Discourse.deprecate(<<~TEXT.squish, since: "2.9", drop_from: "3.0") if opts != parsed_opts
+    if opts != parsed_opts
+      Discourse.deprecate(<<~TEXT.squish, since: "2.9", drop_from: "3.0", output_in_test: true)
         #{klass.name} was enqueued with argument values which do not cleanly serialize to/from JSON.
         This means that the job will be run with slightly different values than the ones supplied to `enqueue`.
         Argument values should be strings, booleans, numbers, or nil (or arrays/hashes of those value types).
       TEXT
+    end
     opts = parsed_opts
 
     if ::Jobs.run_later?

@@ -144,6 +144,8 @@ export default class Chat extends Service {
               const state = channelsView.tracking.channel_tracking[channel.id];
               channel.tracking.unreadCount = state.unread_count;
               channel.tracking.mentionCount = state.mention_count;
+              channel.tracking.watchedThreadsUnreadCount =
+                state.watched_threads_unread_count;
 
               channel.currentUserMembership =
                 channelObject.current_user_membership;

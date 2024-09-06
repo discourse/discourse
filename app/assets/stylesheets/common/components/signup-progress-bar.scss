@@ -1,0 +1,96 @@
+$progress-bar-line-width: 2px;
+$progress-bar-circle-size: 1.2rem;
+$progress-bar-icon-size: 0.8rem;
+
+.signup-progress-bar {
+  width: 100%;
+  display: flex;
+  color: var(--primary-low-mid);
+  box-sizing: border-box;
+  margin-bottom: 1.2em;
+
+  &__segment {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    &:first-child .signup-progress-bar__circle {
+      transform: translateX(50%);
+      z-index: 1;
+    }
+
+    &:last-child {
+      width: $progress-bar-circle-size;
+      .signup-progress-bar__circle {
+        transform: translateX(-50%);
+        z-index: 1;
+      }
+    }
+  }
+
+  &__step-text {
+    white-space: nowrap;
+    width: fit-content;
+    transform: translateX(calc(calc($progress-bar-circle-size / 2) - 50%));
+
+    .signup-progress-bar__segment:first-child & {
+      transform: translateX(0%);
+    }
+
+    .signup-progress-bar__segment:last-child & {
+      transform: translateX(
+        calc(calc($progress-bar-circle-size + $progress-bar-line-width) - 100%)
+      );
+    }
+  }
+
+  &__step {
+    display: flex;
+  }
+
+  &__line {
+    transform: translateY(
+      calc(calc($progress-bar-circle-size + $progress-bar-line-width) / 2)
+    );
+    height: $progress-bar-line-width;
+    width: 100%;
+    background-color: var(--primary-low-mid);
+  }
+
+  &__circle {
+    flex-shrink: 0;
+    font-size: $progress-bar-icon-size;
+    color: var(--secondary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: $progress-bar-circle-size;
+    width: $progress-bar-circle-size;
+    border-radius: 50%;
+    border: $progress-bar-line-width solid var(--primary-low-mid);
+    background-color: var(--secondary);
+  }
+
+  &__step.--completed {
+    color: var(--primary);
+
+    .signup-progress-bar__circle {
+      background-color: var(--success);
+      border: $progress-bar-line-width solid var(--success);
+    }
+  }
+
+  &__line.--completed {
+    background-color: var(--success);
+  }
+
+  &__step.--active {
+    .signup-progress-bar__circle {
+      border: $progress-bar-line-width solid var(--success);
+    }
+    + .signup-progress-bar__step-text {
+      font-weight: bold;
+    }
+  }
+}

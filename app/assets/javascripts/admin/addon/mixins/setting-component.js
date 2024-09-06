@@ -104,6 +104,10 @@ export default Mixin.create({
     this.element.removeEventListener("keydown", this._handleKeydown);
   },
 
+  displayDescription: computed("componentType", function () {
+    return this.componentType !== "bool";
+  }),
+
   dirty: computed("buffered.value", "setting.value", function () {
     let bufferVal = this.get("buffered.value");
     let settingVal = this.setting?.value;
@@ -209,6 +213,10 @@ export default Mixin.create({
         icon: "pencil-alt",
       };
     }
+  }),
+
+  disableSaveButton: computed("validationMessage", function () {
+    return !!this.validationMessage;
   }),
 
   confirmChanges(settingKey) {
@@ -324,12 +332,18 @@ export default Mixin.create({
     this.set("buffered.value", value);
   }),
 
+  setValidationMessage: action(function (message) {
+    this.set("validationMessage", message);
+  }),
+
   cancel: action(function () {
     this.rollbackBuffer();
+    this.set("validationMessage", null);
   }),
 
   resetDefault: action(function () {
     this.set("buffered.value", this.setting.default);
+    this.set("validationMessage", null);
   }),
 
   toggleSecret: action(function () {
@@ -341,6 +355,7 @@ export default Mixin.create({
       "buffered.value",
       this.bufferedValues.concat(this.defaultValues).uniq().join("|")
     );
+    this.set("validationMessage", null);
     return false;
   }),
 

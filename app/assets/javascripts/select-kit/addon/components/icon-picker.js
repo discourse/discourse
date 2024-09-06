@@ -1,4 +1,5 @@
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
 import $ from "jquery";
 import { ajax } from "discourse/lib/ajax";
 import { isDevelopment } from "discourse-common/config/environment";
@@ -10,18 +11,20 @@ import {
 } from "discourse-common/lib/icon-library";
 import FilterForMore from "select-kit/components/filter-for-more";
 import MultiSelectComponent from "select-kit/components/multi-select";
-import { MAIN_COLLECTION } from "select-kit/components/select-kit";
+import {
+  MAIN_COLLECTION,
+  pluginApiIdentifiers,
+} from "select-kit/components/select-kit";
 
 const MORE_ICONS_COLLECTION = "MORE_ICONS_COLLECTION";
 const MAX_RESULTS_RETURNED = 200;
 // Matches  max returned results from icon_picker_search in svg_sprite_controller.rb
 
-export default MultiSelectComponent.extend({
-  pluginApiIdentifiers: ["icon-picker"],
-  classNames: ["icon-picker"],
-
+@classNames("icon-picker")
+@pluginApiIdentifiers("icon-picker")
+export default class IconPicker extends MultiSelectComponent {
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     this._cachedIconsList = null;
     this._resultCount = 0;
@@ -31,13 +34,13 @@ export default MultiSelectComponent.extend({
     }
 
     this.insertAfterCollection(MAIN_COLLECTION, MORE_ICONS_COLLECTION);
-  },
+  }
 
   modifyComponentForCollection(collection) {
     if (collection === MORE_ICONS_COLLECTION) {
       return FilterForMore;
     }
-  },
+  }
 
   modifyContentForCollection(collection) {
     if (collection === MORE_ICONS_COLLECTION) {
@@ -45,11 +48,12 @@ export default MultiSelectComponent.extend({
         shouldShowMoreTip: this._resultCount === MAX_RESULTS_RETURNED,
       };
     }
-  },
+  }
 
-  content: computed("value.[]", function () {
+  @computed("value.[]")
+  get content() {
     return makeArray(this.value).map(this._processIcon);
-  }),
+  }
 
   search(filter = "") {
     if (filter === "" && this._cachedIconsList?.length) {
@@ -70,7 +74,7 @@ export default MultiSelectComponent.extend({
         return icons;
       });
     }
-  },
+  }
 
   _processIcon(icon) {
     const iconName = typeof icon === "object" ? icon.id : icon,
@@ -98,11 +102,11 @@ export default MultiSelectComponent.extend({
       name: iconName,
       icon: strippedIconName,
     };
-  },
+  }
 
   willDestroyElement() {
     $("#svg-sprites .ajax-icon-holder").remove();
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     this._cachedIconsList = null;
     this._resultCount = 0;
@@ -110,16 +114,15 @@ export default MultiSelectComponent.extend({
     if (isDevelopment()) {
       enableMissingIconWarning();
     }
-  },
+  }
 
-  actions: {
-    onChange(value, item) {
-      if (this.selectKit.options.maximum === 1) {
-        value = value.length ? value[0] : null;
-        item = item.length ? item[0] : null;
-      }
+  @action
+  _onChange(value, item) {
+    if (this.selectKit.options.maximum === 1) {
+      value = value.length ? value[0] : null;
+      item = item.length ? item[0] : null;
+    }
 
-      this.onChange?.(value, item);
-    },
-  },
-});
+    this.onChange?.(value, item);
+  }
+}

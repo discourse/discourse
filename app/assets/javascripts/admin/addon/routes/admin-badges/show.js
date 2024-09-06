@@ -1,4 +1,4 @@
-import { action, get } from "@ember/object";
+import { get } from "@ember/object";
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
 import Badge from "discourse/models/badge";
@@ -27,10 +27,5 @@ export default class AdminBadgesShowRoute extends Route {
     super.setupController(...arguments);
 
     controller.setup();
-  }
-
-  @action
-  updateGroupings(groupings) {
-    this.controllerFor("admin-badges").set("badgeGroupings", groupings);
   }
 }

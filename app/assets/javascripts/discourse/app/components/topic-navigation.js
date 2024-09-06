@@ -2,43 +2,40 @@ import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { classNameBindings } from "@ember-decorators/component";
+import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import SwipeEvents from "discourse/lib/swipe-events";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseLater from "discourse-common/lib/later";
-import { bind, observes } from "discourse-common/utils/decorators";
+import { bind } from "discourse-common/utils/decorators";
 import JumpToPost from "./modal/jump-to-post";
 
 const MIN_WIDTH_TIMELINE = 925;
 const MIN_HEIGHT_TIMELINE = 325;
 
-export default Component.extend({
-  modal: service(),
+@classNameBindings(
+  "info.topicProgressExpanded:topic-progress-expanded",
+  "info.renderTimeline:with-timeline:with-topic-progress"
+)
+export default class TopicNavigation extends Component {
+  @service modal;
 
-  classNameBindings: [
-    "info.topicProgressExpanded:topic-progress-expanded",
-    "info.renderTimeline:with-timeline:with-topic-progress",
-  ],
-  composerOpen: null,
-  info: null,
-  canRender: true,
-  _lastTopicId: null,
-  _swipeEvents: null,
-
-  init() {
-    this._super(...arguments);
-    this.set("info", EmberObject.create());
-  },
+  composerOpen = null;
+  info = EmberObject.create();
+  canRender = true;
+  _lastTopicId = null;
+  _swipeEvents = null;
 
   didUpdateAttrs() {
-    this._super(...arguments);
+    super.didUpdateAttrs(...arguments);
     if (this._lastTopicId !== this.topic.id) {
       this._lastTopicId = this.topic.id;
       this.set("canRender", false);
       next(() => this.set("canRender", true));
     }
-  },
+  }
 
   _performCheckSize() {
     if (!this.element || this.isDestroying || this.isDestroyed) {
@@ -60,17 +57,17 @@ export default Component.extend({
         this.mediaQuery.matches && verticalSpace > MIN_HEIGHT_TIMELINE
       );
     }
-  },
+  }
 
   @bind
   _checkSize() {
     discourseDebounce(this, this._performCheckSize, 200, true);
-  },
+  }
 
   // we need to store this so topic progress has something to init with
   _topicScrolled(event) {
     this.set("info.prevEvent", event);
-  },
+  }
 
   @observes("info.topicProgressExpanded")
   _expanded() {
@@ -95,19 +92,19 @@ export default Component.extend({
       $(window).off("click.hide-fullscreen");
     }
     this._checkSize();
-  },
+  }
 
   composerOpened() {
     this.set("composerOpen", true);
     this._checkSize();
-  },
+  }
 
   composerClosed() {
     this.set("composerOpen", false);
     this._checkSize();
-  },
+  }
 
-  _collapseFullscreen(delay = 500) {
+  _collapseFullscreen(postId, delay = 500) {
     if (this.get("info.topicProgressExpanded")) {
       $(".timeline-fullscreen").removeClass("show");
       discourseLater(() => {
@@ -119,7 +116,7 @@ export default Component.extend({
         this._checkSize();
       }, delay);
     }
-  },
+  }
 
   keyboardTrigger(e) {
     if (e.type === "jump") {
@@ -131,7 +128,7 @@ export default Component.extend({
         },
       });
     }
-  },
+  }
 
   @bind
   onSwipeStart(event) {
@@ -153,7 +150,7 @@ export default Component.extend({
     } else if (e.direction === "up" || e.direction === "down") {
       this.movingElement = document.querySelector(".timeline-container");
     }
-  },
+  }
 
   @bind
   onSwipeCancel() {
@@ -164,7 +161,7 @@ export default Component.extend({
       fill: "forwards",
       easing: "ease-out",
     });
-  },
+  }
 
   @bind
   onSwipeEnd(event) {
@@ -183,7 +180,7 @@ export default Component.extend({
           duration: durationMs,
           fill: "forwards",
         })
-        .finished.then(() => this._collapseFullscreen(0));
+        .finished.then(() => this._collapseFullscreen(null, 0));
     } else {
       const distancePx = this.pxClosed;
       durationMs = this._swipeEvents.getMaxAnimationTimeMs(
@@ -195,7 +192,7 @@ export default Component.extend({
         easing: "ease-out",
       });
     }
-  },
+  }
 
   @bind
   onSwipe(event) {
@@ -207,10 +204,10 @@ export default Component.extend({
       [{ transform: `translate3d(0, ${this.pxClosed}px, 0)` }],
       { fill: "forwards" }
     );
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     this._lastTopicId = this.topic.id;
 
@@ -237,10 +234,10 @@ export default Component.extend({
       this.element.addEventListener("swipecancel", this.onSwipeCancel);
       this.element.addEventListener("swipe", this.onSwipe);
     }
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     this.appEvents
       .off("topic:current-post-scrolled", this, this._topicScrolled)
@@ -263,5 +260,5 @@ export default Component.extend({
       this.element.removeEventListener("swipe", this.onSwipe);
       this._swipeEvents.removeTouchListeners();
     }
-  },
-});
+  }
+}

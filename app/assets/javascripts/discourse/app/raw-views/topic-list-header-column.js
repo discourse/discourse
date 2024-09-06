@@ -3,9 +3,10 @@ import { and } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default EmberObject.extend({
-  sortable: null,
-  ariaPressed: and("sortable", "isSorting"),
+export default class TopicListHeaderColumn extends EmberObject {
+  sortable = null;
+
+  @and("sortable", "isSorting") ariaPressed;
 
   @discourseComputed
   localizedName() {
@@ -14,7 +15,7 @@ export default EmberObject.extend({
     }
 
     return this.name ? I18n.t(this.name) : "";
-  },
+  }
 
   @discourseComputed
   sortIcon() {
@@ -26,7 +27,7 @@ export default EmberObject.extend({
       ).toString() === "true";
 
     return `chevron-${isAscending ? "up" : "down"}`;
-  },
+  }
 
   @discourseComputed
   isSorting() {
@@ -35,7 +36,7 @@ export default EmberObject.extend({
       (this.parent.order === this.order ||
         this.parent.context?.order === this.order)
     );
-  },
+  }
 
   @discourseComputed
   className() {
@@ -58,7 +59,7 @@ export default EmberObject.extend({
     }
 
     return name.join(" ");
-  },
+  }
 
   @discourseComputed
   ariaSort() {
@@ -67,5 +68,5 @@ export default EmberObject.extend({
     } else {
       return false;
     }
-  },
-});
+  }
+}

@@ -132,6 +132,10 @@ module PageObjects
           expect(section_link["title"]).to eq(title)
         end
 
+        def find_section_link(name)
+          find(".#{SIDEBAR_SECTION_LINK_SELECTOR}[data-link-name='#{name}']")
+        end
+
         def primary_section_links(slug)
           all("[data-section-name='#{slug}'] .sidebar-section-link-wrapper").map(&:text)
         end

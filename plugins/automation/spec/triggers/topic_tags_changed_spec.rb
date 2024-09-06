@@ -32,6 +32,19 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
       automation.reload
     end
 
+    it "fills placeholders correctly" do
+      topic_0 = Fabricate(:topic, user: user, tags: [], category: category)
+
+      list =
+        capture_contexts do
+          DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), [cool_tag.name])
+        end
+
+      expect(list[0]["placeholders"]).to eq(
+        { "topic_title" => topic_0.title, "topic_url" => topic_0.relative_url },
+      )
+    end
+
     it "should fire the trigger if the tag is added" do
       topic_0 = Fabricate(:topic, user: user, tags: [], category: category)
 
@@ -149,7 +162,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
 
       expect(list.length).to eq(1)
       expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
-      expect(list[0]["added_tags"]).to eq([bad_tag.name, another_tag.name])
+      expect(list[0]["added_tags"]).to match_array([bad_tag.name, another_tag.name])
       expect(list[0]["removed_tags"]).to eq([cool_tag.name])
     end
 

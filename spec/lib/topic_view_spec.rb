@@ -950,6 +950,17 @@ RSpec.describe TopicView do
     end
   end
 
+  describe "#mentioned_users" do
+    it "works with capitalized usernames" do
+      user = Fabricate(:user, username: "JoJo")
+      post_1 = Fabricate(:post, topic: topic, raw: "Hey @#{user.username}")
+
+      view = TopicView.new(topic.id, user).mentioned_users
+
+      expect(view[post_1.id]).to eq([user])
+    end
+  end
+
   describe "#image_url" do
     fab!(:op_upload) { Fabricate(:image_upload) }
     fab!(:post3_upload) { Fabricate(:image_upload) }

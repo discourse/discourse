@@ -17,6 +17,7 @@ RSpec.describe Chat::CreateDirectMessageChannel do
         expect(contract.target_usernames).to eq(%w[lechuck elaine])
       end
     end
+
     context "when the target_groups argument is a string" do
       let(:params) { { target_groups: "admins,moderators" } }
 
@@ -42,6 +43,8 @@ RSpec.describe Chat::CreateDirectMessageChannel do
     let(:params) { { guardian: guardian, target_usernames: target_usernames, name: name } }
 
     context "when all steps pass" do
+      it { is_expected.to run_successfully }
+
       it "sets the service result as successful" do
         expect(result).to be_a_success
       end

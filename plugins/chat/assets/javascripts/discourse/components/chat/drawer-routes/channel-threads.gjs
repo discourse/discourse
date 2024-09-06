@@ -12,6 +12,7 @@ import ChatThreadList from "discourse/plugins/chat/discourse/components/chat-thr
 export default class ChatDrawerRoutesChannelThreads extends Component {
   @service chat;
   @service chatChannelsManager;
+  @service chatStateManager;
 
   backLinkTitle = I18n.t("chat.return_to_list");
 
@@ -57,14 +58,16 @@ export default class ChatDrawerRoutesChannelThreads extends Component {
         </Navbar>
       {{/if}}
 
-      <div class="chat-drawer-content" {{didInsert this.fetchChannel}}>
-        {{#if this.chat.activeChannel}}
-          <ChatThreadList
-            @channel={{this.chat.activeChannel}}
-            @includeHeader={{false}}
-          />
-        {{/if}}
-      </div>
+      {{#if this.chatStateManager.isDrawerExpanded}}
+        <div class="chat-drawer-content" {{didInsert this.fetchChannel}}>
+          {{#if this.chat.activeChannel}}
+            <ChatThreadList
+              @channel={{this.chat.activeChannel}}
+              @includeHeader={{false}}
+            />
+          {{/if}}
+        </div>
+      {{/if}}
     </div>
   </template>
 }

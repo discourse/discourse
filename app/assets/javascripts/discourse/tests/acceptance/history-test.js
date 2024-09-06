@@ -1,6 +1,8 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import topicFixtures from "discourse/tests/fixtures/topic";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { cloneJSON } from "discourse-common/lib/object";
 
 const revisionResponse = {
   created_at: "2021-11-24T10:59:36.163Z",
@@ -99,5 +101,36 @@ acceptance("History Modal - anonymous", function (needs) {
       .doesNotExist(
         "it should not display edit button when user cannot edit the post"
       );
+  });
+});
+
+acceptance("History Modal - not found", function (needs) {
+  needs.pretender((server, helper) => {
+    const json = cloneJSON(topicFixtures["/t/280/1.json"]);
+    json.post_stream.posts[0].version = 2;
+    json.post_stream.posts[0].can_view_edit_history = true;
+
+    server.get("/t/280.json", () => helper.response(json));
+    server.get("/t/280/:post_number.json", () => {
+      helper.response(json);
+    });
+
+    server.get("/posts/398/revisions/latest.json", () => {
+      return helper.response(404, {
+        errors: ["The requested URL or resource could not be found."],
+        error_type: "not_found",
+      });
+    });
+  });
+
+  test("try to view a nonexistent revision", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("article[data-post-id='398'] .edits button");
+    assert.dom(".dialog-body").exists();
+    await click(".dialog-footer .btn-primary");
+
+    assert
+      .dom("article[data-post-id='398'] .edits button")
+      .doesNotExist("it should refresh the post to hide the revisions button");
   });
 });

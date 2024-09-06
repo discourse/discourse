@@ -1,6 +1,7 @@
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
+import { classNameBindings, classNames } from "@ember-decorators/component";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { setting } from "discourse/lib/computed";
 import DiscourseURL, {
@@ -12,113 +13,118 @@ import I18n from "discourse-i18n";
 import CategoryDropMoreCollection from "select-kit/components/category-drop-more-collection";
 import CategoryRow from "select-kit/components/category-row";
 import ComboBoxComponent from "select-kit/components/combo-box";
-import { MAIN_COLLECTION } from "select-kit/components/select-kit";
+import {
+  MAIN_COLLECTION,
+  pluginApiIdentifiers,
+  selectKitOptions,
+} from "select-kit/components/select-kit";
 
 export const NO_CATEGORIES_ID = "no-categories";
 export const ALL_CATEGORIES_ID = "all-categories";
 
 const MORE_COLLECTION = "MORE_COLLECTION";
 
-export default ComboBoxComponent.extend({
-  pluginApiIdentifiers: ["category-drop"],
-  classNames: ["category-drop"],
-  classNameBindings: ["noSubcategories:has-selection"],
-  value: readOnly("category.id"),
-  content: readOnly("categoriesWithShortcuts.[]"),
-  noCategoriesLabel: I18n.t("categories.no_subcategories"),
-  navigateToEdit: false,
-  editingCategory: false,
-  editingCategoryTab: null,
-  allowUncategorized: setting("allow_uncategorized_topics"),
+@classNames("category-drop")
+@classNameBindings("noSubcategories:has-selection")
+@selectKitOptions({
+  filterable: true,
+  none: "category.all",
+  caretDownIcon: "caret-right",
+  caretUpIcon: "caret-down",
+  fullWidthOnMobile: true,
+  noSubcategories: false,
+  subCategory: false,
+  clearable: false,
+  hideParentCategory: "hideParentCategory",
+  countSubcategories: false,
+  autoInsertNoneItem: false,
+  displayCategoryDescription: "displayCategoryDescription",
+  headerComponent: "category-drop/category-drop-header",
+  parentCategory: false,
+  allowUncategorized: "allowUncategorized",
+})
+@pluginApiIdentifiers(["category-drop"])
+export default class CategoryDrop extends ComboBoxComponent {
+  @readOnly("category.id") value;
+  @readOnly("categoriesWithShortcuts.[]") content;
+  @readOnly("selectKit.options.parentCategory.displayName") parentCategoryName;
+  @setting("allow_uncategorized_topics") allowUncategorized;
 
-  selectKitOptions: {
-    filterable: true,
-    none: "category.all",
-    caretDownIcon: "caret-right",
-    caretUpIcon: "caret-down",
-    fullWidthOnMobile: true,
-    noSubcategories: false,
-    subCategory: false,
-    clearable: false,
-    hideParentCategory: "hideParentCategory",
-    countSubcategories: false,
-    autoInsertNoneItem: false,
-    displayCategoryDescription: "displayCategoryDescription",
-    headerComponent: "category-drop/category-drop-header",
-    parentCategory: false,
-    allowUncategorized: "allowUncategorized",
-  },
+  noCategoriesLabel = I18n.t("categories.no_subcategories");
+  navigateToEdit = false;
+  editingCategory = false;
+  editingCategoryTab = null;
 
   init() {
-    this._super(...arguments);
-
+    super.init(...arguments);
     this.insertAfterCollection(MAIN_COLLECTION, MORE_COLLECTION);
-  },
+  }
 
   modifyComponentForCollection(collection) {
     if (collection === MORE_COLLECTION) {
       return CategoryDropMoreCollection;
     }
-  },
+  }
 
   modifyComponentForRow() {
     return CategoryRow;
-  },
+  }
 
-  noSubcategories: computed("selectKit.options.noSubcategories", function () {
+  @computed("selectKit.options.noSubcategories")
+  get noSubcategories() {
     return this.selectKit.options.noSubcategories;
-  }),
+  }
 
-  displayCategoryDescription: computed(function () {
+  @computed
+  get displayCategoryDescription() {
     return !(
       this.get("currentUser.staff") || this.get("currentUser.trust_level") > 0
     );
-  }),
+  }
 
-  hideParentCategory: computed(function () {
+  @computed
+  get hideParentCategory() {
     return this.options.subCategory || false;
-  }),
+  }
 
-  shortcuts: computed(
-    "value",
-    "selectKit.options.{subCategory,noSubcategories}",
-    function () {
-      const shortcuts = [];
+  @computed("value", "selectKit.options.{subCategory,noSubcategories}")
+  get shortcuts() {
+    const shortcuts = [];
 
-      if (
-        (this.value && !this.editingCategory) ||
-        (this.selectKit.options.noSubcategories &&
-          this.selectKit.options.subCategory)
-      ) {
-        shortcuts.push({
-          id: ALL_CATEGORIES_ID,
-          name: this.allCategoriesLabel,
-        });
-      }
-
-      if (
-        this.selectKit.options.subCategory &&
-        (this.value || !this.selectKit.options.noSubcategories)
-      ) {
-        shortcuts.push({
-          id: NO_CATEGORIES_ID,
-          name: this.noCategoriesLabel,
-        });
-      }
-
-      // If there is a single shortcut, we can have a single "remove filter" option
-      if (shortcuts.length === 1 && shortcuts[0].id === ALL_CATEGORIES_ID) {
-        shortcuts[0].name = I18n.t("categories.remove_filter");
-      }
-
-      return shortcuts;
+    if (
+      (this.value && !this.editingCategory) ||
+      (this.selectKit.options.noSubcategories &&
+        this.selectKit.options.subCategory)
+    ) {
+      shortcuts.push({
+        id: ALL_CATEGORIES_ID,
+        name: this.allCategoriesLabel,
+      });
     }
-  ),
 
-  categoriesWithShortcuts: computed("categories.[]", "shortcuts", function () {
+    if (
+      this.selectKit.options.subCategory &&
+      (this.value || !this.selectKit.options.noSubcategories)
+    ) {
+      shortcuts.push({
+        id: NO_CATEGORIES_ID,
+        name: this.noCategoriesLabel,
+      });
+    }
+
+    // If there is a single shortcut, we can have a single "remove filter" option
+    if (shortcuts.length === 1 && shortcuts[0].id === ALL_CATEGORIES_ID) {
+      shortcuts[0].name = I18n.t("categories.remove_filter");
+    }
+
+    return shortcuts;
+  }
+
+  @computed("categories.[]", "shortcuts")
+  get categoriesWithShortcuts() {
     const results = this._filterUncategorized(this.categories || []);
     return this.shortcuts.concat(results);
-  }),
+  }
 
   modifyNoSelection() {
     if (this.selectKit.options.noSubcategories) {
@@ -134,7 +140,7 @@ export default ComboBoxComponent.extend({
           : I18n.t("categories.categories_label")
       );
     }
-  },
+  }
 
   modifySelection(content) {
     if (this.value) {
@@ -150,27 +156,22 @@ export default ComboBoxComponent.extend({
     }
 
     return content;
-  },
+  }
 
-  parentCategoryName: readOnly("selectKit.options.parentCategory.displayName"),
-
-  allCategoriesLabel: computed(
-    "parentCategoryName",
-    "selectKit.options.subCategory",
-    function () {
-      if (this.editingCategory) {
-        return this.noCategoriesLabel;
-      }
-
-      if (this.selectKit.options.subCategory) {
-        return I18n.t("categories.remove_filter", {
-          categoryName: this.parentCategoryName,
-        });
-      }
-
-      return I18n.t("categories.all");
+  @computed("parentCategoryName", "selectKit.options.subCategory")
+  get allCategoriesLabel() {
+    if (this.editingCategory) {
+      return this.noCategoriesLabel;
     }
-  ),
+
+    if (this.selectKit.options.subCategory) {
+      return I18n.t("categories.remove_filter", {
+        categoryName: this.parentCategoryName,
+      });
+    }
+
+    return I18n.t("categories.all");
+  }
 
   async search(filter) {
     if (this.site.lazy_load_categories) {
@@ -221,34 +222,33 @@ export default ComboBoxComponent.extend({
     } else {
       return this._filterUncategorized(this.content);
     }
-  },
+  }
 
-  actions: {
-    onChange(categoryId) {
-      const category =
-        categoryId === ALL_CATEGORIES_ID || categoryId === NO_CATEGORIES_ID
-          ? this.selectKit.options.parentCategory
-          : Category.findById(parseInt(categoryId, 10));
+  @action
+  onChange(categoryId) {
+    const category =
+      categoryId === ALL_CATEGORIES_ID || categoryId === NO_CATEGORIES_ID
+        ? this.selectKit.options.parentCategory
+        : Category.findById(parseInt(categoryId, 10));
 
-      let route;
-      if (this.editingCategoryTab) {
-        // rendered on category page
-        route = getEditCategoryUrl(
-          category,
-          categoryId !== NO_CATEGORIES_ID,
-          this.editingCategoryTab
-        );
-      } else {
-        route = getCategoryAndTagUrl(
-          category,
-          categoryId !== NO_CATEGORIES_ID,
-          this.tagId
-        );
-      }
+    let route;
+    if (this.editingCategoryTab) {
+      // rendered on category page
+      route = getEditCategoryUrl(
+        category,
+        categoryId !== NO_CATEGORIES_ID,
+        this.editingCategoryTab
+      );
+    } else {
+      route = getCategoryAndTagUrl(
+        category,
+        categoryId !== NO_CATEGORIES_ID,
+        this.tagId
+      );
+    }
 
-      DiscourseURL.routeToUrl(route);
-    },
-  },
+    DiscourseURL.routeToUrl(route);
+  }
 
   _filterUncategorized(content) {
     if (!this.siteSettings.allow_uncategorized_topics) {
@@ -258,5 +258,5 @@ export default ComboBoxComponent.extend({
     }
 
     return content;
-  },
-});
+  }
+}

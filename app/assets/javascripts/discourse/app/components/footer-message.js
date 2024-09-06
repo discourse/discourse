@@ -1,4 +1,5 @@
 import Component from "@ember/component";
-export default Component.extend({
-  classNames: ["footer-message"],
-});
+import { classNames } from "@ember-decorators/component";
+
+@classNames("footer-message")
+export default class FooterMessage extends Component {}

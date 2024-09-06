@@ -1,39 +1,44 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
+import {
+  attributeBindings,
+  classNameBindings,
+  classNames,
+} from "@ember-decorators/component";
 import { makeArray } from "discourse-common/lib/helpers";
 import UtilsMixin from "select-kit/mixins/utils";
 
-export default Component.extend(UtilsMixin, {
-  classNames: ["select-kit-header"],
-  classNameBindings: ["isFocused"],
-  attributeBindings: [
-    "role",
-    "tabindex",
-    "selectedValue:data-value",
-    "selectedNames:data-name",
-    "buttonTitle:title",
-    "selectKit.options.autofocus:autofocus",
-  ],
+@classNames("select-kit-header")
+@classNameBindings("isFocused")
+@attributeBindings(
+  "role",
+  "tabindex",
+  "selectedValue:data-value",
+  "selectedNames:data-name",
+  "buttonTitle:title",
+  "selectKit.options.autofocus:autofocus"
+)
+export default class SelectKitHeader extends Component.extend(UtilsMixin) {
+  selectKit = null;
+  role = "listbox";
+  tabindex = 0;
 
-  selectKit: null,
-
-  role: "listbox",
-
-  tabindex: 0,
-
-  selectedValue: computed("value", function () {
+  @computed("value")
+  get selectedValue() {
     return this.value === this.getValue(this.selectKit.noneItem)
       ? null
       : makeArray(this.value).join(",");
-  }),
+  }
 
-  selectedNames: computed("selectedContent.[]", function () {
+  @computed("selectedContent.[]")
+  get selectedNames() {
     return makeArray(this.selectedContent)
       .map((s) => this.getName(s))
       .join(",");
-  }),
+  }
 
-  buttonTitle: computed("value", "selectKit.noneItem", function () {
+  @computed("value", "selectKit.noneItem")
+  get buttonTitle() {
     if (
       !this.value &&
       this.selectKit.noneItem &&
@@ -41,24 +46,25 @@ export default Component.extend(UtilsMixin, {
     ) {
       return this.selectKit.noneItem.title || this.selectKit.noneItem.name;
     }
-  }),
+  }
 
-  icons: computed("selectKit.options.{icon,icons}", function () {
+  @computed("selectKit.options.{icon,icons}")
+  get icons() {
     const icon = makeArray(this.selectKit.options.icon);
     const icons = makeArray(this.selectKit.options.icons);
     return icon.concat(icons).filter(Boolean);
-  }),
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     if (this.selectKit.options.autofocus) {
       this.set("isFocused", true);
     }
-  },
+  }
 
   mouseDown() {
     return false;
-  },
+  }
 
   click(event) {
     event.preventDefault();
@@ -71,13 +77,13 @@ export default Component.extend(UtilsMixin, {
       return false;
     }
     this.selectKit.toggle(event);
-  },
+  }
 
   keyUp(event) {
     if (event.key === " ") {
       event.preventDefault();
     }
-  },
+  }
 
   keyDown(event) {
     if (
@@ -165,7 +171,7 @@ export default Component.extend(UtilsMixin, {
         return true;
       }
     }
-  },
+  }
 
   _focusFilterInput() {
     const filterContainer = document.querySelector(
@@ -178,5 +184,5 @@ export default Component.extend(UtilsMixin, {
       const filterInput = filterContainer.querySelector(".filter-input");
       filterInput && filterInput.focus();
     }
-  },
-});
+  }
+}

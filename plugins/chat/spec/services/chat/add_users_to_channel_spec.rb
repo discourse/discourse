@@ -28,6 +28,8 @@ RSpec.describe Chat::AddUsersToChannel do
     context "when all steps pass" do
       before { channel.add(current_user) }
 
+      it { is_expected.to run_successfully }
+
       it "fetches users to add" do
         expect(result.target_users.map(&:username)).to contain_exactly(*users.map(&:username))
       end

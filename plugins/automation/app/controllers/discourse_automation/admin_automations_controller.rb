@@ -27,7 +27,8 @@ module DiscourseAutomation
         DiscourseAutomation::Automation.new(
           automation_params.merge(last_updated_by_id: current_user.id),
         )
-      if automation.scriptable.forced_triggerable
+
+      if automation.scriptable&.forced_triggerable
         automation.trigger = scriptable.forced_triggerable[:triggerable].to_s
       end
 

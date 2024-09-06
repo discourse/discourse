@@ -177,6 +177,8 @@ en:
       removed_user: "Removed %{who} %{when}"
       removed_group: "Removed %{who} %{when}"
       autobumped: "Automatically bumped %{when}"
+      tags_changed: "Tags updated %{when}"
+      category_changed: "Category updated %{when}"
       autoclosed:
         enabled: "Closed %{when}"
         disabled: "Opened %{when}"
@@ -295,6 +297,7 @@ en:
     now: "just now"
     read_more: "read more"
     more: "More"
+    more_options: "More options"
     x_more:
       one: "%{count} More"
       other: "%{count} More"
@@ -341,8 +344,18 @@ en:
       post_count: "Posts"
       user_count: "Sign-ups"
       active_user_count: "Active users"
+      visitor_count: "Visitors"
+      eu_visitor_count: "Visitors from European Union"
+      traffic_info_footer_MF: |
+        In the last 6 months, this site has served content to an estimated { total_visitors, plural,
+            one {# people}
+          other {# people}
+        } each month, with an estimated { eu_visitors, plural,
+            one {# people}
+          other {# people}
+        } from the European Union.
       contact: "Contact us"
-      contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_info}."
+      contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact %{contact_info}."
       site_activity: "Site activity"
       view_more: "View more"
       view_less: "View less"
@@ -362,6 +375,14 @@ en:
         likes:
           one: "%{formatted_number} like"
           other: "%{formatted_number} likes"
+        visitors_MF: |
+          { total_count, plural,
+              one {{total_formatted_number} visitor}
+            other {{total_formatted_number} visitors}
+          }, about { eu_count, plural,
+              one {{eu_formatted_number}}
+            other {{eu_formatted_number}}
+          } from the EU
         periods:
           last_7_days: "in the last 7 days"
           today: "today"
@@ -2219,6 +2240,7 @@ en:
         }.
 
     learn_more: "Learn more…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>Learn more…</a>"
 
     mute: Mute
     unmute: Unmute
@@ -2314,6 +2336,11 @@ en:
       associate: "Already have an account? <a href='%{associate_link}'>Log In</a> to link your %{provider} account."
       activation_title: "Activate your account"
       already_have_account: "Already have an account?"
+      progress_bar:
+        signup: "Sign Up"
+        activate: "Activate"
+        approve: "Approve"
+        login: "Log In"
 
     forgot_password:
       title: "Password Reset"
@@ -2525,6 +2552,7 @@ en:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} is greater than the max allowed %{max_file_size}"
+        size_too_small: "%{provided_file_size} is smaller than the min allowed %{min_file_size}"
 
     emoji_picker:
       filter_placeholder: Search for emoji
@@ -5011,6 +5039,7 @@ en:
   admin_js:
     # This is a text input placeholder, keep the translation short
     type_to_filter: "type to filter…"
+    settings: "Settings"
 
     admin:
       title: "Discourse Admin"
@@ -5049,7 +5078,7 @@ en:
         problems_found: "Some advice based on your current site settings"
         new_features:
           title: "What's new"
-          subtitle: "For even more detail about new features and improvements we are adding all the time, see <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Release notes</a>."
+          subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
           previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Learn more..."
         last_checked: "Last checked"
@@ -5171,6 +5200,7 @@ en:
 
           membership:
             automatic: Automatic
+            automatic_tooltip: "This group is automatic, you cannot delete it and members are added and removed automatically"
             trust_levels_title: "Trust level automatically granted to members when they're added:"
             effects: Effects
             trust_levels_none: "None"
@@ -5379,6 +5409,7 @@ en:
           post_edited: "Post is updated"
           post_destroyed: "Post is deleted"
           post_recovered: "Post is recovered"
+          category_experts_approved: "Post is approved by category experts"
         group_event:
           group_name: "Group Events"
           group_created: "Group is created"
@@ -5539,7 +5570,7 @@ en:
           community_description: "Community description"
           banner_image: "Banner image"
           banner_image_help: |
-            This will be used on your About page. Recommended size: 800x300px. Accepted types: JPG, PNG, and SVG up to 10MB.
+            This will be used on your About page. Recommended size: 1100x300px. Accepted types: JPG, PNG, and SVG up to 10MB.
           contact_information: "Contact information"
           community_owner: "Community owner"
           community_owner_placeholder: "Johnny Smith"
@@ -5591,6 +5622,8 @@ en:
           back: "Back to flags"
           delete: "Delete"
           delete_confirm: 'Are you sure you want to delete "%{name}"?'
+          flags_tab: "Flags"
+          settings: "Flags Settings"
           form:
             add_header: "Add flag"
             edit_header: "Edit flag"
@@ -5616,7 +5649,8 @@ en:
             move_down: "Move down"
       plugins:
         title: "Plugins"
-        installed: "Installed Plugins"
+        installed: "Installed plugins"
+        description: "Any Discourse plugins that you have installed, or plugins that come preinstalled with Discourse hosting, will appear in this list."
         name: "Name"
         none_installed: "You don't have any plugins installed."
         version: "Version"
@@ -5657,10 +5691,14 @@ en:
 
       backups:
         title: "Backups"
+        files_title: "Backup files"
+        description: "Discourse backups include the full site database, which contains everything on the site: topics, posts, users, groups, settings, themes, etc. Depending on how the backup file is created, it may or may not include uploads."
+        learn_more_url: ""
         menu:
           backups: "Backups"
+          backup_files: "Backup files"
           logs: "Logs"
-        none: "No backup available."
+        none: "No backup available"
         read_only:
           enable:
             title: "Enable read-only mode"
@@ -5698,12 +5736,12 @@ en:
           download:
             label: "Download"
             title: "Send email with download link"
-            alert: "A link to download this backup has been emailed to you."
+            alert: "A link to download this backup has been emailed to you"
           destroy:
             title: "Remove the backup"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
-            is_disabled: "Restore is disabled in the site settings."
+            is_disabled: "Restore is currently disabled. To enable it, visit the <a href='%{url}'>site settings</a>."
             label: "Restore"
             title: "Restore the backup"
             confirm: "Are you sure you want to restore this backup?"
@@ -5712,7 +5750,7 @@ en:
             title: "Rollback the database to previous working state"
             confirm: "Are you sure you want to rollback the database to the previous working state?"
         location:
-          local: "Local Storage"
+          local: "Local storage"
           s3: "S3"
         backup_storage_error: "Failed to access backup storage: %{error_message}"
 
@@ -6864,6 +6902,7 @@ en:
         show_overriden: "Only show overridden"
         show_outdated: "Only show outdated/invalid"
         show_untranslated: "Only show untranslated"
+        only_show_selected_locale: "Only show results in selected locale"
         locale: "Language:"
         more_than_50_results: "There are more than 50 results. Please refine your search."
         no_results: "No matching site texts found"
@@ -6978,9 +7017,10 @@ en:
         name: Name
         badge: Badge
         display_name: Display Name
-        description: Description
+        description: Badges reward users for their activities, contributions, and achievements to recognize, validate, and encourage positive behavior and engagement within the community.
         long_description: Long description
         badge_type: Badge type
+        group_settings: Group Settings
         badge_grouping: Group
         badge_groupings:
           modal_title: Badge Groupings
@@ -7045,9 +7085,8 @@ en:
             with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
         badge_intro:
-          title: "Select an existing badge or create a new one to get started"
-          what_are_badges_title: "What are badges?"
-          badge_query_examples_title: "Badge query examples"
+          title: "Choose a badge or create a new one"
+          description: "Start by selecting an existing badge to customize, or create a brand new badge"
         mass_award:
           title: Bulk Award
           description: Award the same badge to many users at once.

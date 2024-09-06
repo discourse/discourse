@@ -129,27 +129,6 @@ RSpec.describe User do
         ) { user.update(name: "Batman") }
       end
     end
-
-    describe "#refresh_user_directory" do
-      context "when bootstrap mode is enabled" do
-        before { SiteSetting.bootstrap_mode_enabled = true }
-
-        it "creates directory items for a new user for all periods" do
-          expect do user = Fabricate(:user) end.to change { DirectoryItem.count }.by(
-            DirectoryItem.period_types.count,
-          )
-          expect(DirectoryItem.where(user_id: user.id)).to exist
-        end
-      end
-
-      context "when bootstrap mode is disabled" do
-        before { SiteSetting.bootstrap_mode_enabled = false }
-
-        it "doesn't create directory items for a new user" do
-          expect do Fabricate(:user) end.not_to change { DirectoryItem.count }
-        end
-      end
-    end
   end
 
   describe "Validations" do
@@ -3428,8 +3407,9 @@ RSpec.describe User do
       user.update!(groups: [group])
       SiteSetting.enable_category_group_moderation = true
 
-      group_reviewable =
-        Fabricate(:reviewable, reviewable_by_moderator: false, reviewable_by_group: group)
+      category = Fabricate(:category)
+      Fabricate(:category_moderation_group, category:, group:)
+      group_reviewable = Fabricate(:reviewable, reviewable_by_moderator: false, category:)
       mod_reviewable = Fabricate(:reviewable, reviewable_by_moderator: true)
       admin_reviewable = Fabricate(:reviewable, reviewable_by_moderator: false)
 
@@ -3587,7 +3567,10 @@ RSpec.describe User do
   end
 
   describe "#populated_required_fields?" do
-    let!(:required_field) { Fabricate(:user_field, name: "hairstyle") }
+    let!(:required_field) do
+      Fabricate(:user_field, name: "hairstyle", requirement: "for_all_users")
+    end
+    let!(:signup_field) { Fabricate(:user_field, name: "haircolor", requirement: "on_signup") }
     let!(:optional_field) { Fabricate(:user_field, name: "haircolor", requirement: "optional") }
 
     context "when all required fields are populated" do

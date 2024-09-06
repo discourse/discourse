@@ -139,13 +139,15 @@ module Service
 
       def call(instance, context)
         context[name] = super
-        raise ArgumentError, "Model not found" if !optional && context[name].blank?
+        if !optional && (!context[name] || context[name].try(:empty?))
+          raise ArgumentError, "Model not found"
+        end
         if context[name].try(:invalid?)
           context[result_key].fail(invalid: true)
           context.fail!
         end
       rescue ArgumentError => exception
-        context[result_key].fail(exception: exception)
+        context[result_key].fail(exception: exception, not_found: true)
         context.fail!
       end
     end
@@ -228,8 +230,9 @@ module Service
     class_methods do
       include StepsHelpers
 
-      def call(context = {})
-        new(context).tap(&:run).context
+      def call(context = {}, &actions)
+        return new(context).tap(&:run).context unless block_given?
+        ServiceRunner.call(self, context, &actions)
       end
 
       def call!(context = {})

@@ -93,7 +93,6 @@ hr:
       header_indicator_preference:
         title: "Prikaži indikator aktivnosti u zaglavlju"
         all_new: "Sve nove poruke"
-        dm_and_mentions: "Izravne poruke i spominjanja"
         never: "Nikad"
       enable: "Omogući chat"
       flag: "Označi zastavicom"
@@ -284,10 +283,10 @@ hr:
         notifications:
           regular:
             title: "Normalno"
-            description: "Bit ćete obaviješteni ako netko spominje vaš @name u ovoj temi."
           tracking:
             title: "Praćenje"
-            description: "Broj novih odgovora za ovu nit bit će prikazan na popisu niti i kanalu. Bit ćete obaviješteni ako netko spominje Vaš @name u ovoj niti."
+          watching:
+            title: "Promatrano"
         participants_other_count:
           one: "+%{count}"
           few: "+%{count}"

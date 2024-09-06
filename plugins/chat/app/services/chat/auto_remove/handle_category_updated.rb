@@ -59,16 +59,11 @@ module Chat
       end
 
       def remove_users_without_channel_permission(users:, category_channel_ids:)
-        memberships_to_remove = []
-
-        users.find_in_batches do |batch_users|
-          memberships_to_remove.concat(
-            Chat::Action::CalculateMembershipsForRemoval.call(
-              scoped_users: batch_users,
-              channel_ids: category_channel_ids,
-            ),
+        memberships_to_remove =
+          Chat::Action::CalculateMembershipsForRemoval.call(
+            scoped_users_query: users,
+            channel_ids: category_channel_ids,
           )
-        end
 
         return if memberships_to_remove.blank?
 

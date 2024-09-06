@@ -176,7 +176,8 @@ RSpec.describe "Chat channel", type: :system do
       Fabricate(
         :chat_message,
         chat_channel: channel_1,
-        message: "hello @here @all @#{current_user.username} @#{other_user.username} @unexisting",
+        message:
+          "hello @here @all @#{current_user.username} @#{other_user.username} @unexisting @system",
         user: other_user,
       )
     end
@@ -191,14 +192,12 @@ RSpec.describe "Chat channel", type: :system do
     it "highlights the mentions" do
       chat_page.visit_channel(channel_1)
 
-      expect(page).to have_selector(".mention.highlighted.valid-mention", text: "@here")
-      expect(page).to have_selector(".mention.highlighted.valid-mention", text: "@all")
-      expect(page).to have_selector(
-        ".mention.highlighted.valid-mention",
-        text: "@#{current_user.username}",
-      )
+      expect(page).to have_selector(".mention.--wide", text: "@here")
+      expect(page).to have_selector(".mention.--wide", text: "@all")
+      expect(page).to have_selector(".mention.--current", text: "@#{current_user.username}")
       expect(page).to have_selector(".mention", text: "@#{other_user.username}")
       expect(page).to have_selector(".mention", text: "@unexisting")
+      expect(page).to have_selector(".mention.--bot", text: "@system")
     end
 
     it "renders user status on mentions" do

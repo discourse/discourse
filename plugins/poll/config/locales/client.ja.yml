@@ -43,6 +43,12 @@ ja:
       show-results:
         title: "投票結果を表示する"
         label: "結果"
+      show-tally:
+        title: "投票数で投票結果を表示する"
+        label: "集計を表示"
+      show-percentage:
+        title: "投票結果をパーセント率で表示する"
+        label: "パーセント率で表示"
       remove-vote:
         title: "投票の削除"
         label: "投票を取り消す"

@@ -233,7 +233,10 @@ RSpec.describe TopicsController do
     end
 
     describe "moving to a new topic as a group moderator" do
-      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:category)
+      fab!(:category_moderation_group) do
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
+      end
       fab!(:topic) { Fabricate(:topic, category: category) }
       fab!(:p1) { Fabricate(:post, user: group_user.user, post_number: 1, topic: topic) }
       fab!(:p2) { Fabricate(:post, user: group_user.user, post_number: 2, topic: topic) }
@@ -388,7 +391,10 @@ RSpec.describe TopicsController do
     end
 
     describe "moving to an existing topic as a group moderator" do
-      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:category)
+      fab!(:category_moderation_group) do
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
+      end
       fab!(:topic) { Fabricate(:topic, category: category) }
       fab!(:p1) { Fabricate(:post, user: group_user.user, post_number: 1, topic: topic) }
       fab!(:p2) { Fabricate(:post, user: group_user.user, post_number: 2, topic: topic) }
@@ -439,7 +445,10 @@ RSpec.describe TopicsController do
     end
 
     describe "moving chronologically to an existing topic as a group moderator" do
-      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:category)
+      fab!(:category_moderation_group) do
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
+      end
       fab!(:topic) { Fabricate(:topic, category: category) }
       fab!(:p1) do
         Fabricate(
@@ -715,7 +724,10 @@ RSpec.describe TopicsController do
     end
 
     describe "merging into another topic as a group moderator" do
-      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:category)
+      fab!(:category_moderation_group) do
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
+      end
       fab!(:topic) { Fabricate(:topic, category: category) }
       fab!(:p1) { Fabricate(:post, user: post_author1, post_number: 1, topic: topic) }
       fab!(:p2) { Fabricate(:post, user: post_author2, post_number: 2, topic: topic) }
@@ -752,7 +764,10 @@ RSpec.describe TopicsController do
     end
 
     describe "merging chronologically into another topic as a group moderator" do
-      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:category)
+      fab!(:category_moderation_group) do
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
+      end
       fab!(:topic) { Fabricate(:topic, category: category) }
       fab!(:p1) do
         Fabricate(
@@ -1152,7 +1167,10 @@ RSpec.describe TopicsController do
     end
 
     describe "when logged in as a group member with reviewable status" do
-      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:category)
+      fab!(:category_moderation_group) do
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
+      end
       fab!(:topic) { Fabricate(:topic, category: category) }
 
       before do
@@ -2236,9 +2254,6 @@ RSpec.describe TopicsController do
     fab!(:private_topic) { pm }
     fab!(:topic) { Fabricate(:post, user: post_author1).topic }
 
-    fab!(:p1) { Fabricate(:post, user: topic.user) }
-    fab!(:p2) { Fabricate(:post, user: topic.user) }
-
     describe "when topic is not allowed" do
       it "should return the right response" do
         SiteSetting.detailed_404 = true
@@ -2323,6 +2338,12 @@ RSpec.describe TopicsController do
       get "/t/#{another_topic.id}-reasons-discourse-is-awesome"
 
       expect(response).to redirect_to(topic.relative_url)
+    end
+
+    it "does not raise an unhandled exception when receiving an array of IDs" do
+      get "/t/#{topic.id}/summary?id[]=a,b"
+
+      expect(response.status).to eq(400)
     end
 
     it "keeps the post_number parameter around when redirecting" do
@@ -3277,18 +3298,50 @@ RSpec.describe TopicsController do
       end
     end
 
-    it "returns a list of categories" do
+    it "returns suggested topics only when loading the last chunk of posts in a topic" do
+      topic_post_2 = Fabricate(:post, topic: topic)
+      topic_post_3 = Fabricate(:post, topic: topic)
+      topic_post_4 = Fabricate(:post, topic: topic)
+
+      stub_const(TopicView, "CHUNK_SIZE", 2) do
+        get "/t/#{topic.slug}/#{topic.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.has_key?("suggested_topics")).to eq(false)
+
+        get "/t/#{topic.slug}/#{topic.id}/4.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.has_key?("suggested_topics")).to eq(true)
+      end
+    end
+
+    it "returns a list of categories when `lazy_load_categories_group` site setting is enabled for the current user" do
       SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
-      topic.update!(category: Fabricate(:category))
+
+      topic_post_2 = Fabricate(:post, topic: topic)
+      topic_post_3 = Fabricate(:post, topic: topic)
+      topic_post_4 = Fabricate(:post, topic: topic)
       dest_topic.update!(category: Fabricate(:category))
 
-      get "/t/#{topic.slug}/#{topic.id}.json"
+      stub_const(TopicView, "CHUNK_SIZE", 2) do
+        get "/t/#{topic.slug}/#{topic.id}.json"
 
-      expect(response.parsed_body["categories"].map { |c| c["id"] }).to contain_exactly(
-        SiteSetting.uncategorized_category_id,
-        topic.category_id,
-        dest_topic.category_id,
-      )
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.has_key?("suggested_topics")).to eq(false)
+        expect(response.parsed_body["categories"].map { _1["id"] }).to contain_exactly(
+          topic.category_id,
+        )
+
+        get "/t/#{topic.slug}/#{topic.id}/4.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.has_key?("suggested_topics")).to eq(true)
+        expect(response.parsed_body["categories"].map { _1["id"] }).to contain_exactly(
+          topic.category_id,
+          dest_topic.category_id,
+        )
+      end
     end
   end
 
@@ -4935,7 +4988,7 @@ RSpec.describe TopicsController do
       it "allows a category moderator to create a delete timer" do
         user.update!(trust_level: TrustLevel[4])
         Group.user_trust_level_change!(user.id, user.trust_level)
-        topic.category.update!(reviewable_by_group: user.groups.first)
+        Fabricate(:category_moderation_group, category: topic.category, group: user.groups.first)
 
         sign_in(user)
 

@@ -7,8 +7,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { SYSTEM_FLAG_IDS } from "discourse/lib/constants";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
-import AdminConfigHeader from "admin/components/admin-config-header";
 import AdminFlagItem from "admin/components/admin-flag-item";
+import AdminPageSubheader from "admin/components/admin-page-subheader";
 
 export default class AdminConfigAreasFlags extends Component {
   @service site;
@@ -69,17 +69,19 @@ export default class AdminConfigAreasFlags extends Component {
   }
 
   <template>
+    <AdminPageSubheader @titleLabel="admin.config_areas.flags.flags_tab">
+      <:actions as |actions|>
+        <actions.Primary
+          @route="adminConfig.flags.new"
+          @title="admin.config_areas.flags.add"
+          @label="admin.config_areas.flags.add"
+          @icon="plus"
+          @disabled={{this.addFlagButtonDisabled}}
+          class="admin-flags__header-add-flag"
+        />
+      </:actions>
+    </AdminPageSubheader>
     <div class="container admin-flags">
-      <AdminConfigHeader
-        @name="flags"
-        @heading="admin.config_areas.flags.header"
-        @subheading="admin.config_areas.flags.subheader"
-        @primaryActionRoute="adminConfig.flags.new"
-        @primaryActionCssClass="admin-flags__header-add-flag"
-        @primaryActionIcon="plus"
-        @primaryActionLabel="admin.config_areas.flags.add"
-        @primaryActionDisabled={{this.addFlagButtonDisabled}}
-      />
       <table class="admin-flags__items grid">
         <thead>
           <th>{{i18n "admin.config_areas.flags.description"}}</th>

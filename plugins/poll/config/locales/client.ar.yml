@@ -21,6 +21,13 @@ ar:
         few: "أصوات إجمالية"
         many: "صوتًا إجماليًا"
         other: "صوت إجمالي"
+      votes:
+        zero: "%{count} صوت"
+        one: "صوت واحد"
+        two: "صوتان"
+        few: "%{count} أصوات"
+        many: "%{count} صوتًا"
+        other: "%{count} صوت"
       average_rating: "متوسط التقييمات: <strong>%{average}</strong>."
       public:
         title: "تكون الأصوات <strong>مرئية للعامة</strong>."
@@ -66,6 +73,12 @@ ar:
       show-results:
         title: "عرض نتائج استطلاع الرأي"
         label: "النتائج"
+      show-tally:
+        title: "إظهار نتائج التصويت حسب عدد الأصوات"
+        label: "عرض العداد"
+      show-percentage:
+        title: "إظهار نتائج التصويت كنسبة مئوية"
+        label: "العرض كنسبة مئوية"
       remove-vote:
         title: "إزالة صوتك"
         label: "التراجع عن التصويت"

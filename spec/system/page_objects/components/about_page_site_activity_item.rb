@@ -16,6 +16,10 @@ module PageObjects
         )
       end
 
+      def has_text?(text)
+        container.find(".about__activities-item-count").has_text?(text)
+      end
+
       def has_1_day_period?
         period_element.has_text?(I18n.t("js.about.activities.periods.today"))
       end
@@ -26,6 +30,16 @@ module PageObjects
 
       def has_all_time_period?
         period_element.has_text?(I18n.t("js.about.activities.periods.all_time"))
+      end
+
+      # used by plugins
+      def has_custom_count?(text)
+        container.find(".about__activities-item-count").has_text?(text)
+      end
+
+      # used by plugins
+      def has_custom_period?(text)
+        period_element.has_text?(text)
       end
 
       private

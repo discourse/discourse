@@ -22,6 +22,9 @@ export default class ChatChannelUnreadIndicator extends Component {
     if (this.#hasChannelMentions()) {
       return this.args.channel.tracking.mentionCount;
     }
+    if (this.#hasWatchedThreads()) {
+      return this.args.channel.tracking.watchedThreadsUnreadCount;
+    }
     return this.args.channel.tracking.unreadCount;
   }
 
@@ -30,12 +33,18 @@ export default class ChatChannelUnreadIndicator extends Component {
       return this.#hasChannelMentions();
     }
     return (
-      this.args.channel.isDirectMessageChannel || this.#hasChannelMentions()
+      this.args.channel.isDirectMessageChannel ||
+      this.#hasChannelMentions() ||
+      this.#hasWatchedThreads()
     );
   }
 
   #hasChannelMentions() {
     return this.args.channel.tracking.mentionCount > 0;
+  }
+
+  #hasWatchedThreads() {
+    return this.args.channel.tracking.watchedThreadsUnreadCount > 0;
   }
 
   #onlyMentions() {

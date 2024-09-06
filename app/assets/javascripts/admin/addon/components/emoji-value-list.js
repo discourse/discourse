@@ -10,7 +10,6 @@ import I18n from "discourse-i18n";
 @classNameBindings(":value-list", ":emoji-list")
 export default class EmojiValueList extends Component {
   values = null;
-  validationMessage = null;
   emojiPickerIsActive = false;
   isEditorFocused = false;
 
@@ -137,16 +136,14 @@ export default class EmojiValueList extends Component {
   }
 
   _validateInput(input) {
-    this.set("validationMessage", null);
-
     if (!emojiUrlFor(input)) {
-      this.set(
-        "validationMessage",
+      this.setValidationMessage(
         I18n.t("admin.site_settings.emoji_list.invalid_input")
       );
       return false;
     }
 
+    this.setValidationMessage(null);
     return true;
   }
 

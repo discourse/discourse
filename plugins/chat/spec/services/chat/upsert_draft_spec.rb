@@ -29,6 +29,8 @@ RSpec.describe Chat::UpsertDraft do
     end
 
     context "when all steps pass" do
+      it { is_expected.to run_successfully }
+
       it "creates draft if data provided and not existing draft" do
         params[:data] = MultiJson.dump(message: "a")
 

@@ -158,6 +158,8 @@ lt:
             title: "Įprastas"
           tracking:
             title: "Seku"
+          watching:
+            title: "Stebiu"
         participants_other_count:
           one: "+%{count}"
           few: "+%{count}"

@@ -12,6 +12,8 @@ fi:
     poll_minimum_trust_level_to_create: "Vähimmäisluottamustaso, jolla voi luoda kyselyitä."
     poll_create_allowed_groups: "Ryhmät, joilla on oikeus luoda kyselyitä."
     poll_groupable_user_fields: "Käyttäjäkenttäluokat, joiden mukaan kyselyiden tuloksia voi ryhmitellä ja suodattaa."
+    poll_export_data_explorer_query_id: "Tietoselauskyselyn tunnus, jota käytetään äänestystulosten viemiseen (poista käytöstä arvolla 0)."
+    poll_export_ranked_choice_data_explorer_query_id: "Tietoselauskyselyn tunnus, jota käytetään IRV-äänestystulosten viemiseen."
     poll_default_public: "Ota \"Näytä äänestäneet\" -valinta käyttöön oletuksena luotaessa uutta kyselyä."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
@@ -51,6 +53,7 @@ fi:
       one: Tähän kyselyyn vaaditaan vähintään %{count} ääni.
       other: Tähän kyselyyn vaaditaan vähintään %{count} ääntä.
     ranked_choice:
+      vote_options_mismatch: "IRV-äänestyksessä äänessä tehtyjen valintojen määrän täytyy vastata vaihtoehtojen määrää. Vaihtoehtojen määrä on %{count}, ja tehtyjen valintojen määrä oli %{provided}."
       no_group_results_support: "Virheellinen kyselytyyppi, ranked_choice ei tue ryhmiteltyjä tuloksia."
     topic_must_be_open_to_toggle_status: "Vain avoimessa ketjussa voi muuttaa kyselyn tilaa."
     only_staff_or_op_can_toggle_status: "Vain henkilökunta tai kyselyn laatija voi muuttaa kyselyn tilaa."

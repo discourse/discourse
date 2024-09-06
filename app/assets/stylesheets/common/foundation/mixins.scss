@@ -262,6 +262,18 @@ $hpad: 0.65em;
   border-radius: 0.6em;
   text-decoration: none;
   text-wrap: nowrap;
+
+  &.--bot {
+    background: var(--success-low);
+  }
+
+  &.--wide {
+    background: var(--highlight-low-or-medium);
+  }
+
+  &.--current {
+    background: var(--tertiary-400);
+  }
 }
 
 @mixin nav-active() {

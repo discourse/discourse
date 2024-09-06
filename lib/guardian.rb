@@ -136,17 +136,14 @@ class Guardian
     return false if !category
     return false if !category_group_moderation_allowed?
 
-    reviewable_by_group_id = category.reviewable_by_group_id
-    return false if reviewable_by_group_id.blank?
+    @group_moderator_categories ||= {}
 
-    @category_group_moderator_groups ||= {}
-
-    if @category_group_moderator_groups.key?(reviewable_by_group_id)
-      @category_group_moderator_groups[reviewable_by_group_id]
+    if @group_moderator_categories.key?(category.id)
+      @group_moderator_categories[category.id]
     else
-      @category_group_moderator_groups[
-        reviewable_by_group_id
-      ] = category_group_moderator_scope.exists?("categories.id": category.id)
+      @group_moderator_categories[category.id] = category_group_moderator_scope.exists?(
+        id: category.id,
+      )
     end
   end
 
@@ -155,9 +152,9 @@ class Guardian
   end
 
   def is_developer?
-    @user && is_admin? &&
+    @user &&
       (
-        Rails.env.development? || Developer.user_ids.include?(@user.id) ||
+        Rails.env.development? || (is_admin? && Developer.user_ids.include?(@user.id)) ||
           (
             Rails.configuration.respond_to?(:developer_emails) &&
               Rails.configuration.developer_emails.include?(@user.email)
@@ -692,8 +689,9 @@ class Guardian
   end
 
   def category_group_moderator_scope
-    Category.joins(
-      "INNER JOIN group_users ON group_users.group_id = categories.reviewable_by_group_id",
-    ).where("group_users.user_id = ?", user.id)
+    Category
+      .joins(:category_moderation_groups)
+      .joins("INNER JOIN group_users ON group_users.group_id = category_moderation_groups.group_id")
+      .where("group_users.user_id": user.id)
   end
 end

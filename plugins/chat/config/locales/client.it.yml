@@ -39,6 +39,10 @@ it:
       chat_messages_count: "Messaggi di chat"
       chat_channels_count: "Canali di chat"
       chat_users_count: "Utenti della chat"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} messaggio di chat"
+          other: "%{formatted_number} messaggi di chat"
     chat:
       text_copied: Testo copiato negli appunti
       link_copied: Link copiato negli appunti
@@ -130,7 +134,6 @@ it:
       header_indicator_preference:
         title: "Mostra l'indicatore di attività nell'intestazione"
         all_new: "Tutti i nuovi messaggi"
-        dm_and_mentions: "Messaggi diretti e menzioni"
         only_mentions: "Solo menzioni"
         never: "Mai"
       separate_sidebar_mode:
@@ -600,10 +603,10 @@ it:
         notifications:
           regular:
             title: "Normale"
-            description: "Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde."
           tracking:
             title: "Contenuto seguito"
-            description: "Il conteggio delle nuove risposte a questa discussione sarà visualizzato nell'elenco delle discussioni e nel canale. Sarai avvisato se qualcuno menziona il tuo @nome in questa discussione."
+          watching:
+            title: "In osservazione"
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"

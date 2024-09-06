@@ -39,12 +39,16 @@
       this.componentName
       setting=this.setting
       value=this.buffered.value
-      validationMessage=this.validationMessage
       preview=this.preview
       isSecret=this.isSecret
       allowAny=this.allowAny
       changeValueCallback=this.changeValueCallback
+      setValidationMessage=this.setValidationMessage
     }}
+    <SettingValidationMessage @message={{this.validationMessage}} />
+    {{#if this.displayDescription}}
+      <SiteSettings::Description @description={{this.setting.description}} />
+    {{/if}}
   {{/if}}
 </div>
 
@@ -53,6 +57,7 @@
     <DButton
       @action={{this.update}}
       @icon="check"
+      @disabled={{this.disableSaveButton}}
       class="ok setting-controls__ok"
     />
     <DButton
@@ -71,7 +76,7 @@
   {{/if}}
 
   <DButton
-    class="btn-default undo"
+    class="btn-default undo setting-controls__undo"
     @action={{this.resetDefault}}
     @icon="undo"
     @label="admin.settings.reset"

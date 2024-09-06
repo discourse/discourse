@@ -118,6 +118,8 @@ sk:
         label: "Možnosti"
         ranked_choice:
           abstain: "Zdržať sa hlasovania"
+          highest_priority: "(najvyššia priorita)"
+          lowest_priority: "(najnižšia priorita)"
           login: "Prihláste sa a hlasujte!"
       error_while_toggling_status: "Ľutujeme, nastala chyba pri prepínaní stavu tohto hlasovania."
       error_while_casting_votes: "Ľutujeme, nastala chyba pri prideľovaní Vašich hlasov."

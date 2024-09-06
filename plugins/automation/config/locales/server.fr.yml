@@ -56,6 +56,9 @@ fr:
       pm_created:
         title: Message privé créé
         description: Lorsqu'un MP valide est créé, l'automatisation est déclenchée
+      topic_tags_changed:
+        title: Les balises du sujet ont été modifiées
+        description: Lorsque les balises d'un sujet sont modifiées, l'automatisation est déclenchée
       topic:
         title: Sujet
         description: Le script associé ne sera utilisé que sur le sujet spécifié, cela est utile, par exemple, pour les scripts utilisant la validation

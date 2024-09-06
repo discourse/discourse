@@ -260,7 +260,6 @@ et:
       user_count: "Registreerumised"
       active_user_count: "Aktiivsed kasutajad"
       contact: "Võta meiega ühendust"
-      contact_info: "Kriitilise vea või edasilükkamatu probleemi korral võta palun meiega ühendust aadressil %{contact_info}."
       activities:
         topics:
           one: "%{formatted_number} teema"
@@ -1304,6 +1303,10 @@ et:
       title: "Liitu"
       failed: "Miski läks valesti - võimalik, et see meiliaadress on juba registreeritud. Proovi viidet unustatud parooli lehele"
       activation_title: "Aktiveeri oma konto"
+      progress_bar:
+        signup: "Liitu"
+        approve: "Kinnita"
+        login: "Logi sisse"
     forgot_password:
       title: "Parooli uuendamine"
       action: "Unustasin oma parooli"
@@ -2661,6 +2664,7 @@ et:
         show: "Näita"
         about: "Teave"
   admin_js:
+    settings: "Sätted"
     admin:
       title: "Discourse Admin"
       moderator: "Moderaator"
@@ -2906,6 +2910,7 @@ et:
           enabled: "Sisse lülitatud?"
           edit: "Muuda"
           delete: "Kustuta"
+          flags_tab: "Tähised"
           form:
             save: "Salvesta"
             name: "Nimi"
@@ -2915,7 +2920,6 @@ et:
             post: "postitused"
       plugins:
         title: "Plugin"
-        installed: "Paigaldatud pluginad"
         name: "Nimi"
         none_installed: "Ühtegi pluginat ei ole paigaldatud."
         version: "Versioon"
@@ -2944,7 +2948,7 @@ et:
         menu:
           backups: "Varukoopiad"
           logs: "Logid"
-        none: "Ühtegi varukoopiat pole."
+        none: "Ühtegi varukoopiat pole"
         read_only:
           enable:
             title: "Lülita kirjutuskaitstud režiim sisse"
@@ -2978,7 +2982,6 @@ et:
             title: "Eemalda varukoopia"
             confirm: "Oled kindel, et soovid selle varukoopia hävitada?"
           restore:
-            is_disabled: "Taastamine on saidi sätetes välja lülitatud."
             label: "Taasta"
             title: "Taasta varukoopia"
             confirm: "Oled Sa kindel, et soovid taastada seda varukoopiat?"

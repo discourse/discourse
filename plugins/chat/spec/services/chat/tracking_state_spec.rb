@@ -44,6 +44,7 @@ RSpec.describe ::Chat::TrackingState do
             channel_1.id => {
               unread_count: 4, # 2 messages + 2 thread original messages
               mention_count: 0,
+              watched_threads_unread_count: 0,
             },
           )
         end
@@ -55,11 +56,13 @@ RSpec.describe ::Chat::TrackingState do
               channel_id: channel_1.id,
               unread_count: 1,
               mention_count: 0,
+              watched_threads_unread_count: 0,
             },
             thread_2.id => {
               channel_id: channel_1.id,
               unread_count: 2,
               mention_count: 0,
+              watched_threads_unread_count: 0,
             },
           )
         end
@@ -74,6 +77,7 @@ RSpec.describe ::Chat::TrackingState do
               channel_1.id => {
                 unread_count: 4, # 2 messages + 2 thread original messages
                 mention_count: 0,
+                watched_threads_unread_count: 0,
               },
             )
           end
@@ -89,6 +93,7 @@ RSpec.describe ::Chat::TrackingState do
             channel_1.id => {
               unread_count: 4, # 2 messages + 2 thread original messages
               mention_count: 0,
+              watched_threads_unread_count: 0,
             },
           )
         end
@@ -100,6 +105,7 @@ RSpec.describe ::Chat::TrackingState do
               channel_id: channel_1.id,
               unread_count: 2,
               mention_count: 0,
+              watched_threads_unread_count: 0,
             },
           )
         end
@@ -117,10 +123,12 @@ RSpec.describe ::Chat::TrackingState do
           channel_1.id => {
             unread_count: 4, # 2 messages + 2 thread original messages
             mention_count: 0,
+            watched_threads_unread_count: 0,
           },
           channel_2.id => {
             unread_count: 0,
             mention_count: 0,
+            watched_threads_unread_count: 0,
           },
         )
       end
@@ -132,21 +140,25 @@ RSpec.describe ::Chat::TrackingState do
             channel_id: channel_1.id,
             unread_count: 1,
             mention_count: 0,
+            watched_threads_unread_count: 0,
           },
           thread_2.id => {
             channel_id: channel_1.id,
             unread_count: 2,
             mention_count: 0,
+            watched_threads_unread_count: 0,
           },
           thread_3.id => {
             channel_id: channel_2.id,
             unread_count: 0,
             mention_count: 0,
+            watched_threads_unread_count: 0,
           },
           thread_4.id => {
             channel_id: channel_2.id,
             unread_count: 0,
             mention_count: 0,
+            watched_threads_unread_count: 0,
           },
         )
       end

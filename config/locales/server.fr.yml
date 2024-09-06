@@ -1767,6 +1767,7 @@ fr:
     max_reply_history: "Nombre maximal de réponses à développer en déroulant « en réponse à »"
     topics_per_period_in_top_summary: "Nombre de meilleurs sujets affichés dans le résumé par défaut des meilleurs sujets."
     topics_per_period_in_top_page: "Nombre de meilleurs sujets affichés lorsqu'on sélectionne « Voir plus » des meilleurs sujets."
+    redirect_users_to_top_page: "Redirigez automatiquement les nouveaux utilisateurs et les utilisateurs absents depuis longtemps vers la page d'accueil. S'applique uniquement lorsque « top » est présent dans le paramètre « top menu » du site."
     top_page_default_timeframe: "Période de temps par défaut de la première page pour les utilisateurs anonymes (s'ajuste automatiquement pour les utilisateurs connectés en fonction de leur dernière visite)."
     moderators_view_emails: "Autorisez les modérateurs à consulter les adresses e-mail des utilisateurs."
     prioritize_username_in_ux: "Afficher le nom d'utilisateur en premier sur la page d'un utilisateur, sa carte et ses messages (si cette option est désactivée, le nom complet est affiché en premier)"
@@ -1968,6 +1969,7 @@ fr:
     min_trust_to_edit_post: "Le niveau de confiance minimal requis pour modifier des messages."
     edit_post_allowed_groups: "Groupes autorisés à modifier des publications. Les administrateurs et les modérateurs peuvent toujours modifier les publications."
     min_trust_to_allow_self_wiki: "Le niveau de confiance minimal requis pour transformer ses propres messages en type wiki."
+    self_wiki_allowed_groups: "Autorisez les utilisateurs de ces groupes à créer leurs propres publications sur le wiki. Les administrateurs et les modérateurs peuvent toujours créer leurs propres publications sur le wiki."
     min_trust_to_send_messages: "OBSOLÈTE, utilisez plutôt le paramètre « Groupes activés par messages directs ». Le niveau de confiance minimal requis pour créer de nouveaux messages directs."
     min_trust_to_send_email_messages: "Le niveau de confiance minimal pour envoyer un message privé par e-mail."
     send_email_messages_allowed_groups: "Groupes autorisés à envoyer des messages personnels par e-mail. Les administrateurs et les modérateurs peuvent toujours envoyer des messages personnels par e-mail."
@@ -2041,6 +2043,7 @@ fr:
     tos_url: "Si vous disposez déjà de conditions générales d'utilisation hébergées ailleurs que vous souhaitez utiliser, vous pouvez renseigner leur URL complète ici."
     privacy_policy_url: "Si vous disposez déjà d'une politique de confidentialité hébergée ailleurs que vous voulez utiliser, vous pouvez renseigner son URL complète ici."
     log_anonymizer_details: "Indique s'il faut conserver les informations d'un utilisateur dans le journal après son anonymisation."
+    display_eu_visitor_stats: "Affichez le nombre de visiteurs internationaux et européens sur la page /about."
     newuser_spam_host_threshold: "Combien de fois un nouvel utilisateur peut publier un lien vers le même domaine dans la limite de leur « newuser_spam_host_threshold » messages avant d'être considéré comme du spam."
     allowed_spam_host_domains: "Une liste des domaines exclus des hôtes testés pour spam. Les nouveaux utilisateurs pourront toujours créer des messages contenant des liens vers ces domaines."
     staff_like_weight: "La pondération à accorder aux « J'aime » provenant d'un responsable (les autres « J'aime » ont une pondération de 1)."
@@ -2241,6 +2244,7 @@ fr:
     embed_username_required: "Un nom d'utilisateur est nécessaire pour la création du sujet."
     notify_about_reviewable_item_after: "Si certains éléments susceptibles d'être révisés n'ont pas été traités après ces nombreuses heures, envoyez un message personnel aux modérateurs. Réglez l'option sur 0 pour la désactiver."
     delete_drafts_older_than_n_days: "Supprimez les brouillons qui n'ont pas été modifiés depuis plus de (n) jours."
+    delete_merged_stub_topics_after_days: "Délai en jours avant la suppression automatique des sujets brouillon entièrement fusionnés. Réglez ce paramètre sur -1 pour ne jamais supprimer. Réglez-le sur 0 pour supprimer immédiatement."
     bootstrap_mode_min_users: "Nombre minimal d'utilisateurs requis pour désactiver le mode bootstrap et supprimer le bouton Pour commencer (réglez sur 0 pour le désactiver, cela peut prendre jusqu'à 24 heures)"
     prevent_anons_from_downloading_files: "Empêcher les utilisateurs anonymes de télécharger les pièces jointes."
     secure_uploads: 'Limite l''accès à TOUS les fichiers envoyés (image, vidéo, audio, texte, PDF, ZIP, etc.). Si le paramètre « connexion requise » est activé, seuls les utilisateurs connectés peuvent accéder aux fichiers envoyés. Sinon, l''accès sera limité uniquement aux contenus multimédias des messages et catégories privés. ATTENTION : ce paramètre est complexe et nécessite des connaissances d''administration approfondies. Consultez <a target="_blank" href="https://meta.discourse.org/t/-/140017">ce sujet sur les téléversements sécurisés</a> pour en savoir plus.'
@@ -2385,6 +2389,8 @@ fr:
     use_email_for_username_and_name_suggestions: "Utiliser la première moitié des adresses e-mail pour suggérer des noms d'utilisateur et des pseudos. Veuillez noter que cela permet à chacun de facilement deviner les adresses e-mail entières des utilisateurs (car une grande part de ceux-ci sont inscrits à des services communément utilisés tels que GMail)."
     use_name_for_username_suggestions: "Utiliser le nom complet d'un utilisateur lorsque vous suggérez des noms d'utilisateur."
     suggest_weekends_in_date_pickers: "Inclure les week-ends dans les suggestions du sélectionneur de date (désactivez ce paramètre si vous n'utilisez Discourse que les jours de semaine)."
+    show_bottom_topic_map: "Affiche la carte du sujet en bas du sujet lorsqu'il contient 10 réponses ou plus."
+    show_topic_map_in_topics_without_replies: "Affiche la carte du sujet même si le sujet ne comprend aucune réponse."
     splash_screen: "Affiche un écran de chargement temporaire pendant le chargement des ressources du site"
     navigation_menu: "Spécifiez la barre latérale ou la liste déroulante d'en-tête comme menu de navigation principal de votre site. La barre latérale est recommandée."
     default_navigation_menu_categories: "Les catégories sélectionnées seront affichées par défaut dans la section Catégories du menu de navigation."
@@ -2394,6 +2400,7 @@ fr:
     experimental_topics_filter: "EXPÉRIMENTAL : activer l'itinéraire de filtrage des sujets expérimentaux dans /filter"
     enable_experimental_lightbox: "EXPÉRIMENTAL : remplacer la visionneuse d'image par défaut par le design remanié."
     enable_experimental_bookmark_redesign_groups: "EXPÉRIMENTAL : affichez un menu d'accès rapide pour les signets sur les publications et une nouvelle fenêtre modale repensée"
+    glimmer_header_mode: "Contrôlez si la nouvelle implémentation d'en-tête « Glimmer » est utilisée. La valeur « auto » s'activera automatiquement une fois que tous vos thèmes et extensions seront prêts. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "EXPÉRIMENTAL : activez la nouvelle implémentation de la liste de sujets « Glimmer ». Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions sur la base de celui-ci tant que l'implémentation n'est pas finalisée et annoncée."
     experimental_form_templates: "EXPÉRIMENTAL : activez la fonctionnalité des modèles de formulaires. <b>Une fois la fonctionnalité activée,</b> gérez les modèles dans <a href='%{base_path}/admin/customize/form-templates'>Personnaliser/modèles</a>."
     admin_sidebar_enabled_groups: "Activez la navigation dans la barre latérale pour l'interface utilisateur d'administration pour les groupes spécifiés, qui remplace les boutons de navigation d'administration de niveau supérieur."
@@ -2426,6 +2433,7 @@ fr:
       invalid_reply_by_email_address: "La valeur doit contenir « %{reply_key} » et être différente de l'e-mail de notification."
       invalid_alternative_reply_by_email_addresses: "Toutes les valeurs doivent contenir « %{reply_key} » et être différentes de l'e-mail de notification."
       invalid_domain_hostname: "Ne peut inclure les caractères « * » ou « ? »."
+      invalid_allowed_iframes_url: "Les URL Iframe doivent commencer par http:// ou https:// et avoir au moins un « / » supplémentaire"
       invalid_csp_script_src: "La valeur doit être « unsafe-eval » ou « wasm-unsafe-eval », ou sous la forme « <hash algorithm>-<base64 value> » où les algorithmes de hachage pris en charge sont sha256, sha384 ou sha512. Assurez-vous que votre saisie est entourée de guillemets simples."
       pop3_polling_host_is_empty: "Vous devez définir « pop3 polling host » avant d'activer le relevé via POP3."
       pop3_polling_username_is_empty: "Vous devez définir « pop3 polling username » avant d'activer le relevé via POP3."
@@ -2612,6 +2620,7 @@ fr:
     autoclosed_disabled: "Ce sujet est maintenant ouvert. Les nouvelles réponses sont autorisées."
     autoclosed_disabled_lastpost: "Ce sujet est maintenant ouvert. Les nouvelles réponses sont autorisées."
     auto_deleted_by_timer: "Supprimé automatiquement par une action planifiée."
+    auto_deleted_by_merge: "Supprimé automatiquement par fusion."
   login:
     invalid_second_factor_method: "La méthode à deux facteurs sélectionnée n'est pas valide."
     not_enabled_second_factor_method: "La méthode à deux facteurs sélectionnée n'est pas activée pour votre compte."
@@ -4873,18 +4882,31 @@ fr:
           default_locale:
             label: "Langue "
       privacy:
+        title: "Accès des membres"
         fields:
           login_required:
             label: "Visibilité"
+            description: "Votre communauté est-elle publique ou privée ?"
             choices:
               public:
                 label: "Public"
               private:
                 label: "Privé"
           invite_only:
+            label: "Inscription"
+            description: "Comment les membres peuvent-ils rejoindre cette communauté ?"
             choices:
+              sign_up:
+                label: "S'inscrire"
               invite_only:
                 label: "Sur invitation uniquement"
+          must_approve_users:
+            description: "Souhaitez-vous approuver les comptes des membres ?"
+            choices:
+              "no":
+                label: "Non, les nouveaux membres peuvent s'inscrire immédiatement"
+              "yes":
+                label: "Oui, les nouveaux membres doivent être approuvés par les modérateurs"
           chat_enabled:
             placeholder: "Activer la discussion"
             extra_description: "Interagissez avec vos membres en temps réel"

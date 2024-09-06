@@ -18,9 +18,9 @@ export function resetDecorators() {
   _decorators = {};
 }
 
-export default Component.extend({
+export default class PluginConnector extends Component {
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     const args = this.args || {};
     Object.keys(args).forEach((key) => {
@@ -68,31 +68,31 @@ export default Component.extend({
       connectorInfo
     );
     connectorClass?.setupComponent?.call(this, merged, this);
-  },
+  }
 
   didReceiveAttrs() {
-    this._super(...arguments);
+    super.didReceiveAttrs(...arguments);
 
     this._decoratePluginOutlets();
-  },
+  }
 
   @afterRender
   _decoratePluginOutlets() {
     (_decorators[this.connector.outletName] || []).forEach((dec) =>
       dec(this.element, this.args)
     );
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     const connectorClass = this.connector.connectorClass;
     connectorClass?.teardownComponent?.call(this, this);
-  },
+  }
 
   send(name, ...args) {
     const connectorClass = this.connector.connectorClass;
     const action = connectorClass?.actions?.[name];
-    return action ? action.call(this, ...args) : this._super(name, ...args);
-  },
-});
+    return action ? action.call(this, ...args) : super.send(name, ...args);
+  }
+}

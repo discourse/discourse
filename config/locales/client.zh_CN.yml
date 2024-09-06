@@ -173,7 +173,7 @@ zh_CN:
     broken_decorator_alert: "帖子可能无法正确显示，因为您的网站上的其中一个帖子内容装饰器引发错误。"
     broken_page_change_alert: "onPageChange 处理程序出错。请查看浏览器开发者工具了解更多信息。"
     broken_plugin_alert: "由插件 '%{name}' 引起"
-    broken_transformer_alert: "出现了一个错误。你的网站可能无法正常运行。"
+    broken_transformer_alert: "出错了。您的网站可能无法正常运行。"
     critical_deprecation:
       notice: "<b>[管理员通知]</b> 您的一个主题或插件需要更新，以便与即将发布的 Discourse 核心更改兼容。"
       id: "(id:<em>%{id}</em>)"
@@ -240,6 +240,7 @@ zh_CN:
     now: "刚刚"
     read_more: "阅读更多"
     more: "更多"
+    more_options: "更多选项"
     x_more:
       other: "其他 %{count} 人"
     never: "从不"
@@ -280,22 +281,38 @@ zh_CN:
       post_count: "帖子"
       user_count: "注册"
       active_user_count: "活跃用户"
+      visitor_count: "访客"
+      eu_visitor_count: "来自欧盟的访客"
+      traffic_info_footer_MF: |
+        在过去 6 个月内，此网站每月向约 { total_visitors, plural,
+            other {# 人}
+        }提供内容，其中约 { eu_visitors, plural,
+            other {# 人}
+        }来自欧盟。
       contact: "联系我们"
-      contact_info: "如果出现影响此网站的关键问题或紧急事项，请联系我们：%{contact_info}。"
-      site_activity: "站点活动"
+      contact_info: "如果出现影响此网站的关键问题或紧急事项，请联系 %{contact_info}。"
+      site_activity: "网站活动"
+      view_more: "展开"
+      view_less: "收起"
       activities:
         topics:
-          other: "%{formatted_number}话题"
+          other: "%{formatted_number} 个话题"
         posts:
           other: "%{formatted_number} 个帖子"
         active_users:
           other: "%{formatted_number} 位活跃用户"
         sign_ups:
-          other: "%{formatted_number} 位注册"
+          other: "%{formatted_number} 个注册"
         likes:
           other: "%{formatted_number} 个赞"
+        visitors_MF: |
+          { total_count, plural,
+              other {{total_formatted_number} 位访客}
+          }，约 { eu_count, plural,
+              other {{eu_formatted_number}}
+          } 人来自欧盟
         periods:
-          last_7_days: "在最近 7 天"
+          last_7_days: "在过去 7 天"
           today: "今天"
           all_time: "所有时间"
       member_count:
@@ -306,11 +323,11 @@ zh_CN:
         other: "%{formatted_number} 位版主"
       report_inappropriate_content: "如果您发现任何不当内容，请立即与我们的版主和管理员进行对话。请记住，联系前请先登录。"
       site_age:
-        less_than_one_month: "创建于 < 1 个月前"
+        less_than_one_month: "过去 1 个月内创建"
         month:
-          other: "创建于 %{count} 个月前"
+          other: "%{count} 个月前创建"
         year:
-          other: "创建于 %{count} 年前"
+          other: "%{count} 年前创建"
     bookmarked:
       title: "加入书签"
       edit_bookmark: "编辑书签"
@@ -1290,26 +1307,50 @@ zh_CN:
         warnings: "官方警告"
         read_more_in_group: "想阅读更多？浏览 %{groupLink} 中的其他消息。"
         read_more: "想阅读更多？在<a href='%{basePath}/u/%{username}/messages'>个人消息</a>中浏览其他消息。"
-        read_more_personal_pm_MF: |
+        read_more_group_pm_MF: |
           { HAS_UNREAD_AND_NEW, select,
             true {
               { UNREAD, plural,
                    =0 {}
-                other {还有 <a href="{basePath}/u/{username}/messages/unread"># 个未读</a>话题}
+                other {还有 <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># 条未读</a>}
               }
               { NEW, plural,
                    =0 {}
-                other {和<a href="{basePath}/u/{username}/messages/new"># 个新</a>话题，或者浏览其他<a href="{basePath}/u/{username}/messages">个人消息</a>}
+                other {和 <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># 条新</a>消息，或浏览 {groupLink} 中的其他消息}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                other {还有 <a href="{basePath}/u/{username}/messages/unread"># 个未读</a>话题，或者浏览其他<a href="{basePath}/u/{username}/messages">个人消息</a>}
+                other {还有 <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># 条未读</a>消息，或浏览 {groupLink} 中的其他消息}
               }
               { NEW, plural,
                    =0 {}
-                other {还有 <a href="{basePath}/u/{username}/messages/new"># 个新</a>话题，或者浏览其他<a href="{basePath}/u/{username}/messages">个人消息</a>}
+                other {还有 <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># 条新</a>消息，或浏览 {groupLink} 中的其他消息}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                other {还有 <a href="{basePath}/u/{username}/messages/unread"># 条未读</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                other {和 <a href="{basePath}/u/{username}/messages/new"># 条新</a>消息，或者浏览其他<a href="{basePath}/u/{username}/messages">个人消息</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                other {还有 <a href="{basePath}/u/{username}/messages/unread"># 条未读</a>消息，或者浏览其他<a href="{basePath}/u/{username}/messages">个人消息</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                other {还有 <a href="{basePath}/u/{username}/messages/new"># 条新</a>消息，或者浏览其他<a href="{basePath}/u/{username}/messages">个人消息</a>}
               }
             }
             other {}
@@ -1896,16 +1937,17 @@ zh_CN:
       enabled: "此网站处于管理人员专用模式。请继续浏览，但回复、赞和其他操作仅限于管理人员。"
     logs_error_rate_notice:
       reached_hour_MF: |
-        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{rate, plural, other {# 个错误/小时}}</a>达到了网站设置中 {limit, plural, other {# 个错误/小时}}的限制。
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{rate, plural, other {# 个错误/小时}}</a>达到了 {limit, plural, other {# 个错误/小时}}的网站设置上限。
       reached_minute_MF: |
-        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{rate, plural, other {# 个错误/分钟}}</a>达到了网站设置中 {limit, plural, other {# 个错误/分钟}}的限制。
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{rate, plural, other {# 个错误/分钟}}</a>达到了 {limit, plural, other {# 个错误/分钟}}的网站设置上限。
       exceeded_hour_MF: |
-        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{rate, plural, other {# 个错误/小时}}</a>超过了网站设置中 {limit, plural, other {# 个错误/小时}}的限制。
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{rate, plural, other {# 个错误/小时}}</a>超过了 {limit, plural, other {# 个错误/小时}}的网站设置上限。
       exceeded_minute_MF: |
         <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
         other { # 个错误每分钟}
-        }</a>超出了站点设置中{ limit, plural,other { # 个错误每分钟}}的限制。
+        }</a>超过了 { limit, plural,other { # 个错误/分钟}}的网站设置上限。
     learn_more: "了解详情…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>了解详情…</a>"
     mute: 免打扰
     unmute: 取消免打扰
     last_post: 发布时间
@@ -1981,6 +2023,10 @@ zh_CN:
       associate: "已经有帐户？<a href='%{associate_link}'>登录</a>以关联您的 %{provider} 帐户。"
       activation_title: "激活您的帐户"
       already_have_account: "已经有帐户？"
+      progress_bar:
+        signup: "注册"
+        approve: "批准"
+        login: "登录"
     forgot_password:
       title: "密码重置"
       action: "我忘记密码了"
@@ -2172,6 +2218,7 @@ zh_CN:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} 大于允许的最大值 %{max_file_size}"
+        size_too_small: "%{provided_file_size} 小于允许的最小值 %{min_file_size}"
     emoji_picker:
       filter_placeholder: 搜索表情符号
       smileys_&_emotion: 笑脸与情感
@@ -3576,7 +3623,7 @@ zh_CN:
         none: "无子类别"
       colors_disabled: "您无法选择颜色，因为您的“category style”为“none”。"
     flagging:
-      title: "感谢你维护社区的文明！"
+      title: "感谢您维护社区的文明！"
       action: "举报帖子"
       take_action: "采取行动…"
       take_action_options:
@@ -3621,7 +3668,7 @@ zh_CN:
         left:
           other: "剩余 %{count} 个字符"
     flagging_topic:
-      title: "感谢你维护社区的文明！"
+      title: "感谢您维护社区的文明！"
       action: "举报话题"
       notify_action: "消息"
     topic_map:
@@ -4059,7 +4106,7 @@ zh_CN:
         everyone_can_use: "每个人都可以使用标签"
         usable_only_by_groups: "标签对所有人可见，但只有以下群组可以使用它们"
         visible_only_to_groups: "标签仅对以下群组可见"
-        cannot_save: "无法保存标签组。确保至少存在一个标签，标签组名称不为空且少于100个字符，并为标签权限选择一个组。"
+        cannot_save: "无法保存标签群组。确保至少存在一个标签，标签群组名称不为空且少于 100 个字符，并为标签权限选择一个群组。"
         tags_placeholder: "搜索或创建标签"
         parent_tag_placeholder: "可选"
         select_groups_placeholder: "选择群组…"
@@ -4080,7 +4127,7 @@ zh_CN:
       approval_not_required: "一旦用户接受此邀请，他们将被自动批准。"
       custom_message_template_forum: "嘿，您应该加入此论坛！"
       custom_message_template_topic: "嘿，我想您可能会喜欢此话题！"
-    forced_anonymous: "由于负载过大，暂时向所有人显示退出登录的用户可以看到的内容。"
+    forced_anonymous: "由于服务器负载过大，暂时向所有人都显示未登录用户可以看到的内容。"
     forced_anonymous_login_required: "该网站正处于极端负载状态，当前无法加载，请在几分钟后再试。"
     footer_nav:
       back: "返回"
@@ -4386,6 +4433,7 @@ zh_CN:
     powered_by_discourse: "由 Discourse 提供技术支持"
   admin_js:
     type_to_filter: "输入以筛选…"
+    settings: "设置"
     admin:
       title: "Discourse 管理员"
       moderator: "版主"
@@ -4420,7 +4468,7 @@ zh_CN:
         problems_found: "基于您当前网站设置的一些建议"
         new_features:
           title: "最新变化"
-          subtitle: "关于我们一直在添加的新功能和改进，详请参阅 <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>发行说明</a>。"
+          subtitle: "我们一直在发布新功能和改进。本页涵盖了重点内容，但您也可以点击“了解详情”查看详细的版本说明。"
           previous_announcements: "您可以在 <a href='%{url}' target='_blank'>Discourse Meta</a> 上查看以前的新功能公告。"
           learn_more: "了解详情…"
         last_checked: "上次检查"
@@ -4945,6 +4993,7 @@ zh_CN:
           back: "返回举报"
           delete: "删除"
           delete_confirm: '确定要删除“%{name}”吗？'
+          flags_tab: "举报"
           form:
             add_header: "添加举报"
             edit_header: "编辑举报"
@@ -4970,7 +5019,6 @@ zh_CN:
             move_down: "下移"
       plugins:
         title: "插件"
-        installed: "安装的插件"
         name: "名称"
         none_installed: "您没有安装任何插件。"
         version: "版本"
@@ -5008,10 +5056,13 @@ zh_CN:
         legacy: "旧版"
       backups:
         title: "备份"
+        files_title: "备份文件"
+        description: "Discourse 备份包括完整的网站数据库，其中包含网站上的所有内容：话题、帖子、用户、群组、设置、主题等。根据备份文件的创建方式，它可能包含也可能不包含上传内容。"
         menu:
           backups: "备份"
+          backup_files: "备份文件"
           logs: "日志"
-        none: "无可用备份。"
+        none: "无可用备份"
         read_only:
           enable:
             title: "启用只读模式"
@@ -5049,12 +5100,12 @@ zh_CN:
           download:
             label: "下载"
             title: "发送带有下载链接的电子邮件"
-            alert: "已通过电子邮件发送给您下载此备份的链接。"
+            alert: "已通过电子邮件发送给您下载此备份的链接"
           destroy:
             title: "移除备份"
             confirm: "确定要删除此备份吗？"
           restore:
-            is_disabled: "恢复在网站设置中已被禁用。"
+            is_disabled: "恢复功能目前已禁用。要启用此功能，请访问<a href='%{url}'>网站设置</a>。"
             label: "恢复"
             title: "恢复该备份"
             confirm: "确定要恢复此备份吗？"
@@ -6156,6 +6207,7 @@ zh_CN:
         show_overriden: "只显示被替换"
         show_outdated: "仅显示过期/无效"
         show_untranslated: "只显示未翻译的内容"
+        only_show_selected_locale: "仅显示所选区域中的结果"
         locale: "语言："
         more_than_50_results: "结果超过 50 个。请优化您的搜索。"
         no_results: "找不到匹配的网站文本"

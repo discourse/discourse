@@ -15,6 +15,8 @@ RSpec.describe About do
   after { DiscoursePluginRegistry.reset! }
 
   describe "#stats" do
+    use_redis_snapshotting
+
     it "adds plugin stats to the output" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
       register_stat("some_group", Proc.new { stats })
@@ -26,6 +28,13 @@ RSpec.describe About do
           some_group_count: 1000,
         ),
       )
+    end
+
+    it "uses the cache" do
+      cold_cache_count = track_sql_queries { described_class.new.stats }.count
+      hot_cache_count = track_sql_queries { described_class.new.stats }.count
+
+      expect(cold_cache_count + hot_cache_count).to eq(cold_cache_count)
     end
 
     it "does not add plugin stats to the output if they are missing one of the required keys" do
@@ -58,31 +67,28 @@ RSpec.describe About do
   end
 
   describe "#category_moderators" do
-    let(:user) { Fabricate(:user) }
-    let(:public_cat_moderator) { Fabricate(:user, last_seen_at: 1.month.ago) }
-    let(:private_cat_moderator) { Fabricate(:user, last_seen_at: 2.month.ago) }
-    let(:common_moderator) { Fabricate(:user, last_seen_at: 3.month.ago) }
-    let(:common_moderator_2) { Fabricate(:user, last_seen_at: 4.month.ago) }
+    fab!(:user)
+    fab!(:public_cat_moderator) { Fabricate(:user, last_seen_at: 1.month.ago) }
+    fab!(:private_cat_moderator) { Fabricate(:user, last_seen_at: 2.month.ago) }
+    fab!(:common_moderator) { Fabricate(:user, last_seen_at: 3.month.ago) }
+    fab!(:common_moderator_2) { Fabricate(:user, last_seen_at: 4.month.ago) }
 
-    let(:public_group) do
-      group = Fabricate(:public_group)
-      group.add(public_cat_moderator)
-      group.add(common_moderator)
-      group.add(common_moderator_2)
-      group
+    fab!(:public_group) do
+      Fabricate(:public_group, users: [public_cat_moderator, common_moderator, common_moderator_2])
     end
 
-    let(:private_group) do
-      group = Fabricate(:group)
-      group.add(private_cat_moderator)
-      group.add(common_moderator)
-      group.add(common_moderator_2)
-      group
+    fab!(:private_group) do
+      Fabricate(:group, users: [private_cat_moderator, common_moderator, common_moderator_2])
     end
 
-    let!(:public_cat) { Fabricate(:category, reviewable_by_group: public_group) }
-    let!(:private_cat) do
-      Fabricate(:private_category, group: private_group, reviewable_by_group: private_group)
+    fab!(:public_cat) { Fabricate(:category) }
+    fab!(:public_category_moderation_group) do
+      Fabricate(:category_moderation_group, category: public_cat, group: public_group)
+    end
+
+    fab!(:private_cat) { Fabricate(:private_category, group: private_group) }
+    fab!(:private_category_moderation_group) do
+      Fabricate(:category_moderation_group, category: private_cat, group: private_group)
     end
 
     it "lists moderators of the category that the current user can see" do
@@ -110,6 +116,19 @@ RSpec.describe About do
       results = about.category_moderators
       expect(results.size).to eq(2)
       results.each { |res| expect(res.moderators.size).to eq(2) }
+    end
+
+    it "doesn't list the same user twice as a category mod if the user is member of multiple groups" do
+      Fabricate(:category_moderation_group, category: public_cat, group: private_group)
+
+      results = About.new(nil).category_moderators
+      mods = results.find { |r| r.category.id == public_cat.id }.moderators
+      expect(mods.map(&:id)).to contain_exactly(
+        public_cat_moderator.id,
+        common_moderator.id,
+        common_moderator_2.id,
+        private_cat_moderator.id,
+      )
     end
   end
 

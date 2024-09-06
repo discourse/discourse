@@ -82,51 +82,19 @@ RSpec.describe Category do
     end
   end
 
-  describe "#review_group_id" do
+  describe "#category_moderation_groups" do
     fab!(:group)
-    fab!(:category) { Fabricate(:category_with_definition, reviewable_by_group: group) }
+    fab!(:category) { Fabricate(:category_with_definition) }
     fab!(:topic) { Fabricate(:topic, category: category) }
     fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:category_moderation_group) { Fabricate(:category_moderation_group, category:, group:) }
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
-    it "will add the group to the reviewable" do
-      SiteSetting.enable_category_group_moderation = true
-      reviewable = PostActionCreator.spam(user, post).reviewable
-      expect(reviewable.reviewable_by_group_id).to eq(group.id)
-    end
-
-    it "will add the group to the reviewable even if created manually" do
-      SiteSetting.enable_category_group_moderation = true
-      reviewable =
-        ReviewableFlaggedPost.create!(
-          created_by: user,
-          payload: {
-            raw: "test raw",
-          },
-          category: category,
-        )
-      expect(reviewable.reviewable_by_group_id).to eq(group.id)
-    end
-
-    it "will not add add the group to the reviewable" do
-      SiteSetting.enable_category_group_moderation = false
-      reviewable = PostActionCreator.spam(user, post).reviewable
-      expect(reviewable.reviewable_by_group_id).to be_nil
-    end
-
-    it "will nullify the group_id if destroyed" do
+    it "is destroyed if the group is destroyed" do
+      expect(category.category_moderation_groups).to contain_exactly(category_moderation_group)
       reviewable = PostActionCreator.spam(user, post).reviewable
       group.destroy
-      expect(category.reload.reviewable_by_group).to be_blank
-      expect(reviewable.reload.reviewable_by_group_id).to be_blank
-    end
-
-    it "will remove the reviewable_by_group if the category is updated" do
-      SiteSetting.enable_category_group_moderation = true
-      reviewable = PostActionCreator.spam(user, post).reviewable
-      category.reviewable_by_group_id = nil
-      category.save!
-      expect(reviewable.reload.reviewable_by_group_id).to be_nil
+      expect(category.reload.category_moderation_groups).to be_blank
     end
   end
 

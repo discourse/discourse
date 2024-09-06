@@ -41,6 +41,8 @@ class TopicView
     :user_custom_fields,
     :post_custom_fields,
     :post_number,
+    :include_suggested,
+    :include_related,
   )
 
   delegate :category, to: :topic, allow_nil: true, private: true
@@ -50,8 +52,10 @@ class TopicView
     1000
   end
 
+  CHUNK_SIZE = 20
+
   def self.chunk_size
-    20
+    CHUNK_SIZE
   end
 
   def self.default_post_custom_fields
@@ -531,16 +535,19 @@ class TopicView
   def category_group_moderator_user_ids
     @category_group_moderator_user_ids ||=
       begin
-        if SiteSetting.enable_category_group_moderation? &&
-             @topic.category&.reviewable_by_group.present?
+        if SiteSetting.enable_category_group_moderation? && @topic.category.present?
           posts_user_ids = Set.new(@posts.map(&:user_id))
           Set.new(
-            @topic
-              .category
-              .reviewable_by_group
-              .group_users
-              .where(user_id: posts_user_ids)
-              .pluck("distinct user_id"),
+            GroupUser
+              .joins(
+                "INNER JOIN category_moderation_groups ON category_moderation_groups.group_id = group_users.group_id",
+              )
+              .where(
+                "category_moderation_groups.category_id": @topic.category.id,
+                user_id: posts_user_ids,
+              )
+              .distinct
+              .pluck(:user_id),
           )
         else
           Set.new
@@ -644,6 +651,7 @@ class TopicView
               { include_random: true, pm_params: pm_params },
               self,
             )
+
           TopicQuery.new(@user).list_suggested_for(topic, **kwargs)
         end
     else
@@ -744,7 +752,8 @@ class TopicView
         usernames.flatten!
         usernames.uniq!
 
-        users = User.where(username: usernames).includes(:user_status).index_by(&:username)
+        users =
+          User.where(username_lower: usernames).includes(:user_status).index_by(&:username_lower)
 
         mentions.reduce({}) do |hash, (post_id, post_mentioned_usernames)|
           hash[post_id] = post_mentioned_usernames.map { |username| users[username] }.compact

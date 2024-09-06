@@ -55,9 +55,7 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
     end
 
     context "when params are valid" do
-      it "sets the service result as successful" do
-        expect(result).to be_a_success
-      end
+      it { is_expected.to run_successfully }
 
       it "publishes new last read to clients" do
         messages = MessageBus.track_publish { result }

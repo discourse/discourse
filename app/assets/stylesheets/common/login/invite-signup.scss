@@ -2,28 +2,8 @@
   padding: 2rem 3rem;
   background: var(--secondary);
 
-  .login-welcome-header {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto 1fr;
-    overflow-wrap: anywhere;
-  }
-
-  .login-title {
-    font-size: var(--font-up-6);
-    margin: 0;
-  }
-
-  .waving-hand {
-    width: 35px;
-    height: 35px;
-    margin-left: 0.5em;
-    align-self: center;
-  }
-
-  .login-subheader {
-    font-size: var(--font-up-1);
-    margin: 0;
+  .success-info p:last-child {
+    margin-bottom: 0;
   }
 
   .user-info {
@@ -34,10 +14,6 @@
   .avatar {
     width: 30px;
     height: 30px;
-  }
-
-  .col-image {
-    display: none;
   }
 
   .create-account__password {
@@ -64,5 +40,18 @@
   .disclaimer {
     color: var(--primary-medium);
     margin-top: 0.5em;
+  }
+
+  .invite-form form {
+    display: flex;
+    flex-direction: column;
+
+    .input-group {
+      &.email-input,
+      &.username-input,
+      &.name-input.name-required {
+        order: -1;
+      }
+    }
   }
 }

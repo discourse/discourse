@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import AboutPageUsers from "discourse/components/about-page-users";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -9,7 +10,19 @@ import i18n from "discourse-common/helpers/i18n";
 import escape from "discourse-common/lib/escape";
 import I18n from "discourse-i18n";
 
+const pluginActivitiesFuncs = [];
+
+export function addAboutPageActivity(name, func) {
+  pluginActivitiesFuncs.push({ name, func });
+}
+
+export function clearAboutPageActivities() {
+  pluginActivitiesFuncs.clear();
+}
+
 export default class AboutPage extends Component {
+  @service siteSettings;
+
   get moderatorsCount() {
     return this.args.model.moderators.length;
   }
@@ -57,7 +70,7 @@ export default class AboutPage extends Component {
   }
 
   get siteActivities() {
-    return [
+    const list = [
       {
         icon: "scroll",
         class: "topics",
@@ -104,6 +117,22 @@ export default class AboutPage extends Component {
         period: I18n.t("about.activities.periods.all_time"),
       },
     ];
+
+    if (this.siteSettings.display_eu_visitor_stats) {
+      list.splice(2, 0, {
+        icon: "user-secret",
+        class: "visitors",
+        activityText: I18n.messageFormat("about.activities.visitors_MF", {
+          total_count: this.args.model.stats.visitors_7_days,
+          eu_count: this.args.model.stats.eu_visitors_7_days,
+          total_formatted_number: number(this.args.model.stats.visitors_7_days),
+          eu_formatted_number: number(this.args.model.stats.eu_visitors_7_days),
+        }),
+        period: I18n.t("about.activities.periods.last_7_days"),
+      });
+    }
+
+    return list.concat(this.siteActivitiesFromPlugins());
   }
 
   get contactInfo() {
@@ -139,6 +168,33 @@ export default class AboutPage extends Component {
     }
   }
 
+  siteActivitiesFromPlugins() {
+    const stats = this.args.model.stats;
+    const statKeys = Object.keys(stats);
+
+    const configs = [];
+    for (const { name, func } of pluginActivitiesFuncs) {
+      let present = false;
+      const periods = {};
+      for (const stat of statKeys) {
+        const prefix = `${name}_`;
+        if (stat.startsWith(prefix)) {
+          present = true;
+          const period = stat.replace(prefix, "");
+          periods[period] = stats[stat];
+        }
+      }
+      if (!present) {
+        continue;
+      }
+      const config = func(periods);
+      if (config) {
+        configs.push(config);
+      }
+    }
+    return configs;
+  }
+
   <template>
     <section class="about__header">
       {{#if @model.banner_image}}
@@ -149,7 +205,7 @@ export default class AboutPage extends Component {
       <PluginOutlet
         @name="about-after-description"
         @connectorTagName="section"
-        @outletArgs={{hash model=this.model}}
+        @outletArgs={{hash model=@model}}
       />
     </section>
     <div class="about__main-content">
@@ -162,23 +218,37 @@ export default class AboutPage extends Component {
             </span>
           {{/each}}
         </div>
-        <h3>{{i18n "about.simple_title"}}</h3>
-        <div>{{htmlSafe @model.extended_site_description}}</div>
+
+        {{#if @model.extended_site_description}}
+          <h3>{{i18n "about.simple_title"}}</h3>
+          <div>{{htmlSafe @model.extended_site_description}}</div>
+        {{/if}}
 
         {{#if @model.admins.length}}
           <section class="about__admins">
             <h3>{{dIcon "users"}} {{i18n "about.our_admins"}}</h3>
-            <AboutPageUsers @users={{@model.admins}} @truncateAt={{12}} />
+            <AboutPageUsers @users={{@model.admins}} @truncateAt={{6}} />
           </section>
         {{/if}}
+        <PluginOutlet
+          @name="about-after-admins"
+          @connectorTagName="section"
+          @outletArgs={{hash model=@model}}
+        />
 
         {{#if @model.moderators.length}}
           <section class="about__moderators">
             <h3>{{dIcon "users"}} {{i18n "about.our_moderators"}}</h3>
-            <AboutPageUsers @users={{@model.moderators}} @truncateAt={{12}} />
+            <AboutPageUsers @users={{@model.moderators}} @truncateAt={{6}} />
           </section>
         {{/if}}
+        <PluginOutlet
+          @name="about-after-moderators"
+          @connectorTagName="section"
+          @outletArgs={{hash model=@model}}
+        />
       </div>
+
       <div class="about__right-side">
         <h3>{{i18n "about.contact"}}</h3>
         {{#if this.contactInfo}}

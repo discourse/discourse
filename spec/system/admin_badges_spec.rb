@@ -93,4 +93,23 @@ describe "Admin Badges Page", type: :system do
       expect(badges_page.form.field("target_posts")).to be_unchecked
     end
   end
+
+  context "when deleting a badge" do
+    let(:dialog) { PageObjects::Components::Dialog.new }
+
+    it "deletes a badge" do
+      badges_page.new_page
+      badges_page.form.field("enabled").accept
+      badges_page.form.field("name").fill_in("a name")
+      badges_page.form.field("badge_type_id").select(BadgeType::Bronze)
+      badges_page.form.field("icon").select("ambulance")
+      badges_page.submit_form
+      expect(badges_page).to have_saved_form
+      badges_page.form.field("name").fill_in("another name")
+      badges_page.delete_badge
+      dialog.click_yes
+
+      expect(page).to have_current_path("/admin/badges")
+    end
+  end
 end

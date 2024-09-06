@@ -1,12 +1,13 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { tagName } from "@ember-decorators/component";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  tagName: "",
-  copyIcon: "copy",
-  copyClass: "btn-primary",
+@tagName("")
+export default class CopyButton extends Component {
+  copyIcon = "copy";
+  copyClass = "btn-primary";
 
   @bind
   _restoreButton() {
@@ -16,7 +17,7 @@ export default Component.extend({
 
     this.set("copyIcon", "copy");
     this.set("copyClass", "btn-primary");
-  },
+  }
 
   @action
   copy() {
@@ -36,5 +37,5 @@ export default Component.extend({
 
       discourseDebounce(this._restoreButton, 3000);
     } catch (err) {}
-  },
-});
+  }
+}

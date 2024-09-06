@@ -267,7 +267,6 @@ vi:
       user_count: "Đăng ký"
       active_user_count: "Thành viên đang hoạt động"
       contact: "Liên lạc"
-      contact_info: "Trong trường hợp có bất kỳ sự cố nào ảnh hưởng tới trang này, xin vui lòng liên hệ với chúng tôi theo địa chỉ %{contact_info}."
       site_activity: "Hoạt động trang web"
       activities:
         topics:
@@ -1684,6 +1683,10 @@ vi:
       failed: "Có gì đó không đúng, có thể email này đã được đăng ký, thử liên kết quên mật khẩu"
       associate: "Đã có tài khoản? <a href='%{associate_link}'>Đăng nhập</a> để liên kết tài khoản %{provider} của bạn."
       activation_title: "Kích hoạt tài khoản của bạn"
+      progress_bar:
+        signup: "Đăng ký"
+        approve: "Duyệt"
+        login: "Đăng nhập"
     forgot_password:
       title: "Đặt lại mật khẩu"
       action: "Tôi đã quên mật khẩu của tôi"
@@ -3664,6 +3667,7 @@ vi:
         about: "Giới thiệu"
   admin_js:
     type_to_filter: "gõ vào bộ lọc…"
+    settings: "Cài đặt"
     admin:
       title: "Quản trị Diễn đàn"
       moderator: "Điều hành"
@@ -4068,6 +4072,7 @@ vi:
           edit: "Sửa"
           delete: "Xóa"
           delete_confirm: 'Bạn có chắc chắn muốn xóa "%{name}" không?'
+          flags_tab: "Dấu cờ - Flags"
           form:
             save: "Lưu lại"
             name: "Tên"
@@ -4077,7 +4082,6 @@ vi:
             post: "bài viết"
       plugins:
         title: "Plugin"
-        installed: "Đã cài Plugin"
         name: "Tên"
         none_installed: "Bạn chưa cài plugin nào."
         version: "Phiên bản"
@@ -4109,7 +4113,7 @@ vi:
         menu:
           backups: "Bản sao lưu"
           logs: "Log"
-        none: "Chưa có bản sao lưu."
+        none: "Chưa có bản sao lưu"
         read_only:
           enable:
             title: "Bật chế độ chỉ đọc"
@@ -4144,12 +4148,11 @@ vi:
           download:
             label: "Tải xuống"
             title: "Gửi email với liên kết tải xuống"
-            alert: "Một liên kết để tải xuống bản sao lưu này đã được gửi qua email cho bạn."
+            alert: "Một liên kết để tải xuống bản sao lưu này đã được gửi qua email cho bạn"
           destroy:
             title: "Xóa bản sao lưu này"
             confirm: "Bạn muốn hủy bản sao lưu này?"
           restore:
-            is_disabled: "Khôi phục đã bị cấm sử dụng trong cấu hình trang."
             label: "Khôi phục"
             title: "Khôi phục lại sao lưu này"
             confirm: "Bạn có chắc chắn muón phục hồi bản sao lưu này?"
@@ -4158,7 +4161,6 @@ vi:
             title: "Đưa csdl về trạng thái làm việc trước"
             confirm: "Bạn có chắc chắn muốn phục hồi csdl về trạng thái làm việc trước?"
         location:
-          local: "Lưu trữ cục bộ"
           s3: "S3"
         backup_storage_error: "Không thể truy cập bộ nhớ sao lưu: %{error_message}"
       export_csv:

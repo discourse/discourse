@@ -86,6 +86,8 @@ describe Chat::AutoJoinChannelBatch do
         context "when more than one membership is created" do
           let(:user_ids) { Fabricate.times(2, :user).map(&:id) }
 
+          it { is_expected.to run_successfully }
+
           it "does not recalculate user count" do
             ::Chat::ChannelMembershipManager.any_instance.expects(:recalculate_user_count).never
             result
@@ -101,6 +103,8 @@ describe Chat::AutoJoinChannelBatch do
         end
 
         context "when only one membership is created" do
+          it { is_expected.to run_successfully }
+
           it "recalculates user count" do
             ::Chat::ChannelMembershipManager.any_instance.expects(:recalculate_user_count).once
             result

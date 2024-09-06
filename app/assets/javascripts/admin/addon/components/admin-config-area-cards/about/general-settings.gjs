@@ -102,7 +102,7 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
         @onSet={{this.setImage}}
         as |field|
       >
-        <field.Image />
+        <field.Image @type="site_setting" />
       </form.Field>
 
       <form.Submit

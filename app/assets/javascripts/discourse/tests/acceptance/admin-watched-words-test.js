@@ -147,6 +147,18 @@ acceptance("Admin - Watched Words", function (needs) {
     assert.dom(".d-modal__body li .match").hasText("Hello");
     assert.dom(".d-modal__body li .tag").hasText("greeting");
   });
+
+  test("showing/hidding words - tag", async function (assert) {
+    await visit("/admin/customize/watched_words/action/tag");
+
+    await click(".show-words-checkbox");
+
+    assert.dom(".watched-word").hasText("​ hello → greeting");
+
+    await click(".show-words-checkbox");
+
+    assert.dom(".watched-word").doesNotExist();
+  });
 });
 
 acceptance("Admin - Watched Words - Emoji Replacement", function (needs) {

@@ -23,18 +23,20 @@ export default class Info extends Component {
   @service siteSettings;
 
   get showPM() {
-    return !this.args.topic.is_warning && this.args.topic.isPrivateMessage;
+    return (
+      !this.args.topicInfo.is_warning && this.args.topicInfo.isPrivateMessage
+    );
   }
 
   get totalParticipants() {
     return (
-      (this.args.topic.details.allowed_users?.length || 0) +
-      (this.args.topic.allowed_groups?.length || 0)
+      (this.args.topicInfo.details.allowed_users?.length || 0) +
+      (this.args.topicInfo.allowed_groups?.length || 0)
     );
   }
 
   get maxExtraItems() {
-    return this.args.topic.tags?.length > 0 ? 5 : 10;
+    return this.args.topicInfo.tags?.length > 0 ? 5 : 10;
   }
 
   get twoRows() {
@@ -46,8 +48,8 @@ export default class Info extends Component {
   }
 
   get tags() {
-    if (this.args.topic.tags) {
-      return renderTags(this.args.topic);
+    if (this.args.topicInfo.tags) {
+      return renderTags(this.args.topicInfo);
     }
   }
 
@@ -57,14 +59,14 @@ export default class Info extends Component {
 
   get participants() {
     const participants = [
-      ...this.args.topic.details.allowed_users,
-      ...this.args.topic.details.allowed_groups,
+      ...this.args.topicInfo.details.allowed_users,
+      ...this.args.topicInfo.details.allowed_groups,
     ];
     return participants.slice(0, this.maxExtraItems);
   }
 
   get pmHref() {
-    return this.currentUser.pmPath(this.args.topic);
+    return this.currentUser.pmPath(this.args.topicInfo);
   }
 
   @action
@@ -74,8 +76,8 @@ export default class Info extends Component {
     }
 
     e.preventDefault();
-    if (this.args.topic) {
-      DiscourseURL.routeTo(this.args.topic.firstPostUrl, {
+    if (this.args.topicInfo) {
+      DiscourseURL.routeTo(this.args.topicInfo.firstPostUrl, {
         keepFilter: true,
       });
     }
@@ -87,7 +89,7 @@ export default class Info extends Component {
     >
       <PluginOutlet
         @name="header-topic-info__before"
-        @outletArgs={{hash topic=@topic}}
+        @outletArgs={{hash topic=@topicInfo}}
       />
       <div class={{concatClass (if this.twoRows "two-rows") "extra-info"}}>
         <div class="title-wrapper">
@@ -102,56 +104,60 @@ export default class Info extends Component {
               </a>
             {{/if}}
 
-            {{#if (and @topic.fancyTitle @topic.url)}}
-              <Status @topic={{@topic}} @disableActions={{@disableActions}} />
+            {{#if (and @topicInfo.fancyTitle @topicInfo.url)}}
+              <Status
+                @topicInfo={{@topicInfo}}
+                @disableActions={{@disableActions}}
+              />
 
               <a
                 class="topic-link"
                 {{on "click" this.jumpToTopPost}}
-                href={{@topic.url}}
-                data-topic-id={{@topic.id}}
+                href={{@topicInfo.url}}
+                data-topic-id={{@topicInfo.id}}
               >
-                <span>{{htmlSafe @topic.fancyTitle}}</span>
+                <span>{{htmlSafe @topicInfo.fancyTitle}}</span>
               </a>
 
               <span class="header-topic-title-suffix">
                 <PluginOutlet
                   @name="header-topic-title-suffix"
-                  @outletArgs={{hash topic=@topic}}
+                  @outletArgs={{hash topic=@topicInfo}}
                 />
               </span>
             {{/if}}
           </h1>
 
-          {{#if (or @topic.details.loaded @topic.category)}}
+          {{#if (or @topicInfo.details.loaded @topicInfo.category)}}
             {{#if
               (and
-                @topic.category
+                @topicInfo.category
                 (or
-                  (not @topic.category.isUncategorizedCategory)
+                  (not @topicInfo.category.isUncategorizedCategory)
                   (not this.siteSettings.suppress_uncategorized_badge)
                 )
               )
             }}
               <div class="categories-wrapper">
-                {{#if @topic.category.parentCategory}}
+                {{#if @topicInfo.category.parentCategory}}
                   {{#if
                     (and
-                      @topic.category.parentCategory.parentCategory
+                      @topicInfo.category.parentCategory.parentCategory
                       this.site.desktopView
                     )
                   }}
                     {{categoryLink
-                      @topic.category.parentCategory.parentCategory
+                      @topicInfo.category.parentCategory.parentCategory
+                      (hash hideParent="true")
                     }}
                   {{/if}}
 
                   {{categoryLink
-                    @topic.category.parentCategory
+                    @topicInfo.category.parentCategory
                     (hash hideParent="true")
                   }}
                 {{/if}}
-                {{categoryLink @topic.category}}
+                {{categoryLink @topicInfo.category (hash hideParent="true")}}
               </div>
             {{/if}}
 
@@ -172,8 +178,8 @@ export default class Info extends Component {
                     <a
                       class="more-participants"
                       {{on "click" this.jumpToTopPost}}
-                      href={{@topic.url}}
-                      data-topic-id={{@topic.id}}
+                      href={{@topicInfo.url}}
+                      data-topic-id={{@topicInfo.id}}
                     >
                       +{{this.remainingParticipantCount}}
                     </a>
@@ -181,7 +187,7 @@ export default class Info extends Component {
                 </div>
               {{/if}}
               {{#if this.siteSettings.topic_featured_link_enabled}}
-                <FeaturedLink />
+                <FeaturedLink @topicInfo={{@topicInfo}} />
               {{/if}}
             </div>
           {{/if}}
@@ -189,7 +195,7 @@ export default class Info extends Component {
       </div>
       <PluginOutlet
         @name="header-topic-info__after"
-        @outletArgs={{hash topic=@topic}}
+        @outletArgs={{hash topic=@topicInfo}}
       />
     </div>
   </template>

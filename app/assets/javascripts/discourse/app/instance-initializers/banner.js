@@ -1,23 +1,25 @@
 import EmberObject from "@ember/object";
+import { setOwner } from "@ember/owner";
+import { service } from "@ember/service";
 import PreloadStore from "discourse/lib/preload-store";
 import { bind } from "discourse-common/utils/decorators";
 
-export default {
-  after: "message-bus",
+class BannerInit {
+  @service site;
+  @service messageBus;
 
-  initialize(owner) {
-    this.site = owner.lookup("service:site");
-    this.messageBus = owner.lookup("service:message-bus");
+  constructor(owner) {
+    setOwner(this, owner);
 
     const banner = EmberObject.create(PreloadStore.get("banner") || {});
     this.site.set("banner", banner);
 
     this.messageBus.subscribe("/site/banner", this.onMessage);
-  },
+  }
 
   teardown() {
     this.messageBus.unsubscribe("/site/banner", this.onMessage);
-  },
+  }
 
   @bind
   onMessage(data) {
@@ -26,5 +28,18 @@ export default {
     } else {
       this.site.set("banner", null);
     }
+  }
+}
+
+export default {
+  after: "message-bus",
+
+  initialize(owner) {
+    this.instance = new BannerInit(owner);
+  },
+
+  teardown() {
+    this.instance.teardown();
+    this.instance = null;
   },
 };

@@ -208,6 +208,14 @@ ja:
             valid_trust_levels:
               label: 有効な信頼レベル
               description: 投稿がこれらの信頼レベルのユーザーによって作成された場合にのみトリガーされます。デフォルトはすべての信頼レベルです。
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: ウォッチ中のカテゴリ
+              description: トピックがこれらのいずれかのカテゴリに該当する場合にのみトリガーされます
+            watching_tags:
+              label: ウォッチ中のタグ
+              description: トピックにこれらのいずれかのタグが設定されている場合にのみトリガーされます
         after_post_cook:
           fields:
             valid_trust_levels:

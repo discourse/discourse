@@ -139,6 +139,22 @@
                   <td>{{number this.model.stats.active_users_30_days}}</td>
                   <td>&mdash;</td>
                 </tr>
+                {{#if this.siteSettings.display_eu_visitor_stats}}
+                  <tr class="about-visitor-count">
+                    <td>{{i18n "about.visitor_count"}}</td>
+                    <td>{{number this.model.stats.visitors_last_day}}</td>
+                    <td>{{number this.model.stats.visitors_7_days}}</td>
+                    <td>{{number this.model.stats.visitors_30_days}}</td>
+                    <td>&mdash;</td>
+                  </tr>
+                  <tr class="about-eu-visitor-count">
+                    <td>{{i18n "about.eu_visitor_count"}}</td>
+                    <td>{{number this.model.stats.eu_visitors_last_day}}</td>
+                    <td>{{number this.model.stats.eu_visitors_7_days}}</td>
+                    <td>{{number this.model.stats.eu_visitors_30_days}}</td>
+                    <td>&mdash;</td>
+                  </tr>
+                {{/if}}
                 <tr class="about-like-count">
                   <td>{{i18n "about.like_count"}}</td>
                   <td>{{number this.model.stats.likes_last_day}}</td>
@@ -146,10 +162,7 @@
                   <td>{{number this.model.stats.likes_30_days}}</td>
                   <td>{{number this.model.stats.likes_count}}</td>
                 </tr>
-                {{#each
-                  this.site.displayed_about_plugin_stat_groups
-                  as |statGroupName|
-                }}
+                {{#each this.statGroups as |statGroupName|}}
                   <tr class={{concat "about-" statGroupName "-count"}}>
                     <td>{{i18n (concat "about." statGroupName "_count")}}</td>
                     <td>{{number
@@ -170,6 +183,10 @@
                 {{/each}}
               </tbody>
             </table>
+            {{#if this.siteSettings.display_eu_visitor_stats}}
+              <p class="about stats-table-footer"><small
+                >{{this.statsTableFooter}}</small></p>
+            {{/if}}
           </section>
         {{/if}}
 

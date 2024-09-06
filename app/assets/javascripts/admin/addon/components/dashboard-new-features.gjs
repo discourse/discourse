@@ -18,7 +18,7 @@ export default class DashboardNewFeatures extends Component {
 
   @bind
   loadNewFeatures() {
-    ajax("/admin/dashboard/whats-new.json")
+    ajax("/admin/whats-new.json")
       .then((json) => {
         const items = json.new_features.reduce((acc, feature) => {
           const key = moment(feature.released_at || feature.created_at).format(

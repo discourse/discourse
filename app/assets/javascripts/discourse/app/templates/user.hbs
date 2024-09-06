@@ -444,12 +444,12 @@
                     class="btn-danger btn-delete-user"
                   /></div>
               {{/if}}
+
+              <PluginOutlet
+                @name="user-profile-secondary"
+                @outletArgs={{hash model=this.model}}
+              />
             </dl>
-            <PluginOutlet
-              @name="user-profile-secondary"
-              @connectorTagName="div"
-              @outletArgs={{hash model=this.model}}
-            />
           </div>
         {{/unless}}
       </div>

@@ -1,18 +1,15 @@
 import Controller from "@ember/controller";
+import { action } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Controller.extend({
-  init() {
-    this._super(...arguments);
-
-    this.saveAttrNames = [
-      "muted_tags",
-      "tracked_tags",
-      "watched_tags",
-      "watching_first_post_tags",
-    ];
-  },
+export default class TagsController extends Controller {
+  saveAttrNames = [
+    "muted_tags",
+    "tracked_tags",
+    "watched_tags",
+    "watching_first_post_tags",
+  ];
 
   @discourseComputed(
     "model.watched_tags.[]",
@@ -22,17 +19,16 @@ export default Controller.extend({
   )
   selectedTags(watched, watchedFirst, tracked, muted) {
     return [].concat(watched, watchedFirst, tracked, muted).filter((t) => t);
-  },
+  }
 
-  actions: {
-    save() {
-      this.set("saved", false);
-      return this.model
-        .save(this.saveAttrNames)
-        .then(() => {
-          this.set("saved", true);
-        })
-        .catch(popupAjaxError);
-    },
-  },
-});
+  @action
+  save() {
+    this.set("saved", false);
+    return this.model
+      .save(this.saveAttrNames)
+      .then(() => {
+        this.set("saved", true);
+      })
+      .catch(popupAjaxError);
+  }
+}

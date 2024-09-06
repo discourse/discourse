@@ -36,7 +36,6 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :can_delete_sso_record,
              :api_key_count,
              :external_ids,
-             :similar_users,
              :similar_users_count
 
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
@@ -157,25 +156,12 @@ class AdminDetailedUserSerializer < AdminUserSerializer
     external_ids
   end
 
-  def similar_users
-    ActiveModel::ArraySerializer.new(
-      @options[:similar_users],
-      each_serializer: SimilarAdminUserSerializer,
-      scope: scope,
-      root: false,
-    ).as_json
-  end
-
-  def include_similar_users?
-    @options[:similar_users].present?
-  end
-
   def similar_users_count
     @options[:similar_users_count]
   end
 
   def include_similar_users_count?
-    @options[:similar_users].present?
+    @options[:similar_users_count].present?
   end
 
   def can_delete_sso_record
