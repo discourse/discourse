@@ -31,6 +31,13 @@ module("Discourse Chat | Unit | chat-audio", function (hooks) {
 
       this.notificationHandler = this.stub.getCall(0).args[0];
       this.playStub = sinon.stub(chatAudioManager, "play");
+
+      this.handleNotification = (data = {}) => {
+        if (!data.notification_type) {
+          data.notification_type = 30;
+        }
+        this.notificationHandler(data, this.siteSettings, this.currentUser);
+      };
     });
   });
 
@@ -39,33 +46,21 @@ module("Discourse Chat | Unit | chat-audio", function (hooks) {
   });
 
   test("it plays chat sound", function (assert) {
-    this.notificationHandler(
-      { notification_type: 30 },
-      this.siteSettings,
-      this.currentUser
-    );
+    this.handleNotification();
 
     assert.ok(this.playStub.calledOnce);
   });
 
   test("it skips chat sound for user in DND mode", function (assert) {
     this.currentUser.isInDoNotDisturb = () => true;
-    this.notificationHandler(
-      { notification_type: 30 },
-      this.siteSettings,
-      this.currentUser
-    );
+    this.handleNotification();
 
     assert.ok(this.playStub.notCalled);
   });
 
   test("it skips chat sound for user with no chat sound set", function (assert) {
     this.currentUser.user_option.chat_sound = null;
-    this.notificationHandler(
-      { notification_type: 30 },
-      this.siteSettings,
-      this.currentUser
-    );
+    this.handleNotification();
 
     assert.ok(this.playStub.notCalled);
   });
@@ -73,11 +68,8 @@ module("Discourse Chat | Unit | chat-audio", function (hooks) {
   test("it plays a chat sound for mentions", function (assert) {
     this.currentUser.user_option.chat_header_indicator_preference =
       "only_mentions";
-    this.notificationHandler(
-      { notification_type: 29 },
-      this.siteSettings,
-      this.currentUser
-    );
+
+    this.handleNotification({ notification_type: 29 });
 
     assert.ok(this.playStub.calledOnce);
   });
@@ -85,11 +77,8 @@ module("Discourse Chat | Unit | chat-audio", function (hooks) {
   test("it skips chat sound for non-mentions", function (assert) {
     this.currentUser.user_option.chat_header_indicator_preference =
       "only_mentions";
-    this.notificationHandler(
-      { notification_type: 30 },
-      this.siteSettings,
-      this.currentUser
-    );
+
+    this.handleNotification();
 
     assert.ok(this.playStub.notCalled);
   });
@@ -97,11 +86,8 @@ module("Discourse Chat | Unit | chat-audio", function (hooks) {
   test("it plays a chat sound for DMs", function (assert) {
     this.currentUser.user_option.chat_header_indicator_preference =
       "dm_and_mentions";
-    this.notificationHandler(
-      { notification_type: 30, isDirectMessageChannel: true },
-      this.siteSettings,
-      this.currentUser
-    );
+
+    this.handleNotification({ isDirectMessageChannel: true });
 
     assert.ok(this.playStub.calledOnce);
   });
@@ -109,11 +95,8 @@ module("Discourse Chat | Unit | chat-audio", function (hooks) {
   test("it skips chat sound for non-DM messages", function (assert) {
     this.currentUser.user_option.chat_header_indicator_preference =
       "dm_and_mentions";
-    this.notificationHandler(
-      { notification_type: 30, isDirectMessageChannel: false },
-      this.siteSettings,
-      this.currentUser
-    );
+
+    this.handleNotification({ isDirectMessageChannel: false });
 
     assert.ok(this.playStub.notCalled);
   });
