@@ -332,6 +332,7 @@ nav.post-controls {
         pointer-events: none;
       }
       &.d-hover,
+      &:hover,
       &:focus,
       &:active {
         outline: none;
@@ -344,7 +345,9 @@ nav.post-controls {
       &.admin {
         position: relative;
       }
+      // TODO go over the the d-hover style and remove the unnecessary ones when glimmer-post-menu replaces the widget version
       &.delete.d-hover,
+      &.delete:hover,
       &.delete:active,
       &.delete:focus {
         background: var(--danger);

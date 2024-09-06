@@ -1,10 +1,11 @@
 import DButton from "discourse/components/d-button";
+import concatClass from "discourse/helpers/concat-class";
 import i18n from "discourse-common/helpers/i18n";
 
 const PostMenuReplyButton = <template>
   {{#if @properties.canCreatePost}}
     <DButton
-      class="reply create fade-out"
+      class={{concatClass "reply" (if @properties.showLabel "create fade-out")}}
       ...attributes
       @icon="reply"
       @title="post.controls.reply"

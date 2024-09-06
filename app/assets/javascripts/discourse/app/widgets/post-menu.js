@@ -947,9 +947,10 @@ export default createWidget("post-menu", {
   },
 });
 
+// TODO once this widget is removed the `<section>...</section>` tag needs to be added to the PostMenu component
 registerWidgetShim(
   "glimmer-post-menu",
-  "section.post-menu-area.glimmer-post-menu-widget-shim.clearfix",
+  "section.post-menu-area.clearfix",
   hbs`
     <Post::Menu
       @canCreatePost={{@data.canCreatePost}}
