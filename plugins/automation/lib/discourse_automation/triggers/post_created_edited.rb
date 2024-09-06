@@ -14,7 +14,7 @@ DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggers::POST_CREATED
         }
   field :restricted_category, component: :category
   field :restricted_tags, component: :tags
-  field :restricted_group, component: :group
+  field :restricted_groups, component: :groups
   field :ignore_automated, component: :boolean
   field :ignore_group_members, component: :boolean
   field :valid_trust_levels, component: :"trust-levels"
