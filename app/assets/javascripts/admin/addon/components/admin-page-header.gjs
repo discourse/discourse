@@ -32,7 +32,7 @@ const AdminPageHeader = <template>
 
     {{#if @descriptionLabel}}
       <p class="admin-page-header__description">
-        {{{@descriptionLabel}}}
+        {{@descriptionLabel}}
         {{#if @learnMoreUrl}}
           {{htmlSafe (i18n "learn_more_with_link" url=@learnMoreUrl)}}
         {{/if}}
