@@ -1,18 +1,22 @@
-import { or } from "truth-helpers";
+import Component from "@glimmer/component";
 import DButton from "discourse/components/d-button";
 
-const PostMenuAdminButton = <template>
-  {{#if (or @post.canManage @post.can_wiki @post.canEditStaffNotes)}}
-    <DButton
-      class="show-post-admin-menu"
-      ...attributes
-      @icon="wrench"
-      @title="post.controls.admin"
-      @label={{if @properties.showLabel "post.controls.admin_action"}}
-      @action={{@action}}
-      @forwardEvent={{true}}
-    />
-  {{/if}}
-</template>;
+export default class PostMenuAdminButton extends Component {
+  static shouldRender(post) {
+    return post.canManage || post.can_wiki || post.canEditStaffNotes;
+  }
 
-export default PostMenuAdminButton;
+  <template>
+    {{#if @shouldRender}}
+      <DButton
+        class="show-post-admin-menu"
+        ...attributes
+        @icon="wrench"
+        @title="post.controls.admin"
+        @label={{if @showLabel "post.controls.admin_action"}}
+        @action={{@action}}
+        @forwardEvent={{true}}
+      />
+    {{/if}}
+  </template>
+}

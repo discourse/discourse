@@ -5,10 +5,14 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
-import LikeCount from "./like-count";
 
 export default class PostMenuLikeButton extends Component {
+  static shouldRender(post) {
+    return post.showLike;
+  }
+
   @service currentUser;
 
   #element;
@@ -46,7 +50,7 @@ export default class PostMenuLikeButton extends Component {
   }
 
   <template>
-    {{#if @post.showLike}}
+    {{#if @shouldRender}}
       <div class="double-button">
         <LikeCount ...attributes @post={{@post}} @action={{@secondaryAction}} />
         <DButton
@@ -67,6 +71,61 @@ export default class PostMenuLikeButton extends Component {
       <div class="double-button">
         <LikeCount ...attributes @post={{@post}} @action={{@secondaryAction}} />
       </div>
+    {{/if}}
+  </template>
+}
+
+class LikeCount extends Component {
+  get icon() {
+    if (!this.args.post.showLike) {
+      return this.args.post.yours ? "d-liked" : "d-unliked";
+    }
+
+    if (this.args.post.yours) {
+      return "d-liked";
+    }
+  }
+
+  get translatedTitle() {
+    let label;
+
+    if (this.args.post.liked) {
+      label =
+        this.args.post.likeCount === 1
+          ? "post.has_likes_title_only_you"
+          : "post.has_likes_title_you";
+    } else {
+      label = "post.has_likes_title";
+    }
+
+    return i18n(label, {
+      count: this.args.post.liked
+        ? this.args.post.likeCount - 1
+        : this.args.post.likeCount,
+    });
+  }
+
+  <template>
+    {{#if @post.likeCount}}
+      <DButton
+        class={{concatClass
+          "button-count"
+          "like-count"
+          "highlight-action"
+          (if @post.yours "my-likes" "regular-likes")
+        }}
+        ...attributes
+        @ariaPressed={{@likedUsers}}
+        @icon={{this.icon}}
+        @translatedAriaLabel={{i18n
+          "post.sr_post_like_count_button"
+          count=@post.likeCount
+        }}
+        @translatedTitle={{this.translatedTitle}}
+        @action={{@action}}
+      >
+        {{@post.likeCount}}
+      </DButton>
     {{/if}}
   </template>
 }

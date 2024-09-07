@@ -8,6 +8,10 @@ export const BUTTON_ACTION_MODE_RECOVER = "recover";
 export const BUTTON_ACTION_MODE_RECOVER_TOPIC = "recover-topic";
 
 export default class PostMenuDeleteButton extends Component {
+  static shouldRender(post) {
+    return post.can_edit;
+  }
+
   get className() {
     switch (this.args.actionMode) {
       case BUTTON_ACTION_MODE_DELETE:
@@ -71,13 +75,13 @@ export default class PostMenuDeleteButton extends Component {
   }
 
   <template>
-    {{#if @post.can_edit}}
+    {{#if @shouldRender}}
       <DButton
         class={{this.className}}
         ...attributes
         @icon={{this.icon}}
         @title={{this.title}}
-        @label={{if @properties.showLabel this.label}}
+        @label={{if @showLabel this.label}}
         @action={{@action}}
       />
     {{/if}}

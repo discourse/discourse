@@ -6,8 +6,8 @@ import concatClass from "discourse/helpers/concat-class";
 import DiscourseURL from "discourse/lib/url";
 
 export default class PostMenuFlagButton extends Component {
-  get shouldRender() {
-    const { reviewable_id, canFlag, hidden } = this.args.post;
+  static shouldRender(post) {
+    const { reviewable_id, canFlag, hidden } = post;
     return reviewable_id || (canFlag && !hidden);
   }
 
@@ -17,7 +17,7 @@ export default class PostMenuFlagButton extends Component {
   }
 
   <template>
-    {{#if this.shouldRender}}
+    {{#if @shouldRender}}
       <div class="double-button">
         {{#if @post.reviewable_id}}
           <DButton

@@ -13,24 +13,25 @@ import DAG from "discourse/lib/dag";
 import { userPath } from "discourse/lib/url";
 import i18n from "discourse-common/helpers/i18n";
 import discourseLater from "discourse-common/lib/later";
-import PostMenuAdminButton from "./buttons/admin";
-import PostMenuBookmarkButton from "./buttons/bookmark";
-import PostMenuCopyLinkButton from "./buttons/copy-link";
+import PostMenuButton from "./menu/button";
+import PostMenuAdminButton from "./menu/buttons/admin";
+import PostMenuBookmarkButton from "./menu/buttons/bookmark";
+import PostMenuCopyLinkButton from "./menu/buttons/copy-link";
 import PostMenuDeleteButton, {
   BUTTON_ACTION_MODE_DELETE,
   BUTTON_ACTION_MODE_DELETE_TOPIC,
   BUTTON_ACTION_MODE_RECOVER,
   BUTTON_ACTION_MODE_RECOVER_TOPIC,
   BUTTON_ACTION_MODE_SHOW_FLAG_DELETE,
-} from "./buttons/delete";
-import PostMenuEditButton from "./buttons/edit";
-import PostMenuFlagButton from "./buttons/flag";
-import PostMenuLikeButton from "./buttons/like";
-import PostMenuReadButton from "./buttons/read";
-import PostMenuRepliesButton from "./buttons/replies";
-import PostMenuReplyButton from "./buttons/reply";
-import PostMenuShareButton from "./buttons/share";
-import PostMenuShowMoreButton from "./buttons/show-more";
+} from "./menu/buttons/delete";
+import PostMenuEditButton from "./menu/buttons/edit";
+import PostMenuFlagButton from "./menu/buttons/flag";
+import PostMenuLikeButton from "./menu/buttons/like";
+import PostMenuReadButton from "./menu/buttons/read";
+import PostMenuRepliesButton from "./menu/buttons/replies";
+import PostMenuReplyButton from "./menu/buttons/reply";
+import PostMenuShareButton from "./menu/buttons/share";
+import PostMenuShowMoreButton from "./menu/buttons/show-more";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
@@ -66,7 +67,12 @@ function resetPostMenuButtons() {
       [REPLY_BUTTON_ID, PostMenuReplyButton],
       [SHARE_BUTTON_ID, PostMenuShareButton],
       [SHOW_MORE_BUTTON_ID, PostMenuShowMoreButton],
-    ].map(([id, Button]) => [id, registeredAttributes(Button)])
+    ].map(([id, Button]) => [
+      id,
+      registeredAttributes(Button, {
+        shouldRender: Button.shouldRender,
+      }),
+    ])
   );
 }
 
@@ -75,14 +81,17 @@ export function clearExtraPostMenuButtons() {
 }
 
 export const _postMenuPluginApi = Object.freeze({
-  add(id, component, position) {
+  add(id, ButtonComponent, position) {
     if (registeredButtonComponents.has(id)) {
       return false;
     }
 
     registeredButtonComponents.set(
       id,
-      registeredAttributes(component, position)
+      registeredAttributes(ButtonComponent, {
+        position,
+        // shouldRender: is not processed here because custom buttons must handle the logic internally
+      })
     );
 
     return true;
@@ -90,13 +99,16 @@ export const _postMenuPluginApi = Object.freeze({
   delete(id) {
     return registeredButtonComponents.delete(id);
   },
-  replace(id, component) {
+  replace(id, ButtonComponent) {
     const existing = registeredButtonComponents.get(id);
     if (!existing) {
       return false;
     }
 
-    registeredButtonComponents.set(id, { ...existing, component });
+    registeredButtonComponents.set(id, {
+      ...existing,
+      Component: ButtonComponent,
+    });
 
     return true;
   },
@@ -115,10 +127,14 @@ export const _postMenuPluginApi = Object.freeze({
   },
 });
 
-function registeredAttributes(ButtonComponent, position) {
+function registeredAttributes(
+  ButtonComponent,
+  { position, shouldRender } = {}
+) {
   return {
     Component: ButtonComponent,
     position,
+    shouldRender,
   };
 }
 
@@ -151,17 +167,22 @@ export default class PostMenu extends Component {
   @cached
   get registeredButtons() {
     return new Map(
-      registeredButtonComponents.entries().map(([id, attributes]) => {
+      registeredButtonComponents.entries().map(([id, properties]) => {
+        let showLabel = false;
         let alwaysShow = false;
         let extraControl = false;
         let actionMode;
         let primaryAction;
         let secondaryAction;
-        let properties;
+        let context;
 
         switch (id) {
           case ADMIN_BUTTON_ID:
             primaryAction = this.openAdminMenu;
+            break;
+
+          case BOOKMARK_BUTTON_ID:
+            context = { currentUser: this.currentUser };
             break;
 
           case COPY_LINK_BUTTON_ID:
@@ -192,9 +213,7 @@ export default class PostMenu extends Component {
             alwaysShow =
               this.#isWikiMode ||
               (this.args.post.can_edit && this.args.post.yours);
-            properties = {
-              showLabel: this.site.desktopView && this.#isWikiMode,
-            };
+            showLabel = this.site.desktopView && this.#isWikiMode;
             break;
 
           case FLAG_BUTTON_ID:
@@ -208,28 +227,29 @@ export default class PostMenu extends Component {
 
           case READ_BUTTON_ID:
             primaryAction = this.toggleWhoRead;
-            properties = { showReadIndicator: this.args.showReadIndicator };
-            break;
-
-          case REPLY_BUTTON_ID:
-            primaryAction = this.args.replyToPost;
-            properties = {
-              canCreatePost: this.args.canCreatePost,
-              showLabel: this.site.desktopView && !this.#isWikiMode,
-            };
+            context = { showReadIndicator: this.args.showReadIndicator };
             break;
 
           case REPLIES_BUTTON_ID:
             extraControl = true;
             primaryAction = this.args.toggleReplies;
-            properties = {
+            context = {
               filteredRepliesView: this.args.filteredRepliesView,
+              repliesShown: this.args.repliesShown,
               replyDirectlyBelow:
                 this.args.nextPost?.reply_to_post_number ===
                   this.args.post.post_number &&
                 this.args.post.post_number !==
                   this.args.post.filteredRepliesPostNumber,
+              suppressReplyDirectlyBelow:
+                this.siteSettings.suppress_reply_directly_below,
             };
+            break;
+
+          case REPLY_BUTTON_ID:
+            primaryAction = this.args.replyToPost;
+            showLabel = this.site.desktopView && !this.#isWikiMode;
+            context = { canCreatePost: this.args.canCreatePost };
             break;
 
           case SHARE_BUTTON_ID:
@@ -238,22 +258,29 @@ export default class PostMenu extends Component {
 
           case SHOW_MORE_BUTTON_ID:
             primaryAction = this.showMoreActions;
+            context = () => ({
+              collapsed: this.collapsed,
+              collapsedButtons: this.collapsedButtons,
+              hasCollapsedButtons: this.hasCollapsedButtons,
+            });
             break;
         }
 
         const config = {
           id,
-          Component: attributes.Component,
+          Component: properties.Component,
+          shouldRender: properties.shouldRender,
           position: {
-            before: attributes.position?.before,
-            after: attributes.position?.after,
+            before: properties.position?.before,
+            after: properties.position?.after,
           },
+          showLabel,
           action: primaryAction,
           secondaryAction,
           actionMode,
           alwaysShow,
-          properties,
-          extraControl: attributes.position?.extraControl ?? extraControl,
+          context,
+          extraControl: properties.position?.extraControl ?? extraControl,
         };
 
         return [id, config];
@@ -310,7 +337,7 @@ export default class PostMenu extends Component {
       return [];
     }
 
-    return this.availableButtons.filter((button) => {
+    const items = this.availableButtons.filter((button) => {
       if (button.alwaysShow || button.id === SHOW_MORE_BUTTON_ID) {
         return false;
       }
@@ -321,6 +348,12 @@ export default class PostMenu extends Component {
 
       return hiddenItems.includes(button.id);
     });
+
+    if (items.length <= 1) {
+      return [];
+    }
+
+    return items;
   }
 
   @cached
@@ -341,7 +374,7 @@ export default class PostMenu extends Component {
     return this.registeredButtons.get(REPLIES_BUTTON_ID);
   }
 
-  get isShowMoreButtonVisible() {
+  get hasCollapsedButtons() {
     // Only show ellipsis if there is more than one button hidden
     // if there are no more buttons, we are not collapsed
     return this.collapsedButtons.length > 1;
@@ -500,11 +533,7 @@ export default class PostMenu extends Component {
     <nav
       class={{concatClass
         "post-controls"
-        (if
-          (and this.isShowMoreButtonVisible this.collapsed)
-          "collapsed"
-          "expanded"
-        )
+        (if (and this.collapsedButtons this.collapsed) "collapsed" "expanded")
         (if
           this.siteSettings.enable_filtered_replies_view
           "replies-button-visible"
@@ -513,25 +542,11 @@ export default class PostMenu extends Component {
     >
       {{! do not include PluginOutlets here, use the PostMenu DAG API instead }}
       {{#each this.extraControls as |extraControl|}}
-        <extraControl.Component
-          class="btn-flat"
-          @post={{@post}}
-          @properties={{extraControl.properties}}
-          @action={{extraControl.action}}
-          @actionMode={{extraControl.actionMode}}
-          @secondaryAction={{extraControl.secondaryAction}}
-        />
+        <PostMenuButton @button={{extraControl}} @post={{@post}} />
       {{/each}}
       <div class="actions">
         {{#each this.visibleButtons as |button|}}
-          <button.Component
-            class="btn-flat"
-            @post={{@post}}
-            @properties={{button.properties}}
-            @action={{button.action}}
-            @actionMode={{button.actionMode}}
-            @secondaryAction={{button.secondaryAction}}
-          />
+          <PostMenuButton @button={{button}} @post={{@post}} />
         {{/each}}
       </div>
     </nav>
@@ -575,7 +590,7 @@ export default class PostMenu extends Component {
         }}
       />
     {{/if}}
-    {{#if this.isShowMoreButtonVisible}}
+    {{#if this.collapsedButtons}}
       <UserTip
         @id="post_menu"
         @triggerSelector=".post-controls .actions .show-more-actions"
