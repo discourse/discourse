@@ -36,18 +36,18 @@ import PostMenuShowMoreButton from "./menu/buttons/show-more";
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
 
-const ADMIN_BUTTON_ID = "admin";
-const BOOKMARK_BUTTON_ID = "bookmark";
-const COPY_LINK_BUTTON_ID = "copyLink";
-const DELETE_BUTTON_ID = "delete";
-const EDIT_BUTTON_ID = "edit";
-const FLAG_BUTTON_ID = "flag";
-const LIKE_BUTTON_ID = "like";
-const READ_BUTTON_ID = "read";
-const REPLIES_BUTTON_ID = "replies";
-const REPLY_BUTTON_ID = "reply";
-const SHARE_BUTTON_ID = "share";
-const SHOW_MORE_BUTTON_ID = "showMore";
+export const ADMIN_BUTTON_ID = "admin";
+export const BOOKMARK_BUTTON_ID = "bookmark";
+export const COPY_LINK_BUTTON_ID = "copyLink";
+export const DELETE_BUTTON_ID = "delete";
+export const EDIT_BUTTON_ID = "edit";
+export const FLAG_BUTTON_ID = "flag";
+export const LIKE_BUTTON_ID = "like";
+export const READ_BUTTON_ID = "read";
+export const REPLIES_BUTTON_ID = "replies";
+export const REPLY_BUTTON_ID = "reply";
+export const SHARE_BUTTON_ID = "share";
+export const SHOW_MORE_BUTTON_ID = "showMore";
 
 let registeredButtonComponents;
 resetPostMenuButtons();
@@ -262,6 +262,7 @@ export default class PostMenu extends Component {
               collapsed: this.collapsed,
               collapsedButtons: this.collapsedButtons,
               hasCollapsedButtons: this.hasCollapsedButtons,
+              setCollapsed: (value) => (this.collapsed = value),
             });
             break;
         }
@@ -312,11 +313,21 @@ export default class PostMenu extends Component {
 
   @cached
   get extraControls() {
-    const items = [REPLIES_BUTTON_ID];
+    const repliesButton = this.registeredButtons.get(REPLIES_BUTTON_ID);
 
-    return items
-      .map((itemId) => this.registeredButtons.get(itemId))
-      .filter((button) => isPresent(button) && button.extraControl);
+    const items = [
+      repliesButton,
+      ...this.registeredButtons
+        .values()
+        .filter((button) => isPresent(button) && button.extraControl),
+    ];
+
+    const dag = new DAG();
+    new Set(items).forEach((button) =>
+      dag.add(button.id, button, button.position)
+    );
+
+    return dag.resolve().map(({ value }) => value);
   }
 
   get availableButtons() {
@@ -332,7 +343,15 @@ export default class PostMenu extends Component {
     if (
       isEmpty(hiddenItems) ||
       !this.collapsed ||
-      !this.availableButtons.some((button) => button.id === SHOW_MORE_BUTTON_ID)
+      !(
+        // TODO extract this logic to a method
+        (
+          this.availableButtons.some(
+            (button) => button.id === SHOW_MORE_BUTTON_ID
+          ) ||
+          this.extraControls.some((button) => button.id === SHOW_MORE_BUTTON_ID)
+        )
+      )
     ) {
       return [];
     }
