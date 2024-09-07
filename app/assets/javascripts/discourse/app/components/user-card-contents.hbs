@@ -92,21 +92,21 @@
       <div class="d-user-card__main-content">
         <div class="d-user-card__main-content-top">
           <div class="d-user-card__id">
-            {{#if this.contentHidden}}
-              <span class="d-user-card__avatar">
-                {{bound-avatar this.user "huge"}}
-              </span>
-            {{else}}
-              <a
-                {{on "click" (fn this.handleShowUser this.user)}}
-                href={{this.user.path}}
-                class="d-user-card__avatar"
-              >
-                {{bound-avatar this.user "huge"}}
-              </a>
-            {{/if}}
-            <UserAvatarFlair @user={{this.user}} />
-            <div>
+            <div class="d-user-card__avatar-container">
+              {{#if this.contentHidden}}
+                <span class="d-user-card__avatar">
+                  {{bound-avatar this.user "huge"}}
+                </span>
+              {{else}}
+                <a
+                  {{on "click" (fn this.handleShowUser this.user)}}
+                  href={{this.user.path}}
+                  class="d-user-card__avatar"
+                >
+                  {{bound-avatar this.user "huge"}}
+                </a>
+              {{/if}}
+              <UserAvatarFlair @user={{this.user}} />
               <PluginOutlet
                 @name="user-card-avatar-flair"
                 @connectorTagName="div"

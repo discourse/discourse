@@ -335,12 +335,9 @@ $usercard-backdrop: dark-light-choose(none, brightness(0.7));
     max-width: calc(480px - 2em);
     flex-wrap: wrap;
   }
-  &__avatar {
-    height: 50px;
-  }
-  &__id .d-user-card__avatar + div {
-    position: relative;
-    margin-right: 1em;
+  &__id .d-user-card__avatar + div:has(> .avatar-flair) {
+    position: absolute;
+    left: 100%;
   }
   &__id .avatar-flair {
     width: 40px;
@@ -364,13 +361,18 @@ $usercard-backdrop: dark-light-choose(none, brightness(0.7));
   &__id .avatar-flair .fa {
     font-size: var(--font-up-4);
   }
+  &__avatar-container {
+    position: relative;
+    top: -50px;
+  }
+  &__avatar {
+    display: flex;
+  }
   &__avatar img {
     width: 100px;
     height: 100px;
     border: 2px solid var(--secondary);
     border-radius: 50%;
-    position: relative;
-    top: -50px;
     background-color: var(--dominant-color);
   }
   &__avatar + .user-status-message {
@@ -382,7 +384,7 @@ $usercard-backdrop: dark-light-choose(none, brightness(0.7));
     background-color: var(--secondary);
   }
   &__id-titles {
-    margin-left: 0.5em;
+    margin-left: 1.5em;
     gap: 0.25em;
     color: var(--primary);
     flex: 1 1;
