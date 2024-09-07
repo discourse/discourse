@@ -3,12 +3,15 @@
 RSpec.describe Admin::FormTemplatesController do
   fab!(:admin)
   fab!(:user)
+  fab!(:form_template)
 
-  before { SiteSetting.experimental_form_templates = true }
+  before do
+    SiteSetting.experimental_form_templates = true
+    SiteSetting.max_form_template_title_length = 100
+    SiteSetting.max_form_template_content_length = 3000
+  end
 
   describe "#index" do
-    fab!(:form_template)
-
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
@@ -46,8 +49,6 @@ RSpec.describe Admin::FormTemplatesController do
   end
 
   describe "#show" do
-    fab!(:form_template)
-
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
@@ -80,6 +81,47 @@ RSpec.describe Admin::FormTemplatesController do
           expect(response.status).to eq(200)
         }.to change(FormTemplate, :count).by(1)
       end
+
+      it "returns an error if the title is too long" do
+        SiteSetting.max_form_template_title_length = 12
+        SiteSetting.max_form_template_content_length = 3000
+
+        post "/admin/customize/form-templates.json",
+             params: {
+               name: "This is a very very long title that is too long for the database",
+               template: "- type: input\n  id: name",
+             }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t(
+            "form_templates.errors.too_long",
+            type: "title",
+            max_length: SiteSetting.max_form_template_title_length,
+          ),
+        )
+      end
+
+      it "returns an error if the template content is too long" do
+        SiteSetting.max_form_template_title_length = 100
+        SiteSetting.max_form_template_content_length = 50
+
+        post "/admin/customize/form-templates.json",
+             params: {
+               name: "Bug",
+               template:
+                 "- type: input\n  id: website\n  attributes:\n    label: Website or apps\n    description: |\n      Which website or app were you using when the bug happened, please tell me because I need to know this information?\n    placeholder: |\n      e.g. website URL, name of the app\n    validations:\n      required: true",
+             }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t(
+            "form_templates.errors.too_long",
+            type: "template",
+            max_length: SiteSetting.max_form_template_content_length,
+          ),
+        )
+      end
     end
 
     context "when logged in as a non-admin user" do
@@ -102,8 +144,6 @@ RSpec.describe Admin::FormTemplatesController do
   end
 
   describe "#update" do
-    fab!(:form_template)
-
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
@@ -111,13 +151,13 @@ RSpec.describe Admin::FormTemplatesController do
         put "/admin/customize/form-templates/#{form_template.id}.json",
             params: {
               id: form_template.id,
-              name: "Updated Template",
+              name: "Bugs",
               template: "- type: checkbox\n  id: checkbox",
             }
 
         expect(response.status).to eq(200)
         form_template.reload
-        expect(form_template.name).to eq("Updated Template")
+        expect(form_template.name).to eq("Bugs")
         expect(form_template.template).to eq("- type: checkbox\n  id: checkbox")
       end
     end
@@ -145,8 +185,6 @@ RSpec.describe Admin::FormTemplatesController do
   end
 
   describe "#destroy" do
-    fab!(:form_template)
-
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
