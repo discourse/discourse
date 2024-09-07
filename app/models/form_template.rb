@@ -17,7 +17,7 @@ end
 # Table name: form_templates
 #
 #  id         :bigint           not null, primary key
-#  name       :string(100)      not null
+#  name       :string           not null
 #  template   :text             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
