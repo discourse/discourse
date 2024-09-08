@@ -7,7 +7,7 @@ Discourse is a powerful and flexible platform with many options for customizatio
 To get started, we recommend you follow the sections below for each of the following:
 
 - [ ] [Test your email configuration](/admin/email)
-- [ ] [Complete the setup wizard](wizard/steps/branding)
+- [ ] [Complete the setup wizard](/wizard/steps/branding)
 - [ ] [Invite a few people to join you](/my/invited)
 - [ ] [Discuss ideas with your community](/new-topic)
 - [ ] [Adjust other customizations](/admin/site_settings/category/required)
