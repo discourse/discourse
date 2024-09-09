@@ -2,7 +2,6 @@
 
 class Admin::FormTemplatesController < Admin::StaffController
   before_action :ensure_form_templates_enabled
-  before_action :extra_validations, only: %i[create update]
 
   def index
     form_templates = FormTemplate.all.order(:id)
@@ -74,30 +73,5 @@ class Admin::FormTemplatesController < Admin::StaffController
 
   def ensure_form_templates_enabled
     raise Discourse::InvalidAccess.new unless SiteSetting.experimental_form_templates
-  end
-
-  # Since these validations are based on site settings that may change, we do these
-  # validations in the controller instead of the model so a reload is not required.
-  def extra_validations
-    max_title_length = SiteSetting.max_form_template_title_length
-    max_template_length = SiteSetting.max_form_template_content_length
-
-    errors = []
-    if params[:name].length > max_title_length
-      errors << I18n.t(
-        "form_templates.errors.too_long",
-        type: "title",
-        max_length: max_title_length,
-      )
-    end
-    if params[:template].length > max_template_length
-      errors << I18n.t(
-        "form_templates.errors.too_long",
-        type: "template",
-        max_length: max_template_length,
-      )
-    end
-
-    render_json_error(errors.join(", "), status: :unprocessable_entity) && return if errors.any?
   end
 end

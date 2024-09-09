@@ -1,9 +1,18 @@
 # frozen_string_literal: true
 
 class FormTemplate < ActiveRecord::Base
-  validates :name, presence: true, uniqueness: true
-  validates :template, presence: true
-  validates_with FormTemplateYamlValidator
+  validates :name,
+            presence: true,
+            uniqueness: true,
+            length: {
+              maximum: -> { SiteSetting.max_form_template_title_length },
+            }
+  validates :template,
+            presence: true,
+            length: {
+              maximum: -> { SiteSetting.max_form_template_content_length },
+            }
+  validates_with FormTemplateYamlValidator, if: ->(ft) { ft.template }
 
   has_many :category_form_templates, dependent: :destroy
   has_many :categories, through: :category_form_templates

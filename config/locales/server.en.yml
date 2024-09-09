@@ -5708,4 +5708,3 @@ en:
       duplicate_ids: "has duplicate ids"
       reserved_id: "has a reserved keyword as id: %{id}"
       unsafe_description: "has an unsafe HTML description"
-      too_long: "%{type} exceeds the maxium allowed length of %{max_length} characters"

@@ -5,11 +5,7 @@ RSpec.describe Admin::FormTemplatesController do
   fab!(:user)
   fab!(:form_template)
 
-  before do
-    SiteSetting.experimental_form_templates = true
-    SiteSetting.max_form_template_title_length = 100
-    SiteSetting.max_form_template_content_length = 3000
-  end
+  before { SiteSetting.experimental_form_templates = true }
 
   describe "#index" do
     context "when logged in as an admin" do
@@ -80,47 +76,6 @@ RSpec.describe Admin::FormTemplatesController do
 
           expect(response.status).to eq(200)
         }.to change(FormTemplate, :count).by(1)
-      end
-
-      it "returns an error if the title is too long" do
-        SiteSetting.max_form_template_title_length = 12
-        SiteSetting.max_form_template_content_length = 3000
-
-        post "/admin/customize/form-templates.json",
-             params: {
-               name: "This is a very very long title that is too long for the database",
-               template: "- type: input\n  id: name",
-             }
-
-        expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"]).to include(
-          I18n.t(
-            "form_templates.errors.too_long",
-            type: "title",
-            max_length: SiteSetting.max_form_template_title_length,
-          ),
-        )
-      end
-
-      it "returns an error if the template content is too long" do
-        SiteSetting.max_form_template_title_length = 100
-        SiteSetting.max_form_template_content_length = 50
-
-        post "/admin/customize/form-templates.json",
-             params: {
-               name: "Bug",
-               template:
-                 "- type: input\n  id: website\n  attributes:\n    label: Website or apps\n    description: |\n      Which website or app were you using when the bug happened, please tell me because I need to know this information?\n    placeholder: |\n      e.g. website URL, name of the app\n    validations:\n      required: true",
-             }
-
-        expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"]).to include(
-          I18n.t(
-            "form_templates.errors.too_long",
-            type: "template",
-            max_length: SiteSetting.max_form_template_content_length,
-          ),
-        )
       end
     end
 
