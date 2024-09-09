@@ -99,7 +99,7 @@ gem "sidekiq"
 gem "mini_scheduler"
 
 gem "execjs", require: false
-gem "mini_racer"
+gem "mini_racer", "0.17.0.pre2"
 
 gem "highline", require: false
 
@@ -270,10 +270,6 @@ gem "cgi", ">= 0.3.6", require: false
 
 gem "tzinfo-data"
 gem "csv", require: false
-
-# TODO: Can be removed once we upgrade to Rails 7.1
-gem "mutex_m"
-gem "drb"
 
 # dependencies for the automation plugin
 gem "iso8601"

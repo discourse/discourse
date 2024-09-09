@@ -97,27 +97,4 @@ RSpec.describe Jobs::RunProblemCheck do
       end
     end
   end
-
-  context "when the check unexpectedly errors out" do
-    around do |example|
-      ProblemCheck::TestCheck =
-        Class.new(ProblemCheck) do
-          self.max_retries = 1
-
-          def call
-            raise StandardError.new("Something went wrong")
-          end
-        end
-
-      stub_const(ProblemCheck, "CORE_PROBLEM_CHECKS", [ProblemCheck::TestCheck], &example)
-
-      ProblemCheck.send(:remove_const, "TestCheck")
-    end
-
-    it "does not add a problem to the Redis array" do
-      described_class.new.execute(check_identifier: :test_check)
-
-      expect(AdminDashboardData.load_found_scheduled_check_problems).to be_empty
-    end
-  end
 end

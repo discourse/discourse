@@ -2,10 +2,10 @@
 
 describe "About page", type: :system do
   fab!(:current_user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group, users: [current_user]) }
   fab!(:image_upload)
   fab!(:admin) { Fabricate(:admin, last_seen_at: 1.hour.ago) }
   fab!(:moderator) { Fabricate(:moderator, last_seen_at: 1.hour.ago) }
+  fab!(:group) { Fabricate(:group, users: [current_user, admin, moderator]) }
 
   before do
     SiteSetting.title = "title for my forum"
@@ -202,6 +202,24 @@ describe "About page", type: :system do
           expect(about_page.site_activities.likes).to have_all_time_period
         end
       end
+
+      describe "traffic info footer" do
+        it "is displayed when the display_eu_visitor_stats setting is true" do
+          SiteSetting.display_eu_visitor_stats = true
+
+          about_page.visit
+
+          expect(about_page).to have_traffic_info_footer
+        end
+
+        it "is not displayed when the display_eu_visitor_stats setting is false" do
+          SiteSetting.display_eu_visitor_stats = false
+
+          about_page.visit
+
+          expect(about_page).to have_no_traffic_info_footer
+        end
+      end
     end
 
     describe "our admins section" do
@@ -383,6 +401,31 @@ describe "About page", type: :system do
 
         about_page.moderators_list.users.last[:node].click
         expect(about_page).to have_css("#user-card")
+      end
+    end
+
+    describe "the edit link" do
+      it "appears for admins" do
+        sign_in(admin)
+
+        about_page.visit
+        expect(about_page).to have_edit_link
+
+        about_page.edit_link.click
+
+        try_until_success { expect(current_url).to end_with("/admin/config/about") }
+      end
+
+      it "doesn't appear for moderators" do
+        sign_in(moderator)
+
+        about_page.visit
+        expect(about_page).to have_no_edit_link
+      end
+
+      it "doesn't appear for normal users" do
+        about_page.visit
+        expect(about_page).to have_no_edit_link
       end
     end
   end

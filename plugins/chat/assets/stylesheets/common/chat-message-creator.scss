@@ -267,11 +267,14 @@
     }
 
     .unread-indicator {
-      margin-left: 0.5rem;
       width: 8px;
       height: 8px;
       background: var(--tertiary);
       border-radius: 100%;
+
+      &.-urgent {
+        background: var(--success);
+      }
     }
   }
 

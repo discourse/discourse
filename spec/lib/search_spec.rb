@@ -2832,6 +2832,18 @@ RSpec.describe Search do
       Search.advanced_filters.delete(/^min_chars:(\d+)$/)
     end
 
+    it "forces custom filters matchers to be case insensitive" do
+      expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+
+      Search.advanced_filter(/^MIN_CHARS:(\d+)$/) do |posts, match|
+        posts.where("(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?", match.to_i)
+      end
+
+      expect(Search.new("advanced Min_Chars:50").execute.posts).to eq([post0])
+    ensure
+      Search.advanced_filters.delete(/^MIN_CHARS:(\d+)$/)
+    end
+
     it "allows to define custom order" do
       expect(Search.new("advanced").execute.posts).to eq([post1, post0])
 

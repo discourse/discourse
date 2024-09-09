@@ -221,7 +221,7 @@ task "plugin:turbo_spec", %i[plugin argv] do |_, args|
 end
 
 desc "run plugin qunit tests"
-task "plugin:qunit", %i[plugin timeout] do |t, args|
+task "plugin:qunit", :plugin do |t, args|
   args.with_defaults(plugin: "*")
 
   rake = "#{Rails.root}/bin/rake"
@@ -238,9 +238,7 @@ task "plugin:qunit", %i[plugin timeout] do |t, args|
     end
 
   cmd += "TARGET='#{target}' "
-
   cmd += "#{rake} qunit:test"
-  cmd += "[#{args[:timeout]}]" if args[:timeout]
 
   system cmd
   exit $?.exitstatus

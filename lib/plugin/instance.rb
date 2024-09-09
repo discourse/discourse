@@ -49,7 +49,6 @@ class Plugin::Instance
   # Memoized array readers
   %i[
     assets
-    color_schemes
     initializers
     javascripts
     locales
@@ -593,12 +592,6 @@ class Plugin::Instance
   end
 
   def notify_after_initialize
-    color_schemes.each do |c|
-      unless ColorScheme.where(name: c[:name]).exists?
-        ColorScheme.create_from_base(name: c[:name], colors: c[:colors])
-      end
-    end
-
     initializers.each do |callback|
       begin
         callback.call(self)
@@ -730,10 +723,6 @@ class Plugin::Instance
 
   def register_service_worker(file, opts = nil)
     service_workers << [File.join(File.dirname(path), "assets", file), opts]
-  end
-
-  def register_color_scheme(name, colors)
-    color_schemes << { name: name, colors: colors }
   end
 
   def register_seed_data(key, value)
