@@ -5,8 +5,10 @@
     class="incoming-chat-webhooks-back"
   />
 
-  <ChatIncomingWebhookEditForm
-    @webhook={{model.webhook}}
-    @chatChannels={{model.chat_channels}}
-  />
+  <ConditionalLoadingSpinner @condition={{not model.webhook}}>
+    <ChatIncomingWebhookEditForm
+      @webhook={{model.webhook}}
+      @chatChannels={{model.chat_channels}}
+    />
+  </ConditionalLoadingSpinner>
 </div>

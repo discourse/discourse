@@ -54,24 +54,30 @@ export default class ChatIncomingWebhookEditForm extends Component {
           data,
           type: "PUT",
         });
+
+        this.toasts.success({
+          duration: 3000,
+          data: {
+            message: I18n.t("chat.incoming_webhooks.saved"),
+          },
+        });
       } else {
-        await ajax(`/admin/plugins/chat/hooks`, {
+        const webhook = await ajax(`/admin/plugins/chat/hooks`, {
           data,
           type: "POST",
         });
-      }
 
-      this.toasts.success({
-        duration: 3000,
-        data: {
-          message: I18n.t("chat.incoming_webhooks.saved"),
-        },
-      });
+        this.toasts.success({
+          duration: 3000,
+          data: {
+            message: I18n.t("chat.incoming_webhooks.created"),
+          },
+        });
 
-      if (!this.webhook?.id) {
         this.router
           .transitionTo(
-            "adminPlugins.show.discourse-chat-incoming-webhooks.index"
+            "adminPlugins.show.discourse-chat-incoming-webhooks.show",
+            webhook
           )
           .then(() => {
             this.router.refresh();
@@ -153,7 +159,7 @@ export default class ChatIncomingWebhookEditForm extends Component {
                 <DButton
                   @label="chat.incoming_webhooks.select_emoji"
                   @action={{fn (mut this.emojiPickerIsActive) true}}
-                  class="btn-primary"
+                  class="btn-primary admin-chat-webhooks-select-emoji"
                 />
               </row.Col>
               <row.Col @size={{6}}>
@@ -161,6 +167,7 @@ export default class ChatIncomingWebhookEditForm extends Component {
                   @label="chat.incoming_webhooks.reset_emoji"
                   @action={{fn this.resetEmoji form.set}}
                   @disabled={{not field.value}}
+                  class="admin-chat-webhooks-clear-emoji"
                 />
               </row.Col>
             </form.Row>
@@ -169,7 +176,7 @@ export default class ChatIncomingWebhookEditForm extends Component {
         </field.Custom>
       </form.Field>
 
-      {{#if this.webhook?.url}}
+      {{#if this.webhook.url}}
         <form.Container
           @name="url"
           @title={{i18n "chat.incoming_webhooks.url"}}

@@ -64,7 +64,7 @@ export default class AdminChatIncomingWebhooksList extends Component {
                 <LinkTo
                   @route="adminPlugins.show.discourse-chat-incoming-webhooks.show"
                   @model={{webhook.id}}
-                  class="btn btn-small"
+                  class="btn btn-small admin-chat-incoming-webhooks-edit"
                 >{{dIcon "pencil-alt"}}{{i18n
                     "chat.incoming_webhooks.edit"
                   }}</LinkTo>
@@ -72,7 +72,7 @@ export default class AdminChatIncomingWebhooksList extends Component {
                   @icon="trash-alt"
                   @title="chat.incoming_webhooks.delete"
                   @action={{fn this.destroyWebhook webhook}}
-                  class="btn-danger btn-small"
+                  class="btn-danger btn-small admin-chat-incoming-webhooks-delete"
                 />
               </div>
             </td>
