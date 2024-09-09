@@ -63,7 +63,7 @@ How to develop themes:
 Images (e.g. screenshots) for docs can be stored in the `/assets` directory. To reference them from the markdown, use the standard markdown image syntax, with a path like `/assets/my-image.png`. For example:
 
 ```
-![some alt text](/assets/images/my-image.png)
+![some alt text](/assets/my-image.png)
 ```
 
 The sync tool will automatically upload the images to Discourse, and replace the path with a discourse-specific `upload://` path. A mapping of repo-path to discourse-path will be persisted in an HTML comment at the end of the doc's topic.
