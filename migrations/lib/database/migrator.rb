@@ -18,8 +18,7 @@ module Migrations::Database
         performed_migrations = find_performed_migrations
       end
 
-      path = @migrations_path
-      migrate_from_path(path, performed_migrations)
+      migrate_from_path(@migrations_path, performed_migrations)
 
       @db.close
     end
