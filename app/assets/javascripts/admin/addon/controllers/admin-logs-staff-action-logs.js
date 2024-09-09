@@ -164,6 +164,8 @@ export default class AdminLogsStaffActionLogsController extends Controller {
   @action
   showCustomDetailsModal(model, event) {
     event?.preventDefault();
-    this.modal.show(ThemeChangeModal, { model: { staffActionLog: model } });
+    this.modal.show(AdminStaffActionLogComponent, {
+      model: { staffActionLog: model },
+    });
   }
 }
