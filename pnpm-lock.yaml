@@ -122,8 +122,8 @@ importers:
         specifier: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
         version: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
       terser:
-        specifier: ^5.31.6
-        version: 5.31.6
+        specifier: ^5.32.0
+        version: 5.32.0
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
@@ -571,8 +571,8 @@ importers:
         specifier: ^0.7.4
         version: 0.7.4
       terser:
-        specifier: ^5.31.6
-        version: 5.31.6
+        specifier: ^5.32.0
+        version: 5.32.0
       testem:
         specifier: ^3.10.1
         version: 3.10.1(handlebars@4.7.8)(lodash@4.17.21)(underscore@1.13.6)
@@ -1118,8 +1118,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       terser:
-        specifier: ^5.31.6
-        version: 5.31.6
+        specifier: ^5.32.0
+        version: 5.32.0
 
   app/assets/javascripts/truth-helpers:
     dependencies:
@@ -7813,8 +7813,8 @@ packages:
       uglify-js:
         optional: true
 
-  terser@5.31.6:
-    resolution: {integrity: sha512-PQ4DAriWzKj+qgehQ7LK5bQqCFNMmlhjR2PFFLuqGCpuCAauxemVBWwWOxo3UIwWQx8+Pr61Df++r76wDmkQBg==}
+  terser@5.32.0:
+    resolution: {integrity: sha512-v3Gtw3IzpBJ0ugkxEX8U0W6+TnPKRRCWGh1jC/iM/e3Ki5+qvO1L1EAZ56bZasc64aXHwRHNIQEzm6//i5cemQ==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -9669,7 +9669,7 @@ snapshots:
       source-map-url: 0.4.1
       style-loader: 2.0.0(webpack@5.94.0(@swc/core@1.7.24)(esbuild@0.23.1))
       supports-color: 8.1.1
-      terser: 5.31.6
+      terser: 5.32.0
       thread-loader: 3.0.4(webpack@5.94.0(@swc/core@1.7.24)(esbuild@0.23.1))
       webpack: 5.94.0(@swc/core@1.7.24)(esbuild@0.23.1)
     transitivePeerDependencies:
@@ -11578,7 +11578,7 @@ snapshots:
       lodash.defaultsdeep: 4.6.1
       matcher-collection: 2.0.1
       symlink-or-copy: 1.3.1
-      terser: 5.31.6
+      terser: 5.32.0
       walk-sync: 2.2.0
       workerpool: 6.5.1
     transitivePeerDependencies:
@@ -16891,13 +16891,13 @@ snapshots:
       jest-worker: 27.5.1
       schema-utils: 3.3.0
       serialize-javascript: 6.0.2
-      terser: 5.31.6
+      terser: 5.32.0
       webpack: 5.94.0(@swc/core@1.7.24)(esbuild@0.23.1)
     optionalDependencies:
       '@swc/core': 1.7.24
       esbuild: 0.23.1
 
-  terser@5.31.6:
+  terser@5.32.0:
     dependencies:
       '@jridgewell/source-map': 0.3.3
       acorn: 8.12.1
