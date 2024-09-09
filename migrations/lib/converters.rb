@@ -3,25 +3,28 @@
 module Migrations
   module Converters
     def self.all
-      base_path = File.join(::Migrations.root_path, "lib", "converters", "base")
-      core_paths = Dir[File.join(::Migrations.root_path, "lib", "converters", "*")]
-      private_paths = Dir[File.join(::Migrations.root_path, "private", "converters", "*")]
-      all_paths = core_paths - [base_path] + private_paths
+      @all_converters ||=
+        begin
+          base_path = File.join(::Migrations.root_path, "lib", "converters", "base")
+          core_paths = Dir[File.join(::Migrations.root_path, "lib", "converters", "*")]
+          private_paths = Dir[File.join(::Migrations.root_path, "private", "converters", "*")]
+          all_paths = core_paths - [base_path] + private_paths
 
-      all_paths.each_with_object({}) do |path, hash|
-        next unless File.directory?(path)
+          all_paths.each_with_object({}) do |path, hash|
+            next unless File.directory?(path)
 
-        name = File.basename(path).downcase
-        existing_path = hash[name]
+            name = File.basename(path).downcase
+            existing_path = hash[name]
 
-        raise <<~MSG if existing_path
+            raise <<~MSG if existing_path
                 Duplicate converter name found: #{name}
                   * #{existing_path}
                   * #{path}
               MSG
 
-        hash[name] = path
-      end
+            hash[name] = path
+          end
+        end
     end
 
     def self.names

@@ -5,8 +5,14 @@ RSpec.describe ::Migrations::Converters do
   let(:core_path) { File.join(root_path, "lib", "converters") }
   let(:private_path) { File.join(root_path, "private", "converters") }
 
-  before { allow(::Migrations).to receive(:root_path).and_return(root_path) }
-  after { FileUtils.remove_dir(root_path, force: true) }
+  before do
+    allow(::Migrations).to receive(:root_path).and_return(root_path)
+    reset_memoization(described_class, :@all_converters)
+  end
+  after do
+    FileUtils.remove_dir(root_path, force: true)
+    reset_memoization(described_class, :@all_converters)
+  end
 
   def create_converters(core_names: [], private_names: [])
     core_names.each { |dir| FileUtils.mkdir_p(File.join(core_path, dir)) }

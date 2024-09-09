@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe ::Migrations::Database::IntermediateDB do
-  before(:each) do
-    if described_class.instance_variable_defined?(:@db)
-      described_class.remove_instance_variable(:@db)
-    end
-  end
+  before { reset_memoization(described_class, :@db) }
+  after { reset_memoization(described_class, :@db) }
 
   def create_connection_double
     connection = instance_double(::Migrations::Database::Connection)
