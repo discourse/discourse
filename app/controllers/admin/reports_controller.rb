@@ -26,29 +26,29 @@ class Admin::ReportsController < Admin::StaffController
         Report.singleton_methods.grep(/\Areport_(?!about|storage_stats)/)
 
     reports =
-      reports_methods.map do |name|
-        type = name.to_s.gsub("report_", "")
-        description = I18n.t("reports.#{type}.description", default: "")
-        description_link = I18n.t("reports.#{type}.description_link", default: "")
+      reports_methods
+        .map do |name|
+          type = name.to_s.gsub("report_", "")
+          description = I18n.t("reports.#{type}.description", default: "")
+          description_link = I18n.t("reports.#{type}.description_link", default: "")
 
-        {
-          type: type,
-          title: I18n.t("reports.#{type}.title"),
-          description: description.presence ? description : nil,
-          description_link: description_link.presence ? description_link : nil,
-        }
-      end
+          if SiteSetting.use_legacy_pageviews
+            next if HIDDEN_PAGEVIEW_REPORTS.include?(type)
+          else
+            next if HIDDEN_LEGACY_PAGEVIEW_REPORTS.include?(type)
+          end
 
-    reports =
-      reports.reject do |report|
-        if SiteSetting.use_legacy_pageviews
-          HIDDEN_PAGEVIEW_REPORTS.include?(report[:type])
-        else
-          HIDDEN_LEGACY_PAGEVIEW_REPORTS.include?(report[:type])
+          {
+            type: type,
+            title: I18n.t("reports.#{type}.title"),
+            description: description.presence ? description : nil,
+            description_link: description_link.presence ? description_link : nil,
+          }
         end
-      end
+        .compact
+        .sort_by { |report| report[:title] }
 
-    render_json_dump(reports: reports.sort_by { |report| report[:title] })
+    render_json_dump(reports: reports)
   end
 
   def bulk
