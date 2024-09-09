@@ -53,7 +53,7 @@ export default class AdminPageHeader extends Component {
 
       {{#if this.description}}
         <p class="admin-page-header__description">
-          {{this.description}}
+          {{htmlSafe this.description}}
           {{#if @learnMoreUrl}}
             {{htmlSafe (i18n "learn_more_with_link" url=@learnMoreUrl)}}
           {{/if}}

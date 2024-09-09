@@ -26,6 +26,15 @@ module Chat
         )
       end
 
+      def new
+        serialized_channels =
+          Chat::Channel.public_channels.map do |channel|
+            Chat::ChannelSerializer.new(channel, scope: Guardian.new(current_user))
+          end
+
+        render json: serialized_channels, root: "chat_channels"
+      end
+
       def create
         params.require(%i[name chat_channel_id])
 

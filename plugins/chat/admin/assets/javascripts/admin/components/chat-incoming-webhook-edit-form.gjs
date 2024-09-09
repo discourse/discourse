@@ -16,15 +16,22 @@ import ChatChannelChooser from "discourse/plugins/chat/discourse/components/chat
 
 export default class ChatIncomingWebhookEditForm extends Component {
   @service toasts;
+  @service router;
   @tracked emojiPickerIsActive = false;
+  @tracked webhook;
+
+  constructor() {
+    super(...arguments);
+    this.webhook = this.args.webhook;
+  }
 
   get formData() {
     return {
-      name: this.args.webhook.name,
-      description: this.args.webhook.description,
-      username: this.args.webhook.username,
-      chat_channel_id: this.args.webhook.chat_channel.id,
-      emoji: this.args.webhook.emoji,
+      name: this.webhook?.name,
+      description: this.webhook?.description,
+      username: this.webhook?.username,
+      chat_channel_id: this.webhook?.chat_channel.id,
+      emoji: this.webhook?.emoji,
     };
   }
 
@@ -42,16 +49,34 @@ export default class ChatIncomingWebhookEditForm extends Component {
   @action
   async save(data) {
     try {
-      await ajax(`/admin/plugins/chat/hooks/${this.args.webhook.id}`, {
-        data,
-        type: "PUT",
-      });
+      if (this.webhook?.id) {
+        await ajax(`/admin/plugins/chat/hooks/${this.webhook.id}`, {
+          data,
+          type: "PUT",
+        });
+      } else {
+        await ajax(`/admin/plugins/chat/hooks`, {
+          data,
+          type: "POST",
+        });
+      }
+
       this.toasts.success({
         duration: 3000,
         data: {
           message: I18n.t("chat.incoming_webhooks.saved"),
         },
       });
+
+      if (!this.webhook?.id) {
+        this.router
+          .transitionTo(
+            "adminPlugins.show.discourse-chat-incoming-webhooks.index"
+          )
+          .then(() => {
+            this.router.refresh();
+          });
+      }
     } catch (err) {
       popupAjaxError(err);
     }
@@ -144,13 +169,15 @@ export default class ChatIncomingWebhookEditForm extends Component {
         </field.Custom>
       </form.Field>
 
-      <form.Container
-        @name="url"
-        @title={{i18n "chat.incoming_webhooks.url"}}
-        @subtitle={{i18n "chat.incoming_webhooks.url_instructions"}}
-      >
-        <code>{{@webhook.url}}</code>
-      </form.Container>
+      {{#if this.webhook?.url}}
+        <form.Container
+          @name="url"
+          @title={{i18n "chat.incoming_webhooks.url"}}
+          @subtitle={{i18n "chat.incoming_webhooks.url_instructions"}}
+        >
+          <code>{{this.webhook.url}}</code>
+        </form.Container>
+      {{/if}}
 
       <form.Submit />
     </Form>
