@@ -1,2 +1,2 @@
 intermediate_db:
-  path: "/home/gerhard/Documents/import/converter_test/intermediate.db"
+  path: "~/intermediate.db"

@@ -59,7 +59,7 @@ module Migrations::Converters::Base
     private
 
     def create_database
-      db_path = settings[:intermediate_db][:path]
+      db_path = File.expand_path(settings[:intermediate_db][:path], ::Migrations.root_path)
       ::Migrations::Database.migrate(
         db_path,
         migrations_path: ::Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
