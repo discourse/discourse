@@ -105,8 +105,5 @@ module Migrations::Converters::Base
     def ignorable_json_error?(e, input_stream)
       !!(input_stream.eof? && e.message[/empty input/i])
     end
-
-    def oj_settings
-    end
   end
 end
