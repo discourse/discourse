@@ -5,6 +5,7 @@
   .badges {
     display: flex;
     flex-wrap: wrap;
+    flex-direction: column;
     .badges-header {
       display: flex;
       align-items: center;
