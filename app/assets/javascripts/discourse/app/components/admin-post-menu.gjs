@@ -182,7 +182,7 @@ export default class AdminPostMenu extends Component {
           <dropdown.item>
             <DButton
               @label="post.controls.unwiki"
-              @icon="far-edit"
+              @icon="far-pen-to-square"
               class={{concatClass
                 "btn btn-transparent wiki wikied"
                 (if @data.transformedPost.wiki "btn-success")
@@ -194,7 +194,7 @@ export default class AdminPostMenu extends Component {
           <dropdown.item>
             <DButton
               @label="post.controls.wiki"
-              @icon="far-edit"
+              @icon="far-pen-to-square"
               class="btn btn-transparent wiki"
               @action={{fn this.topicAction "toggleWiki"}}
             />

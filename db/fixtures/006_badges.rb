@@ -247,7 +247,7 @@ end
 Badge.seed do |b|
   b.id = Badge::WikiEditor
   b.name = "Wiki Editor"
-  b.default_icon = "far-edit"
+  b.default_icon = "far-pen-to-square"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true

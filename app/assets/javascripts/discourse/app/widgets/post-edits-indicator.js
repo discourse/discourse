@@ -39,7 +39,7 @@ export default createWidget("post-edits-indicator", {
     let title;
 
     if (attrs.wiki) {
-      icon = "far-edit";
+      icon = "far-pen-to-square";
       className = `${className || ""} wiki`.trim();
 
       if (attrs.version > 1) {

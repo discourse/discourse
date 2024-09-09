@@ -276,7 +276,7 @@ registerButton("wiki-edit", (attrs) => {
       action: "editPost",
       className: "edit create",
       title: "post.controls.edit",
-      icon: "far-edit",
+      icon: "far-pen-to-square",
       alwaysShowYours: true,
     };
     if (!attrs.mobileView) {
