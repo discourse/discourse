@@ -432,14 +432,13 @@ $usercard-backdrop: dark-light-choose(none, brightness(0.7));
     align-items: center;
     width: min-content;
     background-color: rgba(var(--secondary-rgb), 0.75);
-    padding: 6px;
     border-radius: var(--d-border-radius);
-    gap: 0.5em;
   }
   &__time {
     color: var(--primary);
     width: max-content;
     font-size: var(--font-down-1);
+    padding: 6px;
   }
   &__location {
     width: max-content;
@@ -450,6 +449,7 @@ $usercard-backdrop: dark-light-choose(none, brightness(0.7));
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    padding: 6px;
   }
   &__location-link {
     color: var(--primary);
