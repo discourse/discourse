@@ -32,8 +32,6 @@ export default class ScrollTracker extends Component.extend(Scrolling) {
   }
 
   scrolled() {
-    super.scrolled(...arguments);
-
     this.session.set(this.trackerName, {
       position: $(window).scrollTop(),
       tag: this.tag,
