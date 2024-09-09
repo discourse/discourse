@@ -86,6 +86,7 @@ class WebHookEventType < ActiveRecord::Base
     chat_message_trashed: 1803,
     chat_message_restored: 1804,
     category_experts_approved: 1901,
+    category_experts_unapproved: 1902,
   }
 
   has_and_belongs_to_many :web_hooks
@@ -118,7 +119,9 @@ class WebHookEventType < ActiveRecord::Base
       )
     end
     unless defined?(SiteSetting.enable_category_experts) && SiteSetting.enable_category_experts
-      ids_to_exclude.concat([TYPES[:category_experts_approved]])
+      ids_to_exclude.concat(
+        [TYPES[:category_experts_approved], TYPES[:category_experts_unapproved]],
+      )
     end
     self.where.not(id: ids_to_exclude)
   end
