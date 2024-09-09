@@ -205,10 +205,10 @@ GEM
       base64
     kgio (2.11.4)
     language_server-protocol (3.17.0.3)
-    libv8-node (18.19.0.0-aarch64-linux)
-    libv8-node (18.19.0.0-arm64-darwin)
-    libv8-node (18.19.0.0-x86_64-darwin)
-    libv8-node (18.19.0.0-x86_64-linux)
+    libv8-node (22.7.0.3)
+    libv8-node (22.7.0.3-aarch64-linux)
+    libv8-node (22.7.0.3-arm64-darwin)
+    libv8-node (22.7.0.3-x86_64-linux)
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -240,8 +240,8 @@ GEM
       mini_racer (>= 0.6.3)
     method_source (1.1.0)
     mini_mime (1.1.5)
-    mini_racer (0.14.1)
-      libv8-node (~> 18.19.0.0)
+    mini_racer (0.17.0.pre2)
+      libv8-node (~> 22.7.0.3)
     mini_scheduler (0.17.0)
       sidekiq (>= 4.2.3, < 7.0)
     mini_sql (1.6.0)
@@ -419,7 +419,7 @@ GEM
       rspec-mocks (~> 3.13.0)
     rspec-core (3.13.1)
       rspec-support (~> 3.13.0)
-    rspec-expectations (3.13.2)
+    rspec-expectations (3.13.3)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-html-matchers (0.10.0)
@@ -472,12 +472,12 @@ GEM
       rubocop-rspec_rails (>= 2.30.0)
     rubocop-factory_bot (2.26.1)
       rubocop (~> 1.61)
-    rubocop-rails (2.26.0)
+    rubocop-rails (2.26.1)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.52.0, < 2.0)
       rubocop-ast (>= 1.31.1, < 2.0)
-    rubocop-rspec (3.0.4)
+    rubocop-rspec (3.0.5)
       rubocop (~> 1.61)
     rubocop-rspec_rails (2.30.0)
       rubocop (~> 1.61)
@@ -520,7 +520,7 @@ GEM
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
-    simplecov-html (0.12.3)
+    simplecov-html (0.13.0)
     simplecov_json_formatter (0.1.4)
     simpleidn (0.2.3)
     snaky_hash (2.0.1)
@@ -651,7 +651,7 @@ DEPENDENCIES
   message_bus
   messageformat-wrapper
   mini_mime
-  mini_racer
+  mini_racer (= 0.17.0.pre2)
   mini_scheduler
   mini_sql
   mini_suffix

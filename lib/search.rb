@@ -903,8 +903,11 @@ class Search
         found = false
 
         Search.advanced_filters.each do |matcher, block|
+          case_insensitive_matcher =
+            Regexp.new(matcher.source, matcher.options | Regexp::IGNORECASE)
+
           cleaned = word.gsub(/["']/, "")
-          if cleaned =~ matcher
+          if cleaned =~ case_insensitive_matcher
             (@filters ||= []) << [block, $1]
             found = true
           end

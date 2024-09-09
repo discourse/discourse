@@ -51,6 +51,10 @@ class TagGroupsController < ApplicationController
     guardian.ensure_can_admin_tag_groups!
     @tag_group = TagGroup.new(tag_groups_params)
     if @tag_group.save
+      StaffActionLogger.new(current_user).log_tag_group_create(
+        @tag_group.name,
+        TagGroupSerializer.new(@tag_group).to_json(root: false),
+      )
       render_serialized(@tag_group, TagGroupSerializer)
     else
       render_json_error(@tag_group)
@@ -59,13 +63,20 @@ class TagGroupsController < ApplicationController
 
   def update
     guardian.ensure_can_admin_tag_groups!
+    old_data = TagGroupSerializer.new(@tag_group).to_json(root: false)
     json_result(@tag_group, serializer: TagGroupSerializer) do |tag_group|
       @tag_group.update(tag_groups_params)
+      new_data = TagGroupSerializer.new(@tag_group).to_json(root: false)
+      StaffActionLogger.new(current_user).log_tag_group_change(@tag_group.name, old_data, new_data)
     end
   end
 
   def destroy
     guardian.ensure_can_admin_tag_groups!
+    StaffActionLogger.new(current_user).log_tag_group_destroy(
+      @tag_group.name,
+      TagGroupSerializer.new(@tag_group).to_json(root: false),
+    )
     @tag_group.destroy
     render json: success_json
   end
