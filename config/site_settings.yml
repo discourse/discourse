@@ -429,6 +429,7 @@ basic:
   use_legacy_pageviews:
     default: false
     hidden: true
+    client: true
 login:
   invite_only:
     refresh: true
