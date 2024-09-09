@@ -230,8 +230,8 @@ importers:
   app/assets/javascripts/dialog-holder:
     dependencies:
       a11y-dialog:
-        specifier: 8.1.0
-        version: 8.1.0
+        specifier: 8.1.1
+        version: 8.1.1
       ember-auto-import:
         specifier: ^2.7.4
         version: 2.7.4(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.24)(esbuild@0.23.1))
@@ -412,8 +412,8 @@ importers:
         specifier: 3.1.1
         version: 3.1.1(@uppy/core@3.0.4)
       a11y-dialog:
-        specifier: 8.1.0
-        version: 8.1.0
+        specifier: 8.1.1
+        version: 8.1.1
       admin:
         specifier: workspace:1.0.0
         version: link:../admin
@@ -2857,8 +2857,8 @@ packages:
   '@zxing/text-encoding@0.9.0':
     resolution: {integrity: sha512-U/4aVJ2mxI0aDNI8Uq0wEhMgY+u4CNtEb0om3+y3+niDAsoTCOB33UF0sxpzqzdqXLqmvc+vZyAt4O8pPdfkwA==}
 
-  a11y-dialog@8.1.0:
-    resolution: {integrity: sha512-1sAxP3CXOgdfQPG0N33sg1jNYwJ0WS48V1rlqsoyb7Ih9GmMEimlCmU74tVePJv2Oihdpk9NqeB6OAt0IaGyLw==}
+  a11y-dialog@8.1.1:
+    resolution: {integrity: sha512-7SBLXFwhQBnEHOaIiKUUQZ5VKJa/b1jBDvPJvlejlqX2w9cpi+iHBrdjcmd4Xd6vIdsuMHGo9Is2SWu0Hzu0zg==}
 
   abab@2.0.6:
     resolution: {integrity: sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==}
@@ -10728,7 +10728,7 @@ snapshots:
 
   '@zxing/text-encoding@0.9.0': {}
 
-  a11y-dialog@8.1.0:
+  a11y-dialog@8.1.1:
     dependencies:
       focusable-selectors: 0.8.4
 
