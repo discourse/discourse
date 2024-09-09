@@ -454,7 +454,10 @@ RSpec.describe TopicViewSerializer do
 
     context "with can_edit" do
       fab!(:group_user)
-      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:category)
+      fab!(:category_moderation_group) do
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
+      end
       fab!(:topic) { Fabricate(:topic, category: category) }
       let(:user) { group_user.user }
 

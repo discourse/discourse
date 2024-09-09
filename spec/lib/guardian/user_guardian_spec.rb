@@ -415,8 +415,10 @@ RSpec.describe UserGuardian do
       group.add(user)
       guardian = Guardian.new(user)
       SiteSetting.enable_category_group_moderation = true
+      category = Fabricate(:category)
+      Fabricate(:category_moderation_group, category:, group:)
 
-      Fabricate(:reviewable_flagged_post, reviewable_by_group: group, category: nil)
+      Fabricate(:reviewable_flagged_post, category:)
 
       expect(guardian.can_see_review_queue?).to eq(true)
     end
@@ -426,8 +428,10 @@ RSpec.describe UserGuardian do
       group.add(user)
       guardian = Guardian.new(user)
       SiteSetting.enable_category_group_moderation = false
+      category = Fabricate(:category)
+      Fabricate(:category_moderation_group, category:, group:)
 
-      Fabricate(:reviewable_flagged_post, reviewable_by_group: group, category: nil)
+      Fabricate(:reviewable_flagged_post, category:)
 
       expect(guardian.can_see_review_queue?).to eq(false)
     end
@@ -438,8 +442,9 @@ RSpec.describe UserGuardian do
       guardian = Guardian.new(user)
       SiteSetting.enable_category_group_moderation = true
       category = Fabricate(:category, read_restricted: true)
+      Fabricate(:category_moderation_group, category:, group:)
 
-      Fabricate(:reviewable_flagged_post, reviewable_by_group: group, category: category)
+      Fabricate(:reviewable_flagged_post, category: category)
 
       expect(guardian.can_see_review_queue?).to eq(false)
     end

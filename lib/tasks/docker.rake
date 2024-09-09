@@ -299,8 +299,6 @@ task "docker:test" do
       end
 
       unless ENV["RUBY_ONLY"]
-        js_timeout = ENV["JS_TIMEOUT"].presence || 900_000 # 15 minutes
-
         unless ENV["SKIP_CORE"]
           @good &&=
             run_or_fail(
@@ -310,14 +308,11 @@ task "docker:test" do
 
         unless ENV["SKIP_PLUGINS"]
           if ENV["SINGLE_PLUGIN"]
-            @good &&=
-              run_or_fail(
-                "CI=1 bundle exec rake plugin:qunit['#{ENV["SINGLE_PLUGIN"]}','#{js_timeout}']",
-              )
+            @good &&= run_or_fail("CI=1 bundle exec rake plugin:qunit['#{ENV["SINGLE_PLUGIN"]}']")
           else
             @good &&=
               run_or_fail(
-                "QUNIT_PARALLEL=#{qunit_concurrency}  CI=1 bundle exec rake plugin:qunit['*','#{js_timeout}']",
+                "QUNIT_PARALLEL=#{qunit_concurrency} CI=1 bundle exec rake plugin:qunit['*']",
               )
           end
         end

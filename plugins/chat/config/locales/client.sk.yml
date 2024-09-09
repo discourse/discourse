@@ -142,6 +142,7 @@ sk:
       header_indicator_preference:
         title: "Zobrazenie indikátora aktivity v záhlaví"
         all_new: "Všetky nové správy"
+        dm_and_mentions: "Priame správy, zmienky a sledované vlákna"
         only_mentions: "Iba zmienky"
         never: "Nikdy"
       separate_sidebar_mode:
@@ -671,10 +672,13 @@ sk:
         notifications:
           regular:
             title: "Normálne"
+            description: "Nechajte sa upozorniť, keď vás niekto spomenie v tomto vlákne."
           tracking:
             title: "Pozorovať"
+            description: "Dostávajte upozornenia, keď sa o vás niekto zmieni v tomto vlákne, a uvidíte počet nových odpovedí v zozname vlákien."
           watching:
             title: "Sledovať"
+            description: "Dostať upozornenie o všetkých odpovediach v tomto vlákne a vidieť počet nových odpovedí v zozname vlákien."
         participants_other_count:
           one: "+%{count}"
           few: "+%{count}"
@@ -702,6 +706,11 @@ sk:
       chat_invitation: "vás pozval do chatového kanála"
       chat_invitation_html: "<span>%{username}</span> <span>vás pozvali, aby ste sa pripojili ku kanálu četu</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} a %{username2}"
+        few: "%{username} a %{count} iných"
+        many: "%{username} a %{count} iné"
+        other: "%{username} a %{count} iné"
       popup:
         chat_mention:
           direct: 'vás spomenul v "%{channel}"'
@@ -719,6 +728,7 @@ sk:
         chat_mention: "Zmienka o chate"
         chat_invitation: "Pozvánka na chat"
         chat_quoted: "Chat citovaný"
+        chat_watched_thread: "Sledované vlákno chatu"
     action_codes:
       chat:
         enabled: '%{who} povolené <button class="btn-link open-chat">chat</button> %{when}'

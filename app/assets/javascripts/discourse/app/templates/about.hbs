@@ -162,10 +162,7 @@
                   <td>{{number this.model.stats.likes_30_days}}</td>
                   <td>{{number this.model.stats.likes_count}}</td>
                 </tr>
-                {{#each
-                  this.site.displayed_about_plugin_stat_groups
-                  as |statGroupName|
-                }}
+                {{#each this.statGroups as |statGroupName|}}
                   <tr class={{concat "about-" statGroupName "-count"}}>
                     <td>{{i18n (concat "about." statGroupName "_count")}}</td>
                     <td>{{number

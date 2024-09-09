@@ -1052,6 +1052,33 @@ class StaffActionLogger
     )
   end
 
+  def log_tag_group_create(name, new_value, opts = {})
+    UserHistory.create!(
+      params(opts).merge(json_params(nil, new_value)).merge(
+        action: UserHistory.actions[:tag_group_create],
+        subject: name,
+      ),
+    )
+  end
+
+  def log_tag_group_destroy(name, old_value, opts = {})
+    UserHistory.create!(
+      params(opts).merge(json_params(old_value, nil)).merge(
+        action: UserHistory.actions[:tag_group_destroy],
+        subject: name,
+      ),
+    )
+  end
+
+  def log_tag_group_change(name, old_data, new_data)
+    UserHistory.create!(
+      params.merge(json_params(old_data, new_data)).merge(
+        action: UserHistory.actions[:tag_group_change],
+        subject: name,
+      ),
+    )
+  end
+
   private
 
   def json_params(previous_value, new_value)

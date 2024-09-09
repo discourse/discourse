@@ -16,6 +16,7 @@ class Group < ActiveRecord::Base
   self.preloaded_custom_field_names = Set.new
 
   has_many :category_groups, dependent: :destroy
+  has_many :category_moderation_groups, dependent: :destroy
   has_many :group_users, dependent: :destroy
   has_many :group_requests, dependent: :destroy
   has_many :group_mentions, dependent: :destroy
@@ -24,15 +25,11 @@ class Group < ActiveRecord::Base
   has_many :group_archived_messages, dependent: :destroy
 
   has_many :categories, through: :category_groups
+  has_many :moderation_categories, through: :category_moderation_groups, source: :category
   has_many :users, through: :group_users
   has_many :human_users, -> { human_users }, through: :group_users, source: :user
   has_many :requesters, through: :group_requests, source: :user
   has_many :group_histories, dependent: :destroy
-  has_many :category_reviews,
-           class_name: "Category",
-           foreign_key: :reviewable_by_group_id,
-           dependent: :nullify
-  has_many :reviewables, foreign_key: :reviewable_by_group_id, dependent: :nullify
   has_many :group_category_notification_defaults, dependent: :destroy
   has_many :group_tag_notification_defaults, dependent: :destroy
   has_many :associated_groups, through: :group_associated_groups, dependent: :destroy
@@ -79,10 +76,6 @@ class Group < ActiveRecord::Base
 
   def expire_imap_mailbox_cache
     Discourse.cache.delete("group_imap_mailboxes_#{self.id}")
-  end
-
-  def remove_review_groups
-    Category.where(review_group_id: self.id).update_all(review_group_id: nil)
   end
 
   validate :name_format_validator

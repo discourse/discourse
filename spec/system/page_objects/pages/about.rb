@@ -50,6 +50,26 @@ module PageObjects
         site_age_stat_element.has_text?(I18n.t("js.about.site_age.year", count: years))
       end
 
+      def edit_link
+        find(".edit-about-page")
+      end
+
+      def has_edit_link?
+        has_css?(".edit-about-page")
+      end
+
+      def has_no_edit_link?
+        has_no_css?(".edit-about-page")
+      end
+
+      def has_traffic_info_footer?
+        has_css?(".traffic-info-footer")
+      end
+
+      def has_no_traffic_info_footer?
+        has_no_css?(".traffic-info-footer")
+      end
+
       def site_activities
         PageObjects::Components::AboutPageSiteActivity.new(find(".about__activities"))
       end

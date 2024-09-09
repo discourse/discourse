@@ -1,4 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { INDICATOR_PREFERENCES } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
 const MENTION = 29;
 const MESSAGE = 30;
@@ -16,11 +17,32 @@ export default {
 
     withPluginApi("0.12.1", (api) => {
       api.registerDesktopNotificationHandler((data, siteSettings, user) => {
+        const indicatorType = user.user_option.chat_header_indicator_preference;
+        const isMention = data.notification_type === MENTION;
+
         if (user.isInDoNotDisturb()) {
           return;
         }
 
-        if (!user.chat_sound) {
+        if (
+          !user.user_option.chat_sound ||
+          indicatorType === INDICATOR_PREFERENCES.never
+        ) {
+          return;
+        }
+
+        if (
+          indicatorType === INDICATOR_PREFERENCES.only_mentions &&
+          !isMention
+        ) {
+          return;
+        }
+
+        if (
+          indicatorType === INDICATOR_PREFERENCES.dm_and_mentions &&
+          !data.isDirectMessageChannel &&
+          !isMention
+        ) {
           return;
         }
 

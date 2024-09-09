@@ -2,7 +2,7 @@
 
 class Chat::Api::DirectMessagesController < Chat::ApiController
   def create
-    with_service(Chat::CreateDirectMessageChannel) do
+    Chat::CreateDirectMessageChannel.call do
       on_success do
         render_serialized(
           result.channel,

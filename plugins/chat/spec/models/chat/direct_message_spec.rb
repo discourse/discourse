@@ -24,11 +24,11 @@ describe Chat::DirectMessage do
       )
     end
 
-    it "returns a nicely formatted truncated name if it's more than 5 users" do
+    it "returns a nicely formatted truncated name if it's more than 7 users" do
       user3 = Fabricate.build(:user, username: "chatdmregent")
 
       users = [user1, user2, user3].concat(
-        5.times.map { |i| Fabricate(:user, username: "chatdmuser#{i}") },
+        6.times.map { |i| Fabricate(:user, username: "chatdmuser#{i}") },
       )
       direct_message = Fabricate(:direct_message, users: users)
 
@@ -36,7 +36,7 @@ describe Chat::DirectMessage do
         I18n.t(
           "chat.channel.dm_title.multi_user_truncated",
           comma_separated_usernames:
-            users[1..5]
+            users[1..6]
               .sort_by(&:username)
               .map { |u| "@#{u.username}" }
               .join(I18n.t("word_connector.comma")),

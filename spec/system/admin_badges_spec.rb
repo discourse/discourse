@@ -43,7 +43,7 @@ describe "Admin Badges Page", type: :system do
       badges_page.form.field("enabled").accept
       badges_page.form.field("name").fill_in("a name")
       badges_page.form.field("badge_type_id").select(BadgeType::Bronze)
-      badges_page.form.field("icon").select("ambulance")
+      badges_page.form.field("icon").select("truck-medical")
       badges_page.form.field("description").fill_in("a description")
       badges_page.form.field("long_description").fill_in("a long_description")
       badges_page.form.field("badge_grouping_id").select(BadgeGrouping::GettingStarted)
@@ -75,11 +75,11 @@ describe "Admin Badges Page", type: :system do
       badge = Badge.find(Badge::Autobiographer)
       badge.update!(image_upload_id: Fabricate(:image_upload).id)
 
-      badges_page.visit_page(Badge::Autobiographer).choose_icon("ambulance").submit_form
+      badges_page.visit_page(Badge::Autobiographer).choose_icon("truck-medical").submit_form
 
       expect(badges_page).to have_saved_form
       expect(badge.reload.image_upload_id).to be_blank
-      expect(badge.icon).to eq("ambulance")
+      expect(badge.icon).to eq("truck-medical")
     end
   end
 
@@ -102,7 +102,7 @@ describe "Admin Badges Page", type: :system do
       badges_page.form.field("enabled").accept
       badges_page.form.field("name").fill_in("a name")
       badges_page.form.field("badge_type_id").select(BadgeType::Bronze)
-      badges_page.form.field("icon").select("ambulance")
+      badges_page.form.field("icon").select("truck-medical")
       badges_page.submit_form
       expect(badges_page).to have_saved_form
       badges_page.form.field("name").fill_in("another name")

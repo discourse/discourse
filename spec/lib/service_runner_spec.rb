@@ -148,8 +148,8 @@ RSpec.describe ServiceRunner do
     end
   end
 
-  describe ".call(service, &block)" do
-    subject(:runner) { described_class.call(service, object, &actions_block) }
+  describe ".call" do
+    subject(:runner) { described_class.call(service, &actions_block) }
 
     let(:result) { object.result }
     let(:actions_block) { object.instance_eval(actions) }
@@ -158,8 +158,6 @@ RSpec.describe ServiceRunner do
     let(:object) do
       Class
         .new(ApplicationController) do
-          include WithServiceHelper
-
           def request
             OpenStruct.new
           end
@@ -450,7 +448,7 @@ RSpec.describe ServiceRunner do
     end
 
     context "when running in the context of a job" do
-      let(:object) { Class.new(ServiceJob).new }
+      let(:object) { Class.new(Jobs::Base).new }
       let(:actions) { <<-BLOCK }
           proc do
             on_success { :success }
