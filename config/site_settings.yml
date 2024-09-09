@@ -410,6 +410,9 @@ basic:
   show_user_menu_avatars:
     client: true
     default: false
+  about_page_hidden_groups:
+    default: ""
+    type: group_list
   extended_site_description:
     default: ""
     max: 10_000
