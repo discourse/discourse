@@ -54,15 +54,15 @@ module DiscourseAutomation
             next if (restricted_tags["value"] & topic.tags.map(&:name)).empty?
           end
 
-          restricted_group_id = automation.trigger_field("restricted_group")["value"]
-          if restricted_group_id.present?
+          restricted_group_ids = automation.trigger_field("restricted_groups")["value"]
+          if restricted_group_ids.present?
             next if !topic.private_message?
 
             target_group_ids = topic.allowed_groups.pluck(:id)
-            next if restricted_group_id != target_group_ids.first
+            next if (restricted_group_ids & target_group_ids).empty?
 
-            ignore_group_members = automation.trigger_field("ignore_group_members")
-            next if ignore_group_members["value"] && post.user.in_any_groups?([restricted_group_id])
+            ignore_group_members = automation.trigger_field("ignore_group_members")["value"]
+            next if ignore_group_members && post.user.in_any_groups?(restricted_group_ids)
           end
 
           ignore_automated = automation.trigger_field("ignore_automated")
@@ -218,7 +218,7 @@ module DiscourseAutomation
         end
     end
 
-    def self.handle_topic_tags_changed(topic, old_tag_names, new_tag_names)
+    def self.handle_topic_tags_changed(topic, old_tag_names, new_tag_names, user)
       name = DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED
 
       DiscourseAutomation::Automation
@@ -248,6 +248,7 @@ module DiscourseAutomation
             "topic" => topic,
             "removed_tags" => removed_tags,
             "added_tags" => added_tags,
+            "user" => user,
             "placeholders" => {
               "topic_url" => topic.relative_url,
               "topic_title" => topic.title,

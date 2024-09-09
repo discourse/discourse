@@ -419,7 +419,7 @@ GEM
       rspec-mocks (~> 3.13.0)
     rspec-core (3.13.1)
       rspec-support (~> 3.13.0)
-    rspec-expectations (3.13.2)
+    rspec-expectations (3.13.3)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-html-matchers (0.10.0)
@@ -472,19 +472,19 @@ GEM
       rubocop-rspec_rails (>= 2.30.0)
     rubocop-factory_bot (2.26.1)
       rubocop (~> 1.61)
-    rubocop-rails (2.26.0)
+    rubocop-rails (2.26.1)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.52.0, < 2.0)
       rubocop-ast (>= 1.31.1, < 2.0)
-    rubocop-rspec (3.0.4)
+    rubocop-rspec (3.0.5)
       rubocop (~> 1.61)
     rubocop-rspec_rails (2.30.0)
       rubocop (~> 1.61)
       rubocop-rspec (~> 3, >= 3.0.1)
     ruby-prof (1.7.0)
     ruby-progressbar (1.13.0)
-    ruby-readability (0.7.1)
+    ruby-readability (0.7.2)
       guess_html_encoding (>= 0.0.4)
       nokogiri (>= 1.6.0)
     ruby2_keywords (0.0.5)
@@ -520,7 +520,7 @@ GEM
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
-    simplecov-html (0.12.3)
+    simplecov-html (0.13.0)
     simplecov_json_formatter (0.1.4)
     simpleidn (0.2.3)
     snaky_hash (2.0.1)
@@ -621,7 +621,6 @@ DEPENDENCIES
   discourse-fonts
   discourse-seed-fu
   discourse_dev_assets
-  drb
   email_reply_trimmer
   excon
   execjs
@@ -660,7 +659,6 @@ DEPENDENCIES
   mocha
   multi_json
   mustache
-  mutex_m
   net-http
   net-imap
   net-pop

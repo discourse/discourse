@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 desc "Runs the qunit test suite"
-task "qunit:test", %i[timeout qunit_path filter] do |_, args|
+task "qunit:test", %i[qunit_path filter] do |_, args|
   require "socket"
   require "chrome_installed_checker"
 

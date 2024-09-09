@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 
-export default class AdminThemeChangeComponent extends Component {
+export default class AdminStaffActionLogComponent extends Component {
   @tracked diff;
 
   constructor() {

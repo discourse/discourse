@@ -73,6 +73,7 @@ export default class SidebarHamburgerDropdown extends Component {
                     @collapsableSections={{this.collapsableSections}}
                   />
                 {{/if}}
+                <PluginOutlet @name="after-sidebar-sections" />
                 <Footer />
               </div>
             </DeferredRender>

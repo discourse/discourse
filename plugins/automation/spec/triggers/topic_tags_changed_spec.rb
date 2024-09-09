@@ -55,6 +55,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
 
       expect(list.length).to eq(1)
       expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
+      expect(list[0]["user"]).to eq(user)
     end
 
     it "should fire the trigger if the tag is removed" do
@@ -65,6 +66,7 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
 
       expect(list.length).to eq(1)
       expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
+      expect(list[0]["user"]).to eq(user)
     end
 
     it "should not fire if the tag is not present" do
