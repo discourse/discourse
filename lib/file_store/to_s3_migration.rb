@@ -211,7 +211,8 @@ module FileStore
         UPLOAD_CONCURRENCY.times.map do
           Thread.new do
             while obj = queue.pop
-              if s3.put_object(obj[:options])
+              opts_with_file = obj[:options].merge(body: File.open(obj[:path], "rb"))
+              if s3.put_object(opts_with_file)
                 putc "."
                 lock.synchronize { synced += 1 }
               else
@@ -237,7 +238,6 @@ module FileStore
 
         options = {
           acl: SiteSetting.s3_use_acls ? "public-read" : nil,
-          body: File.open(path, "rb"),
           bucket: bucket,
           content_type: MiniMime.lookup_by_filename(name)&.content_type,
           content_md5: content_md5,
