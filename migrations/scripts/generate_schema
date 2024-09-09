@@ -11,7 +11,6 @@ require_relative "../lib/migrations"
 
 module Migrations
   load_rails_environment
-  load_gemfiles("common")
 
   class SchemaGenerator
     def initialize(opts = {})
@@ -305,4 +304,4 @@ module Migrations
   end
 end
 
-Migrations::SchemaGenerator.new(output_file_path: ARGV.first).run
+::Migrations::SchemaGenerator.new(output_file_path: ARGV.first).run
