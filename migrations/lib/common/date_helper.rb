@@ -4,7 +4,7 @@ module Migrations
   module DateHelper
     # based on code from https://gist.github.com/emmahsax/af285a4b71d8506a1625a3e591dc993b
     def self.human_readable_time(secs)
-      return "< 1 seconds" if secs < 1
+      return "< 1 second" if secs < 1
 
       [[60, :seconds], [60, :minutes], [24, :hours], [Float::INFINITY, :days]].map do |count, name|
           next if secs <= 0
