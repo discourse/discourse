@@ -618,16 +618,8 @@ createWidget("post-contents", {
         this.state.repliesBelow = posts.map((p) => {
           let result = transformWithCallbacks(p);
 
-          // these would conflict with computed properties with identical names
-          // in the post model if we kept them.
-          delete result.new_user;
-          delete result.deleted;
-          delete result.shareUrl;
-          delete result.firstPost;
-          delete result.usernameUrl;
-
           result.customShare = `${topicUrl}/${p.post_number}`;
-          result.asPost = this.store.createRecord("post", result);
+          result.asPost = this.store.createRecord("post", p);
           return result;
         });
       });
@@ -882,18 +874,8 @@ createWidget("post-article", {
           this.state.repliesAbove = posts.map((p) => {
             let result = transformWithCallbacks(p);
 
-            // We don't want to overwrite CPs - we are doing something a bit weird
-            // here by creating a post object from a transformed post. They aren't
-            // 100% the same.
-            delete result.new_user;
-            delete result.deleted;
-            delete result.shareUrl;
-            delete result.firstPost;
-            delete result.usernameUrl;
-            delete result.topicNotificationLevel;
-
             result.customShare = `${topicUrl}/${p.post_number}`;
-            result.asPost = this.store.createRecord("post", result);
+            result.asPost = this.store.createRecord("post", p);
             return result;
           });
         });

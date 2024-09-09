@@ -949,16 +949,16 @@ RSpec.describe DiscourseTagging do
 
       it "sends a discourse event when the staff adds a staff-only tag" do
         old_tag_names = topic.tags.pluck(:name)
+        admin_guardian = Guardian.new(admin)
         tag_changed_event =
           DiscourseEvent
-            .track_events do
-              DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), ["alpha"])
-            end
+            .track_events { DiscourseTagging.tag_topic_by_names(topic, admin_guardian, ["alpha"]) }
             .last
         expect(tag_changed_event[:event_name]).to eq(:topic_tags_changed)
         expect(tag_changed_event[:params].first).to eq(topic)
         expect(tag_changed_event[:params].second[:old_tag_names]).to eq(old_tag_names)
         expect(tag_changed_event[:params].second[:new_tag_names]).to eq(["alpha"])
+        expect(tag_changed_event[:params].second[:user]).to eq(admin_guardian.user)
       end
 
       context "with non-staff users in tag group groups" do

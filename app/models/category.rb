@@ -7,6 +7,7 @@ class Category < ActiveRecord::Base
     :suppress_from_latest, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
     :required_tag_group_id, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
     :min_tags_from_required_group, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
+    :reviewable_by_group_id,
   ]
 
   include Searchable
@@ -37,7 +38,9 @@ class Category < ActiveRecord::Base
   has_many :featured_topics, through: :category_featured_topics, source: :topic
 
   has_many :category_groups, dependent: :destroy
+  has_many :category_moderation_groups, dependent: :destroy
   has_many :groups, through: :category_groups
+  has_many :moderating_groups, through: :category_moderation_groups, source: :group
   has_many :topic_timers, dependent: :destroy
   has_many :upload_references, as: :target, dependent: :destroy
 
@@ -110,7 +113,6 @@ class Category < ActiveRecord::Base
   after_save :reset_topic_ids_cache
   after_save :clear_subcategory_ids
   after_save :clear_url_cache
-  after_save :update_reviewables
   after_save :publish_discourse_stylesheet
   after_save :publish_category
 
@@ -162,8 +164,6 @@ class Category < ActiveRecord::Base
 
   has_many :category_form_templates, dependent: :destroy
   has_many :form_templates, through: :category_form_templates
-
-  belongs_to :reviewable_by_group, class_name: "Group"
 
   scope :latest, -> { order("topic_count DESC") }
 
@@ -1113,10 +1113,8 @@ class Category < ActiveRecord::Base
     )
   end
 
-  def update_reviewables
-    if should_update_reviewables?
-      Reviewable.where(category_id: id).update_all(reviewable_by_group_id: reviewable_by_group_id)
-    end
+  def moderating_group_ids
+    category_moderation_groups.pluck(:group_id)
   end
 
   def self.find_by_slug_path(slug_path)
@@ -1278,10 +1276,6 @@ class Category < ActiveRecord::Base
     self.build_category_setting if self.category_setting.blank?
   end
 
-  def should_update_reviewables?
-    SiteSetting.enable_category_group_moderation? && saved_change_to_reviewable_by_group_id?
-  end
-
   def check_permissions_compatibility(parent_permissions, child_permissions)
     parent_groups = parent_permissions.map(&:first)
 
@@ -1381,7 +1375,6 @@ end
 #  navigate_to_first_post_after_read         :boolean          default(FALSE), not null
 #  search_priority                           :integer          default(0)
 #  allow_global_tags                         :boolean          default(FALSE), not null
-#  reviewable_by_group_id                    :integer
 #  read_only_banner                          :string
 #  default_list_filter                       :string(20)       default("all")
 #  allow_unlimited_owner_edits_on_first_post :boolean          default(FALSE), not null

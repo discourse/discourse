@@ -1,7 +1,7 @@
-diff --git a/node_modules/content-tag/pkg/standalone.js b/node_modules/content-tag/pkg/standalone.js
+diff --git a/pkg/standalone.js b/pkg/standalone.js
 index 7be08fc..35777bf 100644
---- a/node_modules/content-tag/pkg/standalone.js
-+++ b/node_modules/content-tag/pkg/standalone.js
+--- a/pkg/standalone.js
++++ b/pkg/standalone.js
 @@ -1,7 +1,8 @@
 -import init from "./standalone/content_tag.js";
 +import { initSync } from "./standalone/content_tag.js";
@@ -13,10 +13,10 @@ index 7be08fc..35777bf 100644
  
  const defaultOptions = {
    inline_source_map: false,
-diff --git a/node_modules/content-tag/pkg/standalone/content_tag.js b/node_modules/content-tag/pkg/standalone/content_tag.js
+diff --git a/pkg/standalone/content_tag.js b/pkg/standalone/content_tag.js
 index aaefe00..bb20026 100644
---- a/node_modules/content-tag/pkg/standalone/content_tag.js
-+++ b/node_modules/content-tag/pkg/standalone/content_tag.js
+--- a/pkg/standalone/content_tag.js
++++ b/pkg/standalone/content_tag.js
 @@ -20,6 +20,7 @@ function takeObject(idx) {
      return ret;
  }

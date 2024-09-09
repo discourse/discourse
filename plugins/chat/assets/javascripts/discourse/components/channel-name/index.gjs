@@ -5,9 +5,14 @@ import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserStatusMessage from "discourse/components/user-status-message";
 import replaceEmoji from "discourse/helpers/replace-emoji";
+import ChatChannelUnreadIndicator from "../chat-channel-unread-indicator";
 
 export default class ChatChannelName extends Component {
   @service currentUser;
+
+  get unreadIndicator() {
+    return this.args.unreadIndicator ?? false;
+  }
 
   get firstUser() {
     return this.args.channel.chatable.users[0];
@@ -37,27 +42,43 @@ export default class ChatChannelName extends Component {
   }
 
   get showUserStatus() {
+    if (!this.args.channel.isDirectMessageChannel) {
+      return false;
+    }
     return !!(this.users.length === 1 && this.users[0].status);
+  }
+
+  get channelTitle() {
+    if (this.args.channel.isDirectMessageChannel) {
+      return this.groupDirectMessage
+        ? this.groupsDirectMessageTitle
+        : this.firstUser.username;
+    }
+    return this.args.channel.title;
+  }
+
+  get showPluginOutlet() {
+    return this.args.channel.isDirectMessageChannel && !this.groupDirectMessage;
   }
 
   <template>
     <div class="chat-channel-name">
-      {{#if @channel.isDirectMessageChannel}}
-        {{#if this.groupDirectMessage}}
-          <span class="chat-channel-name__label">
-            {{this.groupsDirectMessageTitle}}
-          </span>
-        {{else}}
-          <span class="chat-channel-name__label">
-            {{this.firstUser.username}}
-          </span>
-          {{#if this.showUserStatus}}
-            <UserStatusMessage
-              @status={{get this.users "0.status"}}
-              @showDescription={{if this.site.mobileView "true"}}
-              class="chat-channel__user-status-message"
-            />
-          {{/if}}
+      <div class="chat-channel-name__label">
+        {{replaceEmoji this.channelTitle}}
+
+        {{#if this.unreadIndicator}}
+          <ChatChannelUnreadIndicator @channel={{@channel}} />
+        {{/if}}
+
+        {{#if this.showUserStatus}}
+          <UserStatusMessage
+            @status={{get this.users "0.status"}}
+            @showDescription={{if this.site.mobileView "true"}}
+            class="chat-channel__user-status-message"
+          />
+        {{/if}}
+
+        {{#if this.showPluginOutlet}}
           <PluginOutlet
             @name="after-chat-channel-username"
             @outletArgs={{hash user=@user}}
@@ -65,15 +86,11 @@ export default class ChatChannelName extends Component {
             @connectorTagName=""
           />
         {{/if}}
-      {{else if @channel.isCategoryChannel}}
-        <span class="chat-channel-name__label">
-          {{replaceEmoji @channel.title}}
-        </span>
 
         {{#if (has-block)}}
           {{yield}}
         {{/if}}
-      {{/if}}
+      </div>
     </div>
   </template>
 }

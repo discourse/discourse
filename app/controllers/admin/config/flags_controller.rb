@@ -2,7 +2,7 @@
 
 class Admin::Config::FlagsController < Admin::AdminController
   def toggle
-    with_service(Flags::ToggleFlag) do
+    Flags::ToggleFlag.call do
       on_success do
         Discourse.request_refresh!
         render(json: success_json)
@@ -26,7 +26,7 @@ class Admin::Config::FlagsController < Admin::AdminController
   end
 
   def create
-    with_service(Flags::CreateFlag) do
+    Flags::CreateFlag.call do
       on_success do
         Discourse.request_refresh!
         render json: result.flag, serializer: FlagSerializer, used_flag_ids: Flag.used_flag_ids
@@ -40,7 +40,7 @@ class Admin::Config::FlagsController < Admin::AdminController
   end
 
   def update
-    with_service(Flags::UpdateFlag) do
+    Flags::UpdateFlag.call do
       on_success do
         Discourse.request_refresh!
         render json: result.flag, serializer: FlagSerializer, used_flag_ids: Flag.used_flag_ids
@@ -57,7 +57,7 @@ class Admin::Config::FlagsController < Admin::AdminController
   end
 
   def reorder
-    with_service(Flags::ReorderFlag) do
+    Flags::ReorderFlag.call do
       on_success do
         Discourse.request_refresh!
         render(json: success_json)
@@ -73,7 +73,7 @@ class Admin::Config::FlagsController < Admin::AdminController
   end
 
   def destroy
-    with_service(Flags::DestroyFlag) do
+    Flags::DestroyFlag.call do
       on_success do
         Discourse.request_refresh!
         render(json: success_json)

@@ -612,6 +612,9 @@ en:
         one: "%{count} user has been added to the group."
         other: "%{count} users have been added to the group."
     errors:
+      default_notification_level_users_limit:
+        one: "Default notification level can't be set on groups larger than %{count} user. Incorrect group: %{group_name}"
+        other: "Default notification level can't be set on groups larger than %{count} users. Incorrect group: %{group_name}"
       grant_trust_level_not_valid: "'%{trust_level}' is not a valid trust level."
       can_not_modify_automatic: "You cannot modify an automatic group"
       member_already_exist:
@@ -754,6 +757,7 @@ en:
               reply_by_email_disabled: "Reply by email has been disabled."
               send_to_email_disabled: "Sorry, you cannot send personal messages to email."
               target_user_not_found: "One of the users you are sending this message to could not be found."
+              too_large_group: "The group: %{group_name}, has too many users to receive a message. Limit is %{limit}."
               unable_to_update: "There was an error updating that topic."
               unable_to_tag: "There was an error tagging the topic."
               unable_to_unlist: "Sorry, you cannot create an unlisted topic."
@@ -1875,8 +1879,8 @@ en:
     include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
     display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
     top_menu: "Determine which items appear in the homepage navigation, and in what order."
-    post_menu: "Determine which items appear on the post menu, and in what order."
-    post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
+    post_menu: "Configure the visibility and order of default post menu items. Additional items added by plugins or themes are managed separately and won’t appear in this list."
+    post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on. Additional items added by plugins or themes are managed separately and won’t appear in this list."
     share_links: "Determine which items appear on the share dialog, and in what order."
     allow_username_in_share_links: "Allow usernames to be included in share links. This is useful to reward badges based on unique visitors."
     site_contact_username: "A valid staff username to send all automated messages from. If left blank the default System account will be used."
@@ -2688,7 +2692,6 @@ en:
     enable_experimental_lightbox: "EXPERIMENTAL: Replace the default image lightbox with the revamped design."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Show a quick access menu for bookmarks on posts and a new redesigned modal"
     experimental_redesigned_about_page_groups: "EXPERIMENTAL: Enable the redesigned /about page for specific groups."
-    glimmer_header_mode: "Control whether the new 'glimmer' header implementation is used. 'auto' will enable automatically once all your themes and plugins are ready. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "EXPERIMENTAL: Enable the new 'glimmer' topic list implementation. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
     experimental_form_templates: "EXPERIMENTAL: Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     admin_sidebar_enabled_groups: "Enable sidebar navigation for the admin UI for the specified groups, which replaces the top-level admin navigation buttons."

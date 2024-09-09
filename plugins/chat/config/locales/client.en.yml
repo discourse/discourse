@@ -251,6 +251,7 @@ en:
       placeholder_channel: "Chat in %{channelName}"
       placeholder_thread: "Chat in thread"
       placeholder_users: "Chat with %{commaSeparatedNames}"
+      placeholder_group: "Chat in group"
       placeholder_new_message_disallowed:
         archived: "Channel is archived, you cannot send new messages right now."
         closed: "Channel is closed, you cannot send new messages right now."

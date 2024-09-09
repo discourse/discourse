@@ -146,7 +146,7 @@ task "themes:qunit", :type, :value do |t, args|
   ENV["THEME_#{type.upcase}"] = value.to_s
   ENV["QUNIT_RAILS_ENV"] ||= "development" # qunit:test will switch to `test` by default
   Rake::Task["qunit:test"].reenable
-  Rake::Task["qunit:test"].invoke(1_200_000, "/theme-qunit")
+  Rake::Task["qunit:test"].invoke("/theme-qunit")
 end
 
 desc "Install a theme/component on a temporary DB and run QUnit tests"

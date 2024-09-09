@@ -426,6 +426,9 @@ basic:
     default: ""
     max: 300
     hidden: true
+  use_legacy_pageviews:
+    default: false
+    hidden: true
 login:
   invite_only:
     refresh: true
@@ -1227,6 +1230,11 @@ posting:
   max_form_template_content_length:
     default: 5000
     max: 150000
+  group_pm_user_limit:
+    default: 1000
+    type: integer
+    min: 1
+    hidden: true
 
 email:
   email_time_window_mins:
@@ -2427,14 +2435,6 @@ developer:
   instrument_gc_stat_per_request:
     default: false
     hidden: true
-  glimmer_header_mode:
-    client: true
-    type: enum
-    choices:
-      - disabled
-      - auto
-      - enabled
-    default: enabled
   admin_sidebar_enabled_groups:
     type: group_list
     list_type: compact

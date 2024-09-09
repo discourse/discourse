@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import AboutPageUsers from "discourse/components/about-page-users";
@@ -22,6 +23,7 @@ export function clearAboutPageActivities() {
 
 export default class AboutPage extends Component {
   @service siteSettings;
+  @service currentUser;
 
   get moderatorsCount() {
     return this.args.model.moderators.length;
@@ -168,6 +170,13 @@ export default class AboutPage extends Component {
     }
   }
 
+  get trafficInfoFooter() {
+    return I18n.messageFormat("about.traffic_info_footer_MF", {
+      total_visitors: this.args.model.stats.visitors_30_days,
+      eu_visitors: this.args.model.stats.eu_visitors_30_days,
+    });
+  }
+
   siteActivitiesFromPlugins() {
     const stats = this.args.model.stats;
     const statKeys = Object.keys(stats);
@@ -196,6 +205,14 @@ export default class AboutPage extends Component {
   }
 
   <template>
+    {{#if this.currentUser.admin}}
+      <p>
+        <LinkTo class="edit-about-page" @route="adminConfig.about">
+          {{dIcon "pencil-alt"}}
+          <span>{{i18n "about.edit"}}</span>
+        </LinkTo>
+      </p>
+    {{/if}}
     <section class="about__header">
       {{#if @model.banner_image}}
         <img class="about__banner" src={{@model.banner_image}} />
@@ -205,7 +222,7 @@ export default class AboutPage extends Component {
       <PluginOutlet
         @name="about-after-description"
         @connectorTagName="section"
-        @outletArgs={{hash model=this.model}}
+        @outletArgs={{hash model=@model}}
       />
     </section>
     <div class="about__main-content">
@@ -230,6 +247,11 @@ export default class AboutPage extends Component {
             <AboutPageUsers @users={{@model.admins}} @truncateAt={{6}} />
           </section>
         {{/if}}
+        <PluginOutlet
+          @name="about-after-admins"
+          @connectorTagName="section"
+          @outletArgs={{hash model=@model}}
+        />
 
         {{#if @model.moderators.length}}
           <section class="about__moderators">
@@ -237,7 +259,13 @@ export default class AboutPage extends Component {
             <AboutPageUsers @users={{@model.moderators}} @truncateAt={{6}} />
           </section>
         {{/if}}
+        <PluginOutlet
+          @name="about-after-moderators"
+          @connectorTagName="section"
+          @outletArgs={{hash model=@model}}
+        />
       </div>
+
       <div class="about__right-side">
         <h3>{{i18n "about.contact"}}</h3>
         {{#if this.contactInfo}}
@@ -262,6 +290,10 @@ export default class AboutPage extends Component {
             </div>
           {{/each}}
         </div>
+        {{#if this.siteSettings.display_eu_visitor_stats}}
+          <p class="about traffic-info-footer"><small
+            >{{this.trafficInfoFooter}}</small></p>
+        {{/if}}
       </div>
     </div>
   </template>

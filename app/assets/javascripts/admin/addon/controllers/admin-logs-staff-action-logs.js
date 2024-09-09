@@ -6,8 +6,8 @@ import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
+import AdminStaffActionLogComponent from "../components/modal/staff-action-log-change";
 import StaffActionLogDetailsModal from "../components/modal/staff-action-log-details";
-import ThemeChangeModal from "../components/modal/theme-change";
 
 export default class AdminLogsStaffActionLogsController extends Controller {
   @service modal;
@@ -164,6 +164,8 @@ export default class AdminLogsStaffActionLogsController extends Controller {
   @action
   showCustomDetailsModal(model, event) {
     event?.preventDefault();
-    this.modal.show(ThemeChangeModal, { model: { staffActionLog: model } });
+    this.modal.show(AdminStaffActionLogComponent, {
+      model: { staffActionLog: model },
+    });
   }
 }

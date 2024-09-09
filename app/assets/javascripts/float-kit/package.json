@@ -18,7 +18,8 @@
     "ember-auto-import": "^2.7.4",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
-    "ember-template-imports": "^4.1.1"
+    "ember-template-imports": "^4.1.1",
+    "truth-helpers": "workspace:1.0.0"
   },
   "devDependencies": {
     "@ember/optional-features": "^2.1.0",
@@ -42,8 +43,9 @@
   },
   "engines": {
     "node": ">= 18",
-    "npm": "please-use-yarn",
-    "yarn": ">= 1.21.1"
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm",
+    "pnpm": ">= 9"
   },
   "ember": {
     "edition": "default"

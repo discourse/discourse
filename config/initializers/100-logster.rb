@@ -81,7 +81,7 @@ store.redis_prefix = Proc.new { redis.namespace }
 store.redis_raw_connection = redis.without_namespace
 severities = [Logger::WARN, Logger::ERROR, Logger::FATAL, Logger::UNKNOWN]
 
-RailsMultisite::ConnectionManagement.each_connection do
+RailsMultisite::ConnectionManagement.safe_each_connection do
   error_rate_per_minute =
     begin
       SiteSetting.alert_admins_if_errors_per_minute

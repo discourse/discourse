@@ -9,6 +9,7 @@ import $ from "jquery";
 import { h } from "virtual-dom";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
+import { addCardClickListenerSelector } from "discourse/components/card-contents-base";
 import {
   addApiImageWrapperButtonClickEvent,
   addComposerUploadHandler,
@@ -22,9 +23,7 @@ import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from 
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
 import { headerIconsDAG } from "discourse/components/header/icons";
-import MountWidget, {
-  addWidgetCleanCallback,
-} from "discourse/components/mount-widget";
+import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import {
   addPluginReviewableParam,
@@ -39,12 +38,12 @@ import {
 } from "discourse/components/search-menu/results/random-quick-tip";
 import { addOnKeyUpCallback } from "discourse/components/search-menu/search-term";
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
-import { forceDropdownForMenuPanels } from "discourse/components/site-header";
 import { addTopicParticipantClassesCallback } from "discourse/components/topic-map/topic-participant";
 import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/container";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { setNotificationsLimit as setUserMenuNotificationsLimit } from "discourse/components/user-menu/notifications-list";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
+import { addLegacyStat as addLegacyAboutPageStat } from "discourse/controllers/about";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
@@ -112,7 +111,6 @@ import {
 } from "discourse/lib/transformer";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
-import { addCardClickListenerSelector } from "discourse/mixins/card-contents-base";
 import { addCustomUserFieldValidationCallback } from "discourse/mixins/user-fields-validation";
 import Composer, {
   registerCustomizationCallback,
@@ -126,7 +124,6 @@ import {
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
-import { attachAdditionalPanel } from "discourse/widgets/header";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import {
@@ -163,20 +160,6 @@ import {
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
-
-const DEPRECATED_HEADER_WIDGETS = [
-  "header",
-  "site-header",
-  "header-contents",
-  "header-buttons",
-  "user-status-bubble",
-  "sidebar-toggle",
-  "header-icons",
-  "header-topic-info",
-  "header-notifications",
-  "home-logo",
-  "user-dropdown",
-];
 
 const appliedModificationIds = new WeakMap();
 
@@ -731,7 +714,7 @@ class PluginApi {
    **/
   decorateWidget(name, fn) {
     const widgetName = name.split(":")[0];
-    this.#deprecatedHeaderWidgetOverride(widgetName, "decorateWidget");
+    this.#deprecatedWidgetOverride(widgetName, "decorateWidget");
 
     decorateWidget(name, fn);
   }
@@ -762,7 +745,7 @@ class PluginApi {
       return;
     }
 
-    this.#deprecatedHeaderWidgetOverride(widget, "attachWidgetAction");
+    this.#deprecatedWidgetOverride(widget, "attachWidgetAction");
 
     widgetClass.prototype[actionName] = fn;
   }
@@ -1107,7 +1090,7 @@ class PluginApi {
    *
    **/
   changeWidgetSetting(widgetName, settingName, newValue) {
-    this.#deprecatedHeaderWidgetOverride(widgetName, "changeWidgetSetting");
+    this.#deprecatedWidgetOverride(widgetName, "changeWidgetSetting");
     changeSetting(widgetName, settingName, newValue);
   }
 
@@ -1141,7 +1124,7 @@ class PluginApi {
    **/
 
   reopenWidget(name, args) {
-    this.#deprecatedHeaderWidgetOverride(name, "reopenWidget");
+    this.#deprecatedWidgetOverride(name, "reopenWidget");
     return reopenWidget(name, args);
   }
 
@@ -1168,16 +1151,12 @@ class PluginApi {
    * and returns a hash of values to pass to attach
    *
    **/
-  addHeaderPanel(name, toggle, transformAttrs) {
-    deprecated(
-      "addHeaderPanel will be removed as part of the glimmer header upgrade. Use api.headerIcons instead.",
-      {
-        id: "discourse.add-header-panel",
-        url: "https://meta.discourse.org/t/296544",
-      }
+  addHeaderPanel() {
+    // eslint-disable-next-line no-console
+    console.error(
+      consolePrefix(),
+      `api.addHeaderPanel: This API was decommissioned. Use api.headerIcons instead.`
     );
-    this.container.lookup("service:header").anyWidgetHeaderOverrides = true;
-    attachAdditionalPanel(name, toggle, transformAttrs);
   }
 
   /**
@@ -2140,19 +2119,12 @@ class PluginApi {
    * ```
    *
    **/
+  // eslint-disable-next-line no-unused-vars
   addToHeaderIcons(icon) {
-    deprecated(
-      "addToHeaderIcons has been deprecated. Use api.headerIcons instead.",
-      {
-        id: "discourse.add-header-icons",
-        url: "https://meta.discourse.org/t/296544",
-      }
-    );
-
-    this.headerIcons.add(
-      icon,
-      <template><MountWidget @widget={{icon}} /></template>,
-      { before: "search" }
+    // eslint-disable-next-line no-console
+    console.error(
+      consolePrefix(),
+      `api.addToHeaderIcons: This API was decommissioned. Use api.headerIcons instead.`
     );
   }
 
@@ -2396,7 +2368,6 @@ class PluginApi {
    *
    */
   forceDropdownForMenuPanels(classNames) {
-    forceDropdownForMenuPanels(classNames);
     glimmerForceDropdownForMenuPanels(classNames);
   }
 
@@ -3278,20 +3249,23 @@ class PluginApi {
    */
   addAboutPageActivity(name, func) {
     addAboutPageActivity(name, func);
+    addLegacyAboutPageStat(name);
   }
 
-  #deprecatedHeaderWidgetOverride(widgetName, override) {
-    if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
-      this.container.lookup("service:header").anyWidgetHeaderOverrides = true;
-      deprecated(
-        `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
-        {
-          since: "v3.3.0.beta1-dev",
-          id: "discourse.header-widget-overrides",
-          url: "https://meta.discourse.org/t/316549",
-        }
-      );
-    }
+  // eslint-disable-next-line no-unused-vars
+  #deprecatedWidgetOverride(widgetName, override) {
+    // insert here the code to handle widget deprecations, e.g. for the header widgets we used:
+    // if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
+    //   this.container.lookup("service:header").anyWidgetHeaderOverrides = true;
+    //   deprecated(
+    //     `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
+    //     {
+    //       since: "v3.3.0.beta1-dev",
+    //       id: "discourse.header-widget-overrides",
+    //       url: "https://meta.discourse.org/t/316549",
+    //     }
+    //   );
+    // }
   }
 }
 

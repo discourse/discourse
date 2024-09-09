@@ -2,7 +2,7 @@
 
 class Chat::Api::ChannelsReadController < Chat::ApiController
   def update
-    with_service(Chat::UpdateUserChannelLastRead) do
+    Chat::UpdateUserChannelLastRead.call do
       on_success { render(json: success_json) }
       on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:ensure_message_id_recency) do
@@ -19,7 +19,7 @@ class Chat::Api::ChannelsReadController < Chat::ApiController
   end
 
   def update_all
-    with_service(Chat::MarkAllUserChannelsRead) do
+    Chat::MarkAllUserChannelsRead.call do
       on_success do
         render(json: success_json.merge(updated_memberships: result.updated_memberships))
       end

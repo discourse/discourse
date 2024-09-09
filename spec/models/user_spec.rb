@@ -3407,8 +3407,9 @@ RSpec.describe User do
       user.update!(groups: [group])
       SiteSetting.enable_category_group_moderation = true
 
-      group_reviewable =
-        Fabricate(:reviewable, reviewable_by_moderator: false, reviewable_by_group: group)
+      category = Fabricate(:category)
+      Fabricate(:category_moderation_group, category:, group:)
+      group_reviewable = Fabricate(:reviewable, reviewable_by_moderator: false, category:)
       mod_reviewable = Fabricate(:reviewable, reviewable_by_moderator: true)
       admin_reviewable = Fabricate(:reviewable, reviewable_by_moderator: false)
 

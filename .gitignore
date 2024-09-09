@@ -70,6 +70,7 @@
 dist
 node_modules
 yarn-error.log
+.pnpm-store
 
 # Linting artifacts
 .eslintcache
