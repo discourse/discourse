@@ -58,8 +58,6 @@ module Migrations::Converters::Base
             result = @job.run(data)
             Oj.to_stream(fork_output_stream, result, OJ_SETTINGS)
           end
-        rescue JSON::ParserError => e
-          raise unless ignorable_json_error?(e, parent_input_stream)
         rescue SignalException
           exit(1)
         ensure
@@ -93,17 +91,11 @@ module Migrations::Converters::Base
             @output_queue.push(data)
             @mutex.synchronize { @data_processed.signal }
           end
-        rescue JSON::ParserError => e
-          raise unless ignorable_json_error?(e, input_stream)
         ensure
           input_stream.close
           @mutex.synchronize { @data_processed.signal }
         end
       end
-    end
-
-    def ignorable_json_error?(e, input_stream)
-      !!(input_stream.eof? && e.message[/empty input/i])
     end
   end
 end

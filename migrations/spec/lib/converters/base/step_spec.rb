@@ -31,7 +31,9 @@ RSpec.describe ::Migrations::Converters::Base::Step do
 
   describe "#initialize" do
     it "works when no arguments are supplied" do
-      TemporaryModule::Users.new
+      step = nil
+      expect { step = TemporaryModule::Users.new }.not_to raise_error
+      expect(step.settings).to be_nil
     end
 
     it "initializes the `settings` attribute if given" do

@@ -17,10 +17,12 @@ RSpec.describe ::Migrations::Converters::Base::Worker do
 
   describe "#start" do
     it "works when `input_queue` is empty" do
-      worker.start
-      input_queue.close
-      worker.wait
-      output_queue.close
+      expect do
+        worker.start
+        input_queue.close
+        worker.wait
+        output_queue.close
+      end.not_to raise_error
     end
 
     it "uses `ForkManager.fork`" do
