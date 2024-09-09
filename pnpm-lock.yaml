@@ -424,8 +424,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       babel-plugin-ember-template-compilation:
-        specifier: ^2.2.5
-        version: 2.2.5
+        specifier: ^2.3.0
+        version: 2.3.0
       bootstrap:
         specifier: 3.4.1
         version: 3.4.1
@@ -1085,8 +1085,8 @@ importers:
         specifier: ^0.9.0
         version: 0.9.0
       babel-plugin-ember-template-compilation:
-        specifier: ^2.2.5
-        version: 2.2.5
+        specifier: ^2.3.0
+        version: 2.3.0
       content-tag:
         specifier: ^2.0.1
         version: 2.0.1(patch_hash=ktsray6trrtjm4aalso2qo7nka)
@@ -3175,6 +3175,10 @@ packages:
 
   babel-plugin-ember-template-compilation@2.2.5:
     resolution: {integrity: sha512-NQ2DT0DsYyHVrEpFQIy2U8S91JaKSE8NOSZzMd7KZFJVgA6KodJq3Uj852HcH9LsSfvwppnM+dRo1G8bzTnnFw==}
+    engines: {node: '>= 12.*'}
+
+  babel-plugin-ember-template-compilation@2.3.0:
+    resolution: {integrity: sha512-4ZrKVSqdw5PxEKRbqfOpPhrrNBDG3mFPhyT6N1Oyyem81ZIkCvNo7TPKvlTHeFxqb6HtUvCACP/pzFpZ74J4pg==}
     engines: {node: '>= 12.*'}
 
   babel-plugin-filter-imports@4.0.0:
@@ -9524,7 +9528,7 @@ snapshots:
       '@types/yargs': 17.0.33
       assert-never: 1.3.0
       babel-import-util: 2.1.1
-      babel-plugin-ember-template-compilation: 2.2.5
+      babel-plugin-ember-template-compilation: 2.3.0
       babel-plugin-syntax-dynamic-import: 6.18.0
       babylon: 6.18.0
       bind-decorator: 1.0.11
@@ -9568,7 +9572,7 @@ snapshots:
       '@embroider/macros': 1.16.6(@glint/template@1.4.1-unstable.ff9ea6c)
       '@embroider/shared-internals': 2.6.3(supports-color@8.1.1)
       assert-never: 1.3.0
-      babel-plugin-ember-template-compilation: 2.2.5
+      babel-plugin-ember-template-compilation: 2.3.0
       broccoli-node-api: 1.7.0
       broccoli-persistent-filter: 3.1.3
       broccoli-plugin: 4.0.7
@@ -11022,6 +11026,11 @@ snapshots:
       ember-rfc176-data: 0.3.18
 
   babel-plugin-ember-template-compilation@2.2.5:
+    dependencies:
+      '@glimmer/syntax': 0.84.3
+      babel-import-util: 3.0.0
+
+  babel-plugin-ember-template-compilation@2.3.0:
     dependencies:
       '@glimmer/syntax': 0.84.3
       babel-import-util: 3.0.0
