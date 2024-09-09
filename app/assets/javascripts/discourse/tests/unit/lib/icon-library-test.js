@@ -45,4 +45,23 @@ module("Unit | Utility | icon-library", function (hooks) {
     });
     assert.ok(html.includes("aria-label='&lt;script&gt;alert(1)'"));
   });
+
+  test("fa5 remaps", function (assert) {
+    const adjustIcon = iconHTML("adjust");
+    assert.true(adjustIcon.includes("d-icon-adjust"), "class is maintained");
+    assert.true(
+      adjustIcon.includes('href="#circle-half-stroke"'),
+      "has remapped icon"
+    );
+
+    const farIcon = iconHTML("far-dot-circle");
+    assert.true(
+      farIcon.includes("d-icon-far-dot-circle"),
+      "class is maintained"
+    );
+    assert.true(
+      farIcon.includes('href="#far-circle-dot"'),
+      "has remapped icon"
+    );
+  });
 });
