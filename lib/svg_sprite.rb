@@ -207,7 +207,7 @@ module SvgSprite
         rotate
         scroll
         share
-        shield-blank
+        shield-halved
         shuffle
         signal
         sliders
