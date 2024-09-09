@@ -6,7 +6,7 @@ import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
-import ThemeChangeModal from "../components/modal/staff-action-log-change";
+import AdminStaffActionLogComponent from "../components/modal/staff-action-log-change";
 import StaffActionLogDetailsModal from "../components/modal/staff-action-log-details";
 
 export default class AdminLogsStaffActionLogsController extends Controller {
