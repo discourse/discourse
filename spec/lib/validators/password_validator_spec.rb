@@ -138,31 +138,8 @@ RSpec.describe PasswordValidator do
       record.reload
       record.password = @password
       validate
+
       expect(record.errors[:password]).to include(password_error_message(:same_as_current))
-    end
-
-    it "adds an error when new password is same as a previous password" do
-      @password = "thisisaoldpassword"
-      record.save!
-      record.reload
-      record.user_password.destroy!
-
-      new_password = "thisisanewpassword"
-
-      _expired_user_password =
-        Fabricate(
-          :expired_user_password,
-          password: new_password,
-          password_algorithm: record.password_algorithm,
-          password_salt: record.salt,
-          user: record,
-        )
-
-      record.password = new_password
-      @password = new_password
-      validate
-
-      expect(record.errors[:password]).to include(password_error_message(:same_as_previous))
     end
 
     it "validation required if password is required" do

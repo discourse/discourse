@@ -3,10 +3,10 @@
 RSpec.describe UserPassword do
   context "for validations" do
     it "should validate presence of user_id" do
-      user_password = Fabricate.build(:user_password, user_id: nil)
+      user_password = Fabricate.build(:user_password, user: nil)
 
       expect(user_password).not_to be_valid
-      expect(user_password.errors[:user_id]).to include("can't be blank")
+      expect(user_password.errors[:user]).to include("must exist")
     end
 
     it "should validate presence of password_hash" do

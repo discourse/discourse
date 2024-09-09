@@ -13,11 +13,6 @@ class User < ActiveRecord::Base
   include HasDeprecatedColumns
 
   DEFAULT_FEATURED_BADGE_COUNT = 3
-
-  PASSWORD_SALT_LENGTH = 16
-  TARGET_PASSWORD_ALGORITHM =
-    "$pbkdf2-#{Rails.configuration.pbkdf2_algorithm}$i=#{Rails.configuration.pbkdf2_iterations},l=32$"
-
   MAX_SIMILAR_USERS = 10
 
   deprecate_column :flag_level, drop_from: "3.2"
@@ -190,7 +185,6 @@ class User < ActiveRecord::Base
   after_update :change_display_name, if: :saved_change_to_name?
 
   before_save :update_usernames
-  before_save :ensure_password_is_hashed
   before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
   before_save :apply_watched_words, unless: :should_skip_user_fields_validation?
@@ -410,7 +404,7 @@ class User < ActiveRecord::Base
   end
 
   def self.max_password_length
-    200
+    UserPassword::MAX_PASSWORD_LENGTH
   end
 
   def self.username_length
@@ -923,13 +917,32 @@ class User < ActiveRecord::Base
     )
   end
 
-  def password=(password)
+  def password=(pw)
     # special case for passwordless accounts
-    @raw_password = password if password.present?
+    return if pw.blank?
+
+    if user_password
+      user_password.password = pw
+    else
+      build_user_password(password: pw)
+    end
+    @raw_password = pw # still required to maintain compatibility with usage of password-related User interface
   end
 
   def password
     "" # so that validator doesn't complain that a password attribute doesn't exist
+  end
+
+  def password_hash
+    user_password&.password_hash
+  end
+
+  def password_algorithm
+    user_password&.password_algorithm
+  end
+
+  def salt
+    user_password&.password_salt
   end
 
   # Indicate that this is NOT a passwordless account for the purposes of validation
@@ -946,7 +959,7 @@ class User < ActiveRecord::Base
   end
 
   def has_password?
-    password_hash.present?
+    user_password ? true : false
   end
 
   def password_validator
@@ -960,20 +973,8 @@ class User < ActiveRecord::Base
   end
 
   def confirm_password?(password)
-    return false unless password_hash && salt && password_algorithm
-    confirmed = self.password_hash == hash_password(password, salt, password_algorithm)
-
-    if confirmed && persisted? && password_algorithm != TARGET_PASSWORD_ALGORITHM
-      # Regenerate password_hash with new algorithm and persist
-      salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
-      update_columns(
-        password_algorithm: TARGET_PASSWORD_ALGORITHM,
-        salt: salt,
-        password_hash: hash_password(password, salt, TARGET_PASSWORD_ALGORITHM),
-      )
-    end
-
-    confirmed
+    return false if !user_password
+    user_password.confirm_password?(password)
   end
 
   def new_user_posting_on_first_day?
@@ -1904,7 +1905,13 @@ class User < ActiveRecord::Base
   end
 
   def expire_old_email_tokens
-    if saved_change_to_password_hash? && !saved_change_to_id?
+    # TODO: Do the same change to UserPassword in case of a direct edit there:
+    # if !saved_change_to_user_id && saved_change_to_password_hash?
+    #   user.email_tokens.where("not expired").update_all(expired: true)
+    # end
+    #
+
+    if user_password&.saved_change_to_password_hash? && !saved_change_to_id?
       email_tokens.where("not expired").update_all(expired: true)
     end
   end
@@ -1937,14 +1944,6 @@ class User < ActiveRecord::Base
 
   def create_email_token
     email_tokens.create!(email: email, scope: EmailToken.scopes[:signup])
-  end
-
-  def ensure_password_is_hashed
-    if @raw_password
-      self.salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
-      self.password_algorithm = TARGET_PASSWORD_ALGORITHM
-      self.password_hash = hash_password(@raw_password, salt, password_algorithm)
-    end
   end
 
   def expire_tokens_if_password_changed
