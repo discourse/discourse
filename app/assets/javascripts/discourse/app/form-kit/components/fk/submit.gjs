@@ -13,7 +13,7 @@ export default class FKSubmit extends Component {
       @forwardEvent="true"
       class="btn-primary form-kit__button"
       type="submit"
-      isLoading={{@isSubmitting}}
+      @isLoading={{@isLoading}}
       ...attributes
     />
   </template>

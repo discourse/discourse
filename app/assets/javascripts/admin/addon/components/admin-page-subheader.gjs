@@ -1,3 +1,4 @@
+import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import i18n from "discourse-common/helpers/i18n";
@@ -7,27 +8,45 @@ import {
   PrimaryButton,
 } from "admin/components/admin-page-action-button";
 
-const AdminPageSubheader = <template>
-  <div class="admin-page-subheader">
-    <div class="admin-page-subheader__title-row">
-      <h3 class="admin-page-subheader__title">{{i18n @titleLabel}}</h3>
-      <div class="admin-page-subheader__actions">
-        {{yield
-          (hash Primary=PrimaryButton Default=DefaultButton Danger=DangerButton)
-          to="actions"
-        }}
+export default class AdminPageSubheader extends Component {
+  get title() {
+    if (this.args.titleLabelTranslated) {
+      return this.args.titleLabelTranslated;
+    } else if (this.args.titleLabel) {
+      return i18n(this.args.titleLabel);
+    }
+  }
+
+  get description() {
+    if (this.args.descriptionLabelTranslated) {
+      return this.args.descriptionLabelTranslated;
+    } else if (this.args.descriptionLabel) {
+      return i18n(this.args.descriptionLabel);
+    }
+  }
+
+  <template>
+    <div class="admin-page-subheader">
+      <div class="admin-page-subheader__title-row">
+        <h3 class="admin-page-subheader__title">{{this.title}}</h3>
+        <div class="admin-page-subheader__actions">
+          {{yield
+            (hash
+              Primary=PrimaryButton Default=DefaultButton Danger=DangerButton
+            )
+            to="actions"
+          }}
+        </div>
       </div>
 
-      {{#if @descriptionLabel}}
-        <p class="admin-page-header__description">
-          {{i18n @descriptionLabel}}
+      {{#if this.description}}
+        <p class="admin-page-subheader__description">
+          {{htmlSafe this.description}}
           {{#if @learnMoreUrl}}
             {{htmlSafe (i18n "learn_more_with_link" url=@learnMoreUrl)}}
           {{/if}}
         </p>
       {{/if}}
     </div>
-  </div>
-</template>;
-
-export default AdminPageSubheader;
+  </template>
+}

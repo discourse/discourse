@@ -506,6 +506,7 @@ en:
           title: "Export chat messages"
           description: "This exports all messages from all channels."
           create_export: "Create export"
+          confirm_export: "This exports all messages from all channels and sends the result to you in a personal message. Are you sure you want to export?"
           export_has_started: "The export has started. You'll receive a PM when it's ready."
 
       my_threads:
@@ -528,6 +529,7 @@ en:
       incoming_webhooks:
         back: "Back"
         channel_placeholder: "Select a channel"
+        channel: "Channel"
         confirm_destroy: "Are you sure you want to delete this incoming webhook? This cannot be un-done."
         current_emoji: "Current Emoji"
         description: "Description"
@@ -551,6 +553,8 @@ en:
         username: "Username"
         username_instructions: "Username of bot that posts to channel. Defaults to 'system' when left blank."
         instructions: "Incoming webhooks can be used by external systems to post messages into a designated chat channel as a bot user via the <code>/hooks/:key</code> endpoint. The payload consists of a single <code>text</code> parameter, which is limited to 2000 characters.<br><br>We also support limited Slack-formatted <code>text</code> parameters, extracting links and mentions based on the format at <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>, but the <code>/hooks/:key/slack</code> endpoint must be used for this."
+        saved: "Webhook changes saved"
+        created: "Webhook created"
 
       selection:
         cancel: "Cancel"
