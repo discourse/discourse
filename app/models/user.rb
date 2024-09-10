@@ -3,6 +3,9 @@
 class User < ActiveRecord::Base
   self.ignored_columns = [
     :old_seen_notification_id, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been written.
+    :salt, # TODO: Remove once DropPasswordColumnsFromUsers has been promoted to pre-deploy
+    :password_hash, # TODO: Remove once DropPasswordColumnsFromUsers has been promoted to pre-deploy
+    :password_algorithm, # TODO: Remove once  DropPasswordColumnsFromUsers has been promoted to pre-deploy
   ]
 
   include Searchable
@@ -2242,8 +2245,6 @@ end
 #  updated_at                :datetime         not null
 #  name                      :string
 #  last_posted_at            :datetime
-#  password_hash             :string(64)
-#  salt                      :string(32)
 #  active                    :boolean          default(FALSE), not null
 #  username_lower            :string(60)       not null
 #  last_seen_at              :datetime
@@ -2274,7 +2275,6 @@ end
 #  secure_identifier         :string
 #  flair_group_id            :integer
 #  last_seen_reviewable_id   :integer
-#  password_algorithm        :string(64)
 #  required_fields_version   :integer
 #  seen_notification_id      :bigint           default(0), not null
 #
