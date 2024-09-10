@@ -215,7 +215,9 @@ export default class AboutPage extends Component {
     {{/if}}
     <section class="about__header">
       {{#if @model.banner_image}}
-        <img class="about__banner" src={{@model.banner_image}} />
+        <div class="about__banner">
+          <img class="about__banner-img" src={{@model.banner_image}} />
+        </div>
       {{/if}}
       <h3>{{@model.title}}</h3>
       <p class="short-description">{{@model.description}}</p>
@@ -243,7 +245,7 @@ export default class AboutPage extends Component {
 
         {{#if @model.admins.length}}
           <section class="about__admins">
-            <h3>{{dIcon "users"}} {{i18n "about.our_admins"}}</h3>
+            <h3>{{i18n "about.our_admins"}}</h3>
             <AboutPageUsers @users={{@model.admins}} @truncateAt={{6}} />
           </section>
         {{/if}}
@@ -255,7 +257,7 @@ export default class AboutPage extends Component {
 
         {{#if @model.moderators.length}}
           <section class="about__moderators">
-            <h3>{{dIcon "users"}} {{i18n "about.our_moderators"}}</h3>
+            <h3>{{i18n "about.our_moderators"}}</h3>
             <AboutPageUsers @users={{@model.moderators}} @truncateAt={{6}} />
           </section>
         {{/if}}
