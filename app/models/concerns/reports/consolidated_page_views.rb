@@ -4,6 +4,8 @@ module Reports::ConsolidatedPageViews
   extend ActiveSupport::Concern
 
   class_methods do
+    # NOTE: This report is deprecated, once use_legacy_pageviews is
+    # always false or no longer needed we can delete this.
     def report_consolidated_page_views(report)
       filters = %w[page_view_logged_in page_view_anon page_view_crawler]
 

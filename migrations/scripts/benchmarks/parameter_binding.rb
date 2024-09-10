@@ -6,7 +6,7 @@ require "bundler/inline"
 gemfile(true) do
   source "https://rubygems.org"
   gem "benchmark-ips"
-  gem "extralite-bundle", github: "digital-fabric/extralite"
+  gem "extralite-bundle"
   gem "sqlite3"
 end
 

@@ -41,7 +41,7 @@ export function applyLocalDates(dates, siteSettings) {
     element.innerText = "";
     element.insertAdjacentHTML(
       "beforeend",
-      `${iconHTML("globe-americas")}
+      `${iconHTML("earth-americas")}
         <span class="relative-time">${localDateBuilder.formatted}</span>`
     );
     element.setAttribute("aria-label", localDateBuilder.textPreview);

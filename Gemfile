@@ -99,7 +99,7 @@ gem "sidekiq"
 gem "mini_scheduler"
 
 gem "execjs", require: false
-gem "mini_racer", "0.17.0.pre2"
+gem "mini_racer"
 
 gem "highline", require: false
 
@@ -274,3 +274,19 @@ gem "csv", require: false
 # dependencies for the automation plugin
 gem "iso8601"
 gem "rrule"
+
+group :migrations, optional: true do
+  gem "extralite-bundle", require: "extralite"
+
+  # auto-loading
+  gem "zeitwerk"
+
+  # databases
+  gem "trilogy"
+
+  # CLI
+  gem "ruby-progressbar"
+
+  # additional Gemfiles from converters
+  Dir[File.expand_path("migrations/**/Gemfile", __dir__)].each { |path| eval_gemfile(path) }
+end

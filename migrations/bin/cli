@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "thor"
+require_relative "../lib/migrations"
+
+module Migrations
+  load_rails_environment
+  configure_zeitwerk
+  enable_i18n
+
+  class CommandLineInterface < Thor
+    include ::Migrations::CLI::ConvertCommand
+    include ::Migrations::CLI::ImportCommand
+    include ::Migrations::CLI::UploadCommand
+
+    def self.exit_on_failure?
+      true
+    end
+  end
+
+  CommandLineInterface.start
+end

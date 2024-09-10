@@ -235,3 +235,8 @@ WebHookEventType.seed do |b|
   b.name = "category_experts_approved"
   b.group = WebHookEventType.groups[:post]
 end
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TYPES[:category_experts_unapproved]
+  b.name = "category_experts_unapproved"
+  b.group = WebHookEventType.groups[:post]
+end
