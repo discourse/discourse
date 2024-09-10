@@ -391,7 +391,7 @@ export default class AdminReport extends Component {
             Report.groupingForDatapoints(report.chartData.length),
         })
       );
-    } else if (mode === "stacked-chart") {
+    } else if (mode === "stacked-chart" || mode === "stacked_chart") {
       return this.get("reportOptions.stackedChart") || {};
     }
   }
