@@ -2,7 +2,7 @@
   {{#unless this.editingTheme}}
     <AdminPageHeader
       @titleLabel="admin.themes.title"
-      @hideTabs={{true}} {{!-- only until we have theme/component cards --}}
+      @hideTabs={{true}} {{!-- Temporary until we have an actual route for components? --}}
     >
       <:breadcrumbs>
         <DBreadcrumbsItem
@@ -10,11 +10,22 @@
           @label={{i18n "admin.themes.title"}}
         />
       </:breadcrumbs>
+      {{!-- <:tabs> !! This needs to work, but currently I do not think components actually has a route
+        <NavItem
+          @route="adminCustomizeThemes"
+          @label={{i18n "admin.themes.title"}}
+          class="admin-themes-tabs__themes"
+        />
+        <NavItem
+          @route="adminCustomizeComponents"
+          @label={{i18n "admin.themes.components"}}
+          class="admin-themes-tabs__components"
+        />
+      </:tabs> --}}
     </AdminPageHeader>
     <ThemesGrid
       @themes={{this.fullThemes}}
       @components={{this.childThemes}}
-      @currentTab={{this.currentTab}}
       @installModal={{route-action "installModal"}}
     />
   {{/unless}}
