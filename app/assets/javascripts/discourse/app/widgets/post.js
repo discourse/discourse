@@ -12,6 +12,7 @@ import {
   prioritizeNameFallback,
   prioritizeNameInUx,
 } from "discourse/lib/settings";
+import { consolePrefix } from "discourse/lib/source-identifier";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
 import { clipboardCopy, formatUsername } from "discourse/lib/utilities";
@@ -39,6 +40,16 @@ function transformWithCallbacks(post, topicUrl, store) {
   transformed.asPost = store.createRecord("post", post);
 
   return transformed;
+}
+
+let postMenuWidgetExtensionsAdded = null;
+
+export function addedWidgetPostMenuExtension() {
+  if (!postMenuWidgetExtensionsAdded) {
+    postMenuWidgetExtensionsAdded = new Set();
+  }
+
+  postMenuWidgetExtensionsAdded.add(consolePrefix().slice(1, -1));
 }
 
 export function avatarImg(wanted, attrs) {
@@ -533,7 +544,10 @@ createWidget("post-contents", {
       },
     };
 
-    if (this.currentUser?.use_glimmer_post_menu) {
+    if (
+      !postMenuWidgetExtensionsAdded &&
+      this.currentUser?.use_glimmer_post_menu
+    ) {
       const filteredRepliesView =
         this.siteSettings.enable_filtered_replies_view;
       result.push(
@@ -573,6 +587,16 @@ createWidget("post-contents", {
         })
       );
     } else {
+      if (postMenuWidgetExtensionsAdded) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          [
+            "Using the legacy 'widget' post menu because the following plugins and/or themes are using deprecated APIs:",
+            ...Array.from(postMenuWidgetExtensionsAdded).sort(),
+          ].join("\n- ")
+        );
+      }
+
       result.push(this.attach("post-menu", attrs, extraState));
     }
 

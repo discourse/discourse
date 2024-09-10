@@ -128,7 +128,10 @@ import {
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
-import { addPostClassesCallback } from "discourse/widgets/post";
+import {
+  addedWidgetPostMenuExtension,
+  addPostClassesCallback,
+} from "discourse/widgets/post";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import {
   addButton,
@@ -164,6 +167,8 @@ import {
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
+
+const DEPRECATED_POST_MENU_WIDGETS = ["post-menu", "small-user-list"];
 
 const appliedModificationIds = new WeakMap();
 
@@ -837,6 +842,15 @@ class PluginApi {
    *  }
    **/
   addPostMenuButton(name, callback) {
+    addedWidgetPostMenuExtension();
+    deprecated(
+      "`api.addPostMenuButton` has been deprecated. Use `api.postMenuButtons.add(...)` instead",
+      {
+        since: "v3.4.0.beta2-dev",
+        id: "discourse.post-menu-widget-overrides",
+      }
+    );
+
     apiExtraButtons[name] = callback;
     addButton(name, callback);
   }
@@ -907,6 +921,15 @@ class PluginApi {
    * ```
    **/
   removePostMenuButton(name, callback) {
+    addedWidgetPostMenuExtension();
+    deprecated(
+      "`api.removePostMenuButton` has been deprecated. Use `api.postMenuButtons.delete(...)` instead",
+      {
+        since: "v3.4.0.beta2-dev",
+        id: "discourse.post-menu-widget-overrides",
+      }
+    );
+
     removeButton(name, callback);
   }
 
@@ -927,7 +950,15 @@ class PluginApi {
    * });
    **/
   replacePostMenuButton(name, widget) {
-    // TODO the widget version won't work properly, fortunately only 1 TC and 1 plugin is using this
+    addedWidgetPostMenuExtension();
+    deprecated(
+      "`api.replacePostMenuButton` has been deprecated. Use `api.postMenuButtons.replace(...)` instead",
+      {
+        since: "v3.4.0.beta2-dev",
+        id: "discourse.post-menu-widget-overrides",
+      }
+    );
+
     replaceButton(name, widget);
   }
 
@@ -3351,6 +3382,17 @@ class PluginApi {
     //     }
     //   );
     // }
+
+    if (DEPRECATED_POST_MENU_WIDGETS.includes(widgetName)) {
+      addedWidgetPostMenuExtension();
+      deprecated(
+        `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
+        {
+          since: "v3.4.0.beta2-dev",
+          id: "discourse.post-menu-widget-overrides",
+        }
+      );
+    }
   }
 }
 
