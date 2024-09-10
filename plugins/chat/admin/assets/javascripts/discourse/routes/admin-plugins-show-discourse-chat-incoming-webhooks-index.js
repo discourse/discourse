@@ -5,7 +5,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseRoute from "discourse/routes/discourse";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
-export default class DiscourseChatIncomingWebhooks extends DiscourseRoute {
+export default class DiscourseChatIncomingWebhooksIndex extends DiscourseRoute {
   @service currentUser;
 
   async model() {
