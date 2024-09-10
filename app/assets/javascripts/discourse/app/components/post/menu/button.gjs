@@ -23,13 +23,8 @@ export default class PostMenuButton extends Component {
     return this.args.showLabel ?? this.args.button.showLabel;
   }
 
-  get Comp() {
-    console.log("aqui");
-    return this.args.button.Component;
-  }
-
   <template>
-    <this.Comp
+    <@button.Component
       class="btn-flat"
       ...attributes
       @action={{@button.action}}
