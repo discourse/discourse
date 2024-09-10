@@ -195,7 +195,6 @@ class User < ActiveRecord::Base
   after_save :clear_global_notice_if_needed
   after_save :refresh_avatar
   after_save :badge_grant
-  after_save :expire_old_email_tokens
   after_save :index_search
   after_save :check_site_contact_username
   after_save :add_to_user_directory,
@@ -1904,18 +1903,6 @@ class User < ActiveRecord::Base
     BadgeGranter.queue_badge_grant(Badge::Trigger::UserChange, user: self)
   end
 
-  def expire_old_email_tokens
-    # TODO: Do the same change to UserPassword in case of a direct edit there:
-    # if !saved_change_to_user_id && saved_change_to_password_hash?
-    #   user.email_tokens.where("not expired").update_all(expired: true)
-    # end
-    #
-
-    if user_password&.saved_change_to_password_hash? && !saved_change_to_id?
-      email_tokens.where("not expired").update_all(expired: true)
-    end
-  end
-
   def index_search
     # force is needed as user custom fields are updated using SQL and after_save callback is not triggered
     SearchIndexer.index(self, force: true)
@@ -1952,6 +1939,9 @@ class User < ActiveRecord::Base
     if @raw_password
       # Association in model may be out-of-sync
       UserAuthToken.where(user_id: id).destroy_all
+
+      email_tokens.where("not expired").update_all(expired: true) if !saved_change_to_id?
+
       # We should not carry this around after save
       @raw_password = nil
       @password_required = false

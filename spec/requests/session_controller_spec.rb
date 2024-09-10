@@ -30,7 +30,7 @@ RSpec.describe SessionController do
         get "/session/email-login/#{email_token.token}.json"
         expect(response.status).to eq(403)
 
-        user.reload.update(admin: true)
+        user.update(admin: true)
         get "/session/email-login/#{email_token.token}.json"
         expect(response.status).to eq(200)
         expect(response.parsed_body["error"]).not_to be_present
@@ -47,7 +47,7 @@ RSpec.describe SessionController do
         get "/session/email-login/#{email_token.token}.json"
         expect(response.status).to eq(403)
 
-        user.reload.update(admin: true)
+        user.update(admin: true)
         get "/session/email-login/#{email_token.token}.json"
         expect(response.status).to eq(200)
         expect(response.parsed_body["error"]).not_to be_present
@@ -159,7 +159,7 @@ RSpec.describe SessionController do
         post "/session/email-login/#{email_token.token}.json"
         expect(response.status).to eq(403)
 
-        user.reload.update(admin: true)
+        user.update(admin: true)
         post "/session/email-login/#{email_token.token}.json"
         expect(response.status).to eq(200)
         expect(response.parsed_body["error"]).not_to be_present
