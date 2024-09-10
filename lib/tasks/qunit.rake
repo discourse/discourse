@@ -119,6 +119,7 @@ task "qunit:test", %i[qunit_path filter] do |_, args|
         ENV["THEME_IDS"]
           .split("|")
           .map { |theme_id| "#{qunit_path}?#{query}&testem=1&id=#{theme_id}" }
+          .shuffle
           .join(",")
       else
         "#{qunit_path}?#{query}&testem=1"
