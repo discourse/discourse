@@ -25,6 +25,7 @@ import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { isTesting } from "discourse-common/config/environment";
 import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
+import { registerDeprecationHandler } from "discourse-common/lib/deprecated";
 import getURL, {
   getAbsoluteURL,
   getURLWithCDN,
@@ -44,13 +45,15 @@ function transformWithCallbacks(post, topicUrl, store) {
 
 let postMenuWidgetExtensionsAdded = null;
 
-export function addedWidgetPostMenuExtension() {
-  if (!postMenuWidgetExtensionsAdded) {
-    postMenuWidgetExtensionsAdded = new Set();
-  }
+registerDeprecationHandler((_, opts) => {
+  if (opts?.id === "discourse.post-menu-widget-overrides") {
+    if (!postMenuWidgetExtensionsAdded) {
+      postMenuWidgetExtensionsAdded = new Set();
+    }
 
-  postMenuWidgetExtensionsAdded.add(consolePrefix().slice(1, -1));
-}
+    postMenuWidgetExtensionsAdded.add(consolePrefix().slice(1, -1));
+  }
+});
 
 export function avatarImg(wanted, attrs) {
   const size = translateSize(wanted);
@@ -587,7 +590,11 @@ createWidget("post-contents", {
         })
       );
     } else {
-      if (postMenuWidgetExtensionsAdded) {
+      if (
+        postMenuWidgetExtensionsAdded &&
+        !postMenuWidgetExtensionsAdded.logged
+      ) {
+        postMenuWidgetExtensionsAdded.logged = true;
         // eslint-disable-next-line no-console
         console.warn(
           [
