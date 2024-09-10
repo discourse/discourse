@@ -533,45 +533,48 @@ createWidget("post-contents", {
       },
     };
 
-    result.push(this.attach("post-menu", attrs, extraState));
-
-    const filteredRepliesView = this.siteSettings.enable_filtered_replies_view;
-    result.push(
-      this.attach("glimmer-post-menu", {
-        canCreatePost: attrs.canCreatePost,
-        filteredRepliesView,
-        nextPost: attrs.nextPost,
-        post: this.findAncestorModel(),
-        prevPost: attrs.prevPost,
-        repliesShown: filteredRepliesView
-          ? extraState.state.filteredRepliesShown
-          : extraState.state.repliesShown,
-        showReadIndicator: attrs.showReadIndicator,
-        changeNotice: () => this.sendWidgetAction("changeNotice"), // this action comes from the post stream
-        changePostOwner: () => this.sendWidgetAction("changePostOwner"), // this action comes from the post stream
-        copyLink: () => this.sendWidgetAction("copyLink"),
-        deletePost: () => this.sendWidgetAction("deletePost"), // this action comes from the post stream
-        editPost: () => this.sendWidgetAction("editPost"), // this action comes from the post stream
-        grantBadge: () => this.sendWidgetAction("grantBadge"), // this action comes from the post stream
-        lockPost: () => this.sendWidgetAction("lockPost"), // this action comes from the post stream
-        permanentlyDeletePost: () =>
-          this.sendWidgetAction("permanentlyDeletePost"),
-        rebakePost: () => this.sendWidgetAction("rebakePost"), // this action comes from the post stream
-        recoverPost: () => this.sendWidgetAction("recoverPost"), // this action comes from the post stream
-        replyToPost: () => this.sendWidgetAction("replyToPost"), // this action comes from the post stream
-        share: () => this.sendWidgetAction("share"),
-        showFlags: () => this.sendWidgetAction("showFlags"), // this action comes from the post stream
-        showPagePublish: () => this.sendWidgetAction("showPagePublish"), // this action comes from the post stream
-        toggleLike: () => this.sendWidgetAction("toggleLike"),
-        togglePostType: () => this.sendWidgetAction("togglePostType"), // this action comes from the post stream
-        toggleReplies: filteredRepliesView
-          ? () => this.sendWidgetAction("toggleFilteredRepliesView")
-          : () => this.sendWidgetAction("toggleRepliesBelow"),
-        toggleWiki: () => this.sendWidgetAction("toggleWiki"), // this action comes from the post stream
-        unhidePost: () => this.sendWidgetAction("unhidePost"), // this action comes from the post stream
-        unlockPost: () => this.sendWidgetAction("unlockPost"), // this action comes from the post stream
-      })
-    );
+    if (this.currentUser?.use_glimmer_post_menu) {
+      const filteredRepliesView =
+        this.siteSettings.enable_filtered_replies_view;
+      result.push(
+        this.attach("glimmer-post-menu", {
+          canCreatePost: attrs.canCreatePost,
+          filteredRepliesView,
+          nextPost: attrs.nextPost,
+          post: this.findAncestorModel(),
+          prevPost: attrs.prevPost,
+          repliesShown: filteredRepliesView
+            ? extraState.state.filteredRepliesShown
+            : extraState.state.repliesShown,
+          showReadIndicator: attrs.showReadIndicator,
+          changeNotice: () => this.sendWidgetAction("changeNotice"), // this action comes from the post stream
+          changePostOwner: () => this.sendWidgetAction("changePostOwner"), // this action comes from the post stream
+          copyLink: () => this.sendWidgetAction("copyLink"),
+          deletePost: () => this.sendWidgetAction("deletePost"), // this action comes from the post stream
+          editPost: () => this.sendWidgetAction("editPost"), // this action comes from the post stream
+          grantBadge: () => this.sendWidgetAction("grantBadge"), // this action comes from the post stream
+          lockPost: () => this.sendWidgetAction("lockPost"), // this action comes from the post stream
+          permanentlyDeletePost: () =>
+            this.sendWidgetAction("permanentlyDeletePost"),
+          rebakePost: () => this.sendWidgetAction("rebakePost"), // this action comes from the post stream
+          recoverPost: () => this.sendWidgetAction("recoverPost"), // this action comes from the post stream
+          replyToPost: () => this.sendWidgetAction("replyToPost"), // this action comes from the post stream
+          share: () => this.sendWidgetAction("share"),
+          showFlags: () => this.sendWidgetAction("showFlags"), // this action comes from the post stream
+          showPagePublish: () => this.sendWidgetAction("showPagePublish"), // this action comes from the post stream
+          toggleLike: () => this.sendWidgetAction("toggleLike"),
+          togglePostType: () => this.sendWidgetAction("togglePostType"), // this action comes from the post stream
+          toggleReplies: filteredRepliesView
+            ? () => this.sendWidgetAction("toggleFilteredRepliesView")
+            : () => this.sendWidgetAction("toggleRepliesBelow"),
+          toggleWiki: () => this.sendWidgetAction("toggleWiki"), // this action comes from the post stream
+          unhidePost: () => this.sendWidgetAction("unhidePost"), // this action comes from the post stream
+          unlockPost: () => this.sendWidgetAction("unlockPost"), // this action comes from the post stream
+        })
+      );
+    } else {
+      result.push(this.attach("post-menu", attrs, extraState));
+    }
 
     const repliesBelow = state.repliesBelow;
     if (repliesBelow.length) {
