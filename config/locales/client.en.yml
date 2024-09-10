@@ -5820,6 +5820,8 @@ en:
           theme_name: "Theme name"
           component_name: "Component name"
           themes_intro: "Select an existing theme or install a new one to get started"
+          themes_intro_new: "Install a new theme to get started, or create your own from scratch using these resources."
+          themes_intro_img_alt: "New theme placeholder"
           beginners_guide_title: "Beginner’s guide to using Discourse Themes"
           developers_guide_title: "Developer’s guide to Discourse Themes"
           browse_themes: "Browse community themes"
@@ -5867,6 +5869,8 @@ en:
           convert_theme_alert_generic: "Are you sure you want to convert this theme to component?"
           convert_theme_tooltip: "Convert this theme to component"
           inactive_themes: "Inactive themes:"
+          set_default_theme: "Set default"
+          default_theme: "Default theme"
           inactive_components: "Unused components:"
           selected:
             one: "%{count} selected"
@@ -7183,6 +7187,10 @@ en:
           categories: "Categories"
           topics: "Topics"
           replace: "Replace"
+      
+      themes:
+        title: "Themes"
+        description: "Customize your forum's appearance with themes."
 
   wizard_js:
     wizard:

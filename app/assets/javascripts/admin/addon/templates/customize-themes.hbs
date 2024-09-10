@@ -1,6 +1,17 @@
 <PluginOutlet @name="admin-customize-themes">
   {{#unless this.editingTheme}}
-    <ThemesList
+    <AdminPageHeader
+      @titleLabel="admin.themes.title"
+      @hideTabs={{true}} {{!-- only until we have theme/component cards --}}
+    >
+      <:breadcrumbs>
+        <DBreadcrumbsItem
+          @path="/admin/customize/themes"
+          @label={{i18n "admin.themes.title"}}
+        />
+      </:breadcrumbs>
+    </AdminPageHeader>
+    <ThemesGrid
       @themes={{this.fullThemes}}
       @components={{this.childThemes}}
       @currentTab={{this.currentTab}}
