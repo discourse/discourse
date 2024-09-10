@@ -66,7 +66,7 @@
     "@uppy/drop-target": "2.0.1",
     "@uppy/utils": "5.4.3",
     "@uppy/xhr-upload": "3.1.1",
-    "a11y-dialog": "8.1.0",
+    "a11y-dialog": "8.1.1",
     "admin": "workspace:1.0.0",
     "autosize": "^6.0.1",
     "babel-import-util": "^3.0.0",
