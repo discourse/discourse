@@ -7,7 +7,7 @@ export default {
 
   initialize(container) {
     const currentUser = container.lookup("service:current-user");
-    if (!currentUser || !currentUser.admin) {
+    if (!currentUser?.admin) {
       return;
     }
 

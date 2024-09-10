@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { ajax } from "discourse/lib/ajax";
@@ -26,16 +26,19 @@ export default class AdminChatIncomingWebhooksList extends Component {
   destroyWebhook(webhook) {
     this.dialog.deleteConfirm({
       message: I18n.t("chat.incoming_webhooks.confirm_destroy"),
-      didConfirm: () => {
+      didConfirm: async () => {
         this.loading = true;
-        return ajax(`/admin/plugins/chat/hooks/${webhook.id}`, {
-          type: "DELETE",
-        })
-          .then(() => {
-            this.args.webhooks.removeObject(webhook);
-          })
-          .catch(popupAjaxError)
-          .finally(() => (this.loading = false));
+
+        try {
+          await ajax(`/admin/plugins/chat/hooks/${webhook.id}`, {
+            type: "DELETE",
+          });
+          this.args.webhooks.removeObject(webhook);
+        } catch (err) {
+          popupAjaxError(err);
+        } finally {
+          this.loading = false;
+        }
       },
     });
   }

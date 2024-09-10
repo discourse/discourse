@@ -17,21 +17,16 @@ import ChatChannelChooser from "discourse/plugins/chat/discourse/components/chat
 export default class ChatIncomingWebhookEditForm extends Component {
   @service toasts;
   @service router;
-  @tracked emojiPickerIsActive = false;
-  @tracked webhook;
 
-  constructor() {
-    super(...arguments);
-    this.webhook = this.args.webhook;
-  }
+  @tracked emojiPickerIsActive = false;
 
   get formData() {
     return {
-      name: this.webhook?.name,
-      description: this.webhook?.description,
-      username: this.webhook?.username,
-      chat_channel_id: this.webhook?.chat_channel.id,
-      emoji: this.webhook?.emoji,
+      name: this.args.webhook?.name,
+      description: this.args.webhook?.description,
+      username: this.args.webhook?.username,
+      chat_channel_id: this.args.webhook?.chat_channel.id,
+      emoji: this.args.webhook?.emoji,
     };
   }
 
@@ -49,8 +44,8 @@ export default class ChatIncomingWebhookEditForm extends Component {
   @action
   async save(data) {
     try {
-      if (this.webhook?.id) {
-        await ajax(`/admin/plugins/chat/hooks/${this.webhook.id}`, {
+      if (this.args.webhook?.id) {
+        await ajax(`/admin/plugins/chat/hooks/${this.args.webhook.id}`, {
           data,
           type: "PUT",
         });
@@ -176,13 +171,13 @@ export default class ChatIncomingWebhookEditForm extends Component {
         </field.Custom>
       </form.Field>
 
-      {{#if this.webhook.url}}
+      {{#if @webhook.url}}
         <form.Container
           @name="url"
           @title={{i18n "chat.incoming_webhooks.url"}}
           @subtitle={{i18n "chat.incoming_webhooks.url_instructions"}}
         >
-          <code>{{this.webhook.url}}</code>
+          <code>{{@webhook.url}}</code>
         </form.Container>
       {{/if}}
 
