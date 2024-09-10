@@ -7,6 +7,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { count, exists } from "discourse/tests/helpers/qunit-helpers";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { createWidget } from "discourse/widgets/widget";
+import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 
 module("Integration | Component | Widget | post-menu", function (hooks) {
   setupRenderingTest(hooks);
@@ -18,18 +19,21 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
   test("add extra button", async function (assert) {
     this.set("args", {});
     withPluginApi("0.14.0", (api) => {
-      api.addPostMenuButton("coffee", () => {
-        return {
-          action: "drinkCoffee",
-          icon: "mug-saucer",
-          className: "hot-coffee",
-          title: "coffee.title",
-          position: "first",
-        };
+      withSilencedDeprecations("discourse.post-menu-widget-overrides", () => {
+        api.addPostMenuButton("coffee", () => {
+          return {
+            action: "drinkCoffee",
+            icon: "mug-saucer",
+            className: "hot-coffee",
+            title: "coffee.title",
+            position: "first",
+          };
+        });
       });
     });
 
-    await render(hbs`<MountWidget @widget="post-menu" @args={{this.args}} />`);
+    await render(hbs`
+      <MountWidget @widget="post-menu" @args={{this.args}} />`);
 
     assert.strictEqual(
       count(".actions .extra-buttons .hot-coffee"),
@@ -44,25 +48,27 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     let testPost = null;
 
     withPluginApi("0.14.0", (api) => {
-      api.addPostMenuButton("coffee", () => {
-        return {
-          action: ({ post, showFeedback }) => {
-            testPost = post;
-            showFeedback("coffee.drink");
-          },
-          icon: "mug-saucer",
-          className: "hot-coffee",
-          title: "coffee.title",
-          position: "first",
-          actionParam: { id: 123 }, // hack for testing
-        };
+      withSilencedDeprecations("discourse.post-menu-widget-overrides", () => {
+        api.addPostMenuButton("coffee", () => {
+          return {
+            action: ({ post, showFeedback }) => {
+              testPost = post;
+              showFeedback("coffee.drink");
+            },
+            icon: "mug-saucer",
+            className: "hot-coffee",
+            title: "coffee.title",
+            position: "first",
+            actionParam: { id: 123 }, // hack for testing
+          };
+        });
       });
     });
 
     await render(hbs`
-       <article data-post-id="123">
-          <MountWidget @widget="post-menu" @args={{this.args}} />
-       </article>`);
+      <article data-post-id="123">
+        <MountWidget @widget="post-menu" @args={{this.args}} />
+      </article>`);
 
     await click(".hot-coffee");
 
@@ -84,12 +90,15 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     this.set("args", { canCreatePost: true, canRemoveReply: true });
 
     withPluginApi("0.14.0", (api) => {
-      api.removePostMenuButton("reply", (attrs) => {
-        return attrs.canRemoveReply;
+      withSilencedDeprecations("discourse.post-menu-widget-overrides", () => {
+        api.removePostMenuButton("reply", (attrs) => {
+          return attrs.canRemoveReply;
+        });
       });
     });
 
-    await render(hbs`<MountWidget @widget="post-menu" @args={{this.args}} />`);
+    await render(hbs`
+      <MountWidget @widget="post-menu" @args={{this.args}} />`);
 
     assert.ok(!exists(".actions .reply"), "it removes reply button");
   });
@@ -98,12 +107,15 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     this.set("args", { canCreatePost: true, canRemoveReply: false });
 
     withPluginApi("0.14.0", (api) => {
-      api.removePostMenuButton("reply", (attrs) => {
-        return attrs.canRemoveReply;
+      withSilencedDeprecations("discourse.post-menu-widget-overrides", () => {
+        api.removePostMenuButton("reply", (attrs) => {
+          return attrs.canRemoveReply;
+        });
       });
     });
 
-    await render(hbs`<MountWidget @widget="post-menu" @args={{this.args}} />`);
+    await render(hbs`
+      <MountWidget @widget="post-menu" @args={{this.args}} />`);
 
     assert.ok(exists(".actions .reply"), "it does not remove reply button");
   });
@@ -112,10 +124,13 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     this.set("args", { canCreatePost: true });
 
     withPluginApi("0.14.0", (api) => {
-      api.removePostMenuButton("reply");
+      withSilencedDeprecations("discourse.post-menu-widget-overrides", () => {
+        api.removePostMenuButton("reply");
+      });
     });
 
-    await render(hbs`<MountWidget @widget="post-menu" @args={{this.args}} />`);
+    await render(hbs`
+      <MountWidget @widget="post-menu" @args={{this.args}} />`);
 
     assert.ok(!exists(".actions .reply"), "it removes reply button");
   });
@@ -124,11 +139,14 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     this.set("args", {});
 
     withPluginApi("0.14.0", (api) => {
-      api.removePostMenuButton("reply", () => true);
-      api.removePostMenuButton("reply", () => false);
+      withSilencedDeprecations("discourse.post-menu-widget-overrides", () => {
+        api.removePostMenuButton("reply", () => true);
+        api.removePostMenuButton("reply", () => false);
+      });
     });
 
-    await render(hbs`<MountWidget @widget="post-menu" @args={{this.args}} />`);
+    await render(hbs`
+      <MountWidget @widget="post-menu" @args={{this.args}} />`);
 
     assert.ok(!exists(".actions .reply"), "it removes reply button");
   });
@@ -143,16 +161,19 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     this.set("args", { id: 1, canCreatePost: true });
 
     withPluginApi("0.14.0", (api) => {
-      api.replacePostMenuButton("reply", {
-        name: "post-menu-replacement",
-        buildAttrs: (widget) => {
-          return widget.attrs;
-        },
-        shouldRender: (widget) => widget.attrs.id === 1, // true!
+      withSilencedDeprecations("discourse.post-menu-widget-overrides", () => {
+        api.replacePostMenuButton("reply", {
+          name: "post-menu-replacement",
+          buildAttrs: (widget) => {
+            return widget.attrs;
+          },
+          shouldRender: (widget) => widget.attrs.id === 1, // true!
+        });
       });
     });
 
-    await render(hbs`<MountWidget @widget="post-menu" @args={{this.args}} />`);
+    await render(hbs`
+      <MountWidget @widget="post-menu" @args={{this.args}} />`);
 
     assert.ok(exists("h1.post-menu-replacement"), "replacement is rendered");
     assert.ok(!exists(".actions .reply"), "reply button is replaced button");
@@ -162,16 +183,19 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     this.set("args", { id: 1, canCreatePost: true, canRemoveReply: false });
 
     withPluginApi("0.14.0", (api) => {
-      api.replacePostMenuButton("reply", {
-        name: "post-menu-replacement",
-        buildAttrs: (widget) => {
-          return widget.attrs;
-        },
-        shouldRender: (widget) => widget.attrs.id === 102323948, // false!
+      withSilencedDeprecations("discourse.post-menu-widget-overrides", () => {
+        api.replacePostMenuButton("reply", {
+          name: "post-menu-replacement",
+          buildAttrs: (widget) => {
+            return widget.attrs;
+          },
+          shouldRender: (widget) => widget.attrs.id === 102323948, // false!
+        });
       });
     });
 
-    await render(hbs`<MountWidget @widget="post-menu" @args={{this.args}} />`);
+    await render(hbs`
+      <MountWidget @widget="post-menu" @args={{this.args}} />`);
 
     assert
       .dom("h1.post-menu-replacement")

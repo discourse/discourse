@@ -223,7 +223,7 @@ export default class Post extends RestModel {
   }
 
   get canManage() {
-    return this.currentUser?.get("canManageTopic");
+    return this.currentUser?.canManageTopic;
   }
 
   get canPermanentlyDelete() {
