@@ -45,6 +45,7 @@ export default class PostMenuRepliesButton extends Component {
         class="show-replies btn-icon-text"
         ...attributes
         disabled={{this.disabled}}
+        @action={{@action}}
         @ariaControls={{concat "embedded-posts__bottom--" @post.post_number}}
         @ariaExpanded={{and
           @context.repliesShown
@@ -63,7 +64,6 @@ export default class PostMenuRepliesButton extends Component {
           count=@post.reply_count
         }}
         @translatedTitle={{this.translatedTitle}}
-        @action={{@action}}
       >
         {{!--
                The icon on the replies button is aligned to the right

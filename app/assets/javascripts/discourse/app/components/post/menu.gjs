@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import { and, eq } from "truth-helpers";
@@ -267,6 +267,7 @@ export default class PostMenu extends Component {
             break;
         }
 
+        const post = this.args.post;
         const config = {
           id,
           Component: properties.Component,
@@ -282,6 +283,20 @@ export default class PostMenu extends Component {
           alwaysShow,
           context,
           extraControl: properties.position?.extraControl ?? extraControl,
+
+          get PostMenuButtonWrapper() {
+            // we need to save the value of `this` context otherwise it will be overriden when
+            // while Ember renders the component
+            const buttonConfig = this;
+
+            return <template>
+              <PostMenuButton
+                @button={{buttonConfig}}
+                @post={{post}}
+                @showLabel={{@showLabel}}
+              />
+            </template>;
+          },
         };
 
         return [id, config];
@@ -509,6 +524,7 @@ export default class PostMenu extends Component {
     return this.siteSettings.post_menu.split("|").filter(Boolean);
   }
 
+  @computed("args.post.bookmarked")
   get #hiddenItems() {
     const setting = this.siteSettings.post_menu_hidden_items;
 
@@ -561,11 +577,11 @@ export default class PostMenu extends Component {
     >
       {{! do not include PluginOutlets here, use the PostMenu DAG API instead }}
       {{#each this.extraControls as |extraControl|}}
-        <PostMenuButton @button={{extraControl}} @post={{@post}} />
+        <extraControl.PostMenuButtonWrapper />
       {{/each}}
       <div class="actions">
         {{#each this.visibleButtons as |button|}}
-          <PostMenuButton @button={{button}} @post={{@post}} />
+          <button.PostMenuButtonWrapper />
         {{/each}}
       </div>
     </nav>

@@ -12,7 +12,11 @@ export default class PostMenuBookmarkButton extends Component {
 
   <template>
     {{#if @shouldRender}}
-      <BookmarkMenu ...attributes @bookmarkManager={{this.bookmarkManager}} />
+      <BookmarkMenu
+        ...attributes
+        @bookmarkManager={{this.bookmarkManager}}
+        @showLabel={{@showLabel}}
+      />
     {{/if}}
   </template>
 }

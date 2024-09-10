@@ -11,11 +11,11 @@ export default class PostMenuAdminButton extends Component {
       <DButton
         class="show-post-admin-menu"
         ...attributes
-        @icon="wrench"
-        @title="post.controls.admin"
-        @label={{if @showLabel "post.controls.admin_action"}}
         @action={{@action}}
         @forwardEvent={{true}}
+        @icon="wrench"
+        @label={{if @showLabel "post.controls.admin_action"}}
+        @title="post.controls.admin"
       />
     {{/if}}
   </template>

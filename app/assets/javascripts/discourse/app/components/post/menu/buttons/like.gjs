@@ -61,9 +61,10 @@ export default class PostMenuLikeButton extends Component {
           ...attributes
           data-post-id={{@post.id}}
           disabled={{this.disabled}}
-          @icon={{if @post.liked "d-liked" "d-unliked"}}
-          @title={{this.title}}
           @action={{fn @action (hash onBeforeToggle=this.animateToggle)}}
+          @icon={{if @post.liked "d-liked" "d-unliked"}}
+          @label={{if @showLabel "post.controls.like_action"}}
+          @title={{this.title}}
           {{didInsert this.setElement}}
         />
       </div>
@@ -87,18 +88,18 @@ class LikeCount extends Component {
   }
 
   get translatedTitle() {
-    let label;
+    let title;
 
     if (this.args.post.liked) {
-      label =
+      title =
         this.args.post.likeCount === 1
           ? "post.has_likes_title_only_you"
           : "post.has_likes_title_you";
     } else {
-      label = "post.has_likes_title";
+      title = "post.has_likes_title";
     }
 
-    return i18n(label, {
+    return i18n(title, {
       count: this.args.post.liked
         ? this.args.post.likeCount - 1
         : this.args.post.likeCount,

@@ -3843,13 +3843,16 @@ en:
 
       controls:
         reply: "begin composing a reply to this post"
+        like_action: "Like"
         like: "like this post"
         has_liked: "you've liked this post"
         read_indicator: "members who read this post"
+        undo_like_action: "Undo like"
         undo_like: "undo like"
         edit: "edit this post"
         edit_action: "Edit"
         edit_anonymous: "Sorry, but you need to be logged in to edit this post."
+        flag_action: "Flag"
         flag: "privately flag this post for attention or send a private notification about it"
         delete_action: "Delete post"
         delete: "delete this post"
