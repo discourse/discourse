@@ -103,7 +103,10 @@ export default class ChannelsListPublic extends Component {
           @showCTA={{this.chatChannelsManager.displayPublicChannels}}
         />
       {{else}}
-        {{#each this.chatChannelsManager.publicMessageChannels as |channel|}}
+        {{#each
+          this.chatChannelsManager.publicMessageChannelsByActivity
+          as |channel|
+        }}
           <ChatChannelRow
             @channel={{channel}}
             @options={{hash settingsButton=true}}

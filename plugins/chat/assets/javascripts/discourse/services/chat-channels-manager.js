@@ -125,16 +125,20 @@ export default class ChatChannelsManager extends Service {
 
   @cached
   get publicMessageChannels() {
-    const channels = this.channels.filter(
+    return this.channels.filter(
       (channel) =>
         channel.isCategoryChannel && channel.currentUserMembership.following
     );
+  }
 
-    if (this.site.mobileView) {
-      return this.#sortChannelsByActivity(channels);
-    } else {
-      return channels.sort((a, b) => a?.slug?.localeCompare?.(b?.slug));
-    }
+  get publicMessageChannelsBySlug() {
+    return this.publicMessageChannels.sort((a, b) =>
+      a?.slug?.localeCompare?.(b?.slug)
+    );
+  }
+
+  get publicMessageChannelsByActivity() {
+    return this.#sortChannelsByActivity(this.publicMessageChannels);
   }
 
   @cached

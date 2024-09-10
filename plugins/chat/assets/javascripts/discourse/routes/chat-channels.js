@@ -24,6 +24,6 @@ export default class ChatChannelsRoute extends DiscourseRoute {
   }
 
   model() {
-    return this.chatChannelsManager.publicMessageChannels;
+    return this.chatChannelsManager.publicMessageChannelsBySlug;
   }
 }

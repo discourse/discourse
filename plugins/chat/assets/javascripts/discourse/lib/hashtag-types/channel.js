@@ -13,7 +13,7 @@ export default class ChannelHashtagType extends HashtagTypeBase {
 
   get preloadedData() {
     if (this.currentUser) {
-      return this.chatChannelsManager.publicMessageChannels;
+      return this.chatChannelsManager.publicMessageChannelsBySlug;
     } else {
       return [];
     }
