@@ -7,23 +7,11 @@
   &__description {
     margin-top: 0.5em;
   }
-  &__options {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
   .d-toggle-switch__label {
     margin-bottom: 0;
   }
   .d-toggle-switch {
     margin-right: 2em;
-  }
-  .btn-secondary {
-    padding: 0.25em 0.325em;
-    margin-right: 0.75em;
-  }
-  .flag-menu-trigger {
-    padding: 0.25em 0.325em;
   }
 
   &__delete.btn,

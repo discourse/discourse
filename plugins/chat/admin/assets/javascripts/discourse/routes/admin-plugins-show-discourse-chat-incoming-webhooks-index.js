@@ -3,6 +3,7 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "discourse-i18n";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default class DiscourseChatIncomingWebhooksIndex extends DiscourseRoute {
@@ -31,5 +32,9 @@ export default class DiscourseChatIncomingWebhooksIndex extends DiscourseRoute {
     } catch (err) {
       popupAjaxError(err);
     }
+  }
+
+  titleToken() {
+    return I18n.t("chat.incoming_webhooks.title");
   }
 }

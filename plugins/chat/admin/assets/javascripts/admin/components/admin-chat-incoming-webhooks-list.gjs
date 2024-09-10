@@ -8,7 +8,6 @@ import DButton from "discourse/components/d-button";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
@@ -62,22 +61,21 @@ export default class AdminChatIncomingWebhooksList extends Component {
             <td>{{webhook.username}}</td>
             <td>{{webhook.description}}</td>
             <td><ChannelTitle @channel={{webhook.chat_channel}} /></td>
-            <td>
-              <div class="incoming-chat-webhooks-row__controls">
-                <LinkTo
-                  @route="adminPlugins.show.discourse-chat-incoming-webhooks.show"
-                  @model={{webhook.id}}
-                  class="btn btn-small admin-chat-incoming-webhooks-edit"
-                >{{dIcon "pencil-alt"}}{{i18n
-                    "chat.incoming_webhooks.edit"
-                  }}</LinkTo>
-                <DButton
-                  @icon="trash-alt"
-                  @title="chat.incoming_webhooks.delete"
-                  @action={{fn this.destroyWebhook webhook}}
-                  class="btn-danger btn-small admin-chat-incoming-webhooks-delete"
-                />
-              </div>
+            <td
+              class="incoming-chat-webhooks-row__controls admin-table-row-controls"
+            >
+              <LinkTo
+                @route="adminPlugins.show.discourse-chat-incoming-webhooks.show"
+                @model={{webhook.id}}
+                class="btn btn-small admin-chat-incoming-webhooks-edit"
+              >{{i18n "chat.incoming_webhooks.edit"}}</LinkTo>
+
+              <DButton
+                @icon="trash-alt"
+                @title="chat.incoming_webhooks.delete"
+                @action={{fn this.destroyWebhook webhook}}
+                class="btn-danger btn-small admin-chat-incoming-webhooks-delete"
+              />
             </td>
           </tr>
         {{/each}}

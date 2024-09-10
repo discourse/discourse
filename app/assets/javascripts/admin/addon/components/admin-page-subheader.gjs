@@ -28,7 +28,7 @@ export default class AdminPageSubheader extends Component {
   <template>
     <div class="admin-page-subheader">
       <div class="admin-page-subheader__title-row">
-        <h3 class="admin-page-subheader__title">{{i18n @titleLabel}}</h3>
+        <h3 class="admin-page-subheader__title">{{this.title}}</h3>
         <div class="admin-page-subheader__actions">
           {{yield
             (hash
