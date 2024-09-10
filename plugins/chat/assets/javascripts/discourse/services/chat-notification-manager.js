@@ -148,7 +148,9 @@ export default class ChatNotificationManager extends Service {
 
   @action
   async fetchChannel(channelId) {
-    return await this.chatChannelsManager.find(channelId);
+    return await this.chatChannelsManager.find(channelId, {
+      fetchIfNotFound: false,
+    });
   }
 
   @bind
@@ -159,7 +161,10 @@ export default class ChatNotificationManager extends Service {
 
     if (this.site.desktopView) {
       const channel = await this.fetchChannel(data.channel_id);
-      data.isDirectMessageChannel = channel.isDirectMessageChannel ?? false;
+
+      if (channel) {
+        data.isDirectMessageChannel = channel.isDirectMessageChannel ?? false;
+      }
 
       return onDesktopNotification(
         data,
