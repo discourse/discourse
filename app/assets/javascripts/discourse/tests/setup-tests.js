@@ -190,7 +190,7 @@ function reportMemoryUsageAfterTests() {
 
 function writeSummaryLine(message) {
   // eslint-disable-next-line no-console
-  console.log(`\n${message}\n`);
+  console.log(`${message}\n`);
   if (window.Testem) {
     window.Testem.useCustomAdapter(function (socket) {
       socket.emit("test-metadata", "summary-line", {
