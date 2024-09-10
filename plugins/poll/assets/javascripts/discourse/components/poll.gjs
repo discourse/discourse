@@ -479,7 +479,8 @@ export default class PollComponent extends Component {
 
     this.preloadedVoters = Object.assign(preloadedVoters);
 
-    votersCount = this.options.find((option) => option.id === optionId).votes;
+    votersCount = this.options.find((option) => option.id === optionId).voters
+      .length;
 
     return ajax("/polls/voters.json", {
       data: {
