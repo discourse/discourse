@@ -330,10 +330,11 @@ $usercard-backdrop: dark-light-choose(none, brightness(0.7));
   }
   &__id {
     display: flex;
-    height: 50px;
+    min-height: 50px;
     position: relative;
-    max-width: calc(480px - 2em);
+    max-width: calc(480px - 1em);
     flex-wrap: wrap;
+    height: 100%;
   }
   &__id .d-user-card__avatar + div:has(> .avatar-flair) {
     position: absolute;
@@ -364,6 +365,7 @@ $usercard-backdrop: dark-light-choose(none, brightness(0.7));
   &__avatar-container {
     position: relative;
     top: -50px;
+    margin-bottom: -50px;
   }
   &__avatar {
     display: flex;
@@ -389,12 +391,17 @@ $usercard-backdrop: dark-light-choose(none, brightness(0.7));
     color: var(--primary);
     flex: 1 1;
     max-width: calc(100% - 120px - 0.5em);
+    flex-direction: column;
+    display: flex;
   }
   &__id-titles:visited {
     color: var(--primary);
   }
   &__id-titles:hover {
     color: var(--primary);
+  }
+  &__id-titles > span > * {
+    line-height: var(--line-height-large);
   }
   &__titles-top {
     display: flex;
@@ -405,6 +412,9 @@ $usercard-backdrop: dark-light-choose(none, brightness(0.7));
     display: flex;
     flex-direction: row;
     gap: 0.25em;
+    &:not(:has(*)) {
+      display: none;
+    }
   }
   &__name {
     font-weight: bold;
@@ -510,7 +520,8 @@ $usercard-backdrop: dark-light-choose(none, brightness(0.7));
     font-size: var(--font-down-1);
     margin-bottom: 0.75em;
   }
-  &__custom-field-title {
+  &__custom-field-title,
+  .desc {
     font-weight: bold;
   }
   &__custom-field-data {
@@ -518,8 +529,10 @@ $usercard-backdrop: dark-light-choose(none, brightness(0.7));
   }
   &__custom-field-group {
     display: flex;
+    align-items: center;
     flex-wrap: wrap;
   }
+  &__custom-field-group > div,
   &__field {
     padding: 3px 5px;
     display: flex;

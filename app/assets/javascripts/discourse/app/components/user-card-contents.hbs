@@ -153,13 +153,6 @@
                 {{#if this.user.staged}}
                   <span class="staged">{{i18n "user.staged"}}</span>
                 {{/if}}
-                <div>
-                  <PluginOutlet
-                    @name="user-card-post-names"
-                    @connectorTagName="div"
-                    @outletArgs={{hash user=this.user}}
-                  />
-                </div>
               </div>
               <div class="d-user-card__titles-bottom">
                 {{#if this.nameFirst}}
@@ -182,6 +175,13 @@
                   <UserStatusMessage @status={{this.user.status}} />
                 {{/if}}
               </div>
+              <span>
+                <PluginOutlet
+                  @name="user-card-post-names"
+                  @connectorTagName="div"
+                  @outletArgs={{hash user=this.user}}
+                />
+              </span>
             </div>
           </div>
           <div class="d-user-card__user-content">
