@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
+import Form from "discourse/components/form";
 import concatClass from "discourse/helpers/concat-class";
 import i18n from "discourse-common/helpers/i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
@@ -50,6 +51,22 @@ export default class ThemeCard extends Component {
     // bring admin to theme preview of site
   }
 
+  @action
+  registerApi(api) {
+    this.formApi = api;
+  }
+
+  @action
+  async onSetThemeUserSelectable(value, { set }) {
+    set("themeUserSelectable", value);
+    await this.formApi.submit();
+  }
+
+  @action
+  async handleSubmit() {
+    await this.formApi.submit();
+  }
+
   get themeRouteModels() {
     return ["themes", this.args.theme.id];
   }
@@ -57,7 +74,19 @@ export default class ThemeCard extends Component {
   <template>
     <AdminConfigAreaCard @translatedHeading={{this.args.theme.name}} class={{concatClass "theme-card" (if this.isDefault "--active" "")}}>
       <div class="theme-card-image-wrapper">
-        <div class="user-selectable">
+        <div class="theme-card-user-selectable">
+          <Form as @onRegisterApi={{this.registerApi}} |form|>
+            <form.CheckboxGroup as |checkboxGroup|>
+              <checkboxGroup.Field
+                @name="themeUserSelectable"
+                @title={{i18n "admin.config_areas.themes.user_selectable"}}
+                @onSet={{this.onSetThemeUserSelectable}}
+                as |field|
+              >
+                <field.Checkbox/>
+              </checkboxGroup.Field>
+            </form.CheckboxGroup>
+          </Form>
         </div>
         <img class="theme-card-image" src={{htmlSafe this.screenshot}} alt={{this.image_alt}} />
       </div>

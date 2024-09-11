@@ -25,6 +25,13 @@
   &-image-wrapper {
     width: 100%;
     height: 165px;
+    position: relative;
+  }
+  &-user-selectable {
+    padding: 0.25em;
+    background-color: var(--secondary);
+    position: absolute;
+    right: 0;
   }
   &-image {
     width: 100%;
