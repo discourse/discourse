@@ -39,6 +39,14 @@ If you want to set up a Discourse forum for production use, see our [**Discourse
 
 If you're looking for official hosting, see [discourse.org/pricing](https://www.discourse.org/pricing/).
 
+## Self-Hosting Options
+
+### Elestio
+
+You can deploy Discourse on Elestio using one-click deployment.
+
+[![Deploy on Elestio](https://elest.io/images/logos/deploy-to-elestio-btn.png)](https://elest.io/open-source/discourse)
+
 ## Requirements
 
 Discourse is built for the *next* 10 years of the Internet, so our requirements are high.
