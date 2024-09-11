@@ -25,7 +25,7 @@
     "eslint": "^8.57.0",
     "jsdoc": "^4.0.0",
     "lefthook": "^1.7.15",
-    "licensee": "^10.0.0",
+    "licensee": "^11.1.0",
     "lint-to-the-future": "^2.0.0",
     "lint-to-the-future-ember-template": "^1.1.1",
     "lint-to-the-future-eslint": "^2.0.1",
@@ -70,7 +70,7 @@
       "content-tag@2.0.1": "patches/content-tag@2.0.1.patch",
       "decorator-transforms@2.0.0": "patches/decorator-transforms@2.0.0.patch",
       "virtual-dom@2.1.1": "patches/virtual-dom@2.1.1.patch",
-      "licensee@10.0.0": "patches/licensee@10.0.0.patch"
+      "licensee@11.1.0": "patches/licensee@11.1.0.patch"
     },
     "peerDependencyRules": {
       "allowedVersions": {

@@ -17,9 +17,9 @@ patchedDependencies:
   ember-this-fallback@0.4.0:
     hash: znalyv6akdxlqfpmxunrdi3osa
     path: patches/ember-this-fallback@0.4.0.patch
-  licensee@10.0.0:
-    hash: mmobvysb35jjs67b5ebk3sxdim
-    path: patches/licensee@10.0.0.patch
+  licensee@11.1.0:
+    hash: 55h346kvblvnigtrwrsh4hpona
+    path: patches/licensee@11.1.0.patch
   virtual-dom@2.1.1:
     hash: ng672yys7q7cl7vz44xn3y54uq
     path: patches/virtual-dom@2.1.1.patch
@@ -89,8 +89,8 @@ importers:
         specifier: ^1.7.15
         version: 1.7.15
       licensee:
-        specifier: ^10.0.0
-        version: 10.0.0(patch_hash=mmobvysb35jjs67b5ebk3sxdim)
+        specifier: ^11.1.0
+        version: 11.1.0(patch_hash=55h346kvblvnigtrwrsh4hpona)
       lint-to-the-future:
         specifier: ^2.0.0
         version: 2.0.0(encoding@0.1.13)
@@ -1799,8 +1799,8 @@ packages:
     resolution: {integrity: sha512-/l42B1qxpG6RdfYf343Uw1vmDjeNhneUXtzhojE7pDgfpEypmRhI6j1kr17XCVv4Cgl9HdAiQY2x0GwKm7rWCw==}
     engines: {node: '>=6.9.0'}
 
-  '@blueoak/list@9.0.0':
-    resolution: {integrity: sha512-ExvaAZaZEIhaCePVpqW4ZoFgixhuylQiukSSqaRNfqUtqSWKnlUMZpZWOlugRpfRLuazPkcquDVhPkeodQI5FQ==}
+  '@blueoak/list@15.0.0':
+    resolution: {integrity: sha512-xW5Xb9Fr3WtYAOwavxxWL0CaJK/ReT+HKb5/R6dR1p9RVJ55MTdaxPdeTKY2ukhFchv2YHPMM8YuZyfyLqxedg==}
 
   '@cnakazawa/watch@1.0.4':
     resolution: {integrity: sha512-v9kIhKwjeZThiWrLmj0y17CWoyddASLj9O2yvbZkbvw/N3rWOYy9zkV66ursAoVr0mV15bL8g0c4QZUE6cdDoQ==}
@@ -5319,10 +5319,6 @@ packages:
     resolution: {integrity: sha512-ODYZC64uqzmtfGMEAX/FvZiRyWLpAC3vYnNunURUnkGVTS+mI0smVsWaPydRBsE3g+ok7h960jChO8mFcWlHaQ==}
     engines: {node: '>=0.10.0'}
 
-  has@1.0.3:
-    resolution: {integrity: sha512-f2dvO0VU6Oej7RkWJGrehjbzMAjFp5/VKPp5tTpWIV4JHHZK1/BxbFRtf/siA2SWTe09caDmVtYYzWEIbBS4zw==}
-    engines: {node: '>= 0.4.0'}
-
   hash-for-dep@1.5.1:
     resolution: {integrity: sha512-/dQ/A2cl7FBPI2pO0CANkvuuVi/IFS5oTyJ0PsOb6jW6WbVW1js5qJXMJTNbWHXBIPdFTWFbabjB+mE0d+gelw==}
 
@@ -5991,9 +5987,9 @@ packages:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
 
-  licensee@10.0.0:
-    resolution: {integrity: sha512-gvn5JHCNuchGGjjIm6FsK4qSOTtHkbUfo8YKW61hhEIk3osEf3fKlCH9ma0j+HaVESrOt0YUOmsi/wusKSnneQ==}
-    engines: {node: '>= 14.17'}
+  licensee@11.1.0:
+    resolution: {integrity: sha512-aRpJYUWfEnfpFPFLlzh3echPwwpx2GkxEMCJwd1nAqGRfjdDJOQcOcs/luGtdOdIMqJRKY/MutqkXKZId6TKBg==}
+    engines: {node: ^18.12 || ^20.9 || >= 22.7}
     hasBin: true
 
   lighthouse-logger@2.0.1:
@@ -7629,6 +7625,9 @@ packages:
 
   spdx-expression-parse@3.0.1:
     resolution: {integrity: sha512-cbqHunsQWnJNE6KhVSMsMeH5H/L9EpymbzqTQ3uLwNCLZ1Q481oWaofqH7nO6V07xlXwY6PhQdQ2IedWx/ZK4Q==}
+
+  spdx-expression-parse@4.0.0:
+    resolution: {integrity: sha512-Clya5JIij/7C6bRR22+tnGXbc4VKlibKSVj2iHvVeX5iMW7s1SIQlqu699JkODJJIhh/pUu8L0/VLh8xflD+LQ==}
 
   spdx-expression-validate@2.0.0:
     resolution: {integrity: sha512-b3wydZLM+Tc6CFvaRDBOF9d76oGIHNCLYFeHbftFXUWjnfZWganmDmvtM5sm1cRwJc/VDBMLyGGrsLFd1vOxbg==}
@@ -9399,7 +9398,7 @@ snapshots:
       '@babel/helper-validator-identifier': 7.24.7
       to-fast-properties: 2.0.0
 
-  '@blueoak/list@9.0.0': {}
+  '@blueoak/list@15.0.0': {}
 
   '@cnakazawa/watch@1.0.4':
     dependencies:
@@ -14266,10 +14265,6 @@ snapshots:
       is-number: 3.0.0
       kind-of: 4.0.0
 
-  has@1.0.3:
-    dependencies:
-      function-bind: 1.1.2
-
   hash-for-dep@1.5.1:
     dependencies:
       broccoli-kitchen-sink-helpers: 0.3.1
@@ -14959,16 +14954,16 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
-  licensee@10.0.0(patch_hash=mmobvysb35jjs67b5ebk3sxdim):
+  licensee@11.1.0(patch_hash=55h346kvblvnigtrwrsh4hpona):
     dependencies:
-      '@blueoak/list': 9.0.0
+      '@blueoak/list': 15.0.0
       '@npmcli/arborist': 6.5.1
       correct-license-metadata: 1.4.0
       docopt: 0.6.2
-      has: 1.0.3
+      hasown: 2.0.2
       npm-license-corrections: 1.6.2
       semver: 7.6.3
-      spdx-expression-parse: 3.0.1
+      spdx-expression-parse: 4.0.0
       spdx-expression-validate: 2.0.0
       spdx-osi: 3.0.0
       spdx-whitelisted: 1.0.0
@@ -16785,6 +16780,11 @@ snapshots:
   spdx-exceptions@2.5.0: {}
 
   spdx-expression-parse@3.0.1:
+    dependencies:
+      spdx-exceptions: 2.5.0
+      spdx-license-ids: 3.0.20
+
+  spdx-expression-parse@4.0.0:
     dependencies:
       spdx-exceptions: 2.5.0
       spdx-license-ids: 3.0.20
