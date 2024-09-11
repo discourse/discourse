@@ -76,7 +76,7 @@ export default class ThemeCard extends Component {
     <AdminConfigAreaCard @translatedHeading={{this.args.theme.name}} class={{concatClass "theme-card" (if this.isDefault "--active" "")}}>
       <div class="theme-card-image-wrapper">
         <div class="theme-card-user-selectable">
-          <Form as @onRegisterApi={{this.registerApi}} |form|>
+          <Form as |form|>
             <form.CheckboxGroup as |checkboxGroup|>
               <checkboxGroup.Field
                 @name="themeUserSelectable"
