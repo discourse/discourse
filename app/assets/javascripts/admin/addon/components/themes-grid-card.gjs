@@ -64,6 +64,7 @@ export default class ThemeCard extends Component {
 
   @action
   async handleSubmit() {
+    // https://github.com/discourse/discourse/blob/878104396d1611a81d2e0b18255f67bfb9dacf28/app/assets/javascripts/admin/addon/controllers/admin-customize-themes-show.js#L379-L382
     await this.formApi.submit();
   }
 
