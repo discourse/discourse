@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -63,20 +64,35 @@ export default class ThemeCard extends Component {
   }
 
   @action
-  async handleSubmit() {
-    // https://github.com/discourse/discourse/blob/878104396d1611a81d2e0b18255f67bfb9dacf28/app/assets/javascripts/admin/addon/controllers/admin-customize-themes-show.js#L379-L382
-    await this.formApi.submit();
+  async handleSubmit({ themeUserSelectable }) {
+    this.args.theme.user_selectable = themeUserSelectable;
+    this.args.theme.saveChanges("user_selectable");
   }
 
   get themeRouteModels() {
     return ["themes", this.args.theme.id];
   }
 
+  @cached
+  get formData() {
+    return {
+      themeUserSelectable: this.args.theme.user_selectable,
+    };
+  }
+
   <template>
-    <AdminConfigAreaCard @translatedHeading={{this.args.theme.name}} class={{concatClass "theme-card" (if this.isDefault "--active" "")}}>
+    <AdminConfigAreaCard
+      @translatedHeading={{this.args.theme.name}}
+      class={{concatClass "theme-card" (if this.isDefault "--active" "")}}
+    >
       <div class="theme-card-image-wrapper">
         <div class="theme-card-user-selectable">
-          <Form as |form|>
+          <Form
+            @onSubmit={{this.handleSubmit}}
+            @onRegisterApi={{this.registerApi}}
+            @data={{this.formData}}
+            as |form|
+          >
             <form.CheckboxGroup as |checkboxGroup|>
               <checkboxGroup.Field
                 @name="themeUserSelectable"
@@ -84,12 +100,16 @@ export default class ThemeCard extends Component {
                 @onSet={{this.onSetThemeUserSelectable}}
                 as |field|
               >
-                <field.Checkbox/>
+                <field.Checkbox />
               </checkboxGroup.Field>
             </form.CheckboxGroup>
           </Form>
         </div>
-        <img class="theme-card-image" src={{htmlSafe this.screenshot}} alt={{this.image_alt}} />
+        <img
+          class="theme-card-image"
+          src={{htmlSafe this.screenshot}}
+          alt={{this.image_alt}}
+        />
       </div>
       <div class="theme-card-content">
         <p class="theme-card-description">{{@theme.description}}</p>
