@@ -8,9 +8,13 @@ RSpec.describe PostsController do
   fab!(:post2) { Fabricate(:post, topic:, raw: "[poll results=on_vote]\n- A\n- B\n[/poll]") }
   fab!(:post3) { Fabricate(:post, topic:, raw: "[poll results=on_vote]\n- A\n- B\n[/poll]") }
   fab!(:post4) { Fabricate(:post, topic:, raw: "[poll results=on_vote]\n- A\n- B\n[/poll]") }
-  fab!(:post5) { Fabricate(:post, topic:, raw: "[poll results=staff_only]\n- A\n- B\n[/poll]") }
-  fab!(:post6) { Fabricate(:post, topic:, raw: "[poll results=staff_only]\n- A\n- B\n[/poll]") }
-  fab!(:post7) { Fabricate(:post, topic:, raw: "[poll visibility=]\n- A\n- B\n[/poll]") }
+  fab!(:post5) do
+    Fabricate(:post, topic:, raw: "[poll public=true results=staff_only]\n- A\n- B\n[/poll]")
+  end
+  fab!(:post6) do
+    Fabricate(:post, topic:, raw: "[poll public=true results=staff_only]\n- A\n- B\n[/poll]")
+  end
+  fab!(:post7) { Fabricate(:post, topic:, raw: "[poll public=true]\n- A\n- B\n[/poll]") }
 
   describe "#show" do
     context "when not logged in" do
@@ -26,7 +30,8 @@ RSpec.describe PostsController do
         # - load all options
         # - count votes for each poll
         # - count votes for each option
-        expect(poll_queries.size).to eq(4)
+        # - voters for poll in post7
+        expect(poll_queries.size).to eq(5)
       end
     end
 
@@ -43,7 +48,10 @@ RSpec.describe PostsController do
         # - all queries listed for "when not logged in"
         # - query to find out if the user has voted in each poll
         # - queries to get "serialized voters" (NOT TRACKED)
-        expect(poll_queries.size).to eq(5)
+        # - voters for poll in post5
+        # - voters for poll in post6
+        # - voters for poll in post7
+        expect(poll_queries.size).to eq(8)
       end
     end
   end
