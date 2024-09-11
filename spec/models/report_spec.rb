@@ -975,13 +975,7 @@ RSpec.describe Report do
   end
 
   describe "exception report" do
-    before(:each) do
-      class Report
-        def self.report_exception_test(report)
-          report.data = x
-        end
-      end
-    end
+    before(:each) { Report.stubs(:report_exception_test).raises(Exception) }
 
     it "returns a report with an exception error" do
       report = Report.find("exception_test", wrap_exceptions_in_test: true)
@@ -990,16 +984,7 @@ RSpec.describe Report do
   end
 
   describe "timeout report" do
-    before(:each) do
-      freeze_time
-
-      class Report
-        def self.report_timeout_test(report)
-          report.error =
-            wrap_slow_query(1) { ActiveRecord::Base.connection.execute("SELECT pg_sleep(5)") }
-        end
-      end
-    end
+    before(:each) { Report.stubs(:report_timeout_test).raises(ActiveRecord::QueryCanceled) }
 
     it "returns a report with a timeout error" do
       report = Report.find("timeout_test")
@@ -1609,15 +1594,8 @@ RSpec.describe Report do
     let(:valid_report) { Report.find("valid_test", wrap_exceptions_in_test: true) }
 
     before(:each) do
-      class Report
-        def self.report_exception_test(report)
-          report.data = x
-        end
-
-        def self.report_valid_test(report)
-          report.data = "success!"
-        end
-      end
+      Report.stubs(:report_exception_test).raises(Exception)
+      Report.stubs(:report_valid_test)
     end
 
     it "caches exception reports for 1 minute" do
