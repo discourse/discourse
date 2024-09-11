@@ -13,6 +13,7 @@
 .theme-card {
   display: flex;
   flex-direction: column;
+  position: relative;
   .admin-config-area-card__content {
     display: flex;
     flex-direction: column;
@@ -25,13 +26,12 @@
   &-image-wrapper {
     width: 100%;
     height: 165px;
-    position: relative;
   }
   &-user-selectable {
-    padding: 0.25em;
     background-color: var(--secondary);
     position: absolute;
-    right: 0;
+    right: 20px;
+    top: 22px;
   }
   &-image {
     width: 100%;
