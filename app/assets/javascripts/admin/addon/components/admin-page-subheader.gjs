@@ -43,7 +43,10 @@ export default class AdminPageSubheader extends Component {
         <p class="admin-page-subheader__description">
           {{htmlSafe this.description}}
           {{#if @learnMoreUrl}}
-            {{htmlSafe (i18n "learn_more_with_link" url=@learnMoreUrl)}}
+            <span class="admin-page-subheader__learn-more">
+              {{htmlSafe
+                (i18n "learn_more_with_link" url=@learnMoreUrl)
+              }}</span>
           {{/if}}
         </p>
       {{/if}}
