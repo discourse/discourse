@@ -56,7 +56,6 @@
     "lint-progress": "pnpm lttf:output && npx html-pages ./lint-progress --no-cache",
     "ember": "pnpm --dir=app/assets/javascripts/discourse ember"
   },
-  "packageManager": "pnpm@9.9.0",
   "engines": {
     "node": ">= 18",
     "npm": "please-use-pnpm",
