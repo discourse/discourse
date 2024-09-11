@@ -18,7 +18,7 @@ export default RouteTemplate(
   class extends Component {
     @service siteSettings;
 
-    @tracked accountActivated = true;
+    @tracked accountActivated = false;
     @tracked isLoading = false;
     @tracked needsApproval = false;
     @tracked errorMessage = null;
