@@ -14,19 +14,23 @@ export default class ChatChannelName extends Component {
     return this.args.unreadIndicator ?? false;
   }
 
-  get firstUser() {
-    return this.args.channel.chatable.users[0];
-  }
-
   get users() {
     return this.args.channel.chatable.users;
   }
 
-  get groupDirectMessage() {
-    return (
-      this.args.channel.isDirectMessageChannel &&
-      this.args.channel.chatable.group
-    );
+  get directMessageTitle() {
+    const title = this.args.channel.title;
+    if (title) {
+      return title;
+    }
+
+    return this.args.channel.chatable.group
+      ? this.usernames
+      : this.users[0].username;
+  }
+
+  get usernames() {
+    return this.users.mapBy("username").join(", ");
   }
 
   get channelColorStyle() {
@@ -41,11 +45,17 @@ export default class ChatChannelName extends Component {
   }
 
   get channelTitle() {
+    if (this.args.channel.isDirectMessageChannel) {
+      return this.directMessageTitle;
+    }
     return this.args.channel.title;
   }
 
   get showPluginOutlet() {
-    return this.args.channel.isDirectMessageChannel && !this.groupDirectMessage;
+    return (
+      this.args.channel.isDirectMessageChannel &&
+      !this.args.channel.chatable.group
+    );
   }
 
   <template>

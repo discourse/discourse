@@ -38,14 +38,23 @@ module Chat
           .map { |user| user || Chat::NullUser.new }
           .reject { |u| u.is_system_user? }
 
-      prefers_name = SiteSetting.display_name_on_posts && !SiteSetting.prioritize_username_in_ux
+      prefers_name =
+        SiteSetting.enable_names && SiteSetting.display_name_on_posts &&
+          !SiteSetting.prioritize_username_in_ux
 
       # direct message to self
       if users.empty?
         return(
           I18n.t(
             "chat.channel.dm_title.single_user",
-            username: "@#{prefers_name ? acting_user.name : acting_user.username}",
+            username:
+              (
+                if prefers_name
+                  acting_user.name.presence || "@#{acting_user.username}"
+                else
+                  "@#{acting_user.username}"
+                end
+              ),
           )
         )
       end
@@ -56,7 +65,9 @@ module Chat
       formatted_names =
         (
           if prefers_name
-            users.sort_by(&:name).map { |u| u.name }
+            users
+              .map { |u| u.name.presence || u.username }
+              .sort { |a, b| a.downcase <=> b.downcase }
           else
             users.sort_by(&:username).map { |u| "@#{u.username}" }
           end
