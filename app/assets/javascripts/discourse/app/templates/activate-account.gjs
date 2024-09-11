@@ -18,7 +18,7 @@ export default RouteTemplate(
   class extends Component {
     @service siteSettings;
 
-    @tracked accountActivated = false;
+    @tracked accountActivated = true;
     @tracked isLoading = false;
     @tracked needsApproval = false;
     @tracked errorMessage = null;
@@ -113,7 +113,6 @@ export default RouteTemplate(
                   class="btn-primary continue-button"
                   @translatedLabel={{i18n
                     "user.activate_account.continue_button"
-                    site_name=this.siteSettings.title
                   }}
                   @action={{this.loadHomepage}}
                 />
