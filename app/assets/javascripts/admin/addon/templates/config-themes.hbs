@@ -1,0 +1,18 @@
+<AdminPageHeader
+  @titleLabel="admin.config_areas.themes.title"
+  @descriptionLabel="admin.config_areas.themes.description"
+  @learnMoreUrl="https://meta.discourse.org/t/91966"
+  @hideTabs={{true}}
+  {{! only until we have theme/component cards }}
+>
+  <:breadcrumbs>
+    <DBreadcrumbsItem
+      @path="/admin/config/themes"
+      @label={{i18n "admin.config_areas.themes.title"}}
+    />
+  </:breadcrumbs>
+</AdminPageHeader>
+
+<div class="admin-container admin-config-page__main-area">
+  {{outlet}}
+</div>

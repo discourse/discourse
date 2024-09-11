@@ -400,6 +400,8 @@ Discourse::Application.routes.draw do
         resources :about, constraints: AdminConstraint.new, only: %i[index] do
           collection { put "/" => "about#update" }
         end
+
+        resources :themes, constraints: AdminConstraint.new, only: %i[index]
       end
     end # admin namespace
 

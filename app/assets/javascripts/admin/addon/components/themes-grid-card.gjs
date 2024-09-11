@@ -10,20 +10,20 @@ import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 export default class ThemeCard extends Component {
   @service siteSettings;
 
-  constructor() {
-    super(...arguments);
-  }
-
   get buttonIcon() {
-    return this.isDefault ? "far-square-check" : "far-square";
+    return this.isDefault ? "far-check-square" : "far-square";
   }
 
   get buttonTitle() {
-    return this.args.theme.default ? "admin.customize.theme.default_theme" : "admin.customize.theme.set_default_theme";
+    return this.args.theme.default
+      ? "admin.customize.theme.default_theme"
+      : "admin.customize.theme.set_default_theme";
   }
 
   get buttonClasses() {
-    return this.isDefault ? "btn-primary theme-card-button" : "btn-default theme-card-button";
+    return this.isDefault
+      ? "btn-primary theme-card-button"
+      : "btn-default theme-card-button";
   }
 
   get isDefault() {
@@ -35,7 +35,9 @@ export default class ThemeCard extends Component {
   }
 
   get screenshot() {
-    return this.args.theme.screenshot? this.args.theme.screenshot : "https://picsum.photos/200/300";
+    return this.args.theme.screenshot
+      ? this.args.theme.screenshot
+      : "https://picsum.photos/200/300";
   }
 
   @action
@@ -48,9 +50,8 @@ export default class ThemeCard extends Component {
     // bring admin to theme preview of site
   }
 
-  @action
-  navigateToEdit() {
-    // bring admin to theme edit page
+  get themeRouteModels() {
+    return ["themes", this.args.theme.id];
   }
 
   <template>
@@ -62,6 +63,15 @@ export default class ThemeCard extends Component {
       </div>
       <div class="theme-card-content">
         <p class="theme-card-description">{{this.args.theme.description}}</p>
+        <img
+          class="theme-card-image"
+          src={{htmlSafe this.screenshot}}
+          alt={{this.image_alt}}
+        />
+      </div>
+      <div class="theme-card-content">
+        <h2 class="theme-card-title">{{@theme.name}}</h2>
+        <p class="theme-card-description">{{@theme.description}}</p>
       </div>
       <div class="theme-card-footer">
         <DButton
@@ -80,7 +90,8 @@ export default class ThemeCard extends Component {
             @preventFocus={{true}}
           />
           <DButton
-            @action={{this.navigateToEdit}}
+            @route="adminCustomizeThemes.show"
+            @routeModels={{this.themeRouteModels}}
             @icon="cog"
             @class="btn-flat theme-card-button"
             @preventFocus={{true}}
