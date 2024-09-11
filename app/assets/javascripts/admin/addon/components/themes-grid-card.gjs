@@ -65,7 +65,7 @@ export default class ThemeCard extends Component {
 
   @action
   async handleSubmit({ themeUserSelectable }) {
-    this.args.theme.user_selectable = themeUserSelectable;
+    this.args.theme.set("user_selectable", themeUserSelectable);
     this.args.theme.saveChanges("user_selectable");
   }
 
