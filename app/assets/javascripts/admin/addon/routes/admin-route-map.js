@@ -218,6 +218,9 @@ export default function () {
         });
 
         this.route("about");
+        this.route("themes", function () {
+          this.route("index", { path: "/" });
+        });
       }
     );
 

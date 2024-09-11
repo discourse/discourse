@@ -5648,6 +5648,14 @@ en:
             title: "More options"
             move_up: "Move up"
             move_down: "Move down"
+        themes:
+          themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
+          themes_intro_img_alt: "New theme placeholder"
+          set_default_theme: "Set default"
+          default_theme: "Default theme"
+          title: "Themes"
+          description: "Themes are expansive customizations that change multiple elements of the style of your forum design, and often also include additional front-end features."
+          new_theme: "New theme"
       plugins:
         title: "Plugins"
         installed: "Installed plugins"
@@ -7187,10 +7195,6 @@ en:
           categories: "Categories"
           topics: "Topics"
           replace: "Replace"
-      
-      themes:
-        title: "Themes"
-        description: "Customize your forum's appearance with themes."
 
   wizard_js:
     wizard:
