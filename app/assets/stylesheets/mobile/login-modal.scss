@@ -28,6 +28,7 @@
 }
 .d-modal.login-modal,
 .d-modal.create-account {
+  padding-bottom: var(--safe-area-inset-bottom);
   .d-modal {
     &__container {
       height: 100svh;
