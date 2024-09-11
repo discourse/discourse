@@ -12,18 +12,26 @@ task "assets:precompile:build" do
 
     raise "Unknown ember version '#{ember_version}'" if !%w[5].include?(ember_version)
 
+    # If `JOBS` env is not set, `thread-loader` defaults to the number of CPUs - 1 on the machine but we want to cap it
+    # at 4 because benchmarking has shown that anything beyond 4 does not improve build times or the increase is marginal.
+    # Therefore, we cap it so that we don't spawn more processes than necessary.
+    jobs_env_count = (4 if !ENV["JOBS"].present? && Etc.nprocessors > 4)
+
     compile_command = "CI=1 yarn --cwd app/assets/javascripts/discourse run ember build"
 
     heap_size_limit = check_node_heap_size_limit
 
     if heap_size_limit < 2048
       STDERR.puts "Node.js heap_size_limit (#{heap_size_limit}) is less than 2048MB. Setting --max-old-space-size=2048 and CHEAP_SOURCE_MAPS=1"
+      jobs_env_count = 0
+
       compile_command =
-        "JOBS=0 CI=1 NODE_OPTIONS='--max-old-space-size=2048' CHEAP_SOURCE_MAPS=1 #{compile_command}"
+        "CI=1 NODE_OPTIONS='--max-old-space-size=2048' CHEAP_SOURCE_MAPS=1 #{compile_command}"
     end
 
     ember_env = ENV["EMBER_ENV"] || "production"
     compile_command = "#{compile_command} -prod" if ember_env == "production"
+    compile_command = "JOBS=#{jobs_env_count} #{compile_command}" if jobs_env_count
 
     only_ember_precompile_build_remaining = (ARGV.last == "assets:precompile:build")
     only_assets_precompile_remaining = (ARGV.last == "assets:precompile")
@@ -230,11 +238,13 @@ def concurrent?
   if ENV["SPROCKETS_CONCURRENT"] == "1"
     concurrent_compressors = []
     executor = Concurrent::FixedThreadPool.new(Concurrent.processor_count)
+
     yield(
       Proc.new do |&block|
         concurrent_compressors << Concurrent::Future.execute(executor: executor) { block.call }
       end
     )
+
     concurrent_compressors.each(&:wait!)
   else
     yield(Proc.new { |&block| block.call })
