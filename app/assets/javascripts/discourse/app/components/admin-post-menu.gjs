@@ -86,7 +86,7 @@ export default class AdminPostMenu extends Component {
               "post.controls.change_post_notice"
               "post.controls.add_post_notice"
             }}
-            title="post.controls.unhide"
+            @title="post.controls.unhide"
             class={{concatClass
               "btn btn-transparent"
               (if @data.transformedPost.notice "change-notice" "add-notice")
@@ -121,7 +121,7 @@ export default class AdminPostMenu extends Component {
           <DButton
             @label="post.controls.change_owner"
             @icon="user"
-            title="post.controls.lock_post_description"
+            @title="post.controls.lock_post_description"
             class="btn btn-transparent change-owner"
             @action={{fn this.topicAction "changePostOwner"}}
           />
@@ -145,7 +145,7 @@ export default class AdminPostMenu extends Component {
             <DButton
               @label="post.controls.unlock_post"
               @icon="unlock"
-              title="post.controls.unlock_post_description"
+              @title="post.controls.unlock_post_description"
               class={{concatClass
                 "btn btn-transparent unlock-post"
                 (if @data.post.locked "btn-success")
@@ -158,7 +158,7 @@ export default class AdminPostMenu extends Component {
             <DButton
               @label="post.controls.lock_post"
               @icon="lock"
-              title="post.controls.lock_post_description"
+              @title="post.controls.lock_post_description"
               class="btn btn-transparent lock-post"
               @action={{fn this.topicAction "lockPost"}}
             />
