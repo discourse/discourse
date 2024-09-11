@@ -29,14 +29,6 @@ export default class ChatChannelName extends Component {
     );
   }
 
-  get groupsDirectMessageTitle() {
-    return this.args.channel.title || this.usernames;
-  }
-
-  get usernames() {
-    return this.users.mapBy("username").join(", ");
-  }
-
   get channelColorStyle() {
     return htmlSafe(`color: #${this.args.channel.chatable.color}`);
   }
@@ -49,11 +41,6 @@ export default class ChatChannelName extends Component {
   }
 
   get channelTitle() {
-    if (this.args.channel.isDirectMessageChannel) {
-      return this.groupDirectMessage
-        ? this.groupsDirectMessageTitle
-        : this.firstUser.username;
-    }
     return this.args.channel.title;
   }
 
