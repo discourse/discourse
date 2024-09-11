@@ -24,7 +24,9 @@ acceptance("Post controls", function () {
       .hasAria("pressed", "true", "show likes button is now pressed");
 
     assert
-      .dom("#post_2 .small-user-list.who-liked")
+      .dom(
+      "#post_2 .small-user-list.who-liked .small-user-list-content"
+    )
       .hasAttribute("role", "list", "likes container has list role");
     assert
       .dom("#post_2 .small-user-list.who-liked")

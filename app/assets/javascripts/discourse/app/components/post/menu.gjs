@@ -588,11 +588,10 @@ export default class PostMenu extends Component {
     {{#if this.readers}}
       <SmallUserList
         class="who-read"
-        aria-label={{i18n
+        @addSelf={{false}}
+        @ariaLabel={{i18n
           "post.actions.people.sr_post_readers_list_description"
         }}
-        @users={{this.readers}}
-        @addSelf={{false}}
         @count={{if
           this.remainingReaders
           this.remainingReaders
@@ -603,16 +602,16 @@ export default class PostMenu extends Component {
           "post.actions.people.read_capped"
           "post.actions.people.read"
         }}
+        @users={{this.readers}}
       />
     {{/if}}
     {{#if this.likedUsers}}
       <SmallUserList
         class="who-liked"
-        aria-label={{i18n
+        @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}
+        @ariaLabel={{i18n
           "post.actions.people.sr_post_likers_list_description"
         }}
-        @users={{this.likedUsers}}
-        @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}
         @count={{if
           this.remainingLikedUsers
           this.remainingLikedUsers
@@ -623,6 +622,7 @@ export default class PostMenu extends Component {
           "post.actions.people.like_capped"
           "post.actions.people.like"
         }}
+        @users={{this.likedUsers}}
       />
     {{/if}}
     {{#if this.collapsedButtons}}

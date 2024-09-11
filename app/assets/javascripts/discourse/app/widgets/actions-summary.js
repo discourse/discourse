@@ -1,7 +1,6 @@
 import { hbs } from "ember-cli-htmlbars";
 import { registerWidgetShim } from "discourse/widgets/render-glimmer";
 
-// TODO deprecate this widget
 // TODO check the rendering in the two voting plugins
 // This shim is nesting everything into a DIV and changing the HTML but only thw two voting plugins
 // are using this widget outside of core.
@@ -10,7 +9,7 @@ registerWidgetShim(
   "div",
   hbs`
     <SmallUserList class={{@data.listClassName}}
-                   aria-label={{@data.ariaLabel}}
+                   @ariaLabel={{@data.ariaLabel}}
                    @users={{@data.users}}
                    @addSelf={{@data.addSelf}}
                    @count={{@data.count}}
