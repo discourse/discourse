@@ -101,6 +101,10 @@
   float: left;
   max-width: 70%;
 
+  &.admin-page-action-button {
+    margin-top: 0;
+  }
+
   .bulk-award-status-icon {
     margin-right: 3px;
 
