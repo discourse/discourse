@@ -36,18 +36,18 @@ import PostMenuShowMoreButton from "./menu/buttons/show-more";
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
 
-export const ADMIN_BUTTON_ID = "admin";
-export const BOOKMARK_BUTTON_ID = "bookmark";
-export const COPY_LINK_BUTTON_ID = "copyLink";
-export const DELETE_BUTTON_ID = "delete";
-export const EDIT_BUTTON_ID = "edit";
-export const FLAG_BUTTON_ID = "flag";
-export const LIKE_BUTTON_ID = "like";
-export const READ_BUTTON_ID = "read";
-export const REPLIES_BUTTON_ID = "replies";
-export const REPLY_BUTTON_ID = "reply";
-export const SHARE_BUTTON_ID = "share";
-export const SHOW_MORE_BUTTON_ID = "showMore";
+export const POST_MENU_ADMIN_BUTTON_KEY = "admin";
+export const POST_MENU_BOOKMARK_BUTTON_KEY = "bookmark";
+export const POST_MENU_COPY_LINK_BUTTON_KEY = "copyLink";
+export const POST_MENU_DELETE_BUTTON_KEY = "delete";
+export const POST_MENU_EDIT_BUTTON_KEY = "edit";
+export const POST_MENU_FLAG_BUTTON_KEY = "flag";
+export const POST_MENU_LIKE_BUTTON_KEY = "like";
+export const POST_MENU_READ_BUTTON_KEY = "read";
+export const POST_MENU_REPLIES_BUTTON_KEY = "replies";
+export const POST_MENU_REPLY_BUTTON_KEY = "reply";
+export const POST_MENU_SHARE_BUTTON_KEY = "share";
+export const POST_MENU_SHOW_MORE_BUTTON_KEY = "showMore";
 
 let registeredButtonComponents;
 resetPostMenuButtons();
@@ -55,20 +55,20 @@ resetPostMenuButtons();
 function resetPostMenuButtons() {
   registeredButtonComponents = new Map(
     [
-      [ADMIN_BUTTON_ID, PostMenuAdminButton],
-      [BOOKMARK_BUTTON_ID, PostMenuBookmarkButton],
-      [COPY_LINK_BUTTON_ID, PostMenuCopyLinkButton],
-      [DELETE_BUTTON_ID, PostMenuDeleteButton],
-      [EDIT_BUTTON_ID, PostMenuEditButton],
-      [FLAG_BUTTON_ID, PostMenuFlagButton],
-      [LIKE_BUTTON_ID, PostMenuLikeButton],
-      [READ_BUTTON_ID, PostMenuReadButton],
-      [REPLIES_BUTTON_ID, PostMenuRepliesButton],
-      [REPLY_BUTTON_ID, PostMenuReplyButton],
-      [SHARE_BUTTON_ID, PostMenuShareButton],
-      [SHOW_MORE_BUTTON_ID, PostMenuShowMoreButton],
-    ].map(([id, Button]) => [
-      id,
+      [POST_MENU_ADMIN_BUTTON_KEY, PostMenuAdminButton],
+      [POST_MENU_BOOKMARK_BUTTON_KEY, PostMenuBookmarkButton],
+      [POST_MENU_COPY_LINK_BUTTON_KEY, PostMenuCopyLinkButton],
+      [POST_MENU_DELETE_BUTTON_KEY, PostMenuDeleteButton],
+      [POST_MENU_EDIT_BUTTON_KEY, PostMenuEditButton],
+      [POST_MENU_FLAG_BUTTON_KEY, PostMenuFlagButton],
+      [POST_MENU_LIKE_BUTTON_KEY, PostMenuLikeButton],
+      [POST_MENU_READ_BUTTON_KEY, PostMenuReadButton],
+      [POST_MENU_REPLIES_BUTTON_KEY, PostMenuRepliesButton],
+      [POST_MENU_REPLY_BUTTON_KEY, PostMenuReplyButton],
+      [POST_MENU_SHARE_BUTTON_KEY, PostMenuShareButton],
+      [POST_MENU_SHOW_MORE_BUTTON_KEY, PostMenuShowMoreButton],
+    ].map(([key, Button]) => [
+      key,
       registeredAttributes(Button, {
         shouldRender: Button.shouldRender,
       }),
@@ -81,13 +81,13 @@ export function clearExtraPostMenuButtons() {
 }
 
 export const _postMenuPluginApi = Object.freeze({
-  add(id, ButtonComponent, position) {
-    if (registeredButtonComponents.has(id)) {
+  add(key, ButtonComponent, position) {
+    if (registeredButtonComponents.has(key)) {
       return false;
     }
 
     registeredButtonComponents.set(
-      id,
+      key,
       registeredAttributes(ButtonComponent, {
         position,
         // shouldRender: is not processed here because custom buttons must handle the logic internally
@@ -96,34 +96,34 @@ export const _postMenuPluginApi = Object.freeze({
 
     return true;
   },
-  delete(id) {
-    return registeredButtonComponents.delete(id);
+  delete(key) {
+    return registeredButtonComponents.delete(key);
   },
-  replace(id, ButtonComponent) {
-    const existing = registeredButtonComponents.get(id);
+  replace(key, ButtonComponent) {
+    const existing = registeredButtonComponents.get(key);
     if (!existing) {
       return false;
     }
 
-    registeredButtonComponents.set(id, {
+    registeredButtonComponents.set(key, {
       ...existing,
       Component: ButtonComponent,
     });
 
     return true;
   },
-  reposition(id, position) {
-    const existing = registeredButtonComponents.get(id);
+  reposition(key, position) {
+    const existing = registeredButtonComponents.get(key);
     if (!existing) {
       return false;
     }
 
-    registeredButtonComponents.set(id, { ...existing, position });
+    registeredButtonComponents.set(key, { ...existing, position });
 
     return true;
   },
-  has(id) {
-    return registeredButtonComponents.has(id);
+  has(key) {
+    return registeredButtonComponents.has(key);
   },
 });
 
@@ -167,29 +167,29 @@ export default class PostMenu extends Component {
   @cached
   get registeredButtons() {
     return new Map(
-      registeredButtonComponents.entries().map(([id, properties]) => {
+      registeredButtonComponents.entries().map(([key, properties]) => {
         let showLabel = false;
         let alwaysShow = false;
-        let extraControl = false;
+        let extraControls = false;
         let actionMode;
         let primaryAction;
         let secondaryAction;
         let context;
 
-        switch (id) {
-          case ADMIN_BUTTON_ID:
+        switch (key) {
+          case POST_MENU_ADMIN_BUTTON_KEY:
             primaryAction = this.openAdminMenu;
             break;
 
-          case BOOKMARK_BUTTON_ID:
+          case POST_MENU_BOOKMARK_BUTTON_KEY:
             context = { currentUser: this.currentUser };
             break;
 
-          case COPY_LINK_BUTTON_ID:
+          case POST_MENU_COPY_LINK_BUTTON_KEY:
             primaryAction = this.args.copyLink;
             break;
 
-          case DELETE_BUTTON_ID:
+          case POST_MENU_DELETE_BUTTON_KEY:
             if (this.args.post.canRecoverTopic) {
               actionMode = BUTTON_ACTION_MODE_RECOVER_TOPIC;
               primaryAction = this.args.recoverPost;
@@ -208,7 +208,7 @@ export default class PostMenu extends Component {
             }
             break;
 
-          case EDIT_BUTTON_ID:
+          case POST_MENU_EDIT_BUTTON_KEY:
             primaryAction = this.args.editPost;
             alwaysShow =
               this.#isWikiMode ||
@@ -216,22 +216,22 @@ export default class PostMenu extends Component {
             showLabel = this.site.desktopView && this.#isWikiMode;
             break;
 
-          case FLAG_BUTTON_ID:
+          case POST_MENU_FLAG_BUTTON_KEY:
             primaryAction = this.args.showFlags;
             break;
 
-          case LIKE_BUTTON_ID:
+          case POST_MENU_LIKE_BUTTON_KEY:
             primaryAction = this.like;
             secondaryAction = this.toggleWhoLiked;
             break;
 
-          case READ_BUTTON_ID:
+          case POST_MENU_READ_BUTTON_KEY:
             primaryAction = this.toggleWhoRead;
             context = { showReadIndicator: this.args.showReadIndicator };
             break;
 
-          case REPLIES_BUTTON_ID:
-            extraControl = true;
+          case POST_MENU_REPLIES_BUTTON_KEY:
+            extraControls = true;
             primaryAction = this.args.toggleReplies;
             context = {
               filteredRepliesView: this.args.filteredRepliesView,
@@ -246,17 +246,17 @@ export default class PostMenu extends Component {
             };
             break;
 
-          case REPLY_BUTTON_ID:
+          case POST_MENU_REPLY_BUTTON_KEY:
             primaryAction = this.args.replyToPost;
             showLabel = this.site.desktopView && !this.#isWikiMode;
             context = { canCreatePost: this.args.canCreatePost };
             break;
 
-          case SHARE_BUTTON_ID:
+          case POST_MENU_SHARE_BUTTON_KEY:
             primaryAction = this.args.share;
             break;
 
-          case SHOW_MORE_BUTTON_ID:
+          case POST_MENU_SHOW_MORE_BUTTON_KEY:
             primaryAction = this.showMoreActions;
             context = () => ({
               collapsed: this.collapsed,
@@ -269,7 +269,7 @@ export default class PostMenu extends Component {
 
         const post = this.args.post;
         const config = {
-          id,
+          key,
           Component: properties.Component,
           shouldRender: properties.shouldRender,
           position: {
@@ -282,7 +282,7 @@ export default class PostMenu extends Component {
           actionMode,
           alwaysShow,
           context,
-          extraControl: properties.position?.extraControl ?? extraControl,
+          extraControls: properties.position?.extraControls ?? extraControls,
 
           get PostMenuButtonWrapper() {
             // we need to save the value of `this` context otherwise it will be overriden when
@@ -299,7 +299,7 @@ export default class PostMenu extends Component {
           },
         };
 
-        return [id, config];
+        return [key, config];
       })
     );
   }
@@ -309,18 +309,18 @@ export default class PostMenu extends Component {
       // if the post is a wiki, make Edit more prominent
       if (this.#isWikiMode) {
         switch (i) {
-          case EDIT_BUTTON_ID:
-            return REPLY_BUTTON_ID;
-          case REPLY_BUTTON_ID:
-            return EDIT_BUTTON_ID;
+          case POST_MENU_EDIT_BUTTON_KEY:
+            return POST_MENU_REPLY_BUTTON_KEY;
+          case POST_MENU_REPLY_BUTTON_KEY:
+            return POST_MENU_EDIT_BUTTON_KEY;
         }
       }
 
       return i;
     });
 
-    if (list.length > 0 && !list.includes(SHOW_MORE_BUTTON_ID)) {
-      list.splice(list.length - 1, 0, SHOW_MORE_BUTTON_ID);
+    if (list.length > 0 && !list.includes(POST_MENU_SHOW_MORE_BUTTON_KEY)) {
+      list.splice(list.length - 1, 0, POST_MENU_SHOW_MORE_BUTTON_KEY);
     }
 
     return list;
@@ -328,18 +328,20 @@ export default class PostMenu extends Component {
 
   @cached
   get extraControls() {
-    const repliesButton = this.registeredButtons.get(REPLIES_BUTTON_ID);
+    const repliesButton = this.registeredButtons.get(
+      POST_MENU_REPLIES_BUTTON_KEY
+    );
 
     const items = [
       repliesButton,
       ...this.registeredButtons
         .values()
-        .filter((button) => isPresent(button) && button.extraControl),
+        .filter((button) => isPresent(button) && button.extraControls),
     ];
 
     const dag = new DAG();
     new Set(items).forEach((button) =>
-      dag.add(button.id, button, button.position)
+      dag.add(button.key, button, button.position)
     );
 
     return dag.resolve().map(({ value }) => value);
@@ -347,8 +349,8 @@ export default class PostMenu extends Component {
 
   get availableButtons() {
     return this.items
-      .map((itemId) => this.registeredButtons.get(itemId))
-      .filter((button) => isPresent(button) && !button.extraControl);
+      .map((itemKey) => this.registeredButtons.get(itemKey))
+      .filter((button) => isPresent(button) && !button.extraControls);
   }
 
   @cached
@@ -362,9 +364,11 @@ export default class PostMenu extends Component {
         // TODO extract this logic to a method
         (
           this.availableButtons.some(
-            (button) => button.id === SHOW_MORE_BUTTON_ID
+            (button) => button.key === POST_MENU_SHOW_MORE_BUTTON_KEY
           ) ||
-          this.extraControls.some((button) => button.id === SHOW_MORE_BUTTON_ID)
+          this.extraControls.some(
+            (button) => button.key === POST_MENU_SHOW_MORE_BUTTON_KEY
+          )
         )
       )
     ) {
@@ -372,15 +376,18 @@ export default class PostMenu extends Component {
     }
 
     const items = this.availableButtons.filter((button) => {
-      if (button.alwaysShow || button.id === SHOW_MORE_BUTTON_ID) {
+      if (button.alwaysShow || button.key === POST_MENU_SHOW_MORE_BUTTON_KEY) {
         return false;
       }
 
-      if (this.args.post.reviewable_id && button.id === FLAG_BUTTON_ID) {
+      if (
+        this.args.post.reviewable_id &&
+        button.key === POST_MENU_FLAG_BUTTON_KEY
+      ) {
         return false;
       }
 
-      return hiddenItems.includes(button.id);
+      return hiddenItems.includes(button.key);
     });
 
     if (items.length <= 1) {
@@ -398,14 +405,14 @@ export default class PostMenu extends Component {
 
     const dag = new DAG();
     new Set(nonCollapsed).forEach((button) =>
-      dag.add(button.id, button, button.position)
+      dag.add(button.key, button, button.position)
     );
 
     return dag.resolve().map(({ value }) => value);
   }
 
   get repliesButton() {
-    return this.registeredButtons.get(REPLIES_BUTTON_ID);
+    return this.registeredButtons.get(POST_MENU_REPLIES_BUTTON_KEY);
   }
 
   get hasCollapsedButtons() {
@@ -415,7 +422,7 @@ export default class PostMenu extends Component {
   }
 
   get showMoreButton() {
-    return this.registeredButtons.get(SHOW_MORE_BUTTON_ID);
+    return this.registeredButtons.get(POST_MENU_SHOW_MORE_BUTTON_KEY);
   }
 
   get remainingLikedUsers() {
@@ -535,7 +542,9 @@ export default class PostMenu extends Component {
     return setting
       .split("|")
       .filter(
-        (itemId) => !this.args.post.bookmarked || itemId !== BOOKMARK_BUTTON_ID
+        (itemKey) =>
+          !this.args.post.bookmarked ||
+          itemKey !== POST_MENU_BOOKMARK_BUTTON_KEY
       );
   }
 

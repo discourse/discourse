@@ -251,10 +251,6 @@ export default class Post extends RestModel {
     return !!this.likeAction?.get("canToggle");
   }
 
-  // get deleted() {
-  //   return this.deleted_at || this.user_deleted;
-  // }
-
   get filteredRepliesPostNumber() {
     return this.topic.get("postStream.filterRepliesToPostNumber");
   }
