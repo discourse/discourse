@@ -5,6 +5,7 @@ import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import i18n from "discourse-common/helpers/i18n";
+import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 
 export default class ThemeCard extends Component {
   @service siteSettings;
@@ -53,12 +54,13 @@ export default class ThemeCard extends Component {
   }
 
   <template>
-    <div class={{concatClass "theme-card" (if this.isDefault "--active" "")}}>
+    <AdminConfigAreaCard @translatedHeading={{this.args.theme.name}} class={{concatClass "theme-card" (if this.isDefault "--active" "")}}>
       <div class="theme-card-image-wrapper">
+        <div class="">
+        </div>
         <img class="theme-card-image" src={{htmlSafe this.screenshot}} alt={{this.image_alt}} />
       </div>
       <div class="theme-card-content">
-        <h2 class="theme-card-title">{{this.args.theme.name}}</h2>
         <p class="theme-card-description">{{this.args.theme.description}}</p>
       </div>
       <div class="theme-card-footer">
@@ -85,6 +87,7 @@ export default class ThemeCard extends Component {
           />
         </div>
       </div>
-    </div>
+    </AdminConfigAreaCard>
+    {{!-- </div> --}}
   </template>
 }
