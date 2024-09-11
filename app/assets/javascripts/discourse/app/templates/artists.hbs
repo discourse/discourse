@@ -1,24 +1,25 @@
 {{outlet}}
 <div id="entity-page" class="artist-page" role="main">
   <div class="entity-page-header flex">
-    <div class="cover-art" title="Album art for {{this.model.artist.artist.name}}">
-      {{html-safe this.model.artist.coverArt}}
+    <div class="cover-art" title="Album art for {{this.model.artist.name}}">
+      {{html-safe this.model.coverArt}}
     </div>
     <div class="artist-info">
-      <h1>{{this.model.artist.artist.name}}</h1>
+      <h1>{{this.model.artist.name}}</h1>
       <div class="details">
         <small class="help-block">
-          {{this.model.artist.artist.begin_year}}
-          {{#if this.model.artist.artist.end_year}} — {{this.model.artist.artist.end_year}}{{/if}}
+          {{this.model.artist.begin_year}}
+          {{#if this.model.artist.end_year}} — {{this.model.artist.end_year}}{{/if}}
           <br>
-          {{this.model.artist.artist.area}}
+          {{this.model.artist.area}}
         </small>
       </div>
-      {{log this.model.artist.artist.rels}}
-      {{#if this.model.wikipediaExtract}}
+      {{log this.reviewsData}}
+      {{log this.wikipediaData}}
+      {{#if this.wikipediaData}}
         <div class="wikipedia-extract">
-          <div class="content">{{html-safe this.model.wikipediaExtract.content}}</div>
-          <a class="btn btn-link pull-right" href="{{this.model.wikipediaExtract.url}}" target="_blank" rel="noopener noreferrer">
+          <div class="content">{{html-safe this.wikipediaData.content}}</div>
+          <a class="btn btn-link pull-right" href="{{this.wikipediaData.url}}" target="_blank" rel="noopener noreferrer">
             Read on Wikipedia…
           </a>
         </div>
@@ -28,15 +29,30 @@
 </div>
 <div class="right-side">
   <div class="entity-rels">
-    {{#if this.model.artist.artist.rels}}
+    {{#if this.model.artist.rels}}
       <h1>Links</h1>
-      {{#each-in this.model.artist.artist.rels as |key value|}}
+      {{#each-in this.model.artist.rels as |key value|}}
         <p>{{key}} : {{value}}</p>
       {{/each-in}}
     {{/if}}
     <OpenInMusicBrainzButton
       @entityType="artist"
-      @entityMBID={{this.model.artist.artist.mbid}}
+      @entityMBID={{this.model.artist.mbid}}
     />
+  </div>
+  <div class="artist-genres">
+    <h2>Genres</h2>
+    {{#if this.model.artist.genres}}
+      <ul>
+        {{#each this.model.artist.genres as |genre|}}
+          <li>
+            {{genre.tag}}
+            <span class="genre-count">({{genre.count}} {{if (eq genre.count 1) "vote" "votes"}})</span>
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p>No genres available for this artist.</p>
+    {{/if}}
   </div>
 </div>

@@ -1,35 +1,44 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import RSVP from 'rsvp'; // Import RSVP
+import { hash } from "rsvp";
 import { isEmpty } from "@ember/utils";
+import { ajax } from "discourse/lib/ajax";
 
 export default class Artists extends DiscourseRoute{
   async model(params) {
-    // Fetch the main artist data
-    const artistData = await this.store.find('artist', params.id);
+    return this.store.find('artist', params.id);
+  }
 
-    // URLs for additional data
-    const reviewsURL = `https://critiquebrainz.org/ws/1/review/?limit=5&entity_id=${params.id}&entity_type=artist`;
-    const wikipediaURL = `https://musicbrainz.org/artist/${params.id}/wikipedia-extract`;
+  afterModel(model, transition) {
+    const reviewsURL = `https://critiquebrainz.org/ws/1/review/?limit=5&entity_id=${model.id}&entity_type=artist`;
+    const wikipediaURL = `https://musicbrainz.org/artist/${model.id}/wikipedia-extract`;
 
-    // Fetch reviews and Wikipezzzdia extract concurrently
-    const [reviewsResponse, wikipediaResponse] = await Promise.all([
-      fetch(reviewsURL),
-      fetch(wikipediaURL)
-    ]);
+    const reviewsData = fetch(reviewsURL).then(
+      (result) => {
+        this.reviewsData = result.json();
+      }
+    );
 
-    // Process responses
-    const reviewsJson = await reviewsResponse.json();
-    const wikipediaJson = await wikipediaResponse.json();
+    const wikipediaData = fetch(wikipediaURL).then(
+      (result) => {
+        console.log("wikipeadia data then callback");
+        console.log(this.wikipediaData);
+        this.wikipediaData = result.json();
+        console.log("post update");
+        console.log(this.wikipediaData);
+      }
+    ).catch((e) => console.log("exception"));
 
-    // Check for fetch errors
-    if (!reviewsResponse.ok) throw new Error(reviewsJson?.message || reviewsResponse.statusText);
-    if (!wikipediaResponse.ok) throw new Error(wikipediaJson?.message || wikipediaResponse.statusText);
+    const promises = {
+      reviewsData,
+      wikipediaData,
+    };
 
-    // Structure the model with all necessary data
-    return RSVP.hash({
-      artist: artistData,
-      reviews: reviewsJson.reviews,
-      wikipediaExtract: wikipediaJson.wikipediaExtract
-    });
+    return hash(promises);
+  }
+
+  setupController(controller, model) {
+    controller.set("model", model);
+    controller.set("reviewsData", this.reviewsData);
+    controller.set("wikipediaData", this.wikipediaData);
   }
 }
