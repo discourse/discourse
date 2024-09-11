@@ -5,11 +5,6 @@
       @components={{this.childThemes}}
       @currentTab={{this.currentTab}}
     />
-    <ThemesGrid
-      @themes={{this.fullThemes}}
-      @components={{this.childThemes}}
-      @installModal={{route-action "installModal"}}
-    />
   {{/unless}}
 
   {{outlet}}
