@@ -107,7 +107,9 @@
   <RenderGlimmerContainer />
 
   {{#if this.showFooterNav}}
-    <FooterNav />
+    <PluginOutlet @name="footer-nav">
+      <FooterNav />
+    </PluginOutlet>
   {{/if}}
 </DiscourseRoot>
 
