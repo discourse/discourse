@@ -13,9 +13,9 @@ task "assets:precompile:build" do
     raise "Unknown ember version '#{ember_version}'" if !%w[5].include?(ember_version)
 
     # If `JOBS` env is not set, `thread-loader` defaults to the number of CPUs - 1 on the machine but we want to cap it
-    # at 4 because benchmarking has shown that anything beyond 4 does not improve build times or the increase is marginal.
+    # at 2 because benchmarking has shown that anything beyond 2 does not improve build times or the increase is marginal.
     # Therefore, we cap it so that we don't spawn more processes than necessary.
-    jobs_env_count = (4 if !ENV["JOBS"].present? && Etc.nprocessors > 4)
+    jobs_env_count = (2 if !ENV["JOBS"].present? && Etc.nprocessors > 2)
 
     compile_command = "CI=1 pnpm --dir=app/assets/javascripts/discourse ember build"
 
