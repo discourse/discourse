@@ -28,7 +28,6 @@ export default class PostMenuReadButton extends Component {
           ...attributes
           @action={{@action}}
           @icon="book-reader"
-          @title="post.controls.copy_title"
           @title="post.controls.read_indicator"
         />
       </div>

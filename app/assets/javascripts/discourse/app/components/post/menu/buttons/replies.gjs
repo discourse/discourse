@@ -51,8 +51,8 @@ export default class PostMenuRepliesButton extends Component {
           @context.repliesShown
           (not @context.filteredRepliesView)
         }}
-        @ariaPressed={{if
-          (not @context.filteredRepliesView)
+        @ariaPressed={{unless
+          @context.filteredRepliesView
           @context.repliesShown
         }}
         @translatedAriaLabel={{i18n

@@ -38,8 +38,8 @@ export default class SmallUserList extends Component {
   }
 
   <template>
-    <div class="clearfix small-user-list" role="list" ...attributes>
-      <span class="small-user-list-content">
+    <div class="clearfix small-user-list" ...attributes>
+      <span class="small-user-list-content" role="list">
         {{#each this.users as |user|}}
           {{#if user.unknown}}
             <div
