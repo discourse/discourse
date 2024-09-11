@@ -103,6 +103,10 @@
 
   &.admin-page-action-button {
     margin-top: 0;
+
+    @media (max-width: $mobile-breakpoint) {
+      max-width: 100%;
+    }
   }
 
   .bulk-award-status-icon {
