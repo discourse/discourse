@@ -57,20 +57,11 @@ export default class ThemeCard extends Component {
   <template>
     <AdminConfigAreaCard @translatedHeading={{this.args.theme.name}} class={{concatClass "theme-card" (if this.isDefault "--active" "")}}>
       <div class="theme-card-image-wrapper">
-        <div class="">
+        <div class="user-selectable">
         </div>
         <img class="theme-card-image" src={{htmlSafe this.screenshot}} alt={{this.image_alt}} />
       </div>
       <div class="theme-card-content">
-        <p class="theme-card-description">{{this.args.theme.description}}</p>
-        <img
-          class="theme-card-image"
-          src={{htmlSafe this.screenshot}}
-          alt={{this.image_alt}}
-        />
-      </div>
-      <div class="theme-card-content">
-        <h2 class="theme-card-title">{{@theme.name}}</h2>
         <p class="theme-card-description">{{@theme.description}}</p>
       </div>
       <div class="theme-card-footer">
@@ -99,6 +90,5 @@ export default class ThemeCard extends Component {
         </div>
       </div>
     </AdminConfigAreaCard>
-    {{!-- </div> --}}
   </template>
 }
