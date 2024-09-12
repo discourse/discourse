@@ -47,10 +47,8 @@ RSpec.describe PostsController do
         #
         # - all queries listed for "when not logged in"
         # - query to find out if the user has voted in each poll
-        # - queries to get "serialized voters" (NOT TRACKED)
-        # - voters for poll in post5
-        # - voters for poll in post6
-        # - voters for poll in post7
+        # - queries to get "serialized voters"
+        # - voters for poll in post5, post6, post7
         expect(poll_queries.size).to eq(8)
       end
     end
