@@ -67,6 +67,21 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
     );
   });
 
+  test("dm channel - self", async function (assert) {
+    const channel = new ChatFabricators(getOwner(this)).directMessageChannel({
+      chatable: new ChatFabricators(getOwner(this)).directMessage({
+        users: [],
+      }),
+    });
+
+    await render(<template><ChannelName @channel={{channel}} /></template>);
+
+    assert.strictEqual(
+      query(CHANNEL_NAME_LABEL).innerText.trim(),
+      this.currentUser.username
+    );
+  });
+
   test("dm channel - prefers name", async function (assert) {
     const siteSettings = getOwner(this).lookup("service:site-settings");
     siteSettings.enable_names = true;

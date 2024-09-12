@@ -28,10 +28,10 @@ export default class ChatChannelName extends Component {
   }
 
   get directMessageTitle() {
-    if (this.users.length === 1) {
+    if (this.users.length === 0) {
       return this.prefersName
-        ? this.users[0].name || this.users[0].username
-        : this.users[0].username;
+        ? this.currentUser.name || this.currentUser.username
+        : this.currentUser.username;
     }
     return this.prefersName
       ? this.users.map((user) => user.name || user.username).join(", ")
