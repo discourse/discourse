@@ -1,12 +1,6 @@
-.theme-cards-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1em;
-}
-
 .themes-cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 1em;
 }
 
@@ -25,7 +19,20 @@
   }
   &-image-wrapper {
     width: 100%;
-    height: 165px;
+    height: 160px;
+    overflow: hidden;
+    svg {
+      width: 100%;
+      top: 0;
+      left: 0;
+    }
+  }
+  &-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top left;
+    border-radius: calc(var(--d-border-radius) + 1px);
   }
   &-user-selectable {
     display: flex;
@@ -42,13 +49,6 @@
   label {
     margin: 0;
     font-weight: 400;
-  }
-  &-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top left;
-    border-radius: calc(var(--d-border-radius) + 1px);
   }
   &-components {
     display: block;

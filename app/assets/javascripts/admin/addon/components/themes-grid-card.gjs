@@ -9,6 +9,7 @@ import concatClass from "discourse/helpers/concat-class";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
+import ThemesGridPlaceholder from "./themes-grid-placeholder";
 
 export default class ThemeCard extends Component {
   @service siteSettings;
@@ -33,6 +34,10 @@ export default class ThemeCard extends Component {
 
   get image_alt() {
     return this.args.theme.name;
+  }
+
+  get hasScreenshot() {
+    return this.args.theme.screenshot ? true : false;
   }
 
   get screenshot() {
@@ -103,11 +108,15 @@ export default class ThemeCard extends Component {
             {{i18n "admin.config_areas.themes.user_selectable"}}
           </label>
         </div>
-        <img
-          class="theme-card-image"
-          src={{htmlSafe this.screenshot}}
-          alt={{this.image_alt}}
-        />
+        {{#if this.hasScreenshot}}
+          <img
+            class="theme-card-image"
+            src={{htmlSafe this.screenshot}}
+            alt={{this.image_alt}}
+          />
+        {{else}}
+          <ThemesGridPlaceholder @theme={{this.args.theme}} />
+        {{/if}}
       </div>
       <div class="theme-card-content">
         <p class="theme-card-description">{{@theme.description}}</p>
