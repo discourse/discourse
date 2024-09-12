@@ -337,7 +337,11 @@ export default Mixin.create({
   _insertAt(start, end, text) {
     this._textarea.setSelectionRange(start, end);
     this._textarea.focus();
-    document.execCommand("insertText", false, text);
+    if (start !== end && text === "") {
+      document.execCommand("delete", false);
+    } else {
+      document.execCommand("insertText", false, text);
+    }
   },
 
   extractTable(text) {
