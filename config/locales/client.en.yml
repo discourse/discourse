@@ -1741,7 +1741,7 @@ en:
         add_email: "Add Alternate Email"
         auth_override_instructions: "Email can be updated from authentication provider."
         no_secondary: "No secondary emails"
-        instructions: "Never shown to the public."
+        instructions: "Never shown to the public"
         admin_note: "Note: An admin user changing another non-admin user's email indicates the user has lost access to their original email account, so a reset password email will be sent to their new address. The user's email will not change until they complete the reset password process."
         ok: "We will email you to confirm"
         required: "Please enter an email address"
@@ -1775,14 +1775,14 @@ en:
 
       name:
         title: "Name"
-        instructions: "Your full name (optional)."
-        instructions_required: "Your full name."
+        instructions: "Your full name (optional)"
+        instructions_required: "Your full name"
         required: "Please enter a name"
         too_short: "Your name is too short"
         ok: "Your name looks good"
       username:
         title: "Username"
-        instructions: "Unique, no spaces, short."
+        instructions: "Unique, no spaces, short"
         short_instructions: "People can mention you as @%{username}"
         available: "Your username is available"
         not_available: "Not available. Try %{suggestion}?"
@@ -2024,8 +2024,8 @@ en:
         same_as_email: "Your password is the same as your email."
         ok: "Your password looks good."
         instructions:
-          one: "At least %{count} character."
-          other: "At least %{count} characters."
+          one: "At least %{count} character"
+          other: "At least %{count} characters"
         required: "Please enter a password"
         confirm: "Confirm"
         incorrect_password: "The entered password is incorrect."
