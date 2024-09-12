@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
-module("Discourse Chat | Unit |  Models | chat-message", function (hooks) {
+module("Discourse Chat | Unit | Models | chat-message", function (hooks) {
   setupTest(hooks);
 
   test(".persisted", function (assert) {
