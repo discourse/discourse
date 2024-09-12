@@ -70,25 +70,7 @@
   {{/if}}
 
   <div class="reviewable-actions">
-    {{#if this.reviewable.last_performing_username}}
-      <div class="stale-help">{{html-safe
-          (i18n
-            "review.stale_help"
-            username=this.reviewable.last_performing_username
-          )
-        }}</div>
-    {{else}}
-      {{#if this.claimEnabled}}
-        <div class="claimed-actions">
-          <span class="help">{{html-safe this.claimHelp}}</span>
-          <ReviewableClaimedTopic
-            @topicId={{this.topicId}}
-            @claimedBy={{this.reviewable.claimed_by}}
-            @onClaim={{fn (mut this.reviewable.claimed_by)}}
-          />
-        </div>
-      {{/if}}
-
+    {{#unless this.reviewable.last_performing_username}}
       {{#if this.canPerform}}
         {{#if this.editing}}
           <DButton
@@ -125,7 +107,28 @@
           {{/if}}
         {{/if}}
       {{/if}}
+    {{/unless}}
+
+    {{#if this.reviewable.last_performing_username}}
+      <div class="stale-help">{{html-safe
+          (i18n
+            "review.stale_help"
+            username=this.reviewable.last_performing_username
+          )
+        }}</div>
+    {{else}}
+      {{#if this.claimEnabled}}
+        <div class="claimed-actions">
+          <span class="help">{{html-safe this.claimHelp}}</span>
+          <ReviewableClaimedTopic
+            @topicId={{this.topicId}}
+            @claimedBy={{this.reviewable.claimed_by}}
+            @onClaim={{fn (mut this.reviewable.claimed_by)}}
+          />
+        </div>
+      {{/if}}
     {{/if}}
+
     <PluginOutlet
       @name="reviewable-item-actions"
       @connectorTagName="div"
