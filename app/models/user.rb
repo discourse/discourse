@@ -1214,7 +1214,23 @@ class User < ActiveRecord::Base
   end
 
   def avatar_dominant_color
-    user_avatar.dominant_color || user_avatar.update_dominant_color!(uploaded_avatar_id, username)
+    dominant_color || update_avatar_dominant_color!
+  end
+
+  def update_avatar_dominant_color!
+    color = self.class.avatar_dominant_color(uploaded_avatar_id, username)
+    update!(dominant_color: color)
+    color
+  end
+
+  def self.avatar_dominant_color(upload_id, username)
+    color =
+      if upload_id.nil?
+        User.letter_avatar_color(User.normalize_username(username))
+      else
+        Upload.find(upload_id)&.dominant_color
+      end
+    color&.upcase
   end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.
@@ -2292,6 +2308,7 @@ end
 #  password_algorithm        :string(64)
 #  required_fields_version   :integer
 #  seen_notification_id      :bigint           default(0), not null
+#  dominant_color            :string
 #
 # Indexes
 #

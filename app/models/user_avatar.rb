@@ -85,22 +85,6 @@ class UserAvatar < ActiveRecord::Base
     end
   end
 
-  def update_dominant_color!(upload_id, username)
-    color = self.class.get_dominant_color(upload_id, username)
-    update!(dominant_color: color)
-    color
-  end
-
-  def self.get_dominant_color(upload_id, username)
-    color =
-      if upload_id.nil?
-        User.letter_avatar_color(User.normalize_username(username))
-      else
-        Upload.find(upload_id)&.dominant_color
-      end
-    color&.upcase
-  end
-
   def self.local_avatar_url(hostname, username, upload_id, size)
     self.local_avatar_template(hostname, username, upload_id).gsub("{size}", size.to_s)
   end
@@ -232,7 +216,6 @@ end
 #  last_gravatar_download_attempt :datetime
 #  created_at                     :datetime         not null
 #  updated_at                     :datetime         not null
-#  dominant_color                 :text
 #
 # Indexes
 #
