@@ -22,7 +22,7 @@ class BasicUserSerializer < ApplicationSerializer
   end
 
   def avatar_dominant_color
-    user&.avatar_dominant_color
+    user.avatar_dominant_color if user&.has_attribute?(:dominant_color)
   end
 
   def user

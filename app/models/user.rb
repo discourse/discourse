@@ -2308,7 +2308,7 @@ end
 #  password_algorithm        :string(64)
 #  required_fields_version   :integer
 #  seen_notification_id      :bigint           default(0), not null
-#  dominant_color            :string
+#  dominant_color            :text
 #
 # Indexes
 #
