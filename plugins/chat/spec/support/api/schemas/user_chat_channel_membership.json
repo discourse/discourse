@@ -23,6 +23,7 @@
         "id": { "type": "number" },
         "name": { "type": "string" },
         "avatar_template": { "type": "string" },
+        "avatar_dominant_color": { "type": "string" },
         "username": { "type": "string" },
         "can_chat": { "type": "boolean" },
         "has_chat_enabled": { "type": "boolean" }

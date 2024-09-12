@@ -11,10 +11,10 @@ acceptance("Click Track", function () {
     });
 
     await visit("/t/internationalization-localization/280");
-    assert.dom(".user-card").hasNoClass("show", "card should not appear");
+    assert.dom(".d-user-card").hasNoClass("show", "card should not appear");
 
     await click('article[data-post-id="3651"] a.mention');
-    assert.dom(".user-card").hasClass("show", "card appears");
+    assert.dom(".d-user-card").hasClass("show", "card appears");
     assert.strictEqual(
       currentURL(),
       "/t/internationalization-localization/280"

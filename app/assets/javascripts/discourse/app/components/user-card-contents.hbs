@@ -99,7 +99,7 @@
                 </span>
               {{else}}
                 <a
-                  {{on "click" (fn this.handleShowUser this.user)}}
+                  {{on "click" this.handleShowUser}}
                   href={{this.user.path}}
                   class="d-user-card__avatar"
                 >
@@ -132,7 +132,7 @@
                     }}
                   {{else}}
                     <a
-                      {{on "click" (fn this.handleShowUser this.user)}}
+                      {{on "click" this.handleShowUser}}
                       href={{this.user.path}}
                       class="d-user-card__user-link"
                       title={{if
