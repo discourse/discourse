@@ -50,6 +50,12 @@
     object-position: top left;
     border-radius: calc(var(--d-border-radius) + 1px);
   }
+  &-components {
+    display: block;
+    font-size: var(--font-down-1);
+    margin-bottom: 10px;
+    color: var(--primary-high);
+  }
   &-button {
     margin-top: auto;
   }

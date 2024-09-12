@@ -41,6 +41,25 @@ export default class ThemeCard extends Component {
       : "https://picsum.photos/200/300";
   }
 
+  get themeRouteModels() {
+    return ["themes", this.args.theme.id];
+  }
+
+  get childrenString() {
+    return this.args.theme.childThemes.reduce((acc,theme,idx) => {
+      if (idx === this.args.theme.childThemes.length - 1) {
+        return acc + theme.name;
+      } else {
+        return acc + theme.name + ", ";
+      }
+    },"");
+  }
+
+  @action
+  showPreview() {
+    // bring admin to theme preview of site
+  }
+
   @action
   async setDefault() {
     // currently saves the correct theme default, but does not update the UI
@@ -62,18 +81,9 @@ export default class ThemeCard extends Component {
   }
 
   @action
-  showPreview() {
-    // bring admin to theme preview of site
-  }
-
-  @action
   async handleSubmit(event) {
     this.args.theme.set("user_selectable", event.target.checked);
     this.args.theme.saveChanges("user_selectable");
-  }
-
-  get themeRouteModels() {
-    return ["themes", this.args.theme.id];
   }
 
   <template>
@@ -101,6 +111,9 @@ export default class ThemeCard extends Component {
       </div>
       <div class="theme-card-content">
         <p class="theme-card-description">{{@theme.description}}</p>
+        {{#if this.args.theme.childThemes}}
+          <span class="theme-card-components">{{i18n "admin.customize.theme.components"}}: {{htmlSafe this.childrenString}}</span>
+        {{/if}}
       </div>
       <div class="theme-card-footer">
         <DButton
