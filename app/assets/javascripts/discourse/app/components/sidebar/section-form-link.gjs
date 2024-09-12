@@ -130,6 +130,7 @@ export default class SectionFormLink extends Component {
           name="link-name"
           aria-label={{i18n "sidebar.sections.custom.links.name.label"}}
           class={{@link.nameCssClass}}
+          data-1p-ignore
         />
 
         {{#if @link.invalidNameMessage}}

@@ -1461,6 +1461,38 @@ acceptance("composer buttons API", function (needs) {
       );
   });
 
+  test("buttons can support a shortcut that triggers a custom action", async function (assert) {
+    withPluginApi("1.37.1", (api) => {
+      api.onToolbarCreate((toolbar) => {
+        toolbar.addButton({
+          id: "smile",
+          group: "extras",
+          icon: "far-smile",
+          shortcut: "ALT+S",
+          shortcutAction: (toolbarEvent) => {
+            toolbarEvent.addText(":smile: from keyboard");
+          },
+          sendAction: (event) => {
+            event.addText(":smile: from click");
+          },
+        });
+      });
+    });
+
+    await visit("/t/internationalization-localization/280");
+    await click(".post-controls button.reply");
+
+    const editor = document.querySelector(".d-editor-input");
+    await triggerKeyEvent(
+      ".d-editor-input",
+      "keydown",
+      "S",
+      Object.assign({ altKey: true }, metaModifier)
+    );
+
+    assert.dom(editor).hasValue(":smile: from keyboard");
+  });
+
   test("buttons can be added conditionally", async function (assert) {
     withPluginApi("0", (api) => {
       api.addComposerToolbarPopupMenuOption({
