@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Action::User::TriggerPostAction do
+RSpec.describe User::Action::TriggerPostAction do
   describe ".call" do
     subject(:action) { described_class.call(guardian:, post:, contract:) }
 

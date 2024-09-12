@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Chat::DirectMessageChannel::CanCommunicateAllPartiesPolicy < PolicyBase
+class Chat::DirectMessageChannel::Policy::CanCommunicateAllParties < Service::PolicyBase
   delegate :target_users, :user_comm_screener, to: :context
 
   def call

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Chat::Channel::MessageCreationPolicy < PolicyBase
+class Chat::Channel::Policy::MessageCreation < Service::PolicyBase
   class DirectMessageStrategy
     class << self
       def call(guardian, channel)

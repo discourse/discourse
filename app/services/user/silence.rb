@@ -5,7 +5,7 @@ class User::Silence
 
   contract
   model :user
-  policy :not_silenced_already, class_name: User::NotAlreadySilencedPolicy
+  policy :not_silenced_already, class_name: User::Policy::NotAlreadySilenced
   model :users
   policy :can_silence_all_users
   step :silence
@@ -44,7 +44,7 @@ class User::Silence
   end
 
   def silence(guardian:, users:, contract:)
-    context[:full_reason] = Action::User::SilenceAll.call(users:, actor: guardian.user, contract:)
+    context[:full_reason] = User::Action::SilenceAll.call(users:, actor: guardian.user, contract:)
   end
 
   def fetch_post(contract:)
@@ -52,6 +52,6 @@ class User::Silence
   end
 
   def perform_post_action(guardian:, post:, contract:)
-    Action::User::TriggerPostAction.call(guardian:, post:, contract:)
+    User::Action::TriggerPostAction.call(guardian:, post:, contract:)
   end
 end

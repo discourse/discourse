@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PolicyBase
+class Service::PolicyBase
   attr_reader :context
 
   delegate :guardian, to: :context

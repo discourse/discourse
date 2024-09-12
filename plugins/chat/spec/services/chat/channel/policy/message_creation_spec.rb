@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Chat::Channel::MessageCreationPolicy do
+RSpec.describe Chat::Channel::Policy::MessageCreation do
   subject(:policy) { described_class.new(context) }
 
   fab!(:user)
