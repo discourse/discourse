@@ -7019,12 +7019,13 @@ en:
       badges:
         status: Status
         title: Badges
+        page_description: Badges reward users for their activities, contributions, and achievements to recognize, validate, and encourage positive behavior and engagement within the community.
         new_badge: New Badge
         new: New
         name: Name
         badge: Badge
         display_name: Display Name
-        description: Badges reward users for their activities, contributions, and achievements to recognize, validate, and encourage positive behavior and engagement within the community.
+        description: Description
         long_description: Long description
         badge_type: Badge type
         group_settings: Group Settings
