@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action, computed } from "@ember/object";
+import { getOwner, setOwner } from "@ember/owner";
 import { inject as service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import { and, eq } from "truth-helpers";
@@ -13,7 +14,7 @@ import DAG from "discourse/lib/dag";
 import { userPath } from "discourse/lib/url";
 import i18n from "discourse-common/helpers/i18n";
 import discourseLater from "discourse-common/lib/later";
-import PostMenuButton from "./menu/button";
+import PostMenuButtonConfig from "./menu/button-config";
 import PostMenuAdminButton from "./menu/buttons/admin";
 import PostMenuBookmarkButton from "./menu/buttons/bookmark";
 import PostMenuCopyLinkButton from "./menu/buttons/copy-link";
@@ -262,44 +263,32 @@ export default class PostMenu extends Component {
             primaryAction = this.showMoreActions;
             context = () => ({
               collapsed: this.collapsed,
-              collapsedButtons: this.collapsedButtons,
-              hasCollapsedButtons: this.hasCollapsedButtons,
+              collapsedButtons: this.renderableCollapsedButtons,
               setCollapsed: (value) => (this.collapsed = value),
             });
             break;
         }
 
-        const post = this.args.post;
-        const config = {
-          key,
-          Component: properties.Component,
-          shouldRender: properties.shouldRender,
-          position: {
-            before: properties.position?.before,
-            after: properties.position?.after,
+        const config = new PostMenuButtonConfig(
+          {
+            key,
+            Component: properties.Component,
+            shouldRender: properties.shouldRender,
+            position: {
+              before: properties.position?.before,
+              after: properties.position?.after,
+            },
+            showLabel,
+            action: primaryAction,
+            secondaryAction,
+            actionMode,
+            alwaysShow,
+            context,
+            extraControls: properties.position?.extraControls ?? extraControls,
           },
-          showLabel,
-          action: primaryAction,
-          secondaryAction,
-          actionMode,
-          alwaysShow,
-          context,
-          extraControls: properties.position?.extraControls ?? extraControls,
-
-          get PostMenuButtonWrapper() {
-            // we need to save the value of `this` context otherwise it will be overriden when
-            // while Ember renders the component
-            const buttonConfig = this;
-
-            return <template>
-              <PostMenuButton
-                @button={{buttonConfig}}
-                @post={{post}}
-                @showLabel={{@showLabel}}
-              />
-            </template>;
-          },
-        };
+          this.args.post
+        );
+        setOwner(config, getOwner(this)); // to allow using getOwner in the shouldRender functions
 
         return [key, config];
       })
@@ -338,7 +327,10 @@ export default class PostMenu extends Component {
       repliesButton,
       ...this.registeredButtons
         .values()
-        .filter((button) => isPresent(button) && button.extraControls),
+        .filter(
+          (button) =>
+            isPresent(button) && button.extraControls && button.shouldRender
+        ),
     ].filter(isPresent);
 
     const dag = new DAG();
@@ -356,7 +348,7 @@ export default class PostMenu extends Component {
   }
 
   @cached
-  get collapsedButtons() {
+  get availableCollapsedButtons() {
     const hiddenItems = this.#hiddenItems;
 
     if (
@@ -400,9 +392,16 @@ export default class PostMenu extends Component {
   }
 
   @cached
+  get renderableCollapsedButtons() {
+    return this.availableCollapsedButtons.filter(
+      (button) => button.shouldRender
+    );
+  }
+
+  @cached
   get visibleButtons() {
     const nonCollapsed = this.availableButtons.filter((button) => {
-      return !this.collapsedButtons.includes(button);
+      return !this.availableCollapsedButtons.includes(button);
     });
 
     const dag = new DAG();
@@ -415,12 +414,6 @@ export default class PostMenu extends Component {
 
   get repliesButton() {
     return this.registeredButtons.get(POST_MENU_REPLIES_BUTTON_KEY);
-  }
-
-  get hasCollapsedButtons() {
-    // Only show ellipsis if there is more than one button hidden
-    // if there are no more buttons, we are not collapsed
-    return this.collapsedButtons.length > 1;
   }
 
   get showMoreButton() {
@@ -595,7 +588,12 @@ export default class PostMenu extends Component {
     <nav
       class={{concatClass
         "post-controls"
-        (if (and this.collapsedButtons this.collapsed) "collapsed" "expanded")
+        "glimmer-post-menu"
+        (if
+          (and this.showMoreButton.shouldRender this.collapsed)
+          "collapsed"
+          "expanded"
+        )
         (if
           this.siteSettings.enable_filtered_replies_view
           "replies-button-visible"
@@ -604,11 +602,11 @@ export default class PostMenu extends Component {
     >
       {{! do not include PluginOutlets here, use the PostMenu DAG API instead }}
       {{#each this.extraControls as |extraControl|}}
-        <extraControl.PostMenuButtonWrapper />
+        <extraControl.PostMenuButtonComponent />
       {{/each}}
       <div class="actions">
         {{#each this.visibleButtons as |button|}}
-          <button.PostMenuButtonWrapper />
+          <button.PostMenuButtonComponent />
         {{/each}}
       </div>
     </nav>
