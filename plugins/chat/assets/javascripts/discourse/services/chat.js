@@ -287,9 +287,9 @@ export default class Chat extends Service {
     let currentList, otherList;
     if (activeChannel.isDirectMessageChannel) {
       currentList = this.chatChannelsManager.truncatedDirectMessageChannels;
-      otherList = this.chatChannelsManager.publicMessageChannelsBySlug;
+      otherList = this.chatChannelsManager.publicMessageChannels;
     } else {
-      currentList = this.chatChannelsManager.publicMessageChannelsBySlug;
+      currentList = this.chatChannelsManager.publicMessageChannels;
       otherList = this.chatChannelsManager.truncatedDirectMessageChannels;
     }
 

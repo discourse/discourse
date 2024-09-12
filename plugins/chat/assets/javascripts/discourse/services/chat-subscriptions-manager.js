@@ -147,7 +147,7 @@ export default class ChatSubscriptionsManager extends Service {
             this.chatChannelsManager.remove(channel);
 
             const firstChannel =
-              this.chatChannelsManager.publicMessageChannelsBySlug[0];
+              this.chatChannelsManager.publicMessageChannels[0];
 
             if (firstChannel) {
               this.router.transitionTo(

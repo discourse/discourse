@@ -33,6 +33,12 @@ export default class ChannelsListPublic extends Component {
     return this.chatChannelsManager.hasThreadedChannels;
   }
 
+  get channelList() {
+    return this.args.sortByActivity === true
+      ? this.chatChannelsManager.publicMessageChannelsByActivity
+      : this.chatChannelsManager.publicMessageChannels;
+  }
+
   @action
   toggleChannelSection(section) {
     this.args.toggleSection(section);
@@ -103,10 +109,7 @@ export default class ChannelsListPublic extends Component {
           @showCTA={{this.chatChannelsManager.displayPublicChannels}}
         />
       {{else}}
-        {{#each
-          this.chatChannelsManager.publicMessageChannelsByActivity
-          as |channel|
-        }}
+        {{#each this.channelList as |channel|}}
           <ChatChannelRow
             @channel={{channel}}
             @options={{hash settingsButton=true}}
