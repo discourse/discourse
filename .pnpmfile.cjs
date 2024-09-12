@@ -18,9 +18,9 @@ if (fs.existsSync(`${discourseRoot}/node_modules/.yarn-integrity`)) {
 }
 
 const pluginBase = `${discourseRoot}/plugins/`;
+const cwd = process.cwd();
 const pluginName =
-  process.cwd().startsWith(pluginBase) &&
-  process.cwd().replace(pluginBase, "").split("/", 2)[0];
+  cwd.startsWith(pluginBase) && cwd.replace(pluginBase, "").split("/", 2)[0];
 
 if (
   pluginName &&
