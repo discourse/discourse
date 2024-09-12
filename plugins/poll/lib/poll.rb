@@ -211,6 +211,21 @@ class DiscoursePoll::Poll
     limit = (opts["limit"] || 25).to_i.clamp(1, 50)
     offset = (page - 1) * limit
 
+    result = Hash.new { |h, k| h[k] = Hash.new { |h2, k2| h2[k2] = [] } }
+
+    poll_by_id = {}
+    number_polls, ranked_polls, other_polls = [], [], []
+    polls.each do |poll|
+      poll_by_id[poll.id] = poll
+      if poll.number?
+        number_polls << poll
+      elsif poll.ranked_choice?
+        ranked_polls << poll
+      else
+        other_polls << poll
+      end
+    end
+
     # The result of a number poll is displayed as the average of all the
     # options and none of the original options is displayed individually.
     if polls[0].number?
@@ -239,42 +254,24 @@ class DiscoursePoll::Poll
         "AND po.digest = :option_digest"
       end || ""
 
-    query =
-      if polls[0].ranked_choice?
-        <<~SQL
-          SELECT poll_id, digest, rank, user_id
-            FROM (
-              SELECT pv.poll_id
-                    , digest
-                    , CASE rank WHEN 0 THEN 'Abstain' ELSE CAST(rank AS text) END AS rank
-                    , user_id
-                    , username
-                    , ROW_NUMBER() OVER (PARTITION BY poll_option_id ORDER BY pv.created_at) AS row
-                FROM poll_votes pv
-                JOIN poll_options po ON pv.poll_id = po.poll_id AND pv.poll_option_id = po.id
-                JOIN users u ON pv.user_id = u.id
-                WHERE pv.poll_id = :poll_ids
-                  /* where */
-            ) v
-            WHERE row BETWEEN :offset AND :offset_plus_limit
-            ORDER BY digest, CASE WHEN rank = 'Abstain' THEN 1 ELSE CAST(rank AS integer) END, username
-          SQL
-      else
-        <<~SQL
-          SELECT poll_id, digest, user_id
-            FROM (
-              SELECT pv.poll_id
-                    , digest
-                    , user_id
-                    , ROW_NUMBER() OVER (PARTITION BY poll_option_id ORDER BY pv.created_at) AS row
-                FROM poll_votes pv
-                JOIN poll_options po ON pv.poll_id = po.poll_id AND pv.poll_option_id = po.id
-                WHERE pv.poll_id = :poll_ids
-                  /* where */
-            ) v
-            WHERE row BETWEEN :offset AND :offset_plus_limit
-          SQL
-      end.gsub("/* where */", where_clause)
+    query = <<~SQL.gsub("/* where */", where_clause)
+      SELECT poll_id, digest, rank, user_id
+        FROM (
+          SELECT pv.poll_id
+               , digest
+               , CASE rank WHEN 0 THEN 'Abstain' ELSE CAST(rank AS text) END AS rank
+               , user_id
+               , username
+               , ROW_NUMBER() OVER (PARTITION BY poll_option_id ORDER BY pv.created_at) AS row
+          FROM poll_votes pv
+          JOIN poll_options po ON pv.poll_id = po.poll_id AND pv.poll_option_id = po.id
+          JOIN users u ON pv.user_id = u.id
+          WHERE pv.poll_id = :poll_ids
+                /* where */
+        ) v
+        WHERE row BETWEEN :offset AND :offset_plus_limit
+        ORDER BY digest, CASE WHEN rank = 'Abstain' THEN 1 ELSE CAST(rank AS integer) END, username
+      SQL
 
     votes = DB.query(query, params)
 
@@ -283,7 +280,6 @@ class DiscoursePoll::Poll
     users =
       User.where(id: user_ids).map { |u| [u.id, UserNameSerializer.new(u).serializable_hash] }.to_h
 
-    result = Hash.new { |h, k| h[k] = Hash.new { |h2, k2| h2[k2] = [] } }
     if polls[0].ranked_choice?
       votes.each { |v| result[v.poll_id][v.digest] << { rank: v.rank, user: users[v.user_id] } }
     else
