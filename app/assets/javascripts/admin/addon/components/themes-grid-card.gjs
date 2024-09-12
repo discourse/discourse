@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
+import { Input } from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
-import Form from "discourse/components/form";
 import concatClass from "discourse/helpers/concat-class";
 import i18n from "discourse-common/helpers/i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
@@ -58,26 +58,13 @@ export default class ThemeCard extends Component {
   }
 
   @action
-  async onSetThemeUserSelectable(value, { set }) {
-    set("themeUserSelectable", value);
-    await this.formApi.submit();
-  }
-
-  @action
-  async handleSubmit({ themeUserSelectable }) {
-    this.args.theme.set("user_selectable", themeUserSelectable);
+  async handleSubmit(event) {
+    this.args.theme.set("user_selectable", event.target.checked);
     this.args.theme.saveChanges("user_selectable");
   }
 
   get themeRouteModels() {
     return ["themes", this.args.theme.id];
-  }
-
-  @cached
-  get formData() {
-    return {
-      themeUserSelectable: this.args.theme.user_selectable,
-    };
   }
 
   <template>
@@ -87,7 +74,16 @@ export default class ThemeCard extends Component {
     >
       <div class="theme-card-image-wrapper">
         <div class="theme-card-user-selectable">
-          <Form
+          <Input
+            @type="checkbox"
+            @checked={{this.args.theme.user_selectable}}
+            id="user-select-theme-{{this.args.theme.id}}"
+            onclick={{this.handleSubmit}}
+          />
+          <label class="checkbox-label" for="user-select-theme-{{this.args.theme.id}}">
+            {{i18n "admin.config_areas.themes.user_selectable"}}
+          </label>
+          {{!-- <Form
             @onSubmit={{this.handleSubmit}}
             @onRegisterApi={{this.registerApi}}
             @data={{this.formData}}
@@ -103,7 +99,7 @@ export default class ThemeCard extends Component {
                 <field.Checkbox />
               </checkboxGroup.Field>
             </form.CheckboxGroup>
-          </Form>
+          </Form> --}}
         </div>
         <img
           class="theme-card-image"

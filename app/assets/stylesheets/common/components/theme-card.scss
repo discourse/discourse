@@ -28,10 +28,20 @@
     height: 165px;
   }
   &-user-selectable {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: var(--secondary);
     position: absolute;
     right: 20px;
     top: 22px;
+  }
+  .ember-checkbox {
+    margin: 0 5px 0 0;
+  }
+  label {
+    margin: 0;
+    font-weight: 400;
   }
   &-image {
     width: 100%;
