@@ -184,6 +184,7 @@ after_initialize do
         if post_with_polls.present?
           all_polls = Poll.includes(:poll_options).where(post_id: post_with_polls)
           Poll.preload!(all_polls, user_id: @user&.id)
+          DiscoursePoll::Poll.preload_serialized_voters!(all_polls)
           all_polls.each do |p|
             polls[p.post_id] ||= []
             polls[p.post_id] << p

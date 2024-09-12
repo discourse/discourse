@@ -45,11 +45,9 @@ RSpec.describe PostsController do
 
         # Expected queries:
         #
-        # - all queries listed for "when not logged in"
+        # - all queries listed for "when not logged in" (except it loads voters for polls in post5, post6 and post7)
         # - query to find out if the user has voted in each poll
-        # - queries to get "serialized voters"
-        # - voters for poll in post5, post6, post7
-        expect(poll_queries.size).to eq(8)
+        expect(poll_queries.size).to eq(6)
       end
     end
   end
