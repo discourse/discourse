@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
+import { getOwner, setOwner } from "@ember/owner";
 
 export default class PostMenuButton extends Component {
   @cached // context can be expensive
@@ -13,6 +14,7 @@ export default class PostMenuButton extends Component {
 
   get shouldRender() {
     if (typeof this.args.button.shouldRender === "function") {
+      setOwner(this.args.button, getOwner(this)); // to allow using getOwner in the shouldRender function
       return this.args.button.shouldRender(this.args.post, this.context);
     }
 

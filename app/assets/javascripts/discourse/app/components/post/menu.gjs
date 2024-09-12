@@ -90,7 +90,7 @@ export const _postMenuPluginApi = Object.freeze({
       key,
       registeredAttributes(ButtonComponent, {
         position,
-        // shouldRender: is not processed here because custom buttons must handle the logic internally
+        shouldRender: ButtonComponent.shouldRender,
       })
     );
 
@@ -108,6 +108,7 @@ export const _postMenuPluginApi = Object.freeze({
     registeredButtonComponents.set(key, {
       ...existing,
       Component: ButtonComponent,
+      shouldRender: ButtonComponent.shouldRender ?? existing.shouldRender,
     });
 
     return true;
@@ -337,7 +338,7 @@ export default class PostMenu extends Component {
       ...this.registeredButtons
         .values()
         .filter((button) => isPresent(button) && button.extraControls),
-    ];
+    ].filter(isPresent);
 
     const dag = new DAG();
     new Set(items).forEach((button) =>

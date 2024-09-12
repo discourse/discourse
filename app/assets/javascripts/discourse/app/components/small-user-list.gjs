@@ -38,46 +38,48 @@ export default class SmallUserList extends Component {
   }
 
   <template>
-    <div class="clearfix small-user-list" ...attributes>
-      <span
-        class="small-user-list-content"
-        aria-label={{@ariaLabel}}
-        role="list"
-      >
-        {{#each this.users as |user|}}
-          {{#if user.unknown}}
-            <div
-              title={{i18n "post.unknown_user"}}
-              class="unknown"
-              role="listitem"
-            ></div>
-          {{else}}
-            <a
-              class="trigger-user-card"
-              data-user-card={{user.username}}
-              title={{user.username}}
-              aria-hidden="false"
-              role="listitem"
-            >
-              {{avatar user.template "tiny"}}
-            </a>
-          {{/if}}
-        {{/each}}
+    {{#if this.users}}
+      <div class="clearfix small-user-list" ...attributes>
+        <span
+          class="small-user-list-content"
+          aria-label={{@ariaLabel}}
+          role="list"
+        >
+          {{#each this.users as |user|}}
+            {{#if user.unknown}}
+              <div
+                title={{i18n "post.unknown_user"}}
+                class="unknown"
+                role="listitem"
+              ></div>
+            {{else}}
+              <a
+                class="trigger-user-card"
+                data-user-card={{user.username}}
+                title={{user.username}}
+                aria-hidden="false"
+                role="listitem"
+              >
+                {{avatar user.template "tiny"}}
+              </a>
+            {{/if}}
+          {{/each}}
 
-        {{#if @description}}
-          {{#if this.postUrl}}
-            <a href={{this.postUrl}}>
+          {{#if @description}}
+            {{#if this.postUrl}}
+              <a href={{this.postUrl}}>
+                <span aria-hidden="true" class="list-description">
+                  {{i18n @description count=@count}}
+                </span>
+              </a>
+            {{else}}
               <span aria-hidden="true" class="list-description">
                 {{i18n @description count=@count}}
               </span>
-            </a>
-          {{else}}
-            <span aria-hidden="true" class="list-description">
-              {{i18n @description count=@count}}
-            </span>
+            {{/if}}
           {{/if}}
-        {{/if}}
-      </span>
-    </div>
+        </span>
+      </div>
+    {{/if}}
   </template>
 }
