@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -6,17 +7,20 @@ import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import i18n from "discourse-common/helpers/i18n";
+import I18n from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 
 export default class ThemeCard extends Component {
   @service siteSettings;
+  @service toasts;
+  @tracked isDefault = this.args.theme.default;
 
   get buttonIcon() {
     return this.isDefault ? "far-check-square" : "far-square";
   }
 
   get buttonTitle() {
-    return this.args.theme.default
+    return this.isDefault
       ? "admin.customize.theme.default_theme"
       : "admin.customize.theme.set_default_theme";
   }
@@ -25,10 +29,6 @@ export default class ThemeCard extends Component {
     return this.isDefault
       ? "btn-primary theme-card-button"
       : "btn-default theme-card-button";
-  }
-
-  get isDefault() {
-    return this.args.theme.default;
   }
 
   get image_alt() {
@@ -42,18 +42,28 @@ export default class ThemeCard extends Component {
   }
 
   @action
-  setDefault() {
-    // Make this theme default theme -> https://github.com/discourse/discourse/blob/24caa36eef826bcdaed88aebfa7df154413fb349/app/assets/javascripts/admin/addon/controllers/admin-customize-themes-show.js#L366
+  async setDefault() {
+    // currently saves the correct theme default, but does not update the UI
+    this.args.theme.set("default", true);
+    this.args.theme.saveChanges("default").then(() => {
+      if (this.args.theme.get("default")) {
+        this.args.allThemes.forEach((theme) => {
+          if (theme !== theme.get("default")) {
+            theme.set("default", false);
+          }
+        });
+      }
+      this.toasts.success({
+        data: {message: I18n.t("admin.customize.theme.set_default_success", {theme: this.args.theme.name})},
+        duration: 2000,
+      });
+    });
+    // inspired by -> https://github.com/discourse/discourse/blob/24caa36eef826bcdaed88aebfa7df154413fb349/app/assets/javascripts/admin/addon/controllers/admin-customize-themes-show.js#L366
   }
 
   @action
   showPreview() {
     // bring admin to theme preview of site
-  }
-
-  @action
-  registerApi(api) {
-    this.formApi = api;
   }
 
   @action

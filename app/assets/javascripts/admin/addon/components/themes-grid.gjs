@@ -74,7 +74,7 @@ export default class ThemesGrid extends Component {
   <template>
     <div class="themes-cards-container">
       {{#each this.sortedThemes as |theme|}}
-        <ThemesGridCard @theme={{theme}} />
+        <ThemesGridCard @theme={{theme}} @allThemes={{this.args.themes}}/>
       {{/each}}
 
       <div class="admin-config-area-card theme-card">
