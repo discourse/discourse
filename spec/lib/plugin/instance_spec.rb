@@ -358,6 +358,8 @@ TEXT
   end
 
   describe "#add_report" do
+    after { Report.remove_report("readers") }
+
     it "adds a report" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       plugin.add_report("readers") {}
