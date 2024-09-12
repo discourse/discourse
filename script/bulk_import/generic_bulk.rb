@@ -45,7 +45,14 @@ class BulkImport::Generic < BulkImport::Base
 
     import_uploads
 
-    if false
+    if ENV["CHAT_ONLY"] == "1"
+      # TODO: Test data. Remove
+      @categories[140] = 4
+      @users[100] = 1 # selase
+      @users[101] = 47 # foster
+      @users[102] = 23 # vance
+      @users[103] = 19 # cristopher.yundt
+    else
       # needs to happen before users, because keeping group names is more important than usernames
       import_groups
 
@@ -110,13 +117,6 @@ class BulkImport::Generic < BulkImport::Base
       import_permalink_normalizations
       import_permalinks
     end
-
-    # TODO: Test data. Remove
-    @categories[140] = 4
-    @users[100] = 1 # selase
-    @users[101] = 47 # foster
-    @users[102] = 23 # vance
-    @users[103] = 19 # cristopher.yundt
 
     import_chat_direct_messages
     import_chat_channels
@@ -2462,6 +2462,12 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     puts "", "Importing chat channels..."
+
+    # Ideally, we’d like these to be set in `import_site_settings`,
+    # but since there’s no way to enforce that, we're defaulting to keeping all chats
+    # indefinitely for now
+    SiteSetting.chat_channel_retention_days = 0
+    SiteSetting.chat_dm_retention_days = 0
 
     channels = query(<<~SQL)
       SELECT *
