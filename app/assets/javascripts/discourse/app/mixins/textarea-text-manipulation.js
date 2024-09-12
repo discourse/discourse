@@ -149,16 +149,21 @@ export default Mixin.create({
     });
 
     if (opts.index && opts.regex) {
-      let i = -1;
-      const newValue = val.replace(opts.regex, (match) => {
-        i++;
-        return i === opts.index ? newVal : match;
-      });
+      if (!opts.regex.global) {
+        throw new Error("Regex must be global");
+      }
 
-      this._insertAt(0, val.length, newValue);
+      const regex = new RegExp(opts.regex);
+      let match;
+      for (let i = 0; i <= opts.index; i++) {
+        match = regex.exec(val);
+      }
+
+      if (match) {
+        this._insertAt(match.index, match.index + match[0].length, newVal);
+      }
     } else {
-      const replacedValue = val.replace(oldVal, newVal);
-      this._insertAt(0, val.length, replacedValue);
+      this._insertAt(needleStart, needleStart + oldVal.length, newVal);
     }
 
     if (
