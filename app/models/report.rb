@@ -224,6 +224,11 @@ class Report
     singleton_class.instance_eval { define_method("report_#{name}", &block) }
   end
 
+  # Only used for testing.
+  def Report.remove_report(name)
+    singleton_class.instance_eval { remove_method("report_#{name}") }
+  end
+
   def self._get(type, opts = nil)
     opts ||= {}
 
