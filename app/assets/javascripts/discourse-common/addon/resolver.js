@@ -233,18 +233,18 @@ export function buildResolver(baseName) {
       return normalized;
     }
 
-    chooseModuleName(moduleName, parsedName) {
-      let resolved = super.chooseModuleName(moduleName, parsedName);
+    findModuleName(parsedName) {
+      let resolved = super.findModuleName(parsedName);
+
       if (resolved) {
         return resolved;
       }
 
       const standard = parsedName.fullNameWithoutType;
-
       let variants = [standard];
 
       if (standard.includes("/")) {
-        variants.push(parsedName.fullNameWithoutType.replace(/\//g, "-"));
+        variants.push(standard.replace(/\//g, "-"));
       }
 
       for (let name of variants) {
