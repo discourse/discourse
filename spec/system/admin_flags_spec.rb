@@ -166,7 +166,7 @@ describe "Admin Flags Page", type: :system do
       "Inappropriate",
     )
 
-    Flag.system.where(name: "illegal").update!(enabled: true)
+    Flag.system.where(name: "inappropriate").update!(enabled: true)
     admin_flags_page.visit.click_delete_flag("custom_inappropriate").confirm_delete
   end
 
