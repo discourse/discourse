@@ -24,6 +24,7 @@ RSpec.describe WebHookUserSerializer do
       :admin,
       :allowed_pm_usernames,
       :avatar_template,
+      :avatar_dominant_color,
       :badge_count,
       :can_ignore_users,
       :can_mute_users,

@@ -7,6 +7,7 @@ RSpec.describe PosterSerializer do
     expect(PosterSerializer.new(poster).attributes.keys).to contain_exactly(
       :trust_level,
       :avatar_template,
+      :avatar_dominant_color,
       :id,
       :name,
       :username,
@@ -27,6 +28,7 @@ RSpec.describe PosterSerializer do
     expect(PosterSerializer.new(groupie).attributes.keys).to contain_exactly(
       :trust_level,
       :avatar_template,
+      :avatar_dominant_color,
       :id,
       :name,
       :username,

@@ -177,7 +177,13 @@ RSpec.describe PresenceController do
       expect(response.status).to eq(200)
       state = response.parsed_body[ch1.name]
       expect(state["users"].map { |u| u["id"] }).to contain_exactly(user.id, user2.id, user3.id)
-      expect(state["users"][0].keys).to contain_exactly("avatar_template", "id", "name", "username")
+      expect(state["users"][0].keys).to contain_exactly(
+        "avatar_dominant_color",
+        "avatar_template",
+        "id",
+        "name",
+        "username",
+      )
       expect(state["count"]).to eq(3)
       expect(state["last_message_id"]).to eq(MessageBus.last_id(ch1.message_bus_channel_name))
     end

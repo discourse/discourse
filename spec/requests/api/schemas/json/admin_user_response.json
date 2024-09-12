@@ -13,6 +13,9 @@
     "avatar_template": {
       "type": "string"
     },
+    "avatar_dominant_color": {
+      "type": "string"
+    },
     "active": {
       "type": "boolean"
     },
@@ -498,6 +501,7 @@
     "username",
     "name",
     "avatar_template",
+    "avatar_dominant_color",
     "active",
     "admin",
     "moderator",

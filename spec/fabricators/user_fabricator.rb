@@ -5,6 +5,7 @@ Fabricator(:user_stat) {}
 Fabricator(:user, class_name: :user) do
   transient refresh_auto_groups: false
   transient trust_level: nil
+  dominant_color { SecureRandom.hex(3) }
 
   name "Bruce Wayne"
   username { sequence(:username) { |i| "bruce#{i}" } }
