@@ -226,26 +226,6 @@ class DiscoursePoll::Poll
       end
     end
 
-    # The result of a number poll is displayed as the average of all the
-    # options and none of the original options is displayed individually.
-    if polls[0].number?
-      user_ids =
-        PollVote
-          .where(poll: polls[0])
-          .group(:user_id)
-          .order("MIN(created_at)")
-          .offset(offset)
-          .limit(limit)
-          .pluck(:user_id)
-
-      return(
-        {
-          polls[0].id =>
-            User.where(id: user_ids).map { |u| UserNameSerializer.new(u).serializable_hash },
-        }
-      )
-    end
-
     params = { poll_ids: polls.map(&:id), offset: offset, offset_plus_limit: offset + limit }
 
     where_clause =
@@ -280,11 +260,17 @@ class DiscoursePoll::Poll
     users =
       User.where(id: user_ids).map { |u| [u.id, UserNameSerializer.new(u).serializable_hash] }.to_h
 
-    if polls[0].ranked_choice?
+    if polls[0].number?
+      votes.each do |v|
+        result[v.poll_id] = [] if result[v.poll_id].empty?
+        result[v.poll_id] << users[v.user_id]
+      end
+    elsif polls[0].ranked_choice?
       votes.each { |v| result[v.poll_id][v.digest] << { rank: v.rank, user: users[v.user_id] } }
     else
       votes.each { |v| result[v.poll_id][v.digest] << users[v.user_id] }
     end
+
     result
   end
 
