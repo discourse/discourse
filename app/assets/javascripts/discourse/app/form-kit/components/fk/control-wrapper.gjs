@@ -62,7 +62,7 @@ export default class FKControlWrapper extends Component {
 
       {{#if @field.description}}
         <FKText
-          class="form-kit__meta-description"
+          class="form-kit__container-description"
         >{{@field.description}}</FKText>
       {{/if}}
 
