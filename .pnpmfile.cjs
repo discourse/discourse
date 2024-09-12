@@ -17,8 +17,14 @@ if (fs.existsSync(`${discourseRoot}/node_modules/.yarn-integrity`)) {
   console.log("cleanup done");
 }
 
+const pluginBase = `${discourseRoot}/plugins/`;
+const pluginName =
+  process.cwd().startsWith(pluginBase) &&
+  process.cwd().replace(pluginBase, "").split("/", 2)[0];
+
 if (
-  process.cwd().startsWith(`${discourseRoot}/plugins/`) &&
+  pluginName &&
+  fs.existsSync(`${discourseRoot}/plugins/${pluginName}/package.json`) &&
   !process.argv.includes("--ignore-workspace")
 ) {
   console.log(
