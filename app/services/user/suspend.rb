@@ -5,7 +5,7 @@ class User::Suspend
 
   contract
   model :user
-  policy :not_suspended_already, class_name: User::NotAlreadySuspendedPolicy
+  policy :not_suspended_already, class_name: User::Policy::NotAlreadySuspended
   model :users
   policy :can_suspend_all_users
   step :suspend
@@ -44,7 +44,7 @@ class User::Suspend
   end
 
   def suspend(guardian:, users:, contract:)
-    context[:full_reason] = Action::User::SuspendAll.call(users:, actor: guardian.user, contract:)
+    context[:full_reason] = User::Action::SuspendAll.call(users:, actor: guardian.user, contract:)
   end
 
   def fetch_post(contract:)
@@ -52,6 +52,6 @@ class User::Suspend
   end
 
   def perform_post_action(guardian:, post:, contract:)
-    Action::User::TriggerPostAction.call(guardian:, post:, contract:)
+    User::Action::TriggerPostAction.call(guardian:, post:, contract:)
   end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Chat::DirectMessageChannel::MaxUsersExcessPolicy < PolicyBase
+class Chat::DirectMessageChannel::Policy::MaxUsersExcess < Service::PolicyBase
   delegate :target_users, to: :context
 
   def call

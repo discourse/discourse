@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class User::NotAlreadySuspendedPolicy < PolicyBase
+class User::Policy::NotAlreadySuspended < Service::PolicyBase
   delegate :user, to: :context, private: true
   delegate :suspend_record, to: :user, private: true
 
