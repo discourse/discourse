@@ -150,6 +150,7 @@ function smallUserAttributes(user) {
 }
 
 export default class PostMenu extends Component {
+  @service appEvents;
   @service capabilities;
   @service currentUser;
   @service keyValueStore;
@@ -450,14 +451,15 @@ export default class PostMenu extends Component {
     }
 
     if (this.args.post.liked) {
-      return this.args.toggleLike();
+      await this.#toggleLike();
+      return;
     }
 
     onBeforeToggle?.(this.args.post.liked);
 
     return new Promise((resolve) => {
       discourseLater(async () => {
-        await this.args.toggleLike();
+        await this.#toggleLike();
         resolve();
       }, 400);
     });
@@ -485,6 +487,13 @@ export default class PostMenu extends Component {
         unlockPost: this.args.unlockPost,
       },
     });
+  }
+
+  @action
+  refreshReaders() {
+    if (this.readers.length) {
+      return this.#fetchWhoRead();
+    }
   }
 
   @action
@@ -526,6 +535,14 @@ export default class PostMenu extends Component {
     }
 
     this.#fetchWhoRead();
+  }
+
+  @action
+  async #toggleLike() {
+    await this.args.toggleLike();
+    if (!this.collapsed) {
+      await this.#fetchWhoLiked();
+    }
   }
 
   get #configuredItems() {
@@ -595,46 +612,38 @@ export default class PostMenu extends Component {
         {{/each}}
       </div>
     </nav>
-    {{#if this.readers}}
-      <SmallUserList
-        class="who-read"
-        @addSelf={{false}}
-        @ariaLabel={{i18n
-          "post.actions.people.sr_post_readers_list_description"
-        }}
-        @count={{if
-          this.remainingReaders
-          this.remainingReaders
-          this.totalReaders
-        }}
-        @description={{if
-          this.remainingReaders
-          "post.actions.people.read_capped"
-          "post.actions.people.read"
-        }}
-        @users={{this.readers}}
-      />
-    {{/if}}
-    {{#if this.likedUsers}}
-      <SmallUserList
-        class="who-liked"
-        @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}
-        @ariaLabel={{i18n
-          "post.actions.people.sr_post_likers_list_description"
-        }}
-        @count={{if
-          this.remainingLikedUsers
-          this.remainingLikedUsers
-          this.totalLikedUsers
-        }}
-        @description={{if
-          this.remainingLikedUsers
-          "post.actions.people.like_capped"
-          "post.actions.people.like"
-        }}
-        @users={{this.likedUsers}}
-      />
-    {{/if}}
+    <SmallUserList
+      class="who-read"
+      @addSelf={{false}}
+      @ariaLabel={{i18n "post.actions.people.sr_post_readers_list_description"}}
+      @count={{if
+        this.remainingReaders
+        this.remainingReaders
+        this.totalReaders
+      }}
+      @description={{if
+        this.remainingReaders
+        "post.actions.people.read_capped"
+        "post.actions.people.read"
+      }}
+      @users={{this.readers}}
+    />
+    <SmallUserList
+      class="who-liked"
+      @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}
+      @ariaLabel={{i18n "post.actions.people.sr_post_likers_list_description"}}
+      @count={{if
+        this.remainingLikedUsers
+        this.remainingLikedUsers
+        this.totalLikedUsers
+      }}
+      @description={{if
+        this.remainingLikedUsers
+        "post.actions.people.like_capped"
+        "post.actions.people.like"
+      }}
+      @users={{this.likedUsers}}
+    />
     {{#if this.collapsedButtons}}
       <UserTip
         @id="post_menu"
