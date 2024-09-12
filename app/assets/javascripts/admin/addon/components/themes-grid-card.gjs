@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -83,23 +82,6 @@ export default class ThemeCard extends Component {
           <label class="checkbox-label" for="user-select-theme-{{this.args.theme.id}}">
             {{i18n "admin.config_areas.themes.user_selectable"}}
           </label>
-          {{!-- <Form
-            @onSubmit={{this.handleSubmit}}
-            @onRegisterApi={{this.registerApi}}
-            @data={{this.formData}}
-            as |form|
-          >
-            <form.CheckboxGroup as |checkboxGroup|>
-              <checkboxGroup.Field
-                @name="themeUserSelectable"
-                @title={{i18n "admin.config_areas.themes.user_selectable"}}
-                @onSet={{this.onSetThemeUserSelectable}}
-                as |field|
-              >
-                <field.Checkbox />
-              </checkboxGroup.Field>
-            </form.CheckboxGroup>
-          </Form> --}}
         </div>
         <img
           class="theme-card-image"
