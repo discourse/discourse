@@ -1219,7 +1219,7 @@ class User < ActiveRecord::Base
 
   def update_avatar_dominant_color!
     color = self.class.avatar_dominant_color(uploaded_avatar_id, username)
-    update!(dominant_color: color)
+    update_column(:dominant_color, color) if persisted?
     color
   end
 

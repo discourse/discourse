@@ -1337,7 +1337,7 @@ class UsersController < ApplicationController
 
     SiteSetting.use_site_small_logo_as_system_avatar = false if user.is_system_user?
 
-    user.user_avatar.dominant_color = User.avatar_dominant_color(upload_id, user.username)
+    user.dominant_color = User.avatar_dominant_color(upload_id, user.username)
     user.uploaded_avatar_id = upload_id
     user.save!
     user.user_avatar.save!

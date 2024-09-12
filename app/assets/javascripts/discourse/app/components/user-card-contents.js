@@ -80,11 +80,6 @@ export default class UserCardContents extends CardContentsBase.extend(
     return user ? "discourse-user-card-title" : null;
   }
 
-  @discourseComputed("user")
-  hasLocaleOrWebsite(user) {
-    return user.location || user.website_name || this.userTimezone;
-  }
-
   @discourseComputed("user.status")
   hasStatus() {
     return this.siteSettings.enable_user_status && this.user.status;

@@ -42,7 +42,7 @@
         {{#unless this.contentHidden}}
           {{#if (or this.showUserLocalTime this.user.location)}}
             <div class="d-user-card__relative-time">
-              {{#if this.showUserLocalTime}}
+              {{#if (and this.userTimezone this.showUserLocalTime)}}
                 <div class="d-user-card__time">
                   {{d-icon "far-clock"}}
                   <span class="label">{{this.formattedUserLocalTime}}</span>
@@ -171,7 +171,7 @@
                     {{if this.user.name " - "}}{{this.user.title}}
                   </span>
                 {{/if}}
-                {{#if this.user.status}}
+                {{#if this.hasStatus}}
                   <UserStatusMessage @status={{this.user.status}} />
                 {{/if}}
               </div>
@@ -206,9 +206,13 @@
               </div>
             {{/if}}
             {{#if this.user.profile_hidden}}
-              <span>{{i18n "user.profile_hidden"}}</span>
+              <span class="d-user-card__hidden-user">
+                {{i18n "user.profile_hidden"}}
+              </span>
             {{else if this.user.inactive}}
-              <span>{{i18n "user.inactive_user"}}</span>
+              <span class="d-user-card__inactive-user">
+                {{i18n "user.inactive_user"}}
+              </span>
             {{/if}}
             {{#if this.isSuspendedOrHasBio}}
               <div class="d-user-card__bio">
