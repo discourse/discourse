@@ -17,7 +17,10 @@ if (fs.existsSync(`${discourseRoot}/node_modules/.yarn-integrity`)) {
   console.log("cleanup done");
 }
 
-if (process.cwd().startsWith(`${discourseRoot}/plugins/`)) {
+if (
+  process.cwd().startsWith(`${discourseRoot}/plugins/`) &&
+  !process.argv.includes("--ignore-workspace")
+) {
   console.log(
     "> pnpm was run inside a plugin directory. Re-executing with --ignore-workspace..."
   );
