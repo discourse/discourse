@@ -65,9 +65,7 @@ module Chat
       formatted_names =
         (
           if prefers_name
-            users
-              .map { |u| u.name.presence || u.username }
-              .sort { |a, b| a.downcase <=> b.downcase }
+            users.map { |u| u.name.presence || "@#{u.username}" }.sort_by { |name| name[1..-1] }
           else
             users.sort_by(&:username).map { |u| "@#{u.username}" }
           end

@@ -9,6 +9,7 @@ import ChatChannelUnreadIndicator from "../chat-channel-unread-indicator";
 
 export default class ChatChannelName extends Component {
   @service currentUser;
+  @service siteSettings;
 
   get unreadIndicator() {
     return this.args.unreadIndicator ?? false;
@@ -18,19 +19,23 @@ export default class ChatChannelName extends Component {
     return this.args.channel.chatable.users;
   }
 
-  get directMessageTitle() {
-    const title = this.args.channel.title;
-    if (title) {
-      return title;
-    }
-
-    return this.args.channel.chatable.group
-      ? this.usernames
-      : this.users[0].username;
+  get prefersName() {
+    return (
+      this.siteSettings.enable_names &&
+      this.siteSettings.display_name_on_posts &&
+      !this.siteSettings.prioritize_username_in_ux
+    );
   }
 
-  get usernames() {
-    return this.users.mapBy("username").join(", ");
+  get directMessageTitle() {
+    if (this.users.length === 1) {
+      return this.prefersName
+        ? this.users[0].name || this.users[0].username
+        : this.users[0].username;
+    }
+    return this.prefersName
+      ? this.users.map((user) => user.name || user.username).join(", ")
+      : this.users.mapBy("username").join(", ");
   }
 
   get channelColorStyle() {
@@ -45,10 +50,7 @@ export default class ChatChannelName extends Component {
   }
 
   get channelTitle() {
-    if (this.args.channel.isDirectMessageChannel) {
-      return this.directMessageTitle;
-    }
-    return this.args.channel.title;
+    return this.args.channel.title ?? this.directMessageTitle;
   }
 
   get showPluginOutlet() {

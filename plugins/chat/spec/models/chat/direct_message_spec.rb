@@ -112,7 +112,7 @@ describe Chat::DirectMessage do
         expect(direct_message.chat_channel_title_for_user(chat_channel, user1)).to eq(
           I18n.t(
             "chat.channel.dm_title.multi_user",
-            comma_separated_usernames: [user2.username, new_user.name].join(
+            comma_separated_usernames: ["@#{user2.username}", new_user.name].join(
               I18n.t("word_connector.comma"),
             ),
           ),
