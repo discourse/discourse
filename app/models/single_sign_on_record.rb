@@ -19,7 +19,7 @@ end
 #  external_username               :string
 #  external_email                  :string
 #  external_name                   :string
-#  external_avatar_url             :string(1500)
+#  external_avatar_url             :string(2000)
 #  external_profile_background_url :string
 #  external_card_background_url    :string
 #
