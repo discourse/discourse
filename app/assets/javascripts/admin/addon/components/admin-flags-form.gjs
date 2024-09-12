@@ -135,7 +135,7 @@ export default class AdminFlagsForm extends Component {
             <form.Field
               @name="description"
               @title={{i18n "admin.config_areas.flags.form.description"}}
-              @validation="length:0,1000"
+              @validation="required|length:3,1000"
               as |field|
             >
               <field.Textarea @height={{60}} />

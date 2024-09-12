@@ -16,11 +16,11 @@ module PageObjects
       end
 
       def has_banner_image?(upload)
-        has_css?("img.about__banner[src=\"#{GlobalPath.full_cdn_url(upload.url)}\"]")
+        has_css?("img.about__banner-img[src=\"#{GlobalPath.full_cdn_url(upload.url)}\"]")
       end
 
       def has_no_banner_image?
-        has_no_css?("img.about__banner")
+        has_no_css?("img.about__banner-img")
       end
 
       def has_members_count?(count, formatted_number)

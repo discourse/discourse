@@ -5411,6 +5411,7 @@ en:
           post_destroyed: "Post is deleted"
           post_recovered: "Post is recovered"
           category_experts_approved: "Post marked as category experts post"
+          category_experts_unapproved: "Post unmarked as category experts post"
         group_event:
           group_name: "Group Events"
           group_created: "Group is created"
@@ -5564,6 +5565,7 @@ en:
       config_areas:
         about:
           header: "About your site"
+          description: "Provide information here about this site and your team so that people can learn what your community is about, who is behind it, and how to reach you in case there is an issue."
           general_settings: "General settings"
           community_name: "Community name"
           community_name_placeholder: "Example Community"
@@ -5615,6 +5617,7 @@ en:
           saved: "saved!"
         flags:
           header: "Moderation Flags"
+          edit_header: "Edit Flag"
           subheader: "The flagging system in Discourse helps you and your moderator team manage content and user behavior, keeping your community respectful and healthy. The defaults are suitable for most communities and you don’t have to change them. However, if your site has particular requirements you can disable flags you don’t need and add your own custom flags."
           description: "Description"
           enabled: "Enabled?"

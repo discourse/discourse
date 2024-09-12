@@ -479,7 +479,8 @@ export default class PollComponent extends Component {
 
     this.preloadedVoters = Object.assign(preloadedVoters);
 
-    votersCount = this.options.find((option) => option.id === optionId).votes;
+    votersCount = this.options.find((option) => option.id === optionId).voters
+      .length;
 
     return ajax("/polls/voters.json", {
       data: {
@@ -731,7 +732,7 @@ export default class PollComponent extends Component {
         {{#if this.showCastVotesButton}}
           <button
             class={{this.castVotesButtonClass}}
-            title="poll.cast-votes.title"
+            title={{i18n "poll.cast-votes.title"}}
             disabled={{this.castVotesDisabled}}
             {{on "click" this.castVotes}}
           >
@@ -743,7 +744,7 @@ export default class PollComponent extends Component {
         {{#if this.showHideResultsButton}}
           <button
             class="btn btn-default toggle-results"
-            title="poll.hide-results.title"
+            title={{i18n "poll.hide-results.title"}}
             {{on "click" this.toggleResults}}
           >
             {{icon "chevron-left"}}
@@ -756,7 +757,7 @@ export default class PollComponent extends Component {
         {{#if this.showShowResultsButton}}
           <button
             class="btn btn-default toggle-results"
-            title="poll.show-results.title"
+            title={{i18n "poll.show-results.title"}}
             {{on "click" this.toggleResults}}
           >
             {{icon "chart-bar"}}
@@ -769,7 +770,7 @@ export default class PollComponent extends Component {
         {{#if this.showRemoveVoteButton}}
           <button
             class="btn btn-default remove-vote"
-            title="poll.remove-vote.title"
+            title={{i18n "poll.remove-vote.title"}}
             {{on "click" this.removeVote}}
           >
             {{icon "undo"}}

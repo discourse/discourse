@@ -127,15 +127,17 @@ export default class AdminFlagItem extends Component {
           }}</p>
       </td>
       <td>
-        <div class="admin-flag-item__options">
-          <DToggleSwitch
-            @state={{this.enabled}}
-            class="admin-flag-item__toggle {{@flag.name_key}}"
-            {{on "click" (fn this.toggleFlagEnabled @flag)}}
-          />
+        <DToggleSwitch
+          @state={{this.enabled}}
+          class="admin-flag-item__toggle {{@flag.name_key}}"
+          {{on "click" (fn this.toggleFlagEnabled @flag)}}
+        />
+      </td>
+      <td>
+        <div class="admin-flag-item__options admin-table-row-controls">
 
           <DButton
-            class="btn btn-secondary admin-flag-item__edit"
+            class="btn-small admin-flag-item__edit"
             @action={{this.edit}}
             @label="admin.config_areas.flags.edit"
             @disabled={{not this.canEdit}}

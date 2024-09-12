@@ -119,37 +119,26 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def suspend
-    SuspendUser.call(user: @user) do
+    User::Suspend.call do
       on_success do
         render_json_dump(
           suspension: {
             suspend_reason: result.reason,
-            full_suspend_reason: result.user_history&.details,
-            suspended_till: @user.suspended_till,
-            suspended_at: @user.suspended_at,
+            full_suspend_reason: result.full_reason,
+            suspended_till: result.user.suspended_till,
+            suspended_at: result.user.suspended_at,
             suspended_by: BasicUserSerializer.new(current_user, root: false).as_json,
           },
         )
       end
-      on_failed_policy(:can_suspend) { raise Discourse::InvalidAccess.new }
-      on_failed_policy(:not_suspended_already) do
-        suspend_record = @user.suspend_record
-        message =
-          I18n.t(
-            "user.already_suspended",
-            staff: suspend_record.acting_user.username,
-            time_ago:
-              AgeWords.time_ago_in_words(
-                suspend_record.created_at,
-                true,
-                scope: :"datetime.distance_in_words_verbose",
-              ),
-          )
-        render json: failed_json.merge(message: message), status: 409
-      end
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
       end
+      on_model_not_found(:user) { raise Discourse::NotFound }
+      on_failed_policy(:not_suspended_already) do |policy|
+        render json: failed_json.merge(message: policy.reason), status: 409
+      end
+      on_failed_policy(:can_suspend_all_users) { raise Discourse::InvalidAccess.new }
     end
   end
 
@@ -325,37 +314,26 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def silence
-    SilenceUser.call(user: @user) do
+    User::Silence.call do
       on_success do
         render_json_dump(
           silence: {
             silenced: true,
-            silence_reason: result.user_history&.details,
-            silenced_till: @user.silenced_till,
-            silenced_at: @user.silenced_at,
+            silence_reason: result.full_reason,
+            silenced_till: result.user.silenced_till,
+            silenced_at: result.user.silenced_at,
             silenced_by: BasicUserSerializer.new(current_user, root: false).as_json,
           },
         )
       end
-      on_failed_policy(:can_silence) { raise Discourse::InvalidAccess.new }
-      on_failed_policy(:not_silenced_already) do
-        silenced_record = @user.silenced_record
-        message =
-          I18n.t(
-            "user.already_silenced",
-            staff: silenced_record.acting_user.username,
-            time_ago:
-              AgeWords.time_ago_in_words(
-                silenced_record.created_at,
-                true,
-                scope: :"datetime.distance_in_words_verbose",
-              ),
-          )
-        render json: failed_json.merge(message: message), status: 409
-      end
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
       end
+      on_model_not_found(:user) { raise Discourse::NotFound }
+      on_failed_policy(:not_silenced_already) do |policy|
+        render json: failed_json.merge(message: policy.reason), status: 409
+      end
+      on_failed_policy(:can_silence_all_users) { raise Discourse::InvalidAccess.new }
     end
   end
 

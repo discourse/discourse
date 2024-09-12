@@ -32,6 +32,16 @@ module DiscourseAutomation
              previous_frequency != frequency
           automation.pending_automations.destroy_all
         elsif automation.pending_automations.present?
+          log_debugging_info(
+            id: automation.id,
+            start_date:,
+            interval:,
+            frequency:,
+            previous_start_date:,
+            previous_interval:,
+            previous_frequency:,
+            now: Time.zone.now,
+          )
           return
         end
 
@@ -87,7 +97,29 @@ module DiscourseAutomation
 
         if next_trigger_date && next_trigger_date > Time.zone.now
           automation.pending_automations.create!(execute_at: next_trigger_date)
+        else
+          log_debugging_info(
+            id: automation.id,
+            start_date:,
+            interval:,
+            frequency:,
+            previous_start_date:,
+            previous_interval:,
+            previous_frequency:,
+            byday:,
+            interval_end:,
+            next_trigger_date:,
+            now: Time.zone.now,
+          )
+          nil
         end
+      end
+
+      def self.log_debugging_info(context)
+        return if !SiteSetting.discourse_automation_enable_recurring_debug
+        str = "[automation] scheduling recurring automation debug: "
+        str += context.map { |k, v| "#{k}=#{v.inspect}" }.join(", ")
+        Rails.logger.warn(str)
       end
     end
   end

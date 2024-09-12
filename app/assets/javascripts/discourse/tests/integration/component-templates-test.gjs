@@ -5,7 +5,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { assert, module, test } from "qunit";
 import sinon from "sinon";
 import { overrideThrowGjsError } from "discourse/instance-initializers/component-templates";
-import { forceMobile, resetMobile } from "discourse/lib/mobile";
+import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 
@@ -139,7 +139,6 @@ module("Integration | Initializers | plugin-component-templates", function () {
       registerBaseComponents();
       forceMobile();
     });
-    hooks.afterEach(resetMobile);
 
     setupRenderingTest(hooks);
 
@@ -176,7 +175,6 @@ module("Integration | Initializers | plugin-component-templates", function () {
       forceMobile();
       registerBaseComponents();
     });
-    hooks.afterEach(resetMobile);
 
     setupRenderingTest(hooks);
 

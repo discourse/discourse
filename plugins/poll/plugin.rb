@@ -182,12 +182,12 @@ after_initialize do
           end
 
         if post_with_polls.present?
-          Poll
-            .where(post_id: post_with_polls)
-            .each do |p|
-              polls[p.post_id] ||= []
-              polls[p.post_id] << p
-            end
+          all_polls = Poll.includes(:poll_options).where(post_id: post_with_polls)
+          Poll.preload!(all_polls, user_id: @user&.id)
+          all_polls.each do |p|
+            polls[p.post_id] ||= []
+            polls[p.post_id] << p
+          end
         end
 
         polls

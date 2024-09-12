@@ -99,6 +99,16 @@ class MiniSqlMultisiteConnection < MiniSql::ActiveRecordPostgres::Connection
     CustomBuilder.new(self, sql)
   end
 
+  def run(sql, params)
+    ActiveSupport::Notifications.instrument(
+      "sql.mini_sql",
+      sql: sql_fragment(sql, *params),
+      name: "MiniSql",
+    )
+
+    super
+  end
+
   def sql_fragment(query, *args)
     if args.length > 0
       param_encoder.encode(query, *args)

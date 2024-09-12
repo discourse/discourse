@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # name: chat
-# about: Adds chat functionality.
+# about: Adds chat functionality to your site so it can natively support both long-form and short-form communication needs of your online community.
 # meta_topic_id: 230881
 # version: 0.4
 # authors: Kane York, Mark VanLandingham, Martin Brennan, Joffrey Jaffeux
@@ -27,7 +27,7 @@ register_svg_icon "file-image"
 register_svg_icon "stop-circle"
 
 # route: /admin/plugins/chat
-add_admin_route "chat.admin.title", "chat"
+add_admin_route "chat.admin.title", "chat", use_new_show_route: true
 
 GlobalSetting.add_default(:allow_unsecure_chat_uploads, false)
 
@@ -442,6 +442,11 @@ after_initialize do
          :constraints => StaffConstraint.new
     put "/admin/plugins/chat/hooks/:incoming_chat_webhook_id" =>
           "chat/admin/incoming_webhooks#update",
+        :constraints => StaffConstraint.new
+    get "/admin/plugins/chat/hooks/new" => "chat/admin/incoming_webhooks#new",
+        :constraints => StaffConstraint.new
+    get "/admin/plugins/chat/hooks/:incoming_chat_webhook_id" =>
+          "chat/admin/incoming_webhooks#show",
         :constraints => StaffConstraint.new
     delete "/admin/plugins/chat/hooks/:incoming_chat_webhook_id" =>
              "chat/admin/incoming_webhooks#destroy",

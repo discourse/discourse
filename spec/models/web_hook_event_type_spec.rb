@@ -64,6 +64,7 @@ RSpec.describe WebHookEventType do
           chat_message_trashed
           chat_message_restored
           category_experts_approved
+          category_experts_unapproved
         ],
       )
     end
