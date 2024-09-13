@@ -285,7 +285,14 @@ export default class Post extends RestModel {
   }
 
   get showLike() {
-    return this.liked || this.canToggleLike;
+    if (
+      !this.currentUser ||
+      (this.topic?.archived && this.user_id !== this.currentUser.id)
+    ) {
+      return true;
+    }
+
+    return this.likeAction && (this.liked || this.canToggleLike);
   }
 
   get topicNotificationLevel() {
@@ -369,9 +376,9 @@ export default class Post extends RestModel {
   }
 
   /**
-    Changes the state of the post to be deleted. Does not call the server, that should be
-    done elsewhere.
-  **/
+   Changes the state of the post to be deleted. Does not call the server, that should be
+   done elsewhere.
+   **/
   setDeletedState(deletedBy) {
     let promise;
     this.set("oldCooked", this.cooked);
@@ -408,10 +415,10 @@ export default class Post extends RestModel {
   }
 
   /**
-    Changes the state of the post to NOT be deleted. Does not call the server.
-    This can only be called after setDeletedState was called, but the delete
-    failed on the server.
-  **/
+   Changes the state of the post to NOT be deleted. Does not call the server.
+   This can only be called after setDeletedState was called, but the delete
+   failed on the server.
+   **/
   undoDeleteState() {
     if (this.oldCooked) {
       this.setProperties({
@@ -436,9 +443,9 @@ export default class Post extends RestModel {
   }
 
   /**
-    Updates a post from another's attributes. This will normally happen when a post is loading but
-    is already found in an identity map.
-  **/
+   Updates a post from another's attributes. This will normally happen when a post is loading but
+   is already found in an identity map.
+   **/
   updateFromPost(otherPost) {
     Object.keys(otherPost).forEach((key) => {
       let value = otherPost[key],

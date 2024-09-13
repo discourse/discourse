@@ -5,6 +5,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
 
@@ -45,8 +46,7 @@ export default class PostMenuLikeButton extends Component {
   @action
   animateToggle() {
     this.#element.classList.add("has-like");
-    const icon = this.#element.querySelector(`.d-icon`);
-    icon.classList.add("heart-animation");
+    this.#element.querySelector(`.d-icon`).classList.add("heart-animation");
   }
 
   <template>
@@ -117,7 +117,6 @@ class LikeCount extends Component {
         }}
         ...attributes
         @ariaPressed={{@likedUsers}}
-        @icon={{this.icon}}
         @translatedAriaLabel={{i18n
           "post.sr_post_like_count_button"
           count=@post.likeCount
@@ -126,6 +125,14 @@ class LikeCount extends Component {
         @action={{@action}}
       >
         {{@post.likeCount}}
+        {{!--
+           When displayed, the icon on the Like Count button is aligned to the right
+           To get the desired effect will use the {{yield}} in the DButton component to our advantage
+           introducing manually the icon after the label
+          --}}
+        {{#if this.icon}}
+          {{~icon this.icon~}}
+        {{/if}}
       </DButton>
     {{/if}}
   </template>

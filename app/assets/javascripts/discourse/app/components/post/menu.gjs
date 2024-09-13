@@ -162,8 +162,10 @@ export default class PostMenu extends Component {
   @service store;
 
   @tracked collapsed = true; // TODO some plugins will need a value transformer
+  @tracked showWhoLiked = false;
   @tracked likedUsers = [];
   @tracked totalLikedUsers;
+  @tracked showWhoRead = false;
   @tracked readers = [];
   @tracked totalReaders;
 
@@ -436,7 +438,9 @@ export default class PostMenu extends Component {
           key: "likedPostId",
           value: this.args.post.id,
         });
-      return this.sendWidgetAction("showLogin");
+
+      this.args.showLogin();
+      return;
     }
 
     if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
@@ -499,10 +503,8 @@ export default class PostMenu extends Component {
     this.collapsed = false;
 
     const fetchData = [
-      !this.likedUsers.length && this.#fetchWhoLiked(),
-      !this.readers.length &&
-        this.args.showReadIndicator &&
-        this.#fetchWhoRead(),
+      !this.showWhoLiked && this.#fetchWhoLiked(),
+      !this.showWhoRead && this.args.showReadIndicator && this.#fetchWhoRead(),
     ].filter(Boolean);
 
     await Promise.all(fetchData);
@@ -510,9 +512,8 @@ export default class PostMenu extends Component {
 
   @action
   toggleWhoLiked() {
-    if (this.likedUsers.length) {
-      this.likedUsers = [];
-      this.totalLikedUsers = null;
+    if (this.showWhoLiked) {
+      this.showWhoLiked = false;
       return;
     }
 
@@ -521,9 +522,8 @@ export default class PostMenu extends Component {
 
   @action
   toggleWhoRead() {
-    if (this.readers.length) {
-      this.readers = [];
-      this.totalReaders = null;
+    if (this.showWhoRead) {
+      this.showWhoRead = false;
       return;
     }
 
@@ -571,6 +571,7 @@ export default class PostMenu extends Component {
 
     this.likedUsers = users.map(smallUserAttributes);
     this.totalLikedUsers = users.totalRows;
+    this.showWhoLiked = true;
   }
 
   async #fetchWhoRead() {
@@ -580,6 +581,7 @@ export default class PostMenu extends Component {
 
     this.readers = users.map(smallUserAttributes);
     this.totalReaders = users.totalRows;
+    this.showWhoRead = true;
   }
 
   <template>
@@ -610,38 +612,46 @@ export default class PostMenu extends Component {
         {{/each}}
       </div>
     </nav>
-    <SmallUserList
-      class="who-read"
-      @addSelf={{false}}
-      @ariaLabel={{i18n "post.actions.people.sr_post_readers_list_description"}}
-      @count={{if
-        this.remainingReaders
-        this.remainingReaders
-        this.totalReaders
-      }}
-      @description={{if
-        this.remainingReaders
-        "post.actions.people.read_capped"
-        "post.actions.people.read"
-      }}
-      @users={{this.readers}}
-    />
-    <SmallUserList
-      class="who-liked"
-      @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}
-      @ariaLabel={{i18n "post.actions.people.sr_post_likers_list_description"}}
-      @count={{if
-        this.remainingLikedUsers
-        this.remainingLikedUsers
-        this.totalLikedUsers
-      }}
-      @description={{if
-        this.remainingLikedUsers
-        "post.actions.people.like_capped"
-        "post.actions.people.like"
-      }}
-      @users={{this.likedUsers}}
-    />
+    {{#if this.showWhoRead}}
+      <SmallUserList
+        class="who-read"
+        @addSelf={{false}}
+        @ariaLabel={{i18n
+          "post.actions.people.sr_post_readers_list_description"
+        }}
+        @count={{if
+          this.remainingReaders
+          this.remainingReaders
+          this.totalReaders
+        }}
+        @description={{if
+          this.remainingReaders
+          "post.actions.people.read_capped"
+          "post.actions.people.read"
+        }}
+        @users={{this.readers}}
+      />
+    {{/if}}
+    {{#if this.showWhoLiked}}
+      <SmallUserList
+        class="who-liked"
+        @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}
+        @ariaLabel={{i18n
+          "post.actions.people.sr_post_likers_list_description"
+        }}
+        @count={{if
+          this.remainingLikedUsers
+          this.remainingLikedUsers
+          this.totalLikedUsers
+        }}
+        @description={{if
+          this.remainingLikedUsers
+          "post.actions.people.like_capped"
+          "post.actions.people.like"
+        }}
+        @users={{this.likedUsers}}
+      />
+    {{/if}}
     {{#if this.collapsedButtons}}
       <UserTip
         @id="post_menu"
