@@ -82,11 +82,11 @@ export default class ThemesGrid extends Component {
       {{/each}}
 
       <div class="admin-config-area-card theme-card">
-        <div class="theme-card-content">
-          <h2 class="theme-card-title">{{i18n
+        <div class="theme-card__content">
+          <h2 class="theme-card__title">{{i18n
               "admin.config_areas.look_and_feel.themes.new_theme"
             }}</h2>
-          <p class="theme-card-description">{{i18n
+          <p class="theme-card__description">{{i18n
               "admin.customize.theme.themes_intro_new"
             }}</p>
           <div class="external-resources">
@@ -107,7 +107,7 @@ export default class ThemesGrid extends Component {
           @action={{this.installModal}}
           @icon="upload"
           @label="admin.customize.install"
-          class="btn-primary theme-card-button"
+          class="btn-primary theme-card__button"
         />
       </div>
     </div>

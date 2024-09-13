@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
@@ -36,8 +37,26 @@ export default class ThemeCard extends Component {
   @computed("args.theme.default")
   get setDefaultButtonClasses() {
     return this.args.theme.default
-      ? "btn-primary theme-card-button"
-      : "btn-default theme-card-button";
+      ? "btn-primary theme-card__button"
+      : "btn-default theme-card__button";
+  }
+
+  @computed(
+    "args.theme.default",
+    "args.theme.isBroken",
+    "args.theme.enabled",
+    "args.theme.isPendingUpdates"
+  )
+  get themeCardClasses() {
+    return this.args.theme.isBroken
+      ? "--broken"
+      : !this.args.theme.enabled
+      ? "--disabled"
+      : this.args.theme.isPendingUpdates
+      ? "--updates"
+      : this.args.theme.default
+      ? "--active"
+      : "";
   }
 
   get imageAlt() {
@@ -99,9 +118,35 @@ export default class ThemeCard extends Component {
 
   <template>
     <AdminConfigAreaCard
-      @translatedHeading={{@theme.name}}
-      class={{concatClass "theme-card" (if @theme.default "--active" "")}}
+      class={{concatClass "theme-card" this.themeCardClasses}}
     >
+      <:optionalCustomHeading>
+        {{@theme.name}}
+        <span class="theme-card__icons">
+          {{#if @theme.isPendingUpdates}}
+            {{icon
+              "sync"
+              title="admin.customize.theme.updates_available_tooltip"
+              class="light-grey-icon"
+            }}
+          {{else}}
+            {{#if @theme.isBroken}}
+              {{icon
+                "exclamation-circle"
+                class="broken-indicator"
+                title="admin.customize.theme.broken_theme_tooltip"
+              }}
+            {{/if}}
+            {{#unless @theme.enabled}}
+              {{icon
+                "ban"
+                class="light-grey-icon"
+                title="admin.customize.theme.disabled_component_tooltip"
+              }}
+            {{/unless}}
+          {{/if}}
+        </span>
+      </:optionalCustomHeading>
       <:optionalAction>
         <Input
           @type="checkbox"
@@ -109,15 +154,18 @@ export default class ThemeCard extends Component {
           id="user-select-theme-{{@theme.id}}"
           onclick={{this.handleSubmit}}
         />
-        <label class="checkbox-label" for="user-select-theme-{{@theme.id}}">
+        <label
+          class="theme-card__checkbox-label"
+          for="user-select-theme-{{@theme.id}}"
+        >
           {{i18n "admin.config_areas.look_and_feel.themes.user_selectable"}}
         </label>
       </:optionalAction>
       <:content>
-        <div class="theme-card-image-wrapper">
+        <div class="theme-card__image-wrapper">
           {{#if this.hasScreenshot}}
             <img
-              class="theme-card-image"
+              class="theme-card__image"
               src={{htmlSafe @theme.screenshot}}
               alt={{this.imageAlt}}
             />
@@ -125,16 +173,16 @@ export default class ThemeCard extends Component {
             <ThemesGridPlaceholder @theme={{@theme}} />
           {{/if}}
         </div>
-        <div class="theme-card-content">
-          <p class="theme-card-description">{{@theme.description}}</p>
+        <div class="theme-card__content">
+          <p class="theme-card__description">{{@theme.description}}</p>
           {{#if @theme.childThemes}}
-            <span class="theme-card-components">{{i18n
+            <span class="theme-card__components">{{i18n
                 "admin.customize.theme.components"
               }}:
               {{htmlSafe this.childrenString}}</span>
           {{/if}}
         </div>
-        <div class="theme-card-footer">
+        <div class="theme-card__footer">
           <DButton
             @action={{this.setDefault}}
             @preventFocus={{true}}
@@ -143,18 +191,18 @@ export default class ThemeCard extends Component {
             @translatedLabel={{i18n this.setDefaultButtonTitle}}
             @disabled={{@theme.default}}
           />
-          <div class="theme-card-footer-actions">
+          <div class="theme-card-footer__actions">
             <DButton
               @action={{this.showPreview}}
               @icon="eye"
-              @class="btn-flat theme-card-button"
+              @class="btn-flat theme-card__button"
               @preventFocus={{true}}
             />
             <DButton
               @route="adminCustomizeThemes.show"
               @routeModels={{this.themeRouteModels}}
               @icon="cog"
-              @class="btn-flat theme-card-button"
+              @class="btn-flat theme-card__button"
               @preventFocus={{true}}
             />
           </div>

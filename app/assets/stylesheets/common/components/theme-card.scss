@@ -1,3 +1,8 @@
+@mixin theme-card-border($color) {
+  border-color: var(--#{$color}-medium);
+  box-shadow: 0px 0px 0px 3px var(--#{$color}-low);
+}
+
 .themes-cards-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -14,10 +19,21 @@
     flex-grow: 1;
   }
   &.--active {
-    border-color: var(--tertiary-medium);
-    box-shadow: 0px 0px 0px 3px var(--tertiary-low);
+    @include theme-card-border(tertiary);
   }
-  &-image-wrapper {
+  &.--disabled {
+    @include theme-card-border(primary);
+  }
+  &.--broken {
+    @include theme-card-border(danger);
+  }
+  &.--updates {
+    @include theme-card-border(success);
+  }
+  .broken-indicator {
+    color: var(--danger);
+  }
+  &__image-wrapper {
     width: 100%;
     height: 160px;
     overflow: hidden;
@@ -27,7 +43,7 @@
       left: 0;
     }
   }
-  &-image {
+  &__image {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -37,20 +53,20 @@
   .ember-checkbox {
     margin: 0 5px 0 0;
   }
-  label {
+  &__checkbox-label {
     margin: 0;
     font-weight: 400;
   }
-  &-components {
+  &__components {
     display: block;
     font-size: var(--font-down-1);
     margin-bottom: 10px;
     color: var(--primary-high);
   }
-  &-button {
+  &__button {
     margin-top: auto;
   }
-  &-footer {
+  &__footer {
     margin-top: auto;
     display: flex;
     justify-content: space-between;
@@ -65,7 +81,7 @@
   }
 }
 
-.theme-card-content .external-resources {
+.theme-card__content .external-resources {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
