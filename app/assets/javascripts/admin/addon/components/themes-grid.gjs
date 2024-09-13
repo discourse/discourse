@@ -30,7 +30,6 @@ export default class ThemesGrid extends Component {
     },
   ];
 
-  @computed("args.themes.@each.default")
   get sortedThemes() {
     // Always show currently set default theme first
     return this.args.themes.sort((a, b) => {
