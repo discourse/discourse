@@ -58,7 +58,7 @@ class PollSerializer < ApplicationSerializer
   end
 
   def voters
-    object.poll_votes.count("DISTINCT user_id") + object.anonymous_voters.to_i
+    object.voters_count + object.anonymous_voters.to_i
   end
 
   def close

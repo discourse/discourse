@@ -75,9 +75,25 @@ export default class ReviewableItem extends Component {
     return classes;
   }
 
-  @discourseComputed("reviewable.created_from_flag", "reviewable.status")
-  displayContextQuestion(createdFromFlag, status) {
-    return createdFromFlag && status === 0;
+  @discourseComputed(
+    "reviewable.created_from_flag",
+    "reviewable.status",
+    "claimOptional",
+    "claimRequired",
+    "reviewable.claimed_by"
+  )
+  displayContextQuestion(
+    createdFromFlag,
+    status,
+    claimOptional,
+    claimRequired,
+    claimedBy
+  ) {
+    return (
+      createdFromFlag &&
+      status === 0 &&
+      (claimOptional || (claimRequired && claimedBy !== null))
+    );
   }
 
   @discourseComputed(
@@ -92,6 +108,16 @@ export default class ReviewableItem extends Component {
   @discourseComputed("siteSettings.reviewable_claiming", "topicId")
   claimEnabled(claimMode, topicId) {
     return claimMode !== "disabled" && !!topicId;
+  }
+
+  @discourseComputed("siteSettings.reviewable_claiming", "claimEnabled")
+  claimOptional(claimMode, claimEnabled) {
+    return !claimEnabled || claimMode === "optional";
+  }
+
+  @discourseComputed("siteSettings.reviewable_claiming", "claimEnabled")
+  claimRequired(claimMode, claimEnabled) {
+    return claimEnabled && claimMode === "required";
   }
 
   @discourseComputed(

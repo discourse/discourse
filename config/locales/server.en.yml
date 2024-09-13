@@ -1371,7 +1371,17 @@ en:
         page_view_crawler: "Known Crawler"
         page_view_other: "Other pageviews"
       yaxis: "Day"
-      description: "Pageviews for logged in users, anonymous users, known crawlers and other. This experimental report ensures logged-in/anon requests are coming from real browsers before counting them."
+      description: "Pageviews for logged in users, anonymous users, known crawlers and other. This experimental report ensures logged-in/anon requests are coming from real browsers before counting them. Historical data for this report is unavailable, for historical data see the ‘Consolidated Pageviews' report."
+    site_traffic:
+      title: "Site traffic"
+      xaxis:
+        page_view_anon_browser: "Pageviews (anonymous)"
+        page_view_logged_in_browser: "Pageviews (logged in)"
+        page_view_crawler: "Known crawlers"
+        page_view_other: "Other traffic"
+      yaxis: "Day"
+      description: "Pageviews for logged in users, anonymous users, known crawlers and other traffic."
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Day"
@@ -2503,7 +2513,7 @@ en:
     delete_drafts_older_than_n_days: "Delete drafts that have not been changed in more than (n) days."
     delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to -1 to never delete. Set to 0 to immediately delete."
 
-    bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode and remove Getting Started button (set to 0 to disable, can take up to 24 hours)"
+    bootstrap_mode_min_users: 'Minimum number of users required to disable bootstrap mode and remove Getting Started button (set to 0 to disable, can take up to 24 hours). See <a target="_blank" href="https://meta.discourse.org/t/-/322876">the bootstrap mode topic on Meta</a> for details.'
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments."
     secure_uploads: 'Limits access to ALL uploads (images, video, audio, text, pdfs, zips, and others). If "login required” is enabled, only logged-in users can access uploads. Otherwise, access will be limited only for media uploads in private messages and private categories. WARNING: This setting is complex and requires deep administrative understanding. See <a target="_blank" href="https://meta.discourse.org/t/-/140017">the secure uploads topic on Meta</a> for details.'
@@ -2699,6 +2709,7 @@ en:
 
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
+    about_page_hidden_groups: "Do not show members of specific groups on the /about page."
     view_raw_email_allowed_groups: "Groups which can view the raw email content of a post if it was created by an incoming email. This includes email headers and other technical information."
     experimental_flags_admin_page_enabled_groups: "EXPERIMENTAL: Remove the Moderation Flags link from the admin sidebar."
 

@@ -69,14 +69,17 @@ class About
   end
 
   def moderators
-    @moderators ||= User.where(moderator: true, admin: false).human_users.order("last_seen_at DESC")
+    @moderators ||=
+      apply_excluded_groups(
+        User.where(moderator: true, admin: false).human_users.order(last_seen_at: :desc),
+      )
   end
 
   def admins
     @admins ||=
       DiscoursePluginRegistry.apply_modifier(
         :about_admins,
-        User.where(admin: true).human_users.order("last_seen_at DESC"),
+        apply_excluded_groups(User.where(admin: true).human_users.order(last_seen_at: :desc)),
       )
   end
 
@@ -136,5 +139,19 @@ class About
 
   def category_mods_limit=(number)
     @category_mods_limit = number
+  end
+
+  private
+
+  def apply_excluded_groups(query)
+    group_ids = SiteSetting.about_page_hidden_groups_map
+    return query if group_ids.blank?
+
+    query.joins(
+      DB.sql_fragment(
+        "LEFT JOIN group_users ON group_id IN (:group_ids) AND user_id = users.id",
+        group_ids:,
+      ),
+    ).where("group_users.id": nil)
   end
 end

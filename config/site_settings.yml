@@ -410,6 +410,9 @@ basic:
   show_user_menu_avatars:
     client: true
     default: false
+  about_page_hidden_groups:
+    default: ""
+    type: group_list
   extended_site_description:
     default: ""
     max: 10_000
@@ -429,6 +432,7 @@ basic:
   use_legacy_pageviews:
     default: false
     hidden: true
+    client: true
 login:
   invite_only:
     refresh: true
@@ -2576,9 +2580,6 @@ backups:
     client: true
 
 search:
-  user_search_similar_results:
-    default: false
-    hidden: true
   prioritize_exact_search_title_match:
     default: true
     hidden: true

@@ -1741,7 +1741,7 @@ en:
         add_email: "Add Alternate Email"
         auth_override_instructions: "Email can be updated from authentication provider."
         no_secondary: "No secondary emails"
-        instructions: "Never shown to the public."
+        instructions: "Never shown to the public"
         admin_note: "Note: An admin user changing another non-admin user's email indicates the user has lost access to their original email account, so a reset password email will be sent to their new address. The user's email will not change until they complete the reset password process."
         ok: "We will email you to confirm"
         required: "Please enter an email address"
@@ -1775,14 +1775,14 @@ en:
 
       name:
         title: "Name"
-        instructions: "Your full name (optional)."
-        instructions_required: "Your full name."
+        instructions: "Your full name (optional)"
+        instructions_required: "Your full name"
         required: "Please enter a name"
         too_short: "Your name is too short"
         ok: "Your name looks good"
       username:
         title: "Username"
-        instructions: "Unique, no spaces, short."
+        instructions: "Unique, no spaces, short"
         short_instructions: "People can mention you as @%{username}"
         available: "Your username is available"
         not_available: "Not available. Try %{suggestion}?"
@@ -2024,8 +2024,8 @@ en:
         same_as_email: "Your password is the same as your email."
         ok: "Your password looks good."
         instructions:
-          one: "At least %{count} character."
-          other: "At least %{count} characters."
+          one: "At least %{count} character"
+          other: "At least %{count} characters"
         required: "Please enter a password"
         confirm: "Confirm"
         incorrect_password: "The entered password is incorrect."
@@ -5410,7 +5410,8 @@ en:
           post_edited: "Post is updated"
           post_destroyed: "Post is deleted"
           post_recovered: "Post is recovered"
-          category_experts_approved: "Post is approved by category experts"
+          category_experts_approved: "Post marked as category experts post"
+          category_experts_unapproved: "Post unmarked as category experts post"
         group_event:
           group_name: "Group Events"
           group_created: "Group is created"
@@ -5557,13 +5558,14 @@ en:
           screened_ips: "Screened IPs"
           screened_urls: "Screened URLs"
           search_logs: "Search Logs"
-          security: "Security"
-          spam: "Spam"
+          security: "Security settings"
+          spam: "Spam settings"
           staff_action_logs: "Staff Action Logs"
 
       config_areas:
         about:
           header: "About your site"
+          description: "Provide information here about this site and your team so that people can learn what your community is about, who is behind it, and how to reach you in case there is an issue."
           general_settings: "General settings"
           community_name: "Community name"
           community_name_placeholder: "Example Community"
@@ -5615,6 +5617,7 @@ en:
           saved: "saved!"
         flags:
           header: "Moderation Flags"
+          edit_header: "Edit Flag"
           subheader: "The flagging system in Discourse helps you and your moderator team manage content and user behavior, keeping your community respectful and healthy. The defaults are suitable for most communities and you don’t have to change them. However, if your site has particular requirements you can disable flags you don’t need and add your own custom flags."
           description: "Description"
           enabled: "Enabled?"
@@ -6356,6 +6359,9 @@ en:
             custom_emoji_destroy: "delete custom emoji"
             delete_post_permanently: "permanently delete post"
             delete_topic_permanently: "permanently delete topic"
+            tag_group_create: "create tag group"
+            tag_group_destroy: "delete tag group"
+            tag_group_change: "change tag group"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -7030,12 +7036,13 @@ en:
       badges:
         status: Status
         title: Badges
+        page_description: Badges reward users for their activities, contributions, and achievements to recognize, validate, and encourage positive behavior and engagement within the community.
         new_badge: New Badge
         new: New
         name: Name
         badge: Badge
         display_name: Display Name
-        description: Badges reward users for their activities, contributions, and achievements to recognize, validate, and encourage positive behavior and engagement within the community.
+        description: Description
         long_description: Long description
         badge_type: Badge type
         group_settings: Group Settings

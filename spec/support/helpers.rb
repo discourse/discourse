@@ -209,7 +209,9 @@ module Helpers
       queries << payload.fetch(:sql) if %w[CACHE SCHEMA].exclude?(payload.fetch(:name))
     end
 
-    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") { yield }
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+      ActiveSupport::Notifications.subscribed(callback, "sql.mini_sql") { yield }
+    end
 
     queries
   end

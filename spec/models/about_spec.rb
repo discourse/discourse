@@ -132,6 +132,29 @@ RSpec.describe About do
     end
   end
 
+  describe "#moderators" do
+    fab!(:mod_1) { Fabricate(:moderator) }
+    fab!(:mod_2) { Fabricate(:moderator) }
+    fab!(:mod_3) { Fabricate(:moderator) }
+
+    context "with the about_page_hidden_groups setting" do
+      fab!(:group_1) { Fabricate(:group, users: [mod_1, mod_3]) }
+      fab!(:group_2) { Fabricate(:group, users: [mod_3]) }
+      fab!(:group_3) { Fabricate(:group) }
+
+      before { SiteSetting.about_page_hidden_groups = [group_1.id, group_2.id].join("|") }
+
+      it "hides moderators that are in any of the specified groups" do
+        expect(About.new.moderators).to contain_exactly(mod_2)
+      end
+
+      it "doesn't hide any moderators if the setting is empty" do
+        SiteSetting.about_page_hidden_groups = ""
+        expect(About.new.moderators).to contain_exactly(mod_1, mod_2, mod_3)
+      end
+    end
+  end
+
   describe "#admins" do
     fab!(:admin_mark) { Fabricate(:admin, name: "mark") }
     fab!(:admin_matt) { Fabricate(:admin, name: "matt") }
@@ -146,6 +169,23 @@ RSpec.describe About do
         expect(About.new(Fabricate(:user)).admins).to match_array([admin_matt, admin_kate])
       ensure
         DiscoursePluginRegistry.unregister_modifier(plugin_instance, :about_admins, &modifier_block)
+      end
+    end
+
+    context "with the about_page_hidden_groups setting" do
+      fab!(:group_1) { Fabricate(:group, users: [admin_mark, admin_matt]) }
+      fab!(:group_2) { Fabricate(:group, users: [admin_mark]) }
+      fab!(:group_3) { Fabricate(:group, users: [admin_kate]) }
+
+      before { SiteSetting.about_page_hidden_groups = [group_1.id, group_2.id].join("|") }
+
+      it "hides admins that are in any of the specified groups" do
+        expect(About.new.admins).to contain_exactly(admin_kate)
+      end
+
+      it "doesn't hide any admins if the setting is empty" do
+        SiteSetting.about_page_hidden_groups = ""
+        expect(About.new.admins).to contain_exactly(admin_kate, admin_mark, admin_matt)
       end
     end
   end

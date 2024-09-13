@@ -104,6 +104,12 @@ export default class StaffActionLog extends RestModel {
 
   @discourseComputed("action_name")
   useCustomModalForDetails(actionName) {
-    return ["change_theme", "delete_theme"].includes(actionName);
+    return [
+      "change_theme",
+      "delete_theme",
+      "tag_group_create",
+      "tag_group_destroy",
+      "tag_group_change",
+    ].includes(actionName);
   }
 }

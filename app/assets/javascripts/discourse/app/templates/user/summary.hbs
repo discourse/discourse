@@ -291,6 +291,7 @@
                     <UserSummaryCategorySearch
                       @user={{this.user}}
                       @category={{category}}
+                      @searchOnlyFirstPosts={{true}}
                       @count={{category.topic_count}}
                     />
                   </td>
@@ -298,6 +299,7 @@
                     <UserSummaryCategorySearch
                       @user={{this.user}}
                       @category={{category}}
+                      @searchOnlyFirstPosts={{false}}
                       @count={{category.post_count}}
                     />
                   </td>

@@ -11,7 +11,6 @@ module("Discourse Chat | Unit | chat-emoji-reaction-store", function (hooks) {
       "service:chat-emoji-reaction-store"
     );
 
-    this.chatEmojiReactionStore.siteSettings = this.siteSettings;
     this.chatEmojiReactionStore.reset();
   });
 

@@ -43,7 +43,7 @@ class Flag < ActiveRecord::Base
   end
 
   def system?
-    self.id < MAX_SYSTEM_FLAG_ID
+    self.id.present? && self.id < MAX_SYSTEM_FLAG_ID
   end
 
   def applies_to?(type)
@@ -61,7 +61,8 @@ class Flag < ActiveRecord::Base
   end
 
   def set_name_key
-    self.name_key = self.name.squeeze(" ").gsub(" ", "_").gsub(/[^\w]/, "").downcase
+    prefix = self.system? ? "" : "custom_"
+    self.name_key = "#{prefix}#{self.name.squeeze(" ").gsub(" ", "_").gsub(/[^\w]/, "").downcase}"
   end
 end
 

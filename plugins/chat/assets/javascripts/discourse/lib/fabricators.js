@@ -80,7 +80,7 @@ export default class ChatFabricators {
       chatable,
       status: args.status || CHANNEL_STATUSES.open,
       slug:
-        chatable?.slug || chatable instanceof Category ? chatable.slugt : null,
+        chatable?.slug || chatable instanceof Category ? chatable.slug : null,
       meta: Object.assign({ can_delete_self: true }, args.meta || {}),
       archive_failed: args.archive_failed ?? false,
       memberships_count: args.memberships_count ?? 0,
