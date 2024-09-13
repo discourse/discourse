@@ -19,7 +19,7 @@
 
     <TagChooser
       @tags={{this.model.watching_tags}}
-      @blacklist={{this.selectedTags}}
+      @blockedTags={{this.selectedTags}}
       @everyTag={{true}}
       @unlimitedTagCount={{true}}
       @options={{hash allowAny=false}}
@@ -36,7 +36,7 @@
 
     <TagChooser
       @tags={{this.model.tracking_tags}}
-      @blacklist={{this.selectedTags}}
+      @blockedTags={{this.selectedTags}}
       @everyTag={{true}}
       @unlimitedTagCount={{true}}
       @options={{hash allowAny=false}}
@@ -53,7 +53,7 @@
 
     <TagChooser
       @tags={{this.model.watching_first_post_tags}}
-      @blacklist={{this.selectedTags}}
+      @blockedTags={{this.selectedTags}}
       @everyTag={{true}}
       @unlimitedTagCount={{true}}
       @options={{hash allowAny=false}}
@@ -70,7 +70,7 @@
 
     <TagChooser
       @tags={{this.model.regular_tags}}
-      @blacklist={{this.selectedTags}}
+      @blockedTags={{this.selectedTags}}
       @everyTag={{true}}
       @unlimitedTagCount={{true}}
       @options={{hash allowAny=false}}
@@ -87,7 +87,7 @@
 
     <TagChooser
       @tags={{this.model.muted_tags}}
-      @blacklist={{this.selectedTags}}
+      @blockedTags={{this.selectedTags}}
       @everyTag={{true}}
       @unlimitedTagCount={{true}}
       @options={{hash allowAny=false}}
