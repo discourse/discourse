@@ -1,7 +1,5 @@
 # frozen_string_literal: true
-class DropPasswordColumnsFromUsers < ActiveRecord::Migration[7.1]
-  DROPPED_COLUMNS ||= { users: %i[password_hash salt password_algorithm] }
-
+class MakePasswordColumnsFromUsersReadOnly < ActiveRecord::Migration[7.1]
   def up
     # remove invalid triggers/functions dependent on the columns to be dropped
     execute <<~SQL.squish
@@ -11,7 +9,9 @@ class DropPasswordColumnsFromUsers < ActiveRecord::Migration[7.1]
       DROP FUNCTION IF EXISTS mirror_user_password_data;
     SQL
 
-    DROPPED_COLUMNS.each { |table, columns| Migration::ColumnDropper.execute_drop(table, columns) }
+    %i[password_hash salt password_algorithm].each do |column|
+      Migration::ColumnDropper.mark_readonly(:users, column)
+    end
   end
 
   def down
