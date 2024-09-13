@@ -15,6 +15,7 @@ import { userPath } from "discourse/lib/url";
 import i18n from "discourse-common/helpers/i18n";
 import discourseLater from "discourse-common/lib/later";
 import PostMenuButtonConfig from "./menu/button-config";
+import PostMenuButtonWrapper from "./menu/button-wrapper";
 import PostMenuAdminButton from "./menu/buttons/admin";
 import PostMenuBookmarkButton from "./menu/buttons/bookmark";
 import PostMenuCopyLinkButton from "./menu/buttons/copy-link";
@@ -611,12 +612,12 @@ export default class PostMenu extends Component {
       }}
     >
       {{! do not include PluginOutlets here, use the PostMenu DAG API instead }}
-      {{#each this.extraControls as |extraControl|}}
-        <extraControl.PostMenuButtonComponent />
+      {{#each this.extraControls key="key" as |extraControl|}}
+        <PostMenuButtonWrapper @buttonConfig={{extraControl}} @post={{@post}} />
       {{/each}}
       <div class="actions">
-        {{#each this.visibleButtons as |button|}}
-          <button.PostMenuButtonComponent />
+        {{#each this.visibleButtons key="key" as |button|}}
+          <PostMenuButtonWrapper @buttonConfig={{button}} @post={{@post}} />
         {{/each}}
       </div>
     </nav>

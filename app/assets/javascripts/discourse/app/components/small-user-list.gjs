@@ -45,7 +45,7 @@ export default class SmallUserList extends Component {
           aria-label={{@ariaLabel}}
           role="list"
         >
-          {{#each this.users as |user|}}
+          {{#each this.users key="username" as |user|}}
             {{#if user.unknown}}
               <div
                 title={{i18n "post.unknown_user"}}

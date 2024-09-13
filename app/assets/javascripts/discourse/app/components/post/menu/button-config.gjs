@@ -81,25 +81,4 @@ export default class PostMenuButtonConfig {
 
     return this.#shouldRender ?? true;
   }
-
-  get PostMenuButtonComponent() {
-    // we need to save the value of `this` context otherwise it will be overridden when
-    // while Ember renders the component
-    const buttonConfig = this;
-    const post = this.#post;
-
-    return <template>
-      <buttonConfig.Component
-        class="btn-flat"
-        ...attributes
-        @action={{buttonConfig.action}}
-        @actionMode={{buttonConfig.actionMode}}
-        @context={{buttonConfig.context}}
-        @post={{post}}
-        @secondaryAction={{buttonConfig.secondaryAction}}
-        @shouldRender={{buttonConfig.shouldRender}}
-        @showLabel={{buttonConfig.showLabel}}
-      />
-    </template>;
-  }
 }
