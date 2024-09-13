@@ -38,7 +38,7 @@ It's helpful to collaborate with at least one or two other people early that can
 - **If your community allows people to freely sign up**, send them the link and ask them to join.
 - **If your community is invite only**, go to [your invites page](%{base_url}/my/invited) and look for the <kbd>+ Invite</kbd> button to create invite links you can share or directly email everyone you want to have in your community.
 
-> :bulb: Your community starts off in “bootstrap mode”, which gives early members [a higher level of trust ](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)than the typical new member so they can help you launch your community. You can adjust how long your community remains in bootstrap mode [here](/admin/site_settings/category/all_results?filter=bootstrap).
+> :bulb: Your community starts off in “bootstrap mode”, which gives early members [a higher level of trust ](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)than the typical new member so they can help you launch your community. You can adjust how long your community remains in bootstrap mode [here](/admin/site_settings/category/all_results?filter=bootstrap). For more information about bootstrap mode, [see the Discourse Meta documentation](https://meta.discourse.org/t/-/322876).
 
 ## :thought_balloon: Discuss ideas with your community
 
