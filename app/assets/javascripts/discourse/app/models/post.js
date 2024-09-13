@@ -243,8 +243,16 @@ export default class Post extends RestModel {
     return this.deleted && this.can_recover;
   }
 
+  get isRecovering() {
+    return !this.deleted && this.can_recover;
+  }
+
   get canRecoverTopic() {
     return this.firstPost && this.deleted && this.topic.details.can_recover;
+  }
+
+  get isRecoveringTopic() {
+    return this.firstPost && !this.deleted && this.topic.details.can_recover;
   }
 
   get canToggleLike() {

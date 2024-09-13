@@ -23,6 +23,8 @@ import PostMenuDeleteButton, {
   BUTTON_ACTION_MODE_DELETE_TOPIC,
   BUTTON_ACTION_MODE_RECOVER,
   BUTTON_ACTION_MODE_RECOVER_TOPIC,
+  BUTTON_ACTION_MODE_RECOVERING,
+  BUTTON_ACTION_MODE_RECOVERING_TOPIC,
   BUTTON_ACTION_MODE_SHOW_FLAG_DELETE,
 } from "./menu/buttons/delete";
 import PostMenuEditButton from "./menu/buttons/edit";
@@ -210,6 +212,12 @@ export default class PostMenu extends Component {
             } else if (this.args.post.showFlagDelete) {
               actionMode = BUTTON_ACTION_MODE_SHOW_FLAG_DELETE;
               primaryAction = this.showDeleteTopicModal;
+            } else if (this.args.post.isRecovering) {
+              actionMode = BUTTON_ACTION_MODE_RECOVERING;
+              primaryAction = null;
+            } else if (this.args.post.isRecoveringTopic) {
+              actionMode = BUTTON_ACTION_MODE_RECOVERING_TOPIC;
+              primaryAction = null;
             }
             break;
 
