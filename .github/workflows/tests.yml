@@ -89,7 +89,7 @@ jobs:
 
       - name: Setup Git
         run: |
-          git config --global user.email "ci@ci.invalid"
+          git config sglobal user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
 
       - name: Start redis
@@ -120,6 +120,7 @@ jobs:
 
       - name: pnpm install
         run: |
+          cp -r /var/www/discourse/node_modules ./node_modules
           pnpm config set store-dir /home/discourse/.local/share/pnpm/store/v3
           pnpm install --frozen-lockfile
 
