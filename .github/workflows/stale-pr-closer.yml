@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   stale:
-    runs-on: ubuntu-latest
+    runs-on: debian-12
     steps:
       - uses: actions/stale@v9
         with:
