@@ -740,7 +740,7 @@ third line`
         toolbar.addButton({
           id: "not-shown",
           group: "extras",
-          icon: "far-frown",
+          icon: "far-face-frown",
           action: () => {},
           condition: () => false,
         });

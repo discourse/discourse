@@ -1467,7 +1467,7 @@ acceptance("composer buttons API", function (needs) {
         toolbar.addButton({
           id: "smile",
           group: "extras",
-          icon: "far-smile",
+          icon: "far-face-smile",
           shortcut: "ALT+S",
           shortcutAction: (toolbarEvent) => {
             toolbarEvent.addText(":smile: from keyboard");
