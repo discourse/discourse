@@ -119,7 +119,9 @@ jobs:
           bundle clean
 
       - name: pnpm install
-        run: pnpm install --frozen-lockfile
+        run: |
+          pnpm config set store-dir /home/discourse/.local/share/pnpm/store/v3
+          pnpm install --frozen-lockfile
 
       - name: Copy official plugins
         if: matrix.target == 'plugins'
@@ -380,7 +382,9 @@ jobs:
           git config --global user.name "Discourse CI"
 
       - name: pnpm install
-        run: pnpm install --frozen-lockfile
+        run: |
+          pnpm config set store-dir /home/discourse/.local/share/pnpm/store/v3
+          pnpm install --frozen-lockfile
 
       - name: Ember Build
         working-directory: ./app/assets/javascripts/discourse
