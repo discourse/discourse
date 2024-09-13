@@ -2026,7 +2026,7 @@ RSpec.describe SessionController do
         before { RateLimiter.enable }
 
         it "should return an error response code with the right error message" do
-          UserPasswordExpirer.expire_user_password(user.reload)
+          UserPasswordExpirer.expire_user_password(user)
           post "/session.json", params: { login: user.username, password: "myawesomepassword" }
 
           expect(response.status).to eq(200)

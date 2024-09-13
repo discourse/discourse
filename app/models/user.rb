@@ -3,9 +3,9 @@
 class User < ActiveRecord::Base
   self.ignored_columns = [
     :old_seen_notification_id, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been written.
-    :salt, # TODO: Remove once DropPasswordColumnsFromUsers has been promoted to pre-deploy
-    :password_hash, # TODO: Remove once DropPasswordColumnsFromUsers has been promoted to pre-deploy
-    :password_algorithm, # TODO: Remove once  DropPasswordColumnsFromUsers has been promoted to pre-deploy
+    :salt, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been written.
+    :password_hash, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been written.
+    :password_algorithm, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been written.
   ]
 
   include Searchable
@@ -925,6 +925,7 @@ class User < ActiveRecord::Base
 
     if user_password
       user_password.password = pw
+      user_password.password_hash_will_change!
     else
       build_user_password(password: pw)
     end
@@ -936,14 +937,29 @@ class User < ActiveRecord::Base
   end
 
   def password_hash
+    Discourse.deprecate(
+      "User#password_hash is deprecated, use UserPassword#password_hash instead.",
+      drop_from: "3.3",
+      raise_error: false,
+    )
     user_password&.password_hash
   end
 
   def password_algorithm
+    Discourse.deprecate(
+      "User#password_algorithm is deprecated, use UserPassword#password_algorithm instead.",
+      drop_from: "3.3",
+      raise_error: false,
+    )
     user_password&.password_algorithm
   end
 
   def salt
+    Discourse.deprecate(
+      "User#password_salt is deprecated, use UserPassword#password_salt instead.",
+      drop_from: "3.3",
+      raise_error: false,
+    )
     user_password&.password_salt
   end
 

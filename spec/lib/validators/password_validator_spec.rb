@@ -7,13 +7,13 @@ RSpec.describe PasswordValidator do
 
   subject(:validate) { validator.validate_each(record, :password, @password) }
 
-  let(:validator) { described_class.new(attributes: :password) }
+  let(:validator) { UserPasswordValidator.new(attributes: :password) }
 
   describe "password required" do
     let(:record) do
       u = Fabricate.build(:user, password: @password)
       u.password_required!
-      u
+      u.user_password
     end
 
     context "when password is not common" do
@@ -50,7 +50,7 @@ RSpec.describe PasswordValidator do
           SiteSetting.min_admin_password_length = 15
 
           @password = "12345678912"
-          record.admin = true
+          record.user.admin = true
           validate
           expect(record.errors[:password]).to be_present
         end

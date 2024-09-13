@@ -37,10 +37,7 @@ RSpec.describe UserPasswordExpirer do
 
       freeze_time do
         user.update!(password: new_password)
-        expect { described_class.expire_user_password(user.reload) }.not_to change(
-          UserPassword,
-          :count,
-        )
+        expect { described_class.expire_user_password(user) }.not_to change(UserPassword, :count)
 
         user_password = user.user_password.reload
 
