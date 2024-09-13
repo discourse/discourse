@@ -133,7 +133,7 @@ export default class PollButtonsDropdownComponent extends Component {
       {{#if this.showDropdown}}
         <DMenu class="widget-dropdown-header">
           <:trigger>
-            {{icon "cog"}}
+            {{icon "gear"}}
           </:trigger>
           <:content>
             <DropdownMenu as |dropdown|>
