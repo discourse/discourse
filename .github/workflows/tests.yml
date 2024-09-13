@@ -108,27 +108,15 @@ jobs:
           echo "debian_release=$DEBIAN_RELEASE" >> $GITHUB_OUTPUT
         shell: bash
 
-      - name: Bundler cache
-        uses: actions/cache@v4
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-gem-${{ hashFiles('**/Gemfile.lock') }}-cachev2
-
-      - name: Setup gems
+      - name: bundle install
         run: |
           gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
-          bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
           bundle install --jobs $(($(nproc) - 1))
-          bundle clean
 
       - name: pnpm install
         run: pnpm install --frozen-lockfile
-
-      - name: Checkout official plugins
-        if: matrix.target == 'plugins'
-        run: bin/rake plugin:install_all_official
 
       # Remove discourse-ai from stable as it is not compatible with Ruby 3.3 which we are now using for the base image
       - name: Remove discourse-ai from stable
@@ -138,12 +126,6 @@ jobs:
       - name: Pull compatible versions of plugins
         if: matrix.target == 'plugins'
         run: bin/rake plugin:pull_compatible_all
-
-      - name: Plugin gems cache
-        uses: actions/cache@v4
-        with:
-          path: plugins/*/gems
-          key: ${{ runner.os }}-plugin-gems-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-${{ hashFiles('plugins/*/plugin.rb') }}
 
       - name: Checkout official themes
         if: matrix.target == 'themes'
@@ -254,10 +236,6 @@ jobs:
       - name: Ember Build for System Tests
         if: matrix.build_type == 'system'
         run: bin/ember-cli --build
-
-      - name: Ensure latest minio binary installed for Core System Tests
-        if: matrix.build_type == 'system' && matrix.target == 'core'
-        run: bundle exec ruby script/install_minio_binaries.rb
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
