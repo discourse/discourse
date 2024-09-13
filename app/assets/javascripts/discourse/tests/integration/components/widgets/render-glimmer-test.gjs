@@ -3,6 +3,7 @@ import templateOnly from "@ember/component/template-only";
 import { click, fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import DButton from "discourse/components/d-button";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import widgetHbs from "discourse/widgets/hbs-compiler";
@@ -61,7 +62,6 @@ class DemoWidget extends Widget {
 class DemoComponent extends ClassicComponent {
   static eventLog = [];
   classNames = ["demo-component"];
-  layout = hbs`<DButton class="component-action-button" @label="component_action" @action={{@action}} /><p class='action-state'>{{@widgetActionTriggered}}</p>`;
 
   init() {
     DemoComponent.eventLog.push("init");
@@ -87,6 +87,22 @@ class DemoComponent extends ClassicComponent {
     super.willDestroy(...arguments);
     DemoComponent.eventLog.push("willDestroy");
   }
+
+  @bind
+  logEvent(msg) {
+    DemoComponent.eventLog.push(msg);
+  }
+
+  <template>
+    <DButton
+      class="component-action-button"
+      @label="component_action"
+      @action={{@action}}
+    />
+    <p class="action-state">{{@widgetActionTriggered}}</p>
+    {{this.logEvent "arg1 rendered" @arg1}}
+    {{this.logEvent "dynamicArg rendered" @dynamicArg}}
+  </template>
 }
 
 class ToggleDemoWidget extends Widget {
@@ -207,7 +223,13 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
 
     assert.deepEqual(
       DemoComponent.eventLog,
-      ["init", "didReceiveAttrs", "didInsertElement"],
+      [
+        "init",
+        "didReceiveAttrs",
+        "arg1 rendered",
+        "dynamicArg rendered",
+        "didInsertElement",
+      ],
       "component is initialized correctly"
     );
 
@@ -217,7 +239,7 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
     await click(".my-widget button");
     assert.deepEqual(
       DemoComponent.eventLog,
-      ["didReceiveAttrs", "didReceiveAttrs"], // once for input, once for event
+      ["didReceiveAttrs", "dynamicArg rendered", "didReceiveAttrs"], // once for input, once for event
       "component is notified of attr change during widget rerender"
     );
 
@@ -235,7 +257,13 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
     await fillIn("input.dynamic-value-input", "visibleAgain");
     assert.deepEqual(
       DemoComponent.eventLog,
-      ["init", "didReceiveAttrs", "didInsertElement"],
+      [
+        "init",
+        "didReceiveAttrs",
+        "arg1 rendered",
+        "dynamicArg rendered",
+        "didInsertElement",
+      ],
       "component can be reinitialized"
     );
   });

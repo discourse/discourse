@@ -1,8 +1,8 @@
 import { hasInternalComponentManager } from "@glimmer/manager";
-import { tracked } from "@glimmer/tracking";
 import { setComponentTemplate } from "@ember/component";
 import templateOnly from "@ember/component/template-only";
 import { assert } from "@ember/debug";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { createWidgetFrom } from "discourse/widgets/widget";
 
 const INITIAL_CLASSES = Symbol("RENDER_GLIMMER_INITIAL_CLASSES");
@@ -139,8 +139,22 @@ export default class RenderGlimmer {
     }
 
     this._componentInfo = prev._componentInfo;
-    if (prev.data !== this.data) {
-      this._componentInfo.data = this.data;
+
+    const data = this._componentInfo.data;
+    const incomingData = this.data;
+
+    if (incomingData) {
+      const keysToRemove = new Set(Object.keys(data));
+
+      for (let [key, value] of Object.entries(incomingData)) {
+        if (data[key] !== value) {
+          data[key] = value;
+        }
+        keysToRemove.delete(key);
+      }
+      for (const key of keysToRemove) {
+        delete data[key];
+      }
     }
 
     return null;
@@ -161,7 +175,7 @@ export default class RenderGlimmer {
     this._componentInfo = new ComponentInfo({
       element,
       component,
-      data: this.data,
+      data: new TrackedObject(this.data),
       setWrapperElementAttrs: (attrs) =>
         this.updateElementAttrs(element, attrs),
     });
@@ -231,7 +245,7 @@ export function registerWidgetShim(name, tagName, template) {
 }
 
 class ComponentInfo {
-  @tracked data;
+  data;
   element;
   component;
   setWrapperElementAttrs;
