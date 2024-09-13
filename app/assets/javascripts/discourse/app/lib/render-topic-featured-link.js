@@ -47,7 +47,7 @@ export default function renderTopicFeaturedLink(topic) {
   if (meta) {
     return `<a class="topic-featured-link" rel="${meta.rel}" target="${
       meta.target
-    }" href="${meta.href}">${renderIcon("string", "external-link-alt")} ${
+    }" href="${meta.href}">${renderIcon("string", "up-right-from-square")} ${
       meta.domain
     }</a>`;
   } else {
@@ -63,7 +63,7 @@ export function topicFeaturedLinkNode(topic) {
       {
         attributes: { href: meta.href, rel: meta.rel, target: meta.target },
       },
-      [renderIcon("node", "external-link-alt"), meta.domain]
+      [renderIcon("node", "up-right-from-square"), meta.domain]
     );
   }
 }

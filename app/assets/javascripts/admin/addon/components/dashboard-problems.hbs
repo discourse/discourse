@@ -20,7 +20,7 @@
                     problem.priority
                   }}
                 >
-                  {{d-icon "exclamation-triangle"}}
+                  {{d-icon "triangle-exclamation"}}
                   {{html-safe problem.message}}
                 </li>
               {{/each}}
@@ -45,7 +45,7 @@
         <p class="actions">
           <DButton
             @action={{this.refreshProblems}}
-            @icon="sync"
+            @icon="arrows-rotate"
             @label="admin.dashboard.refresh_problems"
             class="btn-default"
           />

@@ -14,7 +14,7 @@ export default {
         toolbar.addButton({
           id: "emoji",
           group: "extras",
-          icon: "far-smile",
+          icon: "far-face-smile",
           action: () => toolbar.context.send("emoji"),
           title: "composer.emoji",
           className: "emoji insert-emoji",

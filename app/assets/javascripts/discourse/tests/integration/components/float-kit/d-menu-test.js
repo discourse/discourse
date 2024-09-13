@@ -235,11 +235,11 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
   test("content close argument", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}}><:trigger>test</:trigger><:content as |args|><DButton @icon="times" @action={{args.close}} /></:content></DMenu>`
+      hbs`<DMenu @inline={{true}}><:trigger>test</:trigger><:content as |args|><DButton @icon="xmark" @action={{args.close}} /></:content></DMenu>`
     );
     await open();
 
-    await click(".d-icon-times");
+    await click(".d-icon-xmark");
 
     assert.dom(".fk-d-menu").doesNotExist();
   });

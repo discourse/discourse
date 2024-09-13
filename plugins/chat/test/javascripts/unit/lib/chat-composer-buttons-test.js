@@ -10,7 +10,7 @@ module("Discourse Chat | Unit | chat-composer-buttons", function (hooks) {
   hooks.beforeEach(function () {
     registerChatComposerButton({
       id: "foo",
-      icon: "times",
+      icon: "xmark",
       dependentKeys: ["test"],
     });
 

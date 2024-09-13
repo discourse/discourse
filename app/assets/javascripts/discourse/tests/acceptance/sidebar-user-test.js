@@ -159,7 +159,9 @@ acceptance(
       );
 
       assert.ok(
-        exists(".sidebar-footer-actions-toggle-mobile-view .d-icon-mobile-alt"),
+        exists(
+          ".sidebar-footer-actions-toggle-mobile-view .d-icon-mobile-screen-button"
+        ),
         "displays the mobile icon for the button"
       );
     });

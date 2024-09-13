@@ -50,7 +50,19 @@ RSpec.describe "List channels | sidebar", type: :system do
         channel_2.add(current_user)
       end
 
-      it "sorts them by slug" do
+      it "sorts them by slug when all channels are read" do
+        visit("/")
+
+        expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(
+          ".channel-#{channel_2.id}",
+        )
+        expect(page.find("#sidebar-section-content-chat-channels li:nth-child(2)")).to have_css(
+          ".channel-#{channel_1.id}",
+        )
+      end
+
+      it "sorts them by slug when channel has unread messages" do
+        Fabricate(:chat_message, chat_channel: channel_1)
         visit("/")
 
         expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(

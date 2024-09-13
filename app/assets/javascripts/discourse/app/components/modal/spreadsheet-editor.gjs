@@ -46,7 +46,7 @@ export default class SpreadsheetEditor extends Component {
         title: "table_builder.edit.modal.title",
         insertTable: {
           title: "table_builder.edit.modal.create",
-          icon: "pencil-alt",
+          icon: "pencil",
         },
       };
     } else {
@@ -380,7 +380,7 @@ export default class SpreadsheetEditor extends Component {
             {{#if this.isEditingTable}}
               <div class="edit-reason">
                 <DButton
-                  @icon="info-circle"
+                  @icon="circle-info"
                   @title="table_builder.edit.modal.trigger_reason"
                   @action={{this.showEditReasonField}}
                   class="btn-edit-reason"

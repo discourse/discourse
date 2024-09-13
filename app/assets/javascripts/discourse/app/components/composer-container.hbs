@@ -73,7 +73,7 @@
                 <LinkToInput
                   @onClick={{this.composer.displayEditReason}}
                   @showInput={{this.composer.showEditReason}}
-                  @icon="info-circle"
+                  @icon="circle-info"
                   class="display-edit-reason"
                 >
                   <TextField
@@ -274,9 +274,9 @@
                 class="cancel"
               >
                 {{#if this.composer.canEdit}}
-                  {{d-icon "times"}}
+                  {{d-icon "xmark"}}
                 {{else}}
-                  {{d-icon "far-trash-alt"}}
+                  {{d-icon "trash-can"}}
                 {{/if}}
               </a>
             {{else}}
@@ -342,7 +342,7 @@
                 @action={{this.composer.togglePreview}}
                 @title="composer.hide_preview"
                 @ariaLabel="composer.hide_preview"
-                @icon="pencil-alt"
+                @icon="pencil"
                 class="hide-preview"
               />
             {{/if}}
@@ -368,7 +368,7 @@
                   href
                   id="cancel-file-upload"
                   {{on "click" this.composer.cancelUpload}}
-                >{{d-icon "times"}}</a>
+                >{{d-icon "xmark"}}</a>
               {{/if}}
             </div>
           {{/if}}
@@ -387,9 +387,9 @@
                     this.composer.model.draftConflictUser
                     imageSize="small"
                   }}
-                  {{d-icon "user-edit"}}
+                  {{d-icon "user-pen"}}
                 {{else}}
-                  {{d-icon "exclamation-triangle"}}
+                  {{d-icon "triangle-exclamation"}}
                 {{/if}}
                 {{#if this.site.desktopView}}
                   {{this.composer.model.draftStatus}}
@@ -402,7 +402,7 @@
             <DButton
               @action={{this.composer.togglePreview}}
               @translatedTitle={{this.composer.toggleText}}
-              @icon="angle-double-left"
+              @icon="angles-left"
               class={{concat-class
                 "btn-transparent btn-mini-toggle toggle-preview"
                 (unless this.composer.showPreview "active")

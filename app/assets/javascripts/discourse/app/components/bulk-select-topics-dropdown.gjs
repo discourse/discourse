@@ -43,7 +43,7 @@ export default class BulkSelectTopicsDropdown extends Component {
     let options = [
       {
         id: "update-category",
-        icon: "pencil-alt",
+        icon: "pencil",
         name: i18n("topic_bulk_actions.update_category.name"),
         visible: ({ topics }) => {
           return !topics.some((t) => t.isPrivateMessage);
@@ -78,7 +78,7 @@ export default class BulkSelectTopicsDropdown extends Component {
       },
       {
         id: "archive-messages",
-        icon: "archive",
+        icon: "box-archive",
         name: i18n("topic_bulk_actions.archive_messages.name"),
         visible: ({ topics }) => topics.every((t) => t.isPrivateMessage),
       },
@@ -127,7 +127,7 @@ export default class BulkSelectTopicsDropdown extends Component {
       },
       {
         id: "delete-topics",
-        icon: "trash-alt",
+        icon: "trash-can",
         name: i18n("topic_bulk_actions.delete_topics.name"),
         visible: ({ currentUser }) => currentUser.staff,
       },

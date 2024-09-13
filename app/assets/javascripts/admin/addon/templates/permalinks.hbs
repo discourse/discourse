@@ -56,7 +56,7 @@
                 {{/if}}
                 {{#if pl.external_url}}
                   {{#if pl.linkIsExternal}}
-                    {{d-icon "external-link-alt"}}
+                    {{d-icon "up-right-from-square"}}
                   {{/if}}
                   <a href={{pl.external_url}}>{{pl.external_url}}</a>
                 {{/if}}
@@ -67,7 +67,7 @@
               <td class="col action" style="text-align: right;">
                 <DButton
                   @action={{fn this.destroyRecord pl}}
-                  @icon="far-trash-alt"
+                  @icon="trash-can"
                   class="btn-danger"
                 />
               </td>

@@ -29,7 +29,7 @@ export default class ChatableGroup extends Component {
       data-disabled={{this.isDisabled}}
     >
       <div class="chat-message-creator__group-icon">
-        {{icon "user-friends"}}
+        {{icon "user-group"}}
       </div>
       <div class="chat-message-creator__group-name">
         {{@item.model.name}}

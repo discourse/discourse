@@ -191,7 +191,7 @@
             >
               {{#if this.model.location}}<div
                   class="user-profile-location"
-                >{{d-icon "map-marker-alt"~}}
+                >{{d-icon "location-dot"~}}
                   {{this.model.location}}</div>{{/if}}
               {{#if this.model.website_name}}
                 <div class="user-profile-website">
@@ -439,7 +439,7 @@
               {{#if this.canDeleteUser}}
                 <div class="pull-right"><DButton
                     @action={{action "adminDelete"}}
-                    @icon="exclamation-triangle"
+                    @icon="triangle-exclamation"
                     @label="user.admin_delete"
                     class="btn-danger btn-delete-user"
                   /></div>

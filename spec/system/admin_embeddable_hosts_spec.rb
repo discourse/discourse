@@ -38,10 +38,7 @@ RSpec.describe "Admin EmbeddableHost Management", type: :system do
 
     # Editing
 
-    find(".embeddable-hosts tr:first-child .controls svg.d-icon-pencil-alt").find(
-      :xpath,
-      "..",
-    ).click
+    find(".embeddable-hosts tr:first-child .controls svg.d-icon-pencil").find(:xpath, "..").click
 
     within find(".embeddable-hosts tr:first-child.ember-view") do
       find('input[placeholder="example.com"]').set("updated-example.com")

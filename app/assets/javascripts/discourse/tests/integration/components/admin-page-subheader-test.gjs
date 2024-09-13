@@ -100,7 +100,7 @@ module("Integration | Component | AdminPageSubheader", function (hooks) {
             @action={{someAction}}
             @title="admin.badges.group_settings"
             @label="admin.badges.group_settings"
-            @icon="cog"
+            @icon="gear"
             class="edit-groupings-btn"
           />
         </:actions>

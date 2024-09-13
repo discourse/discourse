@@ -65,7 +65,7 @@ export default class AdminSiteSettingsFilterControls extends Component {
           {{#if @showMenu}}
             <DButton
               @action={{this.toggleMenu}}
-              @icon={{if this.isMenuOpen "times" "bars"}}
+              @icon={{if this.isMenuOpen "xmark" "bars"}}
               class="menu-toggle"
             />
           {{/if}}

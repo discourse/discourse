@@ -1380,6 +1380,24 @@ RSpec.describe Group do
       expect(GroupTagNotificationDefault.lookup(group, :watching)).to be_empty
     end
 
+    it "can change the notification level for a tag" do
+      GroupTagNotificationDefault.create!(
+        group: group,
+        tag: tag1,
+        notification_level: GroupTagNotificationDefault.notification_levels[:watching],
+      )
+
+      group.watching_tags = [tag1.name]
+      group.save!
+      expect(GroupTagNotificationDefault.lookup(group, :watching).pluck(:tag_id)).to eq([tag1.id])
+
+      group.watching_tags = []
+      group.tracking_tags = [tag1.name]
+      group.save!
+      expect(GroupTagNotificationDefault.lookup(group, :watching)).to be_empty
+      expect(GroupTagNotificationDefault.lookup(group, :tracking).pluck(:tag_id)).to eq([tag1.id])
+    end
+
     it "can apply default notifications for admins group" do
       group = Group.find(Group::AUTO_GROUPS[:admins])
       group.tracking_category_ids = [category1.id]

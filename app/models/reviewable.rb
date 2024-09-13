@@ -664,12 +664,12 @@ class Reviewable < ActiveRecord::Base
     bundle ||=
       actions.add_bundle(
         "reject_user",
-        icon: "user-times",
+        icon: "user-xmark",
         label: "reviewables.actions.reject_user.title",
       )
 
     actions.add(:delete_user, bundle: bundle) do |a|
-      a.icon = "user-times"
+      a.icon = "user-xmark"
       a.label = "reviewables.actions.reject_user.delete.title"
       a.require_reject_reason = require_reject_reason
     end

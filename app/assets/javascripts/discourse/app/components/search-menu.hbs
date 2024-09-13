@@ -2,7 +2,7 @@
   <div class="search-input">
     {{#if this.search.inTopicContext}}
       <DButton
-        @icon="times"
+        @icon="xmark"
         @label="search.in_this_topic"
         @title="search.in_this_topic_tooltip"
         @action={{this.clearTopicContext}}
@@ -10,7 +10,7 @@
       />
     {{else if this.inPMInboxContext}}
       <DButton
-        @icon="times"
+        @icon="xmark"
         @label="search.in_messages"
         @title="search.in_messages_tooltip"
         @action={{this.clearPMInboxContext}}

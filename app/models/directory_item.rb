@@ -162,7 +162,11 @@ class DirectoryItem < ActiveRecord::Base
                   #{Array.new(column_names.count, 0).join(", ")}
               FROM users u
               LEFT JOIN directory_items di ON di.user_id = u.id AND di.period_type = :period_type
-              WHERE di.id IS NULL AND u.id > 0 AND u.silenced_till IS NULL AND u.active
+              WHERE di.id IS NULL AND u.id > 0 AND u.silenced_till IS NULL AND u.active AND NOT EXISTS(
+                SELECT 1
+                FROM anonymous_users
+                WHERE anonymous_users.user_id = u.id
+              )
               #{SiteSetting.must_approve_users ? "AND u.approved" : ""}
             ",
       period_type: period_types[period_type],

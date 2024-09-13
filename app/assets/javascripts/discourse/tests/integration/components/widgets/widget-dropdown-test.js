@@ -10,7 +10,7 @@ const DEFAULT_CONTENT = {
     { id: 1, label: "foo" },
     { id: 2, translatedLabel: "FooBar" },
     "separator",
-    { id: 3, translatedLabel: "With icon", icon: "times" },
+    { id: 3, translatedLabel: "With icon", icon: "xmark" },
     { id: 4, html: "<b>baz</b>" },
     { id: 5, translatedLabel: "Disabled", disabled: true },
   ],
@@ -148,11 +148,11 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
   test("icon", async function (assert) {
     this.setProperties(DEFAULT_CONTENT);
-    this.set("icon", "times");
+    this.set("icon", "xmark");
 
     await render(TEMPLATE);
 
-    assert.ok(exists(header().querySelector(".d-icon-times")));
+    assert.ok(exists(header().querySelector(".d-icon-xmark")));
   });
 
   test("class", async function (assert) {
@@ -189,7 +189,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
     await render(TEMPLATE);
 
     await toggle();
-    assert.ok(exists(rowById(3).querySelector(".d-icon-times")));
+    assert.ok(exists(rowById(3).querySelector(".d-icon-xmark")));
   });
 
   test("content with html", async function (assert) {

@@ -9,7 +9,7 @@ const ActionsSummary = <template>
   {{/each}}
   {{#if @data.deleted_at}}
     <div class="post-action deleted-post">
-      {{dIcon "far-trash-alt"}}
+      {{dIcon "trash-can"}}
       <a
         class="trigger-user-card"
         data-user-card={{@data.deletedByUsername}}

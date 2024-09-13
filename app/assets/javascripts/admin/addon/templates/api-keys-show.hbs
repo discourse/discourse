@@ -5,7 +5,7 @@
 
 <div class="api-key api-key-show">
   <AdminFormRow @label="admin.api.key">
-    {{#if this.model.revoked_at}}{{d-icon "times-circle"}}{{/if}}
+    {{#if this.model.revoked_at}}{{d-icon "circle-xmark"}}{{/if}}
     {{this.model.truncatedKey}}
   </AdminFormRow>
 
@@ -31,13 +31,13 @@
         <DButton @action={{this.saveDescription}} @icon="check" class="ok" />
         <DButton
           @action={{this.editDescription}}
-          @icon="times"
+          @icon="xmark"
           class="cancel"
         />
       {{else}}
         <DButton
           @action={{this.editDescription}}
-          @icon="pencil-alt"
+          @icon="pencil"
           class="btn-default"
         />
       {{/if}}
@@ -81,19 +81,19 @@
       {{#if this.model.revoked_at}}
         <DButton
           @action={{fn this.undoRevokeKey this.model}}
-          @icon="undo"
+          @icon="arrow-rotate-left"
           @label="admin.api.undo_revoke"
         />
         <DButton
           @action={{fn this.deleteKey this.model}}
-          @icon="trash-alt"
+          @icon="trash-can"
           @label="admin.api.delete"
           class="btn-danger"
         />
       {{else}}
         <DButton
           @action={{fn this.revokeKey this.model}}
-          @icon="times"
+          @icon="xmark"
           @label="admin.api.revoke"
           class="btn-danger"
         />
@@ -120,7 +120,7 @@
             <td>
               {{scope.action}}
               <DTooltip
-                @icon="question-circle"
+                @icon="circle-question"
                 @content={{i18n
                   (concat
                     "admin.api.scopes.descriptions."

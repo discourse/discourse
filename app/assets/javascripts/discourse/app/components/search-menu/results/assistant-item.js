@@ -18,7 +18,7 @@ export default class AssistantItem extends Component {
   @service search;
   @service appEvents;
 
-  icon = this.args.icon || "search";
+  icon = this.args.icon || "magnifying-glass";
 
   get href() {
     let href = "#";

@@ -68,7 +68,7 @@ export default class JsonSchemaEditorModal extends Component {
 class DiscourseJsonSchemaEditorIconlib {
   constructor() {
     this.mapping = {
-      delete: "trash-alt",
+      delete: "trash-can",
       add: "plus",
       moveup: "arrow-up",
       movedown: "arrow-down",

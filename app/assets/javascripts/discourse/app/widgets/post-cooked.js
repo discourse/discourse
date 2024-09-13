@@ -236,7 +236,7 @@ export default class PostCooked {
         blockQuote.appendChild(div);
       } catch (e) {
         if ([403, 404].includes(e.jqXHR.status)) {
-          const icon = e.jqXHR.status === 403 ? "lock" : "far-trash-alt";
+          const icon = e.jqXHR.status === 403 ? "lock" : "trash-can";
           blockQuote.innerHTML = `<div class='expanded-quote icon-only'>${iconHTML(
             icon
           )}</div>`;

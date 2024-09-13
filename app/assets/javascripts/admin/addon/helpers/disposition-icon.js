@@ -11,7 +11,7 @@ export default class DispositionIcon extends Helper {
     let title = "admin.flags.dispositions." + disposition;
     switch (disposition) {
       case "deferred": {
-        icon = "external-link-alt";
+        icon = "up-right-from-square";
         break;
       }
       case "agreed": {

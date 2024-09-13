@@ -152,7 +152,7 @@ export default class ChatMentionWarnings extends Component {
     {{#if this.show}}
       <div class="chat-mention-warnings">
         <div class="chat-mention-warning__icon">
-          {{dIcon "exclamation-triangle"}}
+          {{dIcon "triangle-exclamation"}}
         </div>
         <div class="chat-mention-warning__text">
           <div class="chat-mention-warning__header">

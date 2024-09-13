@@ -258,7 +258,7 @@ export default {
               }
 
               get actionsIcon() {
-                return "pencil-alt";
+                return "pencil";
               }
 
               get links() {
@@ -287,7 +287,7 @@ export default {
             suffixType = "icon";
             suffixCSSClass = "urgent";
             hoverType = "icon";
-            hoverValue = "times";
+            hoverValue = "xmark";
             hoverTitle = I18n.t("chat.direct_messages.close");
 
             constructor({ channel, chatService, currentUser }) {

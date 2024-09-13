@@ -55,7 +55,7 @@ export default class ChatHeaderIcon extends Component {
       !this.chatSeparateSidebarMode.never &&
       this.site.desktopView
     ) {
-      return "random";
+      return "shuffle";
     }
 
     return "d-chat";

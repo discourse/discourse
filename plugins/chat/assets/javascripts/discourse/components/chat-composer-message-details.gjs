@@ -11,7 +11,7 @@ const ChatComposerMessageDetails = <template>
     data-action={{if @message.editing "edit" "reply"}}
   >
     <div class="chat-reply">
-      {{dIcon (if @message.editing "pencil-alt" "reply")}}
+      {{dIcon (if @message.editing "pencil" "reply")}}
       <ChatUserAvatar @user={{@message.user}} />
       <span class="chat-reply__username">{{@message.user.username}}</span>
       <span class="chat-reply__excerpt">
@@ -21,7 +21,7 @@ const ChatComposerMessageDetails = <template>
 
     <DButton
       @action={{@cancelAction}}
-      @icon="times-circle"
+      @icon="circle-xmark"
       @title="cancel"
       class="btn-flat cancel-message-action"
     />

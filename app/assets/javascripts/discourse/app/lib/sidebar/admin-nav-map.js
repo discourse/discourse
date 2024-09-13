@@ -9,7 +9,7 @@ export const ADMIN_NAV_MAP = [
         name: "admin_backups",
         route: "admin.backups",
         label: "admin.account.sidebar_link.backups",
-        icon: "archive",
+        icon: "box-archive",
       },
       {
         name: "admin_whats_new",
@@ -44,7 +44,7 @@ export const ADMIN_NAV_MAP = [
         routeModels: ["required"],
         query: { filter: "" },
         label: "admin.community.sidebar_link.about_your_site",
-        icon: "cog",
+        icon: "gear",
       },
       {
         name: "admin_badges",
@@ -86,7 +86,7 @@ export const ADMIN_NAV_MAP = [
         name: "admin_user_fields",
         route: "adminUserFields",
         label: "admin.community.sidebar_link.user_fields",
-        icon: "user-edit",
+        icon: "user-pen",
       },
       {
         name: "admin_watched_words",
@@ -149,7 +149,7 @@ export const ADMIN_NAV_MAP = [
         routeModels: ["all_results"],
         query: { filter: "navigation" },
         label: "admin.appearance.sidebar_link.navigation",
-        icon: "project-diagram",
+        icon: "diagram-project",
       },
       {
         name: "admin_themes",
@@ -157,7 +157,7 @@ export const ADMIN_NAV_MAP = [
         routeModels: ["themes"],
         model: "themes",
         label: "admin.appearance.sidebar_link.themes",
-        icon: "paint-brush",
+        icon: "paintbrush",
       },
       {
         name: "admin_components",
@@ -195,7 +195,7 @@ export const ADMIN_NAV_MAP = [
         name: "admin_server_setup",
         route: "adminEmail.index",
         label: "admin.email_settings.sidebar_link.server_setup",
-        icon: "cog",
+        icon: "gear",
       },
     ],
   },
@@ -213,13 +213,13 @@ export const ADMIN_NAV_MAP = [
         name: "admin_email_skipped",
         route: "adminEmail.skipped",
         label: "admin.email_logs.sidebar_link.skipped",
-        icon: "angle-double-right",
+        icon: "angles-right",
       },
       {
         name: "admin_email_bounced",
         route: "adminEmail.bounced",
         label: "admin.email_logs.sidebar_link.bounced",
-        icon: "times",
+        icon: "xmark",
       },
       {
         name: "admin_email_received",
@@ -243,7 +243,7 @@ export const ADMIN_NAV_MAP = [
         name: "admin_logs_error_logs",
         href: getURL("/logs"),
         label: "admin.security.sidebar_link.error_logs",
-        icon: "external-link-alt",
+        icon: "up-right-from-square",
       },
       {
         name: "admin_logs_screened_emails",
@@ -270,7 +270,7 @@ export const ADMIN_NAV_MAP = [
         name: "admin_logs_search_logs",
         route: "adminSearchLogs",
         label: "admin.security.sidebar_link.search_logs",
-        icon: "search",
+        icon: "magnifying-glass",
         moderator: true,
       },
       {
@@ -348,7 +348,7 @@ export const ADMIN_NAV_MAP = [
         routeModels: ["user_api"],
         query: { filter: "" },
         label: "admin.advanced.sidebar_link.user_api",
-        icon: "random",
+        icon: "shuffle",
       },
       {
         name: "admin_api_web_hooks",
@@ -386,7 +386,7 @@ export const ADMIN_NAV_MAP = [
         routeModels: ["search"],
         query: { filter: "" },
         label: "admin.advanced.sidebar_link.search",
-        icon: "search",
+        icon: "magnifying-glass",
       },
       {
         name: "admin_experimental",

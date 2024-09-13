@@ -24,6 +24,6 @@ export default class extends CommonCommunitySection {
   }
 
   get moreSectionButtonIcon() {
-    return "pencil-alt";
+    return "pencil";
   }
 }

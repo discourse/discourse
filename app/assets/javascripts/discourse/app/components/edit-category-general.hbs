@@ -1,6 +1,6 @@
 {{#if this.category.isUncategorizedCategory}}
   <p class="warning">
-    {{d-icon "exclamation-triangle"}}
+    {{d-icon "triangle-exclamation"}}
     {{html-safe
       (i18n
         "category.uncategorized_general_warning"
@@ -53,7 +53,7 @@
         <br />
         <DButton
           @action={{this.showCategoryTopic}}
-          @icon="pencil-alt"
+          @icon="pencil"
           @label="category.change_in_category_topic"
           class="btn-default edit-category-description"
         />

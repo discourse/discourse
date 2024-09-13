@@ -16,7 +16,7 @@ acceptance(
       withPluginApi("0.13.1", (api) => {
         api.registerTopicFooterButton({
           id: "foo",
-          icon: "cog",
+          icon: "gear",
           action() {
             assert.step(`action called`);
             done();

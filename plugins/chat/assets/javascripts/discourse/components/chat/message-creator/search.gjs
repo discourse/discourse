@@ -155,7 +155,7 @@ export default class ChatMessageCreatorSearch extends Component {
 
             <DButton
               class="btn-flat chat-message-creator__search-input__cancel-button"
-              @icon="times"
+              @icon="xmark"
               @action={{@close}}
             />
           </div>

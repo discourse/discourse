@@ -22,7 +22,7 @@ export default class ChatChannelLeaveBtn extends Component {
   <template>
     {{#if this.shouldRender}}
       <DButton
-        @icon="times"
+        @icon="xmark"
         @action={{@onLeaveChannel}}
         @title={{this.leaveChatTitleKey}}
         class="btn-flat chat-channel-leave-btn"

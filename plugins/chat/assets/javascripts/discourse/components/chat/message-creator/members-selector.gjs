@@ -130,7 +130,7 @@ export default class MembersSelector extends Component {
           <DButton
             class="btn-flat chat-message-creator__add-members__close-btn"
             @action={{@cancel}}
-            @icon="times"
+            @icon="xmark"
           />
         </div>
       </div>
