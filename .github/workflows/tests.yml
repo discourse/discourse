@@ -115,7 +115,7 @@ jobs:
           gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
           bundle config --local deployment true
           bundle config --local without development
-          bundle install --jobs $(($(nproc) - 1))
+          bundle install --jobs $(($(nproc) > 4 ? 4 : $(nproc) - 1))
           bundle clean
 
       - name: pnpm install
