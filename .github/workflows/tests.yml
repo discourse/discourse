@@ -89,7 +89,7 @@ jobs:
 
       - name: Setup Git
         run: |
-          git config sglobal user.email "ci@ci.invalid"
+          git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
 
       - name: Start redis
