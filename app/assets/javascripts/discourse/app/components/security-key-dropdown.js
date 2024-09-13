@@ -16,13 +16,13 @@ export default class SecurityKeyDropdown extends DropdownSelectBoxComponent {
 
     content.push({
       id: "edit",
-      icon: "pencil-alt",
+      icon: "pencil",
       name: I18n.t("user.second_factor.edit"),
     });
 
     content.push({
       id: "disable",
-      icon: "trash-alt",
+      icon: "trash-can",
       name: I18n.t("user.second_factor.disable"),
     });
 

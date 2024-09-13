@@ -773,7 +773,7 @@ export default class PollComponent extends Component {
             title={{i18n "poll.remove-vote.title"}}
             {{on "click" this.removeVote}}
           >
-            {{icon "undo"}}
+            {{icon "arrow-rotate-left"}}
             <span class="d-button-label">{{i18n
                 "poll.remove-vote.label"
               }}</span>

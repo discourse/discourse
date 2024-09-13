@@ -35,7 +35,7 @@ export default class DialogHolder extends Component {
               <DButton
                 @action={{this.dialog.cancel}}
                 @title="modal.close"
-                @icon="times"
+                @icon="xmark"
                 class="btn-flat dialog-close close"
               />
             </div>

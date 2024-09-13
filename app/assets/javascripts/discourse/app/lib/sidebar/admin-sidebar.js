@@ -190,7 +190,7 @@ export function useAdminNavConfig(navMap) {
           name: "admin_home",
           route: "admin.dashboard.general",
           label: "admin.dashboard.title",
-          icon: "home",
+          icon: "house",
           moderator: true,
         },
         {
@@ -204,7 +204,7 @@ export function useAdminNavConfig(navMap) {
           name: "admin_all_site_settings",
           route: "adminSiteSettings",
           label: "admin.advanced.sidebar_link.all_site_settings",
-          icon: "cog",
+          icon: "gear",
         },
       ],
     },
@@ -282,7 +282,7 @@ function pluginAdminRouteLinks() {
           ? [plugin.admin_route.location]
           : [],
         label: plugin.admin_route.label,
-        icon: "cog",
+        icon: "gear",
       };
     });
 }

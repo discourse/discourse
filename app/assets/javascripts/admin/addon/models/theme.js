@@ -37,8 +37,8 @@ class Theme extends RestModel {
     return [
       { id: 0, name: "common" },
       { id: 1, name: "desktop", icon: "desktop" },
-      { id: 2, name: "mobile", icon: "mobile-alt" },
-      { id: 3, name: "settings", icon: "cog", advanced: true },
+      { id: 2, name: "mobile", icon: "mobile-screen-button" },
+      { id: 3, name: "settings", icon: "gear", advanced: true },
       {
         id: 4,
         name: "translations",
@@ -49,7 +49,7 @@ class Theme extends RestModel {
       {
         id: 5,
         name: "extra_scss",
-        icon: "paint-brush",
+        icon: "paintbrush",
         advanced: true,
         customNames: true,
       },
@@ -124,7 +124,7 @@ class Theme extends RestModel {
         }
 
         if (fieldName.indexOf("_tag") > 0) {
-          field.icon = "far-file-alt";
+          field.icon = "far-file-lines";
         }
 
         return field;

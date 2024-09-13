@@ -110,7 +110,7 @@ module("Poll | Component | poll-options", function (hooks) {
       @sendRadioClick={{this.toggleOption}}
     />`);
 
-    assert.strictEqual(count("li .d-icon-far-check-square:nth-of-type(1)"), 1);
+    assert.strictEqual(count("li .d-icon-far-square-check:nth-of-type(1)"), 1);
   });
 
   test("single with images", async function (assert) {

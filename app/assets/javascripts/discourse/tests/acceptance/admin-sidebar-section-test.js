@@ -155,26 +155,26 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
         name: "test_section_link",
         label: "admin.plugins.title",
         route: "adminPlugins.index",
-        icon: "cog",
+        icon: "gear",
       });
 
       api.addAdminSidebarSectionLink("root", {
         name: "test_section_link_no_route_or_href",
         label: "admin.plugins.title",
-        icon: "cog",
+        icon: "gear",
       });
 
       api.addAdminSidebarSectionLink("root", {
         name: "test_section_link_no_label_or_text",
         route: "adminPlugins.index",
-        icon: "cog",
+        icon: "gear",
       });
 
       api.addAdminSidebarSectionLink("root", {
         name: "test_section_link_invalid_label",
         label: "blahblah.i18n",
         route: "adminPlugins.index",
-        icon: "cog",
+        icon: "gear",
       });
 
       api.addCommunitySectionLink(
@@ -280,7 +280,7 @@ acceptance(
           name: "test_section_link",
           label: "admin.plugins.title",
           route: "adminPlugins.index",
-          icon: "cog",
+          icon: "gear",
         });
       });
     });

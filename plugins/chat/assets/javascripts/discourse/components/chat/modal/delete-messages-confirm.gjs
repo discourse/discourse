@@ -37,7 +37,7 @@ export default class DeleteMessagesConfirm extends Component {
           class="btn-primary"
           @action={{this.delete}}
           @label="delete"
-          @icon="trash-alt"
+          @icon="trash-can"
         />
         <DModalCancel @close={{@closeModal}} />
       </:footer>

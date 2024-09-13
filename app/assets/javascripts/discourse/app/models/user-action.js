@@ -174,7 +174,7 @@ export default class UserAction extends RestModel {
       groups = {
         likes: UserActionGroup.create({ icon: "heart" }),
         stars: UserActionGroup.create({ icon: "star" }),
-        edits: UserActionGroup.create({ icon: "pencil-alt" }),
+        edits: UserActionGroup.create({ icon: "pencil" }),
         bookmarks: UserActionGroup.create({ icon: "bookmark" }),
       };
     }

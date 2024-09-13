@@ -651,7 +651,7 @@ third line`
       api.onToolbarCreate((toolbar) => {
         toolbar.addButton({
           id: "replace-text",
-          icon: "times",
+          icon: "xmark",
           group: "extras",
           action: () => {
             toolbar.context.newToolbarEvent().replaceText("hello", "goodbye");
@@ -690,7 +690,7 @@ third line`
         toolbar.addButton({
           id: "emoji",
           group: "extras",
-          icon: "far-smile",
+          icon: "far-face-smile",
           action: () => toolbar.context.send("emoji"),
         });
       });
@@ -732,7 +732,7 @@ third line`
         toolbar.addButton({
           id: "shown",
           group: "extras",
-          icon: "far-smile",
+          icon: "far-face-smile",
           action: () => {},
           condition: () => true,
         });
@@ -740,7 +740,7 @@ third line`
         toolbar.addButton({
           id: "not-shown",
           group: "extras",
-          icon: "far-frown",
+          icon: "far-face-frown",
           action: () => {},
           condition: () => false,
         });

@@ -76,7 +76,7 @@ export default class Filter extends Component {
           {{#if this.displayClearFilter}}
             <DButton
               @action={{this.clearFilter}}
-              @icon="times"
+              @icon="xmark"
               class="sidebar-filter__clear"
             />
           {{/if}}

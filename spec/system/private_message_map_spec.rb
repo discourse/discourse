@@ -137,7 +137,7 @@ describe "Topic Map - Private Message", type: :system do
     # removing participants
     private_message_map.toggle_edit_participants_button
     private_message_map.participants_details.each do |details|
-      expect(details).to have_css(".remove-invited .d-icon-times")
+      expect(details).to have_css(".remove-invited .d-icon-xmark")
     end
     private_message_map.click_remove_participant_button(last_post_user)
     expect(private_message_remove_participant_modal).to be_open

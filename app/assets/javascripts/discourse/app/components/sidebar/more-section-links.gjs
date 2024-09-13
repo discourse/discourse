@@ -129,7 +129,7 @@ export default class SidebarMoreSectionLinks extends Component {
         class="sidebar-section-link sidebar-row sidebar-more-section-links-details-summary --link-button"
       >
         <span class="sidebar-section-link-prefix icon">
-          {{icon "ellipsis-v"}}
+          {{icon "ellipsis-vertical"}}
         </span>
         <span class="sidebar-section-link-content-text">
           {{i18n "sidebar.more"}}

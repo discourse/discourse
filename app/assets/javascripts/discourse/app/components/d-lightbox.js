@@ -180,7 +180,7 @@ export default class DLightbox extends Component {
   }
 
   get zoomButtonIcon() {
-    return this.isZoomed ? "search-minus" : "search-plus";
+    return this.isZoomed ? "magnifying-glass-minus" : "magnifying-glass-plus";
   }
 
   @bind

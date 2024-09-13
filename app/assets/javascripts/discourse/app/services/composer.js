@@ -1641,7 +1641,7 @@ export default class ComposerService extends Service {
           {
             label: I18n.t("drafts.abandon.yes_value"),
             class: "btn-danger",
-            icon: "far-trash-alt",
+            icon: "trash-can",
             action: () => {
               this.destroyDraft(data.draft_sequence).finally(() => {
                 data.draft = null;

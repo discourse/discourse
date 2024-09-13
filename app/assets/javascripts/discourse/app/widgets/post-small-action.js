@@ -53,9 +53,9 @@ const groupActionCodes = ["invited_group", "removed_group"];
 
 const icons = {
   "closed.enabled": "lock",
-  "closed.disabled": "unlock-alt",
+  "closed.disabled": "unlock-keyhole",
   "autoclosed.enabled": "lock",
-  "autoclosed.disabled": "unlock-alt",
+  "autoclosed.disabled": "unlock-keyhole",
   "archived.enabled": "folder",
   "archived.disabled": "folder-open",
   "pinned.enabled": "thumbtack",
@@ -66,12 +66,12 @@ const icons = {
   "banner.disabled": "thumbtack unpinned",
   "visible.enabled": "far-eye",
   "visible.disabled": "far-eye-slash",
-  split_topic: "sign-out-alt",
-  invited_user: "plus-circle",
-  invited_group: "plus-circle",
-  user_left: "minus-circle",
-  removed_user: "minus-circle",
-  removed_group: "minus-circle",
+  split_topic: "right-from-bracket",
+  invited_user: "circle-plus",
+  invited_group: "circle-plus",
+  user_left: "circle-minus",
+  removed_user: "circle-minus",
+  removed_group: "circle-minus",
   public_topic: "comment",
   private_topic: "envelope",
   autobumped: "hand-point-right",
@@ -160,7 +160,7 @@ export default createWidget("post-small-action", {
       buttons.push(
         this.attach("button", {
           className: "btn-flat small-action-recover",
-          icon: "undo",
+          icon: "arrow-rotate-left",
           action: "recoverPost",
           title: "post.controls.undelete",
         })
@@ -171,7 +171,7 @@ export default createWidget("post-small-action", {
       buttons.push(
         this.attach("button", {
           className: "btn-flat small-action-edit",
-          icon: "pencil-alt",
+          icon: "pencil",
           action: "editPost",
           title: "post.controls.edit",
         })
@@ -182,7 +182,7 @@ export default createWidget("post-small-action", {
       buttons.push(
         this.attach("button", {
           className: "btn-flat btn-danger small-action-delete",
-          icon: "trash-alt",
+          icon: "trash-can",
           action: "deletePost",
           title: "post.controls.delete",
         })

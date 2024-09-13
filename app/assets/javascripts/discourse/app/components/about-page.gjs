@@ -47,7 +47,7 @@ export default class AboutPage extends Component {
       },
       {
         class: "admins",
-        icon: "shield-alt",
+        icon: "shield-halved",
         text: I18n.t("about.admin_count", {
           count: this.adminsCount,
           formatted_number: I18n.toNumber(this.adminsCount, { precision: 0 }),
@@ -55,7 +55,7 @@ export default class AboutPage extends Component {
       },
       {
         class: "moderators",
-        icon: "shield-alt",
+        icon: "shield-halved",
         text: I18n.t("about.moderator_count", {
           count: this.moderatorsCount,
           formatted_number: I18n.toNumber(this.moderatorsCount, {
@@ -65,7 +65,7 @@ export default class AboutPage extends Component {
       },
       {
         class: "site-creation-date",
-        icon: "calendar-alt",
+        icon: "calendar-days",
         text: this.siteAgeString,
       },
     ];
@@ -83,7 +83,7 @@ export default class AboutPage extends Component {
         period: I18n.t("about.activities.periods.last_7_days"),
       },
       {
-        icon: "pencil-alt",
+        icon: "pencil",
         class: "posts",
         activityText: I18n.t("about.activities.posts", {
           count: this.args.model.stats.posts_last_day,
@@ -92,7 +92,7 @@ export default class AboutPage extends Component {
         period: I18n.t("about.activities.periods.today"),
       },
       {
-        icon: "user-friends",
+        icon: "user-group",
         class: "active-users",
         activityText: I18n.t("about.activities.active_users", {
           count: this.args.model.stats.active_users_7_days,

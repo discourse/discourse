@@ -499,7 +499,7 @@ acceptance("User Status - user menu", function (needs) {
 
     assert.ok(exists("li.set-user-status .btn"), "shows the button");
     assert.ok(
-      exists("li.set-user-status svg.d-icon-plus-circle"),
+      exists("li.set-user-status svg.d-icon-circle-plus"),
       "shows the icon on the button"
     );
   });

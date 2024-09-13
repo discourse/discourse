@@ -477,7 +477,7 @@ acceptance("User menu", function (needs) {
       "activity link has the right label"
     );
     assert.ok(
-      activityLink.querySelector(".d-icon-stream"),
+      activityLink.querySelector(".d-icon-bars-staggered"),
       "activity link has the right icon"
     );
 
@@ -533,7 +533,7 @@ acceptance("User menu", function (needs) {
       "preferences link has the right label"
     );
     assert.ok(
-      preferencesLink.querySelector(".d-icon-cog"),
+      preferencesLink.querySelector(".d-icon-gear"),
       "preferences link has the right icon"
     );
 
@@ -709,7 +709,7 @@ acceptance("User menu", function (needs) {
       "logout button has the right label"
     );
     assert.ok(
-      logoutButton.querySelector(".d-icon-sign-out-alt"),
+      logoutButton.querySelector(".d-icon-right-from-bracket"),
       "logout button has the right icon"
     );
   });

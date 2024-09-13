@@ -154,7 +154,7 @@
             <li>
               <DButton
                 @action={{action "cancelFilter"}}
-                @icon="times"
+                @icon="xmark"
                 @label="topic.filters.cancel"
               />
             </li>
@@ -163,7 +163,7 @@
             <li>
               <DButton
                 @action={{fn (action "deleteUser") this.user}}
-                @icon="exclamation-triangle"
+                @icon="triangle-exclamation"
                 @label="admin.user.delete"
                 class="btn-danger"
               />
@@ -272,7 +272,7 @@
             {{/if}}
             {{#if this.user.location}}
               <span class="location">
-                {{d-icon "map-marker-alt"}}
+                {{d-icon "location-dot"}}
                 <span>{{this.user.location}}</span>
               </span>
             {{/if}}

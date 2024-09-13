@@ -30,7 +30,7 @@ describe "Admin Badges Page", type: :system do
       expect(form.field("show_posts")).to be_disabled
       expect(form.field("show_posts")).to be_unchecked
       expect(form.field("icon")).to be_enabled
-      expect(form.field("icon")).to have_value("user-edit")
+      expect(form.field("icon")).to have_value("user-pen")
       expect(form.container("name")).to have_content(badge.name.strip)
       expect(form.container("description")).to have_content(badge.description.strip)
       expect(form.container("long_description")).to have_content(badge.long_description.strip)

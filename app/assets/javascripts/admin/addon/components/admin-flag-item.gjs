@@ -148,7 +148,7 @@ export default class AdminFlagItem extends Component {
             <DMenu
               @identifier="flag-menu"
               @title={{i18n "admin.config_areas.flags.more_options.title"}}
-              @icon="ellipsis-v"
+              @icon="ellipsis-vertical"
               @onRegisterApi={{this.onRegisterApi}}
             >
               <:content>
@@ -177,7 +177,7 @@ export default class AdminFlagItem extends Component {
                   <dropdown.item>
                     <DButton
                       @label="admin.config_areas.flags.delete"
-                      @icon="trash-alt"
+                      @icon="trash-can"
                       class="btn-transparent admin-flag-item__delete"
                       @action={{this.delete}}
                       @disabled={{not this.canEdit}}

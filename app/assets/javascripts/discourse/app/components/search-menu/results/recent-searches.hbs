@@ -4,7 +4,7 @@
       <h4>{{i18n "search.recent"}}</h4>
       <FlatButton
         @title="search.clear_recent"
-        @icon="times"
+        @icon="xmark"
         @action={{this.clearRecent}}
         class="clear-recent-searches"
       />
@@ -12,7 +12,7 @@
 
     {{#each this.currentUser.recent_searches as |slug|}}
       <SearchMenu::Results::AssistantItem
-        @icon="history"
+        @icon="clock-rotate-left"
         @label={{slug}}
         @slug={{slug}}
         @closeSearchMenu={{@closeSearchMenu}}

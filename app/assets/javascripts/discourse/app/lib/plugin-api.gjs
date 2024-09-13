@@ -504,17 +504,17 @@ class PluginApi {
    *
    *   // for the place in code that render a string
    *   string() {
-   *     return "<svg class=\"fa d-icon d-icon-far-smile svg-icon\" aria-hidden=\"true\"><use href=\"#far-smile\"></use></svg>";
+   *     return "<svg class=\"fa d-icon d-icon-far-face-smile svg-icon\" aria-hidden=\"true\"><use href=\"#far-face-smile\"></use></svg>";
    *   },
    *
    *   // for the places in code that render virtual dom elements
    *   node() {
    *     return h("svg", {
-   *          attributes: { class: "fa d-icon d-icon-far-smile", "aria-hidden": true },
+   *          attributes: { class: "fa d-icon d-icon-far-face-smile", "aria-hidden": true },
    *          namespace: "http://www.w3.org/2000/svg"
    *        },[
    *          h("use", {
-   *          "href": attributeHook("http://www.w3.org/1999/xlink", `#far-smile`),
+   *          "href": attributeHook("http://www.w3.org/1999/xlink", `#far-face-smile`),
    *          namespace: "http://www.w3.org/2000/svg"
    *        })]
    *     );
@@ -779,7 +779,7 @@ class PluginApi {
    * api.addPostMenuButton('coffee', () => {
    *   return {
    *     action: 'drinkCoffee',
-   *     icon: 'coffee',
+   *     icon: 'mug-saucer',
    *     className: 'hot-coffee',
    *     title: 'coffee.title',
    *     position: 'first'  // can be `first`, `last` or `second-last-hidden`
@@ -808,7 +808,7 @@ class PluginApi {
    *        drinkCoffee(post);
    *        showFeedback('discourse_plugin.coffee.drink');
    *      },
-   *      icon: 'coffee',
+   *      icon: 'mug-saucer',
    *      className: 'hot-coffee',
    *    }
    *  }
@@ -829,7 +829,7 @@ class PluginApi {
    *     action: () => {
    *       alert('You clicked on the coffee button!');
    *     },
-   *     icon: 'coffee',
+   *     icon: 'mug-saucer',
    *     className: 'hot-coffee',
    *     label: 'coffee.title',
    *   };
@@ -853,7 +853,7 @@ class PluginApi {
    *     action: () => {
    *       alert('You clicked on the coffee button!');
    *     },
-   *     icon: 'coffee',
+   *     icon: 'mug-saucer',
    *     className: 'hot-coffee',
    *     label: 'coffee.title',
    *   };
@@ -2181,7 +2181,7 @@ class PluginApi {
    *
    * ```
    * api.addQuickAccessProfileItem({
-   *   icon: "pencil-alt",
+   *   icon: "pencil",
    *   href: "/somewhere",
    *   content: I18n.t("user.somewhere")
    * })
@@ -2864,7 +2864,7 @@ class PluginApi {
    *     }
    *
    *     get actionsIcon() {
-   *       return "cog";
+   *       return "gear";
    *     }
    *
    *     get actions() {
@@ -2943,7 +2943,7 @@ class PluginApi {
    *             return "icon";
    *           }
    *           get hoverValue() {
-   *             return "times";
+   *             return "xmark";
    *           }
    *           get hoverAction() {
    *             return () => {};
@@ -3106,7 +3106,7 @@ class PluginApi {
    * ```
    * api.addBulkActionButton({
    *   label: "super_plugin.bulk.enhance",
-   *   icon: "magic",
+   *   icon: wand-magic,
    *   class: "btn-default",
    *   visible: ({ currentUser, siteSettings }) => siteSettings.super_plugin_enabled && currentUser.staff,
    *   async action({ setComponent }) {

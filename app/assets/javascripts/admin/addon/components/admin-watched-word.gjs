@@ -30,7 +30,7 @@ export default class AdminWatchedWord extends Component {
     <div class="watched-word">
       <DButton
         @action={{this.deleteWord}}
-        @icon="times"
+        @icon="xmark"
         class="btn-transparent delete-word-record"
       />
 

@@ -15,7 +15,7 @@ export default class FeaturedLink extends Component {
         target={{this.meta.target}}
         href={{this.meta.href}}
       >
-        {{icon "external-link-alt"}}
+        {{icon "up-right-from-square"}}
         {{this.meta.domain}}
       </a>
     {{/if}}
