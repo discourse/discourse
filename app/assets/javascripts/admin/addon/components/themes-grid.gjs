@@ -85,7 +85,7 @@ export default class ThemesGrid extends Component {
       <div class="admin-config-area-card theme-card">
         <div class="theme-card-content">
           <h2 class="theme-card-title">{{i18n
-              "admin.config_areas.themes.new_theme"
+              "admin.config_areas.look_and_feel.themes.new_theme"
             }}</h2>
           <p class="theme-card-description">{{i18n
               "admin.customize.theme.themes_intro_new"

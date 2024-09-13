@@ -218,8 +218,8 @@ export default function () {
         });
 
         this.route("about");
-        this.route("themes", function () {
-          this.route("index", { path: "/" });
+        this.route("lookAndFeel", { path: "/look-and-feel" }, function () {
+          this.route("themes");
         });
       }
     );

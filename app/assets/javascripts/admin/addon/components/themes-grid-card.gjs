@@ -110,7 +110,7 @@ export default class ThemeCard extends Component {
           onclick={{this.handleSubmit}}
         />
         <label class="checkbox-label" for="user-select-theme-{{@theme.id}}">
-          {{i18n "admin.config_areas.themes.user_selectable"}}
+          {{i18n "admin.config_areas.look_and_feel.themes.user_selectable"}}
         </label>
       </:optionalAction>
       <:content>
