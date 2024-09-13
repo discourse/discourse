@@ -1,6 +1,7 @@
 import { escapeExpression } from "discourse/lib/utilities";
 import User from "discourse/models/user";
 import escape from "discourse-common/lib/escape";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import { helperContext } from "discourse-common/lib/helpers";
 
@@ -17,6 +18,15 @@ export function defaultRenderTag(tag, params) {
   params = params || {};
   const visibleName = escapeExpression(tag);
   tag = visibleName.toLowerCase();
+
+  let tagModel;
+  const store = getOwnerWithFallback(this).lookup("service:store");
+  store.find("tag", tag).then((model) => {
+    tagModel = model;
+    // eslint-disable-next-line no-console
+    console.log(tagModel);
+  });
+
   const classes = ["discourse-tag"];
   const tagName = params.tagName || "a";
   let path;
