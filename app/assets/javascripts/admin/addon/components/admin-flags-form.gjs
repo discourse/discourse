@@ -121,73 +121,77 @@ export default class AdminFlagsForm extends Component {
       />
       <div class="admin-config-area__primary-content admin-flag-form">
         <AdminConfigAreaCard @heading={{this.header}}>
-          <Form @onSubmit={{this.save}} @data={{this.formData}} as |form|>
-            <form.Field
-              @name="name"
-              @title={{i18n "admin.config_areas.flags.form.name"}}
-              @validation="required|length:3,200"
-              @format="large"
-              as |field|
-            >
-              <field.Input />
-            </form.Field>
-
-            <form.Field
-              @name="description"
-              @title={{i18n "admin.config_areas.flags.form.description"}}
-              @validation="length:0,1000"
-              as |field|
-            >
-              <field.Textarea @height={{60}} />
-            </form.Field>
-
-            <form.Field
-              @name="appliesTo"
-              @title={{i18n "admin.config_areas.flags.form.applies_to"}}
-              @validation="required"
-              @validate={{this.validateAppliesTo}}
-              as |field|
-            >
-              <field.Custom>
-                <MultiSelect
-                  @id={{field.id}}
-                  @value={{field.value}}
-                  @onChange={{field.set}}
-                  @content={{this.appliesToValues}}
-                  @options={{hash allowAny=false}}
-                  class="admin-flag-form__applies-to"
-                />
-              </field.Custom>
-            </form.Field>
-
-            <form.CheckboxGroup as |checkboxGroup|>
-              <checkboxGroup.Field
-                @name="requireMessage"
-                @title={{i18n "admin.config_areas.flags.form.require_message"}}
+          <:content>
+            <Form @onSubmit={{this.save}} @data={{this.formData}} as |form|>
+              <form.Field
+                @name="name"
+                @title={{i18n "admin.config_areas.flags.form.name"}}
+                @validation="required|length:3,200"
+                @format="large"
                 as |field|
               >
-                <field.Checkbox>
-                  {{i18n
-                    "admin.config_areas.flags.form.require_message_description"
+                <field.Input />
+              </form.Field>
+
+              <form.Field
+                @name="description"
+                @title={{i18n "admin.config_areas.flags.form.description"}}
+                @validation="length:0,1000"
+                as |field|
+              >
+                <field.Textarea @height={{60}} />
+              </form.Field>
+
+              <form.Field
+                @name="appliesTo"
+                @title={{i18n "admin.config_areas.flags.form.applies_to"}}
+                @validation="required"
+                @validate={{this.validateAppliesTo}}
+                as |field|
+              >
+                <field.Custom>
+                  <MultiSelect
+                    @id={{field.id}}
+                    @value={{field.value}}
+                    @onChange={{field.set}}
+                    @content={{this.appliesToValues}}
+                    @options={{hash allowAny=false}}
+                    class="admin-flag-form__applies-to"
+                  />
+                </field.Custom>
+              </form.Field>
+
+              <form.CheckboxGroup as |checkboxGroup|>
+                <checkboxGroup.Field
+                  @name="requireMessage"
+                  @title={{i18n
+                    "admin.config_areas.flags.form.require_message"
                   }}
-                </field.Checkbox>
-              </checkboxGroup.Field>
+                  as |field|
+                >
+                  <field.Checkbox>
+                    {{i18n
+                      "admin.config_areas.flags.form.require_message_description"
+                    }}
+                  </field.Checkbox>
+                </checkboxGroup.Field>
 
-              <checkboxGroup.Field
-                @name="enabled"
-                @title={{i18n "admin.config_areas.flags.form.enabled"}}
-                as |field|
-              >
-                <field.Checkbox />
-              </checkboxGroup.Field>
-            </form.CheckboxGroup>
+                <checkboxGroup.Field
+                  @name="enabled"
+                  @title={{i18n "admin.config_areas.flags.form.enabled"}}
+                  as |field|
+                >
+                  <field.Checkbox />
+                </checkboxGroup.Field>
+              </form.CheckboxGroup>
 
-            <form.Alert @icon="info-circle">
-              {{i18n "admin.config_areas.flags.form.alert"}}
-            </form.Alert>
+              <form.Alert @icon="info-circle">
+                {{i18n "admin.config_areas.flags.form.alert"}}
+              </form.Alert>
 
-            <form.Submit @label="admin.config_areas.flags.form.save" />
-          </Form>
+              <form.Submit @label="admin.config_areas.flags.form.save" />
+            </Form>
+          </:content>
         </AdminConfigAreaCard>
       </div>
     </div>

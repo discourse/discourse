@@ -14,9 +14,14 @@ export default class AdminConfigAreaCard extends Component {
 
   <template>
     <section class="admin-config-area-card" ...attributes>
-      <h3 class="admin-config-area-card__title">{{this.computedHeading}}</h3>
+      <div class="admin-config-area-card__top-bar">
+        <h3 class="admin-config-area-card__title">{{this.computedHeading}}</h3>
+        <div class="admin-config-area-card__optional-action">
+          {{yield to="optionalAction"}}
+        </div>
+      </div>
       <div class="admin-config-area-card__content">
-        {{yield}}
+        {{yield to="content"}}
       </div>
     </section>
   </template>

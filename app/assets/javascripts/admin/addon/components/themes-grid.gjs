@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import icon from "discourse-common/helpers/d-icon";
@@ -7,6 +7,10 @@ import i18n from "discourse-common/helpers/i18n";
 import InstallThemeModal from "../components/modal/install-theme";
 import ThemesGridCard from "./themes-grid-card";
 
+// NOTE (martin): Much of the JS code in this component is placeholder code. Much
+// of the existing theme logic in /admin/customize/themes has old patterns
+// and technical debt, so anything copied from there to here is subject
+// to change as we improve this incrementally.
 export default class ThemesGrid extends Component {
   @service modal;
   @service router;
@@ -26,8 +30,9 @@ export default class ThemesGrid extends Component {
     },
   ];
 
+  @computed("args.themes.@each.default")
   get sortedThemes() {
-    // always show currently set default theme first
+    // Always show currently set default theme first
     return this.args.themes.sort((a, b) => {
       if (a.default) {
         return -1;
@@ -74,7 +79,7 @@ export default class ThemesGrid extends Component {
   <template>
     <div class="themes-cards-container">
       {{#each this.sortedThemes as |theme|}}
-        <ThemesGridCard @theme={{theme}} @allThemes={{this.args.themes}}/>
+        <ThemesGridCard @theme={{theme}} @allThemes={{this.args.themes}} />
       {{/each}}
 
       <div class="admin-config-area-card theme-card">

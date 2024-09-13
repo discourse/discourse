@@ -34,15 +34,6 @@
     object-position: top left;
     border-radius: calc(var(--d-border-radius) + 1px);
   }
-  &-user-selectable {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--secondary);
-    position: absolute;
-    right: 20px;
-    top: 22px;
-  }
   .ember-checkbox {
     margin: 0 5px 0 0;
   }
@@ -63,6 +54,14 @@
     margin-top: auto;
     display: flex;
     justify-content: space-between;
+  }
+  .admin-config-area-card__optional-action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--secondary);
+    right: 20px;
+    top: 22px;
   }
 }
 
