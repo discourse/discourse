@@ -4,14 +4,14 @@ on:
   workflow_dispatch:
     inputs:
       from:
-        description: 'Starting ref (exclusive). Can be a tag, branch or commit ref. `latest-release` refers to the last beta version bump.'
+        description: "Starting ref (exclusive). Can be a tag, branch or commit ref. `latest-release` refers to the last beta version bump."
         required: true
-        default: 'latest-release'
+        default: "latest-release"
         type: string
       to:
-        description: 'Ending ref (inclusive). Can be a tag, branch or commit ref. `HEAD` refers to the most recent commit.'
+        description: "Ending ref (inclusive). Can be a tag, branch or commit ref. `HEAD` refers to the most recent commit."
         required: true
-        default: 'HEAD'
+        default: "HEAD"
         type: string
 
 permissions:
@@ -35,19 +35,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Bundler cache
-        uses: actions/cache@v4
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: ${{ runner.os }}-gem-
-
-      - name: Setup gems
+      - name: bundle install
         run: |
-          bundle config --local path vendor/bundle
+          cp -r /var/www/discourse/vendor/bundle ./vendor/bundle
+          gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
           bundle config --local deployment true
           bundle config --local without development
-          bundle install --jobs 4
+          bundle install --jobs $(($(nproc) - 1))
           bundle clean
 
       - name: Create output dir
@@ -87,7 +81,7 @@ jobs:
 
           echo "From: $from_ref - $(git rev-parse --short $from_ref) - ${{ steps.dates.outputs.from }}" >> $GITHUB_STEP_SUMMARY
           echo "To: $to_ref - $(git rev-parse --short $to_ref) - ${{ steps.dates.outputs.to }}" >> $GITHUB_STEP_SUMMARY
-          
+
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY

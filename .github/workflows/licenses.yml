@@ -18,7 +18,7 @@ jobs:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: run
     runs-on: debian-12
-    container: discourse/discourse_test:slim
+    container: discourse/discourse_test:release
     timeout-minutes: 10
 
     steps:
@@ -31,19 +31,13 @@ jobs:
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
 
-      - name: Bundler cache
-        uses: actions/cache@v4
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: ${{ runner.os }}-gem-
-
-      - name: Setup gems
+      - name: bundle install
         run: |
-          bundle config --local path vendor/bundle
+          cp -r /var/www/discourse/vendor/bundle ./vendor/bundle
+          gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
           bundle config --local deployment true
           bundle config --local without development
-          bundle install --jobs 4
+          bundle install --jobs $(($(nproc) - 1))
           bundle clean
 
       - name: Setup licensed

@@ -25,7 +25,7 @@ jobs:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: Tests with Ruby ${{ matrix.ruby }}
     runs-on: debian-12
-    container: discourse/discourse_test:slim
+    container: discourse/discourse_test:release
     timeout-minutes: 20
 
     env:
@@ -69,21 +69,10 @@ jobs:
           echo "debian_release=$DEBIAN_RELEASE" >> $GITHUB_OUTPUT
         shell: bash
 
-      - name: Bundler cache
-        uses: actions/cache@v4
-        with:
-          path: vendor/bundle
-          key: >-
-            ${{ runner.os }}-
-            ${{ steps.container-envs.outputs.ruby_version }}-
-            ${{ steps.container-envs.outputs.debian_release }}-
-            ${{ hashFiles('**/Gemfile.lock') }}-
-            migrations-tooling
-
-      - name: Setup gems
+      - name: bundle install
         run: |
+          cp -r /var/www/discourse/vendor/bundle ./vendor/bundle
           gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
-          bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
           bundle config --local with migrations
@@ -126,11 +115,11 @@ jobs:
         if: steps.app-cache.outputs.cache-hit != 'true'
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
-#      - name: Check core database drift
-#        run: |
-#          mkdir /tmp/intermediate_db
-#          ./migrations/scripts/schema_generator /tmp/intermediate_db/base_migration.sql
-#          diff -u migrations/common/intermediate_db_schema/000_base_schema.sql /tmp/intermediate_db/base_migration.sql
+      #      - name: Check core database drift
+      #        run: |
+      #          mkdir /tmp/intermediate_db
+      #          ./migrations/scripts/schema_generator /tmp/intermediate_db/base_migration.sql
+      #          diff -u migrations/common/intermediate_db_schema/000_base_schema.sql /tmp/intermediate_db/base_migration.sql
 
       - name: RSpec
         run: bin/rspec --default-path migrations/spec

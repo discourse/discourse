@@ -44,6 +44,7 @@ jobs:
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && github.ref == 'refs/heads/main' && '1' }}
       CHEAP_SOURCE_MAPS: "1"
       TESTEM_DEFAULT_BROWSER: Chrome
+      MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
 
     strategy:
       fail-fast: false
@@ -110,13 +111,24 @@ jobs:
 
       - name: bundle install
         run: |
+          cp -r /var/www/discourse/vendor/bundle ./vendor/bundle
           gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
           bundle config --local deployment true
           bundle config --local without development
           bundle install --jobs $(($(nproc) - 1))
+          bundle clean
 
       - name: pnpm install
         run: pnpm install --frozen-lockfile
+
+      - name: Copy official plugins
+        if: matrix.target == 'plugins'
+        run: |
+          cp -r /var/www/discourse/plugins/* plugins/
+
+      - name: Checkout official plugins
+        if: matrix.target == 'plugins'
+        run: bin/rake plugin:install_all_official
 
       # Remove discourse-ai from stable as it is not compatible with Ruby 3.3 which we are now using for the base image
       - name: Remove discourse-ai from stable
@@ -236,6 +248,10 @@ jobs:
       - name: Ember Build for System Tests
         if: matrix.build_type == 'system'
         run: bin/ember-cli --build
+
+      - name: Ensure latest minio binary installed for Core System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'core'
+        run: bundle exec ruby script/install_minio_binaries.rb
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
