@@ -76,7 +76,7 @@ jobs:
           bundle config --local deployment true
           bundle config --local without development
           bundle config --local with migrations
-          bundle install --jobs $(($(nproc) > 4 ? 4 : $(nproc) - 1))
+          bundle install --jobs 4
           bundle clean
 
       - name: pnpm install
