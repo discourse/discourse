@@ -44,7 +44,7 @@
           <DButton
             @action={{this.bulkSelectAll}}
             @label="topics.bulk.select_all"
-            @icon="check-square"
+            @icon="square-check"
             class="bulk-select-all"
           />
         </span>
@@ -169,7 +169,7 @@
                   {{/if}}
                   <span class="directory-table__value">
                     {{#if m.owner}}
-                      {{d-icon "shield-alt"}}
+                      {{d-icon "shield-halved"}}
                       {{i18n "groups.members.owner"}}<br />
                     {{/if}}
                     {{#if m.primary}}

@@ -79,7 +79,7 @@ export default class TopicListHeader extends Component {
                   title={{i18n "topics.bulk.toggle"}}
                   class="btn-flat bulk-select"
                 >
-                  {{icon "tasks"}}
+                  {{icon "list-check"}}
                 </button>
               {{/if}}
             </th>

@@ -41,7 +41,7 @@ module Chat
     def build_actions(actions, guardian, args)
       return unless pending?
 
-      return build_action(actions, :ignore, icon: "external-link-alt") if chat_message.blank?
+      return build_action(actions, :ignore, icon: "up-right-from-square") if chat_message.blank?
 
       agree =
         actions.add_bundle(
@@ -79,10 +79,10 @@ module Chat
 
       ignore_bundle = actions.add_bundle("#{id}-ignore", label: "reviewables.actions.ignore.title")
 
-      build_action(actions, :ignore, icon: "external-link-alt", bundle: ignore_bundle)
+      build_action(actions, :ignore, icon: "up-right-from-square", bundle: ignore_bundle)
 
       unless chat_message.deleted_at?
-        build_action(actions, :delete_and_agree, icon: "far-trash-alt", bundle: ignore_bundle)
+        build_action(actions, :delete_and_agree, icon: "trash-can", bundle: ignore_bundle)
       end
     end
 

@@ -940,7 +940,7 @@ acceptance("Composer", function (needs) {
 
     sinon.stub(Draft, "get").resolves({
       draft:
-        '{"reply":"Hey there","action":"createTopic","title":"Draft topic","categoryId":2,"tags":["fun", "times"],"archetypeId":"regular","metaData":null,"composerTime":25269,"typingTime":8100}',
+        '{"reply":"Hey there","action":"createTopic","title":"Draft topic","categoryId":2,"tags":["fun", "xmark"],"archetypeId":"regular","metaData":null,"composerTime":25269,"typingTime":8100}',
       draft_sequence: 0,
       draft_key: NEW_TOPIC_KEY,
     });
@@ -955,15 +955,15 @@ acceptance("Composer", function (needs) {
     assert.strictEqual(selectKit(".category-chooser").header().value(), "2");
     assert.strictEqual(
       selectKit(".mini-tag-chooser").header().value(),
-      "fun,times"
+      "fun,xmark"
     );
   });
 
   test("Deleting the text content of the first post in a private message", async function (assert) {
     await visit("/t/34");
 
-    await click("#post_1 .d-icon-ellipsis-h");
-    await click("#post_1 .d-icon-pencil-alt");
+    await click("#post_1 .d-icon-ellipsis");
+    await click("#post_1 .d-icon-pencil");
     await fillIn(".d-editor-input", "");
 
     assert.strictEqual(
@@ -999,7 +999,7 @@ acceptance("Composer", function (needs) {
       "save button says Save Edit"
     );
     assert.strictEqual(
-      count(".save-or-cancel button.create svg.d-icon-pencil-alt"),
+      count(".save-or-cancel button.create svg.d-icon-pencil"),
       1,
       "save button has pencil icon"
     );
@@ -1467,7 +1467,7 @@ acceptance("composer buttons API", function (needs) {
         toolbar.addButton({
           id: "smile",
           group: "extras",
-          icon: "far-smile",
+          icon: "far-face-smile",
           shortcut: "ALT+S",
           shortcutAction: (toolbarEvent) => {
             toolbarEvent.addText(":smile: from keyboard");

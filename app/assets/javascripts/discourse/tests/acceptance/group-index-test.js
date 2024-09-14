@@ -16,7 +16,7 @@ acceptance("Group Members - Anonymous", function () {
     await visit("/g/discourse");
 
     assert.strictEqual(
-      count(".avatar-flair .d-icon-adjust"),
+      count(".avatar-flair .d-icon-circle-half-stroke"),
       1,
       "it displays the group's avatar flair"
     );

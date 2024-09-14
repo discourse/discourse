@@ -76,7 +76,7 @@ export default class PollOptionsComponent extends Component {
               <button {{on "click" (fn this.sendClick option)}}>
                 {{#if (this.isChosen option)}}
                   {{#if @isCheckbox}}
-                    {{icon "far-check-square"}}
+                    {{icon "far-square-check"}}
                   {{else}}
                     {{icon "circle"}}
                   {{/if}}
@@ -93,7 +93,7 @@ export default class PollOptionsComponent extends Component {
               <button onclick={{routeAction "showLogin"}}>
                 {{#if (this.isChosen option)}}
                   {{#if @isCheckbox}}
-                    {{icon "far-check-square"}}
+                    {{icon "far-square-check"}}
                   {{else}}
                     {{icon "circle"}}
                   {{/if}}

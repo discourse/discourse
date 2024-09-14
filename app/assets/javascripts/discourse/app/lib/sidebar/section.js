@@ -54,7 +54,7 @@ export default class Section {
   }
 
   get headerActionIcon() {
-    return "pencil-alt";
+    return "pencil";
   }
 
   @bind

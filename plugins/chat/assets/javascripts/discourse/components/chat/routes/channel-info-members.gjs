@@ -148,7 +148,7 @@ export default class ChatRouteChannelInfoMembers extends Component {
           <DcFilterInput
             {{autoFocus}}
             @filterAction={{this.mutFilter}}
-            @icons={{hash right="search"}}
+            @icons={{hash right="magnifying-glass"}}
             @containerClass="c-channel-members__filter"
             placeholder={{this.filterPlaceholder}}
           />

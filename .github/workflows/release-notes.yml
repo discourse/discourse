@@ -20,7 +20,7 @@ permissions:
 jobs:
   build:
     name: run
-    runs-on: ubuntu-latest
+    runs-on: debian-12
     container: discourse/discourse_test:slim
     timeout-minutes: 10
     env:

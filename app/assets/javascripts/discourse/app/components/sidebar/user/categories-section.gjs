@@ -82,7 +82,7 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
           title=(i18n "sidebar.sections.categories.header_action_title")
         )
       }}
-      @headerActionsIcon="pencil-alt"
+      @headerActionsIcon="pencil"
       @collapsable={{@collapsable}}
     >
 

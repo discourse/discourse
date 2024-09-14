@@ -21,7 +21,7 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
       api.addPostMenuButton("coffee", () => {
         return {
           action: "drinkCoffee",
-          icon: "coffee",
+          icon: "mug-saucer",
           className: "hot-coffee",
           title: "coffee.title",
           position: "first",
@@ -50,7 +50,7 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
             testPost = post;
             showFeedback("coffee.drink");
           },
-          icon: "coffee",
+          icon: "mug-saucer",
           className: "hot-coffee",
           title: "coffee.title",
           position: "first",

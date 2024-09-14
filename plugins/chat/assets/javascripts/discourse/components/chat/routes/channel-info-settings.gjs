@@ -538,7 +538,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
                       <DButton
                         @action={{this.onArchiveChannel}}
                         @label="chat.channel_settings.archive_channel"
-                        @icon="archive"
+                        @icon="box-archive"
                         class="archive-btn chat-form__btn btn-transparent"
                       />
                     </:action>
@@ -570,7 +570,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
                     <DButton
                       @action={{this.onDeleteChannel}}
                       @label="chat.channel_settings.delete_channel"
-                      @icon="trash-alt"
+                      @icon="trash-can"
                       class="delete-btn chat-form__btn btn-transparent"
                     />
                   </:action>
@@ -583,7 +583,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
           <form.section class="--leave-channel" as |section|>
             {{#if @channel.chatable.group}}
               <div class="c-channel-settings__leave-info">
-                {{icon "exclamation-triangle"}}
+                {{icon "triangle-exclamation"}}
                 {{i18n "chat.channel_settings.leave_groupchat_info"}}
               </div>
             {{/if}}
@@ -595,8 +595,8 @@ export default class ChatRouteChannelInfoSettings extends Component {
                   @options={{hash
                     joinClass="btn-primary"
                     leaveClass="btn-danger"
-                    joinIcon="sign-in-alt"
-                    leaveIcon="sign-out-alt"
+                    joinIcon="right-to-bracket"
+                    leaveIcon="right-from-bracket"
                   }}
                 />
               </:action>

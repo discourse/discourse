@@ -9,7 +9,7 @@ import {
 
 @classNames("bulk-group-member-dropdown")
 @selectKitOptions({
-  icon: "cog",
+  icon: "gear",
   showFullTitle: false,
 })
 @pluginApiIdentifiers("bulk-group-member-dropdown")
@@ -22,7 +22,7 @@ export default class BulkGroupMemberDropdown extends DropdownSelectBoxComponent 
       id: "removeMembers",
       name: I18n.t("groups.members.remove_members"),
       description: I18n.t("groups.members.remove_members_description"),
-      icon: "user-times",
+      icon: "user-xmark",
     });
 
     if (this.bulkSelection.some((m) => !m.owner)) {
@@ -30,7 +30,7 @@ export default class BulkGroupMemberDropdown extends DropdownSelectBoxComponent 
         id: "makeOwners",
         name: I18n.t("groups.members.make_owners"),
         description: I18n.t("groups.members.make_owners_description"),
-        icon: "shield-alt",
+        icon: "shield-halved",
       });
     }
 
@@ -39,7 +39,7 @@ export default class BulkGroupMemberDropdown extends DropdownSelectBoxComponent 
         id: "removeOwners",
         name: I18n.t("groups.members.remove_owners"),
         description: I18n.t("groups.members.remove_owners_description"),
-        icon: "shield-alt",
+        icon: "shield-halved",
       });
     }
 

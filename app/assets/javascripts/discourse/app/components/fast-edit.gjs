@@ -76,7 +76,7 @@ export default class FastEdit extends Component {
         <DButton
           class="btn-small btn-primary save-fast-edit"
           @action={{this.save}}
-          @icon="pencil-alt"
+          @icon="pencil"
           @label="composer.save_edit"
           @translatedTitle={{this.buttonTitle}}
           @isLoading={{this.isSaving}}

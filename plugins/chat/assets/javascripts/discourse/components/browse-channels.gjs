@@ -92,7 +92,7 @@ export default class BrowseChannels extends Component {
         <DcFilterInput
           {{didInsert this.focusFilterInput}}
           @filterAction={{this.setFilter}}
-          @icons={{hash right="search"}}
+          @icons={{hash right="magnifying-glass"}}
           @containerClass="filter-input"
           placeholder={{i18n "chat.browse.filter_input_placeholder"}}
         />

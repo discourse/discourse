@@ -140,7 +140,7 @@ class PmRemoveGroupLink extends Component {
     <DButton
       class="remove-invited"
       @action={{this.showConfirmDialog}}
-      @icon="times"
+      @icon="xmark"
     />
   </template>
 }
@@ -209,7 +209,7 @@ class PmRemoveLink extends Component {
     <DButton
       class="remove-invited"
       @action={{this.showConfirmDialog}}
-      @icon="times"
+      @icon="xmark"
     />
   </template>
 }

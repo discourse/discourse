@@ -35,7 +35,7 @@ export default class TagsAdminDropdown extends DropdownSelectBoxComponent {
         id: "deleteUnusedTags",
         name: I18n.t("tagging.delete_unused"),
         description: I18n.t("tagging.delete_unused_description"),
-        icon: "trash-alt",
+        icon: "trash-can",
       },
     ];
   }

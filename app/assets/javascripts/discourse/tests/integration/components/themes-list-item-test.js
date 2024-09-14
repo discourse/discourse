@@ -25,7 +25,11 @@ module("Integration | Component | themes-list-item", function (hooks) {
 
     await render(hbs`<ThemesListItem @theme={{this.theme}} />`);
 
-    assert.strictEqual(count(".d-icon-sync"), 1, "shows pending update icon");
+    assert.strictEqual(
+      count(".d-icon-arrows-rotate"),
+      1,
+      "shows pending update icon"
+    );
   });
 
   test("broken theme", async function (assert) {
@@ -40,7 +44,7 @@ module("Integration | Component | themes-list-item", function (hooks) {
     await render(hbs`<ThemesListItem @theme={{this.theme}} />`);
 
     assert.strictEqual(
-      count(".d-icon-exclamation-circle"),
+      count(".d-icon-circle-exclamation"),
       1,
       "shows broken theme icon"
     );

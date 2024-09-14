@@ -15,12 +15,12 @@ export default class TokenBasedAuthDropdown extends DropdownSelectBoxComponent {
     return [
       {
         id: "edit",
-        icon: "pencil-alt",
+        icon: "pencil",
         name: I18n.t("user.second_factor.edit"),
       },
       {
         id: "disable",
-        icon: "trash-alt",
+        icon: "trash-can",
         name: I18n.t("user.second_factor.disable"),
       },
     ];

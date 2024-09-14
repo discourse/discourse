@@ -7,7 +7,7 @@ const ReviewableCreatedBy = <template>
     {{#if @user}}
       <UserLink @user={{@user}}>{{avatar @user imageSize="large"}}</UserLink>
     {{else}}
-      {{icon "far-trash-alt" class="deleted-user-avatar"}}
+      {{icon "trash-can" class="deleted-user-avatar"}}
     {{/if}}
   </div>
 </template>;

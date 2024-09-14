@@ -236,7 +236,7 @@ acceptance(
             visible: true,
             public_admission: true,
             public_exit: false,
-            flair_url: "fa-adjust",
+            flair_url: "fa-circle-half-stroke",
             is_group_owner: true,
             mentionable: true,
             messageable: true,

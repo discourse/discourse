@@ -27,7 +27,7 @@ module("Integration | Component | Widget | topic-status", function (hooks) {
     const store = getOwner(this).lookup("service:store");
     TopicStatusIcons.addObject([
       "has_accepted_answer",
-      "far-check-square",
+      "far-square-check",
       "solved",
     ]);
     this.set("args", {
@@ -41,7 +41,7 @@ module("Integration | Component | Widget | topic-status", function (hooks) {
       hbs`<MountWidget @widget="topic-status" @args={{this.args}} />`
     );
 
-    assert.ok(exists(".topic-status .d-icon-far-check-square"));
+    assert.ok(exists(".topic-status .d-icon-far-square-check"));
   });
 
   test("toggling pin status", async function (assert) {

@@ -115,7 +115,7 @@ export default class PmsField extends BaseField {
           </div>
           <section class="actions">
             <DButton
-              @icon="trash-alt"
+              @icon="trash-can"
               @action={{fn this.removePM pm}}
               class="btn-danger"
               @disabled={{@field.isDisabled}}

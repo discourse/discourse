@@ -30,7 +30,7 @@ export default class CategoriesAdminDropdown extends DropdownSelectBoxComponent 
       id: "reorder",
       name: I18n.t("categories.reorder.title"),
       description: I18n.t("categories.reorder.title_long"),
-      icon: "random",
+      icon: "shuffle",
     });
 
     return items;

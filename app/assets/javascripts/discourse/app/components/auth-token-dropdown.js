@@ -15,13 +15,13 @@ export default class AuthTokenDropdown extends DropdownSelectBoxComponent {
     return [
       {
         id: "notYou",
-        icon: "user-times",
+        icon: "user-xmark",
         name: I18n.t("user.auth_tokens.not_you"),
         description: "",
       },
       {
         id: "logOut",
-        icon: "sign-out-alt",
+        icon: "right-from-bracket",
         name: I18n.t("user.log_out"),
         description: "",
       },

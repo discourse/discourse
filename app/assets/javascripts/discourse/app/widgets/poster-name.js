@@ -76,7 +76,7 @@ export default createWidget("poster-name", {
   // TODO: Allow extensibility
   posterGlyph(attrs) {
     if (attrs.moderator || attrs.groupModerator) {
-      return iconNode("shield-alt", {
+      return iconNode("shield-halved", {
         title: I18n.t("user.moderator_tooltip"),
       });
     }

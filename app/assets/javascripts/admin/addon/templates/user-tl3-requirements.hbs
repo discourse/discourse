@@ -145,11 +145,11 @@
       {{#if this.model.tl3Requirements.requirements_lost}}
         {{! tl implicitly not locked }}
         {{#if this.model.tl3Requirements.on_grace_period}}
-          {{d-icon "times"}}
+          {{d-icon "xmark"}}
           {{i18n "admin.user.tl3_requirements.on_grace_period"}}
         {{else}}
           {{! not on grace period }}
-          {{d-icon "times"}}
+          {{d-icon "xmark"}}
           {{i18n "admin.user.tl3_requirements.does_not_qualify"}}
           {{i18n "admin.user.tl3_requirements.will_be_demoted"}}
         {{/if}}
@@ -180,7 +180,7 @@
           {{d-icon "lock"}}
           {{i18n "admin.user.tl3_requirements.locked_will_not_be_promoted"}}
         {{else}}
-          {{d-icon "times"}}
+          {{d-icon "xmark"}}
           {{i18n "admin.user.tl3_requirements.does_not_qualify"}}
         {{/if}}
       {{/if}}

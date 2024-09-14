@@ -78,7 +78,7 @@ export default class TopicMapSummary extends Component {
   }
 
   get topRepliesIcon() {
-    return this.topRepliesSummaryEnabled ? "arrows-alt-v" : "layer-group";
+    return this.topRepliesSummaryEnabled ? "up-down" : "layer-group";
   }
 
   get topRepliesLabel() {

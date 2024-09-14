@@ -398,7 +398,7 @@ acceptance("User - Logout", function (needs) {
     );
     assert.strictEqual(
       query(".dialog-footer .btn-primary").innerText,
-      I18n.t("home"),
+      I18n.t("house"),
       "primary dialog button is present"
     );
 

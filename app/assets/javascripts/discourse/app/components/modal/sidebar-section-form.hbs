@@ -126,7 +126,7 @@
               class="always-public-tooltip"
             >
               <:trigger>
-                {{d-icon "check-square"}}
+                {{d-icon "square-check"}}
                 <span>{{i18n "sidebar.sections.custom.public"}}</span>
               </:trigger>
             </DTooltip>
@@ -144,7 +144,7 @@
     {{/if}}
     {{#if this.canDelete}}
       <DButton
-        @icon="trash-alt"
+        @icon="trash-can"
         @action={{this.delete}}
         @label="sidebar.sections.custom.delete"
         @ariaLabel="sidebar.sections.custom.delete"
@@ -155,7 +155,7 @@
     {{#if this.transformedModel.sectionType}}
       <DButton
         @action={{this.resetToDefault}}
-        @icon="undo"
+        @icon="arrow-rotate-left"
         @title="sidebar.sections.custom.links.reset"
         @label="sidebar.sections.custom.links.reset"
         @ariaLabel="sidebar.sections.custom.links.reset"

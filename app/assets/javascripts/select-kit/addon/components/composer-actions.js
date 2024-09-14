@@ -68,7 +68,7 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
     } else if (isInSlowMode) {
       return "hourglass-start";
     } else if (isEditing) {
-      return "pencil-alt";
+      return "pencil";
     } else {
       return "share";
     }

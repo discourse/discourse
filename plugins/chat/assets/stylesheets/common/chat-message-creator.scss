@@ -25,7 +25,7 @@
       height: 24px;
       width: 24px;
 
-      .d-icon.d-icon-user-friends {
+      .d-icon.d-icon-user-group {
         color: var(--primary-high);
       }
     }
@@ -33,7 +33,7 @@
     .-group & {
       width: 26px;
       height: 26px;
-      .d-icon-user-friends {
+      .d-icon-user-group {
         padding: 5px 5px;
         box-sizing: border-box;
         color: var(--primary-high);
@@ -60,13 +60,13 @@
         color: var(--primary);
         border-color: var(--tertiary);
 
-        .d-icon-times {
+        .d-icon-xmark {
           color: var(--primary);
         }
       }
     }
 
-    .d-icon-times {
+    .d-icon-xmark {
       margin-left: 0.25rem;
     }
   }
@@ -143,7 +143,7 @@
     min-height: 50px;
     box-sizing: border-box;
 
-    .d-icon-search {
+    .d-icon-magnifying-glass {
       color: var(--primary-high);
     }
 

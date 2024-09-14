@@ -17,10 +17,6 @@
   &__inner-container {
     align-self: stretch;
     min-height: unset;
-    .chat-composer.is-focused & {
-      border-color: var(--primary-low);
-      box-shadow: 0 0 2px 0 rgba(var(--tertiary-rgb), 0.95);
-    }
   }
   &__input-container {
     padding: 0.15em 0.5em;

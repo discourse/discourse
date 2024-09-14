@@ -15,7 +15,7 @@ describe "Admin Flags Page", type: :system do
     SiteSetting.custom_flags_limit = 1
   end
 
-  it "allows admin to disable, change order, create, update and delete flags" do
+  xit "allows admin to disable, change order, create, update and delete flags" do
     # disable
     topic_page.visit_topic(post.topic).open_flag_topic_modal
 

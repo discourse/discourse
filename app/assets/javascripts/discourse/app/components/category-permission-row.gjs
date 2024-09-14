@@ -28,11 +28,11 @@ export default class CategoryPermissionRow extends Component {
   }
 
   get canCreateIcon() {
-    return this.canCreate ? "check-square" : "far-square";
+    return this.canCreate ? "square-check" : "far-square";
   }
 
   get canReplyIcon() {
-    return this.canReply ? "check-square" : "far-square";
+    return this.canReply ? "square-check" : "far-square";
   }
 
   get replyGrantedClass() {
@@ -138,7 +138,7 @@ export default class CategoryPermissionRow extends Component {
         {{/if}}
       </span>
       <span class="options actionable">
-        <DButton @icon="check-square" @disabled={{true}} class="btn-flat see" />
+        <DButton @icon="square-check" @disabled={{true}} class="btn-flat see" />
 
         <DButton
           @icon={{this.canReplyIcon}}
@@ -162,7 +162,7 @@ export default class CategoryPermissionRow extends Component {
         <DButton
           class="remove-permission btn-flat"
           @action={{this.removeRow}}
-          @icon="far-trash-alt"
+          @icon="trash-can"
         />
       </span>
     </div>

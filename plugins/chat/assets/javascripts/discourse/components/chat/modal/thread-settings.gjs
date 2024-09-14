@@ -77,7 +77,7 @@ export default class ChatModalThreadSettings extends Component {
 
         {{#if this.currentUser.admin}}
           <div class="discourse-ai-cta">
-            <p class="discourse-ai-cta__title">{{icon "info-circle"}}
+            <p class="discourse-ai-cta__title">{{icon "circle-info"}}
               {{i18n "chat.thread_title_modal.discourse_ai.title"}}</p>
             <p class="discourse-ai-cta__description">{{htmlSafe
                 (i18n

@@ -13,6 +13,6 @@ export default class CategoriesBoxesTopic extends Component {
     if (closed || archived) {
       return "lock";
     }
-    return "far-file-alt";
+    return "far-file-lines";
   }
 }

@@ -62,7 +62,7 @@ module("Integration | Component | home-logo", function (hooks) {
     this.siteSettings.title = title;
 
     await render(<template><HomeLogo @minimized={{true}} /></template>);
-    assert.dom(".d-icon-home").exists({ count: 1 });
+    assert.dom(".d-icon-house").exists({ count: 1 });
   });
 
   test("mobile logo", async function (assert) {
