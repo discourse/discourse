@@ -10,10 +10,17 @@ export default {
     if (caps.isAppWebview) {
       window
         .matchMedia("(prefers-color-scheme: dark)")
-        .addListener(this.updateAppBackground);
+        .addEventListener("change", this.updateAppBackground);
       this.updateAppBackground();
     }
   },
+
+  teardown() {
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .removeEventListener("change", this.updateAppBackground);
+  },
+
   updateAppBackground() {
     discourseLater(() => {
       const header = document.querySelector(".d-header-wrap .d-header");
