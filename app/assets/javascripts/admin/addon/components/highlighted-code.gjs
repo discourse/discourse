@@ -8,7 +8,6 @@ export default class HighlightedCode extends Component {
   @service siteSettings;
 
   highlight = modifier((element) => {
-    debugger;
     highlightSyntax(element, this.siteSettings, this.session);
   });
 
