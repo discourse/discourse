@@ -559,8 +559,8 @@ importers:
         specifier: ^3.2.0
         version: 3.2.0
       sass:
-        specifier: ^1.77.7
-        version: 1.77.8
+        specifier: ^1.78.0
+        version: 1.78.0
       select-kit:
         specifier: workspace:1.0.0
         version: link:../select-kit
@@ -7384,8 +7384,8 @@ packages:
     engines: {node: 10.* || >= 12.*}
     hasBin: true
 
-  sass@1.77.8:
-    resolution: {integrity: sha512-4UHg6prsrycW20fqLGPShtEvo/WyHRVRHwOP4DzkUrObWoWI05QBSfzU71TVB7PFaL104TwNaHpjlWXAZbQiNQ==}
+  sass@1.78.0:
+    resolution: {integrity: sha512-AaIqGSrjo5lA2Yg7RvFZrlXDBCp3nV4XP73GrLGvdRWWwk+8H3l0SDvq/5bA4eF+0RFPLuWUk3E+P1U/YqnpsQ==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -17106,7 +17106,7 @@ snapshots:
       minimist: 1.2.8
       walker: 1.0.8
 
-  sass@1.77.8:
+  sass@1.78.0:
     dependencies:
       chokidar: 3.6.0
       immutable: 4.3.7
