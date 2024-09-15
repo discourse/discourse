@@ -19,6 +19,8 @@ class UserPassword < ActiveRecord::Base
 
   def password=(pw)
     return if pw.blank?
+
+    self.password_hash_will_change!
     @raw_password = pw
   end
 

@@ -925,7 +925,6 @@ class User < ActiveRecord::Base
 
     if user_password
       user_password.password = pw
-      user_password.password_hash_will_change!
     else
       build_user_password(password: pw)
     end
