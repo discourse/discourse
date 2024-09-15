@@ -401,6 +401,8 @@ Discourse::Application.routes.draw do
           collection { put "/" => "about#update" }
         end
       end
+
+      resources :admin_notices, only: %i[destroy], constraints: AdminConstraint.new
     end # admin namespace
 
     get "email/unsubscribe/:key" => "email#unsubscribe", :as => "email_unsubscribe"

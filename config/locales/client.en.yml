@@ -5077,6 +5077,7 @@ en:
         installed_version: "Installed"
         latest_version: "Latest"
         problems_found: "Some advice based on your current site settings"
+        dismiss_notice: "Dismiss"
         new_features:
           title: "What's new"
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
