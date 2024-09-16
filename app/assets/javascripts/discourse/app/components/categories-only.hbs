@@ -1,49 +1,16 @@
-{{#if this.categories}}
-  {{#if this.filteredCategories}}
-    <table class="category-list {{if this.showTopics 'with-topics'}}">
-      <thead>
-        <tr>
-          <th class="category"><span
-              role="heading"
-              aria-level="2"
-              id="categories-only-category"
-            >{{i18n "categories.category"}}</span></th>
-          <th class="topics">{{i18n "categories.topics"}}</th>
-          {{#if this.showTopics}}
-            <th class="latest">{{i18n "categories.latest"}}</th>
-          {{/if}}
-        </tr>
-      </thead>
-      <tbody aria-labelledby="categories-only-category">
-        {{#each this.categories as |category|}}
-          <ParentCategoryRow
-            @category={{category}}
-            @showTopics={{this.showTopics}}
-          />
-        {{/each}}
-      </tbody>
-    </table>
-  {{/if}}
-
-  {{#if this.mutedCategories}}
-    <div class="muted-categories">
-      <a href class="muted-categories-link" {{on "click" this.toggleShowMuted}}>
-        <h3 class="muted-categories-heading">{{i18n "categories.muted"}}</h3>
-        {{#if this.mutedToggleIcon}}
-          {{d-icon this.mutedToggleIcon}}
-        {{/if}}
-      </a>
-      <table
-        class="category-list
-          {{if this.showTopics 'with-topics'}}
-          {{unless this.showMutedCategories 'hidden'}}"
-      >
+<PluginOutlet
+  @name="categories-only-wrapper"
+  @outletArgs={{hash categories=this.categories}}
+>
+  {{#if this.categories}}
+    {{#if this.filteredCategories}}
+      <table class="category-list {{if this.showTopics 'with-topics'}}">
         <thead>
           <tr>
             <th class="category"><span
                 role="heading"
                 aria-level="2"
-                id="categories-only-category-muted"
+                id="categories-only-category"
               >{{i18n "categories.category"}}</span></th>
             <th class="topics">{{i18n "categories.topics"}}</th>
             {{#if this.showTopics}}
@@ -51,19 +18,61 @@
             {{/if}}
           </tr>
         </thead>
-        <tbody aria-labelledby="categories-only-category-muted">
+        <tbody aria-labelledby="categories-only-category">
           {{#each this.categories as |category|}}
             <ParentCategoryRow
               @category={{category}}
               @showTopics={{this.showTopics}}
-              @listType="muted"
             />
           {{/each}}
         </tbody>
       </table>
-    </div>
+    {{/if}}
+
+    {{#if this.mutedCategories}}
+      <div class="muted-categories">
+        <a
+          href
+          class="muted-categories-link"
+          {{on "click" this.toggleShowMuted}}
+        >
+          <h3 class="muted-categories-heading">{{i18n "categories.muted"}}</h3>
+          {{#if this.mutedToggleIcon}}
+            {{d-icon this.mutedToggleIcon}}
+          {{/if}}
+        </a>
+        <table
+          class="category-list
+            {{if this.showTopics 'with-topics'}}
+            {{unless this.showMutedCategories 'hidden'}}"
+        >
+          <thead>
+            <tr>
+              <th class="category"><span
+                  role="heading"
+                  aria-level="2"
+                  id="categories-only-category-muted"
+                >{{i18n "categories.category"}}</span></th>
+              <th class="topics">{{i18n "categories.topics"}}</th>
+              {{#if this.showTopics}}
+                <th class="latest">{{i18n "categories.latest"}}</th>
+              {{/if}}
+            </tr>
+          </thead>
+          <tbody aria-labelledby="categories-only-category-muted">
+            {{#each this.categories as |category|}}
+              <ParentCategoryRow
+                @category={{category}}
+                @showTopics={{this.showTopics}}
+                @listType="muted"
+              />
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    {{/if}}
   {{/if}}
-{{/if}}
+</PluginOutlet>
 
 <PluginOutlet
   @name="below-categories-only"
