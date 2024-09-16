@@ -1,3 +1,4 @@
+import { cached } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
@@ -11,8 +12,11 @@ import {
 } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
+import { createColumns } from "discourse/components/topic-list/topic-list-item";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import rawRenderGlimmer from "discourse/lib/raw-render-glimmer";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL, { groupPath } from "discourse/lib/url";
 import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
@@ -392,5 +396,50 @@ export default class TopicListItem extends Component {
 
   _titleElement() {
     return this.element.querySelector(".main-link .title");
+  }
+
+  @cached
+  get columns() {
+    const self = this;
+    const context = {
+      get category() {
+        return self.topicTrackingState.filterCategory;
+      },
+      get filter() {
+        return self.topicTrackingState.filter;
+      },
+    };
+
+    return applyValueTransformer(
+      "topic-list-item-columns",
+      createColumns(),
+      context
+    )
+      .resolve()
+      .map((entry) => {
+        if (entry.value) {
+          entry.value = htmlSafe(
+            rawRenderGlimmer(
+              this,
+              "th.hbr-ember-outlet",
+              <template>
+                <@data.component
+                  @topic={{@data.topic}}
+                  @tagsForUser={{@data.tagsForUser}}
+                  @hideCategory={{@data.hideCategory}}
+                />
+              </template>,
+              {
+                component: entry.value,
+                topic: this.topic,
+                tagsForUser: this.tagsForUser,
+                hideCategory: this.hideCategory,
+              }
+            )
+          );
+        }
+
+        return entry;
+      });
   }
 }

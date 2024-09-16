@@ -32,7 +32,7 @@ import DiscourseURL from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 
-function createColumns() {
+export function createColumns() {
   const columns = new DAG();
   columns.add("topic-list-before-columns");
   columns.add("bulk-select");
