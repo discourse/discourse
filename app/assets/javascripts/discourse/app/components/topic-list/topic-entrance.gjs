@@ -88,7 +88,7 @@ export default class TopicEntrance extends Component {
             title={{i18n "topic_entrance.jump_top_button_title"}}
             class="btn btn-default full jump-top"
           >
-            {{icon "step-backward"}}
+            {{icon "backward-step"}}
             {{htmlSafe this.topDate}}
           </button>
 
@@ -102,7 +102,7 @@ export default class TopicEntrance extends Component {
             class="btn btn-default full jump-bottom"
           >
             {{htmlSafe this.bottomDate}}
-            {{icon "step-forward"}}
+            {{icon "forward-step"}}
           </button>
         </div>
       </:content>

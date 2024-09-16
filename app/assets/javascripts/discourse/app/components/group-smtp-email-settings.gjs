@@ -194,7 +194,7 @@ export default class GroupSmtpEmailSettings extends Component {
 
         <form.Submit
           @disabled={{or this.testingSettings}}
-          @icon="cog"
+          @icon="gear"
           @label="groups.manage.email.test_settings"
           @title="groups.manage.email.settings_required"
           tabindex="7"

@@ -1,7 +1,7 @@
 <StyleguideExample @title=".btn-icon - sizes (large, default, small)">
   {{#each @dummy.buttonSizes as |bs|}}
     <DButton
-      @icon="times"
+      @icon="xmark"
       @translatedTitle={{bs.text}}
       @disabled={{bs.disabled}}
       class={{bs.class}}
@@ -12,7 +12,7 @@
 <StyleguideExample @title=".btn-icon - states">
   {{#each @dummy.buttonStates as |bs|}}
     <DButton
-      @icon="times"
+      @icon="xmark"
       @translatedTitle={{bs.text}}
       @disabled={{bs.disabled}}
       class={{bs.class}}
@@ -93,7 +93,7 @@
 >
   {{#each @dummy.buttonSizes as |bs|}}
     <DButton
-      @icon="trash-alt"
+      @icon="trash-can"
       @translatedLabel={{bs.text}}
       @disabled={{bs.disabled}}
       class={{concat-class "btn-danger" bs.class}}
@@ -104,7 +104,7 @@
 <StyleguideExample @title=".btn-danger .btn-icon-text - states">
   {{#each @dummy.buttonStates as |bs|}}
     <DButton
-      @icon="trash-alt"
+      @icon="trash-can"
       @translatedLabel={{bs.text}}
       @disabled={{bs.disabled}}
       class={{concat-class "btn-danger" bs.class}}
@@ -115,7 +115,7 @@
 <StyleguideExample @title=".btn-flat - sizes (large, default, small)">
   {{#each @dummy.buttonSizes as |bs|}}
     <FlatButton
-      @icon="trash-alt"
+      @icon="trash-can"
       @disabled={{bs.disabled}}
       @translatedTitle={{bs.title}}
     />
@@ -125,7 +125,7 @@
 <StyleguideExample @title=".btn-flat - states">
   {{#each @dummy.buttonStates as |bs|}}
     <FlatButton
-      @icon="trash-alt"
+      @icon="trash-can"
       @disabled={{bs.disabled}}
       @translatedTitle={{bs.title}}
     />

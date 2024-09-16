@@ -29,6 +29,14 @@ module PageObjects
           ".chat-channel-row[data-chat-channel-id='#{channel.id}']"
         end
 
+        def has_channel?(channel)
+          has_css?(channel_row_selector(channel))
+        end
+
+        def has_no_channel?(channel)
+          has_no_css?(channel_row_selector(channel))
+        end
+
         def has_unread_channel?(channel, count: nil, wait: Capybara.default_max_wait_time)
           unread_indicator_selector =
             "#{channel_row_selector(channel)} .chat-channel-unread-indicator"

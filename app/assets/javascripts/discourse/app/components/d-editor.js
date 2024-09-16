@@ -150,7 +150,7 @@ class Toolbar {
       this.addButton({
         id: "toggle-direction",
         group: "extras",
-        icon: "exchange-alt",
+        icon: "right-left",
         shortcut: "Shift+6",
         title: "composer.toggle_direction",
         preventFocus: true,
@@ -187,6 +187,7 @@ class Toolbar {
       popupMenu: buttonAttrs.popupMenu || false,
       preventFocus: buttonAttrs.preventFocus || false,
       condition: buttonAttrs.condition || (() => true),
+      shortcutAction: buttonAttrs.shortcutAction, // (optional) custom shortcut action
     };
 
     if (buttonAttrs.sendAction) {
@@ -319,7 +320,14 @@ export default class DEditor extends Component.extend(
     Object.keys(shortcuts).forEach((sc) => {
       const button = shortcuts[sc];
       this._itsatrap.bind(sc, () => {
-        button.action(button);
+        const customAction = shortcuts[sc].shortcutAction;
+
+        if (customAction) {
+          const toolbarEvent = this.newToolbarEvent();
+          customAction(toolbarEvent);
+        } else {
+          button.action(button);
+        }
         return false;
       });
     });

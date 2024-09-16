@@ -308,7 +308,7 @@ export default class SchemaThemeSettingNewEditor extends Component {
           {{#if (gt this.fields.length 0)}}
             <DButton
               @action={{this.removeItem}}
-              @icon="trash-alt"
+              @icon="trash-can"
               class="btn-danger schema-theme-setting-editor__remove-btn"
             />
           {{/if}}

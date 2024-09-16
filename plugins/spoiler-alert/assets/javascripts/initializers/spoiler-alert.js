@@ -17,7 +17,7 @@ export function initializeSpoiler(api) {
   api.decorateCookedElement(spoil, { id: "spoiler-alert" });
 
   api.addComposerToolbarPopupMenuOption({
-    icon: "magic",
+    icon: "wand-magic",
     label: "spoiler.title",
     action: (toolbarEvent) => {
       toolbarEvent.applySurround("[spoiler]", "[/spoiler]", "spoiler_text", {

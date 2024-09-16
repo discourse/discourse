@@ -1,5 +1,5 @@
 diff --git a/index.js b/index.js
-index 0a0a91720146b84a4b61bd9ec4b573652c133940..064c93ca41b1bb3ffdd9e36a74105146fffb2a9c 100644
+index d90f15316465ae517b5db02e9e52f49c7582a035..c216c8ca812204f22248522e0249e0fc79a531c4 100644
 --- a/index.js
 +++ b/index.js
 @@ -38,7 +38,7 @@ function licensee (configuration, path, callback) {

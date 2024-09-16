@@ -15,12 +15,12 @@ export default class PasskeyOptionsDropdown extends DropdownSelectBoxComponent {
     return [
       {
         id: "edit",
-        icon: "pencil-alt",
+        icon: "pencil",
         name: I18n.t("user.second_factor.edit"),
       },
       {
         id: "delete",
-        icon: "trash-alt",
+        icon: "trash-can",
         name: I18n.t("user.second_factor.delete"),
       },
     ];

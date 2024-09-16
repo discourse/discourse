@@ -1,5 +1,6 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 import {
   convertIconClass,
   iconHTML,
@@ -47,21 +48,23 @@ module("Unit | Utility | icon-library", function (hooks) {
   });
 
   test("fa5 remaps", function (assert) {
-    const adjustIcon = iconHTML("adjust");
-    assert.true(adjustIcon.includes("d-icon-adjust"), "class is maintained");
-    assert.true(
-      adjustIcon.includes('href="#circle-half-stroke"'),
-      "has remapped icon"
-    );
+    withSilencedDeprecations("discourse.fontawesome-6-upgrade", () => {
+      const adjustIcon = iconHTML("adjust");
+      assert.true(adjustIcon.includes("d-icon-adjust"), "class is maintained");
+      assert.true(
+        adjustIcon.includes('href="#circle-half-stroke"'),
+        "has remapped icon"
+      );
 
-    const farIcon = iconHTML("far-dot-circle");
-    assert.true(
-      farIcon.includes("d-icon-far-dot-circle"),
-      "class is maintained"
-    );
-    assert.true(
-      farIcon.includes('href="#far-circle-dot"'),
-      "has remapped icon"
-    );
+      const farIcon = iconHTML("far-dot-circle");
+      assert.true(
+        farIcon.includes("d-icon-far-dot-circle"),
+        "class is maintained"
+      );
+      assert.true(
+        farIcon.includes('href="#far-circle-dot"'),
+        "has remapped icon"
+      );
+    });
   });
 });

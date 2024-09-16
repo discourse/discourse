@@ -180,7 +180,7 @@ export default class ChatSelectionManager extends Component {
 
         {{#if this.enableMove}}
           <DButton
-            @icon="sign-out-alt"
+            @icon="right-from-bracket"
             @label="chat.selection.move_selection_to_channel"
             @disabled={{not this.anyMessagesSelected}}
             @action={{this.openMoveMessageModal}}
@@ -189,7 +189,7 @@ export default class ChatSelectionManager extends Component {
         {{/if}}
 
         <DButton
-          @icon="trash-alt"
+          @icon="trash-can"
           @translatedLabel={{this.deleteButtonTitle}}
           @disabled={{or
             (not this.anyMessagesSelected)
@@ -201,7 +201,7 @@ export default class ChatSelectionManager extends Component {
         />
 
         <DButton
-          @icon="times"
+          @icon="xmark"
           @label="chat.selection.cancel"
           @action={{@pane.cancelSelecting}}
           id="chat-cancel-selection-btn"

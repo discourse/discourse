@@ -17,7 +17,7 @@ class MainSidebarPanel {
   }
 
   get switchButtonIcon() {
-    return "random";
+    return "shuffle";
   }
 
   get switchButtonDefaultUrl() {

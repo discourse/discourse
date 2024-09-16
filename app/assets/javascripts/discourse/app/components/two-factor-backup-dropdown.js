@@ -16,14 +16,14 @@ export default class TwoFactorBackupDropdown extends DropdownSelectBoxComponent 
 
     content.push({
       id: "edit",
-      icon: "pencil-alt",
+      icon: "pencil",
       name: I18n.t("user.second_factor.edit"),
     });
 
     if (this.secondFactorBackupEnabled) {
       content.push({
         id: "disable",
-        icon: "trash-alt",
+        icon: "trash-can",
         name: I18n.t("user.second_factor.disable"),
       });
     }

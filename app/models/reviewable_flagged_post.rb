@@ -63,20 +63,20 @@ class ReviewableFlaggedPost < Reviewable
       build_action(
         actions,
         :agree_and_edit,
-        icon: "pencil-alt",
+        icon: "pencil",
         bundle: agree_bundle,
         client_action: "edit",
       )
     end
 
     if guardian.can_delete_post_or_topic?(post)
-      build_action(actions, :delete_and_agree, icon: "far-trash-alt", bundle: agree_bundle)
+      build_action(actions, :delete_and_agree, icon: "trash-can", bundle: agree_bundle)
 
       if post.reply_count > 0
         build_action(
           actions,
           :delete_and_agree_replies,
-          icon: "far-trash-alt",
+          icon: "trash-can",
           bundle: agree_bundle,
           confirm: true,
         )
@@ -117,15 +117,15 @@ class ReviewableFlaggedPost < Reviewable
       )
 
     if !post.hidden? || guardian.user.is_system_user?
-      build_action(actions, :ignore_and_do_nothing, icon: "external-link-alt", bundle: ignore)
+      build_action(actions, :ignore_and_do_nothing, icon: "up-right-from-square", bundle: ignore)
     end
     if guardian.can_delete_post_or_topic?(post)
-      build_action(actions, :delete_and_ignore, icon: "far-trash-alt", bundle: ignore)
+      build_action(actions, :delete_and_ignore, icon: "trash-can", bundle: ignore)
       if post.reply_count > 0
         build_action(
           actions,
           :delete_and_ignore_replies,
-          icon: "far-trash-alt",
+          icon: "trash-can",
           confirm: true,
           bundle: ignore,
         )

@@ -163,7 +163,7 @@ function initializeDiscourseLocalDates(api) {
       title: "discourse_local_dates.title",
       id: "local-dates",
       group: "extras",
-      icon: "calendar-alt",
+      icon: "calendar-days",
       sendAction: (event) =>
         toolbar.context.send("insertDiscourseLocalDate", event),
     });

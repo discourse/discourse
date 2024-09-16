@@ -1,7 +1,7 @@
 <li>
   <div class="col first status">
     {{#if @event.redelivering}}
-      {{d-icon "sync"}}
+      {{d-icon "arrows-rotate"}}
     {{else}}
       <span class={{this.statusColorClasses}}>{{@event.status}}</span>
     {{/if}}
@@ -25,7 +25,7 @@
       @label="admin.web_hooks.events.response"
     />
     <DButton
-      @icon="sync"
+      @icon="arrows-rotate"
       @action={{this.redeliver}}
       @label="admin.web_hooks.events.redeliver"
     />

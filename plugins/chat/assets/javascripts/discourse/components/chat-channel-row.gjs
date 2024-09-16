@@ -213,7 +213,7 @@ export default class ChatChannelRow extends Component {
             @options={{hash
               leaveClass="btn-flat chat-channel-leave-btn"
               labelType="none"
-              leaveIcon="times"
+              leaveIcon="xmark"
               leaveTitle=(if
                 @channel.isDirectMessageChannel
                 this.leaveDirectMessageLabel
@@ -231,7 +231,7 @@ export default class ChatChannelRow extends Component {
             (if this.isAtThreshold "-at-threshold" "-not-at-threshold")
           }}
         >
-          {{icon "times-circle"}}
+          {{icon "circle-xmark"}}
         </div>
       {{/if}}
     </LinkTo>

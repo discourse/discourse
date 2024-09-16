@@ -40,7 +40,7 @@ module("Discourse Chat | Component | chat-header-icon", function (hooks) {
       .hasAttribute("title", I18n.t("sidebar.panels.forum.label"))
       .hasAttribute("href", "/latest");
 
-    assert.dom(".d-icon-random").exists();
+    assert.dom(".d-icon-shuffle").exists();
   });
 
   test("mobile", async function (assert) {
@@ -71,7 +71,7 @@ module("Discourse Chat | Component | chat-header-icon", function (hooks) {
       .dom(".icon.btn-flat")
       .hasAttribute("title", I18n.t("sidebar.panels.forum.label"))
       .hasAttribute("href", "/latest");
-    assert.dom(".d-icon-random").exists();
+    assert.dom(".d-icon-shuffle").exists();
     assert.dom(".chat-channel-unread-indicator__number").doesNotExist();
   });
 

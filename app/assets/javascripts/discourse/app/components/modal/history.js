@@ -89,7 +89,7 @@ export default class History extends Component {
       "post.revisions.controls.comparing_previous_to_current_out_of_total",
       {
         previous: this.previousVersion,
-        icon: iconHTML("arrows-alt-h"),
+        icon: iconHTML("left-right"),
         current: this.postRevision?.current_version,
         total: this.postRevision?.version_count,
       }

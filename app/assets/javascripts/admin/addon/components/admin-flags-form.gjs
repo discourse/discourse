@@ -182,7 +182,7 @@ export default class AdminFlagsForm extends Component {
               </checkboxGroup.Field>
             </form.CheckboxGroup>
 
-            <form.Alert @icon="info-circle">
+            <form.Alert @icon="circle-info">
               {{i18n "admin.config_areas.flags.form.alert"}}
             </form.Alert>
 

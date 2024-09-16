@@ -1,6 +1,6 @@
 <div id="revision">
   <div id="revision-details">
-    {{d-icon "pencil-alt"}}
+    {{d-icon "pencil"}}
     <LinkTo
       @route="user"
       @model={{@model.username}}
@@ -36,14 +36,14 @@
 
         {{#if @model.wiki_changes}}
           {{d-icon
-            "far-edit"
+            "far-pen-to-square"
             class=(if @model.wiki_changes.current "diff-ins" "diff-del")
           }}
         {{/if}}
 
         {{#if @model.post_type_changes}}
           {{d-icon
-            "shield-alt"
+            "shield-halved"
             class=(if
               (eq
                 @model.post_type_changes.current
@@ -111,7 +111,7 @@
             title={{i18n "post.revisions.displays.side_by_side.title"}}
             aria-label={{i18n "post.revisions.displays.side_by_side.title"}}
           >
-            {{d-icon "columns"}}
+            {{d-icon "table-columns"}}
             {{i18n "post.revisions.displays.side_by_side.button"}}
           </a>
         </li>
@@ -128,7 +128,7 @@
               "post.revisions.displays.side_by_side_markdown.title"
             }}
           >
-            {{d-icon "columns"}}
+            {{d-icon "table-columns"}}
             {{i18n "post.revisions.displays.side_by_side_markdown.button"}}
           </a>
         </li>

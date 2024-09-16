@@ -286,7 +286,4 @@ group :migrations, optional: true do
 
   # CLI
   gem "ruby-progressbar"
-
-  # additional Gemfiles from converters
-  Dir[File.expand_path("migrations/**/Gemfile", __dir__)].each { |path| eval_gemfile(path) }
 end

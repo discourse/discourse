@@ -692,9 +692,9 @@ export default class Report extends EmberObject {
       case "trending-down":
         return higherIsBetter ? "angle-down" : "angle-up";
       case "high-trending-up":
-        return higherIsBetter ? "angle-double-up" : "angle-double-down";
+        return higherIsBetter ? "angles-up" : "angles-down";
       case "high-trending-down":
-        return higherIsBetter ? "angle-double-down" : "angle-double-up";
+        return higherIsBetter ? "angles-down" : "angles-up";
       default:
         return "minus";
     }

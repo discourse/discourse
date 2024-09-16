@@ -42,14 +42,14 @@ export default class WebhookEvent extends Component {
 
   get expandRequestIcon() {
     return this.expandDetails === this.expandDetailsRequestKey
-      ? "ellipsis-h"
-      : "ellipsis-v";
+      ? "ellipsis"
+      : "ellipsis-vertical";
   }
 
   get expandResponseIcon() {
     return this.expandDetails === this.expandDetailsResponseKey
-      ? "ellipsis-h"
-      : "ellipsis-v";
+      ? "ellipsis"
+      : "ellipsis-vertical";
   }
 
   @action

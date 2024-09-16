@@ -20,7 +20,7 @@ export default class EmailDropdown extends DropdownSelectBoxComponent {
     if (this.email.primary) {
       content.push({
         id: "updateEmail",
-        icon: "pencil-alt",
+        icon: "pencil",
         name: I18n.t("user.email.update_email"),
         description: "",
       });
@@ -38,7 +38,7 @@ export default class EmailDropdown extends DropdownSelectBoxComponent {
     if (!this.email.primary) {
       content.push({
         id: "destroyEmail",
-        icon: "times",
+        icon: "xmark",
         name: I18n.t("user.email.destroy"),
         description: "",
       });

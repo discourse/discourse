@@ -6,14 +6,14 @@ Discourse is a powerful and flexible platform with many options for customizatio
 
 To get started, we recommend you follow the sections below for each of the following:
 
-- [ ] [Test your email configuration](%{base_url}/admin/email)
-- [ ] [Complete the setup wizard](%{base_url}/wizard/steps/branding)
-- [ ] [Invite a few people to join you](%{base_url}/my/invited)
-- [ ] [Discuss ideas with your community](%{base_url}/new-topic)
-- [ ] [Adjust other customizations](%{base_url}/admin/site_settings/category/required)
-- [ ] Update your welcome topic and guidelines
-- [ ] Repeat!
-- [ ] Launch your community
+- [ ] [Test your email configuration](#email-test-your-email-configuration-2)
+- [ ] [Complete the setup wizard](#magic_wand-complete-the-setup-wizard-3)
+- [ ] [Invite a few people to join you](#handshake-invite-a-few-people-to-join-you-4)
+- [ ] [Discuss ideas with your community](#thought_balloon-discuss-ideas-with-your-community-5)
+- [ ] [Update your welcome topic and guidelines](#wave-update-your-welcome-topic-and-guidelines-6)
+- [ ] [Adjust other customizations](#art-adjust-other-customizations-7)
+- [ ] [Repeat!](#arrows_clockwise-repeat-8)
+- [ ] [Launch your community](#rocket-launch-your-community-9)
 
 > :bulb: If you need to get back here later, scroll to the top of any page and click the <kbd>Getting started</kbd> button.
 
@@ -38,7 +38,7 @@ It's helpful to collaborate with at least one or two other people early that can
 - **If your community allows people to freely sign up**, send them the link and ask them to join.
 - **If your community is invite only**, go to [your invites page](%{base_url}/my/invited) and look for the <kbd>+ Invite</kbd> button to create invite links you can share or directly email everyone you want to have in your community.
 
-> :bulb: Your community starts off in “bootstrap mode”, which gives early members [a higher level of trust ](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)than the typical new member so they can help you launch your community. You can adjust how long your community remains in bootstrap mode [here](/admin/site_settings/category/all_results?filter=bootstrap).
+> :bulb: Your community starts off in “bootstrap mode”, which gives early members [a higher level of trust ](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)than the typical new member so they can help you launch your community. You can adjust how long your community remains in bootstrap mode [here](/admin/site_settings/category/all_results?filter=bootstrap). For more information about bootstrap mode, [see the Discourse Meta documentation](https://meta.discourse.org/t/-/322876).
 
 ## :thought_balloon: Discuss ideas with your community
 

@@ -7,7 +7,7 @@
       @ariaCurrentContext="subNav"
       class="user-nav__activity-all"
     >
-      {{d-icon "stream"}}
+      {{d-icon "bars-staggered"}}
       <span>{{i18n "user.filters.all"}}</span>
     </DNavigationItem>
 
@@ -35,7 +35,7 @@
         class="user-nav__activity-read"
         title={{i18n "user.read_help"}}
       >
-        {{d-icon "history"}}
+        {{d-icon "clock-rotate-left"}}
         <span>{{i18n "user.read"}}</span>
       </DNavigationItem>
     {{/if}}
@@ -46,7 +46,7 @@
         @ariaCurrentContext="subNav"
         class="user-nav__activity-drafts"
       >
-        {{d-icon "pencil-alt"}}
+        {{d-icon "pencil"}}
         <span>{{this.draftLabel}}</span>
       </DNavigationItem>
     {{/if}}

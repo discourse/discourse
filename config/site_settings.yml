@@ -2580,9 +2580,6 @@ backups:
     client: true
 
 search:
-  user_search_similar_results:
-    default: false
-    hidden: true
   prioritize_exact_search_title_match:
     default: true
     hidden: true

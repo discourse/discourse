@@ -126,7 +126,7 @@ registerButton("read", (attrs) => {
     return {
       action: "toggleWhoRead",
       title: "post.controls.read_indicator",
-      icon: "book-reader",
+      icon: "book-open-reader",
       before: "read-count",
       addContainer: false,
     };
@@ -245,7 +245,7 @@ registerButton("edit", (attrs) => {
       action: "editPost",
       className: "edit",
       title: "post.controls.edit",
-      icon: "pencil-alt",
+      icon: "pencil",
       alwaysShowYours: true,
     };
   }
@@ -276,7 +276,7 @@ registerButton("wiki-edit", (attrs) => {
       action: "editPost",
       className: "edit create",
       title: "post.controls.edit",
-      icon: "far-edit",
+      icon: "far-pen-to-square",
       alwaysShowYours: true,
     };
     if (!attrs.mobileView) {
@@ -443,7 +443,7 @@ registerButton("delete", (attrs) => {
       id: "recover_topic",
       action: "recoverPost",
       title: "topic.actions.recover",
-      icon: "undo",
+      icon: "arrow-rotate-left",
       className: "recover",
     };
   } else if (attrs.canDeleteTopic) {
@@ -451,7 +451,7 @@ registerButton("delete", (attrs) => {
       id: "delete_topic",
       action: "deletePost",
       title: "post.controls.delete_topic",
-      icon: "far-trash-alt",
+      icon: "trash-can",
       className: "delete",
     };
   } else if (attrs.canRecover) {
@@ -459,7 +459,7 @@ registerButton("delete", (attrs) => {
       id: "recover",
       action: "recoverPost",
       title: "post.controls.undelete",
-      icon: "undo",
+      icon: "arrow-rotate-left",
       className: "recover",
     };
   } else if (attrs.canDelete) {
@@ -467,7 +467,7 @@ registerButton("delete", (attrs) => {
       id: "delete",
       action: "deletePost",
       title: "post.controls.delete",
-      icon: "far-trash-alt",
+      icon: "trash-can",
       className: "delete",
     };
   } else if (attrs.showFlagDelete) {
@@ -475,7 +475,7 @@ registerButton("delete", (attrs) => {
       id: "delete_topic",
       action: "showDeleteTopicModal",
       title: "post.controls.delete_topic_disallowed",
-      icon: "far-trash-alt",
+      icon: "trash-can",
       className: "delete",
     };
   }
@@ -636,7 +636,7 @@ export default createWidget("post-menu", {
         action: "showMoreActions",
         title: "show_more",
         className: "show-more-actions",
-        icon: "ellipsis-h",
+        icon: "ellipsis",
       });
       visibleButtons.splice(visibleButtons.length - 1, 0, showMore);
       hasShowMoreButton = true;

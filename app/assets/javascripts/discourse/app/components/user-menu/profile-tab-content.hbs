@@ -14,7 +14,7 @@
             {{/if}}
           </span>
         {{else}}
-          {{d-icon "plus-circle"}}
+          {{d-icon "circle-plus"}}
           <span class="item-label">
             {{i18n "user_status.set_custom_status"}}
           </span>
@@ -34,7 +34,7 @@
 
   <li class="activity">
     <LinkTo @route="userActivity" @model={{this.currentUser}}>
-      {{d-icon "stream"}}
+      {{d-icon "bars-staggered"}}
       <span class="item-label">
         {{i18n "user.activity_stream"}}
       </span>
@@ -67,7 +67,7 @@
 
   <li class="preferences">
     <LinkTo @route="preferences" @model={{this.currentUser}}>
-      {{d-icon "cog"}}
+      {{d-icon "gear"}}
       <span class="item-label">
         {{i18n "user.preferences.title"}}
       </span>
@@ -135,7 +135,7 @@
 
   <li class="logout">
     <DButton @action={{route-action "logout"}} class="btn-flat profile-tab-btn">
-      {{d-icon "sign-out-alt"}}
+      {{d-icon "right-from-bracket"}}
       <span class="item-label">
         {{i18n "user.log_out"}}
       </span>

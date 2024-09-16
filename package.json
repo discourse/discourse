@@ -14,18 +14,18 @@
     "@glint/environment-ember-template-imports": "^1.4.1-unstable.01b8deb",
     "@glint/template": "^1.4.1-unstable.01b8deb",
     "@mixer/parallel-prettier": "^2.0.3",
-    "@swc/core": "^1.7.24",
+    "@swc/core": "^1.7.26",
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "2.2.0",
     "chrome-launcher": "^1.1.2",
     "chrome-remote-interface": "^0.33.2",
-    "concurrently": "^9.0.0",
+    "concurrently": "^9.0.1",
     "ember-template-lint": "^6.0.0",
     "esbuild": "^0.23.1",
     "eslint": "^8.57.0",
     "jsdoc": "^4.0.0",
     "lefthook": "^1.7.15",
-    "licensee": "^10.0.0",
+    "licensee": "^11.1.0",
     "lint-to-the-future": "^2.0.0",
     "lint-to-the-future-ember-template": "^1.1.1",
     "lint-to-the-future-eslint": "^2.0.1",
@@ -56,7 +56,6 @@
     "lint-progress": "pnpm lttf:output && npx html-pages ./lint-progress --no-cache",
     "ember": "pnpm --dir=app/assets/javascripts/discourse ember"
   },
-  "packageManager": "pnpm@9.9.0",
   "engines": {
     "node": ">= 18",
     "npm": "please-use-pnpm",
@@ -70,7 +69,7 @@
       "content-tag@2.0.1": "patches/content-tag@2.0.1.patch",
       "decorator-transforms@2.0.0": "patches/decorator-transforms@2.0.0.patch",
       "virtual-dom@2.1.1": "patches/virtual-dom@2.1.1.patch",
-      "licensee@10.0.0": "patches/licensee@10.0.0.patch"
+      "licensee@11.1.0": "patches/licensee@11.1.0.patch"
     },
     "peerDependencyRules": {
       "allowedVersions": {

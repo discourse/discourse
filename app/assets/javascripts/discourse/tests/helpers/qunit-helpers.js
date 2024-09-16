@@ -187,6 +187,7 @@ export function testCleanup(container, app) {
   }
 
   User.resetCurrent();
+  resetMobile();
   resetExtraClasses();
   clearOutletCache();
   clearHTMLCache();
@@ -249,6 +250,7 @@ export function testCleanup(container, app) {
   rollbackAllPrepends();
   clearAboutPageActivities();
   clearLegacyAboutPageStats();
+  resetWidgetCleanCallbacks();
 }
 
 function cleanupCssGeneratorTags() {
@@ -344,8 +346,6 @@ export function acceptance(name, optionsOrCallback) {
     beforeEach() {
       I18n.testing = true;
 
-      resetMobile();
-
       resetExtraClasses();
       if (mobileView) {
         forceMobile();
@@ -381,16 +381,10 @@ export function acceptance(name, optionsOrCallback) {
 
     afterEach() {
       I18n.testing = false;
-      resetMobile();
-      let app = getApplication();
       options?.afterEach?.call(this);
       if (loggedIn) {
         User.current().statusManager.stopTrackingStatus();
       }
-      testCleanup(this.container, app);
-
-      // We do this after reset so that the willClearRender will have already fired
-      resetWidgetCleanCallbacks();
     },
   };
 

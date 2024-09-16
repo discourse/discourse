@@ -29,7 +29,7 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }} # Update fetch-job-id step if changing this
-    runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-22.04-8core' }}
+    runs-on: debian-12
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}
     timeout-minutes: 20
 
@@ -41,7 +41,7 @@ jobs:
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
       MINIO_RUNNER_LOG_LEVEL: DEBUG
-      DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && github.ref == 'refs/main/head' }}
+      DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && github.ref == 'refs/heads/main' && '1' }}
       CHEAP_SOURCE_MAPS: "1"
       TESTEM_DEFAULT_BROWSER: Chrome
 
@@ -76,7 +76,11 @@ jobs:
       - name: Set QUNIT_PARALLEL for QUnit tests
         if: matrix.build_type == 'frontend'
         run: |
-          echo "QUNIT_PARALLEL=$(($(nproc) / 2))" >> $GITHUB_ENV
+          if [ "${{ matrix.target }}" = "themes" ]; then
+            echo "QUNIT_PARALLEL=2" >> $GITHUB_ENV
+          else
+            echo "QUNIT_PARALLEL=$(($(nproc) / 2))" >> $GITHUB_ENV
+          fi
 
       - uses: actions/checkout@v4
         with:
@@ -307,7 +311,7 @@ jobs:
 
       - name: Check for flaky tests report
         id: check-flaky-spec-report
-        if: always() && github.repository == 'discourse/discourse'
+        if: always() && github.repository == 'discourse/discourse' && ${{ env.DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS == '1' }}
         run: |
           if [ -f tmp/turbo_rspec_flaky_tests.json ]; then
             echo "exists=true" >> $GITHUB_OUTPUT
@@ -354,7 +358,7 @@ jobs:
   core_frontend_tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: core frontend (${{ matrix.browser }})
-    runs-on: ubuntu-22.04-8core
+    runs-on: debian-12
     container:
       image: discourse/discourse_test:slim-browsers
       options: --user discourse
