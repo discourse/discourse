@@ -233,8 +233,8 @@ importers:
         specifier: 8.1.1
         version: 8.1.1
       ember-auto-import:
-        specifier: ^2.7.4
-        version: 2.7.4(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
+        specifier: ^2.8.0
+        version: 2.8.0(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
       ember-cli-babel:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.25.2)
@@ -457,8 +457,8 @@ importers:
         specifier: workspace:1.0.0
         version: link:../discourse-plugins
       ember-auto-import:
-        specifier: ^2.7.4
-        version: 2.7.4(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
+        specifier: ^2.8.0
+        version: 2.8.0(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
       ember-buffered-proxy:
         specifier: ^2.1.1
         version: 2.1.1(@babel/core@7.25.2)
@@ -625,8 +625,8 @@ importers:
         specifier: workspace:1.0.0
         version: link:../discourse-i18n
       ember-auto-import:
-        specifier: ^2.7.4
-        version: 2.7.4(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
+        specifier: ^2.8.0
+        version: 2.8.0(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
       ember-cli-babel:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.25.2)
@@ -722,8 +722,8 @@ importers:
         specifier: workspace:1.0.0
         version: link:../discourse-i18n
       ember-auto-import:
-        specifier: ^2.7.4
-        version: 2.7.4(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
+        specifier: ^2.8.0
+        version: 2.8.0(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
       markdown-it:
         specifier: 14.0.0
         version: 14.0.0
@@ -777,8 +777,8 @@ importers:
         specifier: ^7.25.2
         version: 7.25.2
       ember-auto-import:
-        specifier: ^2.7.4
-        version: 2.7.4(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
+        specifier: ^2.8.0
+        version: 2.8.0(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
       ember-cli-babel:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.25.2)
@@ -848,8 +848,8 @@ importers:
         specifier: ^7.25.2
         version: 7.25.2
       ember-auto-import:
-        specifier: ^2.7.4
-        version: 2.7.4(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
+        specifier: ^2.8.0
+        version: 2.8.0(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
       ember-cli-babel:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.25.2)
@@ -930,8 +930,8 @@ importers:
         specifier: workspace:1.0.0
         version: link:../discourse-i18n
       ember-auto-import:
-        specifier: ^2.7.4
-        version: 2.7.4(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
+        specifier: ^2.8.0
+        version: 2.8.0(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
       ember-cli-babel:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.25.2)
@@ -1009,8 +1009,8 @@ importers:
         specifier: workspace:1.0.0
         version: link:../discourse-i18n
       ember-auto-import:
-        specifier: ^2.7.4
-        version: 2.7.4(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
+        specifier: ^2.8.0
+        version: 2.8.0(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
       ember-cli-babel:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.25.2)
@@ -1127,8 +1127,8 @@ importers:
         specifier: ^1.8.9
         version: 1.8.9
       ember-auto-import:
-        specifier: ^2.7.4
-        version: 2.7.4(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
+        specifier: ^2.8.0
+        version: 2.8.0(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
 
 packages:
 
@@ -3265,6 +3265,10 @@ packages:
     resolution: {integrity: sha512-QHX8HLlncOLpy54mh+k/sWIFd0ThmRqwe9ZjELybGZK+tZ8rUb9VO0saKJUROTbE+KhzDUT7xziGpGrW8Kmd+g==}
     engines: {node: '>=10.0.0'}
 
+  better-path-resolve@1.0.0:
+    resolution: {integrity: sha512-pbnl5XzGBdrFU/wT4jqmJVPn2B6UHPBOhzMQkY/SPUPB6QtUXtmBHBIwCbXJol93mOpGMnQyP/+BB19q04xj7g==}
+    engines: {node: '>=4'}
+
   big.js@5.2.2:
     resolution: {integrity: sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==}
 
@@ -4255,8 +4259,8 @@ packages:
   electron-to-chromium@1.5.4:
     resolution: {integrity: sha512-orzA81VqLyIGUEA77YkVA1D+N+nNfl2isJVjjmOyrlxuooZ19ynb+dOlaDTqd/idKRS9lDCSBmtzM+kyCsMnkA==}
 
-  ember-auto-import@2.7.4:
-    resolution: {integrity: sha512-6CdXSegJJc8nwwK7+1lIcBUnMVrJRNd4ZdMgcKbCAwPvcGxMgRVBddSzrX/+q/UuflvTEO26Dk1g7Z6KHMXUhw==}
+  ember-auto-import@2.8.0:
+    resolution: {integrity: sha512-0GNLkVQOzDGYygybqKXJDOQRComIbkrptX1l7ptk6tapCKFgqYEZWkJH4t+EmefGWOtKfvvqos6HQ5GtsdH4pg==}
     engines: {node: 12.* || 14.* || >= 16}
 
   ember-buffered-proxy@2.1.1:
@@ -5711,6 +5715,10 @@ packages:
     resolution: {integrity: sha512-tE2UXzivje6ofPW7l23cjDOMa09gb7xlAqG6jG5ej6uPV32TlWP3NKPigtaGeHNu9fohccRYvIiZMfOOnOYUtg==}
     engines: {node: '>= 0.4'}
 
+  is-subdir@1.2.0:
+    resolution: {integrity: sha512-2AT6j+gXe/1ueqbW6fLZJiIw3F8iXGJtt0yDrZaBhAZEG1raiTxKWU+IPqMCzQAXOUCKdA4UDMgacKH25XG2Cw==}
+    engines: {node: '>=4'}
+
   is-symbol@1.0.4:
     resolution: {integrity: sha512-C/CPBqKWnvdcxqIARxyOh4v1UUEOCHpgDa0WYgpKDFMszcrPcffg5uhwSgPCLD2WWxmq6isisz87tzT01tuGhg==}
     engines: {node: '>= 0.4'}
@@ -6904,6 +6912,9 @@ packages:
   pkg-dir@7.0.0:
     resolution: {integrity: sha512-Ie9z/WINcxxLp27BKOCHGde4ITq9UklYKDzVo1nhk5sqGEXU3FpkwP5GM2voTGJkGd9B3Otl+Q4uwSOeSUtOBA==}
     engines: {node: '>=14.16'}
+
+  pkg-entry-points@1.1.0:
+    resolution: {integrity: sha512-9vL2T/he5Kb97GVY+V3Ih4jCC1lF3PQGIDUJIUqKM4Q6twmhrUSAa0OFj+kb8IEs4wYzEgB6kcc4oYy21kZnQw==}
 
   pkg-up@2.0.0:
     resolution: {integrity: sha512-fjAPuiws93rm7mPUu21RdBnkeZNrbfCFCwfAhPWY+rR3zG0ubpe5cEReHOw5fIbfmsxEV/g2kSxGTATY3Bpnwg==}
@@ -11852,6 +11863,10 @@ snapshots:
 
   basic-ftp@5.0.3: {}
 
+  better-path-resolve@1.0.0:
+    dependencies:
+      is-windows: 1.0.2
+
   big.js@5.2.2: {}
 
   bin-links@4.0.4:
@@ -12972,7 +12987,7 @@ snapshots:
 
   electron-to-chromium@1.5.4: {}
 
-  ember-auto-import@2.7.4(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1)):
+  ember-auto-import@2.8.0(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1)):
     dependencies:
       '@babel/core': 7.25.2
       '@babel/plugin-proposal-class-properties': 7.18.6(@babel/core@7.25.2)
@@ -12984,7 +12999,7 @@ snapshots:
       '@embroider/shared-internals': 2.6.3(supports-color@8.1.1)
       babel-loader: 8.3.0(@babel/core@7.25.2)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
       babel-plugin-ember-modules-api-polyfill: 3.5.0
-      babel-plugin-ember-template-compilation: 2.2.5
+      babel-plugin-ember-template-compilation: 2.3.0
       babel-plugin-htmlbars-inline-precompile: 5.3.1
       babel-plugin-syntax-dynamic-import: 6.18.0
       broccoli-debug: 0.6.5
@@ -12997,11 +13012,13 @@ snapshots:
       fs-extra: 10.1.0
       fs-tree-diff: 2.0.1
       handlebars: 4.7.8
+      is-subdir: 1.2.0
       js-string-escape: 1.0.1
       lodash: 4.17.21
       mini-css-extract-plugin: 2.9.1(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
       minimatch: 3.1.2
       parse5: 6.0.1
+      pkg-entry-points: 1.1.0
       resolve: 1.22.8
       resolve-package-path: 4.0.3
       semver: 7.6.3
@@ -13496,7 +13513,7 @@ snapshots:
       chalk: 5.3.0
       cli-table3: 0.6.5
       debug: 4.3.6(supports-color@8.1.1)
-      ember-auto-import: 2.7.4(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
+      ember-auto-import: 2.8.0(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
       ember-cli-babel: 8.2.0(@babel/core@7.25.2)
       ember-qunit: 8.1.0(@ember/test-helpers@4.0.4(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(ember-source@5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))))(@glint/template@1.4.1-unstable.ff9ea6c)(ember-source@5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1)))(qunit@2.22.0)
       ember-source: 5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
@@ -13544,7 +13561,7 @@ snapshots:
 
   ember-on-resize-modifier@2.0.2(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(ember-source@5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1)))(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1)):
     dependencies:
-      ember-auto-import: 2.7.4(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
+      ember-auto-import: 2.8.0(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
       ember-cli-babel: 7.26.11
       ember-cli-htmlbars: 5.7.2
       ember-modifier: 4.2.0(@babel/core@7.25.2)(ember-source@5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1)))
@@ -13638,7 +13655,7 @@ snapshots:
       broccoli-funnel: 3.0.8
       broccoli-merge-trees: 4.2.0
       chalk: 4.1.2
-      ember-auto-import: 2.7.4(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
+      ember-auto-import: 2.8.0(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
       ember-cli-babel: 7.26.11
       ember-cli-get-component-path-option: 1.0.0
       ember-cli-is-package-missing: 1.0.0
@@ -15327,6 +15344,10 @@ snapshots:
     dependencies:
       has-tostringtag: 1.0.2
 
+  is-subdir@1.2.0:
+    dependencies:
+      better-path-resolve: 1.0.0
+
   is-symbol@1.0.4:
     dependencies:
       has-symbols: 1.0.3
@@ -16604,6 +16625,8 @@ snapshots:
   pkg-dir@7.0.0:
     dependencies:
       find-up: 6.3.0
+
+  pkg-entry-points@1.1.0: {}
 
   pkg-up@2.0.0:
     dependencies:
