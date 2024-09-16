@@ -29,8 +29,8 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }} # Update fetch-job-id step if changing this
-    runs-on: ${{ ((github.ref == 'refs/heads/main') && 'debian-12') || 'ubuntu-22.04-8core' }}
-    container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}
+    runs-on: debian-12
+    container: discourse/discourse_test:release
     timeout-minutes: 20
 
     env:
@@ -44,6 +44,7 @@ jobs:
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && github.ref == 'refs/heads/main' && '1' }}
       CHEAP_SOURCE_MAPS: "1"
       TESTEM_DEFAULT_BROWSER: Chrome
+      MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
 
     strategy:
       fail-fast: false
@@ -108,23 +109,25 @@ jobs:
           echo "debian_release=$DEBIAN_RELEASE" >> $GITHUB_OUTPUT
         shell: bash
 
-      - name: Bundler cache
-        uses: actions/cache@v4
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-gem-${{ hashFiles('**/Gemfile.lock') }}-cachev2
-
-      - name: Setup gems
+      - name: bundle install
         run: |
+          cp -r /var/www/discourse/vendor/bundle ./vendor/bundle
           gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
-          bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
-          bundle install --jobs $(($(nproc) - 1))
+          bundle install --jobs 4
           bundle clean
 
       - name: pnpm install
-        run: pnpm install --frozen-lockfile
+        run: |
+          cp -r /var/www/discourse/node_modules ./node_modules
+          pnpm config set store-dir /home/discourse/.local/share/pnpm/store/v3
+          pnpm install --frozen-lockfile
+
+      - name: Copy official plugins
+        if: matrix.target == 'plugins'
+        run: |
+          cp -r /var/www/discourse/plugins/* plugins/
 
       - name: Checkout official plugins
         if: matrix.target == 'plugins'
@@ -138,12 +141,6 @@ jobs:
       - name: Pull compatible versions of plugins
         if: matrix.target == 'plugins'
         run: bin/rake plugin:pull_compatible_all
-
-      - name: Plugin gems cache
-        uses: actions/cache@v4
-        with:
-          path: plugins/*/gems
-          key: ${{ runner.os }}-plugin-gems-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-${{ hashFiles('plugins/*/plugin.rb') }}
 
       - name: Checkout official themes
         if: matrix.target == 'themes'
@@ -358,9 +355,9 @@ jobs:
   core_frontend_tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: core frontend (${{ matrix.browser }})
-    runs-on: ${{ ((github.ref == 'refs/heads/main') && 'debian-12') || 'ubuntu-22.04-8core' }}
+    runs-on: debian-12
     container:
-      image: discourse/discourse_test:slim-browsers
+      image: discourse/discourse_test:release
       options: --user discourse
 
     timeout-minutes: 35
@@ -386,7 +383,10 @@ jobs:
           git config --global user.name "Discourse CI"
 
       - name: pnpm install
-        run: pnpm install --frozen-lockfile
+        run: |
+          cp -r /var/www/discourse/node_modules ./node_modules
+          pnpm config set store-dir /home/discourse/.local/share/pnpm/store/v3
+          pnpm install --frozen-lockfile
 
       - name: Ember Build
         working-directory: ./app/assets/javascripts/discourse
