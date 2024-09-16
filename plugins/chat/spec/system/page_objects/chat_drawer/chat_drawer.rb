@@ -57,7 +57,6 @@ module PageObjects
       end
 
       def has_channel_at_position?(channel, position)
-        # find("#direct-message-channels a:nth-child(1)")["data-chat-channel-id"]
         find(
           "#{VISIBLE_DRAWER} .chat-channel-row:nth-child(#{position})[data-chat-channel-id='#{channel.id}']",
         )
