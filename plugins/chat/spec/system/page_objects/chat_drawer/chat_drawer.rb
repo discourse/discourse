@@ -48,6 +48,14 @@ module PageObjects
         has_no_css?(".chat-skeleton")
       end
 
+      def has_channel?(channel)
+        channels_index.has_channel?(channel)
+      end
+
+      def has_no_channel?(channel)
+        channels_index.has_no_channel?(channel)
+      end
+
       def has_unread_channel?(channel)
         channels_index.has_unread_channel?(channel)
       end
