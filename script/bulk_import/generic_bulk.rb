@@ -20,6 +20,7 @@ class BulkImport::Generic < BulkImport::Base
   AVATAR_DIRECTORY = ENV["AVATAR_DIRECTORY"]
   UPLOAD_DIRECTORY = ENV["UPLOAD_DIRECTORY"]
   CONTENT_UPLOAD_REFERENCE_TYPES = %w[posts chat_messages]
+  LAST_VIEWED_AT_PLACEHOLDER = "1970-01-01 00:00:00"
 
   def initialize(db_path, uploads_db_path = nil)
     super()
@@ -45,92 +46,84 @@ class BulkImport::Generic < BulkImport::Base
 
     import_uploads
 
-    if ENV["CHAT_ONLY"] == "1"
-      # TODO: Test data. Remove
-      @categories[140] = 4
-      @users[100] = 1 # selase
-      @users[101] = 47 # foster
-      @users[102] = 23 # vance
-      @users[103] = 19 # cristopher.yundt
-    else
-      # needs to happen before users, because keeping group names is more important than usernames
-      import_groups
+    # needs to happen before users, because keeping group names is more important than usernames
+    import_groups
 
-      import_users
-      import_user_emails
-      import_user_profiles
-      import_user_options
-      import_user_fields
-      import_user_field_values
-      import_single_sign_on_records
-      import_user_associated_accounts
-      import_muted_users
-      import_user_histories
-      import_user_notes
-      import_user_note_counts
-      import_user_followers
+    import_users
+    import_user_emails
+    import_user_profiles
+    import_user_options
+    import_user_fields
+    import_user_field_values
+    import_single_sign_on_records
+    import_user_associated_accounts
+    import_muted_users
+    import_user_histories
+    import_user_notes
+    import_user_note_counts
+    import_user_followers
 
-      import_user_avatars
-      update_uploaded_avatar_id
+    import_user_avatars
+    update_uploaded_avatar_id
 
-      import_group_members
+    import_group_members
 
-      import_tag_groups
-      import_tags
-      import_tag_users
+    import_tag_groups
+    import_tags
+    import_tag_users
 
-      import_categories
-      import_category_custom_fields
-      import_category_tag_groups
-      import_category_permissions
-      import_category_users
+    import_categories
+    import_category_custom_fields
+    import_category_tag_groups
+    import_category_permissions
+    import_category_users
 
-      import_topics
-      import_posts
-      import_post_custom_fields
+    import_topics
+    import_posts
+    import_post_custom_fields
 
-      import_polls
-      import_poll_options
-      import_poll_votes
+    import_polls
+    import_poll_options
+    import_poll_votes
 
-      import_topic_tags
-      import_topic_allowed_users
-      import_topic_allowed_groups
+    import_topic_tags
+    import_topic_allowed_users
+    import_topic_allowed_groups
 
-      import_likes
-      import_votes
-      import_answers
-      import_gamification_scores
-      import_post_events
+    import_likes
+    import_votes
+    import_answers
+    import_gamification_scores
+    import_post_events
 
-      import_badge_groupings
-      import_badges
-      import_user_badges
+    import_badge_groupings
+    import_badges
+    import_user_badges
 
-      import_optimized_images
+    import_optimized_images
 
-      import_topic_users
-      update_topic_users
+    import_topic_users
+    update_topic_users
 
-      import_user_stats
+    import_user_stats
 
-      import_permalink_normalizations
-      import_permalinks
-    end
+    import_permalink_normalizations
+    import_permalinks
 
     import_chat_direct_messages
     import_chat_channels
-    import_user_chat_channel_memberships
 
     import_chat_threads
-    import_chat_thread_users
-
     import_chat_messages
+
+    import_user_chat_channel_memberships
+    import_chat_thread_users
 
     import_chat_reactions
     import_chat_mentions
 
     update_chat_threads
+    update_chat_membership_metadata
 
     import_upload_references
   end
@@ -2527,16 +2520,20 @@ class BulkImport::Generic < BulkImport::Base
        ORDER BY chat_channel_users.chat_channel_id
     SQL
 
-    # TODO: Can we somehow do this via migration mappings???
     existing_members =
       Chat::UserChatChannelMembership.distinct.pluck(:user_id, :chat_channel_id).to_set
 
     create_user_chat_channel_memberships(channel_users) do |row|
       user_id = user_id_from_imported_id(row["user_id"])
       channel_id = chat_channel_id_from_original_id(row["chat_channel_id"])
+      last_read_message_id = chat_message_id_from_original_id(row["last_read_message_id"])
 
       next if user_id.blank? || channel_id.blank?
-      next if existing_members.include?([user_id, channel_id])
+      next unless existing_members.add?([user_id, channel_id])
+
+      # `last_viewed_at` is required, if not provided, set a placeholder,
+      # it'll be updated in the `update_chat_membership_metadata` step
+      last_viewed_at = to_datetime(row["last_viewed_at"].presence || LAST_VIEWED_AT_PLACEHOLDER)
 
       {
         user_id: user_id,
@@ -2546,9 +2543,9 @@ class BulkImport::Generic < BulkImport::Base
         muted: to_boolean(row["muted"]),
         desktop_notification_level: row["desktop_notification_level"],
         mobile_notification_level: row["mobile_notification_level"],
-        last_read_message_id: row["last_read_message_id"],
+        last_read_message_id: last_read_message_id,
         join_mode: row["join_mode"],
-        last_viewed_at: to_datetime(row["last_viewed_at"]),
+        last_viewed_at: last_viewed_at,
       }
     end
 
@@ -2566,7 +2563,7 @@ class BulkImport::Generic < BulkImport::Base
         chat_direct_message_channel_id_from_original_id(row["chatable_id"])
 
       next if user_id.blank? || direct_message_channel_id.blank?
-      next if existing_direct_message_users.include?([direct_message_channel_id, user_id])
+      next unless existing_direct_message_users.add?([direct_message_channel_id, user_id])
 
       {
         direct_message_channel_id: direct_message_channel_id,
@@ -2598,8 +2595,8 @@ class BulkImport::Generic < BulkImport::Base
 
       next if channel_id.blank? || original_message_user_id.blank?
 
-      # Messages aren't imported yet. Use a placeholder original_message_id for now
-      # Actual original_message_ids will be set in later step after messages have been imported
+      # Messages aren't imported yet. Use a placeholder `original_message_id` for now.
+      # Actual original_message_ids will be set later after messages have been imported
       placeholder_original_message_id = -1
 
       {
@@ -2636,15 +2633,17 @@ class BulkImport::Generic < BulkImport::Base
     create_thread_users(thread_users) do |row|
       user_id = user_id_from_imported_id(row["user_id"])
       thread_id = chat_thread_id_from_original_id(row["chat_thread_id"])
+      last_read_message_id = chat_message_id_from_original_id(row["last_read_message_id"])
 
       next if user_id.blank? || thread_id.blank?
-      next if existing_members.include?([user_id, thread_id])
+      next unless existing_members.add?([user_id, thread_id])
 
       {
         user_id: user_id,
         thread_id: thread_id,
         notification_level: row["notification_level"],
         created_at: to_datetime(row["created_at"]),
+        last_read_message_id: last_read_message_id,
       }
     end
 
@@ -2716,7 +2715,7 @@ class BulkImport::Generic < BulkImport::Base
       user_id = user_id_from_imported_id(row["user_id"])
 
       next if message_id.blank? || user_id.blank?
-      next if existing_reactions.include?([message_id, user_id])
+      next unless existing_reactions.add?([message_id, user_id])
 
       # TODO: Validate emoji
 
@@ -2746,6 +2745,8 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_chat_mentions(mentions) do |row|
+      # TODO: Maybe standardize mention types, instead of requiring converter
+      # to set namespaced ruby classes
       chat_message_id = chat_message_id_from_original_id(row["chat_message_id"])
       target_id =
         case row["type"]
@@ -2803,6 +2804,65 @@ class BulkImport::Generic < BulkImport::Base
         thread_info
       WHERE
         chat_threads.id = thread_info.thread_id;
+    SQL
+
+    puts "  Update took #{(Time.now - start_time).to_i} seconds."
+  end
+
+  def update_chat_membership_metadata
+    unless defined?(::Chat)
+      puts "",
+           "Skipping chat membership metadata updates, because the chat plugin is not installed."
+      return
+    end
+
+    puts "", "Updating chat membership metadata..."
+
+    start_time = Time.now
+
+    # Ensure the user is caught up on all messages in the channel. The primary aim is to prevent
+    # new message indicators from showing up for imported messages. We do this by updating
+    # the `last_viewed_at` and `last_read_message_id` columns in `user_chat_channel_memberships`
+    # if they were not imported.
+    DB.exec(<<~SQL)
+      WITH latest_messages AS (
+        SELECT
+          chat_channel_id,
+          MAX(id) AS last_message_id,
+          MAX(created_at) AS last_message_created_at
+        FROM chat_messages
+        WHERE thread_id IS NULL
+        GROUP BY chat_channel_id
+      )
+      UPDATE user_chat_channel_memberships uccm
+      SET
+        last_read_message_id = COALESCE(uccm.last_read_message_id, lm.last_message_id),
+        last_viewed_at = CASE
+                           WHEN uccm.last_viewed_at = '#{LAST_VIEWED_AT_PLACEHOLDER}'
+                           THEN lm.last_message_created_at + INTERVAL '1 second'
+                           ELSE uccm.last_viewed_at
+                         END
+      FROM latest_messages lm
+      WHERE uccm.chat_channel_id = lm.chat_channel_id
+    SQL
+
+    # Set `last_read_message_id` in `user_chat_thread_memberships` if none is provided.
+    # Similar to the chat channel membership update above, this ensures the user is caught up on messages in the thread.
+    DB.exec(<<~SQL)
+      WITH latest_thread_messages AS (
+        SELECT
+            thread_id,
+            MAX(id) AS last_message_id
+        FROM chat_messages
+        WHERE thread_id IS NOT NULL
+        GROUP BY thread_id
+      )
+      UPDATE user_chat_thread_memberships utm
+      SET
+        last_read_message_id = ltm.last_message_id
+      FROM latest_thread_messages ltm
+      WHERE utm.thread_id = ltm.thread_id
+        AND utm.last_read_message_id IS NULL
     SQL
 
     puts "  Update took #{(Time.now - start_time).to_i} seconds."

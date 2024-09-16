@@ -1862,7 +1862,6 @@ class BulkImport::Base
   def process_user_chat_channel_membership(membership)
     membership[:created_at] ||= NOW
     membership[:updated_at] ||= NOW
-    membership[:last_viewed_at] ||= NOW
     membership[:following] = false if membership[:following].nil?
     membership[:muted] = false if membership[:muted].nil?
     membership[
