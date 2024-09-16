@@ -7,14 +7,20 @@ export default class HighlightedCode extends Component {
   @service session;
   @service siteSettings;
 
-  highlight = modifier((element) => {
-    highlightSyntax(element, this.siteSettings, this.session);
+  highlight = modifier(async (element) => {
+    const code = document.createElement("code");
+    code.classList.add(`lang-${this.args.lang}`);
+    code.innerText = this.args.code;
+
+    const pre = document.createElement("pre");
+    pre.appendChild(code);
+
+    await highlightSyntax(pre, this.siteSettings, this.session);
+
+    element.replaceChildren(pre);
   });
 
   <template>
-    <pre
-      {{! pass in the args to re-highlight if they change }}
-      {{this.highlight @code @lang}}
-    ><code class="lang-{{@lang}}">{{@code}}</code></pre>
+    <div {{this.highlight}}></div>
   </template>
 }

@@ -1,4 +1,5 @@
-import { render } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import HighlightedCode from "admin/components/highlighted-code";
@@ -38,5 +39,25 @@ module("Integration | Component | highlighted-code", function (hooks) {
         "data-unknown-hljs-lang",
         "language is found from language- class"
       );
+  });
+
+  test("re-highlights the code when it changes", async function (assert) {
+    class State {
+      @tracked code = "def foo; end";
+    }
+
+    const testState = new State();
+
+    await render(<template>
+      <HighlightedCode @lang="ruby" @code={{testState.code}} />
+      {{testState.code}}
+    </template>);
+
+    assert.dom("code.lang-ruby.hljs .hljs-title").hasText("foo");
+
+    testState.code = "def bar; end";
+    await settled();
+
+    assert.dom("code.lang-ruby.hljs .hljs-title").hasText("bar");
   });
 });
