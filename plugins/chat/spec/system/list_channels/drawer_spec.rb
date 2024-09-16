@@ -69,15 +69,9 @@ RSpec.describe "List channels | Drawer", type: :system do
         )
         Fabricate(:chat_message, chat_channel: channel_4, use_service: true)
 
-        expect(
-          drawer_page.find("#public-channels a:nth-child(1)")["data-chat-channel-id"],
-        ).to have_content(channel_3.id)
-        expect(
-          drawer_page.find("#public-channels a:nth-child(2)")["data-chat-channel-id"],
-        ).to have_content(channel_1.id)
-        expect(
-          drawer_page.find("#public-channels a:nth-child(3)")["data-chat-channel-id"],
-        ).to have_content(channel_2.id)
+        expect(drawer_page).to have_channel_at_position(channel_3, 1)
+        expect(drawer_page).to have_channel_at_position(channel_1, 2)
+        expect(drawer_page).to have_channel_at_position(channel_2, 3)
       end
     end
   end
@@ -125,12 +119,8 @@ RSpec.describe "List channels | Drawer", type: :system do
         drawer_page.visit_index
         drawer_page.click_direct_messages
 
-        expect(
-          drawer_page.find("#direct-message-channels a:nth-child(1)")["data-chat-channel-id"],
-        ).to have_content(dm_channel_2.id)
-        expect(
-          drawer_page.find("#direct-message-channels a:nth-child(2)")["data-chat-channel-id"],
-        ).to have_content(dm_channel_1.id)
+        expect(drawer_page).to have_channel_at_position(dm_channel_2, 1)
+        expect(drawer_page).to have_channel_at_position(dm_channel_1, 2)
       end
     end
   end
