@@ -19,9 +19,7 @@ export default class LatestTopicListItem extends Component {
   @service appEvents;
 
   get tagClassNames() {
-    if (this.args.topic.tags) {
-      return this.args.topic.tags.map((tagName) => `tag-${tagName}`);
-    }
+    return this.args.topic.tags?.map((tagName) => `tag-${tagName}`);
   }
 
   <template>
