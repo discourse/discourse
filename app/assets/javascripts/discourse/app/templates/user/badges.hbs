@@ -2,11 +2,11 @@
 
 <section class="user-content" id="user-content">
   <PluginOutlet
-    @name="badge-contents-wrapper"
+    @name="user-badges-content"
     @outletArgs={{hash
       sortedBadges=this.sortedBadges
       maxFavBadges=this.siteSettings.max_favorite_badges
-      favBadges=this.favoriteBadges
+      favoriteBadges=this.favoriteBadges
     }}
   >
     {{#if this.siteSettings.max_favorite_badges}}
