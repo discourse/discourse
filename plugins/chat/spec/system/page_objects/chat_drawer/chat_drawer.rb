@@ -48,6 +48,20 @@ module PageObjects
         has_no_css?(".chat-skeleton")
       end
 
+      def has_channel?(channel)
+        channels_index.has_channel?(channel)
+      end
+
+      def has_no_channel?(channel)
+        channels_index.has_no_channel?(channel)
+      end
+
+      def has_channel_at_position?(channel, position)
+        find(
+          "#{VISIBLE_DRAWER} .chat-channel-row:nth-child(#{position})[data-chat-channel-id='#{channel.id}']",
+        )
+      end
+
       def has_unread_channel?(channel)
         channels_index.has_unread_channel?(channel)
       end
