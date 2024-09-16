@@ -556,7 +556,7 @@ GEM
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
     unf (0.2.0)
-    unicode-display_width (2.5.0)
+    unicode-display_width (2.6.0)
     unicorn (6.1.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)

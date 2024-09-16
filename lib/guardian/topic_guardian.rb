@@ -355,7 +355,9 @@ module TopicGuardian
 
   def can_move_posts?(topic)
     return false if is_silenced?
-    can_perform_action_available_to_group_moderators?(topic)
+    return false unless can_perform_action_available_to_group_moderators?(topic)
+    return false if topic.archetype == "private_message" && !is_staff?
+    true
   end
 
   def affected_by_slow_mode?(topic)

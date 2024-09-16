@@ -875,8 +875,6 @@ class TopicsController < ApplicationController
     params.permit(:chronological_order)
     params.permit(:archetype)
 
-    raise Discourse::InvalidAccess if params[:archetype] == "private_message" && !guardian.is_staff?
-
     topic = Topic.with_deleted.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
 

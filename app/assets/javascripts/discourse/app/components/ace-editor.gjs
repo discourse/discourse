@@ -94,7 +94,7 @@ export default class AceEditor extends Component {
     this.appEvents.on("ace:resize", this.resize);
     window.addEventListener("resize", this.resize);
     this._darkModeListener = window.matchMedia("(prefers-color-scheme: dark)");
-    this._darkModeListener.addListener(this.setAceTheme);
+    this._darkModeListener.addEventListener("change", this.setAceTheme);
   }
 
   willDestroy() {
@@ -102,7 +102,7 @@ export default class AceEditor extends Component {
 
     this.editor?.destroy();
 
-    this._darkModeListener?.removeListener(this.setAceTheme);
+    this._darkModeListener?.removeEventListener("change", this.setAceTheme);
     window.removeEventListener("resize", this.resize);
     this.appEvents.off("ace:resize", this.resize);
   }

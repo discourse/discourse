@@ -264,8 +264,8 @@ importers:
   app/assets/javascripts/discourse:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.0.0
-        version: 9.0.0
+        specifier: ^9.0.1
+        version: 9.0.1
       '@glimmer/syntax':
         specifier: ^0.92.3
         version: 0.92.3
@@ -370,8 +370,8 @@ importers:
         specifier: ^4.0.5
         version: 4.0.5(@embroider/core@3.4.15(@glint/template@1.4.1-unstable.ff9ea6c))(webpack@5.94.0(@swc/core@1.7.26)(esbuild@0.23.1))
       '@floating-ui/dom':
-        specifier: ^1.6.10
-        version: 1.6.10
+        specifier: ^1.6.11
+        version: 1.6.11
       '@glimmer/component':
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.25.2)
@@ -538,8 +538,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       jsuites:
-        specifier: ^5.6.0
-        version: 5.6.0
+        specifier: ^5.6.1
+        version: 5.6.1
       loader.js:
         specifier: ^4.7.0
         version: 4.7.0
@@ -565,8 +565,8 @@ importers:
         specifier: workspace:1.0.0
         version: link:../select-kit
       sinon:
-        specifier: ^19.0.1
-        version: 19.0.1
+        specifier: ^19.0.2
+        version: 19.0.2
       source-map:
         specifier: ^0.7.4
         version: 0.7.4
@@ -2121,18 +2121,18 @@ packages:
     resolution: {integrity: sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@faker-js/faker@9.0.0':
-    resolution: {integrity: sha512-dTDHJSmz6c1OJ6HO7jiUiIb4sB20Dlkb3pxYsKm0qTXm2Bmj97rlXIhlvaFsW2rvCi+OLlwKLVSS6ZxFUVZvjQ==}
+  '@faker-js/faker@9.0.1':
+    resolution: {integrity: sha512-4mDeYIgM3By7X6t5E6eYwLAa+2h4DeZDF7thhzIg6XB76jeEvMwadYAMCFJL/R4AnEBcAUO9+gL0vhy3s+qvZA==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
 
   '@floating-ui/core@1.6.7':
     resolution: {integrity: sha512-yDzVT/Lm101nQ5TCVeK65LtdN7Tj4Qpr9RTXJ2vPFLqtLxwOrpoxAHAJI8J3yYWUc40J0BDBheaitK5SJmno2g==}
 
-  '@floating-ui/dom@1.6.10':
-    resolution: {integrity: sha512-fskgCFv8J8OamCmyun8MfjB1Olfn+uZKjOKZ0vhYF3gRmEUXcGOjxWL8bBr7i4kIuPZ2KD2S3EUIOxnjC8kl2A==}
+  '@floating-ui/dom@1.6.11':
+    resolution: {integrity: sha512-qkMCxSR24v2vGkhYDo/UzxfJN3D4syqSjyuTFz6C7XcpU1pASPRieNI0Kj5VP3/503mOfYiGY891ugBX1GlABQ==}
 
-  '@floating-ui/utils@0.2.7':
-    resolution: {integrity: sha512-X8R8Oj771YRl/w+c1HqAC1szL8zWQRwFvgDwT129k9ACdBoud/+/rX9V0qiMl6LWUdP9voC2nDVZYPMQQsb6eA==}
+  '@floating-ui/utils@0.2.8':
+    resolution: {integrity: sha512-kym7SodPp8/wloecOpcmSnWJsK7M0E5Wg8UcFA+uO4B9s5d0ywXOEro/8HM9x0rW+TljRzul/14UYz3TleT3ig==}
 
   '@fortawesome/fontawesome-free@6.6.0':
     resolution: {integrity: sha512-60G28ke/sXdtS9KZCpZSHHkCbdsOGEhIUGlwq6yhY74UpTiToIh8np7A8yphhM4BWsvNFtIvLpi4co+h9Mr9Ow==}
@@ -2500,8 +2500,8 @@ packages:
   '@sinonjs/commons@3.0.1':
     resolution: {integrity: sha512-K3mCHKQ9sVh8o1C9cxkwxaOmXoAMlDxC1mYyHrjqOWEcBjYr76t96zL2zlj5dUGZ3HSw240X1qgH3Mjf1yJWpQ==}
 
-  '@sinonjs/fake-timers@13.0.1':
-    resolution: {integrity: sha512-ZEbLYOvZQHccQJzbg2E5r+/Mdjb6BMdjToL4r8WwUw0VTjTnyY3gCnwLeiovcXI3/Uo25exmqmiwsjL/eE/rSg==}
+  '@sinonjs/fake-timers@13.0.2':
+    resolution: {integrity: sha512-4Bb+oqXZTSTZ1q27Izly9lv8B9dlV61CROxPiVtywwzv5SnytJqhvYe6FclHYuXml4cd1VHPo1zd5PmTeJozvA==}
 
   '@sinonjs/samsam@8.0.2':
     resolution: {integrity: sha512-v46t/fwnhejRSFTGqbpn9u+LQ9xJDse10gNnPgAcxgdoCDMXj/G2asWAC/8Qs+BAZDicX+MNZouXT1A7c83kVw==}
@@ -5883,8 +5883,8 @@ packages:
   jspreadsheet-ce@4.13.4:
     resolution: {integrity: sha512-Rv1xbR5AKme7Nd+vCRsHS05+3h0CtcDYcGseXPOEOWV9Mq7k3z57comq+kjLXJZyEf3CR9kCzIPQsd6tN7Yn6w==}
 
-  jsuites@5.6.0:
-    resolution: {integrity: sha512-YfCy/6lR6KQqpJP55/9ZY0pNqu0NiryWWW6F4/wCN2FuukeeGQvfvCqyur2zyypUTCC7bpJkbqS33R+FJtuXIA==}
+  jsuites@5.6.1:
+    resolution: {integrity: sha512-ekr3Dt7/y8be//97wnkfWzjWUTLa4BrqbnoSUsAtqRd4DtV/TjReZUcED/ytHnWNxVn7yUTGZDZ1E3DZAYyVmQ==}
 
   just-diff-apply@5.5.0:
     resolution: {integrity: sha512-OYTthRfSh55WOItVqwpefPtNt2VdKsq5AnAK6apdtR6yCH8pr0CmSr710J0Mf+WdQy7K/OzMy7K2MgAfdQURDw==}
@@ -7505,8 +7505,8 @@ packages:
   simple-swizzle@0.2.2:
     resolution: {integrity: sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==}
 
-  sinon@19.0.1:
-    resolution: {integrity: sha512-ApJ40RwBpAh/Gi/iR+6x0blGleY1lOWkiTTyxmBE2KBWRvoEa2QNAzB0d7FoiT1C19GIq6bDcOYZAISnE2Cr0Q==}
+  sinon@19.0.2:
+    resolution: {integrity: sha512-euuToqM+PjO4UgXeLETsfQiuoyPXlqFezr6YZDFwHR3t4qaX0fZUe1MfPMznTL5f8BWrVS89KduLdMUsxFCO6g==}
 
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
@@ -10445,18 +10445,18 @@ snapshots:
 
   '@eslint/js@8.57.0': {}
 
-  '@faker-js/faker@9.0.0': {}
+  '@faker-js/faker@9.0.1': {}
 
   '@floating-ui/core@1.6.7':
     dependencies:
-      '@floating-ui/utils': 0.2.7
+      '@floating-ui/utils': 0.2.8
 
-  '@floating-ui/dom@1.6.10':
+  '@floating-ui/dom@1.6.11':
     dependencies:
       '@floating-ui/core': 1.6.7
-      '@floating-ui/utils': 0.2.7
+      '@floating-ui/utils': 0.2.8
 
-  '@floating-ui/utils@0.2.7': {}
+  '@floating-ui/utils@0.2.8': {}
 
   '@fortawesome/fontawesome-free@6.6.0': {}
 
@@ -10989,7 +10989,7 @@ snapshots:
     dependencies:
       type-detect: 4.0.8
 
-  '@sinonjs/fake-timers@13.0.1':
+  '@sinonjs/fake-timers@13.0.2':
     dependencies:
       '@sinonjs/commons': 3.0.1
 
@@ -12860,7 +12860,7 @@ snapshots:
 
   deep-eql@4.1.3:
     dependencies:
-      type-detect: 4.0.8
+      type-detect: 4.1.0
 
   deep-is@0.1.4: {}
 
@@ -15519,9 +15519,9 @@ snapshots:
   jspreadsheet-ce@4.13.4:
     dependencies:
       '@jspreadsheet/formula': 2.0.2
-      jsuites: 5.6.0
+      jsuites: 5.6.1
 
-  jsuites@5.6.0: {}
+  jsuites@5.6.1: {}
 
   just-diff-apply@5.5.0: {}
 
@@ -16167,7 +16167,7 @@ snapshots:
   nise@6.1.1:
     dependencies:
       '@sinonjs/commons': 3.0.1
-      '@sinonjs/fake-timers': 13.0.1
+      '@sinonjs/fake-timers': 13.0.2
       '@sinonjs/text-encoding': 0.7.3
       just-extend: 6.2.0
       path-to-regexp: 8.1.0
@@ -17277,10 +17277,10 @@ snapshots:
     dependencies:
       is-arrayish: 0.3.2
 
-  sinon@19.0.1:
+  sinon@19.0.2:
     dependencies:
       '@sinonjs/commons': 3.0.1
-      '@sinonjs/fake-timers': 13.0.1
+      '@sinonjs/fake-timers': 13.0.2
       '@sinonjs/samsam': 8.0.2
       diff: 7.0.0
       nise: 6.1.1

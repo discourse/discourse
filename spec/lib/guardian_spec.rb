@@ -2288,6 +2288,27 @@ RSpec.describe Guardian do
         expect(Guardian.new(admin).can_move_posts?(topic)).to be_truthy
       end
     end
+
+    context "with a private message topic" do
+      fab!(:pm) { Fabricate(:private_message_topic) }
+
+      it "returns false when not logged in" do
+        expect(Guardian.new.can_move_posts?(pm)).to be_falsey
+      end
+
+      it "returns false when not a moderator" do
+        expect(Guardian.new(user).can_move_posts?(pm)).to be_falsey
+        expect(Guardian.new(trust_level_4).can_move_posts?(pm)).to be_falsey
+      end
+
+      it "returns true when a moderator" do
+        expect(Guardian.new(moderator).can_move_posts?(pm)).to be_truthy
+      end
+
+      it "returns true when an admin" do
+        expect(Guardian.new(admin).can_move_posts?(pm)).to be_truthy
+      end
+    end
   end
 
   describe "#can_delete?" do
