@@ -22,7 +22,7 @@ module("Integration | Component | highlighted-code", function (hooks) {
       <HighlightedCode @lang="ruby" @code={{longCodeBlock}} />
     </template>);
 
-    assert.dom("code").hasText(longCodeBlock.trim());
+    assert.dom("pre code").hasText(longCodeBlock);
   });
 
   test("highlighting code with lang=auto", async function (assert) {

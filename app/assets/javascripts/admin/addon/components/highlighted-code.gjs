@@ -10,7 +10,7 @@ export default class HighlightedCode extends Component {
   highlight = modifier(async (element) => {
     const code = document.createElement("code");
     code.classList.add(`lang-${this.args.lang}`);
-    code.innerText = this.args.code;
+    code.textContent = this.args.code;
 
     const pre = document.createElement("pre");
     pre.appendChild(code);
