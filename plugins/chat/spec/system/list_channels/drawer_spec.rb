@@ -136,7 +136,7 @@ RSpec.describe "List channels | Drawer", type: :system do
   end
 
   context "when no direct message channels" do
-    it "shows the section" do
+    it "shows the empty channel list" do
       drawer_page.visit_index
       drawer_page.click_direct_messages
 
