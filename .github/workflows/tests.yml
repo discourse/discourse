@@ -397,7 +397,7 @@ jobs:
       - name: Core QUnit
         working-directory: ./app/assets/javascripts/discourse
         run: |
-          pnpm ember exam --path /tmp/emberbuild --load-balance --parallel=$(($(nproc) / 2 + 1)) --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
+          pnpm ember exam --path /tmp/emberbuild --load-balance --parallel=$(($(nproc) / 2)) --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
         timeout-minutes: 15
 
       - uses: actions/upload-artifact@v4
