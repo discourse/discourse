@@ -1,6 +1,5 @@
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
-import TopicEntrance from "discourse/components/topic-list/topic-entrance";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
 import formatAge from "discourse/helpers/format-age";
@@ -30,13 +29,11 @@ const FeaturedTopic = <template>
       @url={{@topic.lastUnreadUrl}}
     />
 
-    <TopicEntrance @topic={{@topic}}>
-      <a
-        {{on "click" onTimestampClick}}
-        href={{@topic.lastPostUrl}}
-        class="last-posted-at"
-      >{{formatAge @topic.last_posted_at}}</a>
-    </TopicEntrance>
+    <a
+      {{on "click" onTimestampClick}}
+      href={{@topic.lastPostUrl}}
+      class="last-posted-at"
+    >{{formatAge @topic.last_posted_at}}</a>
   </div>
 </template>;
 
