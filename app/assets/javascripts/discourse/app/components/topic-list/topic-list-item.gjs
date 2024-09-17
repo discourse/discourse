@@ -35,11 +35,9 @@ import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 export default class TopicListItem extends Component {
-  @service appEvents;
   @service currentUser;
   @service historyStore;
   @service messageBus;
-  @service router;
   @service site;
   @service siteSettings;
 
