@@ -3,7 +3,7 @@
     .chat-composer-dropdown__trigger-btn:hover {
       cursor: default;
       .d-icon {
-        color: var(--primary-low-mid);
+        color: var(--primary-high);
       }
     }
   }
@@ -16,7 +16,7 @@
   .d-icon {
     padding: 5px;
     transition: transform 0.1s ease-in-out;
-    background: var(--secondary-very-high);
+    background: var(--primary-low);
     border-radius: 100%;
   }
 

@@ -212,4 +212,30 @@ RSpec.describe ProblemCheckTracker do
       end
     end
   end
+
+  describe "#reset" do
+    let(:problem_tracker) do
+      Fabricate(:problem_check_tracker, identifier: "twitter_login", **original_attributes)
+    end
+
+    let(:original_attributes) do
+      {
+        blips: 0,
+        last_problem_at: 1.week.ago,
+        last_success_at: Time.current,
+        last_run_at: 24.hours.ago,
+        next_run_at: nil,
+      }
+    end
+
+    let(:updated_attributes) { { blips: 0 } }
+
+    it do
+      freeze_time
+
+      expect { problem_tracker.reset(next_run_at: 24.hours.from_now) }.to change {
+        problem_tracker.attributes
+      }.to(hash_including(updated_attributes))
+    end
+  end
 end

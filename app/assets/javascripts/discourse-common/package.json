@@ -23,10 +23,10 @@
     "@uppy/utils": "5.4.3",
     "@uppy/xhr-upload": "3.1.1",
     "discourse-i18n": "workspace:1.0.0",
-    "ember-auto-import": "^2.7.4",
+    "ember-auto-import": "^2.8.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
-    "ember-resolver": "^13.0.0",
+    "ember-resolver": "^13.0.1",
     "handlebars": "^4.7.8",
     "truth-helpers": "workspace:1.0.0"
   },
