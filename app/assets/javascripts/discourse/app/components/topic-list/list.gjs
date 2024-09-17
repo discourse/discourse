@@ -137,7 +137,6 @@ export default class TopicList extends Component {
         {{#each @topics as |topic index|}}
           <TopicListItem
             @topic={{topic}}
-            @category={{@category}}
             @bulkSelectEnabled={{this.bulkSelectEnabled}}
             @showTopicPostBadges={{this.showTopicPostBadges}}
             @hideCategory={{@hideCategory}}
