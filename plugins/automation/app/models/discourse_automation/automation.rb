@@ -31,7 +31,7 @@ module DiscourseAutomation
     end
 
     MIN_NAME_LENGTH = 5
-    MAX_NAME_LENGTH = 30
+    MAX_NAME_LENGTH = 100
     validates :name, length: { in: MIN_NAME_LENGTH..MAX_NAME_LENGTH }
 
     def add_id_to_custom_field(target, custom_field_key)

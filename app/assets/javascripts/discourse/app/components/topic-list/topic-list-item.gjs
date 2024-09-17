@@ -49,9 +49,7 @@ export function createColumns() {
 }
 
 export default class TopicListItem extends Component {
-  @service currentUser;
   @service historyStore;
-  @service messageBus;
   @service site;
   @service siteSettings;
   @service topicTrackingState;
@@ -273,7 +271,13 @@ export default class TopicListItem extends Component {
               </td>
             {{/if}}
           {{else if (eq entry.key "topic")}}
-            <TopicCell @topic={{@topic}} @expandPinned={{this.expandPinned}} />
+            <TopicCell
+              @topic={{@topic}}
+              @showTopicPostBadges={{@showTopicPostBadges}}
+              @hideCategory={{@hideCategory}}
+              @tagsForUser={{@tagsForUser}}
+              @expandPinned={{this.expandPinned}}
+            />
           {{else if (eq entry.key "posters")}}
             {{#if @showPosters}}
               <PostersColumn @posters={{@topic.featuredUsers}} />

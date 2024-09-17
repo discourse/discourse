@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ActionList from "discourse/components/topic-list/action-list";
 import ParticipantGroups from "discourse/components/topic-list/participant-groups";
@@ -18,6 +19,9 @@ import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 export default class TopicCell extends Component {
+  @service currentUser;
+  @service messageBus;
+
   constructor() {
     super(...arguments);
 
