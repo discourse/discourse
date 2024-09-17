@@ -54,8 +54,13 @@ export function navigateToTopic(topic, href) {
 @classNameBindings(":topic-list-item", "unboundClassNames", "topic.visited")
 @attributeBindings("dataTopicId:data-topic-id", "role", "ariaLevel:aria-level")
 export default class TopicListItem extends Component {
-  @service router;
+  @service currentUser;
   @service historyStore;
+  @service messageBus;
+  @service router;
+  @service site;
+  @service siteSettings;
+  @service topicTrackingState;
 
   @alias("topic.id") dataTopicId;
 
