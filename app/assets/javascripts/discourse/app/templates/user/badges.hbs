@@ -1,30 +1,38 @@
 {{body-class "user-badges-page"}}
 
 <section class="user-content" id="user-content">
-  <p class="favorite-count">
-    {{i18n
-      "badges.favorite_count"
-      count=this.favoriteBadges.length
-      max=this.siteSettings.max_favorite_badges
+  <PluginOutlet
+    @name="user-badges-content"
+    @outletArgs={{hash
+      sortedBadges=this.sortedBadges
+      maxFavBadges=this.siteSettings.max_favorite_badges
+      favoriteBadges=this.favoriteBadges
     }}
-  </p>
-
-  <div class="badge-group-list">
-    {{#each this.sortedBadges as |ub|}}
-      <BadgeCard
-        @badge={{ub.badge}}
-        @count={{ub.count}}
-        @canFavorite={{ub.can_favorite}}
-        @isFavorite={{ub.is_favorite}}
-        @username={{this.username}}
-        @canFavoriteMoreBadges={{this.canFavoriteMoreBadges}}
-        @onFavoriteClick={{action "favorite" ub}}
-        @filterUser="true"
+  >
+    <p class="favorite-count">
+      {{i18n
+        "badges.favorite_count"
+        count=this.favoriteBadges.length
+        max=this.siteSettings.max_favorite_badges
+      }}
+    </p>
+    <div class="badge-group-list">
+      {{#each this.sortedBadges as |ub|}}
+        <BadgeCard
+          @badge={{ub.badge}}
+          @count={{ub.count}}
+          @canFavorite={{ub.can_favorite}}
+          @isFavorite={{ub.is_favorite}}
+          @username={{this.username}}
+          @canFavoriteMoreBadges={{this.canFavoriteMoreBadges}}
+          @onFavoriteClick={{action "favorite" ub}}
+          @filterUser="true"
+        />
+      {{/each}}
+      <PluginOutlet
+        @name="after-user-profile-badges"
+        @outletArgs={{hash user=this.user.model}}
       />
-    {{/each}}
-    <PluginOutlet
-      @name="after-user-profile-badges"
-      @outletArgs={{hash user=this.user.model}}
-    />
-  </div>
+    </div>
+  </PluginOutlet>
 </section>
