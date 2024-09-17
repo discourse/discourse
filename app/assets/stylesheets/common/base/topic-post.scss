@@ -1098,6 +1098,10 @@ a.mention,
 a.mention-group {
   // linked
   @include mention;
+
+  .user-status-message {
+    user-select: none;
+  }
 }
 
 .mention .emoji {
