@@ -427,6 +427,12 @@ export default class TopicListItem extends Component {
                   @topic={{@data.topic}}
                   @tagsForUser={{@data.tagsForUser}}
                   @hideCategory={{@data.hideCategory}}
+                  @onTitleFocus={{@data.onTitleFocus}}
+                  @onTitleBlur={{@data.onTitleBlur}}
+                  @includeUnreadIndicator={{@data.includeUnreadIndicator}}
+                  @unreadClass={{@data.unreadClass}}
+                  @newDotText={{@data.newDotText}}
+                  @expandPinned={{@data.expandPinned}}
                 />
               </template>,
               {
@@ -434,6 +440,12 @@ export default class TopicListItem extends Component {
                 topic: this.topic,
                 tagsForUser: this.tagsForUser,
                 hideCategory: this.hideCategory,
+                onTitleFocus: this._onTitleFocus,
+                onTitleBlur: this._onTitleBlur,
+                includeUnreadIndicator: this.includeUnreadIndicator,
+                unreadClass: this.unreadClass,
+                newDotText: this.newDotText,
+                expandPinned: this.expandPinned,
               }
             )
           );
