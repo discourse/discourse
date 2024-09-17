@@ -77,7 +77,8 @@ export default class TopicAdminMenu extends Component {
     return (
       this.currentUser?.canManageTopic ||
       this.details?.can_archive_topic ||
-      this.details?.can_close_topic
+      this.details?.can_close_topic ||
+      this.details?.can_split_merge_topic
     );
   }
 
