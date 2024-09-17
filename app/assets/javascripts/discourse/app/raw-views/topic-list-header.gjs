@@ -16,11 +16,11 @@ export default class TopicListHeader extends EmberObject {
     const self = this;
     const context = {
       get category() {
-        return self.topicTrackingState.filterCategory;
+        return self.topicTrackingState.get("filterCategory");
       },
 
       get filter() {
-        return self.topicTrackingState.filter;
+        return self.topicTrackingState.get("filter");
       },
     };
 

@@ -408,10 +408,10 @@ export default class TopicListItem extends Component {
     const self = this;
     const context = {
       get category() {
-        return self.topicTrackingState.filterCategory;
+        return self.topicTrackingState.get("filterCategory");
       },
       get filter() {
-        return self.topicTrackingState.filter;
+        return self.topicTrackingState.get("filter");
       },
     };
 

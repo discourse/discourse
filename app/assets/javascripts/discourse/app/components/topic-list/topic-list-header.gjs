@@ -33,11 +33,11 @@ export default class TopicListHeader extends Component {
     const self = this;
     const context = {
       get category() {
-        return self.args.category;
+        return self.topicTrackingState.get("filterCategory");
       },
 
       get filter() {
-        return self.topicTrackingState.filter;
+        return self.topicTrackingState.get("filter");
       },
     };
 
