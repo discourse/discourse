@@ -15,9 +15,8 @@ export default class HighlightedCode extends Component {
     const pre = document.createElement("pre");
     pre.appendChild(code);
 
-    await highlightSyntax(pre, this.siteSettings, this.session);
-
     element.replaceChildren(pre);
+    await highlightSyntax(pre, this.siteSettings, this.session);
   });
 
   <template>
