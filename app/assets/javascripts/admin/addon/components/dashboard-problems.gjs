@@ -1,15 +1,33 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { concat } from "@ember/helper";
+import { action } from "@ember/object";
+import { eq } from "truth-helpers";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
+import AdminNotice from "admin/components/admin-notice";
 
-// eslint-disable-next-line ember/no-empty-glimmer-component-classes
 export default class DashboardProblems extends Component {
+  @action
+  async dismissProblem(problem) {
+    try {
+      await ajax(`/admin/admin_notices/${problem.id}`, { type: "DELETE" });
+      this.args.problems.removeObject(problem);
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  get problems() {
+    return this.args.problems.sortBy("priority");
+  }
+
   <template>
-    {{#if @foundProblems}}
+    {{#if @problems.length}}
       <div class="section dashboard-problems">
         <div class="section-title">
           <h2>
@@ -20,35 +38,24 @@ export default class DashboardProblems extends Component {
 
         <div class="section-body">
           <ConditionalLoadingSection @isLoading={{@loadingProblems}}>
-            {{#if @highPriorityProblems.length}}
-              <div class="problem-messages priority-high">
-                <ul>
-                  {{#each @highPriorityProblems as |problem|}}
-                    <li
-                      class={{concatClass
-                        "dashboard-problem "
-                        "priority-"
-                        problem.priority
-                      }}
-                    >
-                      {{icon "triangle-exclamation"}}
-                      {{htmlSafe problem.message}}
-                    </li>
-                  {{/each}}
-                </ul>
-              </div>
-            {{/if}}
-
-            <div class="problem-messages priority-low">
+            <div class="problem-messages">
               <ul>
-                {{#each @lowPriorityProblems as |problem|}}
+                {{#each this.problems as |problem|}}
                   <li
                     class={{concatClass
-                      "dashboard-problem "
-                      "priority-"
-                      problem.priority
+                      "dashboard-problem"
+                      (concat "priority-" problem.priority)
                     }}
-                  >{{htmlSafe problem.message}}</li>
+                  >
+                    <AdminNotice
+                      @icon={{if
+                        (eq problem.priority "high")
+                        "triangle-exclamation"
+                      }}
+                      @problem={{problem}}
+                      @dismissCallback={{this.dismissProblem}}
+                    />
+                  </li>
                 {{/each}}
               </ul>
             </div>

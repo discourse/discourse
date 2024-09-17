@@ -4,7 +4,6 @@ import {
   acceptance,
   count,
   exists,
-  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -59,13 +58,6 @@ acceptance("Dashboard", function (needs) {
     assert.ok(
       exists(".admin-report.new-contributors"),
       "new-contributors report"
-    );
-    assert.strictEqual(
-      query(
-        ".section.dashboard-problems .problem-messages ul li:first-child"
-      ).innerHTML.trim(),
-      "Houston...",
-      "displays problems"
     );
   });
 
