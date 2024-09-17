@@ -54,11 +54,13 @@ export default class PostsCountColumn extends Component {
     <this.wrapperElement
       class="num posts-map posts {{this.likesHeat}} topic-list-data"
     >
-      <PluginOutlet
-        @name="topic-list-before-reply-count"
-        @outletArgs={{hash topic=@topic}}
-      />
-      {{number @topic.replyCount noTitle="true"}}
+      <a href={{@topic.firstPostUrl}} class="badge-posts">
+        <PluginOutlet
+          @name="topic-list-before-reply-count"
+          @outletArgs={{hash topic=@topic}}
+        />
+        {{number @topic.replyCount noTitle="true"}}
+      </a>
     </this.wrapperElement>
   </template>
 }
