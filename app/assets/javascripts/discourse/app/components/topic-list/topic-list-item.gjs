@@ -229,7 +229,13 @@ export default class TopicListItem extends Component {
           </td>
         {{/if}}
 
-        <TopicCell @topic={{@topic}} @expandPinned={{this.expandPinned}} />
+        <TopicCell
+          @topic={{@topic}}
+          @showTopicPostBadges={{@showTopicPostBadges}}
+          @hideCategory={{@hideCategory}}
+          @tagsForUser={{@tagsForUser}}
+          @expandPinned={{this.expandPinned}}
+        />
 
         <PluginOutlet
           @name="topic-list-after-main-link"
