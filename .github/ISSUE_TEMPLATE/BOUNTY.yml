@@ -1,0 +1,131 @@
+name: "Simple Bounty"
+description: "Use this template to create a HEROES Simple Bounty via Github bot"
+title: "Bounty: "
+labels: ["bounty"]
+assignees: heroes-bot-test
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Hi! Let's set up your bounty! Please don't change the template - @heroes-bot-test won't be able to help you.
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: What talent are you looking for?
+      options:
+        - Marketing
+        - Development
+        - Design
+        - Other
+        - Content
+        - Research
+        - Audit
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What you need to be done?
+
+  - type: dropdown
+    id: tags
+    attributes:
+      label: Tags
+      description: Add tags that match the topic of the work
+      multiple: true
+      options:
+        - API
+        - Blockchain
+        - Community
+        - CSS
+        - DAO
+        - dApp
+        - DeFi
+        - Design
+        - Documentation
+        - HTML
+        - Javascript
+        - NFT
+        - React
+        - Rust
+        - Smart contract
+        - Typescript
+        - UI/UX
+        - web3
+        - Translation
+        - Illustration
+        - Branding
+        - Copywriting
+        - Blogging
+        - Editing
+        - Video Creation
+        - Social Media
+        - Graphic Design
+        - Transcription
+        - Product Design
+        - Artificial Intelligence
+        - Quality Assurance
+        - Risk Assessment
+        - Security Audit
+        - Bug Bounty
+        - Code Review
+        - Blockchain Security
+        - Smart Contract Testing
+        - Penetration Testing
+        - Vulnerability Assessment
+        - BOS
+        - News
+        - Hackathon
+        - NEARCON2023
+        - NEARWEEK
+
+  - type: input
+    id: deadline
+    attributes:
+      label: Deadline
+      description: "Set a deadline for your bounty. Please enter the date in format: DD.MM.YYYY"
+      placeholder: "19.05.2027"
+
+  - type: dropdown
+    id: currencyType
+    attributes:
+      label: Currency
+      description: What is the currency you want to pay?
+      options:
+        - USDC.e
+        - USDT.e
+        - DAI
+        - wNEAR
+        - USDt
+        - XP
+        - marmaj
+        - NEKO
+        - JUMP
+        - USDC
+        - NEARVIDIA
+      default: 0
+    validations:
+      required: true
+
+  - type: input
+    id: currencyAmount
+    attributes:
+      label: Amount
+      description: How much it will be cost?
+
+  - type: markdown
+    attributes:
+      value: "## Advanced settings"
+
+  - type: checkboxes
+    id: kyc
+    attributes:
+      label: KYC
+      description: "Use HEROES' KYC Verification, only applicants who passed HEROES' KYC can apply and work on this bounty!"
+      options:
+        - label: Use KYC Verification
+
+  - type: markdown
+    attributes:
+      value: |
+        ### This cannot be changed once the bounty is live!
