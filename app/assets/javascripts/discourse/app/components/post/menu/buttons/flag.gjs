@@ -34,7 +34,7 @@ export default class PostMenuFlagButton extends Component {
         <DButton
           class="create-flag"
           ...attributes
-          @action={{@context.showFlags}}
+          @action={{@buttonActions.showFlags}}
           @icon="flag"
           @label={{if @showLabel "post.controls.flag_action"}}
           @title="post.controls.flag"

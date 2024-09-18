@@ -26,7 +26,7 @@ export default class PostMenuEditButton extends Component {
       <DButton
         class={{concatClass "edit" (if @post.wiki "create")}}
         ...attributes
-        @action={{@context.editPost}}
+        @action={{@buttonActions.editPost}}
         @icon={{if @post.wiki "far-edit" "pencil-alt"}}
         @label={{if this.showLabel "post.controls.edit_action"}}
         @title="post.controls.edit"

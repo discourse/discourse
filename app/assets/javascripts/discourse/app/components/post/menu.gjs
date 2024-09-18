@@ -162,42 +162,27 @@ export default class PostMenu extends Component {
   @service store;
 
   @tracked collapsed = true; // TODO some plugins will need a value transformer
-  @tracked showWhoLiked = false;
+  @tracked isWhoLikedVisible = false;
   @tracked likedUsers = [];
   @tracked totalLikedUsers;
-  @tracked showWhoRead = false;
+  @tracked isWhoReadVisible = false;
   @tracked readers = [];
   @tracked totalReaders;
 
-  @cached
-  get preContext() {
+  get buttonActions() {
     return {
-      canCreatePost: this.args.canCreatePost,
-      collapsed: this.collapsed,
       copyLink: this.args.copyLink,
-      currentUser: this.currentUser,
       deletePost: this.args.deletePost,
       editPost: this.args.editPost,
-      filteredRepliesView: this.args.filteredRepliesView,
-      isWikiMode: this.#isWikiMode,
       like: this.like,
       openAdminMenu: this.openAdminMenu,
       recoverPost: this.args.recoverPost,
-      repliesShown: this.args.repliesShown,
-      replyDirectlyBelow:
-        this.args.nextPost?.reply_to_post_number ===
-          this.args.post.post_number &&
-        this.args.post.post_number !== this.args.post.filteredRepliesPostNumber,
       replyToPost: this.args.replyToPost,
       setCollapsed: (value) => (this.collapsed = value),
       share: this.args.share,
       showDeleteTopicModal: this.showDeleteTopicModal,
       showFlags: this.args.showFlags,
       showMoreActions: this.showMoreActions,
-      showReadIndicator: this.args.showReadIndicator,
-      showWhoRead: this.showWhoRead,
-      suppressReplyDirectlyBelow:
-        this.siteSettings.suppress_reply_directly_below,
       toggleReplies: this.args.toggleReplies,
       toggleWhoLiked: this.toggleWhoLiked,
       toggleWhoRead: this.toggleWhoRead,
@@ -205,9 +190,29 @@ export default class PostMenu extends Component {
   }
 
   @cached
+  get staticMethodsContext() {
+    return {
+      canCreatePost: this.args.canCreatePost,
+      collapsed: this.collapsed,
+      currentUser: this.currentUser,
+      filteredRepliesView: this.args.filteredRepliesView,
+      isWhoLikedVisible: this.isWhoLikedVisible,
+      isWhoReadVisible: this.isWhoReadVisible,
+      isWikiMode: this.isWikiMode,
+      repliesShown: this.args.repliesShown,
+      replyDirectlyBelow:
+        this.args.nextPost?.reply_to_post_number ===
+          this.args.post.post_number &&
+        this.args.post.post_number !== this.args.post.filteredRepliesPostNumber,
+      showReadIndicator: this.args.showReadIndicator,
+      suppressReplyDirectlyBelow:
+        this.siteSettings.suppress_reply_directly_below,
+    };
+  }
+
   get context() {
     return {
-      ...this.preContext,
+      ...this.staticMethodsContext,
       collapsedButtons: this.renderableCollapsedButtons,
     };
   }
@@ -238,7 +243,7 @@ export default class PostMenu extends Component {
   get items() {
     const list = this.#configuredItems.map((i) => {
       // if the post is a wiki, make Edit more prominent
-      if (this.#isWikiMode) {
+      if (this.isWikiMode) {
         switch (i) {
           case POST_MENU_EDIT_BUTTON_KEY:
             return POST_MENU_REPLY_BUTTON_KEY;
@@ -309,7 +314,10 @@ export default class PostMenu extends Component {
 
     const items = this.availableButtons.filter((button) => {
       if (
-        button.alwaysShow({ context: this.preContext, post: this.args.post }) ||
+        button.alwaysShow({
+          context: this.staticMethodsContext,
+          post: this.args.post,
+        }) ||
         button.key === POST_MENU_SHOW_MORE_BUTTON_KEY
       ) {
         return false;
@@ -335,7 +343,10 @@ export default class PostMenu extends Component {
   @cached
   get renderableCollapsedButtons() {
     return this.availableCollapsedButtons.filter((button) =>
-      button.shouldRender({ context: this.preContext, post: this.args.post })
+      button.shouldRender({
+        context: this.staticMethodsContext,
+        post: this.args.post,
+      })
     );
   }
 
@@ -367,6 +378,10 @@ export default class PostMenu extends Component {
 
   get remainingReaders() {
     return this.totalReaders - this.readers.length;
+  }
+
+  get isWikiMode() {
+    return this.args.post.wiki && this.args.post.can_edit;
   }
 
   @action
@@ -442,8 +457,10 @@ export default class PostMenu extends Component {
     this.collapsed = false;
 
     const fetchData = [
-      !this.showWhoLiked && this.#fetchWhoLiked(),
-      !this.showWhoRead && this.args.showReadIndicator && this.#fetchWhoRead(),
+      !this.isWhoLikedVisible && this.#fetchWhoLiked(),
+      !this.isWhoReadVisible &&
+        this.args.showReadIndicator &&
+        this.#fetchWhoRead(),
     ].filter(Boolean);
 
     await Promise.all(fetchData);
@@ -451,8 +468,8 @@ export default class PostMenu extends Component {
 
   @action
   toggleWhoLiked() {
-    if (this.showWhoLiked) {
-      this.showWhoLiked = false;
+    if (this.isWhoLikedVisible) {
+      this.isWhoLikedVisible = false;
       return;
     }
 
@@ -461,8 +478,8 @@ export default class PostMenu extends Component {
 
   @action
   toggleWhoRead() {
-    if (this.showWhoRead) {
-      this.showWhoRead = false;
+    if (this.isWhoReadVisible) {
+      this.isWhoReadVisible = false;
       return;
     }
 
@@ -498,10 +515,6 @@ export default class PostMenu extends Component {
       );
   }
 
-  get #isWikiMode() {
-    return this.args.post.wiki && this.args.post.can_edit;
-  }
-
   async #fetchWhoLiked() {
     const users = await this.store.find("post-action-user", {
       id: this.args.post.id,
@@ -510,7 +523,7 @@ export default class PostMenu extends Component {
 
     this.likedUsers = users.map(smallUserAttributes);
     this.totalLikedUsers = users.totalRows;
-    this.showWhoLiked = true;
+    this.isWhoLikedVisible = true;
   }
 
   async #fetchWhoRead() {
@@ -520,7 +533,7 @@ export default class PostMenu extends Component {
 
     this.readers = users.map(smallUserAttributes);
     this.totalReaders = users.totalRows;
-    this.showWhoRead = true;
+    this.isWhoReadVisible = true;
   }
 
   <template>
@@ -549,6 +562,7 @@ export default class PostMenu extends Component {
       {{! do not include PluginOutlets here, use the PostMenu DAG API instead }}
       {{#each this.extraControls key="key" as |extraControl|}}
         <PostMenuButtonWrapper
+          @buttonActions={{this.buttonActions}}
           @buttonConfig={{extraControl}}
           @context={{this.context}}
           @post={{@post}}
@@ -557,6 +571,7 @@ export default class PostMenu extends Component {
       <div class="actions">
         {{#each this.visibleButtons key="key" as |button|}}
           <PostMenuButtonWrapper
+            @buttonActions={{this.buttonActions}}
             @buttonConfig={{button}}
             @context={{this.context}}
             @post={{@post}}
@@ -564,7 +579,7 @@ export default class PostMenu extends Component {
         {{/each}}
       </div>
     </nav>
-    {{#if this.showWhoRead}}
+    {{#if this.isWhoReadVisible}}
       <SmallUserList
         class="who-read"
         @addSelf={{false}}
@@ -584,7 +599,7 @@ export default class PostMenu extends Component {
         @users={{this.readers}}
       />
     {{/if}}
-    {{#if this.showWhoLiked}}
+    {{#if this.isWhoLikedVisible}}
       <SmallUserList
         class="who-liked"
         @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}

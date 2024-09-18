@@ -11,7 +11,7 @@ export default class PostMenuShowMoreButton extends Component {
       <DButton
         class="show-more-actions"
         ...attributes
-        @action={{@context.showMoreActions}}
+        @action={{@buttonActions.showMoreActions}}
         @icon="ellipsis-h"
         @title="show_more"
       />

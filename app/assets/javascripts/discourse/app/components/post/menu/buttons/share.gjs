@@ -4,7 +4,7 @@ const PostMenuShareButton = <template>
   <DButton
     class="share"
     ...attributes
-    @action={{@context.share}}
+    @action={{@buttonActions.share}}
     @icon="d-post-share"
     @label={{if @showLabel "post.controls.share_action"}}
     @title="post.controls.share"

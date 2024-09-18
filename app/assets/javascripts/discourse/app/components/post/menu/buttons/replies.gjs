@@ -45,7 +45,7 @@ export default class PostMenuRepliesButton extends Component {
         class="show-replies btn-icon-text"
         ...attributes
         disabled={{this.disabled}}
-        @action={{@context.toggleReplies}}
+        @action={{@buttonActions.toggleReplies}}
         @ariaControls={{concat "embedded-posts__bottom--" @post.post_number}}
         @ariaExpanded={{and
           @context.repliesShown

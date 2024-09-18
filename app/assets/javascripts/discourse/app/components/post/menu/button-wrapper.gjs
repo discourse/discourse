@@ -9,6 +9,7 @@ export default class PostMenuButtonWrapper extends Component {
       class="btn-flat"
       ...attributes
       @alwaysShow={{@buttonConfig.alwaysShow this.args}}
+      @buttonActions={{@buttonActions}}
       @context={{@context}}
       @post={{@post}}
       @shouldRender={{@buttonConfig.shouldRender this.args}}

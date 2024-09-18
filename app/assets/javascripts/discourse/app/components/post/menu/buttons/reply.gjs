@@ -23,7 +23,7 @@ export default class PostMenuReplyButton extends Component {
       <DButton
         class={{concatClass "reply" (if this.showLabel "create fade-out")}}
         ...attributes
-        @action={{@context.replyToPost}}
+        @action={{@buttonActions.replyToPost}}
         @icon="reply"
         @label={{if this.showLabel "topic.reply.title"}}
         @title="post.controls.reply"

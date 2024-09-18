@@ -52,7 +52,12 @@ export default class PostMenuLikeButton extends Component {
   <template>
     {{#if @shouldRender}}
       <div class="double-button">
-        <LikeCount ...attributes @post={{@post}} @action={{@toggleWhoLiked}} />
+        <LikeCount
+          ...attributes
+          @action={{@buttonActions.toggleWhoLiked}}
+          @context={{@context}}
+          @post={{@post}}
+        />
         <DButton
           class={{concatClass
             "toggle-like"
@@ -61,7 +66,10 @@ export default class PostMenuLikeButton extends Component {
           ...attributes
           data-post-id={{@post.id}}
           disabled={{this.disabled}}
-          @action={{fn @context.like (hash onBeforeToggle=this.animateToggle)}}
+          @action={{fn
+            @buttonActions.like
+            (hash onBeforeToggle=this.animateToggle)
+          }}
           @icon={{if @post.liked "d-liked" "d-unliked"}}
           @label={{if @showLabel "post.controls.like_action"}}
           @title={{this.title}}
@@ -70,7 +78,12 @@ export default class PostMenuLikeButton extends Component {
       </div>
     {{else if @post.likeCount}}
       <div class="double-button">
-        <LikeCount ...attributes @post={{@post}} @action={{@toggleWhoLiked}} />
+        <LikeCount
+          ...attributes
+          @action={{@buttonActions.toggleWhoLiked}}
+          @context={{@context}}
+          @post={{@post}}
+        />
       </div>
     {{/if}}
   </template>
@@ -116,7 +129,7 @@ class LikeCount extends Component {
           (if @post.yours "my-likes" "regular-likes")
         }}
         ...attributes
-        @ariaPressed={{@likedUsers}}
+        @ariaPressed={{@context.isWhoReadVisible}}
         @translatedAriaLabel={{i18n
           "post.sr_post_like_count_button"
           count=@post.likeCount

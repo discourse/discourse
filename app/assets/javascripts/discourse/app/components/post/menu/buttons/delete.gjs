@@ -81,15 +81,15 @@ export default class PostMenuDeleteButton extends Component {
 
   get activeAction() {
     if (this.args.post.canRecoverTopic) {
-      return this.args.context.recoverPost;
+      return this.args.buttonActions.recoverPost;
     } else if (this.args.post.canDeleteTopic) {
-      return this.args.context.deletePost;
+      return this.args.buttonActions.deletePost;
     } else if (this.args.post.canRecover) {
-      return this.args.context.recoverPost;
+      return this.args.buttonActions.recoverPost;
     } else if (this.args.post.canDelete) {
-      return this.args.context.deletePost;
+      return this.args.buttonActions.deletePost;
     } else if (this.args.post.showFlagDelete) {
-      return this.args.context.showDeleteTopicModal;
+      return this.args.buttonActions.showDeleteTopicModal;
     }
   }
 
