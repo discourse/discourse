@@ -1,10 +1,24 @@
 import Component from "@glimmer/component";
+import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 
 export default class PostMenuEditButton extends Component {
-  static shouldRender(post) {
-    return post.can_edit;
+  static alwaysShow(args) {
+    return args.context.isWikiMode || (args.post.can_edit && args.post.yours);
+  }
+
+  static shouldRender(args) {
+    return args.post.can_edit;
+  }
+
+  @service site;
+
+  get showLabel() {
+    return (
+      this.args.showLabel ??
+      (this.site.desktopView && this.args.context.isWikiMode)
+    );
   }
 
   <template>
@@ -12,9 +26,9 @@ export default class PostMenuEditButton extends Component {
       <DButton
         class={{concatClass "edit" (if @post.wiki "create")}}
         ...attributes
-        @action={{@action}}
+        @action={{@context.editPost}}
         @icon={{if @post.wiki "far-edit" "pencil-alt"}}
-        @label={{if @showLabel "post.controls.edit_action"}}
+        @label={{if this.showLabel "post.controls.edit_action"}}
         @title="post.controls.edit"
       />
     {{/if}}

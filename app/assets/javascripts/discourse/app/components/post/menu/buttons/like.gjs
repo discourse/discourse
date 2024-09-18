@@ -10,8 +10,8 @@ import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
 
 export default class PostMenuLikeButton extends Component {
-  static shouldRender(post) {
-    return post.showLike;
+  static shouldRender(args) {
+    return args.post.showLike;
   }
 
   @service currentUser;
@@ -52,7 +52,7 @@ export default class PostMenuLikeButton extends Component {
   <template>
     {{#if @shouldRender}}
       <div class="double-button">
-        <LikeCount ...attributes @post={{@post}} @action={{@secondaryAction}} />
+        <LikeCount ...attributes @post={{@post}} @action={{@toggleWhoLiked}} />
         <DButton
           class={{concatClass
             "toggle-like"
@@ -61,7 +61,7 @@ export default class PostMenuLikeButton extends Component {
           ...attributes
           data-post-id={{@post.id}}
           disabled={{this.disabled}}
-          @action={{fn @action (hash onBeforeToggle=this.animateToggle)}}
+          @action={{fn @context.like (hash onBeforeToggle=this.animateToggle)}}
           @icon={{if @post.liked "d-liked" "d-unliked"}}
           @label={{if @showLabel "post.controls.like_action"}}
           @title={{this.title}}
@@ -70,7 +70,7 @@ export default class PostMenuLikeButton extends Component {
       </div>
     {{else if @post.likeCount}}
       <div class="double-button">
-        <LikeCount ...attributes @post={{@post}} @action={{@secondaryAction}} />
+        <LikeCount ...attributes @post={{@post}} @action={{@toggleWhoLiked}} />
       </div>
     {{/if}}
   </template>

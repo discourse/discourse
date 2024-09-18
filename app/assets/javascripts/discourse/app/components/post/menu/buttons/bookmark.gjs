@@ -4,8 +4,8 @@ import BookmarkMenu from "discourse/components/bookmark-menu";
 import PostBookmarkManager from "discourse/lib/post-bookmark-manager";
 
 export default class PostMenuBookmarkButton extends Component {
-  static shouldRender(post, context) {
-    return !!context.currentUser;
+  static shouldRender(args) {
+    return !!args.context.currentUser;
   }
 
   bookmarkManager = new PostBookmarkManager(getOwner(this), this.args.post);

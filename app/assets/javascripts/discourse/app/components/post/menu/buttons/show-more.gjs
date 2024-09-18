@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import DButton from "discourse/components/d-button";
 
 export default class PostMenuShowMoreButton extends Component {
-  static shouldRender(post, context) {
-    return context.collapsedButtons.length && context.collapsed;
+  static shouldRender(args) {
+    return args.context.collapsedButtons.length && args.context.collapsed;
   }
 
   <template>
@@ -11,7 +11,7 @@ export default class PostMenuShowMoreButton extends Component {
       <DButton
         class="show-more-actions"
         ...attributes
-        @action={{@action}}
+        @action={{@context.showMoreActions}}
         @icon="ellipsis-h"
         @title="show_more"
       />

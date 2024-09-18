@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { inject as service } from "@ember/service";
@@ -19,15 +20,7 @@ import PostMenuButtonWrapper from "./menu/button-wrapper";
 import PostMenuAdminButton from "./menu/buttons/admin";
 import PostMenuBookmarkButton from "./menu/buttons/bookmark";
 import PostMenuCopyLinkButton from "./menu/buttons/copy-link";
-import PostMenuDeleteButton, {
-  BUTTON_ACTION_MODE_DELETE,
-  BUTTON_ACTION_MODE_DELETE_TOPIC,
-  BUTTON_ACTION_MODE_RECOVER,
-  BUTTON_ACTION_MODE_RECOVER_TOPIC,
-  BUTTON_ACTION_MODE_RECOVERING,
-  BUTTON_ACTION_MODE_RECOVERING_TOPIC,
-  BUTTON_ACTION_MODE_SHOW_FLAG_DELETE,
-} from "./menu/buttons/delete";
+import PostMenuDeleteButton from "./menu/buttons/delete";
 import PostMenuEditButton from "./menu/buttons/edit";
 import PostMenuFlagButton from "./menu/buttons/flag";
 import PostMenuLikeButton from "./menu/buttons/like";
@@ -74,7 +67,9 @@ function resetPostMenuButtons() {
     ].map(([key, Button]) => [
       key,
       registeredAttributes(Button, {
+        alwaysShow: Button.alwaysShow,
         shouldRender: Button.shouldRender,
+        showLabel: Button.showLabel,
       }),
     ])
   );
@@ -134,12 +129,14 @@ export const _postMenuPluginApi = Object.freeze({
 
 function registeredAttributes(
   ButtonComponent,
-  { position, shouldRender } = {}
+  { alwaysShow, position, shouldRender, showLabel } = {}
 ) {
   return {
     Component: ButtonComponent,
+    alwaysShow,
     position,
     shouldRender,
+    showLabel,
   };
 }
 
@@ -173,133 +170,65 @@ export default class PostMenu extends Component {
   @tracked totalReaders;
 
   @cached
+  get preContext() {
+    return {
+      canCreatePost: this.args.canCreatePost,
+      collapsed: this.collapsed,
+      copyLink: this.args.copyLink,
+      currentUser: this.currentUser,
+      deletePost: this.args.deletePost,
+      editPost: this.args.editPost,
+      filteredRepliesView: this.args.filteredRepliesView,
+      isWikiMode: this.#isWikiMode,
+      like: this.like,
+      openAdminMenu: this.openAdminMenu,
+      recoverPost: this.args.recoverPost,
+      repliesShown: this.args.repliesShown,
+      replyDirectlyBelow:
+        this.args.nextPost?.reply_to_post_number ===
+          this.args.post.post_number &&
+        this.args.post.post_number !== this.args.post.filteredRepliesPostNumber,
+      replyToPost: this.args.replyToPost,
+      setCollapsed: (value) => (this.collapsed = value),
+      share: this.args.share,
+      showDeleteTopicModal: this.showDeleteTopicModal,
+      showFlags: this.args.showFlags,
+      showMoreActions: this.showMoreActions,
+      showReadIndicator: this.args.showReadIndicator,
+      showWhoRead: this.showWhoRead,
+      suppressReplyDirectlyBelow:
+        this.siteSettings.suppress_reply_directly_below,
+      toggleReplies: this.args.toggleReplies,
+      toggleWhoLiked: this.toggleWhoLiked,
+      toggleWhoRead: this.toggleWhoRead,
+    };
+  }
+
+  @cached
+  get context() {
+    return {
+      ...this.preContext,
+      collapsedButtons: this.renderableCollapsedButtons,
+    };
+  }
+
+  @cached
   get registeredButtons() {
     return new Map(
       registeredButtonComponents.entries().map(([key, properties]) => {
-        let showLabel = false;
-        let alwaysShow = false;
-        let extraControls = false;
-        let actionMode;
-        let primaryAction;
-        let secondaryAction;
-        let context;
-
-        switch (key) {
-          case POST_MENU_ADMIN_BUTTON_KEY:
-            primaryAction = this.openAdminMenu;
-            break;
-
-          case POST_MENU_BOOKMARK_BUTTON_KEY:
-            context = { currentUser: this.currentUser };
-            break;
-
-          case POST_MENU_COPY_LINK_BUTTON_KEY:
-            primaryAction = this.args.copyLink;
-            break;
-
-          case POST_MENU_DELETE_BUTTON_KEY:
-            if (this.args.post.canRecoverTopic) {
-              actionMode = BUTTON_ACTION_MODE_RECOVER_TOPIC;
-              primaryAction = this.args.recoverPost;
-            } else if (this.args.post.canDeleteTopic) {
-              actionMode = BUTTON_ACTION_MODE_DELETE_TOPIC;
-              primaryAction = this.args.deletePost;
-            } else if (this.args.post.canRecover) {
-              actionMode = BUTTON_ACTION_MODE_RECOVER;
-              primaryAction = this.args.recoverPost;
-            } else if (this.args.post.canDelete) {
-              actionMode = BUTTON_ACTION_MODE_DELETE;
-              primaryAction = this.args.deletePost;
-            } else if (this.args.post.showFlagDelete) {
-              actionMode = BUTTON_ACTION_MODE_SHOW_FLAG_DELETE;
-              primaryAction = this.showDeleteTopicModal;
-            } else if (this.args.post.isRecovering) {
-              actionMode = BUTTON_ACTION_MODE_RECOVERING;
-              primaryAction = null;
-            } else if (this.args.post.isRecoveringTopic) {
-              actionMode = BUTTON_ACTION_MODE_RECOVERING_TOPIC;
-              primaryAction = null;
-            }
-            break;
-
-          case POST_MENU_EDIT_BUTTON_KEY:
-            primaryAction = this.args.editPost;
-            alwaysShow =
-              this.#isWikiMode ||
-              (this.args.post.can_edit && this.args.post.yours);
-            showLabel = this.site.desktopView && this.#isWikiMode;
-            break;
-
-          case POST_MENU_FLAG_BUTTON_KEY:
-            primaryAction = this.args.showFlags;
-            break;
-
-          case POST_MENU_LIKE_BUTTON_KEY:
-            primaryAction = this.like;
-            secondaryAction = this.toggleWhoLiked;
-            break;
-
-          case POST_MENU_READ_BUTTON_KEY:
-            primaryAction = this.toggleWhoRead;
-            context = { showReadIndicator: this.args.showReadIndicator };
-            break;
-
-          case POST_MENU_REPLIES_BUTTON_KEY:
-            extraControls = true;
-            primaryAction = this.args.toggleReplies;
-            context = {
-              filteredRepliesView: this.args.filteredRepliesView,
-              repliesShown: this.args.repliesShown,
-              replyDirectlyBelow:
-                this.args.nextPost?.reply_to_post_number ===
-                  this.args.post.post_number &&
-                this.args.post.post_number !==
-                  this.args.post.filteredRepliesPostNumber,
-              suppressReplyDirectlyBelow:
-                this.siteSettings.suppress_reply_directly_below,
-            };
-            break;
-
-          case POST_MENU_REPLY_BUTTON_KEY:
-            primaryAction = this.args.replyToPost;
-            showLabel = this.site.desktopView && !this.#isWikiMode;
-            context = { canCreatePost: this.args.canCreatePost };
-            break;
-
-          case POST_MENU_SHARE_BUTTON_KEY:
-            primaryAction = this.args.share;
-            break;
-
-          case POST_MENU_SHOW_MORE_BUTTON_KEY:
-            primaryAction = this.showMoreActions;
-            context = () => ({
-              collapsed: this.collapsed,
-              collapsedButtons: this.renderableCollapsedButtons,
-              setCollapsed: (value) => (this.collapsed = value),
-            });
-            break;
-        }
-
-        const config = new PostMenuButtonConfig(
-          {
-            key,
-            Component: properties.Component,
-            shouldRender: properties.shouldRender,
-            position: {
-              before: properties.position?.before,
-              after: properties.position?.after,
-            },
-            showLabel,
-            action: primaryAction,
-            secondaryAction,
-            actionMode,
-            alwaysShow,
-            context,
-            extraControls: properties.position?.extraControls ?? extraControls,
+        const config = new PostMenuButtonConfig({
+          key,
+          // TODO it's probably safe to spread properties instead of enumerating the elements
+          Component: properties.Component,
+          alwaysShow: properties.alwaysShow,
+          shouldRender: properties.shouldRender,
+          position: {
+            before: properties.position?.before,
+            after: properties.position?.after,
           },
-          this.args.post
-        );
-        setOwner(config, getOwner(this)); // to allow using getOwner in the shouldRender functions
+          extraControls: properties?.extraControls ?? false,
+        });
+        setOwner(config, getOwner(this)); // to allow using getOwner in the static functions
 
         return [key, config];
       })
@@ -338,10 +267,7 @@ export default class PostMenu extends Component {
       repliesButton,
       ...this.registeredButtons
         .values()
-        .filter(
-          (button) =>
-            isPresent(button) && button.extraControls && button.shouldRender
-        ),
+        .filter((button) => isPresent(button) && button.extraControls),
     ].filter(isPresent);
 
     const dag = new DAG();
@@ -349,6 +275,7 @@ export default class PostMenu extends Component {
       dag.add(button.key, button, button.position)
     );
 
+    // TODO resolve DAG callbacks? Should I use a behavior transformer?
     return dag.resolve().map(({ value }) => value);
   }
 
@@ -381,7 +308,10 @@ export default class PostMenu extends Component {
     }
 
     const items = this.availableButtons.filter((button) => {
-      if (button.alwaysShow || button.key === POST_MENU_SHOW_MORE_BUTTON_KEY) {
+      if (
+        button.alwaysShow({ context: this.preContext, post: this.args.post }) ||
+        button.key === POST_MENU_SHOW_MORE_BUTTON_KEY
+      ) {
         return false;
       }
 
@@ -404,8 +334,8 @@ export default class PostMenu extends Component {
 
   @cached
   get renderableCollapsedButtons() {
-    return this.availableCollapsedButtons.filter(
-      (button) => button.shouldRender
+    return this.availableCollapsedButtons.filter((button) =>
+      button.shouldRender({ context: this.preContext, post: this.args.post })
     );
   }
 
@@ -601,7 +531,12 @@ export default class PostMenu extends Component {
         "post-controls"
         "glimmer-post-menu"
         (if
-          (and this.showMoreButton.shouldRender this.collapsed)
+          (and
+            (this.showMoreButton.shouldRender
+              (hash context=this.context post=this.post)
+            )
+            this.collapsed
+          )
           "collapsed"
           "expanded"
         )
@@ -613,11 +548,19 @@ export default class PostMenu extends Component {
     >
       {{! do not include PluginOutlets here, use the PostMenu DAG API instead }}
       {{#each this.extraControls key="key" as |extraControl|}}
-        <PostMenuButtonWrapper @buttonConfig={{extraControl}} @post={{@post}} />
+        <PostMenuButtonWrapper
+          @buttonConfig={{extraControl}}
+          @context={{this.context}}
+          @post={{@post}}
+        />
       {{/each}}
       <div class="actions">
         {{#each this.visibleButtons key="key" as |button|}}
-          <PostMenuButtonWrapper @buttonConfig={{button}} @post={{@post}} />
+          <PostMenuButtonWrapper
+            @buttonConfig={{button}}
+            @context={{this.context}}
+            @post={{@post}}
+          />
         {{/each}}
       </div>
     </nav>

@@ -1,32 +1,49 @@
-import { cached } from "@glimmer/tracking";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class PostMenuButtonConfig {
-  #key;
   #Component;
-  #shouldRender;
-  #position;
-  #showLabel;
-  #action;
-  #secondaryAction;
-  #actionMode;
   #alwaysShow;
-  #context;
   #extraControls;
-  #post;
+  #key;
+  #position;
+  #shouldRender;
+  #showLabel;
 
-  constructor(config, post) {
-    this.#key = config.key;
+  constructor(config) {
     this.#Component = config.Component;
-    this.#shouldRender = config.shouldRender;
-    this.#position = config.position;
-    this.#showLabel = config.showLabel;
-    this.#action = config.action;
-    this.#secondaryAction = config.secondaryAction;
-    this.#actionMode = config.actionMode;
     this.#alwaysShow = config.alwaysShow;
-    this.#context = config.context;
     this.#extraControls = config.extraControls;
-    this.#post = post;
+    this.#key = config.key;
+    this.#position = config.position;
+    this.#shouldRender = config.shouldRender;
+    this.#showLabel = config.showLabel;
+  }
+
+  @bind
+  alwaysShow(args) {
+    if (typeof this.#alwaysShow === "function") {
+      return this.#alwaysShow(args);
+    }
+
+    return this.#alwaysShow ?? false;
+  }
+
+  @bind
+  showLabel(args) {
+    if (typeof this.#showLabel === "function") {
+      return this.#showLabel(args);
+    }
+
+    return this.#showLabel ?? false;
+  }
+
+  @bind
+  shouldRender(args) {
+    if (typeof this.#shouldRender === "function") {
+      return this.#shouldRender(args);
+    }
+
+    return this.#shouldRender ?? true;
   }
 
   get key() {
@@ -41,44 +58,7 @@ export default class PostMenuButtonConfig {
     return this.#position;
   }
 
-  get showLabel() {
-    return this.#showLabel;
-  }
-
-  get action() {
-    return this.#action;
-  }
-
-  get secondaryAction() {
-    return this.#secondaryAction;
-  }
-
-  get actionMode() {
-    return this.#actionMode;
-  }
-
-  get alwaysShow() {
-    return this.#alwaysShow;
-  }
-
   get extraControls() {
     return this.#extraControls;
-  }
-
-  @cached // context can be expensive
-  get context() {
-    if (typeof this.#context === "function") {
-      return this.#context();
-    }
-
-    return this.#context;
-  }
-
-  get shouldRender() {
-    if (typeof this.#shouldRender === "function") {
-      return this.#shouldRender(this.#post, this.context);
-    }
-
-    return this.#shouldRender ?? true;
   }
 }

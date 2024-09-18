@@ -1,15 +1,18 @@
-export const PostMenuButtonWrapper = <template>
-  <@buttonConfig.Component
-    class="btn-flat"
-    ...attributes
-    @action={{@buttonConfig.action}}
-    @actionMode={{@buttonConfig.actionMode}}
-    @context={{@buttonConfig.context}}
-    @post={{@post}}
-    @secondaryAction={{@buttonConfig.secondaryAction}}
-    @shouldRender={{@buttonConfig.shouldRender}}
-    @showLabel={{@buttonConfig.showLabel}}
-  />
-</template>;
+import Component from "@glimmer/component";
 
-export default PostMenuButtonWrapper;
+// eslint-disable-next-line ember/no-empty-glimmer-component-classes
+export default class PostMenuButtonWrapper extends Component {
+  // we need a class component because we need to pass this.args to the config helpers
+
+  <template>
+    <@buttonConfig.Component
+      class="btn-flat"
+      ...attributes
+      @alwaysShow={{@buttonConfig.alwaysShow this.args}}
+      @context={{@context}}
+      @post={{@post}}
+      @shouldRender={{@buttonConfig.shouldRender this.args}}
+      @showLabel={{@showLabel.showLabel this.args}}
+    />
+  </template>
+}

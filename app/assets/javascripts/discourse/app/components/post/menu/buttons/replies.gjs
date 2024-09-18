@@ -7,8 +7,8 @@ import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 
 export default class PostMenuRepliesButton extends Component {
-  static shouldRender(post, context) {
-    const replyCount = post.reply_count;
+  static shouldRender(args) {
+    const replyCount = args.post.reply_count;
 
     if (!replyCount) {
       return false;
@@ -16,8 +16,8 @@ export default class PostMenuRepliesButton extends Component {
 
     return !(
       replyCount === 1 &&
-      context.replyDirectlyBelow &&
-      context.suppressReplyDirectlyBelow
+      args.context.replyDirectlyBelow &&
+      args.context.suppressReplyDirectlyBelow
     );
   }
 
@@ -45,7 +45,7 @@ export default class PostMenuRepliesButton extends Component {
         class="show-replies btn-icon-text"
         ...attributes
         disabled={{this.disabled}}
-        @action={{@action}}
+        @action={{@context.toggleReplies}}
         @ariaControls={{concat "embedded-posts__bottom--" @post.post_number}}
         @ariaExpanded={{and
           @context.repliesShown
