@@ -19,7 +19,7 @@ describe Chat::DirectMessage do
         I18n.t(
           "chat.channel.dm_title.multi_user",
           comma_separated_usernames:
-            [user3, user2].map { |u| "@#{u.username}" }.join(I18n.t("word_connector.comma")),
+            [user3, user2].map { |u| u.username }.join(I18n.t("word_connector.comma")),
         ),
       )
     end
@@ -38,7 +38,7 @@ describe Chat::DirectMessage do
           comma_separated_usernames:
             users[1..6]
               .sort_by(&:username)
-              .map { |u| "@#{u.username}" }
+              .map { |u| u.username }
               .join(I18n.t("word_connector.comma")),
           count: 2,
         ),
@@ -49,7 +49,7 @@ describe Chat::DirectMessage do
       direct_message = Fabricate(:direct_message, users: [user1, user2])
 
       expect(direct_message.chat_channel_title_for_user(chat_channel, user1)).to eq(
-        I18n.t("chat.channel.dm_title.single_user", username: "@#{user2.username}"),
+        I18n.t("chat.channel.dm_title.single_user", username: user2.username),
       )
     end
 
@@ -57,7 +57,7 @@ describe Chat::DirectMessage do
       direct_message = Fabricate(:direct_message, users: [user1])
 
       expect(direct_message.chat_channel_title_for_user(chat_channel, user1)).to eq(
-        I18n.t("chat.channel.dm_title.single_user", username: "@#{user1.username}"),
+        I18n.t("chat.channel.dm_title.single_user", username: user1.username),
       )
     end
 
@@ -68,7 +68,7 @@ describe Chat::DirectMessage do
         direct_message.reload
 
         expect(direct_message.chat_channel_title_for_user(chat_channel, user1)).to eq(
-          "@#{I18n.t("chat.deleted_chat_username")}",
+          I18n.t("chat.deleted_chat_username"),
         )
       end
     end
@@ -112,7 +112,7 @@ describe Chat::DirectMessage do
         expect(direct_message.chat_channel_title_for_user(chat_channel, user1)).to eq(
           I18n.t(
             "chat.channel.dm_title.multi_user",
-            comma_separated_usernames: ["@#{user2.username}", new_user.name].join(
+            comma_separated_usernames: [user2.username, new_user.name].join(
               I18n.t("word_connector.comma"),
             ),
           ),
