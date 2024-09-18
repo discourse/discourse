@@ -44,6 +44,7 @@ jobs:
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && github.ref == 'refs/heads/main' && '1' }}
       CHEAP_SOURCE_MAPS: "1"
       TESTEM_DEFAULT_BROWSER: Chrome
+      MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
 
     strategy:
       fail-fast: false
@@ -254,6 +255,13 @@ jobs:
       - name: Ember Build for System Tests
         if: matrix.build_type == 'system'
         run: bin/ember-cli --build
+
+      - name: Minio cache
+        if: matrix.build_type == 'system' && matrix.target == 'core'
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.MINIO_RUNNER_INSTALL_DIR }}
+          key: ${{ runner.os }}-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-gem-${{ hashFiles('**/Gemfile.lock') }}
 
       - name: Ensure latest minio binary installed for Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'

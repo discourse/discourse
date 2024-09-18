@@ -98,7 +98,7 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
       <form.Field
         @name="aboutBannerImage"
         @title={{i18n "admin.config_areas.about.banner_image"}}
-        @subtitle={{i18n "admin.config_areas.about.banner_image_help"}}
+        @description={{i18n "admin.config_areas.about.banner_image_help"}}
         @onSet={{this.setImage}}
         as |field|
       >

@@ -25,6 +25,7 @@ class Poll < ActiveRecord::Base
 
   attr_writer :voters_count
   attr_accessor :has_voted
+  attr_accessor :serialized_voters_cache
 
   after_initialize { @has_voted = {} }
 
