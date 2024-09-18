@@ -466,11 +466,9 @@ RSpec.configure do |config|
       Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
-    if ENV["ELEVATED_UPLOADS_ID"]
-      DB.exec "SELECT setval('uploads_id_seq', 10000)"
-    else
-      DB.exec "SELECT setval('uploads_id_seq', 1)"
-    end
+    DB
+      .query("SELECT sequence_name FROM information_schema.sequences WHERE data_type = 'bigint'")
+      .each { |row| DB.exec "SELECT setval('#{row.sequence_name}', #{2**32})" }
 
     # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
     SiteIconManager.clear_cache!
