@@ -67,7 +67,7 @@ module Chat
           if prefers_name
             users.map { |u| u.name.presence || u.username }.sort_by { |name| name[1..-1] }
           else
-            users.sort_by(&:username).map { |u| u.username }
+            users.map(&:username).sort
           end
         )
 
