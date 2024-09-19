@@ -2706,7 +2706,8 @@ class BulkImport::Generic < BulkImport::Base
       ORDER BY chat_message_id
     SQL
 
-    existing_reactions = Chat::MessageReaction.distinct.pluck(:chat_message_id, :user_id).to_set
+    existing_reactions =
+      Chat::MessageReaction.distinct.pluck(:chat_message_id, :user_id, :emoji).to_set
 
     create_chat_message_reactions(reactions) do |row|
       next if row["emoji"].blank?
@@ -2715,7 +2716,7 @@ class BulkImport::Generic < BulkImport::Base
       user_id = user_id_from_imported_id(row["user_id"])
 
       next if message_id.blank? || user_id.blank?
-      next unless existing_reactions.add?([message_id, user_id])
+      next unless existing_reactions.add?([message_id, user_id, row["emoji"]])
 
       # TODO: Validate emoji
 
