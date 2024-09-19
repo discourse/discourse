@@ -421,7 +421,6 @@ export default class PostMenu extends Component {
     return this.siteSettings.post_menu.split("|").filter(Boolean);
   }
 
-  @computed("args.post.bookmarked")
   get #hiddenItems() {
     const setting = this.siteSettings.post_menu_hidden_items;
 

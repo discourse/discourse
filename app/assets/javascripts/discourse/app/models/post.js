@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import EmberObject, { get } from "@ember/object";
 import { and, equal, not, or } from "@ember/object/computed";
 import { service } from "@ember/service";
@@ -105,6 +106,8 @@ export default class Post extends RestModel {
 
   @service currentUser;
   @service site;
+
+  @tracked bookmarked;
 
   customShare = null;
 
