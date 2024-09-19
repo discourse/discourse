@@ -14,7 +14,7 @@ export default class AdminPostMenu extends Component {
   @service adminPostMenuButtons;
 
   get reviewUrl() {
-    return `/review?topic_id=${this.args.data.id}&status=all`;
+    return `/review?topic_id=${this.args.data.post.id}&status=all`;
   }
 
   get extraButtons() {
