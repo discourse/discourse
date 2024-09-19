@@ -84,12 +84,21 @@ export default class DAG {
    * @returns {boolean} True if the item was replaced, false otherwise.
    */
   replace(key, value, position) {
+    // TODO should it return false if value is not defined or null?
     if (!this.has(key)) {
       return false;
     }
 
     const existingItem = this.#rawData.get(key);
-    this.#rawData.set(key, { ...existingItem, ...position, value });
+
+    // mutating the existing item keeps the position in the map in case before/after weren't explicitly set
+    existingItem.value = value;
+
+    if (position) {
+      existingItem.before = position.before;
+      existingItem.after = position.after;
+    }
+
     this.#refreshDAG();
 
     return true;
@@ -105,7 +114,7 @@ export default class DAG {
    * @returns {boolean} True if the item was repositioned, false otherwise.
    */
   reposition(key, position) {
-    if (!this.has(key)) {
+    if (!this.has(key) || !position) {
       return false;
     }
 
