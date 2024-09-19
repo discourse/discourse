@@ -228,7 +228,7 @@ class Search
 
   def self.need_segmenting?(data)
     return false if data.match?(/\A\d+\z/)
-    !URI.parse(data).path.start_with?("/")
+    !URI.parse(data).path.to_s.start_with?("/")
   rescue URI::InvalidURIError
     true
   end
