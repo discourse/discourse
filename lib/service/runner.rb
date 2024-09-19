@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 #
-# = ServiceRunner
+# = Service::Runner
 #
 # This class is automatically used when passing a block to the `.call` method
 # of a service. Its main purpose is to ease how actions can be run upon a
@@ -53,7 +53,7 @@
 # only exception to this being +on_failure+ as it will always be executed last.
 #
 
-class ServiceRunner
+class Service::Runner
   # @!visibility private
   AVAILABLE_ACTIONS = {
     on_success: {

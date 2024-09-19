@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ServiceRunner do
+RSpec.describe Service::Runner do
   class SuccessService
     include Service::Base
   end
