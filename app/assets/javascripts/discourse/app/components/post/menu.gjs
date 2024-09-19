@@ -12,6 +12,7 @@ import SmallUserList from "discourse/components/small-user-list";
 import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
 import DAG from "discourse/lib/dag";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import i18n from "discourse-common/helpers/i18n";
 import discourseLater from "discourse-common/lib/later";
@@ -46,99 +47,20 @@ export const POST_MENU_REPLY_BUTTON_KEY = "reply";
 export const POST_MENU_SHARE_BUTTON_KEY = "share";
 export const POST_MENU_SHOW_MORE_BUTTON_KEY = "showMore";
 
-let registeredButtonComponents;
-resetPostMenuButtons();
-
-function resetPostMenuButtons() {
-  registeredButtonComponents = new Map(
-    [
-      [POST_MENU_ADMIN_BUTTON_KEY, PostMenuAdminButton],
-      [POST_MENU_BOOKMARK_BUTTON_KEY, PostMenuBookmarkButton],
-      [POST_MENU_COPY_LINK_BUTTON_KEY, PostMenuCopyLinkButton],
-      [POST_MENU_DELETE_BUTTON_KEY, PostMenuDeleteButton],
-      [POST_MENU_EDIT_BUTTON_KEY, PostMenuEditButton],
-      [POST_MENU_FLAG_BUTTON_KEY, PostMenuFlagButton],
-      [POST_MENU_LIKE_BUTTON_KEY, PostMenuLikeButton],
-      [POST_MENU_READ_BUTTON_KEY, PostMenuReadButton],
-      [POST_MENU_REPLIES_BUTTON_KEY, PostMenuRepliesButton],
-      [POST_MENU_REPLY_BUTTON_KEY, PostMenuReplyButton],
-      [POST_MENU_SHARE_BUTTON_KEY, PostMenuShareButton],
-      [POST_MENU_SHOW_MORE_BUTTON_KEY, PostMenuShowMoreButton],
-    ].map(([key, Button]) => [
-      key,
-      registeredAttributes(Button, {
-        alwaysShow: Button.alwaysShow,
-        shouldRender: Button.shouldRender,
-        showLabel: Button.showLabel,
-      }),
-    ])
-  );
-}
-
-export function clearExtraPostMenuButtons() {
-  resetPostMenuButtons();
-}
-
-export const _postMenuPluginApi = Object.freeze({
-  add(key, ButtonComponent, position) {
-    if (registeredButtonComponents.has(key)) {
-      return false;
-    }
-
-    registeredButtonComponents.set(
-      key,
-      registeredAttributes(ButtonComponent, {
-        position,
-        shouldRender: ButtonComponent.shouldRender,
-      })
-    );
-
-    return true;
-  },
-  delete(key) {
-    return registeredButtonComponents.delete(key);
-  },
-  replace(key, ButtonComponent) {
-    const existing = registeredButtonComponents.get(key);
-    if (!existing) {
-      return false;
-    }
-
-    registeredButtonComponents.set(key, {
-      ...existing,
-      Component: ButtonComponent,
-      shouldRender: ButtonComponent.shouldRender ?? existing.shouldRender,
-    });
-
-    return true;
-  },
-  reposition(key, position) {
-    const existing = registeredButtonComponents.get(key);
-    if (!existing) {
-      return false;
-    }
-
-    registeredButtonComponents.set(key, { ...existing, position });
-
-    return true;
-  },
-  has(key) {
-    return registeredButtonComponents.has(key);
-  },
-});
-
-function registeredAttributes(
-  ButtonComponent,
-  { alwaysShow, position, shouldRender, showLabel } = {}
-) {
-  return {
-    Component: ButtonComponent,
-    alwaysShow,
-    position,
-    shouldRender,
-    showLabel,
-  };
-}
+const coreButtonComponents = new Map([
+  [POST_MENU_ADMIN_BUTTON_KEY, PostMenuAdminButton],
+  [POST_MENU_BOOKMARK_BUTTON_KEY, PostMenuBookmarkButton],
+  [POST_MENU_COPY_LINK_BUTTON_KEY, PostMenuCopyLinkButton],
+  [POST_MENU_DELETE_BUTTON_KEY, PostMenuDeleteButton],
+  [POST_MENU_EDIT_BUTTON_KEY, PostMenuEditButton],
+  [POST_MENU_FLAG_BUTTON_KEY, PostMenuFlagButton],
+  [POST_MENU_LIKE_BUTTON_KEY, PostMenuLikeButton],
+  [POST_MENU_READ_BUTTON_KEY, PostMenuReadButton],
+  [POST_MENU_REPLIES_BUTTON_KEY, PostMenuRepliesButton],
+  [POST_MENU_REPLY_BUTTON_KEY, PostMenuReplyButton],
+  [POST_MENU_SHARE_BUTTON_KEY, PostMenuShareButton],
+  [POST_MENU_SHOW_MORE_BUTTON_KEY, PostMenuShowMoreButton],
+]);
 
 function smallUserAttributes(user) {
   return {
@@ -210,6 +132,10 @@ export default class PostMenu extends Component {
     };
   }
 
+  get staticMethodsArgs() {
+    return { context: this.staticMethodsContext, post: this.args.post };
+  }
+
   get context() {
     return {
       ...this.staticMethodsContext,
@@ -219,19 +145,25 @@ export default class PostMenu extends Component {
 
   @cached
   get registeredButtons() {
+    // the DAG is not resolved now, instead we just use the object for convenience to pass a nice DAG API to be used
+    // in the value transformer, and the extract the data to be used later to resolve the DAG order
+    const buttonsRegistry = applyValueTransformer(
+      "post-menu-registered-buttons",
+      // TODO auto-generate the position cordinates based on the order of the elements
+      DAG.from(coreButtonComponents.entries()),
+      this.staticMethodsArgs
+    );
+
     return new Map(
-      registeredButtonComponents.entries().map(([key, properties]) => {
+      buttonsRegistry.entries().map(([key, properties, position]) => {
         const config = new PostMenuButtonConfig({
           key,
-          // TODO it's probably safe to spread properties instead of enumerating the elements
-          Component: properties.Component,
+          Component: properties,
           alwaysShow: properties.alwaysShow,
+          extraControls: properties.extraControls,
           shouldRender: properties.shouldRender,
-          position: {
-            before: properties.position?.before,
-            after: properties.position?.after,
-          },
-          extraControls: properties?.extraControls ?? false,
+          showLabel: properties.showLabel,
+          position,
         });
         setOwner(config, getOwner(this)); // to allow using getOwner in the static functions
 
@@ -275,13 +207,11 @@ export default class PostMenu extends Component {
         .filter((button) => isPresent(button) && button.extraControls),
     ].filter(isPresent);
 
-    const dag = new DAG();
-    new Set(items).forEach((button) =>
-      dag.add(button.key, button, button.position)
-    );
-
-    // TODO resolve DAG callbacks? Should I use a behavior transformer?
-    return dag.resolve().map(({ value }) => value);
+    return DAG.from(
+      items.map((button) => [button.key, button, button.position])
+    )
+      .resolve()
+      .map(({ value }) => value);
   }
 
   get availableButtons() {
@@ -314,10 +244,7 @@ export default class PostMenu extends Component {
 
     const items = this.availableButtons.filter((button) => {
       if (
-        button.alwaysShow({
-          context: this.staticMethodsContext,
-          post: this.args.post,
-        }) ||
+        button.alwaysShow(this.staticMethodsArgs) ||
         button.key === POST_MENU_SHOW_MORE_BUTTON_KEY
       ) {
         return false;
@@ -343,10 +270,7 @@ export default class PostMenu extends Component {
   @cached
   get renderableCollapsedButtons() {
     return this.availableCollapsedButtons.filter((button) =>
-      button.shouldRender({
-        context: this.staticMethodsContext,
-        post: this.args.post,
-      })
+      button.shouldRender(this.staticMethodsArgs)
     );
   }
 
@@ -356,12 +280,11 @@ export default class PostMenu extends Component {
       return !this.availableCollapsedButtons.includes(button);
     });
 
-    const dag = new DAG();
-    new Set(nonCollapsed).forEach((button) =>
-      dag.add(button.key, button, button.position)
-    );
-
-    return dag.resolve().map(({ value }) => value);
+    return DAG.from(
+      nonCollapsed.map((button) => [button.key, button, button.position])
+    )
+      .resolve()
+      .map(({ value }) => value);
   }
 
   get repliesButton() {

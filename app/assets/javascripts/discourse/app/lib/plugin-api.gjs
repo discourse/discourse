@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.38.0";
+export const PLUGIN_API_VERSION = "1.37.1";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -26,7 +26,6 @@ import { headerIconsDAG } from "discourse/components/header/icons";
 import { registeredTabs } from "discourse/components/more-topics";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
-import { _postMenuPluginApi } from "discourse/components/post/menu";
 import {
   addPluginReviewableParam,
   registerReviewableActionModal,
@@ -421,9 +420,10 @@ class PluginApi {
    * behavior. Notice that this includes the default behavior and if next() is not called in your transformer's callback
    * the default behavior will be completely overridden
    * @param {*} [behaviorCallback.context] the optional context in which the behavior is being transformed
+   * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerBehaviorTransformer(transformerName, behaviorCallback) {
-    _registerTransformer(
+    return _registerTransformer(
       transformerName,
       transformerTypes.BEHAVIOR,
       behaviorCallback
@@ -488,9 +488,10 @@ class PluginApi {
    * mutating the input value, return the same output for the same input and not have any side effects.
    * @param {*} valueCallback.value the value to be transformed
    * @param {*} [valueCallback.context] the optional context in which the value is being transformed
+   * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerValueTransformer(transformerName, valueCallback) {
-    _registerTransformer(
+    return _registerTransformer(
       transformerName,
       transformerTypes.VALUE,
       valueCallback
@@ -788,10 +789,6 @@ class PluginApi {
     includeAttributes(...attributes);
   }
 
-  get postMenuButtons() {
-    return _postMenuPluginApi;
-  }
-
   /**
    * Add a new button below a post with your plugin.
    *
@@ -840,7 +837,7 @@ class PluginApi {
    **/
   addPostMenuButton(name, callback) {
     deprecated(
-      "`api.addPostMenuButton` has been deprecated. Use `api.postMenuButtons.add(...)` instead",
+      "`api.addPostMenuButton` has been deprecated. Use the value transformer `post-menu-registered-buttons` instead.",
       {
         since: "v3.4.0.beta2-dev",
         id: "discourse.post-menu-widget-overrides",
@@ -918,7 +915,7 @@ class PluginApi {
    **/
   removePostMenuButton(name, callback) {
     deprecated(
-      "`api.removePostMenuButton` has been deprecated. Use `api.postMenuButtons.delete(...)` instead",
+      "`api.removePostMenuButton` has been deprecated. Use the value transformer `post-menu-registered-buttons` instead.",
       {
         since: "v3.4.0.beta2-dev",
         id: "discourse.post-menu-widget-overrides",
@@ -946,7 +943,7 @@ class PluginApi {
    **/
   replacePostMenuButton(name, widget) {
     deprecated(
-      "`api.replacePostMenuButton` has been deprecated. Use `api.postMenuButtons.replace(...)` instead",
+      "`api.replacePostMenuButton` has been deprecated. Use the value transformer `post-menu-registered-buttons` instead.",
       {
         since: "v3.4.0.beta2-dev",
         id: "discourse.post-menu-widget-overrides",

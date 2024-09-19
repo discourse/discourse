@@ -6,14 +6,42 @@ function ensureArray(val) {
 }
 
 export default class DAG {
+  /**
+   * Creates a new DAG instance from an iterable of entries.
+   *
+   * @param {Iterable<[string, any, Object?]>} entriesLike - An iterable of key-value-position tuples to initialize the DAG.
+   * @param {Object} [opts] - Optional configuration object.
+   * @param {Object} [opts.defaultPosition] - Default positioning rules for new items.
+   * @param {string|string[]} [opts.defaultPosition.before] - A key or array of keys of items which should appear before this one.
+   * @param {string|string[]} [opts.defaultPosition.after] - A key or array of keys of items which should appear after this one.
+   * @returns {DAG} A new DAG instance.
+   */
+  static from(entriesLike, opts) {
+    const dag = new this(opts);
+
+    for (const [key, value, position] of entriesLike) {
+      dag.add(key, value, position);
+    }
+
+    return dag;
+  }
+
   #defaultPosition;
   #rawData = new Map();
   #dag = new DAGMap();
 
-  constructor(args) {
+  /**
+   * Creates a new Directed Acyclic Graph (DAG) instance.
+   *
+   * @param {Object} [opts] - Optional configuration object.
+   * @param {Object} [opts.defaultPosition] - Default positioning rules for new items.
+   * @param {string|string[]} [opts.defaultPosition.before] - A key or array of keys of items which should appear before this one.
+   * @param {string|string[]} [opts.defaultPosition.after] - A key or array of keys of items which should appear after this one.
+   */
+  constructor(opts) {
     // allows for custom default positioning of new items added to the DAG, eg
     // new DAG({ defaultPosition: { before: "foo", after: "bar" } });
-    this.#defaultPosition = args?.defaultPosition || {};
+    this.#defaultPosition = opts?.defaultPosition || {};
   }
 
   /**
@@ -58,6 +86,17 @@ export default class DAG {
     this.#dag.add(key, value, before, after);
 
     return true;
+  }
+
+  /**
+   * Returns an array of entries in the DAG. Each entry is a tuple containing the key, value, and position object.
+   *
+   * @returns {Array<[string, any, {before?: string|string[], after?: string|string[]}]>} An array of key-value-position tuples.
+   */
+  entries() {
+    return Array.from(this.#rawData.entries()).map(
+      ([key, { value, before, after }]) => [key, value, { before, after }]
+    );
   }
 
   /**
@@ -136,7 +175,7 @@ export default class DAG {
   /**
    * Return the resolved key/value pairs in the map. The order of the pairs is determined by the before/after rules.
    *
-   * @returns {Array<{key: string, value: any}>} An array of key/value pairs.
+   * @returns {Array<{key: string, value: any, position: {before?: string|string[], after?: string|string[]}}>} An array of key/value/position objects.
    */
   @bind
   resolve() {
@@ -146,7 +185,8 @@ export default class DAG {
       // dependencies, for example if an item has a "before: search" dependency, the "search" vertex will be included
       // even if it was explicitly excluded from the raw data.
       if (this.has(key)) {
-        result.push({ key, value });
+        const { before, after } = this.#rawData.get(key);
+        result.push({ key, value, position: { before, after } });
       }
     });
     return result;
