@@ -62,7 +62,7 @@ module Chat
       search_category_channels(context, guardian)
     end
 
-    def fetch_direct_message_channels(guardian:, contract:, users:, **args)
+    def fetch_direct_message_channels(guardian:, contract:, users:)
       return unless contract.include_direct_message_channels
       return unless guardian.can_create_direct_message?
       search_direct_message_channels(context, guardian, contract, users)

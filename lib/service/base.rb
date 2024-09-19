@@ -112,6 +112,9 @@ module Service
       def call(instance, context)
         object = class_name&.new(context)
         method = object&.method(:call) || instance.method(method_name)
+        if method.parameters.any? { _1[0] != :keyreq }
+          raise "In #{type} '#{name}': default values in step implementations are not allowed. Maybe they could be defined in a contract?"
+        end
         args = context.to_h.slice(*method.parameters.select { _1[0] == :keyreq }.map(&:last))
         context[result_key] = Context.build(object: object)
         instance.instance_exec(**args, &method)
