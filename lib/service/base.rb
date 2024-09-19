@@ -235,7 +235,7 @@ module Service
 
       def call(context = {}, &actions)
         return new(context).tap(&:run).context unless block_given?
-        ServiceRunner.call(self, context, &actions)
+        Service::Runner.call(self, context, &actions)
       end
 
       def call!(context = {})
