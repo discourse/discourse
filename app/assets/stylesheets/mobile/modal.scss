@@ -36,10 +36,6 @@ html:not(.keyboard-visible.mobile-view) {
     max-height: calc(var(--composer-vh, var(--1dvh)) * 85);
   }
 
-  &__header {
-    padding: 0.5rem;
-  }
-
   &__footer {
     margin-top: auto;
   }
