@@ -1099,15 +1099,15 @@ export default createWidget("post", {
     return [this.attach("post-article", attrs)];
   },
 
-  toggleLike() {
+  async toggleLike() {
     const post = this.model;
     const likeAction = post.get("likeAction");
 
     if (likeAction && likeAction.get("canToggle")) {
-      return likeAction.togglePromise(post).then((result) => {
-        this.appEvents.trigger("page:like-toggled", post, likeAction);
-        return this._warnIfClose(result);
-      });
+      const result = await likeAction.togglePromise(post);
+
+      this.appEvents.trigger("page:like-toggled", post, likeAction);
+      return this._warnIfClose(result);
     }
   },
 

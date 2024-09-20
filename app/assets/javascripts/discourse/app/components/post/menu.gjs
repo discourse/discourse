@@ -308,7 +308,7 @@ export default class PostMenu extends Component {
   }
 
   @action
-  async like({ onBeforeToggle } = {}) {
+  async like({ onBeforeToggle, onAfterToggle } = {}) {
     if (!this.currentUser) {
       this.keyValueStore &&
         this.keyValueStore.set({
@@ -324,16 +324,11 @@ export default class PostMenu extends Component {
       navigator.vibrate(VIBRATE_DURATION);
     }
 
-    if (this.args.post.liked) {
-      await this.#toggleLike();
-      return;
-    }
-
-    onBeforeToggle?.(this.args.post.liked);
-
     return new Promise((resolve) => {
       discourseLater(async () => {
+        onBeforeToggle?.();
         await this.#toggleLike();
+        onAfterToggle?.();
         resolve();
       }, 400);
     });

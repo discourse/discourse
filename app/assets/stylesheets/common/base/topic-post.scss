@@ -508,7 +508,9 @@ nav.post-controls {
   }
 }
 
-.has-like .d-icon.heart-animation {
+// .d-icon.heart-animation is the widget animation while .toggle-like.heart-animation is the glimmer-post-menu's
+.has-like .d-icon.heart-animation,
+.toggle-like.heart-animation .d-icon {
   @media (prefers-reduced-motion: no-preference) {
     animation: heartBump 0.4s;
   }

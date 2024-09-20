@@ -1,13 +1,12 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
-import { bind } from "discourse-common/utils/decorators";
 
 export default class PostMenuLikeButton extends Component {
   static shouldRender(args) {
@@ -16,7 +15,7 @@ export default class PostMenuLikeButton extends Component {
 
   @service currentUser;
 
-  #element;
+  @tracked isAnimated = false;
 
   get disabled() {
     return this.currentUser && !this.args.post.canToggleLike;
@@ -38,15 +37,9 @@ export default class PostMenuLikeButton extends Component {
       : "post.controls.like";
   }
 
-  @bind
-  setElement(element) {
-    this.#element = element;
-  }
-
   @action
-  animateToggle() {
-    this.#element.classList.add("has-like");
-    this.#element.querySelector(`.d-icon`).classList.add("heart-animation");
+  toggleAnimation(value) {
+    this.isAnimated = value;
   }
 
   <template>
@@ -60,7 +53,9 @@ export default class PostMenuLikeButton extends Component {
         />
         <DButton
           class={{concatClass
+            "btn-icon"
             "toggle-like"
+            (if this.isAnimated "heart-animation")
             (if @post.liked "has-like fade-out" "like")
           }}
           ...attributes
@@ -68,12 +63,14 @@ export default class PostMenuLikeButton extends Component {
           disabled={{this.disabled}}
           @action={{fn
             @buttonActions.like
-            (hash onBeforeToggle=this.animateToggle)
+            (hash
+              onBeforeToggle=(fn this.toggleAnimation true)
+              onAfterToggle=(fn this.toggleAnimation false)
+            )
           }}
           @icon={{if @post.liked "d-liked" "d-unliked"}}
           @label={{if @showLabel "post.controls.like_action"}}
           @title={{this.title}}
-          {{didInsert this.setElement}}
         />
       </div>
     {{else if @post.likeCount}}
