@@ -555,7 +555,7 @@ GEM
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2024.2)
       tzinfo (>= 1.0.0)
-    uglifier (4.2.0)
+    uglifier (4.2.1)
       execjs (>= 0.3.0, < 3)
     unf (0.2.0)
     unicode-display_width (2.6.0)
