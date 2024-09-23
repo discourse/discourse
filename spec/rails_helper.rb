@@ -466,6 +466,19 @@ RSpec.configure do |config|
       Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
+    [
+      %w[allowed_pm_users allowed_pm_user_id],
+      %w[ignored_users ignored_user_id],
+      %w[post_actions post_action_type_id],
+      %w[reviewable_histories reviewable_id],
+      %w[reviewable_scores reviewable_id],
+      %w[reviewable_scores reviewable_score_type],
+      %w[sidebar_section_links linkable_id],
+      %w[sidebar_section_links sidebar_section_id],
+      %w[users last_seen_reviewable_id],
+      %w[users required_fields_version],
+    ].each { |table, column| DB.exec("ALTER TABLE #{table} ALTER #{column} TYPE bigint") }
+
     DB
       .query("SELECT sequence_name FROM information_schema.sequences WHERE data_type = 'bigint'")
       .each { |row| DB.exec "SELECT setval('#{row.sequence_name}', #{2**32})" }
