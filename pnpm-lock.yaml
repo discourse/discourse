@@ -86,8 +86,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.3
       lefthook:
-        specifier: ^1.7.15
-        version: 1.7.15
+        specifier: ^1.7.16
+        version: 1.7.16
       licensee:
         specifier: ^11.1.0
         version: 11.1.0(patch_hash=55h346kvblvnigtrwrsh4hpona)
@@ -5949,58 +5949,58 @@ packages:
     resolution: {integrity: sha512-M6T051+5QCGLBQb8id3hdvIW8+zeFV2FyBGFS9IEK5H9Wt4MueD4bW1eWikpHgZp+5xR3l5c8pZUkQsIA0BFZg==}
     engines: {node: '>=8'}
 
-  lefthook-darwin-arm64@1.7.15:
-    resolution: {integrity: sha512-o8JgCnLM7UgF9g0MwarHJFoj6aVSSkUInHpsQZegV1c7CVQY/LIXgSeAWRb9XBvuUjByJ/HiHFMp9/hAALTwxQ==}
+  lefthook-darwin-arm64@1.7.16:
+    resolution: {integrity: sha512-T7VRvfWpCE4IaT2jQnZIT4VVJ+Igj3/DE9Mzlt/Zk8yVn7E9hm+DvvAvj3mOlQtFq1tn5IlJZ6sgogjxpjtgMg==}
     cpu: [arm64]
     os: [darwin]
 
-  lefthook-darwin-x64@1.7.15:
-    resolution: {integrity: sha512-nrdoex0icmXYl7AAvG7WtfEzjQtX/kWvM88jPu/gijH6VhAjp110Y8VScB7rWOcApb5kNNeqd1nKMAFgZ8KhAg==}
+  lefthook-darwin-x64@1.7.16:
+    resolution: {integrity: sha512-SmwulM8QOcqvOYZMrTtVdvIqv6hKk2rBT3JzEyyOJ2kLiBDrfJs/r5dlkLuM06jOqxF5M9WvArb3dUHBkkmewQ==}
     cpu: [x64]
     os: [darwin]
 
-  lefthook-freebsd-arm64@1.7.15:
-    resolution: {integrity: sha512-zl1TPynklJZZ/YsWb2H0gfErQbey318i2W85wIKGEk8kC2UzOgYTuPffnfi7kANei9ntZnhvGgilc6tqYOPuGQ==}
+  lefthook-freebsd-arm64@1.7.16:
+    resolution: {integrity: sha512-YUPpiGVB1i9/OrDwm3tKSYmiip01eqa1gDY79MHj/lj7qLVkqzQsohx+xs/XroZZ/U6CdmLpOHQPXIIZ5FAL6Q==}
     cpu: [arm64]
     os: [freebsd]
 
-  lefthook-freebsd-x64@1.7.15:
-    resolution: {integrity: sha512-/gKPwhWhZ3Q/efGs73/qw6nyR4WCT74oSTgn8wabAJO5+T/2FXTKzo7IiKkQmScmY5OcnD/0teJbJZ17VWSSOg==}
+  lefthook-freebsd-x64@1.7.16:
+    resolution: {integrity: sha512-4KflUJXY7sO7Ikzk9J+6GjzQZaGos67qehi0I343MhpRtCXGOLQWbVT4IMUFZjF+pybu5HfrX6VNcGDF6mTubQ==}
     cpu: [x64]
     os: [freebsd]
 
-  lefthook-linux-arm64@1.7.15:
-    resolution: {integrity: sha512-re2f8WmYw19n8ojit0rnKbERAzD1/iCpU/Y8anXOjD/ROw/cpSfO88uKQrUCNY9Rp4XLtkkp9oDJs3Eg7JS7vA==}
+  lefthook-linux-arm64@1.7.16:
+    resolution: {integrity: sha512-QUiqaBNM3dGHKXNVdcZnYtGb/Jz4qnVrW6L5DMHLJ4ns/w09z3lduYJo/1EZg9QW8+0HD6IYwA3laYRnH+WXtg==}
     cpu: [arm64]
     os: [linux]
 
-  lefthook-linux-x64@1.7.15:
-    resolution: {integrity: sha512-Kj6ieTlhFGlbPDyVFeOb296MS9x/Jj5y/xTPLBM+EKbdsTJSvUYu5FdtEWfhpLyWmPfkZtULHcTQE1hoo9Q4Cg==}
+  lefthook-linux-x64@1.7.16:
+    resolution: {integrity: sha512-jw18PlmZv+5EW0o/7A8r4Y/+Yc4pFh49xpECEts3m+LuWSeMyaubfOVaBuYEoBLC8ksSGDkZ2ocgXtlc81hvFQ==}
     cpu: [x64]
     os: [linux]
 
-  lefthook-openbsd-arm64@1.7.15:
-    resolution: {integrity: sha512-85amE23mJ4BC9OThLkt+QCeVwue2Cr0ezN9LSwP0h8+royyj7YRcSu0VM/Et3B9LO50T2bpdI9norOqTcPZ9yA==}
+  lefthook-openbsd-arm64@1.7.16:
+    resolution: {integrity: sha512-OBuelWygkF37AC44Qj1v+XP6TT4xH8xtvJoa55VstpY0KcA++q1hLDyMjeAake4y6r2JDV3cPxgGjuVoexLorg==}
     cpu: [arm64]
     os: [openbsd]
 
-  lefthook-openbsd-x64@1.7.15:
-    resolution: {integrity: sha512-vXx/PpcalFgdvqkoHLI4KTGZp0ti+VCCL7RqDTA6n+GZpxPTWEXSOz3GuwNALX93Dn6MOYQYktKtXADwy24fcA==}
+  lefthook-openbsd-x64@1.7.16:
+    resolution: {integrity: sha512-wvXlaWQVndvEJKCUMdC2DhBdeSzN+RaNfUEXfPgh+5rg5a3DACHXt1A+QLP7eNDz4+87mzKltED9QtlS1VNQdg==}
     cpu: [x64]
     os: [openbsd]
 
-  lefthook-windows-arm64@1.7.15:
-    resolution: {integrity: sha512-jPKdQOLWQLRPO3VfI3ptpmdQBBsXTwaCLKXMo/gcSyU0xE/ltPD4QqvHzTAFJo00VcKRHjv9QeH69qhENjJtjw==}
+  lefthook-windows-arm64@1.7.16:
+    resolution: {integrity: sha512-6TpgtEDbWqQ6I0BQUGNNzAH8xnlMFOOvDUl0NA1eMo40PgTBL/avNgjP84HQ4hKfFuSzN7s9yrwAlkQdZ9KqUg==}
     cpu: [arm64]
     os: [win32]
 
-  lefthook-windows-x64@1.7.15:
-    resolution: {integrity: sha512-tlkSU669+b64AsqytGy1W3au7h8kFjt5ejLhTkErJpylTqThZIHm/GI0wUmpX+ud8kekM+9j407dweAHYOQ1XA==}
+  lefthook-windows-x64@1.7.16:
+    resolution: {integrity: sha512-EDUQff+mmW7ygWTzIrVxJG0L4mEPt5yOR8OzxqUmIcaqDEhIrtVYIbA/F63iRJmWDC2DBJiHoX4zX44KnZgMRQ==}
     cpu: [x64]
     os: [win32]
 
-  lefthook@1.7.15:
-    resolution: {integrity: sha512-HW2mYkhg0a3RH2t57+ZJwacJiSIuDEhsXQAaCw6iGeN7zowdUV7g5QtnRdFdPkaK2eaNFpG6Rp0GsTrl/v0gNg==}
+  lefthook@1.7.16:
+    resolution: {integrity: sha512-ApzyQnsa3t4YBdbI+nvGVXOuNTNP02Fh+haoDj4f/Sjjlo3S+19OmPdFtJAKcz1ziOL52iq1q3rTLIOtOXNDZg==}
     hasBin: true
 
   levn@0.4.1:
@@ -15605,48 +15605,48 @@ snapshots:
     dependencies:
       invert-kv: 3.0.1
 
-  lefthook-darwin-arm64@1.7.15:
+  lefthook-darwin-arm64@1.7.16:
     optional: true
 
-  lefthook-darwin-x64@1.7.15:
+  lefthook-darwin-x64@1.7.16:
     optional: true
 
-  lefthook-freebsd-arm64@1.7.15:
+  lefthook-freebsd-arm64@1.7.16:
     optional: true
 
-  lefthook-freebsd-x64@1.7.15:
+  lefthook-freebsd-x64@1.7.16:
     optional: true
 
-  lefthook-linux-arm64@1.7.15:
+  lefthook-linux-arm64@1.7.16:
     optional: true
 
-  lefthook-linux-x64@1.7.15:
+  lefthook-linux-x64@1.7.16:
     optional: true
 
-  lefthook-openbsd-arm64@1.7.15:
+  lefthook-openbsd-arm64@1.7.16:
     optional: true
 
-  lefthook-openbsd-x64@1.7.15:
+  lefthook-openbsd-x64@1.7.16:
     optional: true
 
-  lefthook-windows-arm64@1.7.15:
+  lefthook-windows-arm64@1.7.16:
     optional: true
 
-  lefthook-windows-x64@1.7.15:
+  lefthook-windows-x64@1.7.16:
     optional: true
 
-  lefthook@1.7.15:
+  lefthook@1.7.16:
     optionalDependencies:
-      lefthook-darwin-arm64: 1.7.15
-      lefthook-darwin-x64: 1.7.15
-      lefthook-freebsd-arm64: 1.7.15
-      lefthook-freebsd-x64: 1.7.15
-      lefthook-linux-arm64: 1.7.15
-      lefthook-linux-x64: 1.7.15
-      lefthook-openbsd-arm64: 1.7.15
-      lefthook-openbsd-x64: 1.7.15
-      lefthook-windows-arm64: 1.7.15
-      lefthook-windows-x64: 1.7.15
+      lefthook-darwin-arm64: 1.7.16
+      lefthook-darwin-x64: 1.7.16
+      lefthook-freebsd-arm64: 1.7.16
+      lefthook-freebsd-x64: 1.7.16
+      lefthook-linux-arm64: 1.7.16
+      lefthook-linux-x64: 1.7.16
+      lefthook-openbsd-arm64: 1.7.16
+      lefthook-openbsd-x64: 1.7.16
+      lefthook-windows-arm64: 1.7.16
+      lefthook-windows-x64: 1.7.16
 
   levn@0.4.1:
     dependencies:
