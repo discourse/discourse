@@ -35,4 +35,14 @@ DiscourseAutomation::Scriptable.add("nothing_about_us") do
   triggerables [DiscourseAutomation::Triggers::API_CALL]
 end
 
-RSpec.configure { |config| config.include AutomationSpecHelpers }
+RSpec.configure do |config|
+  config.include AutomationSpecHelpers
+
+  config.before(:suite) do
+    if defined?(migrate_column_to_bigint)
+      migrate_column_to_bigint(DiscourseAutomation::Field, :automation_id)
+      migrate_column_to_bigint(DiscourseAutomation::PendingAutomation, :automation_id)
+      migrate_column_to_bigint(DiscourseAutomation::PendingPm, :automation_id)
+    end
+  end
+end
