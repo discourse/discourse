@@ -321,18 +321,11 @@ export default class AdminUserIndexController extends Controller.extend(
 
   @action
   deleteAssociatedAccounts() {
-    const performDelete = () => {
-      this.model
-        .deleteAssociatedAccounts()
-        .then(() => {
-          this.model.set("associated_accounts", []);
-        })
-        .catch(popupAjaxError);
-    };
-
     this.dialog.yesNoConfirm({
       message: I18n.t("admin.user.delete_associated_accounts_confirm"),
-      didConfirm: () => performDelete(),
+      didConfirm: () => {
+        this.model.deleteAssociatedAccounts().catch(popupAjaxError);
+      },
     });
   }
 

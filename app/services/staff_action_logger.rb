@@ -1079,10 +1079,10 @@ class StaffActionLogger
     )
   end
 
-  def log_delele_associated_accounts(user, previous_value:, context:)
+  def log_delete_associated_accounts(user, previous_value:, context:)
     UserHistory.create!(
       params.merge(
-        action: UserHistory.actions[:delele_associated_accounts],
+        action: UserHistory.actions[:delete_associated_accounts],
         target_user_id: user.id,
         previous_value:,
         context:,

@@ -293,6 +293,8 @@ export default class AdminUser extends User {
       data: {
         context: window.location.pathname,
       },
+    }).then(() => {
+      this.set("associated_accounts", []);
     });
   }
 

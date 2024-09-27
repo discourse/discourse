@@ -529,12 +529,12 @@ class Admin::UsersController < Admin::StaffController
           }.to_s
         end
         .join(",")
-    StaffActionLogger.new(current_user).log_delele_associated_accounts(
+    StaffActionLogger.new(current_user).log_delete_associated_accounts(
       @user,
       previous_value:,
       context: params[:context],
     )
-    @user.user_associated_accounts.destroy_all
+    @user.user_associated_accounts.delete_all
     render json: success_json
   end
 
