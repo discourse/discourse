@@ -208,6 +208,8 @@ $usercard-backdrop: dark-light-choose(none, brightness(0.7));
 
 // styles for user cards only
 .d-user-card {
+  --avatar-flair-size: 40px;
+
   all: initial;
   font-family: var(--font-family);
   width: 480px;
@@ -273,7 +275,7 @@ $usercard-backdrop: dark-light-choose(none, brightness(0.7));
     font-size: var;
     color: var(--primary);
   }
-  &__edit-btn {
+  &__header .d-user-card__edit-btn {
     cursor: pointer;
     position: absolute;
     right: 0;
@@ -283,10 +285,18 @@ $usercard-backdrop: dark-light-choose(none, brightness(0.7));
     font-weight: normal;
     transition: all 0.25s;
     opacity: 50%;
-    color: var(--primary) !important;
-    background-color: rgba(var(--secondary-rgb), 0.75) !important;
+    color: var(--primary);
+    background-color: rgba(var(--secondary-rgb), 0.75);
+    .d-icon {
+      color: var(--primary);
+    }
     &:hover {
       opacity: 100%;
+      color: var(--primary);
+      background-color: rgba(var(--secondary-rgb), 0.75);
+      .d-icon {
+        color: var(--primary);
+      }
     }
   }
   &__badge .fa-crab {
@@ -341,11 +351,11 @@ $usercard-backdrop: dark-light-choose(none, brightness(0.7));
     left: 100%;
   }
   &__id .avatar-flair {
-    width: 40px;
-    height: 40px;
-    background-size: 40px 40px;
+    width: var(--avatar-flair-size);
+    height: var(--avatar-flair-size);
+    background-size: var(--avatar-flair-size) var(--avatar-flair-size);
     position: absolute;
-    left: -30px;
+    left: calc(var(--avatar-flair-size) * -0.75);
     bottom: 0;
     display: flex;
     align-items: center;
@@ -354,10 +364,11 @@ $usercard-backdrop: dark-light-choose(none, brightness(0.7));
     background-position: center;
   }
   &__id .avatar-flair.rounded {
-    background-size: 30px 30px;
-    border-radius: 24px;
-    width: 40px;
-    height: 40px;
+    background-size: calc(var(--avatar-flair-size) * 0.75)
+      calc(var(--avatar-flair-size) * 0.75);
+    border-radius: 50%;
+    width: var(--avatar-flair-size);
+    height: var(--avatar-flair-size);
   }
   &__id .avatar-flair .fa {
     font-size: var(--font-up-4);
@@ -477,8 +488,8 @@ $usercard-backdrop: dark-light-choose(none, brightness(0.7));
     font-size: var(--font-down-1);
   }
   &__featured-topic img.emoji {
-    height: var(--font-0);
-    width: var(--font-0);
+    height: 1em;
+    width: 1em;
   }
   &__featured-topic-data,
   &__featured-topic-data:visited,
@@ -507,8 +518,8 @@ $usercard-backdrop: dark-light-choose(none, brightness(0.7));
     font-size: var(--font-0);
   }
   &__bio-excerpt img.emoji:not(.only-emoji) {
-    height: var(--font-0);
-    width: var(--font-0);
+    height: 1em;
+    width: 1em;
   }
   &__custom-fields {
     border-top: 1px solid var(--primary-200);

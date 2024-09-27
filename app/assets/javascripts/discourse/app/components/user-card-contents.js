@@ -22,7 +22,7 @@ import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-@classNames("d-user-card")
+@classNames("d-user-card", "user-card")
 @classNameBindings(
   "visible:show",
   "showBadges",
