@@ -2461,7 +2461,7 @@ RSpec.describe Admin::UsersController do
         expect(UserHistory.last).to have_attributes(
           acting_user_id: admin.id,
           target_user_id: user.id,
-          action: UserHistory.actions[:delele_associated_accounts],
+          action: UserHistory.actions[:delete_associated_accounts],
         )
         expect(UserHistory.last.previous_value).to include(':uid=>"123456789"')
       end
