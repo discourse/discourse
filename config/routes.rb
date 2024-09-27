@@ -162,6 +162,7 @@ Discourse::Application.routes.draw do
         put "disable_second_factor"
         delete "sso_record"
         get "similar-users.json" => "users#similar_users"
+        put "delete_associated_accounts"
       end
       get "users/:id.json" => "users#show", :defaults => { format: "json" }
       get "users/:id/:username" => "users#show",

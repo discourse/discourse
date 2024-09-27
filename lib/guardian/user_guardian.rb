@@ -204,6 +204,10 @@ module UserGuardian
     SiteSetting.enable_discourse_connect && user && is_admin?
   end
 
+  def can_delete_user_associated_accounts?(user)
+    user && is_admin?
+  end
+
   def can_change_tracking_preferences?(user)
     (SiteSetting.allow_changing_staged_user_tracking || !user.staged) && can_edit_user?(user)
   end
