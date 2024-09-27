@@ -78,8 +78,8 @@ export default class AdminUserIndexController extends Controller.extend(
   @discourseComputed("model.associated_accounts")
   associatedAccounts(associatedAccounts) {
     return associatedAccounts
-      .map((provider) => `${provider.name} (${provider.description})`)
-      .join(", ");
+      ?.map((provider) => `${provider.name} (${provider.description})`)
+      ?.join(", ");
   }
 
   @discourseComputed("model.user_fields.[]")
@@ -317,6 +317,23 @@ export default class AdminUserIndexController extends Controller.extend(
   @action
   silence() {
     return this.model.silence();
+  }
+
+  @action
+  deleteAssociatedAccounts() {
+    const performDelete = () => {
+      this.model
+        .deleteAssociatedAccounts()
+        .then(() => {
+          this.model.set("associated_accounts", []);
+        })
+        .catch(popupAjaxError);
+    };
+
+    this.dialog.yesNoConfirm({
+      message: I18n.t("admin.user.delete_associated_accounts_confirm"),
+      didConfirm: () => performDelete(),
+    });
   }
 
   @action
