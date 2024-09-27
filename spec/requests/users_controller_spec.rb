@@ -3543,6 +3543,7 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
         expect(user1.reload.uploaded_avatar_id).to eq(upload.id)
         expect(user1.user_avatar.reload.gravatar_upload_id).to eq(upload.id)
+        expect(user1.dominant_color).to eq(upload.dominant_color)
       end
 
       it "can not pick uploads that were not created by user" do

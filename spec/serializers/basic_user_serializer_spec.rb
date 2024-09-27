@@ -13,6 +13,10 @@ RSpec.describe BasicUserSerializer do
       expect(json[:avatar_template]).to eq(user.avatar_template)
     end
 
+    it "returns the avatar dominant color" do
+      expect(json[:avatar_dominant_color]).to eq(user.dominant_color)
+    end
+
     describe "extended serializers" do
       let(:post_action) { Fabricate(:post_action, user: user) }
       let(:serializer) do

@@ -1704,6 +1704,19 @@ RSpec.describe User do
     end
   end
 
+  describe "#avatar_dominant_color" do
+    let(:user) { Fabricate(:user, dominant_color: "F75E25") }
+    let(:upload) { Fabricate(:image_upload, dominant_color: "524155", user: user) }
+
+    it "returns the dominant color of the user" do
+      expect(user.avatar_dominant_color).to eq("F75E25")
+      user.dominant_color = nil
+      user.uploaded_avatar_id = upload.id
+      user.save!
+      expect(user.reload.avatar_dominant_color).to eq("524155")
+    end
+  end
+
   describe "update_posts_read!" do
     context "with a UserVisit record" do
       fab!(:user)
