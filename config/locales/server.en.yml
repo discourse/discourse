@@ -1270,6 +1270,7 @@ en:
       wrong_move: "Flag cannot be moved"
       system: "System flag cannot be updated or deleted."
       used: "Flag cannot be updated or deleted because has already been used."
+      unique_name: "Flag name must be unique"
   reports:
     default:
       labels:

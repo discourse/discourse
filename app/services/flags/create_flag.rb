@@ -5,6 +5,7 @@ class Flags::CreateFlag
 
   contract
   policy :invalid_access
+  policy :unique_name
   model :flag, :instantiate_flag
 
   transaction do
@@ -26,6 +27,10 @@ class Flags::CreateFlag
   end
 
   private
+
+  def unique_name(name:)
+    !Flag.custom.where(name: name).exists?
+  end
 
   def instantiate_flag(name:, description:, applies_to:, require_message:, enabled:)
     Flag.new(
